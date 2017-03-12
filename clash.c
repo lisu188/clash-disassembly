@@ -172,7 +172,7 @@ int sub_18DF7();
 char *sub_18E49();
 int sub_19585();
 int sub_19E85();
-int __fastcall sub_1A330(int a1);
+int __fastcall chooseBackground(int a1);
 char *__fastcall sub_1A61C(int a1);
 int sub_1A650();
 char sub_1A674();
@@ -219,9 +219,9 @@ void sub_1F490();
 void sub_1F4B9();
 int sub_1F4E2();
 void sub_1F661();
-// int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall playHuman@<eax>(int a1@<ebx>, long double a2@<st0>);
 void sub_1FB59();
-// int __usercall sub_1FB91@<eax>(long double a1@<st0>);
+// int __usercall playGame@<eax>(long double a1@<st0>);
 void *__fastcall sub_1FFAC(void *result, const void *a2);
 int sub_1FFE8();
 int sub_2000C();
@@ -295,7 +295,7 @@ signed int __fastcall sub_24517(int a1, signed int a2, int a3);
 signed int __fastcall sub_2486C(int a1);
 int __fastcall sub_2490E(int result, int a2, char a3);
 int __fastcall sub_24A00(int a1, int a2, char a3);
-// signed int __userpurge sub_24A7C@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, long double a5@<st0>, int a6);
+// signed int __userpurge createUnit@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, long double a5@<st0>, int a6);
 // int __usercall sub_24C5F@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_24CB3@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_24D81@<eax>(int a1@<eax>, long double a2@<st0>);
@@ -957,15 +957,15 @@ int __fastcall sub_5EB3A(int a1);
 int __fastcall sub_5EBB5(const char *a1);
 int __fastcall sub_5EC06(const char *a1, int a2);
 int __fastcall sub_5EC9C(int a1);
-int __fastcall sub_5ED50(const char *a1, int a2, int a3);
-int sub_5EE29();
+int __fastcall loadRes(const char *a1, int a2, int a3);
+int loadResources();
 void __fastcall sub_5EF73(const char *a1, int a2, int a3);
 bool __fastcall sub_5F0DB(char a1);
 bool __fastcall sub_5F176(char a1);
 bool __fastcall sub_5F1DF(unsigned __int8 a1);
 bool __fastcall sub_5F264(char a1);
 bool __fastcall sub_5F32C(char a1);
-signed int sub_5F3B8();
+signed int returnTrue();
 int sub_5F3DC();
 int __fastcall sub_5F400(int a1, const char *a2, int a3);
 int sub_5F448();
@@ -1062,11 +1062,11 @@ int __fastcall sub_65B83(int a1);
 void sub_65BD8();
 int sub_65C40();
 void __fastcall sub_65C92(int a1);
-// int __usercall sub_65D2D@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
+// int __usercall loadMapData@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 int __fastcall sub_660C4(int a1);
 int __fastcall sub_66188(int a1);
 int sub_661C4();
-// signed int __usercall sub_66464@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall loadMap@<eax>(int a1@<eax>, long double a2@<st0>);
 int sub_66604();
 int sub_66705();
 // signed int __usercall sub_667E0@<eax>(long double a1@<st0>);
@@ -1125,13 +1125,13 @@ int sub_6CAAB();
 int sub_6CB48();
 signed int __fastcall sub_6CC1E(int a1, int a2, int a3);
 void sub_6CC4C();
-signed int __fastcall sub_6CC70(int a1, int a2, int a3);
-signed int sub_6CCAF();
+signed int __fastcall initClips(int a1, int a2, int a3);
+signed int registerClipFunctionsAll();
 // signed int __usercall sub_6CCE0@<eax>(long double a1@<st0>);
-// signed int __usercall sub_6CDD0@<eax>(long double a1@<st0>);
+// signed int __usercall playComputer@<eax>(long double a1@<st0>);
 // int __usercall sub_6D08A@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 // int __usercall sub_6D130@<eax>(int a1@<eax>, long double a2@<st0>);
-signed int sub_6D2BD();
+signed int registerClipsFunctions2();
 // int __usercall sub_6D67E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_6D6CA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_6D706@<eax>(long double a1@<st0>);
@@ -1262,7 +1262,7 @@ signed int __fastcall sub_71C08(int a1, int a2, int a3, int a4);
 int sub_71CFA();
 int __fastcall sub_71DD4(int a1);
 // signed int __usercall sub_71F0B@<eax>(int a1@<eax>, long double a2@<st0>);
-signed int sub_71FC8();
+signed int registerClipsFunctions();
 // int __usercall sub_7251C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_7254A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_72578@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
@@ -1306,7 +1306,7 @@ int sub_72880(); // weak
 // signed int __usercall sub_72E39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_72E7B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_72EB1@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
-signed int sub_72EE7();
+signed int registerClipsFunctions3();
 // bool __usercall sub_73153@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_73195@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_731D7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
@@ -1347,63 +1347,63 @@ signed int __fastcall sub_7418C(int a1, int a2);
 long double __fastcall sub_74F7B(int a1, int a2, int a3, int a4, int a5);
 void __fastcall sub_7503D(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
 int __fastcall sub_75223(int a1, int a2, int a3, int a4, signed int a5);
-// signed int __usercall sub_753B0@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7);
-// int __usercall sub_754A7@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
-// int __usercall sub_756BA@<eax>(int a1@<ebx>, long double a2@<st0>);
+// signed int __usercall addUnit@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7);
+// int __usercall addCastle@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
+// int __usercall startMap1@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_758B7();
-// int __usercall sub_75931@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap2@<eax>(int a1@<ebx>, long double a2@<st0>);
 __int16 __fastcall sub_75B25(int a1, int a2, int a3, int a4);
 bool sub_75BB2();
-// int __usercall sub_75C00@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap3@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_75EE5();
-// int __usercall sub_75F52@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap4@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_76409();
 bool sub_76459();
-// int __usercall sub_764C6@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap5@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_768C5();
 bool sub_76932();
-// int __usercall sub_76982@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap6@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_76EB5();
-// int __usercall sub_76FBE@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap7@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_77464();
-// int __usercall sub_774D1@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap8@<eax>(int a1@<ebx>, long double a2@<st0>);
 // bool __usercall sub_77A6D@<eax>(long double a1@<st0>);
 __int16 __fastcall sub_77BF3(int a1, int a2, unsigned __int16 a3, unsigned __int16 a4);
-// int __usercall sub_77D3E@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap9@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_7832D();
 bool sub_783AD();
-// int __usercall sub_7850A@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap10@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_78B35();
-// int __usercall sub_78B98@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap11@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_78DE3();
-// int __usercall sub_78E5D@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap12@<eax>(int a1@<ebx>, long double a2@<st0>);
 __int16 __fastcall sub_79026(int a1, int a2, int a3, int a4);
 bool sub_790B3();
-// int __usercall sub_79101@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap13@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_793CE();
-// int __usercall sub_7943C@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap14@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_797D2();
 bool sub_79822();
-// int __usercall sub_79890@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap15@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_79D0B();
 bool sub_79D79();
-// int __usercall sub_79DC9@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap16@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_7A281();
 int sub_7A347();
 int __fastcall sub_7A37C(int result, int a2);
-// int __usercall sub_7A3C3@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap17@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_7A74E();
-// int __usercall sub_7A7BC@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap18@<eax>(int a1@<ebx>, long double a2@<st0>);
 // bool __usercall sub_7ADAD@<eax>(long double a1@<st0>);
 __int16 __fastcall sub_7AF37(int a1, int a2, unsigned __int16 a3, unsigned __int16 a4);
-// int __usercall sub_7B082@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap19@<eax>(int a1@<ebx>, long double a2@<st0>);
 bool sub_7B7BA();
 bool sub_7B858();
-// int __usercall sub_7B9B7@<eax>(int a1@<ebx>, long double a2@<st0>);
+// int __usercall startMap20@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_7BF3E();
 // signed int __usercall sub_7BFB8@<eax>(long double a1@<st0>);
 int sub_7C17E();
-// int __usercall sub_7C255@<eax>(int result@<eax>, int a2@<ebx>, long double a3@<st0>);
+// int __usercall startMap@<eax>(int result@<eax>, int a2@<ebx>, long double a3@<st0>);
 // int __usercall sub_7C3AC@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 int sub_7C440();
 int nullsub_9(); // weak
@@ -2379,7 +2379,7 @@ int __fastcall sub_A57B0(int a1);
 int sub_A57D0(); // weak
 int __fastcall sub_A57E0(int result, int a2);
 signed int __fastcall sub_A58F0(int a1, int a2, int a3, int a4);
-signed int __fastcall sub_A5910(int a1, int a2, int a3, int a4, int a5);
+signed int __fastcall registerClipsCallback(int a1, int a2, int a3, int a4, int a5);
 signed int __fastcall sub_A5A70(int a1, int a2);
 signed int __fastcall sub_A5AF0(int a1, int a2, int a3);
 int __fastcall sub_A5BB0(char a1);
@@ -2482,7 +2482,7 @@ int __fastcall sub_AA5E0(int result);
 int __fastcall sub_AA5F0(int result);
 signed int __fastcall sub_AA600(int a1, int a2);
 // int __usercall sub_AA680@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_AA6B0@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall addClipsFact@<eax>(int a1@<eax>, long double a2@<st0>);
 int sub_AA860(); // weak
 // int __usercall sub_AA8E0@<eax>(int a1@<eax>, long double a2@<st0>);
 // signed int __usercall sub_AAAA0@<eax>(long double a1@<st0>);
@@ -3661,7 +3661,7 @@ int __fastcall sub_E64B0(int a1, int a2, int a3, int a4, int a5);
 int __fastcall sub_E6620(int a1, int a2);
 int __fastcall sub_E66B0(int a1);
 int sub_E67F0();
-int __fastcall sub_E68F0(int result, int a2, int a3);
+int __fastcall initAllClipsCallbacks(int result, int a2, int a3);
 long double __fastcall sub_E6BA0(int a1, int a2);
 // int __usercall sub_E6C10@<eax>(long double a1@<st0>);
 int __fastcall sub_E6D20(int a1, int a2, int a3);
@@ -10771,8 +10771,8 @@ int dword_1845F0; // weak
 int currentPlayer; // weak
 int dword_1845F8; // weak
 int dword_1845FC; // weak
-int dword_184600; // weak
-int dword_184604; // weak
+int isEndGame; // weak
+int isEndTurn; // weak
 int dword_184608; // weak
 int dword_18460C; // weak
 int dword_184610; // weak
@@ -10832,7 +10832,7 @@ char byte_18AA70[]; // weak
 char byte_18AA71[]; // weak
 int dword_18AA90[]; // weak
 int dword_18AA94[]; // weak
-int dword_18AAD0; // weak
+int isLogEnabled2; // weak
 int isInBattle; // weak
 int dword_18AAD8; // weak
 int dword_18AADC; // weak
@@ -11513,10 +11513,10 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   v17 = a2;
   sub_103F7();
   sub_10362();
-  v4 = sub_5EE29();
+  v4 = loadResources();
   sub_10291(v4, v5, a3);
-  dword_18AAD0 = v15 <= 1 || **(_BYTE **)(v17 + 4) != 108;
-  dword_18AAD0 = 0;
+  isLogEnabled2 = v15 <= 1 || **(_BYTE **)(v17 + 4) != 108;
+  isLogEnabled2 = 0;
   sub_30092();
   v6 = sub_636F1();
   log((int)aUsedmemD, v6);
@@ -11524,7 +11524,7 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   log((int)aUsedmemD_0, v7);
   sub_63678();
   log((int)aInit_clips, v15);
-  sub_6CC70(v8, v9, a3);
+  initClips(v8, v9, a3);
   sub_C1BB0(-1, 0);
   v10 = sub_636F1();
   log((int)aUsedmemD_1, v10);
@@ -11544,7 +11544,7 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
     dword_13D720 = 1;
   if ( v16 > 2 && **(_BYTE **)(v17 + 4) == 101 )
   {
-    sub_1A330(*(_DWORD *)(v17 + 8));
+    chooseBackground(*(_DWORD *)(v17 + 8));
   }
   else if ( v16 > 2 && **(_BYTE **)(v17 + 4) == 98 )
   {
@@ -11554,7 +11554,7 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   {
     sub_1FB59();
     sub_67771(a4);
-    sub_1FB91(a4);
+    playGame(a4);
   }
   else
   {
@@ -11576,7 +11576,7 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
 // F386D: using guessed type int __fastcall exit(_DWORD);
 // 13D720: using guessed type int dword_13D720;
 // 1845E8: using guessed type int dword_1845E8;
-// 18AAD0: using guessed type int dword_18AAD0;
+// 18AAD0: using guessed type int isLogEnabled2;
 // 1AFB98: using guessed type int dword_1AFB98;
 
 //----- (00010708) --------------------------------------------------------
@@ -17004,7 +17004,7 @@ int sub_19E85()
 // 183D94: using guessed type __int16 word_183D94[];
 
 //----- (0001A330) --------------------------------------------------------
-int __fastcall sub_1A330(int a1)
+int __fastcall chooseBackground(int a1)
 {
   int v1; // edx@1
   int v2; // eax@1
@@ -18786,12 +18786,12 @@ int sub_1DEB6()
 
   v0 = sub_20030();
   result = sub_62BD7((int)off_131A28[(unsigned __int8)isEnglish], v0);
-  dword_184600 = result;
+  isEndGame = result;
   return result;
 }
 // 131A28: using guessed type char *off_131A28[2];
 // 13D71D: using guessed type char isEnglish;
-// 184600: using guessed type int dword_184600;
+// 184600: using guessed type int isEndGame;
 
 //----- (0001DEF6) --------------------------------------------------------
 __int16 __usercall sub_1DEF6@<ax>(long double a1@<st0>)
@@ -18819,12 +18819,12 @@ __int16 __usercall sub_1DF2E@<ax>(long double a1@<st0>)
   }
   else
   {
-    dword_184600 = 1;
+    isEndGame = 1;
   }
   return v1;
 }
 // 131A40: using guessed type int dword_131A40;
-// 184600: using guessed type int dword_184600;
+// 184600: using guessed type int isEndGame;
 
 //----- (0001DFD6) --------------------------------------------------------
 char __fastcall sub_1DFD6(int a1)
@@ -19738,7 +19738,7 @@ void sub_1F661()
 // 1845FC: using guessed type int dword_1845FC;
 
 //----- (0001F8C1) --------------------------------------------------------
-int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall playHuman@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // eax@5
@@ -19748,12 +19748,12 @@ int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
 
   sub_61F8C();
   sub_62074();
-  dword_184604 = 0;
+  isEndTurn = 0;
   result = 0;
-  dword_184600 = 0;
-  while ( !dword_184600 )
+  isEndGame = 0;
+  while ( !isEndGame )
   {
-    if ( dword_184604 )
+    if ( isEndTurn )
       break;
     sub_6CB48();
     v3 = sub_10DE4();
@@ -19775,17 +19775,17 @@ int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
     if ( sub_6BD2F(currentPlayer) )
     {
       dword_184608 = 1;
-      dword_184600 = 1;
+      isEndGame = 1;
     }
     if ( *(_DWORD *)((char *)&loc_222EF + gameDataOffset + 2) != -1 && sub_7C17E() )
     {
       dword_184608 = 1;
-      dword_184600 = 1;
+      isEndGame = 1;
       sub_122D0(20);
       return sub_5E73A();
     }
     if ( !*(void **)((char *)&off_222F8 + 1423 * currentPlayer + gameDataOffset) )
-      dword_184604 = 1;
+      isEndTurn = 1;
     if ( *(_DWORD *)((char *)&loc_222EF + gameDataOffset + 2) == -1 )
     {
       result = sub_6BECD(currentPlayer);
@@ -19793,7 +19793,7 @@ int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
       {
         dword_18460C = 1;
         result = 1;
-        dword_184600 = 1;
+        isEndGame = 1;
       }
     }
     else
@@ -19803,7 +19803,7 @@ int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
       {
         dword_18460C = 1;
         result = 1;
-        dword_184600 = 1;
+        isEndGame = 1;
       }
     }
   }
@@ -19813,8 +19813,8 @@ int __usercall sub_1F8C1@<eax>(int a1@<ebx>, long double a2@<st0>)
 // 130268: using guessed type char *off_130268;
 // 1845EC: using guessed type int gameDataOffset;
 // 1845F4: using guessed type int currentPlayer;
-// 184600: using guessed type int dword_184600;
-// 184604: using guessed type int dword_184604;
+// 184600: using guessed type int isEndGame;
+// 184604: using guessed type int isEndTurn;
 // 184608: using guessed type int dword_184608;
 // 18460C: using guessed type int dword_18460C;
 
@@ -19829,7 +19829,7 @@ void sub_1FB59()
 }
 
 //----- (0001FB91) --------------------------------------------------------
-int __usercall sub_1FB91@<eax>(long double a1@<st0>)
+int __usercall playGame@<eax>(long double a1@<st0>)
 {
   int v1; // ebx@7
   int v2; // eax@7
@@ -19913,24 +19913,24 @@ int __usercall sub_1FB91@<eax>(long double a1@<st0>)
     sub_635EC();
   dword_184608 = 0;
   dword_18460C = 0;
-  dword_184604 = 0;
-  dword_184600 = 0;
+  isEndTurn = 0;
+  isEndGame = 0;
   dword_131A40 = -1;
   while ( 1 )
   {
     sub_3BA36(currentPlayer);
     if ( *(_DWORD *)((char *)&loc_22312 + 1423 * currentPlayer + gameDataOffset + 1) )
     {
-      sub_1F8C1(467, a1);
+      playHuman(467, a1);
     }
     else if ( (signed int)*(unsigned __int16 *)((char *)&word_222F6 + gameDataOffset) > 0 )
     {
       sub_16B9A((int)&dword_130110);
       log((int)aComputerplay, v13);
-      sub_6CDD0(a1);
+      playComputer(a1);
       sub_16B9A((int)&unk_12FFCC);
     }
-    if ( dword_184600 )
+    if ( isEndGame )
       break;
     sub_1EFE4(a1);
   }
@@ -19963,7 +19963,7 @@ int __usercall sub_1FB91@<eax>(long double a1@<st0>)
   {
     sub_1FB59();
     sub_60F61(dword_131A40, a1);
-    sub_1FB91(a1);
+    playGame(a1);
   }
   return 0;
 }
@@ -19977,8 +19977,8 @@ int __usercall sub_1FB91@<eax>(long double a1@<st0>)
 // 1845EC: using guessed type int gameDataOffset;
 // 1845F4: using guessed type int currentPlayer;
 // 1845FC: using guessed type int dword_1845FC;
-// 184600: using guessed type int dword_184600;
-// 184604: using guessed type int dword_184604;
+// 184600: using guessed type int isEndGame;
+// 184604: using guessed type int isEndTurn;
 // 184608: using guessed type int dword_184608;
 // 18460C: using guessed type int dword_18460C;
 
@@ -21971,7 +21971,7 @@ int __fastcall sub_24A00(int a1, int a2, char a3)
 }
 
 //----- (00024A7C) --------------------------------------------------------
-signed int __userpurge sub_24A7C@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, long double a5@<st0>, int a6)
+signed int __userpurge createUnit@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, long double a5@<st0>, int a6)
 {
   char v7; // [sp+0h] [bp-20h]@0
   signed int v8; // [sp+0h] [bp-20h]@9
@@ -23917,7 +23917,7 @@ int __usercall sub_28500@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long do
       v14 = dword_1331A4[2 * i] + v28;
       v15 = dword_1331A0[2 * i] + v27;
       v16 = sub_2C7F6(0, 7);
-      v23 = sub_24A7C(*(_WORD *)v29, *(_BYTE *)(v29 + 2), v17, v16, a4, v14);
+      v23 = createUnit(*(_WORD *)v29, *(_BYTE *)(v29 + 2), v17, v16, a4, v14);
       if ( !v23 )
         continue;
     }
@@ -27481,7 +27481,7 @@ void sub_30092()
   int v0; // eax@2
   int v1; // eax@2
 
-  if ( dword_18AAD0 )
+  if ( isLogEnabled2 )
   {
     v0 = creat(aClash_log, 0);
     close(v0);
@@ -27492,7 +27492,7 @@ void sub_30092()
 }
 // F4A1A: using guessed type int __fastcall creat(_DWORD, _DWORD);
 // F4A27: using guessed type int __fastcall close(_DWORD);
-// 18AAD0: using guessed type int dword_18AAD0;
+// 18AAD0: using guessed type int isLogEnabled2;
 // 18AAD4: using guessed type int isInBattle;
 
 //----- (000300E6) --------------------------------------------------------
@@ -27510,7 +27510,7 @@ void __cdecl log(int a1, char a2)
   char *v3; // [sp+4h] [bp-8h]@4
   int v4; // [sp+8h] [bp-4h]@7
 
-  if ( dword_18AAD0 && isLogEnabled )
+  if ( isLogEnabled2 && isLogEnabled )
   {
     v3 = &a2;
     if ( isInBattle )
@@ -27530,7 +27530,7 @@ void __cdecl log(int a1, char a2)
 // F4A68: using guessed type int __fastcall j___fprtf(_DWORD, _DWORD, _DWORD);
 // 133860: using guessed type int isLogEnabled;
 // 133B1C: using guessed type int *off_133B1C;
-// 18AAD0: using guessed type int dword_18AAD0;
+// 18AAD0: using guessed type int isLogEnabled2;
 // 18AAD4: using guessed type int isInBattle;
 
 //----- (00030204) --------------------------------------------------------
@@ -30793,7 +30793,7 @@ signed int __usercall sub_372B6@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
       v15 = 31;
     else
       v15 = 32;
-    if ( sub_24A7C(v15, *(_BYTE *)(v17 + 2), *(_BYTE *)v17, 0, a5, *(_BYTE *)(v17 + 1)) )
+    if ( createUnit(v15, *(_BYTE *)(v17 + 2), *(_BYTE *)v17, 0, a5, *(_BYTE *)(v17 + 1)) )
     {
       v21 = 725 * *(_WORD *)((char *)&off_87D55 + 200 * *(_BYTE *)v17 + 2 * *(_BYTE *)(v17 + 1) + gameDataOffset + 1)
           + gameDataOffset
@@ -33109,7 +33109,7 @@ signed int __userpurge sub_3B72C@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
     if ( !v25 )
     {
       v16 = sub_251D4(a4 - *(_WORD *)v23, v32 - *(_WORD *)(v23 + 2));
-      sub_24A7C(-1, *(_BYTE *)(v23 + 4), v17, v16, a5, v32);
+      createUnit(-1, *(_BYTE *)(v23 + 4), v17, v16, a5, v32);
     }
     v26 = 725 * *(_WORD *)((char *)&off_87D55 + 200 * v31 + 2 * v32 + gameDataOffset + 1) + gameDataOffset + 147174;
     if ( v25 )
@@ -47200,7 +47200,7 @@ signed int __usercall sub_59315@<eax>(int a1@<eax>, int a2@<edx>, long double a3
     *(_BYTE *)(v31 + 1);
     *(_BYTE *)v31;
     v16 = sub_251D4(*((_DWORD *)v26 + 2 * i), *((_DWORD *)v26 + 2 * i + 1));
-    sub_24A7C(-1, *(_BYTE *)(v31 + 2), v17, v16, a3, v15);
+    createUnit(-1, *(_BYTE *)(v31 + 2), v17, v16, a3, v15);
     v28 = 725 * *(_WORD *)((char *)&off_87D55 + 200 * v13 + 2 * v14 + gameDataOffset + 1) + gameDataOffset + 147174;
     v29 = (void *)(v28 + 6);
     v30 = 0;
@@ -50481,7 +50481,7 @@ int __fastcall sub_5EC9C(int a1)
 // F492D: using guessed type int __fastcall strcpy(_DWORD, _DWORD);
 
 //----- (0005ED50) --------------------------------------------------------
-int __fastcall sub_5ED50(const char *a1, int a2, int a3)
+int __fastcall loadRes(const char *a1, int a2, int a3)
 {
   int v3; // ebx@7
   int v4; // ecx@7
@@ -50532,7 +50532,7 @@ int __fastcall sub_5ED50(const char *a1, int a2, int a3)
 // 5ED50: using guessed type int var_80[3];
 
 //----- (0005EE29) --------------------------------------------------------
-int sub_5EE29()
+int loadResources()
 {
   int v0; // eax@1
   int v1; // eax@1
@@ -50545,29 +50545,29 @@ int sub_5EE29()
   int v9[3]; // [sp+0h] [bp-10h]@5
   int v10; // [sp+Ch] [bp-4h]@4
 
-  sub_5ED50((const char *)&unk_11B136, (int)aDataMinimum_re, 20);
-  v0 = sub_5F3B8();
-  sub_5ED50((const char *)&unk_11B147, (int)aDataNormal_res, v0);
-  v1 = sub_5F3B8();
-  sub_5ED50((const char *)&unk_11B159, (int)aDataMaximum_re, v1);
-  v2 = sub_5F3B8();
-  sub_5ED50(aMaps_0, (int)aDataMaps_res, v2);
-  v3 = sub_5F3B8();
-  sub_5ED50(aGfx, (int)aDataGfx3_res, v3);
+  loadRes((const char *)&unk_11B136, (int)aDataMinimum_re, 20);
+  v0 = returnTrue();
+  loadRes((const char *)&unk_11B147, (int)aDataNormal_res, v0);
+  v1 = returnTrue();
+  loadRes((const char *)&unk_11B159, (int)aDataMaximum_re, v1);
+  v2 = returnTrue();
+  loadRes(aMaps_0, (int)aDataMaps_res, v2);
+  v3 = returnTrue();
+  loadRes(aGfx, (int)aDataGfx3_res, v3);
   if ( isEnglish )
   {
-    v5 = sub_5F3B8();
-    sub_5ED50(aGfxBiginfo_eng, (int)aDataInfoang_re, v5);
+    v5 = returnTrue();
+    loadRes(aGfxBiginfo_eng, (int)aDataInfoang_re, v5);
   }
   else
   {
-    v4 = sub_5F3B8();
-    sub_5ED50(aGfxBiginfo_pol, (int)aDataInfopol_re, v4);
+    v4 = returnTrue();
+    loadRes(aGfxBiginfo_pol, (int)aDataInfopol_re, v4);
   }
-  v6 = sub_5F3B8();
-  sub_5ED50(aGfxIs, (int)aDataIs_res, v6);
-  v7 = sub_5F3B8();
-  sub_5ED50(aSfxMusic, (int)aDataMusic_res, v7);
+  v6 = returnTrue();
+  loadRes(aGfxIs, (int)aDataIs_res, v6);
+  v7 = returnTrue();
+  loadRes(aSfxMusic, (int)aDataMusic_res, v7);
   sub_859D0((int)&unk_1AFBAC);
   v10 = sub_5EBB5(aGfxBackgr1_s_0);
   if ( !v10 )
@@ -50729,7 +50729,7 @@ bool __fastcall sub_5F32C(char a1)
 // 1AFBD4: using guessed type int dword_1AFBD4;
 
 //----- (0005F3B8) --------------------------------------------------------
-signed int sub_5F3B8()
+signed int returnTrue()
 {
   return 1;
 }
@@ -51147,7 +51147,7 @@ int __usercall sub_5FE5C@<eax>(long double a1@<st0>)
           v16 = dword_1379B0[2 * k] + *(int *)((char *)&dword_8F28A + gameDataOffset);
           v2 = dword_1379B0[2 * k] + *(int *)((char *)&dword_8F28A + gameDataOffset);
           v3 = sub_251D4(dword_1379AC[2 * k], dword_1379B0[2 * k]);
-          sub_24A7C(0, currentPlayer, v4, v3, a1, v2);
+          createUnit(0, currentPlayer, v4, v3, a1, v2);
           v21 = 725 * *(_WORD *)((char *)&off_87D55 + 200 * v14 + 2 * v16 + gameDataOffset + 1)
               + gameDataOffset
               + 147174;
@@ -53792,7 +53792,7 @@ int __usercall sub_64AE2@<eax>(long double a1@<st0>)
     strcpy(&v3[1423 * i + 4], &byte_1AFF54[11 * i]);
   }
   sub_67862(dword_1AFF8C, (int)v3, a1);
-  return sub_1FB91(a1);
+  return playGame(a1);
 }
 // 64C58: using guessed type void *off_64C58;
 // F492D: using guessed type int __fastcall strcpy(_DWORD, _DWORD);
@@ -54177,7 +54177,7 @@ int __usercall sub_65675@<eax>(int a1@<eax>, long double a2@<st0>)
   v2 = a1;
   sub_1FB59();
   sub_60F61(v2, a2);
-  return sub_1FB91(a2);
+  return playGame(a2);
 }
 
 //----- (000656AC) --------------------------------------------------------
@@ -54459,7 +54459,7 @@ void __fastcall sub_65C92(int a1)
 // 1386F8: using guessed type int dword_1386F8;
 
 //----- (00065D2D) --------------------------------------------------------
-int __usercall sub_65D2D@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
+int __usercall loadMapData@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
 {
   int result; // eax@34
   int m; // [sp+0h] [bp-9Ch]@21
@@ -54647,7 +54647,7 @@ int sub_661C4()
 // 1845F4: using guessed type int currentPlayer;
 
 //----- (00066464) --------------------------------------------------------
-signed int __usercall sub_66464@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall loadMap@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ST0C_4@1
   int v3; // edx@1
@@ -54662,7 +54662,7 @@ signed int __usercall sub_66464@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   memset(gameDataOffset, 0, sub_8F29E);
-  sub_65D2D(v2, v3, (int)sub_8F29E, a2);
+  loadMapData(v2, v3, (int)sub_8F29E, a2);
   *(_DWORD *)(gameDataOffset + 140008) = 0;
   *(_DWORD *)(gameDataOffset + 140012) = 0;
   *(__int16 *)((char *)&word_222F6 + gameDataOffset) = 1;
@@ -54776,8 +54776,8 @@ signed int __usercall sub_667E0@<eax>(long double a1@<st0>)
   int v20; // eax@1
   signed int result; // eax@1
 
-  sub_24A7C(17, 0, 5, 0, a1, 4);
-  sub_24A7C(13, 0, 5, 0, a1, 5);
+  createUnit(17, 0, 5, 0, a1, 4);
+  createUnit(13, 0, 5, 0, a1, 5);
   v1 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88148 + gameDataOffset),
@@ -54812,30 +54812,30 @@ signed int __usercall sub_667E0@<eax>(long double a1@<st0>)
   sub_3555F(
     (int)(&byte_7C6EA[467 * (*(_WORD *)((char *)&loc_88141 + gameDataOffset + 5) - 0x8000)] + gameDataOffset),
     a1);
-  sub_24A7C(17, 0, 4, 0, a1, 6);
-  sub_24A7C(29, 0, 6, 0, a1, 6);
-  sub_24A7C(9, 0, 7, 0, a1, 7);
+  createUnit(17, 0, 4, 0, a1, 6);
+  createUnit(29, 0, 6, 0, a1, 6);
+  createUnit(9, 0, 7, 0, a1, 7);
   v8 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_882D8 + gameDataOffset + 4),
     *(_WORD *)((char *)&loc_88210 + gameDataOffset + 2),
     v8,
     a1);
-  sub_24A7C(20, 0, 7, 0, a1, 7);
+  createUnit(20, 0, 7, 0, a1, 7);
   v9 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_882D8 + gameDataOffset + 4),
     *(_WORD *)((char *)&loc_88210 + gameDataOffset + 2),
     v9,
     a1);
-  sub_24A7C(34, 0, 7, 0, a1, 7);
+  createUnit(34, 0, 7, 0, a1, 7);
   v10 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_882D8 + gameDataOffset + 4),
     *(_WORD *)((char *)&loc_88210 + gameDataOffset + 2),
     v10,
     a1);
-  sub_24A7C(4, 0, 7, 0, a1, 7);
+  createUnit(4, 0, 7, 0, a1, 7);
   v11 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_882D8 + gameDataOffset + 4),
@@ -54843,66 +54843,66 @@ signed int __usercall sub_667E0@<eax>(long double a1@<st0>)
     v11,
     a1);
   *((_BYTE *)&loc_23EF5 + 725 * *(_WORD *)((char *)&loc_88210 + gameDataOffset + 2) + gameDataOffset) = 1;
-  sub_24A7C(27, 2, 10, 0, a1, 7);
-  sub_24A7C(28, 0, 10, 0, a1, 8);
-  sub_24A7C(1, 0, 5, 0, a1, 45);
-  sub_24A7C(17, 0, 5, 0, a1, 46);
+  createUnit(27, 2, 10, 0, a1, 7);
+  createUnit(28, 0, 10, 0, a1, 8);
+  createUnit(1, 0, 5, 0, a1, 45);
+  createUnit(17, 0, 5, 0, a1, 46);
   v12 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v12,
     a1);
-  sub_24A7C(5, 0, 5, 0, a1, 46);
+  createUnit(5, 0, 5, 0, a1, 46);
   v13 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v13,
     a1);
-  sub_24A7C(26, 0, 5, 0, a1, 46);
+  createUnit(26, 0, 5, 0, a1, 46);
   v14 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v14,
     a1);
-  sub_24A7C(13, 0, 5, 0, a1, 46);
+  createUnit(13, 0, 5, 0, a1, 46);
   v15 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v15,
     a1);
-  sub_24A7C(3, 0, 5, 0, a1, 46);
+  createUnit(3, 0, 5, 0, a1, 46);
   v16 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v16,
     a1);
-  sub_24A7C(3, 0, 5, 0, a1, 46);
+  createUnit(3, 0, 5, 0, a1, 46);
   v17 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v17,
     a1);
-  sub_24A7C(3, 0, 5, 0, a1, 46);
+  createUnit(3, 0, 5, 0, a1, 46);
   v18 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v18,
     a1);
-  sub_24A7C(3, 0, 5, 0, a1, 46);
+  createUnit(3, 0, 5, 0, a1, 46);
   v19 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
     *(_WORD *)((char *)&loc_88194 + gameDataOffset + 4),
     v19,
     a1);
-  sub_24A7C(3, 0, 5, 0, a1, 46);
+  createUnit(3, 0, 5, 0, a1, 46);
   v20 = sub_202EC();
   sub_3B2DE(
     *(_WORD *)((char *)&loc_88199 + gameDataOffset + 1),
@@ -54985,7 +54985,7 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
   v50 = a1;
   v51 = a2;
   sprintf(&v47, aMultiD_map, a1 + 1);
-  sub_66464((int)&v47, a3);
+  loadMap((int)&v47, a3);
   v3 = memcpy((char *)&off_222F8 + gameDataOffset, v51, 7115);
   sub_2238E(v3, v4, 7115);
   v48 = 1;
@@ -54997,8 +54997,8 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
       v46 = *(&dword_13877C[10 * v50] + 2 * i);
       if ( *(_DWORD *)((char *)&loc_22312 + 1423 * i + gameDataOffset + 1) )
       {
-        sub_24A7C(17, i, v45, 0, a3, v46);
-        sub_24A7C(0, i, v45 + 1, 0, a3, v46);
+        createUnit(17, i, v45, 0, a3, v46);
+        createUnit(0, i, v45 + 1, 0, a3, v46);
         v5 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
@@ -55025,81 +55025,81 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
           (int)(&byte_7C6EA[467 * (*(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1) - 0x8000)]
               + gameDataOffset),
           a3);
-        sub_24A7C(5, i, v45, 0, a3, v46 + 2);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 + 2);
-        sub_24A7C(16, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(5, i, v45, 0, a3, v46 + 2);
+        createUnit(1, i, v45 + 1, 0, a3, v46 + 2);
+        createUnit(16, i, v45 + 2, 0, a3, v46 + 2);
         v7 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v7,
           a3);
-        sub_24A7C(1, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(1, i, v45 + 2, 0, a3, v46 + 2);
         v8 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v8,
           a3);
-        sub_24A7C(15, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(15, i, v45 + 2, 0, a3, v46 + 2);
         v9 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v9,
           a3);
-        sub_24A7C(17, i, v45 + 1, 0, a3, v46 + 3);
-        sub_24A7C(9, i, v45 + 2, 0, a3, v46 + 3);
+        createUnit(17, i, v45 + 1, 0, a3, v46 + 3);
+        createUnit(9, i, v45 + 2, 0, a3, v46 + 3);
         v10 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v10,
           a3);
-        sub_24A7C(16, i, v45 + 2, 0, a3, v46 - 1);
-        sub_24A7C(16, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(16, i, v45 + 2, 0, a3, v46 - 1);
+        createUnit(16, i, v45 + 1, 0, a3, v46 - 1);
         v11 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v11,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v12 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v12,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v13 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v13,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v14 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v14,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v15 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v15,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v16 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           v16,
           a3);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
         v17 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
@@ -55111,36 +55111,36 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
       {
         *(_DWORD *)((char *)&loc_2231C + 1423 * i + gameDataOffset + 3) = v48;
         v48 ^= 1u;
-        sub_24A7C(17, i, v45, 0, a3, v46);
-        sub_24A7C(3, i, v45 + 1, 0, a3, v46);
+        createUnit(17, i, v45, 0, a3, v46);
+        createUnit(3, i, v45 + 1, 0, a3, v46);
         v18 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
           *(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1),
           v18,
           a3);
-        sub_24A7C(4, i, v45 + 1, 0, a3, v46);
+        createUnit(4, i, v45 + 1, 0, a3, v46);
         v19 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
           *(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1),
           v19,
           a3);
-        sub_24A7C(15, i, v45 + 1, 0, a3, v46);
+        createUnit(15, i, v45 + 1, 0, a3, v46);
         v20 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
           *(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1),
           v20,
           a3);
-        sub_24A7C(16, i, v45 + 1, 0, a3, v46);
+        createUnit(16, i, v45 + 1, 0, a3, v46);
         v21 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
           *(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1),
           v21,
           a3);
-        sub_24A7C(0, i, v45 + 1, 0, a3, v46);
+        createUnit(0, i, v45 + 1, 0, a3, v46);
         v22 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)((char *)&off_87D55 + 200 * (v45 + 1) + 2 * v46 + gameDataOffset + 1),
@@ -55167,88 +55167,88 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
           (int)(&byte_7C6EA[467 * (*(_WORD *)((char *)&off_87D55 + 200 * v45 + 2 * v46 + gameDataOffset + 1) - 0x8000)]
               + gameDataOffset),
           a3);
-        sub_24A7C(5, i, v45, 0, a3, v46 + 2);
-        sub_24A7C(1, i, v45 + 1, 0, a3, v46 + 2);
-        sub_24A7C(16, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(5, i, v45, 0, a3, v46 + 2);
+        createUnit(1, i, v45 + 1, 0, a3, v46 + 2);
+        createUnit(16, i, v45 + 2, 0, a3, v46 + 2);
         v24 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v24,
           a3);
-        sub_24A7C(5, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(5, i, v45 + 2, 0, a3, v46 + 2);
         v25 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v25,
           a3);
-        sub_24A7C(15, i, v45 + 2, 0, a3, v46 + 2);
+        createUnit(15, i, v45 + 2, 0, a3, v46 + 2);
         v26 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5A[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v26,
           a3);
-        sub_24A7C(17, i, v45 + 1, 0, a3, v46 + 3);
-        sub_24A7C(17, i, v45 + 2, 0, a3, v46 + 3);
+        createUnit(17, i, v45 + 1, 0, a3, v46 + 3);
+        createUnit(17, i, v45 + 2, 0, a3, v46 + 3);
         v27 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v27,
           a3);
-        sub_24A7C(9, i, v45 + 2, 0, a3, v46 + 3);
+        createUnit(9, i, v45 + 2, 0, a3, v46 + 3);
         v28 = sub_202EC();
         sub_3B2DE(
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 2)] + 2 * v46 + gameDataOffset),
           *(unsigned __int16 *)((char *)&word_87D5C[100 * (v45 + 1)] + 2 * v46 + gameDataOffset),
           v28,
           a3);
-        sub_24A7C(0, i, v45 - 1, 0, a3, v46 - 1);
-        sub_24A7C(1, i, v45, 0, a3, v46 - 1);
+        createUnit(0, i, v45 - 1, 0, a3, v46 - 1);
+        createUnit(1, i, v45, 0, a3, v46 - 1);
         v29 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v29,
           a3);
-        sub_24A7C(3, i, v45, 0, a3, v46 - 1);
+        createUnit(3, i, v45, 0, a3, v46 - 1);
         v30 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v30,
           a3);
-        sub_24A7C(3, i, v45, 0, a3, v46 - 1);
+        createUnit(3, i, v45, 0, a3, v46 - 1);
         v31 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v31,
           a3);
-        sub_24A7C(0, i, v45, 0, a3, v46 - 1);
+        createUnit(0, i, v45, 0, a3, v46 - 1);
         v32 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v32,
           a3);
-        sub_24A7C(1, i, v45, 0, a3, v46 - 1);
+        createUnit(1, i, v45, 0, a3, v46 - 1);
         v33 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v33,
           a3);
-        sub_24A7C(1, i, v45, 0, a3, v46 - 1);
+        createUnit(1, i, v45, 0, a3, v46 - 1);
         v34 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
           *(_WORD *)(&byte_87D54[200 * (v45 - 1)] + 2 * v46 + gameDataOffset),
           v34,
           a3);
-        sub_24A7C(16, i, v45, 0, a3, v46 - 1);
+        createUnit(16, i, v45, 0, a3, v46 - 1);
         v35 = sub_202EC();
         sub_3B2DE(
           *(_WORD *)(&byte_87D54[200 * v45] + 2 * v46 + gameDataOffset),
@@ -55257,57 +55257,57 @@ int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
           a3);
         if ( *(_DWORD *)((char *)sub_22317 + 1423 * i + gameDataOffset) > 0 )
         {
-          sub_24A7C(0, i, v45 + 2, 0, a3, v46 - 1);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(0, i, v45 + 2, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v36 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v36,
             a3);
-          sub_24A7C(9, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(9, i, v45 + 1, 0, a3, v46 - 1);
           v37 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v37,
             a3);
-          sub_24A7C(9, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(9, i, v45 + 1, 0, a3, v46 - 1);
           v38 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v38,
             a3);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v39 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v39,
             a3);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v40 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v40,
             a3);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v41 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v41,
             a3);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v42 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
             *(_WORD *)(&byte_87D54[200 * (v45 + 2)] + 2 * v46 + gameDataOffset),
             v42,
             a3);
-          sub_24A7C(1, i, v45 + 1, 0, a3, v46 - 1);
+          createUnit(1, i, v45 + 1, 0, a3, v46 - 1);
           v43 = sub_202EC();
           sub_3B2DE(
             *(_WORD *)(&byte_87D54[200 * (v45 + 1)] + 2 * v46 + gameDataOffset),
@@ -57341,23 +57341,23 @@ void sub_6CC4C()
 }
 
 //----- (0006CC70) --------------------------------------------------------
-signed int __fastcall sub_6CC70(int a1, int a2, int a3)
+signed int __fastcall initClips(int a1, int a2, int a3)
 {
   int v3; // edx@1
   int v4; // ecx@1
 
-  sub_E68F0(a1, a2, a3);
+  initAllClipsCallbacks(a1, a2, a3);
   sub_959E0(0);
   sub_88E20(1);
   return sub_8A6D0((int)aStrategClash_d, v3, a3, v4);
 }
 
 //----- (0006CCAF) --------------------------------------------------------
-signed int sub_6CCAF()
+signed int registerClipFunctionsAll()
 {
-  sub_6D2BD();
-  sub_71FC8();
-  return sub_72EE7();
+  registerClipsFunctions2();
+  registerClipsFunctions();
+  return registerClipsFunctions3();
 }
 
 //----- (0006CCE0) --------------------------------------------------------
@@ -57399,7 +57399,7 @@ signed int __usercall sub_6CCE0@<eax>(long double a1@<st0>)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0006CDD0) --------------------------------------------------------
-signed int __usercall sub_6CDD0@<eax>(long double a1@<st0>)
+signed int __usercall playComputer@<eax>(long double a1@<st0>)
 {
   int v1; // edx@1
   int v2; // ecx@1
@@ -57440,10 +57440,10 @@ signed int __usercall sub_6CDD0@<eax>(long double a1@<st0>)
   sprintf(&v10, aIloscTwierdzDD, currentPlayer, v11);
   dword_1B02E0 = sub_AB260((int)&v10, v7, v8, a1);
   sub_A2000(-1, 200, a1);
-  sub_AA6B0(dword_1B02D4, a1);
-  sub_AA6B0(dword_1B02D8, a1);
-  sub_AA6B0(dword_1B02DC, a1);
-  return sub_AA6B0(dword_1B02E0, a1);
+  addClipsFact(dword_1B02D4, a1);
+  addClipsFact(dword_1B02D8, a1);
+  addClipsFact(dword_1B02DC, a1);
+  return addClipsFact(dword_1B02E0, a1);
 }
 // 222F6: using guessed type __int16 word_222F6;
 // 22317: using guessed type int sub_22317();
@@ -57510,38 +57510,38 @@ int __usercall sub_6D130@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0006D2BD) --------------------------------------------------------
-signed int sub_6D2BD()
+signed int registerClipsFunctions2()
 {
-  sub_A5910((int)aSwiatynia, 105, (int)sub_6D67E, (int)aSwiatynia00, (int)a22i);
-  sub_A5910((int)aKop_skarb, 105, (int)sub_6D6CA, (int)aKop_skarb00, (int)a11i);
-  sub_A5910((int)aPobierz_oddz_0, 105, (int)sub_6D706, (int)aPobierz_oddzia, (int)a00i);
-  sub_A5910((int)aPelny_port, 98, (int)sub_6D732, (int)aPelny_port00, (int)a00i);
-  sub_A5910((int)aJest_pracown_0, 98, (int)sub_6D75E, (int)aJest_pracownik, (int)a11i);
-  sub_A5910((int)aJednostka_bi_0, 98, (int)sub_6D79A, (int)aJednostka_bite, (int)a11i);
-  sub_A5910((int)aJest_droga, 98, (int)sub_6D7D6, (int)aJest_droga00, (int)a33i);
-  sub_A5910((int)aJest_droga_w_0, 98, (int)sub_6D832, (int)aJest_droga_w_p, (int)a33i);
-  sub_A5910((int)aJest_droga_w_2, 98, (int)sub_6D88E, (int)aJest_droga_w_1, (int)a33i);
-  sub_A5910((int)aJest_droga_d_0, 98, (int)sub_6D8EA, (int)aJest_droga_do, (int)a33i);
-  sub_A5910((int)aJest_droga_d_2, 98, (int)sub_6D946, (int)aJest_droga_d_1, (int)a33i);
-  sub_A5910((int)aJest_droga_d_4, 98, (int)sub_6D9A2, (int)aJest_droga_d_3, (int)a33i);
-  sub_A5910((int)aOddzial_w_za_0, 98, (int)sub_6D9FE, (int)aOddzial_w_zasi, (int)a33i);
-  sub_A5910((int)aBudowla_w_za_0, 98, (int)sub_6DA5A, (int)aBudowla_w_zasi, (int)a33i);
-  sub_A5910((int)aOdleglosc_od_0, 105, (int)sub_6DAB6, (int)aOdleglosc_od_o, (int)a33i);
-  sub_A5910((int)aSwiatynia_w__0, 98, (int)sub_6DB12, (int)aSwiatynia_w_za, (int)a33i);
-  sub_A5910((int)aSwiatynia_ok, 98, (int)sub_6DB6E, (int)aSwiatynia_ok00, (int)a33i);
-  sub_A5910((int)aMaszeruj, 105, (int)sub_6DBCA, (int)aMaszeruj00, (int)a33i);
-  sub_A5910((int)aMaszeruj_do__0, 105, (int)sub_6DC26, (int)aMaszeruj_do_sw, (int)a33i);
-  sub_A5910((int)aMaszeruj_bli_0, 105, (int)sub_6DC82, (int)aMaszeruj_blisk, (int)a33i);
-  sub_A5910((int)aAtakuj_oddzi_0, 105, (int)sub_6DCDE, (int)aAtakuj_oddzial, (int)a22i);
-  sub_A5910((int)aPrzejmuj_odd_0, 105, (int)sub_6DD2A, (int)aPrzejmuj_oddzi, (int)a22i);
-  sub_A5910((int)aUkryj_oddzial, 105, (int)sub_6DD76, (int)aUkryj_oddzial0, (int)a33i);
-  sub_A5910((int)aJest_armia, 98, (int)sub_6DDD2, (int)aJest_armia00, (int)a11i);
-  sub_A5910((int)aLiczba_jedno_0, 105, (int)sub_6DE0E, (int)aLiczba_jednost, (int)a11i);
-  sub_A5910((int)aAtakuj_budow_0, 105, (int)sub_6DE4A, (int)aAtakuj_budowle, (int)a22i);
-  sub_A5910((int)aJest_brod, 98, (int)sub_6DE96, (int)aJest_brod00, (int)a11i);
-  sub_A5910((int)aBuduj_droge, 98, (int)sub_6DED2, (int)aBuduj_droge00, (int)a11i);
-  sub_A5910((int)aBuduj_pulapke, 105, (int)sub_6DF0E, (int)aBuduj_pulapke0, (int)a33i);
-  return sub_A5910((int)aUnit_canmove, 105, (int)sub_6DF6A, (int)aUnit_canmove00, (int)a11i);
+  registerClipsCallback((int)aSwiatynia, 105, (int)sub_6D67E, (int)aSwiatynia00, (int)a22i);
+  registerClipsCallback((int)aKop_skarb, 105, (int)sub_6D6CA, (int)aKop_skarb00, (int)a11i);
+  registerClipsCallback((int)aPobierz_oddz_0, 105, (int)sub_6D706, (int)aPobierz_oddzia, (int)a00i);
+  registerClipsCallback((int)aPelny_port, 98, (int)sub_6D732, (int)aPelny_port00, (int)a00i);
+  registerClipsCallback((int)aJest_pracown_0, 98, (int)sub_6D75E, (int)aJest_pracownik, (int)a11i);
+  registerClipsCallback((int)aJednostka_bi_0, 98, (int)sub_6D79A, (int)aJednostka_bite, (int)a11i);
+  registerClipsCallback((int)aJest_droga, 98, (int)sub_6D7D6, (int)aJest_droga00, (int)a33i);
+  registerClipsCallback((int)aJest_droga_w_0, 98, (int)sub_6D832, (int)aJest_droga_w_p, (int)a33i);
+  registerClipsCallback((int)aJest_droga_w_2, 98, (int)sub_6D88E, (int)aJest_droga_w_1, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_0, 98, (int)sub_6D8EA, (int)aJest_droga_do, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_2, 98, (int)sub_6D946, (int)aJest_droga_d_1, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_4, 98, (int)sub_6D9A2, (int)aJest_droga_d_3, (int)a33i);
+  registerClipsCallback((int)aOddzial_w_za_0, 98, (int)sub_6D9FE, (int)aOddzial_w_zasi, (int)a33i);
+  registerClipsCallback((int)aBudowla_w_za_0, 98, (int)sub_6DA5A, (int)aBudowla_w_zasi, (int)a33i);
+  registerClipsCallback((int)aOdleglosc_od_0, 105, (int)sub_6DAB6, (int)aOdleglosc_od_o, (int)a33i);
+  registerClipsCallback((int)aSwiatynia_w__0, 98, (int)sub_6DB12, (int)aSwiatynia_w_za, (int)a33i);
+  registerClipsCallback((int)aSwiatynia_ok, 98, (int)sub_6DB6E, (int)aSwiatynia_ok00, (int)a33i);
+  registerClipsCallback((int)aMaszeruj, 105, (int)sub_6DBCA, (int)aMaszeruj00, (int)a33i);
+  registerClipsCallback((int)aMaszeruj_do__0, 105, (int)sub_6DC26, (int)aMaszeruj_do_sw, (int)a33i);
+  registerClipsCallback((int)aMaszeruj_bli_0, 105, (int)sub_6DC82, (int)aMaszeruj_blisk, (int)a33i);
+  registerClipsCallback((int)aAtakuj_oddzi_0, 105, (int)sub_6DCDE, (int)aAtakuj_oddzial, (int)a22i);
+  registerClipsCallback((int)aPrzejmuj_odd_0, 105, (int)sub_6DD2A, (int)aPrzejmuj_oddzi, (int)a22i);
+  registerClipsCallback((int)aUkryj_oddzial, 105, (int)sub_6DD76, (int)aUkryj_oddzial0, (int)a33i);
+  registerClipsCallback((int)aJest_armia, 98, (int)sub_6DDD2, (int)aJest_armia00, (int)a11i);
+  registerClipsCallback((int)aLiczba_jedno_0, 105, (int)sub_6DE0E, (int)aLiczba_jednost, (int)a11i);
+  registerClipsCallback((int)aAtakuj_budow_0, 105, (int)sub_6DE4A, (int)aAtakuj_budowle, (int)a22i);
+  registerClipsCallback((int)aJest_brod, 98, (int)sub_6DE96, (int)aJest_brod00, (int)a11i);
+  registerClipsCallback((int)aBuduj_droge, 98, (int)sub_6DED2, (int)aBuduj_droge00, (int)a11i);
+  registerClipsCallback((int)aBuduj_pulapke, 105, (int)sub_6DF0E, (int)aBuduj_pulapke0, (int)a33i);
+  return registerClipsCallback((int)aUnit_canmove, 105, (int)sub_6DF6A, (int)aUnit_canmove00, (int)a11i);
 }
 
 //----- (0006D67E) --------------------------------------------------------
@@ -60086,51 +60086,51 @@ signed int __usercall sub_71F0B@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00071FC8) --------------------------------------------------------
-signed int sub_71FC8()
+signed int registerClipsFunctions()
 {
-  sub_A5910((int)aLeczenie, 118, (int)sub_7251C, (int)aLeczenie, (int)a11i_0);
-  sub_A5910((int)aSzkolenie, 118, (int)sub_7254A, (int)aSzkolenie, (int)a11i_0);
-  sub_A5910((int)aPalBudowle, 118, (int)sub_72578, (int)aPalbudowle, (int)a11i_0);
-  sub_A5910((int)aUpgradeWall, 118, (int)sub_725A6, (int)aUpgradewall, (int)a11i_0);
-  sub_A5910((int)aZmienPodatek, 118, (int)sub_725D4, (int)aZmienpodatek, (int)a22iif);
-  sub_A5910((int)aRemoveLicence, 118, (int)sub_72612, (int)aRemovelicence, (int)a22i_0);
-  sub_A5910((int)aZacznijLeczeni, 118, (int)sub_7264C, (int)aZacznijleczeni, (int)a22i_0);
-  sub_A5910((int)aZacznijSzkolen, 118, (int)sub_72686, (int)aZacznijszkolen, (int)a22i_0);
-  sub_A5910((int)aZacznijProdukc, 118, (int)sub_726C0, (int)aZacznijprodukc, (int)a22i_0);
-  sub_A5910((int)aKupSzkola, 98, (int)sub_72772, (int)aKupszkola, (int)a11i_0);
-  sub_A5910((int)aKupKuznia, 98, (int)sub_727A8, (int)aKupkuznia, (int)a11i_0);
-  sub_A5910((int)aIsLicence, 98, (int)sub_72730, (int)aIslicence, (int)a22i_0);
-  sub_A5910((int)aBuyLicence, 98, (int)sub_72911, (int)aBuylicence, (int)a22i_0);
-  sub_A5910((int)aKupSzpital, 98, (int)sub_72989, (int)aKupszpital, (int)a11i_0);
-  sub_A5910((int)aBudujZamek, 98, (int)sub_728AC, (int)aBudujzamek, (int)a55iiiiis);
-  sub_A5910((int)aKupKoszary, 98, (int)sub_72953, (int)aKupkoszary, (int)a11i_0);
-  sub_A5910((int)aKupWarsztat, 98, (int)sub_72A61, (int)aKupwarsztat, (int)a11i_0);
-  sub_A5910((int)aIsProduction, 98, (int)sub_72ACD, (int)aIsproduction, (int)a11i_0);
-  sub_A5910((int)aCzyMinimalny, 98, (int)sub_72B39, (int)aCzyminimalny, (int)a44i);
-  sub_A5910((int)aCanBuyLicence, 98, (int)sub_72B93, (int)aCanbuylicence, (int)a22i_0);
-  sub_A5910((int)aIsProductionAn, 98, (int)sub_72CB9, (int)aIsproductionan, (int)a22i_0);
-  sub_A5910((int)aMaxIloscOddzia, 98, (int)sub_72D8B, (int)aMaxiloscoddzia, (int)a11i_0);
-  sub_A5910((int)aJednostkiDoSzk, 98, (int)sub_72D55, (int)aJednostkidoszk, (int)a11i_0);
-  sub_A5910((int)aJednostkiDoSzp, 98, (int)sub_72E03, (int)aJednostkidoszp, (int)a11i_0);
-  sub_A5910((int)aJestJednostkaW, 98, (int)sub_72DC1, (int)aJestjednostkaw, (int)a22i_0);
-  sub_A5910((int)aPodatek, 105, (int)sub_726FA, (int)aPodatek, (int)a11i_0);
-  sub_A5910((int)aPieniadze, 105, (int)sub_727DE, (int)aPieniadze, (int)a11i_0);
-  sub_A5910((int)aSilaMurow, 105, (int)sub_72814, (int)aSilamurow, (int)a11i_0);
-  sub_A5910((int)aSilaZamku, 105, (int)sub_7284A, (int)aSilazamku, (int)a11i_0);
-  sub_A5910((int)aNumerTury, 105, (int)sub_72880, (int)aNumertury, (int)a00i_0);
-  sub_A5910((int)aPoziomTech, 105, (int)sub_729BF, (int)aPoziomtech, (int)a11i_0);
-  sub_A5910((int)aZadowolenie, 105, (int)sub_72A97, (int)aZadowolenie, (int)a11i_0);
-  sub_A5910((int)aTypBudowli, 105, (int)sub_729F5, (int)aTypbudowli, (int)a11i_0);
-  sub_A5910((int)aSilaGracza, 105, (int)sub_72A2B, (int)aSilagracza, (int)a11i_0);
-  sub_A5910((int)aIloscChlopow, 105, (int)sub_72B03, (int)aIloscchlopow, (int)a11i_0);
-  sub_A5910((int)aLicencjaIndex, 105, (int)sub_72BD5, (int)aLicencjaindex, (int)a22i_0);
-  sub_A5910((int)aLicencjaInd, 105, (int)sub_72C17, (int)aLicencjaind, (int)a11i_0);
-  sub_A5910((int)aIloscOddzialow, 105, (int)sub_72C83, (int)aIloscoddzialow, (int)a11i_0);
-  sub_A5910((int)aCanUpgradeWall, 105, (int)sub_72C4D, (int)aCanupgradewall, (int)a11i_0);
-  sub_A5910((int)aWyprowadzChlop, 105, (int)sub_72CFB, (int)aWyprowadzchlop, (int)a44i);
-  sub_A5910((int)aWyprowadzenieO, 105, (int)sub_72E39, (int)aWyprowadzenieo, (int)a22i_0);
-  sub_A5910((int)aWyprowadzeni_1, 105, (int)sub_72E7B, (int)aWyprowadzeni_0, (int)a11i_0);
-  return sub_A5910((int)aNazwaZamku, 115, (int)sub_72EB1, (int)aNazwazamku, (int)a11i_0);
+  registerClipsCallback((int)aLeczenie, 118, (int)sub_7251C, (int)aLeczenie, (int)a11i_0);
+  registerClipsCallback((int)aSzkolenie, 118, (int)sub_7254A, (int)aSzkolenie, (int)a11i_0);
+  registerClipsCallback((int)aPalBudowle, 118, (int)sub_72578, (int)aPalbudowle, (int)a11i_0);
+  registerClipsCallback((int)aUpgradeWall, 118, (int)sub_725A6, (int)aUpgradewall, (int)a11i_0);
+  registerClipsCallback((int)aZmienPodatek, 118, (int)sub_725D4, (int)aZmienpodatek, (int)a22iif);
+  registerClipsCallback((int)aRemoveLicence, 118, (int)sub_72612, (int)aRemovelicence, (int)a22i_0);
+  registerClipsCallback((int)aZacznijLeczeni, 118, (int)sub_7264C, (int)aZacznijleczeni, (int)a22i_0);
+  registerClipsCallback((int)aZacznijSzkolen, 118, (int)sub_72686, (int)aZacznijszkolen, (int)a22i_0);
+  registerClipsCallback((int)aZacznijProdukc, 118, (int)sub_726C0, (int)aZacznijprodukc, (int)a22i_0);
+  registerClipsCallback((int)aKupSzkola, 98, (int)sub_72772, (int)aKupszkola, (int)a11i_0);
+  registerClipsCallback((int)aKupKuznia, 98, (int)sub_727A8, (int)aKupkuznia, (int)a11i_0);
+  registerClipsCallback((int)aIsLicence, 98, (int)sub_72730, (int)aIslicence, (int)a22i_0);
+  registerClipsCallback((int)aBuyLicence, 98, (int)sub_72911, (int)aBuylicence, (int)a22i_0);
+  registerClipsCallback((int)aKupSzpital, 98, (int)sub_72989, (int)aKupszpital, (int)a11i_0);
+  registerClipsCallback((int)aBudujZamek, 98, (int)sub_728AC, (int)aBudujzamek, (int)a55iiiiis);
+  registerClipsCallback((int)aKupKoszary, 98, (int)sub_72953, (int)aKupkoszary, (int)a11i_0);
+  registerClipsCallback((int)aKupWarsztat, 98, (int)sub_72A61, (int)aKupwarsztat, (int)a11i_0);
+  registerClipsCallback((int)aIsProduction, 98, (int)sub_72ACD, (int)aIsproduction, (int)a11i_0);
+  registerClipsCallback((int)aCzyMinimalny, 98, (int)sub_72B39, (int)aCzyminimalny, (int)a44i);
+  registerClipsCallback((int)aCanBuyLicence, 98, (int)sub_72B93, (int)aCanbuylicence, (int)a22i_0);
+  registerClipsCallback((int)aIsProductionAn, 98, (int)sub_72CB9, (int)aIsproductionan, (int)a22i_0);
+  registerClipsCallback((int)aMaxIloscOddzia, 98, (int)sub_72D8B, (int)aMaxiloscoddzia, (int)a11i_0);
+  registerClipsCallback((int)aJednostkiDoSzk, 98, (int)sub_72D55, (int)aJednostkidoszk, (int)a11i_0);
+  registerClipsCallback((int)aJednostkiDoSzp, 98, (int)sub_72E03, (int)aJednostkidoszp, (int)a11i_0);
+  registerClipsCallback((int)aJestJednostkaW, 98, (int)sub_72DC1, (int)aJestjednostkaw, (int)a22i_0);
+  registerClipsCallback((int)aPodatek, 105, (int)sub_726FA, (int)aPodatek, (int)a11i_0);
+  registerClipsCallback((int)aPieniadze, 105, (int)sub_727DE, (int)aPieniadze, (int)a11i_0);
+  registerClipsCallback((int)aSilaMurow, 105, (int)sub_72814, (int)aSilamurow, (int)a11i_0);
+  registerClipsCallback((int)aSilaZamku, 105, (int)sub_7284A, (int)aSilazamku, (int)a11i_0);
+  registerClipsCallback((int)aNumerTury, 105, (int)sub_72880, (int)aNumertury, (int)a00i_0);
+  registerClipsCallback((int)aPoziomTech, 105, (int)sub_729BF, (int)aPoziomtech, (int)a11i_0);
+  registerClipsCallback((int)aZadowolenie, 105, (int)sub_72A97, (int)aZadowolenie, (int)a11i_0);
+  registerClipsCallback((int)aTypBudowli, 105, (int)sub_729F5, (int)aTypbudowli, (int)a11i_0);
+  registerClipsCallback((int)aSilaGracza, 105, (int)sub_72A2B, (int)aSilagracza, (int)a11i_0);
+  registerClipsCallback((int)aIloscChlopow, 105, (int)sub_72B03, (int)aIloscchlopow, (int)a11i_0);
+  registerClipsCallback((int)aLicencjaIndex, 105, (int)sub_72BD5, (int)aLicencjaindex, (int)a22i_0);
+  registerClipsCallback((int)aLicencjaInd, 105, (int)sub_72C17, (int)aLicencjaind, (int)a11i_0);
+  registerClipsCallback((int)aIloscOddzialow, 105, (int)sub_72C83, (int)aIloscoddzialow, (int)a11i_0);
+  registerClipsCallback((int)aCanUpgradeWall, 105, (int)sub_72C4D, (int)aCanupgradewall, (int)a11i_0);
+  registerClipsCallback((int)aWyprowadzChlop, 105, (int)sub_72CFB, (int)aWyprowadzchlop, (int)a44i);
+  registerClipsCallback((int)aWyprowadzenieO, 105, (int)sub_72E39, (int)aWyprowadzenieo, (int)a22i_0);
+  registerClipsCallback((int)aWyprowadzeni_1, 105, (int)sub_72E7B, (int)aWyprowadzeni_0, (int)a11i_0);
+  return registerClipsCallback((int)aNazwaZamku, 115, (int)sub_72EB1, (int)aNazwazamku, (int)a11i_0);
 }
 // 72880: using guessed type int sub_72880();
 
@@ -60611,27 +60611,27 @@ int __usercall sub_72EB1@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long do
 }
 
 //----- (00072EE7) --------------------------------------------------------
-signed int sub_72EE7()
+signed int registerClipsFunctions3()
 {
-  sub_A5910((int)aWejdzDoZamku, 98, (int)sub_73153, (int)aWejdzdozamku, (int)a22i_1);
-  sub_A5910((int)aDolaczDoOddzia, 98, (int)sub_73195, (int)aDolaczdoarmii, (int)a22i_1);
-  sub_A5910((int)aPrzegrupujOddz, 98, (int)sub_731D7, (int)aPrzegrupujarmi, (int)a22i_1);
-  sub_A5910((int)aPrzegrupujZame, 98, (int)sub_73219, (int)aPrzegrupujzame, (int)a22i_1);
-  sub_A5910((int)aLiczbaWolnychM, 105, (int)sub_73321, (int)aLiczbawolnychm, (int)a11i_1);
-  sub_A5910((int)aZnajdzDrogeWPo, 98, (int)sub_7338D, (int)aZnajdzdrogewpo, (int)a22i_1);
-  sub_A5910((int)aMocPrzeciwnika, 105, (int)sub_73357, (int)aMocprzeciwnika, (int)a11i_1);
-  sub_A5910((int)aStanOsobArmii, 105, (int)sub_7325B, (int)aStanosobarmii, (int)a22i_1);
-  sub_A5910((int)aArmiaMaJednost, 98, (int)sub_7329D, (int)aArmiamajednost, (int)a22i_1);
-  sub_A5910((int)aArmiaTylkoJedn, 98, (int)sub_732DF, (int)aArmiatylkojedn, (int)a22i_1);
-  sub_A5910((int)aMaJednostkiDoL, 98, (int)sub_733CF, (int)aMajednostkidol, (int)a11i_1);
-  sub_A5910((int)aZnajdzZamekDoL, 98, (int)sub_73405, (int)aZnajdzzamekdol, (int)a11i_1);
-  sub_A5910((int)aIdzDoLeczenia, 98, (int)sub_7343B, (int)aIdzdoleczenia, (int)a11i_1);
-  sub_A5910((int)aJestZarazaWZam, 98, (int)sub_73471, (int)aJestzarazawzam, (int)a11i_1);
-  sub_A5910((int)aJestZarazaWOdd, 98, (int)sub_734A7, (int)aJestzarazawodd, (int)a11i_1);
-  sub_A5910((int)aOdlaczJednostk, 98, (int)sub_734DD, (int)aOdlaczjednostk, (int)a11i_1);
-  sub_A5910((int)aOdlaczJednos_0, 98, (int)sub_73513, (int)aOdlaczjednos_0, (int)a22i_1);
-  sub_A5910((int)aMaszerujWzdluz, 98, (int)sub_73555, (int)aMaszerujwzdluz, (int)a11i_1);
-  return sub_A5910((int)aZnajdzNajlepsz, 105, (int)sub_7358B, (int)aZnajdz_najleps, (int)a55i);
+  registerClipsCallback((int)aWejdzDoZamku, 98, (int)sub_73153, (int)aWejdzdozamku, (int)a22i_1);
+  registerClipsCallback((int)aDolaczDoOddzia, 98, (int)sub_73195, (int)aDolaczdoarmii, (int)a22i_1);
+  registerClipsCallback((int)aPrzegrupujOddz, 98, (int)sub_731D7, (int)aPrzegrupujarmi, (int)a22i_1);
+  registerClipsCallback((int)aPrzegrupujZame, 98, (int)sub_73219, (int)aPrzegrupujzame, (int)a22i_1);
+  registerClipsCallback((int)aLiczbaWolnychM, 105, (int)sub_73321, (int)aLiczbawolnychm, (int)a11i_1);
+  registerClipsCallback((int)aZnajdzDrogeWPo, 98, (int)sub_7338D, (int)aZnajdzdrogewpo, (int)a22i_1);
+  registerClipsCallback((int)aMocPrzeciwnika, 105, (int)sub_73357, (int)aMocprzeciwnika, (int)a11i_1);
+  registerClipsCallback((int)aStanOsobArmii, 105, (int)sub_7325B, (int)aStanosobarmii, (int)a22i_1);
+  registerClipsCallback((int)aArmiaMaJednost, 98, (int)sub_7329D, (int)aArmiamajednost, (int)a22i_1);
+  registerClipsCallback((int)aArmiaTylkoJedn, 98, (int)sub_732DF, (int)aArmiatylkojedn, (int)a22i_1);
+  registerClipsCallback((int)aMaJednostkiDoL, 98, (int)sub_733CF, (int)aMajednostkidol, (int)a11i_1);
+  registerClipsCallback((int)aZnajdzZamekDoL, 98, (int)sub_73405, (int)aZnajdzzamekdol, (int)a11i_1);
+  registerClipsCallback((int)aIdzDoLeczenia, 98, (int)sub_7343B, (int)aIdzdoleczenia, (int)a11i_1);
+  registerClipsCallback((int)aJestZarazaWZam, 98, (int)sub_73471, (int)aJestzarazawzam, (int)a11i_1);
+  registerClipsCallback((int)aJestZarazaWOdd, 98, (int)sub_734A7, (int)aJestzarazawodd, (int)a11i_1);
+  registerClipsCallback((int)aOdlaczJednostk, 98, (int)sub_734DD, (int)aOdlaczjednostk, (int)a11i_1);
+  registerClipsCallback((int)aOdlaczJednos_0, 98, (int)sub_73513, (int)aOdlaczjednos_0, (int)a22i_1);
+  registerClipsCallback((int)aMaszerujWzdluz, 98, (int)sub_73555, (int)aMaszerujwzdluz, (int)a11i_1);
+  return registerClipsCallback((int)aZnajdzNajlepsz, 105, (int)sub_7358B, (int)aZnajdz_najleps, (int)a55i);
 }
 
 //----- (00073153) --------------------------------------------------------
@@ -61742,13 +61742,13 @@ int __fastcall sub_75223(int a1, int a2, int a3, int a4, signed int a5)
 // 75223: could not find valid save-restore pair for ebx
 
 //----- (000753B0) --------------------------------------------------------
-signed int __usercall sub_753B0@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7)
+signed int __usercall addUnit@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7)
 {
   int *v8; // [sp+0h] [bp-Ch]@1
   int v9; // [sp+4h] [bp-8h]@1
   signed int v10; // [sp+8h] [bp-4h]@1
 
-  sub_24A7C(a5, a4, a2, 0, a1, a3);
+  createUnit(a5, a4, a2, 0, a1, a3);
   v8 = &a7;
   v9 = a6;
   v10 = 1;
@@ -61773,13 +61773,13 @@ signed int __usercall sub_753B0@<eax>(long double a1@<st0>, int a2, int a3, int 
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (000754A7) --------------------------------------------------------
-int __usercall sub_754A7@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9)
+int __usercall addCastle@<eax>(long double a1@<st0>, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9)
 {
   int *v10; // [sp+4h] [bp-Ch]@1
   int v11; // [sp+8h] [bp-8h]@1
   signed int v12; // [sp+Ch] [bp-4h]@1
 
-  sub_24A7C(a7, a4, a2, 0, a1, a3);
+  createUnit(a7, a4, a2, 0, a1, a3);
   v10 = &a9;
   v11 = a8;
   v12 = 1;
@@ -61814,13 +61814,13 @@ int __usercall sub_754A7@<eax>(long double a1@<st0>, int a2, int a3, int a4, int
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (000756BA) --------------------------------------------------------
-int __usercall sub_756BA@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap1@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
   int i; // [sp+0h] [bp-4h]@1
 
-  sub_66464((int)aK_mapa1l_map, a2);
+  loadMap((int)aK_mapa1l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 0;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -61832,17 +61832,17 @@ int __usercall sub_756BA@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(&byte_222FC[gameDataOffset], aAlan);
   v2 = strcpy((char *)&loc_2288B + gameDataOffset, aBochuwit);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 30, 42, 0, 2, (int)aCantbelly_2, 17, 0, 0);
-  sub_753B0(a2, 30, 44, 0, 1, 9, 16);
-  sub_753B0(a2, 31, 44, 0, 0, 0, 0);
-  sub_753B0(a2, 32, 44, 0, 9, 9, -1);
-  sub_753B0(a2, 46, 45, 1, 9, 15, 1);
-  sub_753B0(a2, 15, 6, 1, 0, 0, 0);
-  sub_753B0(a2, 48, 14, 1, 0, 0, 0);
-  sub_24A7C(9, 1, 35, 0, a2, 11);
-  sub_24A7C(9, 1, 49, 0, a2, 39);
-  sub_24A7C(9, 1, 40, 0, a2, 3);
-  sub_24A7C(1, 1, 19, 0, a2, 12);
+  addCastle(a2, 30, 42, 0, 2, (int)aCantbelly_2, 17, 0, 0);
+  addUnit(a2, 30, 44, 0, 1, 9, 16);
+  addUnit(a2, 31, 44, 0, 0, 0, 0);
+  addUnit(a2, 32, 44, 0, 9, 9, -1);
+  addUnit(a2, 46, 45, 1, 9, 15, 1);
+  addUnit(a2, 15, 6, 1, 0, 0, 0);
+  addUnit(a2, 48, 14, 1, 0, 0, 0);
+  createUnit(9, 1, 35, 0, a2, 11);
+  createUnit(9, 1, 49, 0, a2, 39);
+  createUnit(9, 1, 40, 0, a2, 3);
+  createUnit(1, 1, 19, 0, a2, 12);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -61865,14 +61865,14 @@ signed int sub_758B7()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00075931) --------------------------------------------------------
-int __usercall sub_75931@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap2@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
   int v4; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aK_mapa2l_map, a2);
+  loadMap((int)aK_mapa2l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 1;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -61886,15 +61886,15 @@ int __usercall sub_75931@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(&byte_222FC[gameDataOffset], aAlan);
   v2 = strcpy((char *)&loc_2288B + gameDataOffset, aIanos);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 44, 46, 0, 2, (int)aStormus, 17, 17, 0);
-  sub_753B0(a2, 44, 48, 0, 9, 9, -1);
-  v4 = sub_754A7(a2, 1, 23, 1, 2, (int)aDrakefly, 17, 0, 1);
+  addCastle(a2, 44, 46, 0, 2, (int)aStormus, 17, 17, 0);
+  addUnit(a2, 44, 48, 0, 9, 9, -1);
+  v4 = addCastle(a2, 1, 23, 1, 2, (int)aDrakefly, 17, 0, 1);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v4 + gameDataOffset + 4) = -1;
   sub_71F0B(v4, a2);
-  sub_753B0(a2, 1, 25, 1, 9, 15, 1);
-  sub_753B0(a2, 44, 24, 1, 0, 0, 0);
-  sub_753B0(a2, 18, 48, 1, 0, 0, 9);
-  sub_753B0(a2, 12, 0, 1, 0, 0, 0);
+  addUnit(a2, 1, 25, 1, 9, 15, 1);
+  addUnit(a2, 44, 24, 1, 0, 0, 0);
+  addUnit(a2, 18, 48, 1, 0, 0, 9);
+  addUnit(a2, 12, 0, 1, 0, 0, 0);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -61928,7 +61928,7 @@ bool sub_75BB2()
 }
 
 //----- (00075C00) --------------------------------------------------------
-int __usercall sub_75C00@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap3@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -61943,7 +61943,7 @@ int __usercall sub_75C00@<eax>(int a1@<ebx>, long double a2@<st0>)
   int result; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aK_mapa3l_map, a2);
+  loadMap((int)aK_mapa3l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 2;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -61955,26 +61955,26 @@ int __usercall sub_75C00@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(&byte_222FC[gameDataOffset], aAlan);
   v2 = strcpy((char *)&loc_2288B + gameDataOffset, aBochuwit_0);
   sub_2238E(v2, v3, a1);
-  sub_753B0(a2, 98, 24, 0, 9, -1, i);
-  sub_753B0(a2, 98, 25, 0, 0, 0, 0);
-  sub_753B0(a2, 97, 25, 0, 5, 5, 15);
-  sub_753B0(a2, 97, 24, 0, 16, 16, -1);
-  sub_753B0(a2, 98, 26, 0, 13, -1, v4);
-  v6 = sub_754A7(a2, 41, 68, 1, 2, (int)aTregRock, 17, -1, v5);
+  addUnit(a2, 98, 24, 0, 9, -1, i);
+  addUnit(a2, 98, 25, 0, 0, 0, 0);
+  addUnit(a2, 97, 25, 0, 5, 5, 15);
+  addUnit(a2, 97, 24, 0, 16, 16, -1);
+  addUnit(a2, 98, 26, 0, 13, -1, v4);
+  v6 = addCastle(a2, 41, 68, 1, 2, (int)aTregRock, 17, -1, v5);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v6 + gameDataOffset + 4) = -1;
   sub_71F0B(v6, a2);
-  sub_753B0(a2, 83, 16, 1, 15, 1, 1);
-  sub_753B0(a2, 69, 46, 1, 0, 0, 0);
-  sub_753B0(a2, 87, 61, 1, 5, 5, 9);
-  sub_753B0(a2, 52, 58, 1, 9, 9, 9);
-  sub_753B0(a2, 40, 18, 1, 0, 0, 0);
-  sub_753B0(a2, 91, 6, 1, 9, -1, v7);
-  sub_753B0(a2, 85, 9, 1, 9, -1, v8);
-  sub_753B0(a2, 43, 52, 1, 9, -1, v9);
-  sub_753B0(a2, 68, 68, 1, 1, -1, v10);
-  sub_753B0(a2, 35, 69, 1, 1, -1, v11);
-  sub_753B0(a2, 94, 77, 1, 0, 0, 0);
-  sub_753B0(a2, 74, 31, 1, 0, 0, 0);
+  addUnit(a2, 83, 16, 1, 15, 1, 1);
+  addUnit(a2, 69, 46, 1, 0, 0, 0);
+  addUnit(a2, 87, 61, 1, 5, 5, 9);
+  addUnit(a2, 52, 58, 1, 9, 9, 9);
+  addUnit(a2, 40, 18, 1, 0, 0, 0);
+  addUnit(a2, 91, 6, 1, 9, -1, v7);
+  addUnit(a2, 85, 9, 1, 9, -1, v8);
+  addUnit(a2, 43, 52, 1, 9, -1, v9);
+  addUnit(a2, 68, 68, 1, 1, -1, v10);
+  addUnit(a2, 35, 69, 1, 1, -1, v11);
+  addUnit(a2, 94, 77, 1, 0, 0, 0);
+  addUnit(a2, 74, 31, 1, 0, 0, 0);
   sub_6CCE0(a2);
   sub_661C4();
   *(_DWORD *)((char *)&loc_22303 + gameDataOffset + 4) = 91;
@@ -61996,7 +61996,7 @@ bool sub_75EE5()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00075F52) --------------------------------------------------------
-int __usercall sub_75F52@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap4@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62007,7 +62007,7 @@ int __usercall sub_75F52@<eax>(int a1@<ebx>, long double a2@<st0>)
   signed int j; // [sp+0h] [bp-8h]@4
   signed int k; // [sp+0h] [bp-8h]@7
 
-  sub_66464((int)aK_mapa4j_map, a2);
+  loadMap((int)aK_mapa4j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 3;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62024,42 +62024,42 @@ int __usercall sub_75F52@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aSirWenom);
   v2 = strcpy(gameDataOffset + 144297, aLordGorio);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 21, 21, 0, 1, (int)aUghuata, 17, -1, i);
+  v4 = addCastle(a2, 21, 21, 0, 1, (int)aUghuata, 17, -1, i);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v4 + gameDataOffset + 4) = -1;
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) = 300;
   sub_71F0B(v4, a2);
-  sub_753B0(a2, 20, 20, 0, 12, 9, 9);
-  sub_753B0(a2, 23, 20, 0, 5, 5, 16);
-  sub_753B0(a2, 20, 23, 0, 9, 9, 3);
-  sub_753B0(a2, 23, 23, 0, 2, 2, 2);
+  addUnit(a2, 20, 20, 0, 12, 9, 9);
+  addUnit(a2, 23, 20, 0, 5, 5, 16);
+  addUnit(a2, 20, 23, 0, 9, 9, 3);
+  addUnit(a2, 23, 23, 0, 2, 2, 2);
   for ( j = 0; j < 10; ++j )
     *((_BYTE *)&loc_23EF5 + 725 * *(_WORD *)((char *)&loc_88F7C + gameDataOffset) + 31 * j + gameDataOffset) = sub_2C7F6(5, 20);
-  sub_753B0(a2, 22, 23, 0, 17, 17, 17);
-  sub_753B0(a2, 41, 34, 1, 15, 15, 1);
-  sub_753B0(a2, 13, 31, 1, 2, 2, 1);
-  sub_753B0(a2, 15, 24, 1, 5, 5, 5);
-  sub_753B0(a2, 24, 13, 1, 9, 9, 15);
-  sub_753B0(a2, 37, 22, 1, 6, 6, 0);
-  sub_753B0(a2, 12, 0, 1, 12, 12, 12);
+  addUnit(a2, 22, 23, 0, 17, 17, 17);
+  addUnit(a2, 41, 34, 1, 15, 15, 1);
+  addUnit(a2, 13, 31, 1, 2, 2, 1);
+  addUnit(a2, 15, 24, 1, 5, 5, 5);
+  addUnit(a2, 24, 13, 1, 9, 9, 15);
+  addUnit(a2, 37, 22, 1, 6, 6, 0);
+  addUnit(a2, 12, 0, 1, 12, 12, 12);
   for ( k = 0; k < 10; ++k )
   {
     v5 = 725 * *(unsigned __int16 *)((char *)&word_886B6 + gameDataOffset) + gameDataOffset + 31 * k;
     *(_BYTE *)(v5 + 147192) &= 0xFCu;
     *(_BYTE *)(v5 + 147192) |= 1u;
   }
-  sub_753B0(a2, 10, 27, 2, 1, 1, 1);
-  sub_753B0(a2, 21, 48, 2, 0, 0, 0);
-  sub_753B0(a2, 29, 15, 2, 5, 16, 16);
-  sub_753B0(a2, 6, 20, 2, 9, 9, 9);
-  sub_753B0(a2, 1, 9, 2, 26, 26, 26);
-  sub_753B0(a2, 40, 1, 2, 27, 27, 28);
-  sub_753B0(a2, 23, 43, 3, 15, 1, 16);
-  sub_753B0(a2, 39, 31, 3, 0, 0, 0);
+  addUnit(a2, 10, 27, 2, 1, 1, 1);
+  addUnit(a2, 21, 48, 2, 0, 0, 0);
+  addUnit(a2, 29, 15, 2, 5, 16, 16);
+  addUnit(a2, 6, 20, 2, 9, 9, 9);
+  addUnit(a2, 1, 9, 2, 26, 26, 26);
+  addUnit(a2, 40, 1, 2, 27, 27, 28);
+  addUnit(a2, 23, 43, 3, 15, 1, 16);
+  addUnit(a2, 39, 31, 3, 0, 0, 0);
   v6 = 725 * *(_WORD *)((char *)&loc_89C0B + gameDataOffset + 1) + gameDataOffset;
   *((_BYTE *)&loc_23FB2 + v6) |= 3u;
-  sub_753B0(a2, 39, 35, 3, 9, 9, 3);
-  sub_753B0(a2, 49, 48, 3, 5, 5, 5);
-  sub_753B0(a2, 1, 47, 3, 8, 8, 8);
+  addUnit(a2, 39, 35, 3, 9, 9, 3);
+  addUnit(a2, 49, 48, 3, 5, 5, 5);
+  addUnit(a2, 1, 47, 3, 8, 8, 8);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -62084,7 +62084,7 @@ bool sub_76459()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (000764C6) --------------------------------------------------------
-int __usercall sub_764C6@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap5@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62096,7 +62096,7 @@ int __usercall sub_764C6@<eax>(int a1@<ebx>, long double a2@<st0>)
   int j; // [sp+0h] [bp-8h]@4
   int v11; // [sp+4h] [bp-4h]@4
 
-  sub_66464((int)aK_mapa5j_map, a2);
+  loadMap((int)aK_mapa5j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 4;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62110,13 +62110,13 @@ int __usercall sub_764C6@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_2288B + gameDataOffset, aAgordehIi);
   v2 = strcpy((char *)&loc_22E1A + gameDataOffset, aMcdonowan_0);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 41, 48, 0, 2, (int)aTotaweon, 17, 17, 17);
-  sub_753B0(a2, 41, 50, 0, 1, 1, 16);
-  sub_753B0(a2, 42, 50, 0, 5, 0, 0);
-  sub_753B0(a2, 43, 50, 0, 9, 9, 16);
-  v11 = sub_754A7(a2, 56, 69, 1, 2, (int)aHopenberg, 17, 9, 9);
+  addCastle(a2, 41, 48, 0, 2, (int)aTotaweon, 17, 17, 17);
+  addUnit(a2, 41, 50, 0, 1, 1, 16);
+  addUnit(a2, 42, 50, 0, 5, 0, 0);
+  addUnit(a2, 43, 50, 0, 9, 9, 16);
+  v11 = addCastle(a2, 56, 69, 1, 2, (int)aHopenberg, 17, 9, 9);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v11 + gameDataOffset + 4) = 9;
-  sub_753B0(a2, 56, 71, 1, 9, 9, -1);
+  addUnit(a2, 56, 71, 1, 9, 9, -1);
   sub_59749(*(_WORD *)((char *)&loc_8A99F + gameDataOffset + 5), v11, a2);
   for ( j = 0; j < 12; ++j )
     *((_BYTE *)&loc_7C708 + 467 * v11 + 31 * j + gameDataOffset) |= 3u;
@@ -62125,20 +62125,20 @@ int __usercall sub_764C6@<eax>(int a1@<ebx>, long double a2@<st0>)
   *(&byte_7C8AD[467 * v11] + gameDataOffset) = 33;
   *(&byte_7C8AE[467 * v11] + gameDataOffset) = 0;
   sub_71F0B(v11, a2);
-  sub_753B0(a2, 55, 71, 1, 2, 2, 1);
-  sub_753B0(a2, 56, 71, 1, 9, 9, 9);
-  sub_753B0(a2, 57, 71, 1, 5, 5, 5);
-  v4 = sub_754A7(a2, 32, 36, 2, 2, (int)aJolarion, 17, 9, 9);
+  addUnit(a2, 55, 71, 1, 2, 2, 1);
+  addUnit(a2, 56, 71, 1, 9, 9, 9);
+  addUnit(a2, 57, 71, 1, 5, 5, 5);
+  v4 = addCastle(a2, 32, 36, 2, 2, (int)aJolarion, 17, 9, 9);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v4 + gameDataOffset + 4) = -1;
   sub_71F0B(v4, a2);
-  v5 = sub_754A7(a2, 50, 23, 2, 2, (int)aAkserion, 17, -1, j);
+  v5 = addCastle(a2, 50, 23, 2, 2, (int)aAkserion, 17, -1, j);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v5 + gameDataOffset + 4) = -1;
   sub_71F0B(v5, a2);
-  sub_753B0(a2, 50, 25, 2, 9, 15, 5);
-  v7 = sub_754A7(a2, 25, 48, 2, 2, (int)aBodeon, 17, -1, v6);
+  addUnit(a2, 50, 25, 2, 9, 15, 5);
+  v7 = addCastle(a2, 25, 48, 2, 2, (int)aBodeon, 17, -1, v6);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v7 + gameDataOffset + 4) = -1;
   sub_71F0B(v7, a2);
-  sub_753B0(a2, 25, 50, 2, 9, 9, 9);
+  addUnit(a2, 25, 50, 2, 9, 9, 9);
   sub_6CCE0(a2);
   sub_719E2(*(_WORD *)((char *)&loc_8A99F + gameDataOffset + 1) - 0x8000, 4, a2);
   return sub_661C4();
@@ -62163,7 +62163,7 @@ bool sub_76932()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00076982) --------------------------------------------------------
-int __usercall sub_76982@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap6@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62175,7 +62175,7 @@ int __usercall sub_76982@<eax>(int a1@<ebx>, long double a2@<st0>)
   int i; // [sp+0h] [bp-8h]@1
   signed int j; // [sp+0h] [bp-8h]@4
 
-  sub_66464((int)aK_mapa6j_map, a2);
+  loadMap((int)aK_mapa6j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 5;
   byte_222F5[gameDataOffset] = 0;
   for ( i = 0; i < 5; ++i )
@@ -62198,39 +62198,39 @@ int __usercall sub_76982@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aRiludius);
   v2 = strcpy(gameDataOffset + 144297, aAgordeh);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 71, 45, 0, 2, (int)aDefambrion, 17, -1, i);
+  v4 = addCastle(a2, 71, 45, 0, 2, (int)aDefambrion, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) += 200;
-  sub_753B0(a2, 70, 47, 0, 2, 2, 16);
-  sub_753B0(a2, 71, 47, 0, 5, 5, 0);
-  sub_753B0(a2, 72, 47, 0, 9, 9, 16);
-  sub_753B0(a2, 73, 47, 0, 5, 5, 29);
-  sub_753B0(a2, 71, 44, 0, 17, 17, 17);
-  sub_753B0(a2, 72, 44, 0, 1, 2, -1);
-  sub_754A7(a2, 56, 21, 1, 2, (int)aHistone, 17, -1, v5);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 26, 41, 1, 2, (int)aKathaGha, 17, -1, v6) + gameDataOffset) = 1000;
-  sub_753B0(a2, 56, 23, 1, 2, 2, 2);
-  sub_753B0(a2, 57, 23, 1, 5, 5, -1);
-  sub_753B0(a2, 58, 23, 1, 12, 12, 12);
-  sub_753B0(a2, 73, 23, 1, 9, 9, 5);
-  sub_754A7(a2, 68, 77, 2, 2, (int)aGirock, 17, -1, v6);
-  sub_753B0(a2, 67, 79, 2, 9, 15, 5);
-  sub_753B0(a2, 68, 79, 2, 0, 0, 0);
-  sub_753B0(a2, 73, 63, 2, 1, 1, 1);
-  sub_753B0(a2, 69, 79, 2, 0, 0, 0);
-  sub_753B0(a2, 70, 79, 2, 5, 16, 16);
-  sub_753B0(a2, 59, 50, 2, 9, 9, 5);
-  *(_WORD *)((char *)&loc_7C6F8 + 467 * sub_754A7(a2, 42, 54, 3, 2, (int)aGhihUp, 17, -1, v7) + gameDataOffset + 4) = -1;
-  sub_753B0(a2, 41, 56, 3, 20, 20, 20);
-  sub_753B0(a2, 42, 56, 3, 21, 21, 21);
-  sub_753B0(a2, 43, 56, 3, 21, 21, 21);
-  sub_753B0(a2, 44, 56, 3, 2, 2, 2);
-  sub_753B0(a2, 42, 53, 3, 10, 10, 10);
+  addUnit(a2, 70, 47, 0, 2, 2, 16);
+  addUnit(a2, 71, 47, 0, 5, 5, 0);
+  addUnit(a2, 72, 47, 0, 9, 9, 16);
+  addUnit(a2, 73, 47, 0, 5, 5, 29);
+  addUnit(a2, 71, 44, 0, 17, 17, 17);
+  addUnit(a2, 72, 44, 0, 1, 2, -1);
+  addCastle(a2, 56, 21, 1, 2, (int)aHistone, 17, -1, v5);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 26, 41, 1, 2, (int)aKathaGha, 17, -1, v6) + gameDataOffset) = 1000;
+  addUnit(a2, 56, 23, 1, 2, 2, 2);
+  addUnit(a2, 57, 23, 1, 5, 5, -1);
+  addUnit(a2, 58, 23, 1, 12, 12, 12);
+  addUnit(a2, 73, 23, 1, 9, 9, 5);
+  addCastle(a2, 68, 77, 2, 2, (int)aGirock, 17, -1, v6);
+  addUnit(a2, 67, 79, 2, 9, 15, 5);
+  addUnit(a2, 68, 79, 2, 0, 0, 0);
+  addUnit(a2, 73, 63, 2, 1, 1, 1);
+  addUnit(a2, 69, 79, 2, 0, 0, 0);
+  addUnit(a2, 70, 79, 2, 5, 16, 16);
+  addUnit(a2, 59, 50, 2, 9, 9, 5);
+  *(_WORD *)((char *)&loc_7C6F8 + 467 * addCastle(a2, 42, 54, 3, 2, (int)aGhihUp, 17, -1, v7) + gameDataOffset + 4) = -1;
+  addUnit(a2, 41, 56, 3, 20, 20, 20);
+  addUnit(a2, 42, 56, 3, 21, 21, 21);
+  addUnit(a2, 43, 56, 3, 21, 21, 21);
+  addUnit(a2, 44, 56, 3, 2, 2, 2);
+  addUnit(a2, 42, 53, 3, 10, 10, 10);
   for ( j = 0; j < 10; ++j )
   {
     v8 = 725 * *(_WORD *)((char *)&loc_89E8C + gameDataOffset + 4) + gameDataOffset + 31 * j;
     *(_BYTE *)(v8 + 147192) |= 3u;
   }
-  sub_753B0(a2, 87, 66, 3, 21, 21, 21);
+  addUnit(a2, 87, 66, 3, 21, 21, 21);
   sub_6CCE0(a2);
   sub_71A2C(3, 5, a2);
   return sub_661C4();
@@ -62263,7 +62263,7 @@ signed int sub_76EB5()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00076FBE) --------------------------------------------------------
-int __usercall sub_76FBE@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap7@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62277,7 +62277,7 @@ int __usercall sub_76FBE@<eax>(int a1@<ebx>, long double a2@<st0>)
   int i; // [sp+0h] [bp-8h]@1
   int j; // [sp+0h] [bp-8h]@4
 
-  sub_66464((int)aK_mapa7z_map, a2);
+  loadMap((int)aK_mapa7z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 6;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62294,36 +62294,36 @@ int __usercall sub_76FBE@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_2288B + gameDataOffset, aWalter);
   v2 = strcpy((char *)&loc_22E1A + gameDataOffset, aDrebegen);
   sub_2238E(v2, v3, a1);
-  sub_753B0(a2, 13, 4, 0, 33, -1, i);
-  sub_753B0(a2, 14, 4, 0, 1, -1, v4);
-  sub_753B0(a2, 14, 3, 0, 14, -1, v5);
-  sub_754A7(a2, 30, 23, 1, 2, (int)aDragmounth, 17, 9, 9);
-  sub_754A7(a2, 54, 4, 1, 2, (int)aAkserion_0, 17, 15, 15);
-  sub_753B0(a2, 30, 25, 1, 1, 1, 9);
-  sub_753B0(a2, 31, 25, 1, 9, 9, 5);
-  sub_753B0(a2, 54, 6, 1, 0, 0, 0);
-  sub_753B0(a2, 85, 81, 1, 9, 9, 9);
-  sub_753B0(a2, 12, 92, 1, 15, 15, 15);
+  addUnit(a2, 13, 4, 0, 33, -1, i);
+  addUnit(a2, 14, 4, 0, 1, -1, v4);
+  addUnit(a2, 14, 3, 0, 14, -1, v5);
+  addCastle(a2, 30, 23, 1, 2, (int)aDragmounth, 17, 9, 9);
+  addCastle(a2, 54, 4, 1, 2, (int)aAkserion_0, 17, 15, 15);
+  addUnit(a2, 30, 25, 1, 1, 1, 9);
+  addUnit(a2, 31, 25, 1, 9, 9, 5);
+  addUnit(a2, 54, 6, 1, 0, 0, 0);
+  addUnit(a2, 85, 81, 1, 9, 9, 9);
+  addUnit(a2, 12, 92, 1, 15, 15, 15);
   v6 = 725 * *(unsigned __int16 *)((char *)&word_8876E + gameDataOffset) + gameDataOffset;
   *(_BYTE *)(v6 + 147409) |= 3u;
-  sub_753B0(a2, 17, 39, 1, 5, 5, 5);
-  sub_753B0(a2, 57, 38, 1, 8, 8, 8);
-  sub_753B0(a2, 74, 71, 1, 14, 2, 2);
+  addUnit(a2, 17, 39, 1, 5, 5, 5);
+  addUnit(a2, 57, 38, 1, 8, 8, 8);
+  addUnit(a2, 74, 71, 1, 14, 2, 2);
   for ( j = 0; j < 10; ++j )
   {
     v7 = 725 * *(unsigned __int16 *)((char *)&word_8B7B4 + gameDataOffset) + gameDataOffset + 31 * j;
     *(_BYTE *)(v7 + 147192) |= 3u;
   }
   sub_702E9(725 * *(unsigned __int16 *)((char *)&word_8B7B4 + gameDataOffset) + gameDataOffset + 147174, a2);
-  sub_753B0(a2, 82, 9, 1, 12, 15, 15);
+  addUnit(a2, 82, 9, 1, 12, 15, 15);
   sub_702E9(gameDataOffset + 147174 + 725 * *(_WORD *)((char *)&loc_8BD77 + gameDataOffset + 1), a2);
-  v8 = sub_754A7(a2, 90, 41, 2, 2, (int)aGhettan, 17, -1, j);
+  v8 = addCastle(a2, 90, 41, 2, 2, (int)aGhettan, 17, -1, j);
   *(&byte_7C8A7[467 * v8] + gameDataOffset) = 34;
   *(&byte_7C8A8[467 * v8] + gameDataOffset) = 0;
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 41, 67, 2, 2, (int)aBhuaRock, 17, -1, v9) + gameDataOffset) = 1000;
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 5, 56, 2, 1, (int)aJolarion_0, 17, -1, v9) + gameDataOffset) = 2000;
-  sub_753B0(a2, 41, 69, 2, 0, 0, 0);
-  sub_753B0(a2, 42, 69, 2, 11, 11, 11);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 41, 67, 2, 2, (int)aBhuaRock, 17, -1, v9) + gameDataOffset) = 1000;
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 5, 56, 2, 1, (int)aJolarion_0, 17, -1, v9) + gameDataOffset) = 2000;
+  addUnit(a2, 41, 69, 2, 0, 0, 0);
+  addUnit(a2, 42, 69, 2, 11, 11, 11);
   sub_6CCE0(a2);
   sub_661C4();
   *(_DWORD *)((char *)&loc_22303 + gameDataOffset + 4) = 10;
@@ -62347,7 +62347,7 @@ bool sub_77464()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (000774D1) --------------------------------------------------------
-int __usercall sub_774D1@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap8@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62368,7 +62368,7 @@ int __usercall sub_774D1@<eax>(int a1@<ebx>, long double a2@<st0>)
   signed int m; // [sp+0h] [bp-4h]@13
   signed int n; // [sp+0h] [bp-4h]@16
 
-  sub_66464((int)aK_mapa8z_map, a2);
+  loadMap((int)aK_mapa8z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 7;
   sub_705C8(55, 45, a2);
   sub_705C8(50, 27, a2);
@@ -62389,46 +62389,46 @@ int __usercall sub_774D1@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aWodar);
   v2 = strcpy(gameDataOffset + 144297, aRichardV);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 56, 70, 0, 2, (int)aWeghetown, 17, -1, i);
-  sub_754A7(a2, 1, 51, 0, 1, (int)aHenrion, 17, 17, 17);
-  sub_753B0(a2, 56, 72, 0, 15, 12, 0);
-  sub_753B0(a2, 57, 72, 0, 15, 15, 12);
-  sub_753B0(a2, 1, 53, 0, 0, 0, 13);
-  sub_753B0(a2, 2, 53, 0, 17, 17, 17);
-  sub_754A7(a2, 9, 25, 1, 2, (int)aMoonTown, 17, -1, v4);
-  sub_754A7(a2, 18, 34, 1, 2, (int)aGateStone, 17, -1, v5);
-  sub_753B0(a2, 9, 27, 1, 1, 1, 9);
-  sub_753B0(a2, 18, 36, 1, 10, 10, 2);
-  sub_753B0(a2, 19, 36, 1, 25, 25, 25);
-  sub_754A7(a2, 43, 21, 2, 2, (int)aCanoowar, 17, -1, v6);
-  sub_754A7(a2, 54, 31, 2, 1, (int)aTrungeon, 17, -1, v7);
-  sub_753B0(a2, 42, 23, 2, 15, 16, 1);
-  sub_753B0(a2, 43, 23, 2, 29, 29, 1);
+  addCastle(a2, 56, 70, 0, 2, (int)aWeghetown, 17, -1, i);
+  addCastle(a2, 1, 51, 0, 1, (int)aHenrion, 17, 17, 17);
+  addUnit(a2, 56, 72, 0, 15, 12, 0);
+  addUnit(a2, 57, 72, 0, 15, 15, 12);
+  addUnit(a2, 1, 53, 0, 0, 0, 13);
+  addUnit(a2, 2, 53, 0, 17, 17, 17);
+  addCastle(a2, 9, 25, 1, 2, (int)aMoonTown, 17, -1, v4);
+  addCastle(a2, 18, 34, 1, 2, (int)aGateStone, 17, -1, v5);
+  addUnit(a2, 9, 27, 1, 1, 1, 9);
+  addUnit(a2, 18, 36, 1, 10, 10, 2);
+  addUnit(a2, 19, 36, 1, 25, 25, 25);
+  addCastle(a2, 43, 21, 2, 2, (int)aCanoowar, 17, -1, v6);
+  addCastle(a2, 54, 31, 2, 1, (int)aTrungeon, 17, -1, v7);
+  addUnit(a2, 42, 23, 2, 15, 16, 1);
+  addUnit(a2, 43, 23, 2, 29, 29, 1);
   for ( j = 4; j < 6; ++j )
   {
     v8 = 725 * *(_WORD *)((char *)&loc_89F1A + gameDataOffset + 2) + gameDataOffset + 31 * j;
     *(_BYTE *)(v8 + 147192) |= 3u;
   }
-  sub_753B0(a2, 44, 23, 2, 1, 1, 1);
-  sub_753B0(a2, 45, 23, 2, 22, 29, 12);
+  addUnit(a2, 44, 23, 2, 1, 1, 1);
+  addUnit(a2, 45, 23, 2, 22, 29, 12);
   for ( k = 3; k < 5; ++k )
   {
     v9 = 725 * *(_WORD *)((char *)&loc_8A0AB + gameDataOffset + 1) + gameDataOffset + 31 * k;
     *(_BYTE *)(v9 + 147192) |= 3u;
   }
-  sub_753B0(a2, 54, 33, 2, 12, 12, 16);
-  sub_753B0(a2, 55, 33, 2, 9, 9, 9);
-  sub_754A7(a2, 77, 39, 3, 2, (int)aLeweburg, 17, -1, k);
-  sub_754A7(a2, 75, 67, 3, 1, (int)aDefambrion_0, 17, -1, v10);
-  sub_753B0(a2, 77, 41, 3, 15, 16, 6);
-  sub_753B0(a2, 78, 41, 3, 29, 29, 25);
+  addUnit(a2, 54, 33, 2, 12, 12, 16);
+  addUnit(a2, 55, 33, 2, 9, 9, 9);
+  addCastle(a2, 77, 39, 3, 2, (int)aLeweburg, 17, -1, k);
+  addCastle(a2, 75, 67, 3, 1, (int)aDefambrion_0, 17, -1, v10);
+  addUnit(a2, 77, 41, 3, 15, 16, 6);
+  addUnit(a2, 78, 41, 3, 29, 29, 25);
   for ( l = 4; l < 6; ++l )
   {
     v11 = 725 * *(_WORD *)((char *)&loc_8BA94 + gameDataOffset + 4) + gameDataOffset + 31 * l;
     *(_BYTE *)(v11 + 147192) |= 3u;
   }
-  sub_753B0(a2, 75, 69, 3, 1, 1, 1);
-  sub_753B0(a2, 76, 69, 3, 22, 29, 12);
+  addUnit(a2, 75, 69, 3, 1, 1, 1);
+  addUnit(a2, 76, 69, 3, 22, 29, 12);
   for ( m = 2; m < 4; ++m )
   {
     v12 = 725 * *(_WORD *)((char *)&loc_8B93E + gameDataOffset + 2) + gameDataOffset + 31 * m;
@@ -62440,7 +62440,7 @@ int __usercall sub_774D1@<eax>(int a1@<ebx>, long double a2@<st0>)
     *(_BYTE *)(v13 + 147192) &= 0xFCu;
     *(_BYTE *)(v13 + 147192) |= 2u;
   }
-  sub_753B0(a2, 77, 69, 3, 12, 12, 11);
+  addUnit(a2, 77, 69, 3, 12, 12, 11);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -62518,7 +62518,7 @@ __int16 __fastcall sub_77BF3(int a1, int a2, unsigned __int16 a3, unsigned __int
 // 1845C8: using guessed type int dword_1845C8;
 
 //----- (00077D3E) --------------------------------------------------------
-int __usercall sub_77D3E@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap9@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62544,7 +62544,7 @@ int __usercall sub_77D3E@<eax>(int a1@<ebx>, long double a2@<st0>)
   int k; // [sp+0h] [bp-8h]@7
   signed int l; // [sp+0h] [bp-8h]@10
 
-  sub_66464((int)aK_mapa9z_map, a2);
+  loadMap((int)aK_mapa9z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 8;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62563,58 +62563,58 @@ int __usercall sub_77D3E@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aRuryk);
   v2 = strcpy(gameDataOffset + 144297, aRiludius_0);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 8, 27, 0, 2, (int)aTotaweon_0, 17, 33, 33);
-  v4 = sub_754A7(a2, 30, 23, 0, 2, (int)aGordmouth, 17, -1, i);
+  addCastle(a2, 8, 27, 0, 2, (int)aTotaweon_0, 17, 33, 33);
+  v4 = addCastle(a2, 30, 23, 0, 2, (int)aGordmouth, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
-  sub_753B0(a2, 8, 29, 0, 9, 9, 9);
-  sub_753B0(a2, 9, 29, 0, 5, 5, 12);
-  sub_753B0(a2, 10, 29, 0, 2, 2, 2);
-  sub_753B0(a2, 10, 14, 0, 33, -1, v5);
-  sub_753B0(a2, 11, 31, 0, 33, -1, v6);
-  sub_753B0(a2, 22, 29, 0, 33, -1, v7);
-  sub_753B0(a2, 30, 39, 0, 33, -1, v8);
-  sub_753B0(a2, 1, 28, 0, 33, -1, v9);
-  sub_753B0(a2, 8, 50, 0, 33, -1, v10);
-  sub_753B0(a2, 21, 57, 0, 33, -1, v11);
-  sub_753B0(a2, 21, 59, 0, 33, -1, v12);
-  sub_753B0(a2, 28, 57, 0, 33, -1, v13);
-  sub_754A7(a2, 22, 77, 1, 2, (int)aTimbran, 17, -1, v14);
-  sub_754A7(a2, 59, 66, 1, 2, (int)aGhettan_0, 17, -1, v15);
-  sub_753B0(a2, 22, 79, 1, 26, 29, -1);
-  sub_753B0(a2, 59, 68, 1, 11, 11, 2);
-  sub_753B0(a2, 60, 68, 1, 25, 25, 20);
-  sub_754A7(a2, 4, 62, 2, 2, (int)aHopenberg_0, 17, 33, -1);
-  sub_754A7(a2, 84, 64, 2, 2, (int)aKathaGha_0, 17, 33, -1);
-  sub_753B0(a2, 4, 64, 2, 1, 1, 1);
-  sub_753B0(a2, 5, 64, 2, 29, 29, 26);
+  addUnit(a2, 8, 29, 0, 9, 9, 9);
+  addUnit(a2, 9, 29, 0, 5, 5, 12);
+  addUnit(a2, 10, 29, 0, 2, 2, 2);
+  addUnit(a2, 10, 14, 0, 33, -1, v5);
+  addUnit(a2, 11, 31, 0, 33, -1, v6);
+  addUnit(a2, 22, 29, 0, 33, -1, v7);
+  addUnit(a2, 30, 39, 0, 33, -1, v8);
+  addUnit(a2, 1, 28, 0, 33, -1, v9);
+  addUnit(a2, 8, 50, 0, 33, -1, v10);
+  addUnit(a2, 21, 57, 0, 33, -1, v11);
+  addUnit(a2, 21, 59, 0, 33, -1, v12);
+  addUnit(a2, 28, 57, 0, 33, -1, v13);
+  addCastle(a2, 22, 77, 1, 2, (int)aTimbran, 17, -1, v14);
+  addCastle(a2, 59, 66, 1, 2, (int)aGhettan_0, 17, -1, v15);
+  addUnit(a2, 22, 79, 1, 26, 29, -1);
+  addUnit(a2, 59, 68, 1, 11, 11, 2);
+  addUnit(a2, 60, 68, 1, 25, 25, 20);
+  addCastle(a2, 4, 62, 2, 2, (int)aHopenberg_0, 17, 33, -1);
+  addCastle(a2, 84, 64, 2, 2, (int)aKathaGha_0, 17, 33, -1);
+  addUnit(a2, 4, 64, 2, 1, 1, 1);
+  addUnit(a2, 5, 64, 2, 29, 29, 26);
   for ( j = 4; j < 6; ++j )
   {
     v16 = 725 * *(_WORD *)((char *)&loc_881BB + gameDataOffset + 3) + gameDataOffset + 31 * j;
     *(_BYTE *)(v16 + 147192) |= 3u;
   }
-  sub_753B0(a2, 6, 64, 2, 5, 5, 5);
-  sub_753B0(a2, 84, 66, 2, 28, 26, 12);
+  addUnit(a2, 6, 64, 2, 5, 5, 5);
+  addUnit(a2, 84, 66, 2, 28, 26, 12);
   for ( k = 4; k < 6; ++k )
   {
     v17 = 725 * *(_WORD *)((char *)&loc_8BF78 + gameDataOffset + 2) + gameDataOffset + 31 * k;
     *(_BYTE *)(v17 + 147192) |= 3u;
   }
-  sub_753B0(a2, 85, 66, 2, 12, 12, 16);
-  sub_753B0(a2, 86, 66, 2, 10, 10, 10);
-  sub_754A7(a2, 96, 86, 3, 2, (int)aWerneom, 17, -1, k);
-  sub_753B0(a2, 95, 88, 3, 22, 22, 22);
-  sub_753B0(a2, 96, 88, 3, 18, 18, 25);
-  sub_753B0(a2, 97, 88, 3, 1, 1, 24);
+  addUnit(a2, 85, 66, 2, 12, 12, 16);
+  addUnit(a2, 86, 66, 2, 10, 10, 10);
+  addCastle(a2, 96, 86, 3, 2, (int)aWerneom, 17, -1, k);
+  addUnit(a2, 95, 88, 3, 22, 22, 22);
+  addUnit(a2, 96, 88, 3, 18, 18, 25);
+  addUnit(a2, 97, 88, 3, 1, 1, 24);
   v18 = 725 * *(_WORD *)((char *)&loc_8C9CE + gameDataOffset) + gameDataOffset;
   *((_BYTE *)&loc_23FB2 + v18) &= 0xFCu;
   *((_BYTE *)&loc_23FB2 + v18) |= 2u;
-  sub_753B0(a2, 96, 85, 3, 22, 29, 12);
+  addUnit(a2, 96, 85, 3, 22, 29, 12);
   for ( l = 4; l < 6; ++l )
   {
     v19 = 725 * *(_WORD *)((char *)&loc_8C8FC + gameDataOffset + 4) + gameDataOffset + 31 * l;
     *(_BYTE *)(v19 + 147192) |= 3u;
   }
-  sub_753B0(a2, 97, 85, 3, 12, 12, 11);
+  addUnit(a2, 97, 85, 3, 12, 12, 11);
   v20 = 725 * *(_WORD *)((char *)&loc_8C9C5 + gameDataOffset + 3) + gameDataOffset;
   *((_BYTE *)&loc_23F36 + v20) &= 0xFCu;
   *((_BYTE *)&loc_23F36 + v20) |= 2u;
@@ -62680,7 +62680,7 @@ bool sub_783AD()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007850A) --------------------------------------------------------
-int __usercall sub_7850A@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap10@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62696,7 +62696,7 @@ int __usercall sub_7850A@<eax>(int a1@<ebx>, long double a2@<st0>)
   int v13; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aK_map10l_map, a2);
+  loadMap((int)aK_map10l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 9;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62718,50 +62718,50 @@ int __usercall sub_7850A@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 144297, aMieszko);
   v2 = strcpy(gameDataOffset + 145720, aChester);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 13, 3, 0, 2, (int)aGorendberg, 17, -1, i);
+  v4 = addCastle(a2, 13, 3, 0, 2, (int)aGorendberg, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
   v5 = 467 * v4 + gameDataOffset;
   byte_7C8A6[v5] &= 0xF8u;
   byte_7C8A6[v5] |= 2u;
-  v7 = sub_754A7(a2, 94, 95, 0, 2, (int)aTimbran_0, 17, -1, v6);
+  v7 = addCastle(a2, 94, 95, 0, 2, (int)aTimbran_0, 17, -1, v6);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v7 + gameDataOffset) = 500;
   v8 = gameDataOffset + 467 * v7;
   byte_7C8A6[v8] &= 0xF8u;
   byte_7C8A6[v8] |= 2u;
-  sub_753B0(a2, 13, 5, 0, 9, 9, 12);
-  sub_753B0(a2, 14, 5, 0, 5, 5, 5);
-  sub_753B0(a2, 94, 97, 0, 2, 2, 2);
-  sub_753B0(a2, 95, 97, 0, 24, 24, 21);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 62, 53, 1, 2, (int)aGhettan_1, 17, 33, 33) + gameDataOffset) = 3000;
-  sub_753B0(a2, 61, 55, 1, 6, 6, 7);
-  sub_753B0(a2, 62, 55, 1, 11, 11, 24);
-  sub_753B0(a2, 63, 55, 1, 25, 25, 25);
-  sub_753B0(a2, 64, 55, 1, 30, 27, 28);
-  sub_753B0(a2, 62, 52, 1, 22, 22, 22);
-  sub_753B0(a2, 63, 52, 1, 24, 24, 24);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 58, 11, 2, 2, (int)aBhuaRock_0, 17, -1, v9) + gameDataOffset) = 3000;
-  sub_753B0(a2, 57, 13, 2, 1, 1, 1);
-  sub_753B0(a2, 58, 13, 2, 26, 26, 6);
-  sub_753B0(a2, 59, 13, 2, 6, 6, 6);
-  sub_753B0(a2, 60, 13, 2, 28, 27, 12);
-  sub_753B0(a2, 58, 10, 2, 10, 10, 10);
-  sub_753B0(a2, 58, 10, 2, 24, 24, 24);
-  sub_754A7(a2, 95, 16, 3, 2, (int)aKathaGha_1, 17, -1, v9);
-  sub_754A7(a2, 11, 41, 3, 2, (int)aStormus_0, 17, -1, v10);
-  sub_753B0(a2, 95, 18, 3, 25, 25, 25);
-  sub_753B0(a2, 96, 18, 3, 18, 18, 23);
-  sub_753B0(a2, 11, 43, 3, 1, 1, 1);
-  sub_753B0(a2, 12, 43, 3, 22, 29, 12);
-  v12 = sub_754A7(a2, 32, 84, 4, 2, (int)aGuluali, 17, -1, v11);
+  addUnit(a2, 13, 5, 0, 9, 9, 12);
+  addUnit(a2, 14, 5, 0, 5, 5, 5);
+  addUnit(a2, 94, 97, 0, 2, 2, 2);
+  addUnit(a2, 95, 97, 0, 24, 24, 21);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 62, 53, 1, 2, (int)aGhettan_1, 17, 33, 33) + gameDataOffset) = 3000;
+  addUnit(a2, 61, 55, 1, 6, 6, 7);
+  addUnit(a2, 62, 55, 1, 11, 11, 24);
+  addUnit(a2, 63, 55, 1, 25, 25, 25);
+  addUnit(a2, 64, 55, 1, 30, 27, 28);
+  addUnit(a2, 62, 52, 1, 22, 22, 22);
+  addUnit(a2, 63, 52, 1, 24, 24, 24);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 58, 11, 2, 2, (int)aBhuaRock_0, 17, -1, v9) + gameDataOffset) = 3000;
+  addUnit(a2, 57, 13, 2, 1, 1, 1);
+  addUnit(a2, 58, 13, 2, 26, 26, 6);
+  addUnit(a2, 59, 13, 2, 6, 6, 6);
+  addUnit(a2, 60, 13, 2, 28, 27, 12);
+  addUnit(a2, 58, 10, 2, 10, 10, 10);
+  addUnit(a2, 58, 10, 2, 24, 24, 24);
+  addCastle(a2, 95, 16, 3, 2, (int)aKathaGha_1, 17, -1, v9);
+  addCastle(a2, 11, 41, 3, 2, (int)aStormus_0, 17, -1, v10);
+  addUnit(a2, 95, 18, 3, 25, 25, 25);
+  addUnit(a2, 96, 18, 3, 18, 18, 23);
+  addUnit(a2, 11, 43, 3, 1, 1, 1);
+  addUnit(a2, 12, 43, 3, 22, 29, 12);
+  v12 = addCastle(a2, 32, 84, 4, 2, (int)aGuluali, 17, -1, v11);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v12 + gameDataOffset) += 500;
   v13 = gameDataOffset + 467 * v12;
   byte_7C8A6[v13] &= 0xF8u;
   byte_7C8A6[v13] |= 3u;
-  sub_753B0(a2, 31, 86, 4, 30, 30, 12);
-  sub_753B0(a2, 32, 86, 4, 23, 23, 21);
-  sub_753B0(a2, 33, 86, 4, 5, 5, 7);
-  sub_753B0(a2, 34, 86, 4, 12, 12, 8);
-  sub_753B0(a2, 32, 83, 4, 30, 30, 30);
+  addUnit(a2, 31, 86, 4, 30, 30, 12);
+  addUnit(a2, 32, 86, 4, 23, 23, 21);
+  addUnit(a2, 33, 86, 4, 5, 5, 7);
+  addUnit(a2, 34, 86, 4, 12, 12, 8);
+  addUnit(a2, 32, 83, 4, 30, 30, 30);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -62785,7 +62785,7 @@ signed int sub_78B35()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00078B98) --------------------------------------------------------
-int __usercall sub_78B98@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap11@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62797,7 +62797,7 @@ int __usercall sub_78B98@<eax>(int a1@<ebx>, long double a2@<st0>)
   int v9; // ST38_4@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_mapa1z_map, a2);
+  loadMap((int)aP_mapa1z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 10;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62810,7 +62810,7 @@ int __usercall sub_78B98@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_2288B + gameDataOffset, aRaylin);
   v2 = strcpy((char *)&loc_22E1A + gameDataOffset, aGaalaad);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 15, 31, 1, 2, (int)aTimbran_1, 17, 0, 0);
+  v4 = addCastle(a2, 15, 31, 1, 2, (int)aTimbran_1, 17, 0, 0);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
   v5 = gameDataOffset + 467 * v4;
   v6 = *(_WORD *)((char *)&loc_7C898 + v5);
@@ -62819,16 +62819,16 @@ int __usercall sub_78B98@<eax>(int a1@<ebx>, long double a2@<st0>)
   HIBYTE(v6) &= 0xFu;
   *(_WORD *)((char *)&loc_7C898 + v5) &= 0xF000u;
   *(_WORD *)((char *)&loc_7C898 + v5) |= v6;
-  sub_753B0(a2, 15, 33, 1, 1, 15, 16);
-  sub_753B0(a2, 16, 33, 1, 0, 0, 0);
-  sub_753B0(a2, 17, 33, 1, 9, 9, -1);
-  sub_753B0(a2, 1, 22, 2, 9, 15, 1);
-  sub_753B0(a2, 27, 12, 2, 0, 0, 0);
-  sub_753B0(a2, 48, 20, 2, 0, 0, 0);
-  sub_753B0(a2, 34, 37, 2, 9, -1, i);
-  sub_753B0(a2, 11, 13, 2, 9, -1, v7);
-  sub_753B0(a2, 4, 22, 2, 9, -1, v8);
-  sub_753B0(a2, 10, 25, 2, 1, -1, v9);
+  addUnit(a2, 15, 33, 1, 1, 15, 16);
+  addUnit(a2, 16, 33, 1, 0, 0, 0);
+  addUnit(a2, 17, 33, 1, 9, 9, -1);
+  addUnit(a2, 1, 22, 2, 9, 15, 1);
+  addUnit(a2, 27, 12, 2, 0, 0, 0);
+  addUnit(a2, 48, 20, 2, 0, 0, 0);
+  addUnit(a2, 34, 37, 2, 9, -1, i);
+  addUnit(a2, 11, 13, 2, 9, -1, v7);
+  addUnit(a2, 4, 22, 2, 9, -1, v8);
+  addUnit(a2, 10, 25, 2, 1, -1, v9);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -62850,13 +62850,13 @@ signed int sub_78DE3()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00078E5D) --------------------------------------------------------
-int __usercall sub_78E5D@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap12@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_mapa2z_map, a2);
+  loadMap((int)aP_mapa2z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 11;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62869,13 +62869,13 @@ int __usercall sub_78E5D@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_2288B + gameDataOffset, aRaylin);
   v2 = strcpy((char *)&loc_22E1A + gameDataOffset, aWetus_0);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 22, 13, 1, 2, (int)aGatgally, 17, 0, 0);
-  sub_753B0(a2, 22, 15, 1, 17, 15, 16);
-  sub_754A7(a2, 34, 5, 2, 2, (int)aGuluali_0, 17, 0, 0);
-  sub_753B0(a2, 33, 7, 2, 9, 15, 1);
-  sub_753B0(a2, 34, 7, 2, 0, 0, 0);
-  sub_753B0(a2, 35, 7, 2, 0, 0, 0);
-  sub_753B0(a2, 36, 7, 2, 1, 1, 1);
+  addCastle(a2, 22, 13, 1, 2, (int)aGatgally, 17, 0, 0);
+  addUnit(a2, 22, 15, 1, 17, 15, 16);
+  addCastle(a2, 34, 5, 2, 2, (int)aGuluali_0, 17, 0, 0);
+  addUnit(a2, 33, 7, 2, 9, 15, 1);
+  addUnit(a2, 34, 7, 2, 0, 0, 0);
+  addUnit(a2, 35, 7, 2, 0, 0, 0);
+  addUnit(a2, 36, 7, 2, 1, 1, 1);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -62908,7 +62908,7 @@ bool sub_790B3()
 }
 
 //----- (00079101) --------------------------------------------------------
-int __usercall sub_79101@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap13@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -62919,7 +62919,7 @@ int __usercall sub_79101@<eax>(int a1@<ebx>, long double a2@<st0>)
   int result; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_mapa3z_map, a2);
+  loadMap((int)aP_mapa3z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 12;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62932,20 +62932,20 @@ int __usercall sub_79101@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_2288B + gameDataOffset, aRaylin);
   v2 = strcpy((char *)&loc_22E1A + gameDataOffset, aGaalaad_0);
   sub_2238E(v2, v3, a1);
-  sub_753B0(a2, 70, 81, 1, 9, -1, i);
-  sub_753B0(a2, 71, 81, 1, 0, 0, 0);
-  sub_753B0(a2, 69, 82, 1, 5, 5, 15);
-  sub_753B0(a2, 70, 82, 1, 16, 16, -1);
-  sub_753B0(a2, 71, 83, 1, 13, -1, v4);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 59, 14, 2, 2, (int)aSarturia, 17, -1, v5) + gameDataOffset) = 5000;
-  sub_753B0(a2, 67, 36, 2, 15, 1, 1);
-  sub_753B0(a2, 25, 85, 2, 0, 0, 0);
-  sub_753B0(a2, 45, 73, 2, 5, 5, 9);
-  sub_753B0(a2, 69, 91, 2, 9, 9, 9);
-  sub_753B0(a2, 77, 64, 2, 0, 0, 0);
-  sub_753B0(a2, 36, 52, 2, 1, 1, 1);
-  sub_753B0(a2, 41, 49, 2, 9, 9, 9);
-  sub_753B0(a2, 62, 94, 2, 16, 16, 16);
+  addUnit(a2, 70, 81, 1, 9, -1, i);
+  addUnit(a2, 71, 81, 1, 0, 0, 0);
+  addUnit(a2, 69, 82, 1, 5, 5, 15);
+  addUnit(a2, 70, 82, 1, 16, 16, -1);
+  addUnit(a2, 71, 83, 1, 13, -1, v4);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 59, 14, 2, 2, (int)aSarturia, 17, -1, v5) + gameDataOffset) = 5000;
+  addUnit(a2, 67, 36, 2, 15, 1, 1);
+  addUnit(a2, 25, 85, 2, 0, 0, 0);
+  addUnit(a2, 45, 73, 2, 5, 5, 9);
+  addUnit(a2, 69, 91, 2, 9, 9, 9);
+  addUnit(a2, 77, 64, 2, 0, 0, 0);
+  addUnit(a2, 36, 52, 2, 1, 1, 1);
+  addUnit(a2, 41, 49, 2, 9, 9, 9);
+  addUnit(a2, 62, 94, 2, 16, 16, 16);
   sub_6CCE0(a2);
   sub_661C4();
   v6 = gameDataOffset;
@@ -62968,14 +62968,14 @@ bool sub_793CE()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007943C) --------------------------------------------------------
-int __usercall sub_7943C@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap14@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
   int i; // [sp+0h] [bp-4h]@1
   signed int j; // [sp+0h] [bp-4h]@4
 
-  sub_66464((int)aP_mapa4l_map, a2);
+  loadMap((int)aP_mapa4l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 13;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -62994,26 +62994,26 @@ int __usercall sub_7943C@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 144297, aGlazur);
   v2 = strcpy(gameDataOffset + 145720, aSirJohn);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 23, 26, 1, 2, (int)aUngught, 17, -1, i);
-  sub_753B0(a2, 22, 25, 1, 1, 1, 1);
-  sub_753B0(a2, 25, 25, 1, 15, 16, -1);
-  sub_753B0(a2, 22, 28, 1, 9, 9, 9);
-  sub_753B0(a2, 25, 28, 1, 2, 2, 2);
+  addCastle(a2, 23, 26, 1, 2, (int)aUngught, 17, -1, i);
+  addUnit(a2, 22, 25, 1, 1, 1, 1);
+  addUnit(a2, 25, 25, 1, 15, 16, -1);
+  addUnit(a2, 22, 28, 1, 9, 9, 9);
+  addUnit(a2, 25, 28, 1, 2, 2, 2);
   for ( j = 0; j < 10; ++j )
     *((_BYTE *)&loc_23EF5 + 725 * *(_WORD *)((char *)&loc_89110 + gameDataOffset + 6) + 31 * j + gameDataOffset) = sub_2C7F6(5, 20);
-  sub_753B0(a2, 26, 28, 1, 17, 17, 17);
-  sub_753B0(a2, 7, 15, 2, 15, 15, 1);
-  sub_753B0(a2, 1, 1, 2, 0, 0, 0);
-  sub_753B0(a2, 26, 47, 2, 5, 5, 5);
-  sub_753B0(a2, 18, 38, 2, 9, 9, 15);
-  sub_753B0(a2, 35, 18, 2, 0, 0, 0);
-  sub_753B0(a2, 33, 35, 3, 1, 1, 1);
-  sub_753B0(a2, 45, 29, 3, 0, 0, 0);
-  sub_753B0(a2, 10, 33, 3, 5, 16, 16);
-  sub_753B0(a2, 26, 45, 3, 9, 9, 9);
-  sub_753B0(a2, 48, 8, 4, 15, 1, 16);
-  sub_753B0(a2, 21, 10, 4, 0, 0, 0);
-  sub_753B0(a2, 35, 17, 4, 9, 9, 3);
+  addUnit(a2, 26, 28, 1, 17, 17, 17);
+  addUnit(a2, 7, 15, 2, 15, 15, 1);
+  addUnit(a2, 1, 1, 2, 0, 0, 0);
+  addUnit(a2, 26, 47, 2, 5, 5, 5);
+  addUnit(a2, 18, 38, 2, 9, 9, 15);
+  addUnit(a2, 35, 18, 2, 0, 0, 0);
+  addUnit(a2, 33, 35, 3, 1, 1, 1);
+  addUnit(a2, 45, 29, 3, 0, 0, 0);
+  addUnit(a2, 10, 33, 3, 5, 16, 16);
+  addUnit(a2, 26, 45, 3, 9, 9, 9);
+  addUnit(a2, 48, 8, 4, 15, 1, 16);
+  addUnit(a2, 21, 10, 4, 0, 0, 0);
+  addUnit(a2, 35, 17, 4, 9, 9, 3);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -63036,7 +63036,7 @@ bool sub_79822()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00079890) --------------------------------------------------------
-int __usercall sub_79890@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap15@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63049,7 +63049,7 @@ int __usercall sub_79890@<eax>(int a1@<ebx>, long double a2@<st0>)
   int j; // [sp+0h] [bp-8h]@4
   int v12; // [sp+4h] [bp-4h]@4
 
-  sub_66464((int)aP_mapa5l_map, a2);
+  loadMap((int)aP_mapa5l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 14;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -63066,15 +63066,15 @@ int __usercall sub_79890@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aUraken_0);
   v2 = strcpy(gameDataOffset + 144297, aWodar_0);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 50, 3, 1, 2, (int)aWeghetown_0, 17, 33, -1);
+  v4 = addCastle(a2, 50, 3, 1, 2, (int)aWeghetown_0, 17, 33, -1);
   *(_WORD *)((char *)&loc_7C898 + 467 * v4 + gameDataOffset) &= 0xF000u;
-  sub_753B0(a2, 50, 5, 1, 1, 1, 16);
-  sub_753B0(a2, 51, 5, 1, 5, 0, 0);
-  sub_753B0(a2, 52, 5, 1, 9, 9, 16);
-  sub_753B0(a2, 49, 5, 1, 16, 17, 17);
-  v12 = sub_754A7(a2, 52, 24, 2, 2, (int)aTimbran_2, 17, 15, 15);
+  addUnit(a2, 50, 5, 1, 1, 1, 16);
+  addUnit(a2, 51, 5, 1, 5, 0, 0);
+  addUnit(a2, 52, 5, 1, 9, 9, 16);
+  addUnit(a2, 49, 5, 1, 16, 17, 17);
+  v12 = addCastle(a2, 52, 24, 2, 2, (int)aTimbran_2, 17, 15, 15);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v12 + gameDataOffset + 4) = 15;
-  sub_753B0(a2, 52, 26, 2, 9, 9, -1);
+  addUnit(a2, 52, 26, 2, 9, 9, -1);
   sub_59749(*(_WORD *)((char *)&loc_8A62A + gameDataOffset), v12, a2);
   for ( j = 0; j < 12; ++j )
   {
@@ -63090,18 +63090,18 @@ int __usercall sub_79890@<eax>(int a1@<ebx>, long double a2@<st0>)
   *(&byte_7C8B3[467 * v12] + gameDataOffset) = 33;
   *(&byte_7C8B4[467 * v12] + gameDataOffset) = 0;
   sub_71F0B(v12, a2);
-  sub_753B0(a2, 64, 4, 2, 2, 2, 1);
-  sub_753B0(a2, 50, 27, 2, 9, 9, 9);
-  v6 = sub_754A7(a2, 39, 18, 3, 2, (int)aFraggmeon, 17, -1, j);
+  addUnit(a2, 64, 4, 2, 2, 2, 1);
+  addUnit(a2, 50, 27, 2, 9, 9, 9);
+  v6 = addCastle(a2, 39, 18, 3, 2, (int)aFraggmeon, 17, -1, j);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v6 + gameDataOffset) += 200;
-  v8 = sub_754A7(a2, 17, 34, 3, 2, (int)aEufurhon, 17, -1, v7);
+  v8 = addCastle(a2, 17, 34, 3, 2, (int)aEufurhon, 17, -1, v7);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v8 + gameDataOffset) += 200;
-  sub_753B0(a2, 39, 20, 3, 9, 15, 5);
-  sub_753B0(a2, 40, 20, 3, 0, 0, 0);
-  sub_753B0(a2, 16, 36, 3, 1, 1, 1);
-  sub_753B0(a2, 17, 36, 3, 0, 0, 0);
-  sub_753B0(a2, 18, 36, 3, 5, 16, 16);
-  sub_753B0(a2, 25, 4, 3, 9, 9, 9);
+  addUnit(a2, 39, 20, 3, 9, 15, 5);
+  addUnit(a2, 40, 20, 3, 0, 0, 0);
+  addUnit(a2, 16, 36, 3, 1, 1, 1);
+  addUnit(a2, 17, 36, 3, 0, 0, 0);
+  addUnit(a2, 18, 36, 3, 5, 16, 16);
+  addUnit(a2, 25, 4, 3, 9, 9, 9);
   sub_6CCE0(a2);
   sub_719E2(*(_WORD *)((char *)&loc_8A625 + gameDataOffset + 1) - 0x8000, 14, a2);
   return sub_661C4();
@@ -63125,7 +63125,7 @@ bool sub_79D79()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00079DC9) --------------------------------------------------------
-int __usercall sub_79DC9@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap16@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63138,7 +63138,7 @@ int __usercall sub_79DC9@<eax>(int a1@<ebx>, long double a2@<st0>)
   int v10; // ST38_4@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_mapa6l_map, a2);
+  loadMap((int)aP_mapa6l_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 15;
   byte_222F5[gameDataOffset] = 0;
   for ( i = 0; i < 5; ++i )
@@ -63160,35 +63160,35 @@ int __usercall sub_79DC9@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 144297, aSirJames_0);
   v2 = strcpy(gameDataOffset + 145720, aAgordeh_0);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 59, 9, 1, 2, (int)aDefambrion_1, 17, -1, i);
+  v4 = addCastle(a2, 59, 9, 1, 2, (int)aDefambrion_1, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) += 200;
-  sub_754A7(a2, 50, 96, 1, 1, (int)aGhondur, 17, -1, v5);
-  sub_753B0(a2, 59, 11, 1, 2, 2, 16);
-  sub_753B0(a2, 60, 11, 1, 5, 5, 0);
-  sub_753B0(a2, 61, 11, 1, 9, 9, 16);
-  sub_753B0(a2, 49, 98, 1, 5, 5, 29);
-  sub_753B0(a2, 50, 98, 1, 17, 17, 17);
-  sub_753B0(a2, 51, 98, 1, 1, 2, -1);
-  sub_754A7(a2, 86, 55, 2, 2, (int)aHistone_0, 17, -1, v6);
-  sub_753B0(a2, 86, 57, 2, 2, 2, 2);
-  sub_753B0(a2, 87, 57, 2, 5, 5, -1);
-  sub_754A7(a2, 79, 2, 3, 2, (int)aGirock_0, 17, -1, v7);
-  sub_753B0(a2, 78, 4, 3, 9, 15, 5);
-  sub_753B0(a2, 79, 4, 3, 0, 0, 0);
-  sub_753B0(a2, 80, 4, 3, 1, 1, 1);
-  sub_753B0(a2, 81, 4, 3, 0, 0, 0);
-  sub_753B0(a2, 80, 1, 3, 9, 9, 5);
-  v9 = sub_754A7(a2, 48, 38, 4, 2, (int)aGhihUp_0, 17, -1, v8);
+  addCastle(a2, 50, 96, 1, 1, (int)aGhondur, 17, -1, v5);
+  addUnit(a2, 59, 11, 1, 2, 2, 16);
+  addUnit(a2, 60, 11, 1, 5, 5, 0);
+  addUnit(a2, 61, 11, 1, 9, 9, 16);
+  addUnit(a2, 49, 98, 1, 5, 5, 29);
+  addUnit(a2, 50, 98, 1, 17, 17, 17);
+  addUnit(a2, 51, 98, 1, 1, 2, -1);
+  addCastle(a2, 86, 55, 2, 2, (int)aHistone_0, 17, -1, v6);
+  addUnit(a2, 86, 57, 2, 2, 2, 2);
+  addUnit(a2, 87, 57, 2, 5, 5, -1);
+  addCastle(a2, 79, 2, 3, 2, (int)aGirock_0, 17, -1, v7);
+  addUnit(a2, 78, 4, 3, 9, 15, 5);
+  addUnit(a2, 79, 4, 3, 0, 0, 0);
+  addUnit(a2, 80, 4, 3, 1, 1, 1);
+  addUnit(a2, 81, 4, 3, 0, 0, 0);
+  addUnit(a2, 80, 1, 3, 9, 9, 5);
+  v9 = addCastle(a2, 48, 38, 4, 2, (int)aGhihUp_0, 17, -1, v8);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v9 + gameDataOffset) = 1000;
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v9 + gameDataOffset + 4) = -1;
-  sub_753B0(a2, 48, 40, 4, 21, 21, 21);
-  sub_753B0(a2, 49, 40, 4, 2, 2, 2);
-  sub_753B0(a2, 50, 40, 4, 10, 10, 10);
-  sub_753B0(a2, 48, 57, 4, 5, 16, 16);
-  sub_753B0(a2, 18, 75, 4, 20, 20, 20);
-  sub_753B0(a2, 37, 6, 4, 1, 1, 1);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 19, 32, 4, 2, (int)aGuluali_1, 17, -1, v10) + gameDataOffset) = 2000;
-  sub_753B0(a2, 19, 34, 4, 2, 2, 2);
+  addUnit(a2, 48, 40, 4, 21, 21, 21);
+  addUnit(a2, 49, 40, 4, 2, 2, 2);
+  addUnit(a2, 50, 40, 4, 10, 10, 10);
+  addUnit(a2, 48, 57, 4, 5, 16, 16);
+  addUnit(a2, 18, 75, 4, 20, 20, 20);
+  addUnit(a2, 37, 6, 4, 1, 1, 1);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 19, 32, 4, 2, (int)aGuluali_1, 17, -1, v10) + gameDataOffset) = 2000;
+  addUnit(a2, 19, 34, 4, 2, 2, 2);
   sub_6CCE0(a2);
   sub_71A2C(4, 15, a2);
   return sub_661C4();
@@ -63236,7 +63236,7 @@ int __fastcall sub_7A37C(int result, int a2)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007A3C3) --------------------------------------------------------
-int __usercall sub_7A3C3@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap17@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63252,7 +63252,7 @@ int __usercall sub_7A3C3@<eax>(int a1@<ebx>, long double a2@<st0>)
   int result; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_mapa7j_map, a2);
+  loadMap((int)aP_mapa7j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 16;
   byte_222F5[gameDataOffset] = 0;
   for ( i = 0; i < 5; ++i )
@@ -63271,26 +63271,26 @@ int __usercall sub_7A3C3@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy((char *)&loc_22E1A + gameDataOffset, aKalev);
   v2 = strcpy(gameDataOffset + 144297, aIanos_0);
   sub_2238E(v2, v3, a1);
-  sub_753B0(a2, 21, 35, 1, 33, -1, i);
-  sub_753B0(a2, 20, 36, 1, 1, -1, v4);
-  sub_753B0(a2, 22, 36, 1, 14, -1, v5);
-  sub_753B0(a2, 22, 36, 1, 14, 17, -1);
-  v7 = 467 * sub_754A7(a2, 91, 43, 2, 2, (int)aGwadat, 17, -1, v6) + gameDataOffset;
+  addUnit(a2, 21, 35, 1, 33, -1, i);
+  addUnit(a2, 20, 36, 1, 1, -1, v4);
+  addUnit(a2, 22, 36, 1, 14, -1, v5);
+  addUnit(a2, 22, 36, 1, 14, 17, -1);
+  v7 = 467 * addCastle(a2, 91, 43, 2, 2, (int)aGwadat, 17, -1, v6) + gameDataOffset;
   byte_7C8A6[v7] &= 0xF8u;
   byte_7C8A6[v7] |= 3u;
-  sub_754A7(a2, 54, 74, 2, 2, (int)aCantown, 17, -1, v8);
-  sub_753B0(a2, 91, 45, 2, 1, 1, 9);
-  sub_753B0(a2, 92, 45, 2, 9, 9, 5);
-  sub_753B0(a2, 93, 45, 2, 0, 0, 0);
-  sub_753B0(a2, 54, 76, 2, 10, 10, 10);
-  sub_754A7(a2, 35, 3, 3, 2, (int)aThubeos, 17, -1, v9);
-  sub_754A7(a2, 66, 45, 3, 2, (int)aAkserion_1, 17, -1, v10);
-  sub_753B0(a2, 35, 5, 3, 15, 16, 1);
-  sub_753B0(a2, 36, 5, 3, 0, 0, 0);
-  sub_753B0(a2, 66, 47, 3, 1, 1, 1);
-  sub_753B0(a2, 67, 47, 3, 0, 0, 0);
-  sub_753B0(a2, 21, 28, 3, 5, 5, 16);
-  sub_753B0(a2, 28, 76, 3, 9, 9, 9);
+  addCastle(a2, 54, 74, 2, 2, (int)aCantown, 17, -1, v8);
+  addUnit(a2, 91, 45, 2, 1, 1, 9);
+  addUnit(a2, 92, 45, 2, 9, 9, 5);
+  addUnit(a2, 93, 45, 2, 0, 0, 0);
+  addUnit(a2, 54, 76, 2, 10, 10, 10);
+  addCastle(a2, 35, 3, 3, 2, (int)aThubeos, 17, -1, v9);
+  addCastle(a2, 66, 45, 3, 2, (int)aAkserion_1, 17, -1, v10);
+  addUnit(a2, 35, 5, 3, 15, 16, 1);
+  addUnit(a2, 36, 5, 3, 0, 0, 0);
+  addUnit(a2, 66, 47, 3, 1, 1, 1);
+  addUnit(a2, 67, 47, 3, 0, 0, 0);
+  addUnit(a2, 21, 28, 3, 5, 5, 16);
+  addUnit(a2, 28, 76, 3, 9, 9, 9);
   sub_6CCE0(a2);
   sub_661C4();
   v11 = gameDataOffset;
@@ -63313,7 +63313,7 @@ bool sub_7A74E()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007A7BC) --------------------------------------------------------
-int __usercall sub_7A7BC@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap18@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63336,7 +63336,7 @@ int __usercall sub_7A7BC@<eax>(int a1@<ebx>, long double a2@<st0>)
   signed int m; // [sp+0h] [bp-8h]@13
   signed int n; // [sp+0h] [bp-8h]@16
 
-  sub_66464((int)aP_mapa8j_map, a2);
+  loadMap((int)aP_mapa8j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 17;
   byte_222F5[gameDataOffset] = 0;
   sub_705C8(50, 34, a2);
@@ -63363,46 +63363,46 @@ int __usercall sub_7A7BC@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 144297, aMcgregor);
   v2 = strcpy(gameDataOffset + 145720, aCrowley);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 11, 45, 1, 2, (int)aStormus_1, 17, -1, i);
+  v4 = addCastle(a2, 11, 45, 1, 2, (int)aStormus_1, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
-  sub_754A7(a2, 70, 20, 1, 1, (int)aDarkTown, 17, -1, v5);
-  sub_753B0(a2, 12, 47, 1, 15, 12, 0);
-  sub_753B0(a2, 71, 22, 1, 9, 9, 12);
-  sub_753B0(a2, 72, 22, 1, 0, 0, 13);
-  sub_754A7(a2, 32, 5, 2, 2, (int)aTregRock_0, 17, -1, v6);
-  sub_754A7(a2, 42, 27, 2, 2, (int)aBodeon_0, 17, -1, v7);
-  sub_753B0(a2, 32, 7, 2, 1, 1, 9);
-  sub_753B0(a2, 33, 7, 2, 10, 10, 6);
-  sub_753B0(a2, 34, 7, 2, 23, 23, 23);
-  sub_754A7(a2, 25, 38, 3, 2, (int)aGirock_1, 17, -1, v8);
-  sub_754A7(a2, 61, 41, 3, 1, (int)aBodeon_1, 17, -1, v9);
-  sub_753B0(a2, 25, 40, 3, 15, 16, 1);
-  sub_753B0(a2, 26, 40, 3, 29, 29, 1);
+  addCastle(a2, 70, 20, 1, 1, (int)aDarkTown, 17, -1, v5);
+  addUnit(a2, 12, 47, 1, 15, 12, 0);
+  addUnit(a2, 71, 22, 1, 9, 9, 12);
+  addUnit(a2, 72, 22, 1, 0, 0, 13);
+  addCastle(a2, 32, 5, 2, 2, (int)aTregRock_0, 17, -1, v6);
+  addCastle(a2, 42, 27, 2, 2, (int)aBodeon_0, 17, -1, v7);
+  addUnit(a2, 32, 7, 2, 1, 1, 9);
+  addUnit(a2, 33, 7, 2, 10, 10, 6);
+  addUnit(a2, 34, 7, 2, 23, 23, 23);
+  addCastle(a2, 25, 38, 3, 2, (int)aGirock_1, 17, -1, v8);
+  addCastle(a2, 61, 41, 3, 1, (int)aBodeon_1, 17, -1, v9);
+  addUnit(a2, 25, 40, 3, 15, 16, 1);
+  addUnit(a2, 26, 40, 3, 29, 29, 1);
   for ( j = 4; j < 6; ++j )
   {
     v10 = 725 * *(_WORD *)((char *)&loc_891F5 + gameDataOffset + 1) + gameDataOffset + 31 * j;
     *(_BYTE *)(v10 + 147192) |= 3u;
   }
-  sub_753B0(a2, 60, 43, 3, 1, 1, 1);
-  sub_753B0(a2, 61, 43, 3, 22, 29, 12);
+  addUnit(a2, 60, 43, 3, 1, 1, 1);
+  addUnit(a2, 61, 43, 3, 22, 29, 12);
   for ( k = 3; k < 5; ++k )
   {
     v11 = 725 * *(_WORD *)((char *)&loc_8AD53 + gameDataOffset + 1) + gameDataOffset + 31 * k;
     *(_BYTE *)(v11 + 147192) |= 3u;
   }
-  sub_753B0(a2, 62, 43, 3, 12, 12, 16);
-  sub_753B0(a2, 63, 43, 3, 9, 9, 9);
-  sub_754A7(a2, 62, 84, 4, 2, (int)aLeweburg_0, 17, -1, k);
-  sub_754A7(a2, 58, 61, 4, 1, (int)aDefambrion_2, 17, -1, v12);
-  sub_753B0(a2, 62, 86, 4, 15, 16, 6);
-  sub_753B0(a2, 63, 86, 4, 29, 29, 25);
+  addUnit(a2, 62, 43, 3, 12, 12, 16);
+  addUnit(a2, 63, 43, 3, 9, 9, 9);
+  addCastle(a2, 62, 84, 4, 2, (int)aLeweburg_0, 17, -1, k);
+  addCastle(a2, 58, 61, 4, 1, (int)aDefambrion_2, 17, -1, v12);
+  addUnit(a2, 62, 86, 4, 15, 16, 6);
+  addUnit(a2, 63, 86, 4, 29, 29, 25);
   for ( l = 4; l < 6; ++l )
   {
     v13 = 725 * *(_WORD *)((char *)&loc_8AF37 + gameDataOffset + 3) + gameDataOffset + 31 * l;
     *(_BYTE *)(v13 + 147192) |= 3u;
   }
-  sub_753B0(a2, 56, 79, 4, 1, 1, 1);
-  sub_753B0(a2, 65, 44, 4, 22, 29, 12);
+  addUnit(a2, 56, 79, 4, 1, 1, 1);
+  addUnit(a2, 65, 44, 4, 22, 29, 12);
   for ( m = 2; m < 4; ++m )
   {
     v14 = 725 * *(_WORD *)((char *)&loc_8B072 + gameDataOffset + 4) + gameDataOffset + 31 * m;
@@ -63414,7 +63414,7 @@ int __usercall sub_7A7BC@<eax>(int a1@<ebx>, long double a2@<st0>)
     *(_BYTE *)(v15 + 147192) &= 0xFCu;
     *(_BYTE *)(v15 + 147192) |= 2u;
   }
-  sub_753B0(a2, 58, 63, 4, 12, 12, 11);
+  addUnit(a2, 58, 63, 4, 12, 12, 11);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -63491,7 +63491,7 @@ __int16 __fastcall sub_7AF37(int a1, int a2, unsigned __int16 a3, unsigned __int
 // 1845C8: using guessed type int dword_1845C8;
 
 //----- (0007B082) --------------------------------------------------------
-int __usercall sub_7B082@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap19@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63514,7 +63514,7 @@ int __usercall sub_7B082@<eax>(int a1@<ebx>, long double a2@<st0>)
   signed int l; // [sp+0h] [bp-8h]@10
   signed int m; // [sp+0h] [bp-8h]@13
 
-  sub_66464((int)aP_mapa9j_map, a2);
+  loadMap((int)aP_mapa9j_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 18;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -63537,67 +63537,67 @@ int __usercall sub_7B082@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 145720, aMcdan);
   v2 = strcpy(&byte_222FC[gameDataOffset], aDrebegen_1);
   sub_2238E(v2, v3, a1);
-  sub_754A7(a2, 85, 38, 1, 2, (int)aCantbelly_3, 17, 17, 17);
-  v4 = sub_754A7(a2, 15, 23, 1, 2, (int)aStoneBell, 17, -1, i);
+  addCastle(a2, 85, 38, 1, 2, (int)aCantbelly_3, 17, 17, 17);
+  v4 = addCastle(a2, 15, 23, 1, 2, (int)aStoneBell, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
-  sub_753B0(a2, 85, 40, 1, 9, 9, 9);
-  sub_753B0(a2, 86, 40, 1, 5, 5, 12);
-  sub_753B0(a2, 15, 25, 1, 2, 2, 2);
-  sub_753B0(a2, 16, 25, 1, 34, 34, 34);
-  sub_754A7(a2, 9, 89, 2, 2, (int)aTimbran_3, 17, -1, v5);
-  sub_753B0(a2, 9, 91, 2, 26, 29, 5);
-  sub_753B0(a2, 10, 91, 2, 11, 11, 2);
-  sub_753B0(a2, 11, 91, 2, 25, 25, 20);
-  sub_754A7(a2, 6, 5, 3, 2, (int)aHopenberg_1, 17, 33, -1);
-  sub_754A7(a2, 82, 55, 3, 2, (int)aKathaGha_2, 17, 34, -1);
-  sub_753B0(a2, 6, 7, 3, 1, 1, 1);
-  sub_753B0(a2, 7, 7, 3, 29, 29, 26);
+  addUnit(a2, 85, 40, 1, 9, 9, 9);
+  addUnit(a2, 86, 40, 1, 5, 5, 12);
+  addUnit(a2, 15, 25, 1, 2, 2, 2);
+  addUnit(a2, 16, 25, 1, 34, 34, 34);
+  addCastle(a2, 9, 89, 2, 2, (int)aTimbran_3, 17, -1, v5);
+  addUnit(a2, 9, 91, 2, 26, 29, 5);
+  addUnit(a2, 10, 91, 2, 11, 11, 2);
+  addUnit(a2, 11, 91, 2, 25, 25, 20);
+  addCastle(a2, 6, 5, 3, 2, (int)aHopenberg_1, 17, 33, -1);
+  addCastle(a2, 82, 55, 3, 2, (int)aKathaGha_2, 17, 34, -1);
+  addUnit(a2, 6, 7, 3, 1, 1, 1);
+  addUnit(a2, 7, 7, 3, 29, 29, 26);
   for ( j = 4; j < 6; ++j )
   {
     v6 = 725 * *(_WORD *)((char *)&loc_882D8 + gameDataOffset + 4) + gameDataOffset + 31 * j;
     *(_BYTE *)(v6 + 147192) |= 3u;
   }
-  sub_753B0(a2, 82, 57, 3, 5, 5, 5);
-  sub_753B0(a2, 83, 57, 3, 28, 26, 12);
+  addUnit(a2, 82, 57, 3, 5, 5, 5);
+  addUnit(a2, 83, 57, 3, 28, 26, 12);
   for ( k = 4; k < 6; ++k )
   {
     v7 = 725 * *(_WORD *)((char *)&loc_8BE9C + gameDataOffset + 4) + gameDataOffset + 31 * k;
     *(_BYTE *)(v7 + 147192) |= 3u;
   }
-  sub_753B0(a2, 84, 57, 3, 12, 12, 16);
-  sub_753B0(a2, 6, 91, 3, 10, 10, 10);
-  sub_754A7(a2, 27, 49, 4, 2, (int)aWerneom_0, 17, -1, k);
-  sub_754A7(a2, 48, 72, 4, 1, (int)aBokumia, 17, -1, v8);
-  sub_753B0(a2, 27, 51, 4, 22, 22, 22);
-  sub_753B0(a2, 28, 51, 4, 18, 18, 25);
-  sub_753B0(a2, 10, 51, 4, 1, 1, 24);
+  addUnit(a2, 84, 57, 3, 12, 12, 16);
+  addUnit(a2, 6, 91, 3, 10, 10, 10);
+  addCastle(a2, 27, 49, 4, 2, (int)aWerneom_0, 17, -1, k);
+  addCastle(a2, 48, 72, 4, 1, (int)aBokumia, 17, -1, v8);
+  addUnit(a2, 27, 51, 4, 22, 22, 22);
+  addUnit(a2, 28, 51, 4, 18, 18, 25);
+  addUnit(a2, 10, 51, 4, 1, 1, 24);
   v9 = gameDataOffset + 725 * *(_WORD *)((char *)&loc_8858C + gameDataOffset);
   *((_BYTE *)&loc_23F36 + v9) |= 3u;
   v10 = gameDataOffset + 725 * *(_WORD *)((char *)&loc_8858C + gameDataOffset);
   *((_BYTE *)&loc_23FB2 + v10) |= 3u;
-  sub_753B0(a2, 48, 74, 4, 22, 29, 12);
+  addUnit(a2, 48, 74, 4, 22, 29, 12);
   for ( l = 4; l < 6; ++l )
   {
     v11 = 725 * *(_WORD *)((char *)&loc_8A368 + gameDataOffset + 2) + gameDataOffset + 31 * l;
     *(_BYTE *)(v11 + 147192) |= 3u;
   }
-  sub_753B0(a2, 49, 74, 4, 12, 12, 11);
+  addUnit(a2, 49, 74, 4, 12, 12, 11);
   v12 = gameDataOffset + 725 * *(_WORD *)((char *)&loc_8A42F + gameDataOffset + 3);
   *((_BYTE *)&loc_23F36 + v12) &= 0xFCu;
   *((_BYTE *)&loc_23F36 + v12) |= 2u;
-  v13 = sub_754A7(a2, 62, 79, 0, 1, (int)aFhurTao, 17, 33, -1);
+  v13 = addCastle(a2, 62, 79, 0, 1, (int)aFhurTao, 17, 33, -1);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v13 + gameDataOffset) += 200;
-  sub_753B0(a2, 62, 81, 0, 0, 0, 0);
-  sub_753B0(a2, 63, 81, 0, 23, 23, 2);
-  sub_753B0(a2, 61, 81, 0, 1, 1, 5);
-  sub_753B0(a2, 70, 80, 0, 29, 12, 12);
+  addUnit(a2, 62, 81, 0, 0, 0, 0);
+  addUnit(a2, 63, 81, 0, 23, 23, 2);
+  addUnit(a2, 61, 81, 0, 1, 1, 5);
+  addUnit(a2, 70, 80, 0, 29, 12, 12);
   v14 = gameDataOffset + 725 * *(_WORD *)((char *)&loc_8B4A5 + gameDataOffset + 1);
   *(_BYTE *)(v14 + 147223) &= 0xFCu;
   *(_BYTE *)(v14 + 147223) |= 1u;
   v15 = gameDataOffset + 725 * *(_WORD *)((char *)&loc_8B4A5 + gameDataOffset + 1);
   *((_BYTE *)&loc_23F36 + v15) &= 0xFCu;
   *((_BYTE *)&loc_23F36 + v15) |= 1u;
-  sub_753B0(a2, 37, 29, 0, 0, 0, 0);
+  addUnit(a2, 37, 29, 0, 0, 0, 0);
   for ( m = 0; m < 5; ++m )
   {
     v16 = 725 * *(_WORD *)((char *)&loc_89A78 + gameDataOffset) + gameDataOffset + 31 * m;
@@ -63668,7 +63668,7 @@ bool sub_7B858()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007B9B7) --------------------------------------------------------
-int __usercall sub_7B9B7@<eax>(int a1@<ebx>, long double a2@<st0>)
+int __usercall startMap20@<eax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@4
   int v3; // edx@4
@@ -63683,7 +63683,7 @@ int __usercall sub_7B9B7@<eax>(int a1@<ebx>, long double a2@<st0>)
   int v12; // eax@4
   int i; // [sp+0h] [bp-8h]@1
 
-  sub_66464((int)aP_map10z_map, a2);
+  loadMap((int)aP_map10z_map, a2);
   *(_DWORD *)(gameDataOffset + 140017) = 19;
   for ( i = 0; i < 5; ++i )
     sub_66188(i);
@@ -63706,39 +63706,39 @@ int __usercall sub_7B9B7@<eax>(int a1@<ebx>, long double a2@<st0>)
   strcpy(gameDataOffset + 145720, aRiludius_1);
   v2 = strcpy(&byte_222FC[gameDataOffset], aSirMordus);
   sub_2238E(v2, v3, a1);
-  v4 = sub_754A7(a2, 83, 15, 1, 2, (int)aGorendberg_0, 17, -1, i);
+  v4 = addCastle(a2, 83, 15, 1, 2, (int)aGorendberg_0, 17, -1, i);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v4 + gameDataOffset) -= 100;
-  sub_754A7(a2, 73, 68, 1, 2, (int)aTimbran_4, 17, -1, v5);
-  sub_753B0(a2, 83, 17, 1, 9, 9, 12);
-  sub_753B0(a2, 84, 17, 1, 5, 5, 5);
-  sub_753B0(a2, 73, 70, 1, 24, 24, 2);
-  *(_DWORD *)((char *)&loc_7C8A0 + 467 * sub_754A7(a2, 20, 9, 2, 2, (int)aGhettan_2, 17, 33, 33) + gameDataOffset) = 600;
-  sub_754A7(a2, 70, 30, 2, 2, (int)aDrakefly_0, 17, -1, v6);
-  sub_753B0(a2, 20, 11, 2, 6, 6, 7);
-  sub_753B0(a2, 21, 11, 2, 11, 11, 24);
-  sub_753B0(a2, 22, 11, 2, 25, 25, 25);
-  sub_753B0(a2, 70, 32, 2, 30, 27, 28);
-  sub_753B0(a2, 71, 32, 2, 22, 22, 22);
-  sub_754A7(a2, 36, 54, 3, 2, (int)aBhuaRock_1, 17, -1, v7);
-  sub_753B0(a2, 35, 56, 3, 1, 1, 1);
-  sub_753B0(a2, 36, 56, 3, 26, 26, 6);
-  sub_753B0(a2, 37, 56, 3, 6, 6, 6);
-  sub_753B0(a2, 38, 56, 3, 28, 27, 12);
-  sub_753B0(a2, 36, 53, 3, 10, 10, 10);
-  sub_754A7(a2, 79, 2, 4, 2, (int)aKathaGha_3, 17, -1, v8);
-  v10 = sub_754A7(a2, 88, 63, 4, 1, (int)aStormus_2, 17, -1, v9);
+  addCastle(a2, 73, 68, 1, 2, (int)aTimbran_4, 17, -1, v5);
+  addUnit(a2, 83, 17, 1, 9, 9, 12);
+  addUnit(a2, 84, 17, 1, 5, 5, 5);
+  addUnit(a2, 73, 70, 1, 24, 24, 2);
+  *(_DWORD *)((char *)&loc_7C8A0 + 467 * addCastle(a2, 20, 9, 2, 2, (int)aGhettan_2, 17, 33, 33) + gameDataOffset) = 600;
+  addCastle(a2, 70, 30, 2, 2, (int)aDrakefly_0, 17, -1, v6);
+  addUnit(a2, 20, 11, 2, 6, 6, 7);
+  addUnit(a2, 21, 11, 2, 11, 11, 24);
+  addUnit(a2, 22, 11, 2, 25, 25, 25);
+  addUnit(a2, 70, 32, 2, 30, 27, 28);
+  addUnit(a2, 71, 32, 2, 22, 22, 22);
+  addCastle(a2, 36, 54, 3, 2, (int)aBhuaRock_1, 17, -1, v7);
+  addUnit(a2, 35, 56, 3, 1, 1, 1);
+  addUnit(a2, 36, 56, 3, 26, 26, 6);
+  addUnit(a2, 37, 56, 3, 6, 6, 6);
+  addUnit(a2, 38, 56, 3, 28, 27, 12);
+  addUnit(a2, 36, 53, 3, 10, 10, 10);
+  addCastle(a2, 79, 2, 4, 2, (int)aKathaGha_3, 17, -1, v8);
+  v10 = addCastle(a2, 88, 63, 4, 1, (int)aStormus_2, 17, -1, v9);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v10 + gameDataOffset) += 300;
-  sub_753B0(a2, 79, 4, 4, 25, 25, 25);
-  sub_753B0(a2, 80, 4, 4, 18, 18, 23);
-  sub_753B0(a2, 88, 65, 4, 1, 1, 1);
-  sub_753B0(a2, 89, 65, 4, 22, 29, 12);
-  v12 = sub_754A7(a2, 95, 51, 0, 2, (int)aGuluali_2, 17, -1, v11);
+  addUnit(a2, 79, 4, 4, 25, 25, 25);
+  addUnit(a2, 80, 4, 4, 18, 18, 23);
+  addUnit(a2, 88, 65, 4, 1, 1, 1);
+  addUnit(a2, 89, 65, 4, 22, 29, 12);
+  v12 = addCastle(a2, 95, 51, 0, 2, (int)aGuluali_2, 17, -1, v11);
   *(_DWORD *)((char *)&loc_7C8A0 + 467 * v12 + gameDataOffset) += 300;
-  sub_753B0(a2, 95, 53, 0, 30, 30, 12);
-  sub_753B0(a2, 96, 53, 0, 23, 23, 21);
-  sub_753B0(a2, 97, 53, 0, 5, 5, 7);
-  sub_753B0(a2, 55, 79, 0, 12, 12, 8);
-  sub_753B0(a2, 78, 98, 0, 30, 30, 30);
+  addUnit(a2, 95, 53, 0, 30, 30, 12);
+  addUnit(a2, 96, 53, 0, 23, 23, 21);
+  addUnit(a2, 97, 53, 0, 5, 5, 7);
+  addUnit(a2, 55, 79, 0, 12, 12, 8);
+  addUnit(a2, 78, 98, 0, 30, 30, 30);
   sub_6CCE0(a2);
   return sub_661C4();
 }
@@ -63910,71 +63910,71 @@ int sub_7C17E()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0007C255) --------------------------------------------------------
-int __usercall sub_7C255@<eax>(int result@<eax>, int a2@<ebx>, long double a3@<st0>)
+int __usercall startMap@<eax>(int result@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   if ( (unsigned int)result <= 0x13 )
   {
     switch ( result )
     {
       case 0:
-        result = sub_756BA(a2, a3);
+        result = startMap1(a2, a3);
         break;
       case 1:
-        result = sub_75931(a2, a3);
+        result = startMap2(a2, a3);
         break;
       case 2:
-        result = sub_75C00(a2, a3);
+        result = startMap3(a2, a3);
         break;
       case 3:
-        result = sub_75F52(a2, a3);
+        result = startMap4(a2, a3);
         break;
       case 4:
-        result = sub_764C6(a2, a3);
+        result = startMap5(a2, a3);
         break;
       case 5:
-        result = sub_76982(a2, a3);
+        result = startMap6(a2, a3);
         break;
       case 6:
-        result = sub_76FBE(a2, a3);
+        result = startMap7(a2, a3);
         break;
       case 7:
-        result = sub_774D1(a2, a3);
+        result = startMap8(a2, a3);
         break;
       case 8:
-        result = sub_77D3E(a2, a3);
+        result = startMap9(a2, a3);
         break;
       case 9:
-        result = sub_7850A(a2, a3);
+        result = startMap10(a2, a3);
         break;
       case 10:
-        result = sub_78B98(a2, a3);
+        result = startMap11(a2, a3);
         break;
       case 11:
-        result = sub_78E5D(a2, a3);
+        result = startMap12(a2, a3);
         break;
       case 12:
-        result = sub_79101(a2, a3);
+        result = startMap13(a2, a3);
         break;
       case 13:
-        result = sub_7943C(a2, a3);
+        result = startMap14(a2, a3);
         break;
       case 14:
-        result = sub_79890(a2, a3);
+        result = startMap15(a2, a3);
         break;
       case 15:
-        result = sub_79DC9(a2, a3);
+        result = startMap16(a2, a3);
         break;
       case 16:
-        result = sub_7A3C3(a2, a3);
+        result = startMap17(a2, a3);
         break;
       case 17:
-        result = sub_7A7BC(a2, a3);
+        result = startMap18(a2, a3);
         break;
       case 18:
-        result = sub_7B082(a2, a3);
+        result = startMap19(a2, a3);
         break;
       case 19:
-        result = sub_7B9B7(a2, a3);
+        result = startMap20(a2, a3);
         break;
     }
   }
@@ -63996,7 +63996,7 @@ int __usercall sub_7C3AC@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
     sub_5E815();
   sub_5E9CB(v8);
   sub_1FB59();
-  sub_7C255(v8, a2, a3);
+  startMap(v8, a2, a3);
   if ( v8 && v8 != 10 )
   {
     v3 = gameDataOffset + 147147;
@@ -64005,7 +64005,7 @@ int __usercall sub_7C3AC@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
     *(_WORD *)v3 = v6;
     *(_BYTE *)(v3 + 2) = v7;
   }
-  return sub_1FB91(a3);
+  return playGame(a3);
 }
 // 1845EC: using guessed type int gameDataOffset;
 
@@ -73947,11 +73947,11 @@ signed int sub_88370()
 {
   sub_94780((int)aAgenda_0, (int)sub_888E0, 0);
   sub_EC050((int)aActivations, 1, (int)&dword_13A960, 40, (int)sub_DEB50, (int)sub_DEB90);
-  sub_A5910((int)aRefresh, 118, (int)sub_889F0, (int)aRefreshcommand, (int)a11w_0);
-  sub_A5910((int)aRefreshAgenda, 118, (int)sub_88BA0, (int)aRefreshagendac, (int)a01w);
-  sub_A5910((int)aGetSalienceEva, 119, (int)sub_88DA0, (int)aGetsalienceeva, (int)a00_5);
-  sub_A5910((int)aSetSalienceEva, 119, (int)sub_88CA0, (int)aSetsalienceeva, (int)a11w_0);
-  return sub_A5910((int)aAgenda_0, 118, (int)sub_88F10, (int)aAgendacommand, (int)a01w);
+  registerClipsCallback((int)aRefresh, 118, (int)sub_889F0, (int)aRefreshcommand, (int)a11w_0);
+  registerClipsCallback((int)aRefreshAgenda, 118, (int)sub_88BA0, (int)aRefreshagendac, (int)a01w);
+  registerClipsCallback((int)aGetSalienceEva, 119, (int)sub_88DA0, (int)aGetsalienceeva, (int)a00_5);
+  registerClipsCallback((int)aSetSalienceEva, 119, (int)sub_88CA0, (int)aSetsalienceeva, (int)a11w_0);
+  return registerClipsCallback((int)aAgenda_0, 118, (int)sub_88F10, (int)aAgendacommand, (int)a01w);
 }
 // 88DA0: using guessed type int sub_88DA0();
 // 13A960: using guessed type int dword_13A960;
@@ -76313,18 +76313,18 @@ int __usercall sub_8AED0@<eax>(long double a1@<st0>)
 //----- (0008AF20) --------------------------------------------------------
 signed int sub_8AF20()
 {
-  sub_A5910((int)asc_122DC4, 110, (int)sub_8B0A0, (int)aAdditionfuncti, (int)a2N_0);
-  sub_A5910((int)asc_122DE0, 110, (int)sub_8B180, (int)aMultiplication, (int)a2N_0);
-  sub_A5910((int)asc_122DF8, 110, (int)sub_8B270, (int)aSubtractionfun, (int)a2N_0);
-  sub_A5910((int)asc_122E10, 110, (int)sub_8B3A0, (int)aDivisionfuncti, (int)a2N_0);
-  sub_A5910((int)aDiv, 108, (int)sub_8B570, (int)aDivfunction, (int)a2N_0);
-  sub_A5910((int)aSetAutoFloatDi, 98, (int)sub_8B6C0, (int)aSetautofloatdi, (int)a11_0);
-  sub_A5910((int)aGetAutoFloatDi, 98, (int)sub_8B730, (int)aGetautofloatdi, (int)a00_0);
-  sub_A5910((int)aInteger_0, 108, (int)dword_8B790, (int)aIntegerfunctio, (int)a11n);
-  sub_A5910((int)aFloat_0, 100, (int)sub_8B7E0, (int)aFloatfunction, (int)a11n);
-  sub_A5910((int)aAbs, 110, (int)sub_8B850, (int)aAbsfunction, (int)a11n);
-  sub_A5910((int)aMin, 110, (int)sub_8B900, (int)aMinfunction, (int)a2N_0);
-  return sub_A5910((int)aMax, 110, (int)sub_8BA30, (int)aMaxfunction, (int)a2N_0);
+  registerClipsCallback((int)asc_122DC4, 110, (int)sub_8B0A0, (int)aAdditionfuncti, (int)a2N_0);
+  registerClipsCallback((int)asc_122DE0, 110, (int)sub_8B180, (int)aMultiplication, (int)a2N_0);
+  registerClipsCallback((int)asc_122DF8, 110, (int)sub_8B270, (int)aSubtractionfun, (int)a2N_0);
+  registerClipsCallback((int)asc_122E10, 110, (int)sub_8B3A0, (int)aDivisionfuncti, (int)a2N_0);
+  registerClipsCallback((int)aDiv, 108, (int)sub_8B570, (int)aDivfunction, (int)a2N_0);
+  registerClipsCallback((int)aSetAutoFloatDi, 98, (int)sub_8B6C0, (int)aSetautofloatdi, (int)a11_0);
+  registerClipsCallback((int)aGetAutoFloatDi, 98, (int)sub_8B730, (int)aGetautofloatdi, (int)a00_0);
+  registerClipsCallback((int)aInteger_0, 108, (int)dword_8B790, (int)aIntegerfunctio, (int)a11n);
+  registerClipsCallback((int)aFloat_0, 100, (int)sub_8B7E0, (int)aFloatfunction, (int)a11n);
+  registerClipsCallback((int)aAbs, 110, (int)sub_8B850, (int)aAbsfunction, (int)a11n);
+  registerClipsCallback((int)aMin, 110, (int)sub_8B900, (int)aMinfunction, (int)a2N_0);
+  return registerClipsCallback((int)aMax, 110, (int)sub_8BA30, (int)aMaxfunction, (int)a2N_0);
 }
 // 8B730: using guessed type int sub_8B730();
 // 8B790: using guessed type int dword_8B790[5];
@@ -80869,7 +80869,7 @@ signed int sub_8FD00()
     (int)sub_D2670,
     (int)sub_D24E0,
     (int)sub_D26F0);
-  sub_A5910((int)aObjectPatternM, 117, (int)sub_D47F0, (int)aObjectmatchdel, 0);
+  registerClipsCallback((int)aObjectPatternM, 117, (int)sub_D47F0, (int)aObjectmatchdel, 0);
   sub_A5A70((int)aObjectPatternM, (int)sub_D25D0);
   sub_A5AF0((int)aObjectPatternM, 0, 0);
   sub_D26B0();
@@ -80999,35 +80999,35 @@ int sub_8FFD0()
   sub_8D9D0();
   sub_C5140((int)aDefclass, 2);
   sub_C5110((int)aDefclass, (int)sub_905F0, 0);
-  sub_A5910((int)aUndefclass, 118, (int)sub_8C4D0, v0, (int)a11w_7);
+  registerClipsCallback((int)aUndefclass, 118, (int)sub_8C4D0, v0, (int)a11w_7);
   sub_94990((int)aDefclass, (int)sub_8C7A0, 10);
-  sub_A5910((int)aListDefclasses, 118, (int)sub_8C540, v1, (int)a01_2);
-  sub_A5910((int)aPpdefclass, 118, (int)sub_8C520, (int)aPpdefclasscomm, (int)a11w_7);
-  sub_A5910((int)aDescribeClass, 118, (int)sub_8C8E0, (int)aDescribeclassc, (int)a11w_7);
-  sub_A5910((int)aBrowseClasses, 118, (int)sub_8C840, (int)aBrowseclassesc, (int)a01w_6);
-  sub_A5910((int)aGetDefclassLis, 109, (int)sub_8C690, (int)aGetdefclasslis, (int)a01_2);
-  sub_A5910((int)aSuperclassp, 98, (int)sub_8CBF0, (int)aSuperclasspcom, (int)a22w);
-  sub_A5910((int)aSubclassp, 98, (int)sub_8CC50, (int)aSubclasspcomma, (int)a22w);
-  sub_A5910((int)aClassExistp, 98, (int)sub_8D040, (int)aClassexistpcom, (int)a11w_7);
-  sub_A5910((int)aMessageHandl_1, 98, (int)sub_8CD70, (int)aMessagehandler, (int)a23w);
-  sub_A5910((int)aClassAbstractp, 98, (int)sub_8EA40, (int)aClassabstractp, (int)a11w_7);
-  sub_A5910((int)aClassReactivep, 98, (int)sub_8EAA0, (int)aClassreactivep, (int)a11w_7);
-  sub_A5910((int)aClassSlots, 109, (int)sub_8EBF0, (int)aClassslotscomm, (int)a12w);
-  sub_A5910((int)aClassSuperclas, 109, (int)dword_8EC30, (int)aClasssuperclas, (int)a12w);
-  sub_A5910((int)aClassSubclasse, 109, (int)sub_8EC70, (int)aClasssubclasse, (int)a12w);
-  sub_A5910((int)aGetDefmessageH, 109, (int)sub_8ECB0, (int)aGetdefmessageh, (int)a02w);
-  sub_A5910((int)aSlotExistp, 98, (int)sub_8CCA0, (int)aSlotexistpcomm, (int)a23w);
-  sub_A5910((int)aSlotFacets, 109, (int)sub_8ED00, (int)aSlotfacetscomm, (int)a22w);
-  sub_A5910((int)aSlotSources, 109, (int)sub_8ED50, (int)aSlotsourcescom, (int)a22w);
-  sub_A5910((int)aSlotTypes, 109, (int)sub_8EDA0, (int)aSlottypescomma, (int)a22w);
-  sub_A5910((int)aSlotAllowedVal, 109, (int)sub_8EDF0, (int)aSlotallowedval, (int)a22w);
-  sub_A5910((int)aSlotRange, 109, (int)sub_8EE40, (int)aSlotrangecomma, (int)a22w);
-  sub_A5910((int)aSlotCardinalit, 109, (int)sub_8EE90, (int)aSlotcardinalit, (int)a22w);
-  sub_A5910((int)aSlotWritablep, 98, (int)sub_8CE50, (int)aSlotwritablepc, (int)a22we);
-  sub_A5910((int)aSlotInitablep, 98, (int)sub_8CEC0, (int)aSlotinitablepc, (int)a22we);
-  sub_A5910((int)aSlotPublicp, 98, (int)sub_8CF40, (int)aSlotpublicpcom, (int)a22we);
-  sub_A5910((int)aSlotDirectAcce, 98, (int)sub_8CFB0, (int)aSlotdirectacce, (int)a22we);
-  sub_A5910((int)aDefclassModule, 119, (int)sub_8CBD0, (int)aGetdefclassmod, (int)a11w_7);
+  registerClipsCallback((int)aListDefclasses, 118, (int)sub_8C540, v1, (int)a01_2);
+  registerClipsCallback((int)aPpdefclass, 118, (int)sub_8C520, (int)aPpdefclasscomm, (int)a11w_7);
+  registerClipsCallback((int)aDescribeClass, 118, (int)sub_8C8E0, (int)aDescribeclassc, (int)a11w_7);
+  registerClipsCallback((int)aBrowseClasses, 118, (int)sub_8C840, (int)aBrowseclassesc, (int)a01w_6);
+  registerClipsCallback((int)aGetDefclassLis, 109, (int)sub_8C690, (int)aGetdefclasslis, (int)a01_2);
+  registerClipsCallback((int)aSuperclassp, 98, (int)sub_8CBF0, (int)aSuperclasspcom, (int)a22w);
+  registerClipsCallback((int)aSubclassp, 98, (int)sub_8CC50, (int)aSubclasspcomma, (int)a22w);
+  registerClipsCallback((int)aClassExistp, 98, (int)sub_8D040, (int)aClassexistpcom, (int)a11w_7);
+  registerClipsCallback((int)aMessageHandl_1, 98, (int)sub_8CD70, (int)aMessagehandler, (int)a23w);
+  registerClipsCallback((int)aClassAbstractp, 98, (int)sub_8EA40, (int)aClassabstractp, (int)a11w_7);
+  registerClipsCallback((int)aClassReactivep, 98, (int)sub_8EAA0, (int)aClassreactivep, (int)a11w_7);
+  registerClipsCallback((int)aClassSlots, 109, (int)sub_8EBF0, (int)aClassslotscomm, (int)a12w);
+  registerClipsCallback((int)aClassSuperclas, 109, (int)dword_8EC30, (int)aClasssuperclas, (int)a12w);
+  registerClipsCallback((int)aClassSubclasse, 109, (int)sub_8EC70, (int)aClasssubclasse, (int)a12w);
+  registerClipsCallback((int)aGetDefmessageH, 109, (int)sub_8ECB0, (int)aGetdefmessageh, (int)a02w);
+  registerClipsCallback((int)aSlotExistp, 98, (int)sub_8CCA0, (int)aSlotexistpcomm, (int)a23w);
+  registerClipsCallback((int)aSlotFacets, 109, (int)sub_8ED00, (int)aSlotfacetscomm, (int)a22w);
+  registerClipsCallback((int)aSlotSources, 109, (int)sub_8ED50, (int)aSlotsourcescom, (int)a22w);
+  registerClipsCallback((int)aSlotTypes, 109, (int)sub_8EDA0, (int)aSlottypescomma, (int)a22w);
+  registerClipsCallback((int)aSlotAllowedVal, 109, (int)sub_8EDF0, (int)aSlotallowedval, (int)a22w);
+  registerClipsCallback((int)aSlotRange, 109, (int)sub_8EE40, (int)aSlotrangecomma, (int)a22w);
+  registerClipsCallback((int)aSlotCardinalit, 109, (int)sub_8EE90, (int)aSlotcardinalit, (int)a22w);
+  registerClipsCallback((int)aSlotWritablep, 98, (int)sub_8CE50, (int)aSlotwritablepc, (int)a22we);
+  registerClipsCallback((int)aSlotInitablep, 98, (int)sub_8CEC0, (int)aSlotinitablepc, (int)a22we);
+  registerClipsCallback((int)aSlotPublicp, 98, (int)sub_8CF40, (int)aSlotpublicpcom, (int)a22we);
+  registerClipsCallback((int)aSlotDirectAcce, 98, (int)sub_8CFB0, (int)aSlotdirectacce, (int)a22we);
+  registerClipsCallback((int)aDefclassModule, 119, (int)sub_8CBD0, (int)aGetdefclassmod, (int)a11w_7);
   sub_EC050((int)aInstances, 0, (int)&dword_13A9AC, 75, (int)sub_8C610, (int)sub_8C650);
   return sub_EC050((int)aSlots, 1, (int)dword_13A9B0, 74, (int)sub_8C610, (int)sub_8C650);
 }
@@ -83860,7 +83860,7 @@ LABEL_42:
 //----- (00093CA0) --------------------------------------------------------
 signed int sub_93CA0()
 {
-  return sub_A5910((int)aConstructsToC, 118, (int)sub_92C40, (int)aConstructstocc, (int)a23Kii);
+  return registerClipsCallback((int)aConstructsToC, 118, (int)sub_92C40, (int)aConstructstocc, (int)a23Kii);
 }
 
 //----- (00093CD0) --------------------------------------------------------
@@ -84243,8 +84243,8 @@ int sub_943D0()
 //----- (000943E0) --------------------------------------------------------
 int sub_943E0()
 {
-  sub_A5910((int)aClear, 118, (int)sub_94450, (int)aClearcommand, (int)a00_15);
-  sub_A5910((int)aReset, 118, (int)sub_94480, (int)aResetcommand, (int)a00_15);
+  registerClipsCallback((int)aClear, 118, (int)sub_94450, (int)aClearcommand, (int)a00_15);
+  registerClipsCallback((int)aReset, 118, (int)sub_94480, (int)aResetcommand, (int)a00_15);
   return sub_EC050((int)aCompilations_0, 0, (int)&dword_13AA44, 30, 0, 0);
 }
 // 13AA44: using guessed type int dword_13AA44;
@@ -84568,10 +84568,10 @@ signed int sub_949C0()
   do
     *(_DWORD *)(dword_1B1080 + 4 * v0++) = 0;
   while ( v0 < 167 );
-  sub_A5910((int)aGetDynamicCons, 98, (int)sub_952F0, (int)aGdccommand, (int)a00_4);
-  sub_A5910((int)aSetDynamicCons, 98, (int)sub_95270, (int)aSdccommand, (int)a11_1);
-  sub_A5910((int)aGetStaticConst, 98, (int)sub_953A0, (int)aGsccommand, (int)a00_4);
-  return sub_A5910((int)aSetStaticConst, 98, (int)sub_95320, (int)aSsccommand, (int)a11_1);
+  registerClipsCallback((int)aGetDynamicCons, 98, (int)sub_952F0, (int)aGdccommand, (int)a00_4);
+  registerClipsCallback((int)aSetDynamicCons, 98, (int)sub_95270, (int)aSdccommand, (int)a11_1);
+  registerClipsCallback((int)aGetStaticConst, 98, (int)sub_953A0, (int)aGsccommand, (int)a00_4);
+  return registerClipsCallback((int)aSetStaticConst, 98, (int)sub_95320, (int)aSsccommand, (int)a11_1);
 }
 // 952F0: using guessed type int sub_952F0();
 // 953A0: using guessed type int sub_953A0();
@@ -91405,13 +91405,13 @@ int sub_9BFA0()
                    (int)sub_9C1C0,
                    (int)sub_9C660);
   sub_94710((int)aDefinstances, (int)sub_9C8E0, 0);
-  sub_A5910((int)aUndefinstanc_0, 118, (int)sub_9C180, v0, (int)a11w_8);
+  registerClipsCallback((int)aUndefinstanc_0, 118, (int)sub_9C180, v0, (int)a11w_8);
   sub_94990((int)aDefinstances, (int)sub_9C6C0, 0);
   sub_94780((int)aDefinstances, (int)sub_9C790, -1000);
-  sub_A5910((int)aPpdefinstanc_0, 118, (int)sub_9C220, v1, (int)a11w_8);
-  sub_A5910((int)aListDefinstanc, 118, (int)sub_9C240, (int)aListdefinstanc, (int)a01_3);
-  sub_A5910((int)aGetDefinstance, 109, (int)sub_9C280, (int)aGetdefinstance, (int)a01_3);
-  sub_A5910((int)aDefinstancesMo, 119, (int)sub_9C1A0, (int)aGetdefinstan_0, (int)a11w_8);
+  registerClipsCallback((int)aPpdefinstanc_0, 118, (int)sub_9C220, v1, (int)a11w_8);
+  registerClipsCallback((int)aListDefinstanc, 118, (int)sub_9C240, (int)aListdefinstanc, (int)a01_3);
+  registerClipsCallback((int)aGetDefinstance, 109, (int)sub_9C280, (int)aGetdefinstance, (int)a01_3);
+  registerClipsCallback((int)aDefinstancesMo, 119, (int)sub_9C1A0, (int)aGetdefinstan_0, (int)a11w_8);
   sub_94590((int)aDefinstances, (int)sub_9C940, 0);
   sub_9F280();
   return sub_9F7C0();
@@ -92263,11 +92263,11 @@ int sub_9CF30()
   sub_94590((int)aDeffacts, (int)sub_9D020, 0);
   sub_94780((int)aDeffacts, (int)sub_9D080, 0);
   sub_94990((int)aDeffacts, (int)sub_9D140, 10);
-  sub_A5910((int)aGetDeffactsLis, 109, (int)sub_9D1A0, v0, (int)a01w_2);
-  sub_A5910((int)aUndeffacts, 118, (int)sub_9D160, (int)aUndeffactscomm, (int)a11w_3);
-  sub_A5910((int)aDeffactsModule, 119, (int)sub_9D1F0, (int)aDeffactsmodule, (int)a11w_3);
-  sub_A5910((int)aListDeffacts, 118, (int)sub_9D250, (int)aListdeffactsco, (int)a01w_2);
-  sub_A5910((int)aPpdeffacts, 118, (int)sub_9D210, (int)aPpdeffactscomm, (int)a11w_3);
+  registerClipsCallback((int)aGetDeffactsLis, 109, (int)sub_9D1A0, v0, (int)a01w_2);
+  registerClipsCallback((int)aUndeffacts, 118, (int)sub_9D160, (int)aUndeffactscomm, (int)a11w_3);
+  registerClipsCallback((int)aDeffactsModule, 119, (int)sub_9D1F0, (int)aDeffactsmodule, (int)a11w_3);
+  registerClipsCallback((int)aListDeffacts, 118, (int)sub_9D250, (int)aListdeffactsco, (int)a01w_2);
+  registerClipsCallback((int)aPpdeffacts, 118, (int)sub_9D210, (int)aPpdeffactscomm, (int)a11w_3);
   sub_9C9E0();
   return sub_9D290();
 }
@@ -93443,11 +93443,11 @@ int sub_9E550()
   sub_C5140((int)aDeffunction_0, 2);
   sub_94990((int)aDeffunctionHea, (int)sub_9EC30, 1000);
   sub_94990((int)aDeffunctions, (int)sub_9ED10, 0);
-  sub_A5910((int)aUndeffunction, 118, (int)sub_9E880, v0, (int)a11w_5);
-  sub_A5910((int)aListDeffunctio, 118, (int)sub_9E8E0, (int)aListdeffunctio, (int)a01_1);
-  sub_A5910((int)aPpdeffunction, 118, (int)sub_9E8C0, (int)aPpdeffunctionc, (int)a11w_5);
-  sub_A5910((int)aGetDeffunction, 109, (int)sub_9E920, (int)aGetdeffunction, (int)a01_1);
-  sub_A5910((int)aDeffunctionMod, 119, (int)sub_9E8A0, (int)aGetdeffuncti_0, (int)a11w_5);
+  registerClipsCallback((int)aUndeffunction, 118, (int)sub_9E880, v0, (int)a11w_5);
+  registerClipsCallback((int)aListDeffunctio, 118, (int)sub_9E8E0, (int)aListdeffunctio, (int)a01_1);
+  registerClipsCallback((int)aPpdeffunction, 118, (int)sub_9E8C0, (int)aPpdeffunctionc, (int)a11w_5);
+  registerClipsCallback((int)aGetDeffunction, 109, (int)sub_9E920, (int)aGetdeffunction, (int)a01_1);
+  registerClipsCallback((int)aDeffunctionMod, 119, (int)sub_9E8A0, (int)aGetdeffuncti_0, (int)a11w_5);
   sub_9D9B0();
   sub_9DEF0();
   return sub_EC050((int)aDeffunctions, 0, (int)&dword_13AA84, 32, (int)sub_9ED30, (int)sub_9ED60);
@@ -94924,42 +94924,42 @@ signed int __fastcall sub_A0540(int a1, int a2, int a3, int a4)
 //----- (000A05C0) --------------------------------------------------------
 signed int sub_A05C0()
 {
-  sub_A5910((int)aCos, 100, (int)sub_A0C00, (int)aCosfunction, (int)a11n_0);
-  sub_A5910((int)aSin, 100, (int)sub_A0C40, (int)aSinfunction, (int)a11n_0);
-  sub_A5910((int)aTan, 100, (int)sub_A0C80, (int)aTanfunction, (int)a11n_0);
-  sub_A5910((int)aSec, 100, (int)sub_A0D10, (int)aSecfunction, (int)a11n_0);
-  sub_A5910((int)aCsc, 100, (int)sub_A0DA0, (int)aCscfunction, (int)a11n_0);
-  sub_A5910((int)aCot, 100, (int)sub_A0E30, (int)aCotfunction, (int)a11n_0);
-  sub_A5910((int)aAcos, 100, (int)sub_A0EC0, (int)aAcosfunction, (int)a11n_0);
-  sub_A5910((int)aAsin, 100, (int)sub_A0F40, (int)aAsinfunction, (int)a11n_0);
-  sub_A5910((int)aAtan, 100, (int)sub_A0FC0, (int)aAtanfunction, (int)a11n_0);
-  sub_A5910((int)aAsec, 100, (int)sub_A1000, (int)aAsecfunction, (int)a11n_0);
-  sub_A5910((int)aAcsc, 100, (int)sub_A1080, (int)aAcscfunction, (int)a11n_0);
-  sub_A5910((int)aAcot, 100, (int)sub_A1100, (int)aAcotfunction, (int)a11n_0);
-  sub_A5910((int)aCosh, 100, (int)sub_A1190, (int)aCoshfunction, (int)a11n_0);
-  sub_A5910((int)aSinh, 100, (int)sub_A11D0, (int)aSinhfunction, (int)a11n_0);
-  sub_A5910((int)aTanh, 100, (int)sub_A1210, (int)aTanhfunction, (int)a11n_0);
-  sub_A5910((int)aSech, 100, (int)sub_A1250, (int)aSechfunction, (int)a11n_0);
-  sub_A5910((int)aCsch, 100, (int)sub_A12A0, (int)aCschfunction, (int)a11n_0);
-  sub_A5910((int)aCoth, 100, (int)sub_A1370, (int)aCothfunction, (int)a11n_0);
-  sub_A5910((int)aAcosh, 100, (int)sub_A1440, (int)aAcoshfunction, (int)a11n_0);
-  sub_A5910((int)aAsinh, 100, (int)sub_A14C0, (int)aAsinhfunction, (int)a11n_0);
-  sub_A5910((int)aAtanh, 100, (int)sub_A1510, (int)aAtanhfunction, (int)a11n_0);
-  sub_A5910((int)aAsech, 100, (int)sub_A15A0, (int)aAsechfunction, (int)a11n_0);
-  sub_A5910((int)aAcsch, 100, (int)sub_A1630, (int)aAcschfunction, (int)a11n_0);
-  sub_A5910((int)aAcoth, 100, (int)sub_A16C0, (int)aAcothfunction, (int)a11n_0);
-  sub_A5910((int)aMod, 110, (int)sub_A1AE0, (int)aModfunction, (int)a22n);
-  sub_A5910((int)aExp, 100, (int)sub_A1750, (int)aExpfunction, (int)a11n_0);
-  sub_A5910((int)aLog, 100, (int)sub_A1790, (int)aLogfunction, (int)a11n_0);
-  sub_A5910((int)aLog10, 100, (int)sub_A1840, (int)aLog10function, (int)a11n_0);
-  sub_A5910((int)aSqrt, 100, (int)sub_A18F0, (int)aSqrtfunction, (int)a11n_0);
-  sub_A5910((int)aPi, 100, (int)sub_A1CD0, (int)aPifunction, (int)a00_3);
-  sub_A5910((int)aDegRad, 100, (int)sub_A1D10, (int)aDegradfunction, (int)a11n_0);
-  sub_A5910((int)aRadDeg, 100, (int)sub_A1D60, (int)aRaddegfunction, (int)a11n_0);
-  sub_A5910((int)aDegGrad, 100, (int)sub_A1DB0, (int)aDeggradfunctio, (int)a11n_0);
-  sub_A5910((int)aGradDeg, 100, (int)sub_A1DF0, (int)aGraddegfunctio, (int)a11n_0);
-  sub_A5910((int)asc_125F24, 100, (int)sub_A1960, (int)aPowfunction, (int)a22n);
-  return sub_A5910((int)aRound, 108, (int)sub_A1E30, (int)aRoundfunction, (int)a11n_0);
+  registerClipsCallback((int)aCos, 100, (int)sub_A0C00, (int)aCosfunction, (int)a11n_0);
+  registerClipsCallback((int)aSin, 100, (int)sub_A0C40, (int)aSinfunction, (int)a11n_0);
+  registerClipsCallback((int)aTan, 100, (int)sub_A0C80, (int)aTanfunction, (int)a11n_0);
+  registerClipsCallback((int)aSec, 100, (int)sub_A0D10, (int)aSecfunction, (int)a11n_0);
+  registerClipsCallback((int)aCsc, 100, (int)sub_A0DA0, (int)aCscfunction, (int)a11n_0);
+  registerClipsCallback((int)aCot, 100, (int)sub_A0E30, (int)aCotfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcos, 100, (int)sub_A0EC0, (int)aAcosfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsin, 100, (int)sub_A0F40, (int)aAsinfunction, (int)a11n_0);
+  registerClipsCallback((int)aAtan, 100, (int)sub_A0FC0, (int)aAtanfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsec, 100, (int)sub_A1000, (int)aAsecfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcsc, 100, (int)sub_A1080, (int)aAcscfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcot, 100, (int)sub_A1100, (int)aAcotfunction, (int)a11n_0);
+  registerClipsCallback((int)aCosh, 100, (int)sub_A1190, (int)aCoshfunction, (int)a11n_0);
+  registerClipsCallback((int)aSinh, 100, (int)sub_A11D0, (int)aSinhfunction, (int)a11n_0);
+  registerClipsCallback((int)aTanh, 100, (int)sub_A1210, (int)aTanhfunction, (int)a11n_0);
+  registerClipsCallback((int)aSech, 100, (int)sub_A1250, (int)aSechfunction, (int)a11n_0);
+  registerClipsCallback((int)aCsch, 100, (int)sub_A12A0, (int)aCschfunction, (int)a11n_0);
+  registerClipsCallback((int)aCoth, 100, (int)sub_A1370, (int)aCothfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcosh, 100, (int)sub_A1440, (int)aAcoshfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsinh, 100, (int)sub_A14C0, (int)aAsinhfunction, (int)a11n_0);
+  registerClipsCallback((int)aAtanh, 100, (int)sub_A1510, (int)aAtanhfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsech, 100, (int)sub_A15A0, (int)aAsechfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcsch, 100, (int)sub_A1630, (int)aAcschfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcoth, 100, (int)sub_A16C0, (int)aAcothfunction, (int)a11n_0);
+  registerClipsCallback((int)aMod, 110, (int)sub_A1AE0, (int)aModfunction, (int)a22n);
+  registerClipsCallback((int)aExp, 100, (int)sub_A1750, (int)aExpfunction, (int)a11n_0);
+  registerClipsCallback((int)aLog, 100, (int)sub_A1790, (int)aLogfunction, (int)a11n_0);
+  registerClipsCallback((int)aLog10, 100, (int)sub_A1840, (int)aLog10function, (int)a11n_0);
+  registerClipsCallback((int)aSqrt, 100, (int)sub_A18F0, (int)aSqrtfunction, (int)a11n_0);
+  registerClipsCallback((int)aPi, 100, (int)sub_A1CD0, (int)aPifunction, (int)a00_3);
+  registerClipsCallback((int)aDegRad, 100, (int)sub_A1D10, (int)aDegradfunction, (int)a11n_0);
+  registerClipsCallback((int)aRadDeg, 100, (int)sub_A1D60, (int)aRaddegfunction, (int)a11n_0);
+  registerClipsCallback((int)aDegGrad, 100, (int)sub_A1DB0, (int)aDeggradfunctio, (int)a11n_0);
+  registerClipsCallback((int)aGradDeg, 100, (int)sub_A1DF0, (int)aGraddegfunctio, (int)a11n_0);
+  registerClipsCallback((int)asc_125F24, 100, (int)sub_A1960, (int)aPowfunction, (int)a22n);
+  return registerClipsCallback((int)aRound, 108, (int)sub_A1E30, (int)aRoundfunction, (int)a11n_0);
 }
 
 //----- (000A0A10) --------------------------------------------------------
@@ -99724,11 +99724,11 @@ int __fastcall sub_A57E0(int result, int a2)
 //----- (000A58F0) --------------------------------------------------------
 signed int __fastcall sub_A58F0(int a1, int a2, int a3, int a4)
 {
-  return sub_A5910(a1, a2, a3, a4, 0);
+  return registerClipsCallback(a1, a2, a3, a4, 0);
 }
 
 //----- (000A5910) --------------------------------------------------------
-signed int __fastcall sub_A5910(int a1, int a2, int a3, int a4, int a5)
+signed int __fastcall registerClipsCallback(int a1, int a2, int a3, int a4, int a5)
 {
   int v5; // esi@1
   int v6; // edi@1
@@ -101138,16 +101138,16 @@ int __fastcall sub_A6F50(int a1, int a2, int a3, signed int a4)
 //----- (000A6FB0) --------------------------------------------------------
 signed int sub_A6FB0()
 {
-  sub_A5910((int)aFacts_1, 118, (int)sub_A7490, (int)aFactscommand, (int)a4iu);
+  registerClipsCallback((int)aFacts_1, 118, (int)sub_A7490, (int)aFactscommand, (int)a4iu);
   sub_A58F0((int)aAssert, 117, (int)sub_A7110, (int)aAssertcommand);
-  sub_A5910((int)aRetract_0, 118, (int)sub_A7260, (int)aRetractcommand, (int)a1Z);
-  sub_A5910((int)aAssertString, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
-  sub_A5910((int)aStrAssert, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
-  sub_A5910((int)aGetFactDuplica, 98, (int)sub_A73F0, (int)aGetfactduplica, (int)a00_13);
-  sub_A5910((int)aSetFactDuplica, 98, (int)sub_A7380, (int)aSetfactduplica, (int)a11_5);
-  sub_A5910((int)aSaveFacts, 98, (int)sub_A77E0, (int)aSavefactscomma, (int)a1Wk);
-  sub_A5910((int)aLoadFacts, 98, (int)sub_A78E0, (int)aLoadfactscomma, (int)a11k_4);
-  sub_A5910((int)aFactIndex, 108, (int)sub_A7420, (int)aFactindexfunct, (int)a11y);
+  registerClipsCallback((int)aRetract_0, 118, (int)sub_A7260, (int)aRetractcommand, (int)a1Z);
+  registerClipsCallback((int)aAssertString, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
+  registerClipsCallback((int)aStrAssert, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
+  registerClipsCallback((int)aGetFactDuplica, 98, (int)sub_A73F0, (int)aGetfactduplica, (int)a00_13);
+  registerClipsCallback((int)aSetFactDuplica, 98, (int)sub_A7380, (int)aSetfactduplica, (int)a11_5);
+  registerClipsCallback((int)aSaveFacts, 98, (int)sub_A77E0, (int)aSavefactscomma, (int)a1Wk);
+  registerClipsCallback((int)aLoadFacts, 98, (int)sub_A78E0, (int)aLoadfactscomma, (int)a11k_4);
+  registerClipsCallback((int)aFactIndex, 108, (int)sub_A7420, (int)aFactindexfunct, (int)a11y);
   sub_A5A70((int)aAssert, (int)sub_A7E70);
   return sub_A5AF0((int)aAssert, 0, 0);
 }
@@ -101276,7 +101276,7 @@ void __usercall sub_A7260(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>
         break;
       if ( v13 == 6 )
       {
-        sub_AA6B0(v14, a5);
+        addClipsFact(v14, a5);
         ++v5;
         v6 = *(_DWORD *)(v10 + 10);
         if ( !v6 )
@@ -101311,7 +101311,7 @@ LABEL_17:
     v8 = sub_AB320(*(_DWORD *)(v14 + 16));
     if ( v8 )
     {
-      sub_AA6B0(v8, a5);
+      addClipsFact(v8, a5);
     }
     else
     {
@@ -102012,11 +102012,11 @@ int __fastcall sub_A7E70(int a1, int a2, int a3, int a4)
 //----- (000A7ED0) --------------------------------------------------------
 signed int sub_A7ED0()
 {
-  sub_A5910((int)aFactExistp, 98, (int)sub_A7FE0, (int)aFactexistpfunc, (int)a11z);
-  sub_A5910((int)aFactRelation, 119, (int)sub_A7F80, (int)aFactrelationfu, (int)a11z);
-  sub_A5910((int)aFactSlotValue, 117, (int)sub_A8050, (int)aFactslotvaluef, (int)a22Zw);
-  sub_A5910((int)aFactSlotNames, 117, (int)sub_A8180, (int)aFactslotnamesf, (int)a11z);
-  return sub_A5910((int)aGetFactList, 109, (int)sub_A82A0, (int)aGetfactlistfun, (int)a01w_7);
+  registerClipsCallback((int)aFactExistp, 98, (int)sub_A7FE0, (int)aFactexistpfunc, (int)a11z);
+  registerClipsCallback((int)aFactRelation, 119, (int)sub_A7F80, (int)aFactrelationfu, (int)a11z);
+  registerClipsCallback((int)aFactSlotValue, 117, (int)sub_A8050, (int)aFactslotvaluef, (int)a22Zw);
+  registerClipsCallback((int)aFactSlotNames, 117, (int)sub_A8180, (int)aFactslotnamesf, (int)a11z);
+  return registerClipsCallback((int)aGetFactList, 109, (int)sub_A82A0, (int)aGetfactlistfun, (int)a01w_7);
 }
 
 //----- (000A7F80) --------------------------------------------------------
@@ -104143,7 +104143,7 @@ int __usercall sub_AA680@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000AA6B0) --------------------------------------------------------
-signed int __usercall sub_AA6B0@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall addClipsFact@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebx@1
   int v4; // ecx@9
@@ -104207,7 +104207,7 @@ signed int __usercall sub_AA6B0@<eax>(int a1@<eax>, long double a2@<st0>)
   else
   {
     while ( dword_13AE08 )
-      sub_AA6B0(dword_13AE08, a2);
+      addClipsFact(dword_13AE08, a2);
   }
   return 1;
 }
@@ -104365,7 +104365,7 @@ signed int __usercall sub_AAAA0@<eax>(long double a1@<st0>)
   signed int result; // eax@2
 
   while ( dword_13AE08 )
-    result = sub_AA6B0(dword_13AE08, a1);
+    result = addClipsFact(dword_13AE08, a1);
   return result;
 }
 // 13AE08: using guessed type int dword_13AE08;
@@ -104682,7 +104682,7 @@ void __usercall sub_AB2B0(long double a1@<st0>)
   while ( 1 )
   {
     JUMPOUT(dword_13AE08, 0, &loc_AB20A);
-    sub_AA6B0(dword_13AE08, a1);
+    addClipsFact(dword_13AE08, a1);
   }
 }
 // 13AE08: using guessed type int dword_13AE08;
@@ -104693,7 +104693,7 @@ bool __usercall sub_AB2E0@<eax>(long double a1@<st0>)
 {
   dword_13AE0C = 0;
   while ( dword_13AE08 )
-    sub_AA6B0(dword_13AE08, a1);
+    addClipsFact(dword_13AE08, a1);
   return dword_13AE08 == 0;
 }
 // 13AE08: using guessed type int dword_13AE08;
@@ -105636,15 +105636,15 @@ signed int sub_AC460()
 //----- (000AC4B0) --------------------------------------------------------
 signed int sub_AC4B0()
 {
-  sub_A5910((int)aBatch, 98, (int)sub_ACD80, (int)aBatchcommand, (int)a11k_0);
-  sub_A5910((int)aBatch_0, 98, (int)sub_AD110, (int)aBatchstarcomma, (int)a11k_0);
-  sub_A5910((int)aDribbleOn, 98, (int)sub_AC930, (int)aDribbleoncomma, (int)a11k_0);
-  sub_A5910((int)aDribbleOff, 98, (int)sub_ACA40, (int)aDribbleoffcomm, (int)a00_1);
-  sub_A5910((int)aSave, 98, (int)sub_AD360, (int)aSavecommand, (int)a11k_0);
-  sub_A5910((int)aLoad, 98, (int)sub_AD270, (int)aLoadcommand, (int)a11k_0);
-  sub_A5910((int)aLoad_0, 98, (int)sub_AD2F0, (int)aLoadstarcomman, (int)a11k_0);
-  sub_A5910((int)aBsave, 98, (int)sub_8BB60, (int)aBsavecommand, (int)a11k_0);
-  return sub_A5910((int)aBload_1, 98, (int)sub_8AED0, (int)aBloadcommand, (int)a11k_0);
+  registerClipsCallback((int)aBatch, 98, (int)sub_ACD80, (int)aBatchcommand, (int)a11k_0);
+  registerClipsCallback((int)aBatch_0, 98, (int)sub_AD110, (int)aBatchstarcomma, (int)a11k_0);
+  registerClipsCallback((int)aDribbleOn, 98, (int)sub_AC930, (int)aDribbleoncomma, (int)a11k_0);
+  registerClipsCallback((int)aDribbleOff, 98, (int)sub_ACA40, (int)aDribbleoffcomm, (int)a00_1);
+  registerClipsCallback((int)aSave, 98, (int)sub_AD360, (int)aSavecommand, (int)a11k_0);
+  registerClipsCallback((int)aLoad, 98, (int)sub_AD270, (int)aLoadcommand, (int)a11k_0);
+  registerClipsCallback((int)aLoad_0, 98, (int)sub_AD2F0, (int)aLoadstarcomman, (int)a11k_0);
+  registerClipsCallback((int)aBsave, 98, (int)sub_8BB60, (int)aBsavecommand, (int)a11k_0);
+  return registerClipsCallback((int)aBload_1, 98, (int)sub_8AED0, (int)aBloadcommand, (int)a11k_0);
 }
 
 //----- (000AC5D0) --------------------------------------------------------
@@ -108417,27 +108417,27 @@ int sub_AF6F0()
   sub_948F0((int)aDefmethod_0, (int)aDefmethods, (int)sub_B25B0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   sub_94990((int)aDefgeneric_1, (int)sub_B07C0, 1000);
   sub_94990((int)aDefmethod_0, (int)sub_B07E0, -1000);
-  sub_A5910((int)aUndefgeneric, 118, (int)sub_AFBF0, v0, (int)a11w_4);
-  sub_A5910((int)aUndefmethod, 118, (int)sub_AFC30, (int)aUndefmethodcom, (int)a22Wg);
-  sub_A5910((int)aCallNextMethod, 117, (int)sub_B13A0, (int)aCallnextmethod, (int)a00_7);
+  registerClipsCallback((int)aUndefgeneric, 118, (int)sub_AFBF0, v0, (int)a11w_4);
+  registerClipsCallback((int)aUndefmethod, 118, (int)sub_AFC30, (int)aUndefmethodcom, (int)a22Wg);
+  registerClipsCallback((int)aCallNextMethod, 117, (int)sub_B13A0, (int)aCallnextmethod, (int)a00_7);
   sub_A5AF0((int)aCallNextMethod, 1, 0);
-  sub_A5910((int)aCallSpecificMe, 117, (int)sub_B14C0, v1, (int)a2Wi);
+  registerClipsCallback((int)aCallSpecificMe, 117, (int)sub_B14C0, v1, (int)a2Wi);
   sub_A5AF0((int)aCallSpecificMe, 1, 0);
-  sub_A5910((int)aOverrideNextMe, 117, (int)sub_B1590, v2, 0);
+  registerClipsCallback((int)aOverrideNextMe, 117, (int)sub_B1590, v2, 0);
   sub_A5AF0((int)aOverrideNextMe, 1, 0);
-  sub_A5910((int)aNextMethodp, 98, (int)sub_B1360, v3, (int)a00_7);
+  registerClipsCallback((int)aNextMethodp, 98, (int)sub_B1360, v3, (int)a00_7);
   sub_A5AF0((int)aNextMethodp, 1, 0);
-  sub_A5910((int)aGnrcCurrentA_0, 117, (int)sub_B1610, v4, 0);
-  sub_A5910((int)aPpdefgeneric, 118, (int)sub_B0030, (int)aPpdefgenericco, (int)a11w_4);
-  sub_A5910((int)aListDefgeneric, 118, (int)sub_B01A0, (int)aListdefgeneric, (int)a01_0);
-  sub_A5910((int)aPpdefmethod, 118, (int)sub_B0050, (int)aPpdefmethodcom, (int)a22Wi);
-  sub_A5910((int)aListDefmethods, 118, (int)sub_B0100, (int)aListdefmethods, (int)a01w_3);
-  sub_A5910((int)aPreviewGeneric, 118, (int)sub_B1EB0, (int)aPreviewgeneric, (int)a1W_0);
-  sub_A5910((int)aGetDefgenericL, 109, (int)sub_B0260, (int)aGetdefgenericl, (int)a01_0);
-  sub_A5910((int)aGetDefmethodLi, 109, (int)sub_B02B0, (int)aGetdefmethodli, (int)a01w_3);
-  sub_A5910((int)aGetMethodRestr, 109, (int)sub_B0450, (int)aGetmethodrestr, (int)a22iw);
-  sub_A5910((int)aDefgenericModu, 119, (int)sub_AFC10, (int)aGetdefgenericm, (int)a11w_4);
-  sub_A5910((int)aType, 117, (int)sub_B77A0, (int)aClasscommand, (int)a11_3);
+  registerClipsCallback((int)aGnrcCurrentA_0, 117, (int)sub_B1610, v4, 0);
+  registerClipsCallback((int)aPpdefgeneric, 118, (int)sub_B0030, (int)aPpdefgenericco, (int)a11w_4);
+  registerClipsCallback((int)aListDefgeneric, 118, (int)sub_B01A0, (int)aListdefgeneric, (int)a01_0);
+  registerClipsCallback((int)aPpdefmethod, 118, (int)sub_B0050, (int)aPpdefmethodcom, (int)a22Wi);
+  registerClipsCallback((int)aListDefmethods, 118, (int)sub_B0100, (int)aListdefmethods, (int)a01w_3);
+  registerClipsCallback((int)aPreviewGeneric, 118, (int)sub_B1EB0, (int)aPreviewgeneric, (int)a1W_0);
+  registerClipsCallback((int)aGetDefgenericL, 109, (int)sub_B0260, (int)aGetdefgenericl, (int)a01_0);
+  registerClipsCallback((int)aGetDefmethodLi, 109, (int)sub_B02B0, (int)aGetdefmethodli, (int)a01w_3);
+  registerClipsCallback((int)aGetMethodRestr, 109, (int)sub_B0450, (int)aGetmethodrestr, (int)a22iw);
+  registerClipsCallback((int)aDefgenericModu, 119, (int)sub_AFC10, (int)aGetdefgenericm, (int)a11w_4);
+  registerClipsCallback((int)aType, 117, (int)sub_B77A0, (int)aClasscommand, (int)a11_3);
   sub_EC050((int)aGenericFunct_0, 0, (int)&dword_13AEA8, 34, (int)sub_B0A50, (int)sub_B0A80);
   return sub_EC050((int)aMethods, 0, (int)&dword_13AEAC, 33, (int)sub_B0AB0, (int)sub_B0AF0);
 }
@@ -112342,11 +112342,11 @@ int sub_B41D0()
 
   sub_94990((int)aDefglobal_0, (int)sub_B4360, 40);
   sub_94590((int)aDefglobal_0, (int)sub_B42D0, 50);
-  sub_A5910((int)aGetDefglobalLi, 109, (int)sub_B43C0, v0, (int)a01w_4);
-  sub_A5910((int)aUndefglobal, 118, (int)sub_B4380, (int)aUndefglobalcom, (int)a11w_6);
-  sub_A5910((int)aDefglobalModul, 119, (int)sub_B4410, (int)aDefglobalmodul, (int)a11w_6);
-  sub_A5910((int)aListDefglobals, 118, (int)sub_B4470, (int)aListdefglobals, (int)a01w_4);
-  sub_A5910((int)aPpdefglobal, 118, (int)sub_B4430, (int)aPpdefglobalcom, (int)a11w_6);
+  registerClipsCallback((int)aGetDefglobalLi, 109, (int)sub_B43C0, v0, (int)a01w_4);
+  registerClipsCallback((int)aUndefglobal, 118, (int)sub_B4380, (int)aUndefglobalcom, (int)a11w_6);
+  registerClipsCallback((int)aDefglobalModul, 119, (int)sub_B4410, (int)aDefglobalmodul, (int)a11w_6);
+  registerClipsCallback((int)aListDefglobals, 118, (int)sub_B4470, (int)aListdefglobals, (int)a01w_4);
+  registerClipsCallback((int)aPpdefglobal, 118, (int)sub_B4430, (int)aPpdefglobalcom, (int)a11w_6);
   sub_EC050((int)aGlobals, 0, (int)&dword_13AEB8, 0, (int)sub_B44F0, (int)sub_B4520);
   sub_B3CA0();
   return sub_B4550();
@@ -112678,9 +112678,9 @@ int __fastcall sub_B4950(int a1, int a2, int a3, signed int a4)
 //----- (000B49B0) --------------------------------------------------------
 signed int sub_B49B0()
 {
-  sub_A5910((int)aSetResetGlobal, 98, (int)sub_B4A20, (int)aSetresetglobal, (int)a11_6);
-  sub_A5910((int)aGetResetGlobal, 98, (int)sub_B4AC0, (int)aGetresetglobal, (int)a00_8);
-  return sub_A5910((int)aShowDefglobals, 118, (int)sub_B4B00, (int)aShowdefglobals, (int)a01w_5);
+  registerClipsCallback((int)aSetResetGlobal, 98, (int)sub_B4A20, (int)aSetresetglobal, (int)a11_6);
+  registerClipsCallback((int)aGetResetGlobal, 98, (int)sub_B4AC0, (int)aGetresetglobal, (int)a00_8);
+  return registerClipsCallback((int)aShowDefglobals, 118, (int)sub_B4B00, (int)aShowdefglobals, (int)a01w_5);
 }
 // B4AC0: using guessed type int sub_B4AC0();
 
@@ -114773,28 +114773,28 @@ signed int sub_B6CE0()
 
   sub_B9A90();
   sub_A33E0((int)&unk_13AFB0, 7);
-  sub_A5910((int)aInitializeInst, 117, (int)sub_BB600, v0, 0);
-  sub_A5910((int)aActiveInitiali, 117, (int)sub_BACB0, (int)aInitializeinst, 0);
+  registerClipsCallback((int)aInitializeInst, 117, (int)sub_BB600, v0, 0);
+  registerClipsCallback((int)aActiveInitiali, 117, (int)sub_BACB0, (int)aInitializeinst, 0);
   sub_A5A70((int)aActiveInitiali, (int)sub_BD6E0);
-  sub_A5910((int)aMakeInstance, 117, (int)sub_BB630, v1, 0);
-  sub_A5910((int)aActiveMakeInst, 117, (int)sub_BAD10, (int)aMakeinstanceco, 0);
+  registerClipsCallback((int)aMakeInstance, 117, (int)sub_BB630, v1, 0);
+  registerClipsCallback((int)aActiveMakeInst, 117, (int)sub_BAD10, (int)aMakeinstanceco, 0);
   sub_A5A70((int)aActiveMakeInst, (int)sub_BD6E0);
   sub_A5A70((int)aInitializeInst, (int)sub_BD6E0);
   sub_A5A70((int)aMakeInstance, (int)sub_BD6E0);
-  sub_A5910((int)aInitSlots, 117, (int)sub_BB310, v2, (int)a00_9);
-  sub_A5910((int)aDeleteInstance, 98, (int)sub_B78B0, (int)aDeleteinstance, (int)a00_9);
-  sub_A5910((int)aUnmakeInstance, 98, (int)sub_B78E0, (int)aUnmakeinstance, (int)a1E);
-  sub_A5910((int)aInstances_0, 118, (int)sub_B70C0, (int)aInstancescomma, (int)a3w);
-  sub_A5910((int)aPpinstance, 118, (int)sub_B7250, (int)aPpinstancecomm, (int)a00_9);
-  sub_A5910((int)aSymbolToInstan, 117, (int)sub_B79E0, (int)aSymboltoinstan, (int)a11w_9);
-  sub_A5910((int)aInstanceNameTo, 119, (int)sub_B7A30, (int)aInstancenameto, (int)a11p);
-  sub_A5910((int)aInstanceAddr_2, 117, (int)sub_B7A70, (int)aInstanceaddres, (int)a12eep);
-  sub_A5910((int)aInstanceAddr_3, 98, (int)sub_B7CC0, (int)aInstanceaddr_0, (int)a11_4);
-  sub_A5910((int)aInstanceNamep, 98, (int)sub_B7CF0, (int)aInstancenamepc, (int)a11_4);
-  sub_A5910((int)aInstanceName_0, 117, (int)sub_B7C20, (int)aInstancenameco, (int)a11e);
-  sub_A5910((int)aInstancep, 98, (int)sub_B7D20, (int)aInstancepcomma, (int)a11_4);
-  sub_A5910((int)aInstanceExistp, 98, (int)sub_B7D60, (int)aInstanceexistp, (int)a11e);
-  sub_A5910((int)aClass_0, 117, (int)sub_B77A0, (int)aClasscommand_0, (int)a11_4);
+  registerClipsCallback((int)aInitSlots, 117, (int)sub_BB310, v2, (int)a00_9);
+  registerClipsCallback((int)aDeleteInstance, 98, (int)sub_B78B0, (int)aDeleteinstance, (int)a00_9);
+  registerClipsCallback((int)aUnmakeInstance, 98, (int)sub_B78E0, (int)aUnmakeinstance, (int)a1E);
+  registerClipsCallback((int)aInstances_0, 118, (int)sub_B70C0, (int)aInstancescomma, (int)a3w);
+  registerClipsCallback((int)aPpinstance, 118, (int)sub_B7250, (int)aPpinstancecomm, (int)a00_9);
+  registerClipsCallback((int)aSymbolToInstan, 117, (int)sub_B79E0, (int)aSymboltoinstan, (int)a11w_9);
+  registerClipsCallback((int)aInstanceNameTo, 119, (int)sub_B7A30, (int)aInstancenameto, (int)a11p);
+  registerClipsCallback((int)aInstanceAddr_2, 117, (int)sub_B7A70, (int)aInstanceaddres, (int)a12eep);
+  registerClipsCallback((int)aInstanceAddr_3, 98, (int)sub_B7CC0, (int)aInstanceaddr_0, (int)a11_4);
+  registerClipsCallback((int)aInstanceNamep, 98, (int)sub_B7CF0, (int)aInstancenamepc, (int)a11_4);
+  registerClipsCallback((int)aInstanceName_0, 117, (int)sub_B7C20, (int)aInstancenameco, (int)a11e);
+  registerClipsCallback((int)aInstancep, 98, (int)sub_B7D20, (int)aInstancepcomma, (int)a11_4);
+  registerClipsCallback((int)aInstanceExistp, 98, (int)sub_B7D60, (int)aInstanceexistp, (int)a11e);
+  registerClipsCallback((int)aClass_0, 117, (int)sub_B77A0, (int)aClasscommand_0, (int)a11_4);
   sub_BBE50();
   sub_B80B0();
   sub_BCD70();
@@ -115786,11 +115786,11 @@ signed int __fastcall sub_B7FA0(int a1, int a2, int a3)
 //----- (000B80B0) --------------------------------------------------------
 signed int sub_B80B0()
 {
-  sub_A5910((int)aSaveInstances, 108, (int)sub_B8160, (int)aSaveinstancesc, (int)&unk_1289B8);
-  sub_A5910((int)aLoadInstances, 108, (int)sub_B8180, (int)aLoadinstancesc, (int)a11k_2);
-  sub_A5910((int)aRestoreInstanc, 108, (int)sub_B8200, (int)aRestoreinstanc, (int)a11k_2);
-  sub_A5910((int)aBsaveInstances, 108, (int)sub_B8570, (int)aBinarysaveinst, (int)&unk_1289B8);
-  return sub_A5910((int)aBloadInstances, 108, (int)sub_B8280, (int)aBinaryloadinst, (int)a11k_2);
+  registerClipsCallback((int)aSaveInstances, 108, (int)sub_B8160, (int)aSaveinstancesc, (int)&unk_1289B8);
+  registerClipsCallback((int)aLoadInstances, 108, (int)sub_B8180, (int)aLoadinstancesc, (int)a11k_2);
+  registerClipsCallback((int)aRestoreInstanc, 108, (int)sub_B8200, (int)aRestoreinstanc, (int)a11k_2);
+  registerClipsCallback((int)aBsaveInstances, 108, (int)sub_B8570, (int)aBinarysaveinst, (int)&unk_1289B8);
+  return registerClipsCallback((int)aBloadInstances, 108, (int)sub_B8280, (int)aBinaryloadinst, (int)a11k_2);
 }
 
 //----- (000B8160) --------------------------------------------------------
@@ -119041,22 +119041,22 @@ signed int sub_BBE50()
   int v2; // ecx@1
   int v3; // ecx@1
 
-  sub_A5910((int)aModifyInstance, 117, (int)sub_BC4C0, (int)aInactivemodify, 0);
-  sub_A5910((int)aActiveModifyIn, 117, (int)sub_BC020, (int)aModifyinstance, 0);
+  registerClipsCallback((int)aModifyInstance, 117, (int)sub_BC4C0, (int)aInactivemodify, 0);
+  registerClipsCallback((int)aActiveModifyIn, 117, (int)sub_BC020, (int)aModifyinstance, 0);
   sub_A5A70((int)aActiveModifyIn, (int)sub_BD6E0);
-  sub_A5910((int)aMessageModifyI, 117, (int)sub_BC4F0, v0, 0);
-  sub_A5910((int)aActiveMessageM, 117, (int)sub_BC110, (int)aMsgmodifyinsta, 0);
+  registerClipsCallback((int)aMessageModifyI, 117, (int)sub_BC4F0, v0, 0);
+  registerClipsCallback((int)aActiveMessageM, 117, (int)sub_BC110, (int)aMsgmodifyinsta, 0);
   sub_A5A70((int)aActiveMessag_0, (int)sub_BD6E0);
-  sub_A5910((int)aDuplicateInsta, 117, (int)sub_BC520, v1, 0);
-  sub_A5910((int)aActiveDuplicat, 117, (int)sub_BC200, (int)aDuplicateinsta, 0);
+  registerClipsCallback((int)aDuplicateInsta, 117, (int)sub_BC520, v1, 0);
+  registerClipsCallback((int)aActiveDuplicat, 117, (int)sub_BC200, (int)aDuplicateinsta, 0);
   sub_A5A70((int)aActiveDuplicat, (int)sub_BD6E0);
-  sub_A5910((int)aMessageDuplica, 117, (int)sub_BC550, v2, 0);
-  sub_A5910((int)aActiveMessageD, 117, (int)sub_BC360, (int)aMsgduplicatein, 0);
+  registerClipsCallback((int)aMessageDuplica, 117, (int)sub_BC550, v2, 0);
+  registerClipsCallback((int)aActiveMessageD, 117, (int)sub_BC360, (int)aMsgduplicatein, 0);
   sub_A5A70((int)aActiveMessag_1, (int)sub_BD6E0);
-  sub_A5910((int)aDirectModify, 117, (int)sub_BC5C0, v3, 0);
-  sub_A5910((int)aMessageModify, 117, (int)sub_BC5E0, (int)aMsgmodifymsgha, 0);
-  sub_A5910((int)aDirectDuplicat, 117, (int)sub_BC580, (int)aDirectduplicat, 0);
-  sub_A5910((int)aMessageDupli_0, 117, (int)sub_BC5A0, (int)aMsgduplicatems, 0);
+  registerClipsCallback((int)aDirectModify, 117, (int)sub_BC5C0, v3, 0);
+  registerClipsCallback((int)aMessageModify, 117, (int)sub_BC5E0, (int)aMsgmodifymsgha, 0);
+  registerClipsCallback((int)aDirectDuplicat, 117, (int)sub_BC580, (int)aDirectduplicat, 0);
+  registerClipsCallback((int)aMessageDupli_0, 117, (int)sub_BC5A0, (int)aMsgduplicatems, 0);
   sub_A5A70((int)aModifyInstance, (int)sub_BD6E0);
   sub_A5A70((int)aMessageModifyI, (int)sub_BD6E0);
   sub_A5A70((int)aDuplicateInsta, (int)sub_BD6E0);
@@ -119749,18 +119749,18 @@ LABEL_37:
 //----- (000BCD70) --------------------------------------------------------
 signed int sub_BCD70()
 {
-  sub_A5910((int)aDirectMvReplac, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
-  sub_A5910((int)aDirectMvInsert, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
-  sub_A5910((int)aDirectMvDelete, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
-  sub_A5910((int)aMvSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
-  sub_A5910((int)aMvSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
-  sub_A5910((int)aMvSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
-  sub_A5910((int)aSlotDirectRepl, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
-  sub_A5910((int)aSlotDirectInse, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
-  sub_A5910((int)aSlotDirectDele, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
-  sub_A5910((int)aSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
-  sub_A5910((int)aSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
-  return sub_A5910((int)aSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
+  registerClipsCallback((int)aDirectMvReplac, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
+  registerClipsCallback((int)aDirectMvInsert, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
+  registerClipsCallback((int)aDirectMvDelete, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
+  registerClipsCallback((int)aMvSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
+  registerClipsCallback((int)aMvSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
+  registerClipsCallback((int)aMvSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
+  registerClipsCallback((int)aSlotDirectRepl, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
+  registerClipsCallback((int)aSlotDirectInse, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
+  registerClipsCallback((int)aSlotDirectDele, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
+  registerClipsCallback((int)aSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
+  registerClipsCallback((int)aSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
+  return registerClipsCallback((int)aSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
 }
 
 //----- (000BCEF0) --------------------------------------------------------
@@ -120646,19 +120646,19 @@ signed int sub_BDEA0()
   v0 = sub_E5680((int)aQds);
   dword_13B000 = v0;
   ++*(_DWORD *)(v0 + 4);
-  sub_A5910((int)aQueryInstance, 111, (int)sub_BE000, (int)aGetqueryinstan, 0);
-  sub_A5910((int)aQueryInstanceS, 117, (int)sub_BE060, (int)aGetqueryinst_0, 0);
-  sub_A5910((int)aAnyInstancep, 98, (int)sub_BE160, (int)aAnyinstances, 0);
+  registerClipsCallback((int)aQueryInstance, 111, (int)sub_BE000, (int)aGetqueryinstan, 0);
+  registerClipsCallback((int)aQueryInstanceS, 117, (int)sub_BE060, (int)aGetqueryinst_0, 0);
+  registerClipsCallback((int)aAnyInstancep, 98, (int)sub_BE160, (int)aAnyinstances, 0);
   sub_A5A70((int)aAnyInstancep, (int)sub_BF6B0);
-  sub_A5910((int)aFindInstance, 109, (int)sub_BE290, v1, 0);
+  registerClipsCallback((int)aFindInstance, 109, (int)sub_BE290, v1, 0);
   sub_A5A70((int)aFindInstance, (int)sub_BF6B0);
-  sub_A5910((int)aFindAllInstanc, 109, (int)sub_BE440, v2, 0);
+  registerClipsCallback((int)aFindAllInstanc, 109, (int)sub_BE440, v2, 0);
   sub_A5A70((int)aFindAllInstanc, (int)sub_BF6B0);
-  sub_A5910((int)aDoForInstance, 117, (int)sub_BE680, v3, 0);
+  registerClipsCallback((int)aDoForInstance, 117, (int)sub_BE680, v3, 0);
   sub_A5A70((int)aDoForInstance, (int)sub_BF770);
-  sub_A5910((int)aDoForAllInstan, 117, (int)sub_BE7F0, v4, 0);
+  registerClipsCallback((int)aDoForAllInstan, 117, (int)sub_BE7F0, v4, 0);
   sub_A5A70((int)aDoForAllInstan, (int)sub_BF770);
-  sub_A5910((int)aDelayedDoForAl, 117, (int)sub_BE980, v5, 0);
+  registerClipsCallback((int)aDelayedDoForAl, 117, (int)sub_BE980, v5, 0);
   return sub_A5A70((int)aDelayedDoForAl, (int)sub_BF770);
 }
 // BE000: using guessed type int sub_BE000();
@@ -122457,14 +122457,14 @@ LABEL_17:
 //----- (000C0030) --------------------------------------------------------
 signed int sub_C0030()
 {
-  sub_A5910((int)aPrintout, 118, (int)sub_C0140, (int)aPrintoutfuncti, (int)a1_1);
-  sub_A5910((int)aRead, 117, (int)sub_C0330, (int)aReadfunction, (int)a1);
-  sub_A5910((int)aOpen, 98, (int)sub_C05C0, (int)aOpenfunction, (int)a23K);
-  sub_A5910((int)aClose, 98, (int)sub_C0770, (int)aClosefunction, (int)a1);
-  sub_A5910((int)aRemove, 98, (int)sub_C07F0, (int)aRemovefunction, (int)a11k);
-  sub_A5910((int)aRename, 98, (int)sub_C0840, (int)aRenamefunction, (int)a22k);
-  sub_A5910((int)aFormat, 115, (int)&off_C08A0, (int)aFormatfunction, (int)a2Us);
-  return sub_A5910((int)aReadline, 107, (int)sub_C1050, (int)aReadlinefuncti, (int)a1);
+  registerClipsCallback((int)aPrintout, 118, (int)sub_C0140, (int)aPrintoutfuncti, (int)a1_1);
+  registerClipsCallback((int)aRead, 117, (int)sub_C0330, (int)aReadfunction, (int)a1);
+  registerClipsCallback((int)aOpen, 98, (int)sub_C05C0, (int)aOpenfunction, (int)a23K);
+  registerClipsCallback((int)aClose, 98, (int)sub_C0770, (int)aClosefunction, (int)a1);
+  registerClipsCallback((int)aRemove, 98, (int)sub_C07F0, (int)aRemovefunction, (int)a11k);
+  registerClipsCallback((int)aRename, 98, (int)sub_C0840, (int)aRenamefunction, (int)a22k);
+  registerClipsCallback((int)aFormat, 115, (int)&off_C08A0, (int)aFormatfunction, (int)a2Us);
+  return registerClipsCallback((int)aReadline, 107, (int)sub_C1050, (int)aReadlinefuncti, (int)a1);
 }
 // C08A0: using guessed type void *off_C08A0;
 
@@ -124473,30 +124473,30 @@ signed int sub_C24F0()
 {
   int v0; // ecx@1
 
-  sub_A5910((int)aGensym, 119, (int)sub_C2880, (int)aGensymfunction, (int)a00);
-  sub_A5910((int)aGensym_0, 119, (int)sub_C28D0, (int)aGensymstarfunc, (int)a00);
-  sub_A5910((int)aSetgen, 108, (int)sub_C27F0, (int)aSetgenfunction, (int)a11i_2);
-  sub_A5910((int)aSystem, 118, (int)sub_E6C10, (int)aGensystem, (int)a1K);
-  sub_A5910((int)aLength, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
-  sub_A5910((int)aLength_0, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
-  sub_A5910((int)aTime, 100, (int)sub_E6BA0, (int)aGentime, (int)a00);
-  sub_A5910((int)aRandom, 108, (int)sub_C2930, (int)aRandomfunction, (int)a00);
-  sub_A5910((int)aSeed, 118, (int)sub_C2960, (int)aSeedfunction, (int)a11i_2);
-  sub_A5910((int)aConserveMem, 118, (int)sub_C2A80, (int)aConservememcom, (int)a11w);
-  sub_A5910((int)aReleaseMem, 108, (int)sub_C2A40, (int)aReleasememcomm, (int)a00);
-  sub_A5910((int)aMemUsed, 108, (int)sub_C2B10, (int)aMemusedcommand, (int)a00);
-  sub_A5910((int)aMemRequests, 108, (int)sub_C2B40, (int)aMemrequestscom, (int)a00);
-  sub_A5910((int)aOptions, 118, (int)sub_C2C10, (int)aOptionscommand, (int)a00);
-  sub_A5910((int)aExpansionCal_0, 117, (int)sub_C30D0, (int)aExpandfunccall, 0);
-  sub_A5910((int)aExpand_0, 117, (int)sub_C3200, (int)aDummyexpandfun, (int)a11m);
+  registerClipsCallback((int)aGensym, 119, (int)sub_C2880, (int)aGensymfunction, (int)a00);
+  registerClipsCallback((int)aGensym_0, 119, (int)sub_C28D0, (int)aGensymstarfunc, (int)a00);
+  registerClipsCallback((int)aSetgen, 108, (int)sub_C27F0, (int)aSetgenfunction, (int)a11i_2);
+  registerClipsCallback((int)aSystem, 118, (int)sub_E6C10, (int)aGensystem, (int)a1K);
+  registerClipsCallback((int)aLength, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
+  registerClipsCallback((int)aLength_0, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
+  registerClipsCallback((int)aTime, 100, (int)sub_E6BA0, (int)aGentime, (int)a00);
+  registerClipsCallback((int)aRandom, 108, (int)sub_C2930, (int)aRandomfunction, (int)a00);
+  registerClipsCallback((int)aSeed, 118, (int)sub_C2960, (int)aSeedfunction, (int)a11i_2);
+  registerClipsCallback((int)aConserveMem, 118, (int)sub_C2A80, (int)aConservememcom, (int)a11w);
+  registerClipsCallback((int)aReleaseMem, 108, (int)sub_C2A40, (int)aReleasememcomm, (int)a00);
+  registerClipsCallback((int)aMemUsed, 108, (int)sub_C2B10, (int)aMemusedcommand, (int)a00);
+  registerClipsCallback((int)aMemRequests, 108, (int)sub_C2B40, (int)aMemrequestscom, (int)a00);
+  registerClipsCallback((int)aOptions, 118, (int)sub_C2C10, (int)aOptionscommand, (int)a00);
+  registerClipsCallback((int)aExpansionCal_0, 117, (int)sub_C30D0, (int)aExpandfunccall, 0);
+  registerClipsCallback((int)aExpand_0, 117, (int)sub_C3200, (int)aDummyexpandfun, (int)a11m);
   sub_A5AF0((int)aExpand_0, 0, 0);
-  sub_A5910((int)aSetEvaluationE, 119, (int)sub_C3430, v0, 0);
-  sub_A5910((int)aSetSequenceOpe, 98, (int)sub_C3450, (int)aSetsorcommand, (int)a11w);
-  sub_A5910((int)aGetSequenceOpe, 98, (int)sub_A57D0, (int)aGetsequenceope, (int)a00);
-  sub_A5910((int)aGetFunctionRes, 115, (int)sub_C34A0, (int)aGetfunctionres, (int)a11w);
-  sub_A5910((int)aCreate, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
-  sub_A5910((int)aMvAppend, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
-  return sub_A5910((int)aApropos, 118, (int)sub_C2B70, (int)aAproposcommand, (int)a11w);
+  registerClipsCallback((int)aSetEvaluationE, 119, (int)sub_C3430, v0, 0);
+  registerClipsCallback((int)aSetSequenceOpe, 98, (int)sub_C3450, (int)aSetsorcommand, (int)a11w);
+  registerClipsCallback((int)aGetSequenceOpe, 98, (int)sub_A57D0, (int)aGetsequenceope, (int)a00);
+  registerClipsCallback((int)aGetFunctionRes, 115, (int)sub_C34A0, (int)aGetfunctionres, (int)a11w);
+  registerClipsCallback((int)aCreate, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
+  registerClipsCallback((int)aMvAppend, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
+  return registerClipsCallback((int)aApropos, 118, (int)sub_C2B70, (int)aAproposcommand, (int)a11w);
 }
 // A57D0: using guessed type int sub_A57D0();
 // C2930: using guessed type int sub_C2930();
@@ -125677,9 +125677,9 @@ int sub_C3EC0()
 
   sub_94780((int)aDefmodule_0, (int)sub_C3F60, 2000);
   sub_94990((int)aDefmodule_0, (int)sub_C3F90, 1100);
-  sub_A5910((int)aGetDefmoduleLi, 109, (int)sub_C3FF0, v0, (int)a00_11);
-  sub_A5910((int)aListDefmodules, 118, (int)sub_C4090, (int)aListdefmodules, (int)a00_11);
-  sub_A5910((int)aPpdefmodule, 118, (int)sub_C4010, (int)aPpdefmodulecom, (int)a11w_11);
+  registerClipsCallback((int)aGetDefmoduleLi, 109, (int)sub_C3FF0, v0, (int)a00_11);
+  registerClipsCallback((int)aListDefmodules, 118, (int)sub_C4090, (int)aListdefmodules, (int)a00_11);
+  registerClipsCallback((int)aPpdefmodule, 118, (int)sub_C4010, (int)aPpdefmodulecom, (int)a11w_11);
   sub_C3540();
   return sub_C4120();
 }
@@ -126169,8 +126169,8 @@ signed int sub_C48D0()
   sub_C3EC0();
   sub_C4BC0();
   sub_948F0((int)aDefmodule_3, (int)aDefmodules, (int)sub_C5190, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  sub_A5910((int)aGetCurrentModu, 119, (int)sub_C4F70, (int)aGetcurrentmodu, (int)a00_12);
-  return sub_A5910((int)aSetCurrentModu, 119, (int)sub_C4FB0, (int)aSetcurrentmodu, (int)a11w_12);
+  registerClipsCallback((int)aGetCurrentModu, 119, (int)sub_C4F70, (int)aGetcurrentmodu, (int)a00_12);
+  return registerClipsCallback((int)aSetCurrentModu, 119, (int)sub_C4FB0, (int)aSetcurrentmodu, (int)a11w_12);
 }
 // C4F70: using guessed type int sub_C4F70();
 
@@ -128088,21 +128088,21 @@ int sub_C63B0()
   dword_13B108 = v2;
   ++*(_DWORD *)(v2 + 4);
   sub_948F0((int)aDefmessageHa_2, (int)aDefmessageHa_1, (int)sub_C9920, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  sub_A5910((int)aUndefmessageHa, 118, (int)sub_C67C0, (int)aUndefmessageha, (int)a23w_0);
-  sub_A5910((int)aSend, 117, (int)sub_C87E0, (int)aSendcommand, (int)a2Uuw);
-  sub_A5910((int)aPreviewSend, 118, (int)sub_C6BA0, (int)aPreviewsendcom, (int)a22w_0);
-  sub_A5910((int)aPpdefmessageHa, 118, (int)sub_C69A0, (int)aPpdefmessageha, (int)a23w_0);
-  sub_A5910((int)aListDefmessage, 118, (int)sub_C6B50, (int)aListdefmessage, (int)a02w_0);
-  sub_A5910((int)aNextHandlerp, 98, (int)sub_C88A0, (int)aNexthandlerava, (int)a00_10);
+  registerClipsCallback((int)aUndefmessageHa, 118, (int)sub_C67C0, (int)aUndefmessageha, (int)a23w_0);
+  registerClipsCallback((int)aSend, 117, (int)sub_C87E0, (int)aSendcommand, (int)a2Uuw);
+  registerClipsCallback((int)aPreviewSend, 118, (int)sub_C6BA0, (int)aPreviewsendcom, (int)a22w_0);
+  registerClipsCallback((int)aPpdefmessageHa, 118, (int)sub_C69A0, (int)aPpdefmessageha, (int)a23w_0);
+  registerClipsCallback((int)aListDefmessage, 118, (int)sub_C6B50, (int)aListdefmessage, (int)a02w_0);
+  registerClipsCallback((int)aNextHandlerp, 98, (int)sub_C88A0, (int)aNexthandlerava, (int)a00_10);
   sub_A5AF0((int)aNextHandlerp, 1, 0);
-  sub_A5910((int)aCallNextHandle, 117, (int)sub_C8900, v3, (int)a00_10);
+  registerClipsCallback((int)aCallNextHandle, 117, (int)sub_C8900, v3, (int)a00_10);
   sub_A5AF0((int)aCallNextHandle, 1, 0);
-  sub_A5910((int)aOverrideNextHa, 117, (int)sub_C8900, v4, 0);
+  registerClipsCallback((int)aOverrideNextHa, 117, (int)sub_C8900, v4, 0);
   sub_A5AF0((int)aOverrideNextHa, 1, 0);
-  sub_A5910((int)aDynamicGet, 117, (int)sub_C8F60, v5, (int)a11w_10);
-  sub_A5910((int)aDynamicPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
-  sub_A5910((int)aGet, 117, (int)sub_C8F60, (int)aDynamichandler, (int)a11w_10);
-  sub_A5910((int)aPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
+  registerClipsCallback((int)aDynamicGet, 117, (int)sub_C8F60, v5, (int)a11w_10);
+  registerClipsCallback((int)aDynamicPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
+  registerClipsCallback((int)aGet, 117, (int)sub_C8F60, (int)aDynamichandler, (int)a11w_10);
+  registerClipsCallback((int)aPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
   sub_EC050((int)aMessages, 0, (int)&dword_13B0F4, 36, 0, 0);
   return sub_EC050((int)aMessageHandl_2, 0, (int)&dword_13B0F0, 35, (int)sub_C6F10, (int)sub_C6F50);
 }
@@ -131873,30 +131873,30 @@ signed int sub_CAE40()
 {
   int v0; // ecx@1
 
-  sub_A5910((int)aFirst, 109, (int)sub_CB9F0, (int)aFirstfunction, (int)a11m_0);
-  sub_A5910((int)aRest, 109, (int)sub_CBA60, (int)aRestfunction, (int)a11m_0);
-  sub_A5910((int)aSubseq, 109, (int)sub_CB7C0, (int)aSubseqfunction, (int)a33im);
-  sub_A5910((int)aDelete, 109, (int)sub_CB100, (int)aDeletefunction, (int)a33im);
-  sub_A5910((int)aReplace, 109, (int)sub_CB220, (int)aReplacefunctio, (int)a4Mii);
-  sub_A5910((int)aInsert, 109, (int)sub_CB3A0, (int)aInsertfunction, (int)a3Mi);
-  sub_A5910((int)aExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
-  sub_A5910((int)aImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
-  sub_A5910((int)aNth, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
-  sub_A5910((int)aMember, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
-  sub_A5910((int)aSubsetp, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
-  sub_A5910((int)aProgn_2, 117, (int)sub_CC140, (int)aMultifieldprog, 0);
-  sub_A5910((int)aStrImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
-  sub_A5910((int)aStrExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
-  sub_A5910((int)aSubset, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
-  sub_A5910((int)aNth_0, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
-  sub_A5910((int)aMvReplace, 109, (int)sub_CB300, (int)aMvreplacefunct, (int)a33Im);
-  sub_A5910((int)aMember_0, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
-  sub_A5910((int)aMvSubseq, 109, (int)sub_CB8E0, (int)aMvsubseqfuncti, (int)a33Iim);
-  sub_A5910((int)aMvDelete, 109, (int)sub_CB1A0, (int)aMvdeletefuncti, (int)a22Im);
+  registerClipsCallback((int)aFirst, 109, (int)sub_CB9F0, (int)aFirstfunction, (int)a11m_0);
+  registerClipsCallback((int)aRest, 109, (int)sub_CBA60, (int)aRestfunction, (int)a11m_0);
+  registerClipsCallback((int)aSubseq, 109, (int)sub_CB7C0, (int)aSubseqfunction, (int)a33im);
+  registerClipsCallback((int)aDelete, 109, (int)sub_CB100, (int)aDeletefunction, (int)a33im);
+  registerClipsCallback((int)aReplace, 109, (int)sub_CB220, (int)aReplacefunctio, (int)a4Mii);
+  registerClipsCallback((int)aInsert, 109, (int)sub_CB3A0, (int)aInsertfunction, (int)a3Mi);
+  registerClipsCallback((int)aExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
+  registerClipsCallback((int)aImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
+  registerClipsCallback((int)aNth, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
+  registerClipsCallback((int)aMember, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
+  registerClipsCallback((int)aSubsetp, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
+  registerClipsCallback((int)aProgn_2, 117, (int)sub_CC140, (int)aMultifieldprog, 0);
+  registerClipsCallback((int)aStrImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
+  registerClipsCallback((int)aStrExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
+  registerClipsCallback((int)aSubset, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
+  registerClipsCallback((int)aNth_0, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
+  registerClipsCallback((int)aMvReplace, 109, (int)sub_CB300, (int)aMvreplacefunct, (int)a33Im);
+  registerClipsCallback((int)aMember_0, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
+  registerClipsCallback((int)aMvSubseq, 109, (int)sub_CB8E0, (int)aMvsubseqfuncti, (int)a33Iim);
+  registerClipsCallback((int)aMvDelete, 109, (int)sub_CB1A0, (int)aMvdeletefuncti, (int)a22Im);
   sub_A5A70((int)aProgn_2, (int)sub_CBDE0);
   sub_A5AF0((int)aProgn_2, 0, 0);
-  sub_A5910((int)aGetPrognField, 117, (int)sub_CC2B0, v0, (int)a00_2);
-  return sub_A5910((int)aGetPrognIndex, 108, (int)sub_CC2F0, (int)aGetmvprogninde, (int)a00_2);
+  registerClipsCallback((int)aGetPrognField, 117, (int)sub_CC2B0, v0, (int)a00_2);
+  return registerClipsCallback((int)aGetPrognIndex, 108, (int)sub_CC2F0, (int)aGetmvprogninde, (int)a00_2);
 }
 // CC2F0: using guessed type int sub_CC2F0();
 
@@ -142794,15 +142794,15 @@ int __fastcall sub_D7A10(int result)
 //----- (000D7A70) --------------------------------------------------------
 signed int sub_D7A70()
 {
-  sub_A5910((int)aIf, 117, (int)sub_D7EF0, (int)aIffunction, 0);
-  sub_A5910((int)aWhile, 117, (int)sub_D7BD0, (int)aWhilefunction, 0);
-  sub_A5910((int)aLoopForCount, 117, (int)sub_D7CE0, (int)aLoopforcountfu, 0);
-  sub_A5910((int)aGetLoopCount, 108, (int)sub_D7EC0, (int)aGetloopcount, 0);
-  sub_A5910((int)aBind_0, 117, (int)sub_D7FA0, (int)aBindfunction, 0);
-  sub_A5910((int)aProgn_0, 117, (int)sub_D8190, (int)aPrognfunction, 0);
-  sub_A5910((int)aReturn, 117, (int)sub_D8200, (int)aReturnfunction, 0);
-  sub_A5910((int)aBreak, 118, (int)sub_D8240, (int)aBreakfunction, 0);
-  sub_A5910((int)aSwitch, 117, (int)sub_D8260, (int)aSwitchfunction, 0);
+  registerClipsCallback((int)aIf, 117, (int)sub_D7EF0, (int)aIffunction, 0);
+  registerClipsCallback((int)aWhile, 117, (int)sub_D7BD0, (int)aWhilefunction, 0);
+  registerClipsCallback((int)aLoopForCount, 117, (int)sub_D7CE0, (int)aLoopforcountfu, 0);
+  registerClipsCallback((int)aGetLoopCount, 108, (int)sub_D7EC0, (int)aGetloopcount, 0);
+  registerClipsCallback((int)aBind_0, 117, (int)sub_D7FA0, (int)aBindfunction, 0);
+  registerClipsCallback((int)aProgn_0, 117, (int)sub_D8190, (int)aPrognfunction, 0);
+  registerClipsCallback((int)aReturn, 117, (int)sub_D8200, (int)aReturnfunction, 0);
+  registerClipsCallback((int)aBreak, 118, (int)sub_D8240, (int)aBreakfunction, 0);
+  registerClipsCallback((int)aSwitch, 117, (int)sub_D8260, (int)aSwitchfunction, 0);
   sub_D8340();
   sub_A5AF0((int)aProgn_0, 0, 0);
   sub_A5AF0((int)aIf, 0, 0);
@@ -144323,30 +144323,30 @@ int __fastcall sub_D9380(int a1)
 //----- (000D9400) --------------------------------------------------------
 signed int sub_D9400()
 {
-  sub_A5910((int)aNot, 98, (int)sub_D9A90, (int)aNotfunction, (int)a11_7);
-  sub_A5910((int)aAnd, 98, (int)sub_D9AE0, (int)aAndfunction, (int)a2);
-  sub_A5910((int)aOr, 98, (int)sub_D9B50, (int)aOrfunction, (int)a2);
-  sub_A5910((int)aEq, 98, (int)sub_D96F0, (int)aEqfunction, (int)a2);
-  sub_A5910((int)aNeq, 98, (int)sub_D9780, (int)aNeqfunction, (int)a2);
-  sub_A5910((int)asc_12C830, 98, (int)sub_D9BB0, (int)aLessthanorequa, (int)a2N);
-  sub_A5910((int)asc_12C850, 98, (int)sub_D9CB0, (int)aGreaterthanore, (int)a2N);
-  sub_A5910((int)asc_12C868, 98, (int)sub_D9DB0, (int)aLessthanfuncti, (int)a2N);
-  sub_A5910((int)asc_12C880, 98, (int)sub_D9EB0, (int)aGreaterthanfun, (int)a2N);
-  sub_A5910((int)asc_12C89C, 98, (int)sub_D9FB0, (int)aNumericequalfu, (int)a2N);
-  sub_A5910((int)asc_12C8B8, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
-  sub_A5910((int)asc_12C8BC, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
-  sub_A5910((int)aSymbolp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
-  sub_A5910((int)aWordp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
-  sub_A5910((int)aStringp, 98, (int)sub_D9810, (int)aStringpfunctio, (int)a11_7);
-  sub_A5910((int)aLexemep, 98, (int)sub_D98B0, (int)aLexemepfunctio, (int)a11_7);
-  sub_A5910((int)aNumberp, 98, (int)sub_D9900, (int)aNumberpfunctio, (int)a11_7);
-  sub_A5910((int)aIntegerp, 98, (int)sub_D99A0, (int)aIntegerpfuncti, (int)a11_7);
-  sub_A5910((int)aFloatp, 98, (int)sub_D9950, (int)aFloatpfunction, (int)a11_7);
-  sub_A5910((int)aOddp, 98, (int)sub_DA190, (int)aOddpfunction, (int)a11i_3);
-  sub_A5910((int)aEvenp, 98, (int)sub_DA200, (int)aEvenpfunction, (int)a11i_3);
-  sub_A5910((int)aMultifieldp, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
-  sub_A5910((int)aSequencep, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
-  return sub_A5910((int)aPointerp, 98, (int)sub_D9A40, (int)aPointerpfuncti, (int)a11_7);
+  registerClipsCallback((int)aNot, 98, (int)sub_D9A90, (int)aNotfunction, (int)a11_7);
+  registerClipsCallback((int)aAnd, 98, (int)sub_D9AE0, (int)aAndfunction, (int)a2);
+  registerClipsCallback((int)aOr, 98, (int)sub_D9B50, (int)aOrfunction, (int)a2);
+  registerClipsCallback((int)aEq, 98, (int)sub_D96F0, (int)aEqfunction, (int)a2);
+  registerClipsCallback((int)aNeq, 98, (int)sub_D9780, (int)aNeqfunction, (int)a2);
+  registerClipsCallback((int)asc_12C830, 98, (int)sub_D9BB0, (int)aLessthanorequa, (int)a2N);
+  registerClipsCallback((int)asc_12C850, 98, (int)sub_D9CB0, (int)aGreaterthanore, (int)a2N);
+  registerClipsCallback((int)asc_12C868, 98, (int)sub_D9DB0, (int)aLessthanfuncti, (int)a2N);
+  registerClipsCallback((int)asc_12C880, 98, (int)sub_D9EB0, (int)aGreaterthanfun, (int)a2N);
+  registerClipsCallback((int)asc_12C89C, 98, (int)sub_D9FB0, (int)aNumericequalfu, (int)a2N);
+  registerClipsCallback((int)asc_12C8B8, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
+  registerClipsCallback((int)asc_12C8BC, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
+  registerClipsCallback((int)aSymbolp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
+  registerClipsCallback((int)aWordp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
+  registerClipsCallback((int)aStringp, 98, (int)sub_D9810, (int)aStringpfunctio, (int)a11_7);
+  registerClipsCallback((int)aLexemep, 98, (int)sub_D98B0, (int)aLexemepfunctio, (int)a11_7);
+  registerClipsCallback((int)aNumberp, 98, (int)sub_D9900, (int)aNumberpfunctio, (int)a11_7);
+  registerClipsCallback((int)aIntegerp, 98, (int)sub_D99A0, (int)aIntegerpfuncti, (int)a11_7);
+  registerClipsCallback((int)aFloatp, 98, (int)sub_D9950, (int)aFloatpfunction, (int)a11_7);
+  registerClipsCallback((int)aOddp, 98, (int)sub_DA190, (int)aOddpfunction, (int)a11i_3);
+  registerClipsCallback((int)aEvenp, 98, (int)sub_DA200, (int)aEvenpfunction, (int)a11i_3);
+  registerClipsCallback((int)aMultifieldp, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
+  registerClipsCallback((int)aSequencep, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
+  return registerClipsCallback((int)aPointerp, 98, (int)sub_D9A40, (int)aPointerpfuncti, (int)a11_7);
 }
 
 //----- (000D96F0) --------------------------------------------------------
@@ -147767,7 +147767,7 @@ void sub_DCC70()
 //----- (000DCD30) --------------------------------------------------------
 signed int sub_DCD30()
 {
-  sub_A5910((int)aExit, 118, (int)sub_DCF30, (int)aExitcommand, (int)a00_16);
+  registerClipsCallback((int)aExit, 118, (int)sub_DCF30, (int)aExitcommand, (int)a00_16);
   sub_AD3C0();
   return sub_E3970();
 }
@@ -149357,12 +149357,12 @@ int sub_DE750()
   sub_94710((int)aDefrule, (int)sub_DE8C0, 0);
   sub_94780((int)aDefrule, (int)sub_DE900, 0);
   sub_EC050((int)aRules, 0, (int)&dword_13B510, 70, (int)sub_DEB50, (int)sub_DEB90);
-  sub_A5910((int)aGetDefruleList, 109, (int)sub_DE980, (int)aGetdefrulelist, (int)a01w_0);
-  sub_A5910((int)aUndefrule, 118, (int)sub_DE940, (int)aUndefrulecomma, (int)a11w_1);
-  sub_A5910((int)aDefruleModule, 119, (int)sub_DE9D0, (int)aDefrulemodulef, (int)a11w_1);
-  sub_A5910((int)aRules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
-  sub_A5910((int)aListDefrules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
-  sub_A5910((int)aPpdefrule, 118, (int)sub_DE9F0, (int)aPpdefrulecomma, (int)a11w_1);
+  registerClipsCallback((int)aGetDefruleList, 109, (int)sub_DE980, (int)aGetdefrulelist, (int)a01w_0);
+  registerClipsCallback((int)aUndefrule, 118, (int)sub_DE940, (int)aUndefrulecomma, (int)a11w_1);
+  registerClipsCallback((int)aDefruleModule, 119, (int)sub_DE9D0, (int)aDefrulemodulef, (int)a11w_1);
+  registerClipsCallback((int)aRules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
+  registerClipsCallback((int)aListDefrules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
+  registerClipsCallback((int)aPpdefrule, 118, (int)sub_DE9F0, (int)aPpdefrulecomma, (int)a11w_1);
   sub_DD2C0();
   return sub_DEBC0();
 }
@@ -149967,24 +149967,24 @@ int __fastcall sub_DF440(int a1, signed int a2, int a3, signed int a4)
 //----- (000DF480) --------------------------------------------------------
 signed int sub_DF480()
 {
-  sub_A5910((int)aRun, 118, (int)sub_A2A50, (int)aRuncommand, (int)a1i);
-  sub_A5910((int)aHalt, 118, (int)sub_A2AB0, (int)aHaltcommand, (int)a00_6);
-  sub_A5910((int)aFocus_2, 98, (int)sub_A2FA0, (int)aFocuscommand, (int)a1W);
-  sub_A5910((int)aClearFocusStac, 118, (int)sub_A2920, (int)aClearfocusstac, (int)a00_6);
-  sub_A5910((int)aGetFocusStack, 109, (int)sub_A2E30, (int)aGetfocusstackf, (int)a00_6);
-  sub_A5910((int)aPopFocus, 119, (int)sub_A2F00, (int)aPopfocusfuncti, (int)a00_6);
-  sub_A5910((int)aGetFocus, 119, (int)sub_A2F40, (int)aGetfocusfuncti, (int)a00_6);
-  sub_A5910((int)aSetBreak, 118, (int)sub_A2BE0, (int)aSetbreakcomman, (int)a11w_2);
-  sub_A5910((int)aRemoveBreak, 118, (int)sub_A2C50, (int)aRemovebreakcom, (int)a1w);
-  sub_A5910((int)aShowBreaks, 118, (int)sub_A2D30, (int)aShowbreakscomm, (int)a01w_1);
-  sub_A5910((int)aMatches, 118, (int)sub_DF6B0, (int)aMatchescommand, (int)a11w_2);
-  sub_A5910((int)aListFocusStack, 118, (int)sub_A2DB0, (int)aListfocusstack, (int)a00_6);
-  sub_A5910((int)aDependencies, 118, (int)sub_C17A0, (int)aDependenciesco, (int)a11h);
-  sub_A5910((int)aDependents, 118, (int)sub_C17E0, (int)aDependentscomm, (int)a11h);
-  sub_A5910((int)aGetIncremental, 98, (int)sub_B62F0, (int)aGetincremental, (int)a00_6);
-  sub_A5910((int)aSetIncremental, 98, (int)sub_B6220, (int)aSetincremental, (int)a11_2);
-  sub_A5910((int)aGetStrategy, 119, (int)sub_95A20, (int)aGetstrategycom, (int)a00_6);
-  return sub_A5910((int)aSetStrategy, 119, (int)sub_95A50, (int)aSetstrategycom, (int)a11w_2);
+  registerClipsCallback((int)aRun, 118, (int)sub_A2A50, (int)aRuncommand, (int)a1i);
+  registerClipsCallback((int)aHalt, 118, (int)sub_A2AB0, (int)aHaltcommand, (int)a00_6);
+  registerClipsCallback((int)aFocus_2, 98, (int)sub_A2FA0, (int)aFocuscommand, (int)a1W);
+  registerClipsCallback((int)aClearFocusStac, 118, (int)sub_A2920, (int)aClearfocusstac, (int)a00_6);
+  registerClipsCallback((int)aGetFocusStack, 109, (int)sub_A2E30, (int)aGetfocusstackf, (int)a00_6);
+  registerClipsCallback((int)aPopFocus, 119, (int)sub_A2F00, (int)aPopfocusfuncti, (int)a00_6);
+  registerClipsCallback((int)aGetFocus, 119, (int)sub_A2F40, (int)aGetfocusfuncti, (int)a00_6);
+  registerClipsCallback((int)aSetBreak, 118, (int)sub_A2BE0, (int)aSetbreakcomman, (int)a11w_2);
+  registerClipsCallback((int)aRemoveBreak, 118, (int)sub_A2C50, (int)aRemovebreakcom, (int)a1w);
+  registerClipsCallback((int)aShowBreaks, 118, (int)sub_A2D30, (int)aShowbreakscomm, (int)a01w_1);
+  registerClipsCallback((int)aMatches, 118, (int)sub_DF6B0, (int)aMatchescommand, (int)a11w_2);
+  registerClipsCallback((int)aListFocusStack, 118, (int)sub_A2DB0, (int)aListfocusstack, (int)a00_6);
+  registerClipsCallback((int)aDependencies, 118, (int)sub_C17A0, (int)aDependenciesco, (int)a11h);
+  registerClipsCallback((int)aDependents, 118, (int)sub_C17E0, (int)aDependentscomm, (int)a11h);
+  registerClipsCallback((int)aGetIncremental, 98, (int)sub_B62F0, (int)aGetincremental, (int)a00_6);
+  registerClipsCallback((int)aSetIncremental, 98, (int)sub_B6220, (int)aSetincremental, (int)a11_2);
+  registerClipsCallback((int)aGetStrategy, 119, (int)sub_95A20, (int)aGetstrategycom, (int)a00_6);
+  return registerClipsCallback((int)aSetStrategy, 119, (int)sub_95A50, (int)aSetstrategycom, (int)a11w_2);
 }
 // 95A20: using guessed type int sub_95A20();
 // A2F00: using guessed type int sub_A2F00();
@@ -153195,16 +153195,16 @@ int __fastcall sub_E2C00(int result, int a2)
 //----- (000E2C20) --------------------------------------------------------
 signed int sub_E2C20()
 {
-  sub_A5910((int)aStrCat, 107, (int)sub_E2D60, (int)aStrcatfunction, (int)a1_0);
-  sub_A5910((int)aSymCat, 107, (int)sub_E2D80, (int)aSymcatfunction, (int)a1_0);
-  sub_A5910((int)aStrLength, 108, (int)sub_E2F40, (int)aStrlengthfunct, (int)a11j);
-  sub_A5910((int)aStrCompare, 108, (int)sub_E31C0, (int)aStrcomparefunc, (int)a23Jji);
-  sub_A5910((int)aUpcase, 106, (int)sub_E2FA0, (int)aUpcasefunction, (int)a11j);
-  sub_A5910((int)aLowcase, 106, (int)sub_E30B0, (int)aLowcasefunctio, (int)a11j);
-  sub_A5910((int)aSubString, 115, (int)sub_E32C0, (int)aSubstringfunct, (int)a33Iij);
-  sub_A5910((int)aStrIndex, 117, (int)sub_E3480, (int)aStrindexfuncti, (int)a22j);
-  sub_A5910((int)aEval, 117, (int)sub_E3580, (int)aEvalfunction, (int)a11k_1);
-  return sub_A5910((int)aBuild, 98, (int)sub_E3820, (int)aBuildfunction, (int)a11k_1);
+  registerClipsCallback((int)aStrCat, 107, (int)sub_E2D60, (int)aStrcatfunction, (int)a1_0);
+  registerClipsCallback((int)aSymCat, 107, (int)sub_E2D80, (int)aSymcatfunction, (int)a1_0);
+  registerClipsCallback((int)aStrLength, 108, (int)sub_E2F40, (int)aStrlengthfunct, (int)a11j);
+  registerClipsCallback((int)aStrCompare, 108, (int)sub_E31C0, (int)aStrcomparefunc, (int)a23Jji);
+  registerClipsCallback((int)aUpcase, 106, (int)sub_E2FA0, (int)aUpcasefunction, (int)a11j);
+  registerClipsCallback((int)aLowcase, 106, (int)sub_E30B0, (int)aLowcasefunctio, (int)a11j);
+  registerClipsCallback((int)aSubString, 115, (int)sub_E32C0, (int)aSubstringfunct, (int)a33Iij);
+  registerClipsCallback((int)aStrIndex, 117, (int)sub_E3480, (int)aStrindexfuncti, (int)a22j);
+  registerClipsCallback((int)aEval, 117, (int)sub_E3580, (int)aEvalfunction, (int)a11k_1);
+  return registerClipsCallback((int)aBuild, 98, (int)sub_E3820, (int)aBuildfunction, (int)a11k_1);
 }
 
 //----- (000E2D60) --------------------------------------------------------
@@ -156682,7 +156682,7 @@ int sub_E67F0()
 // 1B14CC: using guessed type int dword_1B14CC;
 
 //----- (000E68F0) --------------------------------------------------------
-int __fastcall sub_E68F0(int result, int a2, int a3)
+int __fastcall initAllClipsCallbacks(int result, int a2, int a3)
 {
   if ( !dword_13B568 )
   {
@@ -156702,7 +156702,7 @@ int __fastcall sub_E68F0(int result, int a2, int a3)
     sub_A05C0();
     sub_E8460();
     sub_93CA0();
-    sub_6CCAF();
+    registerClipFunctionsAll();
     sub_949C0();
     sub_A3AD0();
     sub_943E0();
@@ -158067,11 +158067,11 @@ LABEL_14:
 //----- (000E8460) --------------------------------------------------------
 signed int sub_E8460()
 {
-  sub_A5910((int)aHelp, 118, (int)&off_E79E0, (int)aHelpfunction, 0);
-  sub_A5910((int)aHelpPath, 118, (int)sub_E7D20, (int)aHelppathfuncti, (int)a1k);
-  sub_A5910((int)aFetch, 117, (int)sub_E7E50, (int)aFetchcommand, (int)a11k_3);
-  sub_A5910((int)aToss, 98, (int)sub_E8000, (int)aTosscommand, (int)a11k_3);
-  return sub_A5910((int)aPrintRegion, 98, (int)&off_E7F30, (int)aPrintregioncom, (int)a2Wk);
+  registerClipsCallback((int)aHelp, 118, (int)&off_E79E0, (int)aHelpfunction, 0);
+  registerClipsCallback((int)aHelpPath, 118, (int)sub_E7D20, (int)aHelppathfuncti, (int)a1k);
+  registerClipsCallback((int)aFetch, 117, (int)sub_E7E50, (int)aFetchcommand, (int)a11k_3);
+  registerClipsCallback((int)aToss, 98, (int)sub_E8000, (int)aTosscommand, (int)a11k_3);
+  return registerClipsCallback((int)aPrintRegion, 98, (int)&off_E7F30, (int)aPrintregioncom, (int)a2Wk);
 }
 // E79E0: using guessed type void *off_E79E0;
 // E7F30: using guessed type void *off_E7F30;
@@ -158574,11 +158574,11 @@ int sub_E8E00()
   sub_94590((int)aDeftemplate_1, (int)sub_E8EF0, 0);
   sub_94780((int)aDeftemplate_1, (int)sub_E8F00, 0);
   sub_94990((int)aDeftemplate_1, (int)sub_E8F20, 10);
-  sub_A5910((int)aGetDeftemplate, 109, (int)sub_E8F80, v0, (int)a01w_8);
-  sub_A5910((int)aUndeftemplate, 118, (int)sub_E8F40, (int)aUndeftemplatec, (int)a11w_13);
-  sub_A5910((int)aDeftemplateMod, 119, (int)sub_E8FD0, (int)aDeftemplatemod, (int)a11w_13);
-  sub_A5910((int)aListDeftemplat, 118, (int)sub_E9030, (int)aListdeftemplat, (int)a01w_8);
-  sub_A5910((int)aPpdeftemplate, 118, (int)sub_E8FF0, (int)aPpdeftemplatec, (int)a11w_13);
+  registerClipsCallback((int)aGetDeftemplate, 109, (int)sub_E8F80, v0, (int)a01w_8);
+  registerClipsCallback((int)aUndeftemplate, 118, (int)sub_E8F40, (int)aUndeftemplatec, (int)a11w_13);
+  registerClipsCallback((int)aDeftemplateMod, 119, (int)sub_E8FD0, (int)aDeftemplatemod, (int)a11w_13);
+  registerClipsCallback((int)aListDeftemplat, 118, (int)sub_E9030, (int)aListdeftemplat, (int)a01w_8);
+  registerClipsCallback((int)aPpdeftemplate, 118, (int)sub_E8FF0, (int)aPpdeftemplatec, (int)a11w_13);
   sub_E8510();
   return sub_E9110();
 }
@@ -159367,7 +159367,7 @@ void __usercall sub_E9B60(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int 
         *(_DWORD *)(v28 + 56) = sub_CA9D0(*(_DWORD *)(i + 6 * j + 56));
     }
     if ( v36 )
-      sub_AA6B0(i, a3);
+      addClipsFact(i, a3);
     v29 = sub_AA8E0(v11, a3);
     if ( v29 )
     {
@@ -161866,9 +161866,9 @@ void __usercall sub_EC510(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 //----- (000EC660) --------------------------------------------------------
 signed int sub_EC660()
 {
-  sub_A5910((int)aWatch, 118, (int)sub_EC360, (int)aWatchcommand, (int)a1W_2);
-  sub_A5910((int)aUnwatch, 118, (int)sub_EC440, (int)aUnwatchcommand, (int)a1W_2);
-  sub_A5910((int)aListWatchItems, 118, (int)sub_EC510, (int)aListwatchitems, (int)a0W);
+  registerClipsCallback((int)aWatch, 118, (int)sub_EC360, (int)aWatchcommand, (int)a1W_2);
+  registerClipsCallback((int)aUnwatch, 118, (int)sub_EC440, (int)aUnwatchcommand, (int)a1W_2);
+  registerClipsCallback((int)aListWatchItems, 118, (int)sub_EC510, (int)aListwatchitems, (int)a0W);
   sub_DCFE0((int)off_13B4FC[0], 1000, (int)sub_EC700, (int)sub_EC730, 0, 0, 0);
   return sub_DD1A0((int)off_13B4FC[0]);
 }
