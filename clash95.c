@@ -614,7 +614,7 @@ __int16 __spoils<ecx> sub_431CC0();
 // unsigned int __usercall __spoils<ecx> sub_431FB0@<eax>(int a1@<eax>);
 // int __usercall sub_432090@<eax>(int a1@<eax>, int a2@<ecx>);
 // __int16 __usercall sub_432120@<ax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
-int __spoils<ecx> sub_4321D0();
+int __spoils<ecx> Battle_ClearPlacementPreview();
 signed int Battle_ResetUnitColors();
 // signed int __usercall Battle_PlaceUnit@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, char a3@<cl>, int a4@<ebx>);
 int sub_432910();
@@ -45944,7 +45944,7 @@ __int16 __usercall sub_432120@<ax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 // 532048: using guessed type int g_MapData;
 
 //----- (004321D0) --------------------------------------------------------
-int __spoils<ecx> sub_4321D0()
+int __spoils<ecx> Battle_ClearPlacementPreview()
 {
   int result; // eax
   int v1; // ebx
