@@ -11312,7 +11312,7 @@ int dword_526E70; // weak
 int g_CastleIconSprites; // weak
 int g_CastleDecorSprites; // weak
 int g_CastleFontSprites; // weak
-int dword_526E80; // weak
+int g_CastleScreenShouldClose; // weak
 int g_CastleBuildingDestroyed; // weak
 int dword_526E88; // weak
 int dword_526E8C; // weak
@@ -34287,11 +34287,11 @@ int __usercall sub_420840@<eax>(int a1@<eax>, int a2@<ecx>)
   int v4; // edx
 
   result = sub_419E60(a1, a2);
-  dword_526E80 = v4;
+  g_CastleScreenShouldClose = v4;
   return result;
 }
 // 42084B: variable 'v4' is possibly undefined
-// 526E80: using guessed type int dword_526E80;
+// 526E80: using guessed type int g_CastleScreenShouldClose;
 
 //----- (00420870) --------------------------------------------------------
 int Castle_UpdateBuildAvailability()
@@ -34724,7 +34724,7 @@ int __usercall __spoils<ecx,st0> Castle_PromptDestroyBuilding@<eax>(int a1@<ecx>
     Building_Destroy(g_ActiveCastlePtr, a2, a3, a4);
     result = sub_4426C0(aNiszcz, v5);
     g_CastleBuildingDestroyed = 1;
-    dword_526E80 = 1;
+    g_CastleScreenShouldClose = 1;
   }
   return result;
 }
@@ -34733,7 +34733,7 @@ int __usercall __spoils<ecx,st0> Castle_PromptDestroyBuilding@<eax>(int a1@<ecx>
 // 514144: using guessed type char *off_514144[3];
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
-// 526E80: using guessed type int dword_526E80;
+// 526E80: using guessed type int g_CastleScreenShouldClose;
 // 526E84: using guessed type int g_CastleBuildingDestroyed;
 
 //----- (00421010) --------------------------------------------------------
@@ -35774,11 +35774,11 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
   sub_422880(190, 455, 7, 455, 248);
   Render_Present((int)dword_544CD8);
   g_CastleBuildingDestroyed = 0;
-  dword_526E80 = 0;
+  g_CastleScreenShouldClose = 0;
   dword_545150 = (int)&unk_5196A0;
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   v23 = 0;
-  while ( !Input_IsKeyPressed(1) && !dword_526E80 )
+  while ( !Input_IsKeyPressed(1) && !g_CastleScreenShouldClose )
   {
     DD_Pump((int)dword_544CD8, (char)v22);
     sub_421C40();
@@ -35959,7 +35959,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
 // 526E74: using guessed type int g_CastleIconSprites;
 // 526E78: using guessed type int g_CastleDecorSprites;
 // 526E7C: using guessed type int g_CastleFontSprites;
-// 526E80: using guessed type int dword_526E80;
+// 526E80: using guessed type int g_CastleScreenShouldClose;
 // 526E84: using guessed type int g_CastleBuildingDestroyed;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
@@ -37854,15 +37854,15 @@ int Tile_UpdatePassabilityMask()
 // 532048: using guessed type int g_MapData;
 
 //----- (00425970) --------------------------------------------------------
-signed int __usercall Tile_CheckPassability@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
+signed int __usercall Tile_CheckPassability@<eax>(int unitIndex@<eax>, int tileX@<edx>, int tileY@<ebx>)
 {
-  if ( !g_MapIgnoreUnitOccupancy && *(__int16 *)(40 * a2 + g_MapData + 2 * a3 + 1534) != -1 )
+  if ( !g_MapIgnoreUnitOccupancy && *(__int16 *)(40 * tileX + g_MapData + 2 * tileY + 1534) != -1 )
     return 0;
-  if ( byte_531C90[a1] )
+  if ( byte_531C90[unitIndex] )
     return 5;
-  if ( *(_BYTE *)(g_MapData + 20 * a2 + a3 + 3134) )
+  if ( *(_BYTE *)(g_MapData + 20 * tileX + tileY + 3134) )
     return 0;
-  return (unsigned __int8)g_TilePassabilityMask[32 * a2 + a3];
+  return (unsigned __int8)g_TilePassabilityMask[32 * tileX + tileY];
 }
 // 531CB8: using guessed type int g_MapIgnoreUnitOccupancy;
 // 532048: using guessed type int g_MapData;

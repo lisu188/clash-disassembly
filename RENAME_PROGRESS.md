@@ -93,3 +93,7 @@
 | function | castle | clash95.c | sub_420E50 | Castle_BuildTemple | medium | Handles the religious building (Christian/Pagan variant) construction; naming reflects its role. |
 | function | castle | clash95.c | sub_422100 | Castle_UpdateConstructionButtons | medium | Updates castle build button state flags after building availability changes. |
 | function | castle | clash95.c | sub_420870 | Castle_UpdateBuildAvailability | medium | Reads castle build-state bits to populate UI availability flags before rendering. |
+| global | castle | clash95.c | dword_526E80 | g_CastleScreenShouldClose | high | Boolean flag that forces the castle screen loop to exit (set by close events and destruction prompt). |
+| parameter | tile | clash95.c:Tile_CheckPassability | a1 | unitIndex | high | Explicitly denotes the unit index used when evaluating tile occupancy rules. |
+| parameter | tile | clash95.c:Tile_CheckPassability | a2 | tileX | high | Makes clear this argument is the map X coordinate. |
+| parameter | tile | clash95.c:Tile_CheckPassability | a3 | tileY | high | Makes clear this argument is the map Y coordinate. |
