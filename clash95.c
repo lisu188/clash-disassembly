@@ -567,9 +567,9 @@ void sub_429EB0();
 // int __usercall sub_42B9D0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall sub_42BF00@<eax>(int a1@<eax>);
 // char __usercall __spoils<ah,ecx> sub_42C060@<al>(int a1@<eax>);
-// BOOL __usercall sub_42C0F0@<eax>(int a1@<eax>, int a2@<edx>);
-// void __usercall sub_42C130(__int16 *a1@<edx>, DWORD a2@<ebp>);
-// void __usercall sub_42C180(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
+// BOOL __usercall Battle_IsTileInViewport@<eax>(int a1@<eax>, int a2@<edx>);
+// void __usercall Battle_LogUnitEntry(__int16 *a1@<edx>, DWORD a2@<ebp>);
+// void __usercall Battle_LogAllUnits(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall GodAnger@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>);
 // int __usercall Battle_HandleNewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 BOOL Battle_BothPlayersActive();
@@ -585,14 +585,14 @@ __int16 __spoils<ecx> Unit_ToggleSelectionBlink();
 // int __usercall __spoils<ecx> sub_42D560@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 int __spoils<ecx> sub_42D5B0();
 // int __usercall __spoils<ecx> sub_42D670@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, char a5@<sil>);
-int sub_42D6F0();
+int Battle_DismissDialog();
 // int __usercall sub_42D730@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>);
 // int __usercall sub_42DAB0@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_42DAD0@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_42DAE0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall sub_42DEC0@<eax>(int a1@<eax>, int a2@<ebx>, int a3@<edi>);
 // __int16 __usercall sub_42E160@<ax>(char a1@<dl>, int a2@<ebx>, int a3@<edi>);
-// signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>);
+// signed int __usercall Battle_RunLoop@<eax>(int a1@<ebx>, DWORD a2@<ebp>);
 // void __usercall HandleBattleResults(int a1@<eax>, int a2@<edx>, int a3@<ecx>, unsigned __int8 *a4@<ebx>, DWORD a5@<ebp>);
 int __spoils<ecx> sub_42E6F0();
 char sub_42E770();
@@ -615,8 +615,8 @@ __int16 __spoils<ecx> sub_431CC0();
 // int __usercall sub_432090@<eax>(int a1@<eax>, int a2@<ecx>);
 // __int16 __usercall sub_432120@<ax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 int __spoils<ecx> sub_4321D0();
-signed int sub_432770();
-// signed int __usercall sub_4327B0@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, char a3@<cl>, int a4@<ebx>);
+signed int Battle_ResetUnitColors();
+// signed int __usercall Battle_PlaceUnit@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, char a3@<cl>, int a4@<ebx>);
 int sub_432910();
 // void *__usercall sub_432940@<eax>(int a1@<eax>);
 // int __usercall sub_432D30@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
@@ -9133,10 +9133,10 @@ _DWORD dword_513D98[3] = { 31, 432, 1 }; // weak
 _WORD word_513E08[5] = { 500, 60, 0, 0, 3 }; // weak
 int g_CastleHasBuildOptions = 1; // weak
 int g_CastleBuildCategoryOpen[] = { 1 }; // weak
-int dword_513FEA = 1; // weak
-int dword_514012 = 1; // weak
-int dword_51403A = 1; // weak
-int dword_514062 = 1; // weak
+int g_CastleTempleAvailable = 1; // weak
+int g_CastleBarracksAvailable = 1; // weak
+int g_CastleWorkshopAvailable = 1; // weak
+int g_CastleForgeAvailable = 1; // weak
 char *off_514144[3] = { "Czy jeste\x9E pewien?", "Are you sure?", "Bist Du sicher?" }; // weak
 _UNKNOWN unk_514158; // weak
 int dword_51416C = 10; // weak
@@ -9225,7 +9225,7 @@ _DWORD dword_514B78[2] = { 498, 370 }; // weak
 int dword_514B80 = 1; // weak
 _UNKNOWN unk_514BE2; // weak
 int dword_514BEA = 1; // weak
-char byte_514C89 = '\x01'; // weak
+char g_BattleHintFlags = '\x01'; // weak
 int dword_514C99 = 13; // weak
 char *off_514CEC[3] = { "Gracz", "Player", "Spieler" }; // weak
 _UNKNOWN unk_514CF8; // weak
@@ -9265,7 +9265,7 @@ char *off_514DC8[24] =
   "Tiredness",
   "M\x81digkeit"
 }; // weak
-int dword_514E28 = -1; // weak
+int g_BattleHintIndex = -1; // weak
 char *off_514E2C[6] =
 {
   "Tw\xA2j ruch",
@@ -11308,7 +11308,7 @@ LARGE_INTEGER Frequency; // idb
 int g_ActiveCastlePtr; // weak
 int g_CastleScreenSurface; // weak
 _BYTE byte_526A70[1024]; // weak
-int dword_526E70; // weak
+int g_ActiveCastleOwnerIsChristian; // weak
 int g_CastleIconSprites; // weak
 int g_CastleDecorSprites; // weak
 int g_CastleFontSprites; // weak
@@ -11372,17 +11372,17 @@ int dword_531CF0; // weak
 int dword_531CF4; // weak
 int dword_532040; // weak
 int g_MapData; // weak
-int dword_53204C; // weak
+int g_BattleHudSprites; // weak
 int dword_532050; // weak
 int dword_532054; // weak
 int dword_532058; // weak
 int g_SelectionHighlightActive; // weak
-int dword_532060; // weak
-int dword_532064; // weak
-int dword_532068; // weak
-int dword_53206C; // weak
-int dword_532070; // weak
-int dword_532074; // weak
+int g_SelectionBlinkActive; // weak
+int g_BattleLoopExitCode; // weak
+int g_BattleDialogDismissed; // weak
+int g_AttackerStartsOnLeft; // weak
+int g_DefenderStartsOnLeft; // weak
+int g_SelectionBlinkStartTime; // weak
 int dword_532078; // weak
 int dword_532080; // weak
 char byte_532088[]; // weak
@@ -31501,7 +31501,7 @@ int __userpurge CalculateBattleResult@<eax>(
     a4 = v49;
     do
     {
-      sub_42C130(v12, (int)a4, a5);
+      Battle_LogUnitEntry(v12, (int)a4, a5);
       v12 = v13 + 1;
       a4 = (_WORD *)((char *)a4 + 31);
     }
@@ -31514,7 +31514,7 @@ int __userpurge CalculateBattleResult@<eax>(
     v15 = (int)a3;
     do
     {
-      sub_42C130(v14++, v15, a5);
+      Battle_LogUnitEntry(v14++, v15, a5);
       v15 = v16 + 31;
     }
     while ( v14 < a6 );
@@ -31635,7 +31635,7 @@ LABEL_55:
     v40 = (int)v57;
     do
     {
-      sub_42C130(v39++, v40, a5);
+      Battle_LogUnitEntry(v39++, v40, a5);
       v40 = v41 + 31;
     }
     while ( v39 < v25 );
@@ -34300,11 +34300,11 @@ int Castle_UpdateBuildAvailability()
   int result; // eax
 
   g_CastleBuildCategoryOpen[0] = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 8) == 0;
-  dword_513FEA = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 1) == 0;
-  dword_514012 = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 2) == 0;
-  dword_51403A = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 4) == 0;
+  g_CastleTempleAvailable = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 1) == 0;
+  g_CastleBarracksAvailable = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 2) == 0;
+  g_CastleWorkshopAvailable = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 4) == 0;
   v0 = 0;
-  dword_514062 = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 0x10) == 0;
+  g_CastleForgeAvailable = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 0x10) == 0;
   for ( result = 0; result != 50; result += 10 )
   {
     if ( g_CastleBuildCategoryOpen[result] )
@@ -34316,10 +34316,10 @@ int Castle_UpdateBuildAvailability()
 }
 // 513E22: using guessed type int g_CastleHasBuildOptions;
 // 513FC2: using guessed type int g_CastleBuildCategoryOpen[];
-// 513FEA: using guessed type int dword_513FEA;
-// 514012: using guessed type int dword_514012;
-// 51403A: using guessed type int dword_51403A;
-// 514062: using guessed type int dword_514062;
+// 513FEA: using guessed type int g_CastleTempleAvailable;
+// 514012: using guessed type int g_CastleBarracksAvailable;
+// 51403A: using guessed type int g_CastleWorkshopAvailable;
+// 514062: using guessed type int g_CastleForgeAvailable;
 // 526A64: using guessed type int g_ActiveCastlePtr;
 
 //----- (00420910) --------------------------------------------------------
@@ -35725,7 +35725,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
   CSS_EmptySampleCache();
   log(467 * castleIndex, a2, castleIndex, (int)aCastleD);
   g_ActiveCastlePtr = v6 + gameData + 509674;
-  dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_ActiveCastlePtr + 2) + gameData + 140063);
+  g_ActiveCastleOwnerIsChristian = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_ActiveCastlePtr + 2) + gameData + 140063);
   v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_ActiveCastlePtr + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateConstructionButtons();
@@ -35955,7 +35955,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526A68: using guessed type int g_CastleScreenSurface;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
-// 526E70: using guessed type int dword_526E70;
+// 526E70: using guessed type int g_ActiveCastleOwnerIsChristian;
 // 526E74: using guessed type int g_CastleIconSprites;
 // 526E78: using guessed type int g_CastleDecorSprites;
 // 526E7C: using guessed type int g_CastleFontSprites;
@@ -38515,7 +38515,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
     v8 = v5[3];
     v9 = (unsigned __int16)v5[2];
     v52 = 0;
-    if ( !sub_42C0F0(v9, v8) )
+    if ( !Battle_IsTileInViewport(v9, v8) )
       sub_426E20(v50);
     sub_430C20();
     *((_BYTE *)v5 + 22) &= ~1u;
@@ -38560,7 +38560,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
           v27 = sub_40FA80(v26, v25);
           v7 = v27;
           *((_BYTE *)v5 + 3) = v27;
-          if ( !sub_42C0F0(v23, v28) )
+          if ( !Battle_IsTileInViewport(v23, v28) )
           {
             sub_426E20(v50);
             sub_430C20();
@@ -39012,8 +39012,8 @@ int __usercall sub_4272A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
     v100 = 0;
   else
     v100 = (unsigned __int16 *)(31 * v101 + g_MapData + 852);
-  if ( !sub_42C0F0((unsigned __int16)v5[2], (unsigned __int16)v5[3])
-    || (a5 = v100) != 0 && !sub_42C0F0(v100[2], v100[3]) )
+  if ( !Battle_IsTileInViewport((unsigned __int16)v5[2], (unsigned __int16)v5[3])
+    || (a5 = v100) != 0 && !Battle_IsTileInViewport(v100[2], v100[3]) )
   {
     sub_426E20(v102);
     sub_430C20();
@@ -39316,7 +39316,7 @@ LABEL_22:
   }
   if ( v99 )
   {
-    if ( dword_532060 )
+    if ( g_SelectionBlinkActive )
       sub_42D290();
     sub_427FA0(v102, v64, v65, v12);
   }
@@ -39469,7 +39469,7 @@ LABEL_22:
 // 531CC0: using guessed type int dword_531CC0;
 // 531CC4: using guessed type int dword_531CC4;
 // 532048: using guessed type int g_MapData;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 // 5320EC: using guessed type int dword_5320EC;
 // 5320F0: using guessed type int dword_5320F0;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -39691,8 +39691,8 @@ LABEL_12:
   *((_BYTE *)v6 + 8) -= 5;
   *((_BYTE *)v6 + 22) = v12;
   g_SelectedUnitIndex = (int)a1;
-  if ( !sub_42C0F0((unsigned __int16)v6[2], (unsigned __int16)v6[3])
-    || !sub_42C0F0((unsigned __int16)v7[2], (unsigned __int16)v7[3]) )
+  if ( !Battle_IsTileInViewport((unsigned __int16)v6[2], (unsigned __int16)v6[3])
+    || !Battle_IsTileInViewport((unsigned __int16)v7[2], (unsigned __int16)v7[3]) )
   {
     sub_426E20((int)a1);
     sub_430C20();
@@ -39931,7 +39931,7 @@ __int16 __userpurge sub_428880@<ax>(
     v113 = (unsigned __int8 *)(31 * a2 + g_MapData + 852);
   }
   log(a2, a4, (DWORD)v111, (int)a_shotanimDDDDD);
-  if ( !sub_42C0F0((unsigned __int16)v125[2], (unsigned __int16)v125[3]) || !sub_42C0F0(v122, a3) )
+  if ( !Battle_IsTileInViewport((unsigned __int16)v125[2], (unsigned __int16)v125[3]) || !Battle_IsTileInViewport(v122, a3) )
   {
     *(_DWORD *)(g_MapData + 808) = (v122 + (unsigned __int16)v125[2]) / 2 - 3;
     *(_DWORD *)(g_MapData + 812) = (a3 + (unsigned __int16)v125[3]) / 2 - 3;
@@ -40504,7 +40504,7 @@ LABEL_18:
   v10 = *(_WORD *)(v7 + 6);
   v11 = *(_WORD *)(v7 + 4);
   *(_BYTE *)(v7 + 22) &= ~1u;
-  if ( !sub_42C0F0(v11, v10) || !sub_42C0F0(a2, a4) )
+  if ( !Battle_IsTileInViewport(v11, v10) || !Battle_IsTileInViewport(a2, a4) )
   {
     sub_426E20(a1);
     sub_430C20();
@@ -41986,7 +41986,7 @@ char __usercall __spoils<ah,ecx> sub_42C060@<al>(int a1@<eax>)
 // 532048: using guessed type int g_MapData;
 
 //----- (0042C0F0) --------------------------------------------------------
-BOOL __usercall sub_42C0F0@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall Battle_IsTileInViewport@<eax>(int tileX@<eax>, int tileY@<edx>)
 {
   int v2; // ebx
   int v3; // esi
@@ -41994,10 +41994,10 @@ BOOL __usercall sub_42C0F0@<eax>(int a1@<eax>, int a2@<edx>)
 
   v2 = *(_DWORD *)(g_MapData + 808);
   result = 0;
-  if ( a1 >= v2 && a1 < v2 + 7 )
+  if ( tileX >= v2 && tileX < v2 + 7 )
   {
     v3 = *(_DWORD *)(g_MapData + 812);
-    if ( a2 >= v3 && a2 < v3 + 7 )
+    if ( tileY >= v3 && tileY < v3 + 7 )
       return 1;
   }
   return result;
@@ -42005,23 +42005,23 @@ BOOL __usercall sub_42C0F0@<eax>(int a1@<eax>, int a2@<edx>)
 // 532048: using guessed type int g_MapData;
 
 //----- (0042C130) --------------------------------------------------------
-void __usercall sub_42C130(__int16 *a1@<edx>, DWORD a2@<ebp>)
+void __usercall Battle_LogUnitEntry(__int16 *unitEntry@<edx>, DWORD logHandle@<ebp>)
 {
   _DWORD *v3; // ecx
 
-  v3 = *(&off_512568 + 22 * *a1);
-  log((int)v3, *v3, a2, (int)aD0x08x15sPl1dP);
+  v3 = *(&off_512568 + 22 * *unitEntry);
+  log((int)v3, *v3, logHandle, (int)aD0x08x15sPl1dP);
 }
 // 512568: using guessed type char *(*off_512568)[102];
 
 //----- (0042C180) --------------------------------------------------------
-void __usercall sub_42C180(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+void __usercall Battle_LogAllUnits(int logContext@<ecx>, char logCategory@<bl>, DWORD logHandle@<ebp>)
 {
   int v4; // ebx
   __int16 *v5; // ecx
   int v6; // ecx
 
-  log(a1, a2, a3, (int)aBattle_logallu);
+  log(logContext, logCategory, logHandle, (int)aBattle_logallu);
   v4 = 0;
   v5 = (__int16 *)(g_MapData + 852);
   do
@@ -42033,7 +42033,7 @@ void __usercall sub_42C180(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
       if ( v4 >= 22 )
         return;
     }
-    sub_42C130(v5, a3);
+    Battle_LogUnitEntry(v5, logHandle);
     ++v4;
     v5 = (__int16 *)(v6 + 31);
   }
@@ -42168,13 +42168,13 @@ int __usercall GodAnger@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042C4C0) --------------------------------------------------------
-int __usercall Battle_HandleNewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Battle_HandleNewTurn@<eax>(int logContext@<ecx>, char logCategory@<bl>, DWORD logHandle@<ebp>)
 {
   int v3; // ecx
   int result; // eax
 
-  log(a1, a2, a3, (int)aBattle_newturn);
-  sub_42C180(v3, a2, a3);
+  log(logContext, logCategory, logHandle, (int)aBattle_newturn);
+  Battle_LogAllUnits(v3, logCategory, logHandle);
   for ( result = 0; result < 2; ++result )
     ;
   return result;
@@ -42631,7 +42631,7 @@ __int16 sub_42CB50()
           j__nfree_();
           if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
           {
-            sub_428400((unsigned __int16 *)g_SelectedUnitIndex, v5, dword_532060);
+            sub_428400((unsigned __int16 *)g_SelectedUnitIndex, v5, g_SelectionBlinkActive);
             if ( *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
               Unit_SelectNextOwnedUnit(0, v12, v3);
             Render_Begin((int)dword_544CD8, 0);
@@ -42697,7 +42697,7 @@ LABEL_13:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int g_SelectionHighlightActive;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -42708,8 +42708,8 @@ __int16 sub_42D250()
 {
   int v1; // ecx
 
-  dword_532060 = 1;
-  dword_532074 = Time_Now(2, 1);
+  g_SelectionBlinkActive = 1;
+  g_SelectionBlinkStartTime = Time_Now(2, 1);
   dword_514BEA = v1;
   sub_419D60((int)&unk_514BE2, v1);
   return sub_431DE0(g_SelectedUnitIndex);
@@ -42717,20 +42717,20 @@ __int16 sub_42D250()
 // 42D271: variable 'v1' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514BEA: using guessed type int dword_514BEA;
-// 532060: using guessed type int dword_532060;
-// 532074: using guessed type int dword_532074;
+// 532060: using guessed type int g_SelectionBlinkActive;
+// 532074: using guessed type int g_SelectionBlinkStartTime;
 
 //----- (0042D290) --------------------------------------------------------
 __int16 sub_42D290()
 {
-  dword_532060 = 0;
+  g_SelectionBlinkActive = 0;
   dword_514BEA = 1;
   sub_419D60((int)&unk_514BE2, 1);
   return sub_431DE0(g_SelectedUnitIndex);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514BEA: using guessed type int dword_514BEA;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 
 //----- (0042D2C0) --------------------------------------------------------
 int Unit_UpdateSelectionDisplay()
@@ -42741,7 +42741,7 @@ int Unit_UpdateSelectionDisplay()
 
   v0 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
-  if ( dword_532060 )
+  if ( g_SelectionBlinkActive )
     sub_42D290();
   v1 = g_MapData;
   if ( !byte_512582[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)] )
@@ -42771,7 +42771,7 @@ LABEL_6:
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int g_SelectionHighlightActive;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 
 //----- (0042D3A0) --------------------------------------------------------
 int __usercall __spoils<ecx> Unit_SelectNextOwnedUnit@<eax>(int uiContext@<eax>, int eventArg@<ecx>, char triggerReason@<dil>)
@@ -42793,7 +42793,7 @@ int __usercall __spoils<ecx> Unit_SelectNextOwnedUnit@<eax>(int uiContext@<eax>,
   }
   v5 = g_MapData;
   g_SelectedUnitIndex = i;
-  if ( !sub_42C0F0(
+  if ( !Battle_IsTileInViewport(
           *(unsigned __int16 *)(g_MapData + 31 * i + 856),
           *(unsigned __int16 *)(g_MapData + 31 * i + 858)) )
     sub_426E20(v6);
@@ -42832,7 +42832,7 @@ __int16 __spoils<ecx> Unit_ToggleSelectionBlink()
       if ( g_SelectionHighlightActive )
       {
         *(_DWORD *)(v2 + 8) = 2;
-        if ( dword_532060 )
+        if ( g_SelectionBlinkActive )
           LOWORD(v1) = sub_42D290();
       }
       else
@@ -42847,7 +42847,7 @@ __int16 __spoils<ecx> Unit_ToggleSelectionBlink()
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int g_SelectionHighlightActive;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D560) --------------------------------------------------------
@@ -42864,14 +42864,14 @@ int __usercall __spoils<ecx> sub_42D560@<eax>(int a1@<eax>, int a2@<ecx>, char a
     v6[1] = off_514B5C[1];
     v6[2] = off_514B5C[2];
     result = sub_42DAE0((int)v6, a3, a4);
-    dword_532064 = result;
+    g_BattleLoopExitCode = result;
   }
   return result;
 }
 // 514B5C: using guessed type char *off_514B5C[6];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
-// 532064: using guessed type int dword_532064;
+// 532064: using guessed type int g_BattleLoopExitCode;
 
 //----- (0042D5B0) --------------------------------------------------------
 int __spoils<ecx> sub_42D5B0()
@@ -42886,10 +42886,10 @@ int __spoils<ecx> sub_42D5B0()
   if ( byte_51257E[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)] )
   {
     Render_Begin((int)dword_544CD8, 0);
-    LOBYTE(dword_532060) = dword_532060 ^ 1;
-    dword_532074 = Time_Now(v3, v2);
+    LOBYTE(g_SelectionBlinkActive) = g_SelectionBlinkActive ^ 1;
+    g_SelectionBlinkStartTime = Time_Now(v3, v2);
     result = sub_431FB0(g_SelectedUnitIndex);
-    if ( dword_532060 )
+    if ( g_SelectionBlinkActive )
     {
       result = sub_4426C0(aBattleSzarza, 64);
       *(_DWORD *)(v5 + 8) = 2;
@@ -42916,8 +42916,8 @@ int __spoils<ecx> sub_42D5B0()
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int g_SelectionHighlightActive;
-// 532060: using guessed type int dword_532060;
-// 532074: using guessed type int dword_532074;
+// 532060: using guessed type int g_SelectionBlinkActive;
+// 532074: using guessed type int g_SelectionBlinkStartTime;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D670) --------------------------------------------------------
@@ -42953,17 +42953,17 @@ int __usercall __spoils<ecx> sub_42D670@<eax>(int a1@<eax>, int a2@<ecx>, DWORD 
 // 532048: using guessed type int g_MapData;
 
 //----- (0042D6F0) --------------------------------------------------------
-int sub_42D6F0()
+int Battle_DismissDialog()
 {
   int v1; // ecx
 
-  dword_532068 = 1;
+  g_BattleDialogDismissed = 1;
   Render_Begin((int)dword_544CD8, 0);
   *(_BYTE *)(v1 + 8) &= ~4u;
   return sub_419D60(v1, v1);
 }
 // 42D70B: variable 'v1' is possibly undefined
-// 532068: using guessed type int dword_532068;
+// 532068: using guessed type int g_BattleDialogDismissed;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D730) --------------------------------------------------------
@@ -43410,9 +43410,9 @@ __int16 __usercall sub_42E160@<ax>(char a1@<dl>, int a2@<ebx>, int a3@<edi>)
   {
     v3 = 0;
   }
-  if ( v3 != dword_514E28 && (byte_514C89 & 4) == 0 )
+  if ( v3 != g_BattleHintIndex && (g_BattleHintFlags & 4) == 0 )
   {
-    dword_514E28 = v3;
+    g_BattleHintIndex = v3;
     if ( v3 == -1 )
     {
       LOWORD(v3) = sub_430F80(0, 1, a2, a3);
@@ -43426,9 +43426,9 @@ __int16 __usercall sub_42E160@<ax>(char a1@<dl>, int a2@<ebx>, int a3@<edi>)
   return v3;
 }
 // 511130: using guessed type char g_LanguageIndex;
-// 514C89: using guessed type char byte_514C89;
+// 514C89: using guessed type char g_BattleHintFlags;
 // 514DC8: using guessed type char *off_514DC8[24];
-// 514E28: using guessed type int dword_514E28;
+// 514E28: using guessed type int g_BattleHintIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -43436,7 +43436,7 @@ __int16 __usercall sub_42E160@<ax>(char a1@<dl>, int a2@<ebx>, int a3@<edi>)
 // 545150: using guessed type int dword_545150;
 
 //----- (0042E3C0) --------------------------------------------------------
-signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
+signed int __usercall Battle_RunLoop@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
 {
   int v2; // edx
   int v3; // eax
@@ -43473,11 +43473,11 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
   v8[2] = (int)off_514E2C[2];
   v4 = 1;
   sub_42D730(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
-  v5 = dword_532064;
-  dword_532068 = 0;
-  if ( !dword_532064 )
+  v5 = g_BattleLoopExitCode;
+  g_BattleDialogDismissed = 0;
+  if ( !g_BattleLoopExitCode )
   {
-    while ( !dword_532068 )
+    while ( !g_BattleDialogDismissed )
     {
       sub_42E160(0, v4, 0);
       sub_431CC0();
@@ -43492,14 +43492,14 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
       }
       if ( !Battle_BothPlayersActive() )
       {
-        dword_532064 = 1;
+        g_BattleLoopExitCode = 1;
         return 1;
       }
-      if ( dword_532064 )
-        return dword_532064;
+      if ( g_BattleLoopExitCode )
+        return g_BattleLoopExitCode;
     }
   }
-  return dword_532064;
+  return g_BattleLoopExitCode;
 }
 // 42E4F2: variable 'v6' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
@@ -43509,8 +43509,8 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
 // 514E2C: using guessed type char *off_514E2C[6];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
-// 532064: using guessed type int dword_532064;
-// 532068: using guessed type int dword_532068;
+// 532064: using guessed type int g_BattleLoopExitCode;
+// 532068: using guessed type int g_BattleDialogDismissed;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042E5A0) --------------------------------------------------------
@@ -43538,7 +43538,7 @@ void __usercall HandleBattleResults(
   _WORD *v19; // edx
 
   log(a3, a1, a5, (int)aHandlebattlere);
-  sub_432770();
+  Battle_ResetUnitColors();
   for ( i = 0; i < 10; ++i )
   {
     *v5 = -1;
@@ -43871,7 +43871,7 @@ DWORD __userpurge sub_42E9E0@<eax>(
     if ( !v10 )
     {
 LABEL_4:
-      dword_53204C = (int)v10;
+      g_BattleHudSprites = (int)v10;
       goto LABEL_5;
     }
 LABEL_3:
@@ -43905,7 +43905,7 @@ LABEL_5:
   if ( v15 )
     v15 = DLXSpriteSet_Load(v15, (char)a4);
   dword_532058 = (int)v15;
-  dword_514E28 = -1;
+  g_BattleHintIndex = -1;
   dword_514E48 = -1;
   dword_512360 = -1;
   dword_514C99 = (unsigned __int8)g_LanguageIndex + 13;
@@ -44007,31 +44007,31 @@ LABEL_5:
       if ( v81[1] >= v25 )
       {
         v25 = 1;
-        dword_532070 = 1;
-        dword_53206C = 0;
+        g_DefenderStartsOnLeft = 1;
+        g_AttackerStartsOnLeft = 0;
       }
       else
       {
-        dword_53206C = 1;
-        dword_532070 = 0;
+        g_AttackerStartsOnLeft = 1;
+        g_DefenderStartsOnLeft = 0;
       }
     }
     else
     {
-      dword_532070 = 1;
-      dword_53206C = 0;
+      g_DefenderStartsOnLeft = 1;
+      g_AttackerStartsOnLeft = 0;
     }
   }
   else
   {
     v25 = 0;
-    dword_53206C = 1;
-    dword_532070 = 0;
+    g_AttackerStartsOnLeft = 1;
+    g_DefenderStartsOnLeft = 0;
   }
   if ( v82 )
     BattleMapFileName(v70, v25, v82[1]);
   else
-    sub_441550(v70, dword_532070, v74[1]);
+    sub_441550(v70, g_DefenderStartsOnLeft, v74[1]);
   v73 = sub_4427F0(v70, 1);
   (*(void (**)(void))(*(_DWORD *)v73 + 20))();
   sub_473EE0(v27, &v73);
@@ -44089,15 +44089,15 @@ LABEL_5:
   else
     v42 = (char *)(v74 + 18);
   v43 = (char *)(v81 + 3);
-  sub_43D2D0((char *)v81 + 6, v80, v42, dword_53206C, v40);
-  sub_43D2D0(v42, v41, v43, dword_532070, v80);
+  sub_43D2D0((char *)v81 + 6, v80, v42, g_AttackerStartsOnLeft, v40);
+  sub_43D2D0(v42, v41, v43, g_DefenderStartsOnLeft, v80);
   sub_42E7C0(*(_DWORD *)(g_MapData + 836), v75, a6, *(_DWORD *)(g_MapData + 840));
-  if ( dword_53206C )
+  if ( g_AttackerStartsOnLeft )
     v44 = 0;
   else
     v44 = *(_DWORD *)(g_MapData + 804) - 7;
   *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 836) + 3934) = v44;
-  if ( dword_532070 )
+  if ( g_DefenderStartsOnLeft )
     v45 = 0;
   else
     v45 = *(_DWORD *)(g_MapData + 804) - 7;
@@ -44107,7 +44107,7 @@ LABEL_5:
   *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 836) + 3935) = *(_BYTE *)(v46 + 3935);
   g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
   g_SelectionHighlightActive = 0;
-  dword_532064 = 0;
+  g_BattleLoopExitCode = 0;
   g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   sub_430C20();
   v47 = 20;
@@ -44120,7 +44120,7 @@ LABEL_5:
   v50 = *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) == 0;
   log(v51, 20, v41, (int)aStart_0);
   v52 = 0;
-  sub_42C180(v53, 20, 0);
+  Battle_LogAllUnits(v53, 20, 0);
   while ( 1 )
   {
     v54 = *(_DWORD *)(g_MapData + 828);
@@ -44140,7 +44140,7 @@ LABEL_5:
     {
       if ( v50 )
         sub_42DEC0(0, v47, v50);
-      v55 = sub_42E3C0(v47, v52);
+      v55 = Battle_RunLoop(v47, v52);
       v50 = 0;
     }
     else
@@ -44234,7 +44234,7 @@ LABEL_5:
   Render_Pump();
   sub_404F20((int *)&unk_51D4C0, 20);
   sub_405920(&dword_5202BC);
-  sub_405920(&dword_53204C);
+  sub_405920(&g_BattleHudSprites);
   sub_405920(&dword_532050);
   sub_405920(&dword_532054);
   sub_405920(&dword_532058);
@@ -44286,7 +44286,7 @@ LABEL_5:
 // 512360: using guessed type int dword_512360;
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514C99: using guessed type int dword_514C99;
-// 514E28: using guessed type int dword_514E28;
+// 514E28: using guessed type int g_BattleHintIndex;
 // 514E38: using guessed type char *off_514E38[3];
 // 514E44: using guessed type int dword_514E44;
 // 514E48: using guessed type int dword_514E48;
@@ -44297,14 +44297,14 @@ LABEL_5:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 // 532048: using guessed type int g_MapData;
-// 53204C: using guessed type int dword_53204C;
+// 53204C: using guessed type int g_BattleHudSprites;
 // 532050: using guessed type int dword_532050;
 // 532054: using guessed type int dword_532054;
 // 532058: using guessed type int dword_532058;
 // 53205C: using guessed type int g_SelectionHighlightActive;
-// 532064: using guessed type int dword_532064;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 532064: using guessed type int g_BattleLoopExitCode;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 545150: using guessed type int dword_545150;
 
@@ -44397,10 +44397,10 @@ LABEL_7:
   v29 = SpriteForChar;
   if ( dword_514E48 == -1 )
     dword_5320F8 = 0;
-  if ( a1 == g_SelectedUnitIndex && dword_532060 )
+  if ( a1 == g_SelectedUnitIndex && g_SelectionBlinkActive )
   {
     v12 = Time_Now(v11, v10);
-    v13 = sub_415D80(2 * (v12 - dword_532074) - 90);
+    v13 = sub_415D80(2 * (v12 - g_SelectionBlinkStartTime) - 90);
     sub_405560(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, ((50 * v13) >> 16) + 50, 0, 0, 200, 1u);
   }
   else if ( a1 == dword_514E48 )
@@ -44489,8 +44489,8 @@ LABEL_13:
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
 // 532048: using guessed type int g_MapData;
-// 532060: using guessed type int dword_532060;
-// 532074: using guessed type int dword_532074;
+// 532060: using guessed type int g_SelectionBlinkActive;
+// 532074: using guessed type int g_SelectionBlinkStartTime;
 // 5320EC: using guessed type int dword_5320EC;
 // 5320F0: using guessed type int dword_5320F0;
 // 5320F4: using guessed type int dword_5320F4;
@@ -44634,7 +44634,7 @@ int __usercall sub_42FFB0@<eax>(int a1@<eax>, int a2@<edx>)
   v49 = ((a2 - *(_DWORD *)(g_MapData + 812)) << 6) + 16;
   v42 = 40 * a1;
   v43 = 2 * a2;
-  SpriteForChar = DLX_GetSpriteForChar(dword_53204C, *(__int16 *)(2 * a2 + 40 * a1 + g_MapData));
+  SpriteForChar = DLX_GetSpriteForChar(g_BattleHudSprites, *(__int16 *)(2 * a2 + 40 * a1 + g_MapData));
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     v49,
     SpriteForChar,
@@ -44686,7 +44686,7 @@ int __usercall sub_42FFB0@<eax>(int a1@<eax>, int a2@<edx>)
     {
       v47 += 420;
     }
-    v9 = DLX_GetSpriteForChar(dword_53204C, v47);
+    v9 = DLX_GetSpriteForChar(g_BattleHudSprites, v47);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       v49,
       v9,
@@ -44738,7 +44738,7 @@ LABEL_10:
     }
     if ( !v45 )
     {
-      v38 = DLX_GetSpriteForChar(dword_53204C, v48);
+      v38 = DLX_GetSpriteForChar(g_BattleHudSprites, v48);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v49,
         v38,
@@ -44771,7 +44771,7 @@ LABEL_10:
     {
       v14 = 2;
 LABEL_29:
-      v15 = DLX_GetSpriteForChar(dword_53204C, v14 + 5 * *(_DWORD *)(g_MapData + 820) + 428);
+      v15 = DLX_GetSpriteForChar(g_BattleHudSprites, v14 + 5 * *(_DWORD *)(g_MapData + 820) + 428);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v49,
         v15,
@@ -44811,7 +44811,7 @@ LABEL_30:
   sub_42FC30(a1, a2, v49, v2);
   if ( *(_BYTE *)(a2 + g_MapData + 20 * a1 + 3534) && a2 == *(_DWORD *)(g_MapData + 828) && v45 )
   {
-    v16 = DLX_GetSpriteForChar(dword_53204C, v48);
+    v16 = DLX_GetSpriteForChar(g_BattleHudSprites, v48);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       v49,
       v16,
@@ -44997,7 +44997,7 @@ LABEL_30:
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
 // 532048: using guessed type int g_MapData;
-// 53204C: using guessed type int dword_53204C;
+// 53204C: using guessed type int g_BattleHudSprites;
 // 532058: using guessed type int dword_532058;
 // 5320FC: using guessed type int dword_5320FC;
 // 532100: using guessed type int dword_532100;
@@ -45746,7 +45746,7 @@ LABEL_7:
     v2 = (__int16 *)((char *)v8 + 31);
   }
   while ( v1 < 22 );
-  if ( dword_532060 )
+  if ( g_SelectionBlinkActive )
   {
     LOWORD(v11) = g_SelectedUnitIndex;
     if ( g_SelectedUnitIndex != dword_512360 )
@@ -45763,7 +45763,7 @@ LABEL_7:
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 532048: using guessed type int g_MapData;
-// 532060: using guessed type int dword_532060;
+// 532060: using guessed type int g_SelectionBlinkActive;
 
 //----- (00431DE0) --------------------------------------------------------
 __int16 __usercall __spoils<ecx> sub_431DE0@<ax>(int a1@<eax>)
@@ -45973,7 +45973,7 @@ int __spoils<ecx> sub_4321D0()
 // 532048: using guessed type int g_MapData;
 
 //----- (00432770) --------------------------------------------------------
-signed int sub_432770()
+signed int Battle_ResetUnitColors()
 {
   signed int result; // eax
   int v1; // edx
@@ -45994,7 +45994,7 @@ signed int sub_432770()
 // 532048: using guessed type int g_MapData;
 
 //----- (004327B0) --------------------------------------------------------
-signed int __usercall sub_4327B0@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, char a3@<cl>, int a4@<ebx>)
+signed int __usercall Battle_PlaceUnit@<eax>(unsigned __int8 *unitData@<eax>, int tileX@<edx>, char facing@<cl>, int tileY@<ebx>)
 {
   int v5; // ecx
   int v6; // edx
@@ -46002,8 +46002,8 @@ signed int __usercall sub_4327B0@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, 
   int v8; // eax
   int v9; // edi
 
-  log(a2, a4, (DWORD)a1, (int)aBattle_placeun);
-  if ( *(__int16 *)(40 * v5 + g_MapData + 2 * a4 + 1534) != -1 )
+  log(tileX, tileY, (DWORD)unitData, (int)aBattle_placeun);
+  if ( *(__int16 *)(40 * v5 + g_MapData + 2 * tileY + 1534) != -1 )
     return 0;
   v6 = 0;
   for ( i = 0; i < 682; i += 31 )
@@ -46013,17 +46013,17 @@ signed int __usercall sub_4327B0@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, 
     ++v6;
   }
   v8 = 31 * v6;
-  qmemcpy((void *)(g_MapData + 31 * v6 + 852), a1, 0x1Fu);
-  *(_WORD *)(g_MapData + v8 + 856) = a2;
-  *(_WORD *)(g_MapData + v8 + 858) = a4;
-  *(_BYTE *)(g_MapData + v8 + 855) = a3;
-  byte_532120[v6] = a1[8];
+  qmemcpy((void *)(g_MapData + 31 * v6 + 852), unitData, 0x1Fu);
+  *(_WORD *)(g_MapData + v8 + 856) = tileX;
+  *(_WORD *)(g_MapData + v8 + 858) = tileY;
+  *(_BYTE *)(g_MapData + v8 + 855) = facing;
+  byte_532120[v6] = unitData[8];
   v9 = g_MapData;
-  *(_BYTE *)(g_MapData + v8 + 860) = byte_512580[88 * *(__int16 *)a1];
+  *(_BYTE *)(g_MapData + v8 + 860) = byte_512580[88 * *(__int16 *)unitData];
   *(_BYTE *)(g_MapData + v8 + 874) &= ~1u;
   *(_BYTE *)(g_MapData + v8 + 864) &= 0x8Fu;
-  *(_WORD *)(40 * a2 + g_MapData + 2 * a4 + 1534) = v6;
-  *(_DWORD *)(g_MapData + 4 * a1[2] + 3944) = v6;
+  *(_WORD *)(40 * tileX + g_MapData + 2 * tileY + 1534) = v6;
+  *(_DWORD *)(g_MapData + 4 * unitData[2] + 3944) = v6;
   g_SelectedUnitIndex = v6;
   sub_430C20();
   sub_430F80(0, 1, a4, v9);
@@ -50021,14 +50021,14 @@ LABEL_282:
     case 6:
       if ( a2 == *(_DWORD *)(g_MapData + 836) )
       {
-        if ( dword_53206C == 1 )
+        if ( g_AttackerStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
       }
       if ( a2 == *(_DWORD *)(g_MapData + 840) )
       {
-        if ( dword_532070 == 1 )
+        if ( g_DefenderStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
@@ -51030,8 +51030,8 @@ LABEL_47:
 // 5159F0: using guessed type int dword_5159F0[8];
 // 515A10: using guessed type int dword_515A10;
 // 532048: using guessed type int g_MapData;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 // 53244C: using guessed type int dword_53244C[17621];
 // 5437B0: using guessed type int dword_5437B0;
 // 5437B4: using guessed type int dword_5437B4;
@@ -52253,14 +52253,14 @@ signed int __usercall sub_43C6B0@<eax>(int a1@<eax>, signed int a2@<ebx>)
   v32 = -20;
   if ( *(_DWORD *)(g_MapData + 836) == a1 )
   {
-    if ( dword_53206C )
+    if ( g_AttackerStartsOnLeft )
       a2 = 1;
     else
       a2 = -1;
   }
   if ( a1 == *(_DWORD *)(g_MapData + 840) )
   {
-    if ( dword_532070 )
+    if ( g_DefenderStartsOnLeft )
       a2 = 1;
     else
       a2 = -1;
@@ -52398,8 +52398,8 @@ LABEL_23:
 // 43CB45: variable 'v25' is possibly undefined
 // 51257A: using guessed type int dword_51257A[];
 // 532048: using guessed type int g_MapData;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 
 //----- (0043CB80) --------------------------------------------------------
 void sub_43CB80()
@@ -53100,7 +53100,7 @@ signed int __usercall sub_43D560@<eax>(unsigned __int8 *a1@<eax>, _DWORD *a2@<ed
     if ( Tile_CheckPassability(*(__int16 *)a1, v5, v15) )
     {
       v9 = a3 ? 2 : 6;
-      result = sub_4327B0(a1, v5, v9, v15);
+      result = Battle_PlaceUnit(a1, v5, v9, v15);
       if ( result )
         break;
     }
@@ -53118,7 +53118,7 @@ signed int __usercall sub_43D560@<eax>(unsigned __int8 *a1@<eax>, _DWORD *a2@<ed
     if ( Tile_CheckPassability(*(__int16 *)a1, v7, v8) )
     {
       v12 = a3 ? 2 : 6;
-      result = sub_4327B0(a1, v14, v12, v8);
+      result = Battle_PlaceUnit(a1, v14, v12, v8);
       if ( result )
       {
         ++*a2;
