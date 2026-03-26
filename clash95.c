@@ -460,7 +460,7 @@ int __thiscall nullsub_2(_DWORD); // weak
 // unsigned int __usercall sub_420800@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
 int __thiscall sub_420820(void *this);
 // int __usercall sub_420840@<eax>(int a1@<eax>, int a2@<ecx>);
-int sub_420870();
+int Castle_UpdateBuildAvailability();
 void *sub_420910();
 // int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Castle_BuildSchool@<eax>(char a1@<bl>, DWORD a2@<ebp>);
@@ -478,7 +478,7 @@ int sub_421010();
 int __thiscall sub_421C20(void *this);
 unsigned int sub_421C40();
 // int *__usercall Castle_RenderHook@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
-int sub_422100();
+int Castle_UpdateConstructionButtons();
 // int *__usercall Castle_ShowScreen@<eax>(DWORD a1@<eax>, char a2@<bl>);
 // int __userpurge sub_422880@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, int a5);
 int sub_422960();
@@ -34294,7 +34294,7 @@ int __usercall sub_420840@<eax>(int a1@<eax>, int a2@<ecx>)
 // 526E80: using guessed type int dword_526E80;
 
 //----- (00420870) --------------------------------------------------------
-int sub_420870()
+int Castle_UpdateBuildAvailability()
 {
   int v0; // edx
   int result; // eax
@@ -34343,7 +34343,7 @@ void *sub_420910()
   v13 = g_RenderDevice;
   if ( !DD_IsFlipping((int)dword_544CD8) || dword_544CFC >> byte_54512C <= 509 || dword_544D00 >> byte_54512C >= 66 )
     goto LABEL_4;
-  sub_420870();
+  Castle_UpdateBuildAvailability();
   v2 = &unk_51D4C0;
   v3 = -5;
   v4 = 0;
@@ -34545,7 +34545,7 @@ int __usercall Castle_BuildSchool@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~8u;
     sub_4426C0(aBudowaSzkola, 64);
     sub_420A90(251, v8);
-    sub_422100();
+    Castle_UpdateConstructionButtons();
     return j__nfree_();
   }
   return result;
@@ -34579,7 +34579,7 @@ int __usercall Castle_BuildWorkshop@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~4u;
     sub_4426C0(aBudowaWarszt_0, 64);
     sub_420A90(252, v8);
-    sub_422100();
+    Castle_UpdateConstructionButtons();
     return j__nfree_();
   }
   return result;
@@ -34613,7 +34613,7 @@ int __usercall Castle_BuildBarracks@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<
     v4[416] &= ~2u;
     sub_4426C0(aBudowaBaraki, 64);
     sub_420A90(254, v9);
-    sub_422100();
+    Castle_UpdateConstructionButtons();
     return j__nfree_();
   }
   return result;
@@ -34652,7 +34652,7 @@ int __usercall Castle_BuildTemple@<eax>(char a1@<bl>, DWORD a2@<ebp>)
       v9 = aBudowaPoganie;
     sub_4426C0(v9, 64);
     sub_420A90(250, v8);
-    sub_422100();
+    Castle_UpdateConstructionButtons();
     return j__nfree_();
   }
   return result;
@@ -34687,7 +34687,7 @@ int __usercall Castle_BuildForge@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~0x10u;
     sub_4426C0(aBudowaKuznia, 64);
     sub_420A90(253, v8);
-    sub_422100();
+    Castle_UpdateConstructionButtons();
     return j__nfree_();
   }
   return result;
@@ -35653,7 +35653,7 @@ int *__usercall Castle_RenderHook@<eax>(int renderSurface@<ecx>, DWORD castleDat
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00422100) --------------------------------------------------------
-int sub_422100()
+int Castle_UpdateConstructionButtons()
 {
   if ( (*(_BYTE *)(g_ActiveCastlePtr + 420) & 1) != 0 )
     sub_40ED50((int)&word_513E08, 0);
@@ -35728,7 +35728,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
   dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_ActiveCastlePtr + 2) + gameData + 140063);
   v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_ActiveCastlePtr + 2) + 1);
   CSS_PauseStreamReading();
-  sub_422100();
+  Castle_UpdateConstructionButtons();
   strcpy(v45, "zamek_1\\z_iko.s32");
   v45[6] = dword_5202EC + 49;
   v8 = (_DWORD *)Mem_Alloc(4112, v7, a2, a1);

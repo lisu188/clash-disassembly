@@ -91,3 +91,5 @@
 | function | castle | clash95.c | sub_420EF0 | Castle_BuildForge | high | Executes the forge/smithy build action and updates the UI. |
 | function | tile | clash95.c | sub_425970 | Tile_CheckPassability | high | Central helper that enforces unit occupancy, structure blockers, and tile mask results when determining if a tile can be used. |
 | function | castle | clash95.c | sub_420E50 | Castle_BuildTemple | medium | Handles the religious building (Christian/Pagan variant) construction; naming reflects its role. |
+| function | castle | clash95.c | sub_422100 | Castle_UpdateConstructionButtons | medium | Updates castle build button state flags after building availability changes. |
+| function | castle | clash95.c | sub_420870 | Castle_UpdateBuildAvailability | medium | Reads castle build-state bits to populate UI availability flags before rendering. |
