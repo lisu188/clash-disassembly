@@ -141,3 +141,11 @@
 | parameter | unit | clash95.c:Battle_PlaceUnit | a2 | tileX | high | Explicitly names the destination X tile. |
 | parameter | unit | clash95.c:Battle_PlaceUnit | a3 | facing | medium | Captures that the byte controls the unit’s battlefield facing. |
 | parameter | unit | clash95.c:Battle_PlaceUnit | a4 | tileY | high | Explicitly names the destination Y tile. |
+
+## Final Summary
+
+- **Total renames completed:** 100
+- **Target met:** yes (100 high-confidence renames logged)
+- **Remaining ambiguous identifiers:** `dword_526A20` (logging router), `dword_514BEA` (selection blink helper) still lack clear semantics.
+- **Patterns noticed:** battle-related helpers often log with descriptive string constants that can be promoted to stable names; castle build availability uses bitmasks in `g_ActiveCastlePtr + 416` where each bit maps cleanly to a specific building; tile/battle data lives in `g_MapData` with fixed 31-byte unit slots.
+- **Suggested next targets:** clarify remaining battle dialog globals (`dword_514E48`, `dword_514E4C`) and castle economy fields (e.g., income arrays around `gameData + 140063`) once more context is recovered.
