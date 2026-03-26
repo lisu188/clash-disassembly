@@ -97,3 +97,10 @@
 | parameter | tile | clash95.c:Tile_CheckPassability | a1 | unitIndex | high | Explicitly denotes the unit index used when evaluating tile occupancy rules. |
 | parameter | tile | clash95.c:Tile_CheckPassability | a2 | tileX | high | Makes clear this argument is the map X coordinate. |
 | parameter | tile | clash95.c:Tile_CheckPassability | a3 | tileY | high | Makes clear this argument is the map Y coordinate. |
+| function | castle | clash95.c | sub_42C4E0 | Battle_BothPlayersActive | high | Checks the map grid to confirm both players still have at least one unit alive during castle battles. |
+| function | castle | clash95.c | sub_42C4C0 | Battle_HandleNewTurn | medium | Logs the "battle new turn" event and forwards to the routine that rebuilds state at the start of each round. |
+| global | unit | clash95.c | dword_53205C | g_SelectionHighlightActive | medium | Tracks whether the selected unit's highlight overlay is currently shown during blinking animations. |
+| function | unit | clash95.c | sub_42D4E0 | Unit_ToggleSelectionBlink | medium | Toggles the blinking highlight state for the currently selected unit. |
+| global | castle | clash95.c | dword_513E22 | g_CastleHasBuildOptions | medium | Tracks whether any build buttons remain available after refreshing castle construction states. |
+| global | castle | clash95.c | dword_513FC2 | g_CastleBuildCategoryOpen | medium | Array storing per-category availability bits used while scanning castle construction options. |
+| global | unit | clash95.c | dword_5202EC | g_CurrentPlayerIndex | high | Used across combat/castle/map routines as the active player index, so renaming clarifies its role everywhere. |

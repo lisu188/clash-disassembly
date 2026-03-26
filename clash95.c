@@ -571,8 +571,8 @@ void sub_429EB0();
 // void __usercall sub_42C130(__int16 *a1@<edx>, DWORD a2@<ebp>);
 // void __usercall sub_42C180(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall GodAnger@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>);
-// int __usercall sub_42C4C0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-BOOL sub_42C4E0();
+// int __usercall Battle_HandleNewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
+BOOL Battle_BothPlayersActive();
 // int __usercall __spoils<ecx> sub_42C560@<eax>(int a1@<eax>);
 _BOOL2 sub_42C600();
 int __thiscall sub_42C840(int this);
@@ -581,7 +581,7 @@ __int16 sub_42D250();
 __int16 sub_42D290();
 int Unit_UpdateSelectionDisplay();
 // int __usercall __spoils<ecx> Unit_SelectNextOwnedUnit@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<dil>);
-__int16 __spoils<ecx> sub_42D4E0();
+__int16 __spoils<ecx> Unit_ToggleSelectionBlink();
 // int __usercall __spoils<ecx> sub_42D560@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 int __spoils<ecx> sub_42D5B0();
 // int __usercall __spoils<ecx> sub_42D670@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, char a5@<sil>);
@@ -9131,8 +9131,8 @@ __int16 word_513C62[83] =
 __int16 word_513D08[4] = { 5, 6, 30, 29 }; // weak
 _DWORD dword_513D98[3] = { 31, 432, 1 }; // weak
 _WORD word_513E08[5] = { 500, 60, 0, 0, 3 }; // weak
-int dword_513E22 = 1; // weak
-int dword_513FC2[] = { 1 }; // weak
+int g_CastleHasBuildOptions = 1; // weak
+int g_CastleBuildCategoryOpen[] = { 1 }; // weak
 int dword_513FEA = 1; // weak
 int dword_514012 = 1; // weak
 int dword_51403A = 1; // weak
@@ -11234,7 +11234,7 @@ int dword_5202DC; // weak
 int dword_5202E0; // weak
 int gameData; // weak
 int dword_5202E8; // weak
-int dword_5202EC; // weak
+int g_CurrentPlayerIndex; // weak
 int dword_5202F0; // weak
 int dword_5202F4; // weak
 int dword_5202F8; // weak
@@ -11376,7 +11376,7 @@ int dword_53204C; // weak
 int dword_532050; // weak
 int dword_532054; // weak
 int dword_532058; // weak
-int dword_53205C; // weak
+int g_SelectionHighlightActive; // weak
 int dword_532060; // weak
 int dword_532064; // weak
 int dword_532068; // weak
@@ -17568,7 +17568,7 @@ BOOL __spoils<ecx> sub_408030()
           + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
        + *(_DWORD *)(gameData + 140008);
     v3 = *(unsigned __int16 *)(gameData + 200 * v1 + 2 * v2 + 556374);
-    if ( v3 > 0x7FFF || v3 == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + 725 * v3 + 147178) != dword_5202EC )
+    if ( v3 > 0x7FFF || v3 == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + 725 * v3 + 147178) != g_CurrentPlayerIndex )
     {
       return 0;
     }
@@ -17582,7 +17582,7 @@ BOOL __spoils<ecx> sub_408030()
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -17599,11 +17599,11 @@ BOOL __usercall sub_408140@<eax>(int a1@<eax>, int a2@<edx>)
   LOWORD(v4) = v3;
   return v3 <= 0x1F4u
       && (unsigned int)*(__int16 *)(gameData + 725 * v4 + 147180) <= 0x28
-      && *(unsigned __int8 *)(725 * v3 + gameData + 147178) == dword_5202EC;
+      && *(unsigned __int8 *)(725 * v3 + gameData + 147178) == g_CurrentPlayerIndex;
 }
 // 4081A7: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00408200) --------------------------------------------------------
 BOOL __usercall sub_408200@<eax>(int a1@<eax>, int a2@<edx>)
@@ -17617,14 +17617,14 @@ BOOL __usercall sub_408200@<eax>(int a1@<eax>, int a2@<edx>)
   if ( (unsigned __int16)v3 <= 0x1F4u && (unsigned int)*(__int16 *)(gameData + 725 * v3 + 147180) <= 0x28 )
   {
     v4 = gameData + 725 * *(unsigned __int16 *)(gameData + 200 * a1 + 2 * a2 + 556374);
-    if ( *(unsigned __int8 *)(v4 + 147178) != dword_5202EC && !*(_BYTE *)(v4 + 147894) )
+    if ( *(unsigned __int8 *)(v4 + 147178) != g_CurrentPlayerIndex && !*(_BYTE *)(v4 + 147894) )
       return 1;
   }
   return result;
 }
 // 408268: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004082C0) --------------------------------------------------------
 BOOL __usercall sub_4082C0@<eax>(int a1@<eax>, int a2@<edx>)
@@ -17657,7 +17657,7 @@ BOOL __usercall sub_4082F0@<eax>(int a1@<eax>, int a2@<edx>)
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
       v4 = gameData + 467 * v2;
-      if ( *(unsigned __int8 *)(v4 + 509676) == dword_5202EC && *(__int16 *)(v4 + 509690) != -1 )
+      if ( *(unsigned __int8 *)(v4 + 509676) == g_CurrentPlayerIndex && *(__int16 *)(v4 + 509690) != -1 )
         return 1;
     }
   }
@@ -17666,7 +17666,7 @@ BOOL __usercall sub_4082F0@<eax>(int a1@<eax>, int a2@<edx>)
 // 40832B: simplified comparisons for 'eax.4': <0 || >=65 became >=65u
 // 408346: simplified comparisons for 'ecx.4': <0 || >=4 became >=4u
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00408390) --------------------------------------------------------
 BOOL __usercall sub_408390@<eax>(int a1@<eax>, int a2@<edx>)
@@ -17684,7 +17684,7 @@ BOOL __usercall sub_408390@<eax>(int a1@<eax>, int a2@<edx>)
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
       v4 = gameData + 467 * v2;
-      if ( *(unsigned __int8 *)(v4 + 509676) != dword_5202EC && *(__int16 *)(v4 + 509690) != -1 )
+      if ( *(unsigned __int8 *)(v4 + 509676) != g_CurrentPlayerIndex && *(__int16 *)(v4 + 509690) != -1 )
         return 1;
     }
   }
@@ -17693,7 +17693,7 @@ BOOL __usercall sub_408390@<eax>(int a1@<eax>, int a2@<edx>)
 // 4083CB: simplified comparisons for 'eax.4': <0 || >=65 became >=65u
 // 4083E6: simplified comparisons for 'ecx.4': <0 || >=4 became >=4u
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00408430) --------------------------------------------------------
 BOOL __usercall sub_408430@<eax>(int a1@<eax>, int a2@<edx>)
@@ -17858,7 +17858,7 @@ void __usercall sub_4084A0(double a1@<st0>)
     && *(unsigned __int16 *)(200 * v1 + gameData + 2 * v78 + 556374) == 0xFFFF )
   {
     Map_DestroyTile(v1, v78);
-    if ( !sub_40F060(v1, v78, dword_5202EC) )
+    if ( !sub_40F060(v1, v78, g_CurrentPlayerIndex) )
     {
       v69 = aTerenNieodkryt;
       v70 = aUnexploredTerr;
@@ -17946,7 +17946,7 @@ LABEL_48:
     goto LABEL_48;
   }
 LABEL_12:
-  if ( !sub_40F0C0(v1, v78, dword_5202EC) )
+  if ( !sub_40F0C0(v1, v78, g_CurrentPlayerIndex) )
   {
 LABEL_35:
     sub_460D80((int)&dword_544CD8, (int)&unk_5196A0);
@@ -18081,8 +18081,8 @@ LABEL_26:
       v20 = v18 + gameData + 509674;
       if ( *(_WORD *)(gameData + v18 + 509690) )
       {
-        if ( *(unsigned __int8 *)(v19 + 509676) == dword_5202EC && *(__int16 *)(v19 + 509690) != -1 )
-          sub_4202C0(v20, dword_5202EC, v1, a1);
+        if ( *(unsigned __int8 *)(v19 + 509676) == g_CurrentPlayerIndex && *(__int16 *)(v19 + 509690) != -1 )
+          sub_4202C0(v20, g_CurrentPlayerIndex, v1, a1);
       }
       else
       {
@@ -18134,8 +18134,8 @@ LABEL_26:
   }
   if ( !DD_IsFlipping((int)&dword_544CD8) )
     return;
-  v27 = dword_5202EC;
-  if ( sub_42B730(v1, v78, dword_5202EC) )
+  v27 = g_CurrentPlayerIndex;
+  if ( sub_42B730(v1, v78, g_CurrentPlayerIndex) )
     sub_42B9D0(v1, v78, v27, v1);
   if ( g_SelectedUnitIndex != -1 && sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) && sub_43FB10(v1, v78) )
   {
@@ -18447,7 +18447,7 @@ LABEL_205:
 // 5202B4: using guessed type int dword_5202B4;
 // 5202E4: using guessed type int gameData;
 // 5202E8: using guessed type int dword_5202E8;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 544D14: using guessed type int dword_544D14;
@@ -18509,7 +18509,7 @@ int __usercall __spoils<ecx,st0> sub_409D30@<eax>(int a1@<ecx>, char a2@<bl>, DW
   result = YesNoWindow(v7[(unsigned __int8)g_LanguageIndex], 0, a1, a2, a3);
   if ( result )
   {
-    result = sub_450CE0(dword_5202EC, v5, a3, a4);
+    result = sub_450CE0(g_CurrentPlayerIndex, v5, a3, a4);
     dword_5202FC = v6;
   }
   return result;
@@ -18518,7 +18518,7 @@ int __usercall __spoils<ecx,st0> sub_409D30@<eax>(int a1@<ecx>, char a2@<bl>, DW
 // 409D6B: variable 'v6' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511BB0: using guessed type char *g_Text_SurrenderConfirm[3];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202FC: using guessed type int dword_5202FC;
 
 //----- (00409D80) --------------------------------------------------------
@@ -18581,7 +18581,7 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   {
     v8 = 725 * v5 + gameData;
     if ( *(__int16 *)(v8 + 147180) != -1
-      && *(unsigned __int8 *)(v8 + 147178) == dword_5202EC
+      && *(unsigned __int8 *)(v8 + 147178) == g_CurrentPlayerIndex
       && Unit_AttemptNeighborMove(v5) )
     {
       v6 = 1;
@@ -18614,7 +18614,7 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B5C: using guessed type int dword_511B5C;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00409F00) --------------------------------------------------------
 int __usercall sub_409F00@<eax>(int a1@<eax>, int a2@<ecx>)
@@ -18632,7 +18632,7 @@ int __usercall sub_409F00@<eax>(int a1@<eax>, int a2@<ecx>)
       v4 = gameData + 509674 + 467 * dword_511B54;
       if ( (unsigned int)*(char *)(v4 + 4) < 4
         && *(__int16 *)(v4 + 16) != -1
-        && *(unsigned __int8 *)(gameData + 467 * dword_511B54 + 509676) == dword_5202EC )
+        && *(unsigned __int8 *)(gameData + 467 * dword_511B54 + 509676) == g_CurrentPlayerIndex )
       {
         break;
       }
@@ -18652,7 +18652,7 @@ int __usercall sub_409F00@<eax>(int a1@<eax>, int a2@<ecx>)
 // 511B54: using guessed type int dword_511B54;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A000) --------------------------------------------------------
 int __usercall sub_40A000@<eax>(int a1@<eax>, int a2@<ecx>, unsigned __int16 a3@<bx>, DWORD a4@<ebp>, double a5@<st0>)
@@ -18925,7 +18925,7 @@ void __usercall sub_40A490(DWORD a1@<ebp>)
   void *v1; // ecx
 
   v1 = (void *)gameData;
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
   {
     if ( g_SelectedUnitIndex == -1 || *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180) == -1 )
     {
@@ -18938,7 +18938,7 @@ void __usercall sub_40A490(DWORD a1@<ebp>)
 // 40A4ED: variable 'v1' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A500) --------------------------------------------------------
 void __usercall sub_40A500(void *a1@<ecx>, DWORD a2@<ebp>)
@@ -18996,7 +18996,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
 
   v21 = g_RenderDevice;
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  SpriteForChar = DLX_GetSpriteForChar(dword_5202DC, dword_5202EC);
+  SpriteForChar = DLX_GetSpriteForChar(dword_5202DC, g_CurrentPlayerIndex);
   (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     400,
     SpriteForChar,
@@ -19007,7 +19007,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
     0,
     0,
     0);
-  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(gameData + 1423 * dword_5202EC + 140055) + 5);
+  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140055) + 5);
   v4 = g_RenderDevice;
   v5 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v5 + 52))(
@@ -19021,7 +19021,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
     0,
     0);
   Render_ReleaseSurface(7, v5);
-  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, 1423 * dword_5202EC + gameData + 140024 + 4);
+  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, 1423 * g_CurrentPlayerIndex + gameData + 140024 + 4);
   if ( *(_DWORD *)(gameData + 147155) )
   {
     sub_40BB60(3, 76, v5);
@@ -19061,7 +19061,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
 // 5202DC: using guessed type int dword_5202DC;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A820) --------------------------------------------------------
 int __usercall sub_40A820@<eax>(char a1@<bl>, DWORD a2@<ebp>)
@@ -19136,7 +19136,7 @@ int __usercall sub_40A820@<eax>(char a1@<bl>, DWORD a2@<ebp>)
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0040AA60) --------------------------------------------------------
@@ -19161,19 +19161,19 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
 
   log(a1, a2, a3, (int)aNextPlayer);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140039) = *(_DWORD *)(gameData + 140008);
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140043) = *(_DWORD *)(gameData + 140012);
-  v5 = dword_5202EC;
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140039) = *(_DWORD *)(gameData + 140008);
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140043) = *(_DWORD *)(gameData + 140012);
+  v5 = g_CurrentPlayerIndex;
   do
-    dword_5202EC = (dword_5202EC + 1) % 5;
-  while ( !*(_DWORD *)(1423 * dword_5202EC + gameData + 140024) );
-  *(_DWORD *)(gameData + 147139) = dword_5202EC;
+    g_CurrentPlayerIndex = (g_CurrentPlayerIndex + 1) % 5;
+  while ( !*(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140024) );
+  *(_DWORD *)(gameData + 147139) = g_CurrentPlayerIndex;
   log(v5, 5, a3, (int)aPlayerD);
-  v7 = (unsigned __int8 *)dword_5202EC;
-  v8 = *(_DWORD *)(1423 * dword_5202EC + gameData + 140051);
+  v7 = (unsigned __int8 *)g_CurrentPlayerIndex;
+  v8 = *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051);
   if ( v8 )
-    *(_DWORD *)(gameData + 147143) = dword_5202EC;
-  if ( v6 > dword_5202EC )
+    *(_DWORD *)(gameData + 147143) = g_CurrentPlayerIndex;
+  if ( v6 > g_CurrentPlayerIndex )
   {
     ++*(_WORD *)(gameData + 140022);
     log(v6, (char)v7, a3, (int)aNextTurnD);
@@ -19191,7 +19191,7 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
   *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
   Render_Pump();
-  if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
   {
     UI_LoadTurnBannerGfx((char)v7, a3);
     g_SelectedUnitIndex = -1;
@@ -19200,20 +19200,20 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
   }
   g_SelectedUnitIndex = -1;
   dword_511B5C = -1;
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
     sub_40A360(v13);
   Render_LoadResourceSprite(v13, 0xFFFFFFFF);
   sub_418700(1);
-  if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  if ( !*(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
   {
     sub_40A600(1);
     sub_422AC0();
   }
-  if ( !*(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( !*(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
   {
     v7 = *(unsigned __int8 **)(gameData + 140017);
     if ( v7 == (unsigned __int8 *)-1 || v7 == (unsigned __int8 *)19 || v7 == (unsigned __int8 *)9 )
-      AI_ComputeNationStrengthPercent(dword_5202EC, v14, 0xFFFFFFFF, a4);
+      AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, v14, 0xFFFFFFFF, a4);
   }
   log(v14, (char)v7, 0xFFFFFFFF, (int)aAutoMovesBegin);
   Unit_NewTurn(v15, (char)v7, 0xFFFFFFFF, a4);
@@ -19244,7 +19244,7 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
 // 511B5C: using guessed type int dword_511B5C;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0040AD40) --------------------------------------------------------
@@ -19257,7 +19257,7 @@ int *__usercall sub_40AD40@<eax>(DWORD a1@<ebp>)
   sub_404D90((int *)&unk_51D4C0);
   Render_DrawSprite();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
     sub_419D80(dword_511D40);
   else
     sub_40A600(0);
@@ -19276,7 +19276,7 @@ int *__usercall sub_40AD40@<eax>(DWORD a1@<ebp>)
 // 511D40: using guessed type _DWORD dword_511D40[2];
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 
 //----- (0040ADF0) --------------------------------------------------------
@@ -19326,14 +19326,14 @@ int __usercall __spoils<ecx> sub_40AE80@<eax>(int a1@<ebx>)
 
   if ( !dword_520310 )
   {
-    result = 1423 * dword_5202EC;
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    result = 1423 * g_CurrentPlayerIndex;
+    if ( !*(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
       return sub_40ADF0(a1);
   }
   return result;
 }
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AEB0) --------------------------------------------------------
@@ -19610,7 +19610,7 @@ LABEL_24:
       g_RenderHook = v13;
       Render_SetResourceHandle((int)&unk_51D4C0, v14);
     }
-    if ( sub_450FD0(dword_5202EC, 0) )
+    if ( sub_450FD0(g_CurrentPlayerIndex, 0) )
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
@@ -19623,11 +19623,11 @@ LABEL_24:
       sub_4623C0(v27, aKon_por1);
       return;
     }
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140024) )
+    if ( !*(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140024) )
       dword_5202FC = 1;
     if ( *(_DWORD *)(gameData + 140017) == -1 )
     {
-      if ( UI_CheckEndTurnHotkey(dword_5202EC) )
+      if ( UI_CheckEndTurnHotkey(g_CurrentPlayerIndex) )
       {
         dword_520304 = 1;
         dword_5202F8 = 1;
@@ -19661,7 +19661,7 @@ LABEL_24:
 // 513338: using guessed type int dword_513338[63];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F8: using guessed type int dword_5202F8;
 // 5202FC: using guessed type int dword_5202FC;
 // 520300: using guessed type int dword_520300;
@@ -19810,8 +19810,8 @@ LABEL_13:
   log(v20, (char)v21, a3, (int)aSetrhS08x);
   while ( 1 )
   {
-    UI_SetCurrentPlayer(dword_5202EC, v22, (char)v21, a3);
-    if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+    UI_SetCurrentPlayer(g_CurrentPlayerIndex, v22, (char)v21, a3);
+    if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
     {
       sub_40B0A0(v23, v21, a3, a5);
     }
@@ -19899,7 +19899,7 @@ LABEL_13:
 // 5202C0: using guessed type int dword_5202C0;
 // 5202D8: using guessed type int dword_5202D8;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 // 5202F8: using guessed type int dword_5202F8;
 // 5202FC: using guessed type int dword_5202FC;
@@ -21146,13 +21146,13 @@ signed int __usercall sub_40DB80@<eax>(int a1@<eax>, signed int a2@<edx>)
     v4 = (unsigned __int8)byte_523350[*v3];
   else
     v4 = 207;
-  if ( sub_40F060(a1, a2, dword_5202EC) )
+  if ( sub_40F060(a1, a2, g_CurrentPlayerIndex) )
     return v4;
   else
     return 1;
 }
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DC10) --------------------------------------------------------
 int sub_40DC10()
@@ -21202,11 +21202,11 @@ int sub_40DC10()
 //----- (0040DD30) --------------------------------------------------------
 int sub_40DD30()
 {
-  *(_BYTE *)(gameData + 1423 * dword_5202EC + 140047) ^= 1u;
+  *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 140047) ^= 1u;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DD60) --------------------------------------------------------
 BOOL sub_40DD60()
@@ -21230,47 +21230,47 @@ BOOL sub_40DD60()
 //----- (0040DDE0) --------------------------------------------------------
 int sub_40DDE0()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140047) = 1;
   dword_511FF0 = 7;
   Locale_DrawInteger();
   return sub_418700(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE20) --------------------------------------------------------
 int sub_40DE20()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140047) = 1;
   dword_511FF0 = 2;
   Locale_DrawInteger();
   return sub_418700(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE60) --------------------------------------------------------
 int sub_40DE60()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140047) = 1;
   dword_511FF0 = 4;
   Locale_DrawInteger();
   return sub_418700(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DEA0) --------------------------------------------------------
 int sub_40DEA0()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 0;
+  *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140047) = 0;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DED0) --------------------------------------------------------
 signed int __usercall sub_40DED0@<eax>(_WORD *a1@<eax>)
@@ -22347,8 +22347,8 @@ signed int __usercall __spoils<> sub_40F900@<eax>(int a1@<eax>)
   if ( v1[3] == -1 )
     return 0;
   v3 = sub_40F8B0((int)v1);
-  v9 = dword_5202EC;
-  dword_5202EC = *((unsigned __int8 *)v1 + 4);
+  v9 = g_CurrentPlayerIndex;
+  g_CurrentPlayerIndex = *((unsigned __int8 *)v1 + 4);
   v4 = v3;
   v10 = 0;
   for ( i = *v1 - v3; i < v4 + *v1; ++i )
@@ -22360,17 +22360,17 @@ signed int __usercall __spoils<> sub_40F900@<eax>(int a1@<eax>)
         break;
       if ( sub_415E40((j - v7) * (j - v7) + (i - *v1) * (i - *v1)) <= v4 )
       {
-        if ( sub_40EDE0(i, v8, dword_5202EC) )
+        if ( sub_40EDE0(i, v8, g_CurrentPlayerIndex) )
           v10 = 1;
       }
     }
   }
-  dword_5202EC = v9;
+  g_CurrentPlayerIndex = v9;
   return v10;
 }
 // 40F9B6: variable 'v8' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040F9F0) --------------------------------------------------------
 signed int __usercall sub_40F9F0@<eax>(int a1@<eax>)
@@ -23745,7 +23745,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
   v14 = 0;
   for ( i = 0; ; i += 725 )
   {
-    if ( *(__int16 *)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(gameData + i + 147178) != dword_5202EC )
+    if ( *(__int16 *)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(gameData + i + 147178) != g_CurrentPlayerIndex )
       goto LABEL_16;
     v4 = gameData + 147174 + i;
     sub_4127F0((__int16 *)v4, -20, sub_4118C0, 0xFFFFFFFF, a4);
@@ -23808,7 +23808,7 @@ LABEL_16:
 // 4119A2: variable 'v7' is possibly undefined
 // 411A67: variable 'v11' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00411AB0) --------------------------------------------------------
 signed int __usercall sub_411AB0@<eax>(int a1@<eax>)
@@ -27586,7 +27586,7 @@ int __userpurge sub_415F20@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, i
     result = gameData + 725 * result;
     if ( *(__int16 *)(result + 147180) != -1 )
     {
-      if ( !*(_BYTE *)(result + 147894) || (result = *(unsigned __int8 *)(result + 147178), result == dword_5202EC) )
+      if ( !*(_BYTE *)(result + 147894) || (result = *(unsigned __int8 *)(result + 147178), result == g_CurrentPlayerIndex) )
       {
         v7 = gameData + 725 * v24;
         v8 = (unsigned __int8)byte_512577[88 * *(__int16 *)(v7 + 147180)];
@@ -27716,7 +27716,7 @@ int __userpurge sub_415F20@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, i
 // 5202C8: using guessed type int dword_5202C8;
 // 5202D0: using guessed type int dword_5202D0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
 // 52699C: using guessed type int dword_52699C;
@@ -28253,7 +28253,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
       }
     }
   }
-  if ( ((1 << dword_5202EC) & *(unsigned __int8 *)(v4 + gameData + 100 * v3 + 576374)) == 1 << dword_5202EC )
+  if ( ((1 << g_CurrentPlayerIndex) & *(unsigned __int8 *)(v4 + gameData + 100 * v3 + 576374)) == 1 << g_CurrentPlayerIndex )
   {
     v9 = DLX_GetSpriteForChar(dword_5202C8, 6);
     (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -28601,7 +28601,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     v51 = (_DWORD *)(v49 + 316);
     if ( v50 )
     {
-      if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+      if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
       {
         v86 = -1;
         v87 = *v51 - 1;
@@ -28671,7 +28671,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     }
   }
 LABEL_133:
-  if ( v100 == g_SelectedUnitIndex && dword_512360 == -1 && *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( v100 == g_SelectedUnitIndex && dword_512360 == -1 && *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
   {
     DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
     v48 = *((_DWORD *)g_RenderDevice + 46);
@@ -28769,7 +28769,7 @@ LABEL_2:
 // 5202D0: using guessed type int dword_5202D0;
 // 5202D4: using guessed type int dword_5202D4;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 522B38: using guessed type __int16 word_522B38[223];
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
@@ -30019,7 +30019,7 @@ int __userpurge UI_DrawUnitInfoPane@<eax>(
     v7 = DLXSpriteSet_Load(v7, (char)a4);
   v42 = v7;
   Render_ReleaseSurface(7, a5);
-  if ( *(unsigned __int8 *)(v9 + 2) == dword_5202EC )
+  if ( *(unsigned __int8 *)(v9 + 2) == g_CurrentPlayerIndex )
   {
     if ( v8 )
       DLXSpriteSet_DrawText((int)v42, 0, v8, (unsigned __int8 *)dword_5202F4);
@@ -30076,7 +30076,7 @@ int __userpurge UI_DrawUnitInfoPane@<eax>(
       (*(void (**)(void))Surface[46])();
   }
   UI_DrawTextFmt(a6, v50 + 64, v50 + 192, v44 + 5, 3, (int)(**v49)[(unsigned __int8)g_LanguageIndex]);
-  if ( *((unsigned __int8 *)v51 + 2) == dword_5202EC )
+  if ( *((unsigned __int8 *)v51 + 2) == g_CurrentPlayerIndex )
   {
     v48 = v44 + 95;
     v43 = v50 + 85;
@@ -30264,7 +30264,7 @@ LABEL_50:
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512568: using guessed type char *(*off_512568)[102];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 
 //----- (0041A690) --------------------------------------------------------
@@ -32019,7 +32019,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
 
   log(a2, a2, a2, (int)aBuilding_newDD);
   v9 = 725 * v8;
-  dword_5202EC = *(unsigned __int8 *)(gameData + v9 + 147178);
+  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + v9 + 147178);
   v59 = *(__int16 *)(gameData + v9 + 147174);
   v57 = *(__int16 *)(gameData + v9 + 147176);
   if ( v10 == 1 && sub_4121A0(v9 + gameData + 147174) )
@@ -32068,8 +32068,8 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   v60 = 467 * v62 + gameData + 509674;
   *(_BYTE *)v60 = v59;
   *(_BYTE *)(v60 + 1) = v57;
-  v14 = dword_5202EC;
-  *(_BYTE *)(v60 + 3) = dword_5202EC;
+  v14 = g_CurrentPlayerIndex;
+  *(_BYTE *)(v60 + 3) = g_CurrentPlayerIndex;
   *(_BYTE *)(v60 + 2) = v14;
   *(_BYTE *)(v60 + 4) = a1;
   v15 = word_513A70[a1];
@@ -32086,19 +32086,19 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   v20 = *(_WORD *)(v60 + 432);
   *(_BYTE *)(v60 + 436) = v19 & 0xC0;
   *(_WORD *)(v60 + 432) = v20 & 0xF000;
-  LOBYTE(v15) = *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) & 7;
+  LOBYTE(v15) = *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 140071) & 7;
   HIBYTE(v15) = *(_BYTE *)(v60 + 444) & 0xF8;
   *(_BYTE *)(v60 + 444) = HIBYTE(v15);
   *(_BYTE *)(v60 + 444) = v15 | HIBYTE(v15);
   if ( a1 )
   {
-    if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
       v21 = 200;
     else
       v21 = 300;
     *(_DWORD *)(v60 + 438) = v21;
     v22 = (_WORD *)(v60 + 430);
-    if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+    if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
       v23 = 100;
     else
       v23 = 250;
@@ -32207,7 +32207,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
           do
           {
             if ( sub_415E40(v63 * v63 + v37 * v37) <= 4 )
-              sub_40EDE0(v35, v38, dword_5202EC);
+              sub_40EDE0(v35, v38, g_CurrentPlayerIndex);
             ++v37;
           }
           while ( v38 + 1 < v36 );
@@ -32218,7 +32218,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
       while ( v35 < v59 + 4 );
     }
   }
-  v39 = gameData + 1423 * dword_5202EC;
+  v39 = gameData + 1423 * g_CurrentPlayerIndex;
   if ( *(_DWORD *)(v39 + 140067) == -1 && a1 == 2 )
     *(_DWORD *)(v39 + 140067) = v62;
   if ( *(_DWORD *)(gameData + 140017) == -1 || *(_WORD *)(gameData + 140022) != 1 )
@@ -32253,7 +32253,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 513A70: using guessed type __int16 word_513A70[4];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0041D930) --------------------------------------------------------
 _DWORD *__usercall sub_41D930@<eax>(unsigned __int8 *a1@<eax>)
@@ -32377,8 +32377,8 @@ signed int __usercall sub_41DBA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
     default:
       break;
   }
-  v19 = dword_5202EC;
-  dword_5202EC = *(unsigned __int8 *)(gameData + 725 * a4 + 147178);
+  v19 = g_CurrentPlayerIndex;
+  g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + 725 * a4 + 147178);
   v6 = a1 - *(__int16 *)(gameData + 725 * a4 + 147174);
   v27 = 1;
   v7 = v6;
@@ -32429,7 +32429,7 @@ LABEL_24:
         while ( v15 < v22 );
       }
     }
-    dword_5202EC = v19;
+    g_CurrentPlayerIndex = v19;
     return v27;
   }
   else
@@ -32453,7 +32453,7 @@ LABEL_23:
       v11 = *(unsigned __int16 *)(v23 + gameData + v9 + 556374);
       if ( v11 != 0xFFFF && v11 != a4 )
         v27 = 0;
-      if ( sub_42B730(a1, a2, dword_5202EC) || sub_43FB10(a1, a2) || sub_443BB0(a1, a2) )
+      if ( sub_42B730(a1, a2, g_CurrentPlayerIndex) || sub_43FB10(a1, a2) || sub_443BB0(a1, a2) )
         return 0;
       if ( a3 == 3 && sub_41D980(a1, a2, 2) )
         return 0;
@@ -32467,7 +32467,7 @@ LABEL_23:
 // 41DC25: variable 'v20' is possibly undefined
 // 41DD63: variable 'v18' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0041E050) --------------------------------------------------------
 signed int __usercall sub_41E050@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>)
@@ -33084,8 +33084,8 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
     v6 = *(char *)(gameData + i + 509678);
     if ( v6 != -1 )
     {
-      v6 = dword_5202EC;
-      if ( *(unsigned __int8 *)(gameData + i + 509676) == dword_5202EC )
+      v6 = g_CurrentPlayerIndex;
+      if ( *(unsigned __int8 *)(gameData + i + 509676) == g_CurrentPlayerIndex )
       {
         a2 = (unsigned __int8 *)(gameData + 509674 + i);
         a2[420] &= ~1u;
@@ -33141,7 +33141,7 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
     }
   }
   LogAllBuildings(v6, (char)a2, a3);
-  return Building_CheckTechnology(dword_5202EC, v7, a3);
+  return Building_CheckTechnology(g_CurrentPlayerIndex, v7, a3);
 }
 // 41EB6A: variable 'v6' is possibly undefined
 // 41EB74: variable 'v7' is possibly undefined
@@ -33149,7 +33149,7 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
 // 41EC2E: variable 'v12' is possibly undefined
 // 512B58: using guessed type char byte_512B58;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0041EC70) --------------------------------------------------------
 char __usercall Building_GetInto@<al>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
@@ -33913,7 +33913,7 @@ void *__usercall sub_41FDF0@<eax>(unsigned __int8 *a1@<eax>, char a2@<bl>, int a
   Render_ReleaseSurface(7, (DWORD)a1);
   if ( a1[4] )
   {
-    SpriteForChar = DLX_GetSpriteForChar((int)v35, a1[2] != dword_5202EC);
+    SpriteForChar = DLX_GetSpriteForChar((int)v35, a1[2] != g_CurrentPlayerIndex);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       v40,
       SpriteForChar,
@@ -33944,7 +33944,7 @@ void *__usercall sub_41FDF0@<eax>(unsigned __int8 *a1@<eax>, char a2@<bl>, int a
   if ( a1[4] )
   {
     UI_DrawTextFmt(a3, v36 + 10, v36 + 235, v40 + 5, 3, (int)(a1 + 5));
-    if ( a1[2] == dword_5202EC )
+    if ( a1[2] == g_CurrentPlayerIndex )
     {
       if ( (a1[435] & 7) != 0 )
       {
@@ -34025,7 +34025,7 @@ void *__usercall sub_41FDF0@<eax>(unsigned __int8 *a1@<eax>, char a2@<bl>, int a
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 513B44: using guessed type char *off_513B44[2];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (004202C0) --------------------------------------------------------
@@ -34299,7 +34299,7 @@ int Castle_UpdateBuildAvailability()
   int v0; // edx
   int result; // eax
 
-  dword_513FC2[0] = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 8) == 0;
+  g_CastleBuildCategoryOpen[0] = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 8) == 0;
   dword_513FEA = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 1) == 0;
   dword_514012 = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 2) == 0;
   dword_51403A = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 4) == 0;
@@ -34307,15 +34307,15 @@ int Castle_UpdateBuildAvailability()
   dword_514062 = (*(_BYTE *)(g_ActiveCastlePtr + 416) & 0x10) == 0;
   for ( result = 0; result != 50; result += 10 )
   {
-    if ( dword_513FC2[result] )
+    if ( g_CastleBuildCategoryOpen[result] )
       v0 = 1;
   }
   if ( !v0 )
-    dword_513E22 = 0;
+    g_CastleHasBuildOptions = 0;
   return result * 4;
 }
-// 513E22: using guessed type int dword_513E22;
-// 513FC2: using guessed type int dword_513FC2[];
+// 513E22: using guessed type int g_CastleHasBuildOptions;
+// 513FC2: using guessed type int g_CastleBuildCategoryOpen[];
 // 513FEA: using guessed type int dword_513FEA;
 // 514012: using guessed type int dword_514012;
 // 51403A: using guessed type int dword_51403A;
@@ -34751,7 +34751,7 @@ int sub_421010()
   int result; // eax
   int v10; // eax
 
-  SpriteForChar = DLX_GetSpriteForChar(g_CastleFontSprites, dword_5202EC);
+  SpriteForChar = DLX_GetSpriteForChar(g_CastleFontSprites, g_CurrentPlayerIndex);
   v1 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v1 + 52))(
     5,
@@ -34763,14 +34763,14 @@ int sub_421010()
     0,
     0,
     0);
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140063) )
+  if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140063) )
   {
-    DLX_GetSpriteForChar(g_CastleFontSprites, dword_5202EC + 5);
+    DLX_GetSpriteForChar(g_CastleFontSprites, g_CurrentPlayerIndex + 5);
     v1 = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v1 + 52))(-1, -1, -1, -1, 1, 0, 0);
   }
   Render_ReleaseSurface(7, v1);
-  v2 = DLX_GetSpriteForChar(g_CastleFontSprites, *(unsigned __int8 *)(g_ActiveCastlePtr + 421) + 3 * dword_5202EC + 11);
+  v2 = DLX_GetSpriteForChar(g_CastleFontSprites, *(unsigned __int8 *)(g_ActiveCastlePtr + 421) + 3 * g_CurrentPlayerIndex + 11);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     26,
     v2,
@@ -34813,7 +34813,7 @@ int sub_421010()
 // 421197: variable 'v8' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526E7C: using guessed type int g_CastleFontSprites;
 
@@ -34889,8 +34889,8 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
   v66 = a4;
   v65 = a3;
   strcpy(v63, "zamek_1");
-  LOBYTE(a1) = dword_5202EC + 49;
-  v63[6] = dword_5202EC + 49;
+  LOBYTE(a1) = g_CurrentPlayerIndex + 49;
+  v63[6] = g_CurrentPlayerIndex + 49;
   if ( a4 != 2 )
   {
     v5 = *(_BYTE *)(g_ActiveCastlePtr + 416);
@@ -35160,7 +35160,7 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
 // 421717: variable 'v59' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 513D98: using guessed type _DWORD dword_513D98[3];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526E74: using guessed type int g_CastleIconSprites;
 
@@ -35221,11 +35221,11 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       v4 = *(_BYTE *)(g_ActiveCastlePtr + 416);
       if ( (v4 & 4) != 0 && (v4 & 1) != 0 )
       {
-        result = word_513C3C[20 * dword_5202EC];
+        result = word_513C3C[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
           result = sub_421740(
-                     word_513C3C[20 * dword_5202EC],
-                     word_513C3E[20 * dword_5202EC],
+                     word_513C3C[20 * g_CurrentPlayerIndex],
+                     word_513C3E[20 * g_CurrentPlayerIndex],
                      dword_526E8C,
                      g_CastleDecorSprites,
                      1u);
@@ -35236,81 +35236,81 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       v5 = *(_BYTE *)(g_ActiveCastlePtr + 416);
       if ( (v5 & 0x10) != 0 && (v5 & 8) != 0 )
       {
-        result = word_513C40[20 * dword_5202EC];
+        result = word_513C40[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C42[20 * dword_5202EC], dword_526E94 + 12, g_CastleDecorSprites, 1u);
+          result = sub_421740(result, word_513C42[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleDecorSprites, 1u);
       }
       break;
     case 3:
       result = g_ActiveCastlePtr;
       if ( (*(_BYTE *)(g_ActiveCastlePtr + 416) & 0x10) != 0 )
       {
-        result = word_513C44[20 * dword_5202EC];
+        result = word_513C44[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C46[20 * dword_5202EC], dword_526EA8 + 24, g_CastleDecorSprites, 0);
+          result = sub_421740(result, word_513C46[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleDecorSprites, 0);
       }
       break;
     case 4:
-      if ( dword_5202EC != 1 && dword_5202EC != 4
+      if ( g_CurrentPlayerIndex != 1 && g_CurrentPlayerIndex != 4
         || (result = *(_DWORD *)(g_ActiveCastlePtr + 416) << 28 >> 31, (*(_DWORD *)(g_ActiveCastlePtr + 416) & 8) != 0) )
       {
-        if ( dword_5202EC != 3
+        if ( g_CurrentPlayerIndex != 3
           || (result = *(_DWORD *)(g_ActiveCastlePtr + 416) << 30 >> 31, (*(_DWORD *)(g_ActiveCastlePtr + 416) & 2) != 0) )
         {
-          result = word_513C48[20 * dword_5202EC];
+          result = word_513C48[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
-            result = sub_421740(result, word_513C4A[20 * dword_5202EC], dword_526E9C + 36, g_CastleDecorSprites, 1u);
+            result = sub_421740(result, word_513C4A[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleDecorSprites, 1u);
         }
       }
       break;
     case 5:
-      result = word_513C4C[20 * dword_5202EC];
+      result = word_513C4C[20 * g_CurrentPlayerIndex];
       if ( result != -1 )
-        result = sub_421740(result, word_513C4E[20 * dword_5202EC], dword_526EB4 + 48, g_CastleDecorSprites, 0);
+        result = sub_421740(result, word_513C4E[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleDecorSprites, 0);
       break;
     case 6:
       result = *(char *)(g_ActiveCastlePtr + 4);
       if ( result != 1 )
       {
-        result = word_513C50[20 * dword_5202EC];
+        result = word_513C50[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C52[20 * dword_5202EC], dword_526EBC + 71, g_CastleDecorSprites, 1u);
+          result = sub_421740(result, word_513C52[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleDecorSprites, 1u);
       }
       break;
     case 7:
       result = g_ActiveCastlePtr;
       if ( (*(_BYTE *)(g_ActiveCastlePtr + 416) & 8) != 0 )
       {
-        result = word_513C54[20 * dword_5202EC];
+        result = word_513C54[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C56[20 * dword_5202EC], dword_526EC4 + 83, g_CastleDecorSprites, 1u);
+          result = sub_421740(result, word_513C56[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleDecorSprites, 1u);
       }
       break;
     case 8:
       result = g_ActiveCastlePtr;
       if ( (*(_BYTE *)(g_ActiveCastlePtr + 416) & 1) != 0 )
       {
-        result = word_513C58[20 * dword_5202EC];
+        result = word_513C58[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C5A[20 * dword_5202EC], dword_526ED0 + 95, g_CastleDecorSprites, 0);
+          result = sub_421740(result, word_513C5A[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleDecorSprites, 0);
       }
       break;
     case 9:
       result = g_ActiveCastlePtr;
       if ( (*(_BYTE *)(g_ActiveCastlePtr + 416) & 2) != 0 )
       {
-        result = word_513C5C[20 * dword_5202EC];
+        result = word_513C5C[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C5E[20 * dword_5202EC], dword_526EDC + 136, g_CastleDecorSprites, 0);
+          result = sub_421740(result, word_513C5E[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleDecorSprites, 0);
       }
       break;
     case 10:
       result = g_ActiveCastlePtr;
       if ( (*(_BYTE *)(g_ActiveCastlePtr + 416) & 2) != 0 )
       {
-        result = word_513C60[20 * dword_5202EC];
+        result = word_513C60[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C62[20 * dword_5202EC], dword_526EE8 + 167, g_CastleDecorSprites, 0);
+          result = sub_421740(result, word_513C62[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleDecorSprites, 0);
       }
       break;
     default:
@@ -35338,7 +35338,7 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
 // 513C5E: using guessed type __int16 word_513C5E[];
 // 513C60: using guessed type __int16 word_513C60[];
 // 513C62: using guessed type __int16 word_513C62[83];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526E78: using guessed type int g_CastleDecorSprites;
 // 526E8C: using guessed type int dword_526E8C;
@@ -35623,7 +35623,7 @@ int *__usercall Castle_RenderHook@<eax>(int renderSurface@<ecx>, DWORD castleDat
   v12 = renderSurface;
   sub_421240(dword_5202E0, 0, g_ActiveCastlePtr, 0);
   strcpy(v11, "zamek_1");
-  v11[6] = dword_5202EC + 49;
+  v11[6] = g_CurrentPlayerIndex + 49;
   sub_435ED0(v11, (int)byte_526A70, v3, castleDataOffset);
   Render_LoadResourceSprite_v4(8, byte_526A70, v4, 0, a2);
   Render_LoadResourceSprite_v4(7, byte_526A70, v5, 0, a2);
@@ -35646,7 +35646,7 @@ int *__usercall Castle_RenderHook@<eax>(int renderSurface@<ecx>, DWORD castleDat
 // 4220D6: variable 'v9' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526A64: using guessed type int g_ActiveCastlePtr;
 // 526A68: using guessed type int g_CastleScreenSurface;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
@@ -35730,7 +35730,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
   CSS_PauseStreamReading();
   Castle_UpdateConstructionButtons();
   strcpy(v45, "zamek_1\\z_iko.s32");
-  v45[6] = dword_5202EC + 49;
+  v45[6] = g_CurrentPlayerIndex + 49;
   v8 = (_DWORD *)Mem_Alloc(4112, v7, a2, a1);
   if ( v8 )
     v8 = DLXSpriteSet_Load(v8, a2);
@@ -35749,7 +35749,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
     v11 += 2;
   }
   while ( v13 );
-  v45[6] = dword_5202EC + 49;
+  v45[6] = g_CurrentPlayerIndex + 49;
   v14 = (_DWORD *)Mem_Alloc(4112, v9, a2, a1);
   if ( v14 )
     v14 = DLXSpriteSet_Load(v14, a2);
@@ -35949,7 +35949,7 @@ int *__usercall Castle_ShowScreen@<eax>(DWORD castleIndex@<eax>, char a2@<bl>)
 // 513D98: using guessed type _DWORD dword_513D98[3];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 // 523F5C: using guessed type int dword_523F5C;
 // 526A64: using guessed type int g_ActiveCastlePtr;
@@ -36562,7 +36562,7 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
     }
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v7 = *(unsigned __int8 *)(dword_526FA0 + 4);
-    if ( v7 != dword_5202EC )
+    if ( v7 != g_CurrentPlayerIndex )
       UI_SetCurrentPlayer(v7, v6, (char)v4, a2);
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 35);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -36605,8 +36605,8 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
           0);
       }
       Render_ReleaseSurface(7, a2);
-      v9 = dword_5202EC;
-      if ( *(unsigned __int8 *)(dword_526FA0 + 4) == dword_5202EC )
+      v9 = g_CurrentPlayerIndex;
+      if ( *(unsigned __int8 *)(dword_526FA0 + 4) == g_CurrentPlayerIndex )
         UI_DrawTextFmt(j, 38 * j + 32, 38 * j + 70, 450, 3, (int)aD_5);
       if ( dword_526F78[j] )
       {
@@ -36624,8 +36624,8 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
       }
     }
     result = *(unsigned __int8 *)(dword_526FA0 + 4);
-    if ( result != dword_5202EC )
-      return (int)UI_SetCurrentPlayer(dword_5202EC, v9, dword_5202EC, a2);
+    if ( result != g_CurrentPlayerIndex )
+      return (int)UI_SetCurrentPlayer(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
   }
   return result;
 }
@@ -36642,7 +36642,7 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
 // 5202C8: using guessed type int dword_5202C8;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526F78: using guessed type _DWORD dword_526F78[10];
 // 526FA0: using guessed type int dword_526FA0;
 // 527C24: using guessed type int dword_527C24;
@@ -37977,7 +37977,7 @@ int *__usercall sub_425A00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a
   LOWORD(v10) = *(_WORD *)(v11 + 1534);
   *(_WORD *)(v11 + 1534) = -1;
   v77 = v10;
-  if ( dword_5202EC == *(_DWORD *)(g_MapData + 836)
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836)
     && *(unsigned __int8 *)(31 * v58 + g_MapData + 854) == *(_DWORD *)(g_MapData + 840) )
   {
     sub_42E6F0();
@@ -38229,7 +38229,7 @@ LABEL_84:
     --*v65;
   }
   *(_WORD *)(2 * v63 + g_MapData + 40 * v62 + 1534) = v77;
-  if ( dword_5202EC == *(_DWORD *)(g_MapData + 836)
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836)
     && *(unsigned __int8 *)(31 * v58 + g_MapData + 854) == *(_DWORD *)(g_MapData + 840) )
   {
     sub_42E770();
@@ -38241,7 +38241,7 @@ LABEL_84:
 // 425FE5: variable 'v33' is possibly undefined
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 531CBC: using guessed type int dword_531CBC;
 // 532048: using guessed type int g_MapData;
 
@@ -38595,7 +38595,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
             }
             DD_Pump((int)dword_544CD8, v11);
             sub_431CC0();
-            if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+            if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
               sub_42C840(v34);
             v35 = Time_Now(v34, (unsigned __int8)byte_512571[88 * *(__int16 *)(v51 + g_MapData + 852)]);
             if ( v35 - v36 >= v37 )
@@ -38713,7 +38713,7 @@ LABEL_15:
 // 513338: using guessed type int dword_513338[63];
 // 519808: using guessed type int dword_519808;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
 // 523F78: using guessed type int dword_523F78;
@@ -40868,7 +40868,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
 // 5146E0: using guessed type int (*off_5146E0)();
 // 514834: using guessed type char *off_514834[3];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
 // 531CD0: using guessed type int dword_531CD0;
 // 531CD4: using guessed type int dword_531CD4;
@@ -41479,7 +41479,7 @@ BOOL __usercall sub_42B3F0@<eax>(int a1@<eax>, int a2@<edx>)
   int v8; // ecx
 
   result = 0;
-  if ( !sub_42B730(a1, a2, dword_5202EC) )
+  if ( !sub_42B730(a1, a2, g_CurrentPlayerIndex) )
   {
     v5 = Map_DestroyTile(v3, a2);
     if ( v5 != 185
@@ -41503,7 +41503,7 @@ BOOL __usercall sub_42B3F0@<eax>(int a1@<eax>, int a2@<edx>)
 // 42B467: variable 'v7' is possibly undefined
 // 42B499: variable 'v8' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0042B4B0) --------------------------------------------------------
 signed int __usercall Trap_New@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>)
@@ -41974,15 +41974,15 @@ char __usercall __spoils<ah,ecx> sub_42C060@<al>(int a1@<eax>)
     v7 = *(_BYTE *)(v6 + g_MapData + v5++ + 3134);
     *(_BYTE *)(v4 + 421) = v7;
   }
-  result = dword_5202EC;
-  if ( dword_5202EC == *(_DWORD *)(g_MapData + 840) )
+  result = g_CurrentPlayerIndex;
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
   {
     result = *(_BYTE *)(g_MapData + 832);
     *(_BYTE *)(*(_DWORD *)(g_MapData + 828) + a1 + 422) = result;
   }
   return result;
 }
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
 
 //----- (0042C0F0) --------------------------------------------------------
@@ -42168,7 +42168,7 @@ int __usercall GodAnger@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042C4C0) --------------------------------------------------------
-int __usercall sub_42C4C0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Battle_HandleNewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // ecx
   int result; // eax
@@ -42182,7 +42182,7 @@ int __usercall sub_42C4C0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 // 42C4CD: variable 'v3' is possibly undefined
 
 //----- (0042C4E0) --------------------------------------------------------
-BOOL sub_42C4E0()
+BOOL Battle_BothPlayersActive()
 {
   int v0; // esi
   int v1; // edi
@@ -42541,15 +42541,15 @@ __int16 sub_42CB50()
       }
     }
     v5 = *(__int16 *)(g_MapData + 40 * v2 + 2 * v3 + 1534);
-    if ( v5 == -1 || *(unsigned __int8 *)(31 * v5 + g_MapData + 854) != dword_5202EC )
+    if ( v5 == -1 || *(unsigned __int8 *)(31 * v5 + g_MapData + 854) != g_CurrentPlayerIndex )
     {
-      if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v5 + 854) == dword_5202EC )
+      if ( !g_SelectionHighlightActive || v5 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v5 + 854) == g_CurrentPlayerIndex )
       {
         if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + g_MapData + 852) == 13 )
         {
           if ( *(_BYTE *)(g_MapData + 20 * v2 + v3 + 3134) )
           {
-            if ( dword_53205C )
+            if ( g_SelectionHighlightActive )
             {
               if ( Unit_IsTileWithinRange(g_SelectedUnitIndex, v2, v3)
                 && (v17 = g_MapData + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(v17 + 860) >= 5u)
@@ -42657,8 +42657,8 @@ __int16 sub_42CB50()
     }
     else if ( DD_IsFlipping((int)dword_544CD8) )
     {
-      v8 = dword_5202EC;
-      if ( *(unsigned __int8 *)(v6 + g_MapData + 854) == dword_5202EC )
+      v8 = g_CurrentPlayerIndex;
+      if ( *(unsigned __int8 *)(v6 + g_MapData + 854) == g_CurrentPlayerIndex )
       {
         v9 = g_SelectedUnitIndex;
         if ( v5 != g_SelectedUnitIndex )
@@ -42694,9 +42694,9 @@ LABEL_13:
 // 429740: using guessed type int __fastcall sub_429740(_DWORD, _DWORD);
 // 429BD0: using guessed type int __fastcall sub_429BD0(_DWORD, _DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
-// 53205C: using guessed type int dword_53205C;
+// 53205C: using guessed type int g_SelectionHighlightActive;
 // 532060: using guessed type int dword_532060;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
@@ -42747,20 +42747,20 @@ int Unit_UpdateSelectionDisplay()
   if ( !byte_512582[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)] )
   {
     v1 = 1;
-    dword_53205C = (unsigned __int8)byte_512582[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)];
+    g_SelectionHighlightActive = (unsigned __int8)byte_512582[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)];
     dword_514B80 = 1;
     goto LABEL_6;
   }
   if ( !byte_51257E[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)] )
   {
     dword_514B80 = 2;
-    dword_53205C = 1;
+    g_SelectionHighlightActive = 1;
 LABEL_6:
     result = sub_419D60((int)&dword_514B78, v1);
     g_RenderDevice = v0;
     return result;
   }
-  dword_53205C = 1;
+  g_SelectionHighlightActive = 1;
   dword_514B80 = 2;
   result = sub_419D60((int)&dword_514B78, g_MapData);
   g_RenderDevice = v0;
@@ -42770,7 +42770,7 @@ LABEL_6:
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int g_MapData;
-// 53205C: using guessed type int dword_53205C;
+// 53205C: using guessed type int g_SelectionHighlightActive;
 // 532060: using guessed type int dword_532060;
 
 //----- (0042D3A0) --------------------------------------------------------
@@ -42788,7 +42788,7 @@ int __usercall __spoils<ecx> Unit_SelectNextOwnedUnit@<eax>(int uiContext@<eax>,
   for ( i = (g_SelectedUnitIndex + 1) % 22; i != g_SelectedUnitIndex; i = (i + 1) % 22 )
   {
     v4 = 31 * i + g_MapData;
-    if ( *(__int16 *)(v4 + 852) != -1 && *(unsigned __int8 *)(v4 + 854) == dword_5202EC )
+    if ( *(__int16 *)(v4 + 852) != -1 && *(unsigned __int8 *)(v4 + 854) == g_CurrentPlayerIndex )
       break;
   }
   v5 = g_MapData;
@@ -42812,11 +42812,11 @@ int __usercall __spoils<ecx> Unit_SelectNextOwnedUnit@<eax>(int uiContext@<eax>,
 // 42D43B: variable 'v6' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
 
 //----- (0042D4E0) --------------------------------------------------------
-__int16 __spoils<ecx> sub_42D4E0()
+__int16 __spoils<ecx> Unit_ToggleSelectionBlink()
 {
   int v1; // eax
   int v2; // ecx
@@ -42828,8 +42828,8 @@ __int16 __spoils<ecx> sub_42D4E0()
     if ( byte_512582[88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)] )
     {
       LOWORD(v1) = Render_Begin((int)dword_544CD8, 0);
-      LOBYTE(dword_53205C) = dword_53205C ^ 1;
-      if ( dword_53205C )
+      LOBYTE(g_SelectionHighlightActive) = g_SelectionHighlightActive ^ 1;
+      if ( g_SelectionHighlightActive )
       {
         *(_DWORD *)(v2 + 8) = 2;
         if ( dword_532060 )
@@ -42846,7 +42846,7 @@ __int16 __spoils<ecx> sub_42D4E0()
 // 42D53C: variable 'v2' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 532048: using guessed type int g_MapData;
-// 53205C: using guessed type int dword_53205C;
+// 53205C: using guessed type int g_SelectionHighlightActive;
 // 532060: using guessed type int dword_532060;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -42858,7 +42858,7 @@ int __usercall __spoils<ecx> sub_42D560@<eax>(int a1@<eax>, int a2@<ecx>, char a
 
   sub_419E60(a1, a2);
   result = g_MapData;
-  if ( dword_5202EC != *(_DWORD *)(g_MapData + 840) || *(_DWORD *)(g_MapData + 848) )
+  if ( g_CurrentPlayerIndex != *(_DWORD *)(g_MapData + 840) || *(_DWORD *)(g_MapData + 848) )
   {
     v6[0] = off_514B5C[0];
     v6[1] = off_514B5C[1];
@@ -42869,7 +42869,7 @@ int __usercall __spoils<ecx> sub_42D560@<eax>(int a1@<eax>, int a2@<ecx>, char a
   return result;
 }
 // 514B5C: using guessed type char *off_514B5C[6];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
 // 532064: using guessed type int dword_532064;
 
@@ -42893,9 +42893,9 @@ int __spoils<ecx> sub_42D5B0()
     {
       result = sub_4426C0(aBattleSzarza, 64);
       *(_DWORD *)(v5 + 8) = 2;
-      if ( dword_53205C )
+      if ( g_SelectionHighlightActive )
       {
-        dword_53205C = 0;
+        g_SelectionHighlightActive = 0;
         dword_514B80 = 1;
         return sub_419D60((int)dword_514B78, v5);
       }
@@ -42915,7 +42915,7 @@ int __spoils<ecx> sub_42D5B0()
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int g_MapData;
-// 53205C: using guessed type int dword_53205C;
+// 53205C: using guessed type int g_SelectionHighlightActive;
 // 532060: using guessed type int dword_532060;
 // 532074: using guessed type int dword_532074;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -43154,7 +43154,7 @@ int __usercall sub_42DAE0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
     Surface = Render_CreateSurface((int)Surface, v16 - v18 + 1, v20 - v19 + 1);
   v7 = (DWORD)Surface;
   Render_FillRect(0, Surface, (unsigned __int16)v19, (unsigned __int16)v18, v16, v20, 0, 0);
-  SpriteForChar = DLX_GetSpriteForChar((int)v14, dword_5202EC);
+  SpriteForChar = DLX_GetSpriteForChar((int)v14, g_CurrentPlayerIndex);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     v19,
     SpriteForChar,
@@ -43173,7 +43173,7 @@ int __usercall sub_42DAE0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   UI_DrawTextFmt(v16, v18, v16, v19 + 40, 3, v13[(unsigned __int8)g_LanguageIndex]);
   Render_ReleaseSurface(8, v7);
   v10 = v18;
-  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, 1423 * dword_5202EC + gameData + 140024 + 4);
+  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, 1423 * g_CurrentPlayerIndex + gameData + 140024 + 4);
   UI_DrawTextFmt(v17, v10, v9, v19 + 100, 3, *(_DWORD *)(v17 + 4 * (unsigned __int8)g_LanguageIndex));
   sub_419D80(v12);
   Render_Present((int)dword_544CD8);
@@ -43195,7 +43195,7 @@ int __usercall sub_42DAE0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 514D98: using guessed type char *off_514D98[2];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532080: using guessed type int dword_532080;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 545150: using guessed type int dword_545150;
@@ -43445,7 +43445,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
   int v6; // ecx
   int v8[9]; // [esp+0h] [ebp-24h] BYREF
 
-  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * dword_5202EC + 3944);
+  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   if ( *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
   {
     v2 = g_SelectedUnitIndex + 1;
@@ -43455,7 +43455,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
       do
       {
         v3 = g_MapData + 31 * v2;
-        if ( *(__int16 *)(v3 + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == dword_5202EC )
+        if ( *(__int16 *)(v3 + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == g_CurrentPlayerIndex )
           break;
         v2 = (v2 + 1) % 22;
       }
@@ -43464,15 +43464,15 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
     g_SelectedUnitIndex = v2;
   }
   Unit_UpdateSelectionDisplay();
-  *(_DWORD *)(g_MapData + 808) = *(unsigned __int8 *)(g_MapData + 2 * dword_5202EC + 3934);
-  *(_DWORD *)(g_MapData + 812) = *(unsigned __int8 *)(g_MapData + 2 * dword_5202EC + 3935);
+  *(_DWORD *)(g_MapData + 808) = *(unsigned __int8 *)(g_MapData + 2 * g_CurrentPlayerIndex + 3934);
+  *(_DWORD *)(g_MapData + 812) = *(unsigned __int8 *)(g_MapData + 2 * g_CurrentPlayerIndex + 3935);
   sub_430C20();
   sub_430F80(0, 1, a1, (int)v8);
   v8[0] = (int)off_514E2C[0];
   v8[1] = (int)off_514E2C[1];
   v8[2] = (int)off_514E2C[2];
   v4 = 1;
-  sub_42D730(v8[(unsigned __int8)g_LanguageIndex], dword_5202EC, 1, a2);
+  sub_42D730(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
   v5 = dword_532064;
   dword_532068 = 0;
   if ( !dword_532064 )
@@ -43490,7 +43490,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
         v4 = (int)(**(&off_512568 + 22 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852)))[(unsigned __int8)g_LanguageIndex];
         sub_4229A0(3, (char *)v4, v8[0]);
       }
-      if ( !sub_42C4E0() )
+      if ( !Battle_BothPlayersActive() )
       {
         dword_532064 = 1;
         return 1;
@@ -43507,7 +43507,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
 // 512568: using guessed type char *(*off_512568)[102];
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514E2C: using guessed type char *off_514E2C[6];
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532048: using guessed type int g_MapData;
 // 532064: using guessed type int dword_532064;
 // 532068: using guessed type int dword_532068;
@@ -43967,9 +43967,9 @@ LABEL_5:
     log(0, 211, (DWORD)&unk_51D4C0, (int)aNotEnoughMem_9);
     App_RequestQuit((int)aNotEnoughMe_10);
   }
-  v78 = dword_5202EC;
-  dword_5202EC = *((unsigned __int8 *)v81 + 4);
-  *(_DWORD *)(g_MapData + 836) = dword_5202EC;
+  v78 = g_CurrentPlayerIndex;
+  g_CurrentPlayerIndex = *((unsigned __int8 *)v81 + 4);
+  *(_DWORD *)(g_MapData + 836) = g_CurrentPlayerIndex;
   if ( v82 )
     v23 = *((_BYTE *)v82 + 4);
   else
@@ -44105,10 +44105,10 @@ LABEL_5:
   v46 = 2 * *(_DWORD *)(g_MapData + 840) + g_MapData;
   *(_BYTE *)(v46 + 3935) = (*(_DWORD *)(g_MapData + 800) - 7) / 2;
   *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 836) + 3935) = *(_BYTE *)(v46 + 3935);
-  dword_5202EC = *(_DWORD *)(g_MapData + 836);
-  dword_53205C = 0;
+  g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
+  g_SelectionHighlightActive = 0;
   dword_532064 = 0;
-  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * dword_5202EC + 3944);
+  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   sub_430C20();
   v47 = 20;
   sub_430F80(0, v48, 20, (int)v43);
@@ -44117,7 +44117,7 @@ LABEL_5:
   sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
   dword_545150 = (int)&unk_5196A0;
   Render_Present((int)dword_544CD8);
-  v50 = *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) == 0;
+  v50 = *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) == 0;
   log(v51, 20, v41, (int)aStart_0);
   v52 = 0;
   sub_42C180(v53, 20, 0);
@@ -44126,7 +44126,7 @@ LABEL_5:
     v54 = *(_DWORD *)(g_MapData + 828);
     if ( v54 != -1 )
     {
-      if ( dword_5202EC == *(_DWORD *)(g_MapData + 840) )
+      if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
       {
         *(_DWORD *)(g_MapData + 832) = *(char *)(v54 + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134);
         *(_BYTE *)(*(_DWORD *)(g_MapData + 828) + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134) = 0;
@@ -44136,7 +44136,7 @@ LABEL_5:
         *(_BYTE *)(v54 + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134) = *(_BYTE *)(g_MapData + 832);
       }
     }
-    if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
     {
       if ( v50 )
         sub_42DEC0(0, v47, v50);
@@ -44148,8 +44148,8 @@ LABEL_5:
       if ( !v50 )
         sub_42DEC0(1, v47, 0);
       v50 = 1;
-      v55 = sub_43CD00(dword_5202EC);
-      if ( !sub_42C4E0() )
+      v55 = sub_43CD00(g_CurrentPlayerIndex);
+      if ( !Battle_BothPlayersActive() )
         v55 = 1;
     }
     for ( m = 0; m != 682; m += 31 )
@@ -44159,7 +44159,7 @@ LABEL_5:
       if ( v58 != -1 )
       {
         v47 = *(unsigned __int8 *)(v57 + 854);
-        if ( v47 == dword_5202EC )
+        if ( v47 == g_CurrentPlayerIndex )
         {
           *(_BYTE *)(v57 + 860) = byte_512580[88 * v58];
           *(_BYTE *)(g_MapData + m + 864) &= 0x8Fu;
@@ -44168,26 +44168,26 @@ LABEL_5:
     }
     if ( v55 )
       break;
-    v68 = 1423 * dword_5202EC + gameData;
+    v68 = 1423 * g_CurrentPlayerIndex + gameData;
     if ( *(_DWORD *)(v68 + 140073) )
       *(_DWORD *)(v68 + 140077) = 0;
     else
       ++*(_DWORD *)(v68 + 140077);
-    v69 = dword_5202EC;
-    if ( *(int *)(gameData + 1423 * dword_5202EC + 140077) >= 2 )
-      GodAnger(dword_5202EC, dword_5202EC, v47);
-    *(_DWORD *)(gameData + 1423 * dword_5202EC + 140073) = 0;
-    *(_DWORD *)(4 * dword_5202EC + g_MapData + 3944) = g_SelectedUnitIndex;
-    *(_BYTE *)(g_MapData + 2 * dword_5202EC + 3934) = *(_BYTE *)(g_MapData + 808);
-    *(_BYTE *)(g_MapData + 2 * dword_5202EC + 3935) = *(_BYTE *)(g_MapData + 812);
-    if ( dword_5202EC == *(_DWORD *)(g_MapData + 844) )
+    v69 = g_CurrentPlayerIndex;
+    if ( *(int *)(gameData + 1423 * g_CurrentPlayerIndex + 140077) >= 2 )
+      GodAnger(g_CurrentPlayerIndex, g_CurrentPlayerIndex, v47);
+    *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140073) = 0;
+    *(_DWORD *)(4 * g_CurrentPlayerIndex + g_MapData + 3944) = g_SelectedUnitIndex;
+    *(_BYTE *)(g_MapData + 2 * g_CurrentPlayerIndex + 3934) = *(_BYTE *)(g_MapData + 808);
+    *(_BYTE *)(g_MapData + 2 * g_CurrentPlayerIndex + 3935) = *(_BYTE *)(g_MapData + 812);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 844) )
     {
       if ( v52 )
       {
-        if ( dword_5202EC == *(_DWORD *)(g_MapData + 836) )
-          dword_5202EC = *(_DWORD *)(g_MapData + 840);
+        if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
+          g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 840);
         else
-          dword_5202EC = *(_DWORD *)(g_MapData + 836);
+          g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
         v52 = 0;
       }
       else
@@ -44198,22 +44198,22 @@ LABEL_5:
     else
     {
       v69 = *(_DWORD *)(g_MapData + 836);
-      if ( dword_5202EC == v69 )
-        dword_5202EC = *(_DWORD *)(g_MapData + 840);
+      if ( g_CurrentPlayerIndex == v69 )
+        g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 840);
       else
-        dword_5202EC = *(_DWORD *)(g_MapData + 836);
+        g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
     }
-    g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * dword_5202EC + 3944);
-    if ( dword_5202EC == *(_DWORD *)(g_MapData + 836) )
-      sub_42C4C0(v69, v47, v52);
+    g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
+      Battle_HandleNewTurn(v69, v47, v52);
   }
   sub_42E860();
   log(v59, v47, v52, (int)aEndOfBattle);
   v60 = 0;
-  if ( sub_42C4E0() )
+  if ( Battle_BothPlayersActive() )
   {
-    sub_42C560(dword_5202EC);
-    if ( dword_5202EC == *(_DWORD *)(g_MapData + 836) )
+    sub_42C560(g_CurrentPlayerIndex);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
       v60 = 1;
     else
       v60 = 2;
@@ -44245,7 +44245,7 @@ LABEL_5:
   sub_413120(v66, v60);
   CSS_EmptySampleCache();
   g_SelectedUnitIndex = -1;
-  dword_5202EC = v78;
+  g_CurrentPlayerIndex = v78;
   CSS_EmptySampleCache();
   sub_441870(v76);
   sub_419110(0);
@@ -44294,14 +44294,14 @@ LABEL_5:
 // 5202BC: using guessed type int dword_5202BC;
 // 5202C0: using guessed type int dword_5202C0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 // 532048: using guessed type int g_MapData;
 // 53204C: using guessed type int dword_53204C;
 // 532050: using guessed type int dword_532050;
 // 532054: using guessed type int dword_532054;
 // 532058: using guessed type int dword_532058;
-// 53205C: using guessed type int dword_53205C;
+// 53205C: using guessed type int g_SelectionHighlightActive;
 // 532064: using guessed type int dword_532064;
 // 53206C: using guessed type int dword_53206C;
 // 532070: using guessed type int dword_532070;
@@ -44704,7 +44704,7 @@ LABEL_10:
   v45 = 1;
   if ( *(_BYTE *)(v10 + 3534) && a2 == *(_DWORD *)(g_MapData + 828) )
   {
-    if ( dword_5202EC == *(_DWORD *)(g_MapData + 840) )
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
       v11 = *(_DWORD *)(g_MapData + 832);
     else
       v11 = *(char *)(v10 + 3134);
@@ -44933,7 +44933,7 @@ LABEL_30:
   }
   if ( v46 != -1 )
   {
-    if ( *(unsigned __int8 *)(g_MapData + 31 * v46 + 854) == dword_5202EC
+    if ( *(unsigned __int8 *)(g_MapData + 31 * v46 + 854) == g_CurrentPlayerIndex
       && (*(_BYTE *)(g_MapData + 31 * v46 + 874) & 1) != 0 )
     {
       v32 = DLX_GetSpriteForChar(dword_5202C8, 16);
@@ -44993,7 +44993,7 @@ LABEL_30:
 // 514E58: using guessed type int dword_514E58;
 // 5202C8: using guessed type int dword_5202C8;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
 // 532048: using guessed type int g_MapData;
@@ -48585,7 +48585,7 @@ int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>)
   memset_(a2, -1);
   word_532360[0] = -2;
   v2 = 0;
-  v4 = dword_5202EC;
+  v4 = g_CurrentPlayerIndex;
   result = 0;
   v6 = 2 * (v3 != 0);
   do
@@ -48610,7 +48610,7 @@ int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>)
 // 4369A3: variable 'v3' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 53235C: using guessed type int dword_53235C;
 // 532360: using guessed type __int16 word_532360[];
 
@@ -58188,7 +58188,7 @@ int __usercall Port_GetSupply@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, 
             {
               v27 = 725 * v26;
               if ( (unsigned int)*(__int16 *)(v27 + gameData + 147174 + 6) <= 0x28
-                && *(unsigned __int8 *)(v27 + gameData + 147178) == dword_5202EC )
+                && *(unsigned __int8 *)(v27 + gameData + 147178) == g_CurrentPlayerIndex )
               {
                 break;
               }
@@ -58214,7 +58214,7 @@ LABEL_16:
         v8 = dword_517B48[i] + v32;
         v9 = dword_517B4C[i] + v33;
         if ( *(unsigned __int16 *)(gameData + 200 * v8 + 2 * v9 + 556374) == 0xFFFF
-          && sub_413DD0(dword_5202EC, 0, v9, v8) )
+          && sub_413DD0(g_CurrentPlayerIndex, 0, v9, v8) )
         {
           break;
         }
@@ -58226,14 +58226,14 @@ LABEL_16:
       v10 = dword_517B48[2 * v6];
       v11 = v10 + *(_DWORD *)(gameData + 586374);
       v12 = sub_40FA80(v10, dword_517B4C[2 * v6]);
-      Unit_Create(0, dword_5202EC, v11, v12, a4, v29);
+      Unit_Create(0, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(gameData + 200 * v11 + 2 * v29 + 556374);
       v15 = *(_DWORD *)(gameData + 586390) - 1;
       for ( j = 725 * *(unsigned __int16 *)(gameData + 200 * v11 + 2 * v29 + 556374) + gameData + 147174;
             v15 >= 0;
             v13 = v19 - 31 )
       {
-        v12 = dword_5202EC;
+        v12 = g_CurrentPlayerIndex;
         v17 = Rng_RandRange(0, 11);
         --v15;
         sub_40F440(v18, dword_517BA8[v17], v12);
@@ -58266,7 +58266,7 @@ LABEL_16:
 // 517B4C: using guessed type int dword_517B4C[23];
 // 517BA8: using guessed type int dword_517BA8[12];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004438A0) --------------------------------------------------------
 void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>)
@@ -58775,7 +58775,7 @@ signed int __usercall sub_444490@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<
     v7 = 1;
     fread_();
     fclose_(v8);
-    dword_5202EC = *(_DWORD *)(gameData + 147139);
+    g_CurrentPlayerIndex = *(_DWORD *)(gameData + 147139);
     sub_451E20();
 LABEL_3:
     if ( (unsigned int)*(__int16 *)(gameData + 725 * v9 + 147180) <= 0x28 )
@@ -58836,7 +58836,7 @@ LABEL_17:
 // 444688: variable 'v18' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004446E0) --------------------------------------------------------
 char __usercall sub_4446E0@<al>(int a1@<eax>, char *a2@<edx>, DWORD a3@<ebp>)
@@ -59495,7 +59495,7 @@ int __usercall sub_4458E0@<eax>(int a1@<ecx>, const char *a2@<ebx>, DWORD a3@<eb
     if ( (*(_BYTE *)(v4 + gameData + 510109) & 7) == 5 )
     {
       result = *(unsigned __int8 *)(result + 509676);
-      if ( result == dword_5202EC )
+      if ( result == g_CurrentPlayerIndex )
       {
         sub_4620F0(aZaraza, 1, v4, (char)a2, a3);
         a2 = (const char *)v9[(unsigned __int8)g_LanguageIndex];
@@ -59515,7 +59515,7 @@ int __usercall sub_4458E0@<eax>(int a1@<ecx>, const char *a2@<ebx>, DWORD a3@<eb
 // 511130: using guessed type char g_LanguageIndex;
 // 517EA0: using guessed type char *off_517EA0[12];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004459A0) --------------------------------------------------------
 int __usercall sub_4459A0@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
@@ -59526,16 +59526,16 @@ int __usercall sub_4459A0@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
   v4[0] = (int)off_517EAC[0];
   v4[1] = (int)off_517EAC[1];
   v4[2] = (int)off_517EAC[2];
-  if ( *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) != *(_BYTE *)(gameData + 1423 * dword_5202EC + 140072) )
+  if ( *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 140071) != *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 140072) )
     UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&off_517EAC[3]);
-  result = 1423 * dword_5202EC + gameData;
+  result = 1423 * g_CurrentPlayerIndex + gameData;
   *(_BYTE *)(result + 140072) = *(_BYTE *)(result + 140071);
   return result;
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 517EAC: using guessed type char *off_517EAC[9];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00445A40) --------------------------------------------------------
 int __usercall UI_CheatEditRepaint@<eax>(DWORD a1@<ebp>, int a2@<edi>)
@@ -60006,7 +60006,7 @@ int __usercall sub_446480@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
     1,
     0,
     0);
-  DLX_GetSpriteForChar((int)v18, *(unsigned __int8 *)(1423 * dword_5202EC + gameData + 141444) + 1);
+  DLX_GetSpriteForChar((int)v18, *(unsigned __int8 *)(1423 * g_CurrentPlayerIndex + gameData + 141444) + 1);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(-1, -1, -1, -1, 1, 0, 0);
   Render_ReleaseSurface(17, v10);
@@ -60053,7 +60053,7 @@ int __usercall sub_446480@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 543D54: using guessed type int dword_543D54;
 // 543D58: using guessed type int dword_543D58;
 // 543D5C: using guessed type int dword_543D5C;
@@ -60353,7 +60353,7 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
     1,
     0,
     0);
-  DLX_GetSpriteForChar((int)v20, *(unsigned __int8 *)(1423 * dword_5202EC + gameData + 141444) + 1);
+  DLX_GetSpriteForChar((int)v20, *(unsigned __int8 *)(1423 * g_CurrentPlayerIndex + gameData + 141444) + 1);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     -1,
     -1,
@@ -60411,7 +60411,7 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 // 518010: using guessed type char *off_518010[3];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 543D54: using guessed type int dword_543D54;
 // 543D58: using guessed type int dword_543D58;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -60473,7 +60473,7 @@ int __usercall UI_NotifyText@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWO
     1,
     0,
     0);
-  v10 = DLX_GetSpriteForChar((int)v15, *(unsigned __int8 *)(gameData + 1423 * dword_5202EC + 141444) + 1);
+  v10 = DLX_GetSpriteForChar((int)v15, *(unsigned __int8 *)(gameData + 1423 * g_CurrentPlayerIndex + 141444) + 1);
   v17 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v17 + 52))(
     168,
@@ -60509,7 +60509,7 @@ int __usercall UI_NotifyText@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWO
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 545150: using guessed type int dword_545150;
 
@@ -62718,7 +62718,7 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674, this);
   result = sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674));
-  dword_5202EC = v19;
+  g_CurrentPlayerIndex = v19;
   return result;
 }
 // 44B611: variable 'v3' is possibly undefined
@@ -62735,7 +62735,7 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
 // 44BB0A: variable 'v17' is possibly undefined
 // 44BBCF: variable 'v19' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044C2A0) --------------------------------------------------------
 signed int sub_44C2A0()
@@ -62805,12 +62805,12 @@ LABEL_18:
     if ( result >= 7115 )
       return result;
   }
-  dword_5202EC = v8;
+  g_CurrentPlayerIndex = v8;
   *(_DWORD *)(gameData + 147139) = v8;
   return result;
 }
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044C400) --------------------------------------------------------
 signed int __usercall sub_44C400@<eax>(DWORD a1@<ebp>, double a2@<st0>)
@@ -63739,7 +63739,7 @@ int __usercall sub_44E880@<eax>(int a1@<eax>)
   *(_WORD *)(v4 + 4) = v3;
   if ( !(_WORD)v3 )
   {
-    v6 = AI_TickNationPostTurn(dword_5202EC);
+    v6 = AI_TickNationPostTurn(g_CurrentPlayerIndex);
     *(_WORD *)(v4 + 4) = 13 * v6 / 10;
   }
   result = 10 * (*(unsigned __int16 *)(v4 + 4) / 10);
@@ -63748,7 +63748,7 @@ int __usercall sub_44E880@<eax>(int a1@<eax>)
 }
 // 44E89B: variable 'v2' is possibly undefined
 // 44E8AC: variable 'v4' is possibly undefined
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044E900) --------------------------------------------------------
 signed int __usercall Prisoner_SetInCastles@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
@@ -63787,13 +63787,13 @@ signed int __usercall Prisoner_SetInCastles@<eax>(int a1@<ecx>, char a2@<bl>, DW
       while ( 1 )
       {
         result = 6 * i;
-        if ( *(char *)(gameData + 1423 * dword_5202EC + 6 * i + 141381) != -1 )
+        if ( *(char *)(gameData + 1423 * g_CurrentPlayerIndex + 6 * i + 141381) != -1 )
           break;
 LABEL_3:
         if ( ++i >= 10 )
           return result;
       }
-      v5 = result + gameData + 140024 + 1423 * dword_5202EC + 1357;
+      v5 = result + gameData + 140024 + 1423 * g_CurrentPlayerIndex + 1357;
       v6 = 0;
       v7 = -1;
       v27 = *(_DWORD *)(gameData + 140004) + *(_DWORD *)(gameData + 140000);
@@ -63807,7 +63807,7 @@ LABEL_6:
         {
           v9 = 467 * v6;
           result = 467 * v6 + gameData;
-          if ( *(_BYTE *)(result + 509678) == 2 && *(unsigned __int8 *)(result + 509676) == dword_5202EC )
+          if ( *(_BYTE *)(result + 509678) == 2 && *(unsigned __int8 *)(result + 509676) == g_CurrentPlayerIndex )
           {
             v26 = *(unsigned __int8 *)(result + 509675);
             v10 = *(_BYTE *)(result + 509674);
@@ -63853,8 +63853,8 @@ LABEL_6:
     v18[1] = v20;
     sub_44E880((int)v18);
     *v21 = -1;
-    result = 1423 * dword_5202EC;
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    result = 1423 * g_CurrentPlayerIndex;
+    if ( !*(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
       goto LABEL_3;
     sub_4620F0(aUwiezic, 1, i, v20, v16);
     v25[0] = (int)off_518D08[0];
@@ -63878,7 +63878,7 @@ LABEL_6:
 // 511130: using guessed type char g_LanguageIndex;
 // 518D08: using guessed type char *off_518D08[21];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044EB70) --------------------------------------------------------
 int __usercall sub_44EB70@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
@@ -64594,7 +64594,7 @@ int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>)
   int v5; // eax
 
   g_RenderDevice = &unk_51D4C0;
-  v2 = gameData + 1423 * dword_5202EC;
+  v2 = gameData + 1423 * g_CurrentPlayerIndex;
   v3 = *(_BYTE *)(v2 + 141443);
   if ( v3 && v3 != -1 )
   {
@@ -64611,7 +64611,7 @@ int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>)
       0);
   }
   Render_ReleaseSurface(17, a1);
-  v5 = *(char *)(1423 * dword_5202EC + gameData + 141443);
+  v5 = *(char *)(1423 * g_CurrentPlayerIndex + gameData + 141443);
   if ( v5 == -1 )
     v5 = 0;
   return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&off_519010[3 * v5])[(unsigned __int8)g_LanguageIndex]);
@@ -64620,7 +64620,7 @@ int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 519010: using guessed type char *off_519010[30];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5443F0: using guessed type int dword_5443F0;
 
 //----- (0044FE70) --------------------------------------------------------
@@ -65150,7 +65150,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
   if ( *(_DWORD *)(gameData + 140017) != 6 )
   {
     log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
-    v5 = gameData + 1423 * dword_5202EC;
+    v5 = gameData + 1423 * g_CurrentPlayerIndex;
     result = *(char *)(v5 + 141443);
     if ( result != -1 )
     {
@@ -65158,14 +65158,14 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
       {
         if ( result == 9 )
         {
-          log(dword_5202EC, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
+          log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);
-          v21 = AI_FindActionCandidate(dword_5202EC);
+          v21 = AI_FindActionCandidate(g_CurrentPlayerIndex);
           if ( v21 )
           {
             sub_44F1E0(v21, a2, v21, a2, a4);
-            *(_BYTE *)(gameData + 1423 * dword_5202EC + 141443) = 5;
-            if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+            *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 141443) = 5;
+            if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
             {
               v45[0] = (int)off_519350[0];
               v45[1] = (int)off_519350[1];
@@ -65184,8 +65184,8 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
         }
         else if ( result == 1 )
         {
-          log(dword_5202EC, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
-          *(_BYTE *)(gameData + 1423 * dword_5202EC + 141443) = -1;
+          log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
+          *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 141443) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:
@@ -65207,7 +65207,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
               break;
             case 1u:
               log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_1, 1);
-              v26 = Unit_FindById(dword_5202EC, v24, v25);
+              v26 = Unit_FindById(g_CurrentPlayerIndex, v24, v25);
               if ( v26 != -1 )
               {
                 v27 = 467 * v26;
@@ -65220,7 +65220,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
               break;
             case 2u:
               log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_2, 2);
-              v30 = Unit_FindById(dword_5202EC, v28, v29);
+              v30 = Unit_FindById(g_CurrentPlayerIndex, v28, v29);
               if ( v30 != -1 )
               {
                 v31 = 467 * v30;
@@ -65236,7 +65236,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
               break;
             case 3u:
               log(v6, a2, (DWORD)savedregs, (int)aQueen_newtur_3, 3);
-              v36 = Unit_FindById(dword_5202EC, v34, v35);
+              v36 = Unit_FindById(g_CurrentPlayerIndex, v34, v35);
               if ( v36 != -1 )
               {
                 Building_Destroy(467 * v36 + gameData + 509674, a2, (DWORD)savedregs, a4);
@@ -65253,14 +65253,14 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           if ( v11 != 1 )
             UI_NotifyText((int)g_QueenMsgBuf, v11 - 1, a2, (DWORD)savedregs);
         }
-        result = gameData + 1423 * dword_5202EC;
+        result = gameData + 1423 * g_CurrentPlayerIndex;
         if ( *(_WORD *)(gameData + 140022) >= *(_WORD *)(result + 141445) )
         {
           if ( *(_DWORD *)(result + 140051) )
           {
             v38 = Rng_RandRange(0, 24);
             log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
-            v39 = AI_CalcFrontlineScore(dword_5202EC);
+            v39 = AI_CalcFrontlineScore(g_CurrentPlayerIndex);
             if ( sub_446480(
                    *(int *)((char *)off_5191F2 + 7 * v40 + 4 * (unsigned __int8)g_LanguageIndex),
                    *(unsigned __int16 *)((char *)&word_5191F0 + 7 * v40),
@@ -65268,14 +65268,14 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
                    v39,
                    (DWORD)savedregs) )
             {
-              AI_ApplyFrontlineScore(dword_5202EC, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
-              v42 = gameData + 1423 * dword_5202EC;
+              AI_ApplyFrontlineScore(g_CurrentPlayerIndex, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
+              v42 = gameData + 1423 * g_CurrentPlayerIndex;
               if ( *(char *)(v42 + 141443) < 9 )
                 ++*(_BYTE *)(v42 + 141443);
             }
             else
             {
-              v43 = gameData + 1423 * dword_5202EC;
+              v43 = gameData + 1423 * g_CurrentPlayerIndex;
               if ( *(char *)(v43 + 141443) > 1 )
                 --*(_BYTE *)(v43 + 141443);
             }
@@ -65289,30 +65289,30 @@ LABEL_18:
             v12 = Rng_RandRange(5, 8);
             v14 = v12 + *(_WORD *)(v13 + 140022);
             result = gameData;
-            *(_WORD *)(1423 * dword_5202EC + gameData + 141445) = v14;
+            *(_WORD *)(1423 * g_CurrentPlayerIndex + gameData + 141445) = v14;
           }
         }
       }
       else
       {
-        result = AI_TickNationPostTurn(dword_5202EC);
+        result = AI_TickNationPostTurn(g_CurrentPlayerIndex);
         if ( result >= 1000 )
         {
-          *(_BYTE *)(gameData + 1423 * dword_5202EC + 141444) = Rng_RandRange(0, 8);
+          *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 141444) = Rng_RandRange(0, 8);
           v15 = 1;
-          if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+          if ( *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140051) )
           {
             sub_4620F0((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
             v15 = sub_446F40(v17, a2, (DWORD)savedregs);
           }
-          v16 = 1423 * dword_5202EC;
+          v16 = 1423 * g_CurrentPlayerIndex;
           if ( v15 )
           {
             *(_BYTE *)(v16 + gameData + 141443) = 5;
             v18 = Rng_RandRange(5, 8);
             v20 = v18 + *(_WORD *)(v19 + 140022);
-            result = 1423 * dword_5202EC;
-            *(_WORD *)(gameData + 1423 * dword_5202EC + 141445) = v20;
+            result = 1423 * g_CurrentPlayerIndex;
+            *(_WORD *)(gameData + 1423 * g_CurrentPlayerIndex + 141445) = v20;
           }
           else
           {
@@ -65351,7 +65351,7 @@ LABEL_18:
 // 519350: using guessed type char *off_519350[9];
 // 51935C: using guessed type char *off_51935C[6];
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00450CE0) --------------------------------------------------------
 int __usercall sub_450CE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>)
@@ -65808,10 +65808,10 @@ int __usercall sub_451340@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 //----- (00451690) --------------------------------------------------------
 int sub_451690()
 {
-  sub_40ED70(dword_5202EC);
+  sub_40ED70(g_CurrentPlayerIndex);
   return sub_418700(1);
 }
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004516B0) --------------------------------------------------------
 void sub_4516B0()
@@ -66060,7 +66060,7 @@ void sub_451C60()
   int v2; // edx
   char v3; // bl
 
-  *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) = 3;
+  *(_BYTE *)(gameData + 1423 * g_CurrentPlayerIndex + 140071) = 3;
   v0 = 0;
   while ( 1 )
   {
@@ -66068,7 +66068,7 @@ void sub_451C60()
     if ( (unsigned int)*(char *)(v1 + 4) < 4 && *(__int16 *)(v1 + 16) != -1 )
     {
       v2 = gameData + 467 * v0;
-      if ( *(unsigned __int8 *)(v2 + 509676) == dword_5202EC )
+      if ( *(unsigned __int8 *)(v2 + 509676) == g_CurrentPlayerIndex )
       {
         v3 = *(_BYTE *)(v2 + 510118) & 0xF8;
         *(_BYTE *)(v2 + 510118) = v3;
@@ -66087,7 +66087,7 @@ void sub_451C60()
 // 451CF2: conditional instruction was optimized away because eax.4<64u
 // 451C97: simplified comparisons for 'ecx.4': <0 || >=4 became >=4u
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00451D00) --------------------------------------------------------
 int __usercall UI_ReadCheatString@<eax>(char a1@<bl>)
@@ -66300,7 +66300,7 @@ signed int sub_451F70()
   sub_455FF0();
   v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
   dword_54454C = (int)Rules_Log(v21, v2, v1);
-  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", dword_5202EC, *(_DWORD *)(gameData + 1423 * dword_5202EC + 140055));
+  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, *(_DWORD *)(gameData + 1423 * g_CurrentPlayerIndex + 140055));
   dword_544550 = (int)Rules_Log(v21, v4, v3);
   memset_(v6, v5);
   v7 = 0;
@@ -66310,7 +66310,7 @@ LABEL_2:
   if ( (unsigned int)*(char *)(v9 + 4) < 4 && *(__int16 *)(v9 + 16) != -1 )
   {
     v10 = gameData + 467 * v8;
-    if ( *(unsigned __int8 *)(v10 + 509676) == dword_5202EC && *(_BYTE *)(v10 + 509678) == 2 )
+    if ( *(unsigned __int8 *)(v10 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v10 + 509678) == 2 )
       ++v7;
   }
   while ( ++v8 < 100 )
@@ -66318,7 +66318,7 @@ LABEL_2:
     if ( v8 >= 0 )
       goto LABEL_2;
   }
-  v11 = sprintf_(v21, "(ilosc-zamkow %d %d)", dword_5202EC, v7);
+  v11 = sprintf_(v21, "(ilosc-zamkow %d %d)", g_CurrentPlayerIndex, v7);
   dword_544554 = (int)Rules_Log(v21, v12, v11);
   v14 = 0;
 LABEL_11:
@@ -66326,7 +66326,7 @@ LABEL_11:
   if ( (unsigned int)*(char *)(v15 + 4) < 4 && *(__int16 *)(v15 + 16) != -1 )
   {
     v16 = gameData + 467 * v14;
-    if ( *(unsigned __int8 *)(v16 + 509676) == dword_5202EC && *(_BYTE *)(v16 + 509678) == 1 )
+    if ( *(unsigned __int8 *)(v16 + 509676) == g_CurrentPlayerIndex && *(_BYTE *)(v16 + 509678) == 1 )
       ++v13;
   }
   while ( ++v14 < 100 )
@@ -66334,7 +66334,7 @@ LABEL_11:
     if ( v14 >= 0 )
       goto LABEL_11;
   }
-  v17 = sprintf_(v21, "(ilosc-twierdz %d %d)", dword_5202EC, v13);
+  v17 = sprintf_(v21, "(ilosc-twierdz %d %d)", g_CurrentPlayerIndex, v13);
   dword_544558 = (int)Rules_Log(v21, v18, v17);
   sub_47E910(-1, v19, v17);
   sub_479F70(dword_54454C, v17);
@@ -66357,7 +66357,7 @@ LABEL_11:
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 54454C: using guessed type int dword_54454C;
 // 544550: using guessed type int dword_544550;
 // 544554: using guessed type int dword_544554;
@@ -71962,7 +71962,7 @@ signed int __usercall sub_4620F0@<eax>(const char *a1@<eax>, int a2@<edx>, int a
     result = gameData;
     if ( *(_DWORD *)(gameData + 147147) )
     {
-      if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+      if ( *(_DWORD *)(1423 * g_CurrentPlayerIndex + gameData + 140051) )
       {
         v7 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
         v28 = g_RenderHook;
@@ -72039,7 +72039,7 @@ signed int __usercall sub_4620F0@<eax>(const char *a1@<eax>, int a2@<edx>, int a
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
+// 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
