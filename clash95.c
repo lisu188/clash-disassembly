@@ -13,6 +13,7 @@
 #define PLAYER_DISPLAY_NAME_OFFSET 4
 #define PLAYER_CAMERA_LEFT_OFFSET 15
 #define PLAYER_CAMERA_TOP_OFFSET 19
+#define PLAYER_MAP_MODE_ENABLED_OFFSET 23
 #define PLAYER_IS_HUMAN_OFFSET 27
 #define PLAYER_AI_INTELLIGENCE_OFFSET 31
 #define PLAYER_IS_CHRISTIAN_OFFSET 39
@@ -78,6 +79,7 @@
 #define PLAYER_QUEEN_NEXT_REVIEW(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_REVIEW_TURN_OFFSET))
 #define PLAYER_CAMERA_LEFT(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_LEFT_OFFSET))
 #define PLAYER_CAMERA_TOP(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_TOP_OFFSET))
+#define PLAYER_MAP_MODE_ENABLED(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_MAP_MODE_ENABLED_OFFSET))
 #define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
 #define PLAYER_AI_INTELLIGENCE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_AI_INTELLIGENCE_OFFSET))
 #define PLAYER_IS_CHRISTIAN(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_CHRISTIAN_OFFSET))
@@ -366,13 +368,13 @@ int __thiscall sub_40D430(void *this);
 void Locale_DrawInteger();
 // void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>);
 // signed int __usercall Map_DestroyTile@<eax>(int a1@<eax>, signed int a2@<edx>);
-int sub_40DC10();
-int sub_40DD30();
-BOOL sub_40DD60();
-int sub_40DDE0();
-int sub_40DE20();
-int sub_40DE60();
-int sub_40DEA0();
+int MapMode_UpdateCameraFromCursor();
+int MapMode_ToggleEnabled();
+BOOL MapMode_IsCursorInsidePanel();
+int MapMode_EnableTerrainUnitsAndBuildings();
+int MapMode_EnableUnitsOnly();
+int MapMode_EnableBuildingsOnly();
+int MapMode_Disable();
 // signed int __usercall sub_40DED0@<eax>(_WORD *a1@<eax>);
 // int __usercall sub_40DFF0@<eax>(_WORD *a1@<eax>, DWORD a2@<ebp>);
 // BOOL __usercall sub_40E8B0@<eax>(char a1@<bl>, int a2@<ebp>);
@@ -8389,7 +8391,7 @@ int dword_511EC0 = -1; // weak
 char *off_511EC8 = "system.sfn"; // weak
 int dword_511ECC[] = { 0 }; // weak
 __int16 word_511ED0[] = { 10 }; // weak
-int dword_511FF0 = 7; // weak
+int g_MapModeOverlayMask = 7; // weak
 char byte_511FF8[] = { '\xF8' }; // weak
 __int16 word_512348[] = { 30 }; // weak
 __int16 word_51234A[] = { 1 }; // weak
@@ -17613,7 +17615,7 @@ int __usercall sub_407D20@<eax>(signed int a1@<ebp>)
     }
     if ( Input_IsKeyPressed(50) )
     {
-      sub_40DD30();
+      MapMode_ToggleEnabled();
       while ( Input_IsKeyPressed(50) )
         DD_Pump((int)dword_544CD8, 50);
     }
@@ -17630,7 +17632,7 @@ int __usercall sub_407D20@<eax>(signed int a1@<ebp>)
         DD_Pump((int)dword_544CD8, (char)dword_544CD8);
     }
   }
-  result = sub_40DD60();
+  result = MapMode_IsCursorInsidePanel();
   if ( !result )
   {
     v17 = (((dword_544CFC >> byte_54512C)
@@ -17950,7 +17952,7 @@ void __usercall sub_4084A0(double a1@<st0>)
   int v77[3]; // [esp+48h] [ebp-28h]
   int v78; // [esp+54h] [ebp-1Ch]
 
-  if ( sub_40DD60() )
+  if ( MapMode_IsCursorInsidePanel() )
     goto LABEL_35;
   if ( dword_544CFC >> byte_54512C < 32 )
     return;
@@ -19654,7 +19656,7 @@ void __usercall sub_40B0A0(
     DD_Pump((int)dword_544CD8, (char)a2);
     sub_407B20(0, v8, v9);
     sub_40ADF0((int)a2);
-    sub_40DC10();
+    MapMode_UpdateCameraFromCursor();
     if ( !sub_40E8B0((char)a2, 0) )
       break;
     if ( !sub_423860(0, a4) )
@@ -21070,7 +21072,7 @@ int __usercall sub_40D560@<eax>(
         unsigned __int16 a3@<cx>,
         unsigned __int16 a4@<bx>)
 {
-  if ( *(_DWORD *)(gameData + 1423 * *(_DWORD *)(gameData + 147143) + 140047)
+  if ( PLAYER_MAP_MODE_ENABLED(*(_DWORD *)(gameData + 147143))
     && a4 >= (unsigned __int16)word_523344
     && a2 <= (unsigned __int16)word_523346 + (unsigned __int16)word_52334A )
   {
@@ -21134,7 +21136,7 @@ int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>,
   if ( a3 >= v8 )
     v6 = v8 - 1;
   result = 1423 * *(_DWORD *)(gameData + 147143);
-  if ( *(_DWORD *)(gameData + result + 140047) )
+  if ( PLAYER_MAP_MODE_ENABLED(*(_DWORD *)(gameData + 147143)) )
   {
     for ( i = (char *)v17; (int)i <= a4; ++i )
     {
@@ -21163,7 +21165,7 @@ int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>,
 //----- (0040D800) --------------------------------------------------------
 BOOL __usercall sub_40D800@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>)
 {
-  return *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140047)
+  return PLAYER_MAP_MODE_ENABLED(*(_DWORD *)(gameData + 147143))
       && a1 >= (unsigned __int16)word_523344
       && a2 <= (unsigned __int16)word_52334A + (unsigned __int16)word_523346;
 }
@@ -21216,7 +21218,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
     {
       v9 = g_RenderDevice;
       g_RenderDevice = (_UNKNOWN *)dword_52334C;
-      if ( (dword_511FF0 & 1) != 0 )
+      if ( (g_MapModeOverlayMask & 1) != 0 )
       {
         v3 = (unsigned __int16 *)(gameData + 1400 * v2 + 14 * a2);
         if ( v3[2] == 0xFFFF )
@@ -21229,7 +21231,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
       {
         v10 = -49;
       }
-      if ( (dword_511FF0 & 2) != 0
+      if ( (g_MapModeOverlayMask & 2) != 0
         && *(unsigned __int16 *)(TILE_INDEX(v2, a2)) <= 0x1F4u
         && (unsigned int)*(__int16 *)(gameData
                                     + 725 * *(unsigned __int16 *)(TILE_INDEX(v2, a2))
@@ -21239,7 +21241,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
         if ( !*(_BYTE *)(v5 + 147894) )
           v10 = byte_511FF8[*(unsigned __int8 *)(v5 + 147178)];
       }
-      if ( (dword_511FF0 & 4) != 0 )
+      if ( (g_MapModeOverlayMask & 4) != 0 )
       {
         v6 = *(unsigned __int16 *)(TILE_INDEX(v2, a2));
         if ( v6 >= 0x8000 && v6 != 0xFFFF )
@@ -21272,7 +21274,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
 // 40D9B8: simplified comparisons for 'eax.4': <0 || >=29 became >=29u
 // 40DB15: variable 'v7' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511FF0: using guessed type int dword_511FF0;
+// 511FF0: using guessed type int g_MapModeOverlayMask;
 // 5202E4: using guessed type int gameData;
 // 52334C: using guessed type int dword_52334C;
 // 523F50: using guessed type int dword_523F50;
@@ -21298,7 +21300,7 @@ signed int __usercall sub_40DB80@<eax>(int a1@<eax>, signed int a2@<edx>)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DC10) --------------------------------------------------------
-int sub_40DC10()
+int MapMode_UpdateCameraFromCursor()
 {
   int result; // eax
   int v1; // ebx
@@ -21308,8 +21310,8 @@ int sub_40DC10()
   result = DD_IsFlipping((int)dword_544CD8);
   if ( result )
   {
-    result = 1423 * *(_DWORD *)(gameData + 147143);
-    if ( *(_DWORD *)(gameData + result + 140047) )
+    result = *(_DWORD *)(gameData + 147143);
+    if ( PLAYER_MAP_MODE_ENABLED(result) )
     {
       v1 = ((dword_544CFC >> byte_54512C) - (unsigned __int16)word_523344 - 7) / (unsigned __int8)byte_523F54;
       result = ((dword_544D00 >> byte_54512C) - (unsigned __int16)word_523346 - 7) / (unsigned __int8)byte_523F54;
@@ -21343,18 +21345,18 @@ int sub_40DC10()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040DD30) --------------------------------------------------------
-int sub_40DD30()
+int MapMode_ToggleEnabled()
 {
-  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140047) ^= 1u;
+  PLAYER_MAP_MODE_ENABLED(g_CurrentPlayerIndex) ^= 1u;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DD60) --------------------------------------------------------
-BOOL sub_40DD60()
+BOOL MapMode_IsCursorInsidePanel()
 {
-  if ( !*(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140047) )
+  if ( !PLAYER_MAP_MODE_ENABLED(*(_DWORD *)(gameData + 147143)) )
     return 0;
   return dword_544CFC >> byte_54512C > (unsigned __int16)word_523344
       && dword_544CFC >> byte_54512C < (unsigned __int16)word_523348 + (unsigned __int16)word_523344
@@ -21371,45 +21373,45 @@ BOOL sub_40DD60()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040DDE0) --------------------------------------------------------
-int sub_40DDE0()
+int MapMode_EnableTerrainUnitsAndBuildings()
 {
-  *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140047) = 1;
-  dword_511FF0 = 7;
+  PLAYER_MAP_MODE_ENABLED(g_CurrentPlayerIndex) = 1;
+  g_MapModeOverlayMask = 7;
   Locale_DrawInteger();
   return sub_418700(1);
 }
-// 511FF0: using guessed type int dword_511FF0;
+// 511FF0: using guessed type int g_MapModeOverlayMask;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE20) --------------------------------------------------------
-int sub_40DE20()
+int MapMode_EnableUnitsOnly()
 {
-  *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140047) = 1;
-  dword_511FF0 = 2;
+  PLAYER_MAP_MODE_ENABLED(g_CurrentPlayerIndex) = 1;
+  g_MapModeOverlayMask = 2;
   Locale_DrawInteger();
   return sub_418700(1);
 }
-// 511FF0: using guessed type int dword_511FF0;
+// 511FF0: using guessed type int g_MapModeOverlayMask;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DE60) --------------------------------------------------------
-int sub_40DE60()
+int MapMode_EnableBuildingsOnly()
 {
-  *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140047) = 1;
-  dword_511FF0 = 4;
+  PLAYER_MAP_MODE_ENABLED(g_CurrentPlayerIndex) = 1;
+  g_MapModeOverlayMask = 4;
   Locale_DrawInteger();
   return sub_418700(1);
 }
-// 511FF0: using guessed type int dword_511FF0;
+// 511FF0: using guessed type int g_MapModeOverlayMask;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040DEA0) --------------------------------------------------------
-int sub_40DEA0()
+int MapMode_Disable()
 {
-  *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140047) = 0;
+  PLAYER_MAP_MODE_ENABLED(g_CurrentPlayerIndex) = 0;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -62611,7 +62613,7 @@ char sub_44B2F0()
   *(_DWORD *)(gameData + 140051) = 0;
   *(_DWORD *)(gameData + 140051) = 0;
   *(_DWORD *)(gameData + 142897) = 0;
-  *(_DWORD *)(gameData + 140047) = 1;
+  PLAYER_MAP_MODE_ENABLED(0) = 1;
   v1 = aSirArthur;
   v2 = (char *)(gameData + 140028);
   do
@@ -62699,7 +62701,7 @@ char sub_44B430()
   *(_DWORD *)(gameData + 142870) = 1;
   *(_DWORD *)(gameData + 140051) = 1;
   *(_DWORD *)(gameData + 142897) = 0;
-  *(_DWORD *)(gameData + 140047) = 1;
+  PLAYER_MAP_MODE_ENABLED(0) = 1;
   v1 = aSirArthur_0;
   v2 = (char *)(gameData + 140028);
   do

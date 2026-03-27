@@ -360,9 +360,21 @@
 | Building_IsVisibleToPlayer | Building_IsExploredByPlayer | Function | Buildings / Exploration | High | The helper only checks whether any building-footprint tile is marked explored in the player's bitmap; prisoner search code uses it to distinguish hidden versus discovered castles. | c |
 | PlayerRuntimeState + 57 | explored_tile_bits[100][13] | Recovered Struct Field | gameData / Player Runtime / Exploration | High | A stable 1300-byte slice inside each 1423-byte player record is accessed as `13 * row + (column >> 3)`, revealing and testing one bit per map tile across a fixed 100x100 grid. | c, asm |
 
+## Batch 36 – Map Mode Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40DC10 | MapMode_UpdateCameraFromCursor | Function | Map / UI | High | Runs in the main world loop, maps the cursor position inside the map-mode panel back onto strategic tile coordinates, clamps them against map bounds, and updates `MAP_VIEW_LEFT/TOP`. | c |
+| sub_40DD30 | MapMode_ToggleEnabled | Function | Map / UI | High | Keyboard handler toggles the viewed/current player's map-mode latch through this helper, and the only state mutation is XOR of `PlayerRuntimeState + 23` followed by a redraw. | c, asm |
+| sub_40DD60 | MapMode_IsCursorInsidePanel | Function | Map / UI | High | Returns true only when the viewed player's map-mode latch is enabled and the scaled cursor lies within the panel bounds defined by `word_523344..34A`. | c, asm |
+| sub_40DDE0 | MapMode_EnableTerrainUnitsAndBuildings | Function | Map / UI | High | Enables map mode and loads overlay mask `7`, which the panel renderer interprets as terrain coloring plus unit and building owner overlays (`1|2|4`). | c, asm |
+| sub_40DE20 | MapMode_EnableUnitsOnly | Function | Map / UI | High | Enables map mode and loads overlay mask `2`, the units-only layer used by the panel renderer. | c, asm |
+| sub_40DE60 | MapMode_EnableBuildingsOnly | Function | Map / UI | High | Enables map mode and loads overlay mask `4`, the buildings-only layer used by the panel renderer. | c, asm |
+| sub_40DEA0 | MapMode_Disable | Function | Map / UI | High | Clears the per-player map-mode latch and redraws, leaving the overlay mask untouched. | c, asm |
+| dword_511FF0 | g_MapModeOverlayMask | Global | Map / UI | High | Three panel-render branches test bits `1`, `2`, and `4` to decide whether to draw terrain colors, unit ownership marks, and building ownership marks respectively. | c |
+| PlayerRuntimeState + 23 | map_mode_enabled | Recovered Struct Field | gameData / Player Runtime / UI | High | The `Map mode` panel toggle and the preset helpers all write this per-player slot, and panel hit-testing only succeeds while the viewed player's copy is nonzero. | c, asm, exe |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
-- `PlayerRuntimeState` offset `+23` gates the minimap/fog overlay interactions and is clearly a map-overlay mode enable byte, but the exact original label for that toggle is still not secure enough to promote.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.

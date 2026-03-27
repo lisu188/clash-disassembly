@@ -117,6 +117,7 @@
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
+      { "offset": 23, "name": "map_mode_enabled", "type": "int32", "notes": "Per-player strategic map-mode latch. Keyboard toggle and mode presets write this field, and the minimap/map-mode panel only captures cursor input while the viewed player's flag is nonzero." },
       { "offset": 27, "name": "has_human_controller", "type": "int32", "notes": "Campaign/game-info logging prints `komputer` as `1 - value`, and many gameplay/UI paths treat nonzero here as locally controlled or human-visible." },
       { "offset": 31, "name": "ai_intelligence_level", "type": "int32", "notes": "Explicitly logged as `inteligencja` in the rules/game-info output and used to discount licence production for lower-AI players and to choose the ruler-head icon in player stats UI." },
       { "offset": 39, "name": "is_christian_faction", "type": "int32", "notes": "Binary christian/pagan faction flag. Logged as `chrzesc`, drives Christian-vs-Pagan castle art/text sets, and selects the religion icon in stats UI." },
@@ -133,6 +134,7 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "The localized UI string triplet `Tryb mapy / Map mode / Kartenmodus` anchors the corresponding panel, and the `MapMode_*` toggle/preset helpers read and write dword `+23` inside the viewed/current player's 1423-byte record.",
       "Rules/game-info logging prints `(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)` from bytes `+27`, `+31`, and `+39`, giving direct labels for the human/computer flag, AI intelligence, and christian/pagan faction side.",
       "Building creation and capture code stores the first owned type-2 castle into `+43` when empty and clears the same field when that castle is lost, corroborating a remembered primary-castle index.",
       "Battle resolution paths at clash95.c:30841-31253 increment the winner's `+1417` word and decrement the loser's, while the statistics screen later plots that same word as its third per-player bar metric, supporting the descriptive `battle_record_score` name.",
