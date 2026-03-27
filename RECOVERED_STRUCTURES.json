@@ -297,5 +297,31 @@
       "`RoadBuild_UpdateAdjacentPreview` rewrites the first two dwords of the chosen record each frame and passes `&dword_5142B8 + 53 * directionIndex` into `sub_419D60`, proving a stable fixed-stride widget family.",
       "All four records embed the same draw proc (`sub_4191F0`) and activate proc (`RoadBuild_ActivateDirectionWidget`), matching their role as directional road-build UI widgets."
     ]
+  },
+  {
+    "name": "BuildPlacementActionWidgetDescriptor",
+    "kind": "ui_widget_descriptor",
+    "base_offset": 514752,
+    "stride": 53,
+    "description": "Static 53-byte UI widget descriptors for the build-placement mode action buttons such as road, trap, castle, keep, fortress, and treasure digging.",
+    "fields": [
+      { "offset": 0, "name": "screen_x", "type": "int32", "notes": "Static screen-space x position of the widget inside the build-placement control panel." },
+      { "offset": 4, "name": "screen_y", "type": "int32", "notes": "Static screen-space y position of the widget inside the build-placement control panel." },
+      { "offset": 8, "name": "is_enabled", "type": "int32", "notes": "Runtime enable state toggled between `1` and `2` by `BuildBuilding` for the currently selected action." },
+      { "offset": 12, "name": "sprite_sheet_handle_ptr", "type": "void *", "notes": "All descriptors point at the shared build-action sprite-sheet handle (`dword_52030C`)." },
+      { "offset": 16, "name": "widget_sprite_id", "type": "int32", "notes": "Action-specific sprite id such as `0x0F/0x10` for road, `0x11/0x12` for trap, and the castle/keep/fortress ids." },
+      { "offset": 20, "name": "widget_action_id", "type": "int32", "notes": "Static duplicate action/widget id used by the generic UI framework; exact split from `widget_sprite_id` remains unresolved." },
+      { "offset": 24, "name": "hover_state", "type": "int32", "notes": "Static `0x0E` or `-1` style sentinel field consumed by the same generic widget renderer used by the road-build controls." },
+      { "offset": 28, "name": "draw_proc", "type": "funcptr", "notes": "All descriptors use `sub_4191F0` as their draw procedure." },
+      { "offset": 32, "name": "activate_proc", "type": "funcptr", "notes": "Default descriptors use `BuildPlacement_RequestExit`; the currently selected action is temporarily switched to `BuildPlacement_AnimateExitWidgetPress` while `BuildBuilding` is active." },
+      { "offset": 36, "name": "localized_label_ptr_pl", "type": "char *", "notes": "Polish label string such as `Droga`, `Pułapka`, `Zamek`, `Wieża`, `Twierdza`, and `Kopanie skarbów`." },
+      { "offset": 40, "name": "localized_label_ptr_en", "type": "char *", "notes": "English label string such as `Road`, `Trap`, `Castle`, `Keep`, `Fortress`, and `Dig for treasure`." },
+      { "offset": 49, "name": "ui_token_ptr", "type": "char *", "notes": "Shared trailing `\"male\"` token pointer carried by each descriptor; its broader UI-framework role is still unresolved." }
+    ],
+    "evidence": [
+      "Asm exposes a contiguous 53-byte descriptor family rooted at `unk_5146C0`, with repeated layout, shared draw proc `sub_4191F0`, and localized labels for road, trap, castle, keep, fortress, and treasure digging.",
+      "`BuildBuilding` indexes the family as `53 * (buildType + 2)`, flips field `+8` between states `1` and `2`, swaps the activate proc between `BuildPlacement_RequestExit` and `BuildPlacement_AnimateExitWidgetPress`, and redraws the chosen descriptor through `sub_419D60`.",
+      "The records point at the same sprite-sheet handle and are consumed by `sub_419DC0` as one panel-local widget family during the modal building-placement loop."
+    ]
   }
 ]

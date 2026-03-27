@@ -654,8 +654,8 @@ int __thiscall UnitStack_ClearSplitSelectionFlags(void *this);
 // signed int __usercall sub_424EC0@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>);
 // BOOL __usercall Map_TileHasOwner@<eax>(int a1@<eax>, int a2@<edx>);
 int Map_AutoUpgradeVillages();
-// int __usercall sub_4250F0@<eax>(int a1@<eax>, int a2@<ecx>);
-void sub_425110();
+// int __usercall RoadBuild_AnimateExitWidgetPress@<eax>(int a1@<eax>, int a2@<ecx>);
+void RoadBuild_RequestExit();
 // int __usercall RoadBuild_UpdateAdjacentPreview@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall RoadBuild_ActivateDirectionWidget@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 // signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a1@<ebp>, double a2@<st0>);
@@ -682,9 +682,9 @@ int __fastcall sub_429740(_DWORD, _DWORD); // weak
 // int __usercall sub_4298E0@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 int __fastcall sub_429BD0(_DWORD, _DWORD); // weak
 // signed int __usercall sub_429E30@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall sub_429E90@<eax>(int a1@<eax>, int a2@<ecx>);
-void sub_429EB0();
-// int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>);
+// int __usercall BuildPlacement_AnimateExitWidgetPress@<eax>(int a1@<eax>, int a2@<ecx>);
+void BuildPlacement_RequestExit();
+// int __usercall BuildPlacement_DrawTileOverlay@<eax>(__int64 result@<edx:eax>);
 // int __usercall BuildBuilding@<eax>(int@<eax>, int@<ecx>, char@<bl>, double@<st0>);
 // int __usercall UI_DrawNoticeBoxSmall@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall UI_DrawConfirmTop@<eax>(DWORD a1@<ebp>, int a2@<edi>);
@@ -11423,7 +11423,7 @@ int dword_525570; // weak
 int dword_525578; // weak
 int dword_526980; // weak
 int dword_526984; // weak
-int (__fastcall *dword_52698C)(_DWORD, _DWORD); // weak
+int (__fastcall *g_MapTileOverlayDrawHook)(_DWORD, _DWORD); // weak
 int (*dword_526990)(void); // weak
 int g_StackSplitModeEnabled; // weak
 int dword_526998; // weak
@@ -11503,9 +11503,9 @@ int dword_531CB8; // weak
 int dword_531CBC; // weak
 int dword_531CC0; // weak
 int dword_531CC4; // weak
-int dword_531CD0; // weak
-int dword_531CD4; // weak
-__int64 qword_531CD8; // weak
+int g_BuildPlacementLoopExitRequested; // weak
+int g_BuildPlacementTypeId; // weak
+__int64 g_BuildPlacementOriginTile; // weak
 int dword_531CE4; // weak
 int dword_531CE8; // weak
 int dword_531CEC; // weak
@@ -28834,8 +28834,8 @@ LABEL_133:
       0);
   }
   UI_DrawTileHighlightOverlay(v3, v4, a2, a1);
-  if ( dword_52698C )
-    dword_52698C(v56, v4);
+  if ( g_MapTileOverlayDrawHook )
+    g_MapTileOverlayDrawHook(v56, v4);
   if ( *(_DWORD *)(gameData + 147155) )
   {
     if ( WORLD_THEME_INDEX == 1 )
@@ -28889,7 +28889,7 @@ LABEL_2:
 // 522B38: using guessed type __int16 word_522B38[223];
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
-// 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
+// 52698C: using guessed type int (__fastcall *g_MapTileOverlayDrawHook)(_DWORD, _DWORD);
 // 526998: using guessed type int dword_526998;
 // 5269A8: using guessed type int dword_5269A8;
 // 5269AC: using guessed type int dword_5269AC;
@@ -37622,7 +37622,7 @@ int Map_AutoUpgradeVillages()
 // 5202E4: using guessed type int gameData;
 
 //----- (004250F0) --------------------------------------------------------
-int __usercall sub_4250F0@<eax>(int a1@<eax>, int a2@<ecx>)
+int __usercall RoadBuild_AnimateExitWidgetPress@<eax>(int a1@<eax>, int a2@<ecx>)
 {
   int result; // eax
   int v4; // edx
@@ -37635,7 +37635,7 @@ int __usercall sub_4250F0@<eax>(int a1@<eax>, int a2@<ecx>)
 // 527C30: using guessed type int g_RoadBuildLoopExitRequested;
 
 //----- (00425110) --------------------------------------------------------
-void sub_425110()
+void RoadBuild_RequestExit()
 {
   g_RoadBuildLoopExitRequested = 1;
 }
@@ -37758,15 +37758,15 @@ int __usercall RoadBuild_ActivateDirectionWidget@<eax>(int a1@<eax>, DWORD a2@<e
     default:
       break;
   }
-  dword_52698C = 0;
+  g_MapTileOverlayDrawHook = 0;
   Road_Build(g_SelectedUnitIndex, v4, (char)RoadBuild_UpdateAdjacentPreview, a2, a3);
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))RoadBuild_UpdateAdjacentPreview;
+  g_MapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))RoadBuild_UpdateAdjacentPreview;
   return sub_418700(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
 // 425510: variable 'v4' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
+// 52698C: using guessed type int (__fastcall *g_MapTileOverlayDrawHook)(_DWORD, _DWORD);
 
 //----- (00425540) --------------------------------------------------------
 signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a1@<ebp>, double a2@<st0>)
@@ -37790,7 +37790,7 @@ signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a
     v4 = 0;
     dword_545150 = (int)&unk_5196C8;
     sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
-    dword_52698C = v5;
+    g_MapTileOverlayDrawHook = v5;
     g_RoadBuildLoopExitRequested = 0;
     dword_514394 = 2;
     sub_418700(1);
@@ -37884,7 +37884,7 @@ signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a
       g_RoadBuildLoopExitRequested = 1;
     }
 LABEL_13:
-    dword_52698C = 0;
+    g_MapTileOverlayDrawHook = 0;
     dword_514394 = 1;
     sub_419D60((int)dword_51438C, v6);
     result = sub_418700(1);
@@ -37905,7 +37905,7 @@ LABEL_13:
 // 51438C: using guessed type _DWORD dword_51438C[2];
 // 514394: using guessed type int dword_514394;
 // 5202E4: using guessed type int gameData;
-// 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
+// 52698C: using guessed type int (__fastcall *g_MapTileOverlayDrawHook)(_DWORD, _DWORD);
 // 527C28: using guessed type int dword_527C28;
 // 527C30: using guessed type int g_RoadBuildLoopExitRequested;
 // 527C34: using guessed type int g_RoadBuildPreviewActive;
@@ -40694,27 +40694,27 @@ signed int __usercall sub_429E30@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp
 // 532048: using guessed type int dword_532048;
 
 //----- (00429E90) --------------------------------------------------------
-int __usercall sub_429E90@<eax>(int a1@<eax>, int a2@<ecx>)
+int __usercall BuildPlacement_AnimateExitWidgetPress@<eax>(int a1@<eax>, int a2@<ecx>)
 {
   int result; // eax
   int v3; // edx
 
   result = sub_419E60(a1, a2);
-  dword_531CD0 = v3;
+  g_BuildPlacementLoopExitRequested = v3;
   return result;
 }
 // 429E9B: variable 'v3' is possibly undefined
-// 531CD0: using guessed type int dword_531CD0;
+// 531CD0: using guessed type int g_BuildPlacementLoopExitRequested;
 
 //----- (00429EB0) --------------------------------------------------------
-void sub_429EB0()
+void BuildPlacement_RequestExit()
 {
-  dword_531CD0 = 1;
+  g_BuildPlacementLoopExitRequested = 1;
 }
-// 531CD0: using guessed type int dword_531CD0;
+// 531CD0: using guessed type int g_BuildPlacementLoopExitRequested;
 
 //----- (00429EC0) --------------------------------------------------------
-int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
+int __usercall BuildPlacement_DrawTileOverlay@<eax>(__int64 result@<edx:eax>)
 {
   __int64 v1; // kr00_8
   int v2; // edi
@@ -40731,14 +40731,14 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
     v8 = 215;
   else
     v8 = 76;
-  if ( !dword_531CD4 || dword_531CD4 == 3 )
+  if ( !g_BuildPlacementTypeId || g_BuildPlacementTypeId == 3 )
   {
-    if ( (_DWORD)result == (_DWORD)qword_531CD8 )
+    if ( (_DWORD)result == (_DWORD)g_BuildPlacementOriginTile )
     {
-      LODWORD(result) = HIDWORD(qword_531CD8);
-      if ( HIDWORD(result) == HIDWORD(qword_531CD8) )
+      LODWORD(result) = HIDWORD(g_BuildPlacementOriginTile);
+      if ( HIDWORD(result) == HIDWORD(g_BuildPlacementOriginTile) )
       {
-        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex)
+        if ( sub_41DBA0(v1, SHIDWORD(g_BuildPlacementOriginTile), g_BuildPlacementTypeId, g_SelectedUnitIndex)
           && v1 != __PAIR64__(
                      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
                      *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174)) )
@@ -40756,9 +40756,9 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
   }
   else
   {
-    if ( result == qword_531CD8 )
+    if ( result == g_BuildPlacementOriginTile )
     {
-      if ( sub_41DBA0(result, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
+      if ( sub_41DBA0(result, SHIDWORD(result), g_BuildPlacementTypeId, g_SelectedUnitIndex) )
       {
         v2 = (unsigned __int16)v2;
         (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40775,9 +40775,9 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
       }
       goto LABEL_26;
     }
-    if ( result == __PAIR64__(HIDWORD(qword_531CD8), (int)qword_531CD8 + 1) )
+    if ( result == __PAIR64__(HIDWORD(g_BuildPlacementOriginTile), (int)g_BuildPlacementOriginTile + 1) )
     {
-      if ( sub_41DBA0(result - 1, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
+      if ( sub_41DBA0(result - 1, SHIDWORD(result), g_BuildPlacementTypeId, g_SelectedUnitIndex) )
       {
         v4 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40794,9 +40794,9 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
       }
       goto LABEL_26;
     }
-    if ( result == __PAIR64__(HIDWORD(qword_531CD8) + 1, (int)qword_531CD8 + 1) )
+    if ( result == __PAIR64__(HIDWORD(g_BuildPlacementOriginTile) + 1, (int)g_BuildPlacementOriginTile + 1) )
     {
-      if ( sub_41DBA0(result - 1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
+      if ( sub_41DBA0(result - 1, SHIDWORD(g_BuildPlacementOriginTile), g_BuildPlacementTypeId, g_SelectedUnitIndex) )
       {
         v5 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40813,12 +40813,12 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
       }
       goto LABEL_26;
     }
-    if ( (_DWORD)result == (_DWORD)qword_531CD8 )
+    if ( (_DWORD)result == (_DWORD)g_BuildPlacementOriginTile )
     {
-      LODWORD(result) = HIDWORD(qword_531CD8) + 1;
-      if ( HIDWORD(result) == HIDWORD(qword_531CD8) + 1 )
+      LODWORD(result) = HIDWORD(g_BuildPlacementOriginTile) + 1;
+      if ( HIDWORD(result) == HIDWORD(g_BuildPlacementOriginTile) + 1 )
       {
-        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
+        if ( sub_41DBA0(v1, SHIDWORD(g_BuildPlacementOriginTile), g_BuildPlacementTypeId, g_SelectedUnitIndex) )
         {
           v2 = (unsigned __int16)v2;
           (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40854,8 +40854,8 @@ LABEL_26:
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E4: using guessed type int gameData;
-// 531CD4: using guessed type int dword_531CD4;
-// 531CD8: using guessed type __int64 qword_531CD8;
+// 531CD4: using guessed type int g_BuildPlacementTypeId;
+// 531CD8: using guessed type __int64 g_BuildPlacementOriginTile;
 
 //----- (0042A340) --------------------------------------------------------
 int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>)
@@ -40879,55 +40879,55 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
   int v22[9]; // [esp+0h] [ebp-24h] BYREF
 
   log(a2, a3, a1, (int)aBuildbuildingD, a1);
-  dword_531CD4 = a1;
+  g_BuildPlacementTypeId = a1;
   v5 = 53 * (a1 + 2);
-  dword_531CD0 = 0;
+  g_BuildPlacementLoopExitRequested = 0;
   v6 = byte_54512C;
   v7 = dword_544CFC >> byte_54512C;
   *(int *)((char *)&dword_5146C8 + v5) = 2;
-  *(int (**)())((char *)&off_5146E0 + v5) = sub_429E90;
+  *(int (**)())((char *)&off_5146E0 + v5) = BuildPlacement_AnimateExitWidgetPress;
   v8 = gameData;
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))sub_429EC0;
-  LODWORD(qword_531CD8) = *(_DWORD *)(gameData + 140008)
+  g_MapTileOverlayDrawHook = (int (__fastcall *)(_DWORD, _DWORD))BuildPlacement_DrawTileOverlay;
+  LODWORD(g_BuildPlacementOriginTile) = *(_DWORD *)(gameData + 140008)
                         + ((v7 - 32 - (__CFSHL__((v7 - 32) >> 31, 6) + ((v7 - 32) >> 31 << 6))) >> 6);
-  HIDWORD(qword_531CD8) = *(_DWORD *)(gameData + 140012)
+  HIDWORD(g_BuildPlacementOriginTile) = *(_DWORD *)(gameData + 140012)
                         + (((dword_544D00 >> v6)
                           - 16
                           - (__CFSHL__(((dword_544D00 >> v6) - 16) >> 31, 6)
                            + (((dword_544D00 >> v6) - 16) >> 31 << 6))) >> 6);
   sub_418700(1);
-  while ( !dword_531CD0 )
+  while ( !g_BuildPlacementLoopExitRequested )
   {
-    DD_Pump((int)&dword_544CD8, v8, (char)sub_429EC0);
-    sub_40ADF0(v8, (char)sub_429EC0);
+    DD_Pump((int)&dword_544CD8, v8, (char)BuildPlacement_DrawTileOverlay);
+    sub_40ADF0(v8, (char)BuildPlacement_DrawTileOverlay);
     if ( !sub_419DC0((int)&unk_5146C0, a1) && Port_PresentInteger() )
     {
-      Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
+      Render_Begin((int)&dword_544CD8, 0, (char)BuildPlacement_DrawTileOverlay);
       break;
     }
-    sub_407D20(v9, a1, (char)sub_429EC0);
+    sub_407D20(v9, a1, (char)BuildPlacement_DrawTileOverlay);
     v10 = (((dword_544CFC >> byte_54512C)
           - 32
           - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
            + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
         + *(_DWORD *)(gameData + 140008);
-    v8 = qword_531CD8;
+    v8 = g_BuildPlacementOriginTile;
     if ( __PAIR64__(
            *(_DWORD *)(gameData + 140012)
          + (((dword_544D00 >> byte_54512C)
            - 16
            - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
             + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6),
-           v10) != qword_531CD8 )
+           v10) != g_BuildPlacementOriginTile )
     {
-      v8 = HIDWORD(qword_531CD8);
-      HIDWORD(qword_531CD8) = *(_DWORD *)(gameData + 140012)
+      v8 = HIDWORD(g_BuildPlacementOriginTile);
+      HIDWORD(g_BuildPlacementOriginTile) = *(_DWORD *)(gameData + 140012)
                             + (((dword_544D00 >> byte_54512C)
                               - 16
                               - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
                                + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6);
-      v11 = qword_531CD8;
-      LODWORD(qword_531CD8) = v10;
+      v11 = g_BuildPlacementOriginTile;
+      LODWORD(g_BuildPlacementOriginTile) = v10;
       sub_418A90(v11, v8);
       if ( a1 == 2 || a1 == 1 )
       {
@@ -40937,12 +40937,12 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
         sub_418A90(v15, v8);
         sub_418A90(v13, v8);
       }
-      sub_418A90(qword_531CD8, SHIDWORD(qword_531CD8));
+      sub_418A90(g_BuildPlacementOriginTile, SHIDWORD(g_BuildPlacementOriginTile));
       if ( a1 == 2 || a1 == 1 )
       {
-        sub_418A90(qword_531CD8 + 1, SHIDWORD(qword_531CD8));
-        sub_418A90(qword_531CD8, HIDWORD(qword_531CD8) + 1);
-        sub_418A90(qword_531CD8 + 1, HIDWORD(qword_531CD8) + 1);
+        sub_418A90(g_BuildPlacementOriginTile + 1, SHIDWORD(g_BuildPlacementOriginTile));
+        sub_418A90(g_BuildPlacementOriginTile, HIDWORD(g_BuildPlacementOriginTile) + 1);
+        sub_418A90(g_BuildPlacementOriginTile + 1, HIDWORD(g_BuildPlacementOriginTile) + 1);
       }
     }
     if ( DD_IsFlipping((int)&dword_544CD8) )
@@ -40950,7 +40950,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
       if ( a1 == 3 )
       {
         v8 = g_SelectedUnitIndex;
-        if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, g_SelectedUnitIndex, a4) == 1 )
+        if ( Trap_New(g_BuildPlacementOriginTile, SHIDWORD(g_BuildPlacementOriginTile), v16, g_SelectedUnitIndex, a4) == 1 )
         {
           sub_4620F0((int)aZakl_pul, 1, v20, v8, 3u, (char)off_514834);
           v22[0] = (int)off_514834[0];
@@ -40958,18 +40958,18 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
           v22[2] = (int)off_514834[2];
           UI_ShowInfoWindow(v22[(unsigned __int8)g_LanguageIndex], 0, v21, 3u, (int)&v22[3], (int)&off_514834[3]);
           Render_Begin((int)&dword_544CD8, 0, (char)&v22[3]);
-          dword_531CD0 = 1;
+          g_BuildPlacementLoopExitRequested = 1;
           break;
         }
       }
       else
       {
         v8 = g_SelectedUnitIndex;
-        if ( Building_New(qword_531CD8, a1, g_SelectedUnitIndex, a4, (int)aZam, 0) == 1 )
+        if ( Building_New(g_BuildPlacementOriginTile, a1, g_SelectedUnitIndex, a4, (int)aZam, 0) == 1 )
         {
           sub_4426C0((int)aStruktur_2, 64);
-          Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
-          dword_531CD0 = 1;
+          Render_Begin((int)&dword_544CD8, 0, (char)BuildPlacement_DrawTileOverlay);
+          g_BuildPlacementLoopExitRequested = 1;
           break;
         }
       }
@@ -40977,9 +40977,9 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
   }
   v17 = 53 * (a1 + 2);
   *(int *)((char *)&dword_5146C8 + v17) = 1;
-  *(int (**)())((char *)&off_5146E0 + v17) = (int (*)())sub_429EB0;
+  *(int (**)())((char *)&off_5146E0 + v17) = (int (*)())BuildPlacement_RequestExit;
   sub_419D60((int)&unk_5146C0 + v17, 1);
-  dword_52698C = 0;
+  g_MapTileOverlayDrawHook = 0;
   return sub_418700(v18);
 }
 // 42A425: variable 'v9' is possibly undefined
@@ -40989,7 +40989,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
 // 42A629: variable 'v16' is possibly undefined
 // 42A645: variable 'v20' is possibly undefined
 // 42A659: variable 'v21' is possibly undefined
-// 429E90: using guessed type int sub_429E90();
+// 429E90: using guessed type int BuildPlacement_AnimateExitWidgetPress();
 // 511130: using guessed type char byte_511130;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5146C8: using guessed type int dword_5146C8;
@@ -40997,10 +40997,10 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
 // 514834: using guessed type char *off_514834[3];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
-// 531CD0: using guessed type int dword_531CD0;
-// 531CD4: using guessed type int dword_531CD4;
-// 531CD8: using guessed type __int64 qword_531CD8;
+// 52698C: using guessed type int (__fastcall *g_MapTileOverlayDrawHook)(_DWORD, _DWORD);
+// 531CD0: using guessed type int g_BuildPlacementLoopExitRequested;
+// 531CD4: using guessed type int g_BuildPlacementTypeId;
+// 531CD8: using guessed type __int64 g_BuildPlacementOriginTile;
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
