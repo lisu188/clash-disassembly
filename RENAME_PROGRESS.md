@@ -172,3 +172,13 @@
 |---|------------|------|------|----------|----------|------------|-----------|
 | 42 | 42 | Function | clash95.c | sub_40F6E0 | UnitStack_LinkArmyFact | High | Called immediately after spawning or moving stacks so their tile occupancy is synchronized with the rules/AI fact system via `Rules_CreateArmyFact`. |
 | 43 | 43 | Function | clash95.c | sub_4521D0 | Rules_CreateArmyFact | High | Formats the "ODDZIAL" fact string, asserts it in the rules database, caches the returned handle at offset +721 within the stack, and then chains into `Rules_LinkArmyFact`, so the new name reflects that behavior. |
+
+## Batch 15 – Unit Stat Wave
+| # | Cumulative | Kind | File | Old Name | New Name | Confidence | Rationale |
+|---|------------|------|------|----------|----------|------------|-----------|
+| 44 | 44 | Function | clash95.c | sub_411120 | UnitStats_CalcMeleeAttack | High | Reads the melee base table (`byte_51257E`), adds stance and veterancy bonuses, and scales by morale, matching the effective melee strength used in combat and UI. |
+| 45 | 45 | Function | clash95.c | sub_4111C0 | UnitStats_CalcRangedAttack | High | Uses the ranged base table (`byte_51257F`), applies missile-cover penalties and stance bonuses, then scales by morale, so it clearly computes live ranged attack power. |
+| 46 | 46 | Function | clash95.c | sub_411240 | UnitStats_GetRangedIconIndex | Medium | Same inputs as the ranged attack calculation but without morale, providing the UI-ready index for ranged power icons analogous to `UI_IconIndexFromStats`. |
+| 47 | 47 | Function | clash95.c | sub_411280 | UnitStats_CalcDamagePerHit | High | Combines the damage scalar table (`byte_512581`) with veterancy and morale to determine actual hit damage. |
+| 48 | 48 | Function | clash95.c | sub_4112C0 | UnitStats_GetBaseDamage | High | Returns the base damage scalar plus veterancy, i.e., the UI-facing damage stat before morale modifiers. |
+| 49 | 49 | Function | clash95.c | sub_4112F0 | UnitStats_CalcSiegeAttack | Medium | Mirrors the melee/ranged formulas using the structure-damage table (`byte_512584`), so it computes vs-building attack power. |
