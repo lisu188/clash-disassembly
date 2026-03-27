@@ -121,16 +121,14 @@
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 47, "name": "technology_level", "type": "uint8", "notes": "Player-wide technology tier. `Player_UpdateTechnologyLevelFromSettlements` raises this from 1 to 2 or 3 based on how many owned type-1/type-2 settlements have all five core add-on bits installed." },
       { "offset": 48, "name": "last_shown_technology_level", "type": "uint8", "notes": "UI latch copied from `technology_level` after `UI_ShowTechnologyLevelUpIfChanged` displays the one-shot technology-advance popup." },
-      { "offset": 1419, "name": "queen_mood", "type": "uint8", "notes": "Mood state read and updated by the queen-event logic." },
-      { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
-      { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
+      { "offset": 1419, "name": "queen_state", "type": "PlayerQueenState", "notes": "Four-byte per-player queen-relation tail storing the current favor level, active whim/request type, and the next turn when the queen review logic should run again." }
     ],
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
       "Rules/game-info logging prints `(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)` from bytes `+27`, `+31`, and `+39`, giving direct labels for the human/computer flag, AI intelligence, and christian/pagan faction side.",
       "Building creation and capture code stores the first owned type-2 castle into `+43` when empty and clears the same field when that castle is lost, corroborating a remembered primary-castle index.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields.",
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as a stable per-player queen favor/request subrecord.",
       "`Player_UpdateTechnologyLevelFromSettlements` updates byte `+47`, and `UI_ShowTechnologyLevelUpIfChanged` compares that byte against `+48` before latching the new level."
     ]
   },
@@ -223,6 +221,24 @@
     "evidence": [
       "`Prisoner_QueueCapturedUnit` appends 6-byte entries at `PLAYER_DATA(player) + 141381`, storing the captured type id plus one byte and two words copied from the special unit slot.",
       "`Prisoner_SetInCastles` scans exactly 10 of these entries, compares the stored row/column against castle coordinates, and clears the queue entry once the prisoner is moved into a building prison slot."
+    ]
+  },
+  {
+    "name": "PlayerQueenState",
+    "kind": "player_subrecord",
+    "base_offset": 1419,
+    "size": 4,
+    "description": "Four-byte queen relation subrecord embedded at the tail of each PlayerRuntimeState block.",
+    "fields": [
+      { "offset": 0, "name": "queen_favor_level", "type": "int8", "notes": "Persistent queen-approval ladder. `-1` marks an absent or departed queen state, `0` is the pre-proposal baseline, `1` triggers the queen-leaves penalty path, and `9` triggers the high-favor gift/prisoner event before being reset to `5`." },
+      { "offset": 1, "name": "queen_whim_type", "type": "uint8", "notes": "Request/proposal id chosen by `Queen_NewTurn`, used to select the whim sprite and localized whim/proposal dialog text." },
+      { "offset": 2, "name": "next_review_turn", "type": "uint16", "notes": "Absolute game-turn threshold checked before the next queen review or whim event is processed." }
+    ],
+    "evidence": [
+      "`PlayerRuntimeState_ResetDefaults` clears the final byte at player offset `+1419`, and the scenario loaders seed per-player blocks so that the queen logic later reads this exact tail consistently.",
+      "`Queen_NewTurn` treats byte `+1419` as a long-lived favor state: it increments/decrements the value after whim acceptance/rejection, sets it to `5` after a successful proposal or reward event, and sets it to `-1` when the queen leaves or no castle remains.",
+      "`Queen_ShowWhimDialog`, `Queen_ShowProposalDialog`, and `Queen_ShowNotification` all use byte `+1420` to choose the whim sprite and paired request text, proving it is the current whim/proposal id rather than a generic mood byte.",
+      "`Queen_NewTurn` schedules the next queen event by adding 5-8 turns to `GAME_TURN_COUNTER` and storing the result in word `+1421`, which is later compared against the current turn counter before the queen-review logic runs again."
     ]
   },
   {

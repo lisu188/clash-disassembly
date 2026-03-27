@@ -19,7 +19,7 @@
 #define PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET 43
 #define PLAYER_TECH_LEVEL_OFFSET 47
 #define PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET 48
-#define PLAYER_QUEEN_MOOD_OFFSET 1419
+#define PLAYER_QUEEN_FAVOR_LEVEL_OFFSET 1419
 #define PLAYER_QUEEN_WHIM_OFFSET 1420
 #define PLAYER_QUEEN_REVIEW_TURN_OFFSET 1421
 #define ACTIVE_MISSION_INDEX_OFFSET 140017
@@ -70,7 +70,7 @@
 #define PLAYER_RUNTIME_STATE(playerIndex) (gameData + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex))
 #define PLAYER_DATA(playerIndex) PLAYER_RUNTIME_STATE(playerIndex)
 #define PLAYER_IS_ACTIVE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex)))
-#define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
+#define PLAYER_QUEEN_FAVOR_LEVEL(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_FAVOR_LEVEL_OFFSET))
 #define PLAYER_QUEEN_WHIM(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_WHIM_OFFSET))
 #define PLAYER_QUEEN_NEXT_REVIEW(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_REVIEW_TURN_OFFSET))
 #define PLAYER_CAMERA_LEFT(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_LEFT_OFFSET))
@@ -1049,7 +1049,7 @@ signed int Game_InitPlayerViewState();
 // char *__usercall sub_44F660@<eax>(int a1@<eax>);
 // int __usercall sub_44F6D0@<eax>(int a1@<eax>);
 // int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>);
-// int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
+// int __usercall Queen_DrawFavorPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>);
 // int __usercall AI_FindActionCandidate@<eax>(int a1@<eax>);
 // int __usercall Queen_NewTurn@<eax>(int@<ecx>, int@<ebx>, char@<sil>, double@<st0>);
@@ -10367,7 +10367,7 @@ int dword_518ED9 = 1; // weak
 int dword_518F0E = 1; // weak
 int dword_518F43 = 1; // weak
 int dword_518F78 = 1; // weak
-char *g_QueenMoodTexts[30] =
+char *g_QueenFavorTexts[30] =
 {
   "Nie ma kr\xA2lowej.",
   "No queen.",
@@ -64704,14 +64704,14 @@ int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>)
 // 5443FC: using guessed type int dword_5443FC;
 
 //----- (0044FD90) --------------------------------------------------------
-int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall Queen_DrawFavorPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
   int SpriteForChar; // eax
-  int queenMood; // eax
+  int queenFavorLevel; // eax
 
   g_RenderDevice = &unk_51D4C0;
-  queenMood = PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex);
-  if ( queenMood > 0 )
+  queenFavorLevel = PLAYER_QUEEN_FAVOR_LEVEL(g_CurrentPlayerIndex);
+  if ( queenFavorLevel > 0 )
   {
     SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, PLAYER_QUEEN_WHIM(g_CurrentPlayerIndex) + 25);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -64726,13 +64726,13 @@ int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
       0);
   }
   Render_ReleaseSurface(17, a1);
-  if ( queenMood == -1 )
-    queenMood = 0;
-  return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&g_QueenMoodTexts[3 * queenMood])[(unsigned __int8)g_LanguageIndex]);
+  if ( queenFavorLevel == -1 )
+    queenFavorLevel = 0;
+  return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&g_QueenFavorTexts[3 * queenFavorLevel])[(unsigned __int8)g_LanguageIndex]);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 519010: using guessed type char *g_QueenMoodTexts[30];
+// 519010: using guessed type char *g_QueenFavorTexts[30];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5443F0: using guessed type int dword_5443F0;
@@ -65066,7 +65066,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
   }
   while ( v39 != 5 );
   sub_44FC70(v36);
-  Queen_DrawMoodPanel(v36, 10);
+  Queen_DrawFavorPanel(v36, 10);
   sub_419D80(dword_518DC8);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
   Render_Present((int)dword_544CD8);
@@ -65263,10 +65263,10 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
   if ( ACTIVE_MISSION_INDEX != 6 )
   {
     log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
-    result = PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex);
+    result = PLAYER_QUEEN_FAVOR_LEVEL(g_CurrentPlayerIndex);
     if ( result != -1 )
     {
-      if ( PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) )
+      if ( PLAYER_QUEEN_FAVOR_LEVEL(g_CurrentPlayerIndex) )
       {
         if ( result == 9 )
         {
@@ -65276,7 +65276,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           if ( v21 )
           {
             Building_CreatePrisonerUnit(v21, a2, v21, a2, a4);
-            PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) = 5;
+            PLAYER_QUEEN_FAVOR_LEVEL(g_CurrentPlayerIndex) = 5;
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
             {
               v45[0] = (int)off_519350[0];
@@ -65297,7 +65297,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
         else if ( result == 1 )
         {
           log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
-          PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) = -1;
+          PLAYER_QUEEN_FAVOR_LEVEL(g_CurrentPlayerIndex) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:

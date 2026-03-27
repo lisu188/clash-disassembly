@@ -316,8 +316,19 @@
 | PlayerRuntimeState + 43 | primary_castle_building_index | Recovered Struct Field | gameData / Player Runtime | Medium | Set when the player first creates or receives a type-2 castle while the field is `-1`, and cleared when that same building is captured. | c |
 | gameData + 586374 .. +586394 | PortSupplyState | Recovered Struct | Port / Coastal | High | Port load, per-turn refresh, supply pickup, and UI rendering all operate on one contiguous six-dword state block holding port coordinates, arrival timing, ready state, shipment size, and shoreline refresh mode. | c |
 
+## Batch 31 – Player Queen Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| Queen_DrawMoodPanel | Queen_DrawFavorPanel | Function | Queen / UI | High | The panel does not render a transient animation state; it renders the persistent `+1419` player field through the favor-text table, while separately overlaying the current whim icon from `+1420`. | c |
+| g_QueenMoodTexts | g_QueenFavorTexts | Table | Queen / UI | Medium | The 10-state localized text table is indexed by the persistent queen relation byte at `PlayerRuntimeState + 1419`, including the `-1 -> 0` fallback, so `favor` matches the underlying progression better than a generic mood label. | c, exe |
+| PlayerRuntimeState + 1419 | queen_favor_level | Recovered Struct Field | gameData / Player Runtime / Queen | High | `Queen_NewTurn` treats this byte as a persistent approval ladder: successful proposal or reward events set it to `5`, accepted whims raise it toward `9`, rejected whims lower it, value `1` triggers the queen-leaves path, and missing-castle cleanup forces it to `-1`. | c, exe |
+| PlayerRuntimeState + 1420 | queen_whim_type | Recovered Struct Field | gameData / Player Runtime / Queen | High | `Queen_NewTurn` rolls this byte from `0..8`, and all three queen dialog helpers use it to select the whim/proposal sprite and localized request text. | c |
+| PlayerRuntimeState + 1421 | next_review_turn | Recovered Struct Field | gameData / Player Runtime / Queen | High | `Queen_NewTurn` stores `GAME_TURN_COUNTER + rand(5..8)` here after each review/proposal outcome, and later gates the next queen event by comparing the current turn against this word. | c |
+| PlayerRuntimeState + 1419 .. + 1422 | PlayerQueenState | Recovered Struct | gameData / Player Runtime / Queen | High | The final four bytes of each 1423-byte player block behave as one compact subrecord containing the persistent queen favor level, the current whim/request id, and the next review turn. | c |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
+- `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
 - `Building_GetTypeId` exposes building byte `+4` cleanly, but only the settlement/castle-bearing values `1` and `2` are behaviorally secure so far; the full building-type enum remains unresolved.
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.
