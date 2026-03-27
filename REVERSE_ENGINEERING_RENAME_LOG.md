@@ -224,9 +224,57 @@
 | sub_44EFA0 | Prisoner_Torture | Function | Prisoners | High | The asm log string is `Prisoner_Torture(0x%08x,%d)`, and the function dispatches the five torture outcomes: richest hidden castle, hidden castle, hidden unit, death without intel, or resistance. | c, asm |
 | sub_44F260 | Prisoner_Pay | Function | Prisoners | High | The asm log string is `Prisoner_Pay(0x%08x,%d)`, and the function spends the prison cell's ransom value, converts the prisoner into a friendly special garrison unit, and removes the prison entry. | c, asm |
 
+## Batch 26 – Map Loading And gameData State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_44AD60 | PlayerRuntimeState_ResetDefaults | Function | gameData / Player Runtime | High | Resets one 1423-byte player block, restores the default ruler name at `+4`, zeros camera/controller fields, and clears the head byte of each embedded 6-byte prisoner queue entry. | c, asm |
+| sub_44AE10 | Game_ResetPlayerRuntimeStateByIndex | Function | gameData / Player Runtime | High | Thin wrapper that applies `PlayerRuntimeState_ResetDefaults` to `gameData + 140024 + 1423 * playerIndex`. | c |
+| loadMap | Map_LoadFromFile | Function | Map Loading | High | Loads `maps\\<name>.map`, copies three tile layers into the 14-byte tile record, stamps buildings, derives map dimensions, resets mission/view state, and clears unit/building occupancy tables. | c, asm, map |
+| loadMultiplayerMaps | Scenario_LoadMultiplayerMapAndSeedPlayers | Function | Map Loading / Multiplayer | High | Formats `multi%d.map`, calls the raw map loader, copies five player runtime records into gameData, then seeds castles/units from fixed per-map starting-coordinate tables. | c, asm, map |
+| sub_460360 | Scenario_LoadMissionByIndex | Function | Map Loading / Campaign | High | Jump-table dispatcher keyed by the active mission index register that loads `k_mapa*.map` / `p_mapa*.map` files and applies the mission-specific scripted setup. | c, asm |
+| sub_460370 | Scenario_LoadMissionByIndexAndPlay | Function | Map Loading / Campaign | Medium | Preserves view-state bytes, optionally plays the mission-complete interlude, invokes `Scenario_LoadMissionByIndex`, then starts `PlayGame` on the selected mission. | c, asm |
+| off_5180C0 | g_MissionStatusTextsByLanguage | Table | Map Loading / Campaign | High | Indexed as `3 * ACTIVE_MISSION_INDEX + language` by `UI_ShowMissionStatusPanel`, so it is the localized mission objective text table. | c |
+| off_5181B0 | g_MissionStatusFormatsByLanguage | Table | Map Loading / Campaign | High | Three-entry localized format table used to render `Mission %d` status popups. | c |
+| aMaps_1 | aMapsDirectory | Helper | Map Loading | High | Constant prefix copied before every `.map` filename in `Map_LoadFromFile`. | c, asm |
+| dword_518938 | g_MultiplayerStartRows | Table | Map Loading / Multiplayer | High | `Scenario_LoadMultiplayerMapAndSeedPlayers` indexes this table alongside the companion column table to position each seeded player/castle pair. | c, asm |
+| dword_51893C | g_MultiplayerStartColumns | Table | Map Loading / Multiplayer | High | Companion start-column table paired with `g_MultiplayerStartRows` during multiplayer map seeding. | c, asm |
+| gameData + 140024 + 1423 * player | PlayerRuntimeState | Recovered Struct | gameData / Player Runtime | High | Campaign and skirmish code consistently treat this as a per-player runtime block containing enable/name/controller/camera state plus the embedded prisoner transfer queue and queen bytes. | c, asm |
+| gameData + 140017 | active_mission_index | Recovered Struct Field | gameData / World Session | High | Mission status UI, mission advancement, and the campaign mission jump table all use this dword as the current scripted mission id, with `-1` meaning free/skirmish map. | c, asm |
+
+## Batch 27 – Unit Slot Runtime And Effective Stat Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40FDB0 | UnitSlot_CalcActionPointsFromFatigue | Function | Unit Stats / Runtime Slot | High | Reads the per-type base AP table, then applies the 80/90/100 fatigue thresholds from slot `+10` to derive the runtime action-point budget used at the start of each turn. | c, asm |
+| sub_40FE60 | UnitSlot_GetBaseActionPoints | Function | Unit Stats / Runtime Slot | High | Thin helper that returns the unmodified base AP entry from the per-type table for the slot's unit type. | c, asm |
+| sub_4118A0 | UnitSlot_ShouldGainFatigueFromLowActionPoints | Function | Unit Stats / Runtime Slot | Medium | Predicate returns true only for slots with AP `<= 3` and no low-morale refusal flag, matching the new-turn path that adds fatigue to overextended units. | c |
+| sub_4118C0 | UnitSlot_CanRecoverFatigue | Function | Unit Stats / Runtime Slot | High | Predicate returns true only when the spent-turn flag bit is clear, and the new-turn handler uses it to decide which slots recover fatigue. | c, asm |
+| sub_4118D0 | UnitSlot_HasSevereFatigue | Function | Unit Stats / Runtime Slot | High | Predicate checks `fatigue >= 80`, exactly matching the threshold used by the new-turn morale-loss path. | c, asm |
+| sub_4127F0 | UnitStack_AdjustFatigueByPredicate | Function | Unit Stats / Runtime Slot | High | Iterates stack slots, filters through a predicate, skips cargo/prisoner entries, adjusts slot `+10`, clamps to `0..100`, and relinks the army fact. | c, asm |
+| sub_4128E0 | UnitStack_AdjustMoraleByPredicate | Function | Unit Stats / Runtime Slot | High | Iterates stack slots, filters through a predicate, skips cargo/prisoner entries, adjusts slot `+11`, clears the refusal bit on morale gains, clamps to `0..20`, and relinks the army fact. | c, asm |
+| sub_412A30 | UnitStack_SetSpentTurnFlag | Function | Unit Stats / Runtime Slot | High | Sets bit `0x2` in each occupied slot's state-flags byte, and combat/new-turn code uses that bit to suppress fatigue recovery after a spent turn. | c, asm |
+| sub_412A60 | UnitStack_ClearSpentTurnFlag | Function | Unit Stats / Runtime Slot | High | Clears bit `0x2` in each occupied slot's state-flags byte during the new-turn refresh pass. | c, asm |
+| sub_412AF0 | UnitStack_HasLowMoraleUnit | Function | Unit Stats / Runtime Slot | High | Scans occupied slots for state-flags bit `0x4`, which is set by `Unit_CheckLowMorale` when a unit refuses orders. | c, asm |
+| UnitStats_CalcMeleeAttack | UnitStats_CalcEffectiveMeleeAttack | Function | Unit Stats | High | The helper combines stance bits, base melee attack, morale, and current health percent, so `effective` is more accurate than the generic `Calc`. | c, asm |
+| UI_IconIndexFromStats | UnitStats_GetMeleeIconIndex | Function | Unit Stats / UI | High | Uses the same melee inputs as the effective melee helper but omits health scaling, matching a UI icon-strength index rather than a generic UI helper. | c, asm |
+| UnitStats_CalcRangedAttack | UnitStats_CalcEffectiveRangedAttack | Function | Unit Stats | High | Combines stance bits, base ranged attack, morale, current health percent, and the slot `+22` ranged-state bit, making it the effective ranged-attack helper. | c, asm |
+| UnitStats_CalcDamagePerHit | UnitStats_CalcEffectiveDamagePerHit | Function | Unit Stats | High | Uses base damage, morale, and current health percent to produce the effective per-hit damage value. | c, asm |
+| UnitStats_CalcSiegeAttack | UnitStats_CalcEffectiveSiegeAttack | Function | Unit Stats | Medium | Mirrors the melee helper but swaps in the alternate siege/building attack table. | c, asm |
+| byte_51257E | g_UnitTypeBaseMeleeAttack | Table | Unit Stats | High | Indexed by `88 * unitType` wherever standard melee capability or melee strength is needed. | c, asm |
+| byte_51257F | g_UnitTypeBaseRangedAttack | Table | Unit Stats | Medium | Indexed by `88 * unitType` in ranged/projectile attack math and battle-targeting logic. | c, asm |
+| byte_512580 | g_UnitTypeBaseActionPoints | Table | Unit Stats | High | Indexed by `88 * unitType` for slot initialization, AP refresh, and battle-map unit seeding. | c, asm |
+| byte_512581 | g_UnitTypeBaseDamage | Table | Unit Stats | High | Indexed by `88 * unitType` in the direct damage-per-hit helpers. | c, asm |
+| byte_512582 | g_UnitTypeMaxRange | Table | Unit Stats | High | Projectile distance checks compare against this table as the upper range limit. | c, asm |
+| byte_512583 | g_UnitTypeMinRange | Table | Unit Stats | Medium | Projectile distance checks compare against this table as the lower dead-zone limit. | c, asm |
+| byte_512584 | g_UnitTypeBaseSiegeAttack | Table | Unit Stats | Medium | Alternate attack helper indexes this table for siege/structure contexts. | c, asm |
+| gameData + 147174 + 6 + 31 * slot | UnitSlotRecord | Recovered Struct | Unit Stats / Runtime Slot | High | Repeated stable accesses recover a 31-byte per-slot record with type, owner, AP, health, fatigue, morale, stance bits, flags, and auxiliary state. | c, asm |
+| UnitStackRecord.unit_slot_fields (old interpretation) | UnitSlotRecord.current_health_percent / fatigue / morale | Recovered Struct Field | Unit Stats / Runtime Slot | High | Cross-checking `UnitSlot_InitFromType`, `Unit_NewTurn`, combat formulas, and UI drawing overturned the earlier `morale_percent`/`veterancy` reading and established the true health/fatigue/morale split. | c, asm |
+
 ## Deferred / Ambiguous
+- `PlayerRuntimeState.controller_mode` at `+27` is clearly a multiplayer/campaign controller-selection field, but the exact original enum semantics for values `1` and `2` still need a focused pass through UI and AI setup code.
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.
 - `gold` and `peas` are now mapped as cargo-style special entries (`UnitType31_GoldCargo` and `UnitType32_PeasantCargo`), but the exact relationship between type `32` and ordinary recruitable peasants (type `0`) is still not fully explained by the recovered gameplay rules.
-- `g_UnitTypeFlags` bit1 now aligns with a light-unit category through the 6-vs-10 seed at slot `+11`, but its broader gameplay consequences outside veterancy seeding are still only partially recovered.
+- `g_UnitTypeFlags` bit1 now aligns with a light-unit category through the 6-vs-10 morale seed at slot `+11`, but its broader gameplay consequences are still only partially recovered.
+- `UnitSlotRecord.stance_bits` at `+12` is clearly a stance/formation byte, but the exact meaning of the upper subfields remains unresolved.
+- `UnitSlotRecord.state_flags` bit `0x8` appears in both special-entry and cargo-related flows, but its full gameplay meaning is still unresolved.
 - `BattleMap_GetMoveSoundSurfaceClass` is only medium-confidence. The implementation clearly returns a small sound-surface class used by movement audio, but the original designer-facing labels for values `0/1/2` remain inferred from suffix behavior rather than explicit text.
 - `sub_441E60` still appends `gothim.wav`, but the exact gameplay role is not locked down safely enough. It is used in a late attack-resolution path for certain projectile or special-attack unit types, so it remains deferred rather than being mislabeled as a generic kill or victory sound.

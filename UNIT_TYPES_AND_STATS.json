@@ -292,7 +292,7 @@
     {
       "name": "RangedUnitCategory",
       "confidence": "high",
-      "evidence": "Only units with non-zero `byte_512582` enter the projectile logic and use ranged stat helpers."
+      "evidence": "Only units with non-zero `g_UnitTypeMaxRange` enter the projectile logic and use ranged stat helpers."
     },
     {
       "name": "FlyingUnitCategory",
@@ -307,7 +307,7 @@
     {
       "name": "LightUnitCategory",
       "confidence": "high",
-      "evidence": "`g_UnitTypeFlags` bit1 selects the lower veterancy seed path."
+      "evidence": "`g_UnitTypeFlags` bit1 selects the lower 6-point morale seed path instead of the default 10-point seed."
     },
     {
       "name": "SpecialCargoEntryCategory",
@@ -322,46 +322,64 @@
   ],
   "stats": [
     {
-      "name": "action_points",
+      "name": "base_action_points",
       "confidence": "high",
-      "semantic_role": "per-turn stamina consumed by standard movement and melee",
-      "evidence": "Seeded in `UnitSlot_InitFromType` and consumed by ordinary melee handlers."
+      "semantic_role": "per-type maximum action-point budget before fatigue penalties",
+      "evidence": "Stored in `g_UnitTypeBaseActionPoints`, copied into slot +8 on init, and used by `UnitSlot_CalcActionPointsFromFatigue`."
     },
     {
-      "name": "morale_percent",
+      "name": "current_action_points",
       "confidence": "high",
-      "semantic_role": "combat modifier applied as a percentage",
-      "evidence": "Initialized to 100 and multiplied into the attack/damage formulas."
+      "semantic_role": "runtime action points available to the slot this turn",
+      "evidence": "Lives at UnitSlotRecord +8 and is refreshed each new turn from the base AP table after fatigue thresholds are applied."
     },
     {
-      "name": "veterancy",
+      "name": "current_health_percent",
       "confidence": "high",
-      "semantic_role": "experience or training bonus",
-      "evidence": "Seeded to 6 or 10 and reused by the attack/damage helpers."
+      "semantic_role": "runtime health or squad strength percentage",
+      "evidence": "Initialized to 100, scales effective attack and damage helpers, and a zero value kills the slot."
+    },
+    {
+      "name": "fatigue",
+      "confidence": "high",
+      "semantic_role": "runtime exhaustion counter that throttles action points and morale",
+      "evidence": "Lives at UnitSlotRecord +10, drops by 20 on recovery turns, and thresholds at 80/90/100 reduce available action points."
+    },
+    {
+      "name": "morale",
+      "confidence": "high",
+      "semantic_role": "runtime 0-20 morale/obedience score that boosts combat stats and can cause order refusal",
+      "evidence": "Lives at UnitSlotRecord +11, is clamped to 0..20, adds into attack and damage helpers, and drives the low-morale refusal flag."
+    },
+    {
+      "name": "stance_bits",
+      "confidence": "medium",
+      "semantic_role": "runtime formation or stance bits that modify attack values",
+      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, ranged, and siege attack helpers."
     },
     {
       "name": "base_melee_attack",
       "confidence": "high",
       "semantic_role": "primary melee attack rating",
-      "evidence": "Non-zero entries gate standard melee and feed `UnitStats_CalcMeleeAttack`."
+      "evidence": "Non-zero values gate standard melee and feed `UnitStats_CalcEffectiveMeleeAttack`."
     },
     {
-      "name": "base_secondary_attack",
+      "name": "base_ranged_attack",
       "confidence": "medium",
-      "semantic_role": "secondary attack rating, likely projectile strength",
-      "evidence": "Feeds the ranged attack helper and related combat cost logic."
+      "semantic_role": "per-type projectile or ranged attack rating",
+      "evidence": "Stored in `g_UnitTypeBaseRangedAttack` and consumed by `UnitStats_CalcEffectiveRangedAttack` and related projectile combat logic."
     },
     {
-      "name": "base_damage_scalar",
-      "confidence": "medium",
-      "semantic_role": "raw damage scalar before morale/veterancy scaling",
-      "evidence": "Read by `UnitStats_CalcDamagePerHit` and `UnitStats_GetBaseDamage`."
+      "name": "base_damage",
+      "confidence": "high",
+      "semantic_role": "raw per-hit damage value before health scaling",
+      "evidence": "Stored in `g_UnitTypeBaseDamage` and consumed by `UnitStats_CalcEffectiveDamagePerHit` and `UnitStats_GetBaseDamage`."
     },
     {
-      "name": "structure_damage_scalar",
+      "name": "base_siege_attack",
       "confidence": "medium",
-      "semantic_role": "alternate damage scalar for building or fortification contexts",
-      "evidence": "`UnitStats_CalcSiegeAttack` switches to `byte_512584` for the alternate context."
+      "semantic_role": "alternate attack rating used in siege or structure-damage contexts",
+      "evidence": "Stored in `g_UnitTypeBaseSiegeAttack` and consumed by `UnitStats_CalcEffectiveSiegeAttack`."
     },
     {
       "name": "road_move_cost",
@@ -460,17 +478,31 @@
     },
     {
       "unit_type": "RangedUnitCategory",
+      "stat": "base_ranged_attack",
+      "relationship_kind": "projectile_attack_profile",
+      "confidence": "medium",
+      "evidence": "Projectile-capable units use `g_UnitTypeBaseRangedAttack` together with the range tables."
+    },
+    {
+      "unit_type": "RangedUnitCategory",
+      "stat": "base_damage",
+      "relationship_kind": "projectile_damage_profile",
+      "confidence": "high",
+      "evidence": "Projectile combat paths pair the ranged attack helper with `UnitStats_CalcEffectiveDamagePerHit`."
+    },
+    {
+      "unit_type": "RangedUnitCategory",
       "stat": "attack_range_max",
       "relationship_kind": "range_limit",
       "confidence": "high",
-      "evidence": "Projectile logic compares squared distance against `byte_512582`."
+      "evidence": "Projectile logic compares squared distance against `g_UnitTypeMaxRange`."
     },
     {
       "unit_type": "RangedUnitCategory",
       "stat": "attack_range_min",
       "relationship_kind": "dead_zone",
       "confidence": "medium",
-      "evidence": "Projectile logic also compares against `byte_512583`."
+      "evidence": "Projectile logic also compares against `g_UnitTypeMinRange`."
     },
     {
       "unit_type": "FlyingUnitCategory",
@@ -481,7 +513,7 @@
     },
     {
       "unit_type": "LightUnitCategory",
-      "stat": "veterancy",
+      "stat": "morale",
       "relationship_kind": "seed_rule",
       "confidence": "high",
       "evidence": "Light units seed at 6 rather than 10."
@@ -509,17 +541,17 @@
       "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
     },
     {
-      "candidate": "byte_51257F",
+      "candidate": "g_UnitTypeBaseRangedAttack",
       "candidate_kind": "stat",
       "possible_interpretations": [
         "ranged attack strength",
         "secondary attack value"
       ],
-      "evidence": "The table is tightly coupled to ranged logic but still lacks a direct textual label.",
+      "evidence": "The table is tightly coupled to projectile logic but still lacks a direct designer-facing label.",
       "blockers": "No debug string or serialized schema names the field."
     },
     {
-      "candidate": "byte_512584",
+      "candidate": "g_UnitTypeBaseSiegeAttack",
       "candidate_kind": "stat",
       "possible_interpretations": [
         "building damage",
@@ -528,6 +560,28 @@
       ],
       "evidence": "The alternate attack helper switches to it for one context flag, but the original design term is missing.",
       "blockers": "Need a clearer caller or UI string."
+    },
+    {
+      "candidate": "UnitSlotRecord.stance_bits",
+      "candidate_kind": "field",
+      "possible_interpretations": [
+        "formation bits",
+        "attack stance bits",
+        "garrison posture selector"
+      ],
+      "evidence": "The low two bits feed effective attack helpers directly, while the full byte is cycled by `Building_UseGarrisonSlot`.",
+      "blockers": "The exact meaning of the upper subfields is still unresolved."
+    },
+    {
+      "candidate": "UnitSlotRecord.state_flags bit 0x8",
+      "candidate_kind": "field_bit",
+      "possible_interpretations": [
+        "special-entry marker",
+        "cargo decay flag",
+        "battle-aftereffect state"
+      ],
+      "evidence": "The bit is set by `sub_412A90`, checked by `sub_412AC0`, and also appears in peasant-cargo decay paths.",
+      "blockers": "The bit's full lifecycle still spans multiple partially unnamed helper families."
     },
     {
       "candidate": "g_UnitTypeMetadataRecords localized-name header",

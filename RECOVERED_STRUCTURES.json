@@ -36,24 +36,37 @@
       { "offset": 2, "name": "tile_column", "type": "int16", "notes": "Column on the world grid; combined with row to index TILE_INDEX." },
       { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war and turn-sensitive ownership checks via g_CurrentPlayerIndex." },
       { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "0-7 direction used by sprite/orientation logic during path highlighting." },
-      { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlot (31 bytes each)", "notes": "Each slot stores type id, owner, morale (offset +9), veterancy seed (offset +11), and state bits (offset +13)." },
+      { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlotRecord[10]", "notes": "Ten embedded 31-byte slot records storing per-unit runtime state for the stack." },
       { "offset": 316, "name": "path_buffer", "type": "byte[0x194]", "notes": "Movement track copied in/out by qmemcpy during path planning." }
-    ],
-    "unit_slot_fields": [
-      { "offset": 0, "name": "unit_type_id", "type": "int16", "notes": "-1 marks an empty slot; values index the 88-byte unit stat tables." },
-      { "offset": 2, "name": "slot_owner", "type": "uint8", "notes": "Owner copied from stack reset; used for loyalty/morale adjustments." },
-      { "offset": 8, "name": "base_action_points", "type": "uint8", "notes": "Seeded from byte_512580 when the slot is initialized." },
-      { "offset": 9, "name": "morale_percent", "type": "uint8", "notes": "Starts at 100 and drives combat multipliers." },
-      { "offset": 10, "name": "speed_penalty", "type": "uint8", "notes": "Cleared on init; reused by status effects." },
-      { "offset": 11, "name": "veterancy_seed", "type": "uint8", "notes": "Set to 6 for light units and 10 otherwise using g_UnitTypeFlags." },
-      { "offset": 13, "name": "slot_flags", "type": "uint8", "notes": "Bit0 stores the per-turn readiness flag toggled by UnitStack_ClearReadyFlags/SetReadyFlags." },
-      { "offset": 18, "name": "status_dword", "type": "uint32", "notes": "Zeroed on init; reused by casualties/movement cost accumulation." },
-      { "offset": 22, "name": "state_bits", "type": "uint8", "notes": "Low bit cleared on init; pairs with slot_flags for move gating." }
     ],
     "evidence": [
       "Unit_Create uses 147174 + 725 * index to address stacks, writing row/column/facing before stamping TILE_INDEX.",
-      "UnitSlot_InitFromType writes the slot fields (type id, owner, base stats) at offsets relative to stackPtr + 6.",
+      "UnitSlot_InitFromType writes the slot fields (type id, owner, action points, health, fatigue, morale, and control bits) at offsets relative to stackPtr + 6.",
       "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states."
+    ]
+  },
+  {
+    "name": "UnitSlotRecord",
+    "kind": "stack_subrecord",
+    "base_offset": 6,
+    "stride": 31,
+    "description": "Recovered 31-byte per-unit runtime slot embedded inside each UnitStackRecord.",
+    "fields": [
+      { "offset": 0, "name": "unit_type_id", "type": "int16", "notes": "-1 marks an empty slot; otherwise indexes the 88-byte unit-type metadata family." },
+      { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Copied from the stack owner when the slot is initialized." },
+      { "offset": 8, "name": "current_action_points", "type": "uint8", "notes": "Seeded from `g_UnitTypeBaseActionPoints` and recomputed from fatigue by `UnitSlot_CalcActionPointsFromFatigue` each new turn." },
+      { "offset": 9, "name": "current_health_percent", "type": "uint8", "notes": "Starts at 100, scales the effective melee/ranged/damage helpers, and dropping to zero kills the slot." },
+      { "offset": 10, "name": "fatigue", "type": "uint8", "notes": "0-100 exhaustion counter. Thresholds at 80/90/100 reduce action points, and severe fatigue lowers morale each new turn." },
+      { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10." },
+      { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; upper bits also drive garrison stance/formation cycling." },
+      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 marks a still-ambiguous special-entry state." },
+      { "offset": 18, "name": "aux_runtime_state", "type": "uint32", "notes": "Cleared on init and reused by battle/movement helper families; exact subfields remain unresolved." },
+      { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 influences ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`." }
+    ],
+    "evidence": [
+      "UnitSlot_InitFromType writes a stable 31-byte layout with type id, owner, current action points, health, fatigue, morale, and several control-bit clusters.",
+      "`UnitSlot_CalcActionPointsFromFatigue`, `Unit_NewTurn`, `Unit_CheckLowMorale`, and the attack helpers all reuse the same byte offsets, confirming the runtime-slot field boundaries.",
+      "The UI unit-info pane draws a damage bar from slot +9, morale badges from slot +11, and fatigue icons from slot +10, independently corroborating the field meanings."
     ]
   },
   {
@@ -91,20 +104,45 @@
     ]
   },
   {
+    "name": "PlayerRuntimeState",
+    "kind": "player_runtime_record",
+    "base_offset": 140024,
+    "stride": 1423,
+    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, camera positions, queen state, and the deferred prisoner-placement queue.",
+    "fields": [
+      { "offset": 0, "name": "is_active", "type": "int32", "notes": "Set to 1 when a scenario loader enables this player slot; zeroed by `PlayerRuntimeState_ResetDefaults` for unused slots." },
+      { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
+      { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
+      { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
+      { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
+      { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
+      { "offset": 1419, "name": "queen_mood", "type": "uint8", "notes": "Mood state read and updated by the queen-event logic." },
+      { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
+      { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
+    ],
+    "evidence": [
+      "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
+      "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields."
+    ]
+  },
+  {
     "name": "WorldViewState",
     "kind": "shared_state_region",
     "base_offset": 140000,
-    "description": "Shared gameData region that stores world dimensions, the current camera origin, and which player owns the active turn versus the current human view.",
+    "description": "Shared gameData region that stores world dimensions, the active scripted mission id, the current camera origin, and which player owns the active turn versus the current human view.",
     "fields": [
       { "offset": 140000, "name": "map_width_tiles", "type": "int32", "notes": "Horizontal tile count derived at map load and used to clamp camera movement." },
       { "offset": 140004, "name": "map_height_tiles", "type": "int32", "notes": "Vertical tile count derived at map load and used to clamp camera movement." },
       { "offset": 140008, "name": "map_view_left", "type": "int32", "notes": "Current leftmost visible tile in the main-map camera." },
       { "offset": 140012, "name": "map_view_top", "type": "int32", "notes": "Current topmost visible tile in the main-map camera." },
+      { "offset": 140017, "name": "active_mission_index", "type": "int32", "notes": "`-1` for free/skirmish maps; otherwise indexes the scripted mission dispatcher, mission-status text table, and mission-specific victory/failure checks." },
       { "offset": 147139, "name": "turn_owner_player_index", "type": "int32", "notes": "Player id whose strategic turn is currently active; save/load restores g_CurrentPlayerIndex from this slot." },
       { "offset": 147143, "name": "viewed_player_index", "type": "int32", "notes": "Player id whose saved camera position and visibility should drive the current UI view; usually the current human player." }
     ],
     "evidence": [
       "Map load computes offsets 140000 and 140004 by scanning the 14-byte tile grid until it reaches sentinel 0xFFFF rows and columns.",
+      "`UI_ShowMissionStatusPanel`, the post-victory mission-advance path, and the mission jump table rooted at `Scenario_LoadMissionByIndex` all treat offset `140017` as the active mission id.",
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
       "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
     ]
