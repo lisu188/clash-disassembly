@@ -404,10 +404,36 @@
 | sub_418EC0 | Map_StartTileEffectAnimation | Function | Map / FX | High | Starts an 8-frame tile-centered effect at an explicit row/column. Kill/execution paths use it before removing units, and the world renderer draws frames `12..19` on that tile while active. | c, asm |
 | sub_418EE0 | Map_UpdateTileEffectAnimation | Function | Map / FX | High | Advances the timed tile-centered effect started by `Map_StartTileEffectAnimation`, redrawing the affected map tile each step until the 8-frame sequence finishes. | c, asm |
 
+## Batch 40 – Tile Highlight Overlay Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_418F60 | UI_HighlightTile | Function | UI / Map | High | The asm already anchors this proc as `UI_HighlightTile`; gameplay code uses it to enqueue nearby placable tiles for the placement overlay, and the helper stores up to eight unique tile coordinates in the highlight arrays. | c, asm |
+| sub_418FE0 | UI_ClearTileHighlight | Function | UI / Map | High | Clears the entire highlighted-tile coordinate store to `-1`, and callers use it as the paired reset before rebuilding placement highlights or when map state is reset. | c, asm |
+| sub_419000 | UI_DrawTileHighlightOverlay | Function | UI / Map | High | Called from the per-tile world renderer; it checks whether the current tile coordinates are present in the highlight arrays and, if so, draws sprite `40` centered over that tile. | c, asm |
+| dword_5269D8 | g_HighlightedTileRows | Global | UI / Map | High | First coordinate array in the 8-slot highlighted-tile store used by `UI_HighlightTile`, `UI_ClearTileHighlight`, and `UI_DrawTileHighlightOverlay`. | c, asm |
+| dword_5269DC | g_HighlightedTileColumns | Global | UI / Map | High | Second coordinate array in the 8-slot highlighted-tile store paired with `g_HighlightedTileRows`. | c, asm |
+
+## Batch 41 – Unit Stack Split Mode Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40A500 | UnitStack_UpdateSplitModeForSelection | Function | Units / Split Mode | High | Watches the current selected stack and either begins split mode, refreshes the split source, or exits split mode when the current stack becomes invalid or too small to split. | c |
+| sub_423420 | UI_DrawStackSplitPanel | Function | Units / Split Mode / UI | High | Draws the 10-slot stack-splitting panel, populates unit icons and selected-slot toggles, and highlights adjacent map tiles where the chosen subset can be placed. | c, asm |
+| sub_423860 | UnitStack_HandleSplitModeInput | Function | Units / Split Mode | High | Handles clicks inside the split panel and on neighboring destination tiles, toggles selected slot flags, shows unit info on hovered slots, and commits the split move through `sub_423050`. | c |
+| sub_423AC0 | UnitStackSplit_HasSelectedSlots | Function | Units / Split Mode | High | Pure predicate that reports whether any of the 10 split-selection flags are set while split mode is active. | c |
+| sub_423B00 | UnitStack_BeginSplitMode | Function | Units / Split Mode | High | Enters split mode for the current selected stack, enables the split-mode renderer latch, clears selection flags, and redraws the split panel. | c |
+| sub_423B40 | UnitStack_EndSplitMode | Function | Units / Split Mode | High | Leaves split mode, clears tile highlights, disables the split-mode renderer latch, and drops the active split-source stack id. | c, asm |
+| sub_423B70 | UnitStack_ClearSplitSelectionFlags | Function | Units / Split Mode | High | Clears the 10-entry split-selection flag array used by the panel and input handler. | c, asm |
+| sub_423B90 | UnitStack_RefreshSplitSource | Function | Units / Split Mode | High | Updates the active split-source stack id to the current selected stack and redraws the split panel around that stack. | c |
+| dword_514194 | g_StackSplitSourceStackIndex | Global | Units / Split Mode | High | Central mode state: `-1` means no active split mode, otherwise it holds the currently previewed source stack index. | c |
+| dword_526994 | g_StackSplitModeEnabled | Global | Units / Split Mode | High | Render-time latch that suppresses the lower row of world-tile repainting and is set/reset strictly by split-mode entry/exit paths. | c |
+| dword_526F78 | g_StackSplitSelectedSlotFlags | Global | Units / Split Mode | High | Ten per-slot toggle flags copied into the split execution helper and rendered as selected/not-selected markers in the stack split panel. | c, asm |
+| dword_526FA0 | g_StackSplitSourceStackPtr | Global | Units / Split Mode | Medium | Treated throughout the split-mode panel and input code as the currently previewed source stack pointer; one decompiler-emitted `memset_` call near setup is still suspicious, so the pointer interpretation is secure but the exact setup sequence remains slightly noisy. | c |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
 - `clash95.asm` still contains an older stale comment at `0x40D850` that labels the proc as `Locale_DrawInteger`; code and control-flow evidence now show that address is the full map-mode surface redraw loop, so the asm artifact should be reconciled in a later cleanup pass rather than trusted literally.
 - `Map_StartUnitStackHighlight` / `Map_UpdateUnitStackHighlight` are behaviorally secure as a temporary camera-following highlight on one stack id, but the original feature name may have been closer to focus, tracking, or emphasis rather than generic highlight.
+- `g_StackSplitSourceStackPtr` is used exactly like a live source-stack pointer across the split-mode panel and input flow, but the setup helper still contains one decompiler-noisy `memset_` call near that assignment, so the pointer name is kept at medium rather than high confidence.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
