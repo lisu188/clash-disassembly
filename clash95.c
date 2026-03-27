@@ -9,12 +9,15 @@
 #include <defs.h>
 
 #define PLAYER_DATA_STRIDE 1423
-#define PLAYER_QUEEN_MOOD_OFFSET 141443
-#define PLAYER_QUEEN_WHIM_OFFSET 141444
-#define PLAYER_QUEEN_REVIEW_TURN_OFFSET 141445
-#define PLAYER_IS_HUMAN_OFFSET 140051
-#define PLAYER_CAMERA_LEFT_OFFSET 140039
-#define PLAYER_CAMERA_TOP_OFFSET 140043
+#define PLAYER_RUNTIME_STATE_OFFSET 140024
+#define PLAYER_DISPLAY_NAME_OFFSET 4
+#define PLAYER_CAMERA_LEFT_OFFSET 15
+#define PLAYER_CAMERA_TOP_OFFSET 19
+#define PLAYER_IS_HUMAN_OFFSET 27
+#define PLAYER_QUEEN_MOOD_OFFSET 1419
+#define PLAYER_QUEEN_WHIM_OFFSET 1420
+#define PLAYER_QUEEN_REVIEW_TURN_OFFSET 1421
+#define ACTIVE_MISSION_INDEX_OFFSET 140017
 #define GAME_TURN_COUNTER_OFFSET 140022
 #define MAP_WIDTH_TILES_OFFSET 140000
 #define MAP_HEIGHT_TILES_OFFSET 140004
@@ -43,6 +46,7 @@
 #define UNIT_STACK_SLOT_COUNT 10
 #define UNIT_STACK_PATH_OFFSET 316
 #define UNIT_STACK_PATH_BYTES 0x194
+#define UNIT_TYPE_METADATA_STRIDE 88
 #define UNIT_TYPE_PEASANT 0
 #define UNIT_TYPE_CATAPULT 12
 #define UNIT_TYPE_RAM 13
@@ -58,7 +62,9 @@
 #define UNIT_TYPE_PRISONER_FOOT 33
 #define UNIT_TYPE_PRISONER_MOUNTED 34
 
-#define PLAYER_DATA(playerIndex) (gameData + PLAYER_DATA_STRIDE * (playerIndex))
+#define PLAYER_RUNTIME_STATE(playerIndex) (gameData + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex))
+#define PLAYER_DATA(playerIndex) PLAYER_RUNTIME_STATE(playerIndex)
+#define PLAYER_IS_ACTIVE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex)))
 #define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
 #define PLAYER_QUEEN_WHIM(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_WHIM_OFFSET))
 #define PLAYER_QUEEN_NEXT_REVIEW(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_REVIEW_TURN_OFFSET))
@@ -69,6 +75,7 @@
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
 #define MAP_VIEW_TOP (*(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
+#define ACTIVE_MISSION_INDEX (*(_DWORD *)(gameData + ACTIVE_MISSION_INDEX_OFFSET))
 #define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))
 #define TURN_OWNER_PLAYER_INDEX (*(_DWORD *)(gameData + TURN_OWNER_PLAYER_INDEX_OFFSET))
 #define VIEWED_PLAYER_INDEX (*(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET))
@@ -89,6 +96,32 @@
 #define UNIT_STACK_OWNER_INDEX(stackPtr) (*(_BYTE *)((stackPtr) + 4))
 #define UNIT_STACK_FACING(stackPtr) (*(_BYTE *)((stackPtr) + 5))
 #define UNIT_STACK_PATH_BUFFER(stackPtr) ((stackPtr) + UNIT_STACK_PATH_OFFSET)
+#define UNIT_SLOT_TYPE(slotPtr) (*(__int16 *)(slotPtr))
+#define UNIT_SLOT_OWNER(slotPtr) (*(_BYTE *)((slotPtr) + 2))
+#define UNIT_SLOT_ACTION_POINTS(slotPtr) (*(_BYTE *)((slotPtr) + 8))
+#define UNIT_SLOT_HEALTH_PERCENT(slotPtr) (*(_BYTE *)((slotPtr) + 9))
+#define UNIT_SLOT_FATIGUE(slotPtr) (*(_BYTE *)((slotPtr) + 10))
+#define UNIT_SLOT_MORALE(slotPtr) (*(_BYTE *)((slotPtr) + 11))
+#define UNIT_SLOT_STANCE_BITS(slotPtr) (*(_BYTE *)((slotPtr) + 12))
+#define UNIT_SLOT_FLAGS(slotPtr) (*(_BYTE *)((slotPtr) + 13))
+#define UNIT_SLOT_AUX_STATE(slotPtr) (*(_DWORD *)((slotPtr) + 18))
+#define UNIT_SLOT_STATE_BITS(slotPtr) (*(_BYTE *)((slotPtr) + 22))
+
+// Compatibility aliases while stat-callsite cleanup is still in progress.
+#define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
+#define UI_IconIndexFromStats UnitStats_GetMeleeIconIndex
+#define Unit_CalcEffectivenessB UnitStats_CalcEffectiveRangedAttack
+#define Unit_CalcIndexB UnitStats_GetRangedIconIndex
+#define Unit_CalcEffectivenessC UnitStats_CalcEffectiveDamagePerHit
+#define Unit_GetBaseC UnitStats_GetBaseDamage
+#define Unit_CalcEffectivenessD UnitStats_CalcEffectiveSiegeAttack
+#define byte_51257E g_UnitTypeBaseMeleeAttack
+#define byte_51257F g_UnitTypeBaseRangedAttack
+#define byte_512580 g_UnitTypeBaseActionPoints
+#define byte_512581 g_UnitTypeBaseDamage
+#define byte_512582 g_UnitTypeMaxRange
+#define byte_512583 g_UnitTypeMinRange
+#define byte_512584 g_UnitTypeBaseSiegeAttack
 
 
 //-------------------------------------------------------------------------
@@ -344,8 +377,8 @@ int sub_40ED20();
 // __int16 *__usercall UnitStack_SetReadyFlags@<eax>(int a1@<eax>);
 // signed int __usercall sub_40FA80@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall sub_40FAD0@<eax>(int a1@<eax>);
-// int __usercall __spoils<ecx> sub_40FDB0@<eax>(__int16 *a1@<eax>);
-// int __usercall sub_40FE60@<eax>(__int16 *a1@<eax>);
+// int __usercall __spoils<ecx> UnitSlot_CalcActionPointsFromFatigue@<eax>(__int16 *a1@<eax>);
+// int __usercall UnitSlot_GetBaseActionPoints@<eax>(__int16 *a1@<eax>);
 // int __usercall sub_40FE80@<eax>(int a1@<eax>);
 // __int16 *__usercall sub_40FEC0@<eax>(__int16 *result@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 signed int sub_40FEF0();
@@ -358,13 +391,13 @@ signed int sub_40FEF0();
 // signed int __usercall sub_4101E0@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
 // signed int __usercall sub_410260@<eax>(__int16 *a1@<eax>, int a2@<ecx>);
 // void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
-// int __usercall Unit_CalcEffectivenessA@<eax>(char *a1@<eax>, int a2@<edx>);
-// int __usercall UI_IconIndexFromStats@<eax>(__int16 *a1@<eax>);
-// int __usercall Unit_CalcEffectivenessB@<eax>(char *a1@<eax>, int a2@<edx>);
-// int __usercall Unit_CalcIndexB@<eax>(__int16 *a1@<eax>);
-// int __usercall Unit_CalcEffectivenessC@<eax>(__int16 *a1@<eax>);
-// int __usercall Unit_GetBaseC@<eax>(__int16 *a1@<eax>);
-// int __usercall Unit_CalcEffectivenessD@<eax>(char *a1@<eax>, int a2@<edx>);
+// int __usercall UnitStats_CalcEffectiveMeleeAttack@<eax>(char *a1@<eax>, int a2@<edx>);
+// int __usercall UnitStats_GetMeleeIconIndex@<eax>(__int16 *a1@<eax>);
+// int __usercall UnitStats_CalcEffectiveRangedAttack@<eax>(char *a1@<eax>, int a2@<edx>);
+// int __usercall UnitStats_GetRangedIconIndex@<eax>(__int16 *a1@<eax>);
+// int __usercall UnitStats_CalcEffectiveDamagePerHit@<eax>(__int16 *a1@<eax>);
+// int __usercall UnitStats_GetBaseDamage@<eax>(__int16 *a1@<eax>);
+// int __usercall UnitStats_CalcEffectiveSiegeAttack@<eax>(char *a1@<eax>, int a2@<edx>);
 // signed int __usercall __spoils<ecx> Unit_DebugDumpFormationSizes@<eax>(int a1@<eax>, DWORD a2@<ebp>);
 // signed int __usercall Render_DrawSprite_v3@<eax>(int a1@<eax>, DWORD a2@<ebp>);
 // signed int __usercall LogAllUnits@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
@@ -372,9 +405,9 @@ signed int sub_40FEF0();
 // _WORD *__usercall UnitSlots_RemoveGaps@<eax>(_WORD *result@<eax>, int a2@<edx>);
 // void __usercall Unit_CheckLowMorale(_BYTE *a1@<eax>, double a2@<st0>);
 // signed int __usercall __spoils<ecx,st0> sub_411810@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// BOOL __usercall sub_4118A0@<eax>(int a1@<eax>);
-// BOOL __usercall sub_4118C0@<eax>(int a1@<eax>);
-// BOOL __usercall sub_4118D0@<eax>(int a1@<eax>);
+// BOOL __usercall UnitSlot_ShouldGainFatigueFromLowActionPoints@<eax>(int a1@<eax>);
+// BOOL __usercall UnitSlot_CanRecoverFatigue@<eax>(int a1@<eax>);
+// BOOL __usercall UnitSlot_HasSevereFatigue@<eax>(int a1@<eax>);
 // signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // signed int __usercall sub_411AB0@<eax>(int a1@<eax>);
 // __int16 __usercall __spoils<ecx> sub_411B30@<ax>(int a1@<eax>);
@@ -393,16 +426,16 @@ void sub_411D70();
 // int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
 // int __cdecl CSyncObject::Unlock(CSyncObject *__hidden this, __int32, __int32 *); idb
 int __thiscall sub_4127A0(CSyncObject *this); // idb
-// signed int __usercall sub_4127F0@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
+// signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // int __usercall sub_412880@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>);
-// signed int __usercall sub_4128E0@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
+// signed int __usercall UnitStack_AdjustMoraleByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // int __usercall Building_UseGarrisonSlot@<eax>(int result@<eax>);
 // signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// __int16 *__usercall sub_412A30@<eax>(int a1@<eax>);
-// __int16 *__usercall sub_412A60@<eax>(int a1@<eax>);
+// __int16 *__usercall UnitStack_SetSpentTurnFlag@<eax>(int a1@<eax>);
+// __int16 *__usercall UnitStack_ClearSpentTurnFlag@<eax>(int a1@<eax>);
 // int __usercall sub_412A90@<eax>(int result@<eax>);
 // signed int __usercall sub_412AC0@<eax>(int a1@<eax>);
-// signed int __usercall sub_412AF0@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasLowMoraleUnit@<eax>(int a1@<eax>);
 // int __usercall sub_412B20@<eax>(int result@<eax>, int a2@<edx>, int *a3@<ebx>);
 // signed int __usercall UnitStack_HasPrisonerUnits@<eax>(int a1@<eax>);
 // int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
@@ -963,9 +996,9 @@ int sub_449330();
 // void __usercall lodaOptionsCfg(DWORD a1@<ebp>);
 // int __usercall sub_44A980@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
 // void __usercall sub_44A9C0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>);
-// char __usercall sub_44AD60@<al>(int a1@<eax>);
-// char __usercall sub_44AE10@<al>(int a1@<eax>);
-// int __usercall loadMap@<eax>(int a1@<eax>);
+// char __usercall PlayerRuntimeState_ResetDefaults@<al>(int a1@<eax>);
+// char __usercall Game_ResetPlayerRuntimeStateByIndex@<al>(int a1@<eax>);
+// int __usercall Map_LoadFromFile@<eax>(int a1@<eax>);
 char sub_44B2F0();
 char sub_44B430();
 // _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<st0>);
@@ -973,7 +1006,7 @@ signed int Game_InitPlayerViewState();
 // signed int __usercall sub_44C400@<eax>(DWORD a1@<ebp>, double a2@<st0>);
 // signed int __usercall sub_44C410@<eax>(int a1@<eax>);
 // DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>);
+// signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<eax>, DWORD a2@<ebp>);
 // char __usercall sub_44E2A0@<al>(int a1@<eax>, int *a2@<edx>);
 // BOOL __usercall sub_44E350@<eax>(__int16 *a1@<eax>);
 // signed int __userpurge Prisoner_QueueCapturedUnit@<eax>(char a1@<al>, int a2@<edx>, __int16 a3@<cx>, int a4@<ebx>, DWORD a5@<ebp>, __int16 a6);
@@ -1159,8 +1192,8 @@ signed int sub_4570E3();
 // int __usercall sub_45F190@<eax>(int result@<eax>, int a2@<edx>);
 // BOOL __usercall __spoils<ecx,st0> UI_CheckConfirmQuit@<eax>(DWORD a1@<ebp>, double a2@<st0>);
 int __spoils<ecx> UI_CheckDialogAccepted();
-void sub_460360();
-// int __usercall sub_460370@<eax>(char *a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>);
+void Scenario_LoadMissionByIndex();
+// int __usercall Scenario_LoadMissionByIndexAndPlay@<eax>(char *a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>);
 int __thiscall sub_4603F0(void *this);
 // _DWORD *__usercall sub_460410@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_460490@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
@@ -8358,13 +8391,13 @@ char byte_512577[] = { '\0' }; // weak
 char byte_512578[] = { '\b' }; // weak
 char byte_512579[] = { '\b' }; // weak
 int g_UnitTypeFlags[] = { 0 }; // weak
-char byte_51257E[] = { '\x01' }; // weak
-char byte_51257F[] = { '\x01' }; // weak
-char byte_512580[] = { '\x18' }; // weak
-char byte_512581[] = { '\0' }; // weak
-char byte_512582[] = { '\0' }; // weak
-char byte_512583[] = { '\0' }; // weak
-char byte_512584[] = { '\x01' }; // weak
+char g_UnitTypeBaseMeleeAttack[] = { '\x01' }; // weak
+char g_UnitTypeBaseRangedAttack[] = { '\x01' }; // weak
+char g_UnitTypeBaseActionPoints[] = { '\x18' }; // weak
+char g_UnitTypeBaseDamage[] = { '\0' }; // weak
+char g_UnitTypeMaxRange[] = { '\0' }; // weak
+char g_UnitTypeMinRange[] = { '\0' }; // weak
+char g_UnitTypeBaseSiegeAttack[] = { '\x01' }; // weak
 char byte_512585[] = { '\x03' }; // weak
 char byte_512586[] = { '\x04' }; // weak
 _UNKNOWN unk_512587; // weak
@@ -10053,7 +10086,7 @@ char *g_QueenProposalPrompt[3] =
   "Ein Gesandter aus einem fernen Land bringt Dir das Bild einer sch\x94nen Prinzessin. Ihr Vater, K\x94nig Wolfgang, bietet Dir ihre Hand an. M\x94chtest Du sie zur Frau nehmen?"
 }; // weak
 _UNKNOWN unk_518020; // weak
-char *off_5180C0[63] =
+char *g_MissionStatusTextsByLanguage[63] =
 {
   "Zniszczy\x8D wszystkie oddzia\x92y wroga",
   "Destroy all the enemy's detachments",
@@ -10119,7 +10152,7 @@ char *off_5180C0[63] =
   "Misssion %d\n\n%s",
   "Misssion %d\n\n%s"
 }; // weak
-char *off_5181B0[3] = { "Misja %d\n\n%s", "Misssion %d\n\n%s", "Misssion %d\n\n%s" }; // weak
+char *g_MissionStatusFormatsByLanguage[3] = { "Misja %d\n\n%s", "Misssion %d\n\n%s", "Misssion %d\n\n%s" }; // weak
 _UNKNOWN unk_5181C0; // weak
 _UNKNOWN unk_518338; // weak
 char aKarkhan[8] = "Karkhan"; // weak
@@ -10138,9 +10171,9 @@ int dword_5188C4 = 0; // weak
 char byte_5188C8 = '\0'; // weak
 char byte_5188C9 = '\0'; // weak
 char byte_5188CA = '\0'; // weak
-char aMaps_1[6] = "maps\\"; // weak
-int dword_518938[] = { 14 }; // weak
-int dword_51893C[] = { 20 }; // weak
+char aMapsDirectory[6] = "maps\\"; // weak
+int g_MultiplayerStartRows[] = { 14 }; // weak
+int g_MultiplayerStartColumns[] = { 20 }; // weak
 char *off_518C58[39] =
 {
   "sir artur",
@@ -16834,7 +16867,7 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
   sub_40A490(a1);
   if ( g_SelectedUnitIndex == -1 )
     return (void *)sub_422AC0();
-  if ( sub_412AF0(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+  if ( UnitStack_HasLowMoraleUnit(gameData + 147174 + 725 * g_SelectedUnitIndex) )
   {
     sub_422B70(13);
     sub_4229A0(3, g_Text_LowMorale[(unsigned __int8)g_LanguageIndex], v16);
@@ -19298,7 +19331,7 @@ int __usercall Game_AdvanceToNextPlayerTurn@<eax>(int a1@<ecx>, char a2@<bl>, DW
   }
   if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
-    v7 = *(unsigned __int8 **)(gameData + 140017);
+    v7 = (unsigned __int8 *)ACTIVE_MISSION_INDEX;
     if ( v7 == (unsigned __int8 *)-1 || v7 == (unsigned __int8 *)19 || v7 == (unsigned __int8 *)9 )
       AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, v14, 0xFFFFFFFF, a4);
   }
@@ -19385,7 +19418,7 @@ int __usercall sub_40ADF0@<eax>(int a1@<ebx>)
   sub_416610(v3);
   sub_418EE0(v5, v4);
   nullsub_1();
-  v7 = *(_DWORD *)(gameData + 140017);
+  v7 = ACTIVE_MISSION_INDEX;
   if ( v7 == 1 )
   {
     sub_418A90(16, 11);
@@ -19702,7 +19735,7 @@ LABEL_24:
       dword_520300 = 1;
       dword_5202F8 = 1;
     }
-    if ( *(_DWORD *)(gameData + 140017) != -1 && UI_CheckDialogAccepted() )
+  if ( ACTIVE_MISSION_INDEX != -1 && UI_CheckDialogAccepted() )
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
@@ -19712,7 +19745,7 @@ LABEL_24:
     }
     if ( !*(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140024) )
       dword_5202FC = 1;
-    if ( *(_DWORD *)(gameData + 140017) == -1 )
+    if ( ACTIVE_MISSION_INDEX == -1 )
     {
       if ( UI_CheckEndTurnHotkey(g_CurrentPlayerIndex) )
       {
@@ -19884,7 +19917,7 @@ LABEL_13:
   log(v16, 20, a3, (int)aStart);
   LogAllUnits(v17, 20, a3);
   LogAllBuildings(v18, 20, a3);
-  if ( *(_DWORD *)(gameData + 140017) != -1 && GAME_TURN_COUNTER == 1 )
+  if ( ACTIVE_MISSION_INDEX != -1 && GAME_TURN_COUNTER == 1 )
     UI_ShowMissionStatusPanel(v19, a3);
   dword_520300 = 0;
   dword_520304 = 0;
@@ -19937,7 +19970,7 @@ LABEL_13:
     PlayGame(v44, (char)v21, a3, a4, (char)dword_544CD8, a5);
     return 0;
   }
-  v42 = *(_DWORD *)(gameData + 140017);
+  v42 = ACTIVE_MISSION_INDEX;
   if ( v42 == -1 || !dword_520304 )
     return 0;
   if ( v42 == 9 || v42 == 19 )
@@ -19945,7 +19978,7 @@ LABEL_13:
     sub_4623C0(-1, aZwy02);
     return 0;
   }
-  sub_460370((char *)(v42 + 1), -1, a3, a5);
+  Scenario_LoadMissionByIndexAndPlay((char *)(v42 + 1), -1, a3, a5);
   return 0;
 }
 // 40B685: variable 'v7' is possibly undefined
@@ -21835,9 +21868,9 @@ BOOL __usercall sub_40E8B0@<eax>(char a1@<bl>, int a2@<ebp>)
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v6 + 52))(-1, -1, -1, -1, 1, 0, 0);
   Render_ReleaseSurface(2, a2);
   sub_40BBF0(76);
-  v7 = *(_DWORD *)(gameData + 140017);
+  v7 = ACTIVE_MISSION_INDEX;
   if ( v7 == 3 || v7 == 4 || v7 == 13 || v7 == 14 )
-    UI_DrawTextFmt(*(_DWORD *)(gameData + 140017), 0, 585, 11, 2, (int)aDD);
+    UI_DrawTextFmt(ACTIVE_MISSION_INDEX, 0, 585, 11, 2, (int)aDD);
   else
     UI_DrawTextFmt(v6, 0, 570, 11, 2, (int)aD);
   Render_Pump();
@@ -22173,29 +22206,29 @@ int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char 
   *(_WORD *)(result + 6) = 0;
   *(_BYTE *)(result + 3) = 0;
   *(_DWORD *)(result + 23) = 0;
-  *(_WORD *)result = a2;
-  *(_BYTE *)(result + 2) = a3;
+  UNIT_SLOT_TYPE(result) = a2;
+  UNIT_SLOT_OWNER(result) = a3;
   if ( a2 != -1 )
-    *(_BYTE *)(result + 8) = byte_512580[88 * a2];
-  *(_BYTE *)(result + 9) = 100;
+    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * a2];
+  UNIT_SLOT_HEALTH_PERCENT(result) = 100;
   if ( a2 != -1 )
   {
     if ( (g_UnitTypeFlags[22 * a2] & 2) != 0 )
       v3 = 6;
     else
       v3 = 10;
-    *(_BYTE *)(result + 11) = v3;
+    UNIT_SLOT_MORALE(result) = v3;
   }
-  *(_BYTE *)(result + 10) = 0;
-  v4 = *(_BYTE *)(result + 12);
-  *(_DWORD *)(result + 18) = 0;
+  UNIT_SLOT_FATIGUE(result) = 0;
+  v4 = UNIT_SLOT_STANCE_BITS(result);
+  UNIT_SLOT_AUX_STATE(result) = 0;
   v5 = *(_BYTE *)(result + 17);
-  *(_BYTE *)(result + 12) = v4 & 0x80;
+  UNIT_SLOT_STANCE_BITS(result) = v4 & 0x80;
   v6 = *(_BYTE *)(result + 22);
   *(_BYTE *)(result + 17) = v5 & 0xF8;
   v7 = *(_BYTE *)(result + 13);
-  *(_BYTE *)(result + 22) = v6 & 0xFE;
-  *(_BYTE *)(result + 13) = v7 & 0xF0;
+  UNIT_SLOT_STATE_BITS(result) = v6 & 0xFE;
+  UNIT_SLOT_FLAGS(result) = v7 & 0xF0;
   return result;
 }
 // 51257A: using guessed type int g_UnitTypeFlags[];
@@ -22549,14 +22582,14 @@ int __usercall sub_40FAD0@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0040FDB0) --------------------------------------------------------
-int __usercall __spoils<ecx> sub_40FDB0@<eax>(__int16 *a1@<eax>)
+int __usercall __spoils<ecx> UnitSlot_CalcActionPointsFromFatigue@<eax>(__int16 *a1@<eax>)
 {
   int v2; // ecx
   int result; // eax
   int v4; // ecx
 
   v2 = *((char *)a1 + 10);
-  result = (unsigned __int8)byte_512580[88 * *a1];
+  result = (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * *a1];
   if ( v2 >= 80 && v2 <= 89 )
     return (192 * result - (__CFSHL__((192 * result) >> 31, 8) + ((192 * result) >> 31 << 8))) >> 8;
   v4 = *((char *)a1 + 10);
@@ -22568,9 +22601,9 @@ int __usercall __spoils<ecx> sub_40FDB0@<eax>(__int16 *a1@<eax>)
 }
 
 //----- (0040FE60) --------------------------------------------------------
-int __usercall sub_40FE60@<eax>(__int16 *a1@<eax>)
+int __usercall UnitSlot_GetBaseActionPoints@<eax>(__int16 *a1@<eax>)
 {
-  return (unsigned __int8)byte_512580[88 * *a1];
+  return (unsigned __int8)g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * *a1];
 }
 
 //----- (0040FE80) --------------------------------------------------------
@@ -22584,14 +22617,14 @@ int __usercall sub_40FE80@<eax>(int a1@<eax>)
   int v7; // edx
   int v8; // ecx
 
-  v1 = sub_40FE60((__int16 *)(a1 + 6));
+  v1 = UnitSlot_GetBaseActionPoints((__int16 *)(a1 + 6));
   v3 = (__int16 *)(v2 + 37);
   v4 = v1;
   do
   {
     if ( *v3 == -1 )
       break;
-    v6 = sub_40FE60(v3);
+    v6 = UnitSlot_GetBaseActionPoints(v3);
     if ( v6 < v4 )
       v4 = v6;
     v3 = (__int16 *)(v7 + 31);
@@ -23055,7 +23088,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
           || *(__int16 *)(v26 + 16) == -1 )
         {
           sub_410170((int)v7, BYTE2(v105) - v100);
-          sub_412A30((int)v7);
+          UnitStack_SetSpentTurnFlag((int)v7);
         }
         v27 = *v104 - 1;
         v28 = v104;
@@ -23410,7 +23443,7 @@ LABEL_21:
 // 544D14: using guessed type int dword_544D14;
 
 //----- (00411120) --------------------------------------------------------
-int __usercall UnitStats_CalcMeleeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcEffectiveMeleeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
 
@@ -23418,22 +23451,22 @@ int __usercall UnitStats_CalcMeleeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
     v2 = 3;
   else
     v2 = a1[12] & 3;
-  return (v2 + (unsigned __int8)byte_51257E[88 * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
+  return (v2 + (unsigned __int8)g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
 }
 
 //----- (00411180) --------------------------------------------------------
-int __usercall UI_IconIndexFromStats@<eax>(__int16 *a1@<eax>)
+int __usercall UnitStats_GetMeleeIconIndex@<eax>(__int16 *a1@<eax>)
 {
-  return (a1[6] & 3) + (unsigned __int8)byte_51257E[88 * *a1] + *((char *)a1 + 11) / 5;
+  return (a1[6] & 3) + (unsigned __int8)g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 5;
 }
 
 //----- (004111C0) --------------------------------------------------------
-int __usercall UnitStats_CalcRangedAttack@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcEffectiveRangedAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
   int v3; // esi
 
-  v2 = (unsigned __int8)byte_51257F[88 * *(__int16 *)a1];
+  v2 = (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1];
   if ( (a1[22] & 1) != 0 )
     v2 = (320 * v2 - (__CFSHL__((320 * v2) >> 31, 8) + ((320 * v2) >> 31 << 8))) >> 8;
   if ( a2 )
@@ -23446,23 +23479,23 @@ int __usercall UnitStats_CalcRangedAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 //----- (00411240) --------------------------------------------------------
 int __usercall UnitStats_GetRangedIconIndex@<eax>(__int16 *a1@<eax>)
 {
-  return (a1[6] & 3) + (unsigned __int8)byte_51257F[88 * *a1] + *((char *)a1 + 11) / 5;
+  return (a1[6] & 3) + (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 5;
 }
 
 //----- (00411280) --------------------------------------------------------
-int __usercall UnitStats_CalcDamagePerHit@<eax>(__int16 *a1@<eax>)
+int __usercall UnitStats_CalcEffectiveDamagePerHit@<eax>(__int16 *a1@<eax>)
 {
-  return ((unsigned __int8)byte_512581[88 * *a1] + *((char *)a1 + 11) / 10) * *((char *)a1 + 9) / 100;
+  return ((unsigned __int8)g_UnitTypeBaseDamage[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10) * *((char *)a1 + 9) / 100;
 }
 
 //----- (004112C0) --------------------------------------------------------
 int __usercall UnitStats_GetBaseDamage@<eax>(__int16 *a1@<eax>)
 {
-  return (unsigned __int8)byte_512581[88 * *a1] + *((char *)a1 + 11) / 10;
+  return (unsigned __int8)g_UnitTypeBaseDamage[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10;
 }
 
 //----- (004112F0) --------------------------------------------------------
-int __usercall UnitStats_CalcSiegeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcEffectiveSiegeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
 
@@ -23470,7 +23503,7 @@ int __usercall UnitStats_CalcSiegeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
     v2 = 3;
   else
     v2 = a1[12] & 3;
-  return (v2 + (unsigned __int8)byte_512584[88 * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
+  return (v2 + (unsigned __int8)g_UnitTypeBaseSiegeAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
 }
 
 //----- (00411350) --------------------------------------------------------
@@ -23759,19 +23792,19 @@ signed int __usercall __spoils<ecx,st0> sub_411810@<eax>(__int16 *a1@<eax>, DWOR
 // 411887: variable 'v11' is possibly undefined
 
 //----- (004118A0) --------------------------------------------------------
-BOOL __usercall sub_4118A0@<eax>(int a1@<eax>)
+BOOL __usercall UnitSlot_ShouldGainFatigueFromLowActionPoints@<eax>(int a1@<eax>)
 {
   return *(unsigned __int8 *)(a1 + 8) <= 3u && (*(_BYTE *)(a1 + 13) & 4) == 0;
 }
 
 //----- (004118C0) --------------------------------------------------------
-BOOL __usercall sub_4118C0@<eax>(int a1@<eax>)
+BOOL __usercall UnitSlot_CanRecoverFatigue@<eax>(int a1@<eax>)
 {
   return (*(_BYTE *)(a1 + 13) & 2) == 0;
 }
 
 //----- (004118D0) --------------------------------------------------------
-BOOL __usercall sub_4118D0@<eax>(int a1@<eax>)
+BOOL __usercall UnitSlot_HasSevereFatigue@<eax>(int a1@<eax>)
 {
   return *(char *)(a1 + 10) >= 80;
 }
@@ -23797,13 +23830,13 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
     if ( *(__int16 *)(gameData + i + 147180) == -1 || *(unsigned __int8 *)(gameData + i + 147178) != g_CurrentPlayerIndex )
       goto LABEL_16;
     v4 = gameData + 147174 + i;
-    sub_4127F0((__int16 *)v4, -20, sub_4118C0, 0xFFFFFFFF, a4);
+    UnitStack_AdjustFatigueByPredicate((__int16 *)v4, -20, UnitSlot_CanRecoverFatigue, 0xFFFFFFFF, a4);
     if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(v4 + 4) + 140051) )
     {
-      sub_4127F0((__int16 *)v4, 10, sub_4118A0, 0xFFFFFFFF, a4);
-      sub_4128E0((__int16 *)v4, -1, sub_4118D0, 0xFFFFFFFF, a4);
+      UnitStack_AdjustFatigueByPredicate((__int16 *)v4, 10, UnitSlot_ShouldGainFatigueFromLowActionPoints, 0xFFFFFFFF, a4);
+      UnitStack_AdjustMoraleByPredicate((__int16 *)v4, -1, UnitSlot_HasSevereFatigue, 0xFFFFFFFF, a4);
     }
-    sub_412A60(v4);
+    UnitStack_ClearSpentTurnFlag(v4);
     v5 = 0;
     v6 = v4;
     do
@@ -23812,7 +23845,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
       if ( v7 == -1 )
         break;
       v6 += 31;
-      v8 = sub_40FDB0((__int16 *)(v4 + 6 + 31 * v5++));
+      v8 = UnitSlot_CalcActionPointsFromFatigue((__int16 *)(v4 + 6 + 31 * v5++));
       *(_BYTE *)(v6 - 17) = v8;
     }
     while ( v5 < 10 );
@@ -24633,7 +24666,7 @@ int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsi
 #error "4127A3: call analysis failed (funcsize=34)"
 
 //----- (004127F0) --------------------------------------------------------
-signed int __usercall sub_4127F0@<eax>(
+signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(
         __int16 *a1@<eax>,
         int a2@<edx>,
         BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>,
@@ -24723,7 +24756,7 @@ int __usercall sub_412880@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@
 // 4128A0: variable 'v3' is possibly undefined
 
 //----- (004128E0) --------------------------------------------------------
-signed int __usercall sub_4128E0@<eax>(
+signed int __usercall UnitStack_AdjustMoraleByPredicate@<eax>(
         __int16 *a1@<eax>,
         int a2@<edx>,
         BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>,
@@ -24823,7 +24856,7 @@ signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
 // 412A0F: variable 'v10' is possibly undefined
 
 //----- (00412A30) --------------------------------------------------------
-__int16 *__usercall sub_412A30@<eax>(int a1@<eax>)
+__int16 *__usercall UnitStack_SetSpentTurnFlag@<eax>(int a1@<eax>)
 {
   __int16 *result; // eax
   int i; // edx
@@ -24842,7 +24875,7 @@ __int16 *__usercall sub_412A30@<eax>(int a1@<eax>)
 }
 
 //----- (00412A60) --------------------------------------------------------
-__int16 *__usercall sub_412A60@<eax>(int a1@<eax>)
+__int16 *__usercall UnitStack_ClearSpentTurnFlag@<eax>(int a1@<eax>)
 {
   __int16 *result; // eax
   int i; // edx
@@ -24898,7 +24931,7 @@ signed int __usercall sub_412AC0@<eax>(int a1@<eax>)
 }
 
 //----- (00412AF0) --------------------------------------------------------
-signed int __usercall sub_412AF0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasLowMoraleUnit@<eax>(int a1@<eax>)
 {
   __int16 *v1; // eax
   int v2; // edx
@@ -27714,7 +27747,7 @@ int __userpurge sub_415F20@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, i
             0,
             0);
         }
-        if ( sub_412AF0(725 * v24 + gameData + 147174) )
+        if ( UnitStack_HasLowMoraleUnit(725 * v24 + gameData + 147174) )
         {
           v18 = DLX_GetSpriteForChar(dword_5202C8, 33);
           v13 = *((_DWORD *)g_RenderDevice + 46);
@@ -28199,7 +28232,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
       0,
       0);
   }
-  v8 = *(_DWORD *)(gameData + 140017);
+  v8 = ACTIVE_MISSION_INDEX;
   if ( v8 == 7 )
   {
     sub_45C000(v3, v4);
@@ -28750,7 +28783,7 @@ LABEL_133:
       0,
       0);
   }
-  v53 = *(_DWORD *)(gameData + 140017);
+  v53 = ACTIVE_MISSION_INDEX;
   if ( v53 == 1 )
   {
     sub_459ED0(v3, v4, a2, a1);
@@ -30720,12 +30753,12 @@ void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<
           if ( v16 <= 1 )
           {
 LABEL_22:
-            sub_412A30((int)v8);
-            sub_4127F0(v8, v17, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-            sub_4127F0(v62, 10, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-            if ( *(_DWORD *)(gameData + 140017) == 15 )
+            UnitStack_SetSpentTurnFlag((int)v8);
+            UnitStack_AdjustFatigueByPredicate(v8, v17, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+            UnitStack_AdjustFatigueByPredicate(v62, 10, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+            if ( ACTIVE_MISSION_INDEX == 15 )
               sub_45E630(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
-            if ( *(_DWORD *)(gameData + 140017) == 5 )
+            if ( ACTIVE_MISSION_INDEX == 5 )
               sub_45B3C0(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             v18 = (unsigned __int8 *)UnitStack_HasPrisonerUnits((int)v8);
             v60 = UnitStack_HasPrisonerUnits((int)v62);
@@ -30783,9 +30816,9 @@ LABEL_48:
                     }
                     UnitStack_CaptureDefeatedStack(v62, v53, v53, (int)v56, a5);
                   }
-                  sub_4128E0(v8, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                  UnitStack_AdjustMoraleByPredicate(v8, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
-                  sub_4128E0(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                  UnitStack_AdjustMoraleByPredicate(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
@@ -30805,9 +30838,9 @@ LABEL_48:
                     }
                     UnitStack_CaptureDefeatedStack(v8, v49, v49, (int)v57, a5);
                   }
-                  sub_4128E0(v62, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                  UnitStack_AdjustMoraleByPredicate(v62, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
-                  sub_4128E0(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                  UnitStack_AdjustMoraleByPredicate(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   sub_4129E0(v8, (DWORD)v8, a5);
                   sub_4129E0(v8, (DWORD)v8, a5);
                   sub_4129E0(v8, (DWORD)v8, a5);
@@ -30834,7 +30867,7 @@ LABEL_49:
                     UnitStack_CaptureDefeatedStack(v62, (signed int)v8, v46, (int)v20, a5);
                   }
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
-                  sub_4128E0(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                  UnitStack_AdjustMoraleByPredicate(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
@@ -30854,7 +30887,7 @@ LABEL_49:
                   UnitStack_CaptureDefeatedStack(v8, (signed int)v62, v45, (int)v20, a5);
                 }
                 v20 = (unsigned __int8 *)CSyncObject::Unlock;
-                sub_4128E0(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
+                UnitStack_AdjustMoraleByPredicate(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                 sub_4129E0(v8, (DWORD)v8, a5);
                 sub_4129E0(v8, (DWORD)v8, a5);
                 sub_4129E0(v8, (DWORD)v8, a5);
@@ -31082,11 +31115,11 @@ LABEL_15:
         {
           v14 = CSyncObject::Unlock;
           sub_4101E0(v60, 5, (DWORD)v7, a5);
-          sub_412A30((int)v61);
-          sub_4127F0(v61, v15, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
-          if ( *(_DWORD *)(gameData + 140017) == 15 )
+          UnitStack_SetSpentTurnFlag((int)v61);
+          UnitStack_AdjustFatigueByPredicate(v61, v15, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
+          if ( ACTIVE_MISSION_INDEX == 15 )
             sub_45E630(*((unsigned __int8 *)v61 + 4), v7[2]);
-          if ( *(_DWORD *)(gameData + 140017) == 5 )
+          if ( ACTIVE_MISSION_INDEX == 5 )
             sub_45B3C0(*((unsigned __int8 *)v61 + 4), v7[2]);
           v16 = (_WORD *)UnitStack_HasPrisonerUnits((int)v61);
           v57 = Building_HasPrisonerGarrisonEntries((int)v7);
@@ -31115,7 +31148,7 @@ LABEL_28:
             v58 = 0;
             if ( !Building_CountGarrison(UNIT_RECORD(v59)) )
             {
-              sub_4128E0(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
+              UnitStack_AdjustMoraleByPredicate(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
               sub_4129E0(v61, (DWORD)v7, a5);
               sub_4129E0(v61, (DWORD)v7, a5);
               sub_4129E0(v61, (DWORD)v7, a5);
@@ -31163,7 +31196,7 @@ LABEL_42:
               {
                 if ( v36 == 1 )
                 {
-                  sub_4128E0(v61, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
+                  UnitStack_AdjustMoraleByPredicate(v61, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 141441);
                   ++*(_WORD *)(gameData + 1423 * v7[2] + 141441);
                   Building_FindFirstValidAddonSlot((int)v7);
@@ -31195,7 +31228,7 @@ LABEL_42:
               }
               else
               {
-                sub_4128E0(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
+                UnitStack_AdjustMoraleByPredicate(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
                 sub_4129E0(v61, (DWORD)v7, a5);
                 sub_4129E0(v61, (DWORD)v7, a5);
                 sub_4129E0(v61, (DWORD)v7, a5);
@@ -32283,7 +32316,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   v39 = PLAYER_DATA(g_CurrentPlayerIndex);
   if ( *(_DWORD *)(v39 + 140067) == -1 && a1 == 2 )
     *(_DWORD *)(v39 + 140067) = v62;
-  if ( *(_DWORD *)(gameData + 140017) == -1 || GAME_TURN_COUNTER != 1 )
+  if ( ACTIVE_MISSION_INDEX == -1 || GAME_TURN_COUNTER != 1 )
     sub_41E0E0(v60);
   if ( a1 )
   {
@@ -39707,7 +39740,7 @@ signed int __usercall sub_428400@<eax>(unsigned __int16 *a1@<eax>, int a2@<edx>,
   v6 = (__int16 *)(dword_532048 + 852 + 31 * v5);
   v7 = (__int16 *)(31 * v30 + dword_532048 + 852);
   v8 = *v6;
-  if ( !byte_51257E[88 * v8] || v8 == UNIT_TYPE_RAM || *v7 == -1 )
+  if ( !g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * v8] || v8 == UNIT_TYPE_RAM || *v7 == -1 )
     return 0;
   if ( v4 )
     sub_42D250();
@@ -39830,7 +39863,7 @@ BOOL __usercall sub_4287E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
        + (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3)
        * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3));
   v5 = 88 * *v4;
-  return v3 <= (unsigned __int8)byte_512582[v5] && v3 > (unsigned __int8)byte_512583[v5];
+  return v3 <= (unsigned __int8)g_UnitTypeMaxRange[v5] && v3 > (unsigned __int8)g_UnitTypeMinRange[v5];
 }
 // 428818: variable 'v4' is possibly undefined
 // 532048: using guessed type int dword_532048;
@@ -40477,7 +40510,7 @@ int __usercall sub_4295D0@<eax>(int a1@<eax>, int a2@<edx>)
   + (*(unsigned __int16 *)(v3 + 6) - (unsigned __int16)v4[3])
   * (*(unsigned __int16 *)(v3 + 6) - (unsigned __int16)v4[3]));
   v5 = sub_426F90((int)v4);
-  v8 = v7 / v5 * (unsigned __int8)byte_51257F[88 * *v4];
+  v8 = v7 / v5 * (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *v4];
   v9 = (v8 - (__CFSHL__(v8 >> 31, 8) + (v8 >> 31 << 8))) >> 8;
   if ( v9 < 1 )
     goto LABEL_2;
@@ -55188,8 +55221,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
   v18 = a1;
   v19 = a2;
   v4 = Rng_RandRange(1, 5);
-  if ( *(_DWORD *)(gameData + 140017) == 2 && v18 == 95 && v19 == 16
-    || *(_DWORD *)(gameData + 140017) == 12 && v18 == 58 && v19 == 77 )
+  if ( ACTIVE_MISSION_INDEX == 2 && v18 == 95 && v19 == 16 || ACTIVE_MISSION_INDEX == 12 && v18 == 58 && v19 == 77 )
   {
     v5 = v17;
     for ( i = 0; i != 4; ++i )
@@ -55207,7 +55239,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
       v9 = v17;
       do
       {
-        v10 = *(_DWORD *)(gameData + 140017);
+        v10 = ACTIVE_MISSION_INDEX;
         if ( v10 == 2 || v10 == 6 || v10 == 12 || v10 == 16 )
         {
           v11 = Rng_RandRange(0, 6);
@@ -55469,11 +55501,11 @@ void __usercall Temple_ProcessGift(DWORD a1@<eax>, __int16 *a2@<edx>, int a3@<ec
       Unit_Kill((int)a2, a4, a1, a5);
       return;
     case 2u:
-      sub_4127F0(a2, -100, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustFatigueByPredicate(a2, -100, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
       return;
     case 3u:
-      sub_4128E0(a2, 20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustMoraleByPredicate(a2, 20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
       return;
     case 4u:
@@ -55514,7 +55546,7 @@ LABEL_9:
       while ( v17 < 3 );
       goto LABEL_15;
     case 7u:
-      sub_4128E0(a2, 2, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustMoraleByPredicate(a2, 2, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
       return;
     case 8u:
@@ -55537,12 +55569,12 @@ LABEL_15:
       sub_43FDE0(300, a4, *((_BYTE *)a2 + 4), v7, a5);
       break;
     case 0xDu:
-      sub_4128E0(a2, -20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustMoraleByPredicate(a2, -20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
       break;
     case 0xEu:
-      sub_4128E0(a2, -1, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_4127F0(a2, 50, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustMoraleByPredicate(a2, -1, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
+      UnitStack_AdjustFatigueByPredicate(a2, 50, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
       break;
     default:
@@ -55634,7 +55666,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
   }
   else
   {
-    v15 = *(_DWORD *)(gameData + 140017);
+    v15 = ACTIVE_MISSION_INDEX;
     if ( v15 == 1 || v15 == 11 )
     {
       result = 14 * v32;
@@ -55663,12 +55695,12 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
     {
       v16 = v9;
       v18 = Temple_Random(v9, v15, gameData, (DWORD)v7);
-      v19 = *(_DWORD *)(gameData + 140017);
+      v19 = ACTIVE_MISSION_INDEX;
       if ( (v19 == 2 || v19 == 6 || v19 == 12 || v19 == 16)
         && *(_DWORD *)(1423 * *((unsigned __int8 *)v7 + 4) + gameData + 140051) )
       {
-        if ( *(_DWORD *)(gameData + 140017) == 2 && v31 == 95 && v32 == 16
-          || *(_DWORD *)(gameData + 140017) == 12 && v31 == 58 && v32 == 77 )
+        if ( ACTIVE_MISSION_INDEX == 2 && v31 == 95 && v32 == 16
+          || ACTIVE_MISSION_INDEX == 12 && v31 == 58 && v32 == 77 )
         {
           v18 = (DWORD *)&unk_515D50;
         }
@@ -58503,14 +58535,14 @@ signed int __usercall sub_443C20@<eax>(
   {
     return 0;
   }
-  if ( *(_DWORD *)(gameData + 140017) == 7
+  if ( ACTIVE_MISSION_INDEX == 7
     && (*v8 == 55 && v8[1] == 45 || *v8 == 50 && v8[1] == 27 || *v8 == 35 && v8[1] == 63 || *v8 == 14 && v8[1] == 68) )
   {
     qmemcpy(v20, &unk_517DB8, 0x18u);
     a5 = (char *)&unk_517DB8 + 24;
     v12 = v20;
   }
-  else if ( *(_DWORD *)(gameData + 140017) == 17
+  else if ( ACTIVE_MISSION_INDEX == 17
          && (*v8 == 50 && v8[1] == 34 || *v8 == 51 && v8[1] == 73
                                       || *v8 == 77 && v8[1] == 34
                                       || *v8 == 24 && v8[1] == 49) )
@@ -60585,14 +60617,18 @@ int __usercall UI_ShowMissionStatusPanel@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
   int v8[7]; // [esp+64h] [ebp-1Ch] BYREF
 
   v8[6] = a1;
-  v8[0] = (int)off_5181B0[0];
-  v8[1] = (int)off_5181B0[1];
-  v8[2] = (int)off_5181B0[2];
-  v3 = *(_DWORD *)(gameData + 140017);
+  v8[0] = (int)g_MissionStatusFormatsByLanguage[0];
+  v8[1] = (int)g_MissionStatusFormatsByLanguage[1];
+  v8[2] = (int)g_MissionStatusFormatsByLanguage[2];
+  v3 = ACTIVE_MISSION_INDEX;
   if ( v3 != -1 )
   {
     v4 = (const char *)v8[(unsigned __int8)g_LanguageIndex];
-    sprintf_(v7, v4, *(_DWORD *)(gameData + 140017) % 10 + 1, (&off_5180C0[3 * v3])[(unsigned __int8)g_LanguageIndex]);
+    sprintf_(
+      v7,
+      v4,
+      ACTIVE_MISSION_INDEX % 10 + 1,
+      (&g_MissionStatusTextsByLanguage[3 * v3])[(unsigned __int8)g_LanguageIndex]);
     return UI_ShowInfoWindow((int)v7, 2u, v5, a2, (int)&v8[3], (int)v4);
   }
   return result;
@@ -60600,8 +60636,8 @@ int __usercall UI_ShowMissionStatusPanel@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
 // 44768C: variable 'v5' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 511130: using guessed type char g_LanguageIndex;
-// 5180C0: using guessed type char *off_5180C0[63];
-// 5181B0: using guessed type char *off_5181B0[3];
+// 5180C0: using guessed type char *g_MissionStatusTextsByLanguage[63];
+// 5181B0: using guessed type char *g_MissionStatusFormatsByLanguage[3];
 // 5202E4: using guessed type int gameData;
 
 //----- (004476B0) --------------------------------------------------------
@@ -61036,12 +61072,12 @@ int __usercall PlayGame_Dispatch@<eax>(int a1@<ecx>, signed int a2@<ebx>, char *
             LOBYTE(a2) = 1;
             CSS_StopSound(dword_544180, 1000);
             v128 = 1;
-            sub_460370(0, v35, (DWORD)&unk_5196A0, a4);
+            Scenario_LoadMissionByIndexAndPlay(0, v35, (DWORD)&unk_5196A0, a4);
           }
           else
           {
             CSS_StopSound(dword_544180, 1000);
-            sub_460370((char *)0xA, v36, (DWORD)&unk_5196A0, a4);
+            Scenario_LoadMissionByIndexAndPlay((char *)0xA, v36, (DWORD)&unk_5196A0, a4);
             v128 = v37;
           }
         }
@@ -61238,7 +61274,7 @@ int __usercall PlayGame_Dispatch@<eax>(int a1@<ecx>, signed int a2@<ebx>, char *
           a2 = (signed int)v112;
           do
           {
-            sub_44AD60((int)&v112[1423 * v57 - 4]);
+            PlayerRuntimeState_ResetDefaults((int)&v112[1423 * v57 - 4]);
             *(_DWORD *)&v112[v58 - 4] = 1;
             switch ( byte_544188[v59] )
             {
@@ -61292,7 +61328,7 @@ LABEL_64:
             a3 += 11;
           }
           while ( v57 < 5 );
-          loadMultiplayerMaps(dword_5441D8, (DWORD)a3);
+          Scenario_LoadMultiplayerMapAndSeedPlayers(dword_5441D8, (DWORD)a3);
           PlayGame(v65, a2, (DWORD)a3, (char)v110, a4);
         }
         break;
@@ -62245,7 +62281,7 @@ void __usercall sub_44A9C0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0044AD60) --------------------------------------------------------
-char __usercall sub_44AD60@<al>(int a1@<eax>)
+char __usercall PlayerRuntimeState_ResetDefaults@<al>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // edx
@@ -62292,14 +62328,14 @@ char __usercall sub_44AD60@<al>(int a1@<eax>)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (0044AE10) --------------------------------------------------------
-char __usercall sub_44AE10@<al>(int a1@<eax>)
+char __usercall Game_ResetPlayerRuntimeStateByIndex@<al>(int a1@<eax>)
 {
-  return sub_44AD60(gameData + 140024 + 1423 * a1);
+  return PlayerRuntimeState_ResetDefaults(PLAYER_RUNTIME_STATE(a1));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0044AE90) --------------------------------------------------------
-int __usercall loadMap@<eax>(int a1@<eax>)
+int __usercall Map_LoadFromFile@<eax>(int a1@<eax>)
 {
   int v2; // ecx
   __int64 v3; // rax
@@ -62355,7 +62391,7 @@ int __usercall loadMap@<eax>(int a1@<eax>)
   memset_(25, 0);
   v3 = nmalloc_(v2, 1);
   v4 = (__int16 *)v3;
-  qmemcpy(v45, aMaps_1, 4 * v5);
+  qmemcpy(v45, aMapsDirectory, 4 * v5);
   v49 = (__int16 *)v3;
   v6 = (char *)v48;
   v47 = (_BYTE *)v3;
@@ -62504,7 +62540,7 @@ int __usercall loadMap@<eax>(int a1@<eax>)
   v43 += 24;
   *(_WORD *)v43 = *((_WORD *)&dword_5188B0 + 12);
   *(_BYTE *)(v43 + 2) = *((_BYTE *)&dword_5188B0 + 26);
-  *(_DWORD *)(gameData + 140017) = -1;
+  ACTIVE_MISSION_INDEX = -1;
   result = gameData;
   *(_BYTE *)(gameData + 140021) = 0;
   return result;
@@ -62541,7 +62577,7 @@ char sub_44B2F0()
   char *v14; // edi
   char result; // al
 
-  for ( i = 0; i < 5; sub_44AE10(i) )
+  for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
   *(_DWORD *)(gameData + 140024) = 1;
   *(_DWORD *)(gameData + 141447) = 1;
@@ -62631,7 +62667,7 @@ char sub_44B430()
   char *v14; // edi
   char result; // al
 
-  for ( i = 0; i < 5; sub_44AE10(i) )
+  for ( i = 0; i < 5; Game_ResetPlayerRuntimeStateByIndex(i) )
     ;
   *(_DWORD *)(gameData + 140024) = 1;
   *(_DWORD *)(gameData + 142870) = 1;
@@ -62816,7 +62852,7 @@ signed int Game_InitPlayerViewState()
   v1 = 0;
   do
   {
-    if ( *(_DWORD *)(gameData + v1 + 140024) )
+    if ( PLAYER_IS_ACTIVE(v0) )
     {
       v2 = 0;
       v3 = 0;
@@ -62848,7 +62884,7 @@ LABEL_13:
   v6 = 0;
   VIEWED_PLAYER_INDEX = 0;
   v7 = 0;
-  while ( !*(_DWORD *)(gameData + v7 + 140024) || !*(_DWORD *)(gameData + v7 + 140051) )
+  while ( !PLAYER_IS_ACTIVE(v6) || !PLAYER_HAS_HUMAN_CONTROLLER(v6) )
   {
     v7 += 1423;
     ++v6;
@@ -62859,7 +62895,7 @@ LABEL_13:
 LABEL_18:
   v8 = 0;
   result = 0;
-  while ( !*(_DWORD *)(gameData + result + 140024) )
+  while ( !PLAYER_IS_ACTIVE(v8) )
   {
     result += 1423;
     ++v8;
@@ -62890,7 +62926,7 @@ signed int __usercall sub_44C410@<eax>(int a1@<eax>)
   v3 = v7;
   do
   {
-    sub_44AD60((int)v3);
+    PlayerRuntimeState_ResetDefaults((int)v3);
     v7[0] = 1;
     *(_DWORD *)((char *)&v7[355] + 3) = 1;
     *(_DWORD *)((char *)&v7[711] + 2) = 1;
@@ -62910,7 +62946,7 @@ signed int __usercall sub_44C410@<eax>(int a1@<eax>)
     v7[1073] = 1;
   }
   while ( v3 != v5 );
-  loadMultiplayerMaps(a1, 2u);
+  Scenario_LoadMultiplayerMapAndSeedPlayers(a1, 2u);
   return Game_InitPlayerViewState();
 }
 // 44C498: variable 'v4' is possibly undefined
@@ -63084,7 +63120,7 @@ LABEL_3:
 // 5202E4: using guessed type int gameData;
 
 //----- (0044D250) --------------------------------------------------------
-signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
+signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 {
   double v4; // st7
   const void *v5; // edx
@@ -63129,8 +63165,8 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
   int v45; // [esp+98h] [ebp-18h]
 
   v4 = sprintf_(v31, "multi%d.map", a1 + 1);
-  loadMap((int)v31);
-  qmemcpy((void *)(gameData + 140024), v5, v6);
+  Map_LoadFromFile((int)v31);
+  qmemcpy((void *)(gameData + PLAYER_RUNTIME_STATE_OFFSET), v5, v6);
   sub_40D330(a2);
   v33 = 1;
   v7 = 0;
@@ -63141,8 +63177,8 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
     v8 = v35 + gameData;
     if ( *(_DWORD *)(v35 + gameData + 140024) )
     {
-      v41 = dword_518938[v34 / 4];
-      v40 = dword_51893C[v34 / 4];
+      v41 = g_MultiplayerStartRows[v34 / 4];
+      v40 = g_MultiplayerStartColumns[v34 / 4];
       v44 = v40 - 1;
       v36 = v40 + 3;
       v39 = v41 + 2;
@@ -63484,8 +63520,8 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 // 44DF15: variable 'v28' is possibly undefined
 // 44DFB7: variable 'v29' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
-// 518938: using guessed type int dword_518938[];
-// 51893C: using guessed type int dword_51893C[];
+// 518938: using guessed type int g_MultiplayerStartRows[];
+// 51893C: using guessed type int g_MultiplayerStartColumns[];
 // 5202E4: using guessed type int gameData;
 
 //----- (0044E2A0) --------------------------------------------------------
@@ -64373,7 +64409,7 @@ char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>
   int v13; // [esp+70h] [ebp-20h] BYREF
   DWORD v14; // [esp+74h] [ebp-1Ch]
 
-  v5 = *(_DWORD *)(gameData + 140017);
+  v5 = ACTIVE_MISSION_INDEX;
   if ( v5 != 4 && v5 != 6 || (v6 = 1423 * *(unsigned __int8 *)(a1 + 2), *(_DWORD *)(gameData + v6 + 140051)) )
   {
     log(a2, a3, a1, (int)aPrisoner_newtu);
@@ -65203,7 +65239,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
   _DWORD savedregs[6]; // [esp+18h] [ebp+0h] BYREF
 
   result = gameData;
-  if ( *(_DWORD *)(gameData + 140017) != 6 )
+  if ( ACTIVE_MISSION_INDEX != 6 )
   {
     log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
     result = PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex);
@@ -65336,7 +65372,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
             }
             goto LABEL_18;
           }
-          if ( *(_DWORD *)(gameData + 140017) != 14 )
+          if ( ACTIVE_MISSION_INDEX != 14 )
           {
             if ( *(char *)(result + 141443) < 9 )
               ++*(_BYTE *)(result + 141443);
@@ -66296,7 +66332,7 @@ int sub_451EC0()
   int v9; // ecx
   char v10[124]; // [esp+0h] [ebp-7Ch] BYREF
 
-  v1 = sprintf_(v10, "(misja %d)", *(_DWORD *)(gameData + 140017));
+  v1 = sprintf_(v10, "(misja %d)", ACTIVE_MISSION_INDEX);
   Rules_Log(v10, v2, v1);
   do
   {
@@ -70073,7 +70109,7 @@ BOOL __usercall __spoils<ecx,st0> sub_460270@<eax>(DWORD a1@<ebp>, double a2@<st
     dword_5448A0 = 0;
     return result;
   }
-  switch ( *(_DWORD *)(gameData + 140017) )
+  switch ( ACTIVE_MISSION_INDEX )
   {
     case 0:
       v2 = 0;
@@ -70363,7 +70399,7 @@ int __spoils<ecx> sub_4602F0()
   int m; // ecx
   int v16; // edx
 
-  switch ( *(_DWORD *)(gameData + 140017) )
+  switch ( ACTIVE_MISSION_INDEX )
   {
     case 3:
       return *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 560616) - 0x8000) + gameData + 509676) != 0;
@@ -70474,14 +70510,14 @@ LABEL_46:
 // 5202E4: using guessed type int gameData;
 
 //----- (00460360) --------------------------------------------------------
-void sub_460360()
+void Scenario_LoadMissionByIndex()
 {
   JUMPOUT(0x460369);
 }
 // 460363: control flows out of bounds to 460369
 
 //----- (00460370) --------------------------------------------------------
-int __usercall sub_460370@<eax>(char *a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>)
+int __usercall Scenario_LoadMissionByIndexAndPlay@<eax>(char *a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>)
 {
   char v5; // di
   char v6; // si
@@ -70498,7 +70534,7 @@ int __usercall sub_460370@<eax>(char *a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, do
     sub_4623C0(0, aZwy01_0);
   sub_462480((int)a1, a1);
   sub_40B640((char)a1, a3);
-  sub_460360();
+  Scenario_LoadMissionByIndex();
   if ( a1 && a1 != (char *)10 )
   {
     v8 = (_WORD *)(gameData + 147147);
