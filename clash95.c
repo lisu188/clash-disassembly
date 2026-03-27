@@ -301,14 +301,14 @@ void sub_411D70();
 // int __usercall Unit_GetClassIndex@<eax>(int a1@<eax>);
 // signed int __usercall Unit_AttemptNeighborMove@<eax>(int a1@<eax>);
 // BOOL __usercall sub_411F60@<eax>(int a1@<eax>);
-// void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>);
-// int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>);
-// signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>);
+// void *__usercall Unit_ExtractSiegeUnits@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>);
+// int __usercall Unit_AppendFormation@<eax>(char *a1@<eax>, char *a2@<edx>);
+// signed int __usercall __spoils<ecx> Unit_HasRegularTroops@<eax>(int a1@<eax>);
 // signed int __usercall sub_412170@<eax>(int a1@<eax>);
 // signed int __usercall sub_4121A0@<eax>(int a1@<eax>);
 // signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// __int16 *__usercall sub_412300@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
-// int __usercall sub_412520@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
+// __int16 *__usercall Unit_Capture@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
+// int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
 // int __cdecl CSyncObject::Unlock(CSyncObject *__hidden this, __int32, __int32 *); idb
 int __thiscall sub_4127A0(CSyncObject *this); // idb
 // signed int __usercall sub_4127F0@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
@@ -322,11 +322,11 @@ int __thiscall sub_4127A0(CSyncObject *this); // idb
 // signed int __usercall sub_412AC0@<eax>(int a1@<eax>);
 // signed int __usercall sub_412AF0@<eax>(int a1@<eax>);
 // int __usercall sub_412B20@<eax>(int result@<eax>, int a2@<edx>, int *a3@<ebx>);
-// signed int __usercall sub_412B60@<eax>(int a1@<eax>);
-// int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
-// int __usercall sub_412BE0@<eax>(int a1@<eax>);
+// signed int __usercall Unit_FormationHasSiegeEngine@<eax>(int a1@<eax>);
+// int __usercall Unit_CalcFormationAttackPower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
+// int __usercall Unit_CalcArmyAttackPower@<eax>(int a1@<eax>);
 // int __usercall sub_412C00@<eax>(int a1@<eax>, signed int a2@<esi>);
-// int __usercall sub_412C30@<eax>(signed int a1@<eax>);
+// int __usercall Player_CalcTotalAttackPower@<eax>(signed int a1@<eax>);
 // _DWORD *__usercall sub_412D00@<eax>(_DWORD *result@<eax>);
 // int __usercall sub_412D20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<esi>);
 // int __usercall Unit_CopyFlagsFromTemplate@<eax>(int result@<eax>, int a2@<edx>);
@@ -412,10 +412,10 @@ void sub_4190C0();
 // int __usercall sub_41A960@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, unsigned __int8 *a4@<ebx>, DWORD a5@<ebp>, int a6@<edi>);
 // void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
 // void __usercall Unit_AttackBuilding(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
-// int __usercall sub_41C100@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// int __usercall sub_41C300@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
+// int __usercall Unit_CalcAttackPower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
+// int __usercall Unit_CalcDefensePower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // int __usercall sub_41C360@<eax>(int a1@<eax>, signed int a2@<edx>);
-// int __usercall sub_41C410@<eax>(int a1@<eax>, signed int a2@<esi>);
+// int __usercall Hero_CalcAttackBonus@<eax>(int a1@<eax>, signed int a2@<esi>);
 // int __userpurge CalculateBattleResult@<eax>(_WORD *@<eax>, int@<edx>, _WORD *@<ecx>, _WORD *@<ebx>, DWORD@<ebp>, int, int, int, int);
 // signed int __userpurge sub_41C8B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>, int a6@<edi>, int a7);
 // BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<st0>, char *a4, int a5);
@@ -488,9 +488,9 @@ int sub_422AC0();
 // int __usercall sub_422B70@<eax>(int result@<eax>);
 // signed int __usercall Unit_GetSquadCount@<eax>(int a1@<eax>);
 // signed int __usercall sub_422BA0@<eax>(int a1@<eax>);
-// int __usercall sub_422BE0@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
+// int __usercall Unit_AddToGroup@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // BOOL __usercall Map_IsTilePlacable@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6);
+// BOOL __userpurge Unit_MoveFromGroup@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6);
 // _DWORD *__usercall __spoils<ecx> UI_SetCurrentPlayer@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 int sub_4233E0();
 // int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>);
@@ -17975,7 +17975,7 @@ LABEL_35:
     }
     else if ( sub_408200(v1, v78) )
     {
-      if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+      if ( Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58) )
         v15 = &unk_5196F0;
       else
         v15 = &unk_5198A8;
@@ -17992,7 +17992,7 @@ LABEL_35:
 LABEL_21:
   if ( dword_511B58 != -1 && sub_43FB10(v1, v78) )
   {
-    if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+    if ( Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58) )
     {
 LABEL_24:
       v7 = &unk_519830;
@@ -18011,7 +18011,7 @@ LABEL_80:
       v7 = &unk_519718;
       goto LABEL_25;
     }
-    if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+    if ( Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58) )
       goto LABEL_24;
     goto LABEL_80;
   }
@@ -18026,7 +18026,7 @@ LABEL_80:
     v5 = 200 * v1;
     if ( !sub_4082F0(v1, v78) )
     {
-      if ( !sub_412100(gameData + 147174 + 725 * dword_511B58)
+      if ( !Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58)
         || (v5 += gameData,
             *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
         && sub_4121A0(gameData + 147174 + 725 * dword_511B58) )
@@ -18137,7 +18137,7 @@ LABEL_26:
   v27 = dword_5202EC;
   if ( sub_42B730(v1, v78, dword_5202EC) )
     sub_42B9D0(v1, v78, v27, v1);
-  if ( dword_511B58 != -1 && sub_412100(gameData + 147174 + 725 * dword_511B58) && sub_43FB10(v1, v78) )
+  if ( dword_511B58 != -1 && Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58) && sub_43FB10(v1, v78) )
   {
     LOBYTE(v30) = v78;
     if ( !sub_415CD0(gameData + 147174 + 725 * dword_511B58 + 316, v1, v78) )
@@ -18161,7 +18161,7 @@ LABEL_26:
     goto LABEL_205;
   }
   v28 = dword_511B58;
-  if ( dword_511B58 != -1 && sub_412100(gameData + 147174 + 725 * dword_511B58) && Port_IsInsideArea(v1, v78) )
+  if ( dword_511B58 != -1 && Unit_HasRegularTroops(gameData + 147174 + 725 * dword_511B58) && Port_IsInsideArea(v1, v78) )
   {
     if ( *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) )
     {
@@ -18298,7 +18298,7 @@ LABEL_205:
     if ( dword_5202E8 && *(unsigned __int16 *)(v40 + v50 + gameData + 556374) != dword_511B58 )
     {
       Render_Begin((int)&dword_544CD8, 0, v28);
-      sub_422BE0(dword_511B58, *(unsigned __int16 *)(v40 + v58 + gameData + 556374), 0, v1, a1);
+      Unit_AddToGroup(dword_511B58, *(unsigned __int16 *)(v40 + v58 + gameData + 556374), 0, v1, a1);
       dword_5202E8 = 0;
       sub_40A360(v59);
       sub_406980(v1);
@@ -22663,7 +22663,7 @@ signed int __usercall sub_4100B0@<eax>(int a1@<eax>)
   int v3; // ebx
   int i; // edx
 
-  if ( sub_412B60(a1) )
+  if ( Unit_FormationHasSiegeEngine(a1) )
     return 3;
   v2 = v1;
   v3 = 0;
@@ -24095,7 +24095,7 @@ BOOL __usercall sub_411F60@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00412000) --------------------------------------------------------
-void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
+void *__usercall Unit_ExtractSiegeUnits@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
 {
   int v5; // edx
   int v6; // eax
@@ -24142,7 +24142,7 @@ void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
 }
 
 //----- (004120B0) --------------------------------------------------------
-int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>)
+int __usercall Unit_AppendFormation@<eax>(char *a1@<eax>, char *a2@<edx>)
 {
   char *v2; // esi
   int v3; // ecx
@@ -24165,7 +24165,7 @@ int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>)
 }
 
 //----- (00412100) --------------------------------------------------------
-signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>)
+signed int __usercall __spoils<ecx> Unit_HasRegularTroops@<eax>(int a1@<eax>)
 {
   signed int result; // eax
   int v2; // edx
@@ -24342,7 +24342,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
 // 4122E3: variable 'j' is possibly undefined
 
 //----- (00412300) --------------------------------------------------------
-__int16 *__usercall sub_412300@<eax>(
+__int16 *__usercall Unit_Capture@<eax>(
         __int16 *a1@<eax>,
         signed int a2@<edx>,
         int a3@<ecx>,
@@ -24481,7 +24481,7 @@ __int16 *__usercall sub_412300@<eax>(
 // 4124FE: variable 'v33' is possibly undefined
 
 //----- (00412520) --------------------------------------------------------
-int __usercall sub_412520@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>)
+int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>)
 {
   unsigned __int8 *v4; // ebp
   signed int v5; // edi
@@ -24595,7 +24595,7 @@ signed int __usercall sub_4127F0@<eax>(
   char v13; // [esp+0h] [ebp-8h]
 
   v13 = a2;
-  if ( a2 <= 0 || (result = sub_412B60((int)a1)) == 0 )
+  if ( a2 <= 0 || (result = Unit_FormationHasSiegeEngine((int)a1)) == 0 )
   {
     v6 = a1 + 3;
     v7 = 0;
@@ -24679,7 +24679,7 @@ signed int __usercall sub_4128E0@<eax>(
   int v10; // eax
   signed int result; // eax
 
-  if ( a2 >= 0 || (result = sub_412B60((int)a1)) == 0 )
+  if ( a2 >= 0 || (result = Unit_FormationHasSiegeEngine((int)a1)) == 0 )
   {
     v6 = a1 + 3;
     v7 = 0;
@@ -24883,7 +24883,7 @@ int __usercall sub_412B20@<eax>(int result@<eax>, int a2@<edx>, int *a3@<ebx>)
 }
 
 //----- (00412B60) --------------------------------------------------------
-signed int __usercall sub_412B60@<eax>(int a1@<eax>)
+signed int __usercall Unit_FormationHasSiegeEngine@<eax>(int a1@<eax>)
 {
   int v2; // ecx
   int v3; // eax
@@ -24905,7 +24905,7 @@ signed int __usercall sub_412B60@<eax>(int a1@<eax>)
 }
 
 //----- (00412B90) --------------------------------------------------------
-int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
+int __usercall Unit_CalcFormationAttackPower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
 {
   int v5; // ebx
   int v6; // eax
@@ -24929,18 +24929,18 @@ int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
     }
     while ( v6 < a2 );
   }
-  return sub_41C100(a1, a2, v5, a3);
+  return Unit_CalcAttackPower(a1, a2, v5, a3);
 }
 // 412B90: could not find valid save-restore pair for ebx
 
 //----- (00412BE0) --------------------------------------------------------
-int __usercall sub_412BE0@<eax>(int a1@<eax>)
+int __usercall Unit_CalcArmyAttackPower@<eax>(int a1@<eax>)
 {
   signed int v1; // eax
   int v2; // edx
 
   v1 = Unit_GetSquadCount(a1);
-  return sub_412B90((char *)(v2 + 6), v1, 0);
+  return Unit_CalcFormationAttackPower((char *)(v2 + 6), v1, 0);
 }
 // 412BEA: variable 'v2' is possibly undefined
 
@@ -24952,15 +24952,15 @@ int __usercall sub_412C00@<eax>(int a1@<eax>, signed int a2@<esi>)
   int v4; // eax
   char *v5; // ecx
 
-  v2 = sub_41C410(a1, a2);
+  v2 = Hero_CalcAttackBonus(a1, a2);
   v4 = Building_CountGarrison(v3);
-  return sub_412B90(v5, v4, v2);
+  return Unit_CalcFormationAttackPower(v5, v4, v2);
 }
 // 412C11: variable 'v3' is possibly undefined
 // 412C1A: variable 'v5' is possibly undefined
 
 //----- (00412C30) --------------------------------------------------------
-int __usercall sub_412C30@<eax>(signed int a1@<eax>)
+int __usercall Player_CalcTotalAttackPower@<eax>(signed int a1@<eax>)
 {
   int v2; // ecx
   int v3; // edx
@@ -24993,7 +24993,7 @@ LABEL_2:
     v8 = gameData + 725 * i;
     if ( a1 == *(unsigned __int8 *)(v8 + 147178) && *(__int16 *)(v8 + 147180) != -1 )
     {
-      v9 = sub_412BE0(gameData + 147174 + 725 * i);
+      v9 = Unit_CalcArmyAttackPower(gameData + 147174 + 725 * i);
       v2 = v9 + v10;
     }
   }
@@ -30628,7 +30628,7 @@ void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<
   v10 = *(_DWORD *)(gameData + v9 + 140051) && *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 140051);
   v59 = (unsigned __int8 *)v10;
   v63 = 0;
-  if ( sub_412100((int)v8) )
+  if ( Unit_HasRegularTroops((int)v8) )
   {
     v12 = *v8 - *v62;
     if ( v12 <= 0 )
@@ -30666,13 +30666,13 @@ LABEL_22:
               sub_45E630(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             if ( *(_DWORD *)(gameData + 140017) == 5 )
               sub_45B3C0(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
-            v18 = (unsigned __int8 *)sub_412B60((int)v8);
-            v60 = sub_412B60((int)v62);
+            v18 = (unsigned __int8 *)Unit_FormationHasSiegeEngine((int)v8);
+            v60 = Unit_FormationHasSiegeEngine((int)v62);
             v19 = Unit_GetSquadCount((int)v8);
-            sub_412000((char *)v8 + 6, v19, v56);
+            Unit_ExtractSiegeUnits((char *)v8 + 6, v19, v56);
             v20 = v57;
             v21 = Unit_GetSquadCount((int)v62);
-            sub_412000((char *)(v22 + 6), v21, (char *)v57);
+            Unit_ExtractSiegeUnits((char *)(v22 + 6), v21, (char *)v57);
             v23 = *(_DWORD *)(1423 * *((unsigned __int8 *)v8 + 4) + gameData + 140051)
                || *(_DWORD *)(1423 * *((unsigned __int8 *)v62 + 4) + gameData + 140051);
             if ( v23 && Unit_GetSquadCount((int)v8) && Unit_GetSquadCount((int)v62) )
@@ -30711,16 +30711,16 @@ LABEL_48:
               {
                 if ( v31 == 1 )
                 {
-                  sub_4120B0((char *)v62 + 6, (char *)v57);
+                  Unit_AppendFormation((char *)v62 + 6, (char *)v57);
                   if ( *(__int16 *)v56 != -1 )
                   {
-                    v51 = sub_412520(*v62, v62[1], (unsigned __int8 *)v56, a5);
+                    v51 = Unit_CreateNearbyUnitGroup(*v62, v62[1], (unsigned __int8 *)v56, a5);
                     if ( (sub_4121A0(v51) || sub_412170(v52))
                       && *(unsigned __int8 *)(v53 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
                       v63 = 1;
                     }
-                    sub_412300(v62, v53, v53, (int)v56, a5);
+                    Unit_Capture(v62, v53, v53, (int)v56, a5);
                   }
                   sub_4128E0(v8, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
@@ -30733,16 +30733,16 @@ LABEL_48:
                 }
                 else if ( v31 == 2 )
                 {
-                  sub_4120B0((char *)v8 + 6, v56);
+                  Unit_AppendFormation((char *)v8 + 6, v56);
                   if ( *(__int16 *)v56 != -1 )
                   {
-                    v47 = sub_412520(*v8, v8[1], v57, a5);
+                    v47 = Unit_CreateNearbyUnitGroup(*v8, v8[1], v57, a5);
                     if ( (sub_4121A0(v47) || sub_412170(v48))
                       && *(unsigned __int8 *)(v49 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
                       v63 = 1;
                     }
-                    sub_412300(v8, v49, v49, (int)v57, a5);
+                    Unit_Capture(v8, v49, v49, (int)v57, a5);
                   }
                   sub_4128E0(v62, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
@@ -30757,11 +30757,11 @@ LABEL_48:
                 goto LABEL_52;
               }
 LABEL_49:
-              sub_4120B0((char *)v8 + 6, v56);
-              sub_4120B0((char *)v62 + 6, (char *)v57);
-              if ( sub_412100((int)v62) || !sub_412100((int)v8) )
+              Unit_AppendFormation((char *)v8 + 6, v56);
+              Unit_AppendFormation((char *)v62 + 6, (char *)v57);
+              if ( Unit_HasRegularTroops((int)v62) || !Unit_HasRegularTroops((int)v8) )
               {
-                if ( sub_412100((int)v62) && !sub_412100((int)v8) )
+                if ( Unit_HasRegularTroops((int)v62) && !Unit_HasRegularTroops((int)v8) )
                 {
                   if ( (unsigned int)v8[3] <= 0x28 )
                   {
@@ -30770,7 +30770,7 @@ LABEL_49:
                     {
                       v63 = 1;
                     }
-                    sub_412300(v62, (signed int)v8, v46, (int)v20, a5);
+                    Unit_Capture(v62, (signed int)v8, v46, (int)v20, a5);
                   }
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
                   sub_4128E0(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
@@ -30790,7 +30790,7 @@ LABEL_49:
                   {
                     v63 = 1;
                   }
-                  sub_412300(v8, (signed int)v62, v45, (int)v20, a5);
+                  Unit_Capture(v8, (signed int)v62, v45, (int)v20, a5);
                 }
                 v20 = (unsigned __int8 *)CSyncObject::Unlock;
                 sub_4128E0(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
@@ -30995,7 +30995,7 @@ void __usercall Unit_AttackBuilding(int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
   v8 = *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 140051)
     && *(_DWORD *)(gameData + 1423 * v7[2] + 140051);
   v56 = v8;
-  if ( sub_412100((int)v61) )
+  if ( Unit_HasRegularTroops((int)v61) )
   {
     v10 = *v61 - *v7;
     if ( v10 <= 0 )
@@ -31027,7 +31027,7 @@ LABEL_15:
             sub_45E630(*((unsigned __int8 *)v61 + 4), v7[2]);
           if ( *(_DWORD *)(gameData + 140017) == 5 )
             sub_45B3C0(*((unsigned __int8 *)v61 + 4), v7[2]);
-          v16 = (_WORD *)sub_412B60((int)v61);
+          v16 = (_WORD *)Unit_FormationHasSiegeEngine((int)v61);
           v57 = sub_43EC10((int)v7);
           v19 = *(_DWORD *)(1423 * *(unsigned __int8 *)(v18 + 4) + gameData + 140051)
              || *(_DWORD *)(1423 * *(unsigned __int8 *)(467 * v59 + gameData + 509676) + gameData + 140051);
@@ -31074,9 +31074,9 @@ LABEL_47:
             }
             sub_43EC40(v7, (unsigned __int8 *)v61, a5);
             v26 = Unit_GetSquadCount((int)v61);
-            sub_412000((char *)(v27 + 6), v26, v54);
+            Unit_ExtractSiegeUnits((char *)(v27 + 6), v26, v54);
             v28 = Building_CountGarrison((int)v7);
-            sub_412000((char *)v7 + 18, v28, v55);
+            Unit_ExtractSiegeUnits((char *)v7 + 18, v28, v55);
             sub_43EC40(v7, v29, a5);
             v30 = 0;
             do
@@ -31097,7 +31097,7 @@ LABEL_47:
               CalculateBattleResult(v43, v44, v45, v16, (DWORD)v7, v51, v52, v53, 0);
               v36 = 0;
 LABEL_42:
-              sub_4120B0((char *)v61 + 6, v54);
+              Unit_AppendFormation((char *)v61 + 6, v54);
               if ( v36 )
               {
                 if ( v36 == 1 )
@@ -31112,11 +31112,11 @@ LABEL_42:
                 }
               }
               else if ( Building_CountGarrison(467 * v59 + gameData + 509674)
-                     || !sub_412100(725 * v60 + gameData + 147174) )
+                     || !Unit_HasRegularTroops(725 * v60 + gameData + 147174) )
               {
-                if ( Building_CountGarrison(gameData + 509674 + 467 * v59) && !sub_412100(725 * v60 + gameData + 147174) )
+                if ( Building_CountGarrison(gameData + 509674 + 467 * v59) && !Unit_HasRegularTroops(725 * v60 + gameData + 147174) )
                 {
-                  sub_4120B0((char *)v7 + 18, v55);
+                  Unit_AppendFormation((char *)v7 + 18, v55);
                   sub_40F7C0(v60, v40, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
                   ++*(_WORD *)(1423 * v7[2] + gameData + 141441);
@@ -31126,7 +31126,7 @@ LABEL_42:
                   sub_43EE10((int)v7);
                 }
                 else if ( !Building_CountGarrison(467 * v59 + gameData + 509674)
-                       && !sub_412100(725 * v60 + gameData + 147174) )
+                       && !Unit_HasRegularTroops(725 * v60 + gameData + 147174) )
                 {
                   sub_40F7C0(v60, v40, (DWORD)v7, a5);
                 }
@@ -31236,7 +31236,7 @@ LABEL_38:
 // 5202F4: using guessed type int dword_5202F4;
 
 //----- (0041C100) --------------------------------------------------------
-int __usercall sub_41C100@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
+int __usercall Unit_CalcAttackPower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
 {
   unsigned int v6; // eax
   int v7; // edi
@@ -31333,7 +31333,7 @@ LABEL_8:
 // 512568: using guessed type char *(*off_512568)[102];
 
 //----- (0041C300) --------------------------------------------------------
-int __usercall sub_41C300@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
+int __usercall Unit_CalcDefensePower@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
 {
   int i; // ebx
   int v7; // eax
@@ -31395,7 +31395,7 @@ int __usercall sub_41C360@<eax>(int a1@<eax>, signed int a2@<edx>)
 // 41C3E4: variable 'v10' is possibly undefined
 
 //----- (0041C410) --------------------------------------------------------
-int __usercall sub_41C410@<eax>(int a1@<eax>, signed int a2@<esi>)
+int __usercall Hero_CalcAttackBonus@<eax>(int a1@<eax>, signed int a2@<esi>)
 {
   int v3; // eax
   int v4; // ecx
@@ -31520,13 +31520,13 @@ int __userpurge CalculateBattleResult@<eax>(
     while ( v14 < a6 );
   }
   if ( a8 )
-    v17 = sub_41C410(a8, (signed int)a3);
+    v17 = Hero_CalcAttackBonus(a8, (signed int)a3);
   else
     v17 = 0;
-  v50 = sub_41C100((int)v49, a2, (int)v53, v17);
-  sub_41C100((int)a3, a6, a7, 0);
-  v54 = v50 - sub_41C300((int)a3, a6, a7);
-  v18 = sub_41C300((int)v49, a2, (int)v53);
+  v50 = Unit_CalcAttackPower((int)v49, a2, (int)v53, v17);
+  Unit_CalcAttackPower((int)a3, a6, a7, 0);
+  v54 = v50 - Unit_CalcDefensePower((int)a3, a6, a7);
+  v18 = Unit_CalcDefensePower((int)v49, a2, (int)v53);
   log(v19 - v18, v54, a5, (int)aAs1D, v54);
   log(v20, v54, a5, (int)aAs2D, v20);
   if ( v54 < 0 )
@@ -36162,7 +36162,7 @@ signed int __usercall sub_422BA0@<eax>(int a1@<eax>)
 // 51257A: using guessed type int dword_51257A[];
 
 //----- (00422BE0) --------------------------------------------------------
-int __usercall sub_422BE0@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>)
+int __usercall Unit_AddToGroup@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>)
 {
   int v5; // ecx
   DWORD v6; // ecx
@@ -36340,7 +36340,7 @@ BOOL __usercall sub_422DC0@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, i
 // 5202E4: using guessed type int gameData;
 
 //----- (00423050) --------------------------------------------------------
-BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6)
+BOOL __userpurge Unit_MoveFromGroup@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6)
 {
   DWORD v8; // ebp
   int v9; // edx
@@ -36709,7 +36709,7 @@ signed int __usercall sub_423860@<eax>(DWORD a1@<ebp>, double a2@<st0>)
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     if ( DD_IsLost((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * v3 + 6) != -1 )
     {
-      v5 = sub_412B60(dword_526FA0);
+      v5 = Unit_FormationHasSiegeEngine(dword_526FA0);
       Unit_Info(100, 100, v5, (unsigned __int8 *)(dword_526FA0 + 6 + 31 * v3), a1, 0);
       sub_418700(1);
     }
@@ -36747,7 +36747,7 @@ signed int __usercall sub_423860@<eax>(DWORD a1@<ebp>, double a2@<st0>)
         Render_Begin((int)dword_544CD8, 0);
         memset_(v11, 0);
         sub_412B20((int)dword_526F78, 10, v15);
-        if ( sub_423050(dword_511B58, v15, v12, v7, a2, 0) )
+        if ( Unit_MoveFromGroup(dword_511B58, v15, v12, v7, a2, 0) )
           memset_(v13, 0);
         Render_LoadResourceSprite(v13, a1);
         sub_423420(-1, a1);
@@ -53916,12 +53916,12 @@ signed int __usercall sub_43E770@<eax>(int a1@<eax>, int a2@<edx>)
     return 0;
   v4 = *(_BYTE *)(v2 + 4);
   if ( !v4 )
-    return sub_412100(v3);
+    return Unit_HasRegularTroops(v3);
   if ( v4 > 1u )
     return v4 == 2;
   if ( sub_4121A0(v3) )
     return 0;
-  return sub_412100(v5) || sub_412170(v5) || sub_412B60(v6);
+  return Unit_HasRegularTroops(v5) || sub_412170(v5) || Unit_FormationHasSiegeEngine(v6);
 }
 // 43E7D7: variable 'v5' is possibly undefined
 // 43E7F5: variable 'v6' is possibly undefined
@@ -55167,7 +55167,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
     }
   }
   *(_WORD *)((char *)v17 + 31 * v4) = -1;
-  result = (__int16 *)sub_412520(v18, v19, (unsigned __int8 *)v17, a3);
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(v18, v19, (unsigned __int8 *)v17, a3);
   if ( result )
     return (__int16 *)sub_418D90(
                         *(unsigned __int16 *)(200 * *result + gameData + 2 * result[1] + 556374),
@@ -55213,7 +55213,7 @@ __int16 *__usercall sub_43FDE0@<eax>(signed int a1@<eax>, int a2@<edx>, char a3@
   v14[31 * v10] = v11;
   if ( !v11 )
     *(_WORD *)((char *)v13 + 31 * v10) = -1;
-  result = (__int16 *)sub_412520(v16, v15, (unsigned __int8 *)v13, a5);
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(v16, v15, (unsigned __int8 *)v13, a5);
   if ( result )
     return (__int16 *)sub_418D90(
                         *(unsigned __int16 *)(gameData + 200 * *result + 2 * result[1] + 556374),
@@ -58520,7 +58520,7 @@ signed int __usercall sub_443EB0@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, D
   int v20; // [esp+20h] [ebp-1Ch]
 
   v4 = (__int16 *)(gameData + 147174 + 725 * a1);
-  if ( sub_410010((int)v4) < 0 || *((_BYTE *)v4 + 720) || !sub_412100((int)v4) )
+  if ( sub_410010((int)v4) < 0 || *((_BYTE *)v4 + 720) || !Unit_HasRegularTroops((int)v4) )
     return 0;
   if ( sub_4100B0((int)v4) < 2 )
   {
@@ -62661,7 +62661,7 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
 
   Unit_Create(0x11u, 0, 5, 0, 4);
   Unit_Create(0xDu, 0, 5, 0, 5);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
   Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674, v3);
@@ -62685,35 +62685,35 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   Unit_Create(0x11u, 0, v7, 0, 6);
   Unit_Create(0x1Du, 0, 6, 0, 6);
   Unit_Create(9u, 0, 7, 0, 7);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   Unit_Create(0x14u, 0, v8, 0, 7);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   Unit_Create(0x22u, 0, v9, 0, 7);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   Unit_Create(4u, 0, v10, 0, 7);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
   Unit_Create(0x1Bu, 2, 10, 0, 7);
   Unit_Create(0x1Cu, 0, 10, 0, 8);
   Unit_Create(1u, 0, 5, 0, 45);
   Unit_Create(0x11u, 0, 5, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(5u, 0, 5, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(0x1Au, 0, v11, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(0xDu, 0, v12, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(3u, 0, v13, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(3u, 0, v14, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(3u, 0, v15, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(3u, 0, v16, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Unit_Create(3u, 0, v17, 0, 46);
-  sub_422BE0(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
+  Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674, this);
@@ -63095,7 +63095,7 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
       {
         Unit_Create(0x11u, v7, v41, 0, v40);
         Unit_Create(0, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
@@ -63115,21 +63115,21 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         Unit_Create(5u, v7, v15, 0, v14);
         Unit_Create(1u, v7, v10, 0, v38);
         Unit_Create(0x10u, v7, v39, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v39, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
         Unit_Create(0xFu, v7, v16, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
@@ -63137,7 +63137,7 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           v4);
         Unit_Create(0x11u, v7, v10, 0, v36);
         Unit_Create(9u, v7, v39, 0, v36);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
@@ -63145,49 +63145,49 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           v4);
         Unit_Create(0x10u, v7, v17, 0, v44);
         Unit_Create(0x10u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v10, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
@@ -63201,35 +63201,35 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         LOBYTE(v33) = v33 ^ 1;
         Unit_Create(0x11u, v7, v41, 0, v30);
         Unit_Create(3u, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
         Unit_Create(4u, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
         Unit_Create(0xFu, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
         Unit_Create(0x10u, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
         Unit_Create(0, v7, v10, 0, v40);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
@@ -63249,21 +63249,21 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         Unit_Create(5u, v7, v21, 0, v20);
         Unit_Create(1u, v7, v10, 0, v38);
         Unit_Create(0x10u, v7, v39, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
         Unit_Create(5u, v7, v22, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
         Unit_Create(0xFu, v7, v23, 0, v38);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
@@ -63271,14 +63271,14 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           v4);
         Unit_Create(0x11u, v7, v10, 0, v36);
         Unit_Create(0x11u, v7, v39, 0, v36);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
           v10,
           v4);
         Unit_Create(9u, v7, v24, 0, v36);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
@@ -63288,49 +63288,49 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         Unit_Create(0, v7, v41 - 1, 0, v44);
         Unit_Create(1u, v7, v41, 0, v44);
         v37 = 200 * v32;
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + 200 * v32 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(3u, v7, v25, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(3u, v7, v26, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(0, v7, v27, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v28, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(1u, v7, v41, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
         Unit_Create(0x10u, v7, v29, 0, v44);
-        sub_422BE0(
+        Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
@@ -63340,56 +63340,56 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         {
           Unit_Create(0, v7, v39, 0, v44);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(9u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(9u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
           Unit_Create(1u, v7, v10, 0, v44);
-          sub_422BE0(
+          Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
@@ -64838,7 +64838,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
       if ( v29 > v28 )
         v64 = v29;
       v31 = v67;
-      v32 = sub_412C30(v25);
+      v32 = Player_CalcTotalAttackPower(v25);
       v61[v22] = v32;
       if ( v32 > v31 )
         v67 = v32;
@@ -65454,12 +65454,12 @@ LABEL_10:
       {
         if ( *(_DWORD *)(gameData + 1423 * i + 140024) )
         {
-          v11 = sub_412C30(i);
+          v11 = Player_CalcTotalAttackPower(i);
           if ( v11 > v9 )
             v9 = v11;
         }
       }
-      result = 100 * sub_412C30(v4) / v9;
+      result = 100 * Player_CalcTotalAttackPower(v4) / v9;
       if ( result < 10 )
       {
         sub_450CE0(v12, v12, a3, a4);
@@ -66487,7 +66487,7 @@ signed int __usercall sub_4530A0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp
 //----- (004530D0) --------------------------------------------------------
 signed int __usercall sub_4530D0@<eax>(int a1@<eax>)
 {
-  return sub_412100(725 * a1 + gameData + 147174);
+  return Unit_HasRegularTroops(725 * a1 + gameData + 147174);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67106,7 +67106,7 @@ signed int __usercall sub_4547F0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
 //----- (00454800) --------------------------------------------------------
 signed int __usercall sub_454800@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>)
 {
-  sub_412300(
+  Unit_Capture(
     (__int16 *)(gameData + 147174 + 725 * a1),
     gameData + 147174 + 725 * a2,
     gameData + 147174 + 725 * a2,
@@ -67167,7 +67167,7 @@ signed int __usercall sub_454990@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
 //----- (004549A0) --------------------------------------------------------
 BOOL __usercall sub_4549A0@<eax>(int a1@<eax>)
 {
-  return sub_412100(gameData + 147174 + 725 * a1) != 0;
+  return Unit_HasRegularTroops(gameData + 147174 + 725 * a1) != 0;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68855,7 +68855,7 @@ BOOL __usercall sub_457E00@<eax>(unsigned int a1@<eax>, char a2@<bl>, DWORD a3@<
 //----- (00457E50) --------------------------------------------------------
 int __usercall sub_457E50@<eax>(unsigned int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>)
 {
-  return sub_422BE0(a1, a2, 0, a3, a4);
+  return Unit_AddToGroup(a1, a2, 0, a3, a4);
 }
 
 //----- (00457E60) --------------------------------------------------------
@@ -68923,7 +68923,7 @@ BOOL __usercall sub_457E60@<eax>(int a1@<eax>, int a2@<ebp>, int a3@<edi>, doubl
     ++v15;
   }
   while ( v15 <= 1 && !v14 );
-  return v14 && sub_423050(v13, v12, a2, a3, a4, 0);
+  return v14 && Unit_MoveFromGroup(v13, v12, a2, a3, a4, 0);
 }
 // 457F19: conditional instruction was optimized away because %var_24.4==0
 // 5202E4: using guessed type int gameData;
@@ -68997,7 +68997,7 @@ BOOL __usercall sub_457FE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebp>, int a
     ++v18;
   }
   while ( v18 <= 1 && !v17 );
-  return v17 && sub_423050(v15, v14, a4, a3, a5, 0);
+  return v17 && Unit_MoveFromGroup(v15, v14, a4, a3, a5, 0);
 }
 // 458094: conditional instruction was optimized away because %var_20.4==0
 // 5202E4: using guessed type int gameData;
