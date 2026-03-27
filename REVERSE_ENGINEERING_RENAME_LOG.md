@@ -139,6 +139,52 @@
 | sub_422BA0 | UnitStack_HasOnlyFlyingUnits | Function | Unit Types/Stats | High | Walks the occupied slots and returns true only when every unit type has `g_UnitTypeFlags bit0` set, matching the airborne-only predicate used by pathing/UI helpers. |
 | data segment @ 0x512568 stride 88 | UnitTypeMetadataRecord | Recovered Struct | Unit Types/Stats | High | The decompiler emitted several overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitSpriteFolders`, `g_UnitTypeFlags`, `byte_512570`+) from one record family. Code evidence proves a stable 88-byte per-type layout with localized names, sprite folders, flags, animation timing, and terrain move costs. |
 
+## Batch 20 – Unit Roster Correlation Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| *(new constant)* | UNIT_TYPE_RAM | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_512468` (`Taran / Rammbock`) with folder `taran`, and ordinary melee code explicitly excludes type `13`, proving the earlier cannon-at-13 guess was wrong. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_CANNON | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_512444` (`Armata / Cannon`) with folder `armat`, fixing cannon at type `14`. | asm, exe |
+| *(new constant)* | UNIT_TYPE_FORESTER | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_512450` (`Leśnik / Forester`) with folder `lesn`, and the type is created directly by three nearby `Unit_Create(0xFu, ...)` call sites. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_GORAL | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_5123E4` (`Góral / Highlander`) with folder `goral`, placing it at type `16` rather than the earlier folder-order-only guess. | asm, exe |
+| *(new constant)* | UNIT_TYPE_ELEPHANT | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_5124C8` (`Słoń / Elephant`) with folder `slon`, placing it at type `19`. | asm, exe |
+| *(new constant)* | UNIT_TYPE_FLY | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_512534` (`Ważka / Fly / Riesenlibelle`) with folder `wazka`, and movement audio groups type `29` with other looped movers. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_DRAGON | Helper | Unit Types/Stats | High | The asm record xrefs pair `off_512480` (`Smok / Dragon / Drachen`) with folder `smok`, moving the dragon id from the earlier speculative `29` to confirmed `30`. | asm, exe |
+
+## Batch 21 – Unit Move Sound Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| off_5125B9 | g_UnitMoveSoundStems | Global | Unit Audio / Unit Types | High | Both movement-sound helpers index this overlapping record field by `22 * type` and build `sfx\\ruchy\\<stem>...` paths from it; `clash95.asm` shows the first entry as `b_lekkie\\krokb`. | c, asm |
+| byte_5125BD | g_UnitMoveSoundVariantCounts | Table | Unit Audio / Unit Types | High | Step-based movement audio wraps `g_CurrentUnitMoveSoundVariant` modulo this overlapping per-type byte field. | c, asm |
+| byte_5125BE | g_UnitMoveSoundBaseVolumes | Table | Unit Audio / Unit Types | High | Both world and battle movement-audio paths pass this overlapping per-type byte into `CSS_PlaySound` as the playback volume. | c, asm |
+| dword_543CA8 | g_CurrentUnitMoveSoundHandle | Global | Unit Audio | High | Only the movement-audio start/stop helpers read and write this symbol, always as the active sound handle passed to `CSS_StopSound` / `CSS_SetSoundLoop`. | c |
+| dword_543CAC | g_CurrentUnitMoveSoundVariant | Global | Unit Audio | High | The same helpers use this value as the current alternating step index and reset it whenever the moving unit type changes. | c |
+| dword_543CB0 | g_CurrentUnitMoveSoundTypeId | Global | Unit Audio | High | The movement-audio helpers cache the currently sounding unit type here to avoid restarting looped sounds or to reset the step variant when the type changes. | c |
+| sub_4415A0 | BattleMap_GetMoveSoundSurfaceClass | Function | Unit Audio / Battle Map | Medium | The function maps a battle-map tile id through `byte_517318` and is only used to choose the `p/t/d`-style movement-sound suffix in battle movement audio. | c, asm |
+| sub_441F00 | Audio_PlayWorldMapUnitMoveSound | Function | Unit Audio / World Map | High | Called from the world movement animation loop; it builds `sfx\\ruchy\\...` paths, chooses airborne vs terrain-dependent suffixes, and loops siege-like movers. | c, asm |
+| sub_442290 | Audio_PlayBattleMapUnitMoveSound | Function | Unit Audio / Battle Map | High | Battle-only counterpart to the world helper; it uses `BattleMap_GetMoveSoundSurfaceClass` instead of `Map_DestroyTile` when selecting footstep suffixes. | c, asm |
+| sub_4425B0 | Audio_StopUnitMoveSound | Function | Unit Audio | High | Thin helper that stops the active movement sound and clears the cached active unit type. | c |
+
+## Batch 22 – Unit Action Sound Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_441A30 | Audio_PlayUnitActivateSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\activ1.wav?`, is called when selecting a new unit on both world and battle maps, and stores the handle later faded by the move-order helper. | c, asm |
+| sub_441B00 | Audio_PlayUnitMoveOrderSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\go1.wav?`, fades the last activation sound, and is called immediately before unit movement execution on both world and battle maps. | c, asm |
+| sub_441BE0 | Audio_PlayUnitRangedAttackSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\strzal.wav` and is triggered on ranged-attack animation frames. | c, asm |
+| sub_441C80 | Audio_PlayUnitHitSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\dostal.wav` and is triggered when the target takes a hit. | c, asm |
+| sub_441D20 | Audio_PlayUnitDeathSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\dead.wav` and is called at the start of the battle death animation path. | c, asm |
+| sub_441DC0 | Audio_PlayUnitMeleeAttackSound | Function | Unit Audio | High | The helper builds `sfx\\oddzialy\\<unit>\\walka.wav` and is triggered on the designated combat-impact frame during melee attack resolution. | c, asm |
+
+## Batch 23 – Unit Audio Toggle State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| dword_5174D4 | g_UnitSoundsEnabled | Global | Unit Audio | High | Every per-unit sound helper gates on this flag, and the toggle helpers plus the settings-apply path only set it to `0` or `1`. | c, asm |
+| dword_543CA4 | g_LastUnitActivateSoundHandle | Global | Unit Audio | High | `Audio_PlayUnitActivateSound` stores the returned handle here, and `Audio_PlayUnitMoveOrderSound` immediately fades that same handle out before playing the move-order cue. | c, asm |
+| sub_441A10 | Audio_EnableUnitSounds | Function | Unit Audio | High | Single-purpose helper that sets `g_UnitSoundsEnabled = 1`. | c, asm |
+| sub_441A20 | Audio_DisableUnitSounds | Function | Unit Audio | High | Single-purpose helper that sets `g_UnitSoundsEnabled = 0`. | c, asm |
+
 ## Deferred / Ambiguous
-- `smok`, `słoń`, and `góral` remain deferred as concrete ids. The current pass recovered broad classes such as `FlyingUnitCategory`, but the missing localized-name payload still prevents safe id-to-name mapping.
-- `g_UnitTypeFlags` bit1 still has an unresolved gameplay label. It definitely changes the 6-vs-10 initialization path at slot `+11`, but the code evidence is not yet strong enough to call it “light”, “fast”, or another concrete archetype as fact.
+- `specm` and `speck` are no longer anonymous, but only medium-confidence as `UnitType33_TacticianFootVariant` and `UnitType34_TacticianMountedVariant`. The duplicated localized-name pointer and divergent movement assets strongly suggest two commander variants, not two independent fully named troop families.
+- The `peas` entry is now resolved as `UnitType32_Peasants` through the asm-localized-name xrefs, but its exact design relationship to type `0` (`Posp. ruszenie / Peasant`) is still not fully explained by the recovered gameplay rules.
+- `g_UnitTypeFlags` bit1 now aligns with a light-unit category through the 6-vs-10 seed at slot `+11`, but its broader gameplay consequences outside veterancy seeding are still only partially recovered.
+- `BattleMap_GetMoveSoundSurfaceClass` is only medium-confidence. The implementation clearly returns a small sound-surface class used by movement audio, but the original designer-facing labels for values `0/1/2` remain inferred from suffix behavior rather than explicit text.
+- `sub_441E60` still appends `gothim.wav`, but the exact gameplay role is not locked down safely enough. It is used in a late attack-resolution path for certain projectile or special-attack unit types, so it remains deferred rather than being mislabeled as a generic kill or victory sound.
