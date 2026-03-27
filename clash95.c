@@ -23369,7 +23369,7 @@ LABEL_21:
 // 544D14: using guessed type int dword_544D14;
 
 //----- (00411120) --------------------------------------------------------
-int __usercall sub_411120@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcMeleeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
 
@@ -23387,7 +23387,7 @@ int __usercall UI_IconIndexFromStats@<eax>(__int16 *a1@<eax>)
 }
 
 //----- (004111C0) --------------------------------------------------------
-int __usercall sub_4111C0@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcRangedAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
   int v3; // esi
@@ -23403,25 +23403,25 @@ int __usercall sub_4111C0@<eax>(char *a1@<eax>, int a2@<edx>)
 }
 
 //----- (00411240) --------------------------------------------------------
-int __usercall sub_411240@<eax>(__int16 *a1@<eax>)
+int __usercall UnitStats_GetRangedIconIndex@<eax>(__int16 *a1@<eax>)
 {
   return (a1[6] & 3) + (unsigned __int8)byte_51257F[88 * *a1] + *((char *)a1 + 11) / 5;
 }
 
 //----- (00411280) --------------------------------------------------------
-int __usercall sub_411280@<eax>(__int16 *a1@<eax>)
+int __usercall UnitStats_CalcDamagePerHit@<eax>(__int16 *a1@<eax>)
 {
   return ((unsigned __int8)byte_512581[88 * *a1] + *((char *)a1 + 11) / 10) * *((char *)a1 + 9) / 100;
 }
 
 //----- (004112C0) --------------------------------------------------------
-int __usercall sub_4112C0@<eax>(__int16 *a1@<eax>)
+int __usercall UnitStats_GetBaseDamage@<eax>(__int16 *a1@<eax>)
 {
   return (unsigned __int8)byte_512581[88 * *a1] + *((char *)a1 + 11) / 10;
 }
 
 //----- (004112F0) --------------------------------------------------------
-int __usercall sub_4112F0@<eax>(char *a1@<eax>, int a2@<edx>)
+int __usercall UnitStats_CalcSiegeAttack@<eax>(char *a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
 
