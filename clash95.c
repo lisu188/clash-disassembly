@@ -31,6 +31,7 @@
 #define UNIT_STACK_SLOT_COUNT 10
 #define UNIT_STACK_PATH_OFFSET 316
 #define UNIT_STACK_PATH_BYTES 0x194
+#define UNIT_TYPE_PEASANT 0
 
 #define PLAYER_DATA(playerIndex) (gameData + PLAYER_DATA_STRIDE * (playerIndex))
 #define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
@@ -8312,7 +8313,7 @@ char *off_512368[3] =
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
 }; // weak
 char *(*off_512568)[102] = &off_5123CC; // weak
-char *off_51256C = "peon"; // weak
+char *g_UnitSpriteFolders = "peon"; // weak
 char byte_512570[] = { '\x03' }; // weak
 char byte_512571[] = { '\x03' }; // weak
 char byte_512572[] = { '\n' }; // weak
@@ -25345,7 +25346,7 @@ char __usercall sub_4131B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&off_51256C)[22 * a2];
+  v7 = (&g_UnitSpriteFolders)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25389,7 +25390,7 @@ char __usercall sub_4131B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (00413270) --------------------------------------------------------
 char __usercall UI_BeginUnitInfo@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3@<bl>)
@@ -25431,7 +25432,7 @@ char __usercall UI_BeginUnitInfo@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, c
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&off_51256C)[22 * a2];
+  v7 = (&g_UnitSpriteFolders)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25489,7 +25490,7 @@ char __usercall UI_BeginUnitInfo@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, c
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (00413350) --------------------------------------------------------
 char __usercall sub_413350@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>)
@@ -25532,7 +25533,7 @@ char __usercall sub_413350@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&off_51256C)[22 * a2];
+  v8 = (&g_UnitSpriteFolders)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -25590,7 +25591,7 @@ char __usercall sub_413350@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (00413430) --------------------------------------------------------
 char __usercall sub_413430@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>)
@@ -25633,7 +25634,7 @@ char __usercall sub_413430@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&off_51256C)[22 * a2];
+  v8 = (&g_UnitSpriteFolders)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -25691,7 +25692,7 @@ char __usercall sub_413430@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (00413510) --------------------------------------------------------
 char __usercall sub_413510@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>)
@@ -25734,7 +25735,7 @@ char __usercall sub_413510@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&off_51256C)[22 * a2];
+  v8 = (&g_UnitSpriteFolders)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -25792,7 +25793,7 @@ char __usercall sub_413510@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (004135F0) --------------------------------------------------------
 char __usercall sub_4135F0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3@<bl>)
@@ -25834,7 +25835,7 @@ char __usercall sub_4135F0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&off_51256C)[22 * a2];
+  v7 = (&g_UnitSpriteFolders)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25892,7 +25893,7 @@ char __usercall sub_4135F0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (004136D0) --------------------------------------------------------
 char __usercall sub_4136D0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3@<bl>)
@@ -25934,7 +25935,7 @@ char __usercall sub_4136D0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&off_51256C)[22 * a2];
+  v7 = (&g_UnitSpriteFolders)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25992,7 +25993,7 @@ char __usercall sub_4136D0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (004137B0) --------------------------------------------------------
 char __usercall sub_4137B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>)
@@ -26027,7 +26028,7 @@ char __usercall sub_4137B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>)
     v3 += 2;
   }
   while ( v5 );
-  v6 = (&off_51256C)[22 * a2];
+  v6 = (&g_UnitSpriteFolders)[22 * a2];
   v7 = &a1[strlen(a1)];
   do
   {
@@ -26071,7 +26072,7 @@ char __usercall sub_4137B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 
 //----- (00413860) --------------------------------------------------------
 void __usercall sub_413860(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>)
@@ -26126,7 +26127,7 @@ void __usercall sub_413860(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>
     v8 += 2;
   }
   while ( v10 );
-  v11 = (&off_51256C)[22 * a2];
+  v11 = (&g_UnitSpriteFolders)[22 * a2];
   v12 = &a1[strlen(a1)];
   do
   {
@@ -26158,7 +26159,7 @@ void __usercall sub_413860(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>
 }
 // 413915: control flows out of bounds to 413918
 // 511130: using guessed type char g_LanguageIndex;
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 513328: using guessed type char *off_513328[3];
 
 //----- (00413920) --------------------------------------------------------
@@ -56576,7 +56577,7 @@ int __usercall sub_441A30@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v10, aSfxOddzialy, sizeof(v10));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v10[strlen(v10)];
     do
     {
@@ -56610,7 +56611,7 @@ int __usercall sub_441A30@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 // 543CA4: using guessed type int dword_543CA4;
 
@@ -56634,7 +56635,7 @@ int __usercall sub_441B00@<eax>(int result@<eax>)
     v1 = 22 * result;
     CSS_SetSoundVolume(dword_543CA4, 0, 500);
     qmemcpy(v11, aSfxOddzialy_0, 0x64u);
-    v2 = (&off_51256C)[v1];
+    v2 = (&g_UnitSpriteFolders)[v1];
     v3 = &v11[strlen(v11)];
     do
     {
@@ -56667,7 +56668,7 @@ int __usercall sub_441B00@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 // 543CA4: using guessed type int dword_543CA4;
 
@@ -56687,7 +56688,7 @@ int __usercall sub_441BE0@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v9, aSfxOddzialy_1, sizeof(v9));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -56719,7 +56720,7 @@ int __usercall sub_441BE0@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 
 //----- (00441C80) --------------------------------------------------------
@@ -56738,7 +56739,7 @@ int __usercall sub_441C80@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v9, aSfxOddzialy_2, sizeof(v9));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -56770,7 +56771,7 @@ int __usercall sub_441C80@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 
 //----- (00441D20) --------------------------------------------------------
@@ -56789,7 +56790,7 @@ int __usercall sub_441D20@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v9, aSfxOddzialy_3, sizeof(v9));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -56821,7 +56822,7 @@ int __usercall sub_441D20@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 
 //----- (00441DC0) --------------------------------------------------------
@@ -56840,7 +56841,7 @@ int __usercall sub_441DC0@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v9, aSfxOddzialy_4, sizeof(v9));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -56872,7 +56873,7 @@ int __usercall sub_441DC0@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 
 //----- (00441E60) --------------------------------------------------------
@@ -56891,7 +56892,7 @@ int __usercall sub_441E60@<eax>(int result@<eax>)
   if ( dword_5174D4 )
   {
     qmemcpy(v9, aSfxOddzialy_5, sizeof(v9));
-    v1 = (&off_51256C)[22 * result];
+    v1 = (&g_UnitSpriteFolders)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -56923,7 +56924,7 @@ int __usercall sub_441E60@<eax>(int result@<eax>)
   }
   return result;
 }
-// 51256C: using guessed type char *off_51256C;
+// 51256C: using guessed type char *g_UnitSpriteFolders;
 // 5174D4: using guessed type int dword_5174D4;
 
 //----- (00441F00) --------------------------------------------------------

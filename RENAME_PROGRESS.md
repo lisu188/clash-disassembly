@@ -182,3 +182,9 @@
 | 47 | 47 | Function | clash95.c | sub_411280 | UnitStats_CalcDamagePerHit | High | Combines the damage scalar table (`byte_512581`) with veterancy and morale to determine actual hit damage. |
 | 48 | 48 | Function | clash95.c | sub_4112C0 | UnitStats_GetBaseDamage | High | Returns the base damage scalar plus veterancy, i.e., the UI-facing damage stat before morale modifiers. |
 | 49 | 49 | Function | clash95.c | sub_4112F0 | UnitStats_CalcSiegeAttack | Medium | Mirrors the melee/ranged formulas using the structure-damage table (`byte_512584`), so it computes vs-building attack power. |
+
+## Batch 16 – Unit Naming Wave
+| # | Cumulative | Kind | File | Old Name | New Name | Confidence | Rationale |
+|---|------------|------|------|----------|----------|------------|-----------|
+| 50 | 50 | Global | clash95.c | off_51256C | g_UnitSpriteFolders | High | This pointer array feeds every unit sprite load by appending folder names like `peon` to `units_go\` paths; renaming it exposes that it stores per-unit sprite folders. |
+| 51 | 51 | Helper | clash95.c | (implicit type 0) | UNIT_TYPE_PEASANT | High | The first sprite folder entry is `"peon"` and scripting hooks `IloscChlopow` / `WyprowadzChlopow` operate on that archetype, so naming type id 0 as `UNIT_TYPE_PEASANT` documents the unit taxonomy. |

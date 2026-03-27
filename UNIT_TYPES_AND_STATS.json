@@ -1,0 +1,420 @@
+{
+  "resembles_game": "Clash (1998)",
+  "unit_types": [
+    {
+      "name": "UnitType0_Peasant",
+      "confidence": "high",
+      "kind": "concrete_type",
+      "evidence": "The unit-name pointer table base entry is \"peon\" (g_UnitSpriteFolders), which feeds sprite paths like units_go/peon?.s32, and scripting APIs expose IloscChlopow/WyprowadzChlopow for counting/dispatching peasants.",
+      "locations": [
+        "clash95.c:8314-8340",
+        "clash95.c:25320-25480",
+        "clash95.c:68590-68610"
+      ],
+      "related_to": [
+        "UNIT_TYPE_PEASANT",
+        "g_UnitSpriteFolders"
+      ]
+    },
+    {
+      "name": "UnitType13_Hero",
+      "confidence": "high",
+      "kind": "concrete_type",
+      "evidence": "Type id 13 is excluded from melee/ranged routines and special-cased in menus, indicating a unique hero/queen unit.",
+      "locations": [
+        "clash95.c:21784-21806",
+        "clash95.c:49182-49270"
+      ],
+      "related_to": [
+        "queen narrative"
+      ]
+    },
+    {
+      "name": "RangedUnitCategory",
+      "confidence": "high",
+      "kind": "category",
+      "evidence": "Only types with byte_512582 != 0 execute the projectile logic in sub_437630 and rely on ranged stat formulas.",
+      "locations": [
+        "clash95.c:40440-40465",
+        "clash95.c:49182-49270"
+      ],
+      "related_to": [
+        "base_secondary_attack",
+        "base_damage_scalar"
+      ]
+    },
+    {
+      "name": "ImmobileOrGarrisoned",
+      "confidence": "medium",
+      "kind": "category",
+      "evidence": "Flag bit0 in dword_51257A marks units skipped by movement/highlight code, implying static garrison units.",
+      "locations": [
+        "clash95.c:42290-42310",
+        "clash95.c:27660-27695"
+      ],
+      "related_to": [
+        "fortification garrisons"
+      ]
+    },
+    {
+      "name": "DefaultFieldUnit",
+      "confidence": "medium",
+      "kind": "category",
+      "evidence": "Any type with byte_51257E > 0 and flag bit0 cleared participates in melee, consumes action points, and uses morale/veterancy multipliers.",
+      "locations": [
+        "clash95.c:22124-22145",
+        "clash95.c:39680-39760"
+      ],
+      "related_to": [
+        "base_melee_attack",
+        "action_points",
+        "morale_percent"
+      ]
+    },
+    {
+      "name": "LightUnitCategory",
+      "confidence": "high",
+      "kind": "category",
+      "evidence": "dword_51257A bit1 marks light units whose veterancy cap is set to 6 in sub_41E7B0 instead of the default 10.",
+      "locations": [
+        "clash95.c:22133-22144",
+        "clash95.c:32950-32970"
+      ],
+      "related_to": [
+        "veterancy"
+      ]
+    },
+    {
+      "name": "PeonWorker",
+      "confidence": "medium",
+      "kind": "concrete_type",
+      "evidence": "The UI name builder uses ( &off_51256C )[22 * type ] and the zeroth entry is the literal \"peon\", identifying type id 0 as the worker/peon.",
+      "locations": [
+        "clash95.c:25370-25430"
+      ],
+      "related_to": [
+        "DefaultFieldUnit"
+      ]
+    }
+  ],
+  "stats": [
+    {
+      "name": "action_points",
+      "confidence": "high",
+      "semantic_role": "per-turn stamina consumed by melee/move actions",
+      "evidence": "Initialized from byte_512580 during slot creation and decremented each time sub_428400 executes an attack.",
+      "locations": [
+        "clash95.c:22124-22145",
+        "clash95.c:39680-39760"
+      ],
+      "stat_kind": "base_plus_current",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "morale_percent",
+      "confidence": "high",
+      "semantic_role": "percent modifier applied to every attack/defense computation",
+      "evidence": "Field +9 always starts at 100 and multiplies the outputs of sub_411120/sub_411280/sub_4112F0.",
+      "locations": [
+        "clash95.c:22131-22135",
+        "clash95.c:23404-23466"
+      ],
+      "stat_kind": "current_modifier",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "veterancy",
+      "confidence": "high",
+      "semantic_role": "experience bonus added before morale scaling",
+      "evidence": "sub_40F440 seeds offset +11 with 6 or 10 based on dword_51257A bit1 and the value feeds into all stat formulas as /5 or /10 increments.",
+      "locations": [
+        "clash95.c:22135-22144",
+        "clash95.c:23404-23466"
+      ],
+      "stat_kind": "current_modifier",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "base_melee_attack",
+      "confidence": "high",
+      "semantic_role": "core melee attack rating per type",
+      "evidence": "byte_51257E is read in sub_411120/UI_IconIndexFromStats to compute attack value and gates melee eligibility in sub_428400.",
+      "locations": [
+        "clash95.c:23404-23418",
+        "clash95.c:39680-39760"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit"
+      ]
+    },
+    {
+      "name": "base_secondary_attack",
+      "confidence": "medium",
+      "semantic_role": "secondary (likely ranged) attack rating",
+      "evidence": "byte_51257F feeds sub_4111C0 and the projectile hit-cost calculation in sub_4295D0 when byte_512582 marks ranged capability.",
+      "locations": [
+        "clash95.c:23419-23434",
+        "clash95.c:40440-40465"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "base_damage_scalar",
+      "confidence": "medium",
+      "semantic_role": "raw damage magnitude before morale/veterancy multiplier",
+      "evidence": "sub_411280 and sub_4112C0 read byte_512581 to compute inflicted HP values.",
+      "locations": [
+        "clash95.c:23438-23448"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "structure_damage_scalar",
+      "confidence": "medium",
+      "semantic_role": "alternate damage table used when attacking fortifications/buildings",
+      "evidence": "sub_4112F0 adds byte_512584 and veteranship before morale scaling when the caller passes the building-context flag.",
+      "locations": [
+        "clash95.c:23456-23466"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "ImmobileOrGarrisoned"
+      ]
+    },
+    {
+      "name": "road_move_cost",
+      "confidence": "high",
+      "semantic_role": "movement allowance on roads/paved tiles",
+      "evidence": "sub_413DD0 returns byte_512585 when the map tile stores a road index (v11[2] != 0xFFFF).",
+      "locations": [
+        "clash95.c:41380-41410"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "terrain_move_cost",
+      "confidence": "high",
+      "semantic_role": "movement allowance on arbitrary terrain",
+      "evidence": "sub_413DD0 and the dword_524568 lookup combine byte_512586 with tile-type offsets to enforce penalties across grass, mud, etc.",
+      "locations": [
+        "clash95.c:41380-41420",
+        "clash95.c:413B10-41405"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "unit_flags",
+      "confidence": "high",
+      "semantic_role": "bitmask describing mobility/lightness",
+      "evidence": "dword_51257A bit0 marks immobile/garrison units while bit1 marks light units with reduced veterancy caps.",
+      "locations": [
+        "clash95.c:22133-22144",
+        "clash95.c:42290-42310",
+        "clash95.c:32950-32970"
+      ],
+      "stat_kind": "modifier",
+      "used_by": [
+        "all unit categories"
+      ]
+    },
+    {
+      "name": "attack_range_max",
+      "confidence": "high",
+      "semantic_role": "maximum squared projectile range",
+      "evidence": "sub_4287E0 compares distance against byte_512582[88 * type] before allowing ranged attacks.",
+      "locations": [
+        "clash95.c:39803-39820",
+        "clash95.c:49182-49270"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "attack_range_min",
+      "confidence": "medium",
+      "semantic_role": "minimum squared projectile range (dead zone)",
+      "evidence": "The same range check requires distance to exceed byte_512583 entries, proving certain units have a close-range dead zone.",
+      "locations": [
+        "clash95.c:39803-39820"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "sprite_height",
+      "confidence": "medium",
+      "semantic_role": "UI render offset per type",
+      "evidence": "byte_512577 feeds the portrait renderer so selection frames and morale bars align per unit sprite height.",
+      "locations": [
+        "clash95.c:415F20-41610",
+        "clash95.c:27624-27695"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory",
+        "UnitType13_Hero"
+      ]
+    },
+    {
+      "name": "move_pixel_speed",
+      "confidence": "medium",
+      "semantic_role": "per-frame displacement during marching animations",
+      "evidence": "Movement loops multiply byte_512570 by direction vectors to advance dword_523F70/74 while stepping across tiles.",
+      "locations": [
+        "clash95.c:39240-39330",
+        "clash95.c:38680-38720"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "move_tick_delay",
+      "confidence": "medium",
+      "semantic_role": "animation delay between movement ticks",
+      "evidence": "`Time_Now` compares against byte_512571 before emitting the next movement frame in sub_38680.",
+      "locations": [
+        "clash95.c:38632-38705"
+      ],
+      "stat_kind": "modifier",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "death_animation_frames",
+      "confidence": "medium",
+      "semantic_role": "number of frames in a unit’s death/explosion effect",
+      "evidence": "byte_512578 is copied to dword_512364 and the death loop decrements a frame counter until it reaches zero.",
+      "locations": [
+        "clash95.c:39260-39320"
+      ],
+      "stat_kind": "base_stat",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    },
+    {
+      "name": "death_frame_interval",
+      "confidence": "medium",
+      "semantic_role": "time between death animation frames",
+      "evidence": "byte_512572 sets the `Time_Now` threshold before the next explosion frame increments dword_523F7C.",
+      "locations": [
+        "clash95.c:39290-39320"
+      ],
+      "stat_kind": "modifier",
+      "used_by": [
+        "DefaultFieldUnit",
+        "RangedUnitCategory"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "unit_type": "UnitType13_Hero",
+      "stat": "action_points",
+      "relationship_kind": "unused/by design",
+      "confidence": "high",
+      "evidence": "Hero type 13 is prevented from calling melee/ranged handlers, so its stamina and attack stats are never decremented (clash95.c:49182-49270)."
+    },
+    {
+      "unit_type": "RangedUnitCategory",
+      "stat": "base_secondary_attack",
+      "relationship_kind": "damage_source",
+      "confidence": "high",
+      "evidence": "Projectile cost/strength derives from byte_51257F whenever the type has a non-zero attack range (clash95.c:40440-40465, 49182-49270)."
+    },
+    {
+      "unit_type": "ImmobileOrGarrisoned",
+      "stat": "terrain_move_cost",
+      "relationship_kind": "ignored",
+      "confidence": "medium",
+      "evidence": "Units flagged with dword_51257A bit0 skip sub_415EA0 path highlight and therefore do not consume movement costs (clash95.c:27660-27695, 42290-42310)."
+    },
+    {
+      "unit_type": "DefaultFieldUnit",
+      "stat": "base_melee_attack",
+      "relationship_kind": "damage_source",
+      "confidence": "high",
+      "evidence": "Standard melee resolves only when byte_51257E for the attacking type is non-zero and consumes action_points accordingly (clash95.c:39680-39760)."
+    },
+    {
+      "unit_type": "RangedUnitCategory",
+      "stat": "attack_range_max",
+      "relationship_kind": "range_limit",
+      "confidence": "high",
+      "evidence": "sub_4287E0 compares squared distance against byte_512582 entries before allowing a projectile to fire (clash95.c:39803-39820)."
+    },
+    {
+      "unit_type": "RangedUnitCategory",
+      "stat": "attack_range_min",
+      "relationship_kind": "range_limit",
+      "confidence": "medium",
+      "evidence": "The same routine requires distance to exceed byte_512583 entries, proving certain ranged units have dead zones (clash95.c:39803-39820)."
+    },
+    {
+      "unit_type": "LightUnitCategory",
+      "stat": "veterancy",
+      "relationship_kind": "cap",
+      "confidence": "high",
+      "evidence": "sub_41E7B0 caps light-unit veterancy at 6 while heavy/default units can reach 10 (clash95.c:32950-32970)."
+    }
+  ],
+  "ambiguous": [
+    {
+      "candidate": "off_512568 / unit name table",
+      "candidate_kind": "unit_type",
+      "possible_interpretations": [
+        "Complete list of troop names",
+        "Scenario-specific alias list"
+      ],
+      "evidence": "Pointers exist (`off_512568`) but the actual strings were not emitted in clash95.c, so names cannot be recovered.",
+      "blockers": "Missing data segment for off_5123CC."
+    },
+    {
+      "candidate": "byte_51257F",
+      "candidate_kind": "stat",
+      "possible_interpretations": [
+        "ranged attack strength",
+        "defensive retaliation scaling"
+      ],
+      "evidence": "Used in both ranged calculations and move-cost penalty code; no textual labels describing its domain.",
+      "blockers": "Need annotated data tables or debug strings to disambiguate."
+    }
+  ]
+}
