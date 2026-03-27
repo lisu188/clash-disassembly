@@ -691,8 +691,8 @@ void BuildPlacement_RequestExit();
 // int __usercall UI_DrawConfirmBottom@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall UI_SetCurrentSelection@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall UI_ConfirmSelectionApply@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, double a5@<st0>);
-// int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_DecreaseTaxRate@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_IncreaseTaxRate@<eax>(int a1@<eax>, char a2@<bl>);
 // int __usercall BuildingTransferDialog_DecreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>);
 // int __usercall BuildingTransferDialog_IncreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>);
 // int __usercall BuildingTransferDialog_DecreasePendingGold@<eax>(int a1@<eax>, char a2@<bl>);
@@ -879,10 +879,10 @@ int __cdecl sub_43CF90();
 // BOOL __usercall Building_CanBuyUnitLicence@<eax>(char *a1@<eax>, int a2@<edx>);
 // int __usercall Building_FindFirstValidAddonSlot@<eax>(int a1@<eax>);
 // int __usercall __spoils<ecx> sub_43EE10@<eax>(int a1@<eax>);
-// signed int __usercall __spoils<ecx> sub_43EE50@<eax>(int a1@<eax>);
-// __int16 __usercall __spoils<ecx> sub_43EED0@<ax>(int a1@<eax>);
-// int __usercall sub_43F0C0@<eax>(int a1@<eax>);
-// __int16 __usercall __spoils<ecx> sub_43F160@<ax>(unsigned int a1@<eax>);
+// signed int __usercall __spoils<ecx> Building_GetTaxPressureTier@<eax>(int a1@<eax>);
+// __int16 __usercall __spoils<ecx> Building_UpdatePopulationGrowth@<ax>(int a1@<eax>);
+// int __usercall Building_CollectGoldIncome@<eax>(int a1@<eax>);
+// __int16 __usercall __spoils<ecx> Building_UpdateSettlementCrisis@<ax>(unsigned int a1@<eax>);
 // int __usercall Building_GetTotalValue@<eax>(int a1@<eax>);
 // int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>);
 // int __usercall AI_CalcFrontlineScore@<eax>(int a1@<eax>);
@@ -9503,7 +9503,7 @@ char Building_AddonWhitelist[16] =
 }; // weak
 char Building_AddonBlacklist[8] = { '\t', '\n', '\f', '\r', '\x0F', '\xFF', '\0', '\0' }; // weak
 _UNKNOWN unk_515C98; // weak
-char byte_515D00[16] =
+char g_TaxPressureThresholdsByPopulationBand[16] =
 {
   '\0',
   '\x05',
@@ -33245,9 +33245,9 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
           {
             if ( a2[4] == 2 )
             {
-              sub_43F0C0((int)a2);
-              sub_43EED0((int)a2);
-              sub_43F160((unsigned int)a2);
+              Building_CollectGoldIncome((int)a2);
+              Building_UpdatePopulationGrowth((int)a2);
+              Building_UpdateSettlementCrisis((unsigned int)a2);
               Prisoner_NewTurn((DWORD)a2, v12, (char)a2, a4);
             }
             v13 = (char)a2[4];
@@ -41151,7 +41151,7 @@ int __usercall BuildingTransferDialog_ConfirmTransfer@<eax>(int a1@<eax>, int a2
 // 532360: using guessed type __int16 word_532360[];
 
 //----- (0042AB80) --------------------------------------------------------
-int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_DecreaseTaxRate@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -41216,7 +41216,7 @@ int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AC80) --------------------------------------------------------
-int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_IncreaseTaxRate@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -54503,7 +54503,7 @@ int __usercall __spoils<ecx> sub_43EE10@<eax>(int a1@<eax>)
 // 43EE42: variable 'v6' is possibly undefined
 
 //----- (0043EE50) --------------------------------------------------------
-signed int __usercall __spoils<ecx> sub_43EE50@<eax>(int a1@<eax>)
+signed int __usercall __spoils<ecx> Building_GetTaxPressureTier@<eax>(int a1@<eax>)
 {
   unsigned __int16 v2; // ax
   int v3; // edx
@@ -54525,7 +54525,7 @@ signed int __usercall __spoils<ecx> sub_43EE50@<eax>(int a1@<eax>)
   }
   v4 = 4 * v3;
   result = 0;
-  while ( (unsigned __int8)(*(_BYTE *)(a1 + 436) & 0x3F) > (unsigned __int8)byte_515D00[v4] )
+  while ( (unsigned __int8)(*(_BYTE *)(a1 + 436) & 0x3F) > (unsigned __int8)g_TaxPressureThresholdsByPopulationBand[v4] )
   {
     ++result;
     ++v4;
@@ -54537,7 +54537,7 @@ signed int __usercall __spoils<ecx> sub_43EE50@<eax>(int a1@<eax>)
 // 43EE8A: conditional instruction was optimized away because eax.4<4
 
 //----- (0043EED0) --------------------------------------------------------
-__int16 __usercall __spoils<ecx> sub_43EED0@<ax>(int a1@<eax>)
+__int16 __usercall __spoils<ecx> Building_UpdatePopulationGrowth@<ax>(int a1@<eax>)
 {
   __int16 v2; // ax
   __int16 v3; // ax
@@ -54568,7 +54568,7 @@ __int16 __usercall __spoils<ecx> sub_43EED0@<ax>(int a1@<eax>)
     *(_BYTE *)(a1 + 434) = 0;
   v4 = Rng_RandRange(3, 5);
   v5 = v4;
-  switch ( (unsigned __int8)sub_43EE50(v6) )
+  switch ( (unsigned __int8)Building_GetTaxPressureTier(v6) )
   {
     case 0u:
       v5 = v4 + 5;
@@ -54630,7 +54630,7 @@ __int16 __usercall __spoils<ecx> sub_43EED0@<ax>(int a1@<eax>)
 // 43F08B: variable 'v16' is possibly undefined
 
 //----- (0043F0C0) --------------------------------------------------------
-int __usercall sub_43F0C0@<eax>(int a1@<eax>)
+int __usercall Building_CollectGoldIncome@<eax>(int a1@<eax>)
 {
   int v2; // ecx
   unsigned __int16 v3; // ax
@@ -54661,7 +54661,7 @@ int __usercall sub_43F0C0@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F160) --------------------------------------------------------
-__int16 __usercall __spoils<ecx> sub_43F160@<ax>(unsigned int a1@<eax>)
+__int16 __usercall __spoils<ecx> Building_UpdateSettlementCrisis@<ax>(unsigned int a1@<eax>)
 {
   unsigned int v1; // ecx
   char v2; // bl
