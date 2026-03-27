@@ -79,7 +79,7 @@
     "fields": [
       { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index dword_52456C with this word to select the terrain-specific byte_512586 move-cost column." },
       { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
-      { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." },
+      { "offset": 4, "name": "connection_overlay_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks the tile's connectable road, bridge, or attachment overlay. Movement switches to byte_512585 road costs when this word is present, and the connection-shape helpers canonicalize special variants back to base ids such as 866..876 before testing neighbor links." },
       { "offset": 6, "name": "terrain_anim_next_tick", "type": "int32", "notes": "Absolute tick deadline for the next terrain-tile animation step. The world update loop compares `Time_Now()` against this dword before advancing `terrain_tile_id` through the transition table." },
       { "offset": 10, "name": "overlay_anim_next_tick", "type": "int32", "notes": "Absolute tick deadline for the next overlay animation step. The same world update loop uses this dword to advance `overlay_tile_id` independently from the terrain base." }
     ],

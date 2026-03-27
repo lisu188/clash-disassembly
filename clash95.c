@@ -641,12 +641,12 @@ signed int UnitStackSplit_HasSelectedSlots();
 int __thiscall UnitStack_EndSplitMode(void *this);
 int __thiscall UnitStack_ClearSplitSelectionFlags(void *this);
 // int __usercall UnitStack_RefreshSplitSource@<eax>(DWORD a1@<ebp>);
-// BOOL __usercall sub_423BB0@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall sub_423C50@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall sub_423CF0@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall sub_423E10@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_423E90@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_423FC0@<eax>(int result@<eax>);
+// BOOL __usercall ConnectionOverlay_HasNorthLink@<eax>(int a1@<eax>, int a2@<edx>);
+// BOOL __usercall ConnectionOverlay_HasSouthLink@<eax>(int a1@<eax>, int a2@<edx>);
+// BOOL __usercall ConnectionOverlay_HasWestLink@<eax>(int a1@<eax>, int a2@<edx>);
+// BOOL __usercall ConnectionOverlay_HasEastLink@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall ConnectionOverlay_RebuildTileShape@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall ConnectionOverlay_GetCanonicalShapeId@<eax>(int result@<eax>);
 // signed int __usercall sub_424020@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // BOOL __usercall sub_424120@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall sub_424370@<eax>(int a1@<eax>, int a2@<edx>);
@@ -9283,7 +9283,7 @@ _UNKNOWN unk_514158; // weak
 int dword_51416C = 10; // weak
 int dword_514170 = 10; // weak
 int g_StackSplitSourceStackIndex = -1; // weak
-int dword_5141A0[27] =
+int g_ConnectionOverlayShapeByNeighborMask[27] =
 {
   0,
   0,
@@ -32757,7 +32757,7 @@ char __usercall sub_41E1E0@<al>(unsigned __int8 *a1@<eax>, int a2@<ecx>, char a3
   Building_OnGarrisonChange(*(unsigned __int16 *)(2 * a1[1] + 200 * *a1 + gameData + 556374) - 0x8000, v7, a4);
   v9 = (char)a1[4];
   if ( v9 == 2 || v9 == 1 )
-    sub_423E90(*a1, a1[1] + 2);
+    ConnectionOverlay_RebuildTileShape(*a1, a1[1] + 2);
   v10 = (char)a1[4];
   if ( !a1[4] )
   {
@@ -36966,27 +36966,27 @@ int __usercall UnitStack_RefreshSplitSource@<eax>(DWORD a1@<ebp>)
 // 514194: using guessed type int g_StackSplitSourceStackIndex;
 
 //----- (00423BB0) --------------------------------------------------------
-BOOL __usercall sub_423BB0@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall ConnectionOverlay_HasNorthLink@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v2; // eax
 
-  v2 = sub_423FC0(*(unsigned __int16 *)(gameData + 1400 * (a1 - 1) + 14 * a2 + 4));
+  v2 = ConnectionOverlay_GetCanonicalShapeId(*(unsigned __int16 *)(gameData + 1400 * (a1 - 1) + 14 * a2 + 4));
   return v2 == 867 || v2 == 869 || v2 == 871 || v2 == 872 || v2 == 874 || v2 == 875 || v2 == 868 || v2 == 952;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423C50) --------------------------------------------------------
-BOOL __usercall sub_423C50@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall ConnectionOverlay_HasSouthLink@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v2; // eax
 
-  v2 = sub_423FC0(*(unsigned __int16 *)(gameData + 1400 * (a1 + 1) + 14 * a2 + 4));
+  v2 = ConnectionOverlay_GetCanonicalShapeId(*(unsigned __int16 *)(gameData + 1400 * (a1 + 1) + 14 * a2 + 4));
   return v2 == 867 || v2 == 869 || v2 == 870 || v2 == 872 || v2 == 873 || v2 == 875 || v2 == 876 || v2 == 951;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423CF0) --------------------------------------------------------
-BOOL __usercall sub_423CF0@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall ConnectionOverlay_HasWestLink@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v4; // eax
   unsigned __int8 *v5; // eax
@@ -37004,7 +37004,7 @@ BOOL __usercall sub_423CF0@<eax>(int a1@<eax>, int a2@<edx>)
     || (v7 = *v5, v7 != a1)
     || (v8 = a1 ^ v7, LOBYTE(v8) = v5[1], v8 != a2 - 2) )
   {
-    v9 = sub_423FC0(*(unsigned __int16 *)(gameData + 1400 * a1 + 14 * (a2 - 1) + 4));
+    v9 = ConnectionOverlay_GetCanonicalShapeId(*(unsigned __int16 *)(gameData + 1400 * a1 + 14 * (a2 - 1) + 4));
     if ( v9 != 866 && v9 != 868 && v9 != 869 && v9 != 870 && v9 != 871 && v9 != 872 && v9 != 873 && v9 != 949 )
       return 0;
   }
@@ -37013,17 +37013,17 @@ BOOL __usercall sub_423CF0@<eax>(int a1@<eax>, int a2@<edx>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00423E10) --------------------------------------------------------
-BOOL __usercall sub_423E10@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall ConnectionOverlay_HasEastLink@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v2; // eax
 
-  v2 = sub_423FC0(*(unsigned __int16 *)(gameData + 1400 * a1 + 14 * (a2 + 1) + 4));
+  v2 = ConnectionOverlay_GetCanonicalShapeId(*(unsigned __int16 *)(gameData + 1400 * a1 + 14 * (a2 + 1) + 4));
   return v2 == 866 || v2 >= 871 && v2 <= 876 || v2 == 950;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00423E90) --------------------------------------------------------
-int __usercall sub_423E90@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall ConnectionOverlay_RebuildTileShape@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v3; // esi
   int v4; // ecx
@@ -37036,10 +37036,10 @@ int __usercall sub_423E90@<eax>(int a1@<eax>, int a2@<edx>)
   int v11; // ecx
   int result; // eax
 
-  v3 = 8 * sub_423CF0(a1, a2);
-  v5 = (4 * sub_423C50(a1, v4)) | v3;
-  v7 = (2 * sub_423E10(a1, v6)) | v5;
-  v9 = dword_5141A0[v7 | sub_423BB0(a1, v8)];
+  v3 = 8 * ConnectionOverlay_HasWestLink(a1, a2);
+  v5 = (4 * ConnectionOverlay_HasSouthLink(a1, v4)) | v3;
+  v7 = (2 * ConnectionOverlay_HasEastLink(a1, v6)) | v5;
+  v9 = g_ConnectionOverlayShapeByNeighborMask[v7 | ConnectionOverlay_HasNorthLink(a1, v8)];
   v11 = 14 * v10;
   result = gameData + 1400 * a1;
   if ( v9 )
@@ -37052,11 +37052,11 @@ int __usercall sub_423E90@<eax>(int a1@<eax>, int a2@<edx>)
 // 423EB9: variable 'v6' is possibly undefined
 // 423EC6: variable 'v8' is possibly undefined
 // 423EDF: variable 'v10' is possibly undefined
-// 5141A0: using guessed type int dword_5141A0[27];
+// 5141A0: using guessed type int g_ConnectionOverlayShapeByNeighborMask[27];
 // 5202E4: using guessed type int gameData;
 
 //----- (00423FC0) --------------------------------------------------------
-int __usercall sub_423FC0@<eax>(int result@<eax>)
+int __usercall ConnectionOverlay_GetCanonicalShapeId@<eax>(int result@<eax>)
 {
   if ( result >= 819 && result <= 861 )
     return *((unsigned __int16 *)UI_Locale_BuildingNames_I + result + 1);
@@ -37217,10 +37217,10 @@ signed int __usercall Road_Build@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
   v6 = gameData + 725 * v5;
   v29 = *(__int16 *)(v6 + 147174);
   v37 = *(__int16 *)(v6 + 147176);
-  v7 = sub_423BB0(v29, v37);
-  v8 = sub_423C50(v29, v37);
-  sub_423CF0(v29, v37);
-  v9 = sub_423E10(v29, v37);
+  v7 = ConnectionOverlay_HasNorthLink(v29, v37);
+  v8 = ConnectionOverlay_HasSouthLink(v29, v37);
+  ConnectionOverlay_HasWestLink(v29, v37);
+  v9 = ConnectionOverlay_HasEastLink(v29, v37);
   switch ( a2 )
   {
     case 0:
@@ -37474,7 +37474,7 @@ LABEL_14:
           {
             *(_WORD *)(gameData + 1400 * v29 + 14 * v37 + 4) = v13;
             v22 = *(_WORD *)(1400 * v11 + gameData + 14 * v12 + 4);
-            sub_423E90(v11, v12);
+            ConnectionOverlay_RebuildTileShape(v11, v12);
             if ( v22 != 0xFFFF )
             {
               v24 = v23 + gameData + 14 * v12;
@@ -37487,10 +37487,10 @@ LABEL_14:
             }
             else
             {
-              sub_423BB0(v11, v12);
-              sub_423C50(v11, v12);
-              sub_423CF0(v11, v12);
-              sub_423E10(v11, v12);
+              ConnectionOverlay_HasNorthLink(v11, v12);
+              ConnectionOverlay_HasSouthLink(v11, v12);
+              ConnectionOverlay_HasWestLink(v11, v12);
+              ConnectionOverlay_HasEastLink(v11, v12);
             }
             g_SelectedUnitIndex = a1;
             v28 = v12;
