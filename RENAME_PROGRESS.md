@@ -188,3 +188,10 @@
 |---|------------|------|------|----------|----------|------------|-----------|
 | 50 | 50 | Global | clash95.c | off_51256C | g_UnitSpriteFolders | High | This pointer array feeds every unit sprite load by appending folder names like `peon` to `units_go\` paths; renaming it exposes that it stores per-unit sprite folders. |
 | 51 | 51 | Helper | clash95.c | (implicit type 0) | UNIT_TYPE_PEASANT | High | The first sprite folder entry is `"peon"` and scripting hooks `IloscChlopow` / `WyprowadzChlopow` operate on that archetype, so naming type id 0 as `UNIT_TYPE_PEASANT` documents the unit taxonomy. |
+
+## Batch 17 – Unit Morale Wave
+| # | Cumulative | Kind | File | Old Name | New Name | Confidence | Rationale |
+|---|------------|------|------|----------|----------|------------|-----------|
+| 52 | 52 | Function | clash95.c | sub_4114B0 | Unit_CompactSquad | High | Core helper that removes `type == -1` slots by shifting subsequent entries and relinking army facts, used whenever units desert or are killed. |
+| 53 | 53 | Function | clash95.c | sub_411560 | UnitSlots_RemoveGaps | Medium | Secondary slot-compaction helper invoked with an explicit slot count after battle resolution to close gaps without touching the entire squad record. |
+| 54 | 54 | Function | clash95.c | sub_4115E0 | Unit_CheckLowMorale | High | Implements the low-morale deserter check: rolls RNG, logs via `Unit_CheckLowMorale` strings, shows the disband message, and compacts the squad when troops flee. |

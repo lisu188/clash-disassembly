@@ -334,8 +334,8 @@ signed int sub_40FEF0();
 // signed int __usercall Render_DrawSprite_v3@<eax>(int a1@<eax>, DWORD a2@<ebp>);
 // signed int __usercall LogAllUnits@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // signed int __usercall Unit_CompactSquad@<eax>(__int16 *a1@<eax>, int a2@<ecx>, double a3@<st0>);
-// _WORD *__usercall sub_411560@<eax>(_WORD *result@<eax>, int a2@<edx>);
-// void __usercall sub_4115E0(_BYTE *a1@<eax>, double a2@<st0>);
+// _WORD *__usercall UnitSlots_RemoveGaps@<eax>(_WORD *result@<eax>, int a2@<edx>);
+// void __usercall Unit_CheckLowMorale(_BYTE *a1@<eax>, double a2@<st0>);
 // signed int __usercall __spoils<ecx,st0> sub_411810@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 // BOOL __usercall sub_4118A0@<eax>(int a1@<eax>);
 // BOOL __usercall sub_4118C0@<eax>(int a1@<eax>);
@@ -23479,7 +23479,7 @@ signed int __usercall LogAllUnits@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<eb
 // 5202E4: using guessed type int gameData;
 
 //----- (004114B0) --------------------------------------------------------
-signed int __usercall sub_4114B0@<eax>(__int16 *a1@<eax>, int a2@<ecx>, double a3@<st0>)
+signed int __usercall Unit_CompactSquad@<eax>(__int16 *a1@<eax>, int a2@<ecx>, double a3@<st0>)
 {
   int v3; // edx
   DWORD v4; // ebp
@@ -23534,7 +23534,7 @@ signed int __usercall sub_4114B0@<eax>(__int16 *a1@<eax>, int a2@<ecx>, double a
 // 411550: variable 'v12' is possibly undefined
 
 //----- (00411560) --------------------------------------------------------
-_WORD *__usercall sub_411560@<eax>(_WORD *result@<eax>, int a2@<edx>)
+_WORD *__usercall UnitSlots_RemoveGaps@<eax>(_WORD *result@<eax>, int a2@<edx>)
 {
   int v2; // ebx
   int v3; // ebp
@@ -23574,7 +23574,7 @@ _WORD *__usercall sub_411560@<eax>(_WORD *result@<eax>, int a2@<edx>)
 }
 
 //----- (004115E0) --------------------------------------------------------
-void __usercall sub_4115E0(_BYTE *a1@<eax>, double a2@<st0>)
+void __usercall Unit_CheckLowMorale(_BYTE *a1@<eax>, double a2@<st0>)
 {
   int v3; // esi
   __int16 *v4; // ecx
@@ -23777,7 +23777,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
     }
     while ( v5 < 10 );
     Rules_LinkArmyFact((__int16 *)v4, v6, v7, a4, v5, 0xFFFFFFFF);
-    sub_4115E0((_BYTE *)v4, a4);
+    Unit_CheckLowMorale((_BYTE *)v4, a4);
     sub_411810((__int16 *)v4, 0xFFFFFFFF, a4);
     if ( !UnitStack_HasReadyUnits(v4) )
       goto LABEL_16;
@@ -31662,7 +31662,7 @@ LABEL_55:
     }
     while ( v42 < v25 );
   }
-  sub_411560((int)v57, v25);
+  UnitSlots_RemoveGaps((int)v57, v25);
   if ( a8 )
     sub_41C360(a8, v54);
   v44 = 0;
