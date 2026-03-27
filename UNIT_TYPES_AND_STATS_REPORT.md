@@ -1,52 +1,94 @@
 # Unit Types and Stats Report
 
 ## 1. Overview
-- **Analyzed areas:** `clash95.c` sections covering `Unit_Create`, squad-slot initialization (`sub_40F440`), attack/move handlers (`sub_428400`, `sub_4295D0`, `sub_437630`), unit metadata tables (`byte_51257E`..`byte_512586`, `g_UnitTypeFlags`, `byte_512582`), the hidden 88-byte `UnitTypeMetadataRecord` family, and movement/pathing helpers (`Map_GetUnitTileMoveCostOrZero`, `UnitStack_HasOnlyFlyingUnits`, `UnitStack_BuildMergedTerrainMoveProfile`).
-- **Evidence forms:** direct field writes and reads, array lookups indexed by unit type, conditional logic that gates abilities, and formulas applying morale and experience multipliers.
-- **Game resemblance:** mechanics (10-man stacks, morale/experience modifiers, Polish localization) match *Clash* (1998 strategy game). No other files in repo reference different gameplay modes.
+- **Analyzed artifacts:** `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`.
+- **Primary reconstruction path:** the 88-byte `unit_stats` record family at `off_512568` / `unit_stats` in the data segment. `clash95.asm` exposes per-record xrefs to both the localized-name pointers and sprite-folder pointers, while `clash95.exe` confirms the folder stems as raw strings.
+- **Reliability rule used here:** names and ids are only promoted when at least two independent signals align. Folder order alone was treated as insufficient after the asm pass exposed duplicated localized-name pointers for the final commander records.
 
-## 2. Recovered Unit Types / Categories
+## 2. Recovered Unit Roster
+
+### 2.1 Full Roster
+| type_id | recovered_name | folder | confidence | evidence summary |
+| --- | --- | --- | --- | --- |
+| `0` | `UnitType0_Peasant` | `peon` | high | The first `unit_stats` record pairs `Posp. ruszenie / Peasant / Bauern` with `peon`. |
+| `1` | `UnitType1_LightInfantry` | `infl` | high | `off_5123F0` (`Lekka piechota / Light infantry`) and `infl` share the same record xrefs. |
+| `2` | `UnitType2_HeavyInfantry` | `infh` | high | `off_5123FC` (`Ciężka piechota / Heavy infantry`) resolves to the `infh` folder record. |
+| `3` | `UnitType3_Pikeman` | `sprl` | high | `off_512438` (`Pikinier / Pikeman`) and `sprl` resolve to the same 88-byte record. |
+| `4` | `UnitType4_HeavySpearman` | `sprh` | high | `off_51242C` (`Halabardnik / Heavy spearman`) pairs with `sprh`. |
+| `5` | `UnitType5_LightCavalry` | `cavl` | high | `off_51248C` (`Lekka jazda / Light cavalry`) pairs with `cavl`. |
+| `6` | `UnitType6_HeavyCavalry` | `cavh` | high | `off_512498` (`Ciężka jazda / Heavy cavalry`) pairs with `cavh`. |
+| `7` | `UnitType7_Knights` | `ryc` | high | `off_5124A4` (`Rycerstwo / Knights`) resolves to `ryc`. |
+| `8` | `UnitType8_DragonCavalry` | `drag` | high | `off_5124B0` (`Dragon / Dragon cavalry`) resolves to `drag`. |
+| `9` | `UnitType9_Archer` | `arch` | high | `off_5123D8` (`Łucznik / Archer`) resolves to `arch`. |
+| `10` | `UnitType10_Crossbower` | `kusza` | high | `off_512414` (`Kusznik / Crossbower`) resolves to `kusza`. |
+| `11` | `UnitType11_Musketeer` | `muszk` | high | `off_512420` (`Muszkieter / Musketeer`) resolves to `muszk`. |
+| `12` | `UnitType12_Catapult` | `katap` | high | `off_512408` (`Katapulta / Catapult`) resolves to `katap`. |
+| `13` | `UnitType13_Ram` | `taran` | high | `off_512468` (`Taran / Rammbock`) resolves to `taran`; ordinary melee code also excludes type `13`. |
+| `14` | `UnitType14_Cannon` | `armat` | high | `off_512444` (`Armata / Cannon`) resolves to `armat`. |
+| `15` | `UnitType15_Forester` | `lesn` | high | `off_512450` (`Leśnik / Forester`) resolves to `lesn`. |
+| `16` | `UnitType16_Goral` | `goral` | high | `off_5123E4` (`Góral / Highlander`) resolves to `goral`. |
+| `17` | `UnitType17_Builder` | `budow` | high | `off_51245C` (`Budowniczy / Builder`) resolves to `budow`. |
+| `18` | `UnitType18_Worm` | `worm` | high | `off_5124BC` (`Czerw / Worm`) resolves to `worm`. |
+| `19` | `UnitType19_Elephant` | `slon` | high | `off_5124C8` (`Słoń / Elephant`) resolves to `slon`. |
+| `20` | `UnitType20_Cyclop` | `cykl` | high | `off_5124D4` (`Cyklop / Cyclop`) resolves to `cykl`. |
+| `21` | `UnitType21_Troll` | `trol` | high | `off_5124E0` (`Troll`) resolves to `trol`. |
+| `22` | `UnitType22_Scorpion` | `scorp` | high | `off_5124EC` (`Skorpion / Scorpion`) resolves to `scorp`. |
+| `23` | `UnitType23_Skeleton` | `szk` | high | `off_5124F8` (`Szkielet / Skeleton`) resolves to `szk`. |
+| `24` | `UnitType24_Wizard` | `mag` | high | `off_512504` (`Mag / Wizard`) resolves to `mag`. |
+| `25` | `UnitType25_Ghost` | `duch` | high | `off_512510` (`Duch / Ghost`) resolves to `duch`. |
+| `26` | `UnitType26_Eagle` | `orzel` | high | `off_51251C` (`Orzeł / Eagle`) resolves to `orzel`. |
+| `27` | `UnitType27_Pegasus` | `pegaz` | high | `off_512474` (`Pegaz / Pegasus`) resolves to `pegaz`. |
+| `28` | `UnitType28_Winger` | `skrz` | high | `off_512528` (`Skrzydlak / Winger`) resolves to `skrz`. |
+| `29` | `UnitType29_Fly` | `wazka` | high | `off_512534` (`Ważka / Fly / Riesenlibelle`) resolves to `wazka`. |
+| `30` | `UnitType30_Dragon` | `smok` | high | `off_512480` (`Smok / Dragon / Drachen`) resolves to `smok`. |
+| `31` | `UnitType31_Gold` | `gold` | high | `off_512540` (`Złoto / Gold`) resolves to `gold`. |
+| `32` | `UnitType32_Peasants` | `peas` | high | `off_51254C` (`Chłopi / Peasants`) resolves to `peas`. |
+| `33` | `UnitType33_TacticianFootVariant` | `specm` | medium | This record reuses `off_512558` (`Dowódca / Tactician / Soldat`) but carries infantry-like movement assets such as `b_lekkie\\krokb`. |
+| `34` | `UnitType34_TacticianMountedVariant` | `speck` | medium | This record also reuses `off_512558`, but its movement assets switch to cavalry-like stems, suggesting a mounted commander variant. |
+
+### 2.2 Recovered Categories
 | recovered_name | confidence | kind | evidence summary | where found | related |
-| `UnitType0_Peasant` | high | concrete_type | Sprite loader uses `g_UnitSpriteFolders[22 * type]` and the base entry is the literal `"peon"`, which generates file paths like `units_go\peon?.s32`; CLIPS host functions `IloscChlopow` / `WyprowadzChlopow` operate on the same unit archetype, proving type id 0 represents the Chłopi/Peasant stack. | `clash95.c:8314-8340`, `clash95.c:25320-25480`, `clash95.c:68590-68610` | `UNIT_TYPE_PEASANT`, scripting APIs `IloscChlopow`, `WyprowadzChlopow` |
-| `UnitType13_Hero` | high | concrete_type | Type id 13 is repeatedly excluded from standard melee/ranged handlers (`sub_437630`, `sub_428400`) and from general unit menus, implying a unique hero/queen piece that cannot be consumed like regular troops. | `clash95.c:21784-21806`, `49182-49270` | interacts with queen narrative systems.
-| `RangedUnitCategory` | high | category | Units with non-zero `byte_512582` entries execute the projectile logic in `sub_437630`/`sub_4287E0` and therefore own ranged stats. | `clash95.c:39803-39820`, `49182-49270` | inherits range/damage stats.
-| `FlyingUnitCategory` | high | category | `g_UnitTypeFlags` bit0 marks airborne units. They render in the post-ground pass, use alternate movement/death handling, and `UnitStack_HasOnlyFlyingUnits` returns true only when every occupied slot carries this flag. | `clash95.c:27660-27690`, `36171-36190`, `39530-39590`, `44795-44910`, `56980-57330` | likely contains dragons and other aerial units, but exact type ids remain unresolved. |
-| `GroundUnitCategory` | medium | category | Units with `byte_51257E > 0` and `g_UnitTypeFlags bit0 == 0` participate in ordinary melee, use terrain-dependent movement sounds, and render in the ground pass before airborne overlays. | `clash95.c:22124-22145`, `39680-39760`, `44795-44910`, `56980-57330` | parent archetype for most standard troop IDs.
-| `LightUnitCategory` | high | category | `g_UnitTypeFlags` bit1 selects “light” units whose veterancy cap is reduced to 6 and whose UI checks use the light threshold in `sub_41E7B0`. | `clash95.c:22133-22144`, `clash95.c:32950-32970` | controls `veterancy` scaling.
-| `PeonWorker` | medium | concrete_type | The localized UI name builder pulls the string literal "peon" from `(&off_51256C)[22 * type]`, proving type id 0 is the worker/peon unit. | `clash95.c:25370-25430` | baseline civilian/worker unit.
+| --- | --- | --- | --- | --- | --- |
+| `RangedUnitCategory` | high | category | Units with non-zero `byte_512582` execute projectile logic and use the ranged stat helpers. | `clash95.c:39803-39820`, `clash95.c:49182-49270` | `base_secondary_attack`, `attack_range_max`, `attack_range_min` |
+| `FlyingUnitCategory` | high | category | `g_UnitTypeFlags` bit0 marks airborne units. They render in the post-ground pass, use airborne movement-sound variants, and satisfy `UnitStack_HasOnlyFlyingUnits`. | `clash95.c:27660-27690`, `clash95.c:36171-36190`, `clash95.c:39530-39590`, `clash95.c:44795-44910`, `clash95.c:56958-57358` | `UnitType26_Eagle`, `UnitType27_Pegasus`, `UnitType28_Winger`, `UnitType29_Fly`, `UnitType30_Dragon` |
+| `GroundUnitCategory` | medium | category | Non-airborne units with non-zero melee stats use ordinary terrain/surface-dependent movement sounds and the normal melee path. | `clash95.c:22124-22145`, `clash95.c:39680-39760`, `clash95.c:56958-57358` | standard infantry, cavalry, siege, and utility units |
+| `LightUnitCategory` | high | category | `g_UnitTypeFlags` bit1 selects the 6-point veterancy seed instead of the default 10-point seed. | `clash95.c:22133-22144`, `clash95.c:32950-32970` | `veterancy` |
 
 ## 3. Recovered Stats
 | recovered_name | confidence | semantic meaning | evidence summary | locations | stat_kind | used_by |
 | --- | --- | --- | --- | --- | --- | --- |
-| `action_points` (slot `+8`, base `byte_512580`) | high | Per-turn stamina / men count used as resource for attacks or movement. Initialized in `sub_40F440` from `byte_512580[88*type]`, checked before melee and reduced by 5 per swing in `sub_428400`. | `clash95.c:22124-22145`, `39680-39760` | base/current | All field units.
-| `morale_percent` (slot `+9`) | high | Percentage multiplier applied to damage/defense calculations. Always set to 100 on spawn, later overwritten by combat resolution (`sub_426FC0`), and every stat helper multiplies by `morale / 100`. | `clash95.c:22131-22135`, `23438-23460` | current modifier | All field units.
-| `veterancy` (slot `+11`) | high | Small bonus derived from experience/training; default 6 for light units, 10 for heavy (`g_UnitTypeFlags bit1`). Added as `/5` or `/10` bonus in stat formulas. | `clash95.c:22135-22144`, `23404-23460` | current modifier | All field units.
-| `base_melee_attack` (`byte_51257E`) | high | Core melee attack rating. Non-zero entries identify units able to initiate melee; formulas `sub_411120`/`UI_IconIndexFromStats` turn it into actual attack strength via morale/veterancy multipliers. | `clash95.c:23404-23418`, `39680-39760` | base_stat | GroundUnitCategory.
-| `base_secondary_attack` (`byte_51257F`) | medium | Secondary strike (used in ranged targeting and some cost calculations). `sub_4295D0` derives retaliation cost from it, and UI routines use it when `byte_512582` marks ranged capability. | `clash95.c:23419-23434`, `40440-40465` | base_stat | RangedUnitCategory.
-| `base_damage_scalar` (`byte_512581`) | medium | Raw damage per volley; converted to actual damage via morale/veterancy in `sub_411280` and `sub_4112C0`. | `clash95.c:23438-23448` | base_stat | Field units when resolving inflicted HP loss.
-| `structure_damage_scalar` (`byte_512584`) | medium | Alternate damage table, likely vs buildings, used in `sub_4112F0` where caller passes context flag `a2` (unit attacking fortifications). | `clash95.c:23456-23466` | base_stat | Siege or anti-building scenarios.
-| `road_move_cost` (`byte_512585`) | high | Movement allowance when tile provides a built road (`v11[2] != 0xFFFF`); used directly by `Map_GetUnitTileMoveCostOrZero`. | `clash95.c:41380-41410` | base_stat | All movers.
-| `terrain_move_cost` (`byte_512586` via `g_TerrainMoveTableOffsets`) | high | Terrain-dependent movement allowance; `Map_GetUnitTileMoveCostOrZero` combines the move table with `dword_52456C[tileType]` to enforce penalties. | `clash95.c:41380-41420`, `413B10-41405` | base_stat | All movers.
-| `unit_type_flags` (`g_UnitTypeFlags`) | high | Bitfield inside the recovered 88-byte unit metadata record. Bit0 is a flying/airborne flag; a second flag bit still controls the 6-vs-10 initialization path at slot `+11`, but its exact gameplay label remains unresolved. | `clash95.c:22133-22144`, `27660-27690`, `36171-36190`, `39530-39590`, `44795-44910`, `56980-57330` | modifier | All unit types.
-| `attack_range_max` (`byte_512582`) | high | Maximum squared attack range for ranged units. Projectile routines compare distance to this value before firing. | `clash95.c:39803-39820`, `42779-42865` | base_stat | RangedUnitCategory.
-| `attack_range_min` (`byte_512583`) | medium | Minimum squared range (dead zone) for ranged units—catapults/ballistas cannot fire inside this distance. | `clash95.c:39803-39820` | base_stat | RangedUnitCategory.
-| `sprite_height` (`byte_512577`) | medium | Per-type sprite extent used to place selection frames and morale bars; UI draw code subtracts this offset to keep icons aligned. | `clash95.c:415F20-41610`, `27624-27695` | base_stat | All units shown in the tactical UI.
-| `move_pixel_speed` (`byte_512570`) | medium | Per-frame displacement in marching animations; each tick adds `byte_512570` scaled by direction vectors to `dword_523F70/74`, controlling how quickly sprites cross tiles. | `clash95.c:39240-39330`, `38680-38720` | base_stat | Mobile units.
-| `move_tick_delay` (`byte_512571`) | medium | Delay between movement animation updates; movement loops wait for `Time_Now` to exceed this value before emitting the next step. | `clash95.c:38632-38705` | modifier | Mobile units.
-| `death_animation_frames` (`byte_512578`) | medium | Maximum frame count for a unit’s death/explosion effect; copied into `dword_512364` and decremented until the effect completes. | `clash95.c:39260-39320` | base_stat | Units with custom death FX.
-| `death_frame_interval` (`byte_512572`) | medium | Interval between successive death-effect frames; fed into `Time_Now` inside the same loop that advances `dword_523F7C`. | `clash95.c:39290-39320` | modifier | Units with animated death FX.
+| `action_points` | high | Per-turn stamina or readiness budget used by attacks and movement logic. | Seeded in `UnitSlot_InitFromType`, consumed by ordinary melee. | `clash95.c:22124-22145`, `clash95.c:39680-39760` | base/current | most field units |
+| `morale_percent` | high | Percentage multiplier applied to combat stats. | Always initialized to `100`, then used in all attack/damage formulas. | `clash95.c:22131-22135`, `clash95.c:23438-23460` | current modifier | all field units |
+| `veterancy` | high | Experience or training bonus added before morale scaling. | Seeded to `6` or `10` based on `g_UnitTypeFlags` bit1 and consumed by attack helpers. | `clash95.c:22135-22144`, `clash95.c:23404-23460` | current modifier | all field units |
+| `base_melee_attack` | high | Core melee attack rating. | Non-zero values gate standard melee and feed `UnitStats_CalcMeleeAttack`. | `clash95.c:23404-23418`, `clash95.c:39680-39760` | base stat | melee-capable units |
+| `base_secondary_attack` | medium | Secondary attack value, strongly associated with ranged/projectile strength. | Used by ranged damage and retaliation-like calculations, but still lacks an explicit label. | `clash95.c:23419-23434`, `clash95.c:40440-40465` | base stat | ranged-capable units |
+| `base_damage_scalar` | medium | Raw damage scalar before morale/veterancy scaling. | Read by `UnitStats_CalcDamagePerHit` and `UnitStats_GetBaseDamage`. | `clash95.c:23438-23448` | base stat | combat resolution |
+| `structure_damage_scalar` | medium | Alternate damage scalar used in building or fortification contexts. | `UnitStats_CalcSiegeAttack` switches to `byte_512584` for the alternate context. | `clash95.c:23456-23466` | base stat | siege or anti-building cases |
+| `road_move_cost` | high | Move cost on road or bridge overlays. | Returned when the tile record carries a road/bridge overlay. | `clash95.c:41380-41410` | base stat | world movement |
+| `terrain_move_cost` | high | Terrain-dependent move cost. | Combined with `g_TerrainMoveTableOffsets` by world movement helpers. | `clash95.c:41380-41420`, `clash95.c:413B10-41405` | base stat | world movement |
+| `unit_type_flags` | high | Bitfield inside the 88-byte metadata record. | Bit0 is airborne; another bit still controls the light-unit seed path. | `clash95.c:22133-22144`, `clash95.c:27660-27690`, `clash95.c:36171-36190`, `clash95.c:39530-39590`, `clash95.c:44795-44910`, `clash95.c:56958-57358` | modifier | all unit types |
+| `attack_range_max` | high | Maximum squared projectile range. | Projectile logic rejects shots beyond this value. | `clash95.c:39803-39820`, `clash95.c:42779-42865` | base stat | ranged units |
+| `attack_range_min` | medium | Minimum squared projectile range or dead-zone floor. | Projectile logic also rejects shots inside this lower bound. | `clash95.c:39803-39820` | base stat | ranged units with dead zones |
+| `move_pixel_speed` | medium | Per-frame displacement during movement animation. | Movement loops multiply direction vectors by `byte_512570`. | `clash95.c:38680-38720`, `clash95.c:39240-39330` | base stat | mobile units |
+| `move_tick_delay` | medium | Delay between movement animation ticks. | `Time_Now` gates animation advancement with `byte_512571`. | `clash95.c:38632-38705` | modifier | mobile units |
+| `death_animation_frames` | medium | Number of frames in the death effect. | Copied into the battle death-loop state. | `clash95.c:39260-39320` | base stat | units with animated deaths |
+| `death_frame_interval` | medium | Delay between death-animation frames. | Used by the same death loop that advances the effect frame counter. | `clash95.c:39290-39320` | modifier | units with animated deaths |
+| `move_sound_stem` | high | Per-unit movement-sound stem inside the metadata record. | `Audio_PlayWorldMapUnitMoveSound` and `Audio_PlayBattleMapUnitMoveSound` build `sfx\\ruchy\\<stem>...` paths from the field at offset `+81`. | `clash95.c:56958-57358`, `clash95.asm:101018-101218`, `clash95.asm:409554-409562` | base stat | all moving units |
+| `move_sound_variant_count` | high | Number of alternating step samples per unit type. | The current step variant wraps modulo `g_UnitMoveSoundVariantCounts[88 * type]`. | `clash95.c:57103-57104`, `clash95.c:57331-57332`, `clash95.asm:101212-101218`, `clash95.asm:101564-101570` | base stat | step-based movers |
+| `move_sound_base_volume` | high | Default volume used when playing movement sounds. | Both movement-sound helpers pass `g_UnitMoveSoundBaseVolumes[88 * type]` into `CSS_PlaySound`. | `clash95.c:57103`, `clash95.c:57139`, `clash95.c:57234`, `clash95.c:57331`, `clash95.asm:101067`, `clash95.asm:101419` | base stat | all moving units |
 
 ## 4. Type-to-Stat Relationships
 | unit_type | stat | relationship | confidence | evidence |
 | --- | --- | --- | --- | --- |
-| UnitType13_Hero | action_points, base_melee_attack | Not consumable: hero units skip stamina deduction and cannot call melee/ranged handlers, so these stats remain unused, indicating a narrative/queen piece. | high | `clash95.c:49182-49270`, `39680-39760`.
-| RangedUnitCategory | base_secondary_attack, base_damage_scalar, attack_range_max/min | Ranged units use `byte_51257F`/`byte_512581` for projectile strength and `byte_512582`/`byte_512583` for allowable range in `sub_4287E0`. | high | `clash95.c:39803-39820`, `40440-40465`.
-| FlyingUnitCategory | unit_type_flags | `g_UnitTypeFlags` bit0 changes render order, movement-sound family, death animation, and the “all units airborne” predicate used by stack/path helpers. | high | `clash95.c:27660-27695`, `36171-36190`, `39530-39590`, `44795-44910`, `56980-57330`.
-| GroundUnitCategory | action_points + morale + veterancy + base_melee_attack | Ordinary ground squads spawn via `Unit_Create`, consume stamina per melee, and have attack damage derived from the trio of base stats and modifiers. | high | `clash95.c:22124-22145`, `39680-39760`, `23404-23448`.
-| LightUnitCategory | veterancy | Light-type units cap `veterancy` at 6 via `sub_41E7B0`, unlike heavy/default units which can reach 10. | high | `clash95.c:22133-22144`, `32950-32970`.
+| `UnitType13_Ram` | `action_points`, `base_melee_attack` | Standard melee handlers reject type `13`, so its primary interaction path is not the ordinary melee routine despite sharing generic unit-slot state. | high | `clash95.c:39688`, `clash95.c:49195` |
+| `UnitType29_Fly` | `move_sound_stem` | Type `29` is one of the looped non-footstep movers, grouped with siege engines in both world and battle movement audio. | high | `clash95.c:56992`, `clash95.c:57200` |
+| `UnitType30_Dragon` | `unit_type_flags` | Type `30` resolves to `smok` and belongs to the airborne class governed by `g_UnitTypeFlags` bit0. | high | `clash95.asm:409287-409426`, `clash95.c:44795-44910`, `clash95.c:56958-57358` |
+| `RangedUnitCategory` | `base_secondary_attack`, `base_damage_scalar`, `attack_range_max`, `attack_range_min` | Projectile units use `byte_51257F`, `byte_512581`, `byte_512582`, and `byte_512583` together. | high | `clash95.c:39803-39820`, `clash95.c:40440-40465` |
+| `FlyingUnitCategory` | `unit_type_flags`, `move_sound_stem` | Airborne units are identified by bit0 and use single-digit airborne movement-sound suffixes instead of terrain-surface suffixes. | high | `clash95.c:57018-57025`, `clash95.c:57273-57282` |
+| `LightUnitCategory` | `veterancy` | Light units seed at `6` rather than `10`. | high | `clash95.c:22135-22144`, `clash95.c:32950-32970` |
 
 ## 5. Ambiguous Findings
-- **Unit metadata record:** `g_UnitTypeMetadataRecords` is not a plain name table. It is an 88-byte record family whose base field is a localized name pointer array and whose later bytes contain flags plus the per-terrain movement profile (`+29..+37`).
-- **Unit names:** The localized strings behind `g_UnitTypeMetadataRecords` (`off_5123CC`) are not emitted in `clash95.c`, preventing direct recovery of human-readable names for most ids.
-- **`smok` / `słoń` / `góral`:** No current code path proves which concrete type ids map to these roster names. `smok` is compatible with the recovered flying category, but that remains an inference, not a confirmed rename.
-- **Exact semantics of `byte_51257F` and `byte_512584`:** Both feed into damage/attack cost formulas, yet the code does not label whether they correspond to ranged vs siege vs anti-building damage. More evidence (e.g., resource tables with column headers) is required.
+- `UnitType33_TacticianFootVariant` and `UnitType34_TacticianMountedVariant` are still medium-confidence recovered names. The folder stems and movement-sound families diverge, but both records reuse the same localized-name pointer triplet.
+- `byte_51257F` remains only medium-confidence as a pure ranged-attack stat. It behaves like a second attack value, but the code does not yet expose a canonical gameplay label.
+- `byte_512584` still looks like an alternate damage table for buildings or fortifications, but the exact original design label remains unresolved.
+- The decompiler’s `char *(*...)[102]` type on `g_UnitTypeMetadataRecords` is misleading if read literally as “34 unit types x 3 languages.” The asm/xref pass shows at least 35 record slots, with the final two commander records reusing one localized-name pointer triplet.

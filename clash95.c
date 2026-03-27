@@ -44,6 +44,15 @@
 #define UNIT_STACK_PATH_OFFSET 316
 #define UNIT_STACK_PATH_BYTES 0x194
 #define UNIT_TYPE_PEASANT 0
+#define UNIT_TYPE_CATAPULT 12
+#define UNIT_TYPE_RAM 13
+#define UNIT_TYPE_CANNON 14
+#define UNIT_TYPE_FORESTER 15
+#define UNIT_TYPE_GORAL 16
+#define UNIT_TYPE_WORM 18
+#define UNIT_TYPE_ELEPHANT 19
+#define UNIT_TYPE_FLY 29
+#define UNIT_TYPE_DRAGON 30
 
 #define PLAYER_DATA(playerIndex) (gameData + PLAYER_DATA_STRIDE * (playerIndex))
 #define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
@@ -837,7 +846,7 @@ int sub_43F9B0();
 // void __usercall BattleMapFileName(const char *a1@<eax>, int a2@<ecx>, int a3@<ebx>);
 // char __usercall sub_4414C0@<al>(char *a1@<eax>, char *a2@<edx>);
 // char __usercall sub_441550@<al>(const char *a1@<eax>, int a2@<ecx>, int a3@<ebx>);
-// int __usercall sub_4415A0@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall BattleMap_GetMoveSoundSurfaceClass@<eax>(int a1@<eax>, int a2@<edx>);
 // char *__usercall sub_4415E0@<eax>(char *a1@<eax>, char *a2@<edx>, int a3@<ebx>);
 // int __usercall sub_441670@<eax>(char *a1@<eax>, int a2@<edx>);
 // int __usercall sub_441720@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
@@ -853,18 +862,18 @@ void sub_441930();
 int sub_4419D0();
 void sub_4419F0();
 void sub_441A00();
-void sub_441A10();
-void sub_441A20();
-// int __usercall sub_441A30@<eax>(int result@<eax>);
-// int __usercall sub_441B00@<eax>(int result@<eax>);
-// int __usercall sub_441BE0@<eax>(int result@<eax>);
-// int __usercall sub_441C80@<eax>(int result@<eax>);
-// int __usercall sub_441D20@<eax>(int result@<eax>);
-// int __usercall sub_441DC0@<eax>(int result@<eax>);
+void Audio_EnableUnitSounds();
+void Audio_DisableUnitSounds();
+// int __usercall Audio_PlayUnitActivateSound@<eax>(int result@<eax>);
+// int __usercall Audio_PlayUnitMoveOrderSound@<eax>(int result@<eax>);
+// int __usercall Audio_PlayUnitRangedAttackSound@<eax>(int result@<eax>);
+// int __usercall Audio_PlayUnitHitSound@<eax>(int result@<eax>);
+// int __usercall Audio_PlayUnitDeathSound@<eax>(int result@<eax>);
+// int __usercall Audio_PlayUnitMeleeAttackSound@<eax>(int result@<eax>);
 // int __usercall sub_441E60@<eax>(int result@<eax>);
-// void __usercall sub_441F00(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>);
-// void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>);
-void sub_4425B0();
+// void __usercall Audio_PlayWorldMapUnitMoveSound(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>);
+// void __usercall Audio_PlayBattleMapUnitMoveSound(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>);
+void Audio_StopUnitMoveSound();
 // char *__usercall sub_4425E0@<eax>(char *result@<eax>);
 // int __usercall sub_442680@<eax>(int result@<eax>);
 // int __usercall sub_4426C0@<eax>(char *a1@<eax>, int a2@<edx>);
@@ -8370,9 +8379,9 @@ char byte_5125B5[] = { '\0' }; // weak
 char byte_5125B6[] = { '\0' }; // weak
 char byte_5125B7[] = { '\x03' }; // weak
 char byte_5125B8[] = { '\0' }; // weak
-char *off_5125B9 = "b_lekkie\\krokb"; // weak
-char byte_5125BD[] = { '\x04' }; // weak
-char byte_5125BE[] = { '\n' }; // weak
+char *g_UnitMoveSoundStems = "b_lekkie\\krokb"; // weak
+char g_UnitMoveSoundVariantCounts[] = { '\x04' }; // weak
+char g_UnitMoveSoundBaseVolumes[] = { '\n' }; // weak
 char byte_512B58 = '\x1A'; // weak
 char *off_513328[3] = { "pol\\", "eng\\", "ger\\" }; // weak
 int Map_NeighborDX[] = { 0 }; // weak
@@ -9931,7 +9940,7 @@ char byte_517318[440] =
   '\0'
 }; // weak
 int dword_5174D0 = -1; // weak
-int dword_5174D4 = 1; // weak
+int g_UnitSoundsEnabled = 1; // weak
 int dword_5174D8 = 1; // weak
 char aSfx_0[5] = "sfx\\"; // weak
 char aSfxOddzialy[14] = "sfx\\oddzialy\\"; // weak
@@ -11553,10 +11562,10 @@ int dword_543C80; // weak
 int dword_543C84; // weak
 char byte_543C88[20]; // weak
 int dword_543C9C; // weak
-int dword_543CA4; // weak
-int dword_543CA8; // weak
-int dword_543CAC; // weak
-int dword_543CB0; // weak
+int g_LastUnitActivateSoundHandle; // weak
+int g_CurrentUnitMoveSoundHandle; // weak
+int g_CurrentUnitMoveSoundVariant; // weak
+int g_CurrentUnitMoveSoundTypeId; // weak
 int dword_543CC8[11]; // weak
 int dword_543D14; // weak
 int dword_543D18; // weak
@@ -18248,7 +18257,7 @@ LABEL_26:
         {
           if ( *v35 )
           {
-            sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
             sub_410330(g_SelectedUnitIndex, 1, v37, (DWORD)v35, a1);
             sub_406980((DWORD)v35);
           }
@@ -18357,7 +18366,7 @@ LABEL_138:
     if ( !sub_411F60(g_SelectedUnitIndex) )
       return;
 LABEL_205:
-    sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+    Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_410330(g_SelectedUnitIndex, 1, v30, v1, a1);
     sub_406980(v1);
     return;
@@ -18385,7 +18394,7 @@ LABEL_205:
         if ( sub_411F60(g_SelectedUnitIndex) )
         {
           v61 = 725 * g_SelectedUnitIndex;
-          sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           sub_410330(g_SelectedUnitIndex, v62, v51, v61, a1);
           sub_406980(v61);
         }
@@ -18408,7 +18417,7 @@ LABEL_205:
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
           sub_406980(v56);
           Render_LoadResourceSprite(v57, v56);
-          sub_441A30(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&dword_544CD8, 0, v54);
         }
       }
@@ -18457,7 +18466,7 @@ LABEL_205:
         else
         {
           if ( sub_411F60(g_SelectedUnitIndex) )
-            sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           sub_410330(g_SelectedUnitIndex, 1, v63, v65, a1);
           sub_406980(v65);
           sub_418700(1);
@@ -18669,7 +18678,7 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
     sub_423B70((void *)v7);
     sub_40A360(v9);
     sub_40FAD0(v10);
-    sub_441A30(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+    Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_418700(1);
     sub_406980(a3);
     Render_LoadResourceSprite(v11, a3);
@@ -19654,7 +19663,7 @@ LABEL_24:
               {
                 qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v24, 0x194u);
                 if ( sub_411F60(g_SelectedUnitIndex) )
-                  sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
                 sub_410330(g_SelectedUnitIndex, 1, (char)v24, 0, a4);
               }
               j__nfree_();
@@ -23070,7 +23079,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
         v35 = (unsigned __int8)v105;
         if ( sub_43FB10((unsigned __int8)v105, BYTE1(v105)) )
         {
-          sub_4425B0();
+          Audio_StopUnitMoveSound();
           LOBYTE(v13) = v34;
           Temple_UnitGetInto(v35, v37, v34, v34, a5);
           *v95 = 0;
@@ -23150,7 +23159,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
                     if ( (v77 & 1) != 0 )
                     {
                       dword_523F7C = ((_BYTE)dword_523F7C + 1) & 7;
-                      sub_441F00(*v7, v7[1], dword_523F7C, v7[3]);
+                      Audio_PlayWorldMapUnitMoveSound(*v7, v7[1], dword_523F7C, v7[3]);
                     }
                     if ( v106 )
                     {
@@ -23300,7 +23309,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
       }
       else
       {
-        sub_4425B0();
+        Audio_StopUnitMoveSound();
         if ( sub_43E770(v107, *(unsigned __int16 *)(v13 + gameData + v31 + 556374) - 0x8000) )
           Building_UnitGetInto(v107, *(unsigned __int16 *)(v13 + gameData + v31 + 556374) - 0x8000, v13, v31, a5);
         else
@@ -23313,7 +23322,7 @@ LABEL_21:
     v16 = *(__int16 *)(v14 + 147174);
     if ( v16 != v94 || (v16 = v93, *(__int16 *)(v14 + 147176) != v93) )
       Rules_LinkArmyFact(v7, v16, gameData, a5, v13, v94);
-    sub_4425B0();
+    Audio_StopUnitMoveSound();
     dword_523F74 = v17;
     dword_523F70 = v17;
     v18 = v7 + 158;
@@ -38636,7 +38645,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
               if ( (v38 & 1) != 0 )
               {
                 dword_523F7C = ((_BYTE)dword_523F7C + 1) & 7;
-                sub_442290((unsigned __int16)v5[2], (unsigned __int16)v5[3], dword_523F7C, *v5);
+                Audio_PlayBattleMapUnitMoveSound((unsigned __int16)v5[2], (unsigned __int16)v5[3], dword_523F7C, *v5);
               }
               Time_Now(v36, v39);
               v40 = dword_523F70;
@@ -38719,7 +38728,7 @@ LABEL_15:
     v21 = 1423 * *((unsigned __int8 *)v5 + 2);
     *(_DWORD *)((char *)v5 + 23) = 0;
     *(_DWORD *)(gameData + v21 + 140073) = 1;
-    sub_4425B0();
+    Audio_StopUnitMoveSound();
     sub_405920(&dword_523F78);
     dword_512360 = -1;
     sub_430C20();
@@ -39300,7 +39309,7 @@ LABEL_22:
       v69 = *(__int16 *)(v64 + dword_532048 + 852);
       v70 = (unsigned __int8)byte_5125B7[88 * v69];
       if ( v70 == dword_523F7C )
-        sub_441DC0(v69);
+        Audio_PlayUnitMeleeAttackSound(v69);
       v65 = Time_Now(v64, v70);
       sub_430B20((unsigned __int16)v5[2] - 1, (unsigned __int16)v5[3] - 1);
       sub_430B20((unsigned __int16)v5[2], (unsigned __int16)v5[3] - 1);
@@ -39323,7 +39332,7 @@ LABEL_22:
     }
     else
     {
-      sub_441C80((__int16)*v100);
+      Audio_PlayUnitHitSound((__int16)*v100);
       dword_514E44 = v74;
       dword_5320EC = Rng_RandRange(0, 7);
       Time_Now(v75, 3);
@@ -39534,7 +39543,7 @@ int __usercall sub_427FA0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD 
   log(a2, a3, a4, (int)aDeathanimD);
   v6 = 31 * v5;
   v7 = (__int16 *)(dword_532048 + 852 + 31 * v5);
-  sub_441D20(*v7);
+  Audio_PlayUnitDeathSound(*v7);
   if ( (g_UnitTypeFlags[22 * *v7] & 1) != 0 )
   {
     *(_BYTE *)(40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3] + 2334) = 48;
@@ -39676,7 +39685,7 @@ signed int __usercall sub_428400@<eax>(unsigned __int16 *a1@<eax>, int a2@<edx>,
   v6 = (__int16 *)(dword_532048 + 852 + 31 * v5);
   v7 = (__int16 *)(31 * v30 + dword_532048 + 852);
   v8 = *v6;
-  if ( !byte_51257E[88 * v8] || v8 == 13 || *v7 == -1 )
+  if ( !byte_51257E[88 * v8] || v8 == UNIT_TYPE_RAM || *v7 == -1 )
     return 0;
   if ( v4 )
     sub_42D250();
@@ -40118,7 +40127,7 @@ __int16 __userpurge sub_428880@<ax>(
         v37 = *(__int16 *)(v32 + dword_532048 + 852);
         v38 = (unsigned __int8)byte_5125B8[88 * v37];
         if ( v38 == dword_523F7C )
-          sub_441BE0(v37);
+          Audio_PlayUnitRangedAttackSound(v37);
         v124 = Time_Now(v35, v38);
         sub_430B20(*(unsigned __int16 *)(v32 + dword_532048 + 856), *(unsigned __int16 *)(v32 + dword_532048 + 858));
         ++dword_523F7C;
@@ -40162,7 +40171,7 @@ __int16 __userpurge sub_428880@<ax>(
           v52 = dword_523F7C;
           v53 = (unsigned __int8)byte_5125B8[88 * v51];
           if ( v53 == dword_523F7C )
-            sub_441BE0(v51);
+            Audio_PlayUnitRangedAttackSound(v51);
           v124 = Time_Now(v52, v53);
           sub_430B20(*(unsigned __int16 *)(v128 + dword_532048 + 856), *(unsigned __int16 *)(v128 + dword_532048 + 858));
           v48 = dword_512364;
@@ -40325,7 +40334,7 @@ LABEL_62:
   }
   dword_5320EC = Rng_RandRange(3, 7);
   if ( v113 )
-    sub_441C80(*(__int16 *)v113);
+    Audio_PlayUnitHitSound(*(__int16 *)v113);
   v84 = Time_Now(v83, v82);
   v88 = Time_Now(v86, v85);
   while ( v87 && (unsigned __int16)sub_405ED0(dword_5320FC) >= dword_532100 || v113 && dword_5320EC )
@@ -42373,7 +42382,7 @@ LABEL_5:
           }
           else
           {
-            sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
             LOWORD(IsKeyPressed) = sub_4266E0(g_SelectedUnitIndex, v14, v13, v10);
           }
         }
@@ -42584,7 +42593,7 @@ __int16 sub_42CB50()
               {
                 if ( DD_IsFlipping((int)dword_544CD8) )
                 {
-                  sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                   sub_429BD0(v18, v2);
                   Render_Begin((int)dword_544CD8, 0);
                 }
@@ -42609,7 +42618,7 @@ __int16 sub_42CB50()
               }
               if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
               {
-                sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                 sub_4298E0(g_SelectedUnitIndex, v2, v15, v3);
                 Render_Begin((int)dword_544CD8, 0);
               }
@@ -42636,7 +42645,7 @@ __int16 sub_42CB50()
                 v21 = sub_425A00(g_SelectedUnitIndex, v2, (int)v7, v3, v5);
                 v22 = dword_532048;
                 *(_DWORD *)(31 * g_SelectedUnitIndex + dword_532048 + 875) = v21;
-                sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                 sub_4266E0(g_SelectedUnitIndex, v23, v22, v5);
                 Render_Begin((int)dword_544CD8, v24);
               }
@@ -42695,7 +42704,7 @@ __int16 sub_42CB50()
           sub_431DE0(v9);
           sub_431DE0(v5);
           sub_430F80(0, 1, v8, v3);
-          sub_441A30(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+          Audio_PlayUnitActivateSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
         }
       }
     }
@@ -42832,7 +42841,7 @@ int __usercall __spoils<ecx> sub_42D3A0@<eax>(int a1@<eax>, int a2@<ecx>, char a
   if ( result != -1 )
   {
     if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(v7 + 854) + 140051) )
-      return sub_441A30(result);
+      return Audio_PlayUnitActivateSound(result);
   }
   return result;
 }
@@ -49183,7 +49192,7 @@ int *__usercall sub_437630@<eax>(int a1@<eax>, DWORD a2@<edx>)
   v24 = *((_BYTE *)v4 + 8);
   v5 = *v4;
   v31 = (__int16 *)(31 * a2 + dword_532048 + 852);
-  if ( v5 == 13 )
+  if ( v5 == UNIT_TYPE_RAM )
     return 0;
   result = (int *)sub_4262D0(
                     a1,
@@ -56237,7 +56246,7 @@ char __usercall sub_441550@<al>(const char *a1@<eax>, int a2@<ecx>, int a3@<ebx>
 // 441575: variable 'v5' is possibly undefined
 
 //----- (004415A0) --------------------------------------------------------
-int __usercall sub_4415A0@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall BattleMap_GetMoveSoundSurfaceClass@<eax>(int a1@<eax>, int a2@<edx>)
 {
   return (unsigned __int8)byte_517318[*(__int16 *)(40 * a1 + dword_532048 + 2 * a2)];
 }
@@ -56565,21 +56574,21 @@ void sub_441A00()
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A10) --------------------------------------------------------
-void sub_441A10()
+void Audio_EnableUnitSounds()
 {
-  dword_5174D4 = 1;
+  g_UnitSoundsEnabled = 1;
 }
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441A20) --------------------------------------------------------
-void sub_441A20()
+void Audio_DisableUnitSounds()
 {
-  dword_5174D4 = 0;
+  g_UnitSoundsEnabled = 0;
 }
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441A30) --------------------------------------------------------
-int __usercall sub_441A30@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitActivateSound@<eax>(int result@<eax>)
 {
   char *v1; // esi
   char *v2; // edi
@@ -56592,7 +56601,7 @@ int __usercall sub_441A30@<eax>(int result@<eax>)
   char v9[5]; // [esp+1h] [ebp-69h]
   char v10[100]; // [esp+6h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v10, aSfxOddzialy, sizeof(v10));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56625,16 +56634,16 @@ int __usercall sub_441A30@<eax>(int result@<eax>)
     while ( v8 );
     v9[strlen(v10)] = Rng_RandRange(49, 50);
     result = CSS_PlaySound((int)v10, 64, 0, 0);
-    dword_543CA4 = result;
+    g_LastUnitActivateSoundHandle = result;
   }
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
-// 543CA4: using guessed type int dword_543CA4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
+// 543CA4: using guessed type int g_LastUnitActivateSoundHandle;
 
 //----- (00441B00) --------------------------------------------------------
-int __usercall sub_441B00@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitMoveOrderSound@<eax>(int result@<eax>)
 {
   int v1; // ebx
   char *v2; // esi
@@ -56648,10 +56657,10 @@ int __usercall sub_441B00@<eax>(int result@<eax>)
   char v10[5]; // [esp+1h] [ebp-6Dh]
   char v11[104]; // [esp+6h] [ebp-68h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     v1 = 22 * result;
-    CSS_SetSoundVolume(dword_543CA4, 0, 500);
+    CSS_SetSoundVolume(g_LastUnitActivateSoundHandle, 0, 500);
     qmemcpy(v11, aSfxOddzialy_0, 0x64u);
     v2 = (&g_UnitSpriteFolders)[v1];
     v3 = &v11[strlen(v11)];
@@ -56687,11 +56696,11 @@ int __usercall sub_441B00@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
-// 543CA4: using guessed type int dword_543CA4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
+// 543CA4: using guessed type int g_LastUnitActivateSoundHandle;
 
 //----- (00441BE0) --------------------------------------------------------
-int __usercall sub_441BE0@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitRangedAttackSound@<eax>(int result@<eax>)
 {
   char *v1; // esi
   char *v2; // edi
@@ -56703,7 +56712,7 @@ int __usercall sub_441BE0@<eax>(int result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_1, sizeof(v9));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56739,10 +56748,10 @@ int __usercall sub_441BE0@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441C80) --------------------------------------------------------
-int __usercall sub_441C80@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitHitSound@<eax>(int result@<eax>)
 {
   char *v1; // esi
   char *v2; // edi
@@ -56754,7 +56763,7 @@ int __usercall sub_441C80@<eax>(int result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_2, sizeof(v9));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56790,10 +56799,10 @@ int __usercall sub_441C80@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441D20) --------------------------------------------------------
-int __usercall sub_441D20@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitDeathSound@<eax>(int result@<eax>)
 {
   char *v1; // esi
   char *v2; // edi
@@ -56805,7 +56814,7 @@ int __usercall sub_441D20@<eax>(int result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_3, sizeof(v9));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56841,10 +56850,10 @@ int __usercall sub_441D20@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441DC0) --------------------------------------------------------
-int __usercall sub_441DC0@<eax>(int result@<eax>)
+int __usercall Audio_PlayUnitMeleeAttackSound@<eax>(int result@<eax>)
 {
   char *v1; // esi
   char *v2; // edi
@@ -56856,7 +56865,7 @@ int __usercall sub_441DC0@<eax>(int result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_4, sizeof(v9));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56892,7 +56901,7 @@ int __usercall sub_441DC0@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441E60) --------------------------------------------------------
 int __usercall sub_441E60@<eax>(int result@<eax>)
@@ -56907,7 +56916,7 @@ int __usercall sub_441E60@<eax>(int result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_5, sizeof(v9));
     v1 = (&g_UnitSpriteFolders)[22 * result];
@@ -56943,10 +56952,10 @@ int __usercall sub_441E60@<eax>(int result@<eax>)
   return result;
 }
 // 51256C: using guessed type char *g_UnitSpriteFolders;
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441F00) --------------------------------------------------------
-void __usercall sub_441F00(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>)
+void __usercall Audio_PlayWorldMapUnitMoveSound(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>)
 {
   char *v5; // esi
   char *v6; // edi
@@ -56978,20 +56987,20 @@ void __usercall sub_441F00(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
   _BYTE v32[16]; // [esp+D4h] [ebp-10h] BYREF
 
   v29 = a2;
-  if ( !dword_5174D4 )
+  if ( !g_UnitSoundsEnabled )
     return;
-  if ( a4 != 14 && a4 != 13 && a4 != 12 && a4 != 29 )
+  if ( a4 != UNIT_TYPE_CANNON && a4 != UNIT_TYPE_RAM && a4 != UNIT_TYPE_CATAPULT && a4 != UNIT_TYPE_FLY )
   {
     if ( a3 % 4 )
       return;
-    if ( a4 != dword_543CB0 )
+    if ( a4 != g_CurrentUnitMoveSoundTypeId )
     {
-      dword_543CB0 = a4;
-      dword_543CAC = 0;
+      g_CurrentUnitMoveSoundTypeId = a4;
+      g_CurrentUnitMoveSoundVariant = 0;
     }
-    CSS_StopSound(dword_543CA8, 0);
+    CSS_StopSound(g_CurrentUnitMoveSoundHandle, 0);
     qmemcpy(v27, aSfxRuchy_0, sizeof(v27));
-    v13 = (&off_5125B9)[22 * a4];
+    v13 = (&g_UnitMoveSoundStems)[22 * a4];
     v14 = &v27[strlen(v27)];
     do
     {
@@ -57009,11 +57018,11 @@ void __usercall sub_441F00(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
     {
       v17 = v32;
       v32[1] = HIBYTE(word_5178F4);
-      v32[0] = dword_543CAC + 49;
+      v32[0] = g_CurrentUnitMoveSoundVariant + 49;
       goto LABEL_25;
     }
     strcpy(v31, "d0");
-    v31[1] = dword_543CAC + 49;
+    v31[1] = g_CurrentUnitMoveSoundVariant + 49;
     v26 = Map_DestroyTile(a1, v29);
     if ( v26 < 0xB7 )
     {
@@ -57091,15 +57100,15 @@ LABEL_25:
       v23 += 2;
     }
     while ( v25 );
-    dword_543CA8 = CSS_PlaySound((int)v27, (unsigned __int8)byte_5125BE[v21], 0, 0);
-    dword_543CAC = (dword_543CAC + 1) % (unsigned __int8)byte_5125BD[v21];
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)v27, (unsigned __int8)g_UnitMoveSoundBaseVolumes[v21], 0, 0);
+    g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[v21];
     return;
   }
-  if ( a4 != dword_543CB0 )
+  if ( a4 != g_CurrentUnitMoveSoundTypeId )
   {
-    dword_543CB0 = a4;
+    g_CurrentUnitMoveSoundTypeId = a4;
     qmemcpy(v28, aSfxRuchy, sizeof(v28));
-    v5 = (&off_5125B9)[22 * a4];
+    v5 = (&g_UnitMoveSoundStems)[22 * a4];
     v6 = &v28[strlen(v28)];
     do
     {
@@ -57127,7 +57136,7 @@ LABEL_25:
       v10 += 2;
     }
     while ( v12 );
-    dword_543CA8 = CSS_PlaySound((int)v28, (unsigned __int8)byte_5125BE[88 * a4], 0, 0);
+    g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)v28, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * a4], 0, 0);
     if ( a4 > 0xD )
     {
       if ( a4 <= 0xE )
@@ -57139,22 +57148,22 @@ LABEL_25:
     {
       v30 = 31336;
     }
-    CSS_SetSoundLoop(dword_543CA8, v30, -1);
+    CSS_SetSoundLoop(g_CurrentUnitMoveSoundHandle, v30, -1);
   }
 }
 // 441FD2: conditional instruction was optimized away because ebx.4==C
 // 442183: conditional instruction was optimized away because ebx.4==1D
 // 441FC9: simplified comparisons for 'ebx.4': >=Du && >=Eu became >=Eu
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 5125B9: using guessed type char *off_5125B9;
-// 5174D4: using guessed type int dword_5174D4;
+// 5125B9: using guessed type char *g_UnitMoveSoundStems;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 // 5178F4: using guessed type __int16 word_5178F4;
-// 543CA8: using guessed type int dword_543CA8;
-// 543CAC: using guessed type int dword_543CAC;
-// 543CB0: using guessed type int dword_543CB0;
+// 543CA8: using guessed type int g_CurrentUnitMoveSoundHandle;
+// 543CAC: using guessed type int g_CurrentUnitMoveSoundVariant;
+// 543CB0: using guessed type int g_CurrentUnitMoveSoundTypeId;
 
 //----- (00442290) --------------------------------------------------------
-void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>)
+void __usercall Audio_PlayBattleMapUnitMoveSound(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsigned int a4@<ebx>)
 {
   char *v5; // esi
   char *v6; // edi
@@ -57186,15 +57195,15 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
   _BYTE v32[16]; // [esp+D4h] [ebp-10h] BYREF
 
   v29 = a2;
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
-    if ( a4 == 14 || a4 == 13 || a4 == 12 || a4 == 29 )
+    if ( a4 == UNIT_TYPE_CANNON || a4 == UNIT_TYPE_RAM || a4 == UNIT_TYPE_CATAPULT || a4 == UNIT_TYPE_FLY )
     {
-      if ( a4 != dword_543CB0 )
+      if ( a4 != g_CurrentUnitMoveSoundTypeId )
       {
-        dword_543CB0 = a4;
+        g_CurrentUnitMoveSoundTypeId = a4;
         qmemcpy(v28, aSfxRuchy_1, sizeof(v28));
-        v5 = (&off_5125B9)[22 * a4];
+        v5 = (&g_UnitMoveSoundStems)[22 * a4];
         v6 = &v28[strlen(v28)];
         do
         {
@@ -57222,7 +57231,7 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
           v10 += 2;
         }
         while ( v12 );
-        dword_543CA8 = CSS_PlaySound((int)v28, (unsigned __int8)byte_5125BE[88 * a4], 0, 0);
+        g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)v28, (unsigned __int8)g_UnitMoveSoundBaseVolumes[88 * a4], 0, 0);
         if ( a4 > 0xD )
         {
           if ( a4 <= 0xE )
@@ -57234,19 +57243,19 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
         {
           v30 = 31336;
         }
-        CSS_SetSoundLoop(dword_543CA8, v30, -1);
+        CSS_SetSoundLoop(g_CurrentUnitMoveSoundHandle, v30, -1);
       }
     }
     else if ( !(a3 % 4) )
     {
-      if ( a4 != dword_543CB0 )
+      if ( a4 != g_CurrentUnitMoveSoundTypeId )
       {
-        dword_543CB0 = a4;
-        dword_543CAC = 0;
+        g_CurrentUnitMoveSoundTypeId = a4;
+        g_CurrentUnitMoveSoundVariant = 0;
       }
-      CSS_StopSound(dword_543CA8, 0);
+      CSS_StopSound(g_CurrentUnitMoveSoundHandle, 0);
       qmemcpy(v27, aSfxRuchy_2, sizeof(v27));
-      v13 = (&off_5125B9)[22 * a4];
+      v13 = (&g_UnitMoveSoundStems)[22 * a4];
       v14 = &v27[strlen(v27)];
       do
       {
@@ -57264,13 +57273,13 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
       {
         v17 = v32;
         v32[1] = HIBYTE(word_5179CC);
-        v32[0] = dword_543CAC + 49;
+        v32[0] = g_CurrentUnitMoveSoundVariant + 49;
       }
       else
       {
         strcpy(v31, "d0");
-        v31[1] = dword_543CAC + 49;
-        v26 = sub_4415A0(a1, v29);
+        v31[1] = g_CurrentUnitMoveSoundVariant + 49;
+        v26 = BattleMap_GetMoveSoundSurfaceClass(a1, v29);
         if ( v26 )
         {
           if ( v26 <= 1 )
@@ -57319,8 +57328,8 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
         v23 += 2;
       }
       while ( v25 );
-      dword_543CA8 = CSS_PlaySound((int)v27, (unsigned __int8)byte_5125BE[v21], 0, 0);
-      dword_543CAC = (dword_543CAC + 1) % (unsigned __int8)byte_5125BD[v21];
+      g_CurrentUnitMoveSoundHandle = CSS_PlaySound((int)v27, (unsigned __int8)g_UnitMoveSoundBaseVolumes[v21], 0, 0);
+      g_CurrentUnitMoveSoundVariant = (g_CurrentUnitMoveSoundVariant + 1) % (unsigned __int8)g_UnitMoveSoundVariantCounts[v21];
     }
   }
 }
@@ -57328,25 +57337,25 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
 // 442513: conditional instruction was optimized away because ebx.4==1D
 // 442359: simplified comparisons for 'ebx.4': >=Du && >=Eu became >=Eu
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 5125B9: using guessed type char *off_5125B9;
-// 5174D4: using guessed type int dword_5174D4;
+// 5125B9: using guessed type char *g_UnitMoveSoundStems;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 // 5179CC: using guessed type __int16 word_5179CC;
-// 543CA8: using guessed type int dword_543CA8;
-// 543CAC: using guessed type int dword_543CAC;
-// 543CB0: using guessed type int dword_543CB0;
+// 543CA8: using guessed type int g_CurrentUnitMoveSoundHandle;
+// 543CAC: using guessed type int g_CurrentUnitMoveSoundVariant;
+// 543CB0: using guessed type int g_CurrentUnitMoveSoundTypeId;
 
 //----- (004425B0) --------------------------------------------------------
-void sub_4425B0()
+void Audio_StopUnitMoveSound()
 {
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
-    CSS_StopSound(dword_543CA8, 333);
-    dword_543CB0 = -1;
+    CSS_StopSound(g_CurrentUnitMoveSoundHandle, 333);
+    g_CurrentUnitMoveSoundTypeId = -1;
   }
 }
-// 5174D4: using guessed type int dword_5174D4;
-// 543CA8: using guessed type int dword_543CA8;
-// 543CB0: using guessed type int dword_543CB0;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
+// 543CA8: using guessed type int g_CurrentUnitMoveSoundHandle;
+// 543CB0: using guessed type int g_CurrentUnitMoveSoundTypeId;
 
 //----- (004425E0) --------------------------------------------------------
 char *__usercall sub_4425E0@<eax>(char *result@<eax>)
@@ -57361,7 +57370,7 @@ char *__usercall sub_4425E0@<eax>(char *result@<eax>)
   char v8; // al
   char v9[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxButtons, sizeof(v9));
     v1 = result;
@@ -57396,14 +57405,14 @@ char *__usercall sub_4425E0@<eax>(char *result@<eax>)
   }
   return result;
 }
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00442680) --------------------------------------------------------
 int __usercall sub_442680@<eax>(int result@<eax>)
 {
   _BYTE v1[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( dword_5174D4 )
+  if ( g_UnitSoundsEnabled )
   {
     sprintf_(v1, "sfx\\artefakt\\%d.wav", result);
     return CSS_PlaySound((int)v1, 64, 0, 0);
@@ -57411,7 +57420,7 @@ int __usercall sub_442680@<eax>(int result@<eax>)
   return result;
 }
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (004426C0) --------------------------------------------------------
 int __usercall sub_4426C0@<eax>(char *a1@<eax>, int a2@<edx>)
@@ -57425,7 +57434,7 @@ int __usercall sub_4426C0@<eax>(char *a1@<eax>, int a2@<edx>)
   char v10; // al
   char v11[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( !dword_5174D4 )
+  if ( !g_UnitSoundsEnabled )
     return 0;
   qmemcpy(v11, aSfx, sizeof(v11));
   v4 = &v11[strlen(v11)];
@@ -57457,7 +57466,7 @@ int __usercall sub_4426C0@<eax>(char *a1@<eax>, int a2@<edx>)
   while ( v10 );
   return CSS_PlaySound((int)v11, a2, 0, 0);
 }
-// 5174D4: using guessed type int dword_5174D4;
+// 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00442760) --------------------------------------------------------
 int __usercall sub_442760@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
@@ -62201,9 +62210,9 @@ void __usercall sub_44A9C0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
     sub_4419D0();
   }
   if ( *(_DWORD *)(a1 + 20) )
-    sub_441A10();
+    Audio_EnableUnitSounds();
   else
-    sub_441A20();
+    Audio_DisableUnitSounds();
 }
 // 44AA23: variable 'v5' is possibly undefined
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
@@ -62710,7 +62719,7 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
   sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
   Unit_Create(0x11u, 0, v7, 0, 6);
-  Unit_Create(0x1Du, 0, 6, 0, 6);
+  Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
   Unit_Create(9u, 0, 7, 0, 7);
   sub_422BE0(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   Unit_Create(0x14u, 0, v8, 0, 7);
@@ -63155,7 +63164,7 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           0,
           v10,
           v4);
-        Unit_Create(0xFu, v7, v16, 0, v38);
+        Unit_Create(UNIT_TYPE_FORESTER, v7, v16, 0, v38);
         sub_422BE0(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
@@ -63241,7 +63250,7 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           0,
           v10,
           v4);
-        Unit_Create(0xFu, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_FORESTER, v7, v10, 0, v40);
         sub_422BE0(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -63289,7 +63298,7 @@ signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           0,
           v10,
           v4);
-        Unit_Create(0xFu, v7, v23, 0, v38);
+        Unit_Create(UNIT_TYPE_FORESTER, v7, v23, 0, v38);
         sub_422BE0(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
