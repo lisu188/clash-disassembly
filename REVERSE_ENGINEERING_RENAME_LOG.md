@@ -307,8 +307,17 @@
 | BuildingRecord + 414 | selected_unit_licence_slot_index | Recovered Struct Field | Buildings / Production | High | `Building_SetUnitProduction` stores the selected licence slot here, `Building_StopUnitProduction` clears it to `-1`, and per-turn production resolves the active unit type through this index. | c |
 | BuildingRecord + 415 | production_turns_remaining | Recovered Struct Field | Buildings / Production | High | `Building_SetUnitProduction` seeds this countdown from `g_UnitTypeProductionTurns`, UI status panels display it, and the per-turn production resolver decrements it until unit creation. | c |
 
+## Batch 30 – Player Faction And Port Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| PlayerRuntimeState + 27 | has_human_controller | Recovered Struct Field | gameData / Player Runtime | High | Rules logging prints `komputer` as `1 - value`, and UI/gameplay paths treat nonzero here as locally controlled/human-visible. | c |
+| PlayerRuntimeState + 31 | ai_intelligence_level | Recovered Struct Field | gameData / Player Runtime | High | Rules logging prints this field as `inteligencja`, the player-stats UI chooses the head icon from it, and building production discounts use threshold checks on the same dword. | c |
+| PlayerRuntimeState + 39 | is_christian_faction | Recovered Struct Field | gameData / Player Runtime | High | Rules logging prints `chrzesc` from this field, and many castle UI/resource paths switch between christian and pagan assets based on it. | c |
+| PlayerRuntimeState + 43 | primary_castle_building_index | Recovered Struct Field | gameData / Player Runtime | Medium | Set when the player first creates or receives a type-2 castle while the field is `-1`, and cleared when that same building is captured. | c |
+| gameData + 586374 .. +586394 | PortSupplyState | Recovered Struct | Port / Coastal | High | Port load, per-turn refresh, supply pickup, and UI rendering all operate on one contiguous six-dword state block holding port coordinates, arrival timing, ready state, shipment size, and shoreline refresh mode. | c |
+
 ## Deferred / Ambiguous
-- `PlayerRuntimeState.controller_mode` at `+27` is clearly a multiplayer/campaign controller-selection field, but the exact original enum semantics for values `1` and `2` still need a focused pass through UI and AI setup code.
+- `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
 - `Building_GetTypeId` exposes building byte `+4` cleanly, but only the settlement/castle-bearing values `1` and `2` are behaviorally secure so far; the full building-type enum remains unresolved.
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.

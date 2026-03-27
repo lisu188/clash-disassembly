@@ -114,7 +114,10 @@
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
-      { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
+      { "offset": 27, "name": "has_human_controller", "type": "int32", "notes": "Campaign/game-info logging prints `komputer` as `1 - value`, and many gameplay/UI paths treat nonzero here as locally controlled or human-visible." },
+      { "offset": 31, "name": "ai_intelligence_level", "type": "int32", "notes": "Explicitly logged as `inteligencja` in the rules/game-info output and used to discount licence production for lower-AI players and to choose the ruler-head icon in player stats UI." },
+      { "offset": 39, "name": "is_christian_faction", "type": "int32", "notes": "Binary christian/pagan faction flag. Logged as `chrzesc`, drives Christian-vs-Pagan castle art/text sets, and selects the religion icon in stats UI." },
+      { "offset": 43, "name": "primary_castle_building_index", "type": "int32", "notes": "Set to the first owned type-2 castle building when absent and cleared when that same building is captured, so it acts as a remembered main-castle index." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 47, "name": "technology_level", "type": "uint8", "notes": "Player-wide technology tier. `Player_UpdateTechnologyLevelFromSettlements` raises this from 1 to 2 or 3 based on how many owned type-1/type-2 settlements have all five core add-on bits installed." },
       { "offset": 48, "name": "last_shown_technology_level", "type": "uint8", "notes": "UI latch copied from `technology_level` after `UI_ShowTechnologyLevelUpIfChanged` displays the one-shot technology-advance popup." },
@@ -125,6 +128,8 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "Rules/game-info logging prints `(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)` from bytes `+27`, `+31`, and `+39`, giving direct labels for the human/computer flag, AI intelligence, and christian/pagan faction side.",
+      "Building creation and capture code stores the first owned type-2 castle into `+43` when empty and clears the same field when that castle is lost, corroborating a remembered primary-castle index.",
       "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields.",
       "`Player_UpdateTechnologyLevelFromSettlements` updates byte `+47`, and `UI_ShowTechnologyLevelUpIfChanged` compares that byte against `+48` before latching the new level."
     ]
@@ -148,6 +153,26 @@
       "`UI_ShowMissionStatusPanel`, the post-victory mission-advance path, and the mission jump table rooted at `Scenario_LoadMissionByIndex` all treat offset `140017` as the active mission id.",
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
       "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
+    ]
+  },
+  {
+    "name": "PortSupplyState",
+    "kind": "shared_state_region",
+    "base_offset": 586374,
+    "description": "Shared `gameData` region tracking the one active coast/port site, whether a supply ship is currently docked, and when the next shipment should arrive.",
+    "fields": [
+      { "offset": 586374, "name": "port_row", "type": "int32", "notes": "`-1` means no active port exists on the map; otherwise this is the upper-left row of the 2x2 port footprint." },
+      { "offset": 586378, "name": "port_column", "type": "int32", "notes": "Upper-left column of the active port footprint." },
+      { "offset": 586382, "name": "next_supply_turn", "type": "int32", "notes": "Absolute turn number when the next shipment should arrive if no supply is currently waiting." },
+      { "offset": 586386, "name": "has_supply_ready", "type": "int32", "notes": "Nonzero when the port currently has a shipment available for pickup; also used as the sprite/state selector in port UI." },
+      { "offset": 586390, "name": "supply_unit_count", "type": "int32", "notes": "How many random units the next/ready shipment will contain." },
+      { "offset": 586394, "name": "needs_shore_refresh", "type": "int32", "notes": "Controls whether `Port_BuildShorePieces` draws the arrival shoreline variant or the empty-port variant around the 2x2 footprint." }
+    ],
+    "evidence": [
+      "`Map_LoadPort` scans the overlay layer for tile ids `716/726`, stores the port row/column here, seeds the ready flag, next-arrival turn, and shipment size, then calls `Port_BuildShorePieces` and `Rules_LogPortLocation`.",
+      "`Port_NewTurn` clears `needs_shore_refresh`, checks `next_supply_turn` against the game turn counter, and when a shipment arrives sets both `has_supply_ready` and `needs_shore_refresh` before rebuilding the shore tiles.",
+      "`Port_GetSupply` requires `has_supply_ready`, spawns `supply_unit_count` random units near the port, then clears the ready flag and rolls a new `next_supply_turn`.",
+      "`UI_DrawPanelWithSprite` reads the ready flag to choose both the port sprite frame and the localized arrival-vs-empty text."
     ]
   },
   {

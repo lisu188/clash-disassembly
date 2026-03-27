@@ -14,6 +14,9 @@
 #define PLAYER_CAMERA_LEFT_OFFSET 15
 #define PLAYER_CAMERA_TOP_OFFSET 19
 #define PLAYER_IS_HUMAN_OFFSET 27
+#define PLAYER_AI_INTELLIGENCE_OFFSET 31
+#define PLAYER_IS_CHRISTIAN_OFFSET 39
+#define PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET 43
 #define PLAYER_TECH_LEVEL_OFFSET 47
 #define PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET 48
 #define PLAYER_QUEEN_MOOD_OFFSET 1419
@@ -73,6 +76,9 @@
 #define PLAYER_CAMERA_LEFT(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_LEFT_OFFSET))
 #define PLAYER_CAMERA_TOP(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_TOP_OFFSET))
 #define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
+#define PLAYER_AI_INTELLIGENCE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_AI_INTELLIGENCE_OFFSET))
+#define PLAYER_IS_CHRISTIAN(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_CHRISTIAN_OFFSET))
+#define PLAYER_PRIMARY_CASTLE_BUILDING_INDEX(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET))
 #define PLAYER_TECH_LEVEL(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_TECH_LEVEL_OFFSET))
 #define PLAYER_LAST_SHOWN_TECH_LEVEL(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET))
 #define MAP_WIDTH_TILES (*(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET))
@@ -19137,7 +19143,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
     0,
     0,
     0);
-  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140055) + 5);
+  v3 = DLX_GetSpriteForChar(dword_5202DC, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex) + 5);
   v4 = g_RenderDevice;
   v5 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v5 + 52))(
@@ -32324,8 +32330,8 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
     }
   }
   v39 = PLAYER_DATA(g_CurrentPlayerIndex);
-  if ( *(_DWORD *)(v39 + 140067) == -1 && a1 == 2 )
-    *(_DWORD *)(v39 + 140067) = v62;
+  if ( *(_DWORD *)(v39 + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET) == -1 && a1 == 2 )
+    *(_DWORD *)(v39 + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET) = v62;
   if ( ACTIVE_MISSION_INDEX == -1 || GAME_TURN_COUNTER != 1 )
     sub_41E0E0(v60);
   if ( a1 )
@@ -33799,8 +33805,8 @@ _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, 
   v14 = *(unsigned __int16 *)(gameData + 140022);
   sub_455D90(*(unsigned __int8 *)(gameData + 725 * a1 + 147178), a2, v14);
   v15 = 1423 * *(unsigned __int8 *)(v28 + gameData + 509676) + gameData;
-  if ( a2 == *(_DWORD *)(v15 + 140067) )
-    *(_DWORD *)(v15 + 140067) = -1;
+  if ( a2 == *(_DWORD *)(v15 + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET) )
+    *(_DWORD *)(v15 + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET) = -1;
   Building_UnitGetInto(a1, a2, v14, a2, a5);
   v17 = v16;
   for ( i = 0; i < 3; ++i )
@@ -34758,7 +34764,7 @@ int __usercall sub_420E50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v6[2] = *(_BYTE *)(v7 + 2);
     v3[416] &= ~1u;
     v8 = (int)v3;
-    if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(g_CastleUnitRecord + 2) + gameData + 140063) )
+    if ( PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(g_CastleUnitRecord + 2)) )
       v9 = aBudowaChrzesci;
     else
       v9 = aBudowaPoganie;
@@ -34875,7 +34881,7 @@ int sub_421010()
     0,
     0,
     0);
-  if ( *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140063) )
+  if ( PLAYER_IS_CHRISTIAN(g_CurrentPlayerIndex) )
   {
     DLX_GetSpriteForChar(dword_526E7C, g_CurrentPlayerIndex + 5);
     v1 = *((_DWORD *)g_RenderDevice + 46);
@@ -35837,7 +35843,7 @@ int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>)
   CSS_EmptySampleCache();
   log(467 * a1, a2, a1, (int)aCastleD);
   g_CastleUnitRecord = v6 + gameData + 509674;
-  dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_CastleUnitRecord + 2) + gameData + 140063);
+  dword_526E70 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(g_CastleUnitRecord + 2));
   v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_CastleUnitRecord + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateGateToggles();
@@ -41478,7 +41484,7 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
   unsigned __int8 v21[1048]; // [esp+0h] [ebp-418h] BYREF
 
   dword_531CF4 = a1;
-  v1 = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
+  v1 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   sub_436970(a1, 1);
   dword_531CEC = 0;
   dword_531CF0 = 0;
@@ -48132,7 +48138,7 @@ int __usercall sub_435BC0@<eax>(int a1@<eax>, DWORD a2@<ebp>, int a3@<edi>)
   int v25; // ecx
 
   dword_532218 = a1;
-  dword_532214 = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
+  dword_532214 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   dword_532220[0] = 0;
   dword_5322D0[0] = 0;
   memset_(0, 0);
@@ -53381,7 +53387,7 @@ int __usercall sub_43D8E0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   int v18; // ecx
   unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  v4 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   _wcpp_4_ctor_array__(a2, 256);
   if ( v4 )
     v6 = aCastle_chrDw_3;
@@ -53475,7 +53481,7 @@ int __usercall sub_43DAE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   int v18; // ecx
   unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  v4 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   _wcpp_4_ctor_array__(a2, 256);
   if ( v4 )
     v6 = aCastle_chrDw_6;
@@ -53569,7 +53575,7 @@ int __usercall sub_43DCE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   int v18; // ecx
   unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  v4 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   _wcpp_4_ctor_array__(a2, 256);
   if ( v4 )
     v6 = aCastle_chrDw_9;
@@ -53663,7 +53669,7 @@ int __usercall sub_43DEE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   int v18; // ecx
   unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  v4 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   _wcpp_4_ctor_array__(a2, 256);
   if ( v4 )
     v6 = aCastle_chrD_12;
@@ -54066,7 +54072,7 @@ BOOL __usercall Building_BuyUnitLicence@<eax>(int a1@<eax>, int a2@<edx>, int a3
   {
     v7 = gameData + 1423 * *(unsigned __int8 *)(a1 + 2);
     v8 = (unsigned __int16)Building_AddonCostLUT[44 * a2];
-    if ( !*(_DWORD *)(v7 + 140051) && *(int *)(v7 + 140055) >= 2 )
+      if ( !*(_DWORD *)(v7 + 140051) && *(int *)(v7 + PLAYER_AI_INTELLIGENCE_OFFSET) >= 2 )
       v8 = (int)(75 * v8) / 100;
     if ( v8 > *(_DWORD *)(a1 + 438) )
       return 0;
@@ -54131,7 +54137,7 @@ int __usercall Building_SetUnitProduction@<eax>(int a1@<eax>, char a2@<bl>, DWOR
   result = 1423 * v3[2];
   BUILDING_PRODUCTION_TURNS_REMAINING(v3) = g_UnitTypeProductionTurns[88 * (char)BUILDING_UNIT_LICENCE_TYPE(v3, v4)];
   if ( !*(_DWORD *)(result + gameData + 140051)
-    && *(int *)(result + gameData + 140055) >= 1
+    && *(int *)(result + gameData + PLAYER_AI_INTELLIGENCE_OFFSET) >= 1
     && (char)BUILDING_PRODUCTION_TURNS_REMAINING(v3) > 1 )
   {
     --BUILDING_PRODUCTION_TURNS_REMAINING(v3);
@@ -55645,7 +55651,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
   log(a2, a3, a4, (int)aTemple_unitget);
   v7 = (__int16 *)(725 * v6 + gameData + 147174);
   v8 = gameData + 1423 * *((unsigned __int8 *)v7 + 4);
-  if ( *(_DWORD *)(v8 + 140063) )
+  if ( *(_DWORD *)(v8 + PLAYER_IS_CHRISTIAN_OFFSET) )
   {
     if ( *(_DWORD *)(v8 + 140051) )
       v9 = &unk_515D50;
@@ -55662,9 +55668,9 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
   }
   v10 = sub_43FB10(v31, v32);
   v11 = 1423 * *((unsigned __int8 *)v7 + 4);
-  v12 = *(_DWORD *)(gameData + v11 + 140063);
+  v12 = *(_DWORD *)(gameData + v11 + PLAYER_IS_CHRISTIAN_OFFSET);
   if ( v12 && (v10 == 3 || v10 == 4)
-    || (LOBYTE(v11) = gameData, !*(_DWORD *)(1423 * *((unsigned __int8 *)v7 + 4) + gameData + 140063))
+    || (LOBYTE(v11) = gameData, !PLAYER_IS_CHRISTIAN(*((unsigned __int8 *)v7 + 4)))
     && (v10 == 1 || v10 == 2) )
   {
     log(v12, v11, (DWORD)v7, (int)aTemple_unitg_0);
@@ -55699,7 +55705,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
       result = 1423 * *((unsigned __int8 *)v7 + 4) + gameData;
       if ( *(_DWORD *)(result + 140051) )
       {
-        v27 = *(_DWORD *)(result + 140063);
+        v27 = *(_DWORD *)(result + PLAYER_IS_CHRISTIAN_OFFSET);
         if ( v27 )
           return sub_43FEF0(v29[(unsigned __int8)g_LanguageIndex], -1, v27, 0, (DWORD)v7);
         else
@@ -55730,7 +55736,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
       v21 = *(_DWORD *)(v20 + gameData + 140051);
       if ( v21 )
       {
-        v22 = *(_DWORD *)(v20 + gameData + 140063);
+        v22 = *(_DWORD *)(v20 + gameData + PLAYER_IS_CHRISTIAN_OFFSET);
         if ( v22 )
           v23 = aSw_chs;
         else
@@ -62788,7 +62794,7 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 8u;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 4u;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510090) |= 0x10u;
-  *(_DWORD *)(gameData + 140063) = 0;
+  PLAYER_IS_CHRISTIAN(0) = 0;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510119) = 33;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510120) = 2;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510125) = 34;
@@ -63309,7 +63315,7 @@ signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<ea
       else
       {
         v30 = v40;
-        *(_DWORD *)(v8 + 140063) = v33;
+        *(_DWORD *)(v8 + PLAYER_IS_CHRISTIAN_OFFSET) = v33;
         LOBYTE(v33) = v33 ^ 1;
         Unit_Create(0x11u, v7, v41, 0, v30);
         Unit_Create(3u, v7, v10, 0, v40);
@@ -63448,7 +63454,7 @@ signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<ea
           0,
           v10,
           v4);
-        if ( *(int *)(v35 + gameData + 140055) > 0 )
+        if ( *(int *)(v35 + gameData + PLAYER_AI_INTELLIGENCE_OFFSET) > 0 )
         {
           Unit_Create(0, v7, v39, 0, v44);
           Unit_Create(1u, v7, v10, 0, v44);
@@ -64846,7 +64852,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
   Render_ReleaseSurface(18, a3);
   if ( *(_DWORD *)(gameData + 140024) )
   {
-    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, (*(_DWORD *)(gameData + 140063) == 0) + 13);
+    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, (PLAYER_IS_CHRISTIAN(0) == 0) + 13);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       8,
       SpriteForChar,
@@ -66359,8 +66365,8 @@ int sub_451EC0()
              "(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)",
              v3,
              1 - *(_DWORD *)(result + 140051),
-             *(_DWORD *)(result + 140055),
-             *(_DWORD *)(result + 140063));
+             *(_DWORD *)(result + PLAYER_AI_INTELLIGENCE_OFFSET),
+             *(_DWORD *)(result + PLAYER_IS_CHRISTIAN_OFFSET));
       Rules_Log(v10, v7, v6);
       result = sub_47E8E4(v9, v8, (int)aS_0, (char)v10);
     }
@@ -66406,7 +66412,7 @@ signed int sub_451F70()
   sub_455FF0();
   v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
   dword_54454C = (int)Rules_Log(v21, v2, v1);
-  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140055));
+  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
   dword_544550 = (int)Rules_Log(v21, v4, v3);
   memset_(v6, v5);
   v7 = 0;
@@ -67036,8 +67042,8 @@ BOOL __usercall Move_CanEnterTile@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>
 {
   int v4; // ecx
 
-  return sub_43FB10(a2, a3) == 1 && *(_DWORD *)(gameData + 1423 * a1 + 140063)
-      || sub_43FB10(v4, a3) == 3 && !*(_DWORD *)(1423 * a1 + gameData + 140063);
+  return sub_43FB10(a2, a3) == 1 && PLAYER_IS_CHRISTIAN(a1)
+      || sub_43FB10(v4, a3) == 3 && !PLAYER_IS_CHRISTIAN(a1);
 }
 // 4541E6: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
