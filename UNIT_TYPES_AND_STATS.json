@@ -257,35 +257,35 @@
     },
     {
       "id": 31,
-      "name": "UnitType31_Gold",
+      "name": "UnitType31_GoldCargo",
       "folder": "gold",
       "localized_names": "Złoto / Gold",
       "confidence": "high",
-      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record."
+      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record, and stack-action helpers treat type `31` as non-combat cargo."
     },
     {
       "id": 32,
-      "name": "UnitType32_Peasants",
+      "name": "UnitType32_PeasantCargo",
       "folder": "peas",
       "localized_names": "Chłopi / Peasants",
       "confidence": "high",
-      "evidence": "The asm xrefs for `off_51254C` and `peas` land in the same unit_stats record."
+      "evidence": "The asm xrefs for `off_51254C` and `peas` land in the same unit_stats record, and capture/building helpers normalize type `32` as transferable peasant cargo."
     },
     {
       "id": 33,
-      "name": "UnitType33_TacticianFootVariant",
+      "name": "UnitType33_PrisonerOfficerFoot",
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the commander localized-name pointer triplet but keeps infantry-like movement assets."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, and is extracted into the prisoner queue on capture."
     },
     {
       "id": 34,
-      "name": "UnitType34_TacticianMountedVariant",
+      "name": "UnitType34_PrisonerOfficerMounted",
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same commander localized-name pointer triplet but switches to cavalry-like movement assets."
+      "evidence": "This record reuses the same localized-name pointer triplet, switches to cavalry-like movement assets, and follows the same prisoner-only capture and castle-prison flow as type `33`."
     }
   ],
   "unit_categories": [
@@ -308,6 +308,16 @@
       "name": "LightUnitCategory",
       "confidence": "high",
       "evidence": "`g_UnitTypeFlags` bit1 selects the lower veterancy seed path."
+    },
+    {
+      "name": "SpecialCargoEntryCategory",
+      "confidence": "high",
+      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, and feed gold/peasant-specific stack logic."
+    },
+    {
+      "name": "PrisonerEntryCategory",
+      "confidence": "high",
+      "evidence": "Types `33` and `34` are extracted from stacks on capture, queued in per-player prisoner transit storage, and moved into castle prison slots for execution, torture, or ransom."
     }
   ],
   "stats": [
@@ -479,14 +489,24 @@
   ],
   "ambiguous": [
     {
-      "candidate": "UnitType33_TacticianFootVariant / UnitType34_TacticianMountedVariant",
+      "candidate": "UnitType33_PrisonerOfficerFoot / UnitType34_PrisonerOfficerMounted",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
-        "two commander variants sharing the same localized name",
-        "foot and mounted forms of the same hero-class unit"
+        "foot and mounted prisoner-officer records sharing the same localized name",
+        "special commander/courtier prisoner variants"
       ],
-      "evidence": "Both records reuse `off_512558`, but their folder stems and movement-audio families diverge.",
-      "blockers": "No stronger gameplay-facing label has surfaced yet."
+      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, and the capture/building flow treats them as prisoner-only entries.",
+      "blockers": "The prisoner role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
+    },
+    {
+      "candidate": "UnitType31_GoldCargo / UnitType32_PeasantCargo",
+      "candidate_kind": "unit_type",
+      "possible_interpretations": [
+        "non-combat stack cargo entries",
+        "resource/passenger payload records"
+      ],
+      "evidence": "The stack logic excludes types `31` and `32` from the normal-combat predicate, and type `32` is explicitly compacted and rebuilt as cargo.",
+      "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
     },
     {
       "candidate": "byte_51257F",

@@ -182,9 +182,38 @@
 | sub_441A10 | Audio_EnableUnitSounds | Function | Unit Audio | High | Single-purpose helper that sets `g_UnitSoundsEnabled = 1`. | c, asm |
 | sub_441A20 | Audio_DisableUnitSounds | Function | Unit Audio | High | Single-purpose helper that sets `g_UnitSoundsEnabled = 0`. | c, asm |
 
+## Batch 24 – Special Cargo And Prisoner Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| *(new constant)* | UNIT_TYPE_GOLD_CARGO | Helper | Unit Types / Special Entries | High | Type `31` resolves to `gold`, is excluded from `UnitStack_HasNormalCombatUnits`, and is checked by dedicated stack helpers rather than ordinary battle code. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_PEASANT_CARGO | Helper | Unit Types / Special Entries | High | Type `32` resolves to `peas`, is excluded from normal-combat checks, and `UnitStack_NormalizePeasantCargo` rebuilds it as stack payload. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_PRISONER_FOOT | Helper | Unit Types / Prisoners | Medium | Type `33` uses `specm`, shares the `Dowódca / Tactician / Soldat` label triplet, and is extracted into the prisoner pipeline on capture. | c, asm, exe |
+| *(new constant)* | UNIT_TYPE_PRISONER_MOUNTED | Helper | Unit Types / Prisoners | Medium | Type `34` uses `speck`, shares the same localized-name triplet, and follows the same prisoner-only flow with cavalry-like movement assets. | c, asm, exe |
+| sub_412000 | UnitSlots_ExtractSpecialEntries | Function | Unit Lifecycle / Special Entries | High | Copies only types `31..34` into a side buffer while compacting the source slot array, matching the pre-capture special-entry extraction step. | c |
+| sub_4120B0 | UnitSlots_AppendEntries | Function | Unit Lifecycle / Special Entries | High | Finds the first empty slot and appends all entries from a temporary 31-byte slot buffer back into the squad. | c |
+| sub_412100 | UnitStack_HasNormalCombatUnits | Function | Unit Lifecycle / Special Entries | High | Returns true only if the stack contains at least one slot whose type is not `31..34`, which is exactly the “has ordinary combatants” predicate used by movement, capture, and UI code. | c |
+| sub_412170 | UnitStack_HasGoldCargo | Function | Unit Lifecycle / Special Entries | High | Scans squad slots for type `31` only. | c |
+| sub_4121A0 | UnitStack_HasPeasantCargo | Function | Unit Lifecycle / Special Entries | High | Scans squad slots for type `32` only. | c |
+| sub_4121D0 | UnitStack_NormalizePeasantCargo | Function | Unit Lifecycle / Special Entries | High | Sums all type-`32` slot payloads, removes the old entries, and recreates normalized peasant-cargo slots in capped chunks. | c |
+| sub_412300 | UnitStack_CaptureDefeatedStack | Function | Unit Lifecycle / Capture | High | Logs capture, strips prisoner entries into the prisoner queue, flips ownership of captured slots, normalizes peasant cargo, and merges or preserves the defeated stack under the winner. | c |
+| sub_412B60 | UnitStack_HasPrisonerUnits | Function | Unit Lifecycle / Prisoners | High | Returns true only when a squad contains type `33` or `34`. | c |
+| sub_41A960 | UI_DrawSpecialUnitInfoPane | Function | UI / Unit Info | High | Dedicated info window path for types `31..34`, with alternate icon mapping and the localized-name lookup from the unit-type metadata table. | c |
+| sub_44E7A0 | Prisoner_QueueCapturedUnit | Function | Prisoners | High | Debug log string is `Prisoner_AddToInWay`, and the function appends captured type `33/34` entries into the per-player queue later drained by `Prisoner_SetInCastles`. | c, asm |
+| sub_44E850 | Building_FindFreePrisonerSlot | Function | Prisoners / Buildings | High | Scans the three 6-byte prison cells at `building + 445` and returns the first free index or `-1` if full. | c |
+| sub_44EB70 | BuildingPrisoner_SetOrder | Function | Prisoners / Buildings | High | Writes the pending action byte at `building + 445 + 6 * slot + 3`, which `Prisoner_NewTurn` later interprets as behead/torture/pay. | c |
+| sub_44EBA0 | BuildingPrisoner_GetOrder | Function | Prisoners / Buildings | High | Reads back the pending action byte from the same prison-cell field. | c |
+| sub_44F1E0 | Building_CreatePrisonerUnit | Function | Prisoners / Buildings | High | Debug log string is `Building_CreateSpecial`, and every recovered caller uses it to insert a type `33/34` prisoner unit into a building garrison slot. | c, asm |
+| sub_44F350 | Prisoner_NewTurn | Function | Prisoners | High | Debug log string is `Prisoner_NewTurn`, and the function advances held-prisoner timers, auto-assigns late orders, then dispatches behead/torture/pay behavior for each prison cell. | c |
+| sub_44F4E0 | Building_CountPrisoners | Function | Prisoners / Buildings | High | Counts occupied prison cells by scanning the three 6-byte entries starting at `building + 445`. | c |
+| sub_43EB80 | Building_CountPrisonerGarrisonEntries | Function | Buildings / Prisoners | High | Counts only type `33/34` entries inside the building garrison array, i.e. the prisoner-class special garrison occupants. | c |
+| sub_43EBC0 | Building_CountSpecialGarrisonEntries | Function | Buildings / Special Entries | High | Counts all type `31..34` entries inside the 12-slot building garrison. | c |
+| sub_43EC10 | Building_HasPrisonerGarrisonEntries | Function | Buildings / Prisoners | High | Returns true when the building garrison contains at least one type `33` or `34` entry. | c |
+| PLAYER_DATA(player) + 141381 + 6 * slot | PlayerPrisonerTransferQueue | Recovered Struct | Prisoners | High | `Prisoner_QueueCapturedUnit` appends 10 fixed-size entries here, and `Prisoner_SetInCastles` drains them into nearby castles using the stored capture coordinates. | c |
+| BuildingRecord + 445 + 6 * slot | BuildingPrisonerSlot | Recovered Struct | Prisoners / Buildings | High | Execution, torture, ransom, and prisoner-new-turn helpers all operate on the same three 6-byte cells embedded in the building record. | c |
+
 ## Deferred / Ambiguous
-- `specm` and `speck` are no longer anonymous, but only medium-confidence as `UnitType33_TacticianFootVariant` and `UnitType34_TacticianMountedVariant`. The duplicated localized-name pointer and divergent movement assets strongly suggest two commander variants, not two independent fully named troop families.
-- The `peas` entry is now resolved as `UnitType32_Peasants` through the asm-localized-name xrefs, but its exact design relationship to type `0` (`Posp. ruszenie / Peasant`) is still not fully explained by the recovered gameplay rules.
+- `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.
+- `gold` and `peas` are now mapped as cargo-style special entries (`UnitType31_GoldCargo` and `UnitType32_PeasantCargo`), but the exact relationship between type `32` and ordinary recruitable peasants (type `0`) is still not fully explained by the recovered gameplay rules.
 - `g_UnitTypeFlags` bit1 now aligns with a light-unit category through the 6-vs-10 seed at slot `+11`, but its broader gameplay consequences outside veterancy seeding are still only partially recovered.
 - `BattleMap_GetMoveSoundSurfaceClass` is only medium-confidence. The implementation clearly returns a small sound-surface class used by movement audio, but the original designer-facing labels for values `0/1/2` remain inferred from suffix behavior rather than explicit text.
 - `sub_441E60` still appends `gothim.wav`, but the exact gameplay role is not locked down safely enough. It is used in a late attack-resolution path for certain projectile or special-attack unit types, so it remains deferred rather than being mislabeled as a generic kill or victory sound.

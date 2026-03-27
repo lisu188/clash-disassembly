@@ -53,6 +53,10 @@
 #define UNIT_TYPE_ELEPHANT 19
 #define UNIT_TYPE_FLY 29
 #define UNIT_TYPE_DRAGON 30
+#define UNIT_TYPE_GOLD_CARGO 31
+#define UNIT_TYPE_PEASANT_CARGO 32
+#define UNIT_TYPE_PRISONER_FOOT 33
+#define UNIT_TYPE_PRISONER_MOUNTED 34
 
 #define PLAYER_DATA(playerIndex) (gameData + PLAYER_DATA_STRIDE * (playerIndex))
 #define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
@@ -379,13 +383,13 @@ void sub_411D70();
 // int __usercall Unit_GetClassIndex@<eax>(int a1@<eax>);
 // signed int __usercall Unit_AttemptNeighborMove@<eax>(int a1@<eax>);
 // BOOL __usercall sub_411F60@<eax>(int a1@<eax>);
-// void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>);
-// int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>);
-// signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>);
-// signed int __usercall sub_412170@<eax>(int a1@<eax>);
-// signed int __usercall sub_4121A0@<eax>(int a1@<eax>);
-// signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// __int16 *__usercall sub_412300@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
+// void *__usercall UnitSlots_ExtractSpecialEntries@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>);
+// int __usercall UnitSlots_AppendEntries@<eax>(char *a1@<eax>, char *a2@<edx>);
+// signed int __usercall __spoils<ecx> UnitStack_HasNormalCombatUnits@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasGoldCargo@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasPeasantCargo@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_NormalizePeasantCargo@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
+// __int16 *__usercall UnitStack_CaptureDefeatedStack@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
 // int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
 // int __cdecl CSyncObject::Unlock(CSyncObject *__hidden this, __int32, __int32 *); idb
 int __thiscall sub_4127A0(CSyncObject *this); // idb
@@ -400,7 +404,7 @@ int __thiscall sub_4127A0(CSyncObject *this); // idb
 // signed int __usercall sub_412AC0@<eax>(int a1@<eax>);
 // signed int __usercall sub_412AF0@<eax>(int a1@<eax>);
 // int __usercall sub_412B20@<eax>(int result@<eax>, int a2@<edx>, int *a3@<ebx>);
-// signed int __usercall sub_412B60@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasPrisonerUnits@<eax>(int a1@<eax>);
 // int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // int __usercall sub_412BE0@<eax>(int a1@<eax>);
 // int __usercall sub_412C00@<eax>(int a1@<eax>, signed int a2@<esi>);
@@ -487,7 +491,7 @@ void BattleLog_Enable();
 // int __usercall sub_419F50@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __userpurge UI_DrawUnitInfoPane@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, __int16 *a4@<ebx>, DWORD a5@<ebp>, int a6);
 // int __userpurge Unit_Info@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, unsigned __int8 *a4@<ebx>, DWORD a5@<ebp>, DWORD a6);
-// int __usercall sub_41A960@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, unsigned __int8 *a4@<ebx>, DWORD a5@<ebp>, int a6@<edi>);
+// int __usercall UI_DrawSpecialUnitInfoPane@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, unsigned __int8 *a4@<ebx>, DWORD a5@<ebp>, int a6@<edi>);
 // void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
 // void __usercall Unit_AttackBuilding(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
 // int __usercall sub_41C100@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
@@ -810,8 +814,9 @@ int __cdecl sub_43CF90();
 // int __usercall sub_43EB40@<eax>(int result@<eax>, int a2@<edx>);
 // int __usercall Building_CountGarrison@<eax>(int a1@<eax>);
 // int __usercall Building_DrawGarrisonRow@<eax>(int a1@<eax>);
-// int __usercall sub_43EBC0@<eax>(int a1@<eax>);
-// signed int __usercall sub_43EC10@<eax>(int a1@<eax>);
+// int __usercall Building_CountPrisonerGarrisonEntries@<eax>(int a1@<eax>);
+// int __usercall Building_CountSpecialGarrisonEntries@<eax>(int a1@<eax>);
+// signed int __usercall Building_HasPrisonerGarrisonEntries@<eax>(int a1@<eax>);
 // int __usercall sub_43EC40@<eax>(unsigned __int8 *a1@<eax>, unsigned __int8 *a2@<ecx>, double a3@<st0>);
 // BOOL __usercall Building_CanEquipAddon@<eax>(char *a1@<eax>, int a2@<edx>);
 // int __usercall Building_FindFirstValidAddonSlot@<eax>(int a1@<eax>);
@@ -971,12 +976,12 @@ signed int Game_InitPlayerViewState();
 // signed int __usercall loadMultiplayerMaps@<eax>(int a1@<eax>, DWORD a2@<ebp>);
 // char __usercall sub_44E2A0@<al>(int a1@<eax>, int *a2@<edx>);
 // BOOL __usercall sub_44E350@<eax>(__int16 *a1@<eax>);
-// signed int __userpurge sub_44E7A0@<eax>(char a1@<al>, int a2@<edx>, __int16 a3@<cx>, int a4@<ebx>, DWORD a5@<ebp>, __int16 a6);
-// signed int __usercall sub_44E850@<eax>(int a1@<eax>);
+// signed int __userpurge Prisoner_QueueCapturedUnit@<eax>(char a1@<al>, int a2@<edx>, __int16 a3@<cx>, int a4@<ebx>, DWORD a5@<ebp>, __int16 a6);
+// signed int __usercall Building_FindFreePrisonerSlot@<eax>(int a1@<eax>);
 // int __usercall sub_44E880@<eax>(int a1@<eax>);
 // signed int __usercall Prisoner_SetInCastles@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall sub_44EB70@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall sub_44EBA0@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall BuildingPrisoner_SetOrder@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall BuildingPrisoner_GetOrder@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Prisoner_Behead@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // BOOL __usercall sub_44EC80@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
@@ -985,10 +990,10 @@ signed int Game_InitPlayerViewState();
 // int __usercall sub_44EE20@<eax>(int a1@<eax>, int a2@<edx>);
 // void __usercall sub_44EEE0(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
-// int __usercall sub_44F1E0@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, double a5@<st0>);
+// int __usercall Building_CreatePrisonerUnit@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, double a5@<st0>);
 // unsigned int __usercall sub_44F260@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
-// char __usercall sub_44F350@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>);
-// int __usercall sub_44F4E0@<eax>(int a1@<eax>);
+// char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>);
+// int __usercall Building_CountPrisoners@<eax>(int a1@<eax>);
 // BOOL __usercall sub_44F510@<eax>(int a1@<eax>);
 // char *__usercall sub_44F580@<eax>(int a1@<eax>);
 // char *__usercall sub_44F5F0@<eax>(int a1@<eax>);
@@ -18053,7 +18058,7 @@ LABEL_35:
     }
     else if ( sub_408200(v1, v78) )
     {
-      if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+      if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
         v15 = &unk_5196F0;
       else
         v15 = &unk_5198A8;
@@ -18070,7 +18075,7 @@ LABEL_35:
 LABEL_21:
   if ( g_SelectedUnitIndex != -1 && sub_43FB10(v1, v78) )
   {
-    if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+    if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
     {
 LABEL_24:
       v7 = &unk_519830;
@@ -18089,7 +18094,7 @@ LABEL_80:
       v7 = &unk_519718;
       goto LABEL_25;
     }
-    if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+    if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
       goto LABEL_24;
     goto LABEL_80;
   }
@@ -18104,10 +18109,10 @@ LABEL_80:
     v5 = 200 * v1;
     if ( !sub_4082F0(v1, v78) )
     {
-      if ( !sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      if ( !UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
         || (v5 += gameData,
             *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
-        && sub_4121A0(gameData + 147174 + 725 * g_SelectedUnitIndex) )
+        && UnitStack_HasPeasantCargo(gameData + 147174 + 725 * g_SelectedUnitIndex) )
       {
         v7 = &unk_5198D0;
       }
@@ -18215,7 +18220,9 @@ LABEL_26:
   v27 = g_CurrentPlayerIndex;
   if ( Trap_GetTileOwnerMask(v1, v78, g_CurrentPlayerIndex) )
     sub_42B9D0(v1, v78, v27, v1);
-  if ( g_SelectedUnitIndex != -1 && sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) && sub_43FB10(v1, v78) )
+    if ( g_SelectedUnitIndex != -1
+      && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      && sub_43FB10(v1, v78) )
   {
     LOBYTE(v30) = v78;
     if ( !sub_415CD0(gameData + 147174 + 725 * g_SelectedUnitIndex + 316, v1, v78) )
@@ -18239,7 +18246,9 @@ LABEL_26:
     goto LABEL_205;
   }
   v28 = g_SelectedUnitIndex;
-  if ( g_SelectedUnitIndex != -1 && sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) && Port_IsInsideArea(v1, v78) )
+    if ( g_SelectedUnitIndex != -1
+      && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
+      && Port_IsInsideArea(v1, v78) )
   {
     if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
     {
@@ -18328,7 +18337,7 @@ LABEL_26:
     {
       if ( g_SelectedUnitIndex != -1
         && (*(_BYTE *)(467 * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
-         || !sub_4121A0(v30 + gameData + 147174)) )
+         || !UnitStack_HasPeasantCargo(v30 + gameData + 147174)) )
       {
         Unit_AttackBuilding(
           g_SelectedUnitIndex,
@@ -18847,7 +18856,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
             }
             break;
           case 4:
-            if ( !sub_4121A0(725 * g_SelectedUnitIndex + gameData + 147174) )
+            if ( !UnitStack_HasPeasantCargo(725 * g_SelectedUnitIndex + gameData + 147174) )
             {
               a3 = g_SelectedUnitIndex;
               if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&unk_4EC7A4, 0) )
@@ -22703,7 +22712,7 @@ signed int __usercall sub_4100B0@<eax>(int a1@<eax>)
   int v3; // ebx
   int i; // edx
 
-  if ( sub_412B60(a1) )
+  if ( UnitStack_HasPrisonerUnits(a1) )
     return 3;
   v2 = v1;
   v3 = 0;
@@ -24135,7 +24144,7 @@ BOOL __usercall sub_411F60@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00412000) --------------------------------------------------------
-void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
+void *__usercall UnitSlots_ExtractSpecialEntries@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
 {
   int v5; // edx
   int v6; // eax
@@ -24151,7 +24160,10 @@ void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
     v6 = *(__int16 *)a1;
     if ( v6 == -1 )
       break;
-    if ( v6 == 31 || v6 == 32 || v6 == 33 || v6 == 34 )
+    if ( v6 == UNIT_TYPE_GOLD_CARGO
+      || v6 == UNIT_TYPE_PEASANT_CARGO
+      || v6 == UNIT_TYPE_PRISONER_FOOT
+      || v6 == UNIT_TYPE_PRISONER_MOUNTED )
     {
       v7 = 0;
       qmemcpy(a3, a1, 0x1Fu);
@@ -24182,7 +24194,7 @@ void *__usercall sub_412000@<eax>(char *a1@<eax>, int a2@<edx>, char *a3@<ebx>)
 }
 
 //----- (004120B0) --------------------------------------------------------
-int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>)
+int __usercall UnitSlots_AppendEntries@<eax>(char *a1@<eax>, char *a2@<edx>)
 {
   char *v2; // esi
   int v3; // ecx
@@ -24205,7 +24217,7 @@ int __usercall sub_4120B0@<eax>(char *a1@<eax>, char *a2@<edx>)
 }
 
 //----- (00412100) --------------------------------------------------------
-signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>)
+signed int __usercall __spoils<ecx> UnitStack_HasNormalCombatUnits@<eax>(int a1@<eax>)
 {
   signed int result; // eax
   int v2; // edx
@@ -24227,7 +24239,10 @@ signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>)
       while ( !v4 )
       {
         v6 = *(__int16 *)(v2 + 6);
-        if ( v6 == 31 || v6 == 32 || v6 == 33 || v6 == 34 )
+        if ( v6 == UNIT_TYPE_GOLD_CARGO
+          || v6 == UNIT_TYPE_PEASANT_CARGO
+          || v6 == UNIT_TYPE_PRISONER_FOOT
+          || v6 == UNIT_TYPE_PRISONER_MOUNTED )
         {
           ++v5;
           v2 += 31;
@@ -24251,7 +24266,7 @@ signed int __usercall __spoils<ecx> sub_412100@<eax>(int a1@<eax>)
 // 41212D: variable 'v2' is possibly undefined
 
 //----- (00412170) --------------------------------------------------------
-signed int __usercall sub_412170@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasGoldCargo@<eax>(int a1@<eax>)
 {
   int v1; // edx
   int v2; // ecx
@@ -24262,7 +24277,7 @@ signed int __usercall sub_412170@<eax>(int a1@<eax>)
     v2 = *(__int16 *)(a1 + 6);
     if ( v2 == -1 )
       return 0;
-    if ( v2 == 31 )
+    if ( v2 == UNIT_TYPE_GOLD_CARGO )
       break;
     ++v1;
     a1 += 31;
@@ -24273,7 +24288,7 @@ signed int __usercall sub_412170@<eax>(int a1@<eax>)
 }
 
 //----- (004121A0) --------------------------------------------------------
-signed int __usercall sub_4121A0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasPeasantCargo@<eax>(int a1@<eax>)
 {
   int v1; // edx
   int v2; // ecx
@@ -24284,7 +24299,7 @@ signed int __usercall sub_4121A0@<eax>(int a1@<eax>)
     v2 = *(__int16 *)(a1 + 6);
     if ( v2 == -1 )
       return 0;
-    if ( v2 == 32 )
+    if ( v2 == UNIT_TYPE_PEASANT_CARGO )
       break;
     ++v1;
     a1 += 31;
@@ -24295,7 +24310,7 @@ signed int __usercall sub_4121A0@<eax>(int a1@<eax>)
 }
 
 //----- (004121D0) --------------------------------------------------------
-signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
+signed int __usercall UnitStack_NormalizePeasantCargo@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
 {
   __int16 *v3; // ecx
   int v4; // esi
@@ -24323,7 +24338,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
     v7 = *v3;
     if ( v7 == -1 )
       break;
-    if ( v7 == 32 )
+    if ( v7 == UNIT_TYPE_PEASANT_CARGO )
     {
       ++v5;
       v4 += *((char *)v3 + 9);
@@ -24340,7 +24355,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
     {
       if ( *v12 == -1 )
         break;
-      if ( v10[3] == 32 )
+      if ( v10[3] == UNIT_TYPE_PEASANT_CARGO )
         v10[3] = -1;
       v10 = (__int16 *)((char *)v10 + 31);
       ++v11;
@@ -24359,7 +24374,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
       if ( v17 >= v15 )
         break;
       j += 31;
-      *(_WORD *)(j - 25) = 32;
+      *(_WORD *)(j - 25) = UNIT_TYPE_PEASANT_CARGO;
       *(_BYTE *)(j - 16) = 100;
       *(_BYTE *)(j - 15) = 0;
       *(_BYTE *)(j - 14) = 10;
@@ -24367,7 +24382,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
     }
     LOBYTE(i) = 100;
     *(_BYTE *)(j + 14) = v21;
-    *(_WORD *)(j + 6) = 32;
+    *(_WORD *)(j + 6) = UNIT_TYPE_PEASANT_CARGO;
     *(_BYTE *)(j + 15) = v4 % 100;
     v8 = a1;
     *(_BYTE *)(j + 16) = 0;
@@ -24382,7 +24397,7 @@ signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
 // 4122E3: variable 'j' is possibly undefined
 
 //----- (00412300) --------------------------------------------------------
-__int16 *__usercall sub_412300@<eax>(
+__int16 *__usercall UnitStack_CaptureDefeatedStack@<eax>(
         __int16 *a1@<eax>,
         signed int a2@<edx>,
         int a3@<ecx>,
@@ -24427,10 +24442,10 @@ __int16 *__usercall sub_412300@<eax>(
   do
   {
     v11 = *(__int16 *)(v7 + 6);
-    if ( v11 == 33 || v11 == 34 )
+    if ( v11 == UNIT_TYPE_PRISONER_FOOT || v11 == UNIT_TYPE_PRISONER_MOUNTED )
     {
       a4 = *((unsigned __int8 *)a1 + 4);
-      sub_44E7A0(
+      Prisoner_QueueCapturedUnit(
         *(_WORD *)(v7 + 6),
         *(unsigned __int8 *)(v7 + 8),
         *(_WORD *)(v7 + 10),
@@ -24457,7 +24472,7 @@ __int16 *__usercall sub_412300@<eax>(
   Unit_CompactSquad(v15, v16, a5);
   if ( v17[3] == -1 )
     return Rules_UnlinkArmyFact(v17, a5);
-  sub_4121D0(v17, (DWORD)a1, a5);
+  UnitStack_NormalizePeasantCargo(v17, (DWORD)a1, a5);
   sub_4550F0(v18, a4, (DWORD)a1, a5);
   Unit_GetSquadCount((int)a1);
   v20 = Unit_GetSquadCount(a2);
@@ -24635,7 +24650,7 @@ signed int __usercall sub_4127F0@<eax>(
   char v13; // [esp+0h] [ebp-8h]
 
   v13 = a2;
-  if ( a2 <= 0 || (result = sub_412B60((int)a1)) == 0 )
+  if ( a2 <= 0 || (result = UnitStack_HasPrisonerUnits((int)a1)) == 0 )
   {
     v6 = a1 + 3;
     v7 = 0;
@@ -24646,7 +24661,10 @@ signed int __usercall sub_4127F0@<eax>(
       if ( a3((int)v6) )
       {
         v10 = *v8;
-        if ( v10 != 31 && v10 != 32 && v10 != 33 && v10 != 34 )
+        if ( v10 != UNIT_TYPE_GOLD_CARGO
+          && v10 != UNIT_TYPE_PEASANT_CARGO
+          && v10 != UNIT_TYPE_PRISONER_FOOT
+          && v10 != UNIT_TYPE_PRISONER_MOUNTED )
         {
           v11 = v13 + *((_BYTE *)v8 + 10);
           *((_BYTE *)v8 + 10) = v11;
@@ -24719,7 +24737,7 @@ signed int __usercall sub_4128E0@<eax>(
   int v10; // eax
   signed int result; // eax
 
-  if ( a2 >= 0 || (result = sub_412B60((int)a1)) == 0 )
+  if ( a2 >= 0 || (result = UnitStack_HasPrisonerUnits((int)a1)) == 0 )
   {
     v6 = a1 + 3;
     v7 = 0;
@@ -24923,7 +24941,7 @@ int __usercall sub_412B20@<eax>(int result@<eax>, int a2@<edx>, int *a3@<ebx>)
 }
 
 //----- (00412B60) --------------------------------------------------------
-signed int __usercall sub_412B60@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasPrisonerUnits@<eax>(int a1@<eax>)
 {
   int v2; // ecx
   int v3; // eax
@@ -24934,7 +24952,7 @@ signed int __usercall sub_412B60@<eax>(int a1@<eax>)
     v3 = *(__int16 *)(a1 + 6);
     if ( v3 == -1 )
       return 0;
-    if ( v3 == 33 || v3 == 34 )
+    if ( v3 == UNIT_TYPE_PRISONER_FOOT || v3 == UNIT_TYPE_PRISONER_MOUNTED )
       break;
     ++v2;
     a1 += 31;
@@ -24962,7 +24980,7 @@ int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
       if ( v5 )
         break;
       v8 = *(__int16 *)v7;
-      if ( v8 == 33 || v8 == 34 )
+      if ( v8 == UNIT_TYPE_PRISONER_FOOT || v8 == UNIT_TYPE_PRISONER_MOUNTED )
         v5 = 1;
       ++v6;
       v7 += 31;
@@ -30346,8 +30364,11 @@ int __userpurge Unit_Info@<eax>(
   v28 = a2;
   log(a2, (char)a4, a5, (int)aUnit_infoDD0x0);
   v9 = *(__int16 *)a4;
-  if ( v9 == 32 || v9 == 31 || v9 == 33 || v9 == 34 )
-    return sub_41A960(v31, v28, v8, a4, a5, a3);
+  if ( v9 == UNIT_TYPE_PEASANT_CARGO
+    || v9 == UNIT_TYPE_GOLD_CARGO
+    || v9 == UNIT_TYPE_PRISONER_FOOT
+    || v9 == UNIT_TYPE_PRISONER_MOUNTED )
+    return UI_DrawSpecialUnitInfoPane(v31, v28, v8, a4, a5, a3);
   v10 = a4[2];
   UI_BeginUnitInfo(v26, *a4, v10);
   v12 = (_DWORD *)Mem_Alloc(4112, v11, v10, a5);
@@ -30428,7 +30449,7 @@ int __userpurge Unit_Info@<eax>(
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0041A960) --------------------------------------------------------
-int __usercall sub_41A960@<eax>(
+int __usercall UI_DrawSpecialUnitInfoPane@<eax>(
         int a1@<eax>,
         int a2@<edx>,
         int a3@<ecx>,
@@ -30501,14 +30522,14 @@ int __usercall sub_41A960@<eax>(
     0);
   switch ( *(_WORD *)a4 )
   {
-    case 0x1F:
+    case UNIT_TYPE_GOLD_CARGO:
       a6 = 26;
       break;
-    case 0x20:
+    case UNIT_TYPE_PEASANT_CARGO:
       a6 = 25;
       break;
-    case 0x21:
-    case 0x22:
+    case UNIT_TYPE_PRISONER_FOOT:
+    case UNIT_TYPE_PRISONER_MOUNTED:
       a6 = 28;
       break;
     default:
@@ -30668,7 +30689,7 @@ void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<
   v10 = *(_DWORD *)(gameData + v9 + 140051) && *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 140051);
   v59 = (unsigned __int8 *)v10;
   v63 = 0;
-  if ( sub_412100((int)v8) )
+  if ( UnitStack_HasNormalCombatUnits((int)v8) )
   {
     v12 = *v8 - *v62;
     if ( v12 <= 0 )
@@ -30706,13 +30727,13 @@ LABEL_22:
               sub_45E630(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             if ( *(_DWORD *)(gameData + 140017) == 5 )
               sub_45B3C0(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
-            v18 = (unsigned __int8 *)sub_412B60((int)v8);
-            v60 = sub_412B60((int)v62);
+            v18 = (unsigned __int8 *)UnitStack_HasPrisonerUnits((int)v8);
+            v60 = UnitStack_HasPrisonerUnits((int)v62);
             v19 = Unit_GetSquadCount((int)v8);
-            sub_412000((char *)v8 + 6, v19, v56);
+            UnitSlots_ExtractSpecialEntries((char *)v8 + 6, v19, v56);
             v20 = v57;
             v21 = Unit_GetSquadCount((int)v62);
-            sub_412000((char *)(v22 + 6), v21, (char *)v57);
+            UnitSlots_ExtractSpecialEntries((char *)(v22 + 6), v21, (char *)v57);
             v23 = *(_DWORD *)(1423 * *((unsigned __int8 *)v8 + 4) + gameData + 140051)
                || *(_DWORD *)(1423 * *((unsigned __int8 *)v62 + 4) + gameData + 140051);
             if ( v23 && Unit_GetSquadCount((int)v8) && Unit_GetSquadCount((int)v62) )
@@ -30751,16 +30772,16 @@ LABEL_48:
               {
                 if ( v31 == 1 )
                 {
-                  sub_4120B0((char *)v62 + 6, (char *)v57);
+                  UnitSlots_AppendEntries((char *)v62 + 6, (char *)v57);
                   if ( *(__int16 *)v56 != -1 )
                   {
                     v51 = Unit_CreateNearbyUnitGroup(*v62, v62[1], (unsigned __int8 *)v56, a5);
-                    if ( (sub_4121A0(v51) || sub_412170(v52))
+                    if ( (UnitStack_HasPeasantCargo(v51) || UnitStack_HasGoldCargo(v52))
                       && *(unsigned __int8 *)(v53 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
                       v63 = 1;
                     }
-                    sub_412300(v62, v53, v53, (int)v56, a5);
+                    UnitStack_CaptureDefeatedStack(v62, v53, v53, (int)v56, a5);
                   }
                   sub_4128E0(v8, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
@@ -30773,16 +30794,16 @@ LABEL_48:
                 }
                 else if ( v31 == 2 )
                 {
-                  sub_4120B0((char *)v8 + 6, v56);
+                  UnitSlots_AppendEntries((char *)v8 + 6, v56);
                   if ( *(__int16 *)v56 != -1 )
                   {
                     v47 = Unit_CreateNearbyUnitGroup(*v8, v8[1], v57, a5);
-                    if ( (sub_4121A0(v47) || sub_412170(v48))
+                    if ( (UnitStack_HasPeasantCargo(v47) || UnitStack_HasGoldCargo(v48))
                       && *(unsigned __int8 *)(v49 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
                       v63 = 1;
                     }
-                    sub_412300(v8, v49, v49, (int)v57, a5);
+                    UnitStack_CaptureDefeatedStack(v8, v49, v49, (int)v57, a5);
                   }
                   sub_4128E0(v62, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
@@ -30797,20 +30818,20 @@ LABEL_48:
                 goto LABEL_52;
               }
 LABEL_49:
-              sub_4120B0((char *)v8 + 6, v56);
-              sub_4120B0((char *)v62 + 6, (char *)v57);
-              if ( sub_412100((int)v62) || !sub_412100((int)v8) )
+              UnitSlots_AppendEntries((char *)v8 + 6, v56);
+              UnitSlots_AppendEntries((char *)v62 + 6, (char *)v57);
+              if ( UnitStack_HasNormalCombatUnits((int)v62) || !UnitStack_HasNormalCombatUnits((int)v8) )
               {
-                if ( sub_412100((int)v62) && !sub_412100((int)v8) )
+                if ( UnitStack_HasNormalCombatUnits((int)v62) && !UnitStack_HasNormalCombatUnits((int)v8) )
                 {
                   if ( (unsigned int)v8[3] <= 0x28 )
                   {
-                    if ( (sub_4121A0((int)v8) || sub_412170((int)v8))
+                    if ( (UnitStack_HasPeasantCargo((int)v8) || UnitStack_HasGoldCargo((int)v8))
                       && *((unsigned __int8 *)v62 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
                       v63 = 1;
                     }
-                    sub_412300(v62, (signed int)v8, v46, (int)v20, a5);
+                    UnitStack_CaptureDefeatedStack(v62, (signed int)v8, v46, (int)v20, a5);
                   }
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
                   sub_4128E0(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
@@ -30825,12 +30846,12 @@ LABEL_49:
               {
                 if ( (unsigned int)v62[3] <= 0x28 )
                 {
-                  if ( (sub_4121A0((int)v62) || sub_412170((int)v62))
+                  if ( (UnitStack_HasPeasantCargo((int)v62) || UnitStack_HasGoldCargo((int)v62))
                     && *((unsigned __int8 *)v8 + 4) == *(_DWORD *)(gameData + 147143) )
                   {
                     v63 = 1;
                   }
-                  sub_412300(v8, (signed int)v62, v45, (int)v20, a5);
+                  UnitStack_CaptureDefeatedStack(v8, (signed int)v62, v45, (int)v20, a5);
                 }
                 v20 = (unsigned __int8 *)CSyncObject::Unlock;
                 sub_4128E0(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
@@ -31035,7 +31056,7 @@ void __usercall Unit_AttackBuilding(int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
   v8 = *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 140051)
     && *(_DWORD *)(gameData + 1423 * v7[2] + 140051);
   v56 = v8;
-  if ( sub_412100((int)v61) )
+  if ( UnitStack_HasNormalCombatUnits((int)v61) )
   {
     v10 = *v61 - *v7;
     if ( v10 <= 0 )
@@ -31067,13 +31088,13 @@ LABEL_15:
             sub_45E630(*((unsigned __int8 *)v61 + 4), v7[2]);
           if ( *(_DWORD *)(gameData + 140017) == 5 )
             sub_45B3C0(*((unsigned __int8 *)v61 + 4), v7[2]);
-          v16 = (_WORD *)sub_412B60((int)v61);
-          v57 = sub_43EC10((int)v7);
+          v16 = (_WORD *)UnitStack_HasPrisonerUnits((int)v61);
+          v57 = Building_HasPrisonerGarrisonEntries((int)v7);
           v19 = *(_DWORD *)(1423 * *(unsigned __int8 *)(v18 + 4) + gameData + 140051)
              || *(_DWORD *)(1423 * *(unsigned __int8 *)(467 * v59 + gameData + 509676) + gameData + 140051);
           if ( !v19
             || (Building_CountGarrison(UNIT_RECORD(v59)),
-                v21 = sub_43EBC0(v20 + gameData + 509674),
+                v21 = Building_CountSpecialGarrisonEntries(v20 + gameData + 509674),
                 v22 == v21) )
           {
             v25 = 0;
@@ -31152,9 +31173,10 @@ LABEL_42:
                 }
               }
               else if ( Building_CountGarrison(UNIT_RECORD(v59))
-                     || !sub_412100(725 * v60 + gameData + 147174) )
+                     || !UnitStack_HasNormalCombatUnits(725 * v60 + gameData + 147174) )
               {
-                if ( Building_CountGarrison(UNIT_RECORD(v59)) && !sub_412100(725 * v60 + gameData + 147174) )
+                if ( Building_CountGarrison(UNIT_RECORD(v59))
+                  && !UnitStack_HasNormalCombatUnits(725 * v60 + gameData + 147174) )
                 {
                   sub_4120B0((char *)v7 + 18, v55);
                   UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
@@ -31166,7 +31188,7 @@ LABEL_42:
                   sub_43EE10((int)v7);
                 }
                 else if ( !Building_CountGarrison(UNIT_RECORD(v59))
-                       && !sub_412100(725 * v60 + gameData + 147174) )
+                       && !UnitStack_HasNormalCombatUnits(725 * v60 + gameData + 147174) )
                 {
                   UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
                 }
@@ -32062,7 +32084,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   g_CurrentPlayerIndex = *(unsigned __int8 *)(gameData + v9 + 147178);
   v59 = *(__int16 *)(gameData + v9 + 147174);
   v57 = *(__int16 *)(gameData + v9 + 147176);
-  if ( v10 == 1 && sub_4121A0(v9 + gameData + 147174) )
+  if ( v10 == 1 && UnitStack_HasPeasantCargo(v9 + gameData + 147174) )
     return 0;
   if ( !a5 )
   {
@@ -33161,7 +33183,7 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
               sub_43F0C0((int)a2);
               sub_43EED0((int)a2);
               sub_43F160((unsigned int)a2);
-              sub_44F350((DWORD)a2, v12, (char)a2, a4);
+              Prisoner_NewTurn((DWORD)a2, v12, (char)a2, a4);
             }
             v13 = (char)a2[4];
             if ( v13 == 2 || v13 == 1 )
@@ -33736,7 +33758,7 @@ _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, 
     v19 = *(char *)(v17 + 445);
     if ( v19 != -1 && *(_BYTE *)(v17 + 446) == *(_BYTE *)(v16 + 2) )
     {
-      sub_44F1E0(v16, v19, v16, v17, a5);
+      Building_CreatePrisonerUnit(v16, v19, v16, v17, a5);
       Prisoner_Kill(v20, v17, a2);
     }
     v17 += 6;
@@ -34012,7 +34034,7 @@ void *__usercall sub_41FDF0@<eax>(unsigned __int8 *a1@<eax>, char a2@<bl>, int a
     v17 = v36;
     v37 = v36 + 150;
     UI_DrawTextFmt(v36, v36, v36 + 150, v18, 2, (int)aD_25);
-    sub_44F4E0((int)a1);
+    Building_CountPrisoners((int)a1);
     UI_DrawTextFmt(v17, v17, v17 + 208, v19, 2, (int)aD_26);
     UI_DrawTextFmt(v17, v17, v20, v40 + 99, 2, (int)aD_27);
     v22 = v36 ^ v21;
@@ -36749,7 +36771,7 @@ signed int __usercall sub_423860@<eax>(DWORD a1@<ebp>, double a2@<st0>)
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     if ( DD_IsLost((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * v3 + 6) != -1 )
     {
-      v5 = sub_412B60(dword_526FA0);
+      v5 = UnitStack_HasPrisonerUnits(dword_526FA0);
       Unit_Info(100, 100, v5, (unsigned __int8 *)(dword_526FA0 + 6 + 31 * v3), a1, 0);
       sub_418700(1);
     }
@@ -46460,7 +46482,7 @@ void *sub_432ED0()
     v51 = 289;
     v6 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
     v7 = (char *)&g_UnitTypeMetadataRecords + v5;
-    if ( v6 == 33 || v6 == 34 )
+    if ( v6 == UNIT_TYPE_PRISONER_FOOT || v6 == UNIT_TYPE_PRISONER_MOUNTED )
       v8 = 33;
     else
       v8 = 10;
@@ -46478,7 +46500,7 @@ void *sub_432ED0()
       0);
     Render_ReleaseSurface(7, (DWORD)savedregs);
     v11 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-    if ( v11 == 33 || v11 == 34 )
+    if ( v11 == UNIT_TYPE_PRISONER_FOOT || v11 == UNIT_TYPE_PRISONER_MOUNTED )
     {
       UI_DrawTextFmt(
         v10,
@@ -46520,14 +46542,14 @@ LABEL_10:
       v17 = v45;
       sub_460BB0(dword_544CD8, v45, v45 + 49 + SpriteHeight, v51, v41);
       v18 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-      if ( v18 == 33 || v18 == 34 )
+      if ( v18 == UNIT_TYPE_PRISONER_FOOT || v18 == UNIT_TYPE_PRISONER_MOUNTED )
         v19 = 33;
       else
         v19 = 10;
       v20 = DLX_GetSpriteWidth(dword_532144, v19);
       v39 = v51 - 1 + v20;
       v21 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-      if ( v21 == 33 || v21 == 34 )
+      if ( v21 == UNIT_TYPE_PRISONER_FOOT || v21 == UNIT_TYPE_PRISONER_MOUNTED )
         v22 = 33;
       else
         v22 = 10;
@@ -53952,12 +53974,12 @@ signed int __usercall sub_43E770@<eax>(int a1@<eax>, int a2@<edx>)
     return 0;
   v4 = *(_BYTE *)(v2 + 4);
   if ( !v4 )
-    return sub_412100(v3);
+    return UnitStack_HasNormalCombatUnits(v3);
   if ( v4 > 1u )
     return v4 == 2;
-  if ( sub_4121A0(v3) )
+  if ( UnitStack_HasPeasantCargo(v3) )
     return 0;
-  return sub_412100(v5) || sub_412170(v5) || sub_412B60(v6);
+  return UnitStack_HasNormalCombatUnits(v5) || UnitStack_HasGoldCargo(v5) || UnitStack_HasPrisonerUnits(v6);
 }
 // 43E7D7: variable 'v5' is possibly undefined
 // 43E7F5: variable 'v6' is possibly undefined
@@ -54172,7 +54194,7 @@ int __usercall sub_43EB50@<eax>(int a1@<eax>)
 }
 
 //----- (0043EB80) --------------------------------------------------------
-int __usercall sub_43EB80@<eax>(int a1@<eax>)
+int __usercall Building_CountPrisonerGarrisonEntries@<eax>(int a1@<eax>)
 {
   int v1; // ebx
   int v2; // ecx
@@ -54192,7 +54214,7 @@ LABEL_5:
       if ( a1 == v1 )
         return v2;
     }
-    if ( v3 == 33 || v3 == 34 )
+    if ( v3 == UNIT_TYPE_PRISONER_FOOT || v3 == UNIT_TYPE_PRISONER_MOUNTED )
     {
       ++v2;
       goto LABEL_5;
@@ -54204,7 +54226,7 @@ LABEL_5:
 }
 
 //----- (0043EBC0) --------------------------------------------------------
-int __usercall sub_43EBC0@<eax>(int a1@<eax>)
+int __usercall Building_CountSpecialGarrisonEntries@<eax>(int a1@<eax>)
 {
   int v1; // edx
   int v2; // ecx
@@ -54226,7 +54248,10 @@ LABEL_5:
       if ( v1 == v3 )
         return v2;
     }
-    if ( v4 == 33 || v4 == 34 || v4 == 31 || v4 == 32 )
+    if ( v4 == UNIT_TYPE_PRISONER_FOOT
+      || v4 == UNIT_TYPE_PRISONER_MOUNTED
+      || v4 == UNIT_TYPE_GOLD_CARGO
+      || v4 == UNIT_TYPE_PEASANT_CARGO )
     {
       ++v2;
       goto LABEL_5;
@@ -54238,7 +54263,7 @@ LABEL_5:
 }
 
 //----- (0043EC10) --------------------------------------------------------
-signed int __usercall sub_43EC10@<eax>(int a1@<eax>)
+signed int __usercall Building_HasPrisonerGarrisonEntries@<eax>(int a1@<eax>)
 {
   int v1; // edx
   int v2; // ecx
@@ -54247,7 +54272,7 @@ signed int __usercall sub_43EC10@<eax>(int a1@<eax>)
   while ( 1 )
   {
     v2 = *(__int16 *)(a1 + 18);
-    if ( v2 == 33 || v2 == 34 )
+    if ( v2 == UNIT_TYPE_PRISONER_FOOT || v2 == UNIT_TYPE_PRISONER_MOUNTED )
       break;
     ++v1;
     a1 += 31;
@@ -54699,7 +54724,7 @@ int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>)
       for ( j = 0; j != 310; j += 31 )
       {
         v10 = *(__int16 *)(i + gameData + j + 147180);
-        if ( v10 == 31 || v10 == 32 )
+        if ( v10 == UNIT_TYPE_GOLD_CARGO || v10 == UNIT_TYPE_PEASANT_CARGO )
           v1 += *(char *)(i + gameData + j + 147189);
       }
     }
@@ -56016,7 +56041,7 @@ int __usercall UI_DemoTextPresent@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>
         }
         else if ( DD_IsLost((int)dword_544CD8) )
         {
-          v23 = sub_43EC10(dword_543C80);
+          v23 = Building_HasPrisonerGarrisonEntries(dword_543C80);
           v12 = (unsigned __int8 *)(dword_543C80 + 18 + v24);
           Unit_Info(100, 100, v23, v12, a4, 0);
         }
@@ -58556,7 +58581,7 @@ signed int __usercall sub_443EB0@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, D
   int v20; // [esp+20h] [ebp-1Ch]
 
   v4 = (__int16 *)(gameData + 147174 + 725 * a1);
-  if ( sub_410010((int)v4) < 0 || *((_BYTE *)v4 + 720) || !sub_412100((int)v4) )
+  if ( sub_410010((int)v4) < 0 || *((_BYTE *)v4 + 720) || !UnitStack_HasNormalCombatUnits((int)v4) )
     return 0;
   if ( sub_4100B0((int)v4) < 2 )
   {
@@ -63703,7 +63728,7 @@ LABEL_4:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0044E7A0) --------------------------------------------------------
-signed int __userpurge sub_44E7A0@<eax>(
+signed int __userpurge Prisoner_QueueCapturedUnit@<eax>(
         char a1@<al>,
         int a2@<edx>,
         __int16 a3@<cx>,
@@ -63745,7 +63770,7 @@ signed int __userpurge sub_44E7A0@<eax>(
 // 5202E4: using guessed type int gameData;
 
 //----- (0044E850) --------------------------------------------------------
-signed int __usercall sub_44E850@<eax>(int a1@<eax>)
+signed int __usercall Building_FindFreePrisonerSlot@<eax>(int a1@<eax>)
 {
   signed int result; // eax
 
@@ -63853,7 +63878,7 @@ LABEL_6:
             result = sub_415E40(v26 + v11 * v11);
             if ( result < v12 )
             {
-              result = sub_44E850(v9 + gameData + 509674);
+              result = Building_FindFreePrisonerSlot(v9 + gameData + 509674);
               if ( result != -1 )
               {
                 v13 = gameData + v9;
@@ -63881,7 +63906,7 @@ LABEL_6:
     }
     v16 = 467 * v7;
     v17 = UNIT_RECORD(v7);
-    v18 = (_BYTE *)(v17 + 445 + 6 * sub_44E850(v17));
+    v18 = (_BYTE *)(v17 + 445 + 6 * Building_FindFreePrisonerSlot(v17));
     *v18 = *v19;
     v20 = v19[1];
     v18[3] = 0;
@@ -63917,7 +63942,7 @@ LABEL_6:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044EB70) --------------------------------------------------------
-int __usercall sub_44EB70@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall BuildingPrisoner_SetOrder@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // edx
   int result; // eax
@@ -63932,7 +63957,7 @@ int __usercall sub_44EB70@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 // 44EB8E: variable 'v5' is possibly undefined
 
 //----- (0044EBA0) --------------------------------------------------------
-int __usercall sub_44EBA0@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall BuildingPrisoner_GetOrder@<eax>(int a1@<eax>, int a2@<edx>)
 {
   return *(unsigned __int8 *)(a1 + 6 * a2 + 448);
 }
@@ -64260,7 +64285,7 @@ unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx
 // 518D50: using guessed type char *off_518D50[3];
 
 //----- (0044F1E0) --------------------------------------------------------
-int __usercall sub_44F1E0@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, double a5@<st0>)
+int __usercall Building_CreatePrisonerUnit@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, double a5@<st0>)
 {
   int v6; // edx
   int i; // eax
@@ -64312,7 +64337,7 @@ unsigned int __usercall sub_44F260@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<e
     a3 = v7 - result;
     *(_DWORD *)(v5 + 438) = v7 - result;
   }
-  sub_44F1E0(v5, *(char *)(v5 + 6 * a2 + 445), v5, a2, a4);
+  Building_CreatePrisonerUnit(v5, *(char *)(v5 + 6 * a2 + 445), v5, a2, a4);
   Prisoner_Kill(v8, a2, a3);
   result = 1423 * *(unsigned __int8 *)(v9 + 2);
   if ( *(_DWORD *)(gameData + result + 140051) )
@@ -64336,7 +64361,7 @@ unsigned int __usercall sub_44F260@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<e
 // 5202E4: using guessed type int gameData;
 
 //----- (0044F350) --------------------------------------------------------
-char __usercall sub_44F350@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>)
+char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>)
 {
   int v5; // edx
   int v6; // eax
@@ -64414,7 +64439,7 @@ char __usercall sub_44F350@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (0044F4E0) --------------------------------------------------------
-int __usercall sub_44F4E0@<eax>(int a1@<eax>)
+int __usercall Building_CountPrisoners@<eax>(int a1@<eax>)
 {
   int v1; // ebx
   int v2; // edx
@@ -64729,7 +64754,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
   v4 = dword_518DC8;
   for ( j = 0; j < 3; ++j )
   {
-    v6 = sub_44EBA0(dword_5443FC, j);
+    v6 = BuildingPrisoner_GetOrder(dword_5443FC, j);
     if ( v6 >= 2 )
     {
       if ( v6 <= 2 )
@@ -65019,7 +65044,7 @@ LABEL_48:
     v52 = 0;
   }
 LABEL_49:
-  sub_44EB70(v53, v52, v36);
+  BuildingPrisoner_SetOrder(v53, v52, v36);
   if ( dword_518E6F == 2 )
   {
     v54 = 1;
@@ -65040,7 +65065,7 @@ LABEL_49:
     v55 = dword_5443FC;
     v54 = 0;
   }
-  sub_44EB70(v55, v54, v36);
+  BuildingPrisoner_SetOrder(v55, v54, v36);
   if ( dword_518F0E == 2 )
   {
     v56 = 1;
@@ -65061,7 +65086,7 @@ LABEL_49:
     v57 = dword_5443FC;
     v56 = 0;
   }
-  sub_44EB70(v57, v56, dword_518F0E);
+  BuildingPrisoner_SetOrder(v57, v56, dword_518F0E);
   sub_405920(&dword_5443F0);
   j__nfree_();
   Render_Pump();
@@ -65193,7 +65218,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           v21 = AI_FindActionCandidate(g_CurrentPlayerIndex);
           if ( v21 )
           {
-            sub_44F1E0(v21, a2, v21, a2, a4);
+            Building_CreatePrisonerUnit(v21, a2, v21, a2, a4);
             PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) = 5;
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
             {
@@ -66517,7 +66542,7 @@ signed int __usercall sub_4530A0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp
 //----- (004530D0) --------------------------------------------------------
 signed int __usercall sub_4530D0@<eax>(int a1@<eax>)
 {
-  return sub_412100(725 * a1 + gameData + 147174);
+  return UnitStack_HasNormalCombatUnits(725 * a1 + gameData + 147174);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67136,7 +67161,7 @@ signed int __usercall sub_4547F0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
 //----- (00454800) --------------------------------------------------------
 signed int __usercall sub_454800@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>)
 {
-  sub_412300(
+  UnitStack_CaptureDefeatedStack(
     (__int16 *)(gameData + 147174 + 725 * a1),
     gameData + 147174 + 725 * a2,
     gameData + 147174 + 725 * a2,
@@ -67197,7 +67222,7 @@ signed int __usercall sub_454990@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
 //----- (004549A0) --------------------------------------------------------
 BOOL __usercall sub_4549A0@<eax>(int a1@<eax>)
 {
-  return sub_412100(gameData + 147174 + 725 * a1) != 0;
+  return UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * a1) != 0;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -70266,7 +70291,7 @@ LABEL_105:
       for ( i = 0; i != 372; i += 31 )
       {
         v34 = *(__int16 *)(467 * (*(unsigned __int16 *)(gameData + 573450) - 0x8000) + gameData + i + 509692);
-        if ( v34 == 33 || v34 == 34 )
+        if ( v34 == UNIT_TYPE_PRISONER_FOOT || v34 == UNIT_TYPE_PRISONER_MOUNTED )
           ++v32;
       }
       return v32 >= 6;
@@ -70359,7 +70384,7 @@ LABEL_7:
         for ( i = 0; i < 10; ++i )
         {
           v4 = *(__int16 *)(725 * v2 + gameData + 31 * i + 147180);
-          if ( v4 == 33 || v4 == 34 )
+          if ( v4 == UNIT_TYPE_PRISONER_FOOT || v4 == UNIT_TYPE_PRISONER_MOUNTED )
             ++v1;
         }
       }
@@ -70378,7 +70403,7 @@ LABEL_19:
         for ( j = 0; j < 12; ++j )
         {
           v8 = *(__int16 *)(31 * j + gameData + 467 * v5 + 509692);
-          if ( v8 == 33 || v8 == 34 )
+          if ( v8 == UNIT_TYPE_PRISONER_FOOT || v8 == UNIT_TYPE_PRISONER_MOUNTED )
             ++v1;
         }
       }
@@ -70406,7 +70431,7 @@ LABEL_34:
     for ( k = 0; k < 10; ++k )
     {
       v12 = *(__int16 *)(725 * v10 + gameData + 31 * k + 147180);
-      if ( v12 == 33 || v12 == 34 )
+      if ( v12 == UNIT_TYPE_PRISONER_FOOT || v12 == UNIT_TYPE_PRISONER_MOUNTED )
         ++v9;
     }
   }
@@ -70425,7 +70450,7 @@ LABEL_46:
     for ( m = 0; m < 12; ++m )
     {
       v16 = *(__int16 *)(31 * m + gameData + 467 * v13 + 509692);
-      if ( v16 == 33 || v16 == 34 )
+      if ( v16 == UNIT_TYPE_PRISONER_FOOT || v16 == UNIT_TYPE_PRISONER_MOUNTED )
         ++v9;
     }
   }
