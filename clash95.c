@@ -885,8 +885,8 @@ int __cdecl sub_43CF90();
 // __int16 __usercall __spoils<ecx> Building_UpdateSettlementCrisis@<ax>(unsigned int a1@<eax>);
 // int __usercall Building_GetTotalValue@<eax>(int a1@<eax>);
 // int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>);
-// int __usercall AI_CalcFrontlineScore@<eax>(int a1@<eax>);
-// int __usercall AI_ApplyFrontlineScore@<eax>(int a1@<eax>, signed int a2@<edx>);
+// int __usercall Player_CalcStoredGoldInBuildings@<eax>(int a1@<eax>);
+// int __usercall Player_SpendStoredGoldFromBuildings@<eax>(int a1@<eax>, signed int a2@<edx>);
 int sub_43F600();
 // int __userpurge sub_43F630@<eax>(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>, signed int a6@<esi>, int a7);
 // int __userpurge sub_43F880@<eax>(DWORD a1@<eax>, int a2@<edx>, signed int a3@<ecx>, int a4@<ebx>, int a5);
@@ -54804,7 +54804,7 @@ int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F460) --------------------------------------------------------
-int __usercall AI_CalcFrontlineScore@<eax>(int a1@<eax>)
+int __usercall Player_CalcStoredGoldInBuildings@<eax>(int a1@<eax>)
 {
   int v2; // edi
   int v3; // eax
@@ -54835,7 +54835,7 @@ int __usercall AI_CalcFrontlineScore@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F500) --------------------------------------------------------
-int __usercall AI_ApplyFrontlineScore@<eax>(int a1@<eax>, signed int a2@<edx>)
+int __usercall Player_SpendStoredGoldFromBuildings@<eax>(int a1@<eax>, signed int a2@<edx>)
 {
   int v4; // ecx
   int i; // eax
@@ -65384,7 +65384,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           {
             v38 = Rng_RandRange(0, 24);
             log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
-            v39 = AI_CalcFrontlineScore(g_CurrentPlayerIndex);
+            v39 = Player_CalcStoredGoldInBuildings(g_CurrentPlayerIndex);
             if ( Queen_ShowWhimDialog(
                    *(int *)((char *)off_5191F2 + 7 * v40 + 4 * (unsigned __int8)g_LanguageIndex),
                    *(unsigned __int16 *)((char *)&word_5191F0 + 7 * v40),
@@ -65392,7 +65392,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
                    v39,
                    (DWORD)savedregs) )
             {
-              AI_ApplyFrontlineScore(g_CurrentPlayerIndex, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
+              Player_SpendStoredGoldFromBuildings(g_CurrentPlayerIndex, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
               v42 = PLAYER_DATA(g_CurrentPlayerIndex);
               if ( *(char *)(v42 + 141443) < 9 )
                 ++*(_BYTE *)(v42 + 141443);

@@ -528,6 +528,12 @@
 | dword_532428 | g_BuildingTransferDestinationListSpriteSet | Global | UI / Building Transfer | High | Lazily allocated sprite set used only by the destination chooser list and freed by its teardown helper. | c |
 | g_BuildingTransferDestinationSelectionIndex .. g_BuildingTransferDestinationBuildingIds | BuildingTransferDestinationListState | Recovered Struct | UI / Building Transfer | Medium | Adjacent globals form one modal destination-selector state region: a current selection index followed by the packed destination id list consumed by draw, click, and confirm-transfer paths. | c |
 
+## Batch 49 – Building Gold Reserve Helper Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| AI_CalcFrontlineScore | Player_CalcStoredGoldInBuildings | Function | Queen / Economy | High | The helper sums only building field `+438` (`stored_gold`) across owned active building records and is used as the “available funds” input to the queen whim dialog. No combat or frontline state participates. | c |
+| AI_ApplyFrontlineScore | Player_SpendStoredGoldFromBuildings | Function | Queen / Economy | High | The helper repeatedly drains building field `+438` across owned building records until the requested amount is spent, and the only caller is the queen whim acceptance path immediately after checking available building gold. | c |
+
 ## Deferred / Ambiguous
 - `g_BuildingTransferDestinationBuildingIds[0] == -2` is secure as a special non-building sentinel that the confirm path translates to `-1` before calling `Building_Transfer`, but the original UI label and exact gameplay wording behind that sentinel still need a focused string pass.
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
