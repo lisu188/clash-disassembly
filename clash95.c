@@ -630,9 +630,9 @@ int sub_422AC0();
 // signed int __usercall UnitStack_HasOnlyFlyingUnits@<eax>(int a1@<eax>);
 // int __usercall sub_422BE0@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // BOOL __usercall Map_IsTilePlacable@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6);
+// BOOL __userpurge UnitStack_SplitSelectedUnitsToTile@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6);
 // _DWORD *__usercall __spoils<ecx> UI_SetCurrentPlayer@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
-int sub_4233E0();
+int UI_FreeUnitInfoSpriteSet();
 // int __usercall UI_DrawStackSplitPanel@<eax>(int result@<eax>, DWORD a2@<ebp>);
 // int __usercall sub_423760@<eax>(int a1@<eax>, int a2@<ebx>);
 // signed int __usercall UnitStack_HandleSplitModeInput@<eax>(DWORD a1@<ebp>, double a2@<st0>);
@@ -11490,7 +11490,7 @@ int dword_526F0C; // weak
 _UNKNOWN unk_526F10; // weak
 _DWORD g_StackSplitSelectedSlotFlags[10]; // weak
 int g_StackSplitSourceStackPtr; // weak
-int dword_527C24; // weak
+int g_UnitInfoSpriteSet; // weak
 int dword_527C28; // weak
 int dword_527C30; // weak
 int dword_527C34; // weak
@@ -19601,7 +19601,7 @@ int __usercall sub_40B020@<eax>(DWORD a1@<ebp>)
   sub_405920(&dword_5202D8);
   sub_405920(&dword_5202D4);
   sub_405920(&dword_5202D0);
-  sub_4233E0();
+  UI_FreeUnitInfoSpriteSet();
   sub_405920(&dword_5202DC);
   j__nfree_();
   return sub_40ED20();
@@ -36467,7 +36467,7 @@ BOOL __usercall sub_422DC0@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, i
 // 5202E4: using guessed type int gameData;
 
 //----- (00423050) --------------------------------------------------------
-BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6)
+BOOL __userpurge UnitStack_SplitSelectedUnitsToTile@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6)
 {
   DWORD v8; // ebp
   int v9; // edx
@@ -36593,7 +36593,7 @@ BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, 
 // 5202E4: using guessed type int gameData;
 
 //----- (00423370) --------------------------------------------------------
-_DWORD *__usercall __spoils<ecx> sub_423370@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
+_DWORD *__usercall __spoils<ecx> UI_LoadUnitInfoSpriteSet@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
 {
   int v4; // edx
   int v5; // ecx
@@ -36603,21 +36603,21 @@ _DWORD *__usercall __spoils<ecx> sub_423370@<eax>(int a1@<eax>, int a2@<ecx>, ch
 
   v8 = a2;
   v4 = a1;
-  if ( dword_527C24 )
+  if ( g_UnitInfoSpriteSet )
   {
-    nfree_(dword_527C24);
-    dword_527C24 = 0;
+    nfree_(g_UnitInfoSpriteSet);
+    g_UnitInfoSpriteSet = 0;
   }
   sprintf_(v7, "info%d.s32", v4 + 1);
   result = (_DWORD *)Mem_Alloc(4112, v5, a3, a4);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, a3);
-    dword_527C24 = (int)result;
+    g_UnitInfoSpriteSet = (int)result;
   }
   else
   {
-    dword_527C24 = 0;
+    g_UnitInfoSpriteSet = 0;
   }
   return result;
 }
@@ -36625,20 +36625,20 @@ _DWORD *__usercall __spoils<ecx> sub_423370@<eax>(int a1@<eax>, int a2@<ecx>, ch
 // 4233AB: variable 'v5' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
-// 527C24: using guessed type int dword_527C24;
+// 527C24: using guessed type int g_UnitInfoSpriteSet;
 
 //----- (004233E0) --------------------------------------------------------
-int sub_4233E0()
+int UI_FreeUnitInfoSpriteSet()
 {
   int result; // eax
 
-  if ( dword_527C24 )
+  if ( g_UnitInfoSpriteSet )
     result = nfree_(0);
-  dword_527C24 = 0;
+  g_UnitInfoSpriteSet = 0;
   return result;
 }
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
-// 527C24: using guessed type int dword_527C24;
+// 527C24: using guessed type int g_UnitInfoSpriteSet;
 
 //----- (00423420) --------------------------------------------------------
 int __usercall UI_DrawStackSplitPanel@<eax>(int result@<eax>, DWORD a2@<ebp>)
@@ -36706,7 +36706,7 @@ int __usercall UI_DrawStackSplitPanel@<eax>(int result@<eax>, DWORD a2@<ebp>)
     {
       if ( *(__int16 *)(31 * j + g_StackSplitSourceStackPtr + 6) == -1 )
         break;
-      v10 = DLX_GetSpriteForChar(dword_527C24, *(__int16 *)(31 * j + g_StackSplitSourceStackPtr + 6));
+      v10 = DLX_GetSpriteForChar(g_UnitInfoSpriteSet, *(__int16 *)(31 * j + g_StackSplitSourceStackPtr + 6));
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         401,
         v10,
@@ -36772,7 +36772,7 @@ int __usercall UI_DrawStackSplitPanel@<eax>(int result@<eax>, DWORD a2@<ebp>)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526F78: using guessed type _DWORD g_StackSplitSelectedSlotFlags[10];
 // 526FA0: using guessed type int g_StackSplitSourceStackPtr;
-// 527C24: using guessed type int dword_527C24;
+// 527C24: using guessed type int g_UnitInfoSpriteSet;
 
 //----- (00423760) --------------------------------------------------------
 int __usercall sub_423760@<eax>(int a1@<eax>, int a2@<ebx>)
@@ -36874,7 +36874,7 @@ signed int __usercall UnitStack_HandleSplitModeInput@<eax>(DWORD a1@<ebp>, doubl
         Render_Begin((int)dword_544CD8, 0);
         memset_(v11, 0);
         sub_412B20((int)g_StackSplitSelectedSlotFlags, 10, v15);
-        if ( sub_423050(g_SelectedUnitIndex, v15, v12, v7, a2, 0) )
+        if ( UnitStack_SplitSelectedUnitsToTile(g_SelectedUnitIndex, v15, v12, v7, a2, 0) )
           memset_(v13, 0);
         Render_LoadResourceSprite(v13, a1);
         UI_DrawStackSplitPanel(-1, a1);
@@ -69042,7 +69042,7 @@ BOOL __usercall sub_457E60@<eax>(int a1@<eax>, int a2@<ebp>, int a3@<edi>, doubl
     ++v15;
   }
   while ( v15 <= 1 && !v14 );
-  return v14 && sub_423050(v13, v12, a2, a3, a4, 0);
+  return v14 && UnitStack_SplitSelectedUnitsToTile(v13, v12, a2, a3, a4, 0);
 }
 // 457F19: conditional instruction was optimized away because %var_24.4==0
 // 5202E4: using guessed type int gameData;
@@ -69116,7 +69116,7 @@ BOOL __usercall sub_457FE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebp>, int a
     ++v18;
   }
   while ( v18 <= 1 && !v17 );
-  return v17 && sub_423050(v15, v14, a4, a3, a5, 0);
+  return v17 && UnitStack_SplitSelectedUnitsToTile(v15, v14, a4, a3, a5, 0);
 }
 // 458094: conditional instruction was optimized away because %var_20.4==0
 // 5202E4: using guessed type int gameData;

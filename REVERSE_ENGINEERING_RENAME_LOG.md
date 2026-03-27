@@ -429,11 +429,20 @@
 | dword_526F78 | g_StackSplitSelectedSlotFlags | Global | Units / Split Mode | High | Ten per-slot toggle flags copied into the split execution helper and rendered as selected/not-selected markers in the stack split panel. | c, asm |
 | dword_526FA0 | g_StackSplitSourceStackPtr | Global | Units / Split Mode | Medium | Treated throughout the split-mode panel and input code as the currently previewed source stack pointer; one decompiler-emitted `memset_` call near setup is still suspicious, so the pointer interpretation is secure but the exact setup sequence remains slightly noisy. | c |
 
+## Batch 42 – Split Execution And Sprite Set Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_423050 | UnitStack_SplitSelectedUnitsToTile | Function | Units / Split Mode | High | Consumes the selected-slot index array, validates destination capacity/placability, creates a new destination stack when needed, copies the chosen 31-byte unit slots, compacts the source stack, relinks both stacks, and resolves destination trap/building-side effects. | c, asm |
+| sub_423370 | UI_LoadUnitInfoSpriteSet | Function | UI / Unit Info | Medium | Loads `info%d.s32` into the sprite-set handle later used for unit-type icons in the split panel and frees any previously loaded handle first. | c |
+| sub_4233E0 | UI_FreeUnitInfoSpriteSet | Function | UI / Unit Info | High | Paired free/reset helper for the sprite-set handle used by the split/unit-info panel icons; called during play-resource teardown. | c, asm |
+| dword_527C24 | g_UnitInfoSpriteSet | Global | UI / Unit Info | Medium | Sprite-set handle used by the split panel to draw per-unit-type icons; the loader chooses `info%d.s32`, but the exact variant selector feeding `%d` still needs a focused pass. | c, asm |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
 - `clash95.asm` still contains an older stale comment at `0x40D850` that labels the proc as `Locale_DrawInteger`; code and control-flow evidence now show that address is the full map-mode surface redraw loop, so the asm artifact should be reconciled in a later cleanup pass rather than trusted literally.
 - `Map_StartUnitStackHighlight` / `Map_UpdateUnitStackHighlight` are behaviorally secure as a temporary camera-following highlight on one stack id, but the original feature name may have been closer to focus, tracking, or emphasis rather than generic highlight.
 - `g_StackSplitSourceStackPtr` is used exactly like a live source-stack pointer across the split-mode panel and input flow, but the setup helper still contains one decompiler-noisy `memset_` call near that assignment, so the pointer name is kept at medium rather than high confidence.
+- `g_UnitInfoSpriteSet` and `UI_LoadUnitInfoSpriteSet` are secure as the sprite-set family behind split-panel unit icons, but the exact selector feeding `info%d.s32` is not yet mapped back to a clean gameplay enum.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
