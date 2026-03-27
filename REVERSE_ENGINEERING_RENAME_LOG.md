@@ -129,3 +129,16 @@
 | sub_455AD0 | Building_StartTrainingIdleGarrisonUnits | Function | Building/Garrison | Medium | Walks every occupied garrison slot and starts `Building_TrainUnit` on those whose trainability and idle-task predicates pass, so it is an AI or bulk helper for launching training jobs. |
 | sub_455B50 | Building_StartRepairIdleGarrisonUnits | Function | Building/Garrison | Medium | Bulk counterpart to the above that starts `Building_RepairUnit` on occupied, damaged, idle garrison slots. |
 | sub_455BD0 | Building_UnitsLeaveByUnitType | Function | Building/Garrison | High | Finds the first garrison slot whose unit type id matches `a2`, builds a one-element leave list, and passes it to `Building_UnitsLeave` when an exit tile is available. |
+
+## Batch 19 – Unit Type Metadata Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| off_512568 | g_UnitTypeMetadataRecords | Global | Unit Types/Stats | High | The base is indexed as `22 * unitType` (88 bytes per type) and serves as more than a name table: field 0 is a localized-name pointer array, field `+4` is the sprite-folder pointer, and bytes `+29..+37` store the per-terrain movement profile merged by stack movement code. |
+| dword_51257A | g_UnitTypeFlags | Global | Unit Types/Stats | High | This overlapping dword field lives inside the recovered 88-byte metadata record. Bit0 consistently marks airborne units across render order, movement sounds, death handling, and the “all units flying” predicate; another bit still controls the 6-vs-10 seed at slot `+11`. |
+| sub_413920 | UnitStack_BuildMergedTerrainMoveProfile | Function | Unit Types/Stats | High | Iterates every occupied slot, loads the owning unit type's metadata record, and merges bytes `+29..+37` into a temporary profile consumed by world-movement helpers. |
+| sub_422BA0 | UnitStack_HasOnlyFlyingUnits | Function | Unit Types/Stats | High | Walks the occupied slots and returns true only when every unit type has `g_UnitTypeFlags bit0` set, matching the airborne-only predicate used by pathing/UI helpers. |
+| data segment @ 0x512568 stride 88 | UnitTypeMetadataRecord | Recovered Struct | Unit Types/Stats | High | The decompiler emitted several overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitSpriteFolders`, `g_UnitTypeFlags`, `byte_512570`+) from one record family. Code evidence proves a stable 88-byte per-type layout with localized names, sprite folders, flags, animation timing, and terrain move costs. |
+
+## Deferred / Ambiguous
+- `smok`, `słoń`, and `góral` remain deferred as concrete ids. The current pass recovered broad classes such as `FlyingUnitCategory`, but the missing localized-name payload still prevents safe id-to-name mapping.
+- `g_UnitTypeFlags` bit1 still has an unresolved gameplay label. It definitely changes the 6-vs-10 initialization path at slot `+11`, but the code evidence is not yet strong enough to call it “light”, “fast”, or another concrete archetype as fact.
