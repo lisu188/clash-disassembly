@@ -360,11 +360,11 @@ int sub_40C3F0();
 int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, int a4);
 int __spoils<ecx> Render_CreateSprite();
 // int __usercall sub_40CE70@<eax>(unsigned int a1@<eax>, int a2@<ecx>);
-// int __usercall sub_40D330@<eax>(DWORD a1@<ebp>);
-int __thiscall sub_40D430(void *this);
+// int __usercall MapMode_InitSurface@<eax>(DWORD a1@<ebp>);
+int __thiscall MapMode_DestroySurface(void *this);
 // int __usercall MapMode_BlitRectWithViewportFrame@<eax>(int result@<eax>, unsigned __int16 a2@<dx>, unsigned __int16 a3@<cx>, unsigned __int16 a4@<bx>);
 // int __usercall MapMode_RedrawTileRect@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// BOOL __usercall sub_40D800@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>);
+// BOOL __usercall MapMode_IsScreenTileCoveredByPanel@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>);
 void Locale_DrawInteger();
 // void *__usercall MapMode_DrawTile@<eax>(void *result@<eax>, signed int a2@<edx>);
 // signed int __usercall Map_DestroyTile@<eax>(int a1@<eax>, signed int a2@<edx>);
@@ -401,12 +401,12 @@ int sub_40ED20();
 // __int16 *__usercall UnitStack_ClearReadyFlags@<eax>(int a1@<eax>);
 // __int16 *__usercall UnitStack_SetReadyFlags@<eax>(int a1@<eax>);
 // signed int __usercall sub_40FA80@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_40FAD0@<eax>(int a1@<eax>);
+// int __usercall Map_CenterViewOnUnitStack@<eax>(int a1@<eax>);
 // int __usercall __spoils<ecx> UnitSlot_CalcActionPointsFromFatigue@<eax>(__int16 *a1@<eax>);
 // int __usercall UnitSlot_GetBaseActionPoints@<eax>(__int16 *a1@<eax>);
 // int __usercall sub_40FE80@<eax>(int a1@<eax>);
 // __int16 *__usercall sub_40FEC0@<eax>(__int16 *result@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-signed int sub_40FEF0();
+signed int Map_HandleKeyboardScroll();
 // signed int __usercall sub_410010@<eax>(int a1@<eax>);
 // signed int __usercall sub_4100B0@<eax>(int a1@<eax>);
 // signed int __usercall sub_410100@<eax>(int a1@<eax>);
@@ -515,15 +515,15 @@ unsigned int __thiscall sub_416610(void *this);
 // int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<dx>, unsigned __int16 *a3@<ebx>);
 // int __usercall sub_418700@<eax>(int a1@<eax>);
 // int __usercall sub_418A90@<eax>(int result@<eax>, int a2@<edx>);
-// int __usercall sub_418C00@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// int __usercall sub_418CE0@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_418D90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
-void sub_418DA0();
-BOOL sub_418E20();
-// int __usercall sub_418E30@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
-void __fastcall sub_418E50(int a1, int a2);
-// int __usercall sub_418EC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
-void __fastcall sub_418EE0(int a1, int a2);
+// int __usercall Map_CenterViewOnTileRect@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
+// int __usercall Map_CenterViewOnTile@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall Map_StartUnitStackHighlight@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
+void Map_UpdateUnitStackHighlight();
+BOOL Map_IsUnitStackHighlightActive();
+// int __usercall Map_StartUnitStackEffectAnimation@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
+void __fastcall Map_UpdateUnitStackEffectAnimation(int a1, int a2);
+// int __usercall Map_StartTileEffectAnimation@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
+void __fastcall Map_UpdateTileEffectAnimation(int a1, int a2);
 // signed int __usercall UI_HighlightTile@<eax>(int a1@<eax>, int a2@<edx>);
 int __thiscall UI_ClearTileHighlight(void *this);
 // int __usercall sub_419000@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
@@ -18332,7 +18332,7 @@ LABEL_26:
           {
             Supply = (__int16 *)Port_GetSupply(145 * g_SelectedUnitIndex, v37, (DWORD)v35, a1);
             if ( Supply )
-              sub_418C00(
+              Map_CenterViewOnTileRect(
                 *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
                 *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
                 Supply[1],
@@ -18354,7 +18354,7 @@ LABEL_26:
       {
         v39 = (__int16 *)Port_GetSupply(725 * g_SelectedUnitIndex, v27, (DWORD)v29, a1);
         if ( v39 )
-          sub_418C00(
+          Map_CenterViewOnTileRect(
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
             v39[1],
@@ -18744,7 +18744,7 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
     g_SelectedUnitIndex = v5;
     sub_423B70((void *)v7);
     sub_40A360(v9);
-    sub_40FAD0(v10);
+    Map_CenterViewOnUnitStack(v10);
     Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_418700(1);
     sub_406980(a3);
@@ -18784,7 +18784,7 @@ int __usercall sub_409F00@<eax>(int a1@<eax>, int a2@<ecx>)
     }
     g_UnitSearchCursor = (g_UnitSearchCursor + 1) % 100;
   }
-  sub_418CE0(
+  Map_CenterViewOnTile(
     *(unsigned __int8 *)(UNIT_RECORD(g_UnitSearchCursor)),
     *(unsigned __int8 *)(467 * g_UnitSearchCursor + gameData + 509675));
   g_SelectedUnitIndex = -1;
@@ -19441,7 +19441,7 @@ int __usercall sub_40ADF0@<eax>(int a1@<ebx>)
   sub_406FA0(a1);
   sub_416430(v2);
   sub_416610(v3);
-  sub_418EE0(v5, v4);
+  Map_UpdateTileEffectAnimation(v5, v4);
   nullsub_1();
   v7 = ACTIVE_MISSION_INDEX;
   if ( v7 == 1 )
@@ -19980,7 +19980,7 @@ LABEL_13:
   LogAllBuildings(v34, (char)v21, a3);
   sub_4418E0();
   sub_404F20((int *)&unk_51D4C0, v35);
-  sub_40D430(v36);
+  MapMode_DestroySurface(v36);
   sub_40A450(v38, v37);
   sub_40B020(a3);
   sub_422960();
@@ -21012,7 +21012,7 @@ int __usercall sub_40CE70@<eax>(unsigned int a1@<eax>, int a2@<ecx>)
 // 523F50: using guessed type int dword_523F50;
 
 //----- (0040D330) --------------------------------------------------------
-int __usercall sub_40D330@<eax>(DWORD a1@<ebp>)
+int __usercall MapMode_InitSurface@<eax>(DWORD a1@<ebp>)
 {
   _DWORD *Surface; // eax
   int SpriteForChar; // eax
@@ -21055,7 +21055,7 @@ int __usercall sub_40D330@<eax>(DWORD a1@<ebp>)
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040D430) --------------------------------------------------------
-int __thiscall sub_40D430(void *this)
+int __thiscall MapMode_DestroySurface(void *this)
 {
   int result; // eax
 
@@ -21163,7 +21163,7 @@ int __usercall MapMode_RedrawTileRect@<eax>(int a1@<eax>, signed int a2@<edx>, i
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040D800) --------------------------------------------------------
-BOOL __usercall sub_40D800@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>)
+BOOL __usercall MapMode_IsScreenTileCoveredByPanel@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>)
 {
   return PLAYER_MAP_MODE_ENABLED(*(_DWORD *)(gameData + 147143))
       && a1 >= (unsigned __int16)word_523344
@@ -21175,7 +21175,7 @@ BOOL __usercall sub_40D800@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<
 // 52334A: using guessed type __int16 word_52334A;
 
 //----- (0040D850) --------------------------------------------------------
-void sub_40D850()
+void MapMode_RedrawAllTiles()
 {
   char *v0; // ebx
   signed int i; // ecx
@@ -22583,25 +22583,25 @@ signed int __usercall sub_40FA80@<eax>(int a1@<eax>, int a2@<edx>)
 }
 
 //----- (0040FAD0) --------------------------------------------------------
-int __usercall sub_40FAD0@<eax>(int a1@<eax>)
+int __usercall Map_CenterViewOnUnitStack@<eax>(int a1@<eax>)
 {
-  int v1; // eax
-  int v2; // ebx
-  int v3; // esi
+  int stackPtr; // eax
+  int mapWidth; // ebx
+  int mapHeight; // esi
 
-  v1 = 725 * a1;
-  *(_DWORD *)(gameData + 140008) = *(__int16 *)(gameData + v1 + 147174) - 4;
-  *(_DWORD *)(gameData + 140012) = *(__int16 *)(gameData + v1 + 147176) - 3;
-  if ( *(int *)(gameData + 140008) < 0 )
-    *(_DWORD *)(gameData + 140008) = 0;
-  if ( *(int *)(gameData + 140012) < 0 )
-    *(_DWORD *)(gameData + 140012) = 0;
-  v2 = *(_DWORD *)(gameData + 140000);
-  if ( *(_DWORD *)(gameData + 140008) + 9 > v2 )
-    *(_DWORD *)(gameData + 140008) = v2 - 9;
-  v3 = *(_DWORD *)(gameData + 140004);
-  if ( *(_DWORD *)(gameData + 140012) + 7 > v3 )
-    *(_DWORD *)(gameData + 140012) = v3 - 7;
+  stackPtr = UNIT_STACK(a1);
+  MAP_VIEW_LEFT = UNIT_STACK_TILE_ROW(stackPtr) - 4;
+  MAP_VIEW_TOP = UNIT_STACK_TILE_COLUMN(stackPtr) - 3;
+  if ( MAP_VIEW_LEFT < 0 )
+    MAP_VIEW_LEFT = 0;
+  if ( MAP_VIEW_TOP < 0 )
+    MAP_VIEW_TOP = 0;
+  mapWidth = MAP_WIDTH_TILES;
+  if ( MAP_VIEW_LEFT + 9 > mapWidth )
+    MAP_VIEW_LEFT = mapWidth - 9;
+  mapHeight = MAP_HEIGHT_TILES;
+  if ( MAP_VIEW_TOP + 7 > mapHeight )
+    MAP_VIEW_TOP = mapHeight - 7;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -22687,48 +22687,47 @@ __int16 *__usercall sub_40FEC0@<eax>(__int16 *result@<eax>, DWORD a2@<ebp>, doub
 }
 
 //----- (0040FEF0) --------------------------------------------------------
-signed int sub_40FEF0()
+signed int Map_HandleKeyboardScroll()
 {
-  int v0; // edx
-  int v2; // ecx
-  int v3; // ebx
-  int v4; // esi
-  int v5; // ecx
+  int mapViewLeft; // edx
+  int mapViewTop; // ebx
+  int maxMapViewTop; // esi
+  int redrawResult; // ecx
 
   if ( Input_IsKeyPressed(203) )
   {
-    v0 = *(_DWORD *)(gameData + 140008);
-    if ( v0 > 0 )
+    mapViewLeft = MAP_VIEW_LEFT;
+    if ( mapViewLeft > 0 )
     {
-      *(_DWORD *)(gameData + 140008) = v0 - 1;
+      MAP_VIEW_LEFT = mapViewLeft - 1;
 LABEL_4:
       sub_418700(1);
       dword_5202F0 = 1;
       return 1;
     }
   }
-  if ( Input_IsKeyPressed(205) && (v2 = *(_DWORD *)(gameData + 140008), *(_DWORD *)(gameData + 140000) - 9 > v2) )
+  if ( Input_IsKeyPressed(205) && MAP_WIDTH_TILES - 9 > MAP_VIEW_LEFT )
   {
-    *(_DWORD *)(gameData + 140008) = v2 + 1;
+    ++MAP_VIEW_LEFT;
     sub_418700(1);
     dword_5202F0 = 1;
     return 1;
   }
-  else if ( Input_IsKeyPressed(200) && (v3 = *(_DWORD *)(gameData + 140012), v3 > 0) )
+  else if ( Input_IsKeyPressed(200) && (mapViewTop = MAP_VIEW_TOP, mapViewTop > 0) )
   {
-    *(_DWORD *)(gameData + 140012) = v3 - 1;
+    MAP_VIEW_TOP = mapViewTop - 1;
     sub_418700(1);
-    dword_5202F0 = v5;
-    return v5;
+    dword_5202F0 = redrawResult;
+    return redrawResult;
   }
   else
   {
     if ( Input_IsKeyPressed(208) )
     {
-      v4 = *(_DWORD *)(gameData + 140012);
-      if ( *(_DWORD *)(gameData + 140004) - 7 > v4 )
+      maxMapViewTop = MAP_VIEW_TOP;
+      if ( MAP_HEIGHT_TILES - 7 > maxMapViewTop )
       {
-        *(_DWORD *)(gameData + 140012) = v4 + 1;
+        MAP_VIEW_TOP = maxMapViewTop + 1;
         goto LABEL_4;
       }
     }
@@ -23129,7 +23128,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
             || BYTE1(v105) >= v30 + 7 )
           {
             if ( PlayerExploration_GetFogBorderVariant((unsigned __int8)v105, BYTE1(v105), *(_DWORD *)(gameData + 147143)) )
-              sub_40FAD0(v107);
+              Map_CenterViewOnUnitStack(v107);
           }
         }
         v13 = 200 * (unsigned __int8)v105;
@@ -23210,7 +23209,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
                     break;
                 }
                 DD_Pump((int)dword_544CD8, v66);
-                if ( sub_40FEF0() )
+                if ( Map_HandleKeyboardScroll() )
                 {
                   v109 = 0;
                 }
@@ -23737,16 +23736,16 @@ void __usercall Unit_CheckLowMorale(_BYTE *a1@<eax>, double a2@<st0>)
   if ( v3 && *(_DWORD *)(gameData + 1423 * (unsigned __int8)a1[4] + 140051) )
   {
     v10 = *(__int16 *)a1;
-    sub_418C00(v10, *((__int16 *)a1 + 1), *((__int16 *)a1 + 1) - 5, v10);
+    Map_CenterViewOnTileRect(v10, *((__int16 *)a1 + 1), *((__int16 *)a1 + 1) - 5, v10);
     v16[0] = (int)off_512368[0];
     v16[1] = (int)off_512368[1];
     v16[2] = (int)off_512368[2];
     UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, v11, (DWORD)a1, (int)v17, (int)&off_512368[3]);
-    sub_418D90(
+    Map_StartUnitStackHighlight(
       *(unsigned __int16 *)(gameData + 200 * *(__int16 *)a1 + 2 * *((__int16 *)a1 + 1) + 556374),
       *((__int16 *)a1 + 1),
       *(__int16 *)a1);
-    while ( sub_418E20() )
+    while ( Map_IsUnitStackHighlightActive() )
       sub_40ADF0(v10);
   }
   v12 = v17[0];
@@ -24112,8 +24111,8 @@ void sub_411D70()
     v1 += 725;
   }
   while ( v0 < 500 );
-  sub_418DA0();
-  sub_418E50(v8, v7);
+  Map_UpdateUnitStackHighlight();
+  Map_UpdateUnitStackEffectAnimation(v8, v7);
 }
 // 411DBE: variable 'v0' is possibly undefined
 // 411DBE: variable 'v1' is possibly undefined
@@ -28161,7 +28160,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
   v96 = (unsigned __int16)(a1 + 63);
   v97 = a2;
   v98 = a1;
-  if ( sub_40D800(a1, a2 + 63) )
+  if ( MapMode_IsScreenTileCoveredByPanel(a1, a2 + 63) )
     goto LABEL_2;
   v94 = PlayerExploration_GetFogBorderVariant(v3, v4, *(_DWORD *)(gameData + 147143));
   if ( !v94 )
@@ -29068,25 +29067,25 @@ int __usercall sub_418A90@<eax>(int result@<eax>, int a2@<edx>)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00418C00) --------------------------------------------------------
-int __usercall sub_418C00@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
+int __usercall Map_CenterViewOnTileRect@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
 {
-  int v4; // ecx
-  int v5; // ebx
+  int mapWidth; // ecx
+  int mapHeight; // ebx
 
   if ( a4 - result <= 9 && a3 - a2 <= 7 )
   {
-    *(_DWORD *)(gameData + 140008) = (a4 + result) / 2 - 3;
-    *(_DWORD *)(gameData + 140012) = (a3 + a2) / 2 - 3;
-    v4 = *(_DWORD *)(gameData + 140000);
-    if ( *(_DWORD *)(gameData + 140008) + 9 >= v4 )
-      *(_DWORD *)(gameData + 140008) = v4 - 10;
-    v5 = *(_DWORD *)(gameData + 140004);
-    if ( *(_DWORD *)(gameData + 140012) + 7 >= v5 )
-      *(_DWORD *)(gameData + 140012) = v5 - 8;
-    if ( *(int *)(gameData + 140008) < 0 )
-      *(_DWORD *)(gameData + 140008) = 0;
-    if ( *(int *)(gameData + 140012) < 0 )
-      *(_DWORD *)(gameData + 140012) = 0;
+    MAP_VIEW_LEFT = (a4 + result) / 2 - 3;
+    MAP_VIEW_TOP = (a3 + a2) / 2 - 3;
+    mapWidth = MAP_WIDTH_TILES;
+    if ( MAP_VIEW_LEFT + 9 >= mapWidth )
+      MAP_VIEW_LEFT = mapWidth - 10;
+    mapHeight = MAP_HEIGHT_TILES;
+    if ( MAP_VIEW_TOP + 7 >= mapHeight )
+      MAP_VIEW_TOP = mapHeight - 8;
+    if ( MAP_VIEW_LEFT < 0 )
+      MAP_VIEW_LEFT = 0;
+    if ( MAP_VIEW_TOP < 0 )
+      MAP_VIEW_TOP = 0;
     return sub_418700(1);
   }
   return result;
@@ -29094,29 +29093,29 @@ int __usercall sub_418C00@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, in
 // 5202E4: using guessed type int gameData;
 
 //----- (00418CE0) --------------------------------------------------------
-int __usercall sub_418CE0@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall Map_CenterViewOnTile@<eax>(int a1@<eax>, int a2@<edx>)
 {
-  int v2; // ecx
-  int v3; // ebx
+  int mapWidth; // ecx
+  int mapHeight; // ebx
 
-  *(_DWORD *)(gameData + 140008) = a1 - 3;
-  *(_DWORD *)(gameData + 140012) = a2 - 3;
-  v2 = *(_DWORD *)(gameData + 140000);
-  if ( *(_DWORD *)(gameData + 140008) + 9 >= v2 )
-    *(_DWORD *)(gameData + 140008) = v2 - 10;
-  v3 = *(_DWORD *)(gameData + 140004);
-  if ( *(_DWORD *)(gameData + 140012) + 7 >= v3 )
-    *(_DWORD *)(gameData + 140012) = v3 - 8;
-  if ( *(int *)(gameData + 140008) < 0 )
-    *(_DWORD *)(gameData + 140008) = 0;
-  if ( *(int *)(gameData + 140012) < 0 )
-    *(_DWORD *)(gameData + 140012) = 0;
+  MAP_VIEW_LEFT = a1 - 3;
+  MAP_VIEW_TOP = a2 - 3;
+  mapWidth = MAP_WIDTH_TILES;
+  if ( MAP_VIEW_LEFT + 9 >= mapWidth )
+    MAP_VIEW_LEFT = mapWidth - 10;
+  mapHeight = MAP_HEIGHT_TILES;
+  if ( MAP_VIEW_TOP + 7 >= mapHeight )
+    MAP_VIEW_TOP = mapHeight - 8;
+  if ( MAP_VIEW_LEFT < 0 )
+    MAP_VIEW_LEFT = 0;
+  if ( MAP_VIEW_TOP < 0 )
+    MAP_VIEW_TOP = 0;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00418D90) --------------------------------------------------------
-int __usercall sub_418D90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
+int __usercall Map_StartUnitStackHighlight@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 {
   int result; // eax
 
@@ -29129,7 +29128,7 @@ int __usercall sub_418D90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 // 52699C: using guessed type int dword_52699C;
 
 //----- (00418DA0) --------------------------------------------------------
-void sub_418DA0()
+void Map_UpdateUnitStackHighlight()
 {
   int v0; // edx
   int v1; // ecx
@@ -29155,14 +29154,14 @@ void sub_418DA0()
 // 52699C: using guessed type int dword_52699C;
 
 //----- (00418E20) --------------------------------------------------------
-BOOL sub_418E20()
+BOOL Map_IsUnitStackHighlightActive()
 {
   return dword_5139F4 != -1;
 }
 // 5139F4: using guessed type int dword_5139F4;
 
 //----- (00418E30) --------------------------------------------------------
-int __usercall sub_418E30@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
+int __usercall Map_StartUnitStackEffectAnimation@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 {
   int result; // eax
 
@@ -29177,7 +29176,7 @@ int __usercall sub_418E30@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 // 5269A4: using guessed type int dword_5269A4;
 
 //----- (00418E50) --------------------------------------------------------
-void __fastcall sub_418E50(int a1, int a2)
+void __fastcall Map_UpdateUnitStackEffectAnimation(int a1, int a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -29200,7 +29199,7 @@ void __fastcall sub_418E50(int a1, int a2)
 // 5269A4: using guessed type int dword_5269A4;
 
 //----- (00418EC0) --------------------------------------------------------
-int __usercall sub_418EC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
+int __usercall Map_StartTileEffectAnimation@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 {
   int result; // eax
 
@@ -29216,7 +29215,7 @@ int __usercall sub_418EC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>)
 // 5269B0: using guessed type int dword_5269B0;
 
 //----- (00418EE0) --------------------------------------------------------
-void __fastcall sub_418EE0(int a1, int a2)
+void __fastcall Map_UpdateTileEffectAnimation(int a1, int a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -32795,7 +32794,7 @@ char __usercall sub_41E1E0@<al>(unsigned __int8 *a1@<eax>, int a2@<ecx>, char a3
     if ( *(_DWORD *)(1423 * a1[2] + gameData + 140051) )
     {
       v16 = *a1;
-      sub_418C00(v16, a1[1], a1[1] - 5, v16);
+      Map_CenterViewOnTileRect(v16, a1[1], a1[1] - 5, v16);
       return sub_445CE0((int)a1, v17, v16, (DWORD)a1);
     }
   }
@@ -55290,7 +55289,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
   *(_WORD *)((char *)v17 + 31 * v4) = -1;
   result = (__int16 *)Unit_CreateNearbyUnitGroup(v18, v19, (unsigned __int8 *)v17, a3);
   if ( result )
-    return (__int16 *)sub_418D90(
+    return (__int16 *)Map_StartUnitStackHighlight(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
                         (int)result,
                         200 * *result + gameData);
@@ -55336,7 +55335,7 @@ __int16 *__usercall sub_43FDE0@<eax>(signed int a1@<eax>, int a2@<edx>, char a3@
     *(_WORD *)((char *)v13 + 31 * v10) = -1;
   result = (__int16 *)Unit_CreateNearbyUnitGroup(v16, v15, (unsigned __int8 *)v13, a5);
   if ( result )
-    return (__int16 *)sub_418D90(
+    return (__int16 *)Map_StartUnitStackHighlight(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
                         (int)result,
                         gameData + 200 * *result);
@@ -55525,16 +55524,16 @@ void __usercall Temple_ProcessGift(DWORD a1@<eax>, __int16 *a2@<edx>, int a3@<ec
       sub_43FC60(a4, v7, a5);
       return;
     case 1u:
-      sub_418EC0(*a2, a2[1], v8);
+      Map_StartTileEffectAnimation(*a2, a2[1], v8);
       Unit_Kill((int)a2, a4, a1, a5);
       return;
     case 2u:
       UnitStack_AdjustFatigueByPredicate(a2, -100, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
       return;
     case 3u:
       UnitStack_AdjustMoraleByPredicate(a2, 20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
       return;
     case 4u:
       v11 = a2;
@@ -55566,7 +55565,7 @@ void __usercall Temple_ProcessGift(DWORD a1@<eax>, __int16 *a2@<edx>, int a3@<ec
       while ( v12 < 10 );
 LABEL_9:
       sub_455070(a2, v12, v13, a4, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
       return;
     case 6u:
       do
@@ -55575,14 +55574,14 @@ LABEL_9:
       goto LABEL_15;
     case 7u:
       UnitStack_AdjustMoraleByPredicate(a2, 2, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
       return;
     case 8u:
       do
         sub_4129E0(a2, a1, a5);
       while ( v19 < 2 );
 LABEL_15:
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
       break;
     case 9u:
       sub_43FDE0(100, a4, *((_BYTE *)a2 + 4), v7, a5);
@@ -55598,12 +55597,12 @@ LABEL_15:
       break;
     case 0xDu:
       UnitStack_AdjustMoraleByPredicate(a2, -20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
       break;
     case 0xEu:
       UnitStack_AdjustMoraleByPredicate(a2, -1, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       UnitStack_AdjustFatigueByPredicate(a2, 50, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
+      Map_StartUnitStackEffectAnimation(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
       break;
     default:
       return;
@@ -55689,7 +55688,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
       LOBYTE(v11) = 1;
       sub_43FEF0(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)v7);
     }
-    sub_418EC0(*v7, v7[1], v13);
+    Map_StartTileEffectAnimation(*v7, v7[1], v13);
     return Unit_Kill((int)v7, v11, (DWORD)v7, a5);
   }
   else
@@ -58361,7 +58360,7 @@ LABEL_16:
       }
       Rules_LinkArmyFact(j, v14, v13, a4, v12, v11);
       sub_455070(j, v20, v21, v12, v11, a4);
-      sub_418D90(*(unsigned __int16 *)(TILE_INDEX(v11, v29)), 200 * v11 + gameData, v22);
+      Map_StartUnitStackHighlight(*(unsigned __int16 *)(TILE_INDEX(v11, v29)), 200 * v11 + gameData, v22);
       PORT_SUPPLY_READY_FLAG = 0;
       v23 = Rng_RandRange(8, 10);
       PORT_NEXT_SUPPLY_TURN = v24 + v23;
@@ -58940,7 +58939,7 @@ LABEL_17:
     sub_47B890(v19, v17, a2, a3);
     Render_CreateSprite();
     UI_ClearTileHighlight(v18);
-    sub_40D330(a2);
+    MapMode_InitSurface(a2);
     return 1;
   }
   return result;
@@ -63195,7 +63194,7 @@ signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<ea
   v4 = sprintf_(v31, "multi%d.map", a1 + 1);
   Map_LoadFromFile((int)v31);
   qmemcpy((void *)(gameData + PLAYER_RUNTIME_STATE_OFFSET), v5, v6);
-  sub_40D330(a2);
+  MapMode_InitSurface(a2);
   v33 = 1;
   v7 = 0;
   v35 = 0;
@@ -70238,9 +70237,9 @@ LABEL_27:
           {
             if ( PlayerExploration_IsTileExplored(*(__int16 *)(v15 + 147174), *(__int16 *)(v15 + 147176), 0) )
             {
-              sub_40FAD0(v13);
+              Map_CenterViewOnUnitStack(v13);
               sub_442680(0);
-              sub_418EC0(*(__int16 *)(v14 + gameData + 147174), *(__int16 *)(v14 + gameData + 147176), v16);
+              Map_StartTileEffectAnimation(*(__int16 *)(v14 + gameData + 147174), *(__int16 *)(v14 + gameData + 147176), v16);
               Unit_Kill(v14 + gameData + 147174, 0, a1, a2);
               sub_420800(100, v17, v18);
             }
@@ -70336,9 +70335,9 @@ LABEL_105:
         {
           if ( PlayerExploration_IsTileExplored(*(__int16 *)(v28 + 147174), *(__int16 *)(v28 + 147176), 1) )
           {
-            sub_40FAD0(v26);
+            Map_CenterViewOnUnitStack(v26);
             sub_442680(0);
-            sub_418EC0(*(__int16 *)(v27 + gameData + 147174), *(__int16 *)(v27 + gameData + 147176), v29);
+            Map_StartTileEffectAnimation(*(__int16 *)(v27 + gameData + 147174), *(__int16 *)(v27 + gameData + 147176), v29);
             Unit_Kill(v27 + gameData + 147174, 1, a1, a2);
             sub_420800(100, v30, v31);
           }

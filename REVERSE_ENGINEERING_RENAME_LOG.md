@@ -381,10 +381,33 @@
 | sub_40D890 | MapMode_DrawTile | Function | Map / UI | High | Draws one strategic tile into the offscreen map-mode surface, combining terrain tint, optional unit/building owner overlays from `g_MapModeOverlayMask`, and the unexplored fallback color. | c |
 | dword_52334C | g_MapModeSurface | Global | Map / UI | High | Created as a dedicated render surface during map-mode initialization, used as the target for `MapMode_DrawTile`, and later blitted to the main device by `MapMode_BlitRectWithViewportFrame`. | c, asm |
 
+## Batch 38 – Map Mode Surface And Camera Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40D330 | MapMode_InitSurface | Function | Map / UI | High | Initializes the offscreen map-mode panel surface, computes its scaled geometry from the current world dimensions, paints the panel background, and then rebuilds the full map-mode view for the current world theme. | c, asm |
+| sub_40D430 | MapMode_DestroySurface | Function | Map / UI | High | Releases the dedicated offscreen map-mode surface when strategic play shuts down or the surface set is rebuilt. | c, asm |
+| sub_40D800 | MapMode_IsScreenTileCoveredByPanel | Function | Map / UI | High | Pure geometry predicate that returns true only when map mode is enabled and the tested screen-space tile lies underneath the panel's covered corner. | c, asm |
+| sub_40D850 | MapMode_RedrawAllTiles | Function | Map / UI | High | Iterates the full strategic map dimensions, targets `g_MapModeSurface`, and redraws every tile through `MapMode_DrawTile`; the decompiler's jumpout lands in the same init helper epilogue visible in asm. | c, asm |
+| sub_40FAD0 | Map_CenterViewOnUnitStack | Function | Map / Camera | High | Recenters the strategic camera around the selected stack's tile coordinates, clamps the view against world bounds, and triggers a redraw. | c, asm |
+| sub_40FEF0 | Map_HandleKeyboardScroll | Function | Map / Camera | High | Handles arrow-key strategic scrolling, mutates `MAP_VIEW_LEFT/TOP` one tile at a time within world bounds, and marks the world view dirty when movement occurs. | c, asm |
+| sub_418C00 | Map_CenterViewOnTileRect | Function | Map / Camera | Medium | If a tile rectangle fits inside the current 9x7 strategic viewport, recenters the camera on that rectangle's midpoint, clamps to world bounds, and redraws. | c, asm |
+| sub_418CE0 | Map_CenterViewOnTile | Function | Map / Camera | High | Recenters the strategic camera on one target tile, clamps to world bounds, and redraws. | c, asm |
+
+## Batch 39 – Map Highlight And Effect Animation Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_418D90 | Map_StartUnitStackHighlight | Function | Map / Camera / FX | Medium | Seeds a temporary highlighted stack id and start tick. Render paths pulse that stack sprite with alpha, while the paired update helper keeps the camera centered on the same stack until the timed highlight expires. | c, asm |
+| sub_418DA0 | Map_UpdateUnitStackHighlight | Function | Map / Camera / FX | Medium | Per-frame updater for the temporary highlighted stack: recenters the camera on the tracked stack, expires the effect after a fixed duration, and redraws the stack tile when the highlight ends. | c, asm |
+| sub_418E20 | Map_IsUnitStackHighlightActive | Function | Map / Camera / FX | High | Pure predicate that reports whether the temporary highlighted stack id is still active. | c, asm |
+| sub_418E30 | Map_StartUnitStackEffectAnimation | Function | Map / FX | Medium | Starts a 12-frame animated overlay on one stack id. Temple gift/result handlers use it immediately after changing fatigue, morale, or related stack state, and the renderer draws frames `0..11` on that stack while active. | c, asm |
+| sub_418E50 | Map_UpdateUnitStackEffectAnimation | Function | Map / FX | Medium | Advances the timed 12-frame overlay started by `Map_StartUnitStackEffectAnimation` and redraws the affected stack tile each step until the sequence completes. | c, asm |
+| sub_418EC0 | Map_StartTileEffectAnimation | Function | Map / FX | High | Starts an 8-frame tile-centered effect at an explicit row/column. Kill/execution paths use it before removing units, and the world renderer draws frames `12..19` on that tile while active. | c, asm |
+| sub_418EE0 | Map_UpdateTileEffectAnimation | Function | Map / FX | High | Advances the timed tile-centered effect started by `Map_StartTileEffectAnimation`, redrawing the affected map tile each step until the 8-frame sequence finishes. | c, asm |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
-- `sub_40D800` is clearly a map-mode panel geometry predicate, but its two-coordinate contract is still too oddly clipped to name safely beyond “point/rect overlaps panel” without another pass.
-- `sub_40D850` appears to be a full map-mode surface rebuild helper, but the decompiler jump-out and lack of direct callers make that name not yet safe enough to promote.
+- `clash95.asm` still contains an older stale comment at `0x40D850` that labels the proc as `Locale_DrawInteger`; code and control-flow evidence now show that address is the full map-mode surface redraw loop, so the asm artifact should be reconciled in a later cleanup pass rather than trusted literally.
+- `Map_StartUnitStackHighlight` / `Map_UpdateUnitStackHighlight` are behaviorally secure as a temporary camera-following highlight on one stack id, but the original feature name may have been closer to focus, tracking, or emphasis rather than generic highlight.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
