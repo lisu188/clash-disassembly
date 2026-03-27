@@ -82,5 +82,32 @@
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
       "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
     ]
+  },
+  {
+    "name": "BuildingRecord",
+    "kind": "building_entry",
+    "base_offset": 509674,
+    "stride": 467,
+    "description": "Per-building gameplay record inside gameData holding tile ownership, garrison slots, add-ons, and local upgrade/resource state.",
+    "fields": [
+      { "offset": 0, "name": "tile_row", "type": "uint8", "notes": "Building anchor tile row used with TILE_INDEX and building footprint stamping." },
+      { "offset": 1, "name": "tile_column", "type": "uint8", "notes": "Building anchor tile column used with TILE_INDEX and adjacency scans." },
+      { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied into spawned unit stacks and used for ownership, vision, and income lookups." },
+      { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
+      { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
+      { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot task bits used by `Building_TrainUnit` and `Building_RepairUnit`." },
+      { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
+      { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
+      { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
+      { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
+      { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
+      { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
+      { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." }
+    ],
+    "evidence": [
+      "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
+      "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
+      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state."
+    ]
   }
 ]

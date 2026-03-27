@@ -84,3 +84,48 @@
 | sub_41F0C0 | Building_FindFreeAdjacentSpawnTile | Function | Building/Garrison | High | The routine logs `Building_FindFreePlaceNear()`, scans the 12 neighboring offsets around a building, rejects occupied tiles, and returns the first tile whose movement helper accepts the building owner's spawn template. |
 | sub_42B6A0 | Trap_HurtStack | Function | Trap/Combat | High | The helper logs `Trap_HurtUnit`, iterates the occupied stack slots, applies a randomized damage roll derived from `Unit_CalcEffectivenessB`, removes dead slots, and compacts/finalizes the stack afterward. |
 | sub_44C2A0 | Game_InitPlayerViewState | Function | Shared State | High | Seeds each active player's saved camera from the first owned building, picks the first human player as `VIEWED_PLAYER_INDEX`, picks the first active player as both `g_CurrentPlayerIndex` and `TURN_OWNER_PLAYER_INDEX`, and is reused after map setup and scenario load. |
+
+## Batch 16 – Building Transfer and Garrison Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| sub_412520 | Unit_CreateNearbyUnitGroup | Function | Unit Lifecycle | High | The debug string already names the routine, and the body finds a free neighboring tile, calls `Unit_Create`, copies a supplied squad fragment into the new stack, and links the resulting army fact. |
+| sub_41F1A0 | Building_Transfer | Function | Building/Garrison | High | The function logs `Building_Transfer`, temporarily clears the source building footprint from tile occupancy, creates a temporary transport stack (`31` or `32`), copies a percentage of the stored resource or occupants into it, and either moves it near the target building or spawns it on an adjacent tile. |
+| sub_43E0C0 | Building_HasFreeAdjacentExitTile | Function | Building/Garrison | High | The helper only scans the building's legal neighbor pattern and returns true when it finds an in-bounds empty tile whose terrain is traversable by the building owner's unit template; it is a pure exit-tile availability probe. |
+| sub_43E160 | Building_UnitsLeave | Function | Building/Garrison | High | The debug string names the routine, and the body selects a free adjacent exit tile, creates a new stack there, copies the requested garrison slots out of the building record, updates garrison-change state, and refreshes vision. |
+| sub_43E4B0 | Building_CountFreeGarrisonSlots | Function | Building/Garrison | High | The function iterates the 12 building garrison slots (or 10 for smaller buildings) and counts entries whose unit type at offset `+18` is `-1`, so it clearly returns the number of free garrison slots. |
+| aUnit_createnea | aUnitCreateNearbyUnitGroup | Helper | Unit Lifecycle | High | String variable rename follows the confirmed `Unit_CreateNearbyUnitGroup` debug label and keeps logging identifiers aligned with the recovered function name. |
+| aBuilding_findf | aBuildingFindFreePlaceNear | Helper | Building/Garrison | High | The string literal is the exact log text used by `Building_FindFreeAdjacentSpawnTile`, so the helper name now describes the emitted trace rather than a truncated decompiler token. |
+| aBuilding_trans | aBuildingTransfer | Helper | Building/Garrison | High | String helper backing the `Building_Transfer` debug log. |
+| aBuilding_units | aBuildingUnitsLeave | Helper | Building/Garrison | High | String helper backing the `Building_UnitsLeave` debug log. |
+| gameData + 509674 + 467 * buildingIndex | BuildingRecord | Recovered Struct | Building/Garrison | Medium | Building helpers repeatedly treat this 467-byte region as a stable per-building record with tile/owner header bytes, 12 garrison slots at `+18`, addon ids at `+402`, upgrade/resource state at `+421/+429/+438/+444`, and garrison-change bookkeeping near `+463`. |
+
+## Deferred / Ambiguous
+- `BuildingRecord` offset `+4` clearly switches neighbor masks, addon rules, and capture/build handling, but the exact enum behind values `0/1/2` is still not named safely enough.
+- `BuildingRecord` offsets `+421` and `+429` behave like a staged castle or fortification upgrade level plus cooldown timer, but the exact feature being upgraded is still UI- and rules-coupled, so those fields remain descriptively unnamed.
+- `BuildingRecord` offset `+438` is a stored spendable pool used by transfer, addon purchase, and per-turn accrual logic; it is likely a building-local treasury or stockpile, but the economy resource name remains deferred.
+
+## Batch 17 – Building Production Licence Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| sub_43E850 | Building_BuyUnitLicence | Function | Building/Garrison | High | The debug string names the routine, and the body spends from the building-local pool at `+438`, then appends a unit-type id into the installed licence/add-on array at `+402`. |
+| sub_43E940 | Building_RemoveUnitLicence | Function | Building/Garrison | High | The function logs `Building_RemoveUnitLicence`, stops current production when the selected licence matches, and then removes the target type id from the `+402` licence array. |
+| sub_43E9A0 | Building_SetUnitProduction | Function | Building/Garrison | High | The debug string names the routine, and the body stores a selected licence slot at `+414` plus the corresponding production duration at `+415`. |
+| sub_43EA10 | Building_StopUnitProduction | Function | Building/Garrison | High | Single-purpose helper named by its debug string; it clears the selected production slot at `+414`. |
+| sub_43EA30 | Building_TrainUnit | Function | Building/Garrison | High | The debug string names the function, and it writes per-slot task bits into `BuildingRecord + 390 + slotIndex`, starting a training task for the chosen garrison slot. |
+| sub_43EAD0 | Building_RepairUnit | Function | Building/Garrison | High | The debug string names the function, and it writes the complementary repair task bits into the same per-slot task byte used by training. |
+| aBuilding_buyun | aBuildingBuyUnitLicence | Helper | Building/Garrison | High | String helper backing the `Building_BuyUnitLicence` debug log. |
+| aBuilding_remov | aBuildingRemoveUnitLicence | Helper | Building/Garrison | High | String helper backing the `Building_RemoveUnitLicence` debug log. |
+| aBuilding_setun | aBuildingSetUnitProduction | Helper | Building/Garrison | High | String helper backing the `Building_SetUnitProduction` debug log. |
+| aBuilding_stopu | aBuildingStopUnitProduction | Helper | Building/Garrison | High | String helper backing the `Building_StopUnitProduction` debug log. |
+| aBuilding_train | aBuildingTrainUnit | Helper | Building/Garrison | High | String helper backing the `Building_TrainUnit` debug log. |
+| aBuilding_repai | aBuildingRepairUnit | Helper | Building/Garrison | High | String helper backing the `Building_RepairUnit` debug log. |
+
+## Batch 18 – Building Garrison Task Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| sub_4558D0 | Building_UnitsLeaveReadyGarrisonSlots | Function | Building/Garrison | Medium | Collects up to five occupied garrison slots whose morale/condition byte is `100` and whose task bits are idle, then forwards that slot list into `Building_UnitsLeave` if the building has a legal exit tile. |
+| sub_4559D0 | Building_HasTrainableIdleGarrisonUnit | Function | Building/Garrison | Medium | Returns true when the building contains at least one occupied garrison slot with `status & 3 < 2` and no active task bits, which matches the eligibility check later used before starting training. |
+| sub_455A50 | Building_HasRepairableIdleGarrisonUnit | Function | Building/Garrison | Medium | Returns true when the building contains at least one occupied garrison slot below 50 condition with no active high task bits, matching the later repair starter. |
+| sub_455AD0 | Building_StartTrainingIdleGarrisonUnits | Function | Building/Garrison | Medium | Walks every occupied garrison slot and starts `Building_TrainUnit` on those whose trainability and idle-task predicates pass, so it is an AI or bulk helper for launching training jobs. |
+| sub_455B50 | Building_StartRepairIdleGarrisonUnits | Function | Building/Garrison | Medium | Bulk counterpart to the above that starts `Building_RepairUnit` on occupied, damaged, idle garrison slots. |
+| sub_455BD0 | Building_UnitsLeaveByUnitType | Function | Building/Garrison | High | Finds the first garrison slot whose unit type id matches `a2`, builds a one-element leave list, and passes it to `Building_UnitsLeave` when an exit tile is available. |

@@ -377,7 +377,7 @@ void sub_411D70();
 // signed int __usercall sub_4121A0@<eax>(int a1@<eax>);
 // signed int __usercall sub_4121D0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 // __int16 *__usercall sub_412300@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
-// int __usercall sub_412520@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
+// int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
 // int __cdecl CSyncObject::Unlock(CSyncObject *__hidden this, __int32, __int32 *); idb
 int __thiscall sub_4127A0(CSyncObject *this); // idb
 // signed int __usercall sub_4127F0@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
@@ -513,7 +513,7 @@ int sub_41DB20();
 // signed int __usercall sub_41EF80@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 // signed int __usercall sub_41F020@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 // signed int __usercall Building_FindFreeAdjacentSpawnTile@<eax>(unsigned __int8 *a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, _DWORD *a4@<ebx>);
-// signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
+// signed int __usercall Building_Transfer@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
 // int __usercall UI_DrawUnitStatsValues@<eax>(int a1@<eax>);
 // BOOL __usercall sub_41F850@<eax>(unsigned __int8 *a1@<eax>);
 // BOOL __usercall __spoils<ecx> sub_41F890@<eax>(unsigned __int8 *a1@<eax>);
@@ -785,19 +785,19 @@ int __cdecl sub_43CF90();
 // int __usercall sub_43DCE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>);
 // int __usercall sub_43DEC0@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_43DEE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>);
-// BOOL __usercall sub_43E0C0@<eax>(unsigned __int8 *a1@<eax>);
-// signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>, double a3@<st0>);
+// BOOL __usercall Building_HasFreeAdjacentExitTile@<eax>(unsigned __int8 *a1@<eax>);
+// signed int __usercall Building_UnitsLeave@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>, double a3@<st0>);
 // int __usercall Building_GetCapacity@<eax>(int a1@<eax>);
 // signed int __usercall Building_UnitGetInto@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>, signed int i@<ebp>, double a5@<st0>);
 // signed int __usercall sub_43E770@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall Building_HasAddonInGarrison@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall Building_BuyAddon@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
-// int __usercall Building_RemoveAddon@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
-// int __usercall sub_43E9A0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
-// void __usercall sub_43EA10(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// _BYTE *__usercall sub_43EA30@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// BOOL __usercall Building_BuyUnitLicence@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
+// int __usercall Building_RemoveUnitLicence@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
+// int __usercall Building_SetUnitProduction@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// void __usercall Building_StopUnitProduction(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
+// _BYTE *__usercall Building_TrainUnit@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall sub_43EAC0@<eax>(int result@<eax>, int a2@<edx>);
-// __int16 __usercall sub_43EAD0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
+// __int16 __usercall Building_RepairUnit@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
 // int __usercall sub_43EB40@<eax>(int result@<eax>, int a2@<edx>);
 // int __usercall Building_CountGarrison@<eax>(int a1@<eax>);
 // int __usercall Building_DrawGarrisonRow@<eax>(int a1@<eax>);
@@ -1090,12 +1090,12 @@ int Game_GetTurnNumber();
 // BOOL __userpurge sub_455830@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double a3@<st0>, char *a4);
 // signed int __usercall sub_455850@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall __spoils<ecx> sub_455890@<eax>(int a1@<eax>);
-// signed int __usercall sub_4558D0@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>);
-// signed int __usercall sub_4559D0@<eax>(int a1@<eax>);
-// signed int __usercall sub_455A50@<eax>(int a1@<eax>);
-// int __usercall sub_455AD0@<eax>(int a1@<eax>);
-// __int16 __usercall sub_455B50@<ax>(int a1@<eax>);
-// signed int __usercall sub_455BD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>);
+// signed int __usercall Building_UnitsLeaveReadyGarrisonSlots@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>);
+// signed int __usercall Building_HasTrainableIdleGarrisonUnit@<eax>(int a1@<eax>);
+// signed int __usercall Building_HasRepairableIdleGarrisonUnit@<eax>(int a1@<eax>);
+// int __usercall Building_StartTrainingIdleGarrisonUnits@<eax>(int a1@<eax>);
+// __int16 __usercall Building_StartRepairIdleGarrisonUnits@<ax>(int a1@<eax>);
+// signed int __usercall Building_UnitsLeaveByUnitType@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>);
 // _DWORD *__usercall sub_455C90@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall sub_455CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // _DWORD *__usercall sub_455CF0@<eax>(int a1@<eax>, int a2@<edx>);
@@ -4514,7 +4514,7 @@ char aUnit_checklowm[42] = "Unit_CheckLowMorale(0x%08x) - buntuje sie"; // weak
 char aUnit_checklo_0[45] = "Unit_CheckLowMorale(0x%08x) - rozwiazuje sie"; // weak
 char aUnit_newturn[15] = "Unit_NewTurn()"; // weak
 char aUnit_capture0x[28] = "Unit_Capture(0x%08x,0x%08x)"; // weak
-char aUnit_createnea[64] = "Unit_CreateNearbyUnitGroup(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)"; // weak
+char aUnitCreateNearbyUnitGroup[64] = "Unit_CreateNearbyUnitGroup(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)"; // weak
 char aUnit_createn_0[41] = "Unit_CreateNearbyUnitGroup(...) - Error1"; // weak
 char aUnit_createn_1[54] = "Unit_CreateNearbyUnitGroup(...) - return 0x%08x,%d,%d"; // weak
 char aUnitscache_cle[17] = "UnitsCache_Clear"; // weak
@@ -4609,8 +4609,8 @@ char aBuilding_bui_4[33] = "Building_BuildWorkshop() - %d,%d"; // weak
 char aBuilding_bui_2[33] = "Building_BuildBarracks() - %d,%d"; // weak
 char aBuilding_bui_3[33] = "Building_BuildHospital() - %d,%d"; // weak
 char aBuilding_bui_1[31] = "Building_BuildSmiths() - %d,%d"; // weak
-char aBuilding_findf[37] = "Building_FindFreePlaceNear() - %d,%d"; // weak
-char aBuilding_trans[31] = "Building_Transfer(%d,%d,%d,%d)"; // weak
+char aBuildingFindFreePlaceNear[37] = "Building_FindFreePlaceNear() - %d,%d"; // weak
+char aBuildingTransfer[31] = "Building_Transfer(%d,%d,%d,%d)"; // weak
 char aUnit_capturebu[28] = "Unit_CaptureBuilding(%d,%d)"; // weak
 char aBuilding_destr[25] = "Building_Destroy(0x%08x)"; // weak
 char aD_21[3] = "%d"; // weak
@@ -4804,15 +4804,15 @@ char aCastle_pogD_12[21] = "castle.pog\\dw_20.gfx"; // weak
 char aCastle_chrD_14[17] = "castle.chr\\dw_20"; // weak
 char aCastle_pogD_14[17] = "castle.pog\\dw_20"; // weak
 char aS_9[3] = "%s"; // weak
-char aBuilding_units[58] = "Building_UnitsLeave(0x%08x,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)"; // weak
+char aBuildingUnitsLeave[58] = "Building_UnitsLeave(0x%08x,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)"; // weak
 char aBuildings_unit[45] = "Buildings_UnitLeave(...) - OK - 0x%08x,%d,%d"; // weak
 char aBuilding_unitg[28] = "Building_UnitGetInto(%d,%d)"; // weak
-char aBuilding_buyun[35] = "Building_BuyUnitLicence(0x%08x,%d)"; // weak
-char aBuilding_remov[38] = "Building_RemoveUnitLicence(0x%08x,%d)"; // weak
-char aBuilding_setun[38] = "Building_SetUnitProduction(0x%08x,%d)"; // weak
-char aBuilding_stopu[36] = "Building_StopUnitProduction(0x%08x)"; // weak
-char aBuilding_train[30] = "Building_TrainUnit(0x%08x,%d)"; // weak
-char aBuilding_repai[31] = "Building_RepairUnit(0x%08x,%d)"; // weak
+char aBuildingBuyUnitLicence[35] = "Building_BuyUnitLicence(0x%08x,%d)"; // weak
+char aBuildingRemoveUnitLicence[38] = "Building_RemoveUnitLicence(0x%08x,%d)"; // weak
+char aBuildingSetUnitProduction[38] = "Building_SetUnitProduction(0x%08x,%d)"; // weak
+char aBuildingStopUnitProduction[36] = "Building_StopUnitProduction(0x%08x)"; // weak
+char aBuildingTrainUnit[30] = "Building_TrainUnit(0x%08x,%d)"; // weak
+char aBuildingRepairUnit[31] = "Building_RepairUnit(0x%08x,%d)"; // weak
 char aBuildin1_s32[13] = "buildin1.s32"; // weak
 char aBuildin2_s32[13] = "buildin2.s32"; // weak
 char aBuildin3_s32[13] = "buildin3.s32"; // weak
@@ -24512,7 +24512,7 @@ __int16 *__usercall sub_412300@<eax>(
 // 4124FE: variable 'v33' is possibly undefined
 
 //----- (00412520) --------------------------------------------------------
-int __usercall sub_412520@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>)
+int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>)
 {
   unsigned __int8 *v4; // ebp
   signed int v5; // edi
@@ -24533,7 +24533,7 @@ int __usercall sub_412520@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@
 
   v4 = a3;
   v5 = 0;
-  log(a1, (char)a3, (DWORD)a3, (int)aUnit_createnea);
+  log(a1, (char)a3, (DWORD)a3, (int)aUnitCreateNearbyUnitGroup);
   v6 = 0;
   v20 = 0;
   do
@@ -30745,7 +30745,7 @@ LABEL_48:
                   sub_4120B0((char *)v62 + 6, (char *)v57);
                   if ( *(__int16 *)v56 != -1 )
                   {
-                    v51 = sub_412520(*v62, v62[1], (unsigned __int8 *)v56, a5);
+                    v51 = Unit_CreateNearbyUnitGroup(*v62, v62[1], (unsigned __int8 *)v56, a5);
                     if ( (sub_4121A0(v51) || sub_412170(v52))
                       && *(unsigned __int8 *)(v53 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
@@ -30767,7 +30767,7 @@ LABEL_48:
                   sub_4120B0((char *)v8 + 6, v56);
                   if ( *(__int16 *)v56 != -1 )
                   {
-                    v47 = sub_412520(*v8, v8[1], v57, a5);
+                    v47 = Unit_CreateNearbyUnitGroup(*v8, v8[1], v57, a5);
                     if ( (sub_4121A0(v47) || sub_412170(v48))
                       && *(unsigned __int8 *)(v49 + 4) == *(_DWORD *)(gameData + 147143) )
                     {
@@ -32532,7 +32532,7 @@ signed int __usercall sub_41E050@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl
   while ( v8 < 12 );
   if ( v9 < 10 )
     v13[v9] = -1;
-  sub_43E160((unsigned __int8 *)a1, v13, a5);
+  Building_UnitsLeave((unsigned __int8 *)a1, v13, a5);
   *(_WORD *)(a1 + 16) = -1;
   Rules_RetractCastleFact((unsigned __int8 *)a1, a5);
   return 1;
@@ -33407,7 +33407,7 @@ signed int __usercall Building_FindFreeAdjacentSpawnTile@<eax>(unsigned __int8 *
 
   v5 = 0;
   v6 = 0;
-  log(a3, (char)a4, 0, (int)aBuilding_findf);
+  log(a3, (char)a4, 0, (int)aBuildingFindFreePlaceNear);
   do
   {
     v7 = dword_513A10[v6] + *a1;
@@ -33429,7 +33429,7 @@ signed int __usercall Building_FindFreeAdjacentSpawnTile@<eax>(unsigned __int8 *
 // 5202E4: using guessed type int gameData;
 
 //----- (0041F1A0) --------------------------------------------------------
-signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>)
+signed int __usercall Building_Transfer@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>)
 {
   int v6; // edx
   unsigned __int16 v7; // ax
@@ -33478,7 +33478,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
   v42 = a2;
   v44 = a4;
   v43 = a3;
-  log(a3, a2, (DWORD)savedregs, (int)aBuilding_trans);
+  log(a3, a2, (DWORD)savedregs, (int)aBuildingTransfer);
   v46 = (unsigned __int8 *)(gameData + 509674 + v6);
   v40 = 0;
   if ( a2 != -1 )
@@ -33783,7 +33783,7 @@ _DWORD *__usercall Building_Destroy@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<
     }
     if ( v13 < 10 )
       v11[v13] = -1;
-    sub_43E160((unsigned __int8 *)v4, v11, a4);
+    Building_UnitsLeave((unsigned __int8 *)v4, v11, a4);
     if ( v12 < 12 && *(__int16 *)(v4 + 31 * v12 + 18) != -1 )
     {
       v13 = 0;
@@ -33797,7 +33797,7 @@ _DWORD *__usercall Building_Destroy@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<
         ++v12;
       }
       v11[v13] = -1;
-      sub_43E160((unsigned __int8 *)v4, v11, a4);
+      Building_UnitsLeave((unsigned __int8 *)v4, v11, a4);
     }
   }
   *(_WORD *)(v4 + 16) = -1;
@@ -41020,7 +41020,7 @@ int __usercall sub_42A9B0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char
       if ( v6 == -2 )
         v6 = -1;
       a4 = -45;
-      sub_41F1A0((dword_531CF4 - (gameData + 509674)) / 467, v6, 0, dword_531CEC, a5);
+      Building_Transfer((dword_531CF4 - (gameData + 509674)) / 467, v6, 0, dword_531CEC, a5);
       dword_531CEC = 0;
     }
   }
@@ -41030,7 +41030,7 @@ int __usercall sub_42A9B0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char
     if ( v7 == -2 )
       v7 = -1;
     a4 = -45;
-    sub_41F1A0((dword_531CF4 - (gameData + 509674)) / 467, v7, 1, dword_531CF0, a5);
+    Building_Transfer((dword_531CF4 - (gameData + 509674)) / 467, v7, 1, dword_531CF0, a5);
     dword_531CF0 = 0;
   }
   UI_DrawConfirmTop(a3, a4);
@@ -46357,7 +46357,7 @@ void *__usercall sub_432DF0@<eax>(int a1@<ecx>, double a2@<st0>)
         v14[v9] = -1;
         if ( v14[0] != -1 )
         {
-          sub_43E160((unsigned __int8 *)dword_532150, v14, a2);
+          Building_UnitsLeave((unsigned __int8 *)dword_532150, v14, a2);
           memset_(v12, 0);
         }
       }
@@ -46917,7 +46917,7 @@ void *__usercall sub_433A40@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         if ( (*(_BYTE *)(v4 + dword_532150 + 390) & 0x38) != 0 )
           sub_43EB40(dword_532150, v4);
         else
-          sub_43EAD0(dword_532150, v4, a2);
+          Building_RepairUnit(dword_532150, v4, a2);
       }
       ++v4;
       ++v5;
@@ -46953,7 +46953,7 @@ void *__usercall sub_433AC0@<eax>(int a1@<eax>, DWORD a2@<ebp>)
         if ( (*(_BYTE *)(v4 + dword_532150 + 390) & 7) != 0 )
           sub_43EAC0(dword_532150, v4);
         else
-          sub_43EA30(dword_532150, v5 * 4, a2);
+          Building_TrainUnit(dword_532150, v5 * 4, a2);
       }
       ++v4;
       ++v5;
@@ -46997,7 +46997,7 @@ int __usercall sub_433B40@<eax>(int a1@<eax>)
   }
   while ( v3 < 12 );
   v11[v4] = -1;
-  if ( v11[0] == -1 || !sub_43E0C0((unsigned __int8 *)dword_532150) )
+  if ( v11[0] == -1 || !Building_HasFreeAdjacentExitTile((unsigned __int8 *)dword_532150) )
   {
     sub_4425E0(aWrong_7);
     return Render_Begin((int)dword_544CD8, 0);
@@ -47513,7 +47513,7 @@ void *__usercall __spoils<ecx> sub_435180@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
     {
       if ( dword_532338 != -1 )
       {
-        Building_RemoveAddon(dword_532218, *(char *)(dword_532338 + dword_532218 + 402), a2);
+        Building_RemoveUnitLicence(dword_532218, *(char *)(dword_532338 + dword_532218 + 402), a2);
         nfree_(-1);
         dword_5322C8 = v7;
         dword_532304[dword_532338] = 0;
@@ -47798,7 +47798,7 @@ int __usercall sub_4357E0@<eax>(int result@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   {
     sub_419F20(result);
     Render_Begin((int)dword_544CD8, 0);
-    sub_43E9A0(dword_532218, a2, a3);
+    Building_SetUnitProduction(dword_532218, a2, a3);
     sub_434E20();
     sub_435280(a3);
     return sub_419F50(v4, v4);
@@ -47818,7 +47818,7 @@ int __usercall sub_435830@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   int v5; // ecx
 
   sub_419F20(a1);
-  sub_43EA10(v3, a2, a3);
+  Building_StopUnitProduction(v3, a2, a3);
   sub_434E20();
   sub_435280(a3);
   return sub_419F50(v4, v5);
@@ -48314,7 +48314,7 @@ int __usercall sub_436100@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, doub
     v6 = word_532360[dword_53235C];
     if ( v6 == -2 )
       v6 = -1;
-    sub_41F1A0((dword_532354 - (gameData + 509674)) / 467, v6, 1, dword_532350, a4);
+    Building_Transfer((dword_532354 - (gameData + 509674)) / 467, v6, 1, dword_532350, a4);
     dword_532350 = 0;
     sub_436060(a3, 467);
     return sub_435FE0(a3, 467);
@@ -53644,7 +53644,7 @@ int __usercall sub_43DEE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0043E0C0) --------------------------------------------------------
-BOOL __usercall sub_43E0C0@<eax>(unsigned __int8 *a1@<eax>)
+BOOL __usercall Building_HasFreeAdjacentExitTile@<eax>(unsigned __int8 *a1@<eax>)
 {
   int *v2; // esi
   int i; // ebp
@@ -53676,7 +53676,7 @@ BOOL __usercall sub_43E0C0@<eax>(unsigned __int8 *a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E160) --------------------------------------------------------
-signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>, double a3@<st0>)
+signed int __usercall Building_UnitsLeave@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>, double a3@<st0>)
 {
   int *v4; // esi
   int i; // edi
@@ -53701,7 +53701,7 @@ signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>,
   int *v25; // [esp+0h] [ebp-20h]
   __int16 *v27; // [esp+8h] [ebp-18h]
 
-  log(a2[3], a2[2], (DWORD)a1, (int)aBuilding_units);
+  log(a2[3], a2[2], (DWORD)a1, (int)aBuildingUnitsLeave);
   if ( a1[4] )
     v25 = (int *)&unk_515C98;
   else
@@ -53772,7 +53772,7 @@ signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>,
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E4B0) --------------------------------------------------------
-int __usercall sub_43E4B0@<eax>(int a1@<eax>)
+int __usercall Building_CountFreeGarrisonSlots@<eax>(int a1@<eax>)
 {
   int v1; // esi
   int v2; // ebx
@@ -53973,7 +53973,7 @@ signed int __usercall sub_43E820@<eax>(int a1@<eax>, int a2@<edx>)
 }
 
 //----- (0043E850) --------------------------------------------------------
-BOOL __usercall sub_43E850@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>)
+BOOL __usercall Building_BuyUnitLicence@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>)
 {
   int v5; // edx
   BOOL result; // eax
@@ -53982,7 +53982,7 @@ BOOL __usercall sub_43E850@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD
   int v9; // edx
   int v10; // eax
 
-  log(a3, a1, a4, (int)aBuilding_buyun);
+  log(a3, a1, a4, (int)aBuildingBuyUnitLicence);
   if ( Building_HasAddonInGarrison(a1, v5) )
     return 0;
   result = Building_CanEquipAddon((char *)a1, a2);
@@ -54019,17 +54019,17 @@ BOOL __usercall sub_43E850@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, DWORD
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E940) --------------------------------------------------------
-int __usercall sub_43E940@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
+int __usercall Building_RemoveUnitLicence@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
   int v4; // edx
   int v5; // ecx
   int v6; // eax
   __int64 v7; // rax
 
-  log(a1, a2, a3, (int)aBuilding_remov);
+  log(a1, a2, a3, (int)aBuildingRemoveUnitLicence);
   v6 = *(char *)(v5 + 414);
   if ( v6 != -1 && *(char *)(v5 + v6 + 402) == v4 )
-    sub_43EA10(v5, a2, a3);
+    Building_StopUnitProduction(v5, a2, a3);
   v7 = (unsigned int)v5;
   while ( *(char *)(v7 + 402) != a2 )
   {
@@ -54045,13 +54045,13 @@ int __usercall sub_43E940@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 // 43E984: variable 'v4' is possibly undefined
 
 //----- (0043E9A0) --------------------------------------------------------
-int __usercall sub_43E9A0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Building_SetUnitProduction@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   unsigned __int8 *v3; // ecx
   int v4; // edx
   int result; // eax
 
-  log(a1, a2, a3, (int)aBuilding_setun);
+  log(a1, a2, a3, (int)aBuildingSetUnitProduction);
   v3[414] = v4;
   result = 1423 * v3[2];
   v3[415] = byte_5125AF[88 * (char)v3[v4 + 402]];
@@ -54064,17 +54064,17 @@ int __usercall sub_43E9A0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043EA10) --------------------------------------------------------
-void __usercall sub_43EA10(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+void __usercall Building_StopUnitProduction(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v4; // edx
 
-  log(a1, a2, a3, (int)aBuilding_stopu);
+  log(a1, a2, a3, (int)aBuildingStopUnitProduction);
   *(_BYTE *)(v4 + 414) = -1;
 }
 // 43EA21: variable 'v4' is possibly undefined
 
 //----- (0043EA30) --------------------------------------------------------
-_BYTE *__usercall sub_43EA30@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+_BYTE *__usercall Building_TrainUnit@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // edx
   int v4; // ecx
@@ -54082,7 +54082,7 @@ _BYTE *__usercall sub_43EA30@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   char v6; // bl
   char v7; // bh
 
-  log(a1, a2, a3, (int)aBuilding_train);
+  log(a1, a2, a3, (int)aBuildingTrainUnit);
   result = (_BYTE *)(*(_BYTE *)(v4 + 31 * v3 + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
@@ -54110,7 +54110,7 @@ int __usercall sub_43EAC0@<eax>(int result@<eax>, int a2@<edx>)
 }
 
 //----- (0043EAD0) --------------------------------------------------------
-__int16 __usercall sub_43EAD0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
+__int16 __usercall Building_RepairUnit@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
   int v4; // ecx
   int v5; // edx
@@ -54119,7 +54119,7 @@ __int16 __usercall sub_43EAD0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
   char v8; // al
   char v9; // ah
 
-  log(a1, a2, a3, (int)aBuilding_repai);
+  log(a1, a2, a3, (int)aBuildingRepairUnit);
   v6 = *(char *)(v4 + v5 + 27);
   if ( v6 != 100 )
   {
@@ -55194,7 +55194,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
     }
   }
   *(_WORD *)((char *)v17 + 31 * v4) = -1;
-  result = (__int16 *)sub_412520(v18, v19, (unsigned __int8 *)v17, a3);
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(v18, v19, (unsigned __int8 *)v17, a3);
   if ( result )
     return (__int16 *)sub_418D90(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
@@ -55240,7 +55240,7 @@ __int16 *__usercall sub_43FDE0@<eax>(signed int a1@<eax>, int a2@<edx>, char a3@
   v14[31 * v10] = v11;
   if ( !v11 )
     *(_WORD *)((char *)v13 + 31 * v10) = -1;
-  result = (__int16 *)sub_412520(v16, v15, (unsigned __int8 *)v13, a5);
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(v16, v15, (unsigned __int8 *)v13, a5);
   if ( result )
     return (__int16 *)sub_418D90(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
@@ -55740,7 +55740,7 @@ int __usercall sub_440A60@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>)
   v19[v5] = -1;
   if ( v19[0] != -1 )
   {
-    sub_43E160((unsigned __int8 *)dword_543C80, v19, a3);
+    Building_UnitsLeave((unsigned __int8 *)dword_543C80, v19, a3);
     sub_4426C0(aDclose_1, 64);
     v21 = 12;
     g_RenderDevice = &unk_51D4C0;
@@ -64271,7 +64271,7 @@ int __usercall sub_44F1E0@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char
   if ( i == 12 )
   {
     qmemcpy(v10, &unk_518D5C, sizeof(v10));
-    sub_43E160((unsigned __int8 *)a1, v10, a5);
+    Building_UnitsLeave((unsigned __int8 *)a1, v10, a5);
     i = 0;
   }
   result = UnitSlot_InitFromType(31 * i + a1 + 18, v11, *(_BYTE *)(a1 + 2));
@@ -67910,28 +67910,28 @@ BOOL __usercall sub_455690@<eax>(int a1@<eax>)
 //----- (004556C0) --------------------------------------------------------
 __int16 __usercall sub_4556C0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
-  return sub_43EAD0(UNIT_RECORD(a1), a2, a3);
+  return Building_RepairUnit(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556E0) --------------------------------------------------------
 _BYTE *__usercall sub_4556E0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_43EA30(UNIT_RECORD(a1), a2, a3);
+  return Building_TrainUnit(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455700) --------------------------------------------------------
 int __usercall sub_455700@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_43E9A0(UNIT_RECORD(a1), a2, a3);
+  return Building_SetUnitProduction(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
 int __usercall sub_455720@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
-  return Building_RemoveAddon(UNIT_RECORD(a1), a2, a3);
+  return Building_RemoveUnitLicence(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68025,7 +68025,7 @@ signed int __usercall __spoils<ecx> sub_455890@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (004558D0) --------------------------------------------------------
-signed int __usercall sub_4558D0@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>)
+signed int __usercall Building_UnitsLeaveReadyGarrisonSlots@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>)
 {
   int i; // eax
   int v5; // eax
@@ -68064,15 +68064,15 @@ signed int __usercall sub_4558D0@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st
   while ( v5 < 10 && v7 < 5 );
   if ( v13[0] == -1 )
     return 0;
-  if ( sub_43E0C0((unsigned __int8 *)(UNIT_RECORD(v14))) )
-    return sub_43E160((unsigned __int8 *)(v11 + gameData + 509674), v13, a3);
+  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(UNIT_RECORD(v14))) )
+    return Building_UnitsLeave((unsigned __int8 *)(v11 + gameData + 509674), v13, a3);
   return -1;
 }
 // 4559BC: variable 'v11' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (004559D0) --------------------------------------------------------
-signed int __usercall sub_4559D0@<eax>(int a1@<eax>)
+signed int __usercall Building_HasTrainableIdleGarrisonUnit@<eax>(int a1@<eax>)
 {
   int v2; // edx
   int v3; // eax
@@ -68101,7 +68101,7 @@ signed int __usercall sub_4559D0@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455A50) --------------------------------------------------------
-signed int __usercall sub_455A50@<eax>(int a1@<eax>)
+signed int __usercall Building_HasRepairableIdleGarrisonUnit@<eax>(int a1@<eax>)
 {
   int v2; // edx
   int v3; // eax
@@ -68130,7 +68130,7 @@ signed int __usercall sub_455A50@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455AD0) --------------------------------------------------------
-int __usercall sub_455AD0@<eax>(int a1@<eax>)
+int __usercall Building_StartTrainingIdleGarrisonUnits@<eax>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // ebx
@@ -68155,7 +68155,7 @@ int __usercall sub_455AD0@<eax>(int a1@<eax>)
         {
           result = (unsigned __int8)(4 * *(_BYTE *)(result + 510064)) >> 5;
           if ( !result )
-            result = (int)sub_43EA30(v3 + gameData + 509674, v2, v3);
+            result = (int)Building_TrainUnit(v3 + gameData + 509674, v2, v3);
         }
       }
     }
@@ -68169,7 +68169,7 @@ int __usercall sub_455AD0@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455B50) --------------------------------------------------------
-__int16 __usercall sub_455B50@<ax>(int a1@<eax>)
+__int16 __usercall Building_StartRepairIdleGarrisonUnits@<ax>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // ebx
@@ -68191,7 +68191,7 @@ __int16 __usercall sub_455B50@<ax>(int a1@<eax>)
     {
       v7 = v1 + v3 + gameData;
       if ( (*(_BYTE *)(v7 + 510064) & 7) == 0 && !((unsigned __int8)(4 * *(_BYTE *)(v7 + 510064)) >> 5) )
-        result = sub_43EAD0(v3 + gameData + 509674, v1, v6);
+        result = Building_RepairUnit(v3 + gameData + 509674, v1, v6);
     }
     ++v1;
     v2 += 31;
@@ -68203,7 +68203,7 @@ __int16 __usercall sub_455B50@<ax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455BD0) --------------------------------------------------------
-signed int __usercall sub_455BD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>)
+signed int __usercall Building_UnitsLeaveByUnitType@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>)
 {
   int i; // eax
   int v7; // edx
@@ -68232,8 +68232,8 @@ signed int __usercall sub_455BD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
     return 0;
 LABEL_10:
   v10 = 467 * a1;
-  if ( sub_43E0C0((unsigned __int8 *)(v10 + gameData + 509674)) )
-    return sub_43E160((unsigned __int8 *)(v10 + gameData + 509674), v12, a4);
+  if ( Building_HasFreeAdjacentExitTile((unsigned __int8 *)(v10 + gameData + 509674)) )
+    return Building_UnitsLeave((unsigned __int8 *)(v10 + gameData + 509674), v12, a4);
   else
     return -1;
 }
