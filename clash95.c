@@ -91,6 +91,7 @@
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
 #define MAP_VIEW_TOP (*(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
+#define WORLD_THEME_INDEX (*(_BYTE *)(gameData + 140016))
 #define ACTIVE_MISSION_INDEX (*(_DWORD *)(gameData + ACTIVE_MISSION_INDEX_OFFSET))
 #define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))
 #define TURN_OWNER_PLAYER_INDEX (*(_DWORD *)(gameData + TURN_OWNER_PLAYER_INDEX_OFFSET))
@@ -909,7 +910,7 @@ int sub_43F9B0();
 // int __usercall BattleMap_GetMoveSoundSurfaceClass@<eax>(int a1@<eax>, int a2@<edx>);
 // char *__usercall sub_4415E0@<eax>(char *a1@<eax>, char *a2@<edx>, int a3@<ebx>);
 // int __usercall sub_441670@<eax>(char *a1@<eax>, int a2@<edx>);
-// int __usercall sub_441720@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
+// int __usercall Audio_PlayWorldMapMusicByTheme@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>);
 // int __usercall sub_441800@<eax>(char *a1@<eax>, int a2@<edx>);
 // int __usercall sub_441870@<eax>(int result@<eax>);
 int sub_4418E0();
@@ -918,10 +919,10 @@ void sub_441900();
 void sub_441930();
 // int __usercall sub_441960@<eax>(int a1@<edx>, signed int a2@<ebx>);
 // void __usercall sub_441980(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
-// int __usercall sub_4419A0@<eax>(int a1@<edx>, DWORD a2@<ebp>);
-int sub_4419D0();
-void sub_4419F0();
-void sub_441A00();
+// int __usercall Audio_EnableWorldMapMusic@<eax>(int a1@<edx>, DWORD a2@<ebp>);
+int Audio_DisableWorldMapMusic();
+void Audio_SetMusicEnabled();
+void Audio_SetMusicDisabled();
 void Audio_EnableUnitSounds();
 void Audio_DisableUnitSounds();
 // int __usercall Audio_PlayUnitActivateSound@<eax>(int result@<eax>);
@@ -17091,7 +17092,7 @@ void __usercall sub_406FA0(int ii@<ebx>)
             *(_DWORD *)(v4 + v11 + gameData + 6) = v9 + v10;
             *(_WORD *)(v4 + v11 + gameData) = v86;
             sub_418A90(ii, i);
-            if ( !*(_BYTE *)(gameData + 140016) && v86 == 36 )
+            if ( !WORLD_THEME_INDEX && v86 == 36 )
             {
               v12 = (_WORD *)(14 * v5 + j + gameData);
               if ( *v12 == 36 )
@@ -17177,7 +17178,7 @@ void __usercall sub_406FA0(int ii@<ebx>)
     }
     if ( Time_Now(v23, v22) > (unsigned int)dword_520294 )
     {
-      v37 = *(_BYTE *)(gameData + 140016);
+      v37 = WORLD_THEME_INDEX;
       if ( v37 )
       {
         if ( v37 <= 1u )
@@ -17264,7 +17265,7 @@ void __usercall sub_406FA0(int ii@<ebx>)
         while ( v56 < *(_DWORD *)(gameData + 140008) + 9 )
         {
           v58 = (_WORD *)(v57 + gameData + v77);
-          if ( *(_BYTE *)(gameData + 140016) )
+          if ( WORLD_THEME_INDEX )
           {
             if ( *v58 == 771 && (unsigned int)rand_(v56, v58) < 0x199 )
             {
@@ -17299,7 +17300,7 @@ void __usercall sub_406FA0(int ii@<ebx>)
           v63 = *(_WORD *)(jj + kk + gameData);
           if ( v63 >= 0x2Du && v63 <= 0x51u && (unsigned int)rand_(kk, v62) < 0xA3 )
           {
-            v64 = *(_BYTE *)(gameData + 140016);
+            v64 = WORLD_THEME_INDEX;
             v65 = v63 - 46;
             if ( v64 )
             {
@@ -19877,7 +19878,7 @@ int __usercall PlayGame@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, char a
     v7 += 1423;
   }
   while ( v6 < 5 );
-  v8 = *(_BYTE *)(gameData + 140016);
+  v8 = WORLD_THEME_INDEX;
   if ( !v8 )
   {
     if ( dword_5202C0 )
@@ -19927,7 +19928,7 @@ LABEL_13:
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
   *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
   Locale_DrawInteger();
-  sub_441720(*(unsigned __int8 *)(gameData + 140016), v12, 7, a3);
+  Audio_PlayWorldMapMusicByTheme(WORLD_THEME_INDEX, v12, 7, a3);
   Render_DrawSprite();
   sub_418700(1);
   sub_422880(160, 473, v13, 467, 76);
@@ -20735,7 +20736,7 @@ int __spoils<ecx> Map_InitAnimatedTileTransitionTables()
     sub_40C510((int)&word_521338, 15, v1, v1 + 12);
   for ( j = 6; j <= 9u; sub_40C510((int)&word_521338, 15, 8 * j + 595, 8 * j + 596) )
     ;
-  v6 = *(_BYTE *)(gameData + 140016);
+  v6 = WORLD_THEME_INDEX;
   if ( v6 )
   {
     if ( v6 <= 1u )
@@ -20758,13 +20759,13 @@ int __spoils<ecx> Map_InitAnimatedTileTransitionTables()
 LABEL_20:
   for ( ii = 0; ii <= 5u; sub_40C510((int)&word_520738, 10, 8 * ii + 595, 8 * ii + 596) )
     ;
-  if ( *(_BYTE *)(gameData + 140016) == 2 )
+  if ( WORLD_THEME_INDEX == 2 )
     sub_40C510((int)&word_520738, 10, 0xBBu, 701);
-  if ( *(_BYTE *)(gameData + 140016) )
+  if ( WORLD_THEME_INDEX )
     sub_40C510((int)&word_520738, 15, 0x304u, 773);
   else
     sub_40C510((int)&word_520738, 5, 0x303u, 772);
-  v8 = *(_BYTE *)(gameData + 140016);
+  v8 = WORLD_THEME_INDEX;
   if ( v8 )
   {
     if ( v8 <= 1u )
@@ -20790,7 +20791,7 @@ LABEL_20:
     sub_40C510((int)&word_520738, 10, 0x327u, 808);
     sub_40C510((int)&word_520738, 10, 0x32Eu, 815);
   }
-  result = *(unsigned __int8 *)(gameData + 140016);
+  result = WORLD_THEME_INDEX;
   if ( result != 2 )
   {
     sub_40C510((int)&word_520738, 10, 0x61u, 98);
@@ -21038,7 +21039,7 @@ int __usercall sub_40D330@<eax>(DWORD a1@<ebp>)
     1,
     0,
     0);
-  return sub_40CE70(*(unsigned __int8 *)(gameData + 140016), v3);
+  return sub_40CE70(WORLD_THEME_INDEX, v3);
 }
 // 40D40A: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -28166,7 +28167,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     (*(void (__fastcall **)(int, int, int, int))(*((_DWORD *)g_RenderDevice + 46) + 28))(v96, v98, v95, 1);
     goto LABEL_2;
   }
-  if ( *(_BYTE *)(gameData + 140016) == 2 )
+  if ( WORLD_THEME_INDEX == 2 )
   {
     v61 = *a3;
     if ( v61 != 0xFFFF )
@@ -28671,7 +28672,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
         0);
     }
   }
-  if ( !v99 && *(_BYTE *)(gameData + 140016) != 2 )
+  if ( !v99 && WORLD_THEME_INDEX != 2 )
   {
     v82 = a3[1];
     if ( v82 != 0xFFFF && a3[1] >= 0xD3u && a3[1] <= 0xD7u )
@@ -28786,7 +28787,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
 LABEL_133:
   if ( v100 == g_SelectedUnitIndex && dword_512360 == -1 && PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
-    DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
+    DLX_GetSpriteForChar(dword_5202C8, WORLD_THEME_INDEX == 1);
     v48 = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v48 + 52))(-1, -1, -1, -1, 1, 0, 0);
   }
@@ -28835,7 +28836,7 @@ LABEL_133:
     dword_52698C(v56, v4);
   if ( *(_DWORD *)(gameData + 147155) )
   {
-    if ( *(_BYTE *)(gameData + 140016) == 1 )
+    if ( WORLD_THEME_INDEX == 1 )
       v57 = -9;
     else
       v57 = 76;
@@ -30957,7 +30958,7 @@ LABEL_52:
                     0,
                     (DWORD)v8,
                     v60);
-            v37 = *(_BYTE *)(gameData + 140016);
+            v37 = WORLD_THEME_INDEX;
             if ( v37 )
             {
               if ( v37 <= 1u )
@@ -31269,7 +31270,7 @@ LABEL_42:
             sub_40C3F0();
             v34 = (unsigned __int8 *)(gameData + 509674 + v32);
             v36 = sub_42E9E0((__int16 *)(725 * v60 + gameData + 147174), 0, (int)v16, v34, (DWORD)v7, v57);
-            v37 = *(_BYTE *)(gameData + 140016);
+            v37 = WORLD_THEME_INDEX;
             if ( v37 )
             {
               if ( v37 <= 1u )
@@ -40722,7 +40723,7 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
   v1 = result;
   v2 = (((_DWORD)result - *(_DWORD *)(gameData + 140008)) << 6) + 32;
   v3 = ((HIDWORD(result) - *(_DWORD *)(gameData + 140012)) << 6) + 16;
-  if ( *(_BYTE *)(gameData + 140016) == 1 )
+  if ( WORLD_THEME_INDEX == 1 )
     v8 = 215;
   else
     v8 = 76;
@@ -43983,7 +43984,7 @@ DWORD __userpurge sub_42E9E0@<eax>(
   log(v7, (char)a4, a5, (int)aSetrhS08x_8);
   v76 = sub_441800(aBattle_1, 1);
   sub_405920(&dword_5202C0);
-  v9 = *(_BYTE *)(gameData + 140016);
+  v9 = WORLD_THEME_INDEX;
   if ( !v9 )
   {
     v10 = (_DWORD *)Mem_Alloc(4112, v8, (char)a4, a5);
@@ -45068,7 +45069,7 @@ LABEL_30:
     }
     if ( v46 == g_SelectedUnitIndex && dword_512360 == -1 )
     {
-      v33 = DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
+      v33 = DLX_GetSpriteForChar(dword_5202C8, WORLD_THEME_INDEX == 1);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v49,
         v33,
@@ -55004,7 +55005,7 @@ int __userpurge sub_43F630@<eax>(
     }
     v18 = 9 * a4 + v17;
   }
-  v19 = *(_BYTE *)(gameData + 140016);
+  v19 = WORLD_THEME_INDEX;
   if ( v19 )
   {
     if ( v19 <= 1u )
@@ -56450,7 +56451,7 @@ int __usercall sub_441670@<eax>(char *a1@<eax>, int a2@<edx>)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441720) --------------------------------------------------------
-int __usercall sub_441720@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>)
+int __usercall Audio_PlayWorldMapMusicByTheme@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, DWORD a4@<ebp>)
 {
   int v4; // ecx
   int v5; // edx
@@ -56611,14 +56612,14 @@ void __usercall sub_441980(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419A0) --------------------------------------------------------
-int __usercall sub_4419A0@<eax>(int a1@<edx>, DWORD a2@<ebp>)
+int __usercall Audio_EnableWorldMapMusic@<eax>(int a1@<edx>, DWORD a2@<ebp>)
 {
   int result; // eax
 
   if ( !dword_5174D8 )
   {
     dword_5174D8 = 1;
-    return sub_441720(*(unsigned __int8 *)(gameData + 140016), a1, 1, a2);
+    return Audio_PlayWorldMapMusicByTheme(WORLD_THEME_INDEX, a1, 1, a2);
   }
   return result;
 }
@@ -56626,7 +56627,7 @@ int __usercall sub_4419A0@<eax>(int a1@<edx>, DWORD a2@<ebp>)
 // 5202E4: using guessed type int gameData;
 
 //----- (004419D0) --------------------------------------------------------
-int sub_4419D0()
+int Audio_DisableWorldMapMusic()
 {
   int result; // eax
   int v1; // ecx
@@ -56642,14 +56643,14 @@ int sub_4419D0()
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419F0) --------------------------------------------------------
-void sub_4419F0()
+void Audio_SetMusicEnabled()
 {
   dword_5174D8 = 1;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A00) --------------------------------------------------------
-void sub_441A00()
+void Audio_SetMusicDisabled()
 {
   dword_5174D8 = 0;
 }
@@ -61453,7 +61454,7 @@ LABEL_64:
                                         + ((__int16)((unsigned int)dword_518654 >> 12) >> 15 << 8))) >> 8;
         if ( v117 == 2 )
         {
-          sub_4419F0();
+          Audio_SetMusicEnabled();
           if ( !a2 )
             dword_544180 = sub_441670(aMusicMenu_0, 64);
         }
@@ -61461,7 +61462,7 @@ LABEL_64:
         {
           if ( a2 )
             sub_4418F0(dword_544180);
-          sub_441A00();
+          Audio_SetMusicDisabled();
         }
         sub_44A9C0((int)&dword_5188B0, v102, (DWORD)a3);
         sub_44A980(v103, (DWORD)a3);
@@ -62283,17 +62284,17 @@ void __usercall sub_44A9C0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   if ( (int *)a1 == &dword_5188B0 )
   {
     if ( *(_DWORD *)(a1 + 16) )
-      sub_4419F0();
+      Audio_SetMusicEnabled();
     else
-      sub_441A00();
+      Audio_SetMusicDisabled();
   }
   else if ( *(_DWORD *)(a1 + 16) )
   {
-    sub_4419A0(v5, a3);
+    Audio_EnableWorldMapMusic(v5, a3);
   }
   else
   {
-    sub_4419D0();
+    Audio_DisableWorldMapMusic();
   }
   if ( *(_DWORD *)(a1 + 20) )
     Audio_EnableUnitSounds();
@@ -63003,7 +63004,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 0:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 0;
+      WORLD_THEME_INDEX = 0;
       createUnit(a3, 0, 0, 0, 1u, 1, 9);
       createUnit(a3, 1, 0, 1, 0, 0, 0);
       v3 = gameData + 147174;
@@ -63014,7 +63015,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 1:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 2;
+      WORLD_THEME_INDEX = 2;
       createUnit(a3, 0, 0, 0, 1u, 2, 9);
       createUnit(a3, 1, 0, 1, 1u, 2, 9);
       v3 = gameData + 147174;
@@ -63025,7 +63026,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 2:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 1;
+      WORLD_THEME_INDEX = 1;
       createUnit(a3, 0, 0, 0, 2u, 2, 9);
       createUnit(a3, 1, 0, 1, 3u, 3, 9);
       v3 = gameData + 147174;
@@ -63036,7 +63037,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 3:
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
-      *(_BYTE *)(gameData + 140016) = 0;
+      WORLD_THEME_INDEX = 0;
       createUnit(a3, 0, 0, 0, 0x10u, 16, 16);
       createUnit(a3, 1, 0, 1, 0xFu, 15, 15);
       v3 = gameData + 147174;
@@ -63047,7 +63048,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 4:
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
-      *(_BYTE *)(gameData + 140016) = 2;
+      WORLD_THEME_INDEX = 2;
       createUnit(a3, 0, 0, 0, 0xFu, 15, 10);
       createUnit(a3, 1, 0, 1, 0xBu, 10, 5);
       v3 = gameData + 147174;
@@ -63058,7 +63059,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 5:
       *(_WORD *)gameData = 21;
       *(_WORD *)(gameData + 1400) = 21;
-      *(_BYTE *)(gameData + 140016) = 1;
+      WORLD_THEME_INDEX = 1;
       createUnit(a3, 0, 0, 0, 0x15u, 12, 4);
       createUnit(a3, 1, 0, 1, 0xCu, 20, 23);
       v3 = gameData + 147174;
@@ -63069,7 +63070,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 6:
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
-      *(_BYTE *)(gameData + 140016) = 0;
+      WORLD_THEME_INDEX = 0;
       createUnit(a3, 0, 0, 0, 0x17u, 18, 7);
       createUnit(a3, 1, 0, 1, 0x17u, 18, 7);
       v3 = gameData + 147174;
@@ -63080,7 +63081,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 7:
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
-      *(_BYTE *)(gameData + 140016) = 2;
+      WORLD_THEME_INDEX = 2;
       createUnit(a3, 0, 0, 0, 0xDu, 10, 5);
       createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20);
       return sub_42E9E0(
@@ -63093,7 +63094,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 8:
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
-      *(_BYTE *)(gameData + 140016) = 1;
+      WORLD_THEME_INDEX = 1;
       createUnit(a3, 0, 0, 1, 0xEu, 16, 2);
       createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5);
       return sub_42E9E0(
@@ -63106,7 +63107,7 @@ DWORD __usercall sub_44C7F0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
     case 9:
       *(_WORD *)gameData = 28;
       *(_WORD *)(gameData + 1400) = 28;
-      *(_BYTE *)(gameData + 140016) = 2;
+      WORLD_THEME_INDEX = 2;
       createUnit(a3, 0, 0, 0, 0x19u, 24, 28);
       v8 = gameData;
       v9 = 725 * *(unsigned __int16 *)(gameData + 556374);
@@ -65672,7 +65673,7 @@ LABEL_9:
     if ( ++v10 >= 5 )
       return 1;
   }
-  sub_441720(*(unsigned __int8 *)(gameData + 140016), v11, gameData, a2);
+  Audio_PlayWorldMapMusicByTheme(WORLD_THEME_INDEX, v11, gameData, a2);
   return 0;
 }
 // 451044: conditional instruction was optimized away because edx.4<1F4u

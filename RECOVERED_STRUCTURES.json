@@ -144,18 +144,20 @@
     "name": "WorldViewState",
     "kind": "shared_state_region",
     "base_offset": 140000,
-    "description": "Shared gameData region that stores world dimensions, the active scripted mission id, the current camera origin, and which player owns the active turn versus the current human view.",
+    "description": "Shared gameData region that stores world dimensions, the current strategic-map theme profile, the active scripted mission id, the current camera origin, and which player owns the active turn versus the current human view.",
     "fields": [
       { "offset": 140000, "name": "map_width_tiles", "type": "int32", "notes": "Horizontal tile count derived at map load and used to clamp camera movement." },
       { "offset": 140004, "name": "map_height_tiles", "type": "int32", "notes": "Vertical tile count derived at map load and used to clamp camera movement." },
       { "offset": 140008, "name": "map_view_left", "type": "int32", "notes": "Current leftmost visible tile in the main-map camera." },
       { "offset": 140012, "name": "map_view_top", "type": "int32", "notes": "Current topmost visible tile in the main-map camera." },
+      { "offset": 140016, "name": "world_theme_index", "type": "uint8", "notes": "Packed theme selector shared by strategic-map music, world/building sprite families, and several ambient tile-transition tables. Confirmed values are `0`, `1`, and `2`, but their original designer-facing labels remain unresolved." },
       { "offset": 140017, "name": "active_mission_index", "type": "int32", "notes": "`-1` for free/skirmish maps; otherwise indexes the scripted mission dispatcher, mission-status text table, and mission-specific victory/failure checks." },
       { "offset": 147139, "name": "turn_owner_player_index", "type": "int32", "notes": "Player id whose strategic turn is currently active; save/load restores g_CurrentPlayerIndex from this slot." },
       { "offset": 147143, "name": "viewed_player_index", "type": "int32", "notes": "Player id whose saved camera position and visibility should drive the current UI view; usually the current human player." }
     ],
     "evidence": [
       "Map load computes offsets 140000 and 140004 by scanning the 14-byte tile grid until it reaches sentinel 0xFFFF rows and columns.",
+      "The same packed byte at offset `140016` selects `data\\\\mainmap%d.wav` / `sfx\\\\music\\\\mainmap%d.wav` in `Audio_PlayWorldMapMusicByTheme`, switches `buildin1.s32` vs `buildin2.s32` vs `buildin3.s32` in the building atlas loader, and branches among three ambient tile-transition families in the world update loop.",
       "`UI_ShowMissionStatusPanel`, the post-victory mission-advance path, and the mission jump table rooted at `Scenario_LoadMissionByIndex` all treat offset `140017` as the active mission id.",
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
       "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."

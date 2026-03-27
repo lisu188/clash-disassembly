@@ -340,10 +340,20 @@
 | PlayerRuntimeState + 53 | turns_without_battle | Recovered Struct Field | gameData / Player Runtime / Combat | High | Incremented once per turn when no battle occurred, reset after combat, and compared against the `GodAnger` trigger threshold. | c |
 | PlayerRuntimeState + 1417 | battle_record_score | Recovered Struct Field | gameData / Player Runtime / Combat | High | Army and castle battle outcomes increment the winner and decrement the loser through this word, and the player-statistics screen later graphs the same value as its third nation metric. | c |
 
+## Batch 34 – World Theme Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_441720 | Audio_PlayWorldMapMusicByTheme | Function | Audio / World Map | High | Builds `data\\mainmap%d.wav` and `sfx\\music\\mainmap%d.wav` from the incoming theme id, then starts the looping strategic-map music track. | c, asm, exe |
+| sub_4419A0 | Audio_EnableWorldMapMusic | Function | Audio / World Map | High | If world-map music is currently disabled, flips the enable flag on and immediately restarts the strategic-map loop using the packed world-theme byte from `gameData + 140016`. | c |
+| sub_4419D0 | Audio_DisableWorldMapMusic | Function | Audio / World Map | High | Stops the active strategic-map music loop and clears the world-map music enable state. | c |
+| sub_4419F0 | Audio_SetMusicEnabled | Function | Audio / Options | Medium | Pure setter that flips the shared music-enabled flag on without starting playback; used by options/menu code before a separate playback path runs. | c |
+| sub_441A00 | Audio_SetMusicDisabled | Function | Audio / Options | Medium | Pure setter that flips the shared music-enabled flag off without stopping an already-playing loop; used by options/menu code as a state latch. | c |
+| WorldViewState + 16 | world_theme_index | Recovered Struct Field | gameData / World View | High | One packed byte fans out into strategic-map music selection, `buildin1/2/3.s32` atlas choice, and three tile-transition/ambient visual families; debug/test setup writes values `0`, `1`, and `2` directly. | c, asm, exe |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
-- The shared byte at `gameData + 140016` clearly selects one of three strategic-map terrain/animation profiles, but the exact original label for that profile enum is still unresolved. Script-engine `get-strategy` / `set-strategy` host functions turned out to refer to agenda-search strategy, not this gameplay field.
+- `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
 - `Building_GetTypeId` exposes building byte `+4` cleanly, but only the settlement/castle-bearing values `1` and `2` are behaviorally secure so far; the full building-type enum remains unresolved.
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.
