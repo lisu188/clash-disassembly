@@ -8,6 +8,52 @@
 #include <math.h>
 #include <defs.h>
 
+#define PLAYER_DATA_STRIDE 1423
+#define PLAYER_QUEEN_MOOD_OFFSET 141443
+#define PLAYER_QUEEN_WHIM_OFFSET 141444
+#define PLAYER_QUEEN_REVIEW_TURN_OFFSET 141445
+#define PLAYER_IS_HUMAN_OFFSET 140051
+#define GAME_TURN_COUNTER_OFFSET 140022
+#define PORT_ROW_OFFSET 586374
+#define PORT_COLUMN_OFFSET 586378
+#define PORT_NEXT_SUPPLY_TURN_OFFSET 586382
+#define PORT_SUPPLY_READY_FLAG_OFFSET 586386
+#define PORT_SUPPLY_UNIT_COUNT_OFFSET 586390
+#define PORT_SHORE_REFRESH_FLAG_OFFSET 586394
+#define UNIT_RECORD_SIZE 467
+#define UNIT_TABLE_OFFSET 509674
+#define TILE_MAP_OFFSET 556374
+#define TILE_ROW_STRIDE 200
+#define UNIT_STACK_TABLE_OFFSET 147174
+#define UNIT_STACK_STRIDE 725
+#define UNIT_STACK_SLOT_BASE_OFFSET 6
+#define UNIT_STACK_SLOT_STRIDE 31
+#define UNIT_STACK_SLOT_COUNT 10
+#define UNIT_STACK_PATH_OFFSET 316
+#define UNIT_STACK_PATH_BYTES 0x194
+
+#define PLAYER_DATA(playerIndex) (gameData + PLAYER_DATA_STRIDE * (playerIndex))
+#define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
+#define PLAYER_QUEEN_WHIM(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_WHIM_OFFSET))
+#define PLAYER_QUEEN_NEXT_REVIEW(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_REVIEW_TURN_OFFSET))
+#define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
+#define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))
+#define PORT_ROW (*(_DWORD *)(gameData + PORT_ROW_OFFSET))
+#define PORT_COLUMN (*(_DWORD *)(gameData + PORT_COLUMN_OFFSET))
+#define PORT_NEXT_SUPPLY_TURN (*(_DWORD *)(gameData + PORT_NEXT_SUPPLY_TURN_OFFSET))
+#define PORT_SUPPLY_READY_FLAG (*(_DWORD *)(gameData + PORT_SUPPLY_READY_FLAG_OFFSET))
+#define PORT_SUPPLY_UNIT_COUNT (*(_DWORD *)(gameData + PORT_SUPPLY_UNIT_COUNT_OFFSET))
+#define PORT_NEEDS_SHORE_REFRESH (*(_DWORD *)(gameData + PORT_SHORE_REFRESH_FLAG_OFFSET))
+#define UNIT_RECORD(index) (gameData + UNIT_TABLE_OFFSET + UNIT_RECORD_SIZE * (index))
+#define TILE_INDEX(row, column) (gameData + TILE_MAP_OFFSET + TILE_ROW_STRIDE * (row) + 2 * (column))
+#define UNIT_STACK(index) (gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * (index))
+#define UNIT_STACK_SLOT(stackPtr, slotIndex) ((stackPtr) + UNIT_STACK_SLOT_BASE_OFFSET + UNIT_STACK_SLOT_STRIDE * (slotIndex))
+#define UNIT_STACK_TILE_ROW(stackPtr) (*(__int16 *)(stackPtr))
+#define UNIT_STACK_TILE_COLUMN(stackPtr) (*(__int16 *)((stackPtr) + 2))
+#define UNIT_STACK_OWNER_INDEX(stackPtr) (*(_BYTE *)((stackPtr) + 4))
+#define UNIT_STACK_FACING(stackPtr) (*(_BYTE *)((stackPtr) + 5))
+#define UNIT_STACK_PATH_BUFFER(stackPtr) ((stackPtr) + UNIT_STACK_PATH_OFFSET)
+
 
 //-------------------------------------------------------------------------
 // Function declarations
@@ -246,20 +292,20 @@ int sub_40ED20();
 // signed int __usercall sub_40EDE0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 // BOOL __usercall sub_40F060@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 // signed int __usercall sub_40F0C0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
-// signed int __usercall sub_40F3C0@<eax>(int a1@<eax>);
-// int __usercall sub_40F440@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>);
-// char __usercall sub_40F4D0@<al>(int a1@<eax>, int a2@<edx>, char a3@<bl>);
+// signed int __usercall UnitStack_IsIndexOnMap@<eax>(int a1@<eax>);
+// int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>);
+// char __usercall UnitStack_ResetRecord@<al>(int a1@<eax>, int a2@<edx>, char a3@<bl>);
 // signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, int a5);
 // unsigned int __usercall sub_40F6E0@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Unit_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
-// int __usercall sub_40F7C0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
+// int __usercall UnitStack_KillByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // __int16 *__usercall Rules_UnlinkArmyFact@<eax>(__int16 *result@<eax>, double a2@<st0>);
 // __int16 *__usercall Rules_LinkArmyFinalize@<eax>(__int16 *result@<eax>, double a2@<st0>);
-// int __usercall sub_40F8B0@<eax>(int a1@<eax>);
-// signed int __usercall __spoils<> sub_40F900@<eax>(int a1@<eax>);
-// signed int __usercall sub_40F9F0@<eax>(int a1@<eax>);
-// __int16 *__usercall sub_40FA20@<eax>(int a1@<eax>);
-// __int16 *__usercall sub_40FA50@<eax>(int a1@<eax>);
+// int __usercall UnitStack_GetVisionRadius@<eax>(int a1@<eax>);
+// signed int __usercall __spoils<> UnitStack_UpdateVision@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasReadyUnits@<eax>(int a1@<eax>);
+// __int16 *__usercall UnitStack_ClearReadyFlags@<eax>(int a1@<eax>);
+// __int16 *__usercall UnitStack_SetReadyFlags@<eax>(int a1@<eax>);
 // signed int __usercall sub_40FA80@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall sub_40FAD0@<eax>(int a1@<eax>);
 // int __usercall __spoils<ecx> sub_40FDB0@<eax>(__int16 *a1@<eax>);
@@ -478,7 +524,7 @@ int sub_421010();
 int __thiscall sub_421C20(void *this);
 unsigned int sub_421C40();
 // int *__usercall sub_422020@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
-int sub_422100();
+int Castle_UpdateGateToggles();
 // int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>);
 // int __userpurge sub_422880@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, int a5);
 int sub_422960();
@@ -811,8 +857,8 @@ int Port_FindAndInit();
 _DWORD *__spoils<ecx,st0> Rules_LogPortLocation();
 // int __usercall __spoils<ecx> Port_NewTurn@<eax>(DWORD a1@<ebp>);
 int Port_BuildShorePieces();
-int sub_443230();
-// int *__usercall sub_443240@<eax>(int a1@<eax>);
+int Port_HasSupplyReady();
+// int *__usercall Port_BuildDockingTrack@<eax>(int a1@<eax>);
 // int __usercall Port_GetSupply@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>, double@<st0>);
 // void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 int sub_443B60();
@@ -838,11 +884,11 @@ int sub_443B60();
 // int __usercall sub_446230@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 // int __usercall sub_446430@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_446460@<eax>(int a1@<eax>, int a2@<ecx>);
-// int __usercall sub_446480@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
+// int __usercall Queen_ShowWhimDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
 // int __usercall YesNoWindow@<eax>(int a1@<eax>, _BYTE *a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // int __usercall sub_446CB0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
-// int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall UI_NotifyText@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
+// int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall Queen_ShowNotification@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall UI_ShowMissionStatusPanel@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
 int __thiscall nullsub_3(_DWORD); // weak
 int sub_4476B0();
@@ -917,7 +963,7 @@ signed int sub_44C2A0();
 // char *__usercall sub_44F660@<eax>(int a1@<eax>);
 // int __usercall sub_44F6D0@<eax>(int a1@<eax>);
 // int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>);
-// int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>);
+// int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>);
 // int __usercall AI_FindActionCandidate@<eax>(int a1@<eax>);
 // int __usercall Queen_NewTurn@<eax>(int@<ecx>, int@<ebx>, char@<sil>, double@<st0>);
@@ -8225,9 +8271,9 @@ char *g_Text_QuitConfirm[3] =
   "Do you want to quit the game?",
   "M\x94chtest Du das Spiel verlassen?"
 }; // weak
-int dword_511B54 = -1; // weak
-int dword_511B58 = -1; // weak
-int dword_511B5C = -1; // weak
+int g_UnitSearchCursor = -1; // weak
+int g_SelectedUnitIndex = -1; // weak
+int g_LastSelectedUnitIndex = -1; // weak
 int dword_511B64 = -1; // weak
 char *g_Text_SurrenderConfirm[3] =
 {
@@ -9893,7 +9939,7 @@ char *off_517B24[3] =
   "Clash CD not found!",
   "Clash CD nicht gefunden"
 }; // weak
-char *off_517BD8[6] =
+char *g_PortArrivalTexts[6] =
 {
   "Posi\x92ki przyby\x92y",
   "Extra troops came",
@@ -9902,7 +9948,7 @@ char *off_517BD8[6] =
   "Port is empty",
   "Hafen ist verlassen"
 }; // weak
-char *off_517BE4[3] = { "Port jest pusty", "Port is empty", "Hafen ist verlassen" }; // weak
+char *g_PortEmptyTexts[3] = { "Port jest pusty", "Port is empty", "Hafen ist verlassen" }; // weak
 char *off_517DE8[6] =
 {
   "Oddzia\x92 ma za ma\x92y status.",
@@ -9963,7 +10009,7 @@ char *off_517EC4[3] =
 }; // weak
 _UNKNOWN unk_517ED0; // weak
 _UNKNOWN unk_517F70; // weak
-char *off_518010[3] =
+char *g_QueenProposalPrompt[3] =
 {
   "Z zamorskiego kraju przyby\x92 pose\x92 z portretem pi\x91knej ksi\x91\xA7niczki. Jej ojciec, kr\xA2l Wolfgang, widz\x86c  pot\x91g\x91 Twego kr\xA2lestwa got\xA2w jest odda\x8D Ci j\x86 za \xA7on\x91. Czy pragniesz j\x86 po\x9Elubi\x8D?",
   "An envoy arrived from a distant country with a picture of a beautiful princess. Her father, king Wolfgang, seeing your power wishes to offer you his daughter's hand. Do you want to marry her?",
@@ -10235,7 +10281,7 @@ int dword_518ED9 = 1; // weak
 int dword_518F0E = 1; // weak
 int dword_518F43 = 1; // weak
 int dword_518F78 = 1; // weak
-char *off_519010[30] =
+char *g_QueenMoodTexts[30] =
 {
   "Nie ma kr\xA2lowej.",
   "No queen.",
@@ -11305,7 +11351,7 @@ int dword_526A2C; // weak
 int (*dword_526A30)(void); // weak
 int dword_526A34; // weak
 LARGE_INTEGER Frequency; // idb
-int dword_526A64; // weak
+int g_CastleUnitRecord; // weak
 int dword_526A68; // weak
 _BYTE byte_526A70[1024]; // weak
 int dword_526E70; // weak
@@ -16749,9 +16795,9 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
   void *v18; // [esp+20h] [ebp-14h]
 
   sub_40A490(a1);
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
     return (void *)sub_422AC0();
-  if ( sub_412AF0(gameData + 147174 + 725 * dword_511B58) )
+  if ( sub_412AF0(gameData + 147174 + 725 * g_SelectedUnitIndex) )
   {
     sub_422B70(13);
     sub_4229A0(3, g_Text_LowMorale[(unsigned __int8)g_LanguageIndex], v16);
@@ -16763,13 +16809,13 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
     sub_4229A0(
       1,
       aS,
-      (char)(**(&off_512568 + 22 * *(__int16 *)(gameData + 725 * dword_511B58 + 147180)))[(unsigned __int8)g_LanguageIndex]);
+      (char)(**(&off_512568 + 22 * *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180)))[(unsigned __int8)g_LanguageIndex]);
     v18 = g_RenderDevice;
     g_RenderDevice = &unk_51D4C0;
     sub_460BB0(dword_544CD8, v2, 0x1F7u, 0x1D4u, 0x1DCu);
-    v3 = 100 * sub_410010(725 * dword_511B58 + gameData + 147174);
+    v3 = 100 * sub_410010(725 * g_SelectedUnitIndex + gameData + 147174);
     v4 = gameData;
-    v5 = v3 / sub_40FE80(gameData + 147174 + 725 * dword_511B58);
+    v5 = v3 / sub_40FE80(gameData + 147174 + 725 * g_SelectedUnitIndex);
     Surface = (_DWORD *)Mem_Alloc(188, v6, v4, v5);
     v8 = (int)Surface;
     if ( Surface )
@@ -16827,7 +16873,7 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B20: using guessed type char *g_Text_LowMorale[3];
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512568: using guessed type char *(*off_512568)[102];
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E4: using guessed type int gameData;
@@ -17502,8 +17548,8 @@ int __usercall sub_407D20@<eax>(signed int a1@<ebp>)
     result = DD_IsLost((int)dword_544CD8);
     if ( result )
     {
-      result = gameData + 200 * v17;
-      v19 = *(unsigned __int16 *)(result + 2 * v18 + 556374);
+      result = TILE_INDEX(v17;
+      v19 = *(unsigned __int16 *)(result, v18));
       if ( (unsigned __int16)v19 == 0xFFFF )
         return sub_407B90();
       if ( v19 < 0x8000 )
@@ -17567,20 +17613,20 @@ BOOL __spoils<ecx> sub_408030()
          - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
           + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
        + *(_DWORD *)(gameData + 140008);
-    v3 = *(unsigned __int16 *)(gameData + 200 * v1 + 2 * v2 + 556374);
-    if ( v3 > 0x7FFF || v3 == dword_511B58 || *(unsigned __int8 *)(gameData + 725 * v3 + 147178) != dword_5202EC )
+    v3 = *(unsigned __int16 *)(TILE_INDEX(v1, v2));
+    if ( v3 > 0x7FFF || v3 == g_SelectedUnitIndex || *(unsigned __int8 *)(gameData + 725 * v3 + 147178) != dword_5202EC )
     {
       return 0;
     }
     else
     {
       result = 1;
-      dword_511B58 = *(unsigned __int16 *)(gameData + 200 * v1 + 2 * v2 + 556374);
+      g_SelectedUnitIndex = *(unsigned __int16 *)(TILE_INDEX(v1, v2));
     }
   }
   return result;
 }
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -17595,7 +17641,7 @@ BOOL __usercall sub_408140@<eax>(int a1@<eax>, int a2@<edx>)
   int v4; // edx
 
   HIWORD(v4) = 0;
-  v3 = *(_WORD *)(gameData + 200 * a1 + 2 * a2 + 556374);
+  v3 = *(_WORD *)(TILE_INDEX(a1, a2));
   LOWORD(v4) = v3;
   return v3 <= 0x1F4u
       && (unsigned int)*(__int16 *)(gameData + 725 * v4 + 147180) <= 0x28
@@ -17612,11 +17658,11 @@ BOOL __usercall sub_408200@<eax>(int a1@<eax>, int a2@<edx>)
   int v4; // eax
   BOOL result; // eax
 
-  v3 = *(unsigned __int16 *)(gameData + 200 * a1 + 2 * a2 + 556374);
+  v3 = *(unsigned __int16 *)(TILE_INDEX(a1, a2));
   result = 0;
   if ( (unsigned __int16)v3 <= 0x1F4u && (unsigned int)*(__int16 *)(gameData + 725 * v3 + 147180) <= 0x28 )
   {
-    v4 = gameData + 725 * *(unsigned __int16 *)(gameData + 200 * a1 + 2 * a2 + 556374);
+    v4 = gameData + 725 * *(unsigned __int16 *)(TILE_INDEX(a1, a2));
     if ( *(unsigned __int8 *)(v4 + 147178) != dword_5202EC && !*(_BYTE *)(v4 + 147894) )
       return 1;
   }
@@ -17649,11 +17695,11 @@ BOOL __usercall sub_4082F0@<eax>(int a1@<eax>, int a2@<edx>)
   int v4; // eax
   BOOL result; // eax
 
-  v2 = *(unsigned __int16 *)(gameData + 200 * a1 + 2 * a2 + 556374) - 0x8000;
+  v2 = *(unsigned __int16 *)(TILE_INDEX(a1, a2)) - 0x8000;
   result = 0;
   if ( v2 <= 0x64 )
   {
-    v3 = gameData + 509674 + 467 * v2;
+    v3 = UNIT_RECORD(v2);
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
       v4 = gameData + 467 * v2;
@@ -17676,11 +17722,11 @@ BOOL __usercall sub_408390@<eax>(int a1@<eax>, int a2@<edx>)
   int v4; // eax
   BOOL result; // eax
 
-  v2 = *(unsigned __int16 *)(gameData + 200 * a1 + 2 * a2 + 556374) - 0x8000;
+  v2 = *(unsigned __int16 *)(TILE_INDEX(a1, a2)) - 0x8000;
   result = 0;
   if ( v2 <= 0x64 )
   {
-    v3 = gameData + 509674 + 467 * v2;
+    v3 = UNIT_RECORD(v2);
     if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
     {
       v4 = gameData + 467 * v2;
@@ -17717,11 +17763,11 @@ BOOL __usercall Port_IsInsideArea@<eax>(int a1@<eax>, int a2@<edx>)
   int v3; // edi
   BOOL result; // eax
 
-  v2 = *(_DWORD *)(gameData + 586374);
+  v2 = PORT_ROW;
   result = 0;
   if ( v2 != -1 && a1 >= v2 && a1 <= v2 + 1 )
   {
-    v3 = *(_DWORD *)(gameData + 586378);
+    v3 = PORT_COLUMN;
     if ( a2 >= v3 && a2 <= v3 + 1 )
       return 1;
   }
@@ -17855,7 +17901,7 @@ void __usercall sub_4084A0(double a1@<st0>)
     dword_5202B0 = 0;
   }
   if ( (unsigned int)(Time_Now(v3, v2) - dword_5202A4) > 0xC8
-    && *(unsigned __int16 *)(200 * v1 + gameData + 2 * v78 + 556374) == 0xFFFF )
+    && *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == 0xFFFF )
   {
     Map_DestroyTile(v1, v78);
     if ( !sub_40F060(v1, v78, dword_5202EC) )
@@ -17953,12 +17999,12 @@ LABEL_35:
     return;
   }
   v5 = 0;
-  if ( dword_511B58 != -1 && sub_4082C0(v1, v78) )
+  if ( g_SelectedUnitIndex != -1 && sub_4082C0(v1, v78) )
   {
     if ( sub_408140(v1, v78) )
     {
-      if ( *(unsigned __int16 *)(gameData + 200 * v1 + 2 * v78 + 556374) == dword_511B58
-        && *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) )
+      if ( *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == g_SelectedUnitIndex
+        && *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
       {
         v5 = 1;
         sub_460D80((int)&dword_544CD8, (int)&unk_519920);
@@ -17966,7 +18012,7 @@ LABEL_35:
         goto LABEL_21;
       }
       v4 = (unsigned __int16 *)(200 * v1 + gameData);
-      if ( v4[v78 + 278187] != dword_511B58 && dword_5202E8 )
+      if ( v4[v78 + 278187] != g_SelectedUnitIndex && dword_5202E8 )
       {
         sub_460D80((int)&dword_544CD8, (int)&unk_519858);
         dword_5202B4 = v6;
@@ -17975,7 +18021,7 @@ LABEL_35:
     }
     else if ( sub_408200(v1, v78) )
     {
-      if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+      if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
         v15 = &unk_5196F0;
       else
         v15 = &unk_5198A8;
@@ -17990,9 +18036,9 @@ LABEL_35:
     dword_5202B4 = 0;
   }
 LABEL_21:
-  if ( dword_511B58 != -1 && sub_43FB10(v1, v78) )
+  if ( g_SelectedUnitIndex != -1 && sub_43FB10(v1, v78) )
   {
-    if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+    if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
     {
 LABEL_24:
       v7 = &unk_519830;
@@ -18006,18 +18052,18 @@ LABEL_80:
   }
   if ( Port_IsInsideArea(v1, v78) )
   {
-    if ( dword_511B58 == -1 )
+    if ( g_SelectedUnitIndex == -1 )
     {
       v7 = &unk_519718;
       goto LABEL_25;
     }
-    if ( sub_412100(gameData + 147174 + 725 * dword_511B58) )
+    if ( sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) )
       goto LABEL_24;
     goto LABEL_80;
   }
   if ( sub_408430(v1, v78) )
   {
-    if ( dword_511B58 == -1 )
+    if ( g_SelectedUnitIndex == -1 )
     {
       v7 = &unk_519718;
       goto LABEL_25;
@@ -18026,10 +18072,10 @@ LABEL_80:
     v5 = 200 * v1;
     if ( !sub_4082F0(v1, v78) )
     {
-      if ( !sub_412100(gameData + 147174 + 725 * dword_511B58)
+      if ( !sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex)
         || (v5 += gameData,
             *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
-        && sub_4121A0(gameData + 147174 + 725 * dword_511B58) )
+        && sub_4121A0(gameData + 147174 + 725 * g_SelectedUnitIndex) )
       {
         v7 = &unk_5198D0;
       }
@@ -18040,7 +18086,7 @@ LABEL_80:
       goto LABEL_25;
     }
     v5 += gameData;
-    if ( !sub_43E770(dword_511B58, *(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) )
+    if ( !sub_43E770(g_SelectedUnitIndex, *(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) )
     {
       v7 = &unk_5198F8;
       goto LABEL_25;
@@ -18137,59 +18183,59 @@ LABEL_26:
   v27 = dword_5202EC;
   if ( sub_42B730(v1, v78, dword_5202EC) )
     sub_42B9D0(v1, v78, v27, v1);
-  if ( dword_511B58 != -1 && sub_412100(gameData + 147174 + 725 * dword_511B58) && sub_43FB10(v1, v78) )
+  if ( g_SelectedUnitIndex != -1 && sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) && sub_43FB10(v1, v78) )
   {
     LOBYTE(v30) = v78;
-    if ( !sub_415CD0(gameData + 147174 + 725 * dword_511B58 + 316, v1, v78) )
+    if ( !sub_415CD0(gameData + 147174 + 725 * g_SelectedUnitIndex + 316, v1, v78) )
     {
       LOBYTE(v30) = v78;
-      v32 = (const void *)Path_GenerateTrack(dword_511B58, v1, v31, v78);
+      v32 = (const void *)Path_GenerateTrack(g_SelectedUnitIndex, v1, v31, v78);
       if ( v32 )
       {
-        v33 = (void *)(gameData + 147174 + 725 * dword_511B58 + 316);
+        v33 = (void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316);
         qmemcpy(v33, v32, 0x194u);
         j__nfree_();
         sub_418700(1);
         Render_Begin((int)&dword_544CD8, v34, (_BYTE)v33 - 108);
       }
-      if ( *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) != 1 )
+      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
         return;
       goto LABEL_138;
     }
-    if ( !sub_411F60(dword_511B58) )
+    if ( !sub_411F60(g_SelectedUnitIndex) )
       return;
     goto LABEL_205;
   }
-  v28 = dword_511B58;
-  if ( dword_511B58 != -1 && sub_412100(gameData + 147174 + 725 * dword_511B58) && Port_IsInsideArea(v1, v78) )
+  v28 = g_SelectedUnitIndex;
+  if ( g_SelectedUnitIndex != -1 && sub_412100(gameData + 147174 + 725 * g_SelectedUnitIndex) && Port_IsInsideArea(v1, v78) )
   {
-    if ( *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) )
+    if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
     {
-      v35 = (_DWORD *)sub_443240(dword_511B58);
+      v35 = (_DWORD *)Port_BuildDockingTrack(g_SelectedUnitIndex);
       v27 = gameData - 26;
       if ( *v35 )
         v36 = v35[1];
       else
-        v36 = *(_DWORD *)(gameData + 147174 + 725 * dword_511B58 + 320);
-      if ( (unsigned __int16)*(_DWORD *)(gameData + 147174 + 725 * dword_511B58 + 320) == (_WORD)v36 )
+        v36 = *(_DWORD *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 320);
+      if ( (unsigned __int16)*(_DWORD *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 320) == (_WORD)v36 )
       {
         v37 = gameData;
-        qmemcpy((void *)(725 * dword_511B58 + gameData + 147174 + 316), v35, 0x194u);
-        if ( sub_411F60(dword_511B58) || !*v35 )
+        qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v35, 0x194u);
+        if ( sub_411F60(g_SelectedUnitIndex) || !*v35 )
         {
           if ( *v35 )
           {
-            sub_441B00(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
-            sub_410330(dword_511B58, 1, v37, (DWORD)v35, a1);
+            sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+            sub_410330(g_SelectedUnitIndex, 1, v37, (DWORD)v35, a1);
             sub_406980((DWORD)v35);
           }
-          if ( !*(_DWORD *)(gameData + 725 * dword_511B58 + 147490) )
+          if ( !*(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
           {
-            Supply = (__int16 *)Port_GetSupply(145 * dword_511B58, v37, (DWORD)v35, a1);
+            Supply = (__int16 *)Port_GetSupply(145 * g_SelectedUnitIndex, v37, (DWORD)v35, a1);
             if ( Supply )
               sub_418C00(
-                *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
-                *(__int16 *)(gameData + 725 * dword_511B58 + 147176),
+                *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+                *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
                 Supply[1],
                 *Supply);
           }
@@ -18199,19 +18245,19 @@ LABEL_26:
       }
       j__nfree_();
     }
-    v29 = (const void *)sub_443240(dword_511B58);
+    v29 = (const void *)Port_BuildDockingTrack(g_SelectedUnitIndex);
     if ( v29 )
     {
-      qmemcpy((void *)(gameData + 147174 + 725 * dword_511B58 + 316), v29, 0x194u);
+      qmemcpy((void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316), v29, 0x194u);
       j__nfree_();
       sub_418700(1);
-      if ( !*(_DWORD *)(725 * dword_511B58 + gameData + 147174 + 316) )
+      if ( !*(_DWORD *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316) )
       {
-        v39 = (__int16 *)Port_GetSupply(725 * dword_511B58, v27, (DWORD)v29, a1);
+        v39 = (__int16 *)Port_GetSupply(725 * g_SelectedUnitIndex, v27, (DWORD)v29, a1);
         if ( v39 )
           sub_418C00(
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147176),
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
             v39[1],
             *v39);
       }
@@ -18226,7 +18272,7 @@ LABEL_26:
   v40 = 2 * v78;
   if ( sub_408430(v1, v78) )
   {
-    if ( dword_511B58 == -1 && sub_4082F0(v1, v78) )
+    if ( g_SelectedUnitIndex == -1 && sub_4082F0(v1, v78) )
     {
       v42 = *(unsigned __int16 *)(gameData + v41 + v40 + 556374) - 0x8000;
       v43 = 467 * v42;
@@ -18244,16 +18290,16 @@ LABEL_26:
     }
     v45 = sub_4082F0(v1, v78);
     v46 = 200 * v1;
-    v30 = 725 * dword_511B58;
+    v30 = 725 * g_SelectedUnitIndex;
     v47 = 2 * v78;
     if ( !v45 )
     {
-      if ( dword_511B58 != -1
+      if ( g_SelectedUnitIndex != -1
         && (*(_BYTE *)(467 * (*(unsigned __int16 *)(v47 + gameData + v46 + 556374) - 0x8000) + gameData + 509678) != 1
          || !sub_4121A0(v30 + gameData + 147174)) )
       {
         Unit_AttackBuilding(
-          dword_511B58,
+          g_SelectedUnitIndex,
           *(unsigned __int16 *)(2 * v78 + gameData + 200 * v1 + 556374) - 0x8000,
           v30,
           200 * v1,
@@ -18267,38 +18313,38 @@ LABEL_26:
     if ( !sub_415D00(v30 + gameData + 147174 + 316, v48) )
     {
       v32 = (const void *)Unit_MoveTrackNear(
-                            dword_511B58,
+                            g_SelectedUnitIndex,
                             *(unsigned __int16 *)(v49 + v46 + gameData + 556374) - 0x8000,
                             v49,
                             v30,
                             v1);
       if ( v32 )
       {
-        qmemcpy((void *)(725 * dword_511B58 + gameData + 147174 + 316), v32, 0x194u);
+        qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v32, 0x194u);
         j__nfree_();
         sub_418700(1);
       }
-      if ( *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) != 1 )
+      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
         return;
 LABEL_138:
-      sub_410330(dword_511B58, 1, v30, (DWORD)v32, a1);
+      sub_410330(g_SelectedUnitIndex, 1, v30, (DWORD)v32, a1);
       sub_406980((DWORD)v32);
       return;
     }
-    if ( !sub_411F60(dword_511B58) )
+    if ( !sub_411F60(g_SelectedUnitIndex) )
       return;
 LABEL_205:
-    sub_441B00(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
-    sub_410330(dword_511B58, 1, v30, v1, a1);
+    sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+    sub_410330(g_SelectedUnitIndex, 1, v30, v1, a1);
     sub_406980(v1);
     return;
   }
   if ( sub_408140(v1, v78) )
   {
-    if ( dword_5202E8 && *(unsigned __int16 *)(v40 + v50 + gameData + 556374) != dword_511B58 )
+    if ( dword_5202E8 && *(unsigned __int16 *)(v40 + v50 + gameData + 556374) != g_SelectedUnitIndex )
     {
       Render_Begin((int)&dword_544CD8, 0, v28);
-      sub_422BE0(dword_511B58, *(unsigned __int16 *)(v40 + v58 + gameData + 556374), 0, v1, a1);
+      sub_422BE0(g_SelectedUnitIndex, *(unsigned __int16 *)(v40 + v58 + gameData + 556374), 0, v1, a1);
       dword_5202E8 = 0;
       sub_40A360(v59);
       sub_406980(v1);
@@ -18308,65 +18354,65 @@ LABEL_205:
     else
     {
       v51 = gameData;
-      v52 = dword_511B58;
-      if ( *(unsigned __int16 *)(gameData + 200 * v1 + 2 * v78 + 556374) == dword_511B58
-        && (v52 = 145 * dword_511B58, *(_DWORD *)(gameData + 725 * dword_511B58 + 147490)) )
+      v52 = g_SelectedUnitIndex;
+      if ( *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == g_SelectedUnitIndex
+        && (v52 = 145 * g_SelectedUnitIndex, *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490)) )
       {
         Render_Begin((int)&dword_544CD8, 0, v28);
-        if ( sub_411F60(dword_511B58) )
+        if ( sub_411F60(g_SelectedUnitIndex) )
         {
-          v61 = 725 * dword_511B58;
-          sub_441B00(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
-          sub_410330(dword_511B58, v62, v51, v61, a1);
+          v61 = 725 * g_SelectedUnitIndex;
+          sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          sub_410330(g_SelectedUnitIndex, v62, v51, v61, a1);
           sub_406980(v61);
         }
       }
       else
       {
         v53 = 2 * v78 + gameData + 200 * v1;
-        v54 = dword_511B58;
-        if ( *(unsigned __int16 *)(v53 + 556374) != dword_511B58 )
+        v54 = g_SelectedUnitIndex;
+        if ( *(unsigned __int16 *)(v53 + 556374) != g_SelectedUnitIndex )
         {
-          dword_511B5C = dword_511B58;
-          dword_511B58 = *(unsigned __int16 *)(v53 + 556374);
+          g_LastSelectedUnitIndex = g_SelectedUnitIndex;
+          g_SelectedUnitIndex = *(unsigned __int16 *)(v53 + 556374);
           sub_423B70((void *)v52);
           sub_40A360(v55);
           sub_418700(1);
-          v56 = dword_511B5C;
-          if ( dword_511B5C != -1 )
+          v56 = g_LastSelectedUnitIndex;
+          if ( g_LastSelectedUnitIndex != -1 )
             sub_418A90(
-              *(__int16 *)(gameData + 725 * dword_511B5C + 147174),
-              *(__int16 *)(gameData + 725 * dword_511B5C + 147176));
+              *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147174),
+              *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
           sub_406980(v56);
           Render_LoadResourceSprite(v57, v56);
-          sub_441A30(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
+          sub_441A30(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&dword_544CD8, 0, v54);
         }
       }
     }
     return;
   }
-  if ( dword_511B58 != -1 && sub_408200(v1, v78) )
+  if ( g_SelectedUnitIndex != -1 && sub_408200(v1, v78) )
   {
     Render_Begin((int)&dword_544CD8, 0, v28);
-    Unit_Attack(dword_511B58, *(unsigned __int16 *)(v40 + v67 + gameData + 556374), v27, v1, a1);
+    Unit_Attack(g_SelectedUnitIndex, *(unsigned __int16 *)(v40 + v67 + gameData + 556374), v27, v1, a1);
     return;
   }
-  if ( !sub_4082C0(v1, v78) && dword_511B58 != -1 )
+  if ( !sub_4082C0(v1, v78) && g_SelectedUnitIndex != -1 )
   {
-    if ( !*(_DWORD *)(gameData + 725 * dword_511B58 + 147490)
-      || (v68 = *(_DWORD *)(725 * dword_511B58 + gameData + 147174 + 320), (unsigned __int8)v68 != v1)
+    if ( !*(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490)
+      || (v68 = *(_DWORD *)(725 * g_SelectedUnitIndex + gameData + 147174 + 320), (unsigned __int8)v68 != v1)
       || (LOBYTE(v30) = v78, BYTE1(v68) != v78) )
     {
-      v63 = *(__int16 *)(gameData + 725 * dword_511B58 + 147176);
+      v63 = *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176);
       v64 = (const void *)Unit_MoveTrack(
-                            dword_511B58,
-                            *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
+                            g_SelectedUnitIndex,
+                            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
                             v1,
                             v63,
                             v1,
                             v78);
-      v65 = 725 * dword_511B58;
+      v65 = 725 * g_SelectedUnitIndex;
       if ( v64 )
       {
         v66 = v65 + gameData + 147174;
@@ -18378,18 +18424,18 @@ LABEL_205:
       {
         *(_DWORD *)(gameData + v65 + 147490) = 0;
       }
-      if ( *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) == 1 )
+      if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) == 1 )
       {
         if ( sub_423AC0() )
         {
-          *(_DWORD *)(gameData + 725 * dword_511B58 + 147490) = 0;
+          *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) = 0;
           sub_418700(1);
         }
         else
         {
-          if ( sub_411F60(dword_511B58) )
-            sub_441B00(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
-          sub_410330(dword_511B58, 1, v63, v65, a1);
+          if ( sub_411F60(g_SelectedUnitIndex) )
+            sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+          sub_410330(g_SelectedUnitIndex, 1, v63, v65, a1);
           sub_406980(v65);
           sub_418700(1);
         }
@@ -18401,7 +18447,7 @@ LABEL_205:
       }
       return;
     }
-    if ( !sub_411F60(dword_511B58) )
+    if ( !sub_411F60(g_SelectedUnitIndex) )
       return;
     goto LABEL_205;
   }
@@ -18432,8 +18478,8 @@ LABEL_205:
 // 4099A8: variable 'v62' is possibly undefined
 // 409B51: variable 'v67' is possibly undefined
 // 511130: using guessed type char byte_511130;
-// 511B58: using guessed type int dword_511B58;
-// 511B5C: using guessed type int dword_511B5C;
+// 511B58: using guessed type int g_SelectedUnitIndex;
+// 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 511B68: using guessed type char *off_511B68[21];
 // 511B74: using guessed type char *off_511B74[18];
 // 511B80: using guessed type char *off_511B80[15];
@@ -18527,7 +18573,7 @@ int __usercall sub_409D80@<eax>(int a1@<eax>, DWORD a2@<ebp>)
   void *v3; // ecx
   void *v4; // ecx
 
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_2);
     return Render_Begin((int)dword_544CD8, 0);
@@ -18535,8 +18581,8 @@ int __usercall sub_409D80@<eax>(int a1@<eax>, DWORD a2@<ebp>)
   else
   {
     sub_4425E0(*(char **)(a1 + 49));
-    dword_511B5C = dword_511B58;
-    dword_511B58 = (int)v3;
+    g_LastSelectedUnitIndex = g_SelectedUnitIndex;
+    g_SelectedUnitIndex = (int)v3;
     Render_LoadResourceSprite(v3, a2);
     sub_40A360(v4);
     dword_526A34 = (int)&unk_5196A0;
@@ -18545,8 +18591,8 @@ int __usercall sub_409D80@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 }
 // 409DA8: variable 'v3' is possibly undefined
 // 409DB3: variable 'v4' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
-// 511B5C: using guessed type int dword_511B5C;
+// 511B58: using guessed type int g_SelectedUnitIndex;
+// 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 526A34: using guessed type int dword_526A34;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -18563,16 +18609,16 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   void *v11; // ecx
 
   sub_419E60(a1, a2);
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
-    if ( dword_511B5C == -1 )
+    if ( g_LastSelectedUnitIndex == -1 )
       v4 = 0;
     else
-      v4 = dword_511B5C;
+      v4 = g_LastSelectedUnitIndex;
   }
   else
   {
-    v4 = dword_511B58 + 1;
+    v4 = g_SelectedUnitIndex + 1;
   }
   v5 = v4 % 500;
   v6 = 0;
@@ -18595,12 +18641,12 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
   while ( v7 < 500 && !v6 );
   if ( v6 )
   {
-    dword_511B5C = dword_511B58;
-    dword_511B58 = v5;
+    g_LastSelectedUnitIndex = g_SelectedUnitIndex;
+    g_SelectedUnitIndex = v5;
     sub_423B70((void *)v7);
     sub_40A360(v9);
     sub_40FAD0(v10);
-    sub_441A30(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
+    sub_441A30(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_418700(1);
     sub_406980(a3);
     Render_LoadResourceSprite(v11, a3);
@@ -18611,8 +18657,8 @@ void __usercall sub_409DF0(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>)
 // 409E9F: variable 'v9' is possibly undefined
 // 409EA6: variable 'v10' is possibly undefined
 // 409EEC: variable 'v11' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
-// 511B5C: using guessed type int dword_511B5C;
+// 511B58: using guessed type int g_SelectedUnitIndex;
+// 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 
@@ -18624,40 +18670,40 @@ int __usercall sub_409F00@<eax>(int a1@<eax>, int a2@<ecx>)
   void *v5; // ecx
 
   sub_419E60(a1, a2);
-  dword_511B54 = (dword_511B54 + 1) % 100;
+  g_UnitSearchCursor = (g_UnitSearchCursor + 1) % 100;
   for ( i = 0; i < 100; ++i )
   {
-    if ( (unsigned int)dword_511B54 <= 0x64 )
+    if ( (unsigned int)g_UnitSearchCursor <= 0x64 )
     {
-      v4 = gameData + 509674 + 467 * dword_511B54;
+      v4 = UNIT_RECORD(g_UnitSearchCursor);
       if ( (unsigned int)*(char *)(v4 + 4) < 4
         && *(__int16 *)(v4 + 16) != -1
-        && *(unsigned __int8 *)(gameData + 467 * dword_511B54 + 509676) == dword_5202EC )
+        && *(unsigned __int8 *)(gameData + 467 * g_UnitSearchCursor + 509676) == dword_5202EC )
       {
         break;
       }
     }
-    dword_511B54 = (dword_511B54 + 1) % 100;
+    g_UnitSearchCursor = (g_UnitSearchCursor + 1) % 100;
   }
   sub_418CE0(
-    *(unsigned __int8 *)(467 * dword_511B54 + gameData + 509674),
-    *(unsigned __int8 *)(467 * dword_511B54 + gameData + 509675));
-  dword_511B58 = -1;
+    *(unsigned __int8 *)(UNIT_RECORD(g_UnitSearchCursor)),
+    *(unsigned __int8 *)(467 * g_UnitSearchCursor + gameData + 509675));
+  g_SelectedUnitIndex = -1;
   sub_40A360(v5);
   return sub_418700(1);
 }
-// 409F38: simplified comparisons for '$dword_511B54.4': <0 || >=65 became >=65u
+// 409F38: simplified comparisons for '$g_UnitSearchCursor.4': <0 || >=65 became >=65u
 // 409F59: simplified comparisons for 'edx.4': <0 || >=4 became >=4u
 // 409FE2: variable 'v5' is possibly undefined
-// 511B54: using guessed type int dword_511B54;
-// 511B58: using guessed type int dword_511B58;
+// 511B54: using guessed type int g_UnitSearchCursor;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 
 //----- (0040A000) --------------------------------------------------------
 int __usercall sub_40A000@<eax>(int a1@<eax>, int a2@<ecx>, unsigned __int16 a3@<bx>, DWORD a4@<ebp>, double a5@<st0>)
 {
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_3);
     return Render_Begin((int)dword_544CD8, 0);
@@ -18665,10 +18711,10 @@ int __usercall sub_40A000@<eax>(int a1@<eax>, int a2@<ecx>, unsigned __int16 a3@
   else
   {
     sub_419E60(a1, a2);
-    return sub_443EB0(dword_511B58, a3, a4, a5);
+    return sub_443EB0(g_SelectedUnitIndex, a3, a4, a5);
   }
 }
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0040A040) --------------------------------------------------------
@@ -18679,7 +18725,7 @@ char *sub_40A040()
   int v3; // ecx
 
   Render_Begin((int)dword_544CD8, 0);
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
     return sub_4425E0(aWrong_4);
   result = sub_4425E0(*(char **)(v1 + 49));
   if ( dword_5202E8 )
@@ -18696,7 +18742,7 @@ char *sub_40A040()
 }
 // 40A059: variable 'v1' is possibly undefined
 // 40A073: variable 'v3' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E8: using guessed type int dword_5202E8;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -18722,7 +18768,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
   int v9; // ecx
   int v10[7]; // [esp+0h] [ebp-1Ch] BYREF
 
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_5);
     return Render_Begin((int)dword_544CD8, 0);
@@ -18730,7 +18776,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
   else
   {
     sub_419E60(a1, a2);
-    if ( sub_411AB0(dword_511B58) )
+    if ( sub_411AB0(g_SelectedUnitIndex) )
     {
       sub_419D80(g_UI_YesNoDims);
       sub_418700(1);
@@ -18750,35 +18796,35 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
             sub_425540(0x40u, a5);
             break;
           case 1:
-            sub_443C20(dword_511B58, dword_520308, 0x40u, (char)dword_544CD8, 0, a5);
+            sub_443C20(g_SelectedUnitIndex, dword_520308, 0x40u, (char)dword_544CD8, 0, a5);
             break;
           case 2:
             BuildBuilding(3, v7, dword_520308, a5);
             break;
           case 3:
-            if ( sub_410010(gameData + 147174 + 725 * dword_511B58) )
+            if ( sub_410010(gameData + 147174 + 725 * g_SelectedUnitIndex) )
             {
-              a3 = dword_511B58;
-              if ( Building_New(0, dword_511B58, a5, (char *)&unk_4EC79A, 0) )
+              a3 = g_SelectedUnitIndex;
+              if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&unk_4EC79A, 0) )
               {
                 sub_40D890(
-                  (void *)*(__int16 *)(725 * dword_511B58 + gameData + 147174),
-                  *(__int16 *)(725 * dword_511B58 + gameData + 147176));
+                  (void *)*(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
+                  *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
                 sub_4426C0(aStruktur, 64);
               }
             }
             break;
           case 4:
-            if ( !sub_4121A0(725 * dword_511B58 + gameData + 147174) )
+            if ( !sub_4121A0(725 * g_SelectedUnitIndex + gameData + 147174) )
             {
-              a3 = dword_511B58;
-              if ( Building_New(1, dword_511B58, a5, (char *)&unk_4EC7A4, 0) )
+              a3 = g_SelectedUnitIndex;
+              if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&unk_4EC7A4, 0) )
                 sub_4426C0(aStruktur_0, 64);
             }
             break;
           case 5:
-            a3 = dword_511B58;
-            if ( Building_New(2, dword_511B58, a5, (char *)&unk_4EC7AE, 0) )
+            a3 = g_SelectedUnitIndex;
+            if ( Building_New(2, g_SelectedUnitIndex, a5, (char *)&unk_4EC7AE, 0) )
               sub_4426C0(aStruktur_1, 64);
             break;
           default:
@@ -18824,7 +18870,7 @@ LABEL_13:
 // 40A24E: variable 'v7' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 511BC0: using guessed type int g_UI_YesNoDims[3];
 // 511D34: using guessed type char *g_Text_NoBuilder[3];
 // 511D40: using guessed type _DWORD dword_511D40[2];
@@ -18840,7 +18886,7 @@ int __thiscall sub_40A360(void *this)
   int v2; // ecx
   int v3; // ecx
 
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
     dword_511D48 = 1;
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
@@ -18868,7 +18914,7 @@ LABEL_4:
 // 40A3B5: variable 'v2' is possibly undefined
 // 40A3C4: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 511D48: using guessed type int dword_511D48;
 // 511DE7: using guessed type int dword_511DE7;
 // 5202E0: using guessed type int dword_5202E0;
@@ -18925,18 +18971,18 @@ void __usercall sub_40A490(DWORD a1@<ebp>)
   void *v1; // ecx
 
   v1 = (void *)gameData;
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
   {
-    if ( dword_511B58 == -1 || *(__int16 *)(gameData + 725 * dword_511B58 + 147180) == -1 )
+    if ( g_SelectedUnitIndex == -1 || *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180) == -1 )
     {
-      dword_511B58 = -1;
+      g_SelectedUnitIndex = -1;
       sub_40A360((void *)gameData);
     }
     Render_LoadResourceSprite(v1, a1);
   }
 }
 // 40A4ED: variable 'v1' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 
@@ -18945,7 +18991,7 @@ void __usercall sub_40A500(void *a1@<ecx>, DWORD a2@<ebp>)
 {
   int v2; // ecx
 
-  if ( dword_511B58 == -1 )
+  if ( g_SelectedUnitIndex == -1 )
   {
     if ( dword_514194 == -1 )
       return;
@@ -18953,20 +18999,20 @@ LABEL_4:
     sub_423B40(a1);
     return;
   }
-  if ( Unit_GetSquadCount(gameData + 147174 + 725 * dword_511B58) == 1 && dword_514194 != -1 )
+  if ( Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) == 1 && dword_514194 != -1 )
     goto LABEL_4;
-  if ( Unit_GetSquadCount(725 * dword_511B58 + gameData + 147174) > 1 && dword_514194 == -1 )
+  if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && dword_514194 == -1 )
   {
     sub_423B00(v2, a2);
   }
-  else if ( dword_514194 != dword_511B58 && Unit_GetSquadCount(gameData + 147174 + 725 * dword_511B58) > 1 )
+  else if ( dword_514194 != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
   {
     sub_423B90(a2);
   }
 }
 // 40A51A: variable 'a1' is possibly undefined
 // 40A5EE: variable 'v2' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 // 5202E4: using guessed type int gameData;
 
@@ -19007,7 +19053,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
     0,
     0,
     0);
-  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(gameData + 1423 * dword_5202EC + 140055) + 5);
+  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140055) + 5);
   v4 = g_RenderDevice;
   v5 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v5 + 52))(
@@ -19021,7 +19067,7 @@ void *__usercall sub_40A600@<eax>(int a1@<eax>)
     0,
     0);
   Render_ReleaseSurface(7, v5);
-  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, 1423 * dword_5202EC + gameData + 140024 + 4);
+  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, PLAYER_DATA(dword_5202EC) + 140024 + 4);
   if ( *(_DWORD *)(gameData + 147155) )
   {
     sub_40BB60(3, 76, v5);
@@ -19161,21 +19207,21 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
 
   log(a1, a2, a3, (int)aNextPlayer);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140039) = *(_DWORD *)(gameData + 140008);
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140043) = *(_DWORD *)(gameData + 140012);
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140039) = *(_DWORD *)(gameData + 140008);
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140043) = *(_DWORD *)(gameData + 140012);
   v5 = dword_5202EC;
   do
     dword_5202EC = (dword_5202EC + 1) % 5;
-  while ( !*(_DWORD *)(1423 * dword_5202EC + gameData + 140024) );
+  while ( !*(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140024) );
   *(_DWORD *)(gameData + 147139) = dword_5202EC;
   log(v5, 5, a3, (int)aPlayerD);
   v7 = (unsigned __int8 *)dword_5202EC;
-  v8 = *(_DWORD *)(1423 * dword_5202EC + gameData + 140051);
+  v8 = PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC);
   if ( v8 )
     *(_DWORD *)(gameData + 147143) = dword_5202EC;
   if ( v6 > dword_5202EC )
   {
-    ++*(_WORD *)(gameData + 140022);
+    ++GAME_TURN_COUNTER;
     log(v6, (char)v7, a3, (int)aNextTurnD);
     Map_AutoUpgradeVillages();
     Port_NewTurn(a3);
@@ -19191,25 +19237,25 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
   *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
   Render_Pump();
-  if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
   {
     UI_LoadTurnBannerGfx((char)v7, a3);
-    dword_511B58 = -1;
+    g_SelectedUnitIndex = -1;
     Locale_DrawInteger();
     sub_40AD40(a3);
   }
-  dword_511B58 = -1;
-  dword_511B5C = -1;
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  g_SelectedUnitIndex = -1;
+  g_LastSelectedUnitIndex = -1;
+  if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
     sub_40A360(v13);
   Render_LoadResourceSprite(v13, 0xFFFFFFFF);
   sub_418700(1);
-  if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+  if ( !PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
   {
     sub_40A600(1);
     sub_422AC0();
   }
-  if ( !*(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( !PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
   {
     v7 = *(unsigned __int8 **)(gameData + 140017);
     if ( v7 == (unsigned __int8 *)-1 || v7 == (unsigned __int8 *)19 || v7 == (unsigned __int8 *)9 )
@@ -19240,8 +19286,8 @@ int __usercall nextPlayer@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, doub
 // 40ACF0: variable 'v19' is possibly undefined
 // 40AD0C: variable 'v20' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
-// 511B5C: using guessed type int dword_511B5C;
+// 511B58: using guessed type int g_SelectedUnitIndex;
+// 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
@@ -19257,7 +19303,7 @@ int *__usercall sub_40AD40@<eax>(DWORD a1@<ebp>)
   sub_404D90((int *)&unk_51D4C0);
   Render_DrawSprite();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
     sub_419D80(dword_511D40);
   else
     sub_40A600(0);
@@ -19327,7 +19373,7 @@ int __usercall __spoils<ecx> sub_40AE80@<eax>(int a1@<ebx>)
   if ( !dword_520310 )
   {
     result = 1423 * dword_5202EC;
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( !PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       return sub_40ADF0(a1);
   }
   return result;
@@ -19537,41 +19583,41 @@ LABEL_24:
       }
       if ( Input_IsKeyPressed(56) )
       {
-        if ( Input_IsKeyPressed(205) && dword_511B58 != -1 )
+        if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
         {
-          v15 = 725 * dword_511B58;
+          v15 = 725 * g_SelectedUnitIndex;
           v16 = gameData;
-          v17 = *(_BYTE *)(725 * dword_511B58 + gameData + 147179) + 1;
+          v17 = *(_BYTE *)(725 * g_SelectedUnitIndex + gameData + 147179) + 1;
           *(_BYTE *)(v15 + gameData + 147179) = v17;
           *(_BYTE *)(v15 + v16 + 147179) = v17 & 7;
           a2 = (int (__usercall *)@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>))dword_544CD8;
-          sub_411CB0(dword_511B58);
+          sub_411CB0(g_SelectedUnitIndex);
           while ( Input_IsKeyPressed(v18) )
             DD_Pump((int)dword_544CD8, (char)dword_544CD8);
         }
         if ( Input_IsKeyPressed(203) )
         {
-          a2 = (int (__usercall *)@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>))dword_511B58;
-          if ( dword_511B58 != -1 )
+          a2 = (int (__usercall *)@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>))g_SelectedUnitIndex;
+          if ( g_SelectedUnitIndex != -1 )
           {
-            v19 = 725 * dword_511B58;
+            v19 = 725 * g_SelectedUnitIndex;
             v20 = gameData;
-            v21 = *(_BYTE *)(725 * dword_511B58 + gameData + 147179) - 1;
+            v21 = *(_BYTE *)(725 * g_SelectedUnitIndex + gameData + 147179) - 1;
             *(_BYTE *)(v19 + gameData + 147179) = v21;
             *(_BYTE *)(v19 + v20 + 147179) = v21 & 7;
             a2 = (int (__usercall *)@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>))dword_544CD8;
-            sub_411CB0(dword_511B58);
+            sub_411CB0(g_SelectedUnitIndex);
             while ( Input_IsKeyPressed(v22) )
               DD_Pump((int)dword_544CD8, (char)dword_544CD8);
           }
         }
         if ( Input_IsKeyPressed(200) )
         {
-          if ( dword_511B58 != -1 )
+          if ( g_SelectedUnitIndex != -1 )
           {
-            v23 = 725 * dword_511B58 + gameData;
+            v23 = 725 * g_SelectedUnitIndex + gameData;
             v24 = Unit_MoveTrack(
-                    dword_511B58,
+                    g_SelectedUnitIndex,
                     *(__int16 *)(v23 + 147174),
                     *(__int16 *)(v23 + 147174) + Map_NeighborDX[2 * *(unsigned __int8 *)(v23 + 147179)],
                     *(__int16 *)(v23 + 147176),
@@ -19580,13 +19626,13 @@ LABEL_24:
             a2 = (int (__usercall *)@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>))v24;
             if ( v24 )
             {
-              v25 = sub_410010(gameData + 147174 + 725 * dword_511B58);
+              v25 = sub_410010(gameData + 147174 + 725 * g_SelectedUnitIndex);
               if ( v25 >= v26 )
               {
-                qmemcpy((void *)(725 * dword_511B58 + gameData + 147174 + 316), v24, 0x194u);
-                if ( sub_411F60(dword_511B58) )
-                  sub_441B00(*(__int16 *)(gameData + 725 * dword_511B58 + 147180));
-                sub_410330(dword_511B58, 1, (char)v24, 0, a4);
+                qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v24, 0x194u);
+                if ( sub_411F60(g_SelectedUnitIndex) )
+                  sub_441B00(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
+                sub_410330(g_SelectedUnitIndex, 1, (char)v24, 0, a4);
               }
               j__nfree_();
               sub_418700(1);
@@ -19623,7 +19669,7 @@ LABEL_24:
       sub_4623C0(v27, aKon_por1);
       return;
     }
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140024) )
+    if ( !*(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140024) )
       dword_5202FC = 1;
     if ( *(_DWORD *)(gameData + 140017) == -1 )
     {
@@ -19656,7 +19702,7 @@ LABEL_24:
 // 40B370: variable 'v22' is possibly undefined
 // 40B421: variable 'v26' is possibly undefined
 // 40B4E3: variable 'v27' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
 // 5199D8: using guessed type int (*g_RenderHook)();
@@ -19779,7 +19825,7 @@ LABEL_12:
 LABEL_13:
   dword_545150 = (int)&unk_5196A0;
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  dword_511B58 = -1;
+  g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   sub_419790(8);
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
@@ -19797,7 +19843,7 @@ LABEL_13:
   log(v16, 20, a3, (int)aStart);
   LogAllUnits(v17, 20, a3);
   LogAllBuildings(v18, 20, a3);
-  if ( *(_DWORD *)(gameData + 140017) != -1 && *(_WORD *)(gameData + 140022) == 1 )
+  if ( *(_DWORD *)(gameData + 140017) != -1 && GAME_TURN_COUNTER == 1 )
     UI_ShowMissionStatusPanel(v19, a3);
   dword_520300 = 0;
   dword_520304 = 0;
@@ -19811,11 +19857,11 @@ LABEL_13:
   while ( 1 )
   {
     UI_SetCurrentPlayer(dword_5202EC, v22, (char)v21, a3);
-    if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+    if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
     {
       sub_40B0A0(v23, v21, a3, a5);
     }
-    else if ( *(_WORD *)(gameData + 140022) )
+    else if ( GAME_TURN_COUNTER )
     {
       sub_460D80((int)dword_544CD8, (int)&dword_519808);
       log(v28, (char)v21, a3, (int)aComputerplay);
@@ -19892,7 +19938,7 @@ LABEL_13:
 // 40BA6E: variable 'v41' is possibly undefined
 // 40BAC5: variable 'v44' is possibly undefined
 // 4476A0: using guessed type int __thiscall nullsub_3(_DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B64: using guessed type int dword_511B64;
 // 519808: using guessed type int dword_519808;
 // 5199D8: using guessed type int (*g_RenderHook)();
@@ -21087,18 +21133,18 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
         v10 = -49;
       }
       if ( (dword_511FF0 & 2) != 0
-        && *(unsigned __int16 *)(gameData + 200 * v2 + 2 * a2 + 556374) <= 0x1F4u
+        && *(unsigned __int16 *)(TILE_INDEX(v2, a2)) <= 0x1F4u
         && (unsigned int)*(__int16 *)(gameData
-                                    + 725 * *(unsigned __int16 *)(gameData + 200 * v2 + 2 * a2 + 556374)
+                                    + 725 * *(unsigned __int16 *)(TILE_INDEX(v2, a2))
                                     + 147180) <= 0x28 )
       {
-        v5 = gameData + 725 * *(unsigned __int16 *)(gameData + 200 * v2 + 2 * a2 + 556374);
+        v5 = gameData + 725 * *(unsigned __int16 *)(TILE_INDEX(v2, a2));
         if ( !*(_BYTE *)(v5 + 147894) )
           v10 = byte_511FF8[*(unsigned __int8 *)(v5 + 147178)];
       }
       if ( (dword_511FF0 & 4) != 0 )
       {
-        v6 = *(unsigned __int16 *)(gameData + 200 * v2 + 2 * a2 + 556374);
+        v6 = *(unsigned __int16 *)(TILE_INDEX(v2, a2));
         if ( v6 >= 0x8000 && v6 != 0xFFFF )
           v10 = byte_511FF8[*(unsigned __int8 *)(gameData + 467 * (v6 - 0x8000) + 509676)];
       }
@@ -21202,7 +21248,7 @@ int sub_40DC10()
 //----- (0040DD30) --------------------------------------------------------
 int sub_40DD30()
 {
-  *(_BYTE *)(gameData + 1423 * dword_5202EC + 140047) ^= 1u;
+  *(_BYTE *)(PLAYER_DATA(dword_5202EC) + 140047) ^= 1u;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -21230,7 +21276,7 @@ BOOL sub_40DD60()
 //----- (0040DDE0) --------------------------------------------------------
 int sub_40DDE0()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140047) = 1;
   dword_511FF0 = 7;
   Locale_DrawInteger();
   return sub_418700(1);
@@ -21242,7 +21288,7 @@ int sub_40DDE0()
 //----- (0040DE20) --------------------------------------------------------
 int sub_40DE20()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140047) = 1;
   dword_511FF0 = 2;
   Locale_DrawInteger();
   return sub_418700(1);
@@ -21254,7 +21300,7 @@ int sub_40DE20()
 //----- (0040DE60) --------------------------------------------------------
 int sub_40DE60()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 1;
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140047) = 1;
   dword_511FF0 = 4;
   Locale_DrawInteger();
   return sub_418700(1);
@@ -21266,7 +21312,7 @@ int sub_40DE60()
 //----- (0040DEA0) --------------------------------------------------------
 int sub_40DEA0()
 {
-  *(_DWORD *)(gameData + 1423 * dword_5202EC + 140047) = 0;
+  *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140047) = 0;
   return sub_418700(1);
 }
 // 5202E4: using guessed type int gameData;
@@ -22044,7 +22090,7 @@ signed int __usercall sub_40F0C0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3
 // 40F1CA: variable 'v10' is possibly undefined
 
 //----- (0040F3C0) --------------------------------------------------------
-signed int __usercall sub_40F3C0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_IsIndexOnMap@<eax>(int a1@<eax>)
 {
   int v2; // edi
   int v3; // edx
@@ -22074,7 +22120,7 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F440) --------------------------------------------------------
-int __usercall sub_40F440@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>)
+int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>)
 {
   char v3; // dl
   char v4; // bh
@@ -22114,29 +22160,17 @@ int __usercall sub_40F440@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>)
 // 51257A: using guessed type int dword_51257A[];
 
 //----- (0040F4D0) --------------------------------------------------------
-char __usercall sub_40F4D0@<al>(int a1@<eax>, int a2@<edx>, char a3@<bl>)
+char __usercall UnitStack_ResetRecord@<al>(int stackPtr@<eax>, int unitType@<edx>, char ownerIndex@<bl>)
 {
-  int v3; // ecx
-  int v4; // edx
-  _WORD *v5; // eax
-  char result; // al
+  int slotIndex; // edx
 
-  sub_40F440(a1 + 6, a2, a3);
-  v4 = 1;
-  v5 = (_WORD *)(v3 + 37);
-  do
-  {
-    ++v4;
-    *v5 = -1;
-    v5 = (_WORD *)((char *)v5 + 31);
-  }
-  while ( v4 < 10 );
-  result = a3;
-  *(_DWORD *)(v3 + 316) = 0;
-  *(_BYTE *)(v3 + 4) = a3;
-  return result;
+  UnitSlot_InitFromType(stackPtr + UNIT_STACK_SLOT_BASE_OFFSET, unitType, ownerIndex);
+  for ( slotIndex = 1; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
+    *(_WORD *)UNIT_STACK_SLOT(stackPtr, slotIndex) = -1;
+  *(_DWORD *)UNIT_STACK_PATH_BUFFER(stackPtr) = 0;
+  UNIT_STACK_OWNER_INDEX(stackPtr) = ownerIndex;
+  return ownerIndex;
 }
-// 40F4E6: variable 'v3' is possibly undefined
 
 //----- (0040F510) --------------------------------------------------------
 signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, int a5)
@@ -22168,21 +22202,21 @@ signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<e
   v11 = v7 - 1;
   if ( v8 )
   {
-    if ( sub_40F3C0(v11) )
+    if ( UnitStack_IsIndexOnMap(v11) )
       log(v12, a4, a1, (int)aUnit_createErr);
-    v13 = 725 * v11 + gameData + 147174;
+    v13 = (int)UNIT_STACK(v11);
     v14 = 200 * a3 + gameData;
     if ( *(unsigned __int16 *)(v14 + 2 * a5 + 556374) == 0xFFFF )
     {
       if ( a1 == -1 || sub_413DD0(a1, a2, a5, a3) )
       {
-        sub_40F4D0(v13, a1, a2);
-        *(_WORD *)v13 = a3;
-        *(_WORD *)(v13 + 2) = a5;
-        *(_BYTE *)(v13 + 5) = a4;
+        UnitStack_ResetRecord(v13, a1, a2);
+        UNIT_STACK_TILE_ROW(v13) = a3;
+        UNIT_STACK_TILE_COLUMN(v13) = a5;
+        UNIT_STACK_FACING(v13) = a4;
         v16 = gameData;
-        *(_WORD *)(gameData + 200 * a3 + 2 * a5 + 556374) = v11;
-        sub_40F900(v11);
+        *(_WORD *)(TILE_INDEX(a3, a5)) = v11;
+        UnitStack_UpdateVision(v11);
         sub_4521D0((__int16 *)v13, v11, v16, a2, a1);
         log(v17, a2, a1, (int)aUnit_createOk0);
         return 1;
@@ -22215,7 +22249,7 @@ signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<e
 //----- (0040F6E0) --------------------------------------------------------
 unsigned int __usercall sub_40F6E0@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_4521D0(a1, *(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374), (int)a1, a2, a3);
+  return sub_4521D0(a1, *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])), (int)a1, a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -22233,7 +22267,7 @@ int __usercall Unit_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, doubl
   log(a1, a2, a3, (int)aUnit_kill0x08x);
   Unit_DebugDumpFormationSizes(v4, a3);
   Rules_RetractArmyFact(v6, v5, (int)v6, a4);
-  *(_WORD *)(200 * *v7 + gameData + 2 * v7[1] + 556374) = -1;
+  *(_WORD *)(TILE_INDEX(*v7, v7[1])) = -1;
   v8 = 1;
   v9 = v7 + 3;
   do
@@ -22254,50 +22288,39 @@ int __usercall Unit_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, doubl
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F7C0) --------------------------------------------------------
-int __usercall sub_40F7C0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>)
+int __usercall UnitStack_KillByIndex@<eax>(int stackIndex@<eax>, char killReason@<bl>, DWORD a3@<ebp>, double a4@<st0>)
 {
-  return Unit_Kill(725 * a1 + gameData + 147174, a2, a3, a4);
+  return Unit_Kill((int)UNIT_STACK(stackIndex), killReason, a3, a4);
 }
-// 5202E4: using guessed type int gameData;
 
 //----- (0040F800) --------------------------------------------------------
-__int16 *__usercall sub_40F800@<eax>(__int16 *result@<eax>, double a2@<st0>)
+__int16 *__usercall UnitStack_RemoveFromTile@<eax>(__int16 *stack@<eax>, double a2@<st0>)
 {
-  int v2; // ecx
-  int v3; // edx
-  int v4; // edx
-  __int16 *v5; // ecx
-  __int16 *v6; // ecx
+  int stackPtr; // ecx
+  int row; // edx
+  int column; // edx
 
-  v2 = (int)result;
-  v3 = *result;
-  if ( v3 >= 0 )
+  stackPtr = (int)stack;
+  row = UNIT_STACK_TILE_ROW(stackPtr);
+  if ( row >= 0 && row <= *(_DWORD *)(gameData + 140000) - 1 )
   {
-    result = (__int16 *)gameData;
-    if ( v3 <= *(_DWORD *)(gameData + 140000) - 1 )
+    column = UNIT_STACK_TILE_COLUMN(stackPtr);
+    if ( column >= 0 && column <= *(_DWORD *)(gameData + 140004) - 1 )
     {
-      v4 = *(__int16 *)(v2 + 2);
-      if ( v4 >= 0 )
-      {
-        result = (__int16 *)(*(_DWORD *)(gameData + 140004) - 1);
-        if ( v4 <= (int)result )
-        {
-          Rules_RetractArmyFact((_DWORD *)v2, v4, v2, a2);
-          *(_WORD *)(gameData + 200 * *v5 + 2 * v5[1] + 556374) = -1;
-          sub_40D890((void *)*v5, v5[1]);
-          return (__int16 *)sub_40D6D0(*v6, v6[1], v6[1], *v6);
-        }
-      }
+      Rules_RetractArmyFact((_DWORD *)stackPtr, column, stackPtr, a2);
+      *(_WORD *)(TILE_INDEX(row, column)) = -1;
+      sub_40D890((void *)row, column);
+      return (__int16 *)sub_40D6D0(row, column, column, row);
     }
   }
-  return result;
+  return stack;
 }
 // 40F83A: variable 'v5' is possibly undefined
 // 40F87B: variable 'v6' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F890) --------------------------------------------------------
-__int16 *__usercall sub_40F890@<eax>(__int16 *result@<eax>, double a2@<st0>)
+__int16 *__usercall UnitStack_UnlinkIfEmpty@<eax>(__int16 *result@<eax>, double a2@<st0>)
 {
   if ( result[3] == -1 )
     return Rules_UnlinkArmyFact(result, a2);
@@ -22305,7 +22328,7 @@ __int16 *__usercall sub_40F890@<eax>(__int16 *result@<eax>, double a2@<st0>)
 }
 
 //----- (0040F8B0) --------------------------------------------------------
-int __usercall sub_40F8B0@<eax>(int a1@<eax>)
+int __usercall UnitStack_GetVisionRadius@<eax>(int a1@<eax>)
 {
   int v1; // edx
   __int16 *v2; // eax
@@ -22331,105 +22354,90 @@ int __usercall sub_40F8B0@<eax>(int a1@<eax>)
 }
 
 //----- (0040F900) --------------------------------------------------------
-signed int __usercall __spoils<> sub_40F900@<eax>(int a1@<eax>)
+signed int __usercall __spoils<> UnitStack_UpdateVision@<eax>(int stackIndex@<eax>)
 {
-  __int16 *v1; // edi
-  int v3; // eax
-  signed int v4; // ebp
-  int i; // esi
-  int j; // ecx
-  int v7; // ebx
-  signed int v8; // ecx
-  int v9; // [esp+0h] [ebp-18h]
-  int v10; // [esp+4h] [ebp-14h]
+  int stackPtr; // esi
+  int originRow; // edi
+  int originColumn; // ebx
+  int radius; // ebp
+  int previousPlayer; // ecx
+  int updated; // edx
+  int row; // ecx
+  int column; // eax
 
-  v1 = (__int16 *)(gameData + 147174 + 725 * a1);
-  if ( v1[3] == -1 )
+  stackPtr = (int)UNIT_STACK(stackIndex);
+  if ( *(__int16 *)UNIT_STACK_SLOT(stackPtr, 0) == -1 )
     return 0;
-  v3 = sub_40F8B0((int)v1);
-  v9 = dword_5202EC;
-  dword_5202EC = *((unsigned __int8 *)v1 + 4);
-  v4 = v3;
-  v10 = 0;
-  for ( i = *v1 - v3; i < v4 + *v1; ++i )
+  originRow = UNIT_STACK_TILE_ROW(stackPtr);
+  originColumn = UNIT_STACK_TILE_COLUMN(stackPtr);
+  radius = UnitStack_GetVisionRadius(stackPtr);
+  previousPlayer = dword_5202EC;
+  dword_5202EC = UNIT_STACK_OWNER_INDEX(stackPtr);
+  updated = 0;
+  for ( row = originRow - radius; row < originRow + radius; ++row )
   {
-    for ( j = v1[1] - v4; ; j = v8 + 1 )
+    for ( column = originColumn - radius; column < originColumn + radius; ++column )
     {
-      v7 = v1[1];
-      if ( j >= v7 + v4 )
-        break;
-      if ( sub_415E40((j - v7) * (j - v7) + (i - *v1) * (i - *v1)) <= v4 )
-      {
-        if ( sub_40EDE0(i, v8, dword_5202EC) )
-          v10 = 1;
-      }
+      int distance = (column - originColumn) * (column - originColumn)
+                   + (row - originRow) * (row - originRow);
+      if ( sub_415E40(distance) <= radius && sub_40EDE0(row, column, dword_5202EC) )
+        updated = 1;
     }
   }
-  dword_5202EC = v9;
-  return v10;
+  dword_5202EC = previousPlayer;
+  return updated;
 }
-// 40F9B6: variable 'v8' is possibly undefined
-// 5202E4: using guessed type int gameData;
-// 5202EC: using guessed type int dword_5202EC;
 
 //----- (0040F9F0) --------------------------------------------------------
-signed int __usercall sub_40F9F0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasReadyUnits@<eax>(int stackPtr@<eax>)
 {
-  __int16 *v1; // eax
-  int v2; // edx
+  char *slotPtr; // edx
+  int slotIndex; // ecx
 
-  v1 = (__int16 *)(a1 + 6);
-  v2 = 0;
-  while ( 1 )
+  slotPtr = (char *)UNIT_STACK_SLOT(stackPtr, 0);
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *v1 == -1 )
+    if ( *(_WORD *)slotPtr == -1 )
       return 0;
-    if ( (*((_BYTE *)v1 + 13) & 1) != 0 )
-      break;
-    ++v2;
-    v1 = (__int16 *)((char *)v1 + 31);
-    if ( v2 >= 10 )
-      return 0;
+    if ( (slotPtr[13] & 1) != 0 )
+      return 1;
+    slotPtr += UNIT_STACK_SLOT_STRIDE;
   }
-  return 1;
+  return 0;
 }
 
 //----- (0040FA20) --------------------------------------------------------
-__int16 *__usercall sub_40FA20@<eax>(int a1@<eax>)
+__int16 *__usercall UnitStack_ClearReadyFlags@<eax>(int stackPtr@<eax>)
 {
-  __int16 *result; // eax
-  int i; // edx
-  char v3; // bl
+  char *slotPtr; // edx
+  int slotIndex; // ecx
 
-  result = (__int16 *)(a1 + 6);
-  for ( i = 0; i < 10; ++i )
+  slotPtr = (char *)UNIT_STACK_SLOT(stackPtr, 0);
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *result == -1 )
+    if ( *(_WORD *)slotPtr == -1 )
       break;
-    v3 = *((_BYTE *)result + 13);
-    result = (__int16 *)((char *)result + 31);
-    *((_BYTE *)result - 18) = v3 & 0xFE;
+    slotPtr[13] &= ~1u;
+    slotPtr += UNIT_STACK_SLOT_STRIDE;
   }
-  return result;
+  return (__int16 *)stackPtr;
 }
 
 //----- (0040FA50) --------------------------------------------------------
-__int16 *__usercall sub_40FA50@<eax>(int a1@<eax>)
+__int16 *__usercall UnitStack_SetReadyFlags@<eax>(int stackPtr@<eax>)
 {
-  __int16 *result; // eax
-  int i; // edx
-  char v3; // bl
+  char *slotPtr; // edx
+  int slotIndex; // ecx
 
-  result = (__int16 *)(a1 + 6);
-  for ( i = 0; i < 10; ++i )
+  slotPtr = (char *)UNIT_STACK_SLOT(stackPtr, 0);
+  for ( slotIndex = 0; slotIndex < UNIT_STACK_SLOT_COUNT; ++slotIndex )
   {
-    if ( *result == -1 )
+    if ( *(_WORD *)slotPtr == -1 )
       break;
-    v3 = *((_BYTE *)result + 13);
-    result = (__int16 *)((char *)result + 31);
-    *((_BYTE *)result - 18) = v3 | 1;
+    slotPtr[13] |= 1u;
+    slotPtr += UNIT_STACK_SLOT_STRIDE;
   }
-  return result;
+  return (__int16 *)stackPtr;
 }
 
 //----- (0040FA80) --------------------------------------------------------
@@ -23000,9 +23008,9 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
         v23 = sub_410010((int)v7);
         if ( v23 - v24 < 0 )
           goto LABEL_21;
-        v25 = *(unsigned __int16 *)(gameData + 200 * (unsigned __int8)v105 + 2 * BYTE1(v105) + 556374) - 0x8000;
+        v25 = *(unsigned __int16 *)(TILE_INDEX((unsigned __int8)v105, BYTE1(v105))) - 0x8000;
         if ( v25 > 0x64
-          || (v26 = gameData + 509674 + 467 * v25, (unsigned int)*(char *)(v26 + 4) >= 4)
+          || (v26 = UNIT_RECORD(v25), (unsigned int)*(char *)(v26 + 4) >= 4)
           || *(__int16 *)(v26 + 16) == -1 )
         {
           sub_410170((int)v7, BYTE2(v105) - v100);
@@ -23031,7 +23039,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
         if ( v32 <= 0x64 )
         {
           v99 = 467 * v32;
-          v33 = 467 * v32 + gameData + 509674;
+          v33 = UNIT_RECORD(v32);
           if ( (unsigned int)*(char *)(v33 + 4) < 4 && *(__int16 *)(v33 + 16) != -1 )
             break;
         }
@@ -23060,11 +23068,11 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
               v60 = v95;
               *v95 = v59 + 1;
               v60[v59 + 1] = v105;
-              sub_40FA20((int)v7);
+              UnitStack_ClearReadyFlags((int)v7);
               goto LABEL_21;
             }
           }
-          sub_40FA20((int)v7);
+          UnitStack_ClearReadyFlags((int)v7);
           goto LABEL_21;
         }
         *((_BYTE *)v7 + 5) = sub_40FA80(v35 - *v7, v34 - v7[1]);
@@ -23211,7 +23219,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
             if ( v45 <= 0x1F4 && (unsigned int)*(__int16 *)(v44 + gameData + 147180) <= 0x28 )
             {
               v46 = v103;
-              v97 = sub_40F900(v45);
+              v97 = UnitStack_UpdateVision(v45);
               v47 = v46 + 1;
               sub_40D890(v103, v13);
               sub_40D890(v47, v13);
@@ -23265,7 +23273,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
       if ( *(_BYTE *)(v99 + gameData + 509676) != *((_BYTE *)v7 + 4) || *v104 )
       {
         *((_DWORD *)v7 + 79) = 0;
-        sub_40FA20((int)v7);
+        UnitStack_ClearReadyFlags((int)v7);
       }
       else
       {
@@ -23300,7 +23308,7 @@ LABEL_21:
     }
     else
     {
-      sub_40FA20((int)v7);
+      UnitStack_ClearReadyFlags((int)v7);
     }
     if ( dword_523F78 )
       sub_405920(&dword_523F78);
@@ -23770,7 +23778,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
     Rules_LinkArmyFact((__int16 *)v4, v6, v7, a4, v5, 0xFFFFFFFF);
     sub_4115E0((_BYTE *)v4, a4);
     sub_411810((__int16 *)v4, 0xFFFFFFFF, a4);
-    if ( !sub_40F9F0(v4) )
+    if ( !UnitStack_HasReadyUnits(v4) )
       goto LABEL_16;
     v9 = *(unsigned __int16 *)(gameData
                              + 200 * (unsigned __int8)*(_DWORD *)(v4 + 320)
@@ -23780,7 +23788,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
     if ( v9 <= 0x64 )
     {
       v5 = 467 * v9;
-      v10 = 467 * v9 + gameData + 509674;
+      v10 = UNIT_RECORD(v9);
       if ( (unsigned int)*(char *)(v10 + 4) < 4
         && *(__int16 *)(v10 + 16) != -1
         && *(_BYTE *)(v5 + gameData + 509676) != *(_BYTE *)(v4 + 4) )
@@ -23791,7 +23799,7 @@ signed int __usercall Unit_NewTurn@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<e
     if ( *(_DWORD *)(v4 + 316) )
       sub_410330(v14, 0, v5, 0xFFFFFFFF, a4);
     else
-      sub_40FA20(v4);
+      UnitStack_ClearReadyFlags(v4);
 LABEL_16:
     v11 = i + 725;
     v5 = v14 + 1;
@@ -23799,7 +23807,7 @@ LABEL_16:
     if ( v5 >= 500 )
       return LogAllUnits(v11, v5, 0xFFFFFFFF);
   }
-  sub_40FA20(v4);
+  UnitStack_ClearReadyFlags(v4);
   return LogAllUnits(v11, v5, 0xFFFFFFFF);
 }
 // 4119FD: simplified comparisons for 'edx.4': <0 || >=65 became >=65u
@@ -24413,7 +24421,7 @@ __int16 *__usercall sub_412300@<eax>(
     ++v13;
   }
   *(_BYTE *)(a2 + 4) = *((_BYTE *)a1 + 4);
-  sub_40FA20(a2);
+  UnitStack_ClearReadyFlags(a2);
   Unit_CompactSquad(v15, v16, a5);
   if ( v17[3] == -1 )
     return Rules_UnlinkArmyFact(v17, a5);
@@ -24975,12 +24983,12 @@ int __usercall sub_412C30@<eax>(signed int a1@<eax>)
   v2 = 0;
   v3 = 0;
 LABEL_2:
-  v4 = gameData + 509674 + 467 * v3;
+  v4 = UNIT_RECORD(v3);
   if ( (unsigned int)*(char *)(v4 + 4) < 4
     && *(__int16 *)(v4 + 16) != -1
     && *(unsigned __int8 *)(gameData + 467 * v3 + 509676) == a1 )
   {
-    v5 = sub_412C00(gameData + 509674 + 467 * v3, a1);
+    v5 = sub_412C00(UNIT_RECORD(v3), a1);
     v2 = v5 + v6;
   }
   while ( ++v3 < 100 )
@@ -26374,8 +26382,8 @@ signed int __usercall sub_413F50@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<
   signed int result; // eax
   unsigned __int16 *v13; // edi
 
-  v7 = gameData + 200 * a4;
-  v8 = *(unsigned __int16 *)(v7 + 2 * a3 + 556374);
+  v7 = TILE_INDEX(a4;
+  v8 = *(unsigned __int16 *)(v7, a3));
   if ( v8 != 0xFFFF )
   {
     if ( *(unsigned __int16 *)(v7 + 2 * a3 + 556374) > 0x7FFFu
@@ -26431,7 +26439,7 @@ signed int __usercall sub_414150@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<
   int v16; // [esp+44h] [ebp-4h]
 
   v16 = a3;
-  v6 = *(unsigned __int16 *)(gameData + 200 * a2 + 2 * a4 + 556374);
+  v6 = *(unsigned __int16 *)(TILE_INDEX(a2, a4));
   if ( v6 != 0xFFFF )
   {
     if ( v6 > 0x7FFF
@@ -26443,8 +26451,8 @@ signed int __usercall sub_414150@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<
     }
   }
   sub_413920((int)v15, (int)a1);
-  v9 = gameData + 200 * a2;
-  v10 = *(unsigned __int16 *)(v9 + 2 * a4 + 556374);
+  v9 = TILE_INDEX(a2;
+  v10 = *(unsigned __int16 *)(v9, a4));
   if ( v10 != 0xFFFF )
   {
     if ( *(unsigned __int16 *)(v9 + 2 * a4 + 556374) > 0x7FFFu )
@@ -27004,7 +27012,7 @@ int *__userpurge Unit_MoveTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
       v32 = 0;
     }
     v44 = v52;
-    *(_WORD *)(200 * v52 + gameData + 2 * v53 + 556374) = v87;
+    *(_WORD *)(TILE_INDEX(v52, v53)) = v87;
     nfree_(v30);
     v57 = 0;
     nfree_(v45);
@@ -27078,7 +27086,7 @@ _DWORD *__usercall Unit_MoveTrack_1@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ec
   else
   {
 LABEL_11:
-    *(_WORD *)(200 * a2 + gameData + 2 * a4 + 556374) = -1;
+    *(_WORD *)(TILE_INDEX(a2, a4)) = -1;
     sub_40AEB0();
     v25 = v10;
     v11 = *(__int16 *)(gameData + 725 * a1 + 147176);
@@ -27120,7 +27128,7 @@ LABEL_11:
       }
       nfree_(v15);
     }
-    *(_WORD *)(gameData + 200 * a2 + 2 * a4 + 556374) = v25;
+    *(_WORD *)(TILE_INDEX(a2, a4)) = v25;
     Render_LoadResourceSprite_v2();
     return (_DWORD *)v22;
   }
@@ -27173,7 +27181,7 @@ int __usercall Unit_MoveTrackNear@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>
   HIDWORD(v7) = *(unsigned __int8 *)(gameData + v5 + 509674);
   v6 = *(char *)(gameData + v5 + 509678);
   LODWORD(v7) = *(unsigned __int8 *)(gameData + v5 + 509675);
-  *(_WORD *)(200 * HIDWORD(v7) + gameData + 2 * v7 + 556374) = -1;
+  *(_WORD *)(TILE_INDEX(HIDWORD(v7), v7)) = -1;
   if ( v6 == 1 || v6 == 2 )
   {
     v8 = 200 * (HIDWORD(v7) + 1);
@@ -27306,7 +27314,7 @@ int __usercall sub_415970@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a
   HIDWORD(v7) = *(unsigned __int8 *)(gameData + v5 + 509674);
   v6 = *(char *)(gameData + v5 + 509678);
   LODWORD(v7) = *(unsigned __int8 *)(gameData + v5 + 509675);
-  *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556374) = -1;
+  *(_WORD *)(TILE_INDEX(HIDWORD(v7), v7)) = -1;
   if ( v6 == 1 || v6 == 2 )
   {
     v8 = 200 * (HIDWORD(v7) + 1);
@@ -27429,7 +27437,7 @@ BOOL __usercall sub_415D00@<eax>(_DWORD *a1@<eax>, int a2@<edx>)
   BOOL result; // eax
   unsigned __int8 v6; // bh
 
-  v3 = (unsigned __int8 *)(467 * a2 + gameData + 509674);
+  v3 = (unsigned __int8 *)(UNIT_RECORD(a2));
   if ( !*a1 )
     return 0;
   v4 = a1[1];
@@ -28268,11 +28276,11 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
       0);
   }
   v99 = 0;
-  v100 = *(unsigned __int16 *)(gameData + 200 * v3 + 2 * v4 + 556374);
+  v100 = *(unsigned __int16 *)(TILE_INDEX(v3, v4));
   v101 = 0;
   if ( dword_512360 == v100 )
     v101 = dword_523F74;
-  if ( *(unsigned __int16 *)(gameData + 200 * v3 + 2 * v4 + 556374) <= 0x7FFFu
+  if ( *(unsigned __int16 *)(TILE_INDEX(v3, v4)) <= 0x7FFFu
     && (dword_51257A[22 * *(__int16 *)(gameData + 725 * v100 + 147180)] & 1) != 0 )
   {
     v99 = 1;
@@ -28380,7 +28388,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
   }
   if ( v3 > 0 )
   {
-    v18 = *(_WORD *)(gameData + 200 * (v3 - 1) + 2 * v4 + 556374);
+    v18 = *(_WORD *)(TILE_INDEX((v3 - 1), v4));
     v113 = v18;
     if ( v18 >= 0 )
     {
@@ -28466,7 +28474,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     }
     if ( v3 > 0 )
     {
-      v32 = *(unsigned __int16 *)(200 * (v3 - 1) + gameData + 2 * v4 + 556374);
+      v32 = *(unsigned __int16 *)(TILE_INDEX((v3 - 1), v4));
       if ( v32 != 0xFFFF && dword_523F70 > 0 && v32 == dword_512360 )
         sub_415F20(v32, a1, a2, dword_523F74, a3);
     }
@@ -28502,8 +28510,8 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
         sub_415F20(v38, a1, a2, dword_523F74 + 64, a3);
     }
   }
-  v39 = *(unsigned __int16 *)(gameData + 200 * v3 + 2 * v4 + 556374);
-  if ( (unsigned __int16)v39 >= 0x8000u && *(unsigned __int16 *)(gameData + 200 * v3 + 2 * v4 + 556374) != 0xFFFF )
+  v39 = *(unsigned __int16 *)(TILE_INDEX(v3, v4));
+  if ( (unsigned __int16)v39 >= 0x8000u && *(unsigned __int16 *)(TILE_INDEX(v3, v4)) != 0xFFFF )
   {
     v40 = v39 - 0x8000;
     v41 = 467 * (v39 - 0x8000);
@@ -28594,14 +28602,14 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     }
   }
   v48 = dword_512360;
-  if ( dword_512360 == -1 && dword_511B58 != -1 )
+  if ( dword_512360 == -1 && g_SelectedUnitIndex != -1 )
   {
-    v49 = 725 * dword_511B58 + gameData + 147174;
+    v49 = 725 * g_SelectedUnitIndex + gameData + 147174;
     v50 = *(_DWORD *)(v49 + 316);
     v51 = (_DWORD *)(v49 + 316);
     if ( v50 )
     {
-      if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+      if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       {
         v86 = -1;
         v87 = *v51 - 1;
@@ -28638,8 +28646,8 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
             v107 = v104[v90 - (v87 + 1) + 1];
             if ( v87 <= 0 )
             {
-              LOBYTE(v106) = *(_BYTE *)(gameData + 725 * dword_511B58 + 147174);
-              BYTE1(v106) = *(_BYTE *)(gameData + 725 * dword_511B58 + 147176);
+              LOBYTE(v106) = *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147174);
+              BYTE1(v106) = *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147176);
             }
             else
             {
@@ -28651,7 +28659,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
           if ( v86 == -1 )
             goto LABEL_133;
         }
-        if ( HIWORD(v105) > sub_410010(gameData + 147174 + 725 * dword_511B58) )
+        if ( HIWORD(v105) > sub_410010(gameData + 147174 + 725 * g_SelectedUnitIndex) )
           v86 += 65;
         v91 = DLX_GetSpriteForChar(dword_5202CC, v86);
         v48 = *((_DWORD *)g_RenderDevice + 46);
@@ -28671,7 +28679,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
     }
   }
 LABEL_133:
-  if ( v100 == dword_511B58 && dword_512360 == -1 && *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+  if ( v100 == g_SelectedUnitIndex && dword_512360 == -1 && PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
   {
     DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
     v48 = *((_DWORD *)g_RenderDevice + 46);
@@ -28758,7 +28766,7 @@ LABEL_2:
 // 41854D: variable 'v105' is possibly undefined
 // 418668: variable 'v92' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 51257A: using guessed type int dword_51257A[];
 // 513A70: using guessed type __int16 word_513A70[4];
@@ -30991,7 +30999,7 @@ void __usercall Unit_AttackBuilding(int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
   log(a1, a3, a4, (int)aUnit_attackbui);
   Render_DrawSprite_v3(v5, 467 * v59);
   v61 = (__int16 *)(725 * v6 + gameData + 147174);
-  v7 = (unsigned __int8 *)(gameData + 509674 + 467 * v59);
+  v7 = (unsigned __int8 *)(UNIT_RECORD(v59));
   v8 = *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 140051)
     && *(_DWORD *)(gameData + 1423 * v7[2] + 140051);
   v56 = v8;
@@ -31032,7 +31040,7 @@ LABEL_15:
           v19 = *(_DWORD *)(1423 * *(unsigned __int8 *)(v18 + 4) + gameData + 140051)
              || *(_DWORD *)(1423 * *(unsigned __int8 *)(467 * v59 + gameData + 509676) + gameData + 140051);
           if ( !v19
-            || (Building_CountGarrison(467 * v59 + gameData + 509674),
+            || (Building_CountGarrison(UNIT_RECORD(v59)),
                 v21 = sub_43EBC0(v20 + gameData + 509674),
                 v22 == v21) )
           {
@@ -31052,7 +31060,7 @@ LABEL_15:
           {
 LABEL_28:
             v58 = 0;
-            if ( !Building_CountGarrison(467 * v59 + gameData + 509674) )
+            if ( !Building_CountGarrison(UNIT_RECORD(v59)) )
             {
               sub_4128E0(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
               sub_4129E0(v61, (DWORD)v7, a5);
@@ -31111,13 +31119,13 @@ LABEL_42:
                   sub_43EE10((int)v7);
                 }
               }
-              else if ( Building_CountGarrison(467 * v59 + gameData + 509674)
+              else if ( Building_CountGarrison(UNIT_RECORD(v59))
                      || !sub_412100(725 * v60 + gameData + 147174) )
               {
-                if ( Building_CountGarrison(gameData + 509674 + 467 * v59) && !sub_412100(725 * v60 + gameData + 147174) )
+                if ( Building_CountGarrison(UNIT_RECORD(v59)) && !sub_412100(725 * v60 + gameData + 147174) )
                 {
                   sub_4120B0((char *)v7 + 18, v55);
-                  sub_40F7C0(v60, v40, (DWORD)v7, a5);
+                  UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
                   ++*(_WORD *)(1423 * v7[2] + gameData + 141441);
                   Building_FindFirstValidAddonSlot((int)v7);
@@ -31125,10 +31133,10 @@ LABEL_42:
                   sub_43EE10((int)v7);
                   sub_43EE10((int)v7);
                 }
-                else if ( !Building_CountGarrison(467 * v59 + gameData + 509674)
+                else if ( !Building_CountGarrison(UNIT_RECORD(v59))
                        && !sub_412100(725 * v60 + gameData + 147174) )
                 {
-                  sub_40F7C0(v60, v40, (DWORD)v7, a5);
+                  UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
                 }
               }
               else
@@ -32045,7 +32053,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
       if ( v48 != 0xFFFF && v48 != a2 )
         return 0;
     }
-    v43 = *(unsigned __int16 *)(gameData + 200 * v59 + 2 * v57 + 556374);
+    v43 = *(unsigned __int16 *)(TILE_INDEX(v59, v57));
     if ( v43 != 0xFFFF && v43 != a2 )
       return 0;
   }
@@ -32065,7 +32073,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   if ( !v11 )
     return 0;
   v58 = v13;
-  v60 = 467 * v62 + gameData + 509674;
+  v60 = UNIT_RECORD(v62);
   *(_BYTE *)v60 = v59;
   *(_BYTE *)(v60 + 1) = v57;
   v14 = dword_5202EC;
@@ -32086,19 +32094,19 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   v20 = *(_WORD *)(v60 + 432);
   *(_BYTE *)(v60 + 436) = v19 & 0xC0;
   *(_WORD *)(v60 + 432) = v20 & 0xF000;
-  LOBYTE(v15) = *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) & 7;
+  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(dword_5202EC) + 140071) & 7;
   HIBYTE(v15) = *(_BYTE *)(v60 + 444) & 0xF8;
   *(_BYTE *)(v60 + 444) = HIBYTE(v15);
   *(_BYTE *)(v60 + 444) = v15 | HIBYTE(v15);
   if ( a1 )
   {
-    if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       v21 = 200;
     else
       v21 = 300;
     *(_DWORD *)(v60 + 438) = v21;
     v22 = (_WORD *)(v60 + 430);
-    if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+    if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       v23 = 100;
     else
       v23 = 250;
@@ -32153,7 +32161,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
   while ( v32 != v60 + 12 );
   *(_BYTE *)(v60 + 414) = -1;
   Building_UnitGetInto(a2, v58, 7, a2, st7_0);
-  *(_WORD *)(200 * v33 + gameData + 2 * v57 + 556374) = v62 + 0x8000;
+  *(_WORD *)(TILE_INDEX(v33, v57)) = v62 + 0x8000;
   if ( a1 == 1 || a1 == 2 )
   {
     v34 = 200 * (v59 + 1);
@@ -32218,10 +32226,10 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
       while ( v35 < v59 + 4 );
     }
   }
-  v39 = gameData + 1423 * dword_5202EC;
+  v39 = PLAYER_DATA(dword_5202EC);
   if ( *(_DWORD *)(v39 + 140067) == -1 && a1 == 2 )
     *(_DWORD *)(v39 + 140067) = v62;
-  if ( *(_DWORD *)(gameData + 140017) == -1 || *(_WORD *)(gameData + 140022) != 1 )
+  if ( *(_DWORD *)(gameData + 140017) == -1 || GAME_TURN_COUNTER != 1 )
     sub_41E0E0(v60);
   if ( a1 )
   {
@@ -32633,7 +32641,7 @@ char __usercall sub_41E1E0@<al>(unsigned __int8 *a1@<eax>, int a2@<ecx>, char a3
   log(a2, a3, (DWORD)a1, (int)aBuilding_build);
   LOBYTE(v5) = *a1;
   sub_455DF0(v6, *(unsigned __int16 *)(2 * a1[1] + gameData + 200 * v5 + 556374) - 0x8000);
-  sub_455CF0(a1[2], *(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374) - 0x8000);
+  sub_455CF0(a1[2], *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000);
   Building_OnGarrisonChange(*(unsigned __int16 *)(2 * a1[1] + 200 * *a1 + gameData + 556374) - 0x8000, v7, a4);
   v9 = (char)a1[4];
   if ( v9 == 2 || v9 == 1 )
@@ -32723,7 +32731,7 @@ int __usercall sub_41E3F0@<eax>(int result@<eax>, int a2@<ecx>, char a3@<bl>, DW
               return result;
             }
           }
-          sub_40F440((int)&v5[31 * result + 18], (char)v5[(char)v5[414] + 402], v5[2]);
+          UnitSlot_InitFromType((int)&v5[31 * result + 18], (char)v5[(char)v5[414] + 402], v5[2]);
           v8 = *(_DWORD *)(v5 + 438) - (unsigned __int8)byte_5125B0[88 * (char)v5[(char)v5[414] + 402]];
           v9 = 1423 * v5[2];
           *(_DWORD *)(v5 + 438) = v8;
@@ -32737,7 +32745,7 @@ int __usercall sub_41E3F0@<eax>(int result@<eax>, int a2@<ecx>, char a3@<bl>, DW
             v5[414] = -1;
           }
           return Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(gameData + 200 * *v5 + 2 * v5[1] + 556374) - 0x8000,
+                   *(unsigned __int16 *)(TILE_INDEX(*v5, v5[1])) - 0x8000,
                    v8,
                    a5);
         }
@@ -32829,7 +32837,7 @@ char __usercall sub_41E570@<al>(unsigned __int8 *a1@<eax>, double a2@<st0>)
   while ( v4 < 12 );
   if ( v3 )
     LOBYTE(v6) = Building_OnGarrisonChange(
-                   *(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374) - 0x8000,
+                   *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000,
                    (int)a1,
                    a2);
   return v6;
@@ -32946,7 +32954,7 @@ int __usercall __spoils<ecx,st0> sub_41E7F0@<eax>(unsigned __int8 *a1@<eax>, dou
   }
   if ( v4 )
     return Building_OnGarrisonChange(
-             *(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374) - 0x8000,
+             *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000,
              (int)v3,
              a2);
   return result;
@@ -33381,7 +33389,7 @@ signed int __usercall sub_41F0C0@<eax>(unsigned __int8 *a1@<eax>, _DWORD *a2@<ed
   {
     v7 = dword_513A10[v6] + *a1;
     v8 = dword_513A14[v6] + a1[1];
-    if ( *(unsigned __int16 *)(200 * v7 + gameData + 2 * v8 + 556374) == 0xFFFF && sub_413DD0(a1[2], 31, v8, v7) )
+    if ( *(unsigned __int16 *)(TILE_INDEX(v7, v8)) == 0xFFFF && sub_413DD0(a1[2], 31, v8, v7) )
       break;
     v6 += 2;
     ++v5;
@@ -33451,7 +33459,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
   v46 = (unsigned __int8 *)(gameData + 509674 + v6);
   v40 = 0;
   if ( a2 != -1 )
-    v40 = 467 * a2 + gameData + 509674;
+    v40 = UNIT_RECORD(a2);
   if ( v43 && (unsigned int)v44 > *(_DWORD *)(v46 + 438) )
     return 0;
   if ( !v43 )
@@ -33464,7 +33472,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
   if ( sub_41F0C0(v46, &v36, gameData + 509674 + v6, &v37) != 1 )
     return 0;
   sub_40AEB0();
-  *(_WORD *)(200 * *v46 + gameData + 2 * v46[1] + 556374) = -1;
+  *(_WORD *)(TILE_INDEX(*v46, v46[1])) = -1;
   v9 = v46;
   *(_WORD *)(gameData + 200 * (*v46 + 1) + 2 * v46[1] + 556374) = -1;
   *(_WORD *)(200 * (*v9 + 1) + gameData + 2 * v9[1] + 556376) = -1;
@@ -33472,7 +33480,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
   result = Unit_Create((char)((v43 == 0) + 31), v9[2], *v9, 0, v9[1]);
   if ( result )
   {
-    v38 = (__int16 *)(725 * *(unsigned __int16 *)(gameData + 200 * *v46 + 2 * v46[1] + 556374) + gameData + 147174);
+    v38 = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(*v46, v46[1])) + gameData + 147174);
     sub_40FEC0(v38, (DWORD)savedregs, a5);
     v11 = v10 + 6;
     v12 = 100;
@@ -33524,7 +33532,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
     }
     if ( v40
       && (v19 = (int *)Unit_MoveTrackNear(
-                         *(unsigned __int16 *)(gameData + 200 * *v46 + 2 * v46[1] + 556374),
+                         *(unsigned __int16 *)(TILE_INDEX(*v46, v46[1])),
                          v42,
                          (int)v46,
                          v11,
@@ -33559,7 +33567,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
       *(_WORD *)(2 * BYTE1(v26) + 200 * (unsigned __int8)v26 + gameData + 556374) = *(_WORD *)(v39 + 556374);
       v29 = v38;
       qmemcpy(v28, v19, 0x194u);
-      sub_40FA50((int)v29);
+      UnitStack_SetReadyFlags((int)v29);
     }
     else
     {
@@ -33567,10 +33575,10 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
       v35 = v38;
       *v38 = v36;
       v35[1] = v37;
-      *(_WORD *)(2 * v37 + 200 * v36 + gameData + 556374) = *(_WORD *)(gameData + 200 * *v46 + 2 * v46[1] + 556374);
+      *(_WORD *)(2 * v37 + 200 * v36 + gameData + 556374) = *(_WORD *)(TILE_INDEX(*v46, v46[1]));
     }
     v30 = v41 + 0x8000;
-    *(_WORD *)(200 * *v46 + gameData + 2 * v46[1] + 556374) = v41 + 0x8000;
+    *(_WORD *)(TILE_INDEX(*v46, v46[1])) = v41 + 0x8000;
     v31 = v46;
     *(_WORD *)(200 * (*v46 + 1) + gameData + 2 * v46[1] + 556374) = v30;
     *(_WORD *)(200 * (*v31 + 1) + gameData + 2 * v46[1] + 556376) = v30;
@@ -33581,7 +33589,7 @@ signed int __usercall sub_41F1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
       sub_412A90((int)v38);
     Rules_LinkArmyFact(v38, (int)v38, v33, a5, (char)v32, (DWORD)savedregs);
     if ( !*(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v34 + 4) + 140051) )
-      sub_455CC0(*(unsigned __int16 *)(200 * *v34 + gameData + 2 * v38[1] + 556374), v41, v42);
+      sub_455CC0(*(unsigned __int16 *)(TILE_INDEX(*v34, v38[1])), v41, v42);
     return 1;
   }
   return result;
@@ -33682,7 +33690,7 @@ _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, 
     *(_BYTE *)(v9 + 510118) = v12;
     *(_BYTE *)(v9 + 510118) = v11 & 7 | v12;
   }
-  sub_455150(467 * a2 + gameData + 509674, v8, a5);
+  sub_455150(UNIT_RECORD(a2), v8, a5);
   v28 = v13;
   v14 = *(unsigned __int16 *)(gameData + 140022);
   sub_455D90(*(unsigned __int8 *)(gameData + 725 * a1 + 147178), a2, v14);
@@ -33772,7 +33780,7 @@ _DWORD *__usercall Building_Destroy@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<
   *(_WORD *)(v4 + 16) = -1;
   v5 = 0;
 LABEL_3:
-  v6 = gameData + 509674 + 467 * v5;
+  v6 = UNIT_RECORD(v5);
   if ( (unsigned int)*(char *)(v6 + 4) >= 4
     || *(__int16 *)(v6 + 16) == -1
     || (v7 = gameData + 467 * v5, !*(_BYTE *)(v7 + 509678))
@@ -34299,12 +34307,12 @@ int sub_420870()
   int v0; // edx
   int result; // eax
 
-  dword_513FC2[0] = (*(_BYTE *)(dword_526A64 + 416) & 8) == 0;
-  dword_513FEA = (*(_BYTE *)(dword_526A64 + 416) & 1) == 0;
-  dword_514012 = (*(_BYTE *)(dword_526A64 + 416) & 2) == 0;
-  dword_51403A = (*(_BYTE *)(dword_526A64 + 416) & 4) == 0;
+  dword_513FC2[0] = (*(_BYTE *)(g_CastleUnitRecord + 416) & 8) == 0;
+  dword_513FEA = (*(_BYTE *)(g_CastleUnitRecord + 416) & 1) == 0;
+  dword_514012 = (*(_BYTE *)(g_CastleUnitRecord + 416) & 2) == 0;
+  dword_51403A = (*(_BYTE *)(g_CastleUnitRecord + 416) & 4) == 0;
   v0 = 0;
-  dword_514062 = (*(_BYTE *)(dword_526A64 + 416) & 0x10) == 0;
+  dword_514062 = (*(_BYTE *)(g_CastleUnitRecord + 416) & 0x10) == 0;
   for ( result = 0; result != 50; result += 10 )
   {
     if ( dword_513FC2[result] )
@@ -34320,7 +34328,7 @@ int sub_420870()
 // 514012: using guessed type int dword_514012;
 // 51403A: using guessed type int dword_51403A;
 // 514062: using guessed type int dword_514062;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420910) --------------------------------------------------------
 void *sub_420910()
@@ -34436,7 +34444,7 @@ int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>)
   v2 = 639;
   Render_Pump();
   v3 = 0;
-  sub_421240(dword_526A68, 1, dword_526A64, 0);
+  sub_421240(dword_526A68, 1, g_CastleUnitRecord, 0);
   g_RenderDevice = (_UNKNOWN *)dword_526A68;
   v21 = 479;
   v20 = 0;
@@ -34470,9 +34478,9 @@ int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>)
     LOWORD(v7) = 0;
   sub_421240(dword_526A68, 0, a2, 0);
   v18 = Time_Now(v9, v8);
-  v16 = dword_526A64;
+  v16 = g_CastleUnitRecord;
   v11 = a2;
-  dword_526A64 = a2;
+  g_CastleUnitRecord = a2;
   while ( Time_Now(v10, v11) < (unsigned int)(v18 + 200) )
   {
     v14 = Time_Now(v18, v12);
@@ -34489,7 +34497,7 @@ int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>)
       255 * (v14 - v15) / 0xC8u);
     sub_421C40();
   }
-  dword_526A64 = v16;
+  g_CastleUnitRecord = v16;
   Render_FillRect(
     (_DWORD *)dword_526A68,
     (_DWORD *)dword_5202E0,
@@ -34500,7 +34508,7 @@ int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>)
     v7,
     v21);
   Render_FillRect((_DWORD *)dword_526A68, 0, (unsigned __int16)v21, (unsigned __int16)v7, v20, v22, v7, v21);
-  sub_421240(dword_526A68, 1, dword_526A64, 0);
+  sub_421240(dword_526A68, 1, g_CastleUnitRecord, 0);
   g_RenderDevice = &unk_51D4C0;
   sub_421010();
   return Render_Present((int)dword_544CD8);
@@ -34515,7 +34523,7 @@ int __usercall sub_420A90@<eax>(int a1@<eax>, int a2@<edx>)
 // 420C87: variable 'v15' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526A68: using guessed type int dword_526A68;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -34530,13 +34538,13 @@ int __usercall sub_420CD0@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   int v7; // esi
   int v8; // ebx
 
-  Building_BuildSchool((char *)dword_526A64, a1, a2);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 416) & 8) != 0 )
+  Building_BuildSchool((char *)g_CastleUnitRecord, a1, a2);
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 8) != 0 )
   {
     v3 = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
-    v4 = dword_526A64;
-    qmemcpy(v3, (const void *)dword_526A64, 4 * v5);
+    v4 = g_CastleUnitRecord;
+    qmemcpy(v3, (const void *)g_CastleUnitRecord, 4 * v5);
     v7 = v4 + 4 * v5;
     v6 = &v3[4 * v5];
     *(_WORD *)v6 = *(_WORD *)v7;
@@ -34545,13 +34553,13 @@ int __usercall sub_420CD0@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~8u;
     sub_4426C0(aBudowaSzkola, 64);
     sub_420A90(251, v8);
-    sub_422100();
+    Castle_UpdateGateToggles();
     return j__nfree_();
   }
   return result;
 }
 // 420D05: variable 'v5' is possibly undefined
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420D50) --------------------------------------------------------
 int __usercall sub_420D50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
@@ -34565,12 +34573,12 @@ int __usercall sub_420D50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   int v8; // ebx
 
   Building_BuildWorkshop(a1, a2);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 416) & 4) != 0 )
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 4) != 0 )
   {
     v3 = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
-    v4 = dword_526A64;
-    qmemcpy(v3, (const void *)dword_526A64, 4 * v5);
+    v4 = g_CastleUnitRecord;
+    qmemcpy(v3, (const void *)g_CastleUnitRecord, 4 * v5);
     v7 = v4 + 4 * v5;
     v6 = &v3[4 * v5];
     *(_WORD *)v6 = *(_WORD *)v7;
@@ -34579,13 +34587,13 @@ int __usercall sub_420D50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~4u;
     sub_4426C0(aBudowaWarszt_0, 64);
     sub_420A90(252, v8);
-    sub_422100();
+    Castle_UpdateGateToggles();
     return j__nfree_();
   }
   return result;
 }
 // 420D85: variable 'v5' is possibly undefined
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420DD0) --------------------------------------------------------
 int __usercall sub_420DD0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
@@ -34599,12 +34607,12 @@ int __usercall sub_420DD0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
   int v9; // ebx
 
   sub_41EF10(a1, a2, a3);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 416) & 2) != 0 )
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 2) != 0 )
   {
     v4 = (_BYTE *)Mem_Alloc(467, 116, a2, a3);
-    v5 = dword_526A64;
-    qmemcpy(v4, (const void *)dword_526A64, 4 * v6);
+    v5 = g_CastleUnitRecord;
+    qmemcpy(v4, (const void *)g_CastleUnitRecord, 4 * v6);
     v8 = v5 + 4 * v6;
     v7 = &v4[4 * v6];
     *(_WORD *)v7 = *(_WORD *)v8;
@@ -34613,13 +34621,13 @@ int __usercall sub_420DD0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
     v4[416] &= ~2u;
     sub_4426C0(aBudowaBaraki, 64);
     sub_420A90(254, v9);
-    sub_422100();
+    Castle_UpdateGateToggles();
     return j__nfree_();
   }
   return result;
 }
 // 420E05: variable 'v6' is possibly undefined
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420E50) --------------------------------------------------------
 int __usercall sub_420E50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
@@ -34634,32 +34642,32 @@ int __usercall sub_420E50@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   char *v9; // eax
 
   sub_41EF80(a1, a2);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 416) & 1) != 0 )
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 1) != 0 )
   {
     v3 = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
-    v4 = dword_526A64;
-    qmemcpy(v3, (const void *)dword_526A64, 4 * v5);
+    v4 = g_CastleUnitRecord;
+    qmemcpy(v3, (const void *)g_CastleUnitRecord, 4 * v5);
     v7 = v4 + 4 * v5;
     v6 = &v3[4 * v5];
     *(_WORD *)v6 = *(_WORD *)v7;
     v6[2] = *(_BYTE *)(v7 + 2);
     v3[416] &= ~1u;
     v8 = (int)v3;
-    if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(dword_526A64 + 2) + gameData + 140063) )
+    if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(g_CastleUnitRecord + 2) + gameData + 140063) )
       v9 = aBudowaChrzesci;
     else
       v9 = aBudowaPoganie;
     sub_4426C0(v9, 64);
     sub_420A90(250, v8);
-    sub_422100();
+    Castle_UpdateGateToggles();
     return j__nfree_();
   }
   return result;
 }
 // 420E85: variable 'v5' is possibly undefined
 // 5202E4: using guessed type int gameData;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420EF0) --------------------------------------------------------
 int __usercall sub_420EF0@<eax>(char a1@<bl>, DWORD a2@<ebp>)
@@ -34673,12 +34681,12 @@ int __usercall sub_420EF0@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   int v8; // ebx
 
   sub_41F020(a1, a2);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 416) & 0x10) != 0 )
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 0x10) != 0 )
   {
     v3 = (_BYTE *)Mem_Alloc(467, 116, a1, a2);
-    v4 = dword_526A64;
-    qmemcpy(v3, (const void *)dword_526A64, 4 * v5);
+    v4 = g_CastleUnitRecord;
+    qmemcpy(v3, (const void *)g_CastleUnitRecord, 4 * v5);
     v7 = v4 + 4 * v5;
     v6 = &v3[4 * v5];
     *(_WORD *)v6 = *(_WORD *)v7;
@@ -34687,26 +34695,26 @@ int __usercall sub_420EF0@<eax>(char a1@<bl>, DWORD a2@<ebp>)
     v3[416] &= ~0x10u;
     sub_4426C0(aBudowaKuznia, 64);
     sub_420A90(253, v8);
-    sub_422100();
+    Castle_UpdateGateToggles();
     return j__nfree_();
   }
   return result;
 }
 // 420F25: variable 'v5' is possibly undefined
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420F70) --------------------------------------------------------
 BOOL sub_420F70()
 {
   BOOL result; // eax
 
-  result = sub_41F890((unsigned __int8 *)dword_526A64);
+  result = sub_41F890((unsigned __int8 *)g_CastleUnitRecord);
   if ( result )
     return .fn_init();
   return result;
 }
 // 420F80: using guessed type int .fn_init(void);
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00420FB0) --------------------------------------------------------
 int __usercall __spoils<ecx,st0> sub_420FB0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>)
@@ -34721,7 +34729,7 @@ int __usercall __spoils<ecx,st0> sub_420FB0@<eax>(int a1@<ecx>, char a2@<bl>, DW
   result = YesNoWindow(v6[(unsigned __int8)g_LanguageIndex], byte_526A70, a1, a2, a3);
   if ( result )
   {
-    Building_Destroy(dword_526A64, a2, a3, a4);
+    Building_Destroy(g_CastleUnitRecord, a2, a3, a4);
     result = sub_4426C0(aNiszcz, v5);
     dword_526E84 = 1;
     dword_526E80 = 1;
@@ -34731,7 +34739,7 @@ int __usercall __spoils<ecx,st0> sub_420FB0@<eax>(int a1@<ecx>, char a2@<bl>, DW
 // 420FF3: variable 'v5' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 514144: using guessed type char *off_514144[3];
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
 // 526E80: using guessed type int dword_526E80;
 // 526E84: using guessed type int dword_526E84;
@@ -34763,14 +34771,14 @@ int sub_421010()
     0,
     0,
     0);
-  if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140063) )
+  if ( *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140063) )
   {
     DLX_GetSpriteForChar(dword_526E7C, dword_5202EC + 5);
     v1 = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v1 + 52))(-1, -1, -1, -1, 1, 0, 0);
   }
   Render_ReleaseSurface(7, v1);
-  v2 = DLX_GetSpriteForChar(dword_526E7C, *(unsigned __int8 *)(dword_526A64 + 421) + 3 * dword_5202EC + 11);
+  v2 = DLX_GetSpriteForChar(dword_526E7C, *(unsigned __int8 *)(g_CastleUnitRecord + 421) + 3 * dword_5202EC + 11);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     26,
     v2,
@@ -34781,14 +34789,14 @@ int sub_421010()
     1,
     0,
     0);
-  UI_DrawTextFmt(5, 41, 275, 10, 3, dword_526A64 + 5);
+  UI_DrawTextFmt(5, 41, 275, 10, 3, g_CastleUnitRecord + 5);
   UI_DrawTextFmt(5, 58, 87, 30, 2, (int)aD_42);
   UI_DrawTextFmt(5, v3, 149, v4, 2, (int)aD_43);
-  UI_DrawUnitStatsValues(dword_526A64);
+  UI_DrawUnitStatsValues(g_CastleUnitRecord);
   UI_DrawTextFmt(5, v5, 211, v6, 2, (int)aD_44);
   UI_DrawTextFmt(5, v7, 273, v8, 2, (int)aD_45);
-  result = dword_526A64;
-  if ( (*(_BYTE *)(dword_526A64 + 435) & 7) != 0 )
+  result = g_CastleUnitRecord;
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 435) & 7) != 0 )
   {
     v10 = DLX_GetSpriteForChar(dword_526E7C, 10);
     return (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
@@ -34814,7 +34822,7 @@ int sub_421010()
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526E7C: using guessed type int dword_526E7C;
 
 //----- (00421240) --------------------------------------------------------
@@ -34893,37 +34901,37 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
   v63[6] = dword_5202EC + 49;
   if ( a4 != 2 )
   {
-    v5 = *(_BYTE *)(dword_526A64 + 416);
+    v5 = *(_BYTE *)(g_CastleUnitRecord + 416);
     if ( (v5 & 1) == 0 || (v5 & 2) != 0 || (v5 & 4) != 0 )
     {
-      v6 = *(_BYTE *)(dword_526A64 + 416);
+      v6 = *(_BYTE *)(g_CastleUnitRecord + 416);
       if ( (v6 & 1) != 0 || (v6 & 2) != 0 || (v6 & 4) == 0 )
       {
-        v7 = *(_BYTE *)(dword_526A64 + 416);
+        v7 = *(_BYTE *)(g_CastleUnitRecord + 416);
         if ( (v7 & 1) != 0 || (v7 & 2) == 0 || (v7 & 4) != 0 )
         {
-          v8 = *(_BYTE *)(dword_526A64 + 416);
+          v8 = *(_BYTE *)(g_CastleUnitRecord + 416);
           if ( (v8 & 1) == 0 && (v8 & 2) != 0 && (v8 & 4) != 0 )
           {
             v10 = a11_7;
           }
           else
           {
-            v9 = *(_BYTE *)(dword_526A64 + 416);
+            v9 = *(_BYTE *)(g_CastleUnitRecord + 416);
             if ( (v9 & 1) != 0 && (v9 & 2) != 0 && (v9 & 4) != 0 )
             {
               v10 = a12;
             }
             else
             {
-              v55 = *(_BYTE *)(dword_526A64 + 416);
+              v55 = *(_BYTE *)(g_CastleUnitRecord + 416);
               if ( (v55 & 1) != 0 && (v55 & 2) != 0 && (v55 & 4) == 0 )
               {
                 v10 = a10;
               }
               else
               {
-                v56 = *(_BYTE *)(dword_526A64 + 416);
+                v56 = *(_BYTE *)(g_CastleUnitRecord + 416);
                 if ( (v56 & 1) != 0 && (v56 & 2) == 0 && (v56 & 4) != 0 )
                   v10 = a07;
                 else
@@ -35009,17 +35017,17 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
   }
   if ( v66 != 1 )
   {
-    v27 = *(_BYTE *)(dword_526A64 + 416);
+    v27 = *(_BYTE *)(g_CastleUnitRecord + 416);
     if ( (v27 & 8) != 0 && (v27 & 0x10) == 0 )
     {
       v30 = a04;
     }
     else
     {
-      v28 = *(_BYTE *)(dword_526A64 + 416);
+      v28 = *(_BYTE *)(g_CastleUnitRecord + 416);
       if ( (v28 & 8) != 0 || (v28 & 0x10) == 0 )
       {
-        v29 = *(_BYTE *)(dword_526A64 + 416);
+        v29 = *(_BYTE *)(g_CastleUnitRecord + 416);
         if ( (v29 & 8) != 0 && (v29 & 0x10) != 0 )
           v30 = a08;
         else
@@ -35087,7 +35095,7 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
     }
     while ( v46 );
     (*(void (__thiscall **)(int))(*(_DWORD *)(v4 + 184) + 48))(1);
-    a1 = *(char *)(dword_526A64 + 4);
+    a1 = *(char *)(g_CastleUnitRecord + 4);
     if ( a1 == 1 )
     {
       v47 = v63;
@@ -35147,9 +35155,9 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
       1,
       0,
       0);
-    dword_526A64 = v65;
+    g_CastleUnitRecord = v65;
     sub_421C20(v58);
-    dword_526A64 = v59;
+    g_CastleUnitRecord = v59;
     sub_419D80(dword_513D98);
     LOBYTE(a1) = (_BYTE)v64;
     g_RenderDevice = v64;
@@ -35161,7 +35169,7 @@ char __usercall sub_421240@<al>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 513D98: using guessed type _DWORD dword_513D98[3];
 // 5202EC: using guessed type int dword_5202EC;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526E74: using guessed type int dword_526E74;
 
 //----- (00421740) --------------------------------------------------------
@@ -35217,8 +35225,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
   switch ( a1 )
   {
     case 1:
-      result = dword_526A64;
-      v4 = *(_BYTE *)(dword_526A64 + 416);
+      result = g_CastleUnitRecord;
+      v4 = *(_BYTE *)(g_CastleUnitRecord + 416);
       if ( (v4 & 4) != 0 && (v4 & 1) != 0 )
       {
         result = word_513C3C[20 * dword_5202EC];
@@ -35232,8 +35240,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 2:
-      result = dword_526A64;
-      v5 = *(_BYTE *)(dword_526A64 + 416);
+      result = g_CastleUnitRecord;
+      v5 = *(_BYTE *)(g_CastleUnitRecord + 416);
       if ( (v5 & 0x10) != 0 && (v5 & 8) != 0 )
       {
         result = word_513C40[20 * dword_5202EC];
@@ -35242,8 +35250,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 3:
-      result = dword_526A64;
-      if ( (*(_BYTE *)(dword_526A64 + 416) & 0x10) != 0 )
+      result = g_CastleUnitRecord;
+      if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 0x10) != 0 )
       {
         result = word_513C44[20 * dword_5202EC];
         if ( result != -1 )
@@ -35252,10 +35260,10 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       break;
     case 4:
       if ( dword_5202EC != 1 && dword_5202EC != 4
-        || (result = *(_DWORD *)(dword_526A64 + 416) << 28 >> 31, (*(_DWORD *)(dword_526A64 + 416) & 8) != 0) )
+        || (result = *(_DWORD *)(g_CastleUnitRecord + 416) << 28 >> 31, (*(_DWORD *)(g_CastleUnitRecord + 416) & 8) != 0) )
       {
         if ( dword_5202EC != 3
-          || (result = *(_DWORD *)(dword_526A64 + 416) << 30 >> 31, (*(_DWORD *)(dword_526A64 + 416) & 2) != 0) )
+          || (result = *(_DWORD *)(g_CastleUnitRecord + 416) << 30 >> 31, (*(_DWORD *)(g_CastleUnitRecord + 416) & 2) != 0) )
         {
           result = word_513C48[20 * dword_5202EC];
           if ( result != -1 )
@@ -35269,7 +35277,7 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
         result = sub_421740(result, word_513C4E[20 * dword_5202EC], dword_526EB4 + 48, dword_526E78, 0);
       break;
     case 6:
-      result = *(char *)(dword_526A64 + 4);
+      result = *(char *)(g_CastleUnitRecord + 4);
       if ( result != 1 )
       {
         result = word_513C50[20 * dword_5202EC];
@@ -35278,8 +35286,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 7:
-      result = dword_526A64;
-      if ( (*(_BYTE *)(dword_526A64 + 416) & 8) != 0 )
+      result = g_CastleUnitRecord;
+      if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 8) != 0 )
       {
         result = word_513C54[20 * dword_5202EC];
         if ( result != -1 )
@@ -35287,8 +35295,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 8:
-      result = dword_526A64;
-      if ( (*(_BYTE *)(dword_526A64 + 416) & 1) != 0 )
+      result = g_CastleUnitRecord;
+      if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 1) != 0 )
       {
         result = word_513C58[20 * dword_5202EC];
         if ( result != -1 )
@@ -35296,8 +35304,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 9:
-      result = dword_526A64;
-      if ( (*(_BYTE *)(dword_526A64 + 416) & 2) != 0 )
+      result = g_CastleUnitRecord;
+      if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 2) != 0 )
       {
         result = word_513C5C[20 * dword_5202EC];
         if ( result != -1 )
@@ -35305,8 +35313,8 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
       }
       break;
     case 10:
-      result = dword_526A64;
-      if ( (*(_BYTE *)(dword_526A64 + 416) & 2) != 0 )
+      result = g_CastleUnitRecord;
+      if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 2) != 0 )
       {
         result = word_513C60[20 * dword_5202EC];
         if ( result != -1 )
@@ -35339,7 +35347,7 @@ int __usercall __spoils<ecx> Audio_PlaySfx@<eax>(int a1@<eax>)
 // 513C60: using guessed type __int16 word_513C60[];
 // 513C62: using guessed type __int16 word_513C62[83];
 // 5202EC: using guessed type int dword_5202EC;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526E78: using guessed type int dword_526E78;
 // 526E8C: using guessed type int dword_526E8C;
 // 526E94: using guessed type int dword_526E94;
@@ -35621,7 +35629,7 @@ int *__usercall sub_422020@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
   int v12; // [esp+Eh] [ebp-8h]
 
   v12 = a1;
-  sub_421240(dword_5202E0, 0, dword_526A64, 0);
+  sub_421240(dword_5202E0, 0, g_CastleUnitRecord, 0);
   strcpy(v11, "zamek_1");
   v11[6] = dword_5202EC + 49;
   sub_435ED0(v11, (int)byte_526A70, v3, a2);
@@ -35634,7 +35642,7 @@ int *__usercall sub_422020@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
   sub_4610B0((__lock *)dword_544CD8);
   (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
   sub_421C40();
-  sub_421240(dword_526A68, v9, dword_526A64, 0);
+  sub_421240(dword_526A68, v9, g_CastleUnitRecord, 0);
   return sub_405020((int *)&unk_51D4C0, byte_526A70, 20);
 }
 // 422057: variable 'v3' is possibly undefined
@@ -35647,24 +35655,24 @@ int *__usercall sub_422020@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202EC: using guessed type int dword_5202EC;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526A68: using guessed type int dword_526A68;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00422100) --------------------------------------------------------
-int sub_422100()
+int Castle_UpdateGateToggles()
 {
-  if ( (*(_BYTE *)(dword_526A64 + 420) & 1) != 0 )
+  if ( (*(_BYTE *)(g_CastleUnitRecord + 420) & 1) != 0 )
     sub_40ED50((int)&word_513E08, 0);
   else
     sub_40ED30((int)&word_513E08, 0);
-  if ( sub_41F850((unsigned __int8 *)dword_526A64) )
+  if ( sub_41F850((unsigned __int8 *)g_CastleUnitRecord) )
     return sub_40ED30((int)&word_513E08, 2);
   else
     return sub_40ED50((int)&word_513E08, 2);
 }
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 
 //----- (00422180) --------------------------------------------------------
 int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>)
@@ -35724,11 +35732,11 @@ int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>)
   sub_413120(v5, a1);
   CSS_EmptySampleCache();
   log(467 * a1, a2, a1, (int)aCastleD);
-  dword_526A64 = v6 + gameData + 509674;
-  dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(dword_526A64 + 2) + gameData + 140063);
-  v46 = sub_441800(aCastle, *(unsigned __int8 *)(dword_526A64 + 2) + 1);
+  g_CastleUnitRecord = v6 + gameData + 509674;
+  dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_CastleUnitRecord + 2) + gameData + 140063);
+  v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_CastleUnitRecord + 2) + 1);
   CSS_PauseStreamReading();
-  sub_422100();
+  Castle_UpdateGateToggles();
   strcpy(v45, "zamek_1\\z_iko.s32");
   v45[6] = dword_5202EC + 49;
   v8 = (_DWORD *)Mem_Alloc(4112, v7, a2, a1);
@@ -35830,7 +35838,7 @@ int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>)
       case 254:
         if ( v23 != 99 )
         {
-          if ( (*(_BYTE *)(dword_526A64 + 416) & 2) != 0 )
+          if ( (*(_BYTE *)(g_CastleUnitRecord + 416) & 2) != 0 )
             v44 = 3;
           else
             v44 = 8;
@@ -35952,7 +35960,7 @@ int *__usercall Debug_LogRenderHookChange@<eax>(DWORD a1@<eax>, char a2@<bl>)
 // 5202EC: using guessed type int dword_5202EC;
 // 5202F4: using guessed type int dword_5202F4;
 // 523F5C: using guessed type int dword_523F5C;
-// 526A64: using guessed type int dword_526A64;
+// 526A64: using guessed type int g_CastleUnitRecord;
 // 526A68: using guessed type int dword_526A68;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
 // 526E70: using guessed type int dword_526E70;
@@ -36225,9 +36233,9 @@ LABEL_11:
         Unit_GetSquadCount(v26);
         v23 = (char *)v10 + 31 * Unit_GetSquadCount((int)v10) + 6;
         qmemcpy(v23, (const void *)(v26 + 6), v18);
-        sub_40F7C0(a1, a3, (DWORD)v10, a5);
+        UnitStack_KillByIndex(a1, a3, (DWORD)v10, a5);
         *((_BYTE *)v10 + 720) = 0;
-        dword_511B58 = a2;
+        g_SelectedUnitIndex = a2;
         Rules_LinkArmyFact(v10, v19, v20, a5, a3, (DWORD)v10);
         sub_455070(v10, v21, v22, a3, (DWORD)v10, a5);
         return 1;
@@ -36246,7 +36254,7 @@ LABEL_11:
 // 422DA3: variable 'v20' is possibly undefined
 // 422DAA: variable 'v21' is possibly undefined
 // 422DAA: variable 'v22' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (00422DC0) --------------------------------------------------------
@@ -36324,9 +36332,9 @@ BOOL __usercall sub_422DC0@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, i
   *(_WORD *)((char *)&v20[1] + 31 * v11 + 2) = -1;
   v16 = 200 * v24;
   v17 = 2 * v23;
-  if ( *(unsigned __int16 *)(gameData + 200 * v24 + 2 * v23 + 556374) > 0x1F4u
+  if ( *(unsigned __int16 *)(TILE_INDEX(v24, v23)) > 0x1F4u
     || (unsigned int)*(__int16 *)(gameData
-                                + 725 * *(unsigned __int16 *)(gameData + 200 * v24 + 2 * v23 + 556374)
+                                + 725 * *(unsigned __int16 *)(TILE_INDEX(v24, v23))
                                 + 147180) > 0x28 )
   {
     return sub_410010((int)v20) >= 4 && sub_414150((__int16 *)v20, v24, v18, v23);
@@ -36398,7 +36406,7 @@ BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, 
   if ( v15 == v14 )
     return 0;
   v40 = 0;
-  v16 = *(unsigned __int16 *)(gameData + 200 * a4 + 2 * a3 + 556374);
+  v16 = *(unsigned __int16 *)(TILE_INDEX(a4, a3));
   if ( v16 < 0x8000 )
   {
     v36 = 725 * v16 + gameData + 147174;
@@ -36420,7 +36428,7 @@ BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, 
     v39 = sub_40FA80(a4 - *v10, a3 - v10[1]);
     Unit_Create(0xFFFFFFFF, *((unsigned __int8 *)v10 + 4), a4, v39, a3);
   }
-  v17 = 725 * *(unsigned __int16 *)(gameData + 200 * a4 + 2 * a3 + 556374);
+  v17 = 725 * *(unsigned __int16 *)(TILE_INDEX(a4, a3));
   v18 = (__int16 *)(gameData + 147174 + v17);
   if ( v40 )
     v19 = Unit_GetSquadCount(gameData + 147174 + v17);
@@ -36535,8 +36543,8 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
   {
     if ( result == -1 )
     {
-      v2 = dword_511B58;
-      v3 = 8 * dword_511B58;
+      v2 = g_SelectedUnitIndex;
+      v3 = 8 * g_SelectedUnitIndex;
     }
     else
     {
@@ -36554,7 +36562,7 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
       {
         a2 = Map_NeighborDY[2 * i];
         v4 = (int *)(Map_NeighborDX[2 * i] + *(__int16 *)dword_526FA0);
-        if ( Map_IsTilePlacable(dword_511B58, v13, a2 + *(__int16 *)(dword_526FA0 + 2), (int)v4) )
+        if ( Map_IsTilePlacable(g_SelectedUnitIndex, v13, a2 + *(__int16 *)(dword_526FA0 + 2), (int)v4) )
           UI_HighlightTile(
             Map_NeighborDX[2 * i] + *(__int16 *)dword_526FA0,
             *(__int16 *)(dword_526FA0 + 2) + Map_NeighborDY[2 * i]);
@@ -36635,7 +36643,7 @@ int __usercall sub_423420@<eax>(int result@<eax>, DWORD a2@<ebp>)
 // 42374A: variable 'v9' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
 // 514194: using guessed type int dword_514194;
@@ -36747,7 +36755,7 @@ signed int __usercall sub_423860@<eax>(DWORD a1@<ebp>, double a2@<st0>)
         Render_Begin((int)dword_544CD8, 0);
         memset_(v11, 0);
         sub_412B20((int)dword_526F78, 10, v15);
-        if ( sub_423050(dword_511B58, v15, v12, v7, a2, 0) )
+        if ( sub_423050(g_SelectedUnitIndex, v15, v12, v7, a2, 0) )
           memset_(v13, 0);
         Render_LoadResourceSprite(v13, a1);
         sub_423420(-1, a1);
@@ -36763,7 +36771,7 @@ signed int __usercall sub_423860@<eax>(DWORD a1@<ebp>, double a2@<st0>)
 // 423A59: variable 'v12' is possibly undefined
 // 423A6F: variable 'v13' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 // 5202E4: using guessed type int gameData;
 // 526F78: using guessed type _DWORD dword_526F78[10];
@@ -36800,13 +36808,13 @@ signed int sub_423AC0()
 int __usercall sub_423B00@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
 {
   dword_526994 = 1;
-  dword_514194 = dword_511B58;
+  dword_514194 = g_SelectedUnitIndex;
   memset_(a1, 0);
   sub_423420(-1, a2);
   return sub_418700(1);
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 // 526994: using guessed type int dword_526994;
 
@@ -36831,11 +36839,11 @@ int __thiscall sub_423B70(void *this)
 //----- (00423B90) --------------------------------------------------------
 int __usercall sub_423B90@<eax>(DWORD a1@<ebp>)
 {
-  dword_514194 = dword_511B58;
+  dword_514194 = g_SelectedUnitIndex;
   sub_423420(-1, a1);
   return sub_418700(1);
 }
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 
 //----- (00423BB0) --------------------------------------------------------
@@ -37365,7 +37373,7 @@ LABEL_14:
               sub_423CF0(v11, v12);
               sub_423E10(v11, v12);
             }
-            dword_511B58 = a1;
+            g_SelectedUnitIndex = a1;
             v28 = v12;
             v25 = 725 * a1;
             v26 = *(__int16 *)(gameData + 725 * a1 + 147176);
@@ -37398,7 +37406,7 @@ LABEL_14:
 // 424B6F: variable 'v21' is possibly undefined
 // 424C4C: variable 'v23' is possibly undefined
 // 424E8E: variable 'v27' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (00424EC0) --------------------------------------------------------
@@ -37410,7 +37418,7 @@ signed int __usercall sub_424EC0@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st
   signed int result; // eax
   int v9; // edx
 
-  dword_511B58 = a1;
+  g_SelectedUnitIndex = a1;
   v5 = 725 * a1;
   v6 = gameData + 725 * a1;
   v7 = *(__int16 *)(v6 + 147176);
@@ -37432,7 +37440,7 @@ signed int __usercall sub_424EC0@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st
   return result;
 }
 // 424F4D: variable 'v9' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
 // 5202E4: using guessed type int gameData;
@@ -37529,7 +37537,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
   int v13; // ecx
   int v14; // ecx
 
-  v4 = gameData + 725 * dword_511B58;
+  v4 = gameData + 725 * g_SelectedUnitIndex;
   if ( a1 == *(__int16 *)(v4 + 147174) && a2 - *(__int16 *)(v4 + 147176) == -1 )
   {
     v5 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
@@ -37539,7 +37547,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
   }
   else
   {
-    v9 = gameData + 725 * dword_511B58;
+    v9 = gameData + 725 * g_SelectedUnitIndex;
     if ( a1 - *(__int16 *)(v9 + 147174) == 1 && a2 == *(__int16 *)(v9 + 147176) )
     {
       v6 = 1;
@@ -37549,7 +37557,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
     }
     else
     {
-      v11 = gameData + 725 * dword_511B58;
+      v11 = gameData + 725 * g_SelectedUnitIndex;
       if ( a1 == *(__int16 *)(v11 + 147174) && a2 - *(__int16 *)(v11 + 147176) == 1 )
       {
         v12 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
@@ -37559,7 +37567,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
       }
       else
       {
-        result = gameData + 725 * dword_511B58;
+        result = gameData + 725 * g_SelectedUnitIndex;
         if ( a1 - *(__int16 *)(result + 147174) != -1 )
           return result;
         result = *(__int16 *)(result + 147176);
@@ -37573,15 +37581,15 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
     }
   }
   if ( (sub_424020(
-          *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
-          *(__int16 *)(gameData + 725 * dword_511B58 + 147176),
+          *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+          *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
           a2,
           a1)
      || sub_424120(a1, a2))
-    && sub_410010(725 * dword_511B58 + gameData + 147174) >= 6
-    || (result = sub_414150((__int16 *)(725 * dword_511B58 + gameData + 147174), a1, gameData, a2)) != 0
+    && sub_410010(725 * g_SelectedUnitIndex + gameData + 147174) >= 6
+    || (result = sub_414150((__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174), a1, gameData, a2)) != 0
     && (result = sub_41D980(a1, a2, 2)) == 0
-    && (result = sub_410010(725 * dword_511B58 + gameData + 147174), result >= v14)
+    && (result = sub_410010(725 * g_SelectedUnitIndex + gameData + 147174), result >= v14)
     && (result = Map_DestroyTile(a1, a2), result != 185) )
   {
     dword_527C34 = 1;
@@ -37591,7 +37599,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
 }
 // 425490: variable 'v14' is possibly undefined
 // 4254BF: variable 'v7' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514294: using guessed type int dword_514294[9];
 // 5142B8: using guessed type int dword_5142B8;
 // 5142BC: using guessed type int dword_5142BC;
@@ -37630,13 +37638,13 @@ int __usercall sub_4254E0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
       break;
   }
   dword_52698C = 0;
-  Road_Build(dword_511B58, v4, (char)sub_425120, a2, a3);
+  Road_Build(g_SelectedUnitIndex, v4, (char)sub_425120, a2, a3);
   dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))sub_425120;
   return sub_418700(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
 // 425510: variable 'v4' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
 
 //----- (00425540) --------------------------------------------------------
@@ -37654,8 +37662,8 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
   int *v12; // edx
 
   result = Map_DestroyTile(
-             *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
-             *(__int16 *)(gameData + 725 * dword_511B58 + 147176));
+             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
   if ( result != 185 )
   {
     v4 = 0;
@@ -37678,17 +37686,17 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
           v4 = ((_BYTE)dword_527C38 + 1) & 7;
           dword_527C38 = v4;
           sub_418A90(
-            *(__int16 *)(725 * dword_511B58 + gameData + 147174) - 1,
-            *(__int16 *)(725 * dword_511B58 + gameData + 147176));
+            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174) - 1,
+            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
           sub_418A90(
-            *(__int16 *)(725 * dword_511B58 + gameData + 147174),
-            *(__int16 *)(725 * dword_511B58 + gameData + 147176) - 1);
+            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
+            *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176) - 1);
           sub_418A90(
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147174) + 1,
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147176));
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174) + 1,
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
           sub_418A90(
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147174),
-            *(__int16 *)(gameData + 725 * dword_511B58 + 147176) + 1);
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
+            *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176) + 1);
         }
         if ( !sub_419DC0(dword_51438C, a1) )
         {
@@ -37702,7 +37710,7 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
         if ( DD_IsFlipping((int)dword_544CD8) )
         {
           LOBYTE(v6) = byte_54512C;
-          v10 = 725 * dword_511B58 + gameData;
+          v10 = 725 * g_SelectedUnitIndex + gameData;
           v4 = (((dword_544CFC >> byte_54512C)
                - 32
                - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
@@ -37768,7 +37776,7 @@ LABEL_13:
 // 4255E9: variable 'v7' is possibly undefined
 // 4255FF: variable 'v9' is possibly undefined
 // 4257B4: variable 'v6' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5142B8: using guessed type int dword_5142B8;
 // 5142ED: using guessed type int dword_5142ED;
 // 514322: using guessed type int dword_514322;
@@ -38509,7 +38517,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
   if ( v6 && *v6 )
   {
     sub_460D80((int)dword_544CD8, (int)&dword_519808);
-    dword_511B58 = v50;
+    g_SelectedUnitIndex = v50;
     v7 = 0;
     sub_430F80(0, 1, a3, 0);
     v8 = v5[3];
@@ -38595,7 +38603,7 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
             }
             DD_Pump((int)dword_544CD8, v11);
             sub_431CC0();
-            if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+            if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
               sub_42C840(v34);
             v35 = Time_Now(v34, (unsigned __int8)byte_512571[88 * *(__int16 *)(v51 + dword_532048 + 852)]);
             if ( v35 - v36 >= v37 )
@@ -38706,7 +38714,7 @@ LABEL_15:
 // 426A5D: variable 'v36' is possibly undefined
 // 426A61: variable 'v37' is possibly undefined
 // 426AA3: variable 'v39' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 512364: using guessed type int dword_512364;
 // 513334: using guessed type int dword_513334[];
@@ -39690,7 +39698,7 @@ LABEL_12:
   v12 = v6[11] & 0xFE;
   *((_BYTE *)v6 + 8) -= 5;
   *((_BYTE *)v6 + 22) = v12;
-  dword_511B58 = (int)a1;
+  g_SelectedUnitIndex = (int)a1;
   if ( !sub_42C0F0((unsigned __int16)v6[2], (unsigned __int16)v6[3])
     || !sub_42C0F0((unsigned __int16)v7[2], (unsigned __int16)v7[3]) )
   {
@@ -39751,7 +39759,7 @@ LABEL_12:
 // 42878E: variable 'v24' is possibly undefined
 // 42879E: variable 'v26' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 532048: using guessed type int dword_532048;
 
@@ -40462,7 +40470,7 @@ int __usercall sub_4298E0@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, int 
   log(a3, a4, a2, (int)aUnitbattle_a_0);
   if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
     return 0;
-  dword_511B58 = a1;
+  g_SelectedUnitIndex = a1;
   v7 = dword_532048 + 852 + 31 * a1;
   sub_42D290();
   v8 = *(unsigned __int16 *)(v7 + 4) - a2;
@@ -40539,7 +40547,7 @@ LABEL_18:
 // 429A85: variable 'v14' is possibly undefined
 // 429B24: variable 'v16' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 513A78: using guessed type __int16 word_513A78[];
 // 5202E4: using guessed type int gameData;
 // 532048: using guessed type int dword_532048;
@@ -40610,10 +40618,10 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
       LODWORD(result) = HIDWORD(qword_531CD8);
       if ( HIDWORD(result) == HIDWORD(qword_531CD8) )
       {
-        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, dword_511B58)
+        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex)
           && v1 != __PAIR64__(
-                     *(__int16 *)(gameData + 725 * dword_511B58 + 147176),
-                     *(__int16 *)(gameData + 725 * dword_511B58 + 147174)) )
+                     *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
+                     *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174)) )
         {
           LODWORD(result) = (*(int (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 24))(
                               (unsigned __int16)(v2 + 63),
@@ -40630,7 +40638,7 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
   {
     if ( result == qword_531CD8 )
     {
-      if ( sub_41DBA0(result, SHIDWORD(result), dword_531CD4, dword_511B58) )
+      if ( sub_41DBA0(result, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
       {
         v2 = (unsigned __int16)v2;
         (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40649,7 +40657,7 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
     }
     if ( result == __PAIR64__(HIDWORD(qword_531CD8), (int)qword_531CD8 + 1) )
     {
-      if ( sub_41DBA0(result - 1, SHIDWORD(result), dword_531CD4, dword_511B58) )
+      if ( sub_41DBA0(result - 1, SHIDWORD(result), dword_531CD4, g_SelectedUnitIndex) )
       {
         v4 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40668,7 +40676,7 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
     }
     if ( result == __PAIR64__(HIDWORD(qword_531CD8) + 1, (int)qword_531CD8 + 1) )
     {
-      if ( sub_41DBA0(result - 1, SHIDWORD(qword_531CD8), dword_531CD4, dword_511B58) )
+      if ( sub_41DBA0(result - 1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
       {
         v5 = (unsigned __int16)(v2 + 63);
         (*(void (__fastcall **)(int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40690,7 +40698,7 @@ int __usercall sub_429EC0@<eax>(__int64 result@<edx:eax>)
       LODWORD(result) = HIDWORD(qword_531CD8) + 1;
       if ( HIDWORD(result) == HIDWORD(qword_531CD8) + 1 )
       {
-        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, dword_511B58) )
+        if ( sub_41DBA0(v1, SHIDWORD(qword_531CD8), dword_531CD4, g_SelectedUnitIndex) )
         {
           v2 = (unsigned __int16)v2;
           (*(void (__fastcall **)(_DWORD, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 20))(
@@ -40723,7 +40731,7 @@ LABEL_26:
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E4: using guessed type int gameData;
 // 531CD4: using guessed type int dword_531CD4;
@@ -40821,8 +40829,8 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
     {
       if ( a1 == 3 )
       {
-        v8 = dword_511B58;
-        if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, dword_511B58, a4) == 1 )
+        v8 = g_SelectedUnitIndex;
+        if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, g_SelectedUnitIndex, a4) == 1 )
         {
           sub_4620F0((int)aZakl_pul, 1, v20, v8, 3u, (char)off_514834);
           v22[0] = (int)off_514834[0];
@@ -40836,8 +40844,8 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
       }
       else
       {
-        v8 = dword_511B58;
-        if ( Building_New(qword_531CD8, a1, dword_511B58, a4, (int)aZam, 0) == 1 )
+        v8 = g_SelectedUnitIndex;
+        if ( Building_New(qword_531CD8, a1, g_SelectedUnitIndex, a4, (int)aZam, 0) == 1 )
         {
           sub_4426C0((int)aStruktur_2, 64);
           Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
@@ -40863,7 +40871,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
 // 42A659: variable 'v21' is possibly undefined
 // 429E90: using guessed type int sub_429E90();
 // 511130: using guessed type char byte_511130;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5146C8: using guessed type int dword_5146C8;
 // 5146E0: using guessed type int (*off_5146E0)();
 // 514834: using guessed type char *off_514834[3];
@@ -41489,7 +41497,7 @@ BOOL __usercall sub_42B3F0@<eax>(int a1@<eax>, int a2@<edx>)
       && v5 != 147
       && v5 != 1
       && !sub_41D980(v6, a2, 2)
-      && *(unsigned __int16 *)(200 * v7 + gameData + 2 * a2 + 556374) == 0xFFFF
+      && *(unsigned __int16 *)(TILE_INDEX(v7, a2)) == 0xFFFF
       && !sub_43FB10(v7, a2)
       && !sub_443BB0(v8, a2) )
     {
@@ -41667,7 +41675,7 @@ signed int __usercall sub_42B770@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<
   v5 = (__int16 *)(gameData + 147174 + 725 * a1);
   if ( sub_4100B0((int)v5) >= 3 )
   {
-    v16 = sub_40F8B0((int)v5);
+    v16 = UnitStack_GetVisionRadius((int)v5);
     v17 = *v5 - v16;
     v28 = v16;
     v27 = 100 * v17;
@@ -42292,28 +42300,28 @@ LABEL_5:
   IsKeyPressed = Input_IsKeyPressed(56);
   if ( IsKeyPressed )
   {
-    if ( Input_IsKeyPressed(205) && dword_511B58 != -1 )
+    if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
     {
       v2 = dword_532048;
-      v3 = 31 * dword_511B58;
-      v4 = *(_BYTE *)(dword_532048 + 31 * dword_511B58 + 855) + 1;
+      v3 = 31 * g_SelectedUnitIndex;
+      v4 = *(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 855) + 1;
       *(_BYTE *)(dword_532048 + v3 + 855) = v4;
       *(_BYTE *)(v2 + v3 + 855) = v4 & 7;
-      sub_431FB0(dword_511B58);
+      sub_431FB0(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(205) )
       {
         sub_431CC0();
         DD_Pump((int)dword_544CD8, (char)dword_544CD8);
       }
     }
-    if ( Input_IsKeyPressed(203) && dword_511B58 != -1 )
+    if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
     {
       v5 = dword_532048;
-      v6 = 31 * dword_511B58;
-      v7 = *(_BYTE *)(dword_532048 + 31 * dword_511B58 + 855) - 1;
+      v6 = 31 * g_SelectedUnitIndex;
+      v7 = *(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 855) - 1;
       *(_BYTE *)(dword_532048 + v6 + 855) = v7;
       *(_BYTE *)(v5 + v6 + 855) = v7 & 7;
-      sub_431FB0(dword_511B58);
+      sub_431FB0(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(203) )
       {
         sub_431CC0();
@@ -42323,19 +42331,19 @@ LABEL_5:
     IsKeyPressed = Input_IsKeyPressed(200);
     if ( IsKeyPressed )
     {
-      if ( dword_511B58 != -1 )
+      if ( g_SelectedUnitIndex != -1 )
       {
-        v8 = 31 * dword_511B58 + dword_532048 + 852;
+        v8 = 31 * g_SelectedUnitIndex + dword_532048 + 852;
         v9 = *(unsigned __int8 *)(v8 + 3);
         v10 = Map_NeighborDY[2 * v9];
         v12 = sub_425A00(
-                dword_511B58,
+                g_SelectedUnitIndex,
                 Map_NeighborDX[2 * v9] + *(unsigned __int16 *)(v8 + 4),
                 v8,
                 v10 + *(unsigned __int16 *)(v8 + 6),
                 v10);
-        LOWORD(IsKeyPressed) = 31 * dword_511B58;
-        *(_DWORD *)(dword_532048 + 31 * dword_511B58 + 875) = v12;
+        LOWORD(IsKeyPressed) = 31 * g_SelectedUnitIndex;
+        *(_DWORD *)(dword_532048 + 31 * g_SelectedUnitIndex + 875) = v12;
         if ( v12 )
         {
           v13 = HIWORD(*(_DWORD *)(*(_DWORD *)(v11 + 23) + 4));
@@ -42346,8 +42354,8 @@ LABEL_5:
           }
           else
           {
-            sub_441B00(*(__int16 *)(dword_532048 + 31 * dword_511B58 + 852));
-            LOWORD(IsKeyPressed) = sub_4266E0(dword_511B58, v14, v13, v10);
+            sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+            LOWORD(IsKeyPressed) = sub_4266E0(g_SelectedUnitIndex, v14, v13, v10);
           }
         }
       }
@@ -42358,7 +42366,7 @@ LABEL_5:
 // 42C7D4: variable 'v11' is possibly undefined
 // 42C815: variable 'v14' is possibly undefined
 // 42C829: variable 'v15' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
 // 5202E4: using guessed type int gameData;
@@ -42545,19 +42553,19 @@ __int16 sub_42CB50()
     {
       if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(dword_532048 + 31 * v5 + 854) == dword_5202EC )
       {
-        if ( v5 == -1 || *(_WORD *)(31 * dword_511B58 + dword_532048 + 852) == 13 )
+        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == 13 )
         {
           if ( *(_BYTE *)(dword_532048 + 20 * v2 + v3 + 3134) )
           {
             if ( dword_53205C )
             {
-              if ( sub_4287E0(dword_511B58, v2, v3)
-                && (v17 = dword_532048 + 31 * dword_511B58, *(unsigned __int8 *)(v17 + 860) >= 5u)
+              if ( sub_4287E0(g_SelectedUnitIndex, v2, v3)
+                && (v17 = dword_532048 + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(v17 + 860) >= 5u)
                 && (unsigned __int8)(2 * *(_BYTE *)(v17 + 864)) >> 5 < (*(_BYTE *)(v17 + 864) & 3) + 1 )
               {
                 if ( DD_IsFlipping((int)dword_544CD8) )
                 {
-                  sub_441B00(*(__int16 *)(dword_532048 + 31 * dword_511B58 + 852));
+                  sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                   sub_429BD0(v18, v2);
                   Render_Begin((int)dword_544CD8, 0);
                 }
@@ -42569,21 +42577,21 @@ __int16 sub_42CB50()
             }
             else
             {
-              v14 = *(unsigned __int16 *)(31 * dword_511B58 + dword_532048 + 856) - v2;
+              v14 = *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 856) - v2;
               if ( v14 <= 0 )
-                v14 = v2 - *(unsigned __int16 *)(31 * dword_511B58 + dword_532048 + 856);
-              if ( v14 != 1 || *(unsigned __int16 *)(31 * dword_511B58 + dword_532048 + 858) != v3 )
+                v14 = v2 - *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 856);
+              if ( v14 != 1 || *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 858) != v3 )
               {
                 sub_4190B0();
-                sub_4264D0(dword_511B58, v2, v3, v5);
+                sub_4264D0(g_SelectedUnitIndex, v2, v3, v5);
                 sub_4190C0();
                 if ( v16 )
                   j__nfree_();
               }
               if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
               {
-                sub_441B00(*(__int16 *)(dword_532048 + 31 * dword_511B58 + 852));
-                sub_4298E0(dword_511B58, v2, v15, v3);
+                sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                sub_4298E0(g_SelectedUnitIndex, v2, v15, v3);
                 Render_Begin((int)dword_544CD8, 0);
               }
             }
@@ -42591,7 +42599,7 @@ __int16 sub_42CB50()
           else
           {
             sub_4190B0();
-            sub_425A00(dword_511B58, v2, v19, v3, v5);
+            sub_425A00(g_SelectedUnitIndex, v2, v19, v3, v5);
             sub_4190C0();
             if ( v20 )
             {
@@ -42602,15 +42610,15 @@ __int16 sub_42CB50()
             {
               HIWORD(v26) = 1000;
             }
-            if ( HIWORD(v26) <= (int)*(unsigned __int8 *)(dword_532048 + 31 * dword_511B58 + 860) )
+            if ( HIWORD(v26) <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
             {
               if ( DD_IsFlipping((int)dword_544CD8) )
               {
-                v21 = sub_425A00(dword_511B58, v2, (int)v7, v3, v5);
+                v21 = sub_425A00(g_SelectedUnitIndex, v2, (int)v7, v3, v5);
                 v22 = dword_532048;
-                *(_DWORD *)(31 * dword_511B58 + dword_532048 + 875) = v21;
-                sub_441B00(*(__int16 *)(dword_532048 + 31 * dword_511B58 + 852));
-                sub_4266E0(dword_511B58, v23, v22, v5);
+                *(_DWORD *)(31 * g_SelectedUnitIndex + dword_532048 + 875) = v21;
+                sub_441B00(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                sub_4266E0(g_SelectedUnitIndex, v23, v22, v5);
                 Render_Begin((int)dword_544CD8, v24);
               }
             }
@@ -42624,24 +42632,24 @@ __int16 sub_42CB50()
         if ( DD_IsLost((int)dword_544CD8) )
           Unit_Info(100, 100, 0, (unsigned __int8 *)(dword_532048 + 852 + 31 * v5), v5, 0);
         sub_4190B0();
-        sub_4262D0(dword_511B58, v10, v3, v5);
+        sub_4262D0(g_SelectedUnitIndex, v10, v3, v5);
         sub_4190C0();
         if ( v11 )
         {
           j__nfree_();
           if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
           {
-            sub_428400((unsigned __int16 *)dword_511B58, v5, dword_532060);
-            if ( *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852) == -1 )
+            sub_428400((unsigned __int16 *)g_SelectedUnitIndex, v5, dword_532060);
+            if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
               sub_42D3A0(0, v12, v3);
             Render_Begin((int)dword_544CD8, 0);
           }
           goto LABEL_13;
         }
       }
-      else if ( sub_428850(dword_511B58, v5) )
+      else if ( sub_428850(g_SelectedUnitIndex, v5) )
       {
-        v13 = dword_532048 + 31 * dword_511B58;
+        v13 = dword_532048 + 31 * g_SelectedUnitIndex;
         if ( *(unsigned __int8 *)(v13 + 860) >= 5u
           && (unsigned __int8)(2 * *(_BYTE *)(v13 + 864)) >> 5 < (*(_BYTE *)(v13 + 864) & 3) + 1 )
         {
@@ -42660,15 +42668,15 @@ __int16 sub_42CB50()
       v8 = dword_5202EC;
       if ( *(unsigned __int8 *)(v6 + dword_532048 + 854) == dword_5202EC )
       {
-        v9 = dword_511B58;
-        if ( v5 != dword_511B58 )
+        v9 = g_SelectedUnitIndex;
+        if ( v5 != g_SelectedUnitIndex )
         {
-          dword_511B58 = v5;
+          g_SelectedUnitIndex = v5;
           sub_42D2C0();
           sub_431DE0(v9);
           sub_431DE0(v5);
           sub_430F80(0, 1, v8, v3);
-          sub_441A30(*(__int16 *)(dword_532048 + 31 * dword_511B58 + 852));
+          sub_441A30(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
         }
       }
     }
@@ -42693,7 +42701,7 @@ LABEL_13:
 // 42D23E: variable 'v24' is possibly undefined
 // 429740: using guessed type int __fastcall sub_429740(_DWORD, _DWORD);
 // 429BD0: using guessed type int __fastcall sub_429BD0(_DWORD, _DWORD);
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202EC: using guessed type int dword_5202EC;
 // 532048: using guessed type int dword_532048;
 // 53205C: using guessed type int dword_53205C;
@@ -42712,10 +42720,10 @@ __int16 sub_42D250()
   dword_532074 = Time_Now(2, 1);
   dword_514BEA = v1;
   sub_419D60((int)&unk_514BE2, v1);
-  return sub_431DE0(dword_511B58);
+  return sub_431DE0(g_SelectedUnitIndex);
 }
 // 42D271: variable 'v1' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514BEA: using guessed type int dword_514BEA;
 // 532060: using guessed type int dword_532060;
 // 532074: using guessed type int dword_532074;
@@ -42726,9 +42734,9 @@ __int16 sub_42D290()
   dword_532060 = 0;
   dword_514BEA = 1;
   sub_419D60((int)&unk_514BE2, 1);
-  return sub_431DE0(dword_511B58);
+  return sub_431DE0(g_SelectedUnitIndex);
 }
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514BEA: using guessed type int dword_514BEA;
 // 532060: using guessed type int dword_532060;
 
@@ -42744,14 +42752,14 @@ int sub_42D2C0()
   if ( dword_532060 )
     sub_42D290();
   v1 = dword_532048;
-  if ( !byte_512582[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)] )
+  if ( !byte_512582[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)] )
   {
     v1 = 1;
-    dword_53205C = (unsigned __int8)byte_512582[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)];
+    dword_53205C = (unsigned __int8)byte_512582[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)];
     dword_514B80 = 1;
     goto LABEL_6;
   }
-  if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)] )
+  if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)] )
   {
     dword_514B80 = 2;
     dword_53205C = 1;
@@ -42767,7 +42775,7 @@ LABEL_6:
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int dword_532048;
 // 53205C: using guessed type int dword_53205C;
@@ -42785,14 +42793,14 @@ int __usercall __spoils<ecx> sub_42D3A0@<eax>(int a1@<eax>, int a2@<ecx>, char a
 
   if ( a1 )
     sub_419E60(a1, a2);
-  for ( i = (dword_511B58 + 1) % 22; i != dword_511B58; i = (i + 1) % 22 )
+  for ( i = (g_SelectedUnitIndex + 1) % 22; i != g_SelectedUnitIndex; i = (i + 1) % 22 )
   {
     v4 = 31 * i + dword_532048;
     if ( *(__int16 *)(v4 + 852) != -1 && *(unsigned __int8 *)(v4 + 854) == dword_5202EC )
       break;
   }
   v5 = dword_532048;
-  dword_511B58 = i;
+  g_SelectedUnitIndex = i;
   if ( !sub_42C0F0(
           *(unsigned __int16 *)(dword_532048 + 31 * i + 856),
           *(unsigned __int16 *)(dword_532048 + 31 * i + 858)) )
@@ -42800,7 +42808,7 @@ int __usercall __spoils<ecx> sub_42D3A0@<eax>(int a1@<eax>, int a2@<ecx>, char a
   sub_42D2C0();
   sub_430C20();
   sub_430F80(0, 1, v5, a3);
-  v7 = dword_532048 + 31 * dword_511B58;
+  v7 = dword_532048 + 31 * g_SelectedUnitIndex;
   result = *(__int16 *)(v7 + 852);
   if ( result != -1 )
   {
@@ -42810,7 +42818,7 @@ int __usercall __spoils<ecx> sub_42D3A0@<eax>(int a1@<eax>, int a2@<ecx>, char a
   return result;
 }
 // 42D43B: variable 'v6' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 // 532048: using guessed type int dword_532048;
@@ -42821,11 +42829,11 @@ __int16 __spoils<ecx> sub_42D4E0()
   int v1; // eax
   int v2; // ecx
 
-  v1 = 88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852);
+  v1 = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
   if ( byte_51257E[v1] )
   {
-    LOWORD(v1) = (unsigned __int8)byte_512582[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)];
-    if ( byte_512582[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)] )
+    LOWORD(v1) = (unsigned __int8)byte_512582[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)];
+    if ( byte_512582[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)] )
     {
       LOWORD(v1) = Render_Begin((int)dword_544CD8, 0);
       LOBYTE(dword_53205C) = dword_53205C ^ 1;
@@ -42844,7 +42852,7 @@ __int16 __spoils<ecx> sub_42D4E0()
   return v1;
 }
 // 42D53C: variable 'v2' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 532048: using guessed type int dword_532048;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
@@ -42882,13 +42890,13 @@ int __spoils<ecx> sub_42D5B0()
   int v4; // ecx
   int v5; // ecx
 
-  result = (unsigned __int8)byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)];
-  if ( byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)] )
+  result = (unsigned __int8)byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)];
+  if ( byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)] )
   {
     Render_Begin((int)dword_544CD8, 0);
     LOBYTE(dword_532060) = dword_532060 ^ 1;
     dword_532074 = Time_Now(v3, v2);
-    result = sub_431FB0(dword_511B58);
+    result = sub_431FB0(g_SelectedUnitIndex);
     if ( dword_532060 )
     {
       result = sub_4426C0(aBattleSzarza, 64);
@@ -42911,7 +42919,7 @@ int __spoils<ecx> sub_42D5B0()
 // 42D5F7: variable 'v2' is possibly undefined
 // 42D614: variable 'v4' is possibly undefined
 // 42D62E: variable 'v5' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514B80: using guessed type int dword_514B80;
 // 532048: using guessed type int dword_532048;
@@ -42930,10 +42938,10 @@ int __usercall __spoils<ecx> sub_42D670@<eax>(int a1@<eax>, int a2@<ecx>, DWORD 
 
   v9[4] = a2;
   v6 = dword_532048;
-  result = 31 * dword_511B58;
-  if ( (*(_BYTE *)(dword_532048 + 31 * dword_511B58 + 874) & 1) == 0 )
+  result = 31 * g_SelectedUnitIndex;
+  if ( (*(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 874) & 1) == 0 )
   {
-    sub_419E60(a1, dword_511B58);
+    sub_419E60(a1, g_SelectedUnitIndex);
     if ( !sub_429E30(v8, v6, a3) )
     {
       v9[0] = (int)off_514B68[0];
@@ -42948,7 +42956,7 @@ int __usercall __spoils<ecx> sub_42D670@<eax>(int a1@<eax>, int a2@<ecx>, DWORD 
 }
 // 42D6A8: variable 'v8' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B68: using guessed type char *off_514B68[3];
 // 532048: using guessed type int dword_532048;
 
@@ -43173,7 +43181,7 @@ int __usercall sub_42DAE0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   UI_DrawTextFmt(v16, v18, v16, v19 + 40, 3, v13[(unsigned __int8)g_LanguageIndex]);
   Render_ReleaseSurface(8, v7);
   v10 = v18;
-  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, 1423 * dword_5202EC + gameData + 140024 + 4);
+  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, PLAYER_DATA(dword_5202EC) + 140024 + 4);
   UI_DrawTextFmt(v17, v10, v9, v19 + 100, 3, *(_DWORD *)(v17 + 4 * (unsigned __int8)g_LanguageIndex));
   sub_419D80(v12);
   Render_Present((int)dword_544CD8);
@@ -43226,7 +43234,7 @@ int __usercall sub_42DEC0@<eax>(int a1@<eax>, int a2@<ebx>, int a3@<edi>)
   int i; // [esp+24h] [ebp-1Ch]
   int j; // [esp+24h] [ebp-1Ch]
 
-  sub_430F80(dword_532048 + 852 + 31 * dword_511B58, 0, a2, a3);
+  sub_430F80(dword_532048 + 852 + 31 * g_SelectedUnitIndex, 0, a2, a3);
   Render_Pump();
   g_RenderDevice = &unk_51D4C0;
   for ( i = 0; i < 6; ++i )
@@ -43236,7 +43244,7 @@ int __usercall sub_42DEC0@<eax>(int a1@<eax>, int a2@<ebx>, int a3@<edi>)
     v5 = -(char)i;
     byte_532088[v4] = v5;
   }
-  v6 = 31 * dword_511B58 + dword_532048;
+  v6 = 31 * g_SelectedUnitIndex + dword_532048;
   v7 = *(_BYTE *)(v6 + 864) & 3;
   byte_514DC3 = 9 * v7;
   v8 = *(char *)(v6 + 863);
@@ -43314,7 +43322,7 @@ int __usercall sub_42DEC0@<eax>(int a1@<eax>, int a2@<ebx>, int a3@<edi>)
 // 42DF9C: variable 'v10' is possibly undefined
 // 42DFA3: variable 'v12' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 514DA4: using guessed type __int16 word_514DA4[];
 // 514DA6: using guessed type __int16 word_514DA6[];
 // 514DC3: using guessed type char byte_514DC3;
@@ -43445,13 +43453,13 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
   int v6; // ecx
   int v8[9]; // [esp+0h] [ebp-24h] BYREF
 
-  dword_511B58 = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
-  if ( *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852) == -1 )
+  g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
+  if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
   {
-    v2 = dword_511B58 + 1;
-    if ( dword_511B58 + 1 != dword_511B58 )
+    v2 = g_SelectedUnitIndex + 1;
+    if ( g_SelectedUnitIndex + 1 != g_SelectedUnitIndex )
     {
-      a1 = dword_511B58;
+      a1 = g_SelectedUnitIndex;
       do
       {
         v3 = dword_532048 + 31 * v2;
@@ -43459,9 +43467,9 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
           break;
         v2 = (v2 + 1) % 22;
       }
-      while ( v2 != dword_511B58 );
+      while ( v2 != g_SelectedUnitIndex );
     }
-    dword_511B58 = v2;
+    g_SelectedUnitIndex = v2;
   }
   sub_42D2C0();
   *(_DWORD *)(dword_532048 + 808) = *(unsigned __int8 *)(dword_532048 + 2 * dword_5202EC + 3934);
@@ -43487,7 +43495,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
       sub_42C600();
       if ( sub_419DC0(dword_514B78, v5) == 1 )
       {
-        v4 = (int)(**(&off_512568 + 22 * *(__int16 *)(dword_532048 + 31 * dword_511B58 + 852)))[(unsigned __int8)g_LanguageIndex];
+        v4 = (int)(**(&off_512568 + 22 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)))[(unsigned __int8)g_LanguageIndex];
         sub_4229A0(3, (char *)v4, v8[0]);
       }
       if ( !sub_42C4E0() )
@@ -43503,7 +43511,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
 }
 // 42E4F2: variable 'v6' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512568: using guessed type char *(*off_512568)[102];
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514E2C: using guessed type char *off_514E2C[6];
@@ -44108,7 +44116,7 @@ LABEL_5:
   dword_5202EC = *(_DWORD *)(dword_532048 + 836);
   dword_53205C = 0;
   dword_532064 = 0;
-  dword_511B58 = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
+  g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
   sub_430C20();
   v47 = 20;
   sub_430F80(0, v48, 20, (int)v43);
@@ -44117,7 +44125,7 @@ LABEL_5:
   sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
   dword_545150 = (int)&unk_5196A0;
   Render_Present((int)dword_544CD8);
-  v50 = *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) == 0;
+  v50 = PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) == 0;
   log(v51, 20, v41, (int)aStart_0);
   v52 = 0;
   sub_42C180(v53, 20, 0);
@@ -44136,7 +44144,7 @@ LABEL_5:
         *(_BYTE *)(v54 + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824) + 3134) = *(_BYTE *)(dword_532048 + 832);
       }
     }
-    if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
     {
       if ( v50 )
         sub_42DEC0(0, v47, v50);
@@ -44168,16 +44176,16 @@ LABEL_5:
     }
     if ( v55 )
       break;
-    v68 = 1423 * dword_5202EC + gameData;
+    v68 = PLAYER_DATA(dword_5202EC);
     if ( *(_DWORD *)(v68 + 140073) )
       *(_DWORD *)(v68 + 140077) = 0;
     else
       ++*(_DWORD *)(v68 + 140077);
     v69 = dword_5202EC;
-    if ( *(int *)(gameData + 1423 * dword_5202EC + 140077) >= 2 )
+    if ( *(int *)(PLAYER_DATA(dword_5202EC) + 140077) >= 2 )
       GodAnger(dword_5202EC, dword_5202EC, v47);
-    *(_DWORD *)(gameData + 1423 * dword_5202EC + 140073) = 0;
-    *(_DWORD *)(4 * dword_5202EC + dword_532048 + 3944) = dword_511B58;
+    *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140073) = 0;
+    *(_DWORD *)(4 * dword_5202EC + dword_532048 + 3944) = g_SelectedUnitIndex;
     *(_BYTE *)(dword_532048 + 2 * dword_5202EC + 3934) = *(_BYTE *)(dword_532048 + 808);
     *(_BYTE *)(dword_532048 + 2 * dword_5202EC + 3935) = *(_BYTE *)(dword_532048 + 812);
     if ( dword_5202EC == *(_DWORD *)(dword_532048 + 844) )
@@ -44203,7 +44211,7 @@ LABEL_5:
       else
         dword_5202EC = *(_DWORD *)(dword_532048 + 836);
     }
-    dword_511B58 = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
+    g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * dword_5202EC + 3944);
     if ( dword_5202EC == *(_DWORD *)(dword_532048 + 836) )
       sub_42C4C0(v69, v47, v52);
   }
@@ -44244,7 +44252,7 @@ LABEL_5:
   sub_40C3F0();
   sub_413120(v66, v60);
   CSS_EmptySampleCache();
-  dword_511B58 = -1;
+  g_SelectedUnitIndex = -1;
   dword_5202EC = v78;
   CSS_EmptySampleCache();
   sub_441870(v76);
@@ -44282,7 +44290,7 @@ LABEL_5:
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514C99: using guessed type int dword_514C99;
@@ -44397,7 +44405,7 @@ LABEL_7:
   v29 = SpriteForChar;
   if ( dword_514E48 == -1 )
     dword_5320F8 = 0;
-  if ( a1 == dword_511B58 && dword_532060 )
+  if ( a1 == g_SelectedUnitIndex && dword_532060 )
   {
     v12 = Time_Now(v11, v10);
     v13 = sub_415D80(2 * (v12 - dword_532074) - 90);
@@ -44476,7 +44484,7 @@ LABEL_13:
 // 42FA1E: variable 'v22' is possibly undefined
 // 42FA77: variable 'v25' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 512364: using guessed type int dword_512364;
 // 513334: using guessed type int dword_513334[];
@@ -44948,7 +44956,7 @@ LABEL_30:
         0,
         0);
     }
-    if ( v46 == dword_511B58 && dword_512360 == -1 )
+    if ( v46 == g_SelectedUnitIndex && dword_512360 == -1 )
     {
       v33 = DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -44986,7 +44994,7 @@ LABEL_30:
 // 4303A7: variable 'v18' is possibly undefined
 // 43080C: variable 'v34' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 51257A: using guessed type int dword_51257A[];
 // 514E54: using guessed type int dword_514E54;
@@ -45168,10 +45176,10 @@ int __usercall sub_430F80@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, in
   {
     v4 = (__int16 *)result;
   }
-  else if ( dword_511B58 != -1 )
+  else if ( g_SelectedUnitIndex != -1 )
   {
-    result = 31 * dword_511B58;
-    v4 = (__int16 *)(dword_532048 + 852 + 31 * dword_511B58);
+    result = 31 * g_SelectedUnitIndex;
+    v4 = (__int16 *)(dword_532048 + 852 + 31 * g_SelectedUnitIndex);
   }
   if ( v4 )
   {
@@ -45493,7 +45501,7 @@ LABEL_36:
 // 4317EE: variable 'v37' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512568: using guessed type char *(*off_512568)[102];
 // 514DA4: using guessed type __int16 word_514DA4[];
 // 514DA6: using guessed type __int16 word_514DA6[];
@@ -45748,9 +45756,9 @@ LABEL_7:
   while ( v1 < 22 );
   if ( dword_532060 )
   {
-    LOWORD(v11) = dword_511B58;
-    if ( dword_511B58 != dword_512360 )
-      LOWORD(v11) = sub_431DE0(dword_511B58);
+    LOWORD(v11) = g_SelectedUnitIndex;
+    if ( g_SelectedUnitIndex != dword_512360 )
+      LOWORD(v11) = sub_431DE0(g_SelectedUnitIndex);
   }
   return v11;
 }
@@ -45760,7 +45768,7 @@ LABEL_7:
 // 431D46: variable 'v10' is possibly undefined
 // 431D50: variable 'v12' is possibly undefined
 // 431DA6: variable 'v15' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
 // 532048: using guessed type int dword_532048;
 // 532060: using guessed type int dword_532060;
@@ -46024,13 +46032,13 @@ signed int __usercall sub_4327B0@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>, 
   *(_BYTE *)(dword_532048 + v8 + 864) &= 0x8Fu;
   *(_WORD *)(40 * a2 + dword_532048 + 2 * a4 + 1534) = v6;
   *(_DWORD *)(dword_532048 + 4 * a1[2] + 3944) = v6;
-  dword_511B58 = v6;
+  g_SelectedUnitIndex = v6;
   sub_430C20();
   sub_430F80(0, 1, a4, v9);
   return 1;
 }
 // 4327DE: variable 'v5' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 532048: using guessed type int dword_532048;
 
 //----- (00432910) --------------------------------------------------------
@@ -48481,7 +48489,7 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
       }
       else
       {
-        UI_DrawText(dword_53242C, v4 + dword_532430, 467 * v8 + gameData + 509674 + 5);
+        UI_DrawText(dword_53242C, v4 + dword_532430, UNIT_RECORD(v8) + 5);
         SpriteForChar = DLX_GetSpriteForChar(dword_532428, v9);
         v19 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v19 + 52))(
@@ -53636,7 +53644,7 @@ BOOL __usercall sub_43E0C0@<eax>(unsigned __int8 *a1@<eax>)
       && v4 < *(_DWORD *)(gameData + 140000)
       && v5 >= 0
       && v5 < *(_DWORD *)(gameData + 140004)
-      && *(unsigned __int16 *)(gameData + 200 * v4 + 2 * v5 + 556374) == 0xFFFF
+      && *(unsigned __int16 *)(TILE_INDEX(v4, v5)) == 0xFFFF
       && sub_413DD0(a1[2], 0, v5, v4) )
     {
       break;
@@ -53688,7 +53696,7 @@ signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>,
       && v6 < *(_DWORD *)(gameData + 140000)
       && v7 >= 0
       && v7 < *(_DWORD *)(gameData + 140004)
-      && *(unsigned __int16 *)(gameData + 200 * v6 + 2 * v7 + 556374) == 0xFFFF
+      && *(unsigned __int16 *)(TILE_INDEX(v6, v7)) == 0xFFFF
       && sub_413DD0(a1[2], 0, v7, v6) )
     {
       break;
@@ -53704,7 +53712,7 @@ signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>,
   Unit_Create(0xFFFFFFFF, a1[2], v10, v11, v9);
   v12 = a2;
   v13 = 0;
-  v27 = (__int16 *)(725 * *(unsigned __int16 *)(gameData + 200 * v10 + 2 * v9 + 556374) + gameData + 147174);
+  v27 = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(v10, v9)) + gameData + 147174);
   v14 = v27 + 3;
   if ( *a2 != -1 )
   {
@@ -53727,12 +53735,12 @@ signed int __usercall sub_43E160@<eax>(unsigned __int8 *a1@<eax>, int *a2@<edx>,
   sub_40FEC0(v27, (DWORD)a1, a3);
   Rules_LinkArmyFact(v27, v17, v18, a3, (char)v14, (DWORD)a1);
   sub_455070(v27, 0, v19, (char)v14, (DWORD)a1, a3);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374) - 0x8000, v20, v21);
-  sub_40F900(*(unsigned __int16 *)(200 * *v27 + gameData + 2 * v27[1] + 556374));
-  sub_444150(*(unsigned __int16 *)(200 * *v27 + gameData + 2 * v27[1] + 556374), v22);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000, v20, v21);
+  UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])));
+  sub_444150(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])), v22);
   log(v23, (char)v14, (DWORD)a1, (int)aBuildings_unit);
   Unit_DebugDumpFormationSizes((int)v27, (DWORD)a1);
-  return *(unsigned __int16 *)(gameData + 200 * *v27 + 2 * v27[1] + 556374);
+  return *(unsigned __int16 *)(TILE_INDEX(*v27, v27[1]));
 }
 // 43E33C: variable 'v17' is possibly undefined
 // 43E33C: variable 'v18' is possibly undefined
@@ -53753,7 +53761,7 @@ int __usercall sub_43E4B0@<eax>(int a1@<eax>)
   int i; // edx
   int v5; // ecx
 
-  v1 = gameData + 509674 + 467 * a1;
+  v1 = UNIT_RECORD(a1);
   v2 = 0;
   v3 = v1;
   for ( i = 0; ; ++i )
@@ -53805,7 +53813,7 @@ signed int __usercall Building_UnitGetInto@<eax>(
   Render_DrawSprite_v3(v5, i);
   v7 = 725 * v6 + gameData + 147174;
   v29 = (__int16 *)v7;
-  v8 = 467 * a2 + gameData + 509674;
+  v8 = UNIT_RECORD(a2);
   if ( *(_DWORD *)(v7 + 316) )
     *(_DWORD *)(v7 + 316) = 0;
   if ( sub_412AC0(v7) )
@@ -53910,7 +53918,7 @@ signed int __usercall sub_43E770@<eax>(int a1@<eax>, int a2@<edx>)
   int v5; // edx
   int v6; // edx
 
-  v2 = 467 * a2 + gameData + 509674;
+  v2 = UNIT_RECORD(a2);
   v3 = 725 * a1 + gameData + 147174;
   if ( *(_WORD *)(v2 + 16) )
     return 0;
@@ -54264,7 +54272,7 @@ int __usercall sub_43EC40@<eax>(unsigned __int8 *a1@<eax>, unsigned __int8 *a2@<
     }
   }
   return Building_OnGarrisonChange(
-           *(unsigned __int16 *)(200 * *a1 + gameData + 2 * a1[1] + 556374) - 0x8000,
+           *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000,
            (int)a2,
            a3);
 }
@@ -55133,7 +55141,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
     v5 = v17;
     for ( i = 0; i != 4; ++i )
     {
-      sub_40F440((int)v5, dword_515D40[i], v3);
+      UnitSlot_InitFromType((int)v5, dword_515D40[i], v3);
       v5 = (_WORD *)((char *)v5 + 31);
     }
     v4 = 4;
@@ -55159,7 +55167,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
           v13 = v16;
           v14 = dword_515D10[v15];
         }
-        sub_40F440((int)v9, v14, v13);
+        UnitSlot_InitFromType((int)v9, v14, v13);
         ++v8;
         v9 = (_WORD *)((char *)v9 + 31);
       }
@@ -55170,7 +55178,7 @@ __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>
   result = (__int16 *)sub_412520(v18, v19, (unsigned __int8 *)v17, a3);
   if ( result )
     return (__int16 *)sub_418D90(
-                        *(unsigned __int16 *)(200 * *result + gameData + 2 * result[1] + 556374),
+                        *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
                         (int)result,
                         200 * *result + gameData);
   return result;
@@ -55204,7 +55212,7 @@ __int16 *__usercall sub_43FDE0@<eax>(signed int a1@<eax>, int a2@<edx>, char a3@
   v15 = a4;
   v6 = 0;
   v7 = 31 * (a1 / 100);
-  for ( i = 0; i <= v7; sub_40F440((int)v13 + i, 31, a3) )
+  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, 31, a3) )
     ++v6;
   v9 = v17;
   *(_WORD *)((char *)v13 + i) = -1;
@@ -55216,7 +55224,7 @@ __int16 *__usercall sub_43FDE0@<eax>(signed int a1@<eax>, int a2@<edx>, char a3@
   result = (__int16 *)sub_412520(v16, v15, (unsigned __int8 *)v13, a5);
   if ( result )
     return (__int16 *)sub_418D90(
-                        *(unsigned __int16 *)(gameData + 200 * *result + 2 * result[1] + 556374),
+                        *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
                         (int)result,
                         gameData + 200 * *result);
   return result;
@@ -55409,11 +55417,11 @@ void __usercall Temple_ProcessGift(DWORD a1@<eax>, __int16 *a2@<edx>, int a3@<ec
       return;
     case 2u:
       sub_4127F0(a2, -100, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), 200 * *a2 + gameData, v9);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
       return;
     case 3u:
       sub_4128E0(a2, 20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), 200 * *a2 + gameData, v10);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
       return;
     case 4u:
       v11 = a2;
@@ -55445,7 +55453,7 @@ void __usercall Temple_ProcessGift(DWORD a1@<eax>, __int16 *a2@<edx>, int a3@<ec
       while ( v12 < 10 );
 LABEL_9:
       sub_455070(a2, v12, v13, a4, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), 200 * *a2 + gameData, v14);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
       return;
     case 6u:
       do
@@ -55454,14 +55462,14 @@ LABEL_9:
       goto LABEL_15;
     case 7u:
       sub_4128E0(a2, 2, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), a2[1], v18);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
       return;
     case 8u:
       do
         sub_4129E0(a2, a1, a5);
       while ( v19 < 2 );
 LABEL_15:
-      sub_418E30(*(unsigned __int16 *)(gameData + 200 * *a2 + 2 * a2[1] + 556374), gameData + 200 * *a2, v16);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
       break;
     case 9u:
       sub_43FDE0(100, a4, *((_BYTE *)a2 + 4), v7, a5);
@@ -55477,12 +55485,12 @@ LABEL_15:
       break;
     case 0xDu:
       sub_4128E0(a2, -20, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), 200 * *a2 + gameData, v20);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
       break;
     case 0xEu:
       sub_4128E0(a2, -1, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
       sub_4127F0(a2, 50, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(200 * *a2 + gameData + 2 * a2[1] + 556374), 200 * *a2 + gameData, v21);
+      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
       break;
     default:
       return;
@@ -55920,7 +55928,7 @@ int __usercall UI_DemoTextPresent@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>
 
   v27 = a2;
   v26 = g_RenderDevice;
-  dword_543C80 = 467 * a1 + gameData + 509674;
+  dword_543C80 = UNIT_RECORD(a1);
   dword_543C84 = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
   if ( v5 )
@@ -57790,10 +57798,10 @@ int Port_FindAndInit()
   _WORD *bottomRightTile; // edx
   _WORD *bottomLeftTile; // edx
 
-  *(_DWORD *)(gameData + 586374) = -1;
+  PORT_ROW = -1;
   rowIndex = 0;
   rowOffset = 0;
-  *(_DWORD *)(gameData + 586386) = 0;
+  PORT_SUPPLY_READY_FLAG = 0;
 LABEL_2:
   while ( 1 )
   {
@@ -57814,26 +57822,26 @@ LABEL_2:
         break;
       ++columnIndex;
     }
-    *(_DWORD *)(gameData + 586374) = rowIndex;
-    *(_DWORD *)(gameData + 586378) = columnIndex;
+    PORT_ROW = rowIndex;
+    PORT_COLUMN = columnIndex;
     dataBase = gameData;
-    *(_DWORD *)(gameData + 586394) = 1;
-    *(_DWORD *)(gameData + 586386) = *(_DWORD *)(dataBase + 586394);
-    *(_DWORD *)(gameData + 586382) = Rng_RandRange(8, 10);
-    *(_DWORD *)(gameData + 586390) = Rng_RandRange(3, 5);
-    portColumnOffset = 14 * *(_DWORD *)(gameData + 586378);
-    shoreTileId = *(unsigned __int16 *)(portColumnOffset + gameData + 1400 * *(_DWORD *)(gameData + 586374) + 2);
+    PORT_NEEDS_SHORE_REFRESH = 1;
+    PORT_SUPPLY_READY_FLAG = PORT_NEEDS_SHORE_REFRESH;
+    PORT_NEXT_SUPPLY_TURN = Rng_RandRange(8, 10);
+    PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
+    portColumnOffset = 14 * PORT_COLUMN;
+    shoreTileId = *(unsigned __int16 *)(portColumnOffset + gameData + 1400 * PORT_ROW + 2);
     if ( shoreTileId == 726 || shoreTileId == 722 )
     {
-      bottomRightTile = (_WORD *)(14 * (*(_DWORD *)(gameData + 586378) + 1) + gameData + 1400 * (*(_DWORD *)(gameData + 586374) + 1));
+      bottomRightTile = (_WORD *)(14 * (PORT_COLUMN + 1) + gameData + 1400 * (PORT_ROW + 1));
       *bottomRightTile = 715;
-      *(_WORD *)(gameData + 1400 * (*(_DWORD *)(gameData + 586374) + 1) + 14 * *(_DWORD *)(gameData + 586378)) = *bottomRightTile;
+      *(_WORD *)(gameData + 1400 * (PORT_ROW + 1) + 14 * PORT_COLUMN) = *bottomRightTile;
     }
     else
     {
-      bottomLeftTile = (_WORD *)(1400 * (*(_DWORD *)(gameData + 586374) + 1) + gameData + portColumnOffset);
+      bottomLeftTile = (_WORD *)(1400 * (PORT_ROW + 1) + gameData + portColumnOffset);
       *bottomLeftTile = 715;
-      *(_WORD *)(14 * *(_DWORD *)(gameData + 586378) + gameData + 1400 * *(_DWORD *)(gameData + 586374)) = *bottomLeftTile;
+      *(_WORD *)(14 * PORT_COLUMN + gameData + 1400 * PORT_ROW) = *bottomLeftTile;
     }
     Port_BuildShorePieces();
     Rules_LogPortLocation();
@@ -57853,10 +57861,10 @@ _DWORD *__spoils<ecx,st0> Rules_LogPortLocation()
   char v5[204]; // [esp+0h] [ebp-CCh] BYREF
 
   result = (_DWORD *)gameData;
-  v2 = *(_DWORD *)(gameData + 586374);
+  v2 = PORT_ROW;
   if ( v2 != -1 )
   {
-    v3 = sprintf_(v5, "(port %d %d)", v2, *(_DWORD *)(gameData + 586378));
+    v3 = sprintf_(v5, "(port %d %d)", v2, PORT_COLUMN);
     return Rules_Log(v5, v4, v3);
   }
   return result;
@@ -57874,18 +57882,18 @@ int __usercall __spoils<ecx> Port_NewTurn@<eax>(DWORD a1@<ebp>)
   int logArg; // ecx
 
   result = gameData;
-  if ( *(_DWORD *)(gameData + 586374) != -1 )
+  if ( PORT_ROW != -1 )
   {
-    *(_DWORD *)(gameData + 586394) = 0;
+    PORT_NEEDS_SHORE_REFRESH = 0;
     dataBase = gameData;
-    if ( !*(_DWORD *)(gameData + 586386) )
+    if ( !PORT_SUPPLY_READY_FLAG )
     {
-      supplyArrivalTurn = *(_DWORD *)(gameData + 586382);
+      supplyArrivalTurn = PORT_NEXT_SUPPLY_TURN;
       if ( *(unsigned __int16 *)(gameData + 140022) >= supplyArrivalTurn )
       {
-        *(_DWORD *)(gameData + 586394) = 1;
-        *(_DWORD *)(gameData + 586386) = *(_DWORD *)(dataBase + 586394);
-        *(_DWORD *)(gameData + 586390) = Rng_RandRange(3, 5);
+      PORT_NEEDS_SHORE_REFRESH = 1;
+      PORT_SUPPLY_READY_FLAG = PORT_NEEDS_SHORE_REFRESH;
+        PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
         log(logArg, supplyArrivalTurn, a1, (int)aPort_newturnPo);
       }
     }
@@ -57913,20 +57921,20 @@ int Port_BuildShorePieces()
   int j; // [esp+4h] [ebp-18h]
 
   result = gameData;
-  v1 = *(_DWORD *)(gameData + 586374);
+  v1 = PORT_ROW;
   if ( v1 != -1 )
   {
-    if ( *(_DWORD *)(gameData + 586394) )
+    if ( PORT_NEEDS_SHORE_REFRESH )
     {
-      v2 = *(_DWORD *)(gameData + 586374);
+      v2 = PORT_ROW;
       for ( i = 1400 * v1; ; i += 1400 )
       {
-        result = *(_DWORD *)(gameData + 586374) + 1;
+        result = PORT_ROW + 1;
         if ( v2 > result )
           break;
-        v3 = *(_DWORD *)(gameData + 586378);
+        v3 = PORT_COLUMN;
         v4 = 14 * v3;
-        while ( v3 <= *(_DWORD *)(gameData + 586378) + 1 )
+        while ( v3 <= PORT_COLUMN + 1 )
         {
           v5 = v4 + i + gameData;
           switch ( *(_WORD *)(v5 + 2) )
@@ -57954,15 +57962,15 @@ int Port_BuildShorePieces()
     }
     else
     {
-      v6 = *(_DWORD *)(gameData + 586374);
+      v6 = PORT_ROW;
       for ( j = 1400 * v1; ; j += 1400 )
       {
-        result = *(_DWORD *)(gameData + 586374) + 1;
+        result = PORT_ROW + 1;
         if ( v6 > result )
           break;
-        v7 = *(_DWORD *)(gameData + 586378);
+        v7 = PORT_COLUMN;
         v8 = 14 * v7;
-        while ( v7 <= *(_DWORD *)(gameData + 586378) + 1 )
+        while ( v7 <= PORT_COLUMN + 1 )
         {
           v9 = v8 + j + gameData;
           switch ( *(_WORD *)(v9 + 2) )
@@ -57994,14 +58002,14 @@ int Port_BuildShorePieces()
 // 5202E4: using guessed type int gameData;
 
 //----- (00443230) --------------------------------------------------------
-int sub_443230()
+int Port_HasSupplyReady()
 {
-  return *(_DWORD *)(gameData + 586386);
+  return PORT_SUPPLY_READY_FLAG;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00443240) --------------------------------------------------------
-int *__usercall sub_443240@<eax>(int a1@<eax>)
+int *__usercall Port_BuildDockingTrack@<eax>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // ebp
@@ -58035,11 +58043,11 @@ int *__usercall sub_443240@<eax>(int a1@<eax>)
   int v31; // [esp+14h] [ebp-1Ch]
   int v33; // [esp+20h] [ebp-10h]
 
-  v1 = *(_DWORD *)(gameData + 586374);
+  v1 = PORT_ROW;
   if ( v1 == -1 )
     return 0;
-  v2 = *(_DWORD *)(gameData + 586374);
-  v33 = *(_DWORD *)(gameData + 586378);
+  v2 = PORT_ROW;
+  v33 = PORT_COLUMN;
   v30 = 1400 * v1;
   v4 = 1400 * v1 + gameData;
   v26 = *(_WORD *)(v4 + 14 * v33);
@@ -58162,11 +58170,11 @@ int __usercall Port_GetSupply@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, 
   int v36; // [esp+20h] [ebp-1Ch]
 
   log(a1, a2, a3, (int)aPort_getsupply, v28);
-  if ( *(_DWORD *)(gameData + 586374) == -1 )
+  if ( PORT_ROW == -1 )
     return 0;
-  v32 = *(_DWORD *)(gameData + 586374);
-  v33 = *(_DWORD *)(gameData + 586378);
-  result = sub_443230();
+  v32 = PORT_ROW;
+  v33 = PORT_COLUMN;
+  result = Port_HasSupplyReady();
   if ( result )
   {
     v31 = 0;
@@ -58213,7 +58221,7 @@ LABEL_16:
       {
         v8 = dword_517B48[i] + v32;
         v9 = dword_517B4C[i] + v33;
-        if ( *(unsigned __int16 *)(gameData + 200 * v8 + 2 * v9 + 556374) == 0xFFFF
+        if ( *(unsigned __int16 *)(TILE_INDEX(v8, v9)) == 0xFFFF
           && sub_413DD0(dword_5202EC, 0, v9, v8) )
         {
           break;
@@ -58222,28 +58230,28 @@ LABEL_16:
       }
       if ( v6 == 12 )
         return 0;
-      v29 = dword_517B4C[2 * v6] + *(_DWORD *)(gameData + 586378);
+      v29 = dword_517B4C[2 * v6] + PORT_COLUMN;
       v10 = dword_517B48[2 * v6];
-      v11 = v10 + *(_DWORD *)(gameData + 586374);
+      v11 = v10 + PORT_ROW;
       v12 = sub_40FA80(v10, dword_517B4C[2 * v6]);
       Unit_Create(0, dword_5202EC, v11, v12, a4, v29);
-      v14 = 145 * *(unsigned __int16 *)(gameData + 200 * v11 + 2 * v29 + 556374);
-      v15 = *(_DWORD *)(gameData + 586390) - 1;
-      for ( j = 725 * *(unsigned __int16 *)(gameData + 200 * v11 + 2 * v29 + 556374) + gameData + 147174;
+      v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
+      v15 = PORT_SUPPLY_UNIT_COUNT - 1;
+      for ( j = 725 * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + 147174;
             v15 >= 0;
             v13 = v19 - 31 )
       {
         v12 = dword_5202EC;
         v17 = Rng_RandRange(0, 11);
         --v15;
-        sub_40F440(v18, dword_517BA8[v17], v12);
+        UnitSlot_InitFromType(v18, dword_517BA8[v17], v12);
       }
       Rules_LinkArmyFact(j, v14, v13, a4, v12, v11);
       sub_455070(j, v20, v21, v12, v11, a4);
-      sub_418D90(*(unsigned __int16 *)(200 * v11 + gameData + 2 * v29 + 556374), 200 * v11 + gameData, v22);
-      *(_DWORD *)(gameData + 586386) = 0;
+      sub_418D90(*(unsigned __int16 *)(TILE_INDEX(v11, v29)), 200 * v11 + gameData, v22);
+      PORT_SUPPLY_READY_FLAG = 0;
       v23 = Rng_RandRange(8, 10);
-      *(_DWORD *)(gameData + 586382) = v24 + v23;
+      PORT_NEXT_SUPPLY_TURN = v24 + v23;
       Port_BuildShorePieces();
       sub_442680(1);
       return j;
@@ -58316,7 +58324,7 @@ void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   v9 = DLX_GetSpriteHeight((int)v20, 0);
   Render_FillRect(0, (_DWORD *)v8, (unsigned __int16)v23, (unsigned __int16)v22, v22 + v9 - 1, v14, 0, 0);
   Render_ReleaseSurface(7, v8);
-  SpriteForChar = DLX_GetSpriteForChar((int)v20, *(_DWORD *)(gameData + 586386));
+  SpriteForChar = DLX_GetSpriteForChar((int)v20, PORT_SUPPLY_READY_FLAG);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     v23,
     SpriteForChar,
@@ -58332,13 +58340,13 @@ void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>)
   else
     v11 = aPort;
   UI_DrawTextFmt((int)v19, v22 + 10, v22 + 235, v23 + 5, 3, (int)v11);
-  v19[0] = (int)off_517BD8[0];
-  v19[1] = (int)off_517BD8[1];
-  v19[2] = (int)off_517BD8[2];
-  v18[0] = (int)off_517BE4[0];
-  v18[1] = (int)off_517BE4[1];
-  v18[2] = (int)off_517BE4[2];
-  if ( *(_DWORD *)(gameData + 586386) )
+  v19[0] = (int)g_PortArrivalTexts[0];
+  v19[1] = (int)g_PortArrivalTexts[1];
+  v19[2] = (int)g_PortArrivalTexts[2];
+  v18[0] = (int)g_PortEmptyTexts[0];
+  v18[1] = (int)g_PortEmptyTexts[1];
+  v18[2] = (int)g_PortEmptyTexts[2];
+  if ( PORT_SUPPLY_READY_FLAG )
   {
     UI_DrawTextFmt((int)v19, v22 + 122, v22 + 200, v23 + 54, 6, v19[(unsigned __int8)g_LanguageIndex]);
     Render_ReleaseSurface(15, v8);
@@ -58371,8 +58379,8 @@ void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>)
 // 4438CC: variable 'v2' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 517BD8: using guessed type char *off_517BD8[6];
-// 517BE4: using guessed type char *off_517BE4[3];
+// 517BD8: using guessed type char *g_PortArrivalTexts[6];
+// 517BE4: using guessed type char *g_PortEmptyTexts[3];
 // 5202E4: using guessed type int gameData;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -58640,7 +58648,7 @@ signed int __usercall sub_444150@<eax>(unsigned int a1@<eax>, double a2@<st0>)
   v16 = 0;
   if ( sub_4100B0((int)v2) >= 3 )
   {
-    v19 = sub_40F8B0((int)v2);
+    v19 = UnitStack_GetVisionRadius((int)v2);
     v18 = *v2 - v19;
     v15 = 200 * v18;
     while ( v19 + *v2 > v18 )
@@ -58807,9 +58815,9 @@ LABEL_3:
     }
     v15 = 0;
 LABEL_17:
-    v16 = gameData + 509674 + 467 * v15;
+    v16 = UNIT_RECORD(v15);
     if ( (unsigned int)*(char *)(v16 + 4) < 4 && *(__int16 *)(v16 + 16) != -1 )
-      Rules_AssertCastleFact((unsigned __int8 *)(467 * v15 + gameData + 509674), v15);
+      Rules_AssertCastleFact((unsigned __int8 *)(UNIT_RECORD(v15)), v15);
     while ( ++v15 < 100 )
     {
       if ( v15 >= 0 )
@@ -59526,9 +59534,9 @@ int __usercall sub_4459A0@<eax>(int a1@<ecx>, DWORD a2@<ebp>)
   v4[0] = (int)off_517EAC[0];
   v4[1] = (int)off_517EAC[1];
   v4[2] = (int)off_517EAC[2];
-  if ( *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) != *(_BYTE *)(gameData + 1423 * dword_5202EC + 140072) )
+  if ( *(_BYTE *)(PLAYER_DATA(dword_5202EC) + 140071) != *(_BYTE *)(PLAYER_DATA(dword_5202EC) + 140072) )
     UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&off_517EAC[3]);
-  result = 1423 * dword_5202EC + gameData;
+  result = PLAYER_DATA(dword_5202EC);
   *(_BYTE *)(result + 140072) = *(_BYTE *)(result + 140071);
   return result;
 }
@@ -59936,7 +59944,7 @@ int __usercall sub_446460@<eax>(int a1@<eax>, int a2@<ecx>)
 // 543D58: using guessed type int dword_543D58;
 
 //----- (00446480) --------------------------------------------------------
-int __usercall sub_446480@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
+int __usercall Queen_ShowWhimDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
 {
   int v6; // ecx
   _DWORD *v7; // eax
@@ -60006,7 +60014,7 @@ int __usercall sub_446480@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4
     1,
     0,
     0);
-  DLX_GetSpriteForChar((int)v18, *(unsigned __int8 *)(1423 * dword_5202EC + gameData + 141444) + 1);
+  DLX_GetSpriteForChar((int)v18, PLAYER_QUEEN_WHIM(dword_5202EC) + 1);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(-1, -1, -1, -1, 1, 0, 0);
   Render_ReleaseSurface(17, v10);
@@ -60285,7 +60293,7 @@ int __usercall sub_446CB0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD 
 // 545150: using guessed type int dword_545150;
 
 //----- (00446F40) --------------------------------------------------------
-int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // ecx
   int v4; // ecx
@@ -60353,7 +60361,7 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
     1,
     0,
     0);
-  DLX_GetSpriteForChar((int)v20, *(unsigned __int8 *)(1423 * dword_5202EC + gameData + 141444) + 1);
+  DLX_GetSpriteForChar((int)v20, PLAYER_QUEEN_WHIM(dword_5202EC) + 1);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     -1,
     -1,
@@ -60362,9 +60370,9 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
     1,
     0,
     0);
-  v19[0] = (int)off_518010[0];
-  v19[1] = (int)off_518010[1];
-  v19[2] = (int)off_518010[2];
+  v19[0] = (int)g_QueenProposalPrompt[0];
+  v19[1] = (int)g_QueenProposalPrompt[1];
+  v19[2] = (int)g_QueenProposalPrompt[2];
   UI_DrawTextFmt((int)v18, v22 + 175, v22 + 525, v21 + 55, 6, v19[(unsigned __int8)g_LanguageIndex]);
   v10 = v22;
   qmemcpy(v18, &unk_518020, 4 * v11);
@@ -60408,7 +60416,7 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 // 44726D: variable 'v16' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 518010: using guessed type char *off_518010[3];
+// 518010: using guessed type char *g_QueenProposalPrompt[3];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
@@ -60418,7 +60426,7 @@ int __usercall sub_446F40@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 // 545150: using guessed type int dword_545150;
 
 //----- (00447330) --------------------------------------------------------
-int __usercall UI_NotifyText@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
+int __usercall Queen_ShowNotification@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -60473,7 +60481,7 @@ int __usercall UI_NotifyText@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWO
     1,
     0,
     0);
-  v10 = DLX_GetSpriteForChar((int)v15, *(unsigned __int8 *)(gameData + 1423 * dword_5202EC + 141444) + 1);
+  v10 = DLX_GetSpriteForChar((int)v15, PLAYER_QUEEN_WHIM(dword_5202EC) + 1);
   v17 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v17 + 52))(
     168,
@@ -62408,7 +62416,7 @@ int __usercall loadMap@<eax>(int a1@<eax>)
   *(_DWORD *)(gameData + 147159) = 0;
   *(_DWORD *)(gameData + 140008) = 0;
   *(_DWORD *)(gameData + 140012) = 0;
-  *(_WORD *)(gameData + 140022) = 1;
+  GAME_TURN_COUNTER = 1;
   v35 = gameData;
   *(_DWORD *)(gameData + 147143) = 0;
   *(_DWORD *)(gameData + 147139) = *(_DWORD *)(v35 + 147143);
@@ -63787,7 +63795,7 @@ signed int __usercall Prisoner_SetInCastles@<eax>(int a1@<ecx>, char a2@<bl>, DW
       while ( 1 )
       {
         result = 6 * i;
-        if ( *(char *)(gameData + 1423 * dword_5202EC + 6 * i + 141381) != -1 )
+        if ( *(char *)(PLAYER_DATA(dword_5202EC) + 6 * i + 141381) != -1 )
           break;
 LABEL_3:
         if ( ++i >= 10 )
@@ -63798,7 +63806,7 @@ LABEL_3:
       v7 = -1;
       v27 = *(_DWORD *)(gameData + 140004) + *(_DWORD *)(gameData + 140000);
 LABEL_6:
-      v8 = gameData + 509674 + 467 * v6;
+      v8 = UNIT_RECORD(v6);
       result = *(char *)(v8 + 4);
       if ( (unsigned int)result < 4 )
       {
@@ -63844,7 +63852,7 @@ LABEL_6:
         return result;
     }
     v16 = 467 * v7;
-    v17 = 467 * v7 + gameData + 509674;
+    v17 = UNIT_RECORD(v7);
     v18 = (_BYTE *)(v17 + 445 + 6 * sub_44E850(v17));
     *v18 = *v19;
     v20 = v19[1];
@@ -63854,7 +63862,7 @@ LABEL_6:
     sub_44E880((int)v18);
     *v21 = -1;
     result = 1423 * dword_5202EC;
-    if ( !*(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+    if ( !PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       goto LABEL_3;
     sub_4620F0(aUwiezic, 1, i, v20, v16);
     v25[0] = (int)off_518D08[0];
@@ -64009,7 +64017,7 @@ int __usercall sub_44ECF0@<eax>(int a1@<eax>, int a2@<edx>)
   if ( v9 == -1 )
     return 0;
   else
-    return gameData + 509674 + 467 * v9;
+    return UNIT_RECORD(v9);
 }
 // 44ED4A: variable 'v5' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -64247,7 +64255,7 @@ int __usercall sub_44F1E0@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char
     sub_43E160((unsigned __int8 *)a1, v10, a5);
     i = 0;
   }
-  result = sub_40F440(31 * i + a1 + 18, v11, *(_BYTE *)(a1 + 2));
+  result = UnitSlot_InitFromType(31 * i + a1 + 18, v11, *(_BYTE *)(a1 + 2));
   *(_BYTE *)(v9 + a1 + 30) |= 3u;
   return result;
 }
@@ -64586,19 +64594,16 @@ int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>)
 // 5443FC: using guessed type int dword_5443FC;
 
 //----- (0044FD90) --------------------------------------------------------
-int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
-  int v2; // eax
-  char v3; // dl
   int SpriteForChar; // eax
-  int v5; // eax
+  int queenMood; // eax
 
   g_RenderDevice = &unk_51D4C0;
-  v2 = gameData + 1423 * dword_5202EC;
-  v3 = *(_BYTE *)(v2 + 141443);
-  if ( v3 && v3 != -1 )
+  queenMood = PLAYER_QUEEN_MOOD(dword_5202EC);
+  if ( queenMood > 0 )
   {
-    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, *(unsigned __int8 *)(v2 + 141444) + 25);
+    SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, PLAYER_QUEEN_WHIM(dword_5202EC) + 25);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       199,
       SpriteForChar,
@@ -64611,14 +64616,13 @@ int __usercall sub_44FD90@<eax>(DWORD a1@<ebp>, int a2@<edi>)
       0);
   }
   Render_ReleaseSurface(17, a1);
-  v5 = *(char *)(1423 * dword_5202EC + gameData + 141443);
-  if ( v5 == -1 )
-    v5 = 0;
-  return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&off_519010[3 * v5])[(unsigned __int8)g_LanguageIndex]);
+  if ( queenMood == -1 )
+    queenMood = 0;
+  return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&g_QueenMoodTexts[3 * queenMood])[(unsigned __int8)g_LanguageIndex]);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 519010: using guessed type char *off_519010[30];
+// 519010: using guessed type char *g_QueenMoodTexts[30];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int dword_5202EC;
 // 5443F0: using guessed type int dword_5443F0;
@@ -64952,7 +64956,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
   }
   while ( v39 != 5 );
   sub_44FC70(v36);
-  sub_44FD90(v36, 10);
+  Queen_DrawMoodPanel(v36, 10);
   sub_419D80(dword_518DC8);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
   Render_Present((int)dword_544CD8);
@@ -65080,12 +65084,12 @@ int __usercall AI_FindActionCandidate@<eax>(int a1@<eax>)
 
   v2 = 0;
 LABEL_2:
-  v3 = gameData + 509674 + 467 * v2;
+  v3 = UNIT_RECORD(v2);
   if ( (unsigned int)*(char *)(v3 + 4) < 4 && *(__int16 *)(v3 + 16) != -1 )
   {
     v4 = *(char *)(gameData + 467 * v2 + 509678);
     if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(gameData + 467 * v2 + 509676) == a1 )
-      return 467 * v2 + gameData + 509674;
+      return UNIT_RECORD(v2);
   }
   while ( ++v2 < 100 )
   {
@@ -65102,7 +65106,6 @@ LABEL_2:
 int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, double a4@<st0>)
 {
   int result; // eax
-  int v5; // edx
   int v6; // ecx
   char *v7; // edi
   char *v8; // esi
@@ -65150,11 +65153,10 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
   if ( *(_DWORD *)(gameData + 140017) != 6 )
   {
     log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
-    v5 = gameData + 1423 * dword_5202EC;
-    result = *(char *)(v5 + 141443);
+    result = PLAYER_QUEEN_MOOD(dword_5202EC);
     if ( result != -1 )
     {
-      if ( *(_BYTE *)(v5 + 141443) )
+      if ( PLAYER_QUEEN_MOOD(dword_5202EC) )
       {
         if ( result == 9 )
         {
@@ -65164,8 +65166,8 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           if ( v21 )
           {
             sub_44F1E0(v21, a2, v21, a2, a4);
-            *(_BYTE *)(gameData + 1423 * dword_5202EC + 141443) = 5;
-            if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+            PLAYER_QUEEN_MOOD(dword_5202EC) = 5;
+            if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
             {
               v45[0] = (int)off_519350[0];
               v45[1] = (int)off_519350[1];
@@ -65185,7 +65187,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
         else if ( result == 1 )
         {
           log(dword_5202EC, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
-          *(_BYTE *)(gameData + 1423 * dword_5202EC + 141443) = -1;
+          PLAYER_QUEEN_MOOD(dword_5202EC) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:
@@ -65239,7 +65241,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
               v36 = Unit_FindById(dword_5202EC, v34, v35);
               if ( v36 != -1 )
               {
-                Building_Destroy(467 * v36 + gameData + 509674, a2, (DWORD)savedregs, a4);
+                Building_Destroy(UNIT_RECORD(v36), a2, (DWORD)savedregs, a4);
                 sprintf_(
                   g_QueenMsgBuf,
                   g_QueenNewTurnText3[(unsigned __int8)g_LanguageIndex],
@@ -65251,17 +65253,17 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           }
           v11 = strlen(g_QueenMsgBuf) + 1;
           if ( v11 != 1 )
-            UI_NotifyText((int)g_QueenMsgBuf, v11 - 1, a2, (DWORD)savedregs);
+            Queen_ShowNotification((int)g_QueenMsgBuf, v11 - 1, a2, (DWORD)savedregs);
         }
-        result = gameData + 1423 * dword_5202EC;
-        if ( *(_WORD *)(gameData + 140022) >= *(_WORD *)(result + 141445) )
+        result = PLAYER_DATA(dword_5202EC);
+        if ( GAME_TURN_COUNTER >= *(_WORD *)(result + 141445) )
         {
           if ( *(_DWORD *)(result + 140051) )
           {
             v38 = Rng_RandRange(0, 24);
             log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
             v39 = AI_CalcFrontlineScore(dword_5202EC);
-            if ( sub_446480(
+            if ( Queen_ShowWhimDialog(
                    *(int *)((char *)off_5191F2 + 7 * v40 + 4 * (unsigned __int8)g_LanguageIndex),
                    *(unsigned __int16 *)((char *)&word_5191F0 + 7 * v40),
                    7 * v40,
@@ -65269,13 +65271,13 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
                    (DWORD)savedregs) )
             {
               AI_ApplyFrontlineScore(dword_5202EC, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
-              v42 = gameData + 1423 * dword_5202EC;
+              v42 = PLAYER_DATA(dword_5202EC);
               if ( *(char *)(v42 + 141443) < 9 )
                 ++*(_BYTE *)(v42 + 141443);
             }
             else
             {
-              v43 = gameData + 1423 * dword_5202EC;
+              v43 = PLAYER_DATA(dword_5202EC);
               if ( *(char *)(v43 + 141443) > 1 )
                 --*(_BYTE *)(v43 + 141443);
             }
@@ -65289,7 +65291,7 @@ LABEL_18:
             v12 = Rng_RandRange(5, 8);
             v14 = v12 + *(_WORD *)(v13 + 140022);
             result = gameData;
-            *(_WORD *)(1423 * dword_5202EC + gameData + 141445) = v14;
+            PLAYER_QUEEN_NEXT_REVIEW(dword_5202EC) = v14;
           }
         }
       }
@@ -65298,12 +65300,12 @@ LABEL_18:
         result = AI_TickNationPostTurn(dword_5202EC);
         if ( result >= 1000 )
         {
-          *(_BYTE *)(gameData + 1423 * dword_5202EC + 141444) = Rng_RandRange(0, 8);
+          PLAYER_QUEEN_WHIM(dword_5202EC) = Rng_RandRange(0, 8);
           v15 = 1;
-          if ( *(_DWORD *)(gameData + 1423 * dword_5202EC + 140051) )
+          if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
           {
             sub_4620F0((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
-            v15 = sub_446F40(v17, a2, (DWORD)savedregs);
+            v15 = Queen_ShowProposalDialog(v17, a2, (DWORD)savedregs);
           }
           v16 = 1423 * dword_5202EC;
           if ( v15 )
@@ -65312,7 +65314,7 @@ LABEL_18:
             v18 = Rng_RandRange(5, 8);
             v20 = v18 + *(_WORD *)(v19 + 140022);
             result = 1423 * dword_5202EC;
-            *(_WORD *)(gameData + 1423 * dword_5202EC + 141445) = v20;
+            PLAYER_QUEEN_NEXT_REVIEW(dword_5202EC) = v20;
           }
           else
           {
@@ -65363,12 +65365,12 @@ int __usercall sub_450CE0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, doub
 
   log(a2, a1, a3, (int)aPlayer_surrend);
 LABEL_2:
-  v6 = 467 * v5 + gameData + 509674;
+  v6 = UNIT_RECORD(v5);
   if ( (unsigned int)*(char *)(v6 + 4) < 4
     && *(__int16 *)(v6 + 16) != -1
     && *(unsigned __int8 *)(gameData + 467 * v5 + 509676) == a1 )
   {
-    Building_Destroy(467 * v5 + gameData + 509674, a1, a3, a4);
+    Building_Destroy(UNIT_RECORD(v5), a1, a3, a4);
   }
   while ( ++v5 < 100 )
   {
@@ -65380,7 +65382,7 @@ LABEL_10:
   if ( (unsigned int)*(__int16 *)(gameData + 725 * v7 + 147180) <= 0x28
     && *(unsigned __int8 *)(725 * v7 + gameData + 147178) == a1 )
   {
-    sub_40F7C0(v7, a1, a3, a4);
+    UnitStack_KillByIndex(v7, a1, a3, a4);
   }
   while ( ++v7 < 500 )
   {
@@ -65427,7 +65429,7 @@ int __usercall __spoils<ecx,st0> AI_ComputeNationStrengthPercent@<eax>(
   v4 = a1;
   result = 0;
 LABEL_2:
-  v6 = 467 * result + gameData + 509674;
+  v6 = UNIT_RECORD(result);
   if ( (unsigned int)*(char *)(v6 + 4) >= 4
     || *(__int16 *)(v6 + 16) == -1
     || (v7 = gameData + 467 * result, !*(_BYTE *)(v7 + 509678))
@@ -65526,10 +65528,10 @@ LABEL_2:
   }
   v6 = 0;
 LABEL_9:
-  v7 = 467 * v6 + gameData + 509674;
+  v7 = UNIT_RECORD(v6);
   if ( (unsigned int)*(char *)(v7 + 4) < 4
     && *(__int16 *)(v7 + 16) != -1
-    && (*(_BYTE *)(gameData + 467 * v6 + 509678) || Building_CountGarrison(gameData + 509674 + 467 * v6)) )
+    && (*(_BYTE *)(gameData + 467 * v6 + 509678) || Building_CountGarrison(UNIT_RECORD(v6))) )
   {
     v4 = *(unsigned __int8 *)(gameData + 467 * v6 + 509676);
     if ( v4 == a1 )
@@ -65820,20 +65822,20 @@ void sub_4516B0()
   signed int v2; // eax
   signed int v3; // ecx
 
-  if ( dword_511B58 != -1 )
+  if ( g_SelectedUnitIndex != -1 )
   {
     for ( i = 0; ; i += 31 )
     {
-      v2 = Unit_GetSquadCount(725 * dword_511B58 + gameData + 147174);
+      v2 = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v3 >= v2 )
         break;
-      sub_40F440(i + gameData + 147174 + 725 * dword_511B58 + 6, 14, *(_BYTE *)(gameData + 725 * dword_511B58 + 147178));
+      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 14, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
     sub_418700(1);
   }
 }
 // 4516DE: variable 'v3' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (00451730) --------------------------------------------------------
@@ -65843,16 +65845,16 @@ signed int sub_451730()
   int v1; // edx
   signed int v2; // ecx
 
-  if ( dword_511B58 != -1 )
+  if ( g_SelectedUnitIndex != -1 )
   {
     while ( 1 )
     {
-      result = Unit_GetSquadCount(725 * dword_511B58 + gameData + 147174);
+      result = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v2 >= result )
         break;
-      *(_BYTE *)(v1 + 725 * dword_511B58 + gameData + 147192) |= 3u;
-      *(_BYTE *)(v1 + 31 + 725 * dword_511B58 + gameData + 147161) = *(_BYTE *)(v1
-                                                                              + 725 * dword_511B58
+      *(_BYTE *)(v1 + 725 * g_SelectedUnitIndex + gameData + 147192) |= 3u;
+      *(_BYTE *)(v1 + 31 + 725 * g_SelectedUnitIndex + gameData + 147161) = *(_BYTE *)(v1
+                                                                              + 725 * g_SelectedUnitIndex
                                                                               + gameData
                                                                               + 147192) & 0xF3;
     }
@@ -65861,7 +65863,7 @@ signed int sub_451730()
 }
 // 45175D: variable 'v2' is possibly undefined
 // 451770: variable 'v1' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (004517B0) --------------------------------------------------------
@@ -65878,14 +65880,14 @@ void sub_4517C0()
   int v1; // ecx
   signed int v2; // edx
 
-  if ( dword_511B58 != -1 )
+  if ( g_SelectedUnitIndex != -1 )
   {
     while ( 1 )
     {
-      v0 = Unit_GetSquadCount(725 * dword_511B58 + gameData + 147174);
+      v0 = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v2 >= v0 )
         break;
-      *(_BYTE *)(v1 + 31 + gameData + 725 * dword_511B58 + 147158) = 100;
+      *(_BYTE *)(v1 + 31 + gameData + 725 * g_SelectedUnitIndex + 147158) = 100;
     }
   }
   JUMPOUT(0x4517A0);
@@ -65893,7 +65895,7 @@ void sub_4517C0()
 // 4517CA: control flows out of bounds to 4517A0
 // 4517ED: variable 'v2' is possibly undefined
 // 4517FF: variable 'v1' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (00451810) --------------------------------------------------------
@@ -65926,7 +65928,7 @@ int __usercall __spoils<ecx,st0> sub_451810@<eax>(DWORD a1@<ebp>, double a2@<st0
     }
     else
     {
-      sub_40F7C0(v3, gameData, a1, a2);
+      UnitStack_KillByIndex(v3, gameData, a1, a2);
       return sub_418700(1);
     }
   }
@@ -65956,20 +65958,20 @@ int __spoils<ecx> sub_451910()
           - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
            + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6;
   v2 = result + *(_DWORD *)(gameData + 140012);
-  if ( dword_511B58 != -1 )
+  if ( g_SelectedUnitIndex != -1 )
   {
-    *(_WORD *)(200 * *(__int16 *)(gameData + 725 * dword_511B58 + 147174)
+    *(_WORD *)(200 * *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174)
              + gameData
-             + 2 * *(__int16 *)(gameData + 725 * dword_511B58 + 147176)
+             + 2 * *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176)
              + 556374) = -1;
-    *(_WORD *)(200 * v0 + gameData + 2 * v2 + 556374) = dword_511B58;
-    *(_WORD *)(gameData + 725 * dword_511B58 + 147174) = v0;
-    *(_WORD *)(gameData + 725 * dword_511B58 + 147176) = v2;
+    *(_WORD *)(TILE_INDEX(v0, v2)) = g_SelectedUnitIndex;
+    *(_WORD *)(gameData + 725 * g_SelectedUnitIndex + 147174) = v0;
+    *(_WORD *)(gameData + 725 * g_SelectedUnitIndex + 147176) = v2;
     return sub_418700(1);
   }
   return result;
 }
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -65982,20 +65984,20 @@ signed int sub_451A60()
   signed int result; // eax
   signed int v2; // ecx
 
-  if ( dword_511B58 != -1 )
+  if ( g_SelectedUnitIndex != -1 )
   {
     for ( i = 0; ; i += 31 )
     {
-      result = Unit_GetSquadCount(725 * dword_511B58 + gameData + 147174);
+      result = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v2 >= result )
         break;
-      sub_40F440(i + gameData + 147174 + 725 * dword_511B58 + 6, 27, *(_BYTE *)(gameData + 725 * dword_511B58 + 147178));
+      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 27, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
   }
   return result;
 }
 // 451A8E: variable 'v2' is possibly undefined
-// 511B58: using guessed type int dword_511B58;
+// 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 
 //----- (00451AE0) --------------------------------------------------------
@@ -66060,11 +66062,11 @@ void sub_451C60()
   int v2; // edx
   char v3; // bl
 
-  *(_BYTE *)(gameData + 1423 * dword_5202EC + 140071) = 3;
+  *(_BYTE *)(PLAYER_DATA(dword_5202EC) + 140071) = 3;
   v0 = 0;
   while ( 1 )
   {
-    v1 = 467 * v0 + gameData + 509674;
+    v1 = UNIT_RECORD(v0);
     if ( (unsigned int)*(char *)(v1 + 4) < 4 && *(__int16 *)(v1 + 16) != -1 )
     {
       v2 = gameData + 467 * v0;
@@ -66300,13 +66302,13 @@ signed int sub_451F70()
   sub_455FF0();
   v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
   dword_54454C = (int)Rules_Log(v21, v2, v1);
-  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", dword_5202EC, *(_DWORD *)(gameData + 1423 * dword_5202EC + 140055));
+  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", dword_5202EC, *(_DWORD *)(PLAYER_DATA(dword_5202EC) + 140055));
   dword_544550 = (int)Rules_Log(v21, v4, v3);
   memset_(v6, v5);
   v7 = 0;
   v8 = 0;
 LABEL_2:
-  v9 = 467 * v8 + gameData + 509674;
+  v9 = UNIT_RECORD(v8);
   if ( (unsigned int)*(char *)(v9 + 4) < 4 && *(__int16 *)(v9 + 16) != -1 )
   {
     v10 = gameData + 467 * v8;
@@ -66322,7 +66324,7 @@ LABEL_2:
   dword_544554 = (int)Rules_Log(v21, v12, v11);
   v14 = 0;
 LABEL_11:
-  v15 = gameData + 509674 + 467 * v14;
+  v15 = UNIT_RECORD(v14);
   if ( (unsigned int)*(char *)(v15 + 4) < 4 && *(__int16 *)(v15 + 16) != -1 )
   {
     v16 = gameData + 467 * v14;
@@ -66424,7 +66426,7 @@ _DWORD *__usercall Rules_RetractArmyFact@<eax>(_DWORD *result@<eax>, int a2@<edx
   if ( *(_DWORD *)((char *)result + 721) )
   {
     Rules_RetractFactById(*(_DWORD *)((char *)result + 721), a4);
-    v5 = sprintf_(v8, "(usunieto armie %d )", *(unsigned __int16 *)(200 * *v4 + gameData + 2 * v4[1] + 556374));
+    v5 = sprintf_(v8, "(usunieto armie %d )", *(unsigned __int16 *)(TILE_INDEX(*v4, v4[1])));
     result = Rules_Log(v8, v6, v5);
     *(_DWORD *)(v7 + 721) = 0;
   }
@@ -66603,7 +66605,7 @@ signed int __usercall sub_453440@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   if ( sub_411AB0(a1) )
     Track_BridgesOn(v5, a3, a4);
-  v6 = (const void *)sub_415970(v5, *(unsigned __int16 *)(gameData + 200 * a2 + 2 * a3 + 556374) - 0x8000, v5, a3, a4);
+  v6 = (const void *)sub_415970(v5, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000, v5, a3, a4);
   Track_BridgesOff(v7, (char)v6, a4);
   if ( v9 )
   {
@@ -66641,7 +66643,7 @@ signed int __usercall sub_453600@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   if ( sub_411AB0(a1) )
     Track_BridgesOn(v5, a3, a4);
-  v6 = sub_443240(v5);
+  v6 = Port_BuildDockingTrack(v5);
   Track_BridgesOff(v7, (char)v6, a4);
   if ( !v9 )
     return 0;
@@ -66683,7 +66685,7 @@ signed int __usercall sub_453770@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
     Track_BridgesOn(v5, a3, a4);
   v6 = (const void *)Unit_MoveTrackNear(
                        v5,
-                       *(unsigned __int16 *)(gameData + 200 * a2 + 2 * a3 + 556374) - 0x8000,
+                       *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000,
                        v5,
                        a3,
                        a4);
@@ -66753,7 +66755,7 @@ signed int __usercall Move_TryApproachTarget@<eax>(int a1@<eax>, DWORD a2@<edx>,
   }
   else
   {
-    result = Unit_MoveTrackNear(a1, *(unsigned __int16 *)(gameData + 200 * a2 + 2 * a3 + 556374) - 0x8000, a1, a3, a2);
+    result = Unit_MoveTrackNear(a1, *(unsigned __int16 *)(TILE_INDEX(a2, a3)) - 0x8000, a1, a3, a2);
     v5 = (const void *)result;
     if ( result )
     {
@@ -66869,9 +66871,9 @@ signed int __usercall sub_453E60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
               a4,
               a3);
   }
-  else if ( v8 == *(_DWORD *)(gameData + 586374) && a3 == *(_DWORD *)(gameData + 586378) )
+  else if ( v8 == PORT_ROW && a3 == PORT_COLUMN )
   {
-    Track = sub_443240(a1);
+    Track = Port_BuildDockingTrack(a1);
   }
   else
   {
@@ -67737,7 +67739,7 @@ _DWORD *__usercall Rules_RetractCastleFact@<eax>(unsigned __int8 *a1@<eax>, doub
     Rules_RetractFactById(*(_DWORD *)(a1 + 463), a2);
   v3 = *v2;
   *(_DWORD *)(v2 + 463) = 0;
-  return sub_455D20(v2[2], *(unsigned __int16 *)(gameData + 200 * v3 + 2 * v2[1] + 556374) - 0x8000);
+  return sub_455D20(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - 0x8000);
 }
 // 4553B0: variable 'v2' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -67752,14 +67754,14 @@ int Game_GetTurnNumber()
 //----- (00455430) --------------------------------------------------------
 _DWORD *__usercall Rules_OnCastleUpdate@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>)
 {
-  return Building_Destroy(gameData + 509674 + 467 * a1, a2, a3, a4);
+  return Building_Destroy(UNIT_RECORD(a1), a2, a3, a4);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455450) --------------------------------------------------------
 BOOL __usercall sub_455450@<eax>(int a1@<eax>)
 {
-  return sub_41F890((unsigned __int8 *)(gameData + 509674 + 467 * a1));
+  return sub_41F890((unsigned __int8 *)(UNIT_RECORD(a1)));
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67773,7 +67775,7 @@ int __usercall sub_455470@<eax>(int a1@<eax>)
 //----- (00455490) --------------------------------------------------------
 signed int __usercall sub_455490@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return Building_BuildSchool((char *)(gameData + 509674 + 467 * a1), a2, a3);
+  return Building_BuildSchool((char *)(UNIT_RECORD(a1)), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67801,7 +67803,7 @@ int __usercall sub_4554F0@<eax>(int a1@<eax>)
 //----- (00455510) --------------------------------------------------------
 int __usercall sub_455510@<eax>(int a1@<eax>)
 {
-  return sub_43F240(gameData + 509674 + 467 * a1);
+  return sub_43F240(UNIT_RECORD(a1));
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67868,49 +67870,49 @@ BOOL __usercall sub_455620@<eax>(int a1@<eax>)
 //----- (00455650) --------------------------------------------------------
 BOOL __usercall sub_455650@<eax>(int a1@<eax>)
 {
-  return sub_41F850((unsigned __int8 *)(gameData + 509674 + 467 * a1));
+  return sub_41F850((unsigned __int8 *)(UNIT_RECORD(a1)));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455670) --------------------------------------------------------
 int __usercall sub_455670@<eax>(int a1@<eax>)
 {
-  return Building_CountGarrison(gameData + 509674 + 467 * a1);
+  return Building_CountGarrison(UNIT_RECORD(a1));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455690) --------------------------------------------------------
 BOOL __usercall sub_455690@<eax>(int a1@<eax>)
 {
-  return Building_CountGarrison(467 * a1 + gameData + 509674) == 12;
+  return Building_CountGarrison(UNIT_RECORD(a1)) == 12;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556C0) --------------------------------------------------------
 __int16 __usercall sub_4556C0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
-  return sub_43EAD0(gameData + 509674 + 467 * a1, a2, a3);
+  return sub_43EAD0(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556E0) --------------------------------------------------------
 _BYTE *__usercall sub_4556E0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_43EA30(gameData + 509674 + 467 * a1, a2, a3);
+  return sub_43EA30(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455700) --------------------------------------------------------
 int __usercall sub_455700@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_43E9A0(gameData + 509674 + 467 * a1, a2, a3);
+  return sub_43E9A0(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
 int __usercall sub_455720@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
-  return Building_RemoveAddon(gameData + 509674 + 467 * a1, a2, a3);
+  return Building_RemoveAddon(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67941,21 +67943,21 @@ void __userpurge sub_455740(int a1@<eax>, int ebx0@<ebx>, float a3)
 //----- (004557C0) --------------------------------------------------------
 signed int __usercall sub_4557C0@<eax>(int a1@<eax>, int a2@<edx>)
 {
-  return Building_HasAddonInGarrison(gameData + 509674 + 467 * a1, a2);
+  return Building_HasAddonInGarrison(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004557E0) --------------------------------------------------------
 BOOL __usercall sub_4557E0@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
-  return Building_BuyAddon(gameData + 509674 + 467 * a1, a2, gameData + 509674, a3);
+  return Building_BuyAddon(UNIT_RECORD(a1), a2, gameData + 509674, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455800) --------------------------------------------------------
 BOOL __usercall sub_455800@<eax>(int a1@<eax>, int a2@<edx>)
 {
-  return Building_CanEquipAddon((char *)(gameData + 509674 + 467 * a1), a2);
+  return Building_CanEquipAddon((char *)(UNIT_RECORD(a1)), a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68043,7 +68045,7 @@ signed int __usercall sub_4558D0@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st
   while ( v5 < 10 && v7 < 5 );
   if ( v13[0] == -1 )
     return 0;
-  if ( sub_43E0C0((unsigned __int8 *)(467 * v14 + gameData + 509674)) )
+  if ( sub_43E0C0((unsigned __int8 *)(UNIT_RECORD(v14))) )
     return sub_43E160((unsigned __int8 *)(v11 + gameData + 509674), v13, a3);
   return -1;
 }
@@ -68671,7 +68673,7 @@ BOOL __usercall sub_457860@<eax>(DWORD a1@<eax>)
   v3 = 0;
   v11 = gameData + 509674;
 LABEL_2:
-  v4 = gameData + 509674 + 467 * v3;
+  v4 = UNIT_RECORD(v3);
   v5 = *(char *)(v4 + 4);
   if ( v5 < 4 && *(__int16 *)(v4 + 16) != -1 && (*(_DWORD *)(v11 + 416) & 1) == 1 )
   {
@@ -69307,9 +69309,9 @@ int __usercall sub_4582B0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD 
   }
   while ( v26 < 10 );
   if ( !v40 )
-    sub_40F7C0(v35, (char)v28, v26, a5);
+    UnitStack_KillByIndex(v35, (char)v28, v26, a5);
   if ( v40 == v44 )
-    sub_40F7C0(v36, (char)v28, v26, a5);
+    UnitStack_KillByIndex(v36, (char)v28, v26, a5);
   return 1;
 }
 // 4582F8: variable 'v5' is possibly undefined
@@ -69448,7 +69450,7 @@ signed int __usercall sub_4589C0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
   }
   while ( v20 < 10 );
   v23 = 0;
-  v24 = (__int16 *)(gameData + 509674 + 467 * v46 + 18);
+  v24 = (__int16 *)(UNIT_RECORD(v46) + 18);
   v25 = &v43[31 * v55];
   do
   {
@@ -69538,7 +69540,7 @@ signed int __usercall sub_4589C0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
   while ( v28 < 10 );
   v30 = 0;
   v48 = v55 - v52;
-  v31 = (_WORD *)(gameData + 509674 + 467 * v46 + 18);
+  v31 = (_WORD *)(UNIT_RECORD(v46) + 18);
   v32 = &v43[31 * v52];
   do
   {
@@ -69557,7 +69559,7 @@ signed int __usercall sub_4589C0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>,
   }
   while ( v30 < 12 );
   if ( !v52 )
-    sub_40F7C0(v47, v30, (DWORD)v32, a5);
+    UnitStack_KillByIndex(v47, v30, (DWORD)v32, a5);
   return 1;
 }
 // 458A0D: variable 'v6' is possibly undefined
@@ -69621,14 +69623,14 @@ void __userpurge sub_4592E0(
   v11 = -1;
   if ( a4 >= 0 && a4 < *(_DWORD *)(gameData + 140000) && a3 >= 0 && a3 < *(_DWORD *)(gameData + 140004) )
   {
-    if ( *(unsigned __int16 *)(gameData + 200 * a4 + 2 * a3 + 556374) > 0x1F4u
+    if ( *(unsigned __int16 *)(TILE_INDEX(a4, a3)) > 0x1F4u
       || (unsigned int)*(__int16 *)(gameData
-                                  + 725 * *(unsigned __int16 *)(gameData + 200 * a4 + 2 * a3 + 556374)
+                                  + 725 * *(unsigned __int16 *)(TILE_INDEX(a4, a3))
                                   + 147180) > 0x28 )
     {
-      v13 = *(unsigned __int16 *)(gameData + 200 * a4 + 2 * a3 + 556374) - 0x8000;
+      v13 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - 0x8000;
       if ( v13 > 0x64
-        || (v14 = 467 * v13 + gameData + 509674, (unsigned int)*(char *)(v14 + 4) >= 4)
+        || (v14 = UNIT_RECORD(v13), (unsigned int)*(char *)(v14 + 4) >= 4)
         || *(__int16 *)(v14 + 16) == -1 )
       {
         if ( sub_443BB0(a4, a3) )
@@ -69645,13 +69647,13 @@ void __userpurge sub_4592E0(
       else
       {
         v12 = 1;
-        v11 = *(unsigned __int16 *)(200 * a4 + gameData + 2 * a3 + 556374) - 0x8000;
+        v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3)) - 0x8000;
       }
     }
     else
     {
       v12 = 2;
-      v11 = *(unsigned __int16 *)(200 * a4 + gameData + 2 * a3 + 556374);
+      v11 = *(unsigned __int16 *)(TILE_INDEX(a4, a3));
     }
     if ( (a1 == -1 || v12 == a1)
       && (a2 == -1
@@ -69769,7 +69771,7 @@ signed int __usercall createUnit@<eax>(double a1@<st0>, int a2, int a3, int a4, 
   {
     v7 = a4;
     ++v8;
-    sub_40F440(v9 + gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374) + 6, v10, a4);
+    UnitSlot_InitFromType(v9 + gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374) + 6, v10, a4);
     v10 = *(v8 - 1);
   }
   return sub_455070(
@@ -69812,7 +69814,7 @@ int __usercall createCastle@<eax>(
   for ( i = 2 * a3; v10 != -1; v11 = v12 + 31 )
   {
     ++v9;
-    sub_40F440(v11 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374) + gameData + 147174 + 6, v10, a4);
+    UnitSlot_InitFromType(v11 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374) + gameData + 147174 + 6, v10, a4);
     v10 = *(v9 - 1);
   }
   sub_455070(
@@ -70049,7 +70051,7 @@ LABEL_6:
       {
         v8 = 0;
 LABEL_35:
-        v9 = 467 * v8 + gameData + 509674;
+        v9 = UNIT_RECORD(v8);
         if ( (unsigned int)*(char *)(v9 + 4) >= 4
           || *(__int16 *)(v9 + 16) == -1
           || *(_BYTE *)(gameData + 467 * v8 + 509676) != 3 )
@@ -70075,7 +70077,7 @@ LABEL_42:
         return 0;
       }
 LABEL_18:
-      v4 = 467 * v3 + gameData + 509674;
+      v4 = UNIT_RECORD(v3);
       if ( (unsigned int)*(char *)(v4 + 4) < 4 && *(__int16 *)(v4 + 16) != -1 )
       {
         v5 = *(unsigned __int8 *)(467 * v3 + gameData + 509676);
@@ -70175,7 +70177,7 @@ LABEL_75:
     case 0xF:
       v22 = 0;
 LABEL_86:
-      v23 = gameData + 509674 + 467 * v22;
+      v23 = UNIT_RECORD(v22);
       if ( (unsigned int)*(char *)(v23 + 4) < 4
         && *(__int16 *)(v23 + 16) != -1
         && *(_BYTE *)(gameData + 467 * v22 + 509676) == 4 )
@@ -70340,7 +70342,7 @@ LABEL_7:
       }
       v5 = 0;
 LABEL_19:
-      v6 = gameData + 509674 + 467 * v5;
+      v6 = UNIT_RECORD(v5);
       if ( (unsigned int)*(char *)(v6 + 4) < 4
         && *(__int16 *)(v6 + 16) != -1
         && !*(_BYTE *)(467 * v5 + gameData + 509676) )
@@ -70387,7 +70389,7 @@ LABEL_34:
   }
   v13 = 0;
 LABEL_46:
-  v14 = gameData + 509674 + 467 * v13;
+  v14 = UNIT_RECORD(v13);
   if ( (unsigned int)*(char *)(v14 + 4) < 4
     && *(__int16 *)(v14 + 16) != -1
     && *(_BYTE *)(467 * v13 + gameData + 509676) == 1 )
@@ -71962,7 +71964,7 @@ signed int __usercall sub_4620F0@<eax>(const char *a1@<eax>, int a2@<edx>, int a
     result = gameData;
     if ( *(_DWORD *)(gameData + 147147) )
     {
-      if ( *(_DWORD *)(1423 * dword_5202EC + gameData + 140051) )
+      if ( PLAYER_HAS_HUMAN_CONTROLLER(dword_5202EC) )
       {
         v7 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
         v28 = g_RenderHook;

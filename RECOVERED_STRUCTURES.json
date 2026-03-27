@@ -1,0 +1,33 @@
+[
+  {
+    "name": "UnitStackRecord",
+    "kind": "stack_entry",
+    "base_offset": 147174,
+    "stride": 725,
+    "description": "Per-army stack record inside gameData holding tile coordinates, ownership, slots, and the cached move path.",
+    "fields": [
+      { "offset": 0, "name": "tile_row", "type": "int16", "notes": "Row on the 200-column world grid used to stamp tile occupancy and fog-of-war." },
+      { "offset": 2, "name": "tile_column", "type": "int16", "notes": "Column on the world grid; combined with row to index TILE_INDEX." },
+      { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war (dword_5202EC)." },
+      { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "0-7 direction used by sprite/orientation logic during path highlighting." },
+      { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlot (31 bytes each)", "notes": "Each slot stores type id, owner, morale (offset +9), veterancy seed (offset +11), and state bits (offset +13)." },
+      { "offset": 316, "name": "path_buffer", "type": "byte[0x194]", "notes": "Movement track copied in/out by qmemcpy during path planning." }
+    ],
+    "unit_slot_fields": [
+      { "offset": 0, "name": "unit_type_id", "type": "int16", "notes": "-1 marks an empty slot; values index the 88-byte unit stat tables." },
+      { "offset": 2, "name": "slot_owner", "type": "uint8", "notes": "Owner copied from stack reset; used for loyalty/morale adjustments." },
+      { "offset": 8, "name": "base_action_points", "type": "uint8", "notes": "Seeded from byte_512580 when the slot is initialized." },
+      { "offset": 9, "name": "morale_percent", "type": "uint8", "notes": "Starts at 100 and drives combat multipliers." },
+      { "offset": 10, "name": "speed_penalty", "type": "uint8", "notes": "Cleared on init; reused by status effects." },
+      { "offset": 11, "name": "veterancy_seed", "type": "uint8", "notes": "Set to 6 for light units and 10 otherwise using dword_51257A flags." },
+      { "offset": 13, "name": "slot_flags", "type": "uint8", "notes": "Bit0 stores the per-turn readiness flag toggled by UnitStack_ClearReadyFlags/SetReadyFlags." },
+      { "offset": 18, "name": "status_dword", "type": "uint32", "notes": "Zeroed on init; reused by casualties/movement cost accumulation." },
+      { "offset": 22, "name": "state_bits", "type": "uint8", "notes": "Low bit cleared on init; pairs with slot_flags for move gating." }
+    ],
+    "evidence": [
+      "Unit_Create uses 147174 + 725 * index to address stacks, writing row/column/facing before stamping TILE_INDEX.",
+      "UnitSlot_InitFromType writes the slot fields (type id, owner, base stats) at offsets relative to stackPtr + 6.",
+      "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states."
+    ]
+  }
+]
