@@ -693,11 +693,11 @@ void BuildPlacement_RequestExit();
 // int __usercall UI_ConfirmSelectionApply@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, double a5@<st0>);
 // int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>);
 // int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42AD70@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42AE30@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42AF10@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42AFD0@<eax>(int a1@<eax>, char a2@<bl>);
-// int __usercall sub_42B0A0@<eax>(int a1@<eax>);
+// int __usercall BuildingTransferDialog_DecreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_IncreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_DecreasePendingGold@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_IncreasePendingGold@<eax>(int a1@<eax>, char a2@<bl>);
+// int __usercall BuildingTransferDialog_Run@<eax>(int a1@<eax>);
 // BOOL __usercall Trap_CanPlaceAtTile@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall Trap_New@<eax>(DWORD@<eax>, int@<edx>, int@<ecx>, int@<ebx>, double@<st0>);
 // int __usercall Trap_ClearTileOwnerMask@<eax>(int a1@<eax>, int a2@<edx>);
@@ -11506,11 +11506,11 @@ int dword_531CC4; // weak
 int g_BuildPlacementLoopExitRequested; // weak
 int g_BuildPlacementTypeId; // weak
 __int64 g_BuildPlacementOriginTile; // weak
-int dword_531CE4; // weak
-int dword_531CE8; // weak
-int dword_531CEC; // weak
-int dword_531CF0; // weak
-int dword_531CF4; // weak
+int g_BuildingTransferDialogSpriteSet; // weak
+int g_BuildingTransferDialogExitRequested; // weak
+int g_BuildingTransferPendingPeasants; // weak
+int g_BuildingTransferPendingGold; // weak
+int g_BuildingTransferSourceBuildingPtr; // weak
 int dword_532040; // weak
 int dword_532048; // weak
 int dword_53204C; // weak
@@ -41016,9 +41016,9 @@ int __usercall sub_42A760@<eax>(DWORD a1@<ebp>, int a2@<edi>)
   Render_FillRect((_DWORD *)dword_5202E0, 0, 198, 208, 0x104u, 0xDAu, 0xD0u, 0xC6u);
   Render_ReleaseSurface(5, a1);
   UI_DrawTextFmt(a2, 208, 260, 198, 3, (int)aD_D);
-  if ( (__int16)(16 * *(_WORD *)(dword_531CF4 + 432)) >> 4 <= 0 || (*(_BYTE *)(dword_531CF4 + 435) & 7) != 0 )
+  if ( (__int16)(16 * *(_WORD *)(g_BuildingTransferSourceBuildingPtr + 432)) >> 4 <= 0 || (*(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 435) & 7) != 0 )
   {
-    if ( (__int16)(16 * *(_WORD *)(dword_531CF4 + 432)) >> 4 || (*(_BYTE *)(dword_531CF4 + 435) & 7) != 0 )
+    if ( (__int16)(16 * *(_WORD *)(g_BuildingTransferSourceBuildingPtr + 432)) >> 4 || (*(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 435) & 7) != 0 )
       v2 = 4;
     else
       v2 = 3;
@@ -41027,7 +41027,7 @@ int __usercall sub_42A760@<eax>(DWORD a1@<ebp>, int a2@<edi>)
   {
     v2 = 5;
   }
-  SpriteForChar = DLX_GetSpriteForChar(dword_531CE4, v2);
+  SpriteForChar = DLX_GetSpriteForChar(g_BuildingTransferDialogSpriteSet, v2);
   return (*(int (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
                                                                                      + 52))(
            19,
@@ -41042,8 +41042,8 @@ int __usercall sub_42A760@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 531CE4: using guessed type int dword_531CE4;
-// 531CF4: using guessed type int dword_531CF4;
+// 531CE4: using guessed type int g_BuildingTransferDialogSpriteSet;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 
 //----- (0042A890) --------------------------------------------------------
 int __usercall sub_42A890@<eax>(DWORD a1@<ebp>, int a2@<edi>)
@@ -41064,7 +41064,7 @@ int __usercall sub_42A890@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 // 42A8B1: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 531CEC: using guessed type int dword_531CEC;
+// 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
 
 //----- (0042A910) --------------------------------------------------------
 int __usercall sub_42A910@<eax>(DWORD a1@<ebp>, int a2@<edi>)
@@ -41085,30 +41085,30 @@ int __usercall sub_42A910@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 // 42A931: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 531CF0: using guessed type int dword_531CF0;
+// 531CF0: using guessed type int g_BuildingTransferPendingGold;
 
 //----- (0042A990) --------------------------------------------------------
-int __usercall sub_42A990@<eax>(int a1@<eax>, int a2@<ecx>)
+int __usercall BuildingTransferDialog_RequestCloseAnimated@<eax>(int a1@<eax>, int a2@<ecx>)
 {
   int result; // eax
   int v4; // edx
 
   result = sub_419E60(a1, a2);
-  dword_531CE8 = v4;
+  g_BuildingTransferDialogExitRequested = v4;
   return result;
 }
 // 42A99B: variable 'v4' is possibly undefined
-// 531CE8: using guessed type int dword_531CE8;
+// 531CE8: using guessed type int g_BuildingTransferDialogExitRequested;
 
 //----- (0042A9B0) --------------------------------------------------------
-int __usercall sub_42A9B0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, double a5@<st0>)
+int __usercall BuildingTransferDialog_ConfirmTransfer@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char a4@<dil>, double a5@<st0>)
 {
   int v5; // eax
   int v6; // esi
   int v7; // esi
 
   sub_419E60(a1, a2);
-  if ( dword_531CEC )
+  if ( g_BuildingTransferPendingPeasants )
   {
     v5 = word_532360[dword_53235C];
     if ( v5 == -2 || *(_BYTE *)(467 * v5 + gameData + 509678) != 1 )
@@ -41117,18 +41117,18 @@ int __usercall sub_42A9B0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char
       if ( v6 == -2 )
         v6 = -1;
       a4 = -45;
-      Building_Transfer((dword_531CF4 - (gameData + 509674)) / 467, v6, 0, dword_531CEC, a5);
-      dword_531CEC = 0;
+      Building_Transfer((g_BuildingTransferSourceBuildingPtr - (gameData + 509674)) / 467, v6, 0, g_BuildingTransferPendingPeasants, a5);
+      g_BuildingTransferPendingPeasants = 0;
     }
   }
-  if ( dword_531CF0 )
+  if ( g_BuildingTransferPendingGold )
   {
     v7 = word_532360[dword_53235C];
     if ( v7 == -2 )
       v7 = -1;
     a4 = -45;
-    Building_Transfer((dword_531CF4 - (gameData + 509674)) / 467, v7, 1, dword_531CF0, a5);
-    dword_531CF0 = 0;
+    Building_Transfer((g_BuildingTransferSourceBuildingPtr - (gameData + 509674)) / 467, v7, 1, g_BuildingTransferPendingGold, a5);
+    g_BuildingTransferPendingGold = 0;
   }
   UI_DrawConfirmTop(a3, a4);
   UI_DrawConfirmBottom(a3, a4);
@@ -41144,9 +41144,9 @@ int __usercall sub_42A9B0@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, char
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 531CEC: using guessed type int dword_531CEC;
-// 531CF0: using guessed type int dword_531CF0;
-// 531CF4: using guessed type int dword_531CF4;
+// 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
+// 531CF0: using guessed type int g_BuildingTransferPendingGold;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 53235C: using guessed type int dword_53235C;
 // 532360: using guessed type __int16 word_532360[];
 
@@ -41176,15 +41176,15 @@ int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  v6 = dword_531CF4;
-  v7 = *(_BYTE *)(dword_531CF4 + 436);
+  v6 = g_BuildingTransferSourceBuildingPtr;
+  v7 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436);
   if ( (v7 & 0x3F) != 0 )
   {
-    v22 = *(_BYTE *)(dword_531CF4 + 436) & 0xC0;
-    *(_BYTE *)(dword_531CF4 + 436) = v22;
+    v22 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0xC0;
+    *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) = v22;
     *(_BYTE *)(v6 + 436) = ((v7 & 0x3F) - 1) & 0x3F | v22;
   }
-  v8 = *(_BYTE *)(dword_531CF4 + 436) & 0x3F;
+  v8 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0x3F;
   do
   {
     DD_Pump((int)dword_544CD8, v8);
@@ -41194,9 +41194,9 @@ int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>)
     v17 = v8 - v16;
     if ( (int)(v8 - v16) < 0 )
       v17 = 0;
-    v18 = dword_531CF4;
-    v19 = *(_BYTE *)(dword_531CF4 + 436) & 0xC0;
-    *(_BYTE *)(dword_531CF4 + 436) = v19;
+    v18 = g_BuildingTransferSourceBuildingPtr;
+    v19 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0xC0;
+    *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) = v19;
     *(_BYTE *)(v18 + 436) = v17 & 0x3F | v19;
     UI_DrawNoticeBoxSmall((DWORD)dword_544CD8, 0);
   }
@@ -41212,7 +41212,7 @@ int __usercall sub_42AB80@<eax>(int a1@<eax>, char a2@<bl>)
 // 42ABEE: variable 'v14' is possibly undefined
 // 42ABEE: variable 'v15' is possibly undefined
 // 42AC46: variable 'v20' is possibly undefined
-// 531CF4: using guessed type int dword_531CF4;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AC80) --------------------------------------------------------
@@ -41239,12 +41239,12 @@ int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  v6 = dword_531CF4;
-  v7 = ((*(_BYTE *)(dword_531CF4 + 436) & 0x3F) + 1) & 0x3F;
-  v8 = *(_BYTE *)(dword_531CF4 + 436) & 0xC0;
-  *(_BYTE *)(dword_531CF4 + 436) = v8;
+  v6 = g_BuildingTransferSourceBuildingPtr;
+  v7 = ((*(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0x3F) + 1) & 0x3F;
+  v8 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0xC0;
+  *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) = v8;
   *(_BYTE *)(v6 + 436) = v7 | v8;
-  v9 = *(_BYTE *)(dword_531CF4 + 436) & 0x3F;
+  v9 = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0x3F;
   do
   {
     DD_Pump((int)dword_544CD8, v9);
@@ -41253,9 +41253,9 @@ int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>)
     v17 = v9 + (v15 - v16) * (v14 - v16) / 0x15Eu;
     if ( v17 > 40 )
       LOBYTE(v17) = 40;
-    v18 = dword_531CF4;
-    BYTE1(v17) = *(_BYTE *)(dword_531CF4 + 436) & 0xC0;
-    *(_BYTE *)(dword_531CF4 + 436) = BYTE1(v17);
+    v18 = g_BuildingTransferSourceBuildingPtr;
+    BYTE1(v17) = *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) & 0xC0;
+    *(_BYTE *)(g_BuildingTransferSourceBuildingPtr + 436) = BYTE1(v17);
     *(_BYTE *)(v18 + 436) = v17 & 0x3F | BYTE1(v17);
     UI_DrawNoticeBoxSmall(0x15Eu, (int)dword_544CD8);
   }
@@ -41271,11 +41271,11 @@ int __usercall sub_42AC80@<eax>(int a1@<eax>, char a2@<bl>)
 // 42AD06: variable 'v15' is possibly undefined
 // 42AD06: variable 'v16' is possibly undefined
 // 42AD59: variable 'v19' is possibly undefined
-// 531CF4: using guessed type int dword_531CF4;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AD70) --------------------------------------------------------
-int __usercall sub_42AD70@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_DecreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -41293,16 +41293,16 @@ int __usercall sub_42AD70@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  dword_531CEC -= 10;
-  v6 = dword_531CEC;
+  g_BuildingTransferPendingPeasants -= 10;
+  v6 = g_BuildingTransferPendingPeasants;
   do
   {
     DD_Pump((int)dword_544CD8, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
-    dword_531CEC = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
-    if ( dword_531CEC < 0 )
-      dword_531CEC = 0;
+    g_BuildingTransferPendingPeasants = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    if ( g_BuildingTransferPendingPeasants < 0 )
+      g_BuildingTransferPendingPeasants = 0;
     UI_DrawConfirmTop((DWORD)dword_544CD8, 0);
   }
   while ( DD_IsFlipping((int)dword_544CD8) );
@@ -41317,11 +41317,11 @@ int __usercall sub_42AD70@<eax>(int a1@<eax>, char a2@<bl>)
 // 42ADCA: variable 'v12' is possibly undefined
 // 42ADCA: variable 'v13' is possibly undefined
 // 42AE1D: variable 'v14' is possibly undefined
-// 531CEC: using guessed type int dword_531CEC;
+// 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AE30) --------------------------------------------------------
-int __usercall sub_42AE30@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_IncreasePendingPeasants@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -41340,20 +41340,20 @@ int __usercall sub_42AE30@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  dword_531CEC += 10;
-  v6 = dword_531CEC;
+  g_BuildingTransferPendingPeasants += 10;
+  v6 = g_BuildingTransferPendingPeasants;
   do
   {
     DD_Pump((int)dword_544CD8, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
-    dword_531CEC = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
-    if ( dword_531CEC > 1000 )
-      dword_531CEC = 1000;
-    v14 = *(_WORD *)(dword_531CF4 + 430);
+    g_BuildingTransferPendingPeasants = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    if ( g_BuildingTransferPendingPeasants > 1000 )
+      g_BuildingTransferPendingPeasants = 1000;
+    v14 = *(_WORD *)(g_BuildingTransferSourceBuildingPtr + 430);
     HIBYTE(v14) &= 0xFu;
-    if ( v14 < dword_531CEC )
-      dword_531CEC = v14;
+    if ( v14 < g_BuildingTransferPendingPeasants )
+      g_BuildingTransferPendingPeasants = v14;
     UI_DrawConfirmTop(0xAu, (int)dword_544CD8);
   }
   while ( DD_IsFlipping((int)dword_544CD8) );
@@ -41368,12 +41368,12 @@ int __usercall sub_42AE30@<eax>(int a1@<eax>, char a2@<bl>)
 // 42AE85: variable 'v12' is possibly undefined
 // 42AE85: variable 'v13' is possibly undefined
 // 42AEEE: variable 'v15' is possibly undefined
-// 531CEC: using guessed type int dword_531CEC;
-// 531CF4: using guessed type int dword_531CF4;
+// 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AF10) --------------------------------------------------------
-int __usercall sub_42AF10@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_DecreasePendingGold@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -41391,16 +41391,16 @@ int __usercall sub_42AF10@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  dword_531CF0 -= 10;
-  v6 = dword_531CF0;
+  g_BuildingTransferPendingGold -= 10;
+  v6 = g_BuildingTransferPendingGold;
   do
   {
     DD_Pump((int)dword_544CD8, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
-    dword_531CF0 = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
-    if ( dword_531CF0 < 0 )
-      dword_531CF0 = 0;
+    g_BuildingTransferPendingGold = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    if ( g_BuildingTransferPendingGold < 0 )
+      g_BuildingTransferPendingGold = 0;
     UI_DrawConfirmBottom((DWORD)dword_544CD8, 0);
   }
   while ( DD_IsFlipping((int)dword_544CD8) );
@@ -41415,11 +41415,11 @@ int __usercall sub_42AF10@<eax>(int a1@<eax>, char a2@<bl>)
 // 42AF6A: variable 'v12' is possibly undefined
 // 42AF6A: variable 'v13' is possibly undefined
 // 42AFBD: variable 'v14' is possibly undefined
-// 531CF0: using guessed type int dword_531CF0;
+// 531CF0: using guessed type int g_BuildingTransferPendingGold;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042AFD0) --------------------------------------------------------
-int __usercall sub_42AFD0@<eax>(int a1@<eax>, char a2@<bl>)
+int __usercall BuildingTransferDialog_IncreasePendingGold@<eax>(int a1@<eax>, char a2@<bl>)
 {
   int v4; // edx
   int v5; // ecx
@@ -41438,19 +41438,19 @@ int __usercall sub_42AFD0@<eax>(int a1@<eax>, char a2@<bl>)
   Render_Pump();
   DD_Pump((int)dword_544CD8, a2);
   Time_Now(v5, v4);
-  dword_531CF0 += 10;
-  v6 = dword_531CF0;
+  g_BuildingTransferPendingGold += 10;
+  v6 = g_BuildingTransferPendingGold;
   do
   {
     DD_Pump((int)dword_544CD8, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
-    dword_531CF0 = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
-    if ( dword_531CF0 > 1000 )
-      dword_531CF0 = 1000;
-    v14 = *(_DWORD *)(dword_531CF4 + 438);
-    if ( dword_531CF0 > v14 )
-      dword_531CF0 = *(_DWORD *)(dword_531CF4 + 438);
+    g_BuildingTransferPendingGold = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
+    if ( g_BuildingTransferPendingGold > 1000 )
+      g_BuildingTransferPendingGold = 1000;
+    v14 = *(_DWORD *)(g_BuildingTransferSourceBuildingPtr + 438);
+    if ( g_BuildingTransferPendingGold > v14 )
+      g_BuildingTransferPendingGold = *(_DWORD *)(g_BuildingTransferSourceBuildingPtr + 438);
     UI_DrawConfirmBottom(v14, (int)dword_544CD8);
   }
   while ( DD_IsFlipping((int)dword_544CD8) );
@@ -41465,12 +41465,12 @@ int __usercall sub_42AFD0@<eax>(int a1@<eax>, char a2@<bl>)
 // 42B025: variable 'v12' is possibly undefined
 // 42B025: variable 'v13' is possibly undefined
 // 42B086: variable 'v15' is possibly undefined
-// 531CF0: using guessed type int dword_531CF0;
-// 531CF4: using guessed type int dword_531CF4;
+// 531CF0: using guessed type int g_BuildingTransferPendingGold;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042B0A0) --------------------------------------------------------
-int __usercall sub_42B0A0@<eax>(int a1@<eax>)
+int __usercall BuildingTransferDialog_Run@<eax>(int a1@<eax>)
 {
   int v1; // edi
   int v2; // ecx
@@ -41493,11 +41493,11 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
   int v19; // ecx
   unsigned __int8 v21[1048]; // [esp+0h] [ebp-418h] BYREF
 
-  dword_531CF4 = a1;
+  g_BuildingTransferSourceBuildingPtr = a1;
   v1 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
   sub_436970(a1, 1);
-  dword_531CEC = 0;
-  dword_531CF0 = 0;
+  g_BuildingTransferPendingPeasants = 0;
+  g_BuildingTransferPendingGold = 0;
   _wcpp_4_ctor_array__(v2, 256);
   if ( v1 )
     v3 = aCastle_chrDw_1;
@@ -41509,14 +41509,14 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
   v7 = (int)v6;
   if ( v6 )
     v6 = DLXSpriteSet_Load(v6, (char)v21);
-  dword_531CE4 = (int)v6;
+  g_BuildingTransferDialogSpriteSet = (int)v6;
   if ( v1 )
     v8 = aCastle_chrDw_2;
   else
     v8 = aCastle_pogDw_2;
   sub_435ED0(v8, (int)v21, v7, v4);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  SpriteForChar = DLX_GetSpriteForChar(dword_531CE4, (unsigned __int8)g_LanguageIndex);
+  SpriteForChar = DLX_GetSpriteForChar(g_BuildingTransferDialogSpriteSet, (unsigned __int8)g_LanguageIndex);
   v10 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v10 + 52))(
     149,
@@ -41550,13 +41550,13 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
   g_RenderDevice = &unk_51D4C0;
   Render_FillRect((_DWORD *)dword_5202E0, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, v4);
-  v17 = *(_DWORD *)(dword_531CF4 + 438);
+  v17 = *(_DWORD *)(g_BuildingTransferSourceBuildingPtr + 438);
   UI_DrawTextFmt((int)&unk_51D4C0, 545, 602, 30, 3, (int)aD_46);
   sub_405020((int *)&unk_51D4C0, v21, 20);
   sub_460CB0((int)dword_544CD8, (int)v21, v18, v17);
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   Render_Present((int)dword_544CD8);
-  dword_531CE8 = 0;
+  g_BuildingTransferDialogExitRequested = 0;
   do
   {
     DD_Pump((int)dword_544CD8, (char)dword_544CD8);
@@ -41564,9 +41564,9 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
     sub_419DC0(dword_514840, v17);
     sub_44E350(word_514A88);
   }
-  while ( v19 == dword_531CE8 );
+  while ( v19 == g_BuildingTransferDialogExitRequested );
   sub_436AF0();
-  sub_405920(&dword_531CE4);
+  sub_405920(&g_BuildingTransferDialogSpriteSet);
   Render_Pump();
   return sub_404F20((int *)&unk_51D4C0, 20);
 }
@@ -41589,11 +41589,11 @@ int __usercall sub_42B0A0@<eax>(int a1@<eax>)
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 526A2C: using guessed type int dword_526A2C;
-// 531CE4: using guessed type int dword_531CE4;
-// 531CE8: using guessed type int dword_531CE8;
-// 531CEC: using guessed type int dword_531CEC;
-// 531CF0: using guessed type int dword_531CF0;
-// 531CF4: using guessed type int dword_531CF4;
+// 531CE4: using guessed type int g_BuildingTransferDialogSpriteSet;
+// 531CE8: using guessed type int g_BuildingTransferDialogExitRequested;
+// 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
+// 531CF0: using guessed type int g_BuildingTransferPendingGold;
+// 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042B3F0) --------------------------------------------------------

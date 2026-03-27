@@ -206,14 +206,15 @@
       { "offset": 416, "name": "addon_flags", "type": "uint8", "notes": "Bitfield for settlement/castle add-ons. Confirmed bits are `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, and `0x10` smiths; owning at least one fully populated settlement with all five bits contributes to higher player technology." },
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
-      { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
+      { "offset": 430, "name": "peasant_population_count", "type": "uint16", "notes": "Low 12 bits store the settlement's peasant population. Building transfer mode `0` exports this as UnitType32 peasant cargo, and the per-turn economy helpers grow or shrink it based on settlement conditions." },
+      { "offset": 438, "name": "stored_gold", "type": "uint32", "notes": "Spendable gold pool consumed by building add-ons, wall upgrades, and transfer mode `1`, and replenished by the settlement income helper." },
       { "offset": 444, "name": "technology_level_bits", "type": "uint8", "notes": "Low three bits encode the building's current technology tier or cap. Rules host `PoziomTech` returns these bits, and player technology advancement raises them across owned settlements when the player's global tech increases." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." }
     ],
     "evidence": [
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
-      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+415`, while upgrade and income helpers use `+416`, `+421`, `+429`, `+438`, and `+444`, exposing a stable production/licence cluster plus a second cluster for add-ons, technology tier, and local economy state.",
+      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+415`, while upgrade and income helpers use `+416`, `+421`, `+429`, `+430`, `+438`, and `+444`, exposing a stable production/licence cluster plus a second cluster for add-ons, peasant population, gold income, and technology tier.",
       "`Player_UpdateTechnologyLevelFromSettlements`, `Building_BuildSchool`, `Building_BuildWorkshop`, `Building_BuildBarracks`, `Building_BuildHospital`, and `Building_BuildSmiths` all corroborate the settlement-upgrade meaning of bytes `+4`, `+416`, and `+444`.",
       "`Building_BuyUnitLicence`, `Building_RemoveUnitLicence`, `Building_SetUnitProduction`, the castle production UI, and the per-turn production resolver at clash95.c:32794-32840 all corroborate the licence roster at `+402`, the selected production slot at `+414`, and the countdown byte at `+415`.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
@@ -322,6 +323,31 @@
       "Asm exposes a contiguous 53-byte descriptor family rooted at `unk_5146C0`, with repeated layout, shared draw proc `sub_4191F0`, and localized labels for road, trap, castle, keep, fortress, and treasure digging.",
       "`BuildBuilding` indexes the family as `53 * (buildType + 2)`, flips field `+8` between states `1` and `2`, swaps the activate proc between `BuildPlacement_RequestExit` and `BuildPlacement_AnimateExitWidgetPress`, and redraws the chosen descriptor through `sub_419D60`.",
       "The records point at the same sprite-sheet handle and are consumed by `sub_419DC0` as one panel-local widget family during the modal building-placement loop."
+    ]
+  },
+  {
+    "name": "BuildingTransferDialogWidgetDescriptor",
+    "kind": "ui_widget_descriptor",
+    "base_offset": 514848,
+    "stride": 53,
+    "description": "Static 53-byte widget descriptors used by the castle building-transfer dialog for notice-box controls, peasant and gold sliders, cancel, and confirm transfer.",
+    "fields": [
+      { "offset": 0, "name": "screen_x", "type": "int32", "notes": "Static screen-space x position inside the transfer dialog." },
+      { "offset": 4, "name": "screen_y", "type": "int32", "notes": "Static screen-space y position inside the transfer dialog." },
+      { "offset": 8, "name": "is_enabled", "type": "int32", "notes": "Runtime enable state, initialized to `1` for all transfer-dialog widgets." },
+      { "offset": 12, "name": "sprite_sheet_handle_ptr", "type": "void *", "notes": "All descriptors point at the shared transfer-dialog sprite-set handle (`g_BuildingTransferDialogSpriteSet`)." },
+      { "offset": 16, "name": "widget_sprite_id", "type": "int32", "notes": "Widget-specific sprite id for the plus/minus buttons, close button, and confirm-transfer button." },
+      { "offset": 20, "name": "widget_action_id", "type": "int32", "notes": "Static duplicate action/widget id used by the generic UI framework." },
+      { "offset": 24, "name": "hover_state", "type": "int32", "notes": "Static `-1` sentinel in the transfer-dialog controls." },
+      { "offset": 28, "name": "draw_proc", "type": "funcptr", "notes": "Transfer controls use `sub_419770` or `sub_419780` as their draw proc, depending on whether they render text-bearing buttons or icon-only buttons." },
+      { "offset": 32, "name": "activate_proc", "type": "funcptr", "notes": "Points at handlers such as `BuildingTransferDialog_RequestCloseAnimated`, `BuildingTransferDialog_ConfirmTransfer`, and the plus/minus adjustment helpers for peasants and gold." },
+      { "offset": 36, "name": "localized_label_ptrs_or_padding", "type": "mixed", "notes": "Text-bearing widgets store localized label pointers here (`Back`, `Transfer`), while icon-only slider buttons leave this region zeroed." },
+      { "offset": 49, "name": "ui_token_ptr", "type": "char *", "notes": "Trailing UI token pointer such as `\"kasa\"`, `\"male\"`, or `\"duze\"`, matching the same widget framework used elsewhere." }
+    ],
+    "evidence": [
+      "Asm shows a long contiguous 53-byte descriptor family rooted at `dword_514840`, with shared sprite-set pointer `dword_531CE4`, draw procs `sub_419770/sub_419780`, and activate procs that align with the transfer-dialog handlers.",
+      "`BuildingTransferDialog_Run` initializes `g_BuildingTransferDialogSpriteSet`, calls `sub_419D80(dword_514840)`, and then pumps `sub_419DC0(dword_514840, ...)` until the dialog exit latch changes, proving these records are one modal widget family.",
+      "The descriptor labels and handler pairing expose distinct controls for adjusting transferred peasants, adjusting transferred gold, closing the dialog, and confirming the transfer."
     ]
   }
 ]
