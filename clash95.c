@@ -362,11 +362,11 @@ int __spoils<ecx> Render_CreateSprite();
 // int __usercall sub_40CE70@<eax>(unsigned int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_40D330@<eax>(DWORD a1@<ebp>);
 int __thiscall sub_40D430(void *this);
-// int __usercall sub_40D560@<eax>(int result@<eax>, unsigned __int16 a2@<dx>, unsigned __int16 a3@<cx>, unsigned __int16 a4@<bx>);
-// int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
+// int __usercall MapMode_BlitRectWithViewportFrame@<eax>(int result@<eax>, unsigned __int16 a2@<dx>, unsigned __int16 a3@<cx>, unsigned __int16 a4@<bx>);
+// int __usercall MapMode_RedrawTileRect@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // BOOL __usercall sub_40D800@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<cx>);
 void Locale_DrawInteger();
-// void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>);
+// void *__usercall MapMode_DrawTile@<eax>(void *result@<eax>, signed int a2@<edx>);
 // signed int __usercall Map_DestroyTile@<eax>(int a1@<eax>, signed int a2@<edx>);
 int MapMode_UpdateCameraFromCursor();
 int MapMode_ToggleEnabled();
@@ -11397,7 +11397,7 @@ __int16 word_523344; // weak
 __int16 word_523346; // weak
 __int16 word_523348; // weak
 __int16 word_52334A; // weak
-int dword_52334C; // weak
+int g_MapModeSurface; // weak
 char byte_523350[]; // weak
 _UNKNOWN unk_523750; // weak
 _UNKNOWN unk_523B50; // weak
@@ -18906,7 +18906,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
               a3 = g_SelectedUnitIndex;
               if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&unk_4EC79A, 0) )
               {
-                sub_40D890(
+                MapMode_DrawTile(
                   (void *)*(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
                   *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
                 sub_4426C0(aStruktur, 64);
@@ -21028,7 +21028,7 @@ int __usercall sub_40D330@<eax>(DWORD a1@<ebp>)
   Surface = (_DWORD *)Mem_Alloc(188, 16, word_523348, a1);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, word_523348, word_52334A);
-  dword_52334C = (int)Surface;
+  g_MapModeSurface = (int)Surface;
   g_RenderDevice = Surface;
   SpriteForChar = DLX_GetSpriteForChar(dword_5202BC, 4);
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -21051,7 +21051,7 @@ int __usercall sub_40D330@<eax>(DWORD a1@<ebp>)
 // 523346: using guessed type __int16 word_523346;
 // 523348: using guessed type __int16 word_523348;
 // 52334A: using guessed type __int16 word_52334A;
-// 52334C: using guessed type int dword_52334C;
+// 52334C: using guessed type int g_MapModeSurface;
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040D430) --------------------------------------------------------
@@ -21059,14 +21059,14 @@ int __thiscall sub_40D430(void *this)
 {
   int result; // eax
 
-  if ( dword_52334C )
-    return (**(int (__cdecl ***)(void *))(dword_52334C + 184))(this);
+  if ( g_MapModeSurface )
+    return (**(int (__cdecl ***)(void *))(g_MapModeSurface + 184))(this);
   return result;
 }
-// 52334C: using guessed type int dword_52334C;
+// 52334C: using guessed type int g_MapModeSurface;
 
 //----- (0040D560) --------------------------------------------------------
-int __usercall sub_40D560@<eax>(
+int __usercall MapMode_BlitRectWithViewportFrame@<eax>(
         int result@<eax>,
         unsigned __int16 a2@<dx>,
         unsigned __int16 a3@<cx>,
@@ -21081,7 +21081,7 @@ int __usercall sub_40D560@<eax>(
     if ( a3 > (unsigned __int16)word_52334A + (unsigned __int16)word_523346 )
       a3 = word_52334A + word_523346 - 1;
     Render_FillRect(
-      (_DWORD *)dword_52334C,
+      (_DWORD *)g_MapModeSurface,
       g_RenderDevice,
       (unsigned __int16)(a2 - word_523346),
       (unsigned __int16)(result - word_523344),
@@ -21102,11 +21102,11 @@ int __usercall sub_40D560@<eax>(
 // 523344: using guessed type __int16 word_523344;
 // 523346: using guessed type __int16 word_523346;
 // 52334A: using guessed type __int16 word_52334A;
-// 52334C: using guessed type int dword_52334C;
+// 52334C: using guessed type int g_MapModeSurface;
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040D6D0) --------------------------------------------------------
-int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
+int __usercall MapMode_RedrawTileRect@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
 {
   signed int v4; // edi
   int v6; // esi
@@ -21140,7 +21140,7 @@ int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>,
   {
     for ( i = (char *)v17; (int)i <= a4; ++i )
     {
-      for ( j = v4; j <= v6; sub_40D890(i, j) )
+      for ( j = v4; j <= v6; MapMode_DrawTile(i, j) )
         ;
     }
     v12 = (unsigned __int8)byte_523F54 * (_WORD)v6 + (unsigned __int8)byte_523F54 - 1;
@@ -21149,7 +21149,7 @@ int __usercall sub_40D6D0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ecx>,
     v15 = word_523346 + v12 + 7;
     v16 = word_523346 + (unsigned __int8)byte_523F54 * (_WORD)v4 + 7;
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-    sub_40D560(v13, v16, v15, v14);
+    MapMode_BlitRectWithViewportFrame(v13, v16, v15, v14);
     return Render_FillRect(g_RenderDevice, 0, v16, v13, v14, v15, v13, v16);
   }
   return result;
@@ -21182,11 +21182,11 @@ void sub_40D850()
   int v2; // ecx
 
   v0 = 0;
-  g_RenderDevice = (_UNKNOWN *)dword_52334C;
+  g_RenderDevice = (_UNKNOWN *)g_MapModeSurface;
   while ( (int)v0 < *(_DWORD *)(gameData + 140000) )
   {
     for ( i = 0; i < *(_DWORD *)(gameData + 140004); i = v2 + 1 )
-      sub_40D890(v0, i);
+      MapMode_DrawTile(v0, i);
     ++v0;
   }
   JUMPOUT(0x40D410);
@@ -21195,10 +21195,10 @@ void sub_40D850()
 // 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
-// 52334C: using guessed type int dword_52334C;
+// 52334C: using guessed type int g_MapModeSurface;
 
 //----- (0040D890) --------------------------------------------------------
-void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
+void *__usercall MapMode_DrawTile@<eax>(void *result@<eax>, signed int a2@<edx>)
 {
   int v2; // esi
   unsigned __int16 *v3; // eax
@@ -21217,7 +21217,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
     if ( v2 < *(_DWORD *)(gameData + 140000) && a2 >= 0 && a2 < *(_DWORD *)(gameData + 140004) )
     {
       v9 = g_RenderDevice;
-      g_RenderDevice = (_UNKNOWN *)dword_52334C;
+      g_RenderDevice = (_UNKNOWN *)g_MapModeSurface;
       if ( (g_MapModeOverlayMask & 1) != 0 )
       {
         v3 = (unsigned __int16 *)(gameData + 1400 * v2 + 14 * a2);
@@ -21276,7 +21276,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511FF0: using guessed type int g_MapModeOverlayMask;
 // 5202E4: using guessed type int gameData;
-// 52334C: using guessed type int dword_52334C;
+// 52334C: using guessed type int g_MapModeSurface;
 // 523F50: using guessed type int dword_523F50;
 // 523F54: using guessed type char byte_523F54;
 
@@ -22082,7 +22082,7 @@ signed int __usercall PlayerExploration_RevealTile@<eax>(int a1@<eax>, signed in
   }
   v5 = gameData + 1423 * a3 + 13 * a1 + ((a2 - (__CFSHL__(a2 >> 31, 3) + 8 * (a2 >> 31))) >> 3);
   *(_BYTE *)(v5 + 140081) |= 1 << (a2 & 7);
-  sub_40D890((void *)a1, a2);
+  MapMode_DrawTile((void *)a1, a2);
   if ( PlayerExploration_IsTileExplored(a1 - 2, a2, a3) && !PlayerExploration_IsTileExplored(a1 - 1, a2, a3) )
     PlayerExploration_RevealTile(v6, a2, a3);
   if ( PlayerExploration_IsTileExplored(a1 + 2, a2, a3) && !PlayerExploration_IsTileExplored(a1 + 1, a2, a3) )
@@ -22376,8 +22376,8 @@ int __usercall Unit_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, doubl
     v9 = (_WORD *)((char *)v9 + 31);
   }
   while ( v8 < 10 );
-  sub_40D890((void *)*v7, v7[1]);
-  return sub_40D6D0(*v10, v10[1], v10[1], *v10);
+  MapMode_DrawTile((void *)*v7, v7[1]);
+  return MapMode_RedrawTileRect(*v10, v10[1], v10[1], *v10);
 }
 // 40F745: variable 'v4' is possibly undefined
 // 40F74C: variable 'v6' is possibly undefined
@@ -22408,8 +22408,8 @@ __int16 *__usercall UnitStack_RemoveFromTile@<eax>(__int16 *stack@<eax>, double 
     {
       Rules_RetractArmyFact((_DWORD *)stackPtr, column, stackPtr, a2);
       *(_WORD *)(TILE_INDEX(row, column)) = -1;
-      sub_40D890((void *)row, column);
-      return (__int16 *)sub_40D6D0(row, column, column, row);
+      MapMode_DrawTile((void *)row, column);
+      return (__int16 *)MapMode_RedrawTileRect(row, column, column, row);
     }
   }
   return stack;
@@ -23320,25 +23320,25 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
               v46 = v103;
               v97 = UnitStack_UpdateVision(v45);
               v47 = v46 + 1;
-              sub_40D890(v103, v13);
-              sub_40D890(v47, v13);
+              MapMode_DrawTile(v103, v13);
+              MapMode_DrawTile(v47, v13);
               v48 = v13 - 1;
               v102 = v103 - 1;
-              sub_40D890(v103 - 1, v13);
-              sub_40D890(v103, v13 - 1);
-              sub_40D890(v47, v13 - 1);
-              sub_40D890(v102, v13 - 1);
-              sub_40D890(v103, v49);
-              sub_40D890(v47, v50);
+              MapMode_DrawTile(v103 - 1, v13);
+              MapMode_DrawTile(v103, v13 - 1);
+              MapMode_DrawTile(v47, v13 - 1);
+              MapMode_DrawTile(v102, v13 - 1);
+              MapMode_DrawTile(v103, v49);
+              MapMode_DrawTile(v47, v50);
               v13 = v98;
-              sub_40D890(v102, v51);
+              MapMode_DrawTile(v102, v51);
               if ( v13 )
               {
                 LOBYTE(v13) = (_BYTE)v47;
                 v52 = v48;
                 g_RenderDevice = (_UNKNOWN *)dword_5202E0;
                 v53 = v97;
-                sub_40D6D0((int)v102, v52, v45, (int)v47);
+                MapMode_RedrawTileRect((int)v102, v52, v45, (int)v47);
                 if ( v53 )
                   sub_418700(1);
               }
@@ -28860,7 +28860,7 @@ LABEL_2:
         (unsigned __int16)(a2 + 63),
         257);
   }
-  return sub_40D560(a1, a2, a2 + 63, a1 + 63);
+  return MapMode_BlitRectWithViewportFrame(a1, a2, a2 + 63, a1 + 63);
 }
 // 416BC0: conditional instruction was optimized away because %var_7C.4<10000u
 // 416D71: variable 'v14' is possibly undefined
@@ -32345,9 +32345,9 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
     sub_41E0E0(v60);
   if ( a1 )
   {
-    sub_40D890((void *)v59, v57);
-    sub_40D890((void *)(v54 + 1), v57);
-    sub_40D890((void *)v59, v57 + 1);
+    MapMode_DrawTile((void *)v59, v57);
+    MapMode_DrawTile((void *)(v54 + 1), v57);
+    MapMode_DrawTile((void *)v59, v57 + 1);
     v40 = v57 + 1;
     v41 = v55;
   }
@@ -32356,7 +32356,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
     v40 = v57;
     v41 = (void *)v59;
   }
-  sub_40D890(v41, v40);
+  MapMode_DrawTile(v41, v40);
   Rules_AssertCastleFact((unsigned __int8 *)v60, v62);
   sub_455DC0(v62);
   return 1;
@@ -33839,9 +33839,9 @@ _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, 
   for ( m = *(unsigned __int8 *)(gameData + 467 * a2 + 509674); m <= *(unsigned __int8 *)(v24 + gameData + 509674) + 1; ++m )
   {
     for ( j = *(unsigned __int8 *)(v24 + gameData + 509675); j <= *(unsigned __int8 *)(v25 + gameData + 509675) + 1; ++j )
-      sub_40D890((void *)m, j);
+      MapMode_DrawTile((void *)m, j);
   }
-  return (_DWORD *)sub_40D6D0(m, j, j + 1, m + 1);
+  return (_DWORD *)MapMode_RedrawTileRect(m, j, j + 1, m + 1);
 }
 // 41FA10: variable 'v13' is possibly undefined
 // 41FA69: variable 'v16' is possibly undefined

@@ -373,8 +373,18 @@
 | dword_511FF0 | g_MapModeOverlayMask | Global | Map / UI | High | Three panel-render branches test bits `1`, `2`, and `4` to decide whether to draw terrain colors, unit ownership marks, and building ownership marks respectively. | c |
 | PlayerRuntimeState + 23 | map_mode_enabled | Recovered Struct Field | gameData / Player Runtime / UI | High | The `Map mode` panel toggle and the preset helpers all write this per-player slot, and panel hit-testing only succeeds while the viewed player's copy is nonzero. | c, asm, exe |
 
+## Batch 37 – Map Mode Render Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40D560 | MapMode_BlitRectWithViewportFrame | Function | Map / UI | High | Copies a clipped rectangle from the offscreen map-mode surface to the main render device, then redraws the current strategic viewport frame over that panel region. | c |
+| sub_40D6D0 | MapMode_RedrawTileRect | Function | Map / UI | High | Redraws every map-mode tile in a bounded row/column rectangle onto the offscreen panel surface, then blits the corresponding screen rectangle back through `MapMode_BlitRectWithViewportFrame`. | c |
+| sub_40D890 | MapMode_DrawTile | Function | Map / UI | High | Draws one strategic tile into the offscreen map-mode surface, combining terrain tint, optional unit/building owner overlays from `g_MapModeOverlayMask`, and the unexplored fallback color. | c |
+| dword_52334C | g_MapModeSurface | Global | Map / UI | High | Created as a dedicated render surface during map-mode initialization, used as the target for `MapMode_DrawTile`, and later blitted to the main device by `MapMode_BlitRectWithViewportFrame`. | c, asm |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
+- `sub_40D800` is clearly a map-mode panel geometry predicate, but its two-coordinate contract is still too oddly clipped to name safely beyond “point/rect overlaps panel” without another pass.
+- `sub_40D850` appears to be a full map-mode surface rebuild helper, but the decompiler jump-out and lack of direct callers make that name not yet safe enough to promote.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
