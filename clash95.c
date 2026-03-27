@@ -415,7 +415,7 @@ int sub_413180();
 // char __usercall sub_4136D0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>, char a3@<bl>);
 // char __usercall sub_4137B0@<al>(char *a1@<eax>, unsigned __int8 a2@<dl>);
 // void __usercall sub_413860(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>);
-// signed int __usercall sub_413920@<eax>(int a1@<eax>, int a2@<edx>);
+// signed int __usercall UnitStack_BuildMergedTerrainMoveProfile@<eax>(int a1@<eax>, int a2@<edx>);
 signed int __spoils<ecx> Map_InitTerrainMoveTableOffsets();
 // int __usercall Map_GetUnitTileMoveCostOrZero@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // signed int __usercall sub_413F50@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
@@ -556,7 +556,7 @@ int sub_422AC0();
 // int __usercall __spoils<ecx> sub_422B50@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_422B70@<eax>(int result@<eax>);
 // signed int __usercall Unit_GetSquadCount@<eax>(int a1@<eax>);
-// signed int __usercall sub_422BA0@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_HasOnlyFlyingUnits@<eax>(int a1@<eax>);
 // int __usercall sub_422BE0@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // BOOL __usercall Map_IsTilePlacable@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // BOOL __userpurge sub_423050@<eax>(int a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>, int a6);
@@ -8334,7 +8334,7 @@ char *off_512368[3] =
   "One of your troops fell apart. They did not want to serve you anymore, their morale was very low after many lost battles and many dead.",
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
 }; // weak
-char *(*off_512568)[102] = &off_5123CC; // weak
+char *(*g_UnitTypeMetadataRecords)[102] = &off_5123CC; // weak
 char *g_UnitSpriteFolders = "peon"; // weak
 char byte_512570[] = { '\x03' }; // weak
 char byte_512571[] = { '\x03' }; // weak
@@ -8343,7 +8343,7 @@ char byte_512573[4] = { '\0', '\0', '\0', '\0' }; // weak
 char byte_512577[] = { '\0' }; // weak
 char byte_512578[] = { '\b' }; // weak
 char byte_512579[] = { '\b' }; // weak
-int dword_51257A[] = { 0 }; // weak
+int g_UnitTypeFlags[] = { 0 }; // weak
 char byte_51257E[] = { '\x01' }; // weak
 char byte_51257F[] = { '\x01' }; // weak
 char byte_512580[] = { '\x18' }; // weak
@@ -16832,7 +16832,7 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
     sub_4229A0(
       1,
       aS,
-      (char)(**(&off_512568 + 22 * *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180)))[(unsigned __int8)g_LanguageIndex]);
+      (char)(**(&g_UnitTypeMetadataRecords + 22 * *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180)))[(unsigned __int8)g_LanguageIndex]);
     v18 = g_RenderDevice;
     g_RenderDevice = &unk_51D4C0;
     sub_460BB0(dword_544CD8, v2, 0x1F7u, 0x1D4u, 0x1DCu);
@@ -16897,7 +16897,7 @@ void *__usercall sub_406980@<eax>(DWORD a1@<ebp>)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B20: using guessed type char *g_Text_LowMorale[3];
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E4: using guessed type int gameData;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -22162,7 +22162,7 @@ int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char 
   *(_BYTE *)(result + 9) = 100;
   if ( a2 != -1 )
   {
-    if ( (dword_51257A[22 * a2] & 2) != 0 )
+    if ( (g_UnitTypeFlags[22 * a2] & 2) != 0 )
       v3 = 6;
     else
       v3 = 10;
@@ -22180,7 +22180,7 @@ int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char 
   *(_BYTE *)(result + 13) = v7 & 0xF0;
   return result;
 }
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (0040F4D0) --------------------------------------------------------
 char __usercall UnitStack_ResetRecord@<al>(int stackPtr@<eax>, int unitType@<edx>, char ownerIndex@<bl>)
@@ -26185,7 +26185,7 @@ void __usercall sub_413860(char *a1@<eax>, unsigned __int8 a2@<dl>, int a3@<ecx>
 // 513328: using guessed type char *off_513328[3];
 
 //----- (00413920) --------------------------------------------------------
-signed int __usercall sub_413920@<eax>(int a1@<eax>, int a2@<edx>)
+signed int __usercall UnitStack_BuildMergedTerrainMoveProfile@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v3; // esi
   signed int result; // eax
@@ -26201,7 +26201,7 @@ signed int __usercall sub_413920@<eax>(int a1@<eax>, int a2@<edx>)
     result = Unit_GetSquadCount(a2);
     if ( v6 >= result )
       break;
-    v7 = &off_512568 + 22 * *(__int16 *)(v3 + 6);
+    v7 = &g_UnitTypeMetadataRecords + 22 * *(__int16 *)(v3 + 6);
     if ( (v5[29] < *((_BYTE *)v7 + 29) || !*((_BYTE *)v7 + 29)) && v5[29] )
       v5[29] = *((_BYTE *)v7 + 29);
     if ( (v5[30] < *((_BYTE *)v7 + 30) || !*((_BYTE *)v7 + 30)) && v5[30] )
@@ -26234,7 +26234,7 @@ signed int __usercall sub_413920@<eax>(int a1@<eax>, int a2@<edx>)
 // 41394E: variable 'v6' is possibly undefined
 // 41395C: variable 'v5' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
 //----- (00413B10) --------------------------------------------------------
 signed int __spoils<ecx> Map_InitTerrainMoveTableOffsets()
@@ -26473,7 +26473,7 @@ signed int __usercall UnitStack_GetTileMoveCostOrZero@<eax>(__int16 *a1@<eax>, i
         return 0;
     }
   }
-  sub_413920((int)v15, (int)a1);
+  UnitStack_BuildMergedTerrainMoveProfile((int)v15, (int)a1);
   v9 = TILE_INDEX(a2;
   v10 = *(unsigned __int16 *)(v9, a4));
   if ( v10 != 0xFFFF )
@@ -26560,7 +26560,7 @@ int __usercall sub_414400@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
   int v26; // [esp+1Ch] [ebp-18h]
   int v27; // [esp+1Ch] [ebp-18h]
 
-  if ( sub_422BA0(a1) )
+  if ( UnitStack_HasOnlyFlyingUnits(a1) )
     return v4;
   v7 = (int *)Mem_Alloc(404, v5, a2, a3);
   if ( v7 )
@@ -26796,7 +26796,7 @@ int *__userpurge Unit_MoveTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
     v13 = v51;
     v87 = v11;
     v59 = (__int16 *)(725 * v51 + gameData + 147174);
-    sub_413920((int)v50, (int)v59);
+    UnitStack_BuildMergedTerrainMoveProfile((int)v50, (int)v59);
     v15 = nmalloc_(4, v14);
     v67 = v15;
     qmemcpy(&v57, &v67, v16);
@@ -27669,7 +27669,7 @@ int __userpurge sub_415F20@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, i
               0);
           }
         }
-        if ( (dword_51257A[22 * *(__int16 *)(gameData + 725 * v24 + 147180)] & 1) == 0 )
+        if ( (g_UnitTypeFlags[22 * *(__int16 *)(gameData + 725 * v24 + 147180)] & 1) == 0 )
           sub_415EA0(a2, a5);
         v15 = Unit_GetSquadCount(725 * v24 + gameData + 147174);
         if ( v15 > 1 )
@@ -27741,7 +27741,7 @@ int __userpurge sub_415F20@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, i
 // 416268: variable 'v21' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512360: using guessed type int dword_512360;
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 5139F4: using guessed type int dword_5139F4;
 // 5139F8: using guessed type int dword_5139F8;
 // 5202C8: using guessed type int dword_5202C8;
@@ -28304,7 +28304,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
   if ( dword_512360 == v100 )
     v101 = dword_523F74;
   if ( *(unsigned __int16 *)(TILE_INDEX(v3, v4)) <= 0x7FFFu
-    && (dword_51257A[22 * *(__int16 *)(gameData + 725 * v100 + 147180)] & 1) != 0 )
+    && (g_UnitTypeFlags[22 * *(__int16 *)(gameData + 725 * v100 + 147180)] & 1) != 0 )
   {
     v99 = 1;
     v10 = a3[1];
@@ -28791,7 +28791,7 @@ LABEL_2:
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 513A70: using guessed type __int16 word_513A70[4];
 // 5202C0: using guessed type int dword_5202C0;
 // 5202C4: using guessed type int dword_5202C4;
@@ -30044,7 +30044,7 @@ int __userpurge UI_DrawUnitInfoPane@<eax>(
   v50 = a1;
   v44 = a2;
   v51 = a4;
-  v49 = &off_512568 + 22 * *a4;
+  v49 = &g_UnitTypeMetadataRecords + 22 * *a4;
   v7 = (_DWORD *)Mem_Alloc(4112, a3, (char)a4, a5);
   if ( v7 )
     v7 = DLXSpriteSet_Load(v7, (char)a4);
@@ -30294,7 +30294,7 @@ LABEL_50:
 // 41A5E6: variable 'v38' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
 
@@ -30521,7 +30521,7 @@ int __usercall sub_41A960@<eax>(
   UI_DrawTextFmt(v16, v35 + 120, v35 + 173, v34 + 30, 2, (int)aD_19);
   Render_ReleaseSurface(7, v14);
   UI_DrawTextFmt(v16, v35 + 15, v35 + 88, v34 + 32, 2, (int)aD_20);
-  v17 = (**(&off_512568 + 22 * *(__int16 *)a4))[(unsigned __int8)g_LanguageIndex];
+  v17 = (**(&g_UnitTypeMetadataRecords + 22 * *(__int16 *)a4))[(unsigned __int8)g_LanguageIndex];
   UI_DrawTextFmt(v16, v35 + 64, v35 + 162, v34 + 8, 3, (int)v17);
   if ( (a4[13] & 8) != 0 )
   {
@@ -30581,7 +30581,7 @@ int __usercall sub_41A960@<eax>(
 // 41ABDF: variable 'v25' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0041AD20) --------------------------------------------------------
@@ -31297,7 +31297,7 @@ int __usercall sub_41C100@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ecx>, int 
       a1 += 31;
     }
     v7 = 0;
-    v8 = &off_512568 + 22 * v6;
+    v8 = &g_UnitTypeMetadataRecords + 22 * v6;
     if ( v6 == 13 )
     {
       if ( a4 )
@@ -31361,7 +31361,7 @@ LABEL_8:
 // 41C186: variable 'v10' is possibly undefined
 // 41C200: variable 'v12' is possibly undefined
 // 41C225: variable 'v14' is possibly undefined
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
 //----- (0041C300) --------------------------------------------------------
 int __usercall sub_41C300@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
@@ -32946,12 +32946,12 @@ int __usercall Unit_UpdatePerTurn@<eax>(int a1@<eax>, int a2@<ecx>)
 //----- (0041E7B0) --------------------------------------------------------
 BOOL __usercall sub_41E7B0@<eax>(__int16 *a1@<eax>)
 {
-  if ( (dword_51257A[22 * *a1] & 2) != 0 )
+  if ( (g_UnitTypeFlags[22 * *a1] & 2) != 0 )
     return *((char *)a1 + 11) < 6;
   else
     return *((char *)a1 + 11) < 10;
 }
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (0041E7F0) --------------------------------------------------------
 int __usercall __spoils<ecx,st0> sub_41E7F0@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>)
@@ -36168,7 +36168,7 @@ signed int __usercall sub_422B80@<eax>(int a1@<eax>)
 }
 
 //----- (00422BA0) --------------------------------------------------------
-signed int __usercall sub_422BA0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_HasOnlyFlyingUnits@<eax>(int a1@<eax>)
 {
   __int16 *v1; // edx
   int v2; // eax
@@ -36181,7 +36181,7 @@ signed int __usercall sub_422BA0@<eax>(int a1@<eax>)
     v3 = *v1;
     if ( v3 == -1 )
       return 1;
-    if ( (dword_51257A[22 * v3] & 1) == 0 )
+    if ( (g_UnitTypeFlags[22 * v3] & 1) == 0 )
       break;
     ++v2;
     v1 = (__int16 *)((char *)v1 + 31);
@@ -36190,7 +36190,7 @@ signed int __usercall sub_422BA0@<eax>(int a1@<eax>)
   }
   return 0;
 }
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (00422BE0) --------------------------------------------------------
 int __usercall sub_422BE0@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ebx>, DWORD a4@<ebp>, double a5@<st0>)
@@ -37874,14 +37874,14 @@ int sub_425850()
   do
   {
     ++v5;
-    result = dword_51257A[v6] & 1;
+    result = g_UnitTypeFlags[v6] & 1;
     v6 += 22;
     byte_531C8F[v5] = result;
   }
   while ( v5 < 40 );
   return result;
 }
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 532048: using guessed type int dword_532048;
 
 //----- (00425970) --------------------------------------------------------
@@ -39535,7 +39535,7 @@ int __usercall sub_427FA0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD 
   v6 = 31 * v5;
   v7 = (__int16 *)(dword_532048 + 852 + 31 * v5);
   sub_441D20(*v7);
-  if ( (dword_51257A[22 * *v7] & 1) != 0 )
+  if ( (g_UnitTypeFlags[22 * *v7] & 1) != 0 )
   {
     *(_BYTE *)(40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3] + 2334) = 48;
     sub_42F7F0(a1, 255, -4, 255);
@@ -39631,7 +39631,7 @@ int __usercall sub_427FA0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD 
 // 428097: variable 'v13' is possibly undefined
 // 42811D: variable 'v16' is possibly undefined
 // 428273: variable 'v15' is possibly undefined
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 532048: using guessed type int dword_532048;
 // 5320F4: using guessed type int dword_5320F4;
 
@@ -40310,7 +40310,7 @@ LABEL_57:
 LABEL_62:
   if ( v113 )
   {
-    if ( (dword_51257A[22 * *(__int16 *)v113] & 1) != 0 )
+    if ( (g_UnitTypeFlags[22 * *(__int16 *)v113] & 1) != 0 )
     {
       v79 = v113[17] & 7;
       v80 = (v79 + Rng_RandRange(2, 5)) & 7;
@@ -40407,7 +40407,7 @@ LABEL_62:
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512360: using guessed type int dword_512360;
 // 512364: using guessed type int dword_512364;
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 514E44: using guessed type int dword_514E44;
 // 514E54: using guessed type int dword_514E54;
 // 514E58: using guessed type int dword_514E58;
@@ -42036,10 +42036,10 @@ void __usercall sub_42C130(__int16 *a1@<edx>, DWORD a2@<ebp>)
 {
   _DWORD *v3; // ecx
 
-  v3 = *(&off_512568 + 22 * *a1);
+  v3 = *(&g_UnitTypeMetadataRecords + 22 * *a1);
   log((int)v3, *v3, a2, (int)aD0x08x15sPl1dP);
 }
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 
 //----- (0042C180) --------------------------------------------------------
 void __usercall sub_42C180(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
@@ -43514,7 +43514,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
       sub_42C600();
       if ( sub_419DC0(dword_514B78, v5) == 1 )
       {
-        v4 = (int)(**(&off_512568 + 22 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)))[(unsigned __int8)g_LanguageIndex];
+        v4 = (int)(**(&g_UnitTypeMetadataRecords + 22 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852)))[(unsigned __int8)g_LanguageIndex];
         sub_4229A0(3, (char *)v4, v8[0]);
       }
       if ( !sub_42C4E0() )
@@ -43531,7 +43531,7 @@ signed int __usercall sub_42E3C0@<eax>(int a1@<ebx>, DWORD a2@<ebp>)
 // 42E4F2: variable 'v6' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514E2C: using guessed type char *off_514E2C[6];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -44833,7 +44833,7 @@ LABEL_30:
   v44 = 0;
   if ( dword_512360 == v46 )
     v44 = dword_523F74;
-  if ( v46 != -1 && (dword_51257A[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) == 0 )
+  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) == 0 )
     sub_42F820(v46, v2, v49, v44);
   sub_42FC30(a1, a2, v49, v2);
   if ( *(_BYTE *)(a2 + dword_532048 + 20 * a1 + 3534) && a2 == *(_DWORD *)(dword_532048 + 828) && v45 )
@@ -44896,7 +44896,7 @@ LABEL_30:
       }
     }
   }
-  if ( v46 != -1 && (dword_51257A[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) != 0 )
+  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) != 0 )
     sub_42F820(v46, v2, v49, v44);
   if ( a2 < *(_DWORD *)(dword_532048 + 800) )
   {
@@ -45015,7 +45015,7 @@ LABEL_30:
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 514E54: using guessed type int dword_514E54;
 // 514E58: using guessed type int dword_514E58;
 // 5202C8: using guessed type int dword_5202C8;
@@ -45234,7 +45234,7 @@ int __usercall sub_430F80@<eax>(int result@<eax>, int a2@<edx>, int a3@<ebx>, in
         0,
         0);
       v9 = *((char *)v4 + 9);
-      v45 = &off_512568 + 22 * *v4;
+      v45 = &g_UnitTypeMetadataRecords + 22 * *v4;
       dword_53210C = v9;
       v46 = g_RenderDevice;
       if ( v9 < 100 )
@@ -45458,7 +45458,7 @@ LABEL_36:
                   if ( v36 )
                     Render_FillRect((_DWORD *)dword_5202E0, 0, 10, 498, 0x270u, 0x162u, 0x1F2u, 0xAu);
                   Render_Present((int)dword_544CD8);
-                  sub_4229A0(3, (**(&off_512568 + 22 * *v4))[(unsigned __int8)g_LanguageIndex], 0);
+                  sub_4229A0(3, (**(&g_UnitTypeMetadataRecords + 22 * *v4))[(unsigned __int8)g_LanguageIndex], 0);
                   result = (int)v41;
                   g_RenderDevice = v41;
                   return result;
@@ -45521,7 +45521,7 @@ LABEL_36:
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 514DA4: using guessed type __int16 word_514DA4[];
 // 514DA6: using guessed type __int16 word_514DA6[];
 // 514DC1: using guessed type char byte_514DC1;
@@ -46450,7 +46450,7 @@ void *sub_432ED0()
     v5 = 88 * *v46;
     v51 = 289;
     v6 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-    v7 = (char *)&off_512568 + v5;
+    v7 = (char *)&g_UnitTypeMetadataRecords + v5;
     if ( v6 == 33 || v6 == 34 )
       v8 = 33;
     else
@@ -46707,7 +46707,7 @@ LABEL_4:
 // 4333F6: variable 'v29' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 5202E0: using guessed type int dword_5202E0;
 // 532144: using guessed type int dword_532144;
 // 532150: using guessed type int dword_532150;
@@ -47189,7 +47189,7 @@ void *__usercall sub_4347A0@<eax>(int a1@<ecx>, int a2@<ebx>, DWORD a3@<ebp>, in
       UI_DrawText(
         45,
         v14,
-        (int)(**(&off_512568 + 22 * *(int *)((char *)dword_532224 + v20)))[(unsigned __int8)g_LanguageIndex]);
+        (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v20)))[(unsigned __int8)g_LanguageIndex]);
       Render_ReleaseSurface(5, 0x2Du);
       v15 = v21 + 4;
       ++v13;
@@ -47203,7 +47203,7 @@ void *__usercall sub_4347A0@<eax>(int a1@<ecx>, int a2@<ebx>, DWORD a3@<ebp>, in
         UI_DrawText(
           45,
           v14,
-          (int)(**(&off_512568 + 22 * *(int *)((char *)dword_532224 + v18)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v18)))[(unsigned __int8)g_LanguageIndex]);
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
@@ -47211,7 +47211,7 @@ void *__usercall sub_4347A0@<eax>(int a1@<ecx>, int a2@<ebx>, DWORD a3@<ebp>, in
         UI_DrawText(
           45,
           v14,
-          (int)(**(&off_512568 + 22 * *(int *)((char *)dword_532224 + v17)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v17)))[(unsigned __int8)g_LanguageIndex]);
       }
       v15 = v19 + 4;
       ++v13;
@@ -47222,7 +47222,7 @@ void *__usercall sub_4347A0@<eax>(int a1@<ecx>, int a2@<ebx>, DWORD a3@<ebp>, in
   v23 = DLX_GetSpriteForChar(dword_53220C, 17);
   v24 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int))(v24 + 52))(186, v23, -1, -1, -1);
-  v25 = (char *)&off_512568 + v22;
+  v25 = (char *)&g_UnitTypeMetadataRecords + v22;
   Render_ReleaseSurface(7, v24);
   v26 = *(_DWORD *)(*(_DWORD *)v25 + 4 * (unsigned __int8)g_LanguageIndex);
   UI_DrawTextFmt(69, 133, 261, 191, 3, v26);
@@ -47287,7 +47287,7 @@ void *__usercall sub_4347A0@<eax>(int a1@<ecx>, int a2@<ebx>, DWORD a3@<ebp>, in
 // 434BA8: variable 'v28' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 5202E0: using guessed type int dword_5202E0;
 // 53220C: using guessed type int dword_53220C;
 // 532218: using guessed type int dword_532218;
@@ -47896,7 +47896,7 @@ BOOL __thiscall sub_4359B0(void *this)
     result = Building_CanEquipAddon((char *)dword_532218, v1);
     if ( result )
     {
-      if ( *(char *(**)[102])((char *)&off_512568 + v2) )
+      if ( *(char *(**)[102])((char *)&g_UnitTypeMetadataRecords + v2) )
         dword_532220[++v3] = v5;
     }
     v1 = v5 + 1;
@@ -47907,7 +47907,7 @@ BOOL __thiscall sub_4359B0(void *this)
 }
 // 4359EC: variable 'v5' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
-// 512568: using guessed type char *(*off_512568)[102];
+// 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 532218: using guessed type int dword_532218;
 // 532220: using guessed type int dword_532220[];
 
@@ -49414,7 +49414,7 @@ LABEL_10:
       v20 = v57;
       if ( *(char *)(dword_532048 + 20 * v57 + v7 + 3134) <= 0
         || (v20 = dword_532048 + 40 * v57, *(__int16 *)(v20 + 2 * v7 + 1534) != -1)
-        && ((v21 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
+        && ((v21 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
          || (*(_BYTE *)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v21 + 864)) >> 5) > 0) )
       {
         v22 = (int *)sub_4262D0(a1, v20, v7, (unsigned __int16)v7);
@@ -49546,7 +49546,7 @@ LABEL_18:
       {
         v32 = dword_532048 + 40 * a3;
         if ( *(__int16 *)(v32 + 2 * (unsigned __int16)v15 + 1534) == -1
-          || (v33 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
+          || (v33 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
           && (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) <= 0 )
         {
           v34 = sub_4264D0(a1, a3, (unsigned __int16)v15, a3);
@@ -49663,7 +49663,7 @@ LABEL_19:
 // 438203: variable 'v40' is possibly undefined
 // 438221: variable 'v39' is possibly undefined
 // 43829A: variable 'v42' is possibly undefined
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 532048: using guessed type int dword_532048;
 
 //----- (004382E0) --------------------------------------------------------
@@ -49931,7 +49931,7 @@ LABEL_278:
           {
             v154 = dword_532048 + 40 * v171;
             if ( *(__int16 *)(v154 + 2 * v208 + 1534) == -1
-              || (v155 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
+              || (v155 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
               && (*(_BYTE *)(v155 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v155 + 864)) >> 5) <= 0 )
             {
               v157 = sub_4264D0(a1, v171, v208, v171);
@@ -50185,7 +50185,7 @@ LABEL_35:
     {
       v83 = dword_532048 + 40 * v170;
       if ( *(__int16 *)(v83 + 2 * a3 + 1534) == -1
-        || (v84 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
+        || (v84 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
         && (*(_BYTE *)(v84 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v84 + 864)) >> 5) <= 0 )
       {
         v86 = sub_4264D0(a1, v170, a3, a3);
@@ -50314,7 +50314,7 @@ LABEL_39:
       }
       if ( *(char *)(v36 + dword_532048 + 20 * v35 + 3134) <= 0
         || *(__int16 *)(dword_532048 + 40 * v35 + 2 * v36 + 1534) != -1
-        && ((v95 = dword_532048 + 31 * a1, (dword_51257A[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
+        && ((v95 = dword_532048 + 31 * a1, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
          || (*(_BYTE *)(v95 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v95 + 864)) >> 5) > 0) )
       {
         v96 = (int *)sub_4262D0(a1, dword_532048, v36, v35);
@@ -50362,7 +50362,7 @@ LABEL_49:
         v105 = dword_532048;
         if ( *(char *)(dword_532048 + 20 * v48 + v35 + 3134) <= 0
           || *(__int16 *)(dword_532048 + 40 * v48 + 2 * v35 + 1534) != -1
-          && ((v105 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
+          && ((v105 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
            || (*(_BYTE *)(v105 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v105 + 864)) >> 5) > 0) )
         {
           LOBYTE(v36) = v35;
@@ -50410,7 +50410,7 @@ LABEL_56:
           v113 = dword_532048;
           if ( *(char *)(dword_532048 + 20 * v55 + v35 + 3134) <= 0
             || *(__int16 *)(dword_532048 + 40 * v55 + 2 * v35 + 1534) != -1
-            && ((v113 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
+            && ((v113 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
              || (*(_BYTE *)(v113 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v113 + 864)) >> 5) > 0) )
           {
             LOBYTE(v36) = v35;
@@ -50457,7 +50457,7 @@ LABEL_63:
             }
             if ( *(char *)(v62 + dword_532048 + 20 * v35 + 3134) <= 0
               || *(__int16 *)(dword_532048 + 40 * v35 + 2 * v62 + 1534) != -1
-              && ((v65 = a1, v121 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
+              && ((v65 = a1, v121 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
                || (*(_BYTE *)(v121 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v121 + 864)) >> 5) > 0) )
             {
               LOBYTE(v36) = v62;
@@ -50506,7 +50506,7 @@ LABEL_70:
               v130 = dword_532048;
               if ( *(char *)(v75 + dword_532048 + 20 * v74 + 3134) <= 0
                 || *(__int16 *)(dword_532048 + 40 * v74 + 2 * v75 + 1534) != -1
-                && ((v130 = 31 * a1 + dword_532048, (dword_51257A[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
+                && ((v130 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
                  || (*(_BYTE *)(v130 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v130 + 864)) >> 5) > 0) )
               {
                 v131 = (int *)sub_4262D0(a1, v130, v75, v74);
@@ -51053,7 +51053,7 @@ LABEL_47:
 // 43A73B: variable 'v163' is possibly undefined
 // 43A75B: variable 'v162' is possibly undefined
 // 43A7D7: variable 'v166' is possibly undefined
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 5159F0: using guessed type int dword_5159F0[8];
 // 515A10: using guessed type int dword_515A10;
 // 532048: using guessed type int dword_532048;
@@ -51259,7 +51259,7 @@ signed int __usercall sub_43A8B0@<eax>(int a1@<eax>, int a2@<edx>)
     else
     {
       if ( *(__int16 *)(dword_532048 + 40 * v67 + 2 * v12 + 1534) == -1
-        || (v27 = v71, v28 = 31 * v71 + dword_532048, (dword_51257A[22 * *(__int16 *)(v28 + 852)] & 1) == 0)
+        || (v27 = v71, v28 = 31 * v71 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v28 + 852)] & 1) == 0)
         && (v27 = (*(_BYTE *)(v28 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v28 + 864)) >> 5), v27 <= 0) )
       {
         v31 = sub_4264D0(v71, v67, v12, v12);
@@ -51524,7 +51524,7 @@ LABEL_24:
 // 43B701: variable 'v52' is possibly undefined
 // 50F124: using guessed type void *off_50F124;
 // 50F134: using guessed type void *off_50F134;
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 515A10: using guessed type int dword_515A10;
 // 532048: using guessed type int dword_532048;
 // 532448: using guessed type int dword_532448[];
@@ -51722,7 +51722,7 @@ LABEL_34:
     else
     {
       if ( *(__int16 *)(dword_532048 + 40 * a4 + 2 * BYTE1(v34) + 1534) == -1
-        || (v21 = 31 * v16 + dword_532048, (dword_51257A[22 * *(__int16 *)(v21 + 852)] & 1) == 0)
+        || (v21 = 31 * v16 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) == 0)
         && (*(_BYTE *)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v21 + 864)) >> 5) <= 0 )
       {
         LOWORD(v10) = BYTE1(v34);
@@ -51839,7 +51839,7 @@ LABEL_72:
 // 43BCF5: variable 'v28' is possibly undefined
 // 43BD15: variable 'v27' is possibly undefined
 // 43BD8E: variable 'v31' is possibly undefined
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 532048: using guessed type int dword_532048;
 // 5437A0: using guessed type int dword_5437A0;
 // 5437A4: using guessed type int dword_5437A4;
@@ -52327,7 +52327,7 @@ signed int __usercall sub_43C6B0@<eax>(int a1@<eax>, signed int a2@<ebx>)
     v14 = v7;
     if ( *(char *)(v7 + dword_532048 + 20 * v5 + 3134) <= 0
       || (v14 = dword_532048 + 40 * v5, *(__int16 *)(v14 + 2 * v7 + 1534) != -1)
-      && ((v15 = 31 * v33 + dword_532048, (dword_51257A[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
+      && ((v15 = 31 * v33 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
        || (v14 = (unsigned __int8)(2 * *(_BYTE *)(v15 + 864)) >> 5, (*(_BYTE *)(v15 + 864) & 3) + 1 - v14 > 0)) )
     {
       v16 = (int *)sub_4262D0(v33, v14, v7, v5);
@@ -52423,7 +52423,7 @@ LABEL_23:
 // 43CA80: variable 'v22' is possibly undefined
 // 43CB00: variable 'v24' is possibly undefined
 // 43CB45: variable 'v25' is possibly undefined
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 532048: using guessed type int dword_532048;
 // 53206C: using guessed type int dword_53206C;
 // 532070: using guessed type int dword_532070;
@@ -57005,7 +57005,7 @@ void __usercall sub_441F00(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
       v14 += 2;
     }
     while ( v16 );
-    if ( (dword_51257A[22 * a4] & 1) != 0 )
+    if ( (g_UnitTypeFlags[22 * a4] & 1) != 0 )
     {
       v17 = v32;
       v32[1] = HIBYTE(word_5178F4);
@@ -57145,7 +57145,7 @@ LABEL_25:
 // 441FD2: conditional instruction was optimized away because ebx.4==C
 // 442183: conditional instruction was optimized away because ebx.4==1D
 // 441FC9: simplified comparisons for 'ebx.4': >=Du && >=Eu became >=Eu
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 5125B9: using guessed type char *off_5125B9;
 // 5174D4: using guessed type int dword_5174D4;
 // 5178F4: using guessed type __int16 word_5178F4;
@@ -57260,7 +57260,7 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
         v14 += 2;
       }
       while ( v16 );
-      if ( (dword_51257A[22 * a4] & 1) != 0 )
+      if ( (g_UnitTypeFlags[22 * a4] & 1) != 0 )
       {
         v17 = v32;
         v32[1] = HIBYTE(word_5179CC);
@@ -57327,7 +57327,7 @@ void __usercall sub_442290(int a1@<eax>, int a2@<edx>, signed int a3@<ecx>, unsi
 // 442362: conditional instruction was optimized away because ebx.4==C
 // 442513: conditional instruction was optimized away because ebx.4==1D
 // 442359: simplified comparisons for 'ebx.4': >=Du && >=Eu became >=Eu
-// 51257A: using guessed type int dword_51257A[];
+// 51257A: using guessed type int g_UnitTypeFlags[];
 // 5125B9: using guessed type char *off_5125B9;
 // 5174D4: using guessed type int dword_5174D4;
 // 5179CC: using guessed type __int16 word_5179CC;

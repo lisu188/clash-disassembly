@@ -44,26 +44,32 @@
       ]
     },
     {
-      "name": "ImmobileOrGarrisoned",
-      "confidence": "medium",
+      "name": "FlyingUnitCategory",
+      "confidence": "high",
       "kind": "category",
-      "evidence": "Flag bit0 in dword_51257A marks units skipped by movement/highlight code, implying static garrison units.",
+      "evidence": "Bit0 in g_UnitTypeFlags marks airborne units: they render in a post-ground pass, use alternate movement/death handling, and UnitStack_HasOnlyFlyingUnits returns true only when every occupied slot carries that flag.",
       "locations": [
-        "clash95.c:42290-42310",
-        "clash95.c:27660-27695"
+        "clash95.c:27660-27695",
+        "clash95.c:36171-36190",
+        "clash95.c:39530-39590",
+        "clash95.c:44795-44910",
+        "clash95.c:56980-57330"
       ],
       "related_to": [
-        "fortification garrisons"
+        "airborne render order",
+        "alternate movement sounds"
       ]
     },
     {
-      "name": "DefaultFieldUnit",
+      "name": "GroundUnitCategory",
       "confidence": "medium",
       "kind": "category",
-      "evidence": "Any type with byte_51257E > 0 and flag bit0 cleared participates in melee, consumes action points, and uses morale/veterancy multipliers.",
+      "evidence": "Any type with byte_51257E > 0 and g_UnitTypeFlags bit0 cleared participates in ordinary melee, uses terrain-dependent movement sounds, and renders in the ground pass before airborne overlays.",
       "locations": [
         "clash95.c:22124-22145",
-        "clash95.c:39680-39760"
+        "clash95.c:39680-39760",
+        "clash95.c:44795-44910",
+        "clash95.c:56980-57330"
       ],
       "related_to": [
         "base_melee_attack",
@@ -75,7 +81,7 @@
       "name": "LightUnitCategory",
       "confidence": "high",
       "kind": "category",
-      "evidence": "dword_51257A bit1 marks light units whose veterancy cap is set to 6 in sub_41E7B0 instead of the default 10.",
+      "evidence": "g_UnitTypeFlags bit1 marks light units whose veterancy cap is set to 6 in sub_41E7B0 instead of the default 10.",
       "locations": [
         "clash95.c:22133-22144",
         "clash95.c:32950-32970"
@@ -93,7 +99,7 @@
         "clash95.c:25370-25430"
       ],
       "related_to": [
-        "DefaultFieldUnit"
+        "GroundUnitCategory"
       ]
     }
   ],
@@ -109,7 +115,7 @@
       ],
       "stat_kind": "base_plus_current",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -124,7 +130,7 @@
       ],
       "stat_kind": "current_modifier",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -132,14 +138,14 @@
       "name": "veterancy",
       "confidence": "high",
       "semantic_role": "experience bonus added before morale scaling",
-      "evidence": "sub_40F440 seeds offset +11 with 6 or 10 based on dword_51257A bit1 and the value feeds into all stat formulas as /5 or /10 increments.",
+      "evidence": "sub_40F440 seeds offset +11 with 6 or 10 based on g_UnitTypeFlags bit1 and the value feeds into all stat formulas as /5 or /10 increments.",
       "locations": [
         "clash95.c:22135-22144",
         "clash95.c:23404-23466"
       ],
       "stat_kind": "current_modifier",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -154,7 +160,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit"
+        "GroundUnitCategory"
       ]
     },
     {
@@ -181,7 +187,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -195,8 +201,8 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
-        "ImmobileOrGarrisoned"
+        "GroundUnitCategory",
+        "FlyingUnitCategory"
       ]
     },
     {
@@ -209,7 +215,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -224,19 +230,22 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
     {
-      "name": "unit_flags",
+      "name": "unit_type_flags",
       "confidence": "high",
-      "semantic_role": "bitmask describing mobility/lightness",
-      "evidence": "dword_51257A bit0 marks immobile/garrison units while bit1 marks light units with reduced veterancy caps.",
+      "semantic_role": "bitmask inside the recovered 88-byte unit metadata record",
+      "evidence": "g_UnitTypeFlags bit0 marks flying/airborne units, while another flag bit still controls the 6-vs-10 initialization path at slot +11.",
       "locations": [
         "clash95.c:22133-22144",
-        "clash95.c:42290-42310",
-        "clash95.c:32950-32970"
+        "clash95.c:27660-27695",
+        "clash95.c:36171-36190",
+        "clash95.c:39530-39590",
+        "clash95.c:44795-44910",
+        "clash95.c:56980-57330"
       ],
       "stat_kind": "modifier",
       "used_by": [
@@ -281,7 +290,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory",
         "UnitType13_Hero"
       ]
@@ -297,7 +306,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -311,7 +320,7 @@
       ],
       "stat_kind": "modifier",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -325,7 +334,7 @@
       ],
       "stat_kind": "base_stat",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     },
@@ -339,7 +348,7 @@
       ],
       "stat_kind": "modifier",
       "used_by": [
-        "DefaultFieldUnit",
+        "GroundUnitCategory",
         "RangedUnitCategory"
       ]
     }
@@ -360,14 +369,14 @@
       "evidence": "Projectile cost/strength derives from byte_51257F whenever the type has a non-zero attack range (clash95.c:40440-40465, 49182-49270)."
     },
     {
-      "unit_type": "ImmobileOrGarrisoned",
-      "stat": "terrain_move_cost",
-      "relationship_kind": "ignored",
-      "confidence": "medium",
-      "evidence": "Units flagged with dword_51257A bit0 skip sub_415EA0 path highlight and therefore do not consume movement costs (clash95.c:27660-27695, 42290-42310)."
+      "unit_type": "FlyingUnitCategory",
+      "stat": "unit_type_flags",
+      "relationship_kind": "class_flag",
+      "confidence": "high",
+      "evidence": "Airborne units are identified by g_UnitTypeFlags bit0, which changes draw order, stack-class checks, movement sounds, and death animation handling (clash95.c:27660-27695, 36171-36190, 39530-39590, 44795-44910, 56980-57330)."
     },
     {
-      "unit_type": "DefaultFieldUnit",
+      "unit_type": "GroundUnitCategory",
       "stat": "base_melee_attack",
       "relationship_kind": "damage_source",
       "confidence": "high",
@@ -397,13 +406,13 @@
   ],
   "ambiguous": [
     {
-      "candidate": "off_512568 / unit name table",
+      "candidate": "g_UnitTypeMetadataRecords localized names",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
         "Complete list of troop names",
-        "Scenario-specific alias list"
+        "Localized unit roster names"
       ],
-      "evidence": "Pointers exist (`off_512568`) but the actual strings were not emitted in clash95.c, so names cannot be recovered.",
+      "evidence": "The recovered metadata record begins with a localized name pointer array, but the actual strings were not emitted in clash95.c, so names cannot be recovered directly.",
       "blockers": "Missing data segment for off_5123CC."
     },
     {
@@ -415,6 +424,16 @@
       ],
       "evidence": "Used in both ranged calculations and move-cost penalty code; no textual labels describing its domain.",
       "blockers": "Need annotated data tables or debug strings to disambiguate."
+    },
+    {
+      "candidate": "smok / słoń / góral concrete type ids",
+      "candidate_kind": "unit_type",
+      "possible_interpretations": [
+        "specific ids inside FlyingUnitCategory or GroundUnitCategory",
+        "roster names only recoverable from the missing localized-name payload"
+      ],
+      "evidence": "The current source proves only broad classes such as flying, ranged, and ground-melee. No emitted string or unique rules path safely maps these Polish roster names to exact ids.",
+      "blockers": "Need the missing off_5123CC localized strings, external asset manifests, or stronger type-specific production/ability tables."
     }
   ]
 }

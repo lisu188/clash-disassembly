@@ -1,5 +1,27 @@
 [
   {
+    "name": "UnitTypeMetadataRecord",
+    "kind": "type_metadata_entry",
+    "base_offset": 512568,
+    "stride": 88,
+    "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitSpriteFolders`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family.",
+    "fields": [
+      { "offset": 0, "name": "localized_name_ptrs", "type": "char **", "notes": "Pointer to the localized name array used by battle logs and building/unit info screens." },
+      { "offset": 4, "name": "sprite_folder_name", "type": "char *", "notes": "Folder stem used to build paths such as `units_go\\peon?.s32` and the other unit sprite-sheet filenames." },
+      { "offset": 8, "name": "move_pixel_speed", "type": "uint8", "notes": "Per-frame marching displacement used by the world and battle movement animators." },
+      { "offset": 9, "name": "move_tick_delay", "type": "uint8", "notes": "Delay between successive movement animation updates." },
+      { "offset": 10, "name": "death_frame_interval", "type": "uint8", "notes": "Interval between death-animation frames; also reused by some idle animation loops." },
+      { "offset": 18, "name": "type_flags", "type": "uint32", "notes": "Recovered flag word. Bit0 marks flying/airborne units; another bit still controls the 6-vs-10 initialization path at slot +11." },
+      { "offset": 29, "name": "road_move_cost", "type": "uint8", "notes": "Road/track movement cost copied into merged stack movement profiles." },
+      { "offset": 30, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement-cost profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." }
+    ],
+    "evidence": [
+      "The code indexes `g_UnitTypeMetadataRecords` by `22 * unitType`, i.e. 88 bytes per type, then reads both pointer fields and late-byte movement fields from the same base address.",
+      "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and related file paths.",
+      "Movement helpers copy bytes `+29..+37` into a merged stack profile, and the airborne flag checks read the overlapping flag dword at offset `+18`."
+    ]
+  },
+  {
     "name": "UnitStackRecord",
     "kind": "stack_entry",
     "base_offset": 147174,
@@ -19,7 +41,7 @@
       { "offset": 8, "name": "base_action_points", "type": "uint8", "notes": "Seeded from byte_512580 when the slot is initialized." },
       { "offset": 9, "name": "morale_percent", "type": "uint8", "notes": "Starts at 100 and drives combat multipliers." },
       { "offset": 10, "name": "speed_penalty", "type": "uint8", "notes": "Cleared on init; reused by status effects." },
-      { "offset": 11, "name": "veterancy_seed", "type": "uint8", "notes": "Set to 6 for light units and 10 otherwise using dword_51257A flags." },
+      { "offset": 11, "name": "veterancy_seed", "type": "uint8", "notes": "Set to 6 for light units and 10 otherwise using g_UnitTypeFlags." },
       { "offset": 13, "name": "slot_flags", "type": "uint8", "notes": "Bit0 stores the per-turn readiness flag toggled by UnitStack_ClearReadyFlags/SetReadyFlags." },
       { "offset": 18, "name": "status_dword", "type": "uint32", "notes": "Zeroed on init; reused by casualties/movement cost accumulation." },
       { "offset": 22, "name": "state_bits", "type": "uint8", "notes": "Low bit cleared on init; pairs with slot_flags for move gating." }
