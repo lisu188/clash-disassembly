@@ -656,9 +656,9 @@ int __thiscall UnitStack_ClearSplitSelectionFlags(void *this);
 int Map_AutoUpgradeVillages();
 // int __usercall sub_4250F0@<eax>(int a1@<eax>, int a2@<ecx>);
 void sub_425110();
-// int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_4254E0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double a2@<st0>);
+// int __usercall RoadBuild_UpdateAdjacentPreview@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall RoadBuild_ActivateDirectionWidget@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
+// signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a1@<ebp>, double a2@<st0>);
 int sub_425850();
 // signed int __usercall sub_425970@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // int *__usercall sub_425A00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
@@ -9314,7 +9314,7 @@ int g_ConnectionOverlayShapeByNeighborMask[27] =
   263172
 }; // weak
 int dword_51420C[] = { 544 }; // weak
-int dword_514294[9] = { -8, -4, 0, 4, 8, 4, 0, -4, 0 }; // weak
+int g_RoadBuildPreviewPixelOffsetByAnimFrame[9] = { -8, -4, 0, 4, 8, 4, 0, -4, 0 }; // weak
 int dword_5142B8 = 416; // weak
 int dword_5142BC = 400; // weak
 int dword_5142ED = 480; // weak
@@ -11492,9 +11492,9 @@ _DWORD g_StackSplitSelectedSlotFlags[10]; // weak
 int g_StackSplitSourceStackPtr; // weak
 int g_UnitInfoSpriteSet; // weak
 int dword_527C28; // weak
-int dword_527C30; // weak
-int dword_527C34; // weak
-int dword_527C38; // weak
+int g_RoadBuildLoopExitRequested; // weak
+int g_RoadBuildPreviewActive; // weak
+int g_RoadBuildPreviewAnimFrame; // weak
 int dword_527C40; // weak
 char byte_531890[1023]; // weak
 char byte_531C8F[]; // weak
@@ -18892,7 +18892,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
         switch ( dword_520308 )
         {
           case 0:
-            sub_425540(0x40u, a5);
+            RoadBuild_RunPlacementLoop(0x40u, a5);
             break;
           case 1:
             sub_443C20(g_SelectedUnitIndex, dword_520308, 0x40u, (char)dword_544CD8, 0, a5);
@@ -37628,21 +37628,21 @@ int __usercall sub_4250F0@<eax>(int a1@<eax>, int a2@<ecx>)
   int v4; // edx
 
   result = sub_419E60(a1, a2);
-  dword_527C30 = v4;
+  g_RoadBuildLoopExitRequested = v4;
   return result;
 }
 // 4250FB: variable 'v4' is possibly undefined
-// 527C30: using guessed type int dword_527C30;
+// 527C30: using guessed type int g_RoadBuildLoopExitRequested;
 
 //----- (00425110) --------------------------------------------------------
 void sub_425110()
 {
-  dword_527C30 = 1;
+  g_RoadBuildLoopExitRequested = 1;
 }
-// 527C30: using guessed type int dword_527C30;
+// 527C30: using guessed type int g_RoadBuildLoopExitRequested;
 
 //----- (00425120) --------------------------------------------------------
-int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall RoadBuild_UpdateAdjacentPreview@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v4; // eax
   int v5; // eax
@@ -37662,7 +37662,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
     v5 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
     dword_5142B8 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
     v6 = 0;
-    dword_5142BC = v5 + 59 - dword_514294[dword_527C38];
+    dword_5142BC = v5 + 59 - g_RoadBuildPreviewPixelOffsetByAnimFrame[g_RoadBuildPreviewAnimFrame];
   }
   else
   {
@@ -37670,7 +37670,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
     if ( a1 - *(__int16 *)(v9 + 147174) == 1 && a2 == *(__int16 *)(v9 + 147176) )
     {
       v6 = 1;
-      v10 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 42 - dword_514294[dword_527C38];
+      v10 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 42 - g_RoadBuildPreviewPixelOffsetByAnimFrame[g_RoadBuildPreviewAnimFrame];
       dword_5142F1 = ((a2 - *(_DWORD *)(gameData + 140012)) << 6) + 41;
       dword_5142ED = v10;
     }
@@ -37682,7 +37682,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
         v12 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
         dword_514322 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
         v6 = 2;
-        dword_514326 = dword_514294[dword_527C38] + v12 + 26;
+        dword_514326 = g_RoadBuildPreviewPixelOffsetByAnimFrame[g_RoadBuildPreviewAnimFrame] + v12 + 26;
       }
       else
       {
@@ -37694,7 +37694,9 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
           return result;
         v6 = 3;
         v13 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
-        dword_514357 = dword_514294[dword_527C38] + ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 75;
+        dword_514357 = g_RoadBuildPreviewPixelOffsetByAnimFrame[g_RoadBuildPreviewAnimFrame]
+                     + ((a1 - *(_DWORD *)(gameData + 140008)) << 6)
+                     + 75;
         dword_51435B = v13 + 41;
       }
     }
@@ -37711,7 +37713,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
     && (result = sub_410010(725 * g_SelectedUnitIndex + gameData + 147174), result >= v14)
     && (result = Map_DestroyTile(a1, a2), result != 185) )
   {
-    dword_527C34 = 1;
+    g_RoadBuildPreviewActive = 1;
     return sub_419D60((int)&dword_5142B8 + 53 * v6, v7);
   }
   return result;
@@ -37719,7 +37721,7 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
 // 425490: variable 'v14' is possibly undefined
 // 4254BF: variable 'v7' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 514294: using guessed type int dword_514294[9];
+// 514294: using guessed type int g_RoadBuildPreviewPixelOffsetByAnimFrame[9];
 // 5142B8: using guessed type int dword_5142B8;
 // 5142BC: using guessed type int dword_5142BC;
 // 5142ED: using guessed type int dword_5142ED;
@@ -37729,11 +37731,11 @@ int __usercall sub_425120@<eax>(int a1@<eax>, int a2@<edx>)
 // 514357: using guessed type int dword_514357;
 // 51435B: using guessed type int dword_51435B;
 // 5202E4: using guessed type int gameData;
-// 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int dword_527C38;
+// 527C34: using guessed type int g_RoadBuildPreviewActive;
+// 527C38: using guessed type int g_RoadBuildPreviewAnimFrame;
 
 //----- (004254E0) --------------------------------------------------------
-int __usercall sub_4254E0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
+int __usercall RoadBuild_ActivateDirectionWidget@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
 {
   int v4; // edx
   int v5; // ecx
@@ -37757,8 +37759,8 @@ int __usercall sub_4254E0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
       break;
   }
   dword_52698C = 0;
-  Road_Build(g_SelectedUnitIndex, v4, (char)sub_425120, a2, a3);
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))sub_425120;
+  Road_Build(g_SelectedUnitIndex, v4, (char)RoadBuild_UpdateAdjacentPreview, a2, a3);
+  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))RoadBuild_UpdateAdjacentPreview;
   return sub_418700(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
@@ -37767,7 +37769,7 @@ int __usercall sub_4254E0@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
 
 //----- (00425540) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> RoadBuild_RunPlacementLoop@<eax>(DWORD a1@<ebp>, double a2@<st0>)
 {
   signed int result; // eax
   int v4; // ebx
@@ -37789,10 +37791,10 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
     dword_545150 = (int)&unk_5196C8;
     sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
     dword_52698C = v5;
-    dword_527C30 = 0;
+    g_RoadBuildLoopExitRequested = 0;
     dword_514394 = 2;
     sub_418700(1);
-    if ( !dword_527C30 )
+    if ( !g_RoadBuildLoopExitRequested )
     {
       while ( 1 )
       {
@@ -37802,8 +37804,8 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
         if ( Time_Now(v8, v7) - 10 > (unsigned int)dword_527C28 )
         {
           dword_527C28 = Time_Now(v9, dword_527C28);
-          v4 = ((_BYTE)dword_527C38 + 1) & 7;
-          dword_527C38 = v4;
+          v4 = ((_BYTE)g_RoadBuildPreviewAnimFrame + 1) & 7;
+          g_RoadBuildPreviewAnimFrame = v4;
           sub_418A90(
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174) - 1,
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
@@ -37869,17 +37871,17 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
           if ( v12 )
           {
             v12[2] = 2;
-            sub_4254E0((int)v12, a1, a2);
-            dword_527C34 = 0;
+            RoadBuild_ActivateDirectionWidget((int)v12, a1, a2);
+            g_RoadBuildPreviewActive = 0;
             sub_418700(1);
-            if ( !dword_527C34 )
+            if ( !g_RoadBuildPreviewActive )
               break;
           }
         }
-        if ( dword_527C30 )
+        if ( g_RoadBuildLoopExitRequested )
           goto LABEL_13;
       }
-      dword_527C30 = 1;
+      g_RoadBuildLoopExitRequested = 1;
     }
 LABEL_13:
     dword_52698C = 0;
@@ -37905,9 +37907,9 @@ LABEL_13:
 // 5202E4: using guessed type int gameData;
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
 // 527C28: using guessed type int dword_527C28;
-// 527C30: using guessed type int dword_527C30;
-// 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int dword_527C38;
+// 527C30: using guessed type int g_RoadBuildLoopExitRequested;
+// 527C34: using guessed type int g_RoadBuildPreviewActive;
+// 527C38: using guessed type int g_RoadBuildPreviewAnimFrame;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;

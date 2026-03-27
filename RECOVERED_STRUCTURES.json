@@ -273,5 +273,29 @@
       "`Building_FindFreePrisonerSlot` scans three 6-byte cells beginning at `building + 445` and treats byte 0 == -1 as empty.",
       "`BuildingPrisoner_SetAction` and `BuildingPrisoner_GetAction` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
     ]
+  },
+  {
+    "name": "RoadBuildDirectionWidgetDescriptor",
+    "kind": "ui_widget_descriptor",
+    "base_offset": 514296,
+    "stride": 53,
+    "description": "Static 53-byte UI widget descriptors for the four directional road-build buttons shown around the selected stack during road placement mode.",
+    "fields": [
+      { "offset": 0, "name": "screen_x", "type": "int32", "notes": "Updated each frame by `RoadBuild_UpdateAdjacentPreview` to track the current screen-space position of the adjacent target tile." },
+      { "offset": 4, "name": "screen_y", "type": "int32", "notes": "Updated each frame alongside `screen_x` and animated by `g_RoadBuildPreviewPixelOffsetByAnimFrame`." },
+      { "offset": 8, "name": "is_enabled", "type": "int32", "notes": "Initialized to `1` in all four descriptors." },
+      { "offset": 12, "name": "sprite_sheet_handle_ptr", "type": "void *", "notes": "All four descriptors point at the same UI sprite-sheet handle (`dword_52030C`)." },
+      { "offset": 16, "name": "widget_sprite_id", "type": "int32", "notes": "Direction-specific ids `0x1B..0x1E`, matching the four cardinal road-build widgets." },
+      { "offset": 20, "name": "widget_action_id", "type": "int32", "notes": "Static duplicate of `widget_sprite_id`; the exact UI-framework meaning remains unresolved." },
+      { "offset": 24, "name": "hover_state", "type": "int32", "notes": "Static `-1` sentinel in all four descriptors." },
+      { "offset": 28, "name": "draw_proc", "type": "funcptr", "notes": "All four descriptors use `sub_4191F0` as their draw procedure." },
+      { "offset": 32, "name": "activate_proc", "type": "funcptr", "notes": "All four descriptors invoke `RoadBuild_ActivateDirectionWidget` when clicked." },
+      { "offset": 49, "name": "ui_token_ptr", "type": "char *", "notes": "All four descriptors end with the same `\"male\"` token pointer; its UI-framework role is still unresolved." }
+    ],
+    "evidence": [
+      "Asm shows four contiguous 53-byte records rooted at `dword_5142B8`, `dword_5142ED`, `dword_514322`, and `dword_514357` with identical layout and only the coordinates plus ids `0x1B..0x1E` varying.",
+      "`RoadBuild_UpdateAdjacentPreview` rewrites the first two dwords of the chosen record each frame and passes `&dword_5142B8 + 53 * directionIndex` into `sub_419D60`, proving a stable fixed-stride widget family.",
+      "All four records embed the same draw proc (`sub_4191F0`) and activate proc (`RoadBuild_ActivateDirectionWidget`), matching their role as directional road-build UI widgets."
+    ]
   }
 ]
