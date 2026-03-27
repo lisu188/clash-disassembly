@@ -1,7 +1,7 @@
 # Unit Types and Stats Report
 
 ## 1. Overview
-- **Analyzed areas:** `clash95.c` sections covering `Unit_Create`, squad-slot initialization (`sub_40F440`), attack/move handlers (`sub_428400`, `sub_4295D0`, `sub_437630`), unit metadata tables (`byte_51257E`..`byte_512586`, `dword_51257A`, `byte_512582`), and movement/pathing helpers (`sub_413DD0`, `sub_422BA0`).
+- **Analyzed areas:** `clash95.c` sections covering `Unit_Create`, squad-slot initialization (`sub_40F440`), attack/move handlers (`sub_428400`, `sub_4295D0`, `sub_437630`), unit metadata tables (`byte_51257E`..`byte_512586`, `dword_51257A`, `byte_512582`), and movement/pathing helpers (`Map_GetUnitTileMoveCostOrZero`, `sub_422BA0`).
 - **Evidence forms:** direct field writes and reads, array lookups indexed by unit type, conditional logic that gates abilities, and formulas applying morale and experience multipliers.
 - **Game resemblance:** mechanics (10-man stacks, morale/experience modifiers, Polish localization) match *Clash* (1998 strategy game). No other files in repo reference different gameplay modes.
 
@@ -25,8 +25,8 @@
 | `base_secondary_attack` (`byte_51257F`) | medium | Secondary strike (used in ranged targeting and some cost calculations). `sub_4295D0` derives retaliation cost from it, and UI routines use it when `byte_512582` marks ranged capability. | `clash95.c:23419-23434`, `40440-40465` | base_stat | RangedUnitCategory.
 | `base_damage_scalar` (`byte_512581`) | medium | Raw damage per volley; converted to actual damage via morale/veterancy in `sub_411280` and `sub_4112C0`. | `clash95.c:23438-23448` | base_stat | Field units when resolving inflicted HP loss.
 | `structure_damage_scalar` (`byte_512584`) | medium | Alternate damage table, likely vs buildings, used in `sub_4112F0` where caller passes context flag `a2` (unit attacking fortifications). | `clash95.c:23456-23466` | base_stat | Siege or anti-building scenarios.
-| `road_move_cost` (`byte_512585`) | high | Movement allowance when tile provides a built road (`v11[2] != 0xFFFF`); used directly by `sub_413DD0`. | `clash95.c:41380-41410` | base_stat | All movers.
-| `terrain_move_cost` (`byte_512586` via `dword_524568`) | high | Terrain-dependent movement allowance; `sub_413DD0` combines the move table with `dword_52456C[tileType]` to enforce penalties. | `clash95.c:41380-41420`, `413B10-41405` | base_stat | All movers.
+| `road_move_cost` (`byte_512585`) | high | Movement allowance when tile provides a built road (`v11[2] != 0xFFFF`); used directly by `Map_GetUnitTileMoveCostOrZero`. | `clash95.c:41380-41410` | base_stat | All movers.
+| `terrain_move_cost` (`byte_512586` via `g_TerrainMoveTableOffsets`) | high | Terrain-dependent movement allowance; `Map_GetUnitTileMoveCostOrZero` combines the move table with `dword_52456C[tileType]` to enforce penalties. | `clash95.c:41380-41420`, `413B10-41405` | base_stat | All movers.
 | `unit_flags` (`dword_51257A`) | high | Bitfield capturing immobile status (bit0) and the “light unit” template (bit1). Controls spawn of action points, UI highlight, and veterancy caps. | `clash95.c:22133-22144`, `42290-42310`, `32950-32970` | modifier | All unit types.
 | `attack_range_max` (`byte_512582`) | high | Maximum squared attack range for ranged units. Projectile routines compare distance to this value before firing. | `clash95.c:39803-39820`, `42779-42865` | base_stat | RangedUnitCategory.
 | `attack_range_min` (`byte_512583`) | medium | Minimum squared range (dead zone) for ranged units—catapults/ballistas cannot fire inside this distance. | `clash95.c:39803-39820` | base_stat | RangedUnitCategory.

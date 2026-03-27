@@ -8,7 +8,7 @@
     "fields": [
       { "offset": 0, "name": "tile_row", "type": "int16", "notes": "Row on the 200-column world grid used to stamp tile occupancy and fog-of-war." },
       { "offset": 2, "name": "tile_column", "type": "int16", "notes": "Column on the world grid; combined with row to index TILE_INDEX." },
-      { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war (dword_5202EC)." },
+      { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war and turn-sensitive ownership checks via g_CurrentPlayerIndex." },
       { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "0-7 direction used by sprite/orientation logic during path highlighting." },
       { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlot (31 bytes each)", "notes": "Each slot stores type id, owner, morale (offset +9), veterancy seed (offset +11), and state bits (offset +13)." },
       { "offset": 316, "name": "path_buffer", "type": "byte[0x194]", "notes": "Movement track copied in/out by qmemcpy during path planning." }
@@ -28,6 +28,59 @@
       "Unit_Create uses 147174 + 725 * index to address stacks, writing row/column/facing before stamping TILE_INDEX.",
       "UnitSlot_InitFromType writes the slot fields (type id, owner, base stats) at offsets relative to stackPtr + 6.",
       "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states."
+    ]
+  },
+  {
+    "name": "MapTileRecord",
+    "kind": "tile_record",
+    "base_offset": 0,
+    "stride": 14,
+    "row_stride": 1400,
+    "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, and terrain-edge rendering.",
+    "fields": [
+      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index dword_52456C with this word to select the terrain-specific byte_512586 move-cost column." },
+      { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
+      { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." }
+    ],
+    "evidence": [
+      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through dword_52456C and test word 2 for the road-cost fast path.",
+      "Bridge movement code at clash95.c:27193-27278 writes and later restores the word at offset +4 on the crossed tile and its neighbors, proving this field belongs to the tile record rather than a transient path buffer.",
+      "Main-map rendering reads the first two words of adjacent 14-byte entries to choose seam and edge sprites."
+    ]
+  },
+  {
+    "name": "TileTrapOwnerMaskLayer",
+    "kind": "tile_bitmask_layer",
+    "base_offset": 576374,
+    "stride": 1,
+    "row_stride": 100,
+    "description": "One-byte per tile owner mask for planted traps and revealed trap knowledge.",
+    "fields": [
+      { "offset": 0, "name": "owner_mask", "type": "uint8", "notes": "Bit N marks player N as the trap owner or as having revealed the trap on that tile; the byte is cleared once the trap triggers." }
+    ],
+    "evidence": [
+      "Trap_New writes 1 << owner into gameData + 576374 + 100 * row + column when a trap is planted.",
+      "Trap_GetTileOwnerMask returns either the raw byte or a single-player bit test, and render code draws the trap marker only when the current player's bit is present.",
+      "Trap_ClearTileOwnerMask zeroes the byte, and Trap_TriggerAtStackTile clears the same location after damaging the moving stack."
+    ]
+  },
+  {
+    "name": "WorldViewState",
+    "kind": "shared_state_region",
+    "base_offset": 140000,
+    "description": "Shared gameData region that stores world dimensions, the current camera origin, and which player owns the active turn versus the current human view.",
+    "fields": [
+      { "offset": 140000, "name": "map_width_tiles", "type": "int32", "notes": "Horizontal tile count derived at map load and used to clamp camera movement." },
+      { "offset": 140004, "name": "map_height_tiles", "type": "int32", "notes": "Vertical tile count derived at map load and used to clamp camera movement." },
+      { "offset": 140008, "name": "map_view_left", "type": "int32", "notes": "Current leftmost visible tile in the main-map camera." },
+      { "offset": 140012, "name": "map_view_top", "type": "int32", "notes": "Current topmost visible tile in the main-map camera." },
+      { "offset": 147139, "name": "turn_owner_player_index", "type": "int32", "notes": "Player id whose strategic turn is currently active; save/load restores g_CurrentPlayerIndex from this slot." },
+      { "offset": 147143, "name": "viewed_player_index", "type": "int32", "notes": "Player id whose saved camera position and visibility should drive the current UI view; usually the current human player." }
+    ],
+    "evidence": [
+      "Map load computes offsets 140000 and 140004 by scanning the 14-byte tile grid until it reaches sentinel 0xFFFF rows and columns.",
+      "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
+      "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
     ]
   }
 ]

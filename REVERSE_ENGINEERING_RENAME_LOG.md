@@ -47,3 +47,40 @@
 | sub_4114B0 | Unit_CompactSquad | Function | Unit Lifecycle | High | Iterates through the 10 squad slots, shifts data down whenever it finds `type == -1`, clears the tail slot, and re-links the CLIPS army fact; this matches the compact/cleanup helper invoked after casualties. |
 | sub_411560 | UnitSlots_RemoveGaps | Function | Unit Lifecycle | Medium | Helper that scans the first `count` slots and shifts subsequent entries down whenever it encounters an empty slot; combat cleanup code calls it after zeroing hitpoints to remove gaps without touching the full squad. |
 | sub_4115E0 | Unit_CheckLowMorale | Function | Unit Lifecycle | High | Copies the unit record, rolls random morale checks per slot, logs via `aUnit_checklowm` strings, shows the morale-break window (`off_512368`), and if deserters appear it compacts the squad and finalizes the army fact—exactly the low-morale check the logs reference. |
+
+## Batch 13 – Turn, Terrain, and Trap State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| nextPlayer | Game_AdvanceToNextPlayerTurn | Function | Turn Flow | High | Saves the outgoing player camera, rotates to the next active player, increments `GAME_TURN_COUNTER` when the cycle wraps, runs village/port/queen/building/unit per-turn handlers, and then reinitializes either human UI or AI control for the new player. |
+| dword_5202EC | g_CurrentPlayerIndex | Global | Turn Flow | High | The symbol always indexes `PLAYER_DATA`, drives UI ownership checks, is saved/restored around stack-vision stamping, and selects the acting faction for AI and end-turn logic, so it is the current turn player id rather than an anonymous integer. |
+| sub_413B10 | Map_InitTerrainMoveTableOffsets | Function | Movement/Map | High | Builds the 1024-entry lookup that converts terrain tile ids into offsets inside `byte_512586`, which is exactly the initialization step for terrain-specific move-cost columns. |
+| dword_524568 | g_TerrainMoveTableOffsets | Table | Movement/Map | High | `Map_GetUnitTileMoveCostOrZero` and `UnitStack_GetTileMoveCostOrZero` index this array with the tile terrain id and then add the result to `byte_512586`, proving it is a terrain-to-move-table offset map. |
+| sub_413DD0 | Map_GetUnitTileMoveCostOrZero | Function | Movement/Map | High | Rejects occupied, trapped, or blocked tiles, then returns either `byte_512585` road movement cost or a terrain-adjusted `byte_512586` cost for the requested unit template. |
+| sub_414150 | UnitStack_GetTileMoveCostOrZero | Function | Movement/Map | High | Copies a stack-derived movement profile with `sub_413920`, applies the same occupancy/trap checks as the unit-template helper, and returns the resulting cost for a concrete stack. |
+| gameData + 14 * column + 1400 * row | TILE_TERRAIN_RECORD(row, column) / MapTileRecord | Recovered Struct | Map/Tile | High | Movement code treats word 0 as the terrain id, word 2 as a road/bridge override that switches to road costs, and bridge placement temporarily writes overlay ids like `872` at offset `+4`, exposing a stable 14-byte tile record. |
+| gameData + 576374 + column + 100 * row | TILE_TRAP_OWNER_MASK(row, column) / TileTrapOwnerMaskLayer | Recovered Struct | Trap/Map | High | `Trap_New` writes `1 << owner`, `Trap_GetTileOwnerMask` reads and masks the byte, the renderer overlays the trap marker only when the current player bit is set, and `Trap_TriggerAtStackTile` clears the byte after activation. |
+| sub_42B3F0 | Trap_CanPlaceAtTile | Function | Trap/Map | High | Validates that the target tile has no trap bit for the acting player, is not occupied, is not blocked by coast/building rules, and is not on one of the disallowed terrain ids before trap placement proceeds. |
+| sub_42B680 | Trap_ClearTileOwnerMask | Function | Trap/Map | High | Single-purpose helper that zeros the trap-owner byte at `gameData + 576374 + 100 * row + column`. |
+| sub_42B730 | Trap_GetTileOwnerMask | Function | Trap/Map | High | Returns either the raw one-byte trap owner mask for a tile or the bit corresponding to a specific player, matching every placement, rendering, and trigger caller. |
+| sub_42B770 | Trap_TriggerAtStackTile | Function | Trap/Combat | High | Reveals nearby trap bits for detector-capable stacks, checks the triggered tile mask under the moving stack, shows the `aWpad_pul` trap message for players with detection, applies `Trap_HurtUnit`, and then clears the trap tile. |
+
+## Deferred / Ambiguous
+- `gameData + 147139` vs `gameData + 147143` are now clearly two different player-index slots, but the exact naming split is still deferred: one tracks the active turn owner while the other tracks the player whose camera/UI view should be restored.
+- `MapTileRecord` offset `+2` is definitely a secondary overlay word used by terrain-edge rendering, but its exact semantic split between coast edge, decorative overlay, and passability metadata remains ambiguous.
+- The `sub_4100B0(...) >= 3` gate inside `Trap_TriggerAtStackTile` almost certainly means trap detection capability, but the underlying slot-state scale returned by `sub_4100B0` is not yet named safely enough to promote.
+
+## Batch 14 – Shared View-State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| `gameData + 140000` / `+140004` | `MAP_WIDTH_TILES` / `MAP_HEIGHT_TILES` | Helper | Shared State | High | Map load derives these values by scanning the 14-byte tile grid until `0xFFFF`, while scrolling and rendering clamp viewport coordinates against them as world bounds. |
+| `gameData + 140008` / `+140012` | `MAP_VIEW_LEFT` / `MAP_VIEW_TOP` | Helper | Shared State | High | Keyboard scrolling, recentering, and turn handoff all treat these dwords as the current top-left map camera tile. |
+| `PLAYER_DATA(player) + 140039` / `+140043` | `PLAYER_CAMERA_LEFT(player)` / `PLAYER_CAMERA_TOP(player)` | Helper | Shared State | High | The end-turn flow stores the outgoing camera here, save/load persists the same values, and the per-player setup routine seeds them from each faction's first building position. |
+| `gameData + 147139` / `+147143` | `TURN_OWNER_PLAYER_INDEX` / `VIEWED_PLAYER_INDEX` | Helper | Turn Flow | High | `Game_AdvanceToNextPlayerTurn` writes the acting player into `+147139`, switches `+147143` only for human-controlled turns, and restores the camera from `PLAYER_CAMERA_*` using the viewed-player slot. |
+| `gameData + 140000 .. +140012`, `+147139`, `+147143` | `WorldViewState` | Recovered Struct | Shared State | High | These offsets travel together through map-load initialization, save/load persistence, scrolling, and turn rotation, forming a stable shared-state region for world dimensions, camera origin, and active/viewed player ownership. |
+
+## Batch 15 – Spawn and Trap Helper Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| sub_41F0C0 | Building_FindFreeAdjacentSpawnTile | Function | Building/Garrison | High | The routine logs `Building_FindFreePlaceNear()`, scans the 12 neighboring offsets around a building, rejects occupied tiles, and returns the first tile whose movement helper accepts the building owner's spawn template. |
+| sub_42B6A0 | Trap_HurtStack | Function | Trap/Combat | High | The helper logs `Trap_HurtUnit`, iterates the occupied stack slots, applies a randomized damage roll derived from `Unit_CalcEffectivenessB`, removes dead slots, and compacts/finalizes the stack afterward. |
+| sub_44C2A0 | Game_InitPlayerViewState | Function | Shared State | High | Seeds each active player's saved camera from the first owned building, picks the first human player as `VIEWED_PLAYER_INDEX`, picks the first active player as both `g_CurrentPlayerIndex` and `TURN_OWNER_PLAYER_INDEX`, and is reused after map setup and scenario load. |

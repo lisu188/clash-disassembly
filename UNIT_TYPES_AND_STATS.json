@@ -203,7 +203,7 @@
       "name": "road_move_cost",
       "confidence": "high",
       "semantic_role": "movement allowance on roads/paved tiles",
-      "evidence": "sub_413DD0 returns byte_512585 when the map tile stores a road index (v11[2] != 0xFFFF).",
+      "evidence": "Map_GetUnitTileMoveCostOrZero returns byte_512585 when the map tile stores a road index (v11[2] != 0xFFFF).",
       "locations": [
         "clash95.c:41380-41410"
       ],
@@ -217,7 +217,7 @@
       "name": "terrain_move_cost",
       "confidence": "high",
       "semantic_role": "movement allowance on arbitrary terrain",
-      "evidence": "sub_413DD0 and the dword_524568 lookup combine byte_512586 with tile-type offsets to enforce penalties across grass, mud, etc.",
+      "evidence": "Map_GetUnitTileMoveCostOrZero and the g_TerrainMoveTableOffsets lookup combine byte_512586 with tile-type offsets to enforce penalties across grass, mud, etc.",
       "locations": [
         "clash95.c:41380-41420",
         "clash95.c:413B10-41405"
