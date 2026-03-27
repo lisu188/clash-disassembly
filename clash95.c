@@ -296,7 +296,7 @@ int sub_40ED20();
 // int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>);
 // char __usercall UnitStack_ResetRecord@<al>(int a1@<eax>, int a2@<edx>, char a3@<bl>);
 // signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, int a5);
-// unsigned int __usercall sub_40F6E0@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// unsigned int __usercall UnitStack_LinkArmyFact@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Unit_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall UnitStack_KillByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // __int16 *__usercall Rules_UnlinkArmyFact@<eax>(__int16 *result@<eax>, double a2@<st0>);
@@ -994,7 +994,7 @@ signed int sub_451E46();
 signed int sub_451E87();
 int sub_451EC0();
 signed int sub_451F70();
-// unsigned int __usercall sub_4521D0@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
+// unsigned int __usercall Rules_CreateArmyFact@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // _DWORD *__usercall Rules_RetractArmyFact@<eax>(_DWORD *result@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>);
 signed int sub_452390();
 // signed int __usercall sub_4530A0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
@@ -22217,7 +22217,7 @@ signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<e
         v16 = gameData;
         *(_WORD *)(TILE_INDEX(a3, a5)) = v11;
         UnitStack_UpdateVision(v11);
-        sub_4521D0((__int16 *)v13, v11, v16, a2, a1);
+        Rules_CreateArmyFact((__int16 *)v13, v11, v16, a2, a1);
         log(v17, a2, a1, (int)aUnit_createOk0);
         return 1;
       }
@@ -22247,9 +22247,9 @@ signed int __userpurge Unit_Create@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<e
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F6E0) --------------------------------------------------------
-unsigned int __usercall sub_40F6E0@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+unsigned int __usercall UnitStack_LinkArmyFact@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
-  return sub_4521D0(a1, *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])), (int)a1, a2, a3);
+  return Rules_CreateArmyFact(a1, *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])), (int)a1, a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -58787,7 +58787,7 @@ signed int __usercall sub_444490@<eax>(int a1@<eax>, DWORD a2@<ebp>, double a3@<
     sub_451E20();
 LABEL_3:
     if ( (unsigned int)*(__int16 *)(gameData + 725 * v9 + 147180) <= 0x28 )
-      sub_40F6E0((__int16 *)(gameData + 147174 + 725 * v9), v7, a2);
+      UnitStack_LinkArmyFact((__int16 *)(gameData + 147174 + 725 * v9), v7, a2);
     while ( 1 )
     {
       for ( i = 0; i < 10; ++i )
@@ -66366,7 +66366,7 @@ LABEL_11:
 // 544558: using guessed type int dword_544558;
 
 //----- (004521D0) --------------------------------------------------------
-unsigned int __usercall sub_4521D0@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>)
+unsigned int __usercall Rules_CreateArmyFact@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>)
 {
   unsigned int result; // eax
   double v8; // st7
@@ -67392,7 +67392,7 @@ signed int __usercall sub_454ED0@<eax>(__int16 *a1@<eax>, int a2@<edx>, double a
   }
   else
   {
-    sub_4521D0((int)a1, *(unsigned __int16 *)(2 * a1[1] + gameData + 200 * *a1 + 556374), (int)a1, a4, a5, a3);
+    Rules_CreateArmyFact((int)a1, *(unsigned __int16 *)(2 * a1[1] + gameData + 200 * *a1 + 556374), (int)a1, a4, a5, a3);
     return 1;
   }
 }
