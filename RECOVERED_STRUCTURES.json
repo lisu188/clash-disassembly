@@ -116,6 +116,8 @@
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
+      { "offset": 47, "name": "technology_level", "type": "uint8", "notes": "Player-wide technology tier. `Player_UpdateTechnologyLevelFromSettlements` raises this from 1 to 2 or 3 based on how many owned type-1/type-2 settlements have all five core add-on bits installed." },
+      { "offset": 48, "name": "last_shown_technology_level", "type": "uint8", "notes": "UI latch copied from `technology_level` after `UI_ShowTechnologyLevelUpIfChanged` displays the one-shot technology-advance popup." },
       { "offset": 1419, "name": "queen_mood", "type": "uint8", "notes": "Mood state read and updated by the queen-event logic." },
       { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
       { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
@@ -123,7 +125,8 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields.",
+      "`Player_UpdateTechnologyLevelFromSettlements` updates byte `+47`, and `UI_ShowTechnologyLevelUpIfChanged` compares that byte against `+48` before latching the new level."
     ]
   },
   {
@@ -157,22 +160,25 @@
       { "offset": 0, "name": "tile_row", "type": "uint8", "notes": "Building anchor tile row used with TILE_INDEX and building footprint stamping." },
       { "offset": 1, "name": "tile_column", "type": "uint8", "notes": "Building anchor tile column used with TILE_INDEX and adjacency scans." },
       { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied into spawned unit stacks and used for ownership, vision, and income lookups." },
-      { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
+      { "offset": 4, "name": "building_type_id", "type": "uint8", "notes": "Rules/script-visible building type id. Values `1` and `2` are the settlement/castle classes that participate in player technology advancement, and this byte also controls footprint exits and add-on gating." },
       { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
       { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot task bits used by `Building_TrainUnit` and `Building_RepairUnit`." },
-      { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
-      { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
-      { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
+      { "offset": 402, "name": "unit_licence_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty slot. `Building_BuyUnitLicence`, `Building_RemoveUnitLicence`, and the castle-production UI all treat this as the purchased unit-licence roster for the building." },
+      { "offset": 414, "name": "selected_unit_licence_slot_index", "type": "int8", "notes": "Index into `unit_licence_type_ids` for the unit currently selected for production; `-1` means no active production." },
+      { "offset": 415, "name": "production_turns_remaining", "type": "uint8", "notes": "Per-building production countdown seeded from `g_UnitTypeProductionTurns[88 * unitType]`, decremented each turn, and cleared when the building stops or finishes production in non-human control paths." },
+      { "offset": 416, "name": "addon_flags", "type": "uint8", "notes": "Bitfield for settlement/castle add-ons. Confirmed bits are `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, and `0x10` smiths; owning at least one fully populated settlement with all five bits contributes to higher player technology." },
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
       { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
-      { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." },
+      { "offset": 444, "name": "technology_level_bits", "type": "uint8", "notes": "Low three bits encode the building's current technology tier or cap. Rules host `PoziomTech` returns these bits, and player technology advancement raises them across owned settlements when the player's global tech increases." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." }
     ],
     "evidence": [
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
-      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+415`, while upgrade and income helpers use `+416`, `+421`, `+429`, `+438`, and `+444`, exposing a stable production/licence cluster plus a second cluster for add-ons, technology tier, and local economy state.",
+      "`Player_UpdateTechnologyLevelFromSettlements`, `Building_BuildSchool`, `Building_BuildWorkshop`, `Building_BuildBarracks`, `Building_BuildHospital`, and `Building_BuildSmiths` all corroborate the settlement-upgrade meaning of bytes `+4`, `+416`, and `+444`.",
+      "`Building_BuyUnitLicence`, `Building_RemoveUnitLicence`, `Building_SetUnitProduction`, the castle production UI, and the per-turn production resolver at clash95.c:32794-32840 all corroborate the licence roster at `+402`, the selected production slot at `+414`, and the countdown byte at `+415`.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
     ]
   },
