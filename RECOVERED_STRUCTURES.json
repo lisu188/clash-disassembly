@@ -75,15 +75,18 @@
     "base_offset": 0,
     "stride": 14,
     "row_stride": 1400,
-    "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, and terrain-edge rendering.",
+    "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, terrain-edge rendering, and animated world-tile updates.",
     "fields": [
       { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index dword_52456C with this word to select the terrain-specific byte_512586 move-cost column." },
       { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
-      { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." }
+      { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." },
+      { "offset": 6, "name": "terrain_anim_next_tick", "type": "int32", "notes": "Absolute tick deadline for the next terrain-tile animation step. The world update loop compares `Time_Now()` against this dword before advancing `terrain_tile_id` through the transition table." },
+      { "offset": 10, "name": "overlay_anim_next_tick", "type": "int32", "notes": "Absolute tick deadline for the next overlay animation step. The same world update loop uses this dword to advance `overlay_tile_id` independently from the terrain base." }
     ],
     "evidence": [
-      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through dword_52456C and test word 2 for the road-cost fast path.",
+      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through dword_52456C and test array word index 2 (record offset `+4`) for the road-cost fast path.",
       "Bridge movement code at clash95.c:27193-27278 writes and later restores the word at offset +4 on the crossed tile and its neighbors, proving this field belongs to the tile record rather than a transient path buffer.",
+      "The world-map update loop at clash95.c:17072-17118 compares `Time_Now()` against dwords at offsets `+6` and `+10`, then independently advances `terrain_tile_id` and `overlay_tile_id` while re-arming those deadlines.",
       "Main-map rendering reads the first two words of adjacent 14-byte entries to choose seam and edge sprites."
     ]
   },
@@ -121,6 +124,9 @@
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 47, "name": "technology_level", "type": "uint8", "notes": "Player-wide technology tier. `Player_UpdateTechnologyLevelFromSettlements` raises this from 1 to 2 or 3 based on how many owned type-1/type-2 settlements have all five core add-on bits installed." },
       { "offset": 48, "name": "last_shown_technology_level", "type": "uint8", "notes": "UI latch copied from `technology_level` after `UI_ShowTechnologyLevelUpIfChanged` displays the one-shot technology-advance popup." },
+      { "offset": 49, "name": "had_battle_this_turn", "type": "int32", "notes": "Set by field, siege, and castle battle-resolution paths, then cleared at end-of-turn after the god-anger check. This is a coarse per-turn combat-activity flag for the player." },
+      { "offset": 53, "name": "turns_without_battle", "type": "int32", "notes": "Incremented each turn when `had_battle_this_turn` stays clear, reset to zero after any battle, and compared against the god-anger threshold." },
+      { "offset": 1417, "name": "battle_record_score", "type": "int16", "notes": "Battle win/loss tally plotted in the player statistics screen. Army and castle battle outcomes increment the winner and decrement the loser through this word." },
       { "offset": 1419, "name": "queen_state", "type": "PlayerQueenState", "notes": "Four-byte per-player queen-relation tail storing the current favor level, active whim/request type, and the next turn when the queen review logic should run again." }
     ],
     "evidence": [
@@ -128,6 +134,8 @@
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
       "Rules/game-info logging prints `(gameinfo gracz %d komputer %d inteligencja %d chrzesc %d)` from bytes `+27`, `+31`, and `+39`, giving direct labels for the human/computer flag, AI intelligence, and christian/pagan faction side.",
       "Building creation and capture code stores the first owned type-2 castle into `+43` when empty and clears the same field when that castle is lost, corroborating a remembered primary-castle index.",
+      "Battle resolution paths at clash95.c:30841-31253 increment the winner's `+1417` word and decrement the loser's, while the statistics screen later plots that same word as its third per-player bar metric, supporting the descriptive `battle_record_score` name.",
+      "The end-of-turn flow at clash95.c:44286-44293 resets dword `+53` when dword `+49` was set during combat, otherwise increments `+53` and triggers `GodAnger` after two battle-free turns, showing a stable combat-activity pair inside the player record.",
       "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as a stable per-player queen favor/request subrecord.",
       "`Player_UpdateTechnologyLevelFromSettlements` updates byte `+47`, and `UI_ShowTechnologyLevelUpIfChanged` compares that byte against `+48` before latching the new level."
     ]

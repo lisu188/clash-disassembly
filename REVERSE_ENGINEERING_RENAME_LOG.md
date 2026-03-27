@@ -326,9 +326,24 @@
 | PlayerRuntimeState + 1421 | next_review_turn | Recovered Struct Field | gameData / Player Runtime / Queen | High | `Queen_NewTurn` stores `GAME_TURN_COUNTER + rand(5..8)` here after each review/proposal outcome, and later gates the next queen event by comparing the current turn against this word. | c |
 | PlayerRuntimeState + 1419 .. + 1422 | PlayerQueenState | Recovered Struct | gameData / Player Runtime / Queen | High | The final four bytes of each 1423-byte player block behave as one compact subrecord containing the persistent queen favor level, the current whim/request id, and the next review turn. | c |
 
+## Batch 32 – Map Tile Animation Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40C5E0 | Map_InitAnimatedTileTransitionTables | Function | Map / Tile | High | Clears and repopulates the terrain/overlay transition tables that the world-map update loop uses to animate terrain, shoreline, and overlay tiles. The selected transition family depends on the unresolved shared byte at `gameData + 140016`, but the function's responsibility is still clear. | c |
+| MapTileRecord + 6 | terrain_anim_next_tick | Recovered Struct Field | Map / Tile | High | The world-map update loop compares `Time_Now()` against this dword before advancing `terrain_tile_id` through `word_520738`, then stores the next deadline back into the same field. | c |
+| MapTileRecord + 10 | overlay_anim_next_tick | Recovered Struct Field | Map / Tile | High | The same loop separately compares and rewrites this dword when advancing `overlay_tile_id` through its own transition table, proving an independent overlay-animation timer. | c |
+
+## Batch 33 – Player Battle History Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| PlayerRuntimeState + 49 | had_battle_this_turn | Recovered Struct Field | gameData / Player Runtime / Combat | High | Set by multiple battle-resolution exits and then consumed by the end-of-turn flow to decide whether the battle-free-turn counter should reset. | c |
+| PlayerRuntimeState + 53 | turns_without_battle | Recovered Struct Field | gameData / Player Runtime / Combat | High | Incremented once per turn when no battle occurred, reset after combat, and compared against the `GodAnger` trigger threshold. | c |
+| PlayerRuntimeState + 1417 | battle_record_score | Recovered Struct Field | gameData / Player Runtime / Combat | High | Army and castle battle outcomes increment the winner and decrement the loser through this word, and the player-statistics screen later graphs the same value as its third nation metric. | c |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
+- The shared byte at `gameData + 140016` clearly selects one of three strategic-map terrain/animation profiles, but the exact original label for that profile enum is still unresolved. Script-engine `get-strategy` / `set-strategy` host functions turned out to refer to agenda-search strategy, not this gameplay field.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.
 - `Building_GetTypeId` exposes building byte `+4` cleanly, but only the settlement/castle-bearing values `1` and `2` are behaviorally secure so far; the full building-type enum remains unresolved.
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.

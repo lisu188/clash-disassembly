@@ -19,7 +19,10 @@
 #define PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET 43
 #define PLAYER_TECH_LEVEL_OFFSET 47
 #define PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET 48
+#define PLAYER_HAD_BATTLE_THIS_TURN_OFFSET 49
+#define PLAYER_TURNS_WITHOUT_BATTLE_OFFSET 53
 #define PLAYER_QUEEN_FAVOR_LEVEL_OFFSET 1419
+#define PLAYER_BATTLE_RECORD_SCORE_OFFSET 1417
 #define PLAYER_QUEEN_WHIM_OFFSET 1420
 #define PLAYER_QUEEN_REVIEW_TURN_OFFSET 1421
 #define ACTIVE_MISSION_INDEX_OFFSET 140017
@@ -81,6 +84,9 @@
 #define PLAYER_PRIMARY_CASTLE_BUILDING_INDEX(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_PRIMARY_CASTLE_BUILDING_INDEX_OFFSET))
 #define PLAYER_TECH_LEVEL(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_TECH_LEVEL_OFFSET))
 #define PLAYER_LAST_SHOWN_TECH_LEVEL(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET))
+#define PLAYER_HAD_BATTLE_THIS_TURN(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_HAD_BATTLE_THIS_TURN_OFFSET))
+#define PLAYER_TURNS_WITHOUT_BATTLE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_TURNS_WITHOUT_BATTLE_OFFSET))
+#define PLAYER_BATTLE_RECORD_SCORE(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_BATTLE_RECORD_SCORE_OFFSET))
 #define MAP_WIDTH_TILES (*(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET))
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
@@ -20706,7 +20712,7 @@ int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, int a4)
 }
 
 //----- (0040C5E0) --------------------------------------------------------
-int __spoils<ecx> sub_40C5E0()
+int __spoils<ecx> Map_InitAnimatedTileTransitionTables()
 {
   unsigned __int16 i; // ax
   unsigned __int16 v1; // dx
@@ -30838,8 +30844,8 @@ LABEL_48:
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
+                  --PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v8 + 4));
+                  ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v62 + 4));
                 }
                 else if ( v31 == 2 )
                 {
@@ -30861,8 +30867,8 @@ LABEL_48:
                   sub_4129E0(v8, (DWORD)v8, a5);
                   sub_4129E0(v8, (DWORD)v8, a5);
                   sub_4101A0(v8, v50, (DWORD)v8, a5);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
+                  ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v8 + 4));
+                  --PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v62 + 4));
                 }
                 goto LABEL_52;
               }
@@ -30887,8 +30893,8 @@ LABEL_49:
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
                   sub_4129E0(v62, (DWORD)v8, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
+                  --PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v8 + 4));
+                  ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v62 + 4));
                 }
               }
               else
@@ -30907,8 +30913,8 @@ LABEL_49:
                 sub_4129E0(v8, (DWORD)v8, a5);
                 sub_4129E0(v8, (DWORD)v8, a5);
                 sub_4129E0(v8, (DWORD)v8, a5);
-                ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
-                --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
+                ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v8 + 4));
+                --PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v62 + 4));
               }
 LABEL_52:
               if ( v8[3] == -1 )
@@ -31169,8 +31175,8 @@ LABEL_28:
               sub_4129E0(v61, (DWORD)v7, a5);
               sub_4129E0(v61, (DWORD)v7, a5);
               sub_41F900(v60, v49, v50, v25, a5);
-              ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
-              --*(_WORD *)(1423 * v7[2] + gameData + 141441);
+              ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v61 + 4));
+              --PLAYER_BATTLE_RECORD_SCORE(v7[2]);
 LABEL_47:
               if ( v61[3] == -1 )
                 Rules_UnlinkArmyFact(v61, a5);
@@ -31213,8 +31219,8 @@ LABEL_42:
                 if ( v36 == 1 )
                 {
                   UnitStack_AdjustMoraleByPredicate(v61, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
-                  --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 141441);
-                  ++*(_WORD *)(gameData + 1423 * v7[2] + 141441);
+                  --PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v61 + 4));
+                  ++PLAYER_BATTLE_RECORD_SCORE(v7[2]);
                   Building_FindFirstValidAddonSlot((int)v7);
                   sub_43EE10((int)v7);
                   sub_43EE10((int)v7);
@@ -31229,8 +31235,8 @@ LABEL_42:
                 {
                   sub_4120B0((char *)v7 + 18, v55);
                   UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
-                  --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
-                  ++*(_WORD *)(1423 * v7[2] + gameData + 141441);
+                  --PLAYER_BATTLE_RECORD_SCORE(*(unsigned __int8 *)(v48 + 4));
+                  ++PLAYER_BATTLE_RECORD_SCORE(v7[2]);
                   Building_FindFirstValidAddonSlot((int)v7);
                   sub_43EE10((int)v7);
                   sub_43EE10((int)v7);
@@ -31249,8 +31255,8 @@ LABEL_42:
                 sub_4129E0(v61, (DWORD)v7, a5);
                 sub_4129E0(v61, (DWORD)v7, a5);
                 sub_41F900(v60, v46, v47, 0, a5);
-                ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
-                --*(_WORD *)(1423 * v7[2] + gameData + 141441);
+                ++PLAYER_BATTLE_RECORD_SCORE(*((unsigned __int8 *)v61 + 4));
+                --PLAYER_BATTLE_RECORD_SCORE(v7[2]);
               }
               goto LABEL_47;
             }
@@ -38803,9 +38809,8 @@ __int16 __usercall sub_4266E0@<ax>(int a1@<eax>, int a2@<ecx>, __int16 a3@<bx>, 
 LABEL_15:
     *((_BYTE *)v5 + 8) -= v52;
     j__nfree_();
-    v21 = 1423 * *((unsigned __int8 *)v5 + 2);
     *(_DWORD *)((char *)v5 + 23) = 0;
-    *(_DWORD *)(gameData + v21 + 140073) = 1;
+    PLAYER_HAD_BATTLE_THIS_TURN(*((unsigned __int8 *)v5 + 2)) = 1;
     Audio_StopUnitMoveSound();
     sub_405920(&dword_523F78);
     dword_512360 = -1;
@@ -39852,7 +39857,7 @@ LABEL_12:
     if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v6 + 2) + 140051) )
       sub_42D3A0(0, v20, (char)v7);
   }
-  *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v6 + 2) + 140073) = 1;
+  PLAYER_HAD_BATTLE_THIS_TURN(*((unsigned __int8 *)v6 + 2)) = 1;
   sub_430C20();
   sub_430F80(0, 1, v18, (int)v7);
   sub_42D290();
@@ -40649,7 +40654,7 @@ LABEL_18:
   if ( v20 != dword_532104 )
     sub_4426C0(aBattleMurek, 64);
   sub_430B20(a2 + 1, a4);
-  *(_DWORD *)(1423 * *(unsigned __int8 *)(v7 + 2) + gameData + 140073) = 1;
+  PLAYER_HAD_BATTLE_THIS_TURN(*(unsigned __int8 *)(v7 + 2)) = 1;
   sub_430F80(0, 1, v12, a4);
   return 1;
 }
@@ -44089,10 +44094,10 @@ LABEL_5:
   else
     v23 = v74[2];
   *(_DWORD *)(dword_532048 + 840) = v23;
-  *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 836) + gameData + 140077) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 840) + 140077) = 0;
-  *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 836) + gameData + 140073) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 840) + 140073) = 0;
+  PLAYER_TURNS_WITHOUT_BATTLE(*(_DWORD *)(dword_532048 + 836)) = 0;
+  PLAYER_TURNS_WITHOUT_BATTLE(*(_DWORD *)(dword_532048 + 840)) = 0;
+  PLAYER_HAD_BATTLE_THIS_TURN(*(_DWORD *)(dword_532048 + 836)) = 0;
+  PLAYER_HAD_BATTLE_THIS_TURN(*(_DWORD *)(dword_532048 + 840)) = 0;
   if ( *((_BYTE *)v81 + 720) )
   {
     *(_DWORD *)(dword_532048 + 844) = *((unsigned __int8 *)v81 + 4);
@@ -44282,15 +44287,14 @@ LABEL_5:
     }
     if ( v55 )
       break;
-    v68 = PLAYER_DATA(g_CurrentPlayerIndex);
-    if ( *(_DWORD *)(v68 + 140073) )
-      *(_DWORD *)(v68 + 140077) = 0;
+    if ( PLAYER_HAD_BATTLE_THIS_TURN(g_CurrentPlayerIndex) )
+      PLAYER_TURNS_WITHOUT_BATTLE(g_CurrentPlayerIndex) = 0;
     else
-      ++*(_DWORD *)(v68 + 140077);
+      ++PLAYER_TURNS_WITHOUT_BATTLE(g_CurrentPlayerIndex);
     v69 = g_CurrentPlayerIndex;
-    if ( *(int *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140077) >= 2 )
+    if ( PLAYER_TURNS_WITHOUT_BATTLE(g_CurrentPlayerIndex) >= 2 )
       GodAnger(g_CurrentPlayerIndex, g_CurrentPlayerIndex, v47);
-    *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140073) = 0;
+    PLAYER_HAD_BATTLE_THIS_TURN(g_CurrentPlayerIndex) = 0;
     *(_DWORD *)(4 * g_CurrentPlayerIndex + dword_532048 + 3944) = g_SelectedUnitIndex;
     *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3934) = *(_BYTE *)(dword_532048 + 808);
     *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3935) = *(_BYTE *)(dword_532048 + 812);
@@ -62320,7 +62324,7 @@ char __usercall PlayerRuntimeState_ResetDefaults@<al>(int a1@<eax>)
   *(_DWORD *)(a1 + 27) = 1;
   *(_DWORD *)(a1 + 31) = 0;
   *(_DWORD *)a1 = 0;
-  *(_WORD *)(a1 + 1417) = 0;
+  *(_WORD *)(a1 + PLAYER_BATTLE_RECORD_SCORE_OFFSET) = 0;
   v2 = a1 + 60;
   *(_BYTE *)(a1 + 1419) = 0;
   do
@@ -64956,7 +64960,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
       v61[v22] = v32;
       if ( v32 > v31 )
         v67 = v32;
-      v33 = *(__int16 *)(v26 + gameData + 141441);
+      v33 = PLAYER_BATTLE_RECORD_SCORE(v25);
       v63[v22] = v33;
       if ( v23 < v33 )
         v23 = v33;
