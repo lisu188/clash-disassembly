@@ -354,5 +354,20 @@
       "`BuildingTransferDialog_Run` initializes `g_BuildingTransferDialogSpriteSet`, calls `sub_419D80(dword_514840)`, and then pumps `sub_419DC0(dword_514840, ...)` until the dialog exit latch changes, proving these records are one modal widget family.",
       "The descriptor labels and handler pairing expose distinct controls for adjusting transferred peasants, adjusting transferred gold, closing the dialog, and confirming the transfer."
     ]
+  },
+  {
+    "name": "BuildingTransferDestinationListState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingTransferDestinationSelectionIndex",
+    "description": "Modal destination-selector state for the building transfer dialog. This region is stored in adjacent globals rather than in gameData.",
+    "fields": [
+      { "offset": 0, "name": "selection_index", "type": "int32", "notes": "Current highlighted row within the packed destination-building id list. Read and written by the left/right scroll buttons, click handler, list renderer, and transfer confirm path." },
+      { "offset": 4, "name": "destination_building_ids", "type": "int16[100]", "notes": "Packed list of eligible owned destination building ids. Entry `0` is initialized to sentinel `-2`, which the confirm path translates to destination `-1` before calling `Building_Transfer`. The decompiler-emitted `g_BuildingTransferDestinationBuildingIdsLookahead` symbol is an overlapping one-slot lookahead alias over the same list." }
+    ],
+    "evidence": [
+      "`BuildingTransferDialog_BuildDestinationList` clears the list buffer, writes sentinel `-2` at entry 0, appends eligible destination building ids, and resets `selection_index` to zero before the dialog opens.",
+      "`BuildingTransferDialog_DrawDestinationList` renders a five-row window over the same list, using `selection_index` as the center row and treating `-2` specially as a non-building destination choice.",
+      "`BuildingTransferDialog_SelectNextDestination` proves that the decompiler's lookahead symbol is only a shifted alias over `destination_building_ids`, not a distinct second array."
+    ]
   }
 ]

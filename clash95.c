@@ -803,12 +803,12 @@ BOOL __thiscall sub_4359B0(void *this);
 // int __usercall sub_436180@<eax>(int a1@<eax>);
 // int __usercall sub_436250@<eax>(int a1@<eax>);
 // int __usercall sub_436610@<eax>(int result@<eax>, int a2@<edx>);
-// void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>);
-// int __usercall sub_4368F0@<eax>(int a1@<eax>, DWORD a2@<ebp>);
-// int __usercall sub_436930@<eax>(int a1@<eax>, DWORD a2@<ebp>);
-// int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall __spoils<ecx> sub_436A30@<eax>(DWORD a1@<ebp>);
-int sub_436AF0();
+// void *__usercall BuildingTransferDialog_DrawDestinationList@<eax>(int a1@<eax>, DWORD a2@<ebp>);
+// int __usercall BuildingTransferDialog_SelectPreviousDestination@<eax>(int a1@<eax>, DWORD a2@<ebp>);
+// int __usercall BuildingTransferDialog_SelectNextDestination@<eax>(int a1@<eax>, DWORD a2@<ebp>);
+// int __usercall BuildingTransferDialog_BuildDestinationList@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall __spoils<ecx> BuildingTransferDialog_HandleDestinationListClick@<eax>(DWORD a1@<ebp>);
+int BuildingTransferDialog_FreeDestinationListSpriteSet();
 // int __usercall sub_436B20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 int __thiscall sub_436C10(void *this);
 // int __usercall sub_436C50@<eax>(int a1@<eax>);
@@ -11576,10 +11576,10 @@ int dword_53233C; // weak
 int dword_53234C; // weak
 int dword_532350; // weak
 int dword_532354; // weak
-int dword_53235C; // weak
-__int16 word_532360[]; // weak
-__int16 word_532362[99]; // weak
-int dword_532428; // weak
+int g_BuildingTransferDestinationSelectionIndex; // weak
+__int16 g_BuildingTransferDestinationBuildingIds[]; // weak
+__int16 g_BuildingTransferDestinationBuildingIdsLookahead[99]; // weak
+int g_BuildingTransferDestinationListSpriteSet; // weak
 int dword_53242C; // weak
 int dword_532430; // weak
 int dword_532440; // weak
@@ -41006,7 +41006,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0042A760) --------------------------------------------------------
-int __usercall sub_42A760@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall UI_DrawNoticeBoxSmall@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
   int v2; // edx
   int SpriteForChar; // eax
@@ -41046,7 +41046,7 @@ int __usercall sub_42A760@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 // 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
 
 //----- (0042A890) --------------------------------------------------------
-int __usercall sub_42A890@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall UI_DrawConfirmTop@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
   void *v2; // esi
   int v3; // edx
@@ -41067,7 +41067,7 @@ int __usercall sub_42A890@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 // 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
 
 //----- (0042A910) --------------------------------------------------------
-int __usercall sub_42A910@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall UI_DrawConfirmBottom@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
   void *v2; // esi
   int v3; // edx
@@ -41110,10 +41110,10 @@ int __usercall BuildingTransferDialog_ConfirmTransfer@<eax>(int a1@<eax>, int a2
   sub_419E60(a1, a2);
   if ( g_BuildingTransferPendingPeasants )
   {
-    v5 = word_532360[dword_53235C];
+    v5 = g_BuildingTransferDestinationBuildingIds[g_BuildingTransferDestinationSelectionIndex];
     if ( v5 == -2 || *(_BYTE *)(467 * v5 + gameData + 509678) != 1 )
     {
-      v6 = word_532360[dword_53235C];
+      v6 = g_BuildingTransferDestinationBuildingIds[g_BuildingTransferDestinationSelectionIndex];
       if ( v6 == -2 )
         v6 = -1;
       a4 = -45;
@@ -41123,7 +41123,7 @@ int __usercall BuildingTransferDialog_ConfirmTransfer@<eax>(int a1@<eax>, int a2
   }
   if ( g_BuildingTransferPendingGold )
   {
-    v7 = word_532360[dword_53235C];
+    v7 = g_BuildingTransferDestinationBuildingIds[g_BuildingTransferDestinationSelectionIndex];
     if ( v7 == -2 )
       v7 = -1;
     a4 = -45;
@@ -41147,8 +41147,8 @@ int __usercall BuildingTransferDialog_ConfirmTransfer@<eax>(int a1@<eax>, int a2
 // 531CEC: using guessed type int g_BuildingTransferPendingPeasants;
 // 531CF0: using guessed type int g_BuildingTransferPendingGold;
 // 531CF4: using guessed type int g_BuildingTransferSourceBuildingPtr;
-// 53235C: using guessed type int dword_53235C;
-// 532360: using guessed type __int16 word_532360[];
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532360: using guessed type __int16 g_BuildingTransferDestinationBuildingIds[];
 
 //----- (0042AB80) --------------------------------------------------------
 int __usercall BuildingTransferDialog_DecreaseTaxRate@<eax>(int a1@<eax>, char a2@<bl>)
@@ -41495,7 +41495,7 @@ int __usercall BuildingTransferDialog_Run@<eax>(int a1@<eax>)
 
   g_BuildingTransferSourceBuildingPtr = a1;
   v1 = PLAYER_IS_CHRISTIAN(*(unsigned __int8 *)(a1 + 2));
-  sub_436970(a1, 1);
+  BuildingTransferDialog_BuildDestinationList(a1, 1);
   g_BuildingTransferPendingPeasants = 0;
   g_BuildingTransferPendingGold = 0;
   _wcpp_4_ctor_array__(v2, 256);
@@ -41544,7 +41544,7 @@ int __usercall BuildingTransferDialog_Run@<eax>(int a1@<eax>)
   UI_DrawTextFmt(v10, 0, 370, 20, 2, (int)aD_47);
   sub_419D80(dword_514840);
   sub_436610(184, v16);
-  sub_436620((int)v21, v4);
+  BuildingTransferDialog_DrawDestinationList((int)v21, v4);
   UI_DrawConfirmTop(v4, v10);
   UI_DrawConfirmBottom(v4, v10);
   g_RenderDevice = &unk_51D4C0;
@@ -41560,12 +41560,12 @@ int __usercall BuildingTransferDialog_Run@<eax>(int a1@<eax>)
   do
   {
     DD_Pump((int)dword_544CD8, (char)dword_544CD8);
-    sub_436A30(v17);
+    BuildingTransferDialog_HandleDestinationListClick(v17);
     sub_419DC0(dword_514840, v17);
     sub_44E350(word_514A88);
   }
   while ( v19 == g_BuildingTransferDialogExitRequested );
-  sub_436AF0();
+  BuildingTransferDialog_FreeDestinationListSpriteSet();
   sub_405920(&g_BuildingTransferDialogSpriteSet);
   Render_Pump();
   return sub_404F20((int *)&unk_51D4C0, 20);
@@ -48407,7 +48407,7 @@ int __usercall sub_436100@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, doub
   result = sub_419E60(a1, a2);
   if ( dword_532350 )
   {
-    v6 = word_532360[dword_53235C];
+    v6 = g_BuildingTransferDestinationBuildingIds[g_BuildingTransferDestinationSelectionIndex];
     if ( v6 == -2 )
       v6 = -1;
     Building_Transfer((dword_532354 - (gameData + 509674)) / 467, v6, 1, dword_532350, a4);
@@ -48420,8 +48420,8 @@ int __usercall sub_436100@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, doub
 // 5202E4: using guessed type int gameData;
 // 532350: using guessed type int dword_532350;
 // 532354: using guessed type int dword_532354;
-// 53235C: using guessed type int dword_53235C;
-// 532360: using guessed type __int16 word_532360[];
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532360: using guessed type __int16 g_BuildingTransferDestinationBuildingIds[];
 
 //----- (00436180) --------------------------------------------------------
 int __usercall sub_436180@<eax>(int a1@<eax>)
@@ -48532,7 +48532,7 @@ int __usercall sub_436610@<eax>(int result@<eax>, int a2@<edx>)
 // 532430: using guessed type int dword_532430;
 
 //----- (00436620) --------------------------------------------------------
-void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
+void *__usercall BuildingTransferDialog_DrawDestinationList@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 {
   _DWORD *v2; // eax
   int v3; // ecx
@@ -48558,25 +48558,25 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 
   v20 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
-  if ( !dword_532428 )
+  if ( !g_BuildingTransferDestinationListSpriteSet )
   {
     v2 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
     if ( v2 )
       v2 = DLXSpriteSet_Load(v2, 0);
-    dword_532428 = (int)v2;
+    g_BuildingTransferDestinationListSpriteSet = (int)v2;
     sub_4060A0((DWORD)v2, -1, v3, (char)aCas_list_pal);
   }
   Render_ReleaseSurface(5, a2);
   v16 = 0;
-  v18 = dword_53235C - 2;
+  v18 = g_BuildingTransferDestinationSelectionIndex - 2;
   v4 = 0;
   v22 = 0;
   v21 = 18;
-  v17 = 2 * (dword_53235C - 2);
+  v17 = 2 * (g_BuildingTransferDestinationSelectionIndex - 2);
   while ( 1 )
   {
     v5 = v18;
-    if ( dword_53235C + 2 < v18 )
+    if ( g_BuildingTransferDestinationSelectionIndex + 2 < v18 )
       break;
     Render_FillRect(
       (_DWORD *)dword_5202E0,
@@ -48587,14 +48587,14 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
       v21 + dword_532430,
       dword_53242C,
       v22 + dword_532430);
-    if ( v5 >= 0 && word_532360[v17 / 2] != -1 )
+    if ( v5 >= 0 && g_BuildingTransferDestinationBuildingIds[v17 / 2] != -1 )
     {
-      if ( v5 == dword_53235C )
+      if ( v5 == g_BuildingTransferDestinationSelectionIndex )
         v7 = 9;
       else
         v7 = 5;
       Render_ReleaseSurface(v7, v4);
-      v8 = word_532360[v17 / 2];
+      v8 = g_BuildingTransferDestinationBuildingIds[v17 / 2];
       if ( v8 == -2 )
       {
         v15[0] = (int)off_5156E4[0];
@@ -48605,7 +48605,7 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
       else
       {
         UI_DrawText(dword_53242C, v4 + dword_532430, UNIT_RECORD(v8) + 5);
-        SpriteForChar = DLX_GetSpriteForChar(dword_532428, v9);
+        SpriteForChar = DLX_GetSpriteForChar(g_BuildingTransferDestinationListSpriteSet, v9);
         v19 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v19 + 52))(
           v4 + v11 - 4,
@@ -48618,7 +48618,7 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
           0,
           0);
         UI_DrawText(dword_53242C + 124, v4 + dword_532430, (int)aD_10);
-        v13 = DLX_GetSpriteForChar(dword_532428, v12);
+        v13 = DLX_GetSpriteForChar(g_BuildingTransferDestinationListSpriteSet, v12);
         v19 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v19 + 52))(
           v4 + v14 - 2,
@@ -48654,49 +48654,49 @@ void *__usercall sub_436620@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 // 5156E4: using guessed type char *off_5156E4[3];
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 53235C: using guessed type int dword_53235C;
-// 532360: using guessed type __int16 word_532360[];
-// 532428: using guessed type int dword_532428;
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532360: using guessed type __int16 g_BuildingTransferDestinationBuildingIds[];
+// 532428: using guessed type int g_BuildingTransferDestinationListSpriteSet;
 // 53242C: using guessed type int dword_53242C;
 // 532430: using guessed type int dword_532430;
 
 //----- (004368F0) --------------------------------------------------------
-int __usercall sub_4368F0@<eax>(int a1@<eax>, DWORD a2@<ebp>)
+int __usercall BuildingTransferDialog_SelectPreviousDestination@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 {
   int v2; // edx
   int v3; // ecx
 
   sub_419F20(a1);
-  if ( dword_53235C )
-    --dword_53235C;
-  sub_436620((int)off_511234, a2);
+  if ( g_BuildingTransferDestinationSelectionIndex )
+    --g_BuildingTransferDestinationSelectionIndex;
+  BuildingTransferDialog_DrawDestinationList((int)off_511234, a2);
   return sub_419F50(v2, v3);
 }
 // 43691A: variable 'v2' is possibly undefined
 // 43691A: variable 'v3' is possibly undefined
 // 511234: using guessed type char (*off_511234)[1024];
-// 53235C: using guessed type int dword_53235C;
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
 
 //----- (00436930) --------------------------------------------------------
-int __usercall sub_436930@<eax>(int a1@<eax>, DWORD a2@<ebp>)
+int __usercall BuildingTransferDialog_SelectNextDestination@<eax>(int a1@<eax>, DWORD a2@<ebp>)
 {
   int v2; // edx
   int v3; // ecx
 
   sub_419F20(a1);
-  if ( word_532362[dword_53235C] != -1 )
-    ++dword_53235C;
-  sub_436620((int)off_511234, a2);
+  if ( g_BuildingTransferDestinationBuildingIds[g_BuildingTransferDestinationSelectionIndex + 1] != -1 )
+    ++g_BuildingTransferDestinationSelectionIndex;
+  BuildingTransferDialog_DrawDestinationList((int)off_511234, a2);
   return sub_419F50(v2, v3);
 }
 // 43695D: variable 'v2' is possibly undefined
 // 43695D: variable 'v3' is possibly undefined
 // 511234: using guessed type char (*off_511234)[1024];
-// 53235C: using guessed type int dword_53235C;
-// 532362: using guessed type __int16 word_532362[99];
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532362: using guessed type __int16 g_BuildingTransferDestinationBuildingIdsLookahead[99];
 
 //----- (00436970) --------------------------------------------------------
-int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall BuildingTransferDialog_BuildDestinationList@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v2; // edx
   int v3; // ecx
@@ -48706,7 +48706,7 @@ int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>)
   int v7; // ecx
 
   memset_(a2, -1);
-  word_532360[0] = -2;
+  g_BuildingTransferDestinationBuildingIds[0] = -2;
   v2 = 0;
   v4 = g_CurrentPlayerIndex;
   result = 0;
@@ -48721,24 +48721,24 @@ int __usercall sub_436970@<eax>(int a1@<eax>, int a2@<edx>)
       && !*(_WORD *)(v7 + 509690) )
     {
       v6 += 2;
-      *(_WORD *)((char *)&dword_53235C + v6 + 2) = v2;
+      g_BuildingTransferDestinationBuildingIds[v6 / 2] = v2;
     }
     ++v2;
     result += 467;
   }
   while ( v2 < 100 );
-  dword_53235C = 0;
+  g_BuildingTransferDestinationSelectionIndex = 0;
   return result;
 }
 // 4369A3: variable 'v3' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 53235C: using guessed type int dword_53235C;
-// 532360: using guessed type __int16 word_532360[];
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532360: using guessed type __int16 g_BuildingTransferDestinationBuildingIds[];
 
 //----- (00436A30) --------------------------------------------------------
-int __usercall __spoils<ecx> sub_436A30@<eax>(DWORD a1@<ebp>)
+int __usercall __spoils<ecx> BuildingTransferDialog_HandleDestinationListClick@<eax>(DWORD a1@<ebp>)
 {
   int v2; // ebx
   int result; // eax
@@ -48750,14 +48750,17 @@ int __usercall __spoils<ecx> sub_436A30@<eax>(DWORD a1@<ebp>)
     if ( dword_544CFC >> byte_54512C >= dword_53242C )
     {
       result = dword_53242C + 266;
-      if ( dword_544CFC >> byte_54512C <= dword_53242C + 266 && v2 >= -2 && v2 <= 2 && v2 + dword_53235C >= 0 )
+      if ( dword_544CFC >> byte_54512C <= dword_53242C + 266
+        && v2 >= -2
+        && v2 <= 2
+        && v2 + g_BuildingTransferDestinationSelectionIndex >= 0 )
       {
-        result = word_532360[v2 + dword_53235C];
+        result = g_BuildingTransferDestinationBuildingIds[v2 + g_BuildingTransferDestinationSelectionIndex];
         if ( result != -1 )
         {
-          dword_53235C += v2;
+          g_BuildingTransferDestinationSelectionIndex += v2;
           Render_Pump();
-          sub_436620((int)off_511234, a1);
+          BuildingTransferDialog_DrawDestinationList((int)off_511234, a1);
           Render_Present((int)dword_544CD8);
           return Render_Begin((int)dword_544CD8, 0);
         }
@@ -48767,8 +48770,8 @@ int __usercall __spoils<ecx> sub_436A30@<eax>(DWORD a1@<ebp>)
   return result;
 }
 // 511234: using guessed type char (*off_511234)[1024];
-// 53235C: using guessed type int dword_53235C;
-// 532360: using guessed type __int16 word_532360[];
+// 53235C: using guessed type int g_BuildingTransferDestinationSelectionIndex;
+// 532360: using guessed type __int16 g_BuildingTransferDestinationBuildingIds[];
 // 53242C: using guessed type int dword_53242C;
 // 532430: using guessed type int dword_532430;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -48777,16 +48780,16 @@ int __usercall __spoils<ecx> sub_436A30@<eax>(DWORD a1@<ebp>)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00436AF0) --------------------------------------------------------
-int sub_436AF0()
+int BuildingTransferDialog_FreeDestinationListSpriteSet()
 {
   int result; // eax
 
-  if ( dword_532428 )
-    result = sub_405920(&dword_532428);
-  dword_532428 = 0;
+  if ( g_BuildingTransferDestinationListSpriteSet )
+    result = sub_405920(&g_BuildingTransferDestinationListSpriteSet);
+  g_BuildingTransferDestinationListSpriteSet = 0;
   return result;
 }
-// 532428: using guessed type int dword_532428;
+// 532428: using guessed type int g_BuildingTransferDestinationListSpriteSet;
 
 //----- (00436B20) --------------------------------------------------------
 int __usercall sub_436B20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>)
