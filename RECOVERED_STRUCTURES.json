@@ -135,7 +135,7 @@
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
-      "Prisoner_SetInCastles, BuildingPrisoner_SetOrder, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
+      "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
     ]
   },
   {
@@ -167,12 +167,12 @@
       { "offset": 0, "name": "prisoner_type_id", "type": "int8", "notes": "Special prisoner unit type; `-1` marks an empty prison cell." },
       { "offset": 1, "name": "variant_or_payload_byte", "type": "uint8", "notes": "Auxiliary prisoner metadata copied from the player transfer queue; exact meaning remains ambiguous." },
       { "offset": 2, "name": "turns_held", "type": "uint8", "notes": "Incremented every prisoner turn and used to auto-trigger late actions." },
-      { "offset": 3, "name": "pending_order", "type": "uint8", "notes": "0 = none, 1 = behead, 2 = torture, 3 = pay/ransom path." },
-      { "offset": 4, "name": "ransom_value", "type": "uint16", "notes": "Price/value field recalculated by `sub_44E880` and consumed by `Prisoner_Pay`." }
+      { "offset": 3, "name": "pending_action", "type": "uint8", "notes": "0 = none, 1 = behead, 2 = torture, 3 = pay/ransom path." },
+      { "offset": 4, "name": "ransom_value", "type": "uint16", "notes": "Price/value field recalculated by `BuildingPrisoner_RecalculateRansomValue` and consumed by `Prisoner_Pay`." }
     ],
     "evidence": [
       "`Building_FindFreePrisonerSlot` scans three 6-byte cells beginning at `building + 445` and treats byte 0 == -1 as empty.",
-      "`BuildingPrisoner_SetOrder` and `BuildingPrisoner_GetOrder` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
+      "`BuildingPrisoner_SetAction` and `BuildingPrisoner_GetAction` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
     ]
   }
 ]

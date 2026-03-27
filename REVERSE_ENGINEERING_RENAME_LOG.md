@@ -200,8 +200,8 @@
 | sub_41A960 | UI_DrawSpecialUnitInfoPane | Function | UI / Unit Info | High | Dedicated info window path for types `31..34`, with alternate icon mapping and the localized-name lookup from the unit-type metadata table. | c |
 | sub_44E7A0 | Prisoner_QueueCapturedUnit | Function | Prisoners | High | Debug log string is `Prisoner_AddToInWay`, and the function appends captured type `33/34` entries into the per-player queue later drained by `Prisoner_SetInCastles`. | c, asm |
 | sub_44E850 | Building_FindFreePrisonerSlot | Function | Prisoners / Buildings | High | Scans the three 6-byte prison cells at `building + 445` and returns the first free index or `-1` if full. | c |
-| sub_44EB70 | BuildingPrisoner_SetOrder | Function | Prisoners / Buildings | High | Writes the pending action byte at `building + 445 + 6 * slot + 3`, which `Prisoner_NewTurn` later interprets as behead/torture/pay. | c |
-| sub_44EBA0 | BuildingPrisoner_GetOrder | Function | Prisoners / Buildings | High | Reads back the pending action byte from the same prison-cell field. | c |
+| sub_44EB70 | BuildingPrisoner_SetAction | Function | Prisoners / Buildings | High | `clash95.asm` exposes the debug string `Building_SetPrisonerAction(0x%08x,%d,%d)`, and the function writes the pending action byte at `building + 445 + 6 * slot + 3`. | c, asm |
+| sub_44EBA0 | BuildingPrisoner_GetAction | Function | Prisoners / Buildings | High | Reads back the pending action byte from the same prison-cell field. | c |
 | sub_44F1E0 | Building_CreatePrisonerUnit | Function | Prisoners / Buildings | High | Debug log string is `Building_CreateSpecial`, and every recovered caller uses it to insert a type `33/34` prisoner unit into a building garrison slot. | c, asm |
 | sub_44F350 | Prisoner_NewTurn | Function | Prisoners | High | Debug log string is `Prisoner_NewTurn`, and the function advances held-prisoner timers, auto-assigns late orders, then dispatches behead/torture/pay behavior for each prison cell. | c |
 | sub_44F4E0 | Building_CountPrisoners | Function | Prisoners / Buildings | High | Counts occupied prison cells by scanning the three 6-byte entries starting at `building + 445`. | c |
@@ -210,6 +210,19 @@
 | sub_43EC10 | Building_HasPrisonerGarrisonEntries | Function | Buildings / Prisoners | High | Returns true when the building garrison contains at least one type `33` or `34` entry. | c |
 | PLAYER_DATA(player) + 141381 + 6 * slot | PlayerPrisonerTransferQueue | Recovered Struct | Prisoners | High | `Prisoner_QueueCapturedUnit` appends 10 fixed-size entries here, and `Prisoner_SetInCastles` drains them into nearby castles using the stored capture coordinates. | c |
 | BuildingRecord + 445 + 6 * slot | BuildingPrisonerSlot | Recovered Struct | Prisoners / Buildings | High | Execution, torture, ransom, and prisoner-new-turn helpers all operate on the same three 6-byte cells embedded in the building record. | c |
+
+## Batch 25 – Prisoner Action And Targeting Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_43F240 | Building_GetTotalValue | Function | Buildings / Economy | High | Sums stored resources, level bits, flag-based flat values, and add-on costs, then feeds both `AI_TickNationPostTurn` and the “richest hidden castle” torture outcome. | c, asm |
+| sub_44E880 | BuildingPrisoner_RecalculateRansomValue | Function | Prisoners / Buildings | High | Recomputes prison-cell word `+4` from a nation-strength-derived random value, rounds it to tens, and `Prisoner_Pay` later spends that exact field. | c |
+| sub_44EC80 | Building_IsVisibleToPlayer | Function | Buildings / Visibility | High | Tests all four tiles of the building footprint with the player-visibility helper, so it is a building-level visibility predicate rather than a generic boolean. | c |
+| sub_44ECF0 | Prisoner_FindRichestHiddenEnemyCastle | Function | Prisoners / Torture | High | Searches enemy-owned castles that are not visible to the interrogating player and selects the one with the highest `Building_GetTotalValue`, matching the torture text about revealing the richest castle. | c |
+| sub_44EDB0 | Prisoner_FindAnyHiddenEnemyCastle | Function | Prisoners / Torture | High | Returns the first enemy-owned castle that is hidden from the interrogating player, matching the torture text about revealing one of the king's castles. | c |
+| sub_44EE20 | Prisoner_FindAnyHiddenEnemyUnitStack | Function | Prisoners / Torture | High | Returns the first enemy-owned hidden field stack, matching the torture outcome that reveals one enemy unit. | c |
+| sub_44EEE0 | Map_RevealTilesInRadius2ForPlayer | Function | Map / Visibility | High | Stamps visibility around a center point in a radius-2 disk and is used immediately after torture-target discovery to reveal the selected target area. | c |
+| sub_44EFA0 | Prisoner_Torture | Function | Prisoners | High | The asm log string is `Prisoner_Torture(0x%08x,%d)`, and the function dispatches the five torture outcomes: richest hidden castle, hidden castle, hidden unit, death without intel, or resistance. | c, asm |
+| sub_44F260 | Prisoner_Pay | Function | Prisoners | High | The asm log string is `Prisoner_Pay(0x%08x,%d)`, and the function spends the prison cell's ransom value, converts the prisoner into a friendly special garrison unit, and removes the prison entry. | c, asm |
 
 ## Deferred / Ambiguous
 - `specm` and `speck` now resolve behaviorally as prisoner-only special entries, but their exact designer-facing label is still only medium-confidence as `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted`. The prisoner flow is clear; the cross-language name triplet is not.

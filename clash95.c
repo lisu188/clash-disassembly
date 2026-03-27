@@ -825,7 +825,7 @@ int __cdecl sub_43CF90();
 // __int16 __usercall __spoils<ecx> sub_43EED0@<ax>(int a1@<eax>);
 // int __usercall sub_43F0C0@<eax>(int a1@<eax>);
 // __int16 __usercall __spoils<ecx> sub_43F160@<ax>(unsigned int a1@<eax>);
-// int __usercall sub_43F240@<eax>(int a1@<eax>);
+// int __usercall Building_GetTotalValue@<eax>(int a1@<eax>);
 // int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>);
 // int __usercall AI_CalcFrontlineScore@<eax>(int a1@<eax>);
 // int __usercall AI_ApplyFrontlineScore@<eax>(int a1@<eax>, signed int a2@<edx>);
@@ -978,20 +978,20 @@ signed int Game_InitPlayerViewState();
 // BOOL __usercall sub_44E350@<eax>(__int16 *a1@<eax>);
 // signed int __userpurge Prisoner_QueueCapturedUnit@<eax>(char a1@<al>, int a2@<edx>, __int16 a3@<cx>, int a4@<ebx>, DWORD a5@<ebp>, __int16 a6);
 // signed int __usercall Building_FindFreePrisonerSlot@<eax>(int a1@<eax>);
-// int __usercall sub_44E880@<eax>(int a1@<eax>);
+// int __usercall BuildingPrisoner_RecalculateRansomValue@<eax>(int a1@<eax>);
 // signed int __usercall Prisoner_SetInCastles@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall BuildingPrisoner_SetOrder@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall BuildingPrisoner_GetOrder@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall BuildingPrisoner_SetAction@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall BuildingPrisoner_GetAction@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Prisoner_Behead@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
-// BOOL __usercall sub_44EC80@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
-// int __usercall sub_44ECF0@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_44EDB0@<eax>(int a1@<eax>, int a2@<edx>);
-// int __usercall sub_44EE20@<eax>(int a1@<eax>, int a2@<edx>);
-// void __usercall sub_44EEE0(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
-// unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
+// BOOL __usercall Building_IsVisibleToPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
+// int __usercall Prisoner_FindRichestHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall Prisoner_FindAnyHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>);
+// int __usercall Prisoner_FindAnyHiddenEnemyUnitStack@<eax>(int a1@<eax>, int a2@<edx>);
+// void __usercall Map_RevealTilesInRadius2ForPlayer(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
+// unsigned int __usercall Prisoner_Torture@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // int __usercall Building_CreatePrisonerUnit@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, double a5@<st0>);
-// unsigned int __usercall sub_44F260@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
+// unsigned int __usercall Prisoner_Pay@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
 // char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>);
 // int __usercall Building_CountPrisoners@<eax>(int a1@<eax>);
 // BOOL __usercall sub_44F510@<eax>(int a1@<eax>);
@@ -54651,7 +54651,7 @@ __int16 __usercall __spoils<ecx> sub_43F160@<ax>(unsigned int a1@<eax>)
 // 43F223: variable 'v10' is possibly undefined
 
 //----- (0043F240) --------------------------------------------------------
-int __usercall sub_43F240@<eax>(int a1@<eax>)
+int __usercall Building_GetTotalValue@<eax>(int a1@<eax>)
 {
   int v2; // ecx
   unsigned __int16 v3; // ax
@@ -54709,7 +54709,7 @@ int __usercall AI_TickNationPostTurn@<eax>(int a1@<eax>)
       v5 = v3 + gameData + 509674;
       if ( (unsigned int)*(char *)(v5 + 4) < 4 && *(__int16 *)(v5 + 16) != -1 )
       {
-        v6 = sub_43F240(v5);
+        v6 = Building_GetTotalValue(v5);
         v1 = v6 + v7;
       }
     }
@@ -63786,7 +63786,7 @@ signed int __usercall Building_FindFreePrisonerSlot@<eax>(int a1@<eax>)
 }
 
 //----- (0044E880) --------------------------------------------------------
-int __usercall sub_44E880@<eax>(int a1@<eax>)
+int __usercall BuildingPrisoner_RecalculateRansomValue@<eax>(int a1@<eax>)
 {
   int v1; // ebx
   int v2; // edx
@@ -63912,7 +63912,7 @@ LABEL_6:
     v18[3] = 0;
     v18[2] = 0;
     v18[1] = v20;
-    sub_44E880((int)v18);
+    BuildingPrisoner_RecalculateRansomValue((int)v18);
     *v21 = -1;
     result = 1423 * g_CurrentPlayerIndex;
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
@@ -63942,7 +63942,7 @@ LABEL_6:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044EB70) --------------------------------------------------------
-int __usercall BuildingPrisoner_SetOrder@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall BuildingPrisoner_SetAction@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // edx
   int result; // eax
@@ -63957,7 +63957,7 @@ int __usercall BuildingPrisoner_SetOrder@<eax>(int a1@<eax>, char a2@<bl>, DWORD
 // 44EB8E: variable 'v5' is possibly undefined
 
 //----- (0044EBA0) --------------------------------------------------------
-int __usercall BuildingPrisoner_GetOrder@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall BuildingPrisoner_GetAction@<eax>(int a1@<eax>, int a2@<edx>)
 {
   return *(unsigned __int8 *)(a1 + 6 * a2 + 448);
 }
@@ -64015,7 +64015,7 @@ int __usercall Prisoner_Behead@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, D
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EC80) --------------------------------------------------------
-BOOL __usercall sub_44EC80@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>)
+BOOL __usercall Building_IsVisibleToPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>)
 {
   unsigned __int8 *v3; // ecx
   BOOL result; // eax
@@ -64038,7 +64038,7 @@ BOOL __usercall sub_44EC80@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>)
 // 44ECD2: variable 'v6' is possibly undefined
 
 //----- (0044ECF0) --------------------------------------------------------
-int __usercall sub_44ECF0@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall Prisoner_FindRichestHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v3; // edi
   int v4; // ebx
@@ -64054,9 +64054,9 @@ int __usercall sub_44ECF0@<eax>(int a1@<eax>, int a2@<edx>)
   {
     if ( *(_BYTE *)(v5 + gameData + 509678) == 2
       && *(unsigned __int8 *)(v5 + gameData + 509676) == a1
-      && !sub_44EC80((unsigned __int8 *)(v5 + gameData + 509674), a2) )
+      && !Building_IsVisibleToPlayer((unsigned __int8 *)(v5 + gameData + 509674), a2) )
     {
-      v7 = sub_43F240(v5 + gameData + 509674);
+      v7 = Building_GetTotalValue(v5 + gameData + 509674);
       if ( v7 > v3 )
       {
         v3 = v7;
@@ -64076,14 +64076,14 @@ int __usercall sub_44ECF0@<eax>(int a1@<eax>, int a2@<edx>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EDB0) --------------------------------------------------------
-int __usercall sub_44EDB0@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall Prisoner_FindAnyHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v4; // ecx
 
   v4 = 0;
   while ( *(_BYTE *)(gameData + v4 + 509678) != 2
        || *(unsigned __int8 *)(gameData + v4 + 509676) != a1
-       || sub_44EC80((unsigned __int8 *)(v4 + gameData + 509674), a2) )
+       || Building_IsVisibleToPlayer((unsigned __int8 *)(v4 + gameData + 509674), a2) )
   {
     v4 += 467;
     if ( v4 >= 46700 )
@@ -64095,7 +64095,7 @@ int __usercall sub_44EDB0@<eax>(int a1@<eax>, int a2@<edx>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EE20) --------------------------------------------------------
-int __usercall sub_44EE20@<eax>(int a1@<eax>, int a2@<edx>)
+int __usercall Prisoner_FindAnyHiddenEnemyUnitStack@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v4; // ecx
   int v5; // edi
@@ -64126,7 +64126,7 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EEE0) --------------------------------------------------------
-void __usercall sub_44EEE0(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
+void __usercall Map_RevealTilesInRadius2ForPlayer(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 {
   int v3; // edi
   int v4; // esi
@@ -64160,7 +64160,7 @@ void __usercall sub_44EEE0(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 // 44EF47: variable 'v5' is possibly undefined
 
 //----- (0044EFA0) --------------------------------------------------------
-unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>)
+unsigned int __usercall Prisoner_Torture@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>)
 {
   unsigned int result; // eax
   int v7; // ecx
@@ -64195,11 +64195,11 @@ unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx
     case 0u:
     case 5u:
       log(v7, a4, a5, (int)aPrisoner_tor_0);
-      v10 = (unsigned __int8 *)sub_44ECF0(*(unsigned __int8 *)(v8 + 6 * a2 + 446), *(unsigned __int8 *)(v8 + 2));
+      v10 = (unsigned __int8 *)Prisoner_FindRichestHiddenEnemyCastle(*(unsigned __int8 *)(v8 + 6 * a2 + 446), *(unsigned __int8 *)(v8 + 2));
       if ( !v10 )
-        return sub_44EFA0(v9, a2, v9, (char)v10, a5);
+        return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
-      sub_44EEE0(*v10, v10[1], *(unsigned __int8 *)(v11 + 2));
+      Map_RevealTilesInRadius2ForPlayer(*v10, v10[1], *(unsigned __int8 *)(v11 + 2));
       v27[0] = (int)off_518D20[0];
       v27[1] = (int)off_518D20[1];
       v27[2] = (int)off_518D20[2];
@@ -64210,11 +64210,11 @@ unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx
     case 1u:
     case 6u:
       log(v7, a4, a5, (int)aPrisoner_tor_1);
-      v10 = (unsigned __int8 *)sub_44EDB0(*(unsigned __int8 *)(v16 + 6 * a2 + 446), *(unsigned __int8 *)(v16 + 2));
+      v10 = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyCastle(*(unsigned __int8 *)(v16 + 6 * a2 + 446), *(unsigned __int8 *)(v16 + 2));
       if ( !v10 )
-        return sub_44EFA0(v9, a2, v9, (char)v10, a5);
+        return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
-      sub_44EEE0(*v10, v10[1], *(unsigned __int8 *)(v17 + 2));
+      Map_RevealTilesInRadius2ForPlayer(*v10, v10[1], *(unsigned __int8 *)(v17 + 2));
       v25[0] = (int)off_518D2C[0];
       v25[1] = (int)off_518D2C[1];
       v25[2] = (int)off_518D2C[2];
@@ -64225,11 +64225,11 @@ unsigned int __usercall sub_44EFA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx
     case 2u:
     case 7u:
       log(v7, a4, a5, (int)aPrisoner_tor_2);
-      v10 = (unsigned __int8 *)sub_44EE20(*(unsigned __int8 *)(v19 + 6 * a2 + 446), *(unsigned __int8 *)(v19 + 2));
+      v10 = (unsigned __int8 *)Prisoner_FindAnyHiddenEnemyUnitStack(*(unsigned __int8 *)(v19 + 6 * a2 + 446), *(unsigned __int8 *)(v19 + 2));
       if ( !v10 )
-        return sub_44EFA0(v9, a2, v9, (char)v10, a5);
+        return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
-      sub_44EEE0(*(__int16 *)v10, *((__int16 *)v10 + 1), *(unsigned __int8 *)(v20 + 2));
+      Map_RevealTilesInRadius2ForPlayer(*(__int16 *)v10, *((__int16 *)v10 + 1), *(unsigned __int8 *)(v20 + 2));
       v29[0] = (int)off_518D38[0];
       v29[1] = (int)off_518D38[1];
       v29[2] = (int)off_518D38[2];
@@ -64316,7 +64316,7 @@ int __usercall Building_CreatePrisonerUnit@<eax>(DWORD a1@<eax>, int a2@<edx>, i
 // 44F229: variable 'v9' is possibly undefined
 
 //----- (0044F260) --------------------------------------------------------
-unsigned int __usercall sub_44F260@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>)
+unsigned int __usercall Prisoner_Pay@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>)
 {
   DWORD v5; // ecx
   unsigned int result; // eax
@@ -64389,7 +64389,7 @@ char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>
         ++v8[447];
         if ( !*(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140051) && v8[447] == 9 )
           v8[448] = 3;
-        sub_44E880(v13);
+        BuildingPrisoner_RecalculateRansomValue(v13);
         if ( v8[447] == 10 )
         {
           v8[445] = -1;
@@ -64410,11 +64410,11 @@ char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>
           {
             if ( (unsigned __int8)v6 <= 2u )
             {
-              LOBYTE(v6) = sub_44EFA0(a1, v7, (int)v8, v7, a1);
+              LOBYTE(v6) = Prisoner_Torture(a1, v7, (int)v8, v7, a1);
             }
             else if ( (_BYTE)v6 == 3 )
             {
-              LOBYTE(v6) = sub_44F260(a1, v7, a1, a4);
+              LOBYTE(v6) = Prisoner_Pay(a1, v7, a1, a4);
             }
           }
           else if ( (_BYTE)v6 == 1 )
@@ -64754,7 +64754,7 @@ int __usercall sub_44FE70@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>)
   v4 = dword_518DC8;
   for ( j = 0; j < 3; ++j )
   {
-    v6 = BuildingPrisoner_GetOrder(dword_5443FC, j);
+    v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
     if ( v6 >= 2 )
     {
       if ( v6 <= 2 )
@@ -65044,7 +65044,7 @@ LABEL_48:
     v52 = 0;
   }
 LABEL_49:
-  BuildingPrisoner_SetOrder(v53, v52, v36);
+  BuildingPrisoner_SetAction(v53, v52, v36);
   if ( dword_518E6F == 2 )
   {
     v54 = 1;
@@ -65065,7 +65065,7 @@ LABEL_49:
     v55 = dword_5443FC;
     v54 = 0;
   }
-  BuildingPrisoner_SetOrder(v55, v54, v36);
+  BuildingPrisoner_SetAction(v55, v54, v36);
   if ( dword_518F0E == 2 )
   {
     v56 = 1;
@@ -65086,7 +65086,7 @@ LABEL_49:
     v57 = dword_5443FC;
     v56 = 0;
   }
-  BuildingPrisoner_SetOrder(v57, v56, dword_518F0E);
+  BuildingPrisoner_SetAction(v57, v56, dword_518F0E);
   sub_405920(&dword_5443F0);
   j__nfree_();
   Render_Pump();
@@ -67856,7 +67856,7 @@ int __usercall sub_4554F0@<eax>(int a1@<eax>)
 //----- (00455510) --------------------------------------------------------
 int __usercall sub_455510@<eax>(int a1@<eax>)
 {
-  return sub_43F240(UNIT_RECORD(a1));
+  return Building_GetTotalValue(UNIT_RECORD(a1));
 }
 // 5202E4: using guessed type int gameData;
 
