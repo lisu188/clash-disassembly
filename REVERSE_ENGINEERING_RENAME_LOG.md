@@ -18,3 +18,9 @@
 
 ## Deferred / Ambiguous
 - *(none)*
+
+## Batch 9 – Army Fact Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
+|---|---|---|---|---|---|
+| sub_40F6E0 | UnitStack_LinkArmyFact | Function | Unit Lifecycle | High | Wrapper invoked after stack creation and whenever an existing stack tile is re-linked; it passes the stack pointer and tile occupant id into the rules engine (`Rules_CreateArmyFact`) to register the squad in the fact database. |
+| sub_4521D0 | Rules_CreateArmyFact | Function | Rules/Meta | High | Builds the "ODDZIAL" fact string, calls `Rules_AssertFact`, stores the returned handle at stack+721, and then calls `Rules_LinkArmyFact`; behavior matches an army-fact creation helper rather than an anonymous subroutine. |

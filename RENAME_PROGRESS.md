@@ -166,3 +166,9 @@
 | 39 | 39 | Function | clash95.c | sub_40FA20 | UnitStack_ClearReadyFlags | Medium | Iterates every occupied slot and clears bit0 of the flag byte, which resets the per-turn “ready” state for the entire stack. |
 | 40 | 40 | Function | clash95.c | sub_40FA50 | UnitStack_SetReadyFlags | Medium | Complement to the above that sets bit0 for each slot once the UI or turn logic re-enables the stack. |
 | 41 | 41 | Recovered Struct | clash95.c | gameData + 147174 + 725 * index | UNIT_STACK(index) / UnitStackRecord | High | Introduced macros for the stack table stride plus field helpers (row, column, owner, facing, slot array, path buffer) to replace magic offsets and expose the recovered UnitStack record layout. |
+
+## Batch 14 – Army Fact Wave
+| # | Cumulative | Kind | File | Old Name | New Name | Confidence | Rationale |
+|---|------------|------|------|----------|----------|------------|-----------|
+| 42 | 42 | Function | clash95.c | sub_40F6E0 | UnitStack_LinkArmyFact | High | Called immediately after spawning or moving stacks so their tile occupancy is synchronized with the rules/AI fact system via `Rules_CreateArmyFact`. |
+| 43 | 43 | Function | clash95.c | sub_4521D0 | Rules_CreateArmyFact | High | Formats the "ODDZIAL" fact string, asserts it in the rules database, caches the returned handle at offset +721 within the stack, and then chains into `Rules_LinkArmyFact`, so the new name reflects that behavior. |
