@@ -128,12 +128,51 @@
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
       { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
-      { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." }
+      { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." },
+      { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." }
     ],
     "evidence": [
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
-      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state."
+      "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "Prisoner_SetInCastles, BuildingPrisoner_SetOrder, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
+    ]
+  },
+  {
+    "name": "PlayerPrisonerTransferQueue",
+    "kind": "player_subrecord_array",
+    "base_offset": 141381,
+    "stride": 6,
+    "count": 10,
+    "description": "Per-player queue of newly captured prisoner units waiting to be assigned to a castle prison.",
+    "fields": [
+      { "offset": 0, "name": "prisoner_type_id", "type": "int8", "notes": "Type `33` or `34` copied from the captured special unit entry." },
+      { "offset": 1, "name": "variant_or_payload_byte", "type": "uint8", "notes": "Auxiliary prisoner metadata copied from the captured slot; exact gameplay meaning remains unresolved." },
+      { "offset": 2, "name": "capture_tile_row", "type": "uint16", "notes": "Capture-site row later used to choose the nearest eligible castle in `Prisoner_SetInCastles`." },
+      { "offset": 4, "name": "capture_tile_column", "type": "uint16", "notes": "Capture-site column paired with `capture_tile_row` for nearest-castle placement." }
+    ],
+    "evidence": [
+      "`Prisoner_QueueCapturedUnit` appends 6-byte entries at `PLAYER_DATA(player) + 141381`, storing the captured type id plus one byte and two words copied from the special unit slot.",
+      "`Prisoner_SetInCastles` scans exactly 10 of these entries, compares the stored row/column against castle coordinates, and clears the queue entry once the prisoner is moved into a building prison slot."
+    ]
+  },
+  {
+    "name": "BuildingPrisonerSlot",
+    "kind": "building_subrecord",
+    "base_offset": 445,
+    "stride": 6,
+    "count": 3,
+    "description": "Six-byte prisoner cell embedded inside a building record.",
+    "fields": [
+      { "offset": 0, "name": "prisoner_type_id", "type": "int8", "notes": "Special prisoner unit type; `-1` marks an empty prison cell." },
+      { "offset": 1, "name": "variant_or_payload_byte", "type": "uint8", "notes": "Auxiliary prisoner metadata copied from the player transfer queue; exact meaning remains ambiguous." },
+      { "offset": 2, "name": "turns_held", "type": "uint8", "notes": "Incremented every prisoner turn and used to auto-trigger late actions." },
+      { "offset": 3, "name": "pending_order", "type": "uint8", "notes": "0 = none, 1 = behead, 2 = torture, 3 = pay/ransom path." },
+      { "offset": 4, "name": "ransom_value", "type": "uint16", "notes": "Price/value field recalculated by `sub_44E880` and consumed by `Prisoner_Pay`." }
+    ],
+    "evidence": [
+      "`Building_FindFreePrisonerSlot` scans three 6-byte cells beginning at `building + 445` and treats byte 0 == -1 as empty.",
+      "`BuildingPrisoner_SetOrder` and `BuildingPrisoner_GetOrder` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
     ]
   }
 ]

@@ -3,7 +3,7 @@
 ## 1. Overview
 - **Analyzed artifacts:** `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`.
 - **Primary reconstruction path:** the 88-byte `unit_stats` record family at `off_512568` / `unit_stats` in the data segment. `clash95.asm` exposes per-record xrefs to both the localized-name pointers and sprite-folder pointers, while `clash95.exe` confirms the folder stems as raw strings.
-- **Reliability rule used here:** names and ids are only promoted when at least two independent signals align. Folder order alone was treated as insufficient after the asm pass exposed duplicated localized-name pointers for the final commander records.
+- **Reliability rule used here:** names and ids are only promoted when at least two independent signals align. Folder order alone was treated as insufficient after the asm pass exposed duplicated localized-name pointers for the final special prisoner records.
 
 ## 2. Recovered Unit Roster
 
@@ -41,10 +41,10 @@
 | `28` | `UnitType28_Winger` | `skrz` | high | `off_512528` (`Skrzydlak / Winger`) resolves to `skrz`. |
 | `29` | `UnitType29_Fly` | `wazka` | high | `off_512534` (`Ważka / Fly / Riesenlibelle`) resolves to `wazka`. |
 | `30` | `UnitType30_Dragon` | `smok` | high | `off_512480` (`Smok / Dragon / Drachen`) resolves to `smok`. |
-| `31` | `UnitType31_Gold` | `gold` | high | `off_512540` (`Złoto / Gold`) resolves to `gold`. |
-| `32` | `UnitType32_Peasants` | `peas` | high | `off_51254C` (`Chłopi / Peasants`) resolves to `peas`. |
-| `33` | `UnitType33_TacticianFootVariant` | `specm` | medium | This record reuses `off_512558` (`Dowódca / Tactician / Soldat`) but carries infantry-like movement assets such as `b_lekkie\\krokb`. |
-| `34` | `UnitType34_TacticianMountedVariant` | `speck` | medium | This record also reuses `off_512558`, but its movement assets switch to cavalry-like stems, suggesting a mounted commander variant. |
+| `31` | `UnitType31_GoldCargo` | `gold` | high | `off_512540` (`Złoto / Gold`) resolves to `gold`, and stack-action helpers treat type `31` as non-combat cargo excluded from the normal-unit predicate. |
+| `32` | `UnitType32_PeasantCargo` | `peas` | high | `off_51254C` (`Chłopi / Peasants`) resolves to `peas`, and capture/building helpers merge and normalize type `32` as transferable peasant cargo rather than an ordinary combat slot. |
+| `33` | `UnitType33_PrisonerOfficerFoot` | `specm` | medium | This record reuses `off_512558` (`Dowódca / Tactician / Soldat`), uses infantry-like movement assets, and is extracted into the prisoner queue on capture before being jailed, tortured, or ransomed. |
+| `34` | `UnitType34_PrisonerOfficerMounted` | `speck` | medium | This record reuses the same localized-name triplet, switches to cavalry-like movement assets, and follows the same prisoner-only capture and castle-prison flow as type `33`. |
 
 ### 2.2 Recovered Categories
 | recovered_name | confidence | kind | evidence summary | where found | related |
@@ -53,6 +53,8 @@
 | `FlyingUnitCategory` | high | category | `g_UnitTypeFlags` bit0 marks airborne units. They render in the post-ground pass, use airborne movement-sound variants, and satisfy `UnitStack_HasOnlyFlyingUnits`. | `clash95.c:27660-27690`, `clash95.c:36171-36190`, `clash95.c:39530-39590`, `clash95.c:44795-44910`, `clash95.c:56958-57358` | `UnitType26_Eagle`, `UnitType27_Pegasus`, `UnitType28_Winger`, `UnitType29_Fly`, `UnitType30_Dragon` |
 | `GroundUnitCategory` | medium | category | Non-airborne units with non-zero melee stats use ordinary terrain/surface-dependent movement sounds and the normal melee path. | `clash95.c:22124-22145`, `clash95.c:39680-39760`, `clash95.c:56958-57358` | standard infantry, cavalry, siege, and utility units |
 | `LightUnitCategory` | high | category | `g_UnitTypeFlags` bit1 selects the 6-point veterancy seed instead of the default 10-point seed. | `clash95.c:22133-22144`, `clash95.c:32950-32970` | `veterancy` |
+| `SpecialCargoEntryCategory` | high | category | Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, and are used by gold/peasant-specific UI and economy logic. | `clash95.c:24216-24303`, `clash95.c:30685-30854`, `clash95.c:53970-53975` | `UnitType31_GoldCargo`, `UnitType32_PeasantCargo` |
+| `PrisonerEntryCategory` | high | category | Types `33` and `34` are extracted from stacks on capture, queued in player prison transit storage, then moved into building prison slots for execution, torture, or ransom. | `clash95.c:24393-24472`, `clash95.c:63721-64330`, `clash95.asm:118318`, `clash95.asm:119463` | `UnitType33_PrisonerOfficerFoot`, `UnitType34_PrisonerOfficerMounted` |
 
 ## 3. Recovered Stats
 | recovered_name | confidence | semantic meaning | evidence summary | locations | stat_kind | used_by |
@@ -83,12 +85,17 @@
 | `UnitType13_Ram` | `action_points`, `base_melee_attack` | Standard melee handlers reject type `13`, so its primary interaction path is not the ordinary melee routine despite sharing generic unit-slot state. | high | `clash95.c:39688`, `clash95.c:49195` |
 | `UnitType29_Fly` | `move_sound_stem` | Type `29` is one of the looped non-footstep movers, grouped with siege engines in both world and battle movement audio. | high | `clash95.c:56992`, `clash95.c:57200` |
 | `UnitType30_Dragon` | `unit_type_flags` | Type `30` resolves to `smok` and belongs to the airborne class governed by `g_UnitTypeFlags` bit0. | high | `clash95.asm:409287-409426`, `clash95.c:44795-44910`, `clash95.c:56958-57358` |
+| `UnitType31_GoldCargo` | `morale_percent` | Type `31` lives inside ordinary 31-byte squad slots but is excluded from the normal-combat-unit predicate and can coexist with a stack that otherwise contains no combatants. | high | `clash95.c:24216-24259`, `clash95.c:30685-30854` |
+| `UnitType32_PeasantCargo` | `morale_percent` | Type `32` is compacted and rebuilt by `UnitStack_NormalizePeasantCargo`, proving it acts as stack payload rather than as a standard battle unit. | high | `clash95.c:24306-24390`, `clash95.c:32080-32110` |
+| `UnitType33_PrisonerOfficerFoot` | `localized_name_ptrs` | Type `33` shares the `Dowódca / Tactician / Soldat` localized-name triplet but enters the dedicated prisoner queue and castle prison workflow when captured. | high | `clash95.c:24393-24472`, `clash95.c:63721-64424`, `clash95.asm:385244-385246`, `clash95.asm:409419-409423` |
+| `UnitType34_PrisonerOfficerMounted` | `localized_name_ptrs` | Type `34` is the mounted movement-asset sibling of type `33` and follows the same prisoner-only control flow. | high | `clash95.c:24393-24472`, `clash95.c:64278-64424`, `clash95.asm:412173-412174` |
 | `RangedUnitCategory` | `base_secondary_attack`, `base_damage_scalar`, `attack_range_max`, `attack_range_min` | Projectile units use `byte_51257F`, `byte_512581`, `byte_512582`, and `byte_512583` together. | high | `clash95.c:39803-39820`, `clash95.c:40440-40465` |
 | `FlyingUnitCategory` | `unit_type_flags`, `move_sound_stem` | Airborne units are identified by bit0 and use single-digit airborne movement-sound suffixes instead of terrain-surface suffixes. | high | `clash95.c:57018-57025`, `clash95.c:57273-57282` |
 | `LightUnitCategory` | `veterancy` | Light units seed at `6` rather than `10`. | high | `clash95.c:22135-22144`, `clash95.c:32950-32970` |
 
 ## 5. Ambiguous Findings
-- `UnitType33_TacticianFootVariant` and `UnitType34_TacticianMountedVariant` are still medium-confidence recovered names. The folder stems and movement-sound families diverge, but both records reuse the same localized-name pointer triplet.
+- `UnitType33_PrisonerOfficerFoot` and `UnitType34_PrisonerOfficerMounted` are still only medium-confidence names. The prisoner-only behavior is high-confidence, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages.
+- `UnitType31_GoldCargo` and `UnitType32_PeasantCargo` are behaviorally secure as cargo-style special entries, but the exact original distinction between stack payload and ordinary recruitable peasant units is still partly unresolved from code alone.
 - `byte_51257F` remains only medium-confidence as a pure ranged-attack stat. It behaves like a second attack value, but the code does not yet expose a canonical gameplay label.
 - `byte_512584` still looks like an alternate damage table for buildings or fortifications, but the exact original design label remains unresolved.
-- The decompiler’s `char *(*...)[102]` type on `g_UnitTypeMetadataRecords` is misleading if read literally as “34 unit types x 3 languages.” The asm/xref pass shows at least 35 record slots, with the final two commander records reusing one localized-name pointer triplet.
+- The decompiler’s `char *(*...)[102]` type on `g_UnitTypeMetadataRecords` is misleading if read literally as “34 unit types x 3 languages.” The asm/xref pass shows at least 35 record slots, with the final two special prisoner records reusing one localized-name pointer triplet.
