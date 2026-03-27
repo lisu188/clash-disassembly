@@ -380,10 +380,10 @@ int sub_40DEA0();
 int sub_40ED20();
 // int __usercall sub_40ED30@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall sub_40ED50@<eax>(int a1@<eax>, int a2@<edx>);
-// void __usercall sub_40ED70(int a1@<eax>);
-// signed int __usercall sub_40EDE0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
-// BOOL __usercall sub_40F060@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
-// signed int __usercall sub_40F0C0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
+// void __usercall PlayerExploration_RevealAllTiles(int a1@<eax>);
+// signed int __usercall PlayerExploration_RevealTile@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
+// BOOL __usercall PlayerExploration_IsTileExplored@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
+// signed int __usercall PlayerExploration_GetFogBorderVariant@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 // signed int __usercall UnitStack_IsIndexOnMap@<eax>(int a1@<eax>);
 // int __usercall UnitSlot_InitFromType@<eax>(int result@<eax>, int a2@<edx>, char a3@<bl>);
 // char __usercall UnitStack_ResetRecord@<al>(int a1@<eax>, int a2@<edx>, char a3@<bl>);
@@ -1040,7 +1040,7 @@ signed int Game_InitPlayerViewState();
 // int __usercall BuildingPrisoner_GetAction@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_Kill@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Prisoner_Behead@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
-// BOOL __usercall Building_IsVisibleToPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
+// BOOL __usercall Building_IsExploredByPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_FindRichestHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_FindAnyHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall Prisoner_FindAnyHiddenEnemyUnitStack@<eax>(int a1@<eax>, int a2@<edx>);
@@ -17997,7 +17997,7 @@ void __usercall sub_4084A0(double a1@<st0>)
     && *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == 0xFFFF )
   {
     Map_DestroyTile(v1, v78);
-    if ( !sub_40F060(v1, v78, g_CurrentPlayerIndex) )
+    if ( !PlayerExploration_IsTileExplored(v1, v78, g_CurrentPlayerIndex) )
     {
       v69 = aTerenNieodkryt;
       v70 = aUnexploredTerr;
@@ -18085,7 +18085,7 @@ LABEL_48:
     goto LABEL_48;
   }
 LABEL_12:
-  if ( !sub_40F0C0(v1, v78, g_CurrentPlayerIndex) )
+  if ( !PlayerExploration_GetFogBorderVariant(v1, v78, g_CurrentPlayerIndex) )
   {
 LABEL_35:
     sub_460D80((int)&dword_544CD8, (int)&unk_5196A0);
@@ -19873,7 +19873,7 @@ int __usercall PlayGame@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, char a
   do
   {
     if ( !*(_DWORD *)(v7 + gameData + 140051) )
-      sub_40ED70(v6);
+      PlayerExploration_RevealAllTiles(v6);
     ++v6;
     v7 += 1423;
   }
@@ -21245,7 +21245,7 @@ void *__usercall sub_40D890@<eax>(void *result@<eax>, signed int a2@<edx>)
         if ( v6 >= 0x8000 && v6 != 0xFFFF )
           v10 = byte_511FF8[*(unsigned __int8 *)(gameData + 467 * (v6 - 0x8000) + 509676)];
       }
-      if ( !sub_40F060(v2, a2, *(_DWORD *)(gameData + 147143)) )
+      if ( !PlayerExploration_IsTileExplored(v2, a2, *(_DWORD *)(gameData + 147143)) )
         v10 = 1;
       if ( byte_523F54 == 1 )
       {
@@ -21289,7 +21289,7 @@ signed int __usercall sub_40DB80@<eax>(int a1@<eax>, signed int a2@<edx>)
     v4 = (unsigned __int8)byte_523350[*v3];
   else
     v4 = 207;
-  if ( sub_40F060(a1, a2, g_CurrentPlayerIndex) )
+  if ( PlayerExploration_IsTileExplored(a1, a2, g_CurrentPlayerIndex) )
     return v4;
   else
     return 1;
@@ -22031,7 +22031,7 @@ int __usercall sub_40ED50@<eax>(int a1@<eax>, int a2@<edx>)
 }
 
 //----- (0040ED70) --------------------------------------------------------
-void __usercall sub_40ED70(int a1@<eax>)
+void __usercall PlayerExploration_RevealAllTiles(int a1@<eax>)
 {
   int v1; // ebp
   int v2; // edi
@@ -22057,7 +22057,7 @@ void __usercall sub_40ED70(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (0040EDE0) --------------------------------------------------------
-signed int __usercall sub_40EDE0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
+signed int __usercall PlayerExploration_RevealTile@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
 {
   int v5; // eax
   int v6; // ecx
@@ -22074,32 +22074,32 @@ signed int __usercall sub_40EDE0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3
     || a2 < 0
     || a1 >= *(_DWORD *)(gameData + 140000)
     || a2 >= *(_DWORD *)(gameData + 140004)
-    || sub_40F060(a1, a2, a3) )
+    || PlayerExploration_IsTileExplored(a1, a2, a3) )
   {
     return 0;
   }
   v5 = gameData + 1423 * a3 + 13 * a1 + ((a2 - (__CFSHL__(a2 >> 31, 3) + 8 * (a2 >> 31))) >> 3);
   *(_BYTE *)(v5 + 140081) |= 1 << (a2 & 7);
   sub_40D890((void *)a1, a2);
-  if ( sub_40F060(a1 - 2, a2, a3) && !sub_40F060(a1 - 1, a2, a3) )
-    sub_40EDE0(v6, a2, a3);
-  if ( sub_40F060(a1 + 2, a2, a3) && !sub_40F060(a1 + 1, a2, a3) )
-    sub_40EDE0(v7, a2, a3);
-  if ( sub_40F060(a1, a2 - 2, a3) && !sub_40F060(a1, a2 - 1, a3) )
-    sub_40EDE0(a1, v8, a3);
-  if ( sub_40F060(a1, a2 + 2, a3) && !sub_40F060(a1, a2 + 1, a3) )
-    sub_40EDE0(a1, v9, a3);
-  if ( sub_40F060(a1 - 2, a2 - 2, a3) && !sub_40F060(a1 - 1, a2 - 1, a3) )
-    sub_40EDE0(v10, a2 - 1, a3);
-  if ( sub_40F060(a1 + 2, a2 - 2, a3) && !sub_40F060(a1 + 1, a2 - 1, a3) )
-    sub_40EDE0(v11, a2 - 1, a3);
-  if ( sub_40F060(a1 - 2, a2 + 2, a3) && !sub_40F060(a1 - 1, a2 + 1, a3) )
-    sub_40EDE0(a1 - 1, v12, a3);
-  if ( sub_40F060(a1 + 2, a2 + 2, a3) )
+  if ( PlayerExploration_IsTileExplored(a1 - 2, a2, a3) && !PlayerExploration_IsTileExplored(a1 - 1, a2, a3) )
+    PlayerExploration_RevealTile(v6, a2, a3);
+  if ( PlayerExploration_IsTileExplored(a1 + 2, a2, a3) && !PlayerExploration_IsTileExplored(a1 + 1, a2, a3) )
+    PlayerExploration_RevealTile(v7, a2, a3);
+  if ( PlayerExploration_IsTileExplored(a1, a2 - 2, a3) && !PlayerExploration_IsTileExplored(a1, a2 - 1, a3) )
+    PlayerExploration_RevealTile(a1, v8, a3);
+  if ( PlayerExploration_IsTileExplored(a1, a2 + 2, a3) && !PlayerExploration_IsTileExplored(a1, a2 + 1, a3) )
+    PlayerExploration_RevealTile(a1, v9, a3);
+  if ( PlayerExploration_IsTileExplored(a1 - 2, a2 - 2, a3) && !PlayerExploration_IsTileExplored(a1 - 1, a2 - 1, a3) )
+    PlayerExploration_RevealTile(v10, a2 - 1, a3);
+  if ( PlayerExploration_IsTileExplored(a1 + 2, a2 - 2, a3) && !PlayerExploration_IsTileExplored(a1 + 1, a2 - 1, a3) )
+    PlayerExploration_RevealTile(v11, a2 - 1, a3);
+  if ( PlayerExploration_IsTileExplored(a1 - 2, a2 + 2, a3) && !PlayerExploration_IsTileExplored(a1 - 1, a2 + 1, a3) )
+    PlayerExploration_RevealTile(a1 - 1, v12, a3);
+  if ( PlayerExploration_IsTileExplored(a1 + 2, a2 + 2, a3) )
   {
     v13 = a1 + 1;
-    if ( !sub_40F060(v13, a2 + 1, a3) )
-      sub_40EDE0(v13, v14, a3);
+    if ( !PlayerExploration_IsTileExplored(v13, a2 + 1, a3) )
+      PlayerExploration_RevealTile(v13, v14, a3);
   }
   return 1;
 }
@@ -22114,7 +22114,7 @@ signed int __usercall sub_40EDE0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F060) --------------------------------------------------------
-BOOL __usercall sub_40F060@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
+BOOL __usercall PlayerExploration_IsTileExplored@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
 {
   return a1 >= 0
       && a2 >= 0
@@ -22129,7 +22129,7 @@ BOOL __usercall sub_40F060@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F0C0) --------------------------------------------------------
-signed int __usercall sub_40F0C0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
+signed int __usercall PlayerExploration_GetFogBorderVariant@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>)
 {
   signed int v6; // ebp
   bool v7; // al
@@ -22137,17 +22137,17 @@ signed int __usercall sub_40F0C0@<eax>(int a1@<eax>, signed int a2@<edx>, int a3
   char v9; // si
   char v10; // cl
 
-  if ( sub_40F060(a1, a2, a3) )
+  if ( PlayerExploration_IsTileExplored(a1, a2, a3) )
     return -1;
-  sub_40F060(a1 - 1, a2 - 1, a3);
-  sub_40F060(a1, a2 - 1, a3);
-  sub_40F060(a1 + 1, a2 - 1, a3);
-  sub_40F060(a1 - 1, a2, a3);
-  sub_40F060(a1 + 1, a2, a3);
+  PlayerExploration_IsTileExplored(a1 - 1, a2 - 1, a3);
+  PlayerExploration_IsTileExplored(a1, a2 - 1, a3);
+  PlayerExploration_IsTileExplored(a1 + 1, a2 - 1, a3);
+  PlayerExploration_IsTileExplored(a1 - 1, a2, a3);
+  PlayerExploration_IsTileExplored(a1 + 1, a2, a3);
   v6 = a2 + 1;
-  sub_40F060(a1 - 1, v6, a3);
-  sub_40F060(a1, v6, a3);
-  v7 = sub_40F060(a1 + 1, v6, a3);
+  PlayerExploration_IsTileExplored(a1 - 1, v6, a3);
+  PlayerExploration_IsTileExplored(a1, v6, a3);
+  v7 = PlayerExploration_IsTileExplored(a1 + 1, v6, a3);
   v9 = v7 | v8 & 0xFE;
   if ( !v9 )
     return 0;
@@ -22477,7 +22477,7 @@ signed int __usercall __spoils<> UnitStack_UpdateVision@<eax>(int stackIndex@<ea
     {
       int distance = (column - originColumn) * (column - originColumn)
                    + (row - originRow) * (row - originRow);
-      if ( sub_415E40(distance) <= radius && sub_40EDE0(row, column, g_CurrentPlayerIndex) )
+      if ( sub_415E40(distance) <= radius && PlayerExploration_RevealTile(row, column, g_CurrentPlayerIndex) )
         updated = 1;
     }
   }
@@ -22895,7 +22895,7 @@ signed int __usercall sub_410260@<eax>(__int16 *a1@<eax>, int a2@<ecx>)
   int v10; // [esp+1A0h] [ebp-8h]
 
   v10 = a2;
-  if ( sub_40F0C0(*a1, a1[1], *(_DWORD *)(gameData + 147143)) )
+  if ( PlayerExploration_GetFogBorderVariant(*a1, a1[1], *(_DWORD *)(gameData + 147143)) )
     return 1;
   v6 = sub_410010(v3);
   _wcpp_4_copy_array__(*(_DWORD *)(v5 + 316));
@@ -22909,7 +22909,7 @@ signed int __usercall sub_410260@<eax>(__int16 *a1@<eax>, int a2@<ecx>)
     }
     return 0;
   }
-  while ( !sub_40F0C0((unsigned __int8)v9, BYTE1(v9), *(_DWORD *)(gameData + 147143)) );
+  while ( !PlayerExploration_GetFogBorderVariant((unsigned __int8)v9, BYTE1(v9), *(_DWORD *)(gameData + 147143)) );
   return 1;
 }
 // 41029F: variable 'v3' is possibly undefined
@@ -23126,7 +23126,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
             || (v30 = *(_DWORD *)(gameData + 140012), BYTE1(v105) < v30)
             || BYTE1(v105) >= v30 + 7 )
           {
-            if ( sub_40F0C0((unsigned __int8)v105, BYTE1(v105), *(_DWORD *)(gameData + 147143)) )
+            if ( PlayerExploration_GetFogBorderVariant((unsigned __int8)v105, BYTE1(v105), *(_DWORD *)(gameData + 147143)) )
               sub_40FAD0(v107);
           }
         }
@@ -23184,7 +23184,7 @@ void __usercall sub_410330(unsigned int a1@<eax>, int a2@<edx>, char a3@<bl>, DW
           if ( v101 )
           {
             v61 = BYTE1(v105);
-            if ( sub_40F0C0((unsigned __int8)v105, BYTE1(v105), *(_DWORD *)(gameData + 147143)) )
+            if ( PlayerExploration_GetFogBorderVariant((unsigned __int8)v105, BYTE1(v105), *(_DWORD *)(gameData + 147143)) )
             {
               v63 = *(__int16 *)(v91 + gameData + 147174);
               v64 = (v62 - v63) << 6;
@@ -28161,7 +28161,7 @@ int __usercall sub_416850@<eax>(unsigned __int16 a1@<ax>, unsigned __int16 a2@<d
   v98 = a1;
   if ( sub_40D800(a1, a2 + 63) )
     goto LABEL_2;
-  v94 = sub_40F0C0(v3, v4, *(_DWORD *)(gameData + 147143));
+  v94 = PlayerExploration_GetFogBorderVariant(v3, v4, *(_DWORD *)(gameData + 147143));
   if ( !v94 )
   {
     (*(void (__fastcall **)(int, int, int, int))(*((_DWORD *)g_RenderDevice + 46) + 28))(v96, v98, v95, 1);
@@ -32325,7 +32325,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
           do
           {
             if ( sub_415E40(v63 * v63 + v37 * v37) <= 4 )
-              sub_40EDE0(v35, v38, g_CurrentPlayerIndex);
+              PlayerExploration_RevealTile(v35, v38, g_CurrentPlayerIndex);
             ++v37;
           }
           while ( v38 + 1 < v36 );
@@ -32776,7 +32776,7 @@ char __usercall sub_41E1E0@<al>(unsigned __int8 *a1@<eax>, int a2@<ecx>, char a3
         for ( i = v20 - v18; v8 < v22; ++i )
         {
           if ( sub_415E40(v21 * v21 + i * i) <= 15 )
-            sub_40EDE0(v12, v14, a1[2]);
+            PlayerExploration_RevealTile(v12, v14, a1[2]);
           v8 = v14 + 1;
         }
         ++v12;
@@ -64077,20 +64077,20 @@ int __usercall Prisoner_Behead@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, D
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EC80) --------------------------------------------------------
-BOOL __usercall Building_IsVisibleToPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>)
+BOOL __usercall Building_IsExploredByPlayer@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>)
 {
   unsigned __int8 *v3; // ecx
   BOOL result; // eax
   unsigned __int8 *v5; // ecx
   unsigned __int8 *v6; // ecx
 
-  if ( sub_40F060(*a1, a1[1], a2) )
+  if ( PlayerExploration_IsTileExplored(*a1, a1[1], a2) )
     return 1;
-  if ( sub_40F060(*v3 + 1, v3[1], a2) )
+  if ( PlayerExploration_IsTileExplored(*v3 + 1, v3[1], a2) )
     return 1;
-  if ( sub_40F060(*v5 + 1, v5[1] + 1, a2) )
+  if ( PlayerExploration_IsTileExplored(*v5 + 1, v5[1] + 1, a2) )
     return 1;
-  result = sub_40F060(*v6, v6[1] + 1, a2);
+  result = PlayerExploration_IsTileExplored(*v6, v6[1] + 1, a2);
   if ( result )
     return 1;
   return result;
@@ -64116,7 +64116,7 @@ int __usercall Prisoner_FindRichestHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@
   {
     if ( *(_BYTE *)(v5 + gameData + 509678) == 2
       && *(unsigned __int8 *)(v5 + gameData + 509676) == a1
-      && !Building_IsVisibleToPlayer((unsigned __int8 *)(v5 + gameData + 509674), a2) )
+      && !Building_IsExploredByPlayer((unsigned __int8 *)(v5 + gameData + 509674), a2) )
     {
       v7 = Building_GetTotalValue(v5 + gameData + 509674);
       if ( v7 > v3 )
@@ -64145,7 +64145,7 @@ int __usercall Prisoner_FindAnyHiddenEnemyCastle@<eax>(int a1@<eax>, int a2@<edx
   v4 = 0;
   while ( *(_BYTE *)(gameData + v4 + 509678) != 2
        || *(unsigned __int8 *)(gameData + v4 + 509676) != a1
-       || Building_IsVisibleToPlayer((unsigned __int8 *)(v4 + gameData + 509674), a2) )
+       || Building_IsExploredByPlayer((unsigned __int8 *)(v4 + gameData + 509674), a2) )
   {
     v4 += 467;
     if ( v4 >= 46700 )
@@ -64170,7 +64170,7 @@ LABEL_2:
     v5 = 725 * v4;
     v6 = gameData + 725 * v4;
     if ( *(unsigned __int8 *)(v6 + 147178) == a1
-      && !sub_40F060(*(__int16 *)(v6 + 147174), *(__int16 *)(v6 + 147176), a2) )
+      && !PlayerExploration_IsTileExplored(*(__int16 *)(v6 + 147174), *(__int16 *)(v6 + 147176), a2) )
     {
       return gameData + 147174 + v5;
     }
@@ -64210,7 +64210,7 @@ void __usercall Map_RevealTilesInRadius2ForPlayer(int a1@<eax>, int a2@<edx>, in
       do
       {
         if ( sub_415E40(i * i + v4 * v4) <= 2 )
-          sub_40EDE0(v3, v5, a3);
+          PlayerExploration_RevealTile(v3, v5, a3);
         ++v4;
       }
       while ( v5 + 1 < v10 );
@@ -65925,7 +65925,7 @@ int __usercall sub_451340@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 //----- (00451690) --------------------------------------------------------
 int sub_451690()
 {
-  sub_40ED70(g_CurrentPlayerIndex);
+  PlayerExploration_RevealAllTiles(g_CurrentPlayerIndex);
   return sub_418700(1);
 }
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -70234,7 +70234,7 @@ LABEL_27:
           v15 = gameData + 725 * v13;
           if ( *(_BYTE *)(v15 + 147178) )
           {
-            if ( sub_40F060(*(__int16 *)(v15 + 147174), *(__int16 *)(v15 + 147176), 0) )
+            if ( PlayerExploration_IsTileExplored(*(__int16 *)(v15 + 147174), *(__int16 *)(v15 + 147176), 0) )
             {
               sub_40FAD0(v13);
               sub_442680(0);
@@ -70332,7 +70332,7 @@ LABEL_105:
         v28 = gameData + 725 * v26;
         if ( *(_BYTE *)(v28 + 147178) != 1 )
         {
-          if ( sub_40F060(*(__int16 *)(v28 + 147174), *(__int16 *)(v28 + 147176), 1) )
+          if ( PlayerExploration_IsTileExplored(*(__int16 *)(v28 + 147174), *(__int16 *)(v28 + 147176), 1) )
           {
             sub_40FAD0(v26);
             sub_442680(0);

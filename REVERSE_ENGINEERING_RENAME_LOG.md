@@ -10,7 +10,7 @@
 | sub_40F800 | UnitStack_RemoveFromTile | Function | Unit Lifecycle | High | Validates row/column bounds, retracts army intel, zeros the tile entry, and updates fog-of-war, which is exactly the logic to remove a stack from its occupied tile. |
 | sub_40F890 | UnitStack_UnlinkIfEmpty | Function | Unit Lifecycle | High | Checks whether the first slot’s unit type is -1 and, if so, calls `Rules_UnlinkArmyFact`; it only unlinks empty stacks. |
 | sub_40F8B0 | UnitStack_GetVisionRadius | Function | Unit Lifecycle | Medium | Iterates every occupied slot, reads `byte_5125AE` for each unit type, and tracks the max value, yielding the stack’s vision range. |
-| sub_40F900 | UnitStack_UpdateVision | Function | Unit Lifecycle | High | Uses the owning player id, stack tile, and `UnitStack_GetVisionRadius` to stamp fog-of-war via `sub_40EDE0`, so the rename reflects its vision-update role. |
+| sub_40F900 | UnitStack_UpdateVision | Function | Unit Lifecycle | High | Uses the owning player id, stack tile, and `UnitStack_GetVisionRadius` to stamp fog-of-war via `PlayerExploration_RevealTile`, so the rename reflects its vision-update role. |
 | sub_40F9F0 | UnitStack_HasReadyUnits | Function | Unit Lifecycle | Medium | Scans up to 10 slots looking for bit0 set in the slot flag byte, returning 1 only if at least one squad member is marked ready — a readiness probe used in `Unit_NewTurn`. |
 | sub_40FA20 | UnitStack_ClearReadyFlags | Function | Unit Lifecycle | Medium | Iterates every occupied slot and clears bit0 of the flag byte, which resets the per-turn “ready” state for the entire stack. |
 | sub_40FA50 | UnitStack_SetReadyFlags | Function | Unit Lifecycle | Medium | Complement to the above that sets bit0 for each slot once the UI or turn logic re-enables the stack. |
@@ -350,8 +350,19 @@
 | sub_441A00 | Audio_SetMusicDisabled | Function | Audio / Options | Medium | Pure setter that flips the shared music-enabled flag off without stopping an already-playing loop; used by options/menu code as a state latch. | c |
 | WorldViewState + 16 | world_theme_index | Recovered Struct Field | gameData / World View | High | One packed byte fans out into strategic-map music selection, `buildin1/2/3.s32` atlas choice, and three tile-transition/ambient visual families; debug/test setup writes values `0`, `1`, and `2` directly. | c, asm, exe |
 
+## Batch 35 – Player Exploration Struct Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources |
+|---|---|---|---|---|---|---|
+| sub_40ED70 | PlayerExploration_RevealAllTiles | Function | Map / Exploration | High | Iterates 100 rows by 100 columns and OR-sets every bit in the player's 13-byte-per-row exploration slice, matching a full-map reveal helper. | c, asm |
+| sub_40EDE0 | PlayerExploration_RevealTile | Function | Map / Exploration | High | Reveals one previously unexplored tile in the player's packed bitmap, repaints it immediately, and recursively fills one-tile gaps toward already explored neighbors so newly revealed circles stay connected. | c, asm |
+| sub_40F060 | PlayerExploration_IsTileExplored | Function | Map / Exploration | High | Bounds-checks row/column, then tests one bit from the player's 13-byte-per-row bitmap at `PlayerRuntimeState + 57`; many gameplay paths use it as the canonical explored-vs-unexplored predicate. | c, asm |
+| sub_40F0C0 | PlayerExploration_GetFogBorderVariant | Function | Map / Exploration | High | Returns `-1` for already explored tiles, `0` for fully hidden tiles, and otherwise computes a 1..14 fog-border shape index from the eight neighboring exploration bits. | c |
+| Building_IsVisibleToPlayer | Building_IsExploredByPlayer | Function | Buildings / Exploration | High | The helper only checks whether any building-footprint tile is marked explored in the player's bitmap; prisoner search code uses it to distinguish hidden versus discovered castles. | c |
+| PlayerRuntimeState + 57 | explored_tile_bits[100][13] | Recovered Struct Field | gameData / Player Runtime / Exploration | High | A stable 1300-byte slice inside each 1423-byte player record is accessed as `13 * row + (column >> 3)`, revealing and testing one bit per map tile across a fixed 100x100 grid. | c, asm |
+
 ## Deferred / Ambiguous
 - `PlayerRuntimeState.has_human_controller` at `+27` is secure as a human/computer flag in campaign/skirmish runtime code, but multiplayer setup may still use more than a pure boolean there; the exact enum extension for values above `1` needs a focused pass.
+- `PlayerRuntimeState` offset `+23` gates the minimap/fog overlay interactions and is clearly a map-overlay mode enable byte, but the exact original label for that toggle is still not secure enough to promote.
 - `PlayerQueenState.queen_favor_level` is secure as a persistent queen approval/favor ladder, but the original designer-facing label behind the localized state texts may have been framed as mood, affection, loyalty, or prestige rather than literal “favor”.
 - `WorldViewState.world_theme_index` is now secure as a packed strategic/world theme selector, but the exact designer-facing enum labels for concrete values `0`, `1`, and `2` remain unresolved.
 - `Building_BuyAddon` and `Building_HasAddonInGarrison` still need a focused pass. The production/licence subrecord at `+402/+414/+415` is now clear, but the remaining “addon” names may still mix genuine building add-ons with licence-specific flows.

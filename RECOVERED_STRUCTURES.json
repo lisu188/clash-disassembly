@@ -126,6 +126,7 @@
       { "offset": 48, "name": "last_shown_technology_level", "type": "uint8", "notes": "UI latch copied from `technology_level` after `UI_ShowTechnologyLevelUpIfChanged` displays the one-shot technology-advance popup." },
       { "offset": 49, "name": "had_battle_this_turn", "type": "int32", "notes": "Set by field, siege, and castle battle-resolution paths, then cleared at end-of-turn after the god-anger check. This is a coarse per-turn combat-activity flag for the player." },
       { "offset": 53, "name": "turns_without_battle", "type": "int32", "notes": "Incremented each turn when `had_battle_this_turn` stays clear, reset to zero after any battle, and compared against the god-anger threshold." },
+      { "offset": 57, "name": "explored_tile_bits[100][13]", "type": "uint8[100][13]", "notes": "Packed per-player exploration bitmap for the 100x100 strategic map. Each row stores 13 bytes, with bit `(column & 7)` inside byte `column >> 3`; bits are only OR-set during exploration helpers and reset when the whole player record is reinitialized." },
       { "offset": 1417, "name": "battle_record_score", "type": "int16", "notes": "Battle win/loss tally plotted in the player statistics screen. Army and castle battle outcomes increment the winner and decrement the loser through this word." },
       { "offset": 1419, "name": "queen_state", "type": "PlayerQueenState", "notes": "Four-byte per-player queen-relation tail storing the current favor level, active whim/request type, and the next turn when the queen review logic should run again." }
     ],
@@ -136,6 +137,7 @@
       "Building creation and capture code stores the first owned type-2 castle into `+43` when empty and clears the same field when that castle is lost, corroborating a remembered primary-castle index.",
       "Battle resolution paths at clash95.c:30841-31253 increment the winner's `+1417` word and decrement the loser's, while the statistics screen later plots that same word as its third per-player bar metric, supporting the descriptive `battle_record_score` name.",
       "The end-of-turn flow at clash95.c:44286-44293 resets dword `+53` when dword `+49` was set during combat, otherwise increments `+53` and triggers `GodAnger` after two battle-free turns, showing a stable combat-activity pair inside the player record.",
+      "`PlayerExploration_RevealAllTiles`, `PlayerExploration_RevealTile`, and `PlayerExploration_IsTileExplored` all index a stable 1300-byte slice starting at `+57` as `13 * row + (column >> 3)`, proving a packed 100x100 exploration bitmap inside each player record.",
       "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as a stable per-player queen favor/request subrecord.",
       "`Player_UpdateTechnologyLevelFromSettlements` updates byte `+47`, and `UI_ShowTechnologyLevelUpIfChanged` compares that byte against `+48` before latching the new level."
     ]
