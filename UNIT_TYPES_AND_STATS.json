@@ -277,7 +277,7 @@
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit`. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
@@ -317,7 +317,7 @@
     {
       "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, while `Queen_NewTurn` also creates the same ids directly inside building garrisons."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, while `Queen_NewTurn` also creates the same ids directly inside building garrisons. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
     }
   ],
   "stats": [
