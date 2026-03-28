@@ -177,6 +177,26 @@
     ]
   },
   {
+    "name": "PortRuntimeState",
+    "kind": "game_state_region",
+    "base_offset": 586374,
+    "size": 24,
+    "description": "Six-dword world-session region inside gameData tracking the unique port's location and reinforcement schedule.",
+    "fields": [
+      { "offset": 0, "name": "port_tile_row", "type": "int32", "notes": "`-1` marks no port on the loaded map; otherwise this is the top-left row of the 2x2 port footprint." },
+      { "offset": 4, "name": "port_tile_column", "type": "int32", "notes": "Top-left column of the active port footprint." },
+      { "offset": 8, "name": "next_supply_turn", "type": "int32", "notes": "Absolute game-turn number when the next supply ship should arrive." },
+      { "offset": 12, "name": "supply_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
+      { "offset": 16, "name": "pending_supply_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the supply shipment." },
+      { "offset": 20, "name": "needs_shore_refresh", "type": "int32", "notes": "Controls whether `Port_BuildShorePieces` renders the arrival-state shoreline tiles or the empty-state shoreline tiles." }
+    ],
+    "evidence": [
+      "`Port_FindAndInit` seeds all six dwords together after scanning the map for the unique port tile and then immediately calls `Port_BuildShorePieces` and `Rules_LogPortLocation`.",
+      "`Port_NewTurn`, `Port_BuildShorePieces`, and `Port_GetSupply` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
+      "The top-of-file offset macros in `clash95.c` and the matching xrefs in `clash95.asm` agree on the exact offsets `586374..586394` inside `gameData`."
+    ]
+  },
+  {
     "name": "PlayerPrisonerTransferQueue",
     "kind": "player_subrecord_array",
     "base_offset": 141381,
