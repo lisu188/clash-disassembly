@@ -155,15 +155,15 @@
       { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
-      { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
-      { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
+      { "offset": 1420, "name": "queen_portrait_index", "type": "uint8", "notes": "Portrait/sprite variant index chosen during the marriage-proposal path and reused by the proposal, whim, message, and relationship panels." },
+      { "offset": 1421, "name": "queen_next_relationship_check_turn", "type": "uint16", "notes": "Absolute turn threshold checked before the queen reviews this player's kingdom again." }
     ],
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
       "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
       "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while `Queen_NewTurn` and `Queen_DrawRelationshipPanel` use the final bytes at `+1419..+1421` as stable per-player queen-state, whim, and review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields."
     ]
   },
   {
@@ -208,6 +208,7 @@
       { "offset": 430, "name": "peasant_count", "type": "uint16(low 12 bits)", "notes": "Returned by the `IloscChlopow` rules host wrapper and updated by `Building_UpdatePopulationGrowth`; the high nibble stores unrelated packed state bits." },
       { "offset": 434, "name": "satisfaction", "type": "int8", "notes": "Returned by the `Zadowolenie` rules host wrapper and clamped between `0` and `100` during population-growth updates." },
       { "offset": 435, "name": "plague_state", "type": "uint8", "notes": "Low three bits store the active plague countdown/state. Building plague blocks gold collection, decays each turn in `Building_UpdatePlagueState`, and is seeded when a plagued stack enters a clean building." },
+      { "offset": 436, "name": "tax_rate", "type": "uint8(low 6 bits)", "notes": "Returned by the `Podatek` rules host getter, adjusted by `ZmienPodatek`, multiplied into `Building_CollectGoldIncome`, and converted into a burden tier by `Building_GetTaxBurdenTier`; the upper two bits still carry unrelated packed state." },
       { "offset": 438, "name": "stored_money", "type": "uint32", "notes": "Returned by the `Pieniadze` rules host wrapper, spent by transfer and add-on purchase helpers, and replenished by `Building_CollectGoldIncome`." },
       { "offset": 444, "name": "tech_level_bits", "type": "uint8", "notes": "Low three bits are returned by the `PoziomTech` rules host wrapper and cap wall upgrades plus castle add-on availability." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." },
@@ -219,6 +220,7 @@
       "The rules-host wrappers `Podatek`, `Pieniadze`, `SilaMurow`, `SilaZamku`, `PoziomTech`, `Zadowolenie`, and `IloscChlopow` dispatch directly to getters over offsets `+436`, `+438`, `+421`, `Building_GetTotalValue`, `+444`, `+434`, and `+430`, respectively.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
       "The castle add-on builders and `Rules_AssertCastleFact` converge on the exact bit mapping at `+416`: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths.",
+      "`Building_GetTaxRateByIndex`, the `ZmienPodatek` host stub, `Building_CollectGoldIncome`, and `Building_GetTaxBurdenTier` all read or write the low six bits at `+436`, proving that byte carries the building's raw tax rate rather than a derived burden tier.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
       "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Unit_CaptureBuilding` use it to update the asserted castle fact's `moc` and `gracz` attributes."
@@ -313,6 +315,39 @@
     "evidence": [
       "`Building_FindFreePrisonerSlot` scans three 6-byte cells beginning at `building + 445` and treats byte 0 == -1 as empty.",
       "`BuildingPrisoner_SetAction` and `BuildingPrisoner_GetAction` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
+    ]
+  },
+  {
+    "name": "BuildingEconomyDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingEconomyDialogSpriteSet / g_BuildingEconomyDialogExitSignal / g_BuildingEconomyDialogPendingPeasantTransfer / g_BuildingEconomyDialogPendingGoldTransfer / g_BuildingEconomyDialogBuilding",
+    "description": "Transient shared UI state for the castle/building economy dialog. The dialog runner seeds the selected building and sprite set, transfer-button handlers mutate the pending transfer amounts, and the modal button callbacks exit through the shared signal dword.",
+    "fields": [
+      { "offset": 0, "name": "sprite_set_handle", "type": "int32", "notes": "Loaded once by `BuildingEconomyDialog_Run` and passed to the title/icon drawers until the modal loop exits." },
+      { "offset": 4, "name": "exit_signal", "type": "int32", "notes": "Written by the button callback helper `sub_42A990` and polled by the modal loop in `BuildingEconomyDialog_Run`." },
+      { "offset": 8, "name": "pending_peasant_transfer_amount", "type": "int32", "notes": "Adjusted by the peasant-transfer button handlers and committed by `BuildingEconomyDialog_CommitTransfers` as a population transfer." },
+      { "offset": 12, "name": "pending_gold_transfer_amount", "type": "int32", "notes": "Adjusted by the gold-transfer button handlers and committed by `BuildingEconomyDialog_CommitTransfers` as a money transfer." },
+      { "offset": 16, "name": "selected_building_ptr", "type": "BuildingRecord *", "notes": "Building record currently being edited in the dialog; tax and transfer handlers all dereference this pointer." }
+    ],
+    "evidence": [
+      "`BuildingEconomyDialog_Run` seeds the building pointer, zeroes both pending transfer amounts, loads the dialog sprite set, and then spins until the shared exit signal changes.",
+      "`BuildingEconomyDialog_CommitTransfers` consumes the same shared pending amounts and building pointer to call `Building_Transfer` for peasants and gold.",
+      "`BuildingEconomyDialog_DecreaseTaxRate` / `IncreaseTaxRate` and the transfer amount handlers all dereference the same selected-building pointer and pending-amount globals, proving they belong to one dialog-state region rather than unrelated globals."
+    ]
+  },
+  {
+    "name": "BuildingTransferTargetList",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingTransferTargetListIndex / g_BuildingTransferTargetIds",
+    "description": "Transient target-building list used by the building transfer dialogs. The list is rebuilt from eligible player-owned buildings, rendered as a five-row scrolling selector, and consumed by transfer-commit helpers.",
+    "fields": [
+      { "offset": 0, "name": "selected_index", "type": "int32", "notes": "Current cursor index into the target-id list, updated by keyboard and mouse navigation helpers." },
+      { "offset": 4, "name": "target_building_ids[99]", "type": "int16[99]", "notes": "Target building ids plus sentinel values. Entry `-2` is a synthetic top entry, while `-1` marks the end of the live list." }
+    ],
+    "evidence": [
+      "`sub_436970` initializes the list with sentinel `-2`, appends eligible building ids, and resets the selected index to zero.",
+      "`sub_436620`, `sub_4368F0`, `sub_436930`, and `sub_436A30` all render or scroll the same selected index against the same target-id array.",
+      "`BuildingEconomyDialog_CommitTransfers` and the sibling gold-transfer dialog resolve the destination building through the selected index into this shared target-id list."
     ]
   }
 ]

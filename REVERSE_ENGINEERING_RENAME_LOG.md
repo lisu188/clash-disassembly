@@ -626,3 +626,97 @@
 - `sub_410260` still looks like a “current or reachable queued path step is drawable for the viewed player” predicate, but the shortest non-misleading public name is not locked down enough yet.
 - Non-anchor castle-foundation tile ids `708, 709, 710, 712, 713, 714` still behave as foundation variants, but their exact piece/orientation mapping remains deferred.
 - `sub_457E50` is only a wrapper around `Unit_AddToGroup(..., 0)`; it likely wants a group-merge wrapper name, but the narrow behavioral distinction is not yet corroborated well enough.
+
+## Batch 42 – Special Personage And Tax State Corrections
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| UnitStack_HasPrisonerUnits | UnitStack_HasSpecialPersonageUnits | Function | Unit Lifecycle / Special Entries | High | The predicate only checks for unit types `33/34`, and `Queen_NewTurn` creates the same ids through the special-garrison helper, so `prisoner` overstates one acquisition path instead of the underlying unit family. | c, asm, exe | yes: Averroes |
+| Building_CountPrisonerGarrisonEntries | Building_CountSpecialPersonageGarrisonEntries | Function | Buildings / Special Entries | High | Counts only types `33/34` in the building garrison array. Those ids are now corroborated as the broader special-personage family reused by both prisoner and queen-birth flows. | c, exe | yes: Averroes |
+| Building_HasPrisonerGarrisonEntries | Building_HasSpecialPersonageGarrisonEntries | Function | Buildings / Special Entries | High | Boolean sibling of the same `33/34` count helper; the old prisoner wording was too narrow for the recovered unit-family semantics. | c, exe | yes: Averroes |
+| Building_CreateSpecialGarrisonUnit | Building_CreateSpecialPersonageGarrisonUnit | Function | Buildings / Special Entries | High | Called from prisoner release and from `Queen_NewTurn` childbirth, always seeding one of the type `33/34` special-personage units into a building garrison. | c, asm, exe | yes: Averroes |
+| sub_43EAC0 | Building_ClearGarrisonTrainingTimer | Function | Buildings / Garrison Orders | High | Clears bits `0..2` in `BuildingRecord + 390 + slot`, the same low timer bits written by `Building_TrainUnit`; call sites use it to cancel or reset training state. | c | no |
+| sub_43EB40 | Building_ClearGarrisonRepairTimer | Function | Buildings / Garrison Orders | High | Clears bits `3..5` in `BuildingRecord + 390 + slot`, matching the repair timer bits written by `Building_RepairUnit`; call sites use it to cancel or reset repair state. | c | no |
+| Building_GetTaxPressureTier | Building_GetTaxBurdenTier | Function | Buildings / Settlement Economy | High | The helper derives a 0..3 burden tier from population-band-specific thresholds and the raw `Podatek` value at `+436`; the tier is then consumed by population-growth logic rather than serving as the raw tax field itself. | c, asm | no |
+| Building_GetTaxPressureByIndex | Building_GetTaxRateByIndex | Function | Buildings / Rules Host Stats | High | The `Podatek` rules host getter returns the raw low six bits at `BuildingRecord + 436`, which are adjusted by `ZmienPodatek` and multiplied directly into `Building_CollectGoldIncome`, proving it is the tax rate/value rather than a derived pressure tier. | c, asm | no |
+| sub_455740 | Building_AdjustTaxRateByIndex | Function | Buildings / Rules Host Stats | High | The `ZmienPodatek` host path adds a float delta to the same low-six-bit `Podatek` field at `+436` while preserving the packed upper bits, so this is the tax-rate mutator for a building id. | c, asm | no |
+| PLAYER_QUEEN_WHIM / PlayerRuntimeState + 1420 | PLAYER_QUEEN_PORTRAIT_INDEX / PlayerRuntimeState.queen_portrait_index | Global / Recovered Struct Field | Queen / Player Runtime State | High | The byte is set to `Rng_RandRange(0, 8)` during the marriage-proposal path and then used as the sprite index in the proposal, whim, message, and relationship-panel UI; it is not the whim/request id. | c, asm, exe | yes: Averroes |
+| PLAYER_QUEEN_NEXT_REVIEW / PlayerRuntimeState + 1421 | PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN / PlayerRuntimeState.queen_next_relationship_check_turn | Global / Recovered Struct Field | Queen / Player Runtime State | High | The word is repeatedly set to `current_turn + Rng_RandRange(5, 8)` after queen events and only gates the next relationship review/check; the old `review` wording was serviceable but underspecified. | c | yes: Averroes |
+| byte_515D00 | g_SettlementTaxBurdenThresholds | Table | Buildings / Settlement Economy | High | `Building_GetTaxBurdenTier` reads this 4x4 threshold grid by population band to convert the raw tax rate into a derived burden tier. | c | no |
+| BuildingRecord + 436 | BuildingRecord.tax_rate | Recovered Struct Field | Buildings / Settlement Economy | High | The low six bits are returned by `Podatek`, adjusted by `ZmienPodatek`, and multiplied into `Building_CollectGoldIncome`; the burden tier is derived later through `Building_GetTaxBurdenTier`, so the field itself is the raw tax rate. | c, asm | no |
+
+## Deferred / Ambiguous
+- Types `33` and `34` are securely a broader special-personage family, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` still is not corroborated well enough for a narrower public rename.
+- `BuildingRecord + 436` clearly stores the raw tax rate in its low six bits, but the preserved upper two bits still carry unrelated packed state and remain unnamed.
+
+## Batch 43 – Map And Pathing Unknown-Function Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_40ED70 | Map_RevealAllTilesForPlayer | Function | Map / Fog Of War | High | Walks the full per-player reveal bitset, sets every tile-visible bit, and then refreshes the display, which is the map-reveal-all helper rather than a generic draw/update call. | c | yes: James |
+| sub_40EDE0 | Map_RevealTileWithPropagation | Function | Map / Fog Of War | Medium | Reveals one tile if hidden, redraws it, and recursively fills bridging gaps when tiles two steps away are already visible, so the safest name is a reveal helper with propagation rather than a plain visibility predicate. | c | yes: James |
+| sub_414390 | UnitStack_GetMoveCostToTileIgnoringOccupancy | Function | Unit Movement | Medium | Temporarily clears the destination tile occupancy, calls the standard tile-move-cost helper, then restores the old occupant, proving that it queries move cost while bypassing current occupancy. | c | yes: James |
+| sub_423BB0 | MapTile_HasNorthRoadConnection | Function | Map / Roads | Medium | Normalizes the road overlay one row above the target tile and tests for the north-connected road-family ids. | c | yes: James |
+| sub_423C50 | MapTile_HasSouthRoadConnection | Function | Map / Roads | Medium | South-neighbor sibling of the same road-connection predicate family. | c | yes: James |
+| sub_423CF0 | MapTile_HasWestRoadConnection | Function | Map / Roads | Medium | West-neighbor road-connection predicate, with an extra special case for adjacent 2x2 building footprints occupying the western side. | c | yes: James |
+| sub_423E10 | MapTile_HasEastRoadConnection | Function | Map / Roads | Medium | East-neighbor sibling of the same road-connection predicate family. | c | yes: James |
+| sub_423E90 | Map_RebuildRoadOverlayAtTile | Function | Map / Roads | High | Recomputes the four-direction road connection mask from the cardinal predicates and rewrites the overlay tile through the `dword_5141A0` lookup table. | c | yes: James |
+| sub_423FC0 | Map_NormalizeRoadOverlayTileId | Function | Map / Roads | High | Canonicalizes road/overlay tile ids before directional connection testing, collapsing multiple overlay variants into the base road-family ids. | c | yes: James |
+| sub_4530A0 | Rules_PortCollectSupply | Function | Rules / Port | High | Pure rules-host wrapper over `Port_GetSupply`; the registration cluster exposes the port-supply collection command semantics directly. | c | yes: James |
+| sub_453110 | Rules_QueuePathToTile | Function | Rules / Pathing | High | Rules-host wrapper that builds an exact path to a target tile and stores the resulting queued path into the stack's persistent path buffer. | c | yes: James |
+| sub_4532A0 | Rules_QueuePathNearTile | Function | Rules / Pathing | High | Rules-host wrapper over `Unit_MoveTrackNearTile`, queuing a path that stops adjacent to the target tile. | c | yes: James |
+| sub_453440 | Rules_QueuePathNearCastle | Function | Rules / Pathing | High | Rules-host wrapper over `Building_GenerateNearApproachTrack`, queuing a path that stops adjacent to the castle/building footprint. | c | yes: James |
+| sub_453600 | Rules_QueuePathToPort | Function | Rules / Port Pathing | High | Rules-host wrapper over `Port_GenerateApproachTrack`, copying the resulting approach track into the stack's queued path buffer. | c | yes: James |
+
+## Deferred / Ambiguous
+- `sub_424020` and `sub_424120` are definitely road/bridge overlay predicates inside the road-building cluster, but this pass still did not lock down their exact designer-facing distinction safely enough for a public rename.
+- `sub_40D890` clearly redraws some tile-level world-map representation after reveals and ownership changes, but the code still does not prove whether the narrowest honest name is a main-map tile refresh, a minimap tile refresh, or a combined redraw helper.
+
+## Batch 44 – Building Economy Dialog And Hospital Rules Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_42A890 | BuildingTransferDialog_DrawPeasantTransferAmount | Function | UI / Building Economy Dialog | High | Pure draw helper for the top transfer number box; it only redraws the peasant-transfer value region in the building economy dialog cluster. | c | yes: Darwin |
+| sub_42A910 | BuildingTransferDialog_DrawGoldTransferAmount | Function | UI / Building Economy Dialog | High | Pure draw helper for the bottom transfer number box; it only redraws the gold-transfer value region in the same dialog cluster. | c | yes: Darwin |
+| sub_42A9B0 | BuildingEconomyDialog_CommitTransfers | Function | UI / Building Economy Dialog | High | Commits the two pending transfer amounts through `Building_Transfer`, using the currently selected target-building entry and then redrawing the confirm strips. | c | yes: Darwin |
+| sub_42AB80 | BuildingEconomyDialog_DecreaseTaxRate | Function | UI / Building Economy Dialog | High | Animates the low six bits of `BuildingRecord + 436` downward while preserving the upper packed bits, matching the building tax-rate field. | c | yes: Darwin |
+| sub_42AC80 | BuildingEconomyDialog_IncreaseTaxRate | Function | UI / Building Economy Dialog | High | Upward sibling of the same tax-rate animation helper operating on the low six bits at `BuildingRecord + 436`. | c | yes: Darwin |
+| sub_42AD70 | BuildingTransferDialog_DecreasePeasantTransferAmount | Function | UI / Building Economy Dialog | High | Decrements and animates the pending peasant-transfer amount, clamping the value at zero. | c | yes: Darwin |
+| sub_42AE30 | BuildingTransferDialog_IncreasePeasantTransferAmount | Function | UI / Building Economy Dialog | High | Increments and animates the pending peasant-transfer amount, clamping it against the building's stored peasant population at `+430`. | c | yes: Darwin |
+| sub_42AF10 | BuildingTransferDialog_DecreaseGoldTransferAmount | Function | UI / Building Economy Dialog | High | Decrements and animates the pending gold-transfer amount, clamping it at zero. | c | yes: Darwin |
+| sub_42AFD0 | BuildingTransferDialog_IncreaseGoldTransferAmount | Function | UI / Building Economy Dialog | High | Increments and animates the pending gold-transfer amount, clamping it against the building's stored money at `+438`. | c | yes: Darwin |
+| sub_42B0A0 | BuildingEconomyDialog_Run | Function | UI / Building Economy Dialog | High | Seeds the selected building and sprite set, zeroes pending transfers, draws the modal building-economy screen, and spins until the shared exit signal changes. | c | yes: Darwin |
+| sub_456070 | Building_CalcGarrisonFactStrength | Function | Buildings / Rules Facts | High | `Building_OnGarrisonChange` uses it exclusively to refresh the asserted castle fact's `moc` value, and the helper sums effective per-slot combat contributions from the garrison. | c | yes: Darwin |
+| sub_4577F0 | UnitStack_HasUnitsNeedingHealing | Function | Unit Lifecycle / Healing | High | The `MaJednostkiDoLeczenia` rules host path dispatches here, and the helper scans stack slots for units at or below 50 health in healable combat classes. | c | yes: Darwin |
+| sub_457860 | UnitStack_FindPathToNearestHospitalCastle | Function | Unit Movement / Healing | High | Scans owned buildings for castle records with the hospital add-on bit, generates approach tracks, and keeps the cheapest one in the queued-path buffer. | c | yes: Darwin |
+| sub_457A10 | UnitStack_MoveToBuildingAndCheckArrival | Function | Unit Movement / Building Approach | Medium | Ensures a queued approach path exists toward the target building, executes it, and returns whether the stack finished the movement. The current implementation is generic even though one caller uses it for healing. | c | yes: Darwin |
+| dword_531CE4 | g_BuildingEconomyDialogSpriteSet | Global | UI / Building Economy Dialog | High | Loaded once by `BuildingEconomyDialog_Run` and then reused by the dialog's title/icon drawing helpers until the modal loop ends. | c | yes: Darwin |
+| dword_531CE8 | g_BuildingEconomyDialogExitSignal | Global | UI / Building Economy Dialog | High | Written by the dialog callback helper `sub_42A990` and polled by `BuildingEconomyDialog_Run` to terminate the modal loop. | c | yes: Darwin |
+| dword_531CEC | g_BuildingEconomyDialogPendingPeasantTransfer | Global | UI / Building Economy Dialog | High | Mutated only by the peasant-transfer adjustment buttons and consumed by `BuildingEconomyDialog_CommitTransfers`. | c | yes: Darwin |
+| dword_531CF0 | g_BuildingEconomyDialogPendingGoldTransfer | Global | UI / Building Economy Dialog | High | Mutated only by the gold-transfer adjustment buttons and consumed by `BuildingEconomyDialog_CommitTransfers`. | c | yes: Darwin |
+| dword_531CF4 | g_BuildingEconomyDialogBuilding | Global | UI / Building Economy Dialog | High | Shared pointer to the building currently being edited in the economy dialog; tax and transfer handlers all dereference it. | c | yes: Darwin |
+| dword_53235C | g_BuildingTransferTargetListIndex | Global | UI / Building Transfer Target List | High | Shared scrolling-selection index into the transfer target list, mutated by keyboard and mouse navigation helpers. | c | yes: Darwin |
+| word_532360 | g_BuildingTransferTargetIds | Global | UI / Building Transfer Target List | High | Shared int16 target-building id list used by both transfer dialogs and the target-list renderer; `-2` and `-1` act as sentinels. | c | yes: Darwin |
+| g_BuildingEconomyDialogSpriteSet + g_BuildingEconomyDialogExitSignal + g_BuildingEconomyDialogPendingPeasantTransfer + g_BuildingEconomyDialogPendingGoldTransfer + g_BuildingEconomyDialogBuilding | BuildingEconomyDialogState | Recovered Struct | UI / Building Economy Dialog | High | These five globals are seeded, mutated, and consumed together by the modal building-economy dialog and its button callbacks, forming one coherent transient UI-state region. | c | yes: Darwin |
+| g_BuildingTransferTargetListIndex + g_BuildingTransferTargetIds | BuildingTransferTargetList | Recovered Struct | UI / Building Transfer Target List | High | Transfer-target list initialization, rendering, navigation, and commit handlers all operate on this index-plus-array pair as one shared UI-state region. | c | yes: Darwin |
+
+## Deferred / Ambiguous
+- `sub_42A760` clearly draws the building economy dialog's local settlement-status icon, but the narrowest honest public name is still ambiguous between population-growth, plague-state, and broader settlement-status semantics.
+
+## Batch 45 – Battle Control Helper Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_429E30 | UnitBattle_Defence | Function | Unit Battle / Orders | High | The debug string is `UnitBattle_Defence(%d)`, the helper requires at least 5 action points, zeroes the acting unit's remaining AP, and sets the defending-state bit. | c, asm, exe | yes: Pauli |
+| sub_42D290 | UnitBattle_RefreshSelectedUnitUI | Function | Unit Battle / UI | Medium | Clears the transient battle-mode flag, reinitializes the small battle UI state object, and redraws the current selected unit's panel through `sub_431DE0(g_SelectedUnitIndex)`. | c | yes: Pauli |
+| sub_42D3A0 | UnitBattle_SelectNextControllableUnit | Function | Unit Battle / UI | Medium | Cycles from `g_SelectedUnitIndex` to the next current-player battle unit, recenters/redraws the view when needed, refreshes the selected-unit UI, and plays the activation sound. | c | yes: Pauli |
+
+## Batch 46 – Battle Shot Action Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_429740 | UnitBattle_Shot | Function | Unit Battle / Ranged Combat | High | The exact `UnitBattle_Shot(%d,%d)` string survives in asm/exe, and all call sites treat it as the standard ranged attack action against another unit. | asm, exe, c | yes: Pauli |
+| sub_429BD0 | UnitBattle_ShotWall | Function | Unit Battle / Siege Combat | High | The exact `UnitBattle_ShotWall(%d,%d)` string survives in asm/exe, and all call sites use it for ranged attacks against wall hit points rather than unit targets. | asm, exe, c | yes: Pauli |
+
+## Batch 47 – Battle View And Shot Math Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_426E20 | UnitBattle_CenterViewOnUnit | Function | Unit Battle / Camera | High | Recomputes the tactical viewport origin as `unit_tile - 3`, clamps it to the 7x7 battle window, and is called before battle redraws and attack animations. | c | yes: Pauli |
+| sub_426EF0 | UnitBattle_CountAdjacentEnemies | Function | Unit Battle / Positioning | High | Counts occupied adjacent battle tiles whose owner differs from the acting unit's owner. | c | yes: Pauli |
+| sub_426F90 | UnitBattle_GetTargetCrowdingScale | Function | Unit Battle / Damage Math | Medium | Maps adjacent-enemy count to the discrete scales `256, 230, 204, 179, 128`, and melee/ranged damage helpers use it only as a crowding multiplier. | c | yes: Pauli |
+| sub_4295D0 | UnitBattle_CalcShotTargetHealthAfterHit | Function | Unit Battle / Ranged Combat | High | Pure shot-damage math helper whose return value is written directly into the target's health byte after applying range and crowding scaling. | c | yes: Pauli |
