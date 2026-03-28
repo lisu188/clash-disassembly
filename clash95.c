@@ -81,6 +81,7 @@
 #define g_EmptyShrineTexts off_511B74
 #define g_CultPlaceTexts off_511B80
 #define g_EmptyCultPlaceTexts off_511B8C
+#define g_CastleFoundationTexts off_511B98
 #define g_HiddenTreasureTexts off_511BA4
 
 #define PLAYER_RUNTIME_STATE(playerIndex) (gameData + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex))
@@ -564,12 +565,12 @@ void BattleLog_Enable();
 // int __userpurge CalculateBattleResult@<eax>(_WORD *@<eax>, int@<edx>, _WORD *@<ecx>, _WORD *@<ebx>, DWORD@<ebp>, int, int, int, int);
 // signed int __userpurge sub_41C8B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>, int a6@<edi>, int a7);
 // BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<st0>, char *a4, int a5);
-// _DWORD *__usercall sub_41D930@<eax>(unsigned __int8 *a1@<eax>);
+// _DWORD *__usercall Building_LogBuiltCastleFacts@<eax>(unsigned __int8 *a1@<eax>);
 // BOOL __usercall MapTile_IsCastleFoundationTile@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 // BOOL __usercall MapTile_IsCastleFoundationAnchorTile@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 int Rules_RebuildCastleSiteFacts();
 // signed int __usercall BuildCursor_IsPlacementValid@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
-// signed int __usercall sub_41E050@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
+// signed int __usercall Building_Stop@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
 // char __usercall sub_41E0E0@<al>(int a1@<eax>);
 // char __usercall Building_FinishConstruction@<al>(unsigned __int8 *a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>);
 // int __usercall Building_ProcessUnitProductionTurn@<eax>(int result@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
@@ -593,7 +594,7 @@ int Rules_RebuildCastleSiteFacts();
 // int __usercall UI_DrawUnitStatsValues@<eax>(int a1@<eax>);
 // BOOL __usercall Building_CanStartUpgrade@<eax>(unsigned __int8 *a1@<eax>);
 // BOOL __usercall __spoils<ecx> Building_TryStartUpgrade@<eax>(unsigned __int8 *a1@<eax>);
-// _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, signed int j@<esi>, double a5@<st0>);
+// _DWORD *__usercall Unit_CaptureBuilding@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, signed int j@<esi>, double a5@<st0>);
 // _DWORD *__usercall Building_Destroy@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall __spoils<ecx> Unit_CalcRestTurns@<eax>(int a1@<eax>);
 // signed int __usercall Unit_FindById@<eax>(int a1@<eax>, int a2@<ecx>);
@@ -1174,11 +1175,11 @@ int Game_GetTurnNumber();
 // __int16 __usercall Building_StartRepairIdleGarrisonUnits@<ax>(int a1@<eax>);
 // signed int __usercall Building_UnitsLeaveByUnitType@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>);
 // _DWORD *__usercall Rules_LogCastleSiteFact@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
-// _DWORD *__usercall sub_455CF0@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455D20@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_LogBuildingTransferFact@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
+// _DWORD *__usercall Rules_LogNewCastleFact@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_LogCastleDestroyedFact@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall Rules_LogCastleSchemeFact@<eax>(int a1@<eax>, int a2@<ecx>);
-// _DWORD *__usercall sub_455D90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
+// _DWORD *__usercall Rules_LogBuildingCapturedFact@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // _DWORD *__usercall Rules_LogCastleUnderConstructionFact@<eax>(int a1@<eax>);
 _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2);
 // _DWORD *__usercall Rules_LogAssignedCastleFact@<eax>(int a1@<eax>, int a2@<edx>);
@@ -31181,7 +31182,7 @@ LABEL_28:
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
-              sub_41F900(v60, v49, v50, v25, a5);
+              Unit_CaptureBuilding(v60, v49, v50, v25, a5);
               ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
               --*(_WORD *)(1423 * v7[2] + gameData + 141441);
 LABEL_47:
@@ -31261,7 +31262,7 @@ LABEL_42:
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
-                sub_41F900(v60, v46, v47, 0, a5);
+                Unit_CaptureBuilding(v60, v46, v47, 0, a5);
                 ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
                 --*(_WORD *)(1423 * v7[2] + gameData + 141441);
               }
@@ -32380,7 +32381,7 @@ BOOL __userpurge Building_New@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double st7_0@<
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0041D930) --------------------------------------------------------
-_DWORD *__usercall sub_41D930@<eax>(unsigned __int8 *a1@<eax>)
+_DWORD *__usercall Building_LogBuiltCastleFacts@<eax>(unsigned __int8 *a1@<eax>)
 {
   int v2; // edx
 
@@ -32594,7 +32595,7 @@ LABEL_23:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0041E050) --------------------------------------------------------
-signed int __usercall sub_41E050@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>)
+signed int __usercall Building_Stop@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>)
 {
   DWORD v7; // edx
   int v8; // eax
@@ -32757,7 +32758,7 @@ char __usercall Building_FinishConstruction@<al>(unsigned __int8 *a1@<eax>, int 
   log(a2, a3, (DWORD)a1, (int)aBuilding_build);
   LOBYTE(v5) = *a1;
   Rules_LogCastleBuiltFactAndScheme(v6, *(unsigned __int16 *)(2 * a1[1] + gameData + 200 * v5 + 556374) - 0x8000);
-  sub_455CF0(a1[2], *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000);
+  Rules_LogNewCastleFact(a1[2], *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000);
   Building_OnGarrisonChange(*(unsigned __int16 *)(2 * a1[1] + 200 * *a1 + gameData + 556374) - 0x8000, v7, a4);
   v9 = (char)a1[4];
   if ( v9 == 2 || v9 == 1 )
@@ -33767,7 +33768,7 @@ BOOL __usercall __spoils<ecx> Building_TryStartUpgrade@<eax>(unsigned __int8 *a1
 // 41F8A0: variable 'v2' is possibly undefined
 
 //----- (0041F900) --------------------------------------------------------
-_DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, signed int j@<esi>, double a5@<st0>)
+_DWORD *__usercall Unit_CaptureBuilding@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, signed int j@<esi>, double a5@<st0>)
 {
   DWORD v7; // ebx
   int v8; // ecx
@@ -33809,7 +33810,7 @@ _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, 
   sub_455150(UNIT_RECORD(a2), v8, a5);
   v28 = v13;
   v14 = *(unsigned __int16 *)(gameData + 140022);
-  sub_455D90(*(unsigned __int8 *)(gameData + 725 * a1 + 147178), a2, v14);
+  Rules_LogBuildingCapturedFact(*(unsigned __int8 *)(gameData + 725 * a1 + 147178), a2, v14);
   v15 = 1423 * *(unsigned __int8 *)(v28 + gameData + 509676) + gameData;
   if ( a2 == *(_DWORD *)(v15 + 140067) )
     *(_DWORD *)(v15 + 140067) = -1;
@@ -34300,7 +34301,7 @@ int __usercall sub_4202C0@<eax>(DWORD a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, do
       && dword_544CFC >> byte_54512C <= v43
       && dword_544D00 >> byte_54512C <= v45 )
     {
-      sub_41E050(v47, v25, v22, v23, a4);
+      Building_Stop(v47, v25, v22, v23, a4);
       break;
     }
   }
@@ -62809,7 +62810,8 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510120) = 2;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510125) = 34;
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
-  sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
+  Building_LogBuiltCastleFacts(
+    (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
   Unit_Create(0x11u, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
   Unit_Create(9u, 0, 7, 0, 7);
@@ -62845,7 +62847,8 @@ _DWORD *__usercall sub_44B550@<eax>(int this@<ecx>, DWORD a2@<ebp>, double a3@<s
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674, this);
-  result = sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674));
+  result = Building_LogBuiltCastleFacts(
+             (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509674));
   g_CurrentPlayerIndex = v19;
   return result;
 }
@@ -63237,9 +63240,10 @@ signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<ea
           467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000) + gameData + 509674,
           v13);
         v14 = v38;
-        sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
-                                     + gameData
-                                     + 509674));
+        Building_LogBuiltCastleFacts(
+          (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
+                            + gameData
+                            + 509674));
         Unit_Create(5u, v7, v15, 0, v14);
         Unit_Create(1u, v7, v10, 0, v38);
         Unit_Create(0x10u, v7, v39, 0, v38);
@@ -63371,9 +63375,10 @@ signed int __usercall Scenario_LoadMultiplayerMapAndSeedPlayers@<eax>(int a1@<ea
           467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000) + gameData + 509674,
           v19);
         v20 = v38;
-        sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
-                                     + gameData
-                                     + 509674));
+        Building_LogBuiltCastleFacts(
+          (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
+                            + gameData
+                            + 509674));
         Unit_Create(5u, v7, v21, 0, v20);
         Unit_Create(1u, v7, v10, 0, v38);
         Unit_Create(0x10u, v7, v39, 0, v38);
@@ -67865,7 +67870,7 @@ _DWORD *__usercall Rules_RetractCastleFact@<eax>(unsigned __int8 *a1@<eax>, doub
     Rules_RetractFactById(*(_DWORD *)(a1 + 463), a2);
   v3 = *v2;
   *(_DWORD *)(v2 + 463) = 0;
-  return sub_455D20(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - 0x8000);
+  return Rules_LogCastleDestroyedFact(v2[2], *(unsigned __int16 *)(TILE_INDEX(v3, v2[1])) - 0x8000);
 }
 // 4553B0: variable 'v2' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -68373,7 +68378,7 @@ _DWORD *__usercall sub_455CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455CF0) --------------------------------------------------------
-_DWORD *__usercall sub_455CF0@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogNewCastleFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -68386,7 +68391,7 @@ _DWORD *__usercall sub_455CF0@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455D20) --------------------------------------------------------
-_DWORD *__usercall sub_455D20@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogCastleDestroyedFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -68418,7 +68423,7 @@ _DWORD *__usercall Rules_LogCastleSchemeFact@<eax>(int a1@<eax>, int a2@<ecx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455D90) --------------------------------------------------------
-_DWORD *__usercall sub_455D90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
+_DWORD *__usercall Rules_LogBuildingCapturedFact@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 {
   double v4; // st7
   int v5; // ecx
@@ -69953,7 +69958,8 @@ int __usercall createCastle@<eax>(
   Building_New(a5, *(unsigned __int16 *)(i + v17 + gameData + 556374), v13, a6, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509690) = 0;
   Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674, v14);
-  sub_41D930((unsigned __int8 *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674));
+  Building_LogBuiltCastleFacts(
+    (unsigned __int8 *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674));
   return *(unsigned __int16 *)(i + v17 + gameData + 556374) - 0x8000;
 }
 // 459900: variable 'v12' is possibly undefined

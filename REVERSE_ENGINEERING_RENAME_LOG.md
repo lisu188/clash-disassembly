@@ -526,3 +526,16 @@
 ## Deferred / Ambiguous
 - `MapTile_IsCastleFoundationTile` is stable for the `707..714` family and `MapTile_IsCastleFoundationAnchorTile` is stable for `707` / `711`, but the exact semantic split among the non-anchor variants remains unresolved.
 - `sub_455D90` logs `(zdobyty %d %d %d)`, but this pass did not pin down whether the fact is castle-specific, faction-specific, or a broader conquest record.
+
+## Batch 38 – Castle Lifecycle Logging Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_41D930 | Building_LogBuiltCastleFacts | Function | Buildings / Castle Lifecycle | High | Pure wrapper that derives the building id from the record's footprint tile and forwards it twice into `Rules_LogCastleBuiltFactAndScheme`; scenario/setup paths call it after `Building_New` to seed rules facts for pre-existing castles. | c | no |
+| sub_41E050 | Building_Stop | Function | Buildings / Castle Lifecycle | High | Embedded debug string is `Building_Stop(0x%08x)`, and the implementation ejects all occupied garrison slots, clears the active-building state word, and retracts the castle fact. | c, asm | no |
+| sub_41F900 | Unit_CaptureBuilding | Function | Unit Lifecycle / Building Capture | High | Embedded debug string is `Unit_CaptureBuilding(%d,%d)`, and the implementation transfers building ownership to the acting stack's player, updates building tech tier, logs a capture fact, moves the unit inside, handles special prisoner slots, and refreshes nearby tiles. | c, asm | no |
+| sub_455CF0 | Rules_LogNewCastleFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for the payload `(powstal-nowy-zamek %d %d)`, called from `Building_FinishConstruction` after `Rules_LogCastleBuiltFactAndScheme`. | c, asm | no |
+| sub_455D20 | Rules_LogCastleDestroyedFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(zginal-zamek %d %d)`, reached from `Rules_RetractCastleFact` when a castle/building record is removed. | c, asm | no |
+| sub_455D90 | Rules_LogBuildingCapturedFact | Function | Rules / Building Capture | Medium | Literal rules logger for `(zdobyty %d %d %d)` called only from `Unit_CaptureBuilding`; the three arguments are the capturing player id, building id, and current turn number. The capture path is generic building capture, not castle-only capture. | c, asm | no |
+
+## Deferred / Ambiguous
+- `sub_455CC0` logs `(budowanie transfer 0 0 %d %d %d)` during building-transfer logic, but this pass did not pin down whether it represents a generic building-to-army transfer fact, an AI-only construction transfer fact, or a narrower no-human-controller bookkeeping event.
