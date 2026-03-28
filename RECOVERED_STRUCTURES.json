@@ -30,19 +30,55 @@
     "kind": "stack_entry",
     "base_offset": 147174,
     "stride": 725,
-    "description": "Per-army stack record inside gameData holding tile coordinates, ownership, slots, and the cached move path.",
+    "description": "Per-army stack record inside gameData holding tile coordinates, ownership, slots, and the queued world-map path buffer.",
     "fields": [
       { "offset": 0, "name": "tile_row", "type": "int16", "notes": "Row on the 200-column world grid used to stamp tile occupancy and fog-of-war." },
       { "offset": 2, "name": "tile_column", "type": "int16", "notes": "Column on the world grid; combined with row to index TILE_INDEX." },
       { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war and turn-sensitive ownership checks via g_CurrentPlayerIndex." },
       { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "0-7 direction used by sprite/orientation logic during path highlighting." },
       { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlotRecord[10]", "notes": "Ten embedded 31-byte slot records storing per-unit runtime state for the stack." },
-      { "offset": 316, "name": "path_buffer", "type": "byte[0x194]", "notes": "Movement track copied in/out by qmemcpy during path planning." }
+      { "offset": 316, "name": "queued_path", "type": "QueuedPathBuffer", "notes": "404-byte queued path buffer copied in/out by qmemcpy during path planning and partially consumed by `UnitStack_ExecuteQueuedPath`." },
+      { "offset": 720, "name": "is_hidden_on_world_map", "type": "uint8", "notes": "Non-zero while the stack is hidden. The hide action sets it, movement/splitting/merging clear it, and `UnitStack_RevealAndEngageHiddenEnemies` clears the same flag on revealed enemy stacks." }
     ],
     "evidence": [
       "Unit_Create uses 147174 + 725 * index to address stacks, writing row/column/facing before stamping TILE_INDEX.",
       "UnitSlot_InitFromType writes the slot fields (type id, owner, action points, health, fatigue, morale, and control bits) at offsets relative to stackPtr + 6.",
-      "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states."
+      "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states.",
+      "Path planners copy exactly `0x194` bytes into offset `+316`, while `QueuedPath_StartsAtTile`, `QueuedPath_StartsInBuildingFootprint`, and `UnitStack_ExecuteQueuedPath` treat that region as a persistent queued-path buffer.",
+      "The hide-action helper refuses stacks whose byte `+720` is already set, then sets it after spending the turn; merge/split helpers clear the same byte, and `UnitStack_RevealAndEngageHiddenEnemies` clears it on exposed enemy stacks."
+    ]
+  },
+  {
+    "name": "QueuedPathBuffer",
+    "kind": "runtime_helper_record",
+    "base_offset": 316,
+    "size": 404,
+    "description": "404-byte queued path buffer embedded inside each `UnitStackRecord` and returned by the world-map path planners.",
+    "fields": [
+      { "offset": 0, "name": "waypoint_count", "type": "int32", "notes": "Number of live waypoints currently stored in the queue. Zero means no queued path." },
+      { "offset": 4, "name": "waypoints[100]", "type": "PathWaypoint[100]", "notes": "Packed row/column/cumulative-cost waypoints. `UnitStack_ExecuteQueuedPath` consumes them from the tail and rewrites remaining cumulative costs after partial movement." }
+    ],
+    "evidence": [
+      "All world-map path generators allocate or copy exactly `404` bytes, matching one leading int plus 100 packed 4-byte nodes.",
+      "`QueuedPath_StartsAtTile` and `QueuedPath_StartsInBuildingFootprint` read `a1[1]`, proving the first live node begins immediately after the count word.",
+      "`UnitStack_ExecuteQueuedPath` repeatedly decrements the count, reads the tail node, and subtracts the already-spent cost from the high word of each remaining node."
+    ]
+  },
+  {
+    "name": "PathWaypoint",
+    "kind": "runtime_helper_record",
+    "base_offset": 4,
+    "stride": 4,
+    "description": "Packed waypoint entry stored inside `QueuedPathBuffer`.",
+    "fields": [
+      { "offset": 0, "name": "tile_row", "type": "uint8", "notes": "Low byte of the packed dword; compared directly against map rows by the queued-path guard helpers." },
+      { "offset": 1, "name": "tile_column", "type": "uint8", "notes": "Second byte of the packed dword; compared directly against map columns by the queued-path guard helpers." },
+      { "offset": 2, "name": "cumulative_cost", "type": "uint16", "notes": "High word storing the cumulative action-point cost to reach this waypoint from the stack's current origin." }
+    ],
+    "evidence": [
+      "`QueuedPath_StartsAtTile` compares the low two bytes of `waypoints[0]` against row and column parameters.",
+      "`UnitStack_ExecuteQueuedPath` checks the high word against `UnitStack_GetMinCurrentActionPoints` before consuming movement and later subtracts the already-spent cost from that same high word.",
+      "Building and temple approach generators trim the tail by comparing only the low two bytes of packed nodes against building-footprint coordinates, leaving the high word untouched until execution time."
     ]
   },
   {
@@ -59,7 +95,7 @@
       { "offset": 10, "name": "fatigue", "type": "uint8", "notes": "0-100 exhaustion counter. Thresholds at 80/90/100 reduce action points, and severe fatigue lowers morale each new turn." },
       { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10." },
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; upper bits also drive garrison stance/formation cycling." },
-      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 marks a still-ambiguous special-entry state." },
+      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker consumed by plague attrition and building/plague transfer logic." },
       { "offset": 18, "name": "aux_runtime_state", "type": "uint32", "notes": "Cleared on init and reused by battle/movement helper families; exact subfields remain unresolved." },
       { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 influences ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`." }
     ],
@@ -77,12 +113,12 @@
     "row_stride": 1400,
     "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, and terrain-edge rendering.",
     "fields": [
-      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index dword_52456C with this word to select the terrain-specific byte_512586 move-cost column." },
+      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index `g_TerrainMoveProfileOffsets` with this word to select the terrain-specific byte_512586 move-cost column." },
       { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
       { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." }
     ],
     "evidence": [
-      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through dword_52456C and test word 2 for the road-cost fast path.",
+      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through `g_TerrainMoveProfileOffsets` and test word 2 for the road-cost fast path.",
       "Bridge movement code at clash95.c:27193-27278 writes and later restores the word at offset +4 on the crossed tile and its neighbors, proving this field belongs to the tile record rather than a transient path buffer.",
       "Main-map rendering reads the first two words of adjacent 14-byte entries to choose seam and edge sprites."
     ]
@@ -108,22 +144,26 @@
     "kind": "player_runtime_record",
     "base_offset": 140024,
     "stride": 1423,
-    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, camera positions, queen state, and the deferred prisoner-placement queue.",
+    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, religion/visibility state, camera positions, queen state, and the deferred prisoner-placement queue.",
     "fields": [
       { "offset": 0, "name": "is_active", "type": "int32", "notes": "Set to 1 when a scenario loader enables this player slot; zeroed by `PlayerRuntimeState_ResetDefaults` for unused slots." },
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
+      { "offset": 39, "name": "religion_flag", "type": "int32", "notes": "Boolean religious alignment flag. Religious-site entry checks and castle upgrade labels branch on this dword to choose the shrine-vs-cult and Christian-vs-pagan behavior." },
+      { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
-      { "offset": 1419, "name": "queen_mood", "type": "uint8", "notes": "Mood state read and updated by the queen-event logic." },
+      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
       { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
       { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
     ],
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields."
+      "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
+      "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while `Queen_NewTurn` and `Queen_DrawRelationshipPanel` use the final bytes at `+1419..+1421` as stable per-player queen-state, whim, and review fields."
     ]
   },
   {
@@ -165,6 +205,7 @@
       { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
+      { "offset": 435, "name": "plague_state", "type": "uint8", "notes": "Low three bits store the active plague countdown/state. Building plague blocks gold collection, decays each turn in `Building_UpdatePlagueState`, and is seeded when a plagued stack enters a clean building." },
       { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
       { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." }
@@ -173,6 +214,7 @@
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
     ]
   },
@@ -197,6 +239,23 @@
     ]
   },
   {
+    "name": "PortSpawnOffset",
+    "kind": "table_record",
+    "base_symbol": "g_PortSupplySpawnRowOffsets / g_PortSupplySpawnColumnOffsets",
+    "stride": 8,
+    "count": 12,
+    "description": "Recovered interleaved offset table used to probe candidate spawn tiles around the 2x2 port footprint. Hex-Rays split the row and column halves into parallel arrays, but the port supply logic advances them in lockstep as one record family.",
+    "fields": [
+      { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Signed row offset from `PortRuntimeState.port_tile_row` when probing a candidate supply spawn tile." },
+      { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Signed column offset from `PortRuntimeState.port_tile_column` paired with the same row delta." }
+    ],
+    "evidence": [
+      "`Port_GetSupply` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
+      "The asm data walk for `dword_517B48` / `dword_517B4C` advances by 8 bytes per candidate pair, matching one `{ row_delta, column_delta }` record rather than two unrelated tables.",
+      "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_GetSupply` searches for the reinforcement spawn point."
+    ]
+  },
+  {
     "name": "QueenWhimRecord",
     "kind": "table_record",
     "base_offset": 530928,
@@ -205,11 +264,11 @@
     "description": "Overlapped queen-whim table in the data segment. Hex-Rays split the record into `word_5191F0` and `off_5191F2`, but the queen turn logic indexes it as one 14-byte record family.",
     "fields": [
       { "offset": 0, "name": "required_frontline_score", "type": "uint16", "notes": "Compared against `AI_CalcFrontlineScore` before the whim can be accepted, then deducted by `AI_ApplyFrontlineScore` on success." },
-      { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDialog`." }
+      { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDecisionDialog`." }
     ],
     "evidence": [
       "`Queen_NewTurn` computes `7 * whimIndex`, reads a uint16 from `word_5191F0 + 7 * index`, and a localized text pointer from `off_5191F2 + 7 * index + 4 * language`, which matches one overlapped record rather than two unrelated arrays.",
-      "The same uint16 is passed into `Queen_ShowWhimDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
+      "The same uint16 is passed into `Queen_ShowWhimDecisionDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
       "`0x519350 - 0x5191F0 = 0x160`, which fits 25 records of `2 + 3*4` bytes with the expected alignment before the next table."
     ]
   },
