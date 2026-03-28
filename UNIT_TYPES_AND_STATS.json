@@ -273,19 +273,19 @@
     },
     {
       "id": 33,
-      "name": "UnitType33_PrisonerOfficerFoot",
+      "name": "UnitType33_SpecialFootPersonage",
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, and is extracted into the prisoner queue on capture."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit`. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
-      "name": "UnitType34_PrisonerOfficerMounted",
+      "name": "UnitType34_SpecialMountedPersonage",
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same localized-name pointer triplet, switches to cavalry-like movement assets, and follows the same prisoner-only capture and castle-prison flow as type `33`."
+      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
   "unit_categories": [
@@ -315,9 +315,9 @@
       "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, and feed gold/peasant-specific stack logic."
     },
     {
-      "name": "PrisonerEntryCategory",
+      "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are extracted from stacks on capture, queued in per-player prisoner transit storage, and moved into castle prison slots for execution, torture, or ransom."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, while `Queen_NewTurn` also creates the same ids directly inside building garrisons."
     }
   ],
   "stats": [
@@ -521,14 +521,14 @@
   ],
   "ambiguous": [
     {
-      "candidate": "UnitType33_PrisonerOfficerFoot / UnitType34_PrisonerOfficerMounted",
+      "candidate": "UnitType33_SpecialFootPersonage / UnitType34_SpecialMountedPersonage",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
-        "foot and mounted prisoner-officer records sharing the same localized name",
-        "special commander/courtier prisoner variants"
+        "foot and mounted special-personage records reused by both prisoner and queen-birth flows",
+        "special commander/courtier variants sharing a single localized-name triplet"
       ],
-      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, and the capture/building flow treats them as prisoner-only entries.",
-      "blockers": "The prisoner role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
+      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
+      "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
     },
     {
       "candidate": "UnitType31_GoldCargo / UnitType32_PeasantCargo",
