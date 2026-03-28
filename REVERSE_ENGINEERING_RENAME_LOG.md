@@ -371,7 +371,7 @@
 
 ## Deferred / Ambiguous
 - `sub_4100B0` clearly derives a stack-wide readiness/order tier from per-slot control bits, but the exact gameplay label behind `(slot + 18) & 3` is still unresolved.
-- `sub_410100` checks state-flags bit `0x8` across the stack, but the underlying special-entry/cargo semantics of that bit remain ambiguous and were not promoted into a factual rename.
+- Resolved in Batch 35: stack state-flags bit `0x8` is the plague marker (`UNIT_SLOT_FLAG_PLAGUE`), so the older cargo-state ambiguity was retired.
 - `sub_410260` gates the animated movement path on visibility and reachable waypoints, but the original designer-facing term for that reveal/animation predicate is still unresolved.
 - `Unit_MoveTrack_1` is still deferred: the implementation treats an occupied destination as temporarily passable, but whether the best human name is `GenerateTrackToOccupiedTile` or a more specific combat/engagement term remains contested.
 
@@ -420,6 +420,47 @@
 | g_PortSupplySpawnRowOffsets / g_PortSupplySpawnColumnOffsets | PortSpawnOffset[12] | Recovered Struct | Port / Reinforcements | High | `Port_GetSupply` advances the row and column arrays in lockstep for the same candidate tile, and the asm data layout advances by 8 bytes per pair, proving the decompiler split one interleaved `{ row_delta, column_delta }` table into two parallel arrays. | c, asm | yes: Averroes |
 
 ## Deferred / Ambiguous
-- `sub_410100` / `sub_412AC0` are still only provably “does any occupied slot have flag bit \`0x8\`?”, but the gameplay meaning of that bit remains contested.
-- `sub_410260` still depends on the unresolved viewer-exposure predicate behind `sub_40F0C0`, so it was not promoted into a factual visibility/reachability rename.
+- Resolved in Batch 35: `sub_410100` / `sub_412AC0` became `UnitStack_HasPlagueFlag` / `UnitStack_HasPlague` after the plague-transfer and plague-attrition evidence converged.
+- `sub_410260` still depends on the unresolved viewer-exposure naming split around `Map_ClassifyFogOfWarOverlayForPlayer`, so it was not promoted into a factual visibility/reachability rename.
 - `Port_GetSupply` clearly spawns a reinforcement stack rather than returning passive data, but the exact public-facing name is still split between the embedded debug string and the higher-level behavior, so it was left unchanged for now.
+
+## Batch 35 – Fog Of War, Plague, And Religious Site Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_40F060 | Map_IsTileVisibleToPlayer | Function | Map / Visibility | High | Directly indexes the per-player revealed-tile bitset at `PlayerRuntimeState + 57` using `13 * row + (column >> 3)` and returns whether the bit for the target tile is set. | c | no |
+| sub_40F0C0 | Map_ClassifyFogOfWarOverlayForPlayer | Function | Map / Fog Of War | High | Returns `-1` for directly revealed tiles, `0` for fully black interior tiles, and otherwise classifies neighbor-reveal masks into fog overlay sprite codes later drawn from the dedicated overlay sprite set. | c, asm | yes: Parfit |
+| sub_408140 | MapTile_HasOwnUnitStack | Function | Map / Tile Occupancy | High | Used by world-map hover/selection logic as the current-player stack predicate, separate from enemy-visible stack checks. | c | yes: Zeno |
+| sub_408200 | MapTile_HasVisibleEnemyUnitStack | Function | Map / Tile Occupancy | High | Matches the enemy-stack branch in the same world-map hover flow and excludes hidden stacks before exposing combat/inspection UI. | c | yes: Zeno |
+| sub_4082C0 | MapTile_HasOwnOrVisibleEnemyUnitStack | Function | Map / Tile Occupancy | High | Combined tile-occupancy predicate used by hover, info, and selection code after splitting the own-stack and visible-enemy cases. | c | yes: Zeno |
+| sub_4082F0 | MapTile_HasOwnBuilding | Function | Map / Tile Occupancy | High | Building-hover logic branches on this helper before garrison-entry validation, proving it is the current-player building test. | c | yes: Zeno |
+| sub_408390 | MapTile_HasEnemyBuilding | Function | Map / Tile Occupancy | High | Complementary occupied-building test used when the selected stack is hovering an enemy building. | c | yes: Zeno |
+| sub_408430 | MapTile_HasBuilding | Function | Map / Tile Occupancy | High | General occupied-building predicate shared by building info and movement UI branches. | c | yes: Zeno |
+| sub_411AB0 | UnitStack_HasBuilder | Function | Unit Lifecycle / Utility Units | High | Scans the ten embedded slots and returns true only when type id `17` is present; separate digging/building actions gate on this exact helper. | c | no |
+| UnitStack_ApplyPeasantCargoAttrition | UnitStack_ApplyPlagueAttritionToPeasantCargo | Function | Unit Turn Update / Plague | High | The helper only damages type-`32` peasant cargo when slot flag bit `0x8` is set, matching plague spread/attrition rather than generic cargo decay. | c | yes: Hilbert |
+| sub_410100 | UnitStack_HasPlagueFlag | Function | Unit Turn Update / Plague | High | Duplicate stack predicate that returns true when any occupied slot has state-flag bit `0x8` set. | c | yes: Hilbert |
+| sub_412A90 | UnitStack_SetPlagueFlag | Function | Unit Turn Update / Plague | High | Iterates occupied slots and ORs state-flag bit `0x8` into each one when plague spreads to the stack. | c | yes: Hilbert |
+| sub_412AC0 | UnitStack_HasPlague | Function | Unit Turn Update / Plague | High | Canonical stack plague predicate wrapped by the higher-level `JestZarazaWOddziale` rules helper and used by building infection transfer. | c | yes: Hilbert |
+| sub_43FB10 | MapTile_GetReligiousSiteCategory | Function | Map / Religious Sites | High | Distinguishes shrine, empty shrine, cult place, and empty cult place tile families, and the adjacent text tables plus entry rules agree with those four categories. | c, asm | yes: Zeno |
+| sub_443BB0 | MapTile_HasHiddenTreasure | Function | Map / Treasure | High | Checks for the hidden-treasure tile ids and is paired with the localized `Zakopany skarb` strings and `Treasure_DigHere(%d)` action. | c, asm | yes: Zeno |
+| sub_443C20 | Treasure_TryDigHere | Function | Map / Treasure | High | Requires a hidden-treasure tile plus a builder-capable stack, logs `Treasure_DigHere(%d)`, consumes the treasure tile, and dispatches the dig outcome. | c, asm | yes: Zeno |
+| Move_CanEnterTile | Player_CanEnterReligiousSiteTile | Function | Map / Religious Sites | Medium | The helper allows entry into shrine tiles only when the player religion flag is set and into cult-place tiles only when it is clear, so it is a player-versus-religious-site compatibility gate rather than a generic move validator. | c | yes: Zeno |
+| Building_UpdateCrisisState | Building_UpdatePlagueState | Function | Buildings / Plague | High | Only the low three bits at building byte `+435` are updated, the function drains building population while active, and gold income is separately suppressed while those bits are non-zero. | c | yes: Hilbert |
+| sub_457DA0 | Building_GetPlagueState | Function | Buildings / Plague | High | Thin accessor that returns `BuildingRecord + 435 & 7`, exactly the plague countdown/state field consumed by UI and turn-update logic. | c | yes: Hilbert |
+| sub_457DC0 | UnitStack_HasPlagueByIndex | Function | Unit Turn Update / Plague | High | Index wrapper around `UnitStack_HasPlague` for callers that hold only a stack id. | c | yes: Hilbert |
+| dword_5202C4 | g_FogOverlaySpriteSet | Global | Map / Fog Of War | High | The map UI loader allocates and loads this sprite set alongside other world-map sets, and render code indexes it with the fog overlay classifier’s return code before drawing unexplored-edge tiles. | c, asm | yes: Parfit |
+| off_511B68 | g_ShrineTexts | Table | Map / Religious Sites | High | `clash95.asm` exposes the localized base text as `Świątynia`, and hover/info logic uses this table when `MapTile_GetReligiousSiteCategory(...) == 1`. | c, asm | yes: Zeno |
+| off_511B74 | g_EmptyShrineTexts | Table | Map / Religious Sites | High | Same category family as above, but the asm strings show the empty-site wording (`Pusta świątynia`). | c, asm | yes: Zeno |
+| off_511B80 | g_CultPlaceTexts | Table | Map / Religious Sites | High | `clash95.asm` exposes the localized text as `Miejsce kultu`, and the world-map info panel uses it for category `3`. | c, asm | yes: Zeno |
+| off_511B8C | g_EmptyCultPlaceTexts | Table | Map / Religious Sites | High | Localized empty-site counterpart for the cult-place family. | c, asm | yes: Zeno |
+| off_511BA4 | g_HiddenTreasureTexts | Table | Map / Treasure | High | Localized table headed by `Zakopany skarb`, shown when the hover/info logic detects a hidden-treasure tile. | c, asm | yes: Zeno |
+| *(new constants)* categories `1..4` | RELIGIOUS_SITE_CATEGORY_SHRINE / EMPTY_SHRINE / CULT_PLACE / EMPTY_CULT_PLACE | Helper | Map / Religious Sites | High | `MapTile_GetReligiousSiteCategory` is now corroborated by the matching shrine/cult text tables and by `Player_CanEnterReligiousSiteTile`, which only accepts category `1` for one religion flag state and category `3` for the other. | c, asm | yes: Zeno |
+| *(new constant)* slot flag bit `0x8` | UNIT_SLOT_FLAG_PLAGUE | Helper | Unit Turn Update / Plague | High | Both plague predicates, plague propagation, and plague attrition target the same slot-flag bit `0x8`, making the plague interpretation stable. | c | yes: Hilbert |
+| PlayerRuntimeState + 39 | PlayerRuntimeState.religion_flag | Recovered Struct Field | Player Runtime State / Religion | High | Religious-site entry checks and castle-construction labels branch on this dword to choose shrine-vs-cult / Christian-vs-pagan behavior. | c | yes: Zeno |
+| PlayerRuntimeState + 57 | PlayerRuntimeState.revealed_tiles_bitset[1300] | Recovered Struct Field | Player Runtime State / Visibility | High | Visibility stamping and lookup helpers address this exact 1300-byte gap as a 13-bytes-per-row bitset, and fog overlay classification consumes the same data. | c | yes: Parfit |
+| BuildingRecord + 435 | BuildingRecord.plague_state | Recovered Struct Field | Buildings / Plague | High | The low three bits at this byte control plague countdown, block income, trigger plague messages, and are seeded when a plagued stack enters the building. | c | yes: Hilbert |
+
+## Deferred / Ambiguous
+- `sub_410260` still looks like a “current or reachable queued path step is drawable for the viewed player” predicate, but the shortest non-misleading public name is not locked down enough yet.
+- `Map_ClassifyFogOfWarOverlayForPlayer` is stable at the behavior level, but the exact orientation mapping of overlay codes `1..12` remains intentionally undocumented until the sprite sheet is fully cross-labeled.
+- `PlayerRuntimeState.religion_flag` is semantically stable as a two-way religion/alignment switch, but the code alone does not justify a stronger lore-facing enum name than “religion flag.”
+- Hidden treasure tile ids `752` and `755` are both provably treasure-bearing, but their exact designer-facing distinction is still deferred.

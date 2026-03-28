@@ -95,7 +95,7 @@
       { "offset": 10, "name": "fatigue", "type": "uint8", "notes": "0-100 exhaustion counter. Thresholds at 80/90/100 reduce action points, and severe fatigue lowers morale each new turn." },
       { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10." },
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; upper bits also drive garrison stance/formation cycling." },
-      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 marks a still-ambiguous special-entry state." },
+      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker consumed by plague attrition and building/plague transfer logic." },
       { "offset": 18, "name": "aux_runtime_state", "type": "uint32", "notes": "Cleared on init and reused by battle/movement helper families; exact subfields remain unresolved." },
       { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 influences ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`." }
     ],
@@ -144,13 +144,15 @@
     "kind": "player_runtime_record",
     "base_offset": 140024,
     "stride": 1423,
-    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, camera positions, queen state, and the deferred prisoner-placement queue.",
+    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, religion/visibility state, camera positions, queen state, and the deferred prisoner-placement queue.",
     "fields": [
       { "offset": 0, "name": "is_active", "type": "int32", "notes": "Set to 1 when a scenario loader enables this player slot; zeroed by `PlayerRuntimeState_ResetDefaults` for unused slots." },
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
+      { "offset": 39, "name": "religion_flag", "type": "int32", "notes": "Boolean religious alignment flag. Religious-site entry checks and castle upgrade labels branch on this dword to choose the shrine-vs-cult and Christian-vs-pagan behavior." },
+      { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
       { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
@@ -159,6 +161,8 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
+      "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
       "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while `Queen_NewTurn` and `Queen_DrawRelationshipPanel` use the final bytes at `+1419..+1421` as stable per-player queen-state, whim, and review fields."
     ]
   },
@@ -201,6 +205,7 @@
       { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
+      { "offset": 435, "name": "plague_state", "type": "uint8", "notes": "Low three bits store the active plague countdown/state. Building plague blocks gold collection, decays each turn in `Building_UpdatePlagueState`, and is seeded when a plagued stack enters a clean building." },
       { "offset": 438, "name": "stored_resource_pool", "type": "uint32", "notes": "Spendable local pool consumed by transfer and add-on purchase helpers and replenished by building income logic; exact economy resource label remains ambiguous." },
       { "offset": 444, "name": "level_bits", "type": "uint8", "notes": "Low three bits encode the building's current level or tier cap for upgrade/add-on checks." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." }
@@ -209,6 +214,7 @@
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
     ]
   },
