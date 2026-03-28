@@ -202,7 +202,7 @@
       { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot packed task bytes: bits `0..2` are the train/order countdown, while bits `3..5` are the repair countdown." },
       { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
       { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
-      { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
+      { "offset": 416, "name": "castle_addon_flags", "type": "uint8", "notes": "Castle add-on presence bits. Recovered mapping: bit `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths; `Rules_AssertCastleFact` prints the same bit mapping as `szpital`, `koszary`, `warsztat`, `szkola`, and `kuznia`." },
       { "offset": 421, "name": "upgrade_stage_index", "type": "uint8", "notes": "Incremented when the timer at `+429` expires and checked against `(level_bits & 7) - 1` before starting another staged upgrade." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
       { "offset": 435, "name": "plague_state", "type": "uint8", "notes": "Low three bits store the active plague countdown/state. Building plague blocks gold collection, decays each turn in `Building_UpdatePlagueState`, and is seeded when a plagued stack enters a clean building." },
@@ -214,6 +214,7 @@
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "The castle add-on builders and `Rules_AssertCastleFact` converge on the `+416` bit mapping: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, and `0x10` smiths.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray."
     ]
