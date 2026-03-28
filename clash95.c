@@ -28,7 +28,7 @@
 #define PORT_NEXT_SUPPLY_TURN_OFFSET 586382
 #define PORT_SUPPLY_READY_FLAG_OFFSET 586386
 #define PORT_SUPPLY_UNIT_COUNT_OFFSET 586390
-#define PORT_SHORE_REFRESH_FLAG_OFFSET 586394
+#define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
 #define UNIT_RECORD_SIZE 467
 #define UNIT_TABLE_OFFSET 509674
 #define TILE_TERRAIN_RECORD_STRIDE 14
@@ -59,8 +59,8 @@
 #define UNIT_TYPE_DRAGON 30
 #define UNIT_TYPE_GOLD_CARGO 31
 #define UNIT_TYPE_PEASANT_CARGO 32
-#define UNIT_TYPE_PRISONER_FOOT 33
-#define UNIT_TYPE_PRISONER_MOUNTED 34
+#define UNIT_TYPE_SPECIAL_FOOT_PERSONAGE 33
+#define UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE 34
 #define g_SettlementTaxPressureThresholds byte_515D00
 #define g_PortSupplySpawnRowOffsets dword_517B48
 #define g_PortSupplySpawnColumnOffsets dword_517B4C
@@ -91,7 +91,7 @@
 #define PORT_NEXT_SUPPLY_TURN (*(_DWORD *)(gameData + PORT_NEXT_SUPPLY_TURN_OFFSET))
 #define PORT_SUPPLY_READY_FLAG (*(_DWORD *)(gameData + PORT_SUPPLY_READY_FLAG_OFFSET))
 #define PORT_SUPPLY_UNIT_COUNT (*(_DWORD *)(gameData + PORT_SUPPLY_UNIT_COUNT_OFFSET))
-#define PORT_NEEDS_SHORE_REFRESH (*(_DWORD *)(gameData + PORT_SHORE_REFRESH_FLAG_OFFSET))
+#define PORT_SHORE_VARIANT_FLAG (*(_DWORD *)(gameData + PORT_SHORE_VARIANT_FLAG_OFFSET))
 #define UNIT_RECORD(index) (gameData + UNIT_TABLE_OFFSET + UNIT_RECORD_SIZE * (index))
 #define TILE_TERRAIN_RECORD(row, column) ((unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row) + TILE_TERRAIN_RECORD_STRIDE * (column)))
 #define TILE_INDEX(row, column) (gameData + TILE_MAP_OFFSET + TILE_ROW_STRIDE * (row) + 2 * (column))
@@ -113,6 +113,14 @@
 #define UNIT_SLOT_FLAGS(slotPtr) (*(_BYTE *)((slotPtr) + 13))
 #define UNIT_SLOT_AUX_STATE(slotPtr) (*(_DWORD *)((slotPtr) + 18))
 #define UNIT_SLOT_STATE_BITS(slotPtr) (*(_BYTE *)((slotPtr) + 22))
+
+typedef struct QueenWhimRecord
+{
+  unsigned __int16 required_frontline_score;
+  char *texts[3];
+} QueenWhimRecord;
+
+#define g_QueenWhimRecords ((QueenWhimRecord *)&word_5191F0)
 
 // Compatibility aliases while stat-callsite cleanup is still in progress.
 #define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
@@ -553,8 +561,8 @@ int sub_41DB20();
 // char __usercall Building_AutoFillOrUseGarrison@<al>(unsigned __int8 *a1@<eax>, double a2@<st0>);
 // _BYTE *__usercall Unit_NewTurnRegen@<eax>(_BYTE *result@<eax>);
 // int __usercall Unit_UpdatePerTurn@<eax>(int a1@<eax>, int a2@<ecx>);
-// BOOL __usercall sub_41E7B0@<eax>(__int16 *a1@<eax>);
-// int __usercall __spoils<ecx,st0> sub_41E7F0@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>);
+// BOOL __usercall UnitSlot_NeedsMoraleRecovery@<eax>(__int16 *a1@<eax>);
+// int __usercall __spoils<ecx,st0> Building_RecoverGarrisonFatigueAndMorale@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>);
 // unsigned __int8 *__usercall Building_CheckTechnology@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>);
 // void __usercall sub_41E9E0(unsigned __int8 *a1@<edx>, char a2@<bl>, DWORD a3@<ebp>);
 // void __usercall LogAllBuildings(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
@@ -1039,10 +1047,10 @@ signed int Game_InitPlayerViewState();
 // char *__usercall sub_44F5F0@<eax>(int a1@<eax>);
 // char *__usercall sub_44F660@<eax>(int a1@<eax>);
 // int __usercall sub_44F6D0@<eax>(int a1@<eax>);
-// int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>);
+// int __usercall Building_DrawPrisonerRows@<eax>(DWORD a1@<ebp>);
 // int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall Building_ShowPrisonerManagementPanel@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>);
-// int __usercall AI_FindActionCandidate@<eax>(int a1@<eax>);
+// int __usercall Queen_FindEligibleBirthHostBuilding@<eax>(int a1@<eax>);
 // int __usercall Queen_NewTurn@<eax>(int@<ecx>, int@<ebx>, char@<sil>, double@<st0>);
 // int __usercall Player_Surrender@<eax>(int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall __spoils<ecx,st0> AI_ComputeNationStrengthPercent@<eax>(signed int a1@<eax>, int a2@<ecx>, DWORD a3@<ebp>, double a4@<st0>);
@@ -24202,8 +24210,8 @@ void *__usercall UnitSlots_ExtractSpecialEntries@<eax>(char *a1@<eax>, int a2@<e
       break;
     if ( v6 == UNIT_TYPE_GOLD_CARGO
       || v6 == UNIT_TYPE_PEASANT_CARGO
-      || v6 == UNIT_TYPE_PRISONER_FOOT
-      || v6 == UNIT_TYPE_PRISONER_MOUNTED )
+      || v6 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+      || v6 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       v7 = 0;
       qmemcpy(a3, a1, 0x1Fu);
@@ -24281,8 +24289,8 @@ signed int __usercall __spoils<ecx> UnitStack_HasNormalCombatUnits@<eax>(int a1@
         v6 = *(__int16 *)(v2 + 6);
         if ( v6 == UNIT_TYPE_GOLD_CARGO
           || v6 == UNIT_TYPE_PEASANT_CARGO
-          || v6 == UNIT_TYPE_PRISONER_FOOT
-          || v6 == UNIT_TYPE_PRISONER_MOUNTED )
+          || v6 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+          || v6 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         {
           ++v5;
           v2 += 31;
@@ -24482,7 +24490,7 @@ __int16 *__usercall UnitStack_CaptureDefeatedStack@<eax>(
   do
   {
     v11 = *(__int16 *)(v7 + 6);
-    if ( v11 == UNIT_TYPE_PRISONER_FOOT || v11 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v11 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v11 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       a4 = *((unsigned __int8 *)a1 + 4);
       Prisoner_QueueCapturedUnit(
@@ -24703,8 +24711,8 @@ signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(
         v10 = *v8;
         if ( v10 != UNIT_TYPE_GOLD_CARGO
           && v10 != UNIT_TYPE_PEASANT_CARGO
-          && v10 != UNIT_TYPE_PRISONER_FOOT
-          && v10 != UNIT_TYPE_PRISONER_MOUNTED )
+          && v10 != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+          && v10 != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         {
           v11 = v13 + *((_BYTE *)v8 + 10);
           *((_BYTE *)v8 + 10) = v11;
@@ -24992,7 +25000,7 @@ signed int __usercall UnitStack_HasPrisonerUnits@<eax>(int a1@<eax>)
     v3 = *(__int16 *)(a1 + 6);
     if ( v3 == -1 )
       return 0;
-    if ( v3 == UNIT_TYPE_PRISONER_FOOT || v3 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v3 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v3 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       break;
     ++v2;
     a1 += 31;
@@ -25020,7 +25028,7 @@ int __usercall sub_412B90@<eax>(char *a1@<eax>, int a2@<edx>, int a3@<ebx>)
       if ( v5 )
         break;
       v8 = *(__int16 *)v7;
-      if ( v8 == UNIT_TYPE_PRISONER_FOOT || v8 == UNIT_TYPE_PRISONER_MOUNTED )
+      if ( v8 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v8 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         v5 = 1;
       ++v6;
       v7 += 31;
@@ -30406,8 +30414,8 @@ int __userpurge Unit_Info@<eax>(
   v9 = *(__int16 *)a4;
   if ( v9 == UNIT_TYPE_PEASANT_CARGO
     || v9 == UNIT_TYPE_GOLD_CARGO
-    || v9 == UNIT_TYPE_PRISONER_FOOT
-    || v9 == UNIT_TYPE_PRISONER_MOUNTED )
+    || v9 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+    || v9 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     return UI_DrawSpecialUnitInfoPane(v31, v28, v8, a4, a5, a3);
   v10 = a4[2];
   UI_BeginUnitInfo(v26, *a4, v10);
@@ -30568,8 +30576,8 @@ int __usercall UI_DrawSpecialUnitInfoPane@<eax>(
     case UNIT_TYPE_PEASANT_CARGO:
       a6 = 25;
       break;
-    case UNIT_TYPE_PRISONER_FOOT:
-    case UNIT_TYPE_PRISONER_MOUNTED:
+    case UNIT_TYPE_SPECIAL_FOOT_PERSONAGE:
+    case UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE:
       a6 = 28;
       break;
     default:
@@ -32857,7 +32865,7 @@ int __usercall Building_ProcessUnitProductionTurn@<eax>(int result@<eax>, int a2
 // 5202E4: using guessed type int gameData;
 
 //----- (0041E570) --------------------------------------------------------
-char __usercall sub_41E570@<al>(unsigned __int8 *a1@<eax>, double a2@<st0>)
+char __usercall Building_UpdateGarrisonTrainRepairTimers@<al>(unsigned __int8 *a1@<eax>, double a2@<st0>)
 {
   unsigned __int8 *v2; // ecx
   int v3; // esi
@@ -33015,7 +33023,7 @@ int __usercall Unit_UpdatePerTurn@<eax>(int a1@<eax>, int a2@<ecx>)
 // 513A70: using guessed type __int16 word_513A70[4];
 
 //----- (0041E7B0) --------------------------------------------------------
-BOOL __usercall sub_41E7B0@<eax>(__int16 *a1@<eax>)
+BOOL __usercall UnitSlot_NeedsMoraleRecovery@<eax>(__int16 *a1@<eax>)
 {
   if ( (g_UnitTypeFlags[22 * *a1] & 2) != 0 )
     return *((char *)a1 + 11) < 6;
@@ -33025,7 +33033,7 @@ BOOL __usercall sub_41E7B0@<eax>(__int16 *a1@<eax>)
 // 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (0041E7F0) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_41E7F0@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>)
+int __usercall __spoils<ecx,st0> Building_RecoverGarrisonFatigueAndMorale@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>)
 {
   CSyncObject *v3; // ecx
   int v4; // edx
@@ -33041,7 +33049,7 @@ int __usercall __spoils<ecx,st0> sub_41E7F0@<eax>(unsigned __int8 *a1@<eax>, dou
     if ( result != -1 )
     {
       sub_4127A0(v3);
-      result = sub_412880(v7, (int (__usercall *)@<eax>(int@<eax>))sub_41E7B0);
+      result = sub_412880(v7, (int (__usercall *)@<eax>(int@<eax>))UnitSlot_NeedsMoraleRecovery);
       v4 = 1;
     }
     v3 = (CSyncObject *)((char *)v3 + 31);
@@ -33231,11 +33239,11 @@ unsigned __int8 *__usercall Building_NewTurn@<eax>(
               Building_ProcessUnitProductionTurn((int)a2, v6, (char)a2, a3, a4);
               Building_AutoFillOrUseGarrison(a2, a4);
               Unit_NewTurnRegen(a2);
-              sub_41E7F0(a2, a4);
+              Building_RecoverGarrisonFatigueAndMorale(a2, a4);
             }
             else
             {
-              sub_41E7F0(a2, a4);
+              Building_RecoverGarrisonFatigueAndMorale(a2, a4);
             }
           }
         }
@@ -46522,7 +46530,7 @@ void *sub_432ED0()
     v51 = 289;
     v6 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
     v7 = (char *)&g_UnitTypeMetadataRecords + v5;
-    if ( v6 == UNIT_TYPE_PRISONER_FOOT || v6 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v6 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v6 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       v8 = 33;
     else
       v8 = 10;
@@ -46540,7 +46548,7 @@ void *sub_432ED0()
       0);
     Render_ReleaseSurface(7, (DWORD)savedregs);
     v11 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-    if ( v11 == UNIT_TYPE_PRISONER_FOOT || v11 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v11 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v11 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       UI_DrawTextFmt(
         v10,
@@ -46582,14 +46590,14 @@ LABEL_10:
       v17 = v45;
       sub_460BB0(dword_544CD8, v45, v45 + 49 + SpriteHeight, v51, v41);
       v18 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-      if ( v18 == UNIT_TYPE_PRISONER_FOOT || v18 == UNIT_TYPE_PRISONER_MOUNTED )
+      if ( v18 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v18 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         v19 = 33;
       else
         v19 = 10;
       v20 = DLX_GetSpriteWidth(dword_532144, v19);
       v39 = v51 - 1 + v20;
       v21 = *(__int16 *)(dword_532150 + 31 * dword_532188 + 18);
-      if ( v21 == UNIT_TYPE_PRISONER_FOOT || v21 == UNIT_TYPE_PRISONER_MOUNTED )
+      if ( v21 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v21 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         v22 = 33;
       else
         v22 = 10;
@@ -54254,7 +54262,7 @@ LABEL_5:
       if ( a1 == v1 )
         return v2;
     }
-    if ( v3 == UNIT_TYPE_PRISONER_FOOT || v3 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v3 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v3 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
       ++v2;
       goto LABEL_5;
@@ -54288,8 +54296,8 @@ LABEL_5:
       if ( v1 == v3 )
         return v2;
     }
-    if ( v4 == UNIT_TYPE_PRISONER_FOOT
-      || v4 == UNIT_TYPE_PRISONER_MOUNTED
+    if ( v4 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+      || v4 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE
       || v4 == UNIT_TYPE_GOLD_CARGO
       || v4 == UNIT_TYPE_PEASANT_CARGO )
     {
@@ -54312,7 +54320,7 @@ signed int __usercall Building_HasPrisonerGarrisonEntries@<eax>(int a1@<eax>)
   while ( 1 )
   {
     v2 = *(__int16 *)(a1 + 18);
-    if ( v2 == UNIT_TYPE_PRISONER_FOOT || v2 == UNIT_TYPE_PRISONER_MOUNTED )
+    if ( v2 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v2 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       break;
     ++v1;
     a1 += 31;
@@ -57917,8 +57925,8 @@ LABEL_2:
     PORT_ROW = rowIndex;
     PORT_COLUMN = columnIndex;
     dataBase = gameData;
-    PORT_NEEDS_SHORE_REFRESH = 1;
-    PORT_SUPPLY_READY_FLAG = PORT_NEEDS_SHORE_REFRESH;
+    PORT_SHORE_VARIANT_FLAG = 1;
+    PORT_SUPPLY_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
     PORT_NEXT_SUPPLY_TURN = Rng_RandRange(8, 10);
     PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
     portColumnOffset = 14 * PORT_COLUMN;
@@ -57976,15 +57984,15 @@ int __usercall __spoils<ecx> Port_NewTurn@<eax>(DWORD a1@<ebp>)
   result = gameData;
   if ( PORT_ROW != -1 )
   {
-    PORT_NEEDS_SHORE_REFRESH = 0;
+    PORT_SHORE_VARIANT_FLAG = 0;
     dataBase = gameData;
     if ( !PORT_SUPPLY_READY_FLAG )
     {
       supplyArrivalTurn = PORT_NEXT_SUPPLY_TURN;
       if ( *(unsigned __int16 *)(gameData + 140022) >= supplyArrivalTurn )
       {
-      PORT_NEEDS_SHORE_REFRESH = 1;
-      PORT_SUPPLY_READY_FLAG = PORT_NEEDS_SHORE_REFRESH;
+      PORT_SHORE_VARIANT_FLAG = 1;
+      PORT_SUPPLY_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
         PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
         log(logArg, supplyArrivalTurn, a1, (int)aPort_newturnPo);
       }
@@ -58016,7 +58024,7 @@ int Port_BuildShorePieces()
   v1 = PORT_ROW;
   if ( v1 != -1 )
   {
-    if ( PORT_NEEDS_SHORE_REFRESH )
+    if ( PORT_SHORE_VARIANT_FLAG )
     {
       v2 = PORT_ROW;
       for ( i = 1400 * v1; ; i += 1400 )
@@ -64631,7 +64639,7 @@ int __usercall sub_44F6D0@<eax>(int a1@<eax>)
 // 5443F4: using guessed type int dword_5443F4;
 
 //----- (0044FC70) --------------------------------------------------------
-int __usercall sub_44FC70@<eax>(DWORD a1@<ebp>)
+int __usercall Building_DrawPrisonerRows@<eax>(DWORD a1@<ebp>)
 {
   int v1; // edi
   int v2; // esi
@@ -65051,7 +65059,7 @@ int __usercall Building_ShowPrisonerManagementPanel@<eax>(int a1@<eax>, void *a2
     v66 += 1423;
   }
   while ( v39 != 5 );
-  sub_44FC70(v36);
+  Building_DrawPrisonerRows(v36);
   Queen_DrawMoodPanel(v36, 10);
   sub_419D80(dword_518DC8);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
@@ -65172,7 +65180,7 @@ LABEL_49:
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (004506B0) --------------------------------------------------------
-int __usercall AI_FindActionCandidate@<eax>(int a1@<eax>)
+int __usercall Queen_FindEligibleBirthHostBuilding@<eax>(int a1@<eax>)
 {
   int v2; // eax
   int v3; // ebx
@@ -65258,7 +65266,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
         {
           log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);
-          v21 = AI_FindActionCandidate(g_CurrentPlayerIndex);
+          v21 = Queen_FindEligibleBirthHostBuilding(g_CurrentPlayerIndex);
           if ( v21 )
           {
             Building_CreateSpecialGarrisonUnit(v21, a2, v21, a2, a4);
@@ -65360,13 +65368,13 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
             log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
             v39 = AI_CalcFrontlineScore(g_CurrentPlayerIndex);
             if ( Queen_ShowWhimDialog(
-                   *(int *)((char *)off_5191F2 + 7 * v40 + 4 * (unsigned __int8)g_LanguageIndex),
-                   *(unsigned __int16 *)((char *)&word_5191F0 + 7 * v40),
-                   7 * v40,
+                   g_QueenWhimRecords[v38].texts[(unsigned __int8)g_LanguageIndex],
+                   g_QueenWhimRecords[v38].required_frontline_score,
+                   7 * v38,
                    v39,
                    (DWORD)savedregs) )
             {
-              AI_ApplyFrontlineScore(g_CurrentPlayerIndex, *(unsigned __int16 *)((char *)&word_5191F0 + v41));
+              AI_ApplyFrontlineScore(g_CurrentPlayerIndex, g_QueenWhimRecords[v38].required_frontline_score);
               v42 = PLAYER_DATA(g_CurrentPlayerIndex);
               if ( *(char *)(v42 + 141443) < 9 )
                 ++*(_BYTE *)(v42 + 141443);
@@ -70334,7 +70342,7 @@ LABEL_105:
       for ( i = 0; i != 372; i += 31 )
       {
         v34 = *(__int16 *)(467 * (*(unsigned __int16 *)(gameData + 573450) - 0x8000) + gameData + i + 509692);
-        if ( v34 == UNIT_TYPE_PRISONER_FOOT || v34 == UNIT_TYPE_PRISONER_MOUNTED )
+        if ( v34 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v34 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
           ++v32;
       }
       return v32 >= 6;
@@ -70427,7 +70435,7 @@ LABEL_7:
         for ( i = 0; i < 10; ++i )
         {
           v4 = *(__int16 *)(725 * v2 + gameData + 31 * i + 147180);
-          if ( v4 == UNIT_TYPE_PRISONER_FOOT || v4 == UNIT_TYPE_PRISONER_MOUNTED )
+          if ( v4 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v4 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
             ++v1;
         }
       }
@@ -70446,7 +70454,7 @@ LABEL_19:
         for ( j = 0; j < 12; ++j )
         {
           v8 = *(__int16 *)(31 * j + gameData + 467 * v5 + 509692);
-          if ( v8 == UNIT_TYPE_PRISONER_FOOT || v8 == UNIT_TYPE_PRISONER_MOUNTED )
+          if ( v8 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v8 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
             ++v1;
         }
       }
@@ -70474,7 +70482,7 @@ LABEL_34:
     for ( k = 0; k < 10; ++k )
     {
       v12 = *(__int16 *)(725 * v10 + gameData + 31 * k + 147180);
-      if ( v12 == UNIT_TYPE_PRISONER_FOOT || v12 == UNIT_TYPE_PRISONER_MOUNTED )
+      if ( v12 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v12 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         ++v9;
     }
   }
@@ -70493,7 +70501,7 @@ LABEL_46:
     for ( m = 0; m < 12; ++m )
     {
       v16 = *(__int16 *)(31 * m + gameData + 467 * v13 + 509692);
-      if ( v16 == UNIT_TYPE_PRISONER_FOOT || v16 == UNIT_TYPE_PRISONER_MOUNTED )
+      if ( v16 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v16 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         ++v9;
     }
   }

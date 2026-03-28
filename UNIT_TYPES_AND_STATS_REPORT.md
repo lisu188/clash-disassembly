@@ -43,8 +43,8 @@
 | `30` | `UnitType30_Dragon` | `smok` | high | `off_512480` (`Smok / Dragon / Drachen`) resolves to `smok`. |
 | `31` | `UnitType31_GoldCargo` | `gold` | high | `off_512540` (`Złoto / Gold`) resolves to `gold`, and stack-action helpers treat type `31` as non-combat cargo excluded from the normal-unit predicate. |
 | `32` | `UnitType32_PeasantCargo` | `peas` | high | `off_51254C` (`Chłopi / Peasants`) resolves to `peas`, and capture/building helpers merge and normalize type `32` as transferable peasant cargo rather than an ordinary combat slot. |
-| `33` | `UnitType33_SpecialFootPersonage` | `specm` | medium | This record reuses `off_512558` (`Dowódca / Tactician / Soldat`), keeps infantry-like movement assets, enters the prisoner pipeline on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit` during the royal birth event. |
-| `34` | `UnitType34_SpecialMountedPersonage` | `speck` | medium | This record reuses the same localized-name triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path as the alternate royal special entry. |
+| `33` | `UnitType33_SpecialFootPersonage` | `specm` | medium | This record reuses `off_512558` (`Dowódca / Tactician / Soldat`), keeps infantry-like movement assets, enters the prisoner pipeline on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit` during the royal birth event. The `specm` code name and the shared commander-like label both argue for a broader special-personage role rather than a prisoner-only one. |
+| `34` | `UnitType34_SpecialMountedPersonage` | `speck` | medium | This record reuses the same localized-name triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path as the alternate royal special entry. The `speck` code name plus the daughter-birth text about becoming an officer reinforces the same shared special-personage family. |
 
 ### 2.2 Recovered Categories
 | recovered_name | confidence | kind | evidence summary | where found | related |
@@ -95,7 +95,7 @@
 | `LightUnitCategory` | `morale` | Light units seed at `6` rather than `10`, proving that the bit1 class split affects starting morale rather than a hidden veterancy counter. | high | `clash95.c:22188-22196`, `clash95.c:32986-32991` |
 
 ## 5. Ambiguous Findings
-- `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` are still only medium-confidence names. The recovered code now proves these ids are not prisoner-only because `Queen_NewTurn` also creates them, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages.
+- `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` are still only medium-confidence names. The recovered code now proves these ids are not prisoner-only because `Queen_NewTurn` also creates them, and the `specm` / `speck` code names plus the officer-flavored birth text narrow the family further, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages.
 - `UnitType31_GoldCargo` and `UnitType32_PeasantCargo` are behaviorally secure as cargo-style special entries, but the exact original distinction between stack payload and ordinary recruitable peasant units is still partly unresolved from code alone.
 - `g_UnitTypeBaseRangedAttack` remains only medium-confidence as a pure ranged-attack stat. It behaves like a second attack value, but the code does not yet expose a canonical gameplay label.
 - `g_UnitTypeBaseSiegeAttack` still looks like an alternate damage table for buildings or fortifications, but the exact original design label remains unresolved.

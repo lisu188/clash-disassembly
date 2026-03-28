@@ -277,7 +277,7 @@
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit`."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialGarrisonUnit`. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
@@ -285,7 +285,7 @@
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path."
+      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
   "unit_categories": [
@@ -527,7 +527,7 @@
         "foot and mounted special-personage records reused by both prisoner and queen-birth flows",
         "special commander/courtier variants sharing a single localized-name triplet"
       ],
-      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event.",
+      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
       "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
     },
     {

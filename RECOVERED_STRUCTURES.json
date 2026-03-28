@@ -159,7 +159,7 @@
       { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied into spawned unit stacks and used for ownership, vision, and income lookups." },
       { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
       { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
-      { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot task bits used by `Building_TrainUnit` and `Building_RepairUnit`." },
+      { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot packed task bytes: bits `0..2` are the train/order countdown, while bits `3..5` are the repair countdown." },
       { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
       { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
       { "offset": 416, "name": "building_flags", "type": "uint8", "notes": "Bitfield used by add-on gating, castle UI toggles, and income modifiers." },
@@ -188,12 +188,29 @@
       { "offset": 8, "name": "next_supply_turn", "type": "int32", "notes": "Absolute game-turn number when the next supply ship should arrive." },
       { "offset": 12, "name": "supply_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
       { "offset": 16, "name": "pending_supply_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the supply shipment." },
-      { "offset": 20, "name": "needs_shore_refresh", "type": "int32", "notes": "Controls whether `Port_BuildShorePieces` renders the arrival-state shoreline tiles or the empty-state shoreline tiles." }
+      { "offset": 20, "name": "shoreline_variant_flag", "type": "int32", "notes": "Controls which shoreline-piece variant `Port_BuildShorePieces` renders for the current supply state." }
     ],
     "evidence": [
       "`Port_FindAndInit` seeds all six dwords together after scanning the map for the unique port tile and then immediately calls `Port_BuildShorePieces` and `Rules_LogPortLocation`.",
       "`Port_NewTurn`, `Port_BuildShorePieces`, and `Port_GetSupply` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
       "The top-of-file offset macros in `clash95.c` and the matching xrefs in `clash95.asm` agree on the exact offsets `586374..586394` inside `gameData`."
+    ]
+  },
+  {
+    "name": "QueenWhimRecord",
+    "kind": "table_record",
+    "base_offset": 530928,
+    "stride": 14,
+    "count": 25,
+    "description": "Overlapped queen-whim table in the data segment. Hex-Rays split the record into `word_5191F0` and `off_5191F2`, but the queen turn logic indexes it as one 14-byte record family.",
+    "fields": [
+      { "offset": 0, "name": "required_frontline_score", "type": "uint16", "notes": "Compared against `AI_CalcFrontlineScore` before the whim can be accepted, then deducted by `AI_ApplyFrontlineScore` on success." },
+      { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDialog`." }
+    ],
+    "evidence": [
+      "`Queen_NewTurn` computes `7 * whimIndex`, reads a uint16 from `word_5191F0 + 7 * index`, and a localized text pointer from `off_5191F2 + 7 * index + 4 * language`, which matches one overlapped record rather than two unrelated arrays.",
+      "The same uint16 is passed into `Queen_ShowWhimDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
+      "`0x519350 - 0x5191F0 = 0x160`, which fits 25 records of `2 + 3*4` bytes with the expected alignment before the next table."
     ]
   },
   {
