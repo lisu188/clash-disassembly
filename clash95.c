@@ -1129,8 +1129,8 @@ signed int sub_452390();
 // signed int __usercall __spoils<ecx,st0> sub_455070@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>, double a6@<st0>);
 // signed int __usercall __spoils<ecx,st0> sub_4550F0@<eax>(__int16 *a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // signed int __usercall sub_455150@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>);
-// _DWORD *__usercall sub_4551A0@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_4551D0@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_LogTrapFact@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_RetractTrapFact@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall Rules_LogTempleFact@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall Rules_LogTreasureFact@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall Rules_RetractTreasureFact@<eax>(int a1@<eax>, int a2@<edx>);
@@ -33706,7 +33706,7 @@ signed int __usercall Building_Transfer@<eax>(int a1@<eax>, int a2@<edx>, int a3
       UnitStack_SetPlagueFlag((int)v38);
     Rules_LinkArmyFact(v38, (int)v38, v33, a5, (char)v32, (DWORD)savedregs);
     if ( !*(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v34 + 4) + 140051) )
-      sub_455CC0(*(unsigned __int16 *)(TILE_INDEX(*v34, v38[1])), v41, v42);
+      Rules_LogBuildingTransferFact(*(unsigned __int16 *)(TILE_INDEX(*v34, v38[1])), v41, v42);
     return 1;
   }
   return result;
@@ -41848,7 +41848,7 @@ signed int __usercall Trap_TriggerAtStackTile@<eax>(int a1@<eax>, DWORD a2@<ebp>
   v22 = gameData + 725 * a1;
   v23 = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(v22 + 147174);
   TILE_TRAP_OWNER_MASK(*(__int16 *)(v22 + 147174), *(__int16 *)(v22 + 147176)) = 0;
-  sub_4551D0(*(__int16 *)(725 * a1 + gameData + 147174), *(__int16 *)(725 * a1 + gameData + 147176));
+  Rules_RetractTrapFact(*(__int16 *)(725 * a1 + gameData + 147174), *(__int16 *)(725 * a1 + gameData + 147176));
   Trap_HurtStack((__int16 *)(v24 + gameData + 147174), v23, a2, a3);
   return 1;
 }
@@ -62496,7 +62496,7 @@ int __usercall Map_LoadFromFile@<eax>(int a1@<eax>)
     for ( m = 0; m < 100; ++m )
     {
       if ( *v26 )
-        sub_4551A0(v25, m);
+        Rules_LogTrapFact(v25, m);
       ++v26;
     }
     ++v25;
@@ -67704,7 +67704,7 @@ signed int __usercall sub_455150@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st
 // 45517C: variable 'v5' is possibly undefined
 
 //----- (004551A0) --------------------------------------------------------
-_DWORD *__usercall sub_4551A0@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogTrapFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -67717,7 +67717,7 @@ _DWORD *__usercall sub_4551A0@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (004551D0) --------------------------------------------------------
-_DWORD *__usercall sub_4551D0@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_RetractTrapFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -68365,7 +68365,7 @@ _DWORD *__usercall Rules_LogCastleSiteFact@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455CC0) --------------------------------------------------------
-_DWORD *__usercall sub_455CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
+_DWORD *__usercall Rules_LogBuildingTransferFact@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>)
 {
   double v4; // st7
   int v5; // ecx

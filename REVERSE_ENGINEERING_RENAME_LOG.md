@@ -527,6 +527,16 @@
 - `MapTile_IsCastleFoundationTile` is stable for the `707..714` family and `MapTile_IsCastleFoundationAnchorTile` is stable for `707` / `711`, but the exact semantic split among the non-anchor variants remains unresolved.
 - `sub_455D90` logs `(zdobyty %d %d %d)`, but this pass did not pin down whether the fact is castle-specific, faction-specific, or a broader conquest record.
 
+## Batch 37 – Trap Facts And Castle Fact Handles
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_4551A0 | Rules_LogTrapFact | Function | Rules / Traps | High | Emits the exact rules payload `(pulapka row col)` and is called when map-load reconstruction finds armed trap tiles. | c, asm | no |
+| sub_4551D0 | Rules_RetractTrapFact | Function | Rules / Traps | High | Emits the exact rules payload `(kasuj pulapke row col)` immediately after a trap fires and the owner mask is cleared from the tile. | c, asm | no |
+| BuildingRecord + 463 | BuildingRecord.castle_fact_id | Recovered Struct Field | Buildings / Castle Facts | High | `Rules_AssertCastleFact` stores its returned fact handle at `+463`, `Rules_RetractCastleFact` retracts and zeroes the same dword, and `Building_OnGarrisonChange` plus `Unit_CaptureBuilding` update its `moc` and `gracz` attributes. | c, exe | yes: Bacon |
+
+## Deferred / Ambiguous
+- `sub_455150` updates the `gracz` attribute on `BuildingRecord.castle_fact_id`, but this pass stopped short of renaming it until the non-castle call envelope is ruled out more rigorously.
+
 ## Batch 38 – Castle Lifecycle Logging Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
@@ -537,5 +547,51 @@
 | sub_455D20 | Rules_LogCastleDestroyedFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(zginal-zamek %d %d)`, reached from `Rules_RetractCastleFact` when a castle/building record is removed. | c, asm | no |
 | sub_455D90 | Rules_LogBuildingCapturedFact | Function | Rules / Building Capture | Medium | Literal rules logger for `(zdobyty %d %d %d)` called only from `Unit_CaptureBuilding`; the three arguments are the capturing player id, building id, and current turn number. The capture path is generic building capture, not castle-only capture. | c, asm | no |
 
+## Batch 39 – Castle Transfer And Addon Field Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_4554B0 | Building_BuildSmithsByIndex | Function | Buildings / Castle Addons | High | Thin id-based wrapper that forwards directly into `Building_BuildSmiths`, preserving the same add-on build side effects for callers that only hold a building id. | c | no |
+| sub_455530 | Building_BuildBarracksByIndex | Function | Buildings / Castle Addons | High | Thin id-based wrapper that forwards directly into `Building_BuildBarracks`. | c | no |
+| sub_455550 | Building_BuildHospitalByIndex | Function | Buildings / Castle Addons | High | Thin id-based wrapper that forwards directly into `Building_BuildHospital`. | c | no |
+| sub_455CC0 | Rules_LogBuildingTransferFact | Function | Rules / Building Transfer | Medium | Literal rules logger for `(budowanie transfer 0 0 %d %d %d)`, reached from `Building_Transfer` after army-fact relinking in the no-human-controller branch. The name stays implementation-shaped to avoid over-claiming the designer-facing semantics of the three payload numbers. | c, asm | no |
+| sub_455D50 | Rules_LogCastleSchemeFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(schemat %d %d %d)` with a randomized scheme value `1..3`; `Rules_LogCastleBuiltFactAndScheme` delegates to it immediately after logging castle construction. | c, asm | no |
+| sub_455DC0 | Rules_LogCastleUnderConstructionFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(zamek w budowie %d)`, emitted immediately after a castle site is claimed for construction. | c, asm | no |
+| sub_455DF0 | Rules_LogCastleBuiltFactAndScheme | Function | Rules / Castle Lifecycle | High | Logs `(zbudowano zamek %d)` and then immediately logs a scheme fact through `Rules_LogCastleSchemeFact`, so the paired behavior is explicit. | c, asm | no |
+| sub_455E20 | Rules_LogAssignedCastleFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(wyznaczony zamek %d %d)`. | c, asm | no |
+| sub_455E50 | Rules_LogAssignedPlayerFact | Function | Rules / Castle Lifecycle | High | Literal rules logger for `(wyznaczony gracz %d %d)`. | c, asm | no |
+| sub_455FF0 | Map_RebuildCastleSiteAnchorCache | Function | Map / Castle Sites | Medium | Rebuilds the global castle-site anchor coordinate arrays by scanning the map for `MapTile_IsCastleFoundationAnchorTile`; consumers are rules/AI-facing, but the cache behavior itself is explicit. | c, asm | no |
+| dword_544570 | g_CastleSiteAnchorRows | Global | Map / Castle Sites | Medium | Filled exclusively by `Map_RebuildCastleSiteAnchorCache` with the row component of each castle-foundation anchor tile. | c, asm | no |
+| dword_544574 | g_CastleSiteAnchorColumns | Global | Map / Castle Sites | Medium | Filled exclusively by `Map_RebuildCastleSiteAnchorCache` with the column component of each castle-foundation anchor tile. | c, asm | no |
+| BuildingRecord + 416 / building_flags | BuildingRecord.castle_addon_flags | Recovered Struct Field | Buildings / Castle Addons | High | Castle add-on builders and `Rules_AssertCastleFact` converge on the exact bit mapping: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths. | c, asm | no |
+
 ## Deferred / Ambiguous
-- `sub_455CC0` logs `(budowanie transfer 0 0 %d %d %d)` during building-transfer logic, but this pass did not pin down whether it represents a generic building-to-army transfer fact, an AI-only construction transfer fact, or a narrower no-human-controller bookkeeping event.
+- No additional medium/high-confidence candidates remained in the castle transfer and castle-fact neighborhood after this batch. The next unresolved local target is the exact gameplay meaning of the `sub_455F60` distance/cache predicate and its paired `dword_544578` / `dword_54457C` arrays.
+
+## Batch 39 – Castle Foundations And Addon Flags Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_41D980 | MapTile_IsCastleFoundationTile | Function | Map / Castle Sites | High | The predicate accepts tile ids `707..714`, the hover/info path selects the `Fundamenty` text table only when it passes, and castle placement logic treats the same family as special blocked terrain. | c, asm, map | no |
+| sub_41DA50 | MapTile_IsCastleFoundationAnchorTile | Function | Map / Castle Sites | High | Narrower subset predicate that accepts only tile ids `707` and `711`; the anchor-cache rebuild records exactly this subset as castle-site anchors. | c | no |
+| sub_41DBA0 | BuildCursor_IsPlacementValid | Function | UI / Building Placement | Medium | Build-preview validation enforces cursor radius, blocked tiles, occupant checks, trap/religious-site/treasure exclusions, and extra castle-foundation restrictions before construction is allowed. | c | no |
+| sub_41EF10 | Building_BuildBarracks | Function | Buildings / Castle Addons | High | The debug string is `Building_BuildBarracks() - %d,%d`, and the helper spends resources, sets add-on bit `0x02`, and arms the construction-in-progress flag. | c, asm | no |
+| sub_41EF80 | Building_BuildHospital | Function | Buildings / Castle Addons | High | The debug string is `Building_BuildHospital() - %d,%d`, and the helper spends resources, sets add-on bit `0x01`, and arms the construction-in-progress flag. | c, asm | no |
+| sub_41F020 | Building_BuildSmiths | Function | Buildings / Castle Addons | High | The debug string is `Building_BuildSmiths() - %d,%d`, and the helper spends resources, sets add-on bit `0x10`, and arms the construction-in-progress flag. | c, asm | no |
+| sub_4554B0 | Building_BuildSmithsByIndex | Function | Buildings / Castle Addons | High | Thin building-id wrapper that forwards directly into `Building_BuildSmiths`. | c | no |
+| sub_455530 | Building_BuildBarracksByIndex | Function | Buildings / Castle Addons | High | Thin building-id wrapper that forwards directly into `Building_BuildBarracks`. | c | no |
+| sub_455550 | Building_BuildHospitalByIndex | Function | Buildings / Castle Addons | High | Thin building-id wrapper that forwards directly into `Building_BuildHospital`. | c | no |
+| sub_455CC0 | Rules_LogBuildingTransferFact | Function | Rules / Buildings | High | Emits the exact rules payload `(budowanie transfer 0 0 %d %d %d)` from the building-transfer path after a transfer stack is linked into the rules system. | c, asm | no |
+| sub_455D50 | Rules_LogCastleSchemeFact | Function | Rules / Castle Lifecycle | High | Emits the exact rules payload `(schemat %d %d %d)` after `Rng_RandRange(1, 3)`, and the castle-built logger calls it immediately after the built fact. | c, asm | no |
+| sub_455DC0 | Rules_LogCastleUnderConstructionFact | Function | Rules / Castle Lifecycle | High | Emits the exact rules payload `(zamek w budowie %d)` directly after `Rules_AssertCastleFact` during `Building_New`. | c, asm | no |
+| sub_455DF0 | Rules_LogCastleBuiltFactAndScheme | Function | Rules / Castle Lifecycle | High | Emits `(zbudowano zamek %d)` and then immediately calls `Rules_LogCastleSchemeFact`, making the paired behavior explicit. | c, asm | no |
+| sub_455E20 | Rules_LogAssignedCastleFact | Function | Rules / Castle Lifecycle | High | Emits the exact rules payload `(wyznaczony zamek %d %d)`. | c, asm | no |
+| sub_455E50 | Rules_LogAssignedPlayerFact | Function | Rules / Castle Lifecycle | High | Emits the exact rules payload `(wyznaczony gracz %d %d)`. | c, asm | no |
+| sub_455FF0 | Map_RebuildCastleSiteAnchorCache | Function | Map / Castle Sites | Medium | Rebuilds the cached row/column arrays by scanning the full map and recording every `MapTile_IsCastleFoundationAnchorTile` tile. | c | no |
+| off_511B98 | g_CastleFoundationTexts | Table | Map / Castle Sites | High | The hover/info path selects this multilingual table only for castle-foundation terrain, and the asm/map data label it with `Fundamenty`. | c, asm, map | no |
+| dword_544570 | g_CastleSiteAnchorRows | Global | Map / Castle Sites | Medium | Filled only by `Map_RebuildCastleSiteAnchorCache` with the row component of each cached castle-site anchor tile. | c | no |
+| dword_544574 | g_CastleSiteAnchorColumns | Global | Map / Castle Sites | Medium | Filled only by `Map_RebuildCastleSiteAnchorCache` with the column component of each cached castle-site anchor tile. | c | no |
+| BuildingRecord + 416 / building_flags | BuildingRecord.castle_addon_flags | Recovered Struct Field | Buildings / Castle Addons | High | The castle add-on builders and `Rules_AssertCastleFact` converge on the exact bit mapping: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths. | c, asm | no |
+
+## Deferred / Ambiguous
+- `sub_410260` still looks like a “current or reachable queued path step is drawable for the viewed player” predicate, but the shortest non-misleading public name is not locked down enough yet.
+- Non-anchor castle-foundation tile ids `708, 709, 710, 712, 713, 714` still behave as foundation variants, but their exact piece/orientation mapping remains deferred.
+- `sub_457E50` is only a wrapper around `Unit_AddToGroup(..., 0)`; it likely wants a group-merge wrapper name, but the narrow behavioral distinction is not yet corroborated well enough.
