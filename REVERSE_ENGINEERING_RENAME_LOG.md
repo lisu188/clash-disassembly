@@ -323,5 +323,26 @@
 | UNIT_TYPE_PRISONER_MOUNTED | UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE | Helper | Unit Types / Special Entries | High | Type `34` is the mounted sibling of the same shared special-entry family, created by the queen birth path as well as the prisoner system, so the older prisoner-only constant name was no longer accurate. | c, asm, exe | yes: Pauli |
 
 ## Deferred / Ambiguous
-- `Queen_ShowProposalDialog` is semantically close to the exe/debug string `NewQueenWindow()`, but this pass does not yet prove whether the better public-facing name is `Queen_ShowNewQueenWindow`, `Queen_ShowProposalDialog`, or a more specific marriage/envoy title.
+- The internal debug string `NewQueenWindow()` was not promoted because the localized prompt text proves the dialog is specifically a marriage offer, not a generic queen-window controller.
 - `QueenWhimRecord.required_frontline_score` is implementation-safe, but the designer-facing resource name behind that score remains unresolved; the code only proves that whims consume the same per-building frontline-pressure pool later updated by `AI_ApplyFrontlineScore`.
+
+## Batch 30 – Marriage Dialog And Prisoner Panel Controls Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_4127A0 | UnitSlot_AdjustFatigueByPredicate | Function | Unit Runtime / Fatigue | High | Single-slot analogue of `UnitStack_AdjustFatigueByPredicate`: applies the caller-supplied delta to slot fatigue at `+10`, skips special-entry types `31..34`, clamps to `0..100`, and gates on the predicate passed in `ebx`. | c, asm | yes: Lorentz |
+| sub_412880 | UnitSlot_AdjustMoraleByPredicate | Function | Unit Runtime / Morale | High | Single-slot analogue of `UnitStack_AdjustMoraleByPredicate`: applies the caller-supplied delta to slot morale at `+11`, clears the refusal flag on gains, skips special-entry types, and clamps to `0..20`. | c, asm | yes: Lorentz |
+| Building_FindFirstValidAddonSlot | Building_AdjustAllGarrisonMoraleByDelta | Function | Buildings / Garrison | High | The old prototype name was misleading; the wrapper scans every occupied building garrison slot and forwards the caller-supplied morale delta through `UnitSlot_AdjustMoraleByPredicate`, with no add-on search behavior at all. | c, asm | yes: Lorentz |
+| sub_43EE10 | Building_CycleAllGarrisonOrdersOnce | Function | Buildings / Garrison | Medium | Scans every occupied building garrison slot and calls `Building_UseGarrisonSlot` once per slot, so it is a bulk order/state cycler rather than a morale or timer helper. | c, asm | yes: Lorentz |
+| Queen_ShowProposalDialog | Queen_ShowMarriageProposalDialog | Function | Queen / Marriage | High | The localized prompt explicitly asks whether the ruler wants to marry the princess offered by king Wolfgang's envoy; the weak debug string `NewQueenWindow()` is less semantically accurate than the prompt text and callsite behavior in `Queen_NewTurn`. | c, asm, exe | yes: Pauli, Averroes |
+| g_QueenProposalPrompt | g_QueenMarriageProposalTexts | Table | Queen / Marriage | High | Three localized strings describing the envoy-delivered marriage offer, used only by the marriage dialog at `0x446F40`. | c, asm, exe | yes: Pauli |
+| g_QueenMoodTexts | g_QueenRelationshipStateTexts | Table | Queen / Relationship State | Medium | The 30-entry localized table covers `No queen`, anger, estrangement, affection, and childbirth intent, so it models broader queen relationship states rather than pure mood text. | c, asm | yes: Pauli |
+| sub_44F510 | BuildingPrisonerActionWidget_HasPrisoner | Function | Buildings / Prisoners / UI | High | Converts a prisoner-action widget pointer back into one of the three prison-cell indices and checks whether that slot's prisoner type byte is occupied. | c, asm | yes: Averroes |
+| sub_44F580 | BuildingPrisonerActionButton_SelectBehead | Function | Buildings / Prisoners / UI | High | Bound by the widget table to the localized `Behead` labels and only selects that action in the prisoner panel; execution happens later through `BuildingPrisoner_SetAction`. | c, asm, exe | yes: Averroes |
+| sub_44F5F0 | BuildingPrisonerActionButton_SelectTorture | Function | Buildings / Prisoners / UI | High | Bound by the widget table to the localized `Torture` labels and acts as the prisoner-panel selector for that action. | c, asm, exe | yes: Averroes |
+| sub_44F660 | BuildingPrisonerActionButton_SelectBribery | Function | Buildings / Prisoners / UI | High | Bound by the widget table to the localized `Bribery` labels and selects the ransom/bribery action in the prisoner panel. | c, asm, exe | yes: Averroes |
+| sub_44F6D0 | BuildingPrisonerPanel_BackButton | Function | Buildings / Prisoners / UI | Medium | Bound to the localized `Back` button and signals dialog exit by updating `dword_5443F4`, which the prisoner-panel event loop watches. | c, asm, exe | yes: Averroes |
+
+## Deferred / Ambiguous
+- `Queen_DrawMoodPanel` is mostly reliable and was left unchanged; `Queen_DrawMoodSummary` would also fit, but the current name is not misleading enough to justify churn.
+- `g_QueenRelationshipStateTexts` is a safer name than `g_QueenMoodTexts`, but the exact internal state machine behind each row still mixes queen presence, mood, and childbirth intent.
+- `Building_CycleAllGarrisonOrdersOnce` is semantically safe at the implementation level, but the original designer-facing term for the packed order/state byte at slot `+0x0C` is still unresolved.

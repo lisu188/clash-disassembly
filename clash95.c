@@ -440,9 +440,9 @@ void sub_411D70();
 // __int16 *__usercall UnitStack_CaptureDefeatedStack@<eax>(__int16 *a1@<eax>, signed int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
 // int __usercall Unit_CreateNearbyUnitGroup@<eax>(int a1@<eax>, int a2@<edx>, unsigned __int8 *a3@<ebx>, double a4@<st0>);
 // int __cdecl CSyncObject::Unlock(CSyncObject *__hidden this, __int32, __int32 *); idb
-int __thiscall sub_4127A0(CSyncObject *this); // idb
+int __thiscall UnitSlot_AdjustFatigueByPredicate(CSyncObject *this); // idb
 // signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
-// int __usercall sub_412880@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>);
+// int __usercall UnitSlot_AdjustMoraleByPredicate@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>);
 // signed int __usercall UnitStack_AdjustMoraleByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // int __usercall Building_UseGarrisonSlot@<eax>(int result@<eax>);
 // signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
@@ -867,8 +867,8 @@ int __cdecl sub_43CF90();
 // signed int __usercall Building_HasPrisonerGarrisonEntries@<eax>(int a1@<eax>);
 // int __usercall Building_CompactGarrison@<eax>(unsigned __int8 *a1@<eax>, unsigned __int8 *a2@<ecx>, double a3@<st0>);
 // BOOL __usercall Building_CanEquipAddon@<eax>(char *a1@<eax>, int a2@<edx>);
-// int __usercall Building_FindFirstValidAddonSlot@<eax>(int a1@<eax>);
-// int __usercall __spoils<ecx> sub_43EE10@<eax>(int a1@<eax>);
+// int __usercall Building_AdjustAllGarrisonMoraleByDelta@<eax>(int a1@<eax>);
+// int __usercall __spoils<ecx> Building_CycleAllGarrisonOrdersOnce@<eax>(int a1@<eax>);
 // signed int __usercall __spoils<ecx> Building_GetTaxPressureTier@<eax>(int a1@<eax>);
 // __int16 __usercall __spoils<ecx> Building_UpdatePopulationGrowth@<ax>(int a1@<eax>);
 // int __usercall Building_CollectGoldIncome@<eax>(int a1@<eax>);
@@ -972,7 +972,7 @@ int sub_443B60();
 // int __usercall Queen_ShowWhimDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
 // int __usercall YesNoWindow@<eax>(int a1@<eax>, _BYTE *a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // int __usercall sub_446CB0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
-// int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall Queen_ShowMarriageProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall Queen_ShowNotification@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall UI_ShowMissionStatusPanel@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
 int __thiscall nullsub_3(_DWORD); // weak
@@ -1042,11 +1042,11 @@ signed int Game_InitPlayerViewState();
 // unsigned int __usercall Prisoner_Pay@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
 // char __usercall Prisoner_NewTurn@<al>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, double a4@<st0>);
 // int __usercall Building_CountPrisoners@<eax>(int a1@<eax>);
-// BOOL __usercall sub_44F510@<eax>(int a1@<eax>);
-// char *__usercall sub_44F580@<eax>(int a1@<eax>);
-// char *__usercall sub_44F5F0@<eax>(int a1@<eax>);
-// char *__usercall sub_44F660@<eax>(int a1@<eax>);
-// int __usercall sub_44F6D0@<eax>(int a1@<eax>);
+// BOOL __usercall BuildingPrisonerActionWidget_HasPrisoner@<eax>(int a1@<eax>);
+// char *__usercall BuildingPrisonerActionButton_SelectBehead@<eax>(int a1@<eax>);
+// char *__usercall BuildingPrisonerActionButton_SelectTorture@<eax>(int a1@<eax>);
+// char *__usercall BuildingPrisonerActionButton_SelectBribery@<eax>(int a1@<eax>);
+// int __usercall BuildingPrisonerPanel_BackButton@<eax>(int a1@<eax>);
 // int __usercall Building_DrawPrisonerRows@<eax>(DWORD a1@<ebp>);
 // int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall Building_ShowPrisonerManagementPanel@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>);
@@ -10094,7 +10094,7 @@ char *off_517EC4[3] =
 }; // weak
 _UNKNOWN unk_517ED0; // weak
 _UNKNOWN unk_517F70; // weak
-char *g_QueenProposalPrompt[3] =
+char *g_QueenMarriageProposalTexts[3] =
 {
   "Z zamorskiego kraju przyby\x92 pose\x92 z portretem pi\x91knej ksi\x91\xA7niczki. Jej ojciec, kr\xA2l Wolfgang, widz\x86c  pot\x91g\x91 Twego kr\xA2lestwa got\xA2w jest odda\x8D Ci j\x86 za \xA7on\x91. Czy pragniesz j\x86 po\x9Elubi\x8D?",
   "An envoy arrived from a distant country with a picture of a beautiful princess. Her father, king Wolfgang, seeing your power wishes to offer you his daughter's hand. Do you want to marry her?",
@@ -10366,7 +10366,7 @@ int dword_518ED9 = 1; // weak
 int dword_518F0E = 1; // weak
 int dword_518F43 = 1; // weak
 int dword_518F78 = 1; // weak
-char *g_QueenMoodTexts[30] =
+char *g_QueenRelationshipStateTexts[30] =
 {
   "Nie ma kr\xA2lowej.",
   "No queen.",
@@ -24734,7 +24734,7 @@ signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(
 // 41284E: variable 'v9' is possibly undefined
 
 //----- (00412880) --------------------------------------------------------
-int __usercall sub_412880@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>)
+int __usercall UnitSlot_AdjustMoraleByPredicate@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>)
 {
   int result; // eax
   int v3; // edx
@@ -31214,10 +31214,10 @@ LABEL_42:
                   UnitStack_AdjustMoraleByPredicate(v61, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 141441);
                   ++*(_WORD *)(gameData + 1423 * v7[2] + 141441);
-                  Building_FindFirstValidAddonSlot((int)v7);
-                  sub_43EE10((int)v7);
-                  sub_43EE10((int)v7);
-                  sub_43EE10((int)v7);
+                  Building_AdjustAllGarrisonMoraleByDelta((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
                 }
               }
               else if ( Building_CountGarrison(UNIT_RECORD(v59))
@@ -31230,10 +31230,10 @@ LABEL_42:
                   UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
                   ++*(_WORD *)(1423 * v7[2] + gameData + 141441);
-                  Building_FindFirstValidAddonSlot((int)v7);
-                  sub_43EE10((int)v7);
-                  sub_43EE10((int)v7);
-                  sub_43EE10((int)v7);
+                  Building_AdjustAllGarrisonMoraleByDelta((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
+                  Building_CycleAllGarrisonOrdersOnce((int)v7);
                 }
                 else if ( !Building_CountGarrison(UNIT_RECORD(v59))
                        && !UnitStack_HasNormalCombatUnits(725 * v60 + gameData + 147174) )
@@ -33048,8 +33048,8 @@ int __usercall __spoils<ecx,st0> Building_RecoverGarrisonFatigueAndMorale@<eax>(
     result = *(__int16 *)v3;
     if ( result != -1 )
     {
-      sub_4127A0(v3);
-      result = sub_412880(v7, (int (__usercall *)@<eax>(int@<eax>))UnitSlot_NeedsMoraleRecovery);
+      UnitSlot_AdjustFatigueByPredicate(v3);
+      result = UnitSlot_AdjustMoraleByPredicate(v7, (int (__usercall *)@<eax>(int@<eax>))UnitSlot_NeedsMoraleRecovery);
       v4 = 1;
     }
     v3 = (CSyncObject *)((char *)v3 + 31);
@@ -54420,7 +54420,7 @@ BOOL __usercall Building_CanEquipAddon@<eax>(char *a1@<eax>, int a2@<edx>)
 }
 
 //----- (0043EDC0) --------------------------------------------------------
-int __usercall sub_43EDC0@<eax>(int a1@<eax>)
+int __usercall Building_AdjustAllGarrisonMoraleByDelta@<eax>(int a1@<eax>)
 {
   int v1; // ebp
   int v2; // ecx
@@ -54443,7 +54443,7 @@ int __usercall sub_43EDC0@<eax>(int a1@<eax>)
       if ( v2 >= 12 )
         return result;
     }
-    result = sub_412880(v1 + result, (int (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock);
+    result = UnitSlot_AdjustMoraleByPredicate(v1 + result, (int (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock);
     v2 = v5 + 1;
     v3 += 31;
   }
@@ -54453,7 +54453,7 @@ int __usercall sub_43EDC0@<eax>(int a1@<eax>)
 // 43EDF9: variable 'v5' is possibly undefined
 
 //----- (0043EE10) --------------------------------------------------------
-int __usercall __spoils<ecx> sub_43EE10@<eax>(int a1@<eax>)
+int __usercall __spoils<ecx> Building_CycleAllGarrisonOrdersOnce@<eax>(int a1@<eax>)
 {
   int v1; // esi
   int v2; // edx
@@ -60393,7 +60393,7 @@ int __usercall sub_446CB0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD 
 // 545150: using guessed type int dword_545150;
 
 //----- (00446F40) --------------------------------------------------------
-int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Queen_ShowMarriageProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>)
 {
   int v3; // ecx
   int v4; // ecx
@@ -60470,9 +60470,9 @@ int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD 
     1,
     0,
     0);
-  v19[0] = (int)g_QueenProposalPrompt[0];
-  v19[1] = (int)g_QueenProposalPrompt[1];
-  v19[2] = (int)g_QueenProposalPrompt[2];
+  v19[0] = (int)g_QueenMarriageProposalTexts[0];
+  v19[1] = (int)g_QueenMarriageProposalTexts[1];
+  v19[2] = (int)g_QueenMarriageProposalTexts[2];
   UI_DrawTextFmt((int)v18, v22 + 175, v22 + 525, v21 + 55, 6, v19[(unsigned __int8)g_LanguageIndex]);
   v10 = v22;
   qmemcpy(v18, &unk_518020, 4 * v11);
@@ -60516,7 +60516,7 @@ int __usercall Queen_ShowProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD 
 // 44726D: variable 'v16' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 518010: using guessed type char *g_QueenProposalPrompt[3];
+// 518010: using guessed type char *g_QueenMarriageProposalTexts[3];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -64508,14 +64508,14 @@ int __usercall Building_CountPrisoners@<eax>(int a1@<eax>)
 }
 
 //----- (0044F510) --------------------------------------------------------
-BOOL __usercall sub_44F510@<eax>(int a1@<eax>)
+BOOL __usercall BuildingPrisonerActionWidget_HasPrisoner@<eax>(int a1@<eax>)
 {
   return *(char *)(dword_5443FC + 6 * ((a1 - (int)&dword_518DC8) / 53 / 3) + 445) != -1;
 }
 // 5443FC: using guessed type int dword_5443FC;
 
 //----- (0044F580) --------------------------------------------------------
-char *__usercall sub_44F580@<eax>(int a1@<eax>)
+char *__usercall BuildingPrisonerActionButton_SelectBehead@<eax>(int a1@<eax>)
 {
   char *result; // eax
   unsigned __int8 v4; // ah
@@ -64523,7 +64523,7 @@ char *__usercall sub_44F580@<eax>(int a1@<eax>)
   int v6; // ecx
 
   Render_Begin((int)dword_544CD8, 0);
-  result = (char *)sub_44F510(a1);
+  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
     v4 = *(_BYTE *)(a1 + 8) ^ 1;
@@ -64552,7 +64552,7 @@ char *__usercall sub_44F580@<eax>(int a1@<eax>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0044F5F0) --------------------------------------------------------
-char *__usercall sub_44F5F0@<eax>(int a1@<eax>)
+char *__usercall BuildingPrisonerActionButton_SelectTorture@<eax>(int a1@<eax>)
 {
   char *result; // eax
   unsigned __int8 v4; // ah
@@ -64560,7 +64560,7 @@ char *__usercall sub_44F5F0@<eax>(int a1@<eax>)
   int v6; // ecx
 
   Render_Begin((int)dword_544CD8, 0);
-  result = (char *)sub_44F510(a1);
+  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
     v4 = *(_BYTE *)(a1 + 8) ^ 1;
@@ -64589,7 +64589,7 @@ char *__usercall sub_44F5F0@<eax>(int a1@<eax>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0044F660) --------------------------------------------------------
-char *__usercall sub_44F660@<eax>(int a1@<eax>)
+char *__usercall BuildingPrisonerActionButton_SelectBribery@<eax>(int a1@<eax>)
 {
   char *result; // eax
   unsigned __int8 v4; // ah
@@ -64597,7 +64597,7 @@ char *__usercall sub_44F660@<eax>(int a1@<eax>)
   int v6; // ecx
 
   Render_Begin((int)dword_544CD8, 0);
-  result = (char *)sub_44F510(a1);
+  result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
     v4 = *(_BYTE *)(a1 + 8) ^ 1;
@@ -64626,7 +64626,7 @@ char *__usercall sub_44F660@<eax>(int a1@<eax>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0044F6D0) --------------------------------------------------------
-int __usercall sub_44F6D0@<eax>(int a1@<eax>)
+int __usercall BuildingPrisonerPanel_BackButton@<eax>(int a1@<eax>)
 {
   int result; // eax
   int v3; // edx
@@ -64722,11 +64722,17 @@ int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
   Render_ReleaseSurface(17, a1);
   if ( queenMood == -1 )
     queenMood = 0;
-  return UI_DrawTextFmt(a2, 180, 500, 215, 6, (int)(&g_QueenMoodTexts[3 * queenMood])[(unsigned __int8)g_LanguageIndex]);
+  return UI_DrawTextFmt(
+           a2,
+           180,
+           500,
+           215,
+           6,
+           (int)(&g_QueenRelationshipStateTexts[3 * queenMood])[(unsigned __int8)g_LanguageIndex]);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 519010: using guessed type char *g_QueenMoodTexts[30];
+// 519010: using guessed type char *g_QueenRelationshipStateTexts[30];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5443F0: using guessed type int dword_5443F0;
@@ -65409,7 +65415,7 @@ LABEL_18:
           if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
           {
             sub_4620F0((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
-            v15 = Queen_ShowProposalDialog(v17, a2, (DWORD)savedregs);
+            v15 = Queen_ShowMarriageProposalDialog(v17, a2, (DWORD)savedregs);
           }
           v16 = 1423 * g_CurrentPlayerIndex;
           if ( v15 )
