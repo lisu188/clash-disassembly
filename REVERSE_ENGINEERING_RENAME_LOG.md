@@ -373,7 +373,7 @@
 - `sub_4100B0` clearly derives a stack-wide readiness/order tier from per-slot control bits, but the exact gameplay label behind `(slot + 18) & 3` is still unresolved.
 - Resolved in Batch 35: stack state-flags bit `0x8` is the plague marker (`UNIT_SLOT_FLAG_PLAGUE`), so the older cargo-state ambiguity was retired.
 - `sub_410260` gates the animated movement path on visibility and reachable waypoints, but the original designer-facing term for that reveal/animation predicate is still unresolved.
-- `Unit_MoveTrack_1` is still deferred: the implementation treats an occupied destination as temporarily passable, but whether the best human name is `GenerateTrackToOccupiedTile` or a more specific combat/engagement term remains contested.
+- Resolved in Batch 36: `Unit_MoveTrack_1` became `Unit_MoveTrackNearTile` after asm/exe debug-string evidence (`Unit_MoveTrackNear(%d,%d,%d)`) confirmed that the helper intentionally stops adjacent to the target tile.
 
 ## Batch 32 – Stack Lifecycle And Combat Utility Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
@@ -464,3 +464,27 @@
 - `Map_ClassifyFogOfWarOverlayForPlayer` is stable at the behavior level, but the exact orientation mapping of overlay codes `1..12` remains intentionally undocumented until the sprite sheet is fully cross-labeled.
 - `PlayerRuntimeState.religion_flag` is semantically stable as a two-way religion/alignment switch, but the code alone does not justify a stronger lore-facing enum name than “religion flag.”
 - Hidden treasure tile ids `752` and `755` are both provably treasure-bearing, but their exact designer-facing distinction is still deferred.
+
+## Batch 36 – Rules Fact And Upgrade Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| Unit_MoveTrack_1 | Unit_MoveTrackNearTile | Function | Movement / Path Planning | High | The original debug string survives in the binary as `Unit_MoveTrackNear(%d,%d,%d)`, and the implementation temporarily clears the destination occupancy, calls the normal track planner, then trims the final step so the path stops adjacent to the target tile instead of entering it. | c, asm, exe | yes: Lorentz |
+| sub_41DB20 | Rules_RebuildCastleSiteFacts | Function | Rules / Castle Sites | High | Full-map rebuild pass that scans every tile and re-logs tiles `707` and `711` via the `(zamek_place %d %d)` rules fact emitter. | c | no |
+| sub_41F850 | Building_CanStartUpgrade | Function | Buildings / Upgrades | High | Pure predicate that allows an upgrade only when the current stage is below both the hard cap and the building tier cap and no upgrade timer is already running. | c | no |
+| sub_41F890 | Building_TryStartUpgrade | Function | Buildings / Upgrades | High | Calls `Building_CanStartUpgrade`, checks the per-stage resource cost table against the building-local stored pool, seeds the upgrade timer, and deducts the cost on success. | c | no |
+| sub_43F9B0 | Rules_RebuildTempleFacts | Function | Rules / Religious Sites | High | Full-map rebuild pass that re-logs every non-zero `MapTile_GetReligiousSiteCategory` tile through the `(swiatynia %d %d)` fact logger. | c | no |
+| sub_443B60 | Rules_RebuildTreasureFacts | Function | Rules / Treasure | High | Full-map rebuild pass that re-logs every `MapTile_HasHiddenTreasure` tile through the `(skarb %d %d)` fact logger. | c | no |
+| sub_455200 | Rules_LogTempleFact | Function | Rules / Religious Sites | High | Emits the exact rules payload `(swiatynia row col)`, making it the temple-fact logger rather than a generic map note helper. | c | no |
+| sub_455230 | Rules_LogTreasureFact | Function | Rules / Treasure | High | Emits the exact rules payload `(skarb row col)` for hidden-treasure tiles. | c | no |
+| sub_455260 | Rules_RetractTreasureFact | Function | Rules / Treasure | High | Emits the exact rules payload `(kasuj skarb row col)` to retract a previously logged treasure fact after digging. | c | no |
+| sub_455290 | Rules_RetractTempleFact | Function | Rules / Religious Sites | High | Emits the exact rules payload `(kasuj swiatynie row col)` after temple-state changes consume or clear the prior fact. | c | no |
+| sub_455C90 | Rules_LogCastleSiteFact | Function | Rules / Castle Sites | High | Emits the exact rules payload `(zamek_place row col)`, which is used by the castle-site rebuild scan. | c | no |
+| sub_457E00 | Unit_ExecuteQueuedPathAndCheckFinished | Function | Movement / Path Execution | High | Thin wrapper that executes one queued-path step batch and immediately tests whether the embedded `QueuedPathBuffer.waypoint_count` dropped to zero. | c | yes: Lorentz |
+| sub_455450 | Building_TryStartUpgradeByIndex | Function | Buildings / Upgrades | High | Thin index wrapper that forwards `UNIT_RECORD(buildingIndex)` into `Building_TryStartUpgrade`, preserving the same upgrade-start side effects for callers that only hold a building id. | c | no |
+| sub_455650 | Building_CanStartUpgradeByIndex | Function | Buildings / Upgrades | High | Thin index wrapper that forwards `UNIT_RECORD(buildingIndex)` into `Building_CanStartUpgrade` for id-based UI or rules callers. | c | no |
+
+## Deferred / Ambiguous
+- `sub_410260` still looks like a “current or reachable queued path step is drawable for the viewed player” predicate, but the shortest non-misleading public name is not locked down enough yet.
+- `sub_41D980` / `sub_41DA50` clearly belong to the castle-site placement cluster, but their mode parameter inverts or narrows the terrain predicate in a way that is still too easy to overstate.
+- `sub_41EF10` / `sub_41EF80` / `sub_41F020` still line up with barracks / hospital / smithy-style castle add-on builders by debug-string evidence, but the add-on-bit mapping is not settled cleanly enough for a safe public rename.
+- `sub_457E50` is only a wrapper around `Unit_AddToGroup(..., 0)`; it likely wants a group-merge wrapper name, but the narrow behavioral distinction is not yet corroborated well enough.

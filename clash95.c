@@ -500,7 +500,7 @@ signed int __spoils<ecx> Map_InitTerrainMoveTableOffsets();
 // signed int __usercall sub_414390@<eax>(__int16 *a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // int __usercall Path_InsertBridgeCornerWaypoints@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // int *__userpurge Unit_MoveTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>, int a6);
-// _DWORD *__usercall Unit_MoveTrack_1@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
+// _DWORD *__usercall Unit_MoveTrackNearTile@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
 // int __usercall Building_GenerateApproachTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // int __usercall Building_GenerateNearApproachTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // void __usercall Pathing_EnableBridgeCrossings(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
@@ -567,7 +567,7 @@ void BattleLog_Enable();
 // _DWORD *__usercall sub_41D930@<eax>(unsigned __int8 *a1@<eax>);
 // BOOL __usercall sub_41D980@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
 // BOOL __usercall sub_41DA50@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>);
-int sub_41DB20();
+int Rules_RebuildCastleSiteFacts();
 // signed int __usercall sub_41DBA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // signed int __usercall sub_41E050@<eax>(DWORD a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>, double a5@<st0>);
 // char __usercall sub_41E0E0@<al>(int a1@<eax>);
@@ -591,8 +591,8 @@ int sub_41DB20();
 // signed int __usercall Building_FindFreeAdjacentSpawnTile@<eax>(unsigned __int8 *a1@<eax>, _DWORD *a2@<edx>, int a3@<ecx>, _DWORD *a4@<ebx>);
 // signed int __usercall Building_Transfer@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, double a5@<st0>);
 // int __usercall UI_DrawUnitStatsValues@<eax>(int a1@<eax>);
-// BOOL __usercall sub_41F850@<eax>(unsigned __int8 *a1@<eax>);
-// BOOL __usercall __spoils<ecx> sub_41F890@<eax>(unsigned __int8 *a1@<eax>);
+// BOOL __usercall Building_CanStartUpgrade@<eax>(unsigned __int8 *a1@<eax>);
+// BOOL __usercall __spoils<ecx> Building_TryStartUpgrade@<eax>(unsigned __int8 *a1@<eax>);
 // _DWORD *__usercall sub_41F900@<eax>(int a1@<eax>, DWORD a2@<edx>, int a3@<ecx>, signed int j@<esi>, double a5@<st0>);
 // _DWORD *__usercall Building_Destroy@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall __spoils<ecx> Unit_CalcRestTurns@<eax>(int a1@<eax>);
@@ -897,7 +897,7 @@ int sub_43F600();
 // int __userpurge sub_43F880@<eax>(DWORD a1@<eax>, int a2@<edx>, signed int a3@<ecx>, int a4@<ebx>, int a5);
 int __spoils<ecx> sub_43F920();
 int sub_43F980();
-int sub_43F9B0();
+int Rules_RebuildTempleFacts();
 // signed int __usercall MapTile_GetReligiousSiteCategory@<eax>(int a1@<eax>, int a2@<edx>);
 // int *__usercall Temple_GenerateApproachTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>);
 // __int16 *__usercall sub_43FC60@<eax>(int a1@<eax>, int a2@<edx>, double a3@<st0>);
@@ -961,7 +961,7 @@ int Port_IsSupplyReady();
 // int *__usercall Port_GenerateApproachTrack@<eax>(int a1@<eax>);
 // int __usercall Port_GetSupply@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>, double@<st0>);
 // void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>);
-int sub_443B60();
+int Rules_RebuildTreasureFacts();
 // BOOL __usercall MapTile_HasHiddenTreasure@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall Treasure_TryDigHere@<eax>(int@<eax>, char@<bl>, DWORD@<ebp>, char@<dil>, char *@<esi>, double@<st0>);
 // signed int __usercall UnitStack_TryHide@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, DWORD a3@<ebp>, double a4@<st0>);
@@ -1130,15 +1130,15 @@ signed int sub_452390();
 // signed int __usercall sub_455150@<eax>(int a1@<eax>, int a2@<ecx>, double a3@<st0>);
 // _DWORD *__usercall sub_4551A0@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall sub_4551D0@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455200@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455230@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455260@<eax>(int a1@<eax>, int a2@<edx>);
-// _DWORD *__usercall sub_455290@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
+// _DWORD *__usercall Rules_LogTempleFact@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_LogTreasureFact@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_RetractTreasureFact@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_RetractTempleFact@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall Rules_AssertCastleFact@<eax>(unsigned __int8 *a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall Rules_RetractCastleFact@<eax>(unsigned __int8 *a1@<eax>, double a2@<st0>);
 int Game_GetTurnNumber();
 // _DWORD *__usercall Rules_OnCastleUpdate@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
-// BOOL __usercall sub_455450@<eax>(int a1@<eax>);
+// BOOL __usercall Building_TryStartUpgradeByIndex@<eax>(int a1@<eax>);
 // int __usercall sub_455470@<eax>(int a1@<eax>);
 // signed int __usercall sub_455490@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // signed int __usercall sub_4554B0@<eax>(char a1@<bl>, DWORD a2@<ebp>);
@@ -1153,7 +1153,7 @@ int Game_GetTurnNumber();
 // int __usercall sub_4555E0@<eax>(int a1@<eax>);
 // int __usercall sub_455600@<eax>(int a1@<eax>);
 // BOOL __usercall sub_455620@<eax>(int a1@<eax>);
-// BOOL __usercall sub_455650@<eax>(int a1@<eax>);
+// BOOL __usercall Building_CanStartUpgradeByIndex@<eax>(int a1@<eax>);
 // int __usercall sub_455670@<eax>(int a1@<eax>);
 // BOOL __usercall sub_455690@<eax>(int a1@<eax>);
 // __int16 __usercall sub_4556C0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
@@ -1173,7 +1173,7 @@ int Game_GetTurnNumber();
 // int __usercall Building_StartTrainingIdleGarrisonUnits@<eax>(int a1@<eax>);
 // __int16 __usercall Building_StartRepairIdleGarrisonUnits@<ax>(int a1@<eax>);
 // signed int __usercall Building_UnitsLeaveByUnitType@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, double a4@<st0>);
-// _DWORD *__usercall sub_455C90@<eax>(int a1@<eax>, int a2@<edx>);
+// _DWORD *__usercall Rules_LogCastleSiteFact@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall sub_455CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>);
 // _DWORD *__usercall sub_455CF0@<eax>(int a1@<eax>, int a2@<edx>);
 // _DWORD *__usercall sub_455D20@<eax>(int a1@<eax>, int a2@<edx>);
@@ -1200,7 +1200,7 @@ signed int sub_4570E3();
 // int __usercall sub_457C00@<eax>(int a1@<eax>);
 // int __usercall Building_GetPlagueState@<eax>(int a1@<eax>);
 // signed int __usercall UnitStack_HasPlagueByIndex@<eax>(int a1@<eax>);
-// BOOL __usercall sub_457E00@<eax>(unsigned int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
+// BOOL __usercall Unit_ExecuteQueuedPathAndCheckFinished@<eax>(unsigned int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall sub_457E50@<eax>(unsigned int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
 // BOOL __usercall sub_457E60@<eax>(int a1@<eax>, int a2@<ebp>, int a3@<edi>, double a4@<st0>);
 // BOOL __usercall sub_457FE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebp>, int a4@<edi>, double a5@<st0>);
@@ -4626,7 +4626,7 @@ char aNotEnoughMem_3[21] = "Not enough memory=%d"; // weak
 char aNotEnoughMem_4[21] = "Not enough memory=%d"; // weak
 char aNotEnoughMem_5[21] = "Not enough memory=%d"; // weak
 char aNotEnoughMem_6[21] = "Not enough memory=%d"; // weak
-char aUnit_movetra_1[29] = "Building_GenerateApproachTrack(%d,%d,%d)"; // weak
+char aUnit_movetra_1[25] = "Unit_MoveTrackNear(%d,%d,%d)"; // weak
 char aUnit_movetra_0[32] = "Unit_MoveTrackToBuilding(%d,%d)"; // weak
 char aUnit_movetra_3[34] = "Unit_MoveTrackNearBuilding(%d,%d)"; // weak
 char aTrack_bridgeso[18] = "Pathing_EnableBridgeCrossings()"; // weak
@@ -27158,7 +27158,7 @@ int *__userpurge Unit_MoveTrack@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 544D14: using guessed type int dword_544D14;
 
 //----- (00415210) --------------------------------------------------------
-_DWORD *__usercall Unit_MoveTrack_1@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
+_DWORD *__usercall Unit_MoveTrackNearTile@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
 {
   int v7; // edx
   int v8; // eax
@@ -30764,7 +30764,7 @@ void __usercall Unit_Attack(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD a4@<
       if ( v13 <= 1 )
         goto LABEL_22;
     }
-    v14 = Unit_MoveTrack_1(v64, *v62, v11, v62[1], (DWORD)v8);
+    v14 = Unit_MoveTrackNearTile(v64, *v62, v11, v62[1], (DWORD)v8);
     if ( v14 )
     {
       qmemcpy(v8 + 158, v14, 0x194u);
@@ -32432,7 +32432,7 @@ BOOL __usercall sub_41DA50@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>
 // 5202E4: using guessed type int gameData;
 
 //----- (0041DB20) --------------------------------------------------------
-int sub_41DB20()
+int Rules_RebuildCastleSiteFacts()
 {
   int v1; // esi
   int i; // ebp
@@ -32453,7 +32453,7 @@ int sub_41DB20()
     {
       v6 = *(unsigned __int16 *)(v5 + i + gameData);
       if ( v6 == 707 || v6 == 711 )
-        sub_455C90(v1, v4);
+        Rules_LogCastleSiteFact(v1, v4);
       v5 += 14;
       ++v4;
     }
@@ -33737,18 +33737,18 @@ int __usercall sub_41F810@<eax>(int a1@<eax>)
 }
 
 //----- (0041F850) --------------------------------------------------------
-BOOL __usercall sub_41F850@<eax>(unsigned __int8 *a1@<eax>)
+BOOL __usercall Building_CanStartUpgrade@<eax>(unsigned __int8 *a1@<eax>)
 {
   return a1[421] < 2u && a1[421] < (a1[444] & 7) - 1 && !a1[429];
 }
 
 //----- (0041F890) --------------------------------------------------------
-BOOL __usercall __spoils<ecx> sub_41F890@<eax>(unsigned __int8 *a1@<eax>)
+BOOL __usercall __spoils<ecx> Building_TryStartUpgrade@<eax>(unsigned __int8 *a1@<eax>)
 {
   BOOL result; // eax
   int v2; // edx
 
-  result = sub_41F850(a1);
+  result = Building_CanStartUpgrade(a1);
   if ( result )
   {
     if ( (unsigned int)(unsigned __int8)byte_513A7F[4 * *(unsigned __int8 *)(v2 + 421)] <= *(_DWORD *)(v2 + 438) )
@@ -34824,7 +34824,7 @@ BOOL sub_420F70()
 {
   BOOL result; // eax
 
-  result = sub_41F890((unsigned __int8 *)g_CastleUnitRecord);
+  result = Building_TryStartUpgrade((unsigned __int8 *)g_CastleUnitRecord);
   if ( result )
     return .fn_init();
   return result;
@@ -35783,7 +35783,7 @@ int Castle_UpdateGateToggles()
     sub_40ED50((int)&word_513E08, 0);
   else
     sub_40ED30((int)&word_513E08, 0);
-  if ( sub_41F850((unsigned __int8 *)g_CastleUnitRecord) )
+  if ( Building_CanStartUpgrade((unsigned __int8 *)g_CastleUnitRecord) )
     return sub_40ED30((int)&word_513E08, 2);
   else
     return sub_40ED50((int)&word_513E08, 2);
@@ -36335,7 +36335,7 @@ int __usercall Unit_AddToGroup@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3
         goto LABEL_11;
     }
     a3 = v10[1];
-    result = (int)Unit_MoveTrack_1(a1, *v10, (int)v12, a3, (DWORD)v10);
+    result = (int)Unit_MoveTrackNearTile(a1, *v10, (int)v12, a3, (DWORD)v10);
     if ( !result )
       return result;
     qmemcpy((void *)(gameData + 147174 + 725 * a1 + 316), (const void *)result, 0x194u);
@@ -55147,7 +55147,7 @@ int sub_43F980()
 }
 
 //----- (0043F9B0) --------------------------------------------------------
-int sub_43F9B0()
+int Rules_RebuildTempleFacts()
 {
   int i; // ebx
   int result; // eax
@@ -55162,7 +55162,7 @@ int sub_43F9B0()
     for ( j = 0; j < *(_DWORD *)(gameData + 140004); j = v4 + 1 )
     {
       if ( MapTile_GetReligiousSiteCategory(i, j) )
-        sub_455200(i, v4);
+        Rules_LogTempleFact(i, v4);
     }
   }
   return result;
@@ -55758,7 +55758,7 @@ int __usercall Temple_UnitGetInto@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>
       v25 = gameData + 1400 * v31;
       LOWORD(v26) = *(_WORD *)(v25 + 14 * v32 + 2);
       *(_WORD *)(v25 + 14 * v32 + 2) = ++v26;
-      return (int)sub_455290(v31, v26, v25, (DWORD)v7);
+      return (int)Rules_RetractTempleFact(v31, v26, v25, (DWORD)v7);
     }
   }
   return result;
@@ -58501,7 +58501,7 @@ void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00443B60) --------------------------------------------------------
-int sub_443B60()
+int Rules_RebuildTreasureFacts()
 {
   int i; // ebx
   int result; // eax
@@ -58516,7 +58516,7 @@ int sub_443B60()
     for ( j = 0; j < *(_DWORD *)(gameData + 140004); j = v4 + 1 )
     {
       if ( MapTile_HasHiddenTreasure(i, j) )
-        sub_455230(i, v4);
+        Rules_LogTreasureFact(i, v4);
     }
   }
   return result;
@@ -58610,7 +58610,7 @@ signed int __usercall Treasure_TryDigHere@<eax>(
       *v14 = 0;
     }
   }
-  sub_455260(*v8, v8[1], a6);
+  Rules_RetractTreasureFact(*v8, v8[1], a6);
   Temple_ProcessGift(*v16, (int)v8, v8[1], *v8, a6);
   return 1;
 }
@@ -62525,9 +62525,9 @@ int __usercall Map_LoadFromFile@<eax>(int a1@<eax>)
   }
   MAP_HEIGHT_TILES = v32;
   Port_FindAndInit();
-  sub_43F9B0();
-  sub_443B60();
-  sub_41DB20();
+  Rules_RebuildTempleFacts();
+  Rules_RebuildTreasureFacts();
+  Rules_RebuildCastleSiteFacts();
   Render_CreateSprite();
   UI_ClearTileHighlight(v34);
   *(_DWORD *)(gameData + 147147) = 1;
@@ -66687,7 +66687,7 @@ signed int __usercall sub_4532A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   if ( UnitStack_HasBuilder(v5) )
     Pathing_EnableBridgeCrossings(v7, a3, a4);
-  v8 = Unit_MoveTrack_1(v7, a2, v7, a3, a4);
+  v8 = Unit_MoveTrackNearTile(v7, a2, v7, a3, a4);
   Pathing_DisableBridgeCrossings(v9, (char)v8, a4);
   if ( v11 )
   {
@@ -66934,7 +66934,7 @@ signed int __usercall sub_453C90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   else
   {
-    result = (signed int)Unit_MoveTrack_1(v5, a2, v5, a3, a4);
+    result = (signed int)Unit_MoveTrackNearTile(v5, a2, v5, a3, a4);
     v9 = (const void *)result;
     if ( result )
     {
@@ -67003,7 +67003,7 @@ signed int __usercall sub_453E60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   else
   {
-    Track = Unit_MoveTrack_1(a1, v8, v8, a3, a4);
+    Track = Unit_MoveTrackNearTile(a1, v8, v8, a3, a4);
   }
   if ( !Track )
     return 1000;
@@ -67191,7 +67191,7 @@ signed int __usercall sub_454590@<eax>(DWORD a1@<eax>, int a2@<edx>, int a3@<ebx
   }
   if ( !*(_DWORD *)(gameData + 725 * a1 + 147490) )
   {
-    v7 = Unit_MoveTrack_1(a1, v5, v5, a3, a1);
+    v7 = Unit_MoveTrackNearTile(a1, v5, v5, a3, a1);
     if ( v7 )
     {
       qmemcpy((void *)(gameData + 147174 + 725 * a1 + 316), v7, 0x194u);
@@ -67447,7 +67447,7 @@ int __usercall sub_454D20@<eax>(DWORD a1@<eax>, int a2@<edx>, DWORD a3@<ebx>, do
   __int64 v11; // rax
 
   log(a1, a3, a3, (int)aBuduj_pulapke2);
-  result = (int)Unit_MoveTrack_1(a3, v6, v6, v5, a3);
+  result = (int)Unit_MoveTrackNearTile(a3, v6, v6, v5, a3);
   v8 = result;
   if ( result )
   {
@@ -67725,7 +67725,7 @@ _DWORD *__usercall sub_4551D0@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455200) --------------------------------------------------------
-_DWORD *__usercall sub_455200@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogTempleFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -67738,7 +67738,7 @@ _DWORD *__usercall sub_455200@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455230) --------------------------------------------------------
-_DWORD *__usercall sub_455230@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogTreasureFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -67751,7 +67751,7 @@ _DWORD *__usercall sub_455230@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455260) --------------------------------------------------------
-_DWORD *__usercall sub_455260@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_RetractTreasureFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -67764,7 +67764,7 @@ _DWORD *__usercall sub_455260@<eax>(int a1@<eax>, int a2@<edx>)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455290) --------------------------------------------------------
-_DWORD *__usercall sub_455290@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
+_DWORD *__usercall Rules_RetractTempleFact@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
 {
   int v5; // edx
   int v6; // ecx
@@ -67885,9 +67885,9 @@ _DWORD *__usercall Rules_OnCastleUpdate@<eax>(int a1@<eax>, char a2@<bl>, DWORD 
 // 5202E4: using guessed type int gameData;
 
 //----- (00455450) --------------------------------------------------------
-BOOL __usercall sub_455450@<eax>(int a1@<eax>)
+BOOL __usercall Building_TryStartUpgradeByIndex@<eax>(int a1@<eax>)
 {
-  return sub_41F890((unsigned __int8 *)(UNIT_RECORD(a1)));
+  return Building_TryStartUpgrade((unsigned __int8 *)(UNIT_RECORD(a1)));
 }
 // 5202E4: using guessed type int gameData;
 
@@ -67994,9 +67994,9 @@ BOOL __usercall sub_455620@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455650) --------------------------------------------------------
-BOOL __usercall sub_455650@<eax>(int a1@<eax>)
+BOOL __usercall Building_CanStartUpgradeByIndex@<eax>(int a1@<eax>)
 {
-  return sub_41F850((unsigned __int8 *)(UNIT_RECORD(a1)));
+  return Building_CanStartUpgrade((unsigned __int8 *)(UNIT_RECORD(a1)));
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68347,7 +68347,7 @@ LABEL_10:
 // 5202E4: using guessed type int gameData;
 
 //----- (00455C90) --------------------------------------------------------
-_DWORD *__usercall sub_455C90@<eax>(int a1@<eax>, int a2@<edx>)
+_DWORD *__usercall Rules_LogCastleSiteFact@<eax>(int a1@<eax>, int a2@<edx>)
 {
   double v3; // st7
   int v4; // ecx
@@ -68970,7 +68970,7 @@ signed int __usercall UnitStack_HasPlagueByIndex@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00457E00) --------------------------------------------------------
-BOOL __usercall sub_457E00@<eax>(unsigned int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>)
+BOOL __usercall Unit_ExecuteQueuedPathAndCheckFinished@<eax>(unsigned int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>)
 {
   int v4; // ecx
 
@@ -69272,7 +69272,7 @@ int __usercall sub_4582B0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD 
     || (v8 = *(__int16 *)(gameData + 725 * v5 + 147176) - *(__int16 *)(725 * v36 + gameData + 147176),
         (int)((HIDWORD(v8) ^ v8) - HIDWORD(v8)) > 1) )
   {
-    result = (int)Unit_MoveTrack_1(
+    result = (int)Unit_MoveTrackNearTile(
                     v35,
                     *(__int16 *)(gameData + 725 * v36 + 147174),
                     v6,
@@ -69289,7 +69289,7 @@ int __usercall sub_4582B0@<eax>(int a1@<eax>, int a2@<edx>, char a3@<bl>, DWORD 
     || (v13 = *(__int16 *)(725 * v35 + gameData + 147176) - *(__int16 *)(725 * v36 + gameData + 147176),
         (int)((HIDWORD(v13) ^ v13) - HIDWORD(v13)) > 1) )
   {
-    result = (int)Unit_MoveTrack_1(
+    result = (int)Unit_MoveTrackNearTile(
                     v36,
                     *(__int16 *)(gameData + 725 * v35 + 147174),
                     v6,
