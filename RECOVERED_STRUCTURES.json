@@ -152,14 +152,14 @@
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
-      { "offset": 1419, "name": "queen_mood", "type": "uint8", "notes": "Mood state read and updated by the queen-event logic." },
+      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
       { "offset": 1420, "name": "queen_whim", "type": "uint8", "notes": "Current queen whim/request state used by queen review and event selection." },
       { "offset": 1421, "name": "queen_next_review_turn", "type": "uint16", "notes": "Turn counter threshold checked before the queen reviews this player's kingdom again." }
     ],
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while queen logic uses the final bytes at `+1419..+1421` as stable per-player mood/review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while `Queen_NewTurn` and `Queen_DrawRelationshipPanel` use the final bytes at `+1419..+1421` as stable per-player queen-state, whim, and review fields."
     ]
   },
   {
@@ -233,6 +233,23 @@
     ]
   },
   {
+    "name": "PortSpawnOffset",
+    "kind": "table_record",
+    "base_symbol": "g_PortSupplySpawnRowOffsets / g_PortSupplySpawnColumnOffsets",
+    "stride": 8,
+    "count": 12,
+    "description": "Recovered interleaved offset table used to probe candidate spawn tiles around the 2x2 port footprint. Hex-Rays split the row and column halves into parallel arrays, but the port supply logic advances them in lockstep as one record family.",
+    "fields": [
+      { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Signed row offset from `PortRuntimeState.port_tile_row` when probing a candidate supply spawn tile." },
+      { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Signed column offset from `PortRuntimeState.port_tile_column` paired with the same row delta." }
+    ],
+    "evidence": [
+      "`Port_GetSupply` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
+      "The asm data walk for `dword_517B48` / `dword_517B4C` advances by 8 bytes per candidate pair, matching one `{ row_delta, column_delta }` record rather than two unrelated tables.",
+      "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_GetSupply` searches for the reinforcement spawn point."
+    ]
+  },
+  {
     "name": "QueenWhimRecord",
     "kind": "table_record",
     "base_offset": 530928,
@@ -241,11 +258,11 @@
     "description": "Overlapped queen-whim table in the data segment. Hex-Rays split the record into `word_5191F0` and `off_5191F2`, but the queen turn logic indexes it as one 14-byte record family.",
     "fields": [
       { "offset": 0, "name": "required_frontline_score", "type": "uint16", "notes": "Compared against `AI_CalcFrontlineScore` before the whim can be accepted, then deducted by `AI_ApplyFrontlineScore` on success." },
-      { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDialog`." }
+      { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDecisionDialog`." }
     ],
     "evidence": [
       "`Queen_NewTurn` computes `7 * whimIndex`, reads a uint16 from `word_5191F0 + 7 * index`, and a localized text pointer from `off_5191F2 + 7 * index + 4 * language`, which matches one overlapped record rather than two unrelated arrays.",
-      "The same uint16 is passed into `Queen_ShowWhimDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
+      "The same uint16 is passed into `Queen_ShowWhimDecisionDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
       "`0x519350 - 0x5191F0 = 0x160`, which fits 25 records of `2 + 3*4` bytes with the expected alignment before the next table."
     ]
   },

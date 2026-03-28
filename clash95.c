@@ -14,7 +14,7 @@
 #define PLAYER_CAMERA_LEFT_OFFSET 15
 #define PLAYER_CAMERA_TOP_OFFSET 19
 #define PLAYER_IS_HUMAN_OFFSET 27
-#define PLAYER_QUEEN_MOOD_OFFSET 1419
+#define PLAYER_QUEEN_RELATIONSHIP_STATE_OFFSET 1419
 #define PLAYER_QUEEN_WHIM_OFFSET 1420
 #define PLAYER_QUEEN_REVIEW_TURN_OFFSET 1421
 #define ACTIVE_MISSION_INDEX_OFFSET 140017
@@ -72,7 +72,7 @@
 #define PLAYER_RUNTIME_STATE(playerIndex) (gameData + PLAYER_RUNTIME_STATE_OFFSET + PLAYER_DATA_STRIDE * (playerIndex))
 #define PLAYER_DATA(playerIndex) PLAYER_RUNTIME_STATE(playerIndex)
 #define PLAYER_IS_ACTIVE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex)))
-#define PLAYER_QUEEN_MOOD(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_MOOD_OFFSET))
+#define PLAYER_QUEEN_RELATIONSHIP_STATE(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_RELATIONSHIP_STATE_OFFSET))
 #define PLAYER_QUEEN_WHIM(playerIndex) (*(_BYTE *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_WHIM_OFFSET))
 #define PLAYER_QUEEN_NEXT_REVIEW(playerIndex) (*(_WORD *)(PLAYER_DATA(playerIndex) + PLAYER_QUEEN_REVIEW_TURN_OFFSET))
 #define PLAYER_CAMERA_LEFT(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_LEFT_OFFSET))
@@ -288,14 +288,14 @@ int Render_DrawSprite();
 // unsigned int __usercall __spoils<ecx> sub_407B20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>);
 int Render_RestoreLostSurfaces();
 // int __usercall sub_407D20@<eax>(signed int a1@<ebp>);
-BOOL __spoils<ecx> Port_PresentInteger();
+BOOL __spoils<ecx> UI_TrySelectFriendlyStackUnderCursor();
 // BOOL __usercall sub_408140@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __usercall sub_408200@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __usercall sub_4082C0@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __usercall sub_4082F0@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __usercall sub_408390@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __usercall sub_408430@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall Port_IsInsideArea@<eax>(int a1@<eax>, int a2@<edx>);
+// BOOL __usercall Port_IsInsideFootprint@<eax>(int a1@<eax>, int a2@<edx>);
 // void __usercall sub_4084A0(double@<st0>);
 // int __usercall sub_409CC0@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // int __usercall sub_409CE0@<eax>(char a1@<bl>, DWORD a2@<ebp>, double a3@<st0>);
@@ -398,7 +398,7 @@ int sub_40ED20();
 // __int16 *__usercall UnitStack_ClearRemainingActionPoints@<eax>(__int16 *result@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 signed int sub_40FEF0();
 // signed int __usercall UnitStack_GetMinCurrentActionPoints@<eax>(int a1@<eax>);
-// signed int __usercall sub_4100B0@<eax>(int a1@<eax>);
+// signed int __usercall UnitStack_GetMaxOrderTier@<eax>(int a1@<eax>);
 // signed int __usercall sub_410100@<eax>(int a1@<eax>);
 // signed int __usercall UnitStack_SpendActionPointsClamped@<eax>(__int16 *a1@<eax>, int a2@<edx>, DWORD a3@<ebp>, double a4@<st0>);
 // int __usercall UnitStack_SpendActionPointsUnchecked@<eax>(int a1@<eax>, char a2@<dl>);
@@ -444,8 +444,8 @@ int __thiscall UnitSlot_AdjustFatigueByPredicate(CSyncObject *this); // idb
 // signed int __usercall UnitStack_AdjustFatigueByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
 // int __usercall UnitSlot_AdjustMoraleByPredicate@<eax>(int a1@<eax>, int (__usercall *a2)@<eax>(int a1@<eax>)@<ebx>);
 // signed int __usercall UnitStack_AdjustMoraleByPredicate@<eax>(__int16 *a1@<eax>, int a2@<edx>, BOOL (__usercall *a3)@<eax>(int a1@<eax>)@<ebx>, DWORD a4@<ebp>, double a5@<st0>);
-// int __usercall Building_UseGarrisonSlot@<eax>(int result@<eax>);
-// signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
+// int __usercall UnitSlot_CycleOrderState@<eax>(int result@<eax>);
+// signed int __usercall UnitStack_CycleAllSlotOrders@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>);
 // __int16 *__usercall UnitStack_SetSpentTurnFlag@<eax>(int a1@<eax>);
 // __int16 *__usercall UnitStack_ClearSpentTurnFlag@<eax>(int a1@<eax>);
 // int __usercall sub_412A90@<eax>(int result@<eax>);
@@ -942,15 +942,15 @@ int Port_FindAndInit();
 _DWORD *__spoils<ecx,st0> Rules_LogPortLocation();
 // int __usercall __spoils<ecx> Port_NewTurn@<eax>(DWORD a1@<ebp>);
 int Port_BuildShorePieces();
-int Port_HasSupplyReady();
-// int *__usercall Port_BuildDockingTrack@<eax>(int a1@<eax>);
+int Port_IsSupplyReady();
+// int *__usercall Port_GenerateApproachTrack@<eax>(int a1@<eax>);
 // int __usercall Port_GetSupply@<eax>(int@<ecx>, char@<bl>, DWORD@<ebp>, double@<st0>);
 // void *__usercall UI_DrawPanelWithSprite@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 int sub_443B60();
 // BOOL __usercall sub_443BB0@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall sub_443C20@<eax>(int@<eax>, char@<bl>, DWORD@<ebp>, char@<dil>, char *@<esi>, double@<st0>);
-// signed int __usercall sub_443EB0@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, DWORD a3@<ebp>, double a4@<st0>);
-// signed int __usercall UnitStack_RevealAndEngageHiddenEnemies@<eax>(unsigned int a1@<eax>, double a2@<st0>);
+// signed int __usercall UnitStack_TryHide@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, DWORD a3@<ebp>, double a4@<st0>);
+// signed int __usercall UnitStack_RevealHiddenEnemiesAndAttackAdjacent@<eax>(unsigned int a1@<eax>, double a2@<st0>);
 // int __usercall sub_4443C0@<eax>(int a1@<eax>, int a2@<edx>);
 // int __usercall sub_4443D0@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall saveGame@<eax>(int a1@<eax>, DWORD a2@<edx>, double a3@<st0>);
@@ -969,11 +969,11 @@ int sub_443B60();
 // int __usercall sub_446230@<eax>(char a1@<bl>, DWORD a2@<ebp>);
 // int __usercall sub_446430@<eax>(int a1@<eax>, int a2@<ecx>);
 // int __usercall sub_446460@<eax>(int a1@<eax>, int a2@<ecx>);
-// int __usercall Queen_ShowWhimDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
+// int __usercall Queen_ShowWhimDecisionDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>);
 // int __usercall YesNoWindow@<eax>(int a1@<eax>, _BYTE *a2@<edx>, int a3@<ecx>, char a4@<bl>, DWORD a5@<ebp>);
 // int __usercall sub_446CB0@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall Queen_ShowMarriageProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall Queen_ShowNotification@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
+// int __usercall Queen_ShowMessageDialog@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>);
 // int __usercall UI_ShowMissionStatusPanel@<eax>(int a1@<ecx>, DWORD a2@<ebp>);
 int __thiscall nullsub_3(_DWORD); // weak
 int sub_4476B0();
@@ -1048,7 +1048,7 @@ signed int Game_InitPlayerViewState();
 // char *__usercall BuildingPrisonerActionButton_SelectBribery@<eax>(int a1@<eax>);
 // int __usercall BuildingPrisonerPanel_BackButton@<eax>(int a1@<eax>);
 // int __usercall Building_DrawPrisonerRows@<eax>(DWORD a1@<ebp>);
-// int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
+// int __usercall Queen_DrawRelationshipPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>);
 // int __usercall Building_ShowPrisonerManagementPanel@<eax>(int a1@<eax>, void *a2@<ebx>, DWORD a3@<ebp>);
 // int __usercall Queen_FindEligibleBirthHostBuilding@<eax>(int a1@<eax>);
 // int __usercall Queen_NewTurn@<eax>(int@<ecx>, int@<ebx>, char@<sil>, double@<st0>);
@@ -17670,7 +17670,7 @@ int __usercall sub_407D20@<eax>(signed int a1@<ebp>)
 // 545140: using guessed type int dword_545140;
 
 //----- (00408030) --------------------------------------------------------
-BOOL __spoils<ecx> sub_408030()
+BOOL __spoils<ecx> UI_TrySelectFriendlyStackUnderCursor()
 {
   BOOL result; // eax
   int v1; // esi
@@ -17842,7 +17842,7 @@ BOOL __usercall sub_408430@<eax>(int a1@<eax>, int a2@<edx>)
 // 40844B: variable 'v3' is possibly undefined
 
 //----- (00408460) --------------------------------------------------------
-BOOL __usercall Port_IsInsideArea@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall Port_IsInsideFootprint@<eax>(int a1@<eax>, int a2@<edx>)
 {
   int v2; // ebx
   int v3; // edi
@@ -18135,7 +18135,7 @@ LABEL_80:
     v7 = &unk_5198F8;
     goto LABEL_25;
   }
-  if ( Port_IsInsideArea(v1, v78) )
+  if ( Port_IsInsideFootprint(v1, v78) )
   {
     if ( g_SelectedUnitIndex == -1 )
     {
@@ -18187,7 +18187,7 @@ LABEL_80:
     sub_40A360(v16);
   }
 LABEL_26:
-  if ( DD_IsLost((int)&dword_544CD8) && Port_IsInsideArea(v1, v78) )
+  if ( DD_IsLost((int)&dword_544CD8) && Port_IsInsideFootprint(v1, v78) )
     UI_DrawPanelWithSprite(v5, v1);
   if ( DD_IsLost((int)&dword_544CD8) )
   {
@@ -18296,11 +18296,11 @@ LABEL_26:
   v28 = g_SelectedUnitIndex;
     if ( g_SelectedUnitIndex != -1
       && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
-      && Port_IsInsideArea(v1, v78) )
+      && Port_IsInsideFootprint(v1, v78) )
   {
     if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
     {
-      v35 = (_DWORD *)Port_BuildDockingTrack(g_SelectedUnitIndex);
+      v35 = (_DWORD *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
       v27 = gameData - 26;
       if ( *v35 )
         v36 = v35[1];
@@ -18334,7 +18334,7 @@ LABEL_26:
       }
       j__nfree_();
     }
-    v29 = (const void *)Port_BuildDockingTrack(g_SelectedUnitIndex);
+    v29 = (const void *)Port_GenerateApproachTrack(g_SelectedUnitIndex);
     if ( v29 )
     {
       qmemcpy((void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316), v29, 0x194u);
@@ -18353,7 +18353,7 @@ LABEL_26:
     }
     return;
   }
-  if ( Port_IsInsideArea(v1, v78) )
+  if ( Port_IsInsideFootprint(v1, v78) )
   {
     UI_DrawPanelWithSprite(v27, v1);
     return;
@@ -18800,7 +18800,7 @@ int __usercall sub_40A000@<eax>(int a1@<eax>, int a2@<ecx>, unsigned __int16 a3@
   else
   {
     sub_419E60(a1, a2);
-    return sub_443EB0(g_SelectedUnitIndex, a3, a4, a5);
+    return UnitStack_TryHide(g_SelectedUnitIndex, a3, a4, a5);
   }
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -18874,7 +18874,7 @@ int __usercall sub_40A0E0@<eax>(int a1@<eax>, int a2@<ecx>, int a3@<ebx>, DWORD 
       {
         DD_Pump((int)dword_544CD8, a3);
         sub_40ADF0(a3);
-        if ( Port_PresentInteger() || !sub_419DC0(g_UI_YesNoDims, 0x40u) && DD_IsFlipping((int)dword_544CD8) )
+        if ( UI_TrySelectFriendlyStackUnderCursor() || !sub_419DC0(g_UI_YesNoDims, 0x40u) && DD_IsFlipping((int)dword_544CD8) )
           break;
         a3 = dword_520308;
         if ( dword_520308 == -1 )
@@ -22753,7 +22753,7 @@ signed int __usercall UnitStack_GetMinCurrentActionPoints@<eax>(int a1@<eax>)
 }
 
 //----- (004100B0) --------------------------------------------------------
-signed int __usercall sub_4100B0@<eax>(int a1@<eax>)
+signed int __usercall UnitStack_GetMaxOrderTier@<eax>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // eax
@@ -23080,7 +23080,7 @@ void __usercall UnitStack_ExecuteQueuedPath(unsigned int a1@<eax>, int a2@<edx>,
     sub_460D80((int)dword_544CD8, (int)&dword_519808);
     v11 = v107;
     *((_BYTE *)v7 + 720) = 0;
-    UnitStack_RevealAndEngageHiddenEnemies(v11, a5);
+    UnitStack_RevealHiddenEnemiesAndAttackAdjacent(v11, a5);
     Trap_TriggerAtStackTile(v107, v9, a5);
     v106 = v12;
     v13 = *v104;
@@ -23304,7 +23304,7 @@ void __usercall UnitStack_ExecuteQueuedPath(unsigned int a1@<eax>, int a2@<edx>,
           v44 = 725 * v45;
           if ( (unsigned int)*(__int16 *)(725 * v45 + gameData + 147180) <= 0x28 )
           {
-            UnitStack_RevealAndEngageHiddenEnemies(v45, a5);
+            UnitStack_RevealHiddenEnemiesAndAttackAdjacent(v45, a5);
             if ( v45 <= 0x1F4 && (unsigned int)*(__int16 *)(v44 + gameData + 147180) <= 0x28 )
             {
               v46 = v103;
@@ -24819,7 +24819,7 @@ signed int __usercall UnitStack_AdjustMoraleByPredicate@<eax>(
 // 412947: variable 'v9' is possibly undefined
 
 //----- (00412970) --------------------------------------------------------
-int __usercall Building_UseGarrisonSlot@<eax>(int result@<eax>)
+int __usercall UnitSlot_CycleOrderState@<eax>(int result@<eax>)
 {
   char v1; // dl
   char v2; // dh
@@ -24843,7 +24843,7 @@ int __usercall Building_UseGarrisonSlot@<eax>(int result@<eax>)
 }
 
 //----- (004129E0) --------------------------------------------------------
-signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
+signed int __usercall UnitStack_CycleAllSlotOrders@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double a3@<st0>)
 {
   __int16 *v4; // esi
   int v5; // edx
@@ -24860,7 +24860,7 @@ signed int __usercall sub_4129E0@<eax>(__int16 *a1@<eax>, DWORD a2@<ebp>, double
     v7 = *(__int16 *)(v6 + 6);
     if ( v7 == -1 )
       return sub_455070(a1, v5, v6, -1, a2, a3);
-    Building_UseGarrisonSlot((int)v4 + 31 * v5);
+    UnitSlot_CycleOrderState((int)v4 + 31 * v5);
     v5 = v9 + 1;
     v6 = v10 + 31;
   }
@@ -30834,9 +30834,9 @@ LABEL_48:
                   UnitStack_AdjustMoraleByPredicate(v8, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
                   UnitStack_AdjustMoraleByPredicate(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
                   --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
                   ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
                 }
@@ -30856,9 +30856,9 @@ LABEL_48:
                   UnitStack_AdjustMoraleByPredicate(v62, -5, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
                   UnitStack_AdjustMoraleByPredicate(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-                  sub_4129E0(v8, (DWORD)v8, a5);
-                  sub_4129E0(v8, (DWORD)v8, a5);
-                  sub_4129E0(v8, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
                   UnitStack_SubtractActionPointsFloorZero(v8, v50, (DWORD)v8, a5);
                   ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
                   --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
@@ -30883,9 +30883,9 @@ LABEL_49:
                   }
                   v20 = (unsigned __int8 *)CSyncObject::Unlock;
                   UnitStack_AdjustMoraleByPredicate(v62, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
-                  sub_4129E0(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
+                  UnitStack_CycleAllSlotOrders(v62, (DWORD)v8, a5);
                   --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
                   ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
                 }
@@ -30903,9 +30903,9 @@ LABEL_49:
                 }
                 v20 = (unsigned __int8 *)CSyncObject::Unlock;
                 UnitStack_AdjustMoraleByPredicate(v8, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v8, a5);
-                sub_4129E0(v8, (DWORD)v8, a5);
-                sub_4129E0(v8, (DWORD)v8, a5);
-                sub_4129E0(v8, (DWORD)v8, a5);
+                UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
+                UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
+                UnitStack_CycleAllSlotOrders(v8, (DWORD)v8, a5);
                 ++*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 141441);
                 --*(_WORD *)(gameData + 1423 * *((unsigned __int8 *)v62 + 4) + 141441);
               }
@@ -31164,9 +31164,9 @@ LABEL_28:
             if ( !Building_CountGarrison(UNIT_RECORD(v59)) )
             {
               UnitStack_AdjustMoraleByPredicate(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
-              sub_4129E0(v61, (DWORD)v7, a5);
-              sub_4129E0(v61, (DWORD)v7, a5);
-              sub_4129E0(v61, (DWORD)v7, a5);
+              UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
+              UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
+              UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
               sub_41F900(v60, v49, v50, v25, a5);
               ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
               --*(_WORD *)(1423 * v7[2] + gameData + 141441);
@@ -31244,9 +31244,9 @@ LABEL_42:
               else
               {
                 UnitStack_AdjustMoraleByPredicate(v61, 4, (BOOL (__usercall *)@<eax>(int@<eax>))CSyncObject::Unlock, (DWORD)v7, a5);
-                sub_4129E0(v61, (DWORD)v7, a5);
-                sub_4129E0(v61, (DWORD)v7, a5);
-                sub_4129E0(v61, (DWORD)v7, a5);
+                UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
+                UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
+                UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
                 sub_41F900(v60, v46, v47, 0, a5);
                 ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
                 --*(_WORD *)(1423 * v7[2] + gameData + 141441);
@@ -32913,7 +32913,7 @@ char __usercall Building_UpdateGarrisonTrainRepairTimers@<al>(unsigned __int8 *a
         {
           if ( *(_DWORD *)(gameData + 1423 * a1[2] + 140051) )
           {
-            LOBYTE(v6) = Building_UseGarrisonSlot((int)&v11[31 * v4]);
+            LOBYTE(v6) = UnitSlot_CycleOrderState((int)&v11[31 * v4]);
           }
           else
           {
@@ -36555,7 +36555,9 @@ BOOL __userpurge Unit_MoveSelectionFromGroupToTile@<eax>(int a1@<eax>, _DWORD *a
   sub_455070(v10, v26, 4 * v26, (char)v18, (DWORD)v10, a5);
   Rules_LinkArmyFact(v18, v26, v27 - v26, v28, (char)v18, (DWORD)v10);
   sub_455070(v18, v30, 8 * v29, (char)v18, (DWORD)v10, v28);
-  UnitStack_RevealAndEngageHiddenEnemies(*(unsigned __int16 *)(8 * (v30 + v31) + gameData + 2 * a3 + 556374), v32);
+  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(
+    *(unsigned __int16 *)(8 * (v30 + v31) + gameData + 2 * a3 + 556374),
+    v32);
   Trap_TriggerAtStackTile(*(unsigned __int16 *)(v34 + v33 + gameData + 556374), (DWORD)v10, v32);
   return 1;
 }
@@ -37803,7 +37805,7 @@ signed int __usercall __spoils<ecx,st0> sub_425540@<eax>(DWORD a1@<ebp>, double 
         if ( !sub_419DC0(dword_51438C, a1) )
         {
           sub_460D80((int)dword_544CD8, dword_545150);
-          if ( Port_PresentInteger() )
+          if ( UI_TrySelectFriendlyStackUnderCursor() )
           {
             Render_Begin((int)dword_544CD8, 0);
             goto LABEL_13;
@@ -40882,7 +40884,7 @@ int __usercall BuildBuilding@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, dou
   {
     DD_Pump((int)&dword_544CD8, v8, (char)sub_429EC0);
     sub_40ADF0(v8, (char)sub_429EC0);
-    if ( !sub_419DC0((int)&unk_5146C0, a1) && Port_PresentInteger() )
+    if ( !sub_419DC0((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
     {
       Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
       break;
@@ -41772,7 +41774,7 @@ signed int __usercall Trap_TriggerAtStackTile@<eax>(int a1@<eax>, DWORD a2@<ebp>
   signed int v28; // [esp+Ch] [ebp-1Ch]
 
   v5 = (__int16 *)(gameData + 147174 + 725 * a1);
-  if ( sub_4100B0((int)v5) >= 3 )
+  if ( UnitStack_GetMaxOrderTier((int)v5) >= 3 )
   {
     v16 = UnitStack_GetVisionRadius((int)v5);
     v17 = *v5 - v16;
@@ -53835,7 +53837,7 @@ signed int __usercall Building_UnitsLeave@<eax>(unsigned __int8 *a1@<eax>, int *
   sub_455070(v27, 0, v19, (char)v14, (DWORD)a1, a3);
   Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000, v20, v21);
   UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])));
-  UnitStack_RevealAndEngageHiddenEnemies(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])), v22);
+  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])), v22);
   log(v23, (char)v14, (DWORD)a1, (int)aBuildings_unit);
   Unit_DebugDumpFormationSizes((int)v27, (DWORD)a1);
   return *(unsigned __int16 *)(TILE_INDEX(*v27, v27[1]));
@@ -54477,7 +54479,7 @@ int __usercall __spoils<ecx> Building_CycleAllGarrisonOrdersOnce@<eax>(int a1@<e
       if ( v2 >= 12 )
         return result;
     }
-    result = Building_UseGarrisonSlot(v1 + result);
+    result = UnitSlot_CycleOrderState(v1 + result);
     v2 = v5 + 1;
     v3 = v6 + 31;
   }
@@ -55557,7 +55559,7 @@ LABEL_9:
       return;
     case 6u:
       do
-        sub_4129E0(a2, a1, a5);
+        UnitStack_CycleAllSlotOrders(a2, a1, a5);
       while ( v17 < 3 );
       goto LABEL_15;
     case 7u:
@@ -55566,7 +55568,7 @@ LABEL_9:
       return;
     case 8u:
       do
-        sub_4129E0(a2, a1, a5);
+        UnitStack_CycleAllSlotOrders(a2, a1, a5);
       while ( v19 < 2 );
 LABEL_15:
       sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
@@ -58102,14 +58104,14 @@ int Port_BuildShorePieces()
 // 5202E4: using guessed type int gameData;
 
 //----- (00443230) --------------------------------------------------------
-int Port_HasSupplyReady()
+int Port_IsSupplyReady()
 {
   return PORT_SUPPLY_READY_FLAG;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00443240) --------------------------------------------------------
-int *__usercall Port_BuildDockingTrack@<eax>(int a1@<eax>)
+int *__usercall Port_GenerateApproachTrack@<eax>(int a1@<eax>)
 {
   int v1; // ecx
   int v2; // ebp
@@ -58274,7 +58276,7 @@ int __usercall Port_GetSupply@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>, 
     return 0;
   v32 = PORT_ROW;
   v33 = PORT_COLUMN;
-  result = Port_HasSupplyReady();
+  result = Port_IsSupplyReady();
   if ( result )
   {
     v31 = 0;
@@ -58608,7 +58610,7 @@ signed int __usercall sub_443C20@<eax>(
 // 5202E4: using guessed type int gameData;
 
 //----- (00443EB0) --------------------------------------------------------
-signed int __usercall sub_443EB0@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, DWORD a3@<ebp>, double a4@<st0>)
+signed int __usercall UnitStack_TryHide@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, DWORD a3@<ebp>, double a4@<st0>)
 {
   __int16 *v4; // esi
   int v6; // ecx
@@ -58630,7 +58632,7 @@ signed int __usercall sub_443EB0@<eax>(int a1@<eax>, unsigned __int16 a2@<bx>, D
   v4 = (__int16 *)(gameData + 147174 + 725 * a1);
   if ( UnitStack_GetMinCurrentActionPoints((int)v4) < 0 || *((_BYTE *)v4 + 720) || !UnitStack_HasNormalCombatUnits((int)v4) )
     return 0;
-  if ( sub_4100B0((int)v4) < 2 )
+  if ( UnitStack_GetMaxOrderTier((int)v4) < 2 )
   {
     if ( *(_DWORD *)(1423 * *((unsigned __int8 *)v4 + 4) + gameData + 140051) )
     {
@@ -58725,7 +58727,7 @@ LABEL_16:
 // 5202E4: using guessed type int gameData;
 
 //----- (00444150) --------------------------------------------------------
-signed int __usercall UnitStack_RevealAndEngageHiddenEnemies@<eax>(unsigned int a1@<eax>, double a2@<st0>)
+signed int __usercall UnitStack_RevealHiddenEnemiesAndAttackAdjacent@<eax>(unsigned int a1@<eax>, double a2@<st0>)
 {
   __int16 *v2; // ebx
   int j; // ecx
@@ -58746,7 +58748,7 @@ signed int __usercall UnitStack_RevealAndEngageHiddenEnemies@<eax>(unsigned int 
 
   v2 = (__int16 *)(725 * a1 + gameData + 147174);
   v16 = 0;
-  if ( sub_4100B0((int)v2) >= 3 )
+  if ( UnitStack_GetMaxOrderTier((int)v2) >= 3 )
   {
     v19 = UnitStack_GetVisionRadius((int)v2);
     v18 = *v2 - v19;
@@ -60044,7 +60046,7 @@ int __usercall sub_446460@<eax>(int a1@<eax>, int a2@<ecx>)
 // 543D58: using guessed type int dword_543D58;
 
 //----- (00446480) --------------------------------------------------------
-int __usercall Queen_ShowWhimDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
+int __usercall Queen_ShowWhimDecisionDialog@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, DWORD a5@<ebp>)
 {
   int v6; // ecx
   _DWORD *v7; // eax
@@ -60526,7 +60528,7 @@ int __usercall Queen_ShowMarriageProposalDialog@<eax>(int a1@<ecx>, char a2@<bl>
 // 545150: using guessed type int dword_545150;
 
 //----- (00447330) --------------------------------------------------------
-int __usercall Queen_ShowNotification@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
+int __usercall Queen_ShowMessageDialog@<eax>(int a1@<eax>, int a2@<ecx>, char a3@<bl>, DWORD a4@<ebp>)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -64698,14 +64700,14 @@ int __usercall Building_DrawPrisonerRows@<eax>(DWORD a1@<ebp>)
 // 5443FC: using guessed type int dword_5443FC;
 
 //----- (0044FD90) --------------------------------------------------------
-int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
+int __usercall Queen_DrawRelationshipPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
 {
   int SpriteForChar; // eax
-  int queenMood; // eax
+  int queenRelationshipState; // eax
 
   g_RenderDevice = &unk_51D4C0;
-  queenMood = PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex);
-  if ( queenMood > 0 )
+  queenRelationshipState = PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex);
+  if ( queenRelationshipState > 0 )
   {
     SpriteForChar = DLX_GetSpriteForChar(dword_5443F0, PLAYER_QUEEN_WHIM(g_CurrentPlayerIndex) + 25);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -64720,15 +64722,15 @@ int __usercall Queen_DrawMoodPanel@<eax>(DWORD a1@<ebp>, int a2@<edi>)
       0);
   }
   Render_ReleaseSurface(17, a1);
-  if ( queenMood == -1 )
-    queenMood = 0;
+  if ( queenRelationshipState == -1 )
+    queenRelationshipState = 0;
   return UI_DrawTextFmt(
            a2,
            180,
            500,
            215,
            6,
-           (int)(&g_QueenRelationshipStateTexts[3 * queenMood])[(unsigned __int8)g_LanguageIndex]);
+           (int)(&g_QueenRelationshipStateTexts[3 * queenRelationshipState])[(unsigned __int8)g_LanguageIndex]);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -65066,7 +65068,7 @@ int __usercall Building_ShowPrisonerManagementPanel@<eax>(int a1@<eax>, void *a2
   }
   while ( v39 != 5 );
   Building_DrawPrisonerRows(v36);
-  Queen_DrawMoodPanel(v36, 10);
+  Queen_DrawRelationshipPanel(v36, 10);
   sub_419D80(dword_518DC8);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
   Render_Present((int)dword_544CD8);
@@ -65263,10 +65265,10 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
   if ( ACTIVE_MISSION_INDEX != 6 )
   {
     log(a1, a2, (DWORD)savedregs, (int)aQueen_newturn, v45[0]);
-    result = PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex);
+    result = PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex);
     if ( result != -1 )
     {
-      if ( PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) )
+      if ( PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) )
       {
         if ( result == 9 )
         {
@@ -65276,7 +65278,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           if ( v21 )
           {
             Building_CreateSpecialGarrisonUnit(v21, a2, v21, a2, a4);
-            PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) = 5;
+            PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = 5;
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
             {
               v45[0] = (int)g_QueenSonBirthTexts[0];
@@ -65297,7 +65299,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
         else if ( result == 1 )
         {
           log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnK, v45[0]);
-          PLAYER_QUEEN_MOOD(g_CurrentPlayerIndex) = -1;
+          PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) = -1;
           switch ( Rng_RandRange(0, 3) )
           {
             case 0u:
@@ -65363,7 +65365,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
           }
           v11 = strlen(g_QueenMsgBuf) + 1;
           if ( v11 != 1 )
-            Queen_ShowNotification((int)g_QueenMsgBuf, v11 - 1, a2, (DWORD)savedregs);
+            Queen_ShowMessageDialog((int)g_QueenMsgBuf, v11 - 1, a2, (DWORD)savedregs);
         }
         result = PLAYER_DATA(g_CurrentPlayerIndex);
         if ( GAME_TURN_COUNTER >= *(_WORD *)(result + 141445) )
@@ -65373,7 +65375,7 @@ int __usercall Queen_NewTurn@<eax>(int a1@<ecx>, int a2@<ebx>, char a3@<sil>, do
             v38 = Rng_RandRange(0, 24);
             log(v38, a2, (DWORD)savedregs, (int)aQueen_newturnZ, v38);
             v39 = AI_CalcFrontlineScore(g_CurrentPlayerIndex);
-            if ( Queen_ShowWhimDialog(
+            if ( Queen_ShowWhimDecisionDialog(
                    g_QueenWhimRecords[v38].texts[(unsigned __int8)g_LanguageIndex],
                    g_QueenWhimRecords[v38].required_frontline_score,
                    7 * v38,
@@ -66753,7 +66755,7 @@ signed int __usercall sub_453600@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   if ( sub_411AB0(a1) )
     Pathing_EnableBridgeCrossings(v5, a3, a4);
-  v6 = Port_BuildDockingTrack(v5);
+  v6 = Port_GenerateApproachTrack(v5);
   Pathing_DisableBridgeCrossings(v7, (char)v6, a4);
   if ( !v9 )
     return 0;
@@ -66983,7 +66985,7 @@ signed int __usercall sub_453E60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   }
   else if ( v8 == PORT_ROW && a3 == PORT_COLUMN )
   {
-    Track = Port_BuildDockingTrack(a1);
+    Track = Port_GenerateApproachTrack(a1);
   }
   else
   {
@@ -67256,7 +67258,7 @@ signed int __usercall sub_454860@<eax>(unsigned int a1@<eax>, unsigned int a2@<e
     UnitStack_ExecuteQueuedPath(a3, v8, v7, a3, a4);
     if ( __PAIR64__(*(__int16 *)(725 * a3 + gameData + 147174), *(__int16 *)(725 * a3 + gameData + 147176)) == v9 )
     {
-      sub_443EB0(a3, v9, a3, a4);
+      UnitStack_TryHide(a3, v9, a3, a4);
       return 1;
     }
     else
