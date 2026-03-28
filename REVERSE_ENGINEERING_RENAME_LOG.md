@@ -537,6 +537,37 @@
 ## Deferred / Ambiguous
 - `sub_455150` updates the `gracz` attribute on `BuildingRecord.castle_fact_id`, but this pass stopped short of renaming it until the non-castle call envelope is ruled out more rigorously.
 
+## Batch 40 – Building Rules Host Stat Wrappers
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_455470 | Building_GetTaxPressureByIndex | Function | Buildings / Rules Host Stats | High | The `Podatek` rules host stub at `loc_4568F6` dispatches directly to this getter, which returns `BuildingRecord + 436 & 0x3F`, the same tax-pressure value consumed by `Building_GetTaxPressureTier`. | c, asm | no |
+| sub_4554D0 | Building_GetWallStrengthByIndex | Function | Buildings / Rules Host Stats | High | The `SilaMurow` rules host stub at `loc_456A10` dispatches directly to this getter, which returns byte `+421`, the per-building wall-upgrade strength/stage field. | c, asm | no |
+| sub_4554F0 | Building_GetMoneyByIndex | Function | Buildings / Rules Host Stats | High | The `Pieniadze` rules host stub at `loc_4569DA` dispatches directly to this getter, which returns the building-local stored money pool at `+438`. | c, asm | no |
+| sub_455510 | Building_GetCastleStrengthByIndex | Function | Buildings / Rules Host Stats | High | The `SilaZamku` rules host stub at `loc_456A46` dispatches directly to this wrapper around `Building_GetTotalValue`, exposing the building's aggregate strength/value to the rules layer. | c, asm | no |
+| sub_455580 | Building_GetTechLevelByIndex | Function | Buildings / Rules Host Stats | High | The `PoziomTech` rules host stub at `loc_456BBB` dispatches directly to this getter, which returns the low three bits at `+444`. | c, asm | no |
+| sub_4555A0 | Building_GetTypeByIndex | Function | Buildings / Rules Host Stats | High | The `TypBudowli` rules host stub at `loc_456BF1` dispatches directly to this getter, which returns the raw building type byte at offset `+4`. | c, asm | no |
+| sub_4555E0 | Building_GetSatisfactionByIndex | Function | Buildings / Rules Host Stats | High | The `Zadowolenie` rules host stub at `loc_456C93` dispatches directly to this getter, which returns byte `+434`, the clamped satisfaction value used by population growth. | c, asm | no |
+| sub_455600 | Building_GetPeasantCountByIndex | Function | Buildings / Rules Host Stats | High | The `IloscChlopow` rules host stub at `loc_456CFF` dispatches directly to this getter, which returns the low 12 bits at `+430`, the same population value updated by `Building_UpdatePopulationGrowth`. | c, asm | no |
+| sub_455670 | Building_GetGarrisonCountByIndex | Function | Buildings / Rules Host Stats | High | The `IloscOddzialow` rules host stub at `loc_456E7F` dispatches directly to this wrapper around `Building_CountGarrison`. | c, asm | no |
+| sub_455690 | Building_IsGarrisonFullByIndex | Function | Buildings / Rules Host Stats | High | The `MaxIloscOddzialow` rules host stub at `loc_456F87` dispatches directly to this predicate, which returns true exactly when the garrison count reached the 12-slot limit. | c, asm | no |
+| BuildingRecord + 421 | BuildingRecord.wall_strength | Recovered Struct Field | Buildings / Walls | High | The `SilaMurow` rules host getter returns byte `+421`, and wall-upgrade logic reads and advances the same byte as the staged wall-strength field. | c, asm | no |
+| BuildingRecord + 430 | BuildingRecord.peasant_count | Recovered Struct Field | Buildings / Population | High | The `IloscChlopow` rules host getter returns the low 12 bits at `+430`, and `Building_UpdatePopulationGrowth` mutates the same value as the building's peasant population. | c, asm | no |
+| BuildingRecord + 434 | BuildingRecord.satisfaction | Recovered Struct Field | Buildings / Population | High | The `Zadowolenie` rules host getter returns byte `+434`, and `Building_UpdatePopulationGrowth` clamps it between `0` and `100` as a settlement satisfaction/happiness meter. | c, asm | no |
+| BuildingRecord + 438 / stored_resource_pool | BuildingRecord.stored_money | Recovered Struct Field | Buildings / Economy | High | The `Pieniadze` rules host getter returns dword `+438`, while add-on purchase and income logic spend and replenish the same pool as money. | c, asm | no |
+| BuildingRecord + 444 / level_bits | BuildingRecord.tech_level_bits | Recovered Struct Field | Buildings / Technology | High | The `PoziomTech` rules host getter returns the low three bits at `+444`, and upgrade/add-on requirement checks treat those bits as the building's tech level cap. | c, asm | no |
+
+## Batch 41 – Building Production And Licence Wrappers
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| sub_455620 | Building_HasProductionByIndex | Function | Buildings / Production Wrappers | High | The `IsProduction` rules host stub at `loc_456CC9` dispatches directly to this predicate, which returns true when the selected production/licence slot byte at `+414` is not `-1`. | c, asm | no |
+| sub_4556C0 | Building_RepairUnitByIndex | Function | Buildings / Production Wrappers | High | Thin building-id wrapper that forwards directly into `Building_RepairUnit`. | c | no |
+| sub_4556E0 | Building_TrainUnitByIndex | Function | Buildings / Production Wrappers | High | Thin building-id wrapper that forwards directly into `Building_TrainUnit`. | c | no |
+| sub_455700 | Building_SetUnitProductionByIndex | Function | Buildings / Production Wrappers | High | Thin building-id wrapper that forwards directly into `Building_SetUnitProduction`. | c | no |
+| sub_455720 | Building_RemoveUnitLicenceByIndex | Function | Buildings / Production Wrappers | High | Thin building-id wrapper that forwards directly into `Building_RemoveUnitLicence`. | c | no |
+| sub_4557C0 | Building_HasUnitLicenceByIndex | Function | Buildings / Licence Wrappers | High | The `IsLicence` rules host stub at `loc_45692C` dispatches directly to this wrapper around `Building_HasAddonInGarrison`, exposing whether the castle currently owns the requested production licence. | c, asm | no |
+| sub_4557E0 | Building_BuyUnitLicenceByIndex | Function | Buildings / Licence Wrappers | High | The `BuyLicence` rules host stub at `loc_456B0D` dispatches directly to this building-id wrapper over the licence-purchase path. | c, asm | no |
+| sub_455800 | Building_CanBuyUnitLicenceByIndex | Function | Buildings / Licence Wrappers | High | The `CanBuyLicence` rules host stub at `loc_456D8F` dispatches directly to this predicate, which forwards into `Building_CanEquipAddon` for the requested licence type. | c, asm | no |
+
 ## Batch 38 – Castle Lifecycle Logging Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|

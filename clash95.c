@@ -1140,31 +1140,31 @@ signed int sub_452390();
 int Game_GetTurnNumber();
 // _DWORD *__usercall Rules_OnCastleUpdate@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>, double a4@<st0>);
 // BOOL __usercall Building_TryStartUpgradeByIndex@<eax>(int a1@<eax>);
-// int __usercall sub_455470@<eax>(int a1@<eax>);
+// int __usercall Building_GetTaxPressureByIndex@<eax>(int a1@<eax>);
 // signed int __usercall Building_BuildSchoolByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
 // signed int __usercall Building_BuildSmithsByIndex@<eax>(char a1@<bl>, DWORD a2@<ebp>);
-// int __usercall sub_4554D0@<eax>(int a1@<eax>);
-// int __usercall sub_4554F0@<eax>(int a1@<eax>);
-// int __usercall sub_455510@<eax>(int a1@<eax>);
+// int __usercall Building_GetWallStrengthByIndex@<eax>(int a1@<eax>);
+// int __usercall Building_GetMoneyByIndex@<eax>(int a1@<eax>);
+// int __usercall Building_GetCastleStrengthByIndex@<eax>(int a1@<eax>);
 // signed int __usercall Building_BuildBarracksByIndex@<eax>(int a1@<ecx>, char a2@<bl>, DWORD a3@<ebp>);
 // signed int __usercall Building_BuildHospitalByIndex@<eax>(char a1@<bl>, DWORD a2@<ebp>);
-// int __usercall sub_455580@<eax>(int a1@<eax>);
-// int __usercall sub_4555A0@<eax>(int a1@<eax>);
+// int __usercall Building_GetTechLevelByIndex@<eax>(int a1@<eax>);
+// int __usercall Building_GetTypeByIndex@<eax>(int a1@<eax>);
 // signed int __usercall Building_BuildWorkshopByIndex@<eax>(char a1@<bl>, DWORD a2@<ebp>);
-// int __usercall sub_4555E0@<eax>(int a1@<eax>);
-// int __usercall sub_455600@<eax>(int a1@<eax>);
-// BOOL __usercall sub_455620@<eax>(int a1@<eax>);
+// int __usercall Building_GetSatisfactionByIndex@<eax>(int a1@<eax>);
+// int __usercall Building_GetPeasantCountByIndex@<eax>(int a1@<eax>);
+// BOOL __usercall Building_HasProductionByIndex@<eax>(int a1@<eax>);
 // BOOL __usercall Building_CanStartUpgradeByIndex@<eax>(int a1@<eax>);
-// int __usercall sub_455670@<eax>(int a1@<eax>);
-// BOOL __usercall sub_455690@<eax>(int a1@<eax>);
-// __int16 __usercall sub_4556C0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
-// _BYTE *__usercall sub_4556E0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall sub_455700@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
-// int __usercall sub_455720@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
+// int __usercall Building_GetGarrisonCountByIndex@<eax>(int a1@<eax>);
+// BOOL __usercall Building_IsGarrisonFullByIndex@<eax>(int a1@<eax>);
+// __int16 __usercall Building_RepairUnitByIndex@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
+// _BYTE *__usercall Building_TrainUnitByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall Building_SetUnitProductionByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>);
+// int __usercall Building_RemoveUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
 // void __userpurge sub_455740(int a1@<eax>, int ebx0@<ebx>, float a3);
-// signed int __usercall sub_4557C0@<eax>(int a1@<eax>, int a2@<edx>);
-// BOOL __usercall sub_4557E0@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
-// BOOL __usercall sub_455800@<eax>(int a1@<eax>, int a2@<edx>);
+// signed int __usercall Building_HasUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>);
+// BOOL __usercall Building_BuyUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>);
+// BOOL __usercall Building_CanBuyUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>);
 // BOOL __userpurge sub_455830@<eax>(int a1@<ecx>, DWORD a2@<ebx>, double a3@<st0>, char *a4);
 // signed int __usercall sub_455850@<eax>(int a1@<eax>, int a2@<edx>);
 // signed int __usercall __spoils<ecx> sub_455890@<eax>(int a1@<eax>);
@@ -67897,7 +67897,7 @@ BOOL __usercall Building_TryStartUpgradeByIndex@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455470) --------------------------------------------------------
-int __usercall sub_455470@<eax>(int a1@<eax>)
+int __usercall Building_GetTaxPressureByIndex@<eax>(int a1@<eax>)
 {
   return *(_BYTE *)(gameData + 467 * a1 + 510110) & 0x3F;
 }
@@ -67918,21 +67918,21 @@ signed int __usercall Building_BuildSmithsByIndex@<eax>(char a1@<bl>, DWORD a2@<
 // 5202E4: using guessed type int gameData;
 
 //----- (004554D0) --------------------------------------------------------
-int __usercall sub_4554D0@<eax>(int a1@<eax>)
+int __usercall Building_GetWallStrengthByIndex@<eax>(int a1@<eax>)
 {
   return *(unsigned __int8 *)(gameData + 467 * a1 + 510095);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004554F0) --------------------------------------------------------
-int __usercall sub_4554F0@<eax>(int a1@<eax>)
+int __usercall Building_GetMoneyByIndex@<eax>(int a1@<eax>)
 {
   return *(_DWORD *)(gameData + 467 * a1 + 510112);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455510) --------------------------------------------------------
-int __usercall sub_455510@<eax>(int a1@<eax>)
+int __usercall Building_GetCastleStrengthByIndex@<eax>(int a1@<eax>)
 {
   return Building_GetTotalValue(UNIT_RECORD(a1));
 }
@@ -67953,14 +67953,14 @@ signed int __usercall Building_BuildHospitalByIndex@<eax>(char a1@<bl>, DWORD a2
 // 5202E4: using guessed type int gameData;
 
 //----- (00455580) --------------------------------------------------------
-int __usercall sub_455580@<eax>(int a1@<eax>)
+int __usercall Building_GetTechLevelByIndex@<eax>(int a1@<eax>)
 {
   return *(_BYTE *)(gameData + 467 * a1 + 510118) & 7;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004555A0) --------------------------------------------------------
-int __usercall sub_4555A0@<eax>(int a1@<eax>)
+int __usercall Building_GetTypeByIndex@<eax>(int a1@<eax>)
 {
   return *(char *)(gameData + 467 * a1 + 509678);
 }
@@ -67974,14 +67974,14 @@ signed int __usercall Building_BuildWorkshopByIndex@<eax>(char a1@<bl>, DWORD a2
 // 5202E4: using guessed type int gameData;
 
 //----- (004555E0) --------------------------------------------------------
-int __usercall sub_4555E0@<eax>(int a1@<eax>)
+int __usercall Building_GetSatisfactionByIndex@<eax>(int a1@<eax>)
 {
   return *(char *)(gameData + 467 * a1 + 510108);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455600) --------------------------------------------------------
-int __usercall sub_455600@<eax>(int a1@<eax>)
+int __usercall Building_GetPeasantCountByIndex@<eax>(int a1@<eax>)
 {
   int result; // eax
 
@@ -67992,7 +67992,7 @@ int __usercall sub_455600@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455620) --------------------------------------------------------
-BOOL __usercall sub_455620@<eax>(int a1@<eax>)
+BOOL __usercall Building_HasProductionByIndex@<eax>(int a1@<eax>)
 {
   return *(char *)(gameData + 467 * a1 + 510088) != -1;
 }
@@ -68006,42 +68006,42 @@ BOOL __usercall Building_CanStartUpgradeByIndex@<eax>(int a1@<eax>)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455670) --------------------------------------------------------
-int __usercall sub_455670@<eax>(int a1@<eax>)
+int __usercall Building_GetGarrisonCountByIndex@<eax>(int a1@<eax>)
 {
   return Building_CountGarrison(UNIT_RECORD(a1));
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455690) --------------------------------------------------------
-BOOL __usercall sub_455690@<eax>(int a1@<eax>)
+BOOL __usercall Building_IsGarrisonFullByIndex@<eax>(int a1@<eax>)
 {
   return Building_CountGarrison(UNIT_RECORD(a1)) == 12;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556C0) --------------------------------------------------------
-__int16 __usercall sub_4556C0@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
+__int16 __usercall Building_RepairUnitByIndex@<ax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
   return Building_RepairUnit(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004556E0) --------------------------------------------------------
-_BYTE *__usercall sub_4556E0@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+_BYTE *__usercall Building_TrainUnitByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   return Building_TrainUnit(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455700) --------------------------------------------------------
-int __usercall sub_455700@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
+int __usercall Building_SetUnitProductionByIndex@<eax>(int a1@<eax>, char a2@<bl>, DWORD a3@<ebp>)
 {
   return Building_SetUnitProduction(UNIT_RECORD(a1), a2, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
-int __usercall sub_455720@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
+int __usercall Building_RemoveUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
   return Building_RemoveUnitLicence(UNIT_RECORD(a1), a2, a3);
 }
@@ -68072,21 +68072,21 @@ void __userpurge sub_455740(int a1@<eax>, int ebx0@<ebx>, float a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004557C0) --------------------------------------------------------
-signed int __usercall sub_4557C0@<eax>(int a1@<eax>, int a2@<edx>)
+signed int __usercall Building_HasUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>)
 {
   return Building_HasAddonInGarrison(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004557E0) --------------------------------------------------------
-BOOL __usercall sub_4557E0@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
+BOOL __usercall Building_BuyUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>, DWORD a3@<ebp>)
 {
   return Building_BuyAddon(UNIT_RECORD(a1), a2, gameData + 509674, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455800) --------------------------------------------------------
-BOOL __usercall sub_455800@<eax>(int a1@<eax>, int a2@<edx>)
+BOOL __usercall Building_CanBuyUnitLicenceByIndex@<eax>(int a1@<eax>, int a2@<edx>)
 {
   return Building_CanEquipAddon((char *)(UNIT_RECORD(a1)), a2);
 }
