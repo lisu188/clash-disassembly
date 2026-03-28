@@ -30,19 +30,55 @@
     "kind": "stack_entry",
     "base_offset": 147174,
     "stride": 725,
-    "description": "Per-army stack record inside gameData holding tile coordinates, ownership, slots, and the cached move path.",
+    "description": "Per-army stack record inside gameData holding tile coordinates, ownership, slots, and the queued world-map path buffer.",
     "fields": [
       { "offset": 0, "name": "tile_row", "type": "int16", "notes": "Row on the 200-column world grid used to stamp tile occupancy and fog-of-war." },
       { "offset": 2, "name": "tile_column", "type": "int16", "notes": "Column on the world grid; combined with row to index TILE_INDEX." },
       { "offset": 4, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied from PLAYER_DATA and reused by fog-of-war and turn-sensitive ownership checks via g_CurrentPlayerIndex." },
       { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "0-7 direction used by sprite/orientation logic during path highlighting." },
       { "offset": 6, "name": "unit_slots[10]", "type": "UnitSlotRecord[10]", "notes": "Ten embedded 31-byte slot records storing per-unit runtime state for the stack." },
-      { "offset": 316, "name": "path_buffer", "type": "byte[0x194]", "notes": "Movement track copied in/out by qmemcpy during path planning." }
+      { "offset": 316, "name": "queued_path", "type": "QueuedPathBuffer", "notes": "404-byte queued path buffer copied in/out by qmemcpy during path planning and partially consumed by `UnitStack_ExecuteQueuedPath`." },
+      { "offset": 720, "name": "is_hidden_on_world_map", "type": "uint8", "notes": "Non-zero while the stack is hidden. The hide action sets it, movement/splitting/merging clear it, and `UnitStack_RevealAndEngageHiddenEnemies` clears the same flag on revealed enemy stacks." }
     ],
     "evidence": [
       "Unit_Create uses 147174 + 725 * index to address stacks, writing row/column/facing before stamping TILE_INDEX.",
       "UnitSlot_InitFromType writes the slot fields (type id, owner, action points, health, fatigue, morale, and control bits) at offsets relative to stackPtr + 6.",
-      "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states."
+      "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states.",
+      "Path planners copy exactly `0x194` bytes into offset `+316`, while `QueuedPath_StartsAtTile`, `QueuedPath_StartsInBuildingFootprint`, and `UnitStack_ExecuteQueuedPath` treat that region as a persistent queued-path buffer.",
+      "The hide-action helper refuses stacks whose byte `+720` is already set, then sets it after spending the turn; merge/split helpers clear the same byte, and `UnitStack_RevealAndEngageHiddenEnemies` clears it on exposed enemy stacks."
+    ]
+  },
+  {
+    "name": "QueuedPathBuffer",
+    "kind": "runtime_helper_record",
+    "base_offset": 316,
+    "size": 404,
+    "description": "404-byte queued path buffer embedded inside each `UnitStackRecord` and returned by the world-map path planners.",
+    "fields": [
+      { "offset": 0, "name": "waypoint_count", "type": "int32", "notes": "Number of live waypoints currently stored in the queue. Zero means no queued path." },
+      { "offset": 4, "name": "waypoints[100]", "type": "PathWaypoint[100]", "notes": "Packed row/column/cumulative-cost waypoints. `UnitStack_ExecuteQueuedPath` consumes them from the tail and rewrites remaining cumulative costs after partial movement." }
+    ],
+    "evidence": [
+      "All world-map path generators allocate or copy exactly `404` bytes, matching one leading int plus 100 packed 4-byte nodes.",
+      "`QueuedPath_StartsAtTile` and `QueuedPath_StartsInBuildingFootprint` read `a1[1]`, proving the first live node begins immediately after the count word.",
+      "`UnitStack_ExecuteQueuedPath` repeatedly decrements the count, reads the tail node, and subtracts the already-spent cost from the high word of each remaining node."
+    ]
+  },
+  {
+    "name": "PathWaypoint",
+    "kind": "runtime_helper_record",
+    "base_offset": 4,
+    "stride": 4,
+    "description": "Packed waypoint entry stored inside `QueuedPathBuffer`.",
+    "fields": [
+      { "offset": 0, "name": "tile_row", "type": "uint8", "notes": "Low byte of the packed dword; compared directly against map rows by the queued-path guard helpers." },
+      { "offset": 1, "name": "tile_column", "type": "uint8", "notes": "Second byte of the packed dword; compared directly against map columns by the queued-path guard helpers." },
+      { "offset": 2, "name": "cumulative_cost", "type": "uint16", "notes": "High word storing the cumulative action-point cost to reach this waypoint from the stack's current origin." }
+    ],
+    "evidence": [
+      "`QueuedPath_StartsAtTile` compares the low two bytes of `waypoints[0]` against row and column parameters.",
+      "`UnitStack_ExecuteQueuedPath` checks the high word against `UnitStack_GetMinCurrentActionPoints` before consuming movement and later subtracts the already-spent cost from that same high word.",
+      "Building and temple approach generators trim the tail by comparing only the low two bytes of packed nodes against building-footprint coordinates, leaving the high word untouched until execution time."
     ]
   },
   {
@@ -77,12 +113,12 @@
     "row_stride": 1400,
     "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, and terrain-edge rendering.",
     "fields": [
-      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index dword_52456C with this word to select the terrain-specific byte_512586 move-cost column." },
+      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index `g_TerrainMoveProfileOffsets` with this word to select the terrain-specific byte_512586 move-cost column." },
       { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
       { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." }
     ],
     "evidence": [
-      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through dword_52456C and test word 2 for the road-cost fast path.",
+      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through `g_TerrainMoveProfileOffsets` and test word 2 for the road-cost fast path.",
       "Bridge movement code at clash95.c:27193-27278 writes and later restores the word at offset +4 on the crossed tile and its neighbors, proving this field belongs to the tile record rather than a transient path buffer.",
       "Main-map rendering reads the first two words of adjacent 14-byte entries to choose seam and edge sprites."
     ]
