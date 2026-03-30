@@ -10,10 +10,16 @@
       { "offset": 4, "name": "sprite_folder_name", "type": "char *", "notes": "Folder stem used to build paths such as `units_go\\peon?.s32` and the other unit sprite-sheet filenames." },
       { "offset": 8, "name": "move_pixel_speed", "type": "uint8", "notes": "Per-frame marching displacement used by the world and battle movement animators." },
       { "offset": 9, "name": "move_tick_delay", "type": "uint8", "notes": "Delay between successive movement animation updates." },
-      { "offset": 10, "name": "death_frame_interval", "type": "uint8", "notes": "Interval between death-animation frames; also reused by some idle animation loops." },
+      { "offset": 10, "name": "animation_frame_interval", "type": "uint8", "notes": "Shared per-type animation tick interval used by world idle animation, battle idle animation, and the melee/ranged attack loops." },
+      { "offset": 11, "name": "animation_flags", "type": "uint8", "notes": "Recovered animation-behavior bits. Bit0 enables looping idle animation updates on the world map and in battle." },
+      { "offset": 15, "name": "sprite_vertical_offset", "type": "uint8", "notes": "Vertical anchor/overhang offset subtracted from the sprite Y origin; non-zero entries also force neighboring-tile redraws for overhanging sprites." },
+      { "offset": 16, "name": "melee_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_a.s32` melee attack sheet." },
+      { "offset": 17, "name": "ranged_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_s.s32` ranged attack sheet." },
       { "offset": 18, "name": "type_flags", "type": "uint32", "notes": "Recovered flag word. Bit0 marks flying/airborne units; another bit still controls the 6-vs-10 initialization path at slot +11." },
       { "offset": 29, "name": "road_move_cost", "type": "uint8", "notes": "Road/track movement cost copied into merged stack movement profiles." },
       { "offset": 30, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement-cost profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." },
+      { "offset": 79, "name": "melee_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the melee attack loop that triggers the melee attack sound." },
+      { "offset": 80, "name": "ranged_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the shot-animation loop that triggers the ranged attack sound." },
       { "offset": 81, "name": "move_sound_stem", "type": "char *", "notes": "Per-type movement sound stem used to build `sfx\\ruchy\\<stem>...` paths in both world and battle movement audio." },
       { "offset": 85, "name": "move_sound_variant_count", "type": "uint8", "notes": "Number of alternating movement-sound variants for footstep-style movers." },
       { "offset": 86, "name": "move_sound_base_volume", "type": "uint8", "notes": "Default playback volume passed into `CSS_PlaySound` for movement audio." }
@@ -21,8 +27,30 @@
     "evidence": [
       "The code indexes `g_UnitTypeMetadataRecords` by `22 * unitType`, i.e. 88 bytes per type, then reads both pointer fields and late-byte movement fields from the same base address.",
       "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name pointer triplet.",
-      "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and related file paths.",
-      "Movement helpers copy bytes `+29..+37` into a merged stack profile, airborne flag checks read the overlapping flag dword at offset `+18`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family."
+      "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and `units_at` asset paths.",
+      "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering use byte `+15` as the sprite Y-anchor offset, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
+      "Movement helpers copy bytes `+29..+37` into a merged stack profile, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record."
+    ]
+  },
+  {
+    "name": "UnitMoveSpriteCacheEntry",
+    "kind": "cache_entry",
+    "base_symbol": "g_UnitMoveSpriteCacheTypeIds / g_UnitMoveSpriteCacheOwnerIndices / g_UnitMoveSpriteCacheFacingDirections / g_UnitMoveSpriteCacheFrameIndices / g_UnitMoveSpriteCacheHandles / g_UnitMoveSpriteCacheLastUsedTicks",
+    "stride": 15,
+    "count": 100,
+    "description": "Recovered 15-byte LRU cache entry used by world-map and battle rendering to avoid reloading `units_go\\...` movement sprite sheets.",
+    "fields": [
+      { "offset": 0, "name": "unit_type_id", "type": "int32(low 16 bits live)", "notes": "Low 16 bits hold the cached unit type id; `-1` marks a free entry." },
+      { "offset": 4, "name": "owner_index", "type": "uint8", "notes": "Player/color variant index that becomes the trailing digit in the `units_go\\...<owner>.s32` filename." },
+      { "offset": 5, "name": "facing_direction", "type": "uint8", "notes": "Facing bucket used when converting `(frame_index + 8 * facing_direction)` into a sprite index." },
+      { "offset": 6, "name": "frame_index", "type": "uint8", "notes": "Low-three-bit animation frame within the movement sheet." },
+      { "offset": 7, "name": "sprite_handle", "type": "int32", "notes": "Loaded sprite-set handle returned to the renderer on cache hits." },
+      { "offset": 11, "name": "last_used_tick", "type": "int32", "notes": "Timestamp refreshed on hits and consulted by the LRU eviction pass on misses." }
+    ],
+    "evidence": [
+      "`UnitSpriteCache_Reset`, `UnitSpriteCache_Clear`, and `UnitSpriteCache_CountEntries` scan 1500 bytes in steps of 15, proving a fixed-size 100-entry cache family.",
+      "`UnitSpriteCache_LoadMoveSheet` stores the type id, owner index, facing, frame, handle, and timestamp at offsets `0`, `4`, `5`, `6`, `7`, and `11`, respectively.",
+      "`UnitSpriteCache_GetOrLoadMoveSheet` matches exactly those same fields before refreshing `last_used_tick` and returning the cached `sprite_handle`."
     ]
   },
   {
@@ -91,7 +119,7 @@
       { "offset": 0, "name": "unit_type_id", "type": "int16", "notes": "-1 marks an empty slot; otherwise indexes the 88-byte unit-type metadata family." },
       { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Copied from the stack owner when the slot is initialized." },
       { "offset": 8, "name": "current_action_points", "type": "uint8", "notes": "Seeded from `g_UnitTypeBaseActionPoints` and recomputed from fatigue by `UnitSlot_CalcActionPointsFromFatigue` each new turn." },
-      { "offset": 9, "name": "current_health_percent", "type": "uint8", "notes": "Starts at 100, scales the effective melee/ranged/damage helpers, and dropping to zero kills the slot." },
+      { "offset": 9, "name": "current_health_percent", "type": "uint8", "notes": "Starts at 100, scales the effective melee/ranged/damage helpers, drops to zero on death, and is also the slot-quality threshold used by the weak-unit detach/regroup helpers (`<= 10` for weak, `>= 8` for stronger regrouped entries)." },
       { "offset": 10, "name": "fatigue", "type": "uint8", "notes": "0-100 exhaustion counter. Thresholds at 80/90/100 reduce action points, and severe fatigue lowers morale each new turn." },
       { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10." },
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; upper bits also drive garrison stance/formation cycling." },
@@ -102,7 +130,8 @@
     "evidence": [
       "UnitSlot_InitFromType writes a stable 31-byte layout with type id, owner, current action points, health, fatigue, morale, and several control-bit clusters.",
       "`UnitSlot_CalcActionPointsFromFatigue`, `Unit_NewTurn`, `Unit_CheckLowMorale`, and the attack helpers all reuse the same byte offsets, confirming the runtime-slot field boundaries.",
-      "The UI unit-info pane draws a damage bar from slot +9, morale badges from slot +11, and fatigue icons from slot +10, independently corroborating the field meanings."
+      "The UI unit-info pane draws a damage bar from slot +9, morale badges from slot +11, and fatigue icons from slot +10, independently corroborating the field meanings.",
+      "`UnitStack_DetachWeakUnitsToAdjacentTile`, `UnitStack_DetachUnitTypeToAdjacentTile`, and the two regroup-by-health helpers all classify slots directly from byte `+9`, adding a second non-combat signal that this byte is the runtime health/strength percentage."
     ]
   },
   {
@@ -152,6 +181,10 @@
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
       { "offset": 39, "name": "religion_flag", "type": "int32", "notes": "Boolean religious alignment flag. Religious-site entry checks and castle upgrade labels branch on this dword to choose the shrine-vs-cult and Christian-vs-pagan behavior." },
+      { "offset": 47, "name": "tech_level", "type": "uint8", "notes": "Player-wide technology tier. New castles inherit its low three bits into `BuildingRecord.tech_level_bits`, technology progression raises it via the global upgrade check, and the tech-level notification helper compares it against `last_reported_tech_level`." },
+      { "offset": 48, "name": "last_reported_tech_level", "type": "uint8", "notes": "Last technology tier already acknowledged by the player-facing notification path; `Player_ShowTechLevelAdvanceNotification` displays the message only when this differs from `tech_level`, then synchronizes it." },
+      { "offset": 49, "name": "battle_action_taken_flag", "type": "int32", "notes": "Set when the player performs a battle action such as movement, melee attack, or wall attack; the tactical turn loop resets it each round and uses it to decide whether to increment the inactivity counter." },
+      { "offset": 53, "name": "consecutive_idle_battle_turns", "type": "int32", "notes": "Counts consecutive tactical turns with no battle action taken. The battle loop increments it when `battle_action_taken_flag` stays clear and triggers `GodAnger` once it reaches two rounds." },
       { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
       { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
@@ -162,6 +195,8 @@
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
       "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
+      "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
+      "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
       "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
       "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields."
     ]
@@ -198,11 +233,13 @@
       { "offset": 1, "name": "tile_column", "type": "uint8", "notes": "Building anchor tile column used with TILE_INDEX and adjacency scans." },
       { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied into spawned unit stacks and used for ownership, vision, and income lookups." },
       { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
+      { "offset": 5, "name": "display_name", "type": "char[]", "notes": "In-record building/castle name string shown by construction and notification UI; `Building_AssignUniqueGeneratedName` overwrites this buffer when seeding a newly completed stronghold with a unique generated default name." },
       { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
       { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot packed task bytes: bits `0..2` are the train/order countdown, while bits `3..5` are the repair countdown." },
       { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
       { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
       { "offset": 416, "name": "castle_addon_flags", "type": "uint8", "notes": "Castle add-on presence bits. Recovered mapping: bit `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths; `Rules_AssertCastleFact` prints the same bit mapping as `szpital`, `koszary`, `warsztat`, `szkola`, and `kuznia`." },
+      { "offset": 420, "name": "construction_lock_flags", "type": "uint8", "notes": "Bit 0 locks further castle add-on / wall-start actions while a staged construction or upgrade is already in progress; add-on builders set it, completion paths clear it, and `Castle_UpdateGateToggles` reads it to disable the management-screen controls." },
       { "offset": 421, "name": "wall_strength", "type": "uint8", "notes": "Returned by the `SilaMurow` rules host wrapper and incremented by staged wall-upgrade completion." },
       { "offset": 429, "name": "upgrade_timer_turns", "type": "uint8", "notes": "Per-turn countdown that gates completion of the staged upgrade tracked at `+421`." },
       { "offset": 430, "name": "peasant_count", "type": "uint16(low 12 bits)", "notes": "Returned by the `IloscChlopow` rules host wrapper and updated by `Building_UpdatePopulationGrowth`; the high nibble stores unrelated packed state bits." },
@@ -219,7 +256,9 @@
       "The garrison move helpers copy 31-byte unit entries between `+18` and temporary stack records, showing that `+18` begins a 12-slot building garrison array.",
       "The rules-host wrappers `Podatek`, `Pieniadze`, `SilaMurow`, `SilaZamku`, `PoziomTech`, `Zadowolenie`, and `IloscChlopow` dispatch directly to getters over offsets `+436`, `+438`, `+421`, `Building_GetTotalValue`, `+444`, `+434`, and `+430`, respectively.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
+      "`Building_AssignUniqueGeneratedName` copies randomized localized stronghold names into `building + 5`, and `Building_ShowConstructionProgressDialog` plus multiple event-notification paths print the same in-record buffer as the building display name.",
       "The castle add-on builders and `Rules_AssertCastleFact` converge on the exact bit mapping at `+416`: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths.",
+      "Every castle add-on builder first checks bit 0 at `+420`, sets it when construction begins, and the completion/toggle paths clear or consult the same bit before enabling new castle build actions, proving it is the staged-construction lock byte.",
       "`Building_GetTaxRateByIndex`, the `ZmienPodatek` host stub, `Building_CollectGoldIncome`, and `Building_GetTaxBurdenTier` all read or write the low six bits at `+436`, proving that byte carries the building's raw tax rate rather than a derived burden tier.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
@@ -261,6 +300,27 @@
       "`Port_GetSupply` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
       "The asm data walk for `dword_517B48` / `dword_517B4C` advances by 8 bytes per candidate pair, matching one `{ row_delta, column_delta }` record rather than two unrelated tables.",
       "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_GetSupply` searches for the reinforcement spawn point."
+    ]
+  },
+  {
+    "name": "TooltipBackdropState",
+    "kind": "global_state_region",
+    "base_symbol": "g_TooltipBackdropSurface",
+    "size": 28,
+    "description": "Shared UI tooltip-backdrop state holding the saved background surface, captured rectangle, and draw-state handle for hover text across strategic, castle, and battle screens.",
+    "fields": [
+      { "offset": 0, "name": "backdrop_surface", "type": "RenderSurface *", "notes": "Scratch surface allocated by `Tooltip_CaptureBackdrop` and freed by `Tooltip_ReleaseBackdropSurface`." },
+      { "offset": 4, "name": "top", "type": "int32", "notes": "Top edge of the captured backdrop rectangle." },
+      { "offset": 8, "name": "left", "type": "int32", "notes": "Left edge of the captured backdrop rectangle." },
+      { "offset": 12, "name": "bottom", "type": "int32", "notes": "Bottom edge of the captured backdrop rectangle." },
+      { "offset": 16, "name": "right", "type": "int32", "notes": "Right edge of the captured backdrop rectangle." },
+      { "offset": 20, "name": "resource_handle", "type": "int32", "notes": "Draw/resource handle restored before `Tooltip_ShowText` renders the hover text; `Tooltip_SetResourceHandle` is a setter for this field." },
+      { "offset": 24, "name": "aux_context", "type": "int32", "notes": "Stored alongside the capture parameters by `Tooltip_CaptureBackdrop`, but this pass did not prove whether it is an anchor id, width bound, or another tooltip-layout value." }
+    ],
+    "evidence": [
+      "`Tooltip_CaptureBackdrop` allocates the surface at the base symbol, stores the capture rectangle across the next four dwords, and records the active draw/resource handle before returning.",
+      "`Tooltip_ShowText` and `Tooltip_RestoreBackdrop` both restore the exact same rectangle from that contiguous dword cluster, proving the block is stable shared tooltip state rather than temporary locals.",
+      "`Tooltip_ReleaseBackdropSurface` frees the base surface pointer during strategic and battle teardown, while `Tooltip_SetResourceHandle` mutates only the handle field at offset `+20`, corroborating one contiguous tooltip state region."
     ]
   },
   {
@@ -349,5 +409,57 @@
       "`sub_436620`, `sub_4368F0`, `sub_436930`, and `sub_436A30` all render or scroll the same selected index against the same target-id array.",
       "`BuildingEconomyDialog_CommitTransfers` and the sibling gold-transfer dialog resolve the destination building through the selected index into this shared target-id list."
     ]
+  },
+  {
+    "name": "DecisionDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_DecisionDialogExitSignal / g_DecisionDialogResult / g_DecisionDialogConfirmDisabled",
+    "description": "Shared modal result state reused by the generic yes-no dialog plus the queen whim and marriage-proposal decision windows.",
+    "fields": [
+      { "offset": 0, "name": "exit_signal", "type": "int32", "notes": "Polled by the modal loops; the accept/cancel callbacks set it to terminate the active decision dialog." },
+      { "offset": 4, "name": "result", "type": "int32", "notes": "Decision outcome written by the callbacks and returned by the dialog runners (`1` accept, `0` cancel)." },
+      { "offset": 8, "name": "confirm_disabled", "type": "int32", "notes": "Temporary lock flag used by the queen whim dialog to block acceptance when the required score exceeds the current score." }
+    ],
+    "evidence": [
+      "`DecisionDialog_ConfirmIfAllowed` and `DecisionDialog_Cancel` both mutate the same exit/result globals, and every decision dialog returns the shared result value after its modal loop exits.",
+      "`Queen_ShowWhimDecisionDialog`, `YesNoWindow`, and `Queen_ShowMarriageProposalDialog` all seed the same widget templates, spin until `exit_signal` changes, and then return `result`.",
+      "Only the whim dialog writes `confirm_disabled`, and the confirm callback refuses to set an accepting result while that flag is nonzero, proving the third dword belongs to the same shared decision-dialog state."
+    ]
+  },
+  {
+    "name": "WorldMapUnitAttentionFlashState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_WorldMapAttentionFlashUnitIndex / g_WorldMapAttentionFlashStartTick",
+    "description": "Transient world-map UI state for pulsing a specific unit after noteworthy events such as morale breaks, temple gifts, and reinforcement spawns.",
+    "fields": [
+      { "offset": 0, "name": "unit_index", "type": "int32", "notes": "World-map stack index currently being pulsed; `-1` means no active flash." },
+      { "offset": 4, "name": "start_tick", "type": "int32", "notes": "Tick captured from `Time_Now()` when the flash started; the update helper uses it to derive pulse phase and timeout." }
+    ],
+    "evidence": [
+      "`UI_StartWorldMapUnitAttentionFlash` writes both globals together whenever a newly important unit should be highlighted.",
+      "`UI_UpdateWorldMapUnitAttentionFlash` redraws the flashed unit tile every frame and clears the unit index once the elapsed time against `start_tick` crosses the timeout threshold.",
+      "`UI_IsWorldMapUnitAttentionFlashActive` and the world-map unit renderer both treat the pair as one small shared attention-state region rather than unrelated globals."
+    ]
+  },
+  {
+    "name": "CastleManagementScreenState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_SelectedBuildingRecord / g_CastleScreenSurface / g_CastleSceneIconSpriteSet / g_CastleAmbientSpriteSet / g_CastleStatusSpriteSet / g_CastleScreenExitRequested / g_CastleDestroyConfirmed",
+    "description": "Transient shared state for the castle/building management screen. The screen runner seeds the selected building pointer, loads scene/status sprite sets, rebuilds the off-screen surface, animates the scene, and exits through the shared close/destroy flags.",
+    "fields": [
+      { "offset": 0, "name": "selected_building_ptr", "type": "BuildingRecord *", "notes": "Building currently shown and mutated by the castle management screen and add-on build animations." },
+      { "offset": 4, "name": "screen_surface_handle", "type": "RenderSurface *", "notes": "Off-screen surface hit-tested and redrawn by the castle management loop." },
+      { "offset": 8, "name": "scene_icon_sprite_set", "type": "int32", "notes": "Sprite set loaded from `zamek_1\\z_iko.s32` and used for the static screen icon/scene overlays." },
+      { "offset": 12, "name": "ambient_sprite_set", "type": "int32", "notes": "Animated scene sprite set consumed by `Castle_DrawAmbientAnimationLayer` and the timed update loop." },
+      { "offset": 16, "name": "status_sprite_set", "type": "int32", "notes": "Status-panel sprite set used by `Castle_DrawStatusPanel` for owner, wall, and plague indicators." },
+      { "offset": 20, "name": "exit_requested", "type": "int32", "notes": "Shared modal-loop exit flag set by the close/destroy callbacks and polled by `Castle_OpenManagementScreen`." },
+      { "offset": 24, "name": "destroy_confirmed", "type": "int32", "notes": "Latched only when the destroy-building confirmation succeeds so the screen runner can trigger the follow-up destroy flow on exit." }
+    ],
+    "evidence": [
+      "`Castle_OpenManagementScreen` seeds the selected-building pointer, loads all three sprite sets, allocates the screen surface, clears both exit flags, and then drives the modal loop through those globals.",
+      "`Castle_RebuildSceneBuffers`, `Castle_RenderCompositeSceneLayers`, `Castle_DrawStatusPanel`, and `Castle_UpdateAmbientAnimationLayers` all read the same selected-building pointer and sprite/surface globals, proving they belong to one castle-screen runtime region.",
+      "`Castle_ConfirmDestroyCurrentBuilding` sets both `destroy_confirmed` and `exit_requested`, and the screen runner checks those same flags after the loop to decide whether to continue with the destroy flow."
+    ]
+  },
   }
 ]
