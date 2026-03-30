@@ -460,5 +460,44 @@
       "`Castle_RebuildSceneBuffers`, `Castle_RenderCompositeSceneLayers`, `Castle_DrawStatusPanel`, and `Castle_UpdateAmbientAnimationLayers` all read the same selected-building pointer and sprite/surface globals, proving they belong to one castle-screen runtime region.",
       "`Castle_ConfirmDestroyCurrentBuilding` sets both `destroy_confirmed` and `exit_requested`, and the screen runner checks those same flags after the loop to decide whether to continue with the destroy flow."
     ]
+  },
+  {
+    "name": "BuildingGarrisonDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingGarrisonDialogUseChrTheme / g_BuildingGarrisonDialogActiveBuilding / g_BuildingGarrisonDialogSelectedSlots / g_BuildingGarrisonDialogSelectedSlotIndex / g_BuildingGarrisonDialogSelectedUnitSpriteSet / g_BuildingGarrisonDialogSelectedUnitAnimFrame / g_BuildingGarrisonDialogSlotSpriteSets / g_BuildingGarrisonDialogPendingExitCountdown",
+    "description": "Contiguous shared state region for the building garrison dialog. The dialog helpers treat the block around `dword_53214C..dword_5321F4` as one stable modal-state cluster covering theme choice, active building, selection state, selected-unit sprite state, slot sprite sets, and the pending leave-barracks countdown.",
+    "fields": [
+      { "offset": 0, "name": "use_chr_theme", "type": "int32", "notes": "Chooses between the `castle_chr` and `castle_pog` resource families when the dialog rebuilds its art." },
+      { "offset": 4, "name": "active_building_ptr", "type": "BuildingRecord *", "notes": "Building currently shown in the dialog. All slot, repair, training, and leave callbacks dereference this pointer." },
+      { "offset": 8, "name": "unnamed_resource_state", "type": "int32", "notes": "Adjacent dialog resource/surface state used heavily by the renderer. This batch left it unnamed because its exact role is not yet strong enough." },
+      { "offset": 12, "name": "selected_slots[12]", "type": "int32[12]", "notes": "Shared selection bitmap for the 12 barracks slots." },
+      { "offset": 60, "name": "selected_slot_index", "type": "int32", "notes": "Focused slot index used by the detail-panel renderer and detail-sprite reload path." },
+      { "offset": 64, "name": "selected_unit_sprite_set", "type": "int32", "notes": "Sprite-set handle for the currently focused garrison unit." },
+      { "offset": 68, "name": "selected_unit_animation_frame", "type": "int32", "notes": "Animation frame advanced modulo eight by the selected-unit animation tick." },
+      { "offset": 72, "name": "slot_sprite_sets[12]", "type": "int32[12]", "notes": "Per-slot sprite-set handles used by the slot-grid renderer." },
+      { "offset": 120, "name": "unnamed_slot_animation_state[24]", "type": "int32[24]", "notes": "Adjacent per-slot animation/timing state. It is clearly part of the same modal block, but this pass did not freeze more specific names." },
+      { "offset": 168, "name": "pending_exit_countdown", "type": "int32", "notes": "Countdown armed by `BuildingGarrisonDialog_BeginSelectedUnitsExit` and consumed by `BuildingGarrisonDialog_TickExitCountdown` before calling `Building_UnitsLeave`." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_DrawSlotGrid`, `BuildingGarrisonDialog_DrawSelectedUnitPanel`, and the repair/training/exit callbacks all share the same globals for active building, selection state, and pending-exit countdown.",
+      "`BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites` and `BuildingGarrisonDialog_AnimateSelectedUnit` prove that the selected-unit sprite handle and animation frame are stable shared modal state, not temporary locals.",
+      "Asm-backed subagent evidence tied the same address range to the dialog runner setup and teardown, confirming that these globals belong to one building-garrison dialog state region."
+    ]
+  },
+  {
+    "name": "MergedTerrainMoveProfile",
+    "kind": "runtime_helper_record",
+    "base_symbol": "UnitTypeMetadataRecord + 29 / stack-local buffers built by UnitStack_BuildMergedTerrainMoveProfile",
+    "size": 9,
+    "description": "Nine-byte movement-cost slice shared between each unit-type metadata record and the temporary stack-local profile buffers used by world-map pathfinding.",
+    "fields": [
+      { "offset": 0, "name": "road_or_bridge_move_cost", "type": "uint8", "notes": "Road/bridge movement cost returned directly when the tile record carries a road or bridge overlay." },
+      { "offset": 1, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement costs indexed through `g_TerrainMoveProfileOffsets[*terrain_tile_id]` when the tile has no road overlay." }
+    ],
+    "evidence": [
+      "`UnitStack_BuildMergedTerrainMoveProfile` iterates the occupied 31-byte squad slots, loads each member's metadata record, and merges bytes `+29..+37` into an 88-byte temporary buffer.",
+      "`UnitStack_GetTileMoveCostFromMergedProfileOrZero` consumes that temporary buffer without rebuilding it, reading byte `29` for road/bridge overlays and bytes `30..37` for terrain-specific costs.",
+      "The merge logic keeps the highest non-zero cost for each byte and collapses to zero when any member contributes zero, so a stack moves at the slowest traversable rate of its constituent unit types and becomes impassable where any member cannot enter."
+    ]
   }
 ]
