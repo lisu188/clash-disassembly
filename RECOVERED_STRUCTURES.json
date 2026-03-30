@@ -572,40 +572,6 @@
     ]
   },
   {
-    "name": "BuildingGarrisonDialogActions",
-    "kind": "ui_action_table",
-    "base_symbol": "BuildingGarrisonDialogActions / dword_514FC0",
-    "description": "Recovered action-box descriptor table for the building garrison dialog. The current decompiler emits only the first dword triplet cleanly, but the callback wiring and localized button labels prove the table drives the `Back`, `Production`, `Cure`, `Training`, and `Leave barracks` actions.",
-    "fields": [
-      { "offset": 0, "name": "action_box_descriptor_head", "type": "uint32[3]", "notes": "Current decompiled head triplet. The surrounding action records remain overlapped, so this catalog keeps the table conservative instead of fabricating a complete struct layout." }
-    ],
-    "evidence": [
-      "`BuildingGarrisonDialog_ShowProductionDialog` rebuilds the screen by passing the renamed table into `sub_419D80`, which is the same action-box builder used by other modal UI screens.",
-      "Asm-backed subagent evidence tied the callback family to the localized garrison actions `Back`, `Production`, `Cure`, `Training`, and `Leave barracks`, confirming that the table is the dialog's action descriptor block rather than generic castle state."
-    ]
-  },
-  {
-    "name": "MiniMapState",
-    "kind": "ui_state_region",
-    "base_symbol": "word_523344 / word_523346 / word_523348 / word_52334A / dword_52334C / byte_523F54 / dword_523F50 / dword_511FF0",
-    "description": "Shared minimap runtime state. The create/draw/blit helpers treat these globals as one coherent subsystem covering the minimap screen rect, backing surface, pixel scale, terrain-color lookup, and enabled draw layers.",
-    "fields": [
-      { "offset": 0, "name": "screen_left", "type": "int16", "notes": "Actual symbol `word_523344`. Left edge of the minimap on the main UI." },
-      { "offset": 2, "name": "screen_top", "type": "int16", "notes": "Actual symbol `word_523346`. Top edge of the minimap on the main UI." },
-      { "offset": 4, "name": "screen_width", "type": "int16", "notes": "Actual symbol `word_523348`. Width of the minimap surface in pixels." },
-      { "offset": 6, "name": "screen_height", "type": "int16", "notes": "Actual symbol `word_52334A`. Height of the minimap surface in pixels." },
-      { "offset": 8, "name": "surface_handle", "type": "RenderSurface *", "notes": "Actual symbol `dword_52334C`. Backing surface allocated by `MiniMap_CreateSurface` and blitted by the dirty-rect helper." },
-      { "offset": 12, "name": "pixels_per_tile", "type": "uint8", "notes": "Actual symbol `byte_523F54`. Dynamic minimap scale chosen from the world dimensions." },
-      { "offset": 16, "name": "terrain_color_table_ptr", "type": "uint8 *", "notes": "Actual symbol `dword_523F50`. Lookup used by the minimap tile-cell renderer when painting terrain colors." },
-      { "offset": 20, "name": "draw_layer_mask", "type": "uint32", "notes": "Actual symbol `dword_511FF0`. Bitmask controlling whether terrain, units, and buildings contribute to the minimap cell color." }
-    ],
-    "evidence": [
-      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, and seeds the terrain-color lookup state.",
-      "`MiniMap_DrawTileCell` consults the draw-layer mask, terrain-color lookup, unit occupancy, building occupancy, and fog-of-war to paint a single minimap cell.",
-      "`MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_RedrawTileRect`, `MiniMap_RedrawAllTiles`, `MiniMap_UpdateViewportFromCursor`, and `MiniMap_IsCursorInside` all use the same rect/surface/scale globals, proving one coherent minimap state block."
-    ]
-  },
-  {
     "name": "BuildingGarrisonDialogState",
     "kind": "ui_state_region",
     "base_symbol": "g_BuildingGarrisonDialogUseChrTheme / g_BuildingGarrisonDialogActiveBuilding / g_BuildingGarrisonDialogSelectedSlots / g_BuildingGarrisonDialogSelectedSlotIndex / g_BuildingGarrisonDialogSelectedUnitSpriteSet / g_BuildingGarrisonDialogSelectedUnitAnimFrame / g_BuildingGarrisonDialogSlotSpriteSets / g_BuildingGarrisonDialogPendingExitCountdown",
