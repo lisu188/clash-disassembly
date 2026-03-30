@@ -460,6 +460,5 @@
       "`Castle_RebuildSceneBuffers`, `Castle_RenderCompositeSceneLayers`, `Castle_DrawStatusPanel`, and `Castle_UpdateAmbientAnimationLayers` all read the same selected-building pointer and sprite/surface globals, proving they belong to one castle-screen runtime region.",
       "`Castle_ConfirmDestroyCurrentBuilding` sets both `destroy_confirmed` and `exit_requested`, and the screen runner checks those same flags after the loop to decide whether to continue with the destroy flow."
     ]
-  },
   }
 ]
