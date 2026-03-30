@@ -160,6 +160,8 @@ typedef struct QueenWhimRecord
 
 int App_Shutdown();
 int  Game_Init(int a1, char a2, DWORD a3);
+int nullsub_16(void);
+int nullsub_19(void);
 char __thiscall DetectGameCDPath(void *this);
 int  sub_4015A0(_DWORD *a1);
 _DWORD * sub_4015D0(_DWORD *result);
@@ -1305,11 +1307,11 @@ int (* sub_463070(int (**a1)(), int (**a2)()))();
 __int16  sub_463220(int (*a1)(), int a2, int a3, int a4, int a5);
 signed int  sub_4634A0(_DWORD *a1, char *a2, char *a3);
 unsigned int  sub_4635A0(unsigned int a1);
-int * CAviDecompressor_ctor(int *a1, DWORD a2);
+int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2);
 int  CAviDecompressor_dtor(_DWORD *a1);
-int * CAviDecompressor_ctor(int *a1, int (__stdcall ***a2)(_DWORD, void *, _DWORD *), int a3, int a4);
+int * CAviDecompressor_ConstructAndInitCallbacks(int *a1, int (__stdcall ***a2)(_DWORD, void *, _DWORD *), int a3, int a4);
 void  CAviDecompressor_Init(int *a1, int (__stdcall ***a2)(_DWORD, void *, _DWORD *), int a3, int a4);
-int * CAviDecompressor_ctor(int *a1, DWORD a2, int a3, int a4);
+int * CAviDecompressor_ConstructAndInitSource(int *a1, DWORD a2, int a3, int a4);
 void __fastcall CAviDecompressor_InitSource(int a1, int a2);
 void  CAviDecompressor_Done(_DWORD *a1);
 int  CAviDecompressor_Frames(int a1);
@@ -1706,7 +1708,7 @@ int __cdecl fread_();
 // int __cdecl WCIsvListBase_base_insert(_DWORD); weak
 // int __thiscall WCIsvListBase_base_sget(_DWORD); weak
 // void WCIsvListBase_base_destroy(WCIsvListBase * this); idb
-// _DWORD WCIsvListBase_dtor(WCIsvListBase * this); idb
+_DWORD WCIsvListBase_dtor(WCIsvListBase *this);
 int __thiscall nullsub_7(_DWORD); // weak
 void __thiscall sub_476A0C(void *this);
 int __cdecl strrchr_();
@@ -73112,7 +73114,7 @@ unsigned int  sub_4635A0(unsigned int a1)
 }
 
 //----- (004637B0) --------------------------------------------------------
-int * CAviDecompressor_ctor(int *a1, DWORD a2)
+int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2)
 {
   int v3; // eax
   HANDLE *v5; // eax
@@ -73208,7 +73210,7 @@ int  CAviDecompressor_dtor(_DWORD *a1)
 // 463B18: variable 'v1' is possibly undefined
 
 //----- (00463B20) --------------------------------------------------------
-int * CAviDecompressor_ctor(
+int * CAviDecompressor_ConstructAndInitCallbacks(
         int *a1,
         int (__stdcall ***a2)(_DWORD, void *, _DWORD *),
         int a3,
@@ -73320,7 +73322,7 @@ void  CAviDecompressor_Init(
 // 4697E0: using guessed type int __fastcall sub_4697E0(_DWORD, _DWORD);
 
 //----- (00463EA0) --------------------------------------------------------
-int * CAviDecompressor_ctor(int *a1, DWORD a2, int a3, int a4)
+int * CAviDecompressor_ConstructAndInitSource(int *a1, DWORD a2, int a3, int a4)
 {
   int v6; // eax
   HANDLE *v8; // eax
@@ -73816,7 +73818,7 @@ void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v9 = (char *)&j____wcpp_4_fs_handler_rtn_;
   v10 = &stru_50F734;
-  CAviDecompressor_ctor(v12, 0);
+  CAviDecompressor_ConstructEmpty(v12, 0);
   v11 = 1;
   CAviDecompressor_InitPos(v12, v6, a4);
   CAviDecompressor_Init(v12, a2, (int)a1, v7);
@@ -73858,7 +73860,7 @@ void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v8 = &j____wcpp_4_fs_handler_rtn_;
   v9 = &stru_50F740;
-  CAviDecompressor_ctor(v11, 0);
+  CAviDecompressor_ConstructEmpty(v11, 0);
   v10 = 1;
   CAviDecompressor_InitRect(v11, v5);
   CAviDecompressor_Init(v11, a2, (int)a1, v6);
@@ -73900,7 +73902,7 @@ void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v9 = (char *)&j____wcpp_4_fs_handler_rtn_;
   v10 = &stru_50F74C;
-  CAviDecompressor_ctor(v12, 0);
+  CAviDecompressor_ConstructEmpty(v12, 0);
   v11 = 1;
   CAviDecompressor_InitPos(v12, v6, a4);
   CAviDecompressor_InitSource(v7, (int)a1);
@@ -73942,7 +73944,7 @@ void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v8 = &j____wcpp_4_fs_handler_rtn_;
   v9 = &stru_50F758;
-  CAviDecompressor_ctor(v11, 0);
+  CAviDecompressor_ConstructEmpty(v11, 0);
   v10 = 1;
   CAviDecompressor_InitRect(v11, v5);
   CAviDecompressor_InitSource(v6, (int)a1);
