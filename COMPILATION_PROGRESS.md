@@ -63,7 +63,6 @@
 - Add conservative declarations for unresolved nullsubs/weak library placeholders only where the symbol role is truly inert.
 - Rewrite the remaining destructor-style initializer residue into a unique C-safe name.
 - Revisit the malformed `TILE_INDEX(...)` sites and `#error "call analysis failed"` sentinels once the global-data namespace collision layer is cleared.
-
 ## Batch 65 - World Map HUD And Menu Semantics Wave
 - Repairs:
   - renamed the strategic-map lifecycle helpers `sub_40AD40`, `sub_40ADF0`, `sub_40AED0`, `sub_40B020`, `sub_40B0A0`, and `sub_40B640` to `WorldMap_RenderHook`, `WorldMap_RedrawFrame`, `WorldMap_LoadResources`, `WorldMap_UnloadResources`, `WorldMap_RunHumanTurnLoop`, and `WorldMap_Initialize`
@@ -124,6 +123,10 @@
 - Net effect:
   - the world-map tile renderer now reads as a stack renderer with overlay badges instead of an anonymous helper
   - the strategic rendering path is easier to follow from tile draw to unit sprite selection, attention flash, and badge overlays
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ed5d96 (Bootstrap clash95 compilation surface)
 ## Batch 67 - World Map HUD And Menu Semantics Wave
 - Repairs:
   - renamed the strategic-map lifecycle helpers `sub_40AD40`, `sub_40ADF0`, `sub_40AED0`, `sub_40B020`, `sub_40B0A0`, and `sub_40B640` to `WorldMap_RenderHook`, `WorldMap_RedrawFrame`, `WorldMap_LoadResources`, `WorldMap_UnloadResources`, `WorldMap_RunHumanTurnLoop`, and `WorldMap_Initialize`
@@ -143,6 +146,7 @@
 - Net effect:
   - the strategic-map render/update/turn-loop path and the shared menu/minimap controls are now materially easier to follow in the decompiled C
   - compileability did not regress because of these renames, but the present branch state is still sitting on the older duplicate-symbol/bootstrap blocker surface rather than a verified object-clean baseline
+<<<<<<< HEAD
 
 ## Batch 68 - Port Runtime State And Path Query Wave
 - Repairs:
@@ -435,3 +439,5 @@
 - Net effect:
 - the build now compiles a real SDL-target platform runtime translation unit instead of relying on declarations-only shims
 - the input backend is represented in live code as one coherent recovered state block, which reduces future risk when replacing DirectInput polling with SDL input events
+=======
+>>>>>>> 3ed5d96 (Bootstrap clash95 compilation surface)
