@@ -337,7 +337,7 @@
       "name": "current_health_percent",
       "confidence": "high",
       "semantic_role": "runtime health or squad strength percentage",
-      "evidence": "Initialized to 100, scales effective attack and damage helpers, and a zero value kills the slot."
+      "evidence": "Initialized to 100, scales effective attack and damage helpers, a zero value kills the slot, and the detach/regroup helpers also classify slots from this byte (`<= 10` weak cutoff, `>= 8` stronger regroup threshold)."
     },
     {
       "name": "fatigue",
@@ -424,16 +424,46 @@
       "evidence": "`Time_Now` gates movement animation advancement with `byte_512571`."
     },
     {
-      "name": "death_animation_frames",
-      "confidence": "medium",
-      "semantic_role": "number of frames in the death effect",
-      "evidence": "Copied into the battle death-loop state."
+      "name": "animation_frame_interval",
+      "confidence": "high",
+      "semantic_role": "shared per-type frame delay for idle and attack animation loops",
+      "evidence": "World idle animation, battle idle animation, melee attack loops, and ranged attack loops all gate frame advancement with `byte_512572`."
     },
     {
-      "name": "death_frame_interval",
+      "name": "animation_flags",
       "confidence": "medium",
-      "semantic_role": "delay between death-animation frames",
-      "evidence": "Used by the same death loop that advances the effect frame counter."
+      "semantic_role": "per-type animation-behavior bits",
+      "evidence": "Bit0 gates whether the world-map and battle idle-animation updaters advance the unit's looping frame state."
+    },
+    {
+      "name": "sprite_vertical_offset",
+      "confidence": "high",
+      "semantic_role": "per-type sprite Y-anchor and overhang offset",
+      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, and redraw helpers use non-zero values to invalidate neighboring tiles for overhanging sprites."
+    },
+    {
+      "name": "melee_attack_frame_count",
+      "confidence": "high",
+      "semantic_role": "number of frames in the melee attack sheet",
+      "evidence": "The melee attack animation loop copies `byte_512578` into its frame-count limit before stepping the `_a.s32` sheet."
+    },
+    {
+      "name": "ranged_attack_frame_count",
+      "confidence": "high",
+      "semantic_role": "number of frames in the ranged attack sheet",
+      "evidence": "The shot-animation loop copies `byte_512579` into its frame-count limit before stepping the `_s.s32` sheet."
+    },
+    {
+      "name": "melee_attack_sound_frame",
+      "confidence": "high",
+      "semantic_role": "frame index that triggers the melee attack sound",
+      "evidence": "The melee attack loop plays `Audio_PlayUnitMeleeAttackSound` exactly when the current frame matches `byte_5125B7`."
+    },
+    {
+      "name": "ranged_attack_sound_frame",
+      "confidence": "high",
+      "semantic_role": "frame index that triggers the ranged attack sound",
+      "evidence": "Both ranged animation branches play `Audio_PlayUnitRangedAttackSound` when the current frame matches `byte_5125B8`."
     },
     {
       "name": "move_sound_stem",
