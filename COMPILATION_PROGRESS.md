@@ -808,6 +808,24 @@
   - battle-mode toggles and the selected action-button refresh path now read in gameplay terms instead of anonymous `sub_*` labels
   - the footprint-class lookup is explicit at callsites, which makes later unit-type / redraw-structure recovery easier
 
+## Batch 85 - Pathing Move-Cost Register Recovery Wave
+- Repairs:
+  - repaired the bridge-enabled fallback in `Map_GetUnitTileMoveCostOrZero` so it reuses the live `TILE_TERRAIN_RECORD` pointer instead of indexing `g_TerrainMoveProfileOffsets[*v12]` through an undefined decompiler temp
+  - repaired `UnitStack_GetTileMoveCostOrZero` so occupant-owner, trap-owner, and bridge-enabled fallback checks use the real stack owner byte (`a1[4]`) and the live terrain-record pointer (`v13`) instead of undefined `v8` / `v14` temps
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this was a map/pathing decompiler-repair wave
+- Current leading blockers:
+  - none for the current CMake static-library milestone; the move-cost repairs stayed object-clean
+  - the next safe platform/runtime work is still outside gameplay logic: startup harness reconstruction, libc wrapper aliases, and additional SDL-seam import ownership
+  - `Path_InsertBridgeCornerWaypoints` remains the next larger pathing cleanup candidate, but it still deserves a dedicated struct-aware rewrite rather than a rename-only pass
+- Net effect:
+  - the strategic/pathing move-cost helpers no longer depend on two proven false register-loss temporaries
+  - bridge-enabled passability and stack-owned tile checks are now expressed through live terrain/owner inputs instead of decompiler ghosts
+
 ## Batch 82 - SDL Timing Runtime Reduction Wave
 - Repairs:
   - added host-backed `GetTickCount()` in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) as a thin alias over the already recovered `timeGetTime()` seam

@@ -26722,10 +26722,9 @@ int  Map_GetUnitTileMoveCostOrZero(int a1, int a2, int a3, int a4)
     return (unsigned __int8)byte_512585[v10];
   if ( !g_PathingAllowBridgeCrossings )
     return (unsigned __int8)byte_512586[v10 + g_TerrainMoveProfileOffsets[*v11]];
-  return Map_GetBridgeCrossingCostOrZero(a4, a3) || byte_512586[g_TerrainMoveProfileOffsets[*v12] + v10];
+  return Map_GetBridgeCrossingCostOrZero(a4, a3) || byte_512586[g_TerrainMoveProfileOffsets[*v11] + v10];
 }
 // 413E1D: simplified comparisons for 'edx.4': <0 || >=8000 became >=8000u
-// 413F31: variable 'v12' is possibly undefined
 // 5202E4: using guessed type int gameData;
 // 52456C: using guessed type int g_TerrainMoveProfileOffsets[1024];
 // 52556C: using guessed type int g_PathingAllowBridgeCrossings;
@@ -26787,13 +26786,11 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *a1, int a2, int a3, int a4)
 {
   int v6; // edx
   int v7; // eax
-  int v8; // ecx
   int v9; // eax
   int v10; // edx
   int v11; // edi
   signed int result; // eax
   unsigned __int16 *v13; // ecx
-  unsigned __int16 *v14; // ecx
   _BYTE v15[96]; // [esp-1Ch] [ebp-64h] BYREF
   int v16; // [esp+44h] [ebp-4h]
 
@@ -26817,10 +26814,10 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *a1, int a2, int a3, int a4)
     if ( *(unsigned __int16 *)(v9 + 2 * a4 + 556374) > 0x7FFFu )
       return 0;
     v11 = 725 * v10 + gameData;
-    if ( !*(_BYTE *)(v11 + 147894) || *(_BYTE *)(v11 + 147178) == *(_BYTE *)(v8 + 4) )
+    if ( !*(_BYTE *)(v11 + 147894) || *(_BYTE *)(v11 + 147178) == *((_BYTE *)a1 + 4) )
       return 0;
   }
-  if ( ((1 << *(_BYTE *)(v8 + 4)) & TILE_TRAP_OWNER_MASK(a2, a4)) == 1 << *(_BYTE *)(v8 + 4)
+  if ( ((1 << *((_BYTE *)a1 + 4)) & TILE_TRAP_OWNER_MASK(a2, a4)) == 1 << *((_BYTE *)a1 + 4)
     || MapTile_GetReligiousSiteCategory(a2, a4) )
   {
     return 0;
@@ -26832,12 +26829,10 @@ signed int  UnitStack_GetTileMoveCostOrZero(__int16 *a1, int a2, int a3, int a4)
     return (unsigned __int8)v15[g_TerrainMoveProfileOffsets[*v13] + 30];
   result = Map_GetBridgeCrossingCostOrZero(a2, a4);
   if ( !result )
-    return (unsigned __int8)v15[g_TerrainMoveProfileOffsets[*v14] + 30];
+    return (unsigned __int8)v15[g_TerrainMoveProfileOffsets[*v13] + 30];
   return result;
 }
 // 414194: conditional instruction was optimized away because edx.4<FFFFu
-// 41425A: variable 'v8' is possibly undefined
-// 41432B: variable 'v14' is possibly undefined
 // 5202E4: using guessed type int gameData;
 // 52456C: using guessed type int g_TerrainMoveProfileOffsets[1024];
 // 52556C: using guessed type int g_PathingAllowBridgeCrossings;

@@ -1454,3 +1454,9 @@
 | `sub_42D4E0` | `UnitBattle_ToggleSelectedShootingMode` | Function | Battle / UI | High | Only available for units that have both melee and nonzero range, flips the shooting-mode latch, and updates the selected action-button state accordingly. | c, asm | yes: Boyle |
 | `sub_42D5B0` | `UnitBattle_ToggleSelectedChargeMode` | Function | Battle / UI | High | Flips the selected unit’s charge-mode latch, timestamps the toggle, redraws the unit neighborhood, and cancels incompatible shooting mode when charge is enabled. | c, asm | yes: Boyle |
 | `sub_42F7C0` | `UnitBattle_GetFootprintClass` | Function | Battle / Footprint | High | Direct per-unit-type lookup into `byte_512577`, and all live callers use the result only for multi-tile footprint / redraw invalidation logic rather than generic battle class semantics. | c | yes: Boyle |
+
+## Batch 85 – Pathing Move-Cost Register Recovery Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Map_GetUnitTileMoveCostOrZero` final bridge-enabled profile lookup using undefined `v12` | reuse the live `TILE_TERRAIN_RECORD` pointer (`v11`) | compile_fix | Map / Pathing | High | The helper already loads the terrain-record pointer once; the bridge-enabled fallback indexes the same terrain id. The stray `v12` was a decompiler register-loss artifact identified in the tile/pathing review. | c, asm | yes: Hooke |
+| `UnitStack_GetTileMoveCostOrZero` owner/trap/profile checks using undefined `v8` and `v14` | reuse `a1` owner byte and the live `TILE_TERRAIN_RECORD` pointer (`v13`) | compile_fix | Map / Pathing | High | The stack helper already has the stack pointer and the terrain-record pointer in scope; the undefined `v8` / `v14` temporaries were register-split artifacts, not real inputs. Restoring those live values removes the last known bogus locals in this move-cost path. | c, asm | yes: Hooke |
