@@ -1044,3 +1044,34 @@
 - Net effect:
 - the build now compiles a real SDL-target platform runtime translation unit instead of relying on declarations-only shims
 - the input backend is represented in live code as one coherent recovered state block, which reduces future risk when replacing DirectInput polling with SDL input events
+
+## Batch 92 - Castle Garrison State And Tile Highlight Recovery Wave
+- Repairs:
+  - repaired [Building_CreateSpecialPersonageGarrisonUnit](/home/andrz/git/clash-disassembly/clash95.c) with the asm-backed 12-slot garrison scan, the fallback leave-mask copy from `0x518D5C`, the normal `UnitSlot_InitFromType` call, and the final resident-special slot-flag write (`|= 3`)
+  - replaced the decompiler-fused tile-highlight arrays with explicit [g_TileHighlightSlots](/home/andrz/git/clash-disassembly/clash95.c) `{tile_x, tile_y}` records and fixed [UI_DrawTileHighlightOverlay](/home/andrz/git/clash-disassembly/clash95.c) to center the overlay sprite on both axes inside the `64 x 64` tile rect
+  - aligned the live castle-production globals with the already recovered state model:
+    - `dword_532220` -> `g_CastleProductionSelectedAvailableUnitIndex`
+    - `dword_5322D0` -> `g_CastleProductionSelectedUnitSpriteSet`
+  - aligned the live building-garrison globals with their actual ownership:
+    - `dword_532144` -> `g_BuildingGarrisonDialogUiSpriteSet`
+    - `dword_532154` -> `g_BuildingGarrisonDialogResourceHandle`
+  - renamed [BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets](/home/andrz/git/clash-disassembly/clash95.c) and [UI_GetGridIndexFromMouse](/home/andrz/git/clash-disassembly/clash95.c) so their definitions match the already recovered call-site semantics
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch92.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch92`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside gameplay/UI state recovery while preserving the existing SDL seam
+- Current leading blockers:
+  - unchanged at the broader project-link layer: missing `main`, `_wcpp_*`, allocator/runtime wrappers (`j_Mem_Alloc`, `j__nfree_`, `j_j__nfree_`, `memset_`, `nmalloc_`, `nrealloc_`, `memmove_`, `memcpy_`, `wcslen_`, `wcstombs_`), and remaining `JUMPOUT` scars still dominate the first unresolved wave
+  - the direct link probe also still surfaces deeper parser/runtime and startup ownership gaps after that first blocker band, so a faithful executable harness remains a later reconstruction target rather than a build-system omission
+- Key evidence used:
+  - asm at `0x44F1E0` shows `Building_CreateSpecialPersonageGarrisonUnit` scanning `building + 18 + 31 * slot`, reusing the fallback leave-mask block at `0x518D5C` when full, then calling `UnitSlot_InitFromType` and setting the slot flag byte at `building + 30 + 31 * slot`
+  - asm at `0x419000` proves the tile-highlight storage is eight contiguous 8-byte `{tile_x, tile_y}` records and that the overlay sprite is centered on both X and Y before the draw call
+  - the castle-production and garrison-dialog state already existed in [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json); this batch brought the live C names into line with that recovered model instead of inventing a new one
+- Net effect:
+  - the castle/garrison UI cluster now reads closer to the recovered gameplay model already recorded in the artifacts
+  - the tile-highlight path is no longer split across decompiler-illusion pseudo-arrays
+  - the special-personage queen/garrison path has one fewer bogus local-variable scar, which also strengthens the existing unit-taxonomy evidence for the `SpecialPersonageCategory`

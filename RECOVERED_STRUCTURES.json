@@ -745,14 +745,14 @@
   {
     "name": "CastleProductionPanelState",
     "kind": "ui_state_region",
-    "base_symbol": "dword_532218 / dword_532220 / dword_532224 / dword_5322C8 / dword_5322D0 / dword_5322D4 / dword_532304 / dword_532334 / dword_532338 / dword_53233C",
+    "base_symbol": "dword_532218 / g_CastleProductionSelectedAvailableUnitIndex / dword_532224 / dword_5322C8 / g_CastleProductionSelectedUnitSpriteSet / dword_5322D4 / dword_532304 / dword_532334 / dword_532338 / dword_53233C",
     "description": "Shared modal state for the castle unit-production and licence-management panel. The same globals track which building is open, which available unit is selected, which licence slot is highlighted, which preview sprite set is loaded, and the two 12-entry per-slot arrays used for animation frames and loaded licence sprites.",
     "fields": [
       { "offset": 0, "name": "active_building_ptr", "type": "BuildingRecord *", "notes": "Actual symbol `dword_532218`. Set when the panel opens and reused by all licence buy/remove/start/stop handlers." },
-      { "offset": 8, "name": "selected_available_unit_index", "type": "int32", "notes": "Actual symbol `dword_532220`. Index into `available_unit_type_ids`; strip clicks and arrow handlers mutate this field before redrawing the selected details." },
+      { "offset": 8, "name": "selected_available_unit_index", "type": "int32", "notes": "Actual symbol `g_CastleProductionSelectedAvailableUnitIndex` at address `0x532220`. Index into `available_unit_type_ids`; strip clicks and arrow handlers mutate this field before redrawing the selected details." },
       { "offset": 12, "name": "available_unit_type_ids[41]", "type": "int32[41]", "notes": "Actual symbol family `dword_532224` plus alias `dword_532228`. `CastleProduction_RebuildAvailableUnitList` fills up to 40 unit-type ids plus a trailing `-1` sentinel from building licence rules and the unit metadata roster." },
       { "offset": 176, "name": "selected_licence_slot_index", "type": "int32", "notes": "Actual symbol `dword_5322C8`. Grid-hit tests latch this to the selected occupied licence slot; `-1` means no licence slot is selected." },
-      { "offset": 184, "name": "selected_unit_sprite_set_handle", "type": "int32", "notes": "Actual symbol `dword_5322D0`. `CastleProduction_RedrawSelectedUnitDetails` frees/reloads this one preview sprite set from the stack-built asset path." },
+      { "offset": 184, "name": "selected_unit_sprite_set_handle", "type": "int32", "notes": "Actual symbol `g_CastleProductionSelectedUnitSpriteSet` at address `0x5322D0`. `CastleProduction_RedrawSelectedUnitPanel` frees/reloads this one preview sprite set from the stack-built asset path." },
       { "offset": 188, "name": "licence_animation_frames[12]", "type": "int32[12]", "notes": "Actual symbol `dword_5322D4`. Seeded with random `0..7` frames on panel open and advanced modulo 8 by `CastleProduction_TickLicenceGridAnimations`." },
       { "offset": 236, "name": "licence_sprite_set_handles[12]", "type": "int32[12]", "notes": "Actual symbol `dword_532304`. One loaded sprite-set handle per occupied licence slot; zeroed on open and freed on close or delayed removal." },
       { "offset": 284, "name": "pending_added_licence_slot", "type": "int32", "notes": "Actual symbol `dword_532334`. Set to the slot index newly populated by `Building_BuyAddon` and consumed by the add-animation path." },
@@ -764,6 +764,21 @@
       "`CastleProduction_RedrawSelectedUnitDetails` frees/reloads only one preview handle at `dword_5322D0` using the `sub_413430` stack-built sprite path, proving that symbol is scalar and distinct from the 12-entry slot arrays.",
       "`CastleProduction_TickLicenceGridAnimations` advances `dword_5322D4[12]`, delays add/remove completion for exactly 8 ticks through `dword_53233C`, and frees `dword_532304[pending_removed_licence_slot]` when removal completes.",
       "`CastleProduction_RebuildAvailableUnitList`, the strip-click handlers, and the grid-click handler all treat `dword_532220` as the selected index into the `dword_532224` available-type list and `dword_5322C8` as the selected occupied licence slot."
+    ]
+  },
+  {
+    "name": "TileHighlightSlotTable",
+    "kind": "ui_state_region",
+    "base_symbol": "g_TileHighlightSlots",
+    "description": "Eight-entry overlay table storing highlighted map-tile coordinates for the world-map tile highlight pass.",
+    "fields": [
+      { "offset": 0, "name": "tile_x", "type": "int32", "notes": "World-map tile row/x coordinate stored for the highlighted slot." },
+      { "offset": 4, "name": "tile_y", "type": "int32", "notes": "World-map tile column/y coordinate stored for the highlighted slot." }
+    ],
+    "evidence": [
+      "`UI_HighlightTile` scans eight records, compares both coordinates, and either reuses an existing slot or writes the incoming coordinates into the first free `tile_x == -1` record.",
+      "`UI_ClearTileHighlight` clears exactly `0x40` bytes starting at the table base, matching eight contiguous 8-byte `{tile_x, tile_y}` records rather than two unrelated arrays.",
+      "`UI_DrawTileHighlightOverlay` looks up the same slot pair by coordinates, then centers sprite 40 inside the 64x64 tile rect before drawing the overlay, proving the stored records are tile-coordinate pairs consumed by the highlight renderer."
     ]
   }
 ]
