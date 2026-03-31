@@ -303,12 +303,14 @@
       { "offset": 852, "name": "battle_unit_entries[22]", "type": "BattleUnitEntry[22]", "notes": "22 tactical-battle unit entries, each 31 bytes wide, holding per-battle slot state such as type, owner, AP, quantity, coordinates, facing, path pointer, and current animation state." },
       { "offset": 1534, "name": "tile_occupant_ids[20][20]", "type": "int16[20][20]", "notes": "Per-battle-tile occupant index grid; `-1` marks an empty tile." },
       { "offset": 2334, "name": "tile_effect_overlay[20][20][2]", "type": "uint8[20][20][2]", "notes": "Per-tile battle overlay/effect bytes used by death, ranged-hit, and footprint redraw helpers." },
+      { "offset": 3134, "name": "wall_section_hitpoints[20][20]", "type": "uint8[20][20]", "notes": "Per-wall-tile durability grid. `UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI loops read or subtract these bytes when breaching castle walls." },
       { "offset": 3944, "name": "selected_unit_index_by_player[5]", "type": "int32[5]", "notes": "Per-player tactical selection state used to choose the initial active unit when each side's turn begins." }
     ],
     "evidence": [
       "`Battle_RunTacticalCombat` allocates and seeds the block, then `HandleBattleResults` reads side ids from offsets `+836` and `+840` while copying the final 22 battle-unit entries back out.",
       "`UnitBattle_RunTurnLoop` restores the tactical viewport from offsets `+808` and `+812`, resolves the selected unit from the per-player indices at `+3944`, and then drives the active-turn input loop over the same runtime block.",
       "`UnitBattle_MoveTrack`, `UnitBattle_Attack`, and the battle redraw helpers all treat offset `+852` as the base of the 31-byte tactical unit-entry array and offset `+1534` as the 20x20 occupant grid.",
+      "`UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI command loops index `battle_state + 3134 + 20 * column + row` as a mutable byte grid whose values drop to zero when wall sections collapse, proving a dedicated per-tile wall-hitpoint plane inside the same runtime block.",
       "The battle tooltip, death animation, and hit/recoil helpers also index the contiguous overlay bytes beginning at `+2334`, proving one shared tactical-state region rather than scattered globals."
     ]
   },
