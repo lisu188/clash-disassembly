@@ -61,6 +61,7 @@ static struct SDL_Surface g_platform_default_surface = { 640, 480 };
 static struct SDL_Surface g_platform_default_icon = { 32, 32 };
 static struct SDL_Cursor g_platform_default_cursor = { 0 };
 static int g_platform_stock_brush;
+static int g_platform_module_handle_token;
 static MSG g_platform_message_queue[PLATFORM_QUEUE_CAPACITY];
 static size_t g_platform_message_head;
 static size_t g_platform_message_tail;
@@ -320,10 +321,22 @@ DWORD __stdcall GetVersion()
   return 4u;
 }
 
+HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
+{
+  (void)lpModuleName;
+  return &g_platform_module_handle_token;
+}
+
 UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)
 {
   (void)lpRootPathName;
   return 3;
+}
+
+void __stdcall OutputDebugStringA(LPCSTR lpOutputString)
+{
+  if ( lpOutputString )
+    fprintf(stderr, "[platform_sdl] debug: %s\n", lpOutputString);
 }
 
 BOOL __stdcall TranslateMessage(const MSG *lpMsg)

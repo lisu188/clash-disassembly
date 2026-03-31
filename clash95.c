@@ -997,9 +997,9 @@ int  sub_4357E0(int result, char a2, DWORD a3);
 int  sub_435830(int a1, char a2, DWORD a3);
 int  sub_435860(int a1, int a2, DWORD a3, char a4);
 BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this);
-int  sub_435A00(DWORD a1, int a2, int a3);
-int  sub_435AC0(DWORD a1, int a2, int a3);
-int  sub_435B90(DWORD a1);
+int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3);
+int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3);
+int  CastleProduction_TickAnimations(DWORD a1);
 int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3);
 int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4);
 int  sub_435FE0(DWORD a1, int a2);
@@ -4430,12 +4430,12 @@ int  sub_4E60F5(_BYTE *a1, int a2, int a3);
 signed int  sub_4E70ED(_WORD *a1, _WORD *i);
 int  sub_4E7239(_WORD *a1, int a2, int a3);
 // int __fastcall _ccmdline_(_DWORD, _DWORD); weak
-DWORD __cdecl sub_4E7AAE(int a1, int a2, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5);
-const CHAR * sub_4E7CA5(const WCHAR *a1, const WCHAR *a2, int a3);
+DWORD __cdecl CRT_SpawnveLaunchProcess(int a1, int a2, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5);
+const CHAR * CRT_SetEnvironmentVariableCompat(const WCHAR *a1, const WCHAR *a2, int a3);
 // int __thiscall towupper_(_DWORD); weak
 int sub_4E7DDE();
 int sub_4E7DE5();
-signed int  sub_4E7DE8(int a1, int a2);
+signed int  CRT_GetOsHandleFromFd(int a1, int a2);
 unsigned int  sub_4E7EB8(unsigned int a1, unsigned int a2);
 int  sub_4E7F2D(int a1, int a2);
 char * sub_4E7F70(char *a1, const char *a2, unsigned int a3);
@@ -26851,17 +26851,15 @@ signed int  UnitStack_GetMoveCostToTileIgnoringOccupancy(__int16 *a1, int a2, in
   int v6; // edx
   __int16 v7; // di
   signed int result; // eax
-  int v9; // ecx
 
-  v5 = 200 * a2;
-  v6 = gameData + 200 * a2;
-  v7 = *(_WORD *)(2 * a3 + v6 + 556374);
-  *(_WORD *)(2 * a3 + v6 + 556374) = -1;
+  v5 = 2 * a3;
+  v6 = gameData + 200 * a2 + v5 + 556374;
+  v7 = *(_WORD *)v6;
+  *(_WORD *)v6 = -1;
   result = UnitStack_GetTileMoveCostOrZero(a1, a2, 2 * a3, a3);
-  *(_WORD *)(v9 + gameData + v5 + 556374) = v7;
+  *(_WORD *)v6 = v7;
   return result;
 }
-// 4143E4: variable 'v9' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00414400) --------------------------------------------------------
@@ -48392,7 +48390,7 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 // 532220: using guessed type int dword_532220[];
 
 //----- (00435A00) --------------------------------------------------------
-int  sub_435A00(DWORD a1, int a2, int a3)
+int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
 {
   int result; // eax
   int v4; // ecx
@@ -48448,7 +48446,7 @@ int  sub_435A00(DWORD a1, int a2, int a3)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00435AC0) --------------------------------------------------------
-int  sub_435AC0(DWORD a1, int a2, int a3)
+int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
 {
   int v3; // ebx
   int result; // eax
@@ -48489,7 +48487,7 @@ int  sub_435AC0(DWORD a1, int a2, int a3)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00435B90) --------------------------------------------------------
-int  sub_435B90(DWORD a1)
+int  CastleProduction_TickAnimations(DWORD a1)
 {
   int v1; // edx
   void *v2; // ecx
@@ -48585,17 +48583,17 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
   Render_Present((int)dword_544CD8);
   dword_532210 = 0;
-  dword_526A30 = (int (*)(void))sub_435B90;
+  dword_526A30 = (int (*)(void))CastleProduction_TickAnimations;
   do
   {
     DD_Pump((int)dword_544CD8, 0);
-    sub_435B90(v8);
+    CastleProduction_TickAnimations(v8);
     sub_44E350(word_515310);
     g_RenderDevice = &unk_51D4C0;
     if ( !sub_419DC0(dword_515130, v8) )
     {
-      sub_435A00(v8, (int)&unk_51D4C0, (int)dword_515130);
-      sub_435AC0(v8, (int)&unk_51D4C0, (int)dword_515130);
+      CastleProduction_HandleLicenceGridClick(v8, (int)&unk_51D4C0, (int)dword_515130);
+      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&unk_51D4C0, (int)dword_515130);
     }
   }
   while ( !dword_532210 );
@@ -58796,7 +58794,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   Render_Pump();
   v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
   if ( v3 )
-    v3 = DLXSpriteSet_Load(v3, a1);
+    v3 = DLXSpriteSet_Load(v3, "port.s32");
   v20 = v3;
   v22 = 100;
   v23 = 100;
@@ -184638,7 +184636,7 @@ LABEL_20:
 // 54E708: using guessed type int dword_54E708;
 
 //----- (004E7AAE) --------------------------------------------------------
-DWORD __cdecl sub_4E7AAE(int a1, int a2, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5)
+DWORD __cdecl CRT_SpawnveLaunchProcess(int a1, int a2, LPSTR lpCommandLine, LPVOID lpEnvironment, int a5)
 {
   int v5; // ecx
   DWORD dwProcessId; // eax
@@ -184708,7 +184706,7 @@ LABEL_13:
 // 51A8A7: using guessed type int dword_51A8A7;
 
 //----- (004E7CA5) --------------------------------------------------------
-const CHAR * sub_4E7CA5(const WCHAR *a1, const WCHAR *a2, int a3)
+const CHAR * CRT_SetEnvironmentVariableCompat(const WCHAR *a1, const WCHAR *a2, int a3)
 {
   const CHAR *result; // eax
   int v5; // eax
@@ -184788,7 +184786,7 @@ int sub_4E7DE5()
 }
 
 //----- (004E7DE8) --------------------------------------------------------
-signed int  sub_4E7DE8(int a1, int a2)
+signed int  CRT_GetOsHandleFromFd(int a1, int a2)
 {
   if ( a1 >= 0 && a1 <= (unsigned int)dword_51A768 )
     return *(_DWORD *)(4 * a1 + dword_51AED0);

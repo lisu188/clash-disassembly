@@ -826,6 +826,47 @@
   - the strategic/pathing move-cost helpers no longer depend on two proven false register-loss temporaries
   - bridge-enabled passability and stack-owned tile checks are now expressed through live terrain/owner inputs instead of decompiler ghosts
 
+## Batch 86 - Runtime Shim And Castle/CRT Naming Wave
+- Repairs:
+  - repaired `UnitStack_GetMoveCostToTileIgnoringOccupancy` so it restores the saved occupant through the computed tile slot pointer instead of the undefined `v9` register-loss artifact
+  - renamed the castle production panel interaction trio in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_435A00` -> `CastleProduction_HandleLicenceGridClick`
+    - `sub_435AC0` -> `CastleProduction_HandleAvailableUnitStripClick`
+    - `sub_435B90` -> `CastleProduction_TickAnimations`
+  - renamed three corroborated CRT/runtime helpers:
+    - `sub_4E7AAE` -> `CRT_SpawnveLaunchProcess`
+    - `sub_4E7CA5` -> `CRT_SetEnvironmentVariableCompat`
+    - `sub_4E7DE8` -> `CRT_GetOsHandleFromFd`
+  - added the safest missing runtime wrappers in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `nfree_`
+    - `strcmp_`
+    - `sprintf_`
+    - `toupper_`
+    - `towupper_`
+  - extended [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) with SDL-target ownership of:
+    - `GetModuleHandleA`
+    - `OutputDebugStringA`
+  - repaired `UI_DrawPortStatusPanel` so it loads the asm-backed `port.s32` sprite set instead of a false caller-provided filename register
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch86.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch86.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch86`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch86.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetModuleHandleA` -> SDL-target platform seam returning a stable local module token
+  - `OutputDebugStringA` -> SDL-target platform seam forwarding debug output to stderr
+- Current leading blockers:
+  - the CMake static-library milestone remains green, but the direct executable probe still fails first on missing `main` plus the startup/runtime family (`_wcpp_*`, `j_Mem_Alloc`, `j__nfree_` / `j_j__nfree_`, `vsprintf_`, `memset_`, `nmalloc_`, `JUMPOUT`, process/thread/env helpers)
+  - the new wrappers successfully disappeared from the first unresolved link wave, which confirms this batch reduced the low-risk runtime surface rather than just moving symbols around
+  - SDL migration is still blocked on deeper render/device ownership and bitmap/DC replacement, not on basic window/message/timing/debug imports
+- Net effect:
+  - the map/pathing occupancy-masking helper no longer restores through a bogus decompiler temp
+  - the castle production and CRT/runtime hotspots now read in semantic terms instead of raw `sub_*` labels
+  - the platform seam owns two more Win32 imports locally, and the remaining executable-link blockers are more tightly clustered around true startup/runtime reconstruction
+
 ## Batch 82 - SDL Timing Runtime Reduction Wave
 - Repairs:
   - added host-backed `GetTickCount()` in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) as a thin alias over the already recovered `timeGetTime()` seam

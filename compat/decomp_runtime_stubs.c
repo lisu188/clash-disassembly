@@ -1,5 +1,9 @@
 #include "../defs.h"
 
+#include <ctype.h>
+#include <wchar.h>
+#include <wctype.h>
+
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
  * asm-backed reconstruction. These are outside the user-priority gameplay
@@ -8,6 +12,57 @@
 
 unsigned __int16 __ES__;
 unsigned __int16 __DS__;
+
+/*
+ * These are the lowest-risk CRT aliases still missing from the link surface.
+ * They are kept here instead of being spread through gameplay code so later
+ * runtime reconstruction can replace them in one place.
+ */
+int __thiscall nfree_(_DWORD a1)
+{
+  if ( a1 && a1 != (_DWORD)-1 )
+    free((void *)(uintptr_t)a1);
+  return 0;
+}
+
+int __fastcall strcmp_(_DWORD a1, _DWORD a2)
+{
+  const char *lhs;
+  const char *rhs;
+
+  lhs = (const char *)(uintptr_t)a1;
+  rhs = (const char *)(uintptr_t)a2;
+  if ( lhs == rhs )
+    return 0;
+  if ( !lhs )
+    return -1;
+  if ( !rhs )
+    return 1;
+  return strcmp(lhs, rhs);
+}
+
+int __cdecl sprintf_(char *buffer, const char *format, ...)
+{
+  int result;
+  va_list args;
+
+  if ( !buffer || !format )
+    return -1;
+  va_start(args, format);
+  result = vsprintf(buffer, format, args);
+  va_end(args);
+  return result;
+}
+
+int __thiscall toupper_(_DWORD a1)
+{
+  return toupper((unsigned __int8)a1);
+}
+
+int __thiscall towupper_(_DWORD a1)
+{
+  return towupper((wint_t)(unsigned __int16)a1);
+}
 
 int __fastcall sub_4697E0(_DWORD a1, _DWORD a2)
 {
