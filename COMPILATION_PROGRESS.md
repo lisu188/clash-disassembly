@@ -754,6 +754,80 @@
   - the selection-panel subsystem no longer contains the last proven false `memset_` artifacts in its mask-clear path
   - the logs, recovered structures, and live code are now aligned on the platform seam and the input backend slab, which reduces friction for the eventual SDL body replacement pass
 
+## Batch 83 - Timing, Bridge Flag, And Castle Production Repair Wave
+- Repairs:
+  - fixed `Time_Now` in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) to return the performance-counter/frequency quotient directly instead of tail-calling the collapsed `nullsub_2` padding symbol
+  - repaired `Pathing_EnableBridgeCrossings` so it writes literal `1` to `g_PathingAllowBridgeCrossings`, matching the asm-backed `Track_BridgesOn` body
+  - repaired [UI_ClearTileHighlight](/home/andrz/git/clash-disassembly/clash95.c) to clear the real highlight arrays (`dword_5269D8` / paired tile slots) with a fixed 0x40-byte `memset`, replacing the false `memset_(this, -1)` artifact
+  - repaired the two building-garrison selection resets to clear `g_BuildingGarrisonDialogSelectedSlots[12]` explicitly after the 12-slot repair/training loops
+  - repaired the castle production panel opener to clear its 12-entry animation seed array (`dword_5322D0`) before seeding random frames, replacing another zero-pointer `memset_` artifact
+  - added explicit `GetTickCount`, `GetVersion`, and `Sleep` declarations in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) so the compileable target no longer relies on GNU89 implicit declarations for those recovered runtime helpers
+  - folded in two high-confidence castle production renames:
+    - `sub_4359B0` -> `CastleProduction_RebuildAvailableUnitList`
+    - `sub_435BC0` -> `Castle_ShowUnitProductionPanel`
+  - extended the SDL-target runtime seam in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) with conservative `GetVersion()` and `GetDriveTypeA()` placeholders to keep shrinking the Win32 import surface under CMake/link probes
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch83.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch83.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch83.json`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe2`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetVersion` -> SDL-target platform seam placeholder returning a stable NT4-style version signature
+  - `GetDriveTypeA` -> SDL-target platform seam placeholder returning a conservative fixed-drive classification while CD-path behavior stays deferred
+- Current leading blockers:
+  - the honest compile milestone remains the CMake static library; the direct executable probe still fails first on missing `main` / startup harness reconstruction
+  - after this batch, the unresolved executable-link surface is still dominated by `_wcpp_*`, allocator/libc wrappers like `nmalloc_` / `nfree_` / `memset_`, `JUMPOUT`, and heavier process/thread/env helpers rather than the SDL runtime seam itself
+  - `compat/decomp_runtime_stubs.c` still quarantines a map/asm-backed `nullsub_*` family as compile/link placeholders; those are documented as collapsed `retn` bodies, but their non-void return contracts remain intentionally conservative
+- Net effect:
+  - the recovered platform timing path no longer contains the proven `Time_Now` / `nullsub_2` decompiler illusion
+  - the castle production and building-garrison UI clusters shed three more false `memset_` artifacts without changing the current compile target
+  - the SDL-target runtime seam now owns one more small slice of the Win32 import surface, and the remaining linker noise is more clearly concentrated in startup/runtime reconstruction
+
+## Batch 84 - Battle Action Semantics Wave
+- Repairs:
+  - renamed the selected-unit battle action helpers in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_42D2C0` -> `UnitBattle_RefreshSelectedActionButtons`
+    - `sub_42D4E0` -> `UnitBattle_ToggleSelectedShootingMode`
+    - `sub_42D5B0` -> `UnitBattle_ToggleSelectedChargeMode`
+    - `sub_42F7C0` -> `UnitBattle_GetFootprintClass`
+  - rewired the surviving callsites to the recovered names without changing the underlying battle-action or footprint logic
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this was a gameplay-semantics rename pass over battle UI / footprint helpers
+- Current leading blockers:
+  - none for the current CMake static-library milestone; the rename wave stayed object-clean
+  - the remaining executable-link blockers are still dominated by startup/runtime support (`main` / `WinMain`, `_wcpp_*`, libc wrapper imports, `JUMPOUT`, heavier Win32 process/thread/env helpers), not by battle gameplay code
+  - the battle action descriptor blob family around `dword_514B78` is still raw data; turning it into a typed `BattleActionButtonDescriptor` remains the next compile-friendly cleanup in this subsystem
+- Net effect:
+  - battle-mode toggles and the selected action-button refresh path now read in gameplay terms instead of anonymous `sub_*` labels
+  - the footprint-class lookup is explicit at callsites, which makes later unit-type / redraw-structure recovery easier
+
+## Batch 82 - SDL Timing Runtime Reduction Wave
+- Repairs:
+  - added host-backed `GetTickCount()` in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) as a thin alias over the already recovered `timeGetTime()` seam
+  - added host-backed `Sleep()` in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) using `usleep()` so the current SDL-target runtime owns the simplest Win32 timing dependency directly
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch82.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetTickCount` -> host/SDL-side monotonic-millis seam via `timeGetTime()`
+  - `Sleep` -> host/SDL-side sleep seam via `usleep()`
+- Current leading blockers:
+  - the full executable still does not link because the recovered C emits no `main` or `WinMain` symbol, so a launcher wrapper would be speculative until startup is reconstructed from asm
+  - after removing the easiest timing imports, the remaining link surface is still dominated by unresolved runtime/library helpers (`_wcpp_*`, `memset_`, `nmalloc_`, `nfree_`, `JUMPOUT`, process/env APIs, and other quarantine candidates), not by the SDL runtime seam itself
+  - behaviorally loaded platform helpers such as `GetDriveTypeA`, `CreateProcessA`, and environment setters remain intentionally deferred until their call-site semantics are reconstructed more fully
+- Net effect:
+  - the SDL-target runtime now owns the lowest-risk timing imports directly instead of leaving them in the unresolved executable-link set
+  - the link probe is slightly cleaner, and the remaining blockers are better clustered around startup/runtime reconstruction rather than trivial platform timing glue
+
 ## Batch 81 - SDL Runtime Build Surface Wave
 - Repairs:
   - added [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) to the `clash95_recovered` CMake target so the SDL-target compatibility layer is no longer declarations-only

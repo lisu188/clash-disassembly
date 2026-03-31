@@ -32,3 +32,110 @@ int sub_48469F(void)
 {
   return 0;
 }
+
+/*
+ * Map/asm corroborate these as collapsed one-byte `retn` placeholders.
+ * Returning zero here is a compile/link quarantine choice, not a claim that
+ * the original callers depended on a specific non-void result.
+ */
+int nullsub_1(void)
+{
+  return 0;
+}
+
+int __thiscall nullsub_2(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __thiscall nullsub_3(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int nullsub_4(void)
+{
+  return 0;
+}
+
+int nullsub_5(void)
+{
+  return 0;
+}
+
+int __fastcall nullsub_6(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __thiscall nullsub_7(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+_DWORD nullsub_8(void)
+{
+  return 0;
+}
+
+int nullsub_9(void)
+{
+  return 0;
+}
+
+int nullsub_10(void)
+{
+  return 0;
+}
+
+int __fastcall nullsub_11(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int nullsub_15(void)
+{
+  return 0;
+}
+
+int nullsub_16(void)
+{
+  return 0;
+}
+
+int nullsub_19(void)
+{
+  return 0;
+}
+
+int nullsub_23(void)
+{
+  return 0;
+}
+
+int nullsub_24(void)
+{
+  return 0;
+}
+
+int nullsub_29(void)
+{
+  return 0;
+}
+
+int nullsub_30(void)
+{
+  return 0;
+}
+
+int nullsub_32(void)
+{
+  return 0;
+}

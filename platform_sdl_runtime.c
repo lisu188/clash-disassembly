@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 /*
  * Minimal SDL-target runtime seam for the recovered platform layer.
@@ -305,6 +306,26 @@ DWORD __stdcall timeGetTime()
   return (DWORD)(tv.tv_sec * 1000u + tv.tv_usec / 1000u);
 }
 
+DWORD __stdcall GetTickCount()
+{
+  return timeGetTime();
+}
+
+DWORD __stdcall GetVersion()
+{
+  /*
+   * Report an NT-style major version 4 so the recovered platform probes pick a
+   * stable, non-9x path until the startup/runtime layer is fully re-emitted.
+   */
+  return 4u;
+}
+
+UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)
+{
+  (void)lpRootPathName;
+  return 3;
+}
+
 BOOL __stdcall TranslateMessage(const MSG *lpMsg)
 {
   (void)lpMsg;
@@ -327,6 +348,12 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
 BOOL __stdcall WaitMessage()
 {
   return 1;
+}
+
+void __stdcall Sleep(DWORD dwMilliseconds)
+{
+  if ( dwMilliseconds )
+    usleep(dwMilliseconds * 1000u);
 }
 
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint)
