@@ -1,6 +1,7 @@
 #include "../defs.h"
 
 #include <ctype.h>
+#include <errno.h>
 #include <wchar.h>
 #include <wctype.h>
 
@@ -128,6 +129,12 @@ int __thiscall toupper_(_DWORD a1)
 int __thiscall towupper_(_DWORD a1)
 {
   return towupper((wint_t)(unsigned __int16)a1);
+}
+
+errno_t __cdecl _set_errno_(int value)
+{
+  errno = value;
+  return value;
 }
 
 int __fastcall sub_4697E0(_DWORD a1, _DWORD a2)

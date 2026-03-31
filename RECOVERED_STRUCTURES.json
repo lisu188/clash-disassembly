@@ -279,11 +279,11 @@
       { "offset": 8, "name": "next_supply_turn", "type": "int32", "notes": "Absolute game-turn number when the next supply ship should arrive." },
       { "offset": 12, "name": "supply_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
       { "offset": 16, "name": "pending_supply_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the supply shipment." },
-      { "offset": 20, "name": "supply_arrival_visual_flag", "type": "int32", "notes": "Visual latch for the shoreline arrival state. `Port_NewTurn` clears it, the shipment collector raises it when reinforcements are claimed, and `Port_BuildShorePieces` uses it to choose the shoreline-piece variant." }
+      { "offset": 20, "name": "shoreline_variant_visual_flag", "type": "int32", "notes": "Visual latch selecting which shoreline tile variant the port footprint should show. `Port_NewTurn` clears and conditionally re-raises it, and `Port_UpdateShorelineVariantTiles` uses it to swap the 2x2 shoreline secondary-tile set." }
     ],
     "evidence": [
-      "`Port_FindAndInit` seeds all six dwords together after scanning the map for the unique port tile and then immediately calls `Port_BuildShorePieces` and `Rules_LogPortLocation`.",
-      "`Port_NewTurn`, `Port_BuildShorePieces`, and `Port_CollectReinforcementShipment` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
+      "`Port_FindAndInit` seeds all six dwords together after scanning the map for the unique port tile and then immediately calls `Port_UpdateShorelineVariantTiles` and `Rules_LogPortLocation`.",
+      "`Port_NewTurn`, `Port_UpdateShorelineVariantTiles`, and `Port_CollectReinforcementShipment` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
       "The top-of-file offset macros in `clash95.c` and the matching xrefs in `clash95.asm` agree on the exact offsets `586374..586394` inside `gameData`."
     ]
   },
@@ -460,12 +460,12 @@
     "description": "Per-player queue of newly captured prisoner units waiting to be assigned to a castle prison.",
     "fields": [
       { "offset": 0, "name": "prisoner_type_id", "type": "int8", "notes": "Type `33` or `34` copied from the captured special unit entry." },
-      { "offset": 1, "name": "variant_or_payload_byte", "type": "uint8", "notes": "Auxiliary prisoner metadata copied from the captured slot; exact gameplay meaning remains unresolved." },
+      { "offset": 1, "name": "captured_owner_player_index", "type": "uint8", "notes": "Owner/nation id copied from the captured special unit slot and later propagated into the building prison slot for ransom-value calculations." },
       { "offset": 2, "name": "capture_tile_row", "type": "uint16", "notes": "Capture-site row later used to choose the nearest eligible castle in `Prisoner_SetInCastles`." },
       { "offset": 4, "name": "capture_tile_column", "type": "uint16", "notes": "Capture-site column paired with `capture_tile_row` for nearest-castle placement." }
     ],
     "evidence": [
-      "`Prisoner_QueueCapturedUnit` appends 6-byte entries at `PLAYER_DATA(player) + 141381`, storing the captured type id plus one byte and two words copied from the special unit slot.",
+      "`Prisoner_QueueCapturedUnit` appends 6-byte entries at `PLAYER_DATA(player) + 141381`, storing the captured type id, the special slot's owner byte, and two words copied from the captured special unit slot.",
       "`Prisoner_SetInCastles` scans exactly 10 of these entries, compares the stored row/column against castle coordinates, and clears the queue entry once the prisoner is moved into a building prison slot."
     ]
   },
@@ -478,14 +478,14 @@
     "description": "Six-byte prisoner cell embedded inside a building record.",
     "fields": [
       { "offset": 0, "name": "prisoner_type_id", "type": "int8", "notes": "Special prisoner unit type; `-1` marks an empty prison cell." },
-      { "offset": 1, "name": "variant_or_payload_byte", "type": "uint8", "notes": "Auxiliary prisoner metadata copied from the player transfer queue; exact meaning remains ambiguous." },
+      { "offset": 1, "name": "captured_owner_player_index", "type": "uint8", "notes": "Owner/nation id copied from the prisoner transfer queue and passed into `AI_TickNationPostTurn` when recalculating ransom." },
       { "offset": 2, "name": "turns_held", "type": "uint8", "notes": "Incremented every prisoner turn and used to auto-trigger late actions." },
       { "offset": 3, "name": "pending_action", "type": "uint8", "notes": "0 = none, 1 = behead, 2 = torture, 3 = pay/ransom path." },
       { "offset": 4, "name": "ransom_value", "type": "uint16", "notes": "Price/value field recalculated by `BuildingPrisoner_RecalculateRansomValue` and consumed by `Prisoner_Pay`." }
     ],
     "evidence": [
       "`Building_FindFreePrisonerSlot` scans three 6-byte cells beginning at `building + 445` and treats byte 0 == -1 as empty.",
-      "`BuildingPrisoner_SetAction` and `BuildingPrisoner_GetAction` read and write byte `+3`, while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
+      "`Prisoner_SetInCastles` copies the queue byte at `+1` straight into the building slot, `BuildingPrisoner_RecalculateRansomValue` feeds that byte into `AI_TickNationPostTurn`, and `BuildingPrisoner_SetAction` / `BuildingPrisoner_GetAction` still prove byte `+3` is the action field while `Prisoner_NewTurn` increments byte `+2` and `Prisoner_Pay` consumes word `+4`."
     ]
   },
   {

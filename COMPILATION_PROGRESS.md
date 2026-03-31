@@ -1279,3 +1279,45 @@
   - the port subsystem now reads in reinforcement-shipment terms instead of generic supply getter terms
   - one low-risk runtime thunk is removed from the first unresolved linker band
   - the unit metadata/stat artifacts now describe byte `+15` and bytes `+30..+37` in terms that match the observed draw/pathing behavior instead of the older decompiler-shaped interpretation
+
+## Batch 96 - Port Shoreline Variant And Prisoner Owner Tracking Wave
+- Repairs:
+  - renamed the port shoreline-tile updater in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `Port_BuildShorePieces` -> `Port_UpdateShorelineVariantTiles`
+  - added the plain CRT errno setter in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `_set_errno_(value)` now stores `errno = value` and returns the same value
+  - corrected [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) to name:
+    - `PortRuntimeState.supply_arrival_visual_flag` -> `PortRuntimeState.shoreline_variant_visual_flag`
+    - `PlayerPrisonerTransferQueue.variant_or_payload_byte` -> `PlayerPrisonerTransferQueue.captured_owner_player_index`
+    - `BuildingPrisonerSlot.variant_or_payload_byte` -> `BuildingPrisonerSlot.captured_owner_player_index`
+  - extended the special-personage taxonomy artifacts in [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json) with the recovered prisoner-owner tracking relationship
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch96.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch96.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch96`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch96.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch96.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside port/prisoner semantic recovery and CRT-link containment while preserving the existing SDL target seam unchanged
+- Current leading blockers:
+  - the broader executable/link surface is still led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `sub_473ED5`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_nt_` / `_set_errno_dos_`
+    - residual `JUMPOUT` control-flow scars
+  - `_set_errno_` is removed from the live unresolved band by this batch, while the deeper NT/DOS mapping helpers remain intentionally deferred
+- Key evidence used:
+  - `Port_UpdateShorelineVariantTiles` only rewrites the secondary tile ids inside the 2x2 port footprint and never touches shipment creation or rules state, which makes it a shoreline-variant tile updater rather than a generic build helper
+  - `Port_NewTurn`, the port status dialog, and the shoreline updater together separate the logical `supply_ready_flag` from the visual shoreline-variant latch
+  - `Unit_Capture` queues the captured special slot's owner byte, `Prisoner_SetInCastles` copies that same byte into the building prison slot, and `BuildingPrisoner_RecalculateRansomValue` feeds it into `AI_TickNationPostTurn`, proving the prisoner-side byte is an owner/player id
+  - `clash95.asm` shows `__set_EINVAL_` loading literal `9` and calling `__set_errno_`, which corroborates the recovered C callsites that already use `_set_errno_` as a simple setter/clearer
+- Net effect:
+  - the port runtime state now distinguishes the logical ready flag from the purely visual shoreline-variant latch more conservatively
+  - the prisoner pipeline now records the captured special person's owner id explicitly in both the transfer queue and the building prison slot artifacts
+  - one more low-risk CRT setter drops out of the wider link blocker set without inventing the still-unresolved NT/DOS errno mapping helpers

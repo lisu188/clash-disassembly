@@ -571,6 +571,13 @@
       "evidence": "`UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck` scans for types `33` and `34` and forwards that presence flag into the core combat-strength helper used by both stack and garrison military-strength scoring."
     },
     {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "captured_owner_player_index",
+      "relationship_kind": "prisoner_owner_tracking",
+      "confidence": "high",
+      "evidence": "The capture pipeline copies the special slot's owner byte into `PlayerPrisonerTransferQueue +1`, `Prisoner_SetInCastles` copies the same byte into `BuildingPrisonerSlot +1`, and `BuildingPrisoner_RecalculateRansomValue` feeds that stored player id into `AI_TickNationPostTurn`."
+    },
+    {
       "unit_type": "RangedUnitCategory",
       "stat": "base_ranged_attack",
       "relationship_kind": "projectile_attack_profile",
