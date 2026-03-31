@@ -1388,6 +1388,16 @@
 | `Time_Sleep` | `InputBackend_PollState` | Function | Platform / Input Backend | High | The body polls backend devices and fans keyboard/mouse state out into the globals consumed by gameplay; it does not sleep. | c | yes: Nash |
 | `DLXSpriteSet_Load(result, a2)` in `WorldMapTopMenu_LoadSpriteSet` | `DLXSpriteSet_Load(result, "menu.s32")` | Compile Fix | World Map / UI Menu | High | Asm corroborates that the helper always loads the dedicated top-menu sprite resource `menu.s32`; the decompiled argument register was wrong and the string pointer was not materialized in C. | c, asm, exe | yes: Plato |
 
+## Batch 77 – CMake Build Surface Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| missing project build system | root `CMakeLists.txt` with `clash95_recovered` static library target | Compile Fix | Build / CMake | High | There was no build system in the repo. The current verified compileable state is a GNU89 object build of `clash95.c` plus `compat/decomp_runtime_stubs.c`; representing that as a static library target preserves the real milestone without inventing a full executable/link harness. | c | yes: Nash |
+
+## Batch 78 – Player Info Sprite Semantics Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `UI_SetCurrentPlayer` | `UI_LoadCurrentPlayerInfoSpriteSet` | Function | UI / Player Context | High | The body only frees the existing `info%d.s32` sprite handle, formats the next `info%d.s32` filename, loads that sprite set, and stores the new handle. It does not mutate gameplay player state. | c, asm | yes: Meitner |
+
 ## Batch 67 – World Map HUD And Menu Semantics Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|

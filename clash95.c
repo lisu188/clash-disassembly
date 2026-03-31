@@ -810,7 +810,7 @@ signed int  UnitStack_HasOnlyFlyingUnits(int a1);
 int  Unit_AddToGroup(unsigned int a1, int a2, int a3, DWORD a4, double a5);
 BOOL  Map_IsTilePlacable(int a1, _DWORD *a2, int a3, int a4);
 BOOL  Unit_MoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4, double a5, int a6);
-_DWORD * UI_SetCurrentPlayer(int a1, int a2, char a3, DWORD a4);
+_DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int a1, int a2, char a3, DWORD a4);
 int UI_FreeCurrentPlayerInfoSpriteSet();
 int  UnitStackSelection_RedrawPanel(int result, DWORD a2);
 int  UnitStack_ShowSelectionDialog(int a1, int a2);
@@ -20159,7 +20159,7 @@ LABEL_13:
   Debug_Log(v20, (char)v21, a3, (int)aSetrhS08x);
   while ( 1 )
   {
-    UI_SetCurrentPlayer(g_CurrentPlayerIndex, v22, (char)v21, a3);
+    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v22, (char)v21, a3);
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     {
       WorldMap_RunHumanTurnLoop(v23, v21, a3, a5);
@@ -36827,7 +36827,7 @@ BOOL  Unit_MoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (00423370) --------------------------------------------------------
-_DWORD * UI_SetCurrentPlayer(int a1, int a2, char a3, DWORD a4)
+_DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int a1, int a2, char a3, DWORD a4)
 {
   int v4; // edx
   int v5; // ecx
@@ -36924,7 +36924,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v7 = *(unsigned __int8 *)(dword_526FA0 + 4);
     if ( v7 != g_CurrentPlayerIndex )
-      UI_SetCurrentPlayer(v7, v6, (char)v4, a2);
+      UI_LoadCurrentPlayerInfoSpriteSet(v7, v6, (char)v4, a2);
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 35);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       400,
@@ -36986,7 +36986,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
     }
     result = *(unsigned __int8 *)(dword_526FA0 + 4);
     if ( result != g_CurrentPlayerIndex )
-      return (int)UI_SetCurrentPlayer(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
+      return (int)UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
   }
   return result;
 }

@@ -669,3 +669,36 @@
 - Net effect:
   - the SDL migration seam is clearer in live C because the core input backend helpers no longer masquerade as anonymous subs or a fake sleep function
   - the top-menu loader now reflects the binary reality instead of a decompiler register artifact
+
+## Batch 77 - CMake Build Surface Wave
+- Repairs:
+  - added a root `CMakeLists.txt`
+  - represented the current verified compileable state as a static library target `clash95_recovered` built from `clash95.c` and `compat/decomp_runtime_stubs.c`
+  - bound the CMake target to the same source/include surface used by the manual compile probes and forced the proven GNU89 compile mode for GNU/Clang builds
+- Validation probe:
+  - `cmake -S . -B /tmp/clash95-cmake-build`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_cmake_wave.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_cmake_wave.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current compile milestone; the recovered core now builds through CMake as well as the direct compiler probes
+  - the CMake target is intentionally a static library, not a full executable, because the repo still lacks a reconstructed link harness and several runtime/platform externals remain unresolved at final link time
+  - SDL migration beyond this point is body-level backend replacement work in the window/event/input/timing layer, not build-system triage
+- Net effect:
+  - compilation is now reproducible through CMake instead of ad hoc shell commands
+  - the build system describes the real recovered state honestly: compileable library core first, executable/game harness later
+
+## Batch 78 - Player Info Sprite Semantics Wave
+- Repairs:
+  - renamed `UI_SetCurrentPlayer` to `UI_LoadCurrentPlayerInfoSpriteSet`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current compile milestone; the semantic rename remained clean under both direct GCC probing and the CMake build
+  - the remaining SDL/platform work is now body-level backend replacement or packed-data cleanup, not more isolated high-confidence naming in this immediate UI cluster
+- Net effect:
+  - the player-context helper no longer overstates its role; the code now says explicitly that it only swaps the loaded current-player info sprite set
