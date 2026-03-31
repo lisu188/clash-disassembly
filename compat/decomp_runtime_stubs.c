@@ -7,6 +7,9 @@
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
 _DWORD __stdcall GetLastError(void);
+extern __int64 (__fastcall *off_51A568)(_DWORD, _DWORD);
+extern int dword_51A648;
+extern void *lpTlsValue;
 
 static const signed char k_DosErrnoMap[20] = {
   0, 9, 1, 1, 11, 6, 4, 5, 5, 5, 2, 3, -1, -1, 7, 9, 6, 8, 1, -1
@@ -41,6 +44,25 @@ __int64 __thiscall j_Mem_Alloc(_DWORD a1)
    * Mem_Alloc body at 0x461C00.
    */
   return (unsigned int)Mem_Alloc((int)a1, 0, 0, 0);
+}
+
+int __fastcall sub_473ED5(_DWORD a1, _DWORD a2)
+{
+  _DWORD *node;
+
+  (void)a2;
+  node = (_DWORD *)(uintptr_t)a1;
+  off_51A568(a1, a1);
+  *node = dword_51A648;
+  dword_51A648 = (int)(uintptr_t)node;
+  return 0;
+}
+
+__int64 __fastcall sub_485374(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return (unsigned int)(uintptr_t)lpTlsValue;
 }
 
 int __fastcall strcmp_(_DWORD a1, _DWORD a2)

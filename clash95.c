@@ -160,6 +160,14 @@
 #define BUILDING_PRISONER_ACTION(slotPtr) (*(_BYTE *)((slotPtr) + 3))
 #define BUILDING_PRISONER_RANSOM(slotPtr) (*(_WORD *)((slotPtr) + 4))
 
+enum BuildingPrisonerAction
+{
+  BUILDING_PRISONER_ACTION_NONE = 0,
+  BUILDING_PRISONER_ACTION_BEHEAD = 1,
+  BUILDING_PRISONER_ACTION_TORTURE = 2,
+  BUILDING_PRISONER_ACTION_PAY = 3
+};
+
 typedef struct QueenWhimRecord
 {
   unsigned __int16 required_frontline_score;
@@ -888,7 +896,7 @@ signed int  sub_424020(int a1, int a2, int a3, int a4);
 BOOL  sub_424120(int a1, int a2);
 signed int  Map_GetBridgeCrossingCostOrZero(int a1, int a2);
 signed int  Road_Build(int a1, int a2, char a3, DWORD a4, double a5);
-signed int  sub_424EC0(int a1, int a2, double a3);
+signed int  UnitStack_StepOneTileInDirection(int a1, int a2, double a3);
 BOOL  Map_TileHasOwner(int a1, int a2);
 int Map_AutoUpgradeVillages();
 int  sub_4250F0(int a1, int a2);
@@ -1349,10 +1357,10 @@ signed int  sub_4547F0(int a1, int a2, char a3, DWORD a4, double a5);
 signed int  sub_454800(int a1, int a2, double a3);
 signed int  sub_454860(unsigned int a1, unsigned int a2, DWORD a3, double a4);
 signed int  sub_454990(int a1, int a2, char a3, DWORD a4, double a5);
-BOOL  sub_4549A0(int a1);
-signed int  sub_4549E0(int a1);
-signed int  sub_454A20(int a1);
-signed int  sub_454AE0(int a1, DWORD a2, double a3);
+BOOL  UnitStack_HasNormalCombatUnitsByIndex(int a1);
+signed int  UnitStack_GetSquadCountByIndex(int a1);
+signed int  UnitStack_QueuedPathEndsOnCrossingTile(int a1);
+signed int  Road_BuildFromQueuedPathHeading(int a1, DWORD a2, double a3);
 int  sub_454D20(DWORD a1, int a2, DWORD a3, double a4);
 int  UnitStack_CalcArmyFactStrength(int a1);
 signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4, DWORD a5);
@@ -21435,20 +21443,18 @@ void MiniMap_RedrawAllTiles()
 {
   char *v0; // ebx
   signed int i; // ecx
-  int v2; // ecx
 
   v0 = 0;
   g_RenderDevice = (_UNKNOWN *)dword_52334C;
   while ( (int)v0 < *(_DWORD *)(gameData + 140000) )
   {
-    for ( i = 0; i < *(_DWORD *)(gameData + 140004); i = v2 + 1 )
+    for ( i = 0; i < *(_DWORD *)(gameData + 140004); ++i )
       MiniMap_DrawTileCell(v0, i);
     ++v0;
   }
-  JUMPOUT(0x40D410);
+  return;
 }
 // 40D86A: control flows out of bounds to 40D410
-// 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
 // 52334C: using guessed type int dword_52334C;
@@ -37797,7 +37803,7 @@ LABEL_14:
 // 5202E4: using guessed type int gameData;
 
 //----- (00424EC0) --------------------------------------------------------
-signed int  sub_424EC0(int a1, int a2, double a3)
+signed int  UnitStack_StepOneTileInDirection(int a1, int a2, double a3)
 {
   int v5; // esi
   int v6; // edx
@@ -64683,7 +64689,7 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
     case 4u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_4);
-      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = 0;
+      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = BUILDING_PRISONER_ACTION_NONE;
       v26[0] = (int)off_518D50[0];
       v26[1] = (int)off_518D50[1];
       v26[2] = (int)off_518D50[2];
@@ -64820,7 +64826,7 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
       {
         ++v8[447];
         if ( !*(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140051) && v8[447] == 9 )
-          v8[448] = 3;
+          v8[448] = BUILDING_PRISONER_ACTION_PAY;
         BuildingPrisoner_RecalculateRansomValue(v13);
         if ( v8[447] == 10 )
         {
@@ -64838,18 +64844,18 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
         else
         {
           LOBYTE(v6) = v8[448];
-          if ( (unsigned __int8)v6 >= 2u )
+          if ( (unsigned __int8)v6 >= BUILDING_PRISONER_ACTION_TORTURE )
           {
-            if ( (unsigned __int8)v6 <= 2u )
+            if ( (unsigned __int8)v6 <= BUILDING_PRISONER_ACTION_TORTURE )
             {
               LOBYTE(v6) = Prisoner_Torture(a1, v7, (int)v8, v7, a1);
             }
-            else if ( (_BYTE)v6 == 3 )
+            else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_PAY )
             {
               LOBYTE(v6) = Prisoner_Pay(a1, v7, a1, a4);
             }
           }
-          else if ( (_BYTE)v6 == 1 )
+          else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_BEHEAD )
           {
             LOBYTE(v6) = Prisoner_Behead(a1, (int)v8, v7, a1);
           }
@@ -65193,18 +65199,18 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   for ( j = 0; j < 3; ++j )
   {
     v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
-    if ( v6 >= 2 )
+    if ( v6 >= BUILDING_PRISONER_ACTION_TORTURE )
     {
-      if ( v6 <= 2 )
+      if ( v6 <= BUILDING_PRISONER_ACTION_TORTURE )
       {
         *(_DWORD *)((char *)v4 + 61) = v7;
       }
-      else if ( v6 == 3 )
+      else if ( v6 == BUILDING_PRISONER_ACTION_PAY )
       {
         *(_DWORD *)((char *)v4 + 114) = v7;
       }
     }
-    else if ( v6 == 1 )
+    else if ( v6 == BUILDING_PRISONER_ACTION_BEHEAD )
     {
       v4[2] = v7;
     }
@@ -65461,7 +65467,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   while ( v51 == dword_5443F4 );
   if ( dword_518DD0 == 2 )
   {
-    v52 = 1;
+    v52 = BUILDING_PRISONER_ACTION_BEHEAD;
 LABEL_48:
     v53 = dword_5443FC;
     goto LABEL_49;
@@ -65469,60 +65475,60 @@ LABEL_48:
   if ( dword_518E05 == 2 )
   {
     v53 = dword_5443FC;
-    v52 = 2;
+    v52 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else
   {
     if ( dword_518E3A == 2 )
     {
-      v52 = 3;
+      v52 = BUILDING_PRISONER_ACTION_PAY;
       goto LABEL_48;
     }
     v53 = dword_5443FC;
-    v52 = 0;
+    v52 = BUILDING_PRISONER_ACTION_NONE;
   }
 LABEL_49:
   BuildingPrisoner_SetAction(v53, v52, v36);
   if ( dword_518E6F == 2 )
   {
-    v54 = 1;
+    v54 = BUILDING_PRISONER_ACTION_BEHEAD;
     v55 = dword_5443FC;
   }
   else if ( dword_518EA4 == 2 )
   {
     v55 = dword_5443FC;
-    v54 = 2;
+    v54 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else if ( dword_518ED9 == 2 )
   {
-    v54 = 3;
+    v54 = BUILDING_PRISONER_ACTION_PAY;
     v55 = dword_5443FC;
   }
   else
   {
     v55 = dword_5443FC;
-    v54 = 0;
+    v54 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v55, v54, v36);
   if ( dword_518F0E == 2 )
   {
-    v56 = 1;
+    v56 = BUILDING_PRISONER_ACTION_BEHEAD;
     v57 = dword_5443FC;
   }
   else if ( dword_518F43 == 2 )
   {
-    v56 = 2;
+    v56 = BUILDING_PRISONER_ACTION_TORTURE;
     v57 = dword_5443FC;
   }
   else if ( dword_518F78 == 2 )
   {
-    v56 = 3;
+    v56 = BUILDING_PRISONER_ACTION_PAY;
     v57 = dword_5443FC;
   }
   else
   {
     v57 = dword_5443FC;
-    v56 = 0;
+    v56 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v57, v56, dword_518F0E);
   sub_405920(&dword_5443F0);
@@ -67474,8 +67480,8 @@ signed int  Move_CommitIfWithinCost(
   UnitStack_ExecuteQueuedPath(a1, 1, -43 * a1, a3, a4);
   if ( v10 > 0x1F4 || (unsigned int)*(__int16 *)(v6 + gameData + 147180) > 0x28 )
     return 1;
-  if ( sub_454A20(v10) )
-    sub_454AE0(v11, a3, a4);
+  if ( UnitStack_QueuedPathEndsOnCrossingTile(v10) )
+    Road_BuildFromQueuedPathHeading(v11, a3, a4);
   v12 = gameData + 725 * v11;
   if ( v8 == *(__int16 *)(v12 + 147174) && v9 == *(__int16 *)(v12 + 147176) )
   {
@@ -67675,21 +67681,21 @@ signed int  sub_454990(int a1, int a2, char a3, DWORD a4, double a5)
 }
 
 //----- (004549A0) --------------------------------------------------------
-BOOL  sub_4549A0(int a1)
+BOOL  UnitStack_HasNormalCombatUnitsByIndex(int a1)
 {
   return UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * a1) != 0;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004549E0) --------------------------------------------------------
-signed int  sub_4549E0(int a1)
+signed int  UnitStack_GetSquadCountByIndex(int a1)
 {
   return Unit_GetSquadCount(725 * a1 + gameData + 147174);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00454A20) --------------------------------------------------------
-signed int  sub_454A20(int a1)
+signed int  UnitStack_QueuedPathEndsOnCrossingTile(int a1)
 {
   signed int result; // eax
   int v2; // ebx
@@ -67707,7 +67713,7 @@ signed int  sub_454A20(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454AE0) --------------------------------------------------------
-signed int  sub_454AE0(int a1, DWORD a2, double a3)
+signed int  Road_BuildFromQueuedPathHeading(int a1, DWORD a2, double a3)
 {
   int v3; // esi
   int v4; // eax
@@ -67731,27 +67737,28 @@ signed int  sub_454AE0(int a1, DWORD a2, double a3)
   v9 = Facing_DirectionFromDelta8(
          (unsigned __int8)v8 - *(__int16 *)(gameData + v3 + 147174),
          BYTE1(v8) - *(__int16 *)(gameData + v3 + 147176));
-  if ( Map_TileHasOwner(*(__int16 *)(v3 + gameData + 147174), *(__int16 *)(v3 + gameData + 147176)) && !sub_454A20(v10) )
+  if ( Map_TileHasOwner(*(__int16 *)(v3 + gameData + 147174), *(__int16 *)(v3 + gameData + 147176))
+    && !UnitStack_QueuedPathEndsOnCrossingTile(v10) )
   {
     switch ( v9 )
     {
       case 1:
-        v13 = sub_424EC0(v10, 0, a3);
+        v13 = UnitStack_StepOneTileInDirection(v10, 0, a3);
         goto LABEL_10;
       case 3:
-        v13 = sub_424EC0(v10, 4, a3);
+        v13 = UnitStack_StepOneTileInDirection(v10, 4, a3);
 LABEL_10:
         if ( v13 )
           goto LABEL_13;
         v14 = 2;
         break;
       case 5:
-        if ( sub_424EC0(v10, 4, a3) )
+        if ( UnitStack_StepOneTileInDirection(v10, 4, a3) )
           goto LABEL_13;
         v14 = 6;
         break;
       case 7:
-        if ( sub_424EC0(v10, 0, a3) )
+        if ( UnitStack_StepOneTileInDirection(v10, 0, a3) )
           goto LABEL_13;
         v14 = 6;
         break;
@@ -67760,7 +67767,7 @@ LABEL_10:
         break;
     }
 LABEL_12:
-    sub_424EC0(v10, v14, a3);
+    UnitStack_StepOneTileInDirection(v10, v14, a3);
   }
   else
   {
@@ -67780,7 +67787,7 @@ LABEL_12:
           v12 = 4;
           v11 = v10;
 LABEL_8:
-          if ( !sub_424EC0(v11, v12, a3) )
+          if ( !UnitStack_StepOneTileInDirection(v11, v12, a3) )
           {
             v13 = Road_Build(v10, 2, v9, a2, a3);
             goto LABEL_10;
@@ -67788,14 +67795,18 @@ LABEL_8:
         }
         break;
       case 5:
-        if ( !Road_Build(v10, 4, v9, a2, a3) && !sub_424EC0(v10, 4, a3) && !Road_Build(v10, 6, v9, a2, a3) )
+        if ( !Road_Build(v10, 4, v9, a2, a3)
+          && !UnitStack_StepOneTileInDirection(v10, 4, a3)
+          && !Road_Build(v10, 6, v9, a2, a3) )
         {
           v14 = 6;
           goto LABEL_12;
         }
         break;
       case 7:
-        if ( !Road_Build(v10, 0, v9, a2, a3) && !sub_424EC0(v10, 0, a3) && !Road_Build(v10, 6, v9, a2, a3) )
+        if ( !Road_Build(v10, 0, v9, a2, a3)
+          && !UnitStack_StepOneTileInDirection(v10, 0, a3)
+          && !Road_Build(v10, 6, v9, a2, a3) )
         {
           v14 = 6;
           goto LABEL_12;

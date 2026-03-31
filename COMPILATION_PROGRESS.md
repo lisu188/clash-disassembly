@@ -1404,3 +1404,39 @@
   - another fully reconstructible CRT helper pair has been removed from the link blocker band without speculative caller edits
   - the last-error API surface now remains contained inside the SDL-target platform shim
   - the wider unresolved frontier is narrower and more concentrated on startup, `_wcpp_*`, allocator wrappers, and `JUMPOUT` cleanup
+
+## Batch 99 - Runtime Cleanup Node And Bootstrap TLS Wave
+- Repairs:
+  - added the asm-backed `sub_473ED5` quarantine wrapper in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `clash95.asm` proves `sub_473ED5` is only a thunk into `sub_48703D`
+    - the live target body pulls the bootstrap/current thread-data root through `off_51A568` and pushes the caller node onto the global cleanup head at `dword_51A648`
+    - the wrapper keeps that linked-list mutation while intentionally avoiding the still-unrecovered Watcom `__lock` method surface
+  - added the asm-backed `sub_485374` bridge in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `clash95.asm` shows the helper as `mov eax, lpTlsValue ; retn`
+    - `off_51A568` points here during bootstrap before the thread/file-handle hook initializer swaps in `CRT_GetOrCreateThreadDataPreserveLastError`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch99.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch99`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in Watcom/CRT bootstrap recovery and preserved the existing SDL-target seam unchanged
+- Current leading blockers:
+  - the broader executable/link surface is now led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+    - deeper Win32/process/env helpers and unresolved data tables
+  - `sub_473ED5` and `sub_485374` are removed from the active unresolved-link band by this batch
+- Key evidence used:
+  - `clash95.asm` at `0x473ED5` is a one-jump thunk into `sub_48703D`
+  - the `sub_48703D` asm body calls `off_51A568`, then pushes the caller node into the `dword_51A648` singly-linked cleanup list
+  - `clash95.asm` at `0x485374` is the minimal bootstrap getter `mov eax, lpTlsValue ; retn`
+  - `CRT_InitializeThreadAndFileHandleHooks` in both `clash95.c` and `clash95.asm` later rebinds `off_51A568` to `CRT_GetOrCreateThreadDataPreserveLastError`, confirming the bootstrap-only role of `sub_485374`
+- Net effect:
+  - the static-library/object baseline remains intact
+  - the full link probe no longer trips over the cleanup-node thunk or the bootstrap TLS getter
+  - the remaining frontier is more cleanly concentrated on startup ownership, `_wcpp_*`, allocator/free wrappers, and `JUMPOUT`
