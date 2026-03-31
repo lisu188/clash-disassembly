@@ -1044,3 +1044,238 @@
 - Net effect:
 - the build now compiles a real SDL-target platform runtime translation unit instead of relying on declarations-only shims
 - the input backend is represented in live code as one coherent recovered state block, which reduces future risk when replacing DirectInput polling with SDL input events
+
+## Batch 92 - Castle Garrison State And Tile Highlight Recovery Wave
+- Repairs:
+  - repaired [Building_CreateSpecialPersonageGarrisonUnit](/home/andrz/git/clash-disassembly/clash95.c) with the asm-backed 12-slot garrison scan, the fallback leave-mask copy from `0x518D5C`, the normal `UnitSlot_InitFromType` call, and the final resident-special slot-flag write (`|= 3`)
+  - replaced the decompiler-fused tile-highlight arrays with explicit [g_TileHighlightSlots](/home/andrz/git/clash-disassembly/clash95.c) `{tile_x, tile_y}` records and fixed [UI_DrawTileHighlightOverlay](/home/andrz/git/clash-disassembly/clash95.c) to center the overlay sprite on both axes inside the `64 x 64` tile rect
+  - aligned the live castle-production globals with the already recovered state model:
+    - `dword_532220` -> `g_CastleProductionSelectedAvailableUnitIndex`
+    - `dword_5322D0` -> `g_CastleProductionSelectedUnitSpriteSet`
+  - aligned the live building-garrison globals with their actual ownership:
+    - `dword_532144` -> `g_BuildingGarrisonDialogUiSpriteSet`
+    - `dword_532154` -> `g_BuildingGarrisonDialogResourceHandle`
+  - renamed [BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets](/home/andrz/git/clash-disassembly/clash95.c) and [UI_GetGridIndexFromMouse](/home/andrz/git/clash-disassembly/clash95.c) so their definitions match the already recovered call-site semantics
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch92.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch92`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside gameplay/UI state recovery while preserving the existing SDL seam
+- Current leading blockers:
+  - unchanged at the broader project-link layer: missing `main`, `_wcpp_*`, allocator/runtime wrappers (`j_Mem_Alloc`, `j__nfree_`, `j_j__nfree_`, `memset_`, `nmalloc_`, `nrealloc_`, `memmove_`, `memcpy_`, `wcslen_`, `wcstombs_`), and remaining `JUMPOUT` scars still dominate the first unresolved wave
+  - the direct link probe also still surfaces deeper parser/runtime and startup ownership gaps after that first blocker band, so a faithful executable harness remains a later reconstruction target rather than a build-system omission
+- Key evidence used:
+  - asm at `0x44F1E0` shows `Building_CreateSpecialPersonageGarrisonUnit` scanning `building + 18 + 31 * slot`, reusing the fallback leave-mask block at `0x518D5C` when full, then calling `UnitSlot_InitFromType` and setting the slot flag byte at `building + 30 + 31 * slot`
+  - asm at `0x419000` proves the tile-highlight storage is eight contiguous 8-byte `{tile_x, tile_y}` records and that the overlay sprite is centered on both X and Y before the draw call
+  - the castle-production and garrison-dialog state already existed in [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json); this batch brought the live C names into line with that recovered model instead of inventing a new one
+- Net effect:
+  - the castle/garrison UI cluster now reads closer to the recovered gameplay model already recorded in the artifacts
+  - the tile-highlight path is no longer split across decompiler-illusion pseudo-arrays
+  - the special-personage queen/garrison path has one fewer bogus local-variable scar, which also strengthens the existing unit-taxonomy evidence for the `SpecialPersonageCategory`
+
+## Batch 93 - Battle Interaction, Castle Actions, And SDL Utility Seam Wave
+- Repairs:
+  - renamed the unit-selection helper pair in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_412B20` -> `UnitStackSelection_BuildSelectedSlotIndexList`
+    - `sub_412B90` -> `UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck`
+  - renamed the central battle click handler:
+    - `sub_42CB50` -> `UnitBattle_HandleBattlefieldInteraction`
+  - renamed the remaining high-confidence castle production action family from the live action table:
+    - `sub_435280` -> `CastleProduction_DrawProductionStatus`
+    - `sub_435640` -> `CastleProduction_SelectPreviousAvailableUnit`
+    - `sub_435680` -> `CastleProduction_SelectNextAvailableUnit`
+    - `sub_4356C0` -> `CastleProduction_HandleBuyLicenceAction`
+    - `sub_435770` -> `CastleProduction_HandleRemoveLicenceAction`
+    - `sub_4357E0` -> `CastleProduction_HandleProduceAction`
+    - `sub_435830` -> `CastleProduction_HandleStopProductionAction`
+    - `sub_435860` -> `CastleProduction_HandleInfoAction`
+  - extended [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) with the next low-risk SDL-side Win32 utility seam:
+    - `GetDeviceCaps`
+    - `GetPixel`
+    - `SetPixel`
+    - `SetRect`
+    - `EqualRect`
+    - `IntersectRect`
+    - `IsRectEmpty`
+  - updated the unit artifacts to reflect the stronger `SpecialPersonageCategory` evidence and to rename unit metadata byte `+15` from the older `visual_class_index` wording to `footprint_class_index`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch93.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch93.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch93.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch93.json`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch93`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetDeviceCaps` -> SDL-target utility seam returning conservative pixel-format caps for the current placeholder surface model
+  - `GetPixel` / `SetPixel` -> SDL-target placeholder key-pixel ownership on the local `SDL_Surface` shim
+  - `SetRect` / `EqualRect` / `IntersectRect` / `IsRectEmpty` -> SDL-target rectangle utilities behind the existing platform seam
+- Current leading blockers:
+  - the broader executable surface is still dominated by the same startup/runtime band exposed by the direct link probe:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` and related allocator/string wrappers
+    - residual `JUMPOUT` control-flow scars
+  - the new SDL utility seam removed the rect/device-cap/pixel helper cluster from the first unresolved platform-facing wave; `nm /tmp/platform_sdl_runtime_batch93.o` now exports those wrappers locally
+- Key evidence used:
+  - asm around `0x412B20` and `0x412B90` proves the selection-mask helper emits slot indices and the strength wrapper only adds a special-personage presence flag before calling `sub_41C100`
+  - asm around `0x42CB50` matches the battle interaction fanout between info, movement, ranged shots, melee, wall attacks, and friendly reselection
+  - the castle production action-table records at `0x515150+` carry the live localized labels `Buy licence`, `Remove licence`, `Produce`, `Stop`, and `Info` for the corresponding `0x4356xx` / `0x4358xx` handlers
+  - the updated unit artifacts are backed by the existing `UnitBattle_GetFootprintClass` / `Unit_GetClassIndex` callers plus the newly reviewed special-personage strength/fatigue/morale paths
+- Net effect:
+  - the castle production modal loop now reads mostly in action-table semantics instead of raw `sub_*` callbacks
+  - one more central battle interaction helper is human-readable
+  - the SDL seam owns another low-risk Win32 helper cluster
+  - the unit taxonomy/stat artifacts gained additional evidence for special personages and the per-type footprint class
+
+## Batch 94 - Battle Dialog And Building Transfer State Wave
+- Repairs:
+  - renamed the battle dialog / tactical loop latch helpers in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_42A990` -> `BuildingEconomyDialog_SetExitSignal`
+    - `sub_42D6F0` -> `UnitBattle_RequestActionLoopExit`
+    - `sub_42DAB0` -> `UnitBattleDialog_SelectAffirmativeResponse`
+    - `sub_42DAD0` -> `UnitBattleDialog_SelectNegativeResponse`
+  - renamed the temporary battle fortification / order-bit override helpers:
+    - `sub_42E6F0` -> `UnitBattle_TemporarilyClearGateBlocker`
+    - `sub_42E770` -> `UnitBattle_RestoreGateBlocker`
+    - `sub_42E7C0` -> `UnitBattle_OverrideControllerOrderBits`
+    - `sub_42E860` -> `UnitBattle_RestoreControllerOrderBits`
+  - renamed the remaining building-transfer target-list UI cluster:
+    - `sub_436610` -> `BuildingTransferTargetList_SetDrawOrigin`
+    - `sub_436620` -> `BuildingTransferTargetList_Draw`
+    - `sub_4368F0` -> `BuildingTransferTargetList_SelectPrevious`
+    - `sub_436930` -> `BuildingTransferTargetList_SelectNext`
+    - `sub_436970` -> `BuildingTransferTargetList_Rebuild`
+    - `sub_436A30` -> `BuildingTransferTargetList_HandleClick`
+    - `sub_436AF0` -> `BuildingTransferTargetList_FreeSpriteSet`
+  - renamed the shared state latches and selector-view globals that those helpers actually own:
+    - `dword_532068` -> `g_UnitBattleActionLoopExitRequested`
+    - `dword_532080` -> `g_UnitBattlePromptDialogResult`
+    - `dword_532210` -> `g_CastleProductionExitSignal`
+    - `dword_532428` -> `g_BuildingTransferTargetListSpriteSet`
+    - `dword_53242C` -> `g_BuildingTransferTargetListDrawX`
+    - `dword_532430` -> `g_BuildingTransferTargetListDrawY`
+  - extended [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) with:
+    - `BuildingTransferTargetListViewState`
+    - the recovered `g_CastleProductionExitSignal` field inside `CastleProductionPanelState`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch94c.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch94.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch94.json`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch94`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside gameplay/UI semantic recovery and preserved the existing SDL platform seam unchanged
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+  - the direct link probe still shows the wrapper/runtime band first; the newly renamed battle and transfer UI state clusters are no longer part of the unresolved frontier
+- Key evidence used:
+  - asm around `0x42D6F0`, `0x42DAB0`, and `0x42DAD0` proves the battle UI callbacks write concrete latch values into the shared battle action-loop / prompt-dialog result slots
+  - the paired `0x42E6F0` / `0x42E770` fortification-byte save/restore helpers and the paired `0x42E7C0` / `0x42E860` order-bit override helpers are exercised by the battle setup / teardown path around `Battle_RunTacticalCombat`
+  - `BuildingEconomyDialog_Run` already seeds the transfer-target list, list draw origin, and cached sprite set together, while `BuildingTransferTargetList_Draw`, `SelectPrevious`, `SelectNext`, and `HandleClick` all consume that same shared view state
+  - `Castle_ShowUnitProductionPanel` clears one exit latch and spins until it changes, and `CastleProduction_SetExitSignal` is the matching callback-side writer for that modal loop
+- Net effect:
+  - the battle modal-flow helpers now read as explicit dialog/loop state instead of anonymous `sub_*` callbacks
+  - the building transfer selector is now described as one coherent UI list plus view-state model rather than scattered globals
+  - the castle production panel state model now includes its exit latch, which matches the already recovered modal-loop behavior
+
+## Batch 95 - Battle Idle Animation And Slot Flag Consistency Wave
+- Repairs:
+  - renamed the remaining tactical idle-animation updater in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_431CC0` -> `UnitBattle_UpdateIdleAnimatedUnits`
+  - extended [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) with the now-confirmed flag and timing fields:
+    - `UnitSlotRecord.state_flags` now records bit `0x1` as the ready flag alongside the already recovered spent-turn / refusal / plague bits
+    - `BattleUnitEntry` now includes `stance_bits`, `anim_frame_and_effect_bits`, `last_animation_tick`, and `battle_state_bits`
+  - updated the unit taxonomy/stat artifacts to remove the stale `UnitSlotRecord +13 bit 0x8` ambiguity and to record the full recovered `state_flags` byte semantics in [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json)
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch95.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch95.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch95`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch95.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch95.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside tactical-animation and unit-runtime semantic recovery
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+- Key evidence used:
+  - `UnitStack_HasReadyUnits`, `UnitStack_SetReadyFlags`, and `UnitStack_ClearReadyFlags` resolve bit `0x1` of `UnitSlotRecord.state_flags` as the per-slot ready flag
+  - `UnitStack_SetSpentTurnFlag`, `UnitStack_ClearSpentTurnFlag`, `UnitSlot_CanRecoverFatigue`, `Unit_CheckLowMorale`, `UnitStack_HasLowMoraleUnit`, and the already recovered plague helpers complete the rest of the same flag byte
+  - `UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of `BattleUnitEntry +17` behind the same `byte_512572/byte_512573` timing tables used by the world idle-animation updater and refreshes dword `+18` as the matching animation timestamp gate
+  - `UnitBattle_Defence` sets the low bit at battle-entry byte `+22`, and `UnitStats_CalcEffectiveRangedAttack` consumes the same bit as a prepared-defence ranged bonus
+- Net effect:
+  - the tactical idle updater is now named consistently with the world-map idle-animation family
+  - the recovered runtime slot flags now match the actual ready/spent/refusal/plague lifecycle instead of leaving a stale plague ambiguity in the unit report
+  - the tactical `BattleUnitEntry` layout now captures the same animation/state bytes that the battle loop already uses
+
+## Batch 95 - Port Reinforcement Semantics And Metadata Correction Wave
+- Repairs:
+  - renamed the port reinforcement collector in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `Port_GetSupply` -> `Port_CollectReinforcementShipment`
+  - renamed the metadata-byte lookup helpers that return the raw sprite Y lift:
+    - `Unit_GetClassIndex` -> `Unit_GetSpriteVerticalOffsetPx`
+    - `UnitBattle_GetFootprintClass` -> `UnitBattle_GetSpriteVerticalOffsetPx`
+  - rebound one previously recovered helper definition to its live prototype/callers:
+    - `sub_4127A0` -> `UnitSlot_AdjustFatigueByPredicate`
+  - added the asm-backed `j_Mem_Alloc` forwarding thunk in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c), routing the collapsed thunk at `0x4730FB` into the recovered `Mem_Alloc` body at `0x461C00`
+  - updated [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) to rename:
+    - `PortRuntimeState.shoreline_variant_flag` -> `PortRuntimeState.supply_arrival_visual_flag`
+    - `UnitTypeMetadataRecord[15].footprint_class_index` -> `UnitTypeMetadataRecord[15].sprite_vertical_offset_px`
+    - `UnitTypeMetadataRecord[30..37].terrain_move_costs[8]` -> `UnitTypeMetadataRecord[30..37].world_surface_move_costs[8]`
+  - updated the unit-taxonomy/stat artifacts to reflect:
+    - stronger battle-panel corroboration for `morale` and packed `stance_bits`
+    - port-based exclusion evidence for cargo-only and special-personage-only stacks
+    - clearer separation between the `Defence power` numeric row and the packed-state `Status` row
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch95.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch95.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch95`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch95.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch95.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in gameplay/runtime semantics and preserved the existing SDL seam unchanged
+- Current leading blockers:
+  - the broader executable/link surface is still led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_*` and deeper thread/runtime helpers
+    - residual `JUMPOUT` control-flow scars
+  - `j_Mem_Alloc` and the stray `UnitSlot_AdjustFatigueByPredicate`/`sub_4127A0` definition mismatch are removed from that first avoidable unresolved tier by this batch
+- Key evidence used:
+  - `clash95.map` binds `j_Mem_Alloc` to `0x4730FB`, and `clash95.asm` shows that address as a collapsed thunk targeting the recovered `Mem_Alloc` body at `0x461C00`
+  - the port shipment collector at `0x443550` scans the shoreline spawn ring, seeds the fixed reinforcement roster, clears the ready latch, and reschedules the next arrival
+  - `Port_NewTurn`, `Port_BuildShorePieces`, and the shipment collector share the six-dword port runtime block, separating the logical ready flag from the shoreline visual latch
+  - `off_514DC8`, `UnitBattle_UpdateActionTooltip`, and `UnitBattle_DrawSelectedUnitPanel` now clearly separate row 4 (`Defence power`) from row 5 (`Status`)
+  - world-map draw, battle draw, redraw invalidation helpers, and raw `clash95.exe` metadata bytes corroborate metadata byte `+15` as a sprite vertical offset in pixels rather than a reusable class id
+  - `Map_InitTerrainMoveTableOffsets` plus the movement readers corroborate metadata bytes `+30..+37` as an eight-lane normalized world-surface cost profile
+- Net effect:
+  - the port subsystem now reads in reinforcement-shipment terms instead of generic supply getter terms
+  - one low-risk runtime thunk is removed from the first unresolved linker band
+  - the unit metadata/stat artifacts now describe byte `+15` and bytes `+30..+37` in terms that match the observed draw/pathing behavior instead of the older decompiler-shaped interpretation

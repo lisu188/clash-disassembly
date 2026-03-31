@@ -38,6 +38,7 @@ struct SDL_Surface {
   int width;
   int height;
   const char *resource_name;
+  COLORREF key_pixel;
 };
 
 struct SDL_Palette {
@@ -208,6 +209,95 @@ HDC __stdcall GetDC(HWND hWnd)
 {
   (void)hWnd;
   return &g_platform_default_surface;
+}
+
+int __stdcall GetDeviceCaps(HDC hdc, int index)
+{
+  (void)hdc;
+  switch ( index )
+  {
+    case 12:
+      return 32;
+    case 14:
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+COLORREF __stdcall GetPixel(HDC hdc, int x, int y)
+{
+  struct SDL_Surface *surface;
+
+  (void)x;
+  (void)y;
+  surface = (struct SDL_Surface *)hdc;
+  if ( !surface )
+    return 0;
+  return surface->key_pixel;
+}
+
+COLORREF __stdcall SetPixel(HDC hdc, int x, int y, COLORREF color)
+{
+  struct SDL_Surface *surface;
+
+  (void)x;
+  (void)y;
+  surface = (struct SDL_Surface *)hdc;
+  if ( !surface )
+    return 0;
+  surface->key_pixel = color;
+  return color;
+}
+
+BOOL __stdcall SetRect(LPRECT lprc, int xLeft, int yTop, int xRight, int yBottom)
+{
+  if ( !lprc )
+    return 0;
+  lprc->left = xLeft;
+  lprc->top = yTop;
+  lprc->right = xRight;
+  lprc->bottom = yBottom;
+  return 1;
+}
+
+BOOL __stdcall EqualRect(const RECT *lprc1, const RECT *lprc2)
+{
+  if ( !lprc1 || !lprc2 )
+    return 0;
+  return lprc1->left == lprc2->left
+      && lprc1->top == lprc2->top
+      && lprc1->right == lprc2->right
+      && lprc1->bottom == lprc2->bottom;
+}
+
+BOOL __stdcall IsRectEmpty(const RECT *lprc)
+{
+  if ( !lprc )
+    return 1;
+  return lprc->left >= lprc->right || lprc->top >= lprc->bottom;
+}
+
+BOOL __stdcall IntersectRect(LPRECT lprcDst, const RECT *lprcSrc1, const RECT *lprcSrc2)
+{
+  LONG left;
+  LONG top;
+  LONG right;
+  LONG bottom;
+
+  if ( !lprcDst || !lprcSrc1 || !lprcSrc2 )
+    return 0;
+  left = lprcSrc1->left > lprcSrc2->left ? lprcSrc1->left : lprcSrc2->left;
+  top = lprcSrc1->top > lprcSrc2->top ? lprcSrc1->top : lprcSrc2->top;
+  right = lprcSrc1->right < lprcSrc2->right ? lprcSrc1->right : lprcSrc2->right;
+  bottom = lprcSrc1->bottom < lprcSrc2->bottom ? lprcSrc1->bottom : lprcSrc2->bottom;
+  if ( left >= right || top >= bottom )
+  {
+    SetRect(lprcDst, 0, 0, 0, 0);
+    return 0;
+  }
+  SetRect(lprcDst, left, top, right, bottom);
+  return 1;
 }
 
 HWND __stdcall GetForegroundWindow()

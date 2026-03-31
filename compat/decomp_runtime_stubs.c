@@ -4,6 +4,8 @@
 #include <wchar.h>
 #include <wctype.h>
 
+int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
+
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
  * asm-backed reconstruction. These are outside the user-priority gameplay
@@ -23,6 +25,16 @@ int __thiscall nfree_(_DWORD a1)
   if ( a1 && a1 != (_DWORD)-1 )
     free((void *)(uintptr_t)a1);
   return 0;
+}
+
+__int64 __thiscall j_Mem_Alloc(_DWORD a1)
+{
+  /*
+   * clash95.asm marks 0x4730FB as a collapsed 5-byte thunk. The map binds
+   * that thunk to j_Mem_Alloc, and the jump target is the recovered
+   * Mem_Alloc body at 0x461C00.
+   */
+  return (unsigned int)Mem_Alloc((int)a1, 0, 0, 0);
 }
 
 int __fastcall strcmp_(_DWORD a1, _DWORD a2)
