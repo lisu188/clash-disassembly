@@ -1224,6 +1224,50 @@
 - `BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites` is medium confidence because the behavior is clear but the exact original art-pipeline wording could still have been narrower than `DetailSprites`.
 - `g_BuildingGarrisonDialogUseChrTheme` is intentionally concrete about the observed `castle.chr` branch. If later asset research proves the flag is a broader religion/culture enum, the global should be widened then rather than guessed now.
 
+## Batch 63 – Pathing Helper And Movement Profile Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_413F50` | `UnitStack_GetTileMoveCostFromMergedProfileOrZero` | Function | Movement / Pathing | High | The helper is called only from `Unit_MoveTrack` after `UnitStack_BuildMergedTerrainMoveProfile`, consumes the premerged byte slice instead of rebuilding it, and returns the same blocked-or-cost result shape as `UnitStack_GetTileMoveCostOrZero`. | c, asm | no |
+| `sub_415D80` | `Math_SinDegreesQ16` | Helper | Math / Animation | High | The function normalizes signed degree inputs into `0..359`, indexes the 360-entry trig table at `dword_513434`, and callers scale the result with `>> 16`, which matches a fixed-point sine helper rather than a gameplay-specific unknown. | c | no |
+| `sub_415E40` | `Math_CeilSqrt` | Helper | Math / Distance | High | The Newton-style integer routine is fed almost exclusively with `dx*dx + dy*dy` distance-squared terms and returns the ceiling of the square root, which is then compared against reveal, range, and proximity radii. | c | no |
+| `UnitTypeMetadataRecord + 29..37` and stack-local profile buffers | `MergedTerrainMoveProfile` | Recovered Struct | Movement / Pathing | High | `UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` from every occupied slot into a temporary buffer, and `UnitStack_GetTileMoveCostFromMergedProfileOrZero` consumes that exact slice as one pathing record covering road and terrain movement costs. | c | no |
+
+## Deferred / Ambiguous
+- `Building_GenerateApproachTrack` and `Building_GenerateNearApproachTrack` match the asm debug strings `Unit_MoveTrackToBuilding` and `Unit_MoveTrackNearBuilding`, but this batch left the existing names intact because they were already descriptive and not compile-blocking.
+
+## Batch 64 – MiniMap Action And Player UI State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_40D430` | `MiniMap_DestroySurface` | Function | Map / MiniMap | High | The body is a thin destructor for the minimap backing surface: it checks `g_MiniMapSurface` and forwards to the surface vtable destroy slot when present. The declaration was already recovered; this wave aligned the live definition and callsites with it. | c, asm | no |
+| `sub_40DD30` | `MiniMap_ToggleVisibility` | Function | Map / MiniMap | High | The helper only XORs the per-player dword at `PlayerRuntimeState + 23` and triggers a redraw, matching the map-screen hotkey/menu behavior for toggling the minimap on and off. | c, asm | no |
+| `sub_40DDE0` | `MiniMap_ShowAllLayers` | Function | Map / MiniMap | High | The asm action table binds this callback to `Wszystko / All / Alles`, and the implementation sets the minimap-visible flag plus draw mask `7`, enabling terrain, units, and buildings together. | c, asm | no |
+| `sub_40DE20` | `MiniMap_ShowUnitsOnly` | Function | Map / MiniMap | High | The asm action table binds this callback to `Jednostki / Units / Einheiten`, and the implementation sets the minimap-visible flag plus draw mask `2`, which is the unit-only overlay path used by `MiniMap_DrawTileCell`. | c, asm | no |
+| `sub_40DE60` | `MiniMap_ShowBuildingsOnly` | Function | Map / MiniMap | High | The asm action table binds this callback to `Budynki / Buildings / Gebäude`, and the implementation sets the minimap-visible flag plus draw mask `4`, matching the building-owner overlay branch in `MiniMap_DrawTileCell`. | c, asm | no |
+| `sub_40DEA0` | `MiniMap_Hide` | Function | Map / MiniMap | High | The asm action table binds this callback to `Nic / None / Keine`, and the body only clears the same per-player minimap-visible flag before triggering a redraw. | c, asm | no |
+| `PlayerRuntimeState + 23` | `PlayerRuntimeState.minimap_visible_flag` | Recovered Struct Field | Map / MiniMap | High | The minimap show/hide/toggle actions mutate this dword, and the minimap blit, hit-test, and viewport-drag helpers all early-out on the same viewed-player field. Scenario setup also seeds player 0 with the flag enabled. | c, asm | no |
+| `PLAYER_MINIMAP_VISIBLE_OFFSET / PLAYER_MINIMAP_VISIBLE` | `PLAYER_MINIMAP_VISIBLE_OFFSET / PLAYER_MINIMAP_VISIBLE` | Helper | Map / MiniMap | High | Promoting the recovered `PlayerRuntimeState + 23` field to a shared macro removes repeated raw `+140047` arithmetic and ties the minimap UI code back to the central game-state model without changing behavior. | c | no |
+
+## Deferred / Ambiguous
+- `sub_40D800` remains deferred. The asm confirms it gates part of the minimap screen-space intersection path, but the current C still only exposes a partial rectangle predicate, so freezing a narrower public name would overstate what is proven.
+
+## Batch 64 – World Map Unit Render Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_415F20` | `WorldMap_DrawUnitStackWithOverlays` | Function | World Map / Rendering | High | The helper is called from the world-map tile renderer for the main tile and neighboring overhang tiles, selects the unit sprite, applies the attention-flash alpha pulse, and draws the squad-count, low-morale, hidden, and debug-turn overlays for that stack. | c, asm | no |
+
+## Batch 63 – Battle Wall And Strategic Host Sync Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4283D0` | `UnitBattle_GetCorpseSpriteIndex` | Function | Unit Battle / Animation | Medium | The helper returns `byte_5125B6[88 * type] + ((facing + 4) % 8)`, and callers only store that value into the battle corpse overlay bytes after a unit dies. This batch syncs the previously logged recovery into live `clash95.c`. | c | yes |
+| `sub_428880` | `UnitBattle_PlayShotAnimation` | Function | Unit Battle / Ranged Animation | High | The preserved `_ShotAnim(%d,%d,%d,%d,%d,%d)` trace, projectile sprite loading, and shared unit/wall hit handoff already established the role; this batch applies that high-confidence name in-source. | c, asm, map | yes |
+| `sub_4298E0` | `UnitBattle_AttackWall` | Function | Unit Battle / Siege Combat | High | The asm/exe debug string `UnitBattle_AttackWall(%d,%d,%d)` plus the body's near-wall pathing, 5-AP spend, siege-damage application, and wall redraw/audio path prove this is the melee wall-attack helper. | c, asm, exe | yes |
+| `sub_452390` | `Rules_RegisterStrategicActionHostFunctions` | Function | Rules / Host Registration | Medium | The body registers only strategic-map action/query host callbacks: temple and treasure interactions, port supply, multiple path predicates, march/attack actions, ford checks, road/trap building, and `unit_canmove`. That makes it the strategic action/query registration entrypoint rather than a generic helper. | c, asm | yes |
+| `BattleRuntimeState + 3134` | `BattleRuntimeState.wall_section_hitpoints[20][20]` | Recovered Struct Field | Unit Battle / Siege Combat | High | `UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI loops all index `battle_state + 3134 + 20 * column + row` as a mutable wall-durability byte plane that drops to zero when a section collapses. | c | yes |
+
+## Deferred / Ambiguous
+- `Rules_RegisterStrategicActionHostFunctions` is medium confidence because the registration cluster clearly covers strategic-map action and reachability hosts, but the original internal subsystem label may have been narrower than “StrategicAction”.
+- `UnitBattle_GetCorpseSpriteIndex` remains medium confidence. The corpse-overlay role is solid, but the exact original art-pipeline wording behind the sprite-index table is still slightly inferential.
+
 ## Batch 65 – World Map HUD And Menu Semantics Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
@@ -1263,7 +1307,6 @@
 ## Batch 69 – Battle Viewport And Exchange Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
-<<<<<<< HEAD
 | `sub_411D70` | `Map_UpdateIdleAnimatedUnits` | Function | World Map / Units | High | The helper scans all 500 world stacks, advances the idle animation frame when the per-type animation timer elapses, redraws the affected stack footprint, then updates the world-map attention-flash overlays. | c, asm | yes: Sartre |
 | `sub_411E60` | `Unit_AttemptNeighborMove` | Function | World Map / Movement | High | The prototype had already been recovered, and the live definition now matches its behavior: it checks whether the selected stack has at least 3 AP and whether any of the eight adjacent tiles yields an affordable `Unit_MoveTrack`, freeing the temporary path before returning. | c, asm | yes: Sartre |
 | `sub_426FC0` | `UnitBattle_CalcMeleeExchange` | Function | Battle / Combat | High | The helper reads both tactical slots, seeds both out-parameters from the current health bytes, applies the crowding-scaled combat effectiveness math for both sides, optionally scales one side for the alternate exchange mode, and clamps the resulting health losses to `0..100`. | c, asm | yes: Sartre |
@@ -1354,32 +1397,6 @@
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
 | `UI_SetCurrentPlayer` | `UI_LoadCurrentPlayerInfoSpriteSet` | Function | UI / Player Context | High | The body only frees the existing `info%d.s32` sprite handle, formats the next `info%d.s32` filename, loads that sprite set, and stores the new handle. It does not mutate gameplay player state. | c, asm | yes: Meitner |
-=======
-| `sub_415F20` | `WorldMap_DrawUnitStackWithOverlays` | Function | World Map / Rendering | High | The helper is called from the world-map tile renderer for the main tile and neighboring overhang tiles, selects the unit sprite, applies the attention-flash alpha pulse, and draws the squad-count, low-morale, hidden, and debug-turn overlays for that stack. | c, asm | no |
->>>>>>> 3ed5d96 (Bootstrap clash95 compilation surface)
-
-## Batch 67 – World Map HUD And Menu Semantics Wave
-| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
-|---|---|---|---|---|---|---|---|
-| `sub_40AD40` | `WorldMap_RenderHook` | Function | World Map / Rendering | Medium | `PlayGame` installs this helper as `g_RenderHook`, and the body redraws the main-map chrome, refreshes the shared resource surface, and captures the tooltip backdrop for the strategic HUD. | c, asm | no |
-| `sub_40ADF0` | `WorldMap_RedrawFrame` | Function | World Map / Rendering | High | The body pumps DirectDraw, redraws the strategic terrain/unit/building layers plus overlays, and is the common redraw path used by turn flow, movement, and multiple UI handlers. | c, asm | no |
-| `sub_40AED0` | `WorldMap_LoadResources` | Function | World Map / Resource Loading | High | Loads the `frame`, `marks`, `step`, `fog`, `flag`, `whirl`, and `turakomp` sprite sets, allocates the 640x480 world-map surface, loads the `mainmap` palette/data, and initializes the shared menu sprite set. | c, asm | no |
-| `sub_40B020` | `WorldMap_UnloadResources` | Function | World Map / Resource Loading | High | Frees the same world-map sprite/surface handles, empties cached samples, and releases the shared menu sprite set on strategic-map teardown. | c, asm | no |
-| `sub_40B0A0` | `WorldMap_RunHumanTurnLoop` | Function | World Map / Turn Flow | High | This is the human-controlled strategic turn loop: it reads input, redraws the world map, supports minimap dragging and map menus, handles unit hotkeys, and exits on end-turn/quit conditions. | c, asm | no |
-| `sub_40B640` | `WorldMap_Initialize` | Function | World Map / Initialization | Medium | Startup wrapper that loads the world-map resource family, rebuilds terrain move offsets and runtime caches, then finalizes strategic-map setup before control returns to `PlayGame`. | c, asm | no |
-| `sub_40DD30` | `MiniMap_ToggleVisibility` | Function | Map / MiniMap | High | Single-purpose helper that flips the viewed player's minimap-visibility dword and triggers a redraw. | c | no |
-| `sub_40DDE0` | `MiniMap_ShowAllLayers` | Function | Map / MiniMap | High | Enables the minimap, sets draw mask `7`, and redraws; the mask bits already map to terrain, units, and buildings in `MiniMap_DrawTileCell`. | c | no |
-| `sub_40DE20` | `MiniMap_ShowUnitsOnly` | Function | Map / MiniMap | High | Enables the minimap, sets draw mask `2`, and redraws, leaving only the unit-owner overlay active. | c | no |
-| `sub_40DE60` | `MiniMap_ShowBuildingsOnly` | Function | Map / MiniMap | High | Enables the minimap, sets draw mask `4`, and redraws, leaving only the building-owner overlay active. | c | no |
-| `sub_40DEA0` | `MiniMap_Hide` | Function | Map / MiniMap | High | Clears the same per-player minimap-visibility dword and triggers a redraw. | c | no |
-| `sub_40DED0` | `UI_MenuHitTestEntry` | Function | UI / Menus | High | Scans the vertically stacked menu-entry rows, computes centered text bounds from the loaded sprite/font metrics, and returns the hovered entry index or `-1`. | c | no |
-| `sub_40DFF0` | `UI_RunMenu` | Function | UI / Menus | High | Builds a temporary menu surface, drives hover/selection updates, supports nested submenus and tooltip text, and returns the selected callback/result. | c | no |
-| `sub_40ED30` | `UI_MenuEntry_Enable` | Function | UI / Menus | High | Sets the per-entry availability flag at `+26`; callers use it when actions become selectable. | c | no |
-| `sub_40ED50` | `UI_MenuEntry_Disable` | Function | UI / Menus | High | Clears the same per-entry availability flag; callers use it to gray out unavailable actions such as closed gates or missing upgrades. | c | no |
-| `PlayerRuntimeState + 23` | `PlayerRuntimeState.minimap_visible_flag` | Recovered Struct Field | gameData / Player Runtime | High | The minimap show/hide/toggle helpers mutate this dword, and minimap blits, hit-tests, and viewport dragging all early-out on the same field for the viewed player. | c | no |
-| strategic-map raw player-runtime offsets `+140024`, `+140039`, `+140043` in active-turn UI flow | `PLAYER_IS_ACTIVE`, `PLAYER_CAMERA_LEFT`, `PLAYER_CAMERA_TOP`, `PLAYER_DISPLAY_NAME_OFFSET` | Compile Fix | gameData / Player Runtime | High | The touched world-map turn helpers were mixing recovered `PLAYER_*` macros with raw absolute offsets into the same player block. Rebinding the obvious cases to the existing macros removes a real decompiler artifact without inventing new semantics. | c | no |
-
-<<<<<<< HEAD
 ## Batch 79 – Platform Activation State Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
@@ -1412,8 +1429,3 @@
 | `unk_51CA18`, `unk_51CA28`, `unk_51CA38` | `g_InputBackendMouseDeviceGuid`, `g_InputBackendKeyboardDeviceGuid`, `g_InputBackendJoystickInterfaceIid` | Global | Platform / Input Backend | Medium | The first two values are passed to the DirectInput `CreateDevice` path for the mouse and keyboard slots, while the third is used in the post-enumeration interface-upgrade path for the auxiliary device slot. The exact COM type of the third GUID is still only partially evidenced, so the IID wording stays conservative. | c, asm | no |
 | `dword_4E80F0`, `dword_4E9110`, `dword_4E93F0` | `g_InputBackendMouseDataFormat`, `g_InputBackendKeyboardDataFormat`, `g_InputBackendJoystickDataFormat` | Table | Platform / Input Backend | High | These three 5-dword tables are passed directly into the DirectInput `SetDataFormat`-style vtable slot for the mouse, keyboard, and auxiliary device paths, respectively. | c, asm | no |
 | `dword_54DD20` | `g_InputBackendTempJoystickDevice` | Global | Platform / Input Backend | High | The enumeration callback stores the first discovered auxiliary device here, backend init upgrades/configures it, then releases and clears the temporary handle. | c, asm | no |
-=======
-## Deferred / Ambiguous
-- `sub_40AE80` still looks like a redraw gate for non-human strategic turns, but this batch left it unnamed because the exact designer-facing distinction between “AI redraw”, “animation tick”, and “redraw suppression” is not yet pinned down.
-- `sub_40D800` is clearly another minimap boundary predicate, but the currently recovered body still exposes only part of the intended hit-test semantics.
->>>>>>> 3ed5d96 (Bootstrap clash95 compilation surface)
