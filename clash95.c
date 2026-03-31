@@ -4861,6 +4861,8 @@ char aSetrhS08x_5[14] = "SetRH %s=%08x"; // weak
 char aUnsetrh08x_5[13] = "UnsetRH %08x"; // weak
 char aSetrhS08x_4[14] = "SetRH %s=%08x"; // weak
 char aUnsetrh08x_4[13] = "UnsetRH %08x"; // weak
+char aStdrh_3[6] = "StdRH"; // weak
+char aKeep_redraw[12] = "Keep_Redraw"; // weak
 char aBuilding_bui_4[33] = "Building_BuildWorkshop() - %d,%d"; // weak
 char aBuilding_bui_2[33] = "Building_BuildBarracks() - %d,%d"; // weak
 char aBuilding_bui_3[33] = "Building_BuildHospital() - %d,%d"; // weak
