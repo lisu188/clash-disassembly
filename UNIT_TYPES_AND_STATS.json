@@ -317,7 +317,7 @@
     {
       "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, while `Queen_NewTurn` also creates the same ids directly inside building garrisons. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, and military-strength scoring first detects their presence before calling the core combat-strength helper. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
     }
   ],
   "stats": [
@@ -442,10 +442,10 @@
       "evidence": "Bit0 gates whether the world-map and battle idle-animation updaters advance the unit's looping frame state."
     },
     {
-      "name": "visual_class_index",
-      "confidence": "medium",
-      "semantic_role": "per-type visual/footprint class used by rendering and redraw invalidation",
-      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, redraw helpers use the same non-zero values to invalidate neighboring tiles, and `Unit_GetClassIndex` proves the engine also treats the byte as a reusable class lookup."
+      "name": "footprint_class_index",
+      "confidence": "high",
+      "semantic_role": "per-type footprint/overhang class used by rendering and redraw invalidation",
+      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, world and battle redraw helpers use the same non-zero values to invalidate neighboring tiles, and `UnitBattle_GetFootprintClass` / `Unit_GetClassIndex` both expose the byte as a reusable per-type footprint-class lookup."
     },
     {
       "name": "melee_attack_frame_count",
@@ -549,6 +549,20 @@
       "relationship_kind": "airborne_class_flag",
       "confidence": "high",
       "evidence": "The `smok` record belongs to the airborne class governed by `g_UnitTypeFlags` bit0."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "fatigue / morale",
+      "relationship_kind": "excluded_from_standard_adjustment_passes",
+      "confidence": "high",
+      "evidence": "The generic fatigue and morale adjustment helpers explicitly skip type ids `33` and `34`, so special personages do not follow the ordinary troop exhaustion/obedience lifecycle."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "combat_strength_score",
+      "relationship_kind": "presence_flag_forwarded_to_strength_scoring",
+      "confidence": "high",
+      "evidence": "`UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck` scans for types `33` and `34` and forwards that presence flag into the core combat-strength helper used by both stack and garrison military-strength scoring."
     },
     {
       "unit_type": "RangedUnitCategory",
@@ -660,14 +674,14 @@
       "blockers": "Need a tighter binding between the sidebar draw rows and the exact metadata/runtime fields."
     },
     {
-      "candidate": "byte_512577 / Unit_GetClassIndex",
+      "candidate": "byte_512577 / UnitBattle_GetFootprintClass / Unit_GetClassIndex",
       "candidate_kind": "metadata_field",
       "possible_interpretations": [
-        "visual footprint class",
+        "footprint/overhang class",
         "draw-height class",
         "hybrid visual class that also encodes overhang behavior"
       ],
-      "evidence": "Rendering subtracts the byte from the sprite Y origin, redraw helpers use non-zero values to invalidate neighboring tiles, and `Unit_GetClassIndex` returns the same per-type table as a reusable gameplay lookup.",
+      "evidence": "Rendering subtracts the byte from the sprite Y origin, world and battle redraw helpers use non-zero values to invalidate neighboring tiles, and both `UnitBattle_GetFootprintClass` and `Unit_GetClassIndex` return the same per-type table as a reusable lookup.",
       "blockers": "The value is clearly not just a raw literal offset anymore, but the exact enum semantics still need more callers."
     },
     {

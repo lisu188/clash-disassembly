@@ -1075,3 +1075,120 @@
   - the castle/garrison UI cluster now reads closer to the recovered gameplay model already recorded in the artifacts
   - the tile-highlight path is no longer split across decompiler-illusion pseudo-arrays
   - the special-personage queen/garrison path has one fewer bogus local-variable scar, which also strengthens the existing unit-taxonomy evidence for the `SpecialPersonageCategory`
+
+## Batch 93 - Battle Interaction, Castle Actions, And SDL Utility Seam Wave
+- Repairs:
+  - renamed the unit-selection helper pair in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_412B20` -> `UnitStackSelection_BuildSelectedSlotIndexList`
+    - `sub_412B90` -> `UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck`
+  - renamed the central battle click handler:
+    - `sub_42CB50` -> `UnitBattle_HandleBattlefieldInteraction`
+  - renamed the remaining high-confidence castle production action family from the live action table:
+    - `sub_435280` -> `CastleProduction_DrawProductionStatus`
+    - `sub_435640` -> `CastleProduction_SelectPreviousAvailableUnit`
+    - `sub_435680` -> `CastleProduction_SelectNextAvailableUnit`
+    - `sub_4356C0` -> `CastleProduction_HandleBuyLicenceAction`
+    - `sub_435770` -> `CastleProduction_HandleRemoveLicenceAction`
+    - `sub_4357E0` -> `CastleProduction_HandleProduceAction`
+    - `sub_435830` -> `CastleProduction_HandleStopProductionAction`
+    - `sub_435860` -> `CastleProduction_HandleInfoAction`
+  - extended [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) with the next low-risk SDL-side Win32 utility seam:
+    - `GetDeviceCaps`
+    - `GetPixel`
+    - `SetPixel`
+    - `SetRect`
+    - `EqualRect`
+    - `IntersectRect`
+    - `IsRectEmpty`
+  - updated the unit artifacts to reflect the stronger `SpecialPersonageCategory` evidence and to rename unit metadata byte `+15` from the older `visual_class_index` wording to `footprint_class_index`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch93.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch93.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch93.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch93.json`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch93`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetDeviceCaps` -> SDL-target utility seam returning conservative pixel-format caps for the current placeholder surface model
+  - `GetPixel` / `SetPixel` -> SDL-target placeholder key-pixel ownership on the local `SDL_Surface` shim
+  - `SetRect` / `EqualRect` / `IntersectRect` / `IsRectEmpty` -> SDL-target rectangle utilities behind the existing platform seam
+- Current leading blockers:
+  - the broader executable surface is still dominated by the same startup/runtime band exposed by the direct link probe:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` and related allocator/string wrappers
+    - residual `JUMPOUT` control-flow scars
+  - the new SDL utility seam removed the rect/device-cap/pixel helper cluster from the first unresolved platform-facing wave; `nm /tmp/platform_sdl_runtime_batch93.o` now exports those wrappers locally
+- Key evidence used:
+  - asm around `0x412B20` and `0x412B90` proves the selection-mask helper emits slot indices and the strength wrapper only adds a special-personage presence flag before calling `sub_41C100`
+  - asm around `0x42CB50` matches the battle interaction fanout between info, movement, ranged shots, melee, wall attacks, and friendly reselection
+  - the castle production action-table records at `0x515150+` carry the live localized labels `Buy licence`, `Remove licence`, `Produce`, `Stop`, and `Info` for the corresponding `0x4356xx` / `0x4358xx` handlers
+  - the updated unit artifacts are backed by the existing `UnitBattle_GetFootprintClass` / `Unit_GetClassIndex` callers plus the newly reviewed special-personage strength/fatigue/morale paths
+- Net effect:
+  - the castle production modal loop now reads mostly in action-table semantics instead of raw `sub_*` callbacks
+  - one more central battle interaction helper is human-readable
+  - the SDL seam owns another low-risk Win32 helper cluster
+  - the unit taxonomy/stat artifacts gained additional evidence for special personages and the per-type footprint class
+
+## Batch 94 - Battle Dialog And Building Transfer State Wave
+- Repairs:
+  - renamed the battle dialog / tactical loop latch helpers in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_42A990` -> `BuildingEconomyDialog_SetExitSignal`
+    - `sub_42D6F0` -> `UnitBattle_RequestActionLoopExit`
+    - `sub_42DAB0` -> `UnitBattleDialog_SelectAffirmativeResponse`
+    - `sub_42DAD0` -> `UnitBattleDialog_SelectNegativeResponse`
+  - renamed the temporary battle fortification / order-bit override helpers:
+    - `sub_42E6F0` -> `UnitBattle_TemporarilyClearGateBlocker`
+    - `sub_42E770` -> `UnitBattle_RestoreGateBlocker`
+    - `sub_42E7C0` -> `UnitBattle_OverrideControllerOrderBits`
+    - `sub_42E860` -> `UnitBattle_RestoreControllerOrderBits`
+  - renamed the remaining building-transfer target-list UI cluster:
+    - `sub_436610` -> `BuildingTransferTargetList_SetDrawOrigin`
+    - `sub_436620` -> `BuildingTransferTargetList_Draw`
+    - `sub_4368F0` -> `BuildingTransferTargetList_SelectPrevious`
+    - `sub_436930` -> `BuildingTransferTargetList_SelectNext`
+    - `sub_436970` -> `BuildingTransferTargetList_Rebuild`
+    - `sub_436A30` -> `BuildingTransferTargetList_HandleClick`
+    - `sub_436AF0` -> `BuildingTransferTargetList_FreeSpriteSet`
+  - renamed the shared state latches and selector-view globals that those helpers actually own:
+    - `dword_532068` -> `g_UnitBattleActionLoopExitRequested`
+    - `dword_532080` -> `g_UnitBattlePromptDialogResult`
+    - `dword_532210` -> `g_CastleProductionExitSignal`
+    - `dword_532428` -> `g_BuildingTransferTargetListSpriteSet`
+    - `dword_53242C` -> `g_BuildingTransferTargetListDrawX`
+    - `dword_532430` -> `g_BuildingTransferTargetListDrawY`
+  - extended [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) with:
+    - `BuildingTransferTargetListViewState`
+    - the recovered `g_CastleProductionExitSignal` field inside `CastleProductionPanelState`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch94c.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch94.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch94.json`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch94`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside gameplay/UI semantic recovery and preserved the existing SDL platform seam unchanged
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+  - the direct link probe still shows the wrapper/runtime band first; the newly renamed battle and transfer UI state clusters are no longer part of the unresolved frontier
+- Key evidence used:
+  - asm around `0x42D6F0`, `0x42DAB0`, and `0x42DAD0` proves the battle UI callbacks write concrete latch values into the shared battle action-loop / prompt-dialog result slots
+  - the paired `0x42E6F0` / `0x42E770` fortification-byte save/restore helpers and the paired `0x42E7C0` / `0x42E860` order-bit override helpers are exercised by the battle setup / teardown path around `Battle_RunTacticalCombat`
+  - `BuildingEconomyDialog_Run` already seeds the transfer-target list, list draw origin, and cached sprite set together, while `BuildingTransferTargetList_Draw`, `SelectPrevious`, `SelectNext`, and `HandleClick` all consume that same shared view state
+  - `Castle_ShowUnitProductionPanel` clears one exit latch and spins until it changes, and `CastleProduction_SetExitSignal` is the matching callback-side writer for that modal loop
+- Net effect:
+  - the battle modal-flow helpers now read as explicit dialog/loop state instead of anonymous `sub_*` callbacks
+  - the building transfer selector is now described as one coherent UI list plus view-state model rather than scattered globals
+  - the castle production panel state model now includes its exit latch, which matches the already recovered modal-loop behavior
