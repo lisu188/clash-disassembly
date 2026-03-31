@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 /*
  * Minimal SDL-target runtime seam for the recovered platform layer.
@@ -36,6 +37,7 @@ struct SDL_Texture {
 struct SDL_Surface {
   int width;
   int height;
+  const char *resource_name;
 };
 
 struct SDL_Palette {
@@ -60,11 +62,17 @@ static struct SDL_Surface g_platform_default_surface = { 640, 480 };
 static struct SDL_Surface g_platform_default_icon = { 32, 32 };
 static struct SDL_Cursor g_platform_default_cursor = { 0 };
 static int g_platform_stock_brush;
+static int g_platform_module_handle_token;
 static MSG g_platform_message_queue[PLATFORM_QUEUE_CAPACITY];
 static size_t g_platform_message_head;
 static size_t g_platform_message_tail;
 static int g_platform_quit_requested;
 static int g_platform_quit_code;
+
+static int PlatformSurfaceIsBuiltin(const struct SDL_Surface *surface)
+{
+  return surface == &g_platform_default_surface || surface == &g_platform_default_icon;
+}
 
 static int PlatformQueueIsEmpty(void)
 {
@@ -286,6 +294,146 @@ int __stdcall ReleaseDC(HWND hWnd, HDC hDC)
   return 1;
 }
 
+HDC __stdcall CreateCompatibleDC(HDC hdc)
+{
+  struct SDL_Surface *source;
+  struct SDL_Surface *surface;
+
+  source = (struct SDL_Surface *)hdc;
+  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  if ( !surface )
+    return 0;
+  if ( source )
+  {
+    surface->width = source->width;
+    surface->height = source->height;
+  }
+  else
+  {
+    surface->width = 64;
+    surface->height = 64;
+  }
+  return surface;
+}
+
+BOOL __stdcall DeleteDC(HDC hdc)
+{
+  struct SDL_Surface *surface;
+
+  surface = (struct SDL_Surface *)hdc;
+  if ( !surface || PlatformSurfaceIsBuiltin(surface) )
+    return 1;
+  free(surface);
+  return 1;
+}
+
+BOOL __stdcall DeleteObject(HGDIOBJ ho)
+{
+  struct SDL_Surface *surface;
+
+  surface = (struct SDL_Surface *)ho;
+  if ( !surface || PlatformSurfaceIsBuiltin(surface) )
+    return 1;
+  free(surface);
+  return 1;
+}
+
+int __stdcall GetObjectA(HANDLE h, int c, LPVOID pv)
+{
+  const struct SDL_Surface *surface;
+  int *bitmap_fields;
+
+  if ( !h || !pv || c <= 0 )
+    return 0;
+  surface = (const struct SDL_Surface *)h;
+  memset(pv, 0, (size_t)c);
+  bitmap_fields = (int *)pv;
+  if ( c >= 12 )
+  {
+    bitmap_fields[1] = surface->width;
+    bitmap_fields[2] = surface->height;
+  }
+  return c;
+}
+
+HGDIOBJ __stdcall SelectObject(HDC hdc, HGDIOBJ h)
+{
+  struct SDL_Surface *dc_surface;
+  const struct SDL_Surface *object_surface;
+
+  dc_surface = (struct SDL_Surface *)hdc;
+  object_surface = (const struct SDL_Surface *)h;
+  if ( dc_surface && object_surface && !PlatformSurfaceIsBuiltin(dc_surface) )
+  {
+    dc_surface->width = object_surface->width;
+    dc_surface->height = object_surface->height;
+  }
+  return h;
+}
+
+BOOL __stdcall StretchBlt(HDC hdcDest, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop)
+{
+  struct SDL_Surface *dest_surface;
+
+  (void)xDest;
+  (void)yDest;
+  (void)hdcSrc;
+  (void)xSrc;
+  (void)ySrc;
+  (void)wSrc;
+  (void)hSrc;
+  (void)rop;
+  dest_surface = (struct SDL_Surface *)hdcDest;
+  if ( dest_surface && !PlatformSurfaceIsBuiltin(dest_surface) )
+  {
+    if ( wDest > 0 )
+      dest_surface->width = wDest;
+    if ( hDest > 0 )
+      dest_surface->height = hDest;
+  }
+  return 1;
+}
+
+int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight, const void *lpBits, const BITMAPINFO *lpbmi, UINT iUsage, DWORD rop)
+{
+  struct SDL_Surface *surface;
+
+  (void)xDest;
+  (void)yDest;
+  (void)xSrc;
+  (void)ySrc;
+  (void)SrcWidth;
+  (void)lpBits;
+  (void)lpbmi;
+  (void)iUsage;
+  (void)rop;
+  surface = (struct SDL_Surface *)hdc;
+  if ( surface && !PlatformSurfaceIsBuiltin(surface) )
+  {
+    if ( DestWidth > 0 )
+      surface->width = DestWidth;
+    if ( DestHeight > 0 )
+      surface->height = DestHeight;
+  }
+  return SrcHeight ? SrcHeight : DestHeight;
+}
+
+HANDLE __stdcall LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad)
+{
+  struct SDL_Surface *surface;
+
+  (void)hInst;
+  (void)type;
+  (void)fuLoad;
+  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  if ( !surface )
+    return 0;
+  surface->width = cx > 0 ? cx : 64;
+  surface->height = cy > 0 ? cy : 64;
+  surface->resource_name = name;
+  return surface;
+}
+
 BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)
 {
   struct SDL_Window *window;
@@ -303,6 +451,38 @@ DWORD __stdcall timeGetTime()
   if ( gettimeofday(&tv, 0) )
     return 0;
   return (DWORD)(tv.tv_sec * 1000u + tv.tv_usec / 1000u);
+}
+
+DWORD __stdcall GetTickCount()
+{
+  return timeGetTime();
+}
+
+DWORD __stdcall GetVersion()
+{
+  /*
+   * Report an NT-style major version 4 so the recovered platform probes pick a
+   * stable, non-9x path until the startup/runtime layer is fully re-emitted.
+   */
+  return 4u;
+}
+
+HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
+{
+  (void)lpModuleName;
+  return &g_platform_module_handle_token;
+}
+
+UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)
+{
+  (void)lpRootPathName;
+  return 3;
+}
+
+void __stdcall OutputDebugStringA(LPCSTR lpOutputString)
+{
+  if ( lpOutputString )
+    fprintf(stderr, "[platform_sdl] debug: %s\n", lpOutputString);
 }
 
 BOOL __stdcall TranslateMessage(const MSG *lpMsg)
@@ -327,6 +507,12 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
 BOOL __stdcall WaitMessage()
 {
   return 1;
+}
+
+void __stdcall Sleep(DWORD dwMilliseconds)
+{
+  if ( dwMilliseconds )
+    usleep(dwMilliseconds * 1000u);
 }
 
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint)
