@@ -436,10 +436,10 @@
       "evidence": "Bit0 gates whether the world-map and battle idle-animation updaters advance the unit's looping frame state."
     },
     {
-      "name": "sprite_vertical_offset",
-      "confidence": "high",
-      "semantic_role": "per-type sprite Y-anchor and overhang offset",
-      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, and redraw helpers use non-zero values to invalidate neighboring tiles for overhanging sprites."
+      "name": "visual_class_index",
+      "confidence": "medium",
+      "semantic_role": "per-type visual/footprint class used by rendering and redraw invalidation",
+      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, redraw helpers use the same non-zero values to invalidate neighboring tiles, and `Unit_GetClassIndex` proves the engine also treats the byte as a reusable class lookup."
     },
     {
       "name": "melee_attack_frame_count",
@@ -482,6 +482,44 @@
       "confidence": "high",
       "semantic_role": "default movement-sound volume",
       "evidence": "Both movement-sound helpers pass `g_UnitMoveSoundBaseVolumes[88 * type]` into `CSS_PlaySound`."
+    }
+  ],
+  "ui_stat_labels": [
+    {
+      "label": "Quantity",
+      "mapped_stat": "current_health_percent",
+      "confidence": "medium",
+      "evidence": "`UnitBattle_DrawSelectedUnitPanel` formats slot byte `+9` under the localized `Quantity` row, which suggests the byte is the battle-visible quantity/strength measure rather than an opaque HP counter."
+    },
+    {
+      "label": "Action points",
+      "mapped_stat": "current_action_points",
+      "confidence": "high",
+      "evidence": "The selected-unit battle panel prints slot byte `+8` under the `Action points` label from `off_514DC8`."
+    },
+    {
+      "label": "Attack power",
+      "mapped_stat": "base_melee_attack",
+      "confidence": "high",
+      "evidence": "The battle sidebar includes a dedicated `Attack power` row, corroborating the recovered melee-attack family as a displayed combat stat."
+    },
+    {
+      "label": "Shot power",
+      "mapped_stat": "base_ranged_attack",
+      "confidence": "medium",
+      "evidence": "The panel exposes a separate `Shot power` row when ranged combat is relevant, matching the recovered ranged-attack family."
+    },
+    {
+      "label": "Morale",
+      "mapped_stat": "morale",
+      "confidence": "high",
+      "evidence": "The battle panel prints the same runtime morale value already recovered at UnitSlotRecord `+11`."
+    },
+    {
+      "label": "Tiredness",
+      "mapped_stat": "fatigue",
+      "confidence": "high",
+      "evidence": "The final localized battle-sidebar row is `Tiredness`, matching the recovered fatigue byte at UnitSlotRecord `+10`."
     }
   ],
   "relationships": [
@@ -590,6 +628,27 @@
       ],
       "evidence": "The alternate attack helper switches to it for one context flag, but the original design term is missing.",
       "blockers": "Need a clearer caller or UI string."
+    },
+    {
+      "candidate": "Battle sidebar labels `Defence power` / `Status`",
+      "candidate_kind": "ui_stat_label",
+      "possible_interpretations": [
+        "a defence stat row plus a separate status/stance row",
+        "a defence stat row plus a generic condition-effects row"
+      ],
+      "evidence": "`off_514DC8` contains both labels and `UnitBattle_DrawSelectedUnitPanel` clearly reserves sidebar rows for them, but this pass did not isolate the exact backing stat table or runtime field pair.",
+      "blockers": "Need a tighter binding between the sidebar draw rows and the exact metadata/runtime fields."
+    },
+    {
+      "candidate": "byte_512577 / Unit_GetClassIndex",
+      "candidate_kind": "metadata_field",
+      "possible_interpretations": [
+        "visual footprint class",
+        "draw-height class",
+        "hybrid visual class that also encodes overhang behavior"
+      ],
+      "evidence": "Rendering subtracts the byte from the sprite Y origin, redraw helpers use non-zero values to invalidate neighboring tiles, and `Unit_GetClassIndex` returns the same per-type table as a reusable gameplay lookup.",
+      "blockers": "The value is clearly not just a raw literal offset anymore, but the exact enum semantics still need more callers."
     },
     {
       "candidate": "UnitSlotRecord.stance_bits",
