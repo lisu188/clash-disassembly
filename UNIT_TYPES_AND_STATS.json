@@ -585,6 +585,13 @@
       "relationship_kind": "seed_rule",
       "confidence": "high",
       "evidence": "Light units seed at 6 rather than 10."
+    },
+    {
+      "unit_type": "MixedStackCategory",
+      "stat": "road_move_cost / terrain_move_cost",
+      "relationship_kind": "merged_stack_movement_profile",
+      "confidence": "high",
+      "evidence": "`UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` by keeping the highest non-zero movement cost for each lane and collapsing to zero when any member has zero, so world-map stack movement follows the slowest traversable unit."
     }
   ],
   "ambiguous": [

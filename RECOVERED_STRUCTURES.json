@@ -173,12 +173,13 @@
     "kind": "player_runtime_record",
     "base_offset": 140024,
     "stride": 1423,
-    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, religion/visibility state, camera positions, queen state, and the deferred prisoner-placement queue.",
+    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, minimap/camera UI state, controller settings, religion/visibility state, queen state, and the deferred prisoner-placement queue.",
     "fields": [
       { "offset": 0, "name": "is_active", "type": "int32", "notes": "Set to 1 when a scenario loader enables this player slot; zeroed by `PlayerRuntimeState_ResetDefaults` for unused slots." },
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
+      { "offset": 23, "name": "minimap_visible_flag", "type": "int32", "notes": "Per-player minimap visibility latch. The minimap show/hide/toggle actions update it, and minimap blits, hit-tests, and viewport dragging all early-out when it is clear." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
       { "offset": 39, "name": "religion_flag", "type": "int32", "notes": "Boolean religious alignment flag. Religious-site entry checks and castle upgrade labels branch on this dword to choose the shrine-vs-cult and Christian-vs-pagan behavior." },
       { "offset": 47, "name": "tech_level", "type": "uint8", "notes": "Player-wide technology tier. New castles inherit its low three bits into `BuildingRecord.tech_level_bits`, technology progression raises it via the global upgrade check, and the tech-level notification helper compares it against `last_reported_tech_level`." },
@@ -194,6 +195,7 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "`MiniMap_ToggleVisibility`, `MiniMap_ShowAllLayers`, `MiniMap_ShowUnitsOnly`, `MiniMap_ShowBuildingsOnly`, and `MiniMap_Hide` all read or write the dword at offset `+23`, while `MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_IsCursorInside`, and `MiniMap_UpdateViewportFromCursor` all early-out on the same field for the viewed player.",
       "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
       "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
       "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
@@ -301,12 +303,14 @@
       { "offset": 852, "name": "battle_unit_entries[22]", "type": "BattleUnitEntry[22]", "notes": "22 tactical-battle unit entries, each 31 bytes wide, holding per-battle slot state such as type, owner, AP, quantity, coordinates, facing, path pointer, and current animation state." },
       { "offset": 1534, "name": "tile_occupant_ids[20][20]", "type": "int16[20][20]", "notes": "Per-battle-tile occupant index grid; `-1` marks an empty tile." },
       { "offset": 2334, "name": "tile_effect_overlay[20][20][2]", "type": "uint8[20][20][2]", "notes": "Per-tile battle overlay/effect bytes used by death, ranged-hit, and footprint redraw helpers." },
+      { "offset": 3134, "name": "wall_section_hitpoints[20][20]", "type": "uint8[20][20]", "notes": "Per-wall-tile durability grid. `UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI loops read or subtract these bytes when breaching castle walls." },
       { "offset": 3944, "name": "selected_unit_index_by_player[5]", "type": "int32[5]", "notes": "Per-player tactical selection state used to choose the initial active unit when each side's turn begins." }
     ],
     "evidence": [
       "`Battle_RunTacticalCombat` allocates and seeds the block, then `HandleBattleResults` reads side ids from offsets `+836` and `+840` while copying the final 22 battle-unit entries back out.",
       "`UnitBattle_RunTurnLoop` restores the tactical viewport from offsets `+808` and `+812`, resolves the selected unit from the per-player indices at `+3944`, and then drives the active-turn input loop over the same runtime block.",
       "`UnitBattle_MoveTrack`, `UnitBattle_Attack`, and the battle redraw helpers all treat offset `+852` as the base of the 31-byte tactical unit-entry array and offset `+1534` as the 20x20 occupant grid.",
+      "`UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI command loops index `battle_state + 3134 + 20 * column + row` as a mutable byte grid whose values drop to zero when wall sections collapse, proving a dedicated per-tile wall-hitpoint plane inside the same runtime block.",
       "The battle tooltip, death animation, and hit/recoil helpers also index the contiguous overlay bytes beginning at `+2334`, proving one shared tactical-state region rather than scattered globals."
     ]
   },

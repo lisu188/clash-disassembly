@@ -357,6 +357,70 @@
   - the main translation unit still compiles to an object cleanly, and the unresolved helper surface dropped from 532 to 527 by removing leaked Hex-Rays helper symbols from the build
   - the next frontier is split cleanly: link-surface cleanup on one side, and the next high-confidence gameplay cluster on the other
 
+## Batch 63 - Pathing Helper And Movement Profile Wave
+- Repairs:
+  - renamed `sub_413F50` to `UnitStack_GetTileMoveCostFromMergedProfileOrZero`, matching its single caller in `Unit_MoveTrack` and its use of the premerged stack movement-profile buffer
+  - renamed the fixed-point trig helper `sub_415D80` to `Math_SinDegreesQ16`
+  - renamed the integer square-root helper `sub_415E40` to `Math_CeilSqrt`
+  - recorded the recovered `MergedTerrainMoveProfile` helper record in `RECOVERED_STRUCTURES.json`
+  - backfilled the unit/stat artifacts with the newly confirmed mixed-stack movement rule: stack movement uses the slowest traversable member profile and becomes impassable when any member contributes a zero move-cost lane
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch63.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch63.o`
+  - `python3 -c "import json, pathlib; [json.loads(pathlib.Path(p).read_text()) for p in ('RECOVERED_STRUCTURES.json','UNIT_TYPES_AND_STATS.json')]; print('json-ok')"`
+  - `nm -u /tmp/clash95_batch63.o | sort -u | wc -l` -> `525`
+  - `nm -u /tmp/clash95_batch63.o | rg "JUMPOUT|ICSendMessage|Math_SinDegreesQ16|Math_CeilSqrt|UnitStack_GetTileMoveCostFromMergedProfileOrZero"` -> only `ICSendMessage` and `JUMPOUT`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object compile target; the pathing/helper wave remained syntax-clean and object-clean
+  - broader reconstruction work still remains:
+    - `JUMPOUT` is still the main decompiler control-flow artifact left in the audited object surface
+    - `ICSendMessage` remains a true external import rather than a parser problem
+    - there is still no full project link harness around the recovered objects
+- Net effect:
+  - the compileable baseline now exposes the stack pathing cost helper and the two shared math primitives under semantic names instead of anonymous `sub_*` labels
+  - the pathing data model is tighter: the recovered sidecar artifacts now describe both the per-type movement bytes and the merged stack-local movement profile that pathfinding actually consumes
+
+## Batch 64 - MiniMap Action And Player UI State Wave
+- Repairs:
+  - aligned the live minimap destructor body and its callsite with the already recovered `MiniMap_DestroySurface` declaration
+  - renamed the leftover minimap action callbacks to `MiniMap_ToggleVisibility`, `MiniMap_ShowAllLayers`, `MiniMap_ShowUnitsOnly`, `MiniMap_ShowBuildingsOnly`, and `MiniMap_Hide` using the asm-backed localized action table (`All`, `Buildings`, `Units`, `None`) plus the draw-mask values in the C bodies
+  - promoted `PlayerRuntimeState + 23` into `PLAYER_MINIMAP_VISIBLE_OFFSET` / `PLAYER_MINIMAP_VISIBLE`, replacing the remaining raw `+140047` accesses in minimap blit, hit-test, viewport-drag, toggle, and scenario-seed code
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch63.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current object-build target; the minimap UI-state wave remained syntax-clean and object-clean
+  - broader reconstruction work still remains:
+    - `JUMPOUT` control-flow scars are still present in a few functions such as `MiniMap_RedrawAllTiles`
+    - the project still has no link harness around `clash95.c` and `compat/decomp_runtime_stubs.c`
+    - `sub_40D800` is still only a partially recovered minimap-screen predicate and remains intentionally unnamed
+- Net effect:
+  - the compileable baseline now exposes the minimap mode/toggle actions as named UI behavior instead of anonymous callbacks
+  - the central game-state model is slightly tighter because one more per-player UI field is expressed through `PlayerRuntimeState` rather than hard-coded offsets
+
+## Batch 63 - Battle Wall And Strategic Host Sync Wave
+- Repairs:
+  - synced the previously corroborated tactical-battle helpers `sub_4283D0`, `sub_428880`, and `sub_4298E0` to their recovered live names `UnitBattle_GetCorpseSpriteIndex`, `UnitBattle_PlayShotAnimation`, and `UnitBattle_AttackWall`
+  - promoted `sub_452390` to `Rules_RegisterStrategicActionHostFunctions`, documenting the strategic-map host-registration cluster that wires temple, treasure, port, pathing, march, attack, ford, road, trap, and `unit_canmove` callbacks into the rules engine
+  - extended `BattleRuntimeState` in `RECOVERED_STRUCTURES.json` with the wall-section durability plane at offset `+3134`, matching the live siege-combat helpers and AI wall-breach loop
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch63.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch63.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 build target; the rename sync stayed behavior-neutral and preserved object generation
+  - broader reconstruction work still remains:
+    - `JUMPOUT` control-flow fractures are still present at the link surface
+    - there is still no project-level link harness around the recovered objects
+    - stricter pedantic/non-GNU builds still surface decompiler residue such as weak-table pointer-type mismatches and out-of-range legacy string escapes, but those are not blockers for the current compile target
+- Net effect:
+  - the battle wall-attack path is now human-readable in the live source instead of split between recovered logs and stale `sub_*` names
+  - the strategic rules host-registration entrypoint is now named in-source, and the battle-state catalog records the wall durability grid that those helpers mutate
+
 ## Batch 65 - World Map HUD And Menu Semantics Wave
 - Repairs:
   - renamed the strategic-map lifecycle helpers `sub_40AD40`, `sub_40ADF0`, `sub_40AED0`, `sub_40B020`, `sub_40B0A0`, and `sub_40B640` to `WorldMap_RenderHook`, `WorldMap_RedrawFrame`, `WorldMap_LoadResources`, `WorldMap_UnloadResources`, `WorldMap_RunHumanTurnLoop`, and `WorldMap_Initialize`
@@ -379,25 +443,6 @@
 - Net effect:
   - the compilable baseline now exposes the strategic-map render/update/turn-loop path and the shared menu/minimap controls under readable names instead of a dense `sub_*` cluster
   - the player-runtime slab is slightly less error-prone because one more live UI field is named and routed through the recovered structure model rather than raw offset arithmetic
-
-## Batch 65 - Pathing Helper And Movement Profile Wave
-- Repairs:
-  - renamed `sub_413F50` to `UnitStack_GetTileMoveCostFromMergedProfileOrZero`, matching its single `Unit_MoveTrack` caller and its direct consumption of the premerged stack movement-profile buffer
-  - renamed the fixed-point trig helper `sub_415D80` to `Math_SinDegreesQ16`
-  - renamed the integer square-root helper `sub_415E40` to `Math_CeilSqrt`
-  - recorded the recovered `MergedTerrainMoveProfile` helper record in `RECOVERED_STRUCTURES.json`
-  - backfilled the unit/stat artifacts with the mixed-stack movement rule: stack movement follows the slowest traversable member profile and becomes impassable when any member contributes a zero move-cost lane
-- Validation probe:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch65.o`
-  - `python3 -c "import json, pathlib; [json.loads(pathlib.Path(p).read_text()) for p in ('RECOVERED_STRUCTURES.json','UNIT_TYPES_AND_STATS.json')]; print('json-ok')"`
-  - `git diff --check`
-- Current leading blockers:
-  - none for the current object-build target; the pathing/helper wave stayed syntax-clean
-  - broader work remains in unresolved control-flow scars and missing link harness rather than parser or naming breakage
-- Net effect:
-  - the compilable baseline now exposes the stack pathing cost helper and two shared math primitives under semantic names
-  - the pathing sidecar artifacts now describe both the per-type movement bytes and the merged stack-local profile that world movement actually consumes
 
 ## Batch 66 - World Map Unit Render Wave
 - Repairs:
