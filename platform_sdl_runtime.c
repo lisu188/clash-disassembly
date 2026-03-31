@@ -37,6 +37,7 @@ struct SDL_Texture {
 struct SDL_Surface {
   int width;
   int height;
+  const char *resource_name;
 };
 
 struct SDL_Palette {
@@ -67,6 +68,11 @@ static size_t g_platform_message_head;
 static size_t g_platform_message_tail;
 static int g_platform_quit_requested;
 static int g_platform_quit_code;
+
+static int PlatformSurfaceIsBuiltin(const struct SDL_Surface *surface)
+{
+  return surface == &g_platform_default_surface || surface == &g_platform_default_icon;
+}
 
 static int PlatformQueueIsEmpty(void)
 {
@@ -286,6 +292,146 @@ int __stdcall ReleaseDC(HWND hWnd, HDC hDC)
   (void)hWnd;
   (void)hDC;
   return 1;
+}
+
+HDC __stdcall CreateCompatibleDC(HDC hdc)
+{
+  struct SDL_Surface *source;
+  struct SDL_Surface *surface;
+
+  source = (struct SDL_Surface *)hdc;
+  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  if ( !surface )
+    return 0;
+  if ( source )
+  {
+    surface->width = source->width;
+    surface->height = source->height;
+  }
+  else
+  {
+    surface->width = 64;
+    surface->height = 64;
+  }
+  return surface;
+}
+
+BOOL __stdcall DeleteDC(HDC hdc)
+{
+  struct SDL_Surface *surface;
+
+  surface = (struct SDL_Surface *)hdc;
+  if ( !surface || PlatformSurfaceIsBuiltin(surface) )
+    return 1;
+  free(surface);
+  return 1;
+}
+
+BOOL __stdcall DeleteObject(HGDIOBJ ho)
+{
+  struct SDL_Surface *surface;
+
+  surface = (struct SDL_Surface *)ho;
+  if ( !surface || PlatformSurfaceIsBuiltin(surface) )
+    return 1;
+  free(surface);
+  return 1;
+}
+
+int __stdcall GetObjectA(HANDLE h, int c, LPVOID pv)
+{
+  const struct SDL_Surface *surface;
+  int *bitmap_fields;
+
+  if ( !h || !pv || c <= 0 )
+    return 0;
+  surface = (const struct SDL_Surface *)h;
+  memset(pv, 0, (size_t)c);
+  bitmap_fields = (int *)pv;
+  if ( c >= 12 )
+  {
+    bitmap_fields[1] = surface->width;
+    bitmap_fields[2] = surface->height;
+  }
+  return c;
+}
+
+HGDIOBJ __stdcall SelectObject(HDC hdc, HGDIOBJ h)
+{
+  struct SDL_Surface *dc_surface;
+  const struct SDL_Surface *object_surface;
+
+  dc_surface = (struct SDL_Surface *)hdc;
+  object_surface = (const struct SDL_Surface *)h;
+  if ( dc_surface && object_surface && !PlatformSurfaceIsBuiltin(dc_surface) )
+  {
+    dc_surface->width = object_surface->width;
+    dc_surface->height = object_surface->height;
+  }
+  return h;
+}
+
+BOOL __stdcall StretchBlt(HDC hdcDest, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop)
+{
+  struct SDL_Surface *dest_surface;
+
+  (void)xDest;
+  (void)yDest;
+  (void)hdcSrc;
+  (void)xSrc;
+  (void)ySrc;
+  (void)wSrc;
+  (void)hSrc;
+  (void)rop;
+  dest_surface = (struct SDL_Surface *)hdcDest;
+  if ( dest_surface && !PlatformSurfaceIsBuiltin(dest_surface) )
+  {
+    if ( wDest > 0 )
+      dest_surface->width = wDest;
+    if ( hDest > 0 )
+      dest_surface->height = hDest;
+  }
+  return 1;
+}
+
+int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight, const void *lpBits, const BITMAPINFO *lpbmi, UINT iUsage, DWORD rop)
+{
+  struct SDL_Surface *surface;
+
+  (void)xDest;
+  (void)yDest;
+  (void)xSrc;
+  (void)ySrc;
+  (void)SrcWidth;
+  (void)lpBits;
+  (void)lpbmi;
+  (void)iUsage;
+  (void)rop;
+  surface = (struct SDL_Surface *)hdc;
+  if ( surface && !PlatformSurfaceIsBuiltin(surface) )
+  {
+    if ( DestWidth > 0 )
+      surface->width = DestWidth;
+    if ( DestHeight > 0 )
+      surface->height = DestHeight;
+  }
+  return SrcHeight ? SrcHeight : DestHeight;
+}
+
+HANDLE __stdcall LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad)
+{
+  struct SDL_Surface *surface;
+
+  (void)hInst;
+  (void)type;
+  (void)fuLoad;
+  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  if ( !surface )
+    return 0;
+  surface->width = cx > 0 ? cx : 64;
+  surface->height = cy > 0 ? cy : 64;
+  surface->resource_name = name;
+  return surface;
 }
 
 BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)

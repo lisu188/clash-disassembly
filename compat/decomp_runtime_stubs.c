@@ -54,6 +54,60 @@ int __cdecl sprintf_(char *buffer, const char *format, ...)
   return result;
 }
 
+int __cdecl vsprintf_(char *buffer, const char *format, ...)
+{
+  int result;
+  va_list args;
+
+  if ( !buffer || !format )
+    return -1;
+  va_start(args, format);
+  result = vsprintf(buffer, format, args);
+  va_end(args);
+  return result;
+}
+
+int __thiscall fclose_(_DWORD a1)
+{
+  FILE *stream;
+
+  if ( !a1 || a1 == (_DWORD)-1 )
+    return 0;
+  stream = (FILE *)(uintptr_t)a1;
+  return fclose(stream);
+}
+
+int fwrite_(const void *buffer, int size, int file_handle, int count)
+{
+  FILE *stream;
+
+  if ( !buffer || !file_handle || file_handle == -1 || size < 0 || count < 0 )
+    return 0;
+  stream = (FILE *)(uintptr_t)file_handle;
+  return (int)fwrite(buffer, (size_t)size, (size_t)count, stream);
+}
+
+int fread_(void *buffer, int size, int file_handle, int count)
+{
+  FILE *stream;
+
+  if ( !buffer || !file_handle || file_handle == -1 || size < 0 || count < 0 )
+    return 0;
+  stream = (FILE *)(uintptr_t)file_handle;
+  return (int)fread(buffer, (size_t)size, (size_t)count, stream);
+}
+
+int __fastcall strncmp_(_DWORD a1, _DWORD a2)
+{
+  return strcmp_(a1, a2);
+}
+
+int __fastcall tolower_(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return tolower((unsigned __int8)a1);
+}
+
 int __thiscall toupper_(_DWORD a1)
 {
   return toupper((unsigned __int8)a1);

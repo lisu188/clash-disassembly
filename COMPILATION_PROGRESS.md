@@ -760,7 +760,7 @@
   - repaired `Pathing_EnableBridgeCrossings` so it writes literal `1` to `g_PathingAllowBridgeCrossings`, matching the asm-backed `Track_BridgesOn` body
   - repaired [UI_ClearTileHighlight](/home/andrz/git/clash-disassembly/clash95.c) to clear the real highlight arrays (`dword_5269D8` / paired tile slots) with a fixed 0x40-byte `memset`, replacing the false `memset_(this, -1)` artifact
   - repaired the two building-garrison selection resets to clear `g_BuildingGarrisonDialogSelectedSlots[12]` explicitly after the 12-slot repair/training loops
-  - repaired the castle production panel opener to clear its 12-entry animation seed array (`dword_5322D0`) before seeding random frames, replacing another zero-pointer `memset_` artifact
+  - repaired the castle production panel opener to clear its 12-entry per-slot licence sprite-handle array (`dword_532304`) before seeding the separate `dword_5322D4[12]` animation-frame array, replacing another zero-pointer `memset_` artifact
   - added explicit `GetTickCount`, `GetVersion`, and `Sleep` declarations in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) so the compileable target no longer relies on GNU89 implicit declarations for those recovered runtime helpers
   - folded in two high-confidence castle production renames:
     - `sub_4359B0` -> `CastleProduction_RebuildAvailableUnitList`
@@ -866,6 +866,64 @@
   - the map/pathing occupancy-masking helper no longer restores through a bogus decompiler temp
   - the castle production and CRT/runtime hotspots now read in semantic terms instead of raw `sub_*` labels
   - the platform seam owns two more Win32 imports locally, and the remaining executable-link blockers are more tightly clustered around true startup/runtime reconstruction
+
+## Batch 87 - Castle Preview Semantics And SDL Bitmap/DC Seam Wave
+- Repairs:
+  - renamed `sub_4347A0` in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) to `CastleProduction_RedrawSelectedUnitPanel`
+  - repaired `CastleProduction_RedrawSelectedUnitPanel` so it allocates a `0x1010` sprite-set block and loads it from the stack-built asset path buffer emitted by `sub_413430`, matching the executable body at `0x4347A0`; the previous `DLXSpriteSet_Load(..., a2)` argument was a false decompiler register split
+  - corrected the castle-production state model in the logs and recovered structures: `dword_5322D0` is the single selected-preview sprite-set handle, `dword_5322D4[12]` stores licence-slot animation frames, and `dword_532304[12]` stores the per-slot licence sprite handles
+  - extended [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) with a first SDL-target ownership layer for the Win32 bitmap/DC cluster:
+    - `CreateCompatibleDC`
+    - `DeleteDC`
+    - `DeleteObject`
+    - `GetObjectA`
+    - `SelectObject`
+    - `StretchBlt`
+    - `StretchDIBits`
+    - `LoadImageA`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch87.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch87.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch87`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch87.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `CreateCompatibleDC` / `DeleteDC` / `DeleteObject` / `GetObjectA` / `SelectObject` / `StretchBlt` / `StretchDIBits` / `LoadImageA` -> SDL-target surface ownership stubs in `platform_sdl_runtime.c`
+- Current leading blockers:
+  - the CMake static-library milestone remains green, but the broader executable probe still fails first on missing `main` / startup reconstruction plus the runtime family (`_wcpp_*`, `j_Mem_Alloc`, `j__nfree_`, `j_j__nfree_`, `vsprintf_`, `memset_`, `nmalloc_`, `JUMPOUT`, and heavier process/thread/env helpers)
+  - the new bitmap/DC seam functions disappeared from the first unresolved link wave, so the remaining linker noise is more tightly clustered around true runtime/startup reconstruction rather than surface ownership
+  - the castle production subsystem still has some decompiler scars, but the selected-preview flow is now internally consistent with asm-backed asset loading and the recovered panel-state split
+- Net effect:
+  - the castle production UI no longer reloads its selected-unit preview through a bogus caller argument
+  - the logs and recovered structures now reflect the real split between the selected preview handle and the two 12-slot licence arrays
+  - the SDL-target seam owns the first bitmap/DC resource-management slice, which reduces the remaining Win32-era import surface without pretending the renderer is already fully SDL-native
+
+## Batch 88 - CRT Wrapper Link-Surface Reduction Wave
+- Repairs:
+  - added the next safest compile-oriented runtime wrappers in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `vsprintf_`
+    - `fclose_`
+    - `fwrite_`
+    - `fread_`
+    - `strncmp_`
+    - `tolower_`
+  - kept the wrappers centralized in the quarantine translation unit rather than spreading CRT guesses through gameplay code; these remain link-surface reductions, not claims that the surrounding decompiler-corrupted call signatures are fully reconstructed
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch88.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch88`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this was a CRT/libc wrapper reduction pass in the runtime quarantine layer
+- Current leading blockers:
+  - the broader executable still fails first on missing `main` / startup reconstruction and the surviving runtime family (`_wcpp_*`, `j_Mem_Alloc`, `j__nfree_`, `j_j__nfree_`, `memset_`, `nmalloc_`, `nrealloc_`, `memmove_`, `memcpy_`, `JUMPOUT`, process/thread/env helpers, parser/AST/IO helpers)
+  - the first unresolved wave no longer includes `vsprintf_`, `fclose_`, `fwrite_`, `strncmp_`, or `tolower_`, which confirms this batch removed real linker noise rather than just shifting it to later symbols
+  - `fread_` is now owned by the quarantine layer as well, but the broader file/parser subsystem still needs asm-backed recovery before that path is trustworthy at runtime
+- Net effect:
+  - the direct link probe is cleaner and more focused on true startup/runtime reconstruction instead of low-risk CRT aliases
+  - the current build baseline remains the CMake static library, while the unresolved executable surface is now more sharply concentrated around `_wcpp_*`, allocator families, `JUMPOUT`, and the heavier Win32/runtime support layer
 
 ## Batch 82 - SDL Timing Runtime Reduction Wave
 - Repairs:

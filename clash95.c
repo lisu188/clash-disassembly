@@ -980,11 +980,11 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1);
 int  BuildingGarrisonDialog_TickAnimations(double a1);
 int sub_434110();
 unsigned int __thiscall sub_434760(void *this);
-void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5);
-void *sub_434E20();
-int  sub_4350A0(int a1, char a2);
-void * sub_435150(char a1);
-void * sub_435180(int a1, DWORD a2);
+void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4, int a5);
+void * CastleProduction_DrawLicenceGrid();
+int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2);
+void * CastleProduction_ReloadLicenceSlotSprites(char a1);
+void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2);
 int  sub_435280(DWORD a1);
 int  UI_DrawActionBox(int a1);
 int UI_GetGridIndexFromMouse();
@@ -46831,7 +46831,7 @@ void * BuildingGarrisonDialog_TickExitCountdown(int a1, double a2)
         if ( v14[0] != -1 )
         {
           Building_UnitsLeave((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding, v14, a2);
-          memset_(v12, 0);
+          memset(g_BuildingGarrisonDialogSelectedSlots, 0, sizeof(g_BuildingGarrisonDialogSelectedSlots));
         }
       }
     }
@@ -46841,8 +46841,6 @@ void * BuildingGarrisonDialog_TickExitCountdown(int a1, double a2)
 }
 // 432E06: variable 'v3' is possibly undefined
 // 432E0F: variable 'v4' is possibly undefined
-// 432EB3: variable 'v12' is possibly undefined
-// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 532138: using guessed type int dword_532138;
 // 532150: using guessed type int g_BuildingGarrisonDialogActiveBuilding;
 // 532158: using guessed type int g_BuildingGarrisonDialogSelectedSlots[12];
@@ -47573,7 +47571,7 @@ unsigned int __thiscall sub_434760(void *this)
 // 5322CC: using guessed type int dword_5322CC;
 
 //----- (004347A0) --------------------------------------------------------
-void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5)
+void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4, int a5)
 {
   int v5; // ecx
   _DWORD *v6; // eax
@@ -47612,11 +47610,11 @@ void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5)
   int v40; // [esp+46Ch] [ebp-Ch]
 
   if ( dword_5322D0[0] )
-    sub_405920(dword_5322D0);
+    sub_405920(&dword_5322D0[0]);
   sub_413430(v37, dword_532224[dword_532220[0]], a1);
-  v6 = (_DWORD *)Mem_Alloc(4112, v5, a2, a3);
+  v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, a3);
   if ( v6 )
-    v6 = DLXSpriteSet_Load(v6, a2);
+    v6 = DLXSpriteSet_Load(v6, v37);
   v35 = v7;
   dword_5322D0[0] = (int)v6;
   sub_413510(v37, dword_532224[dword_532220[0]], v7);
@@ -47775,7 +47773,7 @@ void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5)
 // 5322D0: using guessed type int dword_5322D0[];
 
 //----- (00434E20) --------------------------------------------------------
-void *sub_434E20()
+void * CastleProduction_DrawLicenceGrid()
 {
   int v0; // esi
   int v1; // edi
@@ -47910,103 +47908,86 @@ void *sub_434E20()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004350A0) --------------------------------------------------------
-int  sub_4350A0(int a1, char a2)
+int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2)
 {
-  int v2; // ecx
   int result; // eax
-  DWORD v4; // ebp
-  int v5; // edx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // edx
+  DWORD sprite_set; // ebp
   char v9[112]; // [esp+0h] [ebp-70h] BYREF
 
-  v2 = a1;
   result = *(char *)(a1 + dword_532218 + 402);
   if ( result == -1 )
   {
-    if ( dword_532304[v2] )
+    if ( dword_532304[a1] )
     {
-      result = nfree_(v2);
-      *(int *)((char *)dword_532304 + v8) = 0;
+      result = nfree_(dword_532304[a1]);
+      dword_532304[a1] = 0;
     }
-    dword_532304[v2] = 0;
+    dword_532304[a1] = 0;
   }
   else
   {
-    v4 = dword_532304[v2];
-    if ( v4 )
+    sprite_set = dword_532304[a1];
+    if ( sprite_set )
     {
-      nfree_(v2);
-      *(int *)((char *)dword_532304 + v5) = 0;
+      nfree_(sprite_set);
+      dword_532304[a1] = 0;
     }
-    sub_413350(v9, *(_BYTE *)(v2 + dword_532218 + 402), v2);
-    result = Mem_Alloc(4112, v6, a2, v4);
+    sub_413350(v9, *(_BYTE *)(a1 + dword_532218 + 402), a1);
+    result = Mem_Alloc(4112, 0x1010, a2, sprite_set);
     if ( result )
-      result = (int)DLXSpriteSet_Load((_DWORD *)result, a2);
-    dword_532304[v7] = result;
+      result = (int)DLXSpriteSet_Load((_DWORD *)result, v9);
+    dword_532304[a1] = result;
   }
   return result;
 }
-// 4350D4: variable 'v5' is possibly undefined
-// 4350E1: variable 'v2' is possibly undefined
-// 4350F4: variable 'v6' is possibly undefined
-// 435104: variable 'v7' is possibly undefined
-// 435128: variable 'v8' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 532218: using guessed type int dword_532218;
 // 532304: using guessed type int dword_532304[12];
 
 //----- (00435150) --------------------------------------------------------
-void * sub_435150(char a1)
+void * CastleProduction_ReloadLicenceSlotSprites(char a1)
 {
   int i; // edx
 
-  for ( i = 0; i < 12; sub_4350A0(i, a1) )
+  for ( i = 0; i < 12; CastleProduction_ReloadLicenceSlotSprite(i, a1) )
     ;
-  return sub_434E20();
+  return CastleProduction_DrawLicenceGrid();
 }
 // 435163: variable 'i' is possibly undefined
 
 //----- (00435180) --------------------------------------------------------
-void * sub_435180(int a1, DWORD a2)
+void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2)
 {
   void *result; // eax
   unsigned int v3; // edx
   int v4; // ecx
   int i; // eax
-  int v6; // edx
-  int v7; // ecx
 
   result = (void *)Time_Now(a1, dword_532204 + 10);
   if ( v3 <= (unsigned int)result )
   {
     dword_532204 = Time_Now(v4, v3);
-    for ( i = 0; i != 12; dword_5322D0[i] = v6 & 7 )
-    {
-      v6 = dword_5322D4[i++] + 1;
-      dword_5322D0[i] = v6;
-    }
+    for ( i = 0; i != 12; ++i )
+      dword_5322D4[i] = (dword_5322D4[i] + 1) & 7;
     if ( (dword_532334 != -1 || dword_532338 != -1) && ++dword_53233C == 8 )
     {
       if ( dword_532338 != -1 )
       {
         Building_RemoveUnitLicence(dword_532218, *(char *)(dword_532338 + dword_532218 + 402), a2);
-        nfree_(-1);
-        dword_5322C8 = v7;
+        nfree_(dword_532304[dword_532338]);
+        dword_5322C8 = -1;
         dword_532304[dword_532338] = 0;
       }
       dword_53233C = 0;
       dword_532338 = -1;
       dword_532334 = -1;
     }
-    return sub_434E20();
+    return CastleProduction_DrawLicenceGrid();
   }
   return result;
 }
 // 435192: variable 'v3' is possibly undefined
 // 435197: variable 'v4' is possibly undefined
-// 435231: variable 'v7' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 532204: using guessed type int dword_532204;
 // 532218: using guessed type int dword_532218;
@@ -48171,7 +48152,7 @@ int  sub_435640(int a1, int a2, DWORD a3, int a4, int a5)
   sub_419F20(a1);
   if ( dword_532220[0] )
     --dword_532220[0];
-  sub_4347A0(v5, a2, a3, a4, a5);
+  CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
   sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
   return sub_419F50(v6, v6);
 }
@@ -48189,7 +48170,7 @@ int  sub_435680(int a1, int a2, DWORD a3, int a4, int a5)
   sub_419F20(a1);
   if ( dword_532228[dword_532220[0]] != -1 )
     ++dword_532220[0];
-  sub_4347A0(v5, a2, a3, a4, a5);
+  CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
   sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
   return sub_419F50(v6, v6);
 }
@@ -48225,11 +48206,11 @@ int  sub_4356C0(int a1, DWORD a2, int a3)
   }
   dword_532334 = i;
   sub_4426C0(aDopen, 64);
-  sub_4350A0(v9, a1);
+  CastleProduction_ReloadLicenceSlotSprite(i, a1);
   UI_DrawActionBox(a3);
   sub_460D80((int)dword_544CD8, v10);
   CastleProduction_RebuildAvailableUnitList(v11);
-  sub_4347A0(v12, a1, a2, a3, v8);
+  CastleProduction_RedrawSelectedUnitPanel(v12, a1, a2, a3, v8);
   return sub_419F50(a1, v13);
 }
 // 4356DB: variable 'v4' is possibly undefined
@@ -48277,7 +48258,7 @@ int  sub_4357E0(int result, char a2, DWORD a3)
     sub_419F20(result);
     Render_Begin((int)dword_544CD8, 0);
     Building_SetUnitProduction(dword_532218, a2, a3);
-    sub_434E20();
+    CastleProduction_DrawLicenceGrid();
     sub_435280(a3);
     return sub_419F50(v4, v4);
   }
@@ -48297,7 +48278,7 @@ int  sub_435830(int a1, char a2, DWORD a3)
 
   sub_419F20(a1);
   Building_StopUnitProduction(v3, a2, a3);
-  sub_434E20();
+  CastleProduction_DrawLicenceGrid();
   sub_435280(a3);
   return sub_419F50(v4, v5);
 }
@@ -48338,8 +48319,8 @@ int  sub_435860(int a1, int a2, DWORD a3, char a4)
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   sub_419D80(dword_515130);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_4347A0(v8, 20, a3, a4, v7);
-  sub_435150(20);
+  CastleProduction_RedrawSelectedUnitPanel(v8, 20, a3, a4, v7);
+  CastleProduction_ReloadLicenceSlotSprites(20);
   sub_435280(a3);
   UI_DrawActionBox(a4);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
@@ -48359,32 +48340,27 @@ int  sub_435860(int a1, int a2, DWORD a3, char a4)
 //----- (004359B0) --------------------------------------------------------
 BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 {
-  int v1; // ecx
-  int v2; // esi
-  int v3; // ebx
+  int metadata_offset; // esi
+  int out_index; // ebx
+  int unit_type; // ecx
   BOOL result; // eax
-  int v5; // ecx
 
-  memset_(this, -1);
-  v1 = 0;
-  v2 = 0;
-  v3 = 0;
+  (void)this;
+  memset(dword_532224, 0xFF, 0xA4);
+  metadata_offset = 0;
+  out_index = 0;
+  unit_type = 0;
   do
   {
-    result = Building_CanEquipAddon((char *)dword_532218, v1);
-    if ( result )
-    {
-      if ( *(char *(**)[102])((char *)&g_UnitTypeMetadataRecords + v2) )
-        dword_532220[++v3] = v5;
-    }
-    v1 = v5 + 1;
-    v2 += 88;
+    result = Building_CanEquipAddon((char *)dword_532218, unit_type);
+    if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
+      dword_532224[out_index++] = unit_type;
+    ++unit_type;
+    metadata_offset += 88;
   }
-  while ( v1 < 40 );
+  while ( unit_type < 40 );
   return result;
 }
-// 4359EC: variable 'v5' is possibly undefined
-// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 532218: using guessed type int dword_532218;
 // 532220: using guessed type int dword_532220[];
@@ -48428,7 +48404,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
         if ( v7 == dword_532224[v6] && v6 != dword_532220[0] )
         {
           dword_532220[0] = v6;
-          sub_4347A0(v7, dword_532224[0], a1, a2, a3);
+          CastleProduction_RedrawSelectedUnitPanel(v7, dword_532224[0], a1, a2, a3);
           return sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
         }
       }
@@ -48467,7 +48443,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
       {
         dword_532220[0] += v3;
         Render_Pump();
-        sub_4347A0(v5, v3, a1, a2, a3);
+        CastleProduction_RedrawSelectedUnitPanel(v5, v3, a1, a2, a3);
         sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
         Render_Present((int)dword_544CD8);
         return Render_Begin((int)dword_544CD8, 0);
@@ -48495,7 +48471,7 @@ int  CastleProduction_TickAnimations(DWORD a1)
 
   v1 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   sub_434760(v2);
-  sub_435180(v3, a1);
+  CastleProduction_TickLicenceGridAnimations(v3, a1);
   return Render_SetResourceHandle((int)&unk_51D4C0, v1);
 }
 // 435B9F: variable 'v2' is possibly undefined
@@ -48532,17 +48508,13 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   dword_532214 = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
   dword_532220[0] = 0;
   dword_5322D0[0] = 0;
-  memset(dword_5322D0, 0, 12 * sizeof(dword_5322D0[0]));
-  do
-  {
-    v3 = Rng_RandRange(0, 7);
-    *(int *)((char *)dword_5322D0 + v4) = v3;
-  }
-  while ( v4 != 48 );
+  memset(dword_532304, 0, sizeof(dword_532304));
+  for ( v24 = 0; v24 != 12; ++v24 )
+    dword_5322D4[v24] = Rng_RandRange(0, 7);
   dword_532338 = -1;
   dword_532334 = -1;
   dword_5322C8 = -1;
-  CastleProduction_RebuildAvailableUnitList((void *)0x30);
+  CastleProduction_RebuildAvailableUnitList(0);
   v6 = Mem_Alloc(1024, v5, -1, a2);
   if ( v6 )
     v6 = _wcpp_4_ctor_array__(v7, 256);
@@ -48558,7 +48530,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   sub_401AB0((_BYTE *)dword_53221C, 6);
   v13 = (_DWORD *)Mem_Alloc(4112, v12, v11, v8);
   if ( v13 )
-    v13 = DLXSpriteSet_Load(v13, v11);
+    v13 = DLXSpriteSet_Load(v13, dword_532214 ? aCastle_chrD_19 : aCastle_pogD_19);
   dword_53220C = (int)v13;
   if ( dword_532214 )
     v14 = aCastle_chrD_19;
@@ -48576,8 +48548,8 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   sub_419D80(dword_515130);
   sub_460D80((int)dword_544CD8, v21);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_4347A0(v22, 20, v8, a3, v10);
-  sub_435150(20);
+  CastleProduction_RedrawSelectedUnitPanel(v22, 20, v8, a3, v10);
+  CastleProduction_ReloadLicenceSlotSprites(20);
   sub_435280(v8);
   UI_DrawActionBox(a3);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
@@ -48600,22 +48572,18 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   dword_526A30 = v23;
   sub_405920(&dword_53220C);
   if ( dword_5322D0[0] )
-    sub_405920(dword_5322D0);
-  v24 = 0;
-  v25 = 0;
-  do
+    sub_405920(&dword_5322D0[0]);
+  for ( v24 = 0; v24 != 12; ++v24 )
   {
-    if ( v25 != dword_532304[v24] )
+    if ( dword_532304[v24] )
     {
-      nfree_(v25);
-      dword_532304[v24] = v25;
+      nfree_(dword_532304[v24]);
+      dword_532304[v24] = 0;
     }
-    ++v24;
   }
-  while ( v24 != 12 );
   Render_Pump();
   sub_404F20((int *)&unk_51D4C0, 20);
-  return j__nfree_();
+  return nfree_(dword_53221C);
 }
 // 435C1C: variable 'v4' is possibly undefined
 // 435C48: variable 'v5' is possibly undefined
