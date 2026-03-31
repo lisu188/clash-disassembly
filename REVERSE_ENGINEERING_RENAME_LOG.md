@@ -1459,6 +1459,37 @@
 | missing SDL-target timing/version imports | `GetVersion` runtime seam in `platform_sdl_runtime.c` | sdl_port_fix | Platform / SDL Runtime | Medium | The placeholder returns an NT-style major version `4` so the recovered OS-family probes follow a stable non-9x path until startup/runtime reconstruction is deeper. This is an explicit compile/runtime seam choice, not a claim about the original host environment. | c | yes: Kierkegaard |
 | missing SDL-target drive-type import | `GetDriveTypeA` runtime seam in `platform_sdl_runtime.c` | sdl_port_fix | Platform / SDL Runtime | Medium | Added as a conservative fixed-drive placeholder so the import surface keeps shrinking under CMake/link probes while CD-path semantics remain explicitly deferred. | c | yes: Kierkegaard |
 
+## Batch 89 - Battle Prompt And Garrison Asset Load Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_42D560` | `UnitBattle_HandleRetreatAction` | Function | Battle / UI | High | The helper is only reachable from the selected-action path for the retreat button, validates the current battle context, and dispatches the retreat-specific state changes before returning to the battle turn loop. | c, asm | yes: Boyle |
+| `sub_42D670` | `UnitBattle_HandlePrepareDefenceAction` | Function | Battle / UI | High | The body is gated by the defend/preparation action button, toggles the selected unit into the defensive readiness state, and reuses the same selected-action redraw flow as the other action-button handlers. | c, asm | yes: Boyle |
+| `sub_42D730` | `UnitBattle_ShowPlayerMessageBanner` | Function | Battle / UI | High | Shared callers pass modal battle text such as the current-player prompt and god-anger messaging while the function formats the banner with player portrait/name state and waits for the brief UI display cycle. | c, asm | yes: Boyle |
+| `sub_42DAE0` | `UnitBattle_ShowCurrentPlayerPromptDialog` | Function | Battle / UI | High | Builds the current-player prompt text, enters the short modal loop around the same banner/dialog state family, and is used specifically at player-turn handoff in tactical combat. | c, asm | yes: Boyle |
+| `sub_42DEC0` | `UnitBattle_AnimateSelectedUnitPanel` | Function | Battle / UI | Medium | The function only redraws and advances the selected-unit side panel animation state; it is adjacent to turn/prompt flow but does not own those transitions itself. | c | yes: Boyle |
+| `sub_431940` | `UnitBattle_ShowWallInfoPopup` | Function | Battle / UI | High | Loads `battle\\mur_info.s32`, selects the localized wall-description strings, and shows the hover/info popup for wall sections during siege battles. | c, asm, exe | yes: Boyle |
+| `BuildingGarrisonDialog_ReloadSlotSprite: DLXSpriteSet_Load((_DWORD *)result, v5)` | `BuildingGarrisonDialog_ReloadSlotSprite: DLXSpriteSet_Load((_DWORD *)result, &v10)` | compile_fix | Building / Garrison | High | Asm at `0x432d30` shows the helper building the slot asset path into the current stack frame and passing `esp` to `DLXSpriteSet_Load`; `v5` was a false register-split artifact. | c, asm | yes: Kant |
+| `BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites: DLXSpriteSet_Load(v7, a2)` | `BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites: DLXSpriteSet_Load(v7, v15)` | compile_fix | Building / Garrison | High | Asm at `0x4336c0` shows the selected-unit detail loader building the sprite path into its stack buffer and loading from that buffer, not from the incoming `a2` argument. | c, asm | yes: Kant |
+
+## Batch 90 - Castle Preview Helper Naming Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_434110` | `CastleProduction_DrawSelectedUnitPortrait` | Function | Castle / Production | High | The body reads the currently loaded preview sprite set from `dword_5322D0`, measures the current frame bounds, draws the preview sprite at the portrait position, and optionally presents. It does not rebuild panel state or reload assets. | c, asm | yes: Kant |
+| `sub_434760` | `CastleProduction_AnimateSelectedUnitPortrait` | Function | Castle / Production | High | The helper only checks the `Time_Now` gate, advances the selected preview frame `dword_5322CC = (dword_5322CC + 1) & 7`, and tail-calls `CastleProduction_DrawSelectedUnitPortrait`. | c, asm | yes: Kant |
+
+## Batch 91 - CRT Startup And TLS Naming Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_472558` | `CRT_ExitProcessWithFinalizers` | Function | Runtime / Startup | High | The helper invokes the runtime exit/finalizer callback path and then tail-calls the lower-level process-exit routine. Both observed callers use it as the last step out of startup/runtime control flow. | c, asm, map | yes: Dirac |
+| `sub_4855AF` | `CRT_InitializeRuntimeBeforeWinMain` | Function | Runtime / Startup | High | Gets the module handle, initializes runtime tables and stack limits, calls the runtime init hooks, and prepares the process before the broader startup flow continues. | c, asm, map | yes: Dirac |
+| `sub_4865AA` | `CRT_GetOrCreateThreadDataPreserveLastError` | Function | Runtime / TLS | High | Saves `GetLastError`, returns existing TLS thread data or reallocates/creates it, then restores the saved last-error value before returning. | c, asm | yes: Dirac |
+| `sub_486628` | `CRT_AllocateTlsIndex` | Function | Runtime / TLS | High | Owns the `TlsAlloc` loop and the legacy Win32 version guard that skips low TLS indices, returning whether a valid TLS slot was acquired. | c, asm | yes: Dirac |
+| `sub_48667D` | `CRT_CreateAndAttachThreadData` | Function | Runtime / TLS | High | Builds a new thread-data block, links it into the runtime list, and stores it in the active TLS slot. | c, asm | yes: Dirac |
+| `sub_4866CC` | `CRT_DetachThreadDataAndMaybeCloseHandle` | Function | Runtime / TLS | High | Removes the current TLS thread-data block, clears the TLS slot, and optionally closes the saved OS handle carried in the thread data. | c, asm | yes: Dirac |
+| `sub_486721` | `CRT_DestroyTlsIndexAndThreadData` | Function | Runtime / TLS | High | Calls the detach helper with close-on-detach enabled, frees the TLS index, and resets `dwTlsIndex` to `-1`. | c, asm | yes: Dirac |
+| `sub_48674D` | `CRT_InitializeThreadAndFileHandleHooks` | Function | Runtime / TLS / File Handles | High | Populates the runtime hook tables for thread-data locking and file-handle ownership, initializes the shared critical-section slab, and binds the active TLS getter/destroyer callbacks. | c, asm | yes: Dirac |
+| `sub_486869` | `CRT_ShutdownThreadAndFileHandleHooks` | Function | Runtime / TLS / File Handles | High | Walks the hook-managed critical-section slabs, frees thread-data state, and tears down the runtime hook ownership installed by `CRT_InitializeThreadAndFileHandleHooks`. | c, asm | yes: Dirac |
+
 ## Batch 84 – Battle Action Semantics Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|

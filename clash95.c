@@ -928,15 +928,15 @@ __int16 UnitBattle_RefreshSelectedUnitUI();
 int UnitBattle_RefreshSelectedActionButtons();
 int  UnitBattle_SelectNextControllableUnit(int a1, int a2, char a3);
 __int16 UnitBattle_ToggleSelectedShootingMode();
-int  sub_42D560(int a1, int a2, char a3, DWORD a4);
+int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4);
 int UnitBattle_ToggleSelectedChargeMode();
-int  sub_42D670(int a1, int a2, DWORD a3, char a4, char a5);
+int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, char a5);
 int sub_42D6F0();
-int  sub_42D730(int a1, int a2, int a3, DWORD a4);
+int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4);
 int  sub_42DAB0(int a1, int a2);
 int  sub_42DAD0(int a1, int a2);
-int  sub_42DAE0(int a1, char a2, DWORD a3);
-int  sub_42DEC0(int a1, int a2, int a3);
+int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3);
+int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3);
 __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3);
 signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2);
 void  HandleBattleResults(int a1, int a2, int a3, unsigned __int8 *a4, DWORD a5);
@@ -954,7 +954,7 @@ int  sub_42FFB0(int a1, int a2);
 int  UnitBattle_RedrawTile(int a1, int a2);
 int UnitBattle_RedrawVisibleGrid();
 int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4);
-int  sub_431940(int a1, int a2, int a3, int a4, DWORD a5);
+int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5);
 __int16 sub_431CC0();
 __int16  UnitBattle_RedrawUnitFootprint(int a1);
 unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1);
@@ -978,8 +978,8 @@ void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2);
 void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int a1, DWORD a2);
 int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1);
 int  BuildingGarrisonDialog_TickAnimations(double a1);
-int sub_434110();
-unsigned int __thiscall sub_434760(void *this);
+int CastleProduction_DrawSelectedUnitPortrait();
+unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this);
 void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4, int a5);
 void * CastleProduction_DrawLicenceGrid();
 int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2);
@@ -1803,7 +1803,7 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4);
 const char ** sub_472320(const char **result, signed int a2, const char *a3);
 _DWORD * sub_472470(_DWORD *result);
 // int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD); weak
-void  __noreturn sub_472558(int a1, int a2, int a3);
+void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3);
 void  __noreturn sub_472584(int a1, int a2, int a3);
 int __fastcall sub_4725B0(int a1, int a2);
 signed int  sub_472620(_DWORD *a1);
@@ -2374,7 +2374,7 @@ int  sub_485296(char *a1);
 _DWORD nullsub_8(); // weak
 _DWORD j___NTAddFileHandle_(); // weak
 int  sub_485384(int a1, int a2, int a3, HMODULE a4);
-int  sub_4855AF(int a1, int a2);
+int  CRT_InitializeRuntimeBeforeWinMain(int a1, int a2);
 // int _InitRtns(void); weak
 // int __fastcall _FiniRtns(_DWORD, _DWORD); weak
 signed int  sub_4856F0(signed int result, char *a2);
@@ -2428,15 +2428,15 @@ int sub_486518(); // weak
 void  sub_48651D(int a1);
 int sub_48657E(); // weak
 void  sub_486583(int result);
-_BYTE *sub_4865AA();
+_BYTE *CRT_GetOrCreateThreadDataPreserveLastError();
 int  sub_4865EE(int a1, int a2);
-BOOL sub_486628();
-int  sub_48667D(int a1, int a2);
-char * sub_4866CC(char *result);
-char *sub_486721();
+BOOL CRT_AllocateTlsIndex();
+int  CRT_CreateAndAttachThreadData(int a1, int a2);
+char * CRT_DetachThreadDataAndMaybeCloseHandle(char *result);
+char *CRT_DestroyTlsIndexAndThreadData();
 _DWORD loc_48672B(); // weak
-void sub_48674D();
-int __thiscall sub_486869(void *this);
+void CRT_InitializeThreadAndFileHandleHooks();
+int __thiscall CRT_ShutdownThreadAndFileHandleHooks(void *this);
 int  sub_4869F0(int a1, const CHAR *a2, _DWORD *a3, int a4);
 signed int  sub_486B10(int a1, const CHAR *a2);
 signed int  sub_486BA0(int a1, void *a2, int a3, int a4, int a5, int a6);
@@ -12883,7 +12883,7 @@ void __cdecl __noreturn App_RequestQuit(int a1)
   ShowWindow(hWnd, 0);
   MessageBoxA(hWnd, Text, Caption, 0);
   App_Shutdown();
-  sub_472558(1, v4, v5);
+  CRT_ExitProcessWithFinalizers(1, v4, v5);
 }
 // 401DB2: variable 'v3' is possibly undefined
 // 401DEB: variable 'v4' is possibly undefined
@@ -42576,7 +42576,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
   v25[2] = (int)off_514B50[2];
   if ( *(_DWORD *)(gameData + 1423 * a1 + 140059) )
   {
-    sub_42D730(v25[(unsigned __int8)g_LanguageIndex], a1, 0, a1);
+    UnitBattle_ShowPlayerMessageBanner(v25[(unsigned __int8)g_LanguageIndex], a1, 0, a1);
     Render_Pump();
     v27 = g_RenderDevice;
     _wcpp_4_ctor_array__(v7, 256);
@@ -43033,7 +43033,7 @@ __int16 sub_42CB50()
       if ( v4 == -1 )
       {
         if ( *(_BYTE *)(v3 + 20 * v2 + dword_532048 + 3134) )
-          sub_431940(100, 100, v3, v2, v0);
+          UnitBattle_ShowWallInfoPopup(100, 100, v3, v2, v0);
       }
       else
       {
@@ -43351,7 +43351,7 @@ __int16 UnitBattle_ToggleSelectedShootingMode()
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D560) --------------------------------------------------------
-int  sub_42D560(int a1, int a2, char a3, DWORD a4)
+int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4)
 {
   int result; // eax
   _DWORD v6[4]; // [esp+0h] [ebp-10h] BYREF
@@ -43363,7 +43363,7 @@ int  sub_42D560(int a1, int a2, char a3, DWORD a4)
     v6[0] = off_514B5C[0];
     v6[1] = off_514B5C[1];
     v6[2] = off_514B5C[2];
-    result = sub_42DAE0((int)v6, a3, a4);
+    result = UnitBattle_ShowCurrentPlayerPromptDialog((int)v6, a3, a4);
     dword_532064 = result;
   }
   return result;
@@ -43421,7 +43421,7 @@ int UnitBattle_ToggleSelectedChargeMode()
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D670) --------------------------------------------------------
-int  sub_42D670(int a1, int a2, DWORD a3, char a4, char a5)
+int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, char a5)
 {
   int v6; // ebx
   int result; // eax
@@ -43467,7 +43467,7 @@ int sub_42D6F0()
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (0042D730) --------------------------------------------------------
-int  sub_42D730(int a1, int a2, int a3, DWORD a4)
+int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
 {
   int v4; // ecx
   int v5; // ecx
@@ -43609,7 +43609,7 @@ int  sub_42DAD0(int a1, int a2)
 // 532080: using guessed type int dword_532080;
 
 //----- (0042DAE0) --------------------------------------------------------
-int  sub_42DAE0(int a1, char a2, DWORD a3)
+int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -43701,7 +43701,7 @@ int  sub_42DAE0(int a1, char a2, DWORD a3)
 // 545150: using guessed type int dword_545150;
 
 //----- (0042DEC0) --------------------------------------------------------
-int  sub_42DEC0(int a1, int a2, int a3)
+int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
 {
   int v4; // eax
   char v5; // dl
@@ -43972,7 +43972,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   v8[1] = (int)off_514E2C[1];
   v8[2] = (int)off_514E2C[2];
   v4 = 1;
-  sub_42D730(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
+  UnitBattle_ShowPlayerMessageBanner(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
   v5 = dword_532064;
   dword_532068 = 0;
   if ( !dword_532064 )
@@ -44639,14 +44639,14 @@ LABEL_5:
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     {
       if ( v50 )
-        sub_42DEC0(0, v47, v50);
+        UnitBattle_AnimateSelectedUnitPanel(0, v47, v50);
       v55 = UnitBattle_RunTurnLoop(v47, v52);
       v50 = 0;
     }
     else
     {
       if ( !v50 )
-        sub_42DEC0(1, v47, 0);
+        UnitBattle_AnimateSelectedUnitPanel(1, v47, 0);
       v50 = 1;
       v55 = sub_43CD00(g_CurrentPlayerIndex);
       if ( !Battle_HasUnitsForBothSides() )
@@ -46011,7 +46011,7 @@ LABEL_36:
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00431940) --------------------------------------------------------
-int  sub_431940(int a1, int a2, int a3, int a4, DWORD a5)
+int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
 {
   _DWORD *v5; // eax
   int v6; // ecx
@@ -46753,7 +46753,7 @@ int  BuildingGarrisonDialog_ReloadSlotSprite(int result, int a2, int a3, DWORD a
       sub_413350(&v10, *(_BYTE *)(v6 + 18), v4);
       result = Mem_Alloc(4112, v8, v5, a4);
       if ( result )
-        result = (int)DLXSpriteSet_Load((_DWORD *)result, v5);
+        result = (int)DLXSpriteSet_Load((_DWORD *)result, &v10);
       g_BuildingGarrisonDialogSlotSpriteSets[v9] = result;
     }
   }
@@ -47222,7 +47222,7 @@ void  BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites(int a1, char a2, DW
       sub_413430(v15, *(_BYTE *)(v5 + 18), g_BuildingGarrisonDialogActiveBuilding);
       v7 = (_DWORD *)Mem_Alloc(4112, v6, a2, a3);
       if ( v7 )
-        v7 = DLXSpriteSet_Load(v7, a2);
+        v7 = DLXSpriteSet_Load(v7, v15);
       g_BuildingGarrisonDialogSelectedUnitSpriteSet = (int)v7;
       sub_413510(
         v15,
@@ -47510,7 +47510,7 @@ int  BuildingGarrisonDialog_TickAnimations(double a1)
 // 433C0E: variable 'v3' is possibly undefined
 
 //----- (00434110) --------------------------------------------------------
-int sub_434110()
+int CastleProduction_DrawSelectedUnitPortrait()
 {
   void *v0; // ebp
   __int16 SpriteWidth; // ax
@@ -47550,7 +47550,7 @@ int sub_434110()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00434760) --------------------------------------------------------
-unsigned int __thiscall sub_434760(void *this)
+unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this)
 {
   unsigned int result; // eax
   unsigned int v2; // edx
@@ -47561,7 +47561,7 @@ unsigned int __thiscall sub_434760(void *this)
   {
     dword_532200 = Time_Now(v3, v2);
     dword_5322CC = ((_BYTE)dword_5322CC + 1) & 7;
-    return sub_434110();
+    return CastleProduction_DrawSelectedUnitPortrait();
   }
   return result;
 }
@@ -47743,7 +47743,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   v30 = DLX_GetSpriteHeight(dword_53220C, 0x11u);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 186, 69, v30 + 69, v33, 0x45u, 0xBAu);
   Render_SaveBackbuffer((int)&unk_51D4C0);
-  sub_434110();
+  CastleProduction_DrawSelectedUnitPortrait();
   result = v39;
   g_RenderDevice = v39;
   return result;
@@ -48470,7 +48470,7 @@ int  CastleProduction_TickAnimations(DWORD a1)
   int v3; // ecx
 
   v1 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
-  sub_434760(v2);
+  CastleProduction_AnimateSelectedUnitPortrait(v2);
   CastleProduction_TickLicenceGridAnimations(v3, a1);
   return Render_SetResourceHandle((int)&unk_51D4C0, v1);
 }
@@ -82047,7 +82047,7 @@ void __thiscall __noreturn sub_470A00(void *this)
 
   fputs_(this, &unk_51A374);
   fputs_(v1, &unk_51A374);
-  sub_472558(255, v2, v3);
+  CRT_ExitProcessWithFinalizers(255, v2, v3);
 }
 // 470A18: variable 'v1' is possibly undefined
 // 470A22: variable 'v2' is possibly undefined
@@ -83495,7 +83495,7 @@ _DWORD * sub_472470(_DWORD *result)
 // 50EC84: using guessed type int (*off_50EC84)();
 
 //----- (00472558) --------------------------------------------------------
-void  __noreturn sub_472558(int a1, int a2, int a3)
+void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3)
 {
   int v4; // edx
   int v5; // ecx
@@ -99795,7 +99795,7 @@ LABEL_22:
 // 54E704: using guessed type int dword_54E704;
 
 //----- (004855AF) --------------------------------------------------------
-int  sub_4855AF(int a1, int a2)
+int  CRT_InitializeRuntimeBeforeWinMain(int a1, int a2)
 {
   HMODULE ModuleHandleA; // ebx
   int v5; // ecx
@@ -100788,7 +100788,7 @@ void  sub_486583(int result)
 }
 
 //----- (004865AA) --------------------------------------------------------
-_BYTE *sub_4865AA()
+_BYTE *CRT_GetOrCreateThreadDataPreserveLastError()
 {
   DWORD LastError; // esi
   _BYTE *Value; // eax
@@ -100844,7 +100844,7 @@ int  sub_4865EE(int a1, int a2)
 // 51AF00: using guessed type int dword_51AF00;
 
 //----- (00486628) --------------------------------------------------------
-BOOL sub_486628()
+BOOL CRT_AllocateTlsIndex()
 {
   dwTlsIndex = TlsAlloc();
   if ( HIWORD(dword_51A8A7) >= 0x8000u && (unsigned __int8)dword_51A8A7 < 4u )
@@ -100858,7 +100858,7 @@ BOOL sub_486628()
 // 51A8A7: using guessed type int dword_51A8A7;
 
 //----- (0048667D) --------------------------------------------------------
-int  sub_48667D(int a1, int a2)
+int  CRT_CreateAndAttachThreadData(int a1, int a2)
 {
   int result; // eax
   int v3; // ecx
@@ -100887,7 +100887,7 @@ int  sub_48667D(int a1, int a2)
 // 4B57DB: using guessed type int __fastcall _AddThreadData_(_DWORD, _DWORD);
 
 //----- (004866CC) --------------------------------------------------------
-char * sub_4866CC(char *result)
+char * CRT_DetachThreadDataAndMaybeCloseHandle(char *result)
 {
   char *v1; // ebx
   void *v2; // esi
@@ -100913,11 +100913,11 @@ char * sub_4866CC(char *result)
 // 4B583C: using guessed type int _RemoveThreadData_(void);
 
 //----- (00486721) --------------------------------------------------------
-char *sub_486721()
+char *CRT_DestroyTlsIndexAndThreadData()
 {
   char *result; // eax
 
-  result = sub_4866CC((char *)1);
+  result = CRT_DetachThreadDataAndMaybeCloseHandle((char *)1);
   if ( dwTlsIndex != -1 )
   {
     result = (char *)TlsFree(dwTlsIndex);
@@ -100927,7 +100927,7 @@ char *sub_486721()
 }
 
 //----- (0048674D) --------------------------------------------------------
-void sub_48674D()
+void CRT_InitializeThreadAndFileHandleHooks()
 {
   off_51A56C = (int (__thiscall *)(_DWORD))sub_4864AA;
   off_51A570 = (int (__fastcall *)(_DWORD, _DWORD))sub_4864B7;
@@ -100948,11 +100948,11 @@ void sub_48674D()
   InitializeCriticalSection((LPCRITICAL_SECTION)dword_54DECC);
   dword_54DED0 = 1;
   off_51A5A0[0] = sub_48657E;
-  off_51A5A4 = (_DWORD (*)())sub_486721;
+  off_51A5A4 = (_DWORD (*)())CRT_DestroyTlsIndexAndThreadData;
   off_51A59C[0] = sub_486518;
   _AddThreadData_(sub_486518, lpTlsValue);
   TlsSetValue(dwTlsIndex, lpTlsValue);
-  off_51A568 = (__int64 (__fastcall *)(_DWORD, _DWORD))sub_4865AA;
+  off_51A568 = (__int64 (__fastcall *)(_DWORD, _DWORD))CRT_GetOrCreateThreadDataPreserveLastError;
   JUMPOUT(0x48671B);
 }
 // 486864: control flows out of bounds to 48671B
@@ -100983,7 +100983,7 @@ void sub_48674D()
 // 54DED0: using guessed type int dword_54DED0;
 
 //----- (00486869) --------------------------------------------------------
-int __thiscall sub_486869(void *this)
+int __thiscall CRT_ShutdownThreadAndFileHandleHooks(void *this)
 {
   int v1; // edx
   int v2; // ecx
@@ -183526,7 +183526,7 @@ BOOL __cdecl sub_4E4F71(LPVOID lpThreadParameter)
         v4 = alloca(v3),
         memset_(v9, 0),
         *(_DWORD *)(v5 + 240) = dword_51AF00,
-        sub_48667D(v5, v5)) )
+        CRT_CreateAndAttachThreadData(v5, v5)) )
   {
     v7 = hObject;
     *(_DWORD *)(off_51A568(v1, v2) + 222) = v7;
@@ -183565,10 +183565,10 @@ HANDLE  sub_4E5018(int a1, int a2, int a3)
   v3 = a1;
   if ( dwTlsIndex == -1 )
   {
-    result = (HANDLE)sub_486628();
+    result = (HANDLE)CRT_AllocateTlsIndex();
     if ( !result )
       return result;
-    sub_48674D();
+    CRT_InitializeThreadAndFileHandleHooks();
   }
   Parameter[0] = v3;
   Parameter[1] = a3;
@@ -183597,7 +183597,7 @@ void __fastcall __noreturn sub_4E50F1(int a1, int a2)
   off_51A5AC(a2, a1);
   sub_4B52E6(v3, v2);
   if ( !dword_54DD90 )
-    sub_4866CC((char *)1);
+    CRT_DetachThreadDataAndMaybeCloseHandle((char *)1);
   ExitThread(0);
 }
 // 4E50F9: variable 'v3' is possibly undefined
