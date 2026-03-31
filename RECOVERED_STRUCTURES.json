@@ -303,14 +303,12 @@
       { "offset": 852, "name": "battle_unit_entries[22]", "type": "BattleUnitEntry[22]", "notes": "22 tactical-battle unit entries, each 31 bytes wide, holding per-battle slot state such as type, owner, AP, quantity, coordinates, facing, path pointer, and current animation state." },
       { "offset": 1534, "name": "tile_occupant_ids[20][20]", "type": "int16[20][20]", "notes": "Per-battle-tile occupant index grid; `-1` marks an empty tile." },
       { "offset": 2334, "name": "tile_effect_overlay[20][20][2]", "type": "uint8[20][20][2]", "notes": "Per-tile battle overlay/effect bytes used by death, ranged-hit, and footprint redraw helpers." },
-      { "offset": 3134, "name": "wall_section_hitpoints[20][20]", "type": "uint8[20][20]", "notes": "Per-wall-tile durability grid. `UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI loops read or subtract these bytes when breaching castle walls." },
       { "offset": 3944, "name": "selected_unit_index_by_player[5]", "type": "int32[5]", "notes": "Per-player tactical selection state used to choose the initial active unit when each side's turn begins." }
     ],
     "evidence": [
       "`Battle_RunTacticalCombat` allocates and seeds the block, then `HandleBattleResults` reads side ids from offsets `+836` and `+840` while copying the final 22 battle-unit entries back out.",
       "`UnitBattle_RunTurnLoop` restores the tactical viewport from offsets `+808` and `+812`, resolves the selected unit from the per-player indices at `+3944`, and then drives the active-turn input loop over the same runtime block.",
       "`UnitBattle_MoveTrack`, `UnitBattle_Attack`, and the battle redraw helpers all treat offset `+852` as the base of the 31-byte tactical unit-entry array and offset `+1534` as the 20x20 occupant grid.",
-      "`UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI command loops index `battle_state + 3134 + 20 * column + row` as a mutable byte grid whose values drop to zero when wall sections collapse, proving a dedicated per-tile wall-hitpoint plane inside the same runtime block.",
       "The battle tooltip, death animation, and hit/recoil helpers also index the contiguous overlay bytes beginning at `+2334`, proving one shared tactical-state region rather than scattered globals."
     ]
   },
@@ -569,6 +567,40 @@
       "`Castle_OpenManagementScreen` seeds the selected-building pointer, loads all three sprite sets, allocates the screen surface, clears both exit flags, and then drives the modal loop through those globals.",
       "`Castle_RebuildSceneBuffers`, `Castle_RenderCompositeSceneLayers`, `Castle_DrawStatusPanel`, and `Castle_UpdateAmbientAnimationLayers` all read the same selected-building pointer and sprite/surface globals, proving they belong to one castle-screen runtime region.",
       "`Castle_ConfirmDestroyCurrentBuilding` sets both `destroy_confirmed` and `exit_requested`, and the screen runner checks those same flags after the loop to decide whether to continue with the destroy flow."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogActions",
+    "kind": "ui_action_table",
+    "base_symbol": "BuildingGarrisonDialogActions / dword_514FC0",
+    "description": "Recovered action-box descriptor table for the building garrison dialog. The current decompiler emits only the first dword triplet cleanly, but the callback wiring and localized button labels prove the table drives the `Back`, `Production`, `Cure`, `Training`, and `Leave barracks` actions.",
+    "fields": [
+      { "offset": 0, "name": "action_box_descriptor_head", "type": "uint32[3]", "notes": "Current decompiled head triplet. The surrounding action records remain overlapped, so this catalog keeps the table conservative instead of fabricating a complete struct layout." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_ShowProductionDialog` rebuilds the screen by passing the renamed table into `sub_419D80`, which is the same action-box builder used by other modal UI screens.",
+      "Asm-backed subagent evidence tied the callback family to the localized garrison actions `Back`, `Production`, `Cure`, `Training`, and `Leave barracks`, confirming that the table is the dialog's action descriptor block rather than generic castle state."
+    ]
+  },
+  {
+    "name": "MiniMapState",
+    "kind": "ui_state_region",
+    "base_symbol": "word_523344 / word_523346 / word_523348 / word_52334A / dword_52334C / byte_523F54 / dword_523F50 / dword_511FF0",
+    "description": "Shared minimap runtime state. The create/draw/blit helpers treat these globals as one coherent subsystem covering the minimap screen rect, backing surface, pixel scale, terrain-color lookup, and enabled draw layers.",
+    "fields": [
+      { "offset": 0, "name": "screen_left", "type": "int16", "notes": "Actual symbol `word_523344`. Left edge of the minimap on the main UI." },
+      { "offset": 2, "name": "screen_top", "type": "int16", "notes": "Actual symbol `word_523346`. Top edge of the minimap on the main UI." },
+      { "offset": 4, "name": "screen_width", "type": "int16", "notes": "Actual symbol `word_523348`. Width of the minimap surface in pixels." },
+      { "offset": 6, "name": "screen_height", "type": "int16", "notes": "Actual symbol `word_52334A`. Height of the minimap surface in pixels." },
+      { "offset": 8, "name": "surface_handle", "type": "RenderSurface *", "notes": "Actual symbol `dword_52334C`. Backing surface allocated by `MiniMap_CreateSurface` and blitted by the dirty-rect helper." },
+      { "offset": 12, "name": "pixels_per_tile", "type": "uint8", "notes": "Actual symbol `byte_523F54`. Dynamic minimap scale chosen from the world dimensions." },
+      { "offset": 16, "name": "terrain_color_table_ptr", "type": "uint8 *", "notes": "Actual symbol `dword_523F50`. Lookup used by the minimap tile-cell renderer when painting terrain colors." },
+      { "offset": 20, "name": "draw_layer_mask", "type": "uint32", "notes": "Actual symbol `dword_511FF0`. Bitmask controlling whether terrain, units, and buildings contribute to the minimap cell color." }
+    ],
+    "evidence": [
+      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, and seeds the terrain-color lookup state.",
+      "`MiniMap_DrawTileCell` consults the draw-layer mask, terrain-color lookup, unit occupancy, building occupancy, and fog-of-war to paint a single minimap cell.",
+      "`MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_RedrawTileRect`, `MiniMap_RedrawAllTiles`, `MiniMap_UpdateViewportFromCursor`, and `MiniMap_IsCursorInside` all use the same rect/surface/scale globals, proving one coherent minimap state block."
     ]
   },
   {
