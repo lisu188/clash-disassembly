@@ -1182,7 +1182,7 @@ int  loadFileSusp(char *a1, const CHAR *a2);
 int Port_FindAndInit();
 _DWORD *Rules_LogPortLocation();
 int  Port_NewTurn(DWORD a1);
-int Port_BuildShorePieces();
+int Port_UpdateShorelineVariantTiles();
 int Port_IsSupplyReady();
 int * Port_GenerateApproachTrack(int a1);
 int  Port_CollectReinforcementShipment(int, char, DWORD, double);
@@ -58317,7 +58317,7 @@ LABEL_2:
       *bottomLeftTile = 715;
       *(_WORD *)(14 * PORT_COLUMN + gameData + 1400 * PORT_ROW) = *bottomLeftTile;
     }
-    Port_BuildShorePieces();
+    Port_UpdateShorelineVariantTiles();
     Rules_LogPortLocation();
     rowOffset += 1400;
     ++rowIndex;
@@ -58371,7 +58371,7 @@ int  Port_NewTurn(DWORD a1)
         Debug_Log(logArg, supplyArrivalTurn, a1, (int)aPort_newturnPo);
       }
     }
-    return Port_BuildShorePieces();
+    return Port_UpdateShorelineVariantTiles();
   }
   return result;
 }
@@ -58379,7 +58379,7 @@ int  Port_NewTurn(DWORD a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00443090) --------------------------------------------------------
-int Port_BuildShorePieces()
+int Port_UpdateShorelineVariantTiles()
 {
   int result; // eax
   int v1; // edx
@@ -58726,7 +58726,7 @@ LABEL_16:
       PORT_SUPPLY_READY_FLAG = 0;
       v23 = Rng_RandRange(8, 10);
       PORT_NEXT_SUPPLY_TURN = v24 + v23;
-      Port_BuildShorePieces();
+      Port_UpdateShorelineVariantTiles();
       Audio_PlayArtifactSound(1);
       return j;
     }
