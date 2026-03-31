@@ -728,9 +728,12 @@
 ## Batch 80 - Platform Seam Reconciliation And Selection Mask Repair Wave
 - Repairs:
   - reconciled the project artifacts with the already-live neutral platform seam names:
+    - `Input_MousePresent` -> `Platform_IsWindowsNt4`
+    - `Input_MouseAcquire` -> `Platform_IsWindows9x`
     - `Win_WndProc` -> `Platform_MainWindowProc`
     - `Win_CreateMainWindow` -> `Platform_CreateMainWindow`
     - `Win_ProcessMessagesAndBlitFrame` -> `Platform_PumpMessagesAndBlitFrame`
+    - `sub_461C80` -> `Video_CanContinuePlayback`
   - renamed `InputBackend_CreateFirstJoystickDeviceCallback` to `InputBackend_StoreEnumeratedDevice` after asm-backed review showed only “capture the first enumerated auxiliary device for later creation,” not a fully proven joystick-specific role
   - repaired the two remaining unit-stack selection-mask decompiler scars:
     - `UnitStack_ShowSelectionDialog`: `memset_(0, 0)` -> `UnitStackSelection_ClearMask((void *)dword_526F78)`
