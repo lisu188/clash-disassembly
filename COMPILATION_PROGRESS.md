@@ -576,3 +576,96 @@
 - Net effect:
   - world-map redraw invalidation around oversized or overhanging units is easier to trace
   - the idle-animation updater and interaction loop now call redraw helpers whose names reflect their true footprint-neighborhood scope
+
+## Batch 73 - SDL Platform Shim Wave
+- Repairs:
+  - added `platform_sdl.h` as the SDL-target compatibility header for the recovered codebase
+  - replaced the root `windows.h` and `compat/windows.h` implementations with thin wrappers around `platform_sdl.h`
+  - switched `clash95.c` from `#include <windows.h>` to `#include "platform_sdl.h"`
+  - rebound the stable window/surface/palette/cursor typedef surface from Win32-flavored placeholders to SDL-style opaque handles while leaving the DirectDraw-shaped adapter types in place as the temporary renderer seam
+- Windows to SDL replacements this batch:
+  - Win32 header surface -> `platform_sdl.h`
+  - `HWND` -> `SDL_Window *`
+  - `HDC` / `HBITMAP` / `HICON` -> `SDL_Surface *`
+  - `HPALETTE` -> `SDL_Palette *`
+  - `HCURSOR` -> `SDL_Cursor *`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_sdlshim.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_sdlshim.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the SDL shim remained syntax-clean and object-clean
+  - the live window loop, input backend, DirectDraw bootstrap, and audio/video backends still execute Win32-era logic inside the now-explicit SDL seam
+  - a real SDL backend still needs function-body replacement in later waves, starting with window/events/input/timing rather than the renderer core
+- Net effect:
+  - the recovered code now compiles against an SDL-target platform surface instead of pretending the Win32 placeholder layer is the final target
+  - future SDL work can replace backend bodies under a stable header seam rather than fighting duplicated Windows compatibility headers
+
+## Batch 74 - Unit Stack Selection And Battle Pathing Wave
+- Repairs:
+  - renamed the world-map split-panel cluster to `UnitStackSelection_SyncForCurrentSelection`, `UnitStackSelection_RedrawPanel`, `UnitStackSelection_HandleInput`, `UnitStackSelection_HasSelectedSlots`, `UnitStackSelection_BeginForSelectedStack`, `UnitStackSelection_End`, `UnitStackSelection_ClearMask`, and `UnitStackSelection_RefreshForSelectedStack`
+  - removed the stray unresolved `Render_LoadResourceSprite` prototype fiction by rebinding all live callsites to the recovered selection-panel sync helper
+  - renamed `sub_425850` to `UnitBattle_InitPathingTables` and `sub_425970` to `UnitBattle_GetTileMoveCostOrZero`
+  - renamed `sub_461B30` to `Win_ProcessMessagesAndBlitFrame`
+  - extended `RECOVERED_STRUCTURES.json` with `UnitStackSelectionState`, `BattlePathingTables`, and `BattleRuntimeState.default_tile_move_cost`
+  - updated the unit-type/stat sidecar reports with the recovered tactical `battle_tile_move_cost` stat and its airborne fixed-cost relationship
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch74.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch74.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch74.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch74.json`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the rename/structure wave remained object-clean
+  - the Win32 event loop and DirectInput backend are now named accurately enough to port, but their bodies are still Windows-specific and must be replaced under the new SDL seam
+  - `byte_531C8F` / `byte_531C90` are still emitted as overlapping globals in live C; the recovered `BattlePathingTables` model is stronger than the decompiler surface, but re-emitting the data block itself still needs a careful asm-backed pass
+  - broader repo-wide compileability still stops after object generation because a full link/build harness has not been reconstructed yet
+- Net effect:
+  - the world-map stack split flow now reads as one coherent subsystem instead of a mix of `sub_*` names plus a phantom sprite-loader symbol
+  - tactical movement code now exposes the real pathing model: one precomputed ground-cost grid, one airborne fixed-cost table, and one occupancy-ignore latch
+
+## Batch 75 - Top Menu And Player Info Sprite Wave
+- Repairs:
+  - renamed `sub_40E8B0` to `WorldMap_HandleTopMenuBar`
+  - renamed `sub_40ECF0` to `WorldMapTopMenu_LoadSpriteSet`
+  - renamed `sub_40ED20` to `WorldMapTopMenu_FreeSpriteSet`
+  - restored the live definition at `0x423370` to the already recovered name `UI_SetCurrentPlayer`
+  - renamed `sub_4233E0` to `UI_FreeCurrentPlayerInfoSpriteSet`
+  - repaired two asm-backed decompiler scars in the player-info sprite flow:
+    - `DLXSpriteSet_Load(result, a3)` -> `DLXSpriteSet_Load(result, v7)` so the formatted `info%d.s32` filename buffer is actually used
+    - `nfree_(0)` -> `nfree_(dword_527C24)` so the current-player info sprite set is really freed before nulling the handle
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch75.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the top-menu and player-context wave remained object-clean
+  - the named platform seam is still only partial: window/events/input/timing remain Win32/DirectInput-backed implementations behind the SDL-target typedef layer
+  - `WorldMap_HandleTopMenuBar` still contains several decompiler-lost temporaries, so any deeper cleanup of that function should be driven from asm rather than local guesswork
+  - broader repo-wide compileability is still limited by the missing full link/build harness and remaining structural cleanup clusters such as `JUMPOUT` sites
+- Net effect:
+  - the strategic top-menu resource/interaction path is now readable instead of anonymous
+  - the current-player info sprite path no longer carries a broken detached definition or an obviously wrong free/load call sequence
+
+## Batch 76 - Input Backend Seam And Menu Loader Repair Wave
+- Repairs:
+  - renamed `sub_47BD10` to `InputBackend_Initialize`
+  - renamed `sub_47BF30` to `InputBackend_Acquire`
+  - renamed `sub_47BF80` to `InputBackend_Unacquire`
+  - renamed `Time_Sleep` to `InputBackend_PollState`
+  - repaired `WorldMapTopMenu_LoadSpriteSet` to load the corroborated `menu.s32` asset directly instead of using the bogus decompiled argument register
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch76.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch76.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the backend-seam rename wave remained object-clean
+  - the platform/input bodies are now named accurately enough for SDL replacement, but the implementation is still DirectInput-backed and will require a coupled SDL event/scancode translation pass rather than more rename-only work
+  - the top-menu hotspot descriptors are still emitted as decompiler-split arrays and pointer slabs; the next safe cleanup there is a packed-table re-emission, not another isolated rename
+  - broader repo-wide compileability is still limited by the missing full link/build harness and later structural cleanup clusters such as `JUMPOUT` sites
+- Net effect:
+  - the SDL migration seam is clearer in live C because the core input backend helpers no longer masquerade as anonymous subs or a fake sleep function
+  - the top-menu loader now reflects the binary reality instead of a decompiler register artifact

@@ -312,6 +312,7 @@
       { "offset": 804, "name": "battlefield_width_tiles", "type": "int32", "notes": "Battlefield width paired with `battlefield_height_tiles` for movement/pathing bounds and viewport clamping." },
       { "offset": 808, "name": "view_left_tile", "type": "int32", "notes": "Left edge of the visible 7x7 tactical viewport." },
       { "offset": 812, "name": "view_top_tile", "type": "int32", "notes": "Top edge of the visible 7x7 tactical viewport." },
+      { "offset": 816, "name": "default_tile_move_cost", "type": "uint8", "notes": "Default tactical ground move cost copied into the precomputed battle pathing grid for traversable non-wall tiles." },
       { "offset": 836, "name": "attacker_owner_player_index", "type": "int32", "notes": "Player id for one battle side; result packing and battle-side comparisons use this dword when splitting survivors between the two formations." },
       { "offset": 840, "name": "defender_owner_player_index", "type": "int32", "notes": "Player id for the opposing battle side and the owner used by the port/castle-style side-specific battle UI branches." },
       { "offset": 844, "name": "special_lead_owner_player_index", "type": "int32", "notes": "Optional owner id for the side whose leader is manually leading the troops; exact zero/non-zero conventions are still battle-setup specific." },
@@ -676,6 +677,40 @@
       "`UnitStack_BuildMergedTerrainMoveProfile` iterates the occupied 31-byte squad slots, loads each member's metadata record, and merges bytes `+29..+37` into an 88-byte temporary buffer.",
       "`UnitStack_GetTileMoveCostFromMergedProfileOrZero` consumes that temporary buffer without rebuilding it, reading byte `29` for road/bridge overlays and bytes `30..37` for terrain-specific costs.",
       "The merge logic keeps the highest non-zero cost for each byte and collapses to zero when any member contributes zero, so a stack moves at the slowest traversable rate of its constituent unit types and becomes impassable where any member cannot enter."
+    ]
+  },
+  {
+    "name": "UnitStackSelectionState",
+    "kind": "ui_state_region",
+    "base_symbol": "dword_514194 / dword_526994 / dword_526F78 / dword_526FA0 / dword_527C24",
+    "description": "Shared modal state for the world-map stack split/selection panel. The same globals drive panel activation, which stack is bound to the panel, which of the 10 slots are marked, and which info sprite set is loaded for the current dialog strip.",
+    "fields": [
+      { "offset": 0, "name": "active_stack_index", "type": "int32", "notes": "Actual symbol `dword_514194`. `-1` when the split panel is inactive; otherwise holds the selected stack index bound to the panel." },
+      { "offset": 4, "name": "dialog_active", "type": "int32", "notes": "Actual symbol `dword_526994`. World-map redraw and modal-loop helpers treat this as the split-panel activity latch." },
+      { "offset": 8, "name": "selected_slot_mask[10]", "type": "int32[10]", "notes": "Actual symbol `dword_526F78`. One dword per slot; non-zero means the unit is marked for transfer or subset movement." },
+      { "offset": 48, "name": "active_stack_ptr", "type": "UnitStackRecord *", "notes": "Actual symbol `dword_526FA0`. Cached pointer to the 725-byte stack record currently rendered in the strip." },
+      { "offset": 52, "name": "info_sprite_set_handle", "type": "int32", "notes": "Actual symbol `dword_527C24`. Sprite set loaded from `info%d.s32` and reused by the split-panel renderer." }
+    ],
+    "evidence": [
+      "`UnitStackSelection_SyncForCurrentSelection` opens, closes, or refreshes the split panel based on `g_SelectedUnitIndex`, current squad size, and whether `active_stack_index` is already latched.",
+      "`UnitStackSelection_RedrawPanel`, `UnitStackSelection_HandleInput`, and `UnitStack_ShowSelectionDialog` all share the same selected-slot mask, active-stack pointer, and dialog-active latch when drawing the strip and moving only marked squad members.",
+      "Asm-backed subagent evidence also ties `dword_527C24` to the `info%d.s32` unit-info sprite family used exclusively by this panel cluster."
+    ]
+  },
+  {
+    "name": "BattlePathingTables",
+    "kind": "runtime_helper_region",
+    "base_symbol": "byte_531890 / byte_531C8F / byte_531C90 / dword_531CB8",
+    "description": "Shared tactical-battle pathing scratch state. The code precomputes per-tile movement costs, keeps a per-unit-type airborne move-cost table, and toggles whether occupied tiles should be treated as blocked.",
+    "fields": [
+      { "offset": 0, "name": "tile_move_cost_grid", "type": "uint8[32][32]", "notes": "Actual symbol `byte_531890`. `UnitBattle_InitPathingTables` fills this scratch grid from the battle map, using zero for impassable wall tiles and `BattleRuntimeState.default_tile_move_cost` for traversable ground." },
+      { "offset": 1024, "name": "air_move_cost_by_unit_type", "type": "uint8[40]", "notes": "Decompiler-split symbols `byte_531C8F` and `byte_531C90` are one overlapping table. `UnitBattle_InitPathingTables` seeds it from `g_UnitTypeFlags bit0`, and `UnitBattle_GetTileMoveCostOrZero` returns fixed tactical move cost `5` for flagged airborne types." },
+      { "offset": 1064, "name": "ignore_occupancy_flag", "type": "int32", "notes": "Actual symbol `dword_531CB8`. When clear, occupied tactical tiles return move cost zero; some movement probes raise it temporarily to ignore blockers." }
+    ],
+    "evidence": [
+      "`UnitBattle_InitPathingTables` iterates the tactical map dimensions, writes the per-tile cost scratch grid, then seeds the per-type airborne table by copying `g_UnitTypeFlags bit0` into the overlapping `byte_531C8F/byte_531C90` slab.",
+      "`UnitBattle_GetTileMoveCostOrZero` first rejects occupied tiles unless `ignore_occupancy_flag` is set, then returns fixed cost `5` for airborne types and otherwise falls back to the precomputed per-tile grid.",
+      "Callers such as `UnitBattle_MoveTrack`, AI movement probes, and the near-move helpers all consult the same grid/table/flag family, proving one shared tactical pathing state region."
     ]
   }
 ]
