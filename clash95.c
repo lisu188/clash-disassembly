@@ -532,15 +532,15 @@ void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2);
 void * sub_40A600(int a1);
 int  UI_LoadTurnBannerGfx(char a1, DWORD a2);
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4);
-int * WorldMap_RenderHook(DWORD a1);
-int  WorldMap_RedrawFrame(int a1, ...);
+int * sub_40AD40(DWORD a1);
+int  sub_40ADF0(int a1, ...);
 int  sub_40AE80(int a1);
 void sub_40AEB0();
 void Render_LoadResourceSprite_v2();
-_DWORD * WorldMap_LoadResources(char a1, DWORD a2);
-int  WorldMap_UnloadResources(DWORD a1);
-void  WorldMap_RunHumanTurnLoop(int a1, int ( *a2)(int a1, char a2, DWORD a3), DWORD a3, double a4);
-unsigned int  WorldMap_Initialize(char a1, DWORD a2);
+_DWORD * sub_40AED0(char a1, DWORD a2);
+int  sub_40B020(DWORD a1);
+void  sub_40B0A0(int a1, int ( *a2)(int a1, char a2, DWORD a3), DWORD a3, double a4);
+unsigned int  sub_40B640(char a1, DWORD a2);
 int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int  Render_ReleaseSurface(int a1, DWORD a2);
 char  sub_40BB60(int a1, char a2, DWORD a3);
@@ -574,7 +574,7 @@ void Locale_DrawInteger();
 void * MiniMap_DrawTileCell(void *result, signed int a2);
 signed int  Map_DestroyTile(int a1, signed int a2);
 int MiniMap_UpdateViewportFromCursor();
-int MiniMap_ToggleVisibility();
+int sub_40DD30();
 BOOL MiniMap_IsCursorInside();
 int MiniMap_ShowAllLayers();
 int MiniMap_ShowUnitsOnly();
@@ -877,14 +877,14 @@ signed int  UnitBattle_GetTargetCrowdingScale(int a1);
 int  UnitBattle_CalcMeleeExchange(int a1, int a2, int *a3, _DWORD *a4, int a5);
 int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __int16 *a5);
 int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4);
-int  UnitBattle_GetCorpseSpriteIndex(__int16 *a1);
+int  sub_4283D0(__int16 *a1);
 signed int  UnitBattle_Attack(unsigned __int16 *a1, int a2, int a3);
 BOOL  UnitBattle_IsTileWithinRange(int a1, int a2, int a3);
 BOOL  UnitBattle_IsUnitWithinRange(int a1, int a2);
-__int16  UnitBattle_PlayShotAnimation(int a1, int a2, int a3, int a4, int a5, int a6, __int128 a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, __int64 a16);
+__int16  sub_428880(int a1, int a2, int a3, int a4, int a5, int a6, __int128 a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, __int64 a16);
 int  UnitBattle_CalcShotTargetHealthAfterHit(int a1, int a2);
 int  UnitBattle_Shot(int a1, int a2); // weak
-int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4);
+int  sub_4298E0(int a1, DWORD a2, int a3, int a4);
 int  UnitBattle_ShotWall(int a1, int a2); // weak
 signed int  UnitBattle_Defence(int a1, char a2, DWORD a3);
 int  sub_429E90(int a1, int a2);
@@ -962,21 +962,21 @@ __int16  sub_432120(int a1, int a2, int a3);
 int sub_4321D0();
 signed int sub_432770();
 signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4);
-int sub_432910();
-void * sub_432940(int a1);
-int  sub_432D30(int result, int a2, int a3, DWORD a4);
-void * sub_432DC0(int a1, DWORD a2);
-void * sub_432DF0(int a1, double a2);
-void *sub_432ED0();
-void  sub_4336C0(int a1, char a2, DWORD a3);
-void *__thiscall sub_4337E0(void *this);
-int sub_433820();
-int  sub_4338C0(int a1);
-int  sub_4338E0(int a1, DWORD a2, char a3);
-void * sub_433A40(int a1, DWORD a2);
-void * sub_433AC0(int a1, DWORD a2);
-int  sub_433B40(int a1);
-int  sub_433BF0(double a1);
+int BuildingGarrisonDialog_CountSelectedSlots();
+void * BuildingGarrisonDialog_DrawSlotGrid(int a1);
+int  BuildingGarrisonDialog_ReloadSlotSprite(int result, int a2, int a3, DWORD a4);
+void * BuildingGarrisonDialog_RebuildSlotSprites(int a1, DWORD a2);
+void * BuildingGarrisonDialog_TickExitCountdown(int a1, double a2);
+void *BuildingGarrisonDialog_DrawSelectedUnitPanel();
+void  BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites(int a1, char a2, DWORD a3);
+void *__thiscall BuildingGarrisonDialog_AnimateSelectedUnit(void *this);
+int BuildingGarrisonDialog_HitTestSlotGrid();
+int  BuildingGarrisonDialog_RequestClose(int a1);
+int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3);
+void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2);
+void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int a1, DWORD a2);
+int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1);
+int  BuildingGarrisonDialog_TickAnimations(double a1);
 int sub_434110();
 unsigned int __thiscall sub_434760(void *this);
 void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5);
@@ -19650,7 +19650,7 @@ int * WorldMap_RenderHook(DWORD a1)
 // 5202F4: using guessed type int dword_5202F4;
 
 //----- (0040ADF0) --------------------------------------------------------
-int  WorldMap_RedrawFrame(int a1, ...)
+int  sub_40ADF0(int a1, ...)
 {
   void *v2; // ecx
   void *v3; // ecx
@@ -19880,7 +19880,7 @@ void  WorldMap_RunHumanTurnLoop(
     UI_ReadCheatString((char)a2);
     DD_Pump((int)dword_544CD8, (char)a2);
     sub_407B20(0, v8, v9);
-    WorldMap_RedrawFrame((int)a2);
+    sub_40ADF0((int)a2);
     MiniMap_UpdateViewportFromCursor();
     if ( !WorldMap_HandleTopMenuBar((char)a2, 0) )
       break;
@@ -40845,7 +40845,7 @@ int  UnitBattle_Shot(int a1, int a2)
   UnitBattle_DrawSelectedUnitPanel(0, 1, a2, 0);
   UnitBattle_RedrawVisibleGrid();
   v4[9] = UnitBattle_CalcShotTargetHealthAfterHit(a1, a2);
-  UnitBattle_PlayShotAnimation(
+  sub_428880(
     a1,
     a2,
     *(unsigned __int16 *)(v4 + 6),
@@ -40866,7 +40866,7 @@ int  UnitBattle_Shot(int a1, int a2)
   {
     v7 = *(unsigned __int16 *)(v4 + 4);
     v8 = *(unsigned __int16 *)(v4 + 6);
-    *(_BYTE *)(40 * v7 + dword_532048 + 2 * v8 + 2334) = UnitBattle_GetCorpseSpriteIndex((__int16 *)v4);
+    *(_BYTE *)(40 * v7 + dword_532048 + 2 * v8 + 2334) = sub_4283D0((__int16 *)v4);
     UnitBattle_PlayDeathAnimation(a2, 0, 0, 0);
     *(_WORD *)v4 = -1;
     *(_WORD *)(40 * v7 + dword_532048 + 2 * v8 + 1534) = -1;
@@ -41010,7 +41010,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   v3[8] -= 5;
   v3[12] = (v3[12] & 0x8F) | (((v5 + 1) & 7) << 4);
   g_SelectedUnitIndex = a1;
-  UnitBattle_PlayShotAnimation(a1, -1, v4, a2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  sub_428880(a1, -1, v4, a2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   UnitBattle_RedrawTile(a2, v4);
   v10 = dword_532104;
   v6 = Unit_CalcEffectivenessC((__int16 *)v3);
@@ -41020,7 +41020,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   v8 = *(unsigned __int16 *)(v3 + 6) - v4;
   if ( v8 < 0 )
     v8 = v4 - *(unsigned __int16 *)(v3 + 6);
-  v9 = Math_CeilSqrt(v7 * v7 + v8 * v8);
+  v9 = sub_415E40(v7 * v7 + v8 * v8);
   if ( *(__int16 *)v3 == 14 && v9 > 4 )
     v6 = 9 * v6 / 10;
   if ( *(__int16 *)v3 == 12 && v9 > 3 )
@@ -41264,7 +41264,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   while ( !dword_531CD0 )
   {
     DD_Pump((int)&dword_544CD8, v8, (char)sub_429EC0);
-    WorldMap_RedrawFrame(v8);
+    sub_40ADF0(v8);
     if ( !sub_419DC0((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
     {
       Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
