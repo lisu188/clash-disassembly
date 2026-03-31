@@ -6,6 +6,11 @@
 #include <wctype.h>
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
+_DWORD __stdcall GetLastError(void);
+
+static const signed char k_DosErrnoMap[20] = {
+  0, 9, 1, 1, 11, 6, 4, 5, 5, 5, 2, 3, -1, -1, 7, 9, 6, 8, 1, -1
+};
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -135,6 +140,28 @@ errno_t __cdecl _set_errno_(int value)
 {
   errno = value;
   return value;
+}
+
+int __cdecl _set_errno_dos_(unsigned int code)
+{
+  int mapped;
+
+  if ( code == 0x7B )
+    mapped = 1;
+  else if ( code == 0xCE )
+    mapped = 9;
+  else if ( code == 0xB7 )
+    mapped = 7;
+  else
+    mapped = k_DosErrnoMap[code <= 0x13 ? code : 0x13];
+  errno = mapped;
+  return -1;
+}
+
+int __cdecl _set_errno_nt_(_DWORD ignored)
+{
+  (void)ignored;
+  return _set_errno_dos_(GetLastError());
 }
 
 int __fastcall sub_4697E0(_DWORD a1, _DWORD a2)

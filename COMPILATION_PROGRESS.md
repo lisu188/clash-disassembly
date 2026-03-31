@@ -1321,3 +1321,86 @@
   - the port runtime state now distinguishes the logical ready flag from the purely visual shoreline-variant latch more conservatively
   - the prisoner pipeline now records the captured special person's owner id explicitly in both the transfer queue and the building prison slot artifacts
   - one more low-risk CRT setter drops out of the wider link blocker set without inventing the still-unresolved NT/DOS errno mapping helpers
+
+## Batch 97 - Queen Childbirth State And Building Service Byte Wave
+- Repairs:
+  - added small readability-only semantics in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING = 9`
+    - `BUILDING_GARRISON_SERVICE_STATE_OFFSET`
+    - `BUILDING_GARRISON_TRAINING_TURNS_MASK`
+    - `BUILDING_GARRISON_REPAIR_TURNS_MASK`
+    - `BUILDING_GARRISON_SERVICE_STATE(buildingPtr, slotIndex)`
+  - rebound the queen birth branch in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) from raw literal `9` to `QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING`
+  - rewrote the core building train/repair timer helpers in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) to use the recovered service-state offset/masks instead of anonymous `+390` / `0x07` / `0x38` accesses
+  - updated [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) to rename:
+    - `BuildingRecord.garrison_order_bytes[12]` -> `BuildingRecord.garrison_service_state[12]`
+    - and to record the confirmed queen-state fragment `queen_relationship_state == 9 -> childbirth pending`
+  - extended [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json) with the direct relationship:
+    - `SpecialPersonageCategory` <- `queen_relationship_state` birth-trigger evidence
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch97.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch97.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch97.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in gameplay/state semantics and preserved the existing SDL seam unchanged
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `sub_473ED5`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_nt_` / `_set_errno_dos_`
+    - residual `JUMPOUT` control-flow scars
+- Key evidence used:
+  - `Queen_NewTurn` checks `PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) == 9`, spawns type `33` or `34` via `Building_CreateSpecialPersonageGarrisonUnit`, and then rewrites the byte to `5`, which secures the childbirth-pending meaning of value `9`
+  - `Building_TrainUnit`, `Building_ClearGarrisonTrainingTimer`, `Building_RepairUnit`, `Building_ClearGarrisonRepairTimer`, and `Building_UpdateGarrisonTrainRepairTimers` all converge on `building + 390 + slot` as one packed byte with independent training and repair countdown bands
+  - the recovered unit-taxonomy artifacts already established types `33` and `34` as the special-personage family reused by both prisoner and queen-birth flows, so the state-byte fragment could be logged directly without inventing stronger labels for the remaining values
+- Net effect:
+  - the queen relationship byte now has one explicit, code-level enum fragment instead of an unexplained magic value in the birth path
+  - the building `+390..+401` family is now documented in service-state terms that match the actual training/repair lifecycle instead of the older generic order-byte label
+  - the unit-type/stat artifacts now capture the direct player-state trigger that emits the special-personage unit family
+
+## Batch 98 - Errno Mapping And Last-Error Seam Wave
+- Repairs:
+  - added the asm-backed CRT errno bridge wrappers in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `_set_errno_dos_`
+    - `_set_errno_nt_`
+  - reconstructed `_set_errno_dos_` with the asm-backed behavior that:
+    - special-cases raw codes `0x7B`, `0xCE`, and `0xB7`
+    - maps the remaining `0..0x13` DOS/Win32 codes through the signed-byte table at `0x51A54D`
+    - stores the mapped `errno`
+    - returns `-1`
+  - added `GetLastError` / `SetLastError` ownership to [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) so the recovered CRT bridge stays behind the SDL-target platform seam instead of introducing new Win32 link dependencies
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch98.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch98.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch98`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch98.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch98.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - `GetLastError` / `SetLastError` -> SDL-target platform-side last-error latch in `platform_sdl_runtime.c`
+- Current leading blockers:
+  - the broader executable/link surface is still led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `sub_473ED5`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+  - `_set_errno_dos_`, `_set_errno_nt_`, and the missing `GetLastError` seam are removed from that first avoidable unresolved tier by this batch
+- Key evidence used:
+  - `clash95.map` binds `__set_errno_dos_` to `0x485306` and `__set_errno_nt_` to `0x485357`
+  - `clash95.asm` shows `__set_errno_dos_` storing the raw DOS/Win32 error, special-casing `0x7B`, `0xCE`, and `0xB7`, then mapping the remaining range through the signed-byte table at `0x51A54D` before returning `-1`
+  - `clash95.asm` shows `__set_errno_nt_` as the thin bridge above the DOS mapper, which the recovered callsites already treat as a plain NT-last-error to errno conversion path
+  - the SDL-target platform shim already owns the Win32 compatibility surface, so `GetLastError` / `SetLastError` belong in `platform_sdl_runtime.c` rather than in gameplay or CRT-callsite code
+- Net effect:
+  - another fully reconstructible CRT helper pair has been removed from the link blocker band without speculative caller edits
+  - the last-error API surface now remains contained inside the SDL-target platform shim
+  - the wider unresolved frontier is narrower and more concentrated on startup, `_wcpp_*`, allocator wrappers, and `JUMPOUT` cleanup

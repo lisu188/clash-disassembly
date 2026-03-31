@@ -36,6 +36,10 @@
 #define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
 #define BUILDING_RECORD_SIZE 467
 #define BUILDING_TABLE_OFFSET 509674
+#define BUILDING_GARRISON_SERVICE_STATE_OFFSET 390
+#define BUILDING_GARRISON_SERVICE_STATE_COUNT 12
+#define BUILDING_GARRISON_TRAINING_TURNS_MASK 0x07
+#define BUILDING_GARRISON_REPAIR_TURNS_MASK 0x38
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374
@@ -67,6 +71,7 @@
 #define UNIT_TYPE_PEASANT_CARGO 32
 #define UNIT_TYPE_SPECIAL_FOOT_PERSONAGE 33
 #define UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE 34
+#define QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING 9
 #define BUILDING_PRISONER_SLOT_BASE_OFFSET 445
 #define BUILDING_PRISONER_SLOT_STRIDE 6
 #define BUILDING_PRISONER_SLOT_COUNT 3
@@ -118,6 +123,7 @@
 #define PORT_SUPPLY_UNIT_COUNT (*(_DWORD *)(gameData + PORT_SUPPLY_UNIT_COUNT_OFFSET))
 #define PORT_SHORE_VARIANT_FLAG (*(_DWORD *)(gameData + PORT_SHORE_VARIANT_FLAG_OFFSET))
 #define BUILDING_RECORD(index) (gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (index))
+#define BUILDING_GARRISON_SERVICE_STATE(buildingPtr, slotIndex) (*(_BYTE *)((buildingPtr) + BUILDING_GARRISON_SERVICE_STATE_OFFSET + (slotIndex)))
 #define UNIT_RECORD_SIZE BUILDING_RECORD_SIZE
 #define UNIT_TABLE_OFFSET BUILDING_TABLE_OFFSET
 #define UNIT_RECORD(index) BUILDING_RECORD(index)
@@ -33163,28 +33169,28 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *a1, double a2)
     v6 = *((__int16 *)v2 + 9);
     if ( v6 != -1 )
     {
-      v7 = v5[390];
-      if ( (v7 & 0x38) != 0 )
+      v7 = BUILDING_GARRISON_SERVICE_STATE(v5, 0);
+      if ( (v7 & BUILDING_GARRISON_REPAIR_TURNS_MASK) != 0 )
       {
         v8 = (((unsigned __int8)(4 * v7) >> 5) - 1) & 7;
         v9 = v7 & 0xC7;
-        v5[390] = v9;
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = v9;
         LOBYTE(v6) = 8 * v8;
         BYTE1(v6) = v6 | v9;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         if ( (v6 & 0x3800) == 0 )
         {
           v3 = 1;
           v2[27] = 100;
         }
       }
-      else if ( (v7 & 7) != 0 )
+      else if ( (v7 & BUILDING_GARRISON_TRAINING_TURNS_MASK) != 0 )
       {
-        LOBYTE(v6) = ((v7 & 7) - 1) & 7;
+        LOBYTE(v6) = ((v7 & BUILDING_GARRISON_TRAINING_TURNS_MASK) - 1) & 7;
         BYTE1(v6) = v7 & 0xF8;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         BYTE1(v6) |= v6;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         if ( (v6 & 0x700) == 0 )
         {
           if ( *(_DWORD *)(gameData + 1423 * a1[2] + 140051) )
@@ -54547,15 +54553,15 @@ _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3)
   result = (_BYTE *)(*(_BYTE *)(v4 + 31 * v3 + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
-    result = (_BYTE *)(v4 + v3 + 390);
+    result = (_BYTE *)(v4 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + v3);
     if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v4 + 2) + gameData + 140051) )
       v6 = (*(_BYTE *)(v4 + 4) == 2) + 1;
     else
       v6 = (*(_BYTE *)(v4 + 4) == 2) + 4;
     v7 = *result & 0xF8;
     *result = v7;
-    *result = v6 & 7 | v7;
-    *(_BYTE *)(v4 + v3 + 390) &= 0xC7u;
+    *result = v6 & BUILDING_GARRISON_TRAINING_TURNS_MASK | v7;
+    BUILDING_GARRISON_SERVICE_STATE(v4, v3) &= 0xC7u;
   }
   return result;
 }
@@ -54564,7 +54570,7 @@ _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3)
 //----- (0043EAC0) --------------------------------------------------------
 int  Building_ClearGarrisonTrainingTimer(int result, int a2)
 {
-  *(_BYTE *)(a2 + result + 390) &= 0xF8u;
+  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
   return result;
 }
 
@@ -54579,7 +54585,7 @@ __int16  Building_RepairUnit(int a1, int a2, DWORD a3)
   v6 = *(signed __int8 *)(a1 + 31 * a2 + 27);
   if ( v6 != 100 )
   {
-    repairTimer = (unsigned __int8 *)(a1 + a2 + 390);
+    repairTimer = (unsigned __int8 *)(a1 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + a2);
     repairTurns = (*(_BYTE *)(a1 + 4) == 2) + 2;
     *repairTimer = *repairTimer & 0xC0 | ((repairTurns & 7) << 3);
   }
@@ -54589,7 +54595,7 @@ __int16  Building_RepairUnit(int a1, int a2, DWORD a3)
 //----- (0043EB40) --------------------------------------------------------
 int  Building_ClearGarrisonRepairTimer(int result, int a2)
 {
-  *(_BYTE *)(a2 + result + 390) &= 0xC7u;
+  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
   return result;
 }
 
@@ -65655,7 +65661,7 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
     {
       if ( PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) )
       {
-        if ( result == 9 )
+        if ( result == QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING )
         {
           Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);

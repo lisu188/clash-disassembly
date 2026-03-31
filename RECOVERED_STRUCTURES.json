@@ -188,7 +188,7 @@
       { "offset": 53, "name": "consecutive_idle_battle_turns", "type": "int32", "notes": "Counts consecutive tactical turns with no battle action taken. The battle loop increments it when `battle_action_taken_flag` stays clear and triggers `GodAnger` once it reaches two rounds." },
       { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
-      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
+      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches. Confirmed fragment: value `9` is the childbirth-pending state that makes `Queen_NewTurn` create type `33` or `34` inside a host building garrison before resetting the byte to `5`." },
       { "offset": 1420, "name": "queen_portrait_index", "type": "uint8", "notes": "Portrait/sprite variant index chosen during the marriage-proposal path and reused by the proposal, whim, message, and relationship panels." },
       { "offset": 1421, "name": "queen_next_relationship_check_turn", "type": "uint16", "notes": "Absolute turn threshold checked before the queen reviews this player's kingdom again." }
     ],
@@ -200,7 +200,8 @@
       "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
       "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
       "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields.",
+      "`Queen_NewTurn` enters its birth branch only when offset `+1419` equals `9`, spawns type `33` or `34` through `Building_CreateSpecialPersonageGarrisonUnit`, and then rewrites the same byte back to `5`, proving value `9` is the childbirth-pending phase."
     ]
   },
   {
@@ -237,7 +238,7 @@
       { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
       { "offset": 5, "name": "display_name", "type": "char[]", "notes": "In-record building/castle name string shown by construction and notification UI; `Building_AssignUniqueGeneratedName` overwrites this buffer when seeding a newly completed stronghold with a unique generated default name." },
       { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
-      { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot packed task bytes: bits `0..2` are the train/order countdown, while bits `3..5` are the repair countdown." },
+      { "offset": 390, "name": "garrison_service_state[12]", "type": "uint8[12]", "notes": "Per-slot packed service-state bytes. Bits `0..2` are `training_turns_remaining`, bits `3..5` are `repair_turns_remaining`, and bits `6..7` remain unresolved." },
       { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
       { "offset": 414, "name": "selected_addon_slot_index", "type": "int8", "notes": "Tracks the currently selected production-licence slot for `Building_SetUnitProduction` and `Building_StopUnitProduction`." },
       { "offset": 416, "name": "castle_addon_flags", "type": "uint8", "notes": "Castle add-on presence bits. Recovered mapping: bit `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths; `Rules_AssertCastleFact` prints the same bit mapping as `szpital`, `koszary`, `warsztat`, `szkola`, and `kuznia`." },
@@ -264,7 +265,8 @@
       "`Building_GetTaxRateByIndex`, the `ZmienPodatek` host stub, `Building_CollectGoldIncome`, and `Building_GetTaxBurdenTier` all read or write the low six bits at `+436`, proving that byte carries the building's raw tax rate rather than a derived burden tier.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
-      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Unit_CaptureBuilding` use it to update the asserted castle fact's `moc` and `gracz` attributes."
+      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Unit_CaptureBuilding` use it to update the asserted castle fact's `moc` and `gracz` attributes.",
+      "`Building_TrainUnit`, `Building_ClearGarrisonTrainingTimer`, `Building_RepairUnit`, `Building_ClearGarrisonRepairTimer`, and `Building_UpdateGarrisonTrainRepairTimers` all read or write offset `+390 + slot` as one packed byte whose low three bits decrement training turns while bits `3..5` independently decrement repair turns; the upper two bits remain unresolved."
     ]
   },
   {
