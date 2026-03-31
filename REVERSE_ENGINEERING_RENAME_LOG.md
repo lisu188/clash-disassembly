@@ -1292,6 +1292,55 @@
 - `sub_40AE80` still looks like a redraw gate for non-human strategic turns, but this batch left it unnamed because the exact designer-facing distinction between “AI redraw”, “animation tick”, and “redraw suppression” is not yet pinned down.
 - `sub_40D800` is clearly another minimap boundary predicate, but the currently recovered body still exposes only part of the intended hit-test semantics.
 
+## Batch 68 – Port Runtime State And Path Query Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `UNIT_RECORD_SIZE` / `UNIT_TABLE_OFFSET` / `UNIT_RECORD` | `BUILDING_RECORD_SIZE` / `BUILDING_TABLE_OFFSET` / `BUILDING_RECORD` | Helper | gameData / Buildings | High | The 467-byte table at `gameData + 509674` is already the recovered `BuildingRecord` slab. Exposing a matching macro family removes a misleading unit-table fiction while preserving `UNIT_RECORD` as a compatibility alias for untouched callsites. | c, asm, map | yes: Plato |
+| `dword_517B48` / `dword_517B4C` split spawn arrays | `PortSpawnOffset` / `g_PortSupplySpawnRingOffsets` | Recovered Struct | Port / Spawn Ring | High | `Port_GetSupply` advances the two symbols in lockstep as 12 row/column pairs around the 2x2 port footprint, and the asm-side data layout corroborates one interleaved 24-dword table rather than two unrelated arrays. | c, asm | yes: Kepler, Plato |
+| `g_PortArrivalTexts[6]` | `g_PortSupplyReadyTexts[3]` | Table | Port / UI | High | The first three strings are the “supply arrived” family, while `off_517BE4` / `g_PortEmptyTexts` is a distinct empty-port table. The old six-entry symbol was a decompiler fusion of adjacent globals. | c, asm, exe | yes: Kepler |
+| `UI_DrawPanelWithSprite` | `UI_DrawPortStatusPanel` | Function | Port / UI | High | The helper only loads `port.s32`, titles the window `Port/Hafen`, selects the sprite from `PORT_SUPPLY_READY_FLAG`, and displays the ready or empty port text families. | c, asm, exe | yes: Kepler |
+| `sub_453E60` | `Rules_GetPathDistanceToObject` | Function | Rules / Pathing | Medium | The host-registration string is `odleglosc_od_obiektu`, and the body special-cases temple, treasure, port, and generic near-tile routing before returning a large failure sentinel when no path is found. | c, asm | yes: Kepler |
+
+## Deferred / Ambiguous
+- `sub_4084A0` is now clearly a world-map hover/click dispatcher, but this batch deferred the live rename until one more pass resolves whether the original role was framed around a hovered tile, a cursor event, or the whole map-panel interaction loop.
+
+## Batch 69 – Battle Viewport And Exchange Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_411D70` | `Map_UpdateIdleAnimatedUnits` | Function | World Map / Units | High | The helper scans all 500 world stacks, advances the idle animation frame when the per-type animation timer elapses, redraws the affected stack footprint, then updates the world-map attention-flash overlays. | c, asm | yes: Sartre |
+| `sub_411E60` | `Unit_AttemptNeighborMove` | Function | World Map / Movement | High | The prototype had already been recovered, and the live definition now matches its behavior: it checks whether the selected stack has at least 3 AP and whether any of the eight adjacent tiles yields an affordable `Unit_MoveTrack`, freeing the temporary path before returning. | c, asm | yes: Sartre |
+| `sub_426FC0` | `UnitBattle_CalcMeleeExchange` | Function | Battle / Combat | High | The helper reads both tactical slots, seeds both out-parameters from the current health bytes, applies the crowding-scaled combat effectiveness math for both sides, optionally scales one side for the alternate exchange mode, and clamps the resulting health losses to `0..100`. | c, asm | yes: Sartre |
+| `sub_42C0F0` | `UnitBattle_IsTileInViewport` | Function | Battle / Viewport | High | Pure 7x7 viewport predicate over `BattleRuntimeState.view_left_tile` and `view_top_tile`; tactical render and attack-animation helpers use it only to test whether a battle tile is currently visible. | c, asm | yes: Sartre |
+| `BattleRuntimeState + 852 + 31 * slotIndex` | `BattleUnitEntry` | Recovered Struct | Battle / Runtime State | High | The tactical battle block stores 22 fixed 31-byte entries at this offset. Combat, viewport, and animation helpers all agree on the slot header: unit type at `+0`, owner at `+2`, facing at `+3`, grid coordinates at `+4/+6`, and runtime AP/health at `+8/+9`. | c | yes: Sartre |
+
+## Deferred / Ambiguous
+- `sub_423760` remains deferred. It is clearly a modal selection dialog over a 10-slot stack subset, but this batch left the exact “inspect” vs “split” vs “move selected members” naming for the next pass with `sub_423420` and `sub_423AC0`.
+
+## Batch 70 – Building Garrison Capacity And Licence Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Building_GetCapacity` | `Building_CountFreeGarrisonSlots` | Function | Buildings / Garrison | High | The live body counts only empty `-1` entries in the embedded garrison array and caps the scan at 10 slots for building type `0` and 12 otherwise. `Building_UnitGetInto` compares incoming squad size against this free-slot count, not a total-capacity constant. | c, asm, map | yes: Banach |
+| `Building_HasAddonInGarrison` | `Building_HasAddonLicence` | Function | Buildings / Addons | High | The helper scans bytes `+402..+413` in `BuildingRecord`, which are the recovered addon/licence ids rather than the real garrison entries at `+18..+389`. | c, asm, map | yes: Banach |
+| `Building_CountSpecialGarrisonEntries` | `Building_CountNonCombatGarrisonEntries` | Function | Buildings / Garrison | High | The loop counts `SPECIAL_FOOT_PERSONAGE`, `SPECIAL_MOUNTED_PERSONAGE`, `GOLD_CARGO`, and `PEASANT_CARGO`, so the old “special” label was too narrow once the exact type set became explicit. | c | yes: Banach |
+
+## Deferred / Ambiguous
+- Building type ids `0/1/2` still remain behaviorally distinct but not safely lore-named. This batch left the numeric type mapping neutral even though the capacity and cargo-acceptance rules are now clearer.
+
+## Batch 71 – World Map Interaction Dispatch Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4084A0` | `WorldMap_HandleTileHoverAndClick` | Function | World Map / Interaction | Medium | Called from the main strategic-map input loop after redraw/minimap updates and before hotkey handling. The body drives cursor hover feedback, stack inspection, building entry/attack, port supply collection, shrine and treasure interactions, and queued-path execution for the currently hovered tile. | c | no |
+| `sub_423760` | `UnitStack_ShowSelectionDialog` | Function | World Map / Unit Selection | Medium | Modal helper that snapshots the current selection globals, clears a 10-slot mask, runs the stack-subset toggle UI loop, and ultimately feeds the selected member mask into `Unit_MoveSelectionFromGroupToTile`. | c, asm | yes: Sartre |
+
+## Deferred / Ambiguous
+- `sub_423420` and `sub_423AC0` still need their own names before the full stack-split interaction family reads cleanly end-to-end.
+
+## Batch 72 – Unit Footprint Redraw Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_411B30` | `Map_RedrawUnitFootprintByIndex` | Function | World Map / Rendering | High | Redraws the unit's tile and any extra tiles implied by its current footprint/overhang class and facing, using the type-dependent footprint class table and the current stack coordinates. | c | yes: Sartre |
+| `sub_411CB0` | `Map_RedrawUnitNeighborhoodByIndex` | Function | World Map / Rendering | High | Redraws the unit's tile plus the full surrounding 8-neighbor ring when the stack's footprint class requires a broader redraw envelope. | c | yes: Sartre |
+
 ## Batch 67 – World Map HUD And Menu Semantics Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|

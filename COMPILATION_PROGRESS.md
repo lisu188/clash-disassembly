@@ -482,3 +482,97 @@
 - Net effect:
   - the strategic-map render/update/turn-loop path and the shared menu/minimap controls are now materially easier to follow in the decompiled C
   - compileability did not regress because of these renames, but the present branch state is still sitting on the older duplicate-symbol/bootstrap blocker surface rather than a verified object-clean baseline
+
+## Batch 68 - Port Runtime State And Path Query Wave
+- Repairs:
+  - introduced an explicit `BUILDING_RECORD_SIZE` / `BUILDING_TABLE_OFFSET` / `BUILDING_RECORD` macro family for the recovered 467-byte `BuildingRecord` slab while preserving the old `UNIT_RECORD*` names as compatibility aliases for untouched callsites
+  - replaced the decompiler's split `dword_517B48` / `dword_517B4C` view with a recovered `PortSpawnOffset` pair layout at the callsite level, making `Port_GetSupply` index the 12 shoreline-adjacent spawn offsets as one interleaved ring table instead of fake parallel arrays
+  - split the fused `g_PortArrivalTexts[6]` symbol into the actual ready-text table `g_PortSupplyReadyTexts[3]` plus the already separate `g_PortEmptyTexts[3]`
+  - renamed `UI_DrawPanelWithSprite` to `UI_DrawPortStatusPanel`
+  - renamed `sub_453E60` to `Rules_GetPathDistanceToObject`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch68.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch68.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch68.json`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; this rename/structure batch remains syntax-clean and object-clean
+  - the broader recovered codebase still lacks a project-level link harness, so object generation remains the reliable compile milestone
+  - decompiler-residue clusters such as `sub_4084A0`, queen dialog helpers, and several movement/pathing routines still merit direct cleanup, but they are not blocking the present compile target
+- Net effect:
+  - the central world-state model now says explicitly that `gameData + 509674` is a building table, not a unit table
+  - the port subsystem reads closer to the binary reality: one singleton runtime state, one 12-entry shoreline spawn ring, one ready-text table, and a port-specific status dialog instead of anonymous helper names
+
+## Batch 69 - Battle Viewport And Exchange Wave
+- Repairs:
+  - renamed `sub_411D70` to `Map_UpdateIdleAnimatedUnits`
+  - synchronized the already recovered `Unit_AttemptNeighborMove` prototype with the live `sub_411E60` definition
+  - renamed `sub_426FC0` to `UnitBattle_CalcMeleeExchange`
+  - renamed `sub_42C0F0` to `UnitBattle_IsTileInViewport`
+  - extended `RECOVERED_STRUCTURES.json` with the explicit `BattleUnitEntry` 31-byte tactical slot layout referenced by `BattleRuntimeState.battle_unit_entries[22]`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch69.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch69.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch69.json`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the rename-only combat/world batch remained object-clean
+  - several high-noise gameplay helpers still deserve structural cleanup before more aggressive renames, especially `sub_4084A0`, `sub_423760`, and the queen dialog cluster
+  - beyond the current compile target, `JUMPOUT` sites and the missing full link harness remain the main repo-wide compileability gap
+- Net effect:
+  - the tactical battle loop now exposes its viewport predicate and two-sided melee-exchange calculator under readable names
+  - the world stack update path now says explicitly when it is just ticking idle animations versus testing whether a unit can make a cheap neighboring move
+
+## Batch 70 - Building Garrison Capacity And Licence Wave
+- Repairs:
+  - synchronized the misleading `Building_GetCapacity` declaration/callsite family to the already recovered implementation name `Building_CountFreeGarrisonSlots`
+  - renamed `Building_HasAddonInGarrison` to `Building_HasAddonLicence`
+  - renamed `Building_CountSpecialGarrisonEntries` to `Building_CountNonCombatGarrisonEntries`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch70.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch70.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the building rename wave remained object-clean
+  - `Building_UnitGetInto` itself is still decompiler-damaged even though the surrounding helper names are now more honest
+  - full repo-wide compileability is still limited by the missing link harness and the remaining structural cleanup clusters such as `JUMPOUT` sites and several dialog/parsing helpers
+- Net effect:
+  - the building API now distinguishes free garrison space from total theoretical capacity
+  - add-on licence storage is no longer mislabeled as if it lived inside the real garrison array
+
+## Batch 71 - World Map Interaction Dispatch Wave
+- Repairs:
+  - renamed `sub_4084A0` to `WorldMap_HandleTileHoverAndClick`
+  - renamed `sub_423760` to `UnitStack_ShowSelectionDialog`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch71.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch71.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the interaction rename wave remained object-clean
+  - surrounding helpers `sub_423420` and `sub_423AC0` still need evidence-backed naming or structural cleanup before the full selection-dialog cluster is fully readable
+  - the deeper repo-wide compileability gap still starts after object generation, not within this renamed slice
+- Net effect:
+  - the main strategic-map input loop no longer hides its central hovered-tile interaction dispatcher behind a raw `sub_*`
+  - stack inspection/split flow is easier to follow from world-map click to modal subset-selection dialog
+
+## Batch 72 - Unit Footprint Redraw Wave
+- Repairs:
+  - renamed `sub_411B30` to `Map_RedrawUnitFootprintByIndex`
+  - renamed `sub_411CB0` to `Map_RedrawUnitNeighborhoodByIndex`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch72.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch72.o`
+  - `git diff --check`
+- Current leading blockers:
+  - none for the current two-object GNU89 compile target; the redraw-family rename wave remained object-clean
+  - what remains in this local cluster is now more structural than nominal, because the surviving decompiler noise is in the footprint-class calculations rather than the helper identities
+  - repo-wide compileability beyond object generation still depends on later structural cleanup, not this redraw slice
+- Net effect:
+  - world-map redraw invalidation around oversized or overhanging units is easier to trace
+  - the idle-animation updater and interaction loop now call redraw helpers whose names reflect their true footprint-neighborhood scope

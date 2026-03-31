@@ -288,6 +288,21 @@
     ]
   },
   {
+    "name": "PortSpawnOffset",
+    "kind": "table_record",
+    "base_symbol": "dword_517B48 / dword_517B4C",
+    "size": 8,
+    "description": "One entry in the 12-cell shoreline spawn ring that `Port_GetSupply` probes around the 2x2 port footprint before creating the reinforcement stack.",
+    "fields": [
+      { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Row offset from `PortRuntimeState.port_tile_row` to one candidate reinforcement spawn tile." },
+      { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Column offset from `PortRuntimeState.port_tile_column` to the same candidate reinforcement spawn tile." }
+    ],
+    "evidence": [
+      "`Port_GetSupply` advances the two decompiled symbols in lockstep as 12 row/column pairs while scanning for the first empty and traversable shoreline-adjacent spawn tile, then reuses the same pair when creating and facing the reinforcement stack.",
+      "The raw data in `clash95.asm` is one interleaved 24-dword table whose entries decode to the fixed ring `(1,2)`, `(0,2)`, `(2,2)`, `(-1,2)`, `(2,1)`, `(-1,1)`, `(2,0)`, `(-1,0)`, `(2,-1)`, `(-1,-1)`, `(1,-1)`, `(0,-1)` around the 2x2 port footprint."
+    ]
+  },
+  {
     "name": "BattleRuntimeState",
     "kind": "battle_state_region",
     "base_symbol": "dword_532048",
@@ -312,6 +327,25 @@
       "`UnitBattle_MoveTrack`, `UnitBattle_Attack`, and the battle redraw helpers all treat offset `+852` as the base of the 31-byte tactical unit-entry array and offset `+1534` as the 20x20 occupant grid.",
       "`UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI command loops index `battle_state + 3134 + 20 * column + row` as a mutable byte grid whose values drop to zero when wall sections collapse, proving a dedicated per-tile wall-hitpoint plane inside the same runtime block.",
       "The battle tooltip, death animation, and hit/recoil helpers also index the contiguous overlay bytes beginning at `+2334`, proving one shared tactical-state region rather than scattered globals."
+    ]
+  },
+  {
+    "name": "BattleUnitEntry",
+    "kind": "battle_slot_record",
+    "size": 31,
+    "description": "One tactical-battle unit slot inside `BattleRuntimeState.battle_unit_entries[22]`, mirroring the core runtime fields of a world-map unit slot while battle-only helpers add transient targeting and animation state around it.",
+    "fields": [
+      { "offset": 0, "name": "unit_type_id", "type": "int16", "notes": "`-1` marks an empty tactical slot." },
+      { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Battle-side owner id used for turn selection, visibility, and side comparisons." },
+      { "offset": 3, "name": "facing_direction", "type": "uint8", "notes": "Current facing used by tactical animation and corpse-sprite selection." },
+      { "offset": 4, "name": "grid_x", "type": "int16", "notes": "Current tactical tile x-coordinate used by viewport checks and movement/attack range logic." },
+      { "offset": 6, "name": "grid_y", "type": "int16", "notes": "Current tactical tile y-coordinate paired with `grid_x`." },
+      { "offset": 8, "name": "action_points", "type": "uint8", "notes": "Remaining tactical action points for the slot this turn." },
+      { "offset": 9, "name": "health_percent", "type": "uint8", "notes": "Current tactical health / quantity value consumed by melee and ranged combat exchange helpers." }
+    ],
+    "evidence": [
+      "`UnitBattle_CalcMeleeExchange` addresses both combatants as `dword_532048 + 852 + 31 * slotIndex`, seeds the outputs from byte `+9`, and applies the two-sided combat math over the same fixed-size entries.",
+      "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout."
     ]
   },
   {
