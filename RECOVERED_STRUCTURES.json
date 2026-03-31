@@ -12,12 +12,12 @@
       { "offset": 9, "name": "move_tick_delay", "type": "uint8", "notes": "Delay between successive movement animation updates." },
       { "offset": 10, "name": "animation_frame_interval", "type": "uint8", "notes": "Shared per-type animation tick interval used by world idle animation, battle idle animation, and the melee/ranged attack loops." },
       { "offset": 11, "name": "animation_flags", "type": "uint8", "notes": "Recovered animation-behavior bits. Bit0 enables looping idle animation updates on the world map and in battle." },
-      { "offset": 15, "name": "footprint_class_index", "type": "uint8", "notes": "Per-type footprint/overhang class. Rendering subtracts it from sprite Y origin, world and battle redraw helpers use non-zero values to invalidate neighboring tiles, and `UnitBattle_GetFootprintClass` / `Unit_GetClassIndex` expose the same table as a reusable class lookup." },
+      { "offset": 15, "name": "sprite_vertical_offset_px", "type": "uint8", "notes": "Per-type sprite Y lift in pixels. World-map and battle rendering subtract it directly from the sprite anchor, while redraw helpers use non-zero values as the overhang test for neighboring-tile invalidation." },
       { "offset": 16, "name": "melee_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_a.s32` melee attack sheet." },
       { "offset": 17, "name": "ranged_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_s.s32` ranged attack sheet." },
       { "offset": 18, "name": "type_flags", "type": "uint32", "notes": "Recovered flag word. Bit0 marks flying/airborne units; another bit still controls the 6-vs-10 initialization path at slot +11." },
       { "offset": 29, "name": "road_move_cost", "type": "uint8", "notes": "Road/track movement cost copied into merged stack movement profiles." },
-      { "offset": 30, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement-cost profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." },
+      { "offset": 30, "name": "world_surface_move_costs[8]", "type": "uint8[8]", "notes": "Eight-lane normalized world-surface movement profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." },
       { "offset": 79, "name": "melee_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the melee attack loop that triggers the melee attack sound." },
       { "offset": 80, "name": "ranged_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the shot-animation loop that triggers the ranged attack sound." },
       { "offset": 81, "name": "move_sound_stem", "type": "char *", "notes": "Per-type movement sound stem used to build `sfx\\ruchy\\<stem>...` paths in both world and battle movement audio." },
@@ -28,8 +28,8 @@
       "The code indexes `g_UnitTypeMetadataRecords` by `22 * unitType`, i.e. 88 bytes per type, then reads both pointer fields and late-byte movement fields from the same base address.",
       "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name pointer triplet.",
       "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and `units_at` asset paths.",
-      "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering use byte `+15` as the sprite Y-anchor offset, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
-      "Movement helpers copy bytes `+29..+37` into a merged stack profile, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record."
+      "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering subtract byte `+15` directly from the sprite Y anchor, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
+      "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record."
     ]
   },
   {
@@ -121,9 +121,9 @@
       { "offset": 8, "name": "current_action_points", "type": "uint8", "notes": "Seeded from `g_UnitTypeBaseActionPoints` and recomputed from fatigue by `UnitSlot_CalcActionPointsFromFatigue` each new turn." },
       { "offset": 9, "name": "current_health_percent", "type": "uint8", "notes": "Starts at 100, scales the effective melee/ranged/damage helpers, drops to zero on death, and is also the slot-quality threshold used by the weak-unit detach/regroup helpers (`<= 10` for weak, `>= 8` for stronger regrouped entries)." },
       { "offset": 10, "name": "fatigue", "type": "uint8", "notes": "0-100 exhaustion counter. Thresholds at 80/90/100 reduce action points, and severe fatigue lowers morale each new turn." },
-      { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10." },
-      { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; upper bits also drive garrison stance/formation cycling." },
-      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker consumed by plague attrition and building/plague transfer logic." },
+      { "offset": 11, "name": "morale", "type": "uint8", "notes": "Bounded 0-20 combat bonus and obedience score. Light-unit records seed this to 6, other units to 10, and the selected-unit battle panel displays it as the `Morale` row with the same 0..20 tiering." },
+      { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; the selected-unit battle panel's `Status` row and icon block also derive from the packed state rooted here, while upper bits drive garrison stance/formation cycling." },
+      { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x1 marks the slot ready for stack-turn execution, bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker consumed by plague attrition and building/plague transfer logic." },
       { "offset": 18, "name": "aux_runtime_state", "type": "uint32", "notes": "Cleared on init and reused by battle/movement helper families; exact subfields remain unresolved." },
       { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 influences ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`." }
     ],
@@ -142,12 +142,12 @@
     "row_stride": 1400,
     "description": "Per-tile terrain and overlay record inside gameData used by movement, bridge placement, and terrain-edge rendering.",
     "fields": [
-      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index `g_TerrainMoveProfileOffsets` with this word to select the terrain-specific byte_512586 move-cost column." },
+      { "offset": 0, "name": "terrain_tile_id", "type": "uint16", "notes": "Primary terrain id; movement helpers index `g_TerrainMoveTableOffsets` with this word to select the normalized byte_512586 move-cost lane." },
       { "offset": 2, "name": "overlay_tile_id", "type": "uint16", "notes": "Secondary visual or edge overlay inspected by draw helpers when stitching neighboring coast and terrain-edge sprites." },
       { "offset": 4, "name": "road_or_bridge_tile_id", "type": "uint16", "notes": "Non-0xFFFF marks a road, bridge, or track overlay; movement switches to byte_512585 road costs when this word is present, and bridge code temporarily writes ids such as 872 here." }
     ],
     "evidence": [
-      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through `g_TerrainMoveProfileOffsets` and test word 2 for the road-cost fast path.",
+      "Map_GetUnitTileMoveCostOrZero and UnitStack_GetTileMoveCostOrZero read word 0 through `g_TerrainMoveTableOffsets` and test word 2 for the road-cost fast path.",
       "Bridge movement code at clash95.c:27193-27278 writes and later restores the word at offset +4 on the crossed tile and its neighbors, proving this field belongs to the tile record rather than a transient path buffer.",
       "Main-map rendering reads the first two words of adjacent 14-byte entries to choose seam and edge sprites."
     ]
@@ -279,11 +279,11 @@
       { "offset": 8, "name": "next_supply_turn", "type": "int32", "notes": "Absolute game-turn number when the next supply ship should arrive." },
       { "offset": 12, "name": "supply_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
       { "offset": 16, "name": "pending_supply_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the supply shipment." },
-      { "offset": 20, "name": "shoreline_variant_flag", "type": "int32", "notes": "Controls which shoreline-piece variant `Port_BuildShorePieces` renders for the current supply state." }
+      { "offset": 20, "name": "supply_arrival_visual_flag", "type": "int32", "notes": "Visual latch for the shoreline arrival state. `Port_NewTurn` clears it, the shipment collector raises it when reinforcements are claimed, and `Port_BuildShorePieces` uses it to choose the shoreline-piece variant." }
     ],
     "evidence": [
       "`Port_FindAndInit` seeds all six dwords together after scanning the map for the unique port tile and then immediately calls `Port_BuildShorePieces` and `Rules_LogPortLocation`.",
-      "`Port_NewTurn`, `Port_BuildShorePieces`, and `Port_GetSupply` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
+      "`Port_NewTurn`, `Port_BuildShorePieces`, and `Port_CollectReinforcementShipment` all read and mutate the same contiguous six-dword block to manage shipment timing, shoreline visuals, and spawned reinforcement contents.",
       "The top-of-file offset macros in `clash95.c` and the matching xrefs in `clash95.asm` agree on the exact offsets `586374..586394` inside `gameData`."
     ]
   },
@@ -292,13 +292,13 @@
     "kind": "table_record",
     "base_symbol": "dword_517B48 / dword_517B4C",
     "size": 8,
-    "description": "One entry in the 12-cell shoreline spawn ring that `Port_GetSupply` probes around the 2x2 port footprint before creating the reinforcement stack.",
+    "description": "One entry in the 12-cell shoreline spawn ring that `Port_CollectReinforcementShipment` probes around the 2x2 port footprint before creating the reinforcement stack.",
     "fields": [
       { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Row offset from `PortRuntimeState.port_tile_row` to one candidate reinforcement spawn tile." },
       { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Column offset from `PortRuntimeState.port_tile_column` to the same candidate reinforcement spawn tile." }
     ],
     "evidence": [
-      "`Port_GetSupply` advances the two decompiled symbols in lockstep as 12 row/column pairs while scanning for the first empty and traversable shoreline-adjacent spawn tile, then reuses the same pair when creating and facing the reinforcement stack.",
+      "`Port_CollectReinforcementShipment` advances the two decompiled symbols in lockstep as 12 row/column pairs while scanning for the first empty and traversable shoreline-adjacent spawn tile, then reuses the same pair when creating and facing the reinforcement stack.",
       "The raw data in `clash95.asm` is one interleaved 24-dword table whose entries decode to the fixed ring `(1,2)`, `(0,2)`, `(2,2)`, `(-1,2)`, `(2,1)`, `(-1,1)`, `(2,0)`, `(-1,0)`, `(2,-1)`, `(-1,-1)`, `(1,-1)`, `(0,-1)` around the 2x2 port footprint."
     ]
   },
@@ -342,11 +342,16 @@
       { "offset": 4, "name": "grid_x", "type": "int16", "notes": "Current tactical tile x-coordinate used by viewport checks and movement/attack range logic." },
       { "offset": 6, "name": "grid_y", "type": "int16", "notes": "Current tactical tile y-coordinate paired with `grid_x`." },
       { "offset": 8, "name": "action_points", "type": "uint8", "notes": "Remaining tactical action points for the slot this turn." },
-      { "offset": 9, "name": "health_percent", "type": "uint8", "notes": "Current tactical health / quantity value consumed by melee and ranged combat exchange helpers." }
+      { "offset": 9, "name": "health_percent", "type": "uint8", "notes": "Current tactical health / quantity value consumed by melee and ranged combat exchange helpers." },
+      { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Mirrors the world-slot stance/order byte; the low two bits feed melee, ranged, and siege helpers and the selected-unit panel icon rows." },
+      { "offset": 17, "name": "anim_frame_and_effect_bits", "type": "uint8", "notes": "Low three bits hold the current idle animation frame advanced by `UnitBattle_UpdateIdleAnimatedUnits`; upper bits still carry unresolved battle-effect flags." },
+      { "offset": 18, "name": "last_animation_tick", "type": "uint32", "notes": "Timestamp gate refreshed by `UnitBattle_UpdateIdleAnimatedUnits` before it advances the low three animation bits at offset +17." },
+      { "offset": 22, "name": "battle_state_bits", "type": "uint8", "notes": "Low bit is set by `UnitBattle_Defence`, cleared when the battle slot is placed, and increases ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`, indicating prepared-defence state." }
     ],
     "evidence": [
       "`UnitBattle_CalcMeleeExchange` addresses both combatants as `dword_532048 + 852 + 31 * slotIndex`, seeds the outputs from byte `+9`, and applies the two-sided combat math over the same fixed-size entries.",
-      "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout."
+      "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout.",
+      "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveRangedAttack` both use the low bit at byte `+22` as a prepared-defence state flag."
     ]
   },
   {
@@ -382,9 +387,9 @@
       { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Signed column offset from `PortRuntimeState.port_tile_column` paired with the same row delta." }
     ],
     "evidence": [
-      "`Port_GetSupply` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
+      "`Port_CollectReinforcementShipment` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
       "The asm data walk for `dword_517B48` / `dword_517B4C` advances by 8 bytes per candidate pair, matching one `{ row_delta, column_delta }` record rather than two unrelated tables.",
-      "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_GetSupply` searches for the reinforcement spawn point."
+      "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_CollectReinforcementShipment` searches for the reinforcement spawn point."
     ]
   },
   {
@@ -687,7 +692,7 @@
     "description": "Nine-byte movement-cost slice shared between each unit-type metadata record and the temporary stack-local profile buffers used by world-map pathfinding.",
     "fields": [
       { "offset": 0, "name": "road_or_bridge_move_cost", "type": "uint8", "notes": "Road/bridge movement cost returned directly when the tile record carries a road or bridge overlay." },
-      { "offset": 1, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement costs indexed through `g_TerrainMoveProfileOffsets[*terrain_tile_id]` when the tile has no road overlay." }
+      { "offset": 1, "name": "world_surface_move_costs[8]", "type": "uint8[8]", "notes": "Eight-lane normalized world-surface movement costs indexed through `g_TerrainMoveTableOffsets[*terrain_tile_id]` when the tile has no road overlay." }
     ],
     "evidence": [
       "`UnitStack_BuildMergedTerrainMoveProfile` iterates the occupied 31-byte squad slots, loads each member's metadata record, and merges bytes `+29..+37` into an 88-byte temporary buffer.",

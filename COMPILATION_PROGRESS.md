@@ -1192,3 +1192,90 @@
   - the battle modal-flow helpers now read as explicit dialog/loop state instead of anonymous `sub_*` callbacks
   - the building transfer selector is now described as one coherent UI list plus view-state model rather than scattered globals
   - the castle production panel state model now includes its exit latch, which matches the already recovered modal-loop behavior
+
+## Batch 95 - Battle Idle Animation And Slot Flag Consistency Wave
+- Repairs:
+  - renamed the remaining tactical idle-animation updater in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `sub_431CC0` -> `UnitBattle_UpdateIdleAnimatedUnits`
+  - extended [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) with the now-confirmed flag and timing fields:
+    - `UnitSlotRecord.state_flags` now records bit `0x1` as the ready flag alongside the already recovered spent-turn / refusal / plague bits
+    - `BattleUnitEntry` now includes `stance_bits`, `anim_frame_and_effect_bits`, `last_animation_tick`, and `battle_state_bits`
+  - updated the unit taxonomy/stat artifacts to remove the stale `UnitSlotRecord +13 bit 0x8` ambiguity and to record the full recovered `state_flags` byte semantics in [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json)
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch95.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch95.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch95`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch95.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch95.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed inside tactical-animation and unit-runtime semantic recovery
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j_Mem_Alloc`
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - residual `JUMPOUT` control-flow scars
+- Key evidence used:
+  - `UnitStack_HasReadyUnits`, `UnitStack_SetReadyFlags`, and `UnitStack_ClearReadyFlags` resolve bit `0x1` of `UnitSlotRecord.state_flags` as the per-slot ready flag
+  - `UnitStack_SetSpentTurnFlag`, `UnitStack_ClearSpentTurnFlag`, `UnitSlot_CanRecoverFatigue`, `Unit_CheckLowMorale`, `UnitStack_HasLowMoraleUnit`, and the already recovered plague helpers complete the rest of the same flag byte
+  - `UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of `BattleUnitEntry +17` behind the same `byte_512572/byte_512573` timing tables used by the world idle-animation updater and refreshes dword `+18` as the matching animation timestamp gate
+  - `UnitBattle_Defence` sets the low bit at battle-entry byte `+22`, and `UnitStats_CalcEffectiveRangedAttack` consumes the same bit as a prepared-defence ranged bonus
+- Net effect:
+  - the tactical idle updater is now named consistently with the world-map idle-animation family
+  - the recovered runtime slot flags now match the actual ready/spent/refusal/plague lifecycle instead of leaving a stale plague ambiguity in the unit report
+  - the tactical `BattleUnitEntry` layout now captures the same animation/state bytes that the battle loop already uses
+
+## Batch 95 - Port Reinforcement Semantics And Metadata Correction Wave
+- Repairs:
+  - renamed the port reinforcement collector in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `Port_GetSupply` -> `Port_CollectReinforcementShipment`
+  - renamed the metadata-byte lookup helpers that return the raw sprite Y lift:
+    - `Unit_GetClassIndex` -> `Unit_GetSpriteVerticalOffsetPx`
+    - `UnitBattle_GetFootprintClass` -> `UnitBattle_GetSpriteVerticalOffsetPx`
+  - rebound one previously recovered helper definition to its live prototype/callers:
+    - `sub_4127A0` -> `UnitSlot_AdjustFatigueByPredicate`
+  - added the asm-backed `j_Mem_Alloc` forwarding thunk in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c), routing the collapsed thunk at `0x4730FB` into the recovered `Mem_Alloc` body at `0x461C00`
+  - updated [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) to rename:
+    - `PortRuntimeState.shoreline_variant_flag` -> `PortRuntimeState.supply_arrival_visual_flag`
+    - `UnitTypeMetadataRecord[15].footprint_class_index` -> `UnitTypeMetadataRecord[15].sprite_vertical_offset_px`
+    - `UnitTypeMetadataRecord[30..37].terrain_move_costs[8]` -> `UnitTypeMetadataRecord[30..37].world_surface_move_costs[8]`
+  - updated the unit-taxonomy/stat artifacts to reflect:
+    - stronger battle-panel corroboration for `morale` and packed `stance_bits`
+    - port-based exclusion evidence for cargo-only and special-personage-only stacks
+    - clearer separation between the `Defence power` numeric row and the packed-state `Status` row
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch95.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch95.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch95`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch95.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch95.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in gameplay/runtime semantics and preserved the existing SDL seam unchanged
+- Current leading blockers:
+  - the broader executable/link surface is still led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_*` and deeper thread/runtime helpers
+    - residual `JUMPOUT` control-flow scars
+  - `j_Mem_Alloc` and the stray `UnitSlot_AdjustFatigueByPredicate`/`sub_4127A0` definition mismatch are removed from that first avoidable unresolved tier by this batch
+- Key evidence used:
+  - `clash95.map` binds `j_Mem_Alloc` to `0x4730FB`, and `clash95.asm` shows that address as a collapsed thunk targeting the recovered `Mem_Alloc` body at `0x461C00`
+  - the port shipment collector at `0x443550` scans the shoreline spawn ring, seeds the fixed reinforcement roster, clears the ready latch, and reschedules the next arrival
+  - `Port_NewTurn`, `Port_BuildShorePieces`, and the shipment collector share the six-dword port runtime block, separating the logical ready flag from the shoreline visual latch
+  - `off_514DC8`, `UnitBattle_UpdateActionTooltip`, and `UnitBattle_DrawSelectedUnitPanel` now clearly separate row 4 (`Defence power`) from row 5 (`Status`)
+  - world-map draw, battle draw, redraw invalidation helpers, and raw `clash95.exe` metadata bytes corroborate metadata byte `+15` as a sprite vertical offset in pixels rather than a reusable class id
+  - `Map_InitTerrainMoveTableOffsets` plus the movement readers corroborate metadata bytes `+30..+37` as an eight-lane normalized world-surface cost profile
+- Net effect:
+  - the port subsystem now reads in reinforcement-shipment terms instead of generic supply getter terms
+  - one low-risk runtime thunk is removed from the first unresolved linker band
+  - the unit metadata/stat artifacts now describe byte `+15` and bytes `+30..+37` in terms that match the observed draw/pathing behavior instead of the older decompiler-shaped interpretation

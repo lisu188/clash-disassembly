@@ -312,12 +312,12 @@
     {
       "name": "SpecialCargoEntryCategory",
       "confidence": "high",
-      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, and feed gold/peasant-specific stack logic."
+      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, feed gold/peasant-specific stack logic, and cannot satisfy the port-reinforcement pickup gate because that gate requires at least one normal combat unit in the claiming stack."
     },
     {
       "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, and military-strength scoring first detects their presence before calling the core combat-strength helper. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
     }
   ],
   "stats": [
@@ -349,13 +349,19 @@
       "name": "morale",
       "confidence": "high",
       "semantic_role": "runtime 0-20 morale/obedience score that boosts combat stats and can cause order refusal",
-      "evidence": "Lives at UnitSlotRecord +11, is clamped to 0..20, adds into attack and damage helpers, and drives the low-morale refusal flag."
+      "evidence": "Lives at UnitSlotRecord +11, is clamped to 0..20, adds into attack and damage helpers, drives the low-morale refusal flag, and is shown in the selected-unit battle panel through the same five-tier 0..20 presentation bucket."
     },
     {
       "name": "stance_bits",
       "confidence": "medium",
       "semantic_role": "runtime formation or stance bits that modify attack values",
-      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, ranged, and siege attack helpers."
+      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, ranged, and siege attack helpers, and the selected-unit battle panel's `Status` row and icon block derive from packed slot state rooted in this byte."
+    },
+    {
+      "name": "state_flags",
+      "confidence": "high",
+      "semantic_role": "runtime ready/spent-turn/refusal/plague flag byte",
+      "evidence": "Bit 0x1 drives `UnitStack_HasReadyUnits`, bit 0x2 is set and cleared by the spent-turn helpers and gates fatigue recovery, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker used by plague spread and peasant-cargo attrition."
     },
     {
       "name": "base_melee_attack",
@@ -388,10 +394,10 @@
       "evidence": "Returned when the world-map tile record has a road or bridge overlay."
     },
     {
-      "name": "terrain_move_cost",
+      "name": "world_surface_move_costs[8]",
       "confidence": "high",
-      "semantic_role": "terrain-dependent move cost",
-      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers."
+      "semantic_role": "eight-lane normalized world-surface movement profile",
+      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers after raw terrain ids collapse into one of eight normalized lanes."
     },
     {
       "name": "battle_tile_move_cost",
@@ -442,10 +448,10 @@
       "evidence": "Bit0 gates whether the world-map and battle idle-animation updaters advance the unit's looping frame state."
     },
     {
-      "name": "footprint_class_index",
+      "name": "sprite_vertical_offset_px",
       "confidence": "high",
-      "semantic_role": "per-type footprint/overhang class used by rendering and redraw invalidation",
-      "evidence": "Rendering subtracts `byte_512577` from the sprite Y origin, world and battle redraw helpers use the same non-zero values to invalidate neighboring tiles, and `UnitBattle_GetFootprintClass` / `Unit_GetClassIndex` both expose the byte as a reusable per-type footprint-class lookup."
+      "semantic_role": "per-type sprite Y lift in pixels, also reused as an overhang-presence test",
+      "evidence": "Rendering subtracts `byte_512577` directly from the sprite Y origin, world and battle redraw helpers use the same non-zero values to invalidate neighboring tiles, and only the large overhanging flyers carry non-zero byte values."
     },
     {
       "name": "melee_attack_frame_count",
@@ -615,10 +621,10 @@
     },
     {
       "unit_type": "MixedStackCategory",
-      "stat": "road_move_cost / terrain_move_cost",
+      "stat": "road_move_cost / world_surface_move_costs[8]",
       "relationship_kind": "merged_stack_movement_profile",
       "confidence": "high",
-      "evidence": "`UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` by keeping the highest non-zero movement cost for each lane and collapsing to zero when any member has zero, so world-map stack movement follows the slowest traversable unit."
+      "evidence": "`UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` by keeping the highest non-zero movement cost for each normalized lane and collapsing to zero when any member has zero, so world-map stack movement follows the slowest traversable unit."
     }
   ],
   "ambiguous": [
@@ -667,22 +673,11 @@
       "candidate": "Battle sidebar labels `Defence power` / `Status`",
       "candidate_kind": "ui_stat_label",
       "possible_interpretations": [
-        "a defence stat row plus a separate status/stance row",
-        "a defence stat row plus a generic condition-effects row"
+        "an unconditional defence-labelled numeric row plus a separate packed runtime-state row",
+        "a defence-labelled UI row currently fed by the recovered damage family plus a generic condition/stance row"
       ],
-      "evidence": "`off_514DC8` contains both labels and `UnitBattle_DrawSelectedUnitPanel` clearly reserves sidebar rows for them, but this pass did not isolate the exact backing stat table or runtime field pair.",
-      "blockers": "Need a tighter binding between the sidebar draw rows and the exact metadata/runtime fields."
-    },
-    {
-      "candidate": "byte_512577 / UnitBattle_GetFootprintClass / Unit_GetClassIndex",
-      "candidate_kind": "metadata_field",
-      "possible_interpretations": [
-        "footprint/overhang class",
-        "draw-height class",
-        "hybrid visual class that also encodes overhang behavior"
-      ],
-      "evidence": "Rendering subtracts the byte from the sprite Y origin, world and battle redraw helpers use non-zero values to invalidate neighboring tiles, and both `UnitBattle_GetFootprintClass` and `Unit_GetClassIndex` return the same per-type table as a reusable lookup.",
-      "blockers": "The value is clearly not just a raw literal offset anymore, but the exact enum semantics still need more callers."
+      "evidence": "`off_514DC8` maps row 4 to `Defence power` and row 5 to `Status`, `UnitBattle_UpdateActionTooltip` follows that same row table, and `UnitBattle_DrawSelectedUnitPanel` shows an unconditional defence-labelled numeric row plus a separate status block rooted in packed slot state around `+12/+13`.",
+      "blockers": "The UI binding is clearer now, but renaming the underlying recovered stat families directly to match those row labels would still overclaim."
     },
     {
       "candidate": "UnitSlotRecord.stance_bits",
@@ -694,17 +689,6 @@
       ],
       "evidence": "The low two bits feed effective attack helpers directly, while the full byte is cycled by `Building_UseGarrisonSlot`.",
       "blockers": "The exact meaning of the upper subfields is still unresolved."
-    },
-    {
-      "candidate": "UnitSlotRecord.state_flags bit 0x8",
-      "candidate_kind": "field_bit",
-      "possible_interpretations": [
-        "special-entry marker",
-        "cargo decay flag",
-        "battle-aftereffect state"
-      ],
-      "evidence": "The bit is set by `sub_412A90`, checked by `sub_412AC0`, and also appears in peasant-cargo decay paths.",
-      "blockers": "The bit's full lifecycle still spans multiple partially unnamed helper families."
     },
     {
       "candidate": "g_UnitTypeMetadataRecords localized-name header",
