@@ -394,6 +394,12 @@
       "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers."
     },
     {
+      "name": "battle_tile_move_cost",
+      "confidence": "medium",
+      "semantic_role": "tactical per-tile movement cost used by battle pathing",
+      "evidence": "`UnitBattle_InitPathingTables` precomputes a tactical move-cost grid from `BattleRuntimeState.default_tile_move_cost`, while `UnitBattle_GetTileMoveCostOrZero` returns fixed cost `5` for airborne unit types."
+    },
+    {
       "name": "unit_type_flags",
       "confidence": "high",
       "semantic_role": "unit-type bitfield inside the 88-byte metadata record",
@@ -578,6 +584,13 @@
       "relationship_kind": "airborne_move_audio_suffixes",
       "confidence": "high",
       "evidence": "Airborne units use digit-only movement-sound suffixes instead of terrain-surface suffixes."
+    },
+    {
+      "unit_type": "FlyingUnitCategory",
+      "stat": "battle_tile_move_cost",
+      "relationship_kind": "fixed_tactical_air_move_cost",
+      "confidence": "high",
+      "evidence": "`UnitBattle_GetTileMoveCostOrZero` bypasses the ground-cost grid and returns fixed move cost `5` whenever the per-type airborne flag is set."
     },
     {
       "unit_type": "LightUnitCategory",

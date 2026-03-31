@@ -4,7 +4,7 @@
    Detected compiler: Visual C++
 */
 
-#include <windows.h>
+#include "platform_sdl.h"
 #include <math.h>
 #include <defs.h>
 
@@ -33,8 +33,8 @@
 #define PORT_SUPPLY_READY_FLAG_OFFSET 586386
 #define PORT_SUPPLY_UNIT_COUNT_OFFSET 586390
 #define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
-#define UNIT_RECORD_SIZE 467
-#define UNIT_TABLE_OFFSET 509674
+#define BUILDING_RECORD_SIZE 467
+#define BUILDING_TABLE_OFFSET 509674
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374
@@ -72,8 +72,7 @@
 #define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
 #define g_SettlementTaxBurdenThresholds byte_515D00
-#define g_PortSupplySpawnRowOffsets dword_517B48
-#define g_PortSupplySpawnColumnOffsets dword_517B4C
+#define g_PortSupplySpawnRingOffsets ((PortSpawnOffset *)dword_517B48)
 #define g_PortSupplyUnitTypePool dword_517BA8
 #define g_PrisonerDeathByExhaustionTexts off_518D98
 #define g_QueenSonBirthTexts off_519350
@@ -110,7 +109,10 @@
 #define PORT_SUPPLY_READY_FLAG (*(_DWORD *)(gameData + PORT_SUPPLY_READY_FLAG_OFFSET))
 #define PORT_SUPPLY_UNIT_COUNT (*(_DWORD *)(gameData + PORT_SUPPLY_UNIT_COUNT_OFFSET))
 #define PORT_SHORE_VARIANT_FLAG (*(_DWORD *)(gameData + PORT_SHORE_VARIANT_FLAG_OFFSET))
-#define UNIT_RECORD(index) (gameData + UNIT_TABLE_OFFSET + UNIT_RECORD_SIZE * (index))
+#define BUILDING_RECORD(index) (gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (index))
+#define UNIT_RECORD_SIZE BUILDING_RECORD_SIZE
+#define UNIT_TABLE_OFFSET BUILDING_TABLE_OFFSET
+#define UNIT_RECORD(index) BUILDING_RECORD(index)
 #define TILE_TERRAIN_RECORD(row, column) ((unsigned __int16 *)(gameData + TILE_TERRAIN_ROW_STRIDE * (row) + TILE_TERRAIN_RECORD_STRIDE * (column)))
 #define TILE_INDEX(row, column) (gameData + TILE_MAP_OFFSET + TILE_ROW_STRIDE * (row) + 2 * (column))
 #define TILE_TRAP_OWNER_MASK(row, column) (*(_BYTE *)(gameData + TILE_TRAP_OWNER_MASK_OFFSET + TILE_TRAP_OWNER_MASK_ROW_STRIDE * (row) + (column)))
@@ -138,7 +140,39 @@ typedef struct QueenWhimRecord
   char *texts[3];
 } QueenWhimRecord;
 
+typedef struct PortSpawnOffset
+{
+  int row_delta;
+  int column_delta;
+} PortSpawnOffset;
+
+typedef struct InputBackendState
+{
+  _DWORD direct_input;
+  _DWORD keyboard_device;
+  _DWORD mouse_device;
+  _DWORD joystick_device;
+  int mouse_delta_x;
+  int mouse_delta_y;
+  int joystick_axis_x;
+  int joystick_axis_y;
+  int joystick_button_primary;
+  int joystick_button_secondary;
+  int mouse_button_primary;
+  int mouse_button_middle;
+  int mouse_button_secondary;
+  char keyboard_state[256];
+  int mouse_device_ready;
+  int keyboard_device_ready;
+  int joystick_device_ready;
+} InputBackendState;
+
 #define g_QueenWhimRecords ((QueenWhimRecord *)&word_5191F0)
+#define dword_5451A8 (g_InputBackendState.mouse_delta_x)
+#define dword_5451AC (g_InputBackendState.mouse_delta_y)
+#define byte_5451C0 (*((signed char *)&g_InputBackendState.mouse_button_primary))
+#define byte_5451C8 (*((signed char *)&g_InputBackendState.mouse_button_secondary))
+#define byte_5451CC ((signed char *)&g_InputBackendState.keyboard_state[0])
 
 // Compatibility aliases while stat-callsite cleanup is still in progress.
 #define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
@@ -477,7 +511,7 @@ BOOL  MapTile_HasOwnBuilding(int a1, int a2);
 BOOL  MapTile_HasEnemyBuilding(int a1, int a2);
 BOOL  MapTile_HasBuilding(int a1, int a2);
 BOOL  Port_IsInsideFootprint(int a1, int a2);
-void  sub_4084A0(double);
+void  WorldMap_HandleTileHoverAndClick(double);
 int  sub_409CC0(int a1, char a2, DWORD a3);
 int  sub_409CE0(char a1, DWORD a2, double a3);
 int  sub_409D00(DWORD a1, char a2, double a3);
@@ -494,7 +528,7 @@ int  sub_40A400(int a1, char a2, DWORD a3);
 int __fastcall sub_40A450(int a1, int a2);
 int  sub_40A460(DWORD a1);
 void  sub_40A490(DWORD a1);
-void  Render_LoadResourceSprite(void *a1, DWORD a2);
+void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2);
 void * sub_40A600(int a1);
 int  UI_LoadTurnBannerGfx(char a1, DWORD a2);
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4);
@@ -548,9 +582,9 @@ int MiniMap_ShowBuildingsOnly();
 int MiniMap_Hide();
 signed int  UI_MenuHitTestEntry(_WORD *a1);
 int  UI_RunMenu(_WORD *a1, DWORD a2);
-BOOL  sub_40E8B0(char a1, int a2);
-_DWORD * sub_40ECF0(int a1, char a2, DWORD a3);
-int sub_40ED20();
+BOOL  WorldMap_HandleTopMenuBar(char a1, int a2);
+_DWORD * WorldMapTopMenu_LoadSpriteSet(int a1, char a2, DWORD a3);
+int WorldMapTopMenu_FreeSpriteSet();
 int  UI_MenuEntry_Enable(int a1, int a2);
 int  UI_MenuEntry_Disable(int a1, int a2);
 void  Map_RevealAllTilesForPlayer(int a1);
@@ -606,9 +640,9 @@ BOOL  UnitSlot_CanRecoverFatigue(int a1);
 BOOL  UnitSlot_HasSevereFatigue(int a1);
 signed int  Unit_NewTurn(int a1, char a2, DWORD a3, double a4);
 signed int  UnitStack_HasBuilder(int a1);
-__int16  sub_411B30(int a1);
-int  sub_411CB0(int a1);
-void sub_411D70();
+__int16  Map_RedrawUnitFootprintByIndex(int a1);
+int  Map_RedrawUnitNeighborhoodByIndex(int a1);
+void Map_UpdateIdleAnimatedUnits();
 int  Unit_GetClassIndex(int a1);
 signed int  Unit_AttemptNeighborMove(int a1);
 BOOL  UnitStack_CanExecuteQueuedPathNow(int a1);
@@ -802,16 +836,16 @@ signed int  UnitStack_HasOnlyFlyingUnits(int a1);
 int  Unit_AddToGroup(unsigned int a1, int a2, int a3, DWORD a4, double a5);
 BOOL  Map_IsTilePlacable(int a1, _DWORD *a2, int a3, int a4);
 BOOL  Unit_MoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4, double a5, int a6);
-_DWORD * UI_SetCurrentPlayer(int a1, int a2, char a3, DWORD a4);
-int sub_4233E0();
-int  sub_423420(int result, DWORD a2);
-int  sub_423760(int a1, int a2);
-signed int  sub_423860(DWORD a1, double a2);
-signed int sub_423AC0();
-int  sub_423B00(int a1, DWORD a2);
-int __thiscall sub_423B40(void *this);
-int __thiscall sub_423B70(void *this);
-int  sub_423B90(DWORD a1);
+_DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int a1, int a2, char a3, DWORD a4);
+int UI_FreeCurrentPlayerInfoSpriteSet();
+int  UnitStackSelection_RedrawPanel(int result, DWORD a2);
+int  UnitStack_ShowSelectionDialog(int a1, int a2);
+signed int  UnitStackSelection_HandleInput(DWORD a1, double a2);
+signed int UnitStackSelection_HasSelectedSlots();
+int  UnitStackSelection_BeginForSelectedStack(int a1, DWORD a2);
+int __thiscall UnitStackSelection_End(void *this);
+int __thiscall UnitStackSelection_ClearMask(void *this);
+int  UnitStackSelection_RefreshForSelectedStack(DWORD a1);
 BOOL  MapTile_HasNorthRoadConnection(int a1, int a2);
 BOOL  MapTile_HasSouthRoadConnection(int a1, int a2);
 BOOL  MapTile_HasWestRoadConnection(int a1, int a2);
@@ -830,8 +864,8 @@ void sub_425110();
 int  sub_425120(int a1, int a2);
 int  sub_4254E0(int a1, DWORD a2, double a3);
 signed int  sub_425540(DWORD a1, double a2);
-int sub_425850();
-signed int  sub_425970(int a1, int a2, int a3);
+int UnitBattle_InitPathingTables();
+signed int  UnitBattle_GetTileMoveCostOrZero(int a1, int a2, int a3);
 int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5);
 int  UnitBattle_MoveTrackNear(int a1, int a2, int a3, DWORD a4);
 int * UnitBattle_MoveTrackNearWall(int a1, int a2, int a3, DWORD a4);
@@ -840,7 +874,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4);
 int  UnitBattle_CenterViewOnUnit(int a1);
 int  UnitBattle_CountAdjacentEnemies(int a1);
 signed int  UnitBattle_GetTargetCrowdingScale(int a1);
-int  sub_426FC0(int a1, int a2, int *a3, _DWORD *a4, int a5);
+int  UnitBattle_CalcMeleeExchange(int a1, int a2, int *a3, _DWORD *a4, int a5);
 int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __int16 *a5);
 int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4);
 int  UnitBattle_GetCorpseSpriteIndex(__int16 *a1);
@@ -878,7 +912,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3);
 int  sub_42B9D0(int a1, int a2, char a3, DWORD a4);
 int  sub_42BF00(int a1);
 char  sub_42C060(int a1);
-BOOL  sub_42C0F0(int a1, int a2);
+BOOL  UnitBattle_IsTileInViewport(int a1, int a2);
 void  sub_42C130(__int16 *a1, DWORD a2, ...);
 void  Battle_LogAllUnits(int a1, char a2, DWORD a3);
 int  GodAnger(DWORD a1, int a2, char a3);
@@ -1029,10 +1063,10 @@ int  sub_43DEC0(int a1, int a2);
 int  sub_43DEE0(int a1, int a2, DWORD a3);
 BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1);
 signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3);
-int  Building_GetCapacity(int a1);
+int  Building_CountFreeGarrisonSlots(int a1);
 signed int  Building_UnitGetInto(int a1, int a2, char a3, signed int i, double a5);
 signed int  Building_CanAcceptUnitStack(int a1, int a2);
-signed int  Building_HasAddonInGarrison(int a1, int a2);
+signed int  Building_HasAddonLicence(int a1, int a2);
 BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4);
 int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3);
 int  Building_SetUnitProduction(int a1, char a2, DWORD a3);
@@ -1044,7 +1078,7 @@ int  Building_ClearGarrisonRepairTimer(int result, int a2);
 int  Building_CountGarrison(int a1);
 int  Building_DrawGarrisonRow(int a1);
 int  Building_CountSpecialPersonageGarrisonEntries(int a1);
-int  Building_CountSpecialGarrisonEntries(int a1);
+int  Building_CountNonCombatGarrisonEntries(int a1);
 signed int  Building_HasSpecialPersonageGarrisonEntries(int a1);
 int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a3);
 BOOL  Building_CanEquipAddon(char *a1, int a2);
@@ -1126,7 +1160,7 @@ int Port_BuildShorePieces();
 int Port_IsSupplyReady();
 int * Port_GenerateApproachTrack(int a1);
 int  Port_GetSupply(int, char, DWORD, double);
-void * UI_DrawPanelWithSprite(char a1, DWORD a2);
+void * UI_DrawPortStatusPanel(char a1, DWORD a2);
 int Rules_RebuildTreasureFacts();
 BOOL  MapTile_HasHiddenTreasure(int a1, int a2);
 signed int  Treasure_TryDigHere(int, char, DWORD, char, char *, double);
@@ -1273,7 +1307,7 @@ signed int  sub_453770(int a1, int a2, int a3, DWORD a4);
 signed int  Move_IsAtTargetOrCanStay(int a1, int a2, int a3);
 signed int  Move_TryApproachTarget(int a1, DWORD a2, int a3);
 signed int  sub_453C90(int a1, int a2, int a3, DWORD a4);
-signed int  sub_453E60(int a1, int a2, int a3, DWORD a4);
+signed int  Rules_GetPathDistanceToObject(int a1, int a2, int a3, DWORD a4);
 BOOL  sub_453FE0(int a1, int a2, int a3);
 BOOL  Player_CanEnterReligiousSiteTile(int a1, int a2, int a3);
 signed int  Move_CommitIfWithinCost(unsigned int a1, int a2, DWORD a3, double a4);
@@ -1429,15 +1463,15 @@ char  Input_KeyToChar(unsigned int a1);
 BOOL  Input_ClearKey(int a1, int a2);
 int Input_MouseInit();
 int nullsub_5(void); // weak
-BOOL Input_MousePresent();
-BOOL Input_MouseAcquire();
+BOOL Platform_IsWindowsNt4();
+BOOL Platform_IsWindows9x();
 int  Render_DefaultRH(int a1, char a2, DWORD a3);
-LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-HWND  Win_CreateMainWindow(HINSTANCE a1, int a2);
-WPARAM  sub_461B30(char a1);
+LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2);
+WPARAM  Platform_PumpMessagesAndBlitFrame(char a1);
 int  Mem_Alloc(int a1, int a2, char a3, DWORD a4);
 int __cdecl j__nfree_();
-BOOL  sub_461C80(char a1);
+BOOL  Video_CanContinuePlayback(char a1);
 signed int  Win_BeginModeChange(const char *a1, int a2, DWORD a3);
 void  Win_EndModeChange(int a1, char *a2, int a3, int a4);
 void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
@@ -1842,7 +1876,7 @@ _DWORD * sub_474D60(_DWORD *result);
 _DWORD * sub_474DE0(_DWORD *a1);
 signed int  sub_474E80(LPVOID *a1, void *a2, void *a3, DWORD a4, int a5);
 signed int  sub_475080(LPVOID *a1, _DWORD *a2, _DWORD *a3, _DWORD *a4, _DWORD *a5, int a6, DWORD a7);
-int  sub_4753E0(int a1);
+int  Render_RestoreLostSurfaceIfNeeded(int a1);
 int  sub_475420(int a1, int a2, char a3, int a4, char a5);
 int  IO_StreamWrite(int result, int a2, int a3, int a4);
 // int __thiscall _wcpp_4_static_init__(__lock *this); idb
@@ -2068,13 +2102,13 @@ int  sub_47BA70(int result);
 signed int  sub_47BA86(int a1, int a2, unsigned int a3, int a4);
 // int __fastcall memmove_(_DWORD, _DWORD); weak
 // int __fastcall strupr_(_DWORD, _DWORD); weak
-BOOL __stdcall sub_47BC10(int a1, int a2);
-_DWORD * sub_47BC40(_DWORD *result);
-_DWORD * sub_47BCA0(_DWORD *a1);
-signed int  sub_47BD10(_DWORD *a1, int a2, int a3);
-int  sub_47BF30(int result);
-int  sub_47BF80(int result);
-int  Time_Sleep(int result, int a2, int a3);
+BOOL __stdcall InputBackend_StoreEnumeratedDevice(int a1, int a2);
+InputBackendState * InputBackend_ResetState(InputBackendState *result);
+InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1);
+signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3);
+int  InputBackend_Acquire(InputBackendState *state);
+int  InputBackend_Unacquire(InputBackendState *state);
+int  InputBackend_PollState(InputBackendState *state, int a2, int a3);
 // _DWORD __stdcall sub_47C181(_DWORD); weak
 // _DWORD __stdcall sub_47C1C0(_DWORD); weak
 int sub_47C200();
@@ -4671,9 +4705,9 @@ _UNKNOWN strstr_; // weak
 // extern _UNKNOWN _wcpp_4_alloc_exc__; weak
 void *off_4C61F0 = (void *)0x487883; // weak
 _UNKNOWN strncat_; // weak
-int dword_4E80F0[5] = { 24, 16, 2, 16, 7 }; // weak
-int dword_4E9110[5] = { 24, 16, 2, 256, 256 }; // weak
-int dword_4E93F0[5] = { 24, 16, 1, 80, 44 }; // weak
+int g_InputBackendMouseDataFormat[5] = { 24, 16, 2, 16, 7 }; // weak
+int g_InputBackendKeyboardDataFormat[5] = { 24, 16, 2, 256, 256 }; // weak
+int g_InputBackendJoystickDataFormat[5] = { 24, 16, 1, 80, 44 }; // weak
 char aClash[7] = "CLASH\\"; // weak
 char aGetreadincrZap[49] = "GetReadIncr: zapis na ekran nie zaimplementowany"; // weak
 char aGetwriteincrZa[50] = "GetWriteIncr: zapis na ekran nie zaimplementowany"; // weak
@@ -10220,14 +10254,11 @@ char *off_517B24[3] =
   "Clash CD not found!",
   "Clash CD nicht gefunden"
 }; // weak
-char *g_PortArrivalTexts[6] =
+char *g_PortSupplyReadyTexts[3] =
 {
   "Posi\x92ki przyby\x92y",
   "Extra troops came",
-  "Truppen kommen",
-  "Port jest pusty",
-  "Port is empty",
-  "Hafen ist verlassen"
+  "Truppen kommen"
 }; // weak
 char *g_PortEmptyTexts[3] = { "Port jest pusty", "Port is empty", "Hafen ist verlassen" }; // weak
 char *off_517DE8[6] =
@@ -10648,7 +10679,7 @@ char g_KeyChar = 'y'; // weak
 char byte_5199A0 = 'z'; // weak
 char byte_5199AE[] = { '\0' }; // weak
 int dword_5199C0 = 1; // weak
-int dword_5199D4 = 1; // weak
+int g_AppIsActive = 1; // weak
 // extern int ( *g_RenderHook)(int a1, char a2, DWORD a3); weak
 char *off_5199F0[3] =
 {
@@ -11516,9 +11547,9 @@ int dword_51C724 = 0; // weak
 char *off_51C790[2] = { "mod", "cotan" }; // weak
 _UNKNOWN unk_51C9F8; // weak
 IID stru_51CA08 = { 3014063072u, 11075u, 4559u, { 162u, 222u, 0u, 170u, 0u, 185u, 51u, 86u } }; // weak
-_UNKNOWN unk_51CA18; // weak
-_UNKNOWN unk_51CA28; // weak
-_UNKNOWN unk_51CA38; // weak
+_UNKNOWN g_InputBackendMouseDeviceGuid; // weak
+_UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
+_UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
 int dword_51D018; // weak
 int dword_51D01C; // weak
 int dword_51D020; // weak
@@ -11890,14 +11921,9 @@ int dword_545140; // weak
 int dword_545150; // weak
 _UNKNOWN unk_545158; // weak
 int dword_54517C; // weak
-int dword_545190; // weak
-_DWORD dword_545198[4]; // weak
-int dword_5451A8; // weak
-int dword_5451AC; // weak
-char byte_5451C0; // weak
-char byte_5451C8; // weak
-char byte_5451CC[268]; // weak
-int dword_5452D8; // weak
+int g_SoundPausedForInactiveApp; // weak
+InputBackendState g_InputBackendState; // weak
+int g_ShouldPresentOnReactivate; // weak
 HWND hWnd; // idb
 int dword_5452E4; // weak
 int dword_5452E8; // weak
@@ -12007,7 +12033,7 @@ int dword_54DD0C; // weak
 int dword_54DD10; // weak
 int dword_54DD14; // weak
 int dword_54DD18; // weak
-int dword_54DD20; // weak
+int g_InputBackendTempJoystickDevice; // weak
 int dword_54DD24; // weak
 int dword_54DD30; // weak
 int dword_54DD40; // weak
@@ -14368,7 +14394,7 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
   }
   if ( !v3[1] )
     App_RequestQuit((int)aNotEnoughFreeM);
-  memset_(0, 0);
+  UnitStackSelection_ClearMask((void *)dword_526F78);
   return v3;
 }
 // 403DBE: variable 'v5' is possibly undefined
@@ -18070,7 +18096,7 @@ BOOL  Port_IsInsideFootprint(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004084A0) --------------------------------------------------------
-void  sub_4084A0(double a1)
+void  WorldMap_HandleTileHoverAndClick(double a1)
 {
   int v1; // ebp
   int v2; // edx
@@ -18397,7 +18423,7 @@ LABEL_80:
   }
 LABEL_26:
   if ( DD_IsLost((int)&dword_544CD8) && Port_IsInsideFootprint(v1, v78) )
-    UI_DrawPanelWithSprite(v5, v1);
+    UI_DrawPortStatusPanel(v5, v1);
   if ( DD_IsLost((int)&dword_544CD8) )
   {
     v8 = 2 * v78;
@@ -18410,7 +18436,7 @@ LABEL_26:
       }
       else
       {
-        sub_423760(*(unsigned __int16 *)(v8 + v9 + gameData + 556374), v5);
+        UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + 556374), v5);
         sub_419D60((int)&unk_511DDF, v10);
       }
     }
@@ -18564,7 +18590,7 @@ LABEL_26:
   }
   if ( Port_IsInsideFootprint(v1, v78) )
   {
-    UI_DrawPanelWithSprite(v27, v1);
+    UI_DrawPortStatusPanel(v27, v1);
     return;
   }
   v40 = 2 * v78;
@@ -18646,7 +18672,7 @@ LABEL_205:
       dword_5202E8 = 0;
       sub_40A360(v59);
       sub_406980(v1);
-      Render_LoadResourceSprite(v60, v1);
+      UnitStackSelection_SyncForCurrentSelection(v60, v1);
       sub_418700(1);
     }
     else
@@ -18673,7 +18699,7 @@ LABEL_205:
         {
           g_LastSelectedUnitIndex = g_SelectedUnitIndex;
           g_SelectedUnitIndex = *(unsigned __int16 *)(v53 + 556374);
-          sub_423B70((void *)v52);
+          UnitStackSelection_ClearMask((void *)v52);
           sub_40A360(v55);
           sub_418700(1);
           v56 = g_LastSelectedUnitIndex;
@@ -18682,7 +18708,7 @@ LABEL_205:
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147174),
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
           sub_406980(v56);
-          Render_LoadResourceSprite(v57, v56);
+          UnitStackSelection_SyncForCurrentSelection(v57, v56);
           Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&dword_544CD8, 0, v54);
         }
@@ -18724,7 +18750,7 @@ LABEL_205:
       }
       if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) == 1 )
       {
-        if ( sub_423AC0() )
+        if ( UnitStackSelection_HasSelectedSlots() )
         {
           *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) = 0;
           sub_418700(1);
@@ -18814,7 +18840,7 @@ int  sub_409CC0(int a1, char a2, DWORD a3)
 int  sub_409CE0(char a1, DWORD a2, double a3)
 {
   sub_444D50(1, a1, a2, a3);
-  sub_423B90(a2);
+  UnitStackSelection_RefreshForSelectedStack(a2);
   return sub_418700(1);
 }
 
@@ -18828,7 +18854,7 @@ int  sub_409D00(DWORD a1, char a2, double a3)
   if ( result == -1 )
   {
     sub_418700(1);
-    return sub_423B90(a1);
+    return UnitStackSelection_RefreshForSelectedStack(a1);
   }
   else
   {
@@ -18881,7 +18907,7 @@ int  sub_409D80(int a1, DWORD a2)
     sub_4425E0(*(char **)(a1 + 49));
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
     g_SelectedUnitIndex = (int)v3;
-    Render_LoadResourceSprite(v3, a2);
+    UnitStackSelection_SyncForCurrentSelection(v3, a2);
     sub_40A360(v4);
     dword_526A34 = (int)&unk_5196A0;
     return sub_418700(1);
@@ -18941,13 +18967,13 @@ void  sub_409DF0(int a1, int a2, DWORD a3)
   {
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
     g_SelectedUnitIndex = v5;
-    sub_423B70((void *)v7);
+    UnitStackSelection_ClearMask((void *)v7);
     sub_40A360(v9);
     Camera_CenterOnUnit(v10);
     Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_418700(1);
     sub_406980(a3);
-    Render_LoadResourceSprite(v11, a3);
+    UnitStackSelection_SyncForCurrentSelection(v11, a3);
   }
 }
 // 409E15: variable 'v5' is possibly undefined
@@ -19144,7 +19170,7 @@ LABEL_13:
       sub_40A490(0x40u);
       sub_418700(1);
       sub_406980(0x40u);
-      return sub_423B90(0x40u);
+      return UnitStackSelection_RefreshForSelectedStack(0x40u);
     }
     else
     {
@@ -19276,7 +19302,7 @@ void  sub_40A490(DWORD a1)
       g_SelectedUnitIndex = -1;
       sub_40A360((void *)gameData);
     }
-    Render_LoadResourceSprite(v1, a1);
+    UnitStackSelection_SyncForCurrentSelection(v1, a1);
   }
 }
 // 40A4ED: variable 'v1' is possibly undefined
@@ -19285,7 +19311,7 @@ void  sub_40A490(DWORD a1)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A500) --------------------------------------------------------
-void  sub_40A500(void *a1, DWORD a2)
+void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)
 {
   int v2; // ecx
 
@@ -19294,18 +19320,18 @@ void  sub_40A500(void *a1, DWORD a2)
     if ( dword_514194 == -1 )
       return;
 LABEL_4:
-    sub_423B40(a1);
+    UnitStackSelection_End(a1);
     return;
   }
   if ( Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) == 1 && dword_514194 != -1 )
     goto LABEL_4;
   if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && dword_514194 == -1 )
   {
-    sub_423B00(v2, a2);
+    UnitStackSelection_BeginForSelectedStack(v2, a2);
   }
   else if ( dword_514194 != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
   {
-    sub_423B90(a2);
+    UnitStackSelection_RefreshForSelectedStack(a2);
   }
 }
 // 40A51A: variable 'a1' is possibly undefined
@@ -19546,7 +19572,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   g_LastSelectedUnitIndex = -1;
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     sub_40A360(v13);
-  Render_LoadResourceSprite(v13, 0xFFFFFFFF);
+  UnitStackSelection_SyncForCurrentSelection(v13, 0xFFFFFFFF);
   sub_418700(1);
   if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
@@ -19609,7 +19635,7 @@ int * WorldMap_RenderHook(DWORD a1)
   UI_EndDraw(7);
   Tooltip_CaptureBackdrop(160, 473, v1, 467, 76);
   sub_406980(a1);
-  Render_LoadResourceSprite(v2, a1);
+  UnitStackSelection_SyncForCurrentSelection(v2, a1);
   result = sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   return result;
@@ -19636,7 +19662,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
 
   DD_Pump((int)dword_544CD8, a1);
   Render_SetResourceHandle((int)&unk_51D4C0, 0);
-  sub_411D70();
+  Map_UpdateIdleAnimatedUnits();
   sub_406FA0(a1);
   sub_416430(v2);
   sub_416610(v3);
@@ -19760,7 +19786,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   dword_5202F4 = v18;
   sub_435ED0(aMainmap, v18, v19, a2);
   sub_460C70((int)dword_544CD8, a1, a2);
-  return sub_40ECF0(v20, a1, a2);
+  return WorldMapTopMenu_LoadSpriteSet(v20, a1, a2);
 }
 // 40AEE5: variable 'v2' is possibly undefined
 // 40AEFC: variable 'v4' is possibly undefined
@@ -19799,10 +19825,10 @@ int  WorldMap_UnloadResources(DWORD a1)
   sub_405920(&dword_5202D8);
   sub_405920(&dword_5202D4);
   sub_405920(&dword_5202D0);
-  sub_4233E0();
+  UI_FreeCurrentPlayerInfoSpriteSet();
   sub_405920(&dword_5202DC);
   j__nfree_();
-  return sub_40ED20();
+  return WorldMapTopMenu_FreeSpriteSet();
 }
 // 40B027: variable 'v2' is possibly undefined
 // 5202BC: using guessed type int dword_5202BC;
@@ -19856,10 +19882,10 @@ void  WorldMap_RunHumanTurnLoop(
     sub_407B20(0, v8, v9);
     WorldMap_RedrawFrame((int)a2);
     MiniMap_UpdateViewportFromCursor();
-    if ( !sub_40E8B0((char)a2, 0) )
+    if ( !WorldMap_HandleTopMenuBar((char)a2, 0) )
       break;
-    if ( !sub_423860(0, a4) )
-      sub_4084A0(a4);
+    if ( !UnitStackSelection_HandleInput(0, a4) )
+      WorldMap_HandleTileHoverAndClick(a4);
     if ( !dword_545140 )
     {
       if ( !Input_IsKeyPressed(56) )
@@ -19889,7 +19915,7 @@ LABEL_24:
           *(_BYTE *)(v15 + gameData + 147179) = v17;
           *(_BYTE *)(v15 + v16 + 147179) = v17 & 7;
           a2 = (int ( *)(int, char, DWORD))dword_544CD8;
-          sub_411CB0(g_SelectedUnitIndex);
+          Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
           while ( Input_IsKeyPressed(v18) )
             DD_Pump((int)dword_544CD8, (char)dword_544CD8);
         }
@@ -19904,7 +19930,7 @@ LABEL_24:
             *(_BYTE *)(v19 + gameData + 147179) = v21;
             *(_BYTE *)(v19 + v20 + 147179) = v21 & 7;
             a2 = (int ( *)(int, char, DWORD))dword_544CD8;
-            sub_411CB0(g_SelectedUnitIndex);
+            Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
             while ( Input_IsKeyPressed(v22) )
               DD_Pump((int)dword_544CD8, (char)dword_544CD8);
           }
@@ -20134,7 +20160,7 @@ LABEL_13:
   sub_418700(1);
   Tooltip_CaptureBackdrop(160, 473, v13, 467, 76);
   sub_40A400(v14, 211, a3);
-  Render_LoadResourceSprite(v15, a3);
+  UnitStackSelection_SyncForCurrentSelection(v15, a3);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   Render_Present((int)dword_544CD8);
   sub_418700(1);
@@ -20154,7 +20180,7 @@ LABEL_13:
   Debug_Log(v20, (char)v21, a3, (int)aSetrhS08x);
   while ( 1 )
   {
-    UI_SetCurrentPlayer(g_CurrentPlayerIndex, v22, (char)v21, a3);
+    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v22, (char)v21, a3);
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     {
       WorldMap_RunHumanTurnLoop(v23, v21, a3, a5);
@@ -22048,7 +22074,7 @@ LABEL_52:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040E8B0) --------------------------------------------------------
-BOOL  sub_40E8B0(char a1, int a2)
+BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
 {
   int v3; // ecx
   int v4; // ecx
@@ -22185,14 +22211,14 @@ BOOL  sub_40E8B0(char a1, int a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040ECF0) --------------------------------------------------------
-_DWORD * sub_40ECF0(int a1, char a2, DWORD a3)
+_DWORD * WorldMapTopMenu_LoadSpriteSet(int a1, char a2, DWORD a3)
 {
   _DWORD *result; // eax
 
   result = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
   if ( result )
   {
-    result = DLXSpriteSet_Load(result, a2);
+    result = DLXSpriteSet_Load(result, "menu.s32");
     dword_523F5C = (int)result;
   }
   else
@@ -22205,7 +22231,7 @@ _DWORD * sub_40ECF0(int a1, char a2, DWORD a3)
 // 523F5C: using guessed type int dword_523F5C;
 
 //----- (0040ED20) --------------------------------------------------------
-int sub_40ED20()
+int WorldMapTopMenu_FreeSpriteSet()
 {
   return sub_405920(&dword_523F5C);
 }
@@ -23449,7 +23475,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                     }
                     else if ( Unit_GetClassIndex(v107) )
                     {
-                      sub_411CB0(v107);
+                      Map_RedrawUnitNeighborhoodByIndex(v107);
                     }
                     else
                     {
@@ -23616,7 +23642,7 @@ LABEL_21:
     dword_512360 = -1;
     if ( v101 )
     {
-      sub_423B90(v15);
+      UnitStackSelection_RefreshForSelectedStack(v15);
       sub_418700(1);
     }
     sub_460D80((int)dword_544CD8, v92);
@@ -24145,7 +24171,7 @@ signed int  UnitStack_HasBuilder(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00411B30) --------------------------------------------------------
-__int16  sub_411B30(int a1)
+__int16  Map_RedrawUnitFootprintByIndex(int a1)
 {
   __int16 *v1; // ecx
   int v2; // eax
@@ -24234,7 +24260,7 @@ __int16  sub_411B30(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00411CB0) --------------------------------------------------------
-int  sub_411CB0(int a1)
+int  Map_RedrawUnitNeighborhoodByIndex(int a1)
 {
   int result; // eax
   __int16 *v3; // ecx
@@ -24272,7 +24298,7 @@ int  sub_411CB0(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00411D70) --------------------------------------------------------
-void sub_411D70()
+void Map_UpdateIdleAnimatedUnits()
 {
   int v0; // ecx
   int v1; // edx
@@ -24306,7 +24332,7 @@ void sub_411D70()
           *(_BYTE *)(v1 + 23) = BYTE1(v5);
           *(_BYTE *)(v1 + 23) = BYTE1(v5) & 0xF8;
           *(_BYTE *)(v1 + 23) = BYTE1(v5);
-          sub_411B30(v6);
+          Map_RedrawUnitFootprintByIndex(v6);
         }
       }
     }
@@ -24332,7 +24358,7 @@ int  Unit_GetClassIndex(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00411E60) --------------------------------------------------------
-signed int  sub_411E60(int a1)
+signed int  Unit_AttemptNeighborMove(int a1)
 {
   int v2; // edx
   signed int v3; // ebp
@@ -29368,7 +29394,7 @@ void UI_UpdateWorldMapUnitAttentionFlash()
     {
       v2 = g_WorldMapAttentionFlashUnitIndex;
       g_WorldMapAttentionFlashUnitIndex = -1;
-      sub_411B30(v2);
+      Map_RedrawUnitFootprintByIndex(v2);
     }
   }
 }
@@ -29415,7 +29441,7 @@ void __fastcall sub_418E50(int a1, int a2)
     v4 = dword_5139F8;
     if ( dword_5269A4 >= 12 )
       dword_5139F8 = -1;
-    sub_411B30(v4);
+    Map_RedrawUnitFootprintByIndex(v4);
   }
 }
 // 418E70: variable 'v2' is possibly undefined
@@ -31150,7 +31176,7 @@ LABEL_52:
                 Rules_UnlinkArmyFact(v62, a5);
               sub_40A490((DWORD)v8);
               v41 = v61;
-              sub_423B90((DWORD)v8);
+              UnitStackSelection_RefreshForSelectedStack((DWORD)v8);
               if ( v41 )
                 WorldMap_RenderHook((DWORD)v8);
               else
@@ -31376,7 +31402,7 @@ LABEL_15:
              || *(_DWORD *)(1423 * *(unsigned __int8 *)(467 * v59 + gameData + 509676) + gameData + 140051);
           if ( !v19
             || (Building_CountGarrison(UNIT_RECORD(v59)),
-                v21 = Building_CountSpecialGarrisonEntries(v20 + gameData + 509674),
+                v21 = Building_CountNonCombatGarrisonEntries(v20 + gameData + 509674),
                 v22 == v21) )
           {
             v25 = 0;
@@ -31409,7 +31435,7 @@ LABEL_47:
                 Rules_UnlinkArmyFact(v61, a5);
               sub_40A490((DWORD)v7);
               v42 = v58;
-              sub_423B90(v58);
+              UnitStackSelection_RefreshForSelectedStack(v58);
               if ( v42 )
                 WorldMap_RenderHook(v42);
               Render_DrawSprite_v3(v60, v42);
@@ -32473,7 +32499,7 @@ int a5;
     v25 += 2;
   }
   while ( v28 );
-  memset_(a1, 0);
+  UnitStackSelection_ClearMask((void *)a1);
   if ( v29 == 1 )
   {
     *(_BYTE *)(v60 + 421) = 1;
@@ -36822,7 +36848,7 @@ BOOL  Unit_MoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (00423370) --------------------------------------------------------
-_DWORD * sub_423370(int a1, int a2, char a3, DWORD a4)
+_DWORD * UI_LoadCurrentPlayerInfoSpriteSet(int a1, int a2, char a3, DWORD a4)
 {
   int v4; // edx
   int v5; // ecx
@@ -36841,7 +36867,7 @@ _DWORD * sub_423370(int a1, int a2, char a3, DWORD a4)
   result = (_DWORD *)Mem_Alloc(4112, v5, a3, a4);
   if ( result )
   {
-    result = DLXSpriteSet_Load(result, a3);
+    result = DLXSpriteSet_Load(result, v7);
     dword_527C24 = (int)result;
   }
   else
@@ -36857,12 +36883,12 @@ _DWORD * sub_423370(int a1, int a2, char a3, DWORD a4)
 // 527C24: using guessed type int dword_527C24;
 
 //----- (004233E0) --------------------------------------------------------
-int sub_4233E0()
+int UI_FreeCurrentPlayerInfoSpriteSet()
 {
   int result; // eax
 
   if ( dword_527C24 )
-    result = nfree_(0);
+    result = nfree_(dword_527C24);
   dword_527C24 = 0;
   return result;
 }
@@ -36870,7 +36896,7 @@ int sub_4233E0()
 // 527C24: using guessed type int dword_527C24;
 
 //----- (00423420) --------------------------------------------------------
-int  sub_423420(int result, DWORD a2)
+int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
 {
   int v2; // edx
   int v3; // eax
@@ -36904,7 +36930,7 @@ int  sub_423420(int result, DWORD a2)
     v4 = v13;
     sub_412B20((int)dword_526F78, 10, v13);
     UI_ClearTileHighlight(v5);
-    if ( (unsigned int)*(__int16 *)(dword_526FA0 + 6) <= 0x28 && sub_423AC0() )
+    if ( (unsigned int)*(__int16 *)(dword_526FA0 + 6) <= 0x28 && UnitStackSelection_HasSelectedSlots() )
     {
       for ( i = 0; i < 12; ++i )
       {
@@ -36919,7 +36945,7 @@ int  sub_423420(int result, DWORD a2)
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v7 = *(unsigned __int8 *)(dword_526FA0 + 4);
     if ( v7 != g_CurrentPlayerIndex )
-      UI_SetCurrentPlayer(v7, v6, (char)v4, a2);
+      UI_LoadCurrentPlayerInfoSpriteSet(v7, v6, (char)v4, a2);
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 35);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
       400,
@@ -36981,7 +37007,7 @@ int  sub_423420(int result, DWORD a2)
     }
     result = *(unsigned __int8 *)(dword_526FA0 + 4);
     if ( result != g_CurrentPlayerIndex )
-      return (int)UI_SetCurrentPlayer(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
+      return (int)UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v9, g_CurrentPlayerIndex, a2);
   }
   return result;
 }
@@ -37004,7 +37030,7 @@ int  sub_423420(int result, DWORD a2)
 // 527C24: using guessed type int dword_527C24;
 
 //----- (00423760) --------------------------------------------------------
-int  sub_423760(int a1, int a2)
+int  UnitStack_ShowSelectionDialog(int a1, int a2)
 {
   _BYTE v4[40]; // [esp+0h] [ebp-48h] BYREF
   int v5; // [esp+28h] [ebp-20h]
@@ -37018,7 +37044,7 @@ int  sub_423760(int a1, int a2)
   dword_526994 = 1;
   dword_514194 = a1;
   memset_(0, 0);
-  sub_423420(a1, a1);
+  UnitStackSelection_RedrawPanel(a1, a1);
   sub_418700(1);
   while ( DD_IsLost((int)dword_544CD8) )
   {
@@ -37030,7 +37056,7 @@ int  sub_423760(int a1, int a2)
   dword_514194 = v7;
   dword_526FA0 = v5;
   qmemcpy(dword_526F78, v4, sizeof(dword_526F78));
-  sub_423420(-1, a1);
+  UnitStackSelection_RedrawPanel(-1, a1);
   return sub_418700(1);
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
@@ -37041,7 +37067,7 @@ int  sub_423760(int a1, int a2)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00423860) --------------------------------------------------------
-signed int  sub_423860(DWORD a1, double a2)
+signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 {
   unsigned int v3; // esi
   int v4; // edi
@@ -37072,13 +37098,13 @@ signed int  sub_423860(DWORD a1, double a2)
     if ( DD_IsFlipping((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * v3 + 6) != -1 )
     {
       LOBYTE(dword_526F78[v3]) ^= 1u;
-      sub_423420(-1, a1);
+      UnitStackSelection_RedrawPanel(-1, a1);
       sub_418700(1);
       Render_Begin((int)dword_544CD8, v6);
     }
     v4 = 1;
   }
-  if ( DD_IsFlipping((int)dword_544CD8) && sub_423AC0() )
+  if ( DD_IsFlipping((int)dword_544CD8) && UnitStackSelection_HasSelectedSlots() )
   {
     v7 = (((dword_544CFC >> byte_54512C)
          - 32
@@ -37105,8 +37131,8 @@ signed int  sub_423860(DWORD a1, double a2)
         sub_412B20((int)dword_526F78, 10, v15);
         if ( Unit_MoveSelectionFromGroupToTile(g_SelectedUnitIndex, v15, v12, v7, a2, 0) )
           memset_(v13, 0);
-        Render_LoadResourceSprite(v13, a1);
-        sub_423420(-1, a1);
+        UnitStackSelection_SyncForCurrentSelection(v13, a1);
+        UnitStackSelection_RedrawPanel(-1, a1);
         sub_418700(1);
       }
     }
@@ -37130,7 +37156,7 @@ signed int  sub_423860(DWORD a1, double a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00423AC0) --------------------------------------------------------
-signed int sub_423AC0()
+signed int UnitStackSelection_HasSelectedSlots()
 {
   int v0; // eax
 
@@ -37153,12 +37179,12 @@ signed int sub_423AC0()
 // 514194: using guessed type int dword_514194;
 
 //----- (00423B00) --------------------------------------------------------
-int  sub_423B00(int a1, DWORD a2)
+int  UnitStackSelection_BeginForSelectedStack(int a1, DWORD a2)
 {
   dword_526994 = 1;
   dword_514194 = g_SelectedUnitIndex;
   memset_(a1, 0);
-  sub_423420(-1, a2);
+  UnitStackSelection_RedrawPanel(-1, a2);
   return sub_418700(1);
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
@@ -37167,7 +37193,7 @@ int  sub_423B00(int a1, DWORD a2)
 // 526994: using guessed type int dword_526994;
 
 //----- (00423B40) --------------------------------------------------------
-int __thiscall sub_423B40(void *this)
+int __thiscall UnitStackSelection_End(void *this)
 {
   UI_ClearTileHighlight(this);
   dword_526994 = 0;
@@ -37178,17 +37204,17 @@ int __thiscall sub_423B40(void *this)
 // 526994: using guessed type int dword_526994;
 
 //----- (00423B70) --------------------------------------------------------
-int __thiscall sub_423B70(void *this)
+int __thiscall UnitStackSelection_ClearMask(void *this)
 {
   return memset_(this, 0);
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00423B90) --------------------------------------------------------
-int  sub_423B90(DWORD a1)
+int  UnitStackSelection_RefreshForSelectedStack(DWORD a1)
 {
   dword_514194 = g_SelectedUnitIndex;
-  sub_423420(-1, a1);
+  UnitStackSelection_RedrawPanel(-1, a1);
   return sub_418700(1);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -38144,7 +38170,7 @@ LABEL_13:
 // 545150: using guessed type int dword_545150;
 
 //----- (00425850) --------------------------------------------------------
-int sub_425850()
+int UnitBattle_InitPathingTables()
 {
   int v0; // edx
   int v1; // ecx
@@ -38210,7 +38236,7 @@ int sub_425850()
 // 532048: using guessed type int dword_532048;
 
 //----- (00425970) --------------------------------------------------------
-signed int  sub_425970(int a1, int a2, int a3)
+signed int  UnitBattle_GetTileMoveCostOrZero(int a1, int a2, int a3)
 {
   if ( !dword_531CB8 && *(__int16 *)(40 * a2 + dword_532048 + 2 * a3 + 1534) != -1 )
     return 0;
@@ -38312,7 +38338,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
     || v60 < 0
     || v59 >= *(_DWORD *)(dword_532048 + 804)
     || v60 >= *(_DWORD *)(dword_532048 + 800)
-    || !sub_425970(v61, v59, v60) )
+    || !UnitBattle_GetTileMoveCostOrZero(v61, v59, v60) )
   {
     return 0;
   }
@@ -38363,7 +38389,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
             i = v14 + Map_NeighborDY[v56 / 4];
             if ( v16 >= 0 && v16 < *(_DWORD *)(dword_532048 + 804) && i >= 0 && i < *(_DWORD *)(dword_532048 + 800) )
             {
-              LOWORD(v17) = sub_425970(v61, v13 + Map_NeighborDX[v56 / 4], v14 + Map_NeighborDY[v56 / 4]);
+              LOWORD(v17) = UnitBattle_GetTileMoveCostOrZero(v61, v13 + Map_NeighborDX[v56 / 4], v14 + Map_NeighborDY[v56 / 4]);
               if ( (_WORD)v17 )
               {
                 if ( v16 != v13 && i != v14 )
@@ -38488,7 +38514,7 @@ LABEL_73:
           v73 = 40 * v35;
           if ( (unsigned __int16)v78 <= (unsigned __int16)v55[20 * v35 + 1 + v36] )
             goto LABEL_84;
-          v37 = sub_425970(v61, v79, v80);
+          v37 = UnitBattle_GetTileMoveCostOrZero(v61, v79, v80);
           LOWORD(v38) = v37;
           if ( !v32 || !v33 )
             goto LABEL_82;
@@ -38871,7 +38897,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
     v8 = v5[3];
     v9 = (unsigned __int16)v5[2];
     v52 = 0;
-    if ( !sub_42C0F0(v9, v8) )
+    if ( !UnitBattle_IsTileInViewport(v9, v8) )
       UnitBattle_CenterViewOnUnit(v50);
     UnitBattle_RedrawVisibleGrid();
     *((_BYTE *)v5 + 22) &= ~1u;
@@ -38907,7 +38933,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           break;
         v23 = (unsigned __int8)v54;
         LOWORD(v11) = BYTE1(v54);
-        if ( sub_425970(*(__int16 *)(v51 + dword_532048 + 852), (unsigned __int8)v54, BYTE1(v54)) )
+        if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v51 + dword_532048 + 852), (unsigned __int8)v54, BYTE1(v54)) )
         {
           v25 = v24 - (unsigned __int16)v5[3];
           LOWORD(v11) = v23 - v5[2];
@@ -38916,7 +38942,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           v27 = Facing_DirectionFromDelta8(v26, v25);
           v7 = v27;
           *((_BYTE *)v5 + 3) = v27;
-          if ( !sub_42C0F0(v23, v28) )
+          if ( !UnitBattle_IsTileInViewport(v23, v28) )
           {
             UnitBattle_CenterViewOnUnit(v50);
             UnitBattle_RedrawVisibleGrid();
@@ -39165,7 +39191,7 @@ signed int  UnitBattle_GetTargetCrowdingScale(int a1)
 }
 
 //----- (00426FC0) --------------------------------------------------------
-int  sub_426FC0(int a1, int a2, int *a3, _DWORD *a4, int a5)
+int  UnitBattle_CalcMeleeExchange(int a1, int a2, int *a3, _DWORD *a4, int a5)
 {
   char *v7; // ebx
   char *v8; // esi
@@ -39368,8 +39394,8 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     v100 = 0;
   else
     v100 = (unsigned __int16 *)(31 * v101 + dword_532048 + 852);
-  if ( !sub_42C0F0((unsigned __int16)v5[2], (unsigned __int16)v5[3])
-    || (a5 = v100) != 0 && !sub_42C0F0(v100[2], v100[3]) )
+  if ( !UnitBattle_IsTileInViewport((unsigned __int16)v5[2], (unsigned __int16)v5[3])
+    || (a5 = v100) != 0 && !UnitBattle_IsTileInViewport(v100[2], v100[3]) )
   {
     UnitBattle_CenterViewOnUnit(v102);
     UnitBattle_RedrawVisibleGrid();
@@ -40047,13 +40073,13 @@ LABEL_12:
   *((_BYTE *)v6 + 8) -= 5;
   *((_BYTE *)v6 + 22) = v12;
   g_SelectedUnitIndex = (int)a1;
-  if ( !sub_42C0F0((unsigned __int16)v6[2], (unsigned __int16)v6[3])
-    || !sub_42C0F0((unsigned __int16)v7[2], (unsigned __int16)v7[3]) )
+  if ( !UnitBattle_IsTileInViewport((unsigned __int16)v6[2], (unsigned __int16)v6[3])
+    || !UnitBattle_IsTileInViewport((unsigned __int16)v7[2], (unsigned __int16)v7[3]) )
   {
     UnitBattle_CenterViewOnUnit((int)a1);
     UnitBattle_RedrawVisibleGrid();
   }
-  sub_426FC0((int)a1, v30, &v28, &v27, v13);
+  UnitBattle_CalcMeleeExchange((int)a1, v30, &v28, &v27, v13);
   *((_BYTE *)v6 + 9) = v27;
   *((_BYTE *)v7 + 9) = v28;
   *((_BYTE *)v6 + 3) = Facing_DirectionFromDelta8(
@@ -40287,7 +40313,7 @@ __int16  UnitBattle_PlayShotAnimation(
     v113 = (unsigned __int8 *)(31 * a2 + dword_532048 + 852);
   }
   Debug_Log(a2, a4, (DWORD)v111, (int)a_shotanimDDDDD);
-  if ( !sub_42C0F0((unsigned __int16)v125[2], (unsigned __int16)v125[3]) || !sub_42C0F0(v122, a3) )
+  if ( !UnitBattle_IsTileInViewport((unsigned __int16)v125[2], (unsigned __int16)v125[3]) || !UnitBattle_IsTileInViewport(v122, a3) )
   {
     *(_DWORD *)(dword_532048 + 808) = (v122 + (unsigned __int16)v125[2]) / 2 - 3;
     *(_DWORD *)(dword_532048 + 812) = (a3 + (unsigned __int16)v125[3]) / 2 - 3;
@@ -40914,7 +40940,7 @@ LABEL_18:
   v10 = *(_WORD *)(v7 + 6);
   v11 = *(_WORD *)(v7 + 4);
   *(_BYTE *)(v7 + 22) &= ~1u;
-  if ( !sub_42C0F0(v11, v10) || !sub_42C0F0(a2, a4) )
+  if ( !UnitBattle_IsTileInViewport(v11, v10) || !UnitBattle_IsTileInViewport(a2, a4) )
   {
     UnitBattle_CenterViewOnUnit(a1);
     UnitBattle_RedrawVisibleGrid();
@@ -42472,7 +42498,7 @@ char  sub_42C060(int a1)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042C0F0) --------------------------------------------------------
-BOOL  sub_42C0F0(int a1, int a2)
+BOOL  UnitBattle_IsTileInViewport(int a1, int a2)
 {
   int v2; // ebx
   int v3; // esi
@@ -43279,7 +43305,7 @@ int  UnitBattle_SelectNextControllableUnit(int a1, int a2, char a3)
   }
   v5 = dword_532048;
   g_SelectedUnitIndex = i;
-  if ( !sub_42C0F0(
+  if ( !UnitBattle_IsTileInViewport(
           *(unsigned __int16 *)(dword_532048 + 31 * i + 856),
           *(unsigned __int16 *)(dword_532048 + 31 * i + 858)) )
     UnitBattle_CenterViewOnUnit(v6);
@@ -44549,7 +44575,7 @@ LABEL_5:
   memset_(v36, -1);
   v37 = v74;
   *(_DWORD *)(dword_532048 + 816) = 5;
-  sub_425850();
+  UnitBattle_InitPathingTables();
   if ( v37 )
     sub_42BF00((int)v37);
   *(_DWORD *)(dword_532048 + 848) = v74 == 0;
@@ -47665,7 +47691,7 @@ void * sub_4347A0(int a1, int a2, DWORD a3, int a4, int a5)
     }
     else
     {
-      if ( Building_HasAddonInGarrison(dword_532218, v16) )
+      if ( Building_HasAddonLicence(dword_532218, v16) )
       {
         Render_ReleaseSurface(20, 0x2Du);
         UI_DrawText(
@@ -49343,7 +49369,7 @@ signed int  sub_436D10(int a1, int a2, char a3, DWORD a4)
           if ( *(__int16 *)(40 * v22 + dword_532048 + 2 * v21 + 1534) == -1 )
           {
             v8 = v21;
-            if ( sub_425970(*v6, v22, v21) )
+            if ( UnitBattle_GetTileMoveCostOrZero(*v6, v22, v21) )
             {
               v6[2] = v22;
               v10 = 0;
@@ -49729,7 +49755,7 @@ LABEL_41:
         v32 = v33[1];
         if ( *((unsigned __int8 *)v4 + 8) < HIWORD(v32) + 5 )
         {
-          sub_426FC0(a1, a2, &v26, &v25, 0);
+          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
           if ( v33 )
           {
             j__nfree_();
@@ -49741,7 +49767,7 @@ LABEL_41:
         v30 = *((char *)v31 + 9);
         while ( *((unsigned __int8 *)v4 + 8) >= HIWORD(v32) + 5 )
         {
-          sub_426FC0(a1, a2, &v26, &v25, 0);
+          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
           *((_BYTE *)v4 + 9) = v25;
           *((_BYTE *)v31 + 9) = v26;
           *((_BYTE *)v4 + 8) -= 5;
@@ -49758,7 +49784,7 @@ LABEL_41:
       else if ( *((unsigned __int8 *)v4 + 8) < 5u )
       {
         v30 = *(char *)(31 * a2 + dword_532048 + 861);
-        sub_426FC0(a1, a2, &v26, &v25, 0);
+        UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
         j__nfree_();
         return (int *)(v29 * (v30 - v26) / 100);
       }
@@ -49768,7 +49794,7 @@ LABEL_41:
         v30 = *((char *)v31 + 9);
         while ( *((unsigned __int8 *)v4 + 8) >= 5u )
         {
-          sub_426FC0(a1, a2, &v26, &v25, 0);
+          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
           *((_BYTE *)v4 + 9) = v25;
           *((_BYTE *)v31 + 9) = v26;
           *((_BYTE *)v4 + 8) -= 5;
@@ -50532,7 +50558,7 @@ LABEL_282:
           a4 = -1;
       }
       v6 = 801 * a1;
-      if ( sub_425970(
+      if ( UnitBattle_GetTileMoveCostOrZero(
              *(__int16 *)(31 * a1 + dword_532048 + 852),
              *(unsigned __int16 *)(31 * a1 + dword_532048 + 856) + 3 * a4,
              *(unsigned __int16 *)(31 * a1 + dword_532048 + 858)) )
@@ -50543,7 +50569,7 @@ LABEL_282:
                    + v6] -= 500;
         return 0;
       }
-      if ( sub_425970(
+      if ( UnitBattle_GetTileMoveCostOrZero(
              *(__int16 *)(v5 + dword_532048 + 852),
              4 * a4 + *(unsigned __int16 *)(v5 + dword_532048 + 856),
              *(unsigned __int16 *)(v5 + dword_532048 + 858)) )
@@ -50554,7 +50580,7 @@ LABEL_282:
                    + v6] -= 500;
         return 0;
       }
-      if ( sub_425970(
+      if ( UnitBattle_GetTileMoveCostOrZero(
              *(__int16 *)(v8 + dword_532048 + 852),
              2 * a4 + *(unsigned __int16 *)(v8 + dword_532048 + 856),
              *(unsigned __int16 *)(v8 + dword_532048 + 858)) )
@@ -50564,7 +50590,7 @@ LABEL_282:
         *(int *)((char *)&dword_53244C[2 * *(unsigned __int16 *)(v10 + 858)] + v11) -= 500;
         return 0;
       }
-      if ( sub_425970(
+      if ( UnitBattle_GetTileMoveCostOrZero(
              *(__int16 *)(v9 + dword_532048 + 852),
              5 * a4 + *(unsigned __int16 *)(v9 + dword_532048 + 856),
              *(unsigned __int16 *)(v9 + dword_532048 + 858)) )
@@ -50577,7 +50603,7 @@ LABEL_282:
       }
       a3 = *(unsigned __int16 *)(v12 + dword_532048 + 856);
       v13 = 6 * a4;
-      if ( sub_425970(*(__int16 *)(v12 + dword_532048 + 852), v13 + a3, *(unsigned __int16 *)(v12 + dword_532048 + 858)) )
+      if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v12 + dword_532048 + 852), v13 + a3, *(unsigned __int16 *)(v12 + dword_532048 + 858)) )
       {
         v19 = dword_532048 + v14;
         v20 = 160 * (v13 + *(unsigned __int16 *)(v19 + 856)) + v6 * 4;
@@ -52374,9 +52400,9 @@ int  sub_43BE50(int a1, int a2, DWORD a3)
                       + dword_532048
                       + 861);
         v15 = *((char *)v25 + 9);
-        sub_426FC0(a1, *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), &v21, &v20, 0);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), &v21, &v20, 0);
         v22 = v14 - v21 - (v15 - v20);
-        sub_426FC0(a1, *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534), &v21, &v20, 1);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534), &v21, &v20, 1);
         v16 = v14 - v21;
         v17 = v15 - v20;
         if ( v16 <= 0 && v17 <= 0
@@ -53595,7 +53621,7 @@ signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
       v6 = ++*a4 % 3;
       *a4 = v6;
     }
-    if ( sub_425970(*(__int16 *)a1, v5, v15) )
+    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)a1, v5, v15) )
     {
       v9 = a3 ? 2 : 6;
       result = Battle_PlaceUnit(a1, v5, v9, v15);
@@ -53613,7 +53639,7 @@ signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
       v11 = ++*a4 % 3;
       *a4 = v11;
     }
-    if ( sub_425970(*(__int16 *)a1, v7, v8) )
+    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)a1, v7, v8) )
     {
       v12 = a3 ? 2 : 6;
       result = Battle_PlaceUnit(a1, v14, v12, v8);
@@ -54349,7 +54375,7 @@ signed int  Building_UnitGetInto(
   if ( Unit_GetSquadCount((int)v29) )
   {
     Unit_GetSquadCount((int)v29);
-    v14 = Building_GetCapacity(a2);
+    v14 = Building_CountFreeGarrisonSlots(a2);
     if ( v16 <= v14 )
     {
       i = (signed int)(v29 + 3);
@@ -54426,7 +54452,7 @@ signed int  Building_CanAcceptUnitStack(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E820) --------------------------------------------------------
-signed int  Building_HasAddonInGarrison(int a1, int a2)
+signed int  Building_HasAddonLicence(int a1, int a2)
 {
   int v2; // esi
   int v3; // ecx
@@ -54454,7 +54480,7 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
   int v10; // eax
 
   Debug_Log(a3, a1, a4, (int)aBuildingBuyUnitLicence);
-  if ( Building_HasAddonInGarrison(a1, a2) )
+  if ( Building_HasAddonLicence(a1, a2) )
     return 0;
   result = Building_CanEquipAddon((char *)a1, a2);
   if ( result )
@@ -54648,7 +54674,7 @@ LABEL_5:
 }
 
 //----- (0043EBC0) --------------------------------------------------------
-int  Building_CountSpecialGarrisonEntries(int a1)
+int  Building_CountNonCombatGarrisonEntries(int a1)
 {
   int v1; // edx
   int v2; // ecx
@@ -58695,10 +58721,10 @@ LABEL_16:
     if ( v31 )
     {
       v6 = 0;
-      for ( i = 0; i < 24; i += 2 )
+      for ( i = 0; i < 12; ++i )
       {
-        v8 = g_PortSupplySpawnRowOffsets[i] + v32;
-        v9 = g_PortSupplySpawnColumnOffsets[i] + v33;
+        v8 = g_PortSupplySpawnRingOffsets[i].row_delta + v32;
+        v9 = g_PortSupplySpawnRingOffsets[i].column_delta + v33;
         if ( *(unsigned __int16 *)(TILE_INDEX(v8, v9)) == 0xFFFF
           && Map_GetUnitTileMoveCostOrZero(g_CurrentPlayerIndex, 0, v9, v8) )
         {
@@ -58708,10 +58734,10 @@ LABEL_16:
       }
       if ( v6 == 12 )
         return 0;
-      v29 = g_PortSupplySpawnColumnOffsets[2 * v6] + PORT_COLUMN;
-      v10 = g_PortSupplySpawnRowOffsets[2 * v6];
+      v29 = g_PortSupplySpawnRingOffsets[v6].column_delta + PORT_COLUMN;
+      v10 = g_PortSupplySpawnRingOffsets[v6].row_delta;
       v11 = v10 + PORT_ROW;
-      v12 = Facing_DirectionFromDelta8(v10, g_PortSupplySpawnColumnOffsets[2 * v6]);
+      v12 = Facing_DirectionFromDelta8(v10, g_PortSupplySpawnRingOffsets[v6].column_delta);
       Unit_Create(0, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
       v15 = PORT_SUPPLY_UNIT_COUNT - 1;
@@ -58755,7 +58781,7 @@ LABEL_16:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004438A0) --------------------------------------------------------
-void * UI_DrawPanelWithSprite(char a1, DWORD a2)
+void * UI_DrawPortStatusPanel(char a1, DWORD a2)
 {
   int v2; // ecx
   _DWORD *v3; // eax
@@ -58818,9 +58844,9 @@ void * UI_DrawPanelWithSprite(char a1, DWORD a2)
   else
     v11 = aPort;
   UI_DrawTextFmt((int)v19, v22 + 10, v22 + 235, v23 + 5, 3, (int)v11);
-  v19[0] = (int)g_PortArrivalTexts[0];
-  v19[1] = (int)g_PortArrivalTexts[1];
-  v19[2] = (int)g_PortArrivalTexts[2];
+  v19[0] = (int)g_PortSupplyReadyTexts[0];
+  v19[1] = (int)g_PortSupplyReadyTexts[1];
+  v19[2] = (int)g_PortSupplyReadyTexts[2];
   v18[0] = (int)g_PortEmptyTexts[0];
   v18[1] = (int)g_PortEmptyTexts[1];
   v18[2] = (int)g_PortEmptyTexts[2];
@@ -58857,7 +58883,7 @@ void * UI_DrawPanelWithSprite(char a1, DWORD a2)
 // 4438CC: variable 'v2' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 517BD8: using guessed type char *g_PortArrivalTexts[6];
+// 517BD8: using guessed type char *g_PortSupplyReadyTexts[3];
 // 517BE4: using guessed type char *g_PortEmptyTexts[3];
 // 5202E4: using guessed type int gameData;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -60360,12 +60386,12 @@ int  sub_446230(char a1, DWORD a2)
   Time_Now(v15, 1);
   Render_BlitSurface(&unk_51D4C0, v16, 0, (DWORD)v12);
   v17 = dword_544CD8;
-  while ( !Input_PollEventsUntil((int)v17, (char)&dword_545198) )
+  while ( !Input_PollEventsUntil((int)v17, (char)&g_InputBackendState) )
   {
     v20 = Time_Now(v19, v18);
     if ( v20 >= v21 || Input_IsAnyKeyPressed() )
       break;
-    Time_Sleep((int)&dword_545198, v21, v19);
+    InputBackend_PollState(&g_InputBackendState, v21, v19);
   }
   Debug_Log(v19, (char)g_RenderHook, (DWORD)v12, (int)aUnsetrh08x_23);
   g_RenderHook = v28;
@@ -67348,7 +67374,7 @@ signed int  sub_453C90(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00453E60) --------------------------------------------------------
-signed int  sub_453E60(int a1, int a2, int a3, DWORD a4)
+signed int  Rules_GetPathDistanceToObject(int a1, int a2, int a3, DWORD a4)
 {
   int v5; // ecx
   int v6; // edx
@@ -68454,7 +68480,7 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 //----- (004557C0) --------------------------------------------------------
 signed int  Building_HasUnitLicenceByIndex(int a1, int a2)
 {
-  return Building_HasAddonInGarrison(UNIT_RECORD(a1), a2);
+  return Building_HasAddonLicence(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -71095,7 +71121,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   int SpriteForChar; // eax
   void *v22; // [esp+1Ch] [ebp-18h]
 
-  sub_461B30(a2);
+  Platform_PumpMessagesAndBlitFrame(a2);
   result = Time_Now(v5, v4);
   if ( result >= dword_5448B0 || v7 )
   {
@@ -71260,9 +71286,9 @@ BOOL  Input_PollEventsUntil(int a1, char a2)
   int v4; // ecx
 
   *(_DWORD *)(a1 + 56) = 0;
-  sub_461B30(a2);
+  Platform_PumpMessagesAndBlitFrame(a2);
   *(_DWORD *)(v3 + 56) = v4;
-  Time_Sleep((int)&dword_545198, v3, v4);
+  InputBackend_PollState(&g_InputBackendState, v3, v4);
   return byte_5451C0 < 0 || byte_5451C8 < 0;
 }
 // 460928: variable 'v4' is possibly undefined
@@ -71343,7 +71369,7 @@ BOOL  Render_FlipRect(int a1, char a2)
         break;
     }
     *(_DWORD *)(v4 + 56) = 0;
-    sub_461B30(a2);
+    Platform_PumpMessagesAndBlitFrame(a2);
     *(_DWORD *)(v5 + 56) = v6;
     (*(void (**)(void))(*(_DWORD *)(v5 + 1120) + 20))();
   }
@@ -71366,9 +71392,9 @@ int  sub_460A50(int a1, int a2)
   int result; // eax
   int v9; // edi
 
-  Time_Sleep((int)&dword_545198, a1, a2);
-  v2[9] += v2[8] * dword_5451A8;
-  v3 = v2[8] * dword_5451AC;
+  InputBackend_PollState(&g_InputBackendState, a1, a2);
+  v2[9] += v2[8] * g_InputBackendState.mouse_delta_x;
+  v3 = v2[8] * g_InputBackendState.mouse_delta_y;
   v4 = v2[10];
   v2[11] = 0;
   v2[10] = v3 + v4;
@@ -72033,22 +72059,22 @@ int Input_MouseInit()
   int v0; // edx
   int v1; // ecx
 
-  sub_47BC40(dword_545198);
+  InputBackend_ResetState(&g_InputBackendState);
   return sub_473ED5(v1, v0);
 }
 // 4616EF: variable 'v1' is possibly undefined
 // 4616EF: variable 'v0' is possibly undefined
 // 473ED5: using guessed type int __fastcall sub_473ED5(_DWORD, _DWORD);
-// 545198: using guessed type _DWORD dword_545198[4];
+// 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461740) --------------------------------------------------------
-BOOL Input_MousePresent()
+BOOL Platform_IsWindowsNt4()
 {
   return (GetVersion() & 0x80000000) == 0 && (unsigned __int8)GetVersion() == 4;
 }
 
 //----- (00461770) --------------------------------------------------------
-BOOL Input_MouseAcquire()
+BOOL Platform_IsWindows9x()
 {
   return (GetVersion() & 0x80000000) != 0 && (unsigned __int8)GetVersion() == 4;
 }
@@ -72061,7 +72087,7 @@ int  Render_DefaultRH(int a1, char a2, DWORD a3)
 }
 
 //----- (004617C0) --------------------------------------------------------
-LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
   DWORD v5; // eax
   DWORD v6; // ebp
@@ -72093,11 +72119,11 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
       DefWindowProcA(hWnd, Msg, wParam, lParam);
     else
       ValidateRect(hWnd, 0);
-    if ( dword_5199D4 != 1 || !dword_51D57C )
+    if ( g_AppIsActive != 1 || !dword_51D57C )
       return 0;
     Debug_Log(v12, Msg, v6, (int)aRestoreD);
     if ( dword_51D57C )
-      sub_4753E0(dword_51D584);
+      Render_RestoreLostSurfaceIfNeeded(dword_51D584);
     if ( g_RenderHook && dword_51D594 == 8 )
     {
       Debug_Log((int)g_RenderHook, Msg, v6, (int)aRedrawhandler0);
@@ -72116,29 +72142,29 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
     if ( (unsigned __int16)wParam == 1 )
     {
       Debug_Log(v9, 1, v6, (int)aAcquire);
-      sub_47BF30((int)dword_545198);
+      InputBackend_Acquire(&g_InputBackendState);
       if ( dword_51D57C )
-        sub_4753E0(dword_51D584);
-      if ( dword_5452D8 )
+        Render_RestoreLostSurfaceIfNeeded(dword_51D584);
+      if ( g_ShouldPresentOnReactivate )
         Render_Present((int)dword_544CD8);
-      if ( dword_545190 )
+      if ( g_SoundPausedForInactiveApp )
         CSS_ResumeSound(dword_5174D0, 1000);
-      dword_545190 = 0;
+      g_SoundPausedForInactiveApp = 0;
       Debug_Log(v11, 1, v6, (int)aResumedSoundD);
     }
     if ( !(_WORD)wParam )
     {
-      dword_5452D8 = dword_544D10;
+      g_ShouldPresentOnReactivate = dword_544D10;
       if ( !v6 )
         Render_Pump();
       Debug_Log(v9, 0, v6, (int)aUnacquire);
-      sub_47BF80((int)dword_545198);
-      if ( !dword_545190 )
+      InputBackend_Unacquire(&g_InputBackendState);
+      if ( !g_SoundPausedForInactiveApp )
         CSS_PauseSound(dword_5174D0, 1000);
-      dword_545190 = 1;
+      g_SoundPausedForInactiveApp = 1;
       Debug_Log(v10, 0, dword_5174D0, (int)aPausedSoundD);
     }
-    dword_5199D4 = (unsigned __int16)wParam;
+    g_AppIsActive = (unsigned __int16)wParam;
     return 0;
   }
 }
@@ -72150,7 +72176,7 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
 // 461982: variable 'v12' is possibly undefined
 // 4619BF: variable 'v13' is possibly undefined
 // 5174D0: using guessed type int dword_5174D0;
-// 5199D4: using guessed type int dword_5199D4;
+// 5199D4: using guessed type int g_AppIsActive;
 // 5199D8: using guessed type int ( *g_RenderHook)(int a1, char a2, DWORD a3);
 // 51D020: using guessed type int dword_51D020;
 // 51D57C: using guessed type int dword_51D57C;
@@ -72158,12 +72184,12 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
 // 51D594: using guessed type int dword_51D594;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
-// 545190: using guessed type int dword_545190;
-// 545198: using guessed type _DWORD dword_545198[4];
-// 5452D8: using guessed type int dword_5452D8;
+// 545190: using guessed type int g_SoundPausedForInactiveApp;
+// 545198: using guessed type _DWORD g_InputBackendState[80];
+// 5452D8: using guessed type int g_ShouldPresentOnReactivate;
 
 //----- (00461A20) --------------------------------------------------------
-HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
+HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2)
 {
   DWORD v3; // ebx
   HWND result; // eax
@@ -72173,7 +72199,7 @@ HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
   v6 = a2;
   v5.hInstance = a1;
   v5.style = 3;
-  v5.lpfnWndProc = (WNDPROC)Win_WndProc;
+  v5.lpfnWndProc = (WNDPROC)Platform_MainWindowProc;
   v5.cbClsExtra = 0;
   v5.cbWndExtra = 0;
   v5.hIcon = LoadIconA(a1, (LPCSTR)0x64);
@@ -72191,16 +72217,16 @@ HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
   {
     ShowWindow(result, 3);
     UpdateWindow(hWnd);
-    sub_47BD10(dword_545198, (int)a1, (int)hWnd);
+    InputBackend_Initialize(&g_InputBackendState, (int)a1, (int)hWnd);
     return (HWND)1;
   }
   return result;
 }
 // 51D020: using guessed type int dword_51D020;
-// 545198: using guessed type _DWORD dword_545198[4];
+// 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461B30) --------------------------------------------------------
-WPARAM  sub_461B30(char a1)
+WPARAM  Platform_PumpMessagesAndBlitFrame(char a1)
 {
   HWND hwnd; // ecx
   struct tagMSG Msg; // [esp+0h] [ebp-1Ch] BYREF
@@ -72209,7 +72235,7 @@ WPARAM  sub_461B30(char a1)
   Render_BlitSurface(&unk_51D4C0, 0, a1, (DWORD)savedregs);
   while ( 1 )
   {
-    if ( !PeekMessageA(&Msg, 0, 0, 0, 0) && dword_5199D4 )
+    if ( !PeekMessageA(&Msg, 0, 0, 0, 0) && g_AppIsActive )
       return 1;
     hwnd = Msg.hwnd;
     if ( dword_51D57C )
@@ -72219,14 +72245,14 @@ WPARAM  sub_461B30(char a1)
       break;
     TranslateMessage(&Msg);
     DispatchMessageA(&Msg);
-    if ( !dword_5199D4 )
+    if ( !g_AppIsActive )
       WaitMessage();
   }
   Render_BeginModeSwitch(&unk_51D4C0);
   return Msg.wParam;
 }
 // 461B87: variable 'hwnd' is possibly undefined
-// 5199D4: using guessed type int dword_5199D4;
+// 5199D4: using guessed type int g_AppIsActive;
 // 51D57C: using guessed type int dword_51D57C;
 
 //----- (00461C00) --------------------------------------------------------
@@ -72248,7 +72274,7 @@ int  Mem_Alloc(int a1, int a2, char a3, DWORD a4)
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (00461C80) --------------------------------------------------------
-BOOL  sub_461C80(char a1)
+BOOL  Video_CanContinuePlayback(char a1)
 {
   DD_Pump((int)dword_544CD8, a1);
   DD_Pump((int)dword_544CD8, a1);
@@ -72318,14 +72344,20 @@ void  Win_EndModeChange(int a1, char *a2, int a3, int a4)
         a2,
         *(IDirectDrawSurface **)(*(_DWORD *)(dword_51D584 + 4) + 164),
         &v4,
-        (int (*)(void))sub_461C80,
+        (int (*)(void))Video_CanContinuePlayback,
         1500);
     }
     else
     {
       if ( dword_51D58C )
         dword_51D588 = 1;
-      PlayAvi(a2, *(IDirectDrawSurface **)(dword_51D57C + 164), a4, a1, (int (*)(void))sub_461C80, 1000);
+      PlayAvi(
+        a2,
+        *(IDirectDrawSurface **)(dword_51D57C + 164),
+        a4,
+        a1,
+        (int (*)(void))Video_CanContinuePlayback,
+        1000);
     }
   }
 }
@@ -72383,7 +72415,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
-    sub_47BF30((int)&dword_545198);
+    InputBackend_Acquire(&g_InputBackendState);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
@@ -72403,7 +72435,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
-    sub_47BF30((int)&dword_545198);
+    InputBackend_Acquire(&g_InputBackendState);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
@@ -85933,7 +85965,7 @@ signed int  sub_475080(
 // 51CA08: using guessed type IID stru_51CA08;
 
 //----- (004753E0) --------------------------------------------------------
-int  sub_4753E0(int a1)
+int  Render_RestoreLostSurfaceIfNeeded(int a1)
 {
   int result; // eax
   int v3; // edx
@@ -91325,65 +91357,69 @@ LABEL_25:
 // 51A570: using guessed type int (__fastcall *off_51A570)(_DWORD, _DWORD);
 
 //----- (0047BC10) --------------------------------------------------------
-BOOL __stdcall sub_47BC10(int a1, int a2)
+BOOL __stdcall InputBackend_StoreEnumeratedDevice(int a1, int a2)
 {
-  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)a2 + 12))(a2, a1 + 4, &dword_54DD20, 0) != 0;
+  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)a2 + 12))(a2, a1 + 4, &g_InputBackendTempJoystickDevice, 0) != 0;
 }
-// 54DD20: using guessed type int dword_54DD20;
+// 54DD20: using guessed type int g_InputBackendTempJoystickDevice;
 
 //----- (0047BC40) --------------------------------------------------------
-_DWORD * sub_47BC40(_DWORD *result)
+InputBackendState * InputBackend_ResetState(InputBackendState *result)
 {
-  *result = 0;
-  result[1] = 0;
-  result[2] = 0;
-  result[3] = 0;
-  result[77] = 0;
-  result[78] = 0;
-  result[79] = 0;
-  result[6] = 0;
-  result[7] = 0;
-  result[4] = 0;
-  result[5] = 0;
+  memset(result->keyboard_state, 0, sizeof(result->keyboard_state));
+  result->direct_input = 0;
+  result->keyboard_device = 0;
+  result->mouse_device = 0;
+  result->joystick_device = 0;
+  result->mouse_delta_x = 0;
+  result->mouse_delta_y = 0;
+  result->joystick_axis_x = 0;
+  result->joystick_axis_y = 0;
+  result->mouse_device_ready = 0;
+  result->keyboard_device_ready = 0;
+  result->joystick_device_ready = 0;
   return result;
 }
 
 //----- (0047BCA0) --------------------------------------------------------
-_DWORD * sub_47BCA0(_DWORD *a1)
+InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1)
 {
+  _DWORD *raw; // esi
   int v2; // edx
   int v3; // ecx
   int v4; // esi
 
-  v2 = a1[1];
+  raw = (_DWORD *)a1;
+  v2 = raw[1];
   if ( v2 )
   {
     (*(void (__stdcall **)(int))(*(_DWORD *)v2 + 8))(v2);
-    a1[1] = 0;
+    raw[1] = 0;
   }
-  v3 = a1[2];
+  v3 = raw[2];
   if ( v3 )
   {
-    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v3 + 8))(v3, a1[2]);
-    a1[2] = 0;
+    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v3 + 8))(v3, raw[2]);
+    raw[2] = 0;
   }
-  v4 = a1[3];
+  v4 = raw[3];
   if ( v4 )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v4 + 8))(a1[3]);
-    a1[3] = 0;
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v4 + 8))(raw[3]);
+    raw[3] = 0;
   }
-  if ( *a1 )
+  if ( raw[0] )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)*a1 + 8))(*a1);
-    *a1 = 0;
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)raw[0] + 8))(raw[0]);
+    raw[0] = 0;
   }
   return a1;
 }
 
 //----- (0047BD10) --------------------------------------------------------
-signed int  sub_47BD10(_DWORD *a1, int a2, int a3)
+signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3)
 {
+  _DWORD *raw; // esi
   _DWORD v5[2]; // [esp+94h] [ebp-3Ch] BYREF
   int v6; // [esp+9Ch] [ebp-34h]
   int v7; // [esp+A0h] [ebp-30h]
@@ -91394,108 +91430,113 @@ signed int  sub_47BD10(_DWORD *a1, int a2, int a3)
   int v12; // [esp+B8h] [ebp-18h]
   int v13; // [esp+BCh] [ebp-14h]
 
-  if ( DirectInputCreateA(a2, 768, a1, 0) )
+  raw = (_DWORD *)a1;
+  if ( DirectInputCreateA(a2, 768, raw, 0) )
     return 0;
-  if ( !(*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)*a1 + 12))(*a1, &unk_51CA18, a1 + 2, 0) )
+  if ( !(*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendMouseDeviceGuid, raw + 2, 0) )
   {
-    (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[2] + 44))(a1[2], dword_4E80F0);
-    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[2] + 52))(a1[2], a3, 5);
-    if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[2] + 28))(a1[2]) )
+    (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[2] + 44))(raw[2], g_InputBackendMouseDataFormat);
+    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[2] + 52))(raw[2], a3, 5);
+    if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[2] + 28))(raw[2]) )
       return 0;
-    a1[77] = 1;
+    raw[77] = 1;
   }
-  if ( (*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)*a1 + 12))(*a1, &unk_51CA28, a1 + 1, 0) )
+  if ( (*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendKeyboardDeviceGuid, raw + 1, 0) )
     goto LABEL_9;
-  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[1] + 44))(a1[1], dword_4E9110);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[1] + 52))(a1[1], a3, 6);
-  if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[1] + 28))(a1[1]) )
+  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[1] + 44))(raw[1], g_InputBackendKeyboardDataFormat);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[1] + 52))(raw[1], a3, 6);
+  if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[1] + 28))(raw[1]) )
     return 0;
-  a1[78] = 1;
+  raw[78] = 1;
 LABEL_9:
-  (*(void (__stdcall **)(_DWORD, int, BOOL (__stdcall *)(int, int), _DWORD, int))(*(_DWORD *)*a1 + 16))(
-    *a1,
+  (*(void (__stdcall **)(_DWORD, int, BOOL (__stdcall *)(int, int), _DWORD, int))(*(_DWORD *)raw[0] + 16))(
+    raw[0],
     4,
-    sub_47BC10,
-    *a1,
+    InputBackend_StoreEnumeratedDevice,
+    raw[0],
     1);
-  if ( !dword_54DD20 )
+  if ( !g_InputBackendTempJoystickDevice )
     return 1;
-  if ( (**(int (__stdcall ***)(int, void *, int))dword_54DD20)(dword_54DD20, &unk_51CA38, (int)(a1 + 3)) )
+  if ( (**(int (__stdcall ***)(int, void *, int))g_InputBackendTempJoystickDevice)(
+         g_InputBackendTempJoystickDevice,
+         &g_InputBackendJoystickInterfaceIid,
+         (int)(raw + 3)) )
     return 0;
-  if ( dword_54DD20 )
+  if ( g_InputBackendTempJoystickDevice )
   {
-    (*(void (__stdcall **)(int))(*(_DWORD *)dword_54DD20 + 8))(dword_54DD20);
-    dword_54DD20 = 0;
+    (*(void (__stdcall **)(int))(*(_DWORD *)g_InputBackendTempJoystickDevice + 8))(g_InputBackendTempJoystickDevice);
+    g_InputBackendTempJoystickDevice = 0;
   }
-  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[3] + 44))(a1[3], dword_4E93F0);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[3] + 52))(a1[3], a3, 6);
+  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[3] + 44))(raw[3], g_InputBackendJoystickDataFormat);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[3] + 52))(raw[3], a3, 6);
   v5[0] = 24;
   v8 = -1000;
   v9 = 1000;
   v5[1] = 16;
   v6 = 0;
   v7 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 4, v5) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
     return 0;
   v6 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 4, v5) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
     return 0;
   v13 = 1000;
   v10[0] = 20;
   v10[1] = 16;
   v11 = 0;
   v12 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 5, v10) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10) )
     return 0;
   v11 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 5, v10)
-    || (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[3] + 28))(a1[3]) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10)
+    || (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[3] + 28))(raw[3]) )
   {
     return 0;
   }
-  a1[79] = 1;
+  raw[79] = 1;
   return 1;
 }
-// 4E80F0: using guessed type int dword_4E80F0[5];
-// 4E9110: using guessed type int dword_4E9110[5];
-// 4E93F0: using guessed type int dword_4E93F0[5];
+// 4E80F0: using guessed type int g_InputBackendMouseDataFormat[5];
+// 4E9110: using guessed type int g_InputBackendKeyboardDataFormat[5];
+// 4E93F0: using guessed type int g_InputBackendJoystickDataFormat[5];
 // 4E9792: using guessed type int __stdcall DirectInputCreateA(_DWORD, _DWORD, _DWORD, _DWORD);
-// 54DD20: using guessed type int dword_54DD20;
+// 54DD20: using guessed type int g_InputBackendTempJoystickDevice;
 
 //----- (0047BF30) --------------------------------------------------------
-int  sub_47BF30(int result)
+int  InputBackend_Acquire(InputBackendState *state)
 {
-  int v1; // ebx
+  _DWORD *raw; // ebx
 
-  v1 = result;
-  if ( *(_DWORD *)(result + 308) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(result + 8) + 28))(*(_DWORD *)(result + 8));
-  if ( *(_DWORD *)(v1 + 312) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 4) + 28))(*(_DWORD *)(v1 + 4));
-  if ( *(_DWORD *)(v1 + 316) )
-    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 12) + 28))(*(_DWORD *)(v1 + 12));
-  return result;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 28))(raw[2]);
+  if ( raw[78] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 28))(raw[1]);
+  if ( raw[79] )
+    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 28))(raw[3]);
+  return 0;
 }
 
 //----- (0047BF80) --------------------------------------------------------
-int  sub_47BF80(int result)
+int  InputBackend_Unacquire(InputBackendState *state)
 {
-  int v1; // ebx
+  _DWORD *raw; // ebx
 
-  v1 = result;
-  if ( *(_DWORD *)(result + 308) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(result + 8) + 32))(*(_DWORD *)(result + 8));
-  if ( *(_DWORD *)(v1 + 312) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 4) + 32))(*(_DWORD *)(v1 + 4));
-  if ( *(_DWORD *)(v1 + 316) )
-    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 12) + 32))(*(_DWORD *)(v1 + 12));
-  return result;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 32))(raw[2]);
+  if ( raw[78] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 32))(raw[1]);
+  if ( raw[79] )
+    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 32))(raw[3]);
+  return 0;
 }
 
 //----- (0047BFD0) --------------------------------------------------------
-int  Time_Sleep(int result, int a2, int a3)
+int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
 {
-  int v3; // ebx
+  int result; // eax
+  _DWORD *raw; // ebx
   _DWORD v4[12]; // [esp+24h] [ebp-6Ch] BYREF
   unsigned __int8 v5; // [esp+54h] [ebp-3Ch]
   unsigned __int8 v6; // [esp+55h] [ebp-3Bh]
@@ -91508,34 +91549,34 @@ int  Time_Sleep(int result, int a2, int a3)
 
   v12 = a3;
   v11 = a2;
-  v3 = result;
-  if ( *(_DWORD *)(result + 308) )
+  result = 0;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
   {
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(result + 8) + 36))(*(_DWORD *)(result + 8), 16, v7) == -2147024866 )
-      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 8) + 28))(*(_DWORD *)(v3 + 8));
-    *(_DWORD *)(v3 + 16) = v7[0];
-    *(_DWORD *)(v3 + 20) = v7[1];
-    *(_DWORD *)(v3 + 40) = v8;
-    *(_DWORD *)(v3 + 48) = v9;
-    result = v10;
-    *(_DWORD *)(v3 + 44) = v10;
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[2] + 36))(raw[2], 16, v7) == -2147024866 )
+      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 28))(raw[2]);
+    state->mouse_delta_x = v7[0];
+    state->mouse_delta_y = v7[1];
+    state->mouse_button_primary = v8;
+    state->mouse_button_secondary = v9;
+    state->mouse_button_middle = v10;
   }
-  if ( *(_DWORD *)(v3 + 312) )
+  if ( raw[78] )
   {
-    result = (*(int (__stdcall **)(_DWORD, int, int))(**(_DWORD **)(v3 + 4) + 36))(*(_DWORD *)(v3 + 4), 256, v3 + 52);
+    result = (*(int (__stdcall **)(_DWORD, int, int))(**(_DWORD **)&raw[1] + 36))(raw[1], 256, (int)&state->keyboard_state[0]);
     if ( result == -2147024866 )
-      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 4) + 28))(*(_DWORD *)(v3 + 4));
+      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 28))(raw[1]);
   }
-  if ( *(_DWORD *)(v3 + 316) )
+  if ( raw[79] )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 12) + 100))(*(_DWORD *)(v3 + 12));
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(v3 + 12) + 36))(*(_DWORD *)(v3 + 12), 80, v4) == -2147024866 )
-      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 12) + 28))(*(_DWORD *)(v3 + 12));
-    *(_DWORD *)(v3 + 24) = v4[0];
-    *(_DWORD *)(v3 + 28) = v4[1];
-    *(_DWORD *)(v3 + 32) = v5;
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 100))(raw[3]);
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[3] + 36))(raw[3], 80, v4) == -2147024866 )
+      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 28))(raw[3]);
+    state->joystick_axis_x = v4[0];
+    state->joystick_axis_y = v4[1];
+    state->joystick_button_primary = v5;
     result = v6;
-    *(_DWORD *)(v3 + 36) = v6;
+    state->joystick_button_secondary = v6;
   }
   return result;
 }

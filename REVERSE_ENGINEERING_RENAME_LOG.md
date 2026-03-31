@@ -1292,6 +1292,112 @@
 - `sub_40AE80` still looks like a redraw gate for non-human strategic turns, but this batch left it unnamed because the exact designer-facing distinction between “AI redraw”, “animation tick”, and “redraw suppression” is not yet pinned down.
 - `sub_40D800` is clearly another minimap boundary predicate, but the currently recovered body still exposes only part of the intended hit-test semantics.
 
+## Batch 68 – Port Runtime State And Path Query Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `UNIT_RECORD_SIZE` / `UNIT_TABLE_OFFSET` / `UNIT_RECORD` | `BUILDING_RECORD_SIZE` / `BUILDING_TABLE_OFFSET` / `BUILDING_RECORD` | Helper | gameData / Buildings | High | The 467-byte table at `gameData + 509674` is already the recovered `BuildingRecord` slab. Exposing a matching macro family removes a misleading unit-table fiction while preserving `UNIT_RECORD` as a compatibility alias for untouched callsites. | c, asm, map | yes: Plato |
+| `dword_517B48` / `dword_517B4C` split spawn arrays | `PortSpawnOffset` / `g_PortSupplySpawnRingOffsets` | Recovered Struct | Port / Spawn Ring | High | `Port_GetSupply` advances the two symbols in lockstep as 12 row/column pairs around the 2x2 port footprint, and the asm-side data layout corroborates one interleaved 24-dword table rather than two unrelated arrays. | c, asm | yes: Kepler, Plato |
+| `g_PortArrivalTexts[6]` | `g_PortSupplyReadyTexts[3]` | Table | Port / UI | High | The first three strings are the “supply arrived” family, while `off_517BE4` / `g_PortEmptyTexts` is a distinct empty-port table. The old six-entry symbol was a decompiler fusion of adjacent globals. | c, asm, exe | yes: Kepler |
+| `UI_DrawPanelWithSprite` | `UI_DrawPortStatusPanel` | Function | Port / UI | High | The helper only loads `port.s32`, titles the window `Port/Hafen`, selects the sprite from `PORT_SUPPLY_READY_FLAG`, and displays the ready or empty port text families. | c, asm, exe | yes: Kepler |
+| `sub_453E60` | `Rules_GetPathDistanceToObject` | Function | Rules / Pathing | Medium | The host-registration string is `odleglosc_od_obiektu`, and the body special-cases temple, treasure, port, and generic near-tile routing before returning a large failure sentinel when no path is found. | c, asm | yes: Kepler |
+
+## Deferred / Ambiguous
+- `sub_4084A0` is now clearly a world-map hover/click dispatcher, but this batch deferred the live rename until one more pass resolves whether the original role was framed around a hovered tile, a cursor event, or the whole map-panel interaction loop.
+
+## Batch 69 – Battle Viewport And Exchange Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_411D70` | `Map_UpdateIdleAnimatedUnits` | Function | World Map / Units | High | The helper scans all 500 world stacks, advances the idle animation frame when the per-type animation timer elapses, redraws the affected stack footprint, then updates the world-map attention-flash overlays. | c, asm | yes: Sartre |
+| `sub_411E60` | `Unit_AttemptNeighborMove` | Function | World Map / Movement | High | The prototype had already been recovered, and the live definition now matches its behavior: it checks whether the selected stack has at least 3 AP and whether any of the eight adjacent tiles yields an affordable `Unit_MoveTrack`, freeing the temporary path before returning. | c, asm | yes: Sartre |
+| `sub_426FC0` | `UnitBattle_CalcMeleeExchange` | Function | Battle / Combat | High | The helper reads both tactical slots, seeds both out-parameters from the current health bytes, applies the crowding-scaled combat effectiveness math for both sides, optionally scales one side for the alternate exchange mode, and clamps the resulting health losses to `0..100`. | c, asm | yes: Sartre |
+| `sub_42C0F0` | `UnitBattle_IsTileInViewport` | Function | Battle / Viewport | High | Pure 7x7 viewport predicate over `BattleRuntimeState.view_left_tile` and `view_top_tile`; tactical render and attack-animation helpers use it only to test whether a battle tile is currently visible. | c, asm | yes: Sartre |
+| `BattleRuntimeState + 852 + 31 * slotIndex` | `BattleUnitEntry` | Recovered Struct | Battle / Runtime State | High | The tactical battle block stores 22 fixed 31-byte entries at this offset. Combat, viewport, and animation helpers all agree on the slot header: unit type at `+0`, owner at `+2`, facing at `+3`, grid coordinates at `+4/+6`, and runtime AP/health at `+8/+9`. | c | yes: Sartre |
+
+## Deferred / Ambiguous
+- `sub_423760` remains deferred. It is clearly a modal selection dialog over a 10-slot stack subset, but this batch left the exact “inspect” vs “split” vs “move selected members” naming for the next pass with `sub_423420` and `sub_423AC0`.
+
+## Batch 70 – Building Garrison Capacity And Licence Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Building_GetCapacity` | `Building_CountFreeGarrisonSlots` | Function | Buildings / Garrison | High | The live body counts only empty `-1` entries in the embedded garrison array and caps the scan at 10 slots for building type `0` and 12 otherwise. `Building_UnitGetInto` compares incoming squad size against this free-slot count, not a total-capacity constant. | c, asm, map | yes: Banach |
+| `Building_HasAddonInGarrison` | `Building_HasAddonLicence` | Function | Buildings / Addons | High | The helper scans bytes `+402..+413` in `BuildingRecord`, which are the recovered addon/licence ids rather than the real garrison entries at `+18..+389`. | c, asm, map | yes: Banach |
+| `Building_CountSpecialGarrisonEntries` | `Building_CountNonCombatGarrisonEntries` | Function | Buildings / Garrison | High | The loop counts `SPECIAL_FOOT_PERSONAGE`, `SPECIAL_MOUNTED_PERSONAGE`, `GOLD_CARGO`, and `PEASANT_CARGO`, so the old “special” label was too narrow once the exact type set became explicit. | c | yes: Banach |
+
+## Deferred / Ambiguous
+- Building type ids `0/1/2` still remain behaviorally distinct but not safely lore-named. This batch left the numeric type mapping neutral even though the capacity and cargo-acceptance rules are now clearer.
+
+## Batch 71 – World Map Interaction Dispatch Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4084A0` | `WorldMap_HandleTileHoverAndClick` | Function | World Map / Interaction | Medium | Called from the main strategic-map input loop after redraw/minimap updates and before hotkey handling. The body drives cursor hover feedback, stack inspection, building entry/attack, port supply collection, shrine and treasure interactions, and queued-path execution for the currently hovered tile. | c | no |
+| `sub_423760` | `UnitStack_ShowSelectionDialog` | Function | World Map / Unit Selection | Medium | Modal helper that snapshots the current selection globals, clears a 10-slot mask, runs the stack-subset toggle UI loop, and ultimately feeds the selected member mask into `Unit_MoveSelectionFromGroupToTile`. | c, asm | yes: Sartre |
+
+## Deferred / Ambiguous
+- `sub_423420` and `sub_423AC0` still need their own names before the full stack-split interaction family reads cleanly end-to-end.
+
+## Batch 72 – Unit Footprint Redraw Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_411B30` | `Map_RedrawUnitFootprintByIndex` | Function | World Map / Rendering | High | Redraws the unit's tile and any extra tiles implied by its current footprint/overhang class and facing, using the type-dependent footprint class table and the current stack coordinates. | c | yes: Sartre |
+| `sub_411CB0` | `Map_RedrawUnitNeighborhoodByIndex` | Function | World Map / Rendering | High | Redraws the unit's tile plus the full surrounding 8-neighbor ring when the stack's footprint class requires a broader redraw envelope. | c | yes: Sartre |
+
+## Batch 73 – SDL Platform Shim Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `#include <windows.h>` in `clash95.c` | `#include "platform_sdl.h"` | SDL Port Fix | Platform / SDL | High | The main translation unit only needed the project-local compatibility surface. Rebinding it to a dedicated SDL-target shim makes the final platform target explicit without changing gameplay logic. | c | yes: Nash |
+| project-local compatibility headers `windows.h` / `compat/windows.h` | wrappers around `platform_sdl.h` | SDL Port Fix | Platform / SDL | High | Both include paths now forward to one shared SDL-target header instead of carrying duplicated Win32 placeholder declarations. | c | no |
+| stable Win32-style opaque handles (`HWND`, `HDC`, `HBITMAP`, `HPALETTE`, `HCURSOR`, `HICON`) | SDL-style opaque handles (`SDL_Window*`, `SDL_Surface*`, `SDL_Palette*`, `SDL_Cursor*`) | SDL Port Fix | Platform / SDL | High | The recovered code uses these as abstract window/surface/palette/cursor handles. Mapping them to SDL-style types is the thinnest safe port seam while the DirectDraw-shaped adapters remain in place for later backend replacement. | c, exe | yes: Nash |
+
+## Batch 74 – Unit Stack Selection And Battle Pathing Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Render_LoadResourceSprite` | `UnitStackSelection_SyncForCurrentSelection` | Function | World Map / Unit Selection | High | The old name was only a stray prototype. Every live caller opens, closes, or refreshes the split/selection strip based on `g_SelectedUnitIndex`, squad count, and the currently bound stack. | c, asm | yes: Plato |
+| `sub_423420` | `UnitStackSelection_RedrawPanel` | Function | World Map / Unit Selection | High | Rebinds the active stack, rebuilds move highlights for marked members, draws the 10-slot strip, and overlays selected-slot markers. | c, asm | yes: Sartre, Plato |
+| `sub_423860` | `UnitStackSelection_HandleInput` | Function | World Map / Unit Selection | High | Handles slot-strip clicks, unit info popups, slot toggling, and marked-member moves into adjacent tiles. | c, asm | yes: Sartre, Plato |
+| `sub_423AC0` | `UnitStackSelection_HasSelectedSlots` | Function | World Map / Unit Selection | High | Pure scan over the 10-dword selection mask; returns true only when at least one slot is marked. | c | yes: Sartre, Plato |
+| `sub_423B00` | `UnitStackSelection_BeginForSelectedStack` | Function | World Map / Unit Selection | High | Activates the strip for `g_SelectedUnitIndex`, clears the mask, and redraws the panel. | c | yes: Plato |
+| `sub_423B40` | `UnitStackSelection_End` | Function | World Map / Unit Selection | High | Clears tile highlights, disables the strip, and resets the active stack index to `-1`. | c | yes: Plato |
+| `sub_423B70` | `UnitStackSelection_ClearMask` | Function | World Map / Unit Selection | High | Zeroes the 10-entry slot-selection mask used by the split panel. | c | yes: Plato |
+| `sub_423B90` | `UnitStackSelection_RefreshForSelectedStack` | Function | World Map / Unit Selection | High | Rebinds the strip to the current selected stack and redraws it after ownership or selection changes. | c | yes: Plato |
+| `sub_425850` | `UnitBattle_InitPathingTables` | Function | Battle / Pathing | High | Precomputes the tactical tile-cost grid from battle-map tiles and seeds the airborne-type cost table from `g_UnitTypeFlags bit0`. | c | yes: Sartre |
+| `sub_425970` | `UnitBattle_GetTileMoveCostOrZero` | Function | Battle / Pathing | High | Rejects occupied or blocked tiles, returns fixed tactical move cost `5` for airborne types, and otherwise reads the precomputed tile-cost grid. | c | yes: Sartre |
+| `sub_461B30` | `Win_ProcessMessagesAndBlitFrame` | Function | Platform / Window Loop | High | Blits the frame, pumps the Win32 message queue, dispatches messages, waits when inactive, and exits through the mode-switch path on quit. | c, asm, map, exe | yes: Meitner, Nash |
+| `dword_514194 / dword_526994 / dword_526F78 / dword_526FA0 / dword_527C24` | `UnitStackSelectionState` | Recovered Struct | World Map / Unit Selection | High | These globals move in lockstep across strip setup, redraw, modal dialog, and selected-member movement, proving one shared selection-panel state cluster. | c, asm | yes: Sartre, Plato |
+| `BattleRuntimeState + 816` | `BattleRuntimeState.default_tile_move_cost` | Recovered Struct Field | Battle / Pathing | High | `UnitBattle_InitPathingTables` copies this byte into the tactical ground-cost scratch grid for traversable tiles. | c | yes: Sartre |
+| `byte_531890 / byte_531C8F / byte_531C90 / dword_531CB8` | `BattlePathingTables` | Recovered Struct | Battle / Pathing | High | Tactical movement callers share one cost grid, one overlapping airborne-type cost table, and one ignore-occupancy flag; the decompiler just split the symbols awkwardly. | c | yes: Sartre, Plato |
+
+## Batch 75 – Top Menu And Player Info Sprite Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_40E8B0` | `WorldMap_HandleTopMenuBar` | Function | World Map / UI Menu | High | Called only from the human strategic-turn loop, logs `MENU: Draw` / `MENU: Hide`, draws the `menu.s32` strip, hit-tests the top bar, and dispatches `UI_RunMenu`, returning false only when the main loop should break. | c, asm, exe | yes: Plato |
+| `sub_40ECF0` | `WorldMapTopMenu_LoadSpriteSet` | Function | World Map / UI Menu | High | Thin sprite-set loader for the dedicated `menu.s32` resource stored in `dword_523F5C`. | c, asm, exe | yes: Plato |
+| `sub_40ED20` | `WorldMapTopMenu_FreeSpriteSet` | Function | World Map / UI Menu | High | Matching teardown helper that frees the same top-menu sprite-set handle. | c | yes: Plato |
+| `sub_423370` | `UI_SetCurrentPlayer` | Function | UI / Player Context | High | The asm already labels the function this way, world-map turn flow calls it under that name, and the selection panel temporarily switches to the stack owner and restores the original player through the same body. | c, asm | yes: Sartre |
+| `sub_4233E0` | `UI_FreeCurrentPlayerInfoSpriteSet` | Function | UI / Player Context | High | Solely frees and nulls the `info%d.s32` sprite-set handle used by `UI_SetCurrentPlayer`, and `WorldMap_UnloadResources` calls it during strategic-map teardown. | c, asm | yes: Sartre |
+
+## Deferred / Ambiguous
+- `WorldMap_HandleTopMenuBar` is high confidence on role, but the exact original internal verb could still have been `Process` or `Run` rather than `Handle`.
+- The top-menu descriptor family around `word_512348..word_51234E` and `off_512350` is real, but this batch did not freeze a complete struct layout for the menu-entry records.
+
+## Batch 76 – Input Backend Seam And Menu Loader Repair Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_47BD10` | `InputBackend_Initialize` | Function | Platform / Input Backend | High | Initializes the DirectInput-backed backend slab, creates keyboard/mouse/third devices, configures cooperative levels/data formats, and marks the acquired-device flags used by later focus/poll helpers. | c | yes: Nash |
+| `sub_47BF30` | `InputBackend_Acquire` | Function | Platform / Input Backend | High | Reacquires each live backend device on focus regain and other platform reentry paths. | c | yes: Nash |
+| `sub_47BF80` | `InputBackend_Unacquire` | Function | Platform / Input Backend | High | Releases each live backend device on focus loss and related platform suspension paths. | c | yes: Nash |
+| `Time_Sleep` | `InputBackend_PollState` | Function | Platform / Input Backend | High | The body polls backend devices and fans keyboard/mouse state out into the globals consumed by gameplay; it does not sleep. | c | yes: Nash |
+| `DLXSpriteSet_Load(result, a2)` in `WorldMapTopMenu_LoadSpriteSet` | `DLXSpriteSet_Load(result, "menu.s32")` | Compile Fix | World Map / UI Menu | High | Asm corroborates that the helper always loads the dedicated top-menu sprite resource `menu.s32`; the decompiled argument register was wrong and the string pointer was not materialized in C. | c, asm, exe | yes: Plato |
+
+## Batch 77 – CMake Build Surface Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| missing project build system | root `CMakeLists.txt` with `clash95_recovered` static library target | Compile Fix | Build / CMake | High | There was no build system in the repo. The current verified compileable state is a GNU89 object build of `clash95.c` plus `compat/decomp_runtime_stubs.c`; representing that as a static library target preserves the real milestone without inventing a full executable/link harness. | c | yes: Nash |
+
+## Batch 78 – Player Info Sprite Semantics Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `UI_SetCurrentPlayer` | `UI_LoadCurrentPlayerInfoSpriteSet` | Function | UI / Player Context | High | The body only frees the existing `info%d.s32` sprite handle, formats the next `info%d.s32` filename, loads that sprite set, and stores the new handle. It does not mutate gameplay player state. | c, asm | yes: Meitner |
+
 ## Batch 67 – World Map HUD And Menu Semantics Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
@@ -1312,3 +1418,36 @@
 | `sub_40ED50` | `UI_MenuEntry_Disable` | Function | UI / Menus | High | Clears the same per-entry availability flag; callers use it to gray out unavailable actions such as closed gates or missing upgrades. | c | no |
 | `PlayerRuntimeState + 23` | `PlayerRuntimeState.minimap_visible_flag` | Recovered Struct Field | gameData / Player Runtime | High | The minimap show/hide/toggle helpers mutate this dword, and minimap blits, hit-tests, and viewport dragging all early-out on the same field for the viewed player. | c | no |
 | strategic-map raw player-runtime offsets `+140024`, `+140039`, `+140043` in active-turn UI flow | `PLAYER_IS_ACTIVE`, `PLAYER_CAMERA_LEFT`, `PLAYER_CAMERA_TOP`, `PLAYER_DISPLAY_NAME_OFFSET` | Compile Fix | gameData / Player Runtime | High | The touched world-map turn helpers were mixing recovered `PLAYER_*` macros with raw absolute offsets into the same player block. Rebinding the obvious cases to the existing macros removes a real decompiler artifact without inventing new semantics. | c | no |
+
+## Batch 79 – Platform Activation State Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4753E0` | `Render_RestoreLostSurfaceIfNeeded` | Function | Platform / Rendering | High | The helper dereferences a DirectDraw-surface-style pointer at offset `+164`, calls vtable slot `+96` (`IsLost` in the DirectDraw surface layout), and only then calls slot `+108` (`Restore`). `Win_WndProc` uses it on both `WM_PAINT` and `WM_ACTIVATEAPP` before redraw/present paths. | c, asm, map | no |
+| `dword_5199D4` | `g_AppIsActive` | Global | Platform / Window Loop | High | Initialized to `1`, assigned from `WM_ACTIVATEAPP` `wParam`, checked by the message-pump fast path, and used to decide whether the inactive app should block in `WaitMessage`. | c, asm | no |
+| `dword_545190` | `g_SoundPausedForInactiveApp` | Global | Platform / Audio / Activation | High | Set when the deactivate branch pauses audio, cleared when the activate branch resumes audio, and consulted to avoid duplicate pause/resume calls. | c, asm | no |
+| `dword_5452D8` | `g_ShouldPresentOnReactivate` | Global | Platform / Rendering / Activation | Medium | Captures the pre-deactivation `dword_544D10` present-enabled state and gates the one-shot `Render_Present` call on activation; the deeper display-mode owner remains unnamed, but the latch role itself is stable. | c, asm | no |
+
+## Batch 80 – Platform Seam Reconciliation And Selection Mask Repair Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Input_MousePresent` | `Platform_IsWindowsNt4` | Function | Platform / OS Detection | High | The helper only checks `GetVersion()` for a clear high bit plus major version `4`, which matches the literal NT4 branch and has nothing to do with mouse presence. The prior name was a decompiler illusion. | c, asm, map | no |
+| `Input_MouseAcquire` | `Platform_IsWindows9x` | Function | Platform / OS Detection | High | The helper only checks `GetVersion()` for a set high bit plus major version `4`, which matches the non-NT Windows 9x family branch rather than any input acquire operation. | c, asm, map | no |
+| `Win_WndProc` | `Platform_MainWindowProc` | Function | Platform / Window Loop | High | Handles `WM_DESTROY`, `WM_PAINT`, and `WM_ACTIVATEAPP`, falls through to `DefWindowProcA` for everything else, and is the concrete platform window-message handler. Neutralizing the prefix keeps the SDL migration seam platform-focused without pretending the body is already SDL-native. | c, asm, map | yes: Planck |
+| `Win_CreateMainWindow` | `Platform_CreateMainWindow` | Function | Platform / Window Loop | High | Registers the `"Clash"` class, creates the 640x480 main window, shows/updates it, and immediately initializes the input backend. This is platform bootstrap, not generic game init. | c, asm, map | yes: Planck |
+| `Win_ProcessMessagesAndBlitFrame` | `Platform_PumpMessagesAndBlitFrame` | Function | Platform / Window Loop | High | Blits the current frame, pumps and dispatches the platform message queue, idles with `WaitMessage` when inactive, and exits through the render mode-switch path on quit. | c, asm, map, exe | yes: Planck |
+| `sub_461C80` | `Video_CanContinuePlayback` | Function | Platform / Video Playback | High | The helper pumps the render/message loop three times and returns true only while no key is pressed and the display surface is neither flipping nor lost. It is used exclusively as the AVI playback continuation callback in `Win_EndModeChange`. | c | no |
+| `InputBackend_CreateFirstJoystickDeviceCallback` | `InputBackend_StoreEnumeratedDevice` | Function | Platform / Input Backend | Medium | The callback is only proven to capture the first enumerated auxiliary DirectInput device into a temporary global for later creation during backend init. The older joystick-specific name overstated the evidence. | c, asm | yes: Planck |
+| `UnitStack_ShowSelectionDialog: memset_(0, 0)` | `UnitStackSelection_ClearMask((void *)dword_526F78)` | Compile Fix | World Map / Unit Selection | High | Asm shows the dialog runner zeroes the 10-dword `dword_526F78` selection mask before redraw. The decompiled zero-pointer `memset_` was a register-loss artifact, not real behavior. | c, asm | yes: Kuhn |
+| `UnitStackSelection_BeginForSelectedStack: memset_(a1, 0)` | `UnitStackSelection_ClearMask((void *)a1)` | Compile Fix | World Map / Unit Selection | High | Asm proves the begin helper clears the 10-entry selection mask supplied in `eax` before redrawing the strip. Routing through the recovered helper removes the last decompiler fiction in this cluster. | c, asm | yes: Kuhn |
+| `dword_545198 input slab` | `InputBackendState` | Recovered Struct | Platform / Input Backend | High | The reset, release, initialize, acquire, unacquire, and poll helpers all agree on one 320-byte input slab holding DirectInput interfaces, mouse deltas/buttons, joystick axes/buttons, keyboard state, and per-device ready flags. | c, asm | yes: Planck |
+
+## Batch 81 – SDL Runtime Build Surface Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_47BC40` | `InputBackend_ResetState` | Function | Platform / Input Backend | High | The helper zeroes the DirectInput/device pointers, clears the cached mouse/joystick deltas, and drops all three device-ready flags in the unified input slab. | c, asm | no |
+| `sub_47BCA0` | `InputBackend_ReleaseDevices` | Function | Platform / Input Backend | High | Releases the keyboard, mouse, joystick, and root DirectInput interfaces from the unified backend state block and nulls the stored handles afterward. | c, asm | no |
+| header-only platform shim declarations | `platform_sdl_runtime.c` compiled runtime seam | sdl_port_fix | Platform / SDL Runtime | High | The new translation unit implements the currently required window/message/surface helpers (`RegisterClassA`, `CreateWindowExA`, `DispatchMessageA`, `GetMessageA`, `PeekMessageA`, and peers) against SDL-shaped local structs, and CMake now builds it into `clash95_recovered`. That moves the port target from declarations-only compatibility toward an actual compiled SDL-side platform layer without pretending the gameplay loop is fully ported yet. | c | no |
+| split globals `dword_5451A8`, `dword_5451AC`, `byte_5451C0`, `byte_5451C8`, `byte_5451CC` | `InputBackendState.mouse_delta_x`, `mouse_delta_y`, `mouse_button_primary`, `mouse_button_secondary`, `keyboard_state` | recovered_struct | Platform / Input Backend | High | The address arithmetic lines up exactly with offsets inside `g_InputBackendState`, and the polled consumers (`Input_IsKeyPressed`, `Input_PollEventsUntil`, cursor-update logic) only need the alias view, not distinct globals. Rebinding them through the recovered struct removes one more decompiler illusion while preserving current behavior. | c, asm | no |
+| `unk_51CA18`, `unk_51CA28`, `unk_51CA38` | `g_InputBackendMouseDeviceGuid`, `g_InputBackendKeyboardDeviceGuid`, `g_InputBackendJoystickInterfaceIid` | Global | Platform / Input Backend | Medium | The first two values are passed to the DirectInput `CreateDevice` path for the mouse and keyboard slots, while the third is used in the post-enumeration interface-upgrade path for the auxiliary device slot. The exact COM type of the third GUID is still only partially evidenced, so the IID wording stays conservative. | c, asm | no |
+| `dword_4E80F0`, `dword_4E9110`, `dword_4E93F0` | `g_InputBackendMouseDataFormat`, `g_InputBackendKeyboardDataFormat`, `g_InputBackendJoystickDataFormat` | Table | Platform / Input Backend | High | These three 5-dword tables are passed directly into the DirectInput `SetDataFormat`-style vtable slot for the mouse, keyboard, and auxiliary device paths, respectively. | c, asm | no |
+| `dword_54DD20` | `g_InputBackendTempJoystickDevice` | Global | Platform / Input Backend | High | The enumeration callback stores the first discovered auxiliary device here, backend init upgrades/configures it, then releases and clears the temporary handle. | c, asm | no |
