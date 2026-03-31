@@ -146,7 +146,33 @@ typedef struct PortSpawnOffset
   int column_delta;
 } PortSpawnOffset;
 
+typedef struct InputBackendState
+{
+  _DWORD direct_input;
+  _DWORD keyboard_device;
+  _DWORD mouse_device;
+  _DWORD joystick_device;
+  int mouse_delta_x;
+  int mouse_delta_y;
+  int joystick_axis_x;
+  int joystick_axis_y;
+  int joystick_button_primary;
+  int joystick_button_secondary;
+  int mouse_button_primary;
+  int mouse_button_middle;
+  int mouse_button_secondary;
+  char keyboard_state[256];
+  int mouse_device_ready;
+  int keyboard_device_ready;
+  int joystick_device_ready;
+} InputBackendState;
+
 #define g_QueenWhimRecords ((QueenWhimRecord *)&word_5191F0)
+#define dword_5451A8 (g_InputBackendState.mouse_delta_x)
+#define dword_5451AC (g_InputBackendState.mouse_delta_y)
+#define byte_5451C0 (*((signed char *)&g_InputBackendState.mouse_button_primary))
+#define byte_5451C8 (*((signed char *)&g_InputBackendState.mouse_button_secondary))
+#define byte_5451CC ((signed char *)&g_InputBackendState.keyboard_state[0])
 
 // Compatibility aliases while stat-callsite cleanup is still in progress.
 #define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
@@ -1437,15 +1463,15 @@ char  Input_KeyToChar(unsigned int a1);
 BOOL  Input_ClearKey(int a1, int a2);
 int Input_MouseInit();
 int nullsub_5(void); // weak
-BOOL Input_MousePresent();
-BOOL Input_MouseAcquire();
+BOOL Platform_IsWindowsNt4();
+BOOL Platform_IsWindows9x();
 int  Render_DefaultRH(int a1, char a2, DWORD a3);
-LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-HWND  Win_CreateMainWindow(HINSTANCE a1, int a2);
-WPARAM  Win_ProcessMessagesAndBlitFrame(char a1);
+LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2);
+WPARAM  Platform_PumpMessagesAndBlitFrame(char a1);
 int  Mem_Alloc(int a1, int a2, char a3, DWORD a4);
 int __cdecl j__nfree_();
-BOOL  sub_461C80(char a1);
+BOOL  Video_CanContinuePlayback(char a1);
 signed int  Win_BeginModeChange(const char *a1, int a2, DWORD a3);
 void  Win_EndModeChange(int a1, char *a2, int a3, int a4);
 void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
@@ -1850,7 +1876,7 @@ _DWORD * sub_474D60(_DWORD *result);
 _DWORD * sub_474DE0(_DWORD *a1);
 signed int  sub_474E80(LPVOID *a1, void *a2, void *a3, DWORD a4, int a5);
 signed int  sub_475080(LPVOID *a1, _DWORD *a2, _DWORD *a3, _DWORD *a4, _DWORD *a5, int a6, DWORD a7);
-int  sub_4753E0(int a1);
+int  Render_RestoreLostSurfaceIfNeeded(int a1);
 int  sub_475420(int a1, int a2, char a3, int a4, char a5);
 int  IO_StreamWrite(int result, int a2, int a3, int a4);
 // int __thiscall _wcpp_4_static_init__(__lock *this); idb
@@ -2076,13 +2102,13 @@ int  sub_47BA70(int result);
 signed int  sub_47BA86(int a1, int a2, unsigned int a3, int a4);
 // int __fastcall memmove_(_DWORD, _DWORD); weak
 // int __fastcall strupr_(_DWORD, _DWORD); weak
-BOOL __stdcall sub_47BC10(int a1, int a2);
-_DWORD * sub_47BC40(_DWORD *result);
-_DWORD * sub_47BCA0(_DWORD *a1);
-signed int  InputBackend_Initialize(_DWORD *a1, int a2, int a3);
-int  InputBackend_Acquire(int result);
-int  InputBackend_Unacquire(int result);
-int  InputBackend_PollState(int result, int a2, int a3);
+BOOL __stdcall InputBackend_StoreEnumeratedDevice(int a1, int a2);
+InputBackendState * InputBackend_ResetState(InputBackendState *result);
+InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1);
+signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3);
+int  InputBackend_Acquire(InputBackendState *state);
+int  InputBackend_Unacquire(InputBackendState *state);
+int  InputBackend_PollState(InputBackendState *state, int a2, int a3);
 // _DWORD __stdcall sub_47C181(_DWORD); weak
 // _DWORD __stdcall sub_47C1C0(_DWORD); weak
 int sub_47C200();
@@ -4679,9 +4705,9 @@ _UNKNOWN strstr_; // weak
 // extern _UNKNOWN _wcpp_4_alloc_exc__; weak
 void *off_4C61F0 = (void *)0x487883; // weak
 _UNKNOWN strncat_; // weak
-int dword_4E80F0[5] = { 24, 16, 2, 16, 7 }; // weak
-int dword_4E9110[5] = { 24, 16, 2, 256, 256 }; // weak
-int dword_4E93F0[5] = { 24, 16, 1, 80, 44 }; // weak
+int g_InputBackendMouseDataFormat[5] = { 24, 16, 2, 16, 7 }; // weak
+int g_InputBackendKeyboardDataFormat[5] = { 24, 16, 2, 256, 256 }; // weak
+int g_InputBackendJoystickDataFormat[5] = { 24, 16, 1, 80, 44 }; // weak
 char aClash[7] = "CLASH\\"; // weak
 char aGetreadincrZap[49] = "GetReadIncr: zapis na ekran nie zaimplementowany"; // weak
 char aGetwriteincrZa[50] = "GetWriteIncr: zapis na ekran nie zaimplementowany"; // weak
@@ -10653,7 +10679,7 @@ char g_KeyChar = 'y'; // weak
 char byte_5199A0 = 'z'; // weak
 char byte_5199AE[] = { '\0' }; // weak
 int dword_5199C0 = 1; // weak
-int dword_5199D4 = 1; // weak
+int g_AppIsActive = 1; // weak
 // extern int ( *g_RenderHook)(int a1, char a2, DWORD a3); weak
 char *off_5199F0[3] =
 {
@@ -11521,9 +11547,9 @@ int dword_51C724 = 0; // weak
 char *off_51C790[2] = { "mod", "cotan" }; // weak
 _UNKNOWN unk_51C9F8; // weak
 IID stru_51CA08 = { 3014063072u, 11075u, 4559u, { 162u, 222u, 0u, 170u, 0u, 185u, 51u, 86u } }; // weak
-_UNKNOWN unk_51CA18; // weak
-_UNKNOWN unk_51CA28; // weak
-_UNKNOWN unk_51CA38; // weak
+_UNKNOWN g_InputBackendMouseDeviceGuid; // weak
+_UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
+_UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
 int dword_51D018; // weak
 int dword_51D01C; // weak
 int dword_51D020; // weak
@@ -11895,14 +11921,9 @@ int dword_545140; // weak
 int dword_545150; // weak
 _UNKNOWN unk_545158; // weak
 int dword_54517C; // weak
-int dword_545190; // weak
-_DWORD dword_545198[4]; // weak
-int dword_5451A8; // weak
-int dword_5451AC; // weak
-char byte_5451C0; // weak
-char byte_5451C8; // weak
-char byte_5451CC[268]; // weak
-int dword_5452D8; // weak
+int g_SoundPausedForInactiveApp; // weak
+InputBackendState g_InputBackendState; // weak
+int g_ShouldPresentOnReactivate; // weak
 HWND hWnd; // idb
 int dword_5452E4; // weak
 int dword_5452E8; // weak
@@ -12012,7 +12033,7 @@ int dword_54DD0C; // weak
 int dword_54DD10; // weak
 int dword_54DD14; // weak
 int dword_54DD18; // weak
-int dword_54DD20; // weak
+int g_InputBackendTempJoystickDevice; // weak
 int dword_54DD24; // weak
 int dword_54DD30; // weak
 int dword_54DD40; // weak
@@ -14373,7 +14394,7 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
   }
   if ( !v3[1] )
     App_RequestQuit((int)aNotEnoughFreeM);
-  memset_(0, 0);
+  UnitStackSelection_ClearMask((void *)dword_526F78);
   return v3;
 }
 // 403DBE: variable 'v5' is possibly undefined
@@ -32478,7 +32499,7 @@ int a5;
     v25 += 2;
   }
   while ( v28 );
-  memset_(a1, 0);
+  UnitStackSelection_ClearMask((void *)a1);
   if ( v29 == 1 )
   {
     *(_BYTE *)(v60 + 421) = 1;
@@ -60365,12 +60386,12 @@ int  sub_446230(char a1, DWORD a2)
   Time_Now(v15, 1);
   Render_BlitSurface(&unk_51D4C0, v16, 0, (DWORD)v12);
   v17 = dword_544CD8;
-  while ( !Input_PollEventsUntil((int)v17, (char)&dword_545198) )
+  while ( !Input_PollEventsUntil((int)v17, (char)&g_InputBackendState) )
   {
     v20 = Time_Now(v19, v18);
     if ( v20 >= v21 || Input_IsAnyKeyPressed() )
       break;
-    InputBackend_PollState((int)&dword_545198, v21, v19);
+    InputBackend_PollState(&g_InputBackendState, v21, v19);
   }
   Debug_Log(v19, (char)g_RenderHook, (DWORD)v12, (int)aUnsetrh08x_23);
   g_RenderHook = v28;
@@ -71100,7 +71121,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   int SpriteForChar; // eax
   void *v22; // [esp+1Ch] [ebp-18h]
 
-  Win_ProcessMessagesAndBlitFrame(a2);
+  Platform_PumpMessagesAndBlitFrame(a2);
   result = Time_Now(v5, v4);
   if ( result >= dword_5448B0 || v7 )
   {
@@ -71265,9 +71286,9 @@ BOOL  Input_PollEventsUntil(int a1, char a2)
   int v4; // ecx
 
   *(_DWORD *)(a1 + 56) = 0;
-  Win_ProcessMessagesAndBlitFrame(a2);
+  Platform_PumpMessagesAndBlitFrame(a2);
   *(_DWORD *)(v3 + 56) = v4;
-  InputBackend_PollState((int)&dword_545198, v3, v4);
+  InputBackend_PollState(&g_InputBackendState, v3, v4);
   return byte_5451C0 < 0 || byte_5451C8 < 0;
 }
 // 460928: variable 'v4' is possibly undefined
@@ -71348,7 +71369,7 @@ BOOL  Render_FlipRect(int a1, char a2)
         break;
     }
     *(_DWORD *)(v4 + 56) = 0;
-    Win_ProcessMessagesAndBlitFrame(a2);
+    Platform_PumpMessagesAndBlitFrame(a2);
     *(_DWORD *)(v5 + 56) = v6;
     (*(void (**)(void))(*(_DWORD *)(v5 + 1120) + 20))();
   }
@@ -71371,9 +71392,9 @@ int  sub_460A50(int a1, int a2)
   int result; // eax
   int v9; // edi
 
-  InputBackend_PollState((int)&dword_545198, a1, a2);
-  v2[9] += v2[8] * dword_5451A8;
-  v3 = v2[8] * dword_5451AC;
+  InputBackend_PollState(&g_InputBackendState, a1, a2);
+  v2[9] += v2[8] * g_InputBackendState.mouse_delta_x;
+  v3 = v2[8] * g_InputBackendState.mouse_delta_y;
   v4 = v2[10];
   v2[11] = 0;
   v2[10] = v3 + v4;
@@ -72038,22 +72059,22 @@ int Input_MouseInit()
   int v0; // edx
   int v1; // ecx
 
-  sub_47BC40(dword_545198);
+  InputBackend_ResetState(&g_InputBackendState);
   return sub_473ED5(v1, v0);
 }
 // 4616EF: variable 'v1' is possibly undefined
 // 4616EF: variable 'v0' is possibly undefined
 // 473ED5: using guessed type int __fastcall sub_473ED5(_DWORD, _DWORD);
-// 545198: using guessed type _DWORD dword_545198[4];
+// 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461740) --------------------------------------------------------
-BOOL Input_MousePresent()
+BOOL Platform_IsWindowsNt4()
 {
   return (GetVersion() & 0x80000000) == 0 && (unsigned __int8)GetVersion() == 4;
 }
 
 //----- (00461770) --------------------------------------------------------
-BOOL Input_MouseAcquire()
+BOOL Platform_IsWindows9x()
 {
   return (GetVersion() & 0x80000000) != 0 && (unsigned __int8)GetVersion() == 4;
 }
@@ -72066,7 +72087,7 @@ int  Render_DefaultRH(int a1, char a2, DWORD a3)
 }
 
 //----- (004617C0) --------------------------------------------------------
-LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
   DWORD v5; // eax
   DWORD v6; // ebp
@@ -72098,11 +72119,11 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
       DefWindowProcA(hWnd, Msg, wParam, lParam);
     else
       ValidateRect(hWnd, 0);
-    if ( dword_5199D4 != 1 || !dword_51D57C )
+    if ( g_AppIsActive != 1 || !dword_51D57C )
       return 0;
     Debug_Log(v12, Msg, v6, (int)aRestoreD);
     if ( dword_51D57C )
-      sub_4753E0(dword_51D584);
+      Render_RestoreLostSurfaceIfNeeded(dword_51D584);
     if ( g_RenderHook && dword_51D594 == 8 )
     {
       Debug_Log((int)g_RenderHook, Msg, v6, (int)aRedrawhandler0);
@@ -72121,29 +72142,29 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
     if ( (unsigned __int16)wParam == 1 )
     {
       Debug_Log(v9, 1, v6, (int)aAcquire);
-      InputBackend_Acquire((int)dword_545198);
+      InputBackend_Acquire(&g_InputBackendState);
       if ( dword_51D57C )
-        sub_4753E0(dword_51D584);
-      if ( dword_5452D8 )
+        Render_RestoreLostSurfaceIfNeeded(dword_51D584);
+      if ( g_ShouldPresentOnReactivate )
         Render_Present((int)dword_544CD8);
-      if ( dword_545190 )
+      if ( g_SoundPausedForInactiveApp )
         CSS_ResumeSound(dword_5174D0, 1000);
-      dword_545190 = 0;
+      g_SoundPausedForInactiveApp = 0;
       Debug_Log(v11, 1, v6, (int)aResumedSoundD);
     }
     if ( !(_WORD)wParam )
     {
-      dword_5452D8 = dword_544D10;
+      g_ShouldPresentOnReactivate = dword_544D10;
       if ( !v6 )
         Render_Pump();
       Debug_Log(v9, 0, v6, (int)aUnacquire);
-      InputBackend_Unacquire((int)dword_545198);
-      if ( !dword_545190 )
+      InputBackend_Unacquire(&g_InputBackendState);
+      if ( !g_SoundPausedForInactiveApp )
         CSS_PauseSound(dword_5174D0, 1000);
-      dword_545190 = 1;
+      g_SoundPausedForInactiveApp = 1;
       Debug_Log(v10, 0, dword_5174D0, (int)aPausedSoundD);
     }
-    dword_5199D4 = (unsigned __int16)wParam;
+    g_AppIsActive = (unsigned __int16)wParam;
     return 0;
   }
 }
@@ -72155,7 +72176,7 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
 // 461982: variable 'v12' is possibly undefined
 // 4619BF: variable 'v13' is possibly undefined
 // 5174D0: using guessed type int dword_5174D0;
-// 5199D4: using guessed type int dword_5199D4;
+// 5199D4: using guessed type int g_AppIsActive;
 // 5199D8: using guessed type int ( *g_RenderHook)(int a1, char a2, DWORD a3);
 // 51D020: using guessed type int dword_51D020;
 // 51D57C: using guessed type int dword_51D57C;
@@ -72163,12 +72184,12 @@ LRESULT __thiscall Win_WndProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, L
 // 51D594: using guessed type int dword_51D594;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
-// 545190: using guessed type int dword_545190;
-// 545198: using guessed type _DWORD dword_545198[4];
-// 5452D8: using guessed type int dword_5452D8;
+// 545190: using guessed type int g_SoundPausedForInactiveApp;
+// 545198: using guessed type _DWORD g_InputBackendState[80];
+// 5452D8: using guessed type int g_ShouldPresentOnReactivate;
 
 //----- (00461A20) --------------------------------------------------------
-HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
+HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2)
 {
   DWORD v3; // ebx
   HWND result; // eax
@@ -72178,7 +72199,7 @@ HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
   v6 = a2;
   v5.hInstance = a1;
   v5.style = 3;
-  v5.lpfnWndProc = (WNDPROC)Win_WndProc;
+  v5.lpfnWndProc = (WNDPROC)Platform_MainWindowProc;
   v5.cbClsExtra = 0;
   v5.cbWndExtra = 0;
   v5.hIcon = LoadIconA(a1, (LPCSTR)0x64);
@@ -72196,16 +72217,16 @@ HWND  Win_CreateMainWindow(HINSTANCE a1, int a2)
   {
     ShowWindow(result, 3);
     UpdateWindow(hWnd);
-    InputBackend_Initialize(dword_545198, (int)a1, (int)hWnd);
+    InputBackend_Initialize(&g_InputBackendState, (int)a1, (int)hWnd);
     return (HWND)1;
   }
   return result;
 }
 // 51D020: using guessed type int dword_51D020;
-// 545198: using guessed type _DWORD dword_545198[4];
+// 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461B30) --------------------------------------------------------
-WPARAM  Win_ProcessMessagesAndBlitFrame(char a1)
+WPARAM  Platform_PumpMessagesAndBlitFrame(char a1)
 {
   HWND hwnd; // ecx
   struct tagMSG Msg; // [esp+0h] [ebp-1Ch] BYREF
@@ -72214,7 +72235,7 @@ WPARAM  Win_ProcessMessagesAndBlitFrame(char a1)
   Render_BlitSurface(&unk_51D4C0, 0, a1, (DWORD)savedregs);
   while ( 1 )
   {
-    if ( !PeekMessageA(&Msg, 0, 0, 0, 0) && dword_5199D4 )
+    if ( !PeekMessageA(&Msg, 0, 0, 0, 0) && g_AppIsActive )
       return 1;
     hwnd = Msg.hwnd;
     if ( dword_51D57C )
@@ -72224,14 +72245,14 @@ WPARAM  Win_ProcessMessagesAndBlitFrame(char a1)
       break;
     TranslateMessage(&Msg);
     DispatchMessageA(&Msg);
-    if ( !dword_5199D4 )
+    if ( !g_AppIsActive )
       WaitMessage();
   }
   Render_BeginModeSwitch(&unk_51D4C0);
   return Msg.wParam;
 }
 // 461B87: variable 'hwnd' is possibly undefined
-// 5199D4: using guessed type int dword_5199D4;
+// 5199D4: using guessed type int g_AppIsActive;
 // 51D57C: using guessed type int dword_51D57C;
 
 //----- (00461C00) --------------------------------------------------------
@@ -72253,7 +72274,7 @@ int  Mem_Alloc(int a1, int a2, char a3, DWORD a4)
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (00461C80) --------------------------------------------------------
-BOOL  sub_461C80(char a1)
+BOOL  Video_CanContinuePlayback(char a1)
 {
   DD_Pump((int)dword_544CD8, a1);
   DD_Pump((int)dword_544CD8, a1);
@@ -72323,14 +72344,20 @@ void  Win_EndModeChange(int a1, char *a2, int a3, int a4)
         a2,
         *(IDirectDrawSurface **)(*(_DWORD *)(dword_51D584 + 4) + 164),
         &v4,
-        (int (*)(void))sub_461C80,
+        (int (*)(void))Video_CanContinuePlayback,
         1500);
     }
     else
     {
       if ( dword_51D58C )
         dword_51D588 = 1;
-      PlayAvi(a2, *(IDirectDrawSurface **)(dword_51D57C + 164), a4, a1, (int (*)(void))sub_461C80, 1000);
+      PlayAvi(
+        a2,
+        *(IDirectDrawSurface **)(dword_51D57C + 164),
+        a4,
+        a1,
+        (int (*)(void))Video_CanContinuePlayback,
+        1000);
     }
   }
 }
@@ -72388,7 +72415,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
-    InputBackend_Acquire((int)&dword_545198);
+    InputBackend_Acquire(&g_InputBackendState);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
@@ -72408,7 +72435,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
-    InputBackend_Acquire((int)&dword_545198);
+    InputBackend_Acquire(&g_InputBackendState);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
@@ -85938,7 +85965,7 @@ signed int  sub_475080(
 // 51CA08: using guessed type IID stru_51CA08;
 
 //----- (004753E0) --------------------------------------------------------
-int  sub_4753E0(int a1)
+int  Render_RestoreLostSurfaceIfNeeded(int a1)
 {
   int result; // eax
   int v3; // edx
@@ -91330,65 +91357,69 @@ LABEL_25:
 // 51A570: using guessed type int (__fastcall *off_51A570)(_DWORD, _DWORD);
 
 //----- (0047BC10) --------------------------------------------------------
-BOOL __stdcall sub_47BC10(int a1, int a2)
+BOOL __stdcall InputBackend_StoreEnumeratedDevice(int a1, int a2)
 {
-  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)a2 + 12))(a2, a1 + 4, &dword_54DD20, 0) != 0;
+  return (*(int (__stdcall **)(int, int, int *, _DWORD))(*(_DWORD *)a2 + 12))(a2, a1 + 4, &g_InputBackendTempJoystickDevice, 0) != 0;
 }
-// 54DD20: using guessed type int dword_54DD20;
+// 54DD20: using guessed type int g_InputBackendTempJoystickDevice;
 
 //----- (0047BC40) --------------------------------------------------------
-_DWORD * sub_47BC40(_DWORD *result)
+InputBackendState * InputBackend_ResetState(InputBackendState *result)
 {
-  *result = 0;
-  result[1] = 0;
-  result[2] = 0;
-  result[3] = 0;
-  result[77] = 0;
-  result[78] = 0;
-  result[79] = 0;
-  result[6] = 0;
-  result[7] = 0;
-  result[4] = 0;
-  result[5] = 0;
+  memset(result->keyboard_state, 0, sizeof(result->keyboard_state));
+  result->direct_input = 0;
+  result->keyboard_device = 0;
+  result->mouse_device = 0;
+  result->joystick_device = 0;
+  result->mouse_delta_x = 0;
+  result->mouse_delta_y = 0;
+  result->joystick_axis_x = 0;
+  result->joystick_axis_y = 0;
+  result->mouse_device_ready = 0;
+  result->keyboard_device_ready = 0;
+  result->joystick_device_ready = 0;
   return result;
 }
 
 //----- (0047BCA0) --------------------------------------------------------
-_DWORD * sub_47BCA0(_DWORD *a1)
+InputBackendState * InputBackend_ReleaseDevices(InputBackendState *a1)
 {
+  _DWORD *raw; // esi
   int v2; // edx
   int v3; // ecx
   int v4; // esi
 
-  v2 = a1[1];
+  raw = (_DWORD *)a1;
+  v2 = raw[1];
   if ( v2 )
   {
     (*(void (__stdcall **)(int))(*(_DWORD *)v2 + 8))(v2);
-    a1[1] = 0;
+    raw[1] = 0;
   }
-  v3 = a1[2];
+  v3 = raw[2];
   if ( v3 )
   {
-    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v3 + 8))(v3, a1[2]);
-    a1[2] = 0;
+    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v3 + 8))(v3, raw[2]);
+    raw[2] = 0;
   }
-  v4 = a1[3];
+  v4 = raw[3];
   if ( v4 )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v4 + 8))(a1[3]);
-    a1[3] = 0;
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v4 + 8))(raw[3]);
+    raw[3] = 0;
   }
-  if ( *a1 )
+  if ( raw[0] )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)*a1 + 8))(*a1);
-    *a1 = 0;
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)raw[0] + 8))(raw[0]);
+    raw[0] = 0;
   }
   return a1;
 }
 
 //----- (0047BD10) --------------------------------------------------------
-signed int  InputBackend_Initialize(_DWORD *a1, int a2, int a3)
+signed int  InputBackend_Initialize(InputBackendState *a1, int a2, int a3)
 {
+  _DWORD *raw; // esi
   _DWORD v5[2]; // [esp+94h] [ebp-3Ch] BYREF
   int v6; // [esp+9Ch] [ebp-34h]
   int v7; // [esp+A0h] [ebp-30h]
@@ -91399,108 +91430,113 @@ signed int  InputBackend_Initialize(_DWORD *a1, int a2, int a3)
   int v12; // [esp+B8h] [ebp-18h]
   int v13; // [esp+BCh] [ebp-14h]
 
-  if ( DirectInputCreateA(a2, 768, a1, 0) )
+  raw = (_DWORD *)a1;
+  if ( DirectInputCreateA(a2, 768, raw, 0) )
     return 0;
-  if ( !(*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)*a1 + 12))(*a1, &unk_51CA18, a1 + 2, 0) )
+  if ( !(*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendMouseDeviceGuid, raw + 2, 0) )
   {
-    (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[2] + 44))(a1[2], dword_4E80F0);
-    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[2] + 52))(a1[2], a3, 5);
-    if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[2] + 28))(a1[2]) )
+    (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[2] + 44))(raw[2], g_InputBackendMouseDataFormat);
+    (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[2] + 52))(raw[2], a3, 5);
+    if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[2] + 28))(raw[2]) )
       return 0;
-    a1[77] = 1;
+    raw[77] = 1;
   }
-  if ( (*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)*a1 + 12))(*a1, &unk_51CA28, a1 + 1, 0) )
+  if ( (*(int (__stdcall **)(_DWORD, void *, _DWORD *, _DWORD))(*(_DWORD *)raw[0] + 12))(raw[0], &g_InputBackendKeyboardDeviceGuid, raw + 1, 0) )
     goto LABEL_9;
-  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[1] + 44))(a1[1], dword_4E9110);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[1] + 52))(a1[1], a3, 6);
-  if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[1] + 28))(a1[1]) )
+  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[1] + 44))(raw[1], g_InputBackendKeyboardDataFormat);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[1] + 52))(raw[1], a3, 6);
+  if ( (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[1] + 28))(raw[1]) )
     return 0;
-  a1[78] = 1;
+  raw[78] = 1;
 LABEL_9:
-  (*(void (__stdcall **)(_DWORD, int, BOOL (__stdcall *)(int, int), _DWORD, int))(*(_DWORD *)*a1 + 16))(
-    *a1,
+  (*(void (__stdcall **)(_DWORD, int, BOOL (__stdcall *)(int, int), _DWORD, int))(*(_DWORD *)raw[0] + 16))(
+    raw[0],
     4,
-    sub_47BC10,
-    *a1,
+    InputBackend_StoreEnumeratedDevice,
+    raw[0],
     1);
-  if ( !dword_54DD20 )
+  if ( !g_InputBackendTempJoystickDevice )
     return 1;
-  if ( (**(int (__stdcall ***)(int, void *, int))dword_54DD20)(dword_54DD20, &unk_51CA38, (int)(a1 + 3)) )
+  if ( (**(int (__stdcall ***)(int, void *, int))g_InputBackendTempJoystickDevice)(
+         g_InputBackendTempJoystickDevice,
+         &g_InputBackendJoystickInterfaceIid,
+         (int)(raw + 3)) )
     return 0;
-  if ( dword_54DD20 )
+  if ( g_InputBackendTempJoystickDevice )
   {
-    (*(void (__stdcall **)(int))(*(_DWORD *)dword_54DD20 + 8))(dword_54DD20);
-    dword_54DD20 = 0;
+    (*(void (__stdcall **)(int))(*(_DWORD *)g_InputBackendTempJoystickDevice + 8))(g_InputBackendTempJoystickDevice);
+    g_InputBackendTempJoystickDevice = 0;
   }
-  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)a1[3] + 44))(a1[3], dword_4E93F0);
-  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)a1[3] + 52))(a1[3], a3, 6);
+  (*(void (__stdcall **)(_DWORD, int *))(*(_DWORD *)raw[3] + 44))(raw[3], g_InputBackendJoystickDataFormat);
+  (*(void (__stdcall **)(_DWORD, int, int))(*(_DWORD *)raw[3] + 52))(raw[3], a3, 6);
   v5[0] = 24;
   v8 = -1000;
   v9 = 1000;
   v5[1] = 16;
   v6 = 0;
   v7 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 4, v5) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
     return 0;
   v6 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 4, v5) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 4, v5) )
     return 0;
   v13 = 1000;
   v10[0] = 20;
   v10[1] = 16;
   v11 = 0;
   v12 = 1;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 5, v10) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10) )
     return 0;
   v11 = 4;
-  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)a1[3] + 24))(a1[3], 5, v10)
-    || (*(int (__stdcall **)(_DWORD))(*(_DWORD *)a1[3] + 28))(a1[3]) )
+  if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(*(_DWORD *)raw[3] + 24))(raw[3], 5, v10)
+    || (*(int (__stdcall **)(_DWORD))(*(_DWORD *)raw[3] + 28))(raw[3]) )
   {
     return 0;
   }
-  a1[79] = 1;
+  raw[79] = 1;
   return 1;
 }
-// 4E80F0: using guessed type int dword_4E80F0[5];
-// 4E9110: using guessed type int dword_4E9110[5];
-// 4E93F0: using guessed type int dword_4E93F0[5];
+// 4E80F0: using guessed type int g_InputBackendMouseDataFormat[5];
+// 4E9110: using guessed type int g_InputBackendKeyboardDataFormat[5];
+// 4E93F0: using guessed type int g_InputBackendJoystickDataFormat[5];
 // 4E9792: using guessed type int __stdcall DirectInputCreateA(_DWORD, _DWORD, _DWORD, _DWORD);
-// 54DD20: using guessed type int dword_54DD20;
+// 54DD20: using guessed type int g_InputBackendTempJoystickDevice;
 
 //----- (0047BF30) --------------------------------------------------------
-int  InputBackend_Acquire(int result)
+int  InputBackend_Acquire(InputBackendState *state)
 {
-  int v1; // ebx
+  _DWORD *raw; // ebx
 
-  v1 = result;
-  if ( *(_DWORD *)(result + 308) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(result + 8) + 28))(*(_DWORD *)(result + 8));
-  if ( *(_DWORD *)(v1 + 312) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 4) + 28))(*(_DWORD *)(v1 + 4));
-  if ( *(_DWORD *)(v1 + 316) )
-    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 12) + 28))(*(_DWORD *)(v1 + 12));
-  return result;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 28))(raw[2]);
+  if ( raw[78] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 28))(raw[1]);
+  if ( raw[79] )
+    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 28))(raw[3]);
+  return 0;
 }
 
 //----- (0047BF80) --------------------------------------------------------
-int  InputBackend_Unacquire(int result)
+int  InputBackend_Unacquire(InputBackendState *state)
 {
-  int v1; // ebx
+  _DWORD *raw; // ebx
 
-  v1 = result;
-  if ( *(_DWORD *)(result + 308) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(result + 8) + 32))(*(_DWORD *)(result + 8));
-  if ( *(_DWORD *)(v1 + 312) )
-    result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 4) + 32))(*(_DWORD *)(v1 + 4));
-  if ( *(_DWORD *)(v1 + 316) )
-    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v1 + 12) + 32))(*(_DWORD *)(v1 + 12));
-  return result;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 32))(raw[2]);
+  if ( raw[78] )
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 32))(raw[1]);
+  if ( raw[79] )
+    return (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 32))(raw[3]);
+  return 0;
 }
 
 //----- (0047BFD0) --------------------------------------------------------
-int  InputBackend_PollState(int result, int a2, int a3)
+int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
 {
-  int v3; // ebx
+  int result; // eax
+  _DWORD *raw; // ebx
   _DWORD v4[12]; // [esp+24h] [ebp-6Ch] BYREF
   unsigned __int8 v5; // [esp+54h] [ebp-3Ch]
   unsigned __int8 v6; // [esp+55h] [ebp-3Bh]
@@ -91513,34 +91549,34 @@ int  InputBackend_PollState(int result, int a2, int a3)
 
   v12 = a3;
   v11 = a2;
-  v3 = result;
-  if ( *(_DWORD *)(result + 308) )
+  result = 0;
+  raw = (_DWORD *)state;
+  if ( raw[77] )
   {
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(result + 8) + 36))(*(_DWORD *)(result + 8), 16, v7) == -2147024866 )
-      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 8) + 28))(*(_DWORD *)(v3 + 8));
-    *(_DWORD *)(v3 + 16) = v7[0];
-    *(_DWORD *)(v3 + 20) = v7[1];
-    *(_DWORD *)(v3 + 40) = v8;
-    *(_DWORD *)(v3 + 48) = v9;
-    result = v10;
-    *(_DWORD *)(v3 + 44) = v10;
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[2] + 36))(raw[2], 16, v7) == -2147024866 )
+      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[2] + 28))(raw[2]);
+    state->mouse_delta_x = v7[0];
+    state->mouse_delta_y = v7[1];
+    state->mouse_button_primary = v8;
+    state->mouse_button_secondary = v9;
+    state->mouse_button_middle = v10;
   }
-  if ( *(_DWORD *)(v3 + 312) )
+  if ( raw[78] )
   {
-    result = (*(int (__stdcall **)(_DWORD, int, int))(**(_DWORD **)(v3 + 4) + 36))(*(_DWORD *)(v3 + 4), 256, v3 + 52);
+    result = (*(int (__stdcall **)(_DWORD, int, int))(**(_DWORD **)&raw[1] + 36))(raw[1], 256, (int)&state->keyboard_state[0]);
     if ( result == -2147024866 )
-      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 4) + 28))(*(_DWORD *)(v3 + 4));
+      result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 28))(raw[1]);
   }
-  if ( *(_DWORD *)(v3 + 316) )
+  if ( raw[79] )
   {
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 12) + 100))(*(_DWORD *)(v3 + 12));
-    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)(v3 + 12) + 36))(*(_DWORD *)(v3 + 12), 80, v4) == -2147024866 )
-      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(v3 + 12) + 28))(*(_DWORD *)(v3 + 12));
-    *(_DWORD *)(v3 + 24) = v4[0];
-    *(_DWORD *)(v3 + 28) = v4[1];
-    *(_DWORD *)(v3 + 32) = v5;
+    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 100))(raw[3]);
+    if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[3] + 36))(raw[3], 80, v4) == -2147024866 )
+      (*(void (__stdcall **)(_DWORD))(**(_DWORD **)&raw[3] + 28))(raw[3]);
+    state->joystick_axis_x = v4[0];
+    state->joystick_axis_y = v4[1];
+    state->joystick_button_primary = v5;
     result = v6;
-    *(_DWORD *)(v3 + 36) = v6;
+    state->joystick_button_secondary = v6;
   }
   return result;
 }

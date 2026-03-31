@@ -712,5 +712,34 @@
       "`UnitBattle_GetTileMoveCostOrZero` first rejects occupied tiles unless `ignore_occupancy_flag` is set, then returns fixed cost `5` for airborne types and otherwise falls back to the precomputed per-tile grid.",
       "Callers such as `UnitBattle_MoveTrack`, AI movement probes, and the near-move helpers all consult the same grid/table/flag family, proving one shared tactical pathing state region."
     ]
+  },
+  {
+    "name": "InputBackendState",
+    "kind": "platform_state_region",
+    "base_symbol": "g_InputBackendState / dword_545198",
+    "size": 320,
+    "description": "DirectInput-backed platform/input state block used by the current Windows-compat layer. It stores the root DirectInput interface, keyboard/mouse/joystick device pointers, the latest polled device state, and device-present flags that gate acquire/unacquire/poll calls. The third device slot is first captured through a generic enumeration callback before being upgraded/configured as the current joystick-style auxiliary device.",
+    "fields": [
+      { "offset": 0, "name": "direct_input_ptr", "type": "void *", "notes": "Root DirectInput interface returned by `DirectInputCreateA` and released by `InputBackend_ReleaseDevices`." },
+      { "offset": 4, "name": "keyboard_device_ptr", "type": "void *", "notes": "Keyboard device pointer created from `g_InputBackendKeyboardDeviceGuid` and polled into `keyboard_state_bytes`." },
+      { "offset": 8, "name": "mouse_device_ptr", "type": "void *", "notes": "Mouse device pointer created from `g_InputBackendMouseDeviceGuid` and polled into the mouse delta/button fields." },
+      { "offset": 12, "name": "joystick_device_ptr", "type": "void *", "notes": "Joystick device pointer obtained through the enum callback plus `QueryInterface` using `g_InputBackendJoystickInterfaceIid`." },
+      { "offset": 16, "name": "mouse_delta_x", "type": "int32", "notes": "Latest relative mouse X delta written by `InputBackend_PollState`." },
+      { "offset": 20, "name": "mouse_delta_y", "type": "int32", "notes": "Latest relative mouse Y delta written by `InputBackend_PollState`." },
+      { "offset": 24, "name": "joystick_axis_x", "type": "int32", "notes": "Latest primary joystick X-axis value after the poll path updates the state block." },
+      { "offset": 28, "name": "joystick_axis_y", "type": "int32", "notes": "Latest primary joystick Y-axis value after the poll path updates the state block." },
+      { "offset": 40, "name": "mouse_button_0_state", "type": "int32", "notes": "First mouse-button state byte widened to int by `InputBackend_PollState`." },
+      { "offset": 44, "name": "mouse_button_2_state", "type": "int32", "notes": "Third mouse-button state byte widened to int by `InputBackend_PollState`." },
+      { "offset": 48, "name": "mouse_button_1_state", "type": "int32", "notes": "Second mouse-button state byte widened to int by `InputBackend_PollState`." },
+      { "offset": 52, "name": "keyboard_state_bytes", "type": "uint8[256]", "notes": "Raw 256-byte keyboard state buffer refreshed on each keyboard-device poll." },
+      { "offset": 308, "name": "has_mouse_device", "type": "int32", "notes": "Set once the mouse device is created and acquired successfully; gates mouse acquire/unacquire/poll calls." },
+      { "offset": 312, "name": "has_keyboard_device", "type": "int32", "notes": "Set once the keyboard device is created and acquired successfully; gates keyboard acquire/unacquire/poll calls." },
+      { "offset": 316, "name": "has_joystick_device", "type": "int32", "notes": "Set once the joystick interface is upgraded, configured, and acquired successfully; gates joystick acquire/unacquire/poll calls." }
+    ],
+    "evidence": [
+      "`InputBackend_ResetState` zeroes the first four dwords as interface/device pointers, clears offsets `+16..+28`, and resets the presence flags at `+308..+316`, proving one contiguous backend state block rather than unrelated globals.",
+      "`InputBackend_Initialize` creates devices into offsets `+8`, `+4`, and `+12`, with the third slot first captured by `InputBackend_StoreEnumeratedDevice`, then upgraded/configured with the joystick interface IID and axis ranges before the matching presence flag is raised.",
+      "`InputBackend_Acquire`, `InputBackend_Unacquire`, and `InputBackend_PollState` all gate their COM calls through the same offsets `+308`, `+312`, and `+316`, while `InputBackend_PollState` writes mouse deltas/buttons, joystick axes, and the 256-byte keyboard buffer into stable offsets inside the same 320-byte slab."
+    ]
   }
 ]

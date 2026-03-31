@@ -702,3 +702,72 @@
   - the remaining SDL/platform work is now body-level backend replacement or packed-data cleanup, not more isolated high-confidence naming in this immediate UI cluster
 - Net effect:
   - the player-context helper no longer overstates its role; the code now says explicitly that it only swaps the loaded current-player info sprite set
+
+## Batch 79 - Platform Activation State Wave
+- Repairs:
+  - renamed `sub_4753E0` to `Render_RestoreLostSurfaceIfNeeded`
+  - renamed platform activation globals:
+    - `dword_5199D4` -> `g_AppIsActive`
+    - `dword_545190` -> `g_SoundPausedForInactiveApp`
+    - `dword_5452D8` -> `g_ShouldPresentOnReactivate`
+- Validation probe:
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch79.o`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none in code generation; this wave tightened naming on the already isolated platform seam so the later SDL event/window replacement can land against named activation/present/surface-restore state instead of raw globals and `sub_*` helpers
+- Current leading blockers:
+  - none for the current CMake/GNU89 compile milestone; the rename wave stayed object-clean
+  - the message pump, window creation, and DirectInput polling bodies are still Win32/DirectInput-backed and need a coordinated SDL backend pass rather than another isolated rename
+  - the repo still does not have a faithful full executable/link harness; the static-library build remains the honest compile target
+- Net effect:
+  - the platform activation path now reads in gameplay-independent terms: app-active latch, deferred present latch, inactive-audio latch, and a lost-surface restore helper
+  - the future SDL replacement surface is narrower because one more render/helper scar has been turned into an explicit seam
+
+## Batch 80 - Platform Seam Reconciliation And Selection Mask Repair Wave
+- Repairs:
+  - reconciled the project artifacts with the already-live neutral platform seam names:
+    - `Win_WndProc` -> `Platform_MainWindowProc`
+    - `Win_CreateMainWindow` -> `Platform_CreateMainWindow`
+    - `Win_ProcessMessagesAndBlitFrame` -> `Platform_PumpMessagesAndBlitFrame`
+  - renamed `InputBackend_CreateFirstJoystickDeviceCallback` to `InputBackend_StoreEnumeratedDevice` after asm-backed review showed only “capture the first enumerated auxiliary device for later creation,” not a fully proven joystick-specific role
+  - repaired the two remaining unit-stack selection-mask decompiler scars:
+    - `UnitStack_ShowSelectionDialog`: `memset_(0, 0)` -> `UnitStackSelection_ClearMask((void *)dword_526F78)`
+    - `UnitStackSelection_BeginForSelectedStack`: `memset_(a1, 0)` -> `UnitStackSelection_ClearMask((void *)a1)`
+  - reconciled the existing `InputBackendState` entry in `RECOVERED_STRUCTURES.json` with the current live-code evidence so the named input slab is tracked consistently across code and artifacts
+- Validation probe:
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch80.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch80.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none in body generation; this wave kept the seam neutral at `Platform_*` rather than falsely renaming the still-Win32 implementations to `SDL_*`
+- Current leading blockers:
+  - none for the current CMake/GNU89 compile milestone; the selection-mask repair and conservative input callback rename remained object-clean
+  - the platform/window/input bodies are still Win32/DirectInput-backed behind the neutral seam and need a coordinated SDL backend pass rather than more rename-only work
+  - the repo still lacks a faithful full executable/link harness, so the CMake static library remains the honest compilation target
+- Net effect:
+  - the selection-panel subsystem no longer contains the last proven false `memset_` artifacts in its mask-clear path
+  - the logs, recovered structures, and live code are now aligned on the platform seam and the input backend slab, which reduces friction for the eventual SDL body replacement pass
+
+## Batch 81 - SDL Runtime Build Surface Wave
+- Repairs:
+  - added [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c) to the `clash95_recovered` CMake target so the SDL-target compatibility layer is no longer declarations-only
+  - materialized the recovered `InputBackendState` slab directly in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) instead of leaving the platform/input region split across `g_InputBackendState[80]` plus overlapping pseudo-globals
+  - rebound the legacy split globals `dword_5451A8`, `dword_5451AC`, `byte_5451C0`, `byte_5451C8`, and `byte_5451CC` through compatibility aliases backed by `InputBackendState`, preserving compileability while making the live field ownership explicit
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch81.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - header-only Win32-compat declarations -> compiled SDL-target runtime seam in `platform_sdl_runtime.c` for window/message primitives such as `RegisterClassA`, `CreateWindowExA`, `DispatchMessageA`, `GetMessageA`, `PeekMessageA`, and related surface/cursor/window placeholders
+- Current leading blockers:
+  - none for the current CMake/GNU89 static-library milestone; the runtime-seam materialization stayed build-clean
+  - the message loop, window proc, and DirectInput bodies are still behavior-preserving Win32-era logic behind the neutral `Platform_*` seam and still need a coordinated SDL event/input backend pass
+  - the repo still lacks a faithful full executable/link harness, so `clash95_recovered` remains the honest compilation milestone rather than a runnable game binary
+- Net effect:
+  - the build now compiles a real SDL-target platform runtime translation unit instead of relying on declarations-only shims
+  - the input backend is represented in live code as one coherent recovered state block, which reduces future risk when replacing DirectInput polling with SDL input events

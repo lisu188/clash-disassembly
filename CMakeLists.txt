@@ -4,6 +4,7 @@ project(clash95_recovered LANGUAGES C)
 
 add_library(clash95_recovered STATIC
   clash95.c
+  platform_sdl_runtime.c
   compat/decomp_runtime_stubs.c
 )
 
