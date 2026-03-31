@@ -110,29 +110,52 @@ typedef int errno_t;
 
 #define qmemcpy memcpy
 
+extern _WORD __ES__;
+extern _WORD __DS__;
+
 #define BYTEn(x, n) (*((_BYTE *)&(x) + (n)))
 #define WORDn(x, n) (*((_WORD *)&(x) + (n)))
 #define DWORDn(x, n) (*((_DWORD *)&(x) + (n)))
+#define MK_FP(seg, off) ((unsigned char *)(uintptr_t)(uint32_t)(uintptr_t)(off))
 
 #define LOBYTE(x) BYTEn(x, 0)
 #define HIBYTE(x) BYTEn(x, 1)
 #define BYTE1(x) BYTEn(x, 1)
 #define BYTE2(x) BYTEn(x, 2)
 #define BYTE3(x) BYTEn(x, 3)
+#define BYTE4(x) BYTEn(x, 4)
+#define BYTE5(x) BYTEn(x, 5)
+#define BYTE6(x) BYTEn(x, 6)
+#define BYTE7(x) BYTEn(x, 7)
+#define SBYTE1(x) (*((int8_t *)&(x) + 1))
 #define LOWORD(x) WORDn(x, 0)
 #define HIWORD(x) WORDn(x, 1)
+#define LODWORD(x) DWORDn(x, 0)
+#define HIDWORD(x) DWORDn(x, 1)
+#define SHIDWORD(x) (*((int32_t *)&(x) + 1))
 #define WORD1(x) WORDn(x, 1)
 #define WORD2(x) WORDn(x, 2)
 #define DWORD1(x) DWORDn(x, 1)
-
 #define SLOBYTE(x) (*((int8_t *)&(x)))
 #define SLOWORD(x) (*((int16_t *)&(x)))
+#define SLODWORD(x) (*((int32_t *)&(x)))
 
 #define COERCE_UNSIGNED_INT(x) (*((unsigned int *)&(x)))
 #define COERCE_UNSIGNED_INT64(x) (*((unsigned long long *)&(x)))
 #define COERCE_FLOAT(x) (*((float *)&(x)))
 #define COERCE_DOUBLE(x) (*((double *)&(x)))
 
+#define __PAIR64__(high, low) ((((uint64_t)(uint32_t)(uintptr_t)(high)) << 32) | (uint32_t)(uintptr_t)(low))
+#define __CFSHL__(x, shift) ((((uint32_t)(x)) >> ((32 - ((shift) & 31)) & 31)) & ((shift) != 0))
 #define __OFSUB__(x, y) ((((x) ^ (y)) & ((x) ^ ((x) - (y)))) < 0)
+
+static inline _DWORD ExcString_Ctor(void) {
+  return 0;
+}
+
+static inline _DWORD ExcString_CtorFromPtr(void *this_) {
+  (void)this_;
+  return 0;
+}
 
 #endif

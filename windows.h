@@ -200,7 +200,42 @@ typedef struct _SECURITY_ATTRIBUTES {
   BOOL bInheritHandle;
 } SECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
 
+typedef struct _CPINFO {
+  UINT MaxCharSize;
+  BYTE DefaultChar[2];
+  BYTE LeadByte[12];
+} CPINFO, *LPCPINFO;
+
+typedef struct _STARTUPINFOA {
+  DWORD cb;
+  LPSTR lpReserved;
+  LPSTR lpDesktop;
+  LPSTR lpTitle;
+  DWORD dwX;
+  DWORD dwY;
+  DWORD dwXSize;
+  DWORD dwYSize;
+  DWORD dwXCountChars;
+  DWORD dwYCountChars;
+  DWORD dwFillAttribute;
+  DWORD dwFlags;
+  WORD wShowWindow;
+  WORD cbReserved2;
+  BYTE *lpReserved2;
+  HANDLE hStdInput;
+  HANDLE hStdOutput;
+  HANDLE hStdError;
+} STARTUPINFOA, *LPSTARTUPINFOA;
+
+typedef struct _PROCESS_INFORMATION {
+  HANDLE hProcess;
+  HANDLE hThread;
+  DWORD dwProcessId;
+  DWORD dwThreadId;
+} PROCESS_INFORMATION, *LPPROCESS_INFORMATION;
+
 typedef DWORD (__stdcall *LPTHREAD_START_ROUTINE)(LPVOID);
+int __stdcall ICSendMessage(DWORD hic, DWORD msg, DWORD dw1, DWORD dw2, DWORD dw3);
 
 typedef struct _RTL_CRITICAL_SECTION {
   LPVOID DebugInfo;
@@ -282,9 +317,19 @@ typedef struct _EXCEPTION_RECORD {
 
 typedef EXCEPTION_RECORD *PEXCEPTION_RECORD;
 
+typedef struct _FLOATING_SAVE_AREA {
+  DWORD ControlWord;
+  DWORD StatusWord;
+} FLOATING_SAVE_AREA;
+
+typedef struct _CONTEXT {
+  DWORD ContextFlags;
+  FLOATING_SAVE_AREA FloatSave;
+} CONTEXT, *PCONTEXT;
+
 typedef struct _EXCEPTION_POINTERS {
   EXCEPTION_RECORD *ExceptionRecord;
-  LPVOID ContextRecord;
+  PCONTEXT ContextRecord;
 } EXCEPTION_POINTERS;
 
 typedef LONG (__stdcall *LPTOP_LEVEL_EXCEPTION_FILTER)(struct _EXCEPTION_POINTERS *ExceptionInfo);
@@ -294,28 +339,68 @@ typedef struct _EXCEPTION_REGISTRATION_RECORD {
   FARPROC Handler;
 } _EXCEPTION_REGISTRATION_RECORD;
 
+typedef struct _NT_TIB {
+  struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList;
+  LPVOID StackBase;
+  LPVOID StackLimit;
+  LPVOID SubSystemTib;
+  union {
+    LPVOID FiberData;
+    DWORD Version;
+  };
+  LPVOID ArbitraryUserPointer;
+  struct _NT_TIB *Self;
+} NT_TIB, *PNT_TIB;
+
+typedef struct _TEB {
+  NT_TIB NtTib;
+} TEB, *PTEB;
+
+typedef struct _MEMORYSTATUS {
+  DWORD dwLength;
+  DWORD dwMemoryLoad;
+  SIZE_T dwTotalPhys;
+  SIZE_T dwAvailPhys;
+  SIZE_T dwTotalPageFile;
+  SIZE_T dwAvailPageFile;
+  SIZE_T dwTotalVirtual;
+  SIZE_T dwAvailVirtual;
+} MEMORYSTATUS, *LPMEMORYSTATUS;
+
+static inline PTEB NtCurrentTeb(void)
+{
+  static TEB fake_teb;
+  return &fake_teb;
+}
+
+typedef struct IUnknownVtbl {
+  HRESULT (__stdcall *QueryInterface)(void *self, const void *riid, void *out_object);
+  ULONG (__stdcall *AddRef)(void *self);
+  ULONG (__stdcall *Release)(void *self);
+} IUnknownVtbl;
+
 typedef struct IUnknown {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IUnknown;
 
 typedef struct IDirectDraw {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IDirectDraw, *LPDIRECTDRAW;
 
 typedef struct IDirectDrawSurface {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IDirectDrawSurface, *LPDIRECTDRAWSURFACE;
 
 typedef struct IDirectDrawSurface2 {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IDirectDrawSurface2, *LPDIRECTDRAWSURFACE2;
 
 typedef struct IDirectInput {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IDirectInput, *LPDIRECTINPUT;
 
 typedef struct IDirectInputDevice {
-  void **lpVtbl;
+  IUnknownVtbl *lpVtbl;
 } IDirectInputDevice, *LPDIRECTINPUTDEVICE;
 
 typedef HWAVEOUT *LPHWAVEOUT;

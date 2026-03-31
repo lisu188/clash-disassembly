@@ -12,7 +12,7 @@
       { "offset": 9, "name": "move_tick_delay", "type": "uint8", "notes": "Delay between successive movement animation updates." },
       { "offset": 10, "name": "animation_frame_interval", "type": "uint8", "notes": "Shared per-type animation tick interval used by world idle animation, battle idle animation, and the melee/ranged attack loops." },
       { "offset": 11, "name": "animation_flags", "type": "uint8", "notes": "Recovered animation-behavior bits. Bit0 enables looping idle animation updates on the world map and in battle." },
-      { "offset": 15, "name": "sprite_vertical_offset", "type": "uint8", "notes": "Vertical anchor/overhang offset subtracted from the sprite Y origin; non-zero entries also force neighboring-tile redraws for overhanging sprites." },
+      { "offset": 15, "name": "visual_class_index", "type": "uint8", "notes": "Per-type visual/footprint class. Rendering subtracts it from sprite Y origin, redraw helpers use non-zero values to invalidate neighboring tiles, and `Unit_GetClassIndex` exposes the same table as a reusable class lookup." },
       { "offset": 16, "name": "melee_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_a.s32` melee attack sheet." },
       { "offset": 17, "name": "ranged_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_s.s32` ranged attack sheet." },
       { "offset": 18, "name": "type_flags", "type": "uint32", "notes": "Recovered flag word. Bit0 marks flying/airborne units; another bit still controls the 6-vs-10 initialization path at slot +11." },
@@ -173,12 +173,13 @@
     "kind": "player_runtime_record",
     "base_offset": 140024,
     "stride": 1423,
-    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, controller settings, religion/visibility state, camera positions, queen state, and the deferred prisoner-placement queue.",
+    "description": "Per-player runtime state block embedded in gameData. Campaign, skirmish, and mission loaders reset this block before seeding player names, minimap/camera UI state, controller settings, religion/visibility state, queen state, and the deferred prisoner-placement queue.",
     "fields": [
       { "offset": 0, "name": "is_active", "type": "int32", "notes": "Set to 1 when a scenario loader enables this player slot; zeroed by `PlayerRuntimeState_ResetDefaults` for unused slots." },
       { "offset": 4, "name": "display_name", "type": "char[11]", "notes": "Localized/player-entered ruler name copied in both campaign loaders and the multiplayer setup menu." },
       { "offset": 15, "name": "camera_left", "type": "int32", "notes": "Saved strategic-map camera X position restored when this player becomes the viewed player." },
       { "offset": 19, "name": "camera_top", "type": "int32", "notes": "Saved strategic-map camera Y position paired with `camera_left`." },
+      { "offset": 23, "name": "minimap_visible_flag", "type": "int32", "notes": "Per-player minimap visibility latch. The minimap show/hide/toggle actions update it, and minimap blits, hit-tests, and viewport dragging all early-out when it is clear." },
       { "offset": 27, "name": "controller_mode", "type": "int32", "notes": "Multiplayer setup writes values 0, 1, or 2 here before `Scenario_LoadMultiplayerMapAndSeedPlayers`; many gameplay paths treat nonzero as locally controlled/human-visible." },
       { "offset": 39, "name": "religion_flag", "type": "int32", "notes": "Boolean religious alignment flag. Religious-site entry checks and castle upgrade labels branch on this dword to choose the shrine-vs-cult and Christian-vs-pagan behavior." },
       { "offset": 47, "name": "tech_level", "type": "uint8", "notes": "Player-wide technology tier. New castles inherit its low three bits into `BuildingRecord.tech_level_bits`, technology progression raises it via the global upgrade check, and the tech-level notification helper compares it against `last_reported_tech_level`." },
@@ -194,6 +195,7 @@
     "evidence": [
       "`PlayerRuntimeState_ResetDefaults` clears a 1423-byte region, restores the default `doc` name at offset `+4`, and initializes the first byte of each embedded 6-byte prisoner-queue entry to `-1`.",
       "Campaign and skirmish setup code copies five 1423-byte records into `gameData + 140024`, then `Scenario_LoadMultiplayerMapAndSeedPlayers` reads enabled flags, controller settings, and player names from that region while seeding the loaded map.",
+      "`MiniMap_ToggleVisibility`, `MiniMap_ShowAllLayers`, `MiniMap_ShowUnitsOnly`, `MiniMap_ShowBuildingsOnly`, and `MiniMap_Hide` all read or write the dword at offset `+23`, while `MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_IsCursorInside`, and `MiniMap_UpdateViewportFromCursor` all early-out on the same field for the viewed player.",
       "Religious-site entry rules and castle-construction labels read the dword at offset `+39` to choose the shrine-vs-cult / Christian-vs-pagan branch, so the field is a stable per-player religion/alignment flag.",
       "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
       "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
@@ -286,6 +288,54 @@
     ]
   },
   {
+    "name": "BattleRuntimeState",
+    "kind": "battle_state_region",
+    "base_symbol": "dword_532048",
+    "description": "Transient tactical-battle runtime block allocated by `Battle_RunTacticalCombat` and reused by the battle turn loop, render helpers, and result-capture path.",
+    "fields": [
+      { "offset": 800, "name": "battlefield_height_tiles", "type": "int32", "notes": "Battlefield height used by tactical movement/pathing bounds checks and viewport clamping." },
+      { "offset": 804, "name": "battlefield_width_tiles", "type": "int32", "notes": "Battlefield width paired with `battlefield_height_tiles` for movement/pathing bounds and viewport clamping." },
+      { "offset": 808, "name": "view_left_tile", "type": "int32", "notes": "Left edge of the visible 7x7 tactical viewport." },
+      { "offset": 812, "name": "view_top_tile", "type": "int32", "notes": "Top edge of the visible 7x7 tactical viewport." },
+      { "offset": 836, "name": "attacker_owner_player_index", "type": "int32", "notes": "Player id for one battle side; result packing and battle-side comparisons use this dword when splitting survivors between the two formations." },
+      { "offset": 840, "name": "defender_owner_player_index", "type": "int32", "notes": "Player id for the opposing battle side and the owner used by the port/castle-style side-specific battle UI branches." },
+      { "offset": 844, "name": "special_lead_owner_player_index", "type": "int32", "notes": "Optional owner id for the side whose leader is manually leading the troops; exact zero/non-zero conventions are still battle-setup specific." },
+      { "offset": 852, "name": "battle_unit_entries[22]", "type": "BattleUnitEntry[22]", "notes": "22 tactical-battle unit entries, each 31 bytes wide, holding per-battle slot state such as type, owner, AP, quantity, coordinates, facing, path pointer, and current animation state." },
+      { "offset": 1534, "name": "tile_occupant_ids[20][20]", "type": "int16[20][20]", "notes": "Per-battle-tile occupant index grid; `-1` marks an empty tile." },
+      { "offset": 2334, "name": "tile_effect_overlay[20][20][2]", "type": "uint8[20][20][2]", "notes": "Per-tile battle overlay/effect bytes used by death, ranged-hit, and footprint redraw helpers." },
+      { "offset": 3134, "name": "wall_section_hitpoints[20][20]", "type": "uint8[20][20]", "notes": "Per-wall-tile durability grid. `UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI loops read or subtract these bytes when breaching castle walls." },
+      { "offset": 3944, "name": "selected_unit_index_by_player[5]", "type": "int32[5]", "notes": "Per-player tactical selection state used to choose the initial active unit when each side's turn begins." }
+    ],
+    "evidence": [
+      "`Battle_RunTacticalCombat` allocates and seeds the block, then `HandleBattleResults` reads side ids from offsets `+836` and `+840` while copying the final 22 battle-unit entries back out.",
+      "`UnitBattle_RunTurnLoop` restores the tactical viewport from offsets `+808` and `+812`, resolves the selected unit from the per-player indices at `+3944`, and then drives the active-turn input loop over the same runtime block.",
+      "`UnitBattle_MoveTrack`, `UnitBattle_Attack`, and the battle redraw helpers all treat offset `+852` as the base of the 31-byte tactical unit-entry array and offset `+1534` as the 20x20 occupant grid.",
+      "`UnitBattle_AttackWall`, `UnitBattle_ShotWall`, and the siege AI command loops index `battle_state + 3134 + 20 * column + row` as a mutable byte grid whose values drop to zero when wall sections collapse, proving a dedicated per-tile wall-hitpoint plane inside the same runtime block.",
+      "The battle tooltip, death animation, and hit/recoil helpers also index the contiguous overlay bytes beginning at `+2334`, proving one shared tactical-state region rather than scattered globals."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogState",
+    "kind": "global_state_region",
+    "base_symbol": "g_BuildingGarrisonDialogUseChrTheme",
+    "description": "Localized building-garrison dialog state shared by the slot-grid, selected-unit detail pane, and delayed `Leave barracks` exit flow.",
+    "fields": [
+      { "offset": 0, "name": "use_chr_theme", "type": "int32", "notes": "Theme flag that selects the `castle_chr_*` versus `castle_pog_*` art family when the dialog is rebuilt after production." },
+      { "offset": 4, "name": "active_building", "type": "int32", "notes": "Pointer/index to the currently displayed building record whose 12 garrison slots populate the dialog." },
+      { "offset": 12, "name": "selected_slots[12]", "type": "int32[12]", "notes": "Per-slot selection flags consumed by the repair, training, and exit callbacks." },
+      { "offset": 60, "name": "selected_slot_index", "type": "int32", "notes": "Currently focused slot used by the right-hand detail pane; `-1` disables the selected-unit panel." },
+      { "offset": 64, "name": "selected_unit_sprite_set", "type": "int32", "notes": "Sprite-set handle for the selected-unit detail animation." },
+      { "offset": 68, "name": "selected_unit_anim_frame", "type": "int32", "notes": "Current animation frame for the selected-unit detail sprite, advanced modulo 8." },
+      { "offset": 72, "name": "slot_sprite_sets[12]", "type": "int32[12]", "notes": "Per-slot sprite-set handles used by the left-hand 12-slot garrison grid." },
+      { "offset": 168, "name": "pending_exit_countdown", "type": "int32", "notes": "Non-zero while the staged `Leave barracks` exit animation/countdown is in progress." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_DrawSlotGrid`, `BuildingGarrisonDialog_DrawSelectedUnitPanel`, and the repair/training callbacks all index the same active building and selected-slot state through the contiguous globals beginning at `0x53214C`.",
+      "`BuildingGarrisonDialog_ReloadSlotSprite` and `BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites` own the per-slot and selected-unit sprite handles inside the same region, while `BuildingGarrisonDialog_AnimateSelectedUnit` advances the adjacent selected-unit frame dword.",
+      "`BuildingGarrisonDialog_BeginSelectedUnitsExit` starts the delayed leave flow by seeding `pending_exit_countdown`, and `BuildingGarrisonDialog_TickExitCountdown` consumes that counter before dispatching `Building_UnitsLeave`."
+    ]
+  },
+  {
     "name": "PortSpawnOffset",
     "kind": "table_record",
     "base_symbol": "g_PortSupplySpawnRowOffsets / g_PortSupplySpawnColumnOffsets",
@@ -321,6 +371,27 @@
       "`Tooltip_CaptureBackdrop` allocates the surface at the base symbol, stores the capture rectangle across the next four dwords, and records the active draw/resource handle before returning.",
       "`Tooltip_ShowText` and `Tooltip_RestoreBackdrop` both restore the exact same rectangle from that contiguous dword cluster, proving the block is stable shared tooltip state rather than temporary locals.",
       "`Tooltip_ReleaseBackdropSurface` frees the base surface pointer during strategic and battle teardown, while `Tooltip_SetResourceHandle` mutates only the handle field at offset `+20`, corroborating one contiguous tooltip state region."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingGarrisonDialogUseChrTheme / g_BuildingGarrisonDialogActiveBuilding / g_BuildingGarrisonDialogSelectedSlots / g_BuildingGarrisonDialogSelectedSlotIndex / g_BuildingGarrisonDialogSelectedUnitSpriteSet / g_BuildingGarrisonDialogSelectedUnitAnimFrame / g_BuildingGarrisonDialogSlotSpriteSets / g_BuildingGarrisonDialogPendingExitCountdown",
+    "description": "Transient shared UI state for the building/castle garrison dialog. The dialog uses one coherent region for theme selection, the active building pointer, slot selection, detail-panel sprite state, per-slot sprite handles, and the delayed leave-barracks countdown.",
+    "fields": [
+      { "offset": 0, "name": "use_chr_theme", "type": "int32", "notes": "Selects the `castle_chr` versus `castle_pog` asset/theme branch when the dialog is rebuilt." },
+      { "offset": 4, "name": "active_building_ptr", "type": "BuildingRecord *", "notes": "Building record currently shown in the dialog; all slot-grid, production, repair, training, and leave-barracks helpers dereference this pointer." },
+      { "offset": 12, "name": "selected_slots[12]", "type": "int32[12]", "notes": "Shared 12-slot selection array toggled by slot-click logic and consumed by the repair/training/leave actions." },
+      { "offset": 60, "name": "selected_slot_index", "type": "int32", "notes": "Currently highlighted garrison slot index used by the detail panel and sprite reloaders." },
+      { "offset": 64, "name": "selected_unit_sprite_set", "type": "int32", "notes": "Sprite-set handle used by the selected-unit detail panel." },
+      { "offset": 68, "name": "selected_unit_anim_frame", "type": "int32", "notes": "Current animation frame for the selected-unit detail sprite." },
+      { "offset": 72, "name": "slot_sprite_sets[12]", "type": "int32[12]", "notes": "Per-slot sprite-set handles used by the 12-cell garrison grid." },
+      { "offset": 168, "name": "pending_exit_countdown", "type": "int32", "notes": "Non-zero while the leave-barracks countdown is active; the grid overlays countdown art from this value and the timed updater dispatches `Building_UnitsLeave` when it expires." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_DrawSlotGrid`, `BuildingGarrisonDialog_DrawSelectedUnitPanel`, `BuildingGarrisonDialog_ShowProductionDialog`, `BuildingGarrisonDialog_ToggleRepairSelectedUnits`, `BuildingGarrisonDialog_ToggleTrainingSelectedUnits`, and `BuildingGarrisonDialog_BeginSelectedUnitsExit` all converge on the same cluster of globals instead of independent locals.",
+      "The selected-slot array, selected-slot index, selected detail sprite set/frame, and the 12 per-slot sprite handles are all updated and consumed together by the draw and animation helpers, proving one coherent dialog-state family.",
+      "Aristotle's asm pass matched the same region to the hidden dialog runner, confirming that the theme flag, active building pointer, selection state, sprite handles, and exit countdown are initialized and cleared as one modal UI block."
     ]
   },
   {
@@ -442,6 +513,45 @@
     ]
   },
   {
+    "name": "BuildingGarrisonDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingGarrisonDialogUseChrTheme / g_BuildingGarrisonDialogActiveBuilding / g_BuildingGarrisonDialogSelectedSlots / g_BuildingGarrisonDialogSelectedSlotIndex / g_BuildingGarrisonDialogSelectedUnitSpriteSet / g_BuildingGarrisonDialogSelectedUnitAnimFrame / g_BuildingGarrisonDialogSlotSpriteSets / g_BuildingGarrisonDialogPendingExitCountdown",
+    "description": "Transient shared state for the building-garrison modal dialog. The asm runner at `loc_433C20` seeds the active building, theme flag, selection arrays, slot sprite handles, selected-unit sprite handle, and leave-countdown state before the dialog action loop starts.",
+    "fields": [
+      { "offset": 0, "name": "use_chr_theme", "type": "int32", "notes": "Boolean-like flag selecting the `castle.chr\\dw_12...` asset family instead of `castle.pog\\dw_12...` when the dialog is rebuilt." },
+      { "offset": 4, "name": "active_building_ptr", "type": "BuildingRecord *", "notes": "Building record currently shown in the dialog; every action callback dereferences this pointer for garrison slots, add-on flags, and exit/repair/train actions." },
+      { "offset": 8, "name": "selected_slots[12]", "type": "int32[12]", "notes": "Twelve-entry slot-selection bitset shared by the slot-grid renderer, multi-select limit helper, and the repair/training/leave callbacks." },
+      { "offset": 56, "name": "selected_slot_index", "type": "int32", "notes": "Focused slot index used by the selected-unit detail panel and the detail-sprite reload path; `-1` means no current focus." },
+      { "offset": 60, "name": "selected_unit_sprite_set", "type": "int32", "notes": "Current selected-unit sprite-set handle drawn by `BuildingGarrisonDialog_DrawSelectedUnitPanel` and rebuilt by `BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites`." },
+      { "offset": 64, "name": "selected_unit_anim_frame", "type": "int32", "notes": "Current animation frame for the selected-unit sprite, advanced modulo 8 by `BuildingGarrisonDialog_AnimateSelectedUnit`." },
+      { "offset": 68, "name": "slot_sprite_sets[12]", "type": "int32[12]", "notes": "Per-slot sprite-set handles for the 12 visible garrison cells. Rebuilt wholesale by `BuildingGarrisonDialog_RebuildSlotSprites` and individually by `BuildingGarrisonDialog_ReloadSlotSprite`." },
+      { "offset": 116, "name": "pending_exit_countdown", "type": "int32", "notes": "Non-zero while `Leave barracks` is counting down. The slot-grid renderer overlays countdown sprites from this value and the timed exit helper clears it after `Building_UnitsLeave` fires." }
+    ],
+    "evidence": [
+      "The asm runner at `loc_433C20` writes `dword_532150`, `dword_53214C`, zeroes `dword_53218C`, clears `dword_532194` and `dword_532158`, initializes slot-frame state, and seeds `dword_5321F4`/`dword_532188` before loading the dialog artwork and action table.",
+      "The recovered callbacks `BuildingGarrisonDialog_DrawSlotGrid`, `BuildingGarrisonDialog_DrawSelectedUnitPanel`, `BuildingGarrisonDialog_ToggleRepairSelectedUnits`, `BuildingGarrisonDialog_ToggleTrainingSelectedUnits`, and `BuildingGarrisonDialog_BeginSelectedUnitsExit` all share this same global cluster, proving one cohesive dialog-state region rather than unrelated temporaries.",
+      "The production-dialog return path reuses the same theme flag, action table, selected-unit sprite handle, and slot-sprite handles when reconstructing the garrison screen, independently confirming the field boundaries."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogActionsTable",
+    "kind": "ui_action_table",
+    "base_symbol": "BuildingGarrisonDialogActions",
+    "description": "Localized action-box descriptor table for the building-garrison modal dialog.",
+    "fields": [
+      { "offset": 0, "name": "back_action", "type": "ActionBoxEntry", "notes": "Localized `Back/Koniec/Zuruck` button wired to `BuildingGarrisonDialog_RequestClose`." },
+      { "offset": 1, "name": "production_action", "type": "ActionBoxEntry", "notes": "Localized `Production` button wired to `BuildingGarrisonDialog_ShowProductionDialog`." },
+      { "offset": 2, "name": "repair_action", "type": "ActionBoxEntry", "notes": "Localized `Cure/Leczenie` button wired to `BuildingGarrisonDialog_ToggleRepairSelectedUnits`." },
+      { "offset": 3, "name": "training_action", "type": "ActionBoxEntry", "notes": "Localized `Training/Trening` button wired to `BuildingGarrisonDialog_ToggleTrainingSelectedUnits`." },
+      { "offset": 4, "name": "leave_action", "type": "ActionBoxEntry", "notes": "Localized `Leave barracks/Opusc koszary` button wired to `BuildingGarrisonDialog_BeginSelectedUnitsExit`." }
+    ],
+    "evidence": [
+      "The data block beginning at `dword_514FC0` contains five sequential localized action descriptors, each with a callback pointer matching one recovered garrison-dialog action handler.",
+      "The production-return path rebuilds the dialog by calling `sub_419D80(BuildingGarrisonDialogActions)`, proving the table is the live action-box descriptor block for this screen.",
+      "Asm strings inside the table directly expose the button labels `Back`, `Production`, `Cure`, `Training`, and `Leave barracks`, tightly matching the recovered callback behaviors."
+    ]
+  },
+  {
     "name": "CastleManagementScreenState",
     "kind": "ui_state_region",
     "base_symbol": "g_SelectedBuildingRecord / g_CastleScreenSurface / g_CastleSceneIconSpriteSet / g_CastleAmbientSpriteSet / g_CastleStatusSpriteSet / g_CastleScreenExitRequested / g_CastleDestroyConfirmed",
@@ -459,6 +569,79 @@
       "`Castle_OpenManagementScreen` seeds the selected-building pointer, loads all three sprite sets, allocates the screen surface, clears both exit flags, and then drives the modal loop through those globals.",
       "`Castle_RebuildSceneBuffers`, `Castle_RenderCompositeSceneLayers`, `Castle_DrawStatusPanel`, and `Castle_UpdateAmbientAnimationLayers` all read the same selected-building pointer and sprite/surface globals, proving they belong to one castle-screen runtime region.",
       "`Castle_ConfirmDestroyCurrentBuilding` sets both `destroy_confirmed` and `exit_requested`, and the screen runner checks those same flags after the loop to decide whether to continue with the destroy flow."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogActions",
+    "kind": "ui_action_table",
+    "base_symbol": "BuildingGarrisonDialogActions / dword_514FC0",
+    "description": "Recovered action-box descriptor table for the building garrison dialog. The current decompiler emits only the first dword triplet cleanly, but the callback wiring and localized button labels prove the table drives the `Back`, `Production`, `Cure`, `Training`, and `Leave barracks` actions.",
+    "fields": [
+      { "offset": 0, "name": "action_box_descriptor_head", "type": "uint32[3]", "notes": "Current decompiled head triplet. The surrounding action records remain overlapped, so this catalog keeps the table conservative instead of fabricating a complete struct layout." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_ShowProductionDialog` rebuilds the screen by passing the renamed table into `sub_419D80`, which is the same action-box builder used by other modal UI screens.",
+      "Asm-backed subagent evidence tied the callback family to the localized garrison actions `Back`, `Production`, `Cure`, `Training`, and `Leave barracks`, confirming that the table is the dialog's action descriptor block rather than generic castle state."
+    ]
+  },
+  {
+    "name": "MiniMapState",
+    "kind": "ui_state_region",
+    "base_symbol": "word_523344 / word_523346 / word_523348 / word_52334A / dword_52334C / byte_523F54 / dword_523F50 / dword_511FF0",
+    "description": "Shared minimap runtime state. The create/draw/blit helpers treat these globals as one coherent subsystem covering the minimap screen rect, backing surface, pixel scale, terrain-color lookup, and enabled draw layers.",
+    "fields": [
+      { "offset": 0, "name": "screen_left", "type": "int16", "notes": "Actual symbol `word_523344`. Left edge of the minimap on the main UI." },
+      { "offset": 2, "name": "screen_top", "type": "int16", "notes": "Actual symbol `word_523346`. Top edge of the minimap on the main UI." },
+      { "offset": 4, "name": "screen_width", "type": "int16", "notes": "Actual symbol `word_523348`. Width of the minimap surface in pixels." },
+      { "offset": 6, "name": "screen_height", "type": "int16", "notes": "Actual symbol `word_52334A`. Height of the minimap surface in pixels." },
+      { "offset": 8, "name": "surface_handle", "type": "RenderSurface *", "notes": "Actual symbol `dword_52334C`. Backing surface allocated by `MiniMap_CreateSurface` and blitted by the dirty-rect helper." },
+      { "offset": 12, "name": "pixels_per_tile", "type": "uint8", "notes": "Actual symbol `byte_523F54`. Dynamic minimap scale chosen from the world dimensions." },
+      { "offset": 16, "name": "terrain_color_table_ptr", "type": "uint8 *", "notes": "Actual symbol `dword_523F50`. Lookup used by the minimap tile-cell renderer when painting terrain colors." },
+      { "offset": 20, "name": "draw_layer_mask", "type": "uint32", "notes": "Actual symbol `dword_511FF0`. Bitmask controlling whether terrain, units, and buildings contribute to the minimap cell color." }
+    ],
+    "evidence": [
+      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, and seeds the terrain-color lookup state.",
+      "`MiniMap_DrawTileCell` consults the draw-layer mask, terrain-color lookup, unit occupancy, building occupancy, and fog-of-war to paint a single minimap cell.",
+      "`MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_RedrawTileRect`, `MiniMap_RedrawAllTiles`, `MiniMap_UpdateViewportFromCursor`, and `MiniMap_IsCursorInside` all use the same rect/surface/scale globals, proving one coherent minimap state block."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_BuildingGarrisonDialogUseChrTheme / g_BuildingGarrisonDialogActiveBuilding / g_BuildingGarrisonDialogSelectedSlots / g_BuildingGarrisonDialogSelectedSlotIndex / g_BuildingGarrisonDialogSelectedUnitSpriteSet / g_BuildingGarrisonDialogSelectedUnitAnimFrame / g_BuildingGarrisonDialogSlotSpriteSets / g_BuildingGarrisonDialogPendingExitCountdown",
+    "description": "Contiguous shared state region for the building garrison dialog. The dialog helpers treat the block around `dword_53214C..dword_5321F4` as one stable modal-state cluster covering theme choice, active building, selection state, selected-unit sprite state, slot sprite sets, and the pending leave-barracks countdown.",
+    "fields": [
+      { "offset": 0, "name": "use_chr_theme", "type": "int32", "notes": "Chooses between the `castle_chr` and `castle_pog` resource families when the dialog rebuilds its art." },
+      { "offset": 4, "name": "active_building_ptr", "type": "BuildingRecord *", "notes": "Building currently shown in the dialog. All slot, repair, training, and leave callbacks dereference this pointer." },
+      { "offset": 8, "name": "unnamed_resource_state", "type": "int32", "notes": "Adjacent dialog resource/surface state used heavily by the renderer. This batch left it unnamed because its exact role is not yet strong enough." },
+      { "offset": 12, "name": "selected_slots[12]", "type": "int32[12]", "notes": "Shared selection bitmap for the 12 barracks slots." },
+      { "offset": 60, "name": "selected_slot_index", "type": "int32", "notes": "Focused slot index used by the detail-panel renderer and detail-sprite reload path." },
+      { "offset": 64, "name": "selected_unit_sprite_set", "type": "int32", "notes": "Sprite-set handle for the currently focused garrison unit." },
+      { "offset": 68, "name": "selected_unit_animation_frame", "type": "int32", "notes": "Animation frame advanced modulo eight by the selected-unit animation tick." },
+      { "offset": 72, "name": "slot_sprite_sets[12]", "type": "int32[12]", "notes": "Per-slot sprite-set handles used by the slot-grid renderer." },
+      { "offset": 120, "name": "unnamed_slot_animation_state[24]", "type": "int32[24]", "notes": "Adjacent per-slot animation/timing state. It is clearly part of the same modal block, but this pass did not freeze more specific names." },
+      { "offset": 168, "name": "pending_exit_countdown", "type": "int32", "notes": "Countdown armed by `BuildingGarrisonDialog_BeginSelectedUnitsExit` and consumed by `BuildingGarrisonDialog_TickExitCountdown` before calling `Building_UnitsLeave`." }
+    ],
+    "evidence": [
+      "`BuildingGarrisonDialog_DrawSlotGrid`, `BuildingGarrisonDialog_DrawSelectedUnitPanel`, and the repair/training/exit callbacks all share the same globals for active building, selection state, and pending-exit countdown.",
+      "`BuildingGarrisonDialog_ReloadSelectedUnitDetailSprites` and `BuildingGarrisonDialog_AnimateSelectedUnit` prove that the selected-unit sprite handle and animation frame are stable shared modal state, not temporary locals.",
+      "Asm-backed subagent evidence tied the same address range to the dialog runner setup and teardown, confirming that these globals belong to one building-garrison dialog state region."
+    ]
+  },
+  {
+    "name": "MergedTerrainMoveProfile",
+    "kind": "runtime_helper_record",
+    "base_symbol": "UnitTypeMetadataRecord + 29 / stack-local buffers built by UnitStack_BuildMergedTerrainMoveProfile",
+    "size": 9,
+    "description": "Nine-byte movement-cost slice shared between each unit-type metadata record and the temporary stack-local profile buffers used by world-map pathfinding.",
+    "fields": [
+      { "offset": 0, "name": "road_or_bridge_move_cost", "type": "uint8", "notes": "Road/bridge movement cost returned directly when the tile record carries a road or bridge overlay." },
+      { "offset": 1, "name": "terrain_move_costs[8]", "type": "uint8[8]", "notes": "Per-terrain movement costs indexed through `g_TerrainMoveProfileOffsets[*terrain_tile_id]` when the tile has no road overlay." }
+    ],
+    "evidence": [
+      "`UnitStack_BuildMergedTerrainMoveProfile` iterates the occupied 31-byte squad slots, loads each member's metadata record, and merges bytes `+29..+37` into an 88-byte temporary buffer.",
+      "`UnitStack_GetTileMoveCostFromMergedProfileOrZero` consumes that temporary buffer without rebuilding it, reading byte `29` for road/bridge overlays and bytes `30..37` for terrain-specific costs.",
+      "The merge logic keeps the highest non-zero cost for each byte and collapses to zero when any member contributes zero, so a stack moves at the slowest traversable rate of its constituent unit types and becomes impassable where any member cannot enter."
     ]
   }
 ]
