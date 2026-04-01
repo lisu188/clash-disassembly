@@ -30,9 +30,9 @@
 #define MAP_VIEW_TOP_OFFSET 140012
 #define PORT_ROW_OFFSET 586374
 #define PORT_COLUMN_OFFSET 586378
-#define PORT_NEXT_SUPPLY_TURN_OFFSET 586382
-#define PORT_SUPPLY_READY_FLAG_OFFSET 586386
-#define PORT_SUPPLY_UNIT_COUNT_OFFSET 586390
+#define PORT_NEXT_REINFORCEMENT_TURN_OFFSET 586382
+#define PORT_REINFORCEMENT_READY_FLAG_OFFSET 586386
+#define PORT_REINFORCEMENT_UNIT_COUNT_OFFSET 586390
 #define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
 #define BUILDING_RECORD_SIZE 467
 #define BUILDING_TABLE_OFFSET 509674
@@ -80,7 +80,7 @@
 #define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
 #define g_SettlementTaxBurdenThresholds byte_515D00
-#define g_PortSupplySpawnRingOffsets ((PortSpawnOffset *)dword_517B48)
+#define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)dword_517B48)
 #define g_PrisonerDeathByExhaustionTexts off_518D98
 #define g_QueenSonBirthTexts off_519350
 #define g_QueenDaughterBirthTexts off_51935C
@@ -114,9 +114,9 @@
 #define VIEWED_PLAYER_INDEX (*(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET))
 #define PORT_ROW (*(_DWORD *)(gameData + PORT_ROW_OFFSET))
 #define PORT_COLUMN (*(_DWORD *)(gameData + PORT_COLUMN_OFFSET))
-#define PORT_NEXT_SUPPLY_TURN (*(_DWORD *)(gameData + PORT_NEXT_SUPPLY_TURN_OFFSET))
-#define PORT_SUPPLY_READY_FLAG (*(_DWORD *)(gameData + PORT_SUPPLY_READY_FLAG_OFFSET))
-#define PORT_SUPPLY_UNIT_COUNT (*(_DWORD *)(gameData + PORT_SUPPLY_UNIT_COUNT_OFFSET))
+#define PORT_NEXT_REINFORCEMENT_TURN (*(_DWORD *)(gameData + PORT_NEXT_REINFORCEMENT_TURN_OFFSET))
+#define PORT_REINFORCEMENT_READY_FLAG (*(_DWORD *)(gameData + PORT_REINFORCEMENT_READY_FLAG_OFFSET))
+#define PORT_REINFORCEMENT_UNIT_COUNT (*(_DWORD *)(gameData + PORT_REINFORCEMENT_UNIT_COUNT_OFFSET))
 #define PORT_SHORE_VARIANT_FLAG (*(_DWORD *)(gameData + PORT_SHORE_VARIANT_FLAG_OFFSET))
 #define BUILDING_RECORD(index) (gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (index))
 #define UNIT_RECORD_SIZE BUILDING_RECORD_SIZE
@@ -366,7 +366,7 @@ extern unsigned char unk_5146C0[];
 extern char *off_514834[];
 extern int dword_517B48[];
 extern int dword_517B4C[];
-extern int g_PortSupplyUnitTypePool[];
+extern int g_PortReinforcementUnitTypePool[];
 extern unsigned char unk_517BF0[];
 extern unsigned char unk_517CE0[];
 extern unsigned char unk_517DB8[];
@@ -822,7 +822,7 @@ BOOL  Building_CanStartUpgrade(unsigned __int8 *a1);
 BOOL  Building_TryStartUpgrade(unsigned __int8 *a1);
 _DWORD * Unit_CaptureBuilding(int a1, DWORD a2, int a3, signed int j, double a5);
 _DWORD * Building_Destroy(int a1, char a2, DWORD a3, double a4);
-int  Unit_CalcRestTurns(int a1);
+int  Building_CalcRemainingConstructionTurns(int a1);
 signed int  Building_FindRandomOwnedCompletedCastle();
 void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3);
 int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double a4);
@@ -1055,10 +1055,10 @@ signed int __fastcall sub_43A880(int a1, int a2);
 signed int  sub_43A8B0(int a1, int a2);
 int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4);
 int  sub_43BE50(int a1, int a2, DWORD a3);
-signed int  sub_43C1E0(int a1);
+signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1);
 signed int  sub_43C6B0(int a1, signed int a2);
 void sub_43CB80();
-signed int  sub_43CC50(int a1, signed int a2);
+signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2);
 signed int  sub_43CD00(unsigned __int8 a1);
 _DWORD * sub_43CF50(_DWORD *result);
 int  sub_43CF60(int result, char a2);
@@ -1076,10 +1076,10 @@ int  sub_43D1E0(WCIsvListBase *this, int a2);
 signed int  sub_43D220(int a1, int a2);
 int  sub_43D250(int a1, int a2);
 int  sub_43D280(_DWORD *a1, _DWORD *a2);
-int  sub_43D2D0(char *a1, int a2, char *a3, int a4, int a5);
-int  sub_43D430(int a1, int a2, unsigned __int8 a3);
+int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int a5);
+int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3);
 signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4);
-int  sub_43D6E0(unsigned __int8 a1, int a2);
+int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2);
 int  sub_43D8C0(int a1, int a2);
 int  sub_43D8E0(int a1, int a2, DWORD a3);
 int  sub_43DAC0(int a1, int a2);
@@ -1184,7 +1184,7 @@ int Port_FindAndInit();
 _DWORD *Rules_LogPortLocation();
 int  Port_NewTurn(DWORD a1);
 int Port_UpdateShorelineVariantTiles();
-int Port_IsSupplyReady();
+int Port_IsReinforcementReady();
 int * Port_GenerateApproachTrack(int a1);
 int  Port_CollectReinforcementShipment(int, char, DWORD, double);
 void * UI_DrawPortStatusPanel(char a1, DWORD a2);
@@ -4553,7 +4553,6 @@ BOOL __stdcall SetEnvironmentVariableW(LPCWSTR lpName, LPCWSTR lpValue);
 void __stdcall SetLastError(DWORD dwErrCode);
 // BOOL __stdcall SetThreadPriority(HANDLE hThread, int nPriority);
 LPTOP_LEVEL_EXCEPTION_FILTER __stdcall SetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
-void __stdcall Sleep(DWORD dwMilliseconds);
 DWORD __stdcall SuspendThread(HANDLE hThread);
 // DWORD __stdcall TlsAlloc();
 BOOL __stdcall TlsFree(DWORD dwTlsIndex);
@@ -8644,13 +8643,13 @@ __int16 g_UnitTypeProductionLicenceCost[] = { 0 }; // weak
 char g_UnitTypeProductionRequiredTechLevelMode2[] = { '\x01' }; // weak
 char g_UnitTypeProductionRequiredTechLevelOtherModes[] = { '\x01' }; // weak
 char g_UnitTypeRole[] = { '\0' }; // weak
-char byte_5125B6[] = { '\0' }; // weak
+char g_UnitTypeCorpseSpriteBaseIndex[] = { '\0' }; // weak
 char byte_5125B7[] = { '\x03' }; // weak
 char byte_5125B8[] = { '\0' }; // weak
 char *g_UnitMoveSoundStems = "b_lekkie\\krokb"; // weak
 char g_UnitMoveSoundVariantCounts[] = { '\x04' }; // weak
 char g_UnitMoveSoundBaseVolumes[] = { '\n' }; // weak
-char byte_512B58 = '\x1A'; // weak
+char g_BuilderConstructionProgressPerTurn = '\x1A'; // weak
 char *off_513328[3] = { "pol\\", "eng\\", "ger\\" }; // weak
 int Map_NeighborDX[] = { 0 }; // weak
 int Map_NeighborDY[63] =
@@ -9687,7 +9686,7 @@ _DWORD dword_515A90[3] = { 39, 426, 1 }; // weak
 _DWORD dword_515B10[3] = { 39, 426, 1 }; // weak
 _DWORD dword_515B90[3] = { 39, 426, 1 }; // weak
 _DWORD dword_515C10[3] = { 39, 426, 1 }; // weak
-char Building_AddonWhitelist[16] =
+char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
 {
   '\x02',
   '\x04',
@@ -9706,7 +9705,7 @@ char Building_AddonWhitelist[16] =
   '\0',
   '\0'
 }; // weak
-char Building_AddonBlacklist[8] = { '\t', '\n', '\f', '\r', '\x0F', '\xFF', '\0', '\0' }; // weak
+char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = { '\t', '\n', '\f', '\r', '\x0F', '\xFF', '\0', '\0' }; // weak
 _UNKNOWN unk_515C98; // weak
 char byte_515D00[16] =
 {
@@ -21396,9 +21395,8 @@ void MiniMap_RedrawAllTiles()
       MiniMap_DrawTileCell(v0, i);
     ++v0;
   }
-  JUMPOUT(0x40D410);
+  return;
 }
-// 40D86A: control flows out of bounds to 40D410
 // 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
@@ -33467,8 +33465,8 @@ unsigned __int8 * Building_NewTurn(
               v11 = *(__int16 *)(i + gameData + j + 509692);
               if ( v11 == 17 )
               {
-                v11 = (unsigned __int8)byte_512B58;
-                v9 += (unsigned __int8)byte_512B58;
+                v11 = (unsigned __int8)g_BuilderConstructionProgressPerTurn;
+                v9 += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
               }
             }
             *(_WORD *)(i + gameData + 509690) -= v9;
@@ -33515,7 +33513,7 @@ unsigned __int8 * Building_NewTurn(
 // 41EB74: variable 'v7' is possibly undefined
 // 41EBFF: variable 'a4' is possibly undefined
 // 41EC2E: variable 'v12' is possibly undefined
-// 512B58: using guessed type char byte_512B58;
+// 512B58: using guessed type char g_BuilderConstructionProgressPerTurn;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -34141,7 +34139,7 @@ LABEL_3:
 // 5202E4: using guessed type int gameData;
 
 //----- (0041FD10) --------------------------------------------------------
-int  Unit_CalcRestTurns(int a1)
+int  Building_CalcRemainingConstructionTurns(int a1)
 {
   int v1; // esi
   int v2; // ebx
@@ -34155,7 +34153,7 @@ int  Unit_CalcRestTurns(int a1)
   do
   {
     if ( *(_WORD *)(a1 + 18) == 17 )
-      v3 += (unsigned __int8)byte_512B58;
+      v3 += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
     a1 += 31;
   }
   while ( a1 != v2 );
@@ -34164,7 +34162,7 @@ int  Unit_CalcRestTurns(int a1)
   else
     return 50;
 }
-// 512B58: using guessed type char byte_512B58;
+// 512B58: using guessed type char g_BuilderConstructionProgressPerTurn;
 
 //----- (0041FD70) --------------------------------------------------------
 signed int  Building_FindRandomOwnedCompletedCastle(a1, a2)
@@ -34482,7 +34480,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   UI_DrawTextFmt((int)v35, v13, v14, v48 + 32, 3, v36[(unsigned __int8)g_LanguageIndex]);
   v15 = v32[4 * *(char *)(v47 + 4) + (unsigned __int8)g_LanguageIndex];
   UI_DrawTextFmt(v15, v13, v16, v48 + 52, 3, v37[(unsigned __int8)g_LanguageIndex]);
-  v18 = Unit_CalcRestTurns(v47);
+  v18 = Building_CalcRemainingConstructionTurns(v47);
   v20 = v19 + 77;
   if ( v18 == 1 )
   {
@@ -39955,7 +39953,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
 //----- (004283D0) --------------------------------------------------------
 int  UnitBattle_GetCorpseSpriteIndex(__int16 *a1)
 {
-  return (unsigned __int8)byte_5125B6[88 * *a1] + (*((unsigned __int8 *)a1 + 3) + 4) % 8;
+  return (unsigned __int8)g_UnitTypeCorpseSpriteBaseIndex[88 * *a1] + (*((unsigned __int8 *)a1 + 3) + 4) % 8;
 }
 
 //----- (00428400) --------------------------------------------------------
@@ -44567,8 +44565,8 @@ LABEL_5:
   else
     v42 = (char *)(v74 + 18);
   v43 = (char *)(v81 + 3);
-  sub_43D2D0((char *)v81 + 6, v80, v42, dword_53206C, v40);
-  sub_43D2D0(v42, v41, v43, dword_532070, v80);
+  Battle_DeploySideUnitsByRoleBuckets((char *)v81 + 6, v80, v42, dword_53206C, v40);
+  Battle_DeploySideUnitsByRoleBuckets(v42, v41, v43, dword_532070, v80);
   UnitBattle_OverrideControllerOrderBits(*(_DWORD *)(dword_532048 + 836), v75, a6, *(_DWORD *)(dword_532048 + 840));
   if ( dword_53206C )
     v44 = 0;
@@ -48172,7 +48170,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   int v13; // [esp-Ch] [ebp-10h]
 
   sub_419F20(a1);
-  if ( !Building_BuyAddon(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
+  if ( !Building_BuyUnitLicence(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
     return sub_419F50(a1, v5);
   v13 = v5;
   sub_460D80((int)dword_544CD8, (int)&dword_519808);
@@ -52406,7 +52404,7 @@ LABEL_5:
 // 5437A4: using guessed type int dword_5437A4;
 
 //----- (0043C1E0) --------------------------------------------------------
-signed int  sub_43C1E0(int a1)
+signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
 {
   int v1; // edx
   int v2; // ecx
@@ -52898,7 +52896,7 @@ void sub_43CB80()
 // 5437B8: using guessed type int dword_5437B8;
 
 //----- (0043CC50) --------------------------------------------------------
-signed int  sub_43CC50(int a1, signed int a2)
+signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
 {
   int v2; // edx
 
@@ -52954,9 +52952,9 @@ signed int  sub_43CD00(unsigned __int8 a1)
   if ( *(_DWORD *)(dword_532048 + 828) != -1 )
     sub_43CB80();
   UnitBattle_UpdateIdleAnimatedUnits();
-  dword_515A10 = sub_43CC50(a1, a1);
+  dword_515A10 = UnitBattle_SelectAiPlanMode(a1, a1);
   UnitBattle_UpdateIdleAnimatedUnits();
-  sub_43C1E0(v3);
+  UnitBattle_BuildAiUnitQueueForCurrentMode(v3);
   UnitBattle_UpdateIdleAnimatedUnits();
   dword_5437AC = 0;
   switch ( dword_515A10 )
@@ -53006,10 +53004,10 @@ LABEL_8:
         sub_43D220((int)&dword_5437C0, v16);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
-      dword_515A10 = sub_43CC50(a1, a1);
+      dword_515A10 = UnitBattle_SelectAiPlanMode(a1, a1);
       UnitBattle_UpdateIdleAnimatedUnits();
       v2 = 0;
-      sub_43C1E0(v18);
+      UnitBattle_BuildAiUnitQueueForCurrentMode(v18);
       UnitBattle_UpdateIdleAnimatedUnits();
 LABEL_13:
       if ( !dword_5437C8 )
@@ -53398,7 +53396,7 @@ int  sub_43D280(_DWORD *a1, _DWORD *a2)
 // 50F134: using guessed type void *off_50F134;
 
 //----- (0043D2D0) --------------------------------------------------------
-int  sub_43D2D0(char *a1, int a2, char *a3, int a4, int a5)
+int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int a5)
 {
   int v5; // esi
   int v6; // edi
@@ -53466,8 +53464,8 @@ int  sub_43D2D0(char *a1, int a2, char *a3, int a4, int a5)
     v30 = v5 / v28;
   v24 = (float)v30;
   v19 = v24 < dbl_4F18A7 && (v24 <= dbl_4F18AF || SLODWORD(v25) > 1065353216);
-  sub_43D430((int)a1, a2, v19);
-  return sub_43D6E0(v20, a4);
+  Battle_BuildRoleDeploymentBuckets((int)a1, a2, v19);
+  return Battle_PlaceRoleDeploymentBuckets(v20, a4);
 }
 // 43D2D0: could not find valid save-restore pair for ebx
 // 43D307: variable 'v10' is possibly undefined
@@ -53481,7 +53479,7 @@ int  sub_43D2D0(char *a1, int a2, char *a3, int a4, int a5)
 // 4F18AF: using guessed type double dbl_4F18AF;
 
 //----- (0043D430) --------------------------------------------------------
-int  sub_43D430(int a1, int a2, unsigned __int8 a3)
+int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
 {
   int result; // eax
   __int16 *v4; // ecx
@@ -53585,7 +53583,7 @@ signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
 // 532048: using guessed type int dword_532048;
 
 //----- (0043D6E0) --------------------------------------------------------
-int  sub_43D6E0(unsigned __int8 a1, int a2)
+int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
 {
   int v2; // edi
   int v3; // ebx
@@ -54736,22 +54734,22 @@ BOOL  Building_IsUnitLicenceEligible(char *a1, int a2)
   {
     for ( i = 0; ; ++i )
     {
-      v8 = Building_AddonWhitelist[i];
+      v8 = g_ProductionLicenceSmithsRequiredUnitTypes[i];
       if ( v8 == -1 || v8 == a2 )
         break;
     }
-    if ( Building_AddonWhitelist[i] == a2 )
+    if ( g_ProductionLicenceSmithsRequiredUnitTypes[i] == a2 )
       return 0;
   }
   if ( (a1[416] & 4) != 0 )
     return 1;
   for ( j = 0; ; ++j )
   {
-    v11 = Building_AddonBlacklist[j];
+    v11 = g_ProductionLicenceWorkshopRequiredUnitTypes[j];
     if ( v11 == -1 || v11 == a2 )
       break;
   }
-  return Building_AddonBlacklist[j] != a2;
+  return g_ProductionLicenceWorkshopRequiredUnitTypes[j] != a2;
 }
 
 //----- (0043EDC0) --------------------------------------------------------
@@ -58240,7 +58238,7 @@ int Port_FindAndInit()
   PORT_ROW = -1;
   rowIndex = 0;
   rowOffset = 0;
-  PORT_SUPPLY_READY_FLAG = 0;
+  PORT_REINFORCEMENT_READY_FLAG = 0;
 LABEL_2:
   while ( 1 )
   {
@@ -58265,9 +58263,9 @@ LABEL_2:
     PORT_COLUMN = columnIndex;
     dataBase = gameData;
     PORT_SHORE_VARIANT_FLAG = 1;
-    PORT_SUPPLY_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
-    PORT_NEXT_SUPPLY_TURN = Rng_RandRange(8, 10);
-    PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
+    PORT_REINFORCEMENT_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
+    PORT_NEXT_REINFORCEMENT_TURN = Rng_RandRange(8, 10);
+    PORT_REINFORCEMENT_UNIT_COUNT = Rng_RandRange(3, 5);
     portColumnOffset = 14 * PORT_COLUMN;
     shoreTileId = *(unsigned __int16 *)(portColumnOffset + gameData + 1400 * PORT_ROW + 2);
     if ( shoreTileId == 726 || shoreTileId == 722 )
@@ -58317,7 +58315,7 @@ int  Port_NewTurn(DWORD a1)
 {
   int result; // eax
   int dataBase; // eax
-  int supplyArrivalTurn; // ebx
+  int reinforcementArrivalTurn; // ebx
   int logArg; // ecx
 
   result = gameData;
@@ -58325,15 +58323,15 @@ int  Port_NewTurn(DWORD a1)
   {
     PORT_SHORE_VARIANT_FLAG = 0;
     dataBase = gameData;
-    if ( !PORT_SUPPLY_READY_FLAG )
+    if ( !PORT_REINFORCEMENT_READY_FLAG )
     {
-      supplyArrivalTurn = PORT_NEXT_SUPPLY_TURN;
-      if ( *(unsigned __int16 *)(gameData + 140022) >= supplyArrivalTurn )
+      reinforcementArrivalTurn = PORT_NEXT_REINFORCEMENT_TURN;
+      if ( *(unsigned __int16 *)(gameData + 140022) >= reinforcementArrivalTurn )
       {
       PORT_SHORE_VARIANT_FLAG = 1;
-      PORT_SUPPLY_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
-        PORT_SUPPLY_UNIT_COUNT = Rng_RandRange(3, 5);
-        Debug_Log(logArg, supplyArrivalTurn, a1, (int)aPort_newturnPo);
+      PORT_REINFORCEMENT_READY_FLAG = PORT_SHORE_VARIANT_FLAG;
+        PORT_REINFORCEMENT_UNIT_COUNT = Rng_RandRange(3, 5);
+        Debug_Log(logArg, reinforcementArrivalTurn, a1, (int)aPort_newturnPo);
       }
     }
     return Port_UpdateShorelineVariantTiles();
@@ -58441,9 +58439,9 @@ int Port_UpdateShorelineVariantTiles()
 // 5202E4: using guessed type int gameData;
 
 //----- (00443230) --------------------------------------------------------
-int Port_IsSupplyReady()
+int Port_IsReinforcementReady()
 {
-  return PORT_SUPPLY_READY_FLAG;
+  return PORT_REINFORCEMENT_READY_FLAG;
 }
 // 5202E4: using guessed type int gameData;
 
@@ -58613,7 +58611,7 @@ int  Port_CollectReinforcementShipment(int a1, char a2, DWORD a3, double a4)
     return 0;
   v32 = PORT_ROW;
   v33 = PORT_COLUMN;
-  result = Port_IsSupplyReady();
+  result = Port_IsReinforcementReady();
   if ( result )
   {
     v31 = 0;
@@ -58658,8 +58656,8 @@ LABEL_16:
       v6 = 0;
       for ( i = 0; i < 12; ++i )
       {
-        v8 = g_PortSupplySpawnRingOffsets[i].row_delta + v32;
-        v9 = g_PortSupplySpawnRingOffsets[i].column_delta + v33;
+        v8 = g_PortReinforcementSpawnRingOffsets[i].row_delta + v32;
+        v9 = g_PortReinforcementSpawnRingOffsets[i].column_delta + v33;
         if ( *(unsigned __int16 *)(TILE_INDEX(v8, v9)) == 0xFFFF
           && Map_GetUnitTileMoveCostOrZero(g_CurrentPlayerIndex, 0, v9, v8) )
         {
@@ -58669,13 +58667,13 @@ LABEL_16:
       }
       if ( v6 == 12 )
         return 0;
-      v29 = g_PortSupplySpawnRingOffsets[v6].column_delta + PORT_COLUMN;
-      v10 = g_PortSupplySpawnRingOffsets[v6].row_delta;
+      v29 = g_PortReinforcementSpawnRingOffsets[v6].column_delta + PORT_COLUMN;
+      v10 = g_PortReinforcementSpawnRingOffsets[v6].row_delta;
       v11 = v10 + PORT_ROW;
-      v12 = Facing_DirectionFromDelta8(v10, g_PortSupplySpawnRingOffsets[v6].column_delta);
+      v12 = Facing_DirectionFromDelta8(v10, g_PortReinforcementSpawnRingOffsets[v6].column_delta);
       Unit_Create(0, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
-      v15 = PORT_SUPPLY_UNIT_COUNT - 1;
+      v15 = PORT_REINFORCEMENT_UNIT_COUNT - 1;
       for ( j = 725 * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + 147174;
             v15 >= 0;
             v13 = v19 - 31 )
@@ -58683,14 +58681,14 @@ LABEL_16:
         v12 = g_CurrentPlayerIndex;
         v17 = Rng_RandRange(0, 11);
         --v15;
-        UnitSlot_InitFromType(v18, g_PortSupplyUnitTypePool[v17], v12);
+        UnitSlot_InitFromType(v18, g_PortReinforcementUnitTypePool[v17], v12);
       }
       Rules_LinkArmyFact(j, v14, v13, a4, v12, v11);
       Rules_SyncArmyFactStrength(j, v20, v21, v12, v11, a4);
       UI_StartWorldMapUnitAttentionFlash(*(unsigned __int16 *)(TILE_INDEX(v11, v29)), 200 * v11 + gameData, v22);
-      PORT_SUPPLY_READY_FLAG = 0;
+      PORT_REINFORCEMENT_READY_FLAG = 0;
       v23 = Rng_RandRange(8, 10);
-      PORT_NEXT_SUPPLY_TURN = v24 + v23;
+      PORT_NEXT_REINFORCEMENT_TURN = v24 + v23;
       Port_UpdateShorelineVariantTiles();
       Audio_PlayArtifactSound(1);
       return j;
@@ -58711,7 +58709,7 @@ LABEL_16:
 // 4437B6: variable 'v24' is possibly undefined
 // 517B48: using guessed type int dword_517B48[];
 // 517B4C: using guessed type int dword_517B4C[23];
-// 517BA8: using guessed type int g_PortSupplyUnitTypePool[12];
+// 517BA8: using guessed type int g_PortReinforcementUnitTypePool[12];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -58763,7 +58761,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   v9 = DLX_GetSpriteHeight((int)v20, 0);
   Render_FillRect(0, (_DWORD *)v8, (unsigned __int16)v23, (unsigned __int16)v22, v22 + v9 - 1, v14, 0, 0);
   Render_ReleaseSurface(7, v8);
-  SpriteForChar = DLX_GetSpriteForChar((int)v20, PORT_SUPPLY_READY_FLAG);
+  SpriteForChar = DLX_GetSpriteForChar((int)v20, PORT_REINFORCEMENT_READY_FLAG);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     v23,
     SpriteForChar,
@@ -58785,7 +58783,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   v18[0] = (int)g_PortEmptyTexts[0];
   v18[1] = (int)g_PortEmptyTexts[1];
   v18[2] = (int)g_PortEmptyTexts[2];
-  if ( PORT_SUPPLY_READY_FLAG )
+  if ( PORT_REINFORCEMENT_READY_FLAG )
   {
     UI_DrawTextFmt((int)v19, v22 + 122, v22 + 200, v23 + 54, 6, v19[(unsigned __int8)g_LanguageIndex]);
     Render_ReleaseSurface(15, v8);
@@ -68424,7 +68422,7 @@ signed int  Building_HasUnitLicenceByIndex(int a1, int a2)
 //----- (004557E0) --------------------------------------------------------
 BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3)
 {
-  return Building_BuyAddon(UNIT_RECORD(a1), a2, gameData + 509674, a3);
+  return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + 509674, a3);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -100914,9 +100912,8 @@ void CRT_InitializeThreadAndFileHandleHooks()
   _AddThreadData_(sub_486518, lpTlsValue);
   TlsSetValue(dwTlsIndex, lpTlsValue);
   g_CrtThreadDataAccessor = (__int64 (__fastcall *)(_DWORD, _DWORD))CRT_GetOrCreateThreadDataPreserveLastError;
-  JUMPOUT(0x48671B);
+  return;
 }
-// 486864: control flows out of bounds to 48671B
 // 4864C7: using guessed type int j___NTAddFileHandle__0();
 // 486518: using guessed type int sub_486518();
 // 48657E: using guessed type int sub_48657E();

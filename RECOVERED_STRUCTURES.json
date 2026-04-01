@@ -331,9 +331,9 @@
     "fields": [
       { "offset": 0, "name": "port_tile_row", "type": "int32", "notes": "`-1` marks no port on the loaded map; otherwise this is the top-left row of the 2x2 port footprint." },
       { "offset": 4, "name": "port_tile_column", "type": "int32", "notes": "Top-left column of the active port footprint." },
-      { "offset": 8, "name": "next_supply_turn", "type": "int32", "notes": "Absolute game-turn number when the next supply ship should arrive." },
-      { "offset": 12, "name": "supply_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
-      { "offset": 16, "name": "pending_supply_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the supply shipment." },
+      { "offset": 8, "name": "next_reinforcement_turn", "type": "int32", "notes": "Absolute game-turn number when the next port reinforcement shipment should arrive." },
+      { "offset": 12, "name": "reinforcement_ready_flag", "type": "int32", "notes": "Non-zero while reinforcements are waiting to be claimed from the port." },
+      { "offset": 16, "name": "pending_reinforcement_unit_count", "type": "int32", "notes": "Number of units to seed into the spawned reinforcement stack when the player collects the waiting port shipment." },
       { "offset": 20, "name": "shoreline_variant_visual_flag", "type": "int32", "notes": "Visual latch selecting which shoreline tile variant the port footprint should show. `Port_NewTurn` clears and conditionally re-raises it, and `Port_UpdateShorelineVariantTiles` uses it to swap the 2x2 shoreline secondary-tile set." }
     ],
     "evidence": [
@@ -360,7 +360,7 @@
   {
     "name": "PortSupplyUnitTypePoolEntry",
     "kind": "table_record",
-    "base_symbol": "g_PortSupplyUnitTypePool",
+    "base_symbol": "g_PortReinforcementUnitTypePool",
     "stride": 4,
     "count": 12,
     "description": "Fixed 12-entry unit-type roster used when `Port_CollectReinforcementShipment` seeds the arriving reinforcement stack.",
@@ -368,7 +368,7 @@
       { "offset": 0, "name": "unit_type_id", "type": "int32", "notes": "One unit type drawn uniformly at random for each slot in the spawned port reinforcement stack." }
     ],
     "evidence": [
-      "`Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes `g_PortSupplyUnitTypePool[randomIndex]` directly into `UnitSlot_InitFromType`, proving the table is a fixed reinforcement roster rather than a generic counter or sprite list.",
+      "`Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes `g_PortReinforcementUnitTypePool[randomIndex]` directly into `UnitSlot_InitFromType`, proving the table is a fixed reinforcement roster rather than a generic counter or sprite list.",
       "The asm-backed table at `dword_517BA8` decodes to unit ids `{0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17}`, which map through the maintained unit roster to `Peasant`, `LightInfantry`, `HeavyInfantry`, `Pikeman`, `HeavySpearman`, `LightCavalry`, `Knights`, `Archer`, `Crossbower`, `Forester`, `Goral`, and `Builder`.",
       "The recovered roster excludes cargo, special-personage, siege-engine, and monster ids, matching the surrounding port logic's role as a human-style shoreline reinforcement source."
     ]
@@ -464,16 +464,16 @@
   {
     "name": "PortSpawnOffset",
     "kind": "table_record",
-    "base_symbol": "g_PortSupplySpawnRowOffsets / g_PortSupplySpawnColumnOffsets",
+    "base_symbol": "g_PortReinforcementSpawnRingOffsets",
     "stride": 8,
     "count": 12,
-    "description": "Recovered interleaved offset table used to probe candidate spawn tiles around the 2x2 port footprint. Hex-Rays split the row and column halves into parallel arrays, but the port supply logic advances them in lockstep as one record family.",
+    "description": "Recovered interleaved offset table used to probe candidate reinforcement spawn tiles around the 2x2 port footprint. Hex-Rays split the row and column halves into parallel arrays, but the port reinforcement logic advances them in lockstep as one record family.",
     "fields": [
-      { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Signed row offset from `PortRuntimeState.port_tile_row` when probing a candidate supply spawn tile." },
+      { "offset": 0, "name": "row_delta", "type": "int32", "notes": "Signed row offset from `PortRuntimeState.port_tile_row` when probing a candidate reinforcement spawn tile." },
       { "offset": 4, "name": "column_delta", "type": "int32", "notes": "Signed column offset from `PortRuntimeState.port_tile_column` paired with the same row delta." }
     ],
     "evidence": [
-      "`Port_CollectReinforcementShipment` indexes `g_PortSupplySpawnRowOffsets[2 * i]` and `g_PortSupplySpawnColumnOffsets[2 * i]` together for the same candidate, showing that the two decompiler arrays are one interleaved table.",
+      "`Port_CollectReinforcementShipment` indexes `g_PortReinforcementSpawnRingOffsets[i].row_delta` and `.column_delta` together for the same candidate, showing that the decompiler's split row/column view is one interleaved table.",
       "The asm data walk for `dword_517B48` / `dword_517B4C` advances by 8 bytes per candidate pair, matching one `{ row_delta, column_delta }` record rather than two unrelated tables.",
       "The recovered pairs cover the 12 empty/passable tiles immediately surrounding the 2x2 port footprint, which is exactly how `Port_CollectReinforcementShipment` searches for the reinforcement spawn point."
     ]
@@ -863,7 +863,7 @@
       { "offset": 192, "name": "selected_unit_sprite_set_handle", "type": "int32", "notes": "Actual symbol `g_CastleProductionSelectedUnitSpriteSet` at address `0x5322D0`. `CastleProduction_RedrawSelectedUnitPanel` frees/reloads this one preview sprite set from the stack-built asset path." },
       { "offset": 196, "name": "licence_animation_frames[12]", "type": "int32[12]", "notes": "Actual symbol `dword_5322D4`. Seeded with random `0..7` frames on panel open and advanced modulo 8 by `CastleProduction_TickLicenceGridAnimations`." },
       { "offset": 244, "name": "licence_sprite_set_handles[12]", "type": "int32[12]", "notes": "Actual symbol `dword_532304`. One loaded sprite-set handle per occupied licence slot; zeroed on open and freed on close or delayed removal." },
-      { "offset": 292, "name": "pending_added_licence_slot", "type": "int32", "notes": "Actual symbol `dword_532334`. Set to the slot index newly populated by `Building_BuyAddon` and consumed by the add-animation path." },
+      { "offset": 292, "name": "pending_added_licence_slot", "type": "int32", "notes": "Actual symbol `dword_532334`. Set to the slot index newly populated by `Building_BuyUnitLicence` and consumed by the add-animation path." },
       { "offset": 296, "name": "pending_removed_licence_slot", "type": "int32", "notes": "Actual symbol `dword_532338`. Set when the user queues licence removal and consumed by the delayed remove/free path." },
       { "offset": 292, "name": "licence_animation_tick", "type": "int32", "notes": "Actual symbol `dword_53233C`. Counts the 8-frame add/remove animation span before the pending-slot latches are cleared." }
     ],
