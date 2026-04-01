@@ -261,7 +261,7 @@
       "folder": "gold",
       "localized_names": "Złoto / Gold",
       "confidence": "high",
-      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record, and stack-action helpers treat type `31` as non-combat cargo."
+      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record, stack-action helpers treat type `31` as non-combat cargo, and temple/treasure reward helpers also instantiate type `31` slots as spawned gold payload stacks."
     },
     {
       "id": 32,
@@ -277,7 +277,7 @@
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The queen-turn path binds type `33` specifically to the son outcome before formatting `g_QueenSonBirthTexts`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
@@ -285,7 +285,7 @@
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
+      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The queen-turn path binds type `34` specifically to the daughter outcome before formatting `g_QueenDaughterBirthTexts`. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
   "unit_categories": [
@@ -331,7 +331,7 @@
       "name": "current_action_points",
       "confidence": "high",
       "semantic_role": "runtime action points available to the slot this turn",
-      "evidence": "Lives at UnitSlotRecord +8 and is refreshed each new turn from the base AP table after fatigue thresholds are applied."
+      "evidence": "Lives at UnitSlotRecord +8, is refreshed each new turn from the base AP table after fatigue thresholds are applied, and tactical battle restores the pre-battle source value before survivors are copied back out through `Battle_RestoreSavedActionPointsBeforeResultCopy`."
     },
     {
       "name": "current_health_percent",
@@ -555,6 +555,27 @@
       "relationship_kind": "airborne_class_flag",
       "confidence": "high",
       "evidence": "The `smok` record belongs to the airborne class governed by `g_UnitTypeFlags` bit0."
+    },
+    {
+      "unit_type": "UnitType31_GoldCargo",
+      "stat": "current_health_percent",
+      "relationship_kind": "temple_reward_payload_quantity",
+      "confidence": "high",
+      "evidence": "`Temple_SpawnGiftGoldCargoStack` initializes type `31` slots, then writes the runtime quantity/health byte with `50`, `100`, `200`, or `300` payload-scaled values before spawning the cargo stack nearby."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "queen_birth_outcome",
+      "relationship_kind": "male_birth_variant",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `33` for the son branch and formats `g_QueenSonBirthTexts`, so this id is the male birth outcome within the shared special-personage family."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "queen_birth_outcome",
+      "relationship_kind": "female_birth_variant",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `34` for the daughter branch and formats `g_QueenDaughterBirthTexts`, so this id is the female birth outcome within the same family."
     },
     {
       "unit_type": "SpecialPersonageCategory",

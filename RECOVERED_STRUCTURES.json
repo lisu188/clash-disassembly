@@ -54,6 +54,29 @@
     ]
   },
   {
+    "name": "BuildingSpriteCacheEntry",
+    "kind": "cache_entry",
+    "base_symbol": "byte_5438E8 / byte_5438E9 / byte_5438EA / byte_5438EB / byte_5438EC / dword_5438ED / dword_5438F1",
+    "stride": 13,
+    "count": 50,
+    "description": "Recovered 13-byte LRU cache entry used by world-map building rendering to avoid reloading `buildin1.s32`, `buildin2.s32`, and `buildin3.s32` sprite sheets for repeated building/tile-state combinations.",
+    "fields": [
+      { "offset": 0, "name": "building_class_or_group", "type": "uint8", "notes": "Primary building visual-class/group key used when selecting the sprite-sheet index family. The exact gameplay-facing enum name remains conservative." },
+      { "offset": 1, "name": "owner_index", "type": "uint8", "notes": "Owning player/color variant folded into the sprite-sheet index calculation." },
+      { "offset": 2, "name": "damage_variant", "type": "int8", "notes": "Signed damage/construction variant key. `-1` selects the alternate index band used for empty/ruined or special building states." },
+      { "offset": 3, "name": "building_variant_index", "type": "uint8", "notes": "Secondary per-building variant byte copied from `BuildingRecord +3`; the exact gameplay-facing meaning remains ambiguous." },
+      { "offset": 4, "name": "footprint_tile_variant", "type": "uint8", "notes": "Relative tile/footprint variant inside the multi-tile building sprite family." },
+      { "offset": 5, "name": "sprite_set_handle", "type": "int32", "notes": "Loaded building sprite-set handle returned on cache hits and freed on eviction/clear." },
+      { "offset": 9, "name": "last_used_tick", "type": "int32", "notes": "Timestamp refreshed on hits and consulted by the LRU eviction pass when all 50 entries are occupied." }
+    ],
+    "evidence": [
+      "`BuildingSpriteCache_Reset`, `BuildingSpriteCache_Clear`, and `BuildingSpriteCache_CountEntries` walk 650 bytes in steps of 13, proving a fixed-size 50-entry cache family.",
+      "`BuildingSpriteCache_GetOrLoadEntry` compares five one-byte visual keys at offsets `0..4`, refreshes the dword timestamp at offset `+9`, and returns the cached dword handle at offset `+5` on hits.",
+      "`BuildingSpriteCache_LoadEntry` evicts the oldest occupied entry when the cache is full, stores the five key bytes plus the loaded handle/timestamp, and rebuilds the sprite-set from `buildin1.s32`, `buildin2.s32`, or `buildin3.s32` depending on the active language/resource mode byte.",
+      "`WorldMap_DrawUnitStackWithOverlays` uses the cache for the current building footprint tile, while `WorldMap_Initialize` and `WorldMap_UnloadResources` reset or clear the same cache family."
+    ]
+  },
+  {
     "name": "UnitStackRecord",
     "kind": "stack_entry",
     "base_offset": 147174,
@@ -153,6 +176,21 @@
     ]
   },
   {
+    "name": "BridgeApproachRoadOverlayTable",
+    "kind": "table_record",
+    "base_symbol": "g_BridgeApproachRoadOverlayTileIds",
+    "count": 48,
+    "description": "Static 48-entry overlay-id table used by the bridge-approach predicate to recognize road-overlay tiles that can legally connect into a bridge crossing.",
+    "fields": [
+      { "offset": 0, "name": "road_overlay_tile_id", "type": "uint32", "notes": "Compared against `MapTileRecord.overlay_tile_id` by `sub_424020`; indices below `6` follow one bridge-axis branch, while indices `6..47` follow the perpendicular branch before the helper confirms the neighboring terrain id is in the bridge band `603..610`." }
+    ],
+    "evidence": [
+      "`sub_424020` linearly scans 48 dword entries from `g_BridgeApproachRoadOverlayTileIds` looking for a match against the tile's overlay word at offset `+2`.",
+      "Once it finds a hit, the helper branches on whether the matched index is below `6` or not, then checks the tile's row or column alignment against the candidate bridge anchor before returning success.",
+      "The same helper finally requires the tile terrain id to be within `603..610`, proving the table is not a generic overlay list but a bridge-approach road-overlay family."
+    ]
+  },
+  {
     "name": "TileTrapOwnerMaskLayer",
     "kind": "tile_bitmask_layer",
     "base_offset": 576374,
@@ -188,7 +226,7 @@
       { "offset": 53, "name": "consecutive_idle_battle_turns", "type": "int32", "notes": "Counts consecutive tactical turns with no battle action taken. The battle loop increments it when `battle_action_taken_flag` stays clear and triggers `GodAnger` once it reaches two rounds." },
       { "offset": 57, "name": "revealed_tiles_bitset[1300]", "type": "uint8[1300]", "notes": "13 bytes per map row storing the player's discovered/visible world tiles. `Map_IsTileVisibleToPlayer`, reveal stamping, and fog-of-war overlay classification all address this bitset directly." },
       { "offset": 1357, "name": "prisoner_transfer_queue[10]", "type": "PlayerPrisonerTransferQueue", "notes": "Ten 6-byte entries cleared by `PlayerRuntimeState_ResetDefaults` and filled by `Prisoner_QueueCapturedUnit` before castles absorb new prisoners." },
-      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches." },
+      { "offset": 1419, "name": "queen_relationship_state", "type": "uint8", "notes": "Broad queen state byte covering marriage status, relationship state, departure, and childbirth branches. Recovered values include `-1` no queen/no further review, `0` unmarried but proposal-eligible, `1` departure retaliation trigger, `5` steady post-birth relationship state, and `9` childbirth trigger." },
       { "offset": 1420, "name": "queen_portrait_index", "type": "uint8", "notes": "Portrait/sprite variant index chosen during the marriage-proposal path and reused by the proposal, whim, message, and relationship panels." },
       { "offset": 1421, "name": "queen_next_relationship_check_turn", "type": "uint16", "notes": "Absolute turn threshold checked before the queen reviews this player's kingdom again." }
     ],
@@ -236,6 +274,7 @@
       { "offset": 2, "name": "owner_player_index", "type": "uint8", "notes": "Player id copied into spawned unit stacks and used for ownership, vision, and income lookups." },
       { "offset": 4, "name": "footprint_class", "type": "uint8", "notes": "Controls which neighboring offsets are legal for exit/spawn scans and which add-on requirement table to use; exact enum values remain ambiguous." },
       { "offset": 5, "name": "display_name", "type": "char[]", "notes": "In-record building/castle name string shown by construction and notification UI; `Building_AssignUniqueGeneratedName` overwrites this buffer when seeding a newly completed stronghold with a unique generated default name." },
+      { "offset": 16, "name": "construction_turns_remaining", "type": "int16", "notes": "`0` marks a completed/usable building, positive values count down staged construction turns, and `-1` marks destroyed or nonexistent records." },
       { "offset": 18, "name": "garrison_slots[12]", "type": "UnitSlot (31 bytes each)", "notes": "Stored unit entries copied into and out of temporary army stacks by Building_UnitsLeave and Building_UnitGetInto." },
       { "offset": 390, "name": "garrison_order_bytes[12]", "type": "uint8[12]", "notes": "Per-slot packed task bytes: bits `0..2` are the train/order countdown, while bits `3..5` are the repair countdown." },
       { "offset": 402, "name": "addon_type_ids[12]", "type": "int8[12]", "notes": "`-1` marks an empty add-on slot; buy/remove/select helpers treat this as the installed building add-on list." },
@@ -251,7 +290,7 @@
       { "offset": 438, "name": "stored_money", "type": "uint32", "notes": "Returned by the `Pieniadze` rules host wrapper, spent by transfer and add-on purchase helpers, and replenished by `Building_CollectGoldIncome`." },
       { "offset": 444, "name": "tech_level_bits", "type": "uint8", "notes": "Low three bits are returned by the `PoziomTech` rules host wrapper and cap wall upgrades plus castle add-on availability." },
       { "offset": 445, "name": "prisoner_slots[3]", "type": "BuildingPrisonerSlot (6 bytes each)", "notes": "Castle-only prisoner cells updated by `Prisoner_SetInCastles`, `Prisoner_NewTurn`, and the execution/torture/ransom helpers." },
-      { "offset": 463, "name": "castle_fact_id", "type": "int32", "notes": "Rules-engine handle returned by `Rules_AssertCastleFact`; `Rules_RetractCastleFact` clears it, `Building_OnGarrisonChange` updates its `moc` attribute, and `Unit_CaptureBuilding` updates its `gracz` owner attribute during capture." }
+      { "offset": 463, "name": "castle_fact_id", "type": "int32", "notes": "Rules-engine handle returned by `Rules_AssertCastleFact`; `Rules_RetractCastleFact` clears it, `Building_OnGarrisonChange` updates its `moc` attribute, and `Rules_SyncCastleFactOwner` updates its `gracz` owner attribute during capture." }
     ],
     "evidence": [
       "Building_Transfer, Building_UnitsLeave, and Building_UnitGetInto all index `gameData + 509674 + 467 * buildingIndex`, proving a stable per-building stride and header.",
@@ -259,12 +298,13 @@
       "The rules-host wrappers `Podatek`, `Pieniadze`, `SilaMurow`, `SilaZamku`, `PoziomTech`, `Zadowolenie`, and `IloscChlopow` dispatch directly to getters over offsets `+436`, `+438`, `+421`, `Building_GetTotalValue`, `+444`, `+434`, and `+430`, respectively.",
       "Building buy/remove/select helpers at clash95.c:53980-54120 operate on `+402`, `+414`, and `+416`, while upgrade and income helpers use `+421`, `+429`, `+438`, and `+444`, exposing a second stable cluster for add-ons and local economy state.",
       "`Building_AssignUniqueGeneratedName` copies randomized localized stronghold names into `building + 5`, and `Building_ShowConstructionProgressDialog` plus multiple event-notification paths print the same in-record buffer as the building display name.",
+      "`Building_FindRandomOwnedCompletedCastle` only accepts candidate buildings whose word at `+16` is zero, while destruction/clear paths write `-1` there and staged construction/update paths count positive values down toward completion, proving this word is the construction-turn timer rather than strength or class data.",
       "The castle add-on builders and `Rules_AssertCastleFact` converge on the exact bit mapping at `+416`: `0x01` hospital, `0x02` barracks, `0x04` workshop, `0x08` school, `0x10` smiths.",
       "Every castle add-on builder first checks bit 0 at `+420`, sets it when construction begins, and the completion/toggle paths clear or consult the same bit before enabling new castle build actions, proving it is the staged-construction lock byte.",
       "`Building_GetTaxRateByIndex`, the `ZmienPodatek` host stub, `Building_CollectGoldIncome`, and `Building_GetTaxBurdenTier` all read or write the low six bits at `+436`, proving that byte carries the building's raw tax rate rather than a derived burden tier.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
-      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Unit_CaptureBuilding` use it to update the asserted castle fact's `moc` and `gracz` attributes."
+      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Rules_SyncCastleFactOwner` use it to update the asserted castle fact's `moc` and `gracz` attributes."
     ]
   },
   {
@@ -310,8 +350,8 @@
     "fields": [
       { "offset": 800, "name": "battlefield_height_tiles", "type": "int32", "notes": "Battlefield height used by tactical movement/pathing bounds checks and viewport clamping." },
       { "offset": 804, "name": "battlefield_width_tiles", "type": "int32", "notes": "Battlefield width paired with `battlefield_height_tiles` for movement/pathing bounds and viewport clamping." },
-      { "offset": 808, "name": "view_left_tile", "type": "int32", "notes": "Left edge of the visible 7x7 tactical viewport." },
-      { "offset": 812, "name": "view_top_tile", "type": "int32", "notes": "Top edge of the visible 7x7 tactical viewport." },
+      { "offset": 808, "name": "view_left_tile", "type": "int32", "notes": "Left edge of the visible 7x7 tactical viewport. `UnitBattle_UpdateViewportFromInputAndGetHoveredSlot` adjusts it from keyboard and lost-surface mouse-drag input before clamping to the battle width." },
+      { "offset": 812, "name": "view_top_tile", "type": "int32", "notes": "Top edge of the visible 7x7 tactical viewport. The same hover/scroll helper adjusts it from keyboard and lost-surface mouse movement before clamping to the battle height." },
       { "offset": 816, "name": "default_tile_move_cost", "type": "uint8", "notes": "Default tactical ground move cost copied into the precomputed battle pathing grid for traversable non-wall tiles." },
       { "offset": 836, "name": "attacker_owner_player_index", "type": "int32", "notes": "Player id for one battle side; result packing and battle-side comparisons use this dword when splitting survivors between the two formations." },
       { "offset": 840, "name": "defender_owner_player_index", "type": "int32", "notes": "Player id for the opposing battle side and the owner used by the port/castle-style side-specific battle UI branches." },
@@ -341,7 +381,7 @@
       { "offset": 3, "name": "facing_direction", "type": "uint8", "notes": "Current facing used by tactical animation and corpse-sprite selection." },
       { "offset": 4, "name": "grid_x", "type": "int16", "notes": "Current tactical tile x-coordinate used by viewport checks and movement/attack range logic." },
       { "offset": 6, "name": "grid_y", "type": "int16", "notes": "Current tactical tile y-coordinate paired with `grid_x`." },
-      { "offset": 8, "name": "action_points", "type": "uint8", "notes": "Remaining tactical action points for the slot this turn." },
+      { "offset": 8, "name": "action_points", "type": "uint8", "notes": "Remaining tactical action points for the slot this turn. `Battle_RestoreSavedActionPointsBeforeResultCopy` restores this byte from `g_BattleSavedActionPointsBySlot` before battle results are copied back into world/building slots, so tactical AP spend does not write back directly." },
       { "offset": 9, "name": "health_percent", "type": "uint8", "notes": "Current tactical health / quantity value consumed by melee and ranged combat exchange helpers." },
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Mirrors the world-slot stance/order byte; the low two bits feed melee, ranged, and siege helpers and the selected-unit panel icon rows." },
       { "offset": 17, "name": "anim_frame_and_effect_bits", "type": "uint8", "notes": "Low three bits hold the current idle animation frame advanced by `UnitBattle_UpdateIdleAnimatedUnits`; upper bits still carry unresolved battle-effect flags." },
@@ -352,6 +392,21 @@
       "`UnitBattle_CalcMeleeExchange` addresses both combatants as `dword_532048 + 852 + 31 * slotIndex`, seeds the outputs from byte `+9`, and applies the two-sided combat math over the same fixed-size entries.",
       "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout.",
       "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveRangedAttack` both use the low bit at byte `+22` as a prepared-defence state flag."
+    ]
+  },
+  {
+    "name": "BattleSavedActionPointsBuffer",
+    "kind": "battle_helper_buffer",
+    "base_symbol": "g_BattleSavedActionPointsBySlot",
+    "count": 24,
+    "description": "Saved strategic/world-slot action-point bytes captured when units are placed into tactical battle and restored before survivors are copied back out.",
+    "fields": [
+      { "offset": 0, "name": "saved_action_points_by_slot[24]", "type": "uint8[24]", "notes": "`Battle_PlaceUnit` writes the source slot's byte `+8` here by battle-entry index, and `Battle_RestoreSavedActionPointsBeforeResultCopy` copies entries `0..21` back into `BattleUnitEntry.action_points` immediately before `HandleBattleResults` repacks survivors into world/building slots." }
+    ],
+    "evidence": [
+      "`Battle_PlaceUnit` stores each incoming unit slot's current action points into `g_BattleSavedActionPointsBySlot[battleIndex]` right after copying the 31-byte slot header into `BattleRuntimeState.battle_unit_entries`.",
+      "`HandleBattleResults` begins by calling `Battle_RestoreSavedActionPointsBeforeResultCopy`, which walks the 22 tactical entries and restores byte `+8` from the saved-action-point buffer before any survivor copy-out happens.",
+      "The restore helper's loop uses the same 31-byte stride as `BattleUnitEntry`, proving the buffer is aligned to tactical-slot indices rather than to battlefield coordinates or players."
     ]
   },
   {
@@ -442,12 +497,12 @@
     "count": 25,
     "description": "Overlapped queen-whim table in the data segment. Hex-Rays split the record into `word_5191F0` and `off_5191F2`, but the queen turn logic indexes it as one 14-byte record family.",
     "fields": [
-      { "offset": 0, "name": "required_frontline_score", "type": "uint16", "notes": "Compared against `AI_CalcFrontlineScore` before the whim can be accepted, then deducted by `AI_ApplyFrontlineScore` on success." },
+      { "offset": 0, "name": "required_stronghold_funds", "type": "uint16", "notes": "Compared against `Player_CalcAvailableStrongholdFunds` before the whim can be accepted, then deducted through `Player_SpendStrongholdFundsEvenly` on success." },
       { "offset": 2, "name": "localized_text_ptrs[3]", "type": "char *[3]", "notes": "Localized whim request text indexed by `g_LanguageIndex` in `Queen_ShowWhimDecisionDialog`." }
     ],
     "evidence": [
       "`Queen_NewTurn` computes `7 * whimIndex`, reads a uint16 from `word_5191F0 + 7 * index`, and a localized text pointer from `off_5191F2 + 7 * index + 4 * language`, which matches one overlapped record rather than two unrelated arrays.",
-      "The same uint16 is passed into `Queen_ShowWhimDecisionDialog` and, on acceptance, into `AI_ApplyFrontlineScore`, proving it is the whim cost field rather than a pointer or enum.",
+      "The same uint16 is passed into `Queen_ShowWhimDecisionDialog` and, on acceptance, into `Player_SpendStrongholdFundsEvenly`, proving it is the whim cost field rather than a pointer or enum.",
       "`0x519350 - 0x5191F0 = 0x160`, which fits 25 records of `2 + 3*4` bytes with the expected alignment before the next table."
     ]
   },

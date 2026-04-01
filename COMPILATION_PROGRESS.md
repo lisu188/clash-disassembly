@@ -1321,3 +1321,118 @@
   - the port runtime state now distinguishes the logical ready flag from the purely visual shoreline-variant latch more conservatively
   - the prisoner pipeline now records the captured special person's owner id explicitly in both the transfer queue and the building prison slot artifacts
   - one more low-risk CRT setter drops out of the wider link blocker set without inventing the still-unresolved NT/DOS errno mapping helpers
+
+## Batch 97 - Queen, Battle, And Runtime Thunk Wave
+- Current subsystem/cluster:
+  - rules path wrappers, queen treasury/departure semantics, bridge/runtime finalizer recovery, and tactical-battle AP/result-copy helpers
+- Subagents spawned and scopes:
+  - Agent A: unit lifecycle, combat, targeting, stats
+  - Agent B: queen systems
+  - Agent C: port/coastal/naval systems
+  - Agent D: tile/map/pathing systems
+  - Agent E: castle/building/garrison systems
+  - Agent F: asm/map/exe corroboration and symbol recovery
+  - Agent G: compilation/link blockers, invalid constructs, and build integration
+  - Agent H: SDL/platform migration and Win32 containment
+- Repairs:
+  - renamed in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `Rules_UnitStackHasNormalCombatUnits`
+    - `Rules_QueuePathToCastle`
+    - `Rules_QueuePathIntoArmyRange`
+    - `Rules_IsTempleWithinArmyRange`
+    - `Rules_MarchToTemple`
+    - `Rules_MarchNearTile`
+    - `BuildingSpriteCache_Reset`
+    - `BuildingSpriteCache_LoadEntry`
+    - `BuildingSpriteCache_GetOrLoadEntry`
+    - `BuildingSpriteCache_Clear`
+    - `BuildingSpriteCache_CountEntries`
+    - `Temple_SpawnGiftUnitGroup`
+    - `Temple_SpawnGiftGoldCargoStack`
+    - `Temple_ShowOutcomePopup`
+    - `Rules_SyncCastleFactOwner`
+    - `Player_CalcAvailableStrongholdFunds`
+    - `Player_SpendStrongholdFundsEvenly`
+    - `Battle_RestoreSavedActionPointsBeforeResultCopy`
+    - `UnitBattle_UpdateViewportFromInputAndGetHoveredSlot`
+    - `UnitBattle_EstimateDamageScoreAgainstUnit`
+  - renamed / recovered data symbols and fields in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) and [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json):
+    - `g_BridgeApproachRoadOverlayTileIds`
+    - `g_CrtThreadDataAccessor`
+    - `g_CrtFinalizerListHead`
+    - `CRT_RunRegisteredFinalizers`
+    - `CRT_GetBootstrapThreadData`
+    - `g_QueenDepartureTexts`
+    - `g_QueenCastleTreasuryTheftTexts`
+    - `g_QueenCastleWellPoisoningTexts`
+    - `g_QueenCastleArsonTexts`
+    - `g_QueenDepartureEventMessageBuffer`
+    - `g_QueenBirthMessageBuffer`
+    - `g_BattleSavedActionPointsBySlot`
+    - `BuildingRecord.construction_turns_remaining`
+    - `QueenWhimRecord.required_stronghold_funds`
+    - `BridgeApproachRoadOverlayTable`
+    - `BattleSavedActionPointsBuffer`
+  - added asm-backed wrappers in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `CRT_RegisterFinalizableObject`
+    - `CRT_GetBootstrapThreadData`
+  - extended [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json) with:
+    - stronger type `33` son vs type `34` daughter birth-path evidence
+    - tactical AP restore evidence for `current_action_points`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch97_final.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch97_final.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch97_final 2>&1 | rg 'main|CRT_RegisterFinalizableObject|CRT_GetBootstrapThreadData|_wcpp_|j__nfree_|j_j__nfree_|memset_|nmalloc_|nrealloc_|memcpy_|memmove_|_set_errno_nt_|_set_errno_dos_|JUMPOUT'`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch97_final.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch97_final.json`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax and object compilation succeed under `-std=gnu89 -w`
+  - `compat/decomp_runtime_stubs.c` object compilation succeeds
+  - `clash95_recovered` static-library build still succeeds
+  - the broader executable link probe still fails, but the filtered unresolved front no longer includes `CRT_RegisterFinalizableObject` or `CRT_GetBootstrapThreadData`
+- Blockers removed:
+  - live unresolved runtime thunk `CRT_RegisterFinalizableObject`
+  - live unresolved bootstrap accessor `CRT_GetBootstrapThreadData`
+  - stale queen “frontline score” naming that was actually stronghold-treasury spending
+  - stale battle helper names around AP restore, viewport hover/scroll, and AI damage scoring
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in gameplay/runtime semantics and quarantined CRT wrappers while preserving the SDL target seam
+  - Agent H confirmed the remaining SDL-side seam mismatches are `GetMessageA` / `WaitMessage`, `ClientToScreen`, and the prototype leakage still declared locally in `clash95.c`
+- Current leading blockers:
+  - the broader executable/link surface is now led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_nt_` / `_set_errno_dos_`
+    - residual `JUMPOUT` control-flow scars
+  - medium-risk next wrapper band after that:
+    - `GetLastError` / `SetLastError`
+    - `CreateDirectoryA` / `DeleteFileA` / `GetFileAttributesA`
+    - event / critical-section / thread primitives
+- High-priority unknown functions reviewed:
+  - `sub_4530D0`
+  - `sub_473ED5`
+  - `sub_487002`
+  - `sub_48703D`
+  - `sub_485374`
+  - `sub_432770`
+  - `sub_42C840`
+  - `sub_437630`
+- Key evidence used:
+  - `clash95.asm` shows `sub_473ED5` as an exact thunk to `sub_48703D`, and `sub_48703D` itself uses the fixed lock at `unk_51A638` while linking entries onto `dword_51A648`
+  - `clash95.asm` shows `sub_485374` as a one-instruction bootstrap accessor returning `lpTlsValue`
+  - the queen retaliation and whim paths only manipulate owned-stronghold `stored_money`, plague bits, and destruction state, and the exe text strings identify departure, theft, poisoning, and arson explicitly
+  - the bridge-approach predicate scans 48 overlay ids and then confirms terrain ids `603..610`, which fixes the road-overlay table semantics
+  - `HandleBattleResults`, `Battle_PlaceUnit`, and the saved AP buffer prove tactical AP is restored before result copy-out
+  - the battle AI helper temporarily simulates ranged/melee exchanges and returns projected defender HP-loss score, which fixes the target-estimation helper name
+- Ambiguous candidates deferred:
+  - `sub_48703D` exact original CRT helper label beyond “internal finalizer-list link worker”
+  - `sub_4620F0` broader event/interlude presenter role
+  - queen retaliation callsite still keeps the asm-backed `Unit_FindById` symbol even though its behavior acts like a completed-castle selector in that path
+  - `sub_42C560` is still only medium-confidence as a withdrawal/disengagement casualty helper
+- total rename count so far:
+  - `1048`

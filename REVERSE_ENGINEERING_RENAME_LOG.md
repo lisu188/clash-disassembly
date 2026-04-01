@@ -324,7 +324,7 @@
 
 ## Deferred / Ambiguous
 - The internal debug string `NewQueenWindow()` was not promoted because the localized prompt text proves the dialog is specifically a marriage offer, not a generic queen-window controller.
-- `QueenWhimRecord.required_frontline_score` is implementation-safe, but the designer-facing resource name behind that score remains unresolved; the code only proves that whims consume the same per-building frontline-pressure pool later updated by `AI_ApplyFrontlineScore`.
+- Resolved in Batch 97: `QueenWhimRecord.required_stronghold_funds` is the safer implementation name. The code only proves that whims consume an owned-stronghold treasury pool, not a more specific designer-facing economy label.
 
 ## Batch 30 – Marriage Dialog And Prisoner Panel Controls Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
@@ -1607,3 +1607,70 @@
 | `PlayerPrisonerTransferQueue.variant_or_payload_byte` | `PlayerPrisonerTransferQueue.captured_owner_player_index` | recovered_struct | Prisoners / Special Personages | High | `Unit_Capture` queues the captured special slot's owner byte, and `Prisoner_SetInCastles` later copies that same byte into the building prison slot, proving the queue byte is an owner/player id rather than a generic payload. | c, prior-artifact | no |
 | `BuildingPrisonerSlot.variant_or_payload_byte` | `BuildingPrisonerSlot.captured_owner_player_index` | recovered_struct | Prisoners / Special Personages | High | `Prisoner_SetInCastles` copies queue byte `+1` into the prison slot unchanged, and `BuildingPrisoner_RecalculateRansomValue` passes slot byte `+1` into `AI_TickNationPostTurn`, proving it is a captured-owner id used by ransom logic. | c, prior-artifact | no |
 | `missing _set_errno_ runtime setter` | `conservative errno setter wrapper in compat/decomp_runtime_stubs.c` | link_fix | Runtime / CRT | High | `clash95.asm` shows `__set_EINVAL_` loading `9` and tail-calling `__set_errno_`, while the recovered C uses `_set_errno_` as a plain setter/clearer path. A direct `errno = value; return value;` wrapper matches that setter role without overclaiming the deeper NT/DOS mapping helpers. | c, asm | no |
+
+## Batch 97 - Building Sprite Cache And Temple Reward Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_43F600` | `BuildingSpriteCache_Reset` | function | Buildings / Rendering Cache | High | Clears the 50-entry, 13-byte-per-entry building sprite cache by marking each primary key byte as `-1`; world-map init calls it before building rendering begins. | c | yes: Lovelace |
+| `sub_43F630` | `BuildingSpriteCache_LoadEntry` | function | Buildings / Rendering Cache | High | Selects an eviction slot, stores five one-byte visual keys plus a timestamp, and loads the sprite set from `buildin1.s32`, `buildin2.s32`, or `buildin3.s32` into the cache entry. | c, asm | yes: Lovelace |
+| `sub_43F880` | `BuildingSpriteCache_GetOrLoadEntry` | function | Buildings / Rendering Cache | High | Scans the 50 cached entries for a five-byte building visual-key match, refreshes the LRU tick on hits, and otherwise falls back to `BuildingSpriteCache_LoadEntry`. | c | yes: Lovelace |
+| `sub_43F920` | `BuildingSpriteCache_Clear` | function | Buildings / Rendering Cache | High | Frees every occupied cached building sprite-set handle and marks each entry free during world-map resource teardown. | c | yes: Lovelace |
+| `sub_43F980` | `BuildingSpriteCache_CountEntries` | function | Buildings / Rendering Cache | High | Counts the live 13-byte building sprite-cache entries whose primary key byte is not `-1`. | c | yes: Lovelace |
+| `byte_5438E8 / byte_5438E9 / byte_5438EA / byte_5438EB / byte_5438EC / dword_5438ED / dword_5438F1` | `BuildingSpriteCacheEntry` | recovered_struct | Buildings / Rendering Cache | High | The world-map building renderer keys a 50-entry cache on five one-byte visual parameters, stores a sprite-set handle at offset `+5`, stores an LRU timestamp at `+9`, and frees or reloads those same entries through the reset/clear/load helpers. | c, prior-artifact | yes: Lovelace |
+| `sub_43FC60` | `Temple_SpawnGiftUnitGroup` | function | Temple / Rewards | High | Builds temporary unit slots from mission-specific or random temple reward tables and spawns the resulting ordinary unit group next to the religious site before flashing attention on the new stack. | c | yes: Lovelace |
+| `sub_43FDE0` | `Temple_SpawnGiftGoldCargoStack` | function | Temple / Rewards | High | Initializes type `31` cargo slots, writes the quantity/health byte with `50`, `100`, `200`, or `300` payload-scaled values, and spawns the resulting gold cargo stack near the temple or treasure site. | c | yes: Lovelace |
+| `sub_43FEF0` | `Temple_ShowOutcomePopup` | function | Temple / Rewards UI | High | Loads `temple.s32`, draws the fixed religious-site outcome frame plus an optional reward icon, prints localized reward text, and waits for dismissal before returning to the world map. | c | yes: Lovelace |
+| `sub_455150` | `Rules_SyncCastleFactOwner` | function | Rules / Castle Facts | High | The helper is only reached from `Unit_CaptureBuilding` and updates the asserted castle fact's `gracz` field from `BuildingRecord.owner_player_index` through `BuildingRecord.castle_fact_id`. | c, asm, prior-artifact | yes: Lovelace |
+
+## Batch 97 - Rules Path Host Wrapper Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_453770` | `Rules_QueuePathToCastle` | function | Rules / Pathing | High | Reuses or rebuilds a queued building-approach track for the castle occupying the target tile, temporarily enables bridge crossings for builders, and stores the resulting queued path on success. The host registration table binds the wrapper to `jest_droga_do_zamku`. | c, asm | yes: Raman |
+| `sub_453C90` | `Rules_QueuePathIntoArmyRange` | function | Rules / Pathing | High | Reuses or rebuilds a `Unit_MoveTrackNearTile` path, rejects it when the acting stack lacks the cached path AP cost, and stores the queued path on success. The wrapper logs `oddzial_w_zasiegu_armii2(%d,%d,%d)` and is registered as `oddzial_w_zasiegu_armii`. | c, asm | yes: Raman |
+| `sub_453FE0` | `Rules_IsTempleWithinArmyRange` | function | Rules / Temple Pathing | High | Lazily seeds the temple approach track when the cached target tile drifts, then returns true only when the acting stack's current AP can pay the cached temple-track cost. The host registration name is `swiatynia_w_zasiegu_armii`. | c, asm | yes: Raman |
+| `sub_454330` | `Rules_MarchToTemple` | function | Rules / Temple Pathing | High | Reuses or rebuilds the queued temple approach track, executes the queued move, and emits the `PA` feedback only when the stack failed to advance after the march attempt. The host registration name is `maszeruj_do_swiatyni`. | c, asm | yes: Raman |
+| `sub_454590` | `Rules_MarchNearTile` | function | Rules / Pathing | High | Reuses or rebuilds a queued `Unit_MoveTrackNearTile` path, executes the queued march, and emits the same `PA` failure feedback when no progress occurs. The host registration name and debug string family are both `maszeruj_blisko`. | c, asm | yes: Raman |
+
+## Batch 97 - Runtime Finalizer And Bridge Overlay Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4530D0` | `Rules_UnitStackHasNormalCombatUnits` | function | Rules / Stack Classification | High | Returns true only when a stack contains at least one slot whose type is neither gold cargo nor peasant cargo. Port supply pickup and special-personage predicates use it as the ordinary-combat-unit gate. | c, asm | yes: Agent C |
+| `dword_51420C` | `g_BridgeApproachRoadOverlayTileIds` | table | Map / Bridge Approach | High | `sub_424020` scans 48 overlay ids from this table against `MapTileRecord.overlay_tile_id`, branches on the matched index band, and then confirms the neighboring terrain is in the bridge range `603..610`. | c, asm | yes: Raman |
+| `sub_473ED5` | `CRT_RegisterFinalizableObject` | function | Runtime / CRT Finalizers | High | `clash95.asm` shows a 5-byte thunk that immediately forwards into `sub_48703D`; live callers use it to register CRT-owned objects in the shared finalizer list rather than to allocate or clear memory. | c, asm, map | yes: Ohm |
+| `sub_487002` | `CRT_RunRegisteredFinalizers` | function | Runtime / CRT Finalizers | High | Pops the shared finalizer list under the CRT lock and calls each entry's vtable finalizer during shutdown. | c, asm | yes: Ohm |
+| `off_51A568` | `g_CrtThreadDataAccessor` | global | Runtime / CRT TLS | High | Initialized to `CRT_GetBootstrapThreadData`, later swapped to `CRT_GetOrCreateThreadDataPreserveLastError`, and every caller treats it as the active thread-data accessor function pointer. | c, asm | yes: Ohm |
+| `dword_51A648` | `g_CrtFinalizerListHead` | global | Runtime / CRT Finalizers | High | Shared head pointer written by `CRT_RegisterFinalizableObject` and consumed by `CRT_RunRegisteredFinalizers`. | c, asm | yes: Ohm |
+| `sub_485374` | `CRT_GetBootstrapThreadData` | function | Runtime / CRT TLS | High | Initial thread-data accessor installed into `g_CrtThreadDataAccessor` before the fuller per-thread allocator accessor takes over. | c, asm | yes: Ohm |
+
+## Batch 97 - Queen Treasury And Departure Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `AI_CalcFrontlineScore` | `Player_CalcAvailableStrongholdFunds` | function | Queen / Economy | High | Sums `BuildingRecord.stored_money` across owned class-1/class-2 completed strongholds. The whim gate compares available treasury, not frontline pressure. | c, asm | yes: Agent B |
+| `AI_ApplyFrontlineScore` | `Player_SpendStrongholdFundsEvenly` | function | Queen / Economy | High | Evenly subtracts the requested whim cost from owned strongholds with non-zero `stored_money` until the spend is exhausted. | c, asm | yes: Agent B |
+| `QueenWhimRecord.required_frontline_score` | `QueenWhimRecord.required_stronghold_funds` | recovered_struct_field | Queen / Whim Table | High | The same uint16 is compared against `Player_CalcAvailableStrongholdFunds` and then deducted from owned stronghold treasuries by `Player_SpendStrongholdFundsEvenly` on acceptance. | c, asm, prior-artifact | yes: Agent B |
+| `g_QueenNewTurnText0` | `g_QueenDepartureTexts` | table | Queen / Event Text | High | Selected only for the plain departure branch. The matching exe string says the queen decided to leave the ruler. | c, asm, exe | yes: Agent B |
+| `g_QueenNewTurnText1` | `g_QueenCastleTreasuryTheftTexts` | table | Queen / Event Text | High | Used only after the chosen stronghold's `stored_money` is zeroed, and the localized string says she took the castle's jewellery and gold. | c, asm, exe | yes: Agent B |
+| `g_QueenNewTurnText2` | `g_QueenCastleWellPoisoningTexts` | table | Queen / Event Text | High | Used only after the target stronghold's plague bits are forced to `5`, and the localized string says she poisoned the well there. | c, asm, exe | yes: Agent B |
+| `g_QueenNewTurnText3` | `g_QueenCastleArsonTexts` | table | Queen / Event Text | High | Used only after the target stronghold is destroyed, and the localized string says she ordered the castle set on fire. | c, asm, exe | yes: Agent B |
+| `g_QueenMsgBuf` | `g_QueenDepartureEventMessageBuffer` | global | Queen / Event Text | High | Only xref family is the queen departure/retaliation switch, where the buffer is built and then passed into `Queen_ShowMessageDialog`. | c, asm | yes: Agent B |
+| `unk_544408` | `g_QueenBirthMessageBuffer` | global | Queen / Event Text | High | Only xref family is the queen childbirth path, where the son/daughter birth text is formatted and passed into `UI_ShowInfoWindow`. | c, asm | yes: Agent B |
+| `BuildingRecord +16` | `BuildingRecord.construction_turns_remaining` | recovered_struct_field | Buildings / Construction | High | `0` marks completed buildings, positive values count staged construction down, and `-1` marks destroyed or nonexistent records across build, destruction, and queen retaliation support paths. | c, prior-artifact | yes: Agent B |
+
+## Batch 97 - Battle Runtime AP And Target Scoring Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_432770` | `Battle_RestoreSavedActionPointsBeforeResultCopy` | function | Battle / Result Copy | High | `HandleBattleResults` calls this first, and the helper walks all 22 tactical entries restoring byte `+8` from the saved AP buffer before survivors are copied back into world/building slots. | c, asm | yes: Agent A |
+| `sub_42C840` | `UnitBattle_UpdateViewportFromInputAndGetHoveredSlot` | function | Battle / Viewport Input | High | Updates `BattleRuntimeState.view_left_tile` / `view_top_tile` from keyboard scroll and lost-surface mouse-drag input, then returns the hovered occupant id from `BattleRuntimeState.tile_occupant_ids`. | c, asm | yes: Agent A |
+| `sub_437630` | `UnitBattle_EstimateDamageScoreAgainstUnit` | function | Battle / AI Target Scoring | High | Temporarily simulates range-closing and repeated ranged/melee exchanges against one target, restores the original AP/coords/health state, and returns a score proportional to projected defender HP loss for AI target ranking. | c | yes: Agent A |
+| `byte_532120` | `g_BattleSavedActionPointsBySlot` | global | Battle / Result Copy | High | `Battle_PlaceUnit` stores each source slot's action points here by tactical-entry index, and `Battle_RestoreSavedActionPointsBeforeResultCopy` restores those bytes before result packing. | c, asm | yes: Agent A |
+
+## Batch 97 - Runtime Stub Containment Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `missing CRT_RegisterFinalizableObject thunk at link time` | `asm-backed wrapper in compat/decomp_runtime_stubs.c` | link_fix | Runtime / CRT Finalizers | High | `sub_473ED5` is an exact thunk to `sub_48703D` in `clash95.asm`, so a direct wrapper removes the live unresolved runtime entry point without changing gameplay code. | c, asm, prior-artifact | yes: Agent G, Ohm |
+| `missing CRT_GetBootstrapThreadData accessor at link time` | `asm-backed wrapper in compat/decomp_runtime_stubs.c` | link_fix | Runtime / CRT TLS | High | `sub_485374` is a one-instruction bootstrap accessor that returns `lpTlsValue`; mirroring it in the quarantined compat layer removes the live unresolved initial thread-data accessor symbol. | c, asm, prior-artifact | yes: Agent G, Ohm |
+
+## Deferred / Ambiguous
+- Keep the asm-backed `Unit_FindById(g_CurrentPlayerIndex)` call symbol in the queen retaliation cases. The behavior acts like a random owned completed-castle selector there, but the call target itself is already constrained by the assembly.
+- `sub_48703D` is now boxed in as the internal list-link worker behind `CRT_RegisterFinalizableObject`, but the exact original CRT helper label is still not strong enough to promote.
+- `sub_4620F0` still looks like a generic illustrated event/interlude presenter; the queen-specific tokens were not enough to lock a broader semantic rename safely.

@@ -6,6 +6,8 @@
 #include <wctype.h>
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
+int sub_48703D(int a1, __lock *a2, int a3);
+extern void *lpTlsValue;
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -15,6 +17,7 @@ int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
 
 unsigned __int16 __ES__;
 unsigned __int16 __DS__;
+__lock unk_51A638;
 
 /*
  * These are the lowest-risk CRT aliases still missing from the link surface.
@@ -26,6 +29,23 @@ int __thiscall nfree_(_DWORD a1)
   if ( a1 && a1 != (_DWORD)-1 )
     free((void *)(uintptr_t)a1);
   return 0;
+}
+
+__int64 __fastcall CRT_GetBootstrapThreadData(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  return __PAIR64__(a2, lpTlsValue);
+}
+
+int __fastcall CRT_RegisterFinalizableObject(_DWORD a1, _DWORD a2)
+{
+  /*
+   * clash95.asm marks 0x473ED5 as an exact thunk to sub_48703D and shows
+   * the target body using the fixed lock object at 0x51A638 rather than the
+   * incoming edx value. Keeping the wrapper here removes the unresolved
+   * thunk without spreading CRT bootstrap glue through clash95.c.
+   */
+  return sub_48703D((int)a1, &unk_51A638, (int)a2);
 }
 
 __int64 __thiscall j_Mem_Alloc(_DWORD a1)
