@@ -1702,6 +1702,28 @@
 | `WaitMessage immediately returns on idle queue` | `idle-sleep WaitMessage shim in platform_sdl_runtime.c` | sdl_port_fix | SDL / Message Pump | High | Agent H showed the current seam skipped the intended inactive-app wait semantics entirely. A short host sleep keeps the SDL seam conservative without reviving Win32. | c, prior-artifact | yes: Agent H |
 | `ClientToScreen ignores window origin` | `window-origin ClientToScreen shim in platform_sdl_runtime.c` | sdl_port_fix | SDL / Coordinates | High | Agent H traced the DirectDraw-facing clipper path and showed the existing seam already tracks `SDL_Window.x/y`; applying that offset is the narrowest fix. | c, prior-artifact | yes: Agent H |
 
+## Batch 99 - Builder Path Queue And Port Reinforcement Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_424EC0` | `UnitStack_MoveOneTileInDirection` | function | Strategic / Pathing | High | Converts a direction id through `Map_NeighborDX` / `Map_NeighborDY`, builds a one-step `Unit_MoveTrack`, copies it into the queued-path buffer, executes it immediately, and redraws the stack. | c, asm | yes: Agent C+D |
+| `sub_454A20` | `Rules_IsQueuedPathTargetBridgeCrossing` | function | Rules / Bridge Roadbuilding | High | Requires a queued path, inspects the final queued node, and returns true only when `Map_GetBridgeCrossingCostOrZero` is non-zero there. The host registration string is `jest_brod`. | c, asm | yes: Agent C+D |
+| `sub_454AE0` | `Rules_BuildRoadOrStepTowardQueuedPath` | function | Rules / Roadbuilding | High | Registered as `buduj_droge`; follows the queued path's last-step direction, prefers stepping on owned non-bridge tiles, otherwise tries `Road_Build` with direction fallbacks, and clears the queued path afterward. | c, asm | yes: Agent C+D |
+| `sub_454D20` | `Rules_BuildTrapNearTile` | function | Rules / Trap Placement | High | Registered as `buduj_pulapke`; builds a `Unit_MoveTrackNearTile`, executes it, then creates the trap only if the acting stack finishes within one tile of the target coordinates. | c, asm | yes: Agent C+D |
+| `dword_517BA8` | `g_PortSupplyUnitTypePool` | table | Port / Reinforcements | High | `Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes the indexed table entry straight into `UnitSlot_InitFromType`; asm decodes the fixed roster `{0,1,2,3,4,5,7,9,10,15,16,17}`. | c, asm, prior-artifact | yes: Agent C+D |
+
+## Batch 99 - SDL Seam Declaration Ownership Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `clash95.c-local window/message/DC wrapper declarations` | `platform_sdl.h-owned SDL seam wrapper declarations` | sdl_port_fix | SDL / Header Ownership | High | The implementations already live in `platform_sdl_runtime.c`, but `clash95.c` still redeclared the same Win32-shaped wrapper surface locally. Moving the prototypes into `platform_sdl.h` keeps the compatibility boundary owned by the SDL seam. | c, prior-artifact | yes: Agent H |
+| `PeekMessageA empty false-return leaves MSG contents stale` | `zeroed empty false-return path in platform_sdl_runtime.c` | sdl_port_fix | SDL / Message Pump | High | The only live caller reads `Msg.hwnd` immediately after a false `PeekMessageA` return in the inactive-app loop, so clearing `MSG` on the empty non-quit path removes the remaining idle-path UB without reintroducing Win32 behavior. | c, prior-artifact | yes: Agent H |
+
+## Batch 100 - Local JUMPOUT Scar Recovery Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `JUMPOUT(0x4065BD) in sub_4065D0` | `direct shared-epilogue return of the computed minimum run length` | compile_fix | Render / Sprite Decode | High | Agent G traced the asm to a shared epilogue at `loc_4065BD` that only moves the local `var_1C` into `eax` and returns. The recovered C now returns the same computed local directly instead of calling the unresolved `JUMPOUT` shim. | c, asm | yes: Agent G |
+| `JUMPOUT(0x4065BD) in sub_406650` | `direct shared-epilogue return of the computed row count` | compile_fix | Render / Sprite Decode | High | The same shared epilogue services `sub_406650`; asm shows no hidden side effects beyond returning the local counter in `eax`, so the C body now returns that value directly. | c, asm | yes: Agent G |
+| `JUMPOUT(0x4E619D) in sub_4E60F5` | `recovered ownership-flag left-shift loop after environment-table compaction` | compile_fix | Runtime / Environment Table | Medium | Agent G tied the target to an in-function byte-copy loop inside `sub_4E60F5`, not to an external helper. The asm bytes at `0x4E6199` decode to copying `flags[i + 1]` down into `flags[i]` while the compacted environment table closes the removed slot. | c, asm | yes: Agent G |
+
 ## Deferred / Ambiguous
 - Keep the asm-backed `Unit_FindById(g_CurrentPlayerIndex)` call symbol in the queen retaliation cases. The behavior acts like a random owned completed-castle selector there, but the call target itself is already constrained by the assembly.
 - `sub_48703D` is now boxed in as the internal list-link worker behind `CRT_RegisterFinalizableObject`, but the exact original CRT helper label is still not strong enough to promote.

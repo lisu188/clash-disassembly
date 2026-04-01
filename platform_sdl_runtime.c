@@ -370,6 +370,8 @@ BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMs
     PlatformFillQuitMessage(lpMsg);
     return 1;
   }
+  if ( lpMsg )
+    memset(lpMsg, 0, sizeof(*lpMsg));
   return 0;
 }
 

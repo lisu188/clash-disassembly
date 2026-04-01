@@ -343,6 +343,22 @@
     ]
   },
   {
+    "name": "PortSupplyUnitTypePoolEntry",
+    "kind": "table_record",
+    "base_symbol": "g_PortSupplyUnitTypePool",
+    "stride": 4,
+    "count": 12,
+    "description": "Fixed 12-entry unit-type roster used when `Port_CollectReinforcementShipment` seeds the arriving reinforcement stack.",
+    "fields": [
+      { "offset": 0, "name": "unit_type_id", "type": "int32", "notes": "One unit type drawn uniformly at random for each slot in the spawned port reinforcement stack." }
+    ],
+    "evidence": [
+      "`Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes `g_PortSupplyUnitTypePool[randomIndex]` directly into `UnitSlot_InitFromType`, proving the table is a fixed reinforcement roster rather than a generic counter or sprite list.",
+      "The asm-backed table at `dword_517BA8` decodes to unit ids `{0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17}`, which map through the maintained unit roster to `Peasant`, `LightInfantry`, `HeavyInfantry`, `Pikeman`, `HeavySpearman`, `LightCavalry`, `Knights`, `Archer`, `Crossbower`, `Forester`, `Goral`, and `Builder`.",
+      "The recovered roster excludes cargo, special-personage, siege-engine, and monster ids, matching the surrounding port logic's role as a human-style shoreline reinforcement source."
+    ]
+  },
+  {
     "name": "BattleRuntimeState",
     "kind": "battle_state_region",
     "base_symbol": "dword_532048",

@@ -318,6 +318,11 @@
       "name": "SpecialPersonageCategory",
       "confidence": "high",
       "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+    },
+    {
+      "name": "PortSupplyReinforcementPool",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` seeds each spawned slot by drawing a random entry from the fixed unit-type table `{0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17}`, so the port reinforcement roster is limited to peasant, infantry, cavalry, archer, forester, goral, and builder units rather than cargo, special-personage, siege, or monster ids."
     }
   ],
   "stats": [
@@ -653,6 +658,13 @@
       "relationship_kind": "merged_stack_movement_profile",
       "confidence": "high",
       "evidence": "`UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` by keeping the highest non-zero movement cost for each normalized lane and collapsing to zero when any member has zero, so world-map stack movement follows the slowest traversable unit."
+    },
+    {
+      "unit_type": "PortSupplyReinforcementPool",
+      "stat": "unit_type_id roster",
+      "relationship_kind": "fixed_random_spawn_roster",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes `g_PortSupplyUnitTypePool[randomIndex]` straight into `UnitSlot_InitFromType`, so the port's reinforcement shipment roster is fixed to ids `0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17`."
     }
   ],
   "ambiguous": [

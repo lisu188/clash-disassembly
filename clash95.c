@@ -79,7 +79,6 @@
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
 #define g_SettlementTaxBurdenThresholds byte_515D00
 #define g_PortSupplySpawnRingOffsets ((PortSpawnOffset *)dword_517B48)
-#define g_PortSupplyUnitTypePool dword_517BA8
 #define g_PrisonerDeathByExhaustionTexts off_518D98
 #define g_QueenSonBirthTexts off_519350
 #define g_QueenDaughterBirthTexts off_51935C
@@ -365,7 +364,7 @@ extern unsigned char unk_5146C0[];
 extern char *off_514834[];
 extern int dword_517B48[];
 extern int dword_517B4C[];
-extern int dword_517BA8[];
+extern int g_PortSupplyUnitTypePool[];
 extern unsigned char unk_517BF0[];
 extern unsigned char unk_517CE0[];
 extern unsigned char unk_517DB8[];
@@ -520,8 +519,8 @@ int  sub_406390(int a1, DWORD a2);
 int  sub_406460(int a1, int a2);
 char  sub_4064A0(int a1, int a2);
 signed int  sub_406540(unsigned __int16 *a1);
-void  sub_4065D0(unsigned __int16 *a1);
-void  sub_406650(unsigned __int16 *a1);
+int  sub_4065D0(unsigned __int16 *a1);
+int  sub_406650(unsigned __int16 *a1);
 int  sub_4066C0(unsigned __int16 *a1);
 int Render_DrawSprite();
 void * sub_406980(DWORD a1);
@@ -882,7 +881,7 @@ signed int  sub_424020(int a1, int a2, int a3, int a4);
 BOOL  sub_424120(int a1, int a2);
 signed int  Map_GetBridgeCrossingCostOrZero(int a1, int a2);
 signed int  Road_Build(int a1, int a2, char a3, DWORD a4, double a5);
-signed int  sub_424EC0(int a1, int a2, double a3);
+signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3);
 BOOL  Map_TileHasOwner(int a1, int a2);
 int Map_AutoUpgradeVillages();
 int  sub_4250F0(int a1, int a2);
@@ -1345,9 +1344,9 @@ signed int  sub_454860(unsigned int a1, unsigned int a2, DWORD a3, double a4);
 signed int  sub_454990(int a1, int a2, char a3, DWORD a4, double a5);
 BOOL  sub_4549A0(int a1);
 signed int  sub_4549E0(int a1);
-signed int  sub_454A20(int a1);
-signed int  sub_454AE0(int a1, DWORD a2, double a3);
-int  sub_454D20(DWORD a1, int a2, DWORD a3, double a4);
+signed int  Rules_IsQueuedPathTargetBridgeCrossing(int a1);
+signed int  Rules_BuildRoadOrStepTowardQueuedPath(int a1, DWORD a2, double a3);
+int  Rules_BuildTrapNearTile(DWORD a1, int a2, DWORD a3, double a4);
 int  UnitStack_CalcArmyFactStrength(int a1);
 signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4, DWORD a5);
 signed int  Rules_LinkArmyFact(__int16 *a1, int a2, int a3, double a4, char a5, DWORD a6);
@@ -4487,43 +4486,6 @@ HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown 
 // int __stdcall AVIStreamFindSample(_DWORD, _DWORD, _DWORD); weak
 // int __fastcall AVIStreamRead(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD); weak
 // int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD); weak
-HDC __stdcall CreateCompatibleDC(HDC hdc);
-BOOL __stdcall DeleteDC(HDC hdc);
-BOOL __stdcall DeleteObject(HGDIOBJ ho);
-int __stdcall GetDeviceCaps(HDC hdc, int index);
-int __stdcall GetObjectA(HANDLE h, int c, LPVOID pv);
-COLORREF __stdcall GetPixel(HDC hdc, int x, int y);
-HGDIOBJ __stdcall GetStockObject(int i);
-HGDIOBJ __stdcall SelectObject(HDC hdc, HGDIOBJ h);
-COLORREF __stdcall SetPixel(HDC hdc, int x, int y, COLORREF color);
-BOOL __stdcall StretchBlt(HDC hdcDest, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop);
-int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight, const void *lpBits, const BITMAPINFO *lpbmi, UINT iUsage, DWORD rop);
-BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint);
-HWND __stdcall CreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
-LRESULT __stdcall DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-LRESULT __stdcall DispatchMessageA(const MSG *lpMsg);
-BOOL __stdcall EqualRect(const RECT *lprc1, const RECT *lprc2);
-BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect);
-HDC __stdcall GetDC(HWND hWnd);
-HWND __stdcall GetForegroundWindow();
-BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax);
-BOOL __stdcall IntersectRect(LPRECT lprcDst, const RECT *lprcSrc1, const RECT *lprcSrc2);
-BOOL __stdcall IsRectEmpty(const RECT *lprc);
-HCURSOR __stdcall LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName);
-HICON __stdcall LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName);
-HANDLE __stdcall LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad);
-int __stdcall MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
-BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
-void __stdcall PostQuitMessage(int nExitCode);
-ATOM __stdcall RegisterClassA(const WNDCLASSA *lpWndClass);
-int __stdcall ReleaseDC(HWND hWnd, HDC hDC);
-BOOL __stdcall SetRect(LPRECT lprc, int xLeft, int yTop, int xRight, int yBottom);
-BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow);
-BOOL __stdcall TranslateMessage(const MSG *lpMsg);
-BOOL __stdcall UpdateWindow(HWND hWnd);
-BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect);
-BOOL __stdcall WaitMessage();
-DWORD __stdcall timeGetTime();
 MMRESULT __stdcall waveOutClose(HWAVEOUT hwo);
 MMRESULT __stdcall waveOutGetDevCapsA(UINT_PTR uDeviceID, LPWAVEOUTCAPSA pwoc, UINT cbwoc);
 // UINT __stdcall waveOutGetNumDevs();
@@ -16848,7 +16810,7 @@ signed int  sub_406540(unsigned __int16 *a1)
 }
 
 //----- (004065D0) --------------------------------------------------------
-void  sub_4065D0(unsigned __int16 *a1)
+int  sub_4065D0(unsigned __int16 *a1)
 {
   unsigned __int16 v2; // dx
   unsigned __int8 *v3; // eax
@@ -16898,12 +16860,11 @@ void  sub_4065D0(unsigned __int16 *a1)
         v10 = v5;
     }
   }
-  JUMPOUT(0x4065BD);
+  return v10;
 }
-// 4065EC: control flows out of bounds to 4065BD
 
 //----- (00406650) --------------------------------------------------------
-void  sub_406650(unsigned __int16 *a1)
+int  sub_406650(unsigned __int16 *a1)
 {
   char *v2; // ecx
   int v3; // esi
@@ -16931,9 +16892,8 @@ void  sub_406650(unsigned __int16 *a1)
       ++v7;
     }
   }
-  JUMPOUT(0x4065BD);
+  return v7;
 }
-// 40666C: control flows out of bounds to 4065BD
 
 //----- (004066C0) --------------------------------------------------------
 int  sub_4066C0(unsigned __int16 *a1)
@@ -37791,7 +37751,7 @@ LABEL_14:
 // 5202E4: using guessed type int gameData;
 
 //----- (00424EC0) --------------------------------------------------------
-signed int  sub_424EC0(int a1, int a2, double a3)
+signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
 {
   int v5; // esi
   int v6; // edx
@@ -58746,7 +58706,7 @@ LABEL_16:
 // 4437B6: variable 'v24' is possibly undefined
 // 517B48: using guessed type int dword_517B48[];
 // 517B4C: using guessed type int dword_517B4C[23];
-// 517BA8: using guessed type int dword_517BA8[12];
+// 517BA8: using guessed type int g_PortSupplyUnitTypePool[12];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -67468,8 +67428,8 @@ signed int  Move_CommitIfWithinCost(
   UnitStack_ExecuteQueuedPath(a1, 1, -43 * a1, a3, a4);
   if ( v10 > 0x1F4 || (unsigned int)*(__int16 *)(v6 + gameData + 147180) > 0x28 )
     return 1;
-  if ( sub_454A20(v10) )
-    sub_454AE0(v11, a3, a4);
+  if ( Rules_IsQueuedPathTargetBridgeCrossing(v10) )
+    Rules_BuildRoadOrStepTowardQueuedPath(v11, a3, a4);
   v12 = gameData + 725 * v11;
   if ( v8 == *(__int16 *)(v12 + 147174) && v9 == *(__int16 *)(v12 + 147176) )
   {
@@ -67683,7 +67643,7 @@ signed int  sub_4549E0(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454A20) --------------------------------------------------------
-signed int  sub_454A20(int a1)
+signed int  Rules_IsQueuedPathTargetBridgeCrossing(int a1)
 {
   signed int result; // eax
   int v2; // ebx
@@ -67701,7 +67661,7 @@ signed int  sub_454A20(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454AE0) --------------------------------------------------------
-signed int  sub_454AE0(int a1, DWORD a2, double a3)
+signed int  Rules_BuildRoadOrStepTowardQueuedPath(int a1, DWORD a2, double a3)
 {
   int v3; // esi
   int v4; // eax
@@ -67725,27 +67685,28 @@ signed int  sub_454AE0(int a1, DWORD a2, double a3)
   v9 = Facing_DirectionFromDelta8(
          (unsigned __int8)v8 - *(__int16 *)(gameData + v3 + 147174),
          BYTE1(v8) - *(__int16 *)(gameData + v3 + 147176));
-  if ( Map_TileHasOwner(*(__int16 *)(v3 + gameData + 147174), *(__int16 *)(v3 + gameData + 147176)) && !sub_454A20(v10) )
+  if ( Map_TileHasOwner(*(__int16 *)(v3 + gameData + 147174), *(__int16 *)(v3 + gameData + 147176))
+    && !Rules_IsQueuedPathTargetBridgeCrossing(v10) )
   {
     switch ( v9 )
     {
       case 1:
-        v13 = sub_424EC0(v10, 0, a3);
+        v13 = UnitStack_MoveOneTileInDirection(v10, 0, a3);
         goto LABEL_10;
       case 3:
-        v13 = sub_424EC0(v10, 4, a3);
+        v13 = UnitStack_MoveOneTileInDirection(v10, 4, a3);
 LABEL_10:
         if ( v13 )
           goto LABEL_13;
         v14 = 2;
         break;
       case 5:
-        if ( sub_424EC0(v10, 4, a3) )
+        if ( UnitStack_MoveOneTileInDirection(v10, 4, a3) )
           goto LABEL_13;
         v14 = 6;
         break;
       case 7:
-        if ( sub_424EC0(v10, 0, a3) )
+        if ( UnitStack_MoveOneTileInDirection(v10, 0, a3) )
           goto LABEL_13;
         v14 = 6;
         break;
@@ -67754,7 +67715,7 @@ LABEL_10:
         break;
     }
 LABEL_12:
-    sub_424EC0(v10, v14, a3);
+    UnitStack_MoveOneTileInDirection(v10, v14, a3);
   }
   else
   {
@@ -67774,7 +67735,7 @@ LABEL_12:
           v12 = 4;
           v11 = v10;
 LABEL_8:
-          if ( !sub_424EC0(v11, v12, a3) )
+          if ( !UnitStack_MoveOneTileInDirection(v11, v12, a3) )
           {
             v13 = Road_Build(v10, 2, v9, a2, a3);
             goto LABEL_10;
@@ -67782,14 +67743,18 @@ LABEL_8:
         }
         break;
       case 5:
-        if ( !Road_Build(v10, 4, v9, a2, a3) && !sub_424EC0(v10, 4, a3) && !Road_Build(v10, 6, v9, a2, a3) )
+        if ( !Road_Build(v10, 4, v9, a2, a3)
+          && !UnitStack_MoveOneTileInDirection(v10, 4, a3)
+          && !Road_Build(v10, 6, v9, a2, a3) )
         {
           v14 = 6;
           goto LABEL_12;
         }
         break;
       case 7:
-        if ( !Road_Build(v10, 0, v9, a2, a3) && !sub_424EC0(v10, 0, a3) && !Road_Build(v10, 6, v9, a2, a3) )
+        if ( !Road_Build(v10, 0, v9, a2, a3)
+          && !UnitStack_MoveOneTileInDirection(v10, 0, a3)
+          && !Road_Build(v10, 6, v9, a2, a3) )
         {
           v14 = 6;
           goto LABEL_12;
@@ -67812,7 +67777,7 @@ LABEL_13:
 // 5202E4: using guessed type int gameData;
 
 //----- (00454D20) --------------------------------------------------------
-int  sub_454D20(DWORD a1, int a2, DWORD a3, double a4)
+int  Rules_BuildTrapNearTile(DWORD a1, int a2, DWORD a3, double a4)
 {
   int v5; // edx
   int v6; // ecx
@@ -184419,6 +184384,7 @@ int  sub_4E60F5(_BYTE *a1, int a2, int a3)
   _DWORD *j; // ecx
   int v12; // esi
   int v13; // ecx
+  unsigned __int8 *v14; // eax
 
   v5 = (_DWORD *)dword_54E704;
 LABEL_20:
@@ -184447,11 +184413,19 @@ LABEL_20:
     memmove_(j, dword_54E700);
     dword_54E700 = v13;
     if ( v10 < v12 )
-      JUMPOUT(0x4E619D);
+    {
+      v14 = (unsigned __int8 *)(v10 + dword_54E700);
+      do
+      {
+        *v14 = v14[1];
+        ++v14;
+        ++v10;
+      }
+      while ( v10 < v12 );
+    }
   }
   return 0;
 }
-// 4E619C: control flows out of bounds to 4E619D
 // 4E6114: variable 'a3' is possibly undefined
 // 4E612C: variable 'v9' is possibly undefined
 // 4E617A: variable 'j' is possibly undefined
