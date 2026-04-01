@@ -161,7 +161,7 @@
 | dword_543CB0 | g_CurrentUnitMoveSoundTypeId | Global | Unit Audio | High | The movement-audio helpers cache the currently sounding unit type here to avoid restarting looped sounds or to reset the step variant when the type changes. | c |
 | sub_4415A0 | BattleMap_GetMoveSoundSurfaceClass | Function | Unit Audio / Battle Map | Medium | The function maps a battle-map tile id through `byte_517318` and is only used to choose the `p/t/d`-style movement-sound suffix in battle movement audio. | c, asm |
 | sub_441F00 | Audio_PlayWorldMapUnitMoveSound | Function | Unit Audio / World Map | High | Called from the world movement animation loop; it builds `sfx\\ruchy\\...` paths, chooses airborne vs terrain-dependent suffixes, and loops siege-like movers. | c, asm |
-| sub_442290 | Audio_PlayBattleMapUnitMoveSound | Function | Unit Audio / Battle Map | High | Battle-only counterpart to the world helper; it uses `BattleMap_GetMoveSoundSurfaceClass` instead of `Map_DestroyTile` when selecting footstep suffixes. | c, asm |
+| sub_442290 | Audio_PlayBattleMapUnitMoveSound | Function | Unit Audio / Battle Map | High | Battle-only counterpart to the world helper; it uses `BattleMap_GetMoveSoundSurfaceClass` instead of `Map_GetTileSurfaceClassOrUnexplored` when selecting footstep suffixes. | c, asm |
 | sub_4425B0 | Audio_StopUnitMoveSound | Function | Unit Audio | High | Thin helper that stops the active movement sound and clears the cached active unit type. | c |
 
 ## Batch 22 – Unit Action Sound Wave
@@ -1816,3 +1816,25 @@
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
 | `sub_455890` | `Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero` | function | Buildings / Production Licences | High | The helper scans the recovered `unit_licence_type_ids[12]` roster, skips entries `<= 0`, skips unit type `17`, and returns the first remaining slot index or `0`. New-building initialization seeds slot `0` to unit type `0` and all later slots to `-1`, proving the `> 0` filter explicitly skips the built-in peasant licence rather than empty slots, while the `!= 17` arm skips builder licences. | c, asm, prior-artifact | yes: Agent A, Agent C+H, Agent E |
+
+## Batch 111 - Army Fact Owner Sync Rename Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `sub_4550F0` | `Rules_SyncArmyFactOwner` | function | Rules / Army Facts | High | The helper sits directly beside `Rules_SyncArmyFactStrength` and `Rules_SyncCastleFactOwner`, first calls `Rules_EnsureArmyFactForStack`, then writes the stack owner's player id into the `"gracz"` slot of the existing army fact through `sub_480160`. Capture paths call it exactly when stack ownership changes without necessarily rebuilding the whole fact, making the owner-sync role precise. | c, asm, map | yes: Agent E, Agent F+G |
+
+## Batch 112 - Terrain Surface Classifier Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Map_DestroyTile` | `Map_GetTileSurfaceClassOrUnexplored` | function | Map / Terrain Classification | High | The helper never mutates map state: it reads the tile terrain id and overlay word, collapses them through the canonical terrain-class table, forces the road class when a road/bridge overlay is present, and returns `1` for tiles outside current-player visibility. The world-map hover panel decodes its outputs as `Plain`, `Forest`, `Desert`, `Swamp`, `Water`, `Hills`, `Mountains`, and `Road`, while placement, trap, pathing, and move-sound callers all use it as a pure surface classifier. | c, asm, map | yes: Agent D |
+
+## Batch 113 - Prisoner Text Table Rename Wave
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `off_518D08` | `g_PrisonerCastleIntakeTexts` | global | Prisoners / UI Text | High | Used only by `Prisoner_SetInCastles` after a captured `33/34` entry is placed into a castle prison; the localized strings report that the enemy captive has been brought to castle `%s`. | c, asm | yes: Agent B |
+| `off_518D14` | `g_PrisonerBeheadingTexts` | global | Prisoners / UI Text | High | Used only by `Prisoner_Behead`, and every localized string is the beheading outcome text for a prisoner in castle `%s`. | c, asm | yes: Agent B |
+| `off_518D20` | `g_PrisonerTortureRichestCastleRevealTexts` | global | Prisoners / UI Text | High | Selected only in torture cases `0/5`, which call `Prisoner_FindRichestHiddenEnemyCastle`; the strings report that the prisoner revealed the richest hidden enemy castle before dying. | c, asm | yes: Agent B |
+| `off_518D2C` | `g_PrisonerTortureCastleRevealTexts` | global | Prisoners / UI Text | High | Selected only in torture cases `1/6`, which call `Prisoner_FindAnyHiddenEnemyCastle`; the strings report that the prisoner revealed one of the enemy king's castles. | c, asm | yes: Agent B |
+| `off_518D38` | `g_PrisonerTortureEnemyStackRevealTexts` | global | Prisoners / UI Text | High | Selected only in torture cases `2/7`, which call `Prisoner_FindAnyHiddenEnemyUnitStack`; the strings report that the prisoner gave up the location of an enemy field stack. | c, asm | yes: Agent B |
+| `off_518D44` | `g_PrisonerTortureNoConfessionDeathTexts` | global | Prisoners / UI Text | High | Selected only in torture case `3`, where the prisoner is killed and the strings say he died without revealing anything. | c, asm | yes: Agent B |
+| `off_518D50` | `g_PrisonerTortureResistanceTexts` | global | Prisoners / UI Text | High | Selected only in torture case `4`, where the prison action is reset instead of killing the prisoner; the strings stress resistance to torture rather than a confession. | c, asm | yes: Agent B |
+| `off_518D8C` | `g_PrisonerBriberyDefectionTexts` | global | Prisoners / UI Text | High | Used only by `Prisoner_Pay`, which spends the ransom/bribe, recreates a friendly `33/34` garrison unit, and shows text that the prisoner joined your side. | c, asm | yes: Agent B |

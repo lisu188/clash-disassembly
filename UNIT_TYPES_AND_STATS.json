@@ -342,7 +342,7 @@
       "name": "current_health_percent",
       "confidence": "high",
       "semantic_role": "runtime health or squad strength percentage",
-      "evidence": "Initialized to 100, scales effective attack and damage helpers, a zero value kills the slot, and the detach/regroup helpers also classify slots from this byte (`<= 10` weak cutoff, `>= 8` stronger regroup threshold)."
+      "evidence": "Initialized to 100 for ordinary units, scales effective attack and damage helpers, a zero value kills the slot, and the detach/regroup helpers also classify slots from this byte (`<= 10` weak cutoff, `>= 8` stronger regroup threshold). Cargo types `31` and `32` reuse the same byte as transfer payload quantity during treasury/population export and reward flows."
     },
     {
       "name": "fatigue",
@@ -359,8 +359,8 @@
     {
       "name": "stance_bits",
       "confidence": "medium",
-      "semantic_role": "runtime formation or stance bits that modify attack values",
-      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, defense-power, and wall-attack helpers; low-bit value `3` is the resident special-occupant state written by `Building_CreateSpecialPersonageGarrisonUnit` and rejected by the generic castle-training helpers; the selected-unit battle panel's `Status` row and icon block also derive from packed slot state rooted in this byte."
+      "semantic_role": "runtime packed status/order/volley byte that modifies combat and garrison behavior",
+      "evidence": "Bits `0..1` of UnitSlotRecord +12 feed melee, defense-power, and wall-attack helpers directly, and value `3` is the resident special-occupant state written by `Building_CreateSpecialPersonageGarrisonUnit`. Bits `2..3` form a separate order/state subfield, bits `4..6` track `volleys_used` and are incremented by ranged fire before being compared against `status_level + 1`, and only bit `7` remains unresolved."
     },
     {
       "name": "state_flags",
@@ -635,9 +635,16 @@
     {
       "unit_type": "UnitType31_GoldCargo",
       "stat": "current_health_percent",
-      "relationship_kind": "temple_reward_payload_quantity",
+      "relationship_kind": "treasury_transfer_payload_quantity",
       "confidence": "high",
-      "evidence": "`Temple_SpawnGiftGoldCargoStack` initializes type `31` slots, then writes the runtime quantity/health byte with `50`, `100`, `200`, or `300` payload-scaled values before spawning the cargo stack nearby."
+      "evidence": "`Building_Transfer` exports stored treasury as type `31` cargo in 100-sized chunks plus a remainder written into slot byte `+9`, `Building_UnitGetInto` adds that same byte back into building treasury on delivery, and `Temple_SpawnGiftGoldCargoStack` reuses the quantity byte for `50/100/200/300` treasure rewards."
+    },
+    {
+      "unit_type": "UnitType32_PeasantCargo",
+      "stat": "current_health_percent",
+      "relationship_kind": "population_transfer_payload_quantity",
+      "confidence": "high",
+      "evidence": "`Building_Transfer` exports building population as type `32` cargo in 100-sized chunks plus a remainder written into slot byte `+9`, `Building_UnitGetInto` adds that same byte back into the low 12 bits of building population storage on delivery, and plague/founding logic also treats the unit as transferable population cargo rather than ordinary infantry."
     },
     {
       "unit_type": "UnitType31_GoldCargo",
@@ -813,25 +820,25 @@
       "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
     },
     {
-      "candidate": "UnitType31_GoldCargo / UnitType32_PeasantCargo",
+      "candidate": "UnitType32_PeasantCargo",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
-        "non-combat stack cargo entries",
-        "resource/passenger payload records"
+        "transferable building population cargo",
+        "a public label closer to peasant convoy / peasant payload"
       ],
-      "evidence": "The stack logic excludes types `31` and `32` from the normal-combat predicate, and type `32` is explicitly compacted and rebuilt as cargo.",
-      "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
+      "evidence": "The stack logic excludes type `32` from the normal-combat predicate, `Building_Transfer` exports building population through this id, `Building_UnitGetInto` adds its quantity byte back into building population storage, plague attrition targets the same cargo, and founding logic treats it as transferable population rather than an ordinary recruitable field unit.",
+      "blockers": "The behavior is secure, but the exact original public/UI label beyond peasant/population cargo remains unresolved."
     },
     {
-      "candidate": "UnitSlotRecord.stance_bits",
-      "candidate_kind": "field",
+      "candidate": "UnitSlotRecord.stance_bits bit 7",
+      "candidate_kind": "field_bit",
       "possible_interpretations": [
-        "formation bits",
-        "attack stance bits",
-        "garrison posture selector"
+        "additional status flag",
+        "garrison posture extension",
+        "battle/display state flag"
       ],
-      "evidence": "The low two bits feed effective attack helpers directly, low-bit value `3` marks a resident special occupant that the generic castle-training helpers reject, and the full byte is cycled by `Building_UseGarrisonSlot`.",
-      "blockers": "The exact meaning of the upper subfields beyond the recovered resident-special low-bit value remains unresolved."
+      "evidence": "Bits `0..1` feed effective attack helpers directly, value `3` marks a resident special occupant, bits `2..3` and `4..6` are now separated into order/state and volley/use subfields, leaving only the top bit unresolved.",
+      "blockers": "The exact semantics of the remaining top bit have not yet been isolated from the surrounding slot-state helpers."
     },
     {
       "candidate": "production_required_tech_level_mode_2 / production_required_tech_level_other_modes",

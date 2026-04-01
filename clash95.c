@@ -597,7 +597,7 @@ int  MiniMap_RedrawTileRect(int a1, signed int a2, int a3, int a4);
 BOOL  sub_40D800(unsigned __int16 a1, unsigned __int16 a2);
 void Locale_DrawInteger();
 void * MiniMap_DrawTileCell(void *result, signed int a2);
-signed int  Map_DestroyTile(int a1, signed int a2);
+signed int  Map_GetTileSurfaceClassOrUnexplored(int a1, signed int a2);
 int MiniMap_UpdateViewportFromCursor();
 int MiniMap_ToggleVisibility();
 BOOL MiniMap_IsCursorInside();
@@ -1351,7 +1351,7 @@ int  UnitStack_CalcArmyFactStrength(int a1);
 signed int  Rules_EnsureArmyFactForStack(__int16 *a1, int a2, double a3, char a4, DWORD a5);
 signed int  Rules_LinkArmyFact(__int16 *a1, int a2, int a3, double a4, char a5, DWORD a6);
 signed int  Rules_SyncArmyFactStrength(__int16 *a1, int a2, int a3, char a4, DWORD a5, double a6);
-signed int  sub_4550F0(__int16 *a1, char a2, DWORD a3, double a4);
+signed int  Rules_SyncArmyFactOwner(__int16 *a1, char a2, DWORD a3, double a4);
 signed int  Rules_SyncCastleFactOwner(int a1, int a2, double a3);
 _DWORD * Rules_LogTrapFact(int a1, int a2);
 _DWORD * Rules_RetractTrapFact(int a1, int a2);
@@ -10442,7 +10442,7 @@ char *off_518C58[39] =
   "drebegen"
 }; // weak
 _UNKNOWN unk_518CF4; // weak
-char *off_518D08[21] =
+char *g_PrisonerCastleIntakeTexts[21] =
 {
   "Panie, nasze wojska po wygranej bitwie z armi\x86 znienawidzonego wroga wzi\x91\x92y w niewol\x91 jego dow\xA2dc\x91 i doprowadzi\x92y do zamku %s.",
   "Master, our troops, having defeated the enemy, captured the enemy's officer and brought him to the castle %s",
@@ -10466,7 +10466,7 @@ char *off_518D08[21] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D14[18] =
+char *g_PrisonerBeheadingTexts[18] =
 {
   "W zamku %s scieto wieznia.",
   "A captured enemy soldier was beheaded in the castle %s.",
@@ -10487,7 +10487,7 @@ char *off_518D14[18] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D20[15] =
+char *g_PrisonerTortureRichestCastleRevealTexts[15] =
 {
   "Twoi kaci ostro zabrali si\x91 do roboty. Wyznaczonego na %s wi\x91\xA6nia torturowali ca\x92\x86 dob\x91 zanim zacz\x86\x92 gada\x8D. Przed \x9Emierci\x86  zdo\x92a\x92 wykrztusi\x8D, gdzie znajduje si\x91 najbogatszy zamek jego w\x92adcy.",
   "Your persecutors did not waste time. The victim was chosen at the castle of %s. They made him betray the secrets of the whereabouts of the richest castle just before he died in pain.",
@@ -10505,7 +10505,7 @@ char *off_518D20[15] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D2C[12] =
+char *g_PrisonerTortureCastleRevealTexts[12] =
 {
   "Krzyki torturowanego na %s wi\x91\xA6nia trwa\x92y ca\x92\x86 noc. Nad ranem kaci poinformowali Ci\x91, \xA7e skazaniec przed \x9Emierci\x86 wskaza\x92 po\x92o\xA7enie jednego z zamk\xA2w jego kr\xA2la.",
   "At %s cries of the tormented man could be heard all night long. At the break of dawn your persecutors brought you the news that he had revealed all the secrets about the whereabouts of his King's castles.",
@@ -10520,7 +10520,7 @@ char *off_518D2C[12] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D38[9] =
+char *g_PrisonerTortureEnemyStackRevealTexts[9] =
 {
   "Kaci byli bardzo zadowoleni z dobrze spe\x92nionego obowi\x86zku. Od wi\x91\xA6nia osadzonego na %s wydobyli informacj\x91 o po\x92o\xA7eniu jednej z wrogich jednostek.",
   "Persecutors were very pleased with what they had done. They had got all information about the enemy's units from the tortured victim in the castle of %s.",
@@ -10532,7 +10532,7 @@ char *off_518D38[9] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D44[6] =
+char *g_PrisonerTortureNoConfessionDeathTexts[6] =
 {
   "Kaci ca\x92\x86 noc zn\x91cali si\x91 nad wyznaczonym  w %s wi\x91\xA6niem, ale ten tylko krzycza\x92 i \x9Emia\x92 si\x91 na przemian. Skona\x92 z imieniem swej ukochanej na ustach.",
   "Persecutors were torturing the victim all night long in the castle of %s but he only screamed and laughed. With his last breath he took his secret with him.",
@@ -10541,14 +10541,14 @@ char *off_518D44[6] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-char *off_518D50[3] =
+char *g_PrisonerTortureResistanceTexts[3] =
 {
   "Ani obc\x91gi, ani topory nie zmusi\x92y wi\x91\xA6nia osadzonego na %s do gadania. To wyj\x86tkowo twarda sztuka, prze\xA7y\x92 najbardziej wyszukane tortury zadawane przez Twoich kat\xA2w.",
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
 _UNKNOWN unk_518D5C; // weak
-char *off_518D8C[6] =
+char *g_PrisonerBriberyDefectionTexts[6] =
 {
   "Osadzony w zamku %s wi\x91zie\xA4 skuszony zaoferowanym przez Ciebie z\x92otem zdradzi\x92 swego w\x92adc\x91 i stan\x86\x92 po Twojej stronie.",
   "Kept in a castle %s he was talked into joining your army, lured with gold. He betrayed his own troops.",
@@ -18203,7 +18203,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
   if ( (unsigned int)(Time_Now(v3, v2) - dword_5202A4) > 0xC8
     && *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == 0xFFFF )
   {
-    Map_DestroyTile(v1, v78);
+    Map_GetTileSurfaceClassOrUnexplored(v1, v78);
     if ( !Map_IsTileVisibleToPlayer(v1, v78, g_CurrentPlayerIndex) )
     {
       v69 = aTerenNieodkryt;
@@ -21486,7 +21486,7 @@ void * MiniMap_DrawTileCell(void *result, signed int a2)
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040DB80) --------------------------------------------------------
-signed int  sub_40DB80(int a1, signed int a2)
+signed int  Map_GetTileSurfaceClassOrUnexplored(int a1, signed int a2)
 {
   unsigned __int16 *v3; // eax
   int v4; // edi
@@ -24737,7 +24737,7 @@ __int16 * UnitStack_CaptureDefeatedStack(
   if ( v17[3] == -1 )
     return Rules_UnlinkArmyFact(v17, a5);
   UnitStack_NormalizePeasantCargo(v17, (DWORD)a1, a5);
-  sub_4550F0(v18, a4, (DWORD)a1, a5);
+  Rules_SyncArmyFactOwner(v18, a4, (DWORD)a1, a5);
   Unit_GetSquadCount((int)a1);
   v20 = Unit_GetSquadCount(a2);
   if ( v21 + v20 <= 10 && (a4 = a1[1], UnitStack_GetMoveCostToTileIgnoringOccupancy((__int16 *)a2, *a1, a4)) )
@@ -24765,7 +24765,7 @@ __int16 * UnitStack_CaptureDefeatedStack(
     *(_BYTE *)(a2 + 4) = *((_BYTE *)a1 + 4);
     if ( *(_DWORD *)(a2 + 316) )
       *(_DWORD *)(a2 + 316) = 0;
-    result = (__int16 *)sub_4550F0((__int16 *)a2, a4, (DWORD)a1, v19);
+    result = (__int16 *)Rules_SyncArmyFactOwner((__int16 *)a2, a4, (DWORD)a1, v19);
   }
   if ( v35 )
   {
@@ -32615,7 +32615,7 @@ BOOL  MapTile_IsCastleFoundationTile(int a1, signed int a2, int a3)
   int v6; // esi
   int v7; // ecx
 
-  v4 = Map_DestroyTile(a1, a2);
+  v4 = Map_GetTileSurfaceClassOrUnexplored(a1, a2);
   if ( v4 == 185 || v4 == 39 || v4 == 204 || v4 == 202 || v4 == 147 || v4 == 207 || v4 == 1 )
     return 0;
   if ( a3 )
@@ -32636,7 +32636,7 @@ BOOL  MapTile_IsCastleFoundationAnchorTile(int a1, signed int a2, int a3)
   int v5; // ecx
   int v6; // eax
 
-  v4 = Map_DestroyTile(a1, a2);
+  v4 = Map_GetTileSurfaceClassOrUnexplored(a1, a2);
   if ( v4 == 185 || v4 == 39 || v4 == 204 || v4 == 202 || v4 == 147 || v4 == 207 || v4 == 1 )
     return 0;
   if ( a3 )
@@ -32789,7 +32789,7 @@ LABEL_23:
     }
     while ( 1 )
     {
-      v10 = Map_DestroyTile(v26, v8);
+      v10 = Map_GetTileSurfaceClassOrUnexplored(v26, v8);
       if ( v10 == 185 || v10 == 39 || v10 == 204 || v10 == 202 || v10 == 147 || v10 == 1 )
         v27 = 0;
       v11 = *(unsigned __int16 *)(v23 + gameData + v9 + 556374);
@@ -37684,7 +37684,8 @@ LABEL_14:
         v20 = UnitStack_GetMinCurrentActionPoints(725 * a1 + gameData + 147174);
         if ( v20 >= v21 )
         {
-          if ( Map_DestroyTile(v29, v37) == 185 || Map_DestroyTile(v11, v12) == 185 )
+          if ( Map_GetTileSurfaceClassOrUnexplored(v29, v37) == 185
+            || Map_GetTileSurfaceClassOrUnexplored(v11, v12) == 185 )
           {
             return 0;
           }
@@ -37927,7 +37928,7 @@ int  sub_425120(int a1, int a2)
     || (result = UnitStack_GetTileMoveCostOrZero((__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174), a1, gameData, a2)) != 0
     && (result = MapTile_IsCastleFoundationTile(a1, a2, 2)) == 0
     && (result = UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174), result >= v14)
-    && (result = Map_DestroyTile(a1, a2), result != 185) )
+    && (result = Map_GetTileSurfaceClassOrUnexplored(a1, a2), result != 185) )
   {
     dword_527C34 = 1;
     return sub_419D60((int)&dword_5142B8 + 53 * v6, v7);
@@ -37998,7 +37999,7 @@ signed int  sub_425540(DWORD a1, double a2)
   int v11; // eax
   int *v12; // edx
 
-  result = Map_DestroyTile(
+  result = Map_GetTileSurfaceClassOrUnexplored(
              *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
              *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
   if ( result != 185 )
@@ -41960,7 +41961,7 @@ BOOL  Trap_CanPlaceAtTile(int a1, int a2)
   result = 0;
   if ( !Trap_GetTileOwnerMask(a1, a2, g_CurrentPlayerIndex) )
   {
-    v5 = Map_DestroyTile(v3, a2);
+    v5 = Map_GetTileSurfaceClassOrUnexplored(v3, a2);
     if ( v5 != 185
       && v5 != 39
       && v5 != 204
@@ -57427,7 +57428,7 @@ void  Audio_PlayWorldMapUnitMoveSound(int a1, int a2, signed int a3, unsigned in
     }
     strcpy(v31, "d0");
     v31[1] = g_CurrentUnitMoveSoundVariant + 49;
-    v26 = Map_DestroyTile(a1, v29);
+    v26 = Map_GetTileSurfaceClassOrUnexplored(a1, v29);
     if ( v26 < 0xB7 )
     {
       if ( v26 < 0x93 )
@@ -64304,12 +64305,12 @@ LABEL_6:
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       goto LABEL_3;
     sub_4620F0(aUwiezic, 1, i, v20, v16);
-    v25[0] = (int)off_518D08[0];
-    v25[1] = (int)off_518D08[1];
-    v25[2] = (int)off_518D08[2];
+    v25[0] = (int)g_PrisonerCastleIntakeTexts[0];
+    v25[1] = (int)g_PrisonerCastleIntakeTexts[1];
+    v25[2] = (int)g_PrisonerCastleIntakeTexts[2];
     v22 = (const char *)v25[(unsigned __int8)g_LanguageIndex];
     sprintf_(&unk_5441F0, v22, v16 + gameData + 509674 + 5);
-    result = UI_ShowInfoWindow((int)&unk_5441F0, 0, v23, v16, (int)v22, (int)&off_518D08[3]);
+    result = UI_ShowInfoWindow((int)&unk_5441F0, 0, v23, v16, (int)v22, (int)&g_PrisonerCastleIntakeTexts[3]);
   }
   return result;
 }
@@ -64323,7 +64324,7 @@ LABEL_6:
 // 44EB5A: variable 'v24' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 511130: using guessed type char g_LanguageIndex;
-// 518D08: using guessed type char *off_518D08[21];
+// 518D08: using guessed type char *g_PrisonerCastleIntakeTexts[21];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -64382,9 +64383,9 @@ int  Prisoner_Behead(int a1, int a2, char a3, DWORD a4)
   if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v5 + 2) + gameData + 140051) )
   {
     sub_4620F0(aZciecie, 1, v5, a3, a4);
-    v11[0] = (int)off_518D14[0];
-    v11[1] = (int)off_518D14[1];
-    v11[2] = (int)off_518D14[2];
+    v11[0] = (int)g_PrisonerBeheadingTexts[0];
+    v11[1] = (int)g_PrisonerBeheadingTexts[1];
+    v11[2] = (int)g_PrisonerBeheadingTexts[2];
     v8 = (const char *)v11[(unsigned __int8)g_LanguageIndex];
     sprintf_(v10, v8, v7 + 5);
     return UI_ShowInfoWindow((int)v10, 0, v9, a4, (int)&v11[3], (int)v8);
@@ -64397,7 +64398,7 @@ int  Prisoner_Behead(int a1, int a2, char a3, DWORD a4)
 // 44EC6B: variable 'v9' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 511130: using guessed type char g_LanguageIndex;
-// 518D14: using guessed type char *off_518D14[18];
+// 518D14: using guessed type char *g_PrisonerBeheadingTexts[18];
 // 5202E4: using guessed type int gameData;
 
 //----- (0044EC80) --------------------------------------------------------
@@ -64586,10 +64587,10 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
         return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
       Map_RevealTilesInRadius2ForPlayer(*v10, v10[1], *(unsigned __int8 *)(v11 + 2));
-      v27[0] = (int)off_518D20[0];
-      v27[1] = (int)off_518D20[1];
-      v27[2] = (int)off_518D20[2];
-      v12 = &off_518D20[3];
+      v27[0] = (int)g_PrisonerTortureRichestCastleRevealTexts[0];
+      v27[1] = (int)g_PrisonerTortureRichestCastleRevealTexts[1];
+      v27[2] = (int)g_PrisonerTortureRichestCastleRevealTexts[2];
+      v12 = &g_PrisonerTortureRichestCastleRevealTexts[3];
       v14 = (int *)v27[(unsigned __int8)g_LanguageIndex];
       sprintf_(&unk_5442C0, (const char *)v14, v13 + 5);
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
@@ -64601,9 +64602,9 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
         return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
       Map_RevealTilesInRadius2ForPlayer(*v10, v10[1], *(unsigned __int8 *)(v17 + 2));
-      v25[0] = (int)off_518D2C[0];
-      v25[1] = (int)off_518D2C[1];
-      v25[2] = (int)off_518D2C[2];
+      v25[0] = (int)g_PrisonerTortureCastleRevealTexts[0];
+      v25[1] = (int)g_PrisonerTortureCastleRevealTexts[1];
+      v25[2] = (int)g_PrisonerTortureCastleRevealTexts[2];
       v14 = v26;
       v12 = (char **)v25[(unsigned __int8)g_LanguageIndex];
       sprintf_(&unk_5442C0, (const char *)v12, v18 + 5);
@@ -64616,30 +64617,30 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
         return Prisoner_Torture(v9, a2, v9, (char)v10, a5);
       Prisoner_Kill(v9, (char)v10, a5);
       Map_RevealTilesInRadius2ForPlayer(*(__int16 *)v10, *((__int16 *)v10 + 1), *(unsigned __int8 *)(v20 + 2));
-      v29[0] = (int)off_518D38[0];
-      v29[1] = (int)off_518D38[1];
-      v29[2] = (int)off_518D38[2];
-      v12 = &off_518D38[3];
+      v29[0] = (int)g_PrisonerTortureEnemyStackRevealTexts[0];
+      v29[1] = (int)g_PrisonerTortureEnemyStackRevealTexts[1];
+      v29[2] = (int)g_PrisonerTortureEnemyStackRevealTexts[2];
+      v12 = &g_PrisonerTortureEnemyStackRevealTexts[3];
       v14 = &v29[3];
       sprintf_(&unk_5442C0, (const char *)v29[(unsigned __int8)g_LanguageIndex], v21 + 5);
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
     case 3u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_3);
       Prisoner_Kill(v22, a4, a5);
-      v28[0] = (int)off_518D44[0];
-      v28[1] = (int)off_518D44[1];
-      v28[2] = (int)off_518D44[2];
-      v12 = &off_518D44[3];
+      v28[0] = (int)g_PrisonerTortureNoConfessionDeathTexts[0];
+      v28[1] = (int)g_PrisonerTortureNoConfessionDeathTexts[1];
+      v28[2] = (int)g_PrisonerTortureNoConfessionDeathTexts[2];
+      v12 = &g_PrisonerTortureNoConfessionDeathTexts[3];
       v14 = v29;
       sprintf_(&unk_5442C0, (const char *)v28[(unsigned __int8)g_LanguageIndex], v23 + 5);
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
     case 4u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_4);
       BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = 0;
-      v26[0] = (int)off_518D50[0];
-      v26[1] = (int)off_518D50[1];
-      v26[2] = (int)off_518D50[2];
-      v12 = &off_518D50[3];
+      v26[0] = (int)g_PrisonerTortureResistanceTexts[0];
+      v26[1] = (int)g_PrisonerTortureResistanceTexts[1];
+      v26[2] = (int)g_PrisonerTortureResistanceTexts[2];
+      v12 = &g_PrisonerTortureResistanceTexts[3];
       v14 = v27;
       sprintf_(&unk_5442C0, (const char *)v26[(unsigned __int8)g_LanguageIndex], v24 + 5);
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
@@ -64664,11 +64665,11 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
 // 44F1AA: variable 'v24' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 511130: using guessed type char g_LanguageIndex;
-// 518D20: using guessed type char *off_518D20[15];
-// 518D2C: using guessed type char *off_518D2C[12];
-// 518D38: using guessed type char *off_518D38[9];
-// 518D44: using guessed type char *off_518D44[6];
-// 518D50: using guessed type char *off_518D50[3];
+// 518D20: using guessed type char *g_PrisonerTortureRichestCastleRevealTexts[15];
+// 518D2C: using guessed type char *g_PrisonerTortureCastleRevealTexts[12];
+// 518D38: using guessed type char *g_PrisonerTortureEnemyStackRevealTexts[9];
+// 518D44: using guessed type char *g_PrisonerTortureNoConfessionDeathTexts[6];
+// 518D50: using guessed type char *g_PrisonerTortureResistanceTexts[3];
 
 //----- (0044F1E0) --------------------------------------------------------
 int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, int a2, int a3, char a4, double a5)
@@ -64726,9 +64727,9 @@ unsigned int  Prisoner_Pay(int a1, int a2, DWORD a3, double a4)
   result = 1423 * *(unsigned __int8 *)(v9 + 2);
   if ( *(_DWORD *)(gameData + result + 140051) )
   {
-    v12[0] = (int)off_518D8C[0];
-    v12[1] = (int)off_518D8C[1];
-    v12[2] = (int)off_518D8C[2];
+    v12[0] = (int)g_PrisonerBriberyDefectionTexts[0];
+    v12[1] = (int)g_PrisonerBriberyDefectionTexts[1];
+    v12[2] = (int)g_PrisonerBriberyDefectionTexts[2];
     v10 = (const char *)v12[(unsigned __int8)g_LanguageIndex];
     sprintf_(&unk_5442C0, v10, v9 + 5);
     return UI_ShowInfoWindow((int)&unk_5442C0, 0, v11, a3, (int)&v12[3], (int)v10);
@@ -64741,7 +64742,7 @@ unsigned int  Prisoner_Pay(int a1, int a2, DWORD a3, double a4)
 // 44F33A: variable 'v11' is possibly undefined
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 // 511130: using guessed type char g_LanguageIndex;
-// 518D8C: using guessed type char *off_518D8C[6];
+// 518D8C: using guessed type char *g_PrisonerBriberyDefectionTexts[6];
 // 5202E4: using guessed type int gameData;
 
 //----- (0044F350) --------------------------------------------------------
@@ -67993,7 +67994,7 @@ signed int  Rules_SyncArmyFactStrength(
 // 4550D5: variable 'v12' is possibly undefined
 
 //----- (004550F0) --------------------------------------------------------
-signed int  sub_4550F0(
+signed int  Rules_SyncArmyFactOwner(
         __int16 *a1,
         char a2,
         DWORD a3,
