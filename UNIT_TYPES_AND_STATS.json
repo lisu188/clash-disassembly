@@ -13,7 +13,7 @@
       "folder": "peon",
       "localized_names": "Posp. ruszenie / Peasant / Bauern",
       "confidence": "high",
-      "evidence": "The first 88-byte unit_stats record pairs the localized-name pointer triplet with the `peon` sprite folder."
+      "evidence": "The first 88-byte unit_stats record pairs the localized-name table with the `peon` resource key."
     },
     {
       "id": 1,
@@ -277,7 +277,7 @@
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The queen-turn path binds type `33` specifically to the son outcome before formatting `g_QueenSonBirthTexts`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name table, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The queen-turn path binds type `33` specifically to the son outcome before formatting `g_QueenSonBirthTexts`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
@@ -285,7 +285,7 @@
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The queen-turn path binds type `34` specifically to the daughter outcome before formatting `g_QueenDaughterBirthTexts`. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
+      "evidence": "This record reuses the same localized-name table, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The queen-turn path binds type `34` specifically to the daughter outcome before formatting `g_QueenDaughterBirthTexts`. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
   "unit_categories": [
@@ -626,11 +626,53 @@
       "evidence": "`Temple_SpawnGiftGoldCargoStack` initializes type `31` slots, then writes the runtime quantity/health byte with `50`, `100`, `200`, or `300` payload-scaled values before spawning the cargo stack nearby."
     },
     {
+      "unit_type": "UnitType31_GoldCargo",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512A20` stores `gold` at metadata `+4` for type `31`, and sprite/audio path builders reuse that same stem when loading unit assets."
+    },
+    {
+      "unit_type": "UnitType32_PeasantCargo",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512A78` stores `peas` at metadata `+4` for type `32`, and the same stem is reused across sprite and sound path construction."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "localized_name_table",
+      "relationship_kind": "shared_localized_name_table",
+      "confidence": "high",
+      "evidence": "Type `33` points at `off_512558`, then UI/log helpers index that table by language; the same localized-name table is shared with type `34` even though the resource keys differ."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512AD0` stores `specm` at metadata `+4` for type `33`, and sprite/audio path builders reuse that same stem even though type `33` shares its localized-name table with type `34`."
+    },
+    {
       "unit_type": "UnitType33_SpecialFootPersonage",
       "stat": "queen_birth_outcome",
       "relationship_kind": "male_birth_variant",
       "confidence": "high",
       "evidence": "`Queen_NewTurn` selects type `33` for the son branch and formats `g_QueenSonBirthTexts`, so this id is the male birth outcome within the shared special-personage family."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "localized_name_table",
+      "relationship_kind": "shared_localized_name_table",
+      "confidence": "high",
+      "evidence": "Type `34` reuses `off_512558` as its localized-name table and the same UI/log helpers index that table by language despite the mounted variant's separate asset stem."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512B28` stores `speck` at metadata `+4` for type `34`, and sprite/audio path builders reuse that same stem even though type `34` shares its localized-name table with type `33`."
     },
     {
       "unit_type": "UnitType34_SpecialMountedPersonage",
@@ -753,7 +795,7 @@
         "foot and mounted special-personage records reused by both prisoner and queen-birth flows",
         "special commander/courtier variants sharing a single localized-name triplet"
       ],
-      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
+      "evidence": "Both records reuse `off_512558`, their resource keys and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
       "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
     },
     {
@@ -798,7 +840,7 @@
       "blockers": "The exact designer-facing split between the two plain-class lanes and the final tileset-specific names behind the conservative `desert_class` and `water_surface` placeholders remain unresolved."
     },
     {
-      "candidate": "g_UnitTypeMetadataRecords localized-name header",
+      "candidate": "UnitTypeMetadataRecord.localized_name_table header",
       "candidate_kind": "structure_header",
       "possible_interpretations": [
         "35 records with one duplicated localized-name triplet",

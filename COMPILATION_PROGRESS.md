@@ -2086,3 +2086,70 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1116`
+
+## Batch 108 - Unit Metadata Front Edge And Hash Probe Repair Wave
+- Current subsystem/cluster:
+  - unit metadata front-edge semantics at record offsets `+0/+4`, plus the adjacent string-keyed hash/probe helper cluster around `sub_478950` / `sub_4789C0` / `sub_4789F0` / `sub_478A60`
+- Subagents spawned and scopes:
+  - the session remained hard-capped at six live subagent threads, so the required scopes continued to be covered by six read-only explorers with combined fallback roles:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B+E: queen systems plus castle/building/garrison systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent F: asm/map/exe corroboration and symbol recovery
+    - Agent G: compilation/link blockers and build integration
+  - focused follow-up evidence merged this batch:
+    - Agent A confirmed metadata field `+0` behaves as a localized-name table pointer and field `+4` behaves as a shared asset/resource stem
+    - Agent D flagged that renaming the whole `0x512568` base to a localized-name-table global would be too narrow, because the same base is indexed as the full 88-byte metadata record when movement code reads offsets `+29..+37`
+    - Agent G confirmed that `sub_4789C0` should return the vacant slot index directly and supplied the asm-backed cleanup path for the surrounding lookup/insert helpers
+- Repairs:
+  - reverted the over-narrow in-progress rename of the whole `0x512568` base and kept the safe base-family symbol `g_UnitTypeMetadataRecords`
+  - kept the promoted overlapping field symbol `g_UnitTypeResourceKeys`
+  - recovered `UnitTypeMetadataRecord +0` as `localized_name_table`
+  - recovered `UnitTypeMetadataRecord +4` as `resource_key`
+  - rewrote `sub_478950` as an asm-backed keyed-entry probe loop
+  - changed `sub_4789C0` from a `void` + `JUMPOUT` scar into a direct vacant-slot index return
+  - propagated the resolved lookup result through `sub_4789F0`
+  - rewrote `sub_478A60` as an asm-backed keyed-entry insert path that reuses the returned slot index directly
+  - synced the maintained unit/stat artifacts to the front-edge metadata model, including special-personage localized-name-table evidence and `31..34` resource-key evidence
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch108.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch108.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch108.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the metadata-front-edge sync and hash-probe cleanup wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 108 edits
+- Blockers removed:
+  - one incorrect in-progress over-rename of the whole metadata base toward localized-name-only semantics
+  - the remaining local `JUMPOUT` scar in `sub_4789C0`
+  - the undefined-temp decompiler scars in `sub_478950`, `sub_4789F0`, and `sub_478A60`
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `sub_478950`
+  - `sub_4789C0`
+  - `sub_4789F0`
+  - `sub_478A60`
+  - `sub_478610`
+  - `sub_4788F0`
+- Key evidence used:
+  - battle/UI helpers load metadata field `+0`, then index by `g_LanguageIndex`, which proves one pointer to a localized-name table rather than a whole-record global rename
+  - path/sprite/audio helpers load metadata field `+4` into `units_go`, `units_i`, `units_at`, and `sfx\\oddzialy` path stems, which proves a shared asset/resource key rather than a sprite-folder-only field
+  - `UnitStack_BuildMergedTerrainMoveProfile` still indexes the same `0x512568` base for bytes `+29..+37`, which disproves the narrower whole-base `localized name tables` global rename
+  - asm `loc_478765` is only `mov eax, ecx; retn`, so `sub_4789C0` must return its computed slot index directly
+  - asm `0x478970..0x478AFC` cleanly resolves the lookup-result and insert-slot dataflow for the surrounding helper cluster
+- Ambiguous candidates deferred:
+  - the owning container semantics and stronger semantic names for the string-keyed hash table behind `sub_478950` / `sub_4789C0` / `sub_478A60`
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - the exact original UI/serialization distinction behind `UnitType31_GoldCargo` / `UnitType32_PeasantCargo`
+  - the unresolved upper subfields of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1123`

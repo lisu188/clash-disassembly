@@ -4,10 +4,10 @@
     "kind": "type_metadata_entry",
     "base_offset": 512568,
     "stride": 88,
-    "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitSpriteFolders`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family.",
+    "description": "Recovered 88-byte per-unit-type metadata record in the data segment. The decompiler split this record into overlapping globals (`g_UnitTypeMetadataRecords`, `g_UnitTypeResourceKeys`, `g_UnitTypeFlags`, and the byte_512570+ tables), but the code consistently indexes it as a single family.",
     "fields": [
-      { "offset": 0, "name": "localized_name_ptrs", "type": "char **", "notes": "Pointer to the localized name array used by battle logs and building/unit info screens. The decompiler emitted this header as `char *(*...)[102]`, but asm/xref evidence shows at least 35 type records and one duplicated commander localized-name triplet." },
-      { "offset": 4, "name": "sprite_folder_name", "type": "char *", "notes": "Folder stem used to build paths such as `units_go\\peon?.s32` and the other unit sprite-sheet filenames." },
+      { "offset": 0, "name": "localized_name_table", "type": "char **", "notes": "Pointer to the localized-name table used by battle logs and building/unit info screens. The decompiler emitted this header as `char *(*...)[102]`, but asm/xref evidence shows at least 35 type records and one duplicated commander localized-name triplet." },
+      { "offset": 4, "name": "resource_key", "type": "char *", "notes": "Shared asset/resource stem used to build paths such as `units_go\\peon?.s32`, `units_i\\peon?.s32`, and `sfx\\oddzialy\\peon\\...`." },
       { "offset": 8, "name": "move_pixel_speed", "type": "uint8", "notes": "Per-frame marching displacement used by the world and battle movement animators." },
       { "offset": 9, "name": "move_tick_delay", "type": "uint8", "notes": "Delay between successive movement animation updates." },
       { "offset": 10, "name": "animation_frame_interval", "type": "uint8", "notes": "Shared per-type animation tick interval used by world idle animation, battle idle animation, and the melee/ranged attack loops." },
@@ -37,9 +37,9 @@
       { "offset": 86, "name": "move_sound_base_volume", "type": "uint8", "notes": "Default playback volume passed into `CSS_PlaySound` for movement audio." }
     ],
     "evidence": [
-      "The code indexes `g_UnitTypeMetadataRecords` by `22 * unitType`, i.e. 88 bytes per type, then reads both pointer fields and late-byte movement fields from the same base address.",
-      "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name pointer triplet.",
-      "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and `units_at` asset paths.",
+      "The code indexes `g_UnitTypeMetadataRecords` by `22 * unitType`, i.e. 88 bytes per type, then reads both front-edge pointer fields and late-byte movement fields from the same base address.",
+      "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name table.",
+      "Battle/UI helpers dereference field 0 as a localized-name table pointer, while sprite and audio helpers read field 4 as the shared resource key used in `units_go`, `units_i`, `units_at`, and `sfx\\oddzialy` path construction.",
       "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering subtract byte `+15` directly from the sprite Y anchor, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
       "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and wall attack.",
       "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record.",

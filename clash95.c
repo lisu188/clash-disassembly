@@ -2022,7 +2022,7 @@ int  sub_478880(int a1);
 int  sub_4788A0(int a1);
 unsigned int  sub_4788F0(int a1, const char **a2);
 int  sub_478950(int a1, const char **a2);
-void  sub_4789C0(int a1, const char **a2);
+unsigned int  sub_4789C0(int a1, const char **a2);
 _DWORD * sub_4789F0(int a1, int a2);
 signed int  sub_478A60(_DWORD *a1, const char **a2, int a3, int a4);
 int  sub_478B10(int a1, int a2, int a3);
@@ -8610,7 +8610,7 @@ char *off_512368[3] =
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
 }; // weak
 char *(*g_UnitTypeMetadataRecords)[102] = &off_5123CC; // weak
-char *g_UnitSpriteFolders = "peon"; // weak
+char *g_UnitTypeResourceKeys = "peon"; // weak
 char byte_512570[] = { '\x03' }; // weak
 char byte_512571[] = { '\x03' }; // weak
 char byte_512572[] = { '\n' }; // weak
@@ -25683,7 +25683,7 @@ char  sub_4131B0(char *a1, unsigned __int8 a2, char a3)
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&g_UnitSpriteFolders)[22 * a2];
+  v7 = (&g_UnitTypeResourceKeys)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25727,7 +25727,7 @@ char  sub_4131B0(char *a1, unsigned __int8 a2, char a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413270) --------------------------------------------------------
 char  UI_BeginUnitInfo(char *a1, unsigned __int8 a2, char a3)
@@ -25769,7 +25769,7 @@ char  UI_BeginUnitInfo(char *a1, unsigned __int8 a2, char a3)
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&g_UnitSpriteFolders)[22 * a2];
+  v7 = (&g_UnitTypeResourceKeys)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -25827,7 +25827,7 @@ char  UI_BeginUnitInfo(char *a1, unsigned __int8 a2, char a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413350) --------------------------------------------------------
 char  sub_413350(char *a1, unsigned __int8 a2, int a3)
@@ -25870,7 +25870,7 @@ char  sub_413350(char *a1, unsigned __int8 a2, int a3)
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&g_UnitSpriteFolders)[22 * a2];
+  v8 = (&g_UnitTypeResourceKeys)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -25928,7 +25928,7 @@ char  sub_413350(char *a1, unsigned __int8 a2, int a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413430) --------------------------------------------------------
 char  sub_413430(char *a1, unsigned __int8 a2, int a3)
@@ -25971,7 +25971,7 @@ char  sub_413430(char *a1, unsigned __int8 a2, int a3)
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&g_UnitSpriteFolders)[22 * a2];
+  v8 = (&g_UnitTypeResourceKeys)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -26029,7 +26029,7 @@ char  sub_413430(char *a1, unsigned __int8 a2, int a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413510) --------------------------------------------------------
 char  sub_413510(char *a1, unsigned __int8 a2, int a3)
@@ -26072,7 +26072,7 @@ char  sub_413510(char *a1, unsigned __int8 a2, int a3)
     v5 += 2;
   }
   while ( v7 );
-  v8 = (&g_UnitSpriteFolders)[22 * a2];
+  v8 = (&g_UnitTypeResourceKeys)[22 * a2];
   v9 = &a1[strlen(a1)];
   do
   {
@@ -26130,7 +26130,7 @@ char  sub_413510(char *a1, unsigned __int8 a2, int a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004135F0) --------------------------------------------------------
 char  sub_4135F0(char *a1, unsigned __int8 a2, char a3)
@@ -26172,7 +26172,7 @@ char  sub_4135F0(char *a1, unsigned __int8 a2, char a3)
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&g_UnitSpriteFolders)[22 * a2];
+  v7 = (&g_UnitTypeResourceKeys)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -26230,7 +26230,7 @@ char  sub_4135F0(char *a1, unsigned __int8 a2, char a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004136D0) --------------------------------------------------------
 char  sub_4136D0(char *a1, unsigned __int8 a2, char a3)
@@ -26272,7 +26272,7 @@ char  sub_4136D0(char *a1, unsigned __int8 a2, char a3)
     v4 += 2;
   }
   while ( v6 );
-  v7 = (&g_UnitSpriteFolders)[22 * a2];
+  v7 = (&g_UnitTypeResourceKeys)[22 * a2];
   v8 = &a1[strlen(a1)];
   do
   {
@@ -26330,7 +26330,7 @@ char  sub_4136D0(char *a1, unsigned __int8 a2, char a3)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004137B0) --------------------------------------------------------
 char  sub_4137B0(char *a1, unsigned __int8 a2)
@@ -26365,7 +26365,7 @@ char  sub_4137B0(char *a1, unsigned __int8 a2)
     v3 += 2;
   }
   while ( v5 );
-  v6 = (&g_UnitSpriteFolders)[22 * a2];
+  v6 = (&g_UnitTypeResourceKeys)[22 * a2];
   v7 = &a1[strlen(a1)];
   do
   {
@@ -26409,7 +26409,7 @@ char  sub_4137B0(char *a1, unsigned __int8 a2)
   while ( result );
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413860) --------------------------------------------------------
 void  sub_413860(char *a1, unsigned __int8 a2, int a3)
@@ -26464,7 +26464,7 @@ void  sub_413860(char *a1, unsigned __int8 a2, int a3)
     v8 += 2;
   }
   while ( v10 );
-  v11 = (&g_UnitSpriteFolders)[22 * a2];
+  v11 = (&g_UnitTypeResourceKeys)[22 * a2];
   v12 = &a1[strlen(a1)];
   do
   {
@@ -26496,7 +26496,7 @@ void  sub_413860(char *a1, unsigned __int8 a2, int a3)
 }
 // 413915: control flows out of bounds to 413918
 // 511130: using guessed type char g_LanguageIndex;
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 513328: using guessed type char *off_513328[3];
 
 //----- (00413920) --------------------------------------------------------
@@ -57008,7 +57008,7 @@ int  Audio_PlayUnitActivateSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v10, aSfxOddzialy, sizeof(v10));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v10[strlen(v10)];
     do
     {
@@ -57042,7 +57042,7 @@ int  Audio_PlayUnitActivateSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 // 543CA4: using guessed type int g_LastUnitActivateSoundHandle;
 
@@ -57066,7 +57066,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
     v1 = 22 * result;
     CSS_SetSoundVolume(g_LastUnitActivateSoundHandle, 0, 500);
     qmemcpy(v11, aSfxOddzialy_0, 0x64u);
-    v2 = (&g_UnitSpriteFolders)[v1];
+    v2 = (&g_UnitTypeResourceKeys)[v1];
     v3 = &v11[strlen(v11)];
     do
     {
@@ -57099,7 +57099,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 // 543CA4: using guessed type int g_LastUnitActivateSoundHandle;
 
@@ -57119,7 +57119,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_1, sizeof(v9));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -57151,7 +57151,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441C80) --------------------------------------------------------
@@ -57170,7 +57170,7 @@ int  Audio_PlayUnitHitSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_2, sizeof(v9));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -57202,7 +57202,7 @@ int  Audio_PlayUnitHitSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441D20) --------------------------------------------------------
@@ -57221,7 +57221,7 @@ int  Audio_PlayUnitDeathSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_3, sizeof(v9));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -57253,7 +57253,7 @@ int  Audio_PlayUnitDeathSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441DC0) --------------------------------------------------------
@@ -57272,7 +57272,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_4, sizeof(v9));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -57304,7 +57304,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441E60) --------------------------------------------------------
@@ -57323,7 +57323,7 @@ int  sub_441E60(int result)
   if ( g_UnitSoundsEnabled )
   {
     qmemcpy(v9, aSfxOddzialy_5, sizeof(v9));
-    v1 = (&g_UnitSpriteFolders)[22 * result];
+    v1 = (&g_UnitTypeResourceKeys)[22 * result];
     v2 = &v9[strlen(v9)];
     do
     {
@@ -57355,7 +57355,7 @@ int  sub_441E60(int result)
   }
   return result;
 }
-// 51256C: using guessed type char *g_UnitSpriteFolders;
+// 51256C: using guessed type char *g_UnitTypeResourceKeys;
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441F00) --------------------------------------------------------
@@ -88296,111 +88296,89 @@ unsigned int  sub_4788F0(int a1, const char **a2)
 //----- (00478950) --------------------------------------------------------
 int  sub_478950(int a1, const char **a2)
 {
-  int result; // eax
-  unsigned int v4; // ecx
-  _DWORD *v5; // edi
-  int v6; // ecx
-  int v7; // esi
-  int v8; // ecx
+  unsigned int slot_index; // ecx
+  _DWORD *table; // edi
+  int entry; // esi
 
   if ( !*a2 || !**a2 )
     return 0;
-  v4 = sub_4788F0(a1, a2);
-  v5 = (_DWORD *)(a1 + 16);
+  slot_index = sub_4788F0(a1, a2);
+  table = (_DWORD *)(a1 + 16);
   while ( 1 )
   {
-    v7 = sub_478610(v5, v4);
-    result = *(_DWORD *)(v7 + 14);
-    if ( !result )
-      break;
-    if ( !strncmp_(v6, v7) )
-      return v7;
-    if ( v8 )
-      v4 = v8 - 1;
+    entry = sub_478610(table, slot_index);
+    if ( !*(_DWORD *)(entry + 14) )
+      return 0;
+    if ( !strncmp_(*a2, entry) )
+      return entry;
+    if ( slot_index )
+      --slot_index;
     else
-      v4 = *v5 - 1;
+      slot_index = *table - 1;
   }
-  return result;
 }
-// 478998: variable 'v6' is possibly undefined
-// 4789A3: variable 'v8' is possibly undefined
 // 48A1ED: using guessed type int __fastcall strncmp_(_DWORD, _DWORD);
 
 //----- (004789C0) --------------------------------------------------------
-void  sub_4789C0(int a1, const char **a2)
+unsigned int  sub_4789C0(int a1, const char **a2)
 {
-  unsigned int v3; // ecx
-  _DWORD *v4; // ebx
-  int v5; // ecx
+  unsigned int slot_index; // ecx
+  _DWORD *table; // ebx
 
-  v3 = sub_4788F0(a1, a2);
-  v4 = (_DWORD *)(a1 + 16);
-  while ( *(_DWORD *)(sub_478610(v4, v3) + 14) )
+  slot_index = sub_4788F0(a1, a2);
+  table = (_DWORD *)(a1 + 16);
+  while ( *(_DWORD *)(sub_478610(table, slot_index) + 14) )
   {
-    if ( v5 )
-      v3 = v5 - 1;
+    if ( slot_index )
+      --slot_index;
     else
-      v3 = *v4 - 1;
+      slot_index = *table - 1;
   }
-  JUMPOUT(0x478765);
+  return slot_index;
 }
-// 4789DC: control flows out of bounds to 478765
-// 4789E4: variable 'v5' is possibly undefined
 
 //----- (004789F0) --------------------------------------------------------
 _DWORD * sub_4789F0(int a1, int a2)
 {
   const char **v4; // eax
-  int v5; // ecx
+  int entry; // ecx
   _DWORD *result; // eax
-  int v7; // ecx
   _DWORD v8[2]; // [esp+0h] [ebp-8h] BYREF
   _DWORD savedregs[4]; // [esp+8h] [ebp+0h] BYREF
 
   v4 = (const char **)sub_4784E0(v8);
-  sub_478950(a1, v4);
+  entry = sub_478950(a1, v4);
   sub_471C60((int)v8, 1);
-  if ( !v5 || (*(_DWORD *)(v5 + 14) & 2) == 0 )
+  if ( !entry || (*(_DWORD *)(entry + 14) & 2) == 0 )
     return 0;
-  result = (_DWORD *)Mem_Alloc(44, v5, a2, (DWORD)savedregs);
+  result = (_DWORD *)Mem_Alloc(44, entry, a2, (DWORD)savedregs);
   if ( result )
-    return (_DWORD *)sub_478770(result, *(int **)(a1 + 36), *(_DWORD *)(v7 + 18), *(_DWORD *)(v7 + 22), a2);
+    return (_DWORD *)sub_478770(result, *(int **)(a1 + 36), *(_DWORD *)(entry + 18), *(_DWORD *)(entry + 22), a2);
   return result;
 }
-// 478A1F: variable 'v5' is possibly undefined
-// 478A43: variable 'v7' is possibly undefined
 
 //----- (00478A60) --------------------------------------------------------
 signed int  sub_478A60(_DWORD *a1, const char **a2, int a3, int a4)
 {
-  int v7; // eax
-  int v8; // ebp
-  int v9; // eax
-  int v10; // ecx
-  int v11; // eax
-  int v12; // ecx
-  int v13; // edx
+  unsigned int slot_index; // ebp
+  int entry; // eax
+  int v9; // edx
 
   if ( a1[2] == a1[4] - 1 || !*a2 || !**a2 )
     return -1;
-  sub_4789C0((int)a1, a2);
-  v8 = v7;
-  v9 = sub_478610(a1 + 4, v7);
-  *(_BYTE *)(v9 + 13) = 0;
-  strncpy_(v9, *a2);
-  *(_DWORD *)(v10 + 14) = a4;
-  v11 = sub_479980(a1[9], (int)a2);
-  *(_DWORD *)(v12 + 18) = v11;
-  *(_DWORD *)(v12 + 22) = a3;
+  slot_index = sub_4789C0((int)a1, a2);
+  entry = sub_478610(a1 + 4, slot_index);
+  *(_BYTE *)(entry + 13) = 0;
+  strncpy_(entry, *a2);
+  *(_DWORD *)(entry + 14) = a4;
+  *(_DWORD *)(entry + 18) = sub_479980(a1[9], (int)a2);
+  *(_DWORD *)(entry + 22) = a3;
   a1[7] = 1;
-  v13 = a1[2];
+  v9 = a1[2];
   a1[3] = 1;
-  a1[2] = v13 + 1;
-  return v8;
+  a1[2] = v9 + 1;
+  return slot_index;
 }
-// 478AA6: variable 'v7' is possibly undefined
-// 478ACD: variable 'v10' is possibly undefined
-// 478AD8: variable 'v12' is possibly undefined
 // 48521A: using guessed type int __fastcall strncpy_(_DWORD, _DWORD);
 
 //----- (00478B10) --------------------------------------------------------
