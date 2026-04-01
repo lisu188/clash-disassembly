@@ -206,14 +206,14 @@ typedef struct TileHighlightSlot
 #define Unit_CalcIndexB UnitStats_GetDefenseIconIndex
 #define Unit_CalcEffectivenessC UnitStats_CalcEffectiveShotPower
 #define Unit_GetBaseC UnitStats_GetBaseShotPower
-#define Unit_CalcEffectivenessD UnitStats_CalcEffectiveSiegeAttack
+#define Unit_CalcEffectivenessD UnitStats_CalcEffectiveWallAttack
 #define byte_51257E g_UnitTypeBaseMeleeAttack
 #define byte_51257F g_UnitTypeBaseDefensePower
 #define byte_512580 g_UnitTypeBaseActionPoints
 #define byte_512581 g_UnitTypeBaseShotPower
 #define byte_512582 g_UnitTypeMaxRange
 #define byte_512583 g_UnitTypeMinRange
-#define byte_512584 g_UnitTypeBaseSiegeAttack
+#define byte_512584 g_UnitTypeBaseWallAttack
 
 
 //-------------------------------------------------------------------------
@@ -652,7 +652,7 @@ int  UnitStats_CalcEffectiveDefensePower(char *a1, int a2);
 int  UnitStats_GetDefenseIconIndex(__int16 *a1);
 int  UnitStats_CalcEffectiveShotPower(__int16 *a1);
 int  UnitStats_GetBaseShotPower(__int16 *a1);
-int  UnitStats_CalcEffectiveSiegeAttack(char *a1, int a2);
+int  UnitStats_CalcEffectiveWallAttack(char *a1, int a2);
 signed int  Unit_DebugDumpFormationSizes(int a1, DWORD a2);
 signed int  Render_DrawSprite_v3(int a1, DWORD a2);
 signed int  LogAllUnits(int a1, char a2, DWORD a3);
@@ -8630,7 +8630,7 @@ char g_UnitTypeBaseActionPoints[] = { '\x18' }; // weak
 char g_UnitTypeBaseShotPower[] = { '\0' }; // weak
 char g_UnitTypeMaxRange[] = { '\0' }; // weak
 char g_UnitTypeMinRange[] = { '\0' }; // weak
-char g_UnitTypeBaseSiegeAttack[] = { '\x01' }; // weak
+char g_UnitTypeBaseWallAttack[] = { '\x01' }; // weak
 char byte_512585[] = { '\x03' }; // weak
 char byte_512586[] = { '\x04' }; // weak
 _UNKNOWN unk_512587; // weak
@@ -23733,7 +23733,7 @@ int  UnitStats_GetBaseShotPower(__int16 *a1)
 }
 
 //----- (004112F0) --------------------------------------------------------
-int  UnitStats_CalcEffectiveSiegeAttack(char *a1, int a2)
+int  UnitStats_CalcEffectiveWallAttack(char *a1, int a2)
 {
   int v2; // ebx
 
@@ -23741,7 +23741,7 @@ int  UnitStats_CalcEffectiveSiegeAttack(char *a1, int a2)
     v2 = 3;
   else
     v2 = UNIT_SLOT_STATUS_LEVEL(a1);
-  return (v2 + (unsigned __int8)g_UnitTypeBaseSiegeAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
+  return (v2 + (unsigned __int8)g_UnitTypeBaseWallAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1] + a1[11] / 5) * a1[9] / 100;
 }
 
 //----- (00411350) --------------------------------------------------------

@@ -360,7 +360,7 @@
       "name": "stance_bits",
       "confidence": "medium",
       "semantic_role": "runtime formation or stance bits that modify attack values",
-      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, ranged, and siege attack helpers, and the selected-unit battle panel's `Status` row and icon block derive from packed slot state rooted in this byte."
+      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, defense-power, and wall-attack helpers, and the selected-unit battle panel's `Status` row and icon block derive from packed slot state rooted in this byte."
     },
     {
       "name": "state_flags",
@@ -387,10 +387,10 @@
       "evidence": "Stored in `g_UnitTypeBaseShotPower`, consumed by `UnitStats_CalcEffectiveShotPower` and `UnitStats_GetBaseShotPower`, and displayed under the `Shot power` UI row."
     },
     {
-      "name": "base_siege_attack",
-      "confidence": "medium",
-      "semantic_role": "alternate attack rating used in siege or structure-damage contexts",
-      "evidence": "Stored in `g_UnitTypeBaseSiegeAttack` and consumed by `UnitStats_CalcEffectiveSiegeAttack`."
+      "name": "base_wall_attack",
+      "confidence": "high",
+      "semantic_role": "per-type wall-assault strength used against fortification sections",
+      "evidence": "Stored in `g_UnitTypeBaseWallAttack`, consumed by `UnitStats_CalcEffectiveWallAttack`, and applied directly to wall-section health during `UnitBattle_AttackWall`."
     },
     {
       "name": "road_move_cost",
@@ -554,6 +554,13 @@
       "evidence": "Type 13 is explicitly rejected by ordinary melee handlers."
     },
     {
+      "unit_type": "UnitType13_Ram",
+      "stat": "base_wall_attack",
+      "relationship_kind": "primary_fortification_assault_stat",
+      "confidence": "high",
+      "evidence": "The ram's building-assault combat-strength branch switches to `UnitStats_CalcEffectiveWallAttack` when fortifications are present, and direct tactical wall assaults apply the same stat straight to wall-section health."
+    },
+    {
       "unit_type": "UnitType29_Fly",
       "stat": "move_sound_stem",
       "relationship_kind": "looped_mover_audio",
@@ -608,6 +615,13 @@
       "relationship_kind": "prisoner_owner_tracking",
       "confidence": "high",
       "evidence": "The capture pipeline copies the special slot's owner byte into `PlayerPrisonerTransferQueue +1`, `Prisoner_SetInCastles` copies the same byte into `BuildingPrisonerSlot +1`, and `BuildingPrisoner_RecalculateRansomValue` feeds that stored player id into `AI_TickNationPostTurn`."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "birth_spawn_host",
+      "relationship_kind": "ordinary_owned_stronghold_garrison_spawn",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `33` or `34` and installs it through `Building_CreateSpecialPersonageGarrisonUnit` into an ordinary owned stronghold garrison slot rather than a separate royal-only container."
     },
     {
       "unit_type": "RangedUnitCategory",
@@ -686,17 +700,6 @@
       ],
       "evidence": "The stack logic excludes types `31` and `32` from the normal-combat predicate, and type `32` is explicitly compacted and rebuilt as cargo.",
       "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
-    },
-    {
-      "candidate": "g_UnitTypeBaseSiegeAttack",
-      "candidate_kind": "stat",
-      "possible_interpretations": [
-        "building damage",
-        "siege attack value",
-        "fortification damage scalar"
-      ],
-      "evidence": "The alternate attack helper switches to it for one context flag, but the original design term is missing.",
-      "blockers": "Need a clearer caller or UI string."
     },
     {
       "candidate": "UnitSlotRecord.stance_bits",

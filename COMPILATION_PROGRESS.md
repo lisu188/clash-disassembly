@@ -1711,3 +1711,57 @@
   - the broader-build frontier around `_wcpp_*`, `j__nfree_` / `j_j__nfree_`, the collapsed `mem*` / heap-helper family, `CreateEventA` / `SetEvent` / `WaitForSingleObject`, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1089`
+
+## Batch 102 - Wall Attack Stat Recovery Wave
+- Current subsystem/cluster:
+  - the last still-ambiguous per-type combat stat in `UnitTypeMetadataRecord`, focused on metadata byte `+28` and the old `siege` helper/table placeholder
+- Subagents spawned and scopes:
+  - agent tool ceiling remained `6`, so scopes were combined instead of blocking:
+    - Agent A+F: unit combat/stat frontier plus asm/map/exe corroboration for `byte_512584`
+    - Agent B: queen systems for generic unit-taxonomy/stat spillover
+    - Agent C: port/coastal/naval taxonomy/stat review
+    - Agent D: tile/map/pathing review for unit-stat implications
+    - Agent E: castle/building/garrison review for fortification-attack semantics
+    - Agent G+H: broader-build ranking plus SDL seam review
+  - only Agent B returned a new mergeable finding in time; its special-personage birth-host relationship was folded into the maintained unit-taxonomy artifacts
+- Repairs:
+  - renamed `UnitStats_CalcEffectiveSiegeAttack` to `UnitStats_CalcEffectiveWallAttack`
+  - renamed `g_UnitTypeBaseSiegeAttack` to `g_UnitTypeBaseWallAttack`
+  - recovered `UnitTypeMetadataRecord +28` as `base_wall_attack`
+  - extended the maintained unit/stat artifacts with:
+    - a high-confidence `UnitType13_Ram -> base_wall_attack` relationship
+    - a high-confidence `SpecialPersonageCategory -> birth_spawn_host` relationship showing queen-born `33/34` entries spawn into ordinary owned stronghold garrisons
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch102.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch102.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch102.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the wall-attack stat rename
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` static-library build still succeeds
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the last medium-confidence placeholder on metadata byte `+28`
+  - the stale `siege` wording on the helper/table family that is only used for wall assaults
+  - the missing documented relationship between ram auto-resolve strength and the wall-attack stat
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `UnitStats_CalcEffectiveWallAttack`
+  - `UnitSlots_CalcCombatStrengthScore`
+  - `UnitBattle_AttackWall`
+  - `Building_CreateSpecialPersonageGarrisonUnit`
+  - the queen birth host-selection path in `Queen_NewTurn`
+- Key evidence used:
+  - `UnitStats_CalcEffectiveWallAttack` has only two confirmed callers: the `UnitType13_Ram` fortification branch inside `UnitSlots_CalcCombatStrengthScore`, and `UnitBattle_AttackWall`
+  - `UnitBattle_AttackWall` subtracts the helper's result directly from wall-section health, which is a narrower role than generic siege or structure damage
+  - `Queen_NewTurn` chooses types `33/34` and routes them through `Building_CreateSpecialPersonageGarrisonUnit`, whose body inserts them through `UnitSlot_InitFromType` into the normal 12-slot building garrison array
+- Ambiguous candidates deferred:
+  - the broader-build frontier around `_wcpp_*`, `j__nfree_` / `j_j__nfree_`, the collapsed `mem*` / heap-helper family, `CreateEventA` / `SetEvent` / `WaitForSingleObject`, and the remaining `JUMPOUT` scars
+  - any further unit-taxonomy/category wave beyond this now needs new evidence from registries, factories, or raw roster/table decoding rather than another local UI/combat pass
+- total rename count so far:
+  - `1092`
