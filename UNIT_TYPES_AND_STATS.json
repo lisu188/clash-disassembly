@@ -591,11 +591,25 @@
       "evidence": "The ram's building-assault combat-strength branch switches to `UnitStats_CalcEffectiveWallAttack` when fortifications are present, and direct tactical wall assaults apply the same stat straight to wall-section health."
     },
     {
+      "unit_type": "UnitType0_Peasant",
+      "stat": "building_unit_licence_roster",
+      "relationship_kind": "seeded_default_castle_licence",
+      "confidence": "high",
+      "evidence": "Newly created buildings seed `unit_licence_type_ids[0] = 0`, so the first castle production-licence slot is a built-in peasant licence rather than an empty entry, and the one-argument licence helper skips that seeded slot when scanning for later licences."
+    },
+    {
       "unit_type": "UnitType17_Builder",
       "stat": "bridge_crossing_pathing_access",
       "relationship_kind": "enables_stack_bridge_route_generation",
       "confidence": "high",
       "evidence": "`UnitStack_HasBuilder` is an exact type-17 membership test, and the strategic queue helpers enable bridge crossings only when that predicate succeeds, allowing builder-containing stacks to route through bridge crossings."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "building_unit_licence_roster",
+      "relationship_kind": "excluded_by_generic_followup_licence_selector",
+      "confidence": "high",
+      "evidence": "The one-argument castle licence helper explicitly skips builder licences while scanning for later roster entries, and the same subsystem treats type `17` as construction labor by subtracting each garrisoned builder from remaining build time."
     },
     {
       "unit_type": "UnitType17_Builder",

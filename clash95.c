@@ -1391,7 +1391,7 @@ BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3);
 BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2);
 BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4);
 signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2);
-signed int  sub_455890(int a1);
+signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1);
 signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3);
 signed int  Building_HasTrainableIdleGarrisonUnit(int a1);
 signed int  Building_HasRepairableIdleGarrisonUnit(int a1);
@@ -68452,7 +68452,7 @@ signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455890) --------------------------------------------------------
-signed int  sub_455890(int a1)
+signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
 {
   signed int result; // eax
   int v3; // ecx
