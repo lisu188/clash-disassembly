@@ -8631,15 +8631,15 @@ char g_UnitTypeBaseShotPower[] = { '\0' }; // weak
 char g_UnitTypeMaxRange[] = { '\0' }; // weak
 char g_UnitTypeMinRange[] = { '\0' }; // weak
 char g_UnitTypeBaseWallAttack[] = { '\x01' }; // weak
-char byte_512585[] = { '\x03' }; // weak
-char byte_512586[] = { '\x04' }; // weak
-_UNKNOWN unk_512587; // weak
-_UNKNOWN unk_512588; // weak
-_UNKNOWN unk_512589; // weak
-_UNKNOWN unk_51258A; // weak
-_UNKNOWN unk_51258B; // weak
-_UNKNOWN unk_51258C; // weak
-_UNKNOWN unk_51258D; // weak
+char g_UnitTypeRoadMoveCost[] = { '\x03' }; // weak
+char g_UnitTypePlainClassMoveCostA[] = { '\x04' }; // weak
+_UNKNOWN g_UnitTypeForestMoveCost; // weak
+_UNKNOWN g_UnitTypeDesertMoveCost; // weak
+_UNKNOWN g_UnitTypeSwampMoveCost; // weak
+_UNKNOWN g_UnitTypePlainClassMoveCostB; // weak
+_UNKNOWN g_UnitTypeWaterSurfaceMoveCost; // weak
+_UNKNOWN g_UnitTypeHillsMoveCost; // weak
+_UNKNOWN g_UnitTypeMountainsMoveCost; // weak
 char byte_5125AE[] = { '\x03' }; // weak
 char g_UnitTypeProductionTime[] = { '\x01' }; // weak
 char g_UnitTypeProductionCost[] = { '\x02' }; // weak
@@ -26583,15 +26583,15 @@ signed int Map_InitTerrainMoveTableOffsets()
   for ( i = 0; i != 4; g_TerrainMoveTableOffsets[i] = 0 )
     ++i;
   do
-    g_TerrainMoveTableOffsets[++i] = &unk_512588 - (_UNKNOWN *)byte_512586;
+    g_TerrainMoveTableOffsets[++i] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA;
   while ( i != 7 );
   result = 7;
-  for ( j = 7; j <= 7; g_TerrainMoveTableOffsets[j] = &unk_512589 - (_UNKNOWN *)byte_512586 )
+  for ( j = 7; j <= 7; g_TerrainMoveTableOffsets[j] = &g_UnitTypeSwampMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++j;
     ++result;
   }
-  for ( k = result; k <= 15; g_TerrainMoveTableOffsets[k] = &unk_512588 - (_UNKNOWN *)byte_512586 )
+  for ( k = result; k <= 15; g_TerrainMoveTableOffsets[k] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++k;
     ++result;
@@ -26601,32 +26601,32 @@ signed int Map_InitTerrainMoveTableOffsets()
     ++m;
     ++result;
   }
-  for ( n = result; n <= 31; g_TerrainMoveTableOffsets[n] = &unk_51258A - (_UNKNOWN *)byte_512586 )
+  for ( n = result; n <= 31; g_TerrainMoveTableOffsets[n] = &g_UnitTypePlainClassMoveCostB - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++n;
     ++result;
   }
-  for ( ii = result; ii <= 44; g_TerrainMoveTableOffsets[ii] = &unk_512588 - (_UNKNOWN *)byte_512586 )
+  for ( ii = result; ii <= 44; g_TerrainMoveTableOffsets[ii] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++ii;
     ++result;
   }
-  for ( jj = result; jj <= 160; g_TerrainMoveTableOffsets[jj] = &unk_512587 - (_UNKNOWN *)byte_512586 )
+  for ( jj = result; jj <= 160; g_TerrainMoveTableOffsets[jj] = &g_UnitTypeForestMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++jj;
     ++result;
   }
-  for ( kk = result; kk <= 185; g_TerrainMoveTableOffsets[kk] = &unk_51258C - (_UNKNOWN *)byte_512586 )
+  for ( kk = result; kk <= 185; g_TerrainMoveTableOffsets[kk] = &g_UnitTypeHillsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++kk;
     ++result;
   }
-  for ( mm = result; mm <= 221; g_TerrainMoveTableOffsets[mm] = &unk_51258D - (_UNKNOWN *)byte_512586 )
+  for ( mm = result; mm <= 221; g_TerrainMoveTableOffsets[mm] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++mm;
     ++result;
   }
-  for ( nn = result; nn <= 706; g_TerrainMoveTableOffsets[nn] = &unk_51258B - (_UNKNOWN *)byte_512586 )
+  for ( nn = result; nn <= 706; g_TerrainMoveTableOffsets[nn] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++nn;
     ++result;
@@ -26636,22 +26636,22 @@ signed int Map_InitTerrainMoveTableOffsets()
     ++i1;
     ++result;
   }
-  for ( i2 = result; i2 <= 714; g_TerrainMoveTableOffsets[i2] = &unk_512588 - (_UNKNOWN *)byte_512586 )
+  for ( i2 = result; i2 <= 714; g_TerrainMoveTableOffsets[i2] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i2;
     ++result;
   }
-  for ( i3 = result; i3 <= 715; g_TerrainMoveTableOffsets[i3] = &unk_51258B - (_UNKNOWN *)byte_512586 )
+  for ( i3 = result; i3 <= 715; g_TerrainMoveTableOffsets[i3] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i3;
     ++result;
   }
-  for ( i4 = result; i4 <= 745; g_TerrainMoveTableOffsets[i4] = &unk_51258B - (_UNKNOWN *)byte_512586 )
+  for ( i4 = result; i4 <= 745; g_TerrainMoveTableOffsets[i4] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i4;
     ++result;
   }
-  for ( i5 = result; i5 <= 750; g_TerrainMoveTableOffsets[i5] = &unk_51258D - (_UNKNOWN *)byte_512586 )
+  for ( i5 = result; i5 <= 750; g_TerrainMoveTableOffsets[i5] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i5;
     ++result;
@@ -26661,17 +26661,17 @@ signed int Map_InitTerrainMoveTableOffsets()
     ++i6;
     ++result;
   }
-  for ( i7 = result; i7 <= 756; g_TerrainMoveTableOffsets[i7] = &unk_512588 - (_UNKNOWN *)byte_512586 )
+  for ( i7 = result; i7 <= 756; g_TerrainMoveTableOffsets[i7] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i7;
     ++result;
   }
-  for ( i8 = result; i8 <= 770; g_TerrainMoveTableOffsets[i8] = &unk_51258B - (_UNKNOWN *)byte_512586 )
+  for ( i8 = result; i8 <= 770; g_TerrainMoveTableOffsets[i8] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i8;
     ++result;
   }
-  for ( i9 = result; i9 < 1024; g_TerrainMoveTableOffsets[i9] = &unk_512588 - (_UNKNOWN *)byte_512586 )
+  for ( i9 = result; i9 < 1024; g_TerrainMoveTableOffsets[i9] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i9;
     ++result;
@@ -26703,10 +26703,11 @@ int  Map_GetUnitTileMoveCostOrZero(int a1, int a2, int a3, int a4)
   v10 = 88 * a2;
   v11 = TILE_TERRAIN_RECORD(a4, a3);
   if ( v11[2] != 0xFFFF )
-    return (unsigned __int8)byte_512585[v10];
+    return (unsigned __int8)g_UnitTypeRoadMoveCost[v10];
   if ( !g_PathingAllowBridgeCrossings )
-    return (unsigned __int8)byte_512586[v10 + g_TerrainMoveProfileOffsets[*v11]];
-  return Map_GetBridgeCrossingCostOrZero(a4, a3) || byte_512586[g_TerrainMoveProfileOffsets[*v11] + v10];
+    return (unsigned __int8)g_UnitTypePlainClassMoveCostA[v10 + g_TerrainMoveProfileOffsets[*v11]];
+  return Map_GetBridgeCrossingCostOrZero(a4, a3)
+      || g_UnitTypePlainClassMoveCostA[g_TerrainMoveProfileOffsets[*v11] + v10];
 }
 // 413E1D: simplified comparisons for 'edx.4': <0 || >=8000 became >=8000u
 // 5202E4: using guessed type int gameData;

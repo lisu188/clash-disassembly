@@ -396,13 +396,13 @@
       "name": "road_move_cost",
       "confidence": "high",
       "semantic_role": "move cost on road and bridge overlays",
-      "evidence": "Returned when the world-map tile record has a road or bridge overlay."
+      "evidence": "Returned from `g_UnitTypeRoadMoveCost` whenever the world-map tile record has a road or bridge overlay."
     },
     {
       "name": "world_surface_move_costs[8]",
       "confidence": "high",
       "semantic_role": "eight-lane normalized world-surface movement profile",
-      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers after raw terrain ids collapse into one of eight normalized lanes."
+      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers after raw terrain ids collapse into one of eight normalized lanes; the currently recovered lane order is `plain_class_a`, `forest`, `desert_class`, `swamp`, `plain_class_b`, `water_surface`, `hills`, `mountains`."
     },
     {
       "name": "battle_tile_move_cost",
@@ -765,6 +765,16 @@
       ],
       "evidence": "`Building_CanEquipAddon` picks one of the two bytes entirely from the building mode byte at offset `+4`, compares the chosen threshold against `tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster.",
       "blockers": "The threshold role is secure, but the original designer-facing names of the two production-building mode families are still unresolved."
+    },
+    {
+      "candidate": "world_surface_move_costs[8] lane split",
+      "candidate_kind": "field_family",
+      "possible_interpretations": [
+        "two plain-class lanes plus forest, desert-class, swamp, water-surface, hills, and mountains",
+        "more tileset-specific open-ground and shoreline variants hidden behind the current plain/desert/water placeholder names"
+      ],
+      "evidence": "The terrain normalization table and the canonical terrain-class table safely lock lane order `plain_class_a`, `forest`, `desert_class`, `swamp`, `plain_class_b`, `water_surface`, `hills`, `mountains`, but the two plain lanes and the water/desert placeholder names still collapse multiple raw terrain-id bands.",
+      "blockers": "The exact designer-facing split between the two plain-class lanes and the final tileset-specific names behind the conservative `desert_class` and `water_surface` placeholders remain unresolved."
     },
     {
       "candidate": "g_UnitTypeMetadataRecords localized-name header",

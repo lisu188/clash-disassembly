@@ -1892,3 +1892,74 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1102`
+
+## Batch 105 - World Surface Movement Lane Recovery Wave
+- Current subsystem/cluster:
+  - the normalized world-surface movement bytes at `UnitTypeMetadataRecord +29..+37`, with the strongest remaining frontier narrowed to the lane-family names behind `byte_512585..unk_51258D`
+- Subagents spawned and scopes:
+  - the available six-agent ceiling remained in effect, so the same combined scopes continued until the closeout merge:
+    - Agent A+F: terrain-lane / asm / exe corroboration for the normalized movement bytes
+    - Agent B: queen spillover check for any stronger non-movement taxonomy evidence
+    - Agent C: port/coastal/naval review to test whether the unresolved lane was actually a shoreline/naval surface
+    - Agent D: tile/map/pathing reconstruction for the terrain normalization chain
+    - Agent E: castle/building fallback frontier if the movement lanes stayed ambiguous
+    - Agent G+H: fallback build/JUMPOUT or SDL-seam cleanup if the semantic lane wave stalled
+  - mergeable subagent evidence used this batch:
+    - Agent A+F and Agent D reconstructed the raw-terrain-band to canonical-terrain-class chain strongly enough to name most normalized lanes
+    - Agent C confirmed road/bridge overlays and builder bridge crossings are separate from the eight normalized land-surface lanes
+- Repairs:
+  - renamed `byte_512585` to `g_UnitTypeRoadMoveCost`
+  - renamed `byte_512586` to `g_UnitTypePlainClassMoveCostA`
+  - renamed `unk_512587` to `g_UnitTypeForestMoveCost`
+  - renamed `unk_512588` to `g_UnitTypeDesertMoveCost`
+  - renamed `unk_512589` to `g_UnitTypeSwampMoveCost`
+  - renamed `unk_51258A` to `g_UnitTypePlainClassMoveCostB`
+  - renamed `unk_51258B` to `g_UnitTypeWaterSurfaceMoveCost`
+  - renamed `unk_51258C` to `g_UnitTypeHillsMoveCost`
+  - renamed `unk_51258D` to `g_UnitTypeMountainsMoveCost`
+  - updated the maintained movement-stat artifacts so the normalized lane order now records the conservative mapping:
+    - `plain_class_a`
+    - `forest`
+    - `desert_class`
+    - `swamp`
+    - `plain_class_b`
+    - `water_surface`
+    - `hills`
+    - `mountains`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch105.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch105.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch105.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the movement-lane table rename wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the movement-stat artifact updates
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the remaining raw `byte_512585..unk_51258D` names on the live world-movement lane family
+  - the lack of a documented partial lane mapping for the eight normalized world-surface movement bytes
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `Map_InitTerrainMoveTableOffsets`
+  - `Map_GetUnitTileMoveCostOrZero`
+  - `UnitStack_GetTileMoveCostFromMergedProfileOrZero`
+  - `UnitStack_GetTileMoveCostOrZero`
+  - `Map_DestroyTile`
+  - `sub_40CE70`
+- Key evidence used:
+  - `Map_InitTerrainMoveTableOffsets` maps raw terrain-id bands into byte offsets inside the contiguous movement-byte family at `+29..+37`
+  - `Map_GetUnitTileMoveCostOrZero` and both stack-level movement readers use `+29` directly for road/bridge overlays and index `+30..+37` only through the normalized terrain lookup
+  - `sub_40CE70` seeds the canonical terrain-class table used by `Map_DestroyTile`, and the world-map hover strings decode those classes as `Plain`, `Forest`, `Desert`, `Swamp`, `Water`, `Hills`, `Mountains`, and `Road`
+  - intersecting the raw-id normalization bands with that canonical terrain-class table proves high-confidence lane names for `forest`, `swamp`, `hills`, and `mountains`, while constraining the remaining lanes to conservative `plain_class`, `desert_class`, and `water_surface` placeholders
+- Ambiguous candidates deferred:
+  - the exact designer-facing split between `plain_class_a` and `plain_class_b`
+  - the final tileset-specific names hidden behind the conservative `desert_class` and `water_surface` placeholders
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1111`
