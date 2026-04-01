@@ -1660,3 +1660,54 @@
   - unit metadata bytes `+22 / +24 / +25 / +26`, whose deeper combat/UI pass is still pending
 - total rename count so far:
   - `1082`
+
+## Batch 101 - Unit Stat Band Correction Wave
+- Current subsystem/cluster:
+  - unit metadata `+22..+28` semantic correction, centered on the stale defense/shot helper names and the per-type combat-stat band inside `UnitTypeMetadataRecord`
+- Subagents spawned and scopes:
+  - Agent A: unit lifecycle/combat/stat-byte corroboration around metadata `+22/+24/+25/+26`
+  - Agent G/H: follow-up corroboration request on the defense-vs-shot helper families; no new mergeable response landed before the write wave
+- Repairs:
+  - renamed the stale `UnitStats_CalcEffectiveRangedAttack` / `UnitStats_GetRangedIconIndex` family to `UnitStats_CalcEffectiveDefensePower` / `UnitStats_GetDefenseIconIndex`
+  - renamed the stale `UnitStats_CalcEffectiveDamagePerHit` / `UnitStats_GetBaseDamage` family to `UnitStats_CalcEffectiveShotPower` / `UnitStats_GetBaseShotPower`
+  - renamed the underlying metadata tables to `g_UnitTypeBaseDefensePower` and `g_UnitTypeBaseShotPower`
+  - recovered `UnitTypeMetadataRecord +22..+28` as `base_melee_attack / base_defense_power / base_action_points / base_shot_power / attack_range_max / attack_range_min / base_siege_attack`
+  - corrected the maintained unit/stat artifacts so the battle sidebar now maps `Defence power` to the defense table and `Shot power` to the shot-power table
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch101.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch101.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch101.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the stat-family correction wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` static-library build still succeeds
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the stale interpretation of metadata byte `+23` as outgoing ranged attack instead of defense power
+  - the stale interpretation of metadata byte `+25` as generic damage instead of shot power
+  - the remaining ambiguity on the `+24 / +26 / +27` action-point and range bytes in the recovered unit-stat artifacts
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `UnitStats_CalcEffectiveDefensePower`
+  - `UnitStats_GetDefenseIconIndex`
+  - `UnitStats_CalcEffectiveShotPower`
+  - `UnitStats_GetBaseShotPower`
+  - `UnitBattle_CalcShotTargetHealthAfterHit`
+  - `UnitSlots_CalcDefenseScore`
+  - `UnitBattle_CalcMeleeExchange`
+- Key evidence used:
+  - `UnitSlots_CalcDefenseScore` sums `Unit_CalcEffectivenessB`, proving the old `ranged attack` family is actually the defense scalar used in battle resolution
+  - `UnitBattle_DrawSelectedUnitPanel` and `BuildingGarrisonDialog_DrawSelectedUnitPanel` place the `Unit_CalcIndexB` row under the localized `Defence power` label, while `Unit_GetBaseC` is only shown under `Shot power`
+  - `UnitBattle_CalcShotTargetHealthAfterHit` uses the attacker's `Unit_CalcEffectivenessC` result against the target type's old `g_UnitTypeBaseRangedAttack` table, proving `+25` is outgoing shot strength and `+23` is defensive resistance
+  - `Trap_HurtStack` and `UnitBattle_CalcMeleeExchange` independently reuse `Unit_CalcEffectivenessB` as a resistance term
+  - `UnitSlot_GetBaseActionPoints` plus `UnitBattle_IsTileWithinRange` lock `+24`, `+26`, and `+27` as the AP and max/min range bytes
+- Ambiguous candidates deferred:
+  - `g_UnitTypeBaseSiegeAttack`, whose exact original designer-facing label is still not exposed beyond the alternate siege/fortification attack role
+  - the broader-build frontier around `_wcpp_*`, `j__nfree_` / `j_j__nfree_`, the collapsed `mem*` / heap-helper family, `CreateEventA` / `SetEvent` / `WaitForSingleObject`, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1089`

@@ -16,6 +16,13 @@
       { "offset": 16, "name": "melee_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_a.s32` melee attack sheet." },
       { "offset": 17, "name": "ranged_attack_frame_count", "type": "uint8", "notes": "Frame count for the `_s.s32` ranged attack sheet." },
       { "offset": 18, "name": "type_flags", "type": "uint32", "notes": "Recovered flag word. Bit0 marks flying/airborne units; another bit still controls the 6-vs-10 initialization path at slot +11." },
+      { "offset": 22, "name": "base_melee_attack", "type": "uint8", "notes": "Per-type `Attack power` scalar consumed by `UnitStats_CalcEffectiveMeleeAttack` and the melee-only combat-strength branch." },
+      { "offset": 23, "name": "base_defense_power", "type": "uint8", "notes": "Per-type `Defence power` scalar consumed by `UnitStats_CalcEffectiveDefensePower`, trap damage mitigation, and melee-exchange resistance math." },
+      { "offset": 24, "name": "base_action_points", "type": "uint8", "notes": "Per-type maximum action-point budget consumed by `UnitSlot_CalcActionPointsFromFatigue`, `UnitSlot_GetBaseActionPoints`, and combat-strength shot-count estimates." },
+      { "offset": 25, "name": "base_shot_power", "type": "uint8", "notes": "Per-type `Shot power` scalar consumed by `UnitStats_CalcEffectiveShotPower`, `UnitStats_GetBaseShotPower`, the projectile UI row, and shot damage projection." },
+      { "offset": 26, "name": "attack_range_max", "type": "uint8", "notes": "Maximum projectile range in tiles used by `UnitBattle_IsTileWithinRange` and ranged-action availability checks." },
+      { "offset": 27, "name": "attack_range_min", "type": "uint8", "notes": "Minimum projectile range or dead-zone floor in tiles used by `UnitBattle_IsTileWithinRange`." },
+      { "offset": 28, "name": "base_siege_attack", "type": "uint8", "notes": "Per-type alternate siege/fortification attack scalar consumed by `UnitStats_CalcEffectiveSiegeAttack`." },
       { "offset": 29, "name": "road_move_cost", "type": "uint8", "notes": "Road/track movement cost copied into merged stack movement profiles." },
       { "offset": 30, "name": "world_surface_move_costs[8]", "type": "uint8[8]", "notes": "Eight-lane normalized world-surface movement profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." },
       { "offset": 79, "name": "melee_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the melee attack loop that triggers the melee attack sound." },
@@ -29,6 +36,7 @@
       "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name pointer triplet.",
       "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and `units_at` asset paths.",
       "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering subtract byte `+15` directly from the sprite Y anchor, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
+      "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and siege attack.",
       "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record."
     ]
   },
@@ -148,7 +156,7 @@
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Low two bits feed melee/ranged/siege attack helpers directly; the selected-unit battle panel's `Status` row and icon block also derive from the packed state rooted here, while upper bits drive garrison stance/formation cycling." },
       { "offset": 13, "name": "state_flags", "type": "uint8", "notes": "Bit 0x1 marks the slot ready for stack-turn execution, bit 0x2 suppresses fatigue recovery for spent turns, bit 0x4 marks low-morale refusal, and bit 0x8 is the plague marker consumed by plague attrition and building/plague transfer logic." },
       { "offset": 18, "name": "aux_runtime_state", "type": "uint32", "notes": "Cleared on init and reused by battle/movement helper families; exact subfields remain unresolved." },
-      { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 influences ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`." }
+      { "offset": 22, "name": "state_bits_2", "type": "uint8", "notes": "Low bit is cleared on init and bit 0 increases `UnitStats_CalcEffectiveDefensePower`, matching the prepared-defence state used in tactical battle." }
     ],
     "evidence": [
       "UnitSlot_InitFromType writes a stable 31-byte layout with type id, owner, current action points, health, fatigue, morale, and several control-bit clusters.",
@@ -402,12 +410,12 @@
       { "offset": 12, "name": "stance_bits", "type": "uint8", "notes": "Mirrors the world-slot stance/order byte; the low two bits feed melee, ranged, and siege helpers and the selected-unit panel icon rows." },
       { "offset": 17, "name": "anim_frame_and_effect_bits", "type": "uint8", "notes": "Low three bits hold the current idle animation frame advanced by `UnitBattle_UpdateIdleAnimatedUnits`; upper bits still carry unresolved battle-effect flags." },
       { "offset": 18, "name": "last_animation_tick", "type": "uint32", "notes": "Timestamp gate refreshed by `UnitBattle_UpdateIdleAnimatedUnits` before it advances the low three animation bits at offset +17." },
-      { "offset": 22, "name": "battle_state_bits", "type": "uint8", "notes": "Low bit is set by `UnitBattle_Defence`, cleared when the battle slot is placed, and increases ranged attack scaling in `UnitStats_CalcEffectiveRangedAttack`, indicating prepared-defence state." }
+      { "offset": 22, "name": "battle_state_bits", "type": "uint8", "notes": "Low bit is set by `UnitBattle_Defence`, cleared when the battle slot is placed, and increases `UnitStats_CalcEffectiveDefensePower`, indicating prepared-defence state." }
     ],
     "evidence": [
       "`UnitBattle_CalcMeleeExchange` addresses both combatants as `dword_532048 + 852 + 31 * slotIndex`, seeds the outputs from byte `+9`, and applies the two-sided combat math over the same fixed-size entries.",
       "The tactical render and attack-animation helpers repeatedly test the same entry's coordinates at offsets `+4/+6` through `UnitBattle_IsTileInViewport`, while `UnitSlot_InitFromType` and the rest of the 31-byte slot family corroborate the shared type/owner/AP/health header layout.",
-      "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveRangedAttack` both use the low bit at byte `+22` as a prepared-defence state flag."
+      "`UnitBattle_UpdateIdleAnimatedUnits` advances the low three bits of byte `+17` and rewrites dword `+18` as an animation timestamp gate, while `UnitBattle_Defence` and `UnitStats_CalcEffectiveDefensePower` both use the low bit at byte `+22` as a prepared-defence state flag."
     ]
   },
   {

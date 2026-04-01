@@ -202,15 +202,15 @@ typedef struct TileHighlightSlot
 // Compatibility aliases while stat-callsite cleanup is still in progress.
 #define Unit_CalcEffectivenessA UnitStats_CalcEffectiveMeleeAttack
 #define UI_IconIndexFromStats UnitStats_GetMeleeIconIndex
-#define Unit_CalcEffectivenessB UnitStats_CalcEffectiveRangedAttack
-#define Unit_CalcIndexB UnitStats_GetRangedIconIndex
-#define Unit_CalcEffectivenessC UnitStats_CalcEffectiveDamagePerHit
-#define Unit_GetBaseC UnitStats_GetBaseDamage
+#define Unit_CalcEffectivenessB UnitStats_CalcEffectiveDefensePower
+#define Unit_CalcIndexB UnitStats_GetDefenseIconIndex
+#define Unit_CalcEffectivenessC UnitStats_CalcEffectiveShotPower
+#define Unit_GetBaseC UnitStats_GetBaseShotPower
 #define Unit_CalcEffectivenessD UnitStats_CalcEffectiveSiegeAttack
 #define byte_51257E g_UnitTypeBaseMeleeAttack
-#define byte_51257F g_UnitTypeBaseRangedAttack
+#define byte_51257F g_UnitTypeBaseDefensePower
 #define byte_512580 g_UnitTypeBaseActionPoints
-#define byte_512581 g_UnitTypeBaseDamage
+#define byte_512581 g_UnitTypeBaseShotPower
 #define byte_512582 g_UnitTypeMaxRange
 #define byte_512583 g_UnitTypeMinRange
 #define byte_512584 g_UnitTypeBaseSiegeAttack
@@ -648,10 +648,10 @@ signed int  UnitStack_CanReachQueuedPathTileWithFogOverlay(__int16 *a1, int a2);
 void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, double a5);
 int  UnitStats_CalcEffectiveMeleeAttack(char *a1, int a2);
 int  UnitStats_GetMeleeIconIndex(__int16 *a1);
-int  UnitStats_CalcEffectiveRangedAttack(char *a1, int a2);
-int  UnitStats_GetRangedIconIndex(__int16 *a1);
-int  UnitStats_CalcEffectiveDamagePerHit(__int16 *a1);
-int  UnitStats_GetBaseDamage(__int16 *a1);
+int  UnitStats_CalcEffectiveDefensePower(char *a1, int a2);
+int  UnitStats_GetDefenseIconIndex(__int16 *a1);
+int  UnitStats_CalcEffectiveShotPower(__int16 *a1);
+int  UnitStats_GetBaseShotPower(__int16 *a1);
 int  UnitStats_CalcEffectiveSiegeAttack(char *a1, int a2);
 signed int  Unit_DebugDumpFormationSizes(int a1, DWORD a2);
 signed int  Render_DrawSprite_v3(int a1, DWORD a2);
@@ -8625,9 +8625,9 @@ char byte_512578[] = { '\b' }; // weak
 char byte_512579[] = { '\b' }; // weak
 int g_UnitTypeFlags[] = { 0 }; // weak
 char g_UnitTypeBaseMeleeAttack[] = { '\x01' }; // weak
-char g_UnitTypeBaseRangedAttack[] = { '\x01' }; // weak
+char g_UnitTypeBaseDefensePower[] = { '\x01' }; // weak
 char g_UnitTypeBaseActionPoints[] = { '\x18' }; // weak
-char g_UnitTypeBaseDamage[] = { '\0' }; // weak
+char g_UnitTypeBaseShotPower[] = { '\0' }; // weak
 char g_UnitTypeMaxRange[] = { '\0' }; // weak
 char g_UnitTypeMinRange[] = { '\0' }; // weak
 char g_UnitTypeBaseSiegeAttack[] = { '\x01' }; // weak
@@ -23699,12 +23699,12 @@ int  UnitStats_GetMeleeIconIndex(__int16 *a1)
 }
 
 //----- (004111C0) --------------------------------------------------------
-int  UnitStats_CalcEffectiveRangedAttack(char *a1, int a2)
+int  UnitStats_CalcEffectiveDefensePower(char *a1, int a2)
 {
   int v2; // ebx
   int v3; // esi
 
-  v2 = (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1];
+  v2 = (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * *(__int16 *)a1];
   if ( (a1[22] & 1) != 0 )
     v2 = (320 * v2 - (__CFSHL__((320 * v2) >> 31, 8) + ((320 * v2) >> 31 << 8))) >> 8;
   if ( a2 )
@@ -23715,21 +23715,21 @@ int  UnitStats_CalcEffectiveRangedAttack(char *a1, int a2)
 }
 
 //----- (00411240) --------------------------------------------------------
-int  UnitStats_GetRangedIconIndex(__int16 *a1)
+int  UnitStats_GetDefenseIconIndex(__int16 *a1)
 {
-  return UNIT_SLOT_STATUS_LEVEL(a1) + (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 5;
+  return UNIT_SLOT_STATUS_LEVEL(a1) + (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 5;
 }
 
 //----- (00411280) --------------------------------------------------------
-int  UnitStats_CalcEffectiveDamagePerHit(__int16 *a1)
+int  UnitStats_CalcEffectiveShotPower(__int16 *a1)
 {
-  return ((unsigned __int8)g_UnitTypeBaseDamage[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10) * *((char *)a1 + 9) / 100;
+  return ((unsigned __int8)g_UnitTypeBaseShotPower[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10) * *((char *)a1 + 9) / 100;
 }
 
 //----- (004112C0) --------------------------------------------------------
-int  UnitStats_GetBaseDamage(__int16 *a1)
+int  UnitStats_GetBaseShotPower(__int16 *a1)
 {
-  return (unsigned __int8)g_UnitTypeBaseDamage[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10;
+  return (unsigned __int8)g_UnitTypeBaseShotPower[UNIT_TYPE_METADATA_STRIDE * *a1] + *((char *)a1 + 11) / 10;
 }
 
 //----- (004112F0) --------------------------------------------------------
@@ -40764,7 +40764,7 @@ int  UnitBattle_CalcShotTargetHealthAfterHit(int a1, int a2)
   + (*(unsigned __int16 *)(v3 + 6) - (unsigned __int16)v4[3])
   * (*(unsigned __int16 *)(v3 + 6) - (unsigned __int16)v4[3]));
   v5 = UnitBattle_GetTargetCrowdingScale((int)v4);
-  v8 = v7 / v5 * (unsigned __int8)g_UnitTypeBaseRangedAttack[UNIT_TYPE_METADATA_STRIDE * *v4];
+  v8 = v7 / v5 * (unsigned __int8)g_UnitTypeBaseDefensePower[UNIT_TYPE_METADATA_STRIDE * *v4];
   v9 = (v8 - (__CFSHL__(v8 >> 31, 8) + (v8 >> 31 << 8))) >> 8;
   if ( v9 < 1 )
     goto LABEL_2;

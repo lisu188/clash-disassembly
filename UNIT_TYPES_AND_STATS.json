@@ -292,7 +292,7 @@
     {
       "name": "RangedUnitCategory",
       "confidence": "high",
-      "evidence": "Only units with non-zero `g_UnitTypeMaxRange` enter the projectile logic and use ranged stat helpers."
+      "evidence": "Only units with non-zero `g_UnitTypeMaxRange` enter the projectile logic, use `UnitStats_CalcEffectiveShotPower`, and obey the min/max range tables."
     },
     {
       "name": "FlyingUnitCategory",
@@ -375,16 +375,16 @@
       "evidence": "Non-zero values gate standard melee and feed `UnitStats_CalcEffectiveMeleeAttack`."
     },
     {
-      "name": "base_ranged_attack",
-      "confidence": "medium",
-      "semantic_role": "per-type projectile or ranged attack rating",
-      "evidence": "Stored in `g_UnitTypeBaseRangedAttack` and consumed by `UnitStats_CalcEffectiveRangedAttack` and related projectile combat logic."
+      "name": "base_defense_power",
+      "confidence": "high",
+      "semantic_role": "per-type defence rating used by combat resistance math and the battle UI",
+      "evidence": "Stored in `g_UnitTypeBaseDefensePower`, consumed by `UnitStats_CalcEffectiveDefensePower`, summed by `UnitSlots_CalcDefenseScore`, and reused by melee exchange, trap damage, and shot-damage mitigation."
     },
     {
-      "name": "base_damage",
+      "name": "base_shot_power",
       "confidence": "high",
-      "semantic_role": "raw per-hit damage value before health scaling",
-      "evidence": "Stored in `g_UnitTypeBaseDamage` and consumed by `UnitStats_CalcEffectiveDamagePerHit` and `UnitStats_GetBaseDamage`."
+      "semantic_role": "per-type projectile or shot-power value before health scaling",
+      "evidence": "Stored in `g_UnitTypeBaseShotPower`, consumed by `UnitStats_CalcEffectiveShotPower` and `UnitStats_GetBaseShotPower`, and displayed under the `Shot power` UI row."
     },
     {
       "name": "base_siege_attack",
@@ -419,14 +419,14 @@
     {
       "name": "attack_range_max",
       "confidence": "high",
-      "semantic_role": "maximum squared projectile range",
-      "evidence": "Projectile logic rejects shots beyond this value."
+      "semantic_role": "maximum projectile range in tiles",
+      "evidence": "`UnitBattle_IsTileWithinRange` compares the ceil-sqrt tile distance against `g_UnitTypeMaxRange`, and ranged-action setup treats zero as no shot mode."
     },
     {
       "name": "attack_range_min",
-      "confidence": "medium",
-      "semantic_role": "minimum squared projectile range",
-      "evidence": "Projectile logic also rejects shots inside this lower bound."
+      "confidence": "high",
+      "semantic_role": "minimum projectile range or dead-zone floor in tiles",
+      "evidence": "`UnitBattle_IsTileWithinRange` rejects shots whose ceil-sqrt tile distance is not greater than `g_UnitTypeMinRange`."
     },
     {
       "name": "move_pixel_speed",
@@ -522,9 +522,15 @@
     },
     {
       "label": "Shot power",
-      "mapped_stat": "base_ranged_attack",
-      "confidence": "medium",
-      "evidence": "The panel exposes a separate `Shot power` row when ranged combat is relevant, matching the recovered ranged-attack family."
+      "mapped_stat": "base_shot_power",
+      "confidence": "high",
+      "evidence": "The panel exposes the `Shot power` row only when metadata byte `+25` is non-zero, and the displayed numeric helper is `UnitStats_GetBaseShotPower`."
+    },
+    {
+      "label": "Defence power",
+      "mapped_stat": "base_defense_power",
+      "confidence": "high",
+      "evidence": "The unconditional `Defence power` row is filled from `UnitStats_GetDefenseIconIndex`, and the same helper family drives stack defense scoring, melee-exchange resistance, and trap damage mitigation."
     },
     {
       "label": "Morale",
@@ -605,31 +611,24 @@
     },
     {
       "unit_type": "RangedUnitCategory",
-      "stat": "base_ranged_attack",
+      "stat": "base_shot_power",
       "relationship_kind": "projectile_attack_profile",
-      "confidence": "medium",
-      "evidence": "Projectile-capable units use `g_UnitTypeBaseRangedAttack` together with the range tables."
-    },
-    {
-      "unit_type": "RangedUnitCategory",
-      "stat": "base_damage",
-      "relationship_kind": "projectile_damage_profile",
       "confidence": "high",
-      "evidence": "Projectile combat paths pair the ranged attack helper with `UnitStats_CalcEffectiveDamagePerHit`."
+      "evidence": "Projectile-capable units use `UnitStats_CalcEffectiveShotPower` as their outgoing shot-strength family together with the range tables."
     },
     {
       "unit_type": "RangedUnitCategory",
       "stat": "attack_range_max",
       "relationship_kind": "range_limit",
       "confidence": "high",
-      "evidence": "Projectile logic compares squared distance against `g_UnitTypeMaxRange`."
+      "evidence": "Projectile logic compares the ceil-sqrt shot distance against `g_UnitTypeMaxRange`."
     },
     {
       "unit_type": "RangedUnitCategory",
       "stat": "attack_range_min",
       "relationship_kind": "dead_zone",
-      "confidence": "medium",
-      "evidence": "Projectile logic also compares against `g_UnitTypeMinRange`."
+      "confidence": "high",
+      "evidence": "Projectile logic also requires the ceil-sqrt shot distance to stay above `g_UnitTypeMinRange`."
     },
     {
       "unit_type": "FlyingUnitCategory",
@@ -689,16 +688,6 @@
       "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
     },
     {
-      "candidate": "g_UnitTypeBaseRangedAttack",
-      "candidate_kind": "stat",
-      "possible_interpretations": [
-        "ranged attack strength",
-        "secondary attack value"
-      ],
-      "evidence": "The table is tightly coupled to projectile logic but still lacks a direct designer-facing label.",
-      "blockers": "No debug string or serialized schema names the field."
-    },
-    {
       "candidate": "g_UnitTypeBaseSiegeAttack",
       "candidate_kind": "stat",
       "possible_interpretations": [
@@ -708,16 +697,6 @@
       ],
       "evidence": "The alternate attack helper switches to it for one context flag, but the original design term is missing.",
       "blockers": "Need a clearer caller or UI string."
-    },
-    {
-      "candidate": "Battle sidebar labels `Defence power` / `Status`",
-      "candidate_kind": "ui_stat_label",
-      "possible_interpretations": [
-        "an unconditional defence-labelled numeric row plus a separate packed runtime-state row",
-        "a defence-labelled UI row currently fed by the recovered damage family plus a generic condition/stance row"
-      ],
-      "evidence": "`off_514DC8` maps row 4 to `Defence power` and row 5 to `Status`, `UnitBattle_UpdateActionTooltip` follows that same row table, and `UnitBattle_DrawSelectedUnitPanel` shows an unconditional defence-labelled numeric row plus a separate status block rooted in packed slot state around `+12/+13`.",
-      "blockers": "The UI binding is clearer now, but renaming the underlying recovered stat families directly to match those row labels would still overclaim."
     },
     {
       "candidate": "UnitSlotRecord.stance_bits",
