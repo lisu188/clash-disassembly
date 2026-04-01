@@ -312,12 +312,12 @@
     {
       "name": "SpecialCargoEntryCategory",
       "confidence": "high",
-      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, feed gold/peasant-specific stack logic, and cannot satisfy the port-reinforcement pickup gate because that gate requires at least one normal combat unit in the claiming stack."
+      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, feed gold/peasant-specific stack logic, count as noncombat building occupants when present in castle garrisons, and cannot satisfy the port-reinforcement pickup gate because that gate requires at least one normal combat unit in the claiming stack."
     },
     {
       "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants; those resident-slot bits exclude them from generic castle training, while `Building_CountNonCombatGarrisonEntries` also classifies them as noncombat building occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
     },
     {
       "name": "PortSupplyReinforcementPool",
@@ -360,7 +360,7 @@
       "name": "stance_bits",
       "confidence": "medium",
       "semantic_role": "runtime formation or stance bits that modify attack values",
-      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, defense-power, and wall-attack helpers, and the selected-unit battle panel's `Status` row and icon block derive from packed slot state rooted in this byte."
+      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, defense-power, and wall-attack helpers; low-bit value `3` is the resident special-occupant state written by `Building_CreateSpecialPersonageGarrisonUnit` and rejected by the generic castle-training helpers; the selected-unit battle panel's `Status` row and icon block also derive from packed slot state rooted in this byte."
     },
     {
       "name": "state_flags",
@@ -450,13 +450,13 @@
       "name": "production_required_tech_level_mode_2",
       "confidence": "high",
       "semantic_role": "per-type tech-level threshold used when the production building mode byte equals `2`",
-      "evidence": "`Building_CanEquipAddon` selects `g_UnitTypeProductionRequiredTechLevelMode2[88 * unitType]` when `building[4] == 2`, compares that byte against `BuildingRecord.tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` uses the same gate for the licensable roster."
+      "evidence": "`Building_IsUnitLicenceEligible` selects `g_UnitTypeProductionRequiredTechLevelMode2[88 * unitType]` when `building[4] == 2`, compares that byte against `BuildingRecord.tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` uses the same gate for the licensable roster."
     },
     {
       "name": "production_required_tech_level_other_modes",
       "confidence": "high",
       "semantic_role": "per-type tech-level threshold used when the production building mode byte is non-zero but not `2`",
-      "evidence": "`Building_CanEquipAddon` switches to `g_UnitTypeProductionRequiredTechLevelOtherModes[88 * unitType]` for the alternate production-building modes and applies the same `tech_level_bits & 7` threshold before the unit licence becomes available."
+      "evidence": "`Building_IsUnitLicenceEligible` switches to `g_UnitTypeProductionRequiredTechLevelOtherModes[88 * unitType]` for the alternate production-building modes and applies the same `tech_level_bits & 7` threshold before the unit licence becomes available."
     },
     {
       "name": "move_pixel_speed",
@@ -668,6 +668,27 @@
       "evidence": "`Queen_NewTurn` selects type `33` or `34` and installs it through `Building_CreateSpecialPersonageGarrisonUnit` into an ordinary owned stronghold garrison slot rather than a separate royal-only container."
     },
     {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "garrison_training_eligibility",
+      "relationship_kind": "not_trainable_while_resident_in_building_garrison",
+      "confidence": "high",
+      "evidence": "`Building_CreateSpecialPersonageGarrisonUnit` sets the resident slot's low status bits to `3`, and the generic castle-training helpers only accept occupied idle garrison slots whose low status bits stay below `2`."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "noncombat_garrison_entry",
+      "relationship_kind": "counts_as_noncombat_building_occupant",
+      "confidence": "high",
+      "evidence": "`Building_CountNonCombatGarrisonEntries` counts types `33` and `34` together with gold and peasant cargo, and the building-engagement gate treats a garrison whose total occupants equal that noncombat count as lacking ordinary combat occupants."
+    },
+    {
+      "unit_type": "SpecialCargoEntryCategory",
+      "stat": "noncombat_garrison_entry",
+      "relationship_kind": "counts_as_noncombat_building_occupant",
+      "confidence": "high",
+      "evidence": "`Building_CountNonCombatGarrisonEntries` counts gold and peasant cargo together with the two special personage types, and the building-engagement gate treats a garrison whose total occupants equal that noncombat count as lacking ordinary combat occupants."
+    },
+    {
       "unit_type": "RangedUnitCategory",
       "stat": "base_shot_power",
       "relationship_kind": "projectile_attack_profile",
@@ -753,8 +774,8 @@
         "attack stance bits",
         "garrison posture selector"
       ],
-      "evidence": "The low two bits feed effective attack helpers directly, while the full byte is cycled by `Building_UseGarrisonSlot`.",
-      "blockers": "The exact meaning of the upper subfields is still unresolved."
+      "evidence": "The low two bits feed effective attack helpers directly, low-bit value `3` marks a resident special occupant that the generic castle-training helpers reject, and the full byte is cycled by `Building_UseGarrisonSlot`.",
+      "blockers": "The exact meaning of the upper subfields beyond the recovered resident-special low-bit value remains unresolved."
     },
     {
       "candidate": "production_required_tech_level_mode_2 / production_required_tech_level_other_modes",
@@ -763,7 +784,7 @@
         "per-unit licence tech thresholds for two production-building subclasses",
         "per-unit licence tech thresholds for `building[4] == 2` versus all other non-zero production modes"
       ],
-      "evidence": "`Building_CanEquipAddon` picks one of the two bytes entirely from the building mode byte at offset `+4`, compares the chosen threshold against `tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster.",
+      "evidence": "`Building_IsUnitLicenceEligible` picks one of the two bytes entirely from the building mode byte at offset `+4`, compares the chosen threshold against `tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster.",
       "blockers": "The threshold role is secure, but the original designer-facing names of the two production-building mode families are still unresolved."
     },
     {

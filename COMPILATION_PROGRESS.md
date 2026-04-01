@@ -1963,3 +1963,71 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1111`
+
+## Batch 106 - Special Personage Garrison And Licence Sync Wave
+- Current subsystem/cluster:
+  - special-personage and cargo behavior inside building garrisons, plus the adjacent castle production-licence helper/field names that were left stale after the prior licence-metadata wave
+- Subagents spawned and scopes:
+  - the session hard-capped live subagent threads at six, so the required scopes were covered by six read-only explorers with two combined fallback roles rather than blocking progress:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform fallback
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compile/link fallback
+  - mergeable subagent evidence used this batch:
+    - Agent A and Agent B independently confirmed that special personages are non-trainable resident special slots and count as noncombat building occupants
+    - Agent E and Agent F+G confirmed that the remaining live “addon” helper/field names in the castle production cluster are semantically stale and should be promoted to `unit licence` names
+    - Agent D tightened the safe boundary on `UnitSlotRecord.stance_bits` by proving low-bit value `3` is the resident special-occupant state
+- Repairs:
+  - renamed `Building_HasAddonLicence` to `Building_HasUnitLicence`
+  - renamed `Building_CanEquipAddon` to `Building_IsUnitLicenceEligible`
+  - renamed `Building_SelectedAddonMatchesTypeByIndex` to `Building_SelectedUnitLicenceMatchesTypeByIndex`
+  - recovered `BuildingRecord +402` as `unit_licence_type_ids[12]`
+  - recovered `BuildingRecord +414` as `selected_unit_licence_slot_index`
+  - strengthened `UnitSlotRecord.stance_bits` evidence to record that low-bit value `3` is the resident special-occupant state rejected by generic castle training
+  - extended the maintained unit/stat artifacts with:
+    - high-confidence `SpecialPersonageCategory -> garrison_training_eligibility = not trainable while resident in building garrisons`
+    - high-confidence `SpecialPersonageCategory -> noncombat_garrison_entry`
+    - high-confidence `SpecialCargoEntryCategory -> noncombat_garrison_entry`
+    - synced licence-threshold evidence text from the stale helper name `Building_CanEquipAddon` to the current live name `Building_IsUnitLicenceEligible`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch106.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch106.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch106.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the licence-helper rename and artifact sync wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the semantic sync wave
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the under-documented special-personage building-garrison relationships around training exclusion and noncombat occupancy
+  - the stale castle-production helper names that still referred to `addon` rather than `unit licence`
+  - the stale `BuildingRecord` licence field names at offsets `+402` and `+414`
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `Building_CreateSpecialPersonageGarrisonUnit`
+  - `Building_TrainUnit`
+  - `Building_CountNonCombatGarrisonEntries`
+  - `Building_HasTrainableIdleGarrisonUnit`
+  - `Building_StartTrainingIdleGarrisonUnits`
+  - `Building_SelectedUnitLicenceMatchesTypeByIndex`
+- Key evidence used:
+  - `Building_CreateSpecialPersonageGarrisonUnit` writes special personages into ordinary building garrison slots and immediately sets `slot_flags |= 3`
+  - `Building_TrainUnit`, `Building_HasTrainableIdleGarrisonUnit`, and `Building_StartTrainingIdleGarrisonUnits` all exclude that resident-special low-bit state from generic castle training
+  - `Building_CountNonCombatGarrisonEntries` counts special personages together with gold and peasant cargo, and the building-engagement gate treats equality with total garrison count as the no-ordinary-combat case
+  - bytes `+402..+413` and byte `+414` in `BuildingRecord` are used consistently as the installed per-unit licence roster and selected licence slot, not as the true castle add-on state
+- Ambiguous candidates deferred:
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - the exact original UI/serialization distinction behind `UnitType31_GoldCargo` / `UnitType32_PeasantCargo`
+  - the unresolved upper subfields of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1116`

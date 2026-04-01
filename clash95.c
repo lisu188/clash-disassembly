@@ -1091,7 +1091,7 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3);
 int  Building_CountFreeGarrisonSlots(int a1);
 signed int  Building_UnitGetInto(int a1, int a2, char a3, signed int i, double a5);
 signed int  Building_CanAcceptUnitStack(int a1, int a2);
-signed int  Building_HasAddonLicence(int a1, int a2);
+signed int  Building_HasUnitLicence(int a1, int a2);
 BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4);
 int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3);
 int  Building_SetUnitProduction(int a1, char a2, DWORD a3);
@@ -1106,7 +1106,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int a1);
 int  Building_CountNonCombatGarrisonEntries(int a1);
 signed int  Building_HasSpecialPersonageGarrisonEntries(int a1);
 int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a3);
-BOOL  Building_CanEquipAddon(char *a1, int a2);
+BOOL  Building_IsUnitLicenceEligible(char *a1, int a2);
 int  Building_AdjustAllGarrisonMoraleByDelta(int a1);
 int  Building_CycleAllGarrisonOrdersOnce(int a1);
 signed int  Building_GetTaxBurdenTier(int a1);
@@ -1408,7 +1408,7 @@ _DWORD * Rules_LogCastleUnderConstructionFact(int a1);
 _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2);
 _DWORD * Rules_LogAssignedCastleFact(int a1, int a2);
 _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2);
-BOOL  Building_SelectedAddonMatchesTypeByIndex(int a1, int a2);
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2);
 int  sub_455EC0(int a1, int a2, int a3);
 signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2);
 signed int  sub_455F60(int a1, int a2, int a3, int a4);
@@ -47653,7 +47653,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
     }
     else
     {
-      if ( Building_HasAddonLicence(dword_532218, v16) )
+      if ( Building_HasUnitLicence(dword_532218, v16) )
       {
         Render_ReleaseSurface(20, 0x2Du);
         UI_DrawText(
@@ -48332,7 +48332,7 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
   unit_type = 0;
   do
   {
-    result = Building_CanEquipAddon((char *)dword_532218, unit_type);
+    result = Building_IsUnitLicenceEligible((char *)dword_532218, unit_type);
     if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
       dword_532224[out_index++] = unit_type;
     ++unit_type;
@@ -54383,7 +54383,7 @@ signed int  Building_CanAcceptUnitStack(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E820) --------------------------------------------------------
-signed int  Building_HasAddonLicence(int a1, int a2)
+signed int  Building_HasUnitLicence(int a1, int a2)
 {
   int v2; // esi
   int v3; // ecx
@@ -54411,9 +54411,9 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
   int v10; // eax
 
   Debug_Log(a3, a1, a4, (int)aBuildingBuyUnitLicence);
-  if ( Building_HasAddonLicence(a1, a2) )
+  if ( Building_HasUnitLicence(a1, a2) )
     return 0;
-  result = Building_CanEquipAddon((char *)a1, a2);
+  result = Building_IsUnitLicenceEligible((char *)a1, a2);
   if ( result )
   {
     v7 = gameData + 1423 * *(unsigned __int8 *)(a1 + 2);
@@ -54711,7 +54711,7 @@ int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a
 // 5202E4: using guessed type int gameData;
 
 //----- (0043ED20) --------------------------------------------------------
-BOOL  Building_CanEquipAddon(char *a1, int a2)
+BOOL  Building_IsUnitLicenceEligible(char *a1, int a2)
 {
   int v4; // eax
   int v5; // edx
@@ -68415,7 +68415,7 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 //----- (004557C0) --------------------------------------------------------
 signed int  Building_HasUnitLicenceByIndex(int a1, int a2)
 {
-  return Building_HasAddonLicence(UNIT_RECORD(a1), a2);
+  return Building_HasUnitLicence(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68429,7 +68429,7 @@ BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3)
 //----- (00455800) --------------------------------------------------------
 BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2)
 {
-  return Building_CanEquipAddon((char *)(UNIT_RECORD(a1)), a2);
+  return Building_IsUnitLicenceEligible((char *)(UNIT_RECORD(a1)), a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -68834,7 +68834,7 @@ _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455E80) --------------------------------------------------------
-BOOL  Building_SelectedAddonMatchesTypeByIndex(int a1, int a2)
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2)
 {
   int v2; // ecx
   int v3; // eax
