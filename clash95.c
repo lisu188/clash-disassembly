@@ -1389,8 +1389,8 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3);
 signed int  Building_HasUnitLicenceByIndex(int a1, int a2);
 BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3);
 BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2);
-BOOL  sub_455830(int a1, DWORD a2, double a3, char *a4);
-signed int  sub_455850(int a1, int a2);
+BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4);
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2);
 signed int  sub_455890(int a1);
 signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3);
 signed int  Building_HasTrainableIdleGarrisonUnit(int a1);
@@ -1409,9 +1409,9 @@ _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2);
 _DWORD * Rules_LogAssignedCastleFact(int a1, int a2);
 _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2);
 BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2);
-int  sub_455EC0(int a1, int a2, int a3);
+int  Player_GetInternedNameByIndex(int a1, int a2, int a3);
 signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2);
-signed int  sub_455F60(int a1, int a2, int a3, int a4);
+signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4);
 void Map_RebuildCastleSiteAnchorCache();
 int  Building_CalcGarrisonFactStrength(int a1);
 int  Building_OnGarrisonChange(int a1, int a2, double a3);
@@ -68429,13 +68429,13 @@ BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455830) --------------------------------------------------------
-BOOL  sub_455830(int a1, DWORD a2, double a3, char *a4)
+BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4)
 {
   return Building_New(a1, a2, a3, a4, 0);
 }
 
 //----- (00455850) --------------------------------------------------------
-signed int  sub_455850(int a1, int a2)
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2)
 {
   signed int result; // eax
   int v4; // ebx
@@ -68841,7 +68841,7 @@ BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455EC0) --------------------------------------------------------
-int  sub_455EC0(int a1, int a2, int a3)
+int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
 {
   char *v4; // edx
   char *v5; // esi
@@ -68893,7 +68893,7 @@ signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455F60) --------------------------------------------------------
-signed int  sub_455F60(int a1, int a2, int a3, int a4)
+signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4)
 {
   int v5; // edx
   int v6; // edx
