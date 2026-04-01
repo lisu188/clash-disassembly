@@ -494,6 +494,11 @@ BOOL __stdcall UpdateWindow(HWND hWnd);
 BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect);
 BOOL __stdcall WaitMessage(void);
 DWORD __stdcall timeGetTime(void);
+DWORD __stdcall GetTickCount(void);
+DWORD __stdcall GetVersion(void);
+HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName);
+UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName);
+void __stdcall OutputDebugStringA(LPCSTR lpOutputString);
 void __stdcall Sleep(DWORD dwMilliseconds);
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint);
 

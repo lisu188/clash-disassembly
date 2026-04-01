@@ -4517,18 +4517,14 @@ DWORD __stdcall GetCurrentProcessId();
 // HANDLE __stdcall GetCurrentProcess();
 DWORD __stdcall GetCurrentThreadId();
 // HANDLE __stdcall GetCurrentThread();
-UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName);
 // LPCH __stdcall GetEnvironmentStrings();
 BOOL __stdcall GetExitCodeProcess(HANDLE hProcess, LPDWORD lpExitCode);
 // DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName);
 DWORD __stdcall GetLastError();
 // DWORD __stdcall GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize);
-HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName);
 // UINT __stdcall GetOEMCP();
 FARPROC __stdcall GetProcAddress(HMODULE hModule, LPCSTR lpProcName);
-DWORD __stdcall GetTickCount();
 DWORD __stdcall GetTimeZoneInformation(LPTIME_ZONE_INFORMATION lpTimeZoneInformation);
-DWORD __stdcall GetVersion();
 HGLOBAL __stdcall GlobalAlloc(UINT uFlags, SIZE_T dwBytes);
 // HGLOBAL __stdcall GlobalFree(HGLOBAL hMem);
 LPVOID __stdcall GlobalLock(HGLOBAL hMem);
@@ -4541,7 +4537,6 @@ HGLOBAL __stdcall LoadResource(HMODULE hModule, HRSRC hResInfo);
 // LPVOID __stdcall LockResource(HGLOBAL hResData);
 BOOL __stdcall MoveFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName);
 // int __stdcall MultiByteToWideChar(UINT CodePage, DWORD dwFlags, LPCSTR lpMultiByteStr, int cbMultiByte, LPWSTR lpWideCharStr, int cchWideChar);
-void __stdcall OutputDebugStringA(LPCSTR lpOutputString);
 // BOOL __stdcall PulseEvent(HANDLE hEvent);
 BOOL __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);
 // BOOL __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);
@@ -82933,11 +82928,8 @@ unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4
 //----- (00471B40) --------------------------------------------------------
 void __cdecl sub_471B40(unsigned int a1)
 {
-  if ( a1 < dword_54DB80 )
-    JUMPOUT(0x47103D);
+  sub_471030(a1);
 }
-// 471B4A: control flows out of bounds to 47103D
-// 54DB80: using guessed type int dword_54DB80;
 
 //----- (00471BA0) --------------------------------------------------------
 void __cdecl sub_471BA0(unsigned int a1, unsigned int a2)

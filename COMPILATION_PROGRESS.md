@@ -2031,3 +2031,58 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1116`
+
+## Batch 107 - SDL Seam Ownership And Local JUMPOUT Repair Wave
+- Current subsystem/cluster:
+  - SDL-target platform declaration ownership cleanup plus one narrow asm-correlated `JUMPOUT` scar inside the stream-state helper cluster
+- Subagents spawned and scopes:
+  - the session remained hard-capped at six live subagent threads, so the required scopes were covered by six read-only explorers with combined fallback roles rather than blocking progress:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B+E: queen systems plus castle/building/garrison systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent F: asm/map/exe corroboration and symbol recovery
+    - Agent G: compilation/link blockers and build integration
+  - mergeable subagent evidence used this batch:
+    - Agent A and Agent C+H independently confirmed the special-personage/cargo building-garrison taxonomy frontier is already reflected in the maintained unit artifacts, so no further safe unit-stat rename wave was available here
+    - Agent C+H identified the remaining declaration-ownership cleanup for `GetTickCount`, `GetVersion`, `GetModuleHandleA`, `GetDriveTypeA`, and `OutputDebugStringA`
+    - Agent F+G identified the local `sub_471B40` tail-jump as an exact shared-block jump into `sub_471030`, making it safe to replace with a direct helper call
+- Repairs:
+  - moved the declarations for `GetTickCount`, `GetVersion`, `GetModuleHandleA`, `GetDriveTypeA`, and `OutputDebugStringA` into `platform_sdl.h`
+  - removed the duplicate local declarations for those wrappers from `clash95.c`
+  - replaced `sub_471B40`'s `JUMPOUT(0x47103D)` scar with a direct call to `sub_471030(a1)`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch107.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after centralizing the SDL seam declarations and repairing the local `JUMPOUT`
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the header-ownership and control-flow cleanup wave
+  - the broader executable link frontier is still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and the remaining `JUMPOUT` scars
+- Blockers removed:
+  - duplicate ownership of five SDL-target platform wrapper declarations between `platform_sdl.h` and `clash95.c`
+  - one narrow `JUMPOUT` control-flow scar in `sub_471B40`
+- SDL-related replacements or cleanups this batch:
+  - `GetTickCount` / `GetVersion` / `GetModuleHandleA` / `GetDriveTypeA` / `OutputDebugStringA` declarations now live in `platform_sdl.h` instead of `clash95.c`
+- High-priority unknown functions reviewed:
+  - `sub_471030`
+  - `sub_471B40`
+  - `CSS_ResumeStream`
+  - `sub_46DA00`
+  - `sub_46DF20`
+- Key evidence used:
+  - `platform_sdl_runtime.c` already owns concrete implementations for all five platform wrappers, so `clash95.c` was only carrying redundant declarations
+  - `platform_sdl.h` is the established SDL seam header already used to own adjacent Win32-shaped wrappers such as `timeGetTime`, `Sleep`, and `ClientToScreen`
+  - `sub_471B40` and `sub_471030` share the same `a1 < dword_54DB80` guard, and the asm target block at `loc_47103D` only clears the record field at offset `+96` before returning
+- Ambiguous candidates deferred:
+  - the semantic names of the wider stream-state helper family around `sub_471030` / `sub_471070`
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - the exact original UI/serialization distinction behind `UnitType31_GoldCargo` / `UnitType32_PeasantCargo`
+  - the unresolved upper subfields of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1116`
