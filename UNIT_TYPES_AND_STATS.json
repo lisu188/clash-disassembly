@@ -459,6 +459,12 @@
       "evidence": "`Building_IsUnitLicenceEligible` switches to `g_UnitTypeProductionRequiredTechLevelOtherModes[88 * unitType]` for the alternate production-building modes and applies the same `tech_level_bits & 7` threshold before the unit licence becomes available."
     },
     {
+      "name": "role",
+      "confidence": "high",
+      "semantic_role": "per-type tactical role class used by battle target priorities, role-matchup ordering, and healing eligibility",
+      "evidence": "The metadata parser loads the literal `role` field into `g_UnitTypeRole`, battle helpers index role-priority tables through that byte, and `UnitStack_HasUnitsNeedingHealing` only counts low-health slots whose role class is at least `3`."
+    },
+    {
       "name": "move_pixel_speed",
       "confidence": "medium",
       "semantic_role": "per-frame displacement during movement animation",

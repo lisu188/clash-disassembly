@@ -176,6 +176,8 @@ LRESULT __stdcall DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 LRESULT __stdcall DispatchMessageA(const MSG *lpMsg)
 {
+  WNDPROC window_proc;
+
   if ( !lpMsg )
     return 0;
   if ( lpMsg->message == PLATFORM_WM_QUIT )
@@ -184,8 +186,16 @@ LRESULT __stdcall DispatchMessageA(const MSG *lpMsg)
     g_platform_quit_code = (int)lpMsg->wParam;
     return 0;
   }
-  if ( g_platform_has_window_class && (void *)g_platform_window_class.lpfnWndProc == (void *)Platform_MainWindowProc )
-    return Platform_MainWindowProc(0, lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+  if ( g_platform_has_window_class )
+  {
+    window_proc = g_platform_window_class.lpfnWndProc;
+    if ( window_proc )
+    {
+      if ( (void *)window_proc == (void *)Platform_MainWindowProc )
+        return Platform_MainWindowProc(0, lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+      return window_proc(lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+    }
+  }
   return 0;
 }
 

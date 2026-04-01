@@ -2447,3 +2447,176 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1138`
+
+## Batch 114 - Port Reinforcement Text And SDL Dispatch Wave
+- Current subsystem/cluster:
+  - a narrow mixed batch spanning one misleading port-arrival text-table name and one contained SDL message-dispatch seam cleanup
+- Subagents spawned and scopes:
+  - the six-agent cap remained in effect, so the required scopes were still covered by the live read-only explorers with combined fallback roles:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compilation/link blockers
+  - mergeable subagent evidence used this batch:
+    - Agent C+H confirmed that the port-ready UI strings are specifically reinforcement-arrival text and that the SDL shim can safely dispatch any registered window proc while preserving the existing `Platform_MainWindowProc` thunk path
+- Functions renamed:
+  - none
+- Structs/classes/globals/tables recovered or renamed:
+  - `g_PortSupplyReadyTexts` -> `g_PortReinforcementArrivedTexts`
+- High-priority unknown functions reviewed:
+  - `DispatchMessageA`
+  - `RegisterClassA`
+  - `CreateWindowExA`
+  - `Port_CollectReinforcementShipment`
+  - `UI_DrawPortStatusPanel`
+- Blockers removed:
+  - one misleading gameplay-facing table name in the port-status panel
+  - one SDL shim limitation where `DispatchMessageA` ignored any registered window proc other than the hard-coded `Platform_MainWindowProc` case
+- SDL-related replacements or cleanups this batch:
+  - `DispatchMessageA` now invokes the registered `WNDPROC` generically and only falls back to the explicit thunk when the proc is `Platform_MainWindowProc`
+- Validation probe:
+  - `rg -n "g_PortSupplyReadyTexts|g_PortReinforcementArrivedTexts|DispatchMessageA|Platform_MainWindowProc" clash95.c platform_sdl_runtime.c REVERSE_ENGINEERING_RENAME_LOG.md COMPILATION_PROGRESS.md`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch114.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch114.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the port-text rename
+  - `platform_sdl_runtime.c` object compilation still succeeds after the generic dispatch cleanup
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 114 edits
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event-thread wrappers, and residual `JUMPOUT` scars
+- Key evidence used:
+  - `UI_DrawPortStatusPanel` formats the renamed three-language table only when `PORT_SUPPLY_READY_FLAG` is set, and the strings literally announce arriving troops rather than a generic “ready” state
+  - `RegisterClassA` already stores the active class proc in the SDL shim, so `DispatchMessageA` can honor that registered callback directly
+  - `Platform_MainWindowProc` still needs a dedicated thunk because the recovered signature remains `__thiscall`, which explains the retained special-case bridge
+- Ambiguous candidates deferred:
+  - the exact original public label behind `UnitType32_PeasantCargo`
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - bit `7` of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1140`
+
+## Batch 115 - Active Production Licence Slot Wave
+- Current subsystem/cluster:
+  - castle production semantics around the still-misleading building field at `BuildingRecord +414`
+- Subagents spawned and scopes:
+  - the six-agent cap remained in effect, so the required scopes were still covered by the live read-only explorers with combined fallback roles:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compilation/link blockers
+  - mergeable subagent evidence used this batch:
+    - Agent E confirmed that `BuildingRecord +414` persists as the active production-licence slot consumed by `Building_ProcessUnitProductionTurn`, while `+415` is the paired `production_turns_remaining` countdown already recovered in prior batches
+- Functions renamed:
+  - none
+- Structs/classes/globals/tables recovered or renamed:
+  - `BuildingRecord.selected_unit_licence_slot_index` -> `BuildingRecord.active_production_licence_slot_index`
+- High-priority unknown functions reviewed:
+  - `Building_SetUnitProduction`
+  - `Building_StopUnitProduction`
+  - `Building_ProcessUnitProductionTurn`
+  - `CastleProduction_DrawLicenceGrid`
+  - `CastleProduction_DrawProductionStatus`
+- Blockers removed:
+  - the remaining misleading interpretation of building byte `+414` as a passive UI selection instead of the active production queue selector used by the per-turn production processor
+- SDL-related replacements or cleanups this batch:
+  - none
+- Validation probe:
+  - `rg -n "BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX|BUILDING_PRODUCTION_TURNS_REMAINING|selected_unit_licence_slot_index|active_production_licence_slot_index" clash95.c RECOVERED_STRUCTURES.json REVERSE_ENGINEERING_RENAME_LOG.md COMPILATION_PROGRESS.md`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch115.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the building production-field clarification
+  - `RECOVERED_STRUCTURES.json` remains valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 115 edits
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event-thread wrappers, and residual `JUMPOUT` scars
+- Key evidence used:
+  - `Building_SetUnitProduction` writes the chosen licence-slot index to `+414` and seeds the paired countdown at `+415`
+  - `Building_ProcessUnitProductionTurn` rereads `+414` each turn to resolve the currently produced unit type before decrementing or reloading `+415`
+  - completion and stop paths clear `+414` back to `-1`, proving it is the active production slot rather than a transient UI highlight
+  - the castle-production UI overlays and status panel read the same two bytes to draw the currently active licence marker and remaining-turn message
+- Ambiguous candidates deferred:
+  - the exact original public label behind `UnitType32_PeasantCargo`
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - bit `7` of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1141`
+
+## Batch 116 - Battle Shooting And Role Table Wave
+- Current subsystem/cluster:
+  - battle shooting/retreat helper names plus the raw per-type tactical role byte in the 88-byte unit metadata record
+- Subagents spawned and scopes:
+  - the six-agent cap remained in effect, so the required scopes were still covered by the live read-only explorers with combined fallback roles:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compilation/link blockers
+  - mergeable subagent evidence used this batch:
+    - Agent A confirmed the exact battle debug-string semantics for the retreat / shooting / safe-distance helpers and corroborated `byte_5125B5` as the metadata parser's `role` field
+- Functions renamed:
+  - `sub_436D10` -> `UnitBattle_RetreatUnit`
+  - `sub_437050` -> `UnitBattle_IsTileWithinMinRange`
+  - `sub_4370B0` -> `UnitBattle_MoveShootingUnit`
+  - `sub_43B740` -> `UnitBattle_ApproachToSafeDistance`
+  - `sub_4549A0` -> `UnitStack_HasNormalCombatUnitsByIndex`
+  - `sub_4549E0` -> `UnitStack_GetSquadCountByIndex`
+- Structs/classes/globals/tables recovered or renamed:
+  - `byte_5125B5` -> `g_UnitTypeRole`
+  - `UnitTypeMetadataRecord +77` -> `role`
+- High-priority unknown functions reviewed:
+  - `UnitBattle_RetreatUnit`
+  - `UnitBattle_IsTileWithinMinRange`
+  - `UnitBattle_MoveShootingUnit`
+  - `UnitBattle_ApproachToSafeDistance`
+  - `UnitStack_HasNormalCombatUnitsByIndex`
+  - `UnitStack_GetSquadCountByIndex`
+- Blockers removed:
+  - six gameplay-relevant autogenerated battle/helper names
+  - one raw metadata byte that still hid the parser-exposed per-type role class behind `byte_5125B5`
+- SDL-related replacements or cleanups this batch:
+  - none
+- Validation probe:
+  - `rg -n "UnitBattle_RetreatUnit|UnitBattle_IsTileWithinMinRange|UnitBattle_MoveShootingUnit|UnitBattle_ApproachToSafeDistance|UnitStack_HasNormalCombatUnitsByIndex|UnitStack_GetSquadCountByIndex|g_UnitTypeRole" clash95.c REVERSE_ENGINEERING_RENAME_LOG.md COMPILATION_PROGRESS.md UNIT_TYPES_AND_STATS_REPORT.md UNIT_TYPES_AND_STATS.json RECOVERED_STRUCTURES.json`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch116.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the battle/role rename wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 116 edits
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event-thread wrappers, and residual `JUMPOUT` scars
+- Key evidence used:
+  - the asm debug strings directly name the retreat, shooting-move, and safe-distance helpers
+  - `UnitBattle_MoveShootingUnit` uses the min-range helper to decide between immediate fire, retreat, or advance-then-fire behavior
+  - the metadata parser loads a literal `role` field into `g_UnitTypeRole`, and battle priority / ordering / healing gates all reuse that same byte band
+- Ambiguous candidates deferred:
+  - the exact original public label behind `UnitType32_PeasantCargo`
+  - the exact original designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - bit `7` of `UnitSlotRecord.stance_bits`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1148`
