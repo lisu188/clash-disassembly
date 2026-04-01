@@ -325,7 +325,9 @@ BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsg
     PlatformFillQuitMessage(lpMsg);
     return 0;
   }
-  return 0;
+  if ( lpMsg )
+    memset(lpMsg, 0, sizeof(*lpMsg));
+  return 1;
 }
 
 HGDIOBJ __stdcall GetStockObject(int i)
@@ -596,6 +598,8 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
 
 BOOL __stdcall WaitMessage()
 {
+  if ( PlatformQueueIsEmpty() && !g_platform_quit_requested )
+    usleep(10000);
   return 1;
 }
 
@@ -607,7 +611,15 @@ void __stdcall Sleep(DWORD dwMilliseconds)
 
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint)
 {
-  (void)hWnd;
-  (void)lpPoint;
+  struct SDL_Window *window;
+
+  if ( !lpPoint )
+    return 0;
+  window = (struct SDL_Window *)hWnd;
+  if ( window )
+  {
+    lpPoint->x += window->x;
+    lpPoint->y += window->y;
+  }
   return 1;
 }

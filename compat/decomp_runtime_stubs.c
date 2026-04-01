@@ -1,7 +1,11 @@
 #include "../defs.h"
+#include "../platform_sdl.h"
 
 #include <ctype.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <wchar.h>
 #include <wctype.h>
 
@@ -18,6 +22,324 @@ extern void *lpTlsValue;
 unsigned __int16 __ES__;
 unsigned __int16 __DS__;
 __lock unk_51A638;
+
+#define COMPAT_TLS_SLOT_COUNT 64
+#define COMPAT_TLS_SEARCH_START 3u
+#define COMPAT_FILE_ATTRIBUTE_READONLY 0x1u
+#define COMPAT_FILE_ATTRIBUTE_DIRECTORY 0x10u
+#define COMPAT_INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+
+static DWORD g_compat_last_error;
+static LPVOID g_compat_tls_slots[COMPAT_TLS_SLOT_COUNT];
+static unsigned char g_compat_tls_slot_in_use[COMPAT_TLS_SLOT_COUNT];
+
+static void CompatSetLastErrorFromErrno(void)
+{
+  if ( errno )
+    g_compat_last_error = (DWORD)errno;
+  else
+    g_compat_last_error = (DWORD)EIO;
+}
+
+static DWORD CompatResolveOsErrorCode(DWORD fallback)
+{
+  if ( g_compat_last_error )
+    return g_compat_last_error;
+  if ( fallback )
+    return fallback;
+  if ( errno )
+    return (DWORD)errno;
+  return (DWORD)EIO;
+}
+
+static int CompatMapOsErrorToErrno(DWORD error_code)
+{
+  switch ( error_code )
+  {
+    case 0:
+      return 0;
+    case 2:
+    case 3:
+      return ENOENT;
+    case 5:
+      return EACCES;
+    case 6:
+      return EBADF;
+    case 8:
+    case 12:
+    case 14:
+      return ENOMEM;
+    case 13:
+      return EACCES;
+    case 16:
+    case 32:
+      return EBUSY;
+    case 17:
+    case 80:
+    case 183:
+      return EEXIST;
+    case 20:
+    case 267:
+      return ENOTDIR;
+    case 21:
+      return EISDIR;
+    case 22:
+    case 87:
+      return EINVAL;
+    case 28:
+    case 112:
+      return ENOSPC;
+    case 145:
+      return ENOTEMPTY;
+    case 258:
+      return EAGAIN;
+    default:
+      if ( error_code <= 255 )
+        return (int)error_code;
+      return EIO;
+  }
+}
+
+static int CompatTlsSlotIsValid(DWORD dwTlsIndex)
+{
+  return dwTlsIndex < COMPAT_TLS_SLOT_COUNT && g_compat_tls_slot_in_use[dwTlsIndex] != 0;
+}
+
+DWORD __stdcall GetLastError(void)
+{
+  return g_compat_last_error;
+}
+
+void __stdcall SetLastError(DWORD dwErrCode)
+{
+  g_compat_last_error = dwErrCode;
+}
+
+int __cdecl _set_errno_dos_(DWORD error_code)
+{
+  errno = CompatMapOsErrorToErrno(CompatResolveOsErrorCode(error_code));
+  return -1;
+}
+
+int __cdecl _set_errno_nt_(DWORD error_code)
+{
+  errno = CompatMapOsErrorToErrno(CompatResolveOsErrorCode(error_code));
+  return -1;
+}
+
+DWORD __stdcall TlsAlloc(void)
+{
+  DWORD index;
+
+  for ( index = COMPAT_TLS_SEARCH_START; index < COMPAT_TLS_SLOT_COUNT; ++index )
+  {
+    if ( !g_compat_tls_slot_in_use[index] )
+    {
+      g_compat_tls_slot_in_use[index] = 1;
+      g_compat_tls_slots[index] = 0;
+      g_compat_last_error = 0;
+      return index;
+    }
+  }
+  for ( index = 0; index < COMPAT_TLS_SEARCH_START; ++index )
+  {
+    if ( !g_compat_tls_slot_in_use[index] )
+    {
+      g_compat_tls_slot_in_use[index] = 1;
+      g_compat_tls_slots[index] = 0;
+      g_compat_last_error = 0;
+      return index;
+    }
+  }
+  g_compat_last_error = (DWORD)ENOMEM;
+  return (DWORD)-1;
+}
+
+BOOL __stdcall TlsFree(DWORD dwTlsIndex)
+{
+  if ( !CompatTlsSlotIsValid(dwTlsIndex) )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  g_compat_tls_slot_in_use[dwTlsIndex] = 0;
+  g_compat_tls_slots[dwTlsIndex] = 0;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+LPVOID __stdcall TlsGetValue(DWORD dwTlsIndex)
+{
+  if ( !CompatTlsSlotIsValid(dwTlsIndex) )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  g_compat_last_error = 0;
+  return g_compat_tls_slots[dwTlsIndex];
+}
+
+BOOL __stdcall TlsSetValue(DWORD dwTlsIndex, LPVOID lpTlsValue)
+{
+  if ( !CompatTlsSlotIsValid(dwTlsIndex) )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  g_compat_tls_slots[dwTlsIndex] = lpTlsValue;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
+{
+  if ( !lpFileName || !*lpFileName )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  if ( unlink(lpFileName) == 0 )
+  {
+    g_compat_last_error = 0;
+    return 1;
+  }
+  CompatSetLastErrorFromErrno();
+  return 0;
+}
+
+BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes)
+{
+  (void)lpSecurityAttributes;
+  if ( !lpPathName || !*lpPathName )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  if ( mkdir(lpPathName, 0777) == 0 )
+  {
+    g_compat_last_error = 0;
+    return 1;
+  }
+  CompatSetLastErrorFromErrno();
+  return 0;
+}
+
+BOOL __stdcall RemoveDirectoryA(LPCSTR lpPathName)
+{
+  if ( !lpPathName || !*lpPathName )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  if ( rmdir(lpPathName) == 0 )
+  {
+    g_compat_last_error = 0;
+    return 1;
+  }
+  CompatSetLastErrorFromErrno();
+  return 0;
+}
+
+DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
+{
+  DWORD attributes;
+  struct stat st;
+
+  if ( !lpFileName || !*lpFileName )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return COMPAT_INVALID_FILE_ATTRIBUTES;
+  }
+  if ( stat(lpFileName, &st) != 0 )
+  {
+    CompatSetLastErrorFromErrno();
+    return COMPAT_INVALID_FILE_ATTRIBUTES;
+  }
+  attributes = 0;
+  if ( S_ISDIR(st.st_mode) )
+    attributes |= COMPAT_FILE_ATTRIBUTE_DIRECTORY;
+  if ( access(lpFileName, W_OK) != 0 )
+    attributes |= COMPAT_FILE_ATTRIBUTE_READONLY;
+  g_compat_last_error = 0;
+  return attributes;
+}
+
+void __noreturn ExitProcess(UINT uExitCode)
+{
+  exit((int)uExitCode);
+}
+
+DWORD __stdcall GetCurrentProcessId(void)
+{
+  return (DWORD)getpid();
+}
+
+DWORD __stdcall GetCurrentThreadId(void)
+{
+  /*
+   * The current recovered host only runs the decompiled core on one thread.
+   * Mirror the process id here until real thread creation/resume is rebuilt.
+   */
+  return (DWORD)getpid();
+}
+
+BOOL __stdcall CloseHandle(HANDLE hObject)
+{
+  if ( !hObject )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  g_compat_last_error = 0;
+  return 1;
+}
+
+DWORD __stdcall ResumeThread(HANDLE hThread)
+{
+  if ( !hThread )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return (DWORD)-1;
+  }
+  g_compat_last_error = 0;
+  return 0;
+}
+
+void __stdcall InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
+{
+  if ( !lpCriticalSection )
+    return;
+  memset(lpCriticalSection, 0, sizeof(*lpCriticalSection));
+  lpCriticalSection->LockCount = -1;
+}
+
+void __stdcall EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
+{
+  if ( !lpCriticalSection )
+    return;
+  ++lpCriticalSection->LockCount;
+  ++lpCriticalSection->RecursionCount;
+  lpCriticalSection->OwningThread = (HANDLE)(uintptr_t)GetCurrentThreadId();
+}
+
+void __stdcall LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
+{
+  if ( !lpCriticalSection )
+    return;
+  if ( lpCriticalSection->RecursionCount > 0 )
+    --lpCriticalSection->RecursionCount;
+  if ( lpCriticalSection->LockCount >= -1 )
+    --lpCriticalSection->LockCount;
+  if ( lpCriticalSection->RecursionCount == 0 )
+    lpCriticalSection->OwningThread = 0;
+}
+
+void __stdcall DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
+{
+  if ( !lpCriticalSection )
+    return;
+  memset(lpCriticalSection, 0, sizeof(*lpCriticalSection));
+}
 
 /*
  * These are the lowest-risk CRT aliases still missing from the link surface.

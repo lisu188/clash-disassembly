@@ -1436,3 +1436,115 @@
   - `sub_42C560` is still only medium-confidence as a withdrawal/disengagement casualty helper
 - total rename count so far:
   - `1048`
+
+## Batch 98 - Runtime Wrapper And SDL Seam Containment Wave
+- Current subsystem/cluster:
+  - runtime TLS/error/filesystem containment, process/synchronization wrapper cleanup, and the remaining low-risk SDL message/coordinate seam fixes
+- Subagents spawned and scopes:
+  - Agent F: asm/map/exe corroboration for low-level runtime helper semantics
+  - Agent G: live link-front ranking and safest next wrapper repairs
+  - Agent H: SDL/platform seam audit around message-pump and coordinate leakage
+- Repairs:
+  - added quarantined runtime wrappers in [compat/decomp_runtime_stubs.c](/home/andrz/git/clash-disassembly/compat/decomp_runtime_stubs.c):
+    - `GetLastError`
+    - `SetLastError`
+    - `_set_errno_nt_`
+    - `_set_errno_dos_`
+    - `TlsAlloc`
+    - `TlsFree`
+    - `TlsGetValue`
+    - `TlsSetValue`
+    - `DeleteFileA`
+    - `CreateDirectoryA`
+    - `RemoveDirectoryA`
+    - `GetFileAttributesA`
+    - `ExitProcess`
+    - `GetCurrentProcessId`
+    - `GetCurrentThreadId`
+    - `CloseHandle`
+    - `ResumeThread`
+    - `InitializeCriticalSection`
+    - `EnterCriticalSection`
+    - `LeaveCriticalSection`
+    - `DeleteCriticalSection`
+  - tightened the SDL seam in [platform_sdl_runtime.c](/home/andrz/git/clash-disassembly/platform_sdl_runtime.c):
+    - `GetMessageA` now treats an empty non-quit queue as idle rather than quit
+    - `WaitMessage` now sleeps briefly while idle instead of spin-returning immediately
+    - `ClientToScreen` now applies the stored SDL-window origin to screen-space coordinates
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch98b.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch98.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch98b 2>&1 | sed -n "s/.*undefined reference to \`\\([^']*\\)'.*/\\1/p" | sort | uniq -c | sort -nr | head -n 80`
+  - `gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o /tmp/clash95_linkprobe_batch98b 2>&1 | rg "undefined reference to '((GetLastError|SetLastError|CreateDirectoryA|DeleteFileA|RemoveDirectoryA|GetFileAttributesA|TlsAlloc|TlsFree|TlsGetValue|TlsSetValue|ExitProcess|_set_errno_nt_|_set_errno_dos_|GetCurrentProcessId|GetCurrentThreadId|InitializeCriticalSection|EnterCriticalSection|LeaveCriticalSection|DeleteCriticalSection|CloseHandle|ResumeThread))'"`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `compat/decomp_runtime_stubs.c` object compilation still succeeds after the wrapper expansion
+  - `platform_sdl_runtime.c` object compilation still succeeds after the SDL seam adjustments
+  - `clash95_recovered` static-library build still succeeds
+  - the broader executable link probe still fails, but the undefined-symbol front no longer includes:
+    - `GetLastError`
+    - `SetLastError`
+    - `_set_errno_nt_`
+    - `_set_errno_dos_`
+    - `TlsAlloc`
+    - `TlsFree`
+    - `TlsGetValue`
+    - `TlsSetValue`
+    - `DeleteFileA`
+    - `CreateDirectoryA`
+    - `RemoveDirectoryA`
+    - `GetFileAttributesA`
+    - `ExitProcess`
+    - `GetCurrentProcessId`
+    - `GetCurrentThreadId`
+    - `CloseHandle`
+    - `ResumeThread`
+    - `InitializeCriticalSection`
+    - `EnterCriticalSection`
+    - `LeaveCriticalSection`
+    - `DeleteCriticalSection`
+- Blockers removed:
+  - the remaining thin Win32/TLS/error/filesystem wrapper band identified in Batch 97
+  - the critical-section wrapper band that still sat ahead of the event/thread scheduling surface
+  - the SDL seam bug where an empty inactive-app queue looked like quit
+  - the SDL seam mismatch where `ClientToScreen` ignored the stored window origin
+- Windows dependencies replaced with SDL this batch:
+  - `GetMessageA` empty-queue handling now follows the SDL-owned queue instead of falling through like a Win32 quit path
+  - `WaitMessage` now idles in the SDL seam with a short host sleep
+  - `ClientToScreen` now derives screen coordinates from the SDL seam's stored window origin
+- Current leading blockers:
+  - the broader executable/link surface is now led by:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memmove_`
+    - `CreateEventA` / `PulseEvent` / `WaitForSingleObject` / `SetEvent`
+    - residual `JUMPOUT` control-flow scars
+  - the next frontier is materially riskier because it crosses into:
+    - actual event/thread scheduling behavior
+    - collapsed CRT heap helper families whose current decompiled call surface is still scarred
+    - startup/runtime constructors (`_wcpp_*`) that are not plain libc aliases
+- High-priority unknown functions reviewed:
+  - `_set_errno_nt_`
+  - `_set_errno_dos_`
+  - `sub_489D18`
+  - `sub_489FBA`
+  - `sub_489FD7`
+  - `sub_4B5C7A`
+  - `CRT_GetOrCreateThreadDataPreserveLastError`
+  - `Platform_PumpMessagesAndBlitFrame`
+- Key evidence used:
+  - Agent F corroborated `_set_errno_nt_` as the Win32 last-error to `errno` mapper and `_set_errno_dos_` as the DOS-style companion mapper, rather than generic setters
+  - Agent F tied `sub_489D18`, `sub_489FBA`, and `sub_489FD7` directly to `DeleteFileA`, `CreateDirectoryA`, and `RemoveDirectoryA`, and confirmed `sub_4B5C7A` only needs invalid-file and readonly-directory attribute behavior from `GetFileAttributesA`
+  - Agent G ranked the remaining live link front and explicitly warned off `_wcpp_*`, `j__nfree_` / `j_j__nfree_`, and the collapsed `mem*` / heap helpers as unsafe alias targets at the current recovery state
+  - Agent H traced the inactive-app message pump in `Platform_PumpMessagesAndBlitFrame` and showed that the SDL seam needed `GetMessageA`, `WaitMessage`, and `ClientToScreen` fixes before any broader platform cleanup wave
+- Ambiguous candidates deferred:
+  - the exact original CRT/DOS mapping table behind `_set_errno_nt_` / `_set_errno_dos_`
+  - any ownership semantics behind `CloseHandle` beyond the current conservative non-owning wrapper
+  - the event/thread primitive family (`CreateEventA`, `PulseEvent`, `WaitForSingleObject`, `SetEvent`) until deeper scheduler/audio/runtime reconstruction is done
+  - the collapsed allocator/runtime family (`j__nfree_`, `j_j__nfree_`, `memset_`, `nmalloc_`, `nrealloc_`, `memmove_`) until their scarred call surface is reconstructed more directly from asm/map evidence
+- total rename count so far:
+  - `1072`
