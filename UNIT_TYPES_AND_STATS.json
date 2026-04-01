@@ -441,6 +441,24 @@
       "evidence": "`Building_ProcessUnitProductionTurn` reads `g_UnitTypeProductionCost`, compares it against `BuildingRecord.stored_money`, and subtracts the same value when the unit is created."
     },
     {
+      "name": "production_licence_cost",
+      "confidence": "high",
+      "semantic_role": "per-type money cost to buy the unit's production licence into a building",
+      "evidence": "`Building_BuyUnitLicence` debits `g_UnitTypeProductionLicenceCost` before appending the unit type into the building's 12-slot licence roster, and `Building_GetTotalValue` adds the same word for each installed licence."
+    },
+    {
+      "name": "production_required_tech_level_mode_2",
+      "confidence": "high",
+      "semantic_role": "per-type tech-level threshold used when the production building mode byte equals `2`",
+      "evidence": "`Building_CanEquipAddon` selects `g_UnitTypeProductionRequiredTechLevelMode2[88 * unitType]` when `building[4] == 2`, compares that byte against `BuildingRecord.tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` uses the same gate for the licensable roster."
+    },
+    {
+      "name": "production_required_tech_level_other_modes",
+      "confidence": "high",
+      "semantic_role": "per-type tech-level threshold used when the production building mode byte is non-zero but not `2`",
+      "evidence": "`Building_CanEquipAddon` switches to `g_UnitTypeProductionRequiredTechLevelOtherModes[88 * unitType]` for the alternate production-building modes and applies the same `tech_level_bits & 7` threshold before the unit licence becomes available."
+    },
+    {
       "name": "move_pixel_speed",
       "confidence": "medium",
       "semantic_role": "per-frame displacement during movement animation",
@@ -737,6 +755,16 @@
       ],
       "evidence": "The low two bits feed effective attack helpers directly, while the full byte is cycled by `Building_UseGarrisonSlot`.",
       "blockers": "The exact meaning of the upper subfields is still unresolved."
+    },
+    {
+      "candidate": "production_required_tech_level_mode_2 / production_required_tech_level_other_modes",
+      "candidate_kind": "field_pair",
+      "possible_interpretations": [
+        "per-unit licence tech thresholds for two production-building subclasses",
+        "per-unit licence tech thresholds for `building[4] == 2` versus all other non-zero production modes"
+      ],
+      "evidence": "`Building_CanEquipAddon` picks one of the two bytes entirely from the building mode byte at offset `+4`, compares the chosen threshold against `tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster.",
+      "blockers": "The threshold role is secure, but the original designer-facing names of the two production-building mode families are still unresolved."
     },
     {
       "candidate": "g_UnitTypeMetadataRecords localized-name header",

@@ -1831,3 +1831,64 @@
   - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1096`
+
+## Batch 104 - Unit Production Licence Metadata Recovery Wave
+- Current subsystem/cluster:
+  - high-confidence adjacent unit metadata bytes at offsets `+73`, `+75`, and `+76`, all tied to the castle production-licence gate
+- Subagents spawned and scopes:
+  - the available six-agent ceiling remained in effect, so scopes stayed combined rather than blocking progress:
+    - Agent A+F: terrain-lane / asm corroboration and nearby unit-stat spillover review
+    - Agent B: queen spillover check for generic taxonomy/stat evidence
+    - Agent C: port/coastal/naval review for any stronger movement-category frontier
+    - Agent D: tile/map/pathing corroboration for the terrain-lane frontier
+    - Agent E: castle/building/garrison review for adjacent production-licence metadata
+    - Agent G+H: fallback build/JUMPOUT or SDL-seam cleanup if the unit-stat frontier stalled
+  - mergeable subagent evidence used this batch:
+    - Agent E boxed in the adjacent `+73/+75/+76` production-licence fields and their building-gate semantics
+- Repairs:
+  - renamed `Building_AddonCostLUT` to `g_UnitTypeProductionLicenceCost`
+  - renamed `Building_ReqLevelByModeA` to `g_UnitTypeProductionRequiredTechLevelMode2`
+  - renamed `Building_ReqLevelByModeB` to `g_UnitTypeProductionRequiredTechLevelOtherModes`
+  - recovered `UnitTypeMetadataRecord +73/+74` as `production_licence_cost`
+  - recovered `UnitTypeMetadataRecord +75` as `production_required_tech_level_mode_2`
+  - recovered `UnitTypeMetadataRecord +76` as `production_required_tech_level_other_modes`
+  - extended the maintained unit/stat artifacts with:
+    - high-confidence `production_licence_cost`
+    - high-confidence `production_required_tech_level_mode_2`
+    - high-confidence `production_required_tech_level_other_modes`
+    - an explicit ambiguity note that the threshold role is secure but the original building-mode labels behind `mode == 2` versus the alternate modes are still unresolved
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch104.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch104.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch104.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the production-licence table rename wave
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the metadata/stat artifact updates
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the unresolved meaning of metadata bytes `+73/+75/+76` inside `UnitTypeMetadataRecord`
+  - the misleading building-side table names on the live production-licence path
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `Building_BuyUnitLicence`
+  - `Building_CanEquipAddon`
+  - `Building_GetTotalValue`
+  - `CastleProduction_RebuildAvailableUnitList`
+- Key evidence used:
+  - `Building_BuyUnitLicence` debits the 16-bit table at `0x5125B1` before appending the unit type into the building's 12-slot licence array
+  - `Building_GetTotalValue` adds the same word back for each installed licence, proving a persistent per-type licence price rather than a transient fee
+  - `Building_CanEquipAddon` selects bytes `0x5125B3` or `0x5125B4` entirely from the production-building mode byte, compares the chosen threshold against `BuildingRecord.tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster
+  - the data layout in `clash95.asm` places the word and the two threshold bytes immediately after the already recovered `production_time` and `production_cost` bytes inside the same 88-byte unit record
+- Ambiguous candidates deferred:
+  - the exact original designer-facing labels for the production-building mode split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the eight normalized terrain-move lanes at metadata `+30..+37`, which still lack enough direct terrain-name proof for a safe full rename wave
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1102`

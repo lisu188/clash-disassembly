@@ -8643,9 +8643,9 @@ _UNKNOWN unk_51258D; // weak
 char byte_5125AE[] = { '\x03' }; // weak
 char g_UnitTypeProductionTime[] = { '\x01' }; // weak
 char g_UnitTypeProductionCost[] = { '\x02' }; // weak
-__int16 Building_AddonCostLUT[] = { 0 }; // weak
-char Building_ReqLevelByModeA[] = { '\x01' }; // weak
-char Building_ReqLevelByModeB[] = { '\x01' }; // weak
+__int16 g_UnitTypeProductionLicenceCost[] = { 0 }; // weak
+char g_UnitTypeProductionRequiredTechLevelMode2[] = { '\x01' }; // weak
+char g_UnitTypeProductionRequiredTechLevelOtherModes[] = { '\x01' }; // weak
 char byte_5125B5[] = { '\0' }; // weak
 char byte_5125B6[] = { '\0' }; // weak
 char byte_5125B7[] = { '\x03' }; // weak
@@ -54416,7 +54416,7 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
   if ( result )
   {
     v7 = gameData + 1423 * *(unsigned __int8 *)(a1 + 2);
-    v8 = (unsigned __int16)Building_AddonCostLUT[44 * a2];
+    v8 = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * a2];
     if ( !*(_DWORD *)(v7 + 140051) && *(int *)(v7 + 140055) >= 2 )
       v8 = (int)(75 * v8) / 100;
     if ( v8 > *(_DWORD *)(a1 + 438) )
@@ -54442,7 +54442,7 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
 }
 // 43E8D7: conditional instruction was optimized away because eax.4<C
 // 43E86D: variable 'v5' is possibly undefined
-// 5125B1: using guessed type __int16 word_5125B1[];
+// 5125B1: using guessed type __int16 g_UnitTypeProductionLicenceCost[];
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E940) --------------------------------------------------------
@@ -54724,7 +54724,9 @@ BOOL  Building_CanEquipAddon(char *a1, int a2)
   if ( !v4 )
     return 0;
   v5 = 88 * a2;
-  v6 = v4 == 2 ? Building_ReqLevelByModeA[v5] : Building_ReqLevelByModeB[v5];
+  v6 = v4 == 2
+     ? g_UnitTypeProductionRequiredTechLevelMode2[v5]
+     : g_UnitTypeProductionRequiredTechLevelOtherModes[v5];
   if ( (unsigned __int8)(a1[444] & 7) < (unsigned __int8)v6 )
     return 0;
   if ( (a1[416] & 0x10) == 0 )
@@ -55054,13 +55056,13 @@ int  Building_GetTotalValue(int a1)
   {
     v7 = *(char *)(v5 + 402);
     if ( v7 != -1 )
-      v4 += (unsigned __int16)Building_AddonCostLUT[44 * v7];
+      v4 += (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * v7];
     ++v5;
   }
   while ( v5 != v6 );
   return v4;
 }
-// 5125B1: using guessed type __int16 word_5125B1[];
+// 5125B1: using guessed type __int16 g_UnitTypeProductionLicenceCost[];
 
 //----- (0043F340) --------------------------------------------------------
 int  AI_TickNationPostTurn(int a1)
