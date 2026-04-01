@@ -8641,8 +8641,8 @@ _UNKNOWN unk_51258B; // weak
 _UNKNOWN unk_51258C; // weak
 _UNKNOWN unk_51258D; // weak
 char byte_5125AE[] = { '\x03' }; // weak
-char byte_5125AF[] = { '\x01' }; // weak
-char byte_5125B0[] = { '\x02' }; // weak
+char g_UnitTypeProductionTime[] = { '\x01' }; // weak
+char g_UnitTypeProductionCost[] = { '\x02' }; // weak
 __int16 Building_AddonCostLUT[] = { 0 }; // weak
 char Building_ReqLevelByModeA[] = { '\x01' }; // weak
 char Building_ReqLevelByModeB[] = { '\x01' }; // weak
@@ -33054,7 +33054,7 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
       v5[415] = v6;
       if ( !v6 )
       {
-        result = (unsigned __int8)byte_5125B0[88 * (char)v5[(char)v5[414] + 402]];
+        result = (unsigned __int8)g_UnitTypeProductionCost[88 * (char)v5[(char)v5[414] + 402]];
         if ( (unsigned int)result <= *(_DWORD *)(v5 + 438) )
         {
           Debug_Log(a2, a3, a4, (int)aBuilding_produ);
@@ -33070,12 +33070,12 @@ int  Building_ProcessUnitProductionTurn(int result, int a2, char a3, DWORD a4, d
             }
           }
           UnitSlot_InitFromType((int)&v5[31 * result + 18], (char)v5[(char)v5[414] + 402], v5[2]);
-          v8 = *(_DWORD *)(v5 + 438) - (unsigned __int8)byte_5125B0[88 * (char)v5[(char)v5[414] + 402]];
+          v8 = *(_DWORD *)(v5 + 438) - (unsigned __int8)g_UnitTypeProductionCost[88 * (char)v5[(char)v5[414] + 402]];
           v9 = 1423 * v5[2];
           *(_DWORD *)(v5 + 438) = v8;
           if ( *(_DWORD *)(gameData + v9 + 140051) )
           {
-            v5[415] = byte_5125AF[88 * (char)v5[(char)v5[414] + 402]];
+            v5[415] = g_UnitTypeProductionTime[88 * (char)v5[(char)v5[414] + 402]];
           }
           else
           {
@@ -54478,7 +54478,7 @@ int  Building_SetUnitProduction(int a1, char a2, DWORD a3)
   Debug_Log(a1, a2, a3, (int)aBuildingSetUnitProduction);
   v3[414] = v4;
   result = 1423 * v3[2];
-  v3[415] = byte_5125AF[88 * (char)v3[v4 + 402]];
+  v3[415] = g_UnitTypeProductionTime[88 * (char)v3[v4 + 402]];
   if ( !*(_DWORD *)(result + gameData + 140051) && *(int *)(result + gameData + 140055) >= 1 && (char)v3[415] > 1 )
     --v3[415];
   return result;

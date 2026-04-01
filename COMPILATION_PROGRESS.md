@@ -1765,3 +1765,69 @@
   - any further unit-taxonomy/category wave beyond this now needs new evidence from registries, factories, or raw roster/table decoding rather than another local UI/combat pass
 - total rename count so far:
   - `1092`
+
+## Batch 103 - Unit Production Metadata Recovery Wave
+- Current subsystem/cluster:
+  - high-confidence unit metadata bytes at offsets `+71/+72`, plus one adjacent concrete builder relationship wave from the same implementation pass
+- Subagents spawned and scopes:
+  - the available six-agent ceiling remained in effect, so scopes stayed combined rather than blocking progress:
+    - Agent A+F: unit-stat / asm corroboration for production metadata inside the 88-byte record
+    - Agent B: queen spillover check for any nearby generic unit-taxonomy evidence
+    - Agent C: port/coastal/naval review for builder pathing and shipment eligibility
+    - Agent D: tile/map/pathing corroboration for bridge-crossing behavior
+    - Agent E: castle/building/garrison review for production countdown and cost semantics
+    - Agent G+H: compile-risk / SDL-seam sanity check for the narrow metadata batch
+  - mergeable subagent evidence used this batch:
+    - Agent C confirmed the builder-specific bridge-crossing and port-shipment relationships
+    - Agent E corroborated the production-time / production-cost interpretation and the `+71/+72` record slots
+    - Agent G+H found no compile-risk fallout for the semantic-only metadata wave
+- Repairs:
+  - renamed `byte_5125AF` to `g_UnitTypeProductionTime`
+  - renamed `byte_5125B0` to `g_UnitTypeProductionCost`
+  - recovered `UnitTypeMetadataRecord +71` as `production_time`
+  - recovered `UnitTypeMetadataRecord +72` as `production_cost`
+  - corrected the lingering `siege attack` wording in the maintained `UnitTypeMetadataRecord` evidence block to `wall attack`
+  - extended the maintained unit/stat artifacts with:
+    - high-confidence `production_time` and `production_cost` stats
+    - a high-confidence `UnitType17_Builder -> bridge_crossing_pathing_access` relationship
+    - a high-confidence `UnitType17_Builder -> PortSupplyReinforcementPool` relationship
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch103.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch103.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch103.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the production-metadata table rename
+  - `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` remain valid JSON
+  - `clash95_recovered` static-library build still succeeds
+  - `git diff --check` remains clean after the metadata/stat artifact update wave
+  - the broader executable link frontier is unchanged and still led by missing `main`, `_wcpp_*`, allocator-family helpers, event/thread wrappers, and residual `JUMPOUT` scars
+- Blockers removed:
+  - the unresolved meaning of metadata bytes `+71/+72` inside `UnitTypeMetadataRecord`
+  - the remaining raw `byte_5125AF` / `byte_5125B0` table names on the live building-production path
+  - the missing documented builder-specific bridge-crossing and port-shipment relationships in the unit-taxonomy artifacts
+- SDL-related replacements or cleanups this batch:
+  - none
+- High-priority unknown functions reviewed:
+  - `Building_SetUnitProduction`
+  - `Building_ProcessUnitProductionTurn`
+  - `UnitStack_HasBuilder`
+  - `Rules_QueuePath`
+  - `Rules_QueuePathNearTile`
+  - `Rules_QueuePathNearCastle`
+  - `Rules_QueuePathToPort`
+  - `Port_CollectReinforcementShipment`
+- Key evidence used:
+  - `Building_SetUnitProduction` copies the selected type's metadata byte into `BuildingRecord +415`, while `Building_ProcessUnitProductionTurn` decrements the same byte each turn and reloads it after each completed unit
+  - the production completion path compares `g_UnitTypeProductionCost` against `BuildingRecord.stored_money` and deducts it on success
+  - `clash95.asm` exposes localized `production time` and `production cost` labels adjacent to the same metadata family
+  - `UnitStack_HasBuilder` is an exact type-17 membership predicate, and the strategic queue helpers enable bridge-crossing path generation only when that predicate succeeds
+  - the port reinforcement roster decoded from `g_PortSupplyUnitTypePool` includes type `17`, proving builders are eligible shipment spawns
+- Ambiguous candidates deferred:
+  - the eight normalized terrain-move lanes at metadata `+30..+37`, which still lack enough direct terrain-name proof for a safe full rename wave
+  - the broader-build frontier around `main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1096`

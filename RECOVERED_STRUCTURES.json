@@ -25,6 +25,8 @@
       { "offset": 28, "name": "base_wall_attack", "type": "uint8", "notes": "Per-type wall-attack scalar consumed by `UnitStats_CalcEffectiveWallAttack` during direct wall assaults and the ram's building-assault combat-strength branch." },
       { "offset": 29, "name": "road_move_cost", "type": "uint8", "notes": "Road/track movement cost copied into merged stack movement profiles." },
       { "offset": 30, "name": "world_surface_move_costs[8]", "type": "uint8[8]", "notes": "Eight-lane normalized world-surface movement profile consumed through `g_TerrainMoveTableOffsets` by `Map_GetUnitTileMoveCostOrZero` and stack-level movement merging." },
+      { "offset": 71, "name": "production_time", "type": "uint8", "notes": "Per-type production-time byte copied into `BuildingRecord +415` by `Building_SetUnitProduction` and reloaded by `Building_ProcessUnitProductionTurn` after each completed unit." },
+      { "offset": 72, "name": "production_cost", "type": "uint8", "notes": "Per-type production-cost byte checked against `BuildingRecord.stored_money` and deducted when `Building_ProcessUnitProductionTurn` finishes a unit." },
       { "offset": 79, "name": "melee_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the melee attack loop that triggers the melee attack sound." },
       { "offset": 80, "name": "ranged_attack_sound_frame", "type": "uint8", "notes": "Frame index inside the shot-animation loop that triggers the ranged attack sound." },
       { "offset": 81, "name": "move_sound_stem", "type": "char *", "notes": "Per-type movement sound stem used to build `sfx\\ruchy\\<stem>...` paths in both world and battle movement audio." },
@@ -36,8 +38,9 @@
       "The decompiler's `char *(*...)[102]` type on the base pointer is misleading if read literally as the roster size: asm xrefs expose at least 35 records, while the final commander pair reuses one localized-name pointer triplet.",
       "Battle/UI helpers dereference field 0 as a localized name pointer array, while sprite loaders read field 4 as the folder stem used in `units_go`, `units_i`, and `units_at` asset paths.",
       "World idle-animation helpers advance on bytes `+10` and `+11`, world/battle rendering subtract byte `+15` directly from the sprite Y anchor, battle melee/ranged loops consume bytes `+16`, `+17`, `+79`, and `+80`, and movement-audio helpers read fields `+81`, `+85`, and `+86` from the same record family.",
-      "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and siege attack.",
-      "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record."
+      "The battle UI, combat-strength scoring, trap damage, projectile damage projection, and range checks all reuse bytes `+22..+28` as one contiguous stat band: melee attack, defence power, action points, shot power, max range, min range, and wall attack.",
+      "Movement helpers copy bytes `+29..+37` into a merged stack profile, normalize raw terrain ids through `g_TerrainMoveTableOffsets`, and then index the eight-byte surface slice at `+30..+37`, while airborne flag checks read the overlapping flag dword at offset `+18`, proving these animation, movement, and audio bytes all coexist inside one 88-byte metadata record.",
+      "`Building_SetUnitProduction` and `Building_ProcessUnitProductionTurn` index the same 88-byte record at offsets `+71` and `+72`, loading the selected unit's production-time countdown and production-cost deduction from the metadata family that also stores the combat, movement, and audio bytes."
     ]
   },
   {

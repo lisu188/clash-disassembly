@@ -429,6 +429,18 @@
       "evidence": "`UnitBattle_IsTileWithinRange` rejects shots whose ceil-sqrt tile distance is not greater than `g_UnitTypeMinRange`."
     },
     {
+      "name": "production_time",
+      "confidence": "high",
+      "semantic_role": "per-type number of production turns needed to finish one queued unit",
+      "evidence": "`Building_SetUnitProduction` copies `g_UnitTypeProductionTime` into `BuildingRecord +415`, and `Building_ProcessUnitProductionTurn` decrements that countdown each turn before reloading the same metadata byte after a completed unit."
+    },
+    {
+      "name": "production_cost",
+      "confidence": "high",
+      "semantic_role": "per-type money cost charged when a queued unit finishes production",
+      "evidence": "`Building_ProcessUnitProductionTurn` reads `g_UnitTypeProductionCost`, compares it against `BuildingRecord.stored_money`, and subtracts the same value when the unit is created."
+    },
+    {
       "name": "move_pixel_speed",
       "confidence": "medium",
       "semantic_role": "per-frame displacement during movement animation",
@@ -559,6 +571,20 @@
       "relationship_kind": "primary_fortification_assault_stat",
       "confidence": "high",
       "evidence": "The ram's building-assault combat-strength branch switches to `UnitStats_CalcEffectiveWallAttack` when fortifications are present, and direct tactical wall assaults apply the same stat straight to wall-section health."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "bridge_crossing_pathing_access",
+      "relationship_kind": "enables_stack_bridge_route_generation",
+      "confidence": "high",
+      "evidence": "`UnitStack_HasBuilder` is an exact type-17 membership test, and the strategic queue helpers enable bridge crossings only when that predicate succeeds, allowing builder-containing stacks to route through bridge crossings."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "PortSupplyReinforcementPool",
+      "relationship_kind": "eligible_port_shipment_spawn_type",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` draws spawned unit ids from a fixed pool that includes type `17` in the asm-decoded roster `{0,1,2,3,4,5,7,9,10,15,16,17}`."
     },
     {
       "unit_type": "UnitType29_Fly",
