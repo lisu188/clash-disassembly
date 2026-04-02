@@ -2854,10 +2854,84 @@
   - `Builder_StartRoadBuildMode` installs the callback, redraw loop, and direction-widget animation state for the modal road-building action
 - Ambiguous candidates deferred:
   - `sub_4250F0` and `sub_425110` in the same road-build callback family
-  - `sub_43BE50`, `sub_43C6B0`, and `sub_43CD00` inside the broader battle AI executor/planner family
+  - `sub_43BE50` and `sub_43C6B0` inside the broader battle AI executor/planner family
   - the exact original public label behind `UnitType32_PeasantCargo`
   - the exact designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
   - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
   - the broader-build frontier around `_WinMain@16`/`main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1173`
+
+## Batch 121 - Road Build Exit Latch And AI Turn Loop Wave
+- Current subsystem/cluster:
+  - the remaining builder road-mode callback family and marker animation globals, plus one already-dirty battle AI turn-loop rename/fix that cleared the same confidence bar
+- Subagents spawned and scopes:
+  - the current session again hit the practical six-thread ceiling, so the required scopes were covered with merged explorer assignments:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compilation/link blockers
+  - mergeable subagent evidence used this batch:
+    - none returned before the write wave, so the batch proceeded from corroborated local `clash95.c`/`clash95.asm` evidence and the already-dirty `clash95.c` road-mode wave was adopted and logged rather than overwritten
+- Functions renamed:
+  - `sub_4250F0` -> `RoadBuildMode_RequestExitAfterWidgetPress`
+  - `sub_425110` -> `RoadBuildMode_RequestExit`
+  - `sub_43CD00` -> `UnitBattle_RunAiTurnForSide`
+- Structs/classes/globals/tables recovered or renamed:
+  - `dword_514294` -> `g_RoadBuildModeMarkerBounceOffsets`
+  - `dword_51438C` -> `g_RoadBuildModeControlWidgets`
+  - `dword_527C28` -> `g_RoadBuildModeLastAnimationTick`
+  - `dword_527C30` -> `g_RoadBuildModeExitRequested`
+  - `dword_527C38` -> `g_RoadBuildModeAnimationFrameIndex`
+  - `RoadBuildModeMarkerBounceOffsetTable` recovered in `RECOVERED_STRUCTURES.json`
+  - `RoadBuildModeUiState` recovered in `RECOVERED_STRUCTURES.json`
+- High-priority unknown functions reviewed:
+  - `RoadBuildMode_RequestExitAfterWidgetPress`
+  - `RoadBuildMode_RequestExit`
+  - `sub_419E60`
+  - `Builder_StartRoadBuildMode`
+  - `RoadBuildMode_HighlightBuildableAdjacentTile`
+  - `sub_43CB80`
+  - `UnitBattle_RunAiTurnForSide`
+- Blockers removed:
+  - the last anonymous road-build callback pair immediately adjacent to the batch 120 rename wave
+  - the anonymous road-build exit latch and marker animation globals inside the same modal loop
+  - the unlabeled bounce-offset table driving the directional road-build markers
+  - the stale per-side AI turn-runner name in the tactical battle loop
+  - the local `sub_43CB80` shared-epilogue `JUMPOUT` scar
+- SDL-related replacements or cleanups this batch:
+  - none
+- Validation probe:
+  - `rg -n "RoadBuildMode_RequestExitAfterWidgetPress|RoadBuildMode_RequestExit\\(|g_RoadBuildModeMarkerBounceOffsets|g_RoadBuildModeControlWidgets|g_RoadBuildModeLastAnimationTick|g_RoadBuildModeExitRequested|g_RoadBuildModeAnimationFrameIndex" clash95.c RECOVERED_STRUCTURES.json`
+  - `rg -n "UnitBattle_RunAiTurnForSide|sub_43CB80|JUMPOUT\\(0x43C853\\)|43C853" clash95.c clash95.asm clash95.map`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch121.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the road-build callback/global wave
+  - `RECOVERED_STRUCTURES.json` remains valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 121 edits
+  - the broader executable link frontier is unchanged and still led by missing `_WinMain@16`/`main`, `_wcpp_*`, allocator-family helpers, event-thread wrappers, and residual `JUMPOUT` scars
+- Key evidence used:
+  - the asm for `sub_4250F0` explicitly sets `edx = 1`, calls `sub_419E60`, and writes that same value into the road-build exit latch
+  - `sub_425110` is just a direct `g_RoadBuildModeExitRequested = 1` helper
+  - `Builder_StartRoadBuildMode` advances `g_RoadBuildModeAnimationFrameIndex = (index + 1) & 7` every 10 ticks and refreshes `g_RoadBuildModeLastAnimationTick` from `Time_Now()`
+  - `RoadBuildMode_HighlightBuildableAdjacentTile` uses `g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]` to bounce the four directional marker widgets
+  - `g_RoadBuildModeControlWidgets` is the root symbol passed into the generic control-scanning helpers while the adjacent DGROUP entries in asm carry the road-build callbacks
+  - `UnitBattle_RunAiTurnForSide` is only called from the tactical battle loop when the AI-controlled current side takes its turn and it owns the full queue-build / queue-drain execution path for that side
+  - the asm for `sub_43CB80` jumps to `loc_43C853`, which is only the shared epilogue that pops the same register set and returns
+- Ambiguous candidates deferred:
+  - `dword_527C34` inside the same road-build loop: still some form of post-build continue/valid-selection latch, but not yet precise enough for promotion
+  - `sub_43BE50`, `sub_43C6B0`, and `sub_43CD00` inside the broader battle AI executor/planner family
+  - the exact original public label behind `UnitType32_PeasantCargo`
+  - the exact designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `_WinMain@16`/`main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1184`

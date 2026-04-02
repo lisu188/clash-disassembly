@@ -206,6 +206,21 @@
     ]
   },
   {
+    "name": "RoadBuildModeMarkerBounceOffsetTable",
+    "kind": "table_record",
+    "base_symbol": "g_RoadBuildModeMarkerBounceOffsets",
+    "count": 9,
+    "description": "Nine-entry signed offset table used to animate the four directional road-build markers while builder road mode is active.",
+    "fields": [
+      { "offset": 0, "name": "pixel_offset", "type": "int32", "notes": "Indexed by `g_RoadBuildModeAnimationFrameIndex` when `RoadBuildMode_HighlightBuildableAdjacentTile` positions the directional marker widgets around the selected unit." }
+    ],
+    "evidence": [
+      "`Builder_StartRoadBuildMode` advances `g_RoadBuildModeAnimationFrameIndex = (index + 1) & 7` every 10 ticks before redrawing the four adjacent marker tiles.",
+      "`RoadBuildMode_HighlightBuildableAdjacentTile` reads `g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]` to shift the directional widget coordinates for each of the four compass directions.",
+      "The signed sequence `-8, -4, 0, 4, 8, 4, 0, -4, 0` is symmetric and purely positional, matching a bounce-animation offset cycle rather than gameplay or stat data."
+    ]
+  },
+  {
     "name": "TileTrapOwnerMaskLayer",
     "kind": "tile_bitmask_layer",
     "base_offset": 576374,
@@ -888,6 +903,22 @@
       "`UI_HighlightTile` scans eight records, compares both coordinates, and either reuses an existing slot or writes the incoming coordinates into the first free `tile_x == -1` record.",
       "`UI_ClearTileHighlight` clears exactly `0x40` bytes starting at the table base, matching eight contiguous 8-byte `{tile_x, tile_y}` records rather than two unrelated arrays.",
       "`UI_DrawTileHighlightOverlay` looks up the same slot pair by coordinates, then centers sprite 40 inside the 64x64 tile rect before drawing the overlay, proving the stored records are tile-coordinate pairs consumed by the highlight renderer."
+    ]
+  },
+  {
+    "name": "RoadBuildModeUiState",
+    "kind": "ui_state_region",
+    "base_symbol": "g_RoadBuildModeControlWidgets / g_RoadBuildModeMarkerBounceOffsets / g_RoadBuildModeLastAnimationTick / g_RoadBuildModeExitRequested / dword_527C34 / g_RoadBuildModeAnimationFrameIndex",
+    "description": "World-map builder road-mode UI state. The same globals hold the exit latch, the 8-frame bounce animation state, the control-widget array polled by the modal loop, and the small bounce-offset table used when positioning the adjacent build markers.",
+    "fields": [
+      { "offset": 0, "name": "last_animation_tick_ms", "type": "uint32", "notes": "Actual symbol `g_RoadBuildModeLastAnimationTick` at address `0x527C28`. The modal loop advances the road-build marker animation only when `Time_Now() - 10` exceeds this timestamp." },
+      { "offset": 8, "name": "exit_requested", "type": "int32", "notes": "Actual symbol `g_RoadBuildModeExitRequested` at address `0x527C30`. Zeroed on road-mode entry, set by the exit callbacks, and polled by `Builder_StartRoadBuildMode` to terminate the modal loop." },
+      { "offset": 16, "name": "animation_frame_index", "type": "int32", "notes": "Actual symbol `g_RoadBuildModeAnimationFrameIndex` at address `0x527C38`. Cycled modulo 8 and used to index `g_RoadBuildModeMarkerBounceOffsets` while the adjacent build markers bounce." }
+    ],
+    "evidence": [
+      "`Builder_StartRoadBuildMode` zeroes `g_RoadBuildModeExitRequested`, enters a modal loop, and exits once that latch becomes non-zero, proving a dedicated road-mode exit flag rather than a generic global status bit.",
+      "The same loop compares `Time_Now() - 10` against `g_RoadBuildModeLastAnimationTick`, then advances `g_RoadBuildModeAnimationFrameIndex = (frame + 1) & 7`, proving one shared 8-frame animation state family.",
+      "`RoadBuildMode_HighlightBuildableAdjacentTile` reads `g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]` when positioning the adjacent marker widgets, tying the bounce-offset table directly to the same modal road-build UI state."
     ]
   }
 ]

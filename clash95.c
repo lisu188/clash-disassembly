@@ -886,8 +886,8 @@ signed int  Road_Build(int a1, int a2, char a3, DWORD a4, double a5);
 signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3);
 BOOL  Map_TileHasOwner(int a1, int a2);
 int Map_AutoUpgradeVillages();
-int  sub_4250F0(int a1, int a2);
-void sub_425110();
+int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2);
+void RoadBuildMode_RequestExit();
 int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2);
 int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3);
 signed int  Builder_StartRoadBuildMode(DWORD a1, double a2);
@@ -1059,7 +1059,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1);
 signed int  sub_43C6B0(int a1, signed int a2);
 void sub_43CB80();
 signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2);
-signed int  sub_43CD00(unsigned __int8 a1);
+signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1);
 _DWORD * sub_43CF50(_DWORD *result);
 int  sub_43CF60(int result, char a2);
 int __cdecl sub_43CF90();
@@ -9518,7 +9518,7 @@ int dword_5141A0[27] =
   263172
 }; // weak
 int g_BridgeApproachRoadOverlayTileIds[] = { 544 }; // weak
-int dword_514294[9] = { -8, -4, 0, 4, 8, 4, 0, -4, 0 }; // weak
+int g_RoadBuildModeMarkerBounceOffsets[9] = { -8, -4, 0, 4, 8, 4, 0, -4, 0 }; // weak
 int dword_5142B8 = 416; // weak
 int dword_5142BC = 400; // weak
 int dword_5142ED = 480; // weak
@@ -9527,7 +9527,7 @@ int dword_514322 = 544; // weak
 int dword_514326 = 400; // weak
 int dword_514357 = 416; // weak
 int dword_51435B = 432; // weak
-_DWORD dword_51438C[2] = { 416, 400 }; // weak
+_DWORD g_RoadBuildModeControlWidgets[2] = { 416, 400 }; // weak
 int dword_514394 = 1; // weak
 int dword_514500[] = { 0 }; // weak
 int dword_514504[] = { -1 }; // weak
@@ -11699,10 +11699,10 @@ _UNKNOWN g_TooltipTextBuffer; // weak
 _DWORD dword_526F78[10]; // weak
 int dword_526FA0; // weak
 int dword_527C24; // weak
-int dword_527C28; // weak
-int dword_527C30; // weak
+int g_RoadBuildModeLastAnimationTick; // weak
+int g_RoadBuildModeExitRequested; // weak
 int dword_527C34; // weak
-int dword_527C38; // weak
+int g_RoadBuildModeAnimationFrameIndex; // weak
 int dword_527C40; // weak
 char byte_531890[1023]; // weak
 char byte_531C8F[]; // weak
@@ -37841,24 +37841,22 @@ int Map_AutoUpgradeVillages()
 // 5202E4: using guessed type int gameData;
 
 //----- (004250F0) --------------------------------------------------------
-int  sub_4250F0(int a1, int a2)
+int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2)
 {
   int result; // eax
-  int v4; // edx
 
   result = sub_419E60(a1, a2);
-  dword_527C30 = v4;
+  g_RoadBuildModeExitRequested = 1;
   return result;
 }
-// 4250FB: variable 'v4' is possibly undefined
-// 527C30: using guessed type int dword_527C30;
+// 527C30: using guessed type int g_RoadBuildModeExitRequested;
 
 //----- (00425110) --------------------------------------------------------
-void sub_425110()
+void RoadBuildMode_RequestExit()
 {
-  dword_527C30 = 1;
+  g_RoadBuildModeExitRequested = 1;
 }
-// 527C30: using guessed type int dword_527C30;
+// 527C30: using guessed type int g_RoadBuildModeExitRequested;
 
 //----- (00425120) --------------------------------------------------------
 int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
@@ -37881,7 +37879,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     v5 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
     dword_5142B8 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
     v6 = 0;
-    dword_5142BC = v5 + 59 - dword_514294[dword_527C38];
+    dword_5142BC = v5 + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
   }
   else
   {
@@ -37889,7 +37887,9 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     if ( a1 - *(__int16 *)(v9 + 147174) == 1 && a2 == *(__int16 *)(v9 + 147176) )
     {
       v6 = 1;
-      v10 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 42 - dword_514294[dword_527C38];
+      v10 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6)
+          + 42
+          - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
       dword_5142F1 = ((a2 - *(_DWORD *)(gameData + 140012)) << 6) + 41;
       dword_5142ED = v10;
     }
@@ -37901,7 +37901,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
         v12 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
         dword_514322 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
         v6 = 2;
-        dword_514326 = dword_514294[dword_527C38] + v12 + 26;
+        dword_514326 = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + v12 + 26;
       }
       else
       {
@@ -37913,7 +37913,9 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
           return result;
         v6 = 3;
         v13 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
-        dword_514357 = dword_514294[dword_527C38] + ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 75;
+        dword_514357 = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
+                     + ((a1 - *(_DWORD *)(gameData + 140008)) << 6)
+                     + 75;
         dword_51435B = v13 + 41;
       }
     }
@@ -37938,7 +37940,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
 // 425490: variable 'v14' is possibly undefined
 // 4254BF: variable 'v7' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 514294: using guessed type int dword_514294[9];
+// 514294: using guessed type int g_RoadBuildModeMarkerBounceOffsets[9];
 // 5142B8: using guessed type int dword_5142B8;
 // 5142BC: using guessed type int dword_5142BC;
 // 5142ED: using guessed type int dword_5142ED;
@@ -37949,7 +37951,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
 // 51435B: using guessed type int dword_51435B;
 // 5202E4: using guessed type int gameData;
 // 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int dword_527C38;
+// 527C38: using guessed type int g_RoadBuildModeAnimationFrameIndex;
 
 //----- (004254E0) --------------------------------------------------------
 int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3)
@@ -38008,21 +38010,21 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
     dword_545150 = (int)&unk_5196C8;
     sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
     dword_52698C = v5;
-    dword_527C30 = 0;
+    g_RoadBuildModeExitRequested = 0;
     dword_514394 = 2;
     sub_418700(1);
-    if ( !dword_527C30 )
+    if ( !g_RoadBuildModeExitRequested )
     {
       while ( 1 )
       {
         DD_Pump((int)dword_544CD8, v4);
         sub_407D20(a1);
         WorldMap_RedrawFrame(v4);
-        if ( Time_Now(v8, v7) - 10 > (unsigned int)dword_527C28 )
+        if ( Time_Now(v8, v7) - 10 > (unsigned int)g_RoadBuildModeLastAnimationTick )
         {
-          dword_527C28 = Time_Now(v9, dword_527C28);
-          v4 = ((_BYTE)dword_527C38 + 1) & 7;
-          dword_527C38 = v4;
+          g_RoadBuildModeLastAnimationTick = Time_Now(v9, g_RoadBuildModeLastAnimationTick);
+          v4 = ((_BYTE)g_RoadBuildModeAnimationFrameIndex + 1) & 7;
+          g_RoadBuildModeAnimationFrameIndex = v4;
           sub_418A90(
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174) - 1,
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
@@ -38036,7 +38038,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176) + 1);
         }
-        if ( !sub_419DC0(dword_51438C, a1) )
+        if ( !sub_419DC0(g_RoadBuildModeControlWidgets, a1) )
         {
           sub_460D80((int)dword_544CD8, dword_545150);
           if ( UI_TrySelectFriendlyStackUnderCursor() )
@@ -38095,15 +38097,15 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
               break;
           }
         }
-        if ( dword_527C30 )
+        if ( g_RoadBuildModeExitRequested )
           goto LABEL_13;
       }
-      dword_527C30 = 1;
+      g_RoadBuildModeExitRequested = 1;
     }
 LABEL_13:
     dword_52698C = 0;
     dword_514394 = 1;
-    sub_419D60((int)dword_51438C, v6);
+    sub_419D60((int)g_RoadBuildModeControlWidgets, v6);
     result = sub_418700(1);
     dword_545150 = (int)&unk_5196A0;
   }
@@ -38119,14 +38121,14 @@ LABEL_13:
 // 5142ED: using guessed type int dword_5142ED;
 // 514322: using guessed type int dword_514322;
 // 514357: using guessed type int dword_514357;
-// 51438C: using guessed type _DWORD dword_51438C[2];
+// 51438C: using guessed type _DWORD g_RoadBuildModeControlWidgets[2];
 // 514394: using guessed type int dword_514394;
 // 5202E4: using guessed type int gameData;
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
-// 527C28: using guessed type int dword_527C28;
-// 527C30: using guessed type int dword_527C30;
+// 527C28: using guessed type int g_RoadBuildModeLastAnimationTick;
+// 527C30: using guessed type int g_RoadBuildModeExitRequested;
 // 527C34: using guessed type int dword_527C34;
-// 527C38: using guessed type int dword_527C38;
+// 527C38: using guessed type int g_RoadBuildModeAnimationFrameIndex;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -44624,7 +44626,7 @@ LABEL_5:
       if ( !v50 )
         UnitBattle_AnimateSelectedUnitPanel(1, v47, 0);
       v50 = 1;
-      v55 = sub_43CD00(g_CurrentPlayerIndex);
+      v55 = UnitBattle_RunAiTurnForSide(g_CurrentPlayerIndex);
       if ( !Battle_HasUnitsForBothSides() )
         v55 = 1;
     }
@@ -52887,7 +52889,7 @@ void sub_43CB80()
       ++v2;
     }
   }
-  JUMPOUT(0x43C853);
+  return;
 }
 // 43CBE0: control flows out of bounds to 43C853
 // 532048: using guessed type int dword_532048;
@@ -52919,7 +52921,7 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
 // 532078: using guessed type int dword_532078;
 
 //----- (0043CD00) --------------------------------------------------------
-signed int  sub_43CD00(unsigned __int8 a1)
+signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
 {
   signed int v2; // esi
   int v3; // edx
