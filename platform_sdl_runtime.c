@@ -335,6 +335,7 @@ BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsg
     PlatformFillQuitMessage(lpMsg);
     return 0;
   }
+  usleep(10000);
   if ( lpMsg )
     memset(lpMsg, 0, sizeof(*lpMsg));
   return 1;
@@ -560,6 +561,31 @@ DWORD __stdcall timeGetTime()
 DWORD __stdcall GetTickCount()
 {
   return timeGetTime();
+}
+
+BOOL __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount)
+{
+  struct timeval tv;
+  unsigned long long ticks;
+
+  if ( !lpPerformanceCount )
+    return 0;
+  if ( gettimeofday(&tv, 0) != 0 )
+  {
+    lpPerformanceCount->QuadPart = 0;
+    return 0;
+  }
+  ticks = (unsigned long long)tv.tv_sec * 1000000ull + (unsigned long long)tv.tv_usec;
+  lpPerformanceCount->QuadPart = (long long)ticks;
+  return 1;
+}
+
+BOOL __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency)
+{
+  if ( !lpFrequency )
+    return 0;
+  lpFrequency->QuadPart = 1000000ll;
+  return 1;
 }
 
 DWORD __stdcall GetVersion()
