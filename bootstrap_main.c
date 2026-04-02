@@ -49,8 +49,8 @@ int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4);
 int App_Shutdown(void);
 HWND Platform_CreateMainWindow(HINSTANCE a1, int a2);
-BOOL Platform_IsWindowsNt4(void);
-BOOL Platform_IsWindows9x(void);
+BOOL Input_MousePresent(void);
+BOOL Input_MouseAcquire(void);
 int __stdcall CSS_SetDirectSoundHWnd(int a1);
 int __stdcall CSS_SetDeviceSearch(int a1);
 signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4);
@@ -67,6 +67,7 @@ int j___NTAddFileHandle_(void)
 }
 
 static char g_boot_command_line[1024];
+static int g_boot_run_startup_prelude;
 
 static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
 {
@@ -82,6 +83,11 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
   {
     const char *argument;
 
+    if ( !strcmp(argv[arg_index], "--authentic-startup-prelude") )
+    {
+      g_boot_run_startup_prelude = 1;
+      continue;
+    }
     if ( arg_index > 1 )
       g_boot_command_line[write_index++] = ' ';
     argument = argv[arg_index];
@@ -103,27 +109,31 @@ static int Bootstrap_ParseIntroMissionIndex(const char *command_line)
   return mission_base + mission_digit;
 }
 
-static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCommandLine, int nShowCmd)
+static int Bootstrap_RunRecoveredStartupPrelude(HINSTANCE hInstance, LPSTR lpCommandLine, char *command_mode_out)
 {
   char command_mode;
-  int device_search_mode;
-
-  (void)hPrevInstance;
-  (void)nShowCmd;
 
   dword_51D020 = (int)(intptr_t)lpCommandLine;
   command_mode = lpCommandLine && *lpCommandLine ? *lpCommandLine : 0;
+  if ( command_mode_out )
+    *command_mode_out = command_mode;
   if ( !Platform_CreateMainWindow(hInstance, command_mode) )
     return 0;
 
-  dword_51D018 = Platform_IsWindowsNt4();
-  if ( !Platform_IsWindows9x() )
-    (void)Platform_IsWindowsNt4();
+  dword_51D018 = Input_MousePresent();
+  if ( !Input_MouseAcquire() )
+    (void)Input_MousePresent();
 
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
   DetectGameCDPath(0);
   sub_442AD0(0);
   Game_Init(0, command_mode, 0);
+  return 1;
+}
+
+static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR lpCommandLine)
+{
+  int device_search_mode;
 
   logEnabled = 1;
   device_search_mode = 0;
@@ -151,7 +161,38 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
 
   if ( command_mode == 'r' )
     dword_51D014 = 1;
+}
 
+static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR lpCommandLine, char *command_mode_out)
+{
+  char command_mode;
+
+  dword_51D020 = (int)(intptr_t)lpCommandLine;
+  command_mode = lpCommandLine && *lpCommandLine ? *lpCommandLine : 0;
+  if ( command_mode_out )
+    *command_mode_out = command_mode;
+  if ( !Platform_CreateMainWindow(hInstance, command_mode) )
+    return 0;
+
+  /*
+   * This is the smallest authentic `_WinMain@16` slice we can currently root
+   * without immediately dragging the deeper rules/render/menu surface back into
+   * the executable link. Keep it limited to real window/input/CD/game-state
+   * bootstrap until the next runtime/helper wave is rebuilt.
+   */
+  dword_51D018 = Input_MousePresent();
+  if ( !Input_MouseAcquire() )
+    (void)Input_MousePresent();
+  CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
+  DetectGameCDPath(0);
+  Game_Init(0, command_mode, 0);
+  if ( command_mode == 'r' )
+    dword_51D014 = 1;
+  return 1;
+}
+
+static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLine)
+{
   if ( command_mode == 'a' )
   {
     WorldMap_Initialize(command_mode, 0);
@@ -183,6 +224,19 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
       PlayGame_Dispatch(0, command_mode, 0, 0.0);
     }
   }
+}
+
+static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCommandLine, int nShowCmd)
+{
+  char command_mode;
+
+  (void)hPrevInstance;
+  (void)nShowCmd;
+
+  if ( !Bootstrap_RunRecoveredStartupPrelude(hInstance, lpCommandLine, &command_mode) )
+    return 0;
+  Bootstrap_RunRecoveredRuntimeAndRenderInit(command_mode, lpCommandLine);
+  Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
 
   /*
    * The original boot slice invokes an object cleanup callback hanging off
@@ -195,59 +249,9 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
   return 0;
 }
 
-static LRESULT __stdcall Bootstrap_SmokeWindowProc(HWND hWndValue, UINT Msg, WPARAM wParam, LPARAM lParam)
+static int Bootstrap_RunMessageLoop(void)
 {
-  (void)lParam;
-
-  /*
-   * Keep the first executable milestone on a narrow, asm-backed Win32 message
-   * subset. Rooting Platform_MainWindowProc already drags the unresolved
-   * render/runtime band, so this smoke proc preserves the authentic message
-   * shapes that matter for startup without claiming the full boot path is
-   * rebuilt yet.
-   */
-  if ( Msg == 2 )
-  {
-    PostQuitMessage(0);
-    return 0;
-  }
-  if ( Msg == 0xF )
-  {
-    ValidateRect(hWndValue, 0);
-    return 0;
-  }
-  if ( Msg == 28 )
-  {
-    g_AppIsActive = (unsigned short)wParam;
-    return 0;
-  }
-  return DefWindowProcA(hWndValue, Msg, wParam, lParam);
-}
-
-static int Bootstrap_RunWindowSmokeLoop(void)
-{
-  HINSTANCE instance;
-  HWND window;
-  WNDCLASSA wndclass;
   MSG message;
-
-  instance = GetModuleHandleA(0);
-  dword_51D020 = (int)(intptr_t)g_boot_command_line;
-  memset(&wndclass, 0, sizeof(wndclass));
-  wndclass.hInstance = instance;
-  wndclass.style = 3;
-  wndclass.lpfnWndProc = Bootstrap_SmokeWindowProc;
-  wndclass.hIcon = LoadIconA(instance, (LPCSTR)0x64);
-  wndclass.hCursor = LoadCursorA(0, (LPCSTR)0x7F00);
-  wndclass.hbrBackground = (HBRUSH)GetStockObject(4);
-  wndclass.lpszClassName = "Clash";
-  RegisterClassA(&wndclass);
-  window = CreateWindowExA(0, "Clash", "Clash", 0x80000000u, 0, 0, 640, 480, 0, 0, instance, 0);
-  hWnd = window;
-  if ( !window )
-    return 1;
-  ShowWindow(window, 3);
-  UpdateWindow(window);
   while ( GetMessageA(&message, 0, 0, 0) )
   {
     TranslateMessage(&message);
@@ -256,14 +260,31 @@ static int Bootstrap_RunWindowSmokeLoop(void)
   return (int)message.wParam;
 }
 
+static int Bootstrap_RunPlatformWindowLoop(void)
+{
+  dword_51D020 = (int)(intptr_t)g_boot_command_line;
+  if ( !Platform_CreateMainWindow(GetModuleHandleA(0), g_boot_command_line[0]) )
+    return 1;
+  return Bootstrap_RunMessageLoop();
+}
+
 int main(int argc, char **argv)
 {
   Bootstrap_BuildCommandLineFromArgv(argc, argv);
   /*
-   * Keep the recovered WinMain slice compiled in-tree, but stop the default
-   * executable at the narrower SDL window/message-loop milestone until the
-   * larger boot/menu render surface links cleanly.
+   * Keep the deeper menu/game-entry branch out of the default link surface
+   * until its runtime/data dependencies are rebuilt. The explicit prelude
+   * probe lets us root the recoverable startup slice without dragging the
+   * whole menu/world path back in.
    */
-  (void)g_boot_command_line;
-  return Bootstrap_RunWindowSmokeLoop();
+  if ( g_boot_run_startup_prelude )
+  {
+    char command_mode;
+
+    if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
+      return 1;
+    (void)command_mode;
+    return Bootstrap_RunMessageLoop();
+  }
+  return Bootstrap_RunPlatformWindowLoop();
 }

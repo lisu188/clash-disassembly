@@ -11,6 +11,7 @@
 - Gameplay semantics are already moderately recovered across unit, battle, building, port, road, and prisoner systems.
 - The main frontier is no longer parser triage; it is startup, link, runtime, and boot-path fidelity.
 - The final platform target remains SDL. Do not reintroduce Win32 as the final runtime layer.
+- The recovered executable is expected to run under WSL with SDL as the platform layer; do not rely on a native Windows host.
 
 ## 3. Current Blocker Families
 - There is still no fully recovered `main` / `_WinMain@16` end-to-end executable path.
@@ -42,6 +43,7 @@
 
 ## 7. Local Game-File Corroboration
 - The installed game files can be inspected under `/mnt/c/clash` when local asset, config, resource, or text evidence is needed.
+- `/mnt/c/clash/Manual.pdf` can also be inspected as secondary evidence for game concepts, UI flow, and terminology.
 - Treat `/mnt/c/clash` as corroborating evidence, not as a replacement for function/data-flow proof from the recovered codebase.
 
 ## 8. Confidence Rules
@@ -55,6 +57,7 @@
 - SDL is the final platform, window, render, timing, and input layer.
 - Keep gameplay code separated from platform glue.
 - Replace or contain Win32-era assumptions behind the existing SDL seam in `platform_sdl.h` and `platform_sdl_runtime.c`.
+- The supported runtime target is WSL plus SDL, not a Windows-only deployment path.
 - A dummy SDL window alone is not success; the goal is authentic recovered boot/runtime behavior.
 
 ## 10. Workflow

@@ -55,6 +55,7 @@ DWORD __stdcall timeGetTime(void);
 #define PLATFORM_QUEUE_CAPACITY 32
 #define PLATFORM_WM_PAINT 0x000F
 #define PLATFORM_WM_QUIT 0x0012
+#define PLATFORM_WM_ACTIVATEAPP 0x001C
 
 static WNDCLASSA g_platform_window_class;
 static int g_platform_has_window_class;
@@ -545,7 +546,11 @@ BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)
 
   window = (struct SDL_Window *)hWnd;
   if ( window )
+  {
     window->visible = nCmdShow != 0;
+    if ( window->visible )
+      PlatformQueuePush(hWnd, PLATFORM_WM_ACTIVATEAPP, 1, 0);
+  }
   return 1;
 }
 
@@ -601,6 +606,22 @@ HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
 {
   (void)lpModuleName;
   return &g_platform_module_handle_token;
+}
+
+HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter)
+{
+  (void)hinst;
+  (void)dwVersion;
+  (void)lplpDirectInput;
+  (void)punkOuter;
+
+  /*
+   * SDL owns input on the target platform, but the recovered boot path still
+   * calls into DirectInput-era setup during window creation. Returning failure
+   * keeps the legacy device slots inert while allowing the authentic window
+   * proc and message loop to come up.
+   */
+  return 1;
 }
 
 UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)

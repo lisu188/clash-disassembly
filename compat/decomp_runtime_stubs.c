@@ -701,6 +701,12 @@ int __fastcall _wcpp_4_dtor_array_store__(_DWORD a1, _DWORD a2)
   return (int)a1;
 }
 
+int __fastcall _wcpp_4_ctor_array__(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return (int)a1;
+}
+
 int __fastcall sub_476322(_DWORD a1, _DWORD a2)
 {
   (void)a1;
@@ -712,10 +718,16 @@ __int64 __fastcall nmalloc_(_DWORD a1, _DWORD a2)
 {
   void *block;
 
+  /*
+   * `_nmalloc_` is a raw custom allocator in the original binary, not a
+   * zeroing CRT helper. The decompiled extra argument is register noise from
+   * the lost usercall ABI, so keep the compatibility stub size-driven and let
+   * repaired callers supply the real size explicitly.
+   */
   (void)a2;
   if ( !a1 )
     return 0;
-  block = calloc(1, (size_t)a1);
+  block = malloc((size_t)a1);
   return (unsigned int)(uintptr_t)block;
 }
 

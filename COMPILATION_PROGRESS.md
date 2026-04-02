@@ -3011,3 +3011,87 @@
   - the remaining unit/stat public-label ambiguities from earlier batches are unchanged
 - total rename count so far:
   - `1191`
+
+## Batch 123 - Authentic Startup Prelude Repair Wave
+- Current frontier:
+  - keep the executable runnable under WSL/SDL, but move the explicit startup probe from a smoke-only window loop into the smallest authentic `_WinMain@16` slice that can survive: real window creation, input-gate setup, `CSS_SetDirectSoundHWnd`, `DetectGameCDPath`, `Game_Init`, then the ordinary message loop
+- Subagents spawned and scopes:
+  - `Mendel`: executable harness / `_WinMain@16` call-order corroboration and the narrowest safe authentic prelude slice
+  - `Dalton`: CRT / allocator-family analysis focused on `_nmalloc_`, `Mem_Alloc`, and the `Game_Init` crash
+  - `Ampere`: boot-path `JUMPOUT` scar ranking for the next startup wave
+  - `Linnaeus`: session-init routing after menu reachability, to keep the next milestone aligned with load-save rather than campaign mission bootstrap
+  - `Mencius`: one-playable-turn dependency floor once session init becomes reachable
+  - mergeable subagent evidence used this batch:
+    - `Mendel` proved the original `_WinMain@16` order around `Win_CreateMainWindow -> Input_MousePresent -> Input_MouseAcquire -> CSS_SetDirectSoundHWnd -> DetectGameCDPath -> sub_442AD0 -> Game_Init`
+    - `Dalton` showed `_nmalloc_` is a raw size-driven custom allocator and that the decompiled `Mem_Alloc -> nmalloc_(a2, a1)` call was the immediate reason `Game_Init` failed under the authentic prelude probe
+    - `Ampere` ranked the next meaningful startup `JUMPOUT` scars once the current early prelude is stable
+    - `Linnaeus` showed the load-save menu branch is still the narrowest post-menu session-init target
+    - `Mencius` mapped the first realistic one-turn loop to a human world-map turn with a one-squad builder stack
+- Functions renamed:
+  - `Platform_IsWindowsNt4` -> `Input_MousePresent`
+  - `Platform_IsWindows9x` -> `Input_MouseAcquire`
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `Game_Init`
+  - `Mem_Alloc`
+  - `_nmalloc_`
+  - `InputBackend_Initialize`
+  - `_WinMain@16` early-prelude slice
+  - `sub_442AD0`
+- Blockers removed this batch:
+  - the explicit `--authentic-startup-prelude` probe no longer crashes inside `Game_Init`'s first allocation path
+  - the early-prelude probe now reaches a real recovered startup slice and stays alive in the normal message loop
+  - the stale `Platform_IsWindowsNt4` / `Platform_IsWindows9x` names no longer obscure the input-gate stage of startup
+  - the bootstrap target is now explicitly built `-fno-pie/-no-pie`, matching the recovered code's 32-bit pointer-in-int assumptions
+- SDL replacements/cleanups this batch:
+  - `ShowWindow` now queues `WM_ACTIVATEAPP(1)` when the SDL-backed window becomes visible so the recovered window proc gets the activation transition it expects
+  - added an inert `DirectInputCreateA` wrapper to the SDL seam so legacy DirectInput setup remains contained while the window path can still boot under WSL
+- Menu/UI fixes this batch:
+  - none; menu/UI remains behind the deeper authentic boot slice and the later render/resource init band
+- Session-init fixes this batch:
+  - none; the next session-init target is still the load-save branch once `PlayGame_Dispatch` is reachable
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c bootstrap_main.c -o /tmp/bootstrap_main_batch123.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch123.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, and `compat/decomp_runtime_stubs.c` all compile cleanly under the current `gnu89` setup
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - `clash95_bootstrap` builds successfully as a WSL-runnable SDL executable
+  - `clash95_recovered` still builds successfully as the recovered static library baseline
+  - briefly rooting `sub_442AD0` in the explicit prelude exposed the next concrete authentic-link band instead of a vague failure wall:
+    - `_wcpp_4_ctor_array_storage_1s__`
+    - `_wcpp_4_ctor_array_storage_1m__`
+    - `strupr_`
+    - `strrchr_`
+    - `strncpy_`
+    - `setvbuf_`
+    - `ftell_`
+    - `fflush_`
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` exits with status `124`, confirming the default executable still stays alive in the SDL-backed message loop
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now also exits with status `124`, confirming the repaired authentic-startup probe no longer faults during `Game_Init`
+- Highest authentic runtime milestone reached:
+  - real early startup through `Platform_CreateMainWindow`, `Input_MousePresent`, `Input_MouseAcquire`, `CSS_SetDirectSoundHWnd`, `DetectGameCDPath`, and `Game_Init`, followed by the ordinary message loop under WSL/SDL
+- Key evidence used:
+  - `_WinMain@16` asm places the early startup slice in the exact order `Win_CreateMainWindow -> Input_MousePresent -> Input_MouseAcquire -> CSS_SetDirectSoundHWnd -> DetectGameCDPath -> sub_442AD0 -> Game_Init`
+  - the map names `0x461740` and `0x461770` as `Input_MousePresent` and `Input_MouseAcquire`
+  - `Mem_Alloc` asm preserves the requested size in `eax` and only copies it into `edx` for the OOM log path before calling `_nmalloc_`
+  - `Game_Init` asm adds `0x23EE6` to the allocation result before calling `_wcpp_4_ctor_array__`, then subtracts the same offset when storing `gameData`
+  - rooting `sub_442AD0` in the explicit prelude exposed a small, concrete string/file helper band instead of another broad startup failure set
+- Ambiguous candidates deferred:
+  - the exact faithful C reconstruction of `_wcpp_4_ctor_array_storage_1s__/1m__`
+  - the decompiler-lost usercall surfaces behind `strupr_`, `strrchr_`, `strncpy_`, `setvbuf_`, `ftell_`, and `fflush_`
+  - `App_RequestQuit`'s variadic formatting path, which is still decompiler-damaged but no longer on the first authentic-prelude crash path
+  - the wider `sub_442AD0` / render/resource / rules-init band between `Game_Init` and `PlayGame_Dispatch`
+  - the remaining session-init, menu/UI, and one-playable-turn blockers identified by `Linnaeus` and `Mencius`
+- total rename count so far:
+  - `1193`

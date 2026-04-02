@@ -1490,8 +1490,8 @@ char  Input_KeyToChar(unsigned int a1);
 BOOL  Input_ClearKey(int a1, int a2);
 int Input_MouseInit();
 int nullsub_5(void); // weak
-BOOL Platform_IsWindowsNt4();
-BOOL Platform_IsWindows9x();
+BOOL Input_MousePresent();
+BOOL Input_MouseAcquire();
 int  Render_DefaultRH(int a1, char a2, DWORD a3);
 LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2);
@@ -12183,12 +12183,11 @@ int App_Shutdown()
 int  Game_Init(int a1, char a2, DWORD a3)
 {
   int result; // eax
-  int v5; // ecx
 
   result = Mem_Alloc(586398, a1, a2, a3);
   if ( result )
   {
-    result = _wcpp_4_ctor_array__(v5, 500) - 147174;
+    result = _wcpp_4_ctor_array__(result + 147174, 500) - 147174;
     gameData = result;
   }
   else
@@ -12198,7 +12197,6 @@ int  Game_Init(int a1, char a2, DWORD a3)
   dword_5202C0 = 0;
   return result;
 }
-// 4011CE: variable 'v5' is possibly undefined
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 5202C0: using guessed type int dword_5202C0;
 // 5202E4: using guessed type int gameData;
@@ -72005,13 +72003,13 @@ int Input_MouseInit()
 // 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461740) --------------------------------------------------------
-BOOL Platform_IsWindowsNt4()
+BOOL Input_MousePresent()
 {
   return (GetVersion() & 0x80000000) == 0 && (unsigned __int8)GetVersion() == 4;
 }
 
 //----- (00461770) --------------------------------------------------------
-BOOL Platform_IsWindows9x()
+BOOL Input_MouseAcquire()
 {
   return (GetVersion() & 0x80000000) != 0 && (unsigned __int8)GetVersion() == 4;
 }
@@ -72199,7 +72197,7 @@ int  Mem_Alloc(int a1, int a2, char a3, DWORD a4)
   _DWORD v7[5]; // [esp+4h] [ebp-14h] BYREF
 
   v7[4] = a2;
-  v7[0] = nmalloc_(a2, a1);
+  v7[0] = nmalloc_(a1, 0);
   qmemcpy(&v6, v7, sizeof(v6));
   if ( !v6 )
   {

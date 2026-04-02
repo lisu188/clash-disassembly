@@ -39,9 +39,9 @@ target_include_directories(clash95_bootstrap
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_recovered PRIVATE -std=gnu89 -w)
-  target_compile_options(clash95_bootstrap_objects PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections)
-  target_compile_options(clash95_bootstrap PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections)
-  target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections)
+  target_compile_options(clash95_bootstrap_objects PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
+  target_compile_options(clash95_bootstrap PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
+  target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
 set_target_properties(clash95_recovered PROPERTIES
