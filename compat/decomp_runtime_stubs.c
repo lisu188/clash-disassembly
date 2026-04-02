@@ -2,8 +2,10 @@
 #include "../platform_sdl.h"
 
 #include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +18,10 @@
 
 #ifndef O_BINARY
 #define O_BINARY 0
+#endif
+
+#ifndef PATH_MAX
+#define PATH_MAX 4096
 #endif
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
@@ -42,10 +48,25 @@ __lock unk_51A638;
 #define COMPAT_FILE_ATTRIBUTE_READONLY 0x1u
 #define COMPAT_FILE_ATTRIBUTE_DIRECTORY 0x10u
 #define COMPAT_INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#define COMPAT_WSL_GAME_ROOT "/mnt/c/clash"
 
 static DWORD g_compat_last_error;
 static LPVOID g_compat_tls_slots[COMPAT_TLS_SLOT_COUNT];
 static unsigned char g_compat_tls_slot_in_use[COMPAT_TLS_SLOT_COUNT];
+
+typedef int (*CompatCtorFn)(void *this_ptr);
+
+typedef struct CompatWcppArrayStoreDesc {
+  unsigned char kind;
+  unsigned char unk1;
+  unsigned char unk2;
+  unsigned char unk3;
+  CompatCtorFn ctor;
+  void *copy_ctor;
+  void *dtor;
+  int stride;
+  const char *type_name;
+} CompatWcppArrayStoreDesc;
 
 static void CompatSetLastErrorFromErrno(void)
 {
@@ -117,6 +138,254 @@ static int CompatMapOsErrorToErrno(DWORD error_code)
 static int CompatTlsSlotIsValid(DWORD dwTlsIndex)
 {
   return dwTlsIndex < COMPAT_TLS_SLOT_COUNT && g_compat_tls_slot_in_use[dwTlsIndex] != 0;
+}
+
+static void CompatNormalizePathSlashes(const char *input, char *output, size_t output_size)
+{
+  size_t index;
+
+  if ( !output_size )
+    return;
+  if ( !input )
+  {
+    output[0] = 0;
+    return;
+  }
+  index = 0;
+  while ( input[index] && index + 1 < output_size )
+  {
+    output[index] = input[index] == '\\' ? '/' : input[index];
+    ++index;
+  }
+  output[index] = 0;
+}
+
+static int CompatAppendPathComponent(char *path, size_t path_size, const char *component)
+{
+  size_t path_len;
+  size_t component_len;
+
+  if ( !path || !component )
+    return 0;
+  if ( !*component )
+    return 1;
+  path_len = strlen(path);
+  component_len = strlen(component);
+  if ( path_len && path[path_len - 1] != '/' )
+  {
+    if ( path_len + 1 >= path_size )
+      return 0;
+    path[path_len++] = '/';
+    path[path_len] = 0;
+  }
+  if ( path_len + component_len >= path_size )
+    return 0;
+  memcpy(path + path_len, component, component_len + 1);
+  return 1;
+}
+
+static int CompatTranslatePathToWsl(const char *input, char *output, size_t output_size)
+{
+  char normalized[PATH_MAX];
+  char current[PATH_MAX];
+  const char *cursor;
+  struct stat st;
+  int current_is_dir;
+
+  if ( !input || !*input || !output || !output_size )
+    return 0;
+  CompatNormalizePathSlashes(input, normalized, sizeof(normalized));
+  if ( !normalized[0] )
+    return 0;
+  if ( stat(normalized, &st) == 0 )
+  {
+    Compat_CopyPrefixN(output, normalized, (unsigned int)strlen(normalized) + 1);
+    return 1;
+  }
+  if ( isalpha((unsigned __int8)normalized[0]) && normalized[1] == ':' )
+  {
+    snprintf(current, sizeof(current), "/mnt/%c", (char)tolower((unsigned __int8)normalized[0]));
+    cursor = normalized + 2;
+    if ( *cursor == '/' )
+      ++cursor;
+  }
+  else if ( normalized[0] == '/' )
+  {
+    Compat_CopyPrefixN(current, "/", 2);
+    cursor = normalized + 1;
+  }
+  else
+  {
+    Compat_CopyPrefixN(current, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+    cursor = normalized;
+  }
+  current_is_dir = stat(current, &st) == 0 && S_ISDIR(st.st_mode);
+  while ( *cursor )
+  {
+    char component[PATH_MAX];
+    char candidate[PATH_MAX];
+    size_t component_len;
+
+    while ( *cursor == '/' )
+      ++cursor;
+    if ( !*cursor )
+      break;
+    component_len = 0;
+    while ( cursor[component_len] && cursor[component_len] != '/' )
+      ++component_len;
+    if ( component_len + 1 > sizeof(component) )
+      return 0;
+    memcpy(component, cursor, component_len);
+    component[component_len] = 0;
+    cursor += component_len;
+    if ( !strcmp(component, ".") )
+      continue;
+    if ( !strcmp(component, "..") )
+    {
+      if ( !CompatAppendPathComponent(current, sizeof(current), component) )
+        return 0;
+      current_is_dir = stat(current, &st) == 0 && S_ISDIR(st.st_mode);
+      continue;
+    }
+    if ( current_is_dir )
+    {
+      DIR *dir_stream;
+      struct dirent *entry;
+      int matched;
+
+      Compat_CopyPrefixN(candidate, current, (unsigned int)strlen(current) + 1);
+      if ( !CompatAppendPathComponent(candidate, sizeof(candidate), component) )
+        return 0;
+      if ( stat(candidate, &st) == 0 )
+      {
+        Compat_CopyPrefixN(current, candidate, (unsigned int)strlen(candidate) + 1);
+        current_is_dir = S_ISDIR(st.st_mode);
+        continue;
+      }
+      matched = 0;
+      dir_stream = opendir(current);
+      if ( dir_stream )
+      {
+        while ( (entry = readdir(dir_stream)) != 0 )
+        {
+          if ( !strcasecmp(entry->d_name, component) )
+          {
+            matched = 1;
+            Compat_CopyPrefixN(component, entry->d_name, (unsigned int)strlen(entry->d_name) + 1);
+            break;
+          }
+        }
+        closedir(dir_stream);
+      }
+      if ( matched )
+      {
+        Compat_CopyPrefixN(candidate, current, (unsigned int)strlen(current) + 1);
+        if ( !CompatAppendPathComponent(candidate, sizeof(candidate), component) )
+          return 0;
+        Compat_CopyPrefixN(current, candidate, (unsigned int)strlen(candidate) + 1);
+        current_is_dir = stat(current, &st) == 0 && S_ISDIR(st.st_mode);
+        continue;
+      }
+    }
+    if ( !CompatAppendPathComponent(current, sizeof(current), component) )
+      return 0;
+    current_is_dir = stat(current, &st) == 0 && S_ISDIR(st.st_mode);
+  }
+  Compat_CopyPrefixN(output, current, (unsigned int)strlen(current) + 1);
+  return 1;
+}
+
+int Compat_CanOpenReadPath(const char *path)
+{
+  char translated_path[PATH_MAX];
+  const char *effective_path;
+  int fd;
+
+  if ( !path || !*path )
+    return 0;
+  effective_path = path;
+  if ( CompatTranslatePathToWsl(path, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  fd = open(effective_path, O_RDONLY | O_BINARY);
+  if ( fd < 0 )
+    return 0;
+  close(fd);
+  return 1;
+}
+
+char *Compat_StrrchrChar(const char *text, int ch)
+{
+  if ( !text )
+    return 0;
+  return strrchr(text, ch);
+}
+
+char *Compat_StruprAsciiInPlace(char *text)
+{
+  unsigned char *cursor;
+
+  if ( !text )
+    return 0;
+  cursor = (unsigned char *)text;
+  while ( *cursor )
+  {
+    *cursor = (unsigned char)toupper(*cursor);
+    ++cursor;
+  }
+  return text;
+}
+
+void Compat_CopyPrefixN(char *dest, const char *src, unsigned int count)
+{
+  unsigned int index;
+
+  if ( !dest || !count )
+    return;
+  if ( !src )
+  {
+    memset(dest, 0, count);
+    return;
+  }
+  for ( index = 0; index < count; ++index )
+  {
+    dest[index] = src[index];
+    if ( !src[index] )
+    {
+      memset(dest + index + 1, 0, count - index - 1);
+      return;
+    }
+  }
+}
+
+int Compat_WcppCtorArrayStorage1m(void *base, int count, const void *descriptor)
+{
+  const CompatWcppArrayStoreDesc *desc;
+  unsigned char *cursor;
+  int index;
+
+  if ( !base )
+    return 0;
+  desc = (const CompatWcppArrayStoreDesc *)descriptor;
+  if ( !desc || desc->stride <= 0 || count <= 0 )
+    return (int)(uintptr_t)base;
+  cursor = (unsigned char *)base;
+  for ( index = 0; index < count; ++index )
+  {
+    if ( desc->ctor )
+      desc->ctor(cursor + index * desc->stride);
+  }
+  return (int)(uintptr_t)base;
+}
+
+int Compat_WcppCtorArrayStorage1s(void *block, int count, const void *descriptor)
+{
+  unsigned char *data;
+
+  if ( !block )
+    return 0;
+  *(int *)block = count;
+  data = (unsigned char *)block + 4;
+  return Compat_WcppCtorArrayStorage1m(data, count, descriptor);
 }
 
 DWORD __stdcall GetLastError(void)
@@ -207,12 +476,18 @@ BOOL __stdcall TlsSetValue(DWORD dwTlsIndex, LPVOID lpTlsValue)
 
 BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
 {
+  char translated_path[PATH_MAX];
+  const char *effective_path;
+
   if ( !lpFileName || !*lpFileName )
   {
     g_compat_last_error = (DWORD)EINVAL;
     return 0;
   }
-  if ( unlink(lpFileName) == 0 )
+  effective_path = lpFileName;
+  if ( CompatTranslatePathToWsl(lpFileName, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  if ( unlink(effective_path) == 0 )
   {
     g_compat_last_error = 0;
     return 1;
@@ -223,13 +498,19 @@ BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
 
 BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
+  char translated_path[PATH_MAX];
+  const char *effective_path;
+
   (void)lpSecurityAttributes;
   if ( !lpPathName || !*lpPathName )
   {
     g_compat_last_error = (DWORD)EINVAL;
     return 0;
   }
-  if ( mkdir(lpPathName, 0777) == 0 )
+  effective_path = lpPathName;
+  if ( CompatTranslatePathToWsl(lpPathName, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  if ( mkdir(effective_path, 0777) == 0 )
   {
     g_compat_last_error = 0;
     return 1;
@@ -240,12 +521,18 @@ BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecur
 
 BOOL __stdcall RemoveDirectoryA(LPCSTR lpPathName)
 {
+  char translated_path[PATH_MAX];
+  const char *effective_path;
+
   if ( !lpPathName || !*lpPathName )
   {
     g_compat_last_error = (DWORD)EINVAL;
     return 0;
   }
-  if ( rmdir(lpPathName) == 0 )
+  effective_path = lpPathName;
+  if ( CompatTranslatePathToWsl(lpPathName, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  if ( rmdir(effective_path) == 0 )
   {
     g_compat_last_error = 0;
     return 1;
@@ -257,6 +544,8 @@ BOOL __stdcall RemoveDirectoryA(LPCSTR lpPathName)
 DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
 {
   DWORD attributes;
+  char translated_path[PATH_MAX];
+  const char *effective_path;
   struct stat st;
 
   if ( !lpFileName || !*lpFileName )
@@ -264,7 +553,10 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
     g_compat_last_error = (DWORD)EINVAL;
     return COMPAT_INVALID_FILE_ATTRIBUTES;
   }
-  if ( stat(lpFileName, &st) != 0 )
+  effective_path = lpFileName;
+  if ( CompatTranslatePathToWsl(lpFileName, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  if ( stat(effective_path, &st) != 0 )
   {
     CompatSetLastErrorFromErrno();
     return COMPAT_INVALID_FILE_ATTRIBUTES;
@@ -272,7 +564,7 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
   attributes = 0;
   if ( S_ISDIR(st.st_mode) )
     attributes |= COMPAT_FILE_ATTRIBUTE_DIRECTORY;
-  if ( access(lpFileName, W_OK) != 0 )
+  if ( access(effective_path, W_OK) != 0 )
     attributes |= COMPAT_FILE_ATTRIBUTE_READONLY;
   g_compat_last_error = 0;
   return attributes;
@@ -800,6 +1092,60 @@ int __fastcall stricmp_(_DWORD a1, _DWORD a2)
   return strcasecmp(lhs, rhs);
 }
 
+int __cdecl strrchr_(void)
+{
+  return 0;
+}
+
+int __fastcall strupr_(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return (int)(uintptr_t)Compat_StruprAsciiInPlace((char *)(uintptr_t)a1);
+}
+
+int __fastcall strncpy_(_DWORD a1, _DWORD a2)
+{
+  char *dest;
+  const char *src;
+
+  dest = (char *)(uintptr_t)a1;
+  src = (const char *)(uintptr_t)a2;
+  if ( !dest )
+    return (int)a1;
+  if ( !src )
+  {
+    *dest = 0;
+    return (int)a1;
+  }
+  Compat_CopyPrefixN(dest, src, (unsigned int)(strlen(src) + 1));
+  return (int)a1;
+}
+
+__int64 __fastcall ftell_(_DWORD a1, _DWORD a2)
+{
+  /*
+   * Quarantine only: the original helper operates on the private stream
+   * runtime, not host libc FILE*. Returning zero keeps the retained boot-path
+   * code linkable until `_allocfp_`, `tell_`, and `_flush_` are reconstructed.
+   */
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __fastcall setvbuf_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __thiscall fflush_(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
 int __cdecl _NTGetFakeHandle_(_DWORD a1, _DWORD a2, _DWORD a3)
 {
   (void)a1;
@@ -870,6 +1216,16 @@ int __fastcall _wcpp_4_dtor_array__(_DWORD a1, _DWORD a2)
   return (int)a1;
 }
 
+int __cdecl _wcpp_4_ctor_array_storage_1m__(void)
+{
+  return 0;
+}
+
+int __cdecl _wcpp_4_ctor_array_storage_1s__(void)
+{
+  return 0;
+}
+
 int __fastcall wctomb_(_DWORD a1, _DWORD a2)
 {
   char *output;
@@ -907,6 +1263,8 @@ HANDLE __stdcall CreateFileA(
 {
   int flags;
   int fd;
+  char translated_path[PATH_MAX];
+  const char *effective_path;
 
   (void)dwShareMode;
   (void)lpSecurityAttributes;
@@ -914,6 +1272,9 @@ HANDLE __stdcall CreateFileA(
   (void)hTemplateFile;
   if ( !lpFileName )
     return (HANDLE)-1;
+  effective_path = lpFileName;
+  if ( CompatTranslatePathToWsl(lpFileName, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
   flags = O_BINARY;
   if ( (dwDesiredAccess & 0x40000000u) != 0 && (dwDesiredAccess & 0x80000000u) != 0 )
     flags |= O_RDWR;
@@ -929,7 +1290,7 @@ HANDLE __stdcall CreateFileA(
     flags |= O_TRUNC;
   else if ( dwCreationDisposition == 1 )
     flags |= O_CREAT;
-  fd = open(lpFileName, flags, 0666);
+  fd = open(effective_path, flags, 0666);
   if ( fd < 0 )
   {
     CompatSetLastErrorFromErrno();

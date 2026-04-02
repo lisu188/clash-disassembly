@@ -3095,3 +3095,80 @@
   - the remaining session-init, menu/UI, and one-playable-turn blockers identified by `Linnaeus` and `Mencius`
 - total rename count so far:
   - `1193`
+
+## Batch 124 - WSL Resource Mount And Archive Runtime Repair Wave
+- Current frontier:
+  - keep the WSL/SDL executable runnable while pushing the authentic startup probe through the real resource-archive mount path rooted by `sub_442AD0`
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Archimedes`: entrypoint / resource-mount asm corroboration around `sub_4429D0`
+  - `Harvey`: CRT / private file-open / `_allocfp_` and `fclose_` helper analysis under `sub_475CC8`
+  - `Zeno`: broader runtime/helper ambiguity review around the archive constructor band
+  - `Aquinas`: session/game-start alignment so the next milestone still points at load-save after menu reachability
+  - `Hume`: one-playable-turn dependency floor once session init becomes reachable
+  - `Popper`: remaining boot-path `JUMPOUT` ranking after the current archive/runtime wall
+  - mergeable subagent evidence used this batch:
+    - `Archimedes` confirmed `sub_4429D0` first probes the direct path, then falls back to `c:\\clash\\<archive>`, then constructs and registers the archive object
+    - `Harvey` confirmed the original private file-open band still flows through `_allocfp_` / `sub_475B9E` / `_freefp_` / `fclose_`, so it remains unsafe to treat the host libc wrappers as faithful
+    - `Popper` re-ranked `sub_490330` as the next high-value boot-path `JUMPOUT` scar once the current stream/runtime tranche is stable
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_4429D0`
+  - `sub_442AD0`
+  - `sub_478770`
+  - `sub_4791A0`
+  - `sub_479BE0`
+  - `sub_47BA86`
+  - `_allocfp_`
+  - `_freefp_`
+  - `fread_`
+- Blockers removed this batch:
+  - `sub_4429D0` no longer depends on the broken private stream open/close band just to probe archive existence
+  - the authentic startup probe no longer aborts on missing `data\\*.res` under WSL because the Win32-shaped file APIs now translate into `/mnt/c/clash`
+  - `sub_479BE0` no longer forwards an undefined constructor mode temporary into the archive object constructor
+  - `sub_4791A0` no longer corrupts the archive cursor field with the bogus `HIDWORD(ftell_)` decompilation artifact
+  - `sub_478770` no longer depends on the decompiler-lost string-source/pointer-width front edge that previously faulted before the real stream path
+- SDL replacements/cleanups this batch:
+  - none in the SDL event/window seam itself; the platform-facing change was WSL path containment inside the compatibility file APIs instead of a new Win32 dependency
+- Menu/UI fixes this batch:
+  - none; the current runtime milestone is still below the menu/render initialization path
+- Session-init fixes this batch:
+  - none; session/game-start init remains behind the unresolved archive/stream runtime wall
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c bootstrap_main.c -o /tmp/bootstrap_main_batch124.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_batch124.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `gdb -batch -ex run -ex bt --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, and `compat/decomp_runtime_stubs.c` still compile cleanly under the current `gnu89` setup
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - `clash95_bootstrap` still builds successfully as a WSL-runnable SDL executable
+  - `clash95_recovered` still builds successfully as the recovered static library baseline
+  - the next authentic startup frontier has narrowed from generic startup failure to the private archive/stream runtime band reached through `sub_442AD0`
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` exits with status `124`, confirming the default bootstrap still stays alive in the SDL-backed message loop
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now exits with status `139`, and GDB shows the fault moved into `sub_47BA86 -> sub_4799B0 -> sub_478770 -> sub_4791A0 -> sub_478FD0 -> sub_479AE0 -> sub_479BE0 -> sub_4429D0 -> sub_442AD0`
+- Highest authentic runtime milestone reached:
+  - authentic startup now enters the real archive/resource mount path inside `sub_442AD0` under WSL/SDL and reaches the private stream seek/cursor helper band before faulting
+- Key evidence used:
+  - `sub_4429D0` asm shows direct archive probe, fallback to `c:\\clash\\`, archive construction via `sub_479BE0`, and archive registration via `sub_477370`
+  - `/mnt/c/clash/DATA/minimum.res`, `/mnt/c/clash/DATA/normal.res`, `/mnt/c/clash/DATA/maps.res`, and related installed game resources exist on disk under WSL
+  - the failure moved from the earlier “Clash CD not found!” path into a deep archive constructor backtrace once the WSL path translation helpers were in place
+  - `sub_4791A0` and `sub_478770` asm corroborated the repaired cursor/source-string front edge well enough to keep the authentic probe moving into the real stream band
+- Ambiguous candidates deferred:
+  - `_allocfp_`, `_freefp_`, `fread_`, `ftell_`, `setvbuf_`, and `fflush_` still need faithful reconstruction around the private stream runtime rather than host-libc placeholders
+  - `sub_47BA86` and the broader `sub_4799B0` cursor/seek family remain the next concrete crash band
+  - `_wcpp_4_ctor_array_storage_1s__` / `_wcpp_4_ctor_array_storage_1m__` are still conservative quarantine helpers, not final runtime fidelity
+  - `sub_490330` remains the next high-value boot-path `JUMPOUT` scar once the current stream/runtime tranche is stable
+- total rename count so far:
+  - `1193`

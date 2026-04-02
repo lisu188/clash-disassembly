@@ -185,6 +185,7 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
     (void)Input_MousePresent();
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
   DetectGameCDPath(0);
+  sub_442AD0(0);
   Game_Init(0, command_mode, 0);
   if ( command_mode == 'r' )
     dword_51D014 = 1;

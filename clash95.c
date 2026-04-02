@@ -1815,7 +1815,7 @@ unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4
 void __cdecl sub_471B40(unsigned int a1);
 void __cdecl sub_471BA0(unsigned int a1, unsigned int a2);
 char  sub_471BF0(_DWORD *a1);
-int sub_471C40();
+int sub_471C40(_DWORD *a1);
 int  sub_471C60(int a1, char a2);
 _DWORD * sub_471CA0(_DWORD *a1, int a2, const char *a3);
 const char ** sub_471D10(const char **a1, const char *a2);
@@ -1859,6 +1859,9 @@ int __cdecl _wcpp_4_ctor_array_storage_1m__();
 // int _wcpp_4_ctor_array_storage_1s__(void); weak
 // int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD); weak
 int __cdecl j_j__nfree_();
+int Compat_WcppCtorArrayStorage1m(void *base, int count, const void *descriptor);
+int Compat_WcppCtorArrayStorage1s(void *block, int count, const void *descriptor);
+int Compat_CanOpenReadPath(const char *path);
 // int __fastcall _wcpp_4_dtor_array__(_DWORD, _DWORD); weak
 _DWORD * sub_473250(_DWORD *result);
 _DWORD * sub_4732A0(_DWORD *a1, _DWORD *a2, int a3, int a4);
@@ -1938,6 +1941,9 @@ _DWORD WCIsvListBase_dtor(WCIsvListBase *this);
 int __thiscall nullsub_7(_DWORD); // weak
 void __thiscall sub_476A0C(void *this);
 int __cdecl strrchr_();
+char *Compat_StrrchrChar(const char *text, int ch);
+char *Compat_StruprAsciiInPlace(char *text);
+void Compat_CopyPrefixN(char *dest, const char *src, unsigned int count);
 int __fastcall sub_476A78(_DWORD, _DWORD); // weak
 int sub_476A80();
 int  sub_476AB0(int result);
@@ -2018,7 +2024,7 @@ int  sub_478610(_DWORD *a1, int a2);
 int  sub_478670(_DWORD *a1);
 _DWORD * sub_4786E0(_DWORD *result);
 int  sub_478720(_DWORD *a1, int a2);
-int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, int a5);
+int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5);
 int  sub_478830(_DWORD *a1, int a2, int a3);
 int  sub_478880(int a1);
 int  sub_4788A0(int a1);
@@ -8522,6 +8528,7 @@ int (*off_510BD4[10])() =
   &sub_478D90
 }; // weak
 int (*off_510C04[4])() = { &sub_4792B0, &sub_477B20, &sub_479D20, &sub_473F70 }; // weak
+_UNKNOWN unk_510C40; // weak
 _UNKNOWN unk_510C60; // weak
 _UNKNOWN unk_510C80; // weak
 _UNKNOWN unk_510CA0; // weak
@@ -12311,9 +12318,12 @@ int * sub_401640(int *a1, _DWORD *a2, int a3)
     *a1 = 0;
     return a1;
   }
+  (void)a3;
   v6 = 0;
-  j_Mem_Alloc(a3);
-  v7 = _wcpp_4_ctor_array_storage_1s__();
+  v7 = Compat_WcppCtorArrayStorage1s(
+         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
+         a1[3],
+         &unk_50ECF0);
   v8 = a1[2];
   *a1 = v7;
   if ( v8 <= 0 )
@@ -12327,14 +12337,12 @@ int * sub_401640(int *a1, _DWORD *a2, int a3)
     sub_471BF0(v11 + 1);
     v11[3] = v10[3];
     ++v6;
-    v9 = v12 + 16;
+    v9 += 16;
   }
   while ( v6 < a1[2] );
   return a1;
 }
-// 4016C7: variable 'v12' is possibly undefined
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
-// 47311F: using guessed type int _wcpp_4_ctor_array_storage_1s__(void);
 // 50ECA4: using guessed type int (*off_50ECA4[2])();
 
 //----- (004016E0) --------------------------------------------------------
@@ -12437,15 +12445,18 @@ int  sub_4017D0(int *a1, int a2)
   a1[3] = v5;
   if ( v4 )
   {
-    _wcpp_4_dtor_array_store__(v5, &unk_50ECF0);
+    _wcpp_4_dtor_array_store__(*a1, &unk_50ECF0);
     result = j_j__nfree_();
-    *a1 = v13;
+    *a1 = 0;
   }
   else
   {
-    j_Mem_Alloc(0);
-    v6 = _wcpp_4_ctor_array_storage_1s__();
+    v6 = Compat_WcppCtorArrayStorage1s(
+           (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
+           a1[3],
+           &unk_50ECF0);
     v14 = v6;
+    v7 = 0;
     if ( a1[2] > 0 )
     {
       v8 = (_DWORD *)(v6 + 4);
@@ -12456,23 +12467,19 @@ int  sub_4017D0(int *a1, int a2)
         *v10 = *v9;
         sub_471BF0(v8);
         v10[3] = v9[3];
-        v7 = v11 + 1;
+        ++v7;
         v8 += 4;
       }
       while ( v7 < a1[2] );
     }
-    _wcpp_4_dtor_array_store__(v7, &unk_50ECF0);
+    _wcpp_4_dtor_array_store__(*a1, &unk_50ECF0);
     j_j__nfree_();
     result = v14;
     *a1 = v14;
   }
   return result;
 }
-// 401816: variable 'v7' is possibly undefined
-// 401837: variable 'v11' is possibly undefined
-// 401883: variable 'v13' is possibly undefined
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
-// 47311F: using guessed type int _wcpp_4_ctor_array_storage_1s__(void);
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00401890) --------------------------------------------------------
@@ -57999,79 +58006,24 @@ char *sub_4429C0()
 //----- (004429D0) --------------------------------------------------------
 int  sub_4429D0(int a1, const CHAR *a2, DWORD a3)
 {
-  char *v3; // ecx
-  char *v4; // esi
-  char *v5; // edi
-  char v6; // al
-  char v7; // al
-  char *v8; // esi
-  unsigned int v9; // kr04_4
-  char *v10; // edi
-  char v11; // al
-  char v12; // al
-  int v13; // ecx
-  int v14; // ecx
-  int *v15; // ebx
-  char *v17; // edi
-  char *v18; // esi
-  char v19; // al
-  char v20; // al
+  int v3; // eax
+  unsigned int v4; // eax
+  int *v5; // eax
   char v21[100]; // [esp+0h] [ebp-88h] BYREF
   int v22[4]; // [esp+64h] [ebp-24h]
-  int v23; // [esp+74h] [ebp-14h]
 
-  v23 = a1;
-  if ( sub_475CC8(a2, (unsigned __int8 *)aRb_3, (int)a2, a3) )
+  v3 = Compat_CanOpenReadPath(a2);
+  if ( v3 )
   {
-    v17 = v21;
-    v18 = v3;
-    fclose_(v3);
-    do
-    {
-      v19 = *v18;
-      *v17 = *v18;
-      if ( !v19 )
-        break;
-      v20 = v18[1];
-      v18 += 2;
-      v17[1] = v20;
-      v17 += 2;
-    }
-    while ( v20 );
+    Compat_CopyPrefixN(v21, a2, (unsigned int)strlen(a2) + 1);
   }
   else
   {
-    v4 = aCClash;
-    v5 = v21;
-    do
-    {
-      v6 = *v4;
-      *v5 = *v4;
-      if ( !v6 )
-        break;
-      v7 = v4[1];
-      v4 += 2;
-      v5[1] = v7;
-      v5 += 2;
-    }
-    while ( v7 );
-    v8 = v3;
-    v9 = strlen(v21) + 1;
-    v10 = &v21[v9 - 1];
-    do
-    {
-      v11 = *v8;
-      *v10 = *v8;
-      if ( !v11 )
-        break;
-      v12 = v8[1];
-      v8 += 2;
-      v10[1] = v12;
-      v10 += 2;
-    }
-    while ( v12 );
-    v13 = sub_475CC8(v21, (unsigned __int8 *)aRb_4, ~v9, a3);
-    if ( !v13 )
+    Compat_CopyPrefixN(v21, aCClash, (unsigned int)strlen(aCClash) + 1);
+    v4 = (unsigned int)strlen(v21) + 1;
+    Compat_CopyPrefixN(&v21[v4 - 1], a2, (unsigned int)strlen(a2) + 1);
+    v3 = Compat_CanOpenReadPath(v21);
+    if ( !v3 )
     {
       v22[0] = (int)off_517B14[0];
       v22[1] = (int)off_517B14[1];
@@ -58079,14 +58031,11 @@ int  sub_4429D0(int a1, const CHAR *a2, DWORD a3)
       v22[3] = (int)off_517B14[3];
       App_RequestQuit(v22[(unsigned __int8)g_LanguageIndex]);
     }
-    fclose_(v13);
   }
-  v15 = sub_479BE0(v21, v14, 0, a3, (int)v21);
-  return sub_477370(dword_543CC8, 0, (DWORD)v15);
+  v5 = sub_479BE0(v21, a3, 0, a3, (int)v21);
+  return sub_477370(dword_543CC8, (const CHAR *)(uintptr_t)(unsigned int)a1, (DWORD)v5);
 }
 // 442A16: variable 'v3' is possibly undefined
-// 442A7F: variable 'v14' is possibly undefined
-// 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 // 511130: using guessed type char g_LanguageIndex;
 // 517B14: using guessed type char *off_517B14[3];
 // 543CC8: using guessed type int dword_543CC8[11];
@@ -82958,7 +82907,7 @@ char  sub_471BF0(_DWORD *a1)
   unsigned int v4; // kr04_4
   __int64 v5; // rdi
 
-  result = sub_471C40();
+  result = sub_471C40(a1);
   if ( v3 )
   {
     result = 0;
@@ -82987,16 +82936,15 @@ char  sub_471BF0(_DWORD *a1)
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00471C40) --------------------------------------------------------
-int sub_471C40()
+int sub_471C40(_DWORD *a1)
 {
   int result; // eax
-  _DWORD *v2; // edx
 
   result = j_j__nfree_();
-  *v2 = 0;
+  if ( a1 )
+    *a1 = 0;
   return result;
 }
-// 471C4A: variable 'v2' is possibly undefined
 
 //----- (00471C60) --------------------------------------------------------
 int  sub_471C60(int a1, char a2)
@@ -83014,7 +82962,7 @@ int  sub_471C60(int a1, char a2)
   else
   {
     *(_DWORD *)(a1 + 4) = &off_50EC84;
-    sub_471C40();
+    sub_471C40((_DWORD *)a1);
     if ( (v3 & 2) != 0 )
       j__nfree_();
     return v2;
@@ -83249,10 +83197,10 @@ const char ** sub_471F10(const char **a1, unsigned int a2)
       v9 = v6[1];
       v6 += 2;
       v5[1] = v9;
-      v5 += 2;
-    }
-    while ( v9 );
-    strupr_(v7, v7);
+        v5 += 2;
+      }
+      while ( v9 );
+    Compat_StruprAsciiInPlace(v7);
     sub_471BF0(a1);
     j_j__nfree_();
   }
@@ -83302,24 +83250,21 @@ int  sub_472120(const char **a1, char a2, signed int a3)
 int  sub_472190(_BYTE **a1)
 {
   _BYTE *v2; // eax
-  int v4; // eax
-  _DWORD *v5; // ecx
+  char *v4; // eax
 
   v2 = *a1;
-  if ( v2 && *v2 && (v4 = strrchr_()) != 0 )
-    return v4 - *v5;
+  if ( v2 && *v2 && (v4 = Compat_StrrchrChar((const char *)v2, '\\')) != 0 )
+    return (int)(v4 - (char *)v2);
   else
     return -1;
 }
-// 4721B4: variable 'v5' is possibly undefined
 
 //----- (004721C0) --------------------------------------------------------
 int  sub_4721C0(char **a1, signed int a2)
 {
   const char *v3; // eax
   signed int v5; // ecx
-  int v6; // eax
-  int v7; // ecx
+  char *v6; // eax
   char v8; // [esp+0h] [ebp-10h]
 
   v3 = *a1;
@@ -83327,16 +83272,20 @@ int  sub_4721C0(char **a1, signed int a2)
     && *v3
     && a2 >= 0
     && (*a1 ? (v5 = strlen(*a1)) : (v5 = 0),
-        a2 < v5 && (v8 = (*a1)[a2 + 1], (*a1)[a2 + 1] = 0, v6 = strrchr_(), *(_BYTE *)(v7 + a2 + 1) = v8, v6)) )
+        a2 < v5
+     && (v8 = (*a1)[a2 + 1],
+         (*a1)[a2 + 1] = 0,
+         v6 = Compat_StrrchrChar(*a1, '\\'),
+         (*a1)[a2 + 1] = v8,
+         v6)) )
   {
-    return v6 - v7;
+    return (int)(v6 - *a1);
   }
   else
   {
     return -1;
   }
 }
-// 47220D: variable 'v7' is possibly undefined
 
 //----- (00472230) --------------------------------------------------------
 char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
@@ -83344,13 +83293,7 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
   char *v6; // eax
   unsigned int v7; // eax
   char *v8; // eax
-  int v9; // ecx
   signed int v10; // ecx
-  char *v11; // esi
-  char *v12; // edi
-  char v13; // al
-  char v14; // al
-  char *v16; // [esp+0h] [ebp-18h]
 
   v6 = *a1;
   if ( !v6 || !*v6 || a2 < 0 )
@@ -83366,33 +83309,19 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
   }
   if ( v7 != a4 )
   {
-    v8 = (char *)j_Mem_Alloc(a3);
-    *v8 = 0;
-    v16 = v8;
-    strncpy_(v8, *a1);
-    *(_BYTE *)(v9 + a2) = 0;
+    v8 = (char *)(uintptr_t)(unsigned int)j_Mem_Alloc(a3 + 1);
+    if ( !v8 )
+      return a1;
+    Compat_CopyPrefixN(v8, *a1, a2);
+    v8[a2] = 0;
     if ( *a1 )
       v10 = strlen(*a1);
     else
       v10 = 0;
     if ( a2 + a4 < v10 )
-    {
-      v11 = &(*a1)[a2 + a4];
-      v12 = (char *)&v16[strlen(v16)];
-      do
-      {
-        v13 = *v11;
-        *v12 = *v11;
-        if ( !v13 )
-          break;
-        v14 = v11[1];
-        v11 += 2;
-        v12[1] = v14;
-        v12 += 2;
-      }
-      while ( v14 );
-    }
-    sub_471BF0(a1);
+      Compat_CopyPrefixN(v8 + a2, &(*a1)[a2 + a4], (unsigned int)(v10 - (a2 + a4) + 1));
+    sub_471C40((_DWORD *)a1);
+    *a1 = v8;
     j_j__nfree_();
     return a1;
   }
@@ -86353,8 +86282,10 @@ int  sub_476AF0(int a1, int a2, const CHAR *a3, DWORD a4)
   v8 = v7;
   if ( v7[3] )
   {
-    j_Mem_Alloc(v7);
-    v9 = _wcpp_4_ctor_array_storage_1s__();
+    v9 = Compat_WcppCtorArrayStorage1s(
+           (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * v7[3] + 4),
+           v7[3],
+           &unk_50ECF0);
   }
   else
   {
@@ -86394,7 +86325,6 @@ int  sub_476AF0(int a1, int a2, const CHAR *a3, DWORD a4)
 // 476C25: variable 'v18' is possibly undefined
 // 476BFC: variable 'v19' is possibly undefined
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
-// 47311F: using guessed type int _wcpp_4_ctor_array_storage_1s__(void);
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 // 50ECA4: using guessed type int (*off_50ECA4[2])();
@@ -88013,8 +87943,10 @@ int * sub_478540(int *a1, int a2, int a3, int a4)
   else
     v6 = v5;
   a1[2] = v6;
-  j_Mem_Alloc(a3);
-  a1[4] = _wcpp_4_ctor_array_storage_1m__();
+  a1[4] = Compat_WcppCtorArrayStorage1m(
+            (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
+            a1[2],
+            &unk_510C40);
   v7 = a1[2];
   a1[1] = v7;
   result = a1;
@@ -88047,16 +87979,17 @@ _DWORD * sub_478590(int *a1, int *a2)
   else
     v7 = v6;
   a1[2] = v7;
-  j_Mem_Alloc(a1);
-  v8 = _wcpp_4_ctor_array_storage_1m__();
-  v9[4] = v8;
-  v10 = v9[2];
-  v9[1] = v10;
-  result = v9;
-  v9[1] = -v10;
+  v8 = Compat_WcppCtorArrayStorage1m(
+         (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
+         a1[2],
+         &unk_510C40);
+  a1[4] = v8;
+  v10 = a1[2];
+  a1[1] = v10;
+  result = (_DWORD *)a1;
+  a1[1] = -v10;
   return result;
 }
-// 4785CE: variable 'v9' is possibly undefined
 // 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (004785F0) --------------------------------------------------------
@@ -88168,23 +88101,27 @@ int  sub_478720(_DWORD *a1, int a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478770) --------------------------------------------------------
-int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, int a5)
+int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5)
 {
-  int v8; // ecx
   int *v9; // eax
   int v10; // esi
   int v11; // eax
-  int v12; // ebx
   int result; // eax
-  int v14; // ecx
+  const char *v14; // edx
   unsigned __int8 *v15; // [esp+0h] [ebp-10h]
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471BF0(a1);
+  sub_471C40(a1);
+  v14 = *(const char **)a5;
+  if ( v14 && *v14 )
+  {
+    *a1 = (int)(uintptr_t)j_Mem_Alloc((unsigned int)strlen(v14) + 1);
+    Compat_CopyPrefixN((char *)(uintptr_t)*a1, v14, (unsigned int)strlen(v14) + 1);
+  }
   a1[1] = &off_50EC94;
   a1[3] = 0;
-  v9 = sub_478540(a1 + 4, (int)a2, v8 + 4, (a4 - 4) / 0x1Au);
+  v9 = sub_478540(a1 + 4, (int)a2, a3 + 4, (a4 - 4) / 0x1Au);
   v10 = (int)(v9 - 4);
   v15 = (unsigned __int8 *)(v9 - 2);
   sub_4799B0(a2, a3, (int)a2);
@@ -88193,18 +88130,15 @@ int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, int a5)
   {
     sub_479C40((int)a2, v15, v11);
     result = v10;
-    a2[12] += v14;
+    a2[12] += v11;
   }
   else
   {
-    v12 = v11 + a2[12];
+    a2[12] += v11;
     result = v10;
-    a2[12] = v12;
   }
   return result;
 }
-// 4787B0: variable 'v8' is possibly undefined
-// 478815: variable 'v14' is possibly undefined
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
@@ -88358,7 +88292,12 @@ _DWORD * sub_4789F0(int a1, int a2)
     return 0;
   result = (_DWORD *)Mem_Alloc(44, entry, a2, (DWORD)savedregs);
   if ( result )
-    return (_DWORD *)sub_478770(result, *(int **)(a1 + 36), *(_DWORD *)(entry + 18), *(_DWORD *)(entry + 22), a2);
+    return (_DWORD *)sub_478770(
+                       result,
+                       *(int **)(a1 + 36),
+                       *(_DWORD *)(entry + 18),
+                       *(_DWORD *)(entry + 22),
+                       (const void *)(uintptr_t)(unsigned int)a2);
   return result;
 }
 
@@ -88374,7 +88313,7 @@ signed int  sub_478A60(_DWORD *a1, const char **a2, int a3, int a4)
   slot_index = sub_4789C0((int)a1, a2);
   entry = sub_478610(a1 + 4, slot_index);
   *(_BYTE *)(entry + 13) = 0;
-  strncpy_(entry, *a2);
+  Compat_CopyPrefixN((char *)(uintptr_t)entry, *a2, 13);
   *(_DWORD *)(entry + 14) = a4;
   *(_DWORD *)(entry + 18) = sub_479980(a1[9], (int)a2);
   *(_DWORD *)(entry + 22) = a3;
@@ -88384,7 +88323,6 @@ signed int  sub_478A60(_DWORD *a1, const char **a2, int a3, int a4)
   a1[2] = v9 + 1;
   return slot_index;
 }
-// 48521A: using guessed type int __fastcall strncpy_(_DWORD, _DWORD);
 
 //----- (00478B10) --------------------------------------------------------
 int  sub_478B10(int a1, int a2, int a3)
@@ -88948,8 +88886,8 @@ int  sub_4791A0(
   v14 = v26;
   v25[12] += v24;
   sub_47BA86(v14[2], v21[3], 1u, a5);
-  v16 = ftell_(v15, v26);
-  *(_DWORD *)(HIDWORD(v16) + 48) = v16;
+  v16 = ftell_(v26[2], v26);
+  v26[12] = (int)v16;
   v18 = Mem_Alloc(44, v17, 1, (DWORD)savedregs);
   v19 = (_DWORD *)v18;
   if ( v18 )
@@ -88958,7 +88896,7 @@ int  sub_4791A0(
     v22 = 0;
     sub_471BF0(&v22);
     v23 = &off_50EC94;
-    v18 = sub_478770(v19, v26, v26[12], 26 * v21[2] + 4, (int)&v22);
+    v18 = sub_478770(v19, v26, v26[12], 26 * v21[2] + 4, &v22);
   }
   v26[1] = v18;
   return sub_471C60((int)&v22, 1);
@@ -89561,14 +89499,12 @@ _DWORD * sub_479B00(int a1, char a2, DWORD a3)
 int * sub_479BE0(const CHAR *a1, int a2, char a3, DWORD a4, int a5)
 {
   int *result; // eax
-  int v8; // edx
 
   result = (int *)Mem_Alloc(56, a2, a3, a4);
   if ( result )
-    return sub_479AE0(result, a1, v8, a3, a5);
+    return sub_479AE0(result, a1, a2, a3, a5);
   return result;
 }
-// 479BF8: variable 'v8' is possibly undefined
 
 //----- (00479C20) --------------------------------------------------------
 _DWORD * sub_479C20(_DWORD *result)
