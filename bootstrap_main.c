@@ -218,7 +218,7 @@ static LRESULT __stdcall Bootstrap_SmokeWindowProc(HWND hWndValue, UINT Msg, WPA
   }
   if ( Msg == 28 )
   {
-    g_AppIsActive = (unsigned __int16)wParam;
+    g_AppIsActive = (unsigned short)wParam;
     return 0;
   }
   return DefWindowProcA(hWndValue, Msg, wParam, lParam);

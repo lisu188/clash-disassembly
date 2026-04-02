@@ -3,14 +3,28 @@
 
 #include <ctype.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <wchar.h>
 #include <wctype.h>
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
 int sub_48703D(int a1, __lock *a2, int a3);
+int sub_406740(void);
+void sub_40AEC0(void);
+int sub_40BD40(_BYTE *a1);
+void sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
+int sub_40C5E0(void);
 extern void *lpTlsValue;
 
 /*
@@ -608,4 +622,313 @@ int nullsub_30(void)
 int nullsub_32(void)
 {
   return 0;
+}
+
+/*
+ * Executable-bootstrap quarantine:
+ *
+ * The current smoke executable still links the whole recovered translation
+ * unit, so some unresolved runtime helpers remain live through retained
+ * tables/sections even though the smoke path never executes them. Keep these
+ * narrow placeholder definitions isolated here until their usercall/register
+ * ABIs are reconstructed from asm strongly enough for the authentic boot path.
+ */
+
+int Render_SetResourceHandle(int a1, int a2)
+{
+  int previous_handle;
+
+  previous_handle = *(_DWORD *)(a1 + 0xCC);
+  *(_DWORD *)(a1 + 0xCC) = a2;
+  return previous_handle;
+}
+
+int Render_DrawSprite(void)
+{
+  return sub_406740();
+}
+
+void Render_LoadResourceSprite_v2(void)
+{
+  sub_40AEC0();
+}
+
+int Render_LoadResourceSprite_v3(_BYTE *a1)
+{
+  return sub_40BD40(a1);
+}
+
+void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
+{
+  sub_40C1F0(a1, a2, a3, a4, a5);
+}
+
+int Render_CreateSprite(void)
+{
+  return sub_40C5E0();
+}
+
+signed int Unit_GetSquadCount(int a1)
+{
+  unsigned char *slot;
+  int squad_count;
+
+  slot = (unsigned char *)(uintptr_t)(a1 + 6);
+  squad_count = 0;
+  while ( squad_count < 10 )
+  {
+    if ( *(short *)slot == -1 )
+      break;
+    ++squad_count;
+    slot += 31;
+  }
+  return squad_count;
+}
+
+int __cdecl j__nfree_(void)
+{
+  return 0;
+}
+
+int __cdecl j_j__nfree_(void)
+{
+  return 0;
+}
+
+int __fastcall _wcpp_4_dtor_array_store__(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return (int)a1;
+}
+
+int __fastcall sub_476322(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+__int64 __fastcall nmalloc_(_DWORD a1, _DWORD a2)
+{
+  void *block;
+
+  (void)a2;
+  if ( !a1 )
+    return 0;
+  block = calloc(1, (size_t)a1);
+  return (unsigned int)(uintptr_t)block;
+}
+
+int __fastcall memset_(_DWORD a1, _DWORD a2)
+{
+  if ( a1 )
+    *(unsigned char *)(uintptr_t)a1 = (unsigned char)a2;
+  return (int)a1;
+}
+
+int __fastcall _FiniRtns(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int _freefp_(void)
+{
+  return 0;
+}
+
+int _chktty_(void)
+{
+  return 0;
+}
+
+int _allocfp_(void)
+{
+  return 0;
+}
+
+int tell_(void)
+{
+  return 0;
+}
+
+int __fastcall lseek_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __fastcall _flush_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int _NTAtMaxFiles_(void)
+{
+  return 0;
+}
+
+int __fastcall stricmp_(_DWORD a1, _DWORD a2)
+{
+  const char *lhs;
+  const char *rhs;
+
+  lhs = (const char *)(uintptr_t)a1;
+  rhs = (const char *)(uintptr_t)a2;
+  if ( lhs == rhs )
+    return 0;
+  if ( !lhs )
+    return -1;
+  if ( !rhs )
+    return 1;
+  return strcasecmp(lhs, rhs);
+}
+
+int __cdecl _NTGetFakeHandle_(_DWORD a1, _DWORD a2, _DWORD a3)
+{
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  return -1;
+}
+
+int __fastcall isatty_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __cdecl _SetIOMode_(_DWORD a1, _DWORD a2, _DWORD a3)
+{
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  return 0;
+}
+
+int __fastcall sub_488A97(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int _ioalloc_(void)
+{
+  return 0;
+}
+
+int __thiscall _wcpp_4_corrupted_stack__(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+__int64 __thiscall _wcpp_4_pgm_thread__(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int _wcpp_4_stab_trav_init__(void)
+{
+  return 0;
+}
+
+int _wcpp_4_stab_trav_next__(void)
+{
+  return 0;
+}
+
+int __fastcall _wcpp_4_stab_trav_move__(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int __fastcall _wcpp_4_dtor_array__(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return (int)a1;
+}
+
+int __fastcall wctomb_(_DWORD a1, _DWORD a2)
+{
+  char *output;
+
+  output = (char *)(uintptr_t)a1;
+  if ( !output )
+    return 0;
+  if ( (unsigned int)a2 < 0x80 )
+    *output = (char)a2;
+  else
+    *output = '?';
+  return 1;
+}
+
+int __fastcall _clib_ulltoa_(_DWORD a1, _DWORD a2)
+{
+  sprintf((char *)(uintptr_t)a2, "%u", (unsigned int)a1);
+  return (int)a2;
+}
+
+int __fastcall sub_4B5A33(_DWORD a1, _DWORD a2)
+{
+  sprintf((char *)(uintptr_t)a2, "%d", (int)a1);
+  return (int)a2;
+}
+
+HANDLE __stdcall CreateFileA(
+  LPCSTR lpFileName,
+  DWORD dwDesiredAccess,
+  DWORD dwShareMode,
+  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
+  DWORD dwCreationDisposition,
+  DWORD dwFlagsAndAttributes,
+  HANDLE hTemplateFile)
+{
+  int flags;
+  int fd;
+
+  (void)dwShareMode;
+  (void)lpSecurityAttributes;
+  (void)dwFlagsAndAttributes;
+  (void)hTemplateFile;
+  if ( !lpFileName )
+    return (HANDLE)-1;
+  flags = O_BINARY;
+  if ( (dwDesiredAccess & 0x40000000u) != 0 && (dwDesiredAccess & 0x80000000u) != 0 )
+    flags |= O_RDWR;
+  else if ( (dwDesiredAccess & 0x40000000u) != 0 )
+    flags |= O_WRONLY;
+  else
+    flags |= O_RDONLY;
+  if ( dwCreationDisposition == 2 )
+    flags |= O_CREAT | O_EXCL;
+  else if ( dwCreationDisposition == 4 )
+    flags |= O_CREAT | O_TRUNC;
+  else if ( dwCreationDisposition == 5 )
+    flags |= O_TRUNC;
+  else if ( dwCreationDisposition == 1 )
+    flags |= O_CREAT;
+  fd = open(lpFileName, flags, 0666);
+  if ( fd < 0 )
+  {
+    CompatSetLastErrorFromErrno();
+    return (HANDLE)-1;
+  }
+  g_compat_last_error = 0;
+  return (HANDLE)(uintptr_t)fd;
+}
+
+void __fastcall __writefsdword(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
 }

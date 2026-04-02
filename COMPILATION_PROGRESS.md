@@ -2935,3 +2935,79 @@
   - the broader-build frontier around `_WinMain@16`/`main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1184`
+
+## Batch 122 - Executable Bootstrap Smoke And Render Export Wave
+- Current frontier:
+  - turn the recovered static-library baseline into a real executable first, while keeping the authentic `_WinMain@16` / menu boot path separate from a narrower pre-authentic smoke milestone
+- Subagents spawned and scopes:
+  - `Sartre`: CRT / `_wcpp_*` / runtime helper recovery with explicit hidden-register ABI review
+  - `Aristotle`: render/bootstrap symbol recovery and missing exported render helper ownership
+  - `Gauss`: menu/UI reachability and which UI helpers are actually on the first boot/menu path
+  - `Epicurus`: data/table blockers on the current retained menu/world route
+  - `Godel`: build/link containment and whether section GC was already doing the right thing
+  - `Helmholtz`: asm/map corroboration for the new boot slice (returned unusable output and was ignored)
+  - mergeable subagent evidence used this batch:
+    - `Sartre` confirmed that most remaining `_wcpp_*` / `nmalloc_` / `memset_` helpers are semantically clear in asm but unsafe to reconstruct faithfully in plain C because hidden register arguments are already lost in the decompilation
+    - `Aristotle` proved that `Render_SetResourceHandle` is the only truly missing body in the small render-helper family and that `Render_CreateSprite`, `Render_DrawSprite`, and `Render_LoadResourceSprite_v2/v3/v4` already exist as `sub_*` bodies
+    - `Gauss` showed the first menu dispatcher is `PlayGame_Dispatch`, not the deeper human-turn modal helpers
+    - `Epicurus` separated real boot/world data blockers from unrelated later parser/compiler tables
+    - `Godel` showed `--gc-sections` is already working and that the executable problem is genuine live reachability rather than dead-code retention failure
+- Functions renamed:
+  - no existing `sub_*` / `FUN_*` gameplay names were renamed this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - no new struct or table names were promoted this batch
+- High-priority unknown functions reviewed:
+  - `Render_SetResourceHandle`
+  - `Render_CreateSprite`
+  - `Render_DrawSprite`
+  - `Render_LoadResourceSprite_v2`
+  - `Render_LoadResourceSprite_v3`
+  - `Render_LoadResourceSprite_v4`
+  - `Unit_GetSquadCount`
+  - the smoke-target runtime helper band (`_wcpp_*`, `j__nfree_`, `nmalloc_`, `memset_`, file-handle helpers)
+- Blockers removed this batch:
+  - the repo now has a real executable target, `clash95_bootstrap`, instead of only the recovered static library
+  - `clash95_bootstrap` now links successfully under the current `gnu89` build
+  - the missing `Render_SetResourceHandle` body no longer blocks retained render code
+  - the declaration-only render helper exports now bind to their already recovered `sub_*` bodies
+  - `Unit_GetSquadCount` is now available under its real exported symbol
+  - the smoke bootstrap no longer roots `Platform_MainWindowProc` and therefore no longer depends on the full render/input/runtime band just to create a runnable process
+- SDL replacements/cleanups this batch:
+  - added `QueryPerformanceCounter` / `QueryPerformanceFrequency` to `platform_sdl_runtime.c`
+  - added an idle sleep to `GetMessageA` when the synthetic queue is empty so the smoke loop remains stable instead of hot-spinning
+- Menu/UI fixes this batch:
+  - none; the current runtime milestone is still below the authentic menu path
+- Session-init fixes this batch:
+  - none; session/game-start init remains behind the unresolved authentic boot path
+- Validation probe:
+  - `cmake -S . -B /tmp/clash95-cmake-build`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `gcc -std=gnu89 -w -I. -c bootstrap_main.c -o /tmp/bootstrap_main_batch122.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_bootstrap` now compiles and links successfully
+  - `clash95_recovered` still builds successfully as the recovered static library baseline
+- Link status:
+  - the project now has one buildable executable target
+  - the authentic boot/menu path is still not linked as a faithful `_WinMain@16` reconstruction; the first executable milestone is a narrower smoke path
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` exits with status `124`, confirming the process starts and stays alive inside the smoke message loop instead of exiting immediately or faulting
+- Highest authentic runtime milestone reached:
+  - none yet; current milestone is a pre-authentic executable smoke loop with a live window/message path, not the original game boot sequence
+- Key evidence used:
+  - `Render_SetResourceHandle` asm is a five-instruction leaf that swaps `[eax + 0xCC]` with the requested handle and returns the previous value
+  - `Unit_GetSquadCount` asm scans ten `31`-byte squad slots starting at `unit + 6` and stops on `-1`
+  - render/bootstrap subagent corroboration showed the other retained render exports were already present as `sub_406740`, `sub_40AEC0`, `sub_40BD40`, `sub_40C1F0`, and `sub_40C5E0`
+  - build/link containment evidence showed the unresolved surface remained live through retained sections even with `--gc-sections`, so the smoke root had to avoid `Platform_MainWindowProc`
+  - runtime-helper review showed the remaining `_wcpp_*` / allocator / `mem*` family still needs asm-backed ABI repair for authentic boot, because the decompiled call sites have already lost hidden register arguments
+- Ambiguous candidates deferred:
+  - the authentic `start -> sub_486369 -> _WinMain@16` boot path remains deferred until the `_wcpp_*`, allocator, and file-handle helper families can be reconstructed safely enough for real execution
+  - the smoke-only placeholder helper tranche in `compat/decomp_runtime_stubs.c` is explicitly not promoted as final runtime fidelity
+  - `Render_DrawSprite_v3` still looks like a map-name collision with `sub_411420` / `Unit_DebugDumpFormationSizes` and was left deferred
+  - the remaining unit/stat public-label ambiguities from earlier batches are unchanged
+- total rename count so far:
+  - `1191`
