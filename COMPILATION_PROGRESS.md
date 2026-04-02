@@ -2796,3 +2796,68 @@
   - the broader-build frontier around `_WinMain@16`/`main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
 - total rename count so far:
   - `1168`
+
+## Batch 120 - Road Build Bridge Overlay Rename Wave
+- Current subsystem/cluster:
+  - the world-map builder road-mode interaction band around bridge-approach predicates, adjacent-tile highlighting, and direction-confirmed road placement
+- Subagents spawned and scopes:
+  - the six-agent cap remained in effect, so the required scopes were still covered by the live read-only explorers with combined fallback roles:
+    - Agent A: unit lifecycle, combat, targeting, stats
+    - Agent B: queen systems
+    - Agent C+H: port/coastal/naval systems plus SDL/platform containment
+    - Agent D: tile/map/pathing systems
+    - Agent E: castle/building/garrison systems
+    - Agent F+G: asm/map/exe corroboration plus compilation/link blockers
+  - mergeable subagent evidence used this batch:
+    - none returned before the write wave, so the batch proceeded from corroborated local `clash95.c`/`clash95.asm`/artifact evidence while the explorers remained live
+- Functions renamed:
+  - `sub_424020` -> `MapTile_HasAlignedBridgeApproachRoadOverlay`
+  - `sub_424120` -> `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+  - `sub_425120` -> `RoadBuildMode_HighlightBuildableAdjacentTile`
+  - `sub_4254E0` -> `RoadBuildMode_BuildInSelectedDirection`
+  - `sub_425540` -> `Builder_StartRoadBuildMode`
+- Structs/classes/globals/tables recovered or renamed:
+  - no new structure or table names were promoted this batch
+  - `RECOVERED_STRUCTURES.json` was kept aligned by updating `BridgeApproachRoadOverlayTable` evidence notes to reference `MapTile_HasAlignedBridgeApproachRoadOverlay`
+- High-priority unknown functions reviewed:
+  - `MapTile_HasAlignedBridgeApproachRoadOverlay`
+  - `MapTile_IsBareBridgeCrossingRoadOverlayCandidate`
+  - `Road_Build`
+  - `RoadBuildMode_HighlightBuildableAdjacentTile`
+  - `RoadBuildMode_BuildInSelectedDirection`
+  - `Builder_StartRoadBuildMode`
+- Blockers removed:
+  - the remaining anonymous bridge-approach predicate pair inside the builder road-placement flow
+  - the anonymous adjacent-tile highlight / confirm-entry helpers for road build mode
+  - the last unnamed road-build mode entrypoint still hanging off the builder action dispatch
+- SDL-related replacements or cleanups this batch:
+  - none
+- Validation probe:
+  - `rg -n "MapTile_HasAlignedBridgeApproachRoadOverlay|MapTile_IsBareBridgeCrossingRoadOverlayCandidate|RoadBuildMode_HighlightBuildableAdjacentTile|RoadBuildMode_BuildInSelectedDirection|Builder_StartRoadBuildMode" clash95.c RECOVERED_STRUCTURES.json`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch120.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `git diff --check`
+- Compile/build status:
+  - `clash95.c` syntax compilation still succeeds under `-std=gnu89 -w`
+  - `clash95.c` object compilation still succeeds after the road-build rename wave
+  - `RECOVERED_STRUCTURES.json` remains valid JSON
+  - `clash95_recovered` still builds successfully as a static library
+  - `git diff --check` remains clean after the batch 120 edits
+  - the broader executable link frontier is unchanged and still led by missing `_WinMain@16`/`main`, `_wcpp_*`, allocator-family helpers, event-thread wrappers, and residual `JUMPOUT` scars
+- Key evidence used:
+  - `MapTile_HasAlignedBridgeApproachRoadOverlay` scans `g_BridgeApproachRoadOverlayTileIds`, branches on the matched table band, and then enforces bridge-terrain alignment before accepting the tile
+  - `MapTile_IsBareBridgeCrossingRoadOverlayCandidate` accepts only empty-overlay bridge tiles whose neighbors already carry compatible road-approach overlay orientations
+  - `RoadBuildMode_HighlightBuildableAdjacentTile` only considers the four tiles adjacent to the selected stack and highlights the direction widget only when a bridge-road placement or ordinary road step is legal
+  - `RoadBuildMode_BuildInSelectedDirection` decodes widget ids `0x1B..0x1E` into four compass directions and immediately forwards the choice to `Road_Build`
+  - `Builder_StartRoadBuildMode` installs the callback, redraw loop, and direction-widget animation state for the modal road-building action
+- Ambiguous candidates deferred:
+  - `sub_4250F0` and `sub_425110` in the same road-build callback family
+  - `sub_43BE50`, `sub_43C6B0`, and `sub_43CD00` inside the broader battle AI executor/planner family
+  - the exact original public label behind `UnitType32_PeasantCargo`
+  - the exact designer-facing label behind `UnitType33_SpecialFootPersonage` / `UnitType34_SpecialMountedPersonage`
+  - the exact designer-facing split behind `production_required_tech_level_mode_2` versus `production_required_tech_level_other_modes`
+  - the broader-build frontier around `_WinMain@16`/`main`, `_wcpp_*`, the collapsed allocator / `mem*` helpers, event-thread wrappers, and the remaining `JUMPOUT` scars
+- total rename count so far:
+  - `1173`

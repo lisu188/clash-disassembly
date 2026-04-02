@@ -197,10 +197,10 @@
     "count": 48,
     "description": "Static 48-entry overlay-id table used by the bridge-approach predicate to recognize road-overlay tiles that can legally connect into a bridge crossing.",
     "fields": [
-      { "offset": 0, "name": "road_overlay_tile_id", "type": "uint32", "notes": "Compared against `MapTileRecord.overlay_tile_id` by `sub_424020`; indices below `6` follow one bridge-axis branch, while indices `6..47` follow the perpendicular branch before the helper confirms the neighboring terrain id is in the bridge band `603..610`." }
+      { "offset": 0, "name": "road_overlay_tile_id", "type": "uint32", "notes": "Compared against `MapTileRecord.overlay_tile_id` by `MapTile_HasAlignedBridgeApproachRoadOverlay`; indices below `6` follow one bridge-axis branch, while indices `6..47` follow the perpendicular branch before the helper confirms the neighboring terrain id is in the bridge band `603..610`." }
     ],
     "evidence": [
-      "`sub_424020` linearly scans 48 dword entries from `g_BridgeApproachRoadOverlayTileIds` looking for a match against the tile's overlay word at offset `+2`.",
+      "`MapTile_HasAlignedBridgeApproachRoadOverlay` linearly scans 48 dword entries from `g_BridgeApproachRoadOverlayTileIds` looking for a match against the tile's overlay word at offset `+2`.",
       "Once it finds a hit, the helper branches on whether the matched index is below `6` or not, then checks the tile's row or column alignment against the candidate bridge anchor before returning success.",
       "The same helper finally requires the tile terrain id to be within `603..610`, proving the table is not a generic overlay list but a bridge-approach road-overlay family."
     ]

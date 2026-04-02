@@ -879,8 +879,8 @@ BOOL  MapTile_HasWestRoadConnection(int a1, int a2);
 BOOL  MapTile_HasEastRoadConnection(int a1, int a2);
 int  Map_RebuildRoadOverlayAtTile(int a1, int a2);
 int  Map_NormalizeRoadOverlayTileId(int result);
-signed int  sub_424020(int a1, int a2, int a3, int a4);
-BOOL  sub_424120(int a1, int a2);
+signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int a1, int a2, int a3, int a4);
+BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int a1, int a2);
 signed int  Map_GetBridgeCrossingCostOrZero(int a1, int a2);
 signed int  Road_Build(int a1, int a2, char a3, DWORD a4, double a5);
 signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3);
@@ -888,9 +888,9 @@ BOOL  Map_TileHasOwner(int a1, int a2);
 int Map_AutoUpgradeVillages();
 int  sub_4250F0(int a1, int a2);
 void sub_425110();
-int  sub_425120(int a1, int a2);
-int  sub_4254E0(int a1, DWORD a2, double a3);
-signed int  sub_425540(DWORD a1, double a2);
+int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2);
+int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3);
+signed int  Builder_StartRoadBuildMode(DWORD a1, double a2);
 int UnitBattle_InitPathingTables();
 signed int  UnitBattle_GetTileMoveCostOrZero(int a1, int a2, int a3);
 int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5);
@@ -19098,7 +19098,7 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
         switch ( dword_520308 )
         {
           case 0:
-            sub_425540(0x40u, a5);
+            Builder_StartRoadBuildMode(0x40u, a5);
             break;
           case 1:
             Treasure_TryDigHere(g_SelectedUnitIndex, dword_520308, 0x40u, (char)dword_544CD8, 0, a5);
@@ -37285,7 +37285,7 @@ int  Map_NormalizeRoadOverlayTileId(int result)
 // 513BD4: using guessed type char *off_513BD4[26];
 
 //----- (00424020) --------------------------------------------------------
-signed int  sub_424020(int a1, int a2, int a3, int a4)
+signed int  MapTile_HasAlignedBridgeApproachRoadOverlay(int a1, int a2, int a3, int a4)
 {
   int v6; // edx
   int v7; // ebx
@@ -37333,7 +37333,7 @@ signed int  sub_424020(int a1, int a2, int a3, int a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00424120) --------------------------------------------------------
-BOOL  sub_424120(int a1, int a2)
+BOOL  MapTile_IsBareBridgeCrossingRoadOverlayCandidate(int a1, int a2)
 {
   int v2; // ebp
   int v3; // eax
@@ -37581,7 +37581,7 @@ LABEL_14:
       }
       v34 = 0;
       v32 = 0;
-      if ( sub_424020(v29, v37, v12, v11) )
+      if ( MapTile_HasAlignedBridgeApproachRoadOverlay(v29, v37, v12, v11) )
       {
         v16 = *(_WORD *)(1400 * v11 + gameData + 14 * v12 + 2);
         if ( v16 >= 0x236u )
@@ -37656,7 +37656,7 @@ LABEL_14:
         *(_WORD *)(v17 + 4) = v36;
         *(_DWORD *)(1400 * v11 + gameData + 14 * v12 + 10) = *(unsigned __int16 *)(gameData + 140022);
       }
-      if ( sub_424120(v11, v12) )
+      if ( MapTile_IsBareBridgeCrossingRoadOverlayCandidate(v11, v12) )
       {
         if ( !a2 || a2 == 4 )
         {
@@ -37861,7 +37861,7 @@ void sub_425110()
 // 527C30: using guessed type int dword_527C30;
 
 //----- (00425120) --------------------------------------------------------
-int  sub_425120(int a1, int a2)
+int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
 {
   int v4; // eax
   int v5; // eax
@@ -37918,12 +37918,12 @@ int  sub_425120(int a1, int a2)
       }
     }
   }
-  if ( (sub_424020(
+  if ( (MapTile_HasAlignedBridgeApproachRoadOverlay(
           *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
           *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176),
           a2,
           a1)
-     || sub_424120(a1, a2))
+     || MapTile_IsBareBridgeCrossingRoadOverlayCandidate(a1, a2))
     && UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174) >= 6
     || (result = UnitStack_GetTileMoveCostOrZero((__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174), a1, gameData, a2)) != 0
     && (result = MapTile_IsCastleFoundationTile(a1, a2, 2)) == 0
@@ -37952,7 +37952,7 @@ int  sub_425120(int a1, int a2)
 // 527C38: using guessed type int dword_527C38;
 
 //----- (004254E0) --------------------------------------------------------
-int  sub_4254E0(int a1, DWORD a2, double a3)
+int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3)
 {
   int v4; // edx
   int v5; // ecx
@@ -37976,8 +37976,8 @@ int  sub_4254E0(int a1, DWORD a2, double a3)
       break;
   }
   dword_52698C = 0;
-  Road_Build(g_SelectedUnitIndex, v4, (char)sub_425120, a2, a3);
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))sub_425120;
+  Road_Build(g_SelectedUnitIndex, v4, (char)RoadBuildMode_HighlightBuildableAdjacentTile, a2, a3);
+  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
   return sub_418700(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
@@ -37986,7 +37986,7 @@ int  sub_4254E0(int a1, DWORD a2, double a3)
 // 52698C: using guessed type int (__fastcall *dword_52698C)(_DWORD, _DWORD);
 
 //----- (00425540) --------------------------------------------------------
-signed int  sub_425540(DWORD a1, double a2)
+signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
 {
   signed int result; // eax
   int v4; // ebx
@@ -38088,7 +38088,7 @@ signed int  sub_425540(DWORD a1, double a2)
           if ( v12 )
           {
             v12[2] = 2;
-            sub_4254E0((int)v12, a1, a2);
+            RoadBuildMode_BuildInSelectedDirection((int)v12, a1, a2);
             dword_527C34 = 0;
             sub_418700(1);
             if ( !dword_527C34 )
