@@ -55,6 +55,7 @@ DWORD __stdcall timeGetTime(void);
 #define PLATFORM_QUEUE_CAPACITY 32
 #define PLATFORM_WM_PAINT 0x000F
 #define PLATFORM_WM_QUIT 0x0012
+#define PLATFORM_WM_ACTIVATEAPP 0x001C
 
 static WNDCLASSA g_platform_window_class;
 static int g_platform_has_window_class;
@@ -176,6 +177,8 @@ LRESULT __stdcall DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 LRESULT __stdcall DispatchMessageA(const MSG *lpMsg)
 {
+  WNDPROC window_proc;
+
   if ( !lpMsg )
     return 0;
   if ( lpMsg->message == PLATFORM_WM_QUIT )
@@ -184,8 +187,16 @@ LRESULT __stdcall DispatchMessageA(const MSG *lpMsg)
     g_platform_quit_code = (int)lpMsg->wParam;
     return 0;
   }
-  if ( g_platform_has_window_class && (void *)g_platform_window_class.lpfnWndProc == (void *)Platform_MainWindowProc )
-    return Platform_MainWindowProc(0, lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+  if ( g_platform_has_window_class )
+  {
+    window_proc = g_platform_window_class.lpfnWndProc;
+    if ( window_proc )
+    {
+      if ( (void *)window_proc == (void *)Platform_MainWindowProc )
+        return Platform_MainWindowProc(0, lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+      return window_proc(lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+    }
+  }
   return 0;
 }
 
@@ -325,7 +336,10 @@ BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsg
     PlatformFillQuitMessage(lpMsg);
     return 0;
   }
-  return 0;
+  usleep(10000);
+  if ( lpMsg )
+    memset(lpMsg, 0, sizeof(*lpMsg));
+  return 1;
 }
 
 HGDIOBJ __stdcall GetStockObject(int i)
@@ -368,6 +382,8 @@ BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMs
     PlatformFillQuitMessage(lpMsg);
     return 1;
   }
+  if ( lpMsg )
+    memset(lpMsg, 0, sizeof(*lpMsg));
   return 0;
 }
 
@@ -530,7 +546,11 @@ BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)
 
   window = (struct SDL_Window *)hWnd;
   if ( window )
+  {
     window->visible = nCmdShow != 0;
+    if ( window->visible )
+      PlatformQueuePush(hWnd, PLATFORM_WM_ACTIVATEAPP, 1, 0);
+  }
   return 1;
 }
 
@@ -548,6 +568,31 @@ DWORD __stdcall GetTickCount()
   return timeGetTime();
 }
 
+BOOL __stdcall QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount)
+{
+  struct timeval tv;
+  unsigned long long ticks;
+
+  if ( !lpPerformanceCount )
+    return 0;
+  if ( gettimeofday(&tv, 0) != 0 )
+  {
+    lpPerformanceCount->QuadPart = 0;
+    return 0;
+  }
+  ticks = (unsigned long long)tv.tv_sec * 1000000ull + (unsigned long long)tv.tv_usec;
+  lpPerformanceCount->QuadPart = (long long)ticks;
+  return 1;
+}
+
+BOOL __stdcall QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency)
+{
+  if ( !lpFrequency )
+    return 0;
+  lpFrequency->QuadPart = 1000000ll;
+  return 1;
+}
+
 DWORD __stdcall GetVersion()
 {
   /*
@@ -561,6 +606,22 @@ HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
 {
   (void)lpModuleName;
   return &g_platform_module_handle_token;
+}
+
+HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter)
+{
+  (void)hinst;
+  (void)dwVersion;
+  (void)lplpDirectInput;
+  (void)punkOuter;
+
+  /*
+   * SDL owns input on the target platform, but the recovered boot path still
+   * calls into DirectInput-era setup during window creation. Returning failure
+   * keeps the legacy device slots inert while allowing the authentic window
+   * proc and message loop to come up.
+   */
+  return 1;
 }
 
 UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)
@@ -596,6 +657,8 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
 
 BOOL __stdcall WaitMessage()
 {
+  if ( PlatformQueueIsEmpty() && !g_platform_quit_requested )
+    usleep(10000);
   return 1;
 }
 
@@ -607,7 +670,15 @@ void __stdcall Sleep(DWORD dwMilliseconds)
 
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint)
 {
-  (void)hWnd;
-  (void)lpPoint;
+  struct SDL_Window *window;
+
+  if ( !lpPoint )
+    return 0;
+  window = (struct SDL_Window *)hWnd;
+  if ( window )
+  {
+    lpPoint->x += window->x;
+    lpPoint->y += window->y;
+  }
   return 1;
 }

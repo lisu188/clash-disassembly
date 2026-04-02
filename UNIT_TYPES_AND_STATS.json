@@ -13,7 +13,7 @@
       "folder": "peon",
       "localized_names": "Posp. ruszenie / Peasant / Bauern",
       "confidence": "high",
-      "evidence": "The first 88-byte unit_stats record pairs the localized-name pointer triplet with the `peon` sprite folder."
+      "evidence": "The first 88-byte unit_stats record pairs the localized-name table with the `peon` resource key."
     },
     {
       "id": 1,
@@ -261,7 +261,7 @@
       "folder": "gold",
       "localized_names": "Złoto / Gold",
       "confidence": "high",
-      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record, and stack-action helpers treat type `31` as non-combat cargo."
+      "evidence": "The asm xrefs for `off_512540` and `gold` land in the same unit_stats record, stack-action helpers treat type `31` as non-combat cargo, and temple/treasure reward helpers also instantiate type `31` slots as spawned gold payload stacks."
     },
     {
       "id": 32,
@@ -277,7 +277,7 @@
       "folder": "specm",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name pointer triplet, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
+      "evidence": "This record reuses the `Dowódca / Tactician / Soldat` localized-name table, keeps infantry-like movement assets, enters the prisoner queue on capture, and is also instantiated by `Queen_NewTurn` through `Building_CreateSpecialPersonageGarrisonUnit`. The queen-turn path binds type `33` specifically to the son outcome before formatting `g_QueenSonBirthTexts`. The asm-backed garrison helper shows the same id being installed through the normal `UnitSlot_InitFromType` path and then marked as a resident special occupant inside the building slot. The `specm` code name argues for a broader special-personage role rather than a prisoner-only one."
     },
     {
       "id": 34,
@@ -285,14 +285,14 @@
       "folder": "speck",
       "localized_names": "Dowódca / Tactician / Soldat",
       "confidence": "medium",
-      "evidence": "This record reuses the same localized-name pointer triplet, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
+      "evidence": "This record reuses the same localized-name table, switches to mounted movement assets, participates in the same prisoner pipeline as type `33`, and is also emitted by the queen birth path. The queen-turn path binds type `34` specifically to the daughter outcome before formatting `g_QueenDaughterBirthTexts`. The same asm-backed helper shows the mounted variant using the ordinary building garrison slot layout instead of a separate royal-only record path. The `speck` code name and the daughter-birth text about becoming an officer reinforce the same shared special-personage family."
     }
   ],
   "unit_categories": [
     {
       "name": "RangedUnitCategory",
       "confidence": "high",
-      "evidence": "Only units with non-zero `g_UnitTypeMaxRange` enter the projectile logic and use ranged stat helpers."
+      "evidence": "Only units with non-zero `g_UnitTypeMaxRange` enter the projectile logic, use `UnitStats_CalcEffectiveShotPower`, and obey the min/max range tables."
     },
     {
       "name": "FlyingUnitCategory",
@@ -312,12 +312,17 @@
     {
       "name": "SpecialCargoEntryCategory",
       "confidence": "high",
-      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, feed gold/peasant-specific stack logic, and cannot satisfy the port-reinforcement pickup gate because that gate requires at least one normal combat unit in the claiming stack."
+      "evidence": "Types `31` and `32` are excluded by `UnitStack_HasNormalCombatUnits`, transferred separately during capture, feed gold/peasant-specific stack logic, count as noncombat building occupants when present in castle garrisons, and cannot satisfy the port-reinforcement pickup gate because that gate requires at least one normal combat unit in the claiming stack."
     },
     {
       "name": "SpecialPersonageCategory",
       "confidence": "high",
-      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+      "evidence": "Types `33` and `34` are non-standard special personage entries: capture logic routes them through per-player prisoner transit storage, `Queen_NewTurn` also creates the same ids directly inside building garrisons, fatigue/morale adjustment paths explicitly skip them, military-strength scoring first detects their presence before calling the core combat-strength helper, and personage-only stacks still fail the port-reinforcement pickup gate because that gate also requires normal combat units. The asm-backed `Building_CreateSpecialPersonageGarrisonUnit` body confirms that these ids are written into the normal 12-slot building garrison array through `UnitSlot_InitFromType` and then flagged as resident special occupants; those resident-slot bits exclude them from generic castle training, while `Building_CountNonCombatGarrisonEntries` also classifies them as noncombat building occupants. Supporting gameplay predicates now consistently name this family as `special personage` rather than `prisoner`."
+    },
+    {
+      "name": "PortReinforcementUnitTypePool",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` seeds each spawned slot by drawing a random entry from the fixed unit-type table `{0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17}`, so the port reinforcement roster is limited to peasant, infantry, cavalry, archer, forester, goral, and builder units rather than cargo, special-personage, siege, or monster ids."
     }
   ],
   "stats": [
@@ -331,13 +336,13 @@
       "name": "current_action_points",
       "confidence": "high",
       "semantic_role": "runtime action points available to the slot this turn",
-      "evidence": "Lives at UnitSlotRecord +8 and is refreshed each new turn from the base AP table after fatigue thresholds are applied."
+      "evidence": "Lives at UnitSlotRecord +8, is refreshed each new turn from the base AP table after fatigue thresholds are applied, and tactical battle restores the pre-battle source value before survivors are copied back out through `Battle_RestoreSavedActionPointsBeforeResultCopy`."
     },
     {
       "name": "current_health_percent",
       "confidence": "high",
       "semantic_role": "runtime health or squad strength percentage",
-      "evidence": "Initialized to 100, scales effective attack and damage helpers, a zero value kills the slot, and the detach/regroup helpers also classify slots from this byte (`<= 10` weak cutoff, `>= 8` stronger regroup threshold)."
+      "evidence": "Initialized to 100 for ordinary units, scales effective attack and damage helpers, a zero value kills the slot, and the detach/regroup helpers also classify slots from this byte (`<= 10` weak cutoff, `>= 8` stronger regroup threshold). Cargo types `31` and `32` reuse the same byte as transfer payload quantity during treasury/population export and reward flows."
     },
     {
       "name": "fatigue",
@@ -354,8 +359,8 @@
     {
       "name": "stance_bits",
       "confidence": "medium",
-      "semantic_role": "runtime formation or stance bits that modify attack values",
-      "evidence": "The low two bits of UnitSlotRecord +12 are added directly into melee, ranged, and siege attack helpers, and the selected-unit battle panel's `Status` row and icon block derive from packed slot state rooted in this byte."
+      "semantic_role": "runtime packed status/order/volley byte that modifies combat and garrison behavior",
+      "evidence": "Bits `0..1` of UnitSlotRecord +12 feed melee, defense-power, and wall-attack helpers directly, and value `3` is the resident special-occupant state written by `Building_CreateSpecialPersonageGarrisonUnit`. Bits `2..3` form a separate order/state subfield, bits `4..6` track `volleys_used` and are incremented by ranged fire before being compared against `status_level + 1`, and only bit `7` remains unresolved."
     },
     {
       "name": "state_flags",
@@ -370,34 +375,34 @@
       "evidence": "Non-zero values gate standard melee and feed `UnitStats_CalcEffectiveMeleeAttack`."
     },
     {
-      "name": "base_ranged_attack",
-      "confidence": "medium",
-      "semantic_role": "per-type projectile or ranged attack rating",
-      "evidence": "Stored in `g_UnitTypeBaseRangedAttack` and consumed by `UnitStats_CalcEffectiveRangedAttack` and related projectile combat logic."
-    },
-    {
-      "name": "base_damage",
+      "name": "base_defense_power",
       "confidence": "high",
-      "semantic_role": "raw per-hit damage value before health scaling",
-      "evidence": "Stored in `g_UnitTypeBaseDamage` and consumed by `UnitStats_CalcEffectiveDamagePerHit` and `UnitStats_GetBaseDamage`."
+      "semantic_role": "per-type defence rating used by combat resistance math and the battle UI",
+      "evidence": "Stored in `g_UnitTypeBaseDefensePower`, consumed by `UnitStats_CalcEffectiveDefensePower`, summed by `UnitSlots_CalcDefenseScore`, and reused by melee exchange, trap damage, and shot-damage mitigation."
     },
     {
-      "name": "base_siege_attack",
-      "confidence": "medium",
-      "semantic_role": "alternate attack rating used in siege or structure-damage contexts",
-      "evidence": "Stored in `g_UnitTypeBaseSiegeAttack` and consumed by `UnitStats_CalcEffectiveSiegeAttack`."
+      "name": "base_shot_power",
+      "confidence": "high",
+      "semantic_role": "per-type projectile or shot-power value before health scaling",
+      "evidence": "Stored in `g_UnitTypeBaseShotPower`, consumed by `UnitStats_CalcEffectiveShotPower` and `UnitStats_GetBaseShotPower`, and displayed under the `Shot power` UI row."
+    },
+    {
+      "name": "base_wall_attack",
+      "confidence": "high",
+      "semantic_role": "per-type wall-assault strength used against fortification sections",
+      "evidence": "Stored in `g_UnitTypeBaseWallAttack`, consumed by `UnitStats_CalcEffectiveWallAttack`, and applied directly to wall-section health during `UnitBattle_AttackWall`."
     },
     {
       "name": "road_move_cost",
       "confidence": "high",
       "semantic_role": "move cost on road and bridge overlays",
-      "evidence": "Returned when the world-map tile record has a road or bridge overlay."
+      "evidence": "Returned from `g_UnitTypeRoadMoveCost` whenever the world-map tile record has a road or bridge overlay."
     },
     {
       "name": "world_surface_move_costs[8]",
       "confidence": "high",
       "semantic_role": "eight-lane normalized world-surface movement profile",
-      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers after raw terrain ids collapse into one of eight normalized lanes."
+      "evidence": "Combined with `g_TerrainMoveTableOffsets` in the world movement helpers after raw terrain ids collapse into one of eight normalized lanes; the currently recovered lane order is `plain_class_a`, `forest`, `desert_class`, `swamp`, `plain_class_b`, `water_surface`, `hills`, `mountains`."
     },
     {
       "name": "battle_tile_move_cost",
@@ -414,14 +419,68 @@
     {
       "name": "attack_range_max",
       "confidence": "high",
-      "semantic_role": "maximum squared projectile range",
-      "evidence": "Projectile logic rejects shots beyond this value."
+      "semantic_role": "maximum projectile range in tiles",
+      "evidence": "`UnitBattle_IsTileWithinRange` compares the ceil-sqrt tile distance against `g_UnitTypeMaxRange`, and ranged-action setup treats zero as no shot mode."
     },
     {
       "name": "attack_range_min",
-      "confidence": "medium",
-      "semantic_role": "minimum squared projectile range",
-      "evidence": "Projectile logic also rejects shots inside this lower bound."
+      "confidence": "high",
+      "semantic_role": "minimum projectile range or dead-zone floor in tiles",
+      "evidence": "`UnitBattle_IsTileWithinRange` rejects shots whose ceil-sqrt tile distance is not greater than `g_UnitTypeMinRange`."
+    },
+    {
+      "name": "production_time",
+      "confidence": "high",
+      "semantic_role": "per-type number of production turns needed to finish one queued unit",
+      "evidence": "`Building_SetUnitProduction` copies `g_UnitTypeProductionTime` into `BuildingRecord +415`, and `Building_ProcessUnitProductionTurn` decrements that countdown each turn before reloading the same metadata byte after a completed unit."
+    },
+    {
+      "name": "production_cost",
+      "confidence": "high",
+      "semantic_role": "per-type money cost charged when a queued unit finishes production",
+      "evidence": "`Building_ProcessUnitProductionTurn` reads `g_UnitTypeProductionCost`, compares it against `BuildingRecord.stored_money`, and subtracts the same value when the unit is created."
+    },
+    {
+      "name": "production_licence_cost",
+      "confidence": "high",
+      "semantic_role": "per-type money cost to buy the unit's production licence into a building",
+      "evidence": "`Building_BuyUnitLicence` debits `g_UnitTypeProductionLicenceCost` before appending the unit type into the building's 12-slot licence roster, and `Building_GetTotalValue` adds the same word for each installed licence."
+    },
+    {
+      "name": "production_required_tech_level_mode_2",
+      "confidence": "high",
+      "semantic_role": "per-type tech-level threshold used when the production building mode byte equals `2`",
+      "evidence": "`Building_IsUnitLicenceEligible` selects `g_UnitTypeProductionRequiredTechLevelMode2[88 * unitType]` when `building[4] == 2`, compares that byte against `BuildingRecord.tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` uses the same gate for the licensable roster."
+    },
+    {
+      "name": "production_required_tech_level_other_modes",
+      "confidence": "high",
+      "semantic_role": "per-type tech-level threshold used when the production building mode byte is non-zero but not `2`",
+      "evidence": "`Building_IsUnitLicenceEligible` switches to `g_UnitTypeProductionRequiredTechLevelOtherModes[88 * unitType]` for the alternate production-building modes and applies the same `tech_level_bits & 7` threshold before the unit licence becomes available."
+    },
+    {
+      "name": "production_requires_smiths",
+      "confidence": "high",
+      "semantic_role": "per-type production-licence gate requiring the smiths add-on",
+      "evidence": "`Building_IsUnitLicenceEligible` scans `g_ProductionLicenceSmithsRequiredUnitTypes` only when smiths bit `0x10` is absent from `BuildingRecord.castle_addon_flags`, so membership in that table is a hard smiths prerequisite for unit-licence eligibility."
+    },
+    {
+      "name": "production_requires_workshop",
+      "confidence": "high",
+      "semantic_role": "per-type production-licence gate requiring the workshop add-on",
+      "evidence": "`Building_IsUnitLicenceEligible` returns early when workshop bit `0x04` is present and otherwise scans `g_ProductionLicenceWorkshopRequiredUnitTypes`, so membership in that table is a hard workshop prerequisite for unit-licence eligibility."
+    },
+    {
+      "name": "construction_progress_per_turn",
+      "confidence": "high",
+      "semantic_role": "fixed per-builder construction throughput applied each new turn",
+      "evidence": "`Building_NewTurn` adds `g_BuilderConstructionProgressPerTurn` for every garrisoned type-17 slot while reducing `BuildingRecord.construction_turns_remaining`, and `Building_CalcRemainingConstructionTurns` divides the remaining timer by the same constant when estimating time left."
+    },
+    {
+      "name": "role",
+      "confidence": "high",
+      "semantic_role": "per-type tactical role class used by battle target priorities, role-matchup ordering, and healing eligibility",
+      "evidence": "The metadata parser loads the literal `role` field into `g_UnitTypeRole`, battle helpers index role-priority tables through that byte, and `UnitStack_HasUnitsNeedingHealing` only counts low-health slots whose role class is at least `3`."
     },
     {
       "name": "move_pixel_speed",
@@ -517,9 +576,15 @@
     },
     {
       "label": "Shot power",
-      "mapped_stat": "base_ranged_attack",
-      "confidence": "medium",
-      "evidence": "The panel exposes a separate `Shot power` row when ranged combat is relevant, matching the recovered ranged-attack family."
+      "mapped_stat": "base_shot_power",
+      "confidence": "high",
+      "evidence": "The panel exposes the `Shot power` row only when metadata byte `+25` is non-zero, and the displayed numeric helper is `UnitStats_GetBaseShotPower`."
+    },
+    {
+      "label": "Defence power",
+      "mapped_stat": "base_defense_power",
+      "confidence": "high",
+      "evidence": "The unconditional `Defence power` row is filled from `UnitStats_GetDefenseIconIndex`, and the same helper family drives stack defense scoring, melee-exchange resistance, and trap damage mitigation."
     },
     {
       "label": "Morale",
@@ -543,6 +608,139 @@
       "evidence": "Type 13 is explicitly rejected by ordinary melee handlers."
     },
     {
+      "unit_type": "UnitType13_Ram",
+      "stat": "base_wall_attack",
+      "relationship_kind": "primary_fortification_assault_stat",
+      "confidence": "high",
+      "evidence": "The ram's building-assault combat-strength branch switches to `UnitStats_CalcEffectiveWallAttack` when fortifications are present, and direct tactical wall assaults apply the same stat straight to wall-section health."
+    },
+    {
+      "unit_type": "UnitType0_Peasant",
+      "stat": "building_unit_licence_roster",
+      "relationship_kind": "seeded_default_castle_licence",
+      "confidence": "high",
+      "evidence": "Newly created buildings seed `unit_licence_type_ids[0] = 0`, so the first castle production-licence slot is a built-in peasant licence rather than an empty entry, and the one-argument licence helper skips that seeded slot when scanning for later licences."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "bridge_crossing_pathing_access",
+      "relationship_kind": "enables_stack_bridge_route_generation",
+      "confidence": "high",
+      "evidence": "`UnitStack_HasBuilder` is an exact type-17 membership test, and the strategic queue helpers enable bridge crossings only when that predicate succeeds, allowing builder-containing stacks to route through bridge crossings."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "building_unit_licence_roster",
+      "relationship_kind": "excluded_by_generic_followup_licence_selector",
+      "confidence": "high",
+      "evidence": "The one-argument castle licence helper explicitly skips builder licences while scanning for later roster entries, and the same subsystem treats type `17` as construction labor by subtracting each garrisoned builder from remaining build time."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "construction_progress_per_turn",
+      "relationship_kind": "fixed_garrisoned_builder_throughput",
+      "confidence": "high",
+      "evidence": "Each garrisoned builder adds the literal constant `26` from `g_BuilderConstructionProgressPerTurn` to the per-turn construction reduction path, and `Building_CalcRemainingConstructionTurns` divides the remaining timer by the same constant to estimate turns left."
+    },
+    {
+      "unit_type": "UnitType17_Builder",
+      "stat": "PortReinforcementUnitTypePool",
+      "relationship_kind": "eligible_port_shipment_spawn_type",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` draws spawned unit ids from a fixed pool that includes type `17` in the asm-decoded roster `{0,1,2,3,4,5,7,9,10,15,16,17}`."
+    },
+    {
+      "unit_type": "UnitType2_HeavyInfantry",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `2` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `2` explicitly."
+    },
+    {
+      "unit_type": "UnitType4_HeavySpearman",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `4` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `4` explicitly."
+    },
+    {
+      "unit_type": "UnitType5_LightCavalry",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `5` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `5` explicitly."
+    },
+    {
+      "unit_type": "UnitType6_HeavyCavalry",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `6` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `6` explicitly."
+    },
+    {
+      "unit_type": "UnitType7_Knights",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `7` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `7` explicitly."
+    },
+    {
+      "unit_type": "UnitType8_DragonCavalry",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `8` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `8` explicitly."
+    },
+    {
+      "unit_type": "UnitType11_Musketeer",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `11` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `11` explicitly."
+    },
+    {
+      "unit_type": "UnitType14_Cannon",
+      "stat": "production_requires_smiths",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `14` when smiths bit `0x10` is absent, and the fixed smiths-gated licence table contains `14` explicitly."
+    },
+    {
+      "unit_type": "UnitType9_Archer",
+      "stat": "production_requires_workshop",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `9` unless workshop bit `0x04` is present, and the fixed workshop-gated licence table contains `9` explicitly."
+    },
+    {
+      "unit_type": "UnitType10_Crossbower",
+      "stat": "production_requires_workshop",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `10` unless workshop bit `0x04` is present, and the fixed workshop-gated licence table contains `10` explicitly."
+    },
+    {
+      "unit_type": "UnitType12_Catapult",
+      "stat": "production_requires_workshop",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `12` unless workshop bit `0x04` is present, and the fixed workshop-gated licence table contains `12` explicitly."
+    },
+    {
+      "unit_type": "UnitType13_Ram",
+      "stat": "production_requires_workshop",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `13` unless workshop bit `0x04` is present, and the fixed workshop-gated licence table contains `13` explicitly."
+    },
+    {
+      "unit_type": "UnitType15_Forester",
+      "stat": "production_requires_workshop",
+      "relationship_kind": "required_castle_addon_for_unit_licence",
+      "confidence": "high",
+      "evidence": "`Building_IsUnitLicenceEligible` rejects unit type `15` unless workshop bit `0x04` is present, and the fixed workshop-gated licence table contains `15` explicitly."
+    },
+    {
       "unit_type": "UnitType29_Fly",
       "stat": "move_sound_stem",
       "relationship_kind": "looped_mover_audio",
@@ -555,6 +753,76 @@
       "relationship_kind": "airborne_class_flag",
       "confidence": "high",
       "evidence": "The `smok` record belongs to the airborne class governed by `g_UnitTypeFlags` bit0."
+    },
+    {
+      "unit_type": "UnitType31_GoldCargo",
+      "stat": "current_health_percent",
+      "relationship_kind": "treasury_transfer_payload_quantity",
+      "confidence": "high",
+      "evidence": "`Building_Transfer` exports stored treasury as type `31` cargo in 100-sized chunks plus a remainder written into slot byte `+9`, `Building_UnitGetInto` adds that same byte back into building treasury on delivery, and `Temple_SpawnGiftGoldCargoStack` reuses the quantity byte for `50/100/200/300` treasure rewards."
+    },
+    {
+      "unit_type": "UnitType32_PeasantCargo",
+      "stat": "current_health_percent",
+      "relationship_kind": "population_transfer_payload_quantity",
+      "confidence": "high",
+      "evidence": "`Building_Transfer` exports building population as type `32` cargo in 100-sized chunks plus a remainder written into slot byte `+9`, `Building_UnitGetInto` adds that same byte back into the low 12 bits of building population storage on delivery, and plague/founding logic also treats the unit as transferable population cargo rather than ordinary infantry."
+    },
+    {
+      "unit_type": "UnitType31_GoldCargo",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512A20` stores `gold` at metadata `+4` for type `31`, and sprite/audio path builders reuse that same stem when loading unit assets."
+    },
+    {
+      "unit_type": "UnitType32_PeasantCargo",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512A78` stores `peas` at metadata `+4` for type `32`, and the same stem is reused across sprite and sound path construction."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "localized_name_table",
+      "relationship_kind": "shared_localized_name_table",
+      "confidence": "high",
+      "evidence": "Type `33` points at `off_512558`, then UI/log helpers index that table by language; the same localized-name table is shared with type `34` even though the resource keys differ."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512AD0` stores `specm` at metadata `+4` for type `33`, and sprite/audio path builders reuse that same stem even though type `33` shares its localized-name table with type `34`."
+    },
+    {
+      "unit_type": "UnitType33_SpecialFootPersonage",
+      "stat": "queen_birth_outcome",
+      "relationship_kind": "male_birth_variant",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `33` for the son branch and formats `g_QueenSonBirthTexts`, so this id is the male birth outcome within the shared special-personage family."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "localized_name_table",
+      "relationship_kind": "shared_localized_name_table",
+      "confidence": "high",
+      "evidence": "Type `34` reuses `off_512558` as its localized-name table and the same UI/log helpers index that table by language despite the mounted variant's separate asset stem."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "resource_key",
+      "relationship_kind": "asset_resource_key",
+      "confidence": "high",
+      "evidence": "Asm row `0x512B28` stores `speck` at metadata `+4` for type `34`, and sprite/audio path builders reuse that same stem even though type `34` shares its localized-name table with type `33`."
+    },
+    {
+      "unit_type": "UnitType34_SpecialMountedPersonage",
+      "stat": "queen_birth_outcome",
+      "relationship_kind": "female_birth_variant",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `34` for the daughter branch and formats `g_QueenDaughterBirthTexts`, so this id is the female birth outcome within the same family."
     },
     {
       "unit_type": "SpecialPersonageCategory",
@@ -578,32 +846,53 @@
       "evidence": "The capture pipeline copies the special slot's owner byte into `PlayerPrisonerTransferQueue +1`, `Prisoner_SetInCastles` copies the same byte into `BuildingPrisonerSlot +1`, and `BuildingPrisoner_RecalculateRansomValue` feeds that stored player id into `AI_TickNationPostTurn`."
     },
     {
-      "unit_type": "RangedUnitCategory",
-      "stat": "base_ranged_attack",
-      "relationship_kind": "projectile_attack_profile",
-      "confidence": "medium",
-      "evidence": "Projectile-capable units use `g_UnitTypeBaseRangedAttack` together with the range tables."
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "birth_spawn_host",
+      "relationship_kind": "ordinary_owned_stronghold_garrison_spawn",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` selects type `33` or `34` and installs it through `Building_CreateSpecialPersonageGarrisonUnit` into an ordinary owned stronghold garrison slot rather than a separate royal-only container."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "garrison_training_eligibility",
+      "relationship_kind": "not_trainable_while_resident_in_building_garrison",
+      "confidence": "high",
+      "evidence": "`Building_CreateSpecialPersonageGarrisonUnit` sets the resident slot's low status bits to `3`, and the generic castle-training helpers only accept occupied idle garrison slots whose low status bits stay below `2`."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
+      "stat": "noncombat_garrison_entry",
+      "relationship_kind": "counts_as_noncombat_building_occupant",
+      "confidence": "high",
+      "evidence": "`Building_CountNonCombatGarrisonEntries` counts types `33` and `34` together with gold and peasant cargo, and the building-engagement gate treats a garrison whose total occupants equal that noncombat count as lacking ordinary combat occupants."
+    },
+    {
+      "unit_type": "SpecialCargoEntryCategory",
+      "stat": "noncombat_garrison_entry",
+      "relationship_kind": "counts_as_noncombat_building_occupant",
+      "confidence": "high",
+      "evidence": "`Building_CountNonCombatGarrisonEntries` counts gold and peasant cargo together with the two special personage types, and the building-engagement gate treats a garrison whose total occupants equal that noncombat count as lacking ordinary combat occupants."
     },
     {
       "unit_type": "RangedUnitCategory",
-      "stat": "base_damage",
-      "relationship_kind": "projectile_damage_profile",
+      "stat": "base_shot_power",
+      "relationship_kind": "projectile_attack_profile",
       "confidence": "high",
-      "evidence": "Projectile combat paths pair the ranged attack helper with `UnitStats_CalcEffectiveDamagePerHit`."
+      "evidence": "Projectile-capable units use `UnitStats_CalcEffectiveShotPower` as their outgoing shot-strength family together with the range tables."
     },
     {
       "unit_type": "RangedUnitCategory",
       "stat": "attack_range_max",
       "relationship_kind": "range_limit",
       "confidence": "high",
-      "evidence": "Projectile logic compares squared distance against `g_UnitTypeMaxRange`."
+      "evidence": "Projectile logic compares the ceil-sqrt shot distance against `g_UnitTypeMaxRange`."
     },
     {
       "unit_type": "RangedUnitCategory",
       "stat": "attack_range_min",
       "relationship_kind": "dead_zone",
-      "confidence": "medium",
-      "evidence": "Projectile logic also compares against `g_UnitTypeMinRange`."
+      "confidence": "high",
+      "evidence": "Projectile logic also requires the ceil-sqrt shot distance to stay above `g_UnitTypeMinRange`."
     },
     {
       "unit_type": "FlyingUnitCategory",
@@ -632,6 +921,13 @@
       "relationship_kind": "merged_stack_movement_profile",
       "confidence": "high",
       "evidence": "`UnitStack_BuildMergedTerrainMoveProfile` merges metadata bytes `+29..+37` by keeping the highest non-zero movement cost for each normalized lane and collapsing to zero when any member has zero, so world-map stack movement follows the slowest traversable unit."
+    },
+    {
+      "unit_type": "PortReinforcementUnitTypePool",
+      "stat": "unit_type_id roster",
+      "relationship_kind": "fixed_random_spawn_roster",
+      "confidence": "high",
+      "evidence": "`Port_CollectReinforcementShipment` rolls `Rng_RandRange(0, 11)` for each arriving slot and passes `g_PortReinforcementUnitTypePool[randomIndex]` straight into `UnitSlot_InitFromType`, so the port's reinforcement shipment roster is fixed to ids `0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17`."
     }
   ],
   "ambiguous": [
@@ -642,63 +938,52 @@
         "foot and mounted special-personage records reused by both prisoner and queen-birth flows",
         "special commander/courtier variants sharing a single localized-name triplet"
       ],
-      "evidence": "Both records reuse `off_512558`, their folder stems and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
+      "evidence": "Both records reuse `off_512558`, their resource keys and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
       "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
     },
     {
-      "candidate": "UnitType31_GoldCargo / UnitType32_PeasantCargo",
+      "candidate": "UnitType32_PeasantCargo",
       "candidate_kind": "unit_type",
       "possible_interpretations": [
-        "non-combat stack cargo entries",
-        "resource/passenger payload records"
+        "transferable building population cargo",
+        "a public label closer to peasant convoy / peasant payload"
       ],
-      "evidence": "The stack logic excludes types `31` and `32` from the normal-combat predicate, and type `32` is explicitly compacted and rebuilt as cargo.",
-      "blockers": "The exact original UI/serialization label for these payload slots is still partly inferred from behavior."
+      "evidence": "The stack logic excludes type `32` from the normal-combat predicate, `Building_Transfer` exports building population through this id, `Building_UnitGetInto` adds its quantity byte back into building population storage, plague attrition targets the same cargo, and founding logic treats it as transferable population rather than an ordinary recruitable field unit.",
+      "blockers": "The behavior is secure, but the exact original public/UI label beyond peasant/population cargo remains unresolved."
     },
     {
-      "candidate": "g_UnitTypeBaseRangedAttack",
-      "candidate_kind": "stat",
+      "candidate": "UnitSlotRecord.stance_bits bit 7",
+      "candidate_kind": "field_bit",
       "possible_interpretations": [
-        "ranged attack strength",
-        "secondary attack value"
+        "additional status flag",
+        "garrison posture extension",
+        "battle/display state flag"
       ],
-      "evidence": "The table is tightly coupled to projectile logic but still lacks a direct designer-facing label.",
-      "blockers": "No debug string or serialized schema names the field."
+      "evidence": "Bits `0..1` feed effective attack helpers directly, value `3` marks a resident special occupant, bits `2..3` and `4..6` are now separated into order/state and volley/use subfields, leaving only the top bit unresolved.",
+      "blockers": "The exact semantics of the remaining top bit have not yet been isolated from the surrounding slot-state helpers."
     },
     {
-      "candidate": "g_UnitTypeBaseSiegeAttack",
-      "candidate_kind": "stat",
+      "candidate": "production_required_tech_level_mode_2 / production_required_tech_level_other_modes",
+      "candidate_kind": "field_pair",
       "possible_interpretations": [
-        "building damage",
-        "siege attack value",
-        "fortification damage scalar"
+        "per-unit licence tech thresholds for two production-building subclasses",
+        "per-unit licence tech thresholds for `building[4] == 2` versus all other non-zero production modes"
       ],
-      "evidence": "The alternate attack helper switches to it for one context flag, but the original design term is missing.",
-      "blockers": "Need a clearer caller or UI string."
+      "evidence": "`Building_IsUnitLicenceEligible` picks one of the two bytes entirely from the building mode byte at offset `+4`, compares the chosen threshold against `tech_level_bits & 7`, and `CastleProduction_RebuildAvailableUnitList` reuses that gate for the available-unit roster.",
+      "blockers": "The threshold role is secure, but the original designer-facing names of the two production-building mode families are still unresolved."
     },
     {
-      "candidate": "Battle sidebar labels `Defence power` / `Status`",
-      "candidate_kind": "ui_stat_label",
+      "candidate": "world_surface_move_costs[8] lane split",
+      "candidate_kind": "field_family",
       "possible_interpretations": [
-        "an unconditional defence-labelled numeric row plus a separate packed runtime-state row",
-        "a defence-labelled UI row currently fed by the recovered damage family plus a generic condition/stance row"
+        "two plain-class lanes plus forest, desert-class, swamp, water-surface, hills, and mountains",
+        "more tileset-specific open-ground and shoreline variants hidden behind the current plain/desert/water placeholder names"
       ],
-      "evidence": "`off_514DC8` maps row 4 to `Defence power` and row 5 to `Status`, `UnitBattle_UpdateActionTooltip` follows that same row table, and `UnitBattle_DrawSelectedUnitPanel` shows an unconditional defence-labelled numeric row plus a separate status block rooted in packed slot state around `+12/+13`.",
-      "blockers": "The UI binding is clearer now, but renaming the underlying recovered stat families directly to match those row labels would still overclaim."
+      "evidence": "The terrain normalization table and the canonical terrain-class table safely lock lane order `plain_class_a`, `forest`, `desert_class`, `swamp`, `plain_class_b`, `water_surface`, `hills`, `mountains`, but the two plain lanes and the water/desert placeholder names still collapse multiple raw terrain-id bands.",
+      "blockers": "The exact designer-facing split between the two plain-class lanes and the final tileset-specific names behind the conservative `desert_class` and `water_surface` placeholders remain unresolved."
     },
     {
-      "candidate": "UnitSlotRecord.stance_bits",
-      "candidate_kind": "field",
-      "possible_interpretations": [
-        "formation bits",
-        "attack stance bits",
-        "garrison posture selector"
-      ],
-      "evidence": "The low two bits feed effective attack helpers directly, while the full byte is cycled by `Building_UseGarrisonSlot`.",
-      "blockers": "The exact meaning of the upper subfields is still unresolved."
-    },
-    {
-      "candidate": "g_UnitTypeMetadataRecords localized-name header",
+      "candidate": "UnitTypeMetadataRecord.localized_name_table header",
       "candidate_kind": "structure_header",
       "possible_interpretations": [
         "35 records with one duplicated localized-name triplet",

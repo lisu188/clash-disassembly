@@ -453,4 +453,53 @@ typedef HWAVEOUT *LPHWAVEOUT;
 #define WM_ACTIVATEAPP 0x001C
 #endif
 
+/*
+ * SDL-owned compatibility wrappers exported to the recovered gameplay code.
+ * Keeping these declarations at the seam avoids redeclaring the same
+ * Win32-shaped surface inside clash95.c.
+ */
+ATOM __stdcall RegisterClassA(const WNDCLASSA *lpWndClass);
+HWND __stdcall CreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam);
+LRESULT __stdcall DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+LRESULT __stdcall DispatchMessageA(const MSG *lpMsg);
+BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect);
+HDC __stdcall GetDC(HWND hWnd);
+int __stdcall GetDeviceCaps(HDC hdc, int index);
+COLORREF __stdcall GetPixel(HDC hdc, int x, int y);
+COLORREF __stdcall SetPixel(HDC hdc, int x, int y, COLORREF color);
+BOOL __stdcall SetRect(LPRECT lprc, int xLeft, int yTop, int xRight, int yBottom);
+BOOL __stdcall EqualRect(const RECT *lprc1, const RECT *lprc2);
+BOOL __stdcall IsRectEmpty(const RECT *lprc);
+BOOL __stdcall IntersectRect(LPRECT lprcDst, const RECT *lprcSrc1, const RECT *lprcSrc2);
+HWND __stdcall GetForegroundWindow(void);
+BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax);
+HGDIOBJ __stdcall GetStockObject(int i);
+HCURSOR __stdcall LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName);
+HICON __stdcall LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName);
+int __stdcall MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
+BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
+void __stdcall PostQuitMessage(int nExitCode);
+int __stdcall ReleaseDC(HWND hWnd, HDC hDC);
+HDC __stdcall CreateCompatibleDC(HDC hdc);
+BOOL __stdcall DeleteDC(HDC hdc);
+BOOL __stdcall DeleteObject(HGDIOBJ ho);
+int __stdcall GetObjectA(HANDLE h, int c, LPVOID pv);
+HGDIOBJ __stdcall SelectObject(HDC hdc, HGDIOBJ h);
+BOOL __stdcall StretchBlt(HDC hdcDest, int xDest, int yDest, int wDest, int hDest, HDC hdcSrc, int xSrc, int ySrc, int wSrc, int hSrc, DWORD rop);
+int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight, const void *lpBits, const BITMAPINFO *lpbmi, UINT iUsage, DWORD rop);
+HANDLE __stdcall LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad);
+BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow);
+BOOL __stdcall TranslateMessage(const MSG *lpMsg);
+BOOL __stdcall UpdateWindow(HWND hWnd);
+BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect);
+BOOL __stdcall WaitMessage(void);
+DWORD __stdcall timeGetTime(void);
+DWORD __stdcall GetTickCount(void);
+DWORD __stdcall GetVersion(void);
+HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName);
+UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName);
+void __stdcall OutputDebugStringA(LPCSTR lpOutputString);
+void __stdcall Sleep(DWORD dwMilliseconds);
+BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint);
+
 #endif
