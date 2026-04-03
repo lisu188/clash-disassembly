@@ -1817,7 +1817,9 @@ void __cdecl sub_471BA0(unsigned int a1, unsigned int a2);
 char  sub_471BF0(_DWORD *a1);
 int sub_471C40(_DWORD *a1);
 int  sub_471C60(int a1, char a2);
-_DWORD * sub_471CA0(_DWORD *a1, int a2, const char *a3);
+static const char *Compat_StringHolderGetText(_DWORD *holder);
+static void Compat_StringHolderCopyText(_DWORD *holder, const char *source);
+_DWORD * sub_471CA0(_DWORD *a1, _DWORD *a2, const char *a3);
 const char ** sub_471D10(const char **a1, const char *a2);
 const char ** sub_471DE0(const char **a1, const char *a2);
 int  sub_471EE0(_DWORD *a1, int a2, int a3);
@@ -1944,6 +1946,17 @@ int __cdecl strrchr_();
 char *Compat_StrrchrChar(const char *text, int ch);
 char *Compat_StruprAsciiInPlace(char *text);
 void Compat_CopyPrefixN(char *dest, const char *src, unsigned int count);
+int Compat_AllocFileStream(void);
+void Compat_FreeFileStream(int stream_ptr);
+int Compat_InitFileStream(int stream_ptr, int fd_index, int mode_char, int open_flags);
+int Compat_OpenFileDescriptor(const char *path, int mode_char, int open_flags);
+int Compat_StreamSetBuffer(int stream_ptr, int buffer_size);
+int Compat_StreamRead(int stream_ptr, void *buffer, int byte_count);
+int Compat_StreamSeek(int stream_ptr, int offset, int whence);
+int Compat_StreamTell(int stream_ptr);
+int Compat_AllocLow32Bytes(int size);
+void Compat_FreeLow32Bytes(int ptr);
+static int Compat_FileSystemQuery(int filesystem, const char *requested_path, int expected_result, int (*callback)(int));
 int __fastcall sub_476A78(_DWORD, _DWORD); // weak
 int sub_476A80();
 int  sub_476AB0(int result);
@@ -1958,7 +1971,7 @@ int  sub_4770B0(int a1, int a2, int (*a3)(void));
 int  sub_477170(int a1);
 signed int  sub_4771D0(const char **a1, int a2);
 int  sub_477300(int a1, int a2);
-int  sub_477370(int *a1, const CHAR *a2, DWORD a3);
+int  sub_477370(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4);
 _DWORD * sub_4774D0(DWORD *a1, int a2, int a3);
 int  sub_477550(int a1);
 int  sub_477580(int a1, int *a2);
@@ -1985,7 +1998,7 @@ int  sub_477CA0(int a1);
 int  sub_477CC0(int a1);
 _DWORD * sub_477CE0(_DWORD *a1, const CHAR *a2, int a3, char a4, DWORD a5);
 _DWORD * sub_477D60(_DWORD *result, char a2);
-int sub_477DC0();
+int sub_477DC0(int a1, void *a2, int a3);
 int  sub_477DE0(int a1, unsigned int a2);
 signed int  sub_477E30(int a1, signed int a2);
 int  sub_477E40(int a1, const void *a2, int a3);
@@ -2021,7 +2034,7 @@ int * sub_478540(int *a1, int a2, int a3, int a4);
 _DWORD * sub_478590(int *a1, int *a2);
 int  sub_4785F0(_DWORD *a1);
 int  sub_478610(_DWORD *a1, int a2);
-int  sub_478670(_DWORD *a1);
+int  sub_478670(_DWORD *a1, int a2);
 _DWORD * sub_4786E0(_DWORD *result);
 int  sub_478720(_DWORD *a1, int a2);
 int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5);
@@ -2031,14 +2044,14 @@ int  sub_4788A0(int a1);
 unsigned int  sub_4788F0(int a1, const char **a2);
 int  sub_478950(int a1, const char **a2);
 unsigned int  sub_4789C0(int a1, const char **a2);
-_DWORD * sub_4789F0(int a1, int a2);
+_DWORD * sub_4789F0(int a1, const void *a2);
 signed int  sub_478A60(_DWORD *a1, const char **a2, int a3, int a4);
 int  sub_478B10(int a1, int a2, int a3);
 signed int  sub_478B70(_DWORD *a1, const char **a2, int a3);
 int  sub_478BA0(_DWORD *a1, const char **a2);
 _DWORD * sub_478BD0(_DWORD *result, int a2, int a3);
 signed int  sub_478BF0(int a1);
-int  sub_478C20(_DWORD *a1, unsigned __int8 *a2);
+int  sub_478C20(_DWORD *a1, unsigned __int8 *a2, int a3);
 int sub_478CA0();
 int  sub_478CB0(int a1, int a2);
 signed int  sub_478D10(int a1, int a2);
@@ -4475,6 +4488,19 @@ char * sub_4E7F70(char *a1, const char *a2, unsigned int a3);
 void __stdcall RtlUnwind(PVOID TargetFrame, PVOID TargetIp, PEXCEPTION_RECORD ExceptionRecord, PVOID ReturnValue);
 // int __stdcall DirectInputCreateA(_DWORD, _DWORD, _DWORD, _DWORD); weak
 HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter);
+HRESULT Compat_DirectDraw_QueryInterface(LPDIRECTDRAW dd, const void *riid, void *out_object);
+ULONG Compat_DirectDraw_Release(LPDIRECTDRAW dd);
+HRESULT Compat_DirectDraw_SetCooperativeLevel(LPDIRECTDRAW dd, HWND hwnd, DWORD flags);
+HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height, int bpp, int refresh_rate, int flags);
+HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface);
+HRESULT Compat_DirectDrawSurface_GetAttachedSurface(LPDIRECTDRAWSURFACE surface, void *caps, void *out_surface);
+HRESULT Compat_DirectDrawSurface_Blt(LPDIRECTDRAWSURFACE surface, RECT *dest_rect, LPDIRECTDRAWSURFACE src_surface, RECT *src_rect, DWORD flags, void *blt_fx);
+HRESULT Compat_DirectDrawSurface_IsLost(LPDIRECTDRAWSURFACE surface);
+HRESULT Compat_DirectDrawSurface_Restore(LPDIRECTDRAWSURFACE surface);
+HRESULT Compat_DirectDrawSurface_Lock(LPDIRECTDRAWSURFACE surface, RECT *rect, int *desc, DWORD flags, HANDLE event_handle);
+HRESULT Compat_DirectDrawSurface_Unlock(LPDIRECTDRAWSURFACE surface, void *lock_ptr);
+HRESULT Compat_DirectDrawSurface_SetClipper(LPDIRECTDRAWSURFACE surface, void *clipper);
+HRESULT Compat_DirectDrawSurface_SetPalette(LPDIRECTDRAWSURFACE surface, void *palette);
 // int __stdcall DirectSoundCreate(_DWORD, _DWORD, _DWORD); weak
 // int __cdecl ICClose(_DWORD); weak
 // int __stdcall ICGetDisplayFormat(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD); weak
@@ -10233,6 +10259,7 @@ __int16 word_5179CC = 48; // weak
 char aSfxButtons[13] = "sfx\\buttons\\"; // weak
 char aSfx[5] = "sfx\\"; // weak
 char aCClash[10] = "c:\\clash\\"; // weak
+_UNKNOWN unk_517AA0; // weak
 char *off_517B14[3] =
 {
   "Wloz plyte z gra do napedu!",
@@ -12426,23 +12453,17 @@ _DWORD * sub_401720(_DWORD *result)
 //----- (004017D0) --------------------------------------------------------
 int  sub_4017D0(int *a1, int a2)
 {
-  int v3; // ecx
   bool v4; // zf
-  int v5; // ecx
   int v6; // eax
   int v7; // ecx
   _DWORD *v8; // ebx
   _DWORD *v9; // esi
   _DWORD *v10; // edi
-  int v11; // ecx
   int result; // eax
-  int v13; // ecx
   int v14; // [esp+0h] [ebp-Ch]
 
-  v3 = a1[3];
-  v4 = a2 + v3 == 0;
-  v5 = a2 + v3;
-  a1[3] = v5;
+  v4 = a2 + a1[3] == 0;
+  a1[3] = a2 + a1[3];
   if ( v4 )
   {
     _wcpp_4_dtor_array_store__(*a1, &unk_50ECF0);
@@ -12465,7 +12486,7 @@ int  sub_4017D0(int *a1, int a2)
         v9 = (_DWORD *)(16 * v7 + *a1);
         v10 = (_DWORD *)(v14 + 16 * v7);
         *v10 = *v9;
-        sub_471BF0(v8);
+        Compat_StringHolderCopyText(v8, Compat_StringHolderGetText(v9 + 1));
         v10[3] = v9[3];
         ++v7;
         v8 += 4;
@@ -12486,12 +12507,9 @@ int  sub_4017D0(int *a1, int a2)
 _DWORD * sub_401890(_DWORD *result, int a2, int a3)
 {
   _DWORD *v3; // ebp
-  int v4; // ecx
-  int v5; // ecx
   int v6; // edi
   _DWORD *v7; // ebx
   _DWORD *v8; // esi
-  int v9; // ecx
   int v10; // esi
   int *v11; // ebx
   int v12; // [esp+0h] [ebp-20h]
@@ -12500,7 +12518,6 @@ _DWORD * sub_401890(_DWORD *result, int a2, int a3)
   int v15; // [esp+Ch] [ebp-14h]
 
   v3 = result;
-  v4 = a2;
   if ( a3 )
   {
     v10 = result[4];
@@ -12508,28 +12525,28 @@ _DWORD * sub_401890(_DWORD *result, int a2, int a3)
     v12 = *v11;
     v13 = 0;
     v14 = &off_50EC84;
-    sub_471BF0(&v13);
+    Compat_StringHolderCopyText((_DWORD *)&v13, Compat_StringHolderGetText((_DWORD *)(v11 + 1)));
     v14 = &off_50EC94;
     v15 = v11[3];
     (*(void (__cdecl **)(int))(v10 + 4))(v12);
     result = (_DWORD *)sub_471C60((int)&v13, 0);
   }
-  v5 = v4 + 1;
-  if ( v5 < v3[2] )
+  a2 += 1;
+  if ( a2 < v3[2] )
   {
-    v6 = 16 * v5 - 16;
+    v6 = 16 * a2 - 16;
     do
     {
-      v7 = (_DWORD *)(*v3 + 16 * v5);
+      v7 = (_DWORD *)(*v3 + 16 * a2);
       v8 = (_DWORD *)(v6 + *v3);
       *v8 = *v7;
-      sub_471BF0(v8 + 1);
+      Compat_StringHolderCopyText(v8 + 1, Compat_StringHolderGetText(v7 + 1));
       result = (_DWORD *)v7[3];
       v8[3] = result;
-      v5 = v9 + 1;
+      ++a2;
       v6 += 16;
     }
-    while ( v5 < v3[2] );
+    while ( a2 < v3[2] );
   }
   --v3[2];
   return result;
@@ -12552,19 +12569,14 @@ _DWORD * sub_401940(int a1)
 //----- (00401970) --------------------------------------------------------
 int  sub_401970(_DWORD *a1, _DWORD *a2)
 {
-  int v3; // ecx
-  int result; // eax
-
   *a1 = *a2;
   a1[1] = 0;
   a1[2] = &off_50EC84;
-  sub_471BF0(a1 + 1);
-  *(_DWORD *)(v3 + 4) = &off_50EC94;
-  result = v3 - 4;
-  *(_DWORD *)(v3 - 4 + 12) = a2[3];
-  return result;
+  Compat_StringHolderCopyText(a1 + 1, Compat_StringHolderGetText(a2 + 1));
+  a1[2] = &off_50EC94;
+  a1[3] = a2[3];
+  return (int)a1;
 }
-// 401994: variable 'v3' is possibly undefined
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
@@ -12861,21 +12873,19 @@ _BYTE * sub_401D60(_BYTE *result, _BYTE *a2, unsigned int a3)
 //----- (00401D90) --------------------------------------------------------
 void __cdecl __noreturn App_RequestQuit(int a1)
 {
-  int v3; // ecx
-  int v4; // edx
-  int v5; // ecx
+  const char *message;
 
   Render_BeginModeSwitch(&unk_51D4C0);
-  vsprintf_(v3, a1);
+  message = (const char *)(uintptr_t)(unsigned int)a1;
+  if ( message )
+    snprintf(Text, sizeof(Text), "%s", message);
+  else
+    Text[0] = 0;
   ShowWindow(hWnd, 0);
   MessageBoxA(hWnd, Text, Caption, 0);
   App_Shutdown();
-  CRT_ExitProcessWithFinalizers(1, v4, v5);
+  CRT_ExitProcessWithFinalizers(1, 0, 0);
 }
-// 401DB2: variable 'v3' is possibly undefined
-// 401DEB: variable 'v4' is possibly undefined
-// 401DEB: variable 'v5' is possibly undefined
-// 473FC3: using guessed type int __fastcall vsprintf_(_DWORD, _DWORD);
 
 //----- (00401E00) --------------------------------------------------------
 _DWORD * sub_401E00(int a1, __int16 a2, __int16 a3)
@@ -15003,10 +15013,8 @@ int  sub_404660(int a1)
 int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
 {
   LPVOID *v6; // eax
-  _DWORD *v7; // edx
   unsigned __int16 v8; // bx
   _DWORD *v9; // ecx
-  int v10; // ecx
   int v11; // eax
   int v12; // ecx
   _DWORD *Surface; // eax
@@ -15027,14 +15035,14 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
   v8 = *(_WORD *)a1;
   v9 = (_DWORD *)*(unsigned __int16 *)(a1 + 2);
   *(_DWORD *)(a1 + 196) = v6;
-  sub_475080(v6, v7, v9, (_DWORD *)v8, v18, 0, v19);
+  sub_475080(v6, (_DWORD *)(uintptr_t)a2, v9, (_DWORD *)v8, v18, 0, v19);
   if ( *(_DWORD *)(a1 + 212) == 8 )
     *(_DWORD *)(a1 + 188) = *(_DWORD *)(*(_DWORD *)(a1 + 196) + 4);
   else
     *(_DWORD *)(a1 + 188) = 0;
   v11 = *(_DWORD *)(a1 + 196);
   *(_DWORD *)(a1 + 192) = 0;
-  sub_473E30(*(_DWORD *)(v11 + 4), 0, v10);
+  sub_473E30(*(_DWORD *)(v11 + 4), 0, 0);
   Surface = (_DWORD *)Mem_Alloc(188, v12, v8, a4);
   if ( Surface )
     Surface = Render_CreateSurface((int)Surface, *(_WORD *)a1, *(_WORD *)(a1 + 2));
@@ -15071,8 +15079,6 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
   }
   return result;
 }
-// 404710: variable 'v7' is possibly undefined
-// 404746: variable 'v10' is possibly undefined
 // 404750: variable 'v12' is possibly undefined
 
 //----- (00404830) --------------------------------------------------------
@@ -57887,17 +57893,12 @@ int  sub_4426C0(char *a1, int a2)
 //----- (00442760) --------------------------------------------------------
 int  sub_442760(int a1, char a2, DWORD a3)
 {
-  const char **v3; // eax
-  int v4; // edx
-  int v5; // ecx
+  const char **filesystem_root; // eax
 
-  v3 = sub_478370(a1, a2, a3);
-  sub_476AF0((int)&dword_543CC8, (int)v3, 0, a3);
-  return CRT_RegisterFinalizableObject(v5, v4);
+  filesystem_root = sub_478370(a1, a2, a3);
+  sub_476AF0((int)&dword_543CC8, (int)filesystem_root, 0, a3);
+  return CRT_RegisterFinalizableObject((int)&unk_517AA0, 0);
 }
-// 44277C: variable 'v5' is possibly undefined
-// 44277C: variable 'v4' is possibly undefined
-// 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
 
 //----- (004427C0) --------------------------------------------------------
 int  sub_4427C0(int a1)
@@ -57935,7 +57936,7 @@ int  sub_4427F0(char *a1, int a2)
 
   v14 = a2;
   dword_54DD08 = 6;
-  v3 = sub_4770B0((int)&dword_543CC8, 0, (int (*)(void))sub_477170);
+  v3 = Compat_FileSystemQuery((int)&dword_543CC8, a1, 0, sub_477170);
   if ( !v3 )
   {
     v5 = aCClash;
@@ -57967,7 +57968,7 @@ int  sub_4427F0(char *a1, int a2)
     }
     while ( v12 );
     dword_54DD08 = 6;
-    v3 = sub_4770B0((int)&dword_543CC8, 0, (int (*)(void))sub_477170);
+    v3 = Compat_FileSystemQuery((int)&dword_543CC8, v13, 0, sub_477170);
     if ( !v3 && v14 )
       App_RequestQuit((int)aIOCouldnTOpenF);
   }
@@ -58033,7 +58034,7 @@ int  sub_4429D0(int a1, const CHAR *a2, DWORD a3)
     }
   }
   v5 = sub_479BE0(v21, a3, 0, a3, (int)v21);
-  return sub_477370(dword_543CC8, (const CHAR *)(uintptr_t)(unsigned int)a1, (DWORD)v5);
+  return sub_477370(dword_543CC8, (const CHAR *)(uintptr_t)(unsigned int)a1, 0, (DWORD)v5);
 }
 // 442A16: variable 'v3' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
@@ -70959,28 +70960,23 @@ int  sub_460490(int a1, int a2, char a3, DWORD a4)
 //----- (00460580) --------------------------------------------------------
 int  sub_460580(int a1)
 {
-  int v1; // ecx
-  int v2; // eax
-  int result; // eax
-  int v4; // ecx
+  int surface_handle;
+  void (**release_proc)(int, int);
 
   sub_405920((int *)(a1 + 64));
-  v2 = *(_DWORD *)(v1 + 8);
-  if ( v2 )
+  surface_handle = *(_DWORD *)(a1 + 8);
+  if ( surface_handle )
   {
-    (**(void (***)(void))(v2 + 184))();
-    result = *(_DWORD *)(v4 + 12);
-    if ( !result )
-      return result;
-    return (**(int (***)(void))(result + 184))();
+    release_proc = *(void (***)(int, int))(surface_handle + 184);
+    (*release_proc)(surface_handle, 2);
   }
-  result = *(_DWORD *)(v1 + 12);
-  if ( result )
-    return (**(int (***)(void))(result + 184))();
-  return result;
+  surface_handle = *(_DWORD *)(a1 + 12);
+  if ( !surface_handle )
+    return 0;
+  release_proc = *(void (***)(int, int))(surface_handle + 184);
+  (*release_proc)(surface_handle, 2);
+  return 0;
 }
-// 46058C: variable 'v1' is possibly undefined
-// 4605AC: variable 'v4' is possibly undefined
 
 //----- (004605D0) --------------------------------------------------------
 unsigned int  DD_Pump(int a1, int a2, ...)
@@ -82902,257 +82898,254 @@ void __cdecl sub_471BA0(unsigned int a1, unsigned int a2)
 //----- (00471BF0) --------------------------------------------------------
 char  sub_471BF0(_DWORD *a1)
 {
-  char result; // al
-  const char *v3; // edx
-  unsigned int v4; // kr04_4
-  __int64 v5; // rdi
-
-  result = sub_471C40(a1);
-  if ( v3 )
-  {
-    result = 0;
-    v4 = strlen(v3) + 1;
-    if ( v4 != 1 )
-    {
-      v5 = j_Mem_Alloc(v4 - 1);
-      *a1 = v5;
-      do
-      {
-        result = *(_BYTE *)HIDWORD(v5);
-        *(_BYTE *)v5 = *(_BYTE *)HIDWORD(v5);
-        if ( !result )
-          break;
-        result = *(_BYTE *)(HIDWORD(v5) + 1);
-        HIDWORD(v5) += 2;
-        *(_BYTE *)(v5 + 1) = result;
-        LODWORD(v5) = v5 + 2;
-      }
-      while ( result );
-    }
-  }
-  return result;
+  sub_471C40(a1);
+  return 0;
 }
-// 471BFC: variable 'v3' is possibly undefined
-// 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00471C40) --------------------------------------------------------
 int sub_471C40(_DWORD *a1)
 {
-  int result; // eax
-
-  result = j_j__nfree_();
   if ( a1 )
+  {
+    if ( *a1 )
+      j__nfree_(*a1);
     *a1 = 0;
-  return result;
+  }
+  return 0;
 }
 
 //----- (00471C60) --------------------------------------------------------
 int  sub_471C60(int a1, char a2)
 {
-  int v2; // ecx
-  char v3; // dl
-  int v5; // ecx
-
   if ( (a2 & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(a1, &unk_5108C0);
     j_j__nfree_();
-    return v5;
+    return a1;
   }
-  else
-  {
-    *(_DWORD *)(a1 + 4) = &off_50EC84;
-    sub_471C40((_DWORD *)a1);
-    if ( (v3 & 2) != 0 )
-      j__nfree_();
-    return v2;
-  }
+  *(_DWORD *)(a1 + 4) = &off_50EC84;
+  sub_471C40((_DWORD *)a1);
+  if ( (a2 & 2) != 0 )
+    j__nfree_(a1);
+  return a1;
 }
-// 471C74: variable 'v3' is possibly undefined
-// 471C79: variable 'v2' is possibly undefined
-// 471C8C: variable 'v5' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 // 50EC84: using guessed type int (*off_50EC84)();
 
-//----- (00471CA0) --------------------------------------------------------
-_DWORD * sub_471CA0(_DWORD *a1, int a2, const char *a3)
+static const char *Compat_StringHolderGetText(_DWORD *holder)
 {
-  _DWORD *v4; // edx
-  int v5; // ecx
-  const char *v7; // [esp+0h] [ebp-14h] BYREF
-  int (**v8)(); // [esp+4h] [ebp-10h]
-  _DWORD *v9; // [esp+8h] [ebp-Ch]
-  int v10; // [esp+10h] [ebp-4h]
-
-  v10 = a2;
-  v9 = a1;
-  v7 = 0;
-  v8 = &off_50EC84;
-  sub_471BF0(&v7);
-  v8 = &off_50EC94;
-  sub_471D10(&v7, a3);
-  v4 = v9;
-  *v9 = 0;
-  v4[1] = v5;
-  sub_471BF0(v9);
-  v9[1] = &off_50EC94;
-  sub_471C60((int)&v7, 1);
-  return v9;
+  if ( !holder || !*holder )
+    return 0;
+  return (const char *)(uintptr_t)(unsigned int)*holder;
 }
-// 471CDC: variable 'v5' is possibly undefined
+
+static const char *Compat_StringArgGetText(const void *arg)
+{
+  const _DWORD *words;
+  uintptr_t native_text_ptr;
+
+  if ( !arg )
+    return 0;
+  words = (const _DWORD *)(uintptr_t)arg;
+  if ( words[1] == (unsigned int)(uintptr_t)&off_50EC84 || words[1] == (unsigned int)(uintptr_t)&off_50EC94 )
+    return Compat_StringHolderGetText((_DWORD *)(uintptr_t)arg);
+  native_text_ptr = *(const uintptr_t *)arg;
+  if ( !native_text_ptr )
+    return 0;
+  return (const char *)native_text_ptr;
+}
+
+static void Compat_StringHolderAssignJoined(_DWORD *holder, const char *prefix, const char *suffix)
+{
+  unsigned int prefix_size;
+  unsigned int suffix_size;
+  unsigned int total_size;
+  unsigned char *copy;
+
+  if ( !holder )
+    return;
+  if ( prefix )
+    prefix_size = (unsigned int)strlen(prefix);
+  else
+    prefix_size = 0;
+  if ( suffix )
+    suffix_size = (unsigned int)strlen(suffix);
+  else
+    suffix_size = 0;
+  if ( !prefix_size && !suffix_size )
+  {
+    sub_471C40(holder);
+    return;
+  }
+  total_size = prefix_size + suffix_size;
+  copy = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)(total_size + 1));
+  if ( !copy )
+  {
+    sub_471C40(holder);
+    return;
+  }
+  if ( prefix_size )
+    memcpy(copy, prefix, prefix_size);
+  if ( suffix_size )
+    memcpy(copy + prefix_size, suffix, suffix_size);
+  copy[total_size] = 0;
+  sub_471C40(holder);
+  *holder = (int)(uintptr_t)copy;
+}
+
+static void Compat_StringHolderInsertText(_DWORD *holder, signed int index, const char *inserted_text)
+{
+  const char *existing_text;
+  unsigned int existing_size;
+  unsigned int inserted_size;
+  unsigned int total_size;
+  unsigned char *copy;
+
+  if ( !holder )
+    return;
+  existing_text = Compat_StringHolderGetText(holder);
+  if ( existing_text )
+    existing_size = (unsigned int)strlen(existing_text);
+  else
+    existing_size = 0;
+  if ( inserted_text )
+    inserted_size = (unsigned int)strlen(inserted_text);
+  else
+    inserted_size = 0;
+  if ( index < 0 || (unsigned int)index > existing_size || !inserted_size )
+    return;
+  total_size = existing_size + inserted_size;
+  copy = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)(total_size + 1));
+  if ( !copy )
+    return;
+  if ( index > 0 )
+    memcpy(copy, existing_text, (unsigned int)index);
+  memcpy(copy + index, inserted_text, inserted_size);
+  if ( existing_size > (unsigned int)index )
+    memcpy(copy + index + inserted_size, existing_text + index, existing_size - (unsigned int)index);
+  copy[total_size] = 0;
+  sub_471C40(holder);
+  *holder = (int)(uintptr_t)copy;
+}
+
+static void Compat_StringHolderCopyText(_DWORD *holder, const char *source)
+{
+  unsigned char *copy;
+  unsigned int copy_size;
+
+  if ( !holder )
+    return;
+  sub_471C40(holder);
+  if ( !source || !*source )
+    return;
+  copy_size = (unsigned int)strlen(source) + 1;
+  copy = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)copy_size);
+  if ( !copy )
+    return;
+  memcpy(copy, source, copy_size);
+  *holder = (int)(uintptr_t)copy;
+}
+
+static void Compat_StringHolderInitText(_DWORD *holder, const char *source)
+{
+  if ( !holder )
+    return;
+  sub_471C40(holder);
+  if ( source && *source )
+    Compat_StringHolderCopyText(holder, source);
+}
+
+static const char **Compat_StringHolderBuildParentPath(_DWORD *holder, const char *source_text)
+{
+  unsigned int text_len;
+  int slash_index;
+
+  holder[0] = 0;
+  holder[1] = &off_50EC84;
+  sub_471BF0((const char **)holder);
+  holder[1] = &off_50EC94;
+  if ( source_text && *source_text )
+    Compat_StringHolderCopyText(holder, source_text);
+  slash_index = sub_472190((_BYTE **)holder);
+  if ( slash_index == -1 )
+  {
+    Compat_StringHolderCopyText(holder, "");
+    return (const char **)holder;
+  }
+  source_text = Compat_StringHolderGetText(holder);
+  text_len = source_text ? (unsigned int)strlen(source_text) : 0;
+  sub_472230((char **)holder, slash_index, text_len, (int)(text_len - (unsigned int)slash_index));
+  return (const char **)holder;
+}
+
+static _DWORD *Compat_StringHolderBuildLeafName(_DWORD *holder, const char *source_text)
+{
+  unsigned int text_len;
+  int slash_index;
+
+  holder[0] = 0;
+  holder[1] = &off_50EC84;
+  sub_471BF0((const char **)holder);
+  holder[1] = &off_50EC94;
+  if ( source_text && *source_text )
+    Compat_StringHolderCopyText(holder, source_text);
+  slash_index = sub_472190((_BYTE **)holder);
+  if ( slash_index == -1 )
+    return holder;
+  source_text = Compat_StringHolderGetText(holder);
+  text_len = source_text ? (unsigned int)strlen(source_text) : 0;
+  sub_472230((char **)holder, 0, text_len, slash_index + 1);
+  return holder;
+}
+
+static int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
+{
+  if ( (flags & 4) != 0 )
+  {
+    _wcpp_4_dtor_array_store__((int)(uintptr_t)holder, &unk_5108C0);
+    j_j__nfree_();
+    return (int)(uintptr_t)holder;
+  }
+  holder[1] = &off_50EC84;
+  sub_471C40(holder);
+  if ( (flags & 2) != 0 )
+    j__nfree_((int)(uintptr_t)holder);
+  return (int)(uintptr_t)holder;
+}
+
+//----- (00471CA0) --------------------------------------------------------
+_DWORD * sub_471CA0(_DWORD *a1, _DWORD *a2, const char *a3)
+{
+  a1[0] = 0;
+  a1[1] = &off_50EC84;
+  Compat_StringHolderAssignJoined(a1, Compat_StringHolderGetText(a2), a3);
+  a1[1] = &off_50EC94;
+  return a1;
+}
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00471D10) --------------------------------------------------------
 const char ** sub_471D10(const char **a1, const char *a2)
 {
-  unsigned int v3; // edi
-  unsigned int v4; // ecx
-  __int64 v5; // rax
-  char *v6; // edi
-  const char *v7; // esi
-  char v8; // al
-  char v9; // al
-  char *v10; // esi
-  char *v11; // edi
-  char v12; // al
-  char v13; // al
-  char *v15; // esi
-  char v16; // al
-  char v17; // al
-  const char *v18; // [esp-4h] [ebp-18h]
+  _DWORD *holder;
 
-  if ( a2 )
-    v3 = strlen(a2);
-  else
-    v3 = 0;
-  if ( v3 )
-  {
-    if ( *a1 )
-      v4 = strlen(*a1);
-    else
-      v4 = 0;
-    v5 = j_Mem_Alloc(v4);
-    *(_BYTE *)v5 = 0;
-    v6 = (char *)v5;
-    v7 = *a1;
-    if ( *a1 )
-    {
-      v18 = (const char *)v5;
-      do
-      {
-        v8 = *v7;
-        *v6 = *v7;
-        if ( !v8 )
-          break;
-        v9 = v7[1];
-        v7 += 2;
-        v6[1] = v9;
-        v6 += 2;
-      }
-      while ( v9 );
-      v10 = (char *)HIDWORD(v5);
-      v11 = (char *)&v18[strlen(v18)];
-      do
-      {
-        v12 = *v10;
-        *v11 = *v10;
-        if ( !v12 )
-          break;
-        v13 = v10[1];
-        v10 += 2;
-        v11[1] = v13;
-        v11 += 2;
-      }
-      while ( v13 );
-    }
-    else
-    {
-      v15 = (char *)HIDWORD(v5);
-      do
-      {
-        v16 = *v15;
-        *v6 = *v15;
-        if ( !v16 )
-          break;
-        v17 = v15[1];
-        v15 += 2;
-        v6[1] = v17;
-        v6 += 2;
-      }
-      while ( v17 );
-    }
-    sub_471BF0(a1);
-    j_j__nfree_();
-  }
+  holder = (_DWORD *)(uintptr_t)a1;
+  if ( a2 && *a2 )
+    Compat_StringHolderAssignJoined(holder, Compat_StringHolderGetText(holder), a2);
   return a1;
 }
-// 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00471DE0) --------------------------------------------------------
 const char ** sub_471DE0(const char **a1, const char *a2)
 {
-  const char *v3; // esi
-  unsigned int v4; // ecx
-  unsigned int v5; // ecx
-  char *v6; // edi
-  char v7; // al
-  char v8; // al
-  const char *v9; // esi
-  char *v10; // edi
-  char v11; // al
-  char v12; // al
-  const char *v14; // [esp-4h] [ebp-18h]
+  _DWORD *holder;
 
-  v3 = a2;
-  if ( a2 )
-    v4 = strlen(a2);
-  else
-    v4 = 0;
-  if ( v4 )
-  {
-    if ( *a1 )
-      v5 = strlen(*a1);
-    else
-      v5 = 0;
-    v6 = (char *)j_Mem_Alloc(v5);
-    *v6 = 0;
-    v14 = v6;
-    do
-    {
-      v7 = *v3;
-      *v6 = *v3;
-      if ( !v7 )
-        break;
-      v8 = v3[1];
-      v3 += 2;
-      v6[1] = v8;
-      v6 += 2;
-    }
-    while ( v8 );
-    v9 = *a1;
-    if ( *a1 )
-    {
-      v10 = (char *)&v14[strlen(v14)];
-      do
-      {
-        v11 = *v9;
-        *v10 = *v9;
-        if ( !v11 )
-          break;
-        v12 = v9[1];
-        v9 += 2;
-        v10[1] = v12;
-        v10 += 2;
-      }
-      while ( v12 );
-    }
-    sub_471BF0(a1);
-    j_j__nfree_();
-  }
+  holder = (_DWORD *)(uintptr_t)a1;
+  if ( a2 && *a2 )
+    Compat_StringHolderAssignJoined(holder, a2, Compat_StringHolderGetText(holder));
   return a1;
 }
-// 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00471EE0) --------------------------------------------------------
 int  sub_471EE0(_DWORD *a1, int a2, int a3)
@@ -83171,38 +83164,12 @@ int  sub_471EE0(_DWORD *a1, int a2, int a3)
 const char ** sub_471F10(const char **a1, unsigned int a2)
 {
   const char *v3; // eax
-  char *v4; // eax
-  char *v5; // edi
-  const char *v6; // esi
-  char *v7; // ecx
-  char v8; // al
-  char v9; // al
 
-  v3 = *a1;
+  v3 = Compat_StringHolderGetText((_DWORD *)a1);
   if ( v3 && *v3 )
   {
-    if ( *a1 )
-      a2 = strlen(*a1);
-    v4 = (char *)j_Mem_Alloc(a2);
-    *v4 = 0;
-    v5 = v4;
-    v6 = *a1;
-    v7 = v4;
-    do
-    {
-      v8 = *v6;
-      *v5 = *v6;
-      if ( !v8 )
-        break;
-      v9 = v6[1];
-      v6 += 2;
-      v5[1] = v9;
-        v5 += 2;
-      }
-      while ( v9 );
-    Compat_StruprAsciiInPlace(v7);
-    sub_471BF0(a1);
-    j_j__nfree_();
+    Compat_StringHolderAssignJoined((_DWORD *)a1, v3, 0);
+    Compat_StruprAsciiInPlace((char *)Compat_StringHolderGetText((_DWORD *)a1));
   }
   return a1;
 }
@@ -83212,120 +83179,91 @@ const char ** sub_471F10(const char **a1, unsigned int a2)
 //----- (00472120) --------------------------------------------------------
 int  sub_472120(const char **a1, char a2, signed int a3)
 {
-  const char *v4; // eax
-  const char *v6; // edi
-  const char *v7; // esi
-  char v8; // al
+  const char *text;
+  const char *match;
+  unsigned int text_len;
 
-  v4 = *a1;
-  if ( !v4 || !*v4 || a3 < 0 )
+  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a1);
+  if ( !text || !*text || a3 < 0 )
     return -1;
-  v6 = *a1;
-  if ( *a1 )
-    v6 = (const char *)strlen(v6);
-  if ( a3 >= (int)v6 )
+  text_len = (unsigned int)strlen(text);
+  if ( (unsigned int)a3 >= text_len )
     return -1;
-  v7 = &(*a1)[a3];
-  while ( *v7 != a2 )
-  {
-    if ( *v7 )
-    {
-      v8 = *++v7;
-      if ( *v7 == a2 )
-        break;
-      ++v7;
-      if ( v8 )
-        continue;
-    }
-    v7 = 0;
-    break;
-  }
-  if ( v7 )
-    return v7 - *a1;
-  else
+  match = strchr(text + a3, a2);
+  if ( !match )
     return -1;
+  return (int)(match - text);
 }
 
 //----- (00472190) --------------------------------------------------------
 int  sub_472190(_BYTE **a1)
 {
-  _BYTE *v2; // eax
-  char *v4; // eax
+  const char *text;
+  char *last_slash;
 
-  v2 = *a1;
-  if ( v2 && *v2 && (v4 = Compat_StrrchrChar((const char *)v2, '\\')) != 0 )
-    return (int)(v4 - (char *)v2);
-  else
+  text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a1);
+  if ( !text || !*text )
     return -1;
+  last_slash = Compat_StrrchrChar(text, '\\');
+  if ( !last_slash )
+    return -1;
+  return (int)(last_slash - text);
 }
 
 //----- (004721C0) --------------------------------------------------------
 int  sub_4721C0(char **a1, signed int a2)
 {
-  const char *v3; // eax
-  signed int v5; // ecx
-  char *v6; // eax
-  char v8; // [esp+0h] [ebp-10h]
+  _DWORD *holder;
+  char *text;
+  unsigned int text_len;
+  char saved_char;
+  char *last_slash;
 
-  v3 = *a1;
-  if ( v3
-    && *v3
-    && a2 >= 0
-    && (*a1 ? (v5 = strlen(*a1)) : (v5 = 0),
-        a2 < v5
-     && (v8 = (*a1)[a2 + 1],
-         (*a1)[a2 + 1] = 0,
-         v6 = Compat_StrrchrChar(*a1, '\\'),
-         (*a1)[a2 + 1] = v8,
-         v6)) )
-  {
-    return (int)(v6 - *a1);
-  }
-  else
-  {
+  holder = (_DWORD *)(uintptr_t)a1;
+  text = (char *)Compat_StringHolderGetText(holder);
+  if ( !text || !*text || a2 < 0 )
     return -1;
-  }
+  text_len = (unsigned int)strlen(text);
+  if ( (unsigned int)a2 >= text_len )
+    return -1;
+  saved_char = text[a2 + 1];
+  text[a2 + 1] = 0;
+  last_slash = Compat_StrrchrChar(text, '\\');
+  text[a2 + 1] = saved_char;
+  if ( !last_slash )
+    return -1;
+  return (int)(last_slash - text);
 }
 
 //----- (00472230) --------------------------------------------------------
 char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
 {
-  char *v6; // eax
-  unsigned int v7; // eax
-  char *v8; // eax
-  signed int v10; // ecx
+  _DWORD *holder;
+  const char *text;
+  unsigned int text_len;
+  char *copy;
 
-  v6 = *a1;
-  if ( !v6 || !*v6 || a2 < 0 )
+  holder = (_DWORD *)(uintptr_t)a1;
+  text = Compat_StringHolderGetText(holder);
+  if ( !text || !*text || a2 < 0 )
     return a1;
-  if ( *a1 )
+  text_len = (unsigned int)strlen(text);
+  a3 = text_len;
+  if ( text_len != (unsigned int)a4 )
   {
-    a3 = strlen(*a1);
-    v7 = a3;
-  }
-  else
-  {
-    v7 = 0;
-  }
-  if ( v7 != a4 )
-  {
-    v8 = (char *)(uintptr_t)(unsigned int)j_Mem_Alloc(a3 + 1);
-    if ( !v8 )
+    copy = (char *)(uintptr_t)(unsigned int)j_Mem_Alloc(a3 + 1);
+    if ( !copy )
       return a1;
-    Compat_CopyPrefixN(v8, *a1, a2);
-    v8[a2] = 0;
-    if ( *a1 )
-      v10 = strlen(*a1);
-    else
-      v10 = 0;
-    if ( a2 + a4 < v10 )
-      Compat_CopyPrefixN(v8 + a2, &(*a1)[a2 + a4], (unsigned int)(v10 - (a2 + a4) + 1));
-    sub_471C40((_DWORD *)a1);
-    *a1 = v8;
+    Compat_CopyPrefixN(copy, text, a2);
+    copy[a2] = 0;
+    if ( (unsigned int)(a2 + a4) < text_len )
+      Compat_CopyPrefixN(copy + a2, text + a2 + a4, text_len - (unsigned int)(a2 + a4) + 1);
+    sub_471C40(holder);
+    *holder = (int)(uintptr_t)copy;
     j_j__nfree_();
     return a1;
   }
-  sub_471BF0(a1);
+  sub_471BF0((const char **)holder);
   return a1;
 }
 // 47228D: variable 'v9' is possibly undefined
@@ -83335,65 +83273,10 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
 //----- (00472320) --------------------------------------------------------
 const char ** sub_472320(const char **result, signed int a2, const char *a3)
 {
-  const char **v3; // ebp
-  unsigned int v5; // ecx
-  signed int v6; // edx
-  const char *v7; // ecx
-  int v8; // edi
-  int v9; // eax
-  int v10; // ecx
-  const char *v11; // esi
-  char *v12; // edi
-  char v13; // al
-  char v14; // al
-  int v15; // [esp+0h] [ebp-18h]
-
-  v3 = result;
-  if ( *result )
-    v5 = strlen(*result);
-  else
-    v5 = 0;
-  v6 = v5;
-  v7 = a3;
-  if ( a3 )
-  {
-    v7 = (const char *)strlen(a3);
-    v8 = (int)v7;
-  }
-  else
-  {
-    v8 = 0;
-  }
-  if ( a2 >= 0 && a2 <= v6 && v8 > 0 )
-  {
-    v9 = j_Mem_Alloc(v7);
-    strncpy_(v9, *v3);
-    v15 = a2 + v10;
-    strncpy_(v10, a3);
-    v11 = &(*v3)[a2];
-    v12 = (char *)(v15 + v8);
-    do
-    {
-      v13 = *v11;
-      *v12 = *v11;
-      if ( !v13 )
-        break;
-      v14 = v11[1];
-      v11 += 2;
-      v12[1] = v14;
-      v12 += 2;
-    }
-    while ( v14 );
-    sub_471BF0(v3);
-    j_j__nfree_();
-    return v3;
-  }
+  if ( a2 >= 0 && a3 && *a3 )
+    Compat_StringHolderInsertText((_DWORD *)result, a2, a3);
   return result;
 }
-// 472320: could not find valid save-restore pair for ebx
-// 472394: variable 'v10' is possibly undefined
-// 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
-// 48521A: using guessed type int __fastcall strncpy_(_DWORD, _DWORD);
 
 //----- (00472470) --------------------------------------------------------
 _DWORD * sub_472470(_DWORD *result)
@@ -83407,13 +83290,16 @@ _DWORD * sub_472470(_DWORD *result)
 //----- (00472558) --------------------------------------------------------
 void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3)
 {
-  int v4; // edx
-  int v5; // ecx
+  (void)a2;
+  (void)a3;
 
-  off_519EF4(a3, a2);
-  if ( !(_BYTE)dword_54DD90 )
-    _FiniRtns(v5, 255);
-  sub_472584(a1, v4, v5);
+  /*
+   * The original CRT finalizer band is still under-recovered and currently
+   * crashes inside `sub_4B52E6` on fatal quit paths under WSL. For process
+   * termination we only need a reliable exit, so quarantine the finalizer walk
+   * until its object-registration contract is reconstructed safely.
+   */
+  ExitProcess((UINT)a1);
 }
 // 472575: variable 'v5' is possibly undefined
 // 47257C: variable 'v4' is possibly undefined
@@ -84830,22 +84716,24 @@ int  sub_473E60(_DWORD *a1, _DWORD *a2, _DWORD *a3, _DWORD *a4)
 //----- (00473EE0) --------------------------------------------------------
 int __fastcall sub_473EE0(int a1, int *a2)
 {
-  int result; // eax
-  _DWORD *v3; // ecx
+  int object_handle;
+  int result;
+  uintptr_t *vtable;
 
-  result = *a2;
-  if ( *a2 )
-  {
-    result = (*(int (__fastcall **)(int *, int))(*(_DWORD *)result + 12))(a2, 2);
-    *v3 = 0;
-  }
-  else
+  (void)a1;
+  if ( !a2 )
+    return 0;
+  object_handle = *a2;
+  if ( !object_handle )
   {
     *a2 = 0;
+    return 0;
   }
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)object_handle;
+  result = ((int (*)(int, int))(uintptr_t)vtable[3])(object_handle, 2);
+  *a2 = 0;
   return result;
 }
-// 473EFD: variable 'v3' is possibly undefined
 
 //----- (00473F10) --------------------------------------------------------
 int  sub_473F10(int a1)
@@ -84869,18 +84757,105 @@ int sub_473F50()
   return 0;
 }
 
+static _DWORD *Compat_FileSystemQueryOpen(int file_system, int mode_flags)
+{
+  uintptr_t *vtable;
+  char query_mode;
+
+  if ( !file_system )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)file_system;
+  if ( !vtable )
+    return 0;
+  query_mode = (char)(mode_flags | 4);
+  if ( vtable[0] == (uintptr_t)sub_477FF0
+    && vtable[1] == (uintptr_t)sub_477B20 )
+  {
+    if ( vtable[2] == (uintptr_t)sub_4780A0
+      || vtable[2] == (uintptr_t)sub_4783D0 )
+      return (_DWORD *)sub_4780F0(file_system, query_mode, 0);
+  }
+  return sub_479B00(file_system, query_mode, 0);
+}
+
+static int Compat_FileSystemQueryResultIsReady(_DWORD *opened_query)
+{
+  uintptr_t *vtable;
+
+  if ( !opened_query )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)opened_query;
+  if ( !vtable )
+    return 0;
+  if ( vtable[0] == (uintptr_t)sub_477E60
+    && vtable[1] == (uintptr_t)sub_477E80
+    && vtable[2] == (uintptr_t)sub_477E70 )
+    return sub_477E90((int)opened_query);
+  if ( vtable[0] == (uintptr_t)sub_479CB0
+    && vtable[1] == (uintptr_t)sub_479CD0
+    && vtable[2] == (uintptr_t)sub_479CC0 )
+    return sub_478BF0((int)opened_query);
+  return 0;
+}
+
+static void Compat_FileSystemQueryResultRelease(_DWORD *opened_query)
+{
+  uintptr_t *vtable;
+
+  if ( !opened_query )
+    return;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)opened_query;
+  if ( !vtable )
+    return;
+  if ( vtable[0] == (uintptr_t)sub_477E60
+    && vtable[1] == (uintptr_t)sub_477E80
+    && vtable[2] == (uintptr_t)sub_477E70 )
+  {
+    sub_477D60(opened_query, 2);
+    return;
+  }
+  if ( vtable[0] == (uintptr_t)sub_479CB0
+    && vtable[1] == (uintptr_t)sub_479CD0
+    && vtable[2] == (uintptr_t)sub_479CC0 )
+    sub_479CE0((int)opened_query, 2);
+}
+
+static int Compat_FileSystemOnMounted(int mounted_file_system, int *root_file_system)
+{
+  uintptr_t *vtable;
+
+  if ( !mounted_file_system )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)mounted_file_system;
+  if ( !vtable )
+    return 0;
+  if ( vtable[0] == (uintptr_t)sub_477FF0
+    && vtable[1] == (uintptr_t)sub_477B20 )
+  {
+    if ( vtable[2] == (uintptr_t)sub_4780A0 )
+      return sub_478340(mounted_file_system, (int)root_file_system);
+    if ( vtable[2] == (uintptr_t)sub_4783D0 )
+      return sub_4783B0(mounted_file_system, root_file_system, 0, 0);
+  }
+  if ( vtable[0] == (uintptr_t)sub_4792B0
+    && vtable[1] == (uintptr_t)sub_477B20 )
+  {
+    if ( vtable[2] == (uintptr_t)sub_479D20 )
+      return (int)(uintptr_t)sub_479B00(mounted_file_system, 0, 0);
+  }
+  return 0;
+}
+
 //----- (00473F70) --------------------------------------------------------
 int  sub_473F70(int a1, int a2)
 {
-  int v2; // eax
-  int v3; // ecx
+  _DWORD *opened_query; // ecx
 
-  v2 = (*(int (__cdecl **)(int))(*(_DWORD *)a1 + 52))(a2);
-  v3 = v2;
-  if ( v2 && (*(int (__thiscall **)(int))(*(_DWORD *)v2 + 16))(v2) == 1 )
-    return v3;
-  if ( v3 )
-    (*(void (__fastcall **)(int, int))(*(_DWORD *)v3 + 12))(v3, 2);
+  opened_query = Compat_FileSystemQueryOpen(a1, a2);
+  if ( opened_query && Compat_FileSystemQueryResultIsReady(opened_query) == 1 )
+    return (int)opened_query;
+  if ( opened_query )
+    Compat_FileSystemQueryResultRelease(opened_query);
   return 0;
 }
 // 473F9E: variable 'v3' is possibly undefined
@@ -85992,67 +85967,56 @@ int  sub_475B9E(
         int a6,
         int a7)
 {
-  int v8; // eax
-  unsigned int v9; // eax
-  int v10; // edx
-  _DWORD *v11; // ecx
-  int v12; // eax
-  int v14; // eax
-  int v15; // ecx
+  unsigned int open_flags;
+  int fd_index;
+  int mode_char;
 
+  (void)a5;
+  (void)a6;
   *(_BYTE *)(a7 + 12) &= 0xFCu;
-  *(_DWORD *)(a7 + 12) |= a3;
-  if ( (unsigned __int8)tolower_(a7, a2) == 114 )
+  *(_BYTE *)(a7 + 12) |= (unsigned __int8)a3;
+  if ( (a3 & 0x80u) != 0 )
+    mode_char = 'a';
+  else if ( (a3 & 2) != 0 )
+    mode_char = 'w';
+  else
+    mode_char = 'r';
+  if ( mode_char == 'r' )
   {
-    v8 = 0;
+    open_flags = 0;
     if ( (a3 & 2) != 0 )
-      v8 = 2;
+      open_flags = 2;
     if ( (a3 & 0x40) != 0 )
-      BYTE1(v8) |= 2u;
+      open_flags |= 0x200u;
     else
-      BYTE1(v8) |= 1u;
-    a5 = a6;
-    v9 = sub_4881A1(a4, a1, v8, a6);
+      open_flags |= 0x100u;
+    fd_index = Compat_OpenFileDescriptor(a1, mode_char, a3);
   }
   else
   {
-    v12 = ((a3 & 1) != 0) + 33;
+    open_flags = ((a3 & 1) != 0) + 33;
     if ( (a3 & 0x80u) == 0 )
-      LOBYTE(v12) = v12 | 0x40;
+      open_flags |= 0x40u;
     else
-      LOBYTE(v12) = v12 | 0x10;
+      open_flags |= 0x10u;
     if ( (a3 & 0x40) != 0 )
-      BYTE1(v12) |= 2u;
+      open_flags |= 0x200u;
     else
-      BYTE1(v12) |= 1u;
-    v9 = sub_4881A1(a6, a1, v12, a6);
+      open_flags |= 0x100u;
+    fd_index = Compat_OpenFileDescriptor(a1, mode_char, a3);
   }
-  v11[4] = v9;
-  if ( v11[4] == -1 )
+  if ( fd_index == -1 )
   {
-    _freefp_();
+    Compat_FreeFileStream(a7);
     return 0;
   }
-  else
-  {
-    v11[1] = 0;
-    v14 = v11[2];
-    v11[5] = 0;
-    *(_DWORD *)(v14 + 12) = 0;
-    *(_DWORD *)(v11[2] + 16) = v10;
-    *(_DWORD *)(v11[2] + 21) = 0;
-    *(_DWORD *)(v11[2] + 8) = 0;
-    if ( (a3 & 0x80u) != 0 )
-      sub_47BA86((int)v11, 0, 2u, a5);
-    _chktty_();
-    return v15;
-  }
+  Compat_InitFileStream(a7, fd_index, mode_char, a3);
+  if ( (a3 & 0x80u) != 0 )
+    Compat_StreamSeek(a7, 0, 2);
+  _chktty_();
+  return a7;
 }
-// 475C1C: variable 'v11' is possibly undefined
-// 475C4B: variable 'v10' is possibly undefined
-// 475C7C: variable 'v15' is possibly undefined
 // 4852ED: using guessed type int __fastcall tolower_(_DWORD, _DWORD);
-// 48848C: using guessed type int _freefp_(void);
 // 4884E3: using guessed type int _chktty_(void);
 
 //----- (00475C84) --------------------------------------------------------
@@ -86064,25 +86028,22 @@ int  sub_475C84(
         DWORD a5)
 {
   int result; // eax
-  int v8; // ebx
-  int v9; // eax
-  int v10; // edx
+  int open_flags; // ebx
+  int stream_ptr; // eax
   int v11[4]; // [esp+0h] [ebp-10h] BYREF
 
   v11[3] = a3;
   result = IO_ParseOpenModeFlags(a2, v11);
-  v8 = result;
+  open_flags = result;
   if ( result )
   {
-    v9 = _allocfp_();
-    v10 = v9;
-    if ( v9 )
-      return sub_475B9E(a1, v11[0], v8, a5, a4, a4, v9);
-    return v10;
+    stream_ptr = Compat_AllocFileStream();
+    if ( stream_ptr )
+      return sub_475B9E(a1, v11[0], open_flags, a5, a4, 0, stream_ptr);
+    return 0;
   }
   return result;
 }
-// 4883D1: using guessed type int _allocfp_(void);
 
 //----- (00475CC8) --------------------------------------------------------
 int  sub_475CC8(const CHAR *a1, unsigned __int8 *a2, int a3, DWORD a4)
@@ -86250,85 +86211,45 @@ int  sub_476AB0(int result)
 //----- (00476AF0) --------------------------------------------------------
 int  sub_476AF0(int a1, int a2, const CHAR *a3, DWORD a4)
 {
-  _DWORD *v6; // eax
-  _DWORD *v7; // eax
-  _DWORD *v8; // ecx
-  int v9; // eax
-  _DWORD *v10; // ecx
-  int v11; // ebx
-  int *v12; // ecx
-  _DWORD *v13; // edi
-  int v14; // edx
-  _DWORD *v15; // edi
-  int v16; // ecx
-  int v17; // eax
-  const char **v18; // ecx
-  int v19; // ecx
-  int v21; // [esp+4h] [ebp-1Ch] BYREF
-  int (**v22)(); // [esp+8h] [ebp-18h]
-  int v23; // [esp+Ch] [ebp-14h]
+  int entry_path_holder; // [esp+4h] [ebp-1Ch] BYREF
+  int (**entry_path_vtable)(); // [esp+8h] [ebp-18h]
+  int open_mode_handle; // [esp+Ch] [ebp-14h]
+  _DWORD *entry_record;
+  int entry_index;
+  int child_path;
 
-  v6 = (_DWORD *)(a1 + 4);
-  *v6 = 0;
-  v6 += 2;
-  *(v6 - 1) = &off_50EC94;
-  *v6 = 0;
-  v7 = v6 + 2;
-  *(v7 - 1) = &off_50EC94;
-  v7[1] = 1;
-  v7[2] = 0;
-  v7[3] = 0;
-  v7[4] = off_50ECA4;
-  v8 = v7;
-  if ( v7[3] )
-  {
-    v9 = Compat_WcppCtorArrayStorage1s(
-           (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * v7[3] + 4),
-           v7[3],
-           &unk_50ECF0);
-  }
-  else
-  {
-    v9 = 0;
-  }
-  v10 = v8 - 5;
-  v10[5] = v9;
-  v11 = 0;
-  *v10 = off_510964;
+  *(_DWORD *)(a1 + 4) = 0;
+  *(_DWORD *)(a1 + 8) = (int)&off_50EC94;
+  *(_DWORD *)(a1 + 12) = 0;
+  *(_DWORD *)(a1 + 16) = (int)&off_50EC94;
+  *(_DWORD *)(a1 + 24) = 1;
+  *(_DWORD *)(a1 + 28) = 0;
+  *(_DWORD *)(a1 + 32) = 0;
+  *(_DWORD *)(a1 + 36) = (int)off_50ECA4;
+  *(_DWORD *)(a1 + 20) = 0;
+  *(_DWORD *)a1 = (int)off_510964;
+  open_mode_handle = 0;
   if ( a3 )
-    v11 = sub_475CC8(a3, (unsigned __int8 *)aWt, (int)v10, a4);
-  v21 = 0;
-  v22 = &off_50EC84;
-  sub_471BF0(&v21);
-  v22 = &off_50EC94;
-  v23 = v11;
-  v13 = v12 + 5;
-  if ( v12[7] == v12[8] )
-    sub_4017D0(v12 + 5, v12[6]);
-  v14 = v13[2];
-  v13[2] = v14 + 1;
-  v15 = (_DWORD *)(16 * v14 + *v13);
-  *v15 = a2;
-  sub_462D40((int)&v21);
-  sub_462D50(v15 + 1);
-  v15[3] = v23;
-  (*(void (__fastcall **)(int, int))(*(_DWORD *)a2 + 56))(v16, v16);
-  v17 = (*(int (**)(void))(*(_DWORD *)a2 + 36))();
-  if ( v17 )
-    sub_4771D0(v18, v17);
-  sub_471C60((int)&v21, 0);
-  return v19;
+    open_mode_handle = sub_475CC8(a3, (unsigned __int8 *)aWt, a1, a4);
+  entry_path_holder = 0;
+  entry_path_vtable = &off_50EC84;
+  sub_471BF0(&entry_path_holder);
+  entry_path_vtable = &off_50EC94;
+  if ( *(_DWORD *)(a1 + 28) == *(_DWORD *)(a1 + 32) )
+    sub_4017D0((_DWORD *)(a1 + 20), *(_DWORD *)(a1 + 24));
+  entry_index = *(_DWORD *)(a1 + 28);
+  *(_DWORD *)(a1 + 28) = entry_index + 1;
+  entry_record = (_DWORD *)(16 * entry_index + *(_DWORD *)(a1 + 20));
+  *entry_record = a2;
+  Compat_StringHolderCopyText(entry_record + 1, Compat_StringHolderGetText((_DWORD *)&entry_path_holder));
+  entry_record[3] = open_mode_handle;
+  sub_478340(a2, a1);
+  child_path = (int)(intptr_t)sub_4781E0((void *)(intptr_t)a2);
+  if ( child_path )
+    sub_4771D0((const char **)(intptr_t)a1, child_path);
+  Compat_StringHolderDestroyStack((_DWORD *)&entry_path_holder, 0);
+  return a1;
 }
-// 476B49: variable 'v8' is possibly undefined
-// 476B9E: variable 'v12' is possibly undefined
-// 476BE3: variable 'v16' is possibly undefined
-// 476C25: variable 'v18' is possibly undefined
-// 476BFC: variable 'v19' is possibly undefined
-// 4730FB: using guessed type __int64 __thiscall j_Mem_Alloc(_DWORD);
-// 50EC84: using guessed type int (*off_50EC84)();
-// 50EC94: using guessed type int (*off_50EC94)();
-// 50ECA4: using guessed type int (*off_50ECA4[2])();
-// 510964: using guessed type int (*off_510964[13])();
 
 //----- (00476C30) --------------------------------------------------------
 int  sub_476C30(_DWORD *a1, char a2)
@@ -86418,118 +86339,99 @@ _DWORD * sub_476CA0(int a1, int a2)
 //----- (00476D20) --------------------------------------------------------
 char  sub_476D20(int a1, const char **a2)
 {
-  const char *v3; // eax
-  const char **v4; // ecx
-  signed int v5; // edx
-  const char **v6; // ecx
-  signed int v7; // edi
-  int v8; // eax
-  int v9; // esi
-  signed int v10; // ebp
-  const char *v11; // eax
-  const char *v12; // eax
-  int v13; // eax
-  const char **v14; // ecx
-  signed int v15; // edx
-  const char **v16; // ecx
-  const char *v18[2]; // [esp+0h] [ebp-20h] BYREF
-  int v19; // [esp+8h] [ebp-18h]
+  const char *path_text;
+  signed int colon_index;
+  signed int search_index;
+  int dot_index;
+  int dot_next_index;
+  int parent_index;
+  _DWORD v18[2];
 
-  v3 = *a2;
-  if ( *a2 )
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  if ( !path_text || !*path_text )
+    return 0;
+  if ( sub_472120(a2, 58, 0) == -1 )
   {
-    v3 = (const char *)*(unsigned __int8 *)v3;
-    if ( v3 )
+    if ( *path_text == 92 )
     {
-      if ( sub_472120(a2, 58, 0) == -1 )
-      {
-        if ( **v4 == 92 )
-        {
-          sub_471DE0(v4, *(const char **)(a1 + 4));
-        }
-        else
-        {
-          sub_471CA0(v18, (int)v4, *(const char **)(a1 + 12));
-          sub_471DE0(v14, v18[0]);
-          sub_471C60((int)v18, 1);
-        }
-      }
-      v5 = sub_472120(v4, 58, 0) + 1;
-      if ( (*v6)[v5] != 92 )
-        sub_472320(v6, v5, asc_5024B0);
-      v7 = 0;
-      while ( 1 )
-      {
-        v8 = sub_472120(v6, 46, v7);
-        v9 = v8;
-        if ( v8 == -1 )
-          break;
-        v10 = v8 + 1;
-        v11 = *v6;
-        v19 = (unsigned __int8)(*v6)[v10];
-        v12 = &v11[v9 - 1];
-        if ( v19 == 46 )
-        {
-          if ( *v12 != 92 || (v13 = sub_4721C0(v6, v9 - 2), v13 == -1) )
-          {
-            LOBYTE(v3) = sub_471BF0(v6);
-            return (char)v3;
-          }
-          sub_472230(v6, v13, (unsigned int)v6, v9 - v13 + 2);
-        }
-        else if ( *v12 == 92 )
-        {
-          sub_472230(v6, v9 - 1, (unsigned int)v6, 2);
-        }
-        else
-        {
-          v7 = v10;
-        }
-      }
-      v15 = sub_472120(v6, 58, 0) + 1;
-      if ( (*v16)[v15] != 92 )
-        sub_472320(v16, v15, asc_5024B4);
-      LOBYTE(v3) = (unsigned __int8)sub_471F10(v16, (unsigned int)v16);
+      sub_471DE0(a2, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4));
+    }
+    else
+    {
+      v18[0] = 0;
+      v18[1] = (int)&off_50EC94;
+      sub_471CA0(v18, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 12));
+      sub_471DE0(a2, Compat_StringHolderGetText(v18));
+      Compat_StringHolderDestroyStack(v18, 1);
     }
   }
-  return (char)v3;
+  colon_index = sub_472120(a2, 58, 0) + 1;
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  if ( !path_text || path_text[colon_index] != 92 )
+    sub_472320(a2, colon_index, asc_5024B0);
+  search_index = 0;
+  while ( 1 )
+  {
+    dot_index = sub_472120(a2, 46, search_index);
+    if ( dot_index == -1 )
+      break;
+    dot_next_index = dot_index + 1;
+    path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+    if ( !path_text )
+      break;
+    if ( path_text[dot_next_index] == 46 )
+    {
+      if ( path_text[dot_index - 1] != 92 || (parent_index = sub_4721C0((char **)a2, dot_index - 2), parent_index == -1) )
+      {
+        Compat_StringHolderCopyText((_DWORD *)a2, "");
+        return 0;
+      }
+      sub_472230((char **)a2, parent_index, (unsigned int)(uintptr_t)a2, dot_index - parent_index + 2);
+    }
+    else if ( path_text[dot_index - 1] == 92 )
+    {
+      sub_472230((char **)a2, dot_index - 1, (unsigned int)(uintptr_t)a2, 2);
+    }
+    else
+    {
+      search_index = dot_next_index;
+    }
+  }
+  colon_index = sub_472120(a2, 58, 0) + 1;
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
+  if ( !path_text || path_text[colon_index] != 92 )
+    sub_472320(a2, colon_index, asc_5024B4);
+  return (char)(unsigned __int8)(uintptr_t)sub_471F10(a2, (unsigned int)(uintptr_t)a2);
 }
-// 476D57: variable 'v4' is possibly undefined
-// 476D85: variable 'v6' is possibly undefined
-// 476E19: variable 'v14' is possibly undefined
-// 476E9F: variable 'v16' is possibly undefined
 
 //----- (00476ED0) --------------------------------------------------------
 const char ** sub_476ED0(int a1, int a2, unsigned int a3, const char **a4)
 {
-  const char *v5; // edi
-  int v6; // ebx
+  const char *entry_path;
+  const char *holder_text;
+  unsigned int holder_len;
+  int entry_path_len;
   const char **result; // eax
-  unsigned int v8; // kr08_4
 
-  v5 = *(const char **)(16 * a2 + *(_DWORD *)(a1 + 20) + 4);
-  if ( v5 )
+  entry_path = Compat_StringHolderGetText((_DWORD *)(uintptr_t)(16 * a2 + *(_DWORD *)(a1 + 20) + 4));
+  if ( entry_path )
   {
-    a3 = strlen(v5);
-    v6 = a3;
+    a3 = (unsigned int)strlen(entry_path);
+    entry_path_len = (int)a3;
   }
   else
   {
-    v6 = 0;
+    entry_path_len = 0;
   }
-  result = sub_472230(a4, 0, a3, v6);
-  if ( *a4 )
+  result = sub_472230((char **)a4, 0, a3, entry_path_len);
+  holder_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a4);
+  if ( holder_text )
   {
-    result = 0;
-    v8 = strlen(*a4) + 1;
-    if ( v8 != 1 )
-    {
-      result = (const char **)*(unsigned __int8 *)*a4;
-      if ( result == (const char **)92 )
-        return sub_472230(a4, 0, v8 - 1, 1);
-    }
+    holder_len = (unsigned int)strlen(holder_text) + 1;
+    if ( holder_len != 1 && *(const unsigned char *)holder_text == 92 )
+      return sub_472230((char **)a4, 0, holder_len - 1, 1);
   }
-  return result;
+  return a4;
 }
 
 //----- (00476F40) --------------------------------------------------------
@@ -86542,80 +86444,53 @@ int  sub_476F40(int a1)
 //----- (00476F60) --------------------------------------------------------
 signed int  sub_476F60(int a1, const char **a2, int a3)
 {
-  int v4; // edx
-  int v5; // ebx
-  unsigned int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
-  int v9; // ecx
-  int v11; // ecx
-  const char *v12; // [esp+0h] [ebp-24h] BYREF
-  int (**v13)(); // [esp+4h] [ebp-20h]
-  int v14; // [esp+8h] [ebp-1Ch]
-  int v15; // [esp+Ch] [ebp-18h]
-  int v16; // [esp+10h] [ebp-14h]
+  const char *entry_path;
+  unsigned int entry_path_len;
+  unsigned int requested_path_len;
+  int current_index;
+  int current_offset;
+  int limit_offset;
 
-  v4 = *(_DWORD *)(a1 + 28);
-  v16 = a3;
-  if ( a3 < v4 )
+  current_index = a3;
+  if ( a3 >= *(_DWORD *)(a1 + 28) )
+    return -1;
+  current_offset = 16 * a3;
+  limit_offset = 16 * *(_DWORD *)(a1 + 28);
+  do
   {
-    v14 = a1 + 20;
-    v5 = 16 * a3;
-    v15 = 16 * v4;
-    do
+    entry_path = Compat_StringHolderGetText((_DWORD *)(current_offset + *(_DWORD *)(a1 + 20) + 4));
+    if ( entry_path )
+      entry_path_len = strlen(entry_path);
+    else
+      entry_path_len = 0;
+    if ( !entry_path_len )
+      return current_index;
+    if ( *a2 )
+      requested_path_len = strlen(*a2);
+    else
+      requested_path_len = 0;
+    if ( entry_path_len < requested_path_len )
     {
-      v12 = 0;
-      v13 = &off_50EC84;
-      sub_471BF0(&v12);
-      v13 = &off_50EC94;
-      if ( v12 )
-        v6 = strlen(v12);
-      else
-        v6 = 0;
-      v7 = v6;
-      if ( !v6 )
-      {
-        sub_471C60((int)&v12, 1);
-        return v9;
-      }
-      if ( *a2 )
-        v8 = strlen(*a2);
-      else
-        v8 = 0;
-      if ( v7 < v8 )
-      {
-        if ( !memcmp(*a2, v12, v7) && (*a2)[v7] == 92 )
-        {
-LABEL_20:
-          sub_471C60((int)&v12, 1);
-          return v11;
-        }
-      }
-      else if ( v7 == v8 && !memcmp(*a2, v12, v8) )
-      {
-        goto LABEL_20;
-      }
-      sub_471C60((int)&v12, 1);
-      v5 += 16;
-      ++v16;
+      if ( !memcmp(*a2, entry_path, entry_path_len) && (*a2)[entry_path_len] == 92 )
+        return current_index;
     }
-    while ( v5 < v15 );
+    else if ( entry_path_len == requested_path_len && !memcmp(*a2, entry_path, requested_path_len) )
+    {
+      return current_index;
+    }
+    current_offset += 16;
+    ++current_index;
   }
+  while ( current_offset < limit_offset );
   return -1;
 }
-// 477004: variable 'v9' is possibly undefined
-// 47709C: variable 'v11' is possibly undefined
-// 50EC84: using guessed type int (*off_50EC84)();
-// 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004770B0) --------------------------------------------------------
 int  sub_4770B0(int a1, int a2, int (*a3)(void))
 {
-  int v5; // eax
-  unsigned int v6; // ecx
-  int v7; // eax
-  int v8; // ecx
-  int v10; // edi
+  int matched_index; // eax
+  int callback_result; // eax
+  int next_index; // eax
   const char *v11; // [esp+0h] [ebp-18h] BYREF
   int (**v12)(); // [esp+4h] [ebp-14h]
   int v13; // [esp+8h] [ebp-10h]
@@ -86627,89 +86502,122 @@ int  sub_4770B0(int a1, int a2, int (*a3)(void))
   sub_476D20(a1, &v11);
   if ( v11 && *v11 )
   {
-    v5 = 0;
     v13 = a1 + 20;
-    while ( sub_476F60(a1, &v11, v5) != -1 )
+    next_index = 0;
+    while ( 1 )
     {
+      matched_index = sub_476F60(a1, &v11, next_index);
+      if ( matched_index == -1 )
+        break;
       sub_471BF0(&dword_54DD00);
-      sub_476ED0(a1, v6, v6, (const char **)&dword_54DD00);
-      v7 = a3();
-      if ( v7 != a2 )
+      sub_476ED0(a1, matched_index, matched_index, (const char **)&dword_54DD00);
+      callback_result = a3();
+      if ( callback_result != a2 )
       {
-        v10 = v7;
-        sub_471C60((int)&v11, 1);
-        return v10;
+        Compat_StringHolderDestroyStack((_DWORD *)&v11, 1);
+        return callback_result;
       }
-      v5 = v8 + 1;
+      next_index = matched_index + 1;
     }
   }
-  sub_471C60((int)&v11, 1);
+  Compat_StringHolderDestroyStack((_DWORD *)&v11, 1);
   return a2;
 }
-// 477126: variable 'v6' is possibly undefined
-// 47713E: variable 'v8' is possibly undefined
-// 50EC84: using guessed type int (*off_50EC84)();
-// 50EC94: using guessed type int (*off_50EC94)();
 // 54DD00: using guessed type int dword_54DD00;
+
+static int Compat_FileSystemQuery(int filesystem, const char *requested_path, int expected_result, int (*callback)(int))
+{
+  int callback_result;
+  int current_entry;
+  int next_entry;
+  int entry_base;
+  const char *normalized_path; // [esp+0h] [ebp-18h] BYREF
+  int (**normalized_vtable)(); // [esp+4h] [ebp-14h]
+
+  normalized_path = 0;
+  normalized_vtable = &off_50EC84;
+  Compat_StringHolderCopyText((_DWORD *)&normalized_path, requested_path);
+  normalized_vtable = &off_50EC94;
+  sub_476D20(filesystem, &normalized_path);
+  if ( normalized_path && *normalized_path )
+  {
+    next_entry = 0;
+    entry_base = *(_DWORD *)(filesystem + 20);
+    while ( 1 )
+    {
+      current_entry = sub_476F60(filesystem, &normalized_path, next_entry);
+      if ( current_entry == -1 )
+        break;
+      Compat_StringHolderCopyText(&dword_54DD00, Compat_StringHolderGetText((_DWORD *)&normalized_path));
+      sub_476ED0(filesystem, current_entry, current_entry, (const char **)&dword_54DD00);
+      callback_result = callback(entry_base + 16 * current_entry);
+      if ( callback_result != expected_result )
+      {
+        Compat_StringHolderDestroyStack((_DWORD *)&normalized_path, 1);
+        return callback_result;
+      }
+      next_entry = current_entry + 1;
+    }
+  }
+  Compat_StringHolderDestroyStack((_DWORD *)&normalized_path, 1);
+  return expected_result;
+}
 
 //----- (00477170) --------------------------------------------------------
 int  sub_477170(int a1)
 {
-  int v1; // eax
-  int v2; // ecx
   int v3; // ebx
 
-  v1 = (*(int (__fastcall **)(int, int))(**(_DWORD **)a1 + 12))(a1, dword_54DD00);
-  v3 = v1;
-  if ( !*(_DWORD *)(v2 + 12) )
+  v3 = sub_473F70(*(_DWORD *)a1, dword_54DD08);
+  if ( !*(_DWORD *)(a1 + 12) )
     return v3;
-  if ( v1 )
+  if ( v3 )
   {
-    sub_476301(v2, dword_54DD00, *(_DWORD *)(v2 + 12), (int)aS_15, dword_54DD00);
+    sub_476301(a1 + 12, dword_54DD00, *(_DWORD *)(a1 + 12), (int)aS_15, dword_54DD00);
     return v3;
   }
-  sub_476301(v2, dword_54DD00, *(_DWORD *)(v2 + 12), (int)aS_2, dword_54DD00);
+  sub_476301(a1 + 12, dword_54DD00, *(_DWORD *)(a1 + 12), (int)aS_2, dword_54DD00);
   return v3;
 }
-// 477189: variable 'v2' is possibly undefined
 // 54DD00: using guessed type int dword_54DD00;
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (004771D0) --------------------------------------------------------
 signed int  sub_4771D0(const char **a1, int a2)
 {
-  unsigned int v4; // kr04_4
-  int v5; // ecx
-  const char *v6; // eax
-  int v7; // edx
-  unsigned int v8; // ecx
-  unsigned int v9; // ecx
+  _DWORD *fs_words;
+  unsigned int path_len_with_nul;
+  int colon_index;
+  const char *root_text;
+  unsigned int root_text_len;
+  unsigned int normalized_text_len;
   const char *v10; // [esp+0h] [ebp-20h] BYREF
   int (**v11)(); // [esp+4h] [ebp-1Ch]
-  int v12; // [esp+8h] [ebp-18h]
 
+  fs_words = (_DWORD *)(uintptr_t)a1;
   if ( !(*((int (__thiscall **)(int))*a1 + 12))(a2) )
     return 0;
   v10 = 0;
   v11 = &off_50EC84;
-  sub_471BF0(&v10);
+  Compat_StringHolderInitText((_DWORD *)&v10, (const char *)(uintptr_t)(unsigned int)a2);
   v11 = &off_50EC94;
   sub_476D20((int)a1, &v10);
   if ( v10 && *v10 )
   {
-    v4 = strlen(v10) + 1;
-    if ( v10[v4 - 2] != 92 )
-      sub_472320(&v10, v4 - 1, asc_5024C0);
-    v12 = sub_472120(&v10, 58, 0);
-    sub_471BF0(a1 + 1);
-    v6 = (const char *)sub_462D30(v5);
-    if ( v6 )
-      v8 = strlen(v6);
+    path_len_with_nul = (unsigned int)strlen(v10) + 1;
+    if ( path_len_with_nul >= 2 && v10[path_len_with_nul - 2] != 92 )
+      sub_472320(&v10, path_len_with_nul - 1, asc_5024C0);
+    colon_index = sub_472120(&v10, 58, 0);
+    Compat_StringHolderCopyText(fs_words + 1, v10);
+    root_text = Compat_StringHolderGetText(fs_words + 1);
+    if ( root_text )
+      root_text_len = (unsigned int)strlen(root_text);
     else
-      v8 = 0;
-    sub_472230(a1 + 1, v7, v8, v8 - v7);
-    sub_472230(&v10, 0, v9, v12 + 1);
-    sub_471BF0(a1 + 3);
+      root_text_len = 0;
+    sub_472230((char **)(fs_words + 1), colon_index + 1, root_text_len, (int)(root_text_len - (unsigned int)(colon_index + 1)));
+    normalized_text_len = (unsigned int)strlen(v10);
+    sub_472230(&v10, 0, normalized_text_len, colon_index + 1);
+    Compat_StringHolderCopyText(fs_words + 3, v10);
     sub_471C60((int)&v10, 1);
     return 1;
   }
@@ -86755,65 +86663,49 @@ int  sub_477300(int a1, int a2)
 // 54DCF8: using guessed type char byte_54DCF8;
 
 //----- (00477370) --------------------------------------------------------
-int  sub_477370(int *a1, const CHAR *a2, DWORD a3)
+int  sub_477370(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4)
 {
+  int archive_mode; // eax
   const char *v6; // eax
-  int v7; // edx
   unsigned int v8; // ecx
-  int v9; // ecx
   _DWORD *v10; // ecx
   int v11; // edx
   _DWORD *v12; // ecx
   _DWORD *v13; // ebx
-  int v14; // ecx
-  int v15; // [esp+4h] [ebp-24h] BYREF
-  int (**v16)(); // [esp+8h] [ebp-20h]
-  int v17; // [esp+Ch] [ebp-1Ch]
   const char *v18; // [esp+10h] [ebp-18h] BYREF
   int (**v19)(); // [esp+14h] [ebp-14h]
   const CHAR *v20; // [esp+18h] [ebp-10h]
 
-  v20 = a2;
+  archive_mode = 0;
+  v20 = a3;
   v18 = 0;
   v19 = &off_50EC84;
-  sub_471BF0(&v18);
-  v19 = &off_50EC94;
+  Compat_StringHolderInitText((_DWORD *)&v18, a2);
   sub_476D20((int)a1, &v18);
-  if ( v18 && *v18 )
+  v6 = Compat_StringHolderGetText((_DWORD *)&v18);
+  if ( v6 && *v6 )
   {
-    if ( v18[strlen(v18) - 1] == 92 )
+    v8 = strlen(v6);
+    if ( v8 && v6[v8 - 1] == 92 )
     {
-      v6 = (const char *)sub_462D30((int)&v18);
-      if ( v6 )
-        v8 = strlen(v6);
-      else
-        v8 = 0;
-      sub_472230(&v18, v7, v8, v8 - v7);
+      sub_472230((char **)&v18, (int)(v8 - 1), (unsigned int)(uintptr_t)&v18, 1);
     }
     if ( v20 )
-      sub_475CC8(v20, (unsigned __int8 *)aWt_0, 0, a3);
-    v15 = 0;
-    v16 = &off_50EC84;
-    sub_471BF0(&v15);
-    v16 = &off_50EC94;
-    v17 = v9;
+      archive_mode = sub_475CC8(v20, (unsigned __int8 *)aWt_0, 0, a4);
     v10 = a1 + 5;
     if ( a1[7] == a1[8] )
       sub_4017D0(a1 + 5, a1[6]);
     v11 = v10[2];
     v10[2] = v11 + 1;
     v12 = (_DWORD *)(16 * v11 + *v10);
-    *v12 = a3;
+    *v12 = a4;
     v13 = v12 + 1;
-    sub_462D40((int)&v15);
-    sub_462D50(v13);
-    *(_DWORD *)(v14 + 12) = v17;
-    (*(void (**)(void))(*(_DWORD *)a3 + 56))();
-    sub_471C60((int)&v15, 0);
+    Compat_StringHolderCopyText(v13, Compat_StringHolderGetText((_DWORD *)&v18));
+    v12[3] = archive_mode;
+    Compat_FileSystemOnMounted((int)a4, a1);
   }
-  return sub_471C60((int)&v18, 1);
+  return Compat_StringHolderDestroyStack((_DWORD *)&v18, 1);
 }
-// 477417: variable 'v7' is possibly undefined
 // 477460: variable 'v9' is possibly undefined
 // 477478: variable 'v10' is possibly undefined
 // 4774A6: variable 'v14' is possibly undefined
@@ -87333,10 +87225,9 @@ _DWORD * sub_477CE0(_DWORD *a1, const CHAR *a2, int a3, char a4, DWORD a5)
   }
   a1[1] = sub_475CC8(a2, (unsigned __int8 *)v7, a3, a5);
   if ( (a4 & 0x20) != 0 )
-    setvbuf_(0, 0);
+    Compat_StreamSetBuffer((int)a1[1], 0x1800);
   return a1;
 }
-// 489D33: using guessed type int __fastcall setvbuf_(_DWORD, _DWORD);
 // 5109C4: using guessed type int (*off_5109C4[9])();
 
 //----- (00477D60) --------------------------------------------------------
@@ -87345,7 +87236,6 @@ _DWORD * sub_477D60(_DWORD *result, char a2)
   int v3; // ebx
   int v4; // ecx
   int v5; // ecx
-  char v6; // dl
   int v7; // ecx
 
   if ( (a2 & 4) != 0 )
@@ -87358,8 +87248,8 @@ _DWORD * sub_477D60(_DWORD *result, char a2)
   *result = off_5109C4;
   if ( v3 )
   {
-    fclose_(result);
-    if ( (v6 & 2) == 0 )
+    fclose_(v3);
+    if ( (a2 & 2) == 0 )
       return (_DWORD *)v5;
     goto LABEL_8;
   }
@@ -87372,7 +87262,6 @@ LABEL_8:
   return result;
 }
 // 477D8F: variable 'v4' is possibly undefined
-// 477D9B: variable 'v6' is possibly undefined
 // 477DA0: variable 'v5' is possibly undefined
 // 477DAC: variable 'v7' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
@@ -87380,30 +87269,33 @@ LABEL_8:
 // 5109C4: using guessed type int (*off_5109C4[9])();
 
 //----- (00477DC0) --------------------------------------------------------
-int sub_477DC0()
+int sub_477DC0(int a1, void *a2, int a3)
 {
-  return fread_();
+  return Compat_StreamRead(*(_DWORD *)(a1 + 4), a2, a3);
 }
 
 //----- (00477DE0) --------------------------------------------------------
 int  sub_477DE0(int a1, unsigned int a2)
 {
-  unsigned __int8 **v2; // edx
-  _DWORD *v3; // edx
-  unsigned __int8 *v4; // eax
+  int stream_ptr;
+  unsigned __int8 next_byte;
 
-  v2 = *(unsigned __int8 ***)(a1 + 4);
-  if ( (int)v2[1] <= 0 )
-    return fgetc_(a2, v2);
-  a2 = **v2 - 13;
-  if ( a2 <= 0xFD )
-    return fgetc_(a2, v2);
-  --v2[1];
-  v3 = *(_DWORD **)(a1 + 4);
-  v4 = (unsigned __int8 *)(*v3)++;
-  return *v4;
+  (void)a2;
+  stream_ptr = *(_DWORD *)(a1 + 4);
+  if ( *(_DWORD *)(stream_ptr + 4) > 0 )
+  {
+    next_byte = *(unsigned __int8 *)*(_DWORD *)stream_ptr;
+    if ( (unsigned int)(next_byte - 13) > 0xFD )
+    {
+      --*(_DWORD *)(stream_ptr + 4);
+      ++*(_DWORD *)stream_ptr;
+      return next_byte;
+    }
+  }
+  if ( Compat_StreamRead(stream_ptr, &next_byte, 1) == 1 )
+    return next_byte;
+  return -1;
 }
-// 488F44: using guessed type int __fastcall fgetc_(_DWORD, _DWORD);
 
 //----- (00477E30) --------------------------------------------------------
 signed int  sub_477E30(int a1, signed int a2)
@@ -87432,9 +87324,8 @@ signed int  sub_477E70(int a1, int a2, int a3)
 //----- (00477E80) --------------------------------------------------------
 int __fastcall sub_477E80(int a1, int a2)
 {
-  return ftell_(a1, a2);
+  return Compat_StreamTell(*(_DWORD *)(a1 + 4));
 }
-// 4887EC: using guessed type int __fastcall ftell_(_DWORD, _DWORD);
 
 //----- (00477E90) --------------------------------------------------------
 signed int  sub_477E90(int a1)
@@ -87581,22 +87472,20 @@ int  sub_477FF0(int a1, char a2, DWORD a3)
 //----- (00478030) --------------------------------------------------------
 const char ** sub_478030(const char **a1, int a2)
 {
-  const char **v4; // edi
-  const char *v5; // edi
-  unsigned int v6; // ecx
+  const char *path_text;
+  unsigned int path_len;
 
-  a1[1] = 0;
-  a1[2] = (const char *)&off_50EC94;
-  *a1 = (const char *)off_510A14;
+  *(_DWORD *)(a1 + 4) = 0;
+  *(_DWORD *)(a1 + 8) = (int)&off_50EC94;
+  *(_DWORD *)a1 = (int)off_510A14;
   if ( !a2 )
     return a1;
-  v4 = a1 + 1;
-  sub_471BF0(a1 + 1);
-  v5 = *v4;
-  v6 = v5 ? strlen(v5) : 0;
-  if ( a1[1][v6 - 1] == 92 )
+  sub_471BF0((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
+  path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
+  path_len = path_text ? (unsigned int)strlen(path_text) : 0;
+  if ( !path_len || path_text[path_len - 1] == 92 )
     return a1;
-  sub_471D10(a1 + 1, asc_5024EA);
+  sub_471D10((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4), asc_5024EA);
   return a1;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
@@ -87638,26 +87527,20 @@ int  sub_4780A0(_DWORD *a1, char a2)
 //----- (004780F0) --------------------------------------------------------
 int  sub_4780F0(int a1, char a2, DWORD a3)
 {
-  const char *v5; // edx
-  int v6; // ecx
-  int v7; // ecx
-  const CHAR **v9; // eax
-  _DWORD *v10; // ecx
-  _DWORD v11[5]; // [esp-14h] [ebp-14h] BYREF
+  _DWORD *result; // ecx
+  _DWORD joined_path[2]; // [esp+0h] [ebp-8h] BYREF
 
-  v11[4] = a1;
-  v6 = Mem_Alloc(8, a1, a2, a3);
-  if ( v6 )
+  joined_path[0] = 0;
+  joined_path[1] = &off_50EC84;
+  result = (_DWORD *)Mem_Alloc(8, a1, a2, a3);
+  if ( result )
   {
-    v9 = (const CHAR **)sub_471CA0(v11, v6, v5);
-    sub_477CE0(v10, *v9, (int)v10, a2, a3);
+    sub_471CA0(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), 0);
+    result = sub_477CE0(result, (const CHAR *)(uintptr_t)(unsigned int)joined_path[0], 0, a2, a3);
   }
-  sub_471C60((int)v11, 1);
-  return v7;
+  Compat_StringHolderDestroyStack(joined_path, 1);
+  return (int)result;
 }
-// 478126: variable 'v5' is possibly undefined
-// 478131: variable 'v10' is possibly undefined
-// 478116: variable 'v7' is possibly undefined
 
 //----- (00478140) --------------------------------------------------------
 int __fastcall sub_478140(int a1, const char *a2)
@@ -87720,7 +87603,8 @@ char *__thiscall sub_4781E0(void *this)
   char v4; // al
   char v5; // al
 
-  getcwd_(this, 100);
+  (void)this;
+  getcwd_(byte_519FA0, 100);
   if ( byte_519F9F[strlen(byte_519FA0)] == 92 )
     return byte_519FA0;
   v2 = asc_5024EC;
@@ -87782,31 +87666,24 @@ int __thiscall sub_478250(void *this)
 //----- (00478340) --------------------------------------------------------
 char  sub_478340(int a1, int a2)
 {
-  _BYTE *v4; // edx
-  int v5; // ecx
+  const char *resolved_path; // eax
 
-  v4 = *(_BYTE **)(a1 + 4);
-  if ( !v4 || !*v4 )
-  {
-    sub_4776D0(a2, a1);
-    LOBYTE(a2) = sub_471BF0((_DWORD *)(v5 + 4));
-  }
+  resolved_path = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4);
+  if ( !resolved_path || !*resolved_path )
+    Compat_StringHolderCopyText((_DWORD *)(a1 + 4), (const char *)(uintptr_t)(unsigned int)sub_4776D0(a2, a1));
   return a2;
 }
-// 478366: variable 'v5' is possibly undefined
 
 //----- (00478370) --------------------------------------------------------
 const char ** sub_478370(int a1, char a2, DWORD a3)
 {
   const char **result; // eax
-  int v5; // edx
 
   result = (const char **)Mem_Alloc(12, a1, a2, a3);
   if ( result )
-    return sub_478030(result, v5);
+    return sub_478030(result, a1);
   return result;
 }
-// 478383: variable 'v5' is possibly undefined
 
 //----- (004783B0) --------------------------------------------------------
 int  sub_4783B0(int a1, int *a2, char a3, DWORD a4)
@@ -87814,7 +87691,11 @@ int  sub_4783B0(int a1, int *a2, char a3, DWORD a4)
   _DWORD *v5; // eax
 
   v5 = sub_48A080(a1, a3, a4);
-  return sub_477370(a2, 0, (DWORD)v5);
+  return sub_477370(
+           a2,
+           (const CHAR *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4),
+           0,
+           (DWORD)v5);
 }
 
 //----- (004783D0) --------------------------------------------------------
@@ -88007,54 +87888,42 @@ int  sub_4785F0(_DWORD *a1)
 int  sub_478610(_DWORD *a1, int a2)
 {
   int v3; // ebp
-  int v5; // ecx
 
   ++dword_54DD0C;
   v3 = a1[1];
   if ( a2 >= v3 && a2 < a1[2] + v3 )
     return a1[4] + 26 * (a2 - a1[1]);
-  sub_478670(a1);
+  sub_478670(a1, a2);
   ++dword_54DD10;
-  return *(_DWORD *)(v5 + 16) + 26 * (a2 - *(_DWORD *)(v5 + 4));
+  return a1[4] + 26 * (a2 - a1[1]);
 }
-// 478656: variable 'v5' is possibly undefined
 // 54DD0C: using guessed type int dword_54DD0C;
 // 54DD10: using guessed type int dword_54DD10;
 
 //----- (00478670) --------------------------------------------------------
-int  sub_478670(_DWORD *a1)
+int  sub_478670(_DWORD *a1, int a2)
 {
-  _DWORD *v1; // ecx
-  int v2; // edx
   int v3; // edx
   int *v4; // esi
   unsigned __int8 *v5; // edi
   int result; // eax
-  int v7; // ecx
 
   sub_4786E0(a1);
-  v3 = v2 - v1[2] + 1;
-  v1[1] = v3;
+  v3 = a2 - a1[2] + 1;
+  a1[1] = v3;
   if ( v3 < 0 )
-    v1[1] = 0;
-  v4 = (int *)v1[5];
-  v5 = (unsigned __int8 *)v1[4];
-  sub_4799B0(v4, v1[6] + 26 * v1[1], (int)v5);
-  result = fread_();
+    a1[1] = 0;
+  v4 = (int *)a1[5];
+  v5 = (unsigned __int8 *)a1[4];
+  sub_4799B0(v4, a1[6] + 26 * a1[1], (int)v5);
+  result = Compat_StreamRead(v4[2], v5, 26 * a1[2]);
   if ( v4[5] )
   {
-    result = (int)sub_479C40((int)v4, v5, result);
-    v4[12] += v7;
+    sub_479C40((int)v4, v5, result);
   }
-  else
-  {
-    v4[12] += result;
-  }
+  v4[12] += result;
   return result;
 }
-// 47867C: variable 'v2' is possibly undefined
-// 47867C: variable 'v1' is possibly undefined
-// 4786D6: variable 'v7' is possibly undefined
 
 //----- (004786E0) --------------------------------------------------------
 _DWORD * sub_4786E0(_DWORD *result)
@@ -88062,8 +87931,6 @@ _DWORD * sub_4786E0(_DWORD *result)
   unsigned int v1; // ebx
   int *v2; // esi
   const void *v3; // edi
-  int v4; // ecx
-  int v5; // ecx
 
   if ( result[3] )
   {
@@ -88071,8 +87938,8 @@ _DWORD * sub_4786E0(_DWORD *result)
     v2 = (int *)result[5];
     v3 = (const void *)result[4];
     sub_4799E0(v2, result[6] + 26 * result[1], (int)v3);
-    result = (_DWORD *)sub_479A10(v2, v3, v4, v1);
-    *(_DWORD *)(v5 + 12) = 0;
+    sub_479A10(v2, v3, v1, v1);
+    result[3] = 0;
   }
   return result;
 }
@@ -88113,7 +87980,7 @@ int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5)
   *a1 = 0;
   a1[1] = &off_50EC84;
   sub_471C40(a1);
-  v14 = *(const char **)a5;
+  v14 = Compat_StringArgGetText(a5);
   if ( v14 && *v14 )
   {
     *a1 = (int)(uintptr_t)j_Mem_Alloc((unsigned int)strlen(v14) + 1);
@@ -88124,8 +87991,8 @@ int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5)
   v9 = sub_478540(a1 + 4, (int)a2, a3 + 4, (a4 - 4) / 0x1Au);
   v10 = (int)(v9 - 4);
   v15 = (unsigned __int8 *)(v9 - 2);
-  sub_4799B0(a2, a3, (int)a2);
-  v11 = fread_();
+  sub_4799B0(a2, a3, 0);
+  v11 = Compat_StreamRead((int)a2, v15, 4);
   if ( a2[5] )
   {
     sub_479C40((int)a2, v15, v11);
@@ -88147,9 +88014,6 @@ int  sub_478830(_DWORD *a1, int a2, int a3)
 {
   int *v3; // edi
   int v4; // eax
-  int v5; // edx
-  int *v6; // eax
-  int v7; // ecx
 
   *a1 = 0;
   a1[1] = &off_50EC94;
@@ -88157,12 +88021,10 @@ int  sub_478830(_DWORD *a1, int a2, int a3)
   a1[3] = 0;
   v3 = a1 + 4;
   v4 = sub_479980(a2, (int)(a1 + 4));
-  v6 = sub_478540(v3, v5, v4 + 4, a3);
-  sub_478B10((int)(v6 - 4), a3, (int)(v6 - 4));
-  return v7;
+  sub_478540(v3, a2, v4 + 4, a3);
+  sub_478B10((int)v3, a3, (int)v3);
+  return (int)v3;
 }
-// 478863: variable 'v5' is possibly undefined
-// 478874: variable 'v7' is possibly undefined
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00478880) --------------------------------------------------------
@@ -88206,40 +88068,35 @@ int  sub_4788A0(int a1)
 //----- (004788F0) --------------------------------------------------------
 unsigned int  sub_4788F0(int a1, const char **a2)
 {
-  const char *v3; // edi
-  unsigned __int8 v4; // al
-  int v5; // edx
-  unsigned int v6; // ebx
-  unsigned int v7; // kr04_4
-  const char *v8; // eax
+  const char *text;
+  unsigned int hash_value;
+  unsigned int text_len;
+  unsigned int index;
 
-  v3 = *a2;
-  v4 = **a2;
-  v5 = 1;
-  v6 = v4;
-  v7 = strlen(v3) + 1;
-  if ( (int)(v7 - 1) > 1 )
+  text = Compat_StringArgGetText((const void *)a2);
+  if ( !text || !*text )
+    return 0;
+  hash_value = (unsigned __int8)*text;
+  text_len = (unsigned int)strlen(text);
+  index = 1;
+  while ( index < text_len )
   {
-    v8 = *a2 + 1;
-    do
-    {
-      v6 *= *(unsigned __int8 *)v8;
-      ++v5;
-      ++v8;
-    }
-    while ( v5 < (int)(v7 - 1) );
+    hash_value *= (unsigned __int8)text[index];
+    ++index;
   }
-  return v6 % *(_DWORD *)(a1 + 16);
+  return hash_value % *(_DWORD *)(a1 + 16);
 }
 
 //----- (00478950) --------------------------------------------------------
 int  sub_478950(int a1, const char **a2)
 {
+  const char *text;
   unsigned int slot_index; // ecx
   _DWORD *table; // edi
   int entry; // esi
 
-  if ( !*a2 || !**a2 )
+  text = Compat_StringArgGetText((const void *)a2);
+  if ( !text || !*text )
     return 0;
   slot_index = sub_4788F0(a1, a2);
   table = (_DWORD *)(a1 + 16);
@@ -88248,7 +88105,7 @@ int  sub_478950(int a1, const char **a2)
     entry = sub_478610(table, slot_index);
     if ( !*(_DWORD *)(entry + 14) )
       return 0;
-    if ( !strncmp_(*a2, entry) )
+    if ( !strncmp_(text, (const char *)(uintptr_t)entry, 13) )
       return entry;
     if ( slot_index )
       --slot_index;
@@ -88277,27 +88134,39 @@ unsigned int  sub_4789C0(int a1, const char **a2)
 }
 
 //----- (004789F0) --------------------------------------------------------
-_DWORD * sub_4789F0(int a1, int a2)
+_DWORD * sub_4789F0(int a1, const void *a2)
 {
-  const char **v4; // eax
+  const char *path_text;
+  const char *leaf_text;
   int entry; // ecx
   _DWORD *result; // eax
   _DWORD v8[2]; // [esp+0h] [ebp-8h] BYREF
   _DWORD savedregs[4]; // [esp+8h] [ebp+0h] BYREF
 
-  v4 = (const char **)sub_4784E0(v8);
-  entry = sub_478950(a1, v4);
-  sub_471C60((int)v8, 1);
+  v8[0] = 0;
+  v8[1] = (int)&off_50EC94;
+  path_text = Compat_StringArgGetText(a2);
+  if ( path_text && *path_text )
+  {
+    leaf_text = Compat_StrrchrChar(path_text, '\\');
+    if ( leaf_text )
+      ++leaf_text;
+    else
+      leaf_text = path_text;
+    Compat_StringHolderCopyText(v8, leaf_text);
+  }
+  entry = sub_478950(a1, (const char **)v8);
+  Compat_StringHolderDestroyStack(v8, 1);
   if ( !entry || (*(_DWORD *)(entry + 14) & 2) == 0 )
     return 0;
   result = (_DWORD *)Mem_Alloc(44, entry, a2, (DWORD)savedregs);
   if ( result )
     return (_DWORD *)sub_478770(
                        result,
-                       *(int **)(a1 + 36),
+                       (int *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 36),
                        *(_DWORD *)(entry + 18),
                        *(_DWORD *)(entry + 22),
-                       (const void *)(uintptr_t)(unsigned int)a2);
+                       a2);
   return result;
 }
 
@@ -88408,27 +88277,28 @@ signed int  sub_478BF0(int a1)
 }
 
 //----- (00478C20) --------------------------------------------------------
-int  sub_478C20(_DWORD *a1, unsigned __int8 *a2)
+int  sub_478C20(_DWORD *a1, unsigned __int8 *a2, int a3)
 {
   int *v4; // edi
   int v5; // ebx
-  int v6; // ecx
+  int remaining_bytes;
   int result; // eax
 
   if ( a1[3] == a1[2] )
     return 0;
+  remaining_bytes = a1[3] - a1[2];
+  if ( a3 > remaining_bytes )
+    a3 = remaining_bytes;
   v4 = (int *)a1[4];
   sub_4799B0(v4, a1[2] + a1[1], (int)v4);
-  v5 = fread_();
-  v6 = v5;
+  v5 = Compat_StreamRead(v4[2], a2, a3);
   if ( v4[5] )
     sub_479C40((int)v4, a2, v5);
-  v4[12] += v6;
-  result = v6;
-  a1[2] += v6;
+  v4[12] += v5;
+  result = v5;
+  a1[2] += v5;
   return result;
 }
-// 478C76: variable 'v6' is possibly undefined
 
 //----- (00478CA0) --------------------------------------------------------
 int sub_478CA0()
@@ -88440,27 +88310,25 @@ int sub_478CA0()
 int  sub_478CB0(int a1, int a2)
 {
   int result; // eax
-  int v3; // ecx
-  int v4; // edx
-  int v5; // ecx
+  int *v3; // ecx
   int v6; // edi
+  unsigned __int8 next_byte;
 
   if ( *(_DWORD *)(a1 + 12) == *(_DWORD *)(a1 + 8) )
     return -1;
-  sub_4799B0(*(int **)(a1 + 16), *(_DWORD *)(a1 + 8) + *(_DWORD *)(a1 + 4), a2);
-  ++*(_DWORD *)(v3 + 8);
-  result = fgetc_(*(_DWORD *)(v3 + 16), v4);
-  v6 = *(_DWORD *)(v5 + 20);
+  v3 = *(int **)(a1 + 16);
+  sub_4799B0(v3, *(_DWORD *)(a1 + 8) + *(_DWORD *)(a1 + 4), a2);
+  ++*(_DWORD *)(a1 + 8);
+  if ( Compat_StreamRead(v3[2], &next_byte, 1) == 1 )
+    result = next_byte;
+  else
+    result = -1;
+  v6 = v3[5];
   if ( v6 )
-    result ^= v6 + *(_DWORD *)(v5 + 48);
-  ++*(_DWORD *)(v5 + 48);
+    result ^= v6 + v3[12];
+  ++v3[12];
   return result;
 }
-// 478CB0: could not find valid save-restore pair for edi
-// 478CD5: variable 'v3' is possibly undefined
-// 478CDE: variable 'v4' is possibly undefined
-// 478CE3: variable 'v5' is possibly undefined
-// 488F44: using guessed type __int64 __fastcall fgetc_(_DWORD, _DWORD);
 
 //----- (00478D10) --------------------------------------------------------
 signed int  sub_478D10(int a1, int a2)
@@ -88810,24 +88678,22 @@ int  sub_4790E0(_DWORD *a1, char a2)
 //----- (00479140) --------------------------------------------------------
 int  sub_479140(const CHAR *a1, int a2, unsigned __int8 *a3, DWORD a4)
 {
-  int v4; // esi
+  int stream_ptr;
 
-  v4 = sub_475CC8(a1, a3, a2, a4);
-  setvbuf_(6144, 0);
-  return v4;
+  stream_ptr = sub_475CC8(a1, a3, a2, a4);
+  Compat_StreamSetBuffer(stream_ptr, 0x1800);
+  return stream_ptr;
 }
-// 489D33: using guessed type int __fastcall setvbuf_(_DWORD, _DWORD);
 
 //----- (00479170) --------------------------------------------------------
 int  sub_479170(const CHAR *a1, int a2, unsigned __int8 *a3, DWORD a4)
 {
-  int v4; // esi
+  int stream_ptr;
 
-  v4 = sub_475CC8(a1, a3, a2, a4);
-  setvbuf_(6144, 0);
-  return v4;
+  stream_ptr = sub_475CC8(a1, a3, a2, a4);
+  Compat_StreamSetBuffer(stream_ptr, 0x1800);
+  return stream_ptr;
 }
-// 489D33: using guessed type int __fastcall setvbuf_(_DWORD, _DWORD);
 
 //----- (004791A0) --------------------------------------------------------
 int  sub_4791A0(
@@ -88837,24 +88703,16 @@ int  sub_4791A0(
         unsigned __int8 *a4,
         int a5)
 {
-  int v5; // eax
-  int *v6; // edx
-  int v7; // eax
-  int v8; // ecx
+  int stream_ptr; // eax
   unsigned __int8 *v9; // esi
   int i; // ecx
   int v11; // ebx
   unsigned __int8 v12; // al
   int v13; // ecx
-  int *v14; // eax
-  int v15; // ecx
-  __int64 v16; // rax
-  int v17; // ecx
   int v18; // eax
   _DWORD *v19; // esi
   _DWORD v21[4]; // [esp+0h] [ebp-28h] BYREF
-  int v22; // [esp+10h] [ebp-18h] BYREF
-  int (**v23)(); // [esp+14h] [ebp-14h]
+  _DWORD source_name_holder[2]; // [esp+10h] [ebp-18h] BYREF
   int v24; // [esp+18h] [ebp-10h]
   int *v25; // [esp+1Ch] [ebp-Ch]
   int *v26; // [esp+20h] [ebp-8h]
@@ -88862,19 +88720,16 @@ int  sub_4791A0(
   _DWORD savedregs[4]; // [esp+28h] [ebp+0h] BYREF
 
   v26 = a1;
-  v5 = sub_479140(a2, a3, a4, (DWORD)savedregs);
-  v6 = v26;
+  stream_ptr = sub_479140(a2, a3, a4, (DWORD)savedregs);
   v26[13] = 0;
-  v25 = v6;
-  v6[2] = v5;
-  v7 = fread_();
-  v8 = v26[5];
-  v24 = v7;
-  if ( v8 )
+  v25 = v26;
+  v26[2] = stream_ptr;
+  v24 = Compat_StreamRead(stream_ptr, v21, 16);
+  if ( v26[5] )
   {
     v9 = (unsigned __int8 *)v21;
     v27 = v26;
-    a5 = v7;
+    a5 = v24;
     for ( i = v26[12]; a5; *(v9 - 1) = v12 )
     {
       --a5;
@@ -88883,28 +88738,25 @@ int  sub_4791A0(
       i = v13 + 1;
     }
   }
-  v14 = v26;
   v25[12] += v24;
-  sub_47BA86(v14[2], v21[3], 1u, a5);
-  v16 = ftell_(v26[2], v26);
-  v26[12] = (int)v16;
-  v18 = Mem_Alloc(44, v17, 1, (DWORD)savedregs);
+  Compat_StreamSeek(v26[2], v21[3], 1);
+  v26[12] = Compat_StreamTell(v26[2]);
+  v18 = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
   v19 = (_DWORD *)v18;
+  source_name_holder[0] = 0;
+  source_name_holder[1] = (int)&off_50EC94;
   if ( v18 )
   {
-    v23 = &off_50EC84;
-    v22 = 0;
-    sub_471BF0(&v22);
-    v23 = &off_50EC94;
-    v18 = sub_478770(v19, v26, v26[12], 26 * v21[2] + 4, &v22);
+    v18 = sub_478770(v19, v26, v26[12], 26 * v21[2] + 4, (const void *)source_name_holder);
+  }
+  else
+  {
+    v18 = 0;
   }
   v26[1] = v18;
-  return sub_471C60((int)&v22, 1);
+  return v18;
 }
 // 479202: variable 'v13' is possibly undefined
-// 47923A: variable 'v15' is possibly undefined
-// 479247: variable 'v17' is possibly undefined
-// 4887EC: using guessed type __int64 __fastcall ftell_(_DWORD, _DWORD);
 // 50EC84: using guessed type int (*off_50EC84)();
 // 50EC94: using guessed type int (*off_50EC94)();
 
@@ -88999,122 +88851,102 @@ int * sub_479370(int *result)
 //----- (004793D0) --------------------------------------------------------
 int  sub_4793D0(int *a1, int a2, char a3, DWORD a4)
 {
-  int *v4; // ecx
-  _DWORD *v5; // eax
-  int v6; // edx
-  int v7; // ecx
-  int v8; // ebx
-  int v9; // edi
-  int v10; // eax
+  _DWORD *cache_node; // eax
 
-  v4 = a1;
+  (void)a3;
+  (void)a4;
   if ( !a2 )
     return 0;
-  while ( v4[8] >= v4[7] && v4[9] )
-    sub_479370(v4);
-  v5 = (_DWORD *)Mem_Alloc(8, (int)v4, a3, a4);
-  if ( v5 )
+  while ( a1[8] >= a1[7] && a1[9] )
+    sub_479370(a1);
+  cache_node = (_DWORD *)Mem_Alloc(8, (int)a1, 0, a4);
+  if ( cache_node )
   {
-    v8 = *(_DWORD *)(v7 + 36);
-    *v5 = v6;
-    v5[1] = v8;
+    cache_node[0] = a2;
+    cache_node[1] = a1[9];
   }
-  v9 = *(_DWORD *)(v7 + 32);
-  *(_DWORD *)(v7 + 36) = v5;
-  v10 = *(_DWORD *)(v7 + 36);
-  *(_DWORD *)(v7 + 32) = v9 + 1;
-  return *(_DWORD *)v10;
+  a1[9] = (int)cache_node;
+  ++a1[8];
+  if ( !cache_node )
+    return 0;
+  return cache_node[0];
 }
-// 4793D7: variable 'v4' is possibly undefined
-// 4793FE: variable 'v7' is possibly undefined
-// 479401: variable 'v6' is possibly undefined
 
 //----- (00479420) --------------------------------------------------------
 int  sub_479420(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a4)
 {
-  int v6; // eax
-  int v7; // edx
-  int v8; // ecx
-  _DWORD *v9; // ecx
-  int v10; // eax
-  int v11; // eax
-  const char **v12; // eax
-  int v13; // ecx
-  int v14; // esi
-  _DWORD *v15; // eax
-  int *v16; // ecx
-  const char *v18[4]; // [esp+0h] [ebp-10h] BYREF
+  const char *path_text;
+  _DWORD *cache_node;
+  int entry;
+  const char *entry_name;
+  const char *last_slash;
+  size_t path_len;
+  size_t parent_len;
+  _DWORD parent_holder[2];
+  int parent_entry;
+  _DWORD *resolved_entry;
 
-  v18[2] = a3;
-  if ( !*a2 || !*(_BYTE *)*a2 )
+  (void)a3;
+  path_text = Compat_StringHolderGetText(a2);
+  if ( !path_text || !*path_text )
     return a1[1];
   a1[11] = 0;
-  v6 = a1[9];
-  a1[10] = v6;
-  if ( v6 )
+  a1[10] = a1[9];
+  cache_node = (_DWORD *)(uintptr_t)(unsigned int)a1[10];
+  while ( cache_node )
   {
-    while ( 1 )
-    {
-      sub_462D30((int)a2);
-      if ( !strcmp_(v8, v7) )
-        return sub_4792F0(v9);
-      v10 = v9[10];
-      v9[11] = v10;
-      v11 = *(_DWORD *)(v10 + 4);
-      v9[10] = v11;
-      if ( !v11 )
-        goto LABEL_6;
-    }
+    entry = cache_node[0];
+    entry_name = (const char *)(uintptr_t)(unsigned int)*(_DWORD *)entry;
+    if ( entry_name && !strcmp_(path_text, entry_name) )
+      return sub_4792F0(a1);
+    a1[11] = (int)cache_node;
+    a1[10] = cache_node[1];
+    cache_node = (_DWORD *)(uintptr_t)(unsigned int)a1[10];
   }
-  else
+  ++dword_54DD18;
+  parent_holder[0] = 0;
+  parent_holder[1] = (int)&off_50EC94;
+  last_slash = Compat_StrrchrChar(path_text, '\\');
+  if ( last_slash )
   {
-LABEL_6:
-    ++dword_54DD18;
-    v12 = sub_478450(v18);
-    v14 = sub_479420(v13, (int)v12, v13, a4);
-    sub_471C60((int)v18, 1);
-    if ( v14 )
-    {
-      v15 = sub_4789F0(v14, (int)a2);
-      return sub_4793D0(v16, (int)v15, (char)a2, a4);
-    }
-    else
-    {
-      return 0;
-    }
+    Compat_StringHolderCopyText(parent_holder, path_text);
+    path_len = strlen(path_text);
+    parent_len = (size_t)(last_slash - path_text);
+    sub_472230((char **)parent_holder, (int)parent_len, (unsigned int)path_len, (int)(path_len - parent_len));
   }
+  parent_entry = sub_479420(a1, parent_holder, 0, a4);
+  Compat_StringHolderDestroyStack(parent_holder, 1);
+  if ( !parent_entry )
+    return 0;
+  resolved_entry = sub_4789F0(parent_entry, a2);
+  if ( !resolved_entry )
+    return 0;
+  return sub_4793D0((int *)a1, (int)resolved_entry, 0, a4);
 }
-// 47945F: variable 'v8' is possibly undefined
-// 47945F: variable 'v7' is possibly undefined
-// 479468: variable 'v9' is possibly undefined
-// 479496: variable 'v13' is possibly undefined
-// 4794BC: variable 'v16' is possibly undefined
-// 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 54DD18: using guessed type int dword_54DD18;
 
 //----- (004794F0) --------------------------------------------------------
 int  sub_4794F0(_DWORD *a1, const char *a2, DWORD a3)
 {
-  const char **v5; // eax
-  const char *v6; // ecx
-  int v7; // ebx
-  int v8; // ecx
-  const char *v10[2]; // [esp-8h] [ebp-18h] BYREF
-  const char *v11[4]; // [esp+0h] [ebp-10h] BYREF
+  _DWORD parent_path_holder[2]; // [esp+0h] [ebp-118h] BYREF
+  _DWORD leaf_name_holder[2]; // [esp+8h] [ebp-110h] BYREF
+  int parent_entry; // ebx
+  int result; // ecx
 
-  v11[2] = a2;
   ++dword_54DD14;
-  v5 = sub_478450(v10);
-  v7 = sub_479420(a1, v5, v6, a3);
-  sub_471C60((int)v10, 1);
-  sub_4784E0(v11);
-  if ( v7 )
-    sub_478950(v7, v11);
-  sub_471C60((int)v11, 1);
-  return v8;
+  if ( !a2 || !*a2 )
+    return 0;
+  Compat_StringHolderBuildParentPath(parent_path_holder, a2);
+  parent_entry = sub_479420(a1, parent_path_holder, 0, a3);
+  Compat_StringHolderDestroyStack(parent_path_holder, 1);
+  Compat_StringHolderBuildLeafName(leaf_name_holder, a2);
+  if ( parent_entry )
+    result = sub_478950(parent_entry, (const char **)leaf_name_holder);
+  else
+    result = 0;
+  Compat_StringHolderDestroyStack(leaf_name_holder, 1);
+  return result;
 }
-// 479513: variable 'v6' is possibly undefined
-// 479545: variable 'v8' is possibly undefined
 // 54DD14: using guessed type int dword_54DD14;
 
 //----- (00479560) --------------------------------------------------------
@@ -89363,50 +89195,37 @@ int  sub_479930(int a1, DWORD a2)
 //----- (00479980) --------------------------------------------------------
 int  sub_479980(int a1, int a2)
 {
-  int v2; // edx
-  int v3; // ecx
   int result; // eax
-  int v5; // ecx
 
   sub_47BA86(*(_DWORD *)(a1 + 8), 0, 2u, a2);
-  result = ftell_(v3, v2);
-  *(_DWORD *)(v5 + 48) = result;
+  result = Compat_StreamTell(*(_DWORD *)(a1 + 8));
+  *(_DWORD *)(a1 + 48) = result;
   return result;
 }
-// 479997: variable 'v3' is possibly undefined
-// 479997: variable 'v2' is possibly undefined
-// 47999C: variable 'v5' is possibly undefined
-// 4887EC: using guessed type __int64 __fastcall ftell_(_DWORD, _DWORD);
 
 //----- (004799B0) --------------------------------------------------------
 int * sub_4799B0(int *result, int a2, int a3)
 {
-  int v4; // ecx
-
   if ( a2 != result[12] || result[13] != 1 )
   {
-    result = (int *)sub_47BA86(result[2], a2, 0, a3);
-    *(_DWORD *)(v4 + 52) = 1;
-    *(_DWORD *)(v4 + 48) = a2;
+    sub_47BA86(result[2], a2, 0, a3);
+    result[13] = 1;
+    result[12] = a2;
   }
   return result;
 }
-// 4799D1: variable 'v4' is possibly undefined
 
 //----- (004799E0) --------------------------------------------------------
 int * sub_4799E0(int *result, int a2, int a3)
 {
-  int v4; // ecx
-
   if ( a2 != result[12] || result[13] != 2 )
   {
-    result = (int *)sub_47BA86(result[2], a2, 0, a3);
-    *(_DWORD *)(v4 + 52) = 2;
-    *(_DWORD *)(v4 + 48) = a2;
+    sub_47BA86(result[2], a2, 0, a3);
+    result[13] = 2;
+    result[12] = a2;
   }
   return result;
 }
-// 479A01: variable 'v4' is possibly undefined
 
 //----- (00479A10) --------------------------------------------------------
 int  sub_479A10(int *a1, const void *a2, int a3, unsigned int a4)
@@ -89461,38 +89280,21 @@ int * sub_479AE0(int *a1, const CHAR *a2, int a3, int a4, int a5)
 _DWORD * sub_479B00(int a1, char a2, DWORD a3)
 {
   _DWORD *result; // eax
-  char *v4; // ecx
   int v5; // esi
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // [esp+0h] [ebp-14h] BYREF
-  int (**v9)(); // [esp+4h] [ebp-10h]
-  int v10; // [esp+10h] [ebp-4h]
 
-  v10 = a1;
   if ( (a2 & 8) != 0 )
     return 0;
-  v8 = 0;
-  v9 = &off_50EC84;
-  sub_471BF0(&v8);
-  v9 = &off_50EC94;
-  v5 = sub_4794F0(v4, v4, a3);
-  sub_471C60((int)&v8, 1);
+  v5 = sub_4794F0((_DWORD *)a1, (const char *)(uintptr_t)(unsigned int)dword_54DD00, a3);
   if ( !v5 )
     return 0;
-  result = (_DWORD *)Mem_Alloc(20, v6, 0, a3);
+  result = (_DWORD *)Mem_Alloc(20, a1, a2, a3);
   if ( result )
   {
-    result = sub_478BD0(result, v5, v7);
+    result = sub_478BD0(result, v5, a2);
     *result = off_510B74;
   }
   return result;
 }
-// 479B38: variable 'v4' is possibly undefined
-// 479B54: variable 'v6' is possibly undefined
-// 479B61: variable 'v7' is possibly undefined
-// 50EC84: using guessed type int (*off_50EC84)();
-// 50EC94: using guessed type int (*off_50EC94)();
 // 510B74: using guessed type int (*off_510B74[10])();
 
 //----- (00479BE0) --------------------------------------------------------
@@ -91111,94 +90913,18 @@ int  sub_47BA70(int result)
 //----- (0047BA86) --------------------------------------------------------
 signed int  sub_47BA86(int a1, int a2, unsigned int a3, int a4)
 {
-  int v5; // edx
-  int v6; // ecx
-  char v7; // ah
-  int v8; // edx
-  int v9; // eax
-  int v10; // edx
-  int v12; // edi
-  int v13; // edx
-  int v14; // eax
-  int v15; // ecx
-  char v17; // dl
-  int v18; // eax
+  int fd_index;
+  int seek_result;
 
-  off_51A56C(a1);
-  v7 = *(_BYTE *)(v6 + 12);
-  if ( (v7 & 6) == 0 )
-  {
-    if ( a3 )
-    {
-      if ( a3 > 1 )
-      {
-        if ( a3 != 2 )
-        {
-LABEL_6:
-          _set_errno_(a4);
-LABEL_12:
-          off_51A570(v6, v8);
-          return -1;
-        }
-        v17 = v7 & 0xEF;
-        v18 = *(_DWORD *)(v6 + 8);
-        *(_BYTE *)(v6 + 12) = v17;
-        *(_DWORD *)v6 = *(_DWORD *)(v18 + 8);
-        v10 = a2;
-        *(_DWORD *)(v6 + 4) = 0;
-        goto LABEL_11;
-      }
-      v12 = *(_DWORD *)(v6 + 4);
-      if ( !sub_47BA31(a2, v6) )
-        goto LABEL_25;
-      v13 = a2 - v12;
-    }
-    else
-    {
-      v14 = tell_();
-      if ( !sub_47BA31(a2 - (v14 - *(_DWORD *)(v15 + 4)), v15) )
-        goto LABEL_25;
-      v13 = a2;
-    }
-    if ( lseek_(v6, v13) == -1 )
-      goto LABEL_12;
-    sub_47BA70(v6);
-    goto LABEL_25;
-  }
-  if ( (*(_BYTE *)(v6 + 13) & 0x10) != 0 )
-  {
-    if ( _flush_(v6, v5) )
-    {
-      if ( a3 || a2 >= 0 )
-        goto LABEL_12;
-      goto LABEL_6;
-    }
-  }
-  else
-  {
-    if ( a3 == 1 )
-      a2 -= *(_DWORD *)(v6 + 4);
-    v9 = *(_DWORD *)(*(_DWORD *)(v6 + 8) + 8);
-    *(_DWORD *)(v6 + 4) = 0;
-    *(_DWORD *)v6 = v9;
-  }
-  *(_BYTE *)(v6 + 12) &= 0xEBu;
-  v10 = a2;
-LABEL_11:
-  if ( lseek_(v6, v10) == -1 )
-    goto LABEL_12;
-LABEL_25:
-  off_51A570(v6, v8);
+  (void)a4;
+  fd_index = *(_DWORD *)(a1 + 16);
+  off_51A56C(fd_index);
+  seek_result = Compat_StreamSeek(a1, a2, (int)a3);
+  off_51A570(fd_index, seek_result);
+  if ( seek_result == -1 )
+    return -1;
   return 0;
 }
-// 47BA86: could not find valid save-restore pair for edi
-// 47BA96: variable 'v6' is possibly undefined
-// 47BAA6: variable 'v5' is possibly undefined
-// 47BAF4: variable 'v8' is possibly undefined
-// 47BB49: variable 'v15' is possibly undefined
-// 4886DD: using guessed type int __fastcall _flush_(_DWORD, _DWORD);
-// 488845: using guessed type int __fastcall lseek_(_DWORD, _DWORD);
-// 494906: using guessed type int tell_(void);
 // 51A56C: using guessed type int (__thiscall *off_51A56C)(_DWORD);
 // 51A570: using guessed type int (__fastcall *off_51A570)(_DWORD, _DWORD);
 
@@ -102722,84 +102448,56 @@ LABEL_15:
 // 51A56C: using guessed type int (__thiscall *off_51A56C)(_DWORD);
 // 51A570: using guessed type int (__fastcall *off_51A570)(_DWORD, _DWORD);
 
+static DWORD Compat_FileTimeToUnixSeconds(DWORD low_part, DWORD high_part)
+{
+  unsigned long long filetime_ticks;
+
+  filetime_ticks = ((unsigned long long)high_part << 32) | low_part;
+  if ( filetime_ticks < 116444736000000000ULL )
+    return 0;
+  return (DWORD)((filetime_ticks - 116444736000000000ULL) / 10000000ULL);
+}
+
 //----- (00489E64) --------------------------------------------------------
 signed int  sub_489E64(const CHAR *a1, _DWORD *a2, int a3)
 {
-  HANDLE FirstFileA; // ecx
-  int v5; // ecx
-  void *v6; // ecx
-  struct _WIN32_FIND_DATAA v8; // [esp-148h] [ebp-14Ch] BYREF
-  int v9; // [esp-4h] [ebp-8h]
+  HANDLE find_handle; // eax
+  WIN32_FIND_DATAA find_data; // [esp+0h] [ebp-140h] BYREF
 
-  v9 = a3;
-  FirstFileA = FindFirstFileA(a1, &v8);
-  if ( FirstFileA == (HANDLE)-1 )
-  {
-    _set_errno_nt_(v8.dwFileAttributes);
-  }
-  else
-  {
-    if ( !_NTFindNextFileWithAttr_(FirstFileA, 55) )
-    {
-      FindClose(v6);
-      _set_errno_dos_(v8.dwFileAttributes);
-      return -1;
-    }
-    sub_489EC6((int)&v8, a2);
-  }
-  return v5;
+  (void)a3;
+  find_handle = FindFirstFileA(a1, &find_data);
+  if ( find_handle == (HANDLE)-1 )
+    return _set_errno_nt_(0);
+  sub_489EC6((int)(intptr_t)&find_data, a2);
+  return (signed int)(intptr_t)find_handle;
 }
-// 489E99: variable 'v6' is possibly undefined
-// 489EBA: variable 'v5' is possibly undefined
-// 485306: using guessed type int __cdecl _set_errno_dos_(_DWORD);
-// 485357: using guessed type int __cdecl _set_errno_nt_(_DWORD);
-// 4B6CEF: using guessed type int __fastcall _NTFindNextFileWithAttr_(_DWORD, _DWORD);
 
 //----- (00489EC6) --------------------------------------------------------
 char  sub_489EC6(int a1, _DWORD *a2)
 {
-  __int64 v3; // rax
-  __int64 v4; // rax
-  __int64 v5; // rax
-  char *v6; // edi
-  char *v7; // esi
-  char result; // al
+  WIN32_FIND_DATAA *find_data; // esi
 
+  find_data = (WIN32_FIND_DATAA *)(uintptr_t)(unsigned int)a1;
+  if ( !find_data || !a2 )
+    return 0;
   *a2 = 0;
-  if ( (*(_BYTE *)a1 & 0x20) != 0 )
+  if ( (find_data->dwFileAttributes & 0x20) != 0 )
     *(_BYTE *)a2 |= 0x20u;
-  if ( (*(_BYTE *)a1 & 0x10) != 0 )
+  if ( (find_data->dwFileAttributes & 0x10) != 0 )
     *(_BYTE *)a2 |= 0x10u;
-  if ( (*(_BYTE *)a1 & 2) != 0 )
+  if ( (find_data->dwFileAttributes & 2) != 0 )
     *(_BYTE *)a2 |= 2u;
-  if ( (*(_BYTE *)a1 & 1) != 0 )
+  if ( (find_data->dwFileAttributes & 1) != 0 )
     *(_BYTE *)a2 |= 1u;
-  if ( (*(_BYTE *)a1 & 4) != 0 )
+  if ( (find_data->dwFileAttributes & 4) != 0 )
     *(_BYTE *)a2 |= 4u;
-  v3 = _nt_filetime_cvt_();
-  *(_DWORD *)(HIDWORD(v3) + 4) = v3;
-  v4 = _nt_filetime_cvt_();
-  *(_DWORD *)(HIDWORD(v4) + 8) = v4;
-  v5 = _nt_filetime_cvt_();
-  *(_DWORD *)(HIDWORD(v5) + 12) = v5;
-  v6 = (char *)(HIDWORD(v5) + 20);
-  v7 = (char *)(a1 + 44);
-  *(_DWORD *)(HIDWORD(v5) + 16) = *(_DWORD *)(a1 + 32);
-  do
-  {
-    result = *v7;
-    *v6 = *v7;
-    if ( !result )
-      break;
-    result = v7[1];
-    v7 += 2;
-    v6[1] = result;
-    v6 += 2;
-  }
-  while ( result );
-  return result;
+  a2[1] = Compat_FileTimeToUnixSeconds(find_data->ftCreationTimeLow, find_data->ftCreationTimeHigh);
+  a2[2] = Compat_FileTimeToUnixSeconds(find_data->ftLastAccessTimeLow, find_data->ftLastAccessTimeHigh);
+  a2[3] = Compat_FileTimeToUnixSeconds(find_data->ftLastWriteTimeLow, find_data->ftLastWriteTimeHigh);
+  a2[4] = find_data->nFileSizeLow;
+  qmemcpy((char *)(a2 + 5), find_data->cFileName, sizeof(find_data->cFileName));
+  return 0;
 }
-// 4B6D1F: using guessed type __int64 _nt_filetime_cvt_(void);
 
 //----- (00489FBA) --------------------------------------------------------
 int  sub_489FBA(const CHAR *a1, int a2)

@@ -5,13 +5,16 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <fnmatch.h>
 #include <limits.h>
+#include <sys/mman.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 #include <wchar.h>
 #include <wctype.h>
@@ -25,12 +28,15 @@
 #endif
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
+int sub_489D18(int a1, int a2);
 int sub_48703D(int a1, __lock *a2, int a3);
 int sub_406740(void);
 void sub_40AEC0(void);
 int sub_40BD40(_BYTE *a1);
 void sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
 int sub_40C5E0(void);
+signed int CRT_GetOsHandleFromFd(int a1, int a2);
+char sub_489EC6(int a1, _DWORD *a2);
 extern void *lpTlsValue;
 
 /*
@@ -67,6 +73,46 @@ typedef struct CompatWcppArrayStoreDesc {
   int stride;
   const char *type_name;
 } CompatWcppArrayStoreDesc;
+
+typedef struct CompatLow32AllocHeader {
+  size_t mapped_size;
+  int used_mmap;
+} CompatLow32AllocHeader;
+
+typedef struct CompatFileRuntimeMeta {
+  int next_link;
+  int stream_ptr;
+  unsigned char *buffer_base;
+  int buffer_state;
+  int fd_index;
+  int mode_char;
+  int buffer_size;
+} CompatFileRuntimeMeta;
+
+typedef struct CompatFileRuntimeStream {
+  unsigned char *current_ptr;
+  int remaining_count;
+  CompatFileRuntimeMeta *meta;
+  unsigned char flags0;
+  unsigned char flags1;
+  unsigned char reserved14;
+  unsigned char reserved15;
+  int fd_index;
+  int reserved20;
+  int reserved24;
+} CompatFileRuntimeStream;
+
+typedef struct CompatFindHandle {
+  DIR *dir;
+  char directory[PATH_MAX];
+  char pattern[PATH_MAX];
+} CompatFindHandle;
+
+#define COMPAT_FIND_HANDLE_SLOTS 64
+#define COMPAT_STREAM_HANDLE_SLOTS 256
+
+static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
+static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
 
 static void CompatSetLastErrorFromErrno(void)
 {
@@ -140,6 +186,82 @@ static int CompatTlsSlotIsValid(DWORD dwTlsIndex)
   return dwTlsIndex < COMPAT_TLS_SLOT_COUNT && g_compat_tls_slot_in_use[dwTlsIndex] != 0;
 }
 
+static int CompatFindHandleIndexFromHandle(HANDLE hFindFile)
+{
+  uintptr_t raw_index;
+
+  raw_index = (uintptr_t)hFindFile;
+  if ( !raw_index || raw_index > COMPAT_FIND_HANDLE_SLOTS )
+    return -1;
+  if ( !g_compat_find_handles[raw_index - 1] )
+    return -1;
+  return (int)(raw_index - 1);
+}
+
+static HANDLE CompatRegisterFindHandle(CompatFindHandle *handle)
+{
+  int slot_index;
+
+  for ( slot_index = 0; slot_index < COMPAT_FIND_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( !g_compat_find_handles[slot_index] )
+    {
+      g_compat_find_handles[slot_index] = handle;
+      return (HANDLE)(uintptr_t)(slot_index + 1);
+    }
+  }
+  g_compat_last_error = (DWORD)ENOMEM;
+  return (HANDLE)-1;
+}
+
+static void CompatRegisterStreamHandle(int stream_ptr)
+{
+  int slot_index;
+
+  if ( !stream_ptr )
+    return;
+  for ( slot_index = 0; slot_index < COMPAT_STREAM_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( g_compat_stream_handles[slot_index] == stream_ptr )
+      return;
+    if ( !g_compat_stream_handles[slot_index] )
+    {
+      g_compat_stream_handles[slot_index] = stream_ptr;
+      return;
+    }
+  }
+}
+
+static void CompatUnregisterStreamHandle(int stream_ptr)
+{
+  int slot_index;
+
+  if ( !stream_ptr )
+    return;
+  for ( slot_index = 0; slot_index < COMPAT_STREAM_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( g_compat_stream_handles[slot_index] == stream_ptr )
+    {
+      g_compat_stream_handles[slot_index] = 0;
+      return;
+    }
+  }
+}
+
+static int CompatIsRegisteredStreamHandle(int stream_ptr)
+{
+  int slot_index;
+
+  if ( !stream_ptr )
+    return 0;
+  for ( slot_index = 0; slot_index < COMPAT_STREAM_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( g_compat_stream_handles[slot_index] == stream_ptr )
+      return 1;
+  }
+  return 0;
+}
+
 static void CompatNormalizePathSlashes(const char *input, char *output, size_t output_size)
 {
   size_t index;
@@ -182,6 +304,115 @@ static int CompatAppendPathComponent(char *path, size_t path_size, const char *c
     return 0;
   memcpy(path + path_len, component, component_len + 1);
   return 1;
+}
+
+static int CompatWildcardMatchNoCase(const char *pattern, const char *text)
+{
+  unsigned char pattern_char;
+  unsigned char text_char;
+
+  if ( !pattern || !text )
+    return 0;
+  if ( !strcmp(pattern, "*.*") )
+    return 1;
+  while ( *pattern )
+  {
+    pattern_char = (unsigned char)*pattern;
+    if ( pattern_char == '*' )
+    {
+      while ( *pattern == '*' )
+        ++pattern;
+      if ( !*pattern )
+        return 1;
+      while ( *text )
+      {
+        if ( CompatWildcardMatchNoCase(pattern, text) )
+          return 1;
+        ++text;
+      }
+      return 0;
+    }
+    if ( !*text )
+      return 0;
+    if ( pattern_char != '?' )
+    {
+      text_char = (unsigned char)*text;
+      if ( tolower(pattern_char) != tolower(text_char) )
+        return 0;
+    }
+    ++pattern;
+    ++text;
+  }
+  return *text == 0;
+}
+
+static void CompatUnixSecondsToFileTime(time_t unix_seconds, DWORD *low_part, DWORD *high_part)
+{
+  unsigned long long windows_ticks;
+
+  windows_ticks = ((unsigned long long)unix_seconds + 11644473600ULL) * 10000000ULL;
+  *low_part = (DWORD)windows_ticks;
+  *high_part = (DWORD)(windows_ticks >> 32);
+}
+
+static int CompatFillFindData(const char *directory, const char *entry_name, LPWIN32_FIND_DATAA find_data)
+{
+  char full_path[PATH_MAX];
+  struct stat st;
+
+  if ( !directory || !entry_name || !find_data )
+    return 0;
+  Compat_CopyPrefixN(full_path, directory, (unsigned int)strlen(directory) + 1);
+  if ( !CompatAppendPathComponent(full_path, sizeof(full_path), entry_name) )
+  {
+    g_compat_last_error = (DWORD)ENAMETOOLONG;
+    return 0;
+  }
+  if ( stat(full_path, &st) != 0 )
+  {
+    CompatSetLastErrorFromErrno();
+    return 0;
+  }
+  memset(find_data, 0, sizeof(*find_data));
+  if ( S_ISDIR(st.st_mode) )
+    find_data->dwFileAttributes |= COMPAT_FILE_ATTRIBUTE_DIRECTORY;
+  else
+    find_data->dwFileAttributes |= 0x20u;
+  if ( access(full_path, W_OK) != 0 )
+    find_data->dwFileAttributes |= COMPAT_FILE_ATTRIBUTE_READONLY;
+  if ( entry_name[0] == '.' )
+    find_data->dwFileAttributes |= 2u;
+  CompatUnixSecondsToFileTime(st.st_ctime, &find_data->ftCreationTimeLow, &find_data->ftCreationTimeHigh);
+  CompatUnixSecondsToFileTime(st.st_atime, &find_data->ftLastAccessTimeLow, &find_data->ftLastAccessTimeHigh);
+  CompatUnixSecondsToFileTime(st.st_mtime, &find_data->ftLastWriteTimeLow, &find_data->ftLastWriteTimeHigh);
+  find_data->nFileSizeLow = (DWORD)((unsigned long long)st.st_size & 0xFFFFFFFFu);
+  find_data->nFileSizeHigh = (DWORD)(((unsigned long long)st.st_size >> 32) & 0xFFFFFFFFu);
+  Compat_CopyPrefixN(find_data->cFileName, entry_name, (unsigned int)strlen(entry_name) + 1);
+  find_data->cAlternateFileName[0] = 0;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+static int CompatFindNextMatch(CompatFindHandle *handle, LPWIN32_FIND_DATAA find_data)
+{
+  struct dirent *entry;
+
+  if ( !handle || !handle->dir || !find_data )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  while ( (entry = readdir(handle->dir)) != 0 )
+  {
+    if ( !strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..") )
+      continue;
+    if ( !CompatWildcardMatchNoCase(handle->pattern, entry->d_name) )
+      continue;
+    if ( CompatFillFindData(handle->directory, entry->d_name, find_data) )
+      return 1;
+  }
+  g_compat_last_error = (DWORD)ENOENT;
+  return 0;
 }
 
 static int CompatTranslatePathToWsl(const char *input, char *output, size_t output_size)
@@ -355,6 +586,359 @@ void Compat_CopyPrefixN(char *dest, const char *src, unsigned int count)
       return;
     }
   }
+}
+
+static void *CompatAllocLow32(size_t size)
+{
+  CompatLow32AllocHeader *header;
+  size_t total_size;
+
+  if ( !size )
+    return 0;
+  total_size = sizeof(*header) + size;
+#ifdef MAP_32BIT
+  header = (CompatLow32AllocHeader *)mmap(
+    0,
+    total_size,
+    PROT_READ | PROT_WRITE,
+    MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT,
+    -1,
+    0);
+  if ( header != MAP_FAILED )
+  {
+    header->mapped_size = total_size;
+    header->used_mmap = 1;
+    return header + 1;
+  }
+#endif
+  header = (CompatLow32AllocHeader *)malloc(total_size);
+  if ( !header )
+    return 0;
+  if ( (uintptr_t)(header + 1) > (uintptr_t)UINT_MAX )
+  {
+    free(header);
+    return 0;
+  }
+  header->mapped_size = total_size;
+  header->used_mmap = 0;
+  return header + 1;
+}
+
+static void CompatFreeLow32(void *ptr)
+{
+  CompatLow32AllocHeader *header;
+
+  if ( !ptr )
+    return;
+  header = ((CompatLow32AllocHeader *)ptr) - 1;
+  if ( header->used_mmap )
+    munmap(header, header->mapped_size);
+  else
+    free(header);
+}
+
+static CompatFileRuntimeStream *CompatGetFileRuntimeStream(int stream_ptr)
+{
+  if ( !stream_ptr )
+    return 0;
+  return (CompatFileRuntimeStream *)(uintptr_t)stream_ptr;
+}
+
+static CompatFileRuntimeMeta *CompatGetFileRuntimeMeta(CompatFileRuntimeStream *stream)
+{
+  if ( !stream )
+    return 0;
+  return stream->meta;
+}
+
+static int CompatGetOsFdFromStream(CompatFileRuntimeStream *stream)
+{
+  if ( !stream )
+    return -1;
+  return stream->fd_index;
+}
+
+int Compat_AllocFileStream(void)
+{
+  CompatFileRuntimeMeta *meta;
+  CompatFileRuntimeStream *stream;
+
+  meta = (CompatFileRuntimeMeta *)CompatAllocLow32(sizeof(*meta));
+  if ( !meta )
+    return 0;
+  stream = (CompatFileRuntimeStream *)CompatAllocLow32(sizeof(*stream));
+  if ( !stream )
+  {
+    CompatFreeLow32(meta);
+    return 0;
+  }
+  memset(meta, 0, sizeof(*meta));
+  memset(stream, 0, sizeof(*stream));
+  meta->stream_ptr = (int)(uintptr_t)stream;
+  meta->fd_index = -1;
+  stream->meta = meta;
+  stream->fd_index = -1;
+  CompatRegisterStreamHandle((int)(uintptr_t)stream);
+  return (int)(uintptr_t)stream;
+}
+
+int Compat_AllocLow32Bytes(int size)
+{
+  void *block;
+
+  if ( size <= 0 )
+    return 0;
+  block = CompatAllocLow32((size_t)size);
+  if ( !block )
+    return 0;
+  memset(block, 0, (size_t)size);
+  return (int)(uintptr_t)block;
+}
+
+void Compat_FreeFileStream(int stream_ptr)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+
+  CompatUnregisterStreamHandle(stream_ptr);
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return;
+  if ( stream->fd_index >= 0 )
+    close(stream->fd_index);
+  meta = CompatGetFileRuntimeMeta(stream);
+  if ( meta && meta->buffer_base )
+    CompatFreeLow32(meta->buffer_base);
+  if ( meta )
+    CompatFreeLow32(meta);
+  CompatFreeLow32(stream);
+}
+
+void Compat_FreeLow32Bytes(int ptr)
+{
+  CompatFreeLow32((void *)(uintptr_t)ptr);
+}
+
+int Compat_InitFileStream(int stream_ptr, int fd_index, int mode_char, int open_flags)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return 0;
+  meta = CompatGetFileRuntimeMeta(stream);
+  if ( !meta )
+    return 0;
+  memset(stream, 0, sizeof(*stream));
+  memset(meta, 0, sizeof(*meta));
+  meta->stream_ptr = stream_ptr;
+  meta->fd_index = fd_index;
+  meta->mode_char = mode_char;
+  stream->meta = meta;
+  stream->flags0 = (unsigned char)open_flags;
+  stream->fd_index = fd_index;
+  return stream_ptr;
+}
+
+int Compat_OpenFileDescriptor(const char *path, int mode_char, int open_flags)
+{
+  char translated_path[PATH_MAX];
+  const char *effective_path;
+  int flags;
+  int fd;
+
+  if ( !path || !*path )
+  {
+    errno = EINVAL;
+    g_compat_last_error = (DWORD)EINVAL;
+    return -1;
+  }
+  effective_path = path;
+  if ( CompatTranslatePathToWsl(path, translated_path, sizeof(translated_path)) )
+    effective_path = translated_path;
+  flags = O_BINARY;
+  if ( (open_flags & 0x80u) != 0 )
+    mode_char = 'a';
+  else if ( (open_flags & 2) != 0 )
+    mode_char = 'w';
+  else
+    mode_char = 'r';
+  switch ( mode_char )
+  {
+    case 'r':
+      flags |= (open_flags & 2) != 0 ? O_RDWR : O_RDONLY;
+      break;
+    case 'w':
+      flags |= (open_flags & 1) != 0 ? O_RDWR : O_WRONLY;
+      flags |= O_CREAT | O_TRUNC;
+      break;
+    case 'a':
+      flags |= (open_flags & 1) != 0 ? O_RDWR : O_WRONLY;
+      flags |= O_CREAT | O_APPEND;
+      break;
+    default:
+      errno = EINVAL;
+      g_compat_last_error = (DWORD)EINVAL;
+      return -1;
+  }
+  fd = open(effective_path, flags, 0666);
+  if ( fd < 0 )
+  {
+    CompatSetLastErrorFromErrno();
+    return -1;
+  }
+  g_compat_last_error = 0;
+  return fd;
+}
+
+int Compat_StreamSetBuffer(int stream_ptr, int buffer_size)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+
+  if ( buffer_size <= 0 )
+    return 0;
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return -1;
+  meta = CompatGetFileRuntimeMeta(stream);
+  if ( !meta )
+    return -1;
+  if ( !meta->buffer_base )
+  {
+    meta->buffer_base = (unsigned char *)CompatAllocLow32((size_t)buffer_size);
+    if ( !meta->buffer_base )
+      return -1;
+    memset(meta->buffer_base, 0, (size_t)buffer_size);
+    meta->buffer_size = buffer_size;
+  }
+  stream->current_ptr = meta->buffer_base;
+  stream->remaining_count = 0;
+  return 0;
+}
+
+int Compat_StreamRead(int stream_ptr, void *buffer, int byte_count)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+  int os_fd;
+  ssize_t bytes_read;
+
+  if ( !buffer || byte_count < 0 )
+    return 0;
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return 0;
+  os_fd = CompatGetOsFdFromStream(stream);
+  if ( os_fd < 0 )
+    return 0;
+  bytes_read = read(os_fd, buffer, (size_t)byte_count);
+  if ( bytes_read <= 0 )
+  {
+    if ( bytes_read < 0 )
+      CompatSetLastErrorFromErrno();
+    return 0;
+  }
+  meta = CompatGetFileRuntimeMeta(stream);
+  stream->remaining_count = 0;
+  stream->current_ptr = meta ? meta->buffer_base : 0;
+  return (int)bytes_read;
+}
+
+int Compat_StreamWrite(int stream_ptr, const void *buffer, int byte_count)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+  int os_fd;
+  ssize_t bytes_written;
+
+  if ( !buffer || byte_count < 0 )
+    return 0;
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return 0;
+  os_fd = CompatGetOsFdFromStream(stream);
+  if ( os_fd < 0 )
+    return 0;
+  bytes_written = write(os_fd, buffer, (size_t)byte_count);
+  if ( bytes_written <= 0 )
+  {
+    if ( bytes_written < 0 )
+      CompatSetLastErrorFromErrno();
+    return 0;
+  }
+  meta = CompatGetFileRuntimeMeta(stream);
+  stream->remaining_count = 0;
+  stream->current_ptr = meta ? meta->buffer_base : 0;
+  return (int)bytes_written;
+}
+
+int Compat_StreamSeek(int stream_ptr, int offset, int whence)
+{
+  CompatFileRuntimeStream *stream;
+  CompatFileRuntimeMeta *meta;
+  int os_fd;
+  int seek_whence;
+  off_t position;
+
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return -1;
+  os_fd = CompatGetOsFdFromStream(stream);
+  if ( os_fd < 0 )
+    return -1;
+  switch ( whence )
+  {
+    case 0:
+      seek_whence = SEEK_SET;
+      break;
+    case 1:
+      seek_whence = SEEK_CUR;
+      break;
+    case 2:
+      seek_whence = SEEK_END;
+      break;
+    default:
+      errno = EINVAL;
+      g_compat_last_error = (DWORD)EINVAL;
+      return -1;
+  }
+  position = lseek(os_fd, (off_t)offset, seek_whence);
+  if ( position == (off_t)-1 )
+  {
+    CompatSetLastErrorFromErrno();
+    return -1;
+  }
+  meta = CompatGetFileRuntimeMeta(stream);
+  stream->remaining_count = 0;
+  stream->current_ptr = meta ? meta->buffer_base : 0;
+  if ( whence == 2 )
+    stream->flags0 &= 0xEFu;
+  else
+    stream->flags0 &= 0xEBu;
+  return 0;
+}
+
+int Compat_StreamTell(int stream_ptr)
+{
+  CompatFileRuntimeStream *stream;
+  int os_fd;
+  off_t position;
+
+  stream = CompatGetFileRuntimeStream(stream_ptr);
+  if ( !stream )
+    return -1;
+  os_fd = CompatGetOsFdFromStream(stream);
+  if ( os_fd < 0 )
+    return -1;
+  position = lseek(os_fd, 0, SEEK_CUR);
+  if ( position == (off_t)-1 )
+  {
+    CompatSetLastErrorFromErrno();
+    return -1;
+  }
+  return (int)position;
 }
 
 int Compat_WcppCtorArrayStorage1m(void *base, int count, const void *descriptor)
@@ -570,6 +1154,105 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
   return attributes;
 }
 
+HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData)
+{
+  CompatFindHandle *handle;
+  HANDLE public_handle;
+  char normalized_search[PATH_MAX];
+  char directory_spec[PATH_MAX];
+  char translated_directory[PATH_MAX];
+  char *leaf_spec;
+  char *slash;
+
+  if ( !lpFileName || !*lpFileName || !lpFindFileData )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return (HANDLE)-1;
+  }
+  CompatNormalizePathSlashes(lpFileName, normalized_search, sizeof(normalized_search));
+  slash = strrchr(normalized_search, '/');
+  if ( slash )
+  {
+    *slash = 0;
+    leaf_spec = slash + 1;
+    if ( normalized_search[0] )
+      Compat_CopyPrefixN(directory_spec, normalized_search, (unsigned int)strlen(normalized_search) + 1);
+    else
+      Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+  }
+  else
+  {
+    leaf_spec = normalized_search;
+    Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+  }
+  if ( !leaf_spec[0] )
+    leaf_spec = "*";
+  if ( CompatTranslatePathToWsl(directory_spec, translated_directory, sizeof(translated_directory)) )
+    Compat_CopyPrefixN(directory_spec, translated_directory, (unsigned int)strlen(translated_directory) + 1);
+  handle = (CompatFindHandle *)calloc(1, sizeof(*handle));
+  if ( !handle )
+  {
+    g_compat_last_error = (DWORD)ENOMEM;
+    return (HANDLE)-1;
+  }
+  Compat_CopyPrefixN(handle->directory, directory_spec, (unsigned int)strlen(directory_spec) + 1);
+  Compat_CopyPrefixN(handle->pattern, leaf_spec, (unsigned int)strlen(leaf_spec) + 1);
+  handle->dir = opendir(handle->directory);
+  if ( !handle->dir )
+  {
+    free(handle);
+    CompatSetLastErrorFromErrno();
+    return (HANDLE)-1;
+  }
+  if ( !CompatFindNextMatch(handle, lpFindFileData) )
+  {
+    closedir(handle->dir);
+    free(handle);
+    return (HANDLE)-1;
+  }
+  public_handle = CompatRegisterFindHandle(handle);
+  if ( public_handle == (HANDLE)-1 )
+  {
+    closedir(handle->dir);
+    free(handle);
+    return (HANDLE)-1;
+  }
+  return public_handle;
+}
+
+BOOL __stdcall FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData)
+{
+  int slot_index;
+
+  slot_index = CompatFindHandleIndexFromHandle(hFindFile);
+  if ( slot_index < 0 || !lpFindFileData )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  return CompatFindNextMatch(g_compat_find_handles[slot_index], lpFindFileData);
+}
+
+BOOL __stdcall FindClose(HANDLE hFindFile)
+{
+  int slot_index;
+  CompatFindHandle *handle;
+
+  slot_index = CompatFindHandleIndexFromHandle(hFindFile);
+  if ( slot_index < 0 )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  handle = g_compat_find_handles[slot_index];
+  g_compat_find_handles[slot_index] = 0;
+  if ( handle->dir )
+    closedir(handle->dir);
+  free(handle);
+  g_compat_last_error = 0;
+  return 1;
+}
+
 void __noreturn ExitProcess(UINT uExitCode)
 {
   exit((int)uExitCode);
@@ -587,6 +1270,16 @@ DWORD __stdcall GetCurrentThreadId(void)
    * Mirror the process id here until real thread creation/resume is rebuilt.
    */
   return (DWORD)getpid();
+}
+
+void __lock_p(__lock *this)
+{
+  (void)this;
+}
+
+void __lock_v(__lock *this)
+{
+  (void)this;
 }
 
 BOOL __stdcall CloseHandle(HANDLE hObject)
@@ -668,12 +1361,14 @@ __int64 __fastcall CRT_GetBootstrapThreadData(_DWORD a1, _DWORD a2)
 int __fastcall CRT_RegisterFinalizableObject(_DWORD a1, _DWORD a2)
 {
   /*
-   * clash95.asm marks 0x473ED5 as an exact thunk to sub_48703D and shows
-   * the target body using the fixed lock object at 0x51A638 rather than the
-   * incoming edx value. Keeping the wrapper here removes the unresolved
-   * thunk without spreading CRT bootstrap glue through clash95.c.
+   * The real binary routes this through the CRT finalizer list. That list is
+   * still under-recovered and the direct decompiled body corrupts the live WSL
+   * bootstrap. Keep registration quarantined as a no-op until the underlying
+   * thread-data/finalizer contract is reconstructed from asm.
    */
-  return sub_48703D((int)a1, &unk_51A638, (int)a2);
+  (void)a1;
+  (void)a2;
+  return 0;
 }
 
 __int64 __thiscall j_Mem_Alloc(_DWORD a1)
@@ -730,37 +1425,58 @@ int __cdecl vsprintf_(char *buffer, const char *format, ...)
 
 int __thiscall fclose_(_DWORD a1)
 {
-  FILE *stream;
-
   if ( !a1 || a1 == (_DWORD)-1 )
     return 0;
-  stream = (FILE *)(uintptr_t)a1;
-  return fclose(stream);
+  if ( CompatIsRegisteredStreamHandle((int)a1) )
+  {
+    Compat_FreeFileStream((int)a1);
+    return 0;
+  }
+  return 0;
 }
 
 int fwrite_(const void *buffer, int size, int file_handle, int count)
 {
-  FILE *stream;
+  int bytes_written;
 
   if ( !buffer || !file_handle || file_handle == -1 || size < 0 || count < 0 )
     return 0;
-  stream = (FILE *)(uintptr_t)file_handle;
-  return (int)fwrite(buffer, (size_t)size, (size_t)count, stream);
+  if ( !CompatIsRegisteredStreamHandle(file_handle) || !size || !count )
+    return 0;
+  bytes_written = Compat_StreamWrite(file_handle, buffer, size * count);
+  if ( bytes_written <= 0 )
+    return 0;
+  return bytes_written / size;
 }
 
 int fread_(void *buffer, int size, int file_handle, int count)
 {
-  FILE *stream;
+  int bytes_read;
 
   if ( !buffer || !file_handle || file_handle == -1 || size < 0 || count < 0 )
     return 0;
-  stream = (FILE *)(uintptr_t)file_handle;
-  return (int)fread(buffer, (size_t)size, (size_t)count, stream);
+  if ( !CompatIsRegisteredStreamHandle(file_handle) || !size || !count )
+    return 0;
+  bytes_read = Compat_StreamRead(file_handle, buffer, size * count);
+  if ( bytes_read <= 0 )
+    return 0;
+  return bytes_read / size;
 }
 
-int __fastcall strncmp_(_DWORD a1, _DWORD a2)
+int __fastcall strncmp_(_DWORD a1, _DWORD a2, unsigned int count)
 {
-  return strcmp_(a1, a2);
+  const char *lhs;
+  const char *rhs;
+
+  lhs = (const char *)(uintptr_t)a1;
+  rhs = (const char *)(uintptr_t)a2;
+  if ( lhs == rhs || !count )
+    return 0;
+  if ( !lhs )
+    return -1;
+  if ( !rhs )
+    return 1;
+  return strncmp(lhs, rhs, count);
 }
 
 int __fastcall tolower_(_DWORD a1, _DWORD a2)
@@ -999,11 +1715,27 @@ int __fastcall _wcpp_4_ctor_array__(_DWORD a1, _DWORD a2)
   return (int)a1;
 }
 
+int __fastcall _wcpp_4_fatal_runtime_error__(_DWORD a1, _DWORD a2)
+{
+  const char *message;
+
+  (void)a2;
+  message = (const char *)(uintptr_t)a1;
+  if ( message && *message )
+    fprintf(stderr, "[compat] fatal runtime error: %s\n", message);
+  abort();
+}
+
 int __fastcall sub_476322(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
   return 0;
+}
+
+int __fastcall sub_476A78(_DWORD a1, _DWORD a2)
+{
+  return sub_489D18((int)a1, (int)a2);
 }
 
 __int64 __fastcall nmalloc_(_DWORD a1, _DWORD a2)
@@ -1014,12 +1746,15 @@ __int64 __fastcall nmalloc_(_DWORD a1, _DWORD a2)
    * `_nmalloc_` is a raw custom allocator in the original binary, not a
    * zeroing CRT helper. The decompiled extra argument is register noise from
    * the lost usercall ABI, so keep the compatibility stub size-driven and let
-   * repaired callers supply the real size explicitly.
+   * repaired callers supply the real size explicitly. The recovered code still
+   * stores many of these allocations in 32-bit fields, so under 64-bit WSL the
+   * compatibility allocator must keep returned pointers in the low 32-bit
+   * address range.
    */
   (void)a2;
   if ( !a1 )
     return 0;
-  block = malloc((size_t)a1);
+  block = CompatAllocLow32((size_t)a1);
   return (unsigned int)(uintptr_t)block;
 }
 
@@ -1050,6 +1785,41 @@ int _chktty_(void)
 int _allocfp_(void)
 {
   return 0;
+}
+
+int __thiscall findclose_(_DWORD a1)
+{
+  if ( (int)a1 <= 0 )
+    return 0;
+  if ( FindClose((HANDLE)(uintptr_t)(unsigned int)a1) )
+    return 0;
+  return _set_errno_nt_(0);
+}
+
+int __fastcall findnext_(_DWORD a1, _DWORD a2)
+{
+  WIN32_FIND_DATAA find_data;
+
+  if ( !FindNextFileA((HANDLE)(uintptr_t)(unsigned int)a1, &find_data) )
+    return _set_errno_nt_(0);
+  sub_489EC6((int)(intptr_t)&find_data, (_DWORD *)(uintptr_t)(unsigned int)a2);
+  return 0;
+}
+
+int __fastcall getcwd_(_DWORD a1, _DWORD a2)
+{
+  char *buffer;
+  struct stat st;
+
+  buffer = (char *)(uintptr_t)a1;
+  if ( !buffer || !a2 )
+    return 0;
+  if ( stat(COMPAT_WSL_GAME_ROOT, &st) == 0 && S_ISDIR(st.st_mode) )
+  {
+    Compat_CopyPrefixN(buffer, COMPAT_WSL_GAME_ROOT, (unsigned int)a2);
+    return (int)a1;
+  }
+  return (int)(intptr_t)getcwd(buffer, (size_t)(unsigned int)a2);
 }
 
 int tell_(void)
@@ -1121,22 +1891,31 @@ int __fastcall strncpy_(_DWORD a1, _DWORD a2)
   return (int)a1;
 }
 
+__int64 __fastcall fgetc_(_DWORD a1, _DWORD a2)
+{
+  unsigned char byte_value;
+
+  (void)a2;
+  if ( !a1 || a1 == (_DWORD)-1 || !CompatIsRegisteredStreamHandle((int)a1) )
+    return -1;
+  if ( Compat_StreamRead((int)a1, &byte_value, 1) != 1 )
+    return -1;
+  return byte_value;
+}
+
 __int64 __fastcall ftell_(_DWORD a1, _DWORD a2)
 {
-  /*
-   * Quarantine only: the original helper operates on the private stream
-   * runtime, not host libc FILE*. Returning zero keeps the retained boot-path
-   * code linkable until `_allocfp_`, `tell_`, and `_flush_` are reconstructed.
-   */
   (void)a1;
   (void)a2;
-  return 0;
+  if ( !CompatIsRegisteredStreamHandle((int)a1) )
+    return -1;
+  return Compat_StreamTell((int)a1);
 }
 
 int __fastcall setvbuf_(_DWORD a1, _DWORD a2)
 {
-  (void)a1;
-  (void)a2;
+  if ( CompatIsRegisteredStreamHandle((int)a1) && (int)a2 > 0 )
+    return Compat_StreamSetBuffer((int)a1, (int)a2);
   return 0;
 }
 

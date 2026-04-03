@@ -32,6 +32,7 @@ int (*g_RenderHook)(int a1, char a2, DWORD a3);
 
 char __thiscall DetectGameCDPath(void *this);
 int __thiscall sub_442AD0(int this);
+int sub_442760(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
@@ -68,6 +69,7 @@ int j___NTAddFileHandle_(void)
 
 static char g_boot_command_line[1024];
 static int g_boot_run_startup_prelude;
+static int g_boot_run_video_init_probe;
 
 static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
 {
@@ -86,6 +88,12 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
     if ( !strcmp(argv[arg_index], "--authentic-startup-prelude") )
     {
       g_boot_run_startup_prelude = 1;
+      continue;
+    }
+    if ( !strcmp(argv[arg_index], "--authentic-video-init") )
+    {
+      g_boot_run_startup_prelude = 1;
+      g_boot_run_video_init_probe = 1;
       continue;
     }
     if ( arg_index > 1 )
@@ -184,12 +192,22 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
   if ( !Input_MouseAcquire() )
     (void)Input_MousePresent();
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
+  sub_442760(0, 0, 0);
   DetectGameCDPath(0);
   sub_442AD0(0);
   Game_Init(0, command_mode, 0);
   if ( command_mode == 'r' )
     dword_51D014 = 1;
   return 1;
+}
+
+static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
+{
+  dword_543CA0 = 1;
+  nullsub_4();
+  Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
+  sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);
+  Render_CreateSprite();
 }
 
 static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLine)
@@ -284,6 +302,8 @@ int main(int argc, char **argv)
 
     if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
       return 1;
+    if ( g_boot_run_video_init_probe )
+      Bootstrap_RunRecoveredVideoInitProbe(command_mode);
     (void)command_mode;
     return Bootstrap_RunMessageLoop();
   }

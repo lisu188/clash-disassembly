@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -48,6 +49,983 @@ struct SDL_Palette {
 struct SDL_Cursor {
   int cursor_id;
 };
+
+static struct SDL_Surface g_platform_default_surface;
+
+int Compat_AllocLow32Bytes(int size);
+void Compat_FreeLow32Bytes(int ptr);
+
+typedef struct CompatDirectDraw CompatDirectDraw;
+typedef struct CompatDirectDrawSurface CompatDirectDrawSurface;
+typedef struct CompatDirectDrawClipper CompatDirectDrawClipper;
+
+typedef struct CompatDirectDrawVTable {
+  HRESULT (__stdcall *QueryInterface)(CompatDirectDraw *self, const void *riid, void *out_object);
+  ULONG (__stdcall *AddRef)(CompatDirectDraw *self);
+  ULONG (__stdcall *Release)(CompatDirectDraw *self);
+  HRESULT (__stdcall *Compact)(CompatDirectDraw *self);
+  HRESULT (__stdcall *CreateClipper)(CompatDirectDraw *self, DWORD flags, void *out_clipper, IUnknown *outer);
+  HRESULT (__stdcall *CreatePalette)(CompatDirectDraw *self, DWORD flags, void *entries, void *out_palette, IUnknown *outer);
+  HRESULT (__stdcall *CreateSurface)(CompatDirectDraw *self, int *desc, void *out_surface, IUnknown *outer);
+  HRESULT (__stdcall *DuplicateSurface)(CompatDirectDraw *self, void *source, void *out_surface);
+  HRESULT (__stdcall *EnumDisplayModes)(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback);
+  HRESULT (__stdcall *EnumSurfaces)(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback);
+  HRESULT (__stdcall *FlipToGDISurface)(CompatDirectDraw *self);
+  HRESULT (__stdcall *GetCaps)(CompatDirectDraw *self, void *driver_caps, void *hel_caps);
+  HRESULT (__stdcall *GetDisplayMode)(CompatDirectDraw *self, int *desc);
+  HRESULT (__stdcall *GetFourCCCodes)(CompatDirectDraw *self, void *count, void *codes);
+  HRESULT (__stdcall *GetGDISurface)(CompatDirectDraw *self, void *out_surface);
+  HRESULT (__stdcall *GetMonitorFrequency)(CompatDirectDraw *self, DWORD *frequency);
+  HRESULT (__stdcall *GetScanLine)(CompatDirectDraw *self, DWORD *scanline);
+  HRESULT (__stdcall *GetVerticalBlankStatus)(CompatDirectDraw *self, BOOL *in_vblank);
+  HRESULT (__stdcall *Initialize)(CompatDirectDraw *self, GUID *guid);
+  HRESULT (__stdcall *RestoreDisplayMode)(CompatDirectDraw *self);
+  HRESULT (__stdcall *SetCooperativeLevel)(CompatDirectDraw *self, HWND hwnd, DWORD flags);
+  HRESULT (__stdcall *SetDisplayMode)(CompatDirectDraw *self, int width, int height, int bpp, int refresh_rate, int flags);
+  HRESULT (__stdcall *WaitForVerticalBlank)(CompatDirectDraw *self, DWORD flags, HANDLE event_handle);
+} CompatDirectDrawVTable;
+
+typedef struct CompatDirectDrawSurfaceVTable {
+  HRESULT (__stdcall *QueryInterface)(CompatDirectDrawSurface *self, const void *riid, void *out_object);
+  ULONG (__stdcall *AddRef)(CompatDirectDrawSurface *self);
+  ULONG (__stdcall *Release)(CompatDirectDrawSurface *self);
+  HRESULT (__stdcall *AddAttachedSurface)(CompatDirectDrawSurface *self, void *attached_surface);
+  HRESULT (__stdcall *AddOverlayDirtyRect)(CompatDirectDrawSurface *self, const RECT *dirty_rect);
+  HRESULT (__stdcall *Blt)(CompatDirectDrawSurface *self, RECT *dest_rect, void *src_surface, RECT *src_rect, DWORD flags, void *blt_fx);
+  HRESULT (__stdcall *BltBatch)(CompatDirectDrawSurface *self, void *batch, DWORD count, DWORD flags);
+  HRESULT (__stdcall *BltFast)(CompatDirectDrawSurface *self, int x, int y, void *src_surface, RECT *src_rect, DWORD flags);
+  HRESULT (__stdcall *DeleteAttachedSurface)(CompatDirectDrawSurface *self, DWORD flags, void *attached_surface);
+  HRESULT (__stdcall *EnumAttachedSurfaces)(CompatDirectDrawSurface *self, void *ctx, void *callback);
+  HRESULT (__stdcall *EnumOverlayZOrders)(CompatDirectDrawSurface *self, DWORD flags, void *ctx, void *callback);
+  HRESULT (__stdcall *Flip)(CompatDirectDrawSurface *self, void *target_override, DWORD flags);
+  HRESULT (__stdcall *GetAttachedSurface)(CompatDirectDrawSurface *self, void *caps, void *out_surface);
+  HRESULT (__stdcall *GetBltStatus)(CompatDirectDrawSurface *self, DWORD flags);
+  HRESULT (__stdcall *GetCaps)(CompatDirectDrawSurface *self, void *caps);
+  HRESULT (__stdcall *GetClipper)(CompatDirectDrawSurface *self, void *out_clipper);
+  HRESULT (__stdcall *GetColorKey)(CompatDirectDrawSurface *self, DWORD flags, void *color_key);
+  HRESULT (__stdcall *GetDC)(CompatDirectDrawSurface *self, void *out_dc);
+  HRESULT (__stdcall *GetFlipStatus)(CompatDirectDrawSurface *self, DWORD flags);
+  HRESULT (__stdcall *GetOverlayPosition)(CompatDirectDrawSurface *self, LONG *x, LONG *y);
+  HRESULT (__stdcall *GetPalette)(CompatDirectDrawSurface *self, void *out_palette);
+  HRESULT (__stdcall *GetPixelFormat)(CompatDirectDrawSurface *self, void *pixel_format);
+  HRESULT (__stdcall *GetSurfaceDesc)(CompatDirectDrawSurface *self, int *desc);
+  HRESULT (__stdcall *Initialize)(CompatDirectDrawSurface *self, CompatDirectDraw *owner, int *desc);
+  HRESULT (__stdcall *IsLost)(CompatDirectDrawSurface *self);
+  HRESULT (__stdcall *Lock)(CompatDirectDrawSurface *self, RECT *rect, int *desc, DWORD flags, HANDLE event_handle);
+  HRESULT (__stdcall *ReleaseDC)(CompatDirectDrawSurface *self, HDC dc);
+  HRESULT (__stdcall *Restore)(CompatDirectDrawSurface *self);
+  HRESULT (__stdcall *SetClipper)(CompatDirectDrawSurface *self, void *clipper);
+  HRESULT (__stdcall *SetColorKey)(CompatDirectDrawSurface *self, DWORD flags, void *color_key);
+  HRESULT (__stdcall *SetOverlayPosition)(CompatDirectDrawSurface *self, LONG x, LONG y);
+  HRESULT (__stdcall *SetPalette)(CompatDirectDrawSurface *self, void *palette);
+  HRESULT (__stdcall *Unlock)(CompatDirectDrawSurface *self, void *lock_ptr);
+  HRESULT (__stdcall *UpdateOverlay)(CompatDirectDrawSurface *self, RECT *src_rect, void *dest_surface, RECT *dest_rect, DWORD flags, void *overlay_fx);
+  HRESULT (__stdcall *UpdateOverlayDisplay)(CompatDirectDrawSurface *self, DWORD flags);
+  HRESULT (__stdcall *UpdateOverlayZOrder)(CompatDirectDrawSurface *self, DWORD flags, void *reference_surface);
+} CompatDirectDrawSurfaceVTable;
+
+typedef struct CompatDirectDrawClipperVTable {
+  HRESULT (__stdcall *QueryInterface)(CompatDirectDrawClipper *self, const void *riid, void *out_object);
+  ULONG (__stdcall *AddRef)(CompatDirectDrawClipper *self);
+  ULONG (__stdcall *Release)(CompatDirectDrawClipper *self);
+  HRESULT (__stdcall *GetClipList)(CompatDirectDrawClipper *self, RECT *clip_rect, void *clip_list, DWORD *size);
+  HRESULT (__stdcall *GetHWnd)(CompatDirectDrawClipper *self, HWND *hwnd);
+  HRESULT (__stdcall *Initialize)(CompatDirectDrawClipper *self, CompatDirectDraw *owner, DWORD flags);
+  HRESULT (__stdcall *IsClipListChanged)(CompatDirectDrawClipper *self, BOOL *changed);
+  HRESULT (__stdcall *SetClipList)(CompatDirectDrawClipper *self, void *clip_list, DWORD flags);
+  HRESULT (__stdcall *SetHWnd)(CompatDirectDrawClipper *self, DWORD flags, HWND hwnd);
+} CompatDirectDrawClipperVTable;
+
+struct CompatDirectDraw {
+  CompatDirectDrawVTable *lpVtbl;
+  ULONG ref_count;
+  HWND cooperative_window;
+  DWORD cooperative_flags;
+  int width;
+  int height;
+  int bpp;
+  CompatDirectDrawSurface *primary_surface;
+};
+
+struct CompatDirectDrawSurface {
+  CompatDirectDrawSurfaceVTable *lpVtbl;
+  ULONG ref_count;
+  CompatDirectDraw *owner;
+  struct SDL_Surface surface;
+  DWORD caps;
+  int width;
+  int height;
+  int bpp;
+  void *clipper;
+  void *palette;
+  CompatDirectDrawSurface *attached_surface;
+  int pitch;
+  void *pixels;
+  int lost;
+};
+
+struct CompatDirectDrawClipper {
+  CompatDirectDrawClipperVTable *lpVtbl;
+  ULONG ref_count;
+  HWND hwnd;
+};
+
+static void *PlatformAllocLow32(size_t size)
+{
+  int ptr_value;
+
+  if ( !size || size > 0x7fffffffU )
+    return 0;
+  ptr_value = Compat_AllocLow32Bytes((int)size);
+  if ( !ptr_value )
+    return 0;
+  return (void *)(uintptr_t)(unsigned int)ptr_value;
+}
+
+static void PlatformFreeLow32(void *ptr)
+{
+  if ( ptr )
+    Compat_FreeLow32Bytes((int)(uintptr_t)ptr);
+}
+
+static int CompatSurfaceBytesPerPixel(const CompatDirectDrawSurface *surface)
+{
+  if ( !surface || surface->bpp <= 8 )
+    return 1;
+  return (surface->bpp + 7) >> 3;
+}
+
+static HRESULT __stdcall CompatDirectDraw_QueryInterface(CompatDirectDraw *self, const void *riid, void *out_object);
+static ULONG __stdcall CompatDirectDraw_AddRef(CompatDirectDraw *self);
+static ULONG __stdcall CompatDirectDraw_Release(CompatDirectDraw *self);
+static HRESULT __stdcall CompatDirectDraw_Compact(CompatDirectDraw *self);
+static HRESULT __stdcall CompatDirectDraw_CreateClipper(CompatDirectDraw *self, DWORD flags, void *out_clipper, IUnknown *outer);
+static HRESULT __stdcall CompatDirectDraw_CreatePalette(CompatDirectDraw *self, DWORD flags, void *entries, void *out_palette, IUnknown *outer);
+static HRESULT __stdcall CompatDirectDraw_CreateSurface(CompatDirectDraw *self, int *desc, void *out_surface, IUnknown *outer);
+static HRESULT __stdcall CompatDirectDraw_DuplicateSurface(CompatDirectDraw *self, void *source, void *out_surface);
+static HRESULT __stdcall CompatDirectDraw_EnumDisplayModes(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback);
+static HRESULT __stdcall CompatDirectDraw_EnumSurfaces(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback);
+static HRESULT __stdcall CompatDirectDraw_FlipToGDISurface(CompatDirectDraw *self);
+static HRESULT __stdcall CompatDirectDraw_GetCaps(CompatDirectDraw *self, void *driver_caps, void *hel_caps);
+static HRESULT __stdcall CompatDirectDraw_GetDisplayMode(CompatDirectDraw *self, int *desc);
+static HRESULT __stdcall CompatDirectDraw_GetFourCCCodes(CompatDirectDraw *self, void *count, void *codes);
+static HRESULT __stdcall CompatDirectDraw_GetGDISurface(CompatDirectDraw *self, void *out_surface);
+static HRESULT __stdcall CompatDirectDraw_GetMonitorFrequency(CompatDirectDraw *self, DWORD *frequency);
+static HRESULT __stdcall CompatDirectDraw_GetScanLine(CompatDirectDraw *self, DWORD *scanline);
+static HRESULT __stdcall CompatDirectDraw_GetVerticalBlankStatus(CompatDirectDraw *self, BOOL *in_vblank);
+static HRESULT __stdcall CompatDirectDraw_Initialize(CompatDirectDraw *self, GUID *guid);
+static HRESULT __stdcall CompatDirectDraw_RestoreDisplayMode(CompatDirectDraw *self);
+static HRESULT __stdcall CompatDirectDraw_SetCooperativeLevel(CompatDirectDraw *self, HWND hwnd, DWORD flags);
+static HRESULT __stdcall CompatDirectDraw_SetDisplayMode(CompatDirectDraw *self, int width, int height, int bpp, int refresh_rate, int flags);
+static HRESULT __stdcall CompatDirectDraw_WaitForVerticalBlank(CompatDirectDraw *self, DWORD flags, HANDLE event_handle);
+
+static HRESULT __stdcall CompatDirectDrawSurface_QueryInterface(CompatDirectDrawSurface *self, const void *riid, void *out_object);
+static ULONG __stdcall CompatDirectDrawSurface_AddRef(CompatDirectDrawSurface *self);
+static ULONG __stdcall CompatDirectDrawSurface_Release(CompatDirectDrawSurface *self);
+static HRESULT __stdcall CompatDirectDrawSurface_AddAttachedSurface(CompatDirectDrawSurface *self, void *attached_surface);
+static HRESULT __stdcall CompatDirectDrawSurface_AddOverlayDirtyRect(CompatDirectDrawSurface *self, const RECT *dirty_rect);
+static HRESULT __stdcall CompatDirectDrawSurface_Blt(CompatDirectDrawSurface *self, RECT *dest_rect, void *src_surface, RECT *src_rect, DWORD flags, void *blt_fx);
+static HRESULT __stdcall CompatDirectDrawSurface_BltBatch(CompatDirectDrawSurface *self, void *batch, DWORD count, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_BltFast(CompatDirectDrawSurface *self, int x, int y, void *src_surface, RECT *src_rect, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_DeleteAttachedSurface(CompatDirectDrawSurface *self, DWORD flags, void *attached_surface);
+static HRESULT __stdcall CompatDirectDrawSurface_EnumAttachedSurfaces(CompatDirectDrawSurface *self, void *ctx, void *callback);
+static HRESULT __stdcall CompatDirectDrawSurface_EnumOverlayZOrders(CompatDirectDrawSurface *self, DWORD flags, void *ctx, void *callback);
+static HRESULT __stdcall CompatDirectDrawSurface_Flip(CompatDirectDrawSurface *self, void *target_override, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_GetAttachedSurface(CompatDirectDrawSurface *self, void *caps, void *out_surface);
+static HRESULT __stdcall CompatDirectDrawSurface_GetBltStatus(CompatDirectDrawSurface *self, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_GetCaps(CompatDirectDrawSurface *self, void *caps);
+static HRESULT __stdcall CompatDirectDrawSurface_GetClipper(CompatDirectDrawSurface *self, void *out_clipper);
+static HRESULT __stdcall CompatDirectDrawSurface_GetColorKey(CompatDirectDrawSurface *self, DWORD flags, void *color_key);
+static HRESULT __stdcall CompatDirectDrawSurface_GetDC(CompatDirectDrawSurface *self, void *out_dc);
+static HRESULT __stdcall CompatDirectDrawSurface_GetFlipStatus(CompatDirectDrawSurface *self, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_GetOverlayPosition(CompatDirectDrawSurface *self, LONG *x, LONG *y);
+static HRESULT __stdcall CompatDirectDrawSurface_GetPalette(CompatDirectDrawSurface *self, void *out_palette);
+static HRESULT __stdcall CompatDirectDrawSurface_GetPixelFormat(CompatDirectDrawSurface *self, void *pixel_format);
+static HRESULT __stdcall CompatDirectDrawSurface_GetSurfaceDesc(CompatDirectDrawSurface *self, int *desc);
+static HRESULT __stdcall CompatDirectDrawSurface_Initialize(CompatDirectDrawSurface *self, CompatDirectDraw *owner, int *desc);
+static HRESULT __stdcall CompatDirectDrawSurface_IsLost(CompatDirectDrawSurface *self);
+static HRESULT __stdcall CompatDirectDrawSurface_Lock(CompatDirectDrawSurface *self, RECT *rect, int *desc, DWORD flags, HANDLE event_handle);
+static HRESULT __stdcall CompatDirectDrawSurface_ReleaseDC(CompatDirectDrawSurface *self, HDC dc);
+static HRESULT __stdcall CompatDirectDrawSurface_Restore(CompatDirectDrawSurface *self);
+static HRESULT __stdcall CompatDirectDrawSurface_SetClipper(CompatDirectDrawSurface *self, void *clipper);
+static HRESULT __stdcall CompatDirectDrawSurface_SetColorKey(CompatDirectDrawSurface *self, DWORD flags, void *color_key);
+static HRESULT __stdcall CompatDirectDrawSurface_SetOverlayPosition(CompatDirectDrawSurface *self, LONG x, LONG y);
+static HRESULT __stdcall CompatDirectDrawSurface_SetPalette(CompatDirectDrawSurface *self, void *palette);
+static HRESULT __stdcall CompatDirectDrawSurface_Unlock(CompatDirectDrawSurface *self, void *lock_ptr);
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlay(CompatDirectDrawSurface *self, RECT *src_rect, void *dest_surface, RECT *dest_rect, DWORD flags, void *overlay_fx);
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayDisplay(CompatDirectDrawSurface *self, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayZOrder(CompatDirectDrawSurface *self, DWORD flags, void *reference_surface);
+
+static HRESULT __stdcall CompatDirectDrawClipper_QueryInterface(CompatDirectDrawClipper *self, const void *riid, void *out_object);
+static ULONG __stdcall CompatDirectDrawClipper_AddRef(CompatDirectDrawClipper *self);
+static ULONG __stdcall CompatDirectDrawClipper_Release(CompatDirectDrawClipper *self);
+static HRESULT __stdcall CompatDirectDrawClipper_GetClipList(CompatDirectDrawClipper *self, RECT *clip_rect, void *clip_list, DWORD *size);
+static HRESULT __stdcall CompatDirectDrawClipper_GetHWnd(CompatDirectDrawClipper *self, HWND *hwnd);
+static HRESULT __stdcall CompatDirectDrawClipper_Initialize(CompatDirectDrawClipper *self, CompatDirectDraw *owner, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawClipper_IsClipListChanged(CompatDirectDrawClipper *self, BOOL *changed);
+static HRESULT __stdcall CompatDirectDrawClipper_SetClipList(CompatDirectDrawClipper *self, void *clip_list, DWORD flags);
+static HRESULT __stdcall CompatDirectDrawClipper_SetHWnd(CompatDirectDrawClipper *self, DWORD flags, HWND hwnd);
+
+static CompatDirectDrawVTable g_compat_directdraw_vtable = {
+  CompatDirectDraw_QueryInterface,
+  CompatDirectDraw_AddRef,
+  CompatDirectDraw_Release,
+  CompatDirectDraw_Compact,
+  CompatDirectDraw_CreateClipper,
+  CompatDirectDraw_CreatePalette,
+  CompatDirectDraw_CreateSurface,
+  CompatDirectDraw_DuplicateSurface,
+  CompatDirectDraw_EnumDisplayModes,
+  CompatDirectDraw_EnumSurfaces,
+  CompatDirectDraw_FlipToGDISurface,
+  CompatDirectDraw_GetCaps,
+  CompatDirectDraw_GetDisplayMode,
+  CompatDirectDraw_GetFourCCCodes,
+  CompatDirectDraw_GetGDISurface,
+  CompatDirectDraw_GetMonitorFrequency,
+  CompatDirectDraw_GetScanLine,
+  CompatDirectDraw_GetVerticalBlankStatus,
+  CompatDirectDraw_Initialize,
+  CompatDirectDraw_RestoreDisplayMode,
+  CompatDirectDraw_SetCooperativeLevel,
+  CompatDirectDraw_SetDisplayMode,
+  CompatDirectDraw_WaitForVerticalBlank
+};
+
+static CompatDirectDrawSurfaceVTable g_compat_directdraw_surface_vtable = {
+  CompatDirectDrawSurface_QueryInterface,
+  CompatDirectDrawSurface_AddRef,
+  CompatDirectDrawSurface_Release,
+  CompatDirectDrawSurface_AddAttachedSurface,
+  CompatDirectDrawSurface_AddOverlayDirtyRect,
+  CompatDirectDrawSurface_Blt,
+  CompatDirectDrawSurface_BltBatch,
+  CompatDirectDrawSurface_BltFast,
+  CompatDirectDrawSurface_DeleteAttachedSurface,
+  CompatDirectDrawSurface_EnumAttachedSurfaces,
+  CompatDirectDrawSurface_EnumOverlayZOrders,
+  CompatDirectDrawSurface_Flip,
+  CompatDirectDrawSurface_GetAttachedSurface,
+  CompatDirectDrawSurface_GetBltStatus,
+  CompatDirectDrawSurface_GetCaps,
+  CompatDirectDrawSurface_GetClipper,
+  CompatDirectDrawSurface_GetColorKey,
+  CompatDirectDrawSurface_GetDC,
+  CompatDirectDrawSurface_GetFlipStatus,
+  CompatDirectDrawSurface_GetOverlayPosition,
+  CompatDirectDrawSurface_GetPalette,
+  CompatDirectDrawSurface_GetPixelFormat,
+  CompatDirectDrawSurface_GetSurfaceDesc,
+  CompatDirectDrawSurface_Initialize,
+  CompatDirectDrawSurface_IsLost,
+  CompatDirectDrawSurface_Lock,
+  CompatDirectDrawSurface_ReleaseDC,
+  CompatDirectDrawSurface_Restore,
+  CompatDirectDrawSurface_SetClipper,
+  CompatDirectDrawSurface_SetColorKey,
+  CompatDirectDrawSurface_SetOverlayPosition,
+  CompatDirectDrawSurface_SetPalette,
+  CompatDirectDrawSurface_Unlock,
+  CompatDirectDrawSurface_UpdateOverlay,
+  CompatDirectDrawSurface_UpdateOverlayDisplay,
+  CompatDirectDrawSurface_UpdateOverlayZOrder
+};
+
+static CompatDirectDrawClipperVTable g_compat_directdraw_clipper_vtable = {
+  CompatDirectDrawClipper_QueryInterface,
+  CompatDirectDrawClipper_AddRef,
+  CompatDirectDrawClipper_Release,
+  CompatDirectDrawClipper_GetClipList,
+  CompatDirectDrawClipper_GetHWnd,
+  CompatDirectDrawClipper_Initialize,
+  CompatDirectDrawClipper_IsClipListChanged,
+  CompatDirectDrawClipper_SetClipList,
+  CompatDirectDrawClipper_SetHWnd
+};
+
+static CompatDirectDrawSurface *CompatDirectDrawSurfaceCreate(CompatDirectDraw *owner, int width, int height, int bpp, DWORD caps)
+{
+  CompatDirectDrawSurface *surface;
+
+  surface = (CompatDirectDrawSurface *)PlatformAllocLow32(sizeof(*surface));
+  if ( !surface )
+    return 0;
+  memset(surface, 0, sizeof(*surface));
+  surface->lpVtbl = &g_compat_directdraw_surface_vtable;
+  surface->ref_count = 1;
+  surface->owner = owner;
+  surface->caps = caps;
+  surface->width = width > 0 ? width : 640;
+  surface->height = height > 0 ? height : 480;
+  surface->bpp = bpp > 0 ? bpp : 16;
+  surface->pitch = surface->width * CompatSurfaceBytesPerPixel(surface);
+  surface->surface.width = surface->width;
+  surface->surface.height = surface->height;
+  surface->surface.resource_name = "directdraw-surface";
+  if ( owner )
+    CompatDirectDraw_AddRef(owner);
+  return surface;
+}
+
+static HRESULT __stdcall CompatDirectDraw_QueryInterface(CompatDirectDraw *self, const void *riid, void *out_object)
+{
+  (void)riid;
+  if ( !self || !out_object )
+    return (HRESULT)0x80070057;
+  *(void **)out_object = self;
+  CompatDirectDraw_AddRef(self);
+  return 0;
+}
+
+static ULONG __stdcall CompatDirectDraw_AddRef(CompatDirectDraw *self)
+{
+  if ( !self )
+    return 0;
+  return ++self->ref_count;
+}
+
+static ULONG __stdcall CompatDirectDraw_Release(CompatDirectDraw *self)
+{
+  if ( !self )
+    return 0;
+  if ( self->ref_count )
+    --self->ref_count;
+  if ( !self->ref_count )
+    PlatformFreeLow32(self);
+  return self->ref_count;
+}
+
+static HRESULT __stdcall CompatDirectDraw_Compact(CompatDirectDraw *self)
+{
+  (void)self;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_CreateClipper(CompatDirectDraw *self, DWORD flags, void *out_clipper, IUnknown *outer)
+{
+  CompatDirectDrawClipper *clipper;
+
+  (void)self;
+  (void)flags;
+  (void)outer;
+  if ( !out_clipper )
+    return (HRESULT)0x80070057;
+  clipper = (CompatDirectDrawClipper *)PlatformAllocLow32(sizeof(*clipper));
+  if ( !clipper )
+    return (HRESULT)0x8007000E;
+  memset(clipper, 0, sizeof(*clipper));
+  clipper->lpVtbl = &g_compat_directdraw_clipper_vtable;
+  clipper->ref_count = 1;
+  *(void **)out_clipper = clipper;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_CreatePalette(CompatDirectDraw *self, DWORD flags, void *entries, void *out_palette, IUnknown *outer)
+{
+  (void)self;
+  (void)flags;
+  (void)entries;
+  (void)outer;
+  if ( out_palette )
+    *(void **)out_palette = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_CreateSurface(CompatDirectDraw *self, int *desc, void *out_surface, IUnknown *outer)
+{
+  CompatDirectDrawSurface *surface;
+  DWORD caps;
+
+  (void)outer;
+  if ( !self || !out_surface )
+    return (HRESULT)0x80070057;
+  caps = 0;
+  if ( desc )
+    caps = (DWORD)desc[1];
+  surface = CompatDirectDrawSurfaceCreate(self, self->width, self->height, self->bpp, caps);
+  if ( !surface )
+    return (HRESULT)0x8007000E;
+  *(void **)out_surface = surface;
+  if ( !self->primary_surface )
+    self->primary_surface = surface;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_DuplicateSurface(CompatDirectDraw *self, void *source, void *out_surface)
+{
+  (void)self;
+  if ( !out_surface )
+    return (HRESULT)0x80070057;
+  *(void **)out_surface = source;
+  if ( source )
+    CompatDirectDrawSurface_AddRef((CompatDirectDrawSurface *)source);
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_EnumDisplayModes(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback)
+{
+  (void)self;
+  (void)flags;
+  (void)desc;
+  (void)ctx;
+  (void)callback;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_EnumSurfaces(CompatDirectDraw *self, DWORD flags, void *desc, void *ctx, void *callback)
+{
+  (void)self;
+  (void)flags;
+  (void)desc;
+  (void)ctx;
+  (void)callback;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_FlipToGDISurface(CompatDirectDraw *self)
+{
+  (void)self;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetCaps(CompatDirectDraw *self, void *driver_caps, void *hel_caps)
+{
+  (void)self;
+  (void)driver_caps;
+  (void)hel_caps;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetDisplayMode(CompatDirectDraw *self, int *desc)
+{
+  if ( !self || !desc )
+    return (HRESULT)0x80070057;
+  memset(desc, 0, 108);
+  desc[0] = 108;
+  desc[2] = self->height;
+  desc[3] = self->width;
+  desc[4] = self->width * ((self->bpp <= 8 ? 1 : self->bpp >> 3));
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetFourCCCodes(CompatDirectDraw *self, void *count, void *codes)
+{
+  (void)self;
+  (void)count;
+  (void)codes;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetGDISurface(CompatDirectDraw *self, void *out_surface)
+{
+  if ( !out_surface )
+    return (HRESULT)0x80070057;
+  *(void **)out_surface = self ? self->primary_surface : 0;
+  if ( self && self->primary_surface )
+    CompatDirectDrawSurface_AddRef(self->primary_surface);
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetMonitorFrequency(CompatDirectDraw *self, DWORD *frequency)
+{
+  (void)self;
+  if ( frequency )
+    *frequency = 60;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetScanLine(CompatDirectDraw *self, DWORD *scanline)
+{
+  (void)self;
+  if ( scanline )
+    *scanline = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_GetVerticalBlankStatus(CompatDirectDraw *self, BOOL *in_vblank)
+{
+  (void)self;
+  if ( in_vblank )
+    *in_vblank = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_Initialize(CompatDirectDraw *self, GUID *guid)
+{
+  (void)self;
+  (void)guid;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_RestoreDisplayMode(CompatDirectDraw *self)
+{
+  (void)self;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_SetCooperativeLevel(CompatDirectDraw *self, HWND hwnd, DWORD flags)
+{
+  if ( !self )
+    return (HRESULT)0x80070057;
+  self->cooperative_window = hwnd;
+  self->cooperative_flags = flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_SetDisplayMode(CompatDirectDraw *self, int width, int height, int bpp, int refresh_rate, int flags)
+{
+  (void)refresh_rate;
+  (void)flags;
+  if ( !self )
+    return (HRESULT)0x80070057;
+  if ( width > 0 )
+    self->width = width;
+  if ( height > 0 )
+    self->height = height;
+  if ( bpp > 0 )
+    self->bpp = bpp;
+  g_platform_default_surface.width = self->width;
+  g_platform_default_surface.height = self->height;
+  if ( self->cooperative_window )
+  {
+    ((struct SDL_Window *)self->cooperative_window)->width = self->width;
+    ((struct SDL_Window *)self->cooperative_window)->height = self->height;
+  }
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDraw_WaitForVerticalBlank(CompatDirectDraw *self, DWORD flags, HANDLE event_handle)
+{
+  (void)self;
+  (void)flags;
+  (void)event_handle;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_QueryInterface(CompatDirectDrawSurface *self, const void *riid, void *out_object)
+{
+  (void)riid;
+  if ( !self || !out_object )
+    return (HRESULT)0x80070057;
+  *(void **)out_object = self;
+  CompatDirectDrawSurface_AddRef(self);
+  return 0;
+}
+
+static ULONG __stdcall CompatDirectDrawSurface_AddRef(CompatDirectDrawSurface *self)
+{
+  if ( !self )
+    return 0;
+  return ++self->ref_count;
+}
+
+static ULONG __stdcall CompatDirectDrawSurface_Release(CompatDirectDrawSurface *self)
+{
+  CompatDirectDraw *owner;
+
+  if ( !self )
+    return 0;
+  if ( self->ref_count )
+    --self->ref_count;
+  if ( self->ref_count )
+    return self->ref_count;
+  if ( self->attached_surface )
+  {
+    CompatDirectDrawSurface_Release(self->attached_surface);
+    self->attached_surface = 0;
+  }
+  if ( self->pixels )
+  {
+    PlatformFreeLow32(self->pixels);
+    self->pixels = 0;
+  }
+  owner = self->owner;
+  if ( owner && owner->primary_surface == self )
+    owner->primary_surface = 0;
+  PlatformFreeLow32(self);
+  if ( owner )
+    CompatDirectDraw_Release(owner);
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_AddAttachedSurface(CompatDirectDrawSurface *self, void *attached_surface)
+{
+  if ( !self )
+    return (HRESULT)0x80070057;
+  self->attached_surface = (CompatDirectDrawSurface *)attached_surface;
+  if ( self->attached_surface )
+    CompatDirectDrawSurface_AddRef(self->attached_surface);
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_AddOverlayDirtyRect(CompatDirectDrawSurface *self, const RECT *dirty_rect)
+{
+  (void)self;
+  (void)dirty_rect;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Blt(CompatDirectDrawSurface *self, RECT *dest_rect, void *src_surface, RECT *src_rect, DWORD flags, void *blt_fx)
+{
+  CompatDirectDrawSurface *src;
+
+  (void)dest_rect;
+  (void)src_rect;
+  (void)flags;
+  (void)blt_fx;
+  if ( !self )
+    return (HRESULT)0x80070057;
+  src = (CompatDirectDrawSurface *)src_surface;
+  if ( src )
+  {
+    self->surface.width = src->surface.width;
+    self->surface.height = src->surface.height;
+  }
+  self->lost = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_BltBatch(CompatDirectDrawSurface *self, void *batch, DWORD count, DWORD flags)
+{
+  (void)self;
+  (void)batch;
+  (void)count;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_BltFast(CompatDirectDrawSurface *self, int x, int y, void *src_surface, RECT *src_rect, DWORD flags)
+{
+  (void)x;
+  (void)y;
+  return CompatDirectDrawSurface_Blt(self, 0, src_surface, src_rect, flags, 0);
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_DeleteAttachedSurface(CompatDirectDrawSurface *self, DWORD flags, void *attached_surface)
+{
+  (void)flags;
+  if ( self && self->attached_surface == (CompatDirectDrawSurface *)attached_surface )
+  {
+    CompatDirectDrawSurface_Release(self->attached_surface);
+    self->attached_surface = 0;
+  }
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_EnumAttachedSurfaces(CompatDirectDrawSurface *self, void *ctx, void *callback)
+{
+  (void)self;
+  (void)ctx;
+  (void)callback;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_EnumOverlayZOrders(CompatDirectDrawSurface *self, DWORD flags, void *ctx, void *callback)
+{
+  (void)self;
+  (void)flags;
+  (void)ctx;
+  (void)callback;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Flip(CompatDirectDrawSurface *self, void *target_override, DWORD flags)
+{
+  (void)self;
+  (void)target_override;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetAttachedSurface(CompatDirectDrawSurface *self, void *caps, void *out_surface)
+{
+  (void)caps;
+  if ( !self || !out_surface )
+    return (HRESULT)0x80070057;
+  if ( !self->attached_surface )
+    self->attached_surface = CompatDirectDrawSurfaceCreate(self->owner, self->width, self->height, self->bpp, self->caps);
+  *(void **)out_surface = self->attached_surface;
+  if ( self->attached_surface )
+    CompatDirectDrawSurface_AddRef(self->attached_surface);
+  return self->attached_surface ? 0 : (HRESULT)0x8007000E;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetBltStatus(CompatDirectDrawSurface *self, DWORD flags)
+{
+  (void)self;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetCaps(CompatDirectDrawSurface *self, void *caps)
+{
+  if ( caps )
+    *(DWORD *)caps = self ? self->caps : 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetClipper(CompatDirectDrawSurface *self, void *out_clipper)
+{
+  if ( out_clipper )
+    *(void **)out_clipper = self ? self->clipper : 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetColorKey(CompatDirectDrawSurface *self, DWORD flags, void *color_key)
+{
+  (void)self;
+  (void)flags;
+  (void)color_key;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetDC(CompatDirectDrawSurface *self, void *out_dc)
+{
+  if ( !self || !out_dc )
+    return (HRESULT)0x80070057;
+  *(void **)out_dc = &self->surface;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetFlipStatus(CompatDirectDrawSurface *self, DWORD flags)
+{
+  (void)self;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetOverlayPosition(CompatDirectDrawSurface *self, LONG *x, LONG *y)
+{
+  (void)self;
+  if ( x )
+    *x = 0;
+  if ( y )
+    *y = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetPalette(CompatDirectDrawSurface *self, void *out_palette)
+{
+  if ( out_palette )
+    *(void **)out_palette = self ? self->palette : 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetPixelFormat(CompatDirectDrawSurface *self, void *pixel_format)
+{
+  (void)self;
+  (void)pixel_format;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_GetSurfaceDesc(CompatDirectDrawSurface *self, int *desc)
+{
+  if ( !self || !desc )
+    return (HRESULT)0x80070057;
+  memset(desc, 0, 108);
+  desc[0] = 108;
+  desc[2] = self->height;
+  desc[3] = self->width;
+  desc[4] = self->pitch;
+  desc[9] = (int)(uintptr_t)self->pixels;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Initialize(CompatDirectDrawSurface *self, CompatDirectDraw *owner, int *desc)
+{
+  (void)desc;
+  if ( self )
+    self->owner = owner;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_IsLost(CompatDirectDrawSurface *self)
+{
+  if ( self && self->lost )
+    return (HRESULT)0x887600c2;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Lock(CompatDirectDrawSurface *self, RECT *rect, int *desc, DWORD flags, HANDLE event_handle)
+{
+  size_t pixel_bytes;
+
+  (void)rect;
+  (void)flags;
+  (void)event_handle;
+  if ( !self || !desc )
+    return (HRESULT)0x80070057;
+  if ( !self->pixels )
+  {
+    pixel_bytes = (size_t)self->pitch * (size_t)self->height;
+    self->pixels = PlatformAllocLow32(pixel_bytes);
+    if ( !self->pixels )
+      return (HRESULT)0x8007000E;
+    memset(self->pixels, 0, pixel_bytes);
+  }
+  memset(desc, 0, 108);
+  desc[0] = 108;
+  desc[2] = self->height;
+  desc[3] = self->width;
+  desc[4] = self->pitch;
+  desc[9] = (int)(uintptr_t)self->pixels;
+  self->lost = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_ReleaseDC(CompatDirectDrawSurface *self, HDC dc)
+{
+  (void)self;
+  (void)dc;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Restore(CompatDirectDrawSurface *self)
+{
+  if ( self )
+    self->lost = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_SetClipper(CompatDirectDrawSurface *self, void *clipper)
+{
+  if ( self )
+    self->clipper = clipper;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_SetColorKey(CompatDirectDrawSurface *self, DWORD flags, void *color_key)
+{
+  (void)self;
+  (void)flags;
+  (void)color_key;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_SetOverlayPosition(CompatDirectDrawSurface *self, LONG x, LONG y)
+{
+  (void)self;
+  (void)x;
+  (void)y;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_SetPalette(CompatDirectDrawSurface *self, void *palette)
+{
+  if ( self )
+    self->palette = palette;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_Unlock(CompatDirectDrawSurface *self, void *lock_ptr)
+{
+  (void)self;
+  (void)lock_ptr;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlay(CompatDirectDrawSurface *self, RECT *src_rect, void *dest_surface, RECT *dest_rect, DWORD flags, void *overlay_fx)
+{
+  (void)self;
+  (void)src_rect;
+  (void)dest_surface;
+  (void)dest_rect;
+  (void)flags;
+  (void)overlay_fx;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayDisplay(CompatDirectDrawSurface *self, DWORD flags)
+{
+  (void)self;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayZOrder(CompatDirectDrawSurface *self, DWORD flags, void *reference_surface)
+{
+  (void)self;
+  (void)flags;
+  (void)reference_surface;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_QueryInterface(CompatDirectDrawClipper *self, const void *riid, void *out_object)
+{
+  (void)riid;
+  if ( !self || !out_object )
+    return (HRESULT)0x80070057;
+  *(void **)out_object = self;
+  CompatDirectDrawClipper_AddRef(self);
+  return 0;
+}
+
+static ULONG __stdcall CompatDirectDrawClipper_AddRef(CompatDirectDrawClipper *self)
+{
+  if ( !self )
+    return 0;
+  return ++self->ref_count;
+}
+
+static ULONG __stdcall CompatDirectDrawClipper_Release(CompatDirectDrawClipper *self)
+{
+  if ( !self )
+    return 0;
+  if ( self->ref_count )
+    --self->ref_count;
+  if ( !self->ref_count )
+    PlatformFreeLow32(self);
+  return self->ref_count;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_GetClipList(CompatDirectDrawClipper *self, RECT *clip_rect, void *clip_list, DWORD *size)
+{
+  (void)self;
+  (void)clip_rect;
+  (void)clip_list;
+  if ( size )
+    *size = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_GetHWnd(CompatDirectDrawClipper *self, HWND *hwnd)
+{
+  if ( hwnd )
+    *hwnd = self ? self->hwnd : 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_Initialize(CompatDirectDrawClipper *self, CompatDirectDraw *owner, DWORD flags)
+{
+  (void)self;
+  (void)owner;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_IsClipListChanged(CompatDirectDrawClipper *self, BOOL *changed)
+{
+  (void)self;
+  if ( changed )
+    *changed = 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_SetClipList(CompatDirectDrawClipper *self, void *clip_list, DWORD flags)
+{
+  (void)self;
+  (void)clip_list;
+  (void)flags;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawClipper_SetHWnd(CompatDirectDrawClipper *self, DWORD flags, HWND hwnd)
+{
+  (void)flags;
+  if ( self )
+    self->hwnd = hwnd;
+  return 0;
+}
 
 extern LRESULT Platform_MainWindowProc(void *this_, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 DWORD __stdcall timeGetTime(void);
@@ -608,6 +1586,109 @@ HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
   return &g_platform_module_handle_token;
 }
 
+HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter)
+{
+  CompatDirectDraw *direct_draw;
+
+  (void)lpGUID;
+  (void)pUnkOuter;
+  if ( !lplpDD )
+    return (HRESULT)0x80070057;
+  *lplpDD = 0;
+  direct_draw = (CompatDirectDraw *)PlatformAllocLow32(sizeof(*direct_draw));
+  if ( !direct_draw )
+    return (HRESULT)0x8007000E;
+  memset(direct_draw, 0, sizeof(*direct_draw));
+  direct_draw->lpVtbl = &g_compat_directdraw_vtable;
+  direct_draw->ref_count = 1;
+  direct_draw->width = g_platform_default_surface.width ? g_platform_default_surface.width : 640;
+  direct_draw->height = g_platform_default_surface.height ? g_platform_default_surface.height : 480;
+  direct_draw->bpp = 16;
+  direct_draw->cooperative_window = g_platform_foreground_window;
+  *lplpDD = (LPDIRECTDRAW)direct_draw;
+  return 0;
+}
+
+HRESULT Compat_DirectDraw_QueryInterface(LPDIRECTDRAW dd, const void *riid, void *out_object)
+{
+  return CompatDirectDraw_QueryInterface((CompatDirectDraw *)dd, riid, out_object);
+}
+
+ULONG Compat_DirectDraw_Release(LPDIRECTDRAW dd)
+{
+  return CompatDirectDraw_Release((CompatDirectDraw *)dd);
+}
+
+HRESULT Compat_DirectDraw_SetCooperativeLevel(LPDIRECTDRAW dd, HWND hwnd, DWORD flags)
+{
+  return CompatDirectDraw_SetCooperativeLevel((CompatDirectDraw *)dd, hwnd, flags);
+}
+
+HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height, int bpp, int refresh_rate, int flags)
+{
+  return CompatDirectDraw_SetDisplayMode((CompatDirectDraw *)dd, width, height, bpp, refresh_rate, flags);
+}
+
+HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface)
+{
+  return CompatDirectDraw_CreateSurface((CompatDirectDraw *)dd, desc, out_surface, 0);
+}
+
+HRESULT Compat_DirectDrawSurface_GetAttachedSurface(LPDIRECTDRAWSURFACE surface, void *caps, void *out_surface)
+{
+  return CompatDirectDrawSurface_GetAttachedSurface((CompatDirectDrawSurface *)surface, caps, out_surface);
+}
+
+HRESULT Compat_DirectDrawSurface_Blt(LPDIRECTDRAWSURFACE surface, RECT *dest_rect, LPDIRECTDRAWSURFACE src_surface, RECT *src_rect, DWORD flags, void *blt_fx)
+{
+  return CompatDirectDrawSurface_Blt((CompatDirectDrawSurface *)surface, dest_rect, src_surface, src_rect, flags, blt_fx);
+}
+
+HRESULT Compat_DirectDrawSurface_IsLost(LPDIRECTDRAWSURFACE surface)
+{
+  return CompatDirectDrawSurface_IsLost((CompatDirectDrawSurface *)surface);
+}
+
+HRESULT Compat_DirectDrawSurface_Restore(LPDIRECTDRAWSURFACE surface)
+{
+  return CompatDirectDrawSurface_Restore((CompatDirectDrawSurface *)surface);
+}
+
+HRESULT Compat_DirectDrawSurface_Lock(LPDIRECTDRAWSURFACE surface, RECT *rect, int *desc, DWORD flags, HANDLE event_handle)
+{
+  return CompatDirectDrawSurface_Lock((CompatDirectDrawSurface *)surface, rect, desc, flags, event_handle);
+}
+
+HRESULT Compat_DirectDrawSurface_Unlock(LPDIRECTDRAWSURFACE surface, void *lock_ptr)
+{
+  return CompatDirectDrawSurface_Unlock((CompatDirectDrawSurface *)surface, lock_ptr);
+}
+
+HRESULT Compat_DirectDrawSurface_SetClipper(LPDIRECTDRAWSURFACE surface, void *clipper)
+{
+  return CompatDirectDrawSurface_SetClipper((CompatDirectDrawSurface *)surface, clipper);
+}
+
+HRESULT Compat_DirectDrawSurface_SetPalette(LPDIRECTDRAWSURFACE surface, void *palette)
+{
+  return CompatDirectDrawSurface_SetPalette((CompatDirectDrawSurface *)surface, palette);
+}
+
+int __stdcall DirectSoundCreate(void *lpGuid, void *lplpDS, void *punkOuter)
+{
+  (void)lpGuid;
+  (void)punkOuter;
+  if ( lplpDS )
+    *(void **)lplpDS = 0;
+
+  /*
+   * Audio still goes through the SDL seam rather than legacy DirectSound.
+   * Returning failure keeps the legacy device slots inert until that bridge is
+   * reconstructed from recovered behavior.
+   */
+  return 1;
+}
+
 HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter)
 {
   (void)hinst;
@@ -626,8 +1707,27 @@ HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lp
 
 UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName)
 {
-  (void)lpRootPathName;
-  return 3;
+  struct stat st;
+  char drive_letter;
+  char probe_path[64];
+
+  if ( !lpRootPathName || !lpRootPathName[0] )
+    return 0;
+  drive_letter = lpRootPathName[0];
+  if ( drive_letter >= 'A' && drive_letter <= 'Z' )
+    drive_letter = (char)(drive_letter - 'A' + 'a');
+  if ( drive_letter < 'a' || drive_letter > 'z' )
+    return 0;
+  snprintf(probe_path, sizeof(probe_path), "/mnt/%c/clash", drive_letter);
+  if ( stat(probe_path, &st) == 0 && S_ISDIR(st.st_mode) )
+    return 5;
+  snprintf(probe_path, sizeof(probe_path), "/mnt/%c/CLASH", drive_letter);
+  if ( stat(probe_path, &st) == 0 && S_ISDIR(st.st_mode) )
+    return 5;
+  snprintf(probe_path, sizeof(probe_path), "/mnt/%c", drive_letter);
+  if ( stat(probe_path, &st) == 0 && S_ISDIR(st.st_mode) )
+    return 3;
+  return 0;
 }
 
 void __stdcall OutputDebugStringA(LPCSTR lpOutputString)

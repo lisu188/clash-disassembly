@@ -3096,6 +3096,290 @@
 - total rename count so far:
   - `1193`
 
+## Batch 128 - Mounted GFX Proof And DirectDraw Link-Seam Wave
+- Current frontier:
+  - keep the authentic WSL/SDL startup slice stable, validate the real mounted `gfx` archive handoff, and make the bootstrap executable relink cleanly so the next live wall is the first DirectDraw-era render bootstrap step instead of an unresolved import
+- Subagents spawned and scopes:
+  - the live-agent pool was recycled again across the current frontier because the workspace remained at the concurrent-agent cap
+  - startup/resource review: confirm whether `sub_4427F0("gfx\\backgr1.s32")` now reaches the mounted `\\GFX` archive or still fails in the root query layer
+  - CRT/runtime review: re-rank the private archive/file helper band only after the mounted query result is observed directly
+  - SDL/platform review: distinguish a true WSL/SDL window/input problem from the first DirectDraw-era render bootstrap dependency
+  - menu/session review: confirm whether the next honest milestone after stable startup is the quarantined video-init slice rather than a direct jump to menus
+  - build/link review: verify the bootstrap target still builds from a fresh link after the current dirty runtime changes
+  - mergeable subagent evidence used this batch:
+    - the SDL/platform review remained aligned that the current frontier is above the WSL window/message/timing seam and specifically at the DirectDraw-era render bridge
+    - the menu/session review remained aligned that successful video-init is the next meaningful precursor to first menu render
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_4427F0`
+  - `sub_477170`
+  - `sub_478950`
+  - `sub_4794F0`
+  - `Render_SetPixelFormat`
+  - `sub_475080`
+- Blockers removed this batch:
+  - a fresh `clash95_bootstrap` rebuild no longer fails on an unresolved `DirectDrawCreate` import
+  - the authentic startup prelude remains stable after a clean rebuild, proving the earlier `gfx\\backgr1.s32` archive/runtime tranche is no longer the active crash wall
+  - direct GDB tracing now proves the mounted-file query sequence reaches the real `\\GFX` archive entry and reduces the residual lookup to `BACKGR1.S32` before the next bootstrap wall
+- SDL replacements/cleanups this batch:
+  - added `DirectDrawCreate` ownership to the SDL seam in `platform_sdl.h` / `platform_sdl_runtime.c` as an explicit fail-closed wrapper instead of leaving it as a bootstrap link hole
+- Menu/UI fixes this batch:
+  - none; the current wall is still below menu/widget rendering
+- Session-init fixes this batch:
+  - none; session/game-start work remains downstream of the render bootstrap wall
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only compat/decomp_runtime_stubs.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only platform_sdl_runtime.c`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_batch143.o`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
+  - `gdb -batch -ex "set debuginfod enabled off" -ex "break sub_477170" -ex "run --authentic-startup-prelude" ...`
+  - `gdb -batch -ex "set debuginfod enabled off" -ex "break sub_478950" -ex "run --authentic-startup-prelude" ...`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c`, `compat/decomp_runtime_stubs.c`, `bootstrap_main.c`, and `platform_sdl_runtime.c` all parse cleanly under the current `gnu89` setup
+- Link status:
+  - `clash95_bootstrap` builds successfully again after the explicit `DirectDrawCreate` seam export
+  - `clash95_recovered` still builds successfully as the recovered static-library baseline
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` exits with status `124`, confirming the default bootstrap window loop remains alive
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`, confirming the authentic early-startup slice remains alive after the mounted archive/resource wave
+  - live GDB tracing of `sub_477170` shows four empty-prefix root/current-directory callbacks first, then a mounted `\\GFX` callback with the residual path reduced to `BACKGR1.S32`, then the fallback `c:\\clash\\gfx\\backgr1.s32` query path
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` now reaches the explicit render/bootstrap probe and stops at the DirectDraw error path instead of the older resource-mount wall
+- Highest authentic runtime milestone reached:
+  - the executable now enters the authentic startup prelude under WSL/SDL, completes the real `sub_442AD0` background-resource lookup far enough to stay alive in the recovered message loop, and the next explicit probe reaches the first DirectDraw-era render bootstrap step
+- Key evidence used:
+  - at `sub_477170`, `dword_54DD00` is `GFX\\BACKGR1.S32` for the four empty-prefix root/current-directory passes, then `BACKGR1.S32` for the mounted `\\GFX` pass, proving the real archive mount is being reached
+  - `sub_478950` is hit with `BACKGR1.S32` on the authentic startup path, showing the failure frontier moved beyond root-prefix normalization into the deeper archive/render bootstrap band
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now stays alive, while `--authentic-video-init` fails with the DirectDraw error path
+- Ambiguous candidates deferred:
+  - whether the next safe SDL/render batch should keep `DirectDrawCreate` as a fail-fast seam while reconstructing just enough `IDirectDraw` behavior for `Render_SetPixelFormat`, or whether a smaller recovered helper band can bypass that dependency first
+  - the wider post-video-init bootstrap band (`sub_460490`, `Render_CreateSprite`, then menu resource loading) remains downstream of the DirectDraw-era render bridge
+  - first menu render, menu input, session init, and one playable turn remain downstream of the video-init wall
+- total rename count so far:
+  - `1193`
+
+## Batch 127 - Stable Early Startup And Video-Init Frontier Wave
+- Current frontier:
+  - keep the WSL/SDL executable in the authentic startup path, then push the next explicit probe through `Render_SetPixelFormat` without fabricating a fake DirectDraw runtime
+- Subagents spawned and scopes:
+  - the workspace hit the live-agent cap again, so the active pool was recycled across the current frontier instead of opening a second parallel wave
+  - startup/entrypoint review: confirm the authentic prelude milestone and whether `main` / `_WinMain@16` still blocked first-boot progress
+  - CRT/runtime review: confirm whether the live wall had moved out of the archive/holder helpers and into the next platform/render band
+  - SDL/platform review: distinguish a true SDL/window issue from the first DirectDraw-era render dependency
+  - menu/session review: re-rank what milestone would count as “close to first menu render” after the new startup state
+  - build/link review: confirm the bootstrap target remained buildable after the current dirty runtime fixes
+  - mergeable subagent evidence used this batch:
+    - the startup/runtime sweep agreed that the authentic early-startup slice is now alive and that the next wall is no longer the mounted archive query path
+    - the SDL/platform sweep agreed the new failure is above the WSL window/message/timing seam and specifically at the first DirectDraw-era render dependency
+    - the menu/session sweep confirmed that a successful video-init probe is the next meaningful precursor to first menu render
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_442760`
+  - `sub_442AD0`
+  - `Game_Init`
+  - `Render_SetPixelFormat`
+  - `sub_475080`
+- Blockers removed this batch:
+  - the authentic startup prelude no longer aborts on the mounted `gfx\\backgr1.s32` lookup path
+  - `sub_442AD0` now completes far enough for `Game_Init` to return and hand control back to the bootstrap message loop
+  - the executable bootstrap surface remains linkable under the current dirty runtime state, so the next work can move above archive mounting instead of re-litigating the earlier resource probe
+- SDL replacements/cleanups this batch:
+  - `DirectDrawCreate` is now owned explicitly by the SDL platform seam as a deliberate failure wrapper instead of an unresolved bootstrap link hole
+  - `DirectSoundCreate` is likewise contained behind an inert SDL-side wrapper so the executable can link without claiming native DirectSound under WSL
+- Menu/UI fixes this batch:
+  - none; the next probe still fails before any real menu/widget render path
+- Session-init fixes this batch:
+  - none; session/game-start work remains below the menu frontier and is still deferred behind render bootstrap
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only compat/decomp_runtime_stubs.c`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap --verbose`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init r`
+- Compile status:
+  - `clash95.c` and `compat/decomp_runtime_stubs.c` still parse cleanly under the current `gnu89` setup
+- Link status:
+  - `clash95_bootstrap` builds successfully again and remains executable under WSL
+  - `clash95_recovered` still builds successfully as the recovered static-library baseline
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` exits with status `124`, confirming the smoke/bootstrap window loop remains alive
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now also exits with status `124`, proving the authentic early-startup slice stays alive instead of crashing or aborting on the resource-mount path
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` prints `[platform_sdl] Clash: DirectDraw Error %s` and dumps core, showing the next live wall is the first DirectDraw-era render bootstrap step
+- Highest authentic runtime milestone reached:
+  - the executable now starts under WSL/SDL, enters the authentic startup prelude through `Platform_CreateMainWindow`, input/CD/resource bootstrap, and `Game_Init`, then stays alive in the ordinary message loop; the next explicit probe reaches `Render_SetPixelFormat` and fails at the SDL/DirectDraw seam before menu rendering
+- Key evidence used:
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now stays alive instead of printing the earlier “Clash CD not found!” abort
+  - `bootstrap_main.c` now exposes an explicit `--authentic-video-init` probe that roots `Render_SetPixelFormat`, `sub_460490`, and `Render_CreateSprite` immediately after the stable startup prelude
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` fails with the DirectDraw error path, which narrows the next real blocker from archive/runtime lookup to the render-platform bridge
+- Ambiguous candidates deferred:
+  - whether the next safe SDL/render batch should keep `DirectDrawCreate` as a deliberate fail-fast seam while reconstructing just enough `IDirectDraw` surface behavior for `Render_SetPixelFormat`, or whether a smaller recovered helper cluster can bypass that dependency first
+  - the broader post-video-init bootstrap band (`sub_460490`, `Render_CreateSprite`, then menu resource loading) remains untested because the DirectDraw seam currently fails first
+  - first menu render, menu input, and session init are still downstream of the DirectDraw-era render bootstrap wall
+- total rename count so far:
+  - `1193`
+
+## Batch 126 - Archive Lookup Width And Root-Entry Frontier Wave
+- Current frontier:
+  - keep the WSL/SDL executable runnable while removing the next x86-64-only archive lookup corruption on the authentic `sub_442AD0 -> sub_4427F0("gfx\\backgr1.s32")` boot path
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Archimedes`: startup-harness and root-entry initialization corroboration around `sub_442760`, `sub_442AD0`, and the archive constructor chain
+  - `Harvey`: CRT / stream-runtime ranking, confirming the private archive/file-runtime family is still the next broad blocker after the current helper wave
+  - `Zeno`: SDL/menu-path review to keep the executable-first work focused below the menu layer
+  - `Aquinas`: `_wcpp_*` / constructor-tail review to distinguish pre-epilogue corruption from finalizer noise
+  - `Hume`: next session/playable-turn dependency floor once the menu path becomes reachable
+  - `Popper`: boot-path `JUMPOUT` ranking after the current archive lookup tranche
+  - mergeable subagent evidence used this batch:
+    - `Archimedes` confirmed the narrowest missing executable-harness step had already been added and that the next live failure remained inside the archive/resource constructor chain rather than the outer startup wrapper
+    - `Harvey` re-ranked the private stream family (`_allocfp_`, `_freefp_`, `fread_`, `ftell_`, `setvbuf_`, `fflush_`) as the next broad runtime wall once the current lookup corruption is removed
+    - `Aquinas` confirmed the live startup fault was still pre-tail runtime corruption, not the quarantined finalizer registration path
+    - `Zeno` confirmed SDL/window/timing are not the current blocker for first menu render; startup/runtime still dominates
+    - `Popper` confirmed no nearby `JUMPOUT` scar outranks the live archive/runtime failure, and kept `sub_490330` as the next meaningful post-resource bootstrap scar
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_478770`
+  - `sub_4788F0`
+  - `sub_478950`
+  - `sub_4789F0`
+  - `sub_4791A0`
+  - `sub_479420`
+  - `sub_4794F0`
+- Blockers removed this batch:
+  - the authentic startup probe no longer crashes in `Compat_StringArgGetText` from the decompiler-lost holder-width mismatch on the `sub_4789F0 -> sub_478950` path
+  - the archive lookup/hash helpers no longer reinterpret holder-backed names as raw 64-bit `char **` values on x86-64
+  - `sub_4789F0` no longer truncates the requested-name holder pointer to `int` before extracting the leaf name for the child-object lookup
+  - `sub_4791A0` no longer passes a raw uninitialized 16-byte buffer where the asm seeds a real empty holder before constructing the root archive table
+- SDL replacements/cleanups this batch:
+  - none; the platform/runtime target remains WSL plus SDL, and the live blocker stayed below the SDL seam
+- Menu/UI fixes this batch:
+  - none; menu rendering remains blocked behind the archive/root-table startup path
+- Session-init fixes this batch:
+  - none; the next session-init target remains the load-save branch once the authentic boot/menu path is stable enough to reach `PlayGame_Dispatch`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch128c.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `gdb -batch -ex run -ex bt --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `gdb -batch -ex run -ex 'info registers ...' -ex 'x/4gx $rsi' -ex 'x/8wx $rsi' -ex 'x/s $rdi' -ex bt --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `gdb -batch -ex run -ex 'x/wx $rbp-0x24' -ex 'x/4wx *(unsigned int*)($rbp-0x24)' -ex bt --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+- Compile status:
+  - `clash95.c` still compiles cleanly under the current `gnu89` setup after the archive-lookup width fixes
+- Link status:
+  - `clash95_bootstrap` still builds successfully as a WSL-runnable SDL executable
+  - the broader project still has no fully authentic `_WinMain@16` / menu-complete executable path, but the retained executable harness remains stable
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` still exits with status `124`, confirming the default bootstrap remains alive in the SDL-backed message loop
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` still exits with a core dump, but the live crash is now isolated to `sub_4788F0 -> sub_478950 -> sub_4789F0 -> sub_479420 -> sub_4794F0 -> sub_479B00 -> sub_473F70 -> sub_477170 -> sub_4427F0 -> sub_442AD0`
+  - the additional GDB probes show the requested leaf name at the crash site is already a valid `"GFX"` string, while the parent-object argument arriving in `sub_4788F0` is garbage (`0x632f632f`), proving the remaining fault is a root-table/root-entry initialization problem rather than another bad holder string
+- Highest authentic runtime milestone reached:
+  - authentic startup still reaches the real archive/resource mount path under WSL/SDL and the first mounted-file query for `gfx\\backgr1.s32`; the remaining crash is now narrowed to bogus root-table/root-entry state inside the archive lookup band rather than the earlier holder-width failures
+- Key evidence used:
+  - asm for `sub_4788F0`, `sub_478950`, `sub_4789F0`, `sub_4791A0`, `sub_479420`, `sub_4794F0`, and `sub_478770`
+  - the GDB memory probe at the crash showed `rdi = 0x4004d010 -> "GFX"` and the holder scratch slot carrying the expected low32 holder layout, which ruled out another leaf-name extraction failure
+  - the GDB stack probe at `sub_4788F0` showed the parent-object argument on the stack as `0x632f632f`, which is invalid and shifts the next safe repair target to root-table/root-entry setup rather than the hash helper itself
+  - `sub_4791A0` asm seeds a real empty holder (`unk_5024FF`) before calling `sub_478770`, so the raw low32 temp buffer in the decompiled C was demonstrably non-faithful
+- Ambiguous candidates deferred:
+  - whether the next highest-confidence repair is the root-table field setup in `sub_4791A0` / `sub_478770` or a broader resync of `sub_479420` / `sub_4794F0` back to the original hidden-register helper flow
+  - the wider private stream runtime family (`_allocfp_`, `_freefp_`, `fread_`, `ftell_`, `setvbuf_`, `fflush_`) still remains after the current root-entry corruption is removed
+  - `sub_490330` remains the next post-resource boot-path `JUMPOUT` scar once the archive/root-table frontier is stable
+- total rename count so far:
+  - `1193`
+
+## Batch 125 - Boot-Path Holder ABI And Mounted Query Repair Wave
+- Current frontier:
+  - keep the WSL/SDL executable runnable while removing x86-64 holder-layout crashes on the authentic mounted-file query path rooted by `sub_4427F0("gfx\\backgr1.s32", 0)`
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Archimedes`: asm-backed reconstruction of `sub_471CA0` and its caller-side register/holder invariants on the live `sub_476D20` path
+  - `Harvey`: holder helper family review (`sub_471BF0` / `sub_471C40` / `sub_471C60` / `sub_471CA0`) and later `sub_477170` callback-selector triage
+  - `Zeno`: SDL/WSL seam review after the drive/path fixes to rank the next real platform blocker
+  - `Aquinas`: next post-startup pre-menu frontier after the current boot/runtime tranche
+  - `Hume`: one-playable-turn dependency floor once the menu path becomes reachable
+  - `Popper`: control-flow-scar triage and the false-negative mounted-query frontier after the holder/runtime crashes were removed
+  - mergeable subagent evidence used this batch:
+    - `Archimedes` confirmed `sub_471CA0` is a pure temp-holder builder on the `sub_476D20` relative-path branch and that the caller-side source holder really comes from `a1 + 4`
+    - `Harvey` confirmed the highest-confidence local repair strategy was to replace the holder-copy helper band (`sub_471CA0`, `sub_471D10`, `sub_471DE0`, `sub_471F10`, `sub_472320`) with low32-safe C reconstructions
+    - `Popper` confirmed the early crashes were not caused by a nearer `JUMPOUT` scar and later re-ranked the remaining frontier as either the mounted-query callback selector band or the deeper archive/object runtime, not another local holder-destruction bug
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_471CA0`
+  - `sub_471D10`
+  - `sub_471DE0`
+  - `sub_471F10`
+  - `sub_472320`
+  - `sub_476D20`
+  - `sub_477170`
+  - `sub_477370`
+  - `sub_4427F0`
+- Blockers removed this batch:
+  - the authentic startup probe no longer dies in `sub_471C60 -> sub_471CA0 -> sub_476D20` from the decompiler-lost holder ABI
+  - the mounted query path no longer crashes in `sub_471DE0`, `sub_476D20`, or `sub_472320` from split pointer/vtable locals and truncated helper calls
+  - `sub_4427F0` now reaches the deliberate post-mount asset lookup failure in `sub_442AD0` instead of faulting earlier in holder/path normalization
+  - the WSL runtime no longer reports every drive as a fixed disk: `GetDriveTypeA` now recognizes `/mnt/<drive>/clash` as the CD root probe the original boot path expects
+- SDL replacements/cleanups this batch:
+  - `GetDriveTypeA` now maps the legacy drive-type probe onto the WSL install layout, returning CD-ROM for `/mnt/<drive>/clash` or `/mnt/<drive>/CLASH`
+- Menu/UI fixes this batch:
+  - none; the current runtime milestone is still below menu/render reachability
+- Session-init fixes this batch:
+  - none; the next session-init target remains the load-save branch once the mounted-file false negative is removed
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `gdb -batch -ex run -ex bt --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c` still compiles cleanly under the current `gnu89` setup after the holder/runtime repairs
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - `clash95_bootstrap` still builds successfully as a WSL-runnable SDL executable
+  - `clash95_recovered` still builds successfully as the recovered static library baseline
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` still exits with status `124`, confirming the default bootstrap stays alive in the SDL-backed message loop
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` now consistently reaches `App_RequestQuit("Clash CD not found!")` from `sub_442AD0` after `CSS_SetFileSystem`, then faults during `App_Shutdown -> sub_460580`
+  - GDB confirms the live crash frontier moved from `sub_471CA0` to `sub_471DE0`, then `sub_476D20`, then `sub_472320`, and finally out of the holder/runtime band into the deliberate mounted-file lookup failure path
+- Highest authentic runtime milestone reached:
+  - authentic startup now mounts the real resource archives under WSL/SDL, reaches `CSS_SetFileSystem`, issues the first mounted-file query for `gfx\\backgr1.s32`, and reaches the deliberate `App_RequestQuit("Clash CD not found!")` boot abort instead of crashing inside the holder/query normalization tranche
+- Key evidence used:
+  - asm for `sub_471BF0`, `sub_471C40`, `sub_471C60`, `sub_471CA0`, `sub_471D10`, `sub_471DE0`, `sub_471F10`, `sub_472320`, `sub_476D20`, `sub_477170`, `sub_477370`, and `sub_4427F0`
+  - GDB frontier shifts showing the boot path progress across `sub_471CA0 -> sub_471DE0 -> sub_476D20 -> sub_472320 -> sub_442AD0`
+  - `/mnt/c/clash/DATA` contains the expected installed archives under WSL, including `minimum.res`, `normal.res`, `maximum.res`, `GFX3.RES`, `MAPS.RES`, `MUSIC.RES`, `INFOANG.RES`, `INFOPOL.RES`, `MISINFOA.RES`, and `MISWAVA.RES`, so the current message is now a false-negative mounted-query frontier rather than missing disk assets
+- Ambiguous candidates deferred:
+  - whether the next safe boot fix is the hidden selector loss in `sub_477170` / the mounted-query callback band, or the deeper archive/object runtime behind the mounted archive query method
+  - the `App_Shutdown -> sub_460580` crash path, which is now only reached after the deliberate boot abort rather than during the authentic startup-prelude runtime
+  - the broader post-boot frontier `sub_451E46 -> sub_47C850 -> sub_490330`, which remains the next major rules/bootstrap band once the mounted-file false negative is removed
+- total rename count so far:
+  - `1193`
+
 ## Batch 124 - WSL Resource Mount And Archive Runtime Repair Wave
 - Current frontier:
   - keep the WSL/SDL executable runnable while pushing the authentic startup probe through the real resource-archive mount path rooted by `sub_442AD0`
