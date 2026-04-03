@@ -82,7 +82,7 @@ typedef struct CompatLow32AllocHeader {
 typedef struct CompatFileRuntimeMeta {
   int next_link;
   int stream_ptr;
-  unsigned char *buffer_base;
+  int buffer_base;
   int buffer_state;
   int fd_index;
   int mode_char;
@@ -90,9 +90,9 @@ typedef struct CompatFileRuntimeMeta {
 } CompatFileRuntimeMeta;
 
 typedef struct CompatFileRuntimeStream {
-  unsigned char *current_ptr;
+  int current_ptr;
   int remaining_count;
-  CompatFileRuntimeMeta *meta;
+  int meta;
   unsigned char flags0;
   unsigned char flags1;
   unsigned char reserved14;
@@ -648,7 +648,7 @@ static CompatFileRuntimeMeta *CompatGetFileRuntimeMeta(CompatFileRuntimeStream *
 {
   if ( !stream )
     return 0;
-  return stream->meta;
+  return (CompatFileRuntimeMeta *)(uintptr_t)(unsigned int)stream->meta;
 }
 
 static int CompatGetOsFdFromStream(CompatFileRuntimeStream *stream)
@@ -676,7 +676,7 @@ int Compat_AllocFileStream(void)
   memset(stream, 0, sizeof(*stream));
   meta->stream_ptr = (int)(uintptr_t)stream;
   meta->fd_index = -1;
-  stream->meta = meta;
+  stream->meta = (int)(uintptr_t)meta;
   stream->fd_index = -1;
   CompatRegisterStreamHandle((int)(uintptr_t)stream);
   return (int)(uintptr_t)stream;
@@ -708,7 +708,7 @@ void Compat_FreeFileStream(int stream_ptr)
     close(stream->fd_index);
   meta = CompatGetFileRuntimeMeta(stream);
   if ( meta && meta->buffer_base )
-    CompatFreeLow32(meta->buffer_base);
+    CompatFreeLow32((void *)(uintptr_t)(unsigned int)meta->buffer_base);
   if ( meta )
     CompatFreeLow32(meta);
   CompatFreeLow32(stream);
@@ -735,7 +735,7 @@ int Compat_InitFileStream(int stream_ptr, int fd_index, int mode_char, int open_
   meta->stream_ptr = stream_ptr;
   meta->fd_index = fd_index;
   meta->mode_char = mode_char;
-  stream->meta = meta;
+  stream->meta = (int)(uintptr_t)meta;
   stream->flags0 = (unsigned char)open_flags;
   stream->fd_index = fd_index;
   return stream_ptr;
@@ -807,10 +807,10 @@ int Compat_StreamSetBuffer(int stream_ptr, int buffer_size)
     return -1;
   if ( !meta->buffer_base )
   {
-    meta->buffer_base = (unsigned char *)CompatAllocLow32((size_t)buffer_size);
+    meta->buffer_base = (int)(uintptr_t)CompatAllocLow32((size_t)buffer_size);
     if ( !meta->buffer_base )
       return -1;
-    memset(meta->buffer_base, 0, (size_t)buffer_size);
+    memset((void *)(uintptr_t)(unsigned int)meta->buffer_base, 0, (size_t)buffer_size);
     meta->buffer_size = buffer_size;
   }
   stream->current_ptr = meta->buffer_base;

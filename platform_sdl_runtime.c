@@ -1611,7 +1611,16 @@ HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown 
 
 HRESULT Compat_DirectDraw_QueryInterface(LPDIRECTDRAW dd, const void *riid, void *out_object)
 {
-  return CompatDirectDraw_QueryInterface((CompatDirectDraw *)dd, riid, out_object);
+  CompatDirectDraw *query_result;
+  HRESULT hr;
+
+  query_result = 0;
+  hr = CompatDirectDraw_QueryInterface((CompatDirectDraw *)dd, riid, &query_result);
+  if ( hr )
+    return hr;
+  if ( out_object )
+    *(int *)out_object = (int)(uintptr_t)query_result;
+  return 0;
 }
 
 ULONG Compat_DirectDraw_Release(LPDIRECTDRAW dd)
@@ -1631,12 +1640,30 @@ HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height,
 
 HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface)
 {
-  return CompatDirectDraw_CreateSurface((CompatDirectDraw *)dd, desc, out_surface, 0);
+  CompatDirectDrawSurface *surface;
+  HRESULT hr;
+
+  surface = 0;
+  hr = CompatDirectDraw_CreateSurface((CompatDirectDraw *)dd, desc, &surface, 0);
+  if ( hr )
+    return hr;
+  if ( out_surface )
+    *(int *)out_surface = (int)(uintptr_t)surface;
+  return 0;
 }
 
 HRESULT Compat_DirectDrawSurface_GetAttachedSurface(LPDIRECTDRAWSURFACE surface, void *caps, void *out_surface)
 {
-  return CompatDirectDrawSurface_GetAttachedSurface((CompatDirectDrawSurface *)surface, caps, out_surface);
+  CompatDirectDrawSurface *attached_surface;
+  HRESULT hr;
+
+  attached_surface = 0;
+  hr = CompatDirectDrawSurface_GetAttachedSurface((CompatDirectDrawSurface *)surface, caps, &attached_surface);
+  if ( hr )
+    return hr;
+  if ( out_surface )
+    *(int *)out_surface = (int)(uintptr_t)attached_surface;
+  return 0;
 }
 
 HRESULT Compat_DirectDrawSurface_Blt(LPDIRECTDRAWSURFACE surface, RECT *dest_rect, LPDIRECTDRAWSURFACE src_surface, RECT *src_rect, DWORD flags, void *blt_fx)

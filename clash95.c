@@ -245,6 +245,8 @@ int __cdecl sub_49A0E0(_DWORD, _DWORD);
 int __cdecl sub_4B6DD0(void);
 int __cdecl sub_4BDD40(void);
 int __cdecl sub_4D88F0(void);
+extern _UNKNOWN unk_511210;
+extern _UNKNOWN unk_511220;
 extern _UNKNOWN unk_51D9A0;
 extern _BYTE byte_51DE60[1024];
 extern _UNKNOWN unk_512008;
@@ -502,7 +504,7 @@ int  sub_405920(int *a1);
 int  sub_405950(int *a1);
 void  sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
 int  DLX_OpenArchive(char *a1, int a2);
-_DWORD * DLXSpriteSet_Load(_DWORD *a1, char a2);
+_DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 int * sub_405C60(int *a1, char a2, int a3);
 int  sub_405D00(int *a1, DWORD *a2, signed int a3);
 int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4);
@@ -1175,6 +1177,9 @@ int  sub_4426C0(char *a1, int a2);
 int  sub_442760(int a1, char a2, DWORD a3);
 int  sub_4427C0(int a1);
 int  sub_4427F0(char *a1, int a2);
+static const char *Compat_StringArgGetText(const void *arg);
+static int Compat_QueryRead(int query_handle, void *buffer, int byte_count);
+static void Compat_RenderStateInvokeMethod(int render_state, unsigned int table_offset);
 char  sub_442990(char *a1);
 char *sub_4429C0();
 int  sub_4429D0(int a1, const CHAR *a2, DWORD a3);
@@ -11568,6 +11573,8 @@ IID stru_51CA08 = { 3014063072u, 11075u, 4559u, { 162u, 222u, 0u, 170u, 0u, 185u
 _UNKNOWN g_InputBackendMouseDeviceGuid; // weak
 _UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
 _UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
+_UNKNOWN unk_511210; // weak
+_UNKNOWN unk_511220; // weak
 int dword_51D018; // weak
 int dword_51D01C; // weak
 int dword_51D020; // weak
@@ -12632,28 +12639,15 @@ int  sub_401A00(_DWORD *a1)
 //----- (00401A40) --------------------------------------------------------
 __int16 sub_401A40()
 {
-  int v0; // ecx
-  __int16 v1; // dx
-  int v2; // ecx
-  int v3; // edx
-  int v4; // ecx
-  __int16 result; // ax
-
   dword_51D4B8 = (int)off_50EF24;
   sub_404660((int)&unk_51D4C0);
-  CRT_RegisterFinalizableObject(v0, 640);
-  sub_401E00((int)&unk_51D9A0, v1, 480);
-  CRT_RegisterFinalizableObject(v2, 256);
-  _wcpp_4_ctor_array__(v4, v3);
-  result = (unsigned __int8)sub_401D10((int)byte_51DE60);
+  CRT_RegisterFinalizableObject((int)&unk_511210, 640);
+  sub_401E00((int)&unk_51D9A0, 640, 480);
+  CRT_RegisterFinalizableObject((int)&unk_511220, 256);
+  _wcpp_4_ctor_array__((int)&unk_51DA60, 256);
   byte_51E265 = 0;
-  return result;
+  return (unsigned __int8)sub_401D10((int)byte_51DE60);
 }
-// 401A66: variable 'v0' is possibly undefined
-// 401A70: variable 'v1' is possibly undefined
-// 401A84: variable 'v2' is possibly undefined
-// 401A8E: variable 'v4' is possibly undefined
-// 401A8E: variable 'v3' is possibly undefined
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
 // 50EF24: using guessed type int (*off_50EF24[5])();
@@ -12697,33 +12691,29 @@ int  sub_401AF0(int a1, DWORD a2)
 //----- (00401B20) --------------------------------------------------------
 int  sub_401B20(int a1, int a2, int a3)
 {
-  int v4; // edx
-  int result; // eax
-  int v6; // esi
-  char v7; // bl
-  unsigned __int8 v8; // cl
-  char v9[768]; // [esp+0h] [ebp-310h]
-  int v10; // [esp+300h] [ebp-10h]
-  int v11; // [esp+308h] [ebp-8h]
+  int palette_offset;
+  int write_ptr;
+  int packed_rgb;
+  unsigned __int8 red;
+  unsigned __int8 green;
+  unsigned __int8 blue;
+  char palette_bytes[768]; // [esp+0h] [ebp-310h]
 
-  v11 = a3;
-  (*(void (**)(void))(*(_DWORD *)a2 + 20))();
-  v4 = a1;
-  result = 0;
-  v6 = a1 + 1024;
-  do
+  (void)a3;
+  Compat_QueryRead(a2, palette_bytes, 0x300);
+  write_ptr = a1;
+  palette_offset = 0;
+  while ( write_ptr != a1 + 1024 )
   {
-    v7 = v9[result + 1];
-    v8 = v9[result + 2];
-    LOBYTE(v10) = v9[result];
-    BYTE1(v10) = v7;
-    HIWORD(v10) = v8;
-    v4 += 4;
-    result += 3;
-    *(_DWORD *)(v4 - 4) = v10;
+    red = (unsigned __int8)palette_bytes[palette_offset];
+    green = (unsigned __int8)palette_bytes[palette_offset + 1];
+    blue = (unsigned __int8)palette_bytes[palette_offset + 2];
+    packed_rgb = red | (green << 8) | (blue << 16);
+    *(_DWORD *)write_ptr = packed_rgb;
+    write_ptr += 4;
+    palette_offset += 3;
   }
-  while ( v4 != v6 );
-  return result;
+  return palette_offset;
 }
 
 //----- (00401BA0) --------------------------------------------------------
@@ -12776,49 +12766,19 @@ int  sub_401BA0(int a1, int a2, DWORD a3)
 //----- (00401C40) --------------------------------------------------------
 int  LoadPalCOL(int a1, int a2, DWORD a3)
 {
-  int v5; // ecx
-  char *v6; // edi
-  char *v7; // esi
-  char *v8; // edx
-  char *v9; // esi
-  char *v10; // edi
-  char v11; // al
-  char v12; // al
-  int v13; // ecx
-  int v14; // ecx
-  char v16[256]; // [esp+0h] [ebp-114h] BYREF
-  int v17[5]; // [esp+100h] [ebp-14h] BYREF
+  const char *palette_name;
+  char path[256]; // [esp+0h] [ebp-114h] BYREF
+  int query_handle; // [esp+100h] [ebp-14h] BYREF
 
-  v17[3] = a2;
+  palette_name = (const char *)(uintptr_t)(unsigned int)a2;
   Debug_Log(63, a1, a3, (int)a_loadpalcolS0x);
-  qmemcpy(v16, aGfx_0, 4 * v5);
-  v7 = &aGfx_0[4 * v5];
-  v6 = &v16[4 * v5];
-  *(_WORD *)v6 = *(_WORD *)v7;
-  v6[2] = v7[2];
-  v9 = v8;
-  v10 = &v16[strlen(v16)];
-  do
-  {
-    v11 = *v9;
-    *v10 = *v9;
-    if ( !v11 )
-      break;
-    v12 = v9[1];
-    v9 += 2;
-    v10[1] = v12;
-    v10 += 2;
-  }
-  while ( v12 );
-  v17[0] = sub_4427F0(v16, 1);
-  (**(void (***)(void))v17[0])();
-  sub_401B20(a1, v17[0], v13);
-  return sub_473EE0(v14, v17);
+  strcpy(path, aGfx_0);
+  strcat(path, palette_name);
+  query_handle = sub_4427F0(path, 1);
+  sub_479CB0(query_handle, 8);
+  sub_401B20(a1, query_handle, 0);
+  return sub_473EE0((int)&dword_543CC8, &query_handle);
 }
-// 401C69: variable 'v5' is possibly undefined
-// 401C70: variable 'v8' is possibly undefined
-// 401CB9: variable 'v13' is possibly undefined
-// 401CCA: variable 'v14' is possibly undefined
 
 //----- (00401CE0) --------------------------------------------------------
 int  sub_401CE0(int a1, unsigned __int8 *a2)
@@ -14375,27 +14335,24 @@ LABEL_180:
 //----- (00403D70) --------------------------------------------------------
 _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
 {
-  _DWORD *v3; // ebp
-  __int64 v4; // rax
-  unsigned int v5; // ecx
-  _DWORD v7[5]; // [esp+0h] [ebp-14h] BYREF
+  _DWORD *surface;
+  unsigned int pixel_count;
 
-  v3 = sub_401E00(a1, a2, a3);
-  v3[46] = off_50EE24;
-  v4 = nmalloc_(4, v3);
-  v7[0] = v4;
-  qmemcpy(v3 + 1, v7, v5);
-  if ( !*(_DWORD *)(HIDWORD(v4) + 4) )
+  surface = sub_401E00(a1, a2, a3);
+  surface[46] = off_50EE24;
+  pixel_count = (unsigned __int16)*(unsigned __int16 *)surface * (unsigned __int16)*((unsigned __int16 *)surface + 1);
+  surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
+  if ( !surface[1] )
   {
-    Debug_Log(0, 0, (DWORD)v3, (int)aNotEnoughMemor);
+    Debug_Log(0, 0, pixel_count, (int)aNotEnoughMemor);
     App_RequestQuit((int)aNotEnoughMem_0);
   }
-  if ( !v3[1] )
+  memset((void *)(uintptr_t)(unsigned int)surface[1], 0, pixel_count);
+  if ( !surface[1] )
     App_RequestQuit((int)aNotEnoughFreeM);
   UnitStackSelection_ClearMask((void *)dword_526F78);
-  return v3;
+  return surface;
 }
-// 403DBE: variable 'v5' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 // 50EE24: using guessed type int (*off_50EE24[5])();
@@ -14990,22 +14947,19 @@ int  Render_UnlockBackbuffer(int a1)
 //----- (00404660) --------------------------------------------------------
 int  sub_404660(int a1)
 {
-  _DWORD *v1; // eax
-  int v2; // ecx
-  int v3; // eax
+  int palette_array;
 
-  v1 = sub_4041D0(a1, 0x280u, 0, 480) + 55;
-  *(v1 - 6) = 0;
-  *(v1 - 5) = 1;
-  *(v1 - 4) = 1;
-  *(v1 - 3) = 0;
-  *(v1 - 2) = 0;
-  *(v1 - 1) = 0;
-  v3 = _wcpp_4_ctor_array__(v2, 256);
-  *(_DWORD *)(v3 - 36) = off_50EEC4;
-  return v3 - 220;
+  palette_array = sub_4041D0(a1, 0x280u, 0, 480) + 220;
+  *(_DWORD *)(palette_array - 24) = 0;
+  *(_DWORD *)(palette_array - 20) = 1;
+  *(_DWORD *)(palette_array - 16) = 1;
+  *(_DWORD *)(palette_array - 12) = 0;
+  *(_DWORD *)(palette_array - 8) = 0;
+  *(_DWORD *)(palette_array - 4) = 0;
+  palette_array = _wcpp_4_ctor_array__(palette_array, 256);
+  *(_DWORD *)(palette_array - 36) = off_50EEC4;
+  return palette_array - 220;
 }
-// 4046AD: variable 'v2' is possibly undefined
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 50EEC4: using guessed type int (*off_50EEC4[5])();
 
@@ -16179,98 +16133,50 @@ int  DLX_OpenArchive(char *a1, int a2)
 // 405A6C: variable 'v7' is possibly undefined
 
 //----- (00405A90) --------------------------------------------------------
-_DWORD * DLXSpriteSet_Load(_DWORD *a1, char a2)
+_DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
 {
-  int v4; // ecx
-  char *v5; // edi
-  char *v6; // esi
-  char *v7; // edx
-  char *v8; // esi
-  char *v9; // edi
-  char v10; // al
-  char v11; // al
-  int v12; // edx
-  unsigned int v13; // ecx
-  _DWORD *v14; // esi
-  int v15; // ecx
-  int v16; // edi
-  int v17; // ebx
-  int v18; // eax
-  int v19; // ecx
-  int v21; // eax
-  int v22; // edx
-  char v23[256]; // [esp+0h] [ebp-11Ch] BYREF
-  int v24; // [esp+100h] [ebp-1Ch] BYREF
-  int v25[6]; // [esp+104h] [ebp-18h] BYREF
+  const char *resource_name;
+  int data_size;
+  int entry_index;
+  int entry_end_offset;
+  int entry_size;
+  char path[256]; // [esp+0h] [ebp-11Ch] BYREF
+  int query_handle; // [esp+100h] [ebp-1Ch] BYREF
 
+  resource_name = a2 ? (const char *)a2 : "";
   a1[1024] = 0;
   a1[1027] = &off_50F044;
-  Debug_Log(63, a2, (DWORD)a1, (int)aDlxspritesetDl);
-  qmemcpy(v23, aGfx, 4 * v4);
-  v6 = &aGfx[4 * v4];
-  v5 = &v23[4 * v4];
-  *(_WORD *)v5 = *(_WORD *)v6;
-  v5[2] = v6[2];
-  v8 = v7;
-  v9 = &v23[strlen(v23)];
-  do
-  {
-    v10 = *v8;
-    *v9 = *v8;
-    if ( !v10 )
-      break;
-    v11 = v8[1];
-    v8 += 2;
-    v9[1] = v11;
-    v9 += 2;
-  }
-  while ( v11 );
-  v24 = sub_4427F0(v23, 0);
-  a1[1026] = sub_4427C0(v24);
-  (*(void (**)(void))(*(_DWORD *)v24 + 20))();
-  v25[0] = nmalloc_(4, v12);
-  qmemcpy(a1 + 1024, v25, v13);
+  Debug_Log(63, 0, (DWORD)resource_name, (int)aDlxspritesetDl);
+  strcpy(path, aGfx);
+  strcat(path, resource_name);
+  query_handle = sub_4427F0(path, 0);
+  a1[1026] = sub_4427C0(query_handle);
+  Compat_QueryRead(query_handle, dword_51F290, 4096);
+  data_size = a1[1026] - 4096;
+  a1[1024] = (unsigned int)nmalloc_(data_size, 4);
   if ( !a1[1024] )
   {
-    Debug_Log(0, 0, (DWORD)a1, (int)aNotEnoughMem_1);
+    Debug_Log(0, 0, data_size, (int)aNotEnoughMem_1);
     App_RequestQuit((int)aNotEnoughMem_2);
   }
-  v14 = a1;
-  (*(void (**)(void))(*(_DWORD *)v24 + 20))();
-  v15 = 0;
-  do
+  Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)a1[1024], data_size);
+  entry_index = 0;
+  while ( entry_index < 1023 && dword_51F290[entry_index] )
   {
-    if ( !dword_51F290[v15] )
-      break;
-    v16 = dword_51F294[v15];
-    if ( v16 )
-    {
-      v17 = v16 - dword_51F290[v15];
-    }
+    entry_end_offset = dword_51F294[entry_index];
+    if ( entry_end_offset )
+      entry_size = entry_end_offset - dword_51F290[entry_index];
     else
-    {
-      v21 = sub_4427C0(v24);
-      v17 = v21 - *(int *)((char *)dword_51F290 + v22);
-    }
-    v18 = Mem_Alloc(22, v15, v17, (DWORD)a1);
-    if ( v18 )
-      v18 = sub_406260(v18, dword_51F290[v19] + a1[1024] - 4096, v17);
-    ++v14;
-    v15 = v19 + 1;
-    *(v14 - 1) = v18;
+      entry_size = sub_4427C0(query_handle) - dword_51F290[entry_index];
+    a1[entry_index] = Mem_Alloc(22, entry_index, entry_size, (DWORD)a1);
+    if ( a1[entry_index] )
+      a1[entry_index] = sub_406260(a1[entry_index], dword_51F290[entry_index] + a1[1024] - 4096, entry_size);
+    ++entry_index;
   }
-  while ( v15 < 1023 );
-  a1[1025] = v15;
-  sub_473EE0(v15, &v24);
+  a1[1025] = entry_index;
+  sub_473EE0(entry_index, &query_handle);
   return a1;
 }
-// 405ACD: variable 'v4' is possibly undefined
-// 405AD4: variable 'v7' is possibly undefined
-// 405B46: variable 'v12' is possibly undefined
-// 405B58: variable 'v13' is possibly undefined
-// 405BF0: variable 'v15' is possibly undefined
-// 405BFF: variable 'v19' is possibly undefined
-// 405C51: variable 'v22' is possibly undefined
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 // 50F044: using guessed type int (*off_50F044)();
 // 51F290: using guessed type int dword_51F290[];
@@ -57903,21 +57809,22 @@ int  sub_442760(int a1, char a2, DWORD a3)
 //----- (004427C0) --------------------------------------------------------
 int  sub_4427C0(int a1)
 {
-  int v1; // ecx
-  int v2; // ebx
-  int v3; // ecx
-  void (***v4)(void); // ecx
-  int v5; // esi
+  int cursor;
+  int size;
+  uintptr_t *vtable;
 
-  v2 = (*(int (__fastcall **)(int, _DWORD))(*(_DWORD *)a1 + 4))(a1, 0);
-  (*(void (**)(void))(*(_DWORD *)v1 + 8))();
-  v5 = (*(int (__fastcall **)(int, int))(*(_DWORD *)v3 + 4))(v3, v2);
-  (**v4)();
-  return v5;
+  if ( !a1 )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  cursor = ((int (*)(int, int))(uintptr_t)vtable[1])(a1, 0);
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  ((void (*)(int))(uintptr_t)vtable[2])(a1);
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  size = ((int (*)(int, int))(uintptr_t)vtable[1])(a1, cursor);
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  ((void (*)(int))(uintptr_t)vtable[0])(a1);
+  return size;
 }
-// 4427CE: variable 'v1' is possibly undefined
-// 4427D7: variable 'v3' is possibly undefined
-// 4427E0: variable 'v4' is possibly undefined
 
 //----- (004427F0) --------------------------------------------------------
 int  sub_4427F0(char *a1, int a2)
@@ -70921,40 +70828,33 @@ _DWORD * sub_460410(int a1, int a2)
 //----- (00460490) --------------------------------------------------------
 int  sub_460490(int a1, int a2, char a3, DWORD a4)
 {
-  _DWORD *v5; // eax
-  int v6; // ecx
-  _DWORD *Surface; // eax
-  int v8; // ecx
-  _DWORD *v9; // eax
-  int v10; // ecx
+  _DWORD *sprite_set;
+  _DWORD *surface;
 
   dword_544D10 = 0;
   *(_DWORD *)(a1 + 44) = 0;
-  v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
-  if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a3);
-  *(_DWORD *)(a1 + 64) = v5;
-  Surface = (_DWORD *)Mem_Alloc(188, v6, a3, a4);
-  if ( Surface )
+  sprite_set = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
+  if ( sprite_set )
+    sprite_set = DLXSpriteSet_Load(sprite_set, "mouse.s32");
+  *(_DWORD *)(a1 + 64) = sprite_set;
+  surface = (_DWORD *)Mem_Alloc(188, 0, a3, a4);
+  if ( surface )
   {
     a3 = 64;
-    Surface = Render_CreateSurface((int)Surface, 64, 64);
+    surface = Render_CreateSurface((int)surface, 64, 64);
   }
-  *(_DWORD *)(a1 + 8) = Surface;
-  v9 = (_DWORD *)Mem_Alloc(188, v8, a3, a4);
-  if ( v9 )
-    v9 = Render_CreateSurface((int)v9, 64, 64);
-  *(_DWORD *)(a1 + 12) = v9;
+  *(_DWORD *)(a1 + 8) = surface;
+  surface = (_DWORD *)Mem_Alloc(188, 0, a3, a4);
+  if ( surface )
+    surface = Render_CreateSurface((int)surface, 64, 64);
+  *(_DWORD *)(a1 + 12) = surface;
   sub_460D80(a1, (int)&unk_545158);
-  (*(void (**)(void))(*(_DWORD *)(a1 + 1120) + 20))();
+  Compat_RenderStateInvokeMethod(a1, 20);
   *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 20);
   *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 24);
   sub_460B20((_DWORD *)a1, 0, 640, 0, 480);
-  return LoadPalCOL(a1 + 80, v10, a4);
+  return LoadPalCOL(a1 + 80, (int)aMap_pal_1, a4);
 }
-// 4604BB: variable 'v6' is possibly undefined
-// 4604D8: variable 'v8' is possibly undefined
-// 46054C: variable 'v10' is possibly undefined
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460580) --------------------------------------------------------
@@ -71444,60 +71344,62 @@ _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00460D80) --------------------------------------------------------
+static void Compat_RenderStateInvokeMethod(int render_state, unsigned int table_offset)
+{
+  int vtable_base;
+  uintptr_t method_ptr;
+
+  vtable_base = *(_DWORD *)(render_state + 1120);
+  if ( !vtable_base )
+    return;
+  method_ptr = (uintptr_t)(unsigned int)*(_DWORD *)(vtable_base + table_offset);
+  if ( method_ptr )
+    ((void (*)(int))(uintptr_t)method_ptr)(render_state);
+}
+
 __int16  sub_460D80(int a1, int a2)
 {
-  int v2; // esi
-  unsigned __int16 i; // di
-  int v4; // eax
-  unsigned __int16 SpriteHeight; // bx
-  unsigned __int16 v6; // cx
-  unsigned __int16 SpriteWidth; // ax
-  unsigned __int16 v8; // cx
-  int v9; // edx
-  unsigned __int16 v11; // [esp+0h] [ebp-1Ch]
-  unsigned __int16 v12; // [esp+4h] [ebp-18h]
-  char v13; // [esp+8h] [ebp-14h]
+  int descriptor;
+  int result;
+  unsigned int sprite_index;
+  unsigned __int16 max_height;
+  unsigned __int16 max_width;
+  unsigned __int16 sprite_height;
+  unsigned __int16 sprite_width;
+  unsigned char was_presenting;
 
-  v2 = a1;
-  if ( a2 != *(_DWORD *)(a1 + 60) )
+  result = a1;
+  if ( a2 == *(_DWORD *)(a1 + 60) )
+    return result;
+  was_presenting = (unsigned char)dword_544D10;
+  if ( was_presenting )
+    Render_Pump(a1);
+  *(_DWORD *)(a1 + 60) = a2;
+  descriptor = *(_DWORD *)(a1 + 60);
+  max_height = 0;
+  max_width = 0;
+  for ( sprite_index = *(unsigned __int16 *)descriptor; sprite_index <= (unsigned int)*(int *)(descriptor + 4); ++sprite_index )
   {
-    v13 = dword_544D10;
-    if ( (_BYTE)dword_544D10 )
-      Render_Pump();
-    *(_DWORD *)(v2 + 60) = a2;
-    v12 = 0;
-    v11 = 0;
-    for ( i = **(_WORD **)(v2 + 60); ; ++i )
-    {
-      v4 = *(_DWORD *)(v2 + 60);
-      if ( i > *(int *)(v4 + 4) )
-        break;
-      SpriteHeight = DLX_GetSpriteHeight(*(_DWORD *)(v2 + 64), i);
-      SpriteWidth = DLX_GetSpriteWidth(*(_DWORD *)(v2 + 64), v6);
-      if ( SpriteHeight > v8 )
-        v12 = SpriteHeight;
-      if ( SpriteWidth > v11 )
-        v11 = SpriteWidth;
-    }
-    *(_DWORD *)(v4 + 12) = v12;
-    *(_DWORD *)(*(_DWORD *)(v2 + 60) + 16) = v11;
-    *(_DWORD *)(*(_DWORD *)(v2 + 60) + 32) = 0;
-    *(_DWORD *)(*(_DWORD *)(v2 + 60) + 28) = 0;
-    sub_460B20((_DWORD *)v2, 0, 640, 0, 480);
-    (*(void (**)(void))(*(_DWORD *)(v2 + 1120) + 20))();
-    (*(void (**)(void))(*(_DWORD *)(v2 + 1120) + 4))();
-    *(_DWORD *)(v2 + 48) = (*(int *)(v2 + 36) >> *(_BYTE *)(v2 + 1108)) - *(_DWORD *)(*(_DWORD *)(v2 + 60) + 20);
-    a1 = *(_DWORD *)(*(_DWORD *)(v2 + 60) + 24);
-    v9 = (*(int *)(v2 + 40) >> *(_BYTE *)(v2 + 1108)) - a1;
-    BYTE1(a1) = v13;
-    *(_DWORD *)(v2 + 52) = v9;
-    if ( v13 )
-      LOWORD(a1) = Render_Present(v2);
+    sprite_height = DLX_GetSpriteHeight(*(_DWORD *)(a1 + 64), (int)sprite_index);
+    sprite_width = DLX_GetSpriteWidth(*(_DWORD *)(a1 + 64), (int)sprite_index);
+    if ( sprite_height > max_height )
+      max_height = sprite_height;
+    if ( sprite_width > max_width )
+      max_width = sprite_width;
   }
-  return a1;
+  *(_DWORD *)(descriptor + 12) = max_height;
+  *(_DWORD *)(descriptor + 16) = max_width;
+  *(_DWORD *)(descriptor + 32) = 0;
+  *(_DWORD *)(descriptor + 28) = 0;
+  sub_460B20((_DWORD *)a1, 0, 640, 0, 480);
+  Compat_RenderStateInvokeMethod(a1, 20);
+  Compat_RenderStateInvokeMethod(a1, 4);
+  *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(descriptor + 20);
+  *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(descriptor + 24);
+  if ( was_presenting )
+    result = Render_Present(a1);
+  return result;
 }
-// 460DD3: variable 'v6' is possibly undefined
-// 460DDB: variable 'v8' is possibly undefined
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460EA0) --------------------------------------------------------
@@ -82955,6 +82857,18 @@ static const char *Compat_StringArgGetText(const void *arg)
   return (const char *)native_text_ptr;
 }
 
+static int Compat_QueryRead(int query_handle, void *buffer, int byte_count)
+{
+  uintptr_t *vtable;
+
+  if ( !query_handle )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
+  if ( !vtable || !vtable[5] )
+    return 0;
+  return ((int (*)(int, void *, int))(uintptr_t)vtable[5])(query_handle, buffer, byte_count);
+}
+
 static void Compat_StringHolderAssignJoined(_DWORD *holder, const char *prefix, const char *suffix)
 {
   unsigned int prefix_size;
@@ -84670,8 +84584,8 @@ int  sub_473E30(int a1, int a2, int a3)
   v4[25] = a3;
   v4[20] = a2;
   v4[0] = 100;
-  return (*(int (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int, _DWORD *))(**(_DWORD **)(a1 + 164) + 20))(
-           *(_DWORD *)(a1 + 164),
+  return Compat_DirectDrawSurface_Blt(
+           (LPDIRECTDRAWSURFACE)*(int *)(a1 + 164),
            0,
            0,
            0,
@@ -85689,22 +85603,12 @@ signed int  sub_475080(
         int a6,
         DWORD a7)
 {
-  HRESULT v9; // eax
-  int v10; // ecx
-  unsigned int v11; // eax
-  int v12; // ecx
-  unsigned int v13; // eax
-  int v14; // ecx
+  _DWORD *raw;
+  HRESULT hr;
   _DWORD *v15; // ebx
-  unsigned int v16; // eax
-  int v17; // ecx
   _DWORD *v18; // eax
   int v19; // ebx
-  unsigned int v20; // eax
-  int v21; // ecx
   _DWORD *v23; // eax
-  unsigned int v24; // eax
-  int v25; // ecx
   int v26; // [esp+34h] [ebp-80h] BYREF
   int v27; // [esp+38h] [ebp-7Ch]
   BOOL v28; // [esp+48h] [ebp-6Ch]
@@ -85712,57 +85616,58 @@ signed int  sub_475080(
   int v30; // [esp+A0h] [ebp-14h] BYREF
   LPDIRECTDRAW lpDD; // [esp+A4h] [ebp-10h] BYREF
 
-  *a1 = 0;
-  a1[10] = (LPVOID)1;
-  a1[4] = 0;
-  a1[6] = a4;
-  a1[7] = a3;
-  a1[2] = 0;
-  a1[8] = a5;
-  a1[1] = a1[2];
-  a1[9] = a2;
-  v9 = DirectDrawCreate(0, &lpDD, 0);
-  if ( v9 )
-    sub_4741F0(v9, v10);
-  v11 = lpDD->lpVtbl->QueryInterface(lpDD, &stru_51CA08, a1);
-  if ( v11 )
-    sub_4741F0(v11, v12);
+  raw = (_DWORD *)a1;
+  raw[0] = 0;
+  raw[10] = 1;
+  raw[4] = 0;
+  raw[6] = (int)(uintptr_t)a4;
+  raw[7] = (int)(uintptr_t)a3;
+  raw[2] = 0;
+  raw[8] = (int)(uintptr_t)a5;
+  raw[1] = raw[2];
+  raw[9] = (int)(uintptr_t)a2;
+  hr = DirectDrawCreate(0, &lpDD, 0);
+  if ( hr )
+    sub_4741F0(hr, 0);
+  hr = Compat_DirectDraw_QueryInterface(lpDD, &stru_51CA08, raw);
+  if ( hr )
+    sub_4741F0(hr, 0);
   if ( lpDD )
   {
-    lpDD->lpVtbl->Release(lpDD);
+    Compat_DirectDraw_Release(lpDD);
     lpDD = 0;
   }
-  v13 = (*(int (__stdcall **)(LPVOID, _DWORD *, int))(*(_DWORD *)*a1 + 80))(*a1, a2, 83);
-  if ( v13 )
-    sub_4741F0(v13, v14);
+  hr = Compat_DirectDraw_SetCooperativeLevel((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], (HWND)(uintptr_t)a2, 83);
+  if ( hr )
+    sub_4741F0(hr, 0);
   if ( a6 )
   {
-    v15 = a1[6];
-    v16 = (*(int (__stdcall **)(LPVOID, _DWORD *, LPVOID, LPVOID, _DWORD, int))(*(_DWORD *)*a1 + 84))(
-            *a1,
-            v15,
-            a1[7],
-            a1[8],
-            0,
-            1);
+    v15 = (_DWORD *)(uintptr_t)(unsigned int)raw[6];
+    hr = Compat_DirectDraw_SetDisplayMode(
+           (LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0],
+           (int)(uintptr_t)v15,
+           raw[7],
+           raw[8],
+           0,
+           1);
   }
   else
   {
-    v15 = a1[7];
-    v16 = (*(int (__stdcall **)(LPVOID, LPVOID, _DWORD *, LPVOID, _DWORD, _DWORD))(*(_DWORD *)*a1 + 84))(
-            *a1,
-            a1[6],
-            v15,
-            a1[8],
-            0,
-            0);
+    v15 = (_DWORD *)(uintptr_t)(unsigned int)raw[7];
+    hr = Compat_DirectDraw_SetDisplayMode(
+           (LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0],
+           raw[6],
+           (int)(uintptr_t)v15,
+           raw[8],
+           0,
+           0);
   }
-  if ( v16 )
-    sub_4741F0(v16, v17);
-  v18 = (_DWORD *)Mem_Alloc(176, v17, (char)v15, a7);
+  if ( hr )
+    sub_4741F0(hr, 0);
+  v18 = (_DWORD *)Mem_Alloc(176, 0, (char)v15, a7);
   if ( v18 )
     v18 = sub_473250(v18);
-  a1[1] = v18;
+  raw[1] = (int)(uintptr_t)v18;
   v27 = 1;
   v29 = 512;
   v26 = 108;
@@ -85772,32 +85677,26 @@ signed int  sub_475080(
     v29 = 536;
   }
   v28 = a7 != 0;
-  v19 = *(_DWORD *)*a1;
-  v20 = (*(int (__stdcall **)(LPVOID, int *, _DWORD *, _DWORD))(v19 + 24))(*a1, &v26, (_DWORD *)a1[1] + 41, 0);
-  if ( v20 )
-    sub_4741F0(v20, v21);
+  v19 = raw[0];
+  hr = Compat_DirectDraw_CreateSurface((LPDIRECTDRAW)(uintptr_t)(unsigned int)raw[0], &v26, (_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41);
+  if ( hr )
+    sub_4741F0(hr, 0);
   if ( a7 )
   {
-    v23 = (_DWORD *)Mem_Alloc(176, v21, v19, a7);
+    v23 = (_DWORD *)Mem_Alloc(176, 0, v19, a7);
     if ( v23 )
       v23 = sub_473250(v23);
-    a1[2] = v23;
+    raw[2] = (int)(uintptr_t)v23;
     v30 = 4;
-    v24 = (*(int (__stdcall **)(_DWORD, int *, _DWORD *))(**((_DWORD **)a1[1] + 41) + 48))(
-            *((_DWORD *)a1[1] + 41),
-            &v30,
-            (_DWORD *)a1[2] + 41);
-    if ( v24 )
-      sub_4741F0(v24, v25);
+    hr = Compat_DirectDrawSurface_GetAttachedSurface(
+           (LPDIRECTDRAWSURFACE)*((_DWORD *)(uintptr_t)(unsigned int)raw[1] + 41),
+           &v30,
+           (_DWORD *)(uintptr_t)(unsigned int)raw[2] + 41);
+    if ( hr )
+      sub_4741F0(hr, 0);
   }
   return 1;
 }
-// 4750F9: variable 'v12' is possibly undefined
-// 475122: variable 'v14' is possibly undefined
-// 475154: variable 'v17' is possibly undefined
-// 4751CA: variable 'v21' is possibly undefined
-// 4751E3: variable 'v10' is possibly undefined
-// 475245: variable 'v25' is possibly undefined
 // 51CA08: using guessed type IID stru_51CA08;
 
 //----- (004753E0) --------------------------------------------------------
@@ -87271,7 +87170,7 @@ LABEL_8:
 //----- (00477DC0) --------------------------------------------------------
 int sub_477DC0(int a1, void *a2, int a3)
 {
-  return Compat_StreamRead(*(_DWORD *)(a1 + 4), a2, a3);
+  return fread_(a2, 1, *(_DWORD *)(a1 + 4), a3);
 }
 
 //----- (00477DE0) --------------------------------------------------------
@@ -89290,7 +89189,7 @@ _DWORD * sub_479B00(int a1, char a2, DWORD a3)
   result = (_DWORD *)Mem_Alloc(20, a1, a2, a3);
   if ( result )
   {
-    result = sub_478BD0(result, v5, a2);
+    result = sub_478BD0(result, v5, a1);
     *result = off_510B74;
   }
   return result;
@@ -89359,13 +89258,23 @@ _DWORD * sub_479C80(int a1)
 //----- (00479CB0) --------------------------------------------------------
 int  sub_479CB0(int a1, int a2)
 {
-  return (*(int (__cdecl **)(int))(*(_DWORD *)a1 + 36))(a2);
+  uintptr_t *vtable;
+
+  if ( !a1 )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  return ((int (*)(int, int))(uintptr_t)vtable[9])(a1, a2);
 }
 
 //----- (00479CC0) --------------------------------------------------------
 int  sub_479CC0(int a1, int a2)
 {
-  return (*(int (__cdecl **)(int))(*(_DWORD *)a1 + 36))(a2);
+  uintptr_t *vtable;
+
+  if ( !a1 )
+    return 0;
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)a1;
+  return ((int (*)(int, int))(uintptr_t)vtable[9])(a1, a2 + *(_DWORD *)(a1 + 12));
 }
 
 //----- (00479CD0) --------------------------------------------------------

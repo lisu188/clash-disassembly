@@ -38,6 +38,7 @@ void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
+int sub_401A40(void);
 int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
 int sub_460490(int a1, int a2, char a3, DWORD a4);
 int Render_CreateSprite(void);
@@ -144,6 +145,14 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   int device_search_mode;
 
   logEnabled = 1;
+  /*
+   * The original binary reaches this render-object constructor through the
+   * static-init band before the video bootstrap starts. Until that `_wcpp_*`
+   * path is reconstructed end-to-end, call the recovered helper explicitly so
+   * `unk_51D4C0` and its palette/resource backing state are initialized before
+   * `Render_SetPixelFormat`.
+   */
+  sub_401A40();
   device_search_mode = 0;
   if ( command_mode == 'g' || command_mode == 'G' )
   {
@@ -204,6 +213,7 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
 static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
 {
   dword_543CA0 = 1;
+  sub_401A40();
   nullsub_4();
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);

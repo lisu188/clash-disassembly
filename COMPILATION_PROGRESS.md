@@ -3096,6 +3096,84 @@
 - total rename count so far:
   - `1193`
 
+## Batch 129 - Authentic Video Init Stabilization Wave
+- Current frontier:
+  - move the WSL/SDL executable from crashing during early video/resource init to a stable authentic video-init plateau that can support the next menu-path wave
+- Subagents spawned and scopes:
+  - `Faraday`: confirm whether the current bootstrap probe still reflects the real startup/video critical path or hides a narrower authenticity gap
+  - `Dewey`: analyze the private stream/file ABI and `_allocfp_` / `fread_` / `ftell_` helper family around the live sprite-loader crash path
+  - `Hypatia`: map the shortest chain from successful sprite/resource loading to the first main-menu frame so the next runtime wave stays menu-directed
+  - one additional asm/map/exe corroboration explorer was spawned to tighten the field layout and calling-convention facts for `sub_477DC0`, `sub_478C20`, `sub_4799B0`, `sub_4427F0`, and nearby file/runtime helpers
+  - mergeable subagent evidence used this batch:
+    - the asm corroboration pass confirmed `DLXSpriteSet_Load` reads through the query object's virtual read slot rather than the plain stream wrapper, and that the live crash had shifted from the generic stream ABI into the higher-level query/constructor band
+    - `Hypatia` confirmed the next menu milestone still sits one substantial render/runtime wave above the current probe, with `PlayGame_Dispatch` and the `menu\\main` resource family still ahead of the present barrier
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `Compat_QueryRead`
+  - `sub_479B00`
+  - `sub_478BD0`
+  - `sub_478C20`
+  - `sub_460D80`
+  - `sub_460490`
+  - `LoadPalCOL`
+  - `sub_401B20`
+- Blockers removed this batch:
+  - `DLXSpriteSet_Load` no longer hardwires the plain stream-reader helper onto a polymorphic query object; it now uses the query object's real read method through `Compat_QueryRead`
+  - the live query-object constructor path no longer writes the mode byte `6` into the parent-stream slot on the authentic video-init path; `sub_479B00` now passes the owning object pointer into `sub_478BD0`
+  - `sub_460D80` no longer crashes in the decompiler-broken cursor-sprite sizing loop or its lost render-state method dispatch; the function now follows the asm-backed sprite scan and state update flow
+  - `sub_460490` no longer faults on the direct `a1 + 460` render-state callback dereference immediately after `sub_460D80`
+  - `LoadPalCOL` no longer depends on the broken path-builder and broken vtable call surface; it now uses the same recovered `gfx\\` path construction pattern as the sprite loader plus the real query seek/read flow
+  - `sub_401B20` now reads the 768-byte palette block through `Compat_QueryRead` instead of the lost query-vtable callsite
+- SDL replacements/cleanups this batch:
+  - none new in the SDL seam itself; the platform milestone improved because the recovered video/resource init path above SDL is now stable
+- Menu/UI fixes this batch:
+  - none yet; the probe now survives the video/resource-init tranche, but it still stops short of authentic menu dispatch and input handling
+- Session-init fixes this batch:
+  - none; session/game-start init remains deferred until the executable is allowed to run beyond the current video-init plateau into the menu/game-entry path
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only compat/decomp_runtime_stubs.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only platform_sdl_runtime.c`
+  - `gcc -std=gnu89 -w -I. -c bootstrap_main.c -o /tmp/bootstrap_main_resume.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_resume.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_resume.o`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_resume5.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
+  - `timeout 5s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
+  - multiple `gdb -batch -ex ... --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` crash probes to confirm the frontier transitions `CompatGetOsFdFromStream -> sub_4799B0 -> sub_460D80 -> sub_460490 -> LoadPalCOL/App_RequestQuit`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, `compat/decomp_runtime_stubs.c`, and `platform_sdl_runtime.c` compile cleanly under the current `gnu89` setup after the video-init repairs
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - `clash95_bootstrap` still builds successfully as a WSL-runnable SDL executable
+  - `clash95_recovered` still builds successfully as the recovered static library baseline
+- Runtime status:
+  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` still exits with status `124`, confirming the default bootstrap stays alive in the SDL-backed message loop
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` still exits with status `124`, confirming the authentic early-startup prelude remains stable
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` now exits with status `124` instead of faulting
+  - `timeout 5s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` also exits with status `124`, confirming the authentic video-init probe now survives into the SDL message loop for at least five seconds
+- Highest authentic runtime milestone reached:
+  - authentic startup plus recovered video/resource initialization now complete cleanly under WSL/SDL, including `Render_SetPixelFormat`, `DLXSpriteSet_Load("mouse.s32")`, cursor-sprite sizing, palette loading through `LoadPalCOL("map.pal")`, and the post-init SDL message loop; the executable still stops short of authentic menu dispatch and interaction
+- Key evidence used:
+  - `DLXSpriteSet_Load` asm proves the two sprite-data reads are virtual query-object reads (`[vtable+0x14]`), not plain `sub_477DC0` stream calls
+  - `sub_478C20` asm shows the parent object lives in slot `+0x10`, while the current live constructor path showed the decompiled C was storing `6` there; fixing `sub_479B00` moved the crash immediately deeper
+  - `sub_460D80` asm provided the exact cursor-sprite iteration, max width/height accumulation, and render-state callback ordering needed to replace the broken decompiled loop
+  - `_LoadPalCOL` and `sub_401B20` asm confirmed the correct `gfx\\<name>` path construction, query seek to offset `8`, and 768-byte palette read
+  - GDB confirmed the frontier progression across the repaired stack: `CompatGetOsFdFromStream -> sub_4799B0 -> sub_460D80 -> sub_460490 -> _LoadPalCOL/App_RequestQuit`, then finally no crash during the full `--authentic-video-init` probe
+- Ambiguous candidates deferred:
+  - whether the next safest menu-facing step is a fuller runtime-init probe (`Bootstrap_RunRecoveredRuntimeAndRenderInit`) or a contained menu-entry probe, now that the video-init plateau is stable
+  - the broader `_wcpp_*`, CRT, and allocator/event helper families, which were no longer the live blocker on this wave but still gate the authentic full `_WinMain@16` path
+  - remaining render/UI methods hanging off `a1 + 460`, which may need the same low32 callback treatment once the menu path starts exercising them more broadly
+- total rename count so far:
+  - `1193`
+
 ## Batch 128 - Mounted GFX Proof And DirectDraw Link-Seam Wave
 - Current frontier:
   - keep the authentic WSL/SDL startup slice stable, validate the real mounted `gfx` archive handoff, and make the bootstrap executable relink cleanly so the next live wall is the first DirectDraw-era render bootstrap step instead of an unresolved import
