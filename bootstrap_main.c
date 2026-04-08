@@ -1,5 +1,7 @@
 #include "platform_sdl.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -27,10 +29,10 @@ extern int g_MainMenuMusicHandle;
 extern int dword_545150;
 extern int logEnabled;
 extern HWND hWnd;
-extern unsigned int dword_544CD8[9];
+extern unsigned int dword_544CD8[281];
 extern unsigned char g_LanguageIndex;
 extern unsigned char byte_543D80[1024];
-extern unsigned char g_MainMenuButtonWidgetsTemplate;
+extern unsigned char g_MainMenuButtonWidgetsTemplate[371];
 extern unsigned char unk_5196A0;
 extern unsigned char unk_51D4C0;
 extern void *g_RenderDevice;
@@ -39,6 +41,7 @@ extern LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Ms
 int dword_51D014;
 int dword_543CA0;
 int (*g_RenderHook)(int a1, char a2, DWORD a3);
+int g_BootstrapSkipIntroAviPlayback;
 
 char __thiscall DetectGameCDPath(void *this);
 int __thiscall sub_442AD0(int this);
@@ -52,17 +55,22 @@ int sub_401A40(void);
 int Render_DefaultRH(int a1, char a2, DWORD a3);
 int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
 int Render_SetResourceHandle(int a1, int a2);
+int Render_LoadPCXImage(int a1, char *a2, int a3, int a4);
+int sub_401E30(unsigned int *a1);
 int sub_460490(int a1, int a2, char a3, DWORD a4);
 int Render_CreateSprite(void);
 DWORD UI_StartAnims(int a1, char a2, DWORD a3);
 void *Render_CreateSurface(int a1, short a2, short a3);
 int DD_Pump(int a1, int a2, ...);
 void *Mem_Alloc(int a1, int a2, char a3, DWORD a4);
+int Compat_AllocLow32Bytes(int size);
+void Compat_FreeLow32Bytes(int ptr);
 void *DLXSpriteSet_Load(void *a1, const void *a2);
 int sub_435ED0(char *a1, int a2, int a3, DWORD a4);
 int sub_441670(char *a1, int a2);
 int sub_404D90(int *a1);
 int *sub_405020(int *result, unsigned char *a2, signed int a3);
+void MainMenu_RebuildButtonWidgetTemplate(void);
 void *sub_419D80(void *result);
 signed int sub_419DC0(unsigned int *a1, DWORD a2);
 void *sub_460CB0(int a1, int a2, int a3, DWORD a4);
@@ -98,6 +106,34 @@ static char g_boot_command_line[1024];
 static int g_boot_run_startup_prelude;
 static int g_boot_run_video_init_probe;
 static int g_boot_run_menu_probe;
+static int g_boot_trace_menu_probe_checked;
+static int g_boot_trace_menu_probe_enabled;
+
+static void Bootstrap_TraceMenuProbe(const char *step)
+{
+  if ( !g_boot_trace_menu_probe_checked )
+  {
+    g_boot_trace_menu_probe_enabled = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+    g_boot_trace_menu_probe_checked = 1;
+  }
+  if ( g_boot_trace_menu_probe_enabled )
+  {
+    fprintf(stderr, "[menu-probe] %s\n", step);
+    fflush(stderr);
+  }
+}
+
+static void Bootstrap_SurfaceRendererLoadGfx(int surface_handle, const char *path)
+{
+  Render_LoadPCXImage(surface_handle, (char *)path, 0, (int)(intptr_t)byte_543D80);
+}
+
+static void Bootstrap_SurfaceRendererDrawStage(int surface_handle, int value, int has_value)
+{
+  (void)value;
+  (void)has_value;
+  sub_401E30((unsigned int *)(uintptr_t)(unsigned int)surface_handle);
+}
 
 static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
 {
@@ -245,74 +281,167 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
 
 static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
 {
+  Bootstrap_TraceMenuProbe("video-init-probe-start");
   dword_543CA0 = 1;
+  Bootstrap_TraceMenuProbe("video-init-sub_401A40");
   sub_401A40();
+  Bootstrap_TraceMenuProbe("video-init-nullsub_4");
   nullsub_4();
+  Bootstrap_TraceMenuProbe("video-init-set-pixel-format");
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
+  Bootstrap_TraceMenuProbe("video-init-sub_460490");
   sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);
+  Bootstrap_TraceMenuProbe("video-init-render-create-sprite");
   Render_CreateSprite();
+  Bootstrap_TraceMenuProbe("video-init-probe-end");
 }
 
 static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
 {
-  unsigned char menu_widgets[372];
+  unsigned char *menu_widgets;
+  const size_t menu_widgets_size = 371;
+  int have_menu_widget_template;
+  int menu_entry_mode;
+  int saved_skip_intro_avi;
   unsigned int widget_offset;
   void *surface;
-  uintptr_t surface_renderer;
 
+  menu_widgets = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)menu_widgets_size);
+  if ( !menu_widgets )
+    return;
+
+  Bootstrap_TraceMenuProbe("create-menu-surface");
   surface = Mem_Alloc(188, 0, command_mode, 0);
   if ( surface )
     surface = Render_CreateSurface((int)(intptr_t)surface, 640, 480);
   dword_5202E0 = (int)(intptr_t)surface;
 
+  Bootstrap_TraceMenuProbe("start-ui-anims");
+  saved_skip_intro_avi = g_BootstrapSkipIntroAviPlayback;
+  g_BootstrapSkipIntroAviPlayback = 1;
   UI_StartAnims(0, command_mode, 0);
+  g_BootstrapSkipIntroAviPlayback = saved_skip_intro_avi;
   Render_SetResourceHandle((int)(intptr_t)&unk_51D4C0, 1);
   g_RenderHook = Render_DefaultRH;
-  DD_Pump((int)(intptr_t)dword_544CD8, 1);
+  menu_entry_mode = (unsigned char)command_mode;
+  Bootstrap_TraceMenuProbe("first-dd-pump");
+  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
 
+  Bootstrap_TraceMenuProbe("load-menu-s32");
   surface = Mem_Alloc(0x1010, 0, command_mode, 0);
   if ( surface )
     surface = DLXSpriteSet_Load(surface, "menu\\main.s32");
   g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)surface;
 
-  surface_renderer = *(uintptr_t *)(uintptr_t)(unsigned int)(dword_5202E0 + 184);
-  (*(void (__fastcall **)(int, const char *))(uintptr_t)(*(uintptr_t *)(surface_renderer + 48)))(0, "menu\\main.gfx");
+  Bootstrap_TraceMenuProbe("load-menu-gfx");
+  Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\main.gfx");
+  Bootstrap_TraceMenuProbe("load-menu-pal");
   sub_435ED0("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
-  if ( dword_5188C0 )
+  if ( menu_entry_mode && dword_5188C0 )
+  {
+    Bootstrap_TraceMenuProbe("start-menu-music");
     g_MainMenuMusicHandle = sub_441670("music\\menu", 64);
+  }
 
   /*
-   * The authentic PlayGame_Dispatch prologue does another pump, reapplies the
-   * render-state palette block through sub_404D90, then pumps once more before
-   * issuing the first two menu draw calls.
+   * Match the recovered PlayGame_Dispatch prologue: the first-frame top-menu
+   * helpers are gated by the carried entry-state variable (`v128`), not by the
+   * return value of `DD_Pump`.
    */
-  DD_Pump((int)(intptr_t)dword_544CD8, 1);
-  sub_404D90((int *)&unk_51D4C0);
-  DD_Pump((int)(intptr_t)dword_544CD8, 1);
-  (*(void (**)(void))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))();
-  (*(void (__thiscall **)(int))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))(92);
-
-  memcpy(menu_widgets, &g_MainMenuButtonWidgetsTemplate, sizeof(menu_widgets));
-  for ( widget_offset = 0; widget_offset < sizeof(menu_widgets); widget_offset += 0x35 )
+  Bootstrap_TraceMenuProbe("second-dd-pump");
+  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
+  if ( menu_entry_mode )
   {
-    *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x10) += (unsigned char)g_LanguageIndex;
-    *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x21) += (unsigned char)g_LanguageIndex;
+    Bootstrap_TraceMenuProbe("apply-palette-block");
+    sub_404D90((int *)&unk_51D4C0);
+  }
+  Bootstrap_TraceMenuProbe("third-dd-pump");
+  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
+  Bootstrap_TraceMenuProbe("draw-menu-stage-1");
+  Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 0, 0);
+  Bootstrap_TraceMenuProbe("draw-menu-stage-2");
+  Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 92, 1);
+
+  MainMenu_RebuildButtonWidgetTemplate();
+  have_menu_widget_template = *(const unsigned int *)(const void *)&g_MainMenuButtonWidgetsTemplate != 0;
+  if ( have_menu_widget_template )
+  {
+    memcpy(menu_widgets, &g_MainMenuButtonWidgetsTemplate, menu_widgets_size);
+    for ( widget_offset = 0; widget_offset < menu_widgets_size; widget_offset += 0x35 )
+    {
+      if ( *(const int *)(const void *)(menu_widgets + widget_offset) == -1 )
+        break;
+      *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x10) += (unsigned char)g_LanguageIndex;
+      *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x14) += (unsigned char)g_LanguageIndex;
+    }
   }
 
   g_RenderDevice = &unk_51D4C0;
-  sub_419D80(menu_widgets);
-  sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
+  if ( have_menu_widget_template )
+  {
+    Bootstrap_TraceMenuProbe("init-menu-widgets");
+    sub_419D80((void *)menu_widgets);
+  }
+  else
+  {
+    Bootstrap_TraceMenuProbe("skip-menu-widgets-template-missing");
+  }
+  if ( menu_entry_mode )
+  {
+    Bootstrap_TraceMenuProbe("apply-menu-fade");
+    sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
+  }
   g_PlayGameMenuExitRequested = 0;
-  sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
+  if ( have_menu_widget_template )
+  {
+    Bootstrap_TraceMenuProbe("build-menu-text-cache");
+    sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
+  }
+  else
+  {
+    Bootstrap_TraceMenuProbe("skip-menu-text-cache-template-missing");
+  }
+  Bootstrap_TraceMenuProbe("select-cursor-descriptor");
   sub_460D80((int)(intptr_t)dword_544CD8, (int)(intptr_t)&unk_5196A0);
   dword_545150 = (int)(intptr_t)&unk_5196A0;
+  Bootstrap_TraceMenuProbe("present-menu");
   Render_Present((int)(intptr_t)dword_544CD8);
 
+  /*
+   * The contained probe still lacks the dirty-bit/runtime invalidation that
+   * normally carries the recovered companion surface onto the SDL window. The
+   * companion already holds the staged menu frame here, so present it directly
+   * and keep the workaround quarantined to the probe.
+   */
+  Bootstrap_TraceMenuProbe("force-menu-window-present");
+  Platform_PresentRecoveredIndexedSurfaceHandle(
+    (void *)(uintptr_t)*(const unsigned int *)(const void *)((const unsigned char *)&unk_51D4C0 + 0xD0),
+    (const uint32_t *)(const void *)byte_543D80);
+
+  if ( !have_menu_widget_template )
+  {
+    Bootstrap_TraceMenuProbe("enter-menu-idle-fallback");
+    while ( !g_PlayGameMenuExitRequested )
+    {
+      Bootstrap_TraceMenuProbe("menu-idle-pump");
+      DD_Pump((int)(intptr_t)dword_544CD8, 16);
+    }
+    Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
+    return 0;
+  }
+
+  Bootstrap_TraceMenuProbe("enter-menu-loop");
   while ( !g_PlayGameMenuExitRequested )
   {
+    Bootstrap_TraceMenuProbe("menu-loop-pump");
     DD_Pump((int)(intptr_t)dword_544CD8, 0);
+    Bootstrap_TraceMenuProbe("menu-loop-ui");
     sub_419DC0((unsigned int *)menu_widgets, 0);
+    Platform_PresentRecoveredIndexedSurfaceHandle(
+      (void *)(uintptr_t)*(const unsigned int *)(const void *)((const unsigned char *)&unk_51D4C0 + 0xD0),
+      (const uint32_t *)(const void *)byte_543D80);
   }
+  Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
 }
 
 static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLine)
@@ -408,11 +537,18 @@ int main(int argc, char **argv)
     if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
       return 1;
     if ( g_boot_run_video_init_probe )
+    {
+      Bootstrap_TraceMenuProbe("main-before-video-init-probe");
       Bootstrap_RunRecoveredVideoInitProbe(command_mode);
+      Bootstrap_TraceMenuProbe("main-after-video-init-probe");
+    }
     if ( g_boot_run_menu_probe )
     {
+      Bootstrap_TraceMenuProbe("main-before-menu-probe-video-init");
       Bootstrap_RunRecoveredVideoInitProbe(command_mode);
+      Bootstrap_TraceMenuProbe("main-before-menu-probe");
       Bootstrap_RunRecoveredMainMenuFirstFrameProbe(command_mode);
+      Bootstrap_TraceMenuProbe("main-after-menu-probe");
       return Bootstrap_RunMessageLoop();
     }
     (void)command_mode;

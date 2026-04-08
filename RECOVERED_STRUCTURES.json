@@ -1013,5 +1013,91 @@
       "`sub_401B20` and `LoadPalCOL` build 256-entry RGB palette tables for `map.pal` and the menu corridor, so a real palette object is required to preserve the recovered indexed-color semantics under SDL.",
       "The repaired SDL presentation path now resolves 8-bit pixels through `surface->palette->entries[index]`, which matches the recovered DirectDraw-era object ownership more closely than the earlier grayscale fallback."
     ]
+  },
+  {
+    "name": "DLXSpriteGlyphRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "sub_406260 / sub_4064A0 / Compat_RenderDeviceDrawMenuSprite",
+    "description": "Compact low32 sprite record used on the top-level menu/text path. The recovered glyph/menu draw helpers only need the width/height/type header and the low32 compressed-stream pointer stored at offset `+10`.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "width_px",
+        "type": "uint16",
+        "notes": "Read by `sub_4064A0` and the contained menu sprite decoder as the per-row decode limit."
+      },
+      {
+        "offset": 2,
+        "name": "height_px",
+        "type": "uint16",
+        "notes": "Read by `sub_4064A0` as the row count for the compressed sprite stream."
+      },
+      {
+        "offset": 4,
+        "name": "sprite_type",
+        "type": "uint16",
+        "notes": "Must be zero on the currently recovered menu/text path; non-zero values still fall through the original unsupported-sprite abort."
+      },
+      {
+        "offset": 10,
+        "name": "compressed_stream_ptr_low32",
+        "type": "low32_pointer<uint8>",
+        "notes": "The compressed glyph/pixel stream starts here. The x86-64 build must decode it as a low32 pointer rather than a native 64-bit pointer-sized field."
+      },
+      {
+        "offset": 14,
+        "name": "compressed_stream_size_bytes",
+        "type": "uint32",
+        "notes": "Populated by `sub_406260` from the loaded sprite entry size."
+      },
+      {
+        "offset": 18,
+        "name": "ownership_or_runtime_flag",
+        "type": "uint32",
+        "notes": "Seeded to `0` by `sub_406260`; later sprite helpers treat it as a small runtime/ownership flag rather than image dimensions."
+      }
+    ],
+    "evidence": [
+      "`sub_406260` copies the first 10 bytes of each loaded sprite entry, stores `a2 + 10` at offset `+10`, stores the loaded entry size at `+14`, and seeds `+18` to zero, which establishes the compact runtime header used by later sprite helpers.",
+      "`sub_4064A0` reads width from offset `+0`, height from offset `+2`, sprite type from offset `+4`, and the compressed stream from offset `+10` while recoloring glyph sprites for the menu text-cache path.",
+      "The contained menu sprite decoder added for the first main-menu button draw also only needs width/height/type plus the low32 stream pointer, corroborating the same header layout from an independent live draw path."
+    ]
+  },
+  {
+    "name": "RecoveredSoftwareSurfaceHandle",
+    "kind": "recovered_struct",
+    "base_symbol": "Render_CreateSurface / unk_51D4C0 companion / dword_5202E0",
+    "description": "188-byte low32 software surface header used by the recovered render/menu path. The contained SDL menu-display helper now presents this indexed surface family directly while the broader Win32/GDI invalidation bridge is still being recovered; Batch 139 confirmed the same companion-surface layout stays valid immediately after the authentic first `Render_Present` without needing an extra probe-only `DD_Pump` before the live menu loop begins.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "width_px",
+        "type": "uint16",
+        "notes": "Low 16 bits of the packed dimension dword written by `sub_401E00` and read back live from the menu companion surface during the contained SDL present wave."
+      },
+      {
+        "offset": 2,
+        "name": "height_px",
+        "type": "uint16",
+        "notes": "High 16 bits of the packed dimension dword; `Render_CreateSurface` seeds it from the requested surface height."
+      },
+      {
+        "offset": 4,
+        "name": "pixels_low32",
+        "type": "low32_pointer<uint8>",
+        "notes": "Low32 pointer to the linear indexed pixel buffer allocated by `Render_CreateSurface`."
+      },
+      {
+        "offset": 184,
+        "name": "surface_vtable",
+        "type": "pointer",
+        "notes": "Software-surface vtable slot written to `off_50EE24` by `Render_CreateSurface`."
+      }
+    ],
+    "evidence": [
+      "`sub_401E00` seeds the packed width/height header and the common surface object layout, while `Render_CreateSurface` allocates the linear pixel buffer, stores it at offset `+4`, and installs `off_50EE24` at offset `+184`.",
+      "The live contained menu-display probe read the `unk_51D4C0` companion surface as `0x01e00280` at offset `0` and `0x401d1010` at offset `+4`, which matches the expected packed `640x480` dimensions plus low32 pixel pointer.",
+      "The new SDL helper only needs those recovered fields to present the already-composed indexed menu surface, corroborating the same layout from an independent runtime path."
+    ]
   }
 ]

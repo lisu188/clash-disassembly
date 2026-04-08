@@ -218,6 +218,8 @@ typedef struct tagSYSTEMTIME {
   WORD wMilliseconds;
 } SYSTEMTIME;
 
+void Platform_PresentRecoveredIndexedSurfaceHandle(void *surface_handle, const uint32_t *palette_entries);
+
 typedef struct _SECURITY_ATTRIBUTES {
   DWORD nLength;
   LPVOID lpSecurityDescriptor;
