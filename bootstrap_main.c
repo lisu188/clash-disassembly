@@ -21,9 +21,9 @@ extern int g_AppIsActive;
 extern int dword_5188B0;
 extern int dword_5188C0;
 extern int dword_5202E0;
-extern int dword_543D74;
-extern int dword_543D78;
-extern int dword_544180;
+extern int g_PlayGameMenuSpriteSetHandle;
+extern int g_PlayGameMenuExitRequested;
+extern int g_MainMenuMusicHandle;
 extern int dword_545150;
 extern int logEnabled;
 extern HWND hWnd;
@@ -273,13 +273,13 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   surface = Mem_Alloc(0x1010, 0, command_mode, 0);
   if ( surface )
     surface = DLXSpriteSet_Load(surface, "menu\\main.s32");
-  dword_543D74 = (int)(intptr_t)surface;
+  g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)surface;
 
   surface_renderer = *(uintptr_t *)(uintptr_t)(unsigned int)(dword_5202E0 + 184);
   (*(void (__fastcall **)(int, const char *))(uintptr_t)(*(uintptr_t *)(surface_renderer + 48)))(0, "menu\\main.gfx");
   sub_435ED0("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
   if ( dword_5188C0 )
-    dword_544180 = sub_441670("music\\menu", 64);
+    g_MainMenuMusicHandle = sub_441670("music\\menu", 64);
 
   DD_Pump((int)(intptr_t)dword_544CD8, 0);
   (*(void (**)(void))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))();
@@ -295,13 +295,13 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   g_RenderDevice = &unk_51D4C0;
   sub_419D80(menu_widgets);
   sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
-  dword_543D78 = 0;
+  g_PlayGameMenuExitRequested = 0;
   sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
   sub_460D80((int)(intptr_t)dword_544CD8, (int)(intptr_t)&unk_5196A0);
   dword_545150 = (int)(intptr_t)&unk_5196A0;
   Render_Present((int)(intptr_t)dword_544CD8);
 
-  while ( !dword_543D78 )
+  while ( !g_PlayGameMenuExitRequested )
   {
     DD_Pump((int)(intptr_t)dword_544CD8, 0);
     sub_419DC0((unsigned int *)menu_widgets, 0);

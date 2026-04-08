@@ -11900,11 +11900,11 @@ char byte_543D48[12]; // weak
 int g_DecisionDialogExitSignal; // weak
 int g_DecisionDialogResult; // weak
 int g_DecisionDialogConfirmDisabled; // weak
-int dword_543D74; // weak
-int dword_543D78; // weak
+int g_PlayGameMenuSpriteSetHandle; // weak
+int g_PlayGameMenuExitRequested; // weak
 int g_MainMenuRequestedScreen; // weak
 unsigned __int8 byte_543D80[1024]; // weak
-int dword_544180; // weak
+int g_MainMenuMusicHandle; // weak
 int dword_544184; // weak
 char byte_544188[]; // weak
 char byte_544189; // weak
@@ -60878,11 +60878,11 @@ int  MainMenu_RequestExit(int a1)
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_EXIT;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447700) --------------------------------------------------------
@@ -60892,10 +60892,10 @@ int  MainMenu_RequestCampaignMenu(int a1)
 
   result = sub_419ED0(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CAMPAIGN;
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447720) --------------------------------------------------------
@@ -60905,10 +60905,10 @@ int  MainMenu_RequestMultiplayerMenu(int a1)
 
   result = sub_419ED0(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_MULTIPLAYER;
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447740) --------------------------------------------------------
@@ -60918,10 +60918,10 @@ int  MainMenu_RequestCreditsCinematic(int a1)
 
   result = sub_419ED0(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CREDITS;
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447760) --------------------------------------------------------
@@ -60931,10 +60931,10 @@ int  MainMenu_RequestOptionsMenu(int a1)
 
   result = sub_419ED0(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_OPTIONS;
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447780) --------------------------------------------------------
@@ -60944,10 +60944,10 @@ int  MainMenu_RequestLoadGameMenu(int a1)
 
   result = sub_419ED0(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_LOAD_GAME;
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (004477A0) --------------------------------------------------------
@@ -61187,12 +61187,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     v10 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
     if ( v10 )
       v10 = DLXSpriteSet_Load(v10, a2);
-    dword_543D74 = (int)v10;
+    g_PlayGameMenuSpriteSetHandle = (int)v10;
     (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMain_gfx);
     v11 = v128;
     sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
     if ( v11 && dword_5188C0 )
-      dword_544180 = sub_441670(aMusicMenu, 64);
+      g_MainMenuMusicHandle = sub_441670(aMusicMenu, 64);
     v13 = v128;
     DD_Pump((int)dword_544CD8, v11);
     if ( v13 )
@@ -61227,13 +61227,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       a2 = 60;
       sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
     }
-    dword_543D78 = 0;
+    g_PlayGameMenuExitRequested = 0;
     sub_460CB0((int)dword_544CD8, (int)byte_543D80, v23, (DWORD)a3);
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     dword_545150 = (int)&unk_5196A0;
     Render_Present((int)dword_544CD8);
     v128 = 0;
-    if ( !dword_543D78 )
+    if ( !g_PlayGameMenuExitRequested )
     {
       a2 = (signed int)dword_544CD8;
       do
@@ -61241,17 +61241,17 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         DD_Pump((int)dword_544CD8, (char)dword_544CD8);
         sub_419DC0(v120, (DWORD)a3);
       }
-      while ( v24 == dword_543D78 );
+      while ( v24 == g_PlayGameMenuExitRequested );
     }
     Render_Pump();
-    sub_405920(&dword_543D74);
+    sub_405920(&g_PlayGameMenuSpriteSetHandle);
     switch ( g_MainMenuRequestedScreen )
     {
       case MAIN_MENU_REQUEST_CAMPAIGN:
         v25 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v25 )
           v25 = DLXSpriteSet_Load(v25, a2);
-        dword_543D74 = (int)v25;
+        g_PlayGameMenuSpriteSetHandle = (int)v25;
         a2 = (signed int)byte_543D80;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMain_gfx_0);
         (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(39);
@@ -61262,45 +61262,45 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         v27[2] = v28[2];
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v124);
-        dword_543D78 = 0;
+        g_PlayGameMenuExitRequested = 0;
         sub_460CB0((int)dword_544CD8, v29, v30, (DWORD)a3);
         a3 = (char *)&unk_5196A0;
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
-        for ( i = dword_543D78 == 0; i; i = dword_543D78 == 0 )
+        for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
         {
           DD_Pump((int)dword_544CD8, (char)byte_543D80);
           sub_419DC0(v124, (DWORD)&unk_5196A0);
           if ( Input_IsKeyPressed(1) )
           {
-            dword_543D78 = 1;
+            g_PlayGameMenuExitRequested = 1;
             break;
           }
         }
         Render_Pump();
         if ( !v32 )
           sub_404F20((int *)&unk_51D4C0, 20);
-        sub_405920(&dword_543D74);
+        sub_405920(&g_PlayGameMenuSpriteSetHandle);
         if ( !v9 && dword_544184 != -1 )
         {
           if ( dword_544184 == 1 )
           {
             LOBYTE(a2) = 1;
-            CSS_StopSound(dword_544180, 1000);
+            CSS_StopSound(g_MainMenuMusicHandle, 1000);
             v128 = 1;
             Scenario_LoadMissionByIndexAndPlay(0, v35, (DWORD)&unk_5196A0, a4);
           }
           else
           {
-            CSS_StopSound(dword_544180, 1000);
+            CSS_StopSound(g_MainMenuMusicHandle, 1000);
             Scenario_LoadMissionByIndexAndPlay((char *)0xA, v36, (DWORD)&unk_5196A0, a4);
             v128 = v37;
           }
         }
         break;
       case MAIN_MENU_REQUEST_CREDITS:
-        CSS_StopSound(dword_544180, 1000);
+        CSS_StopSound(g_MainMenuMusicHandle, 1000);
         sub_404F20((int *)&unk_51D4C0, 20);
         LOBYTE(a2) = 0;
         Video_Avi_playIn(aCre_an, 0, 1, 0, 1, 1);
@@ -61321,7 +61321,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         v40 = (_DWORD *)Mem_Alloc(4112, v39, 1, 0);
         if ( v40 )
           v40 = DLXSpriteSet_Load(v40, 1);
-        dword_543D74 = (int)v40;
+        g_PlayGameMenuSpriteSetHandle = (int)v40;
         a2 = (signed int)byte_543D80;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMultipl_gf);
         Render_LoadResourceSprite_v4(18, byte_543D80, v41, (char)byte_543D80, 0);
@@ -61335,12 +61335,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         qmemcpy(v122, &unk_5184F0, 4 * v45 + 1);
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v122);
-        dword_543D78 = v46;
+        g_PlayGameMenuExitRequested = v46;
         sub_460CB0((int)dword_544CD8, (int)byte_543D80, v47, 0);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = v48;
         Render_Present((int)dword_544CD8);
-        while ( !dword_543D78 )
+        while ( !g_PlayGameMenuExitRequested )
         {
           DD_Pump((int)dword_544CD8, a2);
           if ( DD_IsFlipping((int)dword_544CD8)
@@ -61479,12 +61479,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_Pump();
         if ( dword_544190 )
           sub_404F20((int *)&unk_51D4C0, 20);
-        sub_405920(&dword_543D74);
+        sub_405920(&g_PlayGameMenuSpriteSetHandle);
         v128 = dword_544190;
         if ( dword_544190 )
         {
-          v56 = dword_544180;
-          CSS_StopSound(dword_544180, 1000);
+          v56 = g_MainMenuMusicHandle;
+          CSS_StopSound(g_MainMenuMusicHandle, 1000);
           WorldMap_Initialize(a2, v56);
           a3 = byte_5441A0;
           v57 = 0;
@@ -61553,7 +61553,7 @@ LABEL_64:
         v90 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v90 )
           v90 = DLXSpriteSet_Load(v90, a2);
-        dword_543D74 = (int)v90;
+        g_PlayGameMenuSpriteSetHandle = (int)v90;
         if ( g_LanguageIndex )
         {
           if ( (unsigned __int8)g_LanguageIndex <= 1u )
@@ -61612,12 +61612,12 @@ LABEL_64:
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v113);
         sub_44A880(word_518600, a2, v97);
-        dword_543D78 = 0;
+        g_PlayGameMenuExitRequested = 0;
         sub_460CB0((int)dword_544CD8, v99, v100, v97);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
-        if ( !dword_543D78 )
+        if ( !g_PlayGameMenuExitRequested )
         {
           do
           {
@@ -61625,7 +61625,7 @@ LABEL_64:
             sub_44A8B0(word_518600);
             sub_419DC0(v113, (DWORD)&unk_5196A0);
           }
-          while ( v101 == dword_543D78 );
+          while ( v101 == g_PlayGameMenuExitRequested );
         }
         a2 = dword_5188C0;
         dword_5188BC = v114 == 2;
@@ -61647,26 +61647,26 @@ LABEL_64:
         {
           sub_4419F0();
           if ( !a2 )
-            dword_544180 = sub_441670(aMusicMenu_0, 64);
+            g_MainMenuMusicHandle = sub_441670(aMusicMenu_0, 64);
         }
         else
         {
           if ( a2 )
-            sub_4418F0(dword_544180);
+            sub_4418F0(g_MainMenuMusicHandle);
           sub_441A00();
         }
         sub_44A9C0((int)&dword_5188B0, v102, (DWORD)a3);
         sub_44A980(v103, (DWORD)a3);
         sub_44A8E0(word_518600);
         Render_Pump();
-        sub_405920(&dword_543D74);
+        sub_405920(&g_PlayGameMenuSpriteSetHandle);
         break;
       case MAIN_MENU_REQUEST_LOAD_GAME:
         dword_5441E0 = -1;
         v104 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v104 )
           v104 = DLXSpriteSet_Load(v104, a2);
-        dword_543D74 = (int)v104;
+        g_PlayGameMenuSpriteSetHandle = (int)v104;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuLoad_gfx);
         Render_LoadResourceSprite_v4(18, byte_543D80, v105, (char)byte_543D80, (DWORD)a3);
         Render_LoadResourceSprite_v4(21, byte_543D80, v106, (char)byte_543D80, (DWORD)a3);
@@ -61676,12 +61676,12 @@ LABEL_64:
         qmemcpy(v123, &unk_518808, 0x9Fu);
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v123);
-        dword_543D78 = 0;
+        g_PlayGameMenuExitRequested = 0;
         sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, (DWORD)a3);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
-        while ( !dword_543D78 )
+        while ( !g_PlayGameMenuExitRequested )
         {
           DD_Pump((int)dword_544CD8, (char)&unk_5196A0);
           if ( DD_IsFlipping((int)dword_544CD8) )
@@ -61709,13 +61709,13 @@ LABEL_64:
         Render_Pump();
         if ( dword_544190 )
           sub_404F20((int *)&unk_51D4C0, 20);
-        sub_405920(&dword_543D74);
+        sub_405920(&g_PlayGameMenuSpriteSetHandle);
         if ( !dword_544190 )
           dword_5441E0 = -1;
         a2 = dword_5441E0;
         if ( dword_5441E0 != -1 )
         {
-          CSS_StopSound(dword_544180, 1000);
+          CSS_StopSound(g_MainMenuMusicHandle, 1000);
           WorldMap_Initialize(a2, (DWORD)a3);
           v128 = 1;
           sub_444490(a2, (DWORD)a3, a4);
@@ -61727,7 +61727,7 @@ LABEL_64:
     }
   }
   while ( g_MainMenuRequestedScreen );
-  CSS_StopSound(dword_544180, 1000);
+  CSS_StopSound(g_MainMenuMusicHandle, 1000);
   sub_404F20((int *)&unk_51D4C0, 20);
   Render_UnlockBackbuffer((int)&unk_51D4C0);
   HIBYTE(v110) = HIBYTE(g_RenderHook);
@@ -61819,11 +61819,11 @@ LABEL_64:
 // 5188CA: using guessed type char byte_5188CA;
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E0: using guessed type int dword_5202E0;
-// 543D74: using guessed type int dword_543D74;
-// 543D78: using guessed type int dword_543D78;
+// 543D74: using guessed type int g_PlayGameMenuSpriteSetHandle;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 // 543D80: using guessed type unsigned __int8 byte_543D80[1024];
-// 544180: using guessed type int dword_544180;
+// 544180: using guessed type int g_MainMenuMusicHandle;
 // 544184: using guessed type int dword_544184;
 // 544189: using guessed type char byte_544189;
 // 54418A: using guessed type char byte_54418A;
@@ -61848,12 +61848,12 @@ int  sub_448B90(int a1)
   int v3; // edx
 
   result = sub_419ED0(a1);
-  dword_543D78 = v3;
+  g_PlayGameMenuExitRequested = v3;
   dword_544184 = v3;
   return result;
 }
 // 448B9B: variable 'v3' is possibly undefined
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544184: using guessed type int dword_544184;
 
 //----- (00448BB0) --------------------------------------------------------
@@ -61862,11 +61862,11 @@ int  sub_448BB0(int a1)
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   dword_544184 = 0;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544184: using guessed type int dword_544184;
 
 //----- (00448D10) --------------------------------------------------------
@@ -61935,12 +61935,12 @@ signed int  sub_448E10(int a1)
     if ( v4 > 1 && dword_5441D8 != -1 )
     {
       dword_544190 = 1;
-      dword_543D78 = 1;
+      g_PlayGameMenuExitRequested = 1;
     }
   }
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544190: using guessed type int dword_544190;
 // 5441D8: using guessed type int dword_5441D8;
 
@@ -61950,11 +61950,11 @@ int  sub_448E80(int a1)
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D78 = 1;
+  g_PlayGameMenuExitRequested = 1;
   dword_544190 = 0;
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544190: using guessed type int dword_544190;
 
 //----- (00448EA0) --------------------------------------------------------
@@ -61973,7 +61973,7 @@ int sub_448EA0()
   sub_460BB0(dword_544CD8, 0xB0u, 0xECu, 0x81u, 0x18Au);
   do
   {
-    SpriteForChar = DLX_GetSpriteForChar(dword_543D74, (unsigned __int8)byte_544188[v1] + 8);
+    SpriteForChar = DLX_GetSpriteForChar(g_PlayGameMenuSpriteSetHandle, (unsigned __int8)byte_544188[v1] + 8);
     v3 = v0;
     ++v1;
     v0 += 53;
@@ -61995,7 +61995,7 @@ int sub_448EA0()
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 543D74: using guessed type int dword_543D74;
+// 543D74: using guessed type int g_PlayGameMenuSpriteSetHandle;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
 
@@ -62086,11 +62086,11 @@ int  sub_449C80(int a1)
   int v3; // edx
 
   result = sub_419ED0(a1);
-  dword_543D78 = v3;
+  g_PlayGameMenuExitRequested = v3;
   return result;
 }
 // 449C8B: variable 'v3' is possibly undefined
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 
 //----- (00449CA0) --------------------------------------------------------
 unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3)
@@ -62153,11 +62153,11 @@ int  sub_44A110(int a1, DWORD a2)
   if ( result )
   {
     dword_544190 = 1;
-    dword_543D78 = 1;
+    g_PlayGameMenuExitRequested = 1;
   }
   return result;
 }
-// 543D78: using guessed type int dword_543D78;
+// 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544190: using guessed type int dword_544190;
 // 5441E0: using guessed type int dword_5441E0;
 

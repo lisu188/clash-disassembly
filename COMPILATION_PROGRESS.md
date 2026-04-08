@@ -3096,6 +3096,127 @@
 - total rename count so far:
   - `1193`
 
+## Batch 133 - Main Menu Shared Runtime Naming Wave
+- Current frontier:
+  - keep the recovered main-menu first-frame / idle-loop plateau readable enough to support the next input-fidelity pass by removing the last raw shared runtime names still used across the top menu and first-level submenu screens
+- Subagents spawned and scopes:
+  - no new write-heavy subagent branch was needed; this wave closes the remaining menu-runtime names using the already-correlated `PlayGame_Dispatch` corridor and the settled Batch 131/132 menu evidence
+  - mergeable evidence used this batch:
+    - the same `PlayGame_Dispatch` family stores `DLXSpriteSet_Load(...)` results, zeroes one shared modal-exit latch before each menu loop, and roots/stops menu audio through one shared sound handle
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `dword_543D74` -> `g_PlayGameMenuSpriteSetHandle`
+  - `dword_543D78` -> `g_PlayGameMenuExitRequested`
+  - `dword_544180` -> `g_MainMenuMusicHandle`
+- High-priority unknown functions reviewed:
+  - `sub_405920`
+  - `sub_441670`
+  - `CSS_StopSound`
+  - `PlayGame_Dispatch`
+  - `sub_448B90`
+  - `sub_448BB0`
+  - `sub_448E10`
+  - `sub_448E80`
+  - `sub_449C80`
+  - `sub_44A110`
+- Blockers removed this batch:
+  - the main-menu corridor no longer mixes recovered callback/template names with raw shared-runtime globals for the active sprite set, modal exit latch, and menu music handle
+  - the previously conservative `dword_543D78` latch now has enough repeated modal-loop evidence to be named without pretending it is a top-level-only flag
+- SDL replacements/cleanups this batch:
+  - none; this was a gameplay/menu naming pass above the SDL seam
+- Menu/UI fixes this batch:
+  - renamed the shared sprite-set handle used by the top menu and each first-level submenu screen
+  - renamed the shared exit latch zeroed before each menu modal loop and set by the top-level and submenu callbacks
+  - renamed the shared music handle rooted by `sub_441670("music\\menu", 64)` and stopped/faded on menu transitions
+- Session-init fixes this batch:
+  - none; session/game-start remains downstream of real menu interaction and the still-synthetic input seam
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_recovered -j`
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c` and `bootstrap_main.c` remain compile-clean after the shared menu-runtime rename wave
+  - `clash95_bootstrap` and `clash95_recovered` remain green
+- Link status:
+  - unchanged; this wave stayed inside the already-linked menu corridor
+- Runtime status:
+  - unchanged; the recovered executable still reaches the authentic first menu frame and remains stable in the top-level idle loop under `--authentic-menu-probe`
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 130-132: first authentic main-menu frame plus stable top-level menu idle loop under WSL/SDL
+- Key evidence used:
+  - `g_PlayGameMenuSpriteSetHandle` is always populated from `DLXSpriteSet_Load(...)` in the top menu and submenu branches and released through `sub_405920`
+  - `g_PlayGameMenuExitRequested` is cleared before each menu modal loop and flipped non-zero by the top-level and submenu callbacks to terminate that loop
+  - `g_MainMenuMusicHandle` is rooted by `sub_441670("music\\menu", 64)` and then passed through `CSS_StopSound` / `sub_4418F0` on campaign, credits, options, and load-game transitions
+- Ambiguous candidates deferred:
+  - the deeper `menu\\kamp` submenu still needs another evidence pass before naming `dword_544184` and the `sub_448B90` / `sub_448BB0` pair more specifically than “campaign menu”
+  - real menu responsiveness is still blocked by the synthetic host queue and the DirectInput-era input seam, not by the now-recovered menu-runtime names
+- total rename count so far:
+  - `1204`
+
+## Batch 132 - Main Menu Visible Button Order Corroboration Wave
+- Current frontier:
+  - keep the authentic first-frame / idle-loop menu plateau stable while locking down the visible top-level button ordering and action-table ownership ahead of the input/responsiveness pass
+- Subagents spawned and scopes:
+  - `Linnaeus`: re-check the top-level menu callback family against asm so only proven callback-to-state mappings survive into the canonical artifacts
+  - `Carver`: keep the menu idle-loop/input frontier separate from the naming/table wave so this batch does not drift into speculative SDL fixes
+  - local corroboration pass used this batch:
+    - extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button sprites were checked directly against the sprite-id ranges embedded in `g_MainMenuButtonWidgetsTemplate`
+    - the visible order is now corroborated as `load`, `campaign`, `exit`, `options`, `multiplayer`, `credits` / `autorzy`
+- Functions renamed:
+  - none new; this batch tightened evidence for the already-recovered top-level callback family
+- Structs/classes/globals/tables recovered or renamed:
+  - added `MainMenuButtonWidgetsTemplate` to `RECOVERED_STRUCTURES.json` as the six-entry top-level main-menu action table
+- High-priority unknown functions reviewed:
+  - `PlayGame_Dispatch`
+  - `sub_419D80`
+  - `sub_419DC0`
+  - `MainMenu_RequestLoadGameMenu`
+  - `MainMenu_RequestCampaignMenu`
+  - `MainMenu_RequestExit`
+  - `MainMenu_RequestOptionsMenu`
+  - `MainMenu_RequestMultiplayerMenu`
+  - `MainMenu_RequestCreditsCinematic`
+- Blockers removed this batch:
+  - the exact visible top-level button ordering is no longer ambiguous in the canonical artifacts
+  - the main-menu button table is now represented as one recovered action-table artifact instead of six isolated callback names
+- SDL replacements/cleanups this batch:
+  - none; this was a canonical-artifact tightening pass above the existing SDL seam
+- Menu/UI fixes this batch:
+  - strengthened the main-menu rename evidence with direct local-game-data corroboration from `/mnt/c/clash`
+  - recorded the six-entry `g_MainMenuButtonWidgetsTemplate` table in `RECOVERED_STRUCTURES.json`
+- Session-init fixes this batch:
+  - none; session/game-start remains downstream of real menu interaction and the still-synthetic input seam
+- Validation probe:
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.json`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_recovered -j`
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c` and `bootstrap_main.c` remain compile-clean
+  - `clash95_bootstrap` and `clash95_recovered` remain green
+- Link status:
+  - unchanged; this batch did not widen the executable link surface
+- Runtime status:
+  - unchanged; the recovered executable still reaches the authentic first menu frame and remains stable in the top-level idle loop under `--authentic-menu-probe`
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 130/131: first authentic main-menu frame plus stable top-level menu idle loop under WSL/SDL
+- Key evidence used:
+  - the six callback pointers embedded in `g_MainMenuButtonWidgetsTemplate`
+  - the `PlayGame_Dispatch` top-level switch and submenu asset loads (`menu\\kamp`, `cre_an`, `menu\\multipl`, `menu\\opt`, `menu\\load`)
+  - the extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button groups, which expose the visible labels for the six sprite-id ranges
+- Ambiguous candidates deferred:
+  - the exact generic record layout inside each 0x35-byte menu widget entry is still only partially recovered, so the new structure remains an action-table view rather than a fully typed widget-record struct
+  - real menu responsiveness is still blocked by the synthetic host queue and the DirectInput-era input seam, not by top-level dispatch ambiguity
+- total rename count so far:
+  - `1201`
+
 ## Batch 131 - Main Menu Top-Level Dispatch Naming Wave
 - Current frontier:
   - keep the recovered first-frame / idle-loop main-menu plateau green while making the top-level start-menu state machine readable enough to support the next input/responsiveness wave
@@ -3207,7 +3328,7 @@
     - `sub_460D80`
     - `Render_Present`
   - recovered the top-level menu idle loop shape immediately after the first present:
-    - `while (!dword_543D78) { DD_Pump(...); sub_419DC0(menu_widgets, 0); }`
+    - `while (!g_PlayGameMenuExitRequested) { DD_Pump(...); sub_419DC0(menu_widgets, 0); }`
 - Session-init fixes this batch:
   - none; session/game-start init remains downstream of broader menu interaction, input, and submenu dispatch fidelity
 - Validation probe:
