@@ -79,7 +79,6 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
-<<<<<<< HEAD
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_cpp_core PRIVATE -std=c++17 -Wall -Wextra -pedantic)
   target_compile_options(clash95_cpp_regen PRIVATE

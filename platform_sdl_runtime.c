@@ -860,6 +860,24 @@ HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
   return &g_platform_module_handle_token;
 }
 
+HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter)
+{
+  (void)lpGUID;
+  (void)pUnkOuter;
+
+  if ( lplpDD )
+    *lplpDD = 0;
+
+  /*
+   * PR #26 only needs the widened bootstrap/menu link surface to remain
+   * contained on current main. The richer SDL-backed DirectDraw ownership from
+   * earlier runtime waves has not been replayed in this conflict-resolution
+   * branch, so keep the legacy device creation inert instead of faking a
+   * partially valid COM object here.
+   */
+  return 1;
+}
+
 HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter)
 {
   (void)hinst;
