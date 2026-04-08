@@ -1225,12 +1225,12 @@ int  UI_ShowMissionStatusPanel(int a1, DWORD a2);
 int __thiscall nullsub_3(_DWORD); // weak
 int sub_4476B0();
 int __thiscall sub_4476C0(void *this);
-int  sub_4476E0(int a1);
-int  sub_447700(int a1);
-int  sub_447720(int a1);
-int  sub_447740(int a1);
-int  sub_447760(int a1);
-int  sub_447780(int a1);
+int  MainMenu_RequestExit(int a1);
+int  MainMenu_RequestCampaignMenu(int a1);
+int  MainMenu_RequestMultiplayerMenu(int a1);
+int  MainMenu_RequestCreditsCinematic(int a1);
+int  MainMenu_RequestOptionsMenu(int a1);
+int  MainMenu_RequestLoadGameMenu(int a1);
 signed int  sub_4477A0(int a1, int a2);
 signed int  UI_WaitForAnyKeyOrClick(int a1, int a2);
 DWORD  UI_StartAnims(int a1, char a2, DWORD a3);
@@ -1263,6 +1263,16 @@ char  Game_ResetPlayerRuntimeStateByIndex(int a1);
 int  Map_LoadFromFile(int a1);
 char sub_44B2F0();
 char sub_44B430();
+
+enum
+{
+  MAIN_MENU_REQUEST_EXIT = 0,
+  MAIN_MENU_REQUEST_CAMPAIGN = 1,
+  MAIN_MENU_REQUEST_CREDITS = 2,
+  MAIN_MENU_REQUEST_MULTIPLAYER = 3,
+  MAIN_MENU_REQUEST_OPTIONS = 4,
+  MAIN_MENU_REQUEST_LOAD_GAME = 5
+};
 _DWORD * sub_44B550(int this, DWORD a2, double a3);
 signed int Game_InitPlayerViewState();
 signed int  sub_44C400(DWORD a1, double a2);
@@ -10418,7 +10428,7 @@ char *g_MissionStatusTextsByLanguage[63] =
   "Misssion %d\n\n%s"
 }; // weak
 char *g_MissionStatusFormatsByLanguage[3] = { "Misja %d\n\n%s", "Misssion %d\n\n%s", "Misssion %d\n\n%s" }; // weak
-_UNKNOWN unk_5181C0; // weak
+_UNKNOWN g_MainMenuButtonWidgetsTemplate; // weak
 _UNKNOWN unk_518338; // weak
 char aKarkhan[8] = "Karkhan"; // weak
 char *off_5184DC = &byte_5441A0; // weak
@@ -11892,7 +11902,7 @@ int g_DecisionDialogResult; // weak
 int g_DecisionDialogConfirmDisabled; // weak
 int dword_543D74; // weak
 int dword_543D78; // weak
-int dword_543D7C; // weak
+int g_MainMenuRequestedScreen; // weak
 unsigned __int8 byte_543D80[1024]; // weak
 int dword_544180; // weak
 int dword_544184; // weak
@@ -60863,84 +60873,82 @@ int __thiscall sub_4476C0(void *this)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (004476E0) --------------------------------------------------------
-int  sub_4476E0(int a1)
+int  MainMenu_RequestExit(int a1)
 {
   int result; // eax
 
   result = sub_419ED0(a1);
   dword_543D78 = 1;
-  dword_543D7C = 0;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_EXIT;
   return result;
 }
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447700) --------------------------------------------------------
-int  sub_447700(int a1)
+int  MainMenu_RequestCampaignMenu(int a1)
 {
   int result; // eax
-  int v3; // edx
 
   result = sub_419ED0(a1);
-  dword_543D7C = v3;
-  dword_543D78 = v3;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CAMPAIGN;
+  dword_543D78 = 1;
   return result;
 }
-// 44770B: variable 'v3' is possibly undefined
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447720) --------------------------------------------------------
-int  sub_447720(int a1)
+int  MainMenu_RequestMultiplayerMenu(int a1)
 {
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D7C = 3;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_MULTIPLAYER;
   dword_543D78 = 1;
   return result;
 }
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447740) --------------------------------------------------------
-int  sub_447740(int a1)
+int  MainMenu_RequestCreditsCinematic(int a1)
 {
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D7C = 2;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CREDITS;
   dword_543D78 = 1;
   return result;
 }
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447760) --------------------------------------------------------
-int  sub_447760(int a1)
+int  MainMenu_RequestOptionsMenu(int a1)
 {
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D7C = 4;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_OPTIONS;
   dword_543D78 = 1;
   return result;
 }
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447780) --------------------------------------------------------
-int  sub_447780(int a1)
+int  MainMenu_RequestLoadGameMenu(int a1)
 {
   int result; // eax
 
   result = sub_419ED0(a1);
-  dword_543D7C = 5;
+  g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_LOAD_GAME;
   dword_543D78 = 1;
   return result;
 }
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (004477A0) --------------------------------------------------------
 signed int  sub_4477A0(int a1, int a2)
@@ -61196,8 +61204,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(92);
     Debug_Log(v16, v11, (DWORD)a3, (int)aDrawend);
     v17 = 0;
-    qmemcpy(v120, &unk_5181C0, 4 * v18);
-    v20 = (char *)&unk_5181C0 + 4 * v18;
+    qmemcpy(v120, &g_MainMenuButtonWidgetsTemplate, 4 * v18);
+    v20 = (char *)&g_MainMenuButtonWidgetsTemplate + 4 * v18;
     v19 = &v120[4 * v18];
     *(_WORD *)v19 = *(_WORD *)v20;
     v19[2] = v20[2];
@@ -61237,9 +61245,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     }
     Render_Pump();
     sub_405920(&dword_543D74);
-    switch ( dword_543D7C )
+    switch ( g_MainMenuRequestedScreen )
     {
-      case 1:
+      case MAIN_MENU_REQUEST_CAMPAIGN:
         v25 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v25 )
           v25 = DLXSpriteSet_Load(v25, a2);
@@ -61291,14 +61299,14 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           }
         }
         break;
-      case 2:
+      case MAIN_MENU_REQUEST_CREDITS:
         CSS_StopSound(dword_544180, 1000);
         sub_404F20((int *)&unk_51D4C0, 20);
         LOBYTE(a2) = 0;
         Video_Avi_playIn(aCre_an, 0, 1, 0, 1, 1);
         v128 = 1;
         break;
-      case 3:
+      case MAIN_MENU_REQUEST_MULTIPLAYER:
         a3 = 0;
         memset_(5, 5);
         byte_544188[0] = 3;
@@ -61541,7 +61549,7 @@ LABEL_64:
           PlayGame(v65, a2, (DWORD)a3, (char)v110, a4);
         }
         break;
-      case 4:
+      case MAIN_MENU_REQUEST_OPTIONS:
         v90 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v90 )
           v90 = DLXSpriteSet_Load(v90, a2);
@@ -61653,7 +61661,7 @@ LABEL_64:
         Render_Pump();
         sub_405920(&dword_543D74);
         break;
-      case 5:
+      case MAIN_MENU_REQUEST_LOAD_GAME:
         dword_5441E0 = -1;
         v104 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v104 )
@@ -61718,7 +61726,7 @@ LABEL_64:
         break;
     }
   }
-  while ( dword_543D7C );
+  while ( g_MainMenuRequestedScreen );
   CSS_StopSound(dword_544180, 1000);
   sub_404F20((int *)&unk_51D4C0, 20);
   Render_UnlockBackbuffer((int)&unk_51D4C0);
@@ -61813,7 +61821,7 @@ LABEL_64:
 // 5202E0: using guessed type int dword_5202E0;
 // 543D74: using guessed type int dword_543D74;
 // 543D78: using guessed type int dword_543D78;
-// 543D7C: using guessed type int dword_543D7C;
+// 543D7C: using guessed type int g_MainMenuRequestedScreen;
 // 543D80: using guessed type unsigned __int8 byte_543D80[1024];
 // 544180: using guessed type int dword_544180;
 // 544184: using guessed type int dword_544184;
@@ -70801,6 +70809,16 @@ int __thiscall sub_4603F0(void *this)
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
+/*
+ * The original `unk_545158` descriptor lives far beyond the render-state slab
+ * rooted at `dword_544CD8`. In the compacted C global layout those regions sit
+ * adjacent, so mutating the descriptor's width/height fields would overwrite
+ * `dword_544CD8 + 0x3c`, which is the live descriptor pointer used by
+ * `sub_460D80` and `sub_460B20`. Keep the bootstrap cursor descriptor in
+ * dedicated storage until the broader DGROUP layout is recovered safely.
+ */
+static _DWORD g_RenderVideoInitCursorDescriptor[9];
+
 //----- (00460410) --------------------------------------------------------
 _DWORD * sub_460410(int a1, int a2)
 {
@@ -70848,7 +70866,7 @@ int  sub_460490(int a1, int a2, char a3, DWORD a4)
   if ( surface )
     surface = Render_CreateSurface((int)surface, 64, 64);
   *(_DWORD *)(a1 + 12) = surface;
-  sub_460D80(a1, (int)&unk_545158);
+  sub_460D80(a1, (int)(uintptr_t)g_RenderVideoInitCursorDescriptor);
   Compat_RenderStateInvokeMethod(a1, 20);
   *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 20);
   *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 24);

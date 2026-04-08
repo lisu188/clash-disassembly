@@ -3096,81 +3096,221 @@
 - total rename count so far:
   - `1193`
 
-## Batch 129 - Authentic Video Init Stabilization Wave
+## Batch 131 - Main Menu Top-Level Dispatch Naming Wave
 - Current frontier:
-  - move the WSL/SDL executable from crashing during early video/resource init to a stable authentic video-init plateau that can support the next menu-path wave
+  - keep the recovered first-frame / idle-loop main-menu plateau green while making the top-level start-menu state machine readable enough to support the next input/responsiveness wave
 - Subagents spawned and scopes:
-  - `Faraday`: confirm whether the current bootstrap probe still reflects the real startup/video critical path or hides a narrower authenticity gap
-  - `Dewey`: analyze the private stream/file ABI and `_allocfp_` / `fread_` / `ftell_` helper family around the live sprite-loader crash path
-  - `Hypatia`: map the shortest chain from successful sprite/resource loading to the first main-menu frame so the next runtime wave stays menu-directed
-  - one additional asm/map/exe corroboration explorer was spawned to tighten the field layout and calling-convention facts for `sub_477DC0`, `sub_478C20`, `sub_4799B0`, `sub_4427F0`, and nearby file/runtime helpers
+  - `Linnaeus`: corroborate the top-level main-menu callback family and the `dword_543D7C` state switch against asm/map so only proven submenu names are promoted
+  - `Carver`: inspect the `sub_419D80` / `sub_419DC0` menu update corridor and identify whether a small honest input-seam repair is already safe
+  - one reused explorer was pointed at repo-local and `/mnt/c/clash` resource naming to tighten the visible top-level menu ordering without forcing speculative label names
+  - mergeable evidence used this batch:
+    - `PlayGame_Dispatch` asm proves `sub_447700` sets both latches to `1`, fixing the last decompiler-damaged top-level callback in the start-menu family
+    - the submenu switch and asset loads prove the requested-screen mapping `1 -> menu\\kamp`, `2 -> cre_an`, `3 -> menu\\multipl`, `4 -> menu\\opt`, `5 -> menu\\load`
+- Functions renamed:
+  - `sub_4476E0` -> `MainMenu_RequestExit`
+  - `sub_447700` -> `MainMenu_RequestCampaignMenu`
+  - `sub_447720` -> `MainMenu_RequestMultiplayerMenu`
+  - `sub_447740` -> `MainMenu_RequestCreditsCinematic`
+  - `sub_447760` -> `MainMenu_RequestOptionsMenu`
+  - `sub_447780` -> `MainMenu_RequestLoadGameMenu`
+- Structs/classes/globals/tables recovered or renamed:
+  - `dword_543D7C` -> `g_MainMenuRequestedScreen`
+  - `unk_5181C0` -> `g_MainMenuButtonWidgetsTemplate`
+- High-priority unknown functions reviewed:
+  - `sub_4476E0`
+  - `sub_447700`
+  - `sub_447720`
+  - `sub_447740`
+  - `sub_447760`
+  - `sub_447780`
+  - `sub_419ED0`
+  - `PlayGame_Dispatch`
+- Blockers removed this batch:
+  - the decompiler-broken `sub_447700` is no longer an anonymous gap in the top-level start-menu corridor now that the asm-fixed `state = 1` behavior is reflected in code
+  - the main-menu state switch is now readable in terms of requested screens instead of raw `dword_543D7C` values, which narrows the next menu-input wave to real responsiveness/runtime blockers rather than dispatch ambiguity
+- SDL replacements/cleanups this batch:
+  - none; this was a gameplay-side dispatch recovery pass above the existing SDL containment seam
+- Menu/UI fixes this batch:
+  - renamed the top-level menu widget template cloned by the `PlayGame_Dispatch` prologue and by `bootstrap_main.c`
+  - renamed the six first-level menu callbacks by the submenu/cinematic they provably request
+- Session-init fixes this batch:
+  - none; session/game-start still sits downstream of real menu interaction and the deeper submenu branches
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_recovered -j`
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c` and `bootstrap_main.c` still compile cleanly after the top-level menu rename wave
+  - `clash95_bootstrap` and `clash95_recovered` remain green
+- Link status:
+  - unchanged; this batch stayed inside the already-linked main-menu corridor and did not widen the executable link surface
+- Runtime status:
+  - the recovered executable still reaches the authentic first main-menu frame and remains stable in the top-level idle loop under `--authentic-menu-probe`
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 130: first authentic main-menu frame plus stable top-level menu idle loop under WSL/SDL
+- Key evidence used:
+  - asm for `sub_447700` proves the helper sets both latches to `1`, not an undefined decompiler temp
+  - `PlayGame_Dispatch` directly consumes `g_MainMenuRequestedScreen` in the top-level switch and then loads `menu\\kamp.s32`, `menu\\multipl.s32`, `menu\\opt.s32`, `menu\\load.s32`, or the `cre_an` cinematic
+  - the cloned 0x35-byte-per-entry `g_MainMenuButtonWidgetsTemplate` is the exact localized widget table fed into `sub_419D80` and `sub_419DC0` for the first menu frame and idle loop
+- Ambiguous candidates deferred:
+  - the exact visible left/right button ordering inside `g_MainMenuButtonWidgetsTemplate` still needs one more independent signal before naming each row by on-screen label rather than by requested destination
+  - `dword_543D78` is still only a shared modal-exit latch, not a main-menu-specific global, so it stays conservative
+  - real menu responsiveness is still blocked by the synthetic host queue and the DirectInput-era input seam, not by the now-recovered top-level dispatch names
+- total rename count so far:
+  - `1201`
+
+## Batch 130 - Main Menu First-Frame And Idle-Loop Recovery Wave
+- Current frontier:
+  - move the WSL/SDL executable from a stable authentic video-init plateau into the narrowest safe recovered main-menu slice, without pulling the full `PlayGame_Dispatch` state machine back into the bootstrap link surface
+- Subagents spawned and scopes:
+  - `Hooke`: isolate the narrowest menu-specific helper family after video init that can be rooted without dragging in the broader dispatch/state-switch band
+  - `Herschel`: distinguish a stable first-frame menu plateau from a truly interactive SDL-backed menu loop, and identify the next platform/input blockers
+  - `Bohr`: re-check whether the private buffered-stream contract is still menu-critical after first-frame reachability
+  - `Feynman`: review whether a contained first-frame probe would widen the bootstrap link surface or whether only the deeper `PlayGame_Dispatch` branch caused the unresolved explosion
   - mergeable subagent evidence used this batch:
-    - the asm corroboration pass confirmed `DLXSpriteSet_Load` reads through the query object's virtual read slot rather than the plain stream wrapper, and that the live crash had shifted from the generic stream ABI into the higher-level query/constructor band
-    - `Hypatia` confirmed the next menu milestone still sits one substantial render/runtime wave above the current probe, with `PlayGame_Dispatch` and the `menu\\main` resource family still ahead of the present barrier
+    - `Hooke` confirmed the narrowest safe menu corridor is the `PlayGame_Dispatch` prologue rooted around `sub_435ED0("menu\\main", ...)`, the localized `unk_5181C0` widget table, and `sub_419D80`, with `sub_460CB0` kept downstream as generic presentation plumbing rather than the primary root
+    - `Herschel` confirmed the current SDL seam is sufficient for a stable first-frame / idle menu loop but not yet for fully interactive menus because the host event source and DirectInput-era poll bridge remain synthetic
+    - `Bohr` confirmed the buffered `tell` / `seek` / unread-byte contract remains a real menu-critical runtime issue, but it is not the immediate blocker for the recovered first-frame and idle-loop slice
 - Functions renamed:
   - none this batch
 - Structs/classes/globals/tables recovered or renamed:
   - none this batch
 - High-priority unknown functions reviewed:
-  - `Compat_QueryRead`
-  - `sub_479B00`
+  - `PlayGame_Dispatch`
+  - `sub_435ED0`
+  - `sub_419D80`
+  - `sub_419DC0`
+  - `sub_460CB0`
+  - `sub_460D80`
+- Blockers removed this batch:
+  - the bootstrap target no longer needs the full `PlayGame_Dispatch` state machine just to reach the main menu; it now roots only the recovered menu-specific prologue in `bootstrap_main.c`
+  - the recovered executable now reaches `menu\\main.s32`, `menu\\main.gfx`, `sub_435ED0("menu\\main", ...)`, localized widget-table setup from `unk_5181C0`, `sub_419D80`, `sub_460CB0`, `sub_460D80`, and `Render_Present` without widening into the unresolved gameplay/compiler band
+  - `--authentic-menu-probe` now survives the top-level `DD_Pump` / `sub_419DC0` idle loop for at least five seconds instead of stopping at the earlier video-init-only milestone
+- SDL replacements/cleanups this batch:
+  - none new in the SDL seam itself; the menu milestone improved by recovering the game-side menu bootstrap and idle loop above the existing WSL/SDL containment
+- Menu/UI fixes this batch:
+  - added a contained `--authentic-menu-probe` path in `bootstrap_main.c`
+  - recovered the first main-menu asset/setup slice from the `PlayGame_Dispatch` prologue:
+    - allocate and bind the menu surface
+    - `UI_StartAnims`
+    - `Render_SetResourceHandle`
+    - `DLXSpriteSet_Load("menu\\main.s32")`
+    - load `menu\\main.gfx`
+    - `sub_435ED0("menu\\main", byte_543D80, ...)`
+    - localize the `unk_5181C0` widget table with `g_LanguageIndex`
+    - `sub_419D80`
+    - `sub_405020`
+    - `sub_460CB0`
+    - `sub_460D80`
+    - `Render_Present`
+  - recovered the top-level menu idle loop shape immediately after the first present:
+    - `while (!dword_543D78) { DD_Pump(...); sub_419DC0(menu_widgets, 0); }`
+- Session-init fixes this batch:
+  - none; session/game-start init remains downstream of broader menu interaction, input, and submenu dispatch fidelity
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_recovered -j`
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-video-init`
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `timeout 5s ./bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `bootstrap_main.c` still compiles cleanly under the current `gnu89` setup after the contained main-menu probe recovery
+  - `clash95_bootstrap` and `clash95_recovered` both still build successfully
+- Link status:
+  - `clash95_bootstrap` remains green with the recovered menu first-frame / idle-loop slice linked in
+  - the unresolved explosion only reappears when the deeper `PlayGame_Dispatch` branch is pulled directly into the bootstrap target; the contained menu probe does not trigger that wider link-surface collapse
+- Runtime status:
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-video-init` exits with status `124`, confirming the earlier video-init plateau remains stable
+  - `timeout 2s ./bin/clash95_bootstrap --authentic-menu-probe` exits with status `124`
+  - `timeout 5s ./bin/clash95_bootstrap --authentic-menu-probe` also exits with status `124`, confirming the recovered main-menu first-frame and top-level idle loop remain stable for at least five seconds
+- Highest authentic runtime milestone reached:
+  - the recovered executable now reaches the first authentic main-menu frame and stays alive inside the top-level menu widget loop under WSL/SDL; it is no longer limited to a video-init-only plateau, but it is not yet a fully responsive interactive main menu
+- Key evidence used:
+  - `PlayGame_Dispatch` asm confirms the exact prologue order `Mem_Alloc(188) -> Render_CreateSurface(640, 480) -> UI_StartAnims -> Render_SetResourceHandle -> DD_Pump -> DLXSpriteSet_Load("menu\\main.s32") -> load "menu\\main.gfx" -> sub_435ED0("menu\\main", ...) -> localized copy of unk_5181C0 -> sub_419D80 -> sub_405020 -> sub_460CB0 -> sub_460D80 -> Render_Present -> DD_Pump/sub_419DC0 idle loop`
+  - `sub_419D80` asm confirms it is the widget-record setup pass over the localized 0x35-byte menu entries
+  - `sub_419DC0` asm confirms it is the top-level widget update/hover loop used directly by the main-menu prologue after the first present
+  - object-level and build-level validation proved the contained menu probe links cleanly, while the broader `PlayGame_Dispatch` branch still drags in the unresolved gameplay/compiler surface
+- Ambiguous candidates deferred:
+  - the next SDL/menu step is host event ingestion and input fidelity, not broader rendering recovery: `PeekMessageA` / `GetMessageA` / `WaitMessage` still run against a synthetic queue and `DirectInputCreateA` still fail-closes
+  - the deeper `switch (dword_543D7C)` submenu/state-dispatch band inside `PlayGame_Dispatch` still widens the executable link surface beyond the current safe bootstrap target
+  - the buffered-stream logical position contract (`tell_` / `lseek_` / unread-byte bookkeeping) remains a menu-critical runtime fidelity issue once deeper menu/resource interaction is exercised
+- total rename count so far:
+  - `1193`
+
+## Batch 129 - Authentic Video Init Advancement Wave
+- Current frontier:
+  - move the WSL/SDL executable from crashing in the first sprite/resource stream read to the next authentic video-init layer on the road to the main menu
+- Subagents spawned and scopes:
+  - `Faraday`: confirm whether the current bootstrap probe still reflects the real startup/video critical path or hides a narrower authenticity gap
+  - `Dewey`: analyze the private stream/file ABI and `_allocfp_` / `fread_` / `ftell_` helper family around the live sprite-loader crash path
+  - `Hypatia`: map the shortest chain from successful sprite/resource loading to the first main-menu frame so the next runtime wave stays menu-directed
+  - one additional asm/map/exe corroboration explorer was spawned to tighten the field layout and calling-convention facts for `sub_477DC0`, `sub_478BD0`, `sub_478C20`, `sub_4799B0`, `sub_4427F0`, and nearby file/runtime helpers
+  - mergeable subagent evidence used this batch:
+    - `Dewey` confirmed from asm that `sub_477DC0` is a thin `fread_` wrapper, not a raw `Compat_StreamRead` helper
+    - `Hypatia` confirmed the shortest path from the current frontier to the first main-menu frame still runs through shared loader/runtime infrastructure: `mouse.s32` -> `map.pal` -> `PlayGame_Dispatch` -> `menu\\main.s32` / `menu\\main.gfx` / `menu\\main`
+    - the startup probe review confirmed `--authentic-video-init` is still the right critical-path diagnostic because it now fails on the same resource-loader band the menu assets will reuse
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `DLXSpriteSet_Load`
+  - `sub_477DC0`
   - `sub_478BD0`
   - `sub_478C20`
-  - `sub_460D80`
-  - `sub_460490`
+  - `sub_479B00`
   - `LoadPalCOL`
   - `sub_401B20`
+  - `sub_4427F0`
 - Blockers removed this batch:
   - `DLXSpriteSet_Load` no longer hardwires the plain stream-reader helper onto a polymorphic query object; it now uses the query object's real read method through `Compat_QueryRead`
-  - the live query-object constructor path no longer writes the mode byte `6` into the parent-stream slot on the authentic video-init path; `sub_479B00` now passes the owning object pointer into `sub_478BD0`
-  - `sub_460D80` no longer crashes in the decompiler-broken cursor-sprite sizing loop or its lost render-state method dispatch; the function now follows the asm-backed sprite scan and state update flow
-  - `sub_460490` no longer faults on the direct `a1 + 460` render-state callback dereference immediately after `sub_460D80`
-  - `LoadPalCOL` no longer depends on the broken path-builder and broken vtable call surface; it now uses the same recovered `gfx\\` path construction pattern as the sprite loader plus the real query seek/read flow
-  - `sub_401B20` now reads the 768-byte palette block through `Compat_QueryRead` instead of the lost query-vtable callsite
+  - `sub_477DC0` no longer treats its `+4` field as a raw stream pointer; it now follows the asm-backed `fread_(buffer, 1, file_handle, count)` contract
+  - the live authentic video-init path now gets through `DLXSpriteSet_Load("mouse.s32")` instead of faulting in the private stream/runtime ABI
+  - `LoadPalCOL` no longer uses the decompiler-broken path builder; it now constructs the asm-backed `gfx\\<name>` path and seeks the opened query to offset `8`
+  - `sub_401B20` now reads the 768-byte palette block through `Compat_QueryRead`, matching the asm-backed query-vtable read instead of depending on lost call-shape residue
 - SDL replacements/cleanups this batch:
-  - none new in the SDL seam itself; the platform milestone improved because the recovered video/resource init path above SDL is now stable
+  - none new in the SDL seam itself; the platform milestone improved because the recovered video/resource init path above SDL moved deeper
 - Menu/UI fixes this batch:
-  - none yet; the probe now survives the video/resource-init tranche, but it still stops short of authentic menu dispatch and input handling
+  - none yet; the executable still stops below authentic menu dispatch and interaction
 - Session-init fixes this batch:
-  - none; session/game-start init remains deferred until the executable is allowed to run beyond the current video-init plateau into the menu/game-entry path
+  - none; session/game-start init remains deferred until the executable can get past the remaining palette/resource query wall
 - Validation probe:
   - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
   - `gcc -std=gnu89 -w -I. -fsyntax-only compat/decomp_runtime_stubs.c`
   - `gcc -std=gnu89 -w -I. -fsyntax-only platform_sdl_runtime.c`
-  - `gcc -std=gnu89 -w -I. -c bootstrap_main.c -o /tmp/bootstrap_main_resume.o`
-  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/decomp_runtime_stubs_resume.o`
-  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/platform_sdl_runtime_resume.o`
-  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_resume5.o`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
   - `cmake --build /tmp/clash95-cmake-build --target clash95_bootstrap`
   - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
-  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
   - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude`
   - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
-  - `timeout 5s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init`
-  - multiple `gdb -batch -ex ... --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` crash probes to confirm the frontier transitions `CompatGetOsFdFromStream -> sub_4799B0 -> sub_460D80 -> sub_460490 -> LoadPalCOL/App_RequestQuit`
+  - multiple `gdb -batch -ex ... --args /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` probes to confirm the frontier progression through `DLXSpriteSet_Load("mouse.s32")` and into `LoadPalCOL("gfx\\map.pal")`
+  - `strings -a /mnt/c/clash/DATA/minimum.res /mnt/c/clash/DATA/normal.res /mnt/c/clash/DATA/maximum.res /mnt/c/clash/DATA/GFX3.RES | rg -n 'MOUSE\\.S32|MAP\\.PAL'`
 - Compile status:
-  - `clash95.c`, `bootstrap_main.c`, `compat/decomp_runtime_stubs.c`, and `platform_sdl_runtime.c` compile cleanly under the current `gnu89` setup after the video-init repairs
-  - the JSON sidecar artifacts remain valid
+  - `clash95.c`, `bootstrap_main.c`, `compat/decomp_runtime_stubs.c`, and `platform_sdl_runtime.c` compile cleanly under the current `gnu89` setup after the video-init/runtime repairs
+  - the recovered executable and static library still link successfully
 - Link status:
   - `clash95_bootstrap` still builds successfully as a WSL-runnable SDL executable
   - `clash95_recovered` still builds successfully as the recovered static library baseline
 - Runtime status:
-  - `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap` still exits with status `124`, confirming the default bootstrap stays alive in the SDL-backed message loop
-  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` still exits with status `124`, confirming the authentic early-startup prelude remains stable
-  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` now exits with status `124` instead of faulting
-  - `timeout 5s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` also exits with status `124`, confirming the authentic video-init probe now survives into the SDL message loop for at least five seconds
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`, so the authentic early-startup prelude remains stable
+  - `timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-video-init` still faults, but now the crash is no longer in the first sprite/resource stream read
 - Highest authentic runtime milestone reached:
-  - authentic startup plus recovered video/resource initialization now complete cleanly under WSL/SDL, including `Render_SetPixelFormat`, `DLXSpriteSet_Load("mouse.s32")`, cursor-sprite sizing, palette loading through `LoadPalCOL("map.pal")`, and the post-init SDL message loop; the executable still stops short of authentic menu dispatch and interaction
+  - authentic startup plus the first real video/resource load step now succeed under WSL/SDL: `Render_SetPixelFormat` completes, `DLXSpriteSet_Load("mouse.s32")` succeeds, and the probe advances into `LoadPalCOL("gfx\\map.pal")`; the next live wall is the palette/resource query failure inside `sub_4427F0`, not the earlier stream ABI or cursor-sprite load
 - Key evidence used:
-  - `DLXSpriteSet_Load` asm proves the two sprite-data reads are virtual query-object reads (`[vtable+0x14]`), not plain `sub_477DC0` stream calls
-  - `sub_478C20` asm shows the parent object lives in slot `+0x10`, while the current live constructor path showed the decompiled C was storing `6` there; fixing `sub_479B00` moved the crash immediately deeper
-  - `sub_460D80` asm provided the exact cursor-sprite iteration, max width/height accumulation, and render-state callback ordering needed to replace the broken decompiled loop
-  - `_LoadPalCOL` and `sub_401B20` asm confirmed the correct `gfx\\<name>` path construction, query seek to offset `8`, and 768-byte palette read
-  - GDB confirmed the frontier progression across the repaired stack: `CompatGetOsFdFromStream -> sub_4799B0 -> sub_460D80 -> sub_460490 -> _LoadPalCOL/App_RequestQuit`, then finally no crash during the full `--authentic-video-init` probe
+  - `DLXSpriteSet_Load` asm proves the sprite-data reads are virtual query-object reads (`[vtable+0x14]`), not plain `sub_477DC0` stream calls
+  - `sub_477DC0` asm shows it is a thin `fread_` wrapper over the file-handle field at `+4`
+  - `_LoadPalCOL` asm confirms the correct `gfx\\<name>` path construction, query seek to offset `8`, and handoff into `sub_401B20`
+  - `sub_401B20` asm confirms the 768-byte palette read also goes through the query object's read method
+  - GDB confirmed the live frontier progression from the old `CompatGetOsFdFromStream` crash to `sub_4799B0`, then through successful `mouse.s32` loading, and finally into `LoadPalCOL("gfx\\map.pal")`
+  - `/mnt/c/clash/DATA/minimum.res` contains both `MOUSE.S32` and `MAP.PAL`, so the current palette failure is not explained by a missing installed asset
 - Ambiguous candidates deferred:
-  - whether the next safest menu-facing step is a fuller runtime-init probe (`Bootstrap_RunRecoveredRuntimeAndRenderInit`) or a contained menu-entry probe, now that the video-init plateau is stable
+  - whether the next safest repair is inside `sub_4427F0` / `Compat_FileSystemQuery` / `sub_477170` / `sub_479B00` on the `gfx\\map.pal` reopen path, or in the deeper mounted-resource query state that the second resource lookup depends on
   - the broader `_wcpp_*`, CRT, and allocator/event helper families, which were no longer the live blocker on this wave but still gate the authentic full `_WinMain@16` path
-  - remaining render/UI methods hanging off `a1 + 460`, which may need the same low32 callback treatment once the menu path starts exercising them more broadly
+  - whether `sub_401BA0` needs the same final cleanup as `LoadPalCOL` before the menu/resource path becomes stable
 - total rename count so far:
   - `1193`
 
