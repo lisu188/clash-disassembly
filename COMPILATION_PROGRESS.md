@@ -3096,6 +3096,87 @@
 - total rename count so far:
   - `1193`
 
+## Batch 125 - C++ Executable Regeneration Bootstrap Wave
+- Current frontier:
+  - establish a real parallel C++ executable track on top of the existing recovered C library and bootstrap executable without reopening the deeper startup/runtime crash band prematurely
+- Subagents spawned and scopes:
+  - startup/link audit for canonical blocker docs and entry-chain plan
+  - conservative C++ seam extraction for `DLXSpriteSet`, `CAviDecompressor`, and `CSyncObject`
+  - runtime-wrapper / SDL-gap audit support
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - no canonical recovered-structure edits this batch
+  - added conservative C++ wrapper classes:
+    - `clash95::cpp::DLXSpriteSet`
+    - `clash95::cpp::CAviDecompressor`
+    - `clash95::cpp::CSyncObject`
+- High-priority unknown functions reviewed:
+  - `_wcpp_4_static_init__`
+  - `_wcpp_4_copy_array__`
+  - `CRT_GetBootstrapThreadData`
+  - `CRT_RegisterFinalizableObject`
+  - `Platform_MainWindowProc`
+  - `sub_486369`
+  - `_WinMain@16`
+- Blockers removed this batch:
+  - the repo now has an explicit executable-regeneration skill and canonical artifact set instead of only implicit notes
+  - the repo now has a parallel `clash95_cpp_core` target for conservative C++ seams
+  - the repo now has a parallel `clash95_cpp_regen` executable target that links successfully without destabilizing `clash95_recovered` or `clash95_bootstrap`
+  - the new C++ executable target now preserves the bootstrap target's function/data-section GC on the C startup harness, preventing the entire recovered program from being dragged into the first link attempt
+- SDL replacements/cleanups this batch:
+  - no new body-level SDL rewrites
+  - documented the existing SDL/host seam explicitly in `SDL_BACKEND_GAP_AUDIT.md` and kept `Platform_*` naming neutral
+- Menu/UI fixes this batch:
+  - none; the current executable-regeneration work stays at the bootstrap/message-loop layer
+- Session-init fixes this batch:
+  - none; the authentic startup prelude still reaches the same deeper runtime fault band as the current bootstrap executable
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_core -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o build/clash95.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o build/platform_sdl_runtime.o`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o build/decomp_runtime_stubs.o`
+  - `nm -u build/clash95.o | sort -u > build/clash95_unresolved.txt`
+  - `nm -u build/platform_sdl_runtime.o | sort -u > build/platform_unresolved.txt`
+  - `nm -u build/decomp_runtime_stubs.o | sort -u > build/stubs_unresolved.txt`
+  - `bash -lc 'gcc -std=gnu89 -w -I. clash95.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c -o build/clash95_linkprobe'`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 2s build/bin/clash95_cpp_regen --authentic-startup-prelude`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_cpp_regen.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_cpp_regen.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered` still builds cleanly
+  - `clash95_bootstrap` still builds cleanly
+  - `clash95_cpp_core` now builds cleanly as the first conservative C++ library target
+  - `clash95_cpp_regen` now builds cleanly as a parallel executable target
+- Link status:
+  - the direct raw `gcc` link probe still fails on missing `main`, `_wcpp_*` runtime helpers, unresolved globals/data symbols, and deeper runtime/object-model surface
+  - `clash95_cpp_regen` links successfully because it reuses the existing bootstrap wedge instead of claiming raw whole-program executable recovery
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`, confirming the existing bootstrap executable still stays alive in the host-backed message loop
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`, confirming the new C++ executable target matches the default bootstrap loop milestone
+  - `timeout 2s build/bin/clash95_cpp_regen --authentic-startup-prelude` exits with status `139`, matching the current deeper startup/runtime failure frontier rather than introducing a new C++-specific crash band
+- Highest authentic runtime milestone reached:
+  - the repo now has a parallel `clash95_cpp_regen` executable that links and survives the default bootstrap/message-loop smoke test while preserving the existing authentic-startup frontier
+- Key evidence used:
+  - `clash95.map` confirms `start -> sub_486369 -> _WinMain@16` as the original entry chain and exposes the `DLXSpriteSet`, `CAviDecompressor`, and `CSyncObject` class seams
+  - `bootstrap_main.c` already reconstructs a narrow authentic startup slice rooted in `Platform_CreateMainWindow`, `sub_442AD0`, and `Game_Init`
+  - raw unresolved inventories from `build/clash95_unresolved.txt`, `build/platform_unresolved.txt`, and `build/stubs_unresolved.txt` show the remaining startup/runtime/platform/object-model surface explicitly
+  - the new `clash95_cpp_regen` target only became linkable once its C startup harness matched the bootstrap target's section-GC containment
+- Ambiguous candidates deferred:
+  - `_wcpp_4_static_init__` and `_wcpp_4_copy_array__` remain startup/runtime reconstruction work, not C++ wrapper work
+  - the broader process/thread helper band in `compat/decomp_runtime_stubs.c` still needs sharper classification before any move out of quarantine
+  - `CSyncObject` remains a medium-confidence class seam because only the unlock family is clearly evidenced in the current recovered C side
+  - the deeper `--authentic-startup-prelude` crash band remains the next executable-regeneration frontier
+- total rename count so far:
+  - `1193`
+
 ## Batch 125 - Conversation Findings Documentation Integration Wave
 - Current frontier:
   - absorb prior reverse-engineering conversation findings in a documentation-first, canonical-artifacts-first batch without reopening already-landed rename or structure families
