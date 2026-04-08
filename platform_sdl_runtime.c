@@ -69,11 +69,15 @@ struct SDL_Cursor {
 };
 
 static struct SDL_Surface g_platform_default_surface;
+static int g_platform_frame_dump_checked;
+static const char *g_platform_frame_dump_prefix;
+static int g_platform_frame_dump_index;
 
 int Compat_AllocLow32Bytes(int size);
 void Compat_FreeLow32Bytes(int ptr);
 
 typedef struct CompatDirectDraw CompatDirectDraw;
+typedef struct CompatDirectDrawPalette CompatDirectDrawPalette;
 typedef struct CompatDirectDrawSurface CompatDirectDrawSurface;
 typedef struct CompatDirectDrawClipper CompatDirectDrawClipper;
 
@@ -142,6 +146,16 @@ typedef struct CompatDirectDrawSurfaceVTable {
   HRESULT (__stdcall *UpdateOverlayZOrder)(CompatDirectDrawSurface *self, DWORD flags, void *reference_surface);
 } CompatDirectDrawSurfaceVTable;
 
+typedef struct CompatDirectDrawPaletteVTable {
+  HRESULT (__stdcall *QueryInterface)(CompatDirectDrawPalette *self, const void *riid, void *out_object);
+  ULONG (__stdcall *AddRef)(CompatDirectDrawPalette *self);
+  ULONG (__stdcall *Release)(CompatDirectDrawPalette *self);
+  HRESULT (__stdcall *GetCaps)(CompatDirectDrawPalette *self, DWORD *caps);
+  HRESULT (__stdcall *GetEntries)(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries);
+  HRESULT (__stdcall *Initialize)(CompatDirectDrawPalette *self, CompatDirectDraw *owner, DWORD flags, void *entries);
+  HRESULT (__stdcall *SetEntries)(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries);
+} CompatDirectDrawPaletteVTable;
+
 typedef struct CompatDirectDrawClipperVTable {
   HRESULT (__stdcall *QueryInterface)(CompatDirectDrawClipper *self, const void *riid, void *out_object);
   ULONG (__stdcall *AddRef)(CompatDirectDrawClipper *self);
@@ -180,6 +194,21 @@ struct CompatDirectDrawSurface {
   int pitch;
   void *pixels;
   int lost;
+};
+
+typedef struct CompatPaletteEntry {
+  BYTE red;
+  BYTE green;
+  BYTE blue;
+  BYTE flags;
+} CompatPaletteEntry;
+
+struct CompatDirectDrawPalette {
+  CompatDirectDrawPaletteVTable *lpVtbl;
+  ULONG ref_count;
+  CompatDirectDraw *owner;
+  DWORD flags;
+  CompatPaletteEntry entries[256];
 };
 
 struct CompatDirectDrawClipper {
@@ -234,6 +263,7 @@ static HRESULT CompatDirectDrawSurfaceEnsurePixels(CompatDirectDrawSurface *surf
 static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurface *surface, int *out_pitch)
 {
   const unsigned char *src_base;
+  const CompatDirectDrawPalette *palette;
   Uint32 *pixels;
   int dst_pitch;
   int y;
@@ -246,6 +276,7 @@ static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurfac
   if ( !pixels )
     return 0;
   src_base = (const unsigned char *)surface->pixels;
+  palette = (const CompatDirectDrawPalette *)surface->palette;
   for ( y = 0; y < surface->height; ++y )
   {
     const unsigned char *src_row;
@@ -257,10 +288,23 @@ static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurfac
     {
       if ( surface->bpp <= 8 )
       {
-        Uint32 value;
+        unsigned char index;
 
-        value = src_row[x];
-        dst_row[x] = 0xFF000000u | (value << 16) | (value << 8) | value;
+        index = src_row[x];
+        if ( palette )
+        {
+          const CompatPaletteEntry *entry;
+
+          entry = &palette->entries[index];
+          dst_row[x] = 0xFF000000u | ((Uint32)entry->red << 16) | ((Uint32)entry->green << 8) | (Uint32)entry->blue;
+        }
+        else
+        {
+          Uint32 value;
+
+          value = index;
+          dst_row[x] = 0xFF000000u | (value << 16) | (value << 8) | value;
+        }
       }
       else if ( surface->bpp <= 16 )
       {
@@ -299,6 +343,24 @@ static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurfac
   if ( out_pitch )
     *out_pitch = dst_pitch;
   return pixels;
+}
+
+static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
+{
+  char frame_path[1024];
+
+  if ( !g_platform_frame_dump_checked )
+  {
+    g_platform_frame_dump_prefix = getenv("CLASH95_DUMP_PRESENTED_FRAMES_PREFIX");
+    g_platform_frame_dump_checked = 1;
+  }
+  if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )
+    return;
+  if ( g_platform_frame_dump_index >= 16 )
+    return;
+  snprintf(frame_path, sizeof(frame_path), "%s-%03d.bmp", g_platform_frame_dump_prefix, g_platform_frame_dump_index++);
+  if ( SDL_SaveBMP(surface, frame_path) != 0 )
+    fprintf(stderr, "[platform_sdl] SDL_SaveBMP failed for %s: %s\n", frame_path, SDL_GetError());
 }
 
 static void PlatformPresentDirectDrawSurface(CompatDirectDrawSurface *surface)
@@ -340,6 +402,7 @@ static void PlatformPresentDirectDrawSurface(CompatDirectDrawSurface *surface)
     dest_rect.w = window->width > 0 ? window->width : surface->width;
     dest_rect.h = window->height > 0 ? window->height : surface->height;
     SDL_BlitScaled(dib_surface, 0, host_surface, &dest_rect);
+    PlatformMaybeDumpPresentedFrame(dib_surface);
     SDL_UpdateWindowSurface(window->host_window);
   }
   SDL_FreeSurface(dib_surface);
@@ -628,6 +691,14 @@ static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlay(CompatDirectDrawS
 static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayDisplay(CompatDirectDrawSurface *self, DWORD flags);
 static HRESULT __stdcall CompatDirectDrawSurface_UpdateOverlayZOrder(CompatDirectDrawSurface *self, DWORD flags, void *reference_surface);
 
+static HRESULT __stdcall CompatDirectDrawPalette_QueryInterface(CompatDirectDrawPalette *self, const void *riid, void *out_object);
+static ULONG __stdcall CompatDirectDrawPalette_AddRef(CompatDirectDrawPalette *self);
+static ULONG __stdcall CompatDirectDrawPalette_Release(CompatDirectDrawPalette *self);
+static HRESULT __stdcall CompatDirectDrawPalette_GetCaps(CompatDirectDrawPalette *self, DWORD *caps);
+static HRESULT __stdcall CompatDirectDrawPalette_GetEntries(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries);
+static HRESULT __stdcall CompatDirectDrawPalette_Initialize(CompatDirectDrawPalette *self, CompatDirectDraw *owner, DWORD flags, void *entries);
+static HRESULT __stdcall CompatDirectDrawPalette_SetEntries(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries);
+
 static HRESULT __stdcall CompatDirectDrawClipper_QueryInterface(CompatDirectDrawClipper *self, const void *riid, void *out_object);
 static ULONG __stdcall CompatDirectDrawClipper_AddRef(CompatDirectDrawClipper *self);
 static ULONG __stdcall CompatDirectDrawClipper_Release(CompatDirectDrawClipper *self);
@@ -703,6 +774,16 @@ static CompatDirectDrawSurfaceVTable g_compat_directdraw_surface_vtable = {
   CompatDirectDrawSurface_UpdateOverlayZOrder
 };
 
+static CompatDirectDrawPaletteVTable g_compat_directdraw_palette_vtable = {
+  CompatDirectDrawPalette_QueryInterface,
+  CompatDirectDrawPalette_AddRef,
+  CompatDirectDrawPalette_Release,
+  CompatDirectDrawPalette_GetCaps,
+  CompatDirectDrawPalette_GetEntries,
+  CompatDirectDrawPalette_Initialize,
+  CompatDirectDrawPalette_SetEntries
+};
+
 static CompatDirectDrawClipperVTable g_compat_directdraw_clipper_vtable = {
   CompatDirectDrawClipper_QueryInterface,
   CompatDirectDrawClipper_AddRef,
@@ -714,6 +795,24 @@ static CompatDirectDrawClipperVTable g_compat_directdraw_clipper_vtable = {
   CompatDirectDrawClipper_SetClipList,
   CompatDirectDrawClipper_SetHWnd
 };
+
+static CompatDirectDrawPalette *CompatDirectDrawPaletteCreate(CompatDirectDraw *owner, DWORD flags, void *entries)
+{
+  CompatDirectDrawPalette *palette;
+
+  palette = (CompatDirectDrawPalette *)PlatformAllocLow32(sizeof(*palette));
+  if ( !palette )
+    return 0;
+  memset(palette, 0, sizeof(*palette));
+  palette->lpVtbl = &g_compat_directdraw_palette_vtable;
+  palette->ref_count = 1;
+  palette->owner = owner;
+  palette->flags = flags;
+  CompatDirectDrawPalette_Initialize(palette, owner, flags, entries);
+  if ( owner )
+    CompatDirectDraw_AddRef(owner);
+  return palette;
+}
 
 static CompatDirectDrawSurface *CompatDirectDrawSurfaceCreate(CompatDirectDraw *owner, int width, int height, int bpp, DWORD caps)
 {
@@ -795,13 +894,14 @@ static HRESULT __stdcall CompatDirectDraw_CreateClipper(CompatDirectDraw *self, 
 
 static HRESULT __stdcall CompatDirectDraw_CreatePalette(CompatDirectDraw *self, DWORD flags, void *entries, void *out_palette, IUnknown *outer)
 {
-  (void)self;
-  (void)flags;
-  (void)entries;
+  CompatDirectDrawPalette *palette;
+
   (void)outer;
-  if ( out_palette )
-    *(void **)out_palette = 0;
-  return 0;
+  if ( !out_palette )
+    return (HRESULT)0x80070057;
+  palette = CompatDirectDrawPaletteCreate(self, flags, entries);
+  *(void **)out_palette = palette;
+  return palette ? 0 : (HRESULT)0x8007000E;
 }
 
 static HRESULT __stdcall CompatDirectDraw_CreateSurface(CompatDirectDraw *self, int *desc, void *out_surface, IUnknown *outer)
@@ -983,6 +1083,82 @@ static HRESULT __stdcall CompatDirectDraw_WaitForVerticalBlank(CompatDirectDraw 
   return 0;
 }
 
+static HRESULT __stdcall CompatDirectDrawPalette_QueryInterface(CompatDirectDrawPalette *self, const void *riid, void *out_object)
+{
+  (void)riid;
+  if ( !self || !out_object )
+    return (HRESULT)0x80070057;
+  *(void **)out_object = self;
+  CompatDirectDrawPalette_AddRef(self);
+  return 0;
+}
+
+static ULONG __stdcall CompatDirectDrawPalette_AddRef(CompatDirectDrawPalette *self)
+{
+  if ( !self )
+    return 0;
+  return ++self->ref_count;
+}
+
+static ULONG __stdcall CompatDirectDrawPalette_Release(CompatDirectDrawPalette *self)
+{
+  CompatDirectDraw *owner;
+
+  if ( !self )
+    return 0;
+  if ( self->ref_count )
+    --self->ref_count;
+  if ( self->ref_count )
+    return self->ref_count;
+  owner = self->owner;
+  PlatformFreeLow32(self);
+  if ( owner )
+    CompatDirectDraw_Release(owner);
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawPalette_GetCaps(CompatDirectDrawPalette *self, DWORD *caps)
+{
+  if ( caps )
+    *caps = self ? self->flags : 0;
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawPalette_GetEntries(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries)
+{
+  (void)flags;
+  if ( !self || !entries )
+    return (HRESULT)0x80070057;
+  if ( base > 256u || count > 256u || base + count > 256u )
+    return (HRESULT)0x80070057;
+  memcpy(entries, self->entries + base, (size_t)count * sizeof(self->entries[0]));
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawPalette_Initialize(CompatDirectDrawPalette *self, CompatDirectDraw *owner, DWORD flags, void *entries)
+{
+  if ( !self )
+    return (HRESULT)0x80070057;
+  self->owner = owner;
+  self->flags = flags;
+  if ( entries )
+    memcpy(self->entries, entries, sizeof(self->entries));
+  else
+    memset(self->entries, 0, sizeof(self->entries));
+  return 0;
+}
+
+static HRESULT __stdcall CompatDirectDrawPalette_SetEntries(CompatDirectDrawPalette *self, DWORD flags, DWORD base, DWORD count, void *entries)
+{
+  (void)flags;
+  if ( !self || !entries )
+    return (HRESULT)0x80070057;
+  if ( base > 256u || count > 256u || base + count > 256u )
+    return (HRESULT)0x80070057;
+  memcpy(self->entries + base, entries, (size_t)count * sizeof(self->entries[0]));
+  return 0;
+}
+
 static HRESULT __stdcall CompatDirectDrawSurface_QueryInterface(CompatDirectDrawSurface *self, const void *riid, void *out_object)
 {
   (void)riid;
@@ -1019,6 +1195,11 @@ static ULONG __stdcall CompatDirectDrawSurface_Release(CompatDirectDrawSurface *
   {
     PlatformFreeLow32(self->pixels);
     self->pixels = 0;
+  }
+  if ( self->palette )
+  {
+    CompatDirectDrawPalette_Release((CompatDirectDrawPalette *)self->palette);
+    self->palette = 0;
   }
   owner = self->owner;
   if ( owner && owner->primary_surface == self )
@@ -1238,7 +1419,11 @@ static HRESULT __stdcall CompatDirectDrawSurface_GetOverlayPosition(CompatDirect
 static HRESULT __stdcall CompatDirectDrawSurface_GetPalette(CompatDirectDrawSurface *self, void *out_palette)
 {
   if ( out_palette )
+  {
     *(void **)out_palette = self ? self->palette : 0;
+    if ( self && self->palette )
+      CompatDirectDrawPalette_AddRef((CompatDirectDrawPalette *)self->palette);
+  }
   return 0;
 }
 
@@ -1339,7 +1524,15 @@ static HRESULT __stdcall CompatDirectDrawSurface_SetOverlayPosition(CompatDirect
 static HRESULT __stdcall CompatDirectDrawSurface_SetPalette(CompatDirectDrawSurface *self, void *palette)
 {
   if ( self )
+  {
+    if ( palette )
+      CompatDirectDrawPalette_AddRef((CompatDirectDrawPalette *)palette);
+    if ( self->palette )
+      CompatDirectDrawPalette_Release((CompatDirectDrawPalette *)self->palette);
     self->palette = palette;
+    if ( self == (self->owner ? self->owner->primary_surface : 0) || self->surface.owner_window )
+      PlatformPresentDirectDrawSurface(self);
+  }
   return 0;
 }
 

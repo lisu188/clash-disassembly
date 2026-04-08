@@ -6,6 +6,9 @@
     "clash95.map",
     "clash95.exe"
   ],
+  "maintenance_notes": [
+    "Batch 135 stayed on the SDL/main-menu display frontier. No new unit-type or stat semantics were promoted in that wave; the executable-first palette/presentation repair was prioritized instead."
+  ],
   "unit_types": [
     {
       "id": 0,

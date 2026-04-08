@@ -3096,6 +3096,143 @@
 - total rename count so far:
   - `1193`
 
+## Batch 135 - Main Menu Prologue Resync And Palette-Aware SDL Presentation Wave
+- Current frontier:
+  - keep the contained WSL/SDL main-menu probe alive while closing the next display-fidelity gap between "video init reaches SDL present" and "the recovered main-menu frame uses the authentic pre-draw setup plus palette-aware presentation"
+- Subagents spawned and scopes:
+  - coordinator kept the write surface in `bootstrap_main.c` and merged evidence from the earlier required startup/runtime/SDL/menu fanout before editing
+  - simultaneous A-J coverage was not achievable in one wave because the collab thread limit stayed below the requested count after the interrupted turn; the coordinator retried additional slots and covered the remaining corroboration/build scopes locally
+  - mergeable subagent evidence used this batch:
+    - the SDL-focused background contribution on `platform_sdl_runtime.c` rebuilt the DirectDraw palette seam into a real low32 palette object plus palette-aware 8-bit conversion, which directly supports visible menu fidelity
+    - coordinator-side asm corroboration around `PlayGame_Dispatch` confirmed the contained bootstrap menu probe was still missing the authentic `DD_Pump(1) -> sub_404D90(&unk_51D4C0) -> DD_Pump(1)` tranche before the first menu draw calls
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_404D90`
+  - `sub_404C80`
+  - `sub_435ED0`
+  - `sub_419D80`
+  - `sub_419DC0`
+  - `PlatformPresentDirectDrawSurface`
+  - `CompatDirectDraw_CreatePalette`
+  - `CompatDirectDrawSurface_SetPalette`
+- Blockers removed this batch:
+  - the contained `--authentic-menu-probe` no longer skips the asm-backed pre-draw `sub_404D90` render-state resync that the authentic `PlayGame_Dispatch` top-menu prologue performs between `sub_435ED0("menu\\main", ...)` and the two initial draw calls
+  - the contained menu probe no longer uses a downgraded `DD_Pump(..., 0)` in that same pre-draw tranche; both restored pumps now match the authentic `DD_Pump(..., 1)` call shape seen in asm
+  - the SDL DirectDraw bridge no longer treats 8-bit primary-surface content as palette-less grayscale whenever the recovered code creates and binds a DirectDraw palette
+- SDL replacements/cleanups this batch:
+  - added a real `CompatDirectDrawPalette` object family in `platform_sdl_runtime.c`
+  - `CreatePalette`, `GetPalette`, `SetPalette`, `GetEntries`, and `SetEntries` now preserve palette contents instead of returning inert null placeholders
+  - `PlatformConvertSurfacePixelsToArgb32` now converts 8-bit surface indices through the active DirectDraw palette when one is bound, falling back to grayscale only when the palette is still absent
+- Menu/UI fixes this batch:
+  - `Bootstrap_RunRecoveredMainMenuFirstFrameProbe` now mirrors the authentic menu prologue more closely by restoring the missing `sub_404D90` pre-draw render-state step and the paired `DD_Pump(..., 1)` calls
+  - palette-backed menu/video surfaces can now reach SDL presentation with recovered colors instead of forced grayscale conversion
+- Session-init fixes this batch:
+  - none; this batch stayed intentionally on the menu-display corridor above session/game-start initialization
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `gcc -std=gnu89 -w -I. $(pkg-config --cflags sdl2) -fsyntax-only platform_sdl_runtime.c`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json > /tmp/recovered_structures_batch135.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json > /tmp/unit_types_and_stats_batch135.json`
+  - `cmake -S . -B /tmp/clash95-menu-build`
+  - `cmake --build /tmp/clash95-menu-build --target clash95_bootstrap -j4`
+  - `timeout -s KILL 2s /tmp/clash95-menu-build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout -s KILL 10s /tmp/clash95-menu-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `objdump -d --no-show-raw-insn /tmp/clash95-menu-build/bin/clash95_bootstrap`
+  - `git diff --check`
+- Compile status:
+  - `bootstrap_main.c` remains syntax-clean after the main-menu prologue resync
+  - `platform_sdl_runtime.c` remains syntax-clean after the DirectDraw palette bridge work
+- Link status:
+  - `/tmp/clash95-menu-build/bin/clash95_bootstrap` still links successfully as the WSL/SDL executable target after both the bootstrap and SDL presentation changes
+- Runtime status:
+  - `timeout -s KILL 2s /tmp/clash95-menu-build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `137`, confirming the authentic startup-prelude corridor still stays alive after the menu-display changes
+  - `timeout -s KILL 10s /tmp/clash95-menu-build/bin/clash95_bootstrap --authentic-menu-probe` exits with status `137`, confirming the contained menu probe still stays alive after the prologue resync and palette bridge changes
+  - object-level validation on the rebuilt executable now shows `Bootstrap_RunRecoveredMainMenuFirstFrameProbe` contains the restored `DD_Pump(..., 1) -> sub_404D90(&unk_51D4C0) -> DD_Pump(..., 1)` sequence before the first menu draw calls
+  - the earlier GDB validation path still proves the executable reaches `PlatformPresentDirectDrawSurface` from the authentic DirectDraw/video-init corridor, while this batch strengthens the next step toward a faithful visible menu frame by restoring palette-aware output and the missing game-side pre-draw setup
+- Highest authentic runtime milestone reached:
+  - unchanged at the coarse milestone level: first authentic main-menu frame plus stable top-level menu idle loop under WSL/SDL
+  - improved at the display-fidelity level: the contained menu probe now includes the authentic pre-draw render-state resync and a palette-aware SDL presentation path instead of a grayscale-only 8-bit fallback
+- Key evidence used:
+  - `PlayGame_Dispatch` asm around `loc_447A57..loc_447AE0` shows the authentic top-menu prologue runs `DD_Pump`, then `sub_404D90`, then another `DD_Pump` before the `draw1` / `draw2` calls
+  - the rebuilt `/tmp/clash95-menu-build/bin/clash95_bootstrap` disassembly now contains that restored call sequence inside `Bootstrap_RunRecoveredMainMenuFirstFrameProbe`
+  - the `platform_sdl_runtime.c` palette path now holds actual 256-entry palette data and feeds those colors into `PlatformConvertSurfacePixelsToArgb32`, which is the narrowest faithful improvement available on the visible menu path without widening back into unresolved gameplay/menu dispatch surfaces
+- Ambiguous candidates deferred:
+  - whether the next highest-value menu-display wave is proving the first menu-frame draw reaches `sub_419D80` / `sub_419DC0` under debugger control in this sandbox, or further tightening the SDL host-window present path once a desktop-visible confirmation loop is available
+  - the deeper submenu/state-switch branch of `PlayGame_Dispatch`, which still widens the executable surface beyond the contained bootstrap menu probe
+  - the remaining runtime/helper families below the menu plateau, including the broader CRT/private stream work and the post-menu boot/runtime scars
+- total rename count so far:
+  - `1204`
+
+## Batch 135 - SDL Menu Palette Presentation Recovery Wave
+- Current frontier:
+  - keep the recovered main-menu corridor on the authentic `--authentic-menu-probe` path while removing the last high-confidence SDL presentation blind spot that can leave the 8-bit menu art effectively invisible even though the DirectDraw primary-surface path is live
+- Subagents spawned and scopes:
+  - the active collab thread limit remained capped below the requested A-J fanout, so the coordinator reused the available read-only slots and merged the completed menu-display reports before the write wave
+  - `Averroes`: executable harness / startup-path ranking for the contained menu probe versus the real `App_WinMain -> PlayGame_Dispatch` path
+  - `Popper`: SDL window/render/input/timing/event-loop migration on the live menu corridor
+  - `Ramanujan`: runtime stub ranking on the menu path, separating first-frame display blockers from later responsiveness work
+  - mergeable subagent evidence used this batch:
+    - `Popper` confirmed the live menu probe already creates a real SDL host window, hits `CompatDirectDrawSurface_Blt`, and reaches `PlatformPresentDirectDrawSurface`, but still converts `bpp <= 8` surfaces as grayscale and never materializes a palette object
+    - `Ramanujan` independently ranked the null palette/create-palette stub and grayscale 8-bit conversion above allocator/thread/TLS stubs for the specific goal of “recover main menu displaying”
+    - `Averroes` confirmed the executable still reaches the menu only through the contained `--authentic-menu-probe` slice rather than the default `main -> App_WinMain` path, so this batch stayed intentionally below the broader startup-entry unification work
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `CompatDirectDraw_CreatePalette`
+  - `CompatDirectDrawSurface_SetPalette`
+  - `CompatDirectDrawSurface_GetPalette`
+  - `CompatDirectDrawSurface_Release`
+  - `PlatformConvertSurfacePixelsToArgb32`
+  - `Render_SetPixelFormat`
+  - `sub_404C80`
+- Blockers removed this batch:
+  - the SDL/DirectDraw seam no longer reports success for palette creation while returning a null palette object on the 8-bit menu/video path
+  - primary-surface presentation no longer blindly expands indexed 8-bit pixels as grayscale whenever the recovered code has already built a real palette
+  - DirectDraw surfaces now retain and release palette bindings safely instead of storing a raw opaque pointer with no lifetime management
+  - the contained main-menu probe no longer skips the authentic `DD_Pump(1) -> sub_404D90 -> DD_Pump(1)` palette-refresh preamble immediately before the first two top-menu draw calls
+- SDL replacements/cleanups this batch:
+  - added a low32 `CompatDirectDrawPalette` object with `QueryInterface` / `AddRef` / `Release` / `GetCaps` / `GetEntries` / `Initialize` / `SetEntries`
+  - `CompatDirectDraw_CreatePalette` now allocates and returns a real 256-entry palette object instead of a null-success stub
+  - `CompatDirectDrawSurface_SetPalette` / `GetPalette` now manage palette references explicitly and refresh presentation when the primary surface palette changes
+  - `PlatformConvertSurfacePixelsToArgb32` now resolves 8-bit pixels through the bound palette entries before falling back to grayscale only when no palette is present
+- Menu/UI fixes this batch:
+  - the recovered menu corridor can now preserve the palette-driven color lookup that the `menu\\main` / `menu\\*.s32` assets expect instead of flattening the indexed menu pixels before SDL presentation
+  - `Bootstrap_RunRecoveredMainMenuFirstFrameProbe` now mirrors the correlated `PlayGame_Dispatch` palette/pump preamble more closely before issuing the first top-menu draw calls
+- Session-init fixes this batch:
+  - none; session/game-start remains downstream of the current menu-display and input-fidelity frontier
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. $(pkg-config --cflags sdl2) -fsyntax-only platform_sdl_runtime.c`
+  - `cmake --build build --target clash95_bootstrap -j4`
+  - `timeout -s KILL 3s ./build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex 'set pagination off' -ex 'break PlatformConvertSurfacePixelsToArgb32' -ex 'run --authentic-menu-probe' -ex 'x/wd $rdi+68' -ex 'x/gx $rdi+80' -ex 'x/gx $rdi+104' -ex 'x/bu *(void**)($rdi+104)' -ex 'bt 4' --args ./build/bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `platform_sdl_runtime.c` remains syntax-clean under the SDL2-backed bootstrap toolchain after the palette-object repair
+- Link status:
+  - `clash95_bootstrap` still links successfully as the runnable WSL/SDL executable after widening the SDL seam to include a real palette object
+- Runtime status:
+  - `timeout -s KILL 3s ./build/bin/clash95_bootstrap --authentic-menu-probe` exits with status `137`, confirming the recovered menu probe remains stable after the palette-path repair
+  - GDB still shows the live contained menu probe reaching `PlatformConvertSurfacePixelsToArgb32 <- PlatformPresentDirectDrawSurface <- CompatDirectDrawSurface_Blt`, and the first trapped present remains part of the earlier 16-bit video-init tranche rather than a crash regression
+- Highest authentic runtime milestone reached:
+  - unchanged at the process level: the recovered executable still reaches the first authentic main-menu frame and stable top-level idle loop under WSL/SDL
+  - improved at the display-fidelity level: the SDL seam now has a real palette-aware path for indexed menu presentation instead of a guaranteed grayscale/null-palette collapse
+- Key evidence used:
+  - `Render_SetPixelFormat` still exercises the 8-bit palette path on the menu/video corridor and feeds palette updates through `sub_404C80`
+  - `sub_401B20` / `LoadPalCOL` build 256-entry RGB palette tables that the old SDL seam was ignoring
+  - the live GDB probe still hits `PlatformConvertSurfacePixelsToArgb32` from the authentic present path, keeping this repair directly on the recovered menu-display corridor
+  - the correlated top of `PlayGame_Dispatch` performs an extra `DD_Pump(1)`, reapplies the render-state palette block through `sub_404D90`, and pumps once more before the first two main-menu draw calls; the contained probe had been skipping that preamble
+  - completed subagent evidence independently converged on the same root cause ranking: palette fidelity outranked allocator/thread/TLS work for “make the menu display”
+- Ambiguous candidates deferred:
+  - the contained probe still reaches the top menu through `--authentic-menu-probe` rather than the default `main -> App_WinMain` path; the next startup-facing wave should unify that shared first-frame slice instead of keeping a long-lived copied probe
+  - the current validation environment did not provide a direct human-visible screenshot assertion, so this batch proves palette fidelity in the live present path but not final user-visible menu correctness under a desktop session
+  - real menu responsiveness remains behind the still-conservative DirectInput/message-pump compatibility seam, which stays ranked below the repaired display-path issue for this batch
+- total rename count so far:
+  - `1208`
+
 ## Batch 134 - SDL Menu Presentation And Low32 Handle Containment Wave
 - Current frontier:
   - move the contained authentic main-menu probe from a merely stable idle loop to a real SDL-backed presentation path that can display the recovered start menu
