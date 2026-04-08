@@ -29836,12 +29836,11 @@ unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
 
-static int Compat_RenderDeviceDrawMenuSprite(int top, int left, int sprite_for_char, unsigned char draw_mode)
+static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode)
 {
   _DWORD *surface;
   unsigned char *surface_pixels;
   unsigned char *stream;
-  unsigned char *stream_base;
   int pitch;
   int width;
   int height;
@@ -29875,7 +29874,6 @@ static int Compat_RenderDeviceDrawMenuSprite(int top, int left, int sprite_for_c
   stream = (unsigned char *)(uintptr_t)(unsigned int)*(unsigned int *)(uintptr_t)(sprite_for_char + 10);
   if ( !stream )
     return 0;
-  stream_base = stream;
   pitch = *(unsigned __int16 *)surface;
 
   for ( row = 0; row < height; ++row )
@@ -29885,7 +29883,7 @@ static int Compat_RenderDeviceDrawMenuSprite(int top, int left, int sprite_for_c
 
     if ( top + row < 0 || top + row >= (unsigned __int16)*((unsigned __int16 *)surface + 1) )
       return 0;
-    destination = surface_pixels + (top + row) * pitch + left;
+    destination = surface_pixels + top * pitch + left + row * pitch;
     column = 0;
     while ( column < width )
     {
@@ -29920,8 +29918,6 @@ static int Compat_RenderDeviceDrawMenuSprite(int top, int left, int sprite_for_c
         unsigned char *copy_source;
 
         back_offset = *stream++;
-        if ( !back_offset || stream - 1 - back_offset < stream_base )
-          return 0;
         copy_source = stream - 1 - back_offset;
         run_length = *copy_source++;
         if ( !run_length )
@@ -29944,8 +29940,8 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   unsigned char *widget; // edi
-  int top; // ebx
   int left; // ebx
+  int top; // ebx
   int flags; // edx
   unsigned int sprite_set_holder; // esi
   unsigned int sprite_set; // esi
@@ -29984,8 +29980,8 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
 
   widget = (unsigned char *)a1;
   v28 = a3;
-  top = *(_DWORD *)(widget + 0);
-  left = *(_DWORD *)(widget + 4);
+  left = *(_DWORD *)(widget + 0);
+  top = *(_DWORD *)(widget + 4);
   flags = widget[8];
   sprite_set_holder = *(_DWORD *)(widget + 12);
   if ( sprite_set_holder )
@@ -30003,11 +29999,11 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
     if ( !sprite_set || v30 == -1 )
       return result;
     v25 = DLX_GetSpriteForChar(sprite_set, v30);
-    result = Compat_RenderDeviceDrawMenuSprite(top, left, v25, 0);
+    result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
     if ( (flags & 4) != 0 && overlay_sprite_index != -1 )
     {
       v24 = DLX_GetSpriteForChar(sprite_set, overlay_sprite_index);
-      result = Compat_RenderDeviceDrawMenuSprite(top, left, v24, 1);
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
     }
     return result;
   }
@@ -61143,16 +61139,16 @@ int  MainMenu_RequestExit(int a1)
 //----- (004476D0) --------------------------------------------------------
 static void MainMenu_WriteButtonWidgetTemplateRecord(
         unsigned char *record,
-        int top,
         int left,
+        int top,
         int sprite_index_base,
         int sprite_index_selected_base,
         int action_callback,
         const char *sound_name)
 {
   memset(record, 0, 53);
-  *(_DWORD *)(record + 0) = top;
-  *(_DWORD *)(record + 4) = left;
+  *(_DWORD *)(record + 0) = left;
+  *(_DWORD *)(record + 4) = top;
   record[8] = 1;
   *(_DWORD *)(record + 12) = (int)(uintptr_t)&g_PlayGameMenuSpriteSetHandle;
   *(_DWORD *)(record + 16) = sprite_index_base;
@@ -71245,9 +71241,11 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   _DWORD *primary_surface;
   _DWORD *back_surface;
   _DWORD *cursor_descriptor;
+  unsigned int message_pump_result;
   int v4; // edx
   int v5; // ecx
   unsigned int result; // eax
+  int cursor_update_deadline;
   int v7; // edx
   int v8; // ecx
   int v9; // edx
@@ -71257,7 +71255,6 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   int v13; // ebp
   int v14; // ebx
   unsigned int v15; // eax
-  unsigned int v16; // ecx
   _DWORD *v17; // eax
   int v18; // ecx
   int v19; // ebp
@@ -71265,9 +71262,9 @@ unsigned int  DD_Pump(int a1, int a2, ...)
   int SpriteForChar; // eax
   void *v22; // [esp+1Ch] [ebp-18h]
 
-  Platform_PumpMessagesAndBlitFrame(a2);
+  message_pump_result = Platform_PumpMessagesAndBlitFrame(a2);
   result = Time_Now(v5, v4);
-  if ( result >= dword_5448B0 || v7 )
+  if ( result >= dword_5448B0 || message_pump_result )
   {
     dword_5448B0 = *(_DWORD *)(a1 + 1112) + Time_Now(v8, v7);
     Compat_RenderStateInvokeMethod(a1, 20);
@@ -71285,10 +71282,11 @@ unsigned int  DD_Pump(int a1, int a2, ...)
     v14 = 0;
     if ( v13 )
     {
-      v15 = Time_Now(*(_DWORD *)(v12 + 28) + v13, v11);
-      if ( v16 < v15 )
+      cursor_update_deadline = *(_DWORD *)(v12 + 28) + v13;
+      v15 = Time_Now(cursor_update_deadline, v11);
+      if ( (unsigned int)cursor_update_deadline < v15 )
       {
-        *(_DWORD *)((char *)cursor_descriptor + 28) = Time_Now(v16, v11);
+        *(_DWORD *)((char *)cursor_descriptor + 28) = Time_Now(v15, v11);
         ++*(_DWORD *)((char *)cursor_descriptor + 32);
         v17 = cursor_descriptor;
         if ( v17[1] - *v17 < v17[8] )
@@ -71302,7 +71300,10 @@ unsigned int  DD_Pump(int a1, int a2, ...)
     result = dword_544D10;
     if ( dword_544D10 )
     {
-      if ( v11 || v14 || (result = *(_DWORD *)(a1 + 48), result != *(_DWORD *)a1) || v18 != *(_DWORD *)(a1 + 4) )
+      if ( message_pump_result
+        || v14
+        || (result = *(_DWORD *)(a1 + 48), result != *(_DWORD *)a1)
+        || v18 != *(_DWORD *)(a1 + 4) )
       {
         v22 = g_RenderDevice;
         v19 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
@@ -71519,6 +71520,7 @@ int  sub_460A50(int a1, int a2)
   int result; // eax
   int v9; // edi
 
+  v2 = (_DWORD *)(uintptr_t)(unsigned int)a1;
   InputBackend_PollState(&g_InputBackendState, a1, a2);
   v2[9] += v2[8] * g_InputBackendState.mouse_delta_x;
   v3 = v2[8] * g_InputBackendState.mouse_delta_y;

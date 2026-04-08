@@ -3096,6 +3096,149 @@
 - total rename count so far:
   - `1193`
 
+## Batch 140 - Menu Widget Geometry And Probe Input Recovery Wave
+- Current frontier:
+  - keep the contained SDL/WSL top-level menu probe on the authentic boot/menu loop while turning the currently visible background/shield frame into a genuinely interactive main-menu corridor
+- Subagents spawned and scopes:
+  - `Chandrasekhar`: executable/startup/link triage for the live `clash95_bootstrap` surface
+  - `Zeno`: SDL/menu input fallback seam around `Platform_ReadInputFallbackState`
+  - `Tesla`: runtime stub and message-loop fidelity review
+  - `Dalton`: menu/UI callback and widget-hit path review
+  - `Cicero`: asm/map corroboration for the main-menu widget record orientation and sprite-span semantics
+  - mergeable subagent evidence used this batch:
+    - `Chandrasekhar` and `Tesla` re-confirmed `_CHP` as the immediate local relink blocker before the latest executable/menu validation tranche
+    - `Zeno` and `Dalton` corroborated that the live menu blocker stays on the SDL/input/message seam rather than in the callback table itself
+    - `Cicero` confirmed the `unk_5181C0` top-menu widget records use `[+0]=left/x` and `[+4]=top/y`, while the `DLX_GetSpriteHeight/Width` helper names are semantically swapped on this menu path
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `RecoveredMenuButtonWidgetRecord`
+- High-priority unknown functions reviewed:
+  - `_CHP`
+  - `Compat_RenderDeviceDrawMenuSprite`
+  - `sub_419410`
+  - `sub_419B80`
+  - `Bootstrap_GetMenuProbeWidgetClickCandidate`
+  - `Platform_DebugPrimeInputFallbackMouseState`
+  - `Platform_DebugPrimeInputFallbackMouseDelta`
+  - `GetMessageA`
+- Blockers removed this batch:
+  - `clash95_bootstrap` relinks again after adding the quarantine `_CHP` helper
+  - SDL button events now refresh the fallback cursor coordinates and deltas instead of toggling button bits against stale positions
+  - the contained menu helper no longer treats the top-menu widget records as `top,left`; it now writes into the corroborated `left,top` shield-button lane
+  - the contained probe's auto-click targeting now uses the recovered widget geometry and the semantic sprite span instead of the older transposed assumptions
+  - `GetMessageA` no longer returns success with a fabricated empty message on an idle queue
+- SDL replacements/cleanups this batch:
+  - added `Platform_DebugPrimeInputFallbackMouseDelta` so the contained menu auto-click smoke test can drive the same delta-based fallback input that `DD_Pump -> InputBackend_PollState -> sub_460A50` consumes
+  - SDL button events now update fallback cursor coordinates and deltas on `SDL_MOUSEBUTTONDOWN/UP`
+- Menu/UI fixes this batch:
+  - recovered the top-menu widget record orientation as `[+0]=left/x`, `[+4]=top/y`
+  - rebound the contained menu sprite helper and template writer to that same orientation
+  - corrected the contained auto-click candidate geometry to use `DLX_GetSpriteHeight => width` and `DLX_GetSpriteWidth => height`
+- Session-init fixes this batch:
+  - none; session/game-start initialization remains behind the still-unrecovered menu/input dispatch lane
+- Validation probe:
+  - `cmake --build . --target clash95_bootstrap`
+  - `env CLASH95_TRACE_MENU_PROBE=1 timeout -s KILL 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-menuprobe-wave140-postfix timeout -s KILL 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load timeout -s KILL 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+- Compile status:
+  - `clash95_bootstrap` still builds successfully after the `_CHP`, menu-widget, and probe-input repairs
+  - the JSON sidecar artifacts remain valid after this batch
+- Link status:
+  - `clash95_bootstrap` links cleanly again on the local workspace after the `_CHP` compatibility helper
+- Runtime status:
+  - the contained `--authentic-menu-probe` still reaches `present-menu`, enters the live top-level menu loop, and stays alive until forcibly terminated
+  - fresh dumped frames show the recovered menu helper is now writing partial widget artifacts into the shield-button region instead of leaving a pure background/shield-only frame
+  - the contained auto-click smoke test still fails to exit the menu because the recovered cursor globals and button flags remain zero in the loop, leaving the next blocker in the render-state/input dispatch lane rather than in widget geometry
+- Highest authentic runtime milestone reached:
+  - plain contained executable reaches the authentic top-level menu loop, presents the recovered menu background plus first shield-region widget artifacts, and stays alive under SDL/WSL
+- Key evidence used:
+  - `unk_5181C0` / `g_MainMenuButtonWidgetsTemplate` values form the natural two-column main menu only when read as `left/x, top/y`
+  - `sub_419B80` asm compares `dword_544CFC` against widget offset `+0` and `dword_544D00` against offset `+4`, while `DLX_GetSpriteHeight` / `DLX_GetSpriteWidth` still expose the horizontal/vertical span through semantically swapped helper names
+  - GDB on `Compat_RenderDeviceDrawMenuSprite` showed the first top-menu sprite record begins `0x0085, 0x001d, 0x0000`, corroborating a wide horizontal button sprite on this path rather than a tall narrow one
+  - fresh `/tmp/clash95-menuprobe-wave140-postfix-001.png` and `015.png` show the contained helper now lands visible writes on the shield-button lane
+  - the contained auto-click trace shows credible button targets (`x=225 y=150` for the first load-game candidate) but still reports zero cursor/button state in the live loop, which isolates the next blocker below the widget geometry layer
+- Ambiguous candidates deferred:
+  - the contained menu sprite decode is still incomplete or partially corrupt; the current helper writes shield-region artifacts rather than faithful button art
+  - the render-state/input dispatch band below `DD_Pump` still leaves the recovered cursor globals and button flags at zero in the contained menu loop
+  - the broader submenu/session-init lane remains deferred until that menu/input corridor is live
+- total rename count so far:
+  - `1194`
+
+## Batch 140 - Bootstrap Relink And Menu Widget/Text Corridor Revalidation Wave
+- Current frontier:
+  - keep `clash95_bootstrap` relinkable and live in the contained top-level main-menu loop while moving from a mere visible backdrop toward the actual visible widget/text layer needed for reliable menu interaction
+- Subagents spawned and scopes:
+  - existing live subagent evidence from the executable/startup, SDL/input, runtime-stub, boot-path, and menu/widget lanes was reused before the next write wave
+  - `A`: executable harness / `_CHP` relink blocker ranking
+  - `C`: SDL window/render/input/timing seam review around the live menu loop
+  - `D`: synthetic message/event/input stub review on the menu path
+  - `E`: asm-backed main-menu control-flow corroboration
+  - `F`: widget hit-test / callback / hover-action review around `sub_419B80` / `sub_419DC0`
+  - `H`: read-only first-playable-turn dependency floor review for the downstream session/gameplay frontier
+  - mergeable subagent evidence used this batch:
+    - `A` re-confirmed the immediate local executable blocker was `_CHP`, not a deeper startup-path failure
+    - `C`, `D`, and `F` agreed the live menu corridor still depends on the SDL fallback input/message seam rather than any missing callback wiring
+    - local GDB corroboration on top of the reused menu/widget scopes proved the first contained menu-button draw reaches `Compat_RenderDeviceDrawMenuSprite(left=159, top=136)` with a plausible `133x29` sprite header while the SDL-presented frame still shows only the backdrop
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `MainMenuButtonWidgetsTemplate` evidence updated with the now-revalidated `left/x @ +0`, `top/y @ +4` coordinate ordering
+- High-priority unknown functions reviewed:
+  - `_CHP`
+  - `GetMessageA`
+  - `PlatformHandleHostEvent`
+  - `MainMenu_WriteButtonWidgetTemplateRecord`
+  - `sub_419410`
+  - `sub_419B80`
+  - `Compat_RenderDeviceDrawMenuSprite`
+- Blockers removed this batch:
+  - `clash95_bootstrap` no longer fails to relink on unresolved `_CHP`
+  - SDL fallback button events no longer leave the recovered cursor position stale when a click lands without a preceding motion event
+  - `GetMessageA` no longer fabricates a successful empty message on an idle queue, which is unsafe for recovered modal/menu loops
+  - the local main-menu widget corridor no longer carries the incorrect `top,left` interpretation in the template writer / contained draw helper / hit-test review path
+- SDL replacements/cleanups this batch:
+  - `_CHP` is now contained behind a conservative compatibility helper in `compat/decomp_runtime_stubs.c` so the executable target relinks again
+  - `PlatformHandleHostEvent` now refreshes absolute cursor position and delta on SDL mouse-button events in addition to motion events
+  - `GetMessageA` now blocks until a real queued message or quit signal exists instead of returning a zeroed success record
+- Menu/UI fixes this batch:
+  - `MainMenu_WriteButtonWidgetTemplateRecord`, `sub_419410`, and `sub_419B80` now align again with the DGROUP / asm-backed `left/x then top/y` record order used by the top-level main-menu widget table
+  - contained probe validation plus GDB corroboration proved the visible menu backdrop is still stable, but the fully visible widget/text layer is not yet reaching the SDL-presented frame
+  - the current contained `Compat_RenderDeviceDrawMenuSprite` lane is no longer blocked on sprite-set handle recovery or coordinate-order ambiguity; the remaining UI blocker is the widget/text presentation corridor itself
+- Session-init fixes this batch:
+  - none; this wave stayed on executable relink plus main-menu widget/text revalidation rather than widening into submenu/session-init work
+- Validation probe:
+  - `cmake --build . --target clash95_bootstrap`
+  - `env CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-b140 CLASH95_TRACE_MENU_PROBE=1 timeout -s KILL 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-b140fix CLASH95_TRACE_MENU_PROBE=1 timeout -s KILL 2s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - Python/Pillow conversion and inspection of `/tmp/clash95-b140-001.bmp`, `/tmp/clash95-b140-015.bmp`, `/tmp/clash95-b140fix-015.bmp`, and cropped button-slot regions
+  - `gdb -batch` breakpoint validation on `Compat_RenderDeviceDrawMenuSprite` and `Platform_PresentRecoveredIndexedSurfaceHandle`
+  - `git diff --check`
+- Compile status:
+  - `clash95_bootstrap` builds successfully again from the current workspace after the `_CHP` compatibility repair and the widget/seam cleanup
+- Link status:
+  - `clash95_bootstrap` links cleanly on the local tree again
+  - no new linker regressions were introduced by the SDL/message or widget-coordinate repairs
+- Runtime status:
+  - the contained plain executable probe still reaches `present-menu`, enters `enter-menu-loop`, and stays alive until the enforced timeout / kill
+  - the dumped SDL-presented frames remain stable and identical across the live loop, but they currently show only the top-level backdrop / shield plate rather than the expected visible menu text/widget layer
+  - GDB confirms the contained first button draw is reached with sane geometry, so the next runtime blocker has narrowed from generic “menu interaction” to the specific menu widget/text presentation lane
+- Highest authentic runtime milestone reached:
+  - plain contained authentic top-level menu probe still reaches a live main-menu loop with a stable SDL-presented backdrop, but not yet the fully visible menu widget/text layer required for trustworthy interaction
+- Key evidence used:
+  - `DLX_GetSpriteWidth` / `DLX_GetSpriteHeight`, `sub_419410`, `sub_419B80`, and the DGROUP `unk_5181C0` table together re-confirm the first two widget dwords are `left/x` then `top/y`
+  - GDB on `Compat_RenderDeviceDrawMenuSprite` showed the first contained menu-button draw arrives as `left=159`, `top=136`, with the sprite header reading as a plausible wide button `133x29` format-0 entry
+  - the SDL-presented dumps `/tmp/clash95-b140-001.bmp` through `015.bmp` and `/tmp/clash95-b140fix-001.bmp` through `015.bmp` remained stable `640x480` backdrop-only frames despite the live loop and the contained widget draw reaching the recovered code
+- Ambiguous candidates deferred:
+  - the exact recovered surface/layer that must be SDL-presented to show the visible menu text/widget layer after `sub_419D80` / `sub_460CB0`
+  - the remaining safe contained reconstruction of the `sub_402E80`-style menu/widget draw contract beyond the currently quarantined helper
+  - real host mouse injection into the WSL window is still unavailable from this sandbox, so actual click-through interaction remains unverified even after the message/input seam cleanup
+- total rename count so far:
+  - `1193`
+
 ## Batch 139 - Main Menu Loop Fidelity Cleanup Wave
 - Current frontier:
   - keep the plain contained main-menu probe on the authentic `Render_Present -> DD_Pump(..., 0) -> sub_419DC0(...)` loop shape while preserving the already recovered stable displayed menu frames

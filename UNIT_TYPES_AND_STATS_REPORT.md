@@ -183,3 +183,6 @@
 
 ## 10. Batch 139 Note
 - `Batch 139` stayed intentionally on the executable-first main-menu display frontier. The active work removed a remaining non-authentic extra post-present pump from the contained top-level menu loop and proved the same stable nonblack menu-frame milestone still holds on the plainer one-present-then-loop path, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while real menu hover/click responsiveness remains the next blocker.
+
+## 11. Batch 140 Note
+- `Batch 140` stayed intentionally on the executable-first main-menu interaction frontier. The active work recovered the top-level menu widget record geometry, restored the contained widget draw helper to the corroborated `left/x, top/y` lane, and added a contained auto-click smoke path through the SDL fallback input seam, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while the render-state/input dispatch corridor still leaves the recovered cursor and button state inert in the live menu loop.

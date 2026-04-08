@@ -25,18 +25,45 @@ extern int dword_5188C0;
 extern int dword_5202E0;
 extern int g_PlayGameMenuSpriteSetHandle;
 extern int g_PlayGameMenuExitRequested;
+extern int g_MainMenuRequestedScreen;
 extern int g_MainMenuMusicHandle;
 extern int dword_545150;
+extern int dword_544CFC;
+extern int dword_544D00;
 extern int logEnabled;
 extern HWND hWnd;
 extern unsigned int dword_544CD8[281];
 extern unsigned char g_LanguageIndex;
+extern unsigned char byte_54512C;
 extern unsigned char byte_543D80[1024];
 extern unsigned char g_MainMenuButtonWidgetsTemplate[371];
 extern unsigned char unk_5196A0;
 extern unsigned char unk_51D4C0;
 extern void *g_RenderDevice;
 extern LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+
+typedef struct BootstrapProbeInputBackendState
+{
+  unsigned int direct_input;
+  unsigned int keyboard_device;
+  unsigned int mouse_device;
+  unsigned int joystick_device;
+  int mouse_delta_x;
+  int mouse_delta_y;
+  int joystick_axis_x;
+  int joystick_axis_y;
+  int joystick_button_primary;
+  int joystick_button_secondary;
+  int mouse_button_primary;
+  int mouse_button_middle;
+  int mouse_button_secondary;
+  char keyboard_state[256];
+  int mouse_device_ready;
+  int keyboard_device_ready;
+  int joystick_device_ready;
+} BootstrapProbeInputBackendState;
+
+extern BootstrapProbeInputBackendState g_InputBackendState;
 
 int dword_51D014;
 int dword_543CA0;
@@ -65,6 +92,8 @@ int DD_Pump(int a1, int a2, ...);
 void *Mem_Alloc(int a1, int a2, char a3, DWORD a4);
 int Compat_AllocLow32Bytes(int size);
 void Compat_FreeLow32Bytes(int ptr);
+short DLX_GetSpriteWidth(int a1, unsigned short a2);
+short DLX_GetSpriteHeight(int a1, unsigned short a2);
 void *DLXSpriteSet_Load(void *a1, const void *a2);
 int sub_435ED0(char *a1, int a2, int a3, DWORD a4);
 int sub_441670(char *a1, int a2);
@@ -108,6 +137,8 @@ static int g_boot_run_video_init_probe;
 static int g_boot_run_menu_probe;
 static int g_boot_trace_menu_probe_checked;
 static int g_boot_trace_menu_probe_enabled;
+static int g_boot_menu_probe_auto_click_checked;
+static int g_boot_menu_probe_auto_click_index = -1;
 
 static void Bootstrap_TraceMenuProbe(const char *step)
 {
@@ -121,6 +152,104 @@ static void Bootstrap_TraceMenuProbe(const char *step)
     fprintf(stderr, "[menu-probe] %s\n", step);
     fflush(stderr);
   }
+}
+
+static int Bootstrap_GetMenuProbeAutoClickIndex(void)
+{
+  const char *env_value;
+  char *parse_end;
+  long parsed_value;
+
+  if ( g_boot_menu_probe_auto_click_checked )
+    return g_boot_menu_probe_auto_click_index;
+
+  g_boot_menu_probe_auto_click_checked = 1;
+  env_value = getenv("CLASH95_MENU_PROBE_AUTO_CLICK");
+  if ( !env_value || !*env_value )
+    return g_boot_menu_probe_auto_click_index;
+
+  if ( !strcmp(env_value, "load") || !strcmp(env_value, "load-game") )
+    g_boot_menu_probe_auto_click_index = 0;
+  else if ( !strcmp(env_value, "campaign") )
+    g_boot_menu_probe_auto_click_index = 1;
+  else if ( !strcmp(env_value, "exit") )
+    g_boot_menu_probe_auto_click_index = 2;
+  else if ( !strcmp(env_value, "options") )
+    g_boot_menu_probe_auto_click_index = 3;
+  else if ( !strcmp(env_value, "multiplayer") )
+    g_boot_menu_probe_auto_click_index = 4;
+  else if ( !strcmp(env_value, "credits") )
+    g_boot_menu_probe_auto_click_index = 5;
+  else
+  {
+    parsed_value = strtol(env_value, &parse_end, 10);
+    if ( parse_end != env_value && !*parse_end && parsed_value >= 0 && parsed_value <= 5 )
+      g_boot_menu_probe_auto_click_index = (int)parsed_value;
+  }
+  return g_boot_menu_probe_auto_click_index;
+}
+
+static int Bootstrap_GetMenuProbeWidgetClickCandidate(
+  const unsigned char *widget,
+  int variant_index,
+  int *x_out,
+  int *y_out)
+{
+  unsigned int sprite_set_holder;
+  unsigned int sprite_set;
+  int sprite_index;
+  int top;
+  int left;
+  int width;
+  int height;
+
+  if ( !widget || !x_out || !y_out )
+    return 0;
+  sprite_set_holder = *(const unsigned int *)(const void *)(widget + 12);
+  if ( !sprite_set_holder )
+    return 0;
+  sprite_set = *(const unsigned int *)(const void *)(uintptr_t)sprite_set_holder;
+  if ( !sprite_set )
+    return 0;
+  sprite_index = *(const int *)(const void *)(widget + 20);
+  if ( sprite_index == -1 )
+    sprite_index = *(const int *)(const void *)(widget + 16);
+  if ( sprite_index == -1 )
+    return 0;
+
+  /*
+   * The original `unk_5181C0` blob and the `sub_419B80` / `sub_419410`
+   * corridor corroborate `[+0]=left/x` and `[+4]=top/y` for the 0x35-byte
+   * menu records. The sprite-size helpers are semantically swapped on this
+   * menu path: `DLX_GetSpriteHeight` returns the horizontal span and
+   * `DLX_GetSpriteWidth` returns the vertical span.
+   */
+  left = *(const int *)(const void *)(widget + 0);
+  top = *(const int *)(const void *)(widget + 4);
+  width = (unsigned short)DLX_GetSpriteHeight((int)(intptr_t)sprite_set, (unsigned short)sprite_index);
+  height = (unsigned short)DLX_GetSpriteWidth((int)(intptr_t)sprite_set, (unsigned short)sprite_index);
+  switch ( variant_index )
+  {
+    case 0:
+      *x_out = left + width / 2;
+      *y_out = top + height / 2;
+      break;
+    case 1:
+      *x_out = left + height / 2;
+      *y_out = top + width / 2;
+      break;
+    case 2:
+      *x_out = top + width / 2;
+      *y_out = left + height / 2;
+      break;
+    case 3:
+      *x_out = top + height / 2;
+      *y_out = left + width / 2;
+      break;
+    default:
+      return 0;
+  }
+  return 1;
 }
 
 static void Bootstrap_SurfaceRendererLoadGfx(int surface_handle, const char *path)
@@ -305,10 +434,34 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   int saved_skip_intro_avi;
   unsigned int widget_offset;
   void *surface;
+  int auto_click_index;
+  int auto_click_x;
+  int auto_click_y;
+  int auto_click_phase;
+  int auto_click_variant;
+  int auto_click_settle_loops;
+  int menu_trace_loops;
+  int menu_ui_result;
+  int fallback_probe_delta_x;
+  int fallback_probe_delta_y;
+  signed char fallback_probe_primary;
+  signed char fallback_probe_secondary;
 
   menu_widgets = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)menu_widgets_size);
   if ( !menu_widgets )
     return;
+  auto_click_index = -1;
+  auto_click_x = 0;
+  auto_click_y = 0;
+  auto_click_phase = -1;
+  auto_click_variant = 0;
+  auto_click_settle_loops = 0;
+  menu_trace_loops = 0;
+  menu_ui_result = 0;
+  fallback_probe_delta_x = 0;
+  fallback_probe_delta_y = 0;
+  fallback_probe_primary = 0;
+  fallback_probe_secondary = 0;
 
   Bootstrap_TraceMenuProbe("create-menu-surface");
   surface = Mem_Alloc(188, 0, command_mode, 0);
@@ -392,6 +545,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
     sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
   }
   g_PlayGameMenuExitRequested = 0;
+  g_MainMenuRequestedScreen = 0;
   if ( have_menu_widget_template )
   {
     Bootstrap_TraceMenuProbe("build-menu-text-cache");
@@ -430,16 +584,191 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
     return 0;
   }
 
+  auto_click_index = Bootstrap_GetMenuProbeAutoClickIndex();
+  if ( auto_click_index >= 0
+    && Bootstrap_GetMenuProbeWidgetClickCandidate(
+         menu_widgets + 0x35 * auto_click_index,
+         auto_click_variant,
+         &auto_click_x,
+         &auto_click_y) )
+  {
+    auto_click_phase = 0;
+    if ( g_boot_trace_menu_probe_enabled )
+    {
+      fprintf(
+        stderr,
+        "[menu-probe] auto-click-arm widget=%d variant=%d x=%d y=%d\n",
+        auto_click_index,
+        auto_click_variant,
+        auto_click_x,
+        auto_click_y);
+      fflush(stderr);
+    }
+  }
+
   Bootstrap_TraceMenuProbe("enter-menu-loop");
   while ( !g_PlayGameMenuExitRequested )
   {
+    if ( auto_click_phase == 0 )
+    {
+      Platform_DebugPrimeInputFallbackMouseDelta(
+        auto_click_x - (dword_544CFC >> byte_54512C),
+        auto_click_y - (dword_544D00 >> byte_54512C),
+        0,
+        0);
+      if ( g_boot_trace_menu_probe_enabled )
+      {
+        Platform_ReadInputFallbackState(
+          &fallback_probe_delta_x,
+          &fallback_probe_delta_y,
+          &fallback_probe_primary,
+          &fallback_probe_secondary,
+          0,
+          0);
+        fprintf(
+          stderr,
+          "[menu-probe] fallback-readback phase=move mdx=%d mdy=%d mp=%d ms=%d\n",
+          fallback_probe_delta_x,
+          fallback_probe_delta_y,
+          fallback_probe_primary,
+          fallback_probe_secondary);
+        fflush(stderr);
+        Platform_DebugPrimeInputFallbackMouseDelta(
+          auto_click_x - (dword_544CFC >> byte_54512C),
+          auto_click_y - (dword_544D00 >> byte_54512C),
+          0,
+          0);
+      }
+      Bootstrap_TraceMenuProbe("auto-click-move");
+      auto_click_phase = 1;
+    }
+    else if ( auto_click_phase == 1 )
+    {
+      Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 1, 0);
+      if ( g_boot_trace_menu_probe_enabled )
+      {
+        Platform_ReadInputFallbackState(
+          &fallback_probe_delta_x,
+          &fallback_probe_delta_y,
+          &fallback_probe_primary,
+          &fallback_probe_secondary,
+          0,
+          0);
+        fprintf(
+          stderr,
+          "[menu-probe] fallback-readback phase=down mdx=%d mdy=%d mp=%d ms=%d\n",
+          fallback_probe_delta_x,
+          fallback_probe_delta_y,
+          fallback_probe_primary,
+          fallback_probe_secondary);
+        fflush(stderr);
+        Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 1, 0);
+      }
+      Bootstrap_TraceMenuProbe("auto-click-down");
+      auto_click_phase = 2;
+    }
+    else if ( auto_click_phase == 2 )
+    {
+      Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 0, 0);
+      if ( g_boot_trace_menu_probe_enabled )
+      {
+        Platform_ReadInputFallbackState(
+          &fallback_probe_delta_x,
+          &fallback_probe_delta_y,
+          &fallback_probe_primary,
+          &fallback_probe_secondary,
+          0,
+          0);
+        fprintf(
+          stderr,
+          "[menu-probe] fallback-readback phase=up mdx=%d mdy=%d mp=%d ms=%d\n",
+          fallback_probe_delta_x,
+          fallback_probe_delta_y,
+          fallback_probe_primary,
+          fallback_probe_secondary);
+        fflush(stderr);
+        Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 0, 0);
+      }
+      Bootstrap_TraceMenuProbe("auto-click-up");
+      auto_click_phase = 3;
+      auto_click_settle_loops = 0;
+    }
+    else if ( auto_click_phase == 3 )
+    {
+      ++auto_click_settle_loops;
+      if ( auto_click_settle_loops >= 16 && auto_click_variant < 3 )
+      {
+        ++auto_click_variant;
+        if ( Bootstrap_GetMenuProbeWidgetClickCandidate(
+               menu_widgets + 0x35 * auto_click_index,
+               auto_click_variant,
+               &auto_click_x,
+               &auto_click_y) )
+        {
+          auto_click_phase = 0;
+          auto_click_settle_loops = 0;
+          if ( g_boot_trace_menu_probe_enabled )
+          {
+            fprintf(
+              stderr,
+              "[menu-probe] auto-click-rearm widget=%d variant=%d x=%d y=%d\n",
+              auto_click_index,
+              auto_click_variant,
+              auto_click_x,
+              auto_click_y);
+            fflush(stderr);
+          }
+        }
+      }
+    }
     Bootstrap_TraceMenuProbe("menu-loop-pump");
-    DD_Pump((int)(intptr_t)dword_544CD8, 0);
+    DD_Pump((int)(intptr_t)dword_544CD8, (char)(intptr_t)dword_544CD8);
     Bootstrap_TraceMenuProbe("menu-loop-ui");
-    sub_419DC0((unsigned int *)menu_widgets, 0);
+    menu_ui_result = sub_419DC0((unsigned int *)menu_widgets, 0);
+    if ( g_boot_trace_menu_probe_enabled && auto_click_index >= 0 && menu_trace_loops < 256 )
+    {
+      const unsigned char widget_flags = *(menu_widgets + 0x35 * auto_click_index + 8);
+      const unsigned char device_flags =
+        *((const unsigned char *)(const void *)dword_544CD8 + 44);
+
+      fprintf(
+        stderr,
+        "[menu-probe] loop-state variant=%d phase=%d result=%d widget_flags=%u cursor_x=%d cursor_y=%d device_flags=%u screen=%d\n",
+        auto_click_variant,
+        auto_click_phase,
+        menu_ui_result,
+        widget_flags,
+        dword_544CFC >> byte_54512C,
+        dword_544D00 >> byte_54512C,
+        device_flags,
+        g_MainMenuRequestedScreen);
+      fflush(stderr);
+      fprintf(
+        stderr,
+        "[menu-probe] input-state mdx=%d mdy=%d mp=%d ms=%d mouse_ready=%d keyboard_ready=%d mouse_dev=%u keyboard_dev=%u direct_input=%u\n",
+        g_InputBackendState.mouse_delta_x,
+        g_InputBackendState.mouse_delta_y,
+        g_InputBackendState.mouse_button_primary,
+        g_InputBackendState.mouse_button_secondary,
+        g_InputBackendState.mouse_device_ready,
+        g_InputBackendState.keyboard_device_ready,
+        g_InputBackendState.mouse_device,
+        g_InputBackendState.keyboard_device,
+        g_InputBackendState.direct_input);
+      fflush(stderr);
+      ++menu_trace_loops;
+    }
     Platform_PresentRecoveredIndexedSurfaceHandle(
       (void *)(uintptr_t)*(const unsigned int *)(const void *)((const unsigned char *)&unk_51D4C0 + 0xD0),
       (const uint32_t *)(const void *)byte_543D80);
+  }
+  if ( g_boot_trace_menu_probe_enabled )
+  {
+    fprintf(
+      stderr,
+      "[menu-probe] menu-loop-exit screen=%d\n",
+      g_MainMenuRequestedScreen);
+    fflush(stderr);
   }
   Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
 }

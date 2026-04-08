@@ -1639,6 +1639,30 @@ int __cdecl vsprintf_(char *buffer, const char *format, ...)
   return result;
 }
 
+double __cdecl _CHP(_DWORD low, _DWORD high)
+{
+  union
+  {
+    struct
+    {
+      uint32_t low;
+      uint32_t high;
+    } parts;
+    double value;
+  } value_bits;
+
+  /*
+   * The original `__CHP` is a collapsed x87 helper in the binary, but the
+   * decompiled C has already widened those sites into ordinary two-argument
+   * calls. Rebuilding the split double keeps return-using callsites stable and
+   * lets the wider executable relink while the authentic x87-side behavior
+   * stays deferred.
+   */
+  value_bits.parts.low = (uint32_t)low;
+  value_bits.parts.high = (uint32_t)high;
+  return value_bits.value;
+}
+
 int __thiscall fclose_(_DWORD a1)
 {
   if ( !a1 || a1 == (_DWORD)-1 )

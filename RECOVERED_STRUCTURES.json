@@ -1099,5 +1099,78 @@
       "The live contained menu-display probe read the `unk_51D4C0` companion surface as `0x01e00280` at offset `0` and `0x401d1010` at offset `+4`, which matches the expected packed `640x480` dimensions plus low32 pixel pointer.",
       "The new SDL helper only needs those recovered fields to present the already-composed indexed menu surface, corroborating the same layout from an independent runtime path."
     ]
+  },
+  {
+    "name": "RecoveredMenuButtonWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "unk_5181C0 / g_MainMenuButtonWidgetsTemplate",
+    "description": "0x35-byte top-level main-menu widget record used by `PlayGame_Dispatch`, `sub_419410`, and `sub_419B80`. Batch 140 recovered the orientation as left/x at offset `+0` and top/y at offset `+4`, which is required for the contained widget draw helper and the authentic hit-test lane to agree.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The original `unk_5181C0` values form the natural two-column menu layout only when the first dword is interpreted as the horizontal origin."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "Corroborated by `sub_419B80` comparing the recovered Y cursor against offset `+4` and by the contained menu helper once rebound to the same orientation."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "uint8",
+        "notes": "Bit 0 selects the default sprite lane, bit 2 tracks tooltip/hover state on the live menu path."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "Points at the global holder (`g_PlayGameMenuSpriteSetHandle`) that must be dereferenced once to reach the live sprite-set handle."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "Used when the low flag bit is set."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "Used as the selected/alternate sprite id when present; falls back to `default_sprite_index` when `-1`."
+      },
+      {
+        "offset": 24,
+        "name": "overlay_sprite_index",
+        "type": "int32",
+        "notes": "Optional overlay/tooltip-adjacent sprite slot; `-1` on the top-level button set."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "The top-level menu records point this at `sub_419780`."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Points at the per-button request helper such as `MainMenu_RequestLoadGameMenu`."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "The top-level records point this at `\"menduze\"`."
+      }
+    ],
+    "evidence": [
+      "The original `unk_5181C0` record values `159,136`, `152,168`, `185,204`, `357,136`, `344,168`, `388,204` only form the natural two-column main-menu layout when offset `+0` is `left/x` and offset `+4` is `top/y`.",
+      "`sub_419B80` compares `dword_544CFC` against offset `+0` and `dword_544D00` against offset `+4`, while the effective button span still comes through the semantically swapped `DLX_GetSpriteHeight`/`DLX_GetSpriteWidth` helpers on this path.",
+      "Rebinding the contained menu helper and template writer to the same `left/top` orientation moved the recovered widget writes onto the shield-button region in fresh SDL frame dumps."
+    ]
   }
 ]
