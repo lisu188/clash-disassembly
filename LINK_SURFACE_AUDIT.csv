@@ -1,0 +1,25 @@
+category,symbol_or_family,evidence_source,classification,notes
+build_state,clash95_recovered,CMakeLists.txt,present,Current recovered C static library baseline still builds.
+build_state,clash95_bootstrap,CMakeLists.txt,present,Narrow executable harness already exists around the recovered startup slice.
+build_state,clash95_cpp_core,CMakeLists.txt,present,Conservative C++ class library now builds in parallel with the recovered C baseline.
+build_state,clash95_cpp_regen,CMakeLists.txt,present,Parallel C++ executable now links by reusing the existing bootstrap wedge plus the C++ core.
+build_state,direct gcc link probe,build/clash95_unresolved.txt;build/platform_unresolved.txt;build/stubs_unresolved.txt,blocked,Raw link of clash95.c + platform_sdl_runtime.c + compat/decomp_runtime_stubs.c fails.
+entrypoint,start -> sub_486369 -> _WinMain@16,clash95.map,canonical,Original entry chain from the binary map.
+entrypoint,main -> App_WinMain -> Bootstrap_RunRecoveredStartupPrelude,bootstrap_main.c,recovered harness,Current host-side bootstrap chain.
+startup,main,build/clash95_unresolved.txt,missing,Direct link fails immediately on missing C entrypoint.
+startup,_wcpp_4_static_init__ / _wcpp_4_copy_array__,build/clash95_unresolved.txt;clash95.map,crt/runtime,Core WCpp startup helpers remain unresolved.
+startup,CRT_GetBootstrapThreadData / CRT_RegisterFinalizableObject,build/clash95_unresolved.txt,runtime,CRT runtime support still needs faithful reduction or isolation.
+platform,Platform_MainWindowProc,build/platform_unresolved.txt;platform_sdl_runtime.c,host seam,Only the platform message proc remains unresolved in the small platform object.
+platform,CreateWindowExA / GetMessageA / DispatchMessageA,build/clash95_unresolved.txt,win32 seam,Platform loop still carries Win32-shaped surface.
+media,AVIFileInit / AVIFileOpenA / AVIStreamRead,build/clash95_unresolved.txt,unknown/runtime,AVI runtime is still part of the unresolved executable surface.
+graphics,DirectDrawCreate / CreateCompatibleDC / DeleteDC,build/clash95_unresolved.txt,platform seam,Graphics device setup still depends on host wrappers.
+input,DirectInputCreateA,build/clash95_unresolved.txt,platform seam,Input backend remains on the unresolved surface.
+audio,DirectSoundCreate / Audio_ReturnDSoundError,build/clash95_unresolved.txt,platform seam,Audio runtime still unresolved.
+compiler,AST_AllocNode / AST_FreeNode / IO_OutWriteToken / IO_OutNewline,build/clash95_unresolved.txt,compiler/runtime,Object-model and AST helpers are still in the link surface.
+memory,Mem_Alloc / nrealloc_ / memmove_ / memcpy_,build/clash95_unresolved.txt,wrapper,Allocation and copy wrappers are not fully collapsed yet.
+control_flow,JUMPOUT,build/clash95_unresolved.txt,scar,Control-flow scar still blocks a faithful executable path.
+unknown,unknown_libname_2 / unknown_libname_5 / unknown_libname_10,build/clash95_unresolved.txt,unknown,These remain true unknowns until the binary evidence gets tighter.
+quarantine,Compat_WcppCtorArrayStorage1m / Compat_WcppCtorArrayStorage1s,build/stubs_unresolved.txt,quarantine,Wrapper-band helpers still live in the runtime quarantine layer.
+quarantine,CreateProcessA / CreateThread / WaitForSingleObject,build/stubs_unresolved.txt,quarantine,Process/thread helpers still need a clear home.
+quarantine,fopen/fread/fwrite/strcmp/strlen/strrchr family,build/stubs_unresolved.txt,wrapper,CRT/file wrappers remain broader than the current host seam.
+platform_stub,calloc/free/memset/fprintf/gettimeofday/usleep,build/platform_unresolved.txt,host seam,Expected SDL/host support surface for the platform object.
