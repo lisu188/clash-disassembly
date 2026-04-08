@@ -1829,6 +1829,8 @@ static int g_platform_host_mouse_delta_x;
 static int g_platform_host_mouse_delta_y;
 static signed char g_platform_host_mouse_primary;
 static signed char g_platform_host_mouse_secondary;
+static int g_platform_debug_mouse_primary_pulse_reads;
+static int g_platform_debug_mouse_secondary_pulse_reads;
 static signed char g_platform_host_keyboard_state[256];
 
 static int PlatformSurfaceIsWindowDeviceContext(const struct SDL_Surface *surface)
@@ -2984,6 +2986,8 @@ void Platform_ResetInputFallbackState(void)
   g_platform_host_mouse_delta_y = 0;
   g_platform_host_mouse_primary = 0;
   g_platform_host_mouse_secondary = 0;
+  g_platform_debug_mouse_primary_pulse_reads = 0;
+  g_platform_debug_mouse_secondary_pulse_reads = 0;
   memset(g_platform_host_keyboard_state, 0, sizeof(g_platform_host_keyboard_state));
 }
 
@@ -3019,6 +3023,18 @@ void Platform_DebugPrimeInputFallbackMouseDelta(int delta_x, int delta_y, int pr
   g_platform_host_mouse_secondary = secondary_down ? (signed char)0x80 : 0;
 }
 
+void Platform_DebugPrimeInputFallbackMousePulse(
+  int delta_x,
+  int delta_y,
+  int primary_down,
+  int secondary_down,
+  int read_count)
+{
+  Platform_DebugPrimeInputFallbackMouseDelta(delta_x, delta_y, primary_down, secondary_down);
+  g_platform_debug_mouse_primary_pulse_reads = primary_down && read_count > 0 ? read_count : 0;
+  g_platform_debug_mouse_secondary_pulse_reads = secondary_down && read_count > 0 ? read_count : 0;
+}
+
 void Platform_ReadInputFallbackState(
   int *mouse_delta_x,
   int *mouse_delta_y,
@@ -3047,4 +3063,8 @@ void Platform_ReadInputFallbackState(
   }
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
+  if ( g_platform_debug_mouse_primary_pulse_reads > 0 && --g_platform_debug_mouse_primary_pulse_reads == 0 )
+    g_platform_host_mouse_primary = 0;
+  if ( g_platform_debug_mouse_secondary_pulse_reads > 0 && --g_platform_debug_mouse_secondary_pulse_reads == 0 )
+    g_platform_host_mouse_secondary = 0;
 }

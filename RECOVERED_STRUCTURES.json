@@ -968,7 +968,8 @@
     "evidence": [
       "`PlayGame_Dispatch` copies exactly six 0x35-byte records from `g_MainMenuButtonWidgetsTemplate`, patches the per-language label pointers with `g_LanguageIndex`, initializes the localized buffer via `sub_419D80`, and then polls it through `sub_419DC0` in the top-level main-menu idle loop.",
       "The DGROUP table embeds the callback pointers in the same order `MainMenu_RequestLoadGameMenu`, `MainMenu_RequestCampaignMenu`, `MainMenu_RequestExit`, `MainMenu_RequestOptionsMenu`, `MainMenu_RequestMultiplayerMenu`, `MainMenu_RequestCreditsCinematic`.",
-      "The extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button art confirms the same visible ordering: `load`, `campaign`, `exit`, `options`, `multiplayer`, `credits` / `autorzy`."
+      "The extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button art confirms the same visible ordering: `load`, `campaign`, `exit`, `options`, `multiplayer`, `credits` / `autorzy`.",
+      "The first DGROUP tuples `159/136`, `152/168`, `185/204`, `357/136`, `344/168`, `388/204` plus the correlated `sub_419B80` / `sub_419410` corridor and GDB on the first contained button draw confirm each record stores `left/x` at offset `+0` and `top/y` at offset `+4`; the earlier local `top,left` naming was misleading."
     ]
   },
   {
@@ -1171,6 +1172,122 @@
       "The original `unk_5181C0` record values `159,136`, `152,168`, `185,204`, `357,136`, `344,168`, `388,204` only form the natural two-column main-menu layout when offset `+0` is `left/x` and offset `+4` is `top/y`.",
       "`sub_419B80` compares `dword_544CFC` against offset `+0` and `dword_544D00` against offset `+4`, while the effective button span still comes through the semantically swapped `DLX_GetSpriteHeight`/`DLX_GetSpriteWidth` helpers on this path.",
       "Rebinding the contained menu helper and template writer to the same `left/top` orientation moved the recovered widget writes onto the shield-button region in fresh SDL frame dumps."
+    ]
+  },
+  {
+    "name": "LoadMenuButtonWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "g_LoadMenuButtonWidgetsTemplate / unk_518808",
+    "description": "0x35-byte load-game menu button record reused for the two bottom buttons on the load menu. Batch 142 rebuilt the weak `unk_518808` blob into live records for the confirm/load and back/cancel callbacks.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The reconstructed load-menu records place the confirm button at `249` and the back button at `329`."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "The reconstructed load-menu records place the confirm button at `392` and the back button at `408`."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "uint8",
+        "notes": "Both recovered load-menu button records use the same enabled/default flag lane as the top-level main-menu widgets."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "Points at `g_PlayGameMenuSpriteSetHandle`, just like the other menu button tables."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "The confirm button uses sprite `0`; the back button uses sprite `2`."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "The confirm button uses sprite `1`; the back button uses sprite `3`."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Both recovered load-menu button records point this at `sub_419780`."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "The first record points at `sub_44A110` and the second points at `sub_448E80`."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "Both recovered load-menu button records point this at `\"menmale\"`."
+      }
+    ],
+    "evidence": [
+      "The asm blob at `unk_518808` stores exactly two 0x35-byte records followed by a terminator, with coordinates `249,392` and `329,408`, transition callback `sub_419780`, and action callbacks `sub_44A110` / `sub_448E80`.",
+      "Batch 142 rebuilt that blob into `g_LoadMenuButtonWidgetsTemplate`, and the contained load-menu probe now auto-clicks widget `1` at `x = 347`, `y = 425`, reaching hover and click before exiting through the load-menu `back` callback.",
+      "The reused field layout matches the already recovered `RecoveredMenuButtonWidgetRecord` structure, confirming the load-menu button blob is another instance of the same 0x35-byte widget format."
+    ]
+  },
+  {
+    "name": "RenderStateMethodTable",
+    "kind": "recovered_struct",
+    "base_symbol": "off_50F1E4 / off_50F204",
+    "description": "Six-entry render-state method table family consumed by `DD_Pump` through original 32-bit slot offsets. Batch 141 confirmed the active executable lane still stores these tables as native x86-64 function-pointer arrays even though the recovered code addresses them with 32-bit byte offsets.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "record_begin_or_null",
+        "type": "function pointer",
+        "notes": "On `off_50F204` this is `Device_DoOp`; on the bootstrap/live table `off_50F1E4` it is `nullsub_15`."
+      },
+      {
+        "offset": 4,
+        "name": "record_sample_or_null",
+        "type": "function pointer",
+        "notes": "On `off_50F204` this is `Device_GetParamB`, the second render-state callback invoked by `DD_Pump`; on `off_50F1E4` it is `nullsub_23`."
+      },
+      {
+        "offset": 8,
+        "name": "replay_begin_or_null",
+        "type": "function pointer",
+        "notes": "On `off_50F204` this is `Device_SetParamA`, which arms `default.rec` playback; on `off_50F1E4` it is `nullsub_24`."
+      },
+      {
+        "offset": 12,
+        "name": "input_init",
+        "type": "function pointer",
+        "notes": "Shared `Input_Init` entry."
+      },
+      {
+        "offset": 16,
+        "name": "shutdown_or_pitch_query",
+        "type": "function pointer",
+        "notes": "On `off_50F1E4` this slot is `Input_Shutdown`; on `off_50F204` it is the placeholder `DD_GetSurfacePitch` compatibility query."
+      },
+      {
+        "offset": 20,
+        "name": "cursor_update",
+        "type": "function pointer",
+        "notes": "The live non-replay update slot: `sub_460A50` on `off_50F1E4` and `Device_UpdateRect` on `off_50F204`."
+      }
+    ],
+    "evidence": [
+      "`DD_Pump` calls render-state slot `+20` and then slot `+4` on every active menu update, and `Singer` corroborated from C plus asm that the non-replay path must dispatch `Device_UpdateRect -> sub_460A50` through that table.",
+      "The contained Batch 141 trace showed `DD_Pump` firing without any `Device_UpdateRect` or `sub_460A50` calls while the slot helper treated the table as packed 32-bit entries. Rebinding the helper to native pointer-array indexing while preserving the original 32-bit slot numbering restored live hover/click updates immediately.",
+      "`Device_GetParamA` still installs `off_50F204` into the render-state slab after `sub_460410` seeds `off_50F1E4`, so the two tables are a stable recovered family rather than one-off probe scaffolding."
     ]
   }
 ]

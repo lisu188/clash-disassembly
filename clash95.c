@@ -6,7 +6,9 @@
 
 #include "platform_sdl.h"
 #include <math.h>
+#include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <defs.h>
 
@@ -1246,6 +1248,7 @@ int __thiscall nullsub_3(_DWORD); // weak
 int sub_4476B0();
 int __thiscall sub_4476C0(void *this);
 void MainMenu_RebuildButtonWidgetTemplate(void);
+void LoadMenu_RebuildButtonWidgetTemplate(void);
 int  MainMenu_RequestExit(int a1);
 int  MainMenu_RequestCampaignMenu(int a1);
 int  MainMenu_RequestMultiplayerMenu(int a1);
@@ -8574,6 +8577,28 @@ static int RenderSurface_InvokeSlot64(_DWORD *surface)
   return 0;
 }
 
+static uintptr_t RenderSurface_GetCompactMethodPointer(_DWORD *surface, unsigned int table_offset)
+{
+  unsigned int vtable;
+
+  if ( !surface )
+    return 0;
+  vtable = (unsigned int)surface[46];
+  if ( !vtable )
+    return 0;
+  return (uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)(vtable + table_offset);
+}
+
+static int RenderSurface_InvokeSlot0(_DWORD *surface)
+{
+  uintptr_t method;
+
+  method = RenderSurface_GetCompactMethodPointer(surface, 0);
+  if ( !method )
+    return 0;
+  return ((int (__cdecl *)(void))method)();
+}
+
 static int RenderHandle_InvokeCopyDispatch(int source_handle, int destination_handle)
 {
   int dispatch_fn;
@@ -10624,7 +10649,7 @@ int dword_51860C = 128; // weak
 int dword_518630 = 128; // weak
 int dword_518654 = 128; // weak
 _UNKNOWN unk_518690; // weak
-_UNKNOWN unk_518808; // weak
+_BYTE g_LoadMenuButtonWidgetsTemplate[159]; // weak
 int dword_5188B0 = 1; // weak
 int dword_5188BC = 0; // weak
 int dword_5188C0 = 0; // weak
@@ -12133,9 +12158,9 @@ int dword_544CC4; // weak
 int dword_544CC8; // weak
 char byte_544CCC; // weak
 int dword_544CD0; // weak
-_DWORD dword_544CD8[281]; // weak
-int dword_544CFC; // weak
-int dword_544D00; // weak
+_DWORD dword_544CD8[286]; // weak
+#define dword_544CFC (*((int *)&dword_544CD8[9]))
+#define dword_544D00 (*((int *)&dword_544CD8[10]))
 int dword_544D10; // weak
 int dword_544D14; // weak
 char byte_54512C; // weak
@@ -30019,6 +30044,25 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
     }
     if ( a2 )
     {
+      _DWORD *menu_surface;
+
+      menu_surface = RenderSurface_ResolvePrimaryCompanion((_DWORD *)g_RenderDevice);
+      if ( menu_surface && RenderSurface_IsLinearSoftware(menu_surface) )
+      {
+        v25 = DLX_GetSpriteForChar(sprite_set, v30);
+        result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
+        if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
+        {
+          v24 = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
+          result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
+        }
+        if ( v33 )
+          return Render_Present((int)dword_544CD8);
+        return result;
+      }
+    }
+    if ( a2 )
+    {
       v35 = DLX_GetSpriteHeight(sprite_set, v30);
       SpriteWidth = DLX_GetSpriteWidth(sprite_set, v30);
       Surface = (_DWORD *)Mem_Alloc(188, v7, a3, a4);
@@ -30038,17 +30082,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
       g_RenderDevice = v11;
       v27 = v13;
       SpriteForChar = DLX_GetSpriteForChar(sprite_set, v30);
-      (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                      + 52))(
-        0,
-        SpriteForChar,
-        -1,
-        -1,
-        -1,
-        -1,
-        0,
-        0,
-        0);
+      Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 0);
       g_RenderDevice = v27;
       v17 = Time_Now(v16, v15);
       v19 = v17 + v28;
@@ -30067,41 +30101,19 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
       if ( g_RenderDevice != &unk_51D4C0 )
         result = Render_FillRect((_DWORD *)v12, g_RenderDevice, 0, 0, v37, v36, *a1, a1[2]);
       if ( v34 )
-        result = (**(int (***)(void))(v34 + 184))();
+        result = RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)v34);
       if ( v12 )
-        result = (**(int (***)(void))(v12 + 184))();
+        result = RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)v12);
     }
     else
     {
       v25 = DLX_GetSpriteForChar(sprite_set, v30);
-      result = (*(int (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice
-                                                                                                + 46)
-                                                                                              + 52))(
-                 *((_DWORD *)a1 + 1),
-                 v25,
-                 -1,
-                 -1,
-                 -1,
-                 -1,
-                 0,
-                 0,
-                 0);
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, v25, 0);
     }
     if ( (a1[4] & 4) != 0 && *((_DWORD *)a1 + 6) != -1 )
     {
       v24 = DLX_GetSpriteForChar(sprite_set, *((_DWORD *)a1 + 6));
-      result = (*(int (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice
-                                                                                             + 46)
-                                                                                           + 52))(
-                 *((_DWORD *)a1 + 1),
-                 v24,
-                 -1,
-                 -1,
-                 -1,
-                 -1,
-                 1,
-                 0,
-                 0);
+      result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
     }
     if ( a2 && v33 )
       return Render_Present((int)dword_544CD8);
@@ -30151,6 +30163,26 @@ static int UI_InvokeWidgetActionCallback(int widget)
   if ( !callback )
     return 0;
   return ((int (__cdecl *)(int))(uintptr_t)callback)(widget);
+}
+
+static unsigned int Compat_WidgetPackedField(int widget, unsigned int field_offset)
+{
+  return (unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)(widget + field_offset);
+}
+
+static unsigned int Compat_WidgetSpriteSetHandle(int widget)
+{
+  unsigned int sprite_set_holder;
+
+  sprite_set_holder = Compat_WidgetPackedField(widget, 12);
+  if ( !sprite_set_holder )
+    return 0;
+  return (unsigned int)*(_DWORD *)(uintptr_t)sprite_set_holder;
+}
+
+static const char *Compat_WidgetPackedString(int widget, unsigned int field_offset)
+{
+  return (const char *)(uintptr_t)Compat_WidgetPackedField(widget, field_offset);
 }
 
 //----- (00419790) --------------------------------------------------------
@@ -30316,24 +30348,26 @@ signed int  sub_419B80(int a1, DWORD a2)
   int v3; // esi
   int v4; // eax
   int v5; // eax
+  int sprite_set_handle;
   int v7; // eax
   int v8; // eax
   int v9; // ecx
   char v10; // [esp+0h] [ebp-18h]
 
   v3 = 0;
+  sprite_set_handle = Compat_WidgetSpriteSetHandle(a1);
   if ( dword_544CFC >> byte_54512C < *(_DWORD *)a1 || dword_544D00 >> byte_54512C < *(_DWORD *)(a1 + 4) )
     goto LABEL_29;
   v4 = *(_DWORD *)(a1 + 20) == -1 ? *(_DWORD *)(a1 + 16) : *(_DWORD *)(a1 + 20);
   if ( dword_544CFC >> byte_54512C >= *(_DWORD *)a1
-                                    + (unsigned __int16)DLX_GetSpriteHeight(**(_DWORD **)(a1 + 12), v4)
+                                    + (unsigned __int16)DLX_GetSpriteHeight(sprite_set_handle, v4)
                                     - 1 )
     goto LABEL_29;
   v5 = *(_DWORD *)(a1 + 20);
   if ( v5 == -1 )
     v5 = *(_DWORD *)(a1 + 16);
   if ( dword_544D00 >> byte_54512C >= *(_DWORD *)(a1 + 4)
-                                    + (unsigned __int16)DLX_GetSpriteWidth(**(_DWORD **)(a1 + 12), v5)
+                                    + (unsigned __int16)DLX_GetSpriteWidth(sprite_set_handle, v5)
                                     - 1 )
   {
 LABEL_29:
@@ -30342,7 +30376,7 @@ LABEL_29:
     v8 = a1 + 4 * (unsigned __int8)g_LanguageIndex;
     v9 = *(_DWORD *)(v8 + 36);
     if ( v9 && *(_BYTE *)(a1 + 48) == 1 )
-      Tooltip_RestoreIfTextMatches(*(_DWORD *)(v8 + 36), v9);
+      Tooltip_RestoreIfTextMatches(v9, v9);
     v3 = 1;
     *(_BYTE *)(a1 + 8) &= ~4u;
 LABEL_23:
@@ -30371,7 +30405,7 @@ LABEL_18:
   {
     v7 = a1 + 4 * (unsigned __int8)g_LanguageIndex;
     if ( *(_DWORD *)(v7 + 36) && *(_BYTE *)(a1 + 48) == 1 )
-      Tooltip_ShowText(3, *(char **)(v7 + 36), v10);
+      Tooltip_ShowText(3, (char *)Compat_WidgetPackedString(a1, 36 + 4 * (unsigned __int8)g_LanguageIndex), v10);
     v3 = 2;
     *(_BYTE *)(a1 + 8) |= 4u;
     goto LABEL_23;
@@ -30508,7 +30542,7 @@ int  sub_419E60(int a1, int a2)
 int  sub_419ED0(int a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0(*(char **)(a1 + 49));
+    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
   sub_419D60(a1, a1);
   Render_Begin((int)dword_544CD8, 0);
@@ -30523,7 +30557,7 @@ int  sub_419ED0(int a1)
 int  sub_419F20(int a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0(*(char **)(a1 + 49));
+    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
   return sub_419D60(a1, a1);
 }
@@ -61221,6 +61255,35 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
   *(_DWORD *)(g_MainMenuButtonWidgetsTemplate + 53 * 6) = -1;
 }
 
+void LoadMenu_RebuildButtonWidgetTemplate(void)
+{
+  static const char aLoadMenuButtonClickSound[] = "menmale";
+
+  /*
+   * The original PE stores the load-menu button table as a 0x35-byte record
+   * blob at `unk_518808`. Rebuild it with live symbol addresses so the
+   * recovered runtime no longer depends on the weak-data stub on this path.
+   */
+  memset(g_LoadMenuButtonWidgetsTemplate, 0, sizeof(g_LoadMenuButtonWidgetsTemplate));
+  MainMenu_WriteButtonWidgetTemplateRecord(
+    g_LoadMenuButtonWidgetsTemplate + 53 * 0,
+    249,
+    392,
+    0,
+    1,
+    (int)(uintptr_t)&sub_44A110,
+    aLoadMenuButtonClickSound);
+  MainMenu_WriteButtonWidgetTemplateRecord(
+    g_LoadMenuButtonWidgetsTemplate + 53 * 1,
+    329,
+    408,
+    2,
+    3,
+    (int)(uintptr_t)&sub_448E80,
+    aLoadMenuButtonClickSound);
+  *(_DWORD *)(g_LoadMenuButtonWidgetsTemplate + 53 * 2) = -1;
+}
+
 //----- (00447700) --------------------------------------------------------
 int  MainMenu_RequestCampaignMenu(int a1)
 {
@@ -62010,7 +62073,8 @@ LABEL_64:
         (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
         for ( k = 0; k < 10; sub_44A140(k, (DWORD)a3) )
           ;
-        qmemcpy(v123, &unk_518808, 0x9Fu);
+        LoadMenu_RebuildButtonWidgetTemplate();
+        qmemcpy(v123, &g_LoadMenuButtonWidgetsTemplate, 0x9Fu);
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v123);
         g_PlayGameMenuExitRequested = 0;
@@ -71158,12 +71222,78 @@ static _DWORD g_RenderVideoInitCursorDescriptor[9];
 static _DWORD *Compat_RenderStateSurface(int render_state, unsigned int field_offset);
 static _DWORD *Compat_RenderStateCursorDescriptor(int render_state);
 
+static void Compat_SyncRenderCursorGlobals(const _DWORD *render_state)
+{
+  dword_544CFC = render_state[9];
+  dword_544D00 = render_state[10];
+  byte_54512C = (unsigned char)render_state[277];
+}
+
+typedef struct CompatRenderStateTail
+{
+  int field_464_active;
+  int field_468_active;
+  int field_46C_ticks;
+  int field_470_ticks;
+  int field_474_handle;
+} CompatRenderStateTail;
+
+static CompatRenderStateTail g_RenderStateTail;
+
+static CompatRenderStateTail *Compat_RenderStateTailFields(int render_state)
+{
+  (void)render_state;
+  return &g_RenderStateTail;
+}
+
+static int Compat_MenuProbeTraceEnabled(void)
+{
+  static int trace_state = -1;
+
+  if ( trace_state == -1 )
+    trace_state = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  return trace_state;
+}
+
+static void Compat_MenuProbeTraceRenderInput(
+        const char *phase,
+        int render_state,
+        int arg0,
+        int arg1,
+        int extra0,
+        int extra1)
+{
+  static unsigned int trace_count;
+  CompatRenderStateTail *tail;
+
+  if ( !Compat_MenuProbeTraceEnabled() || trace_count >= 192 )
+    return;
+  tail = Compat_RenderStateTailFields(render_state);
+  fprintf(
+    stderr,
+    "[menu-input] phase=%s arg0=%d arg1=%d extra0=%d extra1=%d field468=%d flags=%u x=%d y=%d scale=%u deadline=%d\n",
+    phase,
+    arg0,
+    arg1,
+    extra0,
+    extra1,
+    tail->field_468_active,
+    *(unsigned __int8 *)(render_state + 44),
+    *(_DWORD *)(render_state + 36) >> *(_BYTE *)(render_state + 1108),
+    *(_DWORD *)(render_state + 40) >> *(_BYTE *)(render_state + 1108),
+    *(unsigned __int8 *)(render_state + 1108),
+    dword_5448B0);
+  fflush(stderr);
+  ++trace_count;
+}
+
 //----- (00460410) --------------------------------------------------------
 _DWORD * sub_460410(int a1, int a2)
 {
   int v2; // eax
   _DWORD *v3; // eax
 
+  (void)a2;
   v2 = a1 + 80;
   *(_DWORD *)(v2 - 64) = 0;
   *(_DWORD *)(v2 - 60) = 0;
@@ -71171,7 +71301,7 @@ _DWORD * sub_460410(int a1, int a2)
   *(_DWORD *)(v2 - 52) = 479;
   *(_DWORD *)(v2 - 48) = 64;
   *(_DWORD *)(v2 - 16) = 0;
-  v3 = (_DWORD *)_wcpp_4_ctor_array__(a2, 256);
+  v3 = (_DWORD *)(uintptr_t)(unsigned int)_wcpp_4_ctor_array__(v2, 256);
   v3[256] = 50;
   v3[257] = 6;
   v3[258] = 2;
@@ -71264,6 +71394,13 @@ unsigned int  DD_Pump(int a1, int a2, ...)
 
   message_pump_result = Platform_PumpMessagesAndBlitFrame(a2);
   result = Time_Now(v5, v4);
+  Compat_MenuProbeTraceRenderInput(
+    "dd-pump",
+    a1,
+    message_pump_result,
+    result,
+    dword_5448B0,
+    *(_DWORD *)(a1 + 1112));
   if ( result >= dword_5448B0 || message_pump_result )
   {
     dword_5448B0 = *(_DWORD *)(a1 + 1112) + Time_Now(v8, v7);
@@ -71410,103 +71547,85 @@ BOOL  DD_IsLost(int a1)
 //----- (00460910) --------------------------------------------------------
 BOOL  Input_PollEventsUntil(int a1, char a2)
 {
-  int v3; // edx
-  int v4; // ecx
+  int previous_poll_state;
 
+  previous_poll_state = *(_DWORD *)(a1 + 56);
   *(_DWORD *)(a1 + 56) = 0;
   Platform_PumpMessagesAndBlitFrame(a2);
-  *(_DWORD *)(v3 + 56) = v4;
-  InputBackend_PollState(&g_InputBackendState, v3, v4);
+  *(_DWORD *)(a1 + 56) = previous_poll_state;
+  InputBackend_PollState(&g_InputBackendState, a1, previous_poll_state);
   return byte_5451C0 < 0 || byte_5451C8 < 0;
 }
-// 460928: variable 'v4' is possibly undefined
-// 460928: variable 'v3' is possibly undefined
 // 5451C0: using guessed type char byte_5451C0;
 // 5451C8: using guessed type char byte_5451C8;
 
 //----- (00460950) --------------------------------------------------------
 BOOL  sub_460950(int a1)
 {
-  int v1; // edx
-  int v2; // ecx
   int v4; // eax
-  int v5; // edx
   int v6; // eax
   int v7; // eax
 
   if ( !DD_IsFlipping(a1) )
     return 0;
-  v4 = Time_Now(v2, v1);
-  if ( (unsigned int)(v4 - *(_DWORD *)(v5 + 68)) >= *(_DWORD *)(v5 + 1104) )
+  v4 = Time_Now(0, 0);
+  if ( (unsigned int)(v4 - *(_DWORD *)(a1 + 68)) >= *(_DWORD *)(a1 + 1104) )
     return 0;
-  v6 = *(_DWORD *)(v5 + 72) - (*(int *)(v5 + 36) >> *(_BYTE *)(v5 + 1108));
+  v6 = *(_DWORD *)(a1 + 72) - (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108));
   if ( v6 <= 0 )
-    v6 = (*(int *)(v5 + 36) >> *(_BYTE *)(v5 + 1108)) - *(_DWORD *)(v5 + 72);
-  if ( v6 >= *(_DWORD *)(v5 + 1116) )
+    v6 = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(a1 + 72);
+  if ( v6 >= *(_DWORD *)(a1 + 1116) )
     return 0;
-  v7 = *(_DWORD *)(v5 + 76) - (*(int *)(v5 + 40) >> *(_BYTE *)(v5 + 1108));
+  v7 = *(_DWORD *)(a1 + 76) - (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108));
   if ( v7 <= 0 )
-    v7 = (*(int *)(v5 + 40) >> *(_BYTE *)(v5 + 1108)) - *(_DWORD *)(v5 + 76);
-  return v7 < *(_DWORD *)(v5 + 1116);
+    v7 = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(a1 + 76);
+  return v7 < *(_DWORD *)(a1 + 1116);
 }
-// 460964: variable 'v2' is possibly undefined
-// 460964: variable 'v1' is possibly undefined
-// 460969: variable 'v5' is possibly undefined
 
 //----- (004609D0) --------------------------------------------------------
 BOOL  Render_Begin(int a1, void (*a2)(void), ...)
 {
-  int v3; // ecx
-  int v5; // ecx
   BOOL result; // eax
 
-  v3 = a1;
+  result = 0;
   while ( 1 )
   {
-    if ( !DD_IsFlipping(v3) )
+    if ( !DD_IsFlipping(a1) )
     {
-      result = DD_IsLost(v5);
+      result = DD_IsLost(a1);
       if ( !result )
         break;
     }
-    DD_Pump(v5, (char)a2);
+    DD_Pump(a1, (char)a2);
     if ( a2 )
       a2();
   }
   return result;
 }
-// 4609DB: variable 'v3' is possibly undefined
-// 4609E8: variable 'v5' is possibly undefined
 
 //----- (00460A10) --------------------------------------------------------
 BOOL  Render_FlipRect(int a1, char a2)
 {
-  int v3; // edx
-  int v4; // edx
-  int v5; // edx
-  int v6; // ecx
+  int previous_poll_state;
   BOOL result; // eax
 
-  v3 = a1;
+  result = 0;
   while ( 1 )
   {
-    if ( !DD_IsFlipping(v3) )
+    if ( !DD_IsFlipping(a1) )
     {
-      result = DD_IsLost(v4);
+      result = DD_IsLost(a1);
       if ( !result )
         break;
     }
-    *(_DWORD *)(v4 + 56) = 0;
+    previous_poll_state = *(_DWORD *)(a1 + 56);
+    *(_DWORD *)(a1 + 56) = 0;
     Platform_PumpMessagesAndBlitFrame(a2);
-    *(_DWORD *)(v5 + 56) = v6;
-    (*(void (**)(void))(*(_DWORD *)(v5 + 1120) + 20))();
+    *(_DWORD *)(a1 + 56) = previous_poll_state;
+    Compat_RenderStateInvokeMethod(a1, 20);
   }
   return result;
 }
-// 460A16: variable 'v3' is possibly undefined
-// 460A22: variable 'v4' is possibly undefined
-// 460A2E: variable 'v6' is possibly undefined
-// 460A2E: variable 'v5' is possibly undefined
 
 //----- (00460A50) --------------------------------------------------------
 int  sub_460A50(int a1, int a2)
@@ -71522,6 +71641,13 @@ int  sub_460A50(int a1, int a2)
 
   v2 = (_DWORD *)(uintptr_t)(unsigned int)a1;
   InputBackend_PollState(&g_InputBackendState, a1, a2);
+  Compat_MenuProbeTraceRenderInput(
+    "live-input",
+    a1,
+    g_InputBackendState.mouse_delta_x,
+    g_InputBackendState.mouse_delta_y,
+    g_InputBackendState.mouse_button_primary,
+    g_InputBackendState.mouse_button_secondary);
   v2[9] += v2[8] * g_InputBackendState.mouse_delta_x;
   v3 = v2[8] * g_InputBackendState.mouse_delta_y;
   v4 = v2[10];
@@ -71544,6 +71670,7 @@ int  sub_460A50(int a1, int a2)
   v9 = v2[7];
   if ( result > v9 )
     v2[10] = v9;
+  Compat_SyncRenderCursorGlobals(v2);
   return result;
 }
 // 460A66: variable 'v2' is possibly undefined
@@ -71557,6 +71684,7 @@ unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3)
 {
   a1[9] = a2 << a1[277];
   a1[10] = a3 << a1[277];
+  Compat_SyncRenderCursorGlobals(a1);
   return DD_Pump((int)a1, a3);
 }
 
@@ -71676,15 +71804,21 @@ _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00460D80) --------------------------------------------------------
+static uintptr_t Compat_RenderStateMethodPointer(int render_state, unsigned int table_offset)
+{
+  uintptr_t *vtable;
+
+  vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(render_state + 1120);
+  if ( !vtable )
+    return 0;
+  return vtable[table_offset / 4];
+}
+
 static void Compat_RenderStateInvokeMethod(int render_state, unsigned int table_offset)
 {
-  int vtable_base;
   uintptr_t method_ptr;
 
-  vtable_base = *(_DWORD *)(render_state + 1120);
-  if ( !vtable_base )
-    return;
-  method_ptr = (uintptr_t)(unsigned int)*(_DWORD *)(vtable_base + table_offset);
+  method_ptr = Compat_RenderStateMethodPointer(render_state, table_offset);
   if ( method_ptr )
     ((void (*)(int))(uintptr_t)method_ptr)(render_state);
 }
@@ -71896,11 +72030,17 @@ int  sub_4610B0(__lock *a1)
 _DWORD * Device_GetParamA(int a1, int a2)
 {
   _DWORD *result; // eax
+  CompatRenderStateTail *tail;
 
   result = sub_460410(a1, a2);
-  result[281] = 0;
-  result[282] = 0;
   result[280] = off_50F204;
+  tail = Compat_RenderStateTailFields(a1);
+  tail->field_464_active = 0;
+  tail->field_468_active = 0;
+  tail->field_46C_ticks = 0;
+  tail->field_470_ticks = 0;
+  tail->field_474_handle = 0;
+  Compat_SyncRenderCursorGlobals(result);
   return result;
 }
 // 50F204: using guessed type int (*off_50F204[6])();
@@ -71908,74 +72048,54 @@ _DWORD * Device_GetParamA(int a1, int a2)
 //----- (00461170) --------------------------------------------------------
 int  Device_DoOp(int a1, int a2, DWORD a3)
 {
-  int v4; // eax
-  int v5; // edx
-  int v6; // ecx
-  int v7; // ecx
+  CompatRenderStateTail *tail;
+  int record_handle;
 
-  *(_DWORD *)(a1 + 1124) = 1;
-  v4 = Time_Now(a2, a1);
-  *(_DWORD *)(v5 + 1132) = v4;
-  sub_475CC8(aDefault_rec, (unsigned __int8 *)aWb_7, v6, a3);
-  return fclose_(v7);
+  (void)a2;
+  tail = Compat_RenderStateTailFields(a1);
+  tail->field_464_active = 1;
+  tail->field_46C_ticks = Time_Now(0, 0);
+  record_handle = sub_475CC8(aDefault_rec, (unsigned __int8 *)aWb_7, 0, a3);
+  return fclose_(record_handle);
 }
-// 461182: variable 'v5' is possibly undefined
-// 461192: variable 'v6' is possibly undefined
-// 461197: variable 'v7' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (004611A0) --------------------------------------------------------
 __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
 {
-  int v4; // edx
-  int v5; // eax
-  char v6; // cl
-  int v7; // edx
-  bool IsLost; // al
-  int v9; // ecx
-  int v10; // edx
-  int v11; // eax
-  int v12; // edx
-  int v13; // ecx
-  int v14; // esi
-  int v15; // ecx
-  _DWORD v17[5]; // [esp+0h] [ebp-14h] BYREF
+  CompatRenderStateTail *tail;
+  unsigned int current_x;
+  unsigned int current_y;
+  int current_flags;
+  _DWORD elapsed_ticks;
+  int record_handle;
 
-  v17[3] = a4;
-  v17[2] = a3;
-  v4 = a1;
-  if ( *(_DWORD *)(a1 + 1124) )
+  (void)a3;
+  (void)a4;
+  tail = Compat_RenderStateTailFields(a1);
+  if ( tail->field_464_active )
   {
-    if ( (unsigned __int8)byte_544CBE != *(_DWORD *)(a1 + 44)
-      || (HIWORD(v5) = HIWORD(*(_DWORD *)(a1 + 44)),
-          v6 = *(_BYTE *)(v4 + 1108),
-          LOWORD(v5) = word_544CBA,
-          *(int *)(v4 + 36) >> v6 != v5)
-      || (LOWORD(a1) = word_544CBC, *(int *)(v4 + 40) >> v6 != (unsigned __int16)word_544CBC) )
+    current_flags = *(_DWORD *)(a1 + 44);
+    current_x = *(unsigned int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108);
+    current_y = *(unsigned int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108);
+    if ( (unsigned __int8)byte_544CBE != current_flags
+      || current_x != (unsigned __int16)word_544CBA
+      || current_y != (unsigned __int16)word_544CBC )
     {
-      word_544CBA = *(_WORD *)(v4 + 36);
-      word_544CBC = *(_WORD *)(v4 + 40);
-      DD_IsFlipping(v4);
-      IsLost = DD_IsLost(v7);
-      byte_544CBE = 2 * (v9 + IsLost);
-      v11 = Time_Now(v9, v10);
-      v17[0] = v11 - *(_DWORD *)(v12 + 1132);
-      v14 = sub_475CC8(aDefault_rec, (unsigned __int8 *)aAb, v13, a2);
-      fwrite_(&word_544CBA, 2, v14, 1);
-      fwrite_(&word_544CBC, 2, v14, 1);
-      fwrite_(&byte_544CBE, 1, v14, 1);
-      fwrite_(v17, 4, v14, 1);
-      LOWORD(a1) = fclose_(v15);
+      word_544CBA = *(_WORD *)(a1 + 36);
+      word_544CBC = *(_WORD *)(a1 + 40);
+      byte_544CBE = (unsigned char)(2 * (DD_IsFlipping(a1) + DD_IsLost(a1)));
+      elapsed_ticks = Time_Now(0, 0) - tail->field_46C_ticks;
+      record_handle = sub_475CC8(aDefault_rec, (unsigned __int8 *)aAb, 1, a2);
+      fwrite_(&word_544CBA, 2, record_handle, 1);
+      fwrite_(&word_544CBC, 2, record_handle, 1);
+      fwrite_(&byte_544CBE, 1, record_handle, 1);
+      fwrite_(&elapsed_ticks, 4, record_handle, 1);
+      return fclose_(record_handle);
     }
   }
-  return a1;
+  return 0;
 }
-// 46120F: variable 'v7' is possibly undefined
-// 461214: variable 'v9' is possibly undefined
-// 46121D: variable 'v10' is possibly undefined
-// 461222: variable 'v12' is possibly undefined
-// 46123A: variable 'v13' is possibly undefined
-// 461290: variable 'v15' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 // 544CBA: using guessed type __int16 word_544CBA;
 // 544CBC: using guessed type __int16 word_544CBC;
@@ -71984,26 +72104,19 @@ __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4)
 //----- (004612A0) --------------------------------------------------------
 int  Device_SetParamA(int a1, DWORD a2)
 {
-  int v3; // eax
-  int v4; // ecx
-  unsigned __int8 *v5; // edx
-  int result; // eax
-  int v7; // ecx
+  CompatRenderStateTail *tail;
 
-  *(_DWORD *)(a1 + 1128) = 1;
-  v3 = Time_Now(a1, (int)aRb_9);
-  *(_DWORD *)(v4 + 1136) = v3;
-  result = sub_475CC8(aDefault_rec, v5, v4, a2);
-  *(_DWORD *)(v7 + 1140) = result;
-  return result;
+  tail = Compat_RenderStateTailFields(a1);
+  tail->field_468_active = 1;
+  tail->field_470_ticks = Time_Now(0, 0);
+  tail->field_474_handle = sub_475CC8(aDefault_rec, (unsigned __int8 *)aRb_9, 0, a2);
+  return tail->field_474_handle;
 }
-// 4612B8: variable 'v4' is possibly undefined
-// 4612C3: variable 'v5' is possibly undefined
-// 4612C8: variable 'v7' is possibly undefined
 
 //----- (004612E0) --------------------------------------------------------
 int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
 {
+  CompatRenderStateTail *tail;
   int v4; // eax
   char v5; // bl
   int v6; // ecx
@@ -72015,15 +72128,24 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
   int v12; // edi
   unsigned int v13; // ecx
 
-  if ( !a1[282] )
+  tail = Compat_RenderStateTailFields((int)a1);
+  Compat_MenuProbeTraceRenderInput(
+    "device-update",
+    (int)a1,
+    a2,
+    a3,
+    tail->field_470_ticks,
+    tail->field_474_handle);
+  if ( !tail->field_468_active )
     return sub_460A50((int)a1, a3);
   v4 = Time_Now(a3, a2);
   v5 = dword_544CC0;
-  v6 = a1[284];
+  v6 = tail->field_470_ticks;
   v7 = v4 - v6 - dword_544CC0;
   if ( v7 < dword_544CC8 - dword_544CC4 )
   {
-    v13 = ((Time_Now(v6, v7) - a1[284] - dword_544CC0) << 8) / (unsigned int)(dword_544CC8 - dword_544CC4);
+    v13 = ((Time_Now(v6, v7) - tail->field_470_ticks - dword_544CC0) << 8)
+        / (unsigned int)(dword_544CC8 - dword_544CC4);
     a1[9] = (unsigned __int16)word_519624
           + ((int)(v13 * ((unsigned __int16)word_519620 - (unsigned __int16)word_519624)
                  - (__CFSHL__((int)(v13 * ((unsigned __int16)word_519620 - (unsigned __int16)word_519624)) >> 31, 8)
@@ -72033,16 +72155,18 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
                   - (__CFSHL__((int)(((unsigned __int16)word_519622 - (unsigned __int16)word_519626) * v13) >> 31, 8)
                    + ((int)(((unsigned __int16)word_519622 - (unsigned __int16)word_519626) * v13) >> 31 << 8))) >> 8);
     a1[10] = result;
+    Compat_SyncRenderCursorGlobals(a1);
   }
   else
   {
-    dword_544CC0 = Time_Now(v6, v7) - a1[284];
+    dword_544CC0 = Time_Now(v6, v7) - tail->field_470_ticks;
     dword_544CC4 = dword_544CC8;
     word_519624 = word_519620;
     word_519626 = word_519622;
     a1[9] = (unsigned __int16)word_519620;
     a1[10] = (unsigned __int16)word_519622;
-    v8 = a1[285];
+    Compat_SyncRenderCursorGlobals(a1);
+    v8 = tail->field_474_handle;
     a1[11] = (unsigned __int8)byte_544CCC;
     if ( (*(_BYTE *)(v8 + 12) & 0x10) == 0 )
     {
@@ -72100,7 +72224,7 @@ int Input_Shutdown()
 //----- (00461540) --------------------------------------------------------
 int  DD_GetSurfacePitch(int a1)
 {
-  return *(_DWORD *)(a1 + 1128);
+  return Compat_RenderStateTailFields(a1)->field_468_active;
 }
 
 //----- (00461570) --------------------------------------------------------

@@ -3096,6 +3096,125 @@
 - total rename count so far:
   - `1193`
 
+## Batch 141 - Top Menu Clickthrough And Render-State Reentry Repair Wave
+- Current frontier:
+  - keep the contained SDL-backed authentic menu lane moving past the top-level button press and into the next load-menu frontier rooted at `MAIN_MENU_REQUEST_LOAD_GAME`
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Singer`: render-state slot lookup and `DD_Pump -> Device_UpdateRect -> sub_460A50` corroboration
+  - `Confucius`: SDL fallback-input consumption review on the contained menu probe path
+  - `Schrodinger`: next-step load-menu frontier review around `MAIN_MENU_REQUEST_LOAD_GAME` and `unk_518808`
+  - mergeable subagent evidence used this batch:
+    - `Singer` confirmed the authentic menu path is supposed to run `DD_Pump -> Device_UpdateRect -> sub_460A50` unless explicit `default.rec` playback is armed through `Device_SetParamA`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `RenderStateMethodTable`
+- High-priority unknown functions reviewed:
+  - `Compat_RenderStateMethodPointer`
+  - `Render_Begin`
+  - `Render_FlipRect`
+  - `Input_PollEventsUntil`
+  - `sub_460950`
+  - `Platform_ReadInputFallbackState`
+- Blockers removed this batch:
+  - `DD_Pump` once again resolves the active render-state update slots on x86-64 instead of silently skipping `Device_UpdateRect` / `sub_460A50`
+  - `Render_Begin` no longer reenters `DD_Pump` with an undefined pseudo-register instead of the live render-state pointer
+  - the contained auto-click no longer latches mouse-down forever across nested `Render_Begin` loops; the synthetic press now expires after one fallback-input read
+  - the contained top-menu `Load Game` button now reaches a real callback result and advances `g_MainMenuRequestedScreen` to `MAIN_MENU_REQUEST_LOAD_GAME` (`screen = 5`)
+- SDL replacements/cleanups this batch:
+  - added a debug-only one-read fallback mouse-button pulse helper on the SDL seam so contained menu probes can emulate a click without permanently holding the recovered button state down
+- Menu/UI fixes this batch:
+  - restored live top-menu hover/click behavior on the contained SDL-presented authentic menu probe
+  - the contained probe now exits the top-level menu loop through `MainMenu_RequestLoadGameMenu` instead of crashing or stalling on the first button-down
+- Session-init fixes this batch:
+  - none; session/game-start init remains behind the next load-menu / submenu frontier
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c bootstrap_main.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c`
+  - `cmake --build . --target clash95_bootstrap -j4`
+  - `env CLASH95_TRACE_MENU_PROBE=1 timeout -s KILL 4s ./bin/clash95_bootstrap --authentic-menu-probe > /tmp/clash95-menuprobe-idle.log 2>&1`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load timeout -s KILL 4s ./bin/clash95_bootstrap --authentic-menu-probe > /tmp/clash95-menuprobe-auto.log 2>&1`
+  - `gdb -batch -ex 'set pagination off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'run --authentic-menu-probe' -ex 'bt 20' --args ./bin/clash95_bootstrap`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` compile cleanly under the current `gnu89` setup
+- Link status:
+  - `clash95_bootstrap` still links successfully as the active SDL-backed executable target
+- Runtime status:
+  - the contained `--authentic-menu-probe` idle lane stays alive for the full four-second timeout without crashing
+  - the contained `--authentic-menu-probe` auto-click lane now reaches live hover (`result = 2` / hover flag set), live click (`result = 3` / button flag set), and exits the top-level menu loop with `screen = 5`
+  - the next blocker moved forward from top-level input failure to the still-unlifted load-menu corridor rooted at `unk_518808`
+- Highest authentic runtime milestone reached:
+  - the SDL-backed contained authentic top-level menu loop now accepts a real recovered hover-and-click transition on the `Load Game` button and advances into the authentic `MAIN_MENU_REQUEST_LOAD_GAME` request path
+- Key evidence used:
+  - `/tmp/clash95-menuprobe-auto.log` now shows `loop-state ... result=2 ... cursor_x=225 cursor_y=150`, then `loop-state ... result=3 ... screen=5`, followed by `menu-loop-exit screen=5`
+  - the escalated `gdb` backtrace on the pre-fix crash showed `sub_419ED0 -> Render_Begin -> DD_Pump -> Compat_RenderStateMethodPointer`, which pinned the button-down failure on the decompiler-scarred reentry path instead of the menu callback itself
+  - `Singer` corroborated from `clash95.c` plus asm that the non-replay menu path must be `DD_Pump -> Device_UpdateRect -> sub_460A50`, so the missing live-input trace on the earlier build identified the render-state method lookup bug directly
+- Ambiguous candidates deferred:
+  - the contained probe still stops at the top-level menu exit and does not yet reconstruct the load-menu subtree copied from `unk_518808`
+  - the packed load-menu widget slab and its callback family remain the next highest-value UI frontier after the recovered top-level clickthrough
+- total rename count so far:
+  - `1193`
+
+## Batch 142 - Contained Load-Menu Handoff And Back-Button Recovery Wave
+- Current frontier:
+  - keep the contained SDL-backed authentic menu lane moving through `MAIN_MENU_REQUEST_LOAD_GAME` and into the load-menu button corridor while isolating the still-broken save-slot draw/resource tranche behind that submenu
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Singer`: load-menu row/resource dependency review around `Render_LoadResourceSprite_v4(18/21)` and `sub_44A140`
+  - `Schrodinger`: load-menu continuation shape rooted at `MAIN_MENU_REQUEST_LOAD_GAME`, `unk_518808`, and the contained-probe extension strategy
+  - mergeable subagent evidence used this batch:
+    - `Schrodinger` confirmed the smallest medium/high-confidence next step was a contained load-menu probe that mirrors the authentic `MAIN_MENU_REQUEST_LOAD_GAME` slice before full session-load tail work
+    - `Singer` confirmed resource ids `18/21` and `sub_44A140` are part of the real load-menu row-render path, so skipping them is only acceptable for a coarse contained smoke probe and not as a final fidelity fix
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `g_LoadMenuButtonWidgetsTemplate`
+  - `LoadMenuButtonWidgetRecord`
+- High-priority unknown functions reviewed:
+  - `Render_LoadResourceSprite_v4`
+  - `sub_40C1F0`
+  - `sub_405920`
+  - `sub_44A140`
+  - `sub_4446E0`
+- Blockers removed this batch:
+  - the weak `unk_518808` blob is no longer the live load-menu button source; the executable lane now rebuilds it into `g_LoadMenuButtonWidgetsTemplate` with real callbacks
+  - the compat `Render_LoadResourceSprite_v4` export no longer just re-enters the broken decompiled `sub_40C1F0`; it now follows the asm-backed cache/recolor loader shape closely enough for the contained lane
+  - the contained probe no longer stops at `screen = 5`; it now chains into a contained load-menu slice and can drive the load-menu `back` button through its own callback
+  - the contained probe no longer faults in the broken sprite-set/cache release band (`sub_405920` / cached `nfree_`) on the handoff path; those teardown steps are now quarantined out of the probe lane
+- SDL replacements/cleanups this batch:
+  - none in the window/input seam itself; the new work stayed on the contained executable/menu corridor and resource helper band
+- Menu/UI fixes this batch:
+  - added a contained load-menu probe with its own `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK` selector so the executable lane can enter the load menu and click the `back` button without widening into full save/session load
+  - the contained load-menu button corridor now reaches live hover (`result = 2`) and live click (`result = 3`) on the `back` button, flipping `g_PlayGameMenuExitRequested = 1` while leaving `confirm = 0`
+  - the top-level contained probe now performs an authentic-style submenu handoff instead of treating `MAIN_MENU_REQUEST_LOAD_GAME` as a dead end
+- Session-init fixes this batch:
+  - none; full load-save/session initialization remains behind the still-quarantined save-slot row renderer and resource ids `18/21`
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c bootstrap_main.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c`
+  - `cmake --build . --target clash95_bootstrap -j4`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back timeout -s KILL 6s ./bin/clash95_bootstrap --authentic-menu-probe > /tmp/clash95-menuprobe-load-back.log 2>&1`
+  - repeated `gdb -batch -ex 'set pagination off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_CLICK back' -ex 'run --authentic-menu-probe' -ex 'bt 25' --args ./bin/clash95_bootstrap` slices while advancing the load-menu frontier
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` still compile cleanly under the current `gnu89` setup
+- Link status:
+  - `clash95_bootstrap` still links successfully as the active SDL-backed executable target
+- Runtime status:
+  - the contained `--authentic-menu-probe` lane still reaches the live top-level `Load Game` clickthrough (`screen = 5`)
+  - the contained probe now enters the load-menu slice, moves the recovered cursor to the `back` button (`x = 347`, `y = 425`), records hover (`result = 2`), records click (`result = 3`), and exits the contained load-menu loop with `exit = 1` / `confirm = 0`
+  - the remaining load-menu blocker moved forward from submenu entry itself to the save-slot renderer/resource corridor rooted at `sub_44A140`, `sub_4446E0`, and resource ids `18/21`
+- Highest authentic runtime milestone reached:
+  - the SDL-backed contained authentic menu lane now enters the load menu after the top-level `Load Game` button and the load-menu `back` button exits through its own recovered callback path
+- Key evidence used:
+  - `/tmp/clash95-menuprobe-load-back.log` now shows `load-auto-click-arm widget=1 variant=0 x=347 y=425`, then `load-loop-state ... result=2 ... exit=0`, then `load-loop-state ... result=3 ... exit=1`, followed by `load-menu-loop-exit selected_slot=-1 confirm=0 screen=5`
+  - the escalated backtraces moved in sequence from `sub_405920` teardown, to `Render_LoadResourceSprite_v4`, to `sub_44A140 -> sub_4446E0`, proving the submenu handoff itself was stable once those deeper helper bands were quarantined or repaired
+  - `Schrodinger`'s earlier contained-probe recommendation lined up with the minimal safe path that reached the new submenu milestone without claiming full save/session fidelity
+- Ambiguous candidates deferred:
+  - the load-menu save-slot row renderer remains only partially recovered; `sub_44A140 -> sub_4446E0` still crashes on the contained executable lane and is temporarily skipped there
+  - resource ids `18/21` are part of the authentic row-render path, but their source-stem/cache lane is still not safe enough to keep in the contained submenu probe
+  - selecting a real save slot and crossing from the load menu into session/game-start initialization remains the next concrete runtime frontier
+- total rename count so far:
+  - `1194`
+
 ## Batch 140 - Menu Widget Geometry And Probe Input Recovery Wave
 - Current frontier:
   - keep the contained SDL/WSL top-level menu probe on the authentic boot/menu loop while turning the currently visible background/shield frame into a genuinely interactive main-menu corridor
