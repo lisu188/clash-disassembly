@@ -3096,6 +3096,90 @@
 - total rename count so far:
   - `1193`
 
+## Batch 127 - PR26 Main Menu Conflict Resolution Wave
+- Current frontier:
+  - replay the PR #26 main-menu naming and SDL-input/menu-bootstrap changes on top of current `main` without reopening the old branch's wider runtime churn
+- Subagents spawned and scopes:
+  - `Feynman`: compare the widened bootstrap link failures against `origin/codex/batch97-frontier-recovery` and identify which compat/platform wrappers were safe to carry forward as low-risk containment
+  - `Hooke`: inspect whether the PR #26 menu renames were already canonical on top of current `main` or still needed fresh rename-log coverage
+  - mergeable subagent evidence used this batch:
+    - `Feynman` confirmed the safe carry-forward band was the file-enumeration/CRT-lock containment plus the SDL seam's inert `DirectDrawCreate` ownership edge; the remaining AVI/thread/exception helpers were still quarantine-only
+- Functions renamed:
+  - `sub_4476E0` -> `MainMenu_RequestExit`
+  - `sub_447700` -> `MainMenu_RequestCampaignMenu`
+  - `sub_447720` -> `MainMenu_RequestMultiplayerMenu`
+  - `sub_447740` -> `MainMenu_RequestCreditsCinematic`
+  - `sub_447760` -> `MainMenu_RequestOptionsMenu`
+  - `sub_447780` -> `MainMenu_RequestLoadGameMenu`
+- Structs/classes/globals/tables recovered or renamed:
+  - `dword_543D74` -> `g_PlayGameMenuSpriteSetHandle`
+  - `dword_543D78` -> `g_PlayGameMenuExitRequested`
+  - `dword_543D7C` -> `g_MainMenuRequestedScreen`
+  - `dword_544180` -> `g_MainMenuMusicHandle`
+  - `unk_5181C0` -> `g_MainMenuButtonWidgetsTemplate`
+  - `RECOVERED_STRUCTURES.json`: retained the `MainMenuButtonWidgetsTemplate` record family while replaying the code-side rename family on top of current `main`
+- High-priority unknown functions reviewed:
+  - `PlayGame_Dispatch`
+  - `sub_4476E0`
+  - `sub_447700`
+  - `sub_447720`
+  - `sub_447740`
+  - `sub_447760`
+  - `sub_447780`
+  - `sub_460490`
+  - `sub_460D80`
+- Blockers removed this batch:
+  - PR #26 no longer conflicts with current `main`; the menu-dispatch corridor, widget-template rename family, bootstrap menu probe, and SDL input-fallback seam now replay cleanly in one branch
+  - the stale oversized `clash95.c` index state left by the raw cherry-picks was replaced with the intended narrow main-menu diff
+  - `clash95_bootstrap` and `clash95_cpp_regen` link again on top of current `main` after moving the widened unresolved band into explicit quarantine wrappers in `compat/decomp_runtime_stubs.c` and an inert `DirectDrawCreate` seam in `platform_sdl_runtime.c`
+- SDL replacements/cleanups this batch:
+  - kept the PR's SDL-backed input fallback hooks in `InputBackend_ResetState` / `InputBackend_PollState`
+  - retained the SDL seam additions for `Platform_ResetInputFallbackState` and `Platform_ReadInputFallbackState`
+  - contained the newly widened legacy DirectDraw symbol through the SDL seam instead of reintroducing a Win32 dependency
+- Menu/UI fixes this batch:
+  - preserved the bootstrap `--authentic-menu-probe` corridor and the top-level menu callback/global naming wave from PR #26
+  - fixed `Bootstrap_BuildCommandLineFromArgv` so it inserts separators only after the first emitted argument rather than from the raw argv index
+- Session-init fixes this batch:
+  - none; this was a conflict-resolution and link-containment wave, not a deeper session/game-start recovery pass
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only compat/decomp_runtime_stubs.c`
+  - `gcc -std=gnu89 -w -I. $(pkg-config --cflags sdl2) -fsyntax-only platform_sdl_runtime.c`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `cmake -S /tmp/clash-pr26-resolve -B /tmp/clash-pr26-build`
+  - `cmake --build /tmp/clash-pr26-build --target clash95_recovered -j`
+  - `cmake --build /tmp/clash-pr26-build --target clash95_bootstrap -j`
+  - `cmake --build /tmp/clash-pr26-build --target clash95_cpp_regen -j`
+  - `timeout 1s /tmp/clash-pr26-build/bin/clash95_bootstrap`
+  - `timeout 2s /tmp/clash-pr26-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex run -ex bt --args /tmp/clash-pr26-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, `compat/decomp_runtime_stubs.c`, and `platform_sdl_runtime.c` compile cleanly after the replayed PR #26 merge
+  - `RECOVERED_STRUCTURES.json` remains valid JSON
+- Link status:
+  - `clash95_recovered` builds successfully
+  - `clash95_bootstrap` builds successfully again on top of current `main`
+  - `clash95_cpp_regen` also builds successfully again on top of current `main`
+- Runtime status:
+  - `timeout 1s /tmp/clash-pr26-build/bin/clash95_bootstrap` exits with status `124`, so the default bootstrap still stays alive in the SDL-backed loop
+  - `timeout 2s /tmp/clash-pr26-build/bin/clash95_bootstrap --authentic-menu-probe` now exits with status `139` on the merged branch
+  - GDB shows that crash band in `sub_471BF0 -> sub_476AF0 -> sub_442760 -> Bootstrap_RunRecoveredEarlyStartupPrelude -> main`, so the PR is conflict-free and build-clean again but the earlier menu-probe runtime plateau is not yet restored on top of current `main`
+- Highest authentic runtime milestone reached:
+  - unchanged by this conflict-resolution wave: the branch is back to a runnable default bootstrap plus a buildable menu-probe path, but the authentic menu-probe runtime still needs a follow-up repair pass before it can reclaim the earlier first-frame plateau
+- Key evidence used:
+  - `PlayGame_Dispatch` still proves the requested-screen mapping for the renamed `MainMenu_Request*` callbacks
+  - `/mnt/c/clash` main-menu art corroborates the top-level widget-template ordering carried into `g_MainMenuButtonWidgetsTemplate`
+  - the rebuilt link surface made the missing containment band concrete: `_wcpp_4_copy_array__`, event/thread helpers, find-file wrappers, `DirectDrawCreate`, and AVI/IC shims
+  - the post-merge GDB probe showed the remaining runtime regression is now an early-startup/prelude fault rather than another conflict artifact
+- Ambiguous candidates deferred:
+  - `_wcpp_4_copy_array__`, `_NTFindNextFileWithAttr_`, and `_nt_filetime_cvt_` remain quarantine-only linker containment on this branch, not faithful runtime reconstructions
+  - the inert `DirectDrawCreate` seam restores linking but not the richer SDL-backed DirectDraw ownership previously explored on the menu/runtime branch
+  - the `--authentic-menu-probe` crash in `sub_471BF0` / `sub_476AF0` / `sub_442760` is the next concrete follow-up target before claiming restored main-menu runtime parity on top of current `main`
+- total rename count so far:
+  - `1204`
+
 ## Batch 125 - C++ Executable Regeneration Bootstrap Wave
 - Current frontier:
   - establish a real parallel C++ executable track on top of the existing recovered C library and bootstrap executable without reopening the deeper startup/runtime crash band prematurely

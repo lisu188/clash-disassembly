@@ -19,11 +19,21 @@ extern int dword_51D01C;
 extern int dword_511134;
 extern int g_AppIsActive;
 extern int dword_5188B0;
+extern int dword_5188C0;
 extern int dword_5202E0;
+extern int g_PlayGameMenuSpriteSetHandle;
+extern int g_PlayGameMenuExitRequested;
+extern int g_MainMenuMusicHandle;
+extern int dword_545150;
 extern int logEnabled;
 extern HWND hWnd;
 extern unsigned int dword_544CD8[9];
+extern unsigned char g_LanguageIndex;
+extern unsigned char byte_543D80[1024];
+extern unsigned char g_MainMenuButtonWidgetsTemplate;
+extern unsigned char unk_5196A0;
 extern unsigned char unk_51D4C0;
+extern void *g_RenderDevice;
 extern LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 int dword_51D014;
@@ -32,14 +42,32 @@ int (*g_RenderHook)(int a1, char a2, DWORD a3);
 
 char __thiscall DetectGameCDPath(void *this);
 int __thiscall sub_442AD0(int this);
+int sub_442760(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
+int sub_401A40(void);
+int Render_DefaultRH(int a1, char a2, DWORD a3);
 int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
+int Render_SetResourceHandle(int a1, int a2);
 int sub_460490(int a1, int a2, char a3, DWORD a4);
 int Render_CreateSprite(void);
+DWORD UI_StartAnims(int a1, char a2, DWORD a3);
+void *Render_CreateSurface(int a1, short a2, short a3);
+int DD_Pump(int a1, int a2, ...);
+void *Mem_Alloc(int a1, int a2, char a3, DWORD a4);
+void *DLXSpriteSet_Load(void *a1, const void *a2);
+int sub_435ED0(char *a1, int a2, int a3, DWORD a4);
+int sub_441670(char *a1, int a2);
+int sub_404D90(int *a1);
+int *sub_405020(int *result, unsigned char *a2, signed int a3);
+void *sub_419D80(void *result);
+signed int sub_419DC0(unsigned int *a1, DWORD a2);
+void *sub_460CB0(int a1, int a2, int a3, DWORD a4);
+short sub_460D80(int a1, int a2);
+int Render_Present(int a1);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
@@ -68,6 +96,8 @@ int j___NTAddFileHandle_(void)
 
 static char g_boot_command_line[1024];
 static int g_boot_run_startup_prelude;
+static int g_boot_run_video_init_probe;
+static int g_boot_run_menu_probe;
 
 static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
 {
@@ -88,7 +118,19 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
       g_boot_run_startup_prelude = 1;
       continue;
     }
-    if ( arg_index > 1 )
+    if ( !strcmp(argv[arg_index], "--authentic-video-init") )
+    {
+      g_boot_run_startup_prelude = 1;
+      g_boot_run_video_init_probe = 1;
+      continue;
+    }
+    if ( !strcmp(argv[arg_index], "--authentic-menu-probe") )
+    {
+      g_boot_run_startup_prelude = 1;
+      g_boot_run_menu_probe = 1;
+      continue;
+    }
+    if ( write_index > 0 )
       g_boot_command_line[write_index++] = ' ';
     argument = argv[arg_index];
     while ( *argument && write_index + 1 < sizeof(g_boot_command_line) )
@@ -136,6 +178,14 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   int device_search_mode;
 
   logEnabled = 1;
+  /*
+   * The original binary reaches this render-object constructor through the
+   * static-init band before the video bootstrap starts. Until that `_wcpp_*`
+   * path is reconstructed end-to-end, call the recovered helper explicitly so
+   * `unk_51D4C0` and its palette/resource backing state are initialized before
+   * `Render_SetPixelFormat`.
+   */
+  sub_401A40();
   device_search_mode = 0;
   if ( command_mode == 'g' || command_mode == 'G' )
   {
@@ -184,12 +234,78 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
   if ( !Input_MouseAcquire() )
     (void)Input_MousePresent();
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
+  sub_442760(0, 0, 0);
   DetectGameCDPath(0);
   sub_442AD0(0);
   Game_Init(0, command_mode, 0);
   if ( command_mode == 'r' )
     dword_51D014 = 1;
   return 1;
+}
+
+static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
+{
+  dword_543CA0 = 1;
+  sub_401A40();
+  nullsub_4();
+  Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
+  sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);
+  Render_CreateSprite();
+}
+
+static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
+{
+  unsigned char menu_widgets[372];
+  unsigned int widget_offset;
+  void *surface;
+  uintptr_t surface_renderer;
+
+  surface = Mem_Alloc(188, 0, command_mode, 0);
+  if ( surface )
+    surface = Render_CreateSurface((int)(intptr_t)surface, 640, 480);
+  dword_5202E0 = (int)(intptr_t)surface;
+
+  UI_StartAnims(0, command_mode, 0);
+  Render_SetResourceHandle((int)(intptr_t)&unk_51D4C0, 1);
+  g_RenderHook = Render_DefaultRH;
+  DD_Pump((int)(intptr_t)dword_544CD8, 1);
+
+  surface = Mem_Alloc(0x1010, 0, command_mode, 0);
+  if ( surface )
+    surface = DLXSpriteSet_Load(surface, "menu\\main.s32");
+  g_PlayGameMenuSpriteSetHandle = (int)(intptr_t)surface;
+
+  surface_renderer = *(uintptr_t *)(uintptr_t)(unsigned int)(dword_5202E0 + 184);
+  (*(void (__fastcall **)(int, const char *))(uintptr_t)(*(uintptr_t *)(surface_renderer + 48)))(0, "menu\\main.gfx");
+  sub_435ED0("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
+  if ( dword_5188C0 )
+    g_MainMenuMusicHandle = sub_441670("music\\menu", 64);
+
+  DD_Pump((int)(intptr_t)dword_544CD8, 0);
+  (*(void (**)(void))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))();
+  (*(void (__thiscall **)(int))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))(92);
+
+  memcpy(menu_widgets, &g_MainMenuButtonWidgetsTemplate, sizeof(menu_widgets));
+  for ( widget_offset = 0; widget_offset < sizeof(menu_widgets); widget_offset += 0x35 )
+  {
+    *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x10) += (unsigned char)g_LanguageIndex;
+    *(uint32_t *)(void *)(menu_widgets + widget_offset + 0x21) += (unsigned char)g_LanguageIndex;
+  }
+
+  g_RenderDevice = &unk_51D4C0;
+  sub_419D80(menu_widgets);
+  sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
+  g_PlayGameMenuExitRequested = 0;
+  sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
+  sub_460D80((int)(intptr_t)dword_544CD8, (int)(intptr_t)&unk_5196A0);
+  dword_545150 = (int)(intptr_t)&unk_5196A0;
+  Render_Present((int)(intptr_t)dword_544CD8);
+
+  while ( !g_PlayGameMenuExitRequested )
+  {
+    DD_Pump((int)(intptr_t)dword_544CD8, 0);
+    sub_419DC0((unsigned int *)menu_widgets, 0);
+  }
 }
 
 static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLine)
@@ -284,6 +400,14 @@ int main(int argc, char **argv)
 
     if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
       return 1;
+    if ( g_boot_run_video_init_probe )
+      Bootstrap_RunRecoveredVideoInitProbe(command_mode);
+    if ( g_boot_run_menu_probe )
+    {
+      Bootstrap_RunRecoveredVideoInitProbe(command_mode);
+      Bootstrap_RunRecoveredMainMenuFirstFrameProbe(command_mode);
+      return Bootstrap_RunMessageLoop();
+    }
     (void)command_mode;
     return Bootstrap_RunMessageLoop();
   }

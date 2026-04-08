@@ -1,5 +1,20 @@
 #include "platform_sdl.h"
 
+#define SDL_MAIN_HANDLED
+#define SDL_Window SDL2_Window
+#define SDL_Renderer SDL2_Renderer
+#define SDL_Texture SDL2_Texture
+#define SDL_Surface SDL2_Surface
+#define SDL_Palette SDL2_Palette
+#define SDL_Cursor SDL2_Cursor
+#include <SDL2/SDL.h>
+#undef SDL_Window
+#undef SDL_Renderer
+#undef SDL_Texture
+#undef SDL_Surface
+#undef SDL_Palette
+#undef SDL_Cursor
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +39,7 @@ struct SDL_Window {
   DWORD style;
   const char *class_name;
   const char *title;
+  SDL2_Window *host_window;
 };
 
 struct SDL_Renderer {
@@ -71,6 +87,15 @@ static size_t g_platform_message_head;
 static size_t g_platform_message_tail;
 static int g_platform_quit_requested;
 static int g_platform_quit_code;
+static int g_platform_sdl_initialized;
+static int g_platform_sdl_available;
+static int g_platform_host_mouse_x;
+static int g_platform_host_mouse_y;
+static int g_platform_host_mouse_delta_x;
+static int g_platform_host_mouse_delta_y;
+static signed char g_platform_host_mouse_primary;
+static signed char g_platform_host_mouse_secondary;
+static signed char g_platform_host_keyboard_state[256];
 
 static int PlatformSurfaceIsBuiltin(const struct SDL_Surface *surface)
 {
@@ -121,6 +146,196 @@ static BOOL PlatformQueuePeek(LPMSG lpMsg, BOOL remove_message)
   return 1;
 }
 
+static int PlatformEnsureSdlVideo(void)
+{
+  if ( g_platform_sdl_initialized )
+    return g_platform_sdl_available;
+  g_platform_sdl_initialized = 1;
+  SDL_SetMainReady();
+  if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == 0 )
+  {
+    g_platform_sdl_available = 1;
+    return 1;
+  }
+  fprintf(stderr, "[platform_sdl] SDL_Init failed: %s\n", SDL_GetError());
+  return 0;
+}
+
+static HWND PlatformFindWindowByHostId(Uint32 window_id)
+{
+  struct SDL_Window *window;
+  SDL2_Window *host_window;
+
+  if ( !window_id || !g_platform_foreground_window || !g_platform_sdl_available )
+    return 0;
+  host_window = SDL_GetWindowFromID(window_id);
+  window = (struct SDL_Window *)g_platform_foreground_window;
+  if ( !host_window || !window || window->host_window != host_window )
+    return 0;
+  return g_platform_foreground_window;
+}
+
+static int PlatformMapSdlKeyToInputScan(SDL_Keycode sym)
+{
+  switch ( sym )
+  {
+    case SDLK_ESCAPE: return 1;
+    case SDLK_1: return 2;
+    case SDLK_2: return 3;
+    case SDLK_3: return 4;
+    case SDLK_4: return 5;
+    case SDLK_5: return 6;
+    case SDLK_6: return 7;
+    case SDLK_7: return 8;
+    case SDLK_8: return 9;
+    case SDLK_9: return 10;
+    case SDLK_0: return 11;
+    case SDLK_MINUS: return 12;
+    case SDLK_EQUALS: return 13;
+    case SDLK_BACKSPACE: return 14;
+    case SDLK_TAB: return 15;
+    case SDLK_q: return 16;
+    case SDLK_w: return 17;
+    case SDLK_e: return 18;
+    case SDLK_r: return 19;
+    case SDLK_t: return 20;
+    case SDLK_y: return 21;
+    case SDLK_u: return 22;
+    case SDLK_i: return 23;
+    case SDLK_o: return 24;
+    case SDLK_p: return 25;
+    case SDLK_LEFTBRACKET: return 26;
+    case SDLK_RIGHTBRACKET: return 27;
+    case SDLK_RETURN:
+    case SDLK_KP_ENTER: return 28;
+    case SDLK_a: return 30;
+    case SDLK_s: return 31;
+    case SDLK_d: return 32;
+    case SDLK_f: return 33;
+    case SDLK_g: return 34;
+    case SDLK_h: return 35;
+    case SDLK_j: return 36;
+    case SDLK_k: return 37;
+    case SDLK_l: return 38;
+    case SDLK_SEMICOLON: return 39;
+    case SDLK_QUOTE: return 40;
+    case SDLK_z: return 44;
+    case SDLK_x: return 45;
+    case SDLK_c: return 46;
+    case SDLK_v: return 47;
+    case SDLK_b: return 48;
+    case SDLK_n: return 49;
+    case SDLK_m: return 50;
+    case SDLK_COMMA: return 51;
+    case SDLK_PERIOD: return 52;
+    case SDLK_SLASH: return 53;
+    case SDLK_SPACE: return 57;
+    case SDLK_F1: return 59;
+    case SDLK_F2: return 60;
+    case SDLK_F3: return 61;
+    case SDLK_F4: return 62;
+    case SDLK_F5: return 63;
+    case SDLK_F6: return 64;
+    case SDLK_F7: return 65;
+    case SDLK_F8: return 66;
+    case SDLK_F9: return 67;
+    case SDLK_F10: return 68;
+    case SDLK_HOME: return 199;
+    case SDLK_UP: return 200;
+    case SDLK_PAGEUP: return 201;
+    case SDLK_LEFT: return 203;
+    case SDLK_RIGHT: return 205;
+    case SDLK_END: return 207;
+    case SDLK_DOWN: return 208;
+    case SDLK_PAGEDOWN: return 209;
+    case SDLK_INSERT: return 210;
+    case SDLK_DELETE: return 211;
+    default: return -1;
+  }
+}
+
+static void PlatformSetKeyboardScan(int scan_code, int pressed)
+{
+  if ( scan_code < 0 || scan_code >= (int)sizeof(g_platform_host_keyboard_state) )
+    return;
+  g_platform_host_keyboard_state[scan_code] = pressed ? (signed char)0x80 : 0;
+}
+
+static void PlatformHandleHostEvent(const SDL_Event *event)
+{
+  HWND hwnd;
+  int scan_code;
+
+  if ( !event )
+    return;
+  switch ( event->type )
+  {
+    case SDL_QUIT:
+      g_platform_quit_requested = 1;
+      g_platform_quit_code = 0;
+      break;
+    case SDL_WINDOWEVENT:
+      hwnd = PlatformFindWindowByHostId(event->window.windowID);
+      if ( !hwnd )
+        break;
+      switch ( event->window.event )
+      {
+        case SDL_WINDOWEVENT_EXPOSED:
+        case SDL_WINDOWEVENT_SHOWN:
+        case SDL_WINDOWEVENT_SIZE_CHANGED:
+        case SDL_WINDOWEVENT_RESIZED:
+          ((struct SDL_Window *)hwnd)->width = event->window.data1;
+          ((struct SDL_Window *)hwnd)->height = event->window.data2;
+          PlatformQueuePush(hwnd, PLATFORM_WM_PAINT, 0, 0);
+          break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+          PlatformQueuePush(hwnd, PLATFORM_WM_ACTIVATEAPP, 1, 0);
+          break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+          PlatformQueuePush(hwnd, PLATFORM_WM_ACTIVATEAPP, 0, 0);
+          break;
+        case SDL_WINDOWEVENT_CLOSE:
+          g_platform_quit_requested = 1;
+          g_platform_quit_code = 0;
+          break;
+        default:
+          break;
+      }
+      break;
+    case SDL_MOUSEMOTION:
+      g_platform_host_mouse_x = event->motion.x;
+      g_platform_host_mouse_y = event->motion.y;
+      g_platform_host_mouse_delta_x += event->motion.xrel;
+      g_platform_host_mouse_delta_y += event->motion.yrel;
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+      if ( event->button.button == SDL_BUTTON_LEFT )
+        g_platform_host_mouse_primary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
+      else if ( event->button.button == SDL_BUTTON_RIGHT )
+        g_platform_host_mouse_secondary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
+      break;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+      scan_code = PlatformMapSdlKeyToInputScan(event->key.keysym.sym);
+      if ( scan_code >= 0 )
+        PlatformSetKeyboardScan(scan_code, event->type == SDL_KEYDOWN);
+      break;
+    default:
+      break;
+  }
+}
+
+static void PlatformPumpHostEvents(void)
+{
+  SDL_Event event;
+
+  if ( !PlatformEnsureSdlVideo() )
+    return;
+  while ( SDL_PollEvent(&event) )
+    PlatformHandleHostEvent(&event);
+}
+
 ATOM __stdcall RegisterClassA(const WNDCLASSA *lpWndClass)
 {
   if ( !lpWndClass )
@@ -161,6 +376,18 @@ HWND __stdcall CreateWindowExA(
   window->style = dwStyle;
   window->class_name = lpClassName;
   window->title = lpWindowName;
+  if ( PlatformEnsureSdlVideo() )
+  {
+    window->host_window = SDL_CreateWindow(
+      lpWindowName ? lpWindowName : "clash95_recovered",
+      X,
+      Y,
+      nWidth > 0 ? nWidth : 640,
+      nHeight > 0 ? nHeight : 480,
+      SDL_WINDOW_HIDDEN);
+    if ( !window->host_window )
+      fprintf(stderr, "[platform_sdl] SDL_CreateWindow failed: %s\n", SDL_GetError());
+  }
   g_platform_foreground_window = window;
   g_platform_quit_requested = 0;
   g_platform_quit_code = 0;
@@ -332,6 +559,7 @@ BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsg
   (void)hWnd;
   (void)wMsgFilterMin;
   (void)wMsgFilterMax;
+  PlatformPumpHostEvents();
   if ( PlatformQueuePeek(lpMsg, 1) )
   {
     if ( lpMsg && lpMsg->message == PLATFORM_WM_QUIT )
@@ -386,6 +614,7 @@ BOOL __stdcall PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMs
   (void)hWnd;
   (void)wMsgFilterMin;
   (void)wMsgFilterMax;
+  PlatformPumpHostEvents();
   if ( PlatformQueuePeek(lpMsg, wRemoveMsg != 0) )
     return 1;
   if ( g_platform_quit_requested )
@@ -559,6 +788,18 @@ BOOL __stdcall ShowWindow(HWND hWnd, int nCmdShow)
   if ( window )
   {
     window->visible = nCmdShow != 0;
+    if ( window->host_window )
+    {
+      if ( window->visible )
+      {
+        SDL_ShowWindow(window->host_window);
+        SDL_RaiseWindow(window->host_window);
+      }
+      else
+      {
+        SDL_HideWindow(window->host_window);
+      }
+    }
     if ( window->visible )
       PlatformQueuePush(hWnd, PLATFORM_WM_ACTIVATEAPP, 1, 0);
   }
@@ -619,6 +860,24 @@ HMODULE __stdcall GetModuleHandleA(LPCSTR lpModuleName)
   return &g_platform_module_handle_token;
 }
 
+HRESULT __stdcall DirectDrawCreate(GUID *lpGUID, LPDIRECTDRAW *lplpDD, IUnknown *pUnkOuter)
+{
+  (void)lpGUID;
+  (void)pUnkOuter;
+
+  if ( lplpDD )
+    *lplpDD = 0;
+
+  /*
+   * PR #26 only needs the widened bootstrap/menu link surface to remain
+   * contained on current main. The richer SDL-backed DirectDraw ownership from
+   * earlier runtime waves has not been replayed in this conflict-resolution
+   * branch, so keep the legacy device creation inert instead of faking a
+   * partially valid COM object here.
+   */
+  return 1;
+}
+
 HRESULT __stdcall DirectInputCreateA(HINSTANCE hinst, DWORD dwVersion, LPVOID lplpDirectInput, LPVOID punkOuter)
 {
   (void)hinst;
@@ -668,6 +927,7 @@ BOOL __stdcall ValidateRect(HWND hWnd, const RECT *lpRect)
 
 BOOL __stdcall WaitMessage()
 {
+  PlatformPumpHostEvents();
   if ( PlatformQueueIsEmpty() && !g_platform_quit_requested )
     usleep(10000);
   return 1;
@@ -692,4 +952,45 @@ BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint)
     lpPoint->y += window->y;
   }
   return 1;
+}
+
+void Platform_ResetInputFallbackState(void)
+{
+  g_platform_host_mouse_x = 0;
+  g_platform_host_mouse_y = 0;
+  g_platform_host_mouse_delta_x = 0;
+  g_platform_host_mouse_delta_y = 0;
+  g_platform_host_mouse_primary = 0;
+  g_platform_host_mouse_secondary = 0;
+  memset(g_platform_host_keyboard_state, 0, sizeof(g_platform_host_keyboard_state));
+}
+
+void Platform_ReadInputFallbackState(
+  int *mouse_delta_x,
+  int *mouse_delta_y,
+  signed char *mouse_button_primary,
+  signed char *mouse_button_secondary,
+  signed char *keyboard_state,
+  int keyboard_state_size)
+{
+  PlatformPumpHostEvents();
+  if ( mouse_delta_x )
+    *mouse_delta_x = g_platform_host_mouse_delta_x;
+  if ( mouse_delta_y )
+    *mouse_delta_y = g_platform_host_mouse_delta_y;
+  if ( mouse_button_primary )
+    *mouse_button_primary = g_platform_host_mouse_primary;
+  if ( mouse_button_secondary )
+    *mouse_button_secondary = g_platform_host_mouse_secondary;
+  if ( keyboard_state && keyboard_state_size > 0 )
+  {
+    size_t copy_size;
+
+    copy_size = (size_t)keyboard_state_size;
+    if ( copy_size > sizeof(g_platform_host_keyboard_state) )
+      copy_size = sizeof(g_platform_host_keyboard_state);
+    memcpy(keyboard_state, g_platform_host_keyboard_state, copy_size);
+  }
+  g_platform_host_mouse_delta_x = 0;
+  g_platform_host_mouse_delta_y = 0;
 }

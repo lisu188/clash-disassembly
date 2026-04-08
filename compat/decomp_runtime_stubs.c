@@ -12,6 +12,7 @@
 #include <strings.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 #include <wchar.h>
 #include <wctype.h>
@@ -74,6 +75,23 @@ typedef struct CompatWcppArrayStoreDesc {
   int stride;
   const char *type_name;
 } CompatWcppArrayStoreDesc;
+
+typedef struct CompatFindHandle {
+  DIR *dir;
+  char directory[PATH_MAX];
+  char pattern[PATH_MAX];
+} CompatFindHandle;
+
+typedef struct CompatEvent {
+  unsigned int magic;
+  int manual_reset;
+  int signaled;
+} CompatEvent;
+
+#define COMPAT_FIND_HANDLE_SLOTS 64
+#define COMPAT_EVENT_MAGIC 0x45564E54u
+
+static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 
 static void CompatSetLastErrorFromErrno(void)
 {
@@ -147,6 +165,34 @@ static int CompatTlsSlotIsValid(DWORD dwTlsIndex)
   return dwTlsIndex < COMPAT_TLS_SLOT_COUNT && g_compat_tls_slot_in_use[dwTlsIndex] != 0;
 }
 
+static int CompatFindHandleIndexFromHandle(HANDLE hFindFile)
+{
+  uintptr_t raw_index;
+
+  raw_index = (uintptr_t)hFindFile;
+  if ( !raw_index || raw_index > COMPAT_FIND_HANDLE_SLOTS )
+    return -1;
+  if ( !g_compat_find_handles[raw_index - 1] )
+    return -1;
+  return (int)(raw_index - 1);
+}
+
+static HANDLE CompatRegisterFindHandle(CompatFindHandle *handle)
+{
+  int slot_index;
+
+  for ( slot_index = 0; slot_index < COMPAT_FIND_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( !g_compat_find_handles[slot_index] )
+    {
+      g_compat_find_handles[slot_index] = handle;
+      return (HANDLE)(uintptr_t)(slot_index + 1);
+    }
+  }
+  g_compat_last_error = (DWORD)ENOMEM;
+  return (HANDLE)-1;
+}
+
 static void CompatNormalizePathSlashes(const char *input, char *output, size_t output_size)
 {
   size_t index;
@@ -189,6 +235,115 @@ static int CompatAppendPathComponent(char *path, size_t path_size, const char *c
     return 0;
   memcpy(path + path_len, component, component_len + 1);
   return 1;
+}
+
+static int CompatWildcardMatchNoCase(const char *pattern, const char *text)
+{
+  unsigned char pattern_char;
+  unsigned char text_char;
+
+  if ( !pattern || !text )
+    return 0;
+  if ( !strcmp(pattern, "*.*") )
+    return 1;
+  while ( *pattern )
+  {
+    pattern_char = (unsigned char)*pattern;
+    if ( pattern_char == '*' )
+    {
+      while ( *pattern == '*' )
+        ++pattern;
+      if ( !*pattern )
+        return 1;
+      while ( *text )
+      {
+        if ( CompatWildcardMatchNoCase(pattern, text) )
+          return 1;
+        ++text;
+      }
+      return 0;
+    }
+    if ( !*text )
+      return 0;
+    if ( pattern_char != '?' )
+    {
+      text_char = (unsigned char)*text;
+      if ( tolower(pattern_char) != tolower(text_char) )
+        return 0;
+    }
+    ++pattern;
+    ++text;
+  }
+  return *text == 0;
+}
+
+static void CompatUnixSecondsToFileTime(time_t unix_seconds, DWORD *low_part, DWORD *high_part)
+{
+  unsigned long long windows_ticks;
+
+  windows_ticks = ((unsigned long long)unix_seconds + 11644473600ULL) * 10000000ULL;
+  *low_part = (DWORD)windows_ticks;
+  *high_part = (DWORD)(windows_ticks >> 32);
+}
+
+static int CompatFillFindData(const char *directory, const char *entry_name, LPWIN32_FIND_DATAA find_data)
+{
+  char full_path[PATH_MAX];
+  struct stat st;
+
+  if ( !directory || !entry_name || !find_data )
+    return 0;
+  Compat_CopyPrefixN(full_path, directory, (unsigned int)strlen(directory) + 1);
+  if ( !CompatAppendPathComponent(full_path, sizeof(full_path), entry_name) )
+  {
+    g_compat_last_error = (DWORD)ENAMETOOLONG;
+    return 0;
+  }
+  if ( stat(full_path, &st) != 0 )
+  {
+    CompatSetLastErrorFromErrno();
+    return 0;
+  }
+  memset(find_data, 0, sizeof(*find_data));
+  if ( S_ISDIR(st.st_mode) )
+    find_data->dwFileAttributes |= COMPAT_FILE_ATTRIBUTE_DIRECTORY;
+  else
+    find_data->dwFileAttributes |= 0x20u;
+  if ( access(full_path, W_OK) != 0 )
+    find_data->dwFileAttributes |= COMPAT_FILE_ATTRIBUTE_READONLY;
+  if ( entry_name[0] == '.' )
+    find_data->dwFileAttributes |= 2u;
+  CompatUnixSecondsToFileTime(st.st_ctime, &find_data->ftCreationTimeLow, &find_data->ftCreationTimeHigh);
+  CompatUnixSecondsToFileTime(st.st_atime, &find_data->ftLastAccessTimeLow, &find_data->ftLastAccessTimeHigh);
+  CompatUnixSecondsToFileTime(st.st_mtime, &find_data->ftLastWriteTimeLow, &find_data->ftLastWriteTimeHigh);
+  find_data->nFileSizeLow = (DWORD)((unsigned long long)st.st_size & 0xFFFFFFFFu);
+  find_data->nFileSizeHigh = (DWORD)(((unsigned long long)st.st_size >> 32) & 0xFFFFFFFFu);
+  Compat_CopyPrefixN(find_data->cFileName, entry_name, (unsigned int)strlen(entry_name) + 1);
+  find_data->cAlternateFileName[0] = 0;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+static int CompatFindNextMatch(CompatFindHandle *handle, LPWIN32_FIND_DATAA find_data)
+{
+  struct dirent *entry;
+
+  if ( !handle || !handle->dir || !find_data )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  while ( (entry = readdir(handle->dir)) != 0 )
+  {
+    if ( !strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..") )
+      continue;
+    if ( !CompatWildcardMatchNoCase(handle->pattern, entry->d_name) )
+      continue;
+    if ( CompatFillFindData(handle->directory, entry->d_name, find_data) )
+      return 1;
+  }
+  g_compat_last_error = (DWORD)ENOENT;
+  return 0;
 }
 
 static int CompatTranslatePathToWsl(const char *input, char *output, size_t output_size)
@@ -555,6 +710,104 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
   return attributes;
 }
 
+HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData)
+{
+  CompatFindHandle *handle;
+  HANDLE public_handle;
+  char normalized_search[PATH_MAX];
+  char directory_spec[PATH_MAX];
+  char translated_directory[PATH_MAX];
+  char *leaf_spec;
+  char *slash;
+
+  if ( !lpFileName || !*lpFileName || !lpFindFileData )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return (HANDLE)-1;
+  }
+  CompatNormalizePathSlashes(lpFileName, normalized_search, sizeof(normalized_search));
+  slash = strrchr(normalized_search, '/');
+  if ( slash )
+  {
+    *slash = 0;
+    leaf_spec = slash + 1;
+    if ( normalized_search[0] )
+      Compat_CopyPrefixN(directory_spec, normalized_search, (unsigned int)strlen(normalized_search) + 1);
+    else
+      Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+  }
+  else
+  {
+    leaf_spec = normalized_search;
+    Compat_CopyPrefixN(directory_spec, COMPAT_WSL_GAME_ROOT, sizeof(COMPAT_WSL_GAME_ROOT));
+  }
+  if ( !leaf_spec[0] )
+    leaf_spec = "*";
+  if ( CompatTranslatePathToWsl(directory_spec, translated_directory, sizeof(translated_directory)) )
+    Compat_CopyPrefixN(directory_spec, translated_directory, (unsigned int)strlen(translated_directory) + 1);
+  handle = (CompatFindHandle *)calloc(1, sizeof(*handle));
+  if ( !handle )
+  {
+    g_compat_last_error = (DWORD)ENOMEM;
+    return (HANDLE)-1;
+  }
+  Compat_CopyPrefixN(handle->directory, directory_spec, (unsigned int)strlen(directory_spec) + 1);
+  Compat_CopyPrefixN(handle->pattern, leaf_spec, (unsigned int)strlen(leaf_spec) + 1);
+  handle->dir = opendir(handle->directory);
+  if ( !handle->dir )
+  {
+    free(handle);
+    CompatSetLastErrorFromErrno();
+    return (HANDLE)-1;
+  }
+  if ( !CompatFindNextMatch(handle, lpFindFileData) )
+  {
+    closedir(handle->dir);
+    free(handle);
+    return (HANDLE)-1;
+  }
+  public_handle = CompatRegisterFindHandle(handle);
+  if ( public_handle == (HANDLE)-1 )
+  {
+    closedir(handle->dir);
+    free(handle);
+  }
+  return public_handle;
+}
+
+BOOL __stdcall FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData)
+{
+  int slot_index;
+
+  slot_index = CompatFindHandleIndexFromHandle(hFindFile);
+  if ( slot_index < 0 || !lpFindFileData )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  return CompatFindNextMatch(g_compat_find_handles[slot_index], lpFindFileData);
+}
+
+BOOL __stdcall FindClose(HANDLE hFindFile)
+{
+  int slot_index;
+  CompatFindHandle *handle;
+
+  slot_index = CompatFindHandleIndexFromHandle(hFindFile);
+  if ( slot_index < 0 )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  handle = g_compat_find_handles[slot_index];
+  g_compat_find_handles[slot_index] = 0;
+  if ( handle->dir )
+    closedir(handle->dir);
+  free(handle);
+  g_compat_last_error = 0;
+  return 1;
+}
+
 void __noreturn ExitProcess(UINT uExitCode)
 {
   exit((int)uExitCode);
@@ -574,6 +827,16 @@ DWORD __stdcall GetCurrentThreadId(void)
   return (DWORD)getpid();
 }
 
+void __lock_p(__lock *this)
+{
+  (void)this;
+}
+
+void __lock_v(__lock *this)
+{
+  (void)this;
+}
+
 BOOL __stdcall CloseHandle(HANDLE hObject)
 {
   if ( !hObject )
@@ -583,6 +846,85 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
   }
   g_compat_last_error = 0;
   return 1;
+}
+
+HANDLE __stdcall CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName)
+{
+  CompatEvent *event;
+
+  (void)lpEventAttributes;
+  (void)lpName;
+  event = (CompatEvent *)calloc(1, sizeof(*event));
+  if ( !event )
+  {
+    g_compat_last_error = (DWORD)ENOMEM;
+    return 0;
+  }
+  event->magic = COMPAT_EVENT_MAGIC;
+  event->manual_reset = bManualReset ? 1 : 0;
+  event->signaled = bInitialState ? 1 : 0;
+  g_compat_last_error = 0;
+  return (HANDLE)event;
+}
+
+DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
+{
+  CompatEvent *event;
+
+  (void)dwMilliseconds;
+  event = (CompatEvent *)hHandle;
+  if ( !event )
+    return 0xFFFFFFFFu;
+  if ( event->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  if ( event->signaled )
+  {
+    if ( !event->manual_reset )
+      event->signaled = 0;
+    return 0;
+  }
+  return 258u;
+}
+
+BOOL __stdcall PulseEvent(HANDLE hEvent)
+{
+  CompatEvent *event;
+
+  event = (CompatEvent *)hEvent;
+  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  event->signaled = 1;
+  if ( !event->manual_reset )
+    event->signaled = 0;
+  return 1;
+}
+
+BOOL __stdcall ResetEvent(HANDLE hEvent)
+{
+  CompatEvent *event;
+
+  event = (CompatEvent *)hEvent;
+  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  event->signaled = 0;
+  return 1;
+}
+
+BOOL __stdcall SetEvent(HANDLE hEvent)
+{
+  CompatEvent *event;
+
+  event = (CompatEvent *)hEvent;
+  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  event->signaled = 1;
+  return 1;
+}
+
+DWORD __stdcall SuspendThread(HANDLE hThread)
+{
+  (void)hThread;
+  return 0;
 }
 
 DWORD __stdcall ResumeThread(HANDLE hThread)
@@ -1024,6 +1366,17 @@ int __fastcall _wcpp_4_ctor_array__(_DWORD a1, _DWORD a2)
   return (int)a1;
 }
 
+int __cdecl _wcpp_4_copy_array__(_DWORD a1)
+{
+  /*
+   * The authentic helper still needs hidden-ABI reconstruction. Keep the
+   * executable link surface contained by returning the incoming storage token.
+   * Current menu/bootstrap probes do not execute the deeper callers that still
+   * depend on the original copy semantics.
+   */
+  return (int)a1;
+}
+
 int __fastcall sub_476322(_DWORD a1, _DWORD a2)
 {
   (void)a1;
@@ -1077,6 +1430,25 @@ int _allocfp_(void)
   return 0;
 }
 
+int __thiscall findclose_(_DWORD a1)
+{
+  if ( (int)a1 <= 0 )
+    return 0;
+  if ( FindClose((HANDLE)(uintptr_t)(unsigned int)a1) )
+    return 0;
+  return _set_errno_nt_(0);
+}
+
+int __fastcall findnext_(_DWORD a1, _DWORD a2)
+{
+  WIN32_FIND_DATAA find_data;
+
+  if ( !FindNextFileA((HANDLE)(uintptr_t)(unsigned int)a1, &find_data) )
+    return _set_errno_nt_(0);
+  sub_489EC6((int)(intptr_t)&find_data, (_DWORD *)(uintptr_t)(unsigned int)a2);
+  return 0;
+}
+
 int tell_(void)
 {
   return 0;
@@ -1119,6 +1491,78 @@ int __fastcall stricmp_(_DWORD a1, _DWORD a2)
 
 int __cdecl strrchr_(void)
 {
+  return 0;
+}
+
+int __fastcall _NTFindNextFileWithAttr_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 1;
+}
+
+__int64 _nt_filetime_cvt_(void)
+{
+  return 0;
+}
+
+int __cdecl abs32(int value)
+{
+  return value < 0 ? -value : value;
+}
+
+_DWORD ExcString_AsCharPtr(void)
+{
+  return 0;
+}
+
+int __cdecl ICClose(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int AVIFileExit(void)
+{
+  return 0;
+}
+
+int __stdcall AVIStreamEndStreaming(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __stdcall AVIStreamRelease(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __stdcall AVIFileRelease(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __cdecl ICDecompress(_DWORD a1, _DWORD a2, _DWORD a3, _DWORD a4, _DWORD a5, _DWORD a6)
+{
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+  (void)a6;
+  return 1;
+}
+
+int __stdcall ICSendMessage(DWORD hic, DWORD msg, DWORD dw1, DWORD dw2, DWORD dw3)
+{
+  (void)hic;
+  (void)msg;
+  (void)dw1;
+  (void)dw2;
+  (void)dw3;
   return 0;
 }
 

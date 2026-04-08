@@ -501,5 +501,13 @@ UINT __stdcall GetDriveTypeA(LPCSTR lpRootPathName);
 void __stdcall OutputDebugStringA(LPCSTR lpOutputString);
 void __stdcall Sleep(DWORD dwMilliseconds);
 BOOL __stdcall ClientToScreen(HWND hWnd, LPPOINT lpPoint);
+void Platform_ResetInputFallbackState(void);
+void Platform_ReadInputFallbackState(
+  int *mouse_delta_x,
+  int *mouse_delta_y,
+  signed char *mouse_button_primary,
+  signed char *mouse_button_secondary,
+  signed char *keyboard_state,
+  int keyboard_state_size);
 
 #endif
