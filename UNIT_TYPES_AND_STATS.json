@@ -854,6 +854,13 @@
     },
     {
       "unit_type": "SpecialPersonageCategory",
+      "stat": "queen_relationship_state",
+      "relationship_kind": "birth_trigger_phase",
+      "confidence": "high",
+      "evidence": "`Queen_NewTurn` only enters the birth branch when `PLAYER_QUEEN_RELATIONSHIP_STATE == 9`; that branch creates type `33` or `34` inside a host building garrison and then resets the byte to `5`, so value `9` is a confirmed childbirth-pending phase that directly spawns the special-personage family."
+    },
+    {
+      "unit_type": "SpecialPersonageCategory",
       "stat": "garrison_training_eligibility",
       "relationship_kind": "not_trainable_while_resident_in_building_garrison",
       "confidence": "high",
@@ -940,6 +947,16 @@
       ],
       "evidence": "Both records reuse `off_512558`, their resource keys and movement-audio families diverge, the capture/building flow routes them through the prisoner system, and `Queen_NewTurn` also creates the same ids during the royal birth event. The `specm` / `speck` code names and the officer-flavored birth text narrow the family further without fully resolving its public label.",
       "blockers": "The shared special-entry role is clear, but the exact original designer-facing label behind `Dowódca / Tactician / Soldat` remains inconsistent across languages."
+    },
+    {
+      "candidate": "PlayerRuntimeState.queen_relationship_state",
+      "candidate_kind": "enum",
+      "possible_interpretations": [
+        "one byte mixing marriage status, relationship phase, departure risk, and childbirth state",
+        "value `9` = childbirth pending; value `5` = broader married/stable or post-birth state; value `1` = immediate departure-risk branch"
+      ],
+      "evidence": "`Queen_NewTurn` only enters the birth branch when the byte is `9`, then spawns type `33` or `34` and resets it to `5`; accepted marriage also writes `5`, and value `1` drives the queen-departure event branch before resetting to `-1`.",
+      "blockers": "Only the `9 -> childbirth pending` fragment is fully secure. The remaining nonzero values still combine multiple relationship phases without a direct designer-facing enum label."
     },
     {
       "candidate": "UnitType32_PeasantCargo",

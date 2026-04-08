@@ -36,6 +36,10 @@
 #define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
 #define BUILDING_RECORD_SIZE 467
 #define BUILDING_TABLE_OFFSET 509674
+#define BUILDING_GARRISON_SERVICE_STATE_OFFSET 390
+#define BUILDING_GARRISON_SERVICE_STATE_COUNT 12
+#define BUILDING_GARRISON_TRAINING_TURNS_MASK 0x07
+#define BUILDING_GARRISON_REPAIR_TURNS_MASK 0x38
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374
@@ -67,6 +71,7 @@
 #define UNIT_TYPE_PEASANT_CARGO 32
 #define UNIT_TYPE_SPECIAL_FOOT_PERSONAGE 33
 #define UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE 34
+#define QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING 9
 #define BUILDING_PRISONER_SLOT_BASE_OFFSET 445
 #define BUILDING_PRISONER_SLOT_STRIDE 6
 #define BUILDING_PRISONER_SLOT_COUNT 3
@@ -119,6 +124,7 @@
 #define PORT_REINFORCEMENT_UNIT_COUNT (*(_DWORD *)(gameData + PORT_REINFORCEMENT_UNIT_COUNT_OFFSET))
 #define PORT_SHORE_VARIANT_FLAG (*(_DWORD *)(gameData + PORT_SHORE_VARIANT_FLAG_OFFSET))
 #define BUILDING_RECORD(index) (gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (index))
+#define BUILDING_GARRISON_SERVICE_STATE(buildingPtr, slotIndex) (*(_BYTE *)((buildingPtr) + BUILDING_GARRISON_SERVICE_STATE_OFFSET + (slotIndex)))
 #define UNIT_RECORD_SIZE BUILDING_RECORD_SIZE
 #define UNIT_TABLE_OFFSET BUILDING_TABLE_OFFSET
 #define UNIT_RECORD(index) BUILDING_RECORD(index)
@@ -154,6 +160,14 @@
 #define BUILDING_PRISONER_OWNER(slotPtr) (*(_BYTE *)((slotPtr) + 1))
 #define BUILDING_PRISONER_ACTION(slotPtr) (*(_BYTE *)((slotPtr) + 3))
 #define BUILDING_PRISONER_RANSOM(slotPtr) (*(_WORD *)((slotPtr) + 4))
+
+enum BuildingPrisonerAction
+{
+  BUILDING_PRISONER_ACTION_NONE = 0,
+  BUILDING_PRISONER_ACTION_BEHEAD = 1,
+  BUILDING_PRISONER_ACTION_TORTURE = 2,
+  BUILDING_PRISONER_ACTION_PAY = 3
+};
 
 typedef struct QueenWhimRecord
 {
@@ -21390,18 +21404,18 @@ void MiniMap_RedrawAllTiles()
 {
   char *v0; // ebx
   signed int i; // ecx
-  int v2; // ecx
 
   v0 = 0;
   g_RenderDevice = (_UNKNOWN *)dword_52334C;
   while ( (int)v0 < *(_DWORD *)(gameData + 140000) )
   {
-    for ( i = 0; i < *(_DWORD *)(gameData + 140004); i = v2 + 1 )
+    for ( i = 0; i < *(_DWORD *)(gameData + 140004); ++i )
       MiniMap_DrawTileCell(v0, i);
     ++v0;
   }
   return;
 }
+// 40D86A: control flows out of bounds to 40D410
 // 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E4: using guessed type int gameData;
@@ -33124,28 +33138,28 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *a1, double a2)
     v6 = *((__int16 *)v2 + 9);
     if ( v6 != -1 )
     {
-      v7 = v5[390];
-      if ( (v7 & 0x38) != 0 )
+      v7 = BUILDING_GARRISON_SERVICE_STATE(v5, 0);
+      if ( (v7 & BUILDING_GARRISON_REPAIR_TURNS_MASK) != 0 )
       {
         v8 = (((unsigned __int8)(4 * v7) >> 5) - 1) & 7;
         v9 = v7 & 0xC7;
-        v5[390] = v9;
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = v9;
         LOBYTE(v6) = 8 * v8;
         BYTE1(v6) = v6 | v9;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         if ( (v6 & 0x3800) == 0 )
         {
           v3 = 1;
           v2[27] = 100;
         }
       }
-      else if ( (v7 & 7) != 0 )
+      else if ( (v7 & BUILDING_GARRISON_TRAINING_TURNS_MASK) != 0 )
       {
-        LOBYTE(v6) = ((v7 & 7) - 1) & 7;
+        LOBYTE(v6) = ((v7 & BUILDING_GARRISON_TRAINING_TURNS_MASK) - 1) & 7;
         BYTE1(v6) = v7 & 0xF8;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         BYTE1(v6) |= v6;
-        v5[390] = BYTE1(v6);
+        BUILDING_GARRISON_SERVICE_STATE(v5, 0) = BYTE1(v6);
         if ( (v6 & 0x700) == 0 )
         {
           if ( *(_DWORD *)(gameData + 1423 * a1[2] + 140051) )
@@ -54515,15 +54529,15 @@ _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3)
   result = (_BYTE *)(*(_BYTE *)(v4 + 31 * v3 + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
-    result = (_BYTE *)(v4 + v3 + 390);
+    result = (_BYTE *)(v4 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + v3);
     if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v4 + 2) + gameData + 140051) )
       v6 = (*(_BYTE *)(v4 + 4) == 2) + 1;
     else
       v6 = (*(_BYTE *)(v4 + 4) == 2) + 4;
     v7 = *result & 0xF8;
     *result = v7;
-    *result = v6 & 7 | v7;
-    *(_BYTE *)(v4 + v3 + 390) &= 0xC7u;
+    *result = v6 & BUILDING_GARRISON_TRAINING_TURNS_MASK | v7;
+    BUILDING_GARRISON_SERVICE_STATE(v4, v3) &= 0xC7u;
   }
   return result;
 }
@@ -54532,7 +54546,7 @@ _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3)
 //----- (0043EAC0) --------------------------------------------------------
 int  Building_ClearGarrisonTrainingTimer(int result, int a2)
 {
-  *(_BYTE *)(a2 + result + 390) &= 0xF8u;
+  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
   return result;
 }
 
@@ -54547,7 +54561,7 @@ __int16  Building_RepairUnit(int a1, int a2, DWORD a3)
   v6 = *(signed __int8 *)(a1 + 31 * a2 + 27);
   if ( v6 != 100 )
   {
-    repairTimer = (unsigned __int8 *)(a1 + a2 + 390);
+    repairTimer = (unsigned __int8 *)(a1 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + a2);
     repairTurns = (*(_BYTE *)(a1 + 4) == 2) + 2;
     *repairTimer = *repairTimer & 0xC0 | ((repairTurns & 7) << 3);
   }
@@ -54557,7 +54571,7 @@ __int16  Building_RepairUnit(int a1, int a2, DWORD a3)
 //----- (0043EB40) --------------------------------------------------------
 int  Building_ClearGarrisonRepairTimer(int result, int a2)
 {
-  *(_BYTE *)(a2 + result + 390) &= 0xC7u;
+  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
   return result;
 }
 
@@ -64589,7 +64603,7 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       return UI_ShowInfoWindow((int)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
     case 4u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_4);
-      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = 0;
+      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = BUILDING_PRISONER_ACTION_NONE;
       v26[0] = (int)g_PrisonerTortureResistanceTexts[0];
       v26[1] = (int)g_PrisonerTortureResistanceTexts[1];
       v26[2] = (int)g_PrisonerTortureResistanceTexts[2];
@@ -64726,7 +64740,7 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
       {
         ++v8[447];
         if ( !*(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140051) && v8[447] == 9 )
-          v8[448] = 3;
+          v8[448] = BUILDING_PRISONER_ACTION_PAY;
         BuildingPrisoner_RecalculateRansomValue(v13);
         if ( v8[447] == 10 )
         {
@@ -64744,18 +64758,18 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
         else
         {
           LOBYTE(v6) = v8[448];
-          if ( (unsigned __int8)v6 >= 2u )
+          if ( (unsigned __int8)v6 >= BUILDING_PRISONER_ACTION_TORTURE )
           {
-            if ( (unsigned __int8)v6 <= 2u )
+            if ( (unsigned __int8)v6 <= BUILDING_PRISONER_ACTION_TORTURE )
             {
               LOBYTE(v6) = Prisoner_Torture(a1, v7, (int)v8, v7, a1);
             }
-            else if ( (_BYTE)v6 == 3 )
+            else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_PAY )
             {
               LOBYTE(v6) = Prisoner_Pay(a1, v7, a1, a4);
             }
           }
-          else if ( (_BYTE)v6 == 1 )
+          else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_BEHEAD )
           {
             LOBYTE(v6) = Prisoner_Behead(a1, (int)v8, v7, a1);
           }
@@ -65099,18 +65113,18 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   for ( j = 0; j < 3; ++j )
   {
     v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
-    if ( v6 >= 2 )
+    if ( v6 >= BUILDING_PRISONER_ACTION_TORTURE )
     {
-      if ( v6 <= 2 )
+      if ( v6 <= BUILDING_PRISONER_ACTION_TORTURE )
       {
         *(_DWORD *)((char *)v4 + 61) = v7;
       }
-      else if ( v6 == 3 )
+      else if ( v6 == BUILDING_PRISONER_ACTION_PAY )
       {
         *(_DWORD *)((char *)v4 + 114) = v7;
       }
     }
-    else if ( v6 == 1 )
+    else if ( v6 == BUILDING_PRISONER_ACTION_BEHEAD )
     {
       v4[2] = v7;
     }
@@ -65367,7 +65381,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   while ( v51 == dword_5443F4 );
   if ( dword_518DD0 == 2 )
   {
-    v52 = 1;
+    v52 = BUILDING_PRISONER_ACTION_BEHEAD;
 LABEL_48:
     v53 = dword_5443FC;
     goto LABEL_49;
@@ -65375,60 +65389,60 @@ LABEL_48:
   if ( dword_518E05 == 2 )
   {
     v53 = dword_5443FC;
-    v52 = 2;
+    v52 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else
   {
     if ( dword_518E3A == 2 )
     {
-      v52 = 3;
+      v52 = BUILDING_PRISONER_ACTION_PAY;
       goto LABEL_48;
     }
     v53 = dword_5443FC;
-    v52 = 0;
+    v52 = BUILDING_PRISONER_ACTION_NONE;
   }
 LABEL_49:
   BuildingPrisoner_SetAction(v53, v52, v36);
   if ( dword_518E6F == 2 )
   {
-    v54 = 1;
+    v54 = BUILDING_PRISONER_ACTION_BEHEAD;
     v55 = dword_5443FC;
   }
   else if ( dword_518EA4 == 2 )
   {
     v55 = dword_5443FC;
-    v54 = 2;
+    v54 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else if ( dword_518ED9 == 2 )
   {
-    v54 = 3;
+    v54 = BUILDING_PRISONER_ACTION_PAY;
     v55 = dword_5443FC;
   }
   else
   {
     v55 = dword_5443FC;
-    v54 = 0;
+    v54 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v55, v54, v36);
   if ( dword_518F0E == 2 )
   {
-    v56 = 1;
+    v56 = BUILDING_PRISONER_ACTION_BEHEAD;
     v57 = dword_5443FC;
   }
   else if ( dword_518F43 == 2 )
   {
-    v56 = 2;
+    v56 = BUILDING_PRISONER_ACTION_TORTURE;
     v57 = dword_5443FC;
   }
   else if ( dword_518F78 == 2 )
   {
-    v56 = 3;
+    v56 = BUILDING_PRISONER_ACTION_PAY;
     v57 = dword_5443FC;
   }
   else
   {
     v57 = dword_5443FC;
-    v56 = 0;
+    v56 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v57, v56, dword_518F0E);
   sub_405920(&dword_5443F0);
@@ -65567,7 +65581,7 @@ int  Queen_NewTurn(int a1, int a2, char a3, double a4)
     {
       if ( PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) )
       {
-        if ( result == 9 )
+        if ( result == QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING )
         {
           Debug_Log(g_CurrentPlayerIndex, a2, (DWORD)savedregs, (int)aQueen_newturnN, v45[0]);
           a2 = (char)((Rng_RandRange(0, 100) <= 0x32) + 33);

@@ -65,6 +65,7 @@ static struct SDL_Surface g_platform_default_icon = { 32, 32 };
 static struct SDL_Cursor g_platform_default_cursor = { 0 };
 static int g_platform_stock_brush;
 static int g_platform_module_handle_token;
+static DWORD g_platform_last_error;
 static MSG g_platform_message_queue[PLATFORM_QUEUE_CAPACITY];
 static size_t g_platform_message_head;
 static size_t g_platform_message_tail;
@@ -214,6 +215,16 @@ BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect)
     lpRect->bottom = window->height;
   }
   return 1;
+}
+
+DWORD __stdcall GetLastError(void)
+{
+  return g_platform_last_error;
+}
+
+void __stdcall SetLastError(DWORD dwErrCode)
+{
+  g_platform_last_error = dwErrCode;
 }
 
 HDC __stdcall GetDC(HWND hWnd)
