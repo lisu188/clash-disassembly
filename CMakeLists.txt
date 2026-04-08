@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.28)
 
 project(clash95_recovered LANGUAGES C CXX)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
+
 add_library(clash95_recovered STATIC
   clash95.c
   platform_sdl_runtime.c
@@ -76,6 +79,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
+<<<<<<< HEAD
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_cpp_core PRIVATE -std=c++17 -Wall -Wextra -pedantic)
   target_compile_options(clash95_cpp_regen PRIVATE
@@ -84,6 +88,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   )
   target_link_options(clash95_cpp_regen PRIVATE -Wl,--gc-sections -no-pie)
 endif()
+
+target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2)
+target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 m)
+target_link_libraries(clash95_cpp_regen PRIVATE PkgConfig::SDL2 m)
 
 set_target_properties(clash95_recovered PROPERTIES
   OUTPUT_NAME clash95_recovered
