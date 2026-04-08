@@ -3142,6 +3142,60 @@
 - total rename count so far:
   - `1193`
 
+## Batch 126 - PR22 Conflict Resolution Merge Wave
+- Current frontier:
+  - rebase and merge `codex/runtime-link-wave99` onto the current `main` baseline without losing the newer canonical names, documentation sync, or runtime-link repairs from either side
+- Functions renamed:
+  - none this batch; conflict resolution kept the current canonical spellings already used by `main`
+- Structs/classes/globals/tables recovered or renamed:
+  - carried forward the `BuildingRecord.garrison_service_state[12]` wording and the confirmed `queen_relationship_state == 9` childbirth fragment into the canonical structure and rename artifacts
+- High-priority unknown functions reviewed:
+  - `_set_errno_dos_`
+  - `_set_errno_nt_`
+  - `sub_473ED5`
+  - `sub_485374`
+- Blockers removed this batch:
+  - PR #22 no longer conflicts with the current `main` history in `clash95.c`, the compat seam, or the canonical recovery artifacts
+  - the exact asm-backed DOS and NT errno bridge wrappers now coexist cleanly with the SDL-owned last-error seam
+  - the cleanup-node bridge and bootstrap TLS getter from the PR branch now build on top of the current mainline runtime surface
+- SDL replacements/cleanups this batch:
+  - preserved `GetLastError` / `SetLastError` ownership in `platform_sdl_runtime.c` instead of reintroducing last-error storage into the compat file
+- Menu/UI fixes this batch:
+  - none
+- Session-init fixes this batch:
+  - none
+- Validation probe:
+  - `git diff --check`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/pr22_RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/pr22_UNIT_TYPES_AND_STATS.json`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c compat/decomp_runtime_stubs.c -o /tmp/pr22_decomp_runtime_stubs.o`
+  - `gcc -std=gnu89 -w -I. -c platform_sdl_runtime.c -o /tmp/pr22_platform_sdl_runtime.o`
+  - `cmake -S . -B /tmp/clash95-pr22-build`
+  - `cmake --build /tmp/clash95-pr22-build --target clash95_recovered`
+  - `cmake --build /tmp/clash95-pr22-build --target clash95_bootstrap`
+  - `timeout 1s /tmp/clash95-pr22-build/bin/clash95_bootstrap`
+- Compile status:
+  - `clash95.c`, `compat/decomp_runtime_stubs.c`, and `platform_sdl_runtime.c` all compile cleanly after conflict resolution
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - `clash95_recovered` builds successfully
+  - `clash95_bootstrap` builds successfully
+- Runtime status:
+  - `timeout 1s /tmp/clash95-pr22-build/bin/clash95_bootstrap` exits with status `124`, confirming the resolved bootstrap still stays alive in the SDL-backed loop during the one-second smoke window
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 124/125: the bootstrap executable remains runnable under WSL/SDL while the deeper authentic-startup archive/stream frontier stays downstream of this merge-resolution batch
+- Key evidence used:
+  - current `main` already treated `UnitStack_MoveOneTileInDirection`, `Rules_IsQueuedPathTargetBridgeCrossing`, `Rules_BuildRoadOrStepTowardQueuedPath`, `Port_IsReinforcementReady`, and `g_PrisonerTortureResistanceTexts` as canonical, so the conflict resolution kept those names
+  - PR #22 contributed the stronger service-state, queen-childbirth, exact errno-mapper, cleanup-node, and bootstrap-TLS details that were merged forward without restoring older terminology
+  - the SDL seam already owned `GetLastError` / `SetLastError`, so the compat merge kept only the CRT-facing bridge logic there
+- Ambiguous candidates deferred:
+  - `PlayerRuntimeState.queen_relationship_state` beyond the confirmed childbirth-pending fragment
+  - `g_UnitTypeBaseRangedAttack` and `g_UnitTypeBaseSiegeAttack` as exact designer-facing stat labels
+  - the broader runtime/stream/archive work downstream of `_allocfp_`, `_freefp_`, `fread_`, `ftell_`, `setvbuf_`, and `fflush_`
+- total rename count so far:
+  - not re-enumerated in this conflict-resolution batch
+
 ## Batch 124 - WSL Resource Mount And Archive Runtime Repair Wave
 - Current frontier:
   - keep the WSL/SDL executable runnable while pushing the authentic startup probe through the real resource-archive mount path rooted by `sub_442AD0`
