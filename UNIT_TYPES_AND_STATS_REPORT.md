@@ -168,3 +168,6 @@
 - `production_required_tech_level_mode_2` and `production_required_tech_level_other_modes` are secure as per-unit licence tech thresholds, but the original designer-facing labels for the production-building mode byte values are still unresolved beyond the literal split `mode == 2` versus `mode != 2`.
 - UnitSlotRecord `+12` is clearly a stance/formation byte, but its upper subfields are still only partially recovered.
 - The decompiler’s `char *(*...)[102]` type on `g_UnitTypeMetadataRecords` is misleading if read literally as “34 unit types x 3 languages.” The asm/xref pass shows at least 35 record slots, with the final two special prisoner records reusing one localized-name table.
+
+## 6. Batch 135 Note
+- `Batch 135` stayed intentionally on the SDL/main-menu display frontier. No new unit-type or stat semantics were promoted in this wave; the unit/stat artifacts remain unchanged apart from this maintenance note while the executable-first menu-display repair was prioritized.

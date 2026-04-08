@@ -970,5 +970,48 @@
       "The DGROUP table embeds the callback pointers in the same order `MainMenu_RequestLoadGameMenu`, `MainMenu_RequestCampaignMenu`, `MainMenu_RequestExit`, `MainMenu_RequestOptionsMenu`, `MainMenu_RequestMultiplayerMenu`, `MainMenu_RequestCreditsCinematic`.",
       "The extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button art confirms the same visible ordering: `load`, `campaign`, `exit`, `options`, `multiplayer`, `credits` / `autorzy`."
     ]
+  },
+  {
+    "name": "CompatDirectDrawPalette",
+    "kind": "recovered_class",
+    "base_symbol": "CompatDirectDrawPalette / CompatDirectDraw_CreatePalette / CompatDirectDrawSurface_SetPalette",
+    "description": "SDL-owned DirectDraw palette bridge for indexed 8-bit presentation on the recovered render path. The class preserves the Win32/DirectDraw palette object contract closely enough for `Render_SetPixelFormat`, `sub_404C80`, and the menu-present path to share a real 256-entry palette instead of falling back to grayscale expansion.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "lpVtbl",
+        "type": "CompatDirectDrawPaletteVTable *",
+        "notes": "Hosts the recovered `QueryInterface`, `AddRef`, `Release`, `GetCaps`, `GetEntries`, `Initialize`, and `SetEntries` methods used by the render bootstrap and later palette updates."
+      },
+      {
+        "offset": 8,
+        "name": "ref_count",
+        "type": "ulong",
+        "notes": "Reference-counted by the owning DirectDraw wrapper plus any surface currently bound through `CompatDirectDrawSurface_SetPalette`."
+      },
+      {
+        "offset": 16,
+        "name": "owner",
+        "type": "CompatDirectDraw *",
+        "notes": "Back-reference to the SDL-owned DirectDraw bridge kept alive while the palette object exists."
+      },
+      {
+        "offset": 24,
+        "name": "flags",
+        "type": "uint32",
+        "notes": "DirectDraw palette capability flags passed through `CompatDirectDraw_CreatePalette` and returned by `GetCaps`."
+      },
+      {
+        "offset": 28,
+        "name": "entries[256]",
+        "type": "CompatPaletteEntry[256]",
+        "notes": "Per-index palette entries stored in the recovered DirectDraw red/green/blue/flags order and consumed by `PlatformConvertSurfacePixelsToArgb32` for indexed-surface presentation."
+      }
+    ],
+    "evidence": [
+      "`Render_SetPixelFormat` still calls the DirectDraw palette-creation slot on the 8-bit boot/menu path and later binds that same object onto the primary surface before `sub_404C80` streams palette updates through it.",
+      "`sub_401B20` and `LoadPalCOL` build 256-entry RGB palette tables for `map.pal` and the menu corridor, so a real palette object is required to preserve the recovered indexed-color semantics under SDL.",
+      "The repaired SDL presentation path now resolves 8-bit pixels through `surface->palette->entries[index]`, which matches the recovered DirectDraw-era object ownership more closely than the earlier grayscale fallback."
+    ]
   }
 ]

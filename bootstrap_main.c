@@ -281,7 +281,14 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   if ( dword_5188C0 )
     g_MainMenuMusicHandle = sub_441670("music\\menu", 64);
 
-  DD_Pump((int)(intptr_t)dword_544CD8, 0);
+  /*
+   * The authentic PlayGame_Dispatch prologue does another pump, reapplies the
+   * render-state palette block through sub_404D90, then pumps once more before
+   * issuing the first two menu draw calls.
+   */
+  DD_Pump((int)(intptr_t)dword_544CD8, 1);
+  sub_404D90((int *)&unk_51D4C0);
+  DD_Pump((int)(intptr_t)dword_544CD8, 1);
   (*(void (**)(void))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))();
   (*(void (__thiscall **)(int))(uintptr_t)(*(uintptr_t *)(surface_renderer + 36)))(92);
 
