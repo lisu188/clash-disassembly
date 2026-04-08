@@ -110,9 +110,30 @@ typedef struct CompatFindHandle {
 
 #define COMPAT_FIND_HANDLE_SLOTS 64
 #define COMPAT_STREAM_HANDLE_SLOTS 256
+#define COMPAT_EVENT_MAGIC 0x45564E54u
+#define COMPAT_WAIT_OBJECT_0 0u
+#define COMPAT_WAIT_TIMEOUT 258u
+#define COMPAT_WAIT_FAILED 0xFFFFFFFFu
+#define COMPAT_WAIT_INFINITE 0xFFFFFFFFu
 
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
+
+typedef struct CompatEventHandle {
+  unsigned int magic;
+  int manual_reset;
+  int signaled;
+} CompatEventHandle;
+
+static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = (CompatEventHandle *)handle;
+  if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  return event_handle;
+}
 
 static void CompatSetLastErrorFromErrno(void)
 {
@@ -1284,10 +1305,18 @@ void __lock_v(__lock *this)
 
 BOOL __stdcall CloseHandle(HANDLE hObject)
 {
+  CompatEventHandle *event_handle;
+
   if ( !hObject )
   {
     g_compat_last_error = (DWORD)EINVAL;
     return 0;
+  }
+  event_handle = CompatGetEventHandle(hObject);
+  if ( event_handle )
+  {
+    event_handle->magic = 0;
+    free(event_handle);
   }
   g_compat_last_error = 0;
   return 1;
@@ -1302,6 +1331,193 @@ DWORD __stdcall ResumeThread(HANDLE hThread)
   }
   g_compat_last_error = 0;
   return 0;
+}
+
+HANDLE __stdcall CreateEventA(
+        LPSECURITY_ATTRIBUTES lpEventAttributes,
+        BOOL bManualReset,
+        BOOL bInitialState,
+        LPCSTR lpName)
+{
+  CompatEventHandle *event_handle;
+
+  (void)lpEventAttributes;
+  (void)lpName;
+  event_handle = (CompatEventHandle *)calloc(1, sizeof(*event_handle));
+  if ( !event_handle )
+  {
+    CompatSetLastErrorFromErrno();
+    return 0;
+  }
+  event_handle->magic = COMPAT_EVENT_MAGIC;
+  event_handle->manual_reset = bManualReset != 0;
+  event_handle->signaled = bInitialState != 0;
+  g_compat_last_error = 0;
+  return (HANDLE)event_handle;
+}
+
+DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = CompatGetEventHandle(hHandle);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return COMPAT_WAIT_FAILED;
+  }
+  if ( event_handle->signaled )
+  {
+    if ( !event_handle->manual_reset )
+      event_handle->signaled = 0;
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_OBJECT_0;
+  }
+  if ( dwMilliseconds == 0 )
+  {
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_TIMEOUT;
+  }
+  if ( dwMilliseconds != COMPAT_WAIT_INFINITE )
+    usleep((useconds_t)(dwMilliseconds * 1000));
+  else
+    usleep(1000);
+  if ( event_handle->signaled )
+  {
+    if ( !event_handle->manual_reset )
+      event_handle->signaled = 0;
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_OBJECT_0;
+  }
+  g_compat_last_error = 0;
+  return COMPAT_WAIT_TIMEOUT;
+}
+
+BOOL __stdcall PulseEvent(HANDLE hEvent)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  event_handle->signaled = event_handle->manual_reset;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+BOOL __stdcall ResetEvent(HANDLE hEvent)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  event_handle->signaled = 0;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+BOOL __stdcall SetEvent(HANDLE hEvent)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  event_handle->signaled = 1;
+  g_compat_last_error = 0;
+  return 1;
+}
+
+DWORD __stdcall SuspendThread(HANDLE hThread)
+{
+  if ( !hThread )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return (DWORD)-1;
+  }
+  g_compat_last_error = 0;
+  return 0;
+}
+
+int __cdecl _wcpp_4_copy_array__(int a1)
+{
+  return a1;
+}
+
+int __cdecl ICClose(int a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int AVIFileExit(void)
+{
+  return 0;
+}
+
+int __stdcall AVIStreamEndStreaming(int a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __stdcall AVIStreamRelease(int a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __stdcall AVIFileRelease(int a1)
+{
+  (void)a1;
+  return 0;
+}
+
+int __cdecl ICDecompress(int a1, int a2, int a3, int a4, int a5, int a6)
+{
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+  (void)a6;
+  return 0;
+}
+
+int __stdcall ICSendMessage(DWORD a1, DWORD a2, DWORD a3, DWORD a4, DWORD a5)
+{
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+  return 0;
+}
+
+int __cdecl abs32(int value)
+{
+  return value < 0 ? -value : value;
+}
+
+int ExcString_AsCharPtr(void *a1, void *a2, void *a3, int a4)
+{
+  static const char kCompatEmptyString[] = "";
+
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  return (int)(uintptr_t)kCompatEmptyString;
 }
 
 void __stdcall InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)

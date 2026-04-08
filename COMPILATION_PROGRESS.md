@@ -3096,6 +3096,69 @@
 - total rename count so far:
   - `1193`
 
+## Batch 134 - SDL Menu Presentation And Low32 Handle Containment Wave
+- Current frontier:
+  - move the contained authentic main-menu probe from a merely stable idle loop to a real SDL-backed presentation path that can display the recovered start menu
+- Subagents spawned and scopes:
+  - reused the existing live subagents already attached to this branch state instead of opening a separate worktree
+  - `Aristotle`: read-only diagnosis of the live `sub_475080` / menu-probe crash surface and exact pointer-width misuse
+  - `Arendt`: `platform_sdl_runtime.c` DirectDraw/SDL presentation seam while preserving the existing owner-window `StretchDIBits` bridge
+  - mergeable subagent evidence used this batch:
+    - `Aristotle` isolated the 64-bit `hWnd` truncation through `Render_SetPixelFormat -> sub_475080 -> Compat_DirectDraw_SetDisplayMode`, showing the SDL window shim must stay in low 32-bit address space while recovered code still stores handles in `int`
+    - `Arendt` confirmed the owner-window `StretchDIBits` path and narrowed the next presentation blocker to the still-inert `CompatDirectDrawSurface_Lock` / `Blt` / `Flip` band
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_475080`
+  - `CompatDirectDrawSurface_Blt`
+  - `CompatDirectDrawSurface_BltFast`
+  - `CompatDirectDrawSurface_Flip`
+  - `CompatDirectDrawSurface_Lock`
+  - `CreateWindowExA`
+  - `PlatformEnsureWindowDeviceContext`
+- Blockers removed this batch:
+  - DirectDraw surface blits no longer discard the recovered pixel payload before it reaches the SDL seam
+  - the contained menu probe now reaches a primary-surface SDL presentation helper from the authentic DirectDraw path instead of stopping at metadata-only surface stubs
+  - Win32-shaped `HWND` / `HDC` / bitmap shim objects no longer depend on arbitrary 64-bit heap addresses while recovered code still narrows them into `int`
+- SDL replacements/cleanups this batch:
+  - added low-32 allocation containment for SDL window/DC/image shim objects that cross recovered 32-bit handle fields
+  - added owner-window tracking for DirectDraw surfaces and window DCs
+  - added DirectDraw surface pixel-buffer allocation, rect fill/copy, flip, and primary-surface SDL presentation helpers
+  - `Compat_DirectDraw_SetDisplayMode` now keeps the SDL host window size synchronized with the recovered display mode
+- Menu/UI fixes this batch:
+  - the contained `--authentic-menu-probe` path now provably executes both `CompatDirectDrawSurface_Blt` and `PlatformPresentDirectDrawSurface` under GDB, which is the first direct proof that the recovered menu probe enters an SDL presentation bridge instead of only surviving in a headless idle loop
+- Session-init fixes this batch:
+  - none; this batch stayed intentionally limited to the menu/video presentation seam
+- Validation probe:
+  - `cmake --build build -j4`
+  - `timeout -s KILL 5s ./build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout -s KILL 5s ./build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex 'set pagination off' -ex 'break CompatDirectDrawSurface_Blt' -ex 'run --authentic-menu-probe' -ex 'bt 5' --args ./build/bin/clash95_bootstrap`
+  - `gdb -batch -ex 'set pagination off' -ex 'break PlatformPresentDirectDrawSurface' -ex 'run --authentic-menu-probe' -ex 'bt 5' --args ./build/bin/clash95_bootstrap`
+- Compile status:
+  - `platform_sdl_runtime.c` still compiles cleanly in both the static-library and bootstrap executable targets
+- Link status:
+  - `clash95_bootstrap` still links successfully as the runnable WSL/SDL executable
+  - `clash95_recovered` still links successfully as the recovered static-library baseline
+- Runtime status:
+  - `timeout -s KILL 5s ./build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `137`, confirming the authentic startup prelude still survives the five-second runtime window
+  - `timeout -s KILL 5s ./build/bin/clash95_bootstrap --authentic-menu-probe` also exits with status `137`, confirming the contained menu probe stays alive long enough to require forced termination rather than faulting during early video init
+  - GDB breakpoint validation shows the live menu probe hits `CompatDirectDrawSurface_Blt` through `Render_SetPixelFormat -> sub_473E30`, and then reaches `PlatformPresentDirectDrawSurface` from that same authentic path
+- Highest authentic runtime milestone reached:
+  - the recovered main-menu probe now survives for at least five seconds and reaches the SDL presentation helper from the authentic DirectDraw primary-surface path
+- Key evidence used:
+  - `Render_SetPixelFormat` still narrows `hWnd` to `int` before forwarding it into `sub_475080`, so SDL shim objects that cross that boundary must remain low-32
+  - `CreateWindowExA`, window-owned DC creation, compatible DC creation, and image-handle creation all originally used host `calloc` allocations above the recovered 32-bit handle surface
+  - GDB on the contained menu probe now stops in `CompatDirectDrawSurface_Blt` and `PlatformPresentDirectDrawSurface`, proving the new SDL presentation bridge is on the live execution path
+- Ambiguous candidates deferred:
+  - the contained menu probe did not hit `StretchDIBits` during the same five-second runtime window, so the active presentation branch appears to be the DirectDraw surface path rather than the GDI-on-DirectDraw path
+  - palette-faithful 8-bit presentation is still conservative; the current SDL presentation helper converts 8-bit surfaces as grayscale until the recovered palette object model is rebuilt more faithfully
+  - if the menu still appears blank on a visible desktop session, the next narrow investigation is whether a later render band bypasses primary-surface present despite the proven `Blt`/present hits during early video init
+- total rename count so far:
+  - `1193`
+
 ## Batch 134 - Main Menu SDL Input Fallback Wave
 - Current frontier:
   - move the recovered main-menu corridor from a stable first-frame / idle-loop plateau toward real responsiveness by stopping the SDL/WSL executable from fail-closing input when the DirectInput-era device bootstrap is unavailable

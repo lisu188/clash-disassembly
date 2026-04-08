@@ -41,6 +41,7 @@ struct SDL_Window {
   const char *class_name;
   const char *title;
   SDL2_Window *host_window;
+  struct SDL_Surface *device_context;
 };
 
 struct SDL_Renderer {
@@ -56,6 +57,7 @@ struct SDL_Surface {
   int height;
   const char *resource_name;
   COLORREF key_pixel;
+  struct SDL_Window *owner_window;
 };
 
 struct SDL_Palette {
@@ -210,6 +212,360 @@ static int CompatSurfaceBytesPerPixel(const CompatDirectDrawSurface *surface)
     return 1;
   return (surface->bpp + 7) >> 3;
 }
+
+static HRESULT CompatDirectDrawSurfaceEnsurePixels(CompatDirectDrawSurface *surface)
+{
+  size_t pixel_bytes;
+
+  if ( !surface )
+    return (HRESULT)0x80070057;
+  if ( surface->pitch <= 0 )
+    surface->pitch = surface->width * CompatSurfaceBytesPerPixel(surface);
+  if ( surface->pixels )
+    return 0;
+  pixel_bytes = (size_t)surface->pitch * (size_t)surface->height;
+  surface->pixels = PlatformAllocLow32(pixel_bytes);
+  if ( !surface->pixels )
+    return (HRESULT)0x8007000E;
+  memset(surface->pixels, 0, pixel_bytes);
+  return 0;
+}
+
+static Uint32 *PlatformConvertSurfacePixelsToArgb32(const CompatDirectDrawSurface *surface, int *out_pitch)
+{
+  const unsigned char *src_base;
+  Uint32 *pixels;
+  int dst_pitch;
+  int y;
+  int x;
+
+  if ( !surface || !surface->pixels || surface->width <= 0 || surface->height <= 0 || surface->pitch <= 0 )
+    return 0;
+  dst_pitch = surface->width * (int)sizeof(*pixels);
+  pixels = (Uint32 *)malloc((size_t)dst_pitch * (size_t)surface->height);
+  if ( !pixels )
+    return 0;
+  src_base = (const unsigned char *)surface->pixels;
+  for ( y = 0; y < surface->height; ++y )
+  {
+    const unsigned char *src_row;
+    Uint32 *dst_row;
+
+    src_row = src_base + (size_t)y * (size_t)surface->pitch;
+    dst_row = (Uint32 *)((unsigned char *)pixels + (size_t)y * (size_t)dst_pitch);
+    for ( x = 0; x < surface->width; ++x )
+    {
+      if ( surface->bpp <= 8 )
+      {
+        Uint32 value;
+
+        value = src_row[x];
+        dst_row[x] = 0xFF000000u | (value << 16) | (value << 8) | value;
+      }
+      else if ( surface->bpp <= 16 )
+      {
+        unsigned short pixel16;
+        Uint32 red;
+        Uint32 green;
+        Uint32 blue;
+
+        pixel16 = ((const unsigned short *)src_row)[x];
+        red = (Uint32)((pixel16 >> 11) & 0x1Fu);
+        green = (Uint32)((pixel16 >> 5) & 0x3Fu);
+        blue = (Uint32)(pixel16 & 0x1Fu);
+        dst_row[x] = 0xFF000000u
+                   | ((red * 255u / 31u) << 16)
+                   | ((green * 255u / 63u) << 8)
+                   | (blue * 255u / 31u);
+      }
+      else if ( surface->bpp <= 24 )
+      {
+        const unsigned char *src_pixel;
+
+        src_pixel = src_row + x * 3;
+        dst_row[x] = 0xFF000000u | ((Uint32)src_pixel[2] << 16) | ((Uint32)src_pixel[1] << 8) | (Uint32)src_pixel[0];
+      }
+      else
+      {
+        const unsigned char *src_pixel;
+        Uint32 alpha;
+
+        src_pixel = src_row + x * 4;
+        alpha = src_pixel[3] ? (Uint32)src_pixel[3] : 0xFFu;
+        dst_row[x] = (alpha << 24) | ((Uint32)src_pixel[2] << 16) | ((Uint32)src_pixel[1] << 8) | (Uint32)src_pixel[0];
+      }
+    }
+  }
+  if ( out_pitch )
+    *out_pitch = dst_pitch;
+  return pixels;
+}
+
+static void PlatformPresentDirectDrawSurface(CompatDirectDrawSurface *surface)
+{
+  struct SDL_Window *window;
+  SDL2_Surface *host_surface;
+  SDL2_Surface *dib_surface;
+  Uint32 *argb_pixels;
+  SDL_Rect dest_rect;
+  int argb_pitch;
+
+  if ( !surface || !surface->pixels )
+    return;
+  window = surface->surface.owner_window;
+  if ( !window && surface->owner )
+    window = (struct SDL_Window *)surface->owner->cooperative_window;
+  if ( !window || !window->host_window )
+    return;
+  argb_pixels = PlatformConvertSurfacePixelsToArgb32(surface, &argb_pitch);
+  if ( !argb_pixels )
+    return;
+  dib_surface = SDL_CreateRGBSurfaceWithFormatFrom(
+    argb_pixels,
+    surface->width,
+    surface->height,
+    32,
+    argb_pitch,
+    SDL_PIXELFORMAT_ARGB8888);
+  if ( !dib_surface )
+  {
+    free(argb_pixels);
+    return;
+  }
+  host_surface = SDL_GetWindowSurface(window->host_window);
+  if ( host_surface )
+  {
+    dest_rect.x = 0;
+    dest_rect.y = 0;
+    dest_rect.w = window->width > 0 ? window->width : surface->width;
+    dest_rect.h = window->height > 0 ? window->height : surface->height;
+    SDL_BlitScaled(dib_surface, 0, host_surface, &dest_rect);
+    SDL_UpdateWindowSurface(window->host_window);
+  }
+  SDL_FreeSurface(dib_surface);
+  free(argb_pixels);
+}
+
+static void CompatDirectDrawSurfaceFillRect(CompatDirectDrawSurface *surface, const RECT *rect, DWORD color)
+{
+  unsigned char *dst_base;
+  int bytes_per_pixel;
+  int left;
+  int top;
+  int right;
+  int bottom;
+  int x;
+  int y;
+
+  if ( !surface || !surface->pixels )
+    return;
+  bytes_per_pixel = CompatSurfaceBytesPerPixel(surface);
+  left = rect ? rect->left : 0;
+  top = rect ? rect->top : 0;
+  right = rect ? rect->right : surface->width;
+  bottom = rect ? rect->bottom : surface->height;
+  if ( left < 0 )
+    left = 0;
+  if ( top < 0 )
+    top = 0;
+  if ( right > surface->width )
+    right = surface->width;
+  if ( bottom > surface->height )
+    bottom = surface->height;
+  if ( left >= right || top >= bottom )
+    return;
+  dst_base = (unsigned char *)surface->pixels;
+  for ( y = top; y < bottom; ++y )
+  {
+    unsigned char *dst_row;
+
+    dst_row = dst_base + (size_t)y * (size_t)surface->pitch + (size_t)left * (size_t)bytes_per_pixel;
+    if ( bytes_per_pixel == 1 )
+    {
+      memset(dst_row, (unsigned char)color, (size_t)(right - left));
+      continue;
+    }
+    if ( bytes_per_pixel == 2 )
+    {
+      unsigned short fill16;
+
+      fill16 = (unsigned short)color;
+      for ( x = left; x < right; ++x )
+        ((unsigned short *)dst_row)[x - left] = fill16;
+      continue;
+    }
+    if ( bytes_per_pixel == 3 )
+    {
+      unsigned char blue;
+      unsigned char green;
+      unsigned char red;
+
+      blue = (unsigned char)(color & 0xFFu);
+      green = (unsigned char)((color >> 8) & 0xFFu);
+      red = (unsigned char)((color >> 16) & 0xFFu);
+      for ( x = left; x < right; ++x )
+      {
+        unsigned char *dst_pixel;
+
+        dst_pixel = dst_row + (size_t)(x - left) * 3u;
+        dst_pixel[0] = blue;
+        dst_pixel[1] = green;
+        dst_pixel[2] = red;
+      }
+      continue;
+    }
+    for ( x = left; x < right; ++x )
+      ((Uint32 *)dst_row)[x - left] = color;
+  }
+}
+
+static void CompatDirectDrawSurfaceCopyRect(
+  CompatDirectDrawSurface *dst,
+  const RECT *dst_rect,
+  const CompatDirectDrawSurface *src,
+  const RECT *src_rect)
+{
+  int dst_bpp;
+  int src_bpp;
+  int dst_left;
+  int dst_top;
+  int src_left;
+  int src_top;
+  int width;
+  int height;
+  int x;
+  int y;
+
+  if ( !dst || !dst->pixels || !src || !src->pixels )
+    return;
+  dst_left = dst_rect ? dst_rect->left : 0;
+  dst_top = dst_rect ? dst_rect->top : 0;
+  src_left = src_rect ? src_rect->left : 0;
+  src_top = src_rect ? src_rect->top : 0;
+  width = dst_rect ? (dst_rect->right - dst_rect->left) : dst->width;
+  height = dst_rect ? (dst_rect->bottom - dst_rect->top) : dst->height;
+  if ( src_rect )
+  {
+    if ( width > src_rect->right - src_rect->left )
+      width = src_rect->right - src_rect->left;
+    if ( height > src_rect->bottom - src_rect->top )
+      height = src_rect->bottom - src_rect->top;
+  }
+  if ( dst_left < 0 )
+  {
+    src_left -= dst_left;
+    width += dst_left;
+    dst_left = 0;
+  }
+  if ( dst_top < 0 )
+  {
+    src_top -= dst_top;
+    height += dst_top;
+    dst_top = 0;
+  }
+  if ( src_left < 0 )
+  {
+    dst_left -= src_left;
+    width += src_left;
+    src_left = 0;
+  }
+  if ( src_top < 0 )
+  {
+    dst_top -= src_top;
+    height += src_top;
+    src_top = 0;
+  }
+  if ( dst_left + width > dst->width )
+    width = dst->width - dst_left;
+  if ( dst_top + height > dst->height )
+    height = dst->height - dst_top;
+  if ( src_left + width > src->width )
+    width = src->width - src_left;
+  if ( src_top + height > src->height )
+    height = src->height - src_top;
+  if ( width <= 0 || height <= 0 )
+    return;
+  dst_bpp = CompatSurfaceBytesPerPixel(dst);
+  src_bpp = CompatSurfaceBytesPerPixel(src);
+  for ( y = 0; y < height; ++y )
+  {
+    unsigned char *dst_row;
+    const unsigned char *src_row;
+
+    dst_row = (unsigned char *)dst->pixels
+            + (size_t)(dst_top + y) * (size_t)dst->pitch
+            + (size_t)dst_left * (size_t)dst_bpp;
+    src_row = (const unsigned char *)src->pixels
+            + (size_t)(src_top + y) * (size_t)src->pitch
+            + (size_t)src_left * (size_t)src_bpp;
+    if ( dst_bpp == src_bpp )
+    {
+      memmove(dst_row, src_row, (size_t)width * (size_t)dst_bpp);
+      continue;
+    }
+    for ( x = 0; x < width; ++x )
+    {
+      const unsigned char *src_pixel;
+      unsigned char *dst_pixel;
+
+      src_pixel = src_row + (size_t)x * (size_t)src_bpp;
+      dst_pixel = dst_row + (size_t)x * (size_t)dst_bpp;
+      if ( src_bpp == 1 && dst_bpp == 2 )
+      {
+        unsigned char gray;
+        unsigned short pixel16;
+
+        gray = src_pixel[0];
+        pixel16 = (unsigned short)(((unsigned short)(gray >> 3) << 11)
+                                 | ((unsigned short)(gray >> 2) << 5)
+                                 | (unsigned short)(gray >> 3));
+        ((unsigned short *)dst_pixel)[0] = pixel16;
+      }
+      else if ( src_bpp == 2 && dst_bpp == 1 )
+      {
+        unsigned short pixel16;
+        unsigned int red;
+        unsigned int green;
+        unsigned int blue;
+
+        pixel16 = ((const unsigned short *)src_pixel)[0];
+        red = ((pixel16 >> 11) & 0x1Fu) * 255u / 31u;
+        green = ((pixel16 >> 5) & 0x3Fu) * 255u / 63u;
+        blue = (pixel16 & 0x1Fu) * 255u / 31u;
+        dst_pixel[0] = (unsigned char)((red + green + blue) / 3u);
+      }
+      else if ( src_bpp == 1 && dst_bpp == 4 )
+      {
+        unsigned int gray;
+
+        gray = src_pixel[0];
+        ((Uint32 *)dst_pixel)[0] = 0xFF000000u | (gray << 16) | (gray << 8) | gray;
+      }
+      else if ( src_bpp == 4 && dst_bpp == 2 )
+      {
+        Uint32 pixel32;
+        unsigned short pixel16;
+
+        pixel32 = ((const Uint32 *)src_pixel)[0];
+        pixel16 = (unsigned short)((((pixel32 >> 19) & 0x1Fu) << 11)
+                                 | (((pixel32 >> 10) & 0x3Fu) << 5)
+                                 | ((pixel32 >> 3) & 0x1Fu));
+        ((unsigned short *)dst_pixel)[0] = pixel16;
+      }
+      else
+      {
+        int copy_bytes;
+
+        copy_bytes = dst_bpp < src_bpp ? dst_bpp : src_bpp;
+        memcpy(dst_pixel, src_pixel, (size_t)copy_bytes);
+        if ( dst_bpp > copy_bytes )
+          memset(dst_pixel + copy_bytes, 0, (size_t)(dst_bpp - copy_bytes));
+      }
+    }
+  }
+}
+
+static HDC PlatformEnsureWindowDeviceContext(struct SDL_Window *window);
 
 static HRESULT __stdcall CompatDirectDraw_QueryInterface(CompatDirectDraw *self, const void *riid, void *out_object);
 static ULONG __stdcall CompatDirectDraw_AddRef(CompatDirectDraw *self);
@@ -378,6 +734,7 @@ static CompatDirectDrawSurface *CompatDirectDrawSurfaceCreate(CompatDirectDraw *
   surface->surface.width = surface->width;
   surface->surface.height = surface->height;
   surface->surface.resource_name = "directdraw-surface";
+  surface->surface.owner_window = owner ? (struct SDL_Window *)owner->cooperative_window : 0;
   if ( owner )
     CompatDirectDraw_AddRef(owner);
   return surface;
@@ -585,11 +942,15 @@ static HRESULT __stdcall CompatDirectDraw_SetCooperativeLevel(CompatDirectDraw *
     return (HRESULT)0x80070057;
   self->cooperative_window = hwnd;
   self->cooperative_flags = flags;
+  if ( self->primary_surface )
+    self->primary_surface->surface.owner_window = (struct SDL_Window *)hwnd;
   return 0;
 }
 
 static HRESULT __stdcall CompatDirectDraw_SetDisplayMode(CompatDirectDraw *self, int width, int height, int bpp, int refresh_rate, int flags)
 {
+  struct SDL_Window *window;
+
   (void)refresh_rate;
   (void)flags;
   if ( !self )
@@ -604,8 +965,12 @@ static HRESULT __stdcall CompatDirectDraw_SetDisplayMode(CompatDirectDraw *self,
   g_platform_default_surface.height = self->height;
   if ( self->cooperative_window )
   {
-    ((struct SDL_Window *)self->cooperative_window)->width = self->width;
-    ((struct SDL_Window *)self->cooperative_window)->height = self->height;
+    window = (struct SDL_Window *)self->cooperative_window;
+    window->width = self->width;
+    window->height = self->height;
+    PlatformEnsureWindowDeviceContext(window);
+    if ( window->host_window )
+      SDL_SetWindowSize(window->host_window, self->width, self->height);
   }
   return 0;
 }
@@ -684,20 +1049,34 @@ static HRESULT __stdcall CompatDirectDrawSurface_AddOverlayDirtyRect(CompatDirec
 static HRESULT __stdcall CompatDirectDrawSurface_Blt(CompatDirectDrawSurface *self, RECT *dest_rect, void *src_surface, RECT *src_rect, DWORD flags, void *blt_fx)
 {
   CompatDirectDrawSurface *src;
+  HRESULT hr;
 
-  (void)dest_rect;
-  (void)src_rect;
   (void)flags;
-  (void)blt_fx;
   if ( !self )
     return (HRESULT)0x80070057;
+  hr = CompatDirectDrawSurfaceEnsurePixels(self);
+  if ( hr )
+    return hr;
   src = (CompatDirectDrawSurface *)src_surface;
   if ( src )
   {
+    hr = CompatDirectDrawSurfaceEnsurePixels(src);
+    if ( hr )
+      return hr;
+    CompatDirectDrawSurfaceCopyRect(self, dest_rect, src, src_rect);
     self->surface.width = src->surface.width;
     self->surface.height = src->surface.height;
   }
+  else
+  {
+    DWORD fill_color;
+
+    fill_color = blt_fx ? ((DWORD *)blt_fx)[20] : 0;
+    CompatDirectDrawSurfaceFillRect(self, dest_rect, fill_color);
+  }
   self->lost = 0;
+  if ( self == (self->owner ? self->owner->primary_surface : 0) || self->surface.owner_window )
+    PlatformPresentDirectDrawSurface(self);
   return 0;
 }
 
@@ -712,9 +1091,26 @@ static HRESULT __stdcall CompatDirectDrawSurface_BltBatch(CompatDirectDrawSurfac
 
 static HRESULT __stdcall CompatDirectDrawSurface_BltFast(CompatDirectDrawSurface *self, int x, int y, void *src_surface, RECT *src_rect, DWORD flags)
 {
-  (void)x;
-  (void)y;
-  return CompatDirectDrawSurface_Blt(self, 0, src_surface, src_rect, flags, 0);
+  RECT dest_rect;
+
+  if ( src_rect )
+  {
+    dest_rect.left = x;
+    dest_rect.top = y;
+    dest_rect.right = x + (src_rect->right - src_rect->left);
+    dest_rect.bottom = y + (src_rect->bottom - src_rect->top);
+  }
+  else
+  {
+    CompatDirectDrawSurface *src;
+
+    src = (CompatDirectDrawSurface *)src_surface;
+    dest_rect.left = x;
+    dest_rect.top = y;
+    dest_rect.right = x + (src ? src->width : self->width);
+    dest_rect.bottom = y + (src ? src->height : self->height);
+  }
+  return CompatDirectDrawSurface_Blt(self, &dest_rect, src_surface, src_rect, flags, 0);
 }
 
 static HRESULT __stdcall CompatDirectDrawSurface_DeleteAttachedSurface(CompatDirectDrawSurface *self, DWORD flags, void *attached_surface)
@@ -747,9 +1143,24 @@ static HRESULT __stdcall CompatDirectDrawSurface_EnumOverlayZOrders(CompatDirect
 
 static HRESULT __stdcall CompatDirectDrawSurface_Flip(CompatDirectDrawSurface *self, void *target_override, DWORD flags)
 {
-  (void)self;
-  (void)target_override;
+  CompatDirectDrawSurface *src;
+
   (void)flags;
+  if ( !self )
+    return (HRESULT)0x80070057;
+  src = (CompatDirectDrawSurface *)target_override;
+  if ( !src )
+    src = self->attached_surface;
+  if ( src )
+  {
+    HRESULT hr;
+
+    hr = CompatDirectDrawSurface_Blt(self, 0, src, 0, 0, 0);
+    if ( hr )
+      return hr;
+  }
+  if ( self == (self->owner ? self->owner->primary_surface : 0) || self->surface.owner_window )
+    PlatformPresentDirectDrawSurface(self);
   return 0;
 }
 
@@ -799,6 +1210,10 @@ static HRESULT __stdcall CompatDirectDrawSurface_GetDC(CompatDirectDrawSurface *
 {
   if ( !self || !out_dc )
     return (HRESULT)0x80070057;
+  if ( !self->surface.owner_window && self->owner && self->owner->cooperative_window )
+    self->surface.owner_window = (struct SDL_Window *)self->owner->cooperative_window;
+  self->surface.width = self->width;
+  self->surface.height = self->height;
   *(void **)out_dc = &self->surface;
   return 0;
 }
@@ -864,21 +1279,16 @@ static HRESULT __stdcall CompatDirectDrawSurface_IsLost(CompatDirectDrawSurface 
 
 static HRESULT __stdcall CompatDirectDrawSurface_Lock(CompatDirectDrawSurface *self, RECT *rect, int *desc, DWORD flags, HANDLE event_handle)
 {
-  size_t pixel_bytes;
+  HRESULT hr;
 
   (void)rect;
   (void)flags;
   (void)event_handle;
   if ( !self || !desc )
     return (HRESULT)0x80070057;
-  if ( !self->pixels )
-  {
-    pixel_bytes = (size_t)self->pitch * (size_t)self->height;
-    self->pixels = PlatformAllocLow32(pixel_bytes);
-    if ( !self->pixels )
-      return (HRESULT)0x8007000E;
-    memset(self->pixels, 0, pixel_bytes);
-  }
+  hr = CompatDirectDrawSurfaceEnsurePixels(self);
+  if ( hr )
+    return hr;
   memset(desc, 0, 108);
   desc[0] = 108;
   desc[2] = self->height;
@@ -937,6 +1347,8 @@ static HRESULT __stdcall CompatDirectDrawSurface_Unlock(CompatDirectDrawSurface 
 {
   (void)self;
   (void)lock_ptr;
+  if ( self == (self->owner ? self->owner->primary_surface : 0) || (self && self->surface.owner_window) )
+    PlatformPresentDirectDrawSurface(self);
   return 0;
 }
 
@@ -1074,9 +1486,126 @@ static signed char g_platform_host_mouse_primary;
 static signed char g_platform_host_mouse_secondary;
 static signed char g_platform_host_keyboard_state[256];
 
+static int PlatformSurfaceIsWindowDeviceContext(const struct SDL_Surface *surface)
+{
+  return surface && surface->owner_window && surface->owner_window->device_context == surface;
+}
+
 static int PlatformSurfaceIsBuiltin(const struct SDL_Surface *surface)
 {
-  return surface == &g_platform_default_surface || surface == &g_platform_default_icon;
+  return surface == &g_platform_default_surface
+      || surface == &g_platform_default_icon
+      || PlatformSurfaceIsWindowDeviceContext(surface);
+}
+
+static struct SDL_Window *PlatformGetWindowFromHdc(HDC hdc)
+{
+  struct SDL_Surface *surface;
+
+  surface = (struct SDL_Surface *)hdc;
+  if ( !surface )
+    return 0;
+  return surface->owner_window;
+}
+
+static HDC PlatformEnsureWindowDeviceContext(struct SDL_Window *window)
+{
+  struct SDL_Surface *surface;
+
+  if ( !window )
+    return &g_platform_default_surface;
+  surface = window->device_context;
+  if ( !surface )
+  {
+    surface = (struct SDL_Surface *)PlatformAllocLow32(sizeof(*surface));
+    if ( !surface )
+      return &g_platform_default_surface;
+    memset(surface, 0, sizeof(*surface));
+    surface->resource_name = "window-device-context";
+    surface->owner_window = window;
+    window->device_context = surface;
+  }
+  surface->width = window->width > 0 ? window->width : 640;
+  surface->height = window->height > 0 ? window->height : 480;
+  return surface;
+}
+
+static Uint32 *PlatformConvertDibToArgb32(const void *bits, const BITMAPINFO *bitmap_info, int fallback_width, int fallback_height, int *out_pitch)
+{
+  const BITMAPINFOHEADER *header;
+  const BYTE *src_base;
+  const RGBQUAD *palette;
+  Uint32 *pixels;
+  int width;
+  int height;
+  int src_pitch;
+  int dst_pitch;
+  int bit_count;
+  int top_down;
+  int y;
+  int x;
+
+  if ( !bits || !bitmap_info )
+    return 0;
+  header = &bitmap_info->bmiHeader;
+  width = header->biWidth ? abs(header->biWidth) : fallback_width;
+  height = header->biHeight ? abs(header->biHeight) : fallback_height;
+  if ( width <= 0 || height <= 0 )
+    return 0;
+  bit_count = header->biBitCount ? header->biBitCount : 32;
+  if ( bit_count != 8 && bit_count != 24 && bit_count != 32 )
+    return 0;
+  src_pitch = ((width * bit_count + 31) / 32) * 4;
+  dst_pitch = width * (int)sizeof(*pixels);
+  pixels = (Uint32 *)malloc((size_t)dst_pitch * (size_t)height);
+  if ( !pixels )
+    return 0;
+  src_base = (const BYTE *)bits;
+  palette = bitmap_info->bmiColors;
+  top_down = header->biHeight < 0;
+  for ( y = 0; y < height; ++y )
+  {
+    const BYTE *src_row;
+    Uint32 *dst_row;
+
+    src_row = src_base + (size_t)(top_down ? y : (height - 1 - y)) * (size_t)src_pitch;
+    dst_row = (Uint32 *)((BYTE *)pixels + (size_t)y * (size_t)dst_pitch);
+    for ( x = 0; x < width; ++x )
+    {
+      switch ( bit_count )
+      {
+        case 8:
+        {
+          RGBQUAD color;
+
+          color = palette[src_row[x]];
+          dst_row[x] = 0xFF000000u | ((Uint32)color.rgbRed << 16) | ((Uint32)color.rgbGreen << 8) | (Uint32)color.rgbBlue;
+          break;
+        }
+        case 24:
+        {
+          const BYTE *src_pixel;
+
+          src_pixel = src_row + x * 3;
+          dst_row[x] = 0xFF000000u | ((Uint32)src_pixel[2] << 16) | ((Uint32)src_pixel[1] << 8) | (Uint32)src_pixel[0];
+          break;
+        }
+        case 32:
+        {
+          const BYTE *src_pixel;
+          Uint32 alpha;
+
+          src_pixel = src_row + x * 4;
+          alpha = src_pixel[3] ? (Uint32)src_pixel[3] : 0xFFu;
+          dst_row[x] = (alpha << 24) | ((Uint32)src_pixel[2] << 16) | ((Uint32)src_pixel[1] << 8) | (Uint32)src_pixel[0];
+          break;
+        }
+      }
+    }
+  }
+  if ( out_pitch )
+    *out_pitch = dst_pitch;
+  return pixels;
 }
 
 static int PlatformQueueIsEmpty(void)
@@ -1343,9 +1872,10 @@ HWND __stdcall CreateWindowExA(
   (void)hMenu;
   (void)hInstance;
   (void)lpParam;
-  window = (struct SDL_Window *)calloc(1, sizeof(*window));
+  window = (struct SDL_Window *)PlatformAllocLow32(sizeof(*window));
   if ( !window )
     return 0;
+  memset(window, 0, sizeof(*window));
   window->x = X;
   window->y = Y;
   window->width = nWidth;
@@ -1423,8 +1953,12 @@ BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect)
 
 HDC __stdcall GetDC(HWND hWnd)
 {
-  (void)hWnd;
-  return &g_platform_default_surface;
+  struct SDL_Window *window;
+
+  window = (struct SDL_Window *)(hWnd ? hWnd : g_platform_foreground_window);
+  if ( !window )
+    return &g_platform_default_surface;
+  return PlatformEnsureWindowDeviceContext(window);
 }
 
 int __stdcall GetDeviceCaps(HDC hdc, int index)
@@ -1613,9 +2147,10 @@ HDC __stdcall CreateCompatibleDC(HDC hdc)
   struct SDL_Surface *surface;
 
   source = (struct SDL_Surface *)hdc;
-  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  surface = (struct SDL_Surface *)PlatformAllocLow32(sizeof(*surface));
   if ( !surface )
     return 0;
+  memset(surface, 0, sizeof(*surface));
   if ( source )
   {
     surface->width = source->width;
@@ -1636,7 +2171,7 @@ BOOL __stdcall DeleteDC(HDC hdc)
   surface = (struct SDL_Surface *)hdc;
   if ( !surface || PlatformSurfaceIsBuiltin(surface) )
     return 1;
-  free(surface);
+  PlatformFreeLow32(surface);
   return 1;
 }
 
@@ -1647,7 +2182,7 @@ BOOL __stdcall DeleteObject(HGDIOBJ ho)
   surface = (struct SDL_Surface *)ho;
   if ( !surface || PlatformSurfaceIsBuiltin(surface) )
     return 1;
-  free(surface);
+  PlatformFreeLow32(surface);
   return 1;
 }
 
@@ -1710,24 +2245,62 @@ BOOL __stdcall StretchBlt(HDC hdcDest, int xDest, int yDest, int wDest, int hDes
 int __stdcall StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight, const void *lpBits, const BITMAPINFO *lpbmi, UINT iUsage, DWORD rop)
 {
   struct SDL_Surface *surface;
+  struct SDL_Window *window;
+  SDL2_Surface *host_surface;
+  SDL2_Surface *dib_surface;
+  Uint32 *argb_pixels;
+  SDL_Rect dest_rect;
+  int argb_pitch;
+  int surface_width;
+  int surface_height;
 
-  (void)xDest;
-  (void)yDest;
   (void)xSrc;
   (void)ySrc;
-  (void)SrcWidth;
-  (void)lpBits;
-  (void)lpbmi;
   (void)iUsage;
   (void)rop;
   surface = (struct SDL_Surface *)hdc;
-  if ( surface && !PlatformSurfaceIsBuiltin(surface) )
+  if ( surface )
   {
     if ( DestWidth > 0 )
       surface->width = DestWidth;
     if ( DestHeight > 0 )
       surface->height = DestHeight;
   }
+  window = PlatformGetWindowFromHdc(hdc);
+  if ( !window || !window->host_window || !lpBits || !lpbmi )
+    return SrcHeight ? SrcHeight : DestHeight;
+  surface_width = lpbmi->bmiHeader.biWidth ? abs(lpbmi->bmiHeader.biWidth) : SrcWidth;
+  surface_height = lpbmi->bmiHeader.biHeight ? abs(lpbmi->bmiHeader.biHeight) : abs(SrcHeight);
+  argb_pixels = PlatformConvertDibToArgb32(lpBits, lpbmi, surface_width, surface_height, &argb_pitch);
+  if ( !argb_pixels )
+    return 0;
+  dib_surface = SDL_CreateRGBSurfaceWithFormatFrom(
+    argb_pixels,
+    surface_width,
+    surface_height,
+    32,
+    argb_pitch,
+    SDL_PIXELFORMAT_ARGB8888);
+  if ( !dib_surface )
+  {
+    free(argb_pixels);
+    return 0;
+  }
+  host_surface = SDL_GetWindowSurface(window->host_window);
+  if ( !host_surface )
+  {
+    SDL_FreeSurface(dib_surface);
+    free(argb_pixels);
+    return 0;
+  }
+  dest_rect.x = xDest;
+  dest_rect.y = yDest;
+  dest_rect.w = DestWidth > 0 ? DestWidth : surface_width;
+  dest_rect.h = DestHeight > 0 ? DestHeight : surface_height;
+  SDL_BlitScaled(dib_surface, 0, host_surface, &dest_rect);
+  SDL_UpdateWindowSurface(window->host_window);
+  SDL_FreeSurface(dib_surface);
+  free(argb_pixels);
   return SrcHeight ? SrcHeight : DestHeight;
 }
 
@@ -1738,9 +2311,10 @@ HANDLE __stdcall LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int
   (void)hInst;
   (void)type;
   (void)fuLoad;
-  surface = (struct SDL_Surface *)calloc(1, sizeof(*surface));
+  surface = (struct SDL_Surface *)PlatformAllocLow32(sizeof(*surface));
   if ( !surface )
     return 0;
+  memset(surface, 0, sizeof(*surface));
   surface->width = cx > 0 ? cx : 64;
   surface->height = cy > 0 ? cy : 64;
   surface->resource_name = name;
