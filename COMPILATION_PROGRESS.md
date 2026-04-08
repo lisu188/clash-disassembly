@@ -3214,7 +3214,6 @@
   - selecting a real save slot and crossing from the load menu into session/game-start initialization remains the next concrete runtime frontier
 - total rename count so far:
   - `1194`
-
 ## Batch 140 - Menu Widget Geometry And Probe Input Recovery Wave
 - Current frontier:
   - keep the contained SDL/WSL top-level menu probe on the authentic boot/menu loop while turning the currently visible background/shield frame into a genuinely interactive main-menu corridor
