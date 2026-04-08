@@ -922,5 +922,54 @@
       "The same loop compares `Time_Now() - 10` against `g_RoadBuildModeLastAnimationTick`, then advances `g_RoadBuildModeAnimationFrameIndex = (frame + 1) & 7`, proving one shared 8-frame animation state family.",
       "`RoadBuildMode_HighlightBuildableAdjacentTile` reads `g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]` when positioning the adjacent marker widgets, tying the bounce-offset table directly to the same modal road-build UI state."
     ]
+  },
+  {
+    "name": "MainMenuButtonWidgetsTemplate",
+    "kind": "ui_action_table",
+    "base_symbol": "g_MainMenuButtonWidgetsTemplate / unk_5181C0",
+    "description": "Six-entry top-level main-menu widget template table copied and localized by `PlayGame_Dispatch` before the first main-menu frame. Each 0x35-byte entry binds one visible button sprite group to the submenu or cinematic requested by the callback pointer stored inside the same record.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "load_game_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "First 0x35-byte entry. Sprite ids `0..3` match the extracted `MAIN_S32` `load` button art, and the callback pointer is `MainMenu_RequestLoadGameMenu`."
+      },
+      {
+        "offset": 53,
+        "name": "campaign_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "Second entry. Sprite ids `6..9` match `campaign`, and the callback pointer is `MainMenu_RequestCampaignMenu`."
+      },
+      {
+        "offset": 106,
+        "name": "exit_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "Third entry. Sprite ids `12..15` match `exit`, and the callback pointer is `MainMenu_RequestExit`."
+      },
+      {
+        "offset": 159,
+        "name": "options_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "Fourth entry. Sprite ids `18..21` match `options`, and the callback pointer is `MainMenu_RequestOptionsMenu`."
+      },
+      {
+        "offset": 212,
+        "name": "multiplayer_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "Fifth entry. Sprite ids `24..27` match `multiplayer`, and the callback pointer is `MainMenu_RequestMultiplayerMenu`."
+      },
+      {
+        "offset": 265,
+        "name": "credits_action",
+        "type": "MenuWidgetTemplateRecord",
+        "notes": "Sixth entry. Sprite ids `30..33` match `credits` / `autorzy`, and the callback pointer is `MainMenu_RequestCreditsCinematic`."
+      }
+    ],
+    "evidence": [
+      "`PlayGame_Dispatch` copies exactly six 0x35-byte records from `g_MainMenuButtonWidgetsTemplate`, patches the per-language label pointers with `g_LanguageIndex`, initializes the localized buffer via `sub_419D80`, and then polls it through `sub_419DC0` in the top-level main-menu idle loop.",
+      "The DGROUP table embeds the callback pointers in the same order `MainMenu_RequestLoadGameMenu`, `MainMenu_RequestCampaignMenu`, `MainMenu_RequestExit`, `MainMenu_RequestOptionsMenu`, `MainMenu_RequestMultiplayerMenu`, `MainMenu_RequestCreditsCinematic`.",
+      "The extracted `/mnt/c/clash/DATA/output/maximum/MAIN_S32` button art confirms the same visible ordering: `load`, `campaign`, `exit`, `options`, `multiplayer`, `credits` / `autorzy`."
+    ]
   }
 ]
