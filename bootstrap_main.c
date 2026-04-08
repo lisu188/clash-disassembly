@@ -130,7 +130,7 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
       g_boot_run_menu_probe = 1;
       continue;
     }
-    if ( arg_index > 1 )
+    if ( write_index > 0 )
       g_boot_command_line[write_index++] = ' ';
     argument = argv[arg_index];
     while ( *argument && write_index + 1 < sizeof(g_boot_command_line) )

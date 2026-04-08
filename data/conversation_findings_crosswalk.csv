@@ -1,0 +1,41 @@
+category,conversation_item,legacy_or_map_name,canonical_or_preferred_name,current_repo_state,canonical_file,action_now,confidence,notes
+repo_doc,Guide file,,DISASSEMBLY_GUIDE.md,present,DISASSEMBLY_GUIDE.md,preserve,high,Added in this integration wave to capture evidence order naming rules and conservative recovery policy.
+repo_doc,Maintainer audit,,docs/CONVERSATION_FINDINGS_GAP_AUDIT.md,present,docs/CONVERSATION_FINDINGS_GAP_AUDIT.md,preserve,high,Added in this integration wave to keep future Codex passes from redoing already-landed rename work.
+repo_doc,Machine-readable crosswalk,,data/conversation_findings_crosswalk.csv,present,data/conversation_findings_crosswalk.csv,preserve,high,Added in this integration wave as a grep-friendly ownership and status map for conversation findings.
+build_surface,Static library target,,clash95_recovered,present,CMakeLists.txt,preserve,high,Build surface already compiles clash95.c plus SDL and compat seam.
+agent_scope,Narrow mission charter,,AGENTS.md,present,AGENTS.md,leave mostly unchanged,high,Still focused on unit types and stats.
+rename,Platform window proc,Win_WndProc,Platform_MainWindowProc,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Platform window bootstrap,Win_CreateMainWindow,Platform_CreateMainWindow,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Message pump and blit loop,Win_ProcessMessagesAndBlitFrame,Platform_PumpMessagesAndBlitFrame,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Port reinforcement collection,Port_GetSupply,Port_CollectReinforcementShipment,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Battlefield click router,sub_42CB50,UnitBattle_HandleBattlefieldInteraction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Selection slot list builder,sub_412B20,UnitStackSelection_BuildSelectedSlotIndexList,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Garrison dialog close,sub_4338C0,BuildingGarrisonDialog_RequestClose,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Garrison dialog production handoff,sub_4338E0,BuildingGarrisonDialog_ShowProductionDialog,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Garrison repair toggle,sub_433A40,BuildingGarrisonDialog_ToggleRepairSelectedUnits,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Garrison training toggle,sub_433AC0,BuildingGarrisonDialog_ToggleTrainingSelectedUnits,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Garrison exit flow,sub_433B40,BuildingGarrisonDialog_BeginSelectedUnitsExit,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Production status text,sub_435280,CastleProduction_DrawProductionStatus,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Production previous selection,sub_435640,CastleProduction_SelectPreviousAvailableUnit,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Production next selection,sub_435680,CastleProduction_SelectNextAvailableUnit,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Buy licence action,sub_4356C0,CastleProduction_HandleBuyLicenceAction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Remove licence action,sub_435770,CastleProduction_HandleRemoveLicenceAction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Produce action,sub_4357E0,CastleProduction_HandleProduceAction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Stop production action,sub_435830,CastleProduction_HandleStopProductionAction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+rename,Info action,sub_435860,CastleProduction_HandleInfoAction,present,REVERSE_ENGINEERING_RENAME_LOG.md,cross-link only,high,Already canonical in rename log.
+structure,Strategic unit selection state,,UnitStackSelectionState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI state region.
+structure,Merged terrain movement helper,,MergedTerrainMoveProfile,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as helper record.
+structure,Minimap runtime state,,MiniMapState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI state region.
+structure,Tooltip saved backdrop,,TooltipBackdropState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as global state region.
+structure,Garrison dialog modal state,,BuildingGarrisonDialogState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI state region.
+structure,Garrison action descriptor table,,BuildingGarrisonDialogActionsTable,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI action table.
+structure,Castle management modal state,,CastleManagementScreenState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI state region.
+structure,Castle production modal state,,CastleProductionPanelState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as UI state region.
+structure,Input backend slab,,InputBackendState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as platform state region.
+structure,Port spawn-ring entry,,PortSpawnOffset,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as table record.
+structure,Tactical battle runtime,,BattleRuntimeState,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as battle state region.
+structure,Tactical pathing scratch state,,BattlePathingTables,present,RECOVERED_STRUCTURES.json,leave stable,high,Already represented as runtime helper region.
+unit_taxonomy,Recovered roster,,35-entry unit roster,present,UNIT_TYPES_AND_STATS_REPORT.md,preserve,high,Already recovered with strong evidence discipline.
+unit_taxonomy,Cargo handling,,UnitType31_GoldCargo and UnitType32_PeasantCargo,present,UNIT_TYPES_AND_STATS_REPORT.md,preserve,high,Already treated as special cargo entries.
+unit_taxonomy,Special personage handling,,UnitType33_SpecialFootPersonage and UnitType34_SpecialMountedPersonage,present,UNIT_TYPES_AND_STATS_REPORT.md,preserve conservatively,high,Already treated as conservative special-personage family.
+progress_log,Conversation integration batch,,COMPILATION_PROGRESS batch note,present,COMPILATION_PROGRESS.md,preserve,high,Recorded in Batch 125 as a docs-first conservative integration wave for the guide audit and crosswalk.

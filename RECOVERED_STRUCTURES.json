@@ -334,7 +334,8 @@
       "`Building_GetTaxRateByIndex`, the `ZmienPodatek` host stub, `Building_CollectGoldIncome`, and `Building_GetTaxBurdenTier` all read or write the low six bits at `+436`, proving that byte carries the building's raw tax rate rather than a derived burden tier.",
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
-      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Rules_SyncCastleFactOwner` use it to update the asserted castle fact's `moc` and `gracz` attributes."
+      "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Rules_SyncCastleFactOwner` use it to update the asserted castle fact's `moc` and `gracz` attributes.",
+      "`Building_TrainUnit`, `Building_ClearGarrisonTrainingTimer`, `Building_RepairUnit`, `Building_ClearGarrisonRepairTimer`, and `Building_UpdateGarrisonTrainRepairTimers` all read or write offset `+390 + slot` as one packed byte whose low three bits decrement training turns while bits `3..5` independently decrement repair turns; the upper two bits remain unresolved."
     ]
   },
   {
