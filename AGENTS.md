@@ -42,7 +42,7 @@
 6. External Clash terminology only as secondary confirmation.
 
 ## 7. Local Game-File Corroboration
-- The installed game files can be inspected under `/mnt/c/clash` when local asset, config, resource, or text evidence is needed.
+- The installed game files under `/mnt/c/clash` are the real local game-data root and can be inspected when actual asset, config, resource, or text evidence is needed.
 - `/mnt/c/clash/Manual.pdf` can also be inspected as secondary evidence for game concepts, UI flow, and terminology.
 - Treat `/mnt/c/clash` as corroborating evidence, not as a replacement for function/data-flow proof from the recovered codebase.
 
