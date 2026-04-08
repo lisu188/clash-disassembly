@@ -82,16 +82,30 @@ typedef struct CompatFindHandle {
   char pattern[PATH_MAX];
 } CompatFindHandle;
 
-typedef struct CompatEvent {
+typedef struct CompatEventHandle {
   unsigned int magic;
   int manual_reset;
   int signaled;
-} CompatEvent;
+} CompatEventHandle;
 
 #define COMPAT_FIND_HANDLE_SLOTS 64
 #define COMPAT_EVENT_MAGIC 0x45564E54u
+#define COMPAT_WAIT_OBJECT_0 0u
+#define COMPAT_WAIT_TIMEOUT 258u
+#define COMPAT_WAIT_FAILED 0xFFFFFFFFu
+#define COMPAT_WAIT_INFINITE 0xFFFFFFFFu
 
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
+
+static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
+{
+  CompatEventHandle *event_handle;
+
+  event_handle = (CompatEventHandle *)handle;
+  if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
+    return 0;
+  return event_handle;
+}
 
 static void CompatSetLastErrorFromErrno(void)
 {
@@ -839,10 +853,18 @@ void __lock_v(__lock *this)
 
 BOOL __stdcall CloseHandle(HANDLE hObject)
 {
+  CompatEventHandle *event_handle;
+
   if ( !hObject )
   {
     g_compat_last_error = (DWORD)EINVAL;
     return 0;
+  }
+  event_handle = CompatGetEventHandle(hObject);
+  if ( event_handle )
+  {
+    event_handle->magic = 0;
+    free(event_handle);
   }
   g_compat_last_error = 0;
   return 1;
@@ -850,80 +872,113 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
 
 HANDLE __stdcall CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, LPCSTR lpName)
 {
-  CompatEvent *event;
+  CompatEventHandle *event_handle;
 
   (void)lpEventAttributes;
   (void)lpName;
-  event = (CompatEvent *)calloc(1, sizeof(*event));
-  if ( !event )
+  event_handle = (CompatEventHandle *)calloc(1, sizeof(*event_handle));
+  if ( !event_handle )
   {
-    g_compat_last_error = (DWORD)ENOMEM;
+    CompatSetLastErrorFromErrno();
     return 0;
   }
-  event->magic = COMPAT_EVENT_MAGIC;
-  event->manual_reset = bManualReset ? 1 : 0;
-  event->signaled = bInitialState ? 1 : 0;
+  event_handle->magic = COMPAT_EVENT_MAGIC;
+  event_handle->manual_reset = bManualReset != 0;
+  event_handle->signaled = bInitialState != 0;
   g_compat_last_error = 0;
-  return (HANDLE)event;
+  return (HANDLE)event_handle;
 }
 
 DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
 {
-  CompatEvent *event;
+  CompatEventHandle *event_handle;
 
-  (void)dwMilliseconds;
-  event = (CompatEvent *)hHandle;
-  if ( !event )
-    return 0xFFFFFFFFu;
-  if ( event->magic != COMPAT_EVENT_MAGIC )
-    return 0;
-  if ( event->signaled )
+  event_handle = CompatGetEventHandle(hHandle);
+  if ( !event_handle )
   {
-    if ( !event->manual_reset )
-      event->signaled = 0;
-    return 0;
+    g_compat_last_error = (DWORD)EINVAL;
+    return COMPAT_WAIT_FAILED;
   }
-  return 258u;
+  if ( event_handle->signaled )
+  {
+    if ( !event_handle->manual_reset )
+      event_handle->signaled = 0;
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_OBJECT_0;
+  }
+  if ( dwMilliseconds == 0 )
+  {
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_TIMEOUT;
+  }
+  if ( dwMilliseconds != COMPAT_WAIT_INFINITE )
+    usleep((useconds_t)(dwMilliseconds * 1000));
+  else
+    usleep(1000);
+  if ( event_handle->signaled )
+  {
+    if ( !event_handle->manual_reset )
+      event_handle->signaled = 0;
+    g_compat_last_error = 0;
+    return COMPAT_WAIT_OBJECT_0;
+  }
+  g_compat_last_error = 0;
+  return COMPAT_WAIT_TIMEOUT;
 }
 
 BOOL __stdcall PulseEvent(HANDLE hEvent)
 {
-  CompatEvent *event;
+  CompatEventHandle *event_handle;
 
-  event = (CompatEvent *)hEvent;
-  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
     return 0;
-  event->signaled = 1;
-  if ( !event->manual_reset )
-    event->signaled = 0;
+  }
+  event_handle->signaled = event_handle->manual_reset;
+  g_compat_last_error = 0;
   return 1;
 }
 
 BOOL __stdcall ResetEvent(HANDLE hEvent)
 {
-  CompatEvent *event;
+  CompatEventHandle *event_handle;
 
-  event = (CompatEvent *)hEvent;
-  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
     return 0;
-  event->signaled = 0;
+  }
+  event_handle->signaled = 0;
+  g_compat_last_error = 0;
   return 1;
 }
 
 BOOL __stdcall SetEvent(HANDLE hEvent)
 {
-  CompatEvent *event;
+  CompatEventHandle *event_handle;
 
-  event = (CompatEvent *)hEvent;
-  if ( !event || event->magic != COMPAT_EVENT_MAGIC )
+  event_handle = CompatGetEventHandle(hEvent);
+  if ( !event_handle )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
     return 0;
-  event->signaled = 1;
+  }
+  event_handle->signaled = 1;
+  g_compat_last_error = 0;
   return 1;
 }
 
 DWORD __stdcall SuspendThread(HANDLE hThread)
 {
-  (void)hThread;
+  if ( !hThread )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return (DWORD)-1;
+  }
+  g_compat_last_error = 0;
   return 0;
 }
 
@@ -1511,9 +1566,15 @@ int __cdecl abs32(int value)
   return value < 0 ? -value : value;
 }
 
-_DWORD ExcString_AsCharPtr(void)
+int ExcString_AsCharPtr(void *a1, void *a2, void *a3, int a4)
 {
-  return 0;
+  static const char kCompatEmptyString[] = "";
+
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  return (int)(uintptr_t)kCompatEmptyString;
 }
 
 int __cdecl ICClose(_DWORD a1)
@@ -1553,7 +1614,7 @@ int __cdecl ICDecompress(_DWORD a1, _DWORD a2, _DWORD a3, _DWORD a4, _DWORD a5, 
   (void)a4;
   (void)a5;
   (void)a6;
-  return 1;
+  return 0;
 }
 
 int __stdcall ICSendMessage(DWORD hic, DWORD msg, DWORD dw1, DWORD dw2, DWORD dw3)
