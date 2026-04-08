@@ -33,7 +33,6 @@ add_executable(clash95_cpp_regen
   src_cpp/startup/cpp_regen_link_anchor.cpp
   $<TARGET_OBJECTS:clash95_bootstrap_objects>
 )
-
 target_include_directories(clash95_recovered
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -71,7 +70,6 @@ target_link_libraries(clash95_cpp_regen
   PRIVATE
     clash95_cpp_core
 )
-
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_recovered PRIVATE -std=gnu89 -w)
   target_compile_options(clash95_bootstrap_objects PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
@@ -101,7 +99,6 @@ set_target_properties(clash95_bootstrap PROPERTIES
   OUTPUT_NAME clash95_bootstrap
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
-
 set_target_properties(clash95_cpp_core PROPERTIES
   OUTPUT_NAME clash95_cpp_core
   ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
