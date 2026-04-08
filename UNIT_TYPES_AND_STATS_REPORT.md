@@ -171,3 +171,15 @@
 
 ## 6. Batch 135 Note
 - `Batch 135` stayed intentionally on the SDL/main-menu display frontier. No new unit-type or stat semantics were promoted in this wave; the unit/stat artifacts remain unchanged apart from this maintenance note while the executable-first menu-display repair was prioritized.
+
+## 7. Batch 136 Note
+- `Batch 136` stayed intentionally on the executable-first main-menu display frontier. The active work repaired the top-level menu text-cache and first-present corridor, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while the black-frame / post-present menu-display seam is still being recovered.
+
+## 8. Batch 137 Note
+- `Batch 137` stayed intentionally on the executable-first main-menu display frontier. The active work recovered the contained SDL present step for the top-level menu surface and proved stable nonblack menu frames under the gdb-contained probe lane, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while plain-run startup fidelity and interactive menu behavior remain the next blockers.
+
+## 9. Batch 138 Note
+- `Batch 138` stayed intentionally on the executable-first main-menu display frontier. The active work removed the plain-run `Render_CreateSprite` startup crash and brought the same stable nonblack menu-frame result onto the non-`gdb` executable lane, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while interactive menu behavior remains the next blocker.
+
+## 10. Batch 139 Note
+- `Batch 139` stayed intentionally on the executable-first main-menu display frontier. The active work removed a remaining non-authentic extra post-present pump from the contained top-level menu loop and proved the same stable nonblack menu-frame milestone still holds on the plainer one-present-then-loop path, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while real menu hover/click responsiveness remains the next blocker.

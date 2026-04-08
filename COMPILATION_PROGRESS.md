@@ -3096,6 +3096,249 @@
 - total rename count so far:
   - `1193`
 
+## Batch 139 - Main Menu Loop Fidelity Cleanup Wave
+- Current frontier:
+  - keep the plain contained main-menu probe on the authentic `Render_Present -> DD_Pump(..., 0) -> sub_419DC0(...)` loop shape while preserving the already recovered stable displayed menu frames
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Planck`: read-only widget hover/click gating review around `sub_419B80` / `sub_419DC0`
+  - `Hegel`: SDL/input fallback and `DD_Pump` menu-interaction seam review
+  - `Poincare`: authentic top-level main-menu loop review around `PlayGame_Dispatch`
+  - `Wegener`: asm/map corroboration for the menu interaction / redraw corridor
+  - mergeable subagent evidence used this batch:
+    - `Planck` confirmed `sub_419B80` only needs valid cursor coordinates plus the left-button `DD_IsFlipping(dword_544CD8)` gate for action callbacks, so menu responsiveness remains downstream of the live `DD_Pump` state rather than hidden extra drawing work
+    - `Poincare` confirmed the authentic top-level menu path does one `Render_Present`, then immediately enters the `DD_Pump((int)dword_544CD8, 0) + sub_419DC0(...)` loop without the probe-local extra post-present pump
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_419B80`
+  - `sub_419DC0`
+  - `DD_Pump`
+  - `Render_Present`
+- Blockers removed this batch:
+  - the contained main-menu probe no longer relies on the non-authentic extra `DD_Pump((int)dword_544CD8, 1)` immediately after the first `Render_Present`
+  - the displayed menu loop now stays on the closer-to-authentic one-present-then-loop shape while preserving the same stable nonblack frame sequence
+- SDL replacements/cleanups this batch:
+  - none beyond retaining the existing quarantined direct SDL present helper while removing the extra probe-only post-present pump that no longer proved necessary for stable display
+- Menu/UI fixes this batch:
+  - the contained main-menu probe now matches the authentic top-level loop ordering more closely: first `Render_Present`, then repeated `DD_Pump(..., 0)` / `sub_419DC0(...)`
+  - the same startup-black `000` frame followed by stable nonblack menu frames (`001..015`) still appears after the cleanup
+- Session-init fixes this batch:
+  - none; this wave stayed on top-level menu-loop fidelity rather than widening into submenu/session-init work
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c clash95.c platform_sdl_runtime.c`
+  - `cmake --build /tmp/clash95-menu-display-build --target clash95_bootstrap -j4`
+  - `env CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-menuprobe-b139 CLASH95_TRACE_MENU_PROBE=1 timeout 2s /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - Python/Pillow inspection of `/tmp/clash95-menuprobe-b139-000.bmp` through `/tmp/clash95-menuprobe-b139-015.bmp`
+  - live plain run of `/tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe` with manual interrupt after the menu loop stayed alive for multiple seconds
+- Compile status:
+  - `bootstrap_main.c`, `clash95.c`, and `platform_sdl_runtime.c` still pass the repo's current `gnu89` syntax check
+- Link status:
+  - `clash95_bootstrap` still links cleanly after the menu-loop fidelity cleanup
+- Runtime status:
+  - the contained probe still reaches `enter-menu-loop` and emits the same stable nonblack menu frames after removing the extra post-present pump
+  - the live plain executable stayed alive in the menu loop until manually interrupted, confirming the cleanup did not regress the recovered display milestone
+  - interactive menu behavior remains unverified because this environment still cannot drive real host mouse input into the WSL window directly
+- Highest authentic runtime milestone reached:
+  - plain non-`gdb` contained authentic main-menu probe keeps stable displayed menu frames on the closer-to-authentic one-present-then-loop path
+- Key evidence used:
+  - `PlayGame_Dispatch` asm and C both show the top-level menu path does one `Render_Present`, then loops on `DD_Pump((int)dword_544CD8, 0)` plus `sub_419DC0(...)` until `g_PlayGameMenuExitRequested` changes
+  - `Planck`'s widget pass confirmed the actionable menu gate remains live cursor/button state rather than another missing post-present draw tranche
+  - `/tmp/clash95-menuprobe-b139-001.bmp` through `015.bmp` remained identical in the key metrics used for the prior display milestone: `640x480`, `185` unique colors, and `296141` nonblack pixels
+- Ambiguous candidates deferred:
+  - actual hover/click responsiveness is still not proven from this sandbox because no real mouse input was injected into the WSL window
+  - the quarantined direct SDL present helper is still a containment step; the long-term target remains the broader recovered invalidation / `Render_BlitSurface` contract
+  - `Hegel` / `Wegener` did not return mergeable findings before this batch closed, so the deeper SDL/input seam review remains open
+- total rename count so far:
+  - `1193`
+
+## Batch 138 - Plain-Run Render_CreateSprite Startup Repair Wave
+- Current frontier:
+  - keep the plain non-`gdb` contained main-menu probe alive in the authentic menu loop and move from stable displayed frames toward input / hit-testing / responsive interaction
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Planck`: read-only crash-band investigation around `sub_40C510 -> Render_CreateSprite`
+  - `Hegel`: asm corroboration for the `Render_CreateSprite` startup helper band
+  - mergeable subagent evidence used this batch:
+    - none returned before the repair landed; the concrete fix came directly from asm plus valgrind evidence on the live plain-run crash band
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_40C4C0`
+  - `sub_40C4F0`
+  - `sub_40C510`
+  - `Render_CreateSprite`
+- Blockers removed this batch:
+  - the plain non-`gdb` startup path no longer faults inside `sub_40C510 -> sub_40C5E0 -> Render_CreateSprite` before `video-init-probe-end`
+  - the contained probe now reaches `video-init-probe-end`, enters the authentic top-level menu loop, and stays alive outside gdb until explicitly interrupted
+- SDL replacements/cleanups this batch:
+  - none beyond exercising the earlier recovered indexed-surface SDL present helper on the now-stable plain-run lane
+- Menu/UI fixes this batch:
+  - the plain non-`gdb` contained probe now emits the same startup-black `000` frame followed by stable nonblack menu frames (`001..015`) seen earlier only on the gdb-stable lane
+  - the top-level menu loop now runs continuously on the plain executable path instead of crashing before first-frame display
+- Session-init fixes this batch:
+  - none; the repair stayed inside the startup/video-init sprite bootstrap band immediately before the menu probe
+- Validation probe:
+  - `valgrind --quiet --error-limit=no --track-origins=yes /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c bootstrap_main.c platform_sdl_runtime.c`
+  - `cmake --build /tmp/clash95-menu-display-build --target clash95_bootstrap -j4`
+  - plain non-`gdb` launch: `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-menuprobe-b138 CLASH95_TRACE_MENU_PROBE=1 /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - Python/Pillow inspection of `/tmp/clash95-menuprobe-b138-000.bmp` through `/tmp/clash95-menuprobe-b138-015.bmp`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, and `platform_sdl_runtime.c` still pass the repo's current `gnu89` syntax check
+- Link status:
+  - `clash95_bootstrap` still links cleanly after the `sub_40C510` startup repair
+- Runtime status:
+  - valgrind no longer reports the earlier uninitialized-stack / invalid-read crash in `sub_40C510`
+  - the plain non-`gdb` contained probe now reaches `force-menu-window-present`, emits stable nonblack menu frames, and remains in the menu loop until interrupted
+  - menu display is now recovered on the plain executable lane, but menu interaction / hit-testing fidelity is still unverified
+- Highest authentic runtime milestone reached:
+  - plain non-`gdb` contained authentic main-menu probe enters the menu loop and keeps stable nonblack menu frames on the SDL window-present path
+- Key evidence used:
+  - valgrind isolated the plain-run crash to `sub_40C510 -> sub_40C5E0 -> Render_CreateSprite` and reported an x86-style uninitialized stack walk reaching bogus address `0x46E46D`
+  - `sub_40C510` asm walks 32-bit pushed varargs from `[esp+arg_8]` in 4-byte steps while consuming only the low 16 bits, which means the decompiled `((char *)&a3 + 4)` stack walk was an x86 recovery artifact rather than valid portable C
+  - after replacing that fake stack walk with `va_list`, the plain probe reached `video-init-probe-end`, entered the menu loop, and produced the same nonblack menu dump sequence as the gdb-contained lane
+- Ambiguous candidates deferred:
+  - input / hit-testing / callback responsiveness on the contained menu loop is still not proven
+  - the long-term fix should still flow back toward the recovered `Render_BlitSurface` / invalidation contract rather than leaving the probe-local direct-present helper as the final architecture
+  - the probe still emits extremely chatty trace output in the menu loop when `CLASH95_TRACE_MENU_PROBE=1` is enabled
+- total rename count so far:
+  - `1193`
+
+## Batch 137 - Main Menu SDL Present Recovery Wave
+- Current frontier:
+  - keep the contained `--authentic-menu-probe` on the authentic top-level main-menu corridor while turning the already-composed indexed menu companion surface into a real SDL-visible frame and isolating the remaining plain-run startup/runtime crash
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Poincare`: authentic menu-entry gating and `DD_Pump` carry-state review
+  - `Wegener`: render companion / present-surface ownership chain around `Render_Present` and `Render_BlitSurface`
+  - `Dalton`: menu asset / palette / display-state review on the contained first-frame path
+  - `Linnaeus`: asm/map corroboration for the top-level menu first-frame corridor
+  - mergeable subagent evidence used this batch:
+    - `Poincare` confirmed the authentic gate is the carried entry-state value saved after the first `DD_Pump`, not the function's C return value
+    - `Wegener` confirmed `dword_5202E0 -> unk_51D4C0` companion ownership and that `Render_Present` only touches cursor scratch surfaces rather than the full menu frame
+    - `Dalton` confirmed the menu background and initial button draws already converge on the same full-screen companion surface, so the remaining black-frame seam was the final SDL handoff rather than earlier stage composition
+    - `Linnaeus` confirmed the unconditional `sub_460CB0 -> sub_460D80 -> Render_Present` order and highlighted the extra probe-only post-present pump as a non-authentic containment step
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - added `RecoveredSoftwareSurfaceHandle` to `RECOVERED_STRUCTURES.json`
+- High-priority unknown functions reviewed:
+  - `PlayGame_Dispatch`
+  - `Render_BlitSurface`
+  - `Render_Present`
+  - `PlatformMaybeDumpPresentedFrame`
+  - `Platform_PresentRecoveredIndexedSurfaceHandle`
+  - `sub_405020`
+- Blockers removed this batch:
+  - the contained probe no longer keys menu music / palette-block / fade decisions off the `DD_Pump` return value; it now keeps a carried `menu_entry_mode` value aligned with the authentic top-level corridor
+  - the contained menu probe now has a real SDL present step for the recovered indexed menu companion surface instead of waiting on the still-missing dirty-bit / GDI invalidation plumbing
+  - probe-local SDL presentation no longer reads the zeroed `unk_51D4C0 + 220` palette mirror; it now uses the populated `byte_543D80` menu palette buffer that `sub_435ED0("menu\\main", ...)` actually loads
+  - the contained probe now emits stable nonblack menu frames (`001..015`) once it reaches the direct SDL present helper under the gdb-stable validation lane
+- SDL replacements/cleanups this batch:
+  - added `Platform_PresentRecoveredIndexedSurfaceHandle` so the SDL seam can present recovered indexed software surfaces plus recovered palette tables directly to the WSL/SDL window and dump hook
+- Menu/UI fixes this batch:
+  - direct-present the recovered top-level menu companion surface immediately after the first `Render_Present` and after each contained menu-loop UI update
+  - the dumped frame stream now shows one startup blank frame followed by stable nonblack top-level menu frames
+- Session-init fixes this batch:
+  - none; the active work stayed on the main-menu display seam rather than deeper session/game-start initialization
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only bootstrap_main.c clash95.c platform_sdl_runtime.c`
+  - `cmake --build /tmp/clash95-menu-display-build --target clash95_bootstrap -j4`
+  - `gdb -batch -ex 'set env CLASH95_DUMP_PRESENTED_FRAMES_PREFIX /tmp/clash95-menuprobe-b137h' -ex 'run --authentic-menu-probe' --args /tmp/clash95-menu-display-build/bin/clash95_bootstrap`
+  - Python/Pillow inspection of `/tmp/clash95-menuprobe-b137h-000.bmp` through `/tmp/clash95-menuprobe-b137h-015.bmp`
+- Compile status:
+  - `bootstrap_main.c`, `clash95.c`, and `platform_sdl_runtime.c` still pass the repo's current `gnu89` syntax check
+- Link status:
+  - `clash95_bootstrap` still links cleanly after the new SDL present helper and probe presentation changes
+- Runtime status:
+  - plain non-`gdb` `--authentic-menu-probe` launch still faults early on the current startup/runtime seam before the contained menu-display probe completes
+  - under the stable gdb-contained lane, the probe reaches `force-menu-window-present` and produces 16 dumped frames; `000` remains startup-black, while `001..015` are stable nonblack menu frames
+  - contained main-menu display is now recovered on the SDL probe lane, but plain-run startup fidelity and menu interaction outside the probe still remain unresolved
+- Highest authentic runtime milestone reached:
+  - contained authentic main-menu probe now displays stable nonblack top-level menu frames through the SDL helper on the real top-level menu corridor
+- Key evidence used:
+  - gdb at `Render_Present` showed the composed menu pixels were already present on `unk_51D4C0`'s companion surface while the render-state scratch surfaces stayed zero, proving the display failure was after composition rather than before it
+  - gdb at `Platform_PresentRecoveredIndexedSurfaceHandle` showed the companion surface's first pixel index was `127` while `unk_51D4C0 + 220` remained all-zero and `byte_543D80` held nonzero menu palette entries, which directly explained the first helper version's all-black output
+  - the dump sequence `/tmp/clash95-menuprobe-b137h-000.bmp` through `/tmp/clash95-menuprobe-b137h-015.bmp` proved the startup blank frame followed by stable nonblack menu frames once the helper switched to the live menu palette buffer
+- Ambiguous candidates deferred:
+  - why plain non-`gdb` probe launch still faults before `video-init-probe-end` on the current startup/runtime seam
+  - why the contained probe still leaves the recovered `unk_51D4C0 + 220` palette mirror zeroed even though `byte_543D80` is populated
+  - whether the long-term fix should re-route the full-frame software-present path back through recovered `Render_BlitSurface` / GDI invalidation instead of the probe-local SDL helper
+- total rename count so far:
+  - `1193`
+
+## Batch 136 - Main Menu Text Cache And First Present Advancement Wave
+- Current frontier:
+  - keep the contained `--authentic-menu-probe` on the real top-level main-menu path while replacing the remaining x86/x64 decompiler scars that still block the first visible presented frame
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `Planck`: main-menu widget/render asm corroboration around `sub_419410`, `sub_4427F0`, and `sub_405980`
+  - `Hegel`: render-device / hidden-register slot review around the first menu-button draw corridor
+  - mergeable subagent evidence used this batch:
+    - `Planck` confirmed the `+2` path-copy stepping in `sub_405980` / `sub_4427F0` is a narrow-string recovery artifact rather than evidence of wide-string paths on the menu/cache load path
+    - earlier live menu/render scopes confirmed the top-level widget path still flows through `sub_419D80 -> sub_419410 -> [render-device slot + 0x34]`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - added `DLXSpriteGlyphRecord` to `RECOVERED_STRUCTURES.json`
+- High-priority unknown functions reviewed:
+  - `sub_419410`
+  - `sub_405980`
+  - `sub_4427F0`
+  - `sub_460C70`
+  - `sub_460CB0`
+  - `DLXSpriteSet_DrawText`
+  - `sub_4064A0`
+- Blockers removed this batch:
+  - the first main-menu button draw no longer dies inside the generic `sub_402E80` x86-only sprite path because the contained probe now uses a menu-only format-0 software decode/blit path
+  - `sub_419410` no longer double-dereferences the menu sprite-set holder on x86-64 before the first button draw
+  - `sub_460C70` no longer passes a null/garbled resource name into `DLXSpriteSet_Load`; it now reloads the authentic `mouse.s32` text-source sprites
+  - `sub_460CB0` no longer hard-aborts on the cache-hit branch when `DLXSpriteSet_Load` cannot reopen `gfx\\cache\\...` through the current query layer; it now regenerates the text sprites and skips the unsupported save step on that fallback path
+  - `DLXSpriteSet_DrawText` no longer depends on undefined locals from the decompiler; the asm-backed remap-table walk now completes
+  - `sub_4064A0` no longer truncates the remap-table pointer or the glyph stream pointer on x86-64
+- SDL replacements/cleanups this batch:
+  - none beyond the already-contained menu-only software sprite decode path used to bypass the generic `sub_402E80` ABI scar
+- Menu/UI fixes this batch:
+  - recovered the single-deref sprite-set handle usage inside `sub_419410`
+  - repaired the top-level menu text-cache regeneration corridor (`sub_460C70 -> DLXSpriteSet_DrawText -> sub_4064A0`)
+  - validated that the contained probe now reaches `sub_460D80` and the first authentic `Render_Present`
+- Session-init fixes this batch:
+  - none; the active frontier remained entirely inside the top-level menu-display path
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build /tmp/clash95-menu-display-build --target clash95_bootstrap -j4`
+  - `timeout 2s /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex run -ex bt --args /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex 'b Render_Present' -ex run -ex bt --args /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-menuprobe timeout 2s /tmp/clash95-menu-display-build/bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `clash95.c` still passes the repo's current `gnu89` syntax check
+- Link status:
+  - `clash95_bootstrap` still links cleanly after the menu-text-cache and glyph-path repairs
+- Runtime status:
+  - the contained `--authentic-menu-probe` no longer faults in the first button-draw corridor or the menu text-cache rebuild helpers
+  - GDB now reaches the first authentic `Render_Present` from `Bootstrap_RunRecoveredMainMenuFirstFrameProbe`
+  - the dumped presented frame `/tmp/clash95-menuprobe-000.bmp` is still all-black, so post-draw surface ownership / pre-present stage fidelity remains unresolved
+  - the run still crashes after the first present / cursor-state tranche, so menu idle-loop stability is not recovered yet
+- Highest authentic runtime milestone reached:
+  - contained authentic main-menu probe reaches `sub_460D80` and the first `Render_Present`, and successfully dumps the first presented frame under the SDL seam
+- Key evidence used:
+  - `PlayGame_Dispatch` asm at `loc_447AE0..loc_447C09` confirms the exact top-level corridor `DD_Pump -> [surface_renderer + 0x24] twice -> sub_419D80 -> sub_405020 -> sub_460CB0 -> sub_460D80 -> Render_Present`
+  - `sub_460CB0` asm shows `sub_460C70` must seed `mouse.s32` before `DLXSpriteSet_DrawText`, and that the cache save is a post-regeneration optimization rather than the source of the menu text itself
+  - `DLXSpriteSet_DrawText` asm shows the routine only builds a 256-byte remap table and calls `sub_4064A0` on each glyph; the decompiled undefined locals were not semantic
+  - `/tmp/clash95-menuprobe-000.bmp` exists after the first `Render_Present`, proving the contained probe now reaches the SDL present hook even though the first dumped frame is still black
+- Ambiguous candidates deferred:
+  - the black first presented frame suggests the current bootstrap `surface_renderer` stage-draw containment is still not faithful enough, but the exact pre-present surface/blit contract remains unresolved
+  - the current `sub_4427F0` / query-object seam still cannot reopen `gfx\\cache\\...`, so cache reuse is still conservative fallback-only behavior
+  - the post-present crash band after the first `Render_Present` still needs a concrete backtrace outside the now-cleared menu-text-cache helpers
+- total rename count so far:
+  - `1193`
+
 ## Batch 135 - Main Menu Prologue Resync And Palette-Aware SDL Presentation Wave
 - Current frontier:
   - keep the contained WSL/SDL main-menu probe alive while closing the next display-fidelity gap between "video init reaches SDL present" and "the recovered main-menu frame uses the authentic pre-draw setup plus palette-aware presentation"
