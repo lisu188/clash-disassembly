@@ -90877,6 +90877,7 @@ InputBackendState * InputBackend_ResetState(InputBackendState *result)
   result->mouse_device_ready = 0;
   result->keyboard_device_ready = 0;
   result->joystick_device_ready = 0;
+  Platform_ResetInputFallbackState();
   return result;
 }
 
@@ -91045,11 +91046,31 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
   unsigned __int8 v10; // [esp+82h] [ebp-Eh]
   int v11; // [esp+84h] [ebp-Ch]
   int v12; // [esp+88h] [ebp-8h]
+  int fallback_mouse_delta_x;
+  int fallback_mouse_delta_y;
+  signed char fallback_mouse_primary;
+  signed char fallback_mouse_secondary;
+  signed char fallback_keyboard_state[256];
 
   v12 = a3;
   v11 = a2;
   result = 0;
   raw = (_DWORD *)state;
+  fallback_mouse_delta_x = 0;
+  fallback_mouse_delta_y = 0;
+  fallback_mouse_primary = 0;
+  fallback_mouse_secondary = 0;
+  memset(fallback_keyboard_state, 0, sizeof(fallback_keyboard_state));
+  if ( !raw[77] || !raw[78] )
+  {
+    Platform_ReadInputFallbackState(
+      &fallback_mouse_delta_x,
+      &fallback_mouse_delta_y,
+      &fallback_mouse_primary,
+      &fallback_mouse_secondary,
+      fallback_keyboard_state,
+      sizeof(fallback_keyboard_state));
+  }
   if ( raw[77] )
   {
     if ( (*(int (__stdcall **)(_DWORD, int, _DWORD *))(**(_DWORD **)&raw[2] + 36))(raw[2], 16, v7) == -2147024866 )
@@ -91060,11 +91081,23 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
     state->mouse_button_secondary = v9;
     state->mouse_button_middle = v10;
   }
+  else
+  {
+    state->mouse_delta_x = fallback_mouse_delta_x;
+    state->mouse_delta_y = fallback_mouse_delta_y;
+    state->mouse_button_primary = fallback_mouse_primary;
+    state->mouse_button_secondary = fallback_mouse_secondary;
+    state->mouse_button_middle = 0;
+  }
   if ( raw[78] )
   {
     result = (*(int (__stdcall **)(_DWORD, int, int))(**(_DWORD **)&raw[1] + 36))(raw[1], 256, (int)&state->keyboard_state[0]);
     if ( result == -2147024866 )
       result = (*(int (__stdcall **)(_DWORD))(**(_DWORD **)&raw[1] + 28))(raw[1]);
+  }
+  else
+  {
+    qmemcpy(&state->keyboard_state[0], fallback_keyboard_state, sizeof(fallback_keyboard_state));
   }
   if ( raw[79] )
   {

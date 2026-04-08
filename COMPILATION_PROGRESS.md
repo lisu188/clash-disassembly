@@ -3096,6 +3096,70 @@
 - total rename count so far:
   - `1193`
 
+## Batch 134 - Main Menu SDL Input Fallback Wave
+- Current frontier:
+  - move the recovered main-menu corridor from a stable first-frame / idle-loop plateau toward real responsiveness by stopping the SDL/WSL executable from fail-closing input when the DirectInput-era device bootstrap is unavailable
+- Subagents spawned and scopes:
+  - `Feynman`: inspect whether the current platform seam is a real SDL backend or still a compatibility facade, and rank the smallest honest host-event ingress change
+  - `Herschel`: confirm which `g_InputBackendState` fields the menu corridor actually consumes and whether `DirectInputCreateA` failure is the concrete blocker
+  - mergeable evidence used this batch:
+    - `Feynman` confirmed the current seam still uses a synthetic queue and local fake `SDL_*` structs, so the highest-value localized change is host-event ingress inside `platform_sdl_runtime.c` rather than another naming-only pass
+    - `Herschel` confirmed the top-level menu and first-level submenu loops ultimately depend on `mouse_delta_x`, `mouse_delta_y`, the signed mouse button bytes, and `keyboard_state[256]`, and that the current `DirectInputCreateA` failure leaves those fields inert even while the menu loop stays alive
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `InputBackend_PollState`
+  - `InputBackend_ResetState`
+  - `Platform_PumpMessagesAndBlitFrame`
+  - `CreateWindowExA`
+  - `GetMessageA`
+  - `PeekMessageA`
+  - `WaitMessage`
+  - `DirectInputCreateA`
+- Blockers removed this batch:
+  - `clash95_bootstrap` no longer depends on the inert DirectInput path just to populate the menu input slab; when no legacy mouse/keyboard devices are ready, `InputBackend_PollState` now consumes a platform-owned fallback feed instead of returning an all-zero input state forever
+  - the platform seam no longer treats SDL as documentation-only for the boot/menu path; `platform_sdl_runtime.c` now roots a real SDL2 host window/event ingress attempt while preserving the old synthetic compatibility fallback if SDL window creation fails
+  - the executable build no longer stops at the newly introduced SDL link surface; `CMakeLists.txt` now wires the bootstrap target through `PkgConfig::SDL2` and explicit `libm`
+- SDL replacements/cleanups this batch:
+  - added SDL2-backed host initialization and event polling inside `platform_sdl_runtime.c`
+  - mapped SDL focus/expose/quit events onto the existing Win32-shaped queue messages already consumed by `Platform_MainWindowProc`
+  - added a conservative fallback keyboard/mouse state bridge so missing DirectInput devices no longer imply missing menu input state
+- Menu/UI fixes this batch:
+  - top-level and first-level menu loops can now consume platform-fed fallback mouse deltas/button state and keyboard state instead of depending on a successfully created DirectInput device stack
+- Session-init fixes this batch:
+  - none; this wave stayed strictly on the menu/input seam above session/game-start initialization
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. $(pkg-config --cflags sdl2) -fsyntax-only platform_sdl_runtime.c`
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `git diff --check`
+  - `timeout -s KILL 2s /home/andrz/git/clash-disassembly/build/bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `clash95.c` and `platform_sdl_runtime.c` remain syntax-clean after the fallback-input seam changes
+  - `clash95_recovered` and `clash95_bootstrap` both build successfully with the new SDL2/bootstrap link wiring
+- Link status:
+  - `clash95_bootstrap` now links cleanly against the SDL2-backed platform seam plus `libm`
+  - the recovered static-library baseline remains green
+- Runtime status:
+  - `timeout -s KILL 2s /home/andrz/git/clash-disassembly/build/bin/clash95_bootstrap --authentic-menu-probe` exits with status `137`, confirming the recovered menu-probe stays alive long enough to require forced termination instead of crashing immediately after the SDL/input fallback changes
+  - menu responsiveness is not yet claimed as solved, because this batch proves the input slab is no longer structurally inert but does not yet provide a clean automated host-event assertion beyond “the real menu loop survives under the SDL-linked fallback seam”
+- Highest authentic runtime milestone reached:
+  - unchanged at the user-visible level: first authentic main-menu frame plus stable top-level menu idle loop under WSL/SDL
+  - improved at the blocker level: the next menu frontier is now actual host-event delivery/confirmation, not the earlier guaranteed all-zero input slab caused by `DirectInputCreateA` failure
+- Key evidence used:
+  - `InputBackend_PollState` only writes menu-relevant mouse/keyboard fields when the legacy ready flags are set, which never happened while `DirectInputCreateA` returned failure
+  - `sub_419B80`, `sub_419DC0`, and the `PlayGame_Dispatch` menu loops consume the logical cursor/buttons and keyboard state rather than raw Win32 mouse messages, so a conservative platform-fed input slab is the right seam to unblock next
+  - `pkg-config --cflags --libs sdl2` resolved successfully on the local WSL toolchain, making a localized SDL2-backed host-event seam viable without introducing a new out-of-repo dependency source
+- Ambiguous candidates deferred:
+  - whether the next highest-value menu wave is direct automated click/hover confirmation inside the bootstrap probe, or deeper SDL-backed presentation so the recovered menu art becomes visibly inspectable from the live host window
+  - the broader render/present seam, which still needs another pass before “visible SDL window” and “responsive recovered menu” can be claimed together
+- total rename count so far:
+  - `1204`
+
 ## Batch 133 - Main Menu Shared Runtime Naming Wave
 - Current frontier:
   - keep the recovered main-menu first-frame / idle-loop plateau readable enough to support the next input-fidelity pass by removing the last raw shared runtime names still used across the top menu and first-level submenu screens
