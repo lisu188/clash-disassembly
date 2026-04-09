@@ -1294,7 +1294,7 @@
     "name": "TextSpriteResourceSlotRecord",
     "kind": "recovered_struct",
     "base_symbol": "off_511EC8 / dword_511ECC / word_511ED0",
-    "description": "0x0C text/font sprite resource slot consumed through `dword_520724` by `Render_ReleaseSurface`, `sub_40BB60`, `sub_40BC00`, `sub_40BC90`, and `sub_40BD40`. Batch 143 confirmed that the original x86 binary stores this as one contiguous table even though the current decompiler output split the fields across separate globals.",
+    "description": "0x0C text/font sprite resource slot consumed through `dword_520724` by `Render_ReleaseSurface`, `sub_40BB60`, `sub_40BC00`, `sub_40BC90`, and `sub_40BD40`. Batch 143 confirmed that the original x86 binary stores this as one contiguous table even though the current decompiler output split the fields across separate globals, and Batch 144 promoted that reconstruction into the live explicit `g_TextSpriteResourceSlots` table in C.",
     "fields": [
       {
         "offset": 0,
@@ -1324,7 +1324,8 @@
     "evidence": [
       "`Render_ReleaseSurface` asm lazily loads the cache from `off_511EC8[3 * slot]`, writes the result back to `dword_511ECC[3 * slot]`, and then points `dword_520724` at the same 12-byte record base.",
       "`sub_40BC00`, `sub_40BC90`, and `sub_40BD40` all read `+4`, `+8`, and `+10` from `dword_520724`, proving the table entry is a contiguous record rather than unrelated globals.",
-      "Batch 143 hit the remaining row-text crash inside that table corridor while lifting the contained load-menu slot strip, making the split-global decompiler view of `off_511EC8` / `dword_511ECC` / `word_511ED0` the next concrete fidelity blocker."
+      "The original binary contains `23` live records followed by a null sentinel; `Singer` corroborated the exact count and the `lazur1` / `lazur2` zero-glyph-spacing entries directly from the exe and map.",
+      "Batch 143 hit the remaining row-text crash inside that table corridor while lifting the contained load-menu slot strip, and Batch 144 reified that recovered layout into the live explicit table so the active C path no longer depends on 32-bit global adjacency."
     ]
   }
 ]

@@ -3166,6 +3166,75 @@
 - total rename count so far:
   - `1194`
 
+## Batch 144 - Load Menu Cursor-State And Explicit Text Slot Table Wave
+- Current frontier:
+  - keep the contained SDL-backed executable lane alive through authentic load-menu row-strip hover plus return-to-button behavior while isolating the still-faulting row-resource preload lane rooted at `Render_LoadResourceSprite_v4(18/21)`
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace already had the required executable-first specialists online
+  - `Singer`: exact `TextSpriteResourceSlotRecord` layout, live record count, and per-slot source/metric reconstruction from C, asm, map, and exe
+  - `Schrodinger`: `sub_419DC0 -> sub_460D80` widget-focus crash review after the contained slot-hover proof
+  - `Cicero`: `sub_44A140` / `sub_40BEE0` / `Render_LoadResourceSprite_v4` row-draw seam review
+  - `Curie`: next `sub_444490` / `.fac` session-load dependencies after the menu lane is safe
+  - mergeable subagent evidence used this batch:
+    - `Singer` confirmed the text/font resource seam is one 12-byte record table with `23` live entries plus a null sentinel, not three unrelated globals
+    - `Schrodinger` narrowed the post-hover crash to the cursor/widget-focus corridor and highlighted that the authentic submenu loop should survive leaving the row strip and returning to the bottom buttons
+    - `Curie` confirmed that `sub_444490` and the `.fac` replay band remain the next session-init frontier once the load-menu corridor is stable
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - no new names; `TextSpriteResourceSlotRecord` was promoted from an inferred struct into the explicit live `g_TextSpriteResourceSlots` table in C
+- High-priority unknown functions reviewed:
+  - `sub_460D80`
+  - `sub_419DC0`
+  - `Render_LoadResourceSprite_v4`
+  - `DLXSpriteSet_Load`
+  - `Render_ReleaseSurface`
+  - `sub_40BB60`
+  - `sub_40BC00`
+  - `sub_40BC90`
+  - `sub_40BD40`
+  - `sub_40C1F0`
+- Blockers removed this batch:
+  - `sub_460D80` now mirrors the active cursor descriptor into `dword_544D14`, so `sub_419DC0` no longer re-enters the cursor-selector path with `dword_526A24 = 1` and a null saved descriptor
+  - the text/font slot seam no longer depends on the decompiler-split weak globals `off_511EC8` / `dword_511ECC` / `word_511ED0`; the live C path now uses an explicit recovered `g_TextSpriteResourceSlots` table
+  - the contained load-menu probe no longer has to exit immediately on row-strip hover to avoid the old widget-focus crash; it now survives slot-strip hover and can return to the `back` button in the same contained loop
+- SDL replacements/cleanups this batch:
+  - none; this wave stayed on the recovered cursor/text slot seam rather than the SDL platform layer
+- Menu/UI fixes this batch:
+  - the authentic load-menu loop now survives the `row-strip hover -> leave strip -> bottom button hover/click` corridor on the contained executable lane
+  - `CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0` plus `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back` now completes without the earlier `sub_419DC0 -> sub_460D80` segfault
+  - an attempted contained widening back into authentic row-resource preload (`Render_LoadResourceSprite_v4(18/21)`) was explicitly re-quarantined after a concrete crash in `DLXSpriteSet_Load`
+- Session-init fixes this batch:
+  - none; `sub_444490` / `.fac` replay remain behind the still-broken row-resource preload lane
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c bootstrap_main.c platform_sdl_runtime.c compat/decomp_runtime_stubs.c`
+  - `cmake --build . --target clash95_bootstrap -j4`
+  - `git diff --check`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back timeout -s KILL 6s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back timeout -s KILL 6s ./bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -batch -ex 'set pagination off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_CLICK back' -ex 'run --authentic-menu-probe' -ex 'bt 25' --args ./bin/clash95_bootstrap`
+- Compile status:
+  - `clash95.c`, `bootstrap_main.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` still compile cleanly under the current `gnu89` setup
+- Link status:
+  - `clash95_bootstrap` still links successfully as the SDL-backed executable target
+- Runtime status:
+  - `/tmp/clash95-menuprobe-load-back-batch144.log` still shows the contained top-menu `Load Game` click reaching the load menu and the load-menu `back` button exiting with `selected_slot = -1`, `confirm = 0`, and `exit = 1`
+  - `/tmp/clash95-menuprobe-load-slot0-back-batch144.log` now shows the contained probe surviving slot-strip hover (`result = 0`, `cursor_x = 327`, `cursor_y = 165`) and then returning to the `back` button for live hover (`result = 2`) and click (`result = 3`) before exiting
+  - the attempted row-resource widening now has a concrete crash frontier at `load-menu-row-resource-18`, with GDB landing in `Render_LoadResourceSprite_v4 -> DLXSpriteSet_Load -> App_RequestQuit -> Render_BeginModeSwitch -> sub_474DE0`
+- Highest authentic runtime milestone reached:
+  - the executable enters the authentic load-menu slice and now survives `row-strip hover -> widget-focus return -> back button exit` in one contained submenu loop
+- Key evidence used:
+  - GDB showing the old widget-focus crash state as `dword_526A24 = 1`, `dword_526A34 = 0`, `dword_544D14 = 0`, followed by `sub_419DC0 -> sub_460D80`
+  - `Singer`'s corroborated `23`-entry-plus-sentinel reconstruction of the text/font slot table from `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`
+  - contained runtime traces in `/tmp/clash95-menuprobe-load-back-batch144.log` and `/tmp/clash95-menuprobe-load-slot0-back-batch144.log`
+  - the explicit row-resource repro trace stopping at `load-menu-row-resource-18` plus the GDB backtrace into `DLXSpriteSet_Load`
+- Ambiguous candidates deferred:
+  - `Render_LoadResourceSprite_v4(18/21)` still faults inside the deeper sprite/resource loader path; it is not yet clear whether the next repair belongs in `DLXSpriteSet_Load`, the menu resource search path, or the mode-switch/runtime side effects reached through `App_RequestQuit`
+  - authentic `sub_44A140` save-slot row repaint remains deferred until that `18/21` preload lane is stable
+  - `sub_444490` and the `.fac` replay/runtime-fact rebuild band remain the next session/game-start target after the row-resource preload lane is repaired
+- total rename count so far:
+  - `1194`
+
 ## Batch 141 - Top Menu Clickthrough And Render-State Reentry Repair Wave
 - Current frontier:
   - keep the contained SDL-backed authentic menu lane moving past the top-level button press and into the next load-menu frontier rooted at `MAIN_MENU_REQUEST_LOAD_GAME`
