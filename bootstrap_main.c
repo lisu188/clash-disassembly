@@ -30,6 +30,7 @@ extern int g_MainMenuMusicHandle;
 extern int dword_544190;
 extern int dword_5441E0;
 extern int dword_545150;
+extern int dword_54DBA8;
 extern int logEnabled;
 extern HWND hWnd;
 extern unsigned int dword_544CD8[286];
@@ -80,6 +81,7 @@ int sub_442760(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
+int __fastcall sub_4725B0(int a1, int a2);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
 int sub_401A40(void);
@@ -121,6 +123,8 @@ void *sub_44A140(int a1, DWORD a2);
 int sub_404F20(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
+int *sub_482260(void);
+signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
 signed int sub_444490(int a1, DWORD a2, double a3);
 signed int sub_44C400(DWORD a1, double a2);
@@ -1308,6 +1312,15 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     CSS_StopSound(g_MainMenuMusicHandle, 1000);
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-worldmap-init");
     WorldMap_Initialize((char)dword_5441E0, 0);
+    if ( !dword_54DBA8 )
+    {
+      Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-slab-init");
+      sub_4725B0(0, 0);
+    }
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
+    sub_482260();
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
+    sub_491B10();
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-load-save");
     sub_444490(dword_5441E0, 0, 0.0);
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-after-save");

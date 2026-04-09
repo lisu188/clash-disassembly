@@ -15,5 +15,7 @@
   - contained `CSS_StopSound -> WorldMap_Initialize -> sub_444490` now returns
   - the contained probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
 - Next boot-path frontier:
-  - contained post-save `PlayGame` handoff after `sub_444490`
+  - keep the green contained post-save handoff intact while characterizing the first loaded-session blocker after `sub_444490`
+  - the explicit broader contained probe currently reaches `parse-make-instance-before-class-lookup` on `oddzial` and dies there
+  - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
   - deferred save-slot repaint/name lane after the row draws

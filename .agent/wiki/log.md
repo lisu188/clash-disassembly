@@ -19,3 +19,14 @@
 - Took an escalated gdb backtrace on the new save-load crash and pinned it to `sub_4443C0 -> sprintf_` while formatting `save\\%d.dat`.
 - Repaired `sub_4443C0` and `sub_4443D0` so the save-path builders take real `char *` buffers instead of truncating stack addresses to low 32-bit ints.
 - Validated that the contained authentic `Load Game` lane now survives `WorldMap_Initialize`, survives the `.dat` / `.fac` load in `sub_444490`, reaches `load-menu-post-confirm-after-save`, and returns to `main-after-menu-probe`.
+- Tried to widen the contained post-confirm probe by seeding the broader rules symbol/number tables through `sub_482260` before `sub_444490`.
+- Confirmed that the experimental widening exposes a deeper recovered allocator/runtime blocker in `sub_472E40 -> sub_472D70 -> sub_472620 -> sub_4827B0 -> Str_Intern -> sub_482260`.
+- Captured crash-state evidence showing the allocator pool tail already pointing into the first hash-table allocation when that broader rules bootstrap is enabled.
+- Rolled the experimental widening back out of the live probe path so the repo keeps the green `load-menu-post-confirm-after-save` foothold.
+- Reconciled the stale durable memory against the live worktree and confirmed the current broader contained probe no longer stops at the old allocator crash note.
+- Materialized `unk_50293C` plus the adjacent `bload` loader strings in `clash95.c` so the retained `sub_47C850` slice no longer dies on missing loader data.
+- Recovered `unknown_libname_4` as the allocator-failure callback swap and repaired `sub_47CBF0` to match the binary-loader allocate / retry / restore contract.
+- Added a `CSyncObject_Unlock` C ABI bridge in `src_cpp/csync_object.cpp` so the retained startup-prelude probes can resolve the lock seam through `clash95_cpp_core`.
+- Confirmed a direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully.
+- Confirmed the archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links too, so the remaining retained blocker has moved to the broader `sub_451E46` unresolved set.
+- Re-ran the broader contained load-menu probe and confirmed the live crash frontier is now `parse-make-instance-before-class-lookup` on `oddzial`, not the earlier allocator note in stale sidecars.

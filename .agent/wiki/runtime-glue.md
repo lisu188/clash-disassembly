@@ -12,8 +12,19 @@
     - restored the finite asm-backed world-map-init seeding loop
   - `sub_4443C0` / `sub_4443D0` in `clash95.c`
     - widened the save-path builders to real `char *` buffers so `.dat` / `.fac` stack paths are no longer truncated
+  - bload loader data in `clash95.c`
+    - materialized `unk_50293C` and the adjacent `bload`/loader error strings that `sub_47C850` expects
+  - `unknown_libname_4` in `clash95.c`
+    - recovered as the allocator-failure callback swap used by the binary-loader retry helper
+  - `sub_47CBF0` in `clash95.c`
+    - recovered as the allocate / halve / restore / zero / init / free helper beneath the `bload` lane
+  - `CSyncObject_Unlock` in `src_cpp/csync_object.cpp`
+    - published as the original C ABI name through the conservative C++ seam instead of a new compat stub
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
-  - the next honest frontier is the post-save `PlayGame` handoff rather than the just-cleared `.dat` / `.fac` load path
+  - the next honest contained frontier in-tree is still the post-save `PlayGame` handoff rather than the just-cleared `.dat` / `.fac` load path
+  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, so the next blocked widening is in class/runtime startup rather than SDL or save-path glue
+  - the retained broader startup-prelude slice rooted at `sub_451E46` still needs the wider unresolved runtime band (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers)
+  - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms, so the remaining executable-regeneration blocker has moved up to the broader `sub_451E46` unresolved set

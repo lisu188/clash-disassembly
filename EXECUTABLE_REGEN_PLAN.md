@@ -15,10 +15,13 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - Keep the current contained executable wedge pointed at the authentic load-menu path.
 - Treat the row-resource, row-draw, world-map-init, and first save-load helper bands as repaired enough for continued contained widening.
 - Take the next batch through:
-  1. the post-save `PlayGame` handoff after `sub_444490` now that the contained probe reaches `load-menu-post-confirm-after-save`
-  2. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
-  3. the first contained loaded-session runtime milestone beyond `main-after-menu-probe`
-- Do not broaden into unrelated runtime wrappers until that contained save-load-to-`PlayGame` corridor is characterized.
+  1. preserving the green contained `load-menu-post-confirm-after-save` foothold
+  2. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` until its remaining unresolved runtime band is narrower
+  3. re-checking the explicit broader contained probe that now reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  4. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
+  5. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
+- Do not broaden into unrelated runtime wrappers until those two adjacent startup fronts are characterized.
+- Do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local post-save patch. Keep the startup-prelude widening separate from the contained load-game wedge.
 
 ## What is already stable enough to build on
 

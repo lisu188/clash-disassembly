@@ -1,5 +1,7 @@
 # Verification
 
+- `cmake -S . -B build`
+  - passed
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
   - passed
 - `timeout 1s build/bin/clash95_bootstrap`
@@ -8,7 +10,16 @@
   - exit `124`
 - `timeout 1s build/bin/clash95_cpp_regen`
   - exit `124`
-- `gdb -batch -ex 'set debuginfod enabled off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_CLICK confirm' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_SLOT 0' -ex 'set environment CLASH95_LOAD_MENU_PROBE_DRAW_ROWS 1' -ex 'set environment CLASH95_LOAD_MENU_PROBE_POST_CONFIRM 1' -ex 'run --authentic-menu-probe' -ex 'bt 40' --args build/bin/clash95_bootstrap`
-  - reaches `load-menu-post-confirm-load-save` and reports the first crash in `sub_4443C0 -> sprintf_`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - reaches `load-menu-post-confirm-after-save` and `main-after-menu-probe`, then stays alive until timeout kills it with exit `137`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exits `139`
+  - reaches `load-menu-post-confirm-load-save`, survives `sub_444490`, then reaches `parse-make-instance-before-class-lookup` on `oddzial` before crashing
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash ... build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o ...`
+  - links successfully
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash ... build/lib/libclash95_cpp_core.a ...`
+  - links successfully
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o ...`
+  - still fails on the broader startup-prelude unresolved set, led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
+- `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
+  - passed
+- `git diff --check`
+  - passed

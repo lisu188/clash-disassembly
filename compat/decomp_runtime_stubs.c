@@ -714,33 +714,70 @@ void Compat_CopyPrefixN(char *dest, const char *src, unsigned int count)
   }
 }
 
+static int CompatPointerFitsSigned32(const void *ptr)
+{
+  return ptr && (uintptr_t)ptr <= (uintptr_t)INT_MAX;
+}
+
+static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int flags, void *hint)
+{
+  CompatLow32AllocHeader *header;
+
+  header = (CompatLow32AllocHeader *)mmap(
+    hint,
+    total_size,
+    PROT_READ | PROT_WRITE,
+    MAP_PRIVATE | MAP_ANONYMOUS | flags,
+    -1,
+    0);
+  if ( header == MAP_FAILED )
+    return 0;
+  if ( !CompatPointerFitsSigned32(header + 1) )
+  {
+    munmap(header, total_size);
+    return 0;
+  }
+  header->mapped_size = total_size;
+  header->used_mmap = 1;
+  return header;
+}
+
 static void *CompatAllocLow32(size_t size)
 {
   CompatLow32AllocHeader *header;
   size_t total_size;
+#ifdef MAP_FIXED_NOREPLACE
+  uintptr_t hint;
+  size_t page_size;
+  long page_size_result;
+#endif
 
   if ( !size )
     return 0;
   total_size = sizeof(*header) + size;
 #ifdef MAP_32BIT
-  header = (CompatLow32AllocHeader *)mmap(
-    0,
-    total_size,
-    PROT_READ | PROT_WRITE,
-    MAP_PRIVATE | MAP_ANONYMOUS | MAP_32BIT,
-    -1,
-    0);
-  if ( header != MAP_FAILED )
-  {
-    header->mapped_size = total_size;
-    header->used_mmap = 1;
+  header = CompatTryMapSignedLow32(total_size, MAP_32BIT, 0);
+  if ( header )
     return header + 1;
+#endif
+#ifdef MAP_FIXED_NOREPLACE
+  page_size_result = sysconf(_SC_PAGESIZE);
+  if ( page_size_result > 0 )
+    page_size = (size_t)page_size_result;
+  else
+    page_size = 4096;
+  total_size = (total_size + page_size - 1) & ~(page_size - 1);
+  for ( hint = 0x10000000u; hint + total_size <= 0x78000000u; hint += 0x01000000u )
+  {
+    header = CompatTryMapSignedLow32(total_size, MAP_FIXED_NOREPLACE, (void *)hint);
+    if ( header )
+      return header + 1;
   }
 #endif
   header = (CompatLow32AllocHeader *)malloc(total_size);
   if ( !header )
     return 0;
-  if ( (uintptr_t)(header + 1) > (uintptr_t)UINT_MAX )
+  if ( !CompatPointerFitsSigned32(header + 1) )
   {
     free(header);
     return 0;

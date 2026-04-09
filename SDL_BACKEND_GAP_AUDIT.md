@@ -20,11 +20,16 @@ This note covers the current host seam used by the executable-regeneration track
 - The next post-confirm fixes also stayed out of the SDL seam:
   - `sub_4163F0` was corrected in recovered C to match the asm-backed finite loop
   - `sub_4443C0` / `sub_4443D0` were widened in recovered C so `.dat` / `.fac` path formatting no longer truncates stack buffers
+  - the retained loader/runtime work for `sub_47C850` stayed in recovered C and the C++ seam, not in `platform_sdl_runtime.c`
 - This is useful negative evidence:
   - the live frontier was inside recovered text-resource helpers and menu-row logic, not `platform_sdl_runtime.c`
   - the SDL seam is still good enough for the contained load-menu row-draw, slot-hover, slot-click/confirm, post-confirm world-map init, and first `.dat` / `.fac` session-load milestones
 - The next likely SDL-facing work still remains later input/present fidelity, not the just-cleared row-resource corridor.
 - The first blocker beyond the new save-load milestone is the post-save `PlayGame` handoff, not an SDL translation gap.
+- An adjacent experimental widening confirmed the same pattern:
+  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  - the retained startup-prelude slice rooted at `sub_451E46` is now blocked by broader runtime/class/parser unresolveds
+  - both failures remain below SDL and should not be “fixed” by moving runtime semantics into `platform_sdl_runtime.c`
 
 ## Stable host behavior already present
 

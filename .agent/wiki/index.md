@@ -1,6 +1,6 @@
 # Agent Wiki Index
 
-- Current frontier: contained post-save handoff after the authentic `Load Game` lane now survives `WorldMap_Initialize` and `sub_444490`.
+- Current frontier: keep the contained post-save handoff green while separating it from the broader startup-prelude widening that now reaches the first retained `CLIPS`/class-runtime band.
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -13,6 +13,9 @@
   - contained post-confirm `WorldMap_Initialize` returns
   - contained `.dat` / `.fac` session-load in `sub_444490` returns
   - the probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+- Adjacent blocked widening:
+  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial` before dumping core
+  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is no longer blocked on local bload header/data or `unknown_libname_4`, but it still stops on the wider unresolved runtime band (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers such as `Lexer_ParseSlotConstraint`)
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

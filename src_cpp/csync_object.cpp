@@ -41,3 +41,8 @@ int CSyncObject::unlock(long, long *) noexcept
 
 } // namespace cpp
 } // namespace clash95
+
+extern "C" int CSyncObject_Unlock(void *raw_sync_object, long lock_state, long *previous_lock_state) noexcept
+{
+  return clash95::cpp::CSyncObject::from_raw(raw_sync_object).unlock(lock_state, previous_lock_state);
+}

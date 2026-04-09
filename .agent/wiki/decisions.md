@@ -18,3 +18,11 @@
   - Reason: the asm passes a live destination buffer in `edx`, and the low32 `int` signature was truncating stack addresses on x86_64 during the authentic save-load path.
 - Keep the next frontier on the post-save `PlayGame` handoff, not on `sub_444490`.
   - Reason: the contained authentic load-game lane now survives both `WorldMap_Initialize` and the `.dat` / `.fac` load and returns to `main-after-menu-probe`.
+- Do not leave the broader `sub_482260` symbol-table seed enabled in the live contained probe until allocator recovery catches up.
+  - Reason: the experimental widening exposed a real `sub_472E40` pool-tail corruption and would regress the current green `after-save` foothold.
+- Do not “fix” the current `oddzial` miss by splicing `Rules_ShowBanner_StrategicClash` or bare `sub_499990` into the contained post-save lane.
+  - Reason: the authentic shipped post-save load lane is still `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`, while the `CLIPS`/bload/class-runtime setup belongs to the broader startup-prelude chain.
+- Recover retained `sub_47C850` loader prerequisites in-place before broadening `sub_451E46`, not by moving class/runtime semantics into the contained save-load wedge.
+  - Reason: the local loader blockers were real executable-regeneration debt, but they are part of the startup-prelude widening, not a local post-save menu fix.
+- Publish `CSyncObject_Unlock` through the existing conservative C++ seam instead of `compat/decomp_runtime_stubs.c`.
+  - Reason: it is an original class ABI surface and fits the current `clash95_cpp_core` ownership better than another quarantine shim.

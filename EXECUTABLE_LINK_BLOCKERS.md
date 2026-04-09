@@ -21,8 +21,29 @@ This note records the current executable-regeneration gap on the clean `codex/cp
   - survives contained post-confirm `WorldMap_Initialize`
   - survives contained `.dat` / `.fac` session-load in `sub_444490`
   - reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
-- The next honest runtime blocker is now the post-save `PlayGame` handoff and the first loaded-session runtime fault beyond `sub_444490`.
+- The next honest contained runtime blocker is now the post-save `PlayGame` handoff and the first loaded-session runtime fault beyond `sub_444490`.
 - The remaining raw link/runtime surface still exists for the broader executable-regeneration track, but it is no longer the blocker for the contained post-confirm save-load wedge.
+
+## Latest startup-prelude narrowing - 2026-04-09
+
+- The retained `CLIPS`/startup-prelude surface moved this batch:
+  - `unk_50293C` and the adjacent `bload` loader strings are now materialized in `clash95.c`
+  - `unknown_libname_4` is now recovered as the allocator callback swap used under `sub_47CBF0`
+  - `CSyncObject_Unlock` is now exported through `src_cpp/csync_object.cpp`
+- A direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully when `csync_object.cpp.o` is present.
+- The archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too.
+- The next retained blocker is no longer that local loader band. It is the wider `sub_451E46` unresolved set:
+  - `unk_508D50`
+  - `unknown_libname_7`
+  - `unknown_libname_8`
+  - `sub_496643`
+  - `ftime_`
+  - `system_`
+  - `dbl_502FDC`
+  - `JUMPOUT`
+  - `AST_FreeNode`
+  - parser helpers such as `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, and `Lexer_ParseRuleRHS`
+- Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails
 
@@ -125,3 +146,12 @@ The key point is that the bootstrap path is rooted in recovered behavior, not a 
 6. Reduce `JUMPOUT` scars and the `_wcpp_*` runtime band only when the replacement is evidence-backed.
 
 This is a staged executable-regeneration path, not a claim that the full native executable is already recovered.
+
+## Live runtime blocker adjacent to the current link wedge
+
+- The current executable problem is no longer primarily link-shaped.
+- `clash95_bootstrap` and `clash95_cpp_regen` both stay green and can still reach the contained `load-menu-post-confirm-after-save` milestone.
+- There are now two adjacent widening fronts:
+  - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  - the retained startup-prelude slice rooted at `sub_451E46` still stops on the wider unresolved runtime band listed above
+- Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.

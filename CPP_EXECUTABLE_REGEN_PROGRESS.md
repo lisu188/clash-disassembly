@@ -18,13 +18,20 @@ This file tracks the parallel executable-regeneration path that grows out of the
 
 ## Latest runtime update - 2026-04-09
 
-- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` are green together after the latest load-menu text-resource repairs.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` are still green together after the latest loader/runtime repair pass.
+- The durable memory had drifted behind the live tree:
+  - the stable contained runtime milestone is still `load-menu-post-confirm-after-save`
+  - the current broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  - the retained broader startup-prelude executable-regeneration slice is no longer blocked on the local bload header/data or allocator-callback gaps beneath `sub_47C850`
 - The bootstrap/reference executable no longer stalls or crashes in the contained load-menu row-resource band or the first post-confirm save-load band:
   - repo-local `gfx\\cache\\...` false positives are filtered through the mounted-query layer before reuse
   - companion `*.pfn` font palettes are now loaded for `Render_LoadResourceSprite_v4(18/21)`
   - the first row-draw helper scars in `Render_LoadResourceSprite_v3`, `sub_40BC00`, and `sub_40BD40` are repaired closely enough for contained submenu row draws
   - `sub_4163F0` now matches the finite asm loop in `WorldMap_Initialize`
   - `sub_4443C0` / `sub_4443D0` no longer truncate stack buffers while formatting `save\\%d.dat` / `save\\%d.fac`
+  - `unk_50293C` plus the adjacent `bload` loader strings are now materialized in `clash95.c`
+  - `unknown_libname_4` is now recovered as the allocator callback swap beneath `sub_47CBF0`
+  - `CSyncObject_Unlock` is now exported through `src_cpp/csync_object.cpp`
 - The highest contained runtime milestone is now:
   - authentic load-menu row resources load
   - all ten `sub_44A140` row draws complete
@@ -33,7 +40,21 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - contained post-confirm `WorldMap_Initialize` returns
   - contained `.dat` / `.fac` session-load in `sub_444490` returns
   - the probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
-- The next executable-regeneration frontier is now the post-save `PlayGame` handoff after `sub_444490`, not the earlier confirm proof or save-load tail itself.
+- The explicit broader contained probe is now characterized as:
+  - `load-menu-post-confirm-rules-slab-init`
+  - `load-menu-post-confirm-rules-index-init`
+  - `load-menu-post-confirm-parser-bootstrap`
+  - `load-menu-post-confirm-load-save`
+  - `parse-make-instance-before-class-lookup`
+  - then a crash on `oddzial`
+- The retained broader startup-prelude executable-regeneration slice also moved this batch:
+  - a direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully
+  - the archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too
+  - the next blocker is the wider `sub_451E46` unresolved set (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers)
+- The next executable-regeneration frontier is split, not singular:
+  - keep the stable contained lane green and eventually continue toward the post-save `PlayGame` handoff
+  - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`
+  - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss
 
 ## Batch 125 - C++ executable regeneration bootstrap wave
 
