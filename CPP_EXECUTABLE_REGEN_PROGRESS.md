@@ -16,6 +16,25 @@ This file tracks the parallel executable-regeneration path that grows out of the
 4. Add a parallel `clash95_cpp_regen` executable that starts from the existing bootstrap foothold and gradually absorbs more authentic startup/runtime responsibility.
 5. Keep the sidecar evidence artifacts synchronized with the live code.
 
+## Latest runtime update - 2026-04-09
+
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` are green together after the latest load-menu text-resource repairs.
+- The bootstrap/reference executable no longer stalls or crashes in the contained load-menu row-resource band or the first post-confirm save-load band:
+  - repo-local `gfx\\cache\\...` false positives are filtered through the mounted-query layer before reuse
+  - companion `*.pfn` font palettes are now loaded for `Render_LoadResourceSprite_v4(18/21)`
+  - the first row-draw helper scars in `Render_LoadResourceSprite_v3`, `sub_40BC00`, and `sub_40BD40` are repaired closely enough for contained submenu row draws
+  - `sub_4163F0` now matches the finite asm loop in `WorldMap_Initialize`
+  - `sub_4443C0` / `sub_4443D0` no longer truncate stack buffers while formatting `save\\%d.dat` / `save\\%d.fac`
+- The highest contained runtime milestone is now:
+  - authentic load-menu row resources load
+  - all ten `sub_44A140` row draws complete
+  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, and `screen = 5`
+  - contained authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, and `screen = 5`
+  - contained post-confirm `WorldMap_Initialize` returns
+  - contained `.dat` / `.fac` session-load in `sub_444490` returns
+  - the probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+- The next executable-regeneration frontier is now the post-save `PlayGame` handoff after `sub_444490`, not the earlier confirm proof or save-load tail itself.
+
 ## Batch 125 - C++ executable regeneration bootstrap wave
 
 - Current frontier:

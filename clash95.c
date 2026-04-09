@@ -1220,8 +1220,8 @@ BOOL  MapTile_HasHiddenTreasure(int a1, int a2);
 signed int  Treasure_TryDigHere(int, char, DWORD, char, char *, double);
 signed int  UnitStack_TryHide(int a1, unsigned __int16 a2, DWORD a3, double a4);
 signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, double a2);
-int  sub_4443C0(int a1, int a2);
-int  sub_4443D0(int a1, int a2);
+int  sub_4443C0(int a1, char *a2);
+int  sub_4443D0(int a1, char *a2);
 signed int  saveGame(int a1, DWORD a2, double a3);
 signed int  sub_444490(int a1, DWORD a2, double a3);
 char  sub_4446E0(int a1, char *a2, DWORD a3);
@@ -12938,14 +12938,12 @@ _BYTE * sub_401AB0(_BYTE *result, char a2)
 //----- (00401AF0) --------------------------------------------------------
 int  sub_401AF0(int a1, DWORD a2)
 {
-  int v3; // eax
-  int v4; // ecx
+  int palette_table;
 
-  v3 = _wcpp_4_ctor_array__(a1, 256);
-  LoadPalCOL(v3, v3, a2);
-  return v4;
+  palette_table = _wcpp_4_ctor_array__(a1, 256);
+  LoadPalCOL(palette_table, a2, 0);
+  return palette_table;
 }
-// 401B0D: variable 'v4' is possibly undefined
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401B20) --------------------------------------------------------
@@ -15517,7 +15515,20 @@ int  sub_404B80(int a1, int a2)
 //----- (00404BA0) --------------------------------------------------------
 int  Render_SaveBackbuffer(int a1)
 {
-  return (*(int (__stdcall **)(_DWORD, int, _DWORD))(***(_DWORD ***)(a1 + 196) + 88))(**(_DWORD **)(a1 + 196), 1, 0);
+  _DWORD surface_wrapper;
+  _DWORD surface_device;
+  uintptr_t *surface_vtable;
+
+  surface_wrapper = *(_DWORD *)(a1 + 196);
+  if ( !surface_wrapper )
+    return 0;
+  surface_device = *(_DWORD *)(uintptr_t)surface_wrapper;
+  if ( !surface_device )
+    return 0;
+  surface_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)surface_device;
+  if ( !surface_vtable || !surface_vtable[11] )
+    return 0;
+  return ((int (__stdcall *)(_DWORD, int, _DWORD))(uintptr_t)surface_vtable[11])(surface_device, 1, 0);
 }
 
 //----- (00404BC0) --------------------------------------------------------
@@ -16266,17 +16277,19 @@ _DWORD * sub_405900(int a1)
 //----- (00405920) --------------------------------------------------------
 int  sub_405920(int *a1)
 {
-  int *v1; // ecx
   int result; // eax
+  uintptr_t method_table;
 
-  v1 = a1;
   result = *a1;
   if ( result )
-    result = (**(int (__fastcall ***)(int *, int))(result + 4108))(v1, 2);
-  *v1 = 0;
+  {
+    method_table = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)result + 4108);
+    if ( method_table )
+      result = ((int (__fastcall *)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)method_table)(result, 2);
+  }
+  *a1 = 0;
   return result;
 }
-// 405929: variable 'v1' is possibly undefined
 
 //----- (00405950) --------------------------------------------------------
 int  sub_405950(int *a1)
@@ -19828,31 +19841,31 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   sub_404D90((int *)&unk_51D4C0);
   v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
   if ( v3 )
-    v3 = DLXSpriteSet_Load(v3, a1);
+    v3 = DLXSpriteSet_Load(v3, "frame.s32");
   dword_5202BC = (int)v3;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, a1, a2);
   if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a1);
+    v5 = DLXSpriteSet_Load(v5, "marks.s32");
   dword_5202C8 = (int)v5;
   v7 = (_DWORD *)Mem_Alloc(4112, v6, a1, a2);
   if ( v7 )
-    v7 = DLXSpriteSet_Load(v7, a1);
+    v7 = DLXSpriteSet_Load(v7, "step.s32");
   dword_5202CC = (int)v7;
   v9 = (_DWORD *)Mem_Alloc(4112, v8, a1, a2);
   if ( v9 )
-    v9 = DLXSpriteSet_Load(v9, a1);
+    v9 = DLXSpriteSet_Load(v9, "fog.s32");
   g_FogOverlaySpriteSet = (int)v9;
   v11 = (_DWORD *)Mem_Alloc(4112, v10, a1, a2);
   if ( v11 )
-    v11 = DLXSpriteSet_Load(v11, a1);
+    v11 = DLXSpriteSet_Load(v11, "flag.s32");
   dword_5202D4 = (int)v11;
   v13 = (_DWORD *)Mem_Alloc(4112, v12, a1, a2);
   if ( v13 )
-    v13 = DLXSpriteSet_Load(v13, a1);
+    v13 = DLXSpriteSet_Load(v13, "whirl.s32");
   dword_5202D0 = (int)v13;
   v15 = (_DWORD *)Mem_Alloc(4112, v14, a1, a2);
   if ( v15 )
-    v15 = DLXSpriteSet_Load(v15, a1);
+    v15 = DLXSpriteSet_Load(v15, "turakomp.s32");
   dword_5202DC = (int)v15;
   if ( !dword_5202E0 )
   {
@@ -19863,7 +19876,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   }
   v18 = Mem_Alloc(1024, v16, a1, a2);
   if ( v18 )
-    v18 = sub_401AF0(v19, a2);
+    v18 = sub_401AF0(v18, (DWORD)"map.pal");
   dword_5202F4 = v18;
   sub_435ED0(aMainmap, v18, v19, a2);
   sub_460C70((int)dword_544CD8, a1, a2);
@@ -20438,32 +20451,31 @@ char  sub_40BBF0(char result)
 int  sub_40BC00(int a1, unsigned __int8 a2)
 {
   TextSpriteResourceSlotRecord *slot;
-  int v3; // eax
-  int v4; // ebx
-  unsigned __int16 v5; // cx
-  int v6; // eax
+  unsigned __int16 sprite_index;
+  uintptr_t *method_table;
 
   slot = TextSprite_GetActiveResourceSlot();
   if ( !slot || !slot->cached_sprite_set )
     return a1;
-  DLX_GetSpriteForChar(slot->cached_sprite_set, a2 - 32);
-  (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  LOWORD(v3) = DLX_GetSpriteHeight(slot->cached_sprite_set, a2 - 32);
-  v4 = v3;
-  DLX_GetSpriteWidth(slot->cached_sprite_set, v5);
-  HIWORD(v6) = HIWORD(dword_520724);
-  LOWORD(v6) = slot->glyph_spacing_word;
-  return a1 + v4 + v6;
+  sprite_index = (unsigned __int16)(a2 - 32);
+  DLX_GetSpriteForChar(slot->cached_sprite_set, sprite_index);
+  method_table = 0;
+  if ( g_RenderDevice )
+    method_table = (uintptr_t *)(uintptr_t)(unsigned int)*((_DWORD *)g_RenderDevice + 46);
+  if ( method_table && method_table[13] )
+  {
+    ((void (__stdcall *)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)method_table[13])(
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      0,
+      0);
+  }
+  DLX_GetSpriteWidth(slot->cached_sprite_set, sprite_index);
+  return a1 + (unsigned __int16)DLX_GetSpriteHeight(slot->cached_sprite_set, sprite_index) + slot->glyph_spacing_word;
 }
-// 40BC64: variable 'v3' is possibly undefined
-// 40BC70: variable 'v5' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 520724: using guessed type int dword_520724;
 
@@ -28256,23 +28268,21 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
 //----- (004163F0) --------------------------------------------------------
 unsigned int __thiscall sub_4163F0(void *this)
 {
-  char v1; // al
-  int v2; // ecx
-  unsigned int result; // eax
-  int v4; // ecx
+  int offset;
+  unsigned int result;
 
+  (void)this;
+  offset = 0;
   do
   {
-    v1 = Rng_RandRange(-20, 20);
-    byte_5269B8[v2] = v1;
+    byte_5269B8[offset] = Rng_RandRange(-20, 20);
+    offset += 2;
     result = Rng_RandRange(-20, 20);
-    byte_5269B7[v4] = result;
+    byte_5269B7[offset] = result;
   }
-  while ( v4 != 30 );
+  while ( offset != 30 );
   return result;
 }
-// 41640B: variable 'v2' is possibly undefined
-// 41641B: variable 'v4' is possibly undefined
 
 //----- (00416430) --------------------------------------------------------
 unsigned __int8 *__thiscall sub_416430(void *this)
@@ -59358,14 +59368,14 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (004443C0) --------------------------------------------------------
-int  sub_4443C0(int a1, int a2)
+int  sub_4443C0(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.dat", a1);
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (004443D0) --------------------------------------------------------
-int  sub_4443D0(int a1, int a2)
+int  sub_4443D0(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.fac", a1);
 }
@@ -59380,14 +59390,14 @@ signed int  saveGame(int a1, DWORD a2, double a3)
   int v8; // edx
   CHAR v10[120]; // [esp+0h] [ebp-78h] BYREF
 
-  sub_4443C0(a1, (int)v10);
+  sub_4443C0(a1, v10);
   PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX) = MAP_VIEW_TOP;
   v6 = sub_475CC8(v10, (unsigned __int8 *)aWb_4, v5, a2);
   fwrite_((const void *)a2, 16, v6, 1);
   fwrite_((const void *)gameData, 586398, v6, 1);
   fclose_(v7);
-  sub_4443D0(a1, v8);
+  sub_4443D0(a1, v10);
   return sub_47B4C0(v10, 2, 0, a3);
 }
 // 44443B: variable 'v5' is possibly undefined
@@ -59415,7 +59425,7 @@ signed int  sub_444490(int a1, DWORD a2, double a3)
   void *v18; // ecx
   CHAR v19[120]; // [esp+0h] [ebp-78h] BYREF
 
-  sub_4443C0(a1, (int)v19);
+  sub_4443C0(a1, v19);
   result = sub_475CC8(v19, (unsigned __int8 *)aRb_5, v5, a2);
   if ( result )
   {
@@ -59463,7 +59473,7 @@ LABEL_17:
       if ( v15 >= 0 )
         goto LABEL_17;
     }
-    sub_4443D0(a1, (int)v19);
+    sub_4443D0(a1, v19);
     sub_47B890(v19, v17, a2, a3);
     Render_CreateSprite();
     UI_ClearTileHighlight(v18);
@@ -109157,44 +109167,40 @@ int  sub_4902C0(double a1)
 //----- (00490330) --------------------------------------------------------
 void sub_490330()
 {
-  int v0; // edx
-  int v1; // eax
-  _DWORD *v2; // ebx
-  int v3; // ecx
+  int next_parser;
+  int next_fact;
+  int parser_node;
+  int parser_bucket;
+  _DWORD *nested_node;
 
-  if ( dword_51A978 )
+  while ( dword_51A978 )
   {
-    do
-    {
-      v0 = *(_DWORD *)(dword_51A978 + 8);
-      dword_54DBAC = dword_51A978;
-      *(_DWORD *)dword_51A978 = *(_DWORD *)(dword_54DBA8 + 48);
-      *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
-      dword_51A978 = v0;
-    }
-    while ( v0 );
+    next_parser = *(_DWORD *)(dword_51A978 + 8);
+    dword_54DBAC = dword_51A978;
+    *(_DWORD *)dword_51A978 = *(_DWORD *)(dword_54DBA8 + 48);
+    *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+    dword_51A978 = next_parser;
   }
   while ( dword_51A974 )
   {
-    if ( (*(_BYTE *)dword_51A974 & 0x10) != 0 && (*(_BYTE *)dword_51A974 & 0x20) == 0 )
+    parser_node = dword_51A974;
+    next_fact = *(_DWORD *)(parser_node + 4);
+    if ( (*(_BYTE *)parser_node & 0x10) != 0 && (*(_BYTE *)parser_node & 0x20) == 0 )
     {
-      v1 = 4 * (*(_DWORD *)dword_51A974 << 17 >> 23) + dword_51A974;
-      v2 = *(_DWORD **)(v1 + 4);
-      if ( v2 )
+      parser_bucket = parser_node + 4 * ((unsigned int)(*(_DWORD *)parser_node << 17) >> 23);
+      nested_node = *(_DWORD **)(parser_bucket + 4);
+      if ( nested_node )
       {
-        dword_54DBAC = *(_DWORD *)(v1 + 4);
-        *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+        dword_54DBAC = *(_DWORD *)(parser_bucket + 4);
+        *nested_node = *(_DWORD *)(dword_54DBA8 + 48);
         *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
       }
     }
-    *(_BYTE *)dword_51A974 &= ~2u;
-    sub_4901C0(dword_51A974);
-    dword_51A974 = v3;
+    *(_BYTE *)parser_node &= ~2u;
+    sub_4901C0(parser_node);
+    dword_51A974 = next_fact;
   }
-  JUMPOUT(0x490324);
 }
-// 490378: control flows out of bounds to 490324
-// 4903D3: variable 'v3' is possibly undefined
 // 51A974: using guessed type int dword_51A974;
 // 51A978: using guessed type int dword_51A978;
 // 54DBA8: using guessed type int dword_54DBA8;

@@ -1,0 +1,24 @@
+# Agent Wiki Index
+
+- Current frontier: contained post-save handoff after the authentic `Load Game` lane now survives `WorldMap_Initialize` and `sub_444490`.
+- Last green targets:
+  - `clash95_recovered`
+  - `clash95_bootstrap`
+  - `clash95_cpp_regen`
+- Highest runtime milestone:
+  - authentic load-menu row resources load
+  - all ten contained `sub_44A140` row draws complete
+  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
+  - contained authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
+  - contained post-confirm `WorldMap_Initialize` returns
+  - contained `.dat` / `.fac` session-load in `sub_444490` returns
+  - the probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+- Core notes:
+  - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
+  - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)
+  - [sdl-seam.md](/home/andrz/git/clash-disassembly/.agent/wiki/sdl-seam.md)
+  - [class-seams.md](/home/andrz/git/clash-disassembly/.agent/wiki/class-seams.md)
+  - [blockers.md](/home/andrz/git/clash-disassembly/.agent/wiki/blockers.md)
+  - [verification.md](/home/andrz/git/clash-disassembly/.agent/wiki/verification.md)
+  - [decisions.md](/home/andrz/git/clash-disassembly/.agent/wiki/decisions.md)
+  - [log.md](/home/andrz/git/clash-disassembly/.agent/wiki/log.md)

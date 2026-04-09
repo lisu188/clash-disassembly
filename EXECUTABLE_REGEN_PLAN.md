@@ -10,6 +10,16 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - `clash95_cpp_regen` already links by reusing `bootstrap_main.c`, the bootstrap object library, and the new C++ core.
 - A direct raw link still fails on missing `main` and a large unresolved startup/runtime surface.
 
+## Immediate frontier update - 2026-04-09
+
+- Keep the current contained executable wedge pointed at the authentic load-menu path.
+- Treat the row-resource, row-draw, world-map-init, and first save-load helper bands as repaired enough for continued contained widening.
+- Take the next batch through:
+  1. the post-save `PlayGame` handoff after `sub_444490` now that the contained probe reaches `load-menu-post-confirm-after-save`
+  2. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
+  3. the first contained loaded-session runtime milestone beyond `main-after-menu-probe`
+- Do not broaden into unrelated runtime wrappers until that contained save-load-to-`PlayGame` corridor is characterized.
+
 ## What is already stable enough to build on
 
 - Canonical entry chain in the binary map: `start -> sub_486369 -> _WinMain@16`

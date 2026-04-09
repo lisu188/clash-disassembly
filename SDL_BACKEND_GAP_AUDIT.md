@@ -14,6 +14,18 @@ This note covers the current host seam used by the executable-regeneration track
   - `timeGetTime`
 - The implementation is still intentionally Win32-shaped at the call boundary. It is not yet a body-level SDL-native platform rewrite.
 
+## Latest executable note - 2026-04-09
+
+- The current load-menu row-resource and row-draw blockers were removed without changing the SDL seam.
+- The next post-confirm fixes also stayed out of the SDL seam:
+  - `sub_4163F0` was corrected in recovered C to match the asm-backed finite loop
+  - `sub_4443C0` / `sub_4443D0` were widened in recovered C so `.dat` / `.fac` path formatting no longer truncates stack buffers
+- This is useful negative evidence:
+  - the live frontier was inside recovered text-resource helpers and menu-row logic, not `platform_sdl_runtime.c`
+  - the SDL seam is still good enough for the contained load-menu row-draw, slot-hover, slot-click/confirm, post-confirm world-map init, and first `.dat` / `.fac` session-load milestones
+- The next likely SDL-facing work still remains later input/present fidelity, not the just-cleared row-resource corridor.
+- The first blocker beyond the new save-load milestone is the post-save `PlayGame` handoff, not an SDL translation gap.
+
 ## Stable host behavior already present
 
 - message queue storage and dispatch

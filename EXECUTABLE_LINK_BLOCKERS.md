@@ -10,6 +10,20 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - `clash95_cpp_regen` now links as a parallel executable by reusing the existing bootstrap wedge and adding the C++ core.
 - A direct `gcc` link of `clash95.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` does not yet produce a runnable executable.
 
+## Latest authentic runtime frontier - 2026-04-09
+
+- The live executable blocker is no longer the old load-menu row-resource preload crash or the first post-confirm `.dat` / `.fac` save-load crash.
+- The contained SDL-backed executable now:
+  - loads the authentic `Render_LoadResourceSprite_v4(18/21)` row text resources
+  - completes all ten contained `sub_44A140` row draws
+  - survives contained slot-hover selection with `selected_slot = 0` and `confirm = 0`
+  - survives contained authentic slot-strip click plus bottom-row load confirm with `selected_slot = 0` and `confirm = 1`
+  - survives contained post-confirm `WorldMap_Initialize`
+  - survives contained `.dat` / `.fac` session-load in `sub_444490`
+  - reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+- The next honest runtime blocker is now the post-save `PlayGame` handoff and the first loaded-session runtime fault beyond `sub_444490`.
+- The remaining raw link/runtime surface still exists for the broader executable-regeneration track, but it is no longer the blocker for the contained post-confirm save-load wedge.
+
 ## Why the direct link fails
 
 The raw link probe fails immediately on the missing process entrypoint and then fans out into the unresolved startup/runtime surface.

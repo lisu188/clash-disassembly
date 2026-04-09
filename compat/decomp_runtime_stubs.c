@@ -28,18 +28,33 @@
 #endif
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
+void *Mem_Realloc(void *a1, int a2, int a3);
 int sub_489D18(int a1, int a2);
 int sub_48703D(int a1, __lock *a2, int a3);
 int sub_406740(void);
+int DLX_GetSpriteForChar(int a1, unsigned __int16 a2);
+__int16 DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
+__int16 DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
 void sub_40AEC0(void);
 int sub_40BD40(_BYTE *a1);
 void sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
 int sub_40C5E0(void);
 int sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
+int sub_4427F0(char *a1, int a2);
 _DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
+int __fastcall sub_473EE0(int a1, int *a2);
+int sub_479CB0(int a1, int a2);
 signed int CRT_GetOsHandleFromFd(int a1, int a2);
 char sub_489EC6(int a1, _DWORD *a2);
+_DWORD * sub_47A730(signed int a1);
+int sub_48D0C0(int result, int a2, int a3, int a4, int a5);
+signed int sub_48D730(int *a1, int a2);
+_DWORD * sub_48D940(int a1, int a2, _DWORD *a3);
+char * Str_Append(const char *a1, char *a2, unsigned int *a3, int *a4);
+char * sub_494720(char *result);
+int sub_4947D0(void);
+signed int sub_49C7D0(int a1, int a2, int a3);
 typedef struct TextSpriteResourceSlotRecord {
   const char *source_stem;
   int cached_sprite_set;
@@ -48,6 +63,9 @@ typedef struct TextSpriteResourceSlotRecord {
 } TextSpriteResourceSlotRecord;
 TextSpriteResourceSlotRecord *TextSprite_GetResourceSlot(int slot_index);
 extern void *lpTlsValue;
+extern int dword_543CC8[11];
+extern int dword_520728;
+extern _UNKNOWN *g_RenderDevice;
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -143,6 +161,83 @@ static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
   if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
     return 0;
   return event_handle;
+}
+
+/*
+ * Watcom runtime thunks that the authentic save-load path now reaches while
+ * staying inside the recovered executable wedge.
+ */
+_DWORD sub_47C181(_DWORD size)
+{
+  (void)size;
+  return 0;
+}
+
+void *plib_malloc__1(size_t size)
+{
+  return malloc(size);
+}
+
+int j_rand_(void)
+{
+  return rand();
+}
+
+void j_srand_(unsigned int seed)
+{
+  srand(seed);
+}
+
+int unknown_libname_2(const char *text)
+{
+  if ( !text )
+    return 0;
+  return atoi(text);
+}
+
+double strtod_(const char *text, char **endptr)
+{
+  return strtod(text, endptr);
+}
+
+/*
+ * Several parser helpers are already recovered in clash95.c under raw address
+ * names. Keep the public symbol bridges here until those bodies are renamed in
+ * place.
+ */
+_DWORD *Module_AllocList(signed int a1)
+{
+  return sub_47A730(a1);
+}
+
+int Lexer_OutputFieldRange(int result, int a2, int a3, int a4, int a5)
+{
+  return sub_48D0C0(result, a2, a3, a4, a5);
+}
+
+signed int Lexer_CheckValueList(int *a1, int a2)
+{
+  return sub_48D730(a1, a2);
+}
+
+_DWORD *Lexer_FindTemplateSlot(int a1, int a2, _DWORD *a3)
+{
+  return sub_48D940(a1, a2, a3);
+}
+
+char *IO_OutWriteToken(char *result)
+{
+  return sub_494720(result);
+}
+
+int IO_OutNewline(void)
+{
+  return sub_4947D0();
+}
+
+signed int Lexer_WarnImpliedTemplate(int a1, int a2, int a3)
+{
+  return sub_49C7D0(a1, a2, a3);
 }
 
 static void CompatSetLastErrorFromErrno(void)
@@ -1574,7 +1669,7 @@ void __stdcall DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 int __thiscall nfree_(_DWORD a1)
 {
   if ( a1 && a1 != (_DWORD)-1 )
-    free((void *)(uintptr_t)a1);
+    CompatFreeLow32((void *)(uintptr_t)a1);
   return 0;
 }
 
@@ -1906,6 +2001,58 @@ int Render_DrawSprite(void)
   return sub_406740();
 }
 
+static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palette_out)
+{
+  char palette_name[100];
+  char query_path[104];
+  unsigned char palette_bytes[768];
+  int query_handle;
+  int palette_index;
+  int palette_offset;
+  size_t source_name_len;
+  uintptr_t *query_vtable;
+
+  if ( !source_stem || !palette_out )
+    return 0;
+
+  strcpy(palette_name, source_stem);
+  source_name_len = strlen(palette_name);
+  if ( source_name_len < 4 || strcmp(palette_name + source_name_len - 4, ".sfn") )
+    return 0;
+  palette_name[source_name_len - 3] = 'p';
+
+  strcpy(query_path, "gfx\\");
+  strcat(query_path, palette_name);
+  query_handle = sub_4427F0(query_path, 1);
+  if ( !query_handle )
+    return 0;
+
+  sub_479CB0(query_handle, 8);
+  query_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
+  if ( !query_vtable || !query_vtable[5] )
+  {
+    sub_473EE0((int)&dword_543CC8, &query_handle);
+    return 0;
+  }
+  if ( ((int (*)(int, void *, int))(uintptr_t)query_vtable[5])(query_handle, palette_bytes, sizeof(palette_bytes))
+    != (int)sizeof(palette_bytes) )
+  {
+    sub_473EE0((int)&dword_543CC8, &query_handle);
+    return 0;
+  }
+  sub_473EE0((int)&dword_543CC8, &query_handle);
+  palette_offset = 0;
+  for ( palette_index = 0; palette_index < 256; ++palette_index )
+  {
+    palette_out[palette_index] =
+      (uint32_t)palette_bytes[palette_offset]
+      | ((uint32_t)palette_bytes[palette_offset + 1] << 8)
+      | ((uint32_t)palette_bytes[palette_offset + 2] << 16);
+    palette_offset += 3;
+  }
+  return 1;
+}
+
 void Render_LoadResourceSprite_v2(void)
 {
   sub_40AEC0();
@@ -1913,20 +2060,44 @@ void Render_LoadResourceSprite_v2(void)
 
 int Render_LoadResourceSprite_v3(_BYTE *a1)
 {
-  return sub_40BD40(a1);
+  TextSpriteResourceSlotRecord *slot;
+  const unsigned char *cursor;
+  int total_width;
+
+  slot = TextSprite_GetResourceSlot(dword_520728);
+  cursor = (const unsigned char *)a1;
+  total_width = 0;
+  if ( !slot || !slot->cached_sprite_set || !cursor || !*cursor )
+    return total_width;
+
+  for ( ; ; )
+  {
+    while ( *cursor == '\n' )
+    {
+      ++cursor;
+      if ( !*cursor )
+        return total_width;
+    }
+    total_width += slot->glyph_spacing_word + (unsigned __int16)DLX_GetSpriteHeight(slot->cached_sprite_set, *cursor - 32);
+    ++cursor;
+    if ( !*cursor )
+      return total_width;
+  }
 }
 
 void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 {
   char cache_path[100];
+  char query_path[104];
   TextSpriteResourceSlotRecord *slot;
   _DWORD *sprite_set;
+  int cached_sprite_set;
+  int cache_query_handle;
   const char *source_stem;
   unsigned int checksum_sum;
   unsigned char checksum_xor;
-  int palette_index;
   int source_offset;
-  uint32_t packed_palette[256];
+  uint32_t source_palette[256];
 
   (void)a3;
   (void)a4;
@@ -1935,6 +2106,9 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   slot = TextSprite_GetResourceSlot(a1);
   if ( !slot )
     return;
+  cached_sprite_set = slot->cached_sprite_set;
+  if ( cached_sprite_set )
+    nfree_(cached_sprite_set);
   slot->cached_sprite_set = 0;
   if ( !a2 )
     return;
@@ -1949,14 +2123,22 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   sprintf_(cache_path, "cache\\%02x%02x%04x.s32", a1, checksum_xor, checksum_sum & 0xFFFFu);
 
   sprite_set = 0;
+  cache_query_handle = 0;
   if ( sub_405980(cache_path, 0, a5, 0) )
   {
-    sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
-    if ( sprite_set )
-      sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
-    slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
-    if ( sprite_set )
-      return;
+    strcpy(query_path, "gfx\\");
+    strcat(query_path, cache_path);
+    cache_query_handle = sub_4427F0(query_path, 0);
+    if ( cache_query_handle )
+    {
+      sub_473EE0((int)&dword_543CC8, &cache_query_handle);
+      sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
+      if ( sprite_set )
+        sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
+      slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
+      if ( sprite_set )
+        return;
+    }
   }
 
   source_stem = slot->source_stem;
@@ -1967,20 +2149,15 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   if ( !sprite_set )
     return;
 
-  source_offset = 0;
-  for ( palette_index = 0; palette_index < 256; ++palette_index )
-  {
-    packed_palette[palette_index] =
-      (uint32_t)a2[source_offset]
-      | ((uint32_t)a2[source_offset + 1] << 8)
-      | ((uint32_t)a2[source_offset + 2] << 16);
-    source_offset += 3;
-  }
+  source_offset = Compat_LoadFontPaletteTable(source_stem, source_palette);
+  if ( !source_offset )
+    return;
+
   DLXSpriteSet_DrawText(
     (int)(intptr_t)sprite_set,
     -1,
-    (int)(intptr_t)packed_palette,
-    (unsigned __int8 *)(void *)packed_palette);
+    (int)(intptr_t)a2,
+    (unsigned __int8 *)(void *)source_palette);
 }
 
 int Render_CreateSprite(void)
