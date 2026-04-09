@@ -603,7 +603,7 @@ _BYTE * sub_40BDA0(_BYTE *a1, int a2);
 int  sub_40BE20(char *a1);
 int __cdecl UI_DrawText(int a1, int a2, int a3);
 int  sub_40BEE0(int a1, int a2, int a3, int a4, int a5, unsigned __int8 *a6);
-int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, int a6);
+int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, ...);
 int  sub_40C190(int a1, int a2, int a3, int a4, int a5, int a6);
 int  UI_GetTextXOffset(int a1);
 void  Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
@@ -8851,9 +8851,45 @@ int dword_511D48 = 1; // weak
 _UNKNOWN unk_511DDF; // weak
 int dword_511DE7 = 1; // weak
 int dword_511EC0 = -1; // weak
-char *off_511EC8 = "system.sfn"; // weak
-int dword_511ECC[] = { 0 }; // weak
-__int16 word_511ED0[] = { 10 }; // weak
+typedef struct TextSpriteResourceSlotRecord {
+  const char *source_stem;
+  int cached_sprite_set;
+  unsigned __int16 line_step_word;
+  unsigned __int16 glyph_spacing_word;
+} TextSpriteResourceSlotRecord;
+
+#define TEXT_SPRITE_RESOURCE_SLOT(stem, line_step, glyph_spacing) \
+  { stem ".sfn", 0, line_step, glyph_spacing }
+
+static TextSpriteResourceSlotRecord g_TextSpriteResourceSlots[] =
+{
+  TEXT_SPRITE_RESOURCE_SLOT("system", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("normal", 20, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("turn", 20, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("info", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek1", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek2", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("turn2", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("gothic_s", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("gothic_l", 40, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek3", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("message", 16, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("red", 16, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek2r", 10, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("goth_s_r", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("bat_info", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("bat_inf2", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek4", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("bud_info", 20, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("lazur1", 13, 0),
+  TEXT_SPRITE_RESOURCE_SLOT("menu", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("zamek5", 13, 1),
+  TEXT_SPRITE_RESOURCE_SLOT("lazur2", 13, 0),
+  TEXT_SPRITE_RESOURCE_SLOT("big", 13, 1),
+  { 0, 0, 0, 0 }
+};
+
+#define TEXT_SPRITE_RESOURCE_SLOT_COUNT ((int)(sizeof(g_TextSpriteResourceSlots) / sizeof(g_TextSpriteResourceSlots[0]) - 1))
 int g_MiniMapDrawMask = 7; // weak
 char byte_511FF8[] = { '\xF8' }; // weak
 __int16 word_512348[] = { 30 }; // weak
@@ -20324,60 +20360,68 @@ LABEL_13:
 // 545150: using guessed type int dword_545150;
 // 5452E8: using guessed type int dword_5452E8;
 
+TextSpriteResourceSlotRecord *TextSprite_GetResourceSlot(int slot_index)
+{
+  if ( slot_index < 0 || slot_index >= TEXT_SPRITE_RESOURCE_SLOT_COUNT )
+    return 0;
+  return &g_TextSpriteResourceSlots[slot_index];
+}
+
+static TextSpriteResourceSlotRecord *TextSprite_GetActiveResourceSlot(void)
+{
+  return TextSprite_GetResourceSlot(dword_520728);
+}
+
 //----- (0040BAE0) --------------------------------------------------------
 int  Render_ReleaseSurface(int a1, DWORD a2)
 {
-  int v2; // ecx
-  _DWORD *v3; // ebx
+  TextSpriteResourceSlotRecord *slot;
+  _DWORD *sprite_set;
   int result; // eax
-  _DWORD *v5; // eax
 
-  v2 = a1;
+  slot = TextSprite_GetResourceSlot(a1);
   dword_520728 = a1;
-  v3 = (_DWORD *)dword_511ECC[3 * a1];
-  if ( !v3 )
+  if ( !slot )
+    return 0;
+  sprite_set = (_DWORD *)(uintptr_t)(unsigned int)slot->cached_sprite_set;
+  if ( !sprite_set )
   {
-    v5 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
-    if ( v5 )
-      v3 = DLXSpriteSet_Load(v5, 0);
-    dword_511ECC[3 * v2] = (int)v3;
+    sprite_set = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
+    if ( sprite_set )
+      sprite_set = DLXSpriteSet_Load(sprite_set, slot->source_stem);
+    slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
   }
-  result = 12 * v2;
-  dword_520724 = (int)&(&off_511EC8)[3 * v2];
+  result = 12 * a1;
+  dword_520724 = a1;
   return result;
 }
-// 40BB12: variable 'v2' is possibly undefined
-// 511EC8: using guessed type char *off_511EC8;
-// 511ECC: using guessed type int dword_511ECC[];
 // 520724: using guessed type int dword_520724;
 // 520728: using guessed type int dword_520728;
 
 //----- (0040BB60) --------------------------------------------------------
 char  sub_40BB60(int a1, char a2, DWORD a3)
 {
-  int v3; // ecx
-  _DWORD *v4; // ebx
+  TextSpriteResourceSlotRecord *slot;
+  _DWORD *sprite_set;
   char result; // al
-  _DWORD *v6; // eax
 
-  v3 = a1;
+  slot = TextSprite_GetResourceSlot(a1);
   dword_520728 = a1;
-  v4 = (_DWORD *)dword_511ECC[3 * a1];
-  if ( !v4 )
+  if ( !slot )
+    return a2;
+  sprite_set = (_DWORD *)(uintptr_t)(unsigned int)slot->cached_sprite_set;
+  if ( !sprite_set )
   {
-    v6 = (_DWORD *)Mem_Alloc(4112, a1, 0, a3);
-    if ( v6 )
-      v4 = DLXSpriteSet_Load(v6, 0);
-    dword_511ECC[3 * v3] = (int)v4;
+    sprite_set = (_DWORD *)Mem_Alloc(4112, a1, 0, a3);
+    if ( sprite_set )
+      sprite_set = DLXSpriteSet_Load(sprite_set, slot->source_stem);
+    slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
   }
   result = a2;
-  dword_520724 = (int)&(&off_511EC8)[3 * v3];
+  dword_520724 = a1;
   byte_51F28C = a2;
   return result;
 }
-// 40BB97: variable 'v3' is possibly undefined
-// 511EC8: using guessed type char *off_511EC8;
-// 511ECC: using guessed type int dword_511ECC[];
 // 51F28C: using guessed type char byte_51F28C;
 // 520724: using guessed type int dword_520724;
 // 520728: using guessed type int dword_520728;
@@ -20393,12 +20437,16 @@ char  sub_40BBF0(char result)
 //----- (0040BC00) --------------------------------------------------------
 int  sub_40BC00(int a1, unsigned __int8 a2)
 {
+  TextSpriteResourceSlotRecord *slot;
   int v3; // eax
   int v4; // ebx
   unsigned __int16 v5; // cx
   int v6; // eax
 
-  DLX_GetSpriteForChar(*(_DWORD *)(dword_520724 + 4), a2 - 32);
+  slot = TextSprite_GetActiveResourceSlot();
+  if ( !slot || !slot->cached_sprite_set )
+    return a1;
+  DLX_GetSpriteForChar(slot->cached_sprite_set, a2 - 32);
   (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     -1,
     -1,
@@ -20407,11 +20455,11 @@ int  sub_40BC00(int a1, unsigned __int8 a2)
     1,
     0,
     0);
-  LOWORD(v3) = DLX_GetSpriteHeight(*(_DWORD *)(dword_520724 + 4), a2 - 32);
+  LOWORD(v3) = DLX_GetSpriteHeight(slot->cached_sprite_set, a2 - 32);
   v4 = v3;
-  DLX_GetSpriteWidth(*(_DWORD *)(dword_520724 + 4), v5);
+  DLX_GetSpriteWidth(slot->cached_sprite_set, v5);
   HIWORD(v6) = HIWORD(dword_520724);
-  LOWORD(v6) = *(_WORD *)(dword_520724 + 10);
+  LOWORD(v6) = slot->glyph_spacing_word;
   return a1 + v4 + v6;
 }
 // 40BC64: variable 'v3' is possibly undefined
@@ -20422,15 +20470,17 @@ int  sub_40BC00(int a1, unsigned __int8 a2)
 //----- (0040BC90) --------------------------------------------------------
 int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
 {
+  TextSpriteResourceSlotRecord *slot;
   int v7; // edx
   unsigned __int8 v8; // bl
 
+  slot = TextSprite_GetActiveResourceSlot();
   if ( a3 == 1 )
   {
     while ( *a4 )
     {
       sub_40BC00((unsigned __int16)a1, *a4);
-      LOWORD(v7) = *(_WORD *)(dword_520724 + 8);
+      LOWORD(v7) = slot ? slot->line_step_word : 0;
       ++a4;
       a2 += v7;
     }
@@ -20451,13 +20501,15 @@ int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
 //----- (0040BD40) --------------------------------------------------------
 int  sub_40BD40(_BYTE *a1)
 {
+  TextSpriteResourceSlotRecord *slot;
   _BYTE *v1; // ecx
   int v2; // ebx
   unsigned __int16 v4; // si
 
+  slot = TextSprite_GetActiveResourceSlot();
   v1 = a1;
   v2 = 0;
-  if ( !*a1 )
+  if ( !slot || !slot->cached_sprite_set || !*a1 )
     return v2;
   do
   {
@@ -20466,8 +20518,8 @@ int  sub_40BD40(_BYTE *a1)
       if ( !*++v1 )
         return v2;
     }
-    v4 = *(_WORD *)(dword_520724 + 10);
-    v2 += v4 + (unsigned __int16)DLX_GetSpriteHeight(*(_DWORD *)(dword_520724 + 4), (unsigned __int8)*v1 - 32);
+    v4 = slot->glyph_spacing_word;
+    v2 += v4 + (unsigned __int16)DLX_GetSpriteHeight(slot->cached_sprite_set, (unsigned __int8)*v1 - 32);
   }
   while ( *v1 );
   return v2;
@@ -20478,15 +20530,17 @@ int  sub_40BD40(_BYTE *a1)
 //----- (0040BDA0) --------------------------------------------------------
 _BYTE * sub_40BDA0(_BYTE *a1, int a2)
 {
+  TextSpriteResourceSlotRecord *slot;
   _BYTE *v2; // ecx
   _BYTE *v3; // ebp
   int v4; // ebx
   unsigned __int16 v5; // si
 
+  slot = TextSprite_GetActiveResourceSlot();
   v2 = a1;
   v3 = a1;
   v4 = 0;
-  if ( !*a1 )
+  if ( !slot || !slot->cached_sprite_set || !*a1 )
     return 0;
   while ( 1 )
   {
@@ -20494,8 +20548,8 @@ _BYTE * sub_40BDA0(_BYTE *a1, int a2)
       return v2;
     if ( *v2 == 32 )
       v3 = v2;
-    v5 = *(_WORD *)(dword_520724 + 10);
-    v4 += v5 + (unsigned __int16)DLX_GetSpriteHeight(*(_DWORD *)(dword_520724 + 4), (unsigned __int8)*v2 - 32);
+    v5 = slot->glyph_spacing_word;
+    v4 += v5 + (unsigned __int16)DLX_GetSpriteHeight(slot->cached_sprite_set, (unsigned __int8)*v2 - 32);
     if ( v4 > a2 )
       break;
     if ( !*v2 )
@@ -20710,15 +20764,20 @@ LABEL_16:
 // 520728: using guessed type int dword_520728;
 
 //----- (0040C150) --------------------------------------------------------
-int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, int a6)
+int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, ...)
 {
-  int v6; // ecx
+  va_list args;
 
-  vsprintf_(a5, a6);
-  return sub_40BEE0(a2, a3, v6, a4, a1, byte_520520);
+  if ( !format )
+    byte_520520[0] = 0;
+  else
+  {
+    va_start(args, format);
+    vsnprintf((char *)byte_520520, sizeof(byte_520520), format, args);
+    va_end(args);
+  }
+  return sub_40BEE0(a2, a3, a5, a4, a1, byte_520520);
 }
-// 40C182: variable 'v6' is possibly undefined
-// 473FC3: using guessed type int __fastcall vsprintf_(_DWORD, _DWORD);
 // 520520: using guessed type unsigned __int8 byte_520520[516];
 
 //----- (0040C190) --------------------------------------------------------
@@ -20736,13 +20795,18 @@ int  sub_40C190(int a1, int a2, int a3, int a4, int a5, int a6)
 //----- (0040C1D0) --------------------------------------------------------
 int  UI_GetTextXOffset(int a1)
 {
-  return (unsigned __int16)word_511ED0[6 * a1];
+  TextSpriteResourceSlotRecord *slot;
+
+  slot = TextSprite_GetResourceSlot(a1);
+  if ( !slot )
+    return 0;
+  return slot->line_step_word;
 }
-// 511ED0: using guessed type __int16 word_511ED0[];
 
 //----- (0040C1F0) --------------------------------------------------------
 void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 {
+  TextSpriteResourceSlotRecord *slot;
   int v6; // edx
   int v7; // ecx
   _BYTE *v8; // eax
@@ -20769,12 +20833,15 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   _BYTE *v29; // [esp+4C8h] [ebp-18h]
 
   v29 = a2;
+  slot = TextSprite_GetResourceSlot(a1);
   Debug_Log(a3, a4, a5, (int)a_conformfont2p);
-  v7 = dword_511ECC[3 * v6];
+  if ( !slot )
+    return;
+  v7 = slot->cached_sprite_set;
   if ( v7 )
   {
     nfree_(v7);
-    *(int *)((char *)dword_511ECC + v24) = 0;
+    slot->cached_sprite_set = 0;
   }
   v8 = v29;
   LOBYTE(v9) = 0;
@@ -20792,7 +20859,7 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     v25 = (_DWORD *)Mem_Alloc(4112, v14, (char)v9, a5);
     if ( v25 )
       v25 = DLXSpriteSet_Load(v25, (char)v9);
-    dword_511ECC[3 * a1] = (int)v25;
+    slot->cached_sprite_set = (int)(uintptr_t)v25;
   }
   else
   {
@@ -20800,10 +20867,9 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     v17 = v16;
     if ( v16 )
       v17 = DLXSpriteSet_Load(v16, (char)v9);
-    a5 = 12 * a1;
     v18 = v28;
-    v19 = (&off_511EC8)[a5 / 4];
-    dword_511ECC[a5 / 4] = (int)v17;
+    v19 = (char *)slot->source_stem;
+    slot->cached_sprite_set = (int)(uintptr_t)v17;
     do
     {
       v20 = *v19;
@@ -20817,10 +20883,10 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     }
     while ( v21 );
     v9 = v26;
-    v27[strlen(v28) + 97] = 112;
-    sub_401AF0((int)v29, a5);
-    DLXSpriteSet_DrawText(dword_511ECC[a5 / 4], -1, v22, v26);
-    DLXSpriteSet_Save((int *)dword_511ECC[a5 / 4], (int)v27, (char)v26);
+    v27[strlen(v28) + 97] = 'p';
+    sub_401AF0((int)v29, 12 * a1);
+    DLXSpriteSet_DrawText(slot->cached_sprite_set, -1, v22, v26);
+    DLXSpriteSet_Save((int *)(uintptr_t)(unsigned int)slot->cached_sprite_set, (int)v27, (char)v26);
   }
   Debug_Log(v23, (char)v9, a5, (int)a_end);
 }
@@ -20840,48 +20906,33 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 //----- (0040C3A0) --------------------------------------------------------
 int  UI_EndDraw(int a1)
 {
-  int v1; // ecx
+  TextSpriteResourceSlotRecord *slot;
   int result; // eax
-  int v3; // edx
 
-  v1 = a1;
-  if ( dword_511ECC[3 * a1] )
+  slot = TextSprite_GetResourceSlot(a1);
+  if ( slot && slot->cached_sprite_set )
   {
-    nfree_(a1);
-    *(int *)((char *)dword_511ECC + v3) = 0;
+    nfree_(slot->cached_sprite_set);
+    slot->cached_sprite_set = 0;
   }
-  result = 3 * v1;
-  dword_511ECC[3 * v1] = 0;
+  result = 3 * a1;
   return result;
 }
-// 40C3E1: variable 'v3' is possibly undefined
-// 40C3C7: variable 'v1' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
-// 511ECC: using guessed type int dword_511ECC[];
 
 //----- (0040C3F0) --------------------------------------------------------
 int sub_40C3F0()
 {
-  int v0; // edx
+  int slot_index;
   int result; // eax
-  int v2; // ecx
-  int v3; // edx
 
-  v0 = 0;
-  if ( off_511EC8 )
+  result = 0;
+  for ( slot_index = 0; slot_index < TEXT_SPRITE_RESOURCE_SLOT_COUNT; ++slot_index )
   {
-    do
-    {
-      result = UI_EndDraw(v0);
-      v0 = v3 + 1;
-    }
-    while ( *(char **)((char *)&off_511EC8 + v2) );
+    result = UI_EndDraw(slot_index);
   }
   return result;
 }
-// 40C412: variable 'v3' is possibly undefined
-// 40C40C: variable 'v2' is possibly undefined
-// 511EC8: using guessed type char *off_511EC8;
 
 //----- (0040C430) --------------------------------------------------------
 int  sub_40C430(int result)
@@ -59438,18 +59489,18 @@ LABEL_17:
 //----- (004446E0) --------------------------------------------------------
 char  sub_4446E0(int a1, char *a2, DWORD a3)
 {
-  int v5; // ecx
-  int v6; // ecx
+  int file_handle; // eax
   char result; // al
   char *v8; // esi
   CHAR v9[108]; // [esp+0h] [ebp-6Ch] BYREF
 
-  sub_4443C0(a1, (int)v9);
-  if ( sub_475CC8(v9, (unsigned __int8 *)aRb_7, v5, a3) )
+  snprintf(v9, sizeof(v9), "save\\%d.dat", a1);
+  file_handle = sub_475CC8(v9, (unsigned __int8 *)aRb_7, 0, a3);
+  if ( file_handle )
   {
-    fread_();
+    fread_(a2, 1, file_handle, 16);
     a2[16] = 0;
-    return fclose_(v6);
+    return fclose_(file_handle);
   }
   else
   {
@@ -59469,29 +59520,25 @@ char  sub_4446E0(int a1, char *a2, DWORD a3)
   }
   return result;
 }
-// 4446F5: variable 'v5' is possibly undefined
-// 44471B: variable 'v6' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444750) --------------------------------------------------------
 int  sub_444750(int a1, DWORD a2)
 {
-  int v2; // ecx
+  int file_handle; // eax
   int result; // eax
-  int v4; // ecx
   CHAR v5[104]; // [esp-68h] [ebp-68h] BYREF
 
-  sub_4443C0(a1, (int)v5);
-  result = sub_475CC8(v5, (unsigned __int8 *)aRb_8, v2, a2);
-  if ( result )
+  snprintf(v5, sizeof(v5), "save\\%d.dat", a1);
+  file_handle = sub_475CC8(v5, (unsigned __int8 *)aRb_8, 0, a2);
+  result = file_handle;
+  if ( file_handle )
   {
-    fclose_(v4);
+    fclose_(file_handle);
     return 1;
   }
   return result;
 }
-// 444762: variable 'v2' is possibly undefined
-// 444770: variable 'v4' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444780) --------------------------------------------------------
@@ -62567,13 +62614,16 @@ void * sub_44A140(int a1, DWORD a2)
 {
   int v4; // edi
   int v5; // eax
+  char *row_label; // eax
   void *result; // eax
-  char v7[20]; // [esp+0h] [ebp-34h] BYREF
   void *v8; // [esp+14h] [ebp-20h]
   int v9; // [esp+18h] [ebp-1Ch]
 
   v8 = g_RenderDevice;
-  sub_4446E0(a1, v7, a2);
+  row_label = (char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes(20);
+  if ( !row_label )
+    return v8;
+  sub_4446E0(a1, row_label, a2);
   v9 = dword_544D10;
   g_RenderDevice = &unk_51D4C0;
   v4 = (unsigned __int16)(22 * a1 + 155);
@@ -62584,9 +62634,10 @@ void * sub_44A140(int a1, DWORD a2)
   else
     v5 = 21;
   Render_ReleaseSurface(v5, (unsigned __int16)(22 * a1 + 175));
-  UI_DrawTextFmt(v4, 244, 410, 22 * a1 + 155, 3, (int)v7);
+  UI_DrawTextFmt(v4, 244, 410, 22 * a1 + 155, 3, (int)(uintptr_t)row_label);
   if ( v9 )
     Render_Present((int)dword_544CD8);
+  Compat_FreeLow32Bytes((int)(uintptr_t)row_label);
   result = v8;
   g_RenderDevice = v8;
   return result;
@@ -71869,6 +71920,7 @@ __int16  sub_460D80(int a1, int a2)
 {
   int descriptor;
   int result;
+  int active_descriptor;
   unsigned int sprite_index;
   unsigned __int16 max_height;
   unsigned __int16 max_width;
@@ -71877,6 +71929,11 @@ __int16  sub_460D80(int a1, int a2)
   unsigned char was_presenting;
 
   result = a1;
+  active_descriptor = a2;
+  if ( !active_descriptor )
+    active_descriptor = *(_DWORD *)(a1 + 60);
+  if ( active_descriptor )
+    dword_544D14 = active_descriptor;
   if ( a2 == *(_DWORD *)(a1 + 60) )
     return result;
   was_presenting = (unsigned char)dword_544D10;

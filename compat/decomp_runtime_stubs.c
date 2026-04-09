@@ -40,9 +40,14 @@ _DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
 signed int CRT_GetOsHandleFromFd(int a1, int a2);
 char sub_489EC6(int a1, _DWORD *a2);
+typedef struct TextSpriteResourceSlotRecord {
+  const char *source_stem;
+  int cached_sprite_set;
+  unsigned __int16 line_step_word;
+  unsigned __int16 glyph_spacing_word;
+} TextSpriteResourceSlotRecord;
+TextSpriteResourceSlotRecord *TextSprite_GetResourceSlot(int slot_index);
 extern void *lpTlsValue;
-extern char *off_511EC8;
-extern int dword_511ECC[];
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -1914,11 +1919,11 @@ int Render_LoadResourceSprite_v3(_BYTE *a1)
 void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 {
   char cache_path[100];
+  TextSpriteResourceSlotRecord *slot;
   _DWORD *sprite_set;
   const char *source_stem;
   unsigned int checksum_sum;
   unsigned char checksum_xor;
-  int slot_index;
   int palette_index;
   int source_offset;
   uint32_t packed_palette[256];
@@ -1927,9 +1932,10 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   (void)a4;
   (void)a5;
 
-  slot_index = 3 * a1;
-  dword_511ECC[slot_index] = 0;
-
+  slot = TextSprite_GetResourceSlot(a1);
+  if ( !slot )
+    return;
+  slot->cached_sprite_set = 0;
   if ( !a2 )
     return;
 
@@ -1948,16 +1954,16 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
     if ( sprite_set )
       sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
-    dword_511ECC[slot_index] = (int)sprite_set;
+    slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
     if ( sprite_set )
       return;
   }
 
-  source_stem = (&off_511EC8)[slot_index];
+  source_stem = slot->source_stem;
   sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
   if ( sprite_set )
     sprite_set = DLXSpriteSet_Load(sprite_set, source_stem);
-  dword_511ECC[slot_index] = (int)sprite_set;
+  slot->cached_sprite_set = (int)(uintptr_t)sprite_set;
   if ( !sprite_set )
     return;
 
