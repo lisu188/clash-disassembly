@@ -183,3 +183,12 @@
 
 ## 10. Batch 139 Note
 - `Batch 139` stayed intentionally on the executable-first main-menu display frontier. The active work removed a remaining non-authentic extra post-present pump from the contained top-level menu loop and proved the same stable nonblack menu-frame milestone still holds on the plainer one-present-then-loop path, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while real menu hover/click responsiveness remains the next blocker.
+
+## 11. Batch 140 Note
+- `Batch 140` stayed intentionally on the executable-first main-menu widget/text frontier. The active work relinked the local bootstrap target through the `_CHP` compatibility repair, tightened the SDL input/message seam, and revalidated the asm-backed `left/x` then `top/y` main-menu widget ordering, but it still did not promote any new unit-type or stat semantics; the contained SDL-presented frame remains a stable backdrop-only menu loop while the visible widget/text layer stays blocked.
+
+## 12. Batch 141 Note
+- `Batch 141` stayed intentionally on the executable-first menu-interaction frontier. The active work restored native render-state slot dispatch, removed the decompiler-scarred `Render_Begin` reentry crash, and switched the contained synthetic button-down to a one-read SDL fallback pulse, which is enough for the authentic top-level `Load Game` button to hover, click, and advance `g_MainMenuRequestedScreen` to `MAIN_MENU_REQUEST_LOAD_GAME` (`screen = 5`). It did not promote any new unit-type or stat semantics; the next blocker is the still-unlifted load-menu subtree rooted at `unk_518808`.
+
+## 13. Batch 142 Note
+- `Batch 142` stayed intentionally on the executable-first load-menu frontier. The active work rebuilt the weak `unk_518808` load-menu button blob into `g_LoadMenuButtonWidgetsTemplate`, replaced the broken `Render_LoadResourceSprite_v4` forwarding wrapper with the asm-backed cache/recolor helper shape, and extended the contained probe far enough to enter the load menu and click the `back` button through its own recovered callback. It still did not promote any new unit-type or stat semantics; the remaining blocker is now the save-slot row/resource corridor behind `sub_44A140`, `sub_4446E0`, and resource ids `18/21`.

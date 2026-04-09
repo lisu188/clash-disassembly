@@ -1829,6 +1829,8 @@ static int g_platform_host_mouse_delta_x;
 static int g_platform_host_mouse_delta_y;
 static signed char g_platform_host_mouse_primary;
 static signed char g_platform_host_mouse_secondary;
+static int g_platform_debug_mouse_primary_pulse_reads;
+static int g_platform_debug_mouse_secondary_pulse_reads;
 static signed char g_platform_host_keyboard_state[256];
 
 static int PlatformSurfaceIsWindowDeviceContext(const struct SDL_Surface *surface)
@@ -2161,6 +2163,10 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
+      g_platform_host_mouse_delta_x += event->button.x - g_platform_host_mouse_x;
+      g_platform_host_mouse_delta_y += event->button.y - g_platform_host_mouse_y;
+      g_platform_host_mouse_x = event->button.x;
+      g_platform_host_mouse_y = event->button.y;
       if ( event->button.button == SDL_BUTTON_LEFT )
         g_platform_host_mouse_primary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
       else if ( event->button.button == SDL_BUTTON_RIGHT )
@@ -2405,26 +2411,26 @@ BOOL __stdcall GetMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsg
   (void)hWnd;
   (void)wMsgFilterMin;
   (void)wMsgFilterMax;
-  PlatformPumpHostEvents();
-  if ( PlatformQueuePeek(lpMsg, 1) )
+  for ( ; ; )
   {
-    if ( lpMsg && lpMsg->message == PLATFORM_WM_QUIT )
+    PlatformPumpHostEvents();
+    if ( PlatformQueuePeek(lpMsg, 1) )
     {
-      g_platform_quit_requested = 1;
-      g_platform_quit_code = (int)lpMsg->wParam;
+      if ( lpMsg && lpMsg->message == PLATFORM_WM_QUIT )
+      {
+        g_platform_quit_requested = 1;
+        g_platform_quit_code = (int)lpMsg->wParam;
+        return 0;
+      }
+      return 1;
+    }
+    if ( g_platform_quit_requested )
+    {
+      PlatformFillQuitMessage(lpMsg);
       return 0;
     }
-    return 1;
+    usleep(10000);
   }
-  if ( g_platform_quit_requested )
-  {
-    PlatformFillQuitMessage(lpMsg);
-    return 0;
-  }
-  usleep(10000);
-  if ( lpMsg )
-    memset(lpMsg, 0, sizeof(*lpMsg));
-  return 1;
 }
 
 HGDIOBJ __stdcall GetStockObject(int i)
@@ -2980,7 +2986,53 @@ void Platform_ResetInputFallbackState(void)
   g_platform_host_mouse_delta_y = 0;
   g_platform_host_mouse_primary = 0;
   g_platform_host_mouse_secondary = 0;
+  g_platform_debug_mouse_primary_pulse_reads = 0;
+  g_platform_debug_mouse_secondary_pulse_reads = 0;
   memset(g_platform_host_keyboard_state, 0, sizeof(g_platform_host_keyboard_state));
+}
+
+void Platform_DebugPrimeInputFallbackMouseState(int x, int y, int primary_down, int secondary_down)
+{
+  /*
+   * Keep the contained menu probe on the same fallback-input corridor the SDL
+   * seam already uses. This only seeds the next `Platform_ReadInputFallbackState`
+   * sample; it does not bypass the recovered `DD_Pump -> InputBackend_PollState`
+   * path.
+   */
+  g_platform_host_mouse_delta_x += x - g_platform_host_mouse_x;
+  g_platform_host_mouse_delta_y += y - g_platform_host_mouse_y;
+  g_platform_host_mouse_x = x;
+  g_platform_host_mouse_y = y;
+  g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
+  g_platform_host_mouse_secondary = secondary_down ? (signed char)0x80 : 0;
+}
+
+void Platform_DebugPrimeInputFallbackMouseDelta(int delta_x, int delta_y, int primary_down, int secondary_down)
+{
+  /*
+   * The contained menu auto-click path needs to steer the recovered cursor via
+   * the same delta-based sample that `DD_Pump -> InputBackend_PollState ->
+   * sub_460A50` consumes, rather than assuming the SDL-side absolute mouse
+   * position is already synchronized with the recovered render-state cursor.
+   */
+  g_platform_host_mouse_delta_x += delta_x;
+  g_platform_host_mouse_delta_y += delta_y;
+  g_platform_host_mouse_x += delta_x;
+  g_platform_host_mouse_y += delta_y;
+  g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
+  g_platform_host_mouse_secondary = secondary_down ? (signed char)0x80 : 0;
+}
+
+void Platform_DebugPrimeInputFallbackMousePulse(
+  int delta_x,
+  int delta_y,
+  int primary_down,
+  int secondary_down,
+  int read_count)
+{
+  Platform_DebugPrimeInputFallbackMouseDelta(delta_x, delta_y, primary_down, secondary_down);
+  g_platform_debug_mouse_primary_pulse_reads = primary_down && read_count > 0 ? read_count : 0;
+  g_platform_debug_mouse_secondary_pulse_reads = secondary_down && read_count > 0 ? read_count : 0;
 }
 
 void Platform_ReadInputFallbackState(
@@ -3011,4 +3063,8 @@ void Platform_ReadInputFallbackState(
   }
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
+  if ( g_platform_debug_mouse_primary_pulse_reads > 0 && --g_platform_debug_mouse_primary_pulse_reads == 0 )
+    g_platform_host_mouse_primary = 0;
+  if ( g_platform_debug_mouse_secondary_pulse_reads > 0 && --g_platform_debug_mouse_secondary_pulse_reads == 0 )
+    g_platform_host_mouse_secondary = 0;
 }

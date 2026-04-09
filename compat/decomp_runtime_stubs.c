@@ -35,9 +35,14 @@ void sub_40AEC0(void);
 int sub_40BD40(_BYTE *a1);
 void sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
 int sub_40C5E0(void);
+int sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
+_DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
+char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
 signed int CRT_GetOsHandleFromFd(int a1, int a2);
 char sub_489EC6(int a1, _DWORD *a2);
 extern void *lpTlsValue;
+extern char *off_511EC8;
+extern int dword_511ECC[];
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -1639,6 +1644,30 @@ int __cdecl vsprintf_(char *buffer, const char *format, ...)
   return result;
 }
 
+double __cdecl _CHP(_DWORD low, _DWORD high)
+{
+  union
+  {
+    struct
+    {
+      uint32_t low;
+      uint32_t high;
+    } parts;
+    double value;
+  } value_bits;
+
+  /*
+   * The original `__CHP` is a collapsed x87 helper in the binary, but the
+   * decompiled C has already widened those sites into ordinary two-argument
+   * calls. Rebuilding the split double keeps return-using callsites stable and
+   * lets the wider executable relink while the authentic x87-side behavior
+   * stays deferred.
+   */
+  value_bits.parts.low = (uint32_t)low;
+  value_bits.parts.high = (uint32_t)high;
+  return value_bits.value;
+}
+
 int __thiscall fclose_(_DWORD a1)
 {
   if ( !a1 || a1 == (_DWORD)-1 )
@@ -1884,7 +1913,68 @@ int Render_LoadResourceSprite_v3(_BYTE *a1)
 
 void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 {
-  sub_40C1F0(a1, a2, a3, a4, a5);
+  char cache_path[100];
+  _DWORD *sprite_set;
+  const char *source_stem;
+  unsigned int checksum_sum;
+  unsigned char checksum_xor;
+  int slot_index;
+  int palette_index;
+  int source_offset;
+  uint32_t packed_palette[256];
+
+  (void)a3;
+  (void)a4;
+  (void)a5;
+
+  slot_index = 3 * a1;
+  dword_511ECC[slot_index] = 0;
+
+  if ( !a2 )
+    return;
+
+  checksum_sum = 0;
+  checksum_xor = 0;
+  for ( source_offset = 0; source_offset < 0x300; ++source_offset )
+  {
+    checksum_xor ^= a2[source_offset];
+    checksum_sum += a2[source_offset];
+  }
+  sprintf_(cache_path, "cache\\%02x%02x%04x.s32", a1, checksum_xor, checksum_sum & 0xFFFFu);
+
+  sprite_set = 0;
+  if ( sub_405980(cache_path, 0, a5, 0) )
+  {
+    sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
+    if ( sprite_set )
+      sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
+    dword_511ECC[slot_index] = (int)sprite_set;
+    if ( sprite_set )
+      return;
+  }
+
+  source_stem = (&off_511EC8)[slot_index];
+  sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
+  if ( sprite_set )
+    sprite_set = DLXSpriteSet_Load(sprite_set, source_stem);
+  dword_511ECC[slot_index] = (int)sprite_set;
+  if ( !sprite_set )
+    return;
+
+  source_offset = 0;
+  for ( palette_index = 0; palette_index < 256; ++palette_index )
+  {
+    packed_palette[palette_index] =
+      (uint32_t)a2[source_offset]
+      | ((uint32_t)a2[source_offset + 1] << 8)
+      | ((uint32_t)a2[source_offset + 2] << 16);
+    source_offset += 3;
+  }
+  DLXSpriteSet_DrawText(
+    (int)(intptr_t)sprite_set,
+    -1,
+    (int)(intptr_t)packed_palette,
+    (unsigned __int8 *)(void *)packed_palette);
 }
 
 int Render_CreateSprite(void)
