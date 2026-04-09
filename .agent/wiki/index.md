@@ -1,6 +1,6 @@
 # Agent Wiki Index
 
-- Current frontier: keep the contained post-save handoff green while separating it from the broader startup-prelude widening that now reaches the first retained `CLIPS`/class-runtime band.
+- Current frontier: keep the pre-confirm authentic load-menu wedge green while separating it from the broader startup-prelude class/bload widening now required by the post-confirm save replay.
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -8,14 +8,13 @@
 - Highest runtime milestone:
   - authentic load-menu row resources load
   - all ten contained `sub_44A140` row draws complete
-  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
-  - contained authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - contained post-confirm `WorldMap_Initialize` returns
-  - contained `.dat` / `.fac` session-load in `sub_444490` returns
-  - the probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+  - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
+  - the live post-confirm save replay now reaches `parse-make-instance-before-class-lookup`
+  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
 - Adjacent blocked widening:
-  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial` before dumping core
-  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is no longer blocked on local bload header/data or `unknown_libname_4`, but it still stops on the wider unresolved runtime band (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers such as `Lexer_ParseSlotConstraint`)
+  - the explicit broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is no longer blocked on `dbl_502FDC`, but it still stops on the wider unresolved runtime band (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, `AST_FreeNode`, and parser helpers such as `Lexer_ParseSlotConstraint`)
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

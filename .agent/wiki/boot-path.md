@@ -12,10 +12,11 @@
   - contained load-menu row draws complete
   - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
   - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - contained `CSS_StopSound -> WorldMap_Initialize -> sub_444490` now returns
-  - the contained probe reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+  - the live post-confirm save replay reaches `parse-make-instance-before-class-lookup`
+  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
 - Next boot-path frontier:
-  - keep the green contained post-save handoff intact while characterizing the first loaded-session blocker after `sub_444490`
-  - the explicit broader contained probe currently reaches `parse-make-instance-before-class-lookup` on `oddzial` and dies there
+  - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
+  - the explicit broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still dies earlier on `symbol-lookup-missing-table MAIN`
   - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
   - deferred save-slot repaint/name lane after the row draws

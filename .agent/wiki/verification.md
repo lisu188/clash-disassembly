@@ -12,13 +12,19 @@
   - exit `124`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 build/bin/clash95_bootstrap --authentic-menu-probe`
   - exits `139`
-  - reaches `load-menu-post-confirm-load-save`, survives `sub_444490`, then reaches `parse-make-instance-before-class-lookup` on `oddzial` before crashing
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash ... build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o ...`
+  - reaches `load-menu-post-confirm-load-save`, then `parse-make-instance-before-class-lookup`
+  - logs `class-lookup-no-table name=oddzial`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exits `139`
+  - logs `symbol-lookup-missing-table MAIN` earlier in the same post-confirm save-replay corridor
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4B0940 ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash ... build/lib/libclash95_cpp_core.a ...`
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_499990 ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o ...`
-  - still fails on the broader startup-prelude unresolved set, led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 ... build/lib/libclash95_cpp_core.a ...`
+  - still fails on the deeper AST / locale / `JUMPOUT` band
+- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
+  - still fails on the broader startup-prelude unresolved set, led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
 - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
   - passed
 - `git diff --check`

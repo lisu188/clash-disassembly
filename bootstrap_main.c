@@ -165,6 +165,8 @@ static int g_boot_load_menu_probe_auto_slot_checked;
 static int g_boot_load_menu_probe_auto_slot_index = -1;
 static int g_boot_load_menu_probe_post_confirm_checked;
 static int g_boot_load_menu_probe_post_confirm_enabled;
+static int g_boot_load_menu_probe_broader_rules_checked;
+static int g_boot_load_menu_probe_broader_rules_enabled;
 
 static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);
 
@@ -281,6 +283,21 @@ static int Bootstrap_ShouldRunLoadMenuProbePostConfirm(void)
   if ( env_value && *env_value && strcmp(env_value, "0") )
     g_boot_load_menu_probe_post_confirm_enabled = 1;
   return g_boot_load_menu_probe_post_confirm_enabled;
+}
+
+static int Bootstrap_ShouldRunLoadMenuProbeBroaderRulesBootstrap(void)
+{
+  const char *env_value;
+
+  if ( g_boot_load_menu_probe_broader_rules_checked )
+    return g_boot_load_menu_probe_broader_rules_enabled;
+
+  g_boot_load_menu_probe_broader_rules_checked = 1;
+  g_boot_load_menu_probe_broader_rules_enabled = 1;
+  env_value = getenv("CLASH95_LOAD_MENU_PROBE_BROADER_RULES");
+  if ( env_value && *env_value && !strcmp(env_value, "0") )
+    g_boot_load_menu_probe_broader_rules_enabled = 0;
+  return g_boot_load_menu_probe_broader_rules_enabled;
 }
 
 static int Bootstrap_ShouldDrawLoadMenuRows(void)
@@ -1312,15 +1329,18 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     CSS_StopSound(g_MainMenuMusicHandle, 1000);
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-worldmap-init");
     WorldMap_Initialize((char)dword_5441E0, 0);
-    if ( !dword_54DBA8 )
+    if ( Bootstrap_ShouldRunLoadMenuProbeBroaderRulesBootstrap() )
     {
-      Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-slab-init");
-      sub_4725B0(0, 0);
+      if ( !dword_54DBA8 )
+      {
+        Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-slab-init");
+        sub_4725B0(0, 0);
+      }
+      Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
+      sub_482260();
+      Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
+      sub_491B10();
     }
-    Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
-    sub_482260();
-    Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
-    sub_491B10();
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-load-save");
     sub_444490(dword_5441E0, 0, 0.0);
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-after-save");

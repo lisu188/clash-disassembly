@@ -31,18 +31,14 @@ This file classifies the current runtime/quarantine surface for executable regen
 
 - The wrapper surface is now explicit in the executable-regeneration docs.
 - The first C++ executable target is being built around the current bootstrap wedge instead of pretending the deeper WCpp/runtime layer is already solved.
-- The text-resource/runtime quarantine layer now carries enough recovered behavior to get through the authentic load-menu row-resource preload and the first contained row-draw pass.
-- The contained load-menu wedge now also reaches the authentic slot-strip click plus bottom-row load confirm proof with `selected_slot = 0` and `confirm = 1`.
-- The next blocker is no longer the click/confirm proof or the first `sub_444490` save-load crash; the contained post-confirm lane now reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`.
-- The fixes that moved this batch were recovered-C and conservative seam repairs, not new gameplay-side shims:
-  - `sub_4163F0` now matches the asm-backed finite loop
-  - `sub_4443C0` / `sub_4443D0` now take real `char *` buffers instead of truncated low32 stack addresses
-  - `unknown_libname_4` is now recovered in-tree instead of left as a missing runtime helper
-  - `CSyncObject_Unlock` now resolves through `clash95_cpp_core`
-- The next blocked widening adjacent to that green state is also below the quarantine seam:
-  - the broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - the retained `sub_451E46` startup-prelude slice still stops on wider runtime/class/parser unresolveds
-  - the live evidence still points at runtime recovery, not an SDL or wrapper seam change
+- The text-resource/runtime quarantine layer still carries the contained pre-confirm load-menu wedge cleanly through row-resource load, row draws, slot-strip selection, and bottom-row confirm.
+- The latest guarded traces show the next blocker is still below the quarantine seam:
+  - with the current broader-rules bootstrap, the post-confirm save replay reaches `parse-make-instance-before-class-lookup` and then dies because `sub_4B0480` reports `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
+  - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
+- The retained executable-regeneration surface was also reduced without changing wrapper policy:
+  - `dbl_502FDC` is now materialized in recovered C as exact data
+  - retained `sub_4B0940` and `sub_499990` probes link, while `sub_4996D0` still depends on deeper runtime/parser recovery
 
 ## What should not move yet
 

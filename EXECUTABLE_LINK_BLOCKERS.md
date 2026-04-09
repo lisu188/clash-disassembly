@@ -12,17 +12,16 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 
 ## Latest authentic runtime frontier - 2026-04-09
 
-- The live executable blocker is no longer the old load-menu row-resource preload crash or the first post-confirm `.dat` / `.fac` save-load crash.
-- The contained SDL-backed executable now:
-  - loads the authentic `Render_LoadResourceSprite_v4(18/21)` row text resources
-  - completes all ten contained `sub_44A140` row draws
-  - survives contained slot-hover selection with `selected_slot = 0` and `confirm = 0`
-  - survives contained authentic slot-strip click plus bottom-row load confirm with `selected_slot = 0` and `confirm = 1`
-  - survives contained post-confirm `WorldMap_Initialize`
-  - survives contained `.dat` / `.fac` session-load in `sub_444490`
-  - reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
-- The next honest contained runtime blocker is now the post-save `PlayGame` handoff and the first loaded-session runtime fault beyond `sub_444490`.
-- The remaining raw link/runtime surface still exists for the broader executable-regeneration track, but it is no longer the blocker for the contained post-confirm save-load wedge.
+- The live executable blocker is no longer row-resource preload, row draws, or save-path formatting.
+- The contained SDL-backed executable still keeps the authentic pre-confirm load-menu corridor alive:
+  - real row resources load
+  - all ten contained `sub_44A140` row draws complete
+  - authentic slot-strip selection and bottom-row load confirm both complete
+- The live post-confirm split is now explicit:
+  - with the current broader-rules bootstrap, the contained probe reaches `parse-make-instance-before-class-lookup` and then logs `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
+- The next honest contained runtime blocker is therefore not local save I/O or SDL. It is the missing authentic class/bload prelude needed before the save replay can instantiate `oddzial`.
+- A direct contained `PlayGame` handoff remains deferred because rooting `PlayGame` from `bootstrap_main.c` immediately reopens the much wider gameplay/session unresolved link surface.
 
 ## Latest startup-prelude narrowing - 2026-04-09
 
@@ -39,10 +38,13 @@ This note records the current executable-regeneration gap on the clean `codex/cp
   - `sub_496643`
   - `ftime_`
   - `system_`
-  - `dbl_502FDC`
   - `JUMPOUT`
   - `AST_FreeNode`
   - parser helpers such as `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, and `Lexer_ParseRuleRHS`
+- Additional retained reduction notes from the latest pass:
+  - `dbl_502FDC` is now materialized in-tree as exact `0.5`
+  - retained `sub_4B0940` and `sub_499990` probes both link successfully
+  - retained `sub_4996D0` still fans into the deeper AST / locale / `JUMPOUT` band, so the next broader class-startup step is still larger than the empty defclass-table allocator alone
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails

@@ -13,11 +13,11 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 ## Immediate frontier update - 2026-04-09
 
 - Keep the current contained executable wedge pointed at the authentic load-menu path.
-- Treat the row-resource, row-draw, world-map-init, and first save-load helper bands as repaired enough for continued contained widening.
+- Treat the row-resource, row-draw, world-map-init, and save-path formatting/helper bands as repaired enough to focus on the missing class/bload prelude rather than local UI or I/O scars.
 - Take the next batch through:
-  1. preserving the green contained `load-menu-post-confirm-after-save` foothold
-  2. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` until its remaining unresolved runtime band is narrower
-  3. re-checking the explicit broader contained probe that now reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  1. preserving the green pre-confirm contained load-menu wedge
+  2. keeping the broader-rules-contained probe reproducible so it still distinguishes `class-lookup-no-table name=oddzial` from the earlier `symbol-lookup-missing-table MAIN` failure
+  3. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` until the missing defclass/bload startup band is narrow enough to root honestly
   4. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
   5. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
 - Do not broaden into unrelated runtime wrappers until those two adjacent startup fronts are characterized.

@@ -411,7 +411,7 @@ int _cnvs2d_();
 int ismbdprint_();
 int mblen_();
 int mblen__0();
-extern double dbl_502FDC;
+double dbl_502FDC = 0.5;
 char __thiscall DetectGameCDPath(void *this);
 int  sub_4015A0(_DWORD *a1);
 _DWORD * sub_4015D0(_DWORD *result);
@@ -133541,15 +133541,23 @@ signed int  sub_4AB0B0(int a1)
 {
   int class_name; // edx
   int *class_record; // ebx
+  int trace_load_save; // eax
 
   if ( *(_WORD *)a1 != 2 )
     return 1;
   class_name = *(_DWORD *)(*(_DWORD *)(a1 + 2) + 16);
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
   class_record = sub_4B0480((_BYTE *)class_name);
   if ( class_record )
   {
     if ( sub_4D5A40((int)class_record) )
     {
+      if ( trace_load_save )
+        fprintf(
+          stderr,
+          "[menu-probe] class-lookup-cannot-create name=%s class=%p\n",
+          class_name ? (const char *)(uintptr_t)(unsigned int)class_name : "<null>",
+          (void *)(uintptr_t)(unsigned int)class_record);
       sub_4859A0((int)aInsmngr_0, 3, 0);
       Output_Write((int)off_51A614[0], (int)aCannotCreateIn, 0);
       Output_Write((int)off_51A614[0], class_name, class_name);
@@ -133560,6 +133568,11 @@ signed int  sub_4AB0B0(int a1)
     *(_DWORD *)(a1 + 2) = class_record;
     return 1;
   }
+  if ( trace_load_save )
+    fprintf(
+      stderr,
+      "[menu-probe] class-lookup-failed name=%s\n",
+      class_name ? (const char *)(uintptr_t)(unsigned int)class_name : "<null>");
   sub_485A60((int)aClass, class_name);
   return 0;
 }
@@ -137937,27 +137950,76 @@ int * sub_4B0480(_BYTE *a1)
   int *result; // eax
   int *v2; // ebx
   int v3; // ecx
+  int trace_load_save; // eax
+  int bucket_index; // edi
+  int saw_symbol_match; // esi
+
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
 
   if ( !dword_51AD68 )
+  {
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] class-lookup-no-table name=%s\n", a1 ? (const char *)a1 : "<null>");
     return 0;
+  }
   result = sub_481EC0(a1);
   v2 = result;
   if ( result )
   {
-    v3 = *(_DWORD *)(dword_51AD68 + 4 * sub_4B1820((int)result));
+    bucket_index = sub_4B1820((int)result);
+    v3 = *(_DWORD *)(dword_51AD68 + 4 * bucket_index);
     if ( !v3 )
+    {
+      if ( trace_load_save )
+        fprintf(
+          stderr,
+          "[menu-probe] class-lookup-empty-bucket name=%s bucket=%d\n",
+          a1 ? (const char *)a1 : "<null>",
+          bucket_index);
       return 0;
+    }
+    saw_symbol_match = 0;
     while ( v2 != *(int **)v3 || !sub_4B0520(v3, 0) )
     {
+      if ( v2 == *(int **)v3 )
+      {
+        saw_symbol_match = 1;
+        if ( trace_load_save )
+          fprintf(
+            stderr,
+            "[menu-probe] class-lookup-hidden name=%s bucket=%d class=%p flags=%02x\n",
+            a1 ? (const char *)a1 : "<null>",
+            bucket_index,
+            (void *)(uintptr_t)(unsigned int)v3,
+            (unsigned __int8)*(_BYTE *)(v3 + 20));
+      }
       v3 = *(_DWORD *)(v3 + 100);
       if ( !v3 )
+      {
+        if ( trace_load_save )
+          fprintf(
+            stderr,
+            "[menu-probe] class-lookup-%s name=%s bucket=%d\n",
+            saw_symbol_match ? "module-hidden" : "symbol-miss",
+            a1 ? (const char *)a1 : "<null>",
+            bucket_index);
         return 0;
+      }
     }
     if ( (*(_BYTE *)(v3 + 20) & 1) != 0 )
       return (int *)v3;
-    else
-      return 0;
+    if ( trace_load_save )
+      fprintf(
+        stderr,
+        "[menu-probe] class-lookup-inactive name=%s bucket=%d class=%p flags=%02x\n",
+        a1 ? (const char *)a1 : "<null>",
+        bucket_index,
+        (void *)(uintptr_t)(unsigned int)v3,
+        (unsigned __int8)*(_BYTE *)(v3 + 20));
+    return 0;
   }
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] class-lookup-no-symbol name=%s\n", a1 ? (const char *)a1 : "<null>");
   return result;
 }
 // 4B04A8: variable 'v3' is possibly undefined

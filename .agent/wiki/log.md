@@ -30,3 +30,8 @@
 - Confirmed a direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully.
 - Confirmed the archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links too, so the remaining retained blocker has moved to the broader `sub_451E46` unresolved set.
 - Re-ran the broader contained load-menu probe and confirmed the live crash frontier is now `parse-make-instance-before-class-lookup` on `oddzial`, not the earlier allocator note in stale sidecars.
+- Added guarded traces in `sub_4AB0B0` / `sub_4B0480` and proved the wider post-confirm `oddzial` crash is a null defclass registry: `class-lookup-no-table name=oddzial`.
+- Re-ran the same probe with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` and confirmed the earlier failure is still `symbol-lookup-missing-table MAIN`.
+- Tried an env-gated direct `PlayGame` handoff from `bootstrap_main.c`, confirmed it immediately widened the bootstrap link surface into the unresolved gameplay/session band, and reverted that change to keep the executable footholds green.
+- Traced `dword_51AD68` back to `sub_4B0940`, confirmed retained probes for `sub_4B0940` and `sub_499990` link cleanly, and confirmed retained `sub_4996D0` still fans into the deeper AST / locale / `JUMPOUT` band.
+- Materialized `dbl_502FDC` in `clash95.c` as exact `0.5`, removing it from the retained `sub_451E46` unresolved set.
