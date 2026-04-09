@@ -195,3 +195,6 @@
 
 ## 14. Batch 142 Note
 - `Batch 142` stayed intentionally on the executable-first load-menu frontier. The active work rebuilt the weak `unk_518808` load-menu button blob into `g_LoadMenuButtonWidgetsTemplate`, replaced the broken `Render_LoadResourceSprite_v4` forwarding wrapper with the asm-backed cache/recolor helper shape, and extended the contained probe far enough to enter the load menu and click the `back` button through its own recovered callback. It still did not promote any new unit-type or stat semantics; the remaining blocker is now the save-slot row/resource corridor behind `sub_44A140`, `sub_4446E0`, and resource ids `18/21`.
+
+## 14. Batch 143 Note
+- `Batch 143` stayed intentionally on the executable-first load-menu frontier. The active work repaired the save-slot label/existence helper band, hardened `UI_DrawTextFmt` and the lazy text-sprite slot loader against the current x86-64 decompiler scars, and extended the contained probe far enough to prove authentic load-menu slot-strip selection state (`selected_slot = 0`) in addition to the earlier contained `back` button exit. It still did not promote any new unit-type or stat semantics; the next blocker is now the split text-sprite table and save-name repaint corridor behind `off_511EC8` / `dword_511ECC` / `word_511ED0`, plus the downstream widget-focus crash in `sub_419DC0 -> sub_460D80`.

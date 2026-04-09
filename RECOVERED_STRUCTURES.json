@@ -1289,5 +1289,42 @@
       "The contained Batch 141 trace showed `DD_Pump` firing without any `Device_UpdateRect` or `sub_460A50` calls while the slot helper treated the table as packed 32-bit entries. Rebinding the helper to native pointer-array indexing while preserving the original 32-bit slot numbering restored live hover/click updates immediately.",
       "`Device_GetParamA` still installs `off_50F204` into the render-state slab after `sub_460410` seeds `off_50F1E4`, so the two tables are a stable recovered family rather than one-off probe scaffolding."
     ]
+  },
+  {
+    "name": "TextSpriteResourceSlotRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "off_511EC8 / dword_511ECC / word_511ED0",
+    "description": "0x0C text/font sprite resource slot consumed through `dword_520724` by `Render_ReleaseSurface`, `sub_40BB60`, `sub_40BC00`, `sub_40BC90`, and `sub_40BD40`. Batch 143 confirmed that the original x86 binary stores this as one contiguous table even though the current decompiler output split the fields across separate globals.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "source_stem",
+        "type": "char *",
+        "notes": "Asm-backed source stem such as `system.sfn`, `lazur1.sfn`, or `lazur2.sfn`."
+      },
+      {
+        "offset": 4,
+        "name": "cached_sprite_set",
+        "type": "pointer",
+        "notes": "Lazy-loaded sprite-set handle written by `Render_ReleaseSurface` and `sub_40BB60`."
+      },
+      {
+        "offset": 8,
+        "name": "line_step_word",
+        "type": "uint16",
+        "notes": "Consumed by `sub_40BC90` when stepping through rendered characters; the exact public semantic is still slightly ambiguous."
+      },
+      {
+        "offset": 10,
+        "name": "glyph_spacing_word",
+        "type": "uint16",
+        "notes": "Consumed by `sub_40BC00` and `sub_40BD40` alongside per-glyph widths while measuring and drawing text."
+      }
+    ],
+    "evidence": [
+      "`Render_ReleaseSurface` asm lazily loads the cache from `off_511EC8[3 * slot]`, writes the result back to `dword_511ECC[3 * slot]`, and then points `dword_520724` at the same 12-byte record base.",
+      "`sub_40BC00`, `sub_40BC90`, and `sub_40BD40` all read `+4`, `+8`, and `+10` from `dword_520724`, proving the table entry is a contiguous record rather than unrelated globals.",
+      "Batch 143 hit the remaining row-text crash inside that table corridor while lifting the contained load-menu slot strip, making the split-global decompiler view of `off_511EC8` / `dword_511ECC` / `word_511ED0` the next concrete fidelity blocker."
+    ]
   }
 ]

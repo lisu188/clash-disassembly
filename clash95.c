@@ -603,7 +603,7 @@ _BYTE * sub_40BDA0(_BYTE *a1, int a2);
 int  sub_40BE20(char *a1);
 int __cdecl UI_DrawText(int a1, int a2, int a3);
 int  sub_40BEE0(int a1, int a2, int a3, int a4, int a5, unsigned __int8 *a6);
-int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, int a6);
+int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, ...);
 int  sub_40C190(int a1, int a2, int a3, int a4, int a5, int a6);
 int  UI_GetTextXOffset(int a1);
 void  Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
@@ -20329,6 +20329,7 @@ int  Render_ReleaseSurface(int a1, DWORD a2)
 {
   int v2; // ecx
   _DWORD *v3; // ebx
+  const char *source_stem; // eax
   int result; // eax
   _DWORD *v5; // eax
 
@@ -20337,9 +20338,10 @@ int  Render_ReleaseSurface(int a1, DWORD a2)
   v3 = (_DWORD *)dword_511ECC[3 * a1];
   if ( !v3 )
   {
+    source_stem = (&off_511EC8)[3 * v2];
     v5 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
     if ( v5 )
-      v3 = DLXSpriteSet_Load(v5, 0);
+      v3 = DLXSpriteSet_Load(v5, source_stem);
     dword_511ECC[3 * v2] = (int)v3;
   }
   result = 12 * v2;
@@ -20357,6 +20359,7 @@ char  sub_40BB60(int a1, char a2, DWORD a3)
 {
   int v3; // ecx
   _DWORD *v4; // ebx
+  const char *source_stem; // eax
   char result; // al
   _DWORD *v6; // eax
 
@@ -20365,9 +20368,10 @@ char  sub_40BB60(int a1, char a2, DWORD a3)
   v4 = (_DWORD *)dword_511ECC[3 * a1];
   if ( !v4 )
   {
+    source_stem = (&off_511EC8)[3 * v3];
     v6 = (_DWORD *)Mem_Alloc(4112, a1, 0, a3);
     if ( v6 )
-      v4 = DLXSpriteSet_Load(v6, 0);
+      v4 = DLXSpriteSet_Load(v6, source_stem);
     dword_511ECC[3 * v3] = (int)v4;
   }
   result = a2;
@@ -20710,15 +20714,20 @@ LABEL_16:
 // 520728: using guessed type int dword_520728;
 
 //----- (0040C150) --------------------------------------------------------
-int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, int a6)
+int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, ...)
 {
-  int v6; // ecx
+  va_list args;
 
-  vsprintf_(a5, a6);
-  return sub_40BEE0(a2, a3, v6, a4, a1, byte_520520);
+  if ( !format )
+    byte_520520[0] = 0;
+  else
+  {
+    va_start(args, format);
+    vsnprintf((char *)byte_520520, sizeof(byte_520520), format, args);
+    va_end(args);
+  }
+  return sub_40BEE0(a2, a3, a5, a4, a1, byte_520520);
 }
-// 40C182: variable 'v6' is possibly undefined
-// 473FC3: using guessed type int __fastcall vsprintf_(_DWORD, _DWORD);
 // 520520: using guessed type unsigned __int8 byte_520520[516];
 
 //----- (0040C190) --------------------------------------------------------
@@ -59438,18 +59447,18 @@ LABEL_17:
 //----- (004446E0) --------------------------------------------------------
 char  sub_4446E0(int a1, char *a2, DWORD a3)
 {
-  int v5; // ecx
-  int v6; // ecx
+  int file_handle; // eax
   char result; // al
   char *v8; // esi
   CHAR v9[108]; // [esp+0h] [ebp-6Ch] BYREF
 
-  sub_4443C0(a1, (int)v9);
-  if ( sub_475CC8(v9, (unsigned __int8 *)aRb_7, v5, a3) )
+  snprintf(v9, sizeof(v9), "save\\%d.dat", a1);
+  file_handle = sub_475CC8(v9, (unsigned __int8 *)aRb_7, 0, a3);
+  if ( file_handle )
   {
-    fread_();
+    fread_(a2, 1, file_handle, 16);
     a2[16] = 0;
-    return fclose_(v6);
+    return fclose_(file_handle);
   }
   else
   {
@@ -59469,29 +59478,25 @@ char  sub_4446E0(int a1, char *a2, DWORD a3)
   }
   return result;
 }
-// 4446F5: variable 'v5' is possibly undefined
-// 44471B: variable 'v6' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444750) --------------------------------------------------------
 int  sub_444750(int a1, DWORD a2)
 {
-  int v2; // ecx
+  int file_handle; // eax
   int result; // eax
-  int v4; // ecx
   CHAR v5[104]; // [esp-68h] [ebp-68h] BYREF
 
-  sub_4443C0(a1, (int)v5);
-  result = sub_475CC8(v5, (unsigned __int8 *)aRb_8, v2, a2);
-  if ( result )
+  snprintf(v5, sizeof(v5), "save\\%d.dat", a1);
+  file_handle = sub_475CC8(v5, (unsigned __int8 *)aRb_8, 0, a2);
+  result = file_handle;
+  if ( file_handle )
   {
-    fclose_(v4);
+    fclose_(file_handle);
     return 1;
   }
   return result;
 }
-// 444762: variable 'v2' is possibly undefined
-// 444770: variable 'v4' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444780) --------------------------------------------------------
@@ -62567,13 +62572,16 @@ void * sub_44A140(int a1, DWORD a2)
 {
   int v4; // edi
   int v5; // eax
+  char *row_label; // eax
   void *result; // eax
-  char v7[20]; // [esp+0h] [ebp-34h] BYREF
   void *v8; // [esp+14h] [ebp-20h]
   int v9; // [esp+18h] [ebp-1Ch]
 
   v8 = g_RenderDevice;
-  sub_4446E0(a1, v7, a2);
+  row_label = (char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes(20);
+  if ( !row_label )
+    return v8;
+  sub_4446E0(a1, row_label, a2);
   v9 = dword_544D10;
   g_RenderDevice = &unk_51D4C0;
   v4 = (unsigned __int16)(22 * a1 + 155);
@@ -62584,9 +62592,10 @@ void * sub_44A140(int a1, DWORD a2)
   else
     v5 = 21;
   Render_ReleaseSurface(v5, (unsigned __int16)(22 * a1 + 175));
-  UI_DrawTextFmt(v4, 244, 410, 22 * a1 + 155, 3, (int)v7);
+  UI_DrawTextFmt(v4, 244, 410, 22 * a1 + 155, 3, (int)(uintptr_t)row_label);
   if ( v9 )
     Render_Present((int)dword_544CD8);
+  Compat_FreeLow32Bytes((int)(uintptr_t)row_label);
   result = v8;
   g_RenderDevice = v8;
   return result;

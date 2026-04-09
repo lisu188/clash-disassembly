@@ -154,6 +154,8 @@ static int g_boot_menu_probe_auto_click_checked;
 static int g_boot_menu_probe_auto_click_index = -1;
 static int g_boot_load_menu_probe_auto_click_checked;
 static int g_boot_load_menu_probe_auto_click_index = -1;
+static int g_boot_load_menu_probe_auto_slot_checked;
+static int g_boot_load_menu_probe_auto_slot_index = -1;
 
 static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);
 
@@ -231,6 +233,31 @@ static int Bootstrap_GetLoadMenuProbeAutoClickIndex(void)
       g_boot_load_menu_probe_auto_click_index = (int)parsed_value;
   }
   return g_boot_load_menu_probe_auto_click_index;
+}
+
+static int Bootstrap_GetLoadMenuProbeAutoSlotIndex(void)
+{
+  const char *env_value;
+  char *parse_end;
+  long parsed_value;
+
+  if ( g_boot_load_menu_probe_auto_slot_checked )
+    return g_boot_load_menu_probe_auto_slot_index;
+
+  g_boot_load_menu_probe_auto_slot_checked = 1;
+  env_value = getenv("CLASH95_LOAD_MENU_PROBE_AUTO_SLOT");
+  if ( !env_value || !*env_value )
+    return g_boot_load_menu_probe_auto_slot_index;
+
+  if ( !strcmp(env_value, "first") )
+    g_boot_load_menu_probe_auto_slot_index = 0;
+  else
+  {
+    parsed_value = strtol(env_value, &parse_end, 10);
+    if ( parse_end != env_value && !*parse_end && parsed_value >= 0 && parsed_value <= 9 )
+      g_boot_load_menu_probe_auto_slot_index = (int)parsed_value;
+  }
+  return g_boot_load_menu_probe_auto_slot_index;
 }
 
 static int Bootstrap_GetMenuProbeWidgetClickCandidate(
@@ -837,6 +864,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   unsigned char *menu_widgets;
   const size_t menu_widgets_size = 159;
   void *surface;
+  int previous_slot_index;
   int slot_index;
   int auto_click_index;
   int auto_click_x;
@@ -846,6 +874,11 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   int auto_click_settle_loops;
   int menu_trace_loops;
   int menu_ui_result;
+  int auto_hover_slot_index;
+  int auto_hover_slot_x;
+  int auto_hover_slot_y;
+  int auto_hover_slot_pending;
+  int auto_hover_exit_on_select;
   int fallback_probe_delta_x;
   int fallback_probe_delta_y;
   signed char fallback_probe_primary;
@@ -863,6 +896,11 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   auto_click_settle_loops = 0;
   menu_trace_loops = 0;
   menu_ui_result = 0;
+  auto_hover_slot_index = -1;
+  auto_hover_slot_x = 0;
+  auto_hover_slot_y = 0;
+  auto_hover_slot_pending = 0;
+  auto_hover_exit_on_select = 0;
   fallback_probe_delta_x = 0;
   fallback_probe_delta_y = 0;
   fallback_probe_primary = 0;
@@ -878,7 +916,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
 
   Bootstrap_TraceMenuProbe("load-menu-gfx");
   Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\load.gfx");
-  Bootstrap_TraceMenuProbe("load-menu-skip-resource-18-21");
+  Bootstrap_TraceMenuProbe("load-menu-row-resource-fallback");
   Bootstrap_TraceMenuProbe("load-menu-draw-stage");
   Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 0, 0);
   Bootstrap_TraceMenuProbe("load-menu-skip-save-slot-draw");
@@ -922,11 +960,39 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
       fflush(stderr);
     }
   }
+  auto_hover_slot_index = Bootstrap_GetLoadMenuProbeAutoSlotIndex();
+  if ( auto_hover_slot_index >= 0 )
+  {
+    auto_hover_slot_x = 327;
+    auto_hover_slot_y = 165 + 22 * auto_hover_slot_index;
+    auto_hover_slot_pending = 1;
+    auto_hover_exit_on_select = auto_click_index < 0;
+    if ( g_boot_trace_menu_probe_enabled )
+    {
+      fprintf(
+        stderr,
+        "[menu-probe] load-auto-hover-arm slot=%d x=%d y=%d\n",
+        auto_hover_slot_index,
+        auto_hover_slot_x,
+        auto_hover_slot_y);
+      fflush(stderr);
+    }
+  }
 
   Bootstrap_TraceMenuProbe("enter-load-menu-loop");
   while ( !g_PlayGameMenuExitRequested )
   {
-    if ( auto_click_phase == 0 )
+    if ( auto_hover_slot_pending )
+    {
+      Platform_DebugPrimeInputFallbackMouseDelta(
+        auto_hover_slot_x - (dword_544CFC >> byte_54512C),
+        auto_hover_slot_y - (dword_544D00 >> byte_54512C),
+        0,
+        0);
+      Bootstrap_TraceMenuProbe("load-auto-hover-slot");
+      auto_hover_slot_pending = 0;
+    }
+    else if ( auto_click_phase == 0 )
     {
       Platform_DebugPrimeInputFallbackMouseDelta(
         auto_click_x - (dword_544CFC >> byte_54512C),
@@ -1041,6 +1107,43 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
 
     Bootstrap_TraceMenuProbe("load-menu-loop-pump");
     DD_Pump((int)(intptr_t)dword_544CD8, (char)(intptr_t)&unk_5196A0);
+    if ( auto_hover_exit_on_select )
+    {
+      if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
+      {
+        slot_index = ((dword_544D00 >> byte_54512C) - 155) / 22;
+        if ( slot_index >= 0 && slot_index <= 9 )
+        {
+          dword_5441E0 = slot_index;
+          g_PlayGameMenuExitRequested = 1;
+          Bootstrap_TraceMenuProbe("load-auto-hover-selected");
+        }
+      }
+    }
+    if ( DD_IsFlipping((int)(intptr_t)dword_544CD8) )
+    {
+      if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
+      {
+        slot_index = ((dword_544D00 >> byte_54512C) - 155) / 22;
+        if ( slot_index <= 9 )
+        {
+          previous_slot_index = dword_5441E0;
+          if ( slot_index != dword_5441E0 )
+          {
+            dword_5441E0 = slot_index;
+          }
+          if ( auto_hover_exit_on_select && dword_5441E0 == auto_hover_slot_index )
+          {
+            g_PlayGameMenuExitRequested = 1;
+            Bootstrap_TraceMenuProbe("load-auto-hover-selected");
+          }
+          if ( sub_460950((int)(intptr_t)dword_544CD8) )
+            sub_44A110(0, 0);
+        }
+      }
+    }
+    if ( g_PlayGameMenuExitRequested )
+      break;
     Bootstrap_TraceMenuProbe("load-menu-loop-ui");
     menu_ui_result = sub_419DC0((unsigned int *)menu_widgets, 0);
     if ( g_boot_trace_menu_probe_enabled && menu_trace_loops < 256 )
