@@ -18,6 +18,9 @@ This file classifies the current runtime/quarantine surface for executable regen
 | `CRT_GetBootstrapThreadData` | `behavioral_stub` | `compat/decomp_runtime_stubs.c`, `bootstrap_main.c`, `clash95.c` weak accessor | Good enough for the bootstrap wedge, not yet a faithful final CRT thread-data recovery. |
 | `CRT_RegisterFinalizableObject` | `behavioral_stub` | `compat/decomp_runtime_stubs.c`, broad `clash95.c` call surface | Used widely enough that it needs a documented quarantine label rather than a semantic upgrade. |
 | `unknown_libname_4` | `recovered_impl` | `clash95.asm` use under `sub_47CBF0`, `clash95.c` | Recovered as the allocator-failure callback swap used by the binary-loader retry helper. |
+| `unknown_libname_7` / `unknown_libname_8` | `recovered_impl` | `clash95.exe` objdump at `0x47E7B0` / `0x48AC80`, `clash95.map`, `clash95.c` | Exact setter-swaps for `dword_51A1EC` / `dword_51A928`; these are runtime helpers, not startup `.fn_init` bodies. |
+| `AST_FreeNode` | `recovered_impl` | `clash95.asm:303859`, `clash95.c` | Exact recursive free-list unwind recovered in-tree; no longer a retained startup blocker. |
+| `mblen_` / `mblen__0` / `sub_4D88F0` | `recovered_impl` | `clash95.exe` objdump, `clash95.c` callers | Narrow object-pattern trampolines and token-table registration slice recovered directly from the binary. |
 | `fread_` / `fwrite_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c` | Host libc forwarding wrappers around the current file-handle translation layer. |
 | filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit | Broad but understandable compatibility wrappers; still not proof of original runtime structure. |
 | `Render_LoadResourceSprite_v4` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:18215-18324`, live contained row-draw probes | Now matches the cache-query gate, companion `.pfn` palette load, and recolor contract closely enough to carry the authentic load-menu row-resource lane. |
@@ -38,7 +41,9 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
   - `dbl_502FDC` is now materialized in recovered C as exact data
-  - retained `sub_4B0940` and `sub_499990` probes link, while `sub_4996D0` still depends on deeper runtime/parser recovery
+  - `AST_FreeNode`, `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0` are now recovered in-tree rather than left in the retained blocker list
+  - retained `sub_4B0940` and `sub_499990` probes link, and retained `sub_4996D0` is now reduced to `unk_508D50` plus nearby `JUMPOUT` scars
+  - the broader retained `sub_451E46` slice now honestly exposes retained `.fn_init` at `sub_49A0E0` alongside `sub_496643`, `ftime_`, `system_`, and the deeper parser/math helper band
 
 ## What should not move yet
 

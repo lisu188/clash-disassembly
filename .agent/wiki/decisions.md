@@ -30,3 +30,5 @@
   - Reason: the local loader blockers were real executable-regeneration debt, but they are part of the startup-prelude widening, not a local post-save menu fix.
 - Publish `CSyncObject_Unlock` through the existing conservative C++ seam instead of `compat/decomp_runtime_stubs.c`.
   - Reason: it is an original class ABI surface and fits the current `clash95_cpp_core` ownership better than another quarantine shim.
+- Correct the `sub_47D0E0` tail to the retained `.fn_init` placeholder at `sub_49A0E0` instead of satisfying that call with `unknown_libname_7`.
+  - Reason: `unknown_libname_7` is the real `dword_51A1EC` setter-swap at `0x47E7B0`, while the authentic startup chain calls the separate collapsed `.fn_init` body at `0x49A0E0`.

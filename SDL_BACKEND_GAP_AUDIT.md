@@ -25,6 +25,7 @@ This note covers the current host seam used by the executable-regeneration track
   - the SDL seam is still good enough for the contained load-menu row draws, slot-strip selection, bottom-row confirm, post-confirm `WorldMap_Initialize`, and first save-replay entry
   - the active blocker is the missing class/bload startup prelude, not input, timing, window, or present behavior
 - The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/parser unresolveds, not by SDL.
+  - after the latest retained helper pass, that non-SDL blocker list is now led by `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, and `JUMPOUT`, not by `unknown_libname_7`, `unknown_libname_8`, or `AST_FreeNode`
 
 ## Stable host behavior already present
 

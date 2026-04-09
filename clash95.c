@@ -246,7 +246,7 @@ int _no_support_loaded(void);
 __int64 __fastcall CRT_GetBootstrapThreadData(_DWORD, _DWORD);
 _DWORD __cdecl bad_exception_dtor(bad_exception *this);
 int __cdecl sub_41FF80(void);
-int __cdecl sub_49A0E0(_DWORD, _DWORD);
+int __cdecl sub_49A0E0(void);
 int __cdecl sub_4B6DD0(void);
 int __cdecl sub_4BDD40(void);
 int __cdecl sub_4D88F0(void);
@@ -409,8 +409,10 @@ _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
 int ismbdprint_();
-int mblen_();
-int mblen__0();
+int __fastcall unknown_libname_7(int a1);
+int __fastcall unknown_libname_8(int a1);
+int __fastcall mblen_(int a1, int a2);
+int __fastcall mblen__0(int a1, int a2);
 double dbl_502FDC = 0.5;
 char __thiscall DetectGameCDPath(void *this);
 int  sub_4015A0(_DWORD *a1);
@@ -11810,6 +11812,18 @@ int dword_51B3EC = 0; // weak
 int dword_51B3F0 = 1; // weak
 _UNKNOWN unk_51B3F4; // weak
 _UNKNOWN unk_51B424; // weak
+_UNKNOWN unk_51B488; // weak
+_UNKNOWN unk_51B4B8; // weak
+_UNKNOWN unk_51B4E8; // weak
+_UNKNOWN unk_51B518; // weak
+_UNKNOWN unk_51B548; // weak
+_UNKNOWN unk_51B578; // weak
+_UNKNOWN unk_51B5A8; // weak
+_UNKNOWN unk_51B5D8; // weak
+_UNKNOWN unk_51B608; // weak
+_UNKNOWN unk_51B638; // weak
+_UNKNOWN unk_51B668; // weak
+_UNKNOWN unk_51B698; // weak
 int dword_51B454 = 0; // weak
 int dword_51B458 = 0; // weak
 int dword_51B45C = 0; // weak
@@ -67061,13 +67075,13 @@ signed int sub_451E46()
   v3[3] = v1;
   sub_47D0E0(v0, v1);
   sub_47DBB0(0);
-  unknown_libname_7();
+  unknown_libname_7(1);
   return sub_47C850((int)aStrategClash_d, (DWORD)v3);
 }
 // 451E51: variable 'v0' is possibly undefined
 // 451E52: variable 'v1' is possibly undefined
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
-// 47E7B0: using guessed type int unknown_libname_7(void);
+// 47E7B0: using guessed type int __fastcall unknown_libname_7(int);
 
 //----- (00451E87) --------------------------------------------------------
 signed int sub_451E87()
@@ -90785,6 +90799,7 @@ int  sub_47AED0(int a1, double a2)
 {
   int v3; // esi
   int v4; // ecx
+  int v5; // eax
   _DWORD v6[10]; // [esp-4h] [ebp-28h] BYREF
 
   v6[8] = a1;
@@ -90792,11 +90807,14 @@ int  sub_47AED0(int a1, double a2)
   if ( Lexer_TokenExpect(1) == -1 )
     return v4;
   sub_4813B0(1, v6, a2);
-  unknown_libname_8();
+  v5 = 1;
+  if ( v6[0] == 2 && v6[1] == dword_54DD70 )
+    v5 = 0;
+  unknown_libname_8(v5);
   return v3;
 }
 // 47AEF6: variable 'v4' is possibly undefined
-// 48AC80: using guessed type int unknown_libname_8(void);
+// 48AC80: using guessed type int __fastcall unknown_libname_8(int);
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0047AF50) --------------------------------------------------------
@@ -92595,12 +92613,13 @@ void __fastcall sub_47D0E0(int a1, int a2)
     sub_492B30();
     sub_4996D0(0);
     sub_4913B0();
-    unknown_libname_7();
+    sub_49A0E0();
     sub_47C530();
     dword_51A1D4 = 1;
   }
 }
 // 47D4E0: using guessed type int sub_47D4E0();
+// 49A0E0: using guessed type int __cdecl sub_49A0E0(void);
 // 496643: using guessed type int __fastcall sub_496643(_DWORD, _DWORD);
 // 51A1D4: using guessed type int dword_51A1D4;
 
@@ -93981,6 +94000,17 @@ char * sub_47E770(unsigned int a1)
 int sub_47E7A0()
 {
   return dword_51A1EC;
+}
+// 51A1EC: using guessed type int dword_51A1EC;
+
+//----- (0047E7B0) --------------------------------------------------------
+int __fastcall unknown_libname_7(int a1)
+{
+  int result; // eax
+
+  result = dword_51A1EC;
+  dword_51A1EC = a1;
+  return result;
 }
 // 51A1EC: using guessed type int dword_51A1EC;
 
@@ -103930,6 +103960,17 @@ int sub_48AC70()
 }
 // 51A928: using guessed type int dword_51A928;
 
+//----- (0048AC80) --------------------------------------------------------
+int __fastcall unknown_libname_8(int a1)
+{
+  int result; // eax
+
+  result = dword_51A928;
+  dword_51A928 = a1;
+  return result;
+}
+// 51A928: using guessed type int dword_51A928;
+
 //----- (0048AC90) --------------------------------------------------------
 int sub_48AC90()
 {
@@ -112117,6 +112158,43 @@ signed int AST_AllocNode()
   *(_WORD *)(node + 12) &= 0xC000u;
   *(_BYTE *)(node + 8) |= 0x20u;
   return node;
+}
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (00493050) --------------------------------------------------------
+int AST_FreeNode(int result)
+{
+  int node;
+  int owner;
+  int (__thiscall *cleanup_fn)(void *this, int);
+
+  node = result;
+  if ( !node )
+    return 0;
+
+  AST_Free(*(_DWORD *)(node + 52));
+  AST_FreeNode(*(_DWORD *)(node + 64));
+  AST_FreeNode(*(_DWORD *)(node + 68));
+  AST_FreeNode(*(_DWORD *)(node + 56));
+  if ( *(_BYTE *)(node + 8) & 0x10 )
+    sub_496970(*(_DWORD **)(node + 16));
+
+  if ( *(_DWORD *)(node + 60) )
+  {
+    owner = *(_DWORD *)(node + 24);
+    if ( owner )
+    {
+      cleanup_fn = *(int (__thiscall **)(void *this, int))(owner + 64);
+      if ( cleanup_fn )
+        cleanup_fn((void *)owner, *(_DWORD *)(node + 60));
+    }
+  }
+
+  dword_54DBAC = node;
+  *(_DWORD *)node = *(_DWORD *)(dword_54DBA8 + 288);
+  *(_DWORD *)(dword_54DBA8 + 288) = dword_54DBAC;
+  return dword_54DBA8;
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -173384,6 +173462,23 @@ LABEL_15:
 // 4D8888: variable 'a2' is possibly undefined
 // 4D888C: variable 'a3' is possibly undefined
 
+//----- (004D88F0) --------------------------------------------------------
+int __cdecl sub_4D88F0(void)
+{
+  sub_48F5C0((int)&unk_51B488, 47);
+  sub_48F5C0((int)&unk_51B4B8, 48);
+  sub_48F5C0((int)&unk_51B4E8, 45);
+  sub_48F5C0((int)&unk_51B518, 46);
+  sub_48F5C0((int)&unk_51B548, 50);
+  sub_48F5C0((int)&unk_51B578, 49);
+  sub_48F5C0((int)&unk_51B5A8, 51);
+  sub_48F5C0((int)&unk_51B5D8, 53);
+  sub_48F5C0((int)&unk_51B608, 55);
+  sub_48F5C0((int)&unk_51B638, 52);
+  sub_48F5C0((int)&unk_51B668, 54);
+  return sub_48F5C0((int)&unk_51B698, 56);
+}
+
 //----- (004D89B0) --------------------------------------------------------
 unsigned int  sub_4D89B0(int a1, int a2, int a3, double a4)
 {
@@ -181111,6 +181206,13 @@ signed int sub_4E1480()
 // 4E154B: variable 'v8' is possibly undefined
 // 4E155F: variable 'v10' is possibly undefined
 
+//----- (004E15D0) --------------------------------------------------------
+int __fastcall mblen_(int a1, int a2)
+{
+  (void)a2;
+  return sub_4E1750(0, a1);
+}
+
 //----- (004E15E0) --------------------------------------------------------
 int  sub_4E15E0(int a1)
 {
@@ -181121,6 +181223,12 @@ int  sub_4E15E0(int a1)
   return v2;
 }
 // 4E15F9: variable 'v2' is possibly undefined
+
+//----- (004E1600) --------------------------------------------------------
+int __fastcall mblen__0(int a1, int a2)
+{
+  return sub_4E1A90(0, a1, a2);
+}
 
 //----- (004E1610) --------------------------------------------------------
 _DWORD * sub_4E1610(_DWORD *result)

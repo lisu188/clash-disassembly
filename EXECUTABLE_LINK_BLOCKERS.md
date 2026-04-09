@@ -33,18 +33,19 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too.
 - The next retained blocker is no longer that local loader band. It is the wider `sub_451E46` unresolved set:
   - `unk_508D50`
-  - `unknown_libname_7`
-  - `unknown_libname_8`
   - `sub_496643`
+  - retained `.fn_init` at `sub_49A0E0`
   - `ftime_`
   - `system_`
   - `JUMPOUT`
-  - `AST_FreeNode`
   - parser helpers such as `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, and `Lexer_ParseRuleRHS`
+  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `floor_`, `ceil_`, `fgets_`, and `sscanf_`
 - Additional retained reduction notes from the latest pass:
   - `dbl_502FDC` is now materialized in-tree as exact `0.5`
   - retained `sub_4B0940` and `sub_499990` probes both link successfully
-  - retained `sub_4996D0` still fans into the deeper AST / locale / `JUMPOUT` band, so the next broader class-startup step is still larger than the empty defclass-table allocator alone
+  - `AST_FreeNode`, `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0` are now recovered in-tree
+  - retained `sub_4996D0` now narrows to `unk_508D50` plus nearby `JUMPOUT` scars, so the next broader class-startup step is still larger than the empty defclass-table allocator alone
+  - the `sub_47D0E0` tail now honestly exposes retained `.fn_init` at `sub_49A0E0` instead of satisfying that call through the unrelated `unknown_libname_7` runtime setter
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails

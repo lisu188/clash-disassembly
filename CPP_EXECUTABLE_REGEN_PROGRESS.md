@@ -30,8 +30,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The retained executable-regeneration slice also moved this batch:
   - `dbl_502FDC` is now materialized in `clash95.c` as exact `0.5`
   - retained probes for `sub_4B0940` and `sub_499990` now link successfully
-  - retained `sub_4996D0` still fans out into the deeper AST / `JUMPOUT` / locale helper band
-  - retained `sub_451E46` still fails on the broader unresolved runtime set, but no longer on `dbl_502FDC`
+  - `AST_FreeNode` is now recovered in-tree from the original asm body
+  - `unknown_libname_7` / `unknown_libname_8` are now recovered as the `dword_51A1EC` / `dword_51A928` setter-swaps, and `sub_47D0E0` no longer hides the retained `.fn_init` call behind the wrong runtime symbol
+  - `mblen_`, `mblen__0`, and `sub_4D88F0` are now materialized from `clash95.exe` corroboration
+  - retained `sub_4996D0` now collapses to `unk_508D50` plus nearby `JUMPOUT` scars instead of the earlier AST / locale helper band
+  - retained `sub_451E46` still fails on the broader unresolved runtime set, but that set is now led by `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers rather than `unknown_libname_7`, `unknown_libname_8`, or `AST_FreeNode`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`

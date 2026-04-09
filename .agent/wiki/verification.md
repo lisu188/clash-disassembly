@@ -22,9 +22,9 @@
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_499990 ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 ... build/lib/libclash95_cpp_core.a ...`
-  - still fails on the deeper AST / locale / `JUMPOUT` band
+  - still fails, but now only on `unk_508D50` plus nearby `JUMPOUT` scars
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
-  - still fails on the broader startup-prelude unresolved set, led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
+  - still fails on the broader startup-prelude unresolved set, now led by `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers
 - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
   - passed
 - `git diff --check`

@@ -17,11 +17,12 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - Take the next batch through:
   1. preserving the green pre-confirm contained load-menu wedge
   2. keeping the broader-rules-contained probe reproducible so it still distinguishes `class-lookup-no-table name=oddzial` from the earlier `symbol-lookup-missing-table MAIN` failure
-  3. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` until the missing defclass/bload startup band is narrow enough to root honestly
+  3. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` from the newly exposed retained helper band (`sub_49A0E0`, `sub_496643`, `unk_508D50`, and nearby `JUMPOUT` scars) until the missing defclass/bload startup band is narrow enough to root honestly
   4. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
   5. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
 - Do not broaden into unrelated runtime wrappers until those two adjacent startup fronts are characterized.
 - Do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local post-save patch. Keep the startup-prelude widening separate from the contained load-game wedge.
+- Do not regress the corrected `sub_47D0E0` call attribution: `unknown_libname_7` is the runtime setter at `0x47E7B0`, while the startup-prelude tail still needs the separate retained `.fn_init` body at `0x49A0E0`.
 
 ## What is already stable enough to build on
 

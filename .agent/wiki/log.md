@@ -35,3 +35,7 @@
 - Tried an env-gated direct `PlayGame` handoff from `bootstrap_main.c`, confirmed it immediately widened the bootstrap link surface into the unresolved gameplay/session band, and reverted that change to keep the executable footholds green.
 - Traced `dword_51AD68` back to `sub_4B0940`, confirmed retained probes for `sub_4B0940` and `sub_499990` link cleanly, and confirmed retained `sub_4996D0` still fans into the deeper AST / locale / `JUMPOUT` band.
 - Materialized `dbl_502FDC` in `clash95.c` as exact `0.5`, removing it from the retained `sub_451E46` unresolved set.
+- Recovered `AST_FreeNode` directly from the asm body and confirmed the retained probes no longer carry it as a blocker.
+- Recovered `unknown_libname_7` / `unknown_libname_8` as the `dword_51A1EC` / `dword_51A928` setter-swaps, and corrected the `sub_47D0E0` tail so it now points at retained `.fn_init` (`sub_49A0E0`) instead of the unrelated runtime setter.
+- Recovered `mblen_`, `mblen__0`, and `sub_4D88F0` from `clash95.exe`, including the missing token-table globals at `unk_51B488` through `unk_51B698`.
+- Re-ran the retained probes and confirmed `sub_4996D0` now narrows to `unk_508D50` plus nearby `JUMPOUT` scars, while `sub_451E46` now honestly exposes `sub_49A0E0` alongside `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers.

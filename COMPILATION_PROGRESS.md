@@ -3096,6 +3096,78 @@
 - total rename count so far:
   - `1193`
 
+## Batch 125 - Retained Startup Helper Reduction Wave
+- Current frontier:
+  - keep the contained authentic load-menu/save-replay split unchanged while reducing the retained startup-prelude helper/runtime band rooted at `sub_451E46 -> sub_47D0E0 -> sub_47C850`
+- Subagents spawned and scopes:
+  - `Harvey`: boot-path corroboration for the live authentic startup frontier and the real `sub_47D0E0` ownership chain
+  - `Euler`: runtime-glue audit for `_wcpp_*`, `unknown_libname_7` / `unknown_libname_8`, `AST_FreeNode`, and retained helper candidates
+  - `Hooke`: SDL seam audit to confirm the live blocker is still below the platform layer
+  - `Sagan`: class/runtime seam audit around `sub_4996D0`, `sub_499990`, `sub_4B0940`, and the defclass registry
+  - `Euclid`: secondary corroboration from `/mnt/c/clash`, `CLASH.DAT`, save files, and the sibling save editor
+  - mergeable subagent evidence used this batch:
+    - `Euler` proved the `sub_47D0E0` tail call is retained `.fn_init` at `0x49A0E0`, not `unknown_libname_7`
+    - `Sagan` confirmed `sub_4996D0` remains the first honest authentic defclass bring-up and that the contained `oddzial` miss still traces back to a null `dword_51AD68`
+    - `Hooke` re-confirmed the current post-confirm and retained blockers are not SDL seam failures
+    - `Euclid` corroborated that `STRATEG/CLASH.DAT` contains `MAIN`, `make-instance`, `defclass`, and `oddzial`, while `.fac` files do not
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - materialized `unk_51B488` through `unk_51B698` in `clash95.c` for the retained object-pattern token registration tables under `sub_4D88F0`
+- High-priority unknown functions reviewed:
+  - `unknown_libname_7`
+  - `unknown_libname_8`
+  - `AST_FreeNode`
+  - `mblen_`
+  - `mblen__0`
+  - `sub_4D88F0`
+  - retained `.fn_init` at `sub_49A0E0`
+- Blockers removed this batch:
+  - retained probes no longer carry `AST_FreeNode`
+  - retained probes no longer carry `unknown_libname_7`
+  - retained probes no longer carry `unknown_libname_8`
+  - retained probes no longer carry `mblen_`, `mblen__0`, or `sub_4D88F0`
+  - `sub_47D0E0` no longer hides retained `.fn_init` behind the wrong `unknown_libname_7` symbol
+- SDL replacements/cleanups this batch:
+  - none; the live contained and retained blockers remain below the SDL seam
+- Menu/UI fixes this batch:
+  - none; the contained menu milestone is unchanged and remains green through post-confirm load-save entry
+- Session-init fixes this batch:
+  - none; the session/game-start handoff remains behind the missing authentic class/bload prelude and later `PlayGame` widening
+- Validation probe:
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 3s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 3s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 -o /tmp/clash95_sub4996d0_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_postfix_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all stay green after the retained helper recovery tranche
+- Link status:
+  - retained `sub_4996D0` now fails only on `unk_508D50` plus nearby `JUMPOUT` scars
+  - retained `sub_451E46` now fails on `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the exact contained menu probes still exit `139` in the same live split: broader rules reach `parse-make-instance-before-class-lookup` then `class-lookup-no-table name=oddzial`, and `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: authentic load-menu row resources load, all ten `sub_44A140` row draws complete, slot-strip selection and bottom-row load confirm succeed, then the real post-confirm save replay reaches `parse-make-instance-before-class-lookup`
+- Key evidence used:
+  - `objdump` corroboration from `clash95.exe` for `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0`
+  - `clash95.asm` / `clash95.map` corroboration that `sub_47D0E0` calls retained `.fn_init` at `0x49A0E0`, not `unknown_libname_7`
+  - live contained menu-probe traces proving the `oddzial` versus `MAIN` split is unchanged after the helper recovery
+- Ambiguous candidates deferred:
+  - `sub_49A0E0` still needs its real body before the broader startup-prelude slice can move honestly deeper
+  - `sub_496643`, `unk_508D50`, and the nearby `JUMPOUT` scars remain the next smallest retained runtime helpers
+  - the broader parser/math helper set behind `sub_451E46` remains deferred until the above runtime band is smaller
+- total rename count so far:
+  - `1193`
+
 ## Batch 125 - Contained Rules Bootstrap Recon
 - Current frontier:
   - preserve the green contained `Load Game` foothold at `load-menu-post-confirm-after-save` while characterizing the next honest runtime widening step beyond the current post-save proof

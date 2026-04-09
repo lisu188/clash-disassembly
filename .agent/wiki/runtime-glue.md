@@ -22,11 +22,19 @@
     - published as the original C ABI name through the conservative C++ seam instead of a new compat stub
   - `dbl_502FDC` in `clash95.c`
     - materialized as exact `0.5`, matching the map/asm-backed rules runtime counter rounding constant
+  - `AST_FreeNode` in `clash95.c`
+    - recovered directly from the original recursive free-list unwind body
+  - `unknown_libname_7` / `unknown_libname_8` in `clash95.c`
+    - recovered as the `dword_51A1EC` / `dword_51A928` setter-swaps used by the retained rules/runtime bootstrap
+  - `sub_47D0E0` in `clash95.c`
+    - corrected to call retained `.fn_init` at `sub_49A0E0` rather than the unrelated `unknown_libname_7` setter
+  - `mblen_`, `mblen__0`, and `sub_4D88F0` in `clash95.c`
+    - recovered from `clash95.exe` as the narrow object-pattern trampolines and token-table registration slice
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained broader startup-prelude slice rooted at `sub_451E46` still needs the wider unresolved runtime band (`unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, `AST_FreeNode`, and parser helpers)
+  - the retained broader startup-prelude slice rooted at `sub_451E46` still needs the wider unresolved runtime band (`unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and parser/math helpers)
   - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms, so the remaining executable-regeneration blocker has moved up to the broader `sub_451E46` unresolved set

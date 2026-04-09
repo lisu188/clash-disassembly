@@ -19,4 +19,5 @@
   - the explicit broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
   - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still dies earlier on `symbol-lookup-missing-table MAIN`
   - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
+  - that retained chain is now reduced past `unknown_libname_7`, `unknown_libname_8`, and `AST_FreeNode`; the next honest blockers are retained `.fn_init` at `sub_49A0E0`, `sub_496643`, `unk_508D50`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser helpers
   - deferred save-slot repaint/name lane after the row draws
