@@ -23,22 +23,25 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the pre-confirm contained load-menu corridor is still green through authentic slot-strip selection and bottom-row load confirm
   - the live post-confirm probe no longer reaches `load-menu-post-confirm-after-save`; with the current broader-rules bootstrap it dies during save replay at `parse-make-instance-before-class-lookup`
   - the retained broader startup-prelude executable-regeneration slice is now reduced past `dbl_502FDC`
-- The current contained runtime split is now explicit:
+- The last directly traced contained runtime split remains explicit:
   - with the current broader-rules bootstrap, the probe reaches `load-menu-post-confirm-load-save`, seeds `MAIN` and `make-instance`, then fails at `sub_4B0480` with `class-lookup-no-table name=oddzial`
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
   - this proves `sub_4725B0` / `sub_482260` / `sub_491B10` seed parser/symbol state but do not yet provide the authentic defclass/bload registry needed by the save replay
 - The retained executable-regeneration slice also moved this batch:
-  - `unk_508D50` now matches the exact asm-backed `5,6,7,"CLIPS",0,0` header blob
-  - the `dword_51ACC4` high-half alias is now tied directly to `qword_51ACC0`
-  - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` no longer fan out through synthetic `JUMPOUT` exits
-  - `sub_496643` is now quarantined as an asm-backed Watcom signal-table wrapper in `compat/decomp_runtime_stubs.c`
-  - `sub_47D360` and `sub_47D3D0` now pass real arguments into retained `ftime_` / `system_`, and those CRT wrappers live in the compat seam
-  - retained `sub_4996D0` now links successfully instead of stopping on the local `JUMPOUT` scar cluster
-  - retained `sub_451E46` now fails on the next broader parser/class/math layer led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `IF_*`, `__FYL2X__`, `floor_`, `ceil_`, `fgets_`, `sscanf_`, `MoveFileA`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, and `aJ_0`
+  - exact retained data/helpers are now materialized in-tree: `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40`
+  - the map-backed parser exports are now bound to their existing recovered bodies:
+    - `Lexer_ParseSlotConstraint`
+    - `Lexer_ParseFieldSpec`
+    - `Lexer_ValidateMessageHandler`
+    - `Lexer_ParseDefglobal`
+    - `Lexer_ParseRuleRHS`
+    - `Lexer_ParseDeclareOptions`
+  - retained `sub_4996D0` still links successfully
+  - retained `sub_451E46` now fails later on the deeper slot/parser/math/runtime band led by `Lexer_BuildSlotNode`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, and `JUMPOUT`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`
-  - the next retained class/runtime target is the parser/class band around `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, and `sub_4BDD40`, not the already-cleared `sub_496643` / `ftime_` / `system_` helper band
+  - the next retained class/runtime target is the deeper slot/parser/math band around `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `unknown_libname_2`, and the `IF_*` / `__FYL2X__` helpers, not the now-cleared parser-export layer
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

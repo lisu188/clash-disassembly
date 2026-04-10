@@ -14,17 +14,18 @@
   - under `timeout 2s`, exits `124`
   - reaches `load-menu-post-confirm-load-save`, then `parse-make-instance-before-class-lookup`
   - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - under `timeout 2s`, exits `124`
+  - reaches `load-menu-post-confirm-load-save`
   - logs `symbol-lookup-missing-table MAIN` earlier in the same post-confirm save-replay corridor
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4B0940 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_499990 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
+  - `timeout` also prints `the monitored command dumped core`
+- `nm -u build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o | rg "Lexer_ValidateMessageHandler|Lexer_ParseDefglobal|Lexer_ParseRuleRHS|Lexer_ParseDeclareOptions|unknown_libname_13|ismbdprint_|aJ_0|sub_4B6DD0|sub_4BDD40|Lexer_ParseSlotConstraint|Lexer_ParseFieldSpec"`
+  - exits `1`, confirming the retained parser-export blocker list is gone from `clash95.c.o`
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
-  - still fails on the broader startup-prelude unresolved set, now led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the deeper parser/math helpers
+  - still fails on the broader startup-prelude unresolved set, now led by `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `IF_DPOW`, `fgets_`, `sscanf_`, `MoveFileA`, and other deeper slot/parser/math/runtime helpers
 - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
   - passed
 - `git diff --check`

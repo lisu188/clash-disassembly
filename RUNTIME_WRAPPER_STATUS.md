@@ -42,10 +42,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
-  - the `CLIPS` header blob now matches the exact `5,6,7,"CLIPS",0,0` bytes in `clash95.c`
-  - the nearby retained `JUMPOUT` cluster is now gone from `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790`
-  - retained `sub_4996D0` now links cleanly
-  - the broader retained `sub_451E46` slice is now exposed honestly as a parser/class/math problem rather than a runtime-wrapper problem
+  - the exact retained data/helper slice `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` now exists in recovered C
+  - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` are now rebound onto their already-recovered bodies
+  - retained `sub_4996D0` still links cleanly
+  - the broader retained `sub_451E46` slice is now exposed honestly as a deeper slot/parser/math problem rather than a runtime-wrapper or parser-export problem
 
 ## What should not move yet
 

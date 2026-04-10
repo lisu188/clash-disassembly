@@ -9,12 +9,13 @@
   - authentic load-menu row resources load
   - all ten contained `sub_44A140` row draws complete
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the live post-confirm save replay now reaches `parse-make-instance-before-class-lookup`
-  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
+  - the contained post-confirm save replay still enters the real save-replay corridor
+  - the traced contained post-confirm split again reproduces `parse-make-instance-before-class-lookup -> class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
 - Adjacent blocked widening:
-  - the explicit broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
-  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
-  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now reduced past the local runtime/helper band and stops on the wider parser/class/math band led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the `IF_*` / `__FYL2X__` math thunks
+  - the broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
+  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
+  - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
+  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now past the parser-export layer and stops on the deeper slot/parser/math/runtime band led by `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` helpers, and `JUMPOUT`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

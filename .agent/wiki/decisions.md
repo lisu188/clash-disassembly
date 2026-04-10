@@ -36,3 +36,7 @@
   - Reason: they are CRT/runtime helpers on the retained startup-prelude path, and quarantining them preserves the rule that platform/runtime glue stays out of the gameplay seam.
 - Patch asm-backed `JUMPOUT` scars in `clash95.c` directly when they collapse to shared epilogues.
   - Reason: these are decompiler control-flow artifacts, not missing runtime services, so stubbing them in compat would hide real recovered control flow.
+- Rebind exact map-backed exported names onto already-recovered local parser bodies instead of writing duplicate retained parser bodies.
+  - Reason: the `clash95.map` exports and `clash95.exe` body matches already proved `sub_48BD50`, `sub_48BE80`, `sub_4C2710`, `sub_4CC6C0`, `sub_4D9C40`, and `sub_4D9FD0` were the real exported entrypoints, so aliasing them in place removes link holes without creating a forked semantic surface.
+- Recover `sub_4BDD40` through an explicit local handler-registration helper `sub_4BDD20` instead of widening `sub_480D60`.
+  - Reason: `sub_4BDD40` needs a specific handler-parameter contract proven by the asm, while broadening `sub_480D60` would risk unrelated call sites on the live parser/runtime path.

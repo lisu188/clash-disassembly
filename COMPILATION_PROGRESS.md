@@ -3171,6 +3171,82 @@
 - total rename count so far:
   - `1193`
 
+## Batch 126 - Retained Parser Export Alignment Wave
+- Current frontier:
+  - keep the contained authentic load-menu/save-replay wedge unchanged while reducing the broader retained startup-prelude slice rooted at `sub_451E46 -> sub_47D0E0 -> sub_47C850`
+- Executable/runtime fixes this batch:
+  - materialized the missing retained data/helper slice in `clash95.c`:
+    - exact `aJ_0 = "+j"`
+    - `unknown_libname_13` as the `dword_51B360` state swap
+    - `ismbdprint_(logical_name)` as the thin `sub_4B5340` boolean wrapper
+    - `sub_4B6DD0` as the exact fact/parser token-registration helper
+    - `sub_4BDD20` / `sub_4BDD40` as the exact procedural parser-function registration helper
+  - rebound existing recovered bodies to their map-backed exports:
+    - `sub_48BD50 -> Lexer_ParseSlotConstraint`
+    - `sub_48BE80 -> Lexer_ParseFieldSpec`
+    - `sub_4C2710 -> Lexer_ValidateMessageHandler`
+    - `sub_4CC6C0 -> Lexer_ParseDefglobal`
+    - `sub_4D9C40 -> Lexer_ParseRuleRHS`
+    - `sub_4D9FD0 -> Lexer_ParseDeclareOptions`
+- Session-init fixes this batch:
+  - none; the post-save `PlayGame` handoff remains deferred behind the missing authentic class/bload prelude
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `nm -u build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o | rg "Lexer_ValidateMessageHandler|Lexer_ParseDefglobal|Lexer_ParseRuleRHS|Lexer_ParseDeclareOptions|unknown_libname_13|ismbdprint_|aJ_0|sub_4B6DD0|sub_4BDD40|Lexer_ParseSlotConstraint|Lexer_ParseFieldSpec"`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 -o /tmp/clash95_sub4996d0_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build cleanly together
+- Link status:
+  - retained `sub_4996D0` still links successfully
+  - the retained parser-export blocker list is gone from `clash95.c.o`
+  - retained `sub_451E46` now fails later on the deeper slot/parser/math/runtime band led by:
+    - `Lexer_BuildSlotNode`
+    - `Lexer_CheckValueList`
+    - `Lexer_EmitSlotBinding`
+    - `Lexer_FindSymbolIndex`
+    - `Lexer_FindTemplateSlot`
+    - `Lexer_OutputFieldRange`
+    - `Lexer_ParseModifyOrDuplicate`
+    - `Lexer_WarnImpliedTemplate`
+    - `unknown_libname_2`
+    - `MoveFileA`
+    - `fgets_`
+    - `sscanf_`
+    - `ceil_`
+    - `floor_`
+    - `IF_*`
+    - `__FYL2X__`
+    - `__FPREM__`
+    - `__F2XM1__`
+    - `__FSCALE__`
+    - `JUMPOUT`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` still exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` still exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` still exits with status `124`
+  - both contained `--authentic-menu-probe` variants still end in the same timeout/core-dump band under `timeout 2s`
+  - with the full post-confirm probe flags restored, the exact guarded split was freshly revalidated in this sandbox run: broader rules still reach `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`, while `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged in the contained lane: the authentic load-menu path still survives row-resource load, all ten row draws, authentic slot-strip selection, bottom-row confirm, and the first post-confirm save replay entry before failing in the broader class/bload startup-prelude gap
+- Key evidence used:
+  - `clash95.map` plus `clash95.exe` `objdump` to align section-relative exports onto their already-recovered bodies at `0x48BD50`, `0x48BE80`, `0x4C2710`, `0x4CC6C0`, `0x4D9C40`, and `0x4D9FD0`
+  - exact `objdump` bodies for `sub_4B6DD0`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and `aJ_0`
+  - the retained `sub_451E46` link probe output from `/tmp/clash95_sub451e46_probe`
+- Ambiguous candidates deferred:
+  - the deeper slot/parser helper band behind `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, and `Lexer_FindTemplateSlot`
+  - the broader math/runtime tranche (`IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `fgets_`, `sscanf_`, `MoveFileA`)
+  - the contained save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
+- total rename count so far:
+  - `1199`
+
 ## Batch 125 - Retained Startup Helper Reduction Wave
 - Current frontier:
   - keep the contained authentic load-menu/save-replay split unchanged while reducing the retained startup-prelude helper/runtime band rooted at `sub_451E46 -> sub_47D0E0 -> sub_47C850`

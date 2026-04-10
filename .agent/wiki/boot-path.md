@@ -12,12 +12,13 @@
   - contained load-menu row draws complete
   - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
   - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the live post-confirm save replay reaches `parse-make-instance-before-class-lookup`
-  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
+  - the contained post-confirm save replay still enters the real save-replay corridor
+  - the traced contained split again reproduces `parse-make-instance-before-class-lookup -> class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
 - Next boot-path frontier:
   - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
-  - the explicit broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
-  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still dies earlier on `symbol-lookup-missing-table MAIN`
+  - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
+  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
+  - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
   - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
-  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, and the nearby `JUMPOUT` scars; the next honest blockers are the parser/class layer around `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, and adjacent parser/math helpers
+  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, the nearby `JUMPOUT` scars, and the parser-export layer; the next honest blockers are the deeper slot/parser/math/runtime helpers `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` helpers, and `JUMPOUT`
   - deferred save-slot repaint/name lane after the row draws

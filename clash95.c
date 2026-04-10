@@ -382,7 +382,7 @@ extern char aBinaryLoadCann[];
 extern char aConstructsBeca[];
 extern char aSkipping[];
 extern char aBload[];
-extern char aJ_0[];
+char aJ_0[3] = "+j"; // weak
 extern char aResetdefglobal[];
 extern int dword_5146C8[];
 extern int (*off_5146E0[])();
@@ -408,7 +408,8 @@ extern char g_QueenBirthMessageBuffer[];
 _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
-int ismbdprint_();
+int ismbdprint_(void *logical_name);
+int unknown_libname_13(int value);
 int __fastcall unknown_libname_7(int a1);
 int __fastcall unknown_libname_8(int a1);
 int __fastcall mblen_(int a1, int a2);
@@ -3780,6 +3781,7 @@ int  sub_4BDDD0(int result);
 int sub_4BDDE0();
 BOOL sub_4BDE40();
 int  sub_4BDE50(int a1, int a2);
+int  sub_4BDF80(int a1, int a2);
 int  Lexer_ParseDeftemplate(int a1, int a2);
 int  sub_4BE310(int result, int a2, signed int a3);
 int  sub_4BE3B0(int a1, int a2);
@@ -11772,6 +11774,19 @@ int dword_51B0BA = 18000; // weak
 int dword_51B0BE = 1; // weak
 int dword_51B0C2 = 3600; // weak
 int dword_51B0C6 = 1; // weak
+_UNKNOWN unk_51B0D8; // weak
+_UNKNOWN unk_51B108; // weak
+_UNKNOWN unk_51B138; // weak
+_UNKNOWN unk_51B168; // weak
+_UNKNOWN unk_51B198; // weak
+_UNKNOWN unk_51B1C8; // weak
+_UNKNOWN unk_51B1F8; // weak
+_UNKNOWN unk_51B228; // weak
+_UNKNOWN unk_51B258; // weak
+_UNKNOWN unk_51B288; // weak
+_UNKNOWN unk_51B2B8; // weak
+_UNKNOWN unk_51B2E8; // weak
+_UNKNOWN unk_51B318; // weak
 int dword_51B348 = 0; // weak
 int dword_51B34C = 0; // weak
 int dword_51B350 = 0; // weak
@@ -104933,7 +104948,7 @@ BOOL  sub_48BD30(BOOL result)
 }
 
 //----- (0048BD50) --------------------------------------------------------
-int  sub_48BD50(_DWORD *a1, int a2, double a3)
+int  Lexer_ParseSlotConstraint(_DWORD *a1, int a2, double a3)
 {
   int result; // eax
   int v5; // ecx
@@ -104999,7 +105014,7 @@ int  sub_48BDD0(int a1, char *a2, _DWORD *a3)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (0048BE80) --------------------------------------------------------
-int  sub_48BE80(int a1, double a2)
+int  Lexer_ParseFieldSpec(int a1, double a2)
 {
   int result; // eax
   int v3; // ecx
@@ -121944,11 +121959,10 @@ int  sub_49E080(int a1, double a2)
 
   v4[7] = a1;
   if ( Lexer_ParseValueList(1, v4, 2, a2) )
-    return unknown_libname_13();
+    return unknown_libname_13(v4[2] != dword_54DD70);
   else
     return dword_51B360;
 }
-// 4BDC00: using guessed type int unknown_libname_13(void);
 // 51B360: using guessed type int dword_51B360;
 // 54DD70: using guessed type int dword_54DD70;
 
@@ -122269,7 +122283,7 @@ const CHAR * sub_49E650(double a1)
       sub_49F310();
       return 0;
     }
-    if ( ismbdprint_() )
+    if ( ismbdprint_((void *)v5) )
     {
       sub_48F610(1);
       Lexer_ErrorRecover(1);
@@ -122313,7 +122327,6 @@ const CHAR * sub_49E650(double a1)
 // 49E7B3: variable 'v11' is possibly undefined
 // 49E7C2: variable 'v12' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
-// 4B5410: using guessed type int ismbdprint_(void);
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049E820) --------------------------------------------------------
@@ -142318,7 +142331,6 @@ signed int sub_4B5310()
            (int)sub_4B54D0,
            (int)sub_4B5420);
 }
-// 4B5410: using guessed type int ismbdprint_(void);
 
 //----- (004B5340) --------------------------------------------------------
 int __thiscall sub_4B5340(void *this)
@@ -142398,6 +142410,12 @@ int __thiscall sub_4B5340(void *this)
 // 51A620: using guessed type char *off_51A620[2];
 // 51A624: using guessed type char *off_51A624;
 // 51AEF8: using guessed type int dword_51AEF8;
+
+//----- (004B5410) --------------------------------------------------------
+int ismbdprint_(void *logical_name)
+{
+  return sub_4B5340(logical_name) != 0;
+}
 
 //----- (004B5420) --------------------------------------------------------
 signed int __thiscall sub_4B5420(void *this)
@@ -143227,6 +143245,25 @@ _BYTE * sub_4B6646(_BYTE *a1, int a2, int a3)
   return v7;
 }
 // 4B6685: variable 'v6' is possibly undefined
+
+//----- (004B6DD0) --------------------------------------------------------
+int sub_4B6DD0()
+{
+  sub_48F5C0((int)&unk_51A8EC, 6);
+  sub_48F5C0((int)&unk_51B0D8, 29);
+  sub_48F5C0((int)&unk_51B108, 30);
+  sub_48F5C0((int)&unk_51B138, 31);
+  sub_48F5C0((int)&unk_51B168, 26);
+  sub_48F5C0((int)&unk_51B198, 27);
+  sub_48F5C0((int)&unk_51B1C8, 28);
+  sub_48F5C0((int)&unk_51B1F8, 23);
+  sub_48F5C0((int)&unk_51B228, 24);
+  sub_48F5C0((int)&unk_51B258, 22);
+  sub_48F5C0((int)&unk_51B288, 34);
+  sub_48F5C0((int)&unk_51B2B8, 25);
+  sub_48F5C0((int)&unk_51B2E8, 32);
+  return sub_48F5C0((int)&unk_51B318, 33);
+}
 
 //----- (004B6EB0) --------------------------------------------------------
 signed int  sub_4B6EB0(int a1)
@@ -149652,6 +149689,56 @@ LABEL_11:
 // 4BDD10: variable 'v9' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
+//----- (004BDC00) --------------------------------------------------------
+int unknown_libname_13(int value)
+{
+  int previous_value; // eax
+
+  previous_value = dword_51B360;
+  dword_51B360 = value;
+  return previous_value;
+}
+// 51B360: using guessed type int dword_51B360;
+
+//----- (004BDD20) --------------------------------------------------------
+signed int sub_4BDD20(_BYTE *function_name, int handler)
+{
+  int **symbol; // eax
+  int v3; // ecx
+
+  symbol = Rules_MakeSymbol(function_name);
+  if ( symbol )
+  {
+    *(int **)((char *)symbol + 17) = 0;
+    *(_WORD *)((char *)symbol + 21) = 0;
+    *(int **)((char *)symbol + 13) = (int *)handler;
+    return 1;
+  }
+  Output_Write((int)off_51A614[0], (int)aFunctionParser, v3);
+  return 0;
+}
+// 51A614: using guessed type char *off_51A614[5];
+
+//----- (004BDD40) --------------------------------------------------------
+int sub_4BDD40()
+{
+  if ( !sub_4BDD20(aBind, (int)sub_4BE590) )
+    return 0;
+  if ( !sub_4BDD20(aProgn, (int)sub_4BE520) )
+    return 0;
+  if ( !sub_4BDD20(aIf, (int)sub_4BE3B0) )
+    return 0;
+  if ( !sub_4BDD20(aWhile, (int)sub_4BDE50) )
+    return 0;
+  if ( !sub_4BDD20(aLoopForCount, (int)sub_4BDF80) )
+    return 0;
+  if ( !sub_4BDD20(aReturn, (int)sub_4BE720) )
+    return 0;
+  if ( !sub_4BDD20(aBreak, (int)sub_4BE800) )
+    return 0;
+  return sub_4BDD20(aSwitch, (int)sub_4BE890);
+}
+
 //----- (004BDDC0) --------------------------------------------------------
 int sub_4BDDC0()
 {
@@ -154220,7 +154307,7 @@ LABEL_46:
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004C2710) --------------------------------------------------------
-signed int  sub_4C2710(int a1, int a2, int a3)
+signed int  Lexer_ValidateMessageHandler(int a1, int a2, int a3)
 {
   int v4; // ecx
   signed int result; // eax
@@ -162967,7 +163054,7 @@ int  sub_4CC570(int a1, double a2)
 // 4CC69D: variable 'v10' is possibly undefined
 
 //----- (004CC6C0) --------------------------------------------------------
-int  sub_4CC6C0(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
+int  Lexer_ParseDefglobal(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
 {
   int v7; // ebp
   int v8; // ecx
@@ -174201,7 +174288,7 @@ int  sub_4D9B90(int a1, _DWORD *a2)
 }
 
 //----- (004D9C40) --------------------------------------------------------
-int  sub_4D9C40(int a1, int *a2, _DWORD *a3, int a4)
+int  Lexer_ParseRuleRHS(int a1, int *a2, _DWORD *a3, int a4)
 {
   int v6; // ebp
   int v7; // ecx
@@ -174422,7 +174509,7 @@ _DWORD * sub_4D9F20(int a1, _DWORD *a2, int *a3, int a4, double a5)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (004D9FD0) --------------------------------------------------------
-int  sub_4D9FD0(_DWORD *a1, double a2)
+int  Lexer_ParseDeclareOptions(_DWORD *a1, double a2)
 {
   int v3; // ebx
   int v4; // edx

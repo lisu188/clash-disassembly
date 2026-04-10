@@ -36,11 +36,23 @@
     - kept quarantined as CRT wrappers now that `sub_47D360` and `sub_47D3D0` pass the real time-buffer and command-string arguments
   - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` in `clash95.c`
     - repaired from asm-backed shared-epilogue `JUMPOUT` scars into normal control flow
+  - `aJ_0` in `clash95.c`
+    - materialized as exact `"+j"` for the retained startup-prelude parser/export lane
+  - `unknown_libname_13` in `clash95.c`
+    - recovered as the `dword_51B360` setter that returns the previous value
+  - `ismbdprint_` in `clash95.c`
+    - recovered as the thin boolean wrapper over `sub_4B5340(logical_name)`
+  - `sub_4B6DD0` in `clash95.c`
+    - recovered as the exact token-registration helper for the retained parser/class startup band
+  - `sub_4BDD20` / `sub_4BDD40` in `clash95.c`
+    - recovered as the procedural parser-function registration helper rather than a widened compat stub
+  - `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` in `clash95.c`
+    - rebound onto already-recovered local bodies using their map-backed export names instead of leaving them as duplicate link holes
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
-  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained broader startup-prelude slice rooted at `sub_451E46` now needs the wider parser/class/math band (`sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the deeper `IF_*` / `__FYL2X__` thunks)
-  - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms, so the remaining executable-regeneration blocker has moved up to the broader `sub_451E46` unresolved set
+  - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
+  - the retained broader startup-prelude slice rooted at `sub_451E46` is now past the parser-export layer and needs the deeper slot/parser/math/runtime band (`Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` thunks, and `JUMPOUT`)
+  - retained `sub_4996D0` still links, so the remaining executable-regeneration blocker has moved deeper into the broader `sub_451E46` unresolved set
