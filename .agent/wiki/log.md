@@ -39,3 +39,15 @@
 - Recovered `unknown_libname_7` / `unknown_libname_8` as the `dword_51A1EC` / `dword_51A928` setter-swaps, and corrected the `sub_47D0E0` tail so it now points at retained `.fn_init` (`sub_49A0E0`) instead of the unrelated runtime setter.
 - Recovered `mblen_`, `mblen__0`, and `sub_4D88F0` from `clash95.exe`, including the missing token-table globals at `unk_51B488` through `unk_51B698`.
 - Re-ran the retained probes and confirmed `sub_4996D0` now narrows to `unk_508D50` plus nearby `JUMPOUT` scars, while `sub_451E46` now honestly exposes `sub_49A0E0` alongside `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers.
+
+## 2026-04-10
+
+- Verified the live tree before editing and confirmed `sub_49A0E0` was already materialized in `clash95.c`, while `dword_51ACC4` still needed to be tied to the high half of `qword_51ACC0`.
+- Re-ran the retained linker probes and confirmed the honest next retained blocker had moved off `unk_508D50` and onto the local `JUMPOUT` scar cluster around `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, and `sub_4D2AC0`.
+- Corrected `unk_508D50` to the exact `5,6,7,"CLIPS",0,0` bytes and collapsed the first retained `JUMPOUT` cluster back into normal control flow.
+- Re-ran the retained probes and confirmed `sub_4996D0` now linked cleanly while the broader `sub_451E46` slice narrowed to `sub_496643`, `ftime_`, `system_`, and a second local `JUMPOUT` band.
+- Recovered `sub_496643` into `compat/decomp_runtime_stubs.c` as the asm-backed Watcom signal-table helper with the original default handler table and ctrl-handler gating.
+- Reconstructed the `ftime_` and `system_` callsites in `sub_47D360` / `sub_47D3D0`, then added quarantined CRT wrappers for those helpers in `compat/decomp_runtime_stubs.c`.
+- Recovered the second local `JUMPOUT` band in `sub_47F480`, `sub_48E1A0`, and `sub_491790`, including the lost outer/inner enumeration updates in `sub_47F480`.
+- Re-ran the retained probes and confirmed `sub_451E46` is now blocked by the deeper parser/class/math band led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the `IF_*` / `__FYL2X__` helpers.
+- Re-ran the traced contained menu probes under `timeout 2s` and reconfirmed the live split: broader rules still reach `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`, while `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still logs `symbol-lookup-missing-table MAIN` earlier in the same corridor.

@@ -32,3 +32,7 @@
   - Reason: it is an original class ABI surface and fits the current `clash95_cpp_core` ownership better than another quarantine shim.
 - Correct the `sub_47D0E0` tail to the retained `.fn_init` placeholder at `sub_49A0E0` instead of satisfying that call with `unknown_libname_7`.
   - Reason: `unknown_libname_7` is the real `dword_51A1EC` setter-swap at `0x47E7B0`, while the authentic startup chain calls the separate collapsed `.fn_init` body at `0x49A0E0`.
+- Keep `sub_496643`, `ftime_`, and `system_` in `compat/decomp_runtime_stubs.c` instead of scattering ad-hoc host calls through recovered gameplay code.
+  - Reason: they are CRT/runtime helpers on the retained startup-prelude path, and quarantining them preserves the rule that platform/runtime glue stays out of the gameplay seam.
+- Patch asm-backed `JUMPOUT` scars in `clash95.c` directly when they collapse to shared epilogues.
+  - Reason: these are decompiler control-flow artifacts, not missing runtime services, so stubbing them in compat would hide real recovered control flow.

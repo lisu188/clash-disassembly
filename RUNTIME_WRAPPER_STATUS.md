@@ -21,6 +21,8 @@ This file classifies the current runtime/quarantine surface for executable regen
 | `unknown_libname_7` / `unknown_libname_8` | `recovered_impl` | `clash95.exe` objdump at `0x47E7B0` / `0x48AC80`, `clash95.map`, `clash95.c` | Exact setter-swaps for `dword_51A1EC` / `dword_51A928`; these are runtime helpers, not startup `.fn_init` bodies. |
 | `AST_FreeNode` | `recovered_impl` | `clash95.asm:303859`, `clash95.c` | Exact recursive free-list unwind recovered in-tree; no longer a retained startup blocker. |
 | `mblen_` / `mblen__0` / `sub_4D88F0` | `recovered_impl` | `clash95.exe` objdump, `clash95.c` callers | Narrow object-pattern trampolines and token-table registration slice recovered directly from the binary. |
+| `sub_496643` | `recovered_impl` | `clash95.exe` objdump at `0x496643`, `clash95.map`, `compat/decomp_runtime_stubs.c` | Kept quarantined in the compat seam, but the signal-table update and ctrl-handler gating now match the original helper closely enough to remove it from the retained startup-prelude blocker list. |
+| `ftime_` / `system_` | `forwarding_wrapper` | `clash95.exe` objdump at `0x47D360` / `0x47D3D0`, `clash95.c`, `compat/decomp_runtime_stubs.c` | The callsites are now reconstructed with the correct arguments; the host-backed implementations remain deliberately quarantined as CRT wrappers. |
 | `fread_` / `fwrite_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c` | Host libc forwarding wrappers around the current file-handle translation layer. |
 | filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit | Broad but understandable compatibility wrappers; still not proof of original runtime structure. |
 | `Render_LoadResourceSprite_v4` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:18215-18324`, live contained row-draw probes | Now matches the cache-query gate, companion `.pfn` palette load, and recolor contract closely enough to carry the authentic load-menu row-resource lane. |
@@ -40,10 +42,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
-  - `dbl_502FDC` is now materialized in recovered C as exact data
-  - `AST_FreeNode`, `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0` are now recovered in-tree rather than left in the retained blocker list
-  - retained `sub_4B0940` and `sub_499990` probes link, and retained `sub_4996D0` is now reduced to `unk_508D50` plus nearby `JUMPOUT` scars
-  - the broader retained `sub_451E46` slice now honestly exposes retained `.fn_init` at `sub_49A0E0` alongside `sub_496643`, `ftime_`, `system_`, and the deeper parser/math helper band
+  - the `CLIPS` header blob now matches the exact `5,6,7,"CLIPS",0,0` bytes in `clash95.c`
+  - the nearby retained `JUMPOUT` cluster is now gone from `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790`
+  - retained `sub_4996D0` now links cleanly
+  - the broader retained `sub_451E46` slice is now exposed honestly as a parser/class/math problem rather than a runtime-wrapper problem
 
 ## What should not move yet
 

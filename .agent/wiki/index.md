@@ -14,7 +14,7 @@
 - Adjacent blocked widening:
   - the explicit broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
   - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
-  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now reduced past `unknown_libname_7`, `unknown_libname_8`, `AST_FreeNode`, `mblen_`, `mblen__0`, and `sub_4D88F0`, but it still stops on the wider unresolved runtime band led by `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and parser helpers
+  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now reduced past the local runtime/helper band and stops on the wider parser/class/math band led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the `IF_*` / `__FYL2X__` math thunks
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

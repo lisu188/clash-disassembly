@@ -16,7 +16,7 @@ This file tracks the parallel executable-regeneration path that grows out of the
 4. Add a parallel `clash95_cpp_regen` executable that starts from the existing bootstrap foothold and gradually absorbs more authentic startup/runtime responsibility.
 5. Keep the sidecar evidence artifacts synchronized with the live code.
 
-## Latest runtime update - 2026-04-09
+## Latest runtime update - 2026-04-10
 
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` are still green together after the latest diagnostic and retained-link reduction pass.
 - The durable memory was corrected against the live tree:
@@ -28,16 +28,17 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
   - this proves `sub_4725B0` / `sub_482260` / `sub_491B10` seed parser/symbol state but do not yet provide the authentic defclass/bload registry needed by the save replay
 - The retained executable-regeneration slice also moved this batch:
-  - `dbl_502FDC` is now materialized in `clash95.c` as exact `0.5`
-  - retained probes for `sub_4B0940` and `sub_499990` now link successfully
-  - `AST_FreeNode` is now recovered in-tree from the original asm body
-  - `unknown_libname_7` / `unknown_libname_8` are now recovered as the `dword_51A1EC` / `dword_51A928` setter-swaps, and `sub_47D0E0` no longer hides the retained `.fn_init` call behind the wrong runtime symbol
-  - `mblen_`, `mblen__0`, and `sub_4D88F0` are now materialized from `clash95.exe` corroboration
-  - retained `sub_4996D0` now collapses to `unk_508D50` plus nearby `JUMPOUT` scars instead of the earlier AST / locale helper band
-  - retained `sub_451E46` still fails on the broader unresolved runtime set, but that set is now led by `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers rather than `unknown_libname_7`, `unknown_libname_8`, or `AST_FreeNode`
+  - `unk_508D50` now matches the exact asm-backed `5,6,7,"CLIPS",0,0` header blob
+  - the `dword_51ACC4` high-half alias is now tied directly to `qword_51ACC0`
+  - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` no longer fan out through synthetic `JUMPOUT` exits
+  - `sub_496643` is now quarantined as an asm-backed Watcom signal-table wrapper in `compat/decomp_runtime_stubs.c`
+  - `sub_47D360` and `sub_47D3D0` now pass real arguments into retained `ftime_` / `system_`, and those CRT wrappers live in the compat seam
+  - retained `sub_4996D0` now links successfully instead of stopping on the local `JUMPOUT` scar cluster
+  - retained `sub_451E46` now fails on the next broader parser/class/math layer led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `IF_*`, `__FYL2X__`, `floor_`, `ceil_`, `fgets_`, `sscanf_`, `MoveFileA`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, and `aJ_0`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`
+  - the next retained class/runtime target is the parser/class band around `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, and `sub_4BDD40`, not the already-cleared `sub_496643` / `ftime_` / `system_` helper band
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

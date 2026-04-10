@@ -30,11 +30,17 @@
     - corrected to call retained `.fn_init` at `sub_49A0E0` rather than the unrelated `unknown_libname_7` setter
   - `mblen_`, `mblen__0`, and `sub_4D88F0` in `clash95.c`
     - recovered from `clash95.exe` as the narrow object-pattern trampolines and token-table registration slice
+  - `sub_496643` in `compat/decomp_runtime_stubs.c`
+    - recovered as the Watcom signal-table update helper with the original default handler table and ctrl-handler gating
+  - `ftime_` / `system_` in `compat/decomp_runtime_stubs.c`
+    - kept quarantined as CRT wrappers now that `sub_47D360` and `sub_47D3D0` pass the real time-buffer and command-string arguments
+  - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` in `clash95.c`
+    - repaired from asm-backed shared-epilogue `JUMPOUT` scars into normal control flow
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained broader startup-prelude slice rooted at `sub_451E46` still needs the wider unresolved runtime band (`unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and parser/math helpers)
+  - the retained broader startup-prelude slice rooted at `sub_451E46` now needs the wider parser/class/math band (`sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the deeper `IF_*` / `__FYL2X__` thunks)
   - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms, so the remaining executable-regeneration blocker has moved up to the broader `sub_451E46` unresolved set

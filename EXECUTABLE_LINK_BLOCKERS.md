@@ -10,7 +10,7 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - `clash95_cpp_regen` now links as a parallel executable by reusing the existing bootstrap wedge and adding the C++ core.
 - A direct `gcc` link of `clash95.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` does not yet produce a runnable executable.
 
-## Latest authentic runtime frontier - 2026-04-09
+## Latest authentic runtime frontier - 2026-04-10
 
 - The live executable blocker is no longer row-resource preload, row draws, or save-path formatting.
 - The contained SDL-backed executable still keeps the authentic pre-confirm load-menu corridor alive:
@@ -23,7 +23,7 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The next honest contained runtime blocker is therefore not local save I/O or SDL. It is the missing authentic class/bload prelude needed before the save replay can instantiate `oddzial`.
 - A direct contained `PlayGame` handoff remains deferred because rooting `PlayGame` from `bootstrap_main.c` immediately reopens the much wider gameplay/session unresolved link surface.
 
-## Latest startup-prelude narrowing - 2026-04-09
+## Latest startup-prelude narrowing - 2026-04-10
 
 - The retained `CLIPS`/startup-prelude surface moved this batch:
   - `unk_50293C` and the adjacent `bload` loader strings are now materialized in `clash95.c`
@@ -31,21 +31,25 @@ This note records the current executable-regeneration gap on the clean `codex/cp
   - `CSyncObject_Unlock` is now exported through `src_cpp/csync_object.cpp`
 - A direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully when `csync_object.cpp.o` is present.
 - The archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too.
-- The next retained blocker is no longer that local loader band. It is the wider `sub_451E46` unresolved set:
-  - `unk_508D50`
-  - `sub_496643`
-  - retained `.fn_init` at `sub_49A0E0`
-  - `ftime_`
-  - `system_`
-  - `JUMPOUT`
-  - parser helpers such as `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, and `Lexer_ParseRuleRHS`
-  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `floor_`, `ceil_`, `fgets_`, and `sscanf_`
+- The next retained blocker is no longer the local helper/runtime band. It is the wider `sub_451E46` parser/class/math set:
+  - `sub_4B6DD0`
+  - `Lexer_ParseSlotConstraint`
+  - `Lexer_ParseFieldSpec`
+  - `sub_4BDD40`
+  - `unknown_libname_13`
+  - `ismbdprint_`
+  - `Lexer_ValidateMessageHandler`
+  - `Lexer_ParseDefglobal`
+  - `Lexer_ParseRuleRHS`
+  - `Lexer_ParseDeclareOptions`
+  - `aJ_0`
+  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `fgets_`, and `sscanf_`
 - Additional retained reduction notes from the latest pass:
-  - `dbl_502FDC` is now materialized in-tree as exact `0.5`
-  - retained `sub_4B0940` and `sub_499990` probes both link successfully
-  - `AST_FreeNode`, `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0` are now recovered in-tree
-  - retained `sub_4996D0` now narrows to `unk_508D50` plus nearby `JUMPOUT` scars, so the next broader class-startup step is still larger than the empty defclass-table allocator alone
-  - the `sub_47D0E0` tail now honestly exposes retained `.fn_init` at `sub_49A0E0` instead of satisfying that call through the unrelated `unknown_libname_7` runtime setter
+  - `unk_508D50` is now exact in-tree, including the double-null `CLIPS` header terminator
+  - `sub_496643`, `ftime_`, and `system_` are no longer live retained blockers
+  - the retained `JUMPOUT` cluster in `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` is now collapsed back into normal control flow
+  - retained `sub_4996D0` now links successfully
+  - the `sub_47D0E0` tail still honestly exposes retained `.fn_init` at `sub_49A0E0` instead of satisfying that call through the unrelated `unknown_libname_7` runtime setter
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails

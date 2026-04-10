@@ -8,5 +8,5 @@
   - contained widened load-menu row draws, slot-hover selection, and slot-click/confirm all complete under the existing SDL seam
   - the explicit broader-rules-contained probe now reaches `parse-make-instance-before-class-lookup` and then logs `class-lookup-no-table name=oddzial`
   - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` dies earlier on `symbol-lookup-missing-table MAIN`
-  - the retained broader startup-prelude slice is now reduced past `unknown_libname_7`, `unknown_libname_8`, and `AST_FreeNode`, but it is still blocked on the wider runtime/class/parser surface below SDL, not on `platform_sdl_runtime.c`
+  - the retained broader startup-prelude slice is now reduced past the local runtime/helper band and is blocked on the wider parser/class/math surface below SDL, not on `platform_sdl_runtime.c`
 - Next likely SDL-facing work is still later input/present fidelity, not the contained menu/load wedge or the newly isolated class/bload startup blocker.

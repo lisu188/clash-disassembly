@@ -8,6 +8,7 @@
 #include <fnmatch.h>
 #include <limits.h>
 #include <sys/mman.h>
+#include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,6 +56,7 @@ char * Str_Append(const char *a1, char *a2, unsigned int *a3, int *a4);
 char * sub_494720(char *result);
 int sub_4947D0(void);
 signed int sub_49C7D0(int a1, int a2, int a3);
+errno_t __cdecl _set_errno_(int value);
 typedef struct TextSpriteResourceSlotRecord {
   const char *source_stem;
   int cached_sprite_set;
@@ -143,6 +145,7 @@ typedef struct CompatFindHandle {
 #define COMPAT_WAIT_TIMEOUT 258u
 #define COMPAT_WAIT_FAILED 0xFFFFFFFFu
 #define COMPAT_WAIT_INFINITE 0xFFFFFFFFu
+#define COMPAT_SIGNAL_SLOT_COUNT 13
 
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
@@ -153,6 +156,13 @@ typedef struct CompatEventHandle {
   int signaled;
 } CompatEventHandle;
 
+typedef struct CompatTimeb {
+  int time_value;
+  unsigned short milliseconds;
+  short timezone_minutes;
+  short dst_flag;
+} CompatTimeb;
+
 static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
 {
   CompatEventHandle *event_handle;
@@ -161,6 +171,102 @@ static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
   if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
     return 0;
   return event_handle;
+}
+
+static intptr_t g_compat_signal_handlers[COMPAT_SIGNAL_SLOT_COUNT] = {
+  1,
+  2,
+  1,
+  2,
+  2,
+  2,
+  2,
+  2,
+  1,
+  1,
+  1,
+  2,
+  1,
+};
+
+static int g_compat_signal_os_codes[COMPAT_SIGNAL_SLOT_COUNT] = {
+  -1,
+  -1,
+  -1,
+  (int)0xC000001D,
+  (int)0xC000013A,
+  (int)0xC0000005,
+  (int)0xC000013A,
+  (int)0xC000013A,
+  -1,
+  -1,
+  -1,
+  (int)0xC0000094,
+  (int)0xC0000095,
+};
+
+static unsigned char g_compat_ctrl_handler_installed;
+
+static int CompatSignalNeedsCtrlHandler(int signal_number)
+{
+  intptr_t handler_value;
+
+  handler_value = g_compat_signal_handlers[signal_number];
+  return handler_value != 2 && handler_value != 3;
+}
+
+/*
+ * Watcom signal registration wrapper used by retained startup code.
+ * Keep the handler table and ctrl-handler gating behavior, but quarantine
+ * the platform-specific console/FPU details here while SDL/WSL remains the
+ * only supported runtime target.
+ */
+intptr_t __fastcall sub_496643(int signal_number, intptr_t handler_value)
+{
+  intptr_t previous_handler;
+
+  if ( signal_number < 1 || signal_number > 12 )
+  {
+    _set_errno_(9);
+    return 3;
+  }
+
+  previous_handler = g_compat_signal_handlers[signal_number];
+  g_compat_signal_handlers[signal_number] = handler_value;
+
+  if ( signal_number == 2 && handler_value != 2 && handler_value != 3 && g_compat_signal_os_codes[signal_number] )
+  {
+    /* Original code also touched the Watcom FPU mask via _control87_. */
+  }
+
+  g_compat_ctrl_handler_installed =
+    CompatSignalNeedsCtrlHandler(4) || CompatSignalNeedsCtrlHandler(7);
+
+  return previous_handler;
+}
+
+int ftime_(void *time_buffer)
+{
+  struct timeval current_time;
+  CompatTimeb *buffer;
+
+  buffer = (CompatTimeb *)time_buffer;
+  if ( !buffer )
+    return _set_errno_(EINVAL);
+
+  if ( gettimeofday(&current_time, 0) != 0 )
+    return _set_errno_(errno);
+
+  buffer->time_value = (int)current_time.tv_sec;
+  buffer->milliseconds = (unsigned short)(current_time.tv_usec / 1000);
+  buffer->timezone_minutes = 0;
+  buffer->dst_flag = 0;
+  return 0;
+}
+
+int system_(const char *command)
+{
+  return system(command);
 }
 
 /*
