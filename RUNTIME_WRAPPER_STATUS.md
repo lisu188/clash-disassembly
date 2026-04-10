@@ -57,13 +57,17 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the early retained `PlayGame_Dispatch` alias/data band was then reduced in `clash95.c` directly: front-end cursor/overlay descriptor records, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are all now local recovered data/bodies rather than live retained blockers
   - the compat seam also now carries the narrow `rand_`, `srand_`, `strlwr_`, `memmove_`, and `_wcpp_4_static_init__` bridges that were already in flight on this branch, which is why those names are no longer present in the retained `PlayGame_Dispatch` probe
   - the next retained reduction pass stayed in recovered C as well: `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their local bodies, the queen departure-event slab is materialized locally, and the remaining `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars were repaired in place
-  - the next retained executable-regeneration blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+  - the mission-loader front was then reduced in recovered C too:
+    - `createUnit` and `createCastle` now use real varargs so the original sentinel-terminated unit lists no longer depend on x86 stack accidents
+    - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`
+    - the first menu-reachable mission-loader cases (`0` and `10`) are materialized directly from asm
+  - the next retained executable-regeneration blocker is now the helper band reached inside that mission-loader slice (`sub_40D330` / `sub_44C2A0`), not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
-- `Scenario_LoadMissionByIndex` / `sub_460360` mission dispatch and packaged map semantics
+- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the first recovered menu-entry slice
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

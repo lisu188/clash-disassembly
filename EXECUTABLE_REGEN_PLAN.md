@@ -18,9 +18,10 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
   1. preserving the green pre-confirm contained load-menu wedge
   2. keeping the broader-rules-contained probe reproducible so it still distinguishes the last directly traced `class-lookup-no-table name=oddzial` failure from the earlier `symbol-lookup-missing-table MAIN` failure
   3. keeping the now-green retained startup-prelude probes (`sub_451E46`, `sub_460490`, `UI_StartAnims`) honest while continuing the broader front-end handoff into `PlayGame_Dispatch`
-  4. reducing the retained `PlayGame_Dispatch` handoff further by recovering `Scenario_LoadMissionByIndex` / `sub_460360` from asm and map evidence rather than pushing mission setup into SDL, compat, or `src_cpp`
-  5. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
-  6. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
+  4. keeping the first recovered retained mission-loader slice honest: thread the selector into `Scenario_LoadMissionByIndex`, use real sentinel-terminated `createUnit` / `createCastle` setup lists, and recover only the menu-reachable cases `0` and `10` from asm/map evidence rather than pushing mission setup into SDL, compat, or `src_cpp`
+  5. then continue the retained mission-loader widening at the next helper band `sub_40D330` / `sub_44C2A0` before attempting more case arms
+  6. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
+  7. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
 - Do not broaden into unrelated runtime wrappers past the already-settled `unknown_libname_2` / `MoveFileA` / `sscanf_` / `fgets_` band until those two adjacent startup fronts are characterized.
 - Do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local post-save patch. Keep the startup-prelude widening separate from the contained load-game wedge.
 - Do not regress the corrected `sub_47D0E0` call attribution: `unknown_libname_7` is the runtime setter at `0x47E7B0`, while the startup-prelude tail still needs the separate retained `.fn_init` body at `0x49A0E0`.
@@ -28,7 +29,8 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - The retained `PlayGame_Dispatch` alias/data band is now reduced again:
   - front-end cursor/overlay descriptors, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are no longer live retained blockers
   - `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are now also reduced in recovered C
-  - the next retained widening should stay on the surviving mission-loader frontier at `Scenario_LoadMissionByIndex` / `sub_460360`, not on a new SDL seam or `src_cpp` abstraction
+  - the surviving mission-loader frontier was then narrowed again: `Scenario_LoadMissionByIndexAndPlay` now threads the selector, `createUnit` / `createCastle` now accept the original sentinel-terminated unit lists, and the first menu-reachable `sub_460360` cases (`0` and `10`) are recovered in place
+  - the next retained widening should stay on the surviving mission-loader helper band at `sub_40D330` / `sub_44C2A0`, not on a new SDL seam or `src_cpp` abstraction
 
 ## What is already stable enough to build on
 

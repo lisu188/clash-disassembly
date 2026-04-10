@@ -28,7 +28,8 @@ This note covers the current host seam used by the executable-regeneration track
   - the local x87-heavy math/runtime band is now gone
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - the next retained blocker is the narrower mission-loader frontier `Scenario_LoadMissionByIndex` / `sub_460360`, which again does not overlap the SDL seam
+  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the first menu-reachable cases, again without touching `platform_sdl_runtime.c`
+  - the next retained blocker is the narrower mission-loader helper band `sub_40D330` / `sub_44C2A0`, which again does not overlap the SDL seam
 
 ## Stable host behavior already present
 

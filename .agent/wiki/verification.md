@@ -19,7 +19,7 @@
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=UI_StartAnims ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch ... build/lib/libclash95_cpp_core.a ...`
-  - now fails only on `Scenario_LoadMissionByIndex` / `sub_460360`
+  - now fails only on `sub_40D330` and `sub_44C2A0` when linked with `build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - under `timeout 2s`, exits `124`
   - logs `class-lookup-no-table name=oddzial`

@@ -62,3 +62,7 @@
   - Reason: the asm shows a small finite even-slot anchor-cache loop, so leaving that control flow in compat or SDL would hide real gameplay/map semantics.
 - Keep `Scenario_LoadMissionByIndex` / `sub_460360` in recovered C and treat it as the next retained widening point.
   - Reason: all current evidence says the surviving blocker is the authentic mission-loader switch with packaged map/name data, not an SDL seam problem, not a compat-wrapper problem, and not a C++ class seam.
+- Thread the selector and the live `st0` value through `Scenario_LoadMissionByIndex` instead of keeping the old zero-arg `JUMPOUT` stub.
+  - Reason: `sub_460370` passes the selector in `eax` and keeps the floating-point argument live for the nested `createUnit` / `createCastle` calls, so recovering the first mission cases honestly requires both values in recovered C.
+- Repair `createUnit` and `createCastle` as real vararg helpers before growing the first recovered mission-loader cases.
+  - Reason: the asm walks trailing unit-type lists until `-1`; leaving those helpers fixed-width would force new mission setup into x86 stack accidents instead of explicit recovered C calls.

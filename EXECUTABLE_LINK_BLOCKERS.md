@@ -30,12 +30,16 @@ This note records the current executable-regeneration gap on the clean `codex/cp
   - the standalone retained `sub_451E46` probe still stays alive under `timeout 1s`
   - the first retained `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C: `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
 - A direct-object retained probe for `sub_4996D0` still links successfully.
-- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, or the broader `PlayGame_Dispatch` UI/data/runtime scatter. It is now the single mission-loader control-flow/data frontier:
-  - `Scenario_LoadMissionByIndex`
-  - `sub_460360`
+- The retained mission-loader surface moved again this batch:
+  - `Scenario_LoadMissionByIndexAndPlay` now passes the real selector into `Scenario_LoadMissionByIndex`
+  - `createUnit` and `createCastle` now match the original sentinel-terminated unit-list contract closely enough to transcribe real mission setup calls
+  - the first menu-reachable `sub_460360` cases are now recovered in `clash95.c`: case `0` (`k_mapa1l.map`) and case `10` (`p_mapa1z.map`)
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, or the bare mission-loader `JUMPOUT`. It is now the next mission-loader helper/control-flow/data band reached by those first recovered cases:
+  - `sub_40D330`
+  - `sub_44C2A0`
 - Additional retained reduction notes from the latest pass:
   - `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their already-recovered local bodies instead of standing as duplicate retained export holes
-  - the `sub_451E46` probe is still green, so the next honest retained widening starts after `UI_StartAnims` and now stops at `Scenario_LoadMissionByIndex` rather than inside the older `PlayGame_Dispatch` UI/data band
+  - the `sub_451E46` probe is still green, so the next honest retained widening starts after `UI_StartAnims` and now stops past the former `Scenario_LoadMissionByIndex` `JUMPOUT`, at `sub_40D330` / `sub_44C2A0`
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails

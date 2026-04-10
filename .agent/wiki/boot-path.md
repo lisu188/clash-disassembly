@@ -22,5 +22,6 @@
   - the retained authentic startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly and stay alive under `timeout 1s`
   - the earlier `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - the next honest retained widening is therefore the chunked mission-loader switch at `Scenario_LoadMissionByIndex` / `sub_460360`
+  - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`, and the first menu-reachable mission-loader cases (`0` and `10`) are recovered in place
+  - the next honest retained widening is therefore the deeper mission-loader helper band at `sub_40D330` / `sub_44C2A0`
   - deferred save-slot repaint/name lane after the row draws

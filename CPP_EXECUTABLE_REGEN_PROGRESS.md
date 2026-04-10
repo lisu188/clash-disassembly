@@ -32,11 +32,15 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the first retained `PlayGame_Dispatch` pass is no longer blocked on the front-end descriptor slab, early world-map/UI export aliases, unit-slot and placement helpers, garrison/UI aliases, or the battle/port/queen debug string slab
   - the port reinforcement ring offsets and unit-type pool are now materialized directly from `clash95.asm`
   - the next retained widening is still `PlayGame_Dispatch`, but the former UI/data/runtime band is now reduced in recovered C: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
-  - the surviving retained blocker is now only `Scenario_LoadMissionByIndex` / `sub_460360`, the chunked mission-loader switch reached through `Scenario_LoadMissionByIndexAndPlay`
+  - the retained mission-loader lane also moved in recovered C:
+    - `Scenario_LoadMissionByIndexAndPlay` now threads the real selector into `Scenario_LoadMissionByIndex`
+    - `createUnit` / `createCastle` now carry the original sentinel-terminated unit lists through real varargs instead of depending on x86 stack accidents
+    - the menu-reachable `sub_460360` cases `0` and `10` are now materialized from asm as the first campaign-entry map loaders (`k_mapa1l.map` and `p_mapa1z.map`) with the corroborated player-state, name, unit, and castle setup
+  - the surviving retained blocker is no longer the bare `Scenario_LoadMissionByIndex` / `sub_460360` `JUMPOUT`; it is the next helper band reached from those first recovered cases: `sub_40D330` and `sub_44C2A0`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims`
-  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, or the earlier `PlayGame_Dispatch` UI/data/runtime band; it is the narrowed mission-loader frontier at `Scenario_LoadMissionByIndex` / `sub_460360`
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, or the bare mission-loader `JUMPOUT`; it is the next helper band reached inside the partially recovered mission-loader slice at `sub_40D330` and `sub_44C2A0`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

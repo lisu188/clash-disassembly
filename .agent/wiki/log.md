@@ -78,3 +78,14 @@
 - Recovered `Map_RebuildCastleSiteAnchorCache` from the asm-backed even-slot anchor-cache loop and removed that retained `JUMPOUT` scar from the live `PlayGame_Dispatch` probe.
 - Re-ran the retained `PlayGame_Dispatch` probe and confirmed the broader UI/data/runtime band is gone: the surviving unresolved is now only `Scenario_LoadMissionByIndex` / `sub_460360`.
 - Reused the read-heavy subagents again and confirmed the narrowed retained blocker is pure recovered C mission-loader work, not SDL seam work, not `compat` runtime glue, and not a `src_cpp` class seam.
+- Reloaded the durable repo memory again, revalidated the three green build targets, and reran the full contained post-confirm load-menu probes before touching the retained mission-loader frontier.
+- Reused the read-heavy subagents against the live retained frontier and confirmed the menu-reachable selectors are only `0` and `10`, the current blocker still lives in recovered C mission setup, and SDL / `src_cpp` remain out of scope for this slice.
+- Recovered `createUnit` and `createCastle` as real vararg helpers with explicit `-1`-terminated unit lists and updated the existing local callsites to stop depending on x86 stack accidents.
+- Threaded the real selector through `Scenario_LoadMissionByIndexAndPlay` into `Scenario_LoadMissionByIndex`, carrying the live floating-point argument into the first recovered mission cases just as `sub_460370` does in asm.
+- Materialized the first menu-reachable mission-loader cases from `sub_460360` directly in `clash95.c`:
+  - case `0`: `k_mapa1l.map`, `Alan`, `Bochuwit`, `Cantbelly`
+  - case `10`: `p_mapa1z.map`, `Raylin`, `Gaalaad`, `Timbran`
+- Re-ran the retained `PlayGame_Dispatch` link audit with `bootstrap_main.c.o` included and confirmed the old `Scenario_LoadMissionByIndex` `JUMPOUT` blocker is gone; the retained widening now stops at `sub_40D330` and `sub_44C2A0`.
+- Re-ran the full contained post-confirm menu probes and confirmed the protected split is unchanged:
+  - broader rules still reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`

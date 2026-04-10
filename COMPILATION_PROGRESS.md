@@ -3096,6 +3096,56 @@
 - total rename count so far:
   - `1193`
 
+## Batch 150 - Mission Loader Entry Case Recovery Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while reducing the retained `PlayGame_Dispatch` mission-loader surface beyond the old `Scenario_LoadMissionByIndex` / `sub_460360` `JUMPOUT`
+- Repairs:
+  - threaded the real selector through `Scenario_LoadMissionByIndexAndPlay` into `Scenario_LoadMissionByIndex`
+  - repaired `createUnit` and `createCastle` to consume the original sentinel-terminated unit lists through real varargs instead of relying on x86 stack layout
+  - added explicit `-1` sentinels to the existing local `createUnit` / `createCastle` callsites that were still living on the decompiler's fixed-width helper signatures
+  - materialized the first menu-reachable `sub_460360` cases directly in `clash95.c` from asm:
+    - case `0`: `k_mapa1l.map`, `Alan`, `Bochuwit`, `Cantbelly`
+    - case `10`: `p_mapa1z.map`, `Raylin`, `Gaalaad`, `Timbran`
+  - carried the case-10 castle field adjustments in recovered C instead of leaving them inside the missing jump-table body
+- Blockers removed this batch:
+  - the retained `PlayGame_Dispatch` surface no longer stops on the bare `Scenario_LoadMissionByIndex` `JUMPOUT`
+  - the first campaign-entry mission cases no longer require the old fixed-arity `createUnit` / `createCastle` scars
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm'`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build cleanly after the mission-loader recovery slice
+- Link status:
+  - the retained `PlayGame_Dispatch` probe no longer fails on `Scenario_LoadMissionByIndex` / `sub_460360`
+  - the same retained probe now narrows to the next mission-loader helper band: `sub_40D330` and `sub_44C2A0`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` still exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` still exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` still exits `124`
+  - the full contained post-confirm menu probes still reproduce the same split under `timeout 2s` plus `timeout: the monitored command dumped core`:
+    - broader rules reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
+    - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged on the contained lane: authentic top-level `Load Game`, row-resource load, row draws, slot-strip click, bottom-row confirm, `WorldMap_Initialize`, and the real post-confirm save-replay split remain intact
+  - improved on the retained lane: the first menu-reachable mission-loader cases now exist in recovered C, and the retained widening has moved past the old `sub_460360` control-flow scar into `sub_40D330` / `sub_44C2A0`
+- Key evidence used:
+  - `clash95.asm` for `sub_460370`, `sub_460360`, `mapK1`, `mapP1`, `createUnit`, and `createCastle`
+  - `clash95.map` for the `mapK*` / `mapP*` mission families and the `createUnit` / `createCastle` anchors
+  - `clash95.c` callsites in `PlayGame_Dispatch` and `PlayGame` proving the current live selectors are `0`, `10`, and later `ACTIVE_MISSION_INDEX + 1`
+- Ambiguous candidates deferred:
+  - the remaining `sub_460360` cases beyond `0` and `10`
+  - the exact semantics of `sub_40D330` and `sub_44C2A0`, which are now the next retained blockers rather than guessed aliases
+  - the contained post-save `oddzial` / `MAIN` startup-prelude split, which remains a separate class/bload problem
+- total rename count so far:
+  - `1193`
+
 ## Batch 149 - PlayGame Dispatch Mission-Loader Reduction Wave
 - Current frontier:
   - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while reducing the retained `PlayGame_Dispatch` handoff to the first authentic mission-loader blocker `Scenario_LoadMissionByIndex`

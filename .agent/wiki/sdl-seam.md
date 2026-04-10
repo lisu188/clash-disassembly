@@ -11,5 +11,6 @@
   - both post-confirm menu-probe variants still fall into the same timeout/core-dump band under `timeout 2s`
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link and stay alive under `timeout 1s`
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - the next retained blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, not an SDL seam export
+  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is now gone in the first menu-reachable cases without touching the SDL seam
+  - the next retained blocker is now the deeper mission-loader helper band `sub_40D330` / `sub_44C2A0`, not an SDL seam export
 - Next likely SDL-facing work is still later input/present fidelity, not the contained menu/load wedge or the newly isolated mission-loader retained blocker.

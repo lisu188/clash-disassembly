@@ -1,6 +1,6 @@
 # Agent Wiki Index
 
-- Current frontier: keep the contained authentic load-menu wedge green while separating it from the broader retained front-end widening that now starts after `sub_451E46`.
+- Current frontier: keep the contained authentic load-menu wedge green while separating it from the broader retained front-end widening that now starts after `sub_451E46` and currently stops in the first recovered mission-loader slice.
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -21,7 +21,8 @@
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
   - the retained startup-prelude slice is no longer blocked on the x87 math band: `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link
   - the former retained `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - the next honest retained blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, the chunked mission-loader switch reached through `Scenario_LoadMissionByIndexAndPlay`
+  - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`, and the first menu-reachable mission-loader cases (`0` and `10`) are materialized directly in `clash95.c`
+  - the next honest retained blocker is now the deeper helper band reached from those cases: `sub_40D330` and `sub_44C2A0`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

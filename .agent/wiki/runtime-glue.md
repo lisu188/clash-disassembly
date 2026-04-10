@@ -73,6 +73,10 @@
     - materialized `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`, `off_519350`, and `off_51935C` directly in recovered C
   - `Map_RebuildCastleSiteAnchorCache` and `sub_4602F0` in `clash95.c`
     - repaired the last local `JUMPOUT` scars on the currently reached retained `PlayGame_Dispatch` lane from the asm-backed even-slot anchor-cache loop and the proven default `return 0` tail
+  - `createUnit` / `createCastle` in `clash95.c`
+    - repaired to consume the original sentinel-terminated unit lists through real varargs, which keeps the first recovered mission-loader cases in recovered C instead of hiding scenario armies behind x86-only stack layout
+  - `Scenario_LoadMissionByIndexAndPlay` / `Scenario_LoadMissionByIndex` in `clash95.c`
+    - selector threading is now explicit, and the first menu-reachable mission-loader cases (`0` and `10`) are materialized from asm in place
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
@@ -80,5 +84,5 @@
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
   - the retained startup-prelude math/runtime band is now settled enough that `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link as standalone probes
-  - the next retained executable-regeneration blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, not a broad wrapper/alias/data scatter
-  - that surviving blocker stays in recovered C mission-loader control flow/data, not in `compat/decomp_runtime_stubs.c`
+  - the next retained executable-regeneration blocker is now the helper band reached inside the first recovered mission-loader slice: `sub_40D330` / `sub_44C2A0`
+  - that surviving blocker still stays in recovered C mission-loader control flow/data, not in `compat/decomp_runtime_stubs.c`

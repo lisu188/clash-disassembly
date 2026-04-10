@@ -1485,8 +1485,8 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
 double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5);
 void  AI_EvaluateStrategicTargetAtTile(int a1, int a2, int a3, int a4, int a5, int a6, int *a7, int *a8, float *a9);
 int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5);
-signed int  createUnit(double, int, int, int, DWORD, int, int);
-int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, int a9);
+signed int  createUnit(double, int, int, int, DWORD, int, ...);
+int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, ...);
 int  sub_459ED0(int result, int a2, int a3, int a4);
 int  sub_45B3C0(int result, int a2);
 int  sub_45C000(int result, int a2);
@@ -1495,7 +1495,7 @@ int  sub_45E630(int result, int a2);
 int  sub_45F190(int result, int a2);
 BOOL  UI_CheckConfirmQuit(DWORD a1, double a2);
 int UI_CheckDialogAccepted();
-void Scenario_LoadMissionByIndex();
+void Scenario_LoadMissionByIndex(int mission_index, double a2);
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4);
 int __thiscall sub_4603F0(void *this);
 _DWORD * sub_460410(int a1, int a2);
@@ -64116,8 +64116,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 1u, 1, 9);
-      createUnit(a3, 1, 0, 1, 0, 0, 0);
+      createUnit(a3, 0, 0, 0, 1u, 1, 9, -1);
+      createUnit(a3, 1, 0, 1, 0, 0, 0, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64127,8 +64127,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 1u, 2, 9);
-      createUnit(a3, 1, 0, 1, 1u, 2, 9);
+      createUnit(a3, 0, 0, 0, 1u, 2, 9, -1);
+      createUnit(a3, 1, 0, 1, 1u, 2, 9, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64138,8 +64138,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 0, 2u, 2, 9);
-      createUnit(a3, 1, 0, 1, 3u, 3, 9);
+      createUnit(a3, 0, 0, 0, 2u, 2, 9, -1);
+      createUnit(a3, 1, 0, 1, 3u, 3, 9, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64149,8 +64149,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 0x10u, 16, 16);
-      createUnit(a3, 1, 0, 1, 0xFu, 15, 15);
+      createUnit(a3, 0, 0, 0, 0x10u, 16, 16, -1);
+      createUnit(a3, 1, 0, 1, 0xFu, 15, 15, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64160,8 +64160,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0xFu, 15, 10);
-      createUnit(a3, 1, 0, 1, 0xBu, 10, 5);
+      createUnit(a3, 0, 0, 0, 0xFu, 15, 10, -1);
+      createUnit(a3, 1, 0, 1, 0xBu, 10, 5, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64171,8 +64171,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 21;
       *(_WORD *)(gameData + 1400) = 21;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 0, 0x15u, 12, 4);
-      createUnit(a3, 1, 0, 1, 0xCu, 20, 23);
+      createUnit(a3, 0, 0, 0, 0x15u, 12, 4, -1);
+      createUnit(a3, 1, 0, 1, 0xCu, 20, 23, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64182,8 +64182,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 0x17u, 18, 7);
-      createUnit(a3, 1, 0, 1, 0x17u, 18, 7);
+      createUnit(a3, 0, 0, 0, 0x17u, 18, 7, -1);
+      createUnit(a3, 1, 0, 1, 0x17u, 18, 7, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -64193,8 +64193,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0xDu, 10, 5);
-      createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20);
+      createUnit(a3, 0, 0, 0, 0xDu, 10, 5, -1);
+      createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(725 * *(unsigned __int16 *)(gameData + 556374) + gameData + 147174),
                0,
@@ -64206,8 +64206,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 1, 0xEu, 16, 2);
-      createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5);
+      createUnit(a3, 0, 0, 1, 0xEu, 16, 2, -1);
+      createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556374)),
                0,
@@ -64219,13 +64219,13 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 28;
       *(_WORD *)(gameData + 1400) = 28;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0x19u, 24, 28);
+      createUnit(a3, 0, 0, 0, 0x19u, 24, 28, -1);
       v8 = gameData;
       v9 = 725 * *(unsigned __int16 *)(gameData + 556374);
       v10 = *(_BYTE *)(gameData + v9 + 147285) & 0xFC;
       *(_BYTE *)(gameData + v9 + 147285) = v10;
       *(_BYTE *)(v8 + v9 + 147285) = v10 | 1;
-      createUnit(a3, 1, 0, 1, 0x1Eu, 24, 24);
+      createUnit(a3, 1, 0, 1, 0x1Eu, 24, 24, -1);
       v11 = gameData;
       v12 = 725 * *(unsigned __int16 *)(gameData + 556574);
       v13 = *(_BYTE *)(gameData + v12 + 147223) & 0xFC;
@@ -70996,38 +70996,39 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
 }
 
 //----- (00459760) --------------------------------------------------------
-signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, int a7)
+signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
 {
+  va_list args;
   char v7; // bl
-  int *v8; // esi
-  int v9; // ecx
-  int v10; // eax
-  DWORD v11; // ebp
-  int v12; // ecx
-  int i; // [esp+0h] [ebp-1Ch]
+  int v8; // ecx
+  int unit_type; // eax
+  DWORD v10; // ebp
+  int slot_offset; // ecx
+  int tile_offset; // [esp+0h] [ebp-1Ch]
 
-  v7 = 0;
+  va_start(args, a6);
   Unit_Create(a5, a4, a2, 0, a1, a3);
-  v8 = &a7;
-  v9 = 31;
-  v10 = a6;
-  v11 = 200 * a2;
-  for ( i = 2 * a3; v10 != -1; v9 = v12 + 31 )
+  v7 = a4;
+  slot_offset = 31;
+  unit_type = a6;
+  v10 = 200 * a2;
+  tile_offset = 2 * a3;
+  while ( unit_type != -1 )
   {
-    v7 = a4;
-    ++v8;
-    UnitSlot_InitFromType(v9 + gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374) + 6, v10, a4);
-    v10 = *(v8 - 1);
+    v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374);
+    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, unit_type, a4);
+    unit_type = va_arg(args, int);
+    slot_offset += 31;
   }
+  va_end(args);
   return Rules_SyncArmyFactStrength(
-           gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374),
-           145 * *(unsigned __int16 *)(i + gameData + v11 + 556374),
+           gameData + 147174 + 725 * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
+           145 * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
            gameData + 147174,
            v7,
-           v11,
+           v10,
            a1);
 }
-// 4597FB: variable 'v12' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00459860) --------------------------------------------------------
@@ -71040,45 +71041,45 @@ int  createCastle(
         char *a6,
         DWORD a7,
         int a8,
-        int a9)
+        ...)
 {
-  int *v9; // esi
-  int v10; // eax
-  int v11; // ecx
-  int v12; // ecx
-  double v13; // st7
-  int v14; // ecx
-  int i; // [esp+0h] [ebp-20h]
-  DWORD v17; // [esp+4h] [ebp-1Ch]
+  va_list args;
+  int v9; // eax
+  int v10; // ecx
+  int unit_type; // eax
+  int unit_index; // eax
+  int tile_offset; // [esp+0h] [ebp-20h]
+  DWORD v15; // [esp+4h] [ebp-1Ch]
 
+  va_start(args, a8);
   Unit_Create(a7, a4, a2, 0, a3);
-  v9 = &a9;
-  v17 = 200 * a2;
-  v10 = a8;
-  v11 = 31;
-  for ( i = 2 * a3; v10 != -1; v11 = v12 + 31 )
+  v15 = 200 * a2;
+  unit_type = a8;
+  v10 = 31;
+  tile_offset = 2 * a3;
+  while ( unit_type != -1 )
   {
-    ++v9;
-    UnitSlot_InitFromType(v11 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374) + gameData + 147174 + 6, v10, a4);
-    v10 = *(v9 - 1);
+    v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374);
+    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, unit_type, a4);
+    unit_type = va_arg(args, int);
+    v10 += 31;
   }
+  va_end(args);
   Rules_SyncArmyFactStrength(
-    (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374)),
-    145 * *(unsigned __int16 *)(i + gameData + v17 + 556374),
+    (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374)),
+    145 * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374),
     gameData + 147174,
-    i,
-    v17,
+    tile_offset,
+    v15,
     st7_0);
-  Building_New(a5, *(unsigned __int16 *)(i + v17 + gameData + 556374), v13, a6, 1);
-  *(_WORD *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674, v14);
+  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374) - 0x8000;
+  Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374), st7_0, a6, 1);
+  *(_WORD *)(467 * unit_index + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(467 * unit_index + gameData + 509674, 0);
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674));
-  return *(unsigned __int16 *)(i + v17 + gameData + 556374) - 0x8000;
+    (unsigned __int8 *)(467 * unit_index + gameData + 509674));
+  return unit_index;
 }
-// 459900: variable 'v12' is possibly undefined
-// 459982: variable 'v13' is possibly undefined
-// 4599DE: variable 'v14' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00459ED0) --------------------------------------------------------
@@ -71666,15 +71667,82 @@ LABEL_46:
 // 5202E4: using guessed type int gameData;
 
 //----- (00460360) --------------------------------------------------------
-void Scenario_LoadMissionByIndex()
+void Scenario_LoadMissionByIndex(int mission_index, double a2)
 {
-  JUMPOUT(0x460369);
+  int building_record; // eax
+  unsigned __int16 building_word; // cx
+  int castle_index; // eax
+  int player_index; // edx
+
+  switch ( mission_index )
+  {
+    case 0:
+      Map_LoadFromFile((int)"k_mapa1l.map");
+      ACTIVE_MISSION_INDEX = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
+      sub_40D330();
+      createCastle(a2, 30, 42, 0, 2, "Cantbelly", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      createUnit(a2, 30, 44, 0, 1u, 9, 0x17, -1);
+      createUnit(a2, 31, 44, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 32, 44, 0, 9u, 9, -1);
+      createUnit(a2, 46, 45, 1, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 15, 6, 1, 0, 0, 0, 0, 0, 0, 0xF, 0xF, 1, -1);
+      createUnit(a2, 48, 14, 1, 0, 0, 0, 0, 0xF, -1);
+      Unit_Create(9u, 1, 35, 0, 11);
+      Unit_Create(9u, 1, 49, 0, 39);
+      Unit_Create(9u, 1, 40, 0, 3);
+      Unit_Create(1u, 1, 19, 0, 12);
+      sub_451EC0();
+      sub_44C2A0();
+      break;
+    case 10:
+      Map_LoadFromFile((int)"p_mapa1z.map");
+      ACTIVE_MISSION_INDEX = 10;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
+      sub_40D330();
+      castle_index = createCastle(a2, 15, 31, 1, 2, "Timbran", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      building_word = *(_WORD *)(building_record + 430);
+      *(_WORD *)(building_record + 430) = (building_word & 0xF000) | (((building_word & 0xFFF) - 0x32) & 0xFFF);
+      createUnit(a2, 15, 33, 1, 1u, 1, 0xF, 0x10, -1);
+      createUnit(a2, 16, 33, 1, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 17, 33, 1, 9u, 9, -1);
+      createUnit(a2, 1, 22, 2, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 27, 12, 2, 0, 0, 0, 0, 0, 0, 0xF, 0xF, 1, -1);
+      createUnit(a2, 48, 20, 2, 0, 0, 0, 0, 0xF, -1);
+      createUnit(a2, 34, 37, 2, 9u, -1);
+      createUnit(a2, 11, 13, 2, 9u, -1);
+      createUnit(a2, 4, 22, 2, 9u, -1);
+      createUnit(a2, 10, 25, 2, 1u, -1);
+      sub_451EC0();
+      sub_44C2A0();
+      break;
+    default:
+      break;
+  }
 }
-// 460363: control flows out of bounds to 460369
 
 //----- (00460370) --------------------------------------------------------
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
 {
+  int mission_index; // eax
   char v5; // di
   char v6; // si
   int v7; // ecx
@@ -71682,27 +71750,21 @@ int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
   _WORD v10[18]; // [esp-28h] [ebp-2Ch] BYREF
   int v11; // [esp-4h] [ebp-8h]
 
+  mission_index = (int)(size_t)a1;
   v11 = a2;
   qmemcpy(v10, (const void *)(gameData + 147147), 0x1Bu);
   v6 = gameData - 27 + 1;
   v5 = (unsigned __int8)&v10[13] + 1;
-  if ( a1 && a1 != (char *)10 )
+  if ( mission_index && mission_index != 10 )
     sub_4623C0(0, aZwy01_0);
-  sub_462480((int)a1, a1);
-  WorldMap_Initialize((char)a1, a3);
-  Scenario_LoadMissionByIndex();
-  if ( a1 && a1 != (char *)10 )
+  sub_462480(mission_index, a1);
+  WorldMap_Initialize((char)mission_index, a3);
+  Scenario_LoadMissionByIndex(mission_index, a4);
+  if ( mission_index && mission_index != 10 )
   {
-    v8 = (_WORD *)(gameData + 147147);
-    qmemcpy((void *)(gameData + 147147), v10, 0x18u);
-    v8 += 12;
-    v7 = 0;
-    *v8++ = v10[12];
-    *(_BYTE *)v8 = v10[13];
-    v6 = (unsigned __int8)&v10[13] + 1;
-    v5 = (_BYTE)v8 + 1;
+    qmemcpy((void *)(gameData + 147147), v10, 0x1Bu);
   }
-  return PlayGame(v7, (char)a1, a3, v5, a4);
+  return PlayGame(v7, (char)mission_index, a3, v5, a4);
 }
 // 4603DF: variable 'v7' is possibly undefined
 // 5202E4: using guessed type int gameData;
