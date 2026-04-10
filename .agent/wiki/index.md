@@ -1,6 +1,9 @@
 # Agent Wiki Index
 
-- Current frontier: keep the contained authentic load-menu wedge green while separating it from the broader retained front-end widening that now starts after `sub_451E46` and currently stops in the first recovered mission-loader slice.
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while separating it from the broader retained mission-loader widening that now starts after `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
+  - the retained mission-loader slice in `clash95.c` now covers cases `0`, `1`, `10`, and `11`
+  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK3` / case `2`
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -8,21 +11,20 @@
   - retained probe `sub_451E46`
   - retained probe `sub_460490`
   - retained probe `UI_StartAnims`
+  - retained probe `PlayGame_Dispatch`
 - Highest runtime milestone:
   - authentic load-menu row resources load
   - all ten contained `sub_44A140` row draws complete
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the contained post-confirm save replay still enters the real save-replay corridor
-  - the traced contained post-confirm split again reproduces `parse-make-instance-before-class-lookup -> class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
-  - retained standalone probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link and stay alive under `timeout 1s`
+  - the corrected post-confirm probe lane (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`) reaches `load-menu-post-confirm-load-save`
+  - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
+  - retained standalone probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
 - Adjacent blocked widening:
-  - the broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
+  - the broader-rules-contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
-  - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
-  - the retained startup-prelude slice is no longer blocked on the x87 math band: `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link
-  - the former retained `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`, and the first menu-reachable mission-loader cases (`0` and `10`) are materialized directly in `clash95.c`
-  - the next honest retained blocker is now the deeper helper band reached from those cases: `sub_40D330` and `sub_44C2A0`
+  - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` is still deferred
+  - the next retained widening is no longer `sub_40D330` / `sub_44C2A0`; those now reuse `MiniMap_CreateSurface` / `Game_InitPlayerViewState`
+  - the next retained widening is the remaining `Scenario_LoadMissionByIndex` case tranche, starting with `mapK3`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

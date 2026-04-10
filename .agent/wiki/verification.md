@@ -10,31 +10,23 @@
   - exit `124`
 - `timeout 1s build/bin/clash95_cpp_regen`
   - exit `124`
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
   - links successfully
-- `timeout 1s /tmp/clash95_sub451e46_probe`
   - exit `124`
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_460490 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=UI_StartAnims ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch ... build/lib/libclash95_cpp_core.a ...`
-  - now fails only on `sub_40D330` and `sub_44C2A0` when linked with `build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - under `timeout 2s`, exits `124`
+- Retained mission-loader status:
+  - `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `10`, and `11` in recovered C
+  - the next retained case frontier is `mapK3` / case `2`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `139`
   - logs `class-lookup-no-table name=oddzial`
   - `timeout` also prints `the monitored command dumped core`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - under `timeout 2s`, exits `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `139`
   - logs `symbol-lookup-missing-table MAIN`
   - `timeout` also prints `the monitored command dumped core`
-- `timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - exit `124`
-  - `timeout` prints `the monitored command dumped core`
-- `bash -lc 'CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe'`
-  - exit `124`
-  - `timeout` prints `the monitored command dumped core`
-- `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
+- `python3 -m json.tool .agent/state.json`
+  - passed
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
   - passed
 - `git diff --check`
   - passed

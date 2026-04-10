@@ -1,68 +1,12 @@
 # Decisions
 
-- Keep cache reuse conservative inside `Render_LoadResourceSprite_v4`.
-  - Reason: repo-local `gfx\\cache\\...` files can exist even when the mounted-query layer cannot reopen them.
-- Keep the `.pfn` palette load in the quarantine helper instead of broadening the SDL seam.
-  - Reason: the original x86 contract keeps this entirely inside the text-resource/runtime helpers.
-- Patch `sub_40BC00` in `clash95.c` directly instead of shadowing it from `compat/decomp_runtime_stubs.c`.
-  - Reason: `clash95_bootstrap` links `clash95.c.o` directly, so a compat duplicate causes a multiple-definition link error.
-- Keep the next contained frontier on slot-click/confirm and save-slot repaint, not on unrelated runtime wrappers.
-  - Reason: the contained menu wedge is now beyond the row-resource and first row-draw helpers.
-- Make the contained confirm probe click the save-slot strip before the bottom-row load button.
-  - Reason: the authentic load-menu loop latches `dword_5441E0` and routes through `sub_44A110` from the in-strip click corridor, not from hover alone.
-- Do not land a direct contained `sub_444490` call in the green bootstrap surface yet.
-  - Reason: the experimental widening immediately reopens a deeper unresolved runtime/parser link band and would regress `clash95_bootstrap` and `clash95_cpp_regen`.
-- Patch `sub_4163F0` in recovered C instead of tracing around it indefinitely.
-  - Reason: the asm proves it is a short deterministic loop, and the decompiled body was using uninitialized indices on the live post-confirm path.
-- Widen `sub_4443C0` / `sub_4443D0` to `char *` buffers in recovered C.
-  - Reason: the asm passes a live destination buffer in `edx`, and the low32 `int` signature was truncating stack addresses on x86_64 during the authentic save-load path.
-- Keep the next frontier on the post-save `PlayGame` handoff, not on `sub_444490`.
-  - Reason: the contained authentic load-game lane now survives both `WorldMap_Initialize` and the `.dat` / `.fac` load and returns to `main-after-menu-probe`.
-- Revert the experimental direct `PlayGame` call from `bootstrap_main.c`.
-  - Reason: even when guarded by an env flag, the reference widens the live bootstrap link surface immediately and regresses `clash95_bootstrap` / `clash95_cpp_regen` by dragging in the unresolved gameplay/session band.
-- Do not leave the broader `sub_482260` symbol-table seed enabled in the live contained probe until allocator recovery catches up.
-  - Reason: the experimental widening exposed a real `sub_472E40` pool-tail corruption and would regress the current green `after-save` foothold.
-- Do not “fix” the current `oddzial` miss by splicing `Rules_ShowBanner_StrategicClash` or bare `sub_499990` into the contained post-save lane.
-  - Reason: the authentic shipped post-save load lane is still `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`, while the `CLIPS`/bload/class-runtime setup belongs to the broader startup-prelude chain.
-- Keep the new class-lookup diagnostics in recovered C.
-  - Reason: they prove the current failure is a null defclass registry (`dword_51AD68`), not module visibility, inactive flags, SDL, or a C++ wrapper seam.
-- Recover retained `sub_47C850` loader prerequisites in-place before broadening `sub_451E46`, not by moving class/runtime semantics into the contained save-load wedge.
-  - Reason: the local loader blockers were real executable-regeneration debt, but they are part of the startup-prelude widening, not a local post-save menu fix.
-- Publish `CSyncObject_Unlock` through the existing conservative C++ seam instead of `compat/decomp_runtime_stubs.c`.
-  - Reason: it is an original class ABI surface and fits the current `clash95_cpp_core` ownership better than another quarantine shim.
-- Correct the `sub_47D0E0` tail to the retained `.fn_init` placeholder at `sub_49A0E0` instead of satisfying that call with `unknown_libname_7`.
-  - Reason: `unknown_libname_7` is the real `dword_51A1EC` setter-swap at `0x47E7B0`, while the authentic startup chain calls the separate collapsed `.fn_init` body at `0x49A0E0`.
-- Keep `sub_496643`, `ftime_`, and `system_` in `compat/decomp_runtime_stubs.c` instead of scattering ad-hoc host calls through recovered gameplay code.
-  - Reason: they are CRT/runtime helpers on the retained startup-prelude path, and quarantining them preserves the rule that platform/runtime glue stays out of the gameplay seam.
-- Patch asm-backed `JUMPOUT` scars in `clash95.c` directly when they collapse to shared epilogues.
-  - Reason: these are decompiler control-flow artifacts, not missing runtime services, so stubbing them in compat would hide real recovered control flow.
-- Rebind exact map-backed exported names onto already-recovered local parser bodies instead of writing duplicate retained parser bodies.
-  - Reason: the `clash95.map` exports and `clash95.exe` body matches already proved `sub_48BD50`, `sub_48BE80`, `sub_4C2710`, `sub_4CC6C0`, `sub_4D9C40`, and `sub_4D9FD0` were the real exported entrypoints, so aliasing them in place removes link holes without creating a forked semantic surface.
-- Recover `sub_4BDD40` through an explicit local handler-registration helper `sub_4BDD20` instead of widening `sub_480D60`.
-  - Reason: `sub_4BDD40` needs a specific handler-parameter contract proven by the asm, while broadening `sub_480D60` would risk unrelated call sites on the live parser/runtime path.
-- Recover the current `fgets_` call shape in recovered C instead of faking a two-argument compat shim.
-  - Reason: the asm proves the live retained callsites pass `buffer` in `eax`, `size` in `edx`, and the stream handle in `ebx`; keeping the decompiler-dropped buffer argument would silently corrupt the runtime path even if it linked.
-- Stop the retained-wrapper pass at the x87 helper boundary.
-  - Reason: `MoveFileA`, `sscanf_`, `fgets_`, and the exact signed-decimal parser are low-risk host or asm-backed repairs, but the remaining `IF_*` / `__FYL2X__` family depends on lost x87 dataflow and needs per-callsite recovery rather than blanket stubs.
-- Recover the retained x87-heavy rules math band directly in `clash95.c` instead of adding compat wrappers.
-  - Reason: the remaining `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW` edges belonged to local `sub_4A3790`-registered callsites, and the asm was strong enough to replace them in place without polluting `compat/decomp_runtime_stubs.c`.
-- Treat `sub_451E46`, `sub_460490`, and `UI_StartAnims` as the now-settled retained startup-prelude probes, and move the next widening to `PlayGame_Dispatch`.
-  - Reason: once those three probes linked cleanly, the next honest retained blocker became the broader front-end/gameplay link surface rather than another startup-prelude math/runtime slice.
-- Keep the new retained `PlayGame_Dispatch` frontier separate from the contained `oddzial` versus `MAIN` save-replay split.
-  - Reason: both surfaces touch authentic startup/class state, but the contained post-confirm replay still needs the missing class/bload prelude while the retained probe now fans into a much wider gameplay/front-end unresolved set.
-- Rebind map-backed `PlayGame_Dispatch` exports onto the existing recovered local bodies instead of chasing the same surface through the SDL seam or the C++ class seams.
-  - Reason: the current retained reductions around `UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_*`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, and `Building_DrawGarrisonRow` were all already present in recovered C; wrapper aliases are safer than inventing new host or class abstractions.
-- Stop this batch at the narrowed `PlayGame_Dispatch` data/runtime band instead of fabricating the deeper queen arrays or forcing the chunked UI checks into a guessed local alias.
-  - Reason: `UI_CheckDialogAccepted` and `UI_CheckConfirmQuit` are chunked mission-goal/runtime procedures in `clash95.asm`, and the surviving queen arrays/buffers plus `unit_stats` still need direct DGROUP corroboration rather than speculative placeholder data.
-- Rebind `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` onto the already-recovered local bodies and repair the local default-tail `JUMPOUT` in place.
-  - Reason: `boot_path_mapper` confirmed both retained exports already landed on real local switch bodies in `clash95.c`; the only live control-flow scar left in that pair was the asm-proven `return 0` default tail in `sub_4602F0`.
-- Materialize the queen departure-event text slab directly in `clash95.c` instead of hiding it in `compat`, SDL, or `src_cpp`.
-  - Reason: the retained `PlayGame_Dispatch` miss had become a DGROUP/data problem around `g_QueenMsgBuf`, not a platform/runtime helper seam.
-- Repair `Map_RebuildCastleSiteAnchorCache` directly in recovered C instead of preserving its `JUMPOUT` scar.
-  - Reason: the asm shows a small finite even-slot anchor-cache loop, so leaving that control flow in compat or SDL would hide real gameplay/map semantics.
-- Keep `Scenario_LoadMissionByIndex` / `sub_460360` in recovered C and treat it as the next retained widening point.
-  - Reason: all current evidence says the surviving blocker is the authentic mission-loader switch with packaged map/name data, not an SDL seam problem, not a compat-wrapper problem, and not a C++ class seam.
-- Thread the selector and the live `st0` value through `Scenario_LoadMissionByIndex` instead of keeping the old zero-arg `JUMPOUT` stub.
-  - Reason: `sub_460370` passes the selector in `eax` and keeps the floating-point argument live for the nested `createUnit` / `createCastle` calls, so recovering the first mission cases honestly requires both values in recovered C.
-- Repair `createUnit` and `createCastle` as real vararg helpers before growing the first recovered mission-loader cases.
-  - Reason: the asm walks trailing unit-type lists until `-1`; leaving those helpers fixed-width would force new mission setup into x86 stack accidents instead of explicit recovered C calls.
+- Keep the contained post-confirm probe keyed to `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`.
+  - Reason: the load-menu loop reads its own env var, and the older duplicated `CLASH95_MENU_PROBE_AUTO_CLICK=load` command was stale and stopped before the bottom-row confirm click.
+- Rebind retained mission-loader helper calls onto `MiniMap_CreateSurface` and `Game_InitPlayerViewState` in recovered C.
+  - Reason: asm and current local bodies already proved `sub_40D330` and `sub_44C2A0` were recovered locally, so another compat shim or `src_cpp` abstraction would only hide real mission/minimap/player-view semantics.
+- Keep the `mapK2` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: asm proves that side effect is case-local, distinct from the internal `createCastle` setup, and not a wrapper or class seam concern.
+- Preserve the `mapK2` manual camera override after `Game_InitPlayerViewState`.
+  - Reason: asm writes player-0 camera and map view values after the shared initializer, so collapsing those writes into the helper would erase a case-specific behavior.
+- Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
+  - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

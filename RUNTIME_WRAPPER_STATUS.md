@@ -45,6 +45,7 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The first C++ executable target is being built around the current bootstrap wedge instead of pretending the deeper WCpp/runtime layer is already solved.
 - The text-resource/runtime quarantine layer still carries the contained pre-confirm load-menu wedge cleanly through row-resource load, row draws, slot-strip selection, and bottom-row confirm.
 - The latest guarded traces show the next blocker is still below the quarantine seam:
+  - the real post-confirm probe lane now needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`; the older duplicate `CLASH95_MENU_PROBE_AUTO_CLICK=load` command shape was stale
   - with the current broader-rules bootstrap, the post-confirm save replay reaches `parse-make-instance-before-class-lookup` and then dies because `sub_4B0480` reports `class-lookup-no-table name=oddzial`
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
@@ -60,8 +61,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the mission-loader front was then reduced in recovered C too:
     - `createUnit` and `createCastle` now use real varargs so the original sentinel-terminated unit lists no longer depend on x86 stack accidents
     - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`
-    - the first menu-reachable mission-loader cases (`0` and `10`) are materialized directly from asm
-  - the next retained executable-regeneration blocker is now the helper band reached inside that mission-loader slice (`sub_40D330` / `sub_44C2A0`), not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - the menu-reachable mission-loader cases (`0`, `1`, `10`, and `11`) are materialized directly from asm
+    - the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
+    - `mapK2` / case `1` also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and the manual camera override after `Game_InitPlayerViewState`
+  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK3` / case `2`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 

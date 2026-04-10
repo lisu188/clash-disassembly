@@ -1,88 +1,17 @@
 # Runtime Glue
 
-- Active repaired glue on the current frontier:
-  - `Render_LoadResourceSprite_v4` compat export
-    - skips repo-local cache false positives unless the mounted-query layer can reopen them
-    - loads companion `*.pfn` palettes and remaps into the live palette
-  - `Render_LoadResourceSprite_v3` compat export
-    - restored the missing non-newline cursor advance
-  - `sub_40BC00` in `clash95.c`
-    - restored the active-slot glyph step and render-device call contract
-  - `sub_4163F0` in `clash95.c`
-    - restored the finite asm-backed world-map-init seeding loop
-  - `sub_4443C0` / `sub_4443D0` in `clash95.c`
-    - widened the save-path builders to real `char *` buffers so `.dat` / `.fac` stack paths are no longer truncated
-  - retained rules math builtin cluster in `clash95.c`
-    - recovered the x87-heavy `sub_4A3FF0` through `sub_4A4E70` band in place with libc-backed math while preserving the original domain, overflow, and singularity callbacks
-    - `sub_451E46` no longer depends on `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, or `IF_DPOW`
-  - bload loader data in `clash95.c`
-    - materialized `unk_50293C` and the adjacent `bload`/loader error strings that `sub_47C850` expects
-  - `unknown_libname_4` in `clash95.c`
-    - recovered as the allocator-failure callback swap used by the binary-loader retry helper
-  - `sub_47CBF0` in `clash95.c`
-    - recovered as the allocate / halve / restore / zero / init / free helper beneath the `bload` lane
-  - `CSyncObject_Unlock` in `src_cpp/csync_object.cpp`
-    - published as the original C ABI name through the conservative C++ seam instead of a new compat stub
-  - `dbl_502FDC` in `clash95.c`
-    - materialized as exact `0.5`, matching the map/asm-backed rules runtime counter rounding constant
-  - `AST_FreeNode` in `clash95.c`
-    - recovered directly from the original recursive free-list unwind body
-  - `unknown_libname_7` / `unknown_libname_8` in `clash95.c`
-    - recovered as the `dword_51A1EC` / `dword_51A928` setter-swaps used by the retained rules/runtime bootstrap
-  - `sub_47D0E0` in `clash95.c`
-    - corrected to call retained `.fn_init` at `sub_49A0E0` rather than the unrelated `unknown_libname_7` setter
-  - `mblen_`, `mblen__0`, and `sub_4D88F0` in `clash95.c`
-    - recovered from `clash95.exe` as the narrow object-pattern trampolines and token-table registration slice
-  - `sub_496643` in `compat/decomp_runtime_stubs.c`
-    - recovered as the Watcom signal-table update helper with the original default handler table and ctrl-handler gating
-  - `ftime_` / `system_` in `compat/decomp_runtime_stubs.c`
-    - kept quarantined as CRT wrappers now that `sub_47D360` and `sub_47D3D0` pass the real time-buffer and command-string arguments
-  - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` in `clash95.c`
-    - repaired from asm-backed shared-epilogue `JUMPOUT` scars into normal control flow
-  - `aJ_0` in `clash95.c`
-    - materialized as exact `"+j"` for the retained startup-prelude parser/export lane
-  - `unknown_libname_13` in `clash95.c`
-    - recovered as the `dword_51B360` setter that returns the previous value
-  - `ismbdprint_` in `clash95.c`
-    - recovered as the thin boolean wrapper over `sub_4B5340(logical_name)`
-  - `sub_4B6DD0` in `clash95.c`
-    - recovered as the exact token-registration helper for the retained parser/class startup band
-  - `sub_4BDD20` / `sub_4BDD40` in `clash95.c`
-    - recovered as the procedural parser-function registration helper rather than a widened compat stub
-  - `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` in `clash95.c`
-    - rebound onto already-recovered local bodies using their map-backed export names instead of leaving them as duplicate link holes
-  - `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` in `clash95.c`
-    - rebound onto the existing recovered local bodies at `sub_47A3F0`, `sub_48BDD0`, and `sub_48D7B0` so the retained startup-prelude link surface no longer stops on duplicate exported names
-  - `unknown_libname_2` in `compat/decomp_runtime_stubs.c`
-    - replaced the placeholder `atoi` bridge with the exact asm-backed signed decimal parser used by the retained rules/runtime callsites
-  - `MoveFileA`, `sscanf_`, and `fgets_` in `compat/decomp_runtime_stubs.c`
-    - added narrow host-backed wrappers and recovered the current `fgets_` call shapes in `clash95.c` so the retained startup-prelude link surface no longer stops on the low-risk file/runtime band
-  - `rand_`, `srand_`, `strlwr_`, `memmove_`, and `_wcpp_4_static_init__` in `compat/decomp_runtime_stubs.c`
-    - carried branch-local compat bridges that remove the current retained `PlayGame_Dispatch` link holes without claiming final CRT/runtime fidelity
-  - front-end cursor/overlay descriptor slab in `clash95.c`
-    - materialized `unk_519718` through `unk_519920` as the exact 12-entry descriptor records consumed by `sub_460D80`
-  - `UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_UnlinkArmyFact`, `Rules_LinkArmyFinalize`, `Unit_DebugDumpFormationSizes`, `Render_DrawSprite_v3`, and `UI_CheckEndTurnHotkey` in `clash95.c`
-    - rebound the retained exports onto their already-recovered local bodies instead of leaving duplicate link holes
-  - `sub_412000`, `sub_4120B0`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Unit_FindById`, `Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, and `Building_DrawGarrisonRow` in `clash95.c`
-    - rebound the next retained helper/export aliases onto their existing recovered local bodies
-  - battle/shot/port/queen debug strings plus the port reinforcement tables in `clash95.c`
-    - materialized `aNewBattle`, `aCalculatebattl`, `aJednostka1`, `aJednostka2`, `aAs1D`, `aAs2D`, `aSum_quantDAtt_`, `aJednostkaZwyci`, `aUnitbattle_sho`, `aUnitbattle_s_0`, `aBattleMurek_0`, `aPort_getsupply`, `aQueen_newturn*`, `aP_posla`, `dword_517B48`, `g_PortReinforcementUnitTypePool`, and `word_5191F0` directly from asm-backed DGROUP data
-  - `UI_CheckConfirmQuit` / `UI_CheckDialogAccepted` in `clash95.c`
-    - rebound onto the already-recovered local bodies at `sub_460270` / `sub_4602F0` instead of leaving duplicate retained export holes
-  - queen departure-event text slab in `clash95.c`
-    - materialized `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`, `off_519350`, and `off_51935C` directly in recovered C
-  - `Map_RebuildCastleSiteAnchorCache` and `sub_4602F0` in `clash95.c`
-    - repaired the last local `JUMPOUT` scars on the currently reached retained `PlayGame_Dispatch` lane from the asm-backed even-slot anchor-cache loop and the proven default `return 0` tail
-  - `createUnit` / `createCastle` in `clash95.c`
-    - repaired to consume the original sentinel-terminated unit lists through real varargs, which keeps the first recovered mission-loader cases in recovered C instead of hiding scenario armies behind x86-only stack layout
-  - `Scenario_LoadMissionByIndexAndPlay` / `Scenario_LoadMissionByIndex` in `clash95.c`
-    - selector threading is now explicit, and the first menu-reachable mission-loader cases (`0` and `10`) are materialized from asm in place
+- Active repaired glue on the live frontier:
+  - `Render_LoadResourceSprite_v4`, `Render_LoadResourceSprite_v3`, and `sub_40BC00` still carry the contained row-resource / row-draw lane
+  - `sub_4163F0`, `sub_4443C0`, and `sub_4443D0` still carry the world-map-init and save-path corridor
+  - the retained parser/export, math, and low-risk file/runtime bands remain settled
+  - no new compat wrappers were added this batch
+- Current batch result:
+  - the old retained helper-name gap `sub_40D330` / `sub_44C2A0` is gone from the mission-loader slice
+  - the first recovered mission cases now call the existing local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly
+  - `mapP2` / case `11` and `mapK2` / case `1` are now materialized in recovered C without broadening `compat/decomp_runtime_stubs.c`
+  - `mapK2` keeps its explicit post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and manual camera override in recovered C rather than wrapper glue
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
-  - broader loaded-session runtime reconstruction beyond the contained save-load wedge
-  - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
-  - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained startup-prelude math/runtime band is now settled enough that `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link as standalone probes
-  - the next retained executable-regeneration blocker is now the helper band reached inside the first recovered mission-loader slice: `sub_40D330` / `sub_44C2A0`
-  - that surviving blocker still stays in recovered C mission-loader control flow/data, not in `compat/decomp_runtime_stubs.c`
+  - the missing authentic class/bload prelude before `oddzial`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK3`

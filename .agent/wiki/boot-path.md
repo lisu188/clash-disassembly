@@ -10,18 +10,14 @@
   - top-level `Load Game` click is stable
   - contained load-menu row resources load
   - contained load-menu row draws complete
-  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
   - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the contained post-confirm save replay still enters the real save-replay corridor
-  - the traced contained split again reproduces `parse-make-instance-before-class-lookup -> class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
+  - the real post-confirm probe lane needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` after slot selection
+  - the contained post-confirm save replay still reaches `load-menu-post-confirm-load-save`
+  - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
 - Next boot-path frontier:
   - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
   - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
-  - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
-  - the retained authentic startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
-  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly and stay alive under `timeout 1s`
-  - the earlier `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`, and the first menu-reachable mission-loader cases (`0` and `10`) are recovered in place
-  - the next honest retained widening is therefore the deeper mission-loader helper band at `sub_40D330` / `sub_44C2A0`
-  - deferred save-slot repaint/name lane after the row draws
+  - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
+  - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
+  - the remaining retained widening is the still-unrecovered `Scenario_LoadMissionByIndex` case tranche, starting with `mapK3`

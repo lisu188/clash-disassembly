@@ -71688,7 +71688,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
       strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
-      sub_40D330();
+      MiniMap_CreateSurface(a2);
       createCastle(a2, 30, 42, 0, 2, "Cantbelly", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
       createUnit(a2, 30, 44, 0, 1u, 9, 0x17, -1);
       createUnit(a2, 31, 44, 0, 0, 0, 0, 0, 0, 0, 0, -1);
@@ -71701,7 +71701,37 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Unit_Create(9u, 1, 40, 0, 3);
       Unit_Create(1u, 1, 19, 0, 12);
       sub_451EC0();
-      sub_44C2A0();
+      Game_InitPlayerViewState();
+      break;
+    case 1:
+      Map_LoadFromFile((int)"k_mapa2l.map");
+      ACTIVE_MISSION_INDEX = 1;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Ianos");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 44, 46, 0, 2, "Stormus", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0xF, -1);
+      createUnit(a2, 44, 48, 0, 9u, 9, -1);
+      castle_index = createCastle(a2, 1, 23, 1, 2, "Drakefly", 0x11u, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 1, 25, 1, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 44, 24, 1, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 18, 48, 1, 0, 0, 9, 9, 9, 0xF, 0xF, 0xF, -1);
+      createUnit(a2, 12, 0, 1, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 91;
+      PLAYER_CAMERA_TOP(0) = 21;
+      MAP_VIEW_LEFT = 90;
+      MAP_VIEW_TOP = 21;
       break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
@@ -71715,7 +71745,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
-      sub_40D330();
+      MiniMap_CreateSurface(a2);
       castle_index = createCastle(a2, 15, 31, 1, 2, "Timbran", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
@@ -71732,7 +71762,29 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 4, 22, 2, 9u, -1);
       createUnit(a2, 10, 25, 2, 1u, -1);
       sub_451EC0();
-      sub_44C2A0();
+      Game_InitPlayerViewState();
+      break;
+    case 11:
+      Map_LoadFromFile((int)"p_mapa2z.map");
+      ACTIVE_MISSION_INDEX = 11;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 22, 13, 1, 2, "Gatgally", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0x10, -1);
+      createUnit(a2, 22, 15, 1, 0x11u, 0xF, 0xF, 0x10, 0x10, -1);
+      createCastle(a2, 34, 5, 2, 2, "Guluali", 0x11u, 0, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      createUnit(a2, 33, 7, 2, 9u, 0xF, 1, 1, 1, 1, -1);
+      createUnit(a2, 34, 7, 2, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 35, 7, 2, 0, 0, 9, 9, 9, 0xF, 0xF, -1);
+      createUnit(a2, 36, 7, 2, 1u, 1, 1, 1, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
       break;
     default:
       break;

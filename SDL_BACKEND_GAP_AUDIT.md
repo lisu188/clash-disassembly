@@ -18,6 +18,7 @@ This note covers the current host seam used by the executable-regeneration track
 
 - The current load-menu and post-confirm blockers still sit below SDL.
 - The latest contained traces show:
+  - the real post-confirm probe lane now needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` in addition to `CLASH95_MENU_PROBE_AUTO_CLICK=load`
   - with the current broader-rules bootstrap, the post-confirm save replay dies at `class-lookup-no-table name=oddzial`
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier with `symbol-lookup-missing-table MAIN`
   - neither failure touches `platform_sdl_runtime.c`
@@ -28,8 +29,9 @@ This note covers the current host seam used by the executable-regeneration track
   - the local x87-heavy math/runtime band is now gone
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
-  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the first menu-reachable cases, again without touching `platform_sdl_runtime.c`
-  - the next retained blocker is the narrower mission-loader helper band `sub_40D330` / `sub_44C2A0`, which again does not overlap the SDL seam
+  - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the first recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
+  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and `mapK2` is recovered in-place; the next retained blocker is the remaining mission-case recovery itself, starting with `mapK3` / case `2`
 
 ## Stable host behavior already present
 

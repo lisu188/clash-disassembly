@@ -24,23 +24,25 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the live post-confirm probe no longer reaches `load-menu-post-confirm-after-save`; with the current broader-rules bootstrap it dies during save replay at `parse-make-instance-before-class-lookup`
   - the retained broader startup-prelude executable-regeneration slice is no longer blocked on the local x87-heavy math/runtime band
 - The last directly traced contained runtime split remains explicit:
-  - with the current broader-rules bootstrap, the probe reaches `load-menu-post-confirm-load-save`, seeds `MAIN` and `make-instance`, then fails at `sub_4B0480` with `class-lookup-no-table name=oddzial`
-  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
+  - the exact post-confirm probe lane must now set `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` alongside `CLASH95_MENU_PROBE_AUTO_CLICK=load`; the older duplicated `CLASH95_MENU_PROBE_AUTO_CLICK=load` sidecar command was stale and stopped before confirm
+  - with the corrected broader-rules bootstrap, the probe reaches `load-menu-post-confirm-load-save`, seeds `MAIN` and `make-instance`, then fails at `sub_4B0480` with `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same corrected probe dies earlier with `symbol-lookup-missing-table MAIN`
   - this proves `sub_4725B0` / `sub_482260` / `sub_491B10` seed parser/symbol state but do not yet provide the authentic defclass/bload registry needed by the save replay
 - The retained executable-regeneration slice also moved this batch:
   - the retained rules math builtin band under `sub_4A3790` is still recovered in place in `clash95.c`, and the direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` remain green
-  - the first retained `PlayGame_Dispatch` pass is no longer blocked on the front-end descriptor slab, early world-map/UI export aliases, unit-slot and placement helpers, garrison/UI aliases, or the battle/port/queen debug string slab
+  - the retained `PlayGame_Dispatch` probe no longer stops on the mission-loader helper-name gap: the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, and the standalone retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
   - the port reinforcement ring offsets and unit-type pool are now materialized directly from `clash95.asm`
-  - the next retained widening is still `PlayGame_Dispatch`, but the former UI/data/runtime band is now reduced in recovered C: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
+  - the former `PlayGame_Dispatch` UI/data/runtime band is already reduced in recovered C: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
   - the retained mission-loader lane also moved in recovered C:
     - `Scenario_LoadMissionByIndexAndPlay` now threads the real selector into `Scenario_LoadMissionByIndex`
     - `createUnit` / `createCastle` now carry the original sentinel-terminated unit lists through real varargs instead of depending on x86 stack accidents
-    - the menu-reachable `sub_460360` cases `0` and `10` are now materialized from asm as the first campaign-entry map loaders (`k_mapa1l.map` and `p_mapa1z.map`) with the corroborated player-state, name, unit, and castle setup
-  - the surviving retained blocker is no longer the bare `Scenario_LoadMissionByIndex` / `sub_460360` `JUMPOUT`; it is the next helper band reached from those first recovered cases: `sub_40D330` and `sub_44C2A0`
+    - the menu-reachable `sub_460360` cases `0`, `1`, `10`, and `11` are now materialized from asm as campaign-entry map loaders (`k_mapa1l.map`, `k_mapa2l.map`, `p_mapa1z.map`, and `p_mapa2z.map`) with the corroborated player-state, name, unit, and castle setup
+    - `mapK2` / case `1` now also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and its manual camera override after `Game_InitPlayerViewState`
+  - the surviving retained blocker is no longer the old `sub_40D330` / `sub_44C2A0` helper band or `mapK2`; it is the remaining `Scenario_LoadMissionByIndex` case recovery itself, starting with `mapK3` / case `2`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
-  - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims`
-  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, or the bare mission-loader `JUMPOUT`; it is the next helper band reached inside the partially recovered mission-loader slice at `sub_40D330` and `sub_44C2A0`
+  - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or `mapK2`; it is the next remaining `Scenario_LoadMissionByIndex` case slice, starting with `mapK3`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

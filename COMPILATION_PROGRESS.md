@@ -3096,6 +3096,146 @@
 - total rename count so far:
   - `1193`
 
+## Batch 150 - Mission Loader Helper Rebind And P2 Recovery Wave
+- Current frontier:
+  - keep the contained SDL-backed load-menu wedge green while continuing the retained mission-loader recovery beyond the old helper-name gap
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately
+  - `boot_path_mapper`: corroborated the retained mission-loader helper order around `loadMap -> sub_40D330 -> ... -> sub_44C2A0`
+  - `runtime_glue_mapper`: confirmed the live helper gap was not `_wcpp_*`, CRT, holder ABI, or `compat/decomp_runtime_stubs.c`
+  - `sdl_seam_mapper`: reconfirmed the frontier does not overlap `platform_sdl_runtime.c`
+  - `class_seam_mapper`: reconfirmed the frontier does not belong in `src_cpp`
+  - `external_corroborator`: corroborated the `K_MAPA*` / `P_MAPA*` mission families from `clash95.exe` strings and `MAPS.RES`
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` confirmed `sub_40D330` is the already-recovered `MiniMap_CreateSurface` body and `sub_44C2A0` is the already-recovered `Game_InitPlayerViewState` body
+    - `runtime_glue_mapper`, `sdl_seam_mapper`, and `class_seam_mapper` all agreed that the live blocker was recovered-C mission/minimap/view-state code, not SDL, not `compat`, and not `src_cpp`
+    - `external_corroborator` confirmed `p_mapa2z.map` and the current mission-family naming as secondary evidence only
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_40D330`
+  - `sub_40CE70`
+  - `sub_44C2A0`
+  - `Scenario_LoadMissionByIndex`
+  - `Scenario_LoadMissionByIndexAndPlay`
+- Blockers removed this batch:
+  - the retained `PlayGame_Dispatch` probe no longer fails on the stale mission-loader helper names `sub_40D330` / `sub_44C2A0`
+  - the retained mission-loader slice now reuses the already-recovered local bodies `MiniMap_CreateSurface` and `Game_InitPlayerViewState`
+  - the menu-reachable retained mission-loader slice now includes case `11` / `mapP2` (`p_mapa2z.map`, `Raylin`, `Wetus`, `Gatgally`, `Guluali`)
+  - the durable verification command for the contained post-confirm probe was corrected: the load-menu loop really keys off `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`, not a duplicated `CLASH95_MENU_PROBE_AUTO_CLICK=load`
+- SDL replacements/cleanups this batch:
+  - none; the retained helper-name reduction and `mapP2` recovery stayed entirely in recovered C
+- Menu/UI fixes this batch:
+  - corrected the exact contained post-confirm probe command shape in the sidecars so it reaches the authentic confirm click and the known `oddzial` / `MAIN` split again
+- Session-init fixes this batch:
+  - none; the live contained post-confirm blocker remains the missing class/bload prelude before `oddzial` instantiation
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build successfully
+- Link status:
+  - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone from the executable-regeneration surface
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the corrected broader-rules-contained post-confirm probe exits `139`, reaches `load-menu-post-confirm-load-save`, and logs `class-lookup-no-table name=oddzial`
+  - the corrected `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` variant exits `139` and logs `symbol-lookup-missing-table MAIN` earlier in the same lane
+- Highest authentic runtime milestone reached:
+  - the contained authentic `Load Game` lane still reaches the real post-confirm save-replay corridor under the corrected confirm-click probe and reproduces the known `oddzial` versus `MAIN` split
+  - on the retained executable-regeneration side, `PlayGame_Dispatch` now links and stays alive under `timeout 1s`, and the mission-loader slice now covers cases `0`, `10`, and `11`
+- Key evidence used:
+  - `sub_40D330` asm at `0x40D330` matches the existing `MiniMap_CreateSurface` body in `clash95.c`
+  - `sub_44C2A0` asm at `0x44C2A0` matches the existing `Game_InitPlayerViewState` body in `clash95.c`
+  - `mapP2` / case `11` at `0x45D250` provides a clean next case arm without the extra `mapK2` post-castle handoff
+  - the corrected contained probe command must set `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` to click the bottom-row load button after slot selection
+- Ambiguous candidates deferred:
+  - `mapK2` / case `1` still carries an extra post-castle `Building_OnGarrisonChange` handoff that needs more careful asm-backed recovery than the already-clean `mapP2` slice
+  - the missing authentic class/bload prelude still blocks the contained post-confirm save replay at `oddzial`
+  - the deeper save-slot repaint/name lane after `load-menu-skip-save-slot-draw` remains deferred
+- total rename count so far:
+  - `1195`
+
+## Batch 151 - Mission Loader mapK2 Recovery Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` transcription past `mapK2`
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately
+  - `boot_path_mapper`: corroborated the exact `mapK2` order from `clash95.asm`, including the extra post-castle garrison refresh and the manual camera override after `Game_InitPlayerViewState`
+  - `runtime_glue_mapper`: confirmed `mapK2` needed no `_wcpp_*`, CRT, holder ABI, `JUMPOUT`, or `compat/decomp_runtime_stubs.c` changes
+  - `sdl_seam_mapper`: reconfirmed the case-1 frontier remains below `platform_sdl_runtime.c`
+  - `class_seam_mapper`: reconfirmed the case-1 frontier remains recovered-C mission setup rather than a `src_cpp` seam
+  - `external_corroborator`: secondarily corroborated `k_mapa2l.map`, `Ianos`, `Stormus`, and `Drakefly` from shipped `clash95.exe` / `MAPS.RES` strings
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` confirmed the exact case-1 order `loadMap -> player reset/writes -> MiniMap_CreateSurface -> Stormus castle -> unit -> Drakefly castle -> BUILDING_RECORD(+18)=-1 -> Building_OnGarrisonChange -> remaining units -> sub_451EC0 -> Game_InitPlayerViewState -> manual camera override`
+    - `runtime_glue_mapper`, `sdl_seam_mapper`, and `class_seam_mapper` all agreed the next edit belonged only in `clash95.c`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `mapK2`
+  - `createCastle`
+  - `createUnit`
+  - `Building_OnGarrisonChange`
+  - `MiniMap_CreateSurface`
+  - `Game_InitPlayerViewState`
+- Blockers removed this batch:
+  - the retained mission-loader slice now includes case `1` / `mapK2` (`k_mapa2l.map`, `Alan`, `Ianos`, `Stormus`, `Drakefly`)
+  - the extra case-local `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff is now carried in recovered C instead of the missing jump-table body
+  - the `mapK2` camera override is now preserved after `Game_InitPlayerViewState`, matching the asm-backed case-local view-state tweak
+- SDL replacements/cleanups this batch:
+  - none; case `1` recovery stayed entirely in recovered C
+- Menu/UI fixes this batch:
+  - none; the contained `oddzial` / `MAIN` split stayed unchanged
+- Session-init fixes this batch:
+  - none; the live contained blocker remains the missing class/bload prelude before `oddzial`
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build successfully after the `mapK2` case recovery
+- Link status:
+  - the direct retained `PlayGame_Dispatch` probe still links and stays alive under `timeout 1s`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the corrected broader-rules-contained post-confirm probe still exits `139`, reaches `load-menu-post-confirm-load-save`, and logs `class-lookup-no-table name=oddzial`
+  - the corrected `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` variant still exits `139` and logs `symbol-lookup-missing-table MAIN` earlier in the same lane
+- Highest authentic runtime milestone reached:
+  - unchanged on the contained lane: the authentic post-confirm load-menu probe still reproduces the known `oddzial` versus `MAIN` split
+  - improved on the retained lane: the mission-loader slice now covers cases `0`, `1`, `10`, and `11`, and the retained front-end widening has moved from `mapK2` to `mapK3`
+- Key evidence used:
+  - `clash95.asm` for `mapK2`, `createCastle`, `createUnit`, and `Building_OnGarrisonChange`
+  - `clash95.map` for the `mapK2` label and `Building_OnGarrisonChange`
+  - `clash95.c` helpers `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createCastle`, and `createUnit`
+  - `clash95.exe` / `MAPS.RES` strings only as secondary corroboration for `k_mapa2l.map`, `Ianos`, `Stormus`, and `Drakefly`
+- Ambiguous candidates deferred:
+  - the exact semantic meaning of the opaque second integer argument at this case-local `Building_OnGarrisonChange` callsite is still not promoted
+  - the missing authentic class/bload prelude still blocks the contained post-confirm save replay at `oddzial`
+  - the deeper save-slot repaint/name lane after `load-menu-skip-save-slot-draw` remains deferred
+- total rename count so far:
+  - `1195`
+
 ## Batch 150 - Mission Loader Entry Case Recovery Wave
 - Current frontier:
   - keep the contained authentic load-menu wedge green while reducing the retained `PlayGame_Dispatch` mission-loader surface beyond the old `Scenario_LoadMissionByIndex` / `sub_460360` `JUMPOUT`
