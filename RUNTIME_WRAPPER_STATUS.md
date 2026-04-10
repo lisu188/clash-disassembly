@@ -47,11 +47,11 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
   - the exact retained data/helper slice `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` now exists in recovered C
-  - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` are now rebound onto their already-recovered bodies
-  - the remaining slot/parser exports `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now also rebound onto their already-recovered bodies
-  - the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `sscanf_`, `fgets_`) is now settled enough that it no longer appears on the retained `sub_451E46` unresolved list
-  - retained `sub_4996D0` still links cleanly
-  - the broader retained `sub_451E46` slice is now exposed honestly as the remaining x87-heavy math/runtime problem rather than a runtime-wrapper or parser-export problem
+  - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now rebound onto their already-recovered bodies
+  - the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `sscanf_`, `fgets_`) remains settled
+  - the retained x87-heavy rules math band was recovered in `clash95.c` directly, not in the wrapper seam
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly
+  - the next retained executable-regeneration blocker is now the broader `PlayGame_Dispatch` link surface rather than a runtime-wrapper, parser-export, or local x87-math problem
 
 ## What should not move yet
 

@@ -126790,10 +126790,7 @@ double  sub_4A3F70(int a1, int a2, int a3, double a4)
 //----- (004A3FF0) --------------------------------------------------------
 double  sub_4A3FF0(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126802,27 +126799,16 @@ double  sub_4A3FF0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 <= 1.0 && v7 >= dbl_507738 )
-  {
-    v4 = v7;
-    IF_DACOS();
-    return v4;
-  }
+    return acos(v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A4049: variable 'v6' is possibly undefined
-// 4D681C: using guessed type double IF_DACOS(void);
 // 507738: using guessed type double dbl_507738;
 
 //----- (004A4060) --------------------------------------------------------
 double  sub_4A4060(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126831,18 +126817,10 @@ double  sub_4A4060(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 <= 1.0 && v7 >= dbl_507740 )
-  {
-    v4 = v7;
-    IF_ASIN();
-    return v4;
-  }
+    return asin(v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A40B9: variable 'v6' is possibly undefined
-// 4D6866: using guessed type double IF_ASIN(void);
 // 507740: using guessed type double dbl_507740;
 
 //----- (004A40D0) --------------------------------------------------------
@@ -126863,11 +126841,7 @@ double  sub_4A40D0(int a1, int a2, int a3, double a4)
 //----- (004A4110) --------------------------------------------------------
 double  sub_4A4110(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
-  unsigned long long v11_bits; // [esp+18h] [ebp+0h]
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126876,29 +126850,16 @@ double  sub_4A4110(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 >= 1.0 || v7 <= dbl_507748 )
-  {
-    v4 = 1.0 / v7;
-    memcpy(&v11_bits, &v4, sizeof(v11_bits));
-    IF_DACOS(v11_bits, HIDWORD(v11_bits));
-    return v4;
-  }
+    return acos(1.0 / v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A416E: variable 'v6' is possibly undefined
-// 4D681C: using guessed type double __cdecl IF_DACOS(_DWORD, _DWORD);
 // 507748: using guessed type double dbl_507748;
 
 //----- (004A4180) --------------------------------------------------------
 double  sub_4A4180(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
-  unsigned long long v11_bits; // [esp+18h] [ebp+0h]
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126907,19 +126868,10 @@ double  sub_4A4180(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 >= 1.0 || v7 <= dbl_507750 )
-  {
-    v4 = 1.0 / v7;
-    memcpy(&v11_bits, &v4, sizeof(v11_bits));
-    IF_ASIN(v11_bits, HIDWORD(v11_bits));
-    return v4;
-  }
+    return asin(1.0 / v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A41DE: variable 'v6' is possibly undefined
-// 4D6866: using guessed type double __cdecl IF_ASIN(_DWORD, _DWORD);
 // 507750: using guessed type double dbl_507750;
 
 //----- (004A41F0) --------------------------------------------------------
@@ -126956,7 +126908,6 @@ double  sub_4A41F0(int a1, int a2, int a3, double a4)
 //----- (004A4280) --------------------------------------------------------
 double  sub_4A4280(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -126964,23 +126915,14 @@ double  sub_4A4280(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DCOSH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return cosh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D68C2: using guessed type double IF_DCOSH(void);
 
 //----- (004A42C0) --------------------------------------------------------
 double  sub_4A42C0(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -126988,23 +126930,14 @@ double  sub_4A42C0(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DSINH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return sinh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D688E: using guessed type double IF_DSINH(void);
 
 //----- (004A4300) --------------------------------------------------------
 double  sub_4A4300(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -127012,23 +126945,14 @@ double  sub_4A4300(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DTANH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return tanh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D68FC: using guessed type double IF_DTANH(void);
 
 //----- (004A4340) --------------------------------------------------------
 double  sub_4A4340(int a1, int a2, int a3, double a4)
 {
-  double v5; // st7
   double v6[2]; // [esp+0h] [ebp-18h] BYREF
   int v7; // [esp+10h] [ebp-8h]
   int v8; // [esp+14h] [ebp-4h]
@@ -127036,23 +126960,14 @@ double  sub_4A4340(int a1, int a2, int a3, double a4)
   v8 = a1;
   v7 = a2;
   if ( sub_4A3BD0(v6, a3, a4) )
-  {
-    v5 = v6[0];
-    IF_DCOSH();
-    return 1.0 / v5;
-  }
-  else
-  {
-    v6[1] = 0.0;
-    return 0.0;
-  }
+    return 1.0 / cosh(v6[0]);
+  v6[1] = 0.0;
+  return 0.0;
 }
-// 4D68C2: using guessed type double IF_DCOSH(void);
 
 //----- (004A4390) --------------------------------------------------------
 double  sub_4A4390(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
   double v6; // [esp+0h] [ebp-20h] BYREF
   int v8; // [esp+14h] [ebp-Ch]
   int v9; // [esp+18h] [ebp-8h]
@@ -127069,20 +126984,14 @@ double  sub_4A4390(int a1, int a2, int a3, double a4)
     return 0.0;
   }
   if ( !sub_4A3C20(v6, 1.0e-25) )
-  {
-    v4 = v6;
-    IF_DSINH();
-    return 1.0 / v4;
-  }
+    return 1.0 / sinh(v6);
   sub_4A3CB0();
   return 0.0;
 }
-// 4D688E: using guessed type double IF_DSINH(void);
 
 //----- (004A4440) --------------------------------------------------------
 double  sub_4A4440(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
   double v6; // [esp+0h] [ebp-20h] BYREF
   int v8; // [esp+14h] [ebp-Ch]
   int v9; // [esp+18h] [ebp-8h]
@@ -127099,22 +127008,15 @@ double  sub_4A4440(int a1, int a2, int a3, double a4)
     return 0.0;
   }
   if ( !sub_4A3C20(v6, 1.0e-25) )
-  {
-    v4 = v6;
-    IF_DTANH();
-    return 1.0 / v4;
-  }
+    return 1.0 / tanh(v6);
   sub_4A3CB0();
   return 0.0;
 }
-// 4D68FC: using guessed type double IF_DTANH(void);
 
 //----- (004A44F0) --------------------------------------------------------
 double  sub_4A44F0(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127123,13 +127025,10 @@ double  sub_4A44F0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 >= 1.0 )
-    return __FYL2X__(sqrt(v6 * v6 + dbl_507758) + v6, 0.6931471805599453094);
+    return acosh(v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A4549: variable 'v5' is possibly undefined
 // 507758: using guessed type double dbl_507758;
 
 //----- (004A4560) --------------------------------------------------------
@@ -127142,7 +127041,7 @@ double  sub_4A4560(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-    return __FYL2X__(sqrt(v5[0] * v5[0] + 1.0) + v5[0], 0.6931471805599453094);
+    return asinh(v5[0]);
   v5[1] = 0.0;
   return 0.0;
 }
@@ -127150,9 +127049,7 @@ double  sub_4A4560(int a1, int a2, int a3, double a4)
 //----- (004A45B0) --------------------------------------------------------
 double  sub_4A45B0(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127161,22 +127058,17 @@ double  sub_4A45B0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 < 1.0 && v6 > dbl_507760 )
-    return __FYL2X__((v6 + 1.0) / (1.0 - v6), 0.6931471805599453094) * dbl_507768;
+    return atanh(v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A4619: variable 'v5' is possibly undefined
 // 507760: using guessed type double dbl_507760;
 // 507768: using guessed type double dbl_507768;
 
 //----- (004A4630) --------------------------------------------------------
 double  sub_4A4630(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127185,13 +127077,10 @@ double  sub_4A4630(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 <= 1.0 && v6 > 0.0 )
-    return __FYL2X__(sqrt(1.0 / (v6 * v6) + dbl_507770) + 1.0 / v6, 0.6931471805599453094);
+    return acosh(1.0 / v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A469B: variable 'v5' is possibly undefined
 // 507770: using guessed type double dbl_507770;
 
 //----- (004A46B0) --------------------------------------------------------
@@ -127208,7 +127097,7 @@ double  sub_4A46B0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v5, a3, a4) )
     return 0.0;
   if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(sqrt(1.0 / (v5 * v5) + 1.0) + 1.0 / v5, 0.6931471805599453094);
+    return asinh(1.0 / v5);
   sub_4A3C50();
   return 0.0;
 }
@@ -127216,9 +127105,7 @@ double  sub_4A46B0(int a1, int a2, int a3, double a4)
 //----- (004A4730) --------------------------------------------------------
 double  sub_4A4730(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127227,13 +127114,10 @@ double  sub_4A4730(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 > 1.0 || v6 < dbl_507778 )
-    return __FYL2X__((v6 + 1.0) / (v6 + dbl_507778), 0.6931471805599453094) * dbl_507780;
+    return atanh(1.0 / v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A479D: variable 'v5' is possibly undefined
 // 507778: using guessed type double dbl_507778;
 // 507780: using guessed type double dbl_507780;
 
@@ -127247,7 +127131,7 @@ double  sub_4A47B0(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-    return __FSCALE__(__F2XM1__(__FPREM__(1.442695040888963407 * v5[0], 1.0)) + 1.0, 1.442695040888963407 * v5[0]);
+    return exp(v5[0]);
   v5[1] = 0.0;
   return 0.0;
 }
@@ -127255,10 +127139,10 @@ double  sub_4A47B0(int a1, int a2, int a3, double a4)
 //----- (004A4800) --------------------------------------------------------
 double  sub_4A4800(int a1, int a2, int a3, double a4)
 {
-  long double v5; // [esp+0h] [ebp-20h] BYREF
-  int v7; // [esp+14h] [ebp-Ch]
-  int v8; // [esp+18h] [ebp-8h]
-  int v9; // [esp+1Ch] [ebp-4h]
+  double v5; // [esp+0h] [ebp-18h] BYREF
+  int v7; // [esp+8h] [ebp-Ch]
+  int v8; // [esp+10h] [ebp-8h]
+  int v9; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -127270,8 +127154,8 @@ double  sub_4A4800(int a1, int a2, int a3, double a4)
     sub_4A3C50();
     return 0.0;
   }
-  if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(v5, 0.6931471805599453094);
+  if ( v5 != 0.0 )
+    return log(v5);
   sub_4A3CB0();
   return 0.0;
 }
@@ -127279,10 +127163,10 @@ double  sub_4A4800(int a1, int a2, int a3, double a4)
 //----- (004A4890) --------------------------------------------------------
 double  sub_4A4890(int a1, int a2, int a3, double a4)
 {
-  long double v5; // [esp+0h] [ebp-20h] BYREF
-  int v7; // [esp+14h] [ebp-Ch]
-  int v8; // [esp+18h] [ebp-8h]
-  int v9; // [esp+1Ch] [ebp-4h]
+  double v5; // [esp+0h] [ebp-18h] BYREF
+  int v7; // [esp+8h] [ebp-Ch]
+  int v8; // [esp+10h] [ebp-8h]
+  int v9; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -127294,8 +127178,8 @@ double  sub_4A4890(int a1, int a2, int a3, double a4)
     sub_4A3C50();
     return 0.0;
   }
-  if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(v5, 0.3010299956639811952);
+  if ( v5 != 0.0 )
+    return log10(v5);
   sub_4A3CB0();
   return 0.0;
 }
@@ -127325,74 +127209,50 @@ double  sub_4A4920(int a1, int a2, int a3, double a4)
 //----- (004A4980) --------------------------------------------------------
 double  sub_4A4980(double a1)
 {
-  double result; // st7
   signed int v2; // eax
-  int v3; // ecx
   int v4; // [esp+0h] [ebp-58h] BYREF
   int v5; // [esp+8h] [ebp-50h]
   int v6; // [esp+18h] [ebp-40h] BYREF
   int v7; // [esp+20h] [ebp-38h]
   double v8; // [esp+30h] [ebp-28h]
   double v9; // [esp+38h] [ebp-20h]
+  double v10; // [esp+40h] [ebp-18h]
 
   if ( Lexer_TokenExpect(2) == -1 )
-  {
-    v9 = 0.0;
     return 0.0;
-  }
-  else
+  v2 = Lexer_ParseValueList(1, &v4, 0, a1);
+  if ( !v2 )
+    return 0.0;
+  v2 = Lexer_ParseValueList(2, &v6, 0, a1);
+  if ( !v2 )
+    return 0.0;
+  v8 = *(double *)(v5 + 16);
+  v9 = *(double *)(v7 + 16);
+  if ( v8 == 0.0 && v9 <= 0.0 )
+    goto LABEL_10;
+  if ( v8 < 0.0 )
   {
-    v2 = Lexer_ParseValueList(1, &v4, 0, a1);
-    if ( v2 && (v2 = Lexer_ParseValueList(2, &v6, 0, a1)) != 0 )
-    {
-      v3 = *(_DWORD *)(v5 + 16);
-      if ( (*(_DWORD *)(v5 + 20) & 0x7FFFFFFF) == 0 && !v3 && *(double *)(v7 + 16) <= 0.0 )
-        goto LABEL_15;
-      if ( *(double *)(v5 + 16) >= 0.0 )
-        goto LABEL_13;
-      if ( *(double *)(v7 + 16) >= 0.0 )
-        floor_(*(double *)(v7 + 16));
-      else
-        ceil_(*(double *)(v7 + 16));
-      v8 = 0.0;
-      if ( 0.0 == *(double *)(v7 + 16) )
-      {
-LABEL_13:
-        result = *(double *)(v7 + 16);
-        IF_DPOW(v3, result);
-        v9 = result;
-      }
-      else
-      {
-LABEL_15:
-        sub_4A3C50();
-        sub_48F610(1);
-        Lexer_ErrorRecover(1);
-        return 0.0;
-      }
-    }
+    if ( v9 >= 0.0 )
+      v10 = floor(v9);
     else
-    {
-      LODWORD(v9) = v2;
-      HIDWORD(v9) = v2;
-      return v9;
-    }
+      v10 = ceil(v9);
+    if ( v10 != v9 )
+      goto LABEL_10;
   }
-  return result;
+  return pow(v8, v9);
+LABEL_10:
+  sub_4A3C50();
+  sub_48F610(1);
+  Lexer_ErrorRecover(1);
+  return 0.0;
 }
-// 4A4A76: variable 'v3' is possibly undefined
-// 4D69BE: using guessed type double  IF_DPOW(_DWORD, double);
 
 //----- (004A4AE0) --------------------------------------------------------
 int * sub_4A4AE0(int a1, double a2)
 {
   signed int v3; // eax
-  int v4; // eax
-  int v5; // eax
   int *result; // eax
   signed int v7; // eax
-  int v8; // eax
-  int v9; // eax
   int v10; // [esp+8h] [ebp-78h] BYREF
   int v11; // [esp+Ch] [ebp-74h]
   int v12; // [esp+10h] [ebp-70h]
@@ -127404,7 +127264,6 @@ int * sub_4A4AE0(int a1, double a2)
   double v18; // [esp+48h] [ebp-38h]
   double v19; // [esp+50h] [ebp-30h]
   double v20; // [esp+58h] [ebp-28h]
-  double v21; // [esp+60h] [ebp-20h]
 
   if ( Lexer_TokenExpect(2) == -1 )
   {
@@ -127421,8 +127280,7 @@ LABEL_20:
   v3 = Lexer_ParseValueList(2, &v10, 110, a2);
   if ( !v3 )
     goto LABEL_20;
-  if ( v11 == 1 && !*(_DWORD *)(v12 + 16)
-    || !v11 && ((*(_DWORD *)(v12 + 20) & 0x7FFFFFFF) != 0 || *(_DWORD *)(v12 + 16) ? (v4 = 0) : (v4 = 1), v4) )
+  if ( v11 == 1 && !*(_DWORD *)(v12 + 16) || v11 != 1 && *(double *)(v12 + 16) == 0.0 )
   {
     sub_485D20();
     Lexer_ErrorRecover(1);
@@ -127440,37 +127298,21 @@ LABEL_20:
   else
   {
     if ( v14 == 1 )
-    {
       v19 = (double)*(int *)(v15 + 16);
-    }
     else
-    {
-      v8 = *(_DWORD *)(v15 + 20);
-      LODWORD(v19) = *(_DWORD *)(v15 + 16);
-      HIDWORD(v19) = v8;
-    }
-    v21 = v19;
+      v19 = *(double *)(v15 + 16);
     if ( v11 == 1 )
-    {
       v16 = (double)*(int *)(v12 + 16);
-    }
     else
-    {
-      v9 = *(_DWORD *)(v12 + 20);
-      LODWORD(v16) = *(_DWORD *)(v12 + 16);
-      HIDWORD(v16) = v9;
-    }
-    v17 = v21 / v16;
-    v5 = HIDWORD(v16);
-    LODWORD(v18) = LODWORD(v16);
+      v16 = *(double *)(v12 + 16);
+    v17 = v19 / v16;
     *(_DWORD *)(a1 + 4) = 0;
-    HIDWORD(v18) = v5;
     if ( v17 >= 0.0 )
-      floor_(v17);
+      v18 = floor(v17);
     else
-      ceil_(v17);
-    v20 = 0.0;
-    result = (int *)sub_481F00(v21 - 0.0 * v18);
+      v18 = ceil(v17);
+    v20 = v19 - v18 * v16;
+    result = (int *)sub_481F00(v20);
     *(_DWORD *)(a1 + 8) = result;
   }
   return result;
@@ -127479,12 +127321,8 @@ LABEL_20:
 //----- (004A4D20) --------------------------------------------------------
 double sub_4A4D20()
 {
-  double result; // st7
-
   Lexer_TokenExpect(0);
-  result = dbl_507788;
-  IF_DACOS();
-  return result;
+  return acos(dbl_507788);
 }
 // 507788: using guessed type double dbl_507788;
 
@@ -127558,33 +127396,20 @@ double  sub_4A4E30(int a1, int a2, int a3, double a4)
 signed int  sub_4A4E70(int a1, double a2)
 {
   signed int result; // eax
-  double v3; // st7
   int v4; // [esp+8h] [ebp-28h] BYREF
   int v5; // [esp+Ch] [ebp-24h]
   int v6; // [esp+10h] [ebp-20h]
-  signed int v7; // [esp+20h] [ebp-10h]
   int v8; // [esp+28h] [ebp-8h]
 
   v8 = a1;
   if ( Lexer_TokenExpect(1) == -1 )
-  {
-    v7 = 0;
     return 0;
-  }
   result = Lexer_ParseValueList(1, &v4, 110, a2);
   if ( !result )
-    goto LABEL_6;
-  if ( v5 == 1 )
-  {
-    result = *(_DWORD *)(v6 + 16);
-LABEL_6:
-    v7 = result;
     return result;
-  }
-  v3 = *(double *)(v6 + 16) + dbl_5077C0;
-  ceil_(v3);
-  _CHP(v4, v5);
-  return (int)v3;
+  if ( v5 == 1 )
+    return *(_DWORD *)(v6 + 16);
+  return (int)ceil(*(double *)(v6 + 16) + dbl_5077C0);
 }
 // 5077C0: using guessed type double dbl_5077C0;
 

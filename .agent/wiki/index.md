@@ -1,21 +1,26 @@
 # Agent Wiki Index
 
-- Current frontier: keep the pre-confirm authentic load-menu wedge green while separating it from the broader startup-prelude class/bload widening now required by the post-confirm save replay.
+- Current frontier: keep the contained authentic load-menu wedge green while separating it from the broader retained front-end widening that now starts after `sub_451E46`.
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
   - `clash95_cpp_regen`
+  - retained probe `sub_451E46`
+  - retained probe `sub_460490`
+  - retained probe `UI_StartAnims`
 - Highest runtime milestone:
   - authentic load-menu row resources load
   - all ten contained `sub_44A140` row draws complete
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
   - the contained post-confirm save replay still enters the real save-replay corridor
   - the traced contained post-confirm split again reproduces `parse-make-instance-before-class-lookup -> class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
+  - retained standalone probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link and stay alive under `timeout 1s`
 - Adjacent blocked widening:
   - the broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
-  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now past the parser-export layer and the low-risk file/runtime wrapper band, and stops on the remaining x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
+  - the retained startup-prelude slice is no longer blocked on the x87 math band: `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link
+  - the next honest retained blocker is the broader `PlayGame_Dispatch` link surface led by `_wcpp_4_static_init__`, front-end/world-map data tables (`sub_43D100`, `unk_512008`, `off_5123CC`), `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

@@ -44,3 +44,9 @@
   - Reason: the asm proves the live retained callsites pass `buffer` in `eax`, `size` in `edx`, and the stream handle in `ebx`; keeping the decompiler-dropped buffer argument would silently corrupt the runtime path even if it linked.
 - Stop the retained-wrapper pass at the x87 helper boundary.
   - Reason: `MoveFileA`, `sscanf_`, `fgets_`, and the exact signed-decimal parser are low-risk host or asm-backed repairs, but the remaining `IF_*` / `__FYL2X__` family depends on lost x87 dataflow and needs per-callsite recovery rather than blanket stubs.
+- Recover the retained x87-heavy rules math band directly in `clash95.c` instead of adding compat wrappers.
+  - Reason: the remaining `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW` edges belonged to local `sub_4A3790`-registered callsites, and the asm was strong enough to replace them in place without polluting `compat/decomp_runtime_stubs.c`.
+- Treat `sub_451E46`, `sub_460490`, and `UI_StartAnims` as the now-settled retained startup-prelude probes, and move the next widening to `PlayGame_Dispatch`.
+  - Reason: once those three probes linked cleanly, the next honest retained blocker became the broader front-end/gameplay link surface rather than another startup-prelude math/runtime slice.
+- Keep the new retained `PlayGame_Dispatch` frontier separate from the contained `oddzial` versus `MAIN` save-replay split.
+  - Reason: both surfaces touch authentic startup/class state, but the contained post-confirm replay still needs the missing class/bload prelude while the retained probe now fans into a much wider gameplay/front-end unresolved set.

@@ -22,34 +22,21 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The durable memory was corrected against the live tree:
   - the pre-confirm contained load-menu corridor is still green through authentic slot-strip selection and bottom-row load confirm
   - the live post-confirm probe no longer reaches `load-menu-post-confirm-after-save`; with the current broader-rules bootstrap it dies during save replay at `parse-make-instance-before-class-lookup`
-  - the retained broader startup-prelude executable-regeneration slice is now reduced past `dbl_502FDC`
+  - the retained broader startup-prelude executable-regeneration slice is no longer blocked on the local x87-heavy math/runtime band
 - The last directly traced contained runtime split remains explicit:
   - with the current broader-rules bootstrap, the probe reaches `load-menu-post-confirm-load-save`, seeds `MAIN` and `make-instance`, then fails at `sub_4B0480` with `class-lookup-no-table name=oddzial`
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
   - this proves `sub_4725B0` / `sub_482260` / `sub_491B10` seed parser/symbol state but do not yet provide the authentic defclass/bload registry needed by the save replay
 - The retained executable-regeneration slice also moved this batch:
-  - exact retained data/helpers are now materialized in-tree: `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40`
-  - the map-backed parser exports are now bound to their existing recovered bodies:
-    - `Lexer_ParseSlotConstraint`
-    - `Lexer_ParseFieldSpec`
-    - `Lexer_ValidateMessageHandler`
-    - `Lexer_ParseDefglobal`
-    - `Lexer_ParseRuleRHS`
-    - `Lexer_ParseDeclareOptions`
-  - the remaining retained slot/parser exports are now also bound to their existing recovered bodies:
-    - `Lexer_EmitSlotBinding`
-    - `Lexer_BuildSlotNode`
-    - `Lexer_FindSymbolIndex`
-  - the low-risk startup-prelude file/runtime wrapper band is now reduced too:
-    - `unknown_libname_2` is recovered as the exact signed decimal parser
-    - `MoveFileA`, `sscanf_`, and `fgets_` now have narrow compat implementations
-    - the currently reached `fgets_` callsites in `clash95.c` were reconstructed to pass the real buffer/size/stream arguments instead of the decompiler's dropped-buffer form
-  - retained `sub_4996D0` still links successfully
-  - retained `sub_451E46` now fails later on the remaining x87-heavy math/runtime band led by `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
+  - the retained rules math builtin band under `sub_4A3790` is now recovered in place in `clash95.c`, including the inverse/inverse-hyperbolic helpers and the local `pow` / `mod` / `round` callsites
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link successfully
+  - the standalone retained `sub_451E46` probe now stays alive under `timeout 1s`, which moves the retained frontier beyond the old startup-prelude math/runtime band
+  - the next retained widening is no longer `sub_451E46`; it is the broader front-end/gameplay handoff at `PlayGame_Dispatch`
+  - the first retained `PlayGame_Dispatch` unresolveds are `_wcpp_4_static_init__`, `sub_43D100`, `unk_512008`, `off_5123CC`, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
-  - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`
-  - the next retained class/runtime target is no longer the slot/parser export band or the low-risk file/runtime wrapper band; it is the remaining x87-heavy math/runtime callsite recovery under `sub_451E46`
+  - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims`
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, or the x87 math band; it is the broader `PlayGame_Dispatch` link surface
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

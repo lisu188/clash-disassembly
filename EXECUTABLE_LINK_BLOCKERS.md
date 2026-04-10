@@ -25,28 +25,29 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 
 ## Latest startup-prelude narrowing - 2026-04-10
 
-- The retained `CLIPS`/startup-prelude surface moved this batch:
-  - `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` are now materialized in `clash95.c`
-  - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` are now rebound onto their already-recovered bodies instead of leaking as link holes
-  - the remaining retained slot/parser exports `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now likewise rebound onto their existing recovered bodies
-  - `unknown_libname_2` is now the exact asm-backed signed decimal parser, and `MoveFileA`, `sscanf_`, and `fgets_` are now narrow compat wrappers with the currently reached `fgets_` callsites repaired in `clash95.c`
+- The retained `CLIPS`/startup-prelude surface moved again this batch:
+  - the local rules math builtin/x87 band under `sub_4A3790` is now recovered in `clash95.c`
+  - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully
+  - the standalone retained `sub_451E46` probe now stays alive under `timeout 1s`
 - A direct-object retained probe for `sub_4996D0` still links successfully.
-- The next retained blocker is no longer the parser-export layer or the low-risk file/runtime wrapper band. It is the remaining `sub_451E46` x87-heavy math/runtime set:
-  - `IF_DACOS`
-  - `IF_ASIN`
-  - `IF_DCOSH`
-  - `IF_DSINH`
-  - `IF_DTANH`
-  - `__FYL2X__`
-  - `__FPREM__`
-  - `__F2XM1__`
-  - `__FSCALE__`
-  - `floor_`
-  - `ceil_`
-  - `IF_DPOW`
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, or the x87-heavy math band. It is the broader `PlayGame_Dispatch` link surface led by:
+  - `_wcpp_4_static_init__`
+  - `sub_43D100`
+  - `unk_512008`
+  - `off_5123CC`
+  - `rand_`
+  - `memmove_`
+  - `strlwr_`
+  - `Locale_DrawInteger`
+  - `Rules_LinkArmyFinalize`
+  - `Rules_UnlinkArmyFact`
+  - `Render_DrawSprite_v3`
+  - `UI_LoadTurnBannerGfx`
+  - `WCIsvListBase_*`
+  - nearby `JUMPOUT`
 - Additional retained reduction notes from the latest pass:
-  - the retained parser-export blocker list is now absent from `clash95.c.o`
-  - the `sub_451E46` probe now fails later, and the first remaining unresolveds are the x87-heavy math helpers rather than parser or file/runtime exports
+  - the retained parser-export blocker list is still absent from `clash95.c.o`
+  - the `sub_451E46` probe is now green, so the next honest retained widening starts after `UI_StartAnims` rather than inside the startup-prelude math/runtime band
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails
@@ -157,5 +158,5 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - `clash95_bootstrap` and `clash95_cpp_regen` both stay green, while the last directly traced contained milestone remains the post-confirm save-replay entry that fails in the missing class/bload prelude.
 - There are now two adjacent widening fronts:
   - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - the retained startup-prelude slice rooted at `sub_451E46` now stops on the deeper slot/parser/math/runtime band listed above
+  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, and `UI_StartAnims`, and the next retained widening stops at the broader `PlayGame_Dispatch` link surface listed above
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.

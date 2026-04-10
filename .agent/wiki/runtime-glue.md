@@ -12,6 +12,9 @@
     - restored the finite asm-backed world-map-init seeding loop
   - `sub_4443C0` / `sub_4443D0` in `clash95.c`
     - widened the save-path builders to real `char *` buffers so `.dat` / `.fac` stack paths are no longer truncated
+  - retained rules math builtin cluster in `clash95.c`
+    - recovered the x87-heavy `sub_4A3FF0` through `sub_4A4E70` band in place with libc-backed math while preserving the original domain, overflow, and singularity callbacks
+    - `sub_451E46` no longer depends on `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, or `IF_DPOW`
   - bload loader data in `clash95.c`
     - materialized `unk_50293C` and the adjacent `bload`/loader error strings that `sub_47C850` expects
   - `unknown_libname_4` in `clash95.c`
@@ -60,5 +63,6 @@
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained broader startup-prelude slice rooted at `sub_451E46` is now past the parser-export layer and the low-risk file/runtime wrapper band, and is reduced to the remaining x87-heavy math/runtime helpers (`IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`)
-  - retained `sub_4996D0` still links, so the remaining executable-regeneration blocker has moved deeper into the broader `sub_451E46` unresolved set
+  - the retained startup-prelude math/runtime band is now settled enough that `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link as standalone probes
+  - the next retained executable-regeneration blocker is the broader `PlayGame_Dispatch` link surface, not another quarantine-wrapper gap
+  - the first honest retained `PlayGame_Dispatch` unresolveds are `_wcpp_4_static_init__`, front-end/world-map data tables (`sub_43D100`, `unk_512008`, `off_5123CC`), `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`

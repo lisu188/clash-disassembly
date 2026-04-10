@@ -24,8 +24,10 @@ This note covers the current host seam used by the executable-regeneration track
 - This is useful negative evidence:
   - the SDL seam is still good enough for the contained load-menu row draws, slot-strip selection, bottom-row confirm, post-confirm `WorldMap_Initialize`, and first save-replay entry
   - the active blocker is the missing class/bload startup prelude, not input, timing, window, or present behavior
-- The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/parser unresolveds, not by SDL.
-  - after the latest retained wrapper pass, that non-SDL blocker list is now reduced to the x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`, not by the SDL seam
+- The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/front-end unresolveds, not by SDL.
+  - the local x87-heavy math/runtime band is now gone
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
+  - the next retained blocker is the broader `PlayGame_Dispatch` unresolved set (`_wcpp_4_static_init__`, front-end/world-map data tables, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_*`, `Render_DrawSprite_v3`, `WCIsvListBase_*`, `JUMPOUT`), which again does not overlap the SDL seam
 
 ## Stable host behavior already present
 

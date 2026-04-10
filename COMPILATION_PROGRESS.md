@@ -3096,6 +3096,79 @@
 - total rename count so far:
   - `1193`
 
+## Batch 147 - Retained Startup Math Collapse And Front-End Link Advancement Wave
+- Current frontier:
+  - keep the contained WSL/SDL load-menu wedge green at the post-confirm `oddzial` / `MAIN` split while moving the retained executable-regeneration surface past the last local x87 math blocker and onto the real front-end/gameplay handoff at `PlayGame_Dispatch`
+- Subagents spawned and scopes:
+  - the existing read-heavy startup/runtime/class/SDL/external subagents were reused first, then recycled after integration to stay within the agent cap
+  - `boot_path_mapper` corroborated the smallest authentic caller path into the retained x87 band as `sub_451E46 -> sub_47D0E0 -> sub_47D320 -> sub_4A3790`, and confirmed `sub_460490` / `UI_StartAnims` as the next retained boot-path footholds once that band linked
+  - `runtime_glue_mapper` confirmed the remaining `IF_*` / `__FYL2X__` / `__FPREM__` names in the retained probe were local `clash95.c` math helpers, not new compat-stub work to hide in `compat/decomp_runtime_stubs.c`
+  - `class_seam_mapper` confirmed the live blocker had moved away from the C++ seams and that the safest next edits were direct `clash95.c` math-call recoveries rather than wider class/runtime rewrites
+  - `sdl_seam_mapper` revalidated that the retained frontier was no longer in `platform_sdl_runtime.c`; the contained `oddzial` / `MAIN` split remained the authentic runtime blocker
+  - `external_corroborator` used `/mnt/c/clash/clash.log` and local assets only as secondary confirmation for the `sub_451E46 -> sub_460490 -> UI_StartAnims` startup order
+- Functions renamed:
+  - none in the public symbol table this batch; the work recovered retained local math semantics in place
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_4A3FF0`
+  - `sub_4A4060`
+  - `sub_4A4280`
+  - `sub_4A42C0`
+  - `sub_4A4300`
+  - `sub_4A44F0`
+  - `sub_4A4560`
+  - `sub_4A45B0`
+  - `sub_4A47B0`
+  - `sub_4A4800`
+  - `sub_4A4890`
+  - `sub_4A4980`
+  - `sub_4A4AE0`
+  - `sub_4A4D20`
+  - `sub_4A4E70`
+- Blockers removed this batch:
+  - the retained `sub_451E46` startup-prelude probe no longer stops on the local x87 math band because the inverse, hyperbolic, logarithmic, exponential, `pow`, signed-truncation `mod`, `pi`, and rounding helpers are now recovered directly in `clash95.c`
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly and stay alive under the existing WSL/SDL bootstrap harness
+  - the retained executable-regeneration frontier is no longer ambiguous between SDL/runtime glue and rules/class math glue; it has narrowed to the wider `PlayGame_Dispatch` front-end/gameplay handoff surface
+- SDL replacements/cleanups this batch:
+  - none; `sdl_seam_mapper` corroborated that the next retained blocker is not in the SDL event/window/input seam
+- Menu/UI fixes this batch:
+  - none to the contained menu corridor itself; the authenticated post-confirm probe still reaches `parse-make-instance-before-class-lookup` and reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
+- Session-init fixes this batch:
+  - none yet; the next retained widening point moved to `PlayGame_Dispatch`, which is the real front-end/game-start handoff band
+- Validation probe:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `timeout 1s /tmp/clash95_sub451e46_probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_460490 -o /tmp/clash95_sub460490_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=UI_StartAnims -o /tmp/clash95_uistartanims_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build green after the local retained math recovery
+- Link status:
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully
+  - the next retained executable-regeneration failure is `PlayGame_Dispatch`, which still fans into the broader gameplay/UI/runtime surface (`sub_43D100`, `_wcpp_4_static_init__`, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `UI_LoadTurnBannerGfx`, `UI_CheckDialogAccepted`, `UI_CheckEndTurnHotkey`, `UI_CheckConfirmQuit`, `Render_DrawSprite_v3`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Map_IsTilePlacable`, `Unit_FindById`, `WCIsvListBase_*`, and residual `JUMPOUT` scars)
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with `124`
+  - both contained post-confirm menu probes still end in the same timeout/core-dump band while reproducing the preserved `oddzial` / `MAIN` split
+- Highest authentic runtime milestone reached:
+  - the contained authentic load-menu lane remains preserved at the post-confirm save replay split, while the retained startup-prelude regeneration track now links through `sub_451E46`, `sub_460490`, and `UI_StartAnims` and stops next at `PlayGame_Dispatch`
+- Key evidence used:
+  - `clash95.asm` and the recovered `clash95.c` bodies agree that the `sub_4A3FF0..sub_4A4E70` tranche is a local rules/math helper band reached from the retained startup-prelude caller stack rather than a hidden SDL/runtime seam
+  - the rebuilt retained probes prove the startup order `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
+  - the traced contained menu probes still produce `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them, so the live runtime blocker did not regress while the retained link frontier advanced
+- Ambiguous candidates deferred:
+  - `PlayGame_Dispatch` still depends on a wider front-end/gameplay/runtime band including `sub_43D100`, `_wcpp_4_static_init__`, `WCIsvListBase_*`, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `UI_LoadTurnBannerGfx`, `Unit_FindById`, and nearby `JUMPOUT` scars
+  - the contained `oddzial` / `MAIN` split still needs the authentic class/bload startup prelude to remove the false-negative class-table state
+  - no claim is made yet about a responsive full menu or playable turn; this batch only removes the retained x87 blocker and moves the executable-regeneration handoff forward honestly
+
 ## Batch 146 - Retained Runtime Wrapper Narrowing Wave
 - Current frontier:
   - keep the contained authentic load-menu wedge green while reducing the broader retained startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` past the remaining low-risk parser/file/runtime blockers and down to the real x87 math band

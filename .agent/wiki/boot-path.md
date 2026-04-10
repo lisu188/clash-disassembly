@@ -19,7 +19,8 @@
   - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
-  - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
-  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, the parser-export layer, and the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`)
-  - the next honest retained blockers are the remaining x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
+  - the retained authentic startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly and stay alive under `timeout 1s`
+  - the next honest retained widening is therefore no longer the local startup-prelude math band; it is the broader `PlayGame_Dispatch` front-end/gameplay link surface
+  - that new retained blocker is led by `_wcpp_4_static_init__`, missing front-end/world-map data tables, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
   - deferred save-slot repaint/name lane after the row draws
