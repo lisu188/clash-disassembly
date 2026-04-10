@@ -3096,6 +3096,64 @@
 - total rename count so far:
   - `1193`
 
+## Batch 146 - Retained Runtime Wrapper Narrowing Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while reducing the broader retained startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` past the remaining low-risk parser/file/runtime blockers and down to the real x87 math band
+- Subagents spawned and scopes:
+  - `boot_path_mapper`: re-confirm the authentic startup-prelude root and current retained narrowing under `sub_451E46`
+  - `runtime_glue_mapper`: classify which retained helpers were safe wrappers now versus which x87 helpers still need per-callsite recovery
+  - `sdl_seam_mapper`: verify the retained unresolved band still sits below SDL
+  - `class_seam_mapper`: distinguish genuine class/parser export alias mismatches from deeper retained class/runtime work
+  - `external_corroborator`: re-check `STRATEG\\CLASH.DAT` / local install evidence for the broader CLIPS startup-prelude context
+- Functions renamed:
+  - `sub_47A3F0` -> `Lexer_EmitSlotBinding`
+  - `sub_48BDD0` -> `Lexer_BuildSlotNode`
+  - `sub_48D7B0` -> `Lexer_FindSymbolIndex`
+- Blockers removed this batch:
+  - the retained `sub_451E46` link surface no longer stops on duplicate exported parser/helper names `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, or `Lexer_FindSymbolIndex`
+  - the retained startup-prelude slice no longer stops on placeholder `unknown_libname_2`, `MoveFileA`, `sscanf_`, or `fgets_`
+  - the live recovered `fgets_` callsites now pass the real buffer/size/stream arguments instead of the decompiler's dropped-buffer form
+- Runtime fixes this batch:
+  - replaced the placeholder `unknown_libname_2` bridge in `compat/decomp_runtime_stubs.c` with the exact asm-backed signed decimal parser
+  - added narrow `MoveFileA`, `sscanf_`, and `fgets_` compat wrappers in `compat/decomp_runtime_stubs.c`
+  - repaired the current `fgets_` call shapes in `AI_CalcStrategicPriorityScore`, `sub_4A5000`, `sub_4A5460`, `sub_4A5AB0`, and `sub_4A60A0`
+  - corrected the adjacent retained close/math recovery scar in `AI_CalcStrategicPriorityScore` so the file handle and distance-squared math match the asm again
+- SDL replacements/cleanups this batch:
+  - none; the retained blocker reduction stayed in recovered startup/runtime code and the compat seam, not in `platform_sdl_runtime.c`
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `bash -lc 'CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe'`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `python3 -m json.tool .agent/state.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green after the retained wrapper reduction pass
+- Link status:
+  - retained `sub_4996D0` still links successfully
+  - retained `sub_451E46` is now reduced to the x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - both contained post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
+- Highest authentic runtime milestone reached:
+  - unchanged: the contained authentic load-menu lane still reaches the real post-confirm save-replay corridor and preserves the `oddzial` versus `MAIN` split
+  - the retained executable-regeneration frontier is now the math-heavy startup-prelude band under `sub_451E46`, not the earlier parser/file/runtime mix
+- Key evidence used:
+  - `clash95.map` plus `clash95.asm` for `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, and the collapsed signed-decimal parser at `0x48523F`
+  - `clash95.asm` callsites for `fgets_` and `sub_4A5460`, proving the real buffer/size/stream register contract
+  - the live retained `sub_451E46` link probe before and after the wrapper pass
+- Ambiguous candidates deferred:
+  - the remaining `IF_*` / `__FYL2X__` / `__FPREM__` / `__F2XM1__` / `__FSCALE__` family still needs per-callsite x87 recovery rather than blanket wrappers
+  - the contained `oddzial` / `MAIN` split remains a separate startup-prelude class/bload investigation from the retained math band
+- total rename count so far:
+  - `1207`
+
 ## Batch 126 - Retained Startup Prelude Runtime And Parser Frontier Reduction
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the broader startup-prelude executable-regeneration slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`

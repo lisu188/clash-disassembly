@@ -68,6 +68,7 @@ extern void *lpTlsValue;
 extern int dword_543CC8[11];
 extern int dword_520728;
 extern _UNKNOWN *g_RenderDevice;
+extern char IsTable[256];
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -296,9 +297,28 @@ void j_srand_(unsigned int seed)
 
 int unknown_libname_2(const char *text)
 {
+  const unsigned char *cursor;
+  unsigned char sign_char;
+  int value;
+
   if ( !text )
     return 0;
-  return atoi(text);
+  cursor = (const unsigned char *)text;
+  while ( (IsTable[(unsigned char)(*cursor + 1)] & 2) != 0 )
+    ++cursor;
+  sign_char = *cursor;
+  if ( sign_char == '+' || sign_char == '-' )
+    ++cursor;
+  value = 0;
+  while ( (IsTable[(unsigned char)(*cursor + 1)] & 0x20) != 0 )
+  {
+    value *= 10;
+    value += *cursor - '0';
+    ++cursor;
+  }
+  if ( sign_char == '-' )
+    value = -value;
+  return value;
 }
 
 double strtod_(const char *text, char **endptr)
@@ -1349,6 +1369,39 @@ BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
   return 0;
 }
 
+BOOL __stdcall MoveFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName)
+{
+  char translated_existing[PATH_MAX];
+  char translated_new[PATH_MAX];
+  const char *existing_path;
+  const char *new_path;
+
+  if ( !lpExistingFileName || !*lpExistingFileName || !lpNewFileName || !*lpNewFileName )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  existing_path = lpExistingFileName;
+  new_path = lpNewFileName;
+  if ( CompatTranslatePathToWsl(lpExistingFileName, translated_existing, sizeof(translated_existing)) )
+    existing_path = translated_existing;
+  if ( CompatTranslatePathToWsl(lpNewFileName, translated_new, sizeof(translated_new)) )
+    new_path = translated_new;
+  if ( access(new_path, F_OK) == 0 )
+  {
+    errno = EEXIST;
+    g_compat_last_error = (DWORD)EEXIST;
+    return 0;
+  }
+  if ( rename(existing_path, new_path) == 0 )
+  {
+    g_compat_last_error = 0;
+    return 1;
+  }
+  CompatSetLastErrorFromErrno();
+  return 0;
+}
+
 BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
   char translated_path[PATH_MAX];
@@ -1870,6 +1923,19 @@ int __cdecl sprintf_(char *buffer, const char *format, ...)
     return -1;
   va_start(args, format);
   result = vsprintf(buffer, format, args);
+  va_end(args);
+  return result;
+}
+
+int __cdecl sscanf_(const char *buffer, const char *format, ...)
+{
+  int result;
+  va_list args;
+
+  if ( !buffer || !format )
+    return -1;
+  va_start(args, format);
+  result = vsscanf(buffer, format, args);
   va_end(args);
   return result;
 }
@@ -2533,6 +2599,38 @@ __int64 __fastcall fgetc_(_DWORD a1, _DWORD a2)
   if ( Compat_StreamRead((int)a1, &byte_value, 1) != 1 )
     return -1;
   return byte_value;
+}
+
+char *fgets_(char *buffer, int buffer_size, int stream_handle)
+{
+  int index;
+  unsigned char byte_value;
+
+  if ( !buffer || buffer_size <= 0 || !CompatIsRegisteredStreamHandle(stream_handle) )
+    return 0;
+  if ( buffer_size == 1 )
+  {
+    buffer[0] = 0;
+    return buffer;
+  }
+  index = 0;
+  while ( index < buffer_size - 1 )
+  {
+    if ( Compat_StreamRead(stream_handle, &byte_value, 1) != 1 )
+    {
+      if ( !index )
+      {
+        buffer[0] = 0;
+        return 0;
+      }
+      break;
+    }
+    buffer[index++] = (char)byte_value;
+    if ( byte_value == '\n' )
+      break;
+  }
+  buffer[index] = 0;
+  return buffer;
 }
 
 __int64 __fastcall ftell_(_DWORD a1, _DWORD a2)

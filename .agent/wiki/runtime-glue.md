@@ -48,11 +48,17 @@
     - recovered as the procedural parser-function registration helper rather than a widened compat stub
   - `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` in `clash95.c`
     - rebound onto already-recovered local bodies using their map-backed export names instead of leaving them as duplicate link holes
+  - `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` in `clash95.c`
+    - rebound onto the existing recovered local bodies at `sub_47A3F0`, `sub_48BDD0`, and `sub_48D7B0` so the retained startup-prelude link surface no longer stops on duplicate exported names
+  - `unknown_libname_2` in `compat/decomp_runtime_stubs.c`
+    - replaced the placeholder `atoi` bridge with the exact asm-backed signed decimal parser used by the retained rules/runtime callsites
+  - `MoveFileA`, `sscanf_`, and `fgets_` in `compat/decomp_runtime_stubs.c`
+    - added narrow host-backed wrappers and recovered the current `fgets_` call shapes in `clash95.c` so the retained startup-prelude link surface no longer stops on the low-risk file/runtime band
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - broader loaded-session runtime reconstruction beyond the contained save-load wedge
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
-  - the retained broader startup-prelude slice rooted at `sub_451E46` is now past the parser-export layer and needs the deeper slot/parser/math/runtime band (`Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` thunks, and `JUMPOUT`)
+  - the retained broader startup-prelude slice rooted at `sub_451E46` is now past the parser-export layer and the low-risk file/runtime wrapper band, and is reduced to the remaining x87-heavy math/runtime helpers (`IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`)
   - retained `sub_4996D0` still links, so the remaining executable-regeneration blocker has moved deeper into the broader `sub_451E46` unresolved set

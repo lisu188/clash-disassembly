@@ -2433,8 +2433,8 @@ int  sub_484090(int result);
 _DWORD * sub_484130(_DWORD *result);
 void  sub_4841A0(_DWORD *a1, double a2);
 double __cdecl _CHP(_DWORD, _DWORD);
-// int __fastcall fgets_(_DWORD, _DWORD); weak
-// _DWORD sscanf_(_DWORD, _DWORD, ...); weak
+char *fgets_(char *buffer, int buffer_size, int stream_handle);
+int __cdecl sscanf_(const char *buffer, const char *format, ...);
 // int __cdecl ExcString_Ctor();
 // _DWORD __ExcString::__ExcString(__ExcString * this); idb
 // _DWORD __ExcString::operator char *(); weak
@@ -3248,7 +3248,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5);
 signed int  sub_4A52C0(int a1);
 int  sub_4A5350(const CHAR *a1, _DWORD *a2, _DWORD *a3, _BYTE *a4);
 int  sub_4A53B0(const CHAR *a1, _DWORD *a2, DWORD a3);
-_BYTE * sub_4A5460(int a1, int a2);
+_BYTE * sub_4A5460(int stream_handle, _BYTE *buffer, int buffer_size);
 signed int  sub_4A54C0(_BYTE *a1, _BYTE *a2);
 int  sub_4A5530(int result, int a2);
 char * sub_4A5570(char *a1);
@@ -70472,15 +70472,15 @@ double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5)
   v7 = sub_475CC8(aStrategprior, (unsigned __int8 *)aR, a3, a2);
   if ( v7 )
   {
-    while ( fgets_(v7, 80) )
+    while ( fgets_(v10, 80, v7) )
     {
       sscanf_(v10, "%d %f", &v11, &v12);
       if ( a1 == v11 )
         v14 = v12;
     }
   }
-  fclose_((v13 - a2) * (v13 - a2));
-  v15 = Math_CeilSqrt(v8 + (a5 - a4) * (a5 - a4));
+  fclose_(v7);
+  v15 = Math_CeilSqrt((v13 - a2) * (v13 - a2) + (a5 - a4) * (a5 - a4));
   return v14 / (double)v15;
 }
 // 459267: variable 'v7' is possibly undefined
@@ -90333,7 +90333,7 @@ signed int  sub_47A350(double a1)
 // 51A15C: using guessed type int dword_51A15C;
 
 //----- (0047A3F0) --------------------------------------------------------
-int  sub_47A3F0(int a1, char *a2, int a3, _DWORD *a4)
+int  Lexer_EmitSlotBinding(int a1, char *a2, int a3, _DWORD *a4)
 {
   int v5; // edi
   int result; // eax
@@ -104976,7 +104976,7 @@ int  Lexer_ParseSlotConstraint(_DWORD *a1, int a2, double a3)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0048BDD0) --------------------------------------------------------
-int  sub_48BDD0(int a1, char *a2, _DWORD *a3)
+int  Lexer_BuildSlotNode(int a1, char *a2, _DWORD *a3)
 {
   char *v5; // ecx
   int v7; // ecx
@@ -106647,7 +106647,7 @@ int  sub_48D790(int a1, int a2)
 }
 
 //----- (0048D7B0) --------------------------------------------------------
-signed int  sub_48D7B0(int a1, int a2)
+signed int  Lexer_FindSymbolIndex(int a1, int a2)
 {
   _DWORD *v3; // eax
   int v4; // edx
@@ -127621,7 +127621,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
       v19 = 0;
       v17 = 0;
       v20 = 1;
-      while ( fgets_(v8, 256) )
+      while ( fgets_(v14, 256, (int)v6) )
       {
         ++v9;
         if ( v14[0] != 36 || v14[1] != 36 )
@@ -127632,7 +127632,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
             {
               if ( v20 != 1 )
               {
-                fclose_(v8);
+                fclose_((int)v6);
                 sub_4A52C0((int)a1);
                 if ( v12 < 60 )
                   return 0;
@@ -127652,7 +127652,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
           {
             if ( v17 != 1 )
             {
-              fclose_(v8);
+              fclose_((int)v6);
               sub_4A52C0((int)a1);
               if ( v11 < 60 )
                 return 0;
@@ -127665,7 +127665,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
           }
         }
       }
-      fclose_(v8);
+      fclose_((int)v6);
       if ( v20 )
       {
         if ( !v19 )
@@ -127682,7 +127682,7 @@ LABEL_23:
     }
     else
     {
-      fclose_(v8);
+      fclose_((int)v6);
       if ( v10 >= 60 )
       {
         sprintf_(v16, "File \"%s\" already loaded.", a1);
@@ -127842,27 +127842,23 @@ int  sub_4A53B0(const CHAR *a1, _DWORD *a2, DWORD a3)
 // 51ACE0: using guessed type int dword_51ACE0;
 
 //----- (004A5460) --------------------------------------------------------
-_BYTE * sub_4A5460(int a1, int a2)
+_BYTE * sub_4A5460(int stream_handle, _BYTE *buffer, int buffer_size)
 {
-  _BYTE *v2; // ecx
-
-  if ( fgets_(a1, a2) )
+  if ( fgets_((char *)buffer, buffer_size, stream_handle) )
   {
-    if ( *v2 == 36 && v2[1] == 36 )
+    if ( *buffer == 36 && buffer[1] == 36 )
     {
-      *v2 = 32;
-      v2[1] = 32;
-      return v2;
+      *buffer = 32;
+      buffer[1] = 32;
+      return buffer;
     }
-    if ( sub_4A54C0(v2, aEndEntry) < 0 )
-      return v2;
+    if ( sub_4A54C0(buffer, aEndEntry) < 0 )
+      return buffer;
   }
-  fclose_(v2);
+  fclose_(stream_handle);
   return 0;
 }
-// 4A5475: variable 'v2' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
-// 4841D3: using guessed type int __fastcall fgets_(_DWORD, _DWORD);
 
 //----- (004A54C0) --------------------------------------------------------
 signed int  sub_4A54C0(_BYTE *a1, _BYTE *a2)
@@ -128425,7 +128421,7 @@ signed int  sub_4A5AB0(int a1, DWORD a2, double a3)
     {
       while ( 2 )
       {
-        if ( !sub_4A5460((int)v36, 256) )
+        if ( !sub_4A5460(v16, v36, 256) )
           goto LABEL_43;
         if ( v15 < 23 )
           goto LABEL_37;
@@ -128735,7 +128731,7 @@ int  sub_4A60A0(double a1)
     for ( i = (int)v2; ; i = (int)v2 )
     {
       Output_Write(i, (int)v5, v4);
-      if ( !sub_4A5460((int)v14, 256) )
+      if ( !sub_4A5460(v3, v14, 256) )
         break;
       v5 = v14;
     }

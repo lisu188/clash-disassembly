@@ -25,7 +25,7 @@
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
-  - still fails on the broader startup-prelude unresolved set, now led by `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `IF_DPOW`, `fgets_`, `sscanf_`, `MoveFileA`, and other deeper slot/parser/math/runtime helpers
+  - still fails on the broader startup-prelude unresolved set, now reduced to the remaining x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
 - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
   - passed
 - `git diff --check`

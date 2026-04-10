@@ -25,7 +25,7 @@ This note covers the current host seam used by the executable-regeneration track
   - the SDL seam is still good enough for the contained load-menu row draws, slot-strip selection, bottom-row confirm, post-confirm `WorldMap_Initialize`, and first save-replay entry
   - the active blocker is the missing class/bload startup prelude, not input, timing, window, or present behavior
 - The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/parser unresolveds, not by SDL.
-  - after the latest retained parser-export pass, that non-SDL blocker list is now led by `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` thunks, and `JUMPOUT`, not by the SDL seam
+  - after the latest retained wrapper pass, that non-SDL blocker list is now reduced to the x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`, not by the SDL seam
 
 ## Stable host behavior already present
 

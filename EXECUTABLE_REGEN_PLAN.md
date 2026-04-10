@@ -17,10 +17,10 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - Take the next batch through:
   1. preserving the green pre-confirm contained load-menu wedge
   2. keeping the broader-rules-contained probe reproducible so it still distinguishes the last directly traced `class-lookup-no-table name=oddzial` failure from the earlier `symbol-lookup-missing-table MAIN` failure
-  3. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` from the now-cleared parser-export layer into the deeper slot/parser/math band (`Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, and the `IF_*` / `__FYL2X__` helpers) until the missing defclass/bload startup band is narrow enough to root honestly
+  3. continuing the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` from the now-cleared parser-export and low-risk file/runtime wrapper bands into the remaining x87-heavy math/runtime callsites (`IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `IF_DPOW`) until the missing defclass/bload startup band is narrow enough to root honestly
   4. only then widening further into the post-save `PlayGame` handoff after `sub_444490`
   5. the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
-- Do not broaden into unrelated runtime wrappers until those two adjacent startup fronts are characterized.
+- Do not broaden into unrelated runtime wrappers past the already-settled `unknown_libname_2` / `MoveFileA` / `sscanf_` / `fgets_` band until those two adjacent startup fronts are characterized.
 - Do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local post-save patch. Keep the startup-prelude widening separate from the contained load-game wedge.
 - Do not regress the corrected `sub_47D0E0` call attribution: `unknown_libname_7` is the runtime setter at `0x47E7B0`, while the startup-prelude tail still needs the separate retained `.fn_init` body at `0x49A0E0`.
 - Keep the CRT/runtime glue quarantined: `sub_496643`, `ftime_`, and `system_` are now compat-seam repairs, so the next widening step should stay in retained parser/math/runtime code rather than backsliding into generic host wrappers.

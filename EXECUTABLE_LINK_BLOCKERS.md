@@ -28,26 +28,25 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The retained `CLIPS`/startup-prelude surface moved this batch:
   - `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` are now materialized in `clash95.c`
   - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, and `Lexer_ParseDeclareOptions` are now rebound onto their already-recovered bodies instead of leaking as link holes
+  - the remaining retained slot/parser exports `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now likewise rebound onto their existing recovered bodies
+  - `unknown_libname_2` is now the exact asm-backed signed decimal parser, and `MoveFileA`, `sscanf_`, and `fgets_` are now narrow compat wrappers with the currently reached `fgets_` callsites repaired in `clash95.c`
 - A direct-object retained probe for `sub_4996D0` still links successfully.
-- The next retained blocker is no longer the parser-export layer. It is the deeper `sub_451E46` slot/parser/math set:
-  - `Lexer_BuildSlotNode`
-  - `Lexer_CheckValueList`
-  - `Lexer_EmitSlotBinding`
-  - `Lexer_FindSymbolIndex`
-  - `Lexer_FindTemplateSlot`
-  - `Lexer_OutputFieldRange`
-  - `Lexer_ParseModifyOrDuplicate`
-  - `Lexer_WarnImpliedTemplate`
-  - `unknown_libname_2`
-  - `MoveFileA`
-  - `fgets_`
-  - `sscanf_`
-  - `ceil_`
+- The next retained blocker is no longer the parser-export layer or the low-risk file/runtime wrapper band. It is the remaining `sub_451E46` x87-heavy math/runtime set:
+  - `IF_DACOS`
+  - `IF_ASIN`
+  - `IF_DCOSH`
+  - `IF_DSINH`
+  - `IF_DTANH`
+  - `__FYL2X__`
+  - `__FPREM__`
+  - `__F2XM1__`
+  - `__FSCALE__`
   - `floor_`
-  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, and `JUMPOUT`
+  - `ceil_`
+  - `IF_DPOW`
 - Additional retained reduction notes from the latest pass:
   - the retained parser-export blocker list is now absent from `clash95.c.o`
-  - the `sub_451E46` probe now fails later, and its first retained parser-specific undefineds are the deeper slot helpers rather than the exported parser entrypoints
+  - the `sub_451E46` probe now fails later, and the first remaining unresolveds are the x87-heavy math helpers rather than parser or file/runtime exports
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails

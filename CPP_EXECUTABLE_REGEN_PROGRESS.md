@@ -36,12 +36,20 @@ This file tracks the parallel executable-regeneration path that grows out of the
     - `Lexer_ParseDefglobal`
     - `Lexer_ParseRuleRHS`
     - `Lexer_ParseDeclareOptions`
+  - the remaining retained slot/parser exports are now also bound to their existing recovered bodies:
+    - `Lexer_EmitSlotBinding`
+    - `Lexer_BuildSlotNode`
+    - `Lexer_FindSymbolIndex`
+  - the low-risk startup-prelude file/runtime wrapper band is now reduced too:
+    - `unknown_libname_2` is recovered as the exact signed decimal parser
+    - `MoveFileA`, `sscanf_`, and `fgets_` now have narrow compat implementations
+    - the currently reached `fgets_` callsites in `clash95.c` were reconstructed to pass the real buffer/size/stream arguments instead of the decompiler's dropped-buffer form
   - retained `sub_4996D0` still links successfully
-  - retained `sub_451E46` now fails later on the deeper slot/parser/math/runtime band led by `Lexer_BuildSlotNode`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, and `JUMPOUT`
+  - retained `sub_451E46` now fails later on the remaining x87-heavy math/runtime band led by `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader authentic startup-prelude slice `sub_451E46 -> sub_47D0E0 -> sub_47C850`
-  - the next retained class/runtime target is the deeper slot/parser/math band around `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_FindTemplateSlot`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `unknown_libname_2`, and the `IF_*` / `__FYL2X__` helpers, not the now-cleared parser-export layer
+  - the next retained class/runtime target is no longer the slot/parser export band or the low-risk file/runtime wrapper band; it is the remaining x87-heavy math/runtime callsite recovery under `sub_451E46`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

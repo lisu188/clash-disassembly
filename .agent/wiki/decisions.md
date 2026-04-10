@@ -40,3 +40,7 @@
   - Reason: the `clash95.map` exports and `clash95.exe` body matches already proved `sub_48BD50`, `sub_48BE80`, `sub_4C2710`, `sub_4CC6C0`, `sub_4D9C40`, and `sub_4D9FD0` were the real exported entrypoints, so aliasing them in place removes link holes without creating a forked semantic surface.
 - Recover `sub_4BDD40` through an explicit local handler-registration helper `sub_4BDD20` instead of widening `sub_480D60`.
   - Reason: `sub_4BDD40` needs a specific handler-parameter contract proven by the asm, while broadening `sub_480D60` would risk unrelated call sites on the live parser/runtime path.
+- Recover the current `fgets_` call shape in recovered C instead of faking a two-argument compat shim.
+  - Reason: the asm proves the live retained callsites pass `buffer` in `eax`, `size` in `edx`, and the stream handle in `ebx`; keeping the decompiler-dropped buffer argument would silently corrupt the runtime path even if it linked.
+- Stop the retained-wrapper pass at the x87 helper boundary.
+  - Reason: `MoveFileA`, `sscanf_`, `fgets_`, and the exact signed-decimal parser are low-risk host or asm-backed repairs, but the remaining `IF_*` / `__FYL2X__` family depends on lost x87 dataflow and needs per-callsite recovery rather than blanket stubs.

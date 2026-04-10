@@ -20,5 +20,6 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
   - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
-  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, the nearby `JUMPOUT` scars, and the parser-export layer; the next honest blockers are the deeper slot/parser/math/runtime helpers `Lexer_BuildSlotNode`, `Lexer_FindSymbolIndex`, `Lexer_CheckValueList`, `Lexer_EmitSlotBinding`, `Lexer_FindTemplateSlot`, `Lexer_OutputFieldRange`, `Lexer_ParseModifyOrDuplicate`, `Lexer_WarnImpliedTemplate`, `unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`, `ceil_`, `floor_`, the `IF_*` / `__FYL2X__` helpers, and `JUMPOUT`
+  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, the parser-export layer, and the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `fgets_`, `sscanf_`)
+  - the next honest retained blockers are the remaining x87-heavy math/runtime helpers `IF_DACOS`, `IF_ASIN`, `IF_DCOSH`, `IF_DSINH`, `IF_DTANH`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, and `IF_DPOW`
   - deferred save-slot repaint/name lane after the row draws
