@@ -3096,6 +3096,83 @@
 - total rename count so far:
   - `1193`
 
+## Batch 152 - Mission Loader mapK3 Recovery Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while continuing the retained `Scenario_LoadMissionByIndex` reduction inside recovered C
+- Subagents spawned and scopes:
+  - reused the live read-heavy subagent set on the current retained frontier
+  - `boot_path_mapper`: exact `mapK3` / case-2 order and case-local side effects from `clash95.asm`
+  - `runtime_glue_mapper`: verify the case stayed below compat/runtime glue and preserved the explicit `Building_OnGarrisonChange` handoff
+  - `sdl_seam_mapper`: re-check that the frontier still sits below SDL
+  - `class_seam_mapper`: re-check that the case stays out of `src_cpp`
+  - `external_corroborator`: secondary string/archive corroboration for `k_mapa3l.map`, `Bochuwit`, and `Treg Rock`
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` corroborated the full case-2 order from `clash95.asm`: `k_mapa3l.map`, `Alan`, `Bochuwit`, five player-0 unit placements, `Treg Rock`, the player-1 reinforcement block, the post-castle `BUILDING_RECORD(+18) = -1` plus `Building_OnGarrisonChange` handoff, and the post-finalizer camera override
+    - `runtime_glue_mapper` confirmed no new compat/runtime wrapper work was needed and that the explicit post-castle handoff should remain local to the case body
+    - `sdl_seam_mapper` and `class_seam_mapper` both confirmed the frontier remained pure recovered-C mission setup below SDL and below `src_cpp`
+    - `external_corroborator` confirmed `k_mapa3l.map` and the nearby `Bochuwit` / `Treg Rock` names in shipped local assets only as secondary evidence
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `PLAYER_AI_INTELLIGENCE_OFFSET`
+  - `PLAYER_AI_INTELLIGENCE(playerIndex)`
+- High-priority unknown functions reviewed:
+  - `mapK3`
+  - `createUnit`
+  - `createCastle`
+  - `Building_OnGarrisonChange`
+  - `MiniMap_CreateSurface`
+  - `Game_InitPlayerViewState`
+- Blockers removed this batch:
+  - the retained mission-loader frontier no longer stops on `mapK3` / case `2`
+  - `Scenario_LoadMissionByIndex` now carries the full `k_mapa3l.map` setup in recovered C, including the player-2 intelligence write and the explicit `Treg Rock` post-castle garrison refresh
+  - the next retained blocker moved cleanly to `mapK4` / case `3`
+- SDL replacements/cleanups this batch:
+  - none; the current mission-loader frontier remained below `platform_sdl_runtime.c`
+- Menu/UI fixes this batch:
+  - none in the contained lane itself; the exact traced post-confirm probes were rerun only to preserve the known `oddzial` / `MAIN` split while the retained mission-loader surface advanced
+- Session-init fixes this batch:
+  - none in the contained save/class runtime lane; the retained executable-regeneration surface simply moved one mission case deeper
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `python3 -m json.tool .agent/state.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build successfully after materializing `mapK3`
+  - the JSON sidecar artifacts remain valid
+- Link status:
+  - the retained `PlayGame_Dispatch` probe still links successfully and stays alive under `timeout 1s`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`
+  - the exact traced contained broader-rules probe exits in the same timeout/core-dump band and still logs `class-lookup-no-table name=oddzial`
+  - the exact traced contained `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` variant exits in the same timeout/core-dump band and still logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged on the contained lane: the authentic post-confirm load-menu probe still reaches the real save replay and reproduces the same `oddzial` versus `MAIN` split
+  - advanced on the retained executable-regeneration lane: `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `10`, and `11`, while retained `PlayGame_Dispatch` still links and stays alive under `timeout 1s`
+- Key evidence used:
+  - `clash95.asm` `mapK3` body and the surrounding `createUnit`, `createCastle`, `Building_OnGarrisonChange`, `sub_451EC0`, `sub_44C2A0`, and `sub_40D330` procedures
+  - `clash95.map` exports for `mapK3`, `createUnit`, `createCastle`, and `Building_OnGarrisonChange`
+  - the already-recovered mission logging strings proving player runtime slot `+31` is `inteligencja`
+  - secondary local asset corroboration for `k_mapa3l.map`, `Bochuwit`, and `Treg Rock`
+- Ambiguous candidates deferred:
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK4` / case `3`
+  - the contained class/bload startup-prelude gap before `oddzial`
+  - the deferred save-slot repaint/name lane after `load-menu-skip-save-slot-draw`
+- total rename count so far:
+  - `1193`
+
 ## Batch 150 - Mission Loader Helper Rebind And P2 Recovery Wave
 - Current frontier:
   - keep the contained SDL-backed load-menu wedge green while continuing the retained mission-loader recovery beyond the old helper-name gap

@@ -19,6 +19,7 @@
 #define PLAYER_CAMERA_TOP_OFFSET 19
 #define PLAYER_MINIMAP_VISIBLE_OFFSET 23
 #define PLAYER_IS_HUMAN_OFFSET 27
+#define PLAYER_AI_INTELLIGENCE_OFFSET 31
 #define PLAYER_RELIGION_FLAG_OFFSET 39
 #define PLAYER_REVEALED_TILES_OFFSET 57
 #define PLAYER_REVEALED_TILE_ROW_BYTES 13
@@ -113,6 +114,7 @@ extern int g_BootstrapSkipIntroAviPlayback;
 #define PLAYER_CAMERA_TOP(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_TOP_OFFSET))
 #define PLAYER_MINIMAP_VISIBLE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_MINIMAP_VISIBLE_OFFSET))
 #define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
+#define PLAYER_AI_INTELLIGENCE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_AI_INTELLIGENCE_OFFSET))
 #define MAP_WIDTH_TILES (*(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET))
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
@@ -71726,6 +71728,47 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 44, 24, 1, 0, 0, 0, 0, 0, -1);
       createUnit(a2, 18, 48, 1, 0, 0, 9, 9, 9, 0xF, 0xF, 0xF, -1);
       createUnit(a2, 12, 0, 1, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 91;
+      PLAYER_CAMERA_TOP(0) = 21;
+      MAP_VIEW_LEFT = 90;
+      MAP_VIEW_TOP = 21;
+      break;
+    case 2:
+      Map_LoadFromFile((int)"k_mapa3l.map");
+      ACTIVE_MISSION_INDEX = 2;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 98, 24, 0, 9u, -1);
+      createUnit(a2, 98, 25, 0, 0, 0, 0, 0, 1u, 1u, 1u, 0x10u, -1);
+      createUnit(a2, 97, 25, 0, 5u, 5u, 0xFu, 0xFu, 0, 0, -1);
+      createUnit(a2, 97, 24, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 98, 26, 0, 0xDu, -1);
+      castle_index = createCastle(a2, 41, 68, 1, 2, "Treg Rock", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 83, 16, 1, 0xFu, 1u, 1u, 1u, 1u, 0x11u, -1);
+      createUnit(a2, 69, 46, 1, 0, 0, 0, 0xFu, 0xFu, 1u, 0x11u, -1);
+      createUnit(a2, 87, 61, 1, 5u, 5u, 9u, 9u, 0x10u, 0x10u, -1);
+      createUnit(a2, 52, 58, 1, 9u, 9u, 9u, 9u, 9u, -1);
+      createUnit(a2, 40, 18, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 91, 6, 1, 9u, -1);
+      createUnit(a2, 85, 9, 1, 9u, -1);
+      createUnit(a2, 43, 52, 1, 9u, -1);
+      createUnit(a2, 68, 68, 1, 1u, -1);
+      createUnit(a2, 35, 69, 1, 1u, -1);
+      createUnit(a2, 94, 77, 1, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 74, 31, 1, 0, 0, 0, 0, 0, -1);
       sub_451EC0();
       Game_InitPlayerViewState();
       PLAYER_CAMERA_LEFT(0) = 91;

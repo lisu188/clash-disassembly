@@ -14,14 +14,14 @@
   - links successfully
   - exit `124`
 - Retained mission-loader status:
-  - `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `10`, and `11` in recovered C
-  - the next retained case frontier is `mapK3` / case `2`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - exit `139`
+  - `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `10`, and `11` in recovered C
+  - the next retained case frontier is `mapK4` / case `3`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
   - logs `class-lookup-no-table name=oddzial`
   - `timeout` also prints `the monitored command dumped core`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - exit `139`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
   - logs `symbol-lookup-missing-table MAIN`
   - `timeout` also prints `the monitored command dumped core`
 - `python3 -m json.tool .agent/state.json`

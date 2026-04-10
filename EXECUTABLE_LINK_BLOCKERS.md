@@ -33,9 +33,9 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The retained mission-loader surface moved again this batch:
   - `Scenario_LoadMissionByIndexAndPlay` now passes the real selector into `Scenario_LoadMissionByIndex`
   - `createUnit` and `createCastle` now match the original sentinel-terminated unit-list contract closely enough to transcribe real mission setup calls
-  - the menu-reachable `sub_460360` cases now recovered in `clash95.c` are case `0` (`k_mapa1l.map`), case `1` (`k_mapa2l.map`), case `10` (`p_mapa1z.map`), and case `11` (`p_mapa2z.map`)
+  - the menu-reachable `sub_460360` cases now recovered in `clash95.c` are case `0` (`k_mapa1l.map`), case `1` (`k_mapa2l.map`), case `2` (`k_mapa3l.map`), case `10` (`p_mapa1z.map`), and case `11` (`p_mapa2z.map`)
   - the first recovered cases now call the already-recovered local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
-- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or `mapK2` / case `1`. It is now the next remaining mission-loader case tranche inside `Scenario_LoadMissionByIndex`, starting with `mapK3` / case `2`.
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or `mapK2` / case `1`. `mapK3` / case `2` is now materialized too, including its player-2 intelligence write, explicit `Treg Rock` post-castle garrison refresh, and post-initializer camera override. The next remaining mission-loader case tranche inside `Scenario_LoadMissionByIndex` now starts with `mapK4` / case `3`.
 - Additional retained reduction notes from the latest pass:
   - `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their already-recovered local bodies instead of standing as duplicate retained export holes
   - the `sub_451E46` probe is still green, and the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
@@ -150,5 +150,5 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - `clash95_bootstrap` and `clash95_cpp_regen` both stay green, while the last directly traced contained milestone remains the post-confirm save-replay entry that fails in the missing class/bload prelude.
 - There are now two adjacent widening fronts:
   - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch`, and the next retained widening stops in the remaining `Scenario_LoadMissionByIndex` cases led by `mapK3` / case `2`
+  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch`, and the next retained widening stops in the remaining `Scenario_LoadMissionByIndex` cases led by `mapK4` / case `3`
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.

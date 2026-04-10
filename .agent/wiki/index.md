@@ -2,8 +2,8 @@
 
 - Current frontier:
   - keep the contained authentic load-menu wedge green while separating it from the broader retained mission-loader widening that now starts after `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
-  - the retained mission-loader slice in `clash95.c` now covers cases `0`, `1`, `10`, and `11`
-  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK3` / case `2`
+  - the retained mission-loader slice in `clash95.c` now covers cases `0`, `1`, `2`, `10`, and `11`
+  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK4` / case `3`
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -24,7 +24,7 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
   - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` is still deferred
   - the next retained widening is no longer `sub_40D330` / `sub_44C2A0`; those now reuse `MiniMap_CreateSurface` / `Game_InitPlayerViewState`
-  - the next retained widening is the remaining `Scenario_LoadMissionByIndex` case tranche, starting with `mapK3`
+  - the next retained widening is the remaining `Scenario_LoadMissionByIndex` case tranche, starting with `mapK4`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

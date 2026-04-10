@@ -8,5 +8,9 @@
   - Reason: asm proves that side effect is case-local, distinct from the internal `createCastle` setup, and not a wrapper or class seam concern.
 - Preserve the `mapK2` manual camera override after `Game_InitPlayerViewState`.
   - Reason: asm writes player-0 camera and map view values after the shared initializer, so collapsing those writes into the helper would erase a case-specific behavior.
+- Keep the `mapK3` player-2 `PLAYER_AI_INTELLIGENCE(2) = 2` write explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the `mapK3` asm writes to player offset `+31`, and the already-recovered mission logging strings identify that slot as `inteligencja`; naming it locally is better than leaving a magic offset or hiding it in unrelated runtime glue.
+- Keep the `mapK3` `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and manual camera override explicit in the case body.
+  - Reason: asm proves both effects are case-local follow-ons after `createCastle` / `Game_InitPlayerViewState`, not generic helper behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
