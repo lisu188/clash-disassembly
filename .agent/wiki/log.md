@@ -103,3 +103,10 @@
   - broader rules still reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
   - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
 - Advanced the durable memory from `mapK3` to `mapK4`, so the next `continue` resumes from case `3` instead of re-auditing the already-recovered `k_mapa3l.map` lane.
+- Reused the read-heavy subagents again on `mapK4` and confirmed the live retained blocker was still pure recovered-C mission setup: `runtime_glue_mapper`, `sdl_seam_mapper`, and `class_seam_mapper` all stayed below compat, SDL, and `src_cpp`, `external_corroborator` only corroborated the shipped `k_mapa4j.map` / `McDonowan` / `Sir Wenom` / `Lord Gorio` / `Ughuata` names secondarily, and `boot_path_mapper` pinned the exact case-3 order from `clash95.asm`.
+- Recovered `mapK4` / case `3` directly in `Scenario_LoadMissionByIndex`, including the four-player activation/name setup, the `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, the explicit `Building_OnGarrisonChange` handoff, and the three case-local raw stack mutation bands, while preserving the absence of a post-`Game_InitPlayerViewState` camera override.
+- Re-ran the three green build targets plus the retained `PlayGame_Dispatch` probe and confirmed the retained executable-regeneration surface still links cleanly after `mapK4`.
+- Re-ran the exact traced contained post-confirm menu probes with the corrected `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1` lane and reconfirmed the same protected split under the timeout/core-dump band:
+  - broader rules still reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Advanced the durable memory from `mapK4` to `mapK5`, so the next `continue` resumes from case `4` instead of re-auditing the already-recovered `k_mapa4j.map` lane.

@@ -12,5 +12,11 @@
   - Reason: the `mapK3` asm writes to player offset `+31`, and the already-recovered mission logging strings identify that slot as `inteligencja`; naming it locally is better than leaving a magic offset or hiding it in unrelated runtime glue.
 - Keep the `mapK3` `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and manual camera override explicit in the case body.
   - Reason: asm proves both effects are case-local follow-ons after `createCastle` / `Game_InitPlayerViewState`, not generic helper behavior.
+- Keep the `mapK4` `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and `Building_OnGarrisonChange` handoff explicit in the case body.
+  - Reason: asm proves those writes happen immediately after `createCastle` and before the first player-0 unit block, so they are scenario-local setup, not helper or wrapper behavior.
+- Keep the `mapK4` raw stack mutation bands at `(23,23)`, `(12,0)`, and `(39,31)` as raw case-local writes for now.
+  - Reason: the asm proves those mutations are real mission setup, but their slot/stack field semantics are not named yet; folding them into guessed helpers would be drift.
+- Preserve the absence of a `mapK4` post-initializer camera override.
+  - Reason: unlike `mapK2` and `mapK3`, the `mapK4` asm returns directly after `Game_InitPlayerViewState`, so copying the earlier camera override pattern would be incorrect.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

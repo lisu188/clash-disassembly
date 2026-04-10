@@ -11,7 +11,7 @@
   - contained load-menu row resources load
   - contained load-menu row draws complete
   - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the real post-confirm probe lane needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` after slot selection
+  - the real post-confirm probe lane needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` plus `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1` after slot selection
   - the contained post-confirm save replay still reaches `load-menu-post-confirm-load-save`
   - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
 - Next boot-path frontier:
@@ -20,4 +20,4 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
   - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
-  - the remaining retained widening is the still-unrecovered `Scenario_LoadMissionByIndex` case tranche, starting with `mapK4`
+  - the remaining retained widening is the still-unrecovered `Scenario_LoadMissionByIndex` case tranche, starting with `mapK5`

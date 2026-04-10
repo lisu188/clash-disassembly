@@ -65,7 +65,8 @@ This file classifies the current runtime/quarantine surface for executable regen
     - the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
     - `mapK2` / case `1` also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and the manual camera override after `Game_InitPlayerViewState`
     - `mapK3` / case `2` now also preserves its case-local player-2 intelligence write, the `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same manual camera override after `Game_InitPlayerViewState`
-  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK4` / case `3`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - `mapK4` / case `3` now also preserves its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three case-local raw stack/status mutation bands in recovered C instead of wrapper glue
+  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK5` / case `4`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 

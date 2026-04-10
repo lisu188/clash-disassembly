@@ -36,14 +36,15 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the retained mission-loader lane also moved in recovered C:
     - `Scenario_LoadMissionByIndexAndPlay` now threads the real selector into `Scenario_LoadMissionByIndex`
     - `createUnit` / `createCastle` now carry the original sentinel-terminated unit lists through real varargs instead of depending on x86 stack accidents
-    - the menu-reachable `sub_460360` cases `0`, `1`, `2`, `10`, and `11` are now materialized from asm as campaign-entry map loaders (`k_mapa1l.map`, `k_mapa2l.map`, `k_mapa3l.map`, `p_mapa1z.map`, and `p_mapa2z.map`) with the corroborated player-state, name, unit, and castle setup
+    - the menu-reachable `sub_460360` cases `0`, `1`, `2`, `3`, `10`, and `11` are now materialized from asm as campaign-entry map loaders (`k_mapa1l.map`, `k_mapa2l.map`, `k_mapa3l.map`, `k_mapa4j.map`, `p_mapa1z.map`, and `p_mapa2z.map`) with the corroborated player-state, name, unit, and castle setup
     - `mapK2` / case `1` now also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and its manual camera override after `Game_InitPlayerViewState`
     - `mapK3` / case `2` now also preserves its case-local player-2 intelligence write, the `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same post-initializer camera override in recovered C
-  - the surviving retained blocker is no longer the old `sub_40D330` / `sub_44C2A0` helper band, `mapK2`, or `mapK3`; it is the remaining `Scenario_LoadMissionByIndex` case recovery itself, starting with `mapK4` / case `3`
+    - `mapK4` / case `3` now also preserves its four-player setup, the `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, the explicit `Building_OnGarrisonChange` handoff, and the three case-local raw stack mutation bands in recovered C, with no copied camera override after `Game_InitPlayerViewState`
+  - the surviving retained blocker is no longer the old `sub_40D330` / `sub_44C2A0` helper band, `mapK2`, `mapK3`, or `mapK4`; it is the remaining `Scenario_LoadMissionByIndex` case recovery itself, starting with `mapK5` / case `4`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
-  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, `mapK2`, or `mapK3`; it is the next remaining `Scenario_LoadMissionByIndex` case slice, starting with `mapK4`
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, `mapK2`, `mapK3`, or `mapK4`; it is the next remaining `Scenario_LoadMissionByIndex` case slice, starting with `mapK5`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 
