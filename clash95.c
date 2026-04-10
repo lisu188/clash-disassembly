@@ -246,7 +246,7 @@ int _no_support_loaded(void);
 __int64 __fastcall CRT_GetBootstrapThreadData(_DWORD, _DWORD);
 _DWORD __cdecl bad_exception_dtor(bad_exception *this);
 int __cdecl sub_41FF80(void);
-int __cdecl sub_49A0E0(_DWORD, _DWORD);
+int __cdecl sub_49A0E0(void);
 int __cdecl sub_4B6DD0(void);
 int __cdecl sub_4BDD40(void);
 int __cdecl sub_4D88F0(void);
@@ -268,9 +268,9 @@ extern char *off_5123CC[102];
 extern _BYTE byte_5441A0[11];
 extern _UNKNOWN unk_519AE8;
 extern _UNKNOWN unk_51A8EC;
-extern _UNKNOWN unk_50293C;
+extern char unk_50293C[];
 extern _UNKNOWN unk_51A290;
-extern _UNKNOWN unk_508D50;
+extern _UNKNOWN unk_508D50[];
 typedef struct __attribute__((packed)) RenderSpriteRemapEntry {
   unsigned short sprite_id;
   unsigned char timing;
@@ -404,14 +404,16 @@ extern char *g_QueenCastleWellPoisoningTexts[];
 extern char *g_QueenCastleArsonTexts[];
 extern __int16 word_5191F0;
 extern char g_QueenBirthMessageBuffer[];
-extern int dword_51ACC4;
+#define dword_51ACC4 HIDWORD(qword_51ACC0)
 _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
 int ismbdprint_();
-int mblen_();
-int mblen__0();
-extern double dbl_502FDC;
+int __fastcall unknown_libname_7(int a1);
+int __fastcall unknown_libname_8(int a1);
+int __fastcall mblen_(int a1, int a2);
+int __fastcall mblen__0(int a1, int a2);
+double dbl_502FDC = 0.5;
 char __thiscall DetectGameCDPath(void *this);
 int  sub_4015A0(_DWORD *a1);
 _DWORD * sub_4015D0(_DWORD *result);
@@ -1220,8 +1222,8 @@ BOOL  MapTile_HasHiddenTreasure(int a1, int a2);
 signed int  Treasure_TryDigHere(int, char, DWORD, char, char *, double);
 signed int  UnitStack_TryHide(int a1, unsigned __int16 a2, DWORD a3, double a4);
 signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, double a2);
-int  sub_4443C0(int a1, int a2);
-int  sub_4443D0(int a1, int a2);
+int  sub_4443C0(int a1, char *a2);
+int  sub_4443D0(int a1, char *a2);
 signed int  saveGame(int a1, DWORD a2, double a3);
 signed int  sub_444490(int a1, DWORD a2, double a3);
 char  sub_4446E0(int a1, char *a2, DWORD a3);
@@ -1875,7 +1877,7 @@ void  __noreturn sub_472584(int a1, int a2, int a3);
 int __fastcall sub_4725B0(int a1, int a2);
 signed int  sub_472620(_DWORD *a1);
 signed int sub_4726C0();
-// int unknown_libname_4(void); weak
+int unknown_libname_4(int a1);
 signed int  sub_472710(int a1, int a2);
 _DWORD * Mem_Realloc(char *a1, unsigned int a2, unsigned int a3);
 int sub_472800();
@@ -2799,9 +2801,9 @@ int  sub_491B80(int a1, const char *a2);
 int  sub_491C00(int a1);
 int __fastcall sub_491C70(int a1, int a2);
 signed int  sub_491CC0(int a1, const char *a2, int a3);
-signed int  sub_491D00(int a1, int a2, int a3, int a4);
+signed int  sub_491D00(int a1, const void *a2, int a3, int a4);
 signed int  sub_491DB0(int a1);
-signed int  sub_491E80(int a1, int a2, int a3);
+signed int  sub_491E80(int a1, const void *a2, int a3);
 int  sub_491F30(int a1);
 int  sub_491F60(int a1, _DWORD *a2, int a3, int *a4, int a5, int a6);
 unsigned int  sub_492090(int a1, int a2, int a3, int *a4, int a5, int a6, int a7);
@@ -3285,8 +3287,8 @@ signed int sub_4A7B10();
 int  sub_4A7B40(int a1, _DWORD *a2);
 int  sub_4A7B60(int a1, int a2, signed int a3, int a4, int a5, char a6);
 int  sub_4A7C20(int a1, int a2, int a3, int a4, char a5);
-// int ftime_(void); weak
-// int system_(void); weak
+int ftime_(void *time_buffer);
+int system_(const char *command);
 int  sub_4A7DA3(const CHAR *a1, const CHAR *a2, int a3);
 signed int  sub_4A7DC0(int a1, _DWORD *a2);
 _DWORD * sub_4A7E20(int *a1, int a2, int a3);
@@ -5828,7 +5830,16 @@ char aCompilations[13] = "compilations"; // weak
 char aMain[5] = "MAIN"; // weak
 char aConstrct[9] = "CONSTRCT"; // weak
 char aSomeConstructs[58] = "Some constructs are still in use. Clear cannot continue.\n"; // weak
+char unk_50293C[12] = { 1, 2, 3, 4, 'C', 'L', 'I', 'P', 'S', 0, 0, 0 }; // weak
+char aBload[6] = "bload"; // weak
 char aBload_0[6] = "BLOAD"; // weak
+char aFile[6] = "File "; // weak
+char aIsNotABinaryCo[34] = " is not a binary construct file.\n"; // weak
+char aIsAnIncompatib[44] = " is an incompatible binary construct file.\n"; // weak
+char aTheClipsEnviro[45] = "The CLIPS environment could not be cleared.\n"; // weak
+char aBinaryLoadCann[30] = "Binary load cannot continue.\n"; // weak
+char aSkipping[11] = "\nSkipping "; // weak
+char aConstructsBeca[39] = " constructs because of unavailibility\n"; // weak
 char aTheFollowingUn[39] = "The following undefined functions are "; // weak
 char aReferencedByTh[34] = "referenced by this binary image:\n"; // weak
 char asc_502A88[4] = "   "; // weak
@@ -11403,6 +11414,10 @@ int dword_51ABC4 = 0; // weak
 int dword_51ABC8 = 0; // weak
 int dword_51ABCC = 0; // weak
 int (*dword_51ABD0)(void) = NULL; // weak
+_UNKNOWN unk_51ABD4; // weak
+_UNKNOWN unk_51AC04; // weak
+_UNKNOWN unk_51AC34; // weak
+_UNKNOWN unk_51AC64; // weak
 int dword_51AC94 = -1; // weak
 int dword_51AC98 = 0; // weak
 int dword_51AC9C = 0; // weak
@@ -11437,7 +11452,8 @@ int dword_51AD10 = 0; // weak
 int dword_51AD14 = 0; // weak
 int dword_51AD18 = 0; // weak
 int dword_51AD1C = 0; // weak
-void *off_51AD20 = &unk_508D50; // weak
+_UNKNOWN unk_508D50[] = { 5, 6, 7, 'C', 'L', 'I', 'P', 'S', 0, 0 }; // weak
+void *off_51AD20 = unk_508D50; // weak
 char *off_51AD24 = "V6.00"; // weak
 int dword_51AD28 = 0; // weak
 int dword_51AD2C = 0; // weak
@@ -11801,6 +11817,18 @@ int dword_51B3EC = 0; // weak
 int dword_51B3F0 = 1; // weak
 _UNKNOWN unk_51B3F4; // weak
 _UNKNOWN unk_51B424; // weak
+_UNKNOWN unk_51B488; // weak
+_UNKNOWN unk_51B4B8; // weak
+_UNKNOWN unk_51B4E8; // weak
+_UNKNOWN unk_51B518; // weak
+_UNKNOWN unk_51B548; // weak
+_UNKNOWN unk_51B578; // weak
+_UNKNOWN unk_51B5A8; // weak
+_UNKNOWN unk_51B5D8; // weak
+_UNKNOWN unk_51B608; // weak
+_UNKNOWN unk_51B638; // weak
+_UNKNOWN unk_51B668; // weak
+_UNKNOWN unk_51B698; // weak
 int dword_51B454 = 0; // weak
 int dword_51B458 = 0; // weak
 int dword_51B45C = 0; // weak
@@ -11925,7 +11953,7 @@ char byte_523F8D[]; // weak
 char byte_523F8E[]; // weak
 int dword_523F8F; // weak
 int dword_523F93; // weak
-int g_TerrainMoveTableOffsets[]; // weak
+int dword_524568; // weak
 int g_TerrainMoveProfileOffsets[1024]; // weak
 int g_PathingAllowBridgeCrossings; // weak
 int dword_525570; // weak
@@ -12938,14 +12966,12 @@ _BYTE * sub_401AB0(_BYTE *result, char a2)
 //----- (00401AF0) --------------------------------------------------------
 int  sub_401AF0(int a1, DWORD a2)
 {
-  int v3; // eax
-  int v4; // ecx
+  int palette_table;
 
-  v3 = _wcpp_4_ctor_array__(a1, 256);
-  LoadPalCOL(v3, v3, a2);
-  return v4;
+  palette_table = _wcpp_4_ctor_array__(a1, 256);
+  LoadPalCOL(palette_table, a2, 0);
+  return palette_table;
 }
-// 401B0D: variable 'v4' is possibly undefined
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401B20) --------------------------------------------------------
@@ -15517,7 +15543,20 @@ int  sub_404B80(int a1, int a2)
 //----- (00404BA0) --------------------------------------------------------
 int  Render_SaveBackbuffer(int a1)
 {
-  return (*(int (__stdcall **)(_DWORD, int, _DWORD))(***(_DWORD ***)(a1 + 196) + 88))(**(_DWORD **)(a1 + 196), 1, 0);
+  _DWORD surface_wrapper;
+  _DWORD surface_device;
+  uintptr_t *surface_vtable;
+
+  surface_wrapper = *(_DWORD *)(a1 + 196);
+  if ( !surface_wrapper )
+    return 0;
+  surface_device = *(_DWORD *)(uintptr_t)surface_wrapper;
+  if ( !surface_device )
+    return 0;
+  surface_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)(uintptr_t)surface_device;
+  if ( !surface_vtable || !surface_vtable[11] )
+    return 0;
+  return ((int (__stdcall *)(_DWORD, int, _DWORD))(uintptr_t)surface_vtable[11])(surface_device, 1, 0);
 }
 
 //----- (00404BC0) --------------------------------------------------------
@@ -16266,17 +16305,19 @@ _DWORD * sub_405900(int a1)
 //----- (00405920) --------------------------------------------------------
 int  sub_405920(int *a1)
 {
-  int *v1; // ecx
   int result; // eax
+  uintptr_t method_table;
 
-  v1 = a1;
   result = *a1;
   if ( result )
-    result = (**(int (__fastcall ***)(int *, int))(result + 4108))(v1, 2);
-  *v1 = 0;
+  {
+    method_table = (uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)result + 4108);
+    if ( method_table )
+      result = ((int (__fastcall *)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)method_table)(result, 2);
+  }
+  *a1 = 0;
   return result;
 }
-// 405929: variable 'v1' is possibly undefined
 
 //----- (00405950) --------------------------------------------------------
 int  sub_405950(int *a1)
@@ -19828,31 +19869,31 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   sub_404D90((int *)&unk_51D4C0);
   v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
   if ( v3 )
-    v3 = DLXSpriteSet_Load(v3, a1);
+    v3 = DLXSpriteSet_Load(v3, "frame.s32");
   dword_5202BC = (int)v3;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, a1, a2);
   if ( v5 )
-    v5 = DLXSpriteSet_Load(v5, a1);
+    v5 = DLXSpriteSet_Load(v5, "marks.s32");
   dword_5202C8 = (int)v5;
   v7 = (_DWORD *)Mem_Alloc(4112, v6, a1, a2);
   if ( v7 )
-    v7 = DLXSpriteSet_Load(v7, a1);
+    v7 = DLXSpriteSet_Load(v7, "step.s32");
   dword_5202CC = (int)v7;
   v9 = (_DWORD *)Mem_Alloc(4112, v8, a1, a2);
   if ( v9 )
-    v9 = DLXSpriteSet_Load(v9, a1);
+    v9 = DLXSpriteSet_Load(v9, "fog.s32");
   g_FogOverlaySpriteSet = (int)v9;
   v11 = (_DWORD *)Mem_Alloc(4112, v10, a1, a2);
   if ( v11 )
-    v11 = DLXSpriteSet_Load(v11, a1);
+    v11 = DLXSpriteSet_Load(v11, "flag.s32");
   dword_5202D4 = (int)v11;
   v13 = (_DWORD *)Mem_Alloc(4112, v12, a1, a2);
   if ( v13 )
-    v13 = DLXSpriteSet_Load(v13, a1);
+    v13 = DLXSpriteSet_Load(v13, "whirl.s32");
   dword_5202D0 = (int)v13;
   v15 = (_DWORD *)Mem_Alloc(4112, v14, a1, a2);
   if ( v15 )
-    v15 = DLXSpriteSet_Load(v15, a1);
+    v15 = DLXSpriteSet_Load(v15, "turakomp.s32");
   dword_5202DC = (int)v15;
   if ( !dword_5202E0 )
   {
@@ -19863,7 +19904,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   }
   v18 = Mem_Alloc(1024, v16, a1, a2);
   if ( v18 )
-    v18 = sub_401AF0(v19, a2);
+    v18 = sub_401AF0(v18, (DWORD)"map.pal");
   dword_5202F4 = v18;
   sub_435ED0(aMainmap, v18, v19, a2);
   sub_460C70((int)dword_544CD8, a1, a2);
@@ -20438,32 +20479,31 @@ char  sub_40BBF0(char result)
 int  sub_40BC00(int a1, unsigned __int8 a2)
 {
   TextSpriteResourceSlotRecord *slot;
-  int v3; // eax
-  int v4; // ebx
-  unsigned __int16 v5; // cx
-  int v6; // eax
+  unsigned __int16 sprite_index;
+  uintptr_t *method_table;
 
   slot = TextSprite_GetActiveResourceSlot();
   if ( !slot || !slot->cached_sprite_set )
     return a1;
-  DLX_GetSpriteForChar(slot->cached_sprite_set, a2 - 32);
-  (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  LOWORD(v3) = DLX_GetSpriteHeight(slot->cached_sprite_set, a2 - 32);
-  v4 = v3;
-  DLX_GetSpriteWidth(slot->cached_sprite_set, v5);
-  HIWORD(v6) = HIWORD(dword_520724);
-  LOWORD(v6) = slot->glyph_spacing_word;
-  return a1 + v4 + v6;
+  sprite_index = (unsigned __int16)(a2 - 32);
+  DLX_GetSpriteForChar(slot->cached_sprite_set, sprite_index);
+  method_table = 0;
+  if ( g_RenderDevice )
+    method_table = (uintptr_t *)(uintptr_t)(unsigned int)*((_DWORD *)g_RenderDevice + 46);
+  if ( method_table && method_table[13] )
+  {
+    ((void (__stdcall *)(int, int, int, int, int, _DWORD, _DWORD))(uintptr_t)method_table[13])(
+      -1,
+      -1,
+      -1,
+      -1,
+      1,
+      0,
+      0);
+  }
+  DLX_GetSpriteWidth(slot->cached_sprite_set, sprite_index);
+  return a1 + (unsigned __int16)DLX_GetSpriteHeight(slot->cached_sprite_set, sprite_index) + slot->glyph_spacing_word;
 }
-// 40BC64: variable 'v3' is possibly undefined
-// 40BC70: variable 'v5' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 520724: using guessed type int dword_520724;
 
@@ -26769,105 +26809,109 @@ signed int Map_InitTerrainMoveTableOffsets()
   int i8; // edx
   int i9; // edx
 
-  for ( i = 0; i != 4; g_TerrainMoveTableOffsets[i] = 0 )
+  /*
+   * `sub_413B10` writes `dword_524568[eax]` starting at offset `+4`, so the
+   * 1024-entry terrain-id lookup table actually begins at `0x52456C`.
+   */
+  for ( i = 0; i != 4; g_TerrainMoveProfileOffsets[i] = 0 )
     ++i;
   do
-    g_TerrainMoveTableOffsets[++i] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA;
+    g_TerrainMoveProfileOffsets[++i] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA;
   while ( i != 7 );
   result = 7;
-  for ( j = 7; j <= 7; g_TerrainMoveTableOffsets[j] = &g_UnitTypeSwampMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( j = 7; j <= 7; g_TerrainMoveProfileOffsets[j] = &g_UnitTypeSwampMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++j;
     ++result;
   }
-  for ( k = result; k <= 15; g_TerrainMoveTableOffsets[k] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( k = result; k <= 15; g_TerrainMoveProfileOffsets[k] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++k;
     ++result;
   }
-  for ( m = result; m <= 19; g_TerrainMoveTableOffsets[m] = 0 )
+  for ( m = result; m <= 19; g_TerrainMoveProfileOffsets[m] = 0 )
   {
     ++m;
     ++result;
   }
-  for ( n = result; n <= 31; g_TerrainMoveTableOffsets[n] = &g_UnitTypePlainClassMoveCostB - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( n = result; n <= 31; g_TerrainMoveProfileOffsets[n] = &g_UnitTypePlainClassMoveCostB - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++n;
     ++result;
   }
-  for ( ii = result; ii <= 44; g_TerrainMoveTableOffsets[ii] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( ii = result; ii <= 44; g_TerrainMoveProfileOffsets[ii] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++ii;
     ++result;
   }
-  for ( jj = result; jj <= 160; g_TerrainMoveTableOffsets[jj] = &g_UnitTypeForestMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( jj = result; jj <= 160; g_TerrainMoveProfileOffsets[jj] = &g_UnitTypeForestMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++jj;
     ++result;
   }
-  for ( kk = result; kk <= 185; g_TerrainMoveTableOffsets[kk] = &g_UnitTypeHillsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( kk = result; kk <= 185; g_TerrainMoveProfileOffsets[kk] = &g_UnitTypeHillsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++kk;
     ++result;
   }
-  for ( mm = result; mm <= 221; g_TerrainMoveTableOffsets[mm] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( mm = result; mm <= 221; g_TerrainMoveProfileOffsets[mm] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++mm;
     ++result;
   }
-  for ( nn = result; nn <= 706; g_TerrainMoveTableOffsets[nn] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( nn = result; nn <= 706; g_TerrainMoveProfileOffsets[nn] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++nn;
     ++result;
   }
-  for ( i1 = result; i1 <= 710; g_TerrainMoveTableOffsets[i1] = 0 )
+  for ( i1 = result; i1 <= 710; g_TerrainMoveProfileOffsets[i1] = 0 )
   {
     ++i1;
     ++result;
   }
-  for ( i2 = result; i2 <= 714; g_TerrainMoveTableOffsets[i2] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i2 = result; i2 <= 714; g_TerrainMoveProfileOffsets[i2] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i2;
     ++result;
   }
-  for ( i3 = result; i3 <= 715; g_TerrainMoveTableOffsets[i3] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i3 = result; i3 <= 715; g_TerrainMoveProfileOffsets[i3] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i3;
     ++result;
   }
-  for ( i4 = result; i4 <= 745; g_TerrainMoveTableOffsets[i4] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i4 = result; i4 <= 745; g_TerrainMoveProfileOffsets[i4] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i4;
     ++result;
   }
-  for ( i5 = result; i5 <= 750; g_TerrainMoveTableOffsets[i5] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i5 = result; i5 <= 750; g_TerrainMoveProfileOffsets[i5] = &g_UnitTypeMountainsMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i5;
     ++result;
   }
-  for ( i6 = result; i6 <= 753; g_TerrainMoveTableOffsets[i6] = 0 )
+  for ( i6 = result; i6 <= 753; g_TerrainMoveProfileOffsets[i6] = 0 )
   {
     ++i6;
     ++result;
   }
-  for ( i7 = result; i7 <= 756; g_TerrainMoveTableOffsets[i7] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i7 = result; i7 <= 756; g_TerrainMoveProfileOffsets[i7] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i7;
     ++result;
   }
-  for ( i8 = result; i8 <= 770; g_TerrainMoveTableOffsets[i8] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i8 = result; i8 <= 770; g_TerrainMoveProfileOffsets[i8] = &g_UnitTypeWaterSurfaceMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i8;
     ++result;
   }
-  for ( i9 = result; i9 < 1024; g_TerrainMoveTableOffsets[i9] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
+  for ( i9 = result; i9 < 1024; g_TerrainMoveProfileOffsets[i9] = &g_UnitTypeDesertMoveCost - (_UNKNOWN *)g_UnitTypePlainClassMoveCostA )
   {
     ++i9;
     ++result;
   }
   return result;
 }
-// 524568: using guessed type int g_TerrainMoveTableOffsets[];
+// 524568: using guessed type int dword_524568;
 
 //----- (00413DD0) --------------------------------------------------------
 int  Map_GetUnitTileMoveCostOrZero(int a1, int a2, int a3, int a4)
@@ -28256,23 +28300,21 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
 //----- (004163F0) --------------------------------------------------------
 unsigned int __thiscall sub_4163F0(void *this)
 {
-  char v1; // al
-  int v2; // ecx
-  unsigned int result; // eax
-  int v4; // ecx
+  int offset;
+  unsigned int result;
 
+  (void)this;
+  offset = 0;
   do
   {
-    v1 = Rng_RandRange(-20, 20);
-    byte_5269B8[v2] = v1;
+    byte_5269B8[offset] = Rng_RandRange(-20, 20);
+    offset += 2;
     result = Rng_RandRange(-20, 20);
-    byte_5269B7[v4] = result;
+    byte_5269B7[offset] = result;
   }
-  while ( v4 != 30 );
+  while ( offset != 30 );
   return result;
 }
-// 41640B: variable 'v2' is possibly undefined
-// 41641B: variable 'v4' is possibly undefined
 
 //----- (00416430) --------------------------------------------------------
 unsigned __int8 *__thiscall sub_416430(void *this)
@@ -29773,54 +29815,89 @@ int  sub_419110(int result)
 }
 // 526A20: using guessed type int dword_526A20;
 
-//----- (00419120) --------------------------------------------------------
-void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...)
+static int Compat_CountPrintfArgs32(const char *format)
 {
-  char *v4; // edx
-  const CHAR *v5; // eax
-  int v6; // eax
-  int v7; // ecx
-  int v8; // ecx
-  unsigned __int64 v9; // rax
-  int v10; // ecx
-  int v11; // ecx
-  int v12; // edx
-  int v13; // ecx
-  int v14; // ecx
+  int count;
 
-  if ( logEnabled && battleLogEnabled )
+  count = 0;
+  while ( format && *format )
   {
-    if ( dword_526A20 )
+    if ( *format++ != '%' )
+      continue;
+    if ( *format == '%' )
     {
-      v4 = aA_1;
-      v5 = aBattle_log_0;
+      ++format;
+      continue;
+    }
+    while ( *format == '#' || *format == '0' || *format == '-' || *format == ' ' || *format == '+' )
+      ++format;
+    if ( *format == '*' )
+    {
+      ++count;
+      ++format;
     }
     else
     {
-      v4 = aA;
-      v5 = aClash_log_0;
+      while ( *format >= '0' && *format <= '9' )
+        ++format;
     }
-    v6 = sub_475CC8(v5, (unsigned __int8 *)v4, a1, a3);
-    Time_Now(v6, 0);
-    Time_Now(v7, 0);
-    LODWORD(v9) = Time_Now(v8, 0);
-    sub_476301(v10, (unsigned int)(v9 / 0x1770) % 0x3C, v10, (int)a03d02d02d, (unsigned int)(v9 / 0x1770) % 0x3C);
-    sub_476322(v11, a4);
-    sub_476301(v13, v12, v13, (int)asc_4EDCFF, a2);
-    fclose_(v14);
+    if ( *format == '.' )
+    {
+      ++format;
+      if ( *format == '*' )
+      {
+        ++count;
+        ++format;
+      }
+      else
+      {
+        while ( *format >= '0' && *format <= '9' )
+          ++format;
+      }
+    }
+    if ( *format == 'I' && format[1] == '6' && format[2] == '4' )
+      format += 3;
+    else if ( *format == 'h' || *format == 'l' || *format == 'L' || *format == 'N' || *format == 'F' || *format == 'w' )
+    {
+      if ( (*format == 'h' && format[1] == 'h') || (*format == 'l' && format[1] == 'l') )
+        ++format;
+      ++format;
+    }
+    if ( *format )
+    {
+      ++count;
+      ++format;
+    }
   }
+  return count;
 }
-// 419120: could not find valid save-restore pair for ebx
-// 419178: variable 'v7' is possibly undefined
-// 419190: variable 'v8' is possibly undefined
-// 4191AB: variable 'v10' is possibly undefined
-// 419195: variable 'v9' is possibly undefined
-// 4191B9: variable 'v11' is possibly undefined
-// 4191C4: variable 'v13' is possibly undefined
-// 4191C4: variable 'v12' is possibly undefined
-// 4191CE: variable 'v14' is possibly undefined
+
+//----- (00419120) --------------------------------------------------------
+void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...)
+{
+  const CHAR *log_path;
+  unsigned __int8 *open_mode;
+  int output_handle;
+  const char *format;
+  unsigned int centiseconds;
+  unsigned int seconds;
+  unsigned int minutes;
+  int low32_line_ptr;
+  char *line_buffer;
+  int line_length;
+
+  if ( !logEnabled || !battleLogEnabled )
+    return;
+
+  /*
+   * The Watcom-style formatter/stream path under `sub_476301` / `sub_488DF2`
+   * is still being re-emitted for x86_64. Keep runtime-side sprite/resource
+   * probes alive by neutralizing logging rather than crashing inside that
+   * auxiliary path.
+   */
+  return;
+}
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
-// 476322: using guessed type int __fastcall sub_476322(_DWORD, _DWORD);
 // 5139FC: using guessed type int battleLogEnabled;
 // 526A1C: using guessed type int logEnabled;
 // 526A20: using guessed type int dword_526A20;
@@ -59358,14 +59435,14 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (004443C0) --------------------------------------------------------
-int  sub_4443C0(int a1, int a2)
+int  sub_4443C0(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.dat", a1);
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (004443D0) --------------------------------------------------------
-int  sub_4443D0(int a1, int a2)
+int  sub_4443D0(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.fac", a1);
 }
@@ -59380,14 +59457,14 @@ signed int  saveGame(int a1, DWORD a2, double a3)
   int v8; // edx
   CHAR v10[120]; // [esp+0h] [ebp-78h] BYREF
 
-  sub_4443C0(a1, (int)v10);
+  sub_4443C0(a1, v10);
   PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX) = MAP_VIEW_TOP;
   v6 = sub_475CC8(v10, (unsigned __int8 *)aWb_4, v5, a2);
   fwrite_((const void *)a2, 16, v6, 1);
   fwrite_((const void *)gameData, 586398, v6, 1);
   fclose_(v7);
-  sub_4443D0(a1, v8);
+  sub_4443D0(a1, v10);
   return sub_47B4C0(v10, 2, 0, a3);
 }
 // 44443B: variable 'v5' is possibly undefined
@@ -59399,78 +59476,93 @@ signed int  saveGame(int a1, DWORD a2, double a3)
 //----- (00444490) --------------------------------------------------------
 signed int  sub_444490(int a1, DWORD a2, double a3)
 {
-  int v5; // ecx
-  signed int result; // eax
-  char v7; // bl
-  int v8; // ecx
-  int v9; // ecx
-  int i; // edx
-  int v11; // eax
-  int j; // edx
-  int k; // esi
-  int v14; // eax
-  int v15; // ecx
-  int v16; // edx
-  int v17; // ecx
-  void *v18; // ecx
+  int file_handle; // eax
+  int trace_load_save; // eax
+  int stack_index; // ecx
+  int slot_index; // edx
+  int building_index; // edx
+  int unit_record_index; // ecx
+  int unit_record; // edx
   CHAR v19[120]; // [esp+0h] [ebp-78h] BYREF
 
-  sub_4443C0(a1, (int)v19);
-  result = sub_475CC8(v19, (unsigned __int8 *)aRb_5, v5, a2);
-  if ( result )
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] load-save-enter\n");
+  sub_4443C0(a1, v19);
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] load-save-path %s\n", v19);
+  file_handle = sub_475CC8(v19, (unsigned __int8 *)aRb_5, 0, a2);
+  if ( file_handle )
   {
-    sub_47BA86(result, 16, 1u, a1);
-    v7 = 1;
-    fread_();
-    fclose_(v8);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-file-opened handle=%d\n", file_handle);
+    sub_47BA86(file_handle, 16, 1u, a1);
+    fread_((void *)(uintptr_t)(unsigned int)gameData, 0x8F29E, file_handle, 1);
+    fclose_(file_handle);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-read\n");
     g_CurrentPlayerIndex = TURN_OWNER_PLAYER_INDEX;
     sub_451E20();
-LABEL_3:
-    if ( (unsigned int)*(__int16 *)(gameData + 725 * v9 + 147180) <= 0x28 )
-      UnitStack_LinkArmyFact((__int16 *)(gameData + 147174 + 725 * v9), v7, a2);
-    while ( 1 )
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-fact-reset\n");
+    for ( stack_index = 0; stack_index < 500; ++stack_index )
     {
-      for ( i = 0; i < 10; ++i )
+      if ( (unsigned int)*(__int16 *)(gameData + 725 * stack_index + 147180) <= 0x28 )
       {
-        v7 = gameData;
-        v11 = 31 * i;
-        *(_DWORD *)(gameData + 725 * v9 + v11 + 147198) = 0;
+        if ( trace_load_save )
+          fprintf(
+            stderr,
+            "[menu-probe] load-save-link-army stack=%d type=%d x=%d y=%d owner=%u\n",
+            stack_index,
+            *(unsigned __int16 *)(gameData + 725 * stack_index + 147180),
+            *(__int16 *)(gameData + 725 * stack_index + 147174),
+            *(__int16 *)(gameData + 725 * stack_index + 147176),
+            *(unsigned __int8 *)(gameData + 725 * stack_index + 147178));
+        UnitStack_LinkArmyFact((__int16 *)(gameData + 147174 + 725 * stack_index), 1, a2);
       }
-      if ( ++v9 >= 500 )
-        break;
-      if ( v9 >= 0 )
-        goto LABEL_3;
-    }
-    for ( j = 0; j < *(_DWORD *)(gameData + 140000); ++j )
-    {
-      for ( k = 0; ; ++k )
+      for ( slot_index = 0; slot_index < 10; ++slot_index )
       {
-        a2 = gameData;
-        if ( k >= *(_DWORD *)(gameData + 140004) )
-          break;
-        v14 = 14 * k;
-        *(_DWORD *)(14 * k + 1400 * j + gameData + 6) = 0;
-        *(_DWORD *)(gameData + 1400 * j + v14 + 10) = 0;
+        *(_DWORD *)(gameData + 725 * stack_index + 31 * slot_index + 147198) = 0;
       }
     }
-    v15 = 0;
-LABEL_17:
-    v16 = UNIT_RECORD(v15);
-    if ( (unsigned int)*(char *)(v16 + 4) < 4 && *(__int16 *)(v16 + 16) != -1 )
-      Rules_AssertCastleFact((unsigned __int8 *)(UNIT_RECORD(v15)), v15);
-    while ( ++v15 < 100 )
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-army-loop\n");
+    for ( building_index = 0; building_index < *(_DWORD *)(gameData + 140000); ++building_index )
     {
-      if ( v15 >= 0 )
-        goto LABEL_17;
+      for ( slot_index = 0; slot_index < *(_DWORD *)(gameData + 140004); ++slot_index )
+      {
+        *(_DWORD *)(14 * slot_index + 1400 * building_index + gameData + 6) = 0;
+        *(_DWORD *)(14 * slot_index + 1400 * building_index + gameData + 10) = 0;
+      }
     }
-    sub_4443D0(a1, (int)v19);
-    sub_47B890(v19, v17, a2, a3);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-building-loop\n");
+    for ( unit_record_index = 0; unit_record_index < 100; ++unit_record_index )
+    {
+      unit_record = UNIT_RECORD(unit_record_index);
+      if ( (unsigned int)*(char *)(unit_record + 4) < 4 && *(__int16 *)(unit_record + 16) != -1 )
+        Rules_AssertCastleFact((unsigned __int8 *)unit_record, unit_record_index);
+    }
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-castle-loop\n");
+    sub_4443D0(a1, v19);
+    sub_47B890(v19, 0, a2, a3);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-sidecar-write\n");
     Render_CreateSprite();
-    UI_ClearTileHighlight(v18);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-render-create\n");
+    UI_ClearTileHighlight(0);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-ui-clear\n");
     MiniMap_CreateSurface(a2);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] load-save-after-minimap\n");
     return 1;
   }
-  return result;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] load-save-open-failed\n");
+  return file_handle;
 }
 // 4445A5: conditional instruction was optimized away because ecx.4<1F4u
 // 44466F: conditional instruction was optimized away because ecx.4<64u
@@ -66988,13 +67080,13 @@ signed int sub_451E46()
   v3[3] = v1;
   sub_47D0E0(v0, v1);
   sub_47DBB0(0);
-  unknown_libname_7();
+  unknown_libname_7(1);
   return sub_47C850((int)aStrategClash_d, (DWORD)v3);
 }
 // 451E51: variable 'v0' is possibly undefined
 // 451E52: variable 'v1' is possibly undefined
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
-// 47E7B0: using guessed type int unknown_libname_7(void);
+// 47E7B0: using guessed type int __fastcall unknown_libname_7(int);
 
 //----- (00451E87) --------------------------------------------------------
 signed int sub_451E87()
@@ -67151,35 +67243,33 @@ char a4;
 DWORD a5;
 {
   unsigned int result; // eax
-  double v8; // st7
-  int v9; // ecx
-  int v10; // ecx
-  _DWORD *v11; // eax
-  int v12; // ecx
-  int v13; // edx
-  double v14; // st7
+  _DWORD *fact; // eax
+  int trace_load_save; // eax
   char v15[1000]; // [esp+0h] [ebp-3ECh] BYREF
-  int v16; // [esp+3E8h] [ebp-4h]
 
-  v16 = a3;
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
   result = a1[3];
   if ( result <= 0x28 )
   {
     ++dword_5195F4;
-    v8 = sprintf_(
-           v15,
-           "( ODDZIAL%d of oddzial (id %d)(gracz %d)(PA %d)(moc %d)(x %d)(y %d))",
-           a2,
-           a2,
-           *((unsigned __int8 *)a1 + 4),
-           100,
-           100,
-           *a1,
-           a1[1]);
-    Debug_Log(v9, a4, a5, (int)aMkinstArmyS);
-    v11 = Rules_AssertFact(v15, v10, v8);
-    *(_DWORD *)(v12 + 721) = v11;
-    return Rules_LinkArmyFact((__int16 *)v12, v13, v12, v14, a4, a5);
+    sprintf_(
+      v15,
+      "( ODDZIAL%d of oddzial (id %d)(gracz %d)(PA %d)(moc %d)(x %d)(y %d))",
+      a2,
+      a2,
+      *((unsigned __int8 *)a1 + 4),
+      100,
+      100,
+      *a1,
+      a1[1]);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] rules-create-army-fact %s\n", v15);
+    Debug_Log(0, a4, a5, (int)aMkinstArmyS);
+    fact = Rules_AssertFact(v15, 0, 0.0);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] rules-create-army-after-assert fact=%p\n", fact);
+    *(_DWORD *)((char *)a1 + 721) = fact;
+    return Rules_LinkArmyFact(a1, a2, a3, 0.0, a4, a5);
   }
   return result;
 }
@@ -83796,7 +83886,9 @@ int __fastcall sub_4725B0(int a1, int a2)
   int result; // eax
   int v3; // ecx
 
-  dword_54DBA8 = nmalloc_(a1, a2);
+  (void)a1;
+  (void)a2;
+  dword_54DBA8 = nmalloc_(0x7D0, 0);
   if ( !dword_54DBA8 )
   {
     sub_4859A0((int)aMemory, 1, 1);
@@ -83815,32 +83907,32 @@ int __fastcall sub_4725B0(int a1, int a2)
 //----- (00472620) --------------------------------------------------------
 signed int  sub_472620(_DWORD *a1)
 {
+  int request_size;
+  int grow_size;
   signed int result; // eax
-  int v2; // ecx
-  int v3; // eax
-  _DWORD *v4; // ecx
-  _DWORD *v5; // ecx
-  _DWORD *v6; // ecx
+  signed int (__fastcall *allocator_callback)(int);
 
-  result = sub_472D70((unsigned int)a1, a1);
+  request_size = (int)(uintptr_t)a1;
+  result = sub_472D70((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size);
   if ( result )
     goto LABEL_5;
-  v3 = 5 * v2;
-  if ( (unsigned int)(5 * v2) <= 0x1000 )
-    v3 = 4096;
-  sub_472860(v3, 0, v2);
-  result = sub_472D70((unsigned int)v4, v4);
-  if ( result || (sub_472860(-1, 1, v2), (result = sub_472D70((unsigned int)v5, v5)) != 0) )
+  grow_size = 5 * request_size;
+  if ( (unsigned int)grow_size <= 0x1000 )
+    grow_size = 4096;
+  sub_472860(grow_size, 0, request_size);
+  result = sub_472D70((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size);
+  if ( result || (sub_472860(-1, 1, request_size), (result = sub_472D70((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size)) != 0) )
   {
 LABEL_5:
-    dword_519EFC += v2;
+    dword_519EFC += request_size;
     ++dword_519F00;
   }
   else
   {
-    while ( !off_519F10() )
+    allocator_callback = (signed int (__fastcall *)(int))off_519F10;
+    while ( !allocator_callback(request_size) )
     {
-      result = sub_472D70((unsigned int)v6, v6);
+      result = sub_472D70((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size);
       if ( result )
         goto LABEL_5;
     }
@@ -83848,10 +83940,6 @@ LABEL_5:
   }
   return result;
 }
-// 472637: variable 'v2' is possibly undefined
-// 472649: variable 'v4' is possibly undefined
-// 472689: variable 'v5' is possibly undefined
-// 4726A6: variable 'v6' is possibly undefined
 // 519EFC: using guessed type int dword_519EFC;
 // 519F00: using guessed type int dword_519F00;
 // 519F10: using guessed type signed int (*off_519F10)();
@@ -83868,6 +83956,16 @@ signed int sub_4726C0()
 }
 // 4726DD: variable 'v0' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
+
+//----- (00472700) --------------------------------------------------------
+int unknown_libname_4(int a1)
+{
+  int previous_handler;
+
+  previous_handler = (int)(intptr_t)off_519F10;
+  off_519F10 = (signed int (*)())(intptr_t)a1;
+  return previous_handler;
+}
 
 //----- (00472710) --------------------------------------------------------
 signed int  sub_472710(int a1, int a2)
@@ -84168,50 +84266,48 @@ int sub_472B10()
 //----- (00472B50) --------------------------------------------------------
 signed int  sub_472B50(unsigned int a1, char a2)
 {
-  unsigned int v2; // edx
-  unsigned int v3; // ecx
-  __int64 v4; // rax
-  int v5; // ecx
-  int v6; // eax
-  int v7; // edx
+  unsigned int request_size;
+  int block_header_bytes;
+  int available_size;
+  int first_block;
+  int tail_header;
 
-  v2 = a1;
+  request_size = a1;
   dword_54DBC0 = 16;
   dword_54DBB8 = 16;
   if ( a1 < 0x3E800 )
     a1 = 256000;
-  v3 = 8 * ((2 * dword_54DBC0 + dword_54DBB8 + a1 - 1) >> 3) + 8 - 2 * dword_54DBC0 - dword_54DBB8;
-  if ( v2 < 0x3E800 && v3 <= v2 + dword_54DBC0 )
-    v3 = 8 * ((dword_54DBB8 + v2 + 2 * dword_54DBC0 - 1) >> 3) + 8 - 2 * dword_54DBC0 - dword_54DBB8;
-  v4 = nmalloc_(v3, v2);
-  dword_54DBBC = v4;
-  if ( (_DWORD)v4 )
+  block_header_bytes = 2 * dword_54DBC0;
+  available_size = 8 * ((dword_54DBB8 + block_header_bytes + a1 - 1) >> 3) + 8 - block_header_bytes - dword_54DBB8;
+  if ( request_size < 0x3E800 && (unsigned int)available_size <= request_size + dword_54DBC0 )
+    available_size = 8 * ((dword_54DBB8 + request_size + block_header_bytes - 1) >> 3) + 8 - block_header_bytes - dword_54DBB8;
+  dword_54DBBC = nmalloc_(available_size, 0);
+  if ( dword_54DBBC )
   {
-    *(_DWORD *)v4 = 0;
+    *(_DWORD *)dword_54DBBC = 0;
     *(_DWORD *)(dword_54DBBC + 4) = 0;
-    *(_DWORD *)(dword_54DBBC + 8) = dword_54DBBC + dword_54DBB8;
-    *(_DWORD *)(dword_54DBBC + 12) = v5;
-    v6 = dword_54DBC0 + dword_54DBB8 + dword_54DBBC;
-    *(_DWORD *)(v5 + v6 + 4) = 0;
-    *(_DWORD *)(v5 + v6 + 8) = 0;
-    v7 = *(_DWORD *)(dword_54DBBC + 8);
-    *(_DWORD *)(v5 + v6 + 12) = 0;
-    *(_DWORD *)(v5 + v6) = v7;
-    *(_DWORD *)(*(_DWORD *)(dword_54DBBC + 8) + 4) = 0;
-    *(_DWORD *)(*(_DWORD *)(dword_54DBBC + 8) + 8) = 0;
-    **(_DWORD **)(dword_54DBBC + 8) = 0;
-    *(_DWORD *)(*(_DWORD *)(dword_54DBBC + 8) + 12) = v5;
+    first_block = dword_54DBBC + dword_54DBB8;
+    *(_DWORD *)(dword_54DBBC + 8) = first_block;
+    *(_DWORD *)(dword_54DBBC + 12) = available_size;
+    tail_header = dword_54DBBC + dword_54DBB8 + dword_54DBC0 + available_size;
+    *(_DWORD *)(tail_header + 4) = 0;
+    *(_DWORD *)(tail_header + 8) = 0;
+    *(_DWORD *)(tail_header + 12) = 0;
+    *(_DWORD *)tail_header = first_block;
+    *(_DWORD *)(first_block + 4) = 0;
+    *(_DWORD *)(first_block + 8) = 0;
+    *(_DWORD *)first_block = 0;
+    *(_DWORD *)(first_block + 12) = available_size;
     dword_519F0C = 1;
     return 1;
   }
   else
   {
-    sub_476301(v5, SHIDWORD(v4), (int)&unk_51A35A, (int)aUnableToAlloca, a2);
+    sub_476301(0, 0, (int)&unk_51A35A, (int)aUnableToAlloca, a2);
     return 0;
   }
 }
 // 472B50: could not find valid save-restore pair for esi
-// 472C0D: variable 'v5' is possibly undefined
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 // 519F0C: using guessed type int dword_519F0C;
 // 54DBB8: using guessed type int dword_54DBB8;
@@ -84221,38 +84317,36 @@ signed int  sub_472B50(unsigned int a1, char a2)
 //----- (00472CB0) --------------------------------------------------------
 int  sub_472CB0(int a1, unsigned int a2)
 {
-  __int64 v2; // rax
-  _DWORD *v3; // ecx
-  int v4; // ebx
-  int v5; // esi
-  int v6; // ecx
+  int available_size;
+  int new_pool;
+  int first_block;
+  int tail_header;
 
   if ( a2 < 0x3E800 )
     a2 = 256000;
-  v2 = nmalloc_(a1, 8 * ((a2 + 2 * dword_54DBC0 + dword_54DBB8 - 1) >> 3) + 8 - dword_54DBB8 - 2 * dword_54DBC0);
-  v4 = HIDWORD(v2);
-  if ( (_DWORD)v2 )
+  available_size = 8 * ((a2 + 2 * dword_54DBC0 + dword_54DBB8 - 1) >> 3) + 8 - dword_54DBB8 - 2 * dword_54DBC0;
+  new_pool = nmalloc_(available_size, 0);
+  if ( new_pool )
   {
-    *(_DWORD *)v2 = 0;
-    *(_DWORD *)(v2 + 4) = v3;
-    v5 = v2 + dword_54DBB8;
-    *(_DWORD *)(v2 + 12) = HIDWORD(v2);
-    *(_DWORD *)(v2 + 8) = v5;
-    *v3 = v2;
-    HIDWORD(v2) = dword_54DBC0 + v2 + dword_54DBB8;
-    *(_QWORD *)(HIDWORD(v2) + v4 + 4) = 0LL;
-    *(_DWORD *)(HIDWORD(v2) + v4 + 12) = 0;
-    v6 = *(_DWORD *)(v2 + 8);
-    *(_DWORD *)(HIDWORD(v2) + v4) = v6;
-    *(_DWORD *)(v6 + 4) = 0;
-    *(_DWORD *)(*(_DWORD *)(v2 + 8) + 8) = 0;
-    **(_DWORD **)(v2 + 8) = 0;
-    *(_DWORD *)(*(_DWORD *)(v2 + 8) + 12) = v4;
-    LODWORD(v2) = 1;
+    *(_DWORD *)new_pool = 0;
+    *(_DWORD *)(new_pool + 4) = a1;
+    first_block = new_pool + dword_54DBB8;
+    *(_DWORD *)(new_pool + 12) = available_size;
+    *(_DWORD *)(new_pool + 8) = first_block;
+    *(_DWORD *)a1 = new_pool;
+    tail_header = new_pool + dword_54DBB8 + dword_54DBC0 + available_size;
+    *(_DWORD *)(tail_header + 4) = 0;
+    *(_DWORD *)(tail_header + 8) = 0;
+    *(_DWORD *)(tail_header + 12) = 0;
+    *(_DWORD *)tail_header = first_block;
+    *(_DWORD *)(first_block + 4) = 0;
+    *(_DWORD *)(first_block + 8) = 0;
+    *(_DWORD *)first_block = 0;
+    *(_DWORD *)(first_block + 12) = available_size;
+    return 1;
   }
-  return v2;
+  return 0;
 }
-// 472D03: variable 'v3' is possibly undefined
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 // 54DBB8: using guessed type int dword_54DBB8;
 // 54DBC0: using guessed type int dword_54DBC0;
@@ -84260,63 +84354,53 @@ int  sub_472CB0(int a1, unsigned int a2)
 //----- (00472D70) --------------------------------------------------------
 signed int  sub_472D70(unsigned int a1, _DWORD *a2)
 {
-  _DWORD *v3; // edi
-  unsigned int v4; // esi
-  unsigned int v5; // ebx
+  _DWORD *pool;
+  _DWORD *block;
+  unsigned int requested_size;
   signed int result; // eax
-  int v7; // edx
-  int v8; // ecx
+  int callback_arg;
 
   if ( !dword_519F0C )
   {
     result = sub_472B50(a1, a1);
     if ( !result )
       return result;
-    sub_486080((int)aBmexit, -2000, 0, 0, v7, v7, (int)sub_4730F0);
+    sub_486080((int)aBmexit, -2000, 0, 0, 0, 0, (int)sub_4730F0);
   }
-  v3 = (_DWORD *)dword_54DBBC;
-  v4 = 8 * ((a1 - 1) >> 3) + 8;
+  requested_size = 8 * ((a1 - 1) >> 3) + 8;
   if ( dword_54DBBC )
   {
+    pool = (_DWORD *)(uintptr_t)dword_54DBBC;
     while ( 1 )
     {
-      a2 = (_DWORD *)v3[2];
-      if ( a2 )
-        break;
-LABEL_7:
-      if ( !*v3 )
+      block = (_DWORD *)(uintptr_t)pool[2];
+      while ( block )
       {
-        result = sub_472CB0((int)v3, v4);
+        if ( requested_size == (unsigned int)block[3] || requested_size + dword_54DBC0 < (unsigned int)block[3] )
+        {
+          sub_472E40((int)(uintptr_t)pool, block, requested_size);
+          return (int)(uintptr_t)((char *)block + dword_54DBC0);
+        }
+        block = (_DWORD *)(uintptr_t)block[1];
+      }
+      if ( !*pool )
+      {
+        result = sub_472CB0((int)(uintptr_t)pool, requested_size);
         if ( !result )
           return result;
       }
-      v3 = (_DWORD *)*v3;
-      if ( !v3 )
-        goto LABEL_10;
-    }
-    while ( 1 )
-    {
-      v5 = a2[3];
-      if ( v4 == v5 || v4 + dword_54DBC0 < v5 )
+      pool = (_DWORD *)(uintptr_t)*pool;
+      if ( !pool )
         break;
-      a2 = (_DWORD *)a2[1];
-      if ( !a2 )
-        goto LABEL_7;
     }
-    sub_472E40((int)v3, a2, v4);
-    return v8 + dword_54DBC0;
-  }
-  else
-  {
 LABEL_10:
-    sub_485C80((int)a2, 2);
+    callback_arg = (int)(uintptr_t)a2;
+    sub_485C80(callback_arg, 2);
     sub_486020();
     return 0;
   }
+  goto LABEL_10;
 }
-// 472DE3: variable 'a2' is possibly undefined
-// 472E18: variable 'v7' is possibly undefined
-// 472E32: variable 'v8' is possibly undefined
 // 519F0C: using guessed type int dword_519F0C;
 // 54DBBC: using guessed type int dword_54DBBC;
 // 54DBC0: using guessed type int dword_54DBC0;
@@ -84324,66 +84408,62 @@ LABEL_10:
 //----- (00472E40) --------------------------------------------------------
 int  sub_472E40(int result, _DWORD *a2, int a3)
 {
-  int v3; // ecx
-  int v4; // esi
-  int v5; // esi
-  int v6; // edi
-  int v7; // ebp
-  _DWORD *v8; // ebp
-  _DWORD *v9; // eax
-  int v10; // edi
-  int v11; // ebp
+  int pool;
+  int block_size;
+  int previous_free;
+  int next_free;
+  _DWORD *tail_header;
+  _DWORD *split_block;
+  int prev_of_split;
+  int next_of_split;
 
-  v3 = result;
-  v4 = a2[3];
-  if ( a3 == v4 )
+  pool = result;
+  block_size = a2[3];
+  if ( a3 == block_size )
   {
-    v5 = a2[2];
+    previous_free = a2[2];
     a2[3] = -a3;
-    if ( v5 )
+    if ( previous_free )
     {
-      result = a2[1];
-      *(_DWORD *)(v5 + 4) = result;
+      *(_DWORD *)(previous_free + 4) = a2[1];
     }
     else
     {
-      v6 = a2[1];
-      if ( v6 )
-        *(_DWORD *)(result + 8) = v6;
+      next_free = a2[1];
+      if ( next_free )
+        *(_DWORD *)(pool + 8) = next_free;
       else
-        *(_DWORD *)(result + 8) = 0;
+        *(_DWORD *)(pool + 8) = 0;
     }
-    v7 = a2[1];
-    if ( v7 )
+    next_free = a2[1];
+    if ( next_free )
     {
-      result = a2[2];
-      *(_DWORD *)(v7 + 8) = result;
+      *(_DWORD *)(next_free + 8) = a2[2];
     }
     a2[2] = 0;
     a2[1] = 0;
   }
   else
   {
-    v8 = (_DWORD *)((char *)a2 + dword_54DBC0 + v4);
-    v9 = (_DWORD *)((char *)a2 + a3 + dword_54DBC0);
-    v9[3] = v4 - (a3 + dword_54DBC0);
-    *v9 = a2;
-    v9[1] = a2[1];
-    v9[2] = a2[2];
-    *v8 = v9;
-    v10 = v9[2];
-    if ( v10 )
-      *(_DWORD *)(v10 + 4) = v9;
+    tail_header = (_DWORD *)((char *)a2 + dword_54DBC0 + block_size);
+    split_block = (_DWORD *)((char *)a2 + dword_54DBC0 + a3);
+    split_block[3] = block_size - (a3 + dword_54DBC0);
+    *split_block = a2;
+    split_block[1] = a2[1];
+    split_block[2] = a2[2];
+    *tail_header = split_block;
+    prev_of_split = split_block[2];
+    if ( prev_of_split )
+      *(_DWORD *)(prev_of_split + 4) = (int)(uintptr_t)split_block;
     else
-      *(_DWORD *)(v3 + 8) = v9;
-    v11 = v9[1];
-    if ( v11 )
-      *(_DWORD *)(v11 + 8) = v9;
+      *(_DWORD *)(pool + 8) = (int)(uintptr_t)split_block;
+    next_of_split = split_block[1];
+    if ( next_of_split )
+      *(_DWORD *)(next_of_split + 8) = (int)(uintptr_t)split_block;
     a2[2] = 0;
     a2[1] = 0;
-    a2[3] = a3;
-    result = -a3;
     a2[3] = -a3;
+    result = -a3;
   }
   return result;
 }
@@ -84514,15 +84594,21 @@ LABEL_27:
 //----- (00473090) --------------------------------------------------------
 int __thiscall sub_473090(void *this)
 {
-  int v1; // edx
   int result; // eax
-  int v3; // ecx
+  int next_pool;
+  int freelist_next;
+
+  (void)this;
 
   if ( dword_54DBBC )
   {
     do
-      nfree_(this);
-    while ( v1 );
+    {
+      next_pool = *(_DWORD *)dword_54DBBC;
+      nfree_(dword_54DBBC);
+      dword_54DBBC = next_pool;
+    }
+    while ( next_pool );
   }
   result = dword_519F08;
   dword_54DBBC = 0;
@@ -84530,17 +84616,15 @@ int __thiscall sub_473090(void *this)
   {
     do
     {
+      freelist_next = *(_DWORD *)(result + 4);
       sub_472710(result, *(_DWORD *)(result + 8));
-      result = v3;
+      result = freelist_next;
     }
-    while ( v3 );
+    while ( freelist_next );
   }
   dword_519F08 = 0;
   return result;
 }
-// 47309D: variable 'this' is possibly undefined
-// 4730A6: variable 'v1' is possibly undefined
-// 4730CC: variable 'v3' is possibly undefined
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 519F08: using guessed type int dword_519F08;
 // 54DBBC: using guessed type int dword_54DBBC;
@@ -90720,6 +90804,7 @@ int  sub_47AED0(int a1, double a2)
 {
   int v3; // esi
   int v4; // ecx
+  int v5; // eax
   _DWORD v6[10]; // [esp-4h] [ebp-28h] BYREF
 
   v6[8] = a1;
@@ -90727,11 +90812,14 @@ int  sub_47AED0(int a1, double a2)
   if ( Lexer_TokenExpect(1) == -1 )
     return v4;
   sub_4813B0(1, v6, a2);
-  unknown_libname_8();
+  v5 = 1;
+  if ( v6[0] == 2 && v6[1] == dword_54DD70 )
+    v5 = 0;
+  unknown_libname_8(v5);
   return v3;
 }
 // 47AEF6: variable 'v4' is possibly undefined
-// 48AC80: using guessed type int unknown_libname_8(void);
+// 48AC80: using guessed type int __fastcall unknown_libname_8(int);
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0047AF50) --------------------------------------------------------
@@ -92181,72 +92269,59 @@ signed int  sub_47CBF0(
         int a2,
         void (__fastcall *a3)(signed int, signed int))
 {
-  int (*v3)(void); // ecx
-  signed int v4; // ecx
-  int v5; // ebx
-  int v6; // edi
-  int v7; // esi
-  signed int v8; // ebx
-  int v9; // ecx
-  signed int v10; // [esp+0h] [ebp-24h]
-  int v11; // [esp+4h] [ebp-20h]
-  signed int v13; // [esp+Ch] [ebp-18h]
-  signed int v14; // [esp+10h] [ebp-14h]
+  int previous_allocator_handler;
+  signed int chunk_count;
+  int chunk_bytes;
+  signed int chunk_base;
+  signed int initialized_count;
+  int entries_this_pass;
+  int entry_index;
+  int entry_ptr;
 
-  v10 = result;
-  if ( result )
+  if ( !result )
+    return result;
+
+  previous_allocator_handler = unknown_libname_4((int)CSyncObject_Unlock);
+  chunk_count = result;
+  do
   {
-    unknown_libname_4();
-    v14 = v10;
-    do
+    chunk_bytes = a2 * chunk_count;
+    chunk_base = sub_472620((_DWORD *)chunk_bytes);
+    if ( !chunk_base )
     {
-      v11 = a2 * v14;
-      v13 = sub_472620((_DWORD *)(a2 * v14));
-      if ( !v13 )
+      if ( chunk_count / 2 )
       {
-        if ( v14 / 2 )
-        {
-          v14 /= 2;
-        }
-        else if ( v3() == 1 )
-        {
-          return unknown_libname_4();
-        }
+        chunk_count /= 2;
+      }
+      else if ( ((int (__cdecl *)(int))(intptr_t)previous_allocator_handler)(chunk_bytes) == 1 )
+      {
+        return unknown_libname_4(previous_allocator_handler);
       }
     }
-    while ( !v13 );
-    unknown_libname_4();
-    v4 = 0;
-    do
-    {
-      v5 = v10 - v4;
-      if ( v10 - v4 >= v14 )
-        v5 = v14;
-      v6 = v5;
-      v7 = 0;
-      sub_47D5A0(v13, v5 * a2);
-      if ( v5 > 0 )
-      {
-        v8 = v13;
-        do
-        {
-          a3(v4, v4);
-          ++v7;
-          v4 = v9 + 1;
-          v8 += a2;
-        }
-        while ( v7 < v6 );
-      }
-    }
-    while ( v4 < v10 );
-    return sub_472710(v13, v11);
   }
-  return result;
+  while ( !chunk_base );
+
+  unknown_libname_4(previous_allocator_handler);
+  initialized_count = 0;
+  while ( initialized_count < result )
+  {
+    entries_this_pass = result - initialized_count;
+    if ( entries_this_pass > chunk_count )
+      entries_this_pass = chunk_count;
+    sub_47D5A0(chunk_base, entries_this_pass * a2);
+    if ( entries_this_pass > 0 )
+    {
+      entry_ptr = chunk_base;
+      for ( entry_index = 0; entry_index < entries_this_pass; ++entry_index )
+      {
+        a3(initialized_count, entry_ptr);
+        ++initialized_count;
+        entry_ptr += a2;
+      }
+    }
+  }
+  return sub_472710(chunk_base, chunk_bytes);
 }
-// 47CC56: variable 'v3' is possibly undefined
-// 47CC79: variable 'v4' is possibly undefined
-// 47CCAB: variable 'v9' is possibly undefined
-// 472700: using guessed type int unknown_libname_4(void);
 
 //----- (0047CCF0) --------------------------------------------------------
 int  sub_47CCF0(int *a1, int *a2)
@@ -92522,12 +92597,11 @@ int  sub_47D0A0(DWORD a1, double a2)
 //----- (0047D0E0) --------------------------------------------------------
 void __fastcall sub_47D0E0(int a1, int a2)
 {
-  void *v2; // ecx
-  int v3; // ecx
-
+  (void)a1;
+  (void)a2;
   if ( !dword_51A1D4 )
   {
-    sub_4725B0(a1, a2);
+    sub_4725B0(0, 0);
     sub_482260();
     sub_485E30();
     sub_496643(1, sub_47D4E0);
@@ -92542,18 +92616,16 @@ void __fastcall sub_47D0E0(int a1, int a2)
     sub_4988F0();
     sub_499050();
     sub_492B30();
-    sub_4996D0(v2);
+    sub_4996D0(0);
     sub_4913B0();
-    sub_49A0E0(a1, a2);
+    sub_49A0E0();
     sub_47C530();
-    dword_51A1D4 = v3;
+    dword_51A1D4 = 1;
   }
 }
-// 47D146: variable 'v2' is possibly undefined
-// 47D15A: variable 'v3' is possibly undefined
 // 47D4E0: using guessed type int sub_47D4E0();
+// 49A0E0: using guessed type int __cdecl sub_49A0E0(void);
 // 496643: using guessed type int __fastcall sub_496643(_DWORD, _DWORD);
-// 49A0E0: using guessed type int __cdecl sub_49A0E0(_DWORD, _DWORD);
 // 51A1D4: using guessed type int dword_51A1D4;
 
 //----- (0047D320) --------------------------------------------------------
@@ -92576,15 +92648,17 @@ signed int sub_47D320()
 //----- (0047D360) --------------------------------------------------------
 double sub_47D360()
 {
-  int v4; // [esp+0h] [ebp-24h]
-  unsigned __int16 v5; // [esp+4h] [ebp-20h]
+  struct
+  {
+    int time_value;
+    unsigned __int16 milliseconds;
+    __int16 timezone_minutes;
+    __int16 dst_flag;
+  } v4;
 
-  ftime_();
-  return (double)(v4 % 10000) + (double)v5 / dbl_502B70;
+  ftime_(&v4);
+  return (double)(v4.time_value % 10000) + (double)v4.milliseconds / dbl_502B70;
 }
-// 47D39D: variable 'v4' is possibly undefined
-// 47D3AE: variable 'v5' is possibly undefined
-// 4A7D01: using guessed type int ftime_(void);
 // 502B70: using guessed type double dbl_502B70;
 
 //----- (0047D3D0) --------------------------------------------------------
@@ -92616,7 +92690,7 @@ LABEL_6:
       {
         if ( dword_51A1CC )
           dword_51A1CC();
-        system_();
+        system_(v1);
         if ( dword_51A1D0 )
           dword_51A1D0();
         if ( dword_51A1C8 )
@@ -92645,7 +92719,6 @@ LABEL_6:
   return result;
 }
 // 47D4AD: variable 'v5' is possibly undefined
-// 4A7D43: using guessed type int system_(void);
 // 51A1C8: using guessed type int (*dword_51A1C8)(void);
 // 51A1CC: using guessed type int (*dword_51A1CC)(void);
 // 51A1D0: using guessed type int (*dword_51A1D0)(void);
@@ -93936,6 +94009,17 @@ int sub_47E7A0()
 }
 // 51A1EC: using guessed type int dword_51A1EC;
 
+//----- (0047E7B0) --------------------------------------------------------
+int __fastcall unknown_libname_7(int a1)
+{
+  int result; // eax
+
+  result = dword_51A1EC;
+  dword_51A1EC = a1;
+  return result;
+}
+// 51A1EC: using guessed type int dword_51A1EC;
+
 //----- (0047E7C0) --------------------------------------------------------
 signed int  sub_47E7C0(int a1, double a2)
 {
@@ -94624,25 +94708,18 @@ void sub_47F480()
 {
   int v0; // ecx
   int v1; // edx
-  int v2; // eax
 
   v0 = 0;
-  while ( Module_NextEnum(v0) )
+  while ( 1 )
   {
+    v0 = Module_NextEnum(v0);
+    if ( !v0 )
+      return;
     v1 = 0;
-    while ( 1 )
-    {
-      v2 = sub_490D50(v1);
-      if ( !v2 )
-        break;
-      sub_47F440(v2);
-    }
+    while ( (v1 = sub_490D50(v1)) != 0 )
+      sub_47F440(v1);
   }
-  JUMPOUT(0x47F45C);
 }
-// 47F492: control flows out of bounds to 47F45C
-// 47F489: variable 'v0' is possibly undefined
-// 47F498: variable 'v1' is possibly undefined
 
 //----- (0047F4B0) --------------------------------------------------------
 int  sub_47F4B0(int a1, int a2)
@@ -95222,30 +95299,65 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   _DWORD *result; // eax
   int **Symbol; // eax
   signed int v5; // ebx
-  __int16 *v6; // ecx
-  int v7; // [esp-4h] [ebp-34h] BYREF
-  int v8; // [esp+0h] [ebp-30h]
-  int v9; // [esp+4h] [ebp-2Ch]
-  _DWORD v10[7]; // [esp+14h] [ebp-1Ch] BYREF
+  int parse_buffer_ptr; // ecx
+  _DWORD *parse_buffer; // esi
+  int token_buffer_ptr; // ecx
+  _DWORD *token_buffer; // esi
+  int trace_load_save; // eax
 
-  v10[5] = a2;
-  v9 = dword_54DD70;
-  v8 = 2;
+  (void)a2;
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] rules-assert-enter %s\n", a1);
+  parse_buffer_ptr = Compat_AllocLow32Bytes(28);
+  token_buffer_ptr = Compat_AllocLow32Bytes(28);
+  if ( !parse_buffer_ptr || !token_buffer_ptr )
+  {
+    if ( parse_buffer_ptr )
+      Compat_FreeLow32Bytes(parse_buffer_ptr);
+    if ( token_buffer_ptr )
+      Compat_FreeLow32Bytes(token_buffer_ptr);
+    return 0;
+  }
+  parse_buffer = (_DWORD *)(uintptr_t)(unsigned int)parse_buffer_ptr;
+  token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
+  parse_buffer[1] = 2;
+  parse_buffer[2] = dword_54DD70;
   result = (_DWORD *)sub_491CC0((int)aMkins, a1, 0);
   if ( result )
   {
-    Parser_NextToken((int)aMkins, (int)v10);
-    if ( v10[0] == 100 )
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] rules-assert-after-router-add\n");
+    Parser_NextToken((int)aMkins, token_buffer_ptr);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] rules-assert-after-first-token token=%d\n", token_buffer[0]);
+    if ( token_buffer[0] == 100 )
     {
+      if ( !dword_54DD40 )
+      {
+        if ( trace_load_save )
+          fprintf(stderr, "[menu-probe] rules-assert-seed-make-instance-symbol\n");
+        Rules_RegisterHostFunction(aMakeInstance, 117, (int)aMakeinstanceco, (int)sub_4AA170, 0);
+      }
       Symbol = Rules_MakeSymbol(aMakeInstance);
+      if ( trace_load_save )
+        fprintf(stderr, "[menu-probe] rules-assert-after-make-symbol symbol=%p\n", Symbol);
       v5 = AST_NewNode(10, (int)Symbol);
+      if ( trace_load_save )
+        fprintf(stderr, "[menu-probe] rules-assert-after-ast-new-node node=%d\n", v5);
       if ( sub_4AAE30(v5, (int)aMkins) )
       {
-        Parser_NextToken((int)aMkins, (int)v10);
-        if ( v10[0] == 102 )
-          Parser_ParseForm(v6, &v7, (int)v6, a3);
+        if ( trace_load_save )
+          fprintf(stderr, "[menu-probe] rules-assert-after-instance-head\n");
+        Parser_NextToken((int)aMkins, token_buffer_ptr);
+        if ( trace_load_save )
+          fprintf(stderr, "[menu-probe] rules-assert-after-second-token token=%d\n", token_buffer[0]);
+        if ( token_buffer[0] == 102 )
+          Parser_ParseForm((__int16 *)v5, parse_buffer, (int)aMkins, a3);
         else
           sub_485BC0();
+        if ( trace_load_save )
+          fprintf(stderr, "[menu-probe] rules-assert-after-parse-form\n");
         AST_Free(v5);
       }
     }
@@ -95254,16 +95366,23 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
       sub_485BC0();
     }
     sub_491DB0((int)aMkins);
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] rules-assert-after-router-remove\n");
     if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
       sub_48ACE0(1, 0);
-    if ( v8 == 2 && v9 == dword_54DD70 )
-      return (_DWORD *)(dword_54DD70 ^ v9);
+    if ( parse_buffer[1] == 2 && parse_buffer[2] == dword_54DD70 )
+      result = (_DWORD *)(dword_54DD70 ^ parse_buffer[2]);
     else
-      return sub_483300(v9);
+      result = sub_483300(parse_buffer[2]);
   }
+  else if ( trace_load_save )
+  {
+    fprintf(stderr, "[menu-probe] rules-assert-router-add-failed\n");
+  }
+  Compat_FreeLow32Bytes(token_buffer_ptr);
+  Compat_FreeLow32Bytes(parse_buffer_ptr);
   return result;
 }
-// 47FFF6: variable 'v6' is possibly undefined
 // 51A960: using guessed type int dword_51A960;
 // 51A96C: using guessed type int dword_51A96C;
 // 51A97C: using guessed type int dword_51A97C;
@@ -95932,16 +96051,12 @@ signed int  Rules_RegisterHostFunction(
         int a4,
         int a5)
 {
-  int v5; // esi
-  _DWORD *v8; // ebx
-  signed int v9; // ecx
-  signed int *v10; // eax
-  int v11; // ecx
-  char v12; // dl
-  int v13; // ebx
-  int v14; // eax
+  int host_function_ptr; // ebx
+  _DWORD *free_node; // eax
+  signed int *symbol; // eax
+  int symbol_ptr; // eax
+  int argument_spec_len; // eax
 
-  v5 = a5;
   if ( a2 != 97
     && a2 != 98
     && a2 != 99
@@ -95962,43 +96077,40 @@ signed int  Rules_RegisterHostFunction(
   {
     return 0;
   }
-  v8 = *(_DWORD **)(dword_54DBA8 + 124);
-  if ( v8 )
+  free_node = *(_DWORD **)(dword_54DBA8 + 124);
+  if ( free_node )
   {
     dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 124);
-    *(_DWORD *)(dword_54DBA8 + 124) = *v8;
-    v9 = dword_54DBAC;
+    *(_DWORD *)(dword_54DBA8 + 124) = *free_node;
+    host_function_ptr = dword_54DBAC;
   }
   else
   {
-    v9 = sub_472620((_DWORD *)0x1F);
+    host_function_ptr = sub_472620((_DWORD *)0x1F);
   }
-  v10 = Str_Intern(a1, v9);
-  *(_DWORD *)v11 = v10;
-  *(_BYTE *)(v11 + 8) = v12;
-  *(_DWORD *)(v11 + 9) = a4;
-  *(_DWORD *)(v11 + 27) = dword_51A264;
-  v13 = v11;
-  *(_DWORD *)(v11 + 4) = a3;
+  symbol = Str_Intern(a1, host_function_ptr);
+  *(_DWORD *)(host_function_ptr + 0) = symbol;
+  *(_BYTE *)(host_function_ptr + 8) = a2;
+  *(_DWORD *)(host_function_ptr + 9) = a4;
+  *(_DWORD *)(host_function_ptr + 27) = dword_51A264;
+  *(_DWORD *)(host_function_ptr + 4) = a3;
   if ( a5
-    && ((int)strlen((const char *)a5) < 2
+    && ((argument_spec_len = strlen((const char *)a5), argument_spec_len < 2)
      || (IsTable[(unsigned __int8)(*(_BYTE *)a5 + 1)] & 0x20) == 0 && *(_BYTE *)a5 != 42
      || (IsTable[(unsigned __int8)(*(_BYTE *)(a5 + 1) + 1)] & 0x20) == 0 && *(_BYTE *)(a5 + 1) != 42) )
   {
-    v5 = 0;
+    a5 = 0;
   }
-  *(_DWORD *)(v13 + 13) = 0;
-  *(_WORD *)(v13 + 21) = 1;
-  *(_WORD *)(v13 + 23) = 1;
-  v14 = *(_DWORD *)v13;
-  *(_DWORD *)(v13 + 17) = v5;
-  ++*(_DWORD *)(v14 + 4);
-  dword_51A264 = v13;
-  sub_481090(v13);
+  *(_DWORD *)(host_function_ptr + 13) = 0;
+  *(_WORD *)(host_function_ptr + 21) = 1;
+  *(_WORD *)(host_function_ptr + 23) = 1;
+  symbol_ptr = *(_DWORD *)(host_function_ptr + 0);
+  *(_DWORD *)(host_function_ptr + 17) = a5;
+  ++*(_DWORD *)(symbol_ptr + 4);
+  dword_51A264 = host_function_ptr;
+  sub_481090(host_function_ptr);
   return 1;
 }
-// 480C8A: variable 'v11' is possibly undefined
-// 480C8C: variable 'v12' is possibly undefined
 // 51A264: using guessed type int dword_51A264;
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -96154,30 +96266,23 @@ int sub_480F70()
 //----- (00481010) --------------------------------------------------------
 int ** Rules_MakeSymbol(_BYTE *a1)
 {
-  _BYTE *v1; // ecx
-  int *v2; // ecx
-  int v3; // edx
-  int ***v4; // eax
-  int **v5; // edx
+  int hash_bucket; // edx
+  int interned_name; // ecx
+  int bucket_entry; // eax
+  int symbol; // edx
 
-  sub_482370(a1, 0x33u);
-  v2 = sub_481EC0(v1);
-  v4 = *(int ****)(dword_54DD40 + 4 * v3);
-  if ( !v4 )
-    return 0;
-  while ( 1 )
+  hash_bucket = sub_482370(a1, 0x33u);
+  interned_name = (int)sub_481EC0((int)a1);
+  bucket_entry = *(_DWORD *)(dword_54DD40 + 4 * hash_bucket);
+  while ( bucket_entry )
   {
-    v5 = *v4;
-    if ( v2 == **v4 )
-      break;
-    v4 = (int ***)v4[1];
-    if ( !v4 )
-      return 0;
+    symbol = *(_DWORD *)bucket_entry;
+    if ( interned_name == *(_DWORD *)symbol )
+      return (int **)symbol;
+    bucket_entry = *(_DWORD *)(bucket_entry + 4);
   }
-  return v5;
+  return 0;
 }
-// 481022: variable 'v1' is possibly undefined
-// 48102E: variable 'v3' is possibly undefined
 // 54DD40: using guessed type int dword_54DD40;
 
 //----- (00481050) --------------------------------------------------------
@@ -96195,36 +96300,31 @@ int sub_481050()
 //----- (00481090) --------------------------------------------------------
 int * sub_481090(int a1)
 {
-  int v1; // edx
-  _DWORD *v2; // ebx
-  int *v3; // ecx
-  int *result; // eax
-  int v5; // edx
-  int v6; // ecx
+  _DWORD *free_node; // ebx
+  int *bucket_head_ptr; // eax
+  int existing_head; // edx
+  int host_function_ptr; // ecx
 
-  v1 = a1;
   if ( !dword_54DD40 )
     sub_481050();
-  v2 = *(_DWORD **)(dword_54DBA8 + 32);
-  if ( v2 )
+  free_node = *(_DWORD **)(dword_54DBA8 + 32);
+  if ( free_node )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 32);
-    *(_DWORD *)(dword_54DBA8 + 32) = *v2;
-    v3 = (int *)dword_54DBAC;
+    dword_54DBAC = (int)free_node;
+    *(_DWORD *)(dword_54DBA8 + 32) = *free_node;
+    host_function_ptr = dword_54DBAC;
   }
   else
   {
-    v3 = (int *)sub_472620((_DWORD *)8);
+    host_function_ptr = sub_472620((_DWORD *)8);
   }
-  *v3 = v1;
-  result = (int *)(dword_54DD40 + 4 * sub_482370(*(_BYTE **)(*(_DWORD *)v1 + 16), 0x33u));
-  v5 = *result;
-  *result = v6;
-  *(_DWORD *)(v6 + 4) = v5;
-  return result;
+  *(_DWORD *)(host_function_ptr + 0) = a1;
+  bucket_head_ptr = (int *)(dword_54DD40 + 4 * sub_482370(*(_BYTE **)(*(_DWORD *)a1 + 16), 0x33u));
+  existing_head = *bucket_head_ptr;
+  *bucket_head_ptr = host_function_ptr;
+  *(_DWORD *)(host_function_ptr + 4) = existing_head;
+  return bucket_head_ptr;
 }
-// 4810BC: variable 'v1' is possibly undefined
-// 4810DE: variable 'v6' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54DD40: using guessed type int dword_54DD40;
@@ -96401,7 +96501,7 @@ int sub_481420()
 // 51A960: using guessed type int dword_51A960;
 
 //----- (00481450) --------------------------------------------------------
-int  sub_481450(int a1)
+int Lexer_TokenExpect(int a1)
 {
   int result; // eax
   int v2; // edx
@@ -96473,7 +96573,7 @@ int  sub_4814A0(int a1, int a2)
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00481550) --------------------------------------------------------
-signed int  sub_481550(int a1, _DWORD *a2, int a3, double a4)
+signed int Lexer_ParseValueList(int a1, _DWORD *a2, int a3, double a4)
 {
   int v7; // ecx
   int v8; // ecx
@@ -96582,6 +96682,17 @@ LABEL_24:
 // 481676: variable 'v17' is possibly undefined
 // 481676: variable 'v18' is possibly undefined
 // 51A964: using guessed type int dword_51A964;
+
+//----- (00472B00) --------------------------------------------------------
+int __fastcall unknown_libname_5(int a1, int a2)
+{
+  int previous_state;
+
+  (void)a2;
+  previous_state = dword_519F04;
+  dword_519F04 = a1;
+  return previous_state;
+}
 
 //----- (00481720) --------------------------------------------------------
 double  sub_481720(__int16 *a1, int a2, _DWORD *a3, double result, int a5)
@@ -97066,21 +97177,29 @@ LABEL_6:
 //----- (00481EC0) --------------------------------------------------------
 int * sub_481EC0(_BYTE *a1)
 {
-  int v1; // ecx
-  int *v2; // ecx
+  int trace_load_save; // eax
+  int bucket_index; // eax
+  int bucket_entry; // ecx
 
-  v1 = *(_DWORD *)(dword_54DD50 + 4 * sub_482370(a1, 0x3F5u));
-  if ( !v1 )
-    return 0;
-  while ( strcmp_(v1, *(_DWORD *)(v1 + 16)) )
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  if ( !dword_54DD50 )
   {
-    v1 = *v2;
-    if ( !v1 )
-      return 0;
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] symbol-lookup-missing-table %s\n", a1);
+    return 0;
   }
-  return v2;
+  bucket_index = sub_482370(a1, 0x3F5u);
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] symbol-lookup table=%08x bucket=%d key=%s\n", dword_54DD50, bucket_index, a1);
+  bucket_entry = *(_DWORD *)(dword_54DD50 + 4 * bucket_index);
+  while ( bucket_entry )
+  {
+    if ( !strcmp_((int)a1, *(_DWORD *)(bucket_entry + 16)) )
+      return (int *)bucket_entry;
+    bucket_entry = *(_DWORD *)bucket_entry;
+  }
+  return 0;
 }
-// 481EEA: variable 'v2' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 54DD50: using guessed type int dword_54DD50;
 
@@ -100352,6 +100471,7 @@ signed int sub_485E30()
 signed int  Output_Write(int a1, int a2, int a3)
 {
   int v5; // ecx
+  void (__fastcall *router_write)(int, int); // ecx
 
   if ( a1 == dword_51A60C )
   {
@@ -100363,20 +100483,21 @@ signed int  Output_Write(int a1, int a2, int a3)
     v5 = dword_51A604;
     if ( dword_51A604 )
     {
-      while ( !*(_DWORD *)(v5 + 16) || !sub_4861E0(v5, v5) )
+      while ( !*(_DWORD *)(v5 + 16) || !sub_4861E0(a1, v5) )
       {
         v5 = *(_DWORD *)(v5 + 32);
         if ( !v5 )
           goto LABEL_5;
       }
-      (*(void (__fastcall **)(int, int))(v5 + 16))(v5, a2);
+      router_write = (void (__fastcall *)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(v5 + 16);
+      router_write(a1, a2);
       return 1;
     }
     else
     {
 LABEL_5:
-      if ( strcmp_(v5, a1) )
-        sub_4862C0();
+      if ( strcmp_((int)off_51A614[0], a1) )
+        sub_4862C0(a1);
       return 0;
     }
   }
@@ -100393,6 +100514,7 @@ int  Lexer_PeekChar(int a1, unsigned int a2)
   int result; // eax
   unsigned __int8 *v3; // ecx
   int v4; // ecx
+  int (__fastcall *router_read)(int); // eax
 
   if ( a1 == dword_51A608 )
   {
@@ -100417,13 +100539,14 @@ LABEL_12:
     sub_4862C0();
     return -1;
   }
-  while ( !*(_DWORD *)(v4 + 24) || !sub_4861E0(v4, v4) )
+  while ( !*(_DWORD *)(v4 + 24) || !sub_4861E0(a1, v4) )
   {
     v4 = *(_DWORD *)(v4 + 32);
     if ( !v4 )
       goto LABEL_12;
   }
-  result = (*(int (**)(void))(v4 + 24))();
+  router_read = (int (__fastcall *)(int))(uintptr_t)(unsigned int)*(_DWORD *)(v4 + 24);
+  result = router_read(a1);
   if ( result == 13 )
     return 10;
   return result;
@@ -100437,24 +100560,26 @@ LABEL_12:
 signed int  Lexer_SkipChar(signed int a1, int a2, int a3)
 {
   int v4; // ecx
+  int (__fastcall *router_skip)(int, int); // eax
 
   if ( a2 == dword_51A608 )
     return sub_489DAA(a1, a3);
   v4 = dword_51A604;
   if ( dword_51A604 )
   {
-    while ( !*(_DWORD *)(v4 + 28) || !sub_4861E0(v4, v4) )
+    while ( !*(_DWORD *)(v4 + 28) || !sub_4861E0(a2, v4) )
     {
       v4 = *(_DWORD *)(v4 + 32);
       if ( !v4 )
         goto LABEL_5;
     }
-    return (*(int (__fastcall **)(int, int))(v4 + 28))(v4, a2);
+    router_skip = (int (__fastcall *)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(v4 + 28);
+    return router_skip(a1, a2);
   }
   else
   {
 LABEL_5:
-    sub_4862C0();
+    sub_4862C0(a2);
     return -1;
   }
 }
@@ -100594,37 +100719,35 @@ signed int  sub_486150(int a1)
 //----- (004861B0) --------------------------------------------------------
 int sub_4861B0()
 {
-  int v0; // ecx
-  int result; // eax
-  int v2; // ecx
+  int logical_name; // ebx
+  int router; // ecx
 
-  v0 = dword_51A604;
+  logical_name = (int)off_51A614[0];
+  router = dword_51A604;
   if ( !dword_51A604 )
     return 0;
-  while ( 1 )
+  while ( sub_4861E0(logical_name, router) != 1 )
   {
-    result = sub_4861E0(v0, v0);
-    if ( result == 1 )
-      break;
-    v0 = *(_DWORD *)(v2 + 32);
-    if ( !v0 )
+    router = *(_DWORD *)(router + 32);
+    if ( !router )
       return 0;
   }
-  return result;
+  return 1;
 }
-// 4861CD: variable 'v2' is possibly undefined
 // 51A604: using guessed type int dword_51A604;
 
 //----- (004861E0) --------------------------------------------------------
 int __fastcall sub_4861E0(int a1, int a2)
 {
   int result; // eax
+  int (__fastcall *router_query)(int); // eax
 
   if ( !*(_DWORD *)(a2 + 4) )
     return 0;
   if ( !*(_DWORD *)(a2 + 12) )
     return 0;
-  result = (*(int (__fastcall **)(int))(a2 + 12))(a1);
+  router_query = (int (__fastcall *)(int))(uintptr_t)(unsigned int)*(_DWORD *)(a2 + 12);
+  result = router_query(a1);
   if ( result != 1 )
     return 0;
   return result;
@@ -102712,61 +102835,53 @@ int  sub_488DE1(_DWORD *a1, int a2)
 //----- (00488DF2) --------------------------------------------------------
 int  sub_488DF2(int a1, int a2, int *a3)
 {
-  _BYTE *v4; // edx
-  int v5; // eax
-  int v6; // ecx
-  int v8; // ebp
-  int v9; // ebp
-  char v10; // cl
-  int v11; // edi
-  int v12; // edx
-  int v13; // ecx
-  char v14; // bl
-  int v15; // edx
+  int lock_key;
+  int stream_state;
+  int busy_state;
+  int saved_mode_bits;
+  int flush_after_write;
+  int write_result;
+  unsigned char stream_flags;
 
-  off_51A56C(a2);
-  v5 = *(_DWORD *)(a1 + 8);
-  v6 = *(_DWORD *)(v5 + 12);
-  if ( v6 != 1 )
+  lock_key = *(_DWORD *)(a1 + 16);
+  off_51A56C(lock_key);
+  stream_state = *(_DWORD *)(a1 + 8);
+  busy_state = *(_DWORD *)(stream_state + 12);
+  if ( busy_state != 1 )
   {
-    if ( v6 )
+    if ( busy_state )
     {
-      off_51A570(v6, v4);
+      off_51A570(lock_key, 0);
       return 0;
     }
-    *(_DWORD *)(v5 + 12) = 1;
+    *(_DWORD *)(stream_state + 12) = 1;
   }
-  v8 = *(_DWORD *)(a1 + 12);
+  saved_mode_bits = *(_DWORD *)(a1 + 12) & 0x30;
   *(_BYTE *)(a1 + 12) &= 0xCFu;
-  v9 = v8 & 0x30;
   if ( !*(_DWORD *)(*(_DWORD *)(a1 + 8) + 8) )
     _ioalloc_();
-  v10 = *(_BYTE *)(a1 + 13);
-  v11 = 0;
-  if ( (v10 & 4) != 0 )
+  flush_after_write = 0;
+  if ( (*(_BYTE *)(a1 + 13) & 4) != 0 )
   {
-    *(_BYTE *)(a1 + 13) = v10 & 0xFA;
-    v11 = 1;
-    *(_BYTE *)(a1 + 13) = v10 & 0xFA | 1;
+    stream_flags = *(_BYTE *)(a1 + 13) & 0xFA;
+    *(_BYTE *)(a1 + 13) = stream_flags;
+    *(_BYTE *)(a1 + 13) = stream_flags | 1;
+    flush_after_write = 1;
   }
-  v12 = sub_487069(a1, v4, (void (*)(void))sub_488DE1, a3);
-  if ( v11 )
+  write_result = sub_487069(a1, (_BYTE *)(uintptr_t)(unsigned int)a2, (void (*)(void))sub_488DE1, a3);
+  if ( flush_after_write )
   {
-    v14 = *(_BYTE *)(a1 + 13) & 0xFA;
-    *(_BYTE *)(a1 + 13) = v14;
-    *(_BYTE *)(a1 + 13) = v14 | 4;
-    _flush_(v13, v12);
+    stream_flags = *(_BYTE *)(a1 + 13) & 0xFA;
+    *(_BYTE *)(a1 + 13) = stream_flags;
+    *(_BYTE *)(a1 + 13) = stream_flags | 4;
+    _flush_(a1, write_result);
   }
   if ( (*(_BYTE *)(a1 + 12) & 0x20) != 0 )
-    v12 = -1;
-  *(_DWORD *)(a1 + 12) |= v9;
-  off_51A570(v13, v12);
-  return v15;
+    write_result = -1;
+  *(_DWORD *)(a1 + 12) |= saved_mode_bits;
+  off_51A570(lock_key, write_result);
+  return write_result;
 }
-// 488E13: variable 'v4' is possibly undefined
-// 488E8A: variable 'v13' is possibly undefined
-// 488EA5: variable 'v12' is possibly undefined
-// 488EAB: variable 'v15' is possibly undefined
 // 4886DD: using guessed type int __fastcall _flush_(_DWORD, _DWORD);
 // 488946: using guessed type int _ioalloc_(void);
 // 51A56C: using guessed type int (__thiscall *off_51A56C)(_DWORD);
@@ -103844,6 +103959,17 @@ int sub_48AC70()
 }
 // 51A928: using guessed type int dword_51A928;
 
+//----- (0048AC80) --------------------------------------------------------
+int __fastcall unknown_libname_8(int a1)
+{
+  int result; // eax
+
+  result = dword_51A928;
+  dword_51A928 = a1;
+  return result;
+}
+// 51A928: using guessed type int dword_51A928;
+
 //----- (0048AC90) --------------------------------------------------------
 int sub_48AC90()
 {
@@ -104089,7 +104215,7 @@ char * Str_Append(const char *a1, char *a2, unsigned int *a3, _DWORD *a4)
   if ( v7 > (int)*a3 )
   {
     v5 = (char *)Mem_Realloc(a2, *a3, v7);
-    *a3 = *a4 + v9 + 1;
+    *a3 = *a4 + v6;
     if ( !v5 )
       return 0;
   }
@@ -104156,14 +104282,15 @@ char * Str_AppendCharEscaping(
         unsigned int a5)
 {
   char *result; // eax
-  unsigned int *v6; // ecx
   int v7; // edx
 
   result = a2;
   if ( (int)(*a3 - 1) <= *a4 )
   {
     result = (char *)Mem_Realloc(a2, *a3, a5);
-    *v6 = a5;
+    *a3 = a5;
+    if ( !result )
+      return 0;
   }
   if ( a1 == 8 )
   {
@@ -106579,7 +106706,7 @@ signed int  sub_48D7E0(int a1, int a2, int a3)
 // 48D839: variable 'v10' is possibly undefined
 
 //----- (0048D8C0) --------------------------------------------------------
-int sub_48D8C0()
+int Lexer_MarkImpliedTemplates()
 {
   int result; // eax
   int i; // edi
@@ -107125,9 +107252,8 @@ void  sub_48E1A0(int a1, char a2)
       a1 = *(_DWORD *)(a1 + 32);
     }
   }
-  JUMPOUT(0x48DEFF);
+  return;
 }
-// 48E1A7: control flows out of bounds to 48DEFF
 
 //----- (0048E1D0) --------------------------------------------------------
 int  sub_48E1D0(double a1)
@@ -109157,44 +109283,40 @@ int  sub_4902C0(double a1)
 //----- (00490330) --------------------------------------------------------
 void sub_490330()
 {
-  int v0; // edx
-  int v1; // eax
-  _DWORD *v2; // ebx
-  int v3; // ecx
+  int next_parser;
+  int next_fact;
+  int parser_node;
+  int parser_bucket;
+  _DWORD *nested_node;
 
-  if ( dword_51A978 )
+  while ( dword_51A978 )
   {
-    do
-    {
-      v0 = *(_DWORD *)(dword_51A978 + 8);
-      dword_54DBAC = dword_51A978;
-      *(_DWORD *)dword_51A978 = *(_DWORD *)(dword_54DBA8 + 48);
-      *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
-      dword_51A978 = v0;
-    }
-    while ( v0 );
+    next_parser = *(_DWORD *)(dword_51A978 + 8);
+    dword_54DBAC = dword_51A978;
+    *(_DWORD *)dword_51A978 = *(_DWORD *)(dword_54DBA8 + 48);
+    *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
+    dword_51A978 = next_parser;
   }
   while ( dword_51A974 )
   {
-    if ( (*(_BYTE *)dword_51A974 & 0x10) != 0 && (*(_BYTE *)dword_51A974 & 0x20) == 0 )
+    parser_node = dword_51A974;
+    next_fact = *(_DWORD *)(parser_node + 4);
+    if ( (*(_BYTE *)parser_node & 0x10) != 0 && (*(_BYTE *)parser_node & 0x20) == 0 )
     {
-      v1 = 4 * (*(_DWORD *)dword_51A974 << 17 >> 23) + dword_51A974;
-      v2 = *(_DWORD **)(v1 + 4);
-      if ( v2 )
+      parser_bucket = parser_node + 4 * ((unsigned int)(*(_DWORD *)parser_node << 17) >> 23);
+      nested_node = *(_DWORD **)(parser_bucket + 4);
+      if ( nested_node )
       {
-        dword_54DBAC = *(_DWORD *)(v1 + 4);
-        *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+        dword_54DBAC = *(_DWORD *)(parser_bucket + 4);
+        *nested_node = *(_DWORD *)(dword_54DBA8 + 48);
         *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
       }
     }
-    *(_BYTE *)dword_51A974 &= ~2u;
-    sub_4901C0(dword_51A974);
-    dword_51A974 = v3;
+    *(_BYTE *)parser_node &= ~2u;
+    sub_4901C0(parser_node);
+    dword_51A974 = next_fact;
   }
-  JUMPOUT(0x490324);
 }
-// 490378: control flows out of bounds to 490324
-// 4903D3: variable 'v3' is possibly undefined
 // 51A974: using guessed type int dword_51A974;
 // 51A978: using guessed type int dword_51A978;
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -110435,9 +110557,8 @@ void  sub_491790(int a1)
     while ( *(_DWORD *)(dword_51A9B4 + 28) )
       dword_51A9B4 = *(_DWORD *)(dword_51A9B4 + 28);
   }
-  JUMPOUT(0x49161E);
+  return;
 }
-// 49179D: control flows out of bounds to 49161E
 // 51A9AC: using guessed type int dword_51A9AC;
 // 51A9B4: using guessed type int dword_51A9B4;
 
@@ -110678,21 +110799,17 @@ signed int sub_491B10()
 //----- (00491B40) --------------------------------------------------------
 signed int  sub_491B40(int a1)
 {
-  int v2; // ecx
-  int v3; // ecx
+  int router_entry; // ecx
 
-  v2 = dword_51A9C8;
-  if ( !dword_51A9C8 )
-    return 0;
-  while ( strcmp_(v2, a1) )
+  router_entry = dword_51A9C8;
+  while ( router_entry )
   {
-    v2 = *(_DWORD *)(v3 + 20);
-    if ( !v2 )
-      return 0;
+    if ( !strcmp_(*(_DWORD *)router_entry, a1) )
+      return 1;
+    router_entry = *(_DWORD *)(router_entry + 20);
   }
-  return 1;
+  return 0;
 }
-// 491B5C: variable 'v3' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A9C8: using guessed type int dword_51A9C8;
 
@@ -110776,23 +110893,20 @@ int __fastcall sub_491C70(int a1, int a2)
 signed int  sub_491CC0(int a1, const char *a2, int a3)
 {
   if ( a2 )
-    return sub_491D00(a1, (int)a2, strlen(a2), a3);
+    return sub_491D00(a1, a2, strlen(a2), a3);
   else
     return sub_491D00(a1, 0, 0, 0);
 }
 
 //----- (00491D00) --------------------------------------------------------
-signed int  sub_491D00(int a1, int a2, int a3, int a4)
+signed int  sub_491D00(int a1, const void *a2, int a3, int a4)
 {
-  int v4; // esi
-  _DWORD *v6; // ecx
-  _DWORD *v7; // edx
-  _BYTE *v8; // edi
-  char v9; // al
-  char v10; // al
-  signed int result; // eax
+  const char *v4; // esi
+  _DWORD *v6; // edx
+  char *payload_copy; // eax
+  size_t name_length; // eax
 
-  v4 = a1;
+  v4 = (const char *)a1;
   if ( sub_491F30(a1) )
     return 0;
   v6 = *(_DWORD **)(dword_54DBA8 + 96);
@@ -110803,32 +110917,31 @@ signed int  sub_491D00(int a1, int a2, int a3, int a4)
   }
   else
   {
-    sub_472620((_DWORD *)0x18);
+    v6 = (_DWORD *)sub_472620((_DWORD *)0x18);
   }
-  v8 = sub_4728F0(strlen((const char *)v4) + 1);
-  *v7 = v8;
-  do
+  name_length = strlen(v4) + 1;
+  v6[0] = (int)sub_4728F0(name_length);
+  memcpy((void *)v6[0], v4, name_length);
+  if ( a2 && a3 > 0 )
   {
-    v9 = *(_BYTE *)v4;
-    *v8 = *(_BYTE *)v4;
-    if ( !v9 )
-      break;
-    v10 = *(_BYTE *)(v4 + 1);
-    v4 += 2;
-    v8[1] = v10;
-    v8 += 2;
+    payload_copy = (char *)Compat_AllocLow32Bytes(a3 + 1);
+    if ( !payload_copy )
+      return 0;
+    memcpy(payload_copy, a2, a3);
+    payload_copy[a3] = 0;
+    v6[1] = (int)(uintptr_t)payload_copy;
   }
-  while ( v10 );
-  v7[4] = 0;
-  v7[1] = a2;
-  v7[2] = a4;
-  v7[3] = a3;
-  v7[5] = dword_51A9C8;
-  result = 1;
-  dword_51A9C8 = (int)v7;
-  return result;
+  else
+  {
+    v6[1] = 0;
+  }
+  v6[2] = a4;
+  v6[3] = a3;
+  v6[4] = 0;
+  v6[5] = dword_51A9C8;
+  dword_51A9C8 = (int)v6;
+  return 1;
 }
-// 491D4E: variable 'v7' is possibly undefined
 // 51A9C8: using guessed type int dword_51A9C8;
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -110836,55 +110949,51 @@ signed int  sub_491D00(int a1, int a2, int a3, int a4)
 //----- (00491DB0) --------------------------------------------------------
 signed int  sub_491DB0(int a1)
 {
-  int v1; // ecx
-  _DWORD **v2; // ebx
-  _DWORD **v3; // esi
+  _DWORD *v2; // ebx
+  _DWORD *v3; // esi
+  int key_length; // edx
 
-  v1 = a1;
-  v2 = (_DWORD **)dword_51A9C8;
+  v2 = (_DWORD *)dword_51A9C8;
   v3 = 0;
-  if ( !dword_51A9C8 )
-    return 0;
-  while ( strcmp_(v1, v1) )
+  while ( v2 )
   {
+    if ( !strcmp_(v2[0], a1) )
+      break;
     v3 = v2;
-    v2 = (_DWORD **)v2[5];
-    if ( !v2 )
-      return 0;
+    v2 = (_DWORD *)v2[5];
   }
+  if ( !v2 )
+    return 0;
   if ( v3 )
   {
     v3[5] = v2[5];
-    sub_472A00(*v2, strlen((const char *)*v2) + 1);
   }
   else
   {
-    dword_51A9C8 = (int)v2[5];
-    sub_472A00(*v2, strlen((const char *)*v2) + 1);
+    dword_51A9C8 = v2[5];
   }
+  if ( !v2[4] && v2[1] )
+    Compat_FreeLow32Bytes(v2[1]);
+  key_length = strlen((const char *)v2[0]) + 1;
+  sub_472A00((_DWORD *)v2[0], key_length);
   dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD **)(dword_54DBA8 + 96);
+  v2[0] = *(_DWORD *)(dword_54DBA8 + 96);
   *(_DWORD *)(dword_54DBA8 + 96) = dword_54DBAC;
   return 1;
 }
-// 491DCB: variable 'v1' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A9C8: using guessed type int dword_51A9C8;
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00491E80) --------------------------------------------------------
-signed int  sub_491E80(int a1, int a2, int a3)
+signed int  sub_491E80(int a1, const void *a2, int a3)
 {
-  int v3; // esi
-  _DWORD *v5; // ecx
-  _DWORD *v6; // edx
-  _BYTE *v7; // edi
-  char v8; // al
-  char v9; // al
-  signed int result; // eax
+  const char *v3; // esi
+  _DWORD *v5; // edx
+  size_t name_length; // eax
 
-  v3 = a1;
+  v3 = (const char *)a1;
   if ( sub_491F30(a1) )
     return 0;
   v5 = *(_DWORD **)(dword_54DBA8 + 96);
@@ -110895,32 +111004,19 @@ signed int  sub_491E80(int a1, int a2, int a3)
   }
   else
   {
-    sub_472620((_DWORD *)0x18);
+    v5 = (_DWORD *)sub_472620((_DWORD *)0x18);
   }
-  v7 = sub_4728F0(strlen((const char *)v3) + 1);
-  *v6 = v7;
-  do
-  {
-    v8 = *(_BYTE *)v3;
-    *v7 = *(_BYTE *)v3;
-    if ( !v8 )
-      break;
-    v9 = *(_BYTE *)(v3 + 1);
-    v3 += 2;
-    v7[1] = v9;
-    v7 += 2;
-  }
-  while ( v9 );
-  v6[2] = 0;
-  v6[4] = 1;
-  v6[1] = a2;
-  v6[3] = a3;
-  v6[5] = dword_51A9C8;
-  result = 1;
-  dword_51A9C8 = (int)v6;
-  return result;
+  name_length = strlen(v3) + 1;
+  v5[0] = (int)sub_4728F0(name_length);
+  memcpy((void *)v5[0], v3, name_length);
+  v5[2] = 0;
+  v5[4] = 1;
+  v5[1] = (int)a2;
+  v5[3] = a3;
+  v5[5] = dword_51A9C8;
+  dword_51A9C8 = (int)v5;
+  return 1;
 }
-// 491EC9: variable 'v6' is possibly undefined
 // 51A9C8: using guessed type int dword_51A9C8;
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -110928,21 +111024,17 @@ signed int  sub_491E80(int a1, int a2, int a3)
 //----- (00491F30) --------------------------------------------------------
 int  sub_491F30(int a1)
 {
-  int v2; // ecx
-  int v3; // ecx
+  _DWORD *v2; // ecx
 
-  v2 = dword_51A9C8;
-  if ( !dword_51A9C8 )
-    return 0;
-  while ( strcmp_(v2, a1) )
+  v2 = (_DWORD *)dword_51A9C8;
+  while ( v2 )
   {
-    v2 = *(_DWORD *)(v3 + 20);
-    if ( !v2 )
-      return 0;
+    if ( !strcmp_(v2[0], a1) )
+      return (int)v2;
+    v2 = (_DWORD *)v2[5];
   }
-  return v3;
+  return 0;
 }
-// 491F4C: variable 'v3' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A9C8: using guessed type int dword_51A9C8;
 
@@ -112025,6 +112117,84 @@ int  sub_492FD0(int result)
   return result;
 }
 // 492FF0: variable 'v2' is possibly undefined
+
+//----- (00492FF0) --------------------------------------------------------
+signed int AST_AllocNode()
+{
+  int node;
+
+  node = *(_DWORD *)(dword_54DBA8 + 288);
+  if ( node )
+  {
+    dword_54DBAC = node;
+    *(_DWORD *)(dword_54DBA8 + 288) = *(_DWORD *)node;
+    node = dword_54DBAC;
+  }
+  else
+  {
+    node = sub_472620((_DWORD *)0x48);
+  }
+
+  *(_DWORD *)node = 103;
+  *(_DWORD *)(node + 4) = 0;
+  *(_DWORD *)(node + 16) = 0;
+  *(_DWORD *)(node + 20) = 0;
+  *(_DWORD *)(node + 24) = 0;
+  *(_DWORD *)(node + 28) = -1;
+  *(_DWORD *)(node + 32) = -1;
+  *(_DWORD *)(node + 36) = 0;
+  *(_DWORD *)(node + 40) = -1;
+  *(_DWORD *)(node + 44) = 1;
+  *(_DWORD *)(node + 48) = 1;
+  *(_DWORD *)(node + 52) = 0;
+  *(_DWORD *)(node + 56) = 0;
+  *(_DWORD *)(node + 60) = 0;
+  *(_DWORD *)(node + 64) = 0;
+  *(_DWORD *)(node + 68) = 0;
+  *(_DWORD *)(node + 8) &= 0xE0003FC0;
+  *(_WORD *)(node + 12) &= 0xC000u;
+  *(_BYTE *)(node + 8) |= 0x20u;
+  return node;
+}
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
+
+//----- (00493050) --------------------------------------------------------
+int AST_FreeNode(int result)
+{
+  int node;
+  int owner;
+  int (__thiscall *cleanup_fn)(void *this, int);
+
+  node = result;
+  if ( !node )
+    return 0;
+
+  AST_Free(*(_DWORD *)(node + 52));
+  AST_FreeNode(*(_DWORD *)(node + 64));
+  AST_FreeNode(*(_DWORD *)(node + 68));
+  AST_FreeNode(*(_DWORD *)(node + 56));
+  if ( *(_BYTE *)(node + 8) & 0x10 )
+    sub_496970(*(_DWORD **)(node + 16));
+
+  if ( *(_DWORD *)(node + 60) )
+  {
+    owner = *(_DWORD *)(node + 24);
+    if ( owner )
+    {
+      cleanup_fn = *(int (__thiscall **)(void *this, int))(owner + 64);
+      if ( cleanup_fn )
+        cleanup_fn((void *)owner, *(_DWORD *)(node + 60));
+    }
+  }
+
+  dword_54DBAC = node;
+  *(_DWORD *)node = *(_DWORD *)(dword_54DBA8 + 288);
+  *(_DWORD *)(dword_54DBA8 + 288) = dword_54DBAC;
+  return dword_54DBA8;
+}
+// 54DBA8: using guessed type int dword_54DBA8;
+// 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (00493000) --------------------------------------------------------
 int  AST_Free(int result)
@@ -115828,6 +115998,18 @@ int sub_497180()
 // 49719A: variable 'v0' is possibly undefined
 // 51AAB0: using guessed type int dword_51AAB0;
 
+//----- (004971A0) --------------------------------------------------------
+int __fastcall unknown_libname_10(int a1, int a2)
+{
+  int previous_state;
+
+  (void)a2;
+  previous_state = dword_51AAB4;
+  dword_51AAB4 = a1;
+  return previous_state;
+}
+// 51AAB4: using guessed type int dword_51AAB4;
+
 //----- (004971B0) --------------------------------------------------------
 int sub_4971B0()
 {
@@ -117837,30 +118019,22 @@ int sub_4995B0()
 //----- (004996D0) --------------------------------------------------------
 signed int __thiscall sub_4996D0(void *this)
 {
-  int v1; // ecx
-  int v2; // ecx
-  void *v3; // ecx
-  void *v4; // ecx
-
-  dword_54E6FC = (int)Str_Intern(aIsA, (int)this);
+  (void)this;
+  dword_54E6FC = (int)Str_Intern(aIsA, 0);
   ++*(_DWORD *)(dword_54E6FC + 4);
-  dword_54E6F8 = (int)Str_Intern(aName, v1);
+  dword_54E6F8 = (int)Str_Intern(aName, 0);
   ++*(_DWORD *)(dword_54E6F8 + 4);
-  dword_54E6F4 = (int)Str_Intern(aInitialObject, v2);
+  dword_54E6F4 = (int)Str_Intern(aInitialObject, 0);
   ++*(_DWORD *)(dword_54E6F4 + 4);
   sub_499990();
   sub_47F8F0();
   sub_4CCEC0();
   sub_4CDDE0();
-  sub_4CE740(v3);
+  sub_4CE740(0);
   sub_4C5450();
   sub_4CFD80();
-  return sub_4D15C0(v4);
+  return sub_4D15C0(0);
 }
-// 4996E7: variable 'v1' is possibly undefined
-// 4996F9: variable 'v2' is possibly undefined
-// 49971A: variable 'v3' is possibly undefined
-// 499729: variable 'v4' is possibly undefined
 // 54E6F4: using guessed type int dword_54E6F4;
 // 54E6F8: using guessed type int dword_54E6F8;
 // 54E6FC: using guessed type int dword_54E6FC;
@@ -118208,6 +118382,15 @@ signed int sub_499FA0()
 // 499FDD: variable 'v2' is possibly undefined
 // 499FCF: variable 'v1' is possibly undefined
 // 51AD68: using guessed type int dword_51AD68;
+
+//----- (0049A0E0) --------------------------------------------------------
+int __cdecl sub_49A0E0(void)
+{
+  sub_48F5C0((int)&unk_51ABD4, 65);
+  sub_48F5C0((int)&unk_51AC04, 66);
+  sub_48F5C0((int)&unk_51AC34, 67);
+  return sub_48F5C0((int)&unk_51AC64, 68);
+}
 
 //----- (0049A120) --------------------------------------------------------
 int  sub_49A120(
@@ -133310,115 +133493,128 @@ LABEL_8:
 //----- (004AAE30) --------------------------------------------------------
 int  sub_4AAE30(int a1, int a2)
 {
-  int v3; // ebx
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // edi
-  int v8; // ecx
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // ecx
-  signed int v12; // esi
-  __int16 v13; // ax
-  int v14; // ecx
-  int v15; // ecx
-  int **Symbol; // edx
-  signed int v17; // eax
-  int v18; // ecx
+  int override_head; // ebx
+  int slot_override_parent; // edi
+  int token_type; // edi
+  int override_tail; // esi
+  int value_node; // eax
+  int create_symbol; // eax
+  int trace_load_save; // eax
 
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-enter\n");
   Parser_NextToken(a2, (int)&dword_54E8FC);
-  v3 = 0;
-  if ( (dword_54E8FC == 8 || dword_54E8FC == 2)
-    && (*(_DWORD *)(a1 + 6) = AST_NewNode(8, dword_54E900), Parser_NextToken(v4, (int)&dword_54E8FC), dword_54E8FC == 2)
-    && !strcmp_(v5, *(_DWORD *)(dword_54E900 + 16))
-    && (Parser_NextToken(v6, (int)&dword_54E8FC), dword_54E8FC == 2)
-    && (*(_DWORD *)(*(_DWORD *)(a1 + 6) + 10) = AST_NewNode(2, dword_54E900),
-        v7 = *(_DWORD *)(*(_DWORD *)(a1 + 6) + 10),
-        sub_4AB0B0(v7)) )
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-token1=%d\n", dword_54E8FC);
+  override_head = 0;
+  if ( dword_54E8FC != 8 && dword_54E8FC != 2 )
+    goto MAKE_INSTANCE_ERROR;
+  *(_DWORD *)(a1 + 6) = AST_NewNode(8, dword_54E900);
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-after-head-node\n");
+  Parser_NextToken(a2, (int)&dword_54E8FC);
+  token_type = dword_54E8FC;
+  if ( trace_load_save )
+    fprintf(
+      stderr,
+      "[menu-probe] parse-make-instance-token2=%d symbol=%s\n",
+      token_type,
+      dword_54E900 ? (const char *)*(_DWORD *)(dword_54E900 + 16) : "<null>");
+  if ( token_type != 2 )
+    goto MAKE_INSTANCE_ERROR;
+  if ( strcmp_((int)aOf_0, *(_DWORD *)(dword_54E900 + 16)) )
+    goto MAKE_INSTANCE_ERROR;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-after-of\n");
+  Parser_NextToken(a2, (int)&dword_54E8FC);
+  if ( trace_load_save )
+    fprintf(
+      stderr,
+      "[menu-probe] parse-make-instance-token3=%d symbol=%s\n",
+      dword_54E8FC,
+      dword_54E900 ? (const char *)*(_DWORD *)(dword_54E900 + 16) : "<null>");
+  if ( dword_54E8FC != token_type )
+    goto MAKE_INSTANCE_ERROR;
+  *(_DWORD *)(*(_DWORD *)(a1 + 6) + 10) = AST_NewNode(dword_54E8FC, dword_54E900);
+  slot_override_parent = *(_DWORD *)(*(_DWORD *)(a1 + 6) + 10);
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-before-class-lookup\n");
+  if ( !sub_4AB0B0(slot_override_parent) )
+    goto MAKE_INSTANCE_ERROR;
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-after-class-lookup\n");
+  Parser_NextToken(a2, (int)&dword_54E8FC);
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] parse-make-instance-token4=%d\n", dword_54E8FC);
+  if ( dword_54E8FC != 100 )
+    goto CHECK_END_TOKEN;
+  while ( 1 )
   {
-    Parser_NextToken(v8, (int)&dword_54E8FC);
-    if ( dword_54E8FC == 100 )
+    Parser_NextToken(a2, (int)&dword_54E8FC);
+    if ( dword_54E8FC != 2 )
+      goto SLOT_OVERRIDE_ERROR;
+    *(_DWORD *)(slot_override_parent + 10) = AST_NewNode(2, dword_54E900);
+    *(_DWORD *)(*(_DWORD *)(slot_override_parent + 10) + 10) = AST_NewNode(2, dword_54DD64);
+    slot_override_parent = *(_DWORD *)(*(_DWORD *)(slot_override_parent + 10) + 10);
+    Parser_NextToken(a2, (int)&dword_54E8FC);
+    override_tail = 0;
+    while ( dword_54E8FC != 101 )
     {
-      while ( 1 )
+      if ( dword_54E8FC == 100 )
       {
-        Parser_NextToken(v9, (int)&dword_54E8FC);
+        Parser_NextToken(a2, (int)&dword_54E8FC);
         if ( dword_54E8FC != 2 )
-          break;
-        *(_DWORD *)(v7 + 10) = AST_NewNode(2, dword_54E900);
-        *(_DWORD *)(*(_DWORD *)(v7 + 10) + 10) = AST_NewNode(2, dword_54DD64);
-        v7 = *(_DWORD *)(*(_DWORD *)(v7 + 10) + 10);
-        Parser_NextToken(v10, (int)&dword_54E8FC);
-        v12 = 0;
-        while ( dword_54E8FC != 101 )
-        {
-          v13 = dword_54E8FC;
-          if ( dword_54E8FC == 100 )
-          {
-            Parser_NextToken(v11, (int)&dword_54E8FC);
-            if ( dword_54E8FC != 2 )
-              goto LABEL_28;
-            if ( strcmp_(v14, aCreate_0) )
-              goto LABEL_28;
-            Parser_NextToken(v15, (int)&dword_54E8FC);
-            if ( dword_54E8FC != 101 )
-              goto LABEL_28;
-            Symbol = Rules_MakeSymbol(aCreate_0);
-            v13 = 10;
-          }
-          else
-          {
-            if ( dword_54E8FC != 2 && dword_54E8FC != 3 && (unsigned int)dword_54E8FC >= 2 && dword_54E8FC != 8 )
-              goto LABEL_28;
-            Symbol = (int **)dword_54E900;
-          }
-          v17 = AST_NewNode(v13, (int)Symbol);
-          if ( v3 )
-            *(_DWORD *)(v12 + 10) = v17;
-          else
-            v3 = v17;
-          v12 = v17;
-          Parser_NextToken(v18, (int)&dword_54E8FC);
-        }
-        *(_DWORD *)(v7 + 6) = v3;
-        Parser_NextToken(v11, (int)&dword_54E8FC);
-        v3 = 0;
-        if ( dword_54E8FC != 100 )
-          goto LABEL_19;
+          goto SLOT_OVERRIDE_ERROR;
+        if ( strcmp_(*(_DWORD *)(dword_54E900 + 16), (int)aCreate_0) )
+          goto SLOT_OVERRIDE_ERROR;
+        Parser_NextToken(a2, (int)&dword_54E8FC);
+        if ( dword_54E8FC != 101 )
+          goto SLOT_OVERRIDE_ERROR;
+        create_symbol = (int)Rules_MakeSymbol(aCreate_0);
+        value_node = AST_NewNode(10, create_symbol);
       }
+      else
+      {
+        if ( dword_54E8FC != 2
+          && dword_54E8FC != 3
+          && dword_54E8FC != 0
+          && dword_54E8FC != 1
+          && dword_54E8FC != 8 )
+        {
+          goto SLOT_OVERRIDE_ERROR;
+        }
+        value_node = AST_NewNode(dword_54E8FC, dword_54E900);
+      }
+      if ( override_head )
+        *(_DWORD *)(override_tail + 10) = value_node;
+      else
+        override_head = value_node;
+      override_tail = value_node;
+      Parser_NextToken(a2, (int)&dword_54E8FC);
     }
-    else
-    {
-LABEL_19:
-      if ( dword_54E8FC == 101 )
-        return a1;
-    }
-LABEL_28:
-    sub_485BC0();
-    Lexer_ErrorRecover(1);
-    AST_Free(a1);
-    AST_Free(v3);
-    return 0;
+    *(_DWORD *)(slot_override_parent + 6) = override_head;
+    Parser_NextToken(a2, (int)&dword_54E8FC);
+    override_head = 0;
+    if ( dword_54E8FC != 100 )
+      break;
   }
-  else
-  {
-    sub_485BC0();
-    Lexer_ErrorRecover(1);
-    AST_Free(a1);
-    return 0;
-  }
+CHECK_END_TOKEN:
+  if ( dword_54E8FC == 101 )
+    return a1;
+SLOT_OVERRIDE_ERROR:
+  sub_485BC0();
+  Lexer_ErrorRecover(1);
+  AST_Free(a1);
+  AST_Free(override_head);
+  return 0;
+MAKE_INSTANCE_ERROR:
+  sub_485BC0();
+  Lexer_ErrorRecover(1);
+  AST_Free(a1);
+  return 0;
 }
 // 4AB03F: simplified comparisons for '$dword_54E8FC.4': ==0 || ==1 became <2u
-// 4AAE75: variable 'v4' is possibly undefined
-// 4AAE97: variable 'v5' is possibly undefined
-// 4AAEB3: variable 'v6' is possibly undefined
-// 4AAEF2: variable 'v8' is possibly undefined
-// 4AAF0B: variable 'v9' is possibly undefined
-// 4AAF4F: variable 'v10' is possibly undefined
-// 4AAF7A: variable 'v11' is possibly undefined
-// 4AAF99: variable 'v14' is possibly undefined
-// 4AAFB5: variable 'v15' is possibly undefined
-// 4AAFF0: variable 'v18' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 54DD64: using guessed type int dword_54DD64;
 // 54E8FC: using guessed type int dword_54E8FC;
@@ -133427,46 +133623,43 @@ LABEL_28:
 //----- (004AB0B0) --------------------------------------------------------
 signed int  sub_4AB0B0(int a1)
 {
-  int *v2; // eax
-  int v3; // ecx
-  int *v4; // ebx
-  int v5; // edx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // ecx
+  int class_name; // edx
+  int *class_record; // ebx
+  int trace_load_save; // eax
 
   if ( *(_WORD *)a1 != 2 )
     return 1;
-  v2 = sub_4B0480(*(_BYTE **)(*(_DWORD *)(a1 + 2) + 16));
-  v4 = v2;
-  if ( v2 )
+  class_name = *(_DWORD *)(*(_DWORD *)(a1 + 2) + 16);
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  class_record = sub_4B0480((_BYTE *)class_name);
+  if ( class_record )
   {
-    if ( sub_4D5A40((int)v2) )
+    if ( sub_4D5A40((int)class_record) )
     {
+      if ( trace_load_save )
+        fprintf(
+          stderr,
+          "[menu-probe] class-lookup-cannot-create name=%s class=%p\n",
+          class_name ? (const char *)(uintptr_t)(unsigned int)class_name : "<null>",
+          (void *)(uintptr_t)(unsigned int)class_record);
       sub_4859A0((int)aInsmngr_0, 3, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotCreateIn, v6);
-      Output_Write((int)off_51A614[0], v7, v7);
-      Output_Write((int)off_51A614[0], (int)a__7, v8);
+      Output_Write((int)off_51A614[0], (int)aCannotCreateIn, 0);
+      Output_Write((int)off_51A614[0], class_name, class_name);
+      Output_Write((int)off_51A614[0], (int)a__7, 0);
       return 0;
     }
-    else
-    {
-      *(_WORD *)v5 = 57;
-      *(_DWORD *)(v5 + 2) = v4;
-      return 1;
-    }
+    *(_WORD *)a1 = 57;
+    *(_DWORD *)(a1 + 2) = class_record;
+    return 1;
   }
-  else
-  {
-    sub_485A60(v3, v3);
-    return 0;
-  }
+  if ( trace_load_save )
+    fprintf(
+      stderr,
+      "[menu-probe] class-lookup-failed name=%s\n",
+      class_name ? (const char *)(uintptr_t)(unsigned int)class_name : "<null>");
+  sub_485A60((int)aClass, class_name);
+  return 0;
 }
-// 4AB0E0: variable 'v5' is possibly undefined
-// 4AB0F8: variable 'v3' is possibly undefined
-// 4AB11E: variable 'v6' is possibly undefined
-// 4AB12A: variable 'v7' is possibly undefined
-// 4AB139: variable 'v8' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004AB150) --------------------------------------------------------
@@ -134816,7 +135009,7 @@ void __fastcall Compiler_MarkAndEmit(int a1, int a2)
     v3 += 4;
     ++v2;
   }
-  JUMPOUT(0x4ACA62);
+  return;
 }
 // 4ACBBE: control flows out of bounds to 4ACA62
 // 4ACBEF: variable 'i' is possibly undefined
@@ -137841,25 +138034,76 @@ int * sub_4B0480(_BYTE *a1)
   int *result; // eax
   int *v2; // ebx
   int v3; // ecx
+  int trace_load_save; // eax
+  int bucket_index; // edi
+  int saw_symbol_match; // esi
 
+  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+
+  if ( !dword_51AD68 )
+  {
+    if ( trace_load_save )
+      fprintf(stderr, "[menu-probe] class-lookup-no-table name=%s\n", a1 ? (const char *)a1 : "<null>");
+    return 0;
+  }
   result = sub_481EC0(a1);
   v2 = result;
   if ( result )
   {
-    v3 = *(_DWORD *)(dword_51AD68 + 4 * sub_4B1820((int)result));
+    bucket_index = sub_4B1820((int)result);
+    v3 = *(_DWORD *)(dword_51AD68 + 4 * bucket_index);
     if ( !v3 )
+    {
+      if ( trace_load_save )
+        fprintf(
+          stderr,
+          "[menu-probe] class-lookup-empty-bucket name=%s bucket=%d\n",
+          a1 ? (const char *)a1 : "<null>",
+          bucket_index);
       return 0;
+    }
+    saw_symbol_match = 0;
     while ( v2 != *(int **)v3 || !sub_4B0520(v3, 0) )
     {
+      if ( v2 == *(int **)v3 )
+      {
+        saw_symbol_match = 1;
+        if ( trace_load_save )
+          fprintf(
+            stderr,
+            "[menu-probe] class-lookup-hidden name=%s bucket=%d class=%p flags=%02x\n",
+            a1 ? (const char *)a1 : "<null>",
+            bucket_index,
+            (void *)(uintptr_t)(unsigned int)v3,
+            (unsigned __int8)*(_BYTE *)(v3 + 20));
+      }
       v3 = *(_DWORD *)(v3 + 100);
       if ( !v3 )
+      {
+        if ( trace_load_save )
+          fprintf(
+            stderr,
+            "[menu-probe] class-lookup-%s name=%s bucket=%d\n",
+            saw_symbol_match ? "module-hidden" : "symbol-miss",
+            a1 ? (const char *)a1 : "<null>",
+            bucket_index);
         return 0;
+      }
     }
     if ( (*(_BYTE *)(v3 + 20) & 1) != 0 )
       return (int *)v3;
-    else
-      return 0;
+    if ( trace_load_save )
+      fprintf(
+        stderr,
+        "[menu-probe] class-lookup-inactive name=%s bucket=%d class=%p flags=%02x\n",
+        a1 ? (const char *)a1 : "<null>",
+        bucket_index,
+        (void *)(uintptr_t)(unsigned int)v3,
+        (unsigned __int8)*(_BYTE *)(v3 + 20));
+    return 0;
   }
+  if ( trace_load_save )
+    fprintf(stderr, "[menu-probe] class-lookup-no-symbol name=%s\n", a1 ? (const char *)a1 : "<null>");
   return result;
 }
 // 4B04A8: variable 'v3' is possibly undefined
@@ -165980,7 +166224,7 @@ signed int  sub_4D0660(
          0,
          0);
   if ( !v6 )
-    JUMPOUT(0x4D05E2);
+    return 0;
   v10 = 0;
   while ( 1 )
   {
@@ -166007,7 +166251,9 @@ void  sub_4D0710(const char *a1, const char *a2, int a3, int a4, int a5, int *a6
   int v7; // ecx
   int v8; // edx
   int v9; // [esp+0h] [ebp-14h]
+  int v10[4]; // [esp+4h] [ebp-10h] BYREF
 
+  v10[0] = 1;
   v6 = sub_4A79F0(
          0,
          a1,
@@ -166020,22 +166266,20 @@ void  sub_4D0710(const char *a1, const char *a2, int a3, int a4, int a5, int *a6
          *(const char **)(*(_DWORD *)(dword_54E8F8 + 20) + 36),
          0,
          0);
-  if ( v6 )
+  if ( !v6 )
+    return;
+  v9 = 0;
+  while ( 1 )
   {
-    v9 = 0;
-    while ( 1 )
-    {
-      sub_4CFF30(v6, *(_DWORD *)(dword_51AD70 + 4 * v9), a5);
-      v8 = v9 + 1;
-      v9 = v8;
-      if ( v8 >= 167 )
-        break;
-      if ( v8 > 0 )
-        sub_476301(v7, v8, v6, (int)asc_50C57C, v8);
-    }
-    JUMPOUT(0x4D06E8);
+    sub_4CFF30(v6, *(_DWORD *)(dword_51AD70 + 4 * v9), a5);
+    v8 = v9 + 1;
+    v9 = v8;
+    if ( v8 >= 167 )
+      break;
+    if ( v8 > 0 )
+      sub_476301(v7, v8, v6, (int)asc_50C57C, v8);
   }
-  JUMPOUT(0x4D05E2);
+  sub_4A7920(v6, &v9, v8, v10, 0, 0);
 }
 // 4D0754: control flows out of bounds to 4D05E2
 // 4D0782: control flows out of bounds to 4D06E8
@@ -168036,7 +168280,7 @@ void  sub_4D2AC0(int a1, int a2)
         *(_DWORD *)(*(_DWORD *)(dword_51AD64 + 4 * i) + 26) += a2;
     }
   }
-  JUMPOUT(0x4D29E4);
+  return;
 }
 // 4D2AD2: control flows out of bounds to 4D29E4
 // 51A180: using guessed type int dword_51A180;
@@ -170412,7 +170656,7 @@ signed int  sub_4D5270(
       sprintf_(a4, a2, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v11 + 8) + 12) + 16));
       if ( v12 )
         break;
-      sub_491E80((int)aDescribeClas_1, v13, a3);
+      sub_491E80((int)aDescribeClas_1, (const void *)v13, a3);
       Output_Write((int)aDescribeClas_1, (int)aRngOo__Oo, v14);
       if ( (**(_BYTE **)(i + *(_DWORD *)(a5 + 56)) & 2) != 0 )
       {
@@ -170539,7 +170783,7 @@ LABEL_10:
       v48 += 2;
     }
     while ( v50 );
-    sub_491E80((int)aDescribeClas_1, (int)&a4[strlen(a4)], a3 - (strlen(a4) + 1));
+    sub_491E80((int)aDescribeClas_1, &a4[strlen(a4)], a3 - (strlen(a4) + 1));
     v51 = *v12;
     if ( (*v12 & 0x10) != 0 || (v51 & 8) != 0 || (v51 & 1) != 0 )
     {
@@ -173223,6 +173467,23 @@ LABEL_15:
 }
 // 4D8888: variable 'a2' is possibly undefined
 // 4D888C: variable 'a3' is possibly undefined
+
+//----- (004D88F0) --------------------------------------------------------
+int __cdecl sub_4D88F0(void)
+{
+  sub_48F5C0((int)&unk_51B488, 47);
+  sub_48F5C0((int)&unk_51B4B8, 48);
+  sub_48F5C0((int)&unk_51B4E8, 45);
+  sub_48F5C0((int)&unk_51B518, 46);
+  sub_48F5C0((int)&unk_51B548, 50);
+  sub_48F5C0((int)&unk_51B578, 49);
+  sub_48F5C0((int)&unk_51B5A8, 51);
+  sub_48F5C0((int)&unk_51B5D8, 53);
+  sub_48F5C0((int)&unk_51B608, 55);
+  sub_48F5C0((int)&unk_51B638, 52);
+  sub_48F5C0((int)&unk_51B668, 54);
+  return sub_48F5C0((int)&unk_51B698, 56);
+}
 
 //----- (004D89B0) --------------------------------------------------------
 unsigned int  sub_4D89B0(int a1, int a2, int a3, double a4)
@@ -180951,6 +181212,13 @@ signed int sub_4E1480()
 // 4E154B: variable 'v8' is possibly undefined
 // 4E155F: variable 'v10' is possibly undefined
 
+//----- (004E15D0) --------------------------------------------------------
+int __fastcall mblen_(int a1, int a2)
+{
+  (void)a2;
+  return sub_4E1750(0, a1);
+}
+
 //----- (004E15E0) --------------------------------------------------------
 int  sub_4E15E0(int a1)
 {
@@ -180961,6 +181229,12 @@ int  sub_4E15E0(int a1)
   return v2;
 }
 // 4E15F9: variable 'v2' is possibly undefined
+
+//----- (004E1600) --------------------------------------------------------
+int __fastcall mblen__0(int a1, int a2)
+{
+  return sub_4E1A90(0, a1, a2);
+}
 
 //----- (004E1610) --------------------------------------------------------
 _DWORD * sub_4E1610(_DWORD *result)

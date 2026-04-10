@@ -201,3 +201,9 @@
 
 ## 15. Batch 144 Note
 - `Batch 144` stayed intentionally on the executable-first load-menu frontier. The active work mirrored the active cursor descriptor into `dword_544D14`, promoted the recovered text/font slot seam into the live explicit `g_TextSpriteResourceSlots` table, and proved that the contained load menu now survives `row-strip hover -> bottom-button return -> back click` in one authentic submenu loop. It still did not promote any new unit-type or stat semantics; the next blocker is now the concrete row-resource preload crash at `Render_LoadResourceSprite_v4(18/21) -> DLXSpriteSet_Load`.
+
+## 16. Batch 146 Note
+- `Batch 146` stayed intentionally on the executable-first load-menu frontier. The active work proved the contained authentic slot-click/confirm lane on a real occupied save slot and characterized the first post-confirm `sub_444490` link/runtime blocker, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while the executable work stays on the load-menu-to-session-init corridor.
+
+## 17. Batch 147 Note
+- `Batch 147` stayed intentionally on the executable-first load-menu/session-load frontier. The active work repaired the recovered `sub_4163F0` world-map-init tail and widened `sub_4443C0` / `sub_4443D0` so the `.dat` / `.fac` save-path builders no longer truncate stack buffers, which moved the contained authentic `Load Game` lane through `WorldMap_Initialize`, through `sub_444490`, to `load-menu-post-confirm-after-save`, and back to `main-after-menu-probe`. It did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note while the next blocker shifts to the post-save `PlayGame` handoff.

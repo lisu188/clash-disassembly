@@ -1,0 +1,38 @@
+# Decisions
+
+- Keep cache reuse conservative inside `Render_LoadResourceSprite_v4`.
+  - Reason: repo-local `gfx\\cache\\...` files can exist even when the mounted-query layer cannot reopen them.
+- Keep the `.pfn` palette load in the quarantine helper instead of broadening the SDL seam.
+  - Reason: the original x86 contract keeps this entirely inside the text-resource/runtime helpers.
+- Patch `sub_40BC00` in `clash95.c` directly instead of shadowing it from `compat/decomp_runtime_stubs.c`.
+  - Reason: `clash95_bootstrap` links `clash95.c.o` directly, so a compat duplicate causes a multiple-definition link error.
+- Keep the next contained frontier on slot-click/confirm and save-slot repaint, not on unrelated runtime wrappers.
+  - Reason: the contained menu wedge is now beyond the row-resource and first row-draw helpers.
+- Make the contained confirm probe click the save-slot strip before the bottom-row load button.
+  - Reason: the authentic load-menu loop latches `dword_5441E0` and routes through `sub_44A110` from the in-strip click corridor, not from hover alone.
+- Do not land a direct contained `sub_444490` call in the green bootstrap surface yet.
+  - Reason: the experimental widening immediately reopens a deeper unresolved runtime/parser link band and would regress `clash95_bootstrap` and `clash95_cpp_regen`.
+- Patch `sub_4163F0` in recovered C instead of tracing around it indefinitely.
+  - Reason: the asm proves it is a short deterministic loop, and the decompiled body was using uninitialized indices on the live post-confirm path.
+- Widen `sub_4443C0` / `sub_4443D0` to `char *` buffers in recovered C.
+  - Reason: the asm passes a live destination buffer in `edx`, and the low32 `int` signature was truncating stack addresses on x86_64 during the authentic save-load path.
+- Keep the next frontier on the post-save `PlayGame` handoff, not on `sub_444490`.
+  - Reason: the contained authentic load-game lane now survives both `WorldMap_Initialize` and the `.dat` / `.fac` load and returns to `main-after-menu-probe`.
+- Revert the experimental direct `PlayGame` call from `bootstrap_main.c`.
+  - Reason: even when guarded by an env flag, the reference widens the live bootstrap link surface immediately and regresses `clash95_bootstrap` / `clash95_cpp_regen` by dragging in the unresolved gameplay/session band.
+- Do not leave the broader `sub_482260` symbol-table seed enabled in the live contained probe until allocator recovery catches up.
+  - Reason: the experimental widening exposed a real `sub_472E40` pool-tail corruption and would regress the current green `after-save` foothold.
+- Do not “fix” the current `oddzial` miss by splicing `Rules_ShowBanner_StrategicClash` or bare `sub_499990` into the contained post-save lane.
+  - Reason: the authentic shipped post-save load lane is still `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`, while the `CLIPS`/bload/class-runtime setup belongs to the broader startup-prelude chain.
+- Keep the new class-lookup diagnostics in recovered C.
+  - Reason: they prove the current failure is a null defclass registry (`dword_51AD68`), not module visibility, inactive flags, SDL, or a C++ wrapper seam.
+- Recover retained `sub_47C850` loader prerequisites in-place before broadening `sub_451E46`, not by moving class/runtime semantics into the contained save-load wedge.
+  - Reason: the local loader blockers were real executable-regeneration debt, but they are part of the startup-prelude widening, not a local post-save menu fix.
+- Publish `CSyncObject_Unlock` through the existing conservative C++ seam instead of `compat/decomp_runtime_stubs.c`.
+  - Reason: it is an original class ABI surface and fits the current `clash95_cpp_core` ownership better than another quarantine shim.
+- Correct the `sub_47D0E0` tail to the retained `.fn_init` placeholder at `sub_49A0E0` instead of satisfying that call with `unknown_libname_7`.
+  - Reason: `unknown_libname_7` is the real `dword_51A1EC` setter-swap at `0x47E7B0`, while the authentic startup chain calls the separate collapsed `.fn_init` body at `0x49A0E0`.
+- Keep `sub_496643`, `ftime_`, and `system_` in `compat/decomp_runtime_stubs.c` instead of scattering ad-hoc host calls through recovered gameplay code.
+  - Reason: they are CRT/runtime helpers on the retained startup-prelude path, and quarantining them preserves the rule that platform/runtime glue stays out of the gameplay seam.
+- Patch asm-backed `JUMPOUT` scars in `clash95.c` directly when they collapse to shared epilogues.
+  - Reason: these are decompiler control-flow artifacts, not missing runtime services, so stubbing them in compat would hide real recovered control flow.

@@ -30,6 +30,7 @@ extern int g_MainMenuMusicHandle;
 extern int dword_544190;
 extern int dword_5441E0;
 extern int dword_545150;
+extern int dword_54DBA8;
 extern int logEnabled;
 extern HWND hWnd;
 extern unsigned int dword_544CD8[286];
@@ -80,6 +81,7 @@ int sub_442760(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
+int __fastcall sub_4725B0(int a1, int a2);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
 int sub_401A40(void);
@@ -118,9 +120,13 @@ BOOL sub_460950(int a1);
 int Render_Present(int a1);
 int sub_44A110(int a1, DWORD a2);
 void *sub_44A140(int a1, DWORD a2);
+int sub_404F20(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
+int *sub_482260(void);
+signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
+signed int sub_444490(int a1, DWORD a2, double a3);
 signed int sub_44C400(DWORD a1, double a2);
 signed int sub_44C410(int a1);
 int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
@@ -132,6 +138,7 @@ BOOL Input_MouseAcquire(void);
 int __stdcall CSS_SetDirectSoundHWnd(int a1);
 int __stdcall CSS_SetDeviceSearch(int a1);
 signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4);
+int __stdcall CSS_StopSound(int a1, int a2);
 void Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
 
 int _no_support_loaded(void)
@@ -156,6 +163,10 @@ static int g_boot_load_menu_probe_auto_click_checked;
 static int g_boot_load_menu_probe_auto_click_index = -1;
 static int g_boot_load_menu_probe_auto_slot_checked;
 static int g_boot_load_menu_probe_auto_slot_index = -1;
+static int g_boot_load_menu_probe_post_confirm_checked;
+static int g_boot_load_menu_probe_post_confirm_enabled;
+static int g_boot_load_menu_probe_broader_rules_checked;
+static int g_boot_load_menu_probe_broader_rules_enabled;
 
 static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);
 
@@ -258,6 +269,43 @@ static int Bootstrap_GetLoadMenuProbeAutoSlotIndex(void)
       g_boot_load_menu_probe_auto_slot_index = (int)parsed_value;
   }
   return g_boot_load_menu_probe_auto_slot_index;
+}
+
+static int Bootstrap_ShouldRunLoadMenuProbePostConfirm(void)
+{
+  const char *env_value;
+
+  if ( g_boot_load_menu_probe_post_confirm_checked )
+    return g_boot_load_menu_probe_post_confirm_enabled;
+
+  g_boot_load_menu_probe_post_confirm_checked = 1;
+  env_value = getenv("CLASH95_LOAD_MENU_PROBE_POST_CONFIRM");
+  if ( env_value && *env_value && strcmp(env_value, "0") )
+    g_boot_load_menu_probe_post_confirm_enabled = 1;
+  return g_boot_load_menu_probe_post_confirm_enabled;
+}
+
+static int Bootstrap_ShouldRunLoadMenuProbeBroaderRulesBootstrap(void)
+{
+  const char *env_value;
+
+  if ( g_boot_load_menu_probe_broader_rules_checked )
+    return g_boot_load_menu_probe_broader_rules_enabled;
+
+  g_boot_load_menu_probe_broader_rules_checked = 1;
+  g_boot_load_menu_probe_broader_rules_enabled = 1;
+  env_value = getenv("CLASH95_LOAD_MENU_PROBE_BROADER_RULES");
+  if ( env_value && *env_value && !strcmp(env_value, "0") )
+    g_boot_load_menu_probe_broader_rules_enabled = 0;
+  return g_boot_load_menu_probe_broader_rules_enabled;
+}
+
+static int Bootstrap_ShouldDrawLoadMenuRows(void)
+{
+  const char *env_value;
+
+  env_value = getenv("CLASH95_LOAD_MENU_PROBE_DRAW_ROWS");
+  return env_value && *env_value && strcmp(env_value, "0");
 }
 
 static int Bootstrap_GetMenuProbeWidgetClickCandidate(
@@ -879,6 +927,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   int auto_hover_slot_y;
   int auto_hover_slot_pending;
   int auto_hover_exit_on_select;
+  int auto_slot_click_phase;
   int fallback_probe_delta_x;
   int fallback_probe_delta_y;
   signed char fallback_probe_primary;
@@ -901,6 +950,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   auto_hover_slot_y = 0;
   auto_hover_slot_pending = 0;
   auto_hover_exit_on_select = 0;
+  auto_slot_click_phase = -1;
   fallback_probe_delta_x = 0;
   fallback_probe_delta_y = 0;
   fallback_probe_primary = 0;
@@ -917,6 +967,20 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   Bootstrap_TraceMenuProbe("load-menu-gfx");
   Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\load.gfx");
   Bootstrap_TraceMenuProbe("load-menu-row-resource-fallback");
+  if ( Bootstrap_ShouldDrawLoadMenuRows() )
+  {
+    int row_index;
+
+    Bootstrap_TraceMenuProbe("load-menu-row-resource-18");
+    Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
+    Bootstrap_TraceMenuProbe("load-menu-row-resource-21");
+    Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
+    for ( row_index = 0; row_index < 10; ++row_index )
+    {
+      Bootstrap_TraceMenuProbe("load-menu-row-draw");
+      sub_44A140(row_index, 0);
+    }
+  }
   Bootstrap_TraceMenuProbe("load-menu-draw-stage");
   Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 0, 0);
   Bootstrap_TraceMenuProbe("load-menu-skip-save-slot-draw");
@@ -967,6 +1031,17 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     auto_hover_slot_y = 165 + 22 * auto_hover_slot_index;
     auto_hover_slot_pending = 1;
     auto_hover_exit_on_select = auto_click_index < 0;
+    if ( auto_click_index >= 0 )
+    {
+      /*
+       * The recovered load-menu loop treats a click on the save-slot strip as
+       * the authentic entry into `dword_5441E0` / `sub_44A110`. When the
+       * contained probe also wants the bottom-row button, click the slot first
+       * and only fall through to the button if the row click does not exit.
+       */
+      auto_slot_click_phase = 0;
+      auto_click_phase = -1;
+    }
     if ( g_boot_trace_menu_probe_enabled )
     {
       fprintf(
@@ -991,6 +1066,69 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
         0);
       Bootstrap_TraceMenuProbe("load-auto-hover-slot");
       auto_hover_slot_pending = 0;
+    }
+    else if ( auto_slot_click_phase == 0 )
+    {
+      Platform_DebugPrimeInputFallbackMousePulse(0, 0, 1, 0, 1);
+      if ( g_boot_trace_menu_probe_enabled )
+      {
+        Platform_ReadInputFallbackState(
+          &fallback_probe_delta_x,
+          &fallback_probe_delta_y,
+          &fallback_probe_primary,
+          &fallback_probe_secondary,
+          0,
+          0);
+        fprintf(
+          stderr,
+          "[menu-probe] load-fallback-readback phase=slot-down mdx=%d mdy=%d mp=%d ms=%d\n",
+          fallback_probe_delta_x,
+          fallback_probe_delta_y,
+          fallback_probe_primary,
+          fallback_probe_secondary);
+        fflush(stderr);
+        Platform_DebugPrimeInputFallbackMousePulse(0, 0, 1, 0, 1);
+      }
+      Bootstrap_TraceMenuProbe("load-auto-slot-down");
+      auto_slot_click_phase = 1;
+    }
+    else if ( auto_slot_click_phase == 1 )
+    {
+      Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 0, 0);
+      if ( g_boot_trace_menu_probe_enabled )
+      {
+        Platform_ReadInputFallbackState(
+          &fallback_probe_delta_x,
+          &fallback_probe_delta_y,
+          &fallback_probe_primary,
+          &fallback_probe_secondary,
+          0,
+          0);
+        fprintf(
+          stderr,
+          "[menu-probe] load-fallback-readback phase=slot-up mdx=%d mdy=%d mp=%d ms=%d\n",
+          fallback_probe_delta_x,
+          fallback_probe_delta_y,
+          fallback_probe_primary,
+          fallback_probe_secondary);
+        fflush(stderr);
+        Platform_DebugPrimeInputFallbackMouseDelta(0, 0, 0, 0);
+      }
+      Bootstrap_TraceMenuProbe("load-auto-slot-up");
+      auto_slot_click_phase = 2;
+    }
+    else if ( auto_slot_click_phase == 2 )
+    {
+      if ( dword_544190 )
+      {
+        auto_slot_click_phase = 3;
+      }
+      else if ( auto_click_index >= 0 && dword_5441E0 != -1 )
+      {
+        auto_click_phase = 0;
+        auto_slot_click_phase = 3;
+        Bootstrap_TraceMenuProbe("load-auto-click-after-slot");
+      }
     }
     else if ( auto_click_phase == 0 )
     {
@@ -1180,6 +1318,33 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
   Bootstrap_TraceMenuProbe("load-menu-loop-cleanup");
   Render_Pump();
+  if ( dword_544190 )
+    sub_404F20((int *)&unk_51D4C0, 20);
+  sub_405920(&g_PlayGameMenuSpriteSetHandle);
+  if ( !dword_544190 )
+    dword_5441E0 = -1;
+  if ( Bootstrap_ShouldRunLoadMenuProbePostConfirm() && dword_5441E0 != -1 )
+  {
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-stop-sound");
+    CSS_StopSound(g_MainMenuMusicHandle, 1000);
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-worldmap-init");
+    WorldMap_Initialize((char)dword_5441E0, 0);
+    if ( Bootstrap_ShouldRunLoadMenuProbeBroaderRulesBootstrap() )
+    {
+      if ( !dword_54DBA8 )
+      {
+        Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-slab-init");
+        sub_4725B0(0, 0);
+      }
+      Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
+      sub_482260();
+      Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
+      sub_491B10();
+    }
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-load-save");
+    sub_444490(dword_5441E0, 0, 0.0);
+    Bootstrap_TraceMenuProbe("load-menu-post-confirm-after-save");
+  }
 }
 
 static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLine)

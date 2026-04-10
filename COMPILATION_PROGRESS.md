@@ -3096,6 +3096,210 @@
 - total rename count so far:
   - `1193`
 
+## Batch 126 - Retained Startup Prelude Runtime And Parser Frontier Reduction
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader startup-prelude executable-regeneration slice `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`
+- Subagents spawned and scopes:
+  - `boot_path_mapper`: corroborated the latest authentic startup frontier against `clash95.asm`, `clash95.map`, `bootstrap_main.c`, and the recent progress sidecars
+  - `runtime_glue_mapper`: audited `_wcpp_*`, CRT helpers, `JUMPOUT`, and `compat/decomp_runtime_stubs.c`
+  - `sdl_seam_mapper`: re-checked `platform_sdl.h`, `platform_sdl_runtime.c`, and the WSL/SDL seam against the current contained lane
+  - `class_seam_mapper`: reviewed `sub_4996D0`, `sub_4B0940`, `sub_499990`, and the class-registry path around `dword_51AD68`
+  - `external_corroborator`: re-checked `/mnt/c/clash` and the shipped `CLASH.DAT` tokens as secondary evidence
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` confirmed the next retained step after the helper band should be `sub_496643` followed by nearby `JUMPOUT` scars, not another contained-lane splice
+    - `runtime_glue_mapper` confirmed `sub_496643` is a Watcom signal-table wrapper and that the next retained `JUMPOUT` sites were real control-flow scars rather than new runtime surfaces
+    - `class_seam_mapper` confirmed `sub_49A0E0` already exists in-tree and should be removed from the live retained blocker wording
+    - `external_corroborator` confirmed `CLASH.DAT` still carries `MAIN`, `make-instance`, `defclass`, and `oddzial`, reinforcing that the live contained blocker remains authentic class/bload bring-up
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `dword_51ACC4` now aliases the high half of `qword_51ACC0`
+  - `unk_508D50` now matches the exact `5,6,7,"CLIPS",0,0` bytes from the original binary
+- High-priority unknown functions reviewed:
+  - `Compiler_MarkAndEmit`
+  - `sub_4D0660`
+  - `sub_4D0710`
+  - `sub_4D2AC0`
+  - `sub_47F480`
+  - `sub_48E1A0`
+  - `sub_491790`
+  - `sub_496643`
+  - `ftime_`
+  - `system_`
+- Blockers removed this batch:
+  - the retained `sub_4996D0` slice no longer fails on the local `JUMPOUT` scar cluster
+  - the broader retained startup-prelude slice no longer fails on `sub_496643`
+  - the broader retained startup-prelude slice no longer fails on `ftime_` / `system_`
+  - the broader retained startup-prelude slice no longer fails on the nearby `sub_47F480` / `sub_48E1A0` / `sub_491790` `JUMPOUT` band
+- SDL replacements/cleanups this batch:
+  - none; the contained lane and the retained startup-prelude slice are still blocked below SDL
+- Menu/UI fixes this batch:
+  - none in the contained logic itself; the traced menu probes were rerun to confirm the live `oddzial` versus `MAIN` split still holds after the retained runtime work
+- Session-init fixes this batch:
+  - none; the post-save `PlayGame` handoff remains deferred behind the missing authentic class/bload prelude
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 -o /tmp/clash95_sub4996d0_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build cleanly together
+- Link status:
+  - retained `sub_4996D0` now links successfully
+  - retained `sub_451E46` now fails on the deeper parser/class/math band led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the `IF_*` / `__FYL2X__` helpers
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` still exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` still exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` still exits with status `124`
+  - the traced contained menu probes still reproduce the same live split under `timeout 2s`: broader rules reach `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`, while `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged in the contained lane: the authentic load-menu path still survives row-resource load, all ten row draws, authentic slot-strip selection, bottom-row confirm, and the first post-confirm save replay entry before failing in the broader class/bload startup-prelude gap
+- Key evidence used:
+  - `clash95.asm` / `objdump` for `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, `sub_491790`, `sub_496643`, `sub_47D360`, and `sub_47D3D0`
+  - `clash95.map` entries for `__SetSignalFunc_`, `__GetSignalFunc_`, `CtrlHandlerIsNeeded_`, `StartCtrlHandler_`, `KillCtrlHandler_`, `__sigabort_`, `ftime_`, and `system_`
+  - traced contained menu-probe output showing the unchanged `oddzial` versus `MAIN` split after the retained runtime work
+- Ambiguous candidates deferred:
+  - the deeper parser/class band rooted at `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, and `sub_4BDD40`
+  - the broader math/runtime helper tranche (`IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`)
+  - the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw`
+- total rename count so far:
+  - `1193`
+
+## Batch 125 - Retained Startup Helper Reduction Wave
+- Current frontier:
+  - keep the contained authentic load-menu/save-replay split unchanged while reducing the retained startup-prelude helper/runtime band rooted at `sub_451E46 -> sub_47D0E0 -> sub_47C850`
+- Subagents spawned and scopes:
+  - `Harvey`: boot-path corroboration for the live authentic startup frontier and the real `sub_47D0E0` ownership chain
+  - `Euler`: runtime-glue audit for `_wcpp_*`, `unknown_libname_7` / `unknown_libname_8`, `AST_FreeNode`, and retained helper candidates
+  - `Hooke`: SDL seam audit to confirm the live blocker is still below the platform layer
+  - `Sagan`: class/runtime seam audit around `sub_4996D0`, `sub_499990`, `sub_4B0940`, and the defclass registry
+  - `Euclid`: secondary corroboration from `/mnt/c/clash`, `CLASH.DAT`, save files, and the sibling save editor
+  - mergeable subagent evidence used this batch:
+    - `Euler` proved the `sub_47D0E0` tail call is retained `.fn_init` at `0x49A0E0`, not `unknown_libname_7`
+    - `Sagan` confirmed `sub_4996D0` remains the first honest authentic defclass bring-up and that the contained `oddzial` miss still traces back to a null `dword_51AD68`
+    - `Hooke` re-confirmed the current post-confirm and retained blockers are not SDL seam failures
+    - `Euclid` corroborated that `STRATEG/CLASH.DAT` contains `MAIN`, `make-instance`, `defclass`, and `oddzial`, while `.fac` files do not
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - materialized `unk_51B488` through `unk_51B698` in `clash95.c` for the retained object-pattern token registration tables under `sub_4D88F0`
+- High-priority unknown functions reviewed:
+  - `unknown_libname_7`
+  - `unknown_libname_8`
+  - `AST_FreeNode`
+  - `mblen_`
+  - `mblen__0`
+  - `sub_4D88F0`
+  - retained `.fn_init` at `sub_49A0E0`
+- Blockers removed this batch:
+  - retained probes no longer carry `AST_FreeNode`
+  - retained probes no longer carry `unknown_libname_7`
+  - retained probes no longer carry `unknown_libname_8`
+  - retained probes no longer carry `mblen_`, `mblen__0`, or `sub_4D88F0`
+  - `sub_47D0E0` no longer hides retained `.fn_init` behind the wrong `unknown_libname_7` symbol
+- SDL replacements/cleanups this batch:
+  - none; the live contained and retained blockers remain below the SDL seam
+- Menu/UI fixes this batch:
+  - none; the contained menu milestone is unchanged and remains green through post-confirm load-save entry
+- Session-init fixes this batch:
+  - none; the session/game-start handoff remains behind the missing authentic class/bload prelude and later `PlayGame` widening
+- Validation probe:
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 3s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 3s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 -o /tmp/clash95_sub4996d0_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_postfix_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all stay green after the retained helper recovery tranche
+- Link status:
+  - retained `sub_4996D0` now fails only on `unk_508D50` plus nearby `JUMPOUT` scars
+  - retained `sub_451E46` now fails on `unk_508D50`, `sub_496643`, retained `.fn_init` at `sub_49A0E0`, `ftime_`, `system_`, `JUMPOUT`, and deeper parser/math helpers
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the exact contained menu probes still exit `139` in the same live split: broader rules reach `parse-make-instance-before-class-lookup` then `class-lookup-no-table name=oddzial`, and `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: authentic load-menu row resources load, all ten `sub_44A140` row draws complete, slot-strip selection and bottom-row load confirm succeed, then the real post-confirm save replay reaches `parse-make-instance-before-class-lookup`
+- Key evidence used:
+  - `objdump` corroboration from `clash95.exe` for `unknown_libname_7`, `unknown_libname_8`, `mblen_`, `mblen__0`, and `sub_4D88F0`
+  - `clash95.asm` / `clash95.map` corroboration that `sub_47D0E0` calls retained `.fn_init` at `0x49A0E0`, not `unknown_libname_7`
+  - live contained menu-probe traces proving the `oddzial` versus `MAIN` split is unchanged after the helper recovery
+- Ambiguous candidates deferred:
+  - `sub_49A0E0` still needs its real body before the broader startup-prelude slice can move honestly deeper
+  - `sub_496643`, `unk_508D50`, and the nearby `JUMPOUT` scars remain the next smallest retained runtime helpers
+  - the broader parser/math helper set behind `sub_451E46` remains deferred until the above runtime band is smaller
+- total rename count so far:
+  - `1193`
+
+## Batch 125 - Contained Rules Bootstrap Recon
+- Current frontier:
+  - preserve the green contained `Load Game` foothold at `load-menu-post-confirm-after-save` while characterizing the next honest runtime widening step beyond the current post-save proof
+- Subagents reused and evidence focus:
+  - `boot_path_mapper` re-confirmed that the authentic startup path roots rules/runtime state through `sub_451E46 -> sub_47D0E0`, not through ad-hoc parser tolerance
+  - `runtime_glue_mapper` re-ranked the allocator and rules-runtime helpers around `sub_472D70`, `sub_472E40`, `Str_Intern`, and `sub_482260` once the contained probe tried to seed the broader rules tables
+  - `sdl_seam_mapper` confirmed the widened failure stayed below `platform_sdl_runtime.c`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_47D0E0`
+  - `sub_482260`
+  - `Str_Intern`
+  - `sub_472D70`
+  - `sub_472E40`
+- Blockers removed this batch:
+  - none landed in-tree; the batch stayed investigative so the repo could keep the previously green contained post-save milestone
+- Runtime blockers characterized this batch:
+  - the contained probe can seed the rules slab at `dword_54DBA8` and still reach `load-menu-post-confirm-after-save`
+  - when the probe is experimentally widened to seed the broader symbol/number table layer through `sub_482260`, the path crashes before `sub_444490` in `sub_472E40 -> sub_472D70 -> sub_472620 -> sub_4827B0 -> Str_Intern -> sub_482260`
+  - live crash evidence shows the allocator pool tail at `dword_54DBBC + 8` is already pointing into the first hash-table allocation when that widening is enabled, so the next honest repair sits in the recovered allocator split/runtime band rather than in SDL or menu code
+- SDL replacements/cleanups this batch:
+  - none; the attempted widening failed wholly inside recovered allocator/runtime helpers
+- Menu/UI fixes this batch:
+  - none; the existing contained menu milestone was preserved instead of broadened unsafely
+- Session-init fixes this batch:
+  - none; post-save session widening remains deferred until the broader rules bootstrap is safe to re-enable
+- Validation probe:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - transient investigative GDB runs on the experimental broadened-symbol-table path, not kept in-tree
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` remain green after rolling the experimental widening back out of the live probe path
+- Link status:
+  - unchanged from the previous green contained milestone
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`
+  - the traced contained menu probe again reaches `load-menu-post-confirm-after-save` and `main-after-menu-probe`
+- Highest authentic runtime milestone reached:
+  - unchanged in-tree: the contained authentic `Load Game` lane still survives `WorldMap_Initialize`, survives `sub_444490`, reaches `load-menu-post-confirm-after-save`, and returns to `main-after-menu-probe`
+- Key evidence used:
+  - traced contained probe output through `load-menu-post-confirm-after-save`
+  - experimental GDB backtraces on the broader `sub_482260` seed path
+  - crash-state memory showing the allocator pool tail already pointing into the first hash-table allocation when the broader rules bootstrap is enabled
+- Ambiguous candidates deferred:
+  - whether the next durable fix should land in `sub_472E40`, `sub_472D70`, or an earlier allocator helper remains unresolved
+  - the broader `sub_47D0E0` / `sub_482260` widening stays deferred until that allocator corruption is repaired without regressing the green contained milestone
+- total rename count so far:
+  - `1193`
+
 ## Batch 143 - Load Menu Slot Selection And Text Sprite Repair Wave
 - Current frontier:
   - keep the contained SDL-backed executable lane moving through the authentic load-menu slot strip while isolating the still-broken save-name repaint/font-table and widget-focus bands behind that submenu
@@ -3232,6 +3436,193 @@
   - `Render_LoadResourceSprite_v4(18/21)` still faults inside the deeper sprite/resource loader path; it is not yet clear whether the next repair belongs in `DLXSpriteSet_Load`, the menu resource search path, or the mode-switch/runtime side effects reached through `App_RequestQuit`
   - authentic `sub_44A140` save-slot row repaint remains deferred until that `18/21` preload lane is stable
   - `sub_444490` and the `.fac` replay/runtime-fact rebuild band remain the next session/game-start target after the row-resource preload lane is repaired
+- total rename count so far:
+  - `1194`
+
+## Batch 145 - Load Menu Row Resource And Row Draw Repair Wave
+- Current frontier:
+  - keep the contained SDL-backed executable lane alive through authentic load-menu row-resource preload and first row draw, then push the next contained action into slot-click/confirm and the deferred save-slot repaint tail
+- Subagents spawned and scopes:
+  - no new subagents; this wave reused the earlier `Singer` / `Cicero` / `Curie` evidence already gathered around `Render_LoadResourceSprite_v4`, `sub_44A140`, and the next `sub_444490` session-load tail
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `Render_LoadResourceSprite_v4`
+  - `Render_LoadResourceSprite_v3`
+  - `sub_40BC00`
+  - `sub_40BD40`
+  - `sub_44A140`
+  - `UI_DrawTextFmt`
+- Blockers removed this batch:
+  - the row-resource preload lane no longer false-positives on repo-local `gfx\\cache\\...` files and then dies in `DLXSpriteSet_Load`; the compat loader now only reuses cache files that are query-openable through the active mounted filesystem
+  - the row-resource recolor lane no longer crashes in `DLXSpriteSet_DrawText`; it now loads the authentic companion `.pfn` font palette and remaps into the live menu palette instead of conflating source and target palette formats
+  - the first authentic load-menu row draw no longer hangs in `sub_40BD40`; the recovered non-newline cursor advance now matches the x86 loop
+  - the first authentic row draw no longer segfaults in `sub_40BC00`; the active text-slot glyph step now follows the asm-backed `glyph draw -> width/height query -> glyph spacing` contract
+- SDL replacements/cleanups this batch:
+  - none; this wave stayed inside the recovered text-resource helpers and did not move SDL/platform behavior
+- Menu/UI fixes this batch:
+  - the widened contained probe now loads both `Render_LoadResourceSprite_v4(18/21)` text resources and completes all ten `sub_44A140` row draws without crashing
+  - the widened probe still survives the contained `back` exit path after the full row-draw pass
+  - the widened probe also now survives authentic slot-hover selection with row drawing active and exits with `selected_slot = 0`, `confirm = 0`, and `screen = 5`
+- Session-init fixes this batch:
+  - none yet; the next authentic frontier is still slot-click/confirm into `sub_444490` rather than the row-draw helpers
+- Validation probe:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back timeout -s KILL 6s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 timeout -s KILL 10s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 timeout -s KILL 10s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `gdb -q -batch -ex 'set debuginfod enabled off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_SLOT 0' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_CLICK back' -ex 'set environment CLASH95_LOAD_MENU_PROBE_DRAW_ROWS 1' -ex 'run --authentic-menu-probe' -ex 'bt 25' --args build/bin/clash95_bootstrap`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all build successfully after the row-resource and row-draw helper repairs
+- Link status:
+  - `clash95_bootstrap` still links successfully as the SDL-backed executable foothold
+  - `clash95_cpp_regen` still links successfully as the parallel executable-regeneration track
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`
+  - the baseline contained load-menu `back` probe still exits with `selected_slot = -1`, `confirm = 0`, and `screen = 5`
+  - the widened contained load-menu probe now prints ten `load-menu-row-draw` traces, completes the submenu present/init path, and still exits through the authentic `back` callback
+  - the widened slot-hover probe now reaches `load-auto-hover-selected` and exits with `selected_slot = 0`, `confirm = 0`, and `screen = 5`
+- Highest authentic runtime milestone reached:
+  - the executable now enters the authentic load-menu slice, loads the real row text resources, completes all ten `sub_44A140` row draws, and survives both contained `back` exit and contained slot-hover selection with the widened row-draw lane active
+- Key evidence used:
+  - `Render_LoadResourceSprite_v4` asm at `clash95.asm:18215-18324`, including the cache query/save corridor, `.pfn` companion palette load through `sub_401AF0`, and the `DLXSpriteSet_DrawText` remap contract
+  - `Render_LoadResourceSprite_v3` asm at `clash95.asm:17529-17576`, showing the missing post-glyph cursor advance
+  - `sub_40BC00` asm at `clash95.asm:17373-17428`, showing the active-slot record dereference, render-device call, and `height + glyph_spacing` return contract
+  - local game-data corroboration from `/mnt/c/clash/DATA/minimum.res`, which contains the relevant `*.SFN` and `*.PFN` assets such as `LAZUR1.PFN`, `LAZUR2.PFN`, and `MENU.PFN`
+- Ambiguous candidates deferred:
+  - the contained probe still skips the deeper save-slot repaint/name lane after the row draws (`load-menu-skip-save-slot-draw`)
+  - authentic slot-click/confirm into `sub_444490` and the `.fac` session-load tail is still the next honest frontier
+  - the full uncontained load-game flow remains deferred until the contained slot-click/confirm lane is stable
+- total rename count so far:
+  - `1194`
+
+## Batch 146 - Load Menu Confirm Proof And Post-Confirm Link-Surface Characterization
+- Current frontier:
+  - keep the contained SDL-backed load-menu wedge honest through the authentic slot-strip click and bottom-button confirm path, then characterize the first concrete blocker beyond that menu exit without regressing the green bootstrap surface
+- Subagents spawned and scopes:
+  - reused the existing read-heavy agents as `boot_path_mapper`, `runtime_glue_mapper`, `sdl_seam_mapper`, `class_seam_mapper`, and `external_corroborator`
+  - mergeable evidence used this batch:
+    - the authentic load-menu loop requires a real in-strip click before `sub_44A110` can fire; hover alone is not the true confirm lane
+    - the shipped game files under `/mnt/c/clash/save` contain real `0.dat..5.dat` and `0.fac..5.fac`, so slot `0` is a valid load target
+    - forcing a direct bootstrap call into `sub_444490` currently pulls in a deeper unresolved session-load/runtime surface rather than exposing an SDL seam failure
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_44A110`
+  - `sub_444750`
+  - `sub_444490`
+  - `sub_47BA86`
+  - `sub_451E20`
+- Blockers removed this batch:
+  - the contained load-menu probe no longer stops at hover-only state when both a slot and the load button are armed; it now clicks the save-slot strip first, which lets the authentic `DD_IsFlipping -> dword_5441E0 -> sub_44A110` corridor run
+  - the contained load-menu probe now reaches the authentic pre-session-load handoff state and exits with `selected_slot = 0`, `confirm = 1`, and `screen = 5`
+- SDL replacements/cleanups this batch:
+  - none; the new confirm milestone came from contained load-menu probe choreography and recovered menu logic, not from `platform_sdl_runtime.c`
+- Menu/UI fixes this batch:
+  - the contained probe now synthesizes a real slot-strip click before falling through to the bottom-row load button, matching the original load-menu interaction order closely enough to prove `sub_44A110` on a real occupied slot
+  - widened row-draw plus `back` exit and widened row-draw plus hover-only exit remain green after the probe change
+- Session-init fixes this batch:
+  - none landed in the green build surface; the experimental direct `sub_444490` continuation was reverted after it reopened the deeper unresolved bootstrap link band
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=back CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 timeout -s KILL 10s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 timeout -s KILL 10s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 timeout -s KILL 12s build/bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green after the contained load-menu confirm-proof change
+- Link status:
+  - `clash95_bootstrap` and `clash95_cpp_regen` still link successfully in their current bootstrap-equivalent wedge
+  - an experimental direct contained continuation into `sub_444490` was reverted because it reopened the deeper unresolved link surface on symbols such as `sub_47C181`, `Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`, `JUMPOUT`, and `unknown_libname_2`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`
+  - widened row-draw plus `back` exit still returns `selected_slot = 0`, `confirm = 0`, and `screen = 5` after the contained slot-strip click proof was added
+  - widened row-draw plus hover-only exit still returns `selected_slot = 0`, `confirm = 0`, and `screen = 5`
+  - widened row-draw plus authentic slot-strip click and bottom-row load confirm now exits with `selected_slot = 0`, `confirm = 1`, and `screen = 5`
+- Highest authentic runtime milestone reached:
+  - the executable now enters the authentic load-menu slice, loads the real row text resources, completes all ten `sub_44A140` row draws, clicks a real occupied save-slot row, and exits the contained load-menu loop with `confirm = 1`, proving the authentic pre-`sub_444490` handoff state
+- Key evidence used:
+  - `PlayGame_Dispatch` load-menu asm at `clash95.asm:110780-110960`, showing the authentic order: row draw setup, slot-strip click path, `sub_44A110`, cleanup, then post-loop `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`
+  - `sub_44A110` and `sub_444750` in `clash95.c`, showing that confirm is gated by `save\\%d.dat` existence rather than by the mounted archive path
+  - local game-data corroboration from `/mnt/c/clash/save`, which contains occupied slots `0..5` with both `.dat` and `.fac` files
+- Ambiguous candidates deferred:
+  - the contained probe still prints `load-menu-skip-save-slot-draw`, so the deeper save-slot repaint/name lane remains only partially widened
+  - the first post-confirm `sub_444490` / `.fac` session-load tail milestone is still deferred behind the reopened unresolved bootstrap link band
+  - the full uncontained load-game flow remains deferred until the direct post-confirm tail can be pulled in without destabilizing the green bootstrap surface
+
+## Batch 147 - Post-Confirm World-Map Init And Save-Load Repair Wave
+- Current frontier:
+  - keep the contained authentic load-game lane honest through `CSS_StopSound -> WorldMap_Initialize -> sub_444490`, then push the next contained step into the post-save `PlayGame` handoff without regressing the green bootstrap surface
+- Subagents spawned and scopes:
+  - reused the existing read-heavy agents as `boot_path_mapper`, `sdl_seam_mapper`, and `class_seam_mapper`
+  - mergeable evidence used this batch:
+    - `WorldMap_Initialize` is a five-call straight-line wrapper in asm; it should return before the bootstrap trace `load-menu-post-confirm-load-save`
+    - the SDL seam is still negative evidence only; the live post-confirm frontier remained in recovered world-map/session-load code
+    - the world-map top-menu path still touches the raw `DLXSpriteSet` seam, but the next live blocker stayed in recovered C save/load helpers rather than `src_cpp`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `sub_4163F0`
+  - `sub_4443C0`
+  - `sub_4443D0`
+  - `sub_444490`
+- Blockers removed this batch:
+  - the post-confirm world-map init no longer stalls before returning; `sub_4163F0` now matches the asm-backed finite RNG seeding loop instead of running through uninitialized indices in recovered C
+  - the contained save-load lane no longer crashes in `sprintf_("save\\%d.dat")` / `sprintf_("save\\%d.fac")`; `sub_4443C0` and `sub_4443D0` now take real `char *` buffers instead of truncating stack addresses to low 32-bit ints
+  - the authentic post-confirm lane now reaches `load-menu-post-confirm-after-save` and returns to `main-after-menu-probe`
+- SDL replacements/cleanups this batch:
+  - none; the moved frontier came from recovered C fixes plus a gdb-confirmed save-path truncation repair, not from `platform_sdl_runtime.c`
+- Menu/UI fixes this batch:
+  - the contained authentic load-menu confirm proof remains green after the post-confirm repairs
+  - the contained probe now survives the full `Load Game` submenu exit plus post-confirm world-map/session-load handoff
+- Session-init fixes this batch:
+  - `WorldMap_Initialize` now returns on the contained post-confirm lane
+  - `sub_444490` now completes the `.dat` / `.fac` session-load corridor on the same contained path
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `gdb -batch -ex 'set debuginfod enabled off' -ex 'set environment CLASH95_TRACE_MENU_PROBE 1' -ex 'set environment CLASH95_MENU_PROBE_AUTO_CLICK load' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_CLICK confirm' -ex 'set environment CLASH95_LOAD_MENU_PROBE_AUTO_SLOT 0' -ex 'set environment CLASH95_LOAD_MENU_PROBE_DRAW_ROWS 1' -ex 'set environment CLASH95_LOAD_MENU_PROBE_POST_CONFIRM 1' -ex 'run --authentic-menu-probe' -ex 'bt 40' --args build/bin/clash95_bootstrap`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout -s KILL 15s build/bin/clash95_bootstrap --authentic-menu-probe`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green after the post-confirm repairs
+- Link status:
+  - `clash95_bootstrap` and `clash95_cpp_regen` still link successfully as the SDL-backed executable footholds
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits with status `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits with status `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits with status `124`
+  - the first gdb pass now reaches `load-menu-post-confirm-load-save` and reports the real crash in `sub_4443C0 -> sprintf_`, which exposed the low32 stack-buffer truncation bug
+  - after widening `sub_4443C0` / `sub_4443D0`, the contained post-confirm probe reaches `load-menu-post-confirm-after-save` and `main-after-menu-probe` and then stays alive until the 15-second timeout kills it with status `137`
+- Highest authentic runtime milestone reached:
+  - the contained authentic `Load Game` lane now survives `CSS_StopSound`, survives `WorldMap_Initialize`, survives the `.dat` / `.fac` session-load path in `sub_444490`, reaches `load-menu-post-confirm-after-save`, and returns to `main-after-menu-probe`
+- Key evidence used:
+  - `sub_40B640` / `WorldMap_Initialize` asm at `clash95.asm:16897-16904`, proving the exact five-call wrapper order after `WorldMap_LoadResources`
+  - `sub_4163F0` asm at `clash95.asm:35090-35114`, proving the finite 15-iteration RNG seeding loop and exposing the decompiler's uninitialized-index scar
+  - `sub_4443C0` / `sub_4443D0` asm at `clash95.asm:104750-104770`, proving the save-path helpers take a live destination buffer in `edx`
+  - the escalated gdb backtrace on the contained probe, which pinned the first post-save crash to `__memcpy_avx_unaligned_erms -> sprintf_ -> sub_4443C0 -> sub_444490`
+- Ambiguous candidates deferred:
+  - the contained probe still prints `load-menu-skip-save-slot-draw`, so the deeper save-slot repaint/name lane remains deferred
+  - the next honest frontier is no longer `sub_444490`; it is the post-save `PlayGame` handoff and the first loaded-session runtime blocker after `load-menu-post-confirm-after-save`
+  - the full uncontained load-game flow remains deferred until the contained post-save handoff is characterized
 - total rename count so far:
   - `1194`
 
@@ -4000,6 +4391,164 @@
 - Ambiguous candidates deferred:
   - whether the next highest-value menu wave is direct automated click/hover confirmation inside the bootstrap probe, or deeper SDL-backed presentation so the recovered menu art becomes visibly inspectable from the live host window
   - the broader render/present seam, which still needs another pass before “visible SDL window” and “responsive recovered menu” can be claimed together
+- total rename count so far:
+  - `1204`
+
+## Batch 135 - Defclass Registry Frontier Isolation Wave
+- Current frontier:
+  - keep the pre-confirm authentic load-menu corridor green while proving what the post-confirm save replay still needs from the broader startup-prelude class/bload band
+- Subagents spawned and scopes:
+  - existing read-heavy subagents were reused immediately from the live pool
+  - `boot_path_mapper`: re-check whether the next honest widening is still the post-save `PlayGame` handoff or an earlier startup-prelude dependency
+  - `runtime_glue_mapper`: reduce the retained `sub_451E46` unresolved set and identify exact low-risk data/runtime blockers
+  - `sdl_seam_mapper`: confirm the new failure is still below SDL
+  - `class_seam_mapper`: pinpoint the `oddzial` failure inside `make-instance` / defclass lookup
+  - `external_corroborator`: re-check startup/menu ordering and `oddzial` terminology against `/mnt/c/clash` and the save-editor evidence
+  - mergeable evidence used this batch:
+    - `boot_path_mapper` confirmed the shipped post-confirm load lane is still `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`, while the missing class/bload work belongs to the broader startup prelude
+    - `class_seam_mapper` identified the live crash as a defclass lookup failure in `sub_4AB0B0 -> sub_4B0480`, not a C++ wrapper or SDL seam problem
+    - `runtime_glue_mapper` identified `sub_4B0940` / `sub_499990` as linkable retained class-startup slices and confirmed `dbl_502FDC` as exact `0.5` data
+    - `sdl_seam_mapper` again confirmed the frontier is below `platform_sdl_runtime.c`
+    - `external_corroborator` reinforced that `make-instance` / `oddzial` belongs to the CLIPS instance/class runtime rather than generic heap allocation
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - `dbl_502FDC` materialized in `clash95.c` as exact `0.5`
+- High-priority unknown functions reviewed:
+  - `sub_4AB0B0`
+  - `sub_4B0480`
+  - `sub_4B0940`
+  - `sub_499990`
+  - `sub_4996D0`
+  - `sub_451E46`
+- Blockers removed this batch:
+  - the broader contained `oddzial` crash is no longer opaque: with the current broader-rules bootstrap the save replay reaches `parse-make-instance-before-class-lookup`, then `sub_4B0480` reports `class-lookup-no-table name=oddzial`
+  - the narrower `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` branch is now distinguished cleanly as the earlier `symbol-lookup-missing-table MAIN` failure
+  - the retained `sub_451E46` unresolved set no longer carries `dbl_502FDC`
+  - retained probes now show `sub_4B0940` and `sub_499990` link cleanly, so the next broader class-startup blocker is beyond the empty defclass-table allocator and registrar band
+- SDL replacements/cleanups this batch:
+  - none; this batch only added guarded class-runtime diagnostics and exact retained-startup data
+- Menu/UI fixes this batch:
+  - none new in the pre-confirm green lane; the post-confirm blocker was reclassified instead
+- Session-init fixes this batch:
+  - none landed yet; a direct contained `PlayGame` handoff probe was tested and reverted in the same turn because it immediately reopened the broad gameplay/session unresolved link surface and would have regressed `clash95_bootstrap`
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4B0940 -o /tmp/clash95_sub4b0940_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_499990 -o /tmp/clash95_sub499990_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 -o /tmp/clash95_sub4996d0_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_postfix_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green
+- Link status:
+  - retained `sub_4B0940` and `sub_499990` probes now link successfully
+  - retained `sub_4996D0` still fails on the deeper class/runtime/parser band (`unk_508D50`, `AST_FreeNode`, `JUMPOUT`, locale/mbcs helpers, and nearby parser helpers)
+  - the broader retained `sub_451E46` unresolved set is reduced by one exact data blocker and no longer includes `dbl_502FDC`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - with the current broader-rules bootstrap, the contained post-confirm probe exits `139` after `parse-make-instance-before-class-lookup` and logs `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe exits earlier and logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - the authentic load-menu corridor still loads the real submenu resources, completes the row draws, and reaches the real post-confirm save-replay path
+  - the live post-confirm frontier is now characterized precisely: parser/symbol state can be seeded far enough to reach `make-instance`, but the defclass registry is still absent when `oddzial` is parsed
+- Key evidence used:
+  - guarded live traces in `sub_4AB0B0` / `sub_4B0480`
+  - `rg` / decompilation evidence showing `dword_51AD68` is allocated by `sub_4B0940`, which is called from `sub_499990`
+  - retained-link probes for `sub_4B0940`, `sub_499990`, `sub_4996D0`, and `sub_451E46`
+  - asm/map corroboration that `dbl_502FDC` is exact `0.5`
+- Ambiguous candidates deferred:
+  - whether the next honest runtime widening should root `sub_499990` plus a retained `bload` step, or a slightly larger authentic class/bload slice from the broader startup prelude
+  - the full post-save `PlayGame` handoff, which remains deferred until the link surface no longer explodes when it is rooted from the bootstrap executable
+  - the broader retained unresolved set still led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
+- total rename count so far:
+  - `1204`
+
+## Batch 134 - Bload Loader Slice And Startup-Prelude Narrowing Wave
+- Current frontier:
+  - keep the green contained `load-menu-post-confirm-after-save` foothold while moving the adjacent startup-prelude executable-regeneration slice deeper into the retained `CLIPS`/class-runtime band without splicing it into the post-save load wedge
+- Subagents spawned and scopes:
+  - existing read-heavy subagents were reused immediately from the live pool
+  - `boot_path_mapper`: corroborate whether the authentic shipped post-save load lane really wants `Rules_ShowBanner_StrategicClash` or whether that work belongs to the broader startup prelude
+  - `runtime_glue_mapper`: audit `unknown_libname_4`, `sub_47CBF0`, retained `bload` strings/data, and the `CSyncObject_Unlock` seam
+  - `class_seam_mapper`: check whether the current `oddzial` miss should be addressed inside the contained load lane or inside the broader class/runtime startup slice
+  - `sdl_seam_mapper`: confirm the new frontier is still below `platform_sdl_runtime.c`
+  - `external_corroborator`: inspect `/mnt/c/clash/STRATEG/CLASH.DAT` and related secondary evidence for the retained `CLIPS`/bload lane
+  - mergeable evidence used this batch:
+    - `boot_path_mapper` confirmed the authentic post-save lane remains `CSS_StopSound -> WorldMap_Initialize -> sub_444490 -> PlayGame`, while `Rules_ShowBanner_StrategicClash -> sub_47C850("strateg\\clash.dat")` belongs to the broader startup prelude
+    - `runtime_glue_mapper` pinned `unknown_libname_4` under `sub_47CBF0` as the allocator-callback swap used by the retained binary-loader helper band
+    - `class_seam_mapper` confirmed the current `oddzial` crash should not be “fixed” by splicing `Rules_ShowBanner_StrategicClash` or bare `sub_499990` into the contained post-save wedge
+    - `sdl_seam_mapper` confirmed the broadened frontier is still below SDL
+    - `external_corroborator` confirmed `/mnt/c/clash/STRATEG/CLASH.DAT` starts with the expected `01 02 03 04 "CLIPS" 00 "V6.00" 00` header
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `unknown_libname_4`
+  - `sub_47CBF0`
+  - `Rules_ShowBanner_StrategicClash`
+  - `sub_451E46`
+  - `sub_47C850`
+  - `sub_47D0E0`
+  - `sub_499990`
+  - `CSyncObject_Unlock`
+- Blockers removed this batch:
+  - the retained `sub_47C850` loader slice is no longer blocked on missing local `bload` header/data
+  - the retained `sub_47C850` loader slice is no longer blocked on missing `unknown_libname_4`
+  - the retained startup-prelude probe is no longer blocked on missing `CSyncObject_Unlock`
+  - the stale durable-memory claim that the next widening still died in allocator corruption is now replaced by the live broader contained frontier at `parse-make-instance-before-class-lookup`
+- SDL replacements/cleanups this batch:
+  - none; this batch stayed in recovered loader/runtime helpers and the conservative C++ seam
+- Menu/UI fixes this batch:
+  - none new in the stable contained lane; the work this batch was startup-prelude/runtime narrowing adjacent to the already-green authentic load-menu path
+- Session-init fixes this batch:
+  - none yet; the broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, but the post-save `PlayGame` handoff remains the next honest contained target
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered -j`
+  - `cmake --build build --target clash95_bootstrap -j`
+  - `cmake --build build --target clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash -o /tmp/clash95_rules_banner_cpp_obj_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=Rules_ShowBanner_StrategicClash -o /tmp/clash95_rules_banner_cpp_archive_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 -o /tmp/clash95_sub451e46_cpp_obj_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/CMakeFiles/clash95_cpp_core.dir/src_cpp/csync_object.cpp.o $(pkg-config --libs sdl2) -lm`
+  - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green after the retained loader/runtime repairs
+- Link status:
+  - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms
+  - the next retained executable-regeneration blocker is the broader `sub_451E46` unresolved set, led by `unk_508D50`, `unknown_libname_7`, `unknown_libname_8`, `sub_496643`, `ftime_`, `system_`, `dbl_502FDC`, `JUMPOUT`, `AST_FreeNode`, and parser helpers
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the broader contained authentic menu probe exits `139` after reaching `parse-make-instance-before-class-lookup` on `oddzial`
+- Highest authentic runtime milestone reached:
+  - the stable contained load-game lane is unchanged at `load-menu-post-confirm-after-save` and `main-after-menu-probe`
+  - the broader contained probe now survives the same path, then reaches `parse-make-instance-before-class-lookup` on `oddzial` before crashing
+- Key evidence used:
+  - asm/map corroboration for `Rules_ShowBanner_StrategicClash`, `sub_47C850`, `sub_47CBF0`, `sub_47D0E0`, `sub_499990`, and `unknown_libname_4`
+  - the live `--authentic-menu-probe` trace showing `load-menu-post-confirm-rules-slab-init`, `load-menu-post-confirm-rules-index-init`, `load-menu-post-confirm-parser-bootstrap`, and `parse-make-instance-before-class-lookup`
+  - `/mnt/c/clash/STRATEG/CLASH.DAT` beginning with the expected `CLIPS` bload header bytes
+- Ambiguous candidates deferred:
+  - the exact minimum class/object startup slice needed after `parse-make-instance-before-class-lookup` remains ambiguous and should stay separate from the contained post-save lane
+  - the broader `sub_451E46` unresolved set still mixes runtime, parser, math, and control-flow scars and needs another reduction pass before deeper authentic widening
+  - the post-save `PlayGame` handoff and the deferred save-slot repaint/name lane still remain the next honest contained targets after the startup-prelude slice is narrower
 - total rename count so far:
   - `1204`
 

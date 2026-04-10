@@ -14,6 +14,19 @@ This note covers the current host seam used by the executable-regeneration track
   - `timeGetTime`
 - The implementation is still intentionally Win32-shaped at the call boundary. It is not yet a body-level SDL-native platform rewrite.
 
+## Latest executable note - 2026-04-10
+
+- The current load-menu and post-confirm blockers still sit below SDL.
+- The latest contained traces show:
+  - with the current broader-rules bootstrap, the post-confirm save replay dies at `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier with `symbol-lookup-missing-table MAIN`
+  - neither failure touches `platform_sdl_runtime.c`
+- This is useful negative evidence:
+  - the SDL seam is still good enough for the contained load-menu row draws, slot-strip selection, bottom-row confirm, post-confirm `WorldMap_Initialize`, and first save-replay entry
+  - the active blocker is the missing class/bload startup prelude, not input, timing, window, or present behavior
+- The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/parser unresolveds, not by SDL.
+  - after the latest retained helper pass, that non-SDL blocker list is now led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the deeper math/runtime thunks, not by `sub_496643`, `ftime_`, `system_`, or the nearby `JUMPOUT` scars
+
 ## Stable host behavior already present
 
 - message queue storage and dispatch

@@ -1,0 +1,23 @@
+# Boot Path
+
+- Durable boot chain in repo:
+  - `main`
+  - `App_WinMain`
+  - `Bootstrap_RunRecoveredStartupPrelude`
+  - `Bootstrap_RunRecoveredRuntimeAndRenderInit`
+  - contained probes such as `--authentic-startup-prelude` and `--authentic-menu-probe`
+- Current contained menu milestone:
+  - top-level `Load Game` click is stable
+  - contained load-menu row resources load
+  - contained load-menu row draws complete
+  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
+  - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
+  - the live post-confirm save replay reaches `parse-make-instance-before-class-lookup`
+  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
+- Next boot-path frontier:
+  - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
+  - the explicit broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still dies earlier on `symbol-lookup-missing-table MAIN`
+  - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
+  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, and the nearby `JUMPOUT` scars; the next honest blockers are the parser/class layer around `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, and adjacent parser/math helpers
+  - deferred save-slot repaint/name lane after the row draws

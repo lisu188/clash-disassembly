@@ -1,0 +1,46 @@
+# Runtime Glue
+
+- Active repaired glue on the current frontier:
+  - `Render_LoadResourceSprite_v4` compat export
+    - skips repo-local cache false positives unless the mounted-query layer can reopen them
+    - loads companion `*.pfn` palettes and remaps into the live palette
+  - `Render_LoadResourceSprite_v3` compat export
+    - restored the missing non-newline cursor advance
+  - `sub_40BC00` in `clash95.c`
+    - restored the active-slot glyph step and render-device call contract
+  - `sub_4163F0` in `clash95.c`
+    - restored the finite asm-backed world-map-init seeding loop
+  - `sub_4443C0` / `sub_4443D0` in `clash95.c`
+    - widened the save-path builders to real `char *` buffers so `.dat` / `.fac` stack paths are no longer truncated
+  - bload loader data in `clash95.c`
+    - materialized `unk_50293C` and the adjacent `bload`/loader error strings that `sub_47C850` expects
+  - `unknown_libname_4` in `clash95.c`
+    - recovered as the allocator-failure callback swap used by the binary-loader retry helper
+  - `sub_47CBF0` in `clash95.c`
+    - recovered as the allocate / halve / restore / zero / init / free helper beneath the `bload` lane
+  - `CSyncObject_Unlock` in `src_cpp/csync_object.cpp`
+    - published as the original C ABI name through the conservative C++ seam instead of a new compat stub
+  - `dbl_502FDC` in `clash95.c`
+    - materialized as exact `0.5`, matching the map/asm-backed rules runtime counter rounding constant
+  - `AST_FreeNode` in `clash95.c`
+    - recovered directly from the original recursive free-list unwind body
+  - `unknown_libname_7` / `unknown_libname_8` in `clash95.c`
+    - recovered as the `dword_51A1EC` / `dword_51A928` setter-swaps used by the retained rules/runtime bootstrap
+  - `sub_47D0E0` in `clash95.c`
+    - corrected to call retained `.fn_init` at `sub_49A0E0` rather than the unrelated `unknown_libname_7` setter
+  - `mblen_`, `mblen__0`, and `sub_4D88F0` in `clash95.c`
+    - recovered from `clash95.exe` as the narrow object-pattern trampolines and token-table registration slice
+  - `sub_496643` in `compat/decomp_runtime_stubs.c`
+    - recovered as the Watcom signal-table update helper with the original default handler table and ctrl-handler gating
+  - `ftime_` / `system_` in `compat/decomp_runtime_stubs.c`
+    - kept quarantined as CRT wrappers now that `sub_47D360` and `sub_47D3D0` pass the real time-buffer and command-string arguments
+  - `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` in `clash95.c`
+    - repaired from asm-backed shared-epilogue `JUMPOUT` scars into normal control flow
+- Still quarantined / unresolved:
+  - deeper `_wcpp_*` runtime families
+  - thread/process helpers
+  - broader loaded-session runtime reconstruction beyond the contained save-load wedge
+  - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
+  - the explicit broader contained probe now reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
+  - the retained broader startup-prelude slice rooted at `sub_451E46` now needs the wider parser/class/math band (`sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the deeper `IF_*` / `__FYL2X__` thunks)
+  - retained `Rules_ShowBanner_StrategicClash` probes now link in both direct-object and archive-backed forms, so the remaining executable-regeneration blocker has moved up to the broader `sub_451E46` unresolved set

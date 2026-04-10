@@ -10,6 +10,48 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - `clash95_cpp_regen` now links as a parallel executable by reusing the existing bootstrap wedge and adding the C++ core.
 - A direct `gcc` link of `clash95.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` does not yet produce a runnable executable.
 
+## Latest authentic runtime frontier - 2026-04-10
+
+- The live executable blocker is no longer row-resource preload, row draws, or save-path formatting.
+- The contained SDL-backed executable still keeps the authentic pre-confirm load-menu corridor alive:
+  - real row resources load
+  - all ten contained `sub_44A140` row draws complete
+  - authentic slot-strip selection and bottom-row load confirm both complete
+- The live post-confirm split is now explicit:
+  - with the current broader-rules bootstrap, the contained probe reaches `parse-make-instance-before-class-lookup` and then logs `class-lookup-no-table name=oddzial`
+  - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same probe dies earlier with `symbol-lookup-missing-table MAIN`
+- The next honest contained runtime blocker is therefore not local save I/O or SDL. It is the missing authentic class/bload prelude needed before the save replay can instantiate `oddzial`.
+- A direct contained `PlayGame` handoff remains deferred because rooting `PlayGame` from `bootstrap_main.c` immediately reopens the much wider gameplay/session unresolved link surface.
+
+## Latest startup-prelude narrowing - 2026-04-10
+
+- The retained `CLIPS`/startup-prelude surface moved this batch:
+  - `unk_50293C` and the adjacent `bload` loader strings are now materialized in `clash95.c`
+  - `unknown_libname_4` is now recovered as the allocator callback swap used under `sub_47CBF0`
+  - `CSyncObject_Unlock` is now exported through `src_cpp/csync_object.cpp`
+- A direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully when `csync_object.cpp.o` is present.
+- The archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too.
+- The next retained blocker is no longer the local helper/runtime band. It is the wider `sub_451E46` parser/class/math set:
+  - `sub_4B6DD0`
+  - `Lexer_ParseSlotConstraint`
+  - `Lexer_ParseFieldSpec`
+  - `sub_4BDD40`
+  - `unknown_libname_13`
+  - `ismbdprint_`
+  - `Lexer_ValidateMessageHandler`
+  - `Lexer_ParseDefglobal`
+  - `Lexer_ParseRuleRHS`
+  - `Lexer_ParseDeclareOptions`
+  - `aJ_0`
+  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `fgets_`, and `sscanf_`
+- Additional retained reduction notes from the latest pass:
+  - `unk_508D50` is now exact in-tree, including the double-null `CLIPS` header terminator
+  - `sub_496643`, `ftime_`, and `system_` are no longer live retained blockers
+  - the retained `JUMPOUT` cluster in `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` is now collapsed back into normal control flow
+  - retained `sub_4996D0` now links successfully
+  - the `sub_47D0E0` tail still honestly exposes retained `.fn_init` at `sub_49A0E0` instead of satisfying that call through the unrelated `unknown_libname_7` runtime setter
+- Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
+
 ## Why the direct link fails
 
 The raw link probe fails immediately on the missing process entrypoint and then fans out into the unresolved startup/runtime surface.
@@ -111,3 +153,12 @@ The key point is that the bootstrap path is rooted in recovered behavior, not a 
 6. Reduce `JUMPOUT` scars and the `_wcpp_*` runtime band only when the replacement is evidence-backed.
 
 This is a staged executable-regeneration path, not a claim that the full native executable is already recovered.
+
+## Live runtime blocker adjacent to the current link wedge
+
+- The current executable problem is no longer primarily link-shaped.
+- `clash95_bootstrap` and `clash95_cpp_regen` both stay green and can still reach the contained `load-menu-post-confirm-after-save` milestone.
+- There are now two adjacent widening fronts:
+  - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
+  - the retained startup-prelude slice rooted at `sub_451E46` still stops on the wider unresolved runtime band listed above
+- Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.
