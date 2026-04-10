@@ -56,12 +56,14 @@ This file classifies the current runtime/quarantine surface for executable regen
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly
   - the early retained `PlayGame_Dispatch` alias/data band was then reduced in `clash95.c` directly: front-end cursor/overlay descriptor records, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are all now local recovered data/bodies rather than live retained blockers
   - the compat seam also now carries the narrow `rand_`, `srand_`, `strlwr_`, `memmove_`, and `_wcpp_4_static_init__` bridges that were already in flight on this branch, which is why those names are no longer present in the retained `PlayGame_Dispatch` probe
-  - the next retained executable-regeneration blocker is now the narrower `PlayGame_Dispatch` data/runtime band (`UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`) rather than a runtime-wrapper, parser-export, or local x87-math problem
+  - the next retained reduction pass stayed in recovered C as well: `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their local bodies, the queen departure-event slab is materialized locally, and the remaining `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars were repaired in place
+  - the next retained executable-regeneration blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
+- `Scenario_LoadMissionByIndex` / `sub_460360` mission dispatch and packaged map semantics
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

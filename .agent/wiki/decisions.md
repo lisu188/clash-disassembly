@@ -54,3 +54,11 @@
   - Reason: the current retained reductions around `UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_*`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, and `Building_DrawGarrisonRow` were all already present in recovered C; wrapper aliases are safer than inventing new host or class abstractions.
 - Stop this batch at the narrowed `PlayGame_Dispatch` data/runtime band instead of fabricating the deeper queen arrays or forcing the chunked UI checks into a guessed local alias.
   - Reason: `UI_CheckDialogAccepted` and `UI_CheckConfirmQuit` are chunked mission-goal/runtime procedures in `clash95.asm`, and the surviving queen arrays/buffers plus `unit_stats` still need direct DGROUP corroboration rather than speculative placeholder data.
+- Rebind `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` onto the already-recovered local bodies and repair the local default-tail `JUMPOUT` in place.
+  - Reason: `boot_path_mapper` confirmed both retained exports already landed on real local switch bodies in `clash95.c`; the only live control-flow scar left in that pair was the asm-proven `return 0` default tail in `sub_4602F0`.
+- Materialize the queen departure-event text slab directly in `clash95.c` instead of hiding it in `compat`, SDL, or `src_cpp`.
+  - Reason: the retained `PlayGame_Dispatch` miss had become a DGROUP/data problem around `g_QueenMsgBuf`, not a platform/runtime helper seam.
+- Repair `Map_RebuildCastleSiteAnchorCache` directly in recovered C instead of preserving its `JUMPOUT` scar.
+  - Reason: the asm shows a small finite even-slot anchor-cache loop, so leaving that control flow in compat or SDL would hide real gameplay/map semantics.
+- Keep `Scenario_LoadMissionByIndex` / `sub_460360` in recovered C and treat it as the next retained widening point.
+  - Reason: all current evidence says the surviving blocker is the authentic mission-loader switch with packaged map/name data, not an SDL seam problem, not a compat-wrapper problem, and not a C++ class seam.

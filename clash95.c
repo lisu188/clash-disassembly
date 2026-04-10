@@ -87,12 +87,16 @@
 #define g_PrisonerDeathByExhaustionTexts off_518D98
 #define g_QueenSonBirthTexts off_519350
 #define g_QueenDaughterBirthTexts off_51935C
+#define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
 #define g_ShrineTexts off_511B68
 #define g_EmptyShrineTexts off_511B74
 #define g_CultPlaceTexts off_511B80
 #define g_EmptyCultPlaceTexts off_511B8C
 #define g_CastleFoundationTexts off_511B98
 #define g_HiddenTreasureTexts off_511BA4
+#define unit_stats g_UnitTypeCorpseSpriteBaseIndex
+#define UI_CheckConfirmQuit sub_460270
+#define UI_CheckDialogAccepted sub_4602F0
 #define dword_532060 g_UnitBattleChargeModeActive
 #define dword_532074 g_UnitBattleChargeModeStartTick
 
@@ -342,7 +346,7 @@ extern char aError[];
 extern char aError_0[];
 extern int (*g_RenderHook)(int a1, char a2, DWORD a3);
 int __cdecl CSyncObject_Unlock(CSyncObject *this, __int32, __int32 *);
-extern unsigned char unit_stats[];
+extern char unit_stats[];
 extern char aNewBattle[];
 extern char aCalculatebattl[];
 extern char aJednostka1[];
@@ -5083,6 +5087,43 @@ char aQueen_newtur_1[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
 char aQueen_newtur_2[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
 char aQueen_newtur_3[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
 char aQueen_newturnZ[] = "Queen_NewTurn() - zachcianka %d";
+/*
+ * Recovered queen-event DGROUP slab around `g_QueenMsgBuf`, `off_519350`, and
+ * the four localized departure-text pointer tables. These are ASCII
+ * transliterations of the asm-backed localized strings so the retained
+ * PlayGame/UI path can link without moving the data into the SDL seam.
+ */
+char g_QueenDepartureEventMessageBuffer[300];
+char *g_QueenDepartureTexts[3] = {
+  "Krolowa rozgoryczona tym malzenstwem postanowila wrocic do swoich panienskich komnat.",
+  "The Queen, utterly dissatisfied with this marriage, decided to return to her maiden chamber.",
+  "Die Konigin ist bitter enttauscht von dieser Ehe und kehrt in ihre Jungfrauenkammer zuruck.",
+};
+char *g_QueenCastleTreasuryTheftTexts[3] = {
+  "Krolowa w napadzie furii spakowala kufry i uciekla, zabierajac skarbiec zamku %s.",
+  "In an act of fury the Queen packed her trunks and escaped, taking the treasury of %s.",
+  "In ihrem Zorn hat die Konigin gepackt und ist geflohen, wobei sie die Schatzkammer von %s mitnahm.",
+};
+char *g_QueenCastleWellPoisoningTexts[3] = {
+  "Twa malzonka miala dosc takiego traktowania i przed ucieczka zatrula studnie w zamku %s.",
+  "Your wife would not stand this kind of treatment and poisoned the wells in %s before fleeing.",
+  "Deine Frau war dieses Umgangs uberdrussig und vergiftete vor ihrer Flucht die Brunnen in %s.",
+};
+char *g_QueenCastleArsonTexts[3] = {
+  "Twa malzonka miala po dziurki w nosie Twego postepowania i przed odejsciem spalila %s.",
+  "Your wife, before parting, ordered her servants to set %s on fire.",
+  "Deine Frau konnte Dich nicht langer ertragen und liess %s vor ihrer Abreise in Brand setzen.",
+};
+char *off_519350[3] = {
+  "Panie, krolowa urodzila Ci syna!!!! Nadworni medrcy i weterani Twoich najwiekszych bitew ksztalca go tak, by mogl rychlo sluzyc Ci jako oddany dowodca.",
+  "Master, the Queen has given birth to your son!!! Your best scholars and knights train him in warcraft so that he can be your right hand soon.",
+  "Herr, die Konigin hat Dir einen Sohn geschenkt! Deine besten Lehrer und Ritter unterweisen ihn in der Kriegskunst, so dass er schon bald Deine rechte Hand sein wird.",
+};
+char *off_51935C[3] = {
+  "Krolu!!! Twa zona poczela corke. Nasi medrcy orzekli, ze odziedziczony po ojcu temperament i zacietosc matki uczynia z niej wspanialego dowodce Twych wojsk.",
+  "Master. Your wife has given birth to your daughter. Scholars say that she has inherited your strength of character and your temperament. Soon she will become a great officer of your troops.",
+  "Herr, die Konigin hat Dir eine Tochter geschenkt! Die Weisen sagen, sie habe Dein Temperament und Deine Charakterstarke geerbt. Schon bald wird sie eine grosse Anfuhrerin Eurer Truppen sein.",
+};
 /* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
 int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
 int g_PortReinforcementUnitTypePool[12] = { 0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17 };
@@ -69674,37 +69715,29 @@ signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4)
 //----- (00455FF0) --------------------------------------------------------
 void Map_RebuildCastleSiteAnchorCache()
 {
-  int v0; // ebp
-  int i; // eax
-  int j; // edi
-  int v3; // esi
-  signed int k; // ecx
-  int v5; // ecx
+  int anchor_slot;
+  int row;
+  int column;
 
-  v0 = 0;
-  for ( i = 0; i != 200; g_CastleSiteAnchorRows[i] = -1 )
+  anchor_slot = 0;
+  for ( row = 2; row <= 200; row += 2 )
   {
-    i += 2;
-    g_CastleSiteAnchorColumns[i] = -1;
+    g_CastleSiteAnchorRows[row] = -1;
+    g_CastleSiteAnchorColumns[row] = -1;
   }
-  for ( j = 0; j < *(_DWORD *)(gameData + 140000); ++j )
+  for ( row = 0; row < *(_DWORD *)(gameData + 140000); ++row )
   {
-    v3 = 2 * v0;
-    for ( k = 0; k < *(_DWORD *)(gameData + 140004); k = v5 + 1 )
+    for ( column = 0; column < *(_DWORD *)(gameData + 140004); ++column )
     {
-      if ( MapTile_IsCastleFoundationAnchorTile(j, k, 2) )
+      if ( MapTile_IsCastleFoundationAnchorTile(row, column, 2) )
       {
-        v3 += 2;
-        g_CastleSiteAnchorRows[v3] = j;
-        ++v0;
-        g_CastleSiteAnchorColumns[v3] = v5;
+        anchor_slot += 2;
+        g_CastleSiteAnchorRows[anchor_slot] = row;
+        g_CastleSiteAnchorColumns[anchor_slot] = column;
       }
     }
   }
-  JUMPOUT(0x455BC1);
 }
-// 456023: control flows out of bounds to 455BC1
-// 45605E: variable 'v5' is possibly undefined
 // 5202E4: using guessed type int gameData;
 // 544570: using guessed type int g_CastleSiteAnchorRows[];
 // 544574: using guessed type int g_CastleSiteAnchorColumns[];
@@ -71582,7 +71615,7 @@ LABEL_19:
       v10 = 0;
       break;
     default:
-      JUMPOUT(0x4602A0);
+      return 0;
   }
 LABEL_34:
   if ( (unsigned int)*(__int16 *)(gameData + 725 * v10 + 147180) <= 0x28
@@ -71621,7 +71654,6 @@ LABEL_46:
   }
   return v9 < 6;
 }
-// 460303: control flows out of bounds to 4602A0
 // 45C811: conditional instruction was optimized away because edx.4<1F4u
 // 45C8A0: conditional instruction was optimized away because eax.4<64u
 // 45FB44: conditional instruction was optimized away because edx.4<1F4u

@@ -31,11 +31,12 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the retained rules math builtin band under `sub_4A3790` is still recovered in place in `clash95.c`, and the direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` remain green
   - the first retained `PlayGame_Dispatch` pass is no longer blocked on the front-end descriptor slab, early world-map/UI export aliases, unit-slot and placement helpers, garrison/UI aliases, or the battle/port/queen debug string slab
   - the port reinforcement ring offsets and unit-type pool are now materialized directly from `clash95.asm`
-  - the next retained widening is still `PlayGame_Dispatch`, but its surviving unresolveds are now the narrower data/runtime band: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and nearby `JUMPOUT`
+  - the next retained widening is still `PlayGame_Dispatch`, but the former UI/data/runtime band is now reduced in recovered C: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
+  - the surviving retained blocker is now only `Scenario_LoadMissionByIndex` / `sub_460360`, the chunked mission-loader switch reached through `Scenario_LoadMissionByIndexAndPlay`
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims`
-  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, or the early alias/data slab; it is the narrowed `PlayGame_Dispatch` data/runtime band
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, or the earlier `PlayGame_Dispatch` UI/data/runtime band; it is the narrowed mission-loader frontier at `Scenario_LoadMissionByIndex` / `sub_460360`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 

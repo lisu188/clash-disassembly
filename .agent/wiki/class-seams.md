@@ -12,7 +12,7 @@
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `sub_4B0940`, `sub_499990`, and `sub_4996D0` now all link
   - the parser-export entrypoints `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now map-backed names bound onto existing recovered bodies rather than live retained blockers
   - the next honest class/runtime widening is no longer the slot/parser export band or the x87 math band
-  - the next honest retained class/runtime widening still belongs to the broader `PlayGame_Dispatch` surface, but the surviving misses are now the chunked UI/world-map checks, `unit_stats`, the deeper queen data slabs, and nearby `JUMPOUT`
+  - the narrowed retained mission-loader blocker is `Scenario_LoadMissionByIndex` / `sub_460360`, and the latest class-seam audit still says it is pure recovered-C mission setup rather than `src_cpp` work
   - the latest retained misses are still not a signal to move behavior into `src_cpp`; they remain local recovered-C/data work until the surviving class/runtime evidence says otherwise
   - do not try to “fix” that by splicing `Rules_ShowBanner_StrategicClash` or bare `sub_499990` into the contained post-save lane
   - the broader startup-prelude widening still belongs to the retained track, not to the stable contained `sub_444490` wedge

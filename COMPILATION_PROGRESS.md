@@ -3096,6 +3096,82 @@
 - total rename count so far:
   - `1193`
 
+## Batch 149 - PlayGame Dispatch Mission-Loader Reduction Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while reducing the retained `PlayGame_Dispatch` handoff to the first authentic mission-loader blocker `Scenario_LoadMissionByIndex`
+- Subagents spawned and scopes:
+  - the existing read-heavy boot/runtime/SDL/class/external subagents were reused immediately
+  - `boot_path_mapper`
+    - corroborate `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, and the next retained `Scenario_LoadMissionByIndex` / `sub_460360` frontier from `clash95.asm`, `clash95.map`, `clash95.c`, and the latest sidecars
+  - `runtime_glue_mapper`
+    - re-check whether the surviving retained blocker belonged in `compat/decomp_runtime_stubs.c` or stayed in recovered C/data
+  - `sdl_seam_mapper`
+    - verify the retained mission-loader blocker still did not overlap the SDL seam
+  - `class_seam_mapper`
+    - verify the retained mission-loader blocker still did not belong in `src_cpp`
+  - `external_corroborator`
+    - use `clash95.exe`, `/mnt/c/clash`, and `clash-save-editor` only as secondary corroboration for mission-index persistence and the packaged mission-map families
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` confirmed `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` already existed as local recovered bodies and that the next nontrivial retained blocker was the chunked `Scenario_LoadMissionByIndex` / `sub_460360` mission switch
+    - `runtime_glue_mapper` confirmed the queen departure-event slab and `unit_stats` lane belonged in recovered C/data, not in `compat/decomp_runtime_stubs.c`
+    - `sdl_seam_mapper` and `class_seam_mapper` both confirmed the remaining retained blocker was not an SDL seam or `src_cpp` class-seam problem
+    - `external_corroborator` confirmed `MAPS.RES` and save-state evidence still support `activeMissionIndex` as packaged mission selector state without overriding the asm-backed control-flow proof
+- Functions renamed:
+  - `sub_460270` -> `UI_CheckConfirmQuit`
+  - `sub_4602F0` -> `UI_CheckDialogAccepted`
+- Structs/classes/globals/tables recovered or renamed:
+  - queen departure-event text slab in `clash95.c`: `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`, `off_519350`, and `off_51935C`
+  - retained `unit_stats` address lane rebound to the already-materialized `g_UnitTypeCorpseSpriteBaseIndex` byte table for the currently reached `PlayGame_Dispatch` callers
+- High-priority unknown functions reviewed:
+  - `UI_CheckConfirmQuit`
+  - `UI_CheckDialogAccepted`
+  - `Map_RebuildCastleSiteAnchorCache`
+  - `Scenario_LoadMissionByIndex`
+  - `Scenario_LoadMissionByIndexAndPlay`
+- Blockers removed this batch:
+  - the retained `PlayGame_Dispatch` probe no longer stops on `UI_CheckConfirmQuit` or `UI_CheckDialogAccepted`
+  - it no longer stops on the `unit_stats` byte lane or the queen departure/birth-event arrays and buffers
+  - it no longer stops on the local `JUMPOUT` scars in `Map_RebuildCastleSiteAnchorCache` or the default tail of `sub_4602F0`
+  - after those repairs, the retained `PlayGame_Dispatch` probe now fails only on `Scenario_LoadMissionByIndex` / `sub_460360`
+- SDL replacements/cleanups this batch:
+  - none; the retained mission-loader blocker still did not overlap `platform_sdl_runtime.c` or `platform_sdl.h`
+- Menu/UI fixes this batch:
+  - none in the contained SDL-backed menu lane; the traced post-confirm `oddzial` / `MAIN` split remained unchanged and green
+- Session-init fixes this batch:
+  - none in the live contained lane; the retained executable-regeneration surface is only narrowed to the first mission-loader switch
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm`
+  - `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build cleanly together
+- Link status:
+  - the retained `PlayGame_Dispatch` probe no longer fails on the chunked UI checks, the queen departure-event data slab, `unit_stats`, or the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars
+  - the surviving retained link blocker is now only `Scenario_LoadMissionByIndex` / `sub_460360`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the traced contained broader-rules probe still reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
+  - the traced contained `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged: the authentic SDL-backed load-menu wedge still reaches real slot-strip selection, bottom-row load confirm, and the live post-confirm save-replay split
+- Key evidence used:
+  - `clash95.asm` for `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, `Map_RebuildCastleSiteAnchorCache`, and the `sub_460360` jump-table frontier
+  - `clash95.c` callsites proving the surviving retained blocker is inside `Scenario_LoadMissionByIndexAndPlay`
+  - `clash95.exe`, `MAPS.RES`, and save-state corroboration only as secondary support for mission-index persistence and packaged mission-map families
+- Ambiguous candidates deferred:
+  - the full 20-case `Scenario_LoadMissionByIndex` / `sub_460360` mission switch still needs case-by-case recovery from asm rather than a guessed placeholder
+  - `Scenario_LoadMissionByIndexAndPlay` still warrants signature and selector-lane reconciliation against the asm `sub_460370` body
+  - the contained post-confirm `oddzial` / `MAIN` split remains a separate missing class/bload-prelude problem rather than a local mission-loader fix
+
 ## Batch 148 - PlayGame Dispatch Alias And Data-Slab Narrowing Wave
 - Current frontier:
   - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while shrinking the retained `PlayGame_Dispatch` surface honestly from the already-green `sub_451E46 -> sub_460490 -> UI_StartAnims` chain

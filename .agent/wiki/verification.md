@@ -19,10 +19,9 @@
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=UI_StartAnims ... build/lib/libclash95_cpp_core.a ...`
   - links successfully
 - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch ... build/lib/libclash95_cpp_core.a ...`
-  - fails on the narrower retained band led by `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, `off_519350`, `off_51935C`, `g_QueenBirthMessageBuffer`, `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`, and `JUMPOUT`
+  - now fails only on `Scenario_LoadMissionByIndex` / `sub_460360`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - under `timeout 2s`, exits `124`
-  - reaches `parse-make-instance-before-class-lookup`
   - logs `class-lookup-no-table name=oddzial`
   - `timeout` also prints `the monitored command dumped core`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`

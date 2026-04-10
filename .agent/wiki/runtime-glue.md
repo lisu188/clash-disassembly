@@ -67,6 +67,12 @@
     - rebound the next retained helper/export aliases onto their existing recovered local bodies
   - battle/shot/port/queen debug strings plus the port reinforcement tables in `clash95.c`
     - materialized `aNewBattle`, `aCalculatebattl`, `aJednostka1`, `aJednostka2`, `aAs1D`, `aAs2D`, `aSum_quantDAtt_`, `aJednostkaZwyci`, `aUnitbattle_sho`, `aUnitbattle_s_0`, `aBattleMurek_0`, `aPort_getsupply`, `aQueen_newturn*`, `aP_posla`, `dword_517B48`, `g_PortReinforcementUnitTypePool`, and `word_5191F0` directly from asm-backed DGROUP data
+  - `UI_CheckConfirmQuit` / `UI_CheckDialogAccepted` in `clash95.c`
+    - rebound onto the already-recovered local bodies at `sub_460270` / `sub_4602F0` instead of leaving duplicate retained export holes
+  - queen departure-event text slab in `clash95.c`
+    - materialized `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`, `off_519350`, and `off_51935C` directly in recovered C
+  - `Map_RebuildCastleSiteAnchorCache` and `sub_4602F0` in `clash95.c`
+    - repaired the last local `JUMPOUT` scars on the currently reached retained `PlayGame_Dispatch` lane from the asm-backed even-slot anchor-cache loop and the proven default `return 0` tail
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
@@ -74,5 +80,5 @@
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
   - the retained startup-prelude math/runtime band is now settled enough that `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link as standalone probes
-  - the next retained executable-regeneration blocker is still `PlayGame_Dispatch`, but it is no longer a broad wrapper/alias/data scatter
-  - the first honest retained `PlayGame_Dispatch` unresolveds are now `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and nearby `JUMPOUT`
+  - the next retained executable-regeneration blocker is now `Scenario_LoadMissionByIndex` / `sub_460360`, not a broad wrapper/alias/data scatter
+  - that surviving blocker stays in recovered C mission-loader control flow/data, not in `compat/decomp_runtime_stubs.c`

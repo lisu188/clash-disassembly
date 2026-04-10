@@ -26,28 +26,16 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 ## Latest startup-prelude narrowing - 2026-04-10
 
 - The retained `CLIPS`/startup-prelude surface moved again this batch:
-  - the local rules math builtin/x87 band under `sub_4A3790` is now recovered in `clash95.c`
-  - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully
-  - the standalone retained `sub_451E46` probe now stays alive under `timeout 1s`
+  - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` still link successfully
+  - the standalone retained `sub_451E46` probe still stays alive under `timeout 1s`
+  - the first retained `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C: `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
 - A direct-object retained probe for `sub_4996D0` still links successfully.
-- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, or the x87-heavy math band. It is the broader `PlayGame_Dispatch` link surface led by:
-  - `_wcpp_4_static_init__`
-  - `sub_43D100`
-  - `unk_512008`
-  - `off_5123CC`
-  - `rand_`
-  - `memmove_`
-  - `strlwr_`
-  - `Locale_DrawInteger`
-  - `Rules_LinkArmyFinalize`
-  - `Rules_UnlinkArmyFact`
-  - `Render_DrawSprite_v3`
-  - `UI_LoadTurnBannerGfx`
-  - `WCIsvListBase_*`
-  - nearby `JUMPOUT`
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, or the broader `PlayGame_Dispatch` UI/data/runtime scatter. It is now the single mission-loader control-flow/data frontier:
+  - `Scenario_LoadMissionByIndex`
+  - `sub_460360`
 - Additional retained reduction notes from the latest pass:
-  - the retained parser-export blocker list is still absent from `clash95.c.o`
-  - the `sub_451E46` probe is now green, so the next honest retained widening starts after `UI_StartAnims` rather than inside the startup-prelude math/runtime band
+  - `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their already-recovered local bodies instead of standing as duplicate retained export holes
+  - the `sub_451E46` probe is still green, so the next honest retained widening starts after `UI_StartAnims` and now stops at `Scenario_LoadMissionByIndex` rather than inside the older `PlayGame_Dispatch` UI/data band
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails
