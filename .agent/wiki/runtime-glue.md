@@ -57,6 +57,16 @@
     - replaced the placeholder `atoi` bridge with the exact asm-backed signed decimal parser used by the retained rules/runtime callsites
   - `MoveFileA`, `sscanf_`, and `fgets_` in `compat/decomp_runtime_stubs.c`
     - added narrow host-backed wrappers and recovered the current `fgets_` call shapes in `clash95.c` so the retained startup-prelude link surface no longer stops on the low-risk file/runtime band
+  - `rand_`, `srand_`, `strlwr_`, `memmove_`, and `_wcpp_4_static_init__` in `compat/decomp_runtime_stubs.c`
+    - carried branch-local compat bridges that remove the current retained `PlayGame_Dispatch` link holes without claiming final CRT/runtime fidelity
+  - front-end cursor/overlay descriptor slab in `clash95.c`
+    - materialized `unk_519718` through `unk_519920` as the exact 12-entry descriptor records consumed by `sub_460D80`
+  - `UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_UnlinkArmyFact`, `Rules_LinkArmyFinalize`, `Unit_DebugDumpFormationSizes`, `Render_DrawSprite_v3`, and `UI_CheckEndTurnHotkey` in `clash95.c`
+    - rebound the retained exports onto their already-recovered local bodies instead of leaving duplicate link holes
+  - `sub_412000`, `sub_4120B0`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Unit_FindById`, `Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, and `Building_DrawGarrisonRow` in `clash95.c`
+    - rebound the next retained helper/export aliases onto their existing recovered local bodies
+  - battle/shot/port/queen debug strings plus the port reinforcement tables in `clash95.c`
+    - materialized `aNewBattle`, `aCalculatebattl`, `aJednostka1`, `aJednostka2`, `aAs1D`, `aAs2D`, `aSum_quantDAtt_`, `aJednostkaZwyci`, `aUnitbattle_sho`, `aUnitbattle_s_0`, `aBattleMurek_0`, `aPort_getsupply`, `aQueen_newturn*`, `aP_posla`, `dword_517B48`, `g_PortReinforcementUnitTypePool`, and `word_5191F0` directly from asm-backed DGROUP data
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
@@ -64,5 +74,5 @@
   - the next honest contained frontier is not local save I/O anymore; it is the missing authentic class/bload prelude required before `oddzial` can be instantiated
   - the last directly traced broader contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial`, then `sub_4B0480` reports `class-lookup-no-table`
   - the retained startup-prelude math/runtime band is now settled enough that `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link as standalone probes
-  - the next retained executable-regeneration blocker is the broader `PlayGame_Dispatch` link surface, not another quarantine-wrapper gap
-  - the first honest retained `PlayGame_Dispatch` unresolveds are `_wcpp_4_static_init__`, front-end/world-map data tables (`sub_43D100`, `unk_512008`, `off_5123CC`), `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
+  - the next retained executable-regeneration blocker is still `PlayGame_Dispatch`, but it is no longer a broad wrapper/alias/data scatter
+  - the first honest retained `PlayGame_Dispatch` unresolveds are now `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and nearby `JUMPOUT`

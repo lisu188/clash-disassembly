@@ -295,6 +295,36 @@ void j_srand_(unsigned int seed)
   srand(seed);
 }
 
+int rand_(void)
+{
+  return rand();
+}
+
+void srand_(unsigned int seed)
+{
+  srand(seed);
+}
+
+char *strlwr_(char *text)
+{
+  unsigned char *cursor;
+
+  if ( !text )
+    return 0;
+  cursor = (unsigned char *)text;
+  while ( *cursor )
+  {
+    *cursor = (unsigned char)tolower(*cursor);
+    ++cursor;
+  }
+  return text;
+}
+
+void *memmove_(void *destination, const void *source, size_t byte_count)
+{
+  return memmove(destination, source, byte_count);
+}
+
 int unknown_libname_2(const char *text)
 {
   const unsigned char *cursor;
@@ -1753,6 +1783,16 @@ DWORD __stdcall SuspendThread(HANDLE hThread)
 int __cdecl _wcpp_4_copy_array__(int a1)
 {
   return a1;
+}
+
+int _wcpp_4_static_init__(unsigned char *flag_byte)
+{
+  if ( !flag_byte )
+    return 1;
+  if ( (*flag_byte & 1) != 0 )
+    return 1;
+  *flag_byte |= 1;
+  return 0;
 }
 
 int __cdecl ICClose(int a1)

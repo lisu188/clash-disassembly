@@ -20,7 +20,7 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
   - the retained startup-prelude slice is no longer blocked on the x87 math band: `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link
-  - the next honest retained blocker is the broader `PlayGame_Dispatch` link surface led by `_wcpp_4_static_init__`, front-end/world-map data tables (`sub_43D100`, `unk_512008`, `off_5123CC`), `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
+  - the next honest retained blocker is the narrower `PlayGame_Dispatch` data/runtime band led by `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers (`off_519350`, `off_51935C`, `g_QueenBirthMessageBuffer`, `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`), and the remaining `JUMPOUT` scars
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

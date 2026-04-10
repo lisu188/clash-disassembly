@@ -50,3 +50,7 @@
   - Reason: once those three probes linked cleanly, the next honest retained blocker became the broader front-end/gameplay link surface rather than another startup-prelude math/runtime slice.
 - Keep the new retained `PlayGame_Dispatch` frontier separate from the contained `oddzial` versus `MAIN` save-replay split.
   - Reason: both surfaces touch authentic startup/class state, but the contained post-confirm replay still needs the missing class/bload prelude while the retained probe now fans into a much wider gameplay/front-end unresolved set.
+- Rebind map-backed `PlayGame_Dispatch` exports onto the existing recovered local bodies instead of chasing the same surface through the SDL seam or the C++ class seams.
+  - Reason: the current retained reductions around `UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_*`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, and `Building_DrawGarrisonRow` were all already present in recovered C; wrapper aliases are safer than inventing new host or class abstractions.
+- Stop this batch at the narrowed `PlayGame_Dispatch` data/runtime band instead of fabricating the deeper queen arrays or forcing the chunked UI checks into a guessed local alias.
+  - Reason: `UI_CheckDialogAccepted` and `UI_CheckConfirmQuit` are chunked mission-goal/runtime procedures in `clash95.asm`, and the surviving queen arrays/buffers plus `unit_stats` still need direct DGROUP corroboration rather than speculative placeholder data.

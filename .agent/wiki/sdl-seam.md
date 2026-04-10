@@ -10,5 +10,5 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe dies earlier on `symbol-lookup-missing-table MAIN`
   - both post-confirm menu-probe variants still fall into the same timeout/core-dump band under `timeout 2s`
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link and stay alive under `timeout 1s`
-  - the next retained blocker is the broader `PlayGame_Dispatch` link surface, and its first unresolveds are `_wcpp_4_static_init__`, front-end/world-map data tables, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_*`, `Render_DrawSprite_v3`, `WCIsvListBase_*`, and `JUMPOUT`, not SDL seam exports
+  - the next retained blocker is still the broader `PlayGame_Dispatch` widening, but the first unresolveds are now `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`, not SDL seam exports
 - Next likely SDL-facing work is still later input/present fidelity, not the contained menu/load wedge or the newly isolated `PlayGame_Dispatch` front-end/gameplay link band.

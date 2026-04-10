@@ -9,6 +9,6 @@
 - The retained broader startup-prelude executable-regeneration slice is now blocked separately at a later front:
   - the retained x87 math/runtime band under `sub_451E46` is gone
   - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` all link and stay alive under `timeout 1s`
-  - the next honest retained blocker is the broader `PlayGame_Dispatch` link surface led by `_wcpp_4_static_init__`, `sub_43D100`, `unk_512008`, `off_5123CC`, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and `JUMPOUT`
+  - the next honest retained blocker is the narrower `PlayGame_Dispatch` data/runtime band led by `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`
 - The contained probe still prints `load-menu-skip-save-slot-draw` after the row draws, so the deeper save-slot repaint/name lane is still deferred.
 - Full uncontained load-game flow remains behind the missing authentic class/bload prelude and the later post-save `PlayGame` handoff.

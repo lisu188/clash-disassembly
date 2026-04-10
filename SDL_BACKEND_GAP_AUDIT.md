@@ -27,7 +27,7 @@ This note covers the current host seam used by the executable-regeneration track
 - The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/front-end unresolveds, not by SDL.
   - the local x87-heavy math/runtime band is now gone
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
-  - the next retained blocker is the broader `PlayGame_Dispatch` unresolved set (`_wcpp_4_static_init__`, front-end/world-map data tables, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_*`, `Render_DrawSprite_v3`, `WCIsvListBase_*`, `JUMPOUT`), which again does not overlap the SDL seam
+  - the next retained blocker is still the `PlayGame_Dispatch` widening, but the live unresolveds are now `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`, which again do not overlap the SDL seam
 
 ## Stable host behavior already present
 

@@ -21,6 +21,6 @@
   - both post-confirm menu-probe variants still end in the same timeout/core-dump band under `timeout 2s`
   - the retained authentic startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly and stay alive under `timeout 1s`
-  - the next honest retained widening is therefore no longer the local startup-prelude math band; it is the broader `PlayGame_Dispatch` front-end/gameplay link surface
-  - that new retained blocker is led by `_wcpp_4_static_init__`, missing front-end/world-map data tables, `rand_`, `memmove_`, `strlwr_`, `Locale_DrawInteger`, `Rules_LinkArmyFinalize`, `Rules_UnlinkArmyFact`, `Render_DrawSprite_v3`, `UI_LoadTurnBannerGfx`, `WCIsvListBase_*`, and nearby `JUMPOUT`
+  - the next honest retained widening is therefore no longer the local startup-prelude math band; it is the narrower `PlayGame_Dispatch` data/runtime band left after the descriptor, alias, and debug/data-slab reductions
+  - that retained blocker is now led by `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and nearby `JUMPOUT`
   - deferred save-slot repaint/name lane after the row draws

@@ -158,5 +158,5 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - `clash95_bootstrap` and `clash95_cpp_regen` both stay green, while the last directly traced contained milestone remains the post-confirm save-replay entry that fails in the missing class/bload prelude.
 - There are now two adjacent widening fronts:
   - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, and `UI_StartAnims`, and the next retained widening stops at the broader `PlayGame_Dispatch` link surface listed above
+  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, and `UI_StartAnims`, and the next retained widening stops at the narrower `PlayGame_Dispatch` data/runtime band led by `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.

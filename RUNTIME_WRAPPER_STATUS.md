@@ -27,13 +27,16 @@ This file classifies the current runtime/quarantine surface for executable regen
 | `MoveFileA` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, `clash95.c:130558`, retained `sub_451E46` probe | Narrow host wrapper over translated WSL paths plus `rename()`; intentionally quarantined as compatibility glue rather than gameplay semantics. |
 | `sscanf_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, `clash95.asm` callsites at `0x459272`, `0x4720F8`, `0x4A5657` | Host `vsscanf` bridge matching the currently reached text-parse callsites. |
 | `fgets_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, `clash95.asm` callsites at `0x459265`, `0x4A50A0`, `0x4A545A` | Narrow registered-stream line reader; the active recovered callsites now pass the real buffer/size/stream arguments. |
+| `rand_` / `srand_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Narrow host-libc RNG bridges kept in the compat seam; good enough to remove the current retained link hole without claiming original CRT fidelity. |
+| `strlwr_` / `memmove_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Simple libc-backed wrappers kept quarantined as runtime glue rather than pulled into recovered gameplay code. |
 | `unknown_libname_2` | `recovered_impl` | `clash95.exe`/asm at `0x48523F`, `compat/decomp_runtime_stubs.c`, `clash95.c` callsites | Exact signed decimal parser recovered from the binary; no longer an `atoi` placeholder. |
 | filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit | Broad but understandable compatibility wrappers; still not proof of original runtime structure. |
 | `Render_LoadResourceSprite_v4` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:18215-18324`, live contained row-draw probes | Now matches the cache-query gate, companion `.pfn` palette load, and recolor contract closely enough to carry the authentic load-menu row-resource lane. |
 | `Render_LoadResourceSprite_v3` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:17529-17576`, gdb SIGINT in contained row draw | The missing non-newline cursor advance was restored from asm, removing the row-draw hang. |
 | `CSyncObject_Unlock` | `recovered_impl` | `src_cpp/csync_object.cpp`, `clash95.c` retained probes | Published through the conservative C++ seam as the original lock ABI rather than a new compat stub. |
+| `_wcpp_4_static_init__` | `behavioral_stub` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | One-byte guard implementation kept in the compat seam to remove the current retained link hole; still not proof of the original Watcom static-init runtime. |
 | `CreateProcessA` / `CreateThread` / `WaitForSingleObject` family | `unknown_runtime` | unresolved audit, `clash95.c` thread/process call sites | These are deeper runtime/process helpers and should not be silently normalized into the SDL seam. |
-| `_wcpp_4_static_init__` / `_wcpp_4_copy_array__` | `unknown_runtime` | raw link failures, `clash95.map`, `clash95.c` | Still part of the true startup/runtime reconstruction frontier. |
+| `_wcpp_4_copy_array__` | `unknown_runtime` | raw link failures, `clash95.map`, `clash95.c` | Still part of the true startup/runtime reconstruction frontier. |
 | `JUMPOUT` sites | `unknown_runtime` | `clash95.c` control-flow scars | These remain explicit recovery blockers, not wrappers. |
 
 ## What moved this batch
@@ -51,7 +54,9 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `sscanf_`, `fgets_`) remains settled
   - the retained x87-heavy rules math band was recovered in `clash95.c` directly, not in the wrapper seam
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link cleanly
-  - the next retained executable-regeneration blocker is now the broader `PlayGame_Dispatch` link surface rather than a runtime-wrapper, parser-export, or local x87-math problem
+  - the early retained `PlayGame_Dispatch` alias/data band was then reduced in `clash95.c` directly: front-end cursor/overlay descriptor records, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are all now local recovered data/bodies rather than live retained blockers
+  - the compat seam also now carries the narrow `rand_`, `srand_`, `strlwr_`, `memmove_`, and `_wcpp_4_static_init__` bridges that were already in flight on this branch, which is why those names are no longer present in the retained `PlayGame_Dispatch` probe
+  - the next retained executable-regeneration blocker is now the narrower `PlayGame_Dispatch` data/runtime band (`UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`) rather than a runtime-wrapper, parser-export, or local x87-math problem
 
 ## What should not move yet
 

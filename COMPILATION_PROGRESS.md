@@ -3096,6 +3096,101 @@
 - total rename count so far:
   - `1193`
 
+## Batch 148 - PlayGame Dispatch Alias And Data-Slab Narrowing Wave
+- Current frontier:
+  - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while shrinking the retained `PlayGame_Dispatch` surface honestly from the already-green `sub_451E46 -> sub_460490 -> UI_StartAnims` chain
+- Subagents spawned and scopes:
+  - existing live subagents were reused immediately because the workspace was already at the active-agent limit
+  - `boot_path_mapper`
+    - corroborate the first retained `PlayGame_Dispatch` DGROUP and alias band from `clash95.asm`, `clash95.map`, `bootstrap_main.c`, and the latest sidecars
+  - `runtime_glue_mapper`
+    - re-check whether the surviving retained misses belonged in recovered C, `compat/decomp_runtime_stubs.c`, or the CRT/runtime seam
+  - `sdl_seam_mapper`
+    - verify the retained frontier still did not overlap `platform_sdl_runtime.c` or `platform_sdl.h`
+  - `class_seam_mapper`
+    - verify the surviving retained `PlayGame_Dispatch` misses were not actually `src_cpp` class-seam work
+  - `external_corroborator`
+    - secondary corroboration for the world-map/front-end descriptor slab and nearby shrine/cult/foundation terminology
+  - mergeable subagent evidence used this batch:
+    - `boot_path_mapper` confirmed the `unk_519718` through `unk_519920` band was an exact 12-entry front-end cursor/overlay descriptor slab already reached by `sub_460D80`
+    - `runtime_glue_mapper` confirmed the first retained misses now belonged in recovered C/data rather than in `compat/decomp_runtime_stubs.c`
+    - `sdl_seam_mapper` and `class_seam_mapper` both confirmed the retained frontier still was not an SDL seam or `src_cpp` class-seam problem
+- Functions renamed:
+  - `sub_40A820` -> `UI_LoadTurnBannerGfx`
+  - `sub_40D850` -> `Locale_DrawInteger`
+  - `sub_40F800` -> `Rules_UnlinkArmyFact`
+  - `sub_40F890` -> `Rules_LinkArmyFinalize`
+  - `sub_411350` -> `Unit_DebugDumpFormationSizes`
+  - `sub_411420` -> `Render_DrawSprite_v3`
+  - `sub_451150` -> `UI_CheckEndTurnHotkey`
+  - `UnitSlots_ExtractSpecialEntries` -> `sub_412000`
+  - `UnitSlots_AppendEntries` -> `sub_4120B0`
+  - `sub_412F30` -> `Unit_SetFlag`
+  - `Unit_CanMoveSelectionFromGroupToTile` -> `Map_IsTilePlacable`
+  - `Building_FindRandomOwnedCompletedCastle` -> `Unit_FindById`
+  - `Building_UpdateGarrisonTrainRepairTimers` -> `Building_AutoFillOrUseGarrison`
+  - `sub_41F810` -> `UI_DrawUnitStatsValues`
+  - `Building_CountSpecialPersonageGarrisonEntries` -> `Building_DrawGarrisonRow`
+- Structs/classes/globals/tables recovered or renamed:
+  - front-end cursor/overlay descriptor slab `unk_519718` through `unk_519920` as exact 40-byte descriptor records consumed by `sub_460D80`
+  - battle/shot/port/queen debug string slab (`aNewBattle`, `aCalculatebattl`, `aJednostka1`, `aJednostka2`, `aAs1D`, `aAs2D`, `aSum_quantDAtt_`, `aJednostkaZwyci`, `aUnitbattle_sho`, `aUnitbattle_s_0`, `aBattleMurek_0`, `aPort_getsupply`, `aQueen_newturn*`, `aP_posla`)
+  - `dword_517B48` as the exact 12 `{row_delta,column_delta}` port reinforcement spawn-ring pairs
+  - `g_PortReinforcementUnitTypePool` as the exact 12-entry reinforcement unit-type table
+  - `word_5191F0 = 30`
+- High-priority unknown functions reviewed:
+  - `UI_CheckDialogAccepted`
+  - `UI_CheckConfirmQuit`
+  - `Building_AutoFillOrUseGarrison`
+  - `UI_DrawUnitStatsValues`
+  - `Building_DrawGarrisonRow`
+  - `Port_CollectReinforcementShipment`
+  - `Queen_NewTurn`
+- Blockers removed this batch:
+  - the retained `PlayGame_Dispatch` probe no longer stops on the `unk_519718` through `unk_519920` DGROUP slab
+  - it no longer stops on the first world-map/front-end export alias band (`UI_LoadTurnBannerGfx`, `Locale_DrawInteger`, `Rules_*`, `Render_DrawSprite_v3`, `UI_CheckEndTurnHotkey`)
+  - it no longer stops on the unit-slot and placement helper band (`sub_412000`, `sub_4120B0`, `Unit_SetFlag`, `Map_IsTilePlacable`, `Unit_FindById`)
+  - it no longer stops on the garrison/UI alias band (`Building_AutoFillOrUseGarrison`, `UI_DrawUnitStatsValues`, `Building_DrawGarrisonRow`)
+  - it no longer stops on the battle/shot/port/queen debug string slab, `dword_517B48`, `g_PortReinforcementUnitTypePool`, or `word_5191F0`
+- SDL replacements/cleanups this batch:
+  - none; the retained frontier still did not overlap `platform_sdl_runtime.c` or `platform_sdl.h`
+- Menu/UI fixes this batch:
+  - none in the contained SDL-backed menu lane; the contained post-confirm split remained unchanged and green
+- Session-init fixes this batch:
+  - none; the broader retained work still stopped before a direct `PlayGame` handoff from `bootstrap_main.c`
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe ...`
+  - `python3 -m json.tool .agent/state.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all still build cleanly together
+- Link status:
+  - the retained `PlayGame_Dispatch` probe no longer fails on the early world-map/UI alias band or the port reinforcement/debug-data slab
+  - the surviving retained link blockers are now `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and `JUMPOUT`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the traced contained broader-rules probe still reaches `parse-make-instance-before-class-lookup` and `class-lookup-no-table name=oddzial`
+  - the traced contained `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still logs `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged: the authentic SDL-backed load-menu wedge still reaches real slot-strip selection, bottom-row load confirm, and the live post-confirm save-replay split
+- Key evidence used:
+  - `clash95.map` / `clash95.asm` proved the early retained unresolveds were mostly export-name or DGROUP mismatches on already-recovered local bodies/data
+  - `clash95.asm` corroborated the exact port reinforcement ring-offset and unit-type tables plus the debug-string slab
+  - the traced contained post-confirm probes proved the SDL-backed load-menu wedge did not regress while the retained frontier narrowed
+- Ambiguous candidates deferred:
+  - `UI_CheckDialogAccepted` and `UI_CheckConfirmQuit` remain chunked mission-goal/runtime procedures, not one-line alias candidates
+  - `unit_stats` still needs direct DGROUP recovery or a proven local alias
+  - the deeper queen birth/departure arrays and buffers (`off_519350`, `off_51935C`, `g_QueenBirthMessageBuffer`, `g_QueenDepartureEventMessageBuffer`, `g_QueenDepartureTexts`, `g_QueenCastleTreasuryTheftTexts`, `g_QueenCastleWellPoisoningTexts`, `g_QueenCastleArsonTexts`) still need direct DGROUP recovery
+  - `Map_RebuildCastleSiteAnchorCache` and `Scenario_LoadMissionByIndex` still carry the next retained `JUMPOUT` scars
+
 ## Batch 147 - Retained Startup Math Collapse And Front-End Link Advancement Wave
 - Current frontier:
   - keep the contained WSL/SDL load-menu wedge green at the post-confirm `oddzial` / `MAIN` split while moving the retained executable-regeneration surface past the last local x87 math blocker and onto the real front-end/gameplay handoff at `PlayGame_Dispatch`

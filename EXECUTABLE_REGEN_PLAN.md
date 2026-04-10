@@ -24,6 +24,9 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - Do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local post-save patch. Keep the startup-prelude widening separate from the contained load-game wedge.
 - Do not regress the corrected `sub_47D0E0` call attribution: `unknown_libname_7` is the runtime setter at `0x47E7B0`, while the startup-prelude tail still needs the separate retained `.fn_init` body at `0x49A0E0`.
 - Keep the CRT/runtime glue quarantined: `sub_496643`, `ftime_`, and `system_` are now compat-seam repairs, and the x87 math band is already recovered in `clash95.c`, so the next widening step should stay in the retained front-end/gameplay surface rather than backsliding into generic host wrappers.
+- The early retained `PlayGame_Dispatch` alias/data band is now reduced:
+  - front-end cursor/overlay descriptors, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are no longer live retained blockers
+  - the next retained widening should stay on the surviving `PlayGame_Dispatch` data/runtime band: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, `unit_stats`, the deeper queen birth/departure arrays and buffers, and the remaining `JUMPOUT` scars
 
 ## What is already stable enough to build on
 

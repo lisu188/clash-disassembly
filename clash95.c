@@ -236,8 +236,8 @@ int nullsub_24(void);
 int nullsub_29(void);
 int nullsub_30(void);
 int nullsub_32(void);
-int __cdecl sub_43D100(void);
-int __cdecl unknown_libname_3(void);
+_DWORD * sub_43D100(WCIsvListBase *this);
+_DWORD *unknown_libname_3(WCIsvListBase *this);
 int __fastcall nullsub_6(_DWORD, _DWORD);
 int nullsub_9(void);
 int nullsub_10(void);
@@ -322,14 +322,14 @@ extern char aWbste[];
 extern char aBagno7pa[];
 extern char aSwamp7ap[];
 extern char aSumpf[];
-extern _UNKNOWN unk_519920;
-extern _UNKNOWN unk_519858;
-extern _UNKNOWN unk_5198A8;
-extern _UNKNOWN unk_519830;
-extern _UNKNOWN unk_5198F8;
-extern _UNKNOWN unk_519718;
-extern _UNKNOWN unk_5198D0;
-extern _UNKNOWN unk_519880;
+extern int unk_519920[];
+extern int unk_519858[];
+extern int unk_5198A8[];
+extern int unk_519830[];
+extern int unk_5198F8[];
+extern int unk_519718[];
+extern int unk_5198D0[];
+extern int unk_519880[];
 extern int dword_5202B4;
 extern char *off_511B68[21];
 extern char *off_511B74[18];
@@ -1977,10 +1977,10 @@ int __fastcall sub_476322(_DWORD, _DWORD); // weak
 // int __fastcall strcmp_(_DWORD, _DWORD); weak
 // __int64 __thiscall _I8D(_DWORD); weak
 int __cdecl fread_();
-// int __fastcall WCIsvListBase_base_next(_DWORD, _DWORD); weak
-// int __cdecl WCIsvListBase_base_insert(_DWORD); weak
-// int __thiscall WCIsvListBase_base_sget(_DWORD); weak
-// void WCIsvListBase_base_destroy(WCIsvListBase * this); idb
+int __fastcall WCIsvListBase_base_next(int list_handle, int cursor_handle);
+int __fastcall WCIsvListBase_base_insert(int list_handle, int link_handle);
+int __fastcall WCIsvListBase_base_sget(int list_handle);
+void WCIsvListBase_base_destroy(WCIsvListBase *this);
 _DWORD WCIsvListBase_dtor(WCIsvListBase *this);
 int __thiscall nullsub_7(_DWORD); // weak
 void __thiscall sub_476A0C(void *this);
@@ -5062,6 +5062,31 @@ char aHandlebattlere[42] = "HandleBattleResults(0x%08x,0x%08x,0x%08x)"; // weak
 char aHandlebattle_0[32] = "HandleBattleResult() - results:"; // weak
 char aBattle_0[10] = "BATTLE!!!"; // weak
 char aNewBattle_0[19] = "!!!!NEW BATTLE!!!!"; // weak
+char aNewBattle[] = "!!!!NEW BATTLE!!!!";
+char aCalculatebattl[] = "CalculateBattleResult(0x%08x,%d,%d,0x%08x,%d,%d,0x%08x, %d";
+char aJednostka1[] = "Jednostka 1:";
+char aJednostka2[] = "Jednostka 2:";
+char aAs1D[] = "as1 = %d";
+char aAs2D[] = "as2 = %d";
+char aSum_quantDAtt_[] = "sum_quant = %d, att_lost = %d";
+char aJednostkaZwyci[] = "Jednostka zwycieska:";
+char aUnitbattle_sho[] = "UnitBattle_Shot(%d,%d)";
+char aUnitbattle_s_0[] = "UnitBattle_ShotWall(%d,%d,%d)";
+char aBattleMurek_0[] = "battle\\murek";
+char aPort_getsupply[] = "Port_GetSupply()";
+char aQueen_newturn[] = "Queen_NewTurn()";
+char aP_posla[] = "p_posla";
+char aQueen_newturnN[] = "Queen_NewTurn() - nowy potomek";
+char aQueen_newturnK[] = "Queen_NewTurn() - krolowa ucieka";
+char aQueen_newtur_0[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_1[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_2[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_3[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newturnZ[] = "Queen_NewTurn() - zachcianka %d";
+/* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
+int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
+int g_PortReinforcementUnitTypePool[12] = { 0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17 };
+__int16 word_5191F0 = 30;
 char aSetrhS08x_8[14] = "SetRH %s=%08x"; // weak
 char aBattle_1[7] = "battle"; // weak
 char aNotEnoughMem_9[21] = "Not enough memory=%d"; // weak
@@ -8652,7 +8677,7 @@ int (*off_50F044)() = &sub_405C60; // weak
 _UNKNOWN unk_50F050; // weak
 int (*off_50F0E4)() = &sub_43CF60; // weak
 _DWORD (*off_50F0F4)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
-int (*off_50F104[2])() = { &sub_43D100, &sub_43CF90 }; // weak
+int (*off_50F104[2])() = { &unknown_libname_3, &sub_43CF90 }; // weak
 int (__thiscall *off_50F114)(WCIsvListBase *this) = &sub_43D1E0; // weak
 void *off_50F124 = &sub_43CFF0; // weak
 void *off_50F134 = &sub_43D0C0; // weak
@@ -8846,6 +8871,63 @@ int g_UnitSearchCursor = -1; // weak
 int g_SelectedUnitIndex = -1; // weak
 int g_LastSelectedUnitIndex = -1; // weak
 int dword_511B64 = -1; // weak
+__int16 word_511B2C[7] = { 0x30B, 0x313, 0x31B, 0x321, 0x327, 0x32E, 0x32E }; // weak
+__int16 word_511B3A[2] = { 0x30B, 0x315 }; // weak
+__int16 word_511B3E[5] = { 0x30B, 0x313, 0x31D, 0x323, 0x32A }; // weak
+char aSwijtynia[] = "\x98wi\x86tynia"; // weak
+char aShrine[] = "Shrine"; // weak
+char aSchrein[] = "Schrein"; // weak
+char aPustaSwijtynia[] = "Pusta \x98wi\x86tynia"; // weak
+char aEmptyShrine[] = "Empty shrine"; // weak
+char aLeererSchrein[] = "Leerer Schrein"; // weak
+char aMiejsceKultu[] = "Miejsce kultu"; // weak
+char aCultPlace[] = "Cult place"; // weak
+char aKultstdtte[] = "Kultst\x84""tte"; // weak
+char aPusteMiejsceKu[] = "Puste miejsce kultu"; // weak
+char aEmptyCultPlace[] = "Empty cult place"; // weak
+char aLeereKultstdtt[] = "Leere Kultst\x84""tte"; // weak
+char aFundamenty[] = "Fundamenty"; // weak
+char aFoundations[] = "Foundations"; // weak
+char aFundamente[] = "Fundamente"; // weak
+char aZakopanySkarb[] = "Zakopany skarb"; // weak
+char aHiddenTreasure[] = "Hidden treasure"; // weak
+char aVersteckterSch[] = "Versteckter Schatz"; // weak
+char aTerenNieodkryt[17] = "Teren nieodkryty"; // weak
+char aUnexploredTerr[19] = "Unexplored terrain"; // weak
+char aUnerforschtesT[22] = "Unerforschtes Terrain"; // weak
+char aDroga3pa[12] = "Droga - 3pa"; // weak
+char aRoad3ap[11] = "Road - 3ap"; // weak
+char aStrase[7] = "Stra\xE1""e"; // weak
+char aLas6pa[10] = "Las - 6pa"; // weak
+char aForest6ap[13] = "Forest - 6ap"; // weak
+char aBaum[5] = "Baum"; // weak
+char aRvwnina4pa[14] = "R\xA2wnina - 4pa"; // weak
+char aPlain4ap[12] = "Plain - 4ap"; // weak
+char aEbene[6] = "Ebene"; // weak
+char aPustynia5pa[15] = "Pustynia - 5pa"; // weak
+char aDesert5ap[13] = "Desert - 5ap"; // weak
+char aWbste[6] = "W\x81""ste"; // weak
+char aBagno7pa[12] = "Bagno - 7pa"; // weak
+char aSwamp7ap[12] = "Swamp - 7ap"; // weak
+char aSumpf[6] = "Sumpf"; // weak
+char aGvryNiskie8pa[18] = "G\xA2ry niskie - 8pa"; // weak
+char aHills8ap[12] = "Hills - 8ap"; // weak
+char aHbgel[6] = "H\x81""gel"; // weak
+char aGvryWysokie[13] = "G\xA2ry wysokie"; // weak
+char aMountains[10] = "Mountains"; // weak
+char aBerge[6] = "Berge"; // weak
+char aWoda[5] = "Woda"; // weak
+char aWater[6] = "Water"; // weak
+char aWasser[7] = "Wasser"; // weak
+char aBlad[5] = "Blad"; // weak
+char aError[6] = "Error"; // weak
+char aError_0[6] = "Error"; // weak
+char *off_511B68[21] = { aSwijtynia, aShrine, aSchrein }; // weak
+char *off_511B74[18] = { aPustaSwijtynia, aEmptyShrine, aLeererSchrein }; // weak
+char *off_511B80[15] = { aMiejsceKultu, aCultPlace, aKultstdtte }; // weak
+char *off_511B8C[12] = { aPusteMiejsceKu, aEmptyCultPlace, aLeereKultstdtt }; // weak
+char *off_511B98[9] = { aFundamenty, aFoundations, aFundamente }; // weak
+char *off_511BA4[6] = { aZakopanySkarb, aHiddenTreasure, aVersteckterSch }; // weak
 char *g_Text_SurrenderConfirm[3] =
 {
   "Czy chcesz si\x91 podda\x8D?",
@@ -8909,6 +8991,7 @@ __int16 word_512348[] = { 30 }; // weak
 __int16 word_51234A[] = { 1 }; // weak
 __int16 word_51234C[] = { 121 }; // weak
 __int16 word_51234E[] = { 25 }; // weak
+unsigned char unk_512008 = 0x14; // weak
 void *off_512350 = &unk_512008; // weak
 int dword_512360 = -1; // weak
 int dword_512364 = 8; // weak
@@ -8917,6 +9000,20 @@ char *off_512368[3] =
   "Jedna z twoich jednostek uleg\x92a rozwi\x86zaniu, Panie. Nie chcieli Ci dalej s\x92u\xA7y\x8D, gdy\xA7 wiele przegranych bitew i og\xA2lne wyczerpanie drastycznie wp\x92yn\x91\x92o na ich morale.",
   "One of your troops fell apart. They did not want to serve you anymore, their morale was very low after many lost battles and many dead.",
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
+}; // weak
+/*
+ * The first localized unit-name table is the front edge of the 88-byte
+ * unit-type metadata record family at 0x512568. The wider metadata slab is
+ * still represented through overlapping globals, but this exact first table is
+ * enough to keep the retained front-end link surface anchored to the authentic
+ * data-segment root instead of an undefined symbol.
+ */
+char *off_5123CC[102] =
+{
+  "Posp. ruszenie",
+  "Peasant",
+  "Bauern",
+  0
 }; // weak
 char *(*g_UnitTypeMetadataRecords)[102] = &off_5123CC; // weak
 char *g_UnitTypeResourceKeys = "peon"; // weak
@@ -10940,11 +11037,34 @@ __int16 word_519624 = 320; // weak
 __int16 word_519626 = 240; // weak
 int dword_519628[] = { 1 }; // weak
 int dword_51962C[] = { 149 }; // weak
-_UNKNOWN unk_5196A0; // weak
-_UNKNOWN unk_5196C8; // weak
-_UNKNOWN unk_5196F0; // weak
-_UNKNOWN unk_5197B8; // weak
+/*
+ * Recovered 40-byte front-end cursor/overlay descriptor records consumed by
+ * sub_460D80. The original binary stores these as ten consecutive dwords:
+ * start sprite, end sprite, an optional fixed animation/count value,
+ * runtime-filled max height/width, hotspot x/y, and runtime counters.
+ */
+int unk_5196A0[10] = { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5196C8[10] = { 3, 3, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5196F0[10] = { 4, 4, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519718[10] = { 5, 5, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5197B8[10] = { 10, 10, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
 int dword_519808 = 12; // weak
+int dword_51980C = 26; // weak
+int dword_519810 = 10; // weak
+int dword_519814 = 0; // weak
+int dword_519818 = 0; // weak
+int dword_51981C = 0; // weak
+int dword_519820 = 0; // weak
+int dword_519824 = 0; // weak
+int dword_519828 = 0; // weak
+int dword_51982C = 0; // weak
+int unk_519830[10] = { 31, 38, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519858[10] = { 39, 39, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519880[10] = { 40, 40, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5198A8[10] = { 41, 41, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5198D0[10] = { 42, 42, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5198F8[10] = { 43, 50, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519920[10] = { 51, 51, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
 char aDefault_rec[12] = "default.rec"; // weak
 char byte_519970[2] = { 'o', 'r' }; // weak
 char byte_519972[2] = { 'd', 'e' }; // weak
@@ -11904,9 +12024,16 @@ char byte_51F28C; // weak
 int dword_51F290[]; // weak
 int dword_51F294[1022]; // weak
 int dword_52028C; // weak
+int dword_520290 = 0; // weak
+int dword_520294 = 0; // weak
 int dword_520298; // weak
 int dword_52029C; // weak
 int dword_5202A0; // weak
+int dword_5202A4 = 0; // weak
+int dword_5202A8 = 0; // weak
+int dword_5202AC = 0; // weak
+int dword_5202B0 = 0; // weak
+int dword_5202B4 = 0; // weak
 int dword_5202BC; // weak
 int dword_5202C0; // weak
 int g_FogOverlaySpriteSet; // weak
@@ -11934,9 +12061,11 @@ unsigned __int8 byte_520520[516]; // weak
 int dword_520724; // weak
 int dword_520728; // weak
 RenderSpriteRemapEntry word_520738[1024]; // weak
+unsigned char byte_521043 = 0; // weak
 RenderSpriteRemapEntry word_521338[1024]; // weak
 _WORD word_521F38[1528]; // weak
 unsigned short word_522B28[1038]; // weak
+__int16 word_522CF6 = 0; // weak
 __int16 g_MiniMapRectLeft; // weak
 __int16 g_MiniMapRectTop; // weak
 __int16 g_MiniMapRectWidth; // weak
@@ -19631,6 +19760,11 @@ int  sub_40A820(char a1, DWORD a2)
   g_RenderHook = v14;
   return Render_SetResourceHandle((int)&unk_51D4C0, v15);
 }
+
+int UI_LoadTurnBannerGfx(char a1, DWORD a2)
+{
+  return sub_40A820(a1, a2);
+}
 // 40A867: variable 'v2' is possibly undefined
 // 40A883: variable 'v3' is possibly undefined
 // 40A896: variable 'v5' is possibly undefined
@@ -21007,7 +21141,7 @@ char  sub_40C450(_BYTE *result, int a2, int a3)
   v3 = result;
   if ( result && *result )
   {
-    strlwr_(a3, a2);
+    strlwr_((char *)v3);
     v4 = 0;
     do
     {
@@ -21645,6 +21779,11 @@ void MiniMap_RedrawAllTiles()
     ++v0;
   }
   return;
+}
+
+void Locale_DrawInteger()
+{
+  MiniMap_RedrawAllTiles();
 }
 // 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -22872,6 +23011,11 @@ __int16 * UnitStack_RemoveFromTile(__int16 *stack, double a2)
   }
   return stack;
 }
+
+__int16 * Rules_UnlinkArmyFact(__int16 *result, double a2)
+{
+  return UnitStack_RemoveFromTile(result, a2);
+}
 // 40F83A: variable 'v5' is possibly undefined
 // 40F87B: variable 'v6' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -22882,6 +23026,11 @@ __int16 * UnitStack_UnlinkIfEmpty(__int16 *result, double a2)
   if ( result[3] == -1 )
     return Rules_UnlinkArmyFact(result, a2);
   return result;
+}
+
+__int16 * Rules_LinkArmyFinalize(__int16 *result, double a2)
+{
+  return UnitStack_UnlinkIfEmpty(result, a2);
 }
 
 //----- (0040F8B0) --------------------------------------------------------
@@ -23999,6 +24148,11 @@ signed int  sub_411350(int a1, DWORD a2)
     Debug_Log(v4 + 1, a1, a2, (int)a15sPl1dP);
   return result;
 }
+
+signed int Unit_DebugDumpFormationSizes(int a1, DWORD a2)
+{
+  return sub_411350(a1, a2);
+}
 // 4113B7: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
@@ -24006,6 +24160,11 @@ signed int  sub_411350(int a1, DWORD a2)
 signed int  sub_411420(int a1, DWORD a2)
 {
   return Unit_DebugDumpFormationSizes(725 * a1 + gameData + 147174, a2);
+}
+
+signed int Render_DrawSprite_v3(int a1, DWORD a2)
+{
+  return sub_411420(a1, a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -24708,6 +24867,11 @@ void * UnitSlots_ExtractSpecialEntries(char *a1, int a2, char *a3)
   return result;
 }
 
+void * sub_412000(char *a1, int a2, char *a3)
+{
+  return UnitSlots_ExtractSpecialEntries(a1, a2, a3);
+}
+
 //----- (004120B0) --------------------------------------------------------
 int  UnitSlots_AppendEntries(char *a1, char *a2)
 {
@@ -24729,6 +24893,11 @@ int  UnitSlots_AppendEntries(char *a1, char *a2)
   result = 31 * v3;
   qmemcpy(v4, v2, 31 * v3);
   return result;
+}
+
+int  sub_4120B0(char *a1, char *a2)
+{
+  return UnitSlots_AppendEntries(a1, a2);
 }
 
 //----- (00412100) --------------------------------------------------------
@@ -25806,6 +25975,11 @@ int  sub_412F30(
     result = sub_4060E0(result, v19, v21 + 8 * v22);
   *(int *)((char *)&dword_523F8F + 15 * v18) = result;
   return result;
+}
+
+int  Unit_SetFlag(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __int8 a4, DWORD a5, signed int a6)
+{
+  return sub_412F30(a1, a2, a3, a4, a5, a6);
 }
 // 412FB8: variable 'v11' is possibly undefined
 // 412FDB: variable 'v7' is possibly undefined
@@ -33325,7 +33499,7 @@ char  Building_AssignUniqueGeneratedName(int a1)
         v4 = (int *)((char *)v4 + 2);
       }
       while ( v7 );
-      strlwr_(v3, v22);
+      strlwr_((char *)&v19);
       if ( !strcmp_(v9, *(char **)((char *)off_513A84 + v8)) )
         v2 = 1;
       v3 = v11 + 1;
@@ -33601,6 +33775,11 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *a1, double a2)
                    (int)a1,
                    a2);
   return v6;
+}
+
+char  Building_AutoFillOrUseGarrison(unsigned __int8 *a1, double a2)
+{
+  return Building_UpdateGarrisonTrainRepairTimers(a1, a2);
 }
 // 41E5CC: variable 'v2' is possibly undefined
 // 41E5D0: variable 'v5' is possibly undefined
@@ -34383,6 +34562,11 @@ int  sub_41F810(int a1)
   return 100 - v2 / 7;
 }
 
+int  UI_DrawUnitStatsValues(int a1)
+{
+  return sub_41F810(a1);
+}
+
 //----- (0041F850) --------------------------------------------------------
 BOOL  Building_CanStartUpgrade(unsigned __int8 *a1)
 {
@@ -34619,6 +34803,11 @@ int a2;
     return (unsigned __int8)v9[Rng_RandRange(0, v4 - 1) + 1];
   else
     return -1;
+}
+
+signed int  Unit_FindById(int a1)
+{
+  return Building_FindRandomOwnedCompletedCastle(a1, 0);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -37102,6 +37291,11 @@ BOOL  Unit_CanMoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4)
   }
   return UnitStack_GetMinCurrentActionPoints((int)v20) >= 4
       && *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(v17 + gameData + v16 + 556374) + 147178) == *(_BYTE *)(725 * v21 + gameData + 147178);
+}
+
+BOOL  Map_IsTilePlacable(int a1, _DWORD *a2, int a3, int a4)
+{
+  return Unit_CanMoveSelectionFromGroupToTile(a1, a2, a3, a4);
 }
 // 422F8A: simplified comparisons for 'eax.4': >=0 && <29 became <29u
 // 422E6E: variable 'v8' is possibly undefined
@@ -53629,137 +53823,241 @@ int  sub_43D0C0(WCIsvListBase *a1, char a2)
 // 43D0FA: variable 'v5' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
+typedef struct WCCompatLink {
+  int next_link;
+  int value;
+} WCCompatLink;
+
+typedef struct WCCompatListBase {
+  int head_link;
+  int vtable;
+  int tail_link;
+  int count;
+  int alloc_fn;
+  int free_fn;
+} WCCompatListBase;
+
+static WCCompatListBase *WCCompat_ListFromBase(WCIsvListBase *this)
+{
+  return (WCCompatListBase *)this;
+}
+
+static WCCompatListBase *WCCompat_ListFromHandle(int list_handle)
+{
+  return (WCCompatListBase *)(uintptr_t)(unsigned int)list_handle;
+}
+
+static WCCompatLink *WCCompat_LinkFromHandle(int link_handle)
+{
+  return (WCCompatLink *)(uintptr_t)(unsigned int)link_handle;
+}
+
+//----- (0043D100) --------------------------------------------------------
+_DWORD *unknown_libname_3(WCIsvListBase *this)
+{
+  WCCompatListBase *list;
+
+  list = WCCompat_ListFromBase(this);
+  list->vtable = (int)(uintptr_t)off_50F104;
+  WCIsvListBase_dtor(this);
+  return (_DWORD *)this;
+}
+
+//----- (0043D100) --------------------------------------------------------
+_DWORD * sub_43D100(WCIsvListBase *this)
+{
+  return unknown_libname_3(this);
+}
+
+int __fastcall WCIsvListBase_base_next(int list_handle, int cursor_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *link;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  if ( !list || !list->head_link )
+    return 0;
+  for ( link = WCCompat_LinkFromHandle(list->head_link); link; link = WCCompat_LinkFromHandle(link->next_link) )
+  {
+    if ( (int)(uintptr_t)link == cursor_handle )
+      return link->next_link;
+  }
+  return list->head_link;
+}
+
+int __fastcall WCIsvListBase_base_insert(int list_handle, int link_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *link;
+  WCCompatLink *tail;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  link = WCCompat_LinkFromHandle(link_handle);
+  if ( !list || !link )
+    return 0;
+  link->next_link = 0;
+  if ( list->tail_link )
+  {
+    tail = WCCompat_LinkFromHandle(list->tail_link);
+    if ( tail )
+      tail->next_link = link_handle;
+    else
+      list->head_link = link_handle;
+  }
+  else
+  {
+    list->head_link = link_handle;
+  }
+  list->count += 1;
+  return link_handle;
+}
+
+int __fastcall WCIsvListBase_base_sget(int list_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *head;
+  int link_handle;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  if ( !list || !list->head_link )
+    return 0;
+  link_handle = list->head_link;
+  head = WCCompat_LinkFromHandle(link_handle);
+  if ( !head )
+  {
+    list->head_link = 0;
+    list->tail_link = 0;
+    list->count = 0;
+    return 0;
+  }
+  list->head_link = head->next_link;
+  if ( !list->head_link )
+    list->tail_link = 0;
+  if ( list->count > 0 )
+    list->count -= 1;
+  return link_handle;
+}
+
+void WCIsvListBase_base_destroy(WCIsvListBase *this)
+{
+  int link_handle;
+
+  for ( link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this); link_handle; link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this) )
+    sub_43D160((int)(uintptr_t)this, link_handle, 8);
+}
+
+_DWORD WCIsvListBase_dtor(WCIsvListBase *this)
+{
+  WCCompatListBase *list;
+
+  list = WCCompat_ListFromBase(this);
+  list->vtable = (int)(uintptr_t)off_50F0F4;
+  if ( list->tail_link )
+    nullsub_7((int)(uintptr_t)this);
+  return (unsigned int)(uintptr_t)this;
+}
+
 //----- (0043D120) --------------------------------------------------------
 _DWORD * sub_43D120(int a1, int a2)
 {
-  _DWORD *result; // eax
-  _DWORD *v3; // edx
+  WCCompatListBase *list;
+  WCCompatLink *link;
 
-  if ( !*(_DWORD *)(a1 + 16) )
-  {
-    result = (_DWORD *)j_Mem_Alloc(a1);
-    if ( !result )
-      return result;
-LABEL_5:
-    *result = 0;
-    result[1] = *v3;
-    return result;
-  }
-  result = (_DWORD *)(*(int (__cdecl **)(int))(a1 + 16))(a2);
-  if ( result )
-    goto LABEL_5;
-  return result;
+  list = WCCompat_ListFromHandle(a1);
+  if ( !list )
+    return 0;
+  if ( !list->alloc_fn )
+    link = (WCCompatLink *)(uintptr_t)(unsigned int)j_Mem_Alloc(8);
+  else
+    link = (WCCompatLink *)(uintptr_t)(unsigned int)(*(int (__cdecl **)(int))(uintptr_t)(unsigned int)list->alloc_fn)(8);
+  if ( !link )
+    return 0;
+  link->next_link = 0;
+  link->value = a2;
+  return (_DWORD *)link;
 }
-// 43D137: conditional instruction was optimized away because eax.4!=0
-// 43D147: conditional instruction was optimized away because eax.4!=0
-// 43D151: variable 'v3' is possibly undefined
-// 4730FB: using guessed type int __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (0043D160) --------------------------------------------------------
 int  sub_43D160(int a1, int a2, int a3)
 {
-  int result; // eax
-
-  result = a2;
-  if ( a2 )
-  {
-    if ( *(_DWORD *)(a1 + 20) )
-      return (*(int (__cdecl **)(int))(a1 + 20))(a3);
-    else
-      return j_j__nfree_();
-  }
-  return result;
+  if ( !a2 )
+    return 0;
+  if ( *(_DWORD *)(a1 + 20) )
+    return (*(int (__cdecl **)(int))(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 20))(a3);
+  return nfree_(a2);
 }
 
 //----- (0043D180) --------------------------------------------------------
 int  sub_43D180(_DWORD *a1, _DWORD *a2, int a3)
 {
-  int result; // eax
-  int i; // ecx
-  int v6; // ecx
+  int link_handle;
+  WCCompatLink *link;
 
   *a1 = *a2;
   a1[4] = a2[4];
   a1[5] = a2[5];
-  result = WCIsvListBase_base_next(a3, a3);
-  for ( i = result; result; i = result )
+  link_handle = WCIsvListBase_base_next((int)(uintptr_t)a2, a3);
+  while ( link_handle )
   {
-    sub_43D220((int)a1, i);
-    result = WCIsvListBase_base_next(v6, v6);
+    link = WCCompat_LinkFromHandle(link_handle);
+    if ( !link )
+      break;
+    sub_43D220((int)(uintptr_t)a1, link->value);
+    link_handle = WCIsvListBase_base_next((int)(uintptr_t)a2, link_handle);
   }
-  return result;
+  return link_handle;
 }
-// 43D1BC: variable 'v6' is possibly undefined
-// 4766BA: using guessed type int __fastcall WCIsvListBase_base_next(_DWORD, _DWORD);
 
 //----- (0043D1E0) --------------------------------------------------------
 int  sub_43D1E0(WCIsvListBase *this, int a2)
 {
-  int v2; // ecx
-  int v3; // edx
-  WCIsvListBase *v5; // [esp-4h] [ebp-4h]
+  WCCompatListBase *list;
 
-  v5 = this;
-  v2 = a2;
-  v3 = *(_DWORD *)(a2 + 8);
-  *(_DWORD *)(a2 + 4) = &off_50F114;
-  if ( v3 )
+  list = WCCompat_ListFromHandle(a2);
+  list->vtable = (int)(uintptr_t)off_50F114;
+  if ( list->tail_link )
   {
     nullsub_7(a2);
-    WCIsvListBase_base_destroy(v5);
+    WCIsvListBase_base_destroy(this);
   }
-  *(_DWORD *)(v2 + 4) = off_50F104;
-  return WCIsvListBase_dtor(v5);
+  list->vtable = (int)(uintptr_t)off_50F104;
+  return WCIsvListBase_dtor(this);
 }
-// 43D1F8: variable 'v2' is possibly undefined
-// 43D1FF: variable 'v5' is possibly undefined
-// 476A0B: using guessed type int __thiscall nullsub_7(_DWORD);
-// 50F104: using guessed type int (*off_50F104[2])();
-// 50F114: using guessed type int (__thiscall *off_50F114)(WCIsvListBase *this);
 
 //----- (0043D220) --------------------------------------------------------
 signed int  sub_43D220(int a1, int a2)
 {
-  int v2; // ecx
-  _DWORD *v3; // ebx
-  signed int result; // eax
-  int v5; // ecx
+  WCCompatListBase *list;
+  WCCompatLink *link;
 
-  v3 = sub_43D120(a1, a1);
-  if ( v3 )
+  link = (WCCompatLink *)sub_43D120(a1, a2);
+  if ( link )
   {
-    WCIsvListBase_base_insert(a2);
-    result = 1;
-    *(_DWORD *)(v5 + 8) = v3;
+    list = WCCompat_ListFromHandle(a1);
+    WCIsvListBase_base_insert(a1, (int)(uintptr_t)link);
+    list->tail_link = (int)(uintptr_t)link;
+    return 1;
   }
-  else
-  {
-    nullsub_7(v2);
-    return 0;
-  }
-  return result;
+  nullsub_7(a1);
+  return 0;
 }
-// 43D23D: variable 'v5' is possibly undefined
-// 43D245: variable 'v2' is possibly undefined
-// 4766D0: using guessed type int __cdecl WCIsvListBase_base_insert(_DWORD);
-// 476A0B: using guessed type int __thiscall nullsub_7(_DWORD);
 
 //----- (0043D250) --------------------------------------------------------
 int  sub_43D250(int a1, int a2)
 {
-  int v2; // eax
-  int v3; // ecx
+  int link_handle;
+  WCCompatLink *link;
 
-  v2 = WCIsvListBase_base_sget(a1);
-  if ( v2 )
-  {
-    a2 = *(_DWORD *)(v2 + 4);
-    (*(void (**)(void))(*(_DWORD *)(v3 + 4) + 4))();
-  }
+  link_handle = WCIsvListBase_base_sget(a1);
+  if ( !link_handle )
+    return a2;
+  link = WCCompat_LinkFromHandle(link_handle);
+  if ( !link )
+    return a2;
+  a2 = link->value;
+  sub_43D160(a1, link_handle, 8);
   return a2;
 }
-// 43D265: variable 'v3' is possibly undefined
-// 47679A: using guessed type int __thiscall WCIsvListBase_base_sget(_DWORD);
 
 //----- (0043D280) --------------------------------------------------------
 int  sub_43D280(_DWORD *a1, _DWORD *a2)
@@ -54993,6 +55291,11 @@ LABEL_5:
   }
   while ( a1 != v1 );
   return v2;
+}
+
+int  Building_DrawGarrisonRow(int a1)
+{
+  return Building_CountSpecialPersonageGarrisonEntries(a1);
 }
 
 //----- (0043EBC0) --------------------------------------------------------
@@ -59880,7 +60183,10 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
       if ( Input_IsKeyPressed(211) )
       {
         LOBYTE(v14) = strlen(&byte_543D28[dword_543D24 + 1]) + 1;
-        memmove_(dword_543D24, &byte_543D28[dword_543D24 + 1]);
+        memmove_(
+          &byte_543D28[dword_543D24],
+          &byte_543D28[dword_543D24 + 1],
+          strlen(&byte_543D28[dword_543D24 + 1]) + 1);
         sub_444780(dword_543D18);
         Input_ClearKey(211, v25);
       }
@@ -59892,7 +60198,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
           v26 = &byte_543D28[dword_543D24--];
           v27 = strlen(v26) + 1;
           LOBYTE(v14) = v27;
-          memmove_(v27 - 1, &byte_543D28[dword_543D24 + 1]);
+          memmove_(&byte_543D28[dword_543D24], &byte_543D28[dword_543D24 + 1], v27);
           sub_444780(dword_543D18);
           Input_ClearKey(14, v28);
         }
@@ -59935,7 +60241,10 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
             if ( (unsigned __int16)Render_LoadResourceSprite_v3(v39) < 0x97u )
             {
               LOBYTE(v14) = strlen(&byte_543D28[dword_543D24]) + 1;
-              memmove_(dword_543D24, &byte_543D28[dword_543D24]);
+              memmove_(
+                &byte_543D28[dword_543D24 + 1],
+                &byte_543D28[dword_543D24],
+                strlen(&byte_543D28[dword_543D24]) + 1);
               v36 = dword_543D24;
               byte_543D28[dword_543D24] = v44;
               dword_543D24 = v36 + 1;
@@ -60469,7 +60778,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
       v25 = strlen(&byte_543D48[dword_543D44 + 1]) + 1;
       v10 = (char *)dword_543D44;
       v21 = v25;
-      memmove_(v25 - 1, &byte_543D48[dword_543D44 + 1]);
+      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v25);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(211, v26);
     }
@@ -60479,7 +60788,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
       v28 = strlen(v27) + 1;
       v10 = (char *)&v27[v28];
       v21 = v28;
-      memmove_(dword_543D44, &byte_543D48[dword_543D44 + 1]);
+      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v28);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(14, v29);
     }
@@ -60499,7 +60808,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
           v33 = strlen(&byte_543D48[dword_543D44]) + 1;
           v10 = &byte_543D48[dword_543D44 + v33];
           v21 = v33;
-          memmove_(dword_543D44, &byte_543D48[dword_543D44]);
+          memmove_(&byte_543D48[dword_543D44 + 1], &byte_543D48[dword_543D44], v33);
           v34 = dword_543D44 + 1;
           *((_BYTE *)&dword_543D44 + v34 + 3) = v48;
           dword_543D44 = v34;
@@ -61957,7 +62266,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             if ( Input_IsKeyPressed(211) )
             {
               LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + 1 + dword_544194]) + 1;
-              memmove_(dword_544194, &byte_5441A0[11 * dword_544198 + 1 + dword_544194]);
+              memmove_(
+                &byte_5441A0[11 * dword_544198 + dword_544194],
+                &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                strlen(&byte_5441A0[11 * dword_544198 + dword_544194 + 1]) + 1);
               sub_448D10(dword_544198, v74, v75);
               Input_ClearKey(211, v76);
             }
@@ -61970,7 +62282,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 v78 = strlen(v77) + 1;
                 a3 = (char *)dword_544194;
                 LOBYTE(a2) = v78;
-                memmove_(v78 - 1, &byte_5441A0[11 * dword_544198 + 1 + dword_544194]);
+                memmove_(
+                  &byte_5441A0[11 * dword_544198 + dword_544194],
+                  &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                  v78);
                 sub_448D10(dword_544198, v79, v80);
                 Input_ClearKey(14, v81);
               }
@@ -61996,7 +62311,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   if ( v85 < v86 )
                   {
                     LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1;
-                    memmove_(dword_544194 + 1, &byte_5441A0[11 * dword_544198 + dword_544194]);
+                    memmove_(
+                      &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                      &byte_5441A0[11 * dword_544198 + dword_544194],
+                      strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1);
                     v87 = 11 * dword_544198;
                     v88 = dword_544194 + 1;
                     LOBYTE(v87) = v129;
@@ -66479,6 +66797,11 @@ signed int  sub_451150(int a1)
     }
   }
   return 0;
+}
+
+signed int UI_CheckEndTurnHotkey(int a1)
+{
+  return sub_451150(a1);
 }
 // 45119B: variable 'v4' is possibly undefined
 // 4511BB: variable 'v5' is possibly undefined
@@ -184577,7 +184900,7 @@ void  sub_4E5F8A(_BYTE *a1, _BYTE *i, int a3)
           v16 = v12;
           if ( !v12 )
             goto LABEL_23;
-          memmove_(v12 + v15, dword_54E700);
+          memmove_((void *)(uintptr_t)(v12 + v15), (const void *)(uintptr_t)dword_54E700, (size_t)v3);
           dword_54E700 = v13;
         }
         else
@@ -184664,7 +184987,7 @@ LABEL_20:
     if ( *(_BYTE *)(v10 + dword_54E700) )
       nfree_(j);
     v12 = ((int)j - dword_54E704) >> 2;
-    memmove_(j, dword_54E700);
+    memmove_(j, (const void *)(uintptr_t)dword_54E700, (size_t)v12);
     dword_54E700 = v13;
     if ( v10 < v12 )
     {
@@ -184739,7 +185062,7 @@ signed int  sub_4E70ED(_WORD *a1, _WORD *i)
         if ( !v15 )
           return -1;
         v16 = v15 + v17;
-        memmove_(v15, dword_54E700);
+        memmove_((void *)(uintptr_t)v15, (const void *)(uintptr_t)dword_54E700, (size_t)v9);
         dword_54E700 = v16;
       }
       else
@@ -184825,7 +185148,7 @@ LABEL_20:
     if ( *(_BYTE *)(v10 + dword_54E700) )
       nfree_(j);
     v12 = ((int)j - dword_54E708) >> 2;
-    memmove_(j, dword_54E700);
+    memmove_(j, (const void *)(uintptr_t)dword_54E700, (size_t)v12);
     dword_54E700 = v13;
     v14 = (_BYTE *)(v10 + v13);
     while ( v10 < v12 )
