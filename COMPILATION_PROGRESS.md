@@ -3096,6 +3096,69 @@
 - total rename count so far:
   - `1193`
 
+## Batch 154 - Recover `mapK7` mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while widening the retained `Scenario_LoadMissionByIndex` slice one case at a time from asm/map evidence
+- Subagents spawned and scopes:
+  - existing read-heavy subagents were reused immediately
+  - `boot_path_mapper`: corroborated the exact `mapK7` body, including the raw stack/status writes, the two `Rules_SyncArmyFactStrength` handoffs, and the post-`Game_InitPlayerViewState` camera override
+  - `runtime_glue_mapper`: confirmed `mapK7` stays in recovered C and does not require new compat/runtime stubs
+  - `sdl_seam_mapper`: confirmed the retained case remains below SDL and should not widen `platform_sdl_runtime.c`
+  - `class_seam_mapper`: confirmed the retained case remains below `src_cpp` / class-seam work
+  - `external_corroborator`: secondarily corroborated `k_mapa7z.map` plus the nearby proper-name pool from shipped assets and `clash95.exe`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `mapK7`
+  - `sub_455070` / `Rules_SyncArmyFactStrength`
+  - `createUnit`
+  - `createCastle`
+  - `Game_InitPlayerViewState`
+- Blockers removed this batch:
+  - the retained mission-loader frontier no longer stops at missing `mapK7` / case `6`
+  - the retained widening no longer lacks the `Walter` / `Drebegen` player setup, the `Dragmounth` / `Akserion` / `Ghettan` / `Bhua Rock` / `Jolarion` castle lane, or the case-local stack/status/camera side effects for `mapK7`
+- SDL replacements/cleanups this batch:
+  - none; subagent corroboration and the live probes both kept the frontier below SDL
+- Menu/UI fixes this batch:
+  - none; the contained `oddzial` / `MAIN` split is preserved unchanged
+- Session-init fixes this batch:
+  - none; the contained post-confirm replay is still blocked by the missing class/bload prelude
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `python3 -m json.tool .agent/state.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together after the `mapK7` recovery
+- Link status:
+  - the retained `PlayGame_Dispatch` standalone probe still links and stays alive under `timeout 1s`
+  - the next retained blocker is the next missing `Scenario_LoadMissionByIndex` case slice, `mapK8` / case `7`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the exact post-confirm contained probes still split cleanly between `class-lookup-no-table name=oddzial` and `symbol-lookup-missing-table MAIN`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries case `6` / `mapK7` in recovered C with its raw stack/status writes, `Rules_SyncArmyFactStrength` handoffs, prisoner/funds writes, and post-init camera override intact
+- Key evidence used:
+  - `clash95.asm` case-6 body at `mapK7`
+  - `clash95.map` names and function addresses for `mapK7`, `createUnit`, `createCastle`, and the scenario-local proper-name slab
+  - existing recovered helpers in `clash95.c`: `Map_LoadFromFile`, `MiniMap_CreateSurface`, `createUnit`, `createCastle`, `Rules_SyncArmyFactStrength`, `sub_451EC0`, `Game_InitPlayerViewState`
+- Ambiguous candidates deferred:
+  - the missing authentic class/bload startup prelude before `oddzial`
+  - the remaining retained `Scenario_LoadMissionByIndex` cases, starting with `mapK8` / case `7`
+  - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw`
+
 ## Batch 152 - Mission Loader mapK3 Recovery Wave
 - Current frontier:
   - keep the contained authentic load-menu wedge green at the traced `oddzial` / `MAIN` split while continuing the retained `Scenario_LoadMissionByIndex` reduction inside recovered C

@@ -71952,6 +71952,75 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Rules_LogAssignedPlayerFact(3, 5);
       Game_InitPlayerViewState();
       break;
+    case 6:
+      Map_LoadFromFile((int)"k_mapa7z.map");
+      ACTIVE_MISSION_INDEX = 6;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Walter");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Drebegen");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 13, 4, 0, 0x21u, -1);
+      createUnit(a2, 14, 4, 0, 1u, -1);
+      createUnit(a2, 14, 3, 0, 0xEu, -1);
+      createCastle(a2, 30, 23, 1, 2, "Dragmounth", 0x11u, 9, 9, 9, 9, 9, 9, -1);
+      createCastle(a2, 54, 4, 1, 2, "Akserion", 0x11u, 0xFu, 0xF, 0xF, 0xF, 0xF, -1);
+      createUnit(a2, 30, 25, 1, 1u, 1, 1, 9, 0x11u, -1);
+      createUnit(a2, 31, 25, 1, 9u, 9, 5, 1, 1, 0, 0, 0, 0, -1);
+      createUnit(a2, 54, 6, 1, 6u, 0, 0, 0, 0, 5, 6, 1, 1, -1);
+      createUnit(a2, 85, 81, 1, 9u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      createUnit(a2, 12, 92, 1, 0xFu, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xDu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(39, 17));
+      *(_BYTE *)(UNIT_STACK(stack_index) + 251) |= 3u;
+      createUnit(a2, 17, 39, 1, 5u, 5, 5, 5, 5, -1);
+      createUnit(a2, 57, 38, 1, 8u, 8, 8, 8, 0x1Au, 0x1A, -1);
+      createUnit(a2, 74, 71, 1, 0xEu, 2, 2, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(74, 71));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
+      Rules_SyncArmyFactStrength(
+        (__int16 *)UNIT_STACK(stack_index),
+        145 * stack_index,
+        gameData + UNIT_STACK_TABLE_OFFSET,
+        UNIT_STACK_OWNER_INDEX(UNIT_STACK(stack_index)),
+        200 * UNIT_STACK_TILE_ROW(UNIT_STACK(stack_index)),
+        a2);
+      createUnit(a2, 82, 9, 1, 0xCu, 0xF, 0xF, 0xF, 0xF, 6, 6, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(82, 9));
+      Rules_SyncArmyFactStrength(
+        (__int16 *)UNIT_STACK(stack_index),
+        145 * stack_index,
+        gameData + UNIT_STACK_TABLE_OFFSET,
+        UNIT_STACK_OWNER_INDEX(UNIT_STACK(stack_index)),
+        200 * UNIT_STACK_TILE_ROW(UNIT_STACK(stack_index)),
+        a2);
+      castle_index = createCastle(a2, 90, 41, 2, 2, "Ghettan", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      castle_index = createCastle(a2, 41, 67, 2, 2, "Bhua Rock", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
+      castle_index = createCastle(a2, 5, 56, 2, 1, "Jolarion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
+      createUnit(a2, 41, 69, 2, 0xBu, 0x10u, 0x10u, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 42, 69, 2, 0xBu, 0xB, 0xB, 0xB, 5, 5, 5, 5, 5, 5, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 10;
+      PLAYER_CAMERA_TOP(0) = 0;
+      MAP_VIEW_LEFT = 10;
+      MAP_VIEW_TOP = 0;
+      break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
       ACTIVE_MISSION_INDEX = 10;

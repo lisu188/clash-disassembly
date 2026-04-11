@@ -14,8 +14,9 @@
   - `mapK4` keeps its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three raw stack/status mutation bands in recovered C rather than wrapper glue
   - `mapK5` keeps its exact `Totaweon` / `Hopenberg` spawn lists, the `BUILDING_RECORD(castle_index) + 18 = 9` garrison preseed, the `Building_UnitGetInto` handoff, the 12-slot raw OR loop, the prisoner-slot writes, and the `Rules_LogAssignedCastleFact(..., 4)` tail in recovered C rather than wrapper glue
   - `mapK6` keeps its mission-local flag clear, the localized `Furd` / `Dulimam` versus `Wetus` / `Riludius` name fork, the player-2 religion flag clear, the player-1 minimap reveal, the player-1..3 intelligence writes, the `Defambrion` `BUILDING_RECORD(+438) += 200`, `Katha Gha` `BUILDING_RECORD(+438) = 1000`, `Ghih Up` `BUILDING_RECORD(+18) = -1`, the raw 10-slot status OR loop through `gameData + 564880`, and the `Rules_LogAssignedPlayerFact(3, 5)` tail in recovered C rather than wrapper glue
+  - `mapK7` keeps its `Alan` / `Walter` / `Drebegen` setup, the player-2 intelligence write, the player-1 and player-2 religion clears, the `Dragmounth` / `Akserion` / `Ghettan` / `Bhua Rock` / `Jolarion` castle lane, the single-stack raw byte OR, the 10-slot raw status OR loop through `TILE_INDEX(74, 71)`, the two `Rules_SyncArmyFactStrength` handoffs, the `Ghettan` prisoner-slot write, the `Bhua Rock` / `Jolarion` `BUILDING_RECORD(+438)` writes, and the post-init camera override in recovered C rather than wrapper glue
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - the missing authentic class/bload prelude before `oddzial`
-  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK7`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK8`

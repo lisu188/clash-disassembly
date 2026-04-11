@@ -26,5 +26,9 @@
   - Reason: the asm proves player 1 and player 2 names diverge on `g_LanguageIndex` (`Furd` / `Dulimam` versus `Wetus` / `Riludius`), while player 3 stays `Agordeh`; flattening that into one string set would erase real mission behavior.
 - Keep the `mapK6` mission-local flag, player-runtime, building-field, and stack-status writes explicit in recovered C.
   - Reason: the asm proves `gameData + 140021`, `PLAYER_RELIGION_FLAG(2)`, `PLAYER_MINIMAP_VISIBLE(1)`, `PLAYER_AI_INTELLIGENCE(1..3)`, the `Defambrion` / `Katha Gha` / `Ghih Up` building-field mutations, and the 10-slot OR loop through `gameData + 564880` are scenario-local follow-ons, not generic helper or wrapper behavior.
+- Keep the `mapK7` raw stack/status writes and the two `Rules_SyncArmyFactStrength` handoffs explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the single-stack byte OR, the 10-slot OR loop rooted at `TILE_INDEX(74, 71)`, and the follow-on strength-fact syncs are case-local mission setup, not generic runtime-wrapper behavior.
+- Keep the `mapK7` `Ghettan` prisoner-slot write, the `Bhua Rock` / `Jolarion` `BUILDING_RECORD(+438)` writes, and the post-`Game_InitPlayerViewState` camera override explicit in the case body.
+  - Reason: asm proves those writes occur as scenario-local follow-ons after `createCastle` / `Game_InitPlayerViewState`, so pushing them into helpers would erase real mission-specific behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
