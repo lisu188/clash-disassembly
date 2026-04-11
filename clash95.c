@@ -72087,6 +72087,79 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       sub_451EC0();
       Game_InitPlayerViewState();
       break;
+    case 8:
+      Map_LoadFromFile((int)"k_mapa9z.map");
+      ACTIVE_MISSION_INDEX = 8;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_QUEEN_RELATIONSHIP_STATE(0) = 5;
+      PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(0) = 10;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Sir James");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Ruryk");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 8, 27, 0, 2, "Totaweon", 0x11u, 0x21u, 0x21u, 0x21u, -1);
+      castle_index = createCastle(a2, 30, 23, 0, 2, "Gordmouth", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createUnit(a2, 8, 29, 0, 0, 9, 9, 9, 0xCu, 2, 2, -1);
+      createUnit(a2, 9, 29, 0, 5u, 5, 0xCu, 7, 8, 8, -1);
+      createUnit(a2, 10, 29, 0, 2u, 2, 2, 2, 2, 0x1Cu, -1);
+      createUnit(a2, 10, 14, 0, 0x21u, -1);
+      createUnit(a2, 11, 31, 0, 0x21u, -1);
+      createUnit(a2, 22, 29, 0, 0x21u, -1);
+      createUnit(a2, 30, 39, 0, 0x21u, -1);
+      createUnit(a2, 1, 28, 0, 0x21u, -1);
+      createUnit(a2, 8, 50, 0, 0x21u, -1);
+      createUnit(a2, 21, 57, 0, 0x21u, -1);
+      createUnit(a2, 21, 59, 0, 0x21u, -1);
+      createUnit(a2, 28, 57, 0, 0x21u, -1);
+      createCastle(a2, 22, 77, 1, 2, "Timbran", 0x11u, -1);
+      createCastle(a2, 59, 66, 1, 2, "Ghettan", 0x11u, -1);
+      createUnit(a2, 22, 79, 1, 0x1Au, 0x1Du, -1);
+      createUnit(a2, 59, 68, 1, 0xBu, 0xBu, 2, 0x15u, 0x15u, 0x15u, 0xCu, 0xCu, 0xCu, -1);
+      createUnit(a2, 60, 68, 1, 0x19u, 0x19u, 0x14u, 0x14u, 0x14u, 8, 8, 8, -1);
+      createCastle(a2, 4, 62, 2, 2, "Hopenberg", 0x11u, 0x21u, -1);
+      createCastle(a2, 84, 64, 2, 2, "Katha Gha", 0x11u, 0x21u, -1);
+      createUnit(a2, 4, 64, 2, 1u, 1, 1, 1, 1, 1, 1, 2, 2, -1);
+      createUnit(a2, 5, 64, 2, 0x1Du, 0x1Du, 0x1Au, 0x1Au, 6, 6, 0xCu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(5, 64));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 6, 64, 2, 5u, 5, 5, 5, 0x13u, 0x13u, 0x16u, 0x16u, 0xCu, 0xEu, -1);
+      createUnit(a2, 84, 66, 2, 0x1Cu, 0x1Au, 0xCu, 0xCu, 0x15u, 0x15u, 0xBu, 0x11u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(84, 66));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 85, 66, 2, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, 0x12u, 0x12u, 0x12u, 0x12u, -1);
+      createUnit(a2, 86, 66, 2, 0xAu, 0xAu, 0xAu, 0xAu, 2, 2, 0x15u, 0x13u, 0x16u, -1);
+      createCastle(a2, 96, 86, 3, 2, "Werneom", 0x11u, -1);
+      createUnit(a2, 95, 88, 3, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, 0x15u, 0x11u, -1);
+      createUnit(a2, 96, 88, 3, 0x12u, 0x12u, 0x19u, 0x19u, 0x19u, 0x19u, 0x13u, -1);
+      createUnit(a2, 97, 88, 3, 1u, 1, 0x18u, 7, 8, 0x16u, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(103, 0));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 5) + 27) =
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 5) + 27) & 0xFC | 2;
+      createUnit(a2, 96, 85, 3, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(102, 69));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 97, 85, 3, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(102, 97));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) =
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) & 0xFC | 2;
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
       ACTIVE_MISSION_INDEX = 10;

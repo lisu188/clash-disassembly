@@ -36,5 +36,13 @@
   - Reason: the asm proves the case performs three direct `|= 3` slot-byte bands plus one `& 0xFC | 2` carry loop, but the exact gameplay meaning of those byte fields is still unresolved; wrapping them now would be drift.
 - Preserve the absence of any `mapK8` post-castle `BUILDING_RECORD(...)` patchups or post-`Game_InitPlayerViewState` camera override.
   - Reason: unlike several earlier cases, the `mapK8` asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying extra building or camera patterns into it would be incorrect.
+- Keep the `mapK9` player-0 queen relationship writes explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm performs those runtime writes immediately after activation/controller setup and before the display-name copies, so hiding them in reset helpers would erase case-local mission behavior.
+- Keep the `mapK9` `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut explicit in the case body.
+  - Reason: the asm follows the `Gordmouth` `createCastle` call with that direct dword subtraction before any player-0 unit placements, so it is a scenario-local building mutation, not generic castle setup.
+- Keep the `mapK9` raw slot-byte `|= 3` loops and the two direct `& 0xFC | 2` rewrites explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves those stack-slot byte mutations are real mission setup, but their exact slot-field semantics are still unresolved; wrapping them now would be drift.
+- Preserve the absence of a `mapK9` post-`Game_InitPlayerViewState` camera override.
+  - Reason: like `mapK8`, the `mapK9` asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying the earlier case-specific camera override pattern would be incorrect.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

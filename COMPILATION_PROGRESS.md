@@ -3116,6 +3116,28 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 157 - Recover mapK9 mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` to `mapK10`
+- Blockers removed this batch:
+  - `mapK9` / case `8` is now materialized in recovered C
+  - the retained next blocker moved from `mapK9` / case `8` to `mapK10` / case `9`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `10`, and `11`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `mapK9`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`
+  - `/mnt/c/clash` corroboration for `k_mapa9z.map` and `Gordmouth`
+- Ambiguous candidates deferred:
+  - the `mapK9` raw slot-byte `|= 3` loops are still explicit case-local byte mutations
+  - the direct `& 0xFC | 2` slot-byte rewrites at `TILE_INDEX(103, 0)` and `TILE_INDEX(102, 97)` are still explicit case-local mutations
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
 ## Batch 126 - Recover mapK8 mission loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained mission-loader widening that now advances from `mapK8` to `mapK9`

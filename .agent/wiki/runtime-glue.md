@@ -16,8 +16,9 @@
   - `mapK6` keeps its mission-local flag clear, the localized `Furd` / `Dulimam` versus `Wetus` / `Riludius` name fork, the player-2 religion flag clear, the player-1 minimap reveal, the player-1..3 intelligence writes, the `Defambrion` `BUILDING_RECORD(+438) += 200`, `Katha Gha` `BUILDING_RECORD(+438) = 1000`, `Ghih Up` `BUILDING_RECORD(+18) = -1`, the raw 10-slot status OR loop through `gameData + 564880`, and the `Rules_LogAssignedPlayerFact(3, 5)` tail in recovered C rather than wrapper glue
   - `mapK7` keeps its `Alan` / `Walter` / `Drebegen` setup, the player-2 intelligence write, the player-1 and player-2 religion clears, the `Dragmounth` / `Akserion` / `Ghettan` / `Bhua Rock` / `Jolarion` castle lane, the single-stack raw byte OR, the 10-slot raw status OR loop through `TILE_INDEX(74, 71)`, the two `Rules_SyncArmyFactStrength` handoffs, the `Ghettan` prisoner-slot write, the `Bhua Rock` / `Jolarion` `BUILDING_RECORD(+438)` writes, and the post-init camera override in recovered C rather than wrapper glue
   - `mapK8` keeps its four `Rules_RetractTreasureFact` calls, the `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, the three raw slot-byte OR loops, and the final `& 0xFC | 2` slot-byte carry loop in recovered C rather than wrapper glue
+  - `mapK9` keeps its player-0 queen relationship writes, the `Alan` / `Sir James` / `Ruryk` / `Riludius` setup, the `Totaweon` / `Gordmouth` / `Timbran` / `Ghettan` / `Hopenberg` / `Katha Gha` / `Werneom` castle lane, the `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut, the three raw slot-byte OR loops, the two direct `& 0xFC | 2` slot-byte rewrites, and the absence of a post-init camera override in recovered C rather than wrapper glue
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - the missing authentic class/bload prelude before `oddzial`
-  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK9`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK10`

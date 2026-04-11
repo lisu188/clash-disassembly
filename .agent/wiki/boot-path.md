@@ -20,4 +20,4 @@
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
   - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
-  - the remaining retained widening is the still-unrecovered `Scenario_LoadMissionByIndex` case tranche, starting with `mapK9`
+  - the remaining retained widening is the still-unrecovered `Scenario_LoadMissionByIndex` case tranche, starting with `mapK10`
