@@ -68,13 +68,14 @@ This file classifies the current runtime/quarantine surface for executable regen
     - `mapK4` / case `3` now also preserves its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three case-local raw stack/status mutation bands in recovered C instead of wrapper glue
     - `mapK8` / case `7` now also preserves its four `Rules_RetractTreasureFact` calls, its `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, and its raw slot-byte mutation loops in recovered C instead of wrapper glue
     - `mapK9` / case `8` now also preserves its player-0 queen relationship writes, its `Alan` / `Sir James` / `Ruryk` / `Riludius` setup, the `Totaweon` / `Gordmouth` / `Timbran` / `Ghettan` / `Hopenberg` / `Katha Gha` / `Werneom` castle lane, the `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut, the three raw slot-byte OR loops, and the two direct `& 0xFC | 2` slot-byte rewrites in recovered C instead of wrapper glue
-  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK10` / case `9`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - `mapK10` / case `9` now also preserves its five-player `Alan` / `Twogor` / `Drebegen` / `Mieszko` / `Chester` setup, the `Gorendberg` / `Timbran` / `Ghettan` / `Bhua Rock` / `Katha Gha` / `Stormus` / `Guluali` castle lane, the case-local `BUILDING_RECORD(+438)` cuts/assignments/addition, and the direct `BUILDING_RECORD(+444)` masked writes in recovered C instead of wrapper glue
+  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapP3` / case `12`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
-- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through `mapK9`
+- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through `mapK10`
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

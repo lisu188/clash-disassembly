@@ -3138,6 +3138,27 @@
   - the direct `& 0xFC | 2` slot-byte rewrites at `TILE_INDEX(103, 0)` and `TILE_INDEX(102, 97)` are still explicit case-local mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 158 - Recover mapK10 mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK10` to `mapP3`
+- Blockers removed this batch:
+  - `mapK10` / case `9` is now materialized in recovered C
+  - the retained next blocker moved from `mapK10` / case `9` to `mapP3` / case `12`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0` through `11`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `mapK10`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`
+  - `/mnt/c/clash` corroboration for `k_map10l.map` and the nearby proper-name pool
+- Ambiguous candidates deferred:
+  - the direct `BUILDING_RECORD(+444)` masked writes in `mapK10` are still explicit case-local byte mutations rather than renamed gameplay fields
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
 ## Batch 126 - Recover mapK8 mission loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained mission-loader widening that now advances from `mapK8` to `mapK9`

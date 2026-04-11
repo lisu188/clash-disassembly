@@ -44,5 +44,11 @@
   - Reason: the asm proves those stack-slot byte mutations are real mission setup, but their exact slot-field semantics are still unresolved; wrapping them now would be drift.
 - Preserve the absence of a `mapK9` post-`Game_InitPlayerViewState` camera override.
   - Reason: like `mapK8`, the `mapK9` asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying the earlier case-specific camera override pattern would be incorrect.
+- Keep the `mapK10` `BUILDING_RECORD(+438)` cuts/assignments/addition explicit in the case body.
+  - Reason: the asm follows the `Gorendberg`, `Timbran`, `Ghettan`, `Bhua Rock`, and `Guluali` `createCastle` calls with direct dword writes that are clearly scenario-local building mutations, not generic castle setup.
+- Keep the `mapK10` masked `BUILDING_RECORD(+444)` writes explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves those low-bit writes occur only on `Gorendberg`, `Timbran`, and `Guluali`, but the exact field semantics are still unresolved; wrapping them now would be drift.
+- Preserve the absence of any `mapK10` raw stack-loop band or post-`Game_InitPlayerViewState` camera override.
+  - Reason: unlike `mapK8` and `mapK9`, this case's mission-local mutations are castle-record writes rather than stack loops, and the asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
