@@ -71883,6 +71883,75 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - 0x8000, 4);
       Game_InitPlayerViewState();
       break;
+    case 5:
+      Map_LoadFromFile((int)"k_mapa6j.map");
+      ACTIVE_MISSION_INDEX = 5;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      PLAYER_AI_INTELLIGENCE(1) = 1;
+      PLAYER_AI_INTELLIGENCE(2) = 1;
+      PLAYER_AI_INTELLIGENCE(3) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      if ( g_LanguageIndex )
+      {
+        strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Furd");
+        strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Dulimam");
+      }
+      else
+      {
+        strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
+        strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
+      }
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 71, 45, 0, 2, "Defambrion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createUnit(a2, 70, 47, 0, 2u, 2, 0x10u, 0x10u, 0, 0, 0, 0, 0x21u, -1);
+      createUnit(a2, 71, 47, 0, 5u, 5, 0, 0, 0, 1, 1, 3, 2, -1);
+      createUnit(a2, 72, 47, 0, 9u, 9, 0x10u, -1);
+      createUnit(a2, 73, 47, 0, 5u, 5, 0x1Du, 0x1Du, 0x10u, 0x10u, -1);
+      createUnit(a2, 71, 44, 0, 0x11u, 0x11, 0x11, 0x11, 1, 1, -1);
+      createUnit(a2, 72, 44, 0, 1u, 2, -1);
+      createCastle(a2, 56, 21, 1, 2, "Histone", 0x11u, -1);
+      castle_index = createCastle(a2, 26, 41, 1, 2, "Katha Gha", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
+      createUnit(a2, 56, 23, 1, 2u, 2, 2, 1, 1, 9, 9, -1);
+      createUnit(a2, 57, 23, 1, 1u, 5, 5, -1);
+      createUnit(a2, 58, 23, 1, 0xCu, 0xCu, 0xCu, 0xCu, 0x15u, -1);
+      createUnit(a2, 73, 23, 1, 9u, 9, 5, 5, 5, 1, 1, 1, 1, 1, -1);
+      createCastle(a2, 68, 77, 2, 2, "Girock", 0x11u, -1);
+      createUnit(a2, 67, 79, 2, 9u, 0xFu, 5, 5, 5, 0x21u, -1);
+      createUnit(a2, 68, 79, 2, 0, 0, 0, 0, 0, 0, 1, -1);
+      createUnit(a2, 73, 63, 2, 1u, 1, 1, 1, 2, 5, -1);
+      createUnit(a2, 69, 79, 2, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 70, 79, 2, 5u, 0x10u, 0x10u, 0, 0, -1);
+      createUnit(a2, 59, 50, 2, 9u, 9, 5, 5, 3, 0xAu, -1);
+      castle_index = createCastle(a2, 42, 54, 3, 2, "Ghih Up", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      createUnit(a2, 41, 56, 3, 0x14u, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, -1);
+      createUnit(a2, 42, 56, 3, 0x15u, 0x15, 0x15, 0x15, 2, 6, 6, -1);
+      createUnit(a2, 43, 56, 3, 0x15u, 0x15, 0x15, 0x15, 1, 0x1Du, 0x1Du, -1);
+      createUnit(a2, 44, 56, 3, 2u, 2, 2, 2, 0x14u, 0x14u, 0x14u, 0x14u, 0x14u, 6, 6, -1);
+      createUnit(a2, 42, 53, 3, 0xAu, 0xAu, 0xAu, 0xAu, 8, 8, 0x17u, 0x17u, 0x17u, 0x17u, -1);
+      stack_index = *(unsigned __int16 *)(gameData + 564880);
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) |= 3u;
+      createUnit(a2, 87, 66, 3, 0x15u, 0x15, 0x15, 0x15, 0x15, 0x15, -1);
+      sub_451EC0();
+      Rules_LogAssignedPlayerFact(3, 5);
+      Game_InitPlayerViewState();
+      break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
       ACTIVE_MISSION_INDEX = 10;

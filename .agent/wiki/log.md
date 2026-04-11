@@ -2,6 +2,13 @@
 
 ## 2026-04-11
 
+- Reloaded the durable repo memory again, checked the stale `.codex-loop` errors, and resumed the retained mission-loader widening from `mapK6` / case `5`.
+- Reused the read-heavy subagents on `mapK6`; the runtime, SDL, and class explorers all reconfirmed the frontier stayed in recovered-C mission setup, while the boot-path review pinned the exact localized player-name fork and the raw post-`Ghih Up` 10-slot status loop.
+- Materialized `mapK6` / case `5` directly in `Scenario_LoadMissionByIndex`, including the `gameData + 140021` mission-local flag clear, the `Furd` / `Dulimam` versus `Wetus` / `Riludius` split, the player-2 religion flag clear, the player-1 minimap reveal, the player-1..3 intelligence writes, the `Defambrion` / `Katha Gha` / `Ghih Up` building-field mutations, the raw 10-slot status OR loop through `gameData + 564880`, and the final `Rules_LogAssignedPlayerFact(3, 5)` tail.
+- Re-ran the three green build targets, the retained `PlayGame_Dispatch` link probe, and the exact traced contained post-confirm menu probes, and confirmed the protected split is unchanged:
+  - broader rules still reaches `class-lookup-no-table name=oddzial`
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Advanced the durable memory from `mapK6` to `mapK7`, so the next `continue` resumes from case `6` instead of re-auditing the already-recovered `k_mapa6j.map` lane.
 - Reloaded the durable repo memory, validated the three green build targets plus the retained `PlayGame_Dispatch` probe, and resumed the retained mission-loader widening from `mapK5` / case `4`.
 - Reused the read-heavy subagents on `mapK5`; the SDL/runtime/class explorers all reconfirmed the frontier stayed in recovered-C mission setup, while the fresh explorer pinned the exact `mapK5` body and caught the absence of minimap writes plus the exact early `Totaweon` spawn arguments.
 - Materialized `mapK5` / case `4` directly in `Scenario_LoadMissionByIndex`, including the three-player setup, the `Totaweon` / `Hopenberg` spawn lists, the `BUILDING_RECORD(castle_index) + 18 = 9` preseed, the `Building_UnitGetInto` handoff through the raw stack word at `gameData + 0x8A9A4`, the 12-slot raw OR loop, the prisoner-slot writes, and the final `Rules_LogAssignedCastleFact(*(WORD *)(gameData + 0x8A9A0) - 0x8000, 4)` tail.

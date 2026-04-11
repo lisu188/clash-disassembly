@@ -31,7 +31,7 @@ This note covers the current host seam used by the executable-regeneration track
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
   - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
   - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
-  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and `mapK2`, `mapK3`, `mapK4`, and `mapK5` are recovered in-place; the next retained blocker is the remaining mission-case recovery itself, starting with `mapK6` / case `5`
+  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and `mapK2`, `mapK3`, `mapK4`, `mapK5`, and `mapK6` are recovered in-place; the next retained blocker is the remaining mission-case recovery itself, starting with `mapK7` / case `6`
 
 ## Stable host behavior already present
 

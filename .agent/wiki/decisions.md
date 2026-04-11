@@ -22,5 +22,9 @@
   - Reason: the exact `mapK5` asm writes only player-activation and human-controller fields before the name copies; carrying over minimap writes from earlier scenarios would be cargo cult.
 - Keep the `mapK5` `Hopenberg` garrison/prisoner block explicit in `Scenario_LoadMissionByIndex`.
   - Reason: the asm proves the `BUILDING_RECORD(castle_index) + 18 = 9` preseed, the `Building_UnitGetInto` handoff, the 12-slot raw OR loop, and the prisoner-slot writes are scenario-local setup that occurs after `createCastle`, not generic helper behavior.
+- Keep the `mapK6` localized player-name split explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves player 1 and player 2 names diverge on `g_LanguageIndex` (`Furd` / `Dulimam` versus `Wetus` / `Riludius`), while player 3 stays `Agordeh`; flattening that into one string set would erase real mission behavior.
+- Keep the `mapK6` mission-local flag, player-runtime, building-field, and stack-status writes explicit in recovered C.
+  - Reason: the asm proves `gameData + 140021`, `PLAYER_RELIGION_FLAG(2)`, `PLAYER_MINIMAP_VISIBLE(1)`, `PLAYER_AI_INTELLIGENCE(1..3)`, the `Defambrion` / `Katha Gha` / `Ghih Up` building-field mutations, and the 10-slot OR loop through `gameData + 564880` are scenario-local follow-ons, not generic helper or wrapper behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
