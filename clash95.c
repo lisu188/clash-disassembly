@@ -72021,6 +72021,72 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       MAP_VIEW_LEFT = 10;
       MAP_VIEW_TOP = 0;
       break;
+    case 7:
+      Map_LoadFromFile((int)"k_mapa8z.map");
+      ACTIVE_MISSION_INDEX = 7;
+      Rules_RetractTreasureFact(55, 45, a2);
+      Rules_RetractTreasureFact(50, 27, a2);
+      Rules_RetractTreasureFact(35, 63, a2);
+      Rules_RetractTreasureFact(14, 68, a2);
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Uraken");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Richard V");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 56, 70, 0, 2, "Weghetown", 0x11u, -1);
+      createCastle(a2, 1, 51, 0, 1, "Henrion", 0x11u, 0x11, 0x11, 0x21u, -1);
+      createUnit(a2, 56, 72, 0, 0xFu, 0xCu, 0, 0, 1, 1, -1);
+      createUnit(a2, 57, 72, 0, 0xFu, 0xFu, 0xCu, 5, 1, 1, -1);
+      createUnit(a2, 1, 53, 0, 0, 0, 0, 0xDu, 0xBu, 9, -1);
+      createUnit(a2, 2, 53, 0, 0x11u, 0x11, 0x11, 0x11, -1);
+      createCastle(a2, 9, 25, 1, 2, "Moon Town", 0x11u, -1);
+      createCastle(a2, 18, 34, 1, 2, "Gate Stone", 0x11u, -1);
+      createUnit(a2, 9, 27, 1, 1u, 1, 1, 9, 0x15u, 0x15u, -1);
+      createUnit(a2, 18, 36, 1, 0xAu, 0xAu, 2, 2, 6, 0x15u, 0x19u, -1);
+      createUnit(a2, 19, 36, 1, 0x19u, 0x19u, 0x19u, 0x19u, 0x15u, 0x15u, 0x15u, 0x14u, -1);
+      createCastle(a2, 43, 21, 2, 2, "Canoowar", 0x11u, -1);
+      createCastle(a2, 54, 31, 2, 1, "Trungeon", 0x11u, -1);
+      createUnit(a2, 42, 23, 2, 0xFu, 0x10u, 1, 8, 0x21u, -1);
+      createUnit(a2, 43, 23, 2, 0x1Du, 0x1Du, 1, 1, 1, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(43, 23));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 44, 23, 2, 1u, 1, 1, 1, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 45, 23, 2, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 54, 33, 2, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 55, 33, 2, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 77, 39, 3, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 75, 67, 3, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 77, 41, 3, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 78, 41, 3, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(78, 41));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 75, 69, 3, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 76, 69, 3, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(76, 69));
+      for ( slot_index = 1; slot_index < 3; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index + 1) + 27) =
+          *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) | 2;
+      }
+      createUnit(a2, 77, 69, 3, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
       ACTIVE_MISSION_INDEX = 10;

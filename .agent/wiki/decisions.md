@@ -30,5 +30,11 @@
   - Reason: the asm proves the single-stack byte OR, the 10-slot OR loop rooted at `TILE_INDEX(74, 71)`, and the follow-on strength-fact syncs are case-local mission setup, not generic runtime-wrapper behavior.
 - Keep the `mapK7` `Ghettan` prisoner-slot write, the `Bhua Rock` / `Jolarion` `BUILDING_RECORD(+438)` writes, and the post-`Game_InitPlayerViewState` camera override explicit in the case body.
   - Reason: asm proves those writes occur as scenario-local follow-ons after `createCastle` / `Game_InitPlayerViewState`, so pushing them into helpers would erase real mission-specific behavior.
+- Keep the `mapK8` treasure removals explicit as `Rules_RetractTreasureFact` calls at the top of the case body.
+  - Reason: asm proves the case begins by retracting four specific treasure facts before any player reset or spawn work, so dropping or relocating them would change mission setup semantics.
+- Keep the `mapK8` raw slot-byte mutation loops explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the case performs three direct `|= 3` slot-byte bands plus one `& 0xFC | 2` carry loop, but the exact gameplay meaning of those byte fields is still unresolved; wrapping them now would be drift.
+- Preserve the absence of any `mapK8` post-castle `BUILDING_RECORD(...)` patchups or post-`Game_InitPlayerViewState` camera override.
+  - Reason: unlike several earlier cases, the `mapK8` asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying extra building or camera patterns into it would be incorrect.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

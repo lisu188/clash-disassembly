@@ -3096,6 +3096,93 @@
 - total rename count so far:
   - `1193`
 
+## Batch 156 - Recover mapK8 mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK8` to `mapK9`
+- Blockers removed this batch:
+  - `mapK8` / case `7` is now materialized in recovered C
+  - the retained next blocker moved from `mapK8` / case `7` to `mapK9` / case `8`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `mapK8`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `Rules_RetractTreasureFact`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`
+- Ambiguous candidates deferred:
+  - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 126 - Recover mapK8 mission loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained mission-loader widening that now advances from `mapK8` to `mapK9`
+- Subagents spawned and scopes:
+  - reused the existing read-heavy subagents immediately on `mapK8` / case `7`
+  - `boot_path_mapper`: corroborated the exact `mapK8` case order, player-runtime writes, castle/unit lane, raw slot-byte loops, and the absence of post-castle building writes or a post-init camera override
+  - `runtime_glue_mapper`: confirmed `mapK8` stays in recovered mission/runtime code and does not need new compat, `_wcpp_*`, holder-ABI, or `JUMPOUT` work
+  - `sdl_seam_mapper`: confirmed `mapK8` stays below SDL and should not move into `platform_sdl_runtime.c`
+  - `class_seam_mapper`: confirmed `mapK8` stays below `src_cpp` / class seams and belongs in `clash95.c`
+  - `external_corroborator`: secondarily confirmed `k_mapa8z.map` and the nearby proper-name pool from `/mnt/c/clash`
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - `Scenario_LoadMissionByIndex`
+  - `Rules_RetractTreasureFact`
+  - `MiniMap_CreateSurface`
+  - `Game_InitPlayerViewState`
+  - `createUnit`
+  - `createCastle`
+- Blockers removed this batch:
+  - the retained `Scenario_LoadMissionByIndex` case-7 gap is gone
+  - `mapK8` no longer blocks the standalone retained `PlayGame_Dispatch` widening
+  - the retained next blocker moved from `mapK8` / case `7` to `mapK9` / case `8`
+- SDL replacements/cleanups this batch:
+  - none; `mapK8` stayed entirely below the SDL seam
+- Menu/UI fixes this batch:
+  - none; the contained `oddzial` / `MAIN` split is unchanged and still separate from the retained mission-loader work
+- Session-init fixes this batch:
+  - none; direct `PlayGame` handoff is still deferred behind the missing authentic class/bload prelude
+- Validation probe:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - `python3 -m json.tool .agent/state.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+- Compile status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` all remain green
+- Link status:
+  - the standalone retained `PlayGame_Dispatch` probe still links and exits `124`
+- Runtime status:
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 2s build/bin/clash95_bootstrap --authentic-startup-prelude` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - the broader exact contained post-confirm probe still logs `class-lookup-no-table name=oddzial` and times out with the same core-dump band
+  - the narrower exact contained post-confirm probe still logs `symbol-lookup-missing-table MAIN` and times out with the same core-dump band
+- Highest authentic runtime milestone reached:
+  - the contained authentic load-menu wedge still reaches real post-confirm save replay with the protected `oddzial` versus `MAIN` split intact, while the retained broader front now carries recovered mission-loader cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`
+- Key evidence used:
+  - `clash95.asm` `mapK8` at `0x45B910` through the next `sub_460360` chunk boundary
+  - `clash95.map` `mapK8` symbol placement
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `Rules_RetractTreasureFact`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, and `createCastle`
+  - `/mnt/c/clash/clash95.exe` and `/mnt/c/clash/DATA/MAPS.RES` for secondary `k_mapa8z.map` / proper-name corroboration
+- Ambiguous candidates deferred:
+  - the `mapK8` raw slot-byte loops are still left as raw case-local byte mutations rather than renamed gameplay helpers
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+  - the contained post-confirm save replay still needs the authentic class/bload prelude before any direct `PlayGame` handoff
+- total rename count so far:
+  - `1193`
+
 ## Batch 154 - Recover `mapK7` mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while widening the retained `Scenario_LoadMissionByIndex` slice one case at a time from asm/map evidence
@@ -6160,3 +6247,23 @@
   - `sub_490330` remains the next high-value boot-path `JUMPOUT` scar once the current stream/runtime tranche is stable
 - total rename count so far:
   - `1193`
+
+## Batch 156 - Recover mapK8 mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK8` to `mapK9`
+- Blockers removed this batch:
+  - `mapK8` / case `7` is now materialized in recovered C
+  - the retained next blocker moved from `mapK8` / case `7` to `mapK9` / case `8`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `mapK8`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `Rules_RetractTreasureFact`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`
+- Ambiguous candidates deferred:
+  - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`

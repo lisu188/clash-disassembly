@@ -14,8 +14,8 @@
   - links successfully
   - exit `124`
 - Retained mission-loader status:
-  - `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `10`, and `11` in recovered C
-  - the next retained case frontier is `mapK8` / case `7`
+  - `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11` in recovered C
+  - the next retained case frontier is `mapK9` / case `8`
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - exit `124`
   - logs `class-lookup-no-table name=oddzial`

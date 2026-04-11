@@ -61,18 +61,19 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the mission-loader front was then reduced in recovered C too:
     - `createUnit` and `createCastle` now use real varargs so the original sentinel-terminated unit lists no longer depend on x86 stack accidents
     - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`
-    - the menu-reachable mission-loader cases (`0`, `1`, `2`, `10`, and `11`) are materialized directly from asm
+    - the menu-reachable mission-loader cases (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`) are materialized directly from asm
     - the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
     - `mapK2` / case `1` also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and the manual camera override after `Game_InitPlayerViewState`
     - `mapK3` / case `2` now also preserves its case-local player-2 intelligence write, the `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same manual camera override after `Game_InitPlayerViewState`
     - `mapK4` / case `3` now also preserves its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three case-local raw stack/status mutation bands in recovered C instead of wrapper glue
-  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK8` / case `7`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - `mapK8` / case `7` now also preserves its four `Rules_RetractTreasureFact` calls, its `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, and its raw slot-byte mutation loops in recovered C instead of wrapper glue
+  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapK9` / case `8`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
-- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the first recovered menu-entry slice
+- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through `mapK8`
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

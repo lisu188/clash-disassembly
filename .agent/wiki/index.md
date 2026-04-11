@@ -2,8 +2,8 @@
 
 - Current frontier:
   - keep the contained authentic load-menu wedge green while separating it from the broader retained mission-loader widening that now starts after `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
-  - the retained mission-loader slice in `clash95.c` now covers cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `10`, and `11`
-  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK8` / case `7`
+  - the retained mission-loader slice in `clash95.c` now covers cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`
+  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK9` / case `8`
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
@@ -18,14 +18,14 @@
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
   - the corrected post-confirm probe lane (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` plus `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1`) reaches `load-menu-post-confirm-load-save`
   - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
-  - `mapK7` / case `6` is now materialized in recovered C with its `Alan` / `Walter` / `Drebegen` setup, the `Dragmounth` / `Akserion` / `Ghettan` / `Bhua Rock` / `Jolarion` castle lane, the raw stack/status mutations, the two `Rules_SyncArmyFactStrength` handoffs, the prisoner/fund writes, and the post-init camera override preserved
+  - `mapK8` / case `7` is now materialized in recovered C with its four `Rules_RetractTreasureFact` calls, the `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, and the raw slot-byte mutation loops preserved, while still omitting any post-castle `BUILDING_RECORD(...)` patchups or post-init camera override because asm does too
   - retained standalone probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
 - Adjacent blocked widening:
   - the broader-rules-contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
   - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` is still deferred
   - the next retained widening is no longer `sub_40D330` / `sub_44C2A0`; those now reuse `MiniMap_CreateSurface` / `Game_InitPlayerViewState`
-  - the next retained widening is the remaining `Scenario_LoadMissionByIndex` case tranche, starting with `mapK8`
+  - the next retained widening is the remaining `Scenario_LoadMissionByIndex` case tranche, starting with `mapK9`
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)
