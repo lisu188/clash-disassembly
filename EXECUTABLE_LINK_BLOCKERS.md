@@ -10,7 +10,7 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - `clash95_cpp_regen` now links as a parallel executable by reusing the existing bootstrap wedge and adding the C++ core.
 - A direct `gcc` link of `clash95.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` does not yet produce a runnable executable.
 
-## Latest authentic runtime frontier - 2026-04-10
+## Latest authentic runtime frontier - 2026-04-11
 
 - The live executable blocker is no longer row-resource preload, row draws, or save-path formatting.
 - The contained SDL-backed executable still keeps the authentic pre-confirm load-menu corridor alive:
@@ -23,7 +23,7 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The next honest contained runtime blocker is therefore not local save I/O or SDL. It is the missing authentic class/bload prelude needed before the save replay can instantiate `oddzial`.
 - A direct contained `PlayGame` handoff remains deferred because rooting `PlayGame` from `bootstrap_main.c` immediately reopens the much wider gameplay/session unresolved link surface.
 
-## Latest startup-prelude narrowing - 2026-04-10
+## Latest startup-prelude narrowing - 2026-04-11
 
 - The retained `CLIPS`/startup-prelude surface moved again this batch:
   - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` still link successfully
@@ -33,9 +33,9 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The retained mission-loader surface moved again this batch:
   - `Scenario_LoadMissionByIndexAndPlay` now passes the real selector into `Scenario_LoadMissionByIndex`
   - `createUnit` and `createCastle` now match the original sentinel-terminated unit-list contract closely enough to transcribe real mission setup calls
-  - the menu-reachable `sub_460360` cases now recovered in `clash95.c` are case `0` (`k_mapa1l.map`), case `1` (`k_mapa2l.map`), case `2` (`k_mapa3l.map`), case `3` (`k_mapa4j.map`), case `10` (`p_mapa1z.map`), and case `11` (`p_mapa2z.map`)
+  - the menu-reachable `sub_460360` cases now recovered in `clash95.c` are case `0` (`k_mapa1l.map`), case `1` (`k_mapa2l.map`), case `2` (`k_mapa3l.map`), case `3` (`k_mapa4j.map`), case `4` (`k_mapa5j.map`), case `10` (`p_mapa1z.map`), and case `11` (`p_mapa2z.map`)
   - the first recovered cases now call the already-recovered local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
-- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or `mapK2` / case `1`. `mapK3` / case `2` is now materialized too, including its player-2 intelligence write, explicit `Treg Rock` post-castle garrison refresh, and post-initializer camera override, and `mapK4` / case `3` is now materialized too, including its four-player setup, `Ughuata` post-castle `BUILDING_RECORD(+18) = -1`, `BUILDING_RECORD(+438) = 300`, and its raw stack mutation bands. The next remaining mission-loader case tranche inside `Scenario_LoadMissionByIndex` now starts with `mapK5` / case `4`.
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or `mapK2` / case `1`. `mapK3` / case `2` is now materialized too, including its player-2 intelligence write, explicit `Treg Rock` post-castle garrison refresh, and post-initializer camera override, `mapK4` / case `3` is now materialized too, including its four-player setup, `Ughuata` post-castle `BUILDING_RECORD(+18) = -1`, `BUILDING_RECORD(+438) = 300`, and its raw stack mutation bands, and `mapK5` / case `4` is now materialized too, including its exact `Totaweon` / `Hopenberg` setup, raw garrison/prisoner writes, and `Rules_LogAssignedCastleFact(..., 4)` tail. The next remaining mission-loader case tranche inside `Scenario_LoadMissionByIndex` now starts with `mapK6` / case `5`.
 - Additional retained reduction notes from the latest pass:
   - `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their already-recovered local bodies instead of standing as duplicate retained export holes
   - the `sub_451E46` probe is still green, and the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`

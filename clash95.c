@@ -71833,6 +71833,56 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       sub_451EC0();
       Game_InitPlayerViewState();
       break;
+    case 4:
+      Map_LoadFromFile((int)"k_mapa5j.map");
+      ACTIVE_MISSION_INDEX = 4;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh II");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "McDonowan");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 41, 48, 0, 2, "Totaweon", 0x11u, 0x11, 0x11, 0x11, 0x21u, 0x10u, 0x10u, 0x10u, -1);
+      createUnit(a2, 41, 50, 0, 1u, 1, 0x10u, 0, 0, 0, 0, 0, 0x11u, -1);
+      createUnit(a2, 42, 50, 0, 5u, 0, 0, 0, 0, 0, 0, 0, 2, -1);
+      createUnit(a2, 43, 50, 0, 9u, 9, 0x10u, 3, 3, 0x22u, 0xFu, 0xFu, -1);
+      castle_index = createCastle(a2, 56, 69, 1, 1, "Hopenberg", 0x11u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_WORD *)(building_record + 18) = 9;
+      createUnit(a2, 56, 71, 1, 9u, 9, -1);
+      stack_index = *(unsigned __int16 *)(gameData + 567716);
+      Building_UnitGetInto(stack_index, castle_index, 56, 71, a2);
+      for ( slot_index = 0; slot_index < 12; ++slot_index )
+        *(_BYTE *)(building_record + 31 * slot_index + 30) |= 3u;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 1)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 1)) = 0;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 55, 71, 1, 2u, 2, 1, 1, 9, 0x11u, -1);
+      createUnit(a2, 56, 71, 1, 9u, 9, 9, 5, 5, 5, 1, 1, 0x11u, -1);
+      createUnit(a2, 57, 71, 1, 5u, 5, 5, 5, 5, 0x11u, -1);
+      castle_index = createCastle(a2, 32, 36, 2, 2, "Jolarion", 0x11u, 9, 9, 0, 0, 0, 1, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      castle_index = createCastle(a2, 50, 23, 2, 2, "Akserion", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 50, 25, 2, 9u, 0xFu, 5, -1);
+      castle_index = createCastle(a2, 25, 48, 2, 2, "Bodeon", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 25, 50, 2, 9u, 9, 9, 9, 5, 5, -1);
+      sub_451EC0();
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - 0x8000, 4);
+      Game_InitPlayerViewState();
+      break;
     case 10:
       Map_LoadFromFile((int)"p_mapa1z.map");
       ACTIVE_MISSION_INDEX = 10;

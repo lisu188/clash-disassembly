@@ -1,5 +1,15 @@
 # Agent Log
 
+## 2026-04-11
+
+- Reloaded the durable repo memory, validated the three green build targets plus the retained `PlayGame_Dispatch` probe, and resumed the retained mission-loader widening from `mapK5` / case `4`.
+- Reused the read-heavy subagents on `mapK5`; the SDL/runtime/class explorers all reconfirmed the frontier stayed in recovered-C mission setup, while the fresh explorer pinned the exact `mapK5` body and caught the absence of minimap writes plus the exact early `Totaweon` spawn arguments.
+- Materialized `mapK5` / case `4` directly in `Scenario_LoadMissionByIndex`, including the three-player setup, the `Totaweon` / `Hopenberg` spawn lists, the `BUILDING_RECORD(castle_index) + 18 = 9` preseed, the `Building_UnitGetInto` handoff through the raw stack word at `gameData + 0x8A9A4`, the 12-slot raw OR loop, the prisoner-slot writes, and the final `Rules_LogAssignedCastleFact(*(WORD *)(gameData + 0x8A9A0) - 0x8000, 4)` tail.
+- Re-ran the three green build targets, the retained `PlayGame_Dispatch` link probe, and the exact traced contained post-confirm menu probes, and confirmed the protected split is unchanged:
+  - broader rules still reaches `class-lookup-no-table name=oddzial`
+  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
+- Advanced the durable memory from `mapK5` to `mapK6`, so the next `continue` resumes from case `5` instead of re-auditing the already-recovered `k_mapa5j.map` lane.
+
 ## 2026-04-09
 
 - Reloaded the durable repo memory and corrected the stale assumption that the live frontier was still `gfx\\backgr1.s32`; the latest durable state was already inside the contained load-menu corridor.

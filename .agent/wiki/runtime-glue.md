@@ -12,8 +12,9 @@
   - `mapK2` keeps its explicit post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and manual camera override in recovered C rather than wrapper glue
   - `mapK3` keeps its player-2 intelligence write, its `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same manual camera override in recovered C rather than wrapper glue
   - `mapK4` keeps its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three raw stack/status mutation bands in recovered C rather than wrapper glue
+  - `mapK5` keeps its exact `Totaweon` / `Hopenberg` spawn lists, the `BUILDING_RECORD(castle_index) + 18 = 9` garrison preseed, the `Building_UnitGetInto` handoff, the 12-slot raw OR loop, the prisoner-slot writes, and the `Rules_LogAssignedCastleFact(..., 4)` tail in recovered C rather than wrapper glue
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - the missing authentic class/bload prelude before `oddzial`
-  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK5`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapK6`

@@ -14,7 +14,7 @@ This note covers the current host seam used by the executable-regeneration track
   - `timeGetTime`
 - The implementation is still intentionally Win32-shaped at the call boundary. It is not yet a body-level SDL-native platform rewrite.
 
-## Latest executable note - 2026-04-10
+## Latest executable note - 2026-04-11
 
 - The current load-menu and post-confirm blockers still sit below SDL.
 - The latest contained traces show:
@@ -30,8 +30,8 @@ This note covers the current host seam used by the executable-regeneration track
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
   - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
-  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the first recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
-  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and `mapK2`, `mapK3`, and `mapK4` are recovered in-place; the next retained blocker is the remaining mission-case recovery itself, starting with `mapK5` / case `4`
+  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
+  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and `mapK2`, `mapK3`, `mapK4`, and `mapK5` are recovered in-place; the next retained blocker is the remaining mission-case recovery itself, starting with `mapK6` / case `5`
 
 ## Stable host behavior already present
 

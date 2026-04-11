@@ -18,5 +18,9 @@
   - Reason: the asm proves those mutations are real mission setup, but their slot/stack field semantics are not named yet; folding them into guessed helpers would be drift.
 - Preserve the absence of a `mapK4` post-initializer camera override.
   - Reason: unlike `mapK2` and `mapK3`, the `mapK4` asm returns directly after `Game_InitPlayerViewState`, so copying the earlier camera override pattern would be incorrect.
+- Preserve the absence of minimap-visibility writes in `mapK5`.
+  - Reason: the exact `mapK5` asm writes only player-activation and human-controller fields before the name copies; carrying over minimap writes from earlier scenarios would be cargo cult.
+- Keep the `mapK5` `Hopenberg` garrison/prisoner block explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the `BUILDING_RECORD(castle_index) + 18 = 9` preseed, the `Building_UnitGetInto` handoff, the 12-slot raw OR loop, and the prisoner-slot writes are scenario-local setup that occurs after `createCastle`, not generic helper behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

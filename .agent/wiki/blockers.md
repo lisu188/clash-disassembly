@@ -8,5 +8,5 @@
 - The retained broader executable-regeneration slice is now blocked separately at a later front:
   - `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` all link and stay alive under `timeout 1s`
   - the mission-loader helper-name gap `sub_40D330` / `sub_44C2A0` is gone
-  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK5` / case `4`
+  - the next honest retained blocker is the remaining `Scenario_LoadMissionByIndex` case recovery, starting with `mapK6` / case `5`
 - The contained probe still prints `load-menu-skip-save-slot-draw` after the row draws, so the deeper save-slot repaint/name lane is still deferred.
