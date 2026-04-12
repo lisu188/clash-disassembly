@@ -58,5 +58,31 @@
   - Reason: the asm proves the case writes one raw byte per slot on the stack at `TILE_INDEX(25, 28)`, but the exact field semantics are still unresolved; wrapping it now would be drift.
 - Preserve the absence of any post-castle `BUILDING_RECORD(...)`, `Building_OnGarrisonChange`, `Rules_LogAssigned*`, or post-`Game_InitPlayerViewState` camera writes in case `13` / `p_mapa4l.map`.
   - Reason: unlike neighboring missions, the case-13 asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying extra building or camera patterns into it would be incorrect.
+- Keep case `14` / `p_mapa5l.map`'s `Weghetown` post-castle `BUILDING_RECORD(+430) & 0xF000` clear explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the mission masks the low 12 bits immediately after `createCastle`, but the underlying building-word field is still not named tightly enough to hide that write behind a guessed helper.
+- Keep case `14` / `p_mapa5l.map`'s `Timbran` garrison and prisoner lane explicit in the case body.
+  - Reason: the asm proves the `BUILDING_RECORD(+18) = 0xF` write, the forced `Building_UnitGetInto` handoff, the raw 12-slot `& 0xFC | 1` loop, the two `Building_OnGarrisonChange` calls, and the three prisoner-slot writes are scenario-local follow-ons after `createCastle`, not generic helper behavior.
+- Keep case `14` / `p_mapa5l.map`'s `Fraggmeon` / `Eufurhon` `BUILDING_RECORD(+438) += 200` boosts and the final `Rules_LogAssignedCastleFact(..., 14)` tail explicit in recovered C, and preserve the absence of any post-init camera override.
+  - Reason: the asm proves those are the only post-castle treasury/rules side effects after the player-3 unit lane, and the case returns directly after `sub_451EC0` and `Game_InitPlayerViewState`.
+- Keep case `15` / `p_mapa6l.map`'s mission-local `gameData + 140021` byte clear and player-4 intelligence write explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm performs both writes before any name copies or castle/unit setup, and collapsing them into reset helpers would erase case-local mission behavior.
+- Keep case `15` / `p_mapa6l.map`'s `Defambrion`, `Ghih Up`, and `Guluali` building-field writes explicit in the case body.
+  - Reason: the asm proves those `BUILDING_RECORD(+438)` boosts/assignments and the `Ghih Up` `BUILDING_RECORD(+18) = -1` write are scenario-local follow-ons after `createCastle`, not generic castle setup.
+- Keep case `15` / `p_mapa6l.map`'s `Rules_LogAssignedPlayerFact(4, 15)` tail explicit and preserve the absence of any post-init camera override.
+  - Reason: unlike neighboring cases that end on assigned-castle facts or camera resets, the asm returns directly after the player-fact log and `Game_InitPlayerViewState`, so copying another tail pattern into it would be incorrect.
+- Keep case `16` / `p_mapa7j.map`'s `Gwadat` `BUILDING_RECORD(+444)` masked write explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the mission patches only that castle record with a masked low-bit write immediately after `createCastle`, but the exact field semantics are still unresolved; wrapping it now would be drift.
+- Keep case `16` / `p_mapa7j.map`'s four raw slot-state mutation bands explicit in the case body.
+  - Reason: the asm proves the case performs two `|= 3` loops on the stacks at `TILE_INDEX(26, 40)` and `TILE_INDEX(63, 86)`, one `|= 3` loop at `TILE_INDEX(61, 43)`, and a split `|= 3` then `& 0xFC | 2` sequence at `TILE_INDEX(65, 44)`; naming those byte lanes prematurely would be guesswork.
+- Keep case `16` / `p_mapa7j.map`'s post-`Game_InitPlayerViewState` player-1 camera override explicit and preserve the absence of any `Rules_LogAssigned*` tail.
+  - Reason: the asm writes `MAP_VIEW_LEFT/TOP` and `PLAYER_CAMERA_LEFT/TOP(1)` after the shared initializer and then returns directly, so pulling those writes into a helper or inventing a rules-log tail would erase real case-local behavior.
+- Keep case `17` / `p_mapa8j.map`'s four `Rules_RetractTreasureFact` calls explicit at the top of the case body.
+  - Reason: the asm proves the mission retracts those four treasure facts before any player reset or spawn work, so relocating them into generic reset code would change mission setup semantics.
+- Keep case `17` / `p_mapa8j.map`'s `Dark Town` `BUILDING_RECORD(+438) -= 100` cut explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm follows that `createCastle` call with a direct dword subtraction before the first player-1 unit lane, so it is a scenario-local building mutation, not generic castle setup.
+- Keep case `17` / `p_mapa8j.map`'s four raw slot-state mutation bands explicit in the case body.
+  - Reason: the asm proves the case performs two `|= 3` loops at `TILE_INDEX(26, 40)` and `TILE_INDEX(63, 86)`, one `|= 3` loop at `TILE_INDEX(61, 43)`, and a split `|= 3` then `& 0xFC | 2` sequence at `TILE_INDEX(65, 44)`; naming those byte lanes prematurely would be guesswork.
+- Preserve the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in case `17` / `p_mapa8j.map`.
+  - Reason: unlike neighboring cases with explicit camera or rules-log tails, the asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying those patterns into case `17` would be incorrect.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.

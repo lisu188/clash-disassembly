@@ -3116,6 +3116,50 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 163 - Recover case 16 p_mapa7j.map mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `16` / `p_mapa7j.map` to case `17` / `p_mapa8j.map`
+- Blockers removed this batch:
+  - case `16` / `p_mapa7j.map` is now materialized in recovered C
+  - the retained next blocker moved from case `16` / `p_mapa7j.map` to case `17` / `p_mapa8j.map`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, `11`, `12`, `13`, `14`, `15`, and `16`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `loc_45E650` / `aP_mapa7j_map`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `createUnit`, `createCastle`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`
+  - subagent corroboration confirmed the live work stayed in recovered-C mission setup below SDL, compat, and `src_cpp`
+- Ambiguous candidates deferred:
+  - case `16`'s `Gwadat` `BUILDING_RECORD(+444)` masked write remains an explicit case-local byte mutation
+  - case `16`'s four raw slot-state mutation bands remain explicit case-local byte writes
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 164 - Recover case 17 p_mapa8j.map mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `17` / `p_mapa8j.map` to case `18` / `p_mapa9j.map`
+- Blockers removed this batch:
+  - case `17` / `p_mapa8j.map` is now materialized in recovered C
+  - the retained next blocker moved from case `17` / `p_mapa8j.map` to case `18` / `p_mapa9j.map`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0` through `17`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `loc_45EA40` / `aP_mapa8j_map`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `Rules_RetractTreasureFact`, `createUnit`, `createCastle`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`
+  - subagent corroboration confirmed the live work stayed in recovered-C mission setup below SDL, compat, and `src_cpp`
+- Ambiguous candidates deferred:
+  - case `17`'s `Dark Town` `BUILDING_RECORD(+438) -= 100` cut remains an explicit case-local dword mutation
+  - case `17`'s four raw slot-state mutation bands remain explicit case-local byte writes
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
 ## Batch 157 - Recover mapK9 mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` to `mapK10`
@@ -3199,6 +3243,50 @@
   - `/mnt/c/clash` corroboration for `p_mapa4l.map`, `Leryks X`, `Glazur`, `Sir John`, and `Ungught`
 - Ambiguous candidates deferred:
   - the random per-slot byte writes on the stack at `TILE_INDEX(25, 28)` remain an explicit case-local loop rather than a renamed gameplay helper
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 161 - Recover case 14 `p_mapa5l.map` mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `14` / `p_mapa5l.map` to case `15` / `p_mapa6l.map`
+- Blockers removed this batch:
+  - case `14` / `p_mapa5l.map` is now materialized in recovered C
+  - the retained next blocker moved from case `14` / `p_mapa5l.map` to case `15` / `p_mapa6l.map`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0` through `14`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` case `14` / `p_mapa5l.map`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`, `Building_UnitGetInto`, `Building_OnGarrisonChange`, and `Rules_LogAssignedCastleFact`
+  - `/mnt/c/clash` corroboration for `p_mapa5l.map`, `Uraken`, `Wodar`, `Weghetown`, `Timbran`, `Fraggmeon`, and `Eufurhon`
+- Ambiguous candidates deferred:
+  - the raw 12-slot `& 0xFC | 1` Timbran garrison loop remains an explicit case-local byte mutation rather than a renamed helper
+  - the `Weghetown` post-castle `BUILDING_RECORD(+430) & 0xF000` clear remains an explicit field-preserving mask until the underlying building word is named more tightly
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 162 - Recover case 15 `p_mapa6l.map` mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `15` / `p_mapa6l.map` to case `16` / `p_mapa7j.map`
+- Blockers removed this batch:
+  - case `15` / `p_mapa6l.map` is now materialized in recovered C
+  - the retained next blocker moved from case `15` / `p_mapa6l.map` to case `16` / `p_mapa7j.map`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0` through `15`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` case `15` / `p_mapa6l.map`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`, `createUnit`, `createCastle`, and `Rules_LogAssignedPlayerFact`
+  - `/mnt/c/clash` corroboration for `p_mapa6l.map`, `Frederic`, `Sir James`, `Agordeh`, `Defambrion`, `Ghondur`, `Histone`, `Girock`, `Ghih Up`, and `Guluali`
+- Ambiguous candidates deferred:
+  - the mission-local `*(_BYTE *)(gameData + 140021) = 0` clear remains a raw byte write until the field is named more tightly
+  - the Ghondur / Histone / Girock / Ghih Up / Guluali unit lanes remain explicit case-local setup rather than guessed helper abstractions
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
 ## Batch 126 - Recover mapK8 mission loader case

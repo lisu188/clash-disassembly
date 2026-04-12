@@ -4,24 +4,13 @@
   - `Render_LoadResourceSprite_v4`, `Render_LoadResourceSprite_v3`, and `sub_40BC00` still carry the contained row-resource / row-draw lane
   - `sub_4163F0`, `sub_4443C0`, and `sub_4443D0` still carry the world-map-init and save-path corridor
   - the retained parser/export, math, and low-risk file/runtime bands remain settled
-  - no new compat wrappers were added this batch
-- Current batch result:
+  - no new compat wrappers were added in the latest mission-loader batch
+- Mission-loader note:
   - the old retained helper-name gap `sub_40D330` / `sub_44C2A0` is gone from the mission-loader slice
-  - the first recovered mission cases now call the existing local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly
-  - `mapP2` / case `11`, `mapK2` / case `1`, `mapK3` / case `2`, and `mapK4` / case `3` are now materialized in recovered C without broadening `compat/decomp_runtime_stubs.c`
-  - `mapK2` keeps its explicit post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and manual camera override in recovered C rather than wrapper glue
-  - `mapK3` keeps its player-2 intelligence write, its `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same manual camera override in recovered C rather than wrapper glue
-  - `mapK4` keeps its `Ughuata` post-castle `BUILDING_RECORD(castle_index) + 18 = -1`, `BUILDING_RECORD(castle_index) + 438 = 300`, and its three raw stack/status mutation bands in recovered C rather than wrapper glue
-  - `mapK5` keeps its exact `Totaweon` / `Hopenberg` spawn lists, the `BUILDING_RECORD(castle_index) + 18 = 9` garrison preseed, the `Building_UnitGetInto` handoff, the 12-slot raw OR loop, the prisoner-slot writes, and the `Rules_LogAssignedCastleFact(..., 4)` tail in recovered C rather than wrapper glue
-  - `mapK6` keeps its mission-local flag clear, the localized `Furd` / `Dulimam` versus `Wetus` / `Riludius` name fork, the player-2 religion flag clear, the player-1 minimap reveal, the player-1..3 intelligence writes, the `Defambrion` `BUILDING_RECORD(+438) += 200`, `Katha Gha` `BUILDING_RECORD(+438) = 1000`, `Ghih Up` `BUILDING_RECORD(+18) = -1`, the raw 10-slot status OR loop through `gameData + 564880`, and the `Rules_LogAssignedPlayerFact(3, 5)` tail in recovered C rather than wrapper glue
-  - `mapK7` keeps its `Alan` / `Walter` / `Drebegen` setup, the player-2 intelligence write, the player-1 and player-2 religion clears, the `Dragmounth` / `Akserion` / `Ghettan` / `Bhua Rock` / `Jolarion` castle lane, the single-stack raw byte OR, the 10-slot raw status OR loop through `TILE_INDEX(74, 71)`, the two `Rules_SyncArmyFactStrength` handoffs, the `Ghettan` prisoner-slot write, the `Bhua Rock` / `Jolarion` `BUILDING_RECORD(+438)` writes, and the post-init camera override in recovered C rather than wrapper glue
-  - `mapK8` keeps its four `Rules_RetractTreasureFact` calls, the `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, the three raw slot-byte OR loops, and the final `& 0xFC | 2` slot-byte carry loop in recovered C rather than wrapper glue
-  - `mapK9` keeps its player-0 queen relationship writes, the `Alan` / `Sir James` / `Ruryk` / `Riludius` setup, the `Totaweon` / `Gordmouth` / `Timbran` / `Ghettan` / `Hopenberg` / `Katha Gha` / `Werneom` castle lane, the `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut, the three raw slot-byte OR loops, the two direct `& 0xFC | 2` slot-byte rewrites, and the absence of a post-init camera override in recovered C rather than wrapper glue
-  - `mapK10` keeps its five-player `Alan` / `Twogor` / `Drebegen` / `Mieszko` / `Chester` setup, the `Gorendberg` / `Timbran` / `Ghettan` / `Bhua Rock` / `Katha Gha` / `Stormus` / `Guluali` castle lane, the direct `BUILDING_RECORD(+438)` cuts/assignments/addition, the masked `BUILDING_RECORD(+444)` writes, and the absence of any raw stack loops or post-init camera override in recovered C rather than wrapper glue
-  - `mapP3` keeps its `Raylin` / `Gaalaad` setup, the player-1 human/minimap/religion writes, the player-1 no-castle unit lane, the `Sarturia` `BUILDING_RECORD(+438) = 5000` write, and the post-init camera override back onto player `1` in recovered C rather than wrapper glue
-  - case `13` / `p_mapa4l.map` keeps its `Raylin` / `Leryks X` / `Glazur` / `Sir John` setup, the single `Ungught` castle lane, the random per-slot `Rng_RandRange(5, 20)` loop at `TILE_INDEX(25, 28)`, the three no-castle unit lanes for players `2..4`, and the absence of any post-castle building writes or post-init camera override in recovered C rather than wrapper glue
+  - the recovered cases now call the existing local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly
+  - case `17` / `p_mapa8j.map` stays entirely in recovered C: mission-local byte clear, four `Rules_RetractTreasureFact` calls, `Raylin` / `Lord Ruwe` / `McGregor` / `Crowley`, the `Dark Town` `BUILDING_RECORD(+438) -= 100` cut, the four raw slot-state mutation bands, and no post-init camera override or `Rules_LogAssigned*` tail
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - the missing authentic class/bload prelude before `oddzial`
-  - the remaining `Scenario_LoadMissionByIndex` cases, starting with case `14` / `p_mapa5l.map`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with case `18` / `p_mapa9j.map`

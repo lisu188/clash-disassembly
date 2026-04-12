@@ -10,7 +10,7 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - `clash95_cpp_regen` already links by reusing `bootstrap_main.c`, the bootstrap object library, and the new C++ core.
 - A direct raw link still fails on missing `main` and a large unresolved startup/runtime surface.
 
-## Immediate frontier update - 2026-04-11
+## Immediate frontier update - 2026-04-12
 
 - Keep the current contained executable wedge pointed at the authentic load-menu path.
 - Treat the row-resource, row-draw, world-map-init, and save-path formatting/helper bands as repaired enough to focus on the missing class/bload prelude rather than local UI or I/O scars.
@@ -19,7 +19,7 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
   2. keeping the broader-rules-contained probe reproducible with the real post-confirm command shape so it still distinguishes the last directly traced `class-lookup-no-table name=oddzial` failure from the earlier `symbol-lookup-missing-table MAIN` failure
   3. keeping the now-green retained startup-prelude probes (`sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`) honest while continuing the broader front-end handoff into the remaining mission-loader cases
   4. keeping the recovered retained mission-loader slice honest: thread the selector into `Scenario_LoadMissionByIndex`, use real sentinel-terminated `createUnit` / `createCastle` setup lists, and recover the menu-reachable cases directly from asm/map evidence rather than pushing mission setup into SDL, compat, or `src_cpp`
-  5. continue the retained mission-loader widening at the remaining case tranche starting with case `14` / `p_mapa5l.map`, now that `mapK2` / case `1`, `mapK3` / case `2`, `mapK4` / case `3`, `mapK5` / case `4`, `mapK6` / case `5`, `mapK7` / case `6`, `mapK8` / case `7`, `mapK9` / case `8`, `mapK10` / case `9`, `mapP3` / case `12`, and case `13` / `p_mapa4l.map` are materialized in recovered C with their extra post-castle, raw stack, prisoner, camera-side, localized-name, queen-state, treasury-cut, treasure-retraction, direct building-byte, no-castle-lane, and random slot-byte side effects still explicit
+  5. continue the retained mission-loader widening at the remaining case tranche starting with case `18` / `p_mapa9j.map`, now that `mapK2` / case `1`, `mapK3` / case `2`, `mapK4` / case `3`, `mapK5` / case `4`, `mapK6` / case `5`, `mapK7` / case `6`, `mapK8` / case `7`, `mapK9` / case `8`, `mapK10` / case `9`, `mapP3` / case `12`, case `13` / `p_mapa4l.map`, case `14` / `p_mapa5l.map`, case `15` / `p_mapa6l.map`, case `16` / `p_mapa7j.map`, and case `17` / `p_mapa8j.map` are materialized in recovered C with their extra post-castle, raw stack, prisoner, camera-side, localized-name, queen-state, treasury-cut, treasure-retraction, direct building-byte, no-castle-lane, random slot-byte, and player-view side effects still explicit
   6. only then widen further into the post-save `PlayGame` handoff after `sub_444490`
   7. keep the deferred save-slot repaint/name lane that still prints `load-menu-skip-save-slot-draw` separate from the retained mission-loader work
 - Do not broaden into unrelated runtime wrappers past the already-settled `unknown_libname_2` / `MoveFileA` / `sscanf_` / `fgets_` band until those two adjacent startup fronts are characterized.
@@ -29,8 +29,8 @@ This is the minimal honest plan for the next `clash95_cpp_regen` step.
 - The retained `PlayGame_Dispatch` alias/data band is now reduced again:
   - front-end cursor/overlay descriptors, the first world-map/UI export aliases, the unit-slot and placement helpers, the garrison/UI aliases, the battle/port/queen debug string slab, and the port reinforcement tables are no longer live retained blockers
   - `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are now also reduced in recovered C
-  - the surviving mission-loader frontier was then narrowed again: `Scenario_LoadMissionByIndexAndPlay` now threads the selector, `createUnit` / `createCastle` now accept the original sentinel-terminated unit lists, and the menu-reachable `sub_460360` cases (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`) are recovered in place
-  - the next retained widening should stay on the remaining mission-loader case arms, starting with case `14` / `p_mapa5l.map`, not on a new SDL seam or `src_cpp` abstraction
+  - the surviving mission-loader frontier was then narrowed again: `Scenario_LoadMissionByIndexAndPlay` now threads the selector, `createUnit` / `createCastle` now accept the original sentinel-terminated unit lists, and the menu-reachable `sub_460360` cases through case `17` are recovered in place
+  - the next retained widening should stay on the remaining mission-loader case arms, starting with case `18` / `p_mapa9j.map`, not on a new SDL seam or `src_cpp` abstraction
 
 ## What is already stable enough to build on
 

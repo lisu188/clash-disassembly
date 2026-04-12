@@ -72364,6 +72364,270 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       sub_451EC0();
       Game_InitPlayerViewState();
       break;
+    case 14:
+      Map_LoadFromFile((int)"p_mapa5l.map");
+      ACTIVE_MISSION_INDEX = 14;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Uraken");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 50, 3, 1, 2, "Weghetown", 0x11u, 0x21u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      building_word = *(_WORD *)(building_record + 430);
+      *(_WORD *)(building_record + 430) = building_word & 0xF000;
+      createUnit(a2, 50, 5, 1, 5u, 1, 1, 0x10u, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 51, 5, 1, 5u, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 52, 5, 1, 9u, 9, 0x10u, 3, 3, 0x21u, -1);
+      createUnit(a2, 49, 5, 1, 0x11u, 0x11u, 0x10u, 1, 1, -1);
+      castle_index = createCastle(a2, 52, 24, 2, 2, "Timbran", 0x11u, 0xFu, 0xFu, 0xFu, 0xFu, 0xFu, 9, 9, 9, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_WORD *)(building_record + 18) = 0xF;
+      createUnit(a2, 52, 26, 2, 1u, 1, 9, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(52, 26));
+      Building_UnitGetInto(stack_index, castle_index, 52, 26, a2);
+      for ( slot_index = 0; slot_index < 12; ++slot_index )
+        *(_BYTE *)(building_record + 31 * slot_index + 30) =
+          (*(_BYTE *)(building_record + 31 * slot_index + 30) & 0xFC) | 1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 1)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 1)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 2)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 2)) = 0;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 64, 4, 2, 2u, 2, 2, 1, 1, 9, -1);
+      createUnit(a2, 50, 27, 2, 9u, 9, 9, 9, 5, 5, 5, 1, 1, 1, -1);
+      castle_index = createCastle(a2, 39, 18, 3, 2, "Fraggmeon", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      castle_index = createCastle(a2, 17, 34, 3, 2, "Eufurhon", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createUnit(a2, 39, 20, 3, 9u, 0xFu, 5, -1);
+      createUnit(a2, 40, 20, 3, 0, 0, 0, 1, -1);
+      createUnit(a2, 16, 36, 3, 1u, 1, 1, 1, 2, -1);
+      createUnit(a2, 17, 36, 3, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 18, 36, 3, 3u, 5, 0x10u, 0x10u, 1, 0, 0, -1);
+      createUnit(a2, 25, 4, 3, 9u, 9, 5, 5, -1);
+      sub_451EC0();
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(TILE_INDEX(52, 24)) - 0x8000, 14);
+      Game_InitPlayerViewState();
+      break;
+    case 15:
+      Map_LoadFromFile((int)"p_mapa6l.map");
+      ACTIVE_MISSION_INDEX = 15;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_AI_INTELLIGENCE(4) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Frederic");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Sir James");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 59, 9, 1, 2, "Defambrion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createCastle(a2, 50, 96, 1, 1, "Ghondur", 0x11u, -1);
+      createUnit(a2, 59, 11, 1, 2u, 2, 0x10u, 0x10u, 0, 0, 0, 0, 0x21u, -1);
+      createUnit(a2, 60, 11, 1, 5u, 5, 0, 0, 0, 1, 1, 3, 2, -1);
+      createUnit(a2, 61, 11, 1, 9u, 9, 0x10u, -1);
+      createUnit(a2, 49, 98, 1, 5u, 5, 0x1Du, 0x1Du, 0x10u, 0x10u, -1);
+      createUnit(a2, 50, 98, 1, 0x11u, 0x11u, 0x11u, 0x11u, 1, 1, -1);
+      createUnit(a2, 51, 98, 1, 1u, 1, 2, -1);
+      createCastle(a2, 86, 55, 2, 2, "Histone", 0x11u, -1);
+      createUnit(a2, 86, 57, 2, 2u, 2, 2, 2, 1, 1, 9, 9, -1);
+      createUnit(a2, 87, 57, 2, 5u, 5, -1);
+      createCastle(a2, 79, 2, 3, 2, "Girock", 0x11u, -1);
+      createUnit(a2, 78, 4, 3, 9u, 0xFu, 5, 0x21u, -1);
+      createUnit(a2, 79, 4, 3, 0, 0, 0, 1, -1);
+      createUnit(a2, 80, 4, 3, 1u, 1, 1, 1, -1);
+      createUnit(a2, 81, 4, 3, 0, 0, 0, 0, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 80, 1, 3, 9u, 9, 5, 5, -1);
+      castle_index = createCastle(a2, 48, 38, 4, 2, "Ghih Up", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 1000;
+      *(_WORD *)(building_record + 18) = -1;
+      createUnit(a2, 48, 40, 4, 0x15u, 0x15u, 0x15u, 0x15u, 2, -1);
+      createUnit(a2, 49, 40, 4, 2u, 2, 2, 2, 0x14u, 0x14u, 0x14u, 0x14u, -1);
+      createUnit(a2, 50, 40, 4, 0xAu, 0xAu, 0xAu, 0xAu, 5, 5, 0x17u, 0x17u, 0x17u, 0x17u, -1);
+      createUnit(a2, 48, 57, 4, 5u, 0x10u, 0x10u, 0, 0, -1);
+      createUnit(a2, 18, 75, 4, 0x14u, 0x14u, 0x14u, 0xBu, 0xBu, -1);
+      createUnit(a2, 37, 6, 4, 1u, 1, 1, 1, 1, 1, 0xFu, 0xFu, -1);
+      castle_index = createCastle(a2, 19, 32, 4, 2, "Guluali", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
+      createUnit(a2, 19, 34, 4, 2u, 2, 2, 9, 9, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Rules_LogAssignedPlayerFact(4, 15);
+      Game_InitPlayerViewState();
+      break;
+    case 16:
+      Map_LoadFromFile((int)"p_mapa7j.map");
+      ACTIVE_MISSION_INDEX = 16;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 1;
+      PLAYER_AI_INTELLIGENCE(3) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Kalev");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Ianos");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 21, 35, 1, 0x21u, -1);
+      createUnit(a2, 20, 36, 1, 1u, 1, -1);
+      createUnit(a2, 22, 36, 1, 0xEu, -1);
+      createUnit(a2, 22, 36, 1, 0xEu, 0x11u, -1);
+      castle_index = createCastle(a2, 91, 43, 2, 2, "Gwadat", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 3;
+      createCastle(a2, 54, 74, 2, 2, "Cantown", 0x11u, -1);
+      createUnit(a2, 91, 45, 2, 1u, 1, 9, -1);
+      createUnit(a2, 92, 45, 2, 9u, 9, 5, 1, 1, -1);
+      createUnit(a2, 93, 45, 2, 0, 0, 0, 0, 5, 8, -1);
+      createUnit(a2, 54, 76, 2, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, -1);
+      createCastle(a2, 35, 3, 2, 3, "Thubeos", 0x11u, -1);
+      createCastle(a2, 66, 45, 2, 3, "Akserion", 0x11u, -1);
+      createUnit(a2, 35, 5, 3, 0xFu, 0x10u, 1, 1, 1, 8, 0x21u, -1);
+      createUnit(a2, 36, 5, 3, 0, 0, 0, 0, 1, 1, 2, 2, -1);
+      createUnit(a2, 66, 47, 3, 1u, 1, 1, 1, 2, 2, 2, 5, 5, 5, -1);
+      createUnit(a2, 67, 47, 3, 0, 0, 0, 0, 0, 0, 0x10u, -1);
+      createUnit(a2, 21, 28, 3, 5u, 5, 0x10u, 0x10u, 1, 1, 0x11u, -1);
+      createUnit(a2, 28, 76, 3, 9u, 9, 9, 9, 5, 4, 4, 2, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(26, 40));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 60, 43, 3, 1u, 1, 1, 2, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 61, 43, 3, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(61, 43));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 62, 43, 3, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 63, 43, 3, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 62, 86, 4, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 63, 86, 4, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 56, 79, 4, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 65, 44, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(65, 44));
+      for ( slot_index = 2; slot_index < 4; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 2u;
+      }
+      createUnit(a2, 58, 63, 4, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      MAP_VIEW_LEFT = 17;
+      PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
+      MAP_VIEW_TOP = 32;
+      PLAYER_CAMERA_TOP(1) = MAP_VIEW_TOP;
+      break;
+    case 17:
+      Map_LoadFromFile((int)"p_mapa8j.map");
+      ACTIVE_MISSION_INDEX = 17;
+      *(_BYTE *)(gameData + 140021) = 0;
+      Rules_RetractTreasureFact(50, 34, a2);
+      Rules_RetractTreasureFact(51, 73, a2);
+      Rules_RetractTreasureFact(77, 34, a2);
+      Rules_RetractTreasureFact(24, 49, a2);
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_AI_INTELLIGENCE(3) = 2;
+      PLAYER_AI_INTELLIGENCE(4) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Ruwe");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "McGregor");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Crowley");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 11, 45, 1, 2, "Stormus", 0x11u, -1);
+      castle_index = createCastle(a2, 70, 20, 1, 1, "Dark Town", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createUnit(a2, 12, 47, 1, 0xFu, 0xCu, 0, 0, 1, 1, -1);
+      createUnit(a2, 22, 71, 1, 9u, 9, 0xCu, 5, 1, 1, -1);
+      createUnit(a2, 72, 22, 1, 0, 0, 0xDu, 0xBu, 9, -1);
+      createCastle(a2, 32, 5, 2, 2, "Treg Rock", 0x11u, -1);
+      createCastle(a2, 42, 27, 2, 2, "Bodeon", 0x11u, -1);
+      createUnit(a2, 32, 7, 2, 1u, 1, 9, 0xFu, 0xFu, -1);
+      createUnit(a2, 33, 7, 2, 0xAu, 0xAu, 6, 2, 2, 0x15u, 0x17u, -1);
+      createUnit(a2, 34, 7, 2, 0x17u, 0x17u, 0x17u, 0x17u, 0xFu, 0xFu, 0xEu, -1);
+      createCastle(a2, 25, 38, 3, 2, "Girock", 0x11u, -1);
+      createCastle(a2, 61, 41, 3, 1, "Bodeon", 0x11u, -1);
+      createUnit(a2, 25, 40, 3, 0xFu, 0x10u, 1, 1, 1, 6, 0x21u, -1);
+      createUnit(a2, 26, 40, 3, 0x1Du, 0x1Du, 1, 1, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(26, 40));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 60, 43, 3, 1u, 1, 1, 1, 2, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 61, 43, 3, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(61, 43));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 62, 43, 3, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 63, 43, 3, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 62, 86, 4, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 63, 86, 4, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 56, 79, 4, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 65, 44, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(65, 44));
+      for ( slot_index = 2; slot_index < 4; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 2u;
+      }
+      createUnit(a2, 58, 63, 4, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
     default:
       break;
   }
