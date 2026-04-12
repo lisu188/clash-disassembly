@@ -18,8 +18,10 @@
   - `mapK8` keeps its four `Rules_RetractTreasureFact` calls, the `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, the three raw slot-byte OR loops, and the final `& 0xFC | 2` slot-byte carry loop in recovered C rather than wrapper glue
   - `mapK9` keeps its player-0 queen relationship writes, the `Alan` / `Sir James` / `Ruryk` / `Riludius` setup, the `Totaweon` / `Gordmouth` / `Timbran` / `Ghettan` / `Hopenberg` / `Katha Gha` / `Werneom` castle lane, the `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut, the three raw slot-byte OR loops, the two direct `& 0xFC | 2` slot-byte rewrites, and the absence of a post-init camera override in recovered C rather than wrapper glue
   - `mapK10` keeps its five-player `Alan` / `Twogor` / `Drebegen` / `Mieszko` / `Chester` setup, the `Gorendberg` / `Timbran` / `Ghettan` / `Bhua Rock` / `Katha Gha` / `Stormus` / `Guluali` castle lane, the direct `BUILDING_RECORD(+438)` cuts/assignments/addition, the masked `BUILDING_RECORD(+444)` writes, and the absence of any raw stack loops or post-init camera override in recovered C rather than wrapper glue
+  - `mapP3` keeps its `Raylin` / `Gaalaad` setup, the player-1 human/minimap/religion writes, the player-1 no-castle unit lane, the `Sarturia` `BUILDING_RECORD(+438) = 5000` write, and the post-init camera override back onto player `1` in recovered C rather than wrapper glue
+  - case `13` / `p_mapa4l.map` keeps its `Raylin` / `Leryks X` / `Glazur` / `Sir John` setup, the single `Ungught` castle lane, the random per-slot `Rng_RandRange(5, 20)` loop at `TILE_INDEX(25, 28)`, the three no-castle unit lanes for players `2..4`, and the absence of any post-castle building writes or post-init camera override in recovered C rather than wrapper glue
 - Still quarantined / unresolved:
   - deeper `_wcpp_*` runtime families
   - thread/process helpers
   - the missing authentic class/bload prelude before `oddzial`
-  - the remaining `Scenario_LoadMissionByIndex` cases, starting with `mapP3`
+  - the remaining `Scenario_LoadMissionByIndex` cases, starting with case `14` / `p_mapa5l.map`

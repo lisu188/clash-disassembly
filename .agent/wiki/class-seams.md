@@ -9,4 +9,4 @@
   - the current broader contained crash is still at `parse-make-instance-before-class-lookup` on `oddzial`
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now all link
   - the old retained `sub_40D330` / `sub_44C2A0` gap was confirmed again to be pure recovered-C mission/minimap/view-state work, not `src_cpp`
-  - `mapK2`, `mapK3`, `mapK4`, `mapK5`, `mapK6`, `mapK7`, `mapK8`, `mapK9`, and `mapK10` were also confirmed and recovered as pure recovered-C mission setup; the next honest class/runtime widening is still not a signal to move behavior into `src_cpp`, and the live retained blocker is now the remaining mission-case recovery starting with `mapP3`
+  - `mapK2`, `mapK3`, `mapK4`, `mapK5`, `mapK6`, `mapK7`, `mapK8`, `mapK9`, `mapK10`, `mapP3`, and case `13` / `p_mapa4l.map` were also confirmed and recovered as pure recovered-C mission setup; the next honest class/runtime widening is still not a signal to move behavior into `src_cpp`, and the live retained blocker is now the remaining mission-case recovery starting with case `14` / `p_mapa5l.map`

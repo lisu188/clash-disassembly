@@ -61,7 +61,7 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the mission-loader front was then reduced in recovered C too:
     - `createUnit` and `createCastle` now use real varargs so the original sentinel-terminated unit lists no longer depend on x86 stack accidents
     - `Scenario_LoadMissionByIndexAndPlay` now threads the selector into `Scenario_LoadMissionByIndex`
-    - the menu-reachable mission-loader cases (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`) are materialized directly from asm
+    - the menu-reachable mission-loader cases (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, `11`, `12`, and `13`) are materialized directly from asm
     - the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
     - `mapK2` / case `1` also preserves its case-local post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and the manual camera override after `Game_InitPlayerViewState`
     - `mapK3` / case `2` now also preserves its case-local player-2 intelligence write, the `Treg Rock` post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff, and the same manual camera override after `Game_InitPlayerViewState`
@@ -69,13 +69,15 @@ This file classifies the current runtime/quarantine surface for executable regen
     - `mapK8` / case `7` now also preserves its four `Rules_RetractTreasureFact` calls, its `Alan` / `Uraken` / `Wodar` / `Richard V` setup, the eight-castle lane, and its raw slot-byte mutation loops in recovered C instead of wrapper glue
     - `mapK9` / case `8` now also preserves its player-0 queen relationship writes, its `Alan` / `Sir James` / `Ruryk` / `Riludius` setup, the `Totaweon` / `Gordmouth` / `Timbran` / `Ghettan` / `Hopenberg` / `Katha Gha` / `Werneom` castle lane, the `Gordmouth` `BUILDING_RECORD(+438) -= 100` cut, the three raw slot-byte OR loops, and the two direct `& 0xFC | 2` slot-byte rewrites in recovered C instead of wrapper glue
     - `mapK10` / case `9` now also preserves its five-player `Alan` / `Twogor` / `Drebegen` / `Mieszko` / `Chester` setup, the `Gorendberg` / `Timbran` / `Ghettan` / `Bhua Rock` / `Katha Gha` / `Stormus` / `Guluali` castle lane, the case-local `BUILDING_RECORD(+438)` cuts/assignments/addition, and the direct `BUILDING_RECORD(+444)` masked writes in recovered C instead of wrapper glue
-  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with `mapP3` / case `12`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - `mapP3` / case `12` now also preserves its `Raylin` / `Gaalaad` setup, the player-1 human/minimap/religion writes, the player-1 no-castle unit lane, the `Sarturia` `BUILDING_RECORD(+438) = 5000` write, and the post-`Game_InitPlayerViewState` camera override back onto player `1` in recovered C instead of wrapper glue
+    - case `13` / `p_mapa4l.map` now also preserves its `Raylin` / `Leryks X` / `Glazur` / `Sir John` setup, the single `Ungught` castle lane, the random per-slot `Rng_RandRange(5, 20)` loop on the stack at `TILE_INDEX(25, 28)`, and the absence of post-castle building writes or a post-init camera override in recovered C instead of wrapper glue
+  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with case `14` / `p_mapa5l.map`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
-- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through `mapK10`
+- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through case `13` / `p_mapa4l.map`
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

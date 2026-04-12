@@ -72284,6 +72284,86 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       sub_451EC0();
       Game_InitPlayerViewState();
       break;
+    case 12:
+      Map_LoadFromFile((int)"p_mapa3z.map");
+      ACTIVE_MISSION_INDEX = 12;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 70, 81, 1, 9u, -1);
+      createUnit(a2, 71, 81, 1, 0, 0, 0, 1, 1, 1, 0x10u, -1);
+      createUnit(a2, 69, 82, 1, 5u, 5, 0xFu, 0xFu, 0, 0, -1);
+      createUnit(a2, 70, 82, 1, 0x10u, 0x10u, -1);
+      createUnit(a2, 71, 83, 1, 0xDu, -1);
+      castle_index = createCastle(a2, 59, 14, 2, 2, "Sarturia", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 5000;
+      createUnit(a2, 67, 36, 2, 0xFu, 1, 1, 1, 1, -1);
+      createUnit(a2, 25, 85, 2, 0, 0, 0, 0, 0, 0xFu, 0xFu, 1u, -1);
+      createUnit(a2, 45, 73, 2, 5u, 5, 9, 9, 0x10u, 0x10u, -1);
+      createUnit(a2, 69, 91, 2, 9u, 9, 9, 9, 9, -1);
+      createUnit(a2, 77, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 36, 52, 2, 1u, 1, 1, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 41, 49, 2, 9u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      createUnit(a2, 62, 94, 2, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      MAP_VIEW_LEFT = 67;
+      PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
+      MAP_VIEW_TOP = 77;
+      PLAYER_CAMERA_TOP(1) = MAP_VIEW_TOP;
+      break;
+    case 13:
+      Map_LoadFromFile((int)"p_mapa4l.map");
+      ACTIVE_MISSION_INDEX = 13;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Leryks X");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Glazur");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Sir John");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 23, 26, 1, 2, "Ungught", 0x11u, -1);
+      createUnit(a2, 22, 25, 1, 1u, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 25, 25, 1, 0x10u, -1);
+      createUnit(a2, 22, 28, 1, 9u, 9, 9, 3, 3, 1, 1, -1);
+      createUnit(a2, 25, 28, 1, 2u, 2, 2, 0xAu, 0xAu, 0xAu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(25, 28));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) = Rng_RandRange(5, 20);
+      createUnit(a2, 26, 28, 1, 0x11u, 0x11, 0x11, 0x22u, -1);
+      createUnit(a2, 7, 15, 2, 0xFu, 0xF, 1, 1, -1);
+      createUnit(a2, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 26, 47, 2, 5u, 5, 5, 0x10u, 0x10u, 0, 0, 0, -1);
+      createUnit(a2, 18, 38, 2, 9u, 9, 0xFu, 0xFu, 0, 0, 0, -1);
+      createUnit(a2, 35, 18, 2, 0, 0, 0, 0, 0, 9u, -1);
+      createUnit(a2, 33, 35, 3, 1u, 1, 1, -1);
+      createUnit(a2, 45, 29, 3, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 10, 33, 3, 5u, 0x10u, 0x10u, 1, 1, 0, 0, -1);
+      createUnit(a2, 26, 45, 3, 9u, 9, 9, 5, 5, 0x10u, -1);
+      createUnit(a2, 48, 8, 4, 0xFu, 1, 0x10u, 1, 9, 0, 3, 3, -1);
+      createUnit(a2, 21, 10, 4, 0, 0, 0, 3, 3, 3, 0xCu, -1);
+      createUnit(a2, 35, 17, 4, 9u, 9, 3, 3, 3, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
     default:
       break;
   }

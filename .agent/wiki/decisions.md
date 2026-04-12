@@ -50,5 +50,13 @@
   - Reason: the asm proves those low-bit writes occur only on `Gorendberg`, `Timbran`, and `Guluali`, but the exact field semantics are still unresolved; wrapping them now would be drift.
 - Preserve the absence of any `mapK10` raw stack-loop band or post-`Game_InitPlayerViewState` camera override.
   - Reason: unlike `mapK8` and `mapK9`, this case's mission-local mutations are castle-record writes rather than stack loops, and the asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`.
+- Keep the `mapP3` player-1 no-castle lane, the `Sarturia` `BUILDING_RECORD(+438) = 5000` write, and the post-`Game_InitPlayerViewState` camera override explicit in the case body.
+  - Reason: asm proves those effects are scenario-local follow-ons outside generic helper behavior, and collapsing them into `createCastle`, `Game_InitPlayerViewState`, SDL, or wrapper glue would erase real mission semantics.
+- Do not promote an explicit player-2 religion write in `mapP3` without tighter asm proof.
+  - Reason: the reviewed case-12 asm excerpt proved player-1 `PLAYER_RELIGION_FLAG(1) = 0`, but did not yet prove an equivalent explicit player-2 write, so keeping player 2 untouched is safer than cargo-culting symmetry into the recovered mission setup.
+- Keep case `13` / `p_mapa4l.map`'s random per-slot `Rng_RandRange(5, 20)` loop explicit in `Scenario_LoadMissionByIndex`.
+  - Reason: the asm proves the case writes one raw byte per slot on the stack at `TILE_INDEX(25, 28)`, but the exact field semantics are still unresolved; wrapping it now would be drift.
+- Preserve the absence of any post-castle `BUILDING_RECORD(...)`, `Building_OnGarrisonChange`, `Rules_LogAssigned*`, or post-`Game_InitPlayerViewState` camera writes in case `13` / `p_mapa4l.map`.
+  - Reason: unlike neighboring missions, the case-13 asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying extra building or camera patterns into it would be incorrect.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
