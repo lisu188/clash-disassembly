@@ -3116,6 +3116,49 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
+- Blockers removed this batch:
+  - case `18` / `p_mapa9j.map` is now materialized in recovered C
+  - the retained next blocker moved from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: `Scenario_LoadMissionByIndex` now carries cases `0` through `18`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `loc_45EDD0` / `aP_mapa9j_map`
+  - `clash95.c` `Scenario_LoadMissionByIndex`, `createUnit`, `createCastle`, `MiniMap_CreateSurface`, `Game_InitPlayerViewState`
+  - subagent corroboration confirmed the live work stayed in recovered-C mission setup below SDL, compat, and `src_cpp`
+- Ambiguous candidates deferred:
+  - case `18`'s `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut and `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost remain explicit case-local dword mutations
+  - case `18`'s raw slot-state mutation bands remain explicit case-local byte writes on the `+28` lane
+  - case `18` preserves the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail
+
+## Batch 166 - Corroborate the existing case 19 p_map10z.map lane
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while moving the retained executable-regeneration frontier off the now-complete `Scenario_LoadMissionByIndex` switch and into the post-mission gameplay/session surface
+- Blockers removed this batch:
+  - corroborated that the existing case `19` / `p_map10z.map` body in `clash95.c` already matches the retained `mapP10` asm lane closely enough to treat the full 20-case mission switch as covered
+  - the retained blocker is no longer another mission-loader case arm
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the menu-reachable 20-case `Scenario_LoadMissionByIndex` switch is now fully covered in recovered C
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` `mapP10` / `aP_map10z_map`
+  - `clash95.c` `Scenario_LoadMissionByIndex` case `19` and `Scenario_LoadMissionByIndexAndPlay`
+  - boot-path corroboration that the contained blocker remains the class/bload prelude, not another mission-loader arm
+- Ambiguous candidates deferred:
+  - mission-dependent UI switches should not be deduplicated just because `sub_460360` reuses `mapP9` / `mapP10`-style bodies
+  - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
 ## Batch 163 - Recover case 16 p_mapa7j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `16` / `p_mapa7j.map` to case `17` / `p_mapa8j.map`

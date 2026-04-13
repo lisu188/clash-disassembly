@@ -75,13 +75,15 @@ This file classifies the current runtime/quarantine surface for executable regen
     - case `15` / `p_mapa6l.map` now also preserves its mission-local byte clear, the four-player `Raylin` / `Frederic` / `Sir James` / `Agordeh` setup, the player-4 intelligence write, the `Defambrion` `BUILDING_RECORD(+438) += 200` boost, the `Ghih Up` `BUILDING_RECORD(+438) = 1000` and `BUILDING_RECORD(+18) = -1` writes, the `Guluali` `BUILDING_RECORD(+438) = 2000` write, and the final `Rules_LogAssignedPlayerFact(4, 15)` tail in recovered C instead of wrapper glue
     - case `16` / `p_mapa7j.map` now also preserves its mission-local byte clear, the three-player `Raylin` / `Kalev` / `Ianos` setup, the `Gwadat` `BUILDING_RECORD(+444)` masked write, the four raw slot-state mutation bands, the post-`Game_InitPlayerViewState` player-1 camera override, and the absence of any `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
     - case `17` / `p_mapa8j.map` now also preserves its mission-local byte clear, the four `Rules_RetractTreasureFact` calls, the four-player `Raylin` / `Lord Ruwe` / `McGregor` / `Crowley` setup, the `Dark Town` `BUILDING_RECORD(+438) -= 100` cut, the four raw slot-state mutation bands, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
-  - the next retained executable-regeneration blocker is now the remaining mission-loader case recovery itself, starting with case `18` / `p_mapa9j.map`, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+    - case `18` / `p_mapa9j.map` now also preserves its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the direct raw slot-state writes on the `+28` lane, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
+    - case `19` / `p_map10z.map` was already present and is now corroborated against asm, so the full 20-case mission-loader switch remains recovered C rather than wrapper glue
+  - the next retained executable-regeneration blocker is now the broader gameplay/session surface beyond the fully covered mission-loader switch, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
 - `_wcpp_*` startup helpers
 - thread/process runtime helpers
 - control-flow scars
-- the remaining `Scenario_LoadMissionByIndex` / `sub_460360` cases beyond the now-recovered menu-entry slice through case `17` / `p_mapa8j.map`
+- the broader gameplay/session surface beyond the now-covered 20-case `Scenario_LoadMissionByIndex` / `sub_460360` switch
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”

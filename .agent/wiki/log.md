@@ -1,5 +1,14 @@
 # Agent Log
 
+## 2026-04-13
+
+- Reloaded the durable repo memory in the required order, checked the newest `.codex-loop` files again, and resumed directly from the stored retained mission-loader frontier at case `18` / `p_mapa9j.map`.
+- Reused the read-heavy subagents immediately on case `18`; runtime, SDL, and class seam checks all reconfirmed the live work stayed in recovered-C mission setup below compat, SDL, and `src_cpp`, while the boot-path evidence pinned the exact `p_mapa9j.map` arm and its neighboring `case 19` / `p_map10z.map` lane.
+- Recovered case `18` / `p_mapa9j.map` directly in `Scenario_LoadMissionByIndex`, including the five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the raw slot-state mutation bands on the `+28` lane, and the preserved absence of any post-init camera override or `Rules_LogAssigned*` tail.
+- Re-ran `cmake -S . -B build`, the three green build targets, the retained `PlayGame_Dispatch` standalone probe, and the exact traced contained post-confirm menu probes after case `18`; all green targets stayed green, the retained probe still links and exits `124`, and the contained runtime split is still `oddzial` with broader rules versus `MAIN` without them.
+- Corroborated that the already-present case `19` / `p_map10z.map` body matches the retained `mapP10` asm lane closely enough to treat the whole 20-case mission switch as covered, while also confirming that mission-conditional UI switches should not be deduplicated just because the switch reuses adjacent mission aliases.
+- Advanced the durable memory off the mission-loader switch entirely, so the next `continue` resumes from the broader gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame` instead of re-auditing the already-covered `p_mapa9j.map` or `p_map10z.map` lanes.
+
 ## 2026-04-12
 
 - Reloaded the durable repo memory in the required order, re-read the newest `.codex-loop` entries, and resumed directly from the stored retained mission-loader frontier at case `14` / `p_mapa5l.map`.

@@ -84,5 +84,9 @@
   - Reason: the asm proves the case performs two `|= 3` loops at `TILE_INDEX(26, 40)` and `TILE_INDEX(63, 86)`, one `|= 3` loop at `TILE_INDEX(61, 43)`, and a split `|= 3` then `& 0xFC | 2` sequence at `TILE_INDEX(65, 44)`; naming those byte lanes prematurely would be guesswork.
 - Preserve the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in case `17` / `p_mapa8j.map`.
   - Reason: unlike neighboring cases with explicit camera or rules-log tails, the asm returns directly after `sub_451EC0` and `Game_InitPlayerViewState`, so copying those patterns into case `17` would be incorrect.
+- Keep case `18` / `p_mapa9j.map`'s `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, and six raw slot-state mutation bands explicit in the case body.
+  - Reason: the asm performs those treasury and slot-byte writes directly around scenario-local spawns, and the exact slot-lane semantics are still unresolved.
+- Do not collapse the `case 18` / `case 19` mission bodies into shared helpers just because other switches reuse adjacent mission aliases.
+  - Reason: `sub_460360` reuses the existing `mapP9` / `mapP10`-style lanes, but mission-conditional UI switches still diverge for missions `18` and `19`, so deduplicating now could erase real mission-specific behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
