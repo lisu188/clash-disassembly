@@ -3116,6 +3116,53 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 157 - Repair post-mission PlayGame handoff and prologue
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while narrowing the first retained gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+- Blockers removed this batch:
+  - `Scenario_LoadMissionByIndexAndPlay` no longer forwards decompiler-garbage save-state locals into `PlayGame`
+  - `PlayGame` no longer enters the retained surface with uninitialized player-reveal scan counters or wrong background/tree resource names
+  - the retained surface is now explicit through a direct `PlayGame` standalone probe, not only `PlayGame_Dispatch`
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the direct retained `PlayGame` standalone probe now also links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: direct retained `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame` probes now all link and stay alive under `timeout 1s`
+  - the next honest retained gameplay/session symbol is the human-turn entry `WorldMap_RunHumanTurnLoop`, with the AI-side `sub_451F70` branch still secondary
+- Key evidence used:
+  - `clash95.asm` `sub_460370` / `PlayGame`
+  - `clash95.c` `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+  - retained `PlayGame_Dispatch` and `PlayGame` standalone link probes
+- Ambiguous candidates deferred:
+  - the `PlayGame` replay tail still carries usercall/register ambiguity around the recursive `sub_444490 -> PlayGame` handoff
+  - the next retained reduction should start with `WorldMap_RunHumanTurnLoop`, not by broadening SDL, compat wrappers, or `src_cpp`
+
+## Batch 167 - Reduce the first WorldMap_RunHumanTurnLoop slice
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while reducing the broader retained gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired `Scenario_LoadMissionByIndexAndPlay` / `PlayGame` handoff
+- Blockers removed this batch:
+  - `WorldMap_RunHumanTurnLoop` no longer depends on fabricated entry locals for its first turn-exit flags; the zero-init prologue now matches the asm-backed `sub_4459A0(0, a3)` plus `dword_5202FC = 0` / `dword_5202F8 = 0` sequence
+  - the mission-success exit no longer forwards a fabricated local into `sub_4623C0`; the recovered C now restores the exact asm-backed `sub_4623C0("arama1", "kon_por1")` tail after `sub_404F20(&unk_51D4C0, 20)`
+  - the retained blocker moved deeper inside `WorldMap_RunHumanTurnLoop` instead of remaining at the `PlayGame` handoff
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` and `PlayGame` standalone probes still link and exit `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the startup-prelude chain is green through direct retained `PlayGame`, and the first human-turn loop slice now matches asm on its zero-init entry flags plus its `arama1` / `kon_por1` mission-success video tail
+- Key evidence used:
+  - `clash95.asm` `sub_40B0A0` / `PlayGame`
+  - `clash95.map` `PlayGame`, `nextPlayer`, and the nearby world-map/UI helper names
+  - `clash95.c` `WorldMap_RunHumanTurnLoop`, `PlayGame`, and `Scenario_LoadMissionByIndexAndPlay`
+  - retained `PlayGame_Dispatch` and `PlayGame` standalone link probes
+- Ambiguous candidates deferred:
+  - the deeper `WorldMap_RunHumanTurnLoop` body still carries usercall/register-loss scars around `DD_Pump`, key-hold loops, render-hook debug plumbing, and the queued-path AP compare
+  - the adjacent AI branch `sub_451F70` remains secondary until the first human-turn path is narrower
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
@@ -6483,3 +6530,27 @@
 - Ambiguous candidates deferred:
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 157 - Reduce retained human-turn loop call-shape band
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+- Blockers removed this batch:
+  - the first deeper `WorldMap_RunHumanTurnLoop` register-loss band now matches asm on its zero-arg loop-entry helper shapes
+  - the held-key `DD_Pump` loops for right/left facing rotation no longer depend on decompiler-garbage temporaries
+  - the queued-path action-point check now uses the required AP from the last move-track step instead of a fabricated pointer cast
+  - the debug render-hook/resource-handle toggle now saves and restores both live values explicitly
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - retained standalone probes for `PlayGame` and `WorldMap_RunHumanTurnLoop` stay alive under `timeout 1s`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe now stays alive after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_40B0A0` (`WorldMap_RunHumanTurnLoop`)
+  - `clash95.c` around the first human-turn branch after `PlayGame`
+  - retained probes in `clash95_cpp_regen`
+- Ambiguous candidates deferred:
+  - the remaining deeper `WorldMap_RunHumanTurnLoop` body still has unresolved register-loss/usercall scars beyond the repaired entry/call-shape band
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening

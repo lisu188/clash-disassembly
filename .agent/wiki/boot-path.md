@@ -18,6 +18,10 @@
   - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
   - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
   - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
-  - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
-  - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
-  - the remaining retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch
+  - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch -> PlayGame`
+  - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame` now link and stay alive under `timeout 1s`
+  - the remaining retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch, still centered on `WorldMap_RunHumanTurnLoop` but now past its zero-init entry and `arama1` / `kon_por1` mission-success tail
+
+## Latest Update
+- Retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and `WorldMap_RunHumanTurnLoop` now all stay alive under `timeout 1s`.
+- The remaining retained widening is still the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch, but it is now past the zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block.

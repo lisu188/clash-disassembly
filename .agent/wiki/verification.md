@@ -10,12 +10,15 @@
   - exit `124`
 - `timeout 1s build/bin/clash95_cpp_regen`
   - exit `124`
-- `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -o /tmp/clash95_playgame_dispatch_probe -Wl,--undefined=PlayGame_Dispatch build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_cpp_regen.dir/src_cpp/startup/cpp_regen_link_anchor.cpp.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a -lSDL2 -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - links successfully
+  - exit `124`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -o /tmp/clash95_playgame_probe -Wl,--undefined=PlayGame build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_cpp_regen.dir/src_cpp/startup/cpp_regen_link_anchor.cpp.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a -lSDL2 -lm && timeout 1s /tmp/clash95_playgame_probe'`
   - links successfully
   - exit `124`
 - Retained mission-loader status:
   - `Scenario_LoadMissionByIndex` now carries all 20 switch arms, cases `0` through `19`, in recovered C
-  - the next retained frontier is the gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+  - the next retained frontier is the deeper `WorldMap_RunHumanTurnLoop` surface after the repaired `Scenario_LoadMissionByIndexAndPlay` / `PlayGame` handoff, beginning from the remaining lost-register/usercall scars inside that loop
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - exit `124`
   - logs `class-lookup-no-table name=oddzial`
@@ -30,3 +33,9 @@
   - passed
 - `git diff --check`
   - passed
+
+## Latest Update
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- Retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening starts after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block

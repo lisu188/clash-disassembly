@@ -14,7 +14,7 @@ This note covers the current host seam used by the executable-regeneration track
   - `timeGetTime`
 - The implementation is still intentionally Win32-shaped at the call boundary. It is not yet a body-level SDL-native platform rewrite.
 
-## Latest executable note - 2026-04-12
+## Latest executable note - 2026-04-13
 
 - The current load-menu and post-confirm blockers still sit below SDL.
 - The latest contained traces show:
@@ -30,8 +30,10 @@ This note covers the current host seam used by the executable-regeneration track
   - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
   - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
   - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - the direct retained `PlayGame` probe now also links and stays alive under `timeout 1s`
   - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
-  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and the full menu-reachable 20-case `Scenario_LoadMissionByIndex` switch is covered in recovered C without touching `platform_sdl_runtime.c`; the next retained blocker is the broader gameplay/session surface after that switch, not SDL
+  - the first `WorldMap_RunHumanTurnLoop` zero-init and `arama1` / `kon_por1` mission-success repairs also landed entirely in recovered C without touching `platform_sdl_runtime.c`
+  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and the full menu-reachable 20-case `Scenario_LoadMissionByIndex` switch is covered in recovered C without touching `platform_sdl_runtime.c`; the next retained blocker is the deeper `WorldMap_RunHumanTurnLoop` gameplay/session surface after that switch, not SDL
 
 ## Stable host behavior already present
 
@@ -78,3 +80,8 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 2. Continue moving only host-only helpers into the seam.
 3. Avoid pushing gameplay/runtime semantics into `platform_sdl_runtime.c`.
 4. Revisit event translation only after the executable path is stable enough to compare runtime behavior.
+
+## Latest retained non-SDL evidence
+- The latest `WorldMap_RunHumanTurnLoop` call-shape repairs also landed entirely in recovered C without touching `platform_sdl_runtime.c`.
+- The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
+- The next retained blocker remains below SDL inside the deeper `WorldMap_RunHumanTurnLoop` gameplay/session surface after the repaired call-shape band.

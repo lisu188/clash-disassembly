@@ -16,7 +16,7 @@ This file tracks the parallel executable-regeneration path that grows out of the
 4. Add a parallel `clash95_cpp_regen` executable that starts from the existing bootstrap foothold and gradually absorbs more authentic startup/runtime responsibility.
 5. Keep the sidecar evidence artifacts synchronized with the live code.
 
-## Latest runtime update - 2026-04-12
+## Latest runtime update - 2026-04-13
 
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` are still green together after the latest diagnostic and retained-link reduction pass.
 - The durable memory was corrected against the live tree:
@@ -29,8 +29,12 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, the same corrected probe dies earlier with `symbol-lookup-missing-table MAIN`
   - this proves `sub_4725B0` / `sub_482260` / `sub_491B10` seed parser/symbol state but do not yet provide the authentic defclass/bload registry needed by the save replay
 - The retained executable-regeneration slice also moved this batch:
+  - `Scenario_LoadMissionByIndexAndPlay` now keeps its 27-byte campaign-state save/restore explicit and returns into `PlayGame` without the old fabricated `v5` / `v7` temporaries
+  - the `PlayGame` prologue now restores the asm-backed `backgr1.s32` / `backgr2.s32` / `backgr3.s32` and `treemas1.s32` / `treemas2.s32` / `treemas3.s32` loads, and its first player scan no longer depends on uninitialized counters
   - the retained rules math builtin band under `sub_4A3790` is still recovered in place in `clash95.c`, and the direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` remain green
   - the retained `PlayGame_Dispatch` probe no longer stops on the mission-loader helper-name gap: the first recovered cases now call the existing recovered helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, and the standalone retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - the direct retained `PlayGame` probe now also links and stays alive under `timeout 1s`
+  - the first `WorldMap_RunHumanTurnLoop` reduction is now in recovered C too: its zero-init entry flags and its mission-success `sub_4623C0("arama1", "kon_por1")` tail now match asm
   - the port reinforcement ring offsets and unit-type pool are now materialized directly from `clash95.asm`
   - the former `PlayGame_Dispatch` UI/data/runtime band is already reduced in recovered C: `UI_CheckDialogAccepted`, `UI_CheckConfirmQuit`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
   - the retained mission-loader lane also moved in recovered C:
@@ -54,11 +58,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
     - case `17` / `p_mapa8j.map` now also preserves its mission-local `gameData + 140021` byte clear, the four `Rules_RetractTreasureFact` calls, the four-player `Raylin` / `Lord Ruwe` / `McGregor` / `Crowley` setup, the `Dark Town` `BUILDING_RECORD(+438) -= 100` cut, the four raw slot-state mutation bands rooted at `TILE_INDEX(26, 40)`, `TILE_INDEX(61, 43)`, `TILE_INDEX(63, 86)`, and `TILE_INDEX(65, 44)`, and the preserved absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C
     - case `18` / `p_mapa9j.map` now also preserves its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the direct raw slot-state writes on the `+28` lane rooted at `TILE_INDEX(7, 7)`, `TILE_INDEX(78, 45)`, `TILE_INDEX(10, 51)`, `TILE_INDEX(49, 74)`, `TILE_INDEX(70, 80)`, and `TILE_INDEX(37, 29)`, and the preserved absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C
     - case `19` / `p_map10z.map` was already present and is now corroborated against `mapP10` in asm: five-player `Sir Mordus` / `Raylin` / `Galaghan` / `Longhand` / `Riludius`, the `Gorendberg` `BUILDING_RECORD(+438) -= 100` cut, the `Ghettan` `BUILDING_RECORD(+438) = 600` write, the `Stormus` / `Guluali` `BUILDING_RECORD(+438) += 300` boosts, and no post-`Game_InitPlayerViewState` camera override or raw slot-state loop
-  - the surviving retained blocker is no longer the old `sub_40D330` / `sub_44C2A0` helper band, the mission-loader `JUMPOUT`, or any of the 20 `Scenario_LoadMissionByIndex` case arms; it is now the broader gameplay/session widening beyond the now-complete mission switch
+  - the surviving retained blocker is no longer the old `sub_40D330` / `sub_44C2A0` helper band, the mission-loader `JUMPOUT`, or any of the 20 `Scenario_LoadMissionByIndex` case arms; it is now the deeper post-`PlayGame` human-turn widening inside `WorldMap_RunHumanTurnLoop` after the repaired entry/tail slice
 - The next executable-regeneration frontier remains split, not singular:
   - keep the contained load-menu wedge green while pursuing the missing authentic class/bload prelude, not a local save-load hack
   - separately continue the broader retained front-end widening now that the startup-prelude math/runtime band is green enough to probe through `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
-  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or any remaining `Scenario_LoadMissionByIndex` case slice; it is the next gameplay/session surface beyond the now-complete switch
+  - the next retained class/runtime target is no longer the slot/parser export band, the low-risk file/runtime wrapper band, the x87 math band, the earlier `PlayGame_Dispatch` UI/data/runtime band, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or any remaining `Scenario_LoadMissionByIndex` case slice; it is the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired entry/tail slice, and only then the adjacent AI branch `sub_451F70`
   - do not treat `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained `oddzial` miss
   - do not land a direct `PlayGame` reference in `bootstrap_main.c` yet; it immediately reopens the wider gameplay/session unresolved surface
 
@@ -104,3 +108,12 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - Resulting milestone:
   - `clash95_cpp_regen` now links and stays alive for the default one-second smoke run, matching the current bootstrap wedge
   - the deeper `--authentic-startup-prelude` path still faults with exit status `139`, so the next frontier remains the existing startup/runtime crash band rather than C++ target creation itself
+
+## Latest retained widening update
+- `WorldMap_RunHumanTurnLoop` now restores the next asm-backed call-shape band directly in recovered C:
+  - zero-arg `UI_ReadCheatString(0)`, `DD_Pump((int)dword_544CD8, 0)`, `sub_407B20(0, 0, 0)`, `WorldMap_RedrawFrame(0)`, and `WorldMap_HandleTopMenuBar(0, 0)` at loop entry
+  - held-key turn-left and turn-right loops that keep pumping `DD_Pump((int)dword_544CD8, 0)`
+  - the queued-path action-point gate from the high word of the last move-track step
+  - the escape/debug render block with explicit save/restore of the previous resource handle and `g_RenderHook`
+- The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
+- The next retained executable-regeneration blocker remains the deeper `WorldMap_RunHumanTurnLoop` loop body after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, and repaired call-shape band. The adjacent AI branch `sub_451F70` is still secondary.
