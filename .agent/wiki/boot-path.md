@@ -10,14 +10,14 @@
   - top-level `Load Game` click is stable
   - contained load-menu row resources load
   - contained load-menu row draws complete
-  - contained slot-hover selection exits with `selected_slot = 0`, `confirm = 0`, `screen = 5`
   - contained slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the live post-confirm save replay reaches `parse-make-instance-before-class-lookup`
-  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
+  - the real post-confirm probe lane needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` plus `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1` after slot selection
+  - the contained post-confirm save replay still reaches `load-menu-post-confirm-load-save`
+  - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
 - Next boot-path frontier:
   - keep the green pre-confirm load-menu wedge intact while supplying the missing authentic class/bload prelude for post-confirm save replay
-  - the explicit broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
-  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still dies earlier on `symbol-lookup-missing-table MAIN`
-  - the broader authentic startup-prelude chain is `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")`, and that chain should be widened separately from the contained post-save lane
-  - that retained chain is now reduced past `unk_508D50`, `sub_496643`, `ftime_`, `system_`, and the nearby `JUMPOUT` scars; the next honest blockers are the parser/class layer around `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, and adjacent parser/math helpers
-  - deferred save-slot repaint/name lane after the row draws
+  - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass table
+  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still dies earlier on `symbol-lookup-missing-table MAIN`
+  - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
+  - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
+  - the remaining retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch

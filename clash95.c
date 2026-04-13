@@ -19,6 +19,7 @@
 #define PLAYER_CAMERA_TOP_OFFSET 19
 #define PLAYER_MINIMAP_VISIBLE_OFFSET 23
 #define PLAYER_IS_HUMAN_OFFSET 27
+#define PLAYER_AI_INTELLIGENCE_OFFSET 31
 #define PLAYER_RELIGION_FLAG_OFFSET 39
 #define PLAYER_REVEALED_TILES_OFFSET 57
 #define PLAYER_REVEALED_TILE_ROW_BYTES 13
@@ -87,12 +88,16 @@
 #define g_PrisonerDeathByExhaustionTexts off_518D98
 #define g_QueenSonBirthTexts off_519350
 #define g_QueenDaughterBirthTexts off_51935C
+#define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
 #define g_ShrineTexts off_511B68
 #define g_EmptyShrineTexts off_511B74
 #define g_CultPlaceTexts off_511B80
 #define g_EmptyCultPlaceTexts off_511B8C
 #define g_CastleFoundationTexts off_511B98
 #define g_HiddenTreasureTexts off_511BA4
+#define unit_stats g_UnitTypeCorpseSpriteBaseIndex
+#define UI_CheckConfirmQuit sub_460270
+#define UI_CheckDialogAccepted sub_4602F0
 #define dword_532060 g_UnitBattleChargeModeActive
 #define dword_532074 g_UnitBattleChargeModeStartTick
 
@@ -109,6 +114,7 @@ extern int g_BootstrapSkipIntroAviPlayback;
 #define PLAYER_CAMERA_TOP(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_CAMERA_TOP_OFFSET))
 #define PLAYER_MINIMAP_VISIBLE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_MINIMAP_VISIBLE_OFFSET))
 #define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
+#define PLAYER_AI_INTELLIGENCE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_AI_INTELLIGENCE_OFFSET))
 #define MAP_WIDTH_TILES (*(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET))
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
@@ -236,8 +242,8 @@ int nullsub_24(void);
 int nullsub_29(void);
 int nullsub_30(void);
 int nullsub_32(void);
-int __cdecl sub_43D100(void);
-int __cdecl unknown_libname_3(void);
+_DWORD * sub_43D100(WCIsvListBase *this);
+_DWORD *unknown_libname_3(WCIsvListBase *this);
 int __fastcall nullsub_6(_DWORD, _DWORD);
 int nullsub_9(void);
 int nullsub_10(void);
@@ -322,14 +328,14 @@ extern char aWbste[];
 extern char aBagno7pa[];
 extern char aSwamp7ap[];
 extern char aSumpf[];
-extern _UNKNOWN unk_519920;
-extern _UNKNOWN unk_519858;
-extern _UNKNOWN unk_5198A8;
-extern _UNKNOWN unk_519830;
-extern _UNKNOWN unk_5198F8;
-extern _UNKNOWN unk_519718;
-extern _UNKNOWN unk_5198D0;
-extern _UNKNOWN unk_519880;
+extern int unk_519920[];
+extern int unk_519858[];
+extern int unk_5198A8[];
+extern int unk_519830[];
+extern int unk_5198F8[];
+extern int unk_519718[];
+extern int unk_5198D0[];
+extern int unk_519880[];
 extern int dword_5202B4;
 extern char *off_511B68[21];
 extern char *off_511B74[18];
@@ -342,7 +348,7 @@ extern char aError[];
 extern char aError_0[];
 extern int (*g_RenderHook)(int a1, char a2, DWORD a3);
 int __cdecl CSyncObject_Unlock(CSyncObject *this, __int32, __int32 *);
-extern unsigned char unit_stats[];
+extern char unit_stats[];
 extern char aNewBattle[];
 extern char aCalculatebattl[];
 extern char aJednostka1[];
@@ -382,7 +388,7 @@ extern char aBinaryLoadCann[];
 extern char aConstructsBeca[];
 extern char aSkipping[];
 extern char aBload[];
-extern char aJ_0[];
+char aJ_0[3] = "+j"; // weak
 extern char aResetdefglobal[];
 extern int dword_5146C8[];
 extern int (*off_5146E0[])();
@@ -408,7 +414,8 @@ extern char g_QueenBirthMessageBuffer[];
 _DWORD ExcString_AsCharPtr(void);
 int EFG_Format_();
 int _cnvs2d_();
-int ismbdprint_();
+int ismbdprint_(void *logical_name);
+int unknown_libname_13(int value);
 int __fastcall unknown_libname_7(int a1);
 int __fastcall unknown_libname_8(int a1);
 int __fastcall mblen_(int a1, int a2);
@@ -1480,8 +1487,8 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
 double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5);
 void  AI_EvaluateStrategicTargetAtTile(int a1, int a2, int a3, int a4, int a5, int a6, int *a7, int *a8, float *a9);
 int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5);
-signed int  createUnit(double, int, int, int, DWORD, int, int);
-int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, int a9);
+signed int  createUnit(double, int, int, int, DWORD, int, ...);
+int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, ...);
 int  sub_459ED0(int result, int a2, int a3, int a4);
 int  sub_45B3C0(int result, int a2);
 int  sub_45C000(int result, int a2);
@@ -1490,7 +1497,7 @@ int  sub_45E630(int result, int a2);
 int  sub_45F190(int result, int a2);
 BOOL  UI_CheckConfirmQuit(DWORD a1, double a2);
 int UI_CheckDialogAccepted();
-void Scenario_LoadMissionByIndex();
+void Scenario_LoadMissionByIndex(int mission_index, double a2);
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4);
 int __thiscall sub_4603F0(void *this);
 _DWORD * sub_460410(int a1, int a2);
@@ -1976,10 +1983,10 @@ int __fastcall sub_476322(_DWORD, _DWORD); // weak
 // int __fastcall strcmp_(_DWORD, _DWORD); weak
 // __int64 __thiscall _I8D(_DWORD); weak
 int __cdecl fread_();
-// int __fastcall WCIsvListBase_base_next(_DWORD, _DWORD); weak
-// int __cdecl WCIsvListBase_base_insert(_DWORD); weak
-// int __thiscall WCIsvListBase_base_sget(_DWORD); weak
-// void WCIsvListBase_base_destroy(WCIsvListBase * this); idb
+int __fastcall WCIsvListBase_base_next(int list_handle, int cursor_handle);
+int __fastcall WCIsvListBase_base_insert(int list_handle, int link_handle);
+int __fastcall WCIsvListBase_base_sget(int list_handle);
+void WCIsvListBase_base_destroy(WCIsvListBase *this);
 _DWORD WCIsvListBase_dtor(WCIsvListBase *this);
 int __thiscall nullsub_7(_DWORD); // weak
 void __thiscall sub_476A0C(void *this);
@@ -2432,8 +2439,8 @@ int  sub_484090(int result);
 _DWORD * sub_484130(_DWORD *result);
 void  sub_4841A0(_DWORD *a1, double a2);
 double __cdecl _CHP(_DWORD, _DWORD);
-// int __fastcall fgets_(_DWORD, _DWORD); weak
-// _DWORD sscanf_(_DWORD, _DWORD, ...); weak
+char *fgets_(char *buffer, int buffer_size, int stream_handle);
+int __cdecl sscanf_(const char *buffer, const char *format, ...);
 // int __cdecl ExcString_Ctor();
 // _DWORD __ExcString::__ExcString(__ExcString * this); idb
 // _DWORD __ExcString::operator char *(); weak
@@ -3247,7 +3254,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5);
 signed int  sub_4A52C0(int a1);
 int  sub_4A5350(const CHAR *a1, _DWORD *a2, _DWORD *a3, _BYTE *a4);
 int  sub_4A53B0(const CHAR *a1, _DWORD *a2, DWORD a3);
-_BYTE * sub_4A5460(int a1, int a2);
+_BYTE * sub_4A5460(int stream_handle, _BYTE *buffer, int buffer_size);
 signed int  sub_4A54C0(_BYTE *a1, _BYTE *a2);
 int  sub_4A5530(int result, int a2);
 char * sub_4A5570(char *a1);
@@ -3780,6 +3787,7 @@ int  sub_4BDDD0(int result);
 int sub_4BDDE0();
 BOOL sub_4BDE40();
 int  sub_4BDE50(int a1, int a2);
+int  sub_4BDF80(int a1, int a2);
 int  Lexer_ParseDeftemplate(int a1, int a2);
 int  sub_4BE310(int result, int a2, signed int a3);
 int  sub_4BE3B0(int a1, int a2);
@@ -5060,6 +5068,68 @@ char aHandlebattlere[42] = "HandleBattleResults(0x%08x,0x%08x,0x%08x)"; // weak
 char aHandlebattle_0[32] = "HandleBattleResult() - results:"; // weak
 char aBattle_0[10] = "BATTLE!!!"; // weak
 char aNewBattle_0[19] = "!!!!NEW BATTLE!!!!"; // weak
+char aNewBattle[] = "!!!!NEW BATTLE!!!!";
+char aCalculatebattl[] = "CalculateBattleResult(0x%08x,%d,%d,0x%08x,%d,%d,0x%08x, %d";
+char aJednostka1[] = "Jednostka 1:";
+char aJednostka2[] = "Jednostka 2:";
+char aAs1D[] = "as1 = %d";
+char aAs2D[] = "as2 = %d";
+char aSum_quantDAtt_[] = "sum_quant = %d, att_lost = %d";
+char aJednostkaZwyci[] = "Jednostka zwycieska:";
+char aUnitbattle_sho[] = "UnitBattle_Shot(%d,%d)";
+char aUnitbattle_s_0[] = "UnitBattle_ShotWall(%d,%d,%d)";
+char aBattleMurek_0[] = "battle\\murek";
+char aPort_getsupply[] = "Port_GetSupply()";
+char aQueen_newturn[] = "Queen_NewTurn()";
+char aP_posla[] = "p_posla";
+char aQueen_newturnN[] = "Queen_NewTurn() - nowy potomek";
+char aQueen_newturnK[] = "Queen_NewTurn() - krolowa ucieka";
+char aQueen_newtur_0[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_1[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_2[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newtur_3[] = "Queen_NewTurn() - krolowa ucieka - schemat %d";
+char aQueen_newturnZ[] = "Queen_NewTurn() - zachcianka %d";
+/*
+ * Recovered queen-event DGROUP slab around `g_QueenMsgBuf`, `off_519350`, and
+ * the four localized departure-text pointer tables. These are ASCII
+ * transliterations of the asm-backed localized strings so the retained
+ * PlayGame/UI path can link without moving the data into the SDL seam.
+ */
+char g_QueenDepartureEventMessageBuffer[300];
+char *g_QueenDepartureTexts[3] = {
+  "Krolowa rozgoryczona tym malzenstwem postanowila wrocic do swoich panienskich komnat.",
+  "The Queen, utterly dissatisfied with this marriage, decided to return to her maiden chamber.",
+  "Die Konigin ist bitter enttauscht von dieser Ehe und kehrt in ihre Jungfrauenkammer zuruck.",
+};
+char *g_QueenCastleTreasuryTheftTexts[3] = {
+  "Krolowa w napadzie furii spakowala kufry i uciekla, zabierajac skarbiec zamku %s.",
+  "In an act of fury the Queen packed her trunks and escaped, taking the treasury of %s.",
+  "In ihrem Zorn hat die Konigin gepackt und ist geflohen, wobei sie die Schatzkammer von %s mitnahm.",
+};
+char *g_QueenCastleWellPoisoningTexts[3] = {
+  "Twa malzonka miala dosc takiego traktowania i przed ucieczka zatrula studnie w zamku %s.",
+  "Your wife would not stand this kind of treatment and poisoned the wells in %s before fleeing.",
+  "Deine Frau war dieses Umgangs uberdrussig und vergiftete vor ihrer Flucht die Brunnen in %s.",
+};
+char *g_QueenCastleArsonTexts[3] = {
+  "Twa malzonka miala po dziurki w nosie Twego postepowania i przed odejsciem spalila %s.",
+  "Your wife, before parting, ordered her servants to set %s on fire.",
+  "Deine Frau konnte Dich nicht langer ertragen und liess %s vor ihrer Abreise in Brand setzen.",
+};
+char *off_519350[3] = {
+  "Panie, krolowa urodzila Ci syna!!!! Nadworni medrcy i weterani Twoich najwiekszych bitew ksztalca go tak, by mogl rychlo sluzyc Ci jako oddany dowodca.",
+  "Master, the Queen has given birth to your son!!! Your best scholars and knights train him in warcraft so that he can be your right hand soon.",
+  "Herr, die Konigin hat Dir einen Sohn geschenkt! Deine besten Lehrer und Ritter unterweisen ihn in der Kriegskunst, so dass er schon bald Deine rechte Hand sein wird.",
+};
+char *off_51935C[3] = {
+  "Krolu!!! Twa zona poczela corke. Nasi medrcy orzekli, ze odziedziczony po ojcu temperament i zacietosc matki uczynia z niej wspanialego dowodce Twych wojsk.",
+  "Master. Your wife has given birth to your daughter. Scholars say that she has inherited your strength of character and your temperament. Soon she will become a great officer of your troops.",
+  "Herr, die Konigin hat Dir eine Tochter geschenkt! Die Weisen sagen, sie habe Dein Temperament und Deine Charakterstarke geerbt. Schon bald wird sie eine grosse Anfuhrerin Eurer Truppen sein.",
+};
+/* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
+int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
+int g_PortReinforcementUnitTypePool[12] = { 0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17 };
+__int16 word_5191F0 = 30;
 char aSetrhS08x_8[14] = "SetRH %s=%08x"; // weak
 char aBattle_1[7] = "battle"; // weak
 char aNotEnoughMem_9[21] = "Not enough memory=%d"; // weak
@@ -8650,7 +8720,7 @@ int (*off_50F044)() = &sub_405C60; // weak
 _UNKNOWN unk_50F050; // weak
 int (*off_50F0E4)() = &sub_43CF60; // weak
 _DWORD (*off_50F0F4)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
-int (*off_50F104[2])() = { &sub_43D100, &sub_43CF90 }; // weak
+int (*off_50F104[2])() = { &unknown_libname_3, &sub_43CF90 }; // weak
 int (__thiscall *off_50F114)(WCIsvListBase *this) = &sub_43D1E0; // weak
 void *off_50F124 = &sub_43CFF0; // weak
 void *off_50F134 = &sub_43D0C0; // weak
@@ -8844,6 +8914,63 @@ int g_UnitSearchCursor = -1; // weak
 int g_SelectedUnitIndex = -1; // weak
 int g_LastSelectedUnitIndex = -1; // weak
 int dword_511B64 = -1; // weak
+__int16 word_511B2C[7] = { 0x30B, 0x313, 0x31B, 0x321, 0x327, 0x32E, 0x32E }; // weak
+__int16 word_511B3A[2] = { 0x30B, 0x315 }; // weak
+__int16 word_511B3E[5] = { 0x30B, 0x313, 0x31D, 0x323, 0x32A }; // weak
+char aSwijtynia[] = "\x98wi\x86tynia"; // weak
+char aShrine[] = "Shrine"; // weak
+char aSchrein[] = "Schrein"; // weak
+char aPustaSwijtynia[] = "Pusta \x98wi\x86tynia"; // weak
+char aEmptyShrine[] = "Empty shrine"; // weak
+char aLeererSchrein[] = "Leerer Schrein"; // weak
+char aMiejsceKultu[] = "Miejsce kultu"; // weak
+char aCultPlace[] = "Cult place"; // weak
+char aKultstdtte[] = "Kultst\x84""tte"; // weak
+char aPusteMiejsceKu[] = "Puste miejsce kultu"; // weak
+char aEmptyCultPlace[] = "Empty cult place"; // weak
+char aLeereKultstdtt[] = "Leere Kultst\x84""tte"; // weak
+char aFundamenty[] = "Fundamenty"; // weak
+char aFoundations[] = "Foundations"; // weak
+char aFundamente[] = "Fundamente"; // weak
+char aZakopanySkarb[] = "Zakopany skarb"; // weak
+char aHiddenTreasure[] = "Hidden treasure"; // weak
+char aVersteckterSch[] = "Versteckter Schatz"; // weak
+char aTerenNieodkryt[17] = "Teren nieodkryty"; // weak
+char aUnexploredTerr[19] = "Unexplored terrain"; // weak
+char aUnerforschtesT[22] = "Unerforschtes Terrain"; // weak
+char aDroga3pa[12] = "Droga - 3pa"; // weak
+char aRoad3ap[11] = "Road - 3ap"; // weak
+char aStrase[7] = "Stra\xE1""e"; // weak
+char aLas6pa[10] = "Las - 6pa"; // weak
+char aForest6ap[13] = "Forest - 6ap"; // weak
+char aBaum[5] = "Baum"; // weak
+char aRvwnina4pa[14] = "R\xA2wnina - 4pa"; // weak
+char aPlain4ap[12] = "Plain - 4ap"; // weak
+char aEbene[6] = "Ebene"; // weak
+char aPustynia5pa[15] = "Pustynia - 5pa"; // weak
+char aDesert5ap[13] = "Desert - 5ap"; // weak
+char aWbste[6] = "W\x81""ste"; // weak
+char aBagno7pa[12] = "Bagno - 7pa"; // weak
+char aSwamp7ap[12] = "Swamp - 7ap"; // weak
+char aSumpf[6] = "Sumpf"; // weak
+char aGvryNiskie8pa[18] = "G\xA2ry niskie - 8pa"; // weak
+char aHills8ap[12] = "Hills - 8ap"; // weak
+char aHbgel[6] = "H\x81""gel"; // weak
+char aGvryWysokie[13] = "G\xA2ry wysokie"; // weak
+char aMountains[10] = "Mountains"; // weak
+char aBerge[6] = "Berge"; // weak
+char aWoda[5] = "Woda"; // weak
+char aWater[6] = "Water"; // weak
+char aWasser[7] = "Wasser"; // weak
+char aBlad[5] = "Blad"; // weak
+char aError[6] = "Error"; // weak
+char aError_0[6] = "Error"; // weak
+char *off_511B68[21] = { aSwijtynia, aShrine, aSchrein }; // weak
+char *off_511B74[18] = { aPustaSwijtynia, aEmptyShrine, aLeererSchrein }; // weak
+char *off_511B80[15] = { aMiejsceKultu, aCultPlace, aKultstdtte }; // weak
+char *off_511B8C[12] = { aPusteMiejsceKu, aEmptyCultPlace, aLeereKultstdtt }; // weak
+char *off_511B98[9] = { aFundamenty, aFoundations, aFundamente }; // weak
+char *off_511BA4[6] = { aZakopanySkarb, aHiddenTreasure, aVersteckterSch }; // weak
 char *g_Text_SurrenderConfirm[3] =
 {
   "Czy chcesz si\x91 podda\x8D?",
@@ -8907,6 +9034,7 @@ __int16 word_512348[] = { 30 }; // weak
 __int16 word_51234A[] = { 1 }; // weak
 __int16 word_51234C[] = { 121 }; // weak
 __int16 word_51234E[] = { 25 }; // weak
+unsigned char unk_512008 = 0x14; // weak
 void *off_512350 = &unk_512008; // weak
 int dword_512360 = -1; // weak
 int dword_512364 = 8; // weak
@@ -8915,6 +9043,20 @@ char *off_512368[3] =
   "Jedna z twoich jednostek uleg\x92a rozwi\x86zaniu, Panie. Nie chcieli Ci dalej s\x92u\xA7y\x8D, gdy\xA7 wiele przegranych bitew i og\xA2lne wyczerpanie drastycznie wp\x92yn\x91\x92o na ich morale.",
   "One of your troops fell apart. They did not want to serve you anymore, their morale was very low after many lost battles and many dead.",
   "Eine Deiner Einheiten hat sich aufgel\x94st. Die M\x84nner wollten Dir nicht l\x84nger dienen, weil die vielen verlorenen Schlachten und die allgemeine Ersch\x94pfung drastisch ihre Moral untergraben haben."
+}; // weak
+/*
+ * The first localized unit-name table is the front edge of the 88-byte
+ * unit-type metadata record family at 0x512568. The wider metadata slab is
+ * still represented through overlapping globals, but this exact first table is
+ * enough to keep the retained front-end link surface anchored to the authentic
+ * data-segment root instead of an undefined symbol.
+ */
+char *off_5123CC[102] =
+{
+  "Posp. ruszenie",
+  "Peasant",
+  "Bauern",
+  0
 }; // weak
 char *(*g_UnitTypeMetadataRecords)[102] = &off_5123CC; // weak
 char *g_UnitTypeResourceKeys = "peon"; // weak
@@ -10938,11 +11080,34 @@ __int16 word_519624 = 320; // weak
 __int16 word_519626 = 240; // weak
 int dword_519628[] = { 1 }; // weak
 int dword_51962C[] = { 149 }; // weak
-_UNKNOWN unk_5196A0; // weak
-_UNKNOWN unk_5196C8; // weak
-_UNKNOWN unk_5196F0; // weak
-_UNKNOWN unk_5197B8; // weak
+/*
+ * Recovered 40-byte front-end cursor/overlay descriptor records consumed by
+ * sub_460D80. The original binary stores these as ten consecutive dwords:
+ * start sprite, end sprite, an optional fixed animation/count value,
+ * runtime-filled max height/width, hotspot x/y, and runtime counters.
+ */
+int unk_5196A0[10] = { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5196C8[10] = { 3, 3, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5196F0[10] = { 4, 4, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519718[10] = { 5, 5, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5197B8[10] = { 10, 10, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
 int dword_519808 = 12; // weak
+int dword_51980C = 26; // weak
+int dword_519810 = 10; // weak
+int dword_519814 = 0; // weak
+int dword_519818 = 0; // weak
+int dword_51981C = 0; // weak
+int dword_519820 = 0; // weak
+int dword_519824 = 0; // weak
+int dword_519828 = 0; // weak
+int dword_51982C = 0; // weak
+int unk_519830[10] = { 31, 38, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519858[10] = { 39, 39, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519880[10] = { 40, 40, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5198A8[10] = { 41, 41, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int unk_5198D0[10] = { 42, 42, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_5198F8[10] = { 43, 50, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int unk_519920[10] = { 51, 51, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
 char aDefault_rec[12] = "default.rec"; // weak
 char byte_519970[2] = { 'o', 'r' }; // weak
 char byte_519972[2] = { 'd', 'e' }; // weak
@@ -11772,6 +11937,19 @@ int dword_51B0BA = 18000; // weak
 int dword_51B0BE = 1; // weak
 int dword_51B0C2 = 3600; // weak
 int dword_51B0C6 = 1; // weak
+_UNKNOWN unk_51B0D8; // weak
+_UNKNOWN unk_51B108; // weak
+_UNKNOWN unk_51B138; // weak
+_UNKNOWN unk_51B168; // weak
+_UNKNOWN unk_51B198; // weak
+_UNKNOWN unk_51B1C8; // weak
+_UNKNOWN unk_51B1F8; // weak
+_UNKNOWN unk_51B228; // weak
+_UNKNOWN unk_51B258; // weak
+_UNKNOWN unk_51B288; // weak
+_UNKNOWN unk_51B2B8; // weak
+_UNKNOWN unk_51B2E8; // weak
+_UNKNOWN unk_51B318; // weak
 int dword_51B348 = 0; // weak
 int dword_51B34C = 0; // weak
 int dword_51B350 = 0; // weak
@@ -11889,9 +12067,16 @@ char byte_51F28C; // weak
 int dword_51F290[]; // weak
 int dword_51F294[1022]; // weak
 int dword_52028C; // weak
+int dword_520290 = 0; // weak
+int dword_520294 = 0; // weak
 int dword_520298; // weak
 int dword_52029C; // weak
 int dword_5202A0; // weak
+int dword_5202A4 = 0; // weak
+int dword_5202A8 = 0; // weak
+int dword_5202AC = 0; // weak
+int dword_5202B0 = 0; // weak
+int dword_5202B4 = 0; // weak
 int dword_5202BC; // weak
 int dword_5202C0; // weak
 int g_FogOverlaySpriteSet; // weak
@@ -11919,9 +12104,11 @@ unsigned __int8 byte_520520[516]; // weak
 int dword_520724; // weak
 int dword_520728; // weak
 RenderSpriteRemapEntry word_520738[1024]; // weak
+unsigned char byte_521043 = 0; // weak
 RenderSpriteRemapEntry word_521338[1024]; // weak
 _WORD word_521F38[1528]; // weak
 unsigned short word_522B28[1038]; // weak
+__int16 word_522CF6 = 0; // weak
 __int16 g_MiniMapRectLeft; // weak
 __int16 g_MiniMapRectTop; // weak
 __int16 g_MiniMapRectWidth; // weak
@@ -19616,6 +19803,11 @@ int  sub_40A820(char a1, DWORD a2)
   g_RenderHook = v14;
   return Render_SetResourceHandle((int)&unk_51D4C0, v15);
 }
+
+int UI_LoadTurnBannerGfx(char a1, DWORD a2)
+{
+  return sub_40A820(a1, a2);
+}
 // 40A867: variable 'v2' is possibly undefined
 // 40A883: variable 'v3' is possibly undefined
 // 40A896: variable 'v5' is possibly undefined
@@ -20992,7 +21184,7 @@ char  sub_40C450(_BYTE *result, int a2, int a3)
   v3 = result;
   if ( result && *result )
   {
-    strlwr_(a3, a2);
+    strlwr_((char *)v3);
     v4 = 0;
     do
     {
@@ -21630,6 +21822,11 @@ void MiniMap_RedrawAllTiles()
     ++v0;
   }
   return;
+}
+
+void Locale_DrawInteger()
+{
+  MiniMap_RedrawAllTiles();
 }
 // 40D88B: variable 'v2' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -22857,6 +23054,11 @@ __int16 * UnitStack_RemoveFromTile(__int16 *stack, double a2)
   }
   return stack;
 }
+
+__int16 * Rules_UnlinkArmyFact(__int16 *result, double a2)
+{
+  return UnitStack_RemoveFromTile(result, a2);
+}
 // 40F83A: variable 'v5' is possibly undefined
 // 40F87B: variable 'v6' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -22867,6 +23069,11 @@ __int16 * UnitStack_UnlinkIfEmpty(__int16 *result, double a2)
   if ( result[3] == -1 )
     return Rules_UnlinkArmyFact(result, a2);
   return result;
+}
+
+__int16 * Rules_LinkArmyFinalize(__int16 *result, double a2)
+{
+  return UnitStack_UnlinkIfEmpty(result, a2);
 }
 
 //----- (0040F8B0) --------------------------------------------------------
@@ -23984,6 +24191,11 @@ signed int  sub_411350(int a1, DWORD a2)
     Debug_Log(v4 + 1, a1, a2, (int)a15sPl1dP);
   return result;
 }
+
+signed int Unit_DebugDumpFormationSizes(int a1, DWORD a2)
+{
+  return sub_411350(a1, a2);
+}
 // 4113B7: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
@@ -23991,6 +24203,11 @@ signed int  sub_411350(int a1, DWORD a2)
 signed int  sub_411420(int a1, DWORD a2)
 {
   return Unit_DebugDumpFormationSizes(725 * a1 + gameData + 147174, a2);
+}
+
+signed int Render_DrawSprite_v3(int a1, DWORD a2)
+{
+  return sub_411420(a1, a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -24693,6 +24910,11 @@ void * UnitSlots_ExtractSpecialEntries(char *a1, int a2, char *a3)
   return result;
 }
 
+void * sub_412000(char *a1, int a2, char *a3)
+{
+  return UnitSlots_ExtractSpecialEntries(a1, a2, a3);
+}
+
 //----- (004120B0) --------------------------------------------------------
 int  UnitSlots_AppendEntries(char *a1, char *a2)
 {
@@ -24714,6 +24936,11 @@ int  UnitSlots_AppendEntries(char *a1, char *a2)
   result = 31 * v3;
   qmemcpy(v4, v2, 31 * v3);
   return result;
+}
+
+int  sub_4120B0(char *a1, char *a2)
+{
+  return UnitSlots_AppendEntries(a1, a2);
 }
 
 //----- (00412100) --------------------------------------------------------
@@ -25791,6 +26018,11 @@ int  sub_412F30(
     result = sub_4060E0(result, v19, v21 + 8 * v22);
   *(int *)((char *)&dword_523F8F + 15 * v18) = result;
   return result;
+}
+
+int  Unit_SetFlag(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __int8 a4, DWORD a5, signed int a6)
+{
+  return sub_412F30(a1, a2, a3, a4, a5, a6);
 }
 // 412FB8: variable 'v11' is possibly undefined
 // 412FDB: variable 'v7' is possibly undefined
@@ -33310,7 +33542,7 @@ char  Building_AssignUniqueGeneratedName(int a1)
         v4 = (int *)((char *)v4 + 2);
       }
       while ( v7 );
-      strlwr_(v3, v22);
+      strlwr_((char *)&v19);
       if ( !strcmp_(v9, *(char **)((char *)off_513A84 + v8)) )
         v2 = 1;
       v3 = v11 + 1;
@@ -33586,6 +33818,11 @@ char  Building_UpdateGarrisonTrainRepairTimers(unsigned __int8 *a1, double a2)
                    (int)a1,
                    a2);
   return v6;
+}
+
+char  Building_AutoFillOrUseGarrison(unsigned __int8 *a1, double a2)
+{
+  return Building_UpdateGarrisonTrainRepairTimers(a1, a2);
 }
 // 41E5CC: variable 'v2' is possibly undefined
 // 41E5D0: variable 'v5' is possibly undefined
@@ -34368,6 +34605,11 @@ int  sub_41F810(int a1)
   return 100 - v2 / 7;
 }
 
+int  UI_DrawUnitStatsValues(int a1)
+{
+  return sub_41F810(a1);
+}
+
 //----- (0041F850) --------------------------------------------------------
 BOOL  Building_CanStartUpgrade(unsigned __int8 *a1)
 {
@@ -34604,6 +34846,11 @@ int a2;
     return (unsigned __int8)v9[Rng_RandRange(0, v4 - 1) + 1];
   else
     return -1;
+}
+
+signed int  Unit_FindById(int a1)
+{
+  return Building_FindRandomOwnedCompletedCastle(a1, 0);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -37087,6 +37334,11 @@ BOOL  Unit_CanMoveSelectionFromGroupToTile(int a1, _DWORD *a2, int a3, int a4)
   }
   return UnitStack_GetMinCurrentActionPoints((int)v20) >= 4
       && *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(v17 + gameData + v16 + 556374) + 147178) == *(_BYTE *)(725 * v21 + gameData + 147178);
+}
+
+BOOL  Map_IsTilePlacable(int a1, _DWORD *a2, int a3, int a4)
+{
+  return Unit_CanMoveSelectionFromGroupToTile(a1, a2, a3, a4);
 }
 // 422F8A: simplified comparisons for 'eax.4': >=0 && <29 became <29u
 // 422E6E: variable 'v8' is possibly undefined
@@ -53614,137 +53866,241 @@ int  sub_43D0C0(WCIsvListBase *a1, char a2)
 // 43D0FA: variable 'v5' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
+typedef struct WCCompatLink {
+  int next_link;
+  int value;
+} WCCompatLink;
+
+typedef struct WCCompatListBase {
+  int head_link;
+  int vtable;
+  int tail_link;
+  int count;
+  int alloc_fn;
+  int free_fn;
+} WCCompatListBase;
+
+static WCCompatListBase *WCCompat_ListFromBase(WCIsvListBase *this)
+{
+  return (WCCompatListBase *)this;
+}
+
+static WCCompatListBase *WCCompat_ListFromHandle(int list_handle)
+{
+  return (WCCompatListBase *)(uintptr_t)(unsigned int)list_handle;
+}
+
+static WCCompatLink *WCCompat_LinkFromHandle(int link_handle)
+{
+  return (WCCompatLink *)(uintptr_t)(unsigned int)link_handle;
+}
+
+//----- (0043D100) --------------------------------------------------------
+_DWORD *unknown_libname_3(WCIsvListBase *this)
+{
+  WCCompatListBase *list;
+
+  list = WCCompat_ListFromBase(this);
+  list->vtable = (int)(uintptr_t)off_50F104;
+  WCIsvListBase_dtor(this);
+  return (_DWORD *)this;
+}
+
+//----- (0043D100) --------------------------------------------------------
+_DWORD * sub_43D100(WCIsvListBase *this)
+{
+  return unknown_libname_3(this);
+}
+
+int __fastcall WCIsvListBase_base_next(int list_handle, int cursor_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *link;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  if ( !list || !list->head_link )
+    return 0;
+  for ( link = WCCompat_LinkFromHandle(list->head_link); link; link = WCCompat_LinkFromHandle(link->next_link) )
+  {
+    if ( (int)(uintptr_t)link == cursor_handle )
+      return link->next_link;
+  }
+  return list->head_link;
+}
+
+int __fastcall WCIsvListBase_base_insert(int list_handle, int link_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *link;
+  WCCompatLink *tail;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  link = WCCompat_LinkFromHandle(link_handle);
+  if ( !list || !link )
+    return 0;
+  link->next_link = 0;
+  if ( list->tail_link )
+  {
+    tail = WCCompat_LinkFromHandle(list->tail_link);
+    if ( tail )
+      tail->next_link = link_handle;
+    else
+      list->head_link = link_handle;
+  }
+  else
+  {
+    list->head_link = link_handle;
+  }
+  list->count += 1;
+  return link_handle;
+}
+
+int __fastcall WCIsvListBase_base_sget(int list_handle)
+{
+  WCCompatListBase *list;
+  WCCompatLink *head;
+  int link_handle;
+
+  list = WCCompat_ListFromHandle(list_handle);
+  if ( !list || !list->head_link )
+    return 0;
+  link_handle = list->head_link;
+  head = WCCompat_LinkFromHandle(link_handle);
+  if ( !head )
+  {
+    list->head_link = 0;
+    list->tail_link = 0;
+    list->count = 0;
+    return 0;
+  }
+  list->head_link = head->next_link;
+  if ( !list->head_link )
+    list->tail_link = 0;
+  if ( list->count > 0 )
+    list->count -= 1;
+  return link_handle;
+}
+
+void WCIsvListBase_base_destroy(WCIsvListBase *this)
+{
+  int link_handle;
+
+  for ( link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this); link_handle; link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this) )
+    sub_43D160((int)(uintptr_t)this, link_handle, 8);
+}
+
+_DWORD WCIsvListBase_dtor(WCIsvListBase *this)
+{
+  WCCompatListBase *list;
+
+  list = WCCompat_ListFromBase(this);
+  list->vtable = (int)(uintptr_t)off_50F0F4;
+  if ( list->tail_link )
+    nullsub_7((int)(uintptr_t)this);
+  return (unsigned int)(uintptr_t)this;
+}
+
 //----- (0043D120) --------------------------------------------------------
 _DWORD * sub_43D120(int a1, int a2)
 {
-  _DWORD *result; // eax
-  _DWORD *v3; // edx
+  WCCompatListBase *list;
+  WCCompatLink *link;
 
-  if ( !*(_DWORD *)(a1 + 16) )
-  {
-    result = (_DWORD *)j_Mem_Alloc(a1);
-    if ( !result )
-      return result;
-LABEL_5:
-    *result = 0;
-    result[1] = *v3;
-    return result;
-  }
-  result = (_DWORD *)(*(int (__cdecl **)(int))(a1 + 16))(a2);
-  if ( result )
-    goto LABEL_5;
-  return result;
+  list = WCCompat_ListFromHandle(a1);
+  if ( !list )
+    return 0;
+  if ( !list->alloc_fn )
+    link = (WCCompatLink *)(uintptr_t)(unsigned int)j_Mem_Alloc(8);
+  else
+    link = (WCCompatLink *)(uintptr_t)(unsigned int)(*(int (__cdecl **)(int))(uintptr_t)(unsigned int)list->alloc_fn)(8);
+  if ( !link )
+    return 0;
+  link->next_link = 0;
+  link->value = a2;
+  return (_DWORD *)link;
 }
-// 43D137: conditional instruction was optimized away because eax.4!=0
-// 43D147: conditional instruction was optimized away because eax.4!=0
-// 43D151: variable 'v3' is possibly undefined
-// 4730FB: using guessed type int __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (0043D160) --------------------------------------------------------
 int  sub_43D160(int a1, int a2, int a3)
 {
-  int result; // eax
-
-  result = a2;
-  if ( a2 )
-  {
-    if ( *(_DWORD *)(a1 + 20) )
-      return (*(int (__cdecl **)(int))(a1 + 20))(a3);
-    else
-      return j_j__nfree_();
-  }
-  return result;
+  if ( !a2 )
+    return 0;
+  if ( *(_DWORD *)(a1 + 20) )
+    return (*(int (__cdecl **)(int))(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 20))(a3);
+  return nfree_(a2);
 }
 
 //----- (0043D180) --------------------------------------------------------
 int  sub_43D180(_DWORD *a1, _DWORD *a2, int a3)
 {
-  int result; // eax
-  int i; // ecx
-  int v6; // ecx
+  int link_handle;
+  WCCompatLink *link;
 
   *a1 = *a2;
   a1[4] = a2[4];
   a1[5] = a2[5];
-  result = WCIsvListBase_base_next(a3, a3);
-  for ( i = result; result; i = result )
+  link_handle = WCIsvListBase_base_next((int)(uintptr_t)a2, a3);
+  while ( link_handle )
   {
-    sub_43D220((int)a1, i);
-    result = WCIsvListBase_base_next(v6, v6);
+    link = WCCompat_LinkFromHandle(link_handle);
+    if ( !link )
+      break;
+    sub_43D220((int)(uintptr_t)a1, link->value);
+    link_handle = WCIsvListBase_base_next((int)(uintptr_t)a2, link_handle);
   }
-  return result;
+  return link_handle;
 }
-// 43D1BC: variable 'v6' is possibly undefined
-// 4766BA: using guessed type int __fastcall WCIsvListBase_base_next(_DWORD, _DWORD);
 
 //----- (0043D1E0) --------------------------------------------------------
 int  sub_43D1E0(WCIsvListBase *this, int a2)
 {
-  int v2; // ecx
-  int v3; // edx
-  WCIsvListBase *v5; // [esp-4h] [ebp-4h]
+  WCCompatListBase *list;
 
-  v5 = this;
-  v2 = a2;
-  v3 = *(_DWORD *)(a2 + 8);
-  *(_DWORD *)(a2 + 4) = &off_50F114;
-  if ( v3 )
+  list = WCCompat_ListFromHandle(a2);
+  list->vtable = (int)(uintptr_t)off_50F114;
+  if ( list->tail_link )
   {
     nullsub_7(a2);
-    WCIsvListBase_base_destroy(v5);
+    WCIsvListBase_base_destroy(this);
   }
-  *(_DWORD *)(v2 + 4) = off_50F104;
-  return WCIsvListBase_dtor(v5);
+  list->vtable = (int)(uintptr_t)off_50F104;
+  return WCIsvListBase_dtor(this);
 }
-// 43D1F8: variable 'v2' is possibly undefined
-// 43D1FF: variable 'v5' is possibly undefined
-// 476A0B: using guessed type int __thiscall nullsub_7(_DWORD);
-// 50F104: using guessed type int (*off_50F104[2])();
-// 50F114: using guessed type int (__thiscall *off_50F114)(WCIsvListBase *this);
 
 //----- (0043D220) --------------------------------------------------------
 signed int  sub_43D220(int a1, int a2)
 {
-  int v2; // ecx
-  _DWORD *v3; // ebx
-  signed int result; // eax
-  int v5; // ecx
+  WCCompatListBase *list;
+  WCCompatLink *link;
 
-  v3 = sub_43D120(a1, a1);
-  if ( v3 )
+  link = (WCCompatLink *)sub_43D120(a1, a2);
+  if ( link )
   {
-    WCIsvListBase_base_insert(a2);
-    result = 1;
-    *(_DWORD *)(v5 + 8) = v3;
+    list = WCCompat_ListFromHandle(a1);
+    WCIsvListBase_base_insert(a1, (int)(uintptr_t)link);
+    list->tail_link = (int)(uintptr_t)link;
+    return 1;
   }
-  else
-  {
-    nullsub_7(v2);
-    return 0;
-  }
-  return result;
+  nullsub_7(a1);
+  return 0;
 }
-// 43D23D: variable 'v5' is possibly undefined
-// 43D245: variable 'v2' is possibly undefined
-// 4766D0: using guessed type int __cdecl WCIsvListBase_base_insert(_DWORD);
-// 476A0B: using guessed type int __thiscall nullsub_7(_DWORD);
 
 //----- (0043D250) --------------------------------------------------------
 int  sub_43D250(int a1, int a2)
 {
-  int v2; // eax
-  int v3; // ecx
+  int link_handle;
+  WCCompatLink *link;
 
-  v2 = WCIsvListBase_base_sget(a1);
-  if ( v2 )
-  {
-    a2 = *(_DWORD *)(v2 + 4);
-    (*(void (**)(void))(*(_DWORD *)(v3 + 4) + 4))();
-  }
+  link_handle = WCIsvListBase_base_sget(a1);
+  if ( !link_handle )
+    return a2;
+  link = WCCompat_LinkFromHandle(link_handle);
+  if ( !link )
+    return a2;
+  a2 = link->value;
+  sub_43D160(a1, link_handle, 8);
   return a2;
 }
-// 43D265: variable 'v3' is possibly undefined
-// 47679A: using guessed type int __thiscall WCIsvListBase_base_sget(_DWORD);
 
 //----- (0043D280) --------------------------------------------------------
 int  sub_43D280(_DWORD *a1, _DWORD *a2)
@@ -54978,6 +55334,11 @@ LABEL_5:
   }
   while ( a1 != v1 );
   return v2;
+}
+
+int  Building_DrawGarrisonRow(int a1)
+{
+  return Building_CountSpecialPersonageGarrisonEntries(a1);
 }
 
 //----- (0043EBC0) --------------------------------------------------------
@@ -59865,7 +60226,10 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
       if ( Input_IsKeyPressed(211) )
       {
         LOBYTE(v14) = strlen(&byte_543D28[dword_543D24 + 1]) + 1;
-        memmove_(dword_543D24, &byte_543D28[dword_543D24 + 1]);
+        memmove_(
+          &byte_543D28[dword_543D24],
+          &byte_543D28[dword_543D24 + 1],
+          strlen(&byte_543D28[dword_543D24 + 1]) + 1);
         sub_444780(dword_543D18);
         Input_ClearKey(211, v25);
       }
@@ -59877,7 +60241,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
           v26 = &byte_543D28[dword_543D24--];
           v27 = strlen(v26) + 1;
           LOBYTE(v14) = v27;
-          memmove_(v27 - 1, &byte_543D28[dword_543D24 + 1]);
+          memmove_(&byte_543D28[dword_543D24], &byte_543D28[dword_543D24 + 1], v27);
           sub_444780(dword_543D18);
           Input_ClearKey(14, v28);
         }
@@ -59920,7 +60284,10 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
             if ( (unsigned __int16)Render_LoadResourceSprite_v3(v39) < 0x97u )
             {
               LOBYTE(v14) = strlen(&byte_543D28[dword_543D24]) + 1;
-              memmove_(dword_543D24, &byte_543D28[dword_543D24]);
+              memmove_(
+                &byte_543D28[dword_543D24 + 1],
+                &byte_543D28[dword_543D24],
+                strlen(&byte_543D28[dword_543D24]) + 1);
               v36 = dword_543D24;
               byte_543D28[dword_543D24] = v44;
               dword_543D24 = v36 + 1;
@@ -60454,7 +60821,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
       v25 = strlen(&byte_543D48[dword_543D44 + 1]) + 1;
       v10 = (char *)dword_543D44;
       v21 = v25;
-      memmove_(v25 - 1, &byte_543D48[dword_543D44 + 1]);
+      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v25);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(211, v26);
     }
@@ -60464,7 +60831,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
       v28 = strlen(v27) + 1;
       v10 = (char *)&v27[v28];
       v21 = v28;
-      memmove_(dword_543D44, &byte_543D48[dword_543D44 + 1]);
+      memmove_(&byte_543D48[dword_543D44], &byte_543D48[dword_543D44 + 1], v28);
       UI_CheatEditRepaint(v17, (int)v10);
       Input_ClearKey(14, v29);
     }
@@ -60484,7 +60851,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
           v33 = strlen(&byte_543D48[dword_543D44]) + 1;
           v10 = &byte_543D48[dword_543D44 + v33];
           v21 = v33;
-          memmove_(dword_543D44, &byte_543D48[dword_543D44]);
+          memmove_(&byte_543D48[dword_543D44 + 1], &byte_543D48[dword_543D44], v33);
           v34 = dword_543D44 + 1;
           *((_BYTE *)&dword_543D44 + v34 + 3) = v48;
           dword_543D44 = v34;
@@ -61942,7 +62309,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             if ( Input_IsKeyPressed(211) )
             {
               LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + 1 + dword_544194]) + 1;
-              memmove_(dword_544194, &byte_5441A0[11 * dword_544198 + 1 + dword_544194]);
+              memmove_(
+                &byte_5441A0[11 * dword_544198 + dword_544194],
+                &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                strlen(&byte_5441A0[11 * dword_544198 + dword_544194 + 1]) + 1);
               sub_448D10(dword_544198, v74, v75);
               Input_ClearKey(211, v76);
             }
@@ -61955,7 +62325,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 v78 = strlen(v77) + 1;
                 a3 = (char *)dword_544194;
                 LOBYTE(a2) = v78;
-                memmove_(v78 - 1, &byte_5441A0[11 * dword_544198 + 1 + dword_544194]);
+                memmove_(
+                  &byte_5441A0[11 * dword_544198 + dword_544194],
+                  &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                  v78);
                 sub_448D10(dword_544198, v79, v80);
                 Input_ClearKey(14, v81);
               }
@@ -61981,7 +62354,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   if ( v85 < v86 )
                   {
                     LOBYTE(a2) = strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1;
-                    memmove_(dword_544194 + 1, &byte_5441A0[11 * dword_544198 + dword_544194]);
+                    memmove_(
+                      &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
+                      &byte_5441A0[11 * dword_544198 + dword_544194],
+                      strlen(&byte_5441A0[11 * dword_544198 + dword_544194]) + 1);
                     v87 = 11 * dword_544198;
                     v88 = dword_544194 + 1;
                     LOBYTE(v87) = v129;
@@ -63742,8 +64118,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 1u, 1, 9);
-      createUnit(a3, 1, 0, 1, 0, 0, 0);
+      createUnit(a3, 0, 0, 0, 1u, 1, 9, -1);
+      createUnit(a3, 1, 0, 1, 0, 0, 0, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63753,8 +64129,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 1u, 2, 9);
-      createUnit(a3, 1, 0, 1, 1u, 2, 9);
+      createUnit(a3, 0, 0, 0, 1u, 2, 9, -1);
+      createUnit(a3, 1, 0, 1, 1u, 2, 9, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63764,8 +64140,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 0, 2u, 2, 9);
-      createUnit(a3, 1, 0, 1, 3u, 3, 9);
+      createUnit(a3, 0, 0, 0, 2u, 2, 9, -1);
+      createUnit(a3, 1, 0, 1, 3u, 3, 9, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63775,8 +64151,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 0x10u, 16, 16);
-      createUnit(a3, 1, 0, 1, 0xFu, 15, 15);
+      createUnit(a3, 0, 0, 0, 0x10u, 16, 16, -1);
+      createUnit(a3, 1, 0, 1, 0xFu, 15, 15, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63786,8 +64162,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0xFu, 15, 10);
-      createUnit(a3, 1, 0, 1, 0xBu, 10, 5);
+      createUnit(a3, 0, 0, 0, 0xFu, 15, 10, -1);
+      createUnit(a3, 1, 0, 1, 0xBu, 10, 5, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63797,8 +64173,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 21;
       *(_WORD *)(gameData + 1400) = 21;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 0, 0x15u, 12, 4);
-      createUnit(a3, 1, 0, 1, 0xCu, 20, 23);
+      createUnit(a3, 0, 0, 0, 0x15u, 12, 4, -1);
+      createUnit(a3, 1, 0, 1, 0xCu, 20, 23, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63808,8 +64184,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 9;
       *(_WORD *)(gameData + 1400) = 9;
       *(_BYTE *)(gameData + 140016) = 0;
-      createUnit(a3, 0, 0, 0, 0x17u, 18, 7);
-      createUnit(a3, 1, 0, 1, 0x17u, 18, 7);
+      createUnit(a3, 0, 0, 0, 0x17u, 18, 7, -1);
+      createUnit(a3, 1, 0, 1, 0x17u, 18, 7, -1);
       v3 = gameData + 147174;
       v4 = *(unsigned __int16 *)(gameData + 556374);
       v5 = (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556574));
@@ -63819,8 +64195,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 4;
       *(_WORD *)(gameData + 1400) = 4;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0xDu, 10, 5);
-      createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20);
+      createUnit(a3, 0, 0, 0, 0xDu, 10, 5, -1);
+      createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(725 * *(unsigned __int16 *)(gameData + 556374) + gameData + 147174),
                0,
@@ -63832,8 +64208,8 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 0;
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 1;
-      createUnit(a3, 0, 0, 1, 0xEu, 16, 2);
-      createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5);
+      createUnit(a3, 0, 0, 1, 0xEu, 16, 2, -1);
+      createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556374)),
                0,
@@ -63845,13 +64221,13 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)gameData = 28;
       *(_WORD *)(gameData + 1400) = 28;
       *(_BYTE *)(gameData + 140016) = 2;
-      createUnit(a3, 0, 0, 0, 0x19u, 24, 28);
+      createUnit(a3, 0, 0, 0, 0x19u, 24, 28, -1);
       v8 = gameData;
       v9 = 725 * *(unsigned __int16 *)(gameData + 556374);
       v10 = *(_BYTE *)(gameData + v9 + 147285) & 0xFC;
       *(_BYTE *)(gameData + v9 + 147285) = v10;
       *(_BYTE *)(v8 + v9 + 147285) = v10 | 1;
-      createUnit(a3, 1, 0, 1, 0x1Eu, 24, 24);
+      createUnit(a3, 1, 0, 1, 0x1Eu, 24, 24, -1);
       v11 = gameData;
       v12 = 725 * *(unsigned __int16 *)(gameData + 556574);
       v13 = *(_BYTE *)(gameData + v12 + 147223) & 0xFC;
@@ -66464,6 +66840,11 @@ signed int  sub_451150(int a1)
     }
   }
   return 0;
+}
+
+signed int UI_CheckEndTurnHotkey(int a1)
+{
+  return sub_451150(a1);
 }
 // 45119B: variable 'v4' is possibly undefined
 // 4511BB: variable 'v5' is possibly undefined
@@ -69336,37 +69717,29 @@ signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4)
 //----- (00455FF0) --------------------------------------------------------
 void Map_RebuildCastleSiteAnchorCache()
 {
-  int v0; // ebp
-  int i; // eax
-  int j; // edi
-  int v3; // esi
-  signed int k; // ecx
-  int v5; // ecx
+  int anchor_slot;
+  int row;
+  int column;
 
-  v0 = 0;
-  for ( i = 0; i != 200; g_CastleSiteAnchorRows[i] = -1 )
+  anchor_slot = 0;
+  for ( row = 2; row <= 200; row += 2 )
   {
-    i += 2;
-    g_CastleSiteAnchorColumns[i] = -1;
+    g_CastleSiteAnchorRows[row] = -1;
+    g_CastleSiteAnchorColumns[row] = -1;
   }
-  for ( j = 0; j < *(_DWORD *)(gameData + 140000); ++j )
+  for ( row = 0; row < *(_DWORD *)(gameData + 140000); ++row )
   {
-    v3 = 2 * v0;
-    for ( k = 0; k < *(_DWORD *)(gameData + 140004); k = v5 + 1 )
+    for ( column = 0; column < *(_DWORD *)(gameData + 140004); ++column )
     {
-      if ( MapTile_IsCastleFoundationAnchorTile(j, k, 2) )
+      if ( MapTile_IsCastleFoundationAnchorTile(row, column, 2) )
       {
-        v3 += 2;
-        g_CastleSiteAnchorRows[v3] = j;
-        ++v0;
-        g_CastleSiteAnchorColumns[v3] = v5;
+        anchor_slot += 2;
+        g_CastleSiteAnchorRows[anchor_slot] = row;
+        g_CastleSiteAnchorColumns[anchor_slot] = column;
       }
     }
   }
-  JUMPOUT(0x455BC1);
 }
-// 456023: control flows out of bounds to 455BC1
-// 45605E: variable 'v5' is possibly undefined
 // 5202E4: using guessed type int gameData;
 // 544570: using guessed type int g_CastleSiteAnchorRows[];
 // 544574: using guessed type int g_CastleSiteAnchorColumns[];
@@ -70457,15 +70830,15 @@ double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5)
   v7 = sub_475CC8(aStrategprior, (unsigned __int8 *)aR, a3, a2);
   if ( v7 )
   {
-    while ( fgets_(v7, 80) )
+    while ( fgets_(v10, 80, v7) )
     {
       sscanf_(v10, "%d %f", &v11, &v12);
       if ( a1 == v11 )
         v14 = v12;
     }
   }
-  fclose_((v13 - a2) * (v13 - a2));
-  v15 = Math_CeilSqrt(v8 + (a5 - a4) * (a5 - a4));
+  fclose_(v7);
+  v15 = Math_CeilSqrt((v13 - a2) * (v13 - a2) + (a5 - a4) * (a5 - a4));
   return v14 / (double)v15;
 }
 // 459267: variable 'v7' is possibly undefined
@@ -70625,38 +70998,39 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
 }
 
 //----- (00459760) --------------------------------------------------------
-signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, int a7)
+signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
 {
+  va_list args;
   char v7; // bl
-  int *v8; // esi
-  int v9; // ecx
-  int v10; // eax
-  DWORD v11; // ebp
-  int v12; // ecx
-  int i; // [esp+0h] [ebp-1Ch]
+  int v8; // ecx
+  int unit_type; // eax
+  DWORD v10; // ebp
+  int slot_offset; // ecx
+  int tile_offset; // [esp+0h] [ebp-1Ch]
 
-  v7 = 0;
+  va_start(args, a6);
   Unit_Create(a5, a4, a2, 0, a1, a3);
-  v8 = &a7;
-  v9 = 31;
-  v10 = a6;
-  v11 = 200 * a2;
-  for ( i = 2 * a3; v10 != -1; v9 = v12 + 31 )
+  v7 = a4;
+  slot_offset = 31;
+  unit_type = a6;
+  v10 = 200 * a2;
+  tile_offset = 2 * a3;
+  while ( unit_type != -1 )
   {
-    v7 = a4;
-    ++v8;
-    UnitSlot_InitFromType(v9 + gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374) + 6, v10, a4);
-    v10 = *(v8 - 1);
+    v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374);
+    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, unit_type, a4);
+    unit_type = va_arg(args, int);
+    slot_offset += 31;
   }
+  va_end(args);
   return Rules_SyncArmyFactStrength(
-           gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v11 + 556374),
-           145 * *(unsigned __int16 *)(i + gameData + v11 + 556374),
+           gameData + 147174 + 725 * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
+           145 * *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374),
            gameData + 147174,
            v7,
-           v11,
+           v10,
            a1);
 }
-// 4597FB: variable 'v12' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00459860) --------------------------------------------------------
@@ -70669,45 +71043,45 @@ int  createCastle(
         char *a6,
         DWORD a7,
         int a8,
-        int a9)
+        ...)
 {
-  int *v9; // esi
-  int v10; // eax
-  int v11; // ecx
-  int v12; // ecx
-  double v13; // st7
-  int v14; // ecx
-  int i; // [esp+0h] [ebp-20h]
-  DWORD v17; // [esp+4h] [ebp-1Ch]
+  va_list args;
+  int v9; // eax
+  int v10; // ecx
+  int unit_type; // eax
+  int unit_index; // eax
+  int tile_offset; // [esp+0h] [ebp-20h]
+  DWORD v15; // [esp+4h] [ebp-1Ch]
 
+  va_start(args, a8);
   Unit_Create(a7, a4, a2, 0, a3);
-  v9 = &a9;
-  v17 = 200 * a2;
-  v10 = a8;
-  v11 = 31;
-  for ( i = 2 * a3; v10 != -1; v11 = v12 + 31 )
+  v15 = 200 * a2;
+  unit_type = a8;
+  v10 = 31;
+  tile_offset = 2 * a3;
+  while ( unit_type != -1 )
   {
-    ++v9;
-    UnitSlot_InitFromType(v11 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374) + gameData + 147174 + 6, v10, a4);
-    v10 = *(v9 - 1);
+    v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374);
+    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, unit_type, a4);
+    unit_type = va_arg(args, int);
+    v10 += 31;
   }
+  va_end(args);
   Rules_SyncArmyFactStrength(
-    (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(i + gameData + v17 + 556374)),
-    145 * *(unsigned __int16 *)(i + gameData + v17 + 556374),
+    (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374)),
+    145 * *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374),
     gameData + 147174,
-    i,
-    v17,
+    tile_offset,
+    v15,
     st7_0);
-  Building_New(a5, *(unsigned __int16 *)(i + v17 + gameData + 556374), v13, a6, 1);
-  *(_WORD *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509690) = 0;
-  Unit_UpdatePerTurn(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674, v14);
+  unit_index = *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374) - 0x8000;
+  Building_New(a5, *(unsigned __int16 *)(tile_offset + v15 + gameData + 556374), st7_0, a6, 1);
+  *(_WORD *)(467 * unit_index + gameData + 509690) = 0;
+  Unit_UpdatePerTurn(467 * unit_index + gameData + 509674, 0);
   Building_LogBuiltCastleFacts(
-    (unsigned __int8 *)(467 * (*(unsigned __int16 *)(i + gameData + v17 + 556374) - 0x8000) + gameData + 509674));
-  return *(unsigned __int16 *)(i + v17 + gameData + 556374) - 0x8000;
+    (unsigned __int8 *)(467 * unit_index + gameData + 509674));
+  return unit_index;
 }
-// 459900: variable 'v12' is possibly undefined
-// 459982: variable 'v13' is possibly undefined
-// 4599DE: variable 'v14' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00459ED0) --------------------------------------------------------
@@ -71244,7 +71618,7 @@ LABEL_19:
       v10 = 0;
       break;
     default:
-      JUMPOUT(0x4602A0);
+      return 0;
   }
 LABEL_34:
   if ( (unsigned int)*(__int16 *)(gameData + 725 * v10 + 147180) <= 0x28
@@ -71283,7 +71657,6 @@ LABEL_46:
   }
   return v9 < 6;
 }
-// 460303: control flows out of bounds to 4602A0
 // 45C811: conditional instruction was optimized away because edx.4<1F4u
 // 45C8A0: conditional instruction was optimized away because eax.4<64u
 // 45FB44: conditional instruction was optimized away because edx.4<1F4u
@@ -71296,15 +71669,1117 @@ LABEL_46:
 // 5202E4: using guessed type int gameData;
 
 //----- (00460360) --------------------------------------------------------
-void Scenario_LoadMissionByIndex()
+void Scenario_LoadMissionByIndex(int mission_index, double a2)
 {
-  JUMPOUT(0x460369);
+  int building_record; // eax
+  unsigned __int16 building_word; // cx
+  int castle_index; // eax
+  int player_index; // edx
+  unsigned __int16 stack_index; // ax
+  int slot_index; // ecx
+
+  switch ( mission_index )
+  {
+    case 0:
+      Map_LoadFromFile((int)"k_mapa1l.map");
+      ACTIVE_MISSION_INDEX = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 30, 42, 0, 2, "Cantbelly", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      createUnit(a2, 30, 44, 0, 1u, 9, 0x17, -1);
+      createUnit(a2, 31, 44, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 32, 44, 0, 9u, 9, -1);
+      createUnit(a2, 46, 45, 1, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 15, 6, 1, 0, 0, 0, 0, 0, 0, 0xF, 0xF, 1, -1);
+      createUnit(a2, 48, 14, 1, 0, 0, 0, 0, 0xF, -1);
+      Unit_Create(9u, 1, 35, 0, 11);
+      Unit_Create(9u, 1, 49, 0, 39);
+      Unit_Create(9u, 1, 40, 0, 3);
+      Unit_Create(1u, 1, 19, 0, 12);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 1:
+      Map_LoadFromFile((int)"k_mapa2l.map");
+      ACTIVE_MISSION_INDEX = 1;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Ianos");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 44, 46, 0, 2, "Stormus", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0xF, -1);
+      createUnit(a2, 44, 48, 0, 9u, 9, -1);
+      castle_index = createCastle(a2, 1, 23, 1, 2, "Drakefly", 0x11u, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 1, 25, 1, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 44, 24, 1, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 18, 48, 1, 0, 0, 9, 9, 9, 0xF, 0xF, 0xF, -1);
+      createUnit(a2, 12, 0, 1, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 91;
+      PLAYER_CAMERA_TOP(0) = 21;
+      MAP_VIEW_LEFT = 90;
+      MAP_VIEW_TOP = 21;
+      break;
+    case 2:
+      Map_LoadFromFile((int)"k_mapa3l.map");
+      ACTIVE_MISSION_INDEX = 2;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_MINIMAP_VISIBLE(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 98, 24, 0, 9u, -1);
+      createUnit(a2, 98, 25, 0, 0, 0, 0, 0, 1u, 1u, 1u, 0x10u, -1);
+      createUnit(a2, 97, 25, 0, 5u, 5u, 0xFu, 0xFu, 0, 0, -1);
+      createUnit(a2, 97, 24, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 98, 26, 0, 0xDu, -1);
+      castle_index = createCastle(a2, 41, 68, 1, 2, "Treg Rock", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 83, 16, 1, 0xFu, 1u, 1u, 1u, 1u, 0x11u, -1);
+      createUnit(a2, 69, 46, 1, 0, 0, 0, 0xFu, 0xFu, 1u, 0x11u, -1);
+      createUnit(a2, 87, 61, 1, 5u, 5u, 9u, 9u, 0x10u, 0x10u, -1);
+      createUnit(a2, 52, 58, 1, 9u, 9u, 9u, 9u, 9u, -1);
+      createUnit(a2, 40, 18, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 91, 6, 1, 9u, -1);
+      createUnit(a2, 85, 9, 1, 9u, -1);
+      createUnit(a2, 43, 52, 1, 9u, -1);
+      createUnit(a2, 68, 68, 1, 1u, -1);
+      createUnit(a2, 35, 69, 1, 1u, -1);
+      createUnit(a2, 94, 77, 1, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 74, 31, 1, 0, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 91;
+      PLAYER_CAMERA_TOP(0) = 21;
+      MAP_VIEW_LEFT = 90;
+      MAP_VIEW_TOP = 21;
+      break;
+    case 3:
+      Map_LoadFromFile((int)"k_mapa4j.map");
+      ACTIVE_MISSION_INDEX = 3;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "McDonowan");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Sir Wenom");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Gorio");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 21, 21, 0, 1, "Ughuata", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 300;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 20, 20, 0, 0xCu, 9, 9, 1, 1, 0x10u, -1);
+      createUnit(a2, 23, 20, 0, 5u, 5, 0x10u, -1);
+      createUnit(a2, 20, 23, 0, 9u, 9, 3, 3, -1);
+      createUnit(a2, 23, 23, 0, 2u, 2, 2, 0xAu, 0xAu, 0xAu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(23, 23));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) = Rng_RandRange(5, 20);
+      createUnit(a2, 22, 23, 0, 0x11u, 0x11, 0x11, 0x21u, -1);
+      createUnit(a2, 41, 34, 1, 0xFu, 0xF, 1, 1, -1);
+      createUnit(a2, 13, 31, 1, 2u, 2, 1, 2, 1, 0, 0x10u, 0x10u, 0x11u, -1);
+      createUnit(a2, 15, 24, 1, 5u, 5, 5, 0x10u, 0x10u, 0, 0, 0, -1);
+      createUnit(a2, 24, 13, 1, 9u, 9, 0xFu, 0xFu, 0, 0, 0, -1);
+      createUnit(a2, 37, 22, 1, 6u, 6, 0, 0, 0, 9u, -1);
+      createUnit(a2, 12, 0, 1, 0xCu, 0xC, 0xC, 0xC, 0xC, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(12, 0));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) = (*(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) & 0xFC) | 1;
+      createUnit(a2, 10, 27, 2, 1u, 1, 1, -1);
+      createUnit(a2, 21, 48, 2, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 29, 15, 2, 5u, 0x10u, 0x10u, 1, 1, 0, 0, -1);
+      createUnit(a2, 6, 20, 2, 9u, 9, 9, 5, 5, 0x10u, -1);
+      createUnit(a2, 1, 9, 2, 0x1Au, 0x1A, 0x1A, 0x1A, 0x1Du, 0x1D, 0x1D, -1);
+      createUnit(a2, 40, 1, 2, 0x1Bu, 0x1B, 0x1Cu, 0x1Cu, 0x1Du, 0x1D, 0x1D, -1);
+      createUnit(a2, 23, 43, 3, 0xFu, 1, 0x10u, 5, 9, 0, 3, 3, -1);
+      createUnit(a2, 39, 31, 3, 0, 0, 0, 3, 3, 3, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(39, 31));
+      *(_BYTE *)(UNIT_STACK(stack_index) + 204) |= 3u;
+      createUnit(a2, 39, 35, 3, 9u, 9, 3, 3, 3, 0x11u, -1);
+      createUnit(a2, 49, 48, 3, 5u, 5, 5, 5, 5, 5, 5, -1);
+      createUnit(a2, 1, 47, 3, 8u, 8, 8, 8, 8, 8, 8, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 4:
+      Map_LoadFromFile((int)"k_mapa5j.map");
+      ACTIVE_MISSION_INDEX = 4;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh II");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "McDonowan");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 41, 48, 0, 2, "Totaweon", 0x11u, 0x11, 0x11, 0x11, 0x21u, 0x10u, 0x10u, 0x10u, -1);
+      createUnit(a2, 41, 50, 0, 1u, 1, 0x10u, 0, 0, 0, 0, 0, 0x11u, -1);
+      createUnit(a2, 42, 50, 0, 5u, 0, 0, 0, 0, 0, 0, 0, 2, -1);
+      createUnit(a2, 43, 50, 0, 9u, 9, 0x10u, 3, 3, 0x22u, 0xFu, 0xFu, -1);
+      castle_index = createCastle(a2, 56, 69, 1, 1, "Hopenberg", 0x11u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_WORD *)(building_record + 18) = 9;
+      createUnit(a2, 56, 71, 1, 9u, 9, -1);
+      stack_index = *(unsigned __int16 *)(gameData + 567716);
+      Building_UnitGetInto(stack_index, castle_index, 56, 71, a2);
+      for ( slot_index = 0; slot_index < 12; ++slot_index )
+        *(_BYTE *)(building_record + 31 * slot_index + 30) |= 3u;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 1)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 1)) = 0;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 55, 71, 1, 2u, 2, 1, 1, 9, 0x11u, -1);
+      createUnit(a2, 56, 71, 1, 9u, 9, 9, 5, 5, 5, 1, 1, 0x11u, -1);
+      createUnit(a2, 57, 71, 1, 5u, 5, 5, 5, 5, 0x11u, -1);
+      castle_index = createCastle(a2, 32, 36, 2, 2, "Jolarion", 0x11u, 9, 9, 0, 0, 0, 1, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      castle_index = createCastle(a2, 50, 23, 2, 2, "Akserion", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 50, 25, 2, 9u, 0xFu, 5, -1);
+      castle_index = createCastle(a2, 25, 48, 2, 2, "Bodeon", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 25, 50, 2, 9u, 9, 9, 9, 5, 5, -1);
+      sub_451EC0();
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - 0x8000, 4);
+      Game_InitPlayerViewState();
+      break;
+    case 5:
+      Map_LoadFromFile((int)"k_mapa6j.map");
+      ACTIVE_MISSION_INDEX = 5;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      PLAYER_AI_INTELLIGENCE(1) = 1;
+      PLAYER_AI_INTELLIGENCE(2) = 1;
+      PLAYER_AI_INTELLIGENCE(3) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      if ( g_LanguageIndex )
+      {
+        strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Furd");
+        strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Dulimam");
+      }
+      else
+      {
+        strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
+        strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
+      }
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 71, 45, 0, 2, "Defambrion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createUnit(a2, 70, 47, 0, 2u, 2, 0x10u, 0x10u, 0, 0, 0, 0, 0x21u, -1);
+      createUnit(a2, 71, 47, 0, 5u, 5, 0, 0, 0, 1, 1, 3, 2, -1);
+      createUnit(a2, 72, 47, 0, 9u, 9, 0x10u, -1);
+      createUnit(a2, 73, 47, 0, 5u, 5, 0x1Du, 0x1Du, 0x10u, 0x10u, -1);
+      createUnit(a2, 71, 44, 0, 0x11u, 0x11, 0x11, 0x11, 1, 1, -1);
+      createUnit(a2, 72, 44, 0, 1u, 2, -1);
+      createCastle(a2, 56, 21, 1, 2, "Histone", 0x11u, -1);
+      castle_index = createCastle(a2, 26, 41, 1, 2, "Katha Gha", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
+      createUnit(a2, 56, 23, 1, 2u, 2, 2, 1, 1, 9, 9, -1);
+      createUnit(a2, 57, 23, 1, 1u, 5, 5, -1);
+      createUnit(a2, 58, 23, 1, 0xCu, 0xCu, 0xCu, 0xCu, 0x15u, -1);
+      createUnit(a2, 73, 23, 1, 9u, 9, 5, 5, 5, 1, 1, 1, 1, 1, -1);
+      createCastle(a2, 68, 77, 2, 2, "Girock", 0x11u, -1);
+      createUnit(a2, 67, 79, 2, 9u, 0xFu, 5, 5, 5, 0x21u, -1);
+      createUnit(a2, 68, 79, 2, 0, 0, 0, 0, 0, 0, 1, -1);
+      createUnit(a2, 73, 63, 2, 1u, 1, 1, 1, 2, 5, -1);
+      createUnit(a2, 69, 79, 2, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 70, 79, 2, 5u, 0x10u, 0x10u, 0, 0, -1);
+      createUnit(a2, 59, 50, 2, 9u, 9, 5, 5, 3, 0xAu, -1);
+      castle_index = createCastle(a2, 42, 54, 3, 2, "Ghih Up", 0x11u, -1);
+      *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
+      createUnit(a2, 41, 56, 3, 0x14u, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, -1);
+      createUnit(a2, 42, 56, 3, 0x15u, 0x15, 0x15, 0x15, 2, 6, 6, -1);
+      createUnit(a2, 43, 56, 3, 0x15u, 0x15, 0x15, 0x15, 1, 0x1Du, 0x1Du, -1);
+      createUnit(a2, 44, 56, 3, 2u, 2, 2, 2, 0x14u, 0x14u, 0x14u, 0x14u, 0x14u, 6, 6, -1);
+      createUnit(a2, 42, 53, 3, 0xAu, 0xAu, 0xAu, 0xAu, 8, 8, 0x17u, 0x17u, 0x17u, 0x17u, -1);
+      stack_index = *(unsigned __int16 *)(gameData + 564880);
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) |= 3u;
+      createUnit(a2, 87, 66, 3, 0x15u, 0x15, 0x15, 0x15, 0x15, 0x15, -1);
+      sub_451EC0();
+      Rules_LogAssignedPlayerFact(3, 5);
+      Game_InitPlayerViewState();
+      break;
+    case 6:
+      Map_LoadFromFile((int)"k_mapa7z.map");
+      ACTIVE_MISSION_INDEX = 6;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Walter");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Drebegen");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 13, 4, 0, 0x21u, -1);
+      createUnit(a2, 14, 4, 0, 1u, -1);
+      createUnit(a2, 14, 3, 0, 0xEu, -1);
+      createCastle(a2, 30, 23, 1, 2, "Dragmounth", 0x11u, 9, 9, 9, 9, 9, 9, -1);
+      createCastle(a2, 54, 4, 1, 2, "Akserion", 0x11u, 0xFu, 0xF, 0xF, 0xF, 0xF, -1);
+      createUnit(a2, 30, 25, 1, 1u, 1, 1, 9, 0x11u, -1);
+      createUnit(a2, 31, 25, 1, 9u, 9, 5, 1, 1, 0, 0, 0, 0, -1);
+      createUnit(a2, 54, 6, 1, 6u, 0, 0, 0, 0, 5, 6, 1, 1, -1);
+      createUnit(a2, 85, 81, 1, 9u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      createUnit(a2, 12, 92, 1, 0xFu, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xDu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(39, 17));
+      *(_BYTE *)(UNIT_STACK(stack_index) + 251) |= 3u;
+      createUnit(a2, 17, 39, 1, 5u, 5, 5, 5, 5, -1);
+      createUnit(a2, 57, 38, 1, 8u, 8, 8, 8, 0x1Au, 0x1A, -1);
+      createUnit(a2, 74, 71, 1, 0xEu, 2, 2, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(74, 71));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
+      Rules_SyncArmyFactStrength(
+        (__int16 *)UNIT_STACK(stack_index),
+        145 * stack_index,
+        gameData + UNIT_STACK_TABLE_OFFSET,
+        UNIT_STACK_OWNER_INDEX(UNIT_STACK(stack_index)),
+        200 * UNIT_STACK_TILE_ROW(UNIT_STACK(stack_index)),
+        a2);
+      createUnit(a2, 82, 9, 1, 0xCu, 0xF, 0xF, 0xF, 0xF, 6, 6, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(82, 9));
+      Rules_SyncArmyFactStrength(
+        (__int16 *)UNIT_STACK(stack_index),
+        145 * stack_index,
+        gameData + UNIT_STACK_TABLE_OFFSET,
+        UNIT_STACK_OWNER_INDEX(UNIT_STACK(stack_index)),
+        200 * UNIT_STACK_TILE_ROW(UNIT_STACK(stack_index)),
+        a2);
+      castle_index = createCastle(a2, 90, 41, 2, 2, "Ghettan", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      castle_index = createCastle(a2, 41, 67, 2, 2, "Bhua Rock", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
+      castle_index = createCastle(a2, 5, 56, 2, 1, "Jolarion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
+      createUnit(a2, 41, 69, 2, 0xBu, 0x10u, 0x10u, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 42, 69, 2, 0xBu, 0xB, 0xB, 0xB, 5, 5, 5, 5, 5, 5, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      PLAYER_CAMERA_LEFT(0) = 10;
+      PLAYER_CAMERA_TOP(0) = 0;
+      MAP_VIEW_LEFT = 10;
+      MAP_VIEW_TOP = 0;
+      break;
+    case 7:
+      Map_LoadFromFile((int)"k_mapa8z.map");
+      ACTIVE_MISSION_INDEX = 7;
+      Rules_RetractTreasureFact(55, 45, a2);
+      Rules_RetractTreasureFact(50, 27, a2);
+      Rules_RetractTreasureFact(35, 63, a2);
+      Rules_RetractTreasureFact(14, 68, a2);
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Uraken");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Richard V");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 56, 70, 0, 2, "Weghetown", 0x11u, -1);
+      createCastle(a2, 1, 51, 0, 1, "Henrion", 0x11u, 0x11, 0x11, 0x21u, -1);
+      createUnit(a2, 56, 72, 0, 0xFu, 0xCu, 0, 0, 1, 1, -1);
+      createUnit(a2, 57, 72, 0, 0xFu, 0xFu, 0xCu, 5, 1, 1, -1);
+      createUnit(a2, 1, 53, 0, 0, 0, 0, 0xDu, 0xBu, 9, -1);
+      createUnit(a2, 2, 53, 0, 0x11u, 0x11, 0x11, 0x11, -1);
+      createCastle(a2, 9, 25, 1, 2, "Moon Town", 0x11u, -1);
+      createCastle(a2, 18, 34, 1, 2, "Gate Stone", 0x11u, -1);
+      createUnit(a2, 9, 27, 1, 1u, 1, 1, 9, 0x15u, 0x15u, -1);
+      createUnit(a2, 18, 36, 1, 0xAu, 0xAu, 2, 2, 6, 0x15u, 0x19u, -1);
+      createUnit(a2, 19, 36, 1, 0x19u, 0x19u, 0x19u, 0x19u, 0x15u, 0x15u, 0x15u, 0x14u, -1);
+      createCastle(a2, 43, 21, 2, 2, "Canoowar", 0x11u, -1);
+      createCastle(a2, 54, 31, 2, 1, "Trungeon", 0x11u, -1);
+      createUnit(a2, 42, 23, 2, 0xFu, 0x10u, 1, 8, 0x21u, -1);
+      createUnit(a2, 43, 23, 2, 0x1Du, 0x1Du, 1, 1, 1, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(43, 23));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 44, 23, 2, 1u, 1, 1, 1, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 45, 23, 2, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 54, 33, 2, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 55, 33, 2, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 77, 39, 3, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 75, 67, 3, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 77, 41, 3, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 78, 41, 3, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(78, 41));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 75, 69, 3, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 76, 69, 3, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(76, 69));
+      for ( slot_index = 1; slot_index < 3; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index + 1) + 27) =
+          *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) | 2;
+      }
+      createUnit(a2, 77, 69, 3, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 8:
+      Map_LoadFromFile((int)"k_mapa9z.map");
+      ACTIVE_MISSION_INDEX = 8;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_QUEEN_RELATIONSHIP_STATE(0) = 5;
+      PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN(0) = 10;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Sir James");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Ruryk");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 8, 27, 0, 2, "Totaweon", 0x11u, 0x21u, 0x21u, 0x21u, -1);
+      castle_index = createCastle(a2, 30, 23, 0, 2, "Gordmouth", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createUnit(a2, 8, 29, 0, 0, 9, 9, 9, 0xCu, 2, 2, -1);
+      createUnit(a2, 9, 29, 0, 5u, 5, 0xCu, 7, 8, 8, -1);
+      createUnit(a2, 10, 29, 0, 2u, 2, 2, 2, 2, 0x1Cu, -1);
+      createUnit(a2, 10, 14, 0, 0x21u, -1);
+      createUnit(a2, 11, 31, 0, 0x21u, -1);
+      createUnit(a2, 22, 29, 0, 0x21u, -1);
+      createUnit(a2, 30, 39, 0, 0x21u, -1);
+      createUnit(a2, 1, 28, 0, 0x21u, -1);
+      createUnit(a2, 8, 50, 0, 0x21u, -1);
+      createUnit(a2, 21, 57, 0, 0x21u, -1);
+      createUnit(a2, 21, 59, 0, 0x21u, -1);
+      createUnit(a2, 28, 57, 0, 0x21u, -1);
+      createCastle(a2, 22, 77, 1, 2, "Timbran", 0x11u, -1);
+      createCastle(a2, 59, 66, 1, 2, "Ghettan", 0x11u, -1);
+      createUnit(a2, 22, 79, 1, 0x1Au, 0x1Du, -1);
+      createUnit(a2, 59, 68, 1, 0xBu, 0xBu, 2, 0x15u, 0x15u, 0x15u, 0xCu, 0xCu, 0xCu, -1);
+      createUnit(a2, 60, 68, 1, 0x19u, 0x19u, 0x14u, 0x14u, 0x14u, 8, 8, 8, -1);
+      createCastle(a2, 4, 62, 2, 2, "Hopenberg", 0x11u, 0x21u, -1);
+      createCastle(a2, 84, 64, 2, 2, "Katha Gha", 0x11u, 0x21u, -1);
+      createUnit(a2, 4, 64, 2, 1u, 1, 1, 1, 1, 1, 1, 2, 2, -1);
+      createUnit(a2, 5, 64, 2, 0x1Du, 0x1Du, 0x1Au, 0x1Au, 6, 6, 0xCu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(5, 64));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 6, 64, 2, 5u, 5, 5, 5, 0x13u, 0x13u, 0x16u, 0x16u, 0xCu, 0xEu, -1);
+      createUnit(a2, 84, 66, 2, 0x1Cu, 0x1Au, 0xCu, 0xCu, 0x15u, 0x15u, 0xBu, 0x11u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(84, 66));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 85, 66, 2, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, 0x12u, 0x12u, 0x12u, 0x12u, -1);
+      createUnit(a2, 86, 66, 2, 0xAu, 0xAu, 0xAu, 0xAu, 2, 2, 0x15u, 0x13u, 0x16u, -1);
+      createCastle(a2, 96, 86, 3, 2, "Werneom", 0x11u, -1);
+      createUnit(a2, 95, 88, 3, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, 0x15u, 0x11u, -1);
+      createUnit(a2, 96, 88, 3, 0x12u, 0x12u, 0x19u, 0x19u, 0x19u, 0x19u, 0x13u, -1);
+      createUnit(a2, 97, 88, 3, 1u, 1, 0x18u, 7, 8, 0x16u, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(103, 0));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 5) + 27) =
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 5) + 27) & 0xFC | 2;
+      createUnit(a2, 96, 85, 3, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(102, 69));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
+      createUnit(a2, 97, 85, 3, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(102, 97));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) =
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) & 0xFC | 2;
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 9:
+      Map_LoadFromFile((int)"k_map10l.map");
+      ACTIVE_MISSION_INDEX = 9;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_AI_INTELLIGENCE(4) = 2;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Twogor");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Drebegen");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Mieszko");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Chester");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 13, 3, 0, 2, "Gorendberg", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 2;
+      castle_index = createCastle(a2, 94, 95, 0, 2, "Timbran", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 500;
+      *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 2;
+      createUnit(a2, 13, 5, 0, 0x1Du, 0xAu, 0xAu, 0xCu, 9u, 9, -1);
+      createUnit(a2, 14, 5, 0, 5u, 5, 5, 5, 5, 5, 5, 5, 5, 5, -1);
+      createUnit(a2, 94, 97, 0, 0x22u, 2, 2, 2, 2, 2, -1);
+      createUnit(a2, 95, 97, 0, 0x18u, 0x18u, 0x15u, 0x15u, 0x1Eu, -1);
+      castle_index = createCastle(a2, 62, 53, 1, 2, "Ghettan", 0x11u, 0x21u, 0x21u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 3000;
+      createUnit(a2, 61, 55, 1, 6u, 6, 7, 7, 0x1Eu, 0x1Eu, 5, 5, 5, 0x18u, -1);
+      createUnit(a2, 62, 55, 1, 0xBu, 0xBu, 0x18u, 0x15u, 0xCu, 8, 8, 0x11u, -1);
+      createUnit(a2, 63, 55, 1, 0x19u, 0x19u, 0x19u, 0x19u, 0x19u, 0x14u, 0x14u, 0x14u, 0xEu, 0x1Au, -1);
+      createUnit(a2, 64, 55, 1, 0x1Eu, 0x1Bu, 0x1Cu, 5u, 5, 2, 0x11u, -1);
+      createUnit(a2, 62, 52, 1, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, 0x18u, 0x1Eu, -1);
+      createUnit(a2, 63, 52, 1, 0x18u, 0x18u, 0x18u, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, -1);
+      castle_index = createCastle(a2, 58, 11, 2, 2, "Bhua Rock", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 3000;
+      createUnit(a2, 57, 13, 2, 1u, 1, 1, 1, 1, 6, 6, 0x15u, 0x16u, -1);
+      createUnit(a2, 58, 13, 2, 0x1Au, 0x1Au, 6, 6, 0xCu, 0xEu, 0xEu, 0x1Cu, -1);
+      createUnit(a2, 59, 13, 2, 6u, 6, 6, 6, 0x11u, -1);
+      createUnit(a2, 60, 13, 2, 0x1Cu, 0x1Bu, 0xCu, 0xCu, 0x15u, 0x15u, 0x18u, 0x11u, -1);
+      createUnit(a2, 58, 10, 2, 0xAu, 0xAu, 0xAu, 0xAu, 2u, 2, 0x15u, 0x13u, 0x16u, -1);
+      createUnit(a2, 58, 10, 2, 0x18u, 0x18u, 0x18u, 0x1Eu, -1);
+      createCastle(a2, 95, 16, 3, 2, "Katha Gha", 0x11u, -1);
+      createCastle(a2, 11, 41, 3, 2, "Stormus", 0x11u, -1);
+      createUnit(a2, 95, 18, 3, 0x19u, 0x19u, 0x19u, 0x19u, 0x19u, 0x15u, 0x1Bu, -1);
+      createUnit(a2, 96, 18, 3, 0x12u, 0x12u, 0x17u, 0x17u, 0x13u, 0x13u, 0x13u, 0x18u, 0x18u, 0x18u, -1);
+      createUnit(a2, 11, 43, 3, 1u, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 12, 43, 3, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x17u, 0x17u, 0x11u, -1);
+      castle_index = createCastle(a2, 32, 84, 4, 2, "Guluali", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) += 500;
+      *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 3;
+      createUnit(a2, 31, 86, 4, 0x1Eu, 0x1Eu, 0xCu, 0xCu, 0xEu, 2, 2, -1);
+      createUnit(a2, 32, 86, 4, 0x17u, 0x17u, 0x15u, 0x15u, 0x15u, 0x15u, 0x15u, -1);
+      createUnit(a2, 33, 86, 4, 5u, 5, 7, 7, 0x12u, 0x19u, 0x19u, 0x11u, -1);
+      createUnit(a2, 34, 86, 4, 0xCu, 0xCu, 8u, 8, 8, 0x1Bu, 0x1Bu, 0x11u, -1);
+      createUnit(a2, 32, 83, 4, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x15u, 0x15u, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 10:
+      Map_LoadFromFile((int)"p_mapa1z.map");
+      ACTIVE_MISSION_INDEX = 10;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_MINIMAP_VISIBLE(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 15, 31, 1, 2, "Timbran", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      building_word = *(_WORD *)(building_record + 430);
+      *(_WORD *)(building_record + 430) = (building_word & 0xF000) | (((building_word & 0xFFF) - 0x32) & 0xFFF);
+      createUnit(a2, 15, 33, 1, 1u, 1, 0xF, 0x10, -1);
+      createUnit(a2, 16, 33, 1, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 17, 33, 1, 9u, 9, -1);
+      createUnit(a2, 1, 22, 2, 9u, 0xF, 1, 1, 1, -1);
+      createUnit(a2, 27, 12, 2, 0, 0, 0, 0, 0, 0, 0xF, 0xF, 1, -1);
+      createUnit(a2, 48, 20, 2, 0, 0, 0, 0, 0xF, -1);
+      createUnit(a2, 34, 37, 2, 9u, -1);
+      createUnit(a2, 11, 13, 2, 9u, -1);
+      createUnit(a2, 4, 22, 2, 9u, -1);
+      createUnit(a2, 10, 25, 2, 1u, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 11:
+      Map_LoadFromFile((int)"p_mapa2z.map");
+      ACTIVE_MISSION_INDEX = 11;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 22, 13, 1, 2, "Gatgally", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0x10, -1);
+      createUnit(a2, 22, 15, 1, 0x11u, 0xF, 0xF, 0x10, 0x10, -1);
+      createCastle(a2, 34, 5, 2, 2, "Guluali", 0x11u, 0, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      createUnit(a2, 33, 7, 2, 9u, 0xF, 1, 1, 1, 1, -1);
+      createUnit(a2, 34, 7, 2, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 35, 7, 2, 0, 0, 9, 9, 9, 0xF, 0xF, -1);
+      createUnit(a2, 36, 7, 2, 1u, 1, 1, 1, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 12:
+      Map_LoadFromFile((int)"p_mapa3z.map");
+      ACTIVE_MISSION_INDEX = 12;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 70, 81, 1, 9u, -1);
+      createUnit(a2, 71, 81, 1, 0, 0, 0, 1, 1, 1, 0x10u, -1);
+      createUnit(a2, 69, 82, 1, 5u, 5, 0xFu, 0xFu, 0, 0, -1);
+      createUnit(a2, 70, 82, 1, 0x10u, 0x10u, -1);
+      createUnit(a2, 71, 83, 1, 0xDu, -1);
+      castle_index = createCastle(a2, 59, 14, 2, 2, "Sarturia", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 5000;
+      createUnit(a2, 67, 36, 2, 0xFu, 1, 1, 1, 1, -1);
+      createUnit(a2, 25, 85, 2, 0, 0, 0, 0, 0, 0xFu, 0xFu, 1u, -1);
+      createUnit(a2, 45, 73, 2, 5u, 5, 9, 9, 0x10u, 0x10u, -1);
+      createUnit(a2, 69, 91, 2, 9u, 9, 9, 9, 9, -1);
+      createUnit(a2, 77, 64, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 36, 52, 2, 1u, 1, 1, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 41, 49, 2, 9u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      createUnit(a2, 62, 94, 2, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, 0x10u, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      MAP_VIEW_LEFT = 67;
+      PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
+      MAP_VIEW_TOP = 77;
+      PLAYER_CAMERA_TOP(1) = MAP_VIEW_TOP;
+      break;
+    case 13:
+      Map_LoadFromFile((int)"p_mapa4l.map");
+      ACTIVE_MISSION_INDEX = 13;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Leryks X");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Glazur");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Sir John");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 23, 26, 1, 2, "Ungught", 0x11u, -1);
+      createUnit(a2, 22, 25, 1, 1u, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 25, 25, 1, 0x10u, -1);
+      createUnit(a2, 22, 28, 1, 9u, 9, 9, 3, 3, 1, 1, -1);
+      createUnit(a2, 25, 28, 1, 2u, 2, 2, 0xAu, 0xAu, 0xAu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(25, 28));
+      for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) = Rng_RandRange(5, 20);
+      createUnit(a2, 26, 28, 1, 0x11u, 0x11, 0x11, 0x22u, -1);
+      createUnit(a2, 7, 15, 2, 0xFu, 0xF, 1, 1, -1);
+      createUnit(a2, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 26, 47, 2, 5u, 5, 5, 0x10u, 0x10u, 0, 0, 0, -1);
+      createUnit(a2, 18, 38, 2, 9u, 9, 0xFu, 0xFu, 0, 0, 0, -1);
+      createUnit(a2, 35, 18, 2, 0, 0, 0, 0, 0, 9u, -1);
+      createUnit(a2, 33, 35, 3, 1u, 1, 1, -1);
+      createUnit(a2, 45, 29, 3, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 10, 33, 3, 5u, 0x10u, 0x10u, 1, 1, 0, 0, -1);
+      createUnit(a2, 26, 45, 3, 9u, 9, 9, 5, 5, 0x10u, -1);
+      createUnit(a2, 48, 8, 4, 0xFu, 1, 0x10u, 1, 9, 0, 3, 3, -1);
+      createUnit(a2, 21, 10, 4, 0, 0, 0, 3, 3, 3, 0xCu, -1);
+      createUnit(a2, 35, 17, 4, 9u, 9, 3, 3, 3, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 14:
+      Map_LoadFromFile((int)"p_mapa5l.map");
+      ACTIVE_MISSION_INDEX = 14;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(2) = 0;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Uraken");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 50, 3, 1, 2, "Weghetown", 0x11u, 0x21u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      building_word = *(_WORD *)(building_record + 430);
+      *(_WORD *)(building_record + 430) = building_word & 0xF000;
+      createUnit(a2, 50, 5, 1, 5u, 1, 1, 0x10u, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 51, 5, 1, 5u, 0, 0, 0, 0, 0, 0, 0, 0, -1);
+      createUnit(a2, 52, 5, 1, 9u, 9, 0x10u, 3, 3, 0x21u, -1);
+      createUnit(a2, 49, 5, 1, 0x11u, 0x11u, 0x10u, 1, 1, -1);
+      castle_index = createCastle(a2, 52, 24, 2, 2, "Timbran", 0x11u, 0xFu, 0xFu, 0xFu, 0xFu, 0xFu, 9, 9, 9, 9, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_WORD *)(building_record + 18) = 0xF;
+      createUnit(a2, 52, 26, 2, 1u, 1, 9, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(52, 26));
+      Building_UnitGetInto(stack_index, castle_index, 52, 26, a2);
+      for ( slot_index = 0; slot_index < 12; ++slot_index )
+        *(_BYTE *)(building_record + 31 * slot_index + 30) =
+          (*(_BYTE *)(building_record + 31 * slot_index + 30) & 0xFC) | 1;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 1)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 1)) = 0;
+      BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 2)) = UNIT_TYPE_SPECIAL_FOOT_PERSONAGE;
+      BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 2)) = 0;
+      Building_OnGarrisonChange(castle_index, 0, a2);
+      createUnit(a2, 64, 4, 2, 2u, 2, 2, 1, 1, 9, -1);
+      createUnit(a2, 50, 27, 2, 9u, 9, 9, 9, 5, 5, 5, 1, 1, 1, -1);
+      castle_index = createCastle(a2, 39, 18, 3, 2, "Fraggmeon", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      castle_index = createCastle(a2, 17, 34, 3, 2, "Eufurhon", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createUnit(a2, 39, 20, 3, 9u, 0xFu, 5, -1);
+      createUnit(a2, 40, 20, 3, 0, 0, 0, 1, -1);
+      createUnit(a2, 16, 36, 3, 1u, 1, 1, 1, 2, -1);
+      createUnit(a2, 17, 36, 3, 0, 0, 0, 0, 0, 0, 0x10u, 0x10u, -1);
+      createUnit(a2, 18, 36, 3, 3u, 5, 0x10u, 0x10u, 1, 0, 0, -1);
+      createUnit(a2, 25, 4, 3, 9u, 9, 5, 5, -1);
+      sub_451EC0();
+      Rules_LogAssignedCastleFact(*(unsigned __int16 *)(TILE_INDEX(52, 24)) - 0x8000, 14);
+      Game_InitPlayerViewState();
+      break;
+    case 15:
+      Map_LoadFromFile((int)"p_mapa6l.map");
+      ACTIVE_MISSION_INDEX = 15;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_AI_INTELLIGENCE(4) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Frederic");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Sir James");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 59, 9, 1, 2, "Defambrion", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
+      createCastle(a2, 50, 96, 1, 1, "Ghondur", 0x11u, -1);
+      createUnit(a2, 59, 11, 1, 2u, 2, 0x10u, 0x10u, 0, 0, 0, 0, 0x21u, -1);
+      createUnit(a2, 60, 11, 1, 5u, 5, 0, 0, 0, 1, 1, 3, 2, -1);
+      createUnit(a2, 61, 11, 1, 9u, 9, 0x10u, -1);
+      createUnit(a2, 49, 98, 1, 5u, 5, 0x1Du, 0x1Du, 0x10u, 0x10u, -1);
+      createUnit(a2, 50, 98, 1, 0x11u, 0x11u, 0x11u, 0x11u, 1, 1, -1);
+      createUnit(a2, 51, 98, 1, 1u, 1, 2, -1);
+      createCastle(a2, 86, 55, 2, 2, "Histone", 0x11u, -1);
+      createUnit(a2, 86, 57, 2, 2u, 2, 2, 2, 1, 1, 9, 9, -1);
+      createUnit(a2, 87, 57, 2, 5u, 5, -1);
+      createCastle(a2, 79, 2, 3, 2, "Girock", 0x11u, -1);
+      createUnit(a2, 78, 4, 3, 9u, 0xFu, 5, 0x21u, -1);
+      createUnit(a2, 79, 4, 3, 0, 0, 0, 1, -1);
+      createUnit(a2, 80, 4, 3, 1u, 1, 1, 1, -1);
+      createUnit(a2, 81, 4, 3, 0, 0, 0, 0, 0x10u, 0x10u, 0xBu, -1);
+      createUnit(a2, 80, 1, 3, 9u, 9, 5, 5, -1);
+      castle_index = createCastle(a2, 48, 38, 4, 2, "Ghih Up", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) = 1000;
+      *(_WORD *)(building_record + 18) = -1;
+      createUnit(a2, 48, 40, 4, 0x15u, 0x15u, 0x15u, 0x15u, 2, -1);
+      createUnit(a2, 49, 40, 4, 2u, 2, 2, 2, 0x14u, 0x14u, 0x14u, 0x14u, -1);
+      createUnit(a2, 50, 40, 4, 0xAu, 0xAu, 0xAu, 0xAu, 5, 5, 0x17u, 0x17u, 0x17u, 0x17u, -1);
+      createUnit(a2, 48, 57, 4, 5u, 0x10u, 0x10u, 0, 0, -1);
+      createUnit(a2, 18, 75, 4, 0x14u, 0x14u, 0x14u, 0xBu, 0xBu, -1);
+      createUnit(a2, 37, 6, 4, 1u, 1, 1, 1, 1, 1, 0xFu, 0xFu, -1);
+      castle_index = createCastle(a2, 19, 32, 4, 2, "Guluali", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
+      createUnit(a2, 19, 34, 4, 2u, 2, 2, 9, 9, 0, 0, 0, 0, -1);
+      sub_451EC0();
+      Rules_LogAssignedPlayerFact(4, 15);
+      Game_InitPlayerViewState();
+      break;
+    case 16:
+      Map_LoadFromFile((int)"p_mapa7j.map");
+      ACTIVE_MISSION_INDEX = 16;
+      *(_BYTE *)(gameData + 140021) = 0;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 1;
+      PLAYER_AI_INTELLIGENCE(3) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Kalev");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Ianos");
+      MiniMap_CreateSurface(a2);
+      createUnit(a2, 21, 35, 1, 0x21u, -1);
+      createUnit(a2, 20, 36, 1, 1u, 1, -1);
+      createUnit(a2, 22, 36, 1, 0xEu, -1);
+      createUnit(a2, 22, 36, 1, 0xEu, 0x11u, -1);
+      castle_index = createCastle(a2, 91, 43, 2, 2, "Gwadat", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 3;
+      createCastle(a2, 54, 74, 2, 2, "Cantown", 0x11u, -1);
+      createUnit(a2, 91, 45, 2, 1u, 1, 9, -1);
+      createUnit(a2, 92, 45, 2, 9u, 9, 5, 1, 1, -1);
+      createUnit(a2, 93, 45, 2, 0, 0, 0, 0, 5, 8, -1);
+      createUnit(a2, 54, 76, 2, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, 0xAu, -1);
+      createCastle(a2, 35, 3, 2, 3, "Thubeos", 0x11u, -1);
+      createCastle(a2, 66, 45, 2, 3, "Akserion", 0x11u, -1);
+      createUnit(a2, 35, 5, 3, 0xFu, 0x10u, 1, 1, 1, 8, 0x21u, -1);
+      createUnit(a2, 36, 5, 3, 0, 0, 0, 0, 1, 1, 2, 2, -1);
+      createUnit(a2, 66, 47, 3, 1u, 1, 1, 1, 2, 2, 2, 5, 5, 5, -1);
+      createUnit(a2, 67, 47, 3, 0, 0, 0, 0, 0, 0, 0x10u, -1);
+      createUnit(a2, 21, 28, 3, 5u, 5, 0x10u, 0x10u, 1, 1, 0x11u, -1);
+      createUnit(a2, 28, 76, 3, 9u, 9, 9, 9, 5, 4, 4, 2, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(26, 40));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 60, 43, 3, 1u, 1, 1, 2, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 61, 43, 3, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(61, 43));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 62, 43, 3, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 63, 43, 3, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 62, 86, 4, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 63, 86, 4, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 56, 79, 4, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 65, 44, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(65, 44));
+      for ( slot_index = 2; slot_index < 4; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 2u;
+      }
+      createUnit(a2, 58, 63, 4, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      MAP_VIEW_LEFT = 17;
+      PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
+      MAP_VIEW_TOP = 32;
+      PLAYER_CAMERA_TOP(1) = MAP_VIEW_TOP;
+      break;
+    case 17:
+      Map_LoadFromFile((int)"p_mapa8j.map");
+      ACTIVE_MISSION_INDEX = 17;
+      *(_BYTE *)(gameData + 140021) = 0;
+      Rules_RetractTreasureFact(50, 34, a2);
+      Rules_RetractTreasureFact(51, 73, a2);
+      Rules_RetractTreasureFact(77, 34, a2);
+      Rules_RetractTreasureFact(24, 49, a2);
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_AI_INTELLIGENCE(2) = 2;
+      PLAYER_AI_INTELLIGENCE(3) = 2;
+      PLAYER_AI_INTELLIGENCE(4) = 2;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Ruwe");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "McGregor");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Crowley");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 11, 45, 1, 2, "Stormus", 0x11u, -1);
+      castle_index = createCastle(a2, 70, 20, 1, 1, "Dark Town", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createUnit(a2, 12, 47, 1, 0xFu, 0xCu, 0, 0, 1, 1, -1);
+      createUnit(a2, 22, 71, 1, 9u, 9, 0xCu, 5, 1, 1, -1);
+      createUnit(a2, 72, 22, 1, 0, 0, 0xDu, 0xBu, 9, -1);
+      createCastle(a2, 32, 5, 2, 2, "Treg Rock", 0x11u, -1);
+      createCastle(a2, 42, 27, 2, 2, "Bodeon", 0x11u, -1);
+      createUnit(a2, 32, 7, 2, 1u, 1, 9, 0xFu, 0xFu, -1);
+      createUnit(a2, 33, 7, 2, 0xAu, 0xAu, 6, 2, 2, 0x15u, 0x17u, -1);
+      createUnit(a2, 34, 7, 2, 0x17u, 0x17u, 0x17u, 0x17u, 0xFu, 0xFu, 0xEu, -1);
+      createCastle(a2, 25, 38, 3, 2, "Girock", 0x11u, -1);
+      createCastle(a2, 61, 41, 3, 1, "Bodeon", 0x11u, -1);
+      createUnit(a2, 25, 40, 3, 0xFu, 0x10u, 1, 1, 1, 6, 0x21u, -1);
+      createUnit(a2, 26, 40, 3, 0x1Du, 0x1Du, 1, 1, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(26, 40));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 60, 43, 3, 1u, 1, 1, 1, 2, 2, 2, 2, 0x16u, 0x16u, -1);
+      createUnit(a2, 61, 43, 3, 0x16u, 0x1Du, 0xCu, 0x10u, 0x10u, 0xBu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(61, 43));
+      for ( slot_index = 3; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 62, 43, 3, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, -1);
+      createUnit(a2, 63, 43, 3, 9u, 9, 9, 9, 6, 2, 2, 2, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createUnit(a2, 62, 86, 4, 0xFu, 0x10u, 6, 6, 8, 0x21u, -1);
+      createUnit(a2, 63, 86, 4, 0x1Du, 0x1Du, 0x19u, 0x19u, 2, 2, 0x13u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      createUnit(a2, 56, 79, 4, 1u, 1, 1, 1, 2, 2, 2, 0x16u, -1);
+      createUnit(a2, 65, 44, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(65, 44));
+      for ( slot_index = 2; slot_index < 4; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+      {
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) &= 0xFCu;
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 2u;
+      }
+      createUnit(a2, 58, 63, 4, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 18:
+      Map_LoadFromFile((int)"p_mapa9j.map");
+      ACTIVE_MISSION_INDEX = 18;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(3) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Drebegen");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Tubius");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Gorio");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "McDan");
+      MiniMap_CreateSurface(a2);
+      createCastle(a2, 85, 38, 1, 2, "Cantbelly", 0x11u, 0x11u, 0x11u, -1);
+      castle_index = createCastle(a2, 15, 23, 1, 2, "Stone Bell", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createUnit(a2, 85, 40, 1, 9u, 9, 9, 0xCu, 2, 2, 0x21u, -1);
+      createUnit(a2, 86, 40, 1, 5u, 5, 0xCu, 7, 0x1Eu, 0x1Eu, -1);
+      createUnit(a2, 15, 25, 1, 2u, 2, 2, 2, 2, 2, 0x21u, -1);
+      createUnit(a2, 16, 25, 1, 0x22u, 0x22u, 0x22u, 0x22u, 0x22u, 0x22u, -1);
+      createCastle(a2, 9, 89, 2, 2, "Timbran", 0x11u, -1);
+      createUnit(a2, 9, 91, 2, 0x1Au, 0x1Du, 5, 5, 6, -1);
+      createUnit(a2, 10, 91, 2, 0xBu, 0xBu, 0x15u, 0x15u, 0x15u, 0xCu, 0xCu, 0xCu, -1);
+      createUnit(a2, 11, 91, 2, 0x19u, 0x19u, 0x14u, 0x14u, 0x14u, 0xCu, 0xEu, 8, 8, 8, -1);
+      createCastle(a2, 6, 5, 3, 2, "Hopenberg", 0x11u, 0x21u, -1);
+      createCastle(a2, 82, 55, 3, 2, "Katha Gha", 0x11u, 0x22u, -1);
+      createUnit(a2, 6, 7, 3, 1u, 1, 1, 1, 1, 1, 1, 2, 2, -1);
+      createUnit(a2, 7, 7, 3, 0x1Du, 0x1Du, 0x1Au, 0x1Au, 6, 6, 0xCu, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(7, 7));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
+      createUnit(a2, 82, 57, 3, 5u, 5, 5, 5, 0x13u, 0x13u, 0x16u, 0x16u, 0xCu, 0xEu, -1);
+      createUnit(a2, 83, 57, 3, 0x1Cu, 0x1Au, 0xCu, 0xCu, 0x15u, 0x15u, 0xBu, 0x11u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(78, 45));
+      for ( slot_index = 4; slot_index < 6; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
+      createUnit(a2, 84, 57, 3, 0xCu, 0xCu, 0x10u, 0x10u, 2, 2, 0x12u, 0x12u, 0x12u, 0x12u, -1);
+      createUnit(a2, 6, 91, 3, 0xAu, 0xAu, 0xAu, 0xAu, 2, 2, 0x15u, 0x13u, 0x16u, -1);
+      createCastle(a2, 27, 49, 4, 2, "Werneom", 0x11u, -1);
+      createCastle(a2, 48, 72, 4, 1, "Bokumia", 0x11u, -1);
+      createUnit(a2, 27, 51, 4, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, 0x15u, 0x11u, -1);
+      createUnit(a2, 28, 51, 4, 0x12u, 0x12u, 0x19u, 0x19u, 0x19u, 0x19u, 0x13u, -1);
+      createUnit(a2, 10, 51, 4, 1u, 1, 0x18u, 7, 8, 0x16u, 0xCu, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(10, 51));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) |= 3u;
+      createUnit(a2, 48, 74, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x19u, 0x19u, -1);
+      createUnit(a2, 49, 74, 4, 0xCu, 0xCu, 0xBu, 2, 2, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(49, 74));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) &= 0xFCu;
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) |= 2u;
+      castle_index = createCastle(a2, 62, 79, 0, 1, "Fhur Tao", 0x11u, 0x21u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) += 200;
+      createUnit(a2, 62, 81, 0, 0, 0, 0, 0, 0, 0, 1u, 9u, -1);
+      createUnit(a2, 63, 81, 0, 0, 0x17u, 0x17u, 2, 9u, -1);
+      createUnit(a2, 61, 81, 0, 0, 1u, 1u, 5u, 5u, 0, 0, -1);
+      createUnit(a2, 70, 80, 0, 0x1Du, 0xCu, 0xCu, 1, 1, 1, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(70, 80));
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 28) &= 0xFCu;
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 28) |= 1u;
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) &= 0xFCu;
+      *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) |= 1u;
+      createUnit(a2, 37, 29, 0, 0, 0, 0, 0, 0xBu, 0xBu, 5u, -1);
+      stack_index = *(unsigned __int16 *)(TILE_INDEX(37, 29));
+      for ( slot_index = 0; slot_index < 5; ++slot_index )
+        *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    case 19:
+      Map_LoadFromFile((int)"p_map10z.map");
+      ACTIVE_MISSION_INDEX = 19;
+      for ( player_index = 0; player_index < 5; ++player_index )
+        Game_ResetPlayerRuntimeStateByIndex(player_index);
+      PLAYER_IS_ACTIVE(0) = 1;
+      PLAYER_IS_ACTIVE(1) = 1;
+      PLAYER_IS_ACTIVE(2) = 1;
+      PLAYER_IS_ACTIVE(3) = 1;
+      PLAYER_IS_ACTIVE(4) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(0) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(2) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(3) = 0;
+      PLAYER_HAS_HUMAN_CONTROLLER(4) = 0;
+      PLAYER_RELIGION_FLAG(1) = 0;
+      PLAYER_RELIGION_FLAG(3) = 0;
+      PLAYER_MINIMAP_VISIBLE(1) = 1;
+      strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Sir Mordus");
+      strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
+      strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Galaghan");
+      strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Longhand");
+      strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
+      MiniMap_CreateSurface(a2);
+      castle_index = createCastle(a2, 83, 15, 1, 2, "Gorendberg", 0x11u, -1);
+      building_record = BUILDING_RECORD(castle_index);
+      *(_DWORD *)(building_record + 438) -= 100;
+      createCastle(a2, 73, 68, 1, 2, "Timbran", 0x11u, -1);
+      createUnit(a2, 83, 17, 1, 9u, 9, 0xCu, 0xAu, 0xAu, 0x1Du, 0x21u, -1);
+      createUnit(a2, 84, 17, 1, 5u, 5, 5, 5, 5, 5, 5, 5, 5, 5, -1);
+      createUnit(a2, 73, 70, 1, 0x18u, 0x18u, 2, 2, 2, 2, 2, 0x22u, -1);
+      castle_index = createCastle(a2, 20, 9, 2, 2, "Ghettan", 0x11u, 0x21u, 0x21u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 600;
+      createCastle(a2, 70, 30, 2, 2, "Drakefly", 0x11u, -1);
+      createUnit(a2, 20, 11, 2, 6u, 6, 7, 7, 0x1Eu, 0x1Eu, 5, 5, 5, 0x18u, -1);
+      createUnit(a2, 21, 11, 2, 0xBu, 0xBu, 0x18u, 0x15u, 0xCu, 8, 8, -1);
+      createUnit(a2, 22, 11, 2, 0x19u, 0x19u, 0x19u, 0x19u, 0x19u, 0x14u, 0x14u, 0x14u, 0xEu, 0x1Au, -1);
+      createUnit(a2, 70, 32, 2, 2u, 0x1Eu, 0x1Bu, 0x1Cu, 5, 5, 2, -1);
+      createUnit(a2, 71, 32, 2, 2u, 0x16u, 0x16u, 0x16u, 0x16u, 0x16u, 0x18u, 0x1Eu, -1);
+      createCastle(a2, 36, 54, 3, 2, "Bhua Rock", 0x11u, -1);
+      createUnit(a2, 35, 56, 3, 1u, 1, 1, 1, 1, 6, 6, 0x15u, 0x16u, -1);
+      createUnit(a2, 36, 56, 3, 0x1Au, 0x1Au, 6, 6, 0xCu, 0xEu, 0xEu, 0x1Cu, -1);
+      createUnit(a2, 37, 56, 3, 6u, 6, 6, 6, -1);
+      createUnit(a2, 38, 56, 3, 0x1Cu, 0x1Bu, 0xCu, 0xCu, 0x15u, 0x15u, 0x18u, -1);
+      createUnit(a2, 36, 53, 3, 0xAu, 0xAu, 0xAu, 0xAu, 2, 2, 0x15u, 0x13u, 0x16u, -1);
+      createCastle(a2, 79, 2, 4, 2, "Katha Gha", 0x11u, -1);
+      castle_index = createCastle(a2, 88, 63, 4, 1, "Stormus", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 300;
+      createUnit(a2, 79, 4, 4, 0x19u, 0x19u, 0x19u, 0x19u, 0x19u, 0x15u, 0x1Bu, -1);
+      createUnit(a2, 80, 4, 4, 0x12u, 0x12u, 0x17u, 0x17u, 0x13u, 0x13u, 0x13u, 0x18u, 0x18u, 0x18u, -1);
+      createUnit(a2, 88, 65, 4, 1u, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1);
+      createUnit(a2, 89, 65, 4, 0x16u, 0x1Du, 0xCu, 0xCu, 0x10u, 0x10u, 0x17u, 0x17u, -1);
+      castle_index = createCastle(a2, 95, 51, 0, 2, "Guluali", 0x11u, -1);
+      *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 300;
+      createUnit(a2, 95, 53, 0, 0x1Eu, 0x1Eu, 0xCu, 0xCu, 0xEu, 2, 2, -1);
+      createUnit(a2, 96, 53, 0, 0x17u, 0x17u, 0x15u, 0x15u, 0x15u, 0x15u, 0x15u, -1);
+      createUnit(a2, 97, 53, 0, 5u, 5, 7, 7, 0x12u, 0x19u, 0x19u, -1);
+      createUnit(a2, 55, 79, 0, 0xCu, 0xCu, 8, 8, 8, 0x1Bu, 0x1Bu, -1);
+      createUnit(a2, 78, 98, 0, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x1Eu, 0x15u, 0x15u, -1);
+      sub_451EC0();
+      Game_InitPlayerViewState();
+      break;
+    default:
+      break;
+  }
 }
-// 460363: control flows out of bounds to 460369
 
 //----- (00460370) --------------------------------------------------------
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
 {
+  int mission_index; // eax
   char v5; // di
   char v6; // si
   int v7; // ecx
@@ -71312,27 +72787,21 @@ int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
   _WORD v10[18]; // [esp-28h] [ebp-2Ch] BYREF
   int v11; // [esp-4h] [ebp-8h]
 
+  mission_index = (int)(size_t)a1;
   v11 = a2;
   qmemcpy(v10, (const void *)(gameData + 147147), 0x1Bu);
   v6 = gameData - 27 + 1;
   v5 = (unsigned __int8)&v10[13] + 1;
-  if ( a1 && a1 != (char *)10 )
+  if ( mission_index && mission_index != 10 )
     sub_4623C0(0, aZwy01_0);
-  sub_462480((int)a1, a1);
-  WorldMap_Initialize((char)a1, a3);
-  Scenario_LoadMissionByIndex();
-  if ( a1 && a1 != (char *)10 )
+  sub_462480(mission_index, a1);
+  WorldMap_Initialize((char)mission_index, a3);
+  Scenario_LoadMissionByIndex(mission_index, a4);
+  if ( mission_index && mission_index != 10 )
   {
-    v8 = (_WORD *)(gameData + 147147);
-    qmemcpy((void *)(gameData + 147147), v10, 0x18u);
-    v8 += 12;
-    v7 = 0;
-    *v8++ = v10[12];
-    *(_BYTE *)v8 = v10[13];
-    v6 = (unsigned __int8)&v10[13] + 1;
-    v5 = (_BYTE)v8 + 1;
+    qmemcpy((void *)(gameData + 147147), v10, 0x1Bu);
   }
-  return PlayGame(v7, (char)a1, a3, v5, a4);
+  return PlayGame(v7, (char)mission_index, a3, v5, a4);
 }
 // 4603DF: variable 'v7' is possibly undefined
 // 5202E4: using guessed type int gameData;
@@ -90318,7 +91787,7 @@ signed int  sub_47A350(double a1)
 // 51A15C: using guessed type int dword_51A15C;
 
 //----- (0047A3F0) --------------------------------------------------------
-int  sub_47A3F0(int a1, char *a2, int a3, _DWORD *a4)
+int  Lexer_EmitSlotBinding(int a1, char *a2, int a3, _DWORD *a4)
 {
   int v5; // edi
   int result; // eax
@@ -104933,7 +106402,7 @@ BOOL  sub_48BD30(BOOL result)
 }
 
 //----- (0048BD50) --------------------------------------------------------
-int  sub_48BD50(_DWORD *a1, int a2, double a3)
+int  Lexer_ParseSlotConstraint(_DWORD *a1, int a2, double a3)
 {
   int result; // eax
   int v5; // ecx
@@ -104961,7 +106430,7 @@ int  sub_48BD50(_DWORD *a1, int a2, double a3)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (0048BDD0) --------------------------------------------------------
-int  sub_48BDD0(int a1, char *a2, _DWORD *a3)
+int  Lexer_BuildSlotNode(int a1, char *a2, _DWORD *a3)
 {
   char *v5; // ecx
   int v7; // ecx
@@ -104999,7 +106468,7 @@ int  sub_48BDD0(int a1, char *a2, _DWORD *a3)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (0048BE80) --------------------------------------------------------
-int  sub_48BE80(int a1, double a2)
+int  Lexer_ParseFieldSpec(int a1, double a2)
 {
   int result; // eax
   int v3; // ecx
@@ -106632,7 +108101,7 @@ int  sub_48D790(int a1, int a2)
 }
 
 //----- (0048D7B0) --------------------------------------------------------
-signed int  sub_48D7B0(int a1, int a2)
+signed int  Lexer_FindSymbolIndex(int a1, int a2)
 {
   _DWORD *v3; // eax
   int v4; // edx
@@ -121944,11 +123413,10 @@ int  sub_49E080(int a1, double a2)
 
   v4[7] = a1;
   if ( Lexer_ParseValueList(1, v4, 2, a2) )
-    return unknown_libname_13();
+    return unknown_libname_13(v4[2] != dword_54DD70);
   else
     return dword_51B360;
 }
-// 4BDC00: using guessed type int unknown_libname_13(void);
 // 51B360: using guessed type int dword_51B360;
 // 54DD70: using guessed type int dword_54DD70;
 
@@ -122269,7 +123737,7 @@ const CHAR * sub_49E650(double a1)
       sub_49F310();
       return 0;
     }
-    if ( ismbdprint_() )
+    if ( ismbdprint_((void *)v5) )
     {
       sub_48F610(1);
       Lexer_ErrorRecover(1);
@@ -122313,7 +123781,6 @@ const CHAR * sub_49E650(double a1)
 // 49E7B3: variable 'v11' is possibly undefined
 // 49E7C2: variable 'v12' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
-// 4B5410: using guessed type int ismbdprint_(void);
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (0049E820) --------------------------------------------------------
@@ -126777,10 +128244,7 @@ double  sub_4A3F70(int a1, int a2, int a3, double a4)
 //----- (004A3FF0) --------------------------------------------------------
 double  sub_4A3FF0(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126789,27 +128253,16 @@ double  sub_4A3FF0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 <= 1.0 && v7 >= dbl_507738 )
-  {
-    v4 = v7;
-    IF_DACOS();
-    return v4;
-  }
+    return acos(v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A4049: variable 'v6' is possibly undefined
-// 4D681C: using guessed type double IF_DACOS(void);
 // 507738: using guessed type double dbl_507738;
 
 //----- (004A4060) --------------------------------------------------------
 double  sub_4A4060(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126818,18 +128271,10 @@ double  sub_4A4060(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 <= 1.0 && v7 >= dbl_507740 )
-  {
-    v4 = v7;
-    IF_ASIN();
-    return v4;
-  }
+    return asin(v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A40B9: variable 'v6' is possibly undefined
-// 4D6866: using guessed type double IF_ASIN(void);
 // 507740: using guessed type double dbl_507740;
 
 //----- (004A40D0) --------------------------------------------------------
@@ -126850,11 +128295,7 @@ double  sub_4A40D0(int a1, int a2, int a3, double a4)
 //----- (004A4110) --------------------------------------------------------
 double  sub_4A4110(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
-  unsigned long long v11_bits; // [esp+18h] [ebp+0h]
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126863,29 +128304,16 @@ double  sub_4A4110(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 >= 1.0 || v7 <= dbl_507748 )
-  {
-    v4 = 1.0 / v7;
-    memcpy(&v11_bits, &v4, sizeof(v11_bits));
-    IF_DACOS(v11_bits, HIDWORD(v11_bits));
-    return v4;
-  }
+    return acos(1.0 / v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A416E: variable 'v6' is possibly undefined
-// 4D681C: using guessed type double __cdecl IF_DACOS(_DWORD, _DWORD);
 // 507748: using guessed type double dbl_507748;
 
 //----- (004A4180) --------------------------------------------------------
 double  sub_4A4180(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
-  int v6; // edx
-  unsigned long long v11_bits; // [esp+18h] [ebp+0h]
   double v7; // [esp+0h] [ebp-18h] BYREF
-  double v8; // [esp+8h] [ebp-10h]
   int v9; // [esp+10h] [ebp-8h]
   int v10; // [esp+14h] [ebp-4h]
 
@@ -126894,19 +128322,10 @@ double  sub_4A4180(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v7, a3, a4) )
     return 0.0;
   if ( v7 >= 1.0 || v7 <= dbl_507750 )
-  {
-    v4 = 1.0 / v7;
-    memcpy(&v11_bits, &v4, sizeof(v11_bits));
-    IF_ASIN(v11_bits, HIDWORD(v11_bits));
-    return v4;
-  }
+    return asin(1.0 / v7);
   sub_4A3C50();
-  LODWORD(v8) = v6;
-  HIDWORD(v8) = v6;
-  return v8;
+  return 0.0;
 }
-// 4A41DE: variable 'v6' is possibly undefined
-// 4D6866: using guessed type double __cdecl IF_ASIN(_DWORD, _DWORD);
 // 507750: using guessed type double dbl_507750;
 
 //----- (004A41F0) --------------------------------------------------------
@@ -126943,7 +128362,6 @@ double  sub_4A41F0(int a1, int a2, int a3, double a4)
 //----- (004A4280) --------------------------------------------------------
 double  sub_4A4280(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -126951,23 +128369,14 @@ double  sub_4A4280(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DCOSH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return cosh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D68C2: using guessed type double IF_DCOSH(void);
 
 //----- (004A42C0) --------------------------------------------------------
 double  sub_4A42C0(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -126975,23 +128384,14 @@ double  sub_4A42C0(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DSINH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return sinh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D688E: using guessed type double IF_DSINH(void);
 
 //----- (004A4300) --------------------------------------------------------
 double  sub_4A4300(int a1, int a2, int a3, double a4)
 {
-  double result; // st7
   double v5[2]; // [esp+0h] [ebp-18h] BYREF
   int v6; // [esp+10h] [ebp-8h]
   int v7; // [esp+14h] [ebp-4h]
@@ -126999,23 +128399,14 @@ double  sub_4A4300(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-  {
-    result = v5[0];
-    IF_DTANH();
-  }
-  else
-  {
-    v5[1] = 0.0;
-    return 0.0;
-  }
-  return result;
+    return tanh(v5[0]);
+  v5[1] = 0.0;
+  return 0.0;
 }
-// 4D68FC: using guessed type double IF_DTANH(void);
 
 //----- (004A4340) --------------------------------------------------------
 double  sub_4A4340(int a1, int a2, int a3, double a4)
 {
-  double v5; // st7
   double v6[2]; // [esp+0h] [ebp-18h] BYREF
   int v7; // [esp+10h] [ebp-8h]
   int v8; // [esp+14h] [ebp-4h]
@@ -127023,23 +128414,14 @@ double  sub_4A4340(int a1, int a2, int a3, double a4)
   v8 = a1;
   v7 = a2;
   if ( sub_4A3BD0(v6, a3, a4) )
-  {
-    v5 = v6[0];
-    IF_DCOSH();
-    return 1.0 / v5;
-  }
-  else
-  {
-    v6[1] = 0.0;
-    return 0.0;
-  }
+    return 1.0 / cosh(v6[0]);
+  v6[1] = 0.0;
+  return 0.0;
 }
-// 4D68C2: using guessed type double IF_DCOSH(void);
 
 //----- (004A4390) --------------------------------------------------------
 double  sub_4A4390(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
   double v6; // [esp+0h] [ebp-20h] BYREF
   int v8; // [esp+14h] [ebp-Ch]
   int v9; // [esp+18h] [ebp-8h]
@@ -127056,20 +128438,14 @@ double  sub_4A4390(int a1, int a2, int a3, double a4)
     return 0.0;
   }
   if ( !sub_4A3C20(v6, 1.0e-25) )
-  {
-    v4 = v6;
-    IF_DSINH();
-    return 1.0 / v4;
-  }
+    return 1.0 / sinh(v6);
   sub_4A3CB0();
   return 0.0;
 }
-// 4D688E: using guessed type double IF_DSINH(void);
 
 //----- (004A4440) --------------------------------------------------------
 double  sub_4A4440(int a1, int a2, int a3, double a4)
 {
-  double v4; // st7
   double v6; // [esp+0h] [ebp-20h] BYREF
   int v8; // [esp+14h] [ebp-Ch]
   int v9; // [esp+18h] [ebp-8h]
@@ -127086,22 +128462,15 @@ double  sub_4A4440(int a1, int a2, int a3, double a4)
     return 0.0;
   }
   if ( !sub_4A3C20(v6, 1.0e-25) )
-  {
-    v4 = v6;
-    IF_DTANH();
-    return 1.0 / v4;
-  }
+    return 1.0 / tanh(v6);
   sub_4A3CB0();
   return 0.0;
 }
-// 4D68FC: using guessed type double IF_DTANH(void);
 
 //----- (004A44F0) --------------------------------------------------------
 double  sub_4A44F0(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127110,13 +128479,10 @@ double  sub_4A44F0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 >= 1.0 )
-    return __FYL2X__(sqrt(v6 * v6 + dbl_507758) + v6, 0.6931471805599453094);
+    return acosh(v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A4549: variable 'v5' is possibly undefined
 // 507758: using guessed type double dbl_507758;
 
 //----- (004A4560) --------------------------------------------------------
@@ -127129,7 +128495,7 @@ double  sub_4A4560(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-    return __FYL2X__(sqrt(v5[0] * v5[0] + 1.0) + v5[0], 0.6931471805599453094);
+    return asinh(v5[0]);
   v5[1] = 0.0;
   return 0.0;
 }
@@ -127137,9 +128503,7 @@ double  sub_4A4560(int a1, int a2, int a3, double a4)
 //----- (004A45B0) --------------------------------------------------------
 double  sub_4A45B0(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127148,22 +128512,17 @@ double  sub_4A45B0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 < 1.0 && v6 > dbl_507760 )
-    return __FYL2X__((v6 + 1.0) / (1.0 - v6), 0.6931471805599453094) * dbl_507768;
+    return atanh(v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A4619: variable 'v5' is possibly undefined
 // 507760: using guessed type double dbl_507760;
 // 507768: using guessed type double dbl_507768;
 
 //----- (004A4630) --------------------------------------------------------
 double  sub_4A4630(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127172,13 +128531,10 @@ double  sub_4A4630(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 <= 1.0 && v6 > 0.0 )
-    return __FYL2X__(sqrt(1.0 / (v6 * v6) + dbl_507770) + 1.0 / v6, 0.6931471805599453094);
+    return acosh(1.0 / v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A469B: variable 'v5' is possibly undefined
 // 507770: using guessed type double dbl_507770;
 
 //----- (004A46B0) --------------------------------------------------------
@@ -127195,7 +128551,7 @@ double  sub_4A46B0(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v5, a3, a4) )
     return 0.0;
   if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(sqrt(1.0 / (v5 * v5) + 1.0) + 1.0 / v5, 0.6931471805599453094);
+    return asinh(1.0 / v5);
   sub_4A3C50();
   return 0.0;
 }
@@ -127203,9 +128559,7 @@ double  sub_4A46B0(int a1, int a2, int a3, double a4)
 //----- (004A4730) --------------------------------------------------------
 double  sub_4A4730(int a1, int a2, int a3, double a4)
 {
-  int v5; // edx
   double v6; // [esp+0h] [ebp-18h] BYREF
-  double v7; // [esp+8h] [ebp-10h]
   int v8; // [esp+10h] [ebp-8h]
   int v9; // [esp+14h] [ebp-4h]
 
@@ -127214,13 +128568,10 @@ double  sub_4A4730(int a1, int a2, int a3, double a4)
   if ( !sub_4A3BD0(&v6, a3, a4) )
     return 0.0;
   if ( v6 > 1.0 || v6 < dbl_507778 )
-    return __FYL2X__((v6 + 1.0) / (v6 + dbl_507778), 0.6931471805599453094) * dbl_507780;
+    return atanh(1.0 / v6);
   sub_4A3C50();
-  LODWORD(v7) = v5;
-  HIDWORD(v7) = v5;
-  return v7;
+  return 0.0;
 }
-// 4A479D: variable 'v5' is possibly undefined
 // 507778: using guessed type double dbl_507778;
 // 507780: using guessed type double dbl_507780;
 
@@ -127234,7 +128585,7 @@ double  sub_4A47B0(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( sub_4A3BD0(v5, a3, a4) )
-    return __FSCALE__(__F2XM1__(__FPREM__(1.442695040888963407 * v5[0], 1.0)) + 1.0, 1.442695040888963407 * v5[0]);
+    return exp(v5[0]);
   v5[1] = 0.0;
   return 0.0;
 }
@@ -127242,10 +128593,10 @@ double  sub_4A47B0(int a1, int a2, int a3, double a4)
 //----- (004A4800) --------------------------------------------------------
 double  sub_4A4800(int a1, int a2, int a3, double a4)
 {
-  long double v5; // [esp+0h] [ebp-20h] BYREF
-  int v7; // [esp+14h] [ebp-Ch]
-  int v8; // [esp+18h] [ebp-8h]
-  int v9; // [esp+1Ch] [ebp-4h]
+  double v5; // [esp+0h] [ebp-18h] BYREF
+  int v7; // [esp+8h] [ebp-Ch]
+  int v8; // [esp+10h] [ebp-8h]
+  int v9; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -127257,8 +128608,8 @@ double  sub_4A4800(int a1, int a2, int a3, double a4)
     sub_4A3C50();
     return 0.0;
   }
-  if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(v5, 0.6931471805599453094);
+  if ( v5 != 0.0 )
+    return log(v5);
   sub_4A3CB0();
   return 0.0;
 }
@@ -127266,10 +128617,10 @@ double  sub_4A4800(int a1, int a2, int a3, double a4)
 //----- (004A4890) --------------------------------------------------------
 double  sub_4A4890(int a1, int a2, int a3, double a4)
 {
-  long double v5; // [esp+0h] [ebp-20h] BYREF
-  int v7; // [esp+14h] [ebp-Ch]
-  int v8; // [esp+18h] [ebp-8h]
-  int v9; // [esp+1Ch] [ebp-4h]
+  double v5; // [esp+0h] [ebp-18h] BYREF
+  int v7; // [esp+8h] [ebp-Ch]
+  int v8; // [esp+10h] [ebp-8h]
+  int v9; // [esp+14h] [ebp-4h]
 
   v9 = a1;
   v8 = a3;
@@ -127281,8 +128632,8 @@ double  sub_4A4890(int a1, int a2, int a3, double a4)
     sub_4A3C50();
     return 0.0;
   }
-  if ( (HIDWORD(v5) & 0x7FFFFFFF) != 0 || LODWORD(v5) )
-    return __FYL2X__(v5, 0.3010299956639811952);
+  if ( v5 != 0.0 )
+    return log10(v5);
   sub_4A3CB0();
   return 0.0;
 }
@@ -127312,74 +128663,50 @@ double  sub_4A4920(int a1, int a2, int a3, double a4)
 //----- (004A4980) --------------------------------------------------------
 double  sub_4A4980(double a1)
 {
-  double result; // st7
   signed int v2; // eax
-  int v3; // ecx
   int v4; // [esp+0h] [ebp-58h] BYREF
   int v5; // [esp+8h] [ebp-50h]
   int v6; // [esp+18h] [ebp-40h] BYREF
   int v7; // [esp+20h] [ebp-38h]
   double v8; // [esp+30h] [ebp-28h]
   double v9; // [esp+38h] [ebp-20h]
+  double v10; // [esp+40h] [ebp-18h]
 
   if ( Lexer_TokenExpect(2) == -1 )
-  {
-    v9 = 0.0;
     return 0.0;
-  }
-  else
+  v2 = Lexer_ParseValueList(1, &v4, 0, a1);
+  if ( !v2 )
+    return 0.0;
+  v2 = Lexer_ParseValueList(2, &v6, 0, a1);
+  if ( !v2 )
+    return 0.0;
+  v8 = *(double *)(v5 + 16);
+  v9 = *(double *)(v7 + 16);
+  if ( v8 == 0.0 && v9 <= 0.0 )
+    goto LABEL_10;
+  if ( v8 < 0.0 )
   {
-    v2 = Lexer_ParseValueList(1, &v4, 0, a1);
-    if ( v2 && (v2 = Lexer_ParseValueList(2, &v6, 0, a1)) != 0 )
-    {
-      v3 = *(_DWORD *)(v5 + 16);
-      if ( (*(_DWORD *)(v5 + 20) & 0x7FFFFFFF) == 0 && !v3 && *(double *)(v7 + 16) <= 0.0 )
-        goto LABEL_15;
-      if ( *(double *)(v5 + 16) >= 0.0 )
-        goto LABEL_13;
-      if ( *(double *)(v7 + 16) >= 0.0 )
-        floor_(*(double *)(v7 + 16));
-      else
-        ceil_(*(double *)(v7 + 16));
-      v8 = 0.0;
-      if ( 0.0 == *(double *)(v7 + 16) )
-      {
-LABEL_13:
-        result = *(double *)(v7 + 16);
-        IF_DPOW(v3, result);
-        v9 = result;
-      }
-      else
-      {
-LABEL_15:
-        sub_4A3C50();
-        sub_48F610(1);
-        Lexer_ErrorRecover(1);
-        return 0.0;
-      }
-    }
+    if ( v9 >= 0.0 )
+      v10 = floor(v9);
     else
-    {
-      LODWORD(v9) = v2;
-      HIDWORD(v9) = v2;
-      return v9;
-    }
+      v10 = ceil(v9);
+    if ( v10 != v9 )
+      goto LABEL_10;
   }
-  return result;
+  return pow(v8, v9);
+LABEL_10:
+  sub_4A3C50();
+  sub_48F610(1);
+  Lexer_ErrorRecover(1);
+  return 0.0;
 }
-// 4A4A76: variable 'v3' is possibly undefined
-// 4D69BE: using guessed type double  IF_DPOW(_DWORD, double);
 
 //----- (004A4AE0) --------------------------------------------------------
 int * sub_4A4AE0(int a1, double a2)
 {
   signed int v3; // eax
-  int v4; // eax
-  int v5; // eax
   int *result; // eax
   signed int v7; // eax
-  int v8; // eax
-  int v9; // eax
   int v10; // [esp+8h] [ebp-78h] BYREF
   int v11; // [esp+Ch] [ebp-74h]
   int v12; // [esp+10h] [ebp-70h]
@@ -127391,7 +128718,6 @@ int * sub_4A4AE0(int a1, double a2)
   double v18; // [esp+48h] [ebp-38h]
   double v19; // [esp+50h] [ebp-30h]
   double v20; // [esp+58h] [ebp-28h]
-  double v21; // [esp+60h] [ebp-20h]
 
   if ( Lexer_TokenExpect(2) == -1 )
   {
@@ -127408,8 +128734,7 @@ LABEL_20:
   v3 = Lexer_ParseValueList(2, &v10, 110, a2);
   if ( !v3 )
     goto LABEL_20;
-  if ( v11 == 1 && !*(_DWORD *)(v12 + 16)
-    || !v11 && ((*(_DWORD *)(v12 + 20) & 0x7FFFFFFF) != 0 || *(_DWORD *)(v12 + 16) ? (v4 = 0) : (v4 = 1), v4) )
+  if ( v11 == 1 && !*(_DWORD *)(v12 + 16) || v11 != 1 && *(double *)(v12 + 16) == 0.0 )
   {
     sub_485D20();
     Lexer_ErrorRecover(1);
@@ -127427,37 +128752,21 @@ LABEL_20:
   else
   {
     if ( v14 == 1 )
-    {
       v19 = (double)*(int *)(v15 + 16);
-    }
     else
-    {
-      v8 = *(_DWORD *)(v15 + 20);
-      LODWORD(v19) = *(_DWORD *)(v15 + 16);
-      HIDWORD(v19) = v8;
-    }
-    v21 = v19;
+      v19 = *(double *)(v15 + 16);
     if ( v11 == 1 )
-    {
       v16 = (double)*(int *)(v12 + 16);
-    }
     else
-    {
-      v9 = *(_DWORD *)(v12 + 20);
-      LODWORD(v16) = *(_DWORD *)(v12 + 16);
-      HIDWORD(v16) = v9;
-    }
-    v17 = v21 / v16;
-    v5 = HIDWORD(v16);
-    LODWORD(v18) = LODWORD(v16);
+      v16 = *(double *)(v12 + 16);
+    v17 = v19 / v16;
     *(_DWORD *)(a1 + 4) = 0;
-    HIDWORD(v18) = v5;
     if ( v17 >= 0.0 )
-      floor_(v17);
+      v18 = floor(v17);
     else
-      ceil_(v17);
-    v20 = 0.0;
-    result = (int *)sub_481F00(v21 - 0.0 * v18);
+      v18 = ceil(v17);
+    v20 = v19 - v18 * v16;
+    result = (int *)sub_481F00(v20);
     *(_DWORD *)(a1 + 8) = result;
   }
   return result;
@@ -127466,12 +128775,8 @@ LABEL_20:
 //----- (004A4D20) --------------------------------------------------------
 double sub_4A4D20()
 {
-  double result; // st7
-
   Lexer_TokenExpect(0);
-  result = dbl_507788;
-  IF_DACOS();
-  return result;
+  return acos(dbl_507788);
 }
 // 507788: using guessed type double dbl_507788;
 
@@ -127545,33 +128850,20 @@ double  sub_4A4E30(int a1, int a2, int a3, double a4)
 signed int  sub_4A4E70(int a1, double a2)
 {
   signed int result; // eax
-  double v3; // st7
   int v4; // [esp+8h] [ebp-28h] BYREF
   int v5; // [esp+Ch] [ebp-24h]
   int v6; // [esp+10h] [ebp-20h]
-  signed int v7; // [esp+20h] [ebp-10h]
   int v8; // [esp+28h] [ebp-8h]
 
   v8 = a1;
   if ( Lexer_TokenExpect(1) == -1 )
-  {
-    v7 = 0;
     return 0;
-  }
   result = Lexer_ParseValueList(1, &v4, 110, a2);
   if ( !result )
-    goto LABEL_6;
-  if ( v5 == 1 )
-  {
-    result = *(_DWORD *)(v6 + 16);
-LABEL_6:
-    v7 = result;
     return result;
-  }
-  v3 = *(double *)(v6 + 16) + dbl_5077C0;
-  ceil_(v3);
-  _CHP(v4, v5);
-  return (int)v3;
+  if ( v5 == 1 )
+    return *(_DWORD *)(v6 + 16);
+  return (int)ceil(*(double *)(v6 + 16) + dbl_5077C0);
 }
 // 5077C0: using guessed type double dbl_5077C0;
 
@@ -127608,7 +128900,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
       v19 = 0;
       v17 = 0;
       v20 = 1;
-      while ( fgets_(v8, 256) )
+      while ( fgets_(v14, 256, (int)v6) )
       {
         ++v9;
         if ( v14[0] != 36 || v14[1] != 36 )
@@ -127619,7 +128911,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
             {
               if ( v20 != 1 )
               {
-                fclose_(v8);
+                fclose_((int)v6);
                 sub_4A52C0((int)a1);
                 if ( v12 < 60 )
                   return 0;
@@ -127639,7 +128931,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
           {
             if ( v17 != 1 )
             {
-              fclose_(v8);
+              fclose_((int)v6);
               sub_4A52C0((int)a1);
               if ( v11 < 60 )
                 return 0;
@@ -127652,7 +128944,7 @@ _DWORD * sub_4A5000(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
           }
         }
       }
-      fclose_(v8);
+      fclose_((int)v6);
       if ( v20 )
       {
         if ( !v19 )
@@ -127669,7 +128961,7 @@ LABEL_23:
     }
     else
     {
-      fclose_(v8);
+      fclose_((int)v6);
       if ( v10 >= 60 )
       {
         sprintf_(v16, "File \"%s\" already loaded.", a1);
@@ -127829,27 +129121,23 @@ int  sub_4A53B0(const CHAR *a1, _DWORD *a2, DWORD a3)
 // 51ACE0: using guessed type int dword_51ACE0;
 
 //----- (004A5460) --------------------------------------------------------
-_BYTE * sub_4A5460(int a1, int a2)
+_BYTE * sub_4A5460(int stream_handle, _BYTE *buffer, int buffer_size)
 {
-  _BYTE *v2; // ecx
-
-  if ( fgets_(a1, a2) )
+  if ( fgets_((char *)buffer, buffer_size, stream_handle) )
   {
-    if ( *v2 == 36 && v2[1] == 36 )
+    if ( *buffer == 36 && buffer[1] == 36 )
     {
-      *v2 = 32;
-      v2[1] = 32;
-      return v2;
+      *buffer = 32;
+      buffer[1] = 32;
+      return buffer;
     }
-    if ( sub_4A54C0(v2, aEndEntry) < 0 )
-      return v2;
+    if ( sub_4A54C0(buffer, aEndEntry) < 0 )
+      return buffer;
   }
-  fclose_(v2);
+  fclose_(stream_handle);
   return 0;
 }
-// 4A5475: variable 'v2' is possibly undefined
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
-// 4841D3: using guessed type int __fastcall fgets_(_DWORD, _DWORD);
 
 //----- (004A54C0) --------------------------------------------------------
 signed int  sub_4A54C0(_BYTE *a1, _BYTE *a2)
@@ -128412,7 +129700,7 @@ signed int  sub_4A5AB0(int a1, DWORD a2, double a3)
     {
       while ( 2 )
       {
-        if ( !sub_4A5460((int)v36, 256) )
+        if ( !sub_4A5460(v16, v36, 256) )
           goto LABEL_43;
         if ( v15 < 23 )
           goto LABEL_37;
@@ -128722,7 +130010,7 @@ int  sub_4A60A0(double a1)
     for ( i = (int)v2; ; i = (int)v2 )
     {
       Output_Write(i, (int)v5, v4);
-      if ( !sub_4A5460((int)v14, 256) )
+      if ( !sub_4A5460(v3, v14, 256) )
         break;
       v5 = v14;
     }
@@ -142318,7 +143606,6 @@ signed int sub_4B5310()
            (int)sub_4B54D0,
            (int)sub_4B5420);
 }
-// 4B5410: using guessed type int ismbdprint_(void);
 
 //----- (004B5340) --------------------------------------------------------
 int __thiscall sub_4B5340(void *this)
@@ -142398,6 +143685,12 @@ int __thiscall sub_4B5340(void *this)
 // 51A620: using guessed type char *off_51A620[2];
 // 51A624: using guessed type char *off_51A624;
 // 51AEF8: using guessed type int dword_51AEF8;
+
+//----- (004B5410) --------------------------------------------------------
+int ismbdprint_(void *logical_name)
+{
+  return sub_4B5340(logical_name) != 0;
+}
 
 //----- (004B5420) --------------------------------------------------------
 signed int __thiscall sub_4B5420(void *this)
@@ -143227,6 +144520,25 @@ _BYTE * sub_4B6646(_BYTE *a1, int a2, int a3)
   return v7;
 }
 // 4B6685: variable 'v6' is possibly undefined
+
+//----- (004B6DD0) --------------------------------------------------------
+int sub_4B6DD0()
+{
+  sub_48F5C0((int)&unk_51A8EC, 6);
+  sub_48F5C0((int)&unk_51B0D8, 29);
+  sub_48F5C0((int)&unk_51B108, 30);
+  sub_48F5C0((int)&unk_51B138, 31);
+  sub_48F5C0((int)&unk_51B168, 26);
+  sub_48F5C0((int)&unk_51B198, 27);
+  sub_48F5C0((int)&unk_51B1C8, 28);
+  sub_48F5C0((int)&unk_51B1F8, 23);
+  sub_48F5C0((int)&unk_51B228, 24);
+  sub_48F5C0((int)&unk_51B258, 22);
+  sub_48F5C0((int)&unk_51B288, 34);
+  sub_48F5C0((int)&unk_51B2B8, 25);
+  sub_48F5C0((int)&unk_51B2E8, 32);
+  return sub_48F5C0((int)&unk_51B318, 33);
+}
 
 //----- (004B6EB0) --------------------------------------------------------
 signed int  sub_4B6EB0(int a1)
@@ -149652,6 +150964,56 @@ LABEL_11:
 // 4BDD10: variable 'v9' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
+//----- (004BDC00) --------------------------------------------------------
+int unknown_libname_13(int value)
+{
+  int previous_value; // eax
+
+  previous_value = dword_51B360;
+  dword_51B360 = value;
+  return previous_value;
+}
+// 51B360: using guessed type int dword_51B360;
+
+//----- (004BDD20) --------------------------------------------------------
+signed int sub_4BDD20(_BYTE *function_name, int handler)
+{
+  int **symbol; // eax
+  int v3; // ecx
+
+  symbol = Rules_MakeSymbol(function_name);
+  if ( symbol )
+  {
+    *(int **)((char *)symbol + 17) = 0;
+    *(_WORD *)((char *)symbol + 21) = 0;
+    *(int **)((char *)symbol + 13) = (int *)handler;
+    return 1;
+  }
+  Output_Write((int)off_51A614[0], (int)aFunctionParser, v3);
+  return 0;
+}
+// 51A614: using guessed type char *off_51A614[5];
+
+//----- (004BDD40) --------------------------------------------------------
+int sub_4BDD40()
+{
+  if ( !sub_4BDD20(aBind, (int)sub_4BE590) )
+    return 0;
+  if ( !sub_4BDD20(aProgn, (int)sub_4BE520) )
+    return 0;
+  if ( !sub_4BDD20(aIf, (int)sub_4BE3B0) )
+    return 0;
+  if ( !sub_4BDD20(aWhile, (int)sub_4BDE50) )
+    return 0;
+  if ( !sub_4BDD20(aLoopForCount, (int)sub_4BDF80) )
+    return 0;
+  if ( !sub_4BDD20(aReturn, (int)sub_4BE720) )
+    return 0;
+  if ( !sub_4BDD20(aBreak, (int)sub_4BE800) )
+    return 0;
+  return sub_4BDD20(aSwitch, (int)sub_4BE890);
+}
+
 //----- (004BDDC0) --------------------------------------------------------
 int sub_4BDDC0()
 {
@@ -154220,7 +155582,7 @@ LABEL_46:
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004C2710) --------------------------------------------------------
-signed int  sub_4C2710(int a1, int a2, int a3)
+signed int  Lexer_ValidateMessageHandler(int a1, int a2, int a3)
 {
   int v4; // ecx
   signed int result; // eax
@@ -162967,7 +164329,7 @@ int  sub_4CC570(int a1, double a2)
 // 4CC69D: variable 'v10' is possibly undefined
 
 //----- (004CC6C0) --------------------------------------------------------
-int  sub_4CC6C0(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
+int  Lexer_ParseDefglobal(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
 {
   int v7; // ebp
   int v8; // ecx
@@ -174201,7 +175563,7 @@ int  sub_4D9B90(int a1, _DWORD *a2)
 }
 
 //----- (004D9C40) --------------------------------------------------------
-int  sub_4D9C40(int a1, int *a2, _DWORD *a3, int a4)
+int  Lexer_ParseRuleRHS(int a1, int *a2, _DWORD *a3, int a4)
 {
   int v6; // ebp
   int v7; // ecx
@@ -174422,7 +175784,7 @@ _DWORD * sub_4D9F20(int a1, _DWORD *a2, int *a3, int a4, double a5)
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 
 //----- (004D9FD0) --------------------------------------------------------
-int  sub_4D9FD0(_DWORD *a1, double a2)
+int  Lexer_ParseDeclareOptions(_DWORD *a1, double a2)
 {
   int v3; // ebx
   int v4; // edx
@@ -184669,7 +186031,7 @@ void  sub_4E5F8A(_BYTE *a1, _BYTE *i, int a3)
           v16 = v12;
           if ( !v12 )
             goto LABEL_23;
-          memmove_(v12 + v15, dword_54E700);
+          memmove_((void *)(uintptr_t)(v12 + v15), (const void *)(uintptr_t)dword_54E700, (size_t)v3);
           dword_54E700 = v13;
         }
         else
@@ -184756,7 +186118,7 @@ LABEL_20:
     if ( *(_BYTE *)(v10 + dword_54E700) )
       nfree_(j);
     v12 = ((int)j - dword_54E704) >> 2;
-    memmove_(j, dword_54E700);
+    memmove_(j, (const void *)(uintptr_t)dword_54E700, (size_t)v12);
     dword_54E700 = v13;
     if ( v10 < v12 )
     {
@@ -184831,7 +186193,7 @@ signed int  sub_4E70ED(_WORD *a1, _WORD *i)
         if ( !v15 )
           return -1;
         v16 = v15 + v17;
-        memmove_(v15, dword_54E700);
+        memmove_((void *)(uintptr_t)v15, (const void *)(uintptr_t)dword_54E700, (size_t)v9);
         dword_54E700 = v16;
       }
       else
@@ -184917,7 +186279,7 @@ LABEL_20:
     if ( *(_BYTE *)(v10 + dword_54E700) )
       nfree_(j);
     v12 = ((int)j - dword_54E708) >> 2;
-    memmove_(j, dword_54E700);
+    memmove_(j, (const void *)(uintptr_t)dword_54E700, (size_t)v12);
     dword_54E700 = v13;
     v14 = (_BYTE *)(v10 + v13);
     while ( v10 < v12 )

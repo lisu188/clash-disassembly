@@ -1,12 +1,10 @@
 # SDL Seam
 
-- The just-cleared load-menu row-resource and row-draw blockers were not SDL seam failures.
-- `platform_sdl_runtime.c` remained unchanged through this batch.
+- The current contained and retained frontiers are still below SDL.
 - Current evidence:
   - `clash95_bootstrap` default run stays alive for `1s`
   - `--authentic-startup-prelude` stays alive for `2s`
-  - contained widened load-menu row draws, slot-hover selection, and slot-click/confirm all complete under the existing SDL seam
-  - the explicit broader-rules-contained probe now reaches `parse-make-instance-before-class-lookup` and then logs `class-lookup-no-table name=oddzial`
-  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` dies earlier on `symbol-lookup-missing-table MAIN`
-  - the retained broader startup-prelude slice is now reduced past the local runtime/helper band and is blocked on the wider parser/class/math surface below SDL, not on `platform_sdl_runtime.c`
-- Next likely SDL-facing work is still later input/present fidelity, not the contained menu/load wedge or the newly isolated class/bload startup blocker.
+  - the corrected post-confirm contained probes (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`) still reproduce `oddzial` with broader rules and `MAIN` without them
+  - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
+  - the old retained `sub_40D330` / `sub_44C2A0` gap plus the full 20-case mission-loader switch were resolved entirely in recovered C without touching `platform_sdl_runtime.c`
+- Next likely SDL-facing work is still later input/present fidelity, not the current gameplay/session or class/bload blocker; the next retained blocker stays below SDL.

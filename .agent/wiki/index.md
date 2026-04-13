@@ -1,20 +1,31 @@
 # Agent Wiki Index
 
-- Current frontier: keep the pre-confirm authentic load-menu wedge green while separating it from the broader startup-prelude class/bload widening now required by the post-confirm save replay.
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while separating it from the broader retained mission-loader widening that now starts after `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch`
+  - the retained mission-loader slice in `clash95.c` now covers all 20 switch arms, cases `0` through `19`
+  - the next honest retained blocker is the broader gameplay/session widening after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`, not another mission-loader case
 - Last green targets:
   - `clash95_recovered`
   - `clash95_bootstrap`
   - `clash95_cpp_regen`
+  - retained probe `sub_451E46`
+  - retained probe `sub_460490`
+  - retained probe `UI_StartAnims`
+  - retained probe `PlayGame_Dispatch`
 - Highest runtime milestone:
   - authentic load-menu row resources load
   - all ten contained `sub_44A140` row draws complete
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
-  - the live post-confirm save replay now reaches `parse-make-instance-before-class-lookup`
-  - the guarded trace proves the immediate blocker is `class-lookup-no-table name=oddzial`
+  - the corrected post-confirm probe lane (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` plus `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1`) reaches `load-menu-post-confirm-load-save`
+  - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
+  - case `18` / `p_mapa9j.map` is now materialized in recovered C with its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the six raw slot-state mutation bands on the `+28` lane, and the preserved absence of any post-init camera override or `Rules_LogAssigned*` tail
+  - case `19` / `p_map10z.map` was already present and is now corroborated against `mapP10`, completing the 20-case mission switch without introducing new SDL, compat, or `src_cpp` glue
+  - retained standalone probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
 - Adjacent blocked widening:
-  - the explicit broader-rules contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
-  - `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` still fails earlier on `symbol-lookup-missing-table MAIN`
-  - the retained broader startup-prelude chain `sub_451E46 -> sub_47D0E0 -> sub_47C850("strateg\\clash.dat")` is now reduced past the local runtime/helper band and stops on the wider parser/class/math band led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the `IF_*` / `__FYL2X__` math thunks
+  - the broader-rules-contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
+  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
+  - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` is still deferred
+  - the next retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch
 - Core notes:
   - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
   - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)

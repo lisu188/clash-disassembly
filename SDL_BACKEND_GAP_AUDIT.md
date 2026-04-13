@@ -14,18 +14,24 @@ This note covers the current host seam used by the executable-regeneration track
   - `timeGetTime`
 - The implementation is still intentionally Win32-shaped at the call boundary. It is not yet a body-level SDL-native platform rewrite.
 
-## Latest executable note - 2026-04-10
+## Latest executable note - 2026-04-12
 
 - The current load-menu and post-confirm blockers still sit below SDL.
 - The latest contained traces show:
+  - the real post-confirm probe lane now needs `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` in addition to `CLASH95_MENU_PROBE_AUTO_CLICK=load`
   - with the current broader-rules bootstrap, the post-confirm save replay dies at `class-lookup-no-table name=oddzial`
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier with `symbol-lookup-missing-table MAIN`
   - neither failure touches `platform_sdl_runtime.c`
 - This is useful negative evidence:
   - the SDL seam is still good enough for the contained load-menu row draws, slot-strip selection, bottom-row confirm, post-confirm `WorldMap_Initialize`, and first save-replay entry
   - the active blocker is the missing class/bload startup prelude, not input, timing, window, or present behavior
-- The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/parser unresolveds, not by SDL.
-  - after the latest retained helper pass, that non-SDL blocker list is now led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, and the deeper math/runtime thunks, not by `sub_496643`, `ftime_`, `system_`, or the nearby `JUMPOUT` scars
+- The retained startup-prelude slice rooted at `sub_451E46` is likewise still blocked by runtime/class/front-end unresolveds, not by SDL.
+  - the local x87-heavy math/runtime band is now gone
+  - retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` now link successfully without touching `platform_sdl_runtime.c`
+  - the former `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C
+  - the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - the mission-loader `JUMPOUT` at `Scenario_LoadMissionByIndex` / `sub_460360` is also gone in the recovered menu-reachable cases, again without touching `platform_sdl_runtime.c`
+  - the old retained helper-name band `sub_40D330` / `sub_44C2A0` is now gone too, and the full menu-reachable 20-case `Scenario_LoadMissionByIndex` switch is covered in recovered C without touching `platform_sdl_runtime.c`; the next retained blocker is the broader gameplay/session surface after that switch, not SDL
 
 ## Stable host behavior already present
 

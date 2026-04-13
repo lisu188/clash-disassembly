@@ -10,7 +10,7 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - `clash95_cpp_regen` now links as a parallel executable by reusing the existing bootstrap wedge and adding the C++ core.
 - A direct `gcc` link of `clash95.c`, `platform_sdl_runtime.c`, and `compat/decomp_runtime_stubs.c` does not yet produce a runnable executable.
 
-## Latest authentic runtime frontier - 2026-04-10
+## Latest authentic runtime frontier - 2026-04-12
 
 - The live executable blocker is no longer row-resource preload, row draws, or save-path formatting.
 - The contained SDL-backed executable still keeps the authentic pre-confirm load-menu corridor alive:
@@ -23,33 +23,23 @@ This note records the current executable-regeneration gap on the clean `codex/cp
 - The next honest contained runtime blocker is therefore not local save I/O or SDL. It is the missing authentic class/bload prelude needed before the save replay can instantiate `oddzial`.
 - A direct contained `PlayGame` handoff remains deferred because rooting `PlayGame` from `bootstrap_main.c` immediately reopens the much wider gameplay/session unresolved link surface.
 
-## Latest startup-prelude narrowing - 2026-04-10
+## Latest startup-prelude narrowing - 2026-04-12
 
-- The retained `CLIPS`/startup-prelude surface moved this batch:
-  - `unk_50293C` and the adjacent `bload` loader strings are now materialized in `clash95.c`
-  - `unknown_libname_4` is now recovered as the allocator callback swap used under `sub_47CBF0`
-  - `CSyncObject_Unlock` is now exported through `src_cpp/csync_object.cpp`
-- A direct-object retained probe for `Rules_ShowBanner_StrategicClash` now links successfully when `csync_object.cpp.o` is present.
-- The archive-backed retained probe for `Rules_ShowBanner_StrategicClash` now links successfully too.
-- The next retained blocker is no longer the local helper/runtime band. It is the wider `sub_451E46` parser/class/math set:
-  - `sub_4B6DD0`
-  - `Lexer_ParseSlotConstraint`
-  - `Lexer_ParseFieldSpec`
-  - `sub_4BDD40`
-  - `unknown_libname_13`
-  - `ismbdprint_`
-  - `Lexer_ValidateMessageHandler`
-  - `Lexer_ParseDefglobal`
-  - `Lexer_ParseRuleRHS`
-  - `Lexer_ParseDeclareOptions`
-  - `aJ_0`
-  - deeper math/runtime helpers such as `IF_*`, `__FYL2X__`, `__FPREM__`, `__F2XM1__`, `__FSCALE__`, `floor_`, `ceil_`, `fgets_`, and `sscanf_`
+- The retained `CLIPS`/startup-prelude surface moved again this batch:
+  - direct retained probes for `sub_451E46`, `sub_460490`, and `UI_StartAnims` still link successfully
+  - the standalone retained `sub_451E46` probe still stays alive under `timeout 1s`
+  - the first retained `PlayGame_Dispatch` UI/data/runtime band is now reduced in recovered C: `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, the reached `unit_stats` byte lane, the queen departure-event tables/buffer slab, and the local `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0` `JUMPOUT` scars are no longer live retained blockers
+- A direct-object retained probe for `sub_4996D0` still links successfully.
+- The retained mission-loader surface moved again this batch:
+  - `Scenario_LoadMissionByIndexAndPlay` now passes the real selector into `Scenario_LoadMissionByIndex`
+  - `createUnit` and `createCastle` now match the original sentinel-terminated unit-list contract closely enough to transcribe real mission setup calls
+  - the menu-reachable `sub_460360` cases now recovered or corroborated in `clash95.c` are the full 20-arm switch, cases `0` through `19`
+  - the first recovered cases now call the already-recovered local helpers `MiniMap_CreateSurface` and `Game_InitPlayerViewState` directly, so the old retained `sub_40D330` / `sub_44C2A0` helper-name gap is gone
+- The next retained blocker is no longer the parser-export layer, the low-risk file/runtime wrapper band, the x87-heavy math band, the broader `PlayGame_Dispatch` UI/data/runtime scatter, the bare mission-loader `JUMPOUT`, the `sub_40D330` / `sub_44C2A0` helper gap, or any remaining mission-loader case arm. The full 20-case `Scenario_LoadMissionByIndex` switch is now covered in recovered C: case `18` / `p_mapa9j.map` is newly materialized with its `Stone Bell` cut, `Fhur Tao` boost, and raw `+28` slot-state mutations still explicit, and the already-present case `19` / `p_map10z.map` now corroborates against `mapP10` closely enough to keep its `Gorendberg`, `Ghettan`, `Stormus`, and `Guluali` treasury writes plus the absence of any post-init camera override intact. The next retained widening is therefore the broader gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`, not another mission-switch arm.
 - Additional retained reduction notes from the latest pass:
-  - `unk_508D50` is now exact in-tree, including the double-null `CLIPS` header terminator
-  - `sub_496643`, `ftime_`, and `system_` are no longer live retained blockers
-  - the retained `JUMPOUT` cluster in `Compiler_MarkAndEmit`, `sub_4D0660`, `sub_4D0710`, `sub_4D2AC0`, `sub_47F480`, `sub_48E1A0`, and `sub_491790` is now collapsed back into normal control flow
-  - retained `sub_4996D0` now links successfully
-  - the `sub_47D0E0` tail still honestly exposes retained `.fn_init` at `sub_49A0E0` instead of satisfying that call through the unrelated `unknown_libname_7` runtime setter
+  - `UI_CheckConfirmQuit` and `UI_CheckDialogAccepted` are now rebound onto their already-recovered local bodies instead of standing as duplicate retained export holes
+  - the `sub_451E46` probe is still green, and the direct retained `PlayGame_Dispatch` probe now links and stays alive under `timeout 1s`
+  - `mapK2` now carries its distinct post-castle `BUILDING_RECORD(castle_index) + 18 = -1` plus `Building_OnGarrisonChange` handoff and the case-local camera override directly in recovered C
 - Do not use `Rules_ShowBanner_StrategicClash` or bare `sub_499990` as a local fix for the contained post-save `oddzial` miss. That runtime belongs to the broader startup-prelude slice, not the stable `sub_444490` wedge.
 
 ## Why the direct link fails
@@ -157,8 +147,8 @@ This is a staged executable-regeneration path, not a claim that the full native 
 ## Live runtime blocker adjacent to the current link wedge
 
 - The current executable problem is no longer primarily link-shaped.
-- `clash95_bootstrap` and `clash95_cpp_regen` both stay green and can still reach the contained `load-menu-post-confirm-after-save` milestone.
+- `clash95_bootstrap` and `clash95_cpp_regen` both stay green, while the last directly traced contained milestone remains the post-confirm save-replay entry that fails in the missing class/bload prelude.
 - There are now two adjacent widening fronts:
   - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - the retained startup-prelude slice rooted at `sub_451E46` still stops on the wider unresolved runtime band listed above
+  - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch`, and the next retained widening stops in the broader gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.

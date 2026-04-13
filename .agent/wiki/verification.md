@@ -10,22 +10,23 @@
   - exit `124`
 - `timeout 1s build/bin/clash95_cpp_regen`
   - exit `124`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - under `timeout 2s`, exits `124`
-  - reaches `load-menu-post-confirm-load-save`, then `parse-make-instance-before-class-lookup`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - links successfully
+  - exit `124`
+- Retained mission-loader status:
+  - `Scenario_LoadMissionByIndex` now carries all 20 switch arms, cases `0` through `19`, in recovered C
+  - the next retained frontier is the gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
   - logs `class-lookup-no-table name=oddzial`
-- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=first CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
-  - under `timeout 2s`, exits `124`
-  - logs `symbol-lookup-missing-table MAIN` earlier in the same post-confirm save-replay corridor
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4B0940 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_499990 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_4996D0 ... build/lib/libclash95_cpp_core.a ...`
-  - links successfully
-- `c++ -no-pie -Wl,--gc-sections -Wl,--undefined=sub_451E46 ... build/lib/libclash95_cpp_core.a ...`
-  - still fails on the broader startup-prelude unresolved set, now led by `sub_4B6DD0`, `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `sub_4BDD40`, `unknown_libname_13`, `ismbdprint_`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `aJ_0`, and the deeper parser/math helpers
-- `python3 -m json.tool .agent/state.json >/tmp/agent_state.json`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- `python3 -m json.tool .agent/state.json`
+  - passed
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
   - passed
 - `git diff --check`
   - passed
