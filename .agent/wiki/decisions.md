@@ -90,3 +90,20 @@
   - Reason: `sub_460360` reuses the existing `mapP9` / `mapP10`-style lanes, but mission-conditional UI switches still diverge for missions `18` and `19`, so deduplicating now could erase real mission-specific behavior.
 - Keep the retained mission-loader widening separate from the contained `oddzial` / `MAIN` save-replay split.
   - Reason: the retained `PlayGame_Dispatch` probe is now green, but the contained post-confirm replay still needs the missing class/bload prelude rather than more mission setup.
+- Keep `Scenario_LoadMissionByIndexAndPlay`'s 27-byte campaign-state save/restore explicit and return into `PlayGame` with stable zeroed decompiler-only args instead of preserving fabricated `v5` / `v7` temporaries.
+  - Reason: the asm only copies 27 bytes to and from the mission-state slab and does not intentionally seed those locals; keeping the explicit save/restore is honest, while propagating the decompiler garbage only obscures the real retained frontier.
+- Keep `PlayGame`'s `backgr1/2/3.s32` and `treemas1/2/3.s32` filenames explicit in recovered C.
+  - Reason: asm proves the first post-mission `PlayGame` prologue loads those exact sprite sets based on the current world-map theme, so forwarding the command-mode byte into `DLXSpriteSet_Load` was a real local bug, not a wrapper or SDL issue.
+- Treat `WorldMap_RunHumanTurnLoop` as the next retained gameplay/session target before `sub_451F70`.
+  - Reason: after `PlayGame` finishes its shared setup, the first authentic session bifurcation is the human-turn branch, and that is the nearest route toward the one-narrow-playable-turn goal.
+- Keep `WorldMap_RunHumanTurnLoop`'s zero-init prologue explicit as `sub_4459A0(0, a3)`, `dword_5202FC = 0`, and `dword_5202F8 = 0`.
+  - Reason: the asm zeroes `edx`, passes that into `sub_4459A0`, and then stores the same zero into the two turn-exit flags, so preserving undefined locals there is a real recovered-C bug.
+- Keep `WorldMap_RunHumanTurnLoop`'s mission-success exit explicit as `sub_4623C0(aArama1, aKon_por1)` after `sub_404F20(&unk_51D4C0, 20)`.
+  - Reason: the asm loads those two exact literals before the call, so forwarding a fabricated local instead of `"arama1"` obscures real control flow in the first human-turn loop surface.
+
+- Keep `WorldMap_RunHumanTurnLoop`'s first loop-body helper lane explicit as zero-arg recovered calls.
+  - Reason: the asm clears the working arg registers before `UI_ReadCheatString`, `DD_Pump`, `sub_407B20`, `WorldMap_RedrawFrame`, and `WorldMap_HandleTopMenuBar`; preserving decompiler-garbage temporaries there reintroduces false runtime dependencies.
+- Keep the held-key facing loops explicit as `while (Input_IsKeyPressed(...)) DD_Pump((int)dword_544CD8, 0)`.
+  - Reason: the asm keeps pumping the same display/runtime handle with a zero secondary arg while those keys remain held; forwarding lost locals there obscures the real message-pump shape.
+- Keep the queued-path AP gate and the debug render toggle explicit inside `WorldMap_RunHumanTurnLoop`.
+  - Reason: the asm pulls the required AP from the last move-track step and separately saves/restores the previous resource handle and `g_RenderHook`, so collapsing those into guessed helpers or fabricated temporaries would hide live gameplay/session control flow.
