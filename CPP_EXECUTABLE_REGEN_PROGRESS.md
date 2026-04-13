@@ -117,3 +117,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the escape/debug render block with explicit save/restore of the previous resource handle and `g_RenderHook`
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained executable-regeneration blocker remains the deeper `WorldMap_RunHumanTurnLoop` loop body after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, and repaired call-shape band. The adjacent AI branch `sub_451F70` is still secondary.
+
+## Latest retained widening update
+- `WorldMap_HandleTopMenuBar` now restores the retained `sub_40E8B0` helper band directly in recovered C: the menu-sprite draw call, the mission `3`/`13` versus `4`/`14` turn-counter text, the temporary menu-surface destroy call, and the saved render-hook/resource-handle restore block are all local recovered behavior now.
+- `UnitStackSelection_HandleInput` now also restores the retained `sub_423860` helper band directly in recovered C: zero-arg `Render_Begin` calls, real adjacent-tile move coordinates into `Unit_MoveSelectionFromGroupToTile`, `dword_526F78` zero-on-success, and the `Render_LoadResourceSprite_v2` plus selection-panel redraw success tail are all local recovered behavior now.
+- The direct retained `WorldMap_RunHumanTurnLoop` probe still links and stays alive under `timeout 1s`.
+- The next retained executable-regeneration blocker is now the deeper `WorldMap_RunHumanTurnLoop` body after those repaired helper bands, with first focus on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` rather than SDL, compat, or `src_cpp` seams.

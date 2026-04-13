@@ -90,5 +90,5 @@ At that point `clash95_cpp_regen` can grow beyond the current bootstrap-equivale
 ## Immediate retained next step
 1. Keep the contained `oddzial` versus `MAIN` split green and separate from the retained gameplay/session widening.
 2. Keep the retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and `WorldMap_RunHumanTurnLoop` green.
-3. Continue reducing the deeper `WorldMap_RunHumanTurnLoop` loop body after the repaired zero-init entry, `arama1` / `kon_por1` tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block.
+3. Continue reducing the deeper `WorldMap_RunHumanTurnLoop` loop body after the repaired zero-init entry, `arama1` / `kon_por1` tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, saved render-hook/resource-handle debug block, the repaired `WorldMap_HandleTopMenuBar` helper band, and the repaired `UnitStackSelection_HandleInput` helper band; next focus is `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.
 4. Only after that should the adjacent AI branch `sub_451F70` take priority.

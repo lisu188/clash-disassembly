@@ -39,3 +39,10 @@
   - exit `124`
 - Retained frontier note:
   - the next retained `WorldMap_RunHumanTurnLoop` widening starts after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block
+
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol PlayGame`
+  - exit `124`
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- Retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` helper bands, with first focus on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`

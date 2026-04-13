@@ -160,5 +160,5 @@ This is a staged executable-regeneration path, not a claim that the full native 
 
 ## Latest retained runtime blocker update
 - The retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and a direct `WorldMap_RunHumanTurnLoop` probe.
-- The next retained widening stays in the deeper `WorldMap_RunHumanTurnLoop` surface after the now-complete `Scenario_LoadMissionByIndex` switch and after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helpers, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block.
+- The next retained widening stays in the deeper `WorldMap_RunHumanTurnLoop` surface after the now-complete `Scenario_LoadMissionByIndex` switch and after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helpers, held-key `DD_Pump` loops, queued-path AP compare, saved render-hook/resource-handle debug block, the repaired `WorldMap_HandleTopMenuBar` helper band, and the repaired `UnitStackSelection_HandleInput` helper band; the next local center is `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.
 - This remains a gameplay/session runtime-fidelity problem, not an SDL seam or raw-link inventory problem.

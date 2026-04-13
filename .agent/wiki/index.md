@@ -42,3 +42,5 @@
 - `WorldMap_RunHumanTurnLoop` now also restores the zero-arg loop-entry helper lane, held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block.
 - Last green retained targets now include `WorldMap_RunHumanTurnLoop` alongside `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame`.
 - The next honest retained blocker stays in the deeper `WorldMap_RunHumanTurnLoop` loop body after those repaired call-shape slices, not in SDL, compat, or the already-covered mission-loader switch.
+
+- `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` now restore their retained helper bands directly in recovered C, so the next honest retained blocker is deeper in `WorldMap_RunHumanTurnLoop` at `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.

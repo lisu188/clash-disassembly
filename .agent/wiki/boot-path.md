@@ -25,3 +25,6 @@
 ## Latest Update
 - Retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and `WorldMap_RunHumanTurnLoop` now all stay alive under `timeout 1s`.
 - The remaining retained widening is still the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch, but it is now past the zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block.
+
+- The retained gameplay/session widening is now past the `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` helper bands inside `WorldMap_RunHumanTurnLoop`.
+- The next honest retained widening inside the same loop now falls through to `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`, while the contained `oddzial` / `MAIN` split remains unchanged.

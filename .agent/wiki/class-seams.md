@@ -14,3 +14,6 @@
 ## Latest Update
 - Retained probes now include `WorldMap_RunHumanTurnLoop` alongside `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame`.
 - The latest `WorldMap_RunHumanTurnLoop` call-shape repairs stayed pure recovered C, so the live retained blocker is still the deeper loop body rather than a `src_cpp` seam.
+
+- The latest `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` repairs stayed pure recovered C, so they are not evidence for widening `src_cpp` class seams.
+- The next retained blocker remains deeper gameplay/session control flow, not a class seam.

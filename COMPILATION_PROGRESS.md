@@ -6554,3 +6554,25 @@
   - the remaining deeper `WorldMap_RunHumanTurnLoop` body still has unresolved register-loss/usercall scars beyond the repaired entry/call-shape band
   - the adjacent AI branch `sub_451F70` remains secondary
   - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 158 - Reduce retained top-menu and split-panel loop helpers
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - the next honest retained blocker is now past the helper-call-shape band and into the deeper fallback path centered on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`
+- Blockers removed this batch:
+  - `WorldMap_HandleTopMenuBar` now matches `sub_40E8B0` on the menu-sprite draw call, the mission `3`/`13` versus `4`/`14` turn-counter text, the temporary menu-surface destroy call, and the saved render-hook/resource-handle restore block
+  - `UnitStackSelection_HandleInput` now matches `sub_423860` on its zero-arg `Render_Begin` calls, real adjacent-tile move coordinates into `Unit_MoveSelectionFromGroupToTile`, `dword_526F78` zero-on-success, and `Render_LoadResourceSprite_v2` plus selection-panel redraw success tail
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - retained standalone probes for `PlayGame` and `WorldMap_RunHumanTurnLoop` still stay alive under `timeout 1s`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe now stays alive after the repaired top-menu helper band and split-panel helper band inside the human-turn loop
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_40E8B0`, `sub_423860`, and the `sub_423050` move-selection handoff
+  - `clash95.c` around `WorldMap_HandleTopMenuBar`, `UnitStackSelection_HandleInput`, `Unit_MoveSelectionFromGroupToTile`, and `WorldMap_RunHumanTurnLoop`
+- Ambiguous candidates deferred:
+  - the remaining deeper `WorldMap_RunHumanTurnLoop` body still has unresolved register-loss/usercall scars beyond the repaired top-menu and split-panel helpers, with `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` now the first local center
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening

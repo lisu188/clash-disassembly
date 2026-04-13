@@ -14,3 +14,6 @@
 - The latest `WorldMap_RunHumanTurnLoop` call-shape repairs stayed entirely in recovered C without touching `platform_sdl_runtime.c`.
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained blocker stays below SDL inside the deeper `WorldMap_RunHumanTurnLoop` register-loss/usercall surface after the repaired call-shape band.
+
+- The latest `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` repairs stayed entirely below SDL in recovered C.
+- The next retained blocker still stays below SDL and is now centered on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.

@@ -14,3 +14,6 @@
 ## Latest Update
 - `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and `WorldMap_RunHumanTurnLoop` all link and stay alive under `timeout 1s`.
 - The next honest retained blocker is still the deeper `WorldMap_RunHumanTurnLoop` register-loss/usercall surface after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helpers, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block.
+
+- `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` are no longer the live retained blocker band.
+- The next honest retained blocker inside `WorldMap_RunHumanTurnLoop` is now the deeper `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` surface, with `sub_451F70` still secondary.
