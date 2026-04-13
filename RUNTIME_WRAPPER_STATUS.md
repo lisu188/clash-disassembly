@@ -97,3 +97,4 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The latest retained widening stayed in recovered C: `WorldMap_RunHumanTurnLoop` now restores the zero-arg loop-entry helper lane, the held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block.
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained executable-regeneration blocker is still the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop`, not a wrapper, SDL, or `src_cpp` seam problem.
+- The latest retained widening also stayed in recovered C: `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` now restore their asm-backed helper bands without adding new compat wrappers.

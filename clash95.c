@@ -22544,22 +22544,18 @@ LABEL_52:
 //----- (0040E8B0) --------------------------------------------------------
 BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
 {
-  int v3; // ecx
-  int v4; // ecx
-  _DWORD *Surface; // eax
-  int v6; // edi
-  int v7; // edx
-  int v8; // ebx
+  _DWORD *surface; // eax
+  int menu_sprite; // edx
+  int mission_index; // edx
+  int mouse_x; // ebx
+  int mouse_y; // eax
   int i; // edx
-  int v10; // edi
-  int (*v11)(); // ecx
-  int v12; // ecx
-  int (*v13)(); // ecx
-  int v14; // edx
-  int v15; // ecx
-  int v16; // [esp+1Ch] [ebp-28h]
-  int v17; // [esp+20h] [ebp-24h]
-  void (*v18)(void); // [esp+24h] [ebp-20h]
+  int close_button_left; // ebx
+  int previous_screen_handle; // [esp+1Ch] [ebp-28h]
+  int should_hide_menu; // [esp+20h] [ebp-24h]
+  void (*menu_callback)(void); // [esp+24h] [ebp-20h]
+  int previous_resource_handle; // [esp+28h] [ebp-1Ch]
+  int (*previous_render_hook)(); // [esp+2Ch] [ebp-18h]
 
   if ( dword_544CFC >> byte_54512C < 0
     || dword_544D00 >> byte_54512C < 0
@@ -22569,97 +22565,99 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   {
     return 1;
   }
-  Debug_Log(v3, a1, a2, (int)aMenuDraw);
+  Debug_Log(0, a1, a2, (int)aMenuDraw);
   Render_Pump();
-  v16 = dword_544D14;
+  previous_screen_handle = dword_544D14;
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
   Render_Present((int)dword_544CD8);
-  Surface = (_DWORD *)Mem_Alloc(188, v4, 0, a2);
-  if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, 400);
-  dword_523F60 = (int)Surface;
-  g_RenderDevice = Surface;
-  (*(void (**)(void))(Surface[46] + 56))();
-  DLX_GetSpriteForChar(dword_523F5C, (unsigned __int8)g_LanguageIndex % 3);
-  v6 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v6 + 52))(-1, -1, -1, -1, 1, 0, 0);
-  Render_ReleaseSurface(2, a2);
+  surface = (_DWORD *)Mem_Alloc(188, 0, 0, a2);
+  if ( surface )
+    surface = Render_CreateSurface((int)surface, 640, 400);
+  dword_523F60 = (int)surface;
+  g_RenderDevice = surface;
+  (*(void (**)(void))(surface[46] + 56))();
+  menu_sprite = DLX_GetSpriteForChar(dword_523F5C, (unsigned __int8)g_LanguageIndex % 3);
+  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(surface[46] + 52))(
+    0,
+    menu_sprite,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    0,
+    0);
+  Render_ReleaseSurface(2, 0);
   sub_40BBF0(76);
-  v7 = ACTIVE_MISSION_INDEX;
-  if ( v7 == 3 || v7 == 4 || v7 == 13 || v7 == 14 )
-    UI_DrawTextFmt(ACTIVE_MISSION_INDEX, 0, 585, 11, 2, (int)aDD);
+  mission_index = ACTIVE_MISSION_INDEX;
+  if ( mission_index == 3 || mission_index == 13 )
+    UI_DrawTextFmt(0, 585, 11, 2, (int)aDD, GAME_TURN_COUNTER, 10);
+  else if ( mission_index == 4 || mission_index == 14 )
+    UI_DrawTextFmt(0, 585, 11, 2, (int)aDD, GAME_TURN_COUNTER, 20);
   else
-    UI_DrawTextFmt(v6, 0, 570, 11, 2, (int)aD);
+    UI_DrawTextFmt(0, 570, 11, 2, (int)aD, GAME_TURN_COUNTER);
   Render_Pump();
-  LOBYTE(v8) = 0;
   sub_402850((_DWORD *)dword_523F60, 0, 0, 0, 0x27Fu, 0x23u, 0, 0);
   Render_Present((int)dword_544CD8);
-  v17 = 0;
-  v18 = 0;
+  should_hide_menu = 0;
+  menu_callback = 0;
   while ( dword_544CFC >> byte_54512C >= 0
        && dword_544D00 >> byte_54512C >= 0
        && dword_544CFC >> byte_54512C <= 640
        && dword_544D00 >> byte_54512C <= 25 )
   {
-    DD_Pump((int)dword_544CD8, v8);
+    DD_Pump((int)dword_544CD8, 0);
     for ( i = 0; i != 12; i += 6 )
     {
-      a2 = (unsigned __int16)word_51234E[i];
-      HIWORD(v10) = 0;
-      v8 = dword_544CFC >> byte_54512C;
-      if ( dword_544CFC >> byte_54512C >= (unsigned __int16)word_512348[i] )
+      mouse_x = dword_544CFC >> byte_54512C;
+      if ( mouse_x >= (unsigned __int16)word_512348[i] )
       {
-        LOWORD(v10) = word_51234A[i];
-        if ( dword_544D00 >> byte_54512C >= v10
-          && v8 <= (unsigned __int16)word_51234C[i]
-          && dword_544D00 >> byte_54512C <= a2
+        mouse_y = dword_544D00 >> byte_54512C;
+        if ( mouse_y >= (unsigned __int16)word_51234A[i]
+          && mouse_x <= (unsigned __int16)word_51234C[i]
+          && mouse_y <= (unsigned __int16)word_51234E[i]
           && DD_IsFlipping((int)dword_544CD8) )
         {
-          v18 = (void (*)(void))UI_RunMenu(*(void **)((char *)&off_512350 + i * 2), a2);
+          menu_callback = (void (*)(void))UI_RunMenu(
+                                         *(void **)((char *)&off_512350 + i * 2),
+                                         (unsigned __int16)word_51234E[i]);
         }
       }
     }
     if ( DD_IsFlipping((int)dword_544CD8) )
     {
-      v8 = g_LanguageIndex == 2 ? 430 : 470;
-      if ( dword_544CFC >> byte_54512C >= v8
+      close_button_left = g_LanguageIndex == 2 ? 430 : 470;
+      if ( dword_544CFC >> byte_54512C >= close_button_left
         && dword_544D00 >> byte_54512C >= 0
         && dword_544CFC >> byte_54512C <= 590
         && dword_544D00 >> byte_54512C <= 25 )
       {
         Render_Begin((int)dword_544CD8, 0);
-        v17 = 1;
+        should_hide_menu = 1;
         break;
       }
     }
   }
-  if ( dword_523F60 )
-    (**(void (__cdecl ***)(int))(dword_523F60 + 184))(v16);
+  surface = (_DWORD *)dword_523F60;
+  if ( surface )
+    (*(void (__fastcall **)(_DWORD *, int))(surface[46]))(surface, 2);
   Render_Pump();
   Render_FillRect((_DWORD *)dword_5202E0, 0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
-  sub_460D80((int)dword_544CD8, v16);
+  sub_460D80((int)dword_544CD8, previous_screen_handle);
   Render_Present((int)dword_544CD8);
-  Render_SetResourceHandle((int)&unk_51D4C0, 1);
-  v11 = g_RenderHook;
+  previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+  previous_render_hook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log((int)v11, 0, a2, (int)aSetrhS08x_2);
-  if ( v18 )
-    v18();
-  Debug_Log(v12, 0, a2, (int)aUnsetrh08x_2);
-  g_RenderHook = v13;
-  Render_SetResourceHandle((int)&unk_51D4C0, v14);
-  Debug_Log(v15, 0, a2, (int)aMenuHide);
-  return !v17;
+  Debug_Log((int)Render_DefaultRH, 0, a2, (int)aSetrhS08x_2, aStdrh_3, Render_DefaultRH);
+  if ( menu_callback )
+    menu_callback();
+  Debug_Log((int)g_RenderHook, 0, a2, (int)aUnsetrh08x_2, g_RenderHook);
+  g_RenderHook = previous_render_hook;
+  Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+  Debug_Log(0, 0, a2, (int)aMenuHide);
+  return !should_hide_menu;
 }
-// 40E905: variable 'v3' is possibly undefined
-// 40E95C: variable 'v4' is possibly undefined
-// 40EB0F: variable 'i' is possibly undefined
-// 40EBE5: variable 'v16' is possibly undefined
-// 40EC49: variable 'v12' is possibly undefined
-// 40EC56: variable 'v13' is possibly undefined
-// 40EC5C: variable 'v14' is possibly undefined
-// 40EC66: variable 'v15' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512348: using guessed type __int16 word_512348[];
@@ -37752,81 +37750,76 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
 //----- (00423860) --------------------------------------------------------
 signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 {
-  unsigned int v3; // esi
-  int v4; // edi
-  signed int v5; // eax
-  void (*v6)(void); // edx
-  int v7; // esi
-  int v8; // ecx
-  int v9; // eax
-  int v10; // eax
-  int v11; // ecx
-  int v12; // ecx
-  void *v13; // ecx
-  int v15[12]; // [esp+0h] [ebp-30h] BYREF
+  int slot_index; // esi
+  signed int handled_panel_input; // edi
+  signed int special_unit_info; // eax
+  int target_tile_x; // esi
+  int target_tile_y; // ecx
+  int distance_x; // eax
+  int distance_y; // eax
+  int selected_slot_indices[12]; // [esp+0h] [ebp-30h] BYREF
 
   if ( dword_514194 == -1 )
     return 0;
-  v3 = ((dword_544CFC >> byte_54512C) - 35) / 38;
-  v4 = 0;
-  if ( dword_544D00 >> byte_54512C >= 400 && dword_544D00 >> byte_54512C < 464 && v3 <= 9 )
+  slot_index = ((dword_544CFC >> byte_54512C) - 35) / 38;
+  handled_panel_input = 0;
+  if ( dword_544D00 >> byte_54512C >= 400
+    && dword_544D00 >> byte_54512C < 464
+    && slot_index >= 0
+    && slot_index <= 9 )
   {
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-    if ( DD_IsLost((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * v3 + 6) != -1 )
+    if ( DD_IsLost((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
-      v5 = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
-      Unit_Info(100, 100, v5, (unsigned __int8 *)(dword_526FA0 + 6 + 31 * v3), a1, 0);
+      special_unit_info = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
+      Unit_Info(100, 100, special_unit_info, (unsigned __int8 *)(dword_526FA0 + 31 * slot_index + 6), a1, 0);
       sub_418700(1);
     }
-    if ( DD_IsFlipping((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * v3 + 6) != -1 )
+    if ( DD_IsFlipping((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
-      LOBYTE(dword_526F78[v3]) ^= 1u;
+      LOBYTE(dword_526F78[slot_index]) ^= 1u;
       UnitStackSelection_RedrawPanel(-1, a1);
       sub_418700(1);
-      Render_Begin((int)dword_544CD8, v6);
+      Render_Begin((int)dword_544CD8, 0);
     }
-    v4 = 1;
+    handled_panel_input = 1;
   }
   if ( DD_IsFlipping((int)dword_544CD8) && UnitStackSelection_HasSelectedSlots() )
   {
-    v7 = (((dword_544CFC >> byte_54512C)
-         - 32
-         - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
-          + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
-       + *(_DWORD *)(gameData + 140008);
-    v8 = (((dword_544D00 >> byte_54512C)
-         - 16
-         - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
-          + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6)
-       + *(_DWORD *)(gameData + 140012);
-    v9 = *(__int16 *)dword_526FA0 - v7;
-    if ( v9 <= 0 )
-      v9 = v7 - *(__int16 *)dword_526FA0;
-    if ( v9 <= 1 )
+    target_tile_x = ((dword_544CFC >> byte_54512C) - 32) / 64 + *(_DWORD *)(gameData + 140008);
+    target_tile_y = ((dword_544D00 >> byte_54512C) - 16) / 64 + *(_DWORD *)(gameData + 140012);
+    distance_x = *(__int16 *)dword_526FA0 - target_tile_x;
+    if ( distance_x < 0 )
+      distance_x = -distance_x;
+    if ( distance_x <= 1 )
     {
-      v10 = *(__int16 *)(dword_526FA0 + 2) - v8;
-      if ( v10 <= 0 )
-        v10 = v8 - *(__int16 *)(dword_526FA0 + 2);
-      if ( v10 <= 1 )
+      distance_y = *(__int16 *)(dword_526FA0 + 2) - target_tile_y;
+      if ( distance_y < 0 )
+        distance_y = -distance_y;
+      if ( distance_y <= 1 )
       {
         Render_Begin((int)dword_544CD8, 0);
-        memset_(v11, 0);
-        UnitStackSelection_BuildSelectedSlotIndexList((int)dword_526F78, 10, v15);
-        if ( Unit_MoveSelectionFromGroupToTile(g_SelectedUnitIndex, v15, v12, v7, a2, 0) )
-          memset_(v13, 0);
-        UnitStackSelection_SyncForCurrentSelection(v13, a1);
+        memset_(selected_slot_indices, 0);
+        UnitStackSelection_BuildSelectedSlotIndexList((int)dword_526F78, 10, selected_slot_indices);
+        if ( Unit_MoveSelectionFromGroupToTile(
+               g_SelectedUnitIndex,
+               (_DWORD *)selected_slot_indices,
+               target_tile_y,
+               target_tile_x,
+               a2,
+               0) )
+        {
+          memset_(dword_526F78, 0);
+        }
+        Render_LoadResourceSprite_v2();
         UnitStackSelection_RedrawPanel(-1, a1);
         sub_418700(1);
       }
     }
   }
-  return v4;
+  return handled_panel_input;
 }
 // 4238BB: simplified comparisons for 'esi.4': <0 || >=A became >=Au
-// 423975: variable 'v6' is possibly undefined
-// 423A34: variable 'v11' is possibly undefined
-// 423A59: variable 'v12' is possibly undefined
-// 423A6F: variable 'v13' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;

@@ -85,3 +85,4 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 - The latest `WorldMap_RunHumanTurnLoop` call-shape repairs also landed entirely in recovered C without touching `platform_sdl_runtime.c`.
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained blocker remains below SDL inside the deeper `WorldMap_RunHumanTurnLoop` gameplay/session surface after the repaired call-shape band.
+- The latest retained top-menu and split-panel helper repairs also stayed entirely in recovered C without touching `platform_sdl_runtime.c`.

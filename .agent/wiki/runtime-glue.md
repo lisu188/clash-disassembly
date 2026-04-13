@@ -22,3 +22,7 @@
 - `WorldMap_RunHumanTurnLoop` now also restores the zero-arg loop-entry helper lane, the held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block in recovered C.
 - No new compat wrappers were added in this batch.
 - The live retained blocker is still the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired call-shape band.
+
+- `WorldMap_HandleTopMenuBar` now also restores the menu-sprite draw, mission turn-counter text, menu-surface destroy, and saved render-hook/resource-handle restore block directly in recovered C.
+- `UnitStackSelection_HandleInput` now also restores the zero-arg `Render_Begin` calls, real move coordinates, `dword_526F78` zero-on-success, and `Render_LoadResourceSprite_v2` plus redraw tail directly in recovered C.
+- No new compat wrappers were added in this batch either.

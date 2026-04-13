@@ -107,3 +107,8 @@
   - Reason: the asm keeps pumping the same display/runtime handle with a zero secondary arg while those keys remain held; forwarding lost locals there obscures the real message-pump shape.
 - Keep the queued-path AP gate and the debug render toggle explicit inside `WorldMap_RunHumanTurnLoop`.
   - Reason: the asm pulls the required AP from the last move-track step and separately saves/restores the previous resource handle and `g_RenderHook`, so collapsing those into guessed helpers or fabricated temporaries would hide live gameplay/session control flow.
+
+- Keep `WorldMap_HandleTopMenuBar`'s menu-sprite draw, mission turn-counter text, temporary menu-surface destroy, and saved render-hook/resource-handle restore block explicit in recovered C.
+  - Reason: `sub_40E8B0` proves those operations are part of the real human-turn loop helper band, so pushing them into SDL, compat, or guessed helpers would hide authentic gameplay/session control flow.
+- Keep `UnitStackSelection_HandleInput`'s selected-slot move success tail explicit as `Unit_MoveSelectionFromGroupToTile(...)`, `memset_(dword_526F78, 0)` on success, `Render_LoadResourceSprite_v2()`, and `UnitStackSelection_RedrawPanel(-1, ...)` in recovered C.
+  - Reason: `sub_423860` proves that exact tail order and the real adjacent-tile coordinate handoff; the earlier decompiler temporaries were false dependencies, not a missing runtime seam.
