@@ -4838,6 +4838,7 @@ char aMainmap[8] = "mainmap"; // weak
 char aSetrhS08x_0[14] = "SetRH %s=%08x"; // weak
 char aUnsetrh08x[13] = "UnsetRH %08x"; // weak
 char aKon_por1[9] = "kon_por1"; // weak
+char aArama1[7] = "arama1"; // weak
 char aPlaygame[11] = "PlayGame()"; // weak
 char aStart[7] = "START:"; // weak
 char aSetrhS08x[14] = "SetRH %s=%08x"; // weak
@@ -20182,21 +20183,24 @@ void  WorldMap_RunHumanTurnLoop(
   int v23; // edx
   int *v24; // esi
   signed int v25; // eax
-  signed int v26; // ecx
+  unsigned __int16 v26; // cx
   int v27; // ecx
+  int v28; // eax
+  int previous_resource_handle; // eax
+  int (*previous_render_hook)(); // ecx
 
   sub_4458E0(a1, (const char *)a2, a3);
-  sub_4459A0(v6, a3);
-  dword_5202FC = v7;
-  dword_5202F8 = v7;
+  sub_4459A0(0, a3);
+  dword_5202FC = 0;
+  dword_5202F8 = 0;
   do
   {
-    UI_ReadCheatString((char)a2);
-    DD_Pump((int)dword_544CD8, (char)a2);
-    sub_407B20(0, v8, v9);
-    WorldMap_RedrawFrame((int)a2);
+    UI_ReadCheatString(0);
+    DD_Pump((int)dword_544CD8, 0);
+    sub_407B20(0, 0, 0);
+    WorldMap_RedrawFrame(0);
     MiniMap_UpdateViewportFromCursor();
-    if ( !WorldMap_HandleTopMenuBar((char)a2, 0) )
+    if ( !WorldMap_HandleTopMenuBar(0, 0) )
       break;
     if ( !UnitStackSelection_HandleInput(0, a4) )
       WorldMap_HandleTileHoverAndClick(a4);
@@ -20230,8 +20234,8 @@ LABEL_24:
           *(_BYTE *)(v15 + v16 + 147179) = v17 & 7;
           a2 = (int ( *)(int, char, DWORD))dword_544CD8;
           Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
-          while ( Input_IsKeyPressed(v18) )
-            DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+          while ( Input_IsKeyPressed(205) )
+            DD_Pump((int)dword_544CD8, 0);
         }
         if ( Input_IsKeyPressed(203) )
         {
@@ -20245,8 +20249,8 @@ LABEL_24:
             *(_BYTE *)(v19 + v20 + 147179) = v21 & 7;
             a2 = (int ( *)(int, char, DWORD))dword_544CD8;
             Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
-            while ( Input_IsKeyPressed(v22) )
-              DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+            while ( Input_IsKeyPressed(203) )
+              DD_Pump((int)dword_544CD8, 0);
           }
         }
         if ( Input_IsKeyPressed(200) )
@@ -20261,16 +20265,17 @@ LABEL_24:
                     *(__int16 *)(v23 + 147176),
                     0,
                     *(__int16 *)(v23 + 147176) + Map_NeighborDY[2 * *(unsigned __int8 *)(v23 + 147179)]);
-            a2 = (int ( *)(int, char, DWORD))v24;
             if ( v24 )
             {
+              v28 = v24[*v24];
+              v26 = HIWORD(v28);
               v25 = UnitStack_GetMinCurrentActionPoints(gameData + 147174 + 725 * g_SelectedUnitIndex);
               if ( v25 >= v26 )
               {
                 qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v24, 0x194u);
                 if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
                   Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
-                UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, (char)v24, 0, a4);
+                UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, 0, 0, a4);
               }
               j__nfree_();
               sub_418700(1);
@@ -20284,15 +20289,14 @@ LABEL_24:
     sub_40A460(0);
     if ( Input_IsKeyPressed(1) )
     {
-      Render_SetResourceHandle((int)&unk_51D4C0, 1);
-      a2 = Render_DefaultRH;
-      v10 = g_RenderHook;
+      previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+      previous_render_hook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
-      Debug_Log((int)v10, (char)Render_DefaultRH, 0, (int)aSetrhS08x_0);
-      sub_409CC0(v11, (char)Render_DefaultRH, 0);
-      Debug_Log(v12, (char)Render_DefaultRH, 0, (int)aUnsetrh08x);
-      g_RenderHook = v13;
-      Render_SetResourceHandle((int)&unk_51D4C0, v14);
+      Debug_Log(previous_resource_handle, 0, 0, (int)aSetrhS08x_0);
+      sub_409CC0(0, 0, 0);
+      Debug_Log((int)g_RenderHook, 0, 0, (int)aUnsetrh08x);
+      g_RenderHook = previous_render_hook;
+      Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
     }
     if ( Player_CheckForDefeatAndHandleElimination(g_CurrentPlayerIndex, 0) )
     {
@@ -20304,7 +20308,7 @@ LABEL_24:
       dword_520300 = 1;
       dword_5202F8 = 1;
       sub_404F20((int *)&unk_51D4C0, 20);
-      sub_4623C0(v27, aKon_por1);
+      sub_4623C0((int)aArama1, aKon_por1);
       return;
     }
     if ( !*(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140024) )
@@ -20407,10 +20411,14 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   int v41; // ecx
   int v42; // ebx
   int v44; // ecx
+  const char *background_resource_name;
+  const char *tree_resource_name;
 
   dword_5452E8 = 0;
   Debug_Log(a1, a2, a3, (int)aPlaygame);
   nullsub_3(0);
+  v6 = 0;
+  v7 = 0;
   do
   {
     if ( !*(_DWORD *)(v7 + gameData + 140051) )
@@ -20420,47 +20428,36 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   }
   while ( v6 < 5 );
   v8 = *(_BYTE *)(gameData + 140016);
+  background_resource_name = 0;
+  tree_resource_name = 0;
   if ( !v8 )
   {
-    if ( dword_5202C0 )
-      sub_405920(&dword_5202C0);
-    v9 = (_DWORD *)Mem_Alloc(4112, v7, a2, a3);
-    if ( v9 )
-      v9 = DLXSpriteSet_Load(v9, a2);
-    dword_5202C0 = (int)v9;
-    v11 = (_DWORD *)Mem_Alloc(4112, v10, a2, a3);
-    if ( !v11 )
-      goto LABEL_12;
-    goto LABEL_11;
+    background_resource_name = "backgr1.s32";
+    tree_resource_name = "treemas1.s32";
   }
-  if ( v8 <= 1u )
+  else if ( v8 == 1 )
+  {
+    background_resource_name = "backgr2.s32";
+    tree_resource_name = "treemas2.s32";
+  }
+  else if ( v8 == 2 )
+  {
+    background_resource_name = "backgr3.s32";
+    tree_resource_name = "treemas3.s32";
+  }
+  if ( background_resource_name )
   {
     if ( dword_5202C0 )
       sub_405920(&dword_5202C0);
-    v24 = (_DWORD *)Mem_Alloc(4112, v7, a2, a3);
-    if ( v24 )
-      v24 = DLXSpriteSet_Load(v24, a2);
-    dword_5202C0 = (int)v24;
-    v11 = (_DWORD *)Mem_Alloc(4112, v25, a2, a3);
-    if ( !v11 )
-      goto LABEL_12;
-    goto LABEL_11;
+    v9 = (_DWORD *)Mem_Alloc(4112, 0, a2, a3);
+    if ( v9 )
+      v9 = DLXSpriteSet_Load(v9, background_resource_name);
+    dword_5202C0 = (int)v9;
+    v11 = (_DWORD *)Mem_Alloc(4112, 0, a2, a3);
+    if ( v11 )
+      v11 = DLXSpriteSet_Load(v11, tree_resource_name);
+    dword_5202D8 = (int)v11;
   }
-  if ( v8 != 2 )
-    goto LABEL_13;
-  if ( dword_5202C0 )
-    sub_405920(&dword_5202C0);
-  v26 = (_DWORD *)Mem_Alloc(4112, v7, a2, a3);
-  if ( v26 )
-    v26 = DLXSpriteSet_Load(v26, a2);
-  dword_5202C0 = (int)v26;
-  v11 = (_DWORD *)Mem_Alloc(4112, v27, a2, a3);
-  if ( v11 )
-LABEL_11:
-    v11 = DLXSpriteSet_Load(v11, a2);
-LABEL_12:
-  dword_5202D8 = (int)v11;
-LABEL_13:
   dword_545150 = (int)&unk_5196A0;
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   g_SelectedUnitIndex = -1;
@@ -72780,30 +72777,19 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
 {
   int mission_index; // eax
-  char v5; // di
-  char v6; // si
-  int v7; // ecx
-  _WORD *v8; // edi
-  _WORD v10[18]; // [esp-28h] [ebp-2Ch] BYREF
-  int v11; // [esp-4h] [ebp-8h]
+  unsigned __int8 saved_campaign_state[27]; // [esp-1Bh] [ebp-1Bh] BYREF
 
   mission_index = (int)(size_t)a1;
-  v11 = a2;
-  qmemcpy(v10, (const void *)(gameData + 147147), 0x1Bu);
-  v6 = gameData - 27 + 1;
-  v5 = (unsigned __int8)&v10[13] + 1;
+  qmemcpy(saved_campaign_state, (const void *)(gameData + 147147), 0x1Bu);
   if ( mission_index && mission_index != 10 )
     sub_4623C0(0, aZwy01_0);
   sub_462480(mission_index, a1);
   WorldMap_Initialize((char)mission_index, a3);
   Scenario_LoadMissionByIndex(mission_index, a4);
   if ( mission_index && mission_index != 10 )
-  {
-    qmemcpy((void *)(gameData + 147147), v10, 0x1Bu);
-  }
-  return PlayGame(v7, (char)mission_index, a3, v5, a4);
+    qmemcpy((void *)(gameData + 147147), saved_campaign_state, 0x1Bu);
+  return PlayGame(0, (char)mission_index, a3, 0, a4);
 }
-// 4603DF: variable 'v7' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (004603F0) --------------------------------------------------------

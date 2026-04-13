@@ -50,6 +50,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
+  - the latest retained pass stayed in recovered C: `Scenario_LoadMissionByIndexAndPlay` now keeps its 27-byte campaign-state save/restore explicit and no longer forwards decompiler garbage into `PlayGame`
+  - the `PlayGame` prologue now restores the asm-backed `backgr1.s32` / `backgr2.s32` / `backgr3.s32` and `treemas1.s32` / `treemas2.s32` / `treemas3.s32` loads, and its first player scan no longer depends on uninitialized counters
+  - `WorldMap_RunHumanTurnLoop` now restores the asm-backed zero-init entry flags and the `sub_4623C0("arama1", "kon_por1")` mission-success tail in recovered C
+  - the direct retained `PlayGame` probe now links and stays alive under `timeout 1s`, so the first retained gameplay/session blocker is now explicit inside the deeper `WorldMap_RunHumanTurnLoop` surface rather than a wrapper gap
   - the exact retained data/helper slice `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` now exists in recovered C
   - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now rebound onto their already-recovered bodies
   - the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `sscanf_`, `fgets_`) remains settled
@@ -77,7 +81,7 @@ This file classifies the current runtime/quarantine surface for executable regen
     - case `17` / `p_mapa8j.map` now also preserves its mission-local byte clear, the four `Rules_RetractTreasureFact` calls, the four-player `Raylin` / `Lord Ruwe` / `McGregor` / `Crowley` setup, the `Dark Town` `BUILDING_RECORD(+438) -= 100` cut, the four raw slot-state mutation bands, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
     - case `18` / `p_mapa9j.map` now also preserves its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the direct raw slot-state writes on the `+28` lane, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
     - case `19` / `p_map10z.map` was already present and is now corroborated against asm, so the full 20-case mission-loader switch remains recovered C rather than wrapper glue
-  - the next retained executable-regeneration blocker is now the broader gameplay/session surface beyond the fully covered mission-loader switch, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+  - the next retained executable-regeneration blocker is now the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired entry/tail slice, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
@@ -87,3 +91,9 @@ This file classifies the current runtime/quarantine surface for executable regen
 - the broader gameplay/session surface beyond the now-covered 20-case `Scenario_LoadMissionByIndex` / `sub_460360` switch
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”
+
+## Latest retained runtime note
+- No new compat wrappers were added in the latest human-turn-loop batch.
+- The latest retained widening stayed in recovered C: `WorldMap_RunHumanTurnLoop` now restores the zero-arg loop-entry helper lane, the held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block.
+- The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
+- The next retained executable-regeneration blocker is still the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop`, not a wrapper, SDL, or `src_cpp` seam problem.
