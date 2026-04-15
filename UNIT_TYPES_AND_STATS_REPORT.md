@@ -210,3 +210,6 @@
 
 ## 18. Batch 149 Note
 - `Batch 149` stayed intentionally on the retained executable-regeneration handoff between the already-green startup-prelude probes and the deeper mission/session path. The active work reduced the retained `PlayGame_Dispatch` frontier past `UI_CheckConfirmQuit`, `UI_CheckDialogAccepted`, the queen departure-event slab, the reached `unit_stats` byte lane, and the local control-flow scars in `Map_RebuildCastleSiteAnchorCache` / `sub_4602F0`, but it did not promote any new unit-type or stat semantics. The unit/stat artifacts remain unchanged apart from this maintenance note while the next retained blocker is now the chunked mission-loader switch `Scenario_LoadMissionByIndex` / `sub_460360`.
+
+## 19. Batch 157 Note
+- `Batch 157` materialized an evidence-backed `unit_type` enum directly in `clash95.c` from the existing recovered roster in `UNIT_TYPES_AND_STATS.json` and rewrote every `createUnit(...)` roster in `clash95.c` to use `UNIT_TYPE_*` constants instead of raw numeric ids. This wave did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, and the special-personage labels for ids `33` and `34` remain medium-confidence.
