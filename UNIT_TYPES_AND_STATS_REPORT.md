@@ -216,3 +216,6 @@
 
 ## 20. Batch 158 Note
 - `Batch 158` rewrote the remaining direct `Unit_Create(...)` callsites with literal unit ids to use `UNIT_TYPE_*` constants instead of raw numeric values, covering the static setup lanes in `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper. This wave still did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the special-personage labels for ids `33` and `34` remain medium-confidence.
+
+## 21. Batch 159 Note
+- `Batch 159` replaced the remaining fixed `UnitSlot_InitFromType(...)` unit-id literals with `UNIT_TYPE_*` constants in `Temple_SpawnGiftGoldCargoStack`, `sub_4516B0`, and `sub_451A60`, covering the `UNIT_TYPE_GOLD_CARGO`, `UNIT_TYPE_CANNON`, and `UNIT_TYPE_PEGASUS` lanes. This wave still did not promote any new unit-type or stat semantics; pool/table-driven unit types remain dynamic, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the special-personage labels for ids `33` and `34` remain medium-confidence.

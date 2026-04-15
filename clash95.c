@@ -56406,7 +56406,7 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int a1, int a2, char a3, int a4,
   v15 = a4;
   v6 = 0;
   v7 = 31 * (a1 / 100);
-  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, 31, a3) )
+  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, UNIT_TYPE_GOLD_CARGO, a3) )
     ++v6;
   v9 = v17;
   *(_WORD *)((char *)v13 + i) = -1;
@@ -67103,7 +67103,10 @@ void sub_4516B0()
       v2 = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v3 >= v2 )
         break;
-      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 14, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
+      UnitSlot_InitFromType(
+        i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6,
+        UNIT_TYPE_CANNON,
+        *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
     sub_418700(1);
   }
@@ -67265,7 +67268,10 @@ signed int sub_451A60()
       result = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v2 >= result )
         break;
-      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 27, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
+      UnitSlot_InitFromType(
+        i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6,
+        UNIT_TYPE_PEGASUS,
+        *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
   }
   return result;
