@@ -3116,6 +3116,30 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 157 - Materialize unit_type enum for createUnit rosters
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the recovered mission rosters in `createUnit(...)` are now a semantic-recovery target instead of a raw numeric-id lane
+- Blockers removed this batch:
+  - `clash95.c` now carries an evidence-backed `unit_type` enum for ids `0..34` instead of the earlier partial `UNIT_TYPE_*` `#define` subset
+  - every `createUnit(...)` roster in `Scenario_LoadMissionByIndex` now uses `UNIT_TYPE_*` constants instead of raw numeric ids
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: `Scenario_LoadMissionByIndex` still carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`, with improved readability in the recovered `createUnit(...)` rosters
+- Key evidence used:
+  - `clash95.c` `createUnit` and `Scenario_LoadMissionByIndex`
+  - `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md` for the recovered unit id-to-name roster
+- Ambiguous candidates deferred:
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+  - `createCastle(...)` roster ids remain numeric outside the narrower `createUnit(...)` scope of this batch
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
