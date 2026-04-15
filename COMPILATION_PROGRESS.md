@@ -3191,6 +3191,31 @@
   - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
 
+## Batch 160 - Type pool-driven unit sources with unit_type enums
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining unit-type ambiguity now centers on naming semantics for dynamic pools rather than raw numeric ids in the pools themselves
+- Blockers removed this batch:
+  - `g_PortReinforcementUnitTypePool` now has `unit_type` element type and `UNIT_TYPE_*` initializers instead of raw numeric ids
+  - the temple/spawn helper pools `dword_515D10`, `dword_515D24`, and `dword_515D40` now use `unit_type` element type and `UNIT_TYPE_*` initializers instead of raw numeric ids
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the port-reinforcement and temple gift pools now exposing their unit roster directly at the definition site
+- Key evidence used:
+  - `clash95.c` `Port_SpawnReinforcementGroup`, `Temple_SpawnGiftUnitGroup`, and the pool/table definitions near `g_PortReinforcementUnitTypePool`, `dword_515D10`, `dword_515D24`, and `dword_515D40`
+  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced, so this batch keeps the original symbol names while typing the contents
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`

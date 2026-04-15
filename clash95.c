@@ -420,7 +420,7 @@ extern unsigned char unk_5146C0[];
 extern char *off_514834[];
 extern int dword_517B48[];
 extern int dword_517B4C[];
-extern int g_PortReinforcementUnitTypePool[];
+extern unit_type g_PortReinforcementUnitTypePool[];
 extern unsigned char unk_517BF0[];
 extern unsigned char unk_517CE0[];
 extern unsigned char unk_517DB8[];
@@ -5152,7 +5152,20 @@ char *off_51935C[3] = {
 };
 /* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
 int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
-int g_PortReinforcementUnitTypePool[12] = { 0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17 };
+unit_type g_PortReinforcementUnitTypePool[12] = {
+  UNIT_TYPE_PEASANT,
+  UNIT_TYPE_LIGHT_INFANTRY,
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_PIKEMAN,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_ARCHER,
+  UNIT_TYPE_CROSSBOWER,
+  UNIT_TYPE_FORESTER,
+  UNIT_TYPE_GORAL,
+  UNIT_TYPE_BUILDER
+};
 __int16 word_5191F0 = 30;
 char aSetrhS08x_8[14] = "SetRH %s=%08x"; // weak
 char aBattle_1[7] = "battle"; // weak
@@ -10198,9 +10211,23 @@ char byte_515D00[16] =
   '\0',
   '\0'
 }; // weak
-int dword_515D10[5] = { 29, 20, 21, 22, 23 }; // weak
-int dword_515D24[7] = { 1, 2, 3, 4, 5, 7, 8 }; // weak
-int dword_515D40[] = { 13 }; // weak
+unit_type dword_515D10[5] = {
+  UNIT_TYPE_FLY,
+  UNIT_TYPE_CYCLOP,
+  UNIT_TYPE_TROLL,
+  UNIT_TYPE_SCORPION,
+  UNIT_TYPE_SKELETON
+}; // weak
+unit_type dword_515D24[7] = {
+  UNIT_TYPE_LIGHT_INFANTRY,
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_PIKEMAN,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_DRAGON_CAVALRY
+}; // weak
+unit_type dword_515D40[] = { UNIT_TYPE_RAM }; // weak
 _UNKNOWN unk_515D50; // weak
 _UNKNOWN unk_515EE8; // weak
 _UNKNOWN unk_516050; // weak

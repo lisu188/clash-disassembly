@@ -219,3 +219,6 @@
 
 ## 21. Batch 159 Note
 - `Batch 159` replaced the remaining fixed `UnitSlot_InitFromType(...)` unit-id literals with `UNIT_TYPE_*` constants in `Temple_SpawnGiftGoldCargoStack`, `sub_4516B0`, and `sub_451A60`, covering the `UNIT_TYPE_GOLD_CARGO`, `UNIT_TYPE_CANNON`, and `UNIT_TYPE_PEGASUS` lanes. This wave still did not promote any new unit-type or stat semantics; pool/table-driven unit types remain dynamic, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the special-personage labels for ids `33` and `34` remain medium-confidence.
+
+## 22. Batch 160 Note
+- `Batch 160` typed the remaining pool-driven unit sources with `unit_type` enums by converting `g_PortReinforcementUnitTypePool`, `dword_515D10`, `dword_515D24`, and `dword_515D40` from raw numeric initializers to `UNIT_TYPE_*` constants. This wave still did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the `dword_515D10` / `dword_515D24` / `dword_515D40` symbol semantics remain under-evidenced even though their contents are now explicit.
