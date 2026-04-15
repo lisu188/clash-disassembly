@@ -31256,11 +31256,11 @@ LABEL_26:
   }
 LABEL_47:
   v34 = *v51;
-  if ( v34 == 15 )
+  if ( v34 == UNIT_TYPE_FORESTER )
   {
     v35 = 11;
   }
-  else if ( v34 == 16 )
+  else if ( v34 == UNIT_TYPE_GORAL )
   {
     v35 = 12;
   }
@@ -34865,7 +34865,7 @@ int  Building_CalcRemainingConstructionTurns(int a1)
   v3 = 0;
   do
   {
-    if ( *(_WORD *)(a1 + 18) == 17 )
+    if ( *(_WORD *)(a1 + 18) == UNIT_TYPE_BUILDER )
       v3 += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
     a1 += 31;
   }
@@ -41211,7 +41211,7 @@ __int16  UnitBattle_PlayShotAnimation(
         }
       }
       g_RenderDevice = &unk_51D4C0;
-      if ( *v125 == 12 )
+      if ( *v125 == UNIT_TYPE_CATAPULT )
       {
         v54 = 8 * (Time_Now(v48, v49) - v130) / (unsigned int)v127;
         v55 = v54 - 4;
@@ -41309,12 +41309,16 @@ __int16  UnitBattle_PlayShotAnimation(
   dword_523F7C %= dword_512364;
   UnitBattle_RedrawTile(*(unsigned __int16 *)(dword_532048 + 31 * a1 + 856), *(unsigned __int16 *)(dword_532048 + 31 * a1 + 858));
   v72 = *v125;
-  v73 = v72 == 12 || v72 == 14 || v72 == 30 || v72 == 28 || v72 == 24;
+  v73 = v72 == UNIT_TYPE_CATAPULT
+     || v72 == UNIT_TYPE_CANNON
+     || v72 == UNIT_TYPE_DRAGON
+     || v72 == UNIT_TYPE_WINGER
+     || v72 == UNIT_TYPE_WIZARD;
   v74 = v73;
   if ( v73 )
   {
     v75 = *v125;
-    if ( v75 == 12 || v75 == 14 )
+    if ( v75 == UNIT_TYPE_CATAPULT || v75 == UNIT_TYPE_CANNON )
     {
       v76 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
       if ( v76 )
@@ -41327,7 +41331,7 @@ LABEL_55:
       {
 LABEL_57:
         v77 = *v125;
-        if ( v77 == 30 || v77 == 28 )
+        if ( v77 == UNIT_TYPE_DRAGON || v77 == UNIT_TYPE_WINGER )
         {
           v78 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
           if ( v78 )
@@ -41710,9 +41714,9 @@ int  UnitBattle_ShotWall(int a1, int a2)
   if ( v8 < 0 )
     v8 = v4 - *(unsigned __int16 *)(v3 + 6);
   v9 = Math_CeilSqrt(v7 * v7 + v8 * v8);
-  if ( *(__int16 *)v3 == 14 && v9 > 4 )
+  if ( *(__int16 *)v3 == UNIT_TYPE_CANNON && v9 > 4 )
     v6 = 9 * v6 / 10;
-  if ( *(__int16 *)v3 == 12 && v9 > 3 )
+  if ( *(__int16 *)v3 == UNIT_TYPE_CATAPULT && v9 > 3 )
     v6 = 9 * v6 / 10;
   v11 = dword_532048 + 40 * a2;
   LOWORD(v12) = word_513A78[2 * *(_DWORD *)(dword_532048 + 820)];
@@ -42751,7 +42755,7 @@ signed int  Trap_New(DWORD a1, int a2, int a3, int a4, double a5)
         v14 = Unit_GetSquadCount(v12 + gameData + 147174);
         if ( v16 >= v14 )
           break;
-        if ( *v15 == 17 )
+        if ( *v15 == UNIT_TYPE_BUILDER )
         {
           *v15 = -1;
           break;
@@ -43746,7 +43750,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
     {
       if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(dword_532048 + 31 * v5 + 854) == g_CurrentPlayerIndex )
       {
-        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == 13 )
+        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == UNIT_TYPE_RAM )
         {
           if ( *(_BYTE *)(dword_532048 + 20 * v2 + v3 + 3134) )
           {
@@ -55065,7 +55069,7 @@ signed int  Building_UnitGetInto(
   {
     for ( i = 0; i < 10; ++i )
     {
-      if ( *v10 == 31 )
+      if ( *v10 == UNIT_TYPE_GOLD_CARGO )
       {
         *(_DWORD *)(v8 + 438) += 100 * *((char *)v10 + 9) / 100;
         *v10 = -1;
@@ -55078,7 +55082,7 @@ signed int  Building_UnitGetInto(
   {
     for ( i = 0; i < 10; ++i )
     {
-      if ( *(_WORD *)v11 == 32 )
+      if ( *(_WORD *)v11 == UNIT_TYPE_PEASANT_CARGO )
       {
         v12 = (*(_WORD *)(v8 + 430) & 0xFFF) + 100 * *(char *)(v11 + 9) / 100;
         v13 = *(_WORD *)(v8 + 430) & 0xF000;
@@ -71453,7 +71457,7 @@ LABEL_27:
       }
     case 8:
       v19 = 0;
-      while ( *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == 33 )
+      while ( *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
         v19 += 31;
         if ( v19 >= 372 )

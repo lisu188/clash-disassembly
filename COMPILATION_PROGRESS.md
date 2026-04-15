@@ -3299,6 +3299,34 @@
   - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
 
+## Batch 164 - Replace residual gameplay unit-id literals with UNIT_TYPE_* names
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining unit-type ambiguity now centers on mixed-domain raw ids and under-evidenced semantic naming rather than confirmed gameplay/unit-slot comparisons
+- Blockers removed this batch:
+  - confirmed gameplay/unit-slot raw ids in `UI_DrawUnitInfoPane`, `UnitBattle_PlayShotAnimation`, `UnitBattle_ShotWall`, `Building_CalcRemainingConstructionTurns`, `Trap_New`, `UnitBattle_HandleBattlefieldInteraction`, `Building_UnitGetInto`, and the mission case-8 garrison check now use `UNIT_TYPE_*` names instead of literal ids
+  - the cleaned lanes now spell out `UNIT_TYPE_FORESTER`, `UNIT_TYPE_GORAL`, `UNIT_TYPE_BUILDER`, `UNIT_TYPE_RAM`, `UNIT_TYPE_CATAPULT`, `UNIT_TYPE_CANNON`, `UNIT_TYPE_DRAGON`, `UNIT_TYPE_WINGER`, `UNIT_TYPE_WIZARD`, `UNIT_TYPE_GOLD_CARGO`, `UNIT_TYPE_PEASANT_CARGO`, and `UNIT_TYPE_SPECIAL_FOOT_PERSONAGE` directly at the callsites that already operate on recovered unit-slot records
+- Compile/link/runtime status:
+  - `git diff --check`
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the remaining confirmed gameplay unit-slot literal comparisons now exposed through `UNIT_TYPE_*` names
+- Key evidence used:
+  - `clash95.c` `UI_DrawUnitInfoPane`, `UnitBattle_PlayShotAnimation`, `UnitBattle_ShotWall`, `Building_CalcRemainingConstructionTurns`, `Trap_New`, `UnitBattle_HandleBattlefieldInteraction`, `Building_UnitGetInto`, and the mission-objective switch near the case-8 garrison scan
+  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - mixed-domain raw numeric ids remain in parser/AST code, sprite selectors, terrain/object ids, and other lanes where the field is not yet securely a `unit_type`
+  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are already named explicitly
+  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
+  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
