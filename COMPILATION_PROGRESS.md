@@ -3271,6 +3271,34 @@
   - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
 
+## Batch 163 - Type the castle-production available-unit cache with unit_type
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining unit-type ambiguity now centers on under-evidenced semantic names and legacy byte-backed storage rather than the castle-production available-unit cache itself
+- Blockers removed this batch:
+  - the castle-production available-unit cache `dword_532224` is now typed as a `unit_type[41]` sentinel-terminated buffer instead of a generic `int[]`
+  - the direct cache readers in `CastleProduction_RedrawSelectedUnitPanel` and `CastleProduction_HandleLicenceGridClick` now read the typed cache through array indexing instead of byte-offset pointer casts
+  - the stale guessed-type comments around the castle-production panel now match the typed `dword_532224` cache
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the castle-production available-unit list now exposing unit-type semantics directly at the cache layer
+- Key evidence used:
+  - `clash95.c` `CastleProduction_RebuildAvailableUnitList`, `CastleProduction_RedrawSelectedUnitPanel`, `CastleProduction_HandleBuyLicenceAction`, `CastleProduction_HandleLicenceGridClick`, and `CastleProduction_HandleAvailableUnitStripClick`
+  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are now named explicitly
+  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
+  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`

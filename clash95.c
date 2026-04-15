@@ -12346,7 +12346,7 @@ int dword_532214; // weak
 int dword_532218; // weak
 int dword_53221C; // weak
 int g_CastleProductionSelectedAvailableUnitIndex; // weak
-int dword_532224[]; // weak
+unit_type dword_532224[41]; // weak
 int dword_532228[40]; // weak
 int dword_5322C8; // weak
 int dword_5322CC; // weak
@@ -48354,7 +48354,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   v15 = 4 * (g_CastleProductionSelectedAvailableUnitIndex - 2);
   while ( v13 <= g_CastleProductionSelectedAvailableUnitIndex + 2 )
   {
-    if ( v13 < 0 || (v16 = *(int *)((char *)dword_532224 + v15), v16 == -1) )
+    if ( v13 < 0 || (v16 = dword_532224[v15 / 4], v16 == -1) )
     {
       v15 += 4;
       ++v13;
@@ -48366,9 +48366,9 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
       UI_DrawText(
         45,
         v14,
-        (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v20)))[(unsigned __int8)g_LanguageIndex]);
+        (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
       Render_ReleaseSurface(5, 0x2Du);
-      v15 = v21 + 4;
+      v15 += 4;
       ++v13;
       v14 += 17;
     }
@@ -48380,7 +48380,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
         UI_DrawText(
           45,
           v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v18)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
@@ -48388,9 +48388,9 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
         UI_DrawText(
           45,
           v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v17)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
       }
-      v15 = v19 + 4;
+      v15 += 4;
       ++v13;
       v14 += 17;
     }
@@ -48470,7 +48470,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
 // 532218: using guessed type int dword_532218;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 5322D0: using guessed type int dword_5322D0[];
 
 //----- (00434E20) --------------------------------------------------------
@@ -48923,7 +48923,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
 // 519808: using guessed type int dword_519808;
 // 532218: using guessed type int dword_532218;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 532334: using guessed type int dword_532334;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -49035,7 +49035,7 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
 // 532214: using guessed type int dword_532214;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (004359B0) --------------------------------------------------------
@@ -49094,10 +49094,10 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
         {
           do
           {
-            if ( v7 == *(int *)((char *)dword_532224 + result) )
+            if ( v7 == dword_532224[v6] )
               break;
-            a3 = *(int *)((char *)dword_532228 + result);
-            result += 4;
+            a3 = dword_532228[v6];
+            result += sizeof(int);
             ++v6;
           }
           while ( a3 != -1 );
@@ -49117,7 +49117,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
 // 532218: using guessed type int dword_532218;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 532228: using guessed type int dword_532228[];
 // 5322C8: using guessed type int dword_5322C8;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -49157,7 +49157,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
 // 53220C: using guessed type int dword_53220C;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
