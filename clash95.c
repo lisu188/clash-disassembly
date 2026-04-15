@@ -59336,7 +59336,7 @@ LABEL_16:
       v10 = g_PortReinforcementSpawnRingOffsets[v6].row_delta;
       v11 = v10 + PORT_ROW;
       v12 = Facing_DirectionFromDelta8(v10, g_PortReinforcementSpawnRingOffsets[v6].column_delta);
-      Unit_Create(0, g_CurrentPlayerIndex, v11, v12, a4, v29);
+      Unit_Create(UNIT_TYPE_PEASANT, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
       v15 = PORT_REINFORCEMENT_UNIT_COUNT - 1;
       for ( j = 725 * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + 147174;
@@ -63917,8 +63917,8 @@ _DWORD * sub_44B550(int this, DWORD a2, double a3)
   _DWORD *result; // eax
   int v19; // edx
 
-  Unit_Create(0x11u, 0, 5, 0, 4);
-  Unit_Create(0xDu, 0, 5, 0, 5);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 4);
+  Unit_Create(UNIT_TYPE_RAM, 0, 5, 0, 5);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
   Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
@@ -63941,37 +63941,37 @@ _DWORD * sub_44B550(int this, DWORD a2, double a3)
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
   Building_LogBuiltCastleFacts(
     (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
-  Unit_Create(0x11u, 0, v7, 0, 6);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
-  Unit_Create(9u, 0, 7, 0, 7);
+  Unit_Create(UNIT_TYPE_ARCHER, 0, 7, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(0x14u, 0, v8, 0, 7);
+  Unit_Create(UNIT_TYPE_CYCLOP, 0, v8, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(0x22u, 0, v9, 0, 7);
+  Unit_Create(UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, 0, v9, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(4u, 0, v10, 0, 7);
+  Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, 0, v10, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
-  Unit_Create(0x1Bu, 2, 10, 0, 7);
-  Unit_Create(0x1Cu, 0, 10, 0, 8);
-  Unit_Create(1u, 0, 5, 0, 45);
-  Unit_Create(0x11u, 0, 5, 0, 46);
+  Unit_Create(UNIT_TYPE_PEGASUS, 2, 10, 0, 7);
+  Unit_Create(UNIT_TYPE_WINGER, 0, 10, 0, 8);
+  Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 0, 5, 0, 45);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(5u, 0, 5, 0, 46);
+  Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, 0, 5, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(0x1Au, 0, v11, 0, 46);
+  Unit_Create(UNIT_TYPE_EAGLE, 0, v11, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(0xDu, 0, v12, 0, 46);
+  Unit_Create(UNIT_TYPE_RAM, 0, v12, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v13, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v13, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v14, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v14, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v15, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v15, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v16, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v16, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v17, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v17, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
@@ -64353,8 +64353,8 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
       v11 = 2 * v40;
       if ( *(_DWORD *)(v8 + 140051) )
       {
-        Unit_Create(0x11u, v7, v41, 0, v40);
-        Unit_Create(0, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v41, 0, v40);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64373,16 +64373,16 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
                             + gameData
                             + 509674));
-        Unit_Create(5u, v7, v15, 0, v14);
-        Unit_Create(1u, v7, v10, 0, v38);
-        Unit_Create(0x10u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v15, 0, v14);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v38);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
@@ -64396,58 +64396,58 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x11u, v7, v10, 0, v36);
-        Unit_Create(9u, v7, v39, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v10, 0, v36);
+        Unit_Create(UNIT_TYPE_ARCHER, v7, v39, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v17, 0, v44);
-        Unit_Create(0x10u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v17, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
@@ -64460,15 +64460,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
         v30 = v40;
         *(_DWORD *)(v8 + 140063) = v33;
         LOBYTE(v33) = v33 ^ 1;
-        Unit_Create(0x11u, v7, v41, 0, v30);
-        Unit_Create(3u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v41, 0, v30);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
-        Unit_Create(4u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64482,14 +64482,14 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
-        Unit_Create(0, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64508,16 +64508,16 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
                             + gameData
                             + 509674));
-        Unit_Create(5u, v7, v21, 0, v20);
-        Unit_Create(1u, v7, v10, 0, v38);
-        Unit_Create(0x10u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v21, 0, v20);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v38);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
-        Unit_Create(5u, v7, v22, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v22, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
@@ -64531,15 +64531,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x11u, v7, v10, 0, v36);
-        Unit_Create(0x11u, v7, v39, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v10, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v39, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
           v10,
           v4);
-        Unit_Create(9u, v7, v24, 0, v36);
+        Unit_Create(UNIT_TYPE_ARCHER, v7, v24, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
@@ -64547,8 +64547,8 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           v10,
           v4);
         v32 = v41 - 1;
-        Unit_Create(0, v7, v41 - 1, 0, v44);
-        Unit_Create(1u, v7, v41, 0, v44);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v41 - 1, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v41, 0, v44);
         v37 = 200 * v32;
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
@@ -64556,42 +64556,42 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(3u, v7, v25, 0, v44);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v25, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(3u, v7, v26, 0, v44);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v26, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(0, v7, v27, 0, v44);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v27, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v28, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v28, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v41, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v41, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v29, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v29, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
@@ -64600,57 +64600,57 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           v4);
         if ( *(int *)(v35 + gameData + 140055) > 0 )
         {
-          Unit_Create(0, v7, v39, 0, v44);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_PEASANT, v7, v39, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(9u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_ARCHER, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(9u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_ARCHER, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
@@ -71724,10 +71724,10 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 46, 45, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 15, 6, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 48, 14, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_FORESTER, -1);
-      Unit_Create(9u, 1, 35, 0, 11);
-      Unit_Create(9u, 1, 49, 0, 39);
-      Unit_Create(9u, 1, 40, 0, 3);
-      Unit_Create(1u, 1, 19, 0, 12);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 35, 0, 11);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 49, 0, 39);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 40, 0, 3);
+      Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 1, 19, 0, 12);
       sub_451EC0();
       Game_InitPlayerViewState();
       break;

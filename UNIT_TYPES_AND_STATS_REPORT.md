@@ -213,3 +213,6 @@
 
 ## 19. Batch 157 Note
 - `Batch 157` materialized an evidence-backed `unit_type` enum directly in `clash95.c` from the existing recovered roster in `UNIT_TYPES_AND_STATS.json` and rewrote every `createUnit(...)` and `createCastle(...)` roster in `clash95.c` to use `UNIT_TYPE_*` constants instead of raw numeric ids. This wave did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, and the special-personage labels for ids `33` and `34` remain medium-confidence.
+
+## 20. Batch 158 Note
+- `Batch 158` rewrote the remaining direct `Unit_Create(...)` callsites with literal unit ids to use `UNIT_TYPE_*` constants instead of raw numeric values, covering the static setup lanes in `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper. This wave still did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the special-personage labels for ids `33` and `34` remain medium-confidence.

@@ -3141,6 +3141,31 @@
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
   - direct `Unit_Create(...)` callsites still carry raw numeric unit ids outside the narrower mission-roster helper scope of this batch
 
+## Batch 158 - Apply unit_type enum to direct Unit_Create callsites
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining static unit-spawn lanes now center on direct `Unit_Create(...)` callsites rather than helper rosters
+- Blockers removed this batch:
+  - literal first-argument unit ids in direct `Unit_Create(...)` callsites now use `UNIT_TYPE_*` constants instead of raw numeric ids
+  - the static spawn/setup lanes in `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper now expose the recovered unit taxonomy directly
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: `Scenario_LoadMissionByIndex` still carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`, with improved readability in the direct `Unit_Create(...)` setup lanes around it
+- Key evidence used:
+  - `clash95.c` `Unit_Create`, `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper
+  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - dynamic/direct pool-driven unit types still flow through variables such as `g_PortReinforcementUnitTypePool[v17]`
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
