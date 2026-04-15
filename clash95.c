@@ -1150,9 +1150,9 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3);
 int  Building_CountFreeGarrisonSlots(int a1);
 signed int  Building_UnitGetInto(int a1, int a2, char a3, signed int i, double a5);
 signed int  Building_CanAcceptUnitStack(int a1, int a2);
-signed int  Building_HasUnitLicence(int a1, int a2);
-BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4);
-int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3);
+signed int  Building_HasUnitLicence(int a1, unit_type a2);
+BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4);
+int  Building_RemoveUnitLicence(int a1, unit_type a2, DWORD a3);
 int  Building_SetUnitProduction(int a1, char a2, DWORD a3);
 void  Building_StopUnitProduction(int a1, char a2, DWORD a3);
 _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3);
@@ -1165,7 +1165,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int a1);
 int  Building_CountNonCombatGarrisonEntries(int a1);
 signed int  Building_HasSpecialPersonageGarrisonEntries(int a1);
 int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a3);
-BOOL  Building_IsUnitLicenceEligible(char *a1, int a2);
+BOOL  Building_IsUnitLicenceEligible(char *a1, unit_type a2);
 int  Building_AdjustAllGarrisonMoraleByDelta(int a1);
 int  Building_CycleAllGarrisonOrdersOnce(int a1);
 signed int  Building_GetTaxBurdenTier(int a1);
@@ -1458,20 +1458,20 @@ BOOL  Building_IsGarrisonFullByIndex(int a1);
 __int16  Building_RepairUnitByIndex(int a1, int a2, DWORD a3);
 _BYTE * Building_TrainUnitByIndex(int a1, char a2, DWORD a3);
 int  Building_SetUnitProductionByIndex(int a1, char a2, DWORD a3);
-int  Building_RemoveUnitLicenceByIndex(int a1, int a2, DWORD a3);
+int  Building_RemoveUnitLicenceByIndex(int a1, unit_type a2, DWORD a3);
 void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3);
-signed int  Building_HasUnitLicenceByIndex(int a1, int a2);
-BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3);
-BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2);
+signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2);
+BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3);
+BOOL  Building_CanBuyUnitLicenceByIndex(int a1, unit_type a2);
 BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4);
-signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2);
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2);
 signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1);
 signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3);
 signed int  Building_HasTrainableIdleGarrisonUnit(int a1);
 signed int  Building_HasRepairableIdleGarrisonUnit(int a1);
 int  Building_StartTrainingIdleGarrisonUnits(int a1);
 __int16  Building_StartRepairIdleGarrisonUnits(int a1);
-signed int  Building_UnitsLeaveByUnitType(int a1, int a2, int a3, double a4);
+signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a4);
 _DWORD * Rules_LogCastleSiteFact(int a1, int a2);
 _DWORD * Rules_LogBuildingTransferFact(int a1, int a2, int a3);
 _DWORD * Rules_LogNewCastleFact(int a1, int a2);
@@ -1482,9 +1482,9 @@ _DWORD * Rules_LogCastleUnderConstructionFact(int a1);
 _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2);
 _DWORD * Rules_LogAssignedCastleFact(int a1, int a2);
 _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2);
-BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2);
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2);
 int  Player_GetInternedNameByIndex(int a1, int a2, int a3);
-signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2);
+signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2);
 signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4);
 void Map_RebuildCastleSiteAnchorCache();
 int  Building_CalcGarrisonFactStrength(int a1);
@@ -1502,9 +1502,9 @@ signed int  UnitStack_HasPlagueByIndex(int a1);
 BOOL  Unit_ExecuteQueuedPathAndCheckFinished(unsigned int a1, char a2, DWORD a3, double a4);
 int  Script_UnitAddToGroup(unsigned int a1, int a2, DWORD a3, double a4);
 BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4);
-BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, double a5);
-signed int  UnitStack_HasUnitType(int a1, int a2);
-signed int  UnitStack_HasOnlyUnitType(int a1, int a2);
+BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a4, double a5);
+signed int  UnitStack_HasUnitType(int a1, unit_type a2);
+signed int  UnitStack_HasOnlyUnitType(int a1, unit_type a2);
 signed int  UnitStack_GetHealthPercentAggregate(int a1, int a2);
 int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5);
 signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a3, DWORD a4, double a5);
@@ -10173,15 +10173,15 @@ _DWORD dword_515B90[3] = { 39, 426, 1 }; // weak
 _DWORD dword_515C10[3] = { 39, 426, 1 }; // weak
 char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
 {
-  '\x02',
-  '\x04',
-  '\x06',
-  '\x05',
-  '\a',
-  '\b',
-  '\v',
-  '\x0E',
-  '\xFF',
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_HEAVY_CAVALRY,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_DRAGON_CAVALRY,
+  UNIT_TYPE_MUSKETEER,
+  UNIT_TYPE_CANNON,
+  -1,
   '\0',
   '\0',
   '\0',
@@ -10190,7 +10190,16 @@ char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
   '\0',
   '\0'
 }; // weak
-char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = { '\t', '\n', '\f', '\r', '\x0F', '\xFF', '\0', '\0' }; // weak
+char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = {
+  UNIT_TYPE_ARCHER,
+  UNIT_TYPE_CROSSBOWER,
+  UNIT_TYPE_CATAPULT,
+  UNIT_TYPE_RAM,
+  UNIT_TYPE_FORESTER,
+  -1,
+  '\0',
+  '\0'
+}; // weak
 _UNKNOWN unk_515C98; // weak
 char byte_515D00[16] =
 {
@@ -49034,23 +49043,23 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 {
   int metadata_offset; // esi
   int out_index; // ebx
-  int unit_type; // ecx
+  unit_type unitType; // ecx
   BOOL result; // eax
 
   (void)this;
   memset(dword_532224, 0xFF, 0xA4);
   metadata_offset = 0;
   out_index = 0;
-  unit_type = 0;
+  unitType = UNIT_TYPE_PEASANT;
   do
   {
-    result = Building_IsUnitLicenceEligible((char *)dword_532218, unit_type);
+    result = Building_IsUnitLicenceEligible((char *)dword_532218, unitType);
     if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
-      dword_532224[out_index++] = unit_type;
-    ++unit_type;
+      dword_532224[out_index++] = unitType;
+    ++unitType;
     metadata_offset += 88;
   }
-  while ( unit_type < 40 );
+  while ( unitType < 40 );
   return result;
 }
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
@@ -55162,7 +55171,7 @@ signed int  Building_CanAcceptUnitStack(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E820) --------------------------------------------------------
-signed int  Building_HasUnitLicence(int a1, int a2)
+signed int  Building_HasUnitLicence(int a1, unit_type a2)
 {
   int v2; // esi
   int v3; // ecx
@@ -55180,7 +55189,7 @@ signed int  Building_HasUnitLicence(int a1, int a2)
 }
 
 //----- (0043E850) --------------------------------------------------------
-BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
+BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4)
 {
   int v5; // edx
   BOOL result; // eax
@@ -55226,7 +55235,7 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E940) --------------------------------------------------------
-int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3)
+int  Building_RemoveUnitLicence(int a1, unit_type a2, DWORD a3)
 {
   int activeProductionLicenceSlot; // eax
   int addonSlot; // edx
@@ -55499,7 +55508,7 @@ int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a
 // 5202E4: using guessed type int gameData;
 
 //----- (0043ED20) --------------------------------------------------------
-BOOL  Building_IsUnitLicenceEligible(char *a1, int a2)
+BOOL  Building_IsUnitLicenceEligible(char *a1, unit_type a2)
 {
   int v4; // eax
   int v5; // edx
@@ -69227,7 +69236,7 @@ int  Building_SetUnitProductionByIndex(int a1, char a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
-int  Building_RemoveUnitLicenceByIndex(int a1, int a2, DWORD a3)
+int  Building_RemoveUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
 {
   return Building_RemoveUnitLicence(UNIT_RECORD(a1), a2, a3);
 }
@@ -69258,21 +69267,21 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004557C0) --------------------------------------------------------
-signed int  Building_HasUnitLicenceByIndex(int a1, int a2)
+signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2)
 {
   return Building_HasUnitLicence(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004557E0) --------------------------------------------------------
-BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3)
+BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
 {
   return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + 509674, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455800) --------------------------------------------------------
-BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2)
+BOOL  Building_CanBuyUnitLicenceByIndex(int a1, unit_type a2)
 {
   return Building_IsUnitLicenceEligible((char *)(UNIT_RECORD(a1)), a2);
 }
@@ -69285,7 +69294,7 @@ BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4)
 }
 
 //----- (00455850) --------------------------------------------------------
-signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2)
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2)
 {
   signed int result; // eax
   int v4; // ebx
@@ -69313,7 +69322,7 @@ signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
   while ( 1 )
   {
     v4 = *(char *)(v3 + gameData + result + 510076);
-    if ( v4 > 0 && v4 != 17 )
+    if ( v4 != -1 && v4 != UNIT_TYPE_PEASANT && v4 != UNIT_TYPE_BUILDER )
       break;
     if ( ++result >= 12 )
       return 0;
@@ -69501,7 +69510,7 @@ __int16  Building_StartRepairIdleGarrisonUnits(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455BD0) --------------------------------------------------------
-signed int  Building_UnitsLeaveByUnitType(int a1, int a2, int a3, double a4)
+signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a4)
 {
   int i; // eax
   int v7; // edx
@@ -69679,7 +69688,7 @@ _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455E80) --------------------------------------------------------
-BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2)
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -69725,7 +69734,7 @@ int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455F20) --------------------------------------------------------
-signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2)
+signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2)
 {
   int v2; // ebx
   int v3; // eax
@@ -70235,7 +70244,7 @@ BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00457FE0) --------------------------------------------------------
-BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, double a5)
+BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a4, double a5)
 {
   int v5; // esi
   __int16 *v6; // edx
@@ -70309,7 +70318,7 @@ BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, dou
 // 5202E4: using guessed type int gameData;
 
 //----- (00458160) --------------------------------------------------------
-signed int  UnitStack_HasUnitType(int a1, int a2)
+signed int  UnitStack_HasUnitType(int a1, unit_type a2)
 {
   int v3; // edx
   __int16 *i; // eax
@@ -70331,7 +70340,7 @@ signed int  UnitStack_HasUnitType(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004581C0) --------------------------------------------------------
-signed int  UnitStack_HasOnlyUnitType(int a1, int a2)
+signed int  UnitStack_HasOnlyUnitType(int a1, unit_type a2)
 {
   int v3; // edx
   __int16 *i; // eax

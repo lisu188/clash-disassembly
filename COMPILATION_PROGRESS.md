@@ -3243,6 +3243,34 @@
   - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
 
+## Batch 162 - Type production-licence and unit-type predicate helpers
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining unit-type ambiguity now centers on under-evidenced dynamic table semantics and legacy byte-backed storage rather than raw numeric ids in the safe production-licence or unit-predicate helpers
+- Blockers removed this batch:
+  - the production-licence requirement tables `g_ProductionLicenceSmithsRequiredUnitTypes` and `g_ProductionLicenceWorkshopRequiredUnitTypes` now spell their unit ids with `UNIT_TYPE_*` constants instead of raw character escapes
+  - the safe building licence helpers and wrappers `Building_HasUnitLicence`, `Building_BuyUnitLicence`, `Building_RemoveUnitLicence`, `Building_IsUnitLicenceEligible`, `Building_RemoveUnitLicenceByIndex`, `Building_HasUnitLicenceByIndex`, `Building_BuyUnitLicenceByIndex`, `Building_CanBuyUnitLicenceByIndex`, `Building_FindUnitLicenceSlotIndexOrZero`, `Building_UnitsLeaveByUnitType`, `Building_SelectedUnitLicenceMatchesTypeByIndex`, and `Building_HasGarrisonUnitTypeByIndex` now expose `unit_type` directly
+  - the stack predicate helpers `UnitStack_DetachUnitTypeToAdjacentTile`, `UnitStack_HasUnitType`, and `UnitStack_HasOnlyUnitType` now expose `unit_type` directly, while `CastleProduction_RebuildAvailableUnitList` and `Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero` now read in terms of explicit `UNIT_TYPE_*` values
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the production-licence gates and unit-type predicate layer now exposing unit semantics directly
+- Key evidence used:
+  - `clash95.c` `CastleProduction_RebuildAvailableUnitList`, `Building_IsUnitLicenceEligible`, `Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero`, the by-index licence wrappers, and the stack predicate helpers near `UnitStack_DetachUnitTypeToAdjacentTile` / `UnitStack_HasUnitType` / `UnitStack_HasOnlyUnitType`
+  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are now named explicitly
+  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
+  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
