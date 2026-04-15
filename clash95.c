@@ -676,8 +676,8 @@ signed int  Map_RevealTileWithPropagation(int a1, signed int a2, int a3);
 BOOL  Map_IsTileVisibleToPlayer(int a1, signed int a2, int a3);
 signed int  Map_ClassifyFogOfWarOverlayForPlayer(int a1, signed int a2, int a3);
 signed int  UnitStack_IsIndexOnMap(int a1);
-int  UnitSlot_InitFromType(int result, int a2, char a3);
-char  UnitStack_ResetRecord(int a1, int a2, char a3);
+int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex);
+char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex);
 signed int  Unit_Create();
 unsigned int  UnitStack_LinkArmyFact(__int16 *a1, char a2, DWORD a3);
 int  Unit_Kill(int a1, char a2, DWORD a3, double a4);
@@ -1352,7 +1352,7 @@ int  Prisoner_FindAnyHiddenEnemyCastle(int a1, int a2);
 int  Prisoner_FindAnyHiddenEnemyUnitStack(int a1, int a2);
 void  Map_RevealTilesInRadius2ForPlayer(int a1, int a2, int a3);
 unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5);
-int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, int a2, int a3, char a4, double a5);
+int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, unit_type a2, int a3, char a4, double a5);
 unsigned int  Prisoner_Pay(int a1, int a2, DWORD a3, double a4);
 char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4);
 int  Building_CountPrisoners(int a1);
@@ -1511,8 +1511,8 @@ signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a
 double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5);
 void  AI_EvaluateStrategicTargetAtTile(int a1, int a2, int a3, int a4, int a5, int a6, int *a7, int *a8, float *a9);
 int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5);
-signed int  createUnit(double, int, int, int, DWORD, int, ...);
-int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, ...);
+signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...);
+int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, unit_type a7, unit_type a8, ...);
 int  sub_459ED0(int result, int a2, int a3, int a4);
 int  sub_45B3C0(int result, int a2);
 int  sub_45C000(int result, int a2);
@@ -22905,7 +22905,7 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F440) --------------------------------------------------------
-int  UnitSlot_InitFromType(int result, int a2, char a3)
+int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
 {
   char v3; // dl
   char v4; // bh
@@ -22917,14 +22917,14 @@ int  UnitSlot_InitFromType(int result, int a2, char a3)
   *(_WORD *)(result + 6) = 0;
   *(_BYTE *)(result + 3) = 0;
   *(_DWORD *)(result + 23) = 0;
-  UNIT_SLOT_TYPE(result) = a2;
-  UNIT_SLOT_OWNER(result) = a3;
-  if ( a2 != -1 )
-    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * a2];
+  UNIT_SLOT_TYPE(result) = unitType;
+  UNIT_SLOT_OWNER(result) = ownerIndex;
+  if ( unitType != -1 )
+    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
   UNIT_SLOT_HEALTH_PERCENT(result) = 100;
-  if ( a2 != -1 )
+  if ( unitType != -1 )
   {
-    if ( (g_UnitTypeFlags[22 * a2] & 2) != 0 )
+    if ( (g_UnitTypeFlags[22 * unitType] & 2) != 0 )
       v3 = 6;
     else
       v3 = 10;
@@ -22945,7 +22945,7 @@ int  UnitSlot_InitFromType(int result, int a2, char a3)
 // 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (0040F4D0) --------------------------------------------------------
-char  UnitStack_ResetRecord(int stackPtr, int unitType, char ownerIndex)
+char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex)
 {
   int slotIndex; // edx
 
@@ -22959,7 +22959,7 @@ char  UnitStack_ResetRecord(int stackPtr, int unitType, char ownerIndex)
 
 //----- (0040F510) --------------------------------------------------------
 signed int  Unit_Create(a1, a2, a3, a4, a5)
-DWORD a1;
+unit_type a1;
 int a2;
 int a3;
 char a4;
@@ -56347,7 +56347,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
   unsigned int v11; // eax
   char v12; // cl
   char v13; // bl
-  int v14; // edx
+  unit_type v14; // edx
   unsigned int v15; // eax
   char v16; // cl
   _WORD v17[172]; // [esp+0h] [ebp-170h] BYREF
@@ -56407,9 +56407,9 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
 // 43FCBB: variable 'v3' is possibly undefined
 // 43FD55: variable 'v12' is possibly undefined
 // 43FD89: variable 'v16' is possibly undefined
-// 515D10: using guessed type int dword_515D10[5];
-// 515D24: using guessed type int dword_515D24[7];
-// 515D40: using guessed type int dword_515D40[];
+// 515D10: using guessed type unit_type dword_515D10[5];
+// 515D24: using guessed type unit_type dword_515D24[7];
+// 515D40: using guessed type unit_type dword_515D40[];
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FDE0) --------------------------------------------------------
@@ -59401,7 +59401,7 @@ LABEL_16:
 // 4437B6: variable 'v24' is possibly undefined
 // 517B48: using guessed type int dword_517B48[];
 // 517B4C: using guessed type int dword_517B4C[23];
-// 517BA8: using guessed type int g_PortReinforcementUnitTypePool[12];
+// 517BA8: using guessed type unit_type g_PortReinforcementUnitTypePool[12];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -65512,7 +65512,7 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
 // 518D50: using guessed type char *g_PrisonerTortureResistanceTexts[3];
 
 //----- (0044F1E0) --------------------------------------------------------
-int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, int a2, int a3, char a4, double a5)
+int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, unit_type a2, int a3, char a4, double a5)
 {
   int garrison_slot_ptr; // edx
   int slot_index; // eax
@@ -71055,12 +71055,12 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
 }
 
 //----- (00459760) --------------------------------------------------------
-signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
+signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...)
 {
   va_list args;
   char v7; // bl
   int v8; // ecx
-  int unit_type; // eax
+  unit_type next_unit_type; // eax
   DWORD v10; // ebp
   int slot_offset; // ecx
   int tile_offset; // [esp+0h] [ebp-1Ch]
@@ -71069,14 +71069,14 @@ signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
   Unit_Create(a5, a4, a2, 0, a1, a3);
   v7 = a4;
   slot_offset = 31;
-  unit_type = a6;
+  next_unit_type = a6;
   v10 = 200 * a2;
   tile_offset = 2 * a3;
-  while ( unit_type != -1 )
+  while ( next_unit_type != -1 )
   {
     v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374);
-    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, unit_type, a4);
-    unit_type = va_arg(args, int);
+    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, next_unit_type, a4);
+    next_unit_type = va_arg(args, int);
     slot_offset += 31;
   }
   va_end(args);
@@ -71098,14 +71098,14 @@ int  createCastle(
         int a4,
         int a5,
         char *a6,
-        DWORD a7,
-        int a8,
+        unit_type a7,
+        unit_type a8,
         ...)
 {
   va_list args;
   int v9; // eax
   int v10; // ecx
-  int unit_type; // eax
+  unit_type next_unit_type; // eax
   int unit_index; // eax
   int tile_offset; // [esp+0h] [ebp-20h]
   DWORD v15; // [esp+4h] [ebp-1Ch]
@@ -71113,14 +71113,14 @@ int  createCastle(
   va_start(args, a8);
   Unit_Create(a7, a4, a2, 0, a3);
   v15 = 200 * a2;
-  unit_type = a8;
+  next_unit_type = a8;
   v10 = 31;
   tile_offset = 2 * a3;
-  while ( unit_type != -1 )
+  while ( next_unit_type != -1 )
   {
     v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374);
-    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, unit_type, a4);
-    unit_type = va_arg(args, int);
+    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, next_unit_type, a4);
+    next_unit_type = va_arg(args, int);
     v10 += 31;
   }
   va_end(args);

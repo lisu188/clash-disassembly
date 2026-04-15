@@ -3216,6 +3216,33 @@
   - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
   - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
 
+## Batch 161 - Type unit-spawn helper signatures with unit_type
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
+  - the remaining unit-type ambiguity now centers on under-evidenced table semantics and the old recovered no-prototype seams rather than raw numeric ids or helper signatures
+- Blockers removed this batch:
+  - `UnitSlot_InitFromType`, `UnitStack_ResetRecord`, `createUnit`, `createCastle`, and `Building_CreateSpecialPersonageGarrisonUnit` now advertise `unit_type` directly in their safe prototype and definition slots instead of plain `int` / `DWORD`
+  - `Unit_Create` now uses `unit_type` for its recovered first parameter in the K&R-style definition while intentionally keeping the loose top-level `Unit_Create()` declaration, because the decompiled call sites still rely on the old no-prototype extra-argument form
+  - `Temple_SpawnGiftUnitGroup` now carries its pool-selected local `v14` as `unit_type`, and the stale guessed-type comments for `dword_515D10`, `dword_515D24`, `dword_515D40`, and `g_PortReinforcementUnitTypePool` now match the typed pool definitions
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the unit-spawn helper layer now exposing unit-type semantics directly in its signatures
+- Key evidence used:
+  - `clash95.c` `UnitSlot_InitFromType`, `UnitStack_ResetRecord`, `Unit_Create`, `createUnit`, `createCastle`, `Building_CreateSpecialPersonageGarrisonUnit`, and `Temple_SpawnGiftUnitGroup`
+  - the already-typed pool definitions and existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+- Ambiguous candidates deferred:
+  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
+  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced even though the helper layer now treats them as `unit_type`
+  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from case `18` / `p_mapa9j.map` to case `19` / `p_map10z.map`
