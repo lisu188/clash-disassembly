@@ -1,7 +1,6 @@
 #include "platform_sdl.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -152,160 +151,43 @@ int j___NTAddFileHandle_(void)
 }
 
 static char g_boot_command_line[1024];
-static int g_boot_run_startup_prelude;
-static int g_boot_run_video_init_probe;
-static int g_boot_run_menu_probe;
-static int g_boot_trace_menu_probe_checked;
 static int g_boot_trace_menu_probe_enabled;
-static int g_boot_menu_probe_auto_click_checked;
-static int g_boot_menu_probe_auto_click_index = -1;
-static int g_boot_load_menu_probe_auto_click_checked;
-static int g_boot_load_menu_probe_auto_click_index = -1;
-static int g_boot_load_menu_probe_auto_slot_checked;
-static int g_boot_load_menu_probe_auto_slot_index = -1;
-static int g_boot_load_menu_probe_post_confirm_checked;
-static int g_boot_load_menu_probe_post_confirm_enabled;
-static int g_boot_load_menu_probe_broader_rules_checked;
-static int g_boot_load_menu_probe_broader_rules_enabled;
 
 static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);
 
 static void Bootstrap_TraceMenuProbe(const char *step)
 {
-  if ( !g_boot_trace_menu_probe_checked )
-  {
-    g_boot_trace_menu_probe_enabled = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
-    g_boot_trace_menu_probe_checked = 1;
-  }
-  if ( g_boot_trace_menu_probe_enabled )
-  {
-    fprintf(stderr, "[menu-probe] %s\n", step);
-    fflush(stderr);
-  }
+  (void)step;
 }
 
 static int Bootstrap_GetMenuProbeAutoClickIndex(void)
 {
-  const char *env_value;
-  char *parse_end;
-  long parsed_value;
-
-  if ( g_boot_menu_probe_auto_click_checked )
-    return g_boot_menu_probe_auto_click_index;
-
-  g_boot_menu_probe_auto_click_checked = 1;
-  env_value = getenv("CLASH95_MENU_PROBE_AUTO_CLICK");
-  if ( !env_value || !*env_value )
-    return g_boot_menu_probe_auto_click_index;
-
-  if ( !strcmp(env_value, "load") || !strcmp(env_value, "load-game") )
-    g_boot_menu_probe_auto_click_index = 0;
-  else if ( !strcmp(env_value, "campaign") )
-    g_boot_menu_probe_auto_click_index = 1;
-  else if ( !strcmp(env_value, "exit") )
-    g_boot_menu_probe_auto_click_index = 2;
-  else if ( !strcmp(env_value, "options") )
-    g_boot_menu_probe_auto_click_index = 3;
-  else if ( !strcmp(env_value, "multiplayer") )
-    g_boot_menu_probe_auto_click_index = 4;
-  else if ( !strcmp(env_value, "credits") )
-    g_boot_menu_probe_auto_click_index = 5;
-  else
-  {
-    parsed_value = strtol(env_value, &parse_end, 10);
-    if ( parse_end != env_value && !*parse_end && parsed_value >= 0 && parsed_value <= 5 )
-      g_boot_menu_probe_auto_click_index = (int)parsed_value;
-  }
-  return g_boot_menu_probe_auto_click_index;
+  return -1;
 }
 
 static int Bootstrap_GetLoadMenuProbeAutoClickIndex(void)
 {
-  const char *env_value;
-  char *parse_end;
-  long parsed_value;
-
-  if ( g_boot_load_menu_probe_auto_click_checked )
-    return g_boot_load_menu_probe_auto_click_index;
-
-  g_boot_load_menu_probe_auto_click_checked = 1;
-  env_value = getenv("CLASH95_LOAD_MENU_PROBE_AUTO_CLICK");
-  if ( !env_value || !*env_value )
-    return g_boot_load_menu_probe_auto_click_index;
-
-  if ( !strcmp(env_value, "load") || !strcmp(env_value, "confirm") || !strcmp(env_value, "select") )
-    g_boot_load_menu_probe_auto_click_index = 0;
-  else if ( !strcmp(env_value, "back") || !strcmp(env_value, "cancel") || !strcmp(env_value, "return") )
-    g_boot_load_menu_probe_auto_click_index = 1;
-  else
-  {
-    parsed_value = strtol(env_value, &parse_end, 10);
-    if ( parse_end != env_value && !*parse_end && parsed_value >= 0 && parsed_value <= 1 )
-      g_boot_load_menu_probe_auto_click_index = (int)parsed_value;
-  }
-  return g_boot_load_menu_probe_auto_click_index;
+  return -1;
 }
 
 static int Bootstrap_GetLoadMenuProbeAutoSlotIndex(void)
 {
-  const char *env_value;
-  char *parse_end;
-  long parsed_value;
-
-  if ( g_boot_load_menu_probe_auto_slot_checked )
-    return g_boot_load_menu_probe_auto_slot_index;
-
-  g_boot_load_menu_probe_auto_slot_checked = 1;
-  env_value = getenv("CLASH95_LOAD_MENU_PROBE_AUTO_SLOT");
-  if ( !env_value || !*env_value )
-    return g_boot_load_menu_probe_auto_slot_index;
-
-  if ( !strcmp(env_value, "first") )
-    g_boot_load_menu_probe_auto_slot_index = 0;
-  else
-  {
-    parsed_value = strtol(env_value, &parse_end, 10);
-    if ( parse_end != env_value && !*parse_end && parsed_value >= 0 && parsed_value <= 9 )
-      g_boot_load_menu_probe_auto_slot_index = (int)parsed_value;
-  }
-  return g_boot_load_menu_probe_auto_slot_index;
+  return -1;
 }
 
 static int Bootstrap_ShouldRunLoadMenuProbePostConfirm(void)
 {
-  const char *env_value;
-
-  if ( g_boot_load_menu_probe_post_confirm_checked )
-    return g_boot_load_menu_probe_post_confirm_enabled;
-
-  g_boot_load_menu_probe_post_confirm_checked = 1;
-  env_value = getenv("CLASH95_LOAD_MENU_PROBE_POST_CONFIRM");
-  if ( env_value && *env_value && strcmp(env_value, "0") )
-    g_boot_load_menu_probe_post_confirm_enabled = 1;
-  return g_boot_load_menu_probe_post_confirm_enabled;
+  return 0;
 }
 
 static int Bootstrap_ShouldRunLoadMenuProbeBroaderRulesBootstrap(void)
 {
-  const char *env_value;
-
-  if ( g_boot_load_menu_probe_broader_rules_checked )
-    return g_boot_load_menu_probe_broader_rules_enabled;
-
-  g_boot_load_menu_probe_broader_rules_checked = 1;
-  g_boot_load_menu_probe_broader_rules_enabled = 1;
-  env_value = getenv("CLASH95_LOAD_MENU_PROBE_BROADER_RULES");
-  if ( env_value && *env_value && !strcmp(env_value, "0") )
-    g_boot_load_menu_probe_broader_rules_enabled = 0;
-  return g_boot_load_menu_probe_broader_rules_enabled;
+  return 1;
 }
 
 static int Bootstrap_ShouldDrawLoadMenuRows(void)
 {
-  const char *env_value;
-
-  env_value = getenv("CLASH95_LOAD_MENU_PROBE_DRAW_ROWS");
-  return env_value && *env_value && strcmp(env_value, "0");
+  return 1;
 }
 
 static int Bootstrap_GetMenuProbeWidgetClickCandidate(
@@ -397,23 +279,6 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
   {
     const char *argument;
 
-    if ( !strcmp(argv[arg_index], "--authentic-startup-prelude") )
-    {
-      g_boot_run_startup_prelude = 1;
-      continue;
-    }
-    if ( !strcmp(argv[arg_index], "--authentic-video-init") )
-    {
-      g_boot_run_startup_prelude = 1;
-      g_boot_run_video_init_probe = 1;
-      continue;
-    }
-    if ( !strcmp(argv[arg_index], "--authentic-menu-probe") )
-    {
-      g_boot_run_startup_prelude = 1;
-      g_boot_run_menu_probe = 1;
-      continue;
-    }
     if ( write_index > 0 )
       g_boot_command_line[write_index++] = ' ';
     argument = argv[arg_index];
@@ -461,7 +326,6 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
 {
   int device_search_mode;
 
-  logEnabled = 1;
   /*
    * The original binary reaches this render-object constructor through the
    * static-init band before the video bootstrap starts. Until that `_wcpp_*`
@@ -481,10 +345,14 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   }
 
   CSS_SetDeviceSearch(device_search_mode);
+  if ( !dword_54DBA8 )
+    sub_4725B0(0, 0);
   sub_472860(-1, 0, 0);
-  CSS_Init(6, 0xC0, 0xFA0, 0x9C4);
+  /*
+   * The retained full path now reaches the DirectSound-era device table, but
+   * that table is not recovered safely enough for x86-64 execution yet.
+   */
   dword_543CA0 = 1;
-  createLogFiles(0, 0, 0);
   sub_451E46();
   sub_472860(-1, 0, 0);
   nullsub_4();
@@ -1389,7 +1257,7 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
   (void)hPrevInstance;
   (void)nShowCmd;
 
-  if ( !Bootstrap_RunRecoveredStartupPrelude(hInstance, lpCommandLine, &command_mode) )
+  if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(hInstance, lpCommandLine, &command_mode) )
     return 0;
   Bootstrap_RunRecoveredRuntimeAndRenderInit(command_mode, lpCommandLine);
   Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
@@ -1427,35 +1295,5 @@ static int Bootstrap_RunPlatformWindowLoop(void)
 int main(int argc, char **argv)
 {
   Bootstrap_BuildCommandLineFromArgv(argc, argv);
-  /*
-   * Keep the deeper menu/game-entry branch out of the default link surface
-   * until its runtime/data dependencies are rebuilt. The explicit prelude
-   * probe lets us root the recoverable startup slice without dragging the
-   * whole menu/world path back in.
-   */
-  if ( g_boot_run_startup_prelude )
-  {
-    char command_mode;
-
-    if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
-      return 1;
-    if ( g_boot_run_video_init_probe )
-    {
-      Bootstrap_TraceMenuProbe("main-before-video-init-probe");
-      Bootstrap_RunRecoveredVideoInitProbe(command_mode);
-      Bootstrap_TraceMenuProbe("main-after-video-init-probe");
-    }
-    if ( g_boot_run_menu_probe )
-    {
-      Bootstrap_TraceMenuProbe("main-before-menu-probe-video-init");
-      Bootstrap_RunRecoveredVideoInitProbe(command_mode);
-      Bootstrap_TraceMenuProbe("main-before-menu-probe");
-      Bootstrap_RunRecoveredMainMenuFirstFrameProbe(command_mode);
-      Bootstrap_TraceMenuProbe("main-after-menu-probe");
-      return Bootstrap_RunMessageLoop();
-    }
-    (void)command_mode;
-    return Bootstrap_RunMessageLoop();
-  }
-  return Bootstrap_RunPlatformWindowLoop();
+  return App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0);
 }

@@ -79,6 +79,7 @@ extern char IsTable[256];
 unsigned __int16 __ES__;
 unsigned __int16 __DS__;
 __lock unk_51A638;
+_UNKNOWN unk_519AE8;
 
 #define COMPAT_TLS_SLOT_COUNT 64
 #define COMPAT_TLS_SEARCH_START 3u
@@ -208,6 +209,54 @@ static int g_compat_signal_os_codes[COMPAT_SIGNAL_SLOT_COUNT] = {
 
 static unsigned char g_compat_ctrl_handler_installed;
 
+static int CompatPointerReadable(const void *ptr)
+{
+  static long page_size;
+  uintptr_t address;
+  unsigned char residency;
+
+  if ( !ptr )
+    return 0;
+  if ( !page_size )
+  {
+    page_size = sysconf(_SC_PAGESIZE);
+    if ( page_size <= 0 )
+      page_size = 4096;
+  }
+  address = (uintptr_t)ptr;
+  address &= ~((uintptr_t)page_size - 1u);
+  return mincore((void *)address, 1, &residency) == 0;
+}
+
+static int CompatSafeStrcmp(const char *lhs, const char *rhs)
+{
+  size_t index;
+
+  if ( lhs == rhs )
+    return 0;
+  if ( !lhs )
+    return -1;
+  if ( !rhs )
+    return 1;
+  for ( index = 0; index < 4096; ++index )
+  {
+    unsigned char left_char;
+    unsigned char right_char;
+
+    if ( !CompatPointerReadable(lhs + index) )
+      return CompatPointerReadable(rhs + index) ? -1 : 0;
+    if ( !CompatPointerReadable(rhs + index) )
+      return 1;
+    left_char = (unsigned char)lhs[index];
+    right_char = (unsigned char)rhs[index];
+    if ( left_char != right_char )
+      return (int)left_char - (int)right_char;
+    if ( !left_char )
+      return 0;
+  }
+  return 0;
+}
+
 static int CompatSignalNeedsCtrlHandler(int signal_number)
 {
   intptr_t handler_value;
@@ -263,6 +312,11 @@ int ftime_(void *time_buffer)
   buffer->timezone_minutes = 0;
   buffer->dst_flag = 0;
   return 0;
+}
+
+int time_(void)
+{
+  return (int)time(0);
 }
 
 int system_(const char *command)
@@ -1664,6 +1718,26 @@ DWORD __stdcall ResumeThread(HANDLE hThread)
   return 0;
 }
 
+HANDLE __stdcall beginthreadex_(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  g_compat_last_error = 0;
+  return (HANDLE)(uintptr_t)1;
+}
+
+BOOL __stdcall SetThreadPriority(HANDLE hThread, int nPriority)
+{
+  (void)nPriority;
+  if ( !hThread )
+  {
+    g_compat_last_error = (DWORD)EINVAL;
+    return 0;
+  }
+  g_compat_last_error = 0;
+  return 1;
+}
+
 HANDLE __stdcall CreateEventA(
         LPSECURITY_ATTRIBUTES lpEventAttributes,
         BOOL bManualReset,
@@ -1945,13 +2019,7 @@ int __fastcall strcmp_(_DWORD a1, _DWORD a2)
 
   lhs = (const char *)(uintptr_t)a1;
   rhs = (const char *)(uintptr_t)a2;
-  if ( lhs == rhs )
-    return 0;
-  if ( !lhs )
-    return -1;
-  if ( !rhs )
-    return 1;
-  return strcmp(lhs, rhs);
+  return CompatSafeStrcmp(lhs, rhs);
 }
 
 int __cdecl sprintf_(char *buffer, const char *format, ...)
@@ -2029,6 +2097,12 @@ int __thiscall fclose_(_DWORD a1)
   return 0;
 }
 
+int __cdecl close_(_DWORD a1, _DWORD a2)
+{
+  (void)a2;
+  return fclose_(a1);
+}
+
 int fwrite_(const void *buffer, int size, int file_handle, int count)
 {
   int bytes_written;
@@ -2041,6 +2115,21 @@ int fwrite_(const void *buffer, int size, int file_handle, int count)
   if ( bytes_written <= 0 )
     return 0;
   return bytes_written / size;
+}
+
+int __fastcall fputs_(_DWORD a1, _DWORD a2)
+{
+  const char *text;
+  int length;
+
+  (void)a2;
+  text = (const char *)(uintptr_t)a1;
+  if ( !text )
+    return -1;
+  length = (int)strlen(text);
+  if ( length <= 0 )
+    return 0;
+  return fwrite(text, 1, (size_t)length, stderr) == (size_t)length ? 0 : -1;
 }
 
 int fread_(void *buffer, int size, int file_handle, int count)
@@ -2501,6 +2590,14 @@ int __fastcall memset_(_DWORD a1, _DWORD a2)
   if ( a1 )
     *(unsigned char *)(uintptr_t)a1 = (unsigned char)a2;
   return (int)a1;
+}
+
+int __cdecl CSyncObject_Unlock(void *raw_sync_object, __int32 lock_state, __int32 *previous_lock_state)
+{
+  (void)lock_state;
+  if ( previous_lock_state )
+    *previous_lock_state = 0;
+  return raw_sync_object ? 1 : 0;
 }
 
 int __fastcall _FiniRtns(_DWORD a1, _DWORD a2)

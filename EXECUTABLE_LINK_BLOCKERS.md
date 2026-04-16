@@ -123,10 +123,10 @@ The current bootstrap chain is the recoverable host-side approximation:
 
 - `main()` in `bootstrap_main.c`
 - `App_WinMain()`
-- `Bootstrap_RunRecoveredStartupPrelude()`
+- `Bootstrap_RunRecoveredEarlyStartupPrelude()`
 - `Bootstrap_RunRecoveredRuntimeAndRenderInit()`
 - `Bootstrap_RunRecoveredGameEntry()`
-- `Bootstrap_RunMessageLoop()` or `Bootstrap_RunPlatformWindowLoop()`
+- `Bootstrap_RunMessageLoop()`
 
 The key point is that the bootstrap path is rooted in recovered behavior, not a dummy demo loop.
 
@@ -162,3 +162,9 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - The retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and a direct `WorldMap_RunHumanTurnLoop` probe.
 - The next retained widening stays in the deeper `WorldMap_RunHumanTurnLoop` surface after the now-complete `Scenario_LoadMissionByIndex` switch and after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helpers, held-key `DD_Pump` loops, queued-path AP compare, saved render-hook/resource-handle debug block, the repaired `WorldMap_HandleTopMenuBar` helper band, and the repaired `UnitStackSelection_HandleInput` helper band; the next local center is `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.
 - This remains a gameplay/session runtime-fidelity problem, not an SDL seam or raw-link inventory problem.
+
+## Latest front-end runtime blocker update
+- The bootstrap executable now has one default route: `main()` builds the recovered command-line buffer from argv and always enters `App_WinMain`.
+- Host-side bootstrap modes are gone. Old probe switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the wrapper.
+- The menu-probe env surface is collapsed to fixed behavior; the tracked runtime code only keeps the SDL presented-frame dump diagnostic env read.
+- The remaining front-end blockers are after this full route: clean finite live-loop shutdown, the still-skipped DirectSound-era `CSS_Init` table, the still-skipped retained `createLogFiles` path, and the broader playable `App_WinMain` / `PlayGame` session milestone.
