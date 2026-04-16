@@ -59910,7 +59910,7 @@ signed int  sub_444490(int a1, DWORD a2, double a3)
   int unit_record; // edx
   CHAR v19[120]; // [esp+0h] [ebp-78h] BYREF
 
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] load-save-enter\n");
   sub_4443C0(a1, v19);
@@ -67698,7 +67698,7 @@ DWORD a5;
   int trace_load_save; // eax
   char v15[1000]; // [esp+0h] [ebp-3ECh] BYREF
 
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   result = a1[3];
   if ( result <= 0x28 )
   {
@@ -72931,7 +72931,7 @@ static int Compat_MenuProbeTraceEnabled(void)
   static int trace_state = -1;
 
   if ( trace_state == -1 )
-    trace_state = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+    trace_state = 0;
   return trace_state;
 }
 
@@ -96845,7 +96845,7 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   int trace_load_save; // eax
 
   (void)a2;
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] rules-assert-enter %s\n", a1);
   parse_buffer_ptr = Compat_AllocLow32Bytes(28);
@@ -98720,7 +98720,7 @@ int * sub_481EC0(_BYTE *a1)
   int bucket_index; // eax
   int bucket_entry; // ecx
 
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   if ( !dword_54DD50 )
   {
     if ( trace_load_save )
@@ -134859,7 +134859,7 @@ int  sub_4AAE30(int a1, int a2)
   int create_symbol; // eax
   int trace_load_save; // eax
 
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] parse-make-instance-enter\n");
   Parser_NextToken(a2, (int)&dword_54E8FC);
@@ -134988,7 +134988,7 @@ signed int  sub_4AB0B0(int a1)
   if ( *(_WORD *)a1 != 2 )
     return 1;
   class_name = *(_DWORD *)(*(_DWORD *)(a1 + 2) + 16);
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
   class_record = sub_4B0480((_BYTE *)class_name);
   if ( class_record )
   {
@@ -139396,7 +139396,7 @@ int * sub_4B0480(_BYTE *a1)
   int bucket_index; // edi
   int saw_symbol_match; // esi
 
-  trace_load_save = getenv("CLASH95_TRACE_MENU_PROBE") != 0;
+  trace_load_save = 0;
 
   if ( !dword_51AD68 )
   {
