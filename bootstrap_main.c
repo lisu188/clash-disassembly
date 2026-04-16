@@ -152,6 +152,7 @@ int j___NTAddFileHandle_(void)
 }
 
 static char g_boot_command_line[1024];
+static int g_boot_run_platform_window_only;
 static int g_boot_run_startup_prelude;
 static int g_boot_run_video_init_probe;
 static int g_boot_run_menu_probe;
@@ -305,7 +306,17 @@ static int Bootstrap_ShouldDrawLoadMenuRows(void)
   const char *env_value;
 
   env_value = getenv("CLASH95_LOAD_MENU_PROBE_DRAW_ROWS");
-  return env_value && *env_value && strcmp(env_value, "0");
+  return !env_value || !*env_value || strcmp(env_value, "0");
+}
+
+static int Bootstrap_ShouldExitAfterCapturePhase(const char *phase)
+{
+  const char *env_value;
+
+  env_value = getenv("CLASH95_MENU_PROBE_EXIT_AFTER_CAPTURE");
+  if ( !env_value || !*env_value || !strcmp(env_value, "0") )
+    return 0;
+  return !strcmp(env_value, "1") || !strcmp(env_value, "all") || !strcmp(env_value, phase);
 }
 
 static int Bootstrap_GetMenuProbeWidgetClickCandidate(
@@ -412,6 +423,11 @@ static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
     {
       g_boot_run_startup_prelude = 1;
       g_boot_run_menu_probe = 1;
+      continue;
+    }
+    if ( !strcmp(argv[arg_index], "--platform-window-only") )
+    {
+      g_boot_run_platform_window_only = 1;
       continue;
     }
     if ( write_index > 0 )
@@ -693,6 +709,12 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   Platform_PresentRecoveredIndexedSurfaceHandle(
     (void *)(uintptr_t)*(const unsigned int *)(const void *)((const unsigned char *)&unk_51D4C0 + 0xD0),
     (const uint32_t *)(const void *)byte_543D80);
+  if ( Bootstrap_ShouldExitAfterCapturePhase("main-menu") )
+  {
+    Bootstrap_TraceMenuProbe("main-menu-capture-exit");
+    Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
+    return;
+  }
 
   if ( !have_menu_widget_template )
   {
@@ -966,7 +988,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
 
   Bootstrap_TraceMenuProbe("load-menu-gfx");
   Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\load.gfx");
-  Bootstrap_TraceMenuProbe("load-menu-row-resource-fallback");
+  Bootstrap_TraceMenuProbe("load-menu-row-resource-draw");
   if ( Bootstrap_ShouldDrawLoadMenuRows() )
   {
     int row_index;
@@ -983,7 +1005,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   }
   Bootstrap_TraceMenuProbe("load-menu-draw-stage");
   Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 0, 0);
-  Bootstrap_TraceMenuProbe("load-menu-skip-save-slot-draw");
+  Bootstrap_TraceMenuProbe("load-menu-row-draws-complete");
 
   LoadMenu_RebuildButtonWidgetTemplate();
   memcpy(menu_widgets, &g_LoadMenuButtonWidgetsTemplate, menu_widgets_size);
@@ -1269,6 +1291,9 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           if ( slot_index != dword_5441E0 )
           {
             dword_5441E0 = slot_index;
+            if ( previous_slot_index != -1 )
+              sub_44A140(previous_slot_index, 0);
+            sub_44A140(dword_5441E0, 0);
           }
           if ( auto_hover_exit_on_select && dword_5441E0 == auto_hover_slot_index )
           {
@@ -1427,11 +1452,11 @@ static int Bootstrap_RunPlatformWindowLoop(void)
 int main(int argc, char **argv)
 {
   Bootstrap_BuildCommandLineFromArgv(argc, argv);
+  if ( g_boot_run_platform_window_only )
+    return Bootstrap_RunPlatformWindowLoop();
   /*
-   * Keep the deeper menu/game-entry branch out of the default link surface
-   * until its runtime/data dependencies are rebuilt. The explicit prelude
-   * probe lets us root the recoverable startup slice without dragging the
-   * whole menu/world path back in.
+   * Explicit probes let us isolate startup, render init, and menu presentation
+   * slices without always entering the default front-end path below.
    */
   if ( g_boot_run_startup_prelude )
   {
@@ -1452,10 +1477,34 @@ int main(int argc, char **argv)
       Bootstrap_TraceMenuProbe("main-before-menu-probe");
       Bootstrap_RunRecoveredMainMenuFirstFrameProbe(command_mode);
       Bootstrap_TraceMenuProbe("main-after-menu-probe");
+      if ( Bootstrap_ShouldExitAfterCapturePhase("main-menu")
+        || Bootstrap_ShouldExitAfterCapturePhase("load-menu") )
+      {
+        return 0;
+      }
       return Bootstrap_RunMessageLoop();
     }
     (void)command_mode;
     return Bootstrap_RunMessageLoop();
   }
-  return Bootstrap_RunPlatformWindowLoop();
+  /*
+   * Default to the recovered front-end foothold rather than a bare SDL window:
+   * early startup prelude, video/render init, and the contained authentic menu
+   * presentation path. The full `App_WinMain` game-entry handoff remains
+   * gated until the wider runtime/session surface is ready.
+   */
+  {
+    char command_mode;
+
+    if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(GetModuleHandleA(0), g_boot_command_line, &command_mode) )
+      return 1;
+    Bootstrap_RunRecoveredVideoInitProbe(command_mode);
+    Bootstrap_RunRecoveredMainMenuFirstFrameProbe(command_mode);
+    if ( Bootstrap_ShouldExitAfterCapturePhase("main-menu")
+      || Bootstrap_ShouldExitAfterCapturePhase("load-menu") )
+    {
+      return 0;
+    }
+    return Bootstrap_RunMessageLoop();
+  }
 }

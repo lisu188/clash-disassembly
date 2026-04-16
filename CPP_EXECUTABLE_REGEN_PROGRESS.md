@@ -104,3 +104,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - Resulting milestone:
   - `clash95_cpp_regen` now links and stays alive for the default one-second smoke run, matching the current bootstrap wedge
   - the deeper `--authentic-startup-prelude` path still faults with exit status `139`, so the next frontier remains the existing startup/runtime crash band rather than C++ target creation itself
+
+## Latest front-end runtime update
+- `clash95_bootstrap` now defaults to the recovered executable foothold: early startup prelude, recovered video init, and recovered main-menu first-frame presentation. The prior bare SDL host-window loop remains available as `--platform-window-only`.
+- The contained menu path now has deterministic capture-exit points for `main-menu` and `load-menu`, and load-menu save rows/slot highlighting are drawn by default inside the contained probe.
+- `CLASH95_SCREENSHOT_PREFIX` aliases the existing presented-frame dump prefix, and `ctest` now runs `clash95_menu_capture_smoke` to validate nonblank BMP captures for both the main menu and load-game menu.
+- The next executable-regeneration blocker remains the post-confirm load-save class/bload prelude (`class-lookup-no-table name=oddzial`) and the broader `App_WinMain` / `PlayGame` session handoff, not pre-confirm menu rendering or screenshot capture.

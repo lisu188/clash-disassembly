@@ -30,3 +30,18 @@
   - passed
 - `git diff --check`
   - passed
+
+## Menu/loading screenshot capture smoke
+- `cmake -S . -B build`
+  - passed
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - passed
+  - `clash95_menu_capture_smoke` validated nonblank BMP screenshots for the default main-menu capture and the auto-clicked load-menu capture
+- `timeout 1s build/bin/clash95_bootstrap`
+  - exit `124`
+  - default executable now reaches the recovered front-end live loop before the external timeout kills it
+  - the timeout kill can still print `the monitored command dumped core`, so finite screenshot verification uses `CLASH95_MENU_PROBE_EXIT_AFTER_CAPTURE`
+- Remaining runtime verification gap:
+  - post-confirm load-save replay still fails past the pre-confirm menu wedge at `class-lookup-no-table name=oddzial`
