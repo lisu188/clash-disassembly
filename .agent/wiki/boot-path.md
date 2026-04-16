@@ -21,3 +21,10 @@
   - the retained startup-prelude order is now corroborated as `sub_451E46 -> sub_460490 -> initRandomSeed -> StartMenu -> UI_StartAnims -> PlayGame_Dispatch`
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` now link and stay alive under `timeout 1s`
   - the remaining retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch
+
+## Latest Front-End Update
+- `clash95_bootstrap` now defaults to the recovered front-end wedge instead of a bare SDL window: early startup prelude, recovered video init, recovered main-menu first-frame presentation, then the message loop.
+- `--platform-window-only` keeps the old host-window smoke path available when isolating the SDL shell.
+- `CLASH95_MENU_PROBE_EXIT_AFTER_CAPTURE=main-menu` and `CLASH95_MENU_PROBE_EXIT_AFTER_CAPTURE=load-menu` provide deterministic finite exits after screenshot capture.
+- The load-game menu draws save rows by default during the contained probe and repaints the selected-slot row during auto-hover selection.
+- The post-confirm save replay remains blocked at the known class/bload frontier (`class-lookup-no-table name=oddzial`); that blocker is after the verified main-menu and load-menu capture wedge.

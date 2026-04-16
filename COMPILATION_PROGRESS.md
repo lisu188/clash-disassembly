@@ -3116,6 +3116,31 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 173 - Default front-end menu capture smoke
+- Current frontier:
+  - make the bootstrap executable runnable into the recovered front-end path by default, with the authentic main menu and load-game screen still contained before the full `App_WinMain` handoff
+  - add a repeatable screenshot capture verification path for the menu/loading milestones instead of relying only on timeout-based manual probes
+- Blockers removed this batch:
+  - default `clash95_bootstrap` now runs the recovered early startup prelude, recovered video init, and recovered main-menu first-frame path instead of opening only a bare SDL window; `--platform-window-only` preserves the old inert host-window smoke path
+  - the contained load-game menu now draws save rows by default, repaints the previous and current highlighted save slot during probe hover, and exposes a capture-exit point for deterministic verification
+  - `CLASH95_SCREENSHOT_PREFIX` now aliases the SDL presented-frame BMP dump prefix, and CTest has a `clash95_menu_capture_smoke` test that captures both main-menu and load-menu frames and rejects blank/malformed BMPs
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - default `timeout 1s build/bin/clash95_bootstrap` reaches the recovered front-end loop and then exits `124` when killed by `timeout`; the live-loop kill can still report a dumped core
+- Highest authentic runtime milestone reached:
+  - default `build/bin/clash95_bootstrap` now reaches the recovered main-menu presentation path without requiring `--authentic-menu-probe`
+  - capture-exit verification reaches the main-menu present point and the load-game menu row/slot-selection point, writes BMP screenshots, and confirms the captures are nonblank
+- Key evidence used:
+  - `bootstrap_main.c` for recovered startup/menu probe containment and the authenticated load-menu row drawing path
+  - `platform_sdl_runtime.c` for SDL presented-frame BMP capture
+  - `tests/verify_menu_captures.sh` for the new deterministic menu/loading screenshot test
+- Ambiguous candidates deferred:
+  - the post-confirm load-save replay still reaches the known `class-lookup-no-table name=oddzial` blocker and remains separate from the pre-confirm menu/loading capture wedge
+  - full `App_WinMain` / `PlayGame` session handoff remains gated behind the broader runtime/session surface
+  - the default live loop is runnable but still not a clean finite smoke unless a capture-exit environment variable or external timeout is used
+
 ## Batch 157 - Materialize unit_type enum for createUnit rosters
 - Current frontier:
   - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward

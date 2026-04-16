@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 
 project(clash95_recovered LANGUAGES C CXX)
 
+enable_testing()
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 
@@ -108,3 +110,11 @@ set_target_properties(clash95_cpp_regen PROPERTIES
   OUTPUT_NAME clash95_cpp_regen
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+
+add_test(
+  NAME clash95_menu_capture_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_menu_captures.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_menu_capture_smoke PROPERTIES TIMEOUT 20)

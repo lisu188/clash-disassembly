@@ -152,3 +152,9 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - the explicit broader contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
   - the retained startup-prelude slice now links through `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch`, and the next retained widening stops in the broader gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.
+
+## Latest front-end runtime blocker update
+- The bootstrap executable now has a real default front-end route: `main()` builds the command line, runs the recovered early startup prelude, runs recovered video init, presents the recovered main-menu first frame, and then enters the message loop.
+- The old bare SDL window path is still available behind `--platform-window-only`; it is no longer the default executable milestone.
+- Pre-confirm menu rendering and screenshot capture are no longer blockers: `clash95_menu_capture_smoke` validates nonblank BMP captures for the default main-menu path and the auto-clicked load-game menu row/slot-selection path.
+- The remaining front-end blockers are after this wedge: clean finite live-loop shutdown, the post-confirm load-save class/bload prelude (`oddzial`), and the broader ungated `App_WinMain` / `PlayGame` session handoff.
