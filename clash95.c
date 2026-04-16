@@ -30074,23 +30074,22 @@ void BattleLog_Enable()
 //----- (004190D0) --------------------------------------------------------
 void  createLogFiles(int a1, int a2, DWORD a3)
 {
-  int v3; // ecx
-  int v5; // [esp-8h] [ebp-8h]
-  int v7; // [esp-4h] [ebp-4h]
+  FILE *log_file;
 
+  (void)a1;
+  (void)a2;
+  (void)a3;
   if ( logEnabled )
   {
-    sub_4762AE(aClash_log, a3);
-    close_(a2, a1);
-    sub_4762AE(aBattle_log, a3);
-    close_(v5, v7);
-    dword_526A20 = v3;
+    log_file = fopen(aClash_log, "wb");
+    if ( log_file )
+      fclose(log_file);
+    log_file = fopen(aBattle_log, "wb");
+    if ( log_file )
+      fclose(log_file);
+    dword_526A20 = 0;
   }
 }
-// 4190FB: variable 'v5' is possibly undefined
-// 4190FB: variable 'v7' is possibly undefined
-// 419100: variable 'v3' is possibly undefined
-// 4762BB: using guessed type int __cdecl close_(_DWORD, _DWORD);
 // 526A1C: using guessed type int logEnabled;
 // 526A20: using guessed type int dword_526A20;
 

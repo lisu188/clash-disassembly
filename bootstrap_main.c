@@ -351,6 +351,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   }
 
   CSS_SetDeviceSearch(device_search_mode);
+  logEnabled = 1;
   if ( !dword_54DBA8 )
     sub_4725B0(0, 0);
   sub_472860(-1, 0, 0);
@@ -359,6 +360,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
    * that table is not recovered safely enough for x86-64 execution yet.
    */
   dword_543CA0 = 1;
+  createLogFiles(0, 0, 0);
   sub_451E46();
   sub_472860(-1, 0, 0);
   nullsub_4();

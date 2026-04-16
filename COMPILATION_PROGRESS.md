@@ -3116,266 +3116,52 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
-## Batch 174 - Compact bootstrap args into full-game launch
+## Batch 157 - Repair post-mission PlayGame handoff and prologue
 - Current frontier:
-  - make `clash95_bootstrap` always enter the recovered full-game `App_WinMain` route instead of keeping separate bootstrap probe modes
-  - collapse the old menu-probe environment controls so startup behavior is not selected through ad hoc env state
+  - keep the contained authentic load-menu wedge green while narrowing the first retained gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
 - Blockers removed this batch:
-  - `main()` now builds the recovered WinMain command-line string from argv and unconditionally calls `App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0)`
-  - bootstrap-only switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the host wrapper
-  - bootstrap menu-probe env controls now collapse to fixed defaults, and the recovered-core `CLASH95_TRACE_MENU_PROBE` trace reads are disabled constants
-  - the full route now seeds the runtime slab before `sub_472860`, uses the recovered early startup prelude, and links through missing retained runtime helpers such as `time_`, `beginthreadex_`, `SetThreadPriority`, `close_`, `fputs_`, `CSyncObject_Unlock`, and `unk_519AE8`
-  - `strcmp_` now uses a bounded readable-pointer compare so malformed retained parser/rules pointers do not immediately crash the full route
+  - `Scenario_LoadMissionByIndexAndPlay` no longer forwards decompiler-garbage save-state locals into `PlayGame`
+  - `PlayGame` no longer enters the retained surface with uninitialized player-reveal scan counters or wrong background/tree resource names
+  - the retained surface is now explicit through a direct `PlayGame` standalone probe, not only `PlayGame_Dispatch`
 - Compile/link/runtime status:
-  - `cmake -S . -B build`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
-  - `timeout -s KILL 2s build/bin/clash95_bootstrap`
-  - `timeout -s KILL 2s build/bin/clash95_cpp_regen`
-  - `ctest --test-dir build --output-on-failure`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - `clash95_bootstrap` and `clash95_cpp_regen` now both enter the recovered full-game startup route by default and stay alive until the forced two-second kill instead of requiring a probe flag
-  - tracked runtime code has only the SDL frame-dump diagnostic env read (`CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`) remaining; bootstrap/menu-probe env steering is no longer active
-- Ambiguous candidates deferred:
-  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
-  - `createLogFiles` remains skipped because the retained log-file runtime still faults before it is needed for the full-game smoke
-  - the live full-game loop still needs an authentic finite shutdown/verification milestone rather than relying on an external forced kill
-
-## Batch 173 - Default front-end menu capture smoke
-- Current frontier:
-  - make the bootstrap executable runnable into the recovered front-end path by default, with the authentic main menu and load-game screen still contained before the full `App_WinMain` handoff
-  - add a repeatable screenshot capture verification path for the menu/loading milestones instead of relying only on timeout-based manual probes
-- Blockers removed this batch:
-  - default `clash95_bootstrap` now runs the recovered early startup prelude, recovered video init, and recovered main-menu first-frame path instead of opening only a bare SDL window; `--platform-window-only` preserves the old inert host-window smoke path
-  - the contained load-game menu now draws save rows by default, repaints the previous and current highlighted save slot during probe hover, and exposes a capture-exit point for deterministic verification
-  - `CLASH95_SCREENSHOT_PREFIX` now aliases the SDL presented-frame BMP dump prefix, and CTest has a `clash95_menu_capture_smoke` test that captures both main-menu and load-menu frames and rejects blank/malformed BMPs
-- Compile/link/runtime status:
-  - `cmake -S . -B build`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
-  - `ctest --test-dir build --output-on-failure`
-  - default `timeout 1s build/bin/clash95_bootstrap` reaches the recovered front-end loop and then exits `124` when killed by `timeout`; the live-loop kill can still report a dumped core
-- Highest authentic runtime milestone reached:
-  - default `build/bin/clash95_bootstrap` now reaches the recovered main-menu presentation path without requiring `--authentic-menu-probe`
-  - capture-exit verification reaches the main-menu present point and the load-game menu row/slot-selection point, writes BMP screenshots, and confirms the captures are nonblank
-- Key evidence used:
-  - `bootstrap_main.c` for recovered startup/menu probe containment and the authenticated load-menu row drawing path
-  - `platform_sdl_runtime.c` for SDL presented-frame BMP capture
-  - `tests/verify_menu_captures.sh` for the new deterministic menu/loading screenshot test
-- Ambiguous candidates deferred:
-  - the post-confirm load-save replay still reaches the known `class-lookup-no-table name=oddzial` blocker and remains separate from the pre-confirm menu/loading capture wedge
-  - full `App_WinMain` / `PlayGame` session handoff remains gated behind the broader runtime/session surface
-  - the default live loop is runnable but still not a clean finite smoke unless a capture-exit environment variable or external timeout is used
-
-## Batch 157 - Materialize unit_type enum for createUnit rosters
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the recovered mission rosters in `createUnit(...)` and `createCastle(...)` are now a semantic-recovery target instead of a raw numeric-id lane
-- Blockers removed this batch:
-  - `clash95.c` now carries an evidence-backed `unit_type` enum for ids `0..34` instead of the earlier partial `UNIT_TYPE_*` `#define` subset
-  - every `createUnit(...)` roster in `Scenario_LoadMissionByIndex` now uses `UNIT_TYPE_*` constants instead of raw numeric ids
-  - every `createCastle(...)` garrison roster in `Scenario_LoadMissionByIndex` now uses `UNIT_TYPE_*` constants instead of raw numeric ids
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` standalone probe still links and exits `124`
+  - the direct retained `PlayGame` standalone probe now also links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
 - Highest authentic runtime milestone reached:
   - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: `Scenario_LoadMissionByIndex` still carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`, with improved readability in the recovered `createUnit(...)` / `createCastle(...)` rosters
+  - widened retained milestone: direct retained `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame` probes now all link and stay alive under `timeout 1s`
+  - the next honest retained gameplay/session symbol is the human-turn entry `WorldMap_RunHumanTurnLoop`, with the AI-side `sub_451F70` branch still secondary
 - Key evidence used:
-  - `clash95.c` `createUnit`, `createCastle`, and `Scenario_LoadMissionByIndex`
-  - `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md` for the recovered unit id-to-name roster
+  - `clash95.asm` `sub_460370` / `PlayGame`
+  - `clash95.c` `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+  - retained `PlayGame_Dispatch` and `PlayGame` standalone link probes
 - Ambiguous candidates deferred:
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-  - direct `Unit_Create(...)` callsites still carry raw numeric unit ids outside the narrower mission-roster helper scope of this batch
+  - the `PlayGame` replay tail still carries usercall/register ambiguity around the recursive `sub_444490 -> PlayGame` handoff
+  - the next retained reduction should start with `WorldMap_RunHumanTurnLoop`, not by broadening SDL, compat wrappers, or `src_cpp`
 
-## Batch 158 - Apply unit_type enum to direct Unit_Create callsites
+## Batch 167 - Reduce the first WorldMap_RunHumanTurnLoop slice
 - Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining static unit-spawn lanes now center on direct `Unit_Create(...)` callsites rather than helper rosters
+  - keep the contained authentic load-menu wedge green while reducing the broader retained gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired `Scenario_LoadMissionByIndexAndPlay` / `PlayGame` handoff
 - Blockers removed this batch:
-  - literal first-argument unit ids in direct `Unit_Create(...)` callsites now use `UNIT_TYPE_*` constants instead of raw numeric ids
-  - the static spawn/setup lanes in `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper now expose the recovered unit taxonomy directly
+  - `WorldMap_RunHumanTurnLoop` no longer depends on fabricated entry locals for its first turn-exit flags; the zero-init prologue now matches the asm-backed `sub_4459A0(0, a3)` plus `dword_5202FC = 0` / `dword_5202F8 = 0` sequence
+  - the mission-success exit no longer forwards a fabricated local into `sub_4623C0`; the recovered C now restores the exact asm-backed `sub_4623C0("arama1", "kon_por1")` tail after `sub_404F20(&unk_51D4C0, 20)`
+  - the retained blocker moved deeper inside `WorldMap_RunHumanTurnLoop` instead of remaining at the `PlayGame` handoff
 - Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained `PlayGame_Dispatch` and `PlayGame` standalone probes still link and exit `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
 - Highest authentic runtime milestone reached:
   - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: `Scenario_LoadMissionByIndex` still carries cases `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `10`, and `11`, with improved readability in the direct `Unit_Create(...)` setup lanes around it
+  - widened retained milestone: the startup-prelude chain is green through direct retained `PlayGame`, and the first human-turn loop slice now matches asm on its zero-init entry flags plus its `arama1` / `kon_por1` mission-success video tail
 - Key evidence used:
-  - `clash95.c` `Unit_Create`, `sub_44B550`, `Game_InitPlayerViewState`, `Scenario_LoadMissionByIndex`, and the port-reinforcement helper
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
+  - `clash95.asm` `sub_40B0A0` / `PlayGame`
+  - `clash95.map` `PlayGame`, `nextPlayer`, and the nearby world-map/UI helper names
+  - `clash95.c` `WorldMap_RunHumanTurnLoop`, `PlayGame`, and `Scenario_LoadMissionByIndexAndPlay`
+  - retained `PlayGame_Dispatch` and `PlayGame` standalone link probes
 - Ambiguous candidates deferred:
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - dynamic/direct pool-driven unit types still flow through variables such as `g_PortReinforcementUnitTypePool[v17]`
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 159 - Apply unit_type enum to fixed UnitSlot_InitFromType lanes
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining static unit-type literals now center on pool/table-driven spawn sources rather than fixed helper callsites
-- Blockers removed this batch:
-  - `Temple_SpawnGiftGoldCargoStack` now uses `UNIT_TYPE_GOLD_CARGO` instead of raw unit id `31`
-  - the fixed selected-stack overwrite helpers now use `UNIT_TYPE_CANNON` and `UNIT_TYPE_PEGASUS` instead of raw unit ids `14` and `27`
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the last fixed `UnitSlot_InitFromType(...)` helper literals now named directly
-- Key evidence used:
-  - `clash95.c` `Temple_SpawnGiftGoldCargoStack`, `sub_4516B0`, and `sub_451A60`
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - dynamic/pool-driven unit types still flow through sources such as `g_PortReinforcementUnitTypePool[v17]`, `dword_515D10`, `dword_515D24`, and `dword_515D40`
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 160 - Type pool-driven unit sources with unit_type enums
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining unit-type ambiguity now centers on naming semantics for dynamic pools rather than raw numeric ids in the pools themselves
-- Blockers removed this batch:
-  - `g_PortReinforcementUnitTypePool` now has `unit_type` element type and `UNIT_TYPE_*` initializers instead of raw numeric ids
-  - the temple/spawn helper pools `dword_515D10`, `dword_515D24`, and `dword_515D40` now use `unit_type` element type and `UNIT_TYPE_*` initializers instead of raw numeric ids
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the port-reinforcement and temple gift pools now exposing their unit roster directly at the definition site
-- Key evidence used:
-  - `clash95.c` `Port_SpawnReinforcementGroup`, `Temple_SpawnGiftUnitGroup`, and the pool/table definitions near `g_PortReinforcementUnitTypePool`, `dword_515D10`, `dword_515D24`, and `dword_515D40`
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced, so this batch keeps the original symbol names while typing the contents
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 161 - Type unit-spawn helper signatures with unit_type
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining unit-type ambiguity now centers on under-evidenced table semantics and the old recovered no-prototype seams rather than raw numeric ids or helper signatures
-- Blockers removed this batch:
-  - `UnitSlot_InitFromType`, `UnitStack_ResetRecord`, `createUnit`, `createCastle`, and `Building_CreateSpecialPersonageGarrisonUnit` now advertise `unit_type` directly in their safe prototype and definition slots instead of plain `int` / `DWORD`
-  - `Unit_Create` now uses `unit_type` for its recovered first parameter in the K&R-style definition while intentionally keeping the loose top-level `Unit_Create()` declaration, because the decompiled call sites still rely on the old no-prototype extra-argument form
-  - `Temple_SpawnGiftUnitGroup` now carries its pool-selected local `v14` as `unit_type`, and the stale guessed-type comments for `dword_515D10`, `dword_515D24`, `dword_515D40`, and `g_PortReinforcementUnitTypePool` now match the typed pool definitions
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the unit-spawn helper layer now exposing unit-type semantics directly in its signatures
-- Key evidence used:
-  - `clash95.c` `UnitSlot_InitFromType`, `UnitStack_ResetRecord`, `Unit_Create`, `createUnit`, `createCastle`, `Building_CreateSpecialPersonageGarrisonUnit`, and `Temple_SpawnGiftUnitGroup`
-  - the already-typed pool definitions and existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
-  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced even though the helper layer now treats them as `unit_type`
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 162 - Type production-licence and unit-type predicate helpers
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining unit-type ambiguity now centers on under-evidenced dynamic table semantics and legacy byte-backed storage rather than raw numeric ids in the safe production-licence or unit-predicate helpers
-- Blockers removed this batch:
-  - the production-licence requirement tables `g_ProductionLicenceSmithsRequiredUnitTypes` and `g_ProductionLicenceWorkshopRequiredUnitTypes` now spell their unit ids with `UNIT_TYPE_*` constants instead of raw character escapes
-  - the safe building licence helpers and wrappers `Building_HasUnitLicence`, `Building_BuyUnitLicence`, `Building_RemoveUnitLicence`, `Building_IsUnitLicenceEligible`, `Building_RemoveUnitLicenceByIndex`, `Building_HasUnitLicenceByIndex`, `Building_BuyUnitLicenceByIndex`, `Building_CanBuyUnitLicenceByIndex`, `Building_FindUnitLicenceSlotIndexOrZero`, `Building_UnitsLeaveByUnitType`, `Building_SelectedUnitLicenceMatchesTypeByIndex`, and `Building_HasGarrisonUnitTypeByIndex` now expose `unit_type` directly
-  - the stack predicate helpers `UnitStack_DetachUnitTypeToAdjacentTile`, `UnitStack_HasUnitType`, and `UnitStack_HasOnlyUnitType` now expose `unit_type` directly, while `CastleProduction_RebuildAvailableUnitList` and `Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero` now read in terms of explicit `UNIT_TYPE_*` values
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the production-licence gates and unit-type predicate layer now exposing unit semantics directly
-- Key evidence used:
-  - `clash95.c` `CastleProduction_RebuildAvailableUnitList`, `Building_IsUnitLicenceEligible`, `Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero`, the by-index licence wrappers, and the stack predicate helpers near `UnitStack_DetachUnitTypeToAdjacentTile` / `UnitStack_HasUnitType` / `UnitStack_HasOnlyUnitType`
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are now named explicitly
-  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
-  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 163 - Type the castle-production available-unit cache with unit_type
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining unit-type ambiguity now centers on under-evidenced semantic names and legacy byte-backed storage rather than the castle-production available-unit cache itself
-- Blockers removed this batch:
-  - the castle-production available-unit cache `dword_532224` is now typed as a `unit_type[41]` sentinel-terminated buffer instead of a generic `int[]`
-  - the direct cache readers in `CastleProduction_RedrawSelectedUnitPanel` and `CastleProduction_HandleLicenceGridClick` now read the typed cache through array indexing instead of byte-offset pointer casts
-  - the stale guessed-type comments around the castle-production panel now match the typed `dword_532224` cache
-- Compile/link/runtime status:
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-  - `git diff --check`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the castle-production available-unit list now exposing unit-type semantics directly at the cache layer
-- Key evidence used:
-  - `clash95.c` `CastleProduction_RebuildAvailableUnitList`, `CastleProduction_RedrawSelectedUnitPanel`, `CastleProduction_HandleBuyLicenceAction`, `CastleProduction_HandleLicenceGridClick`, and `CastleProduction_HandleAvailableUnitStripClick`
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are now named explicitly
-  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
-  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
-
-## Batch 164 - Replace residual gameplay unit-id literals with UNIT_TYPE_* names
-- Current frontier:
-  - keep the contained authentic load-menu wedge green while continuing the retained `Scenario_LoadMissionByIndex` reduction from `mapK9` onward
-  - the remaining unit-type ambiguity now centers on mixed-domain raw ids and under-evidenced semantic naming rather than confirmed gameplay/unit-slot comparisons
-- Blockers removed this batch:
-  - confirmed gameplay/unit-slot raw ids in `UI_DrawUnitInfoPane`, `UnitBattle_PlayShotAnimation`, `UnitBattle_ShotWall`, `Building_CalcRemainingConstructionTurns`, `Trap_New`, `UnitBattle_HandleBattlefieldInteraction`, `Building_UnitGetInto`, and the mission case-8 garrison check now use `UNIT_TYPE_*` names instead of literal ids
-  - the cleaned lanes now spell out `UNIT_TYPE_FORESTER`, `UNIT_TYPE_GORAL`, `UNIT_TYPE_BUILDER`, `UNIT_TYPE_RAM`, `UNIT_TYPE_CATAPULT`, `UNIT_TYPE_CANNON`, `UNIT_TYPE_DRAGON`, `UNIT_TYPE_WINGER`, `UNIT_TYPE_WIZARD`, `UNIT_TYPE_GOLD_CARGO`, `UNIT_TYPE_PEASANT_CARGO`, and `UNIT_TYPE_SPECIAL_FOOT_PERSONAGE` directly at the callsites that already operate on recovered unit-slot records
-- Compile/link/runtime status:
-  - `git diff --check`
-  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
-  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
-  - `timeout 1s build/bin/clash95_bootstrap`
-  - `timeout 1s build/bin/clash95_cpp_regen`
-  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
-- Highest authentic runtime milestone reached:
-  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
-  - unchanged retained milestone: the mission/static setup surface keeps the same retained coverage, with the remaining confirmed gameplay unit-slot literal comparisons now exposed through `UNIT_TYPE_*` names
-- Key evidence used:
-  - `clash95.c` `UI_DrawUnitInfoPane`, `UnitBattle_PlayShotAnimation`, `UnitBattle_ShotWall`, `Building_CalcRemainingConstructionTurns`, `Trap_New`, `UnitBattle_HandleBattlefieldInteraction`, `Building_UnitGetInto`, and the mission-objective switch near the case-8 garrison scan
-  - the existing recovered roster in `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md`
-- Ambiguous candidates deferred:
-  - mixed-domain raw numeric ids remain in parser/AST code, sprite selectors, terrain/object ids, and other lanes where the field is not yet securely a `unit_type`
-  - the production-licence requirement tables stay byte-backed because the recovered storage uses `char` slots with `-1` sentinels even though their contents are already named explicitly
-  - the top-level `Unit_Create()` declaration remains intentionally loose because the recovered call sites still use the old no-prototype extra-argument form
-  - the semantic names for `dword_515D10`, `dword_515D24`, and especially the one-element `dword_515D40` remain under-evidenced
-  - the `Unit_Create(0xFFFFFFFF, ...)` sentinel lane remains a non-enum special case
-  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels
+  - the deeper `WorldMap_RunHumanTurnLoop` body still carries usercall/register-loss scars around `DD_Pump`, key-hold loops, render-hook debug plumbing, and the queued-path AP compare
+  - the adjacent AI branch `sub_451F70` remains secondary until the first human-turn path is narrower
 
 ## Batch 165 - Recover case 18 p_mapa9j.map mission-loader case
 - Current frontier:
@@ -6744,3 +6530,273 @@
 - Ambiguous candidates deferred:
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
+
+## Batch 157 - Reduce retained human-turn loop call-shape band
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+- Blockers removed this batch:
+  - the first deeper `WorldMap_RunHumanTurnLoop` register-loss band now matches asm on its zero-arg loop-entry helper shapes
+  - the held-key `DD_Pump` loops for right/left facing rotation no longer depend on decompiler-garbage temporaries
+  - the queued-path action-point check now uses the required AP from the last move-track step instead of a fabricated pointer cast
+  - the debug render-hook/resource-handle toggle now saves and restores both live values explicitly
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - retained standalone probes for `PlayGame` and `WorldMap_RunHumanTurnLoop` stay alive under `timeout 1s`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe now stays alive after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_40B0A0` (`WorldMap_RunHumanTurnLoop`)
+  - `clash95.c` around the first human-turn branch after `PlayGame`
+  - retained probes in `clash95_cpp_regen`
+- Ambiguous candidates deferred:
+  - the remaining deeper `WorldMap_RunHumanTurnLoop` body still has unresolved register-loss/usercall scars beyond the repaired entry/call-shape band
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 158 - Reduce retained top-menu and split-panel loop helpers
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - the next honest retained blocker is now past the helper-call-shape band and into the deeper fallback path centered on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`
+- Blockers removed this batch:
+  - `WorldMap_HandleTopMenuBar` now matches `sub_40E8B0` on the menu-sprite draw call, the mission `3`/`13` versus `4`/`14` turn-counter text, the temporary menu-surface destroy call, and the saved render-hook/resource-handle restore block
+  - `UnitStackSelection_HandleInput` now matches `sub_423860` on its zero-arg `Render_Begin` calls, real adjacent-tile move coordinates into `Unit_MoveSelectionFromGroupToTile`, `dword_526F78` zero-on-success, and `Render_LoadResourceSprite_v2` plus selection-panel redraw success tail
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - retained standalone probes for `PlayGame` and `WorldMap_RunHumanTurnLoop` still stay alive under `timeout 1s`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe now stays alive after the repaired top-menu helper band and split-panel helper band inside the human-turn loop
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_40E8B0`, `sub_423860`, and the `sub_423050` move-selection handoff
+  - `clash95.c` around `WorldMap_HandleTopMenuBar`, `UnitStackSelection_HandleInput`, `Unit_MoveSelectionFromGroupToTile`, and `WorldMap_RunHumanTurnLoop`
+- Ambiguous candidates deferred:
+  - the remaining deeper `WorldMap_RunHumanTurnLoop` body still has unresolved register-loss/usercall scars beyond the repaired top-menu and split-panel helpers, with `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` now the first local center
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 159 - Reduce retained tile-hover execute tails
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the wrapper and execute-tail tranche inside that function is now narrower
+- Blockers removed this batch:
+  - `MapTile_HasOwnOrVisibleEnemyUnitStack` and `MapTile_HasBuilding` no longer depend on undefined forwarded coordinates
+  - the lost-surface own/enemy stack info lane now preserves the asm `UnitStack_ShowSelectionDialog(..., 1)` tail
+  - the temple/building/self-move execute tails inside `WorldMap_HandleTileHoverAndClick` now use the zero-arg `UnitStack_ExecuteQueuedPath` call shape from `sub_4084A0`
+  - the own-stack merge and reselection tails now reload resources with `Render_LoadResourceSprite_v2` instead of the decompiler-spurious selection-sync calls
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - the retained standalone `WorldMap_RunHumanTurnLoop` probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired `sub_4084A0` wrapper lane, lost-surface stack-selection tail, own-stack resource-reload lane, and zero-arg queued-path execute tails
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_4084A0`, `sub_4082C0`, and `sub_408430`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick`, `UnitStack_ExecuteQueuedPath`, `UnitStack_ShowSelectionDialog`, and `Render_LoadResourceSprite_v2`
+- Ambiguous candidates deferred:
+  - the deeper enemy-building and enemy-stack attack bands inside `sub_4084A0` still carry decompiler-noisy extra arguments and remain the next local retained focus
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 168 - Reduce retained hovered stack-id ghosts
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the hovered stack-id reads inside its own-stack merge and visible enemy-stack attack branches are now narrower
+- Blockers removed this batch:
+  - the own-stack merge guard and add-to-group lane no longer depend on decompiler-only `v50` / `v58` tile-offset ghosts
+  - the visible enemy-stack attack lane no longer depends on the decompiler-only `v67` tile-offset ghost
+  - those branches now read the hovered stack id directly from `TILE_INDEX(v1, v78)`, matching the asm tile-lookup shape instead of carrying fabricated locals
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - one-second smoke runs for `clash95_bootstrap` and `clash95_cpp_regen` still exit `124`
+  - the retained standalone `WorldMap_RunHumanTurnLoop` probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired `sub_4084A0` hovered-stack-id cleanup in the own-stack merge/add-to-group and visible enemy-stack attack lanes
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_4084A0`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick` and `TILE_INDEX`
+- Ambiguous candidates deferred:
+  - the deeper enemy-building `Unit_AttackBuilding` lane inside `sub_4084A0` still carries decompiler-noisy usercall extras and remains the next local retained focus
+  - the own-stack reselection path still keeps the suspicious `UnitStackSelection_ClearMask((void *)v52)` call site even though the asm callee zeroes the global mask directly
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 169 - Reduce retained reselection clear-mask lane
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the own-stack reselection clear-mask lane is now narrower
+- Blockers removed this batch:
+  - the own-stack reselection path inside `WorldMap_HandleTileHoverAndClick` no longer threads the bogus `v52` argument through `UnitStackSelection_ClearMask`
+  - `UnitStackSelection_ClearMask` itself now matches asm on its hardcoded `dword_526F78` zeroing semantics instead of forwarding a fake caller-provided buffer
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - one-second smoke runs for `clash95_bootstrap` and `clash95_cpp_regen` still exit `124`
+  - the retained standalone `WorldMap_RunHumanTurnLoop` probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired `sub_4084A0` clear-mask helper semantics and own-stack reselection tail
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_4084A0` and `sub_423B70`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick`, `UnitStackSelection_ClearMask`, and `dword_526F78`
+- Ambiguous candidates deferred:
+  - the deeper enemy-building `Unit_AttackBuilding` / building-interaction band inside `sub_4084A0` still carries decompiler-noisy usercall and approach-track scars and remains the next local retained focus
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 170 - Reduce retained hovered building-id ghosts
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the enemy-building and own-building interaction branches now share a single hovered building id instead of re-reading raw tile offsets
+- Blockers removed this batch:
+  - the enemy-building attack predicate no longer re-reads the hovered tile entry through decompiler-noisy raw offset expressions before `Unit_AttackBuilding`
+  - the own-building approach branch now reuses the same hovered building id and calls `QueuedPath_StartsInBuildingFootprint` with the explicit queue pointer type
+  - that local building-interaction band now matches the asm tile-lookup shape more closely without changing the still-plausible `Unit_AttackBuilding` usercall shape
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - one-second smoke runs for `clash95_bootstrap` and `clash95_cpp_regen` still exit `124`
+  - the retained standalone `WorldMap_RunHumanTurnLoop` probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired `sub_4084A0` shared hovered-building-id cleanup in the building-interaction band
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `sub_4084A0`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick`, `TILE_INDEX`, and `QueuedPath_StartsInBuildingFootprint`
+- Ambiguous candidates deferred:
+  - the deeper enemy-building `Unit_AttackBuilding` call-shape and own-building approach-path generation lane inside `sub_4084A0` still carry decompiler-noisy usercall scars and remain the next local retained focus
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 171 - Reduce retained building selected-stack forwarding scars
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the own-building approach helper and enemy-building attack helper now both forward the selected stack index directly instead of depending on lost-register locals
+- Blockers removed this batch:
+  - `Building_GenerateApproachTrack` no longer uses the bogus `v12` selected-stack lookup before `Unit_MoveTrack`, and now anchors the path search from `a1` like asm
+  - `Unit_AttackBuilding` no longer loses the selected stack index in its opening `Render_DrawSprite_v3` and selected-stack-record setup
+  - the attack helper’s approach-track request no longer forwards the undefined `v9`, and instead keeps the selected stack index stable across the retained move-to-building prelude
+- Compile/link/runtime status:
+  - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` still build together
+  - one-second smoke runs for `clash95_bootstrap` and `clash95_cpp_regen` still exit `124`
+  - the retained standalone `WorldMap_RunHumanTurnLoop` probe still links and exits `124`
+  - the exact contained post-confirm probes still preserve `class-lookup-no-table name=oddzial` with broader rules versus `symbol-lookup-missing-table MAIN` without them
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired selected-stack forwarding in `Building_GenerateApproachTrack` and the `Unit_AttackBuilding` prologue
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `Unit_AttackBuilding`, `Unit_MoveTrackNear`, and `sub_4084A0`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick`, `Building_GenerateApproachTrack`, and `Unit_AttackBuilding`
+- Ambiguous candidates deferred:
+  - the deeper mid-body `Unit_AttackBuilding` garrison/combat-resolution lane still carries decompiler-noisy usercall scars and remains the next local retained focus
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 172 - Materialize unit_type enum and reduce retained building-combat lane
+- Current frontier:
+  - keep the contained authentic load-menu wedge green while continuing the broader retained gameplay/session widening inside `WorldMap_RunHumanTurnLoop`
+  - `WorldMap_HandleTileHoverAndClick` / `sub_4084A0` remains the first live retained center, but the `Unit_AttackBuilding` mid-body garrison/combat-resolution lane is now narrower and the recovered unit ids now also exist as a canonical `unit_type` enum in `clash95.c`
+- Blockers removed this batch:
+  - `Unit_AttackBuilding` no longer depends on lost-register ghosts for its human-controller prompt gate, the 12-slot `UI_PromptLeadTroopsPersonally` / `CalculateBattleResult` call shapes, the per-slot garrison timer clear loop, or the building-index handoff into `Unit_CaptureBuilding`
+  - `clash95.c` now carries an evidence-backed `unit_type` enum for ids `0..34`, replacing the older partial unit-type `#define` subset with the roster already maintained in `UNIT_TYPES_AND_STATS.*`
+  - every `createUnit(...)` callsite in `clash95.c` now spells its full sentinel-terminated unit roster with `UNIT_TYPE_*` enum constants instead of raw numeric ids
+- Compile/link/runtime status:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
+  - `timeout 1s build/bin/clash95_bootstrap`
+  - `timeout 1s build/bin/clash95_cpp_regen`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged contained milestone: the authentic load-menu lane still reaches the real post-confirm save replay and preserves the `oddzial` versus `MAIN` split
+  - widened retained milestone: the direct retained `WorldMap_RunHumanTurnLoop` probe still stays alive after the repaired `Unit_AttackBuilding` prompt/garrison/combat-resolution band inside `sub_4084A0`
+- Key evidence used:
+  - `clash95.asm` / `clash95.map` for `Unit_AttackBuilding`, `sub_41C8B0`, `sub_43EBC0`, `sub_43EC40`, `sub_41F900`, and `sub_40F7C0`
+  - `clash95.c` around `WorldMap_HandleTileHoverAndClick`, `Unit_AttackBuilding`, and the top-of-file unit-type constants surface
+  - `UNIT_TYPES_AND_STATS.json` / `UNIT_TYPES_AND_STATS_REPORT.md` for the recovered unit id-to-name roster used by the new enum
+- Ambiguous candidates deferred:
+  - the deeper `Unit_AttackBuilding` outcome-resolution tails still carry decompiler-noisy locals beyond the repaired prompt/garrison/capture-index tranche and remain the next local retained focus
+  - `UnitType33_SpecialFootPersonage` and `UnitType34_SpecialMountedPersonage` remain medium-confidence labels even though their ids now live in the new enum
+  - the adjacent AI branch `sub_451F70` remains secondary
+  - the contained save-slot repaint/name lane and the broader class/bload prelude remain separate blockers from the retained gameplay/session widening
+
+## Batch 173 - Default front-end menu capture smoke
+- Current frontier:
+  - make the bootstrap executable runnable into the recovered front-end path by default, with the authentic main menu and load-game screen still contained before the full `App_WinMain` handoff
+  - add a repeatable screenshot capture verification path for the menu/loading milestones instead of relying only on timeout-based manual probes
+- Blockers removed this batch:
+  - default `clash95_bootstrap` now runs the recovered early startup prelude, recovered video init, and recovered main-menu first-frame path instead of opening only a bare SDL window; `--platform-window-only` preserves the old inert host-window smoke path
+  - the contained load-game menu now draws save rows by default, repaints the previous and current highlighted save slot during probe hover, and exposes a capture-exit point for deterministic verification
+  - `CLASH95_SCREENSHOT_PREFIX` now aliases the SDL presented-frame BMP dump prefix, and CTest has a `clash95_menu_capture_smoke` test that captures both main-menu and load-menu frames and rejects blank/malformed BMPs
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - default `timeout 1s build/bin/clash95_bootstrap` reaches the recovered front-end loop and then exits `124` when killed by `timeout`; the live-loop kill can still report a dumped core
+- Highest authentic runtime milestone reached:
+  - default `build/bin/clash95_bootstrap` now reaches the recovered main-menu presentation path without requiring `--authentic-menu-probe`
+  - capture-exit verification reaches the main-menu present point and the load-game menu row/slot-selection point, writes BMP screenshots, and confirms the captures are nonblank
+- Key evidence used:
+  - `bootstrap_main.c` for recovered startup/menu probe containment and the authenticated load-menu row drawing path
+  - `platform_sdl_runtime.c` for SDL presented-frame BMP capture
+  - `tests/verify_menu_captures.sh` for the new deterministic menu/loading screenshot test
+- Ambiguous candidates deferred:
+  - the post-confirm load-save replay still reaches the known `class-lookup-no-table name=oddzial` blocker and remains separate from the pre-confirm menu/loading capture wedge
+  - full `App_WinMain` / `PlayGame` session handoff remains gated behind the broader runtime/session surface
+  - the default live loop is runnable but still not a clean finite smoke unless a capture-exit environment variable or external timeout is used
+
+## Batch 174 - Compact bootstrap args into full-game launch
+- Current frontier:
+  - make `clash95_bootstrap` always enter the recovered full-game `App_WinMain` route instead of keeping separate bootstrap probe modes
+  - collapse the old menu-probe environment controls so startup behavior is not selected through ad hoc env state
+- Blockers removed this batch:
+  - `main()` now builds the recovered WinMain command-line string from argv and unconditionally calls `App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0)`
+  - bootstrap-only switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the host wrapper
+  - bootstrap menu-probe env controls now collapse to fixed defaults, and the recovered-core `CLASH95_TRACE_MENU_PROBE` trace reads are disabled constants
+  - the full route now seeds the runtime slab before `sub_472860`, uses the recovered early startup prelude, and links through missing retained runtime helpers such as `time_`, `beginthreadex_`, `SetThreadPriority`, `close_`, `fputs_`, `CSyncObject_Unlock`, and `unk_519AE8`
+  - `strcmp_` now uses a bounded readable-pointer compare so malformed retained parser/rules pointers do not immediately crash the full route
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `timeout -s KILL 2s build/bin/clash95_bootstrap`
+  - `timeout -s KILL 2s build/bin/clash95_cpp_regen`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - `clash95_bootstrap` and `clash95_cpp_regen` now both enter the recovered full-game startup route by default and stay alive until the forced two-second kill instead of requiring a probe flag
+  - tracked runtime code only keeps SDL frame-dump diagnostic env reads (`CLASH95_DUMP_PRESENTED_FRAMES_PREFIX` and the compatibility alias `CLASH95_SCREENSHOT_PREFIX`); bootstrap/menu-probe env steering is no longer active
+- Key evidence used:
+  - `bootstrap_main.c` for host entrypoint compaction and full `App_WinMain` route selection
+  - `compat/decomp_runtime_stubs.c` for retained runtime helper/link repairs
+  - `clash95.c` trace-hook callsites for the removed `CLASH95_TRACE_MENU_PROBE` dependency
+- Ambiguous candidates deferred:
+  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+  - `createLogFiles` remains skipped because the retained log-file runtime still faults before it is needed for the full-game smoke
+  - the live full-game loop still needs an authentic finite shutdown/verification milestone rather than relying on an external forced kill
+
+## Batch 175 - Restore retained log-file creation slice
+- Current frontier:
+  - keep `clash95_bootstrap` and `clash95_cpp_regen` on the full recovered `App_WinMain` route while reducing the skipped startup/runtime surface one narrow slice at a time
+- Blockers removed this batch:
+  - `createLogFiles` no longer depends on the malformed decompiler locals around `sub_4762AE` / `close_`
+  - the function now follows the asm-observed behavior: if `logEnabled` is set, truncate/create `clash.log` and `battle.log`, close both files, and clear `dword_526A20`
+  - `Bootstrap_RunRecoveredRuntimeAndRenderInit` now restores the original `logEnabled = 1` handoff before the retained runtime slab setup and calls `createLogFiles(0, 0, 0)` after the still-deferred sound init point
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - `timeout -k 1s 2s build/bin/clash95_bootstrap`
+  - `timeout -k 1s 2s build/bin/clash95_cpp_regen`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged full-route milestone: both bootstrap executables enter the recovered `App_WinMain` path by default and stay alive until externally killed
+  - startup fidelity is narrower because the retained log-file creation side effect is now present again on the full route
+- Key evidence used:
+  - `clash95.asm:38932-38955` for `createLogFiles`
+  - `clash95.asm:360-396` for the original startup ordering around `logEnabled`, `CSS_SetDeviceSearch`, `CSS_Init`, and `createLogFiles`
+- Ambiguous candidates deferred:
+  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+  - the live full-game loop still needs an authentic finite shutdown/verification milestone rather than relying on an external forced kill

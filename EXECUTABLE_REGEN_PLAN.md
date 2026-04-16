@@ -87,8 +87,9 @@ The next batch is successful when it can say, with evidence:
 
 At that point `clash95_cpp_regen` can grow beyond the current bootstrap-equivalent wedge without pretending the full executable path is already recovered.
 
-## Immediate retained next step
-1. Keep the contained `oddzial` versus `MAIN` split green and separate from the retained gameplay/session widening.
-2. Keep the retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, and `WorldMap_RunHumanTurnLoop` green.
-3. Continue reducing the deeper `WorldMap_RunHumanTurnLoop` loop body after the repaired zero-init entry, `arama1` / `kon_por1` tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, saved render-hook/resource-handle debug block, the repaired `WorldMap_HandleTopMenuBar` helper band, and the repaired `UnitStackSelection_HandleInput` helper band; next focus is `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.
-4. Only after that should the adjacent AI branch `sub_451F70` take priority.
+## Immediate full-route next step
+1. Keep `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` green on the default `main -> App_WinMain` route.
+2. Treat old host-side probe switches and menu-probe env controls as historical only; do not reintroduce them as startup selectors.
+3. Add an authentic finite shutdown or deterministic full-route verification milestone so live-loop validation does not depend only on forced timeout kills.
+4. Recover or quarantine the skipped `CSS_Init` device-table path only when the DirectSound-era data flow is safe for x86-64 SDL execution.
+5. Keep the broader playable `App_WinMain` / `PlayGame` session milestone as the next runtime goal after the startup route has a finite verification point.
