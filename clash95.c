@@ -420,7 +420,7 @@ extern unsigned char unk_5146C0[];
 extern char *off_514834[];
 extern int dword_517B48[];
 extern int dword_517B4C[];
-extern int g_PortReinforcementUnitTypePool[];
+extern unit_type g_PortReinforcementUnitTypePool[];
 extern unsigned char unk_517BF0[];
 extern unsigned char unk_517CE0[];
 extern unsigned char unk_517DB8[];
@@ -676,8 +676,8 @@ signed int  Map_RevealTileWithPropagation(int a1, signed int a2, int a3);
 BOOL  Map_IsTileVisibleToPlayer(int a1, signed int a2, int a3);
 signed int  Map_ClassifyFogOfWarOverlayForPlayer(int a1, signed int a2, int a3);
 signed int  UnitStack_IsIndexOnMap(int a1);
-int  UnitSlot_InitFromType(int result, int a2, char a3);
-char  UnitStack_ResetRecord(int a1, int a2, char a3);
+int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex);
+char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex);
 signed int  Unit_Create();
 unsigned int  UnitStack_LinkArmyFact(__int16 *a1, char a2, DWORD a3);
 int  Unit_Kill(int a1, char a2, DWORD a3, double a4);
@@ -1150,9 +1150,9 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3);
 int  Building_CountFreeGarrisonSlots(int a1);
 signed int  Building_UnitGetInto(int a1, int a2, char a3, signed int i, double a5);
 signed int  Building_CanAcceptUnitStack(int a1, int a2);
-signed int  Building_HasUnitLicence(int a1, int a2);
-BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4);
-int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3);
+signed int  Building_HasUnitLicence(int a1, unit_type a2);
+BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4);
+int  Building_RemoveUnitLicence(int a1, unit_type a2, DWORD a3);
 int  Building_SetUnitProduction(int a1, char a2, DWORD a3);
 void  Building_StopUnitProduction(int a1, char a2, DWORD a3);
 _BYTE * Building_TrainUnit(int a1, char a2, DWORD a3);
@@ -1165,7 +1165,7 @@ int  Building_CountSpecialPersonageGarrisonEntries(int a1);
 int  Building_CountNonCombatGarrisonEntries(int a1);
 signed int  Building_HasSpecialPersonageGarrisonEntries(int a1);
 int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a3);
-BOOL  Building_IsUnitLicenceEligible(char *a1, int a2);
+BOOL  Building_IsUnitLicenceEligible(char *a1, unit_type a2);
 int  Building_AdjustAllGarrisonMoraleByDelta(int a1);
 int  Building_CycleAllGarrisonOrdersOnce(int a1);
 signed int  Building_GetTaxBurdenTier(int a1);
@@ -1352,7 +1352,7 @@ int  Prisoner_FindAnyHiddenEnemyCastle(int a1, int a2);
 int  Prisoner_FindAnyHiddenEnemyUnitStack(int a1, int a2);
 void  Map_RevealTilesInRadius2ForPlayer(int a1, int a2, int a3);
 unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5);
-int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, int a2, int a3, char a4, double a5);
+int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, unit_type a2, int a3, char a4, double a5);
 unsigned int  Prisoner_Pay(int a1, int a2, DWORD a3, double a4);
 char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4);
 int  Building_CountPrisoners(int a1);
@@ -1458,20 +1458,20 @@ BOOL  Building_IsGarrisonFullByIndex(int a1);
 __int16  Building_RepairUnitByIndex(int a1, int a2, DWORD a3);
 _BYTE * Building_TrainUnitByIndex(int a1, char a2, DWORD a3);
 int  Building_SetUnitProductionByIndex(int a1, char a2, DWORD a3);
-int  Building_RemoveUnitLicenceByIndex(int a1, int a2, DWORD a3);
+int  Building_RemoveUnitLicenceByIndex(int a1, unit_type a2, DWORD a3);
 void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3);
-signed int  Building_HasUnitLicenceByIndex(int a1, int a2);
-BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3);
-BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2);
+signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2);
+BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3);
+BOOL  Building_CanBuyUnitLicenceByIndex(int a1, unit_type a2);
 BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4);
-signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2);
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2);
 signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1);
 signed int  Building_UnitsLeaveReadyGarrisonSlots(int a1, int a2, double a3);
 signed int  Building_HasTrainableIdleGarrisonUnit(int a1);
 signed int  Building_HasRepairableIdleGarrisonUnit(int a1);
 int  Building_StartTrainingIdleGarrisonUnits(int a1);
 __int16  Building_StartRepairIdleGarrisonUnits(int a1);
-signed int  Building_UnitsLeaveByUnitType(int a1, int a2, int a3, double a4);
+signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a4);
 _DWORD * Rules_LogCastleSiteFact(int a1, int a2);
 _DWORD * Rules_LogBuildingTransferFact(int a1, int a2, int a3);
 _DWORD * Rules_LogNewCastleFact(int a1, int a2);
@@ -1482,9 +1482,9 @@ _DWORD * Rules_LogCastleUnderConstructionFact(int a1);
 _DWORD *__fastcall Rules_LogCastleBuiltFactAndScheme(int a1, int a2);
 _DWORD * Rules_LogAssignedCastleFact(int a1, int a2);
 _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2);
-BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2);
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2);
 int  Player_GetInternedNameByIndex(int a1, int a2, int a3);
-signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2);
+signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2);
 signed int  Map_IsCastleSiteDistanceMinimal(int a1, int a2, int a3, int a4);
 void Map_RebuildCastleSiteAnchorCache();
 int  Building_CalcGarrisonFactStrength(int a1);
@@ -1502,17 +1502,17 @@ signed int  UnitStack_HasPlagueByIndex(int a1);
 BOOL  Unit_ExecuteQueuedPathAndCheckFinished(unsigned int a1, char a2, DWORD a3, double a4);
 int  Script_UnitAddToGroup(unsigned int a1, int a2, DWORD a3, double a4);
 BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4);
-BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, double a5);
-signed int  UnitStack_HasUnitType(int a1, int a2);
-signed int  UnitStack_HasOnlyUnitType(int a1, int a2);
+BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a4, double a5);
+signed int  UnitStack_HasUnitType(int a1, unit_type a2);
+signed int  UnitStack_HasOnlyUnitType(int a1, unit_type a2);
 signed int  UnitStack_GetHealthPercentAggregate(int a1, int a2);
 int  UnitStack_RegroupWithOtherStackByHealth(int a1, int a2, char a3, DWORD a4, double a5);
 signed int  UnitStack_RegroupWithBuildingGarrisonByHealth(int a1, int a2, char a3, DWORD a4, double a5);
 double  AI_CalcStrategicPriorityScore(int a1, DWORD a2, int a3, int a4, int a5);
 void  AI_EvaluateStrategicTargetAtTile(int a1, int a2, int a3, int a4, int a5, int a6, int *a7, int *a8, float *a9);
 int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5);
-signed int  createUnit(double, int, int, int, DWORD, int, ...);
-int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, DWORD a7, int a8, ...);
+signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...);
+int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, unit_type a7, unit_type a8, ...);
 int  sub_459ED0(int result, int a2, int a3, int a4);
 int  sub_45B3C0(int result, int a2);
 int  sub_45C000(int result, int a2);
@@ -5152,7 +5152,20 @@ char *off_51935C[3] = {
 };
 /* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
 int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
-int g_PortReinforcementUnitTypePool[12] = { 0, 1, 2, 3, 4, 5, 7, 9, 10, 15, 16, 17 };
+unit_type g_PortReinforcementUnitTypePool[12] = {
+  UNIT_TYPE_PEASANT,
+  UNIT_TYPE_LIGHT_INFANTRY,
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_PIKEMAN,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_ARCHER,
+  UNIT_TYPE_CROSSBOWER,
+  UNIT_TYPE_FORESTER,
+  UNIT_TYPE_GORAL,
+  UNIT_TYPE_BUILDER
+};
 __int16 word_5191F0 = 30;
 char aSetrhS08x_8[14] = "SetRH %s=%08x"; // weak
 char aBattle_1[7] = "battle"; // weak
@@ -10160,15 +10173,15 @@ _DWORD dword_515B90[3] = { 39, 426, 1 }; // weak
 _DWORD dword_515C10[3] = { 39, 426, 1 }; // weak
 char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
 {
-  '\x02',
-  '\x04',
-  '\x06',
-  '\x05',
-  '\a',
-  '\b',
-  '\v',
-  '\x0E',
-  '\xFF',
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_HEAVY_CAVALRY,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_DRAGON_CAVALRY,
+  UNIT_TYPE_MUSKETEER,
+  UNIT_TYPE_CANNON,
+  -1,
   '\0',
   '\0',
   '\0',
@@ -10177,7 +10190,16 @@ char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
   '\0',
   '\0'
 }; // weak
-char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = { '\t', '\n', '\f', '\r', '\x0F', '\xFF', '\0', '\0' }; // weak
+char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = {
+  UNIT_TYPE_ARCHER,
+  UNIT_TYPE_CROSSBOWER,
+  UNIT_TYPE_CATAPULT,
+  UNIT_TYPE_RAM,
+  UNIT_TYPE_FORESTER,
+  -1,
+  '\0',
+  '\0'
+}; // weak
 _UNKNOWN unk_515C98; // weak
 char byte_515D00[16] =
 {
@@ -10198,9 +10220,23 @@ char byte_515D00[16] =
   '\0',
   '\0'
 }; // weak
-int dword_515D10[5] = { 29, 20, 21, 22, 23 }; // weak
-int dword_515D24[7] = { 1, 2, 3, 4, 5, 7, 8 }; // weak
-int dword_515D40[] = { 13 }; // weak
+unit_type dword_515D10[5] = {
+  UNIT_TYPE_FLY,
+  UNIT_TYPE_CYCLOP,
+  UNIT_TYPE_TROLL,
+  UNIT_TYPE_SCORPION,
+  UNIT_TYPE_SKELETON
+}; // weak
+unit_type dword_515D24[7] = {
+  UNIT_TYPE_LIGHT_INFANTRY,
+  UNIT_TYPE_HEAVY_INFANTRY,
+  UNIT_TYPE_PIKEMAN,
+  UNIT_TYPE_HEAVY_SPEARMAN,
+  UNIT_TYPE_LIGHT_CAVALRY,
+  UNIT_TYPE_KNIGHTS,
+  UNIT_TYPE_DRAGON_CAVALRY
+}; // weak
+unit_type dword_515D40[] = { UNIT_TYPE_RAM }; // weak
 _UNKNOWN unk_515D50; // weak
 _UNKNOWN unk_515EE8; // weak
 _UNKNOWN unk_516050; // weak
@@ -12310,7 +12346,7 @@ int dword_532214; // weak
 int dword_532218; // weak
 int dword_53221C; // weak
 int g_CastleProductionSelectedAvailableUnitIndex; // weak
-int dword_532224[]; // weak
+unit_type dword_532224[41]; // weak
 int dword_532228[40]; // weak
 int dword_5322C8; // weak
 int dword_5322CC; // weak
@@ -22878,7 +22914,7 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040F440) --------------------------------------------------------
-int  UnitSlot_InitFromType(int result, int a2, char a3)
+int  UnitSlot_InitFromType(int result, unit_type unitType, char ownerIndex)
 {
   char v3; // dl
   char v4; // bh
@@ -22890,14 +22926,14 @@ int  UnitSlot_InitFromType(int result, int a2, char a3)
   *(_WORD *)(result + 6) = 0;
   *(_BYTE *)(result + 3) = 0;
   *(_DWORD *)(result + 23) = 0;
-  UNIT_SLOT_TYPE(result) = a2;
-  UNIT_SLOT_OWNER(result) = a3;
-  if ( a2 != -1 )
-    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * a2];
+  UNIT_SLOT_TYPE(result) = unitType;
+  UNIT_SLOT_OWNER(result) = ownerIndex;
+  if ( unitType != -1 )
+    UNIT_SLOT_ACTION_POINTS(result) = g_UnitTypeBaseActionPoints[UNIT_TYPE_METADATA_STRIDE * unitType];
   UNIT_SLOT_HEALTH_PERCENT(result) = 100;
-  if ( a2 != -1 )
+  if ( unitType != -1 )
   {
-    if ( (g_UnitTypeFlags[22 * a2] & 2) != 0 )
+    if ( (g_UnitTypeFlags[22 * unitType] & 2) != 0 )
       v3 = 6;
     else
       v3 = 10;
@@ -22918,7 +22954,7 @@ int  UnitSlot_InitFromType(int result, int a2, char a3)
 // 51257A: using guessed type int g_UnitTypeFlags[];
 
 //----- (0040F4D0) --------------------------------------------------------
-char  UnitStack_ResetRecord(int stackPtr, int unitType, char ownerIndex)
+char  UnitStack_ResetRecord(int stackPtr, unit_type unitType, char ownerIndex)
 {
   int slotIndex; // edx
 
@@ -22932,7 +22968,7 @@ char  UnitStack_ResetRecord(int stackPtr, int unitType, char ownerIndex)
 
 //----- (0040F510) --------------------------------------------------------
 signed int  Unit_Create(a1, a2, a3, a4, a5)
-DWORD a1;
+unit_type a1;
 int a2;
 int a3;
 char a4;
@@ -31220,11 +31256,11 @@ LABEL_26:
   }
 LABEL_47:
   v34 = *v51;
-  if ( v34 == 15 )
+  if ( v34 == UNIT_TYPE_FORESTER )
   {
     v35 = 11;
   }
-  else if ( v34 == 16 )
+  else if ( v34 == UNIT_TYPE_GORAL )
   {
     v35 = 12;
   }
@@ -34829,7 +34865,7 @@ int  Building_CalcRemainingConstructionTurns(int a1)
   v3 = 0;
   do
   {
-    if ( *(_WORD *)(a1 + 18) == 17 )
+    if ( *(_WORD *)(a1 + 18) == UNIT_TYPE_BUILDER )
       v3 += (unsigned __int8)g_BuilderConstructionProgressPerTurn;
     a1 += 31;
   }
@@ -41175,7 +41211,7 @@ __int16  UnitBattle_PlayShotAnimation(
         }
       }
       g_RenderDevice = &unk_51D4C0;
-      if ( *v125 == 12 )
+      if ( *v125 == UNIT_TYPE_CATAPULT )
       {
         v54 = 8 * (Time_Now(v48, v49) - v130) / (unsigned int)v127;
         v55 = v54 - 4;
@@ -41273,12 +41309,16 @@ __int16  UnitBattle_PlayShotAnimation(
   dword_523F7C %= dword_512364;
   UnitBattle_RedrawTile(*(unsigned __int16 *)(dword_532048 + 31 * a1 + 856), *(unsigned __int16 *)(dword_532048 + 31 * a1 + 858));
   v72 = *v125;
-  v73 = v72 == 12 || v72 == 14 || v72 == 30 || v72 == 28 || v72 == 24;
+  v73 = v72 == UNIT_TYPE_CATAPULT
+     || v72 == UNIT_TYPE_CANNON
+     || v72 == UNIT_TYPE_DRAGON
+     || v72 == UNIT_TYPE_WINGER
+     || v72 == UNIT_TYPE_WIZARD;
   v74 = v73;
   if ( v73 )
   {
     v75 = *v125;
-    if ( v75 == 12 || v75 == 14 )
+    if ( v75 == UNIT_TYPE_CATAPULT || v75 == UNIT_TYPE_CANNON )
     {
       v76 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
       if ( v76 )
@@ -41291,7 +41331,7 @@ LABEL_55:
       {
 LABEL_57:
         v77 = *v125;
-        if ( v77 == 30 || v77 == 28 )
+        if ( v77 == UNIT_TYPE_DRAGON || v77 == UNIT_TYPE_WINGER )
         {
           v78 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
           if ( v78 )
@@ -41674,9 +41714,9 @@ int  UnitBattle_ShotWall(int a1, int a2)
   if ( v8 < 0 )
     v8 = v4 - *(unsigned __int16 *)(v3 + 6);
   v9 = Math_CeilSqrt(v7 * v7 + v8 * v8);
-  if ( *(__int16 *)v3 == 14 && v9 > 4 )
+  if ( *(__int16 *)v3 == UNIT_TYPE_CANNON && v9 > 4 )
     v6 = 9 * v6 / 10;
-  if ( *(__int16 *)v3 == 12 && v9 > 3 )
+  if ( *(__int16 *)v3 == UNIT_TYPE_CATAPULT && v9 > 3 )
     v6 = 9 * v6 / 10;
   v11 = dword_532048 + 40 * a2;
   LOWORD(v12) = word_513A78[2 * *(_DWORD *)(dword_532048 + 820)];
@@ -42715,7 +42755,7 @@ signed int  Trap_New(DWORD a1, int a2, int a3, int a4, double a5)
         v14 = Unit_GetSquadCount(v12 + gameData + 147174);
         if ( v16 >= v14 )
           break;
-        if ( *v15 == 17 )
+        if ( *v15 == UNIT_TYPE_BUILDER )
         {
           *v15 = -1;
           break;
@@ -43710,7 +43750,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
     {
       if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(dword_532048 + 31 * v5 + 854) == g_CurrentPlayerIndex )
       {
-        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == 13 )
+        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == UNIT_TYPE_RAM )
         {
           if ( *(_BYTE *)(dword_532048 + 20 * v2 + v3 + 3134) )
           {
@@ -48318,7 +48358,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   v15 = 4 * (g_CastleProductionSelectedAvailableUnitIndex - 2);
   while ( v13 <= g_CastleProductionSelectedAvailableUnitIndex + 2 )
   {
-    if ( v13 < 0 || (v16 = *(int *)((char *)dword_532224 + v15), v16 == -1) )
+    if ( v13 < 0 || (v16 = dword_532224[v15 / 4], v16 == -1) )
     {
       v15 += 4;
       ++v13;
@@ -48330,9 +48370,9 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
       UI_DrawText(
         45,
         v14,
-        (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v20)))[(unsigned __int8)g_LanguageIndex]);
+        (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
       Render_ReleaseSurface(5, 0x2Du);
-      v15 = v21 + 4;
+      v15 += 4;
       ++v13;
       v14 += 17;
     }
@@ -48344,7 +48384,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
         UI_DrawText(
           45,
           v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v18)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
@@ -48352,9 +48392,9 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
         UI_DrawText(
           45,
           v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * *(int *)((char *)dword_532224 + v17)))[(unsigned __int8)g_LanguageIndex]);
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
       }
-      v15 = v19 + 4;
+      v15 += 4;
       ++v13;
       v14 += 17;
     }
@@ -48434,7 +48474,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
 // 532218: using guessed type int dword_532218;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 5322D0: using guessed type int dword_5322D0[];
 
 //----- (00434E20) --------------------------------------------------------
@@ -48887,7 +48927,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
 // 519808: using guessed type int dword_519808;
 // 532218: using guessed type int dword_532218;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 532334: using guessed type int dword_532334;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
@@ -48999,7 +49039,7 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
 // 532214: using guessed type int dword_532214;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (004359B0) --------------------------------------------------------
@@ -49007,23 +49047,23 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 {
   int metadata_offset; // esi
   int out_index; // ebx
-  int unit_type; // ecx
+  unit_type unitType; // ecx
   BOOL result; // eax
 
   (void)this;
   memset(dword_532224, 0xFF, 0xA4);
   metadata_offset = 0;
   out_index = 0;
-  unit_type = 0;
+  unitType = UNIT_TYPE_PEASANT;
   do
   {
-    result = Building_IsUnitLicenceEligible((char *)dword_532218, unit_type);
+    result = Building_IsUnitLicenceEligible((char *)dword_532218, unitType);
     if ( result && *(_DWORD *)((char *)&g_UnitTypeMetadataRecords + metadata_offset) )
-      dword_532224[out_index++] = unit_type;
-    ++unit_type;
+      dword_532224[out_index++] = unitType;
+    ++unitType;
     metadata_offset += 88;
   }
-  while ( unit_type < 40 );
+  while ( unitType < 40 );
   return result;
 }
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
@@ -49058,10 +49098,10 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
         {
           do
           {
-            if ( v7 == *(int *)((char *)dword_532224 + result) )
+            if ( v7 == dword_532224[v6] )
               break;
-            a3 = *(int *)((char *)dword_532228 + result);
-            result += 4;
+            a3 = dword_532228[v6];
+            result += sizeof(int);
             ++v6;
           }
           while ( a3 != -1 );
@@ -49081,7 +49121,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
 // 532218: using guessed type int dword_532218;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 532228: using guessed type int dword_532228[];
 // 5322C8: using guessed type int dword_5322C8;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -49121,7 +49161,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
 // 53220C: using guessed type int dword_53220C;
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
-// 532224: using guessed type int dword_532224[];
+// 532224: using guessed type unit_type dword_532224[41];
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -55029,7 +55069,7 @@ signed int  Building_UnitGetInto(
   {
     for ( i = 0; i < 10; ++i )
     {
-      if ( *v10 == 31 )
+      if ( *v10 == UNIT_TYPE_GOLD_CARGO )
       {
         *(_DWORD *)(v8 + 438) += 100 * *((char *)v10 + 9) / 100;
         *v10 = -1;
@@ -55042,7 +55082,7 @@ signed int  Building_UnitGetInto(
   {
     for ( i = 0; i < 10; ++i )
     {
-      if ( *(_WORD *)v11 == 32 )
+      if ( *(_WORD *)v11 == UNIT_TYPE_PEASANT_CARGO )
       {
         v12 = (*(_WORD *)(v8 + 430) & 0xFFF) + 100 * *(char *)(v11 + 9) / 100;
         v13 = *(_WORD *)(v8 + 430) & 0xF000;
@@ -55135,7 +55175,7 @@ signed int  Building_CanAcceptUnitStack(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E820) --------------------------------------------------------
-signed int  Building_HasUnitLicence(int a1, int a2)
+signed int  Building_HasUnitLicence(int a1, unit_type a2)
 {
   int v2; // esi
   int v3; // ecx
@@ -55153,7 +55193,7 @@ signed int  Building_HasUnitLicence(int a1, int a2)
 }
 
 //----- (0043E850) --------------------------------------------------------
-BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
+BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4)
 {
   int v5; // edx
   BOOL result; // eax
@@ -55199,7 +55239,7 @@ BOOL  Building_BuyUnitLicence(int a1, int a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E940) --------------------------------------------------------
-int  Building_RemoveUnitLicence(int a1, int a2, DWORD a3)
+int  Building_RemoveUnitLicence(int a1, unit_type a2, DWORD a3)
 {
   int activeProductionLicenceSlot; // eax
   int addonSlot; // edx
@@ -55472,7 +55512,7 @@ int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a
 // 5202E4: using guessed type int gameData;
 
 //----- (0043ED20) --------------------------------------------------------
-BOOL  Building_IsUnitLicenceEligible(char *a1, int a2)
+BOOL  Building_IsUnitLicenceEligible(char *a1, unit_type a2)
 {
   int v4; // eax
   int v5; // edx
@@ -56320,7 +56360,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
   unsigned int v11; // eax
   char v12; // cl
   char v13; // bl
-  int v14; // edx
+  unit_type v14; // edx
   unsigned int v15; // eax
   char v16; // cl
   _WORD v17[172]; // [esp+0h] [ebp-170h] BYREF
@@ -56380,9 +56420,9 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
 // 43FCBB: variable 'v3' is possibly undefined
 // 43FD55: variable 'v12' is possibly undefined
 // 43FD89: variable 'v16' is possibly undefined
-// 515D10: using guessed type int dword_515D10[5];
-// 515D24: using guessed type int dword_515D24[7];
-// 515D40: using guessed type int dword_515D40[];
+// 515D10: using guessed type unit_type dword_515D10[5];
+// 515D24: using guessed type unit_type dword_515D24[7];
+// 515D40: using guessed type unit_type dword_515D40[];
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FDE0) --------------------------------------------------------
@@ -56406,7 +56446,7 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int a1, int a2, char a3, int a4,
   v15 = a4;
   v6 = 0;
   v7 = 31 * (a1 / 100);
-  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, 31, a3) )
+  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, UNIT_TYPE_GOLD_CARGO, a3) )
     ++v6;
   v9 = v17;
   *(_WORD *)((char *)v13 + i) = -1;
@@ -59336,7 +59376,7 @@ LABEL_16:
       v10 = g_PortReinforcementSpawnRingOffsets[v6].row_delta;
       v11 = v10 + PORT_ROW;
       v12 = Facing_DirectionFromDelta8(v10, g_PortReinforcementSpawnRingOffsets[v6].column_delta);
-      Unit_Create(0, g_CurrentPlayerIndex, v11, v12, a4, v29);
+      Unit_Create(UNIT_TYPE_PEASANT, g_CurrentPlayerIndex, v11, v12, a4, v29);
       v14 = 145 * *(unsigned __int16 *)(TILE_INDEX(v11, v29));
       v15 = PORT_REINFORCEMENT_UNIT_COUNT - 1;
       for ( j = 725 * *(unsigned __int16 *)(TILE_INDEX(v11, v29)) + gameData + 147174;
@@ -59374,7 +59414,7 @@ LABEL_16:
 // 4437B6: variable 'v24' is possibly undefined
 // 517B48: using guessed type int dword_517B48[];
 // 517B4C: using guessed type int dword_517B4C[23];
-// 517BA8: using guessed type int g_PortReinforcementUnitTypePool[12];
+// 517BA8: using guessed type unit_type g_PortReinforcementUnitTypePool[12];
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
@@ -63917,8 +63957,8 @@ _DWORD * sub_44B550(int this, DWORD a2, double a3)
   _DWORD *result; // eax
   int v19; // edx
 
-  Unit_Create(0x11u, 0, 5, 0, 4);
-  Unit_Create(0xDu, 0, 5, 0, 5);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 4);
+  Unit_Create(UNIT_TYPE_RAM, 0, 5, 0, 5);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557384), *(unsigned __int16 *)(gameData + 557382), 0, a2, a3);
   Building_New(1, *(unsigned __int16 *)(gameData + 557382), a3, aCantbelly_3, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509690) = 0;
@@ -63941,37 +63981,37 @@ _DWORD * sub_44B550(int this, DWORD a2, double a3)
   *(_BYTE *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 510126) = 4;
   Building_LogBuiltCastleFacts(
     (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 557382) - 0x8000) + gameData + 509674));
-  Unit_Create(0x11u, 0, v7, 0, 6);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, v7, 0, 6);
   Unit_Create(UNIT_TYPE_FLY, 0, 6, 0, 6);
-  Unit_Create(9u, 0, 7, 0, 7);
+  Unit_Create(UNIT_TYPE_ARCHER, 0, 7, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(0x14u, 0, v8, 0, 7);
+  Unit_Create(UNIT_TYPE_CYCLOP, 0, v8, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(0x22u, 0, v9, 0, 7);
+  Unit_Create(UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, 0, v9, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
-  Unit_Create(4u, 0, v10, 0, 7);
+  Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, 0, v10, 0, 7);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557788), *(unsigned __int16 *)(gameData + 557586), 0, a2, a3);
   *(_BYTE *)(gameData + 725 * *(unsigned __int16 *)(gameData + 557586) + 147189) = 1;
-  Unit_Create(0x1Bu, 2, 10, 0, 7);
-  Unit_Create(0x1Cu, 0, 10, 0, 8);
-  Unit_Create(1u, 0, 5, 0, 45);
-  Unit_Create(0x11u, 0, 5, 0, 46);
+  Unit_Create(UNIT_TYPE_PEGASUS, 2, 10, 0, 7);
+  Unit_Create(UNIT_TYPE_WINGER, 0, 10, 0, 8);
+  Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 0, 5, 0, 45);
+  Unit_Create(UNIT_TYPE_BUILDER, 0, 5, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(5u, 0, 5, 0, 46);
+  Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, 0, 5, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(0x1Au, 0, v11, 0, 46);
+  Unit_Create(UNIT_TYPE_EAGLE, 0, v11, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(0xDu, 0, v12, 0, 46);
+  Unit_Create(UNIT_TYPE_RAM, 0, v12, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v13, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v13, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v14, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v14, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v15, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v15, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v16, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v16, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
-  Unit_Create(3u, 0, v17, 0, 46);
+  Unit_Create(UNIT_TYPE_PIKEMAN, 0, v17, 0, 46);
   Unit_AddToGroup(*(unsigned __int16 *)(gameData + 557466), *(unsigned __int16 *)(gameData + 557464), 0, a2, a3);
   Building_New(0, *(unsigned __int16 *)(gameData + 557464), a3, aKopegon, 1);
   *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 557464) - 0x8000) + gameData + 509690) = 0;
@@ -64220,7 +64260,7 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)(gameData + 1400) = 4;
       *(_BYTE *)(gameData + 140016) = 2;
       createUnit(a3, 0, 0, 0, UNIT_TYPE_RAM, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      createCastle(a3, 1, 0, 1, 2, aZamek, 0xCu, 14, 20, -1);
+      createCastle(a3, 1, 0, 1, 2, aZamek, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_CYCLOP, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(725 * *(unsigned __int16 *)(gameData + 556374) + gameData + 147174),
                0,
@@ -64233,7 +64273,7 @@ DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
       *(_WORD *)(gameData + 1400) = 0;
       *(_BYTE *)(gameData + 140016) = 1;
       createUnit(a3, 0, 0, 1, UNIT_TYPE_CANNON, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a3, 1, 0, 0, 2, aZamek_0, 0xEu, 24, 5, -1);
+      createCastle(a3, 1, 0, 0, 2, aZamek_0, UNIT_TYPE_CANNON, UNIT_TYPE_WIZARD, UNIT_TYPE_LIGHT_CAVALRY, -1);
       return Battle_RunTacticalCombat(
                (__int16 *)(gameData + 147174 + 725 * *(unsigned __int16 *)(gameData + 556374)),
                0,
@@ -64353,8 +64393,8 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
       v11 = 2 * v40;
       if ( *(_DWORD *)(v8 + 140051) )
       {
-        Unit_Create(0x11u, v7, v41, 0, v40);
-        Unit_Create(0, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v41, 0, v40);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64373,16 +64413,16 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
                             + gameData
                             + 509674));
-        Unit_Create(5u, v7, v15, 0, v14);
-        Unit_Create(1u, v7, v10, 0, v38);
-        Unit_Create(0x10u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v15, 0, v14);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v38);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
@@ -64396,58 +64436,58 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x11u, v7, v10, 0, v36);
-        Unit_Create(9u, v7, v39, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v10, 0, v36);
+        Unit_Create(UNIT_TYPE_ARCHER, v7, v39, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v17, 0, v44);
-        Unit_Create(0x10u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v17, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v10, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
@@ -64460,15 +64500,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
         v30 = v40;
         *(_DWORD *)(v8 + 140063) = v33;
         LOBYTE(v33) = v33 ^ 1;
-        Unit_Create(0x11u, v7, v41, 0, v30);
-        Unit_Create(3u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v41, 0, v30);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
-        Unit_Create(4u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_HEAVY_SPEARMAN, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64482,14 +64522,14 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
           0,
           v10,
           v4);
-        Unit_Create(0, v7, v10, 0, v40);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v10, 0, v40);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v45 + gameData + 556374),
           *(unsigned __int16 *)(gameData + v42 + v11 + 556374),
@@ -64508,16 +64548,16 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           (unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + v42 + v11 + 556374) - 0x8000)
                             + gameData
                             + 509674));
-        Unit_Create(5u, v7, v21, 0, v20);
-        Unit_Create(1u, v7, v10, 0, v38);
-        Unit_Create(0x10u, v7, v39, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v21, 0, v20);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v38);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v39, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
           0,
           v10,
           v4);
-        Unit_Create(5u, v7, v22, 0, v38);
+        Unit_Create(UNIT_TYPE_LIGHT_CAVALRY, v7, v22, 0, v38);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556378),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556378),
@@ -64531,15 +64571,15 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(0x11u, v7, v10, 0, v36);
-        Unit_Create(0x11u, v7, v39, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v10, 0, v36);
+        Unit_Create(UNIT_TYPE_BUILDER, v7, v39, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
           0,
           v10,
           v4);
-        Unit_Create(9u, v7, v24, 0, v36);
+        Unit_Create(UNIT_TYPE_ARCHER, v7, v24, 0, v36);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v43 + gameData + 556380),
           *(unsigned __int16 *)(gameData + v45 + v11 + 556380),
@@ -64547,8 +64587,8 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           v10,
           v4);
         v32 = v41 - 1;
-        Unit_Create(0, v7, v41 - 1, 0, v44);
-        Unit_Create(1u, v7, v41, 0, v44);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v41 - 1, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v41, 0, v44);
         v37 = 200 * v32;
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
@@ -64556,42 +64596,42 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           0,
           v10,
           v4);
-        Unit_Create(3u, v7, v25, 0, v44);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v25, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(3u, v7, v26, 0, v44);
+        Unit_Create(UNIT_TYPE_PIKEMAN, v7, v26, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(0, v7, v27, 0, v44);
+        Unit_Create(UNIT_TYPE_PEASANT, v7, v27, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v28, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v28, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(1u, v7, v41, 0, v44);
+        Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v41, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
           0,
           v10,
           v4);
-        Unit_Create(0x10u, v7, v29, 0, v44);
+        Unit_Create(UNIT_TYPE_GORAL, v7, v29, 0, v44);
         Unit_AddToGroup(
           *(unsigned __int16 *)(v11 + v42 + gameData + 556372),
           *(unsigned __int16 *)(gameData + v37 + v11 + 556372),
@@ -64600,57 +64640,57 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, DWORD a2)
           v4);
         if ( *(int *)(v35 + gameData + 140055) > 0 )
         {
-          Unit_Create(0, v7, v39, 0, v44);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_PEASANT, v7, v39, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(9u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_ARCHER, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(9u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_ARCHER, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
             0,
             v10,
             v4);
-          Unit_Create(1u, v7, v10, 0, v44);
+          Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, v7, v10, 0, v44);
           Unit_AddToGroup(
             *(unsigned __int16 *)(v11 + v45 + gameData + 556372),
             *(unsigned __int16 *)(gameData + v43 + v11 + 556372),
@@ -65485,7 +65525,7 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
 // 518D50: using guessed type char *g_PrisonerTortureResistanceTexts[3];
 
 //----- (0044F1E0) --------------------------------------------------------
-int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, int a2, int a3, char a4, double a5)
+int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, unit_type a2, int a3, char a4, double a5)
 {
   int garrison_slot_ptr; // edx
   int slot_index; // eax
@@ -67103,7 +67143,10 @@ void sub_4516B0()
       v2 = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v3 >= v2 )
         break;
-      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 14, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
+      UnitSlot_InitFromType(
+        i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6,
+        UNIT_TYPE_CANNON,
+        *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
     sub_418700(1);
   }
@@ -67265,7 +67308,10 @@ signed int sub_451A60()
       result = Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174);
       if ( v2 >= result )
         break;
-      UnitSlot_InitFromType(i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6, 27, *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
+      UnitSlot_InitFromType(
+        i + gameData + 147174 + 725 * g_SelectedUnitIndex + 6,
+        UNIT_TYPE_PEGASUS,
+        *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
   }
   return result;
@@ -69194,7 +69240,7 @@ int  Building_SetUnitProductionByIndex(int a1, char a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455720) --------------------------------------------------------
-int  Building_RemoveUnitLicenceByIndex(int a1, int a2, DWORD a3)
+int  Building_RemoveUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
 {
   return Building_RemoveUnitLicence(UNIT_RECORD(a1), a2, a3);
 }
@@ -69225,21 +69271,21 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004557C0) --------------------------------------------------------
-signed int  Building_HasUnitLicenceByIndex(int a1, int a2)
+signed int  Building_HasUnitLicenceByIndex(int a1, unit_type a2)
 {
   return Building_HasUnitLicence(UNIT_RECORD(a1), a2);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (004557E0) --------------------------------------------------------
-BOOL  Building_BuyUnitLicenceByIndex(int a1, int a2, DWORD a3)
+BOOL  Building_BuyUnitLicenceByIndex(int a1, unit_type a2, DWORD a3)
 {
   return Building_BuyUnitLicence(UNIT_RECORD(a1), a2, gameData + 509674, a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (00455800) --------------------------------------------------------
-BOOL  Building_CanBuyUnitLicenceByIndex(int a1, int a2)
+BOOL  Building_CanBuyUnitLicenceByIndex(int a1, unit_type a2)
 {
   return Building_IsUnitLicenceEligible((char *)(UNIT_RECORD(a1)), a2);
 }
@@ -69252,7 +69298,7 @@ BOOL  Rules_BuildCastle(int a1, DWORD a2, double a3, char *a4)
 }
 
 //----- (00455850) --------------------------------------------------------
-signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, int a2)
+signed int  Building_FindUnitLicenceSlotIndexOrZero(int a1, unit_type a2)
 {
   signed int result; // eax
   int v4; // ebx
@@ -69280,7 +69326,7 @@ signed int  Building_FindFirstNonPeasantNonBuilderLicenceSlotOrZero(int a1)
   while ( 1 )
   {
     v4 = *(char *)(v3 + gameData + result + 510076);
-    if ( v4 > 0 && v4 != 17 )
+    if ( v4 != -1 && v4 != UNIT_TYPE_PEASANT && v4 != UNIT_TYPE_BUILDER )
       break;
     if ( ++result >= 12 )
       return 0;
@@ -69468,7 +69514,7 @@ __int16  Building_StartRepairIdleGarrisonUnits(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455BD0) --------------------------------------------------------
-signed int  Building_UnitsLeaveByUnitType(int a1, int a2, int a3, double a4)
+signed int  Building_UnitsLeaveByUnitType(int a1, unit_type a2, int a3, double a4)
 {
   int i; // eax
   int v7; // edx
@@ -69646,7 +69692,7 @@ _DWORD * Rules_LogAssignedPlayerFact(int a1, int a2)
 // 4761CE: using guessed type double sprintf_(_DWORD, const char *, ...);
 
 //----- (00455E80) --------------------------------------------------------
-BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, int a2)
+BOOL  Building_SelectedUnitLicenceMatchesTypeByIndex(int a1, unit_type a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -69692,7 +69738,7 @@ int  Player_GetInternedNameByIndex(int a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00455F20) --------------------------------------------------------
-signed int  Building_HasGarrisonUnitTypeByIndex(int a1, int a2)
+signed int  Building_HasGarrisonUnitTypeByIndex(int a1, unit_type a2)
 {
   int v2; // ebx
   int v3; // eax
@@ -70202,7 +70248,7 @@ BOOL  UnitStack_DetachWeakUnitsToAdjacentTile(int a1, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00457FE0) --------------------------------------------------------
-BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, double a5)
+BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, unit_type a2, int a3, int a4, double a5)
 {
   int v5; // esi
   __int16 *v6; // edx
@@ -70276,7 +70322,7 @@ BOOL  UnitStack_DetachUnitTypeToAdjacentTile(int a1, int a2, int a3, int a4, dou
 // 5202E4: using guessed type int gameData;
 
 //----- (00458160) --------------------------------------------------------
-signed int  UnitStack_HasUnitType(int a1, int a2)
+signed int  UnitStack_HasUnitType(int a1, unit_type a2)
 {
   int v3; // edx
   __int16 *i; // eax
@@ -70298,7 +70344,7 @@ signed int  UnitStack_HasUnitType(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004581C0) --------------------------------------------------------
-signed int  UnitStack_HasOnlyUnitType(int a1, int a2)
+signed int  UnitStack_HasOnlyUnitType(int a1, unit_type a2)
 {
   int v3; // edx
   __int16 *i; // eax
@@ -71022,12 +71068,12 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
 }
 
 //----- (00459760) --------------------------------------------------------
-signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
+signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...)
 {
   va_list args;
   char v7; // bl
   int v8; // ecx
-  int unit_type; // eax
+  unit_type next_unit_type; // eax
   DWORD v10; // ebp
   int slot_offset; // ecx
   int tile_offset; // [esp+0h] [ebp-1Ch]
@@ -71036,14 +71082,14 @@ signed int  createUnit(double a1, int a2, int a3, int a4, DWORD a5, int a6, ...)
   Unit_Create(a5, a4, a2, 0, a1, a3);
   v7 = a4;
   slot_offset = 31;
-  unit_type = a6;
+  next_unit_type = a6;
   v10 = 200 * a2;
   tile_offset = 2 * a3;
-  while ( unit_type != -1 )
+  while ( next_unit_type != -1 )
   {
     v8 = *(unsigned __int16 *)(tile_offset + gameData + v10 + 556374);
-    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, unit_type, a4);
-    unit_type = va_arg(args, int);
+    UnitSlot_InitFromType(slot_offset + gameData + 147174 + 725 * v8 + 6, next_unit_type, a4);
+    next_unit_type = va_arg(args, int);
     slot_offset += 31;
   }
   va_end(args);
@@ -71065,14 +71111,14 @@ int  createCastle(
         int a4,
         int a5,
         char *a6,
-        DWORD a7,
-        int a8,
+        unit_type a7,
+        unit_type a8,
         ...)
 {
   va_list args;
   int v9; // eax
   int v10; // ecx
-  int unit_type; // eax
+  unit_type next_unit_type; // eax
   int unit_index; // eax
   int tile_offset; // [esp+0h] [ebp-20h]
   DWORD v15; // [esp+4h] [ebp-1Ch]
@@ -71080,14 +71126,14 @@ int  createCastle(
   va_start(args, a8);
   Unit_Create(a7, a4, a2, 0, a3);
   v15 = 200 * a2;
-  unit_type = a8;
+  next_unit_type = a8;
   v10 = 31;
   tile_offset = 2 * a3;
-  while ( unit_type != -1 )
+  while ( next_unit_type != -1 )
   {
     v9 = *(unsigned __int16 *)(tile_offset + gameData + v15 + 556374);
-    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, unit_type, a4);
-    unit_type = va_arg(args, int);
+    UnitSlot_InitFromType(v10 + 725 * v9 + gameData + 147174 + 6, next_unit_type, a4);
+    next_unit_type = va_arg(args, int);
     v10 += 31;
   }
   va_end(args);
@@ -71411,7 +71457,7 @@ LABEL_27:
       }
     case 8:
       v19 = 0;
-      while ( *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == 33 )
+      while ( *(_WORD *)(467 * (*(unsigned __int16 *)(gameData + 562420) - 0x8000) + gameData + v19 + 509692) == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE )
       {
         v19 += 31;
         if ( v19 >= 372 )
@@ -71717,17 +71763,17 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 30, 42, 0, 2, "Cantbelly", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      createCastle(a2, 30, 42, 0, 2, "Cantbelly", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 30, 44, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_SKELETON, -1);
       createUnit(a2, 31, 44, 0, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 32, 44, 0, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 46, 45, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 15, 6, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 48, 14, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_FORESTER, -1);
-      Unit_Create(9u, 1, 35, 0, 11);
-      Unit_Create(9u, 1, 49, 0, 39);
-      Unit_Create(9u, 1, 40, 0, 3);
-      Unit_Create(1u, 1, 19, 0, 12);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 35, 0, 11);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 49, 0, 39);
+      Unit_Create(UNIT_TYPE_ARCHER, 1, 40, 0, 3);
+      Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 1, 19, 0, 12);
       sub_451EC0();
       Game_InitPlayerViewState();
       break;
@@ -71745,9 +71791,9 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Ianos");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 44, 46, 0, 2, "Stormus", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0xF, -1);
+      createCastle(a2, 44, 46, 0, 2, "Stormus", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_GORAL, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 44, 48, 0, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
-      castle_index = createCastle(a2, 1, 23, 1, 2, "Drakefly", 0x11u, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      castle_index = createCastle(a2, 1, 23, 1, 2, "Drakefly", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 1, 25, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
@@ -71780,7 +71826,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 97, 25, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 97, 24, 0, UNIT_TYPE_PEASANT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 98, 26, 0, UNIT_TYPE_RAM, -1);
-      castle_index = createCastle(a2, 41, 68, 1, 2, "Treg Rock", 0x11u, -1);
+      castle_index = createCastle(a2, 41, 68, 1, 2, "Treg Rock", UNIT_TYPE_BUILDER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 83, 16, 1, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_BUILDER, -1);
@@ -71820,7 +71866,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Sir Wenom");
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Gorio");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 21, 21, 0, 1, "Ughuata", 0x11u, -1);
+      castle_index = createCastle(a2, 21, 21, 0, 1, "Ughuata", UNIT_TYPE_BUILDER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 300;
       Building_OnGarrisonChange(castle_index, 0, a2);
@@ -71872,11 +71918,11 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh II");
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "McDonowan");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 41, 48, 0, 2, "Totaweon", 0x11u, 0x11, 0x11, 0x11, 0x21u, 0x10u, 0x10u, 0x10u, -1);
+      createCastle(a2, 41, 48, 0, 2, "Totaweon", UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 41, 50, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 42, 50, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 43, 50, 0, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_GORAL, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
-      castle_index = createCastle(a2, 56, 69, 1, 1, "Hopenberg", 0x11u, 9, 9, 9, 9, 9, 9, 9, 9, 9, -1);
+      castle_index = createCastle(a2, 56, 69, 1, 1, "Hopenberg", UNIT_TYPE_BUILDER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_WORD *)(building_record + 18) = 9;
       createUnit(a2, 56, 71, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
@@ -71892,14 +71938,14 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 55, 71, 1, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 56, 71, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 57, 71, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_BUILDER, -1);
-      castle_index = createCastle(a2, 32, 36, 2, 2, "Jolarion", 0x11u, 9, 9, 0, 0, 0, 1, -1);
+      castle_index = createCastle(a2, 32, 36, 2, 2, "Jolarion", UNIT_TYPE_BUILDER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
-      castle_index = createCastle(a2, 50, 23, 2, 2, "Akserion", 0x11u, -1);
+      castle_index = createCastle(a2, 50, 23, 2, 2, "Akserion", UNIT_TYPE_BUILDER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 50, 25, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      castle_index = createCastle(a2, 25, 48, 2, 2, "Bodeon", 0x11u, -1);
+      castle_index = createCastle(a2, 25, 48, 2, 2, "Bodeon", UNIT_TYPE_BUILDER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 25, 50, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
@@ -71939,7 +71985,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       }
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 71, 45, 0, 2, "Defambrion", 0x11u, -1);
+      castle_index = createCastle(a2, 71, 45, 0, 2, "Defambrion", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
       createUnit(a2, 70, 47, 0, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 71, 47, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_PIKEMAN, UNIT_TYPE_HEAVY_INFANTRY, -1);
@@ -71947,21 +71993,21 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 73, 47, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 71, 44, 0, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 72, 44, 0, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a2, 56, 21, 1, 2, "Histone", 0x11u, -1);
-      castle_index = createCastle(a2, 26, 41, 1, 2, "Katha Gha", 0x11u, -1);
+      createCastle(a2, 56, 21, 1, 2, "Histone", UNIT_TYPE_BUILDER, -1);
+      castle_index = createCastle(a2, 26, 41, 1, 2, "Katha Gha", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
       createUnit(a2, 56, 23, 1, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 57, 23, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 58, 23, 1, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_TROLL, -1);
       createUnit(a2, 73, 23, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
-      createCastle(a2, 68, 77, 2, 2, "Girock", 0x11u, -1);
+      createCastle(a2, 68, 77, 2, 2, "Girock", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 67, 79, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 68, 79, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 73, 63, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 69, 79, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_MUSKETEER, -1);
       createUnit(a2, 70, 79, 2, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 59, 50, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_PIKEMAN, UNIT_TYPE_CROSSBOWER, -1);
-      castle_index = createCastle(a2, 42, 54, 3, 2, "Ghih Up", 0x11u, -1);
+      castle_index = createCastle(a2, 42, 54, 3, 2, "Ghih Up", UNIT_TYPE_BUILDER, -1);
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       createUnit(a2, 41, 56, 3, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, -1);
       createUnit(a2, 42, 56, 3, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, -1);
@@ -71997,8 +72043,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 13, 4, 0, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 14, 4, 0, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 14, 3, 0, UNIT_TYPE_CANNON, -1);
-      createCastle(a2, 30, 23, 1, 2, "Dragmounth", 0x11u, 9, 9, 9, 9, 9, 9, -1);
-      createCastle(a2, 54, 4, 1, 2, "Akserion", 0x11u, 0xFu, 0xF, 0xF, 0xF, 0xF, -1);
+      createCastle(a2, 30, 23, 1, 2, "Dragmounth", UNIT_TYPE_BUILDER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
+      createCastle(a2, 54, 4, 1, 2, "Akserion", UNIT_TYPE_BUILDER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 30, 25, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 31, 25, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 54, 6, 1, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
@@ -72028,13 +72074,13 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         UNIT_STACK_OWNER_INDEX(UNIT_STACK(stack_index)),
         200 * UNIT_STACK_TILE_ROW(UNIT_STACK(stack_index)),
         a2);
-      castle_index = createCastle(a2, 90, 41, 2, 2, "Ghettan", 0x11u, -1);
+      castle_index = createCastle(a2, 90, 41, 2, 2, "Ghettan", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       BUILDING_PRISONER_TYPE(BUILDING_PRISONER_SLOT(building_record, 0)) = UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE;
       BUILDING_PRISONER_OWNER(BUILDING_PRISONER_SLOT(building_record, 0)) = 0;
-      castle_index = createCastle(a2, 41, 67, 2, 2, "Bhua Rock", 0x11u, -1);
+      castle_index = createCastle(a2, 41, 67, 2, 2, "Bhua Rock", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 1000;
-      castle_index = createCastle(a2, 5, 56, 2, 1, "Jolarion", 0x11u, -1);
+      castle_index = createCastle(a2, 5, 56, 2, 1, "Jolarion", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
       createUnit(a2, 41, 69, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 42, 69, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
@@ -72067,19 +72113,19 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Richard V");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 56, 70, 0, 2, "Weghetown", 0x11u, -1);
-      createCastle(a2, 1, 51, 0, 1, "Henrion", 0x11u, 0x11, 0x11, 0x21u, -1);
+      createCastle(a2, 56, 70, 0, 2, "Weghetown", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 1, 51, 0, 1, "Henrion", UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 56, 72, 0, UNIT_TYPE_FORESTER, UNIT_TYPE_CATAPULT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 57, 72, 0, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_CATAPULT, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 1, 53, 0, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_RAM, UNIT_TYPE_MUSKETEER, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 2, 53, 0, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, -1);
-      createCastle(a2, 9, 25, 1, 2, "Moon Town", 0x11u, -1);
-      createCastle(a2, 18, 34, 1, 2, "Gate Stone", 0x11u, -1);
+      createCastle(a2, 9, 25, 1, 2, "Moon Town", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 18, 34, 1, 2, "Gate Stone", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 9, 27, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, -1);
       createUnit(a2, 18, 36, 1, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_TROLL, UNIT_TYPE_GHOST, -1);
       createUnit(a2, 19, 36, 1, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_CYCLOP, -1);
-      createCastle(a2, 43, 21, 2, 2, "Canoowar", 0x11u, -1);
-      createCastle(a2, 54, 31, 2, 1, "Trungeon", 0x11u, -1);
+      createCastle(a2, 43, 21, 2, 2, "Canoowar", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 54, 31, 2, 1, "Trungeon", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 42, 23, 2, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 43, 23, 2, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(43, 23));
@@ -72089,8 +72135,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 45, 23, 2, UNIT_TYPE_SCORPION, UNIT_TYPE_FLY, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_MUSKETEER, -1);
       createUnit(a2, 54, 33, 2, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 55, 33, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a2, 77, 39, 3, 2, "Leweburg", 0x11u, -1);
-      createCastle(a2, 75, 67, 3, 1, "Defambrion", 0x11u, -1);
+      createCastle(a2, 77, 39, 3, 2, "Leweburg", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 75, 67, 3, 1, "Defambrion", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 77, 41, 3, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 78, 41, 3, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ELEPHANT, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(78, 41));
@@ -72131,8 +72177,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Ruryk");
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 8, 27, 0, 2, "Totaweon", 0x11u, 0x21u, 0x21u, 0x21u, -1);
-      castle_index = createCastle(a2, 30, 23, 0, 2, "Gordmouth", 0x11u, -1);
+      createCastle(a2, 8, 27, 0, 2, "Totaweon", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
+      castle_index = createCastle(a2, 30, 23, 0, 2, "Gordmouth", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
       createUnit(a2, 8, 29, 0, UNIT_TYPE_PEASANT, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_CATAPULT, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
@@ -72147,13 +72193,13 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 21, 57, 0, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 21, 59, 0, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 28, 57, 0, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
-      createCastle(a2, 22, 77, 1, 2, "Timbran", 0x11u, -1);
-      createCastle(a2, 59, 66, 1, 2, "Ghettan", 0x11u, -1);
+      createCastle(a2, 22, 77, 1, 2, "Timbran", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 59, 66, 1, 2, "Ghettan", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 22, 79, 1, UNIT_TYPE_EAGLE, UNIT_TYPE_FLY, -1);
       createUnit(a2, 59, 68, 1, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, -1);
       createUnit(a2, 60, 68, 1, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, -1);
-      createCastle(a2, 4, 62, 2, 2, "Hopenberg", 0x11u, 0x21u, -1);
-      createCastle(a2, 84, 64, 2, 2, "Katha Gha", 0x11u, 0x21u, -1);
+      createCastle(a2, 4, 62, 2, 2, "Hopenberg", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
+      createCastle(a2, 84, 64, 2, 2, "Katha Gha", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 4, 64, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 5, 64, 2, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_EAGLE, UNIT_TYPE_EAGLE, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(5, 64));
@@ -72166,7 +72212,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) |= 3u;
       createUnit(a2, 85, 66, 2, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_WORM, -1);
       createUnit(a2, 86, 66, 2, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_ELEPHANT, UNIT_TYPE_SCORPION, -1);
-      createCastle(a2, 96, 86, 3, 2, "Werneom", 0x11u, -1);
+      createCastle(a2, 96, 86, 3, 2, "Werneom", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 95, 88, 3, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_TROLL, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 96, 88, 3, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_ELEPHANT, -1);
       createUnit(a2, 97, 88, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_WIZARD, UNIT_TYPE_KNIGHTS, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SCORPION, UNIT_TYPE_CATAPULT, -1);
@@ -72207,11 +72253,11 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Mieszko");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Chester");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 13, 3, 0, 2, "Gorendberg", 0x11u, -1);
+      castle_index = createCastle(a2, 13, 3, 0, 2, "Gorendberg", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
       *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 2;
-      castle_index = createCastle(a2, 94, 95, 0, 2, "Timbran", 0x11u, -1);
+      castle_index = createCastle(a2, 94, 95, 0, 2, "Timbran", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) = 500;
       *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 2;
@@ -72219,7 +72265,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 14, 5, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 94, 97, 0, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 95, 97, 0, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_DRAGON, -1);
-      castle_index = createCastle(a2, 62, 53, 1, 2, "Ghettan", 0x11u, 0x21u, 0x21u, -1);
+      castle_index = createCastle(a2, 62, 53, 1, 2, "Ghettan", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) = 3000;
       createUnit(a2, 61, 55, 1, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_KNIGHTS, UNIT_TYPE_KNIGHTS, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_WIZARD, -1);
@@ -72228,7 +72274,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 64, 55, 1, UNIT_TYPE_DRAGON, UNIT_TYPE_PEGASUS, UNIT_TYPE_WINGER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 62, 52, 1, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_WIZARD, UNIT_TYPE_DRAGON, -1);
       createUnit(a2, 63, 52, 1, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, -1);
-      castle_index = createCastle(a2, 58, 11, 2, 2, "Bhua Rock", 0x11u, -1);
+      castle_index = createCastle(a2, 58, 11, 2, 2, "Bhua Rock", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) = 3000;
       createUnit(a2, 57, 13, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_TROLL, UNIT_TYPE_SCORPION, -1);
@@ -72237,13 +72283,13 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 60, 13, 2, UNIT_TYPE_WINGER, UNIT_TYPE_PEGASUS, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_WIZARD, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 58, 10, 2, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_ELEPHANT, UNIT_TYPE_SCORPION, -1);
       createUnit(a2, 58, 10, 2, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_DRAGON, -1);
-      createCastle(a2, 95, 16, 3, 2, "Katha Gha", 0x11u, -1);
-      createCastle(a2, 11, 41, 3, 2, "Stormus", 0x11u, -1);
+      createCastle(a2, 95, 16, 3, 2, "Katha Gha", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 11, 41, 3, 2, "Stormus", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 95, 18, 3, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_TROLL, UNIT_TYPE_PEGASUS, -1);
       createUnit(a2, 96, 18, 3, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_ELEPHANT, UNIT_TYPE_ELEPHANT, UNIT_TYPE_ELEPHANT, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, -1);
       createUnit(a2, 11, 43, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 12, 43, 3, UNIT_TYPE_SCORPION, UNIT_TYPE_FLY, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_BUILDER, -1);
-      castle_index = createCastle(a2, 32, 84, 4, 2, "Guluali", 0x11u, -1);
+      castle_index = createCastle(a2, 32, 84, 4, 2, "Guluali", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) += 500;
       *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 3;
@@ -72268,7 +72314,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Gaalaad");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 15, 31, 1, 2, "Timbran", 0x11u, 0, 0, 0, 1, 1, 1, 9, -1);
+      castle_index = createCastle(a2, 15, 31, 1, 2, "Timbran", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
       building_word = *(_WORD *)(building_record + 430);
@@ -72298,9 +72344,9 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Raylin");
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Wetus");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 22, 13, 1, 2, "Gatgally", 0x11u, 0, 0, 0, 1, 1, 9, 0x10, 0x10, -1);
+      createCastle(a2, 22, 13, 1, 2, "Gatgally", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 22, 15, 1, UNIT_TYPE_BUILDER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
-      createCastle(a2, 34, 5, 2, 2, "Guluali", 0x11u, 0, 0, 1, 1, 9, 9, 0xF, 0xF, -1);
+      createCastle(a2, 34, 5, 2, 2, "Guluali", UNIT_TYPE_BUILDER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 33, 7, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 34, 7, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 35, 7, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
@@ -72327,7 +72373,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 69, 82, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 70, 82, 1, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 71, 83, 1, UNIT_TYPE_RAM, -1);
-      castle_index = createCastle(a2, 59, 14, 2, 2, "Sarturia", 0x11u, -1);
+      castle_index = createCastle(a2, 59, 14, 2, 2, "Sarturia", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) = 5000;
       createUnit(a2, 67, 36, 2, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
@@ -72364,7 +72410,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Glazur");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Sir John");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 23, 26, 1, 2, "Ungught", 0x11u, -1);
+      createCastle(a2, 23, 26, 1, 2, "Ungught", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 22, 25, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 25, 25, 1, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 22, 28, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
@@ -72406,7 +72452,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(2) + PLAYER_DISPLAY_NAME_OFFSET), "Uraken");
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Wodar");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 50, 3, 1, 2, "Weghetown", 0x11u, 0x21u, -1);
+      castle_index = createCastle(a2, 50, 3, 1, 2, "Weghetown", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       building_record = BUILDING_RECORD(castle_index);
       building_word = *(_WORD *)(building_record + 430);
       *(_WORD *)(building_record + 430) = building_word & 0xF000;
@@ -72414,7 +72460,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 51, 5, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 52, 5, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_GORAL, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 49, 5, 1, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
-      castle_index = createCastle(a2, 52, 24, 2, 2, "Timbran", 0x11u, 0xFu, 0xFu, 0xFu, 0xFu, 0xFu, 9, 9, 9, 9, -1);
+      castle_index = createCastle(a2, 52, 24, 2, 2, "Timbran", UNIT_TYPE_BUILDER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_WORD *)(building_record + 18) = 0xF;
       createUnit(a2, 52, 26, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
@@ -72433,9 +72479,9 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 64, 4, 2, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 50, 27, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
-      castle_index = createCastle(a2, 39, 18, 3, 2, "Fraggmeon", 0x11u, -1);
+      castle_index = createCastle(a2, 39, 18, 3, 2, "Fraggmeon", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
-      castle_index = createCastle(a2, 17, 34, 3, 2, "Eufurhon", 0x11u, -1);
+      castle_index = createCastle(a2, 17, 34, 3, 2, "Eufurhon", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
       createUnit(a2, 39, 20, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 40, 20, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, -1);
@@ -72469,25 +72515,25 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Sir James");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Agordeh");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 59, 9, 1, 2, "Defambrion", 0x11u, -1);
+      castle_index = createCastle(a2, 59, 9, 1, 2, "Defambrion", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 200;
-      createCastle(a2, 50, 96, 1, 1, "Ghondur", 0x11u, -1);
+      createCastle(a2, 50, 96, 1, 1, "Ghondur", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 59, 11, 1, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 60, 11, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_PIKEMAN, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 61, 11, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 49, 98, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 50, 98, 1, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 51, 98, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a2, 86, 55, 2, 2, "Histone", 0x11u, -1);
+      createCastle(a2, 86, 55, 2, 2, "Histone", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 86, 57, 2, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 87, 57, 2, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      createCastle(a2, 79, 2, 3, 2, "Girock", 0x11u, -1);
+      createCastle(a2, 79, 2, 3, 2, "Girock", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 78, 4, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 79, 4, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 80, 4, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 81, 4, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_MUSKETEER, -1);
       createUnit(a2, 80, 1, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      castle_index = createCastle(a2, 48, 38, 4, 2, "Ghih Up", 0x11u, -1);
+      castle_index = createCastle(a2, 48, 38, 4, 2, "Ghih Up", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) = 1000;
       *(_WORD *)(building_record + 18) = -1;
@@ -72497,7 +72543,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 48, 57, 4, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 18, 75, 4, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, -1);
       createUnit(a2, 37, 6, 4, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
-      castle_index = createCastle(a2, 19, 32, 4, 2, "Guluali", 0x11u, -1);
+      castle_index = createCastle(a2, 19, 32, 4, 2, "Guluali", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
       createUnit(a2, 19, 34, 4, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       sub_451EC0();
@@ -72527,16 +72573,16 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 20, 36, 1, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 22, 36, 1, UNIT_TYPE_CANNON, -1);
       createUnit(a2, 22, 36, 1, UNIT_TYPE_CANNON, UNIT_TYPE_BUILDER, -1);
-      castle_index = createCastle(a2, 91, 43, 2, 2, "Gwadat", 0x11u, -1);
+      castle_index = createCastle(a2, 91, 43, 2, 2, "Gwadat", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_BYTE *)(building_record + 444) = *(_BYTE *)(building_record + 444) & 0xF8 | 3;
-      createCastle(a2, 54, 74, 2, 2, "Cantown", 0x11u, -1);
+      createCastle(a2, 54, 74, 2, 2, "Cantown", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 91, 45, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 92, 45, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 93, 45, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, -1);
       createUnit(a2, 54, 76, 2, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, -1);
-      createCastle(a2, 35, 3, 2, 3, "Thubeos", 0x11u, -1);
-      createCastle(a2, 66, 45, 2, 3, "Akserion", 0x11u, -1);
+      createCastle(a2, 35, 3, 2, 3, "Thubeos", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 66, 45, 2, 3, "Akserion", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 35, 5, 3, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 36, 5, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 66, 47, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
@@ -72553,8 +72599,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
       createUnit(a2, 62, 43, 3, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 63, 43, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
-      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 62, 86, 4, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 63, 86, 4, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ELEPHANT, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
@@ -72605,20 +72651,20 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "McGregor");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Crowley");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 11, 45, 1, 2, "Stormus", 0x11u, -1);
-      castle_index = createCastle(a2, 70, 20, 1, 1, "Dark Town", 0x11u, -1);
+      createCastle(a2, 11, 45, 1, 2, "Stormus", UNIT_TYPE_BUILDER, -1);
+      castle_index = createCastle(a2, 70, 20, 1, 1, "Dark Town", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
       createUnit(a2, 12, 47, 1, UNIT_TYPE_FORESTER, UNIT_TYPE_CATAPULT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 22, 71, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_CATAPULT, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 72, 22, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_RAM, UNIT_TYPE_MUSKETEER, UNIT_TYPE_ARCHER, -1);
-      createCastle(a2, 32, 5, 2, 2, "Treg Rock", 0x11u, -1);
-      createCastle(a2, 42, 27, 2, 2, "Bodeon", 0x11u, -1);
+      createCastle(a2, 32, 5, 2, 2, "Treg Rock", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 42, 27, 2, 2, "Bodeon", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 32, 7, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 33, 7, 2, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_SKELETON, -1);
       createUnit(a2, 34, 7, 2, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_CANNON, -1);
-      createCastle(a2, 25, 38, 3, 2, "Girock", 0x11u, -1);
-      createCastle(a2, 61, 41, 3, 1, "Bodeon", 0x11u, -1);
+      createCastle(a2, 25, 38, 3, 2, "Girock", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 61, 41, 3, 1, "Bodeon", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 25, 40, 3, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 26, 40, 3, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(26, 40));
@@ -72631,8 +72677,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 3u;
       createUnit(a2, 62, 43, 3, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 63, 43, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      createCastle(a2, 62, 84, 4, 2, "Leweburg", 0x11u, -1);
-      createCastle(a2, 58, 61, 4, 1, "Defambrion", 0x11u, -1);
+      createCastle(a2, 62, 84, 4, 2, "Leweburg", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 58, 61, 4, 1, "Defambrion", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 62, 86, 4, UNIT_TYPE_FORESTER, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 63, 86, 4, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ELEPHANT, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(63, 86));
@@ -72676,20 +72722,20 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Lord Gorio");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "McDan");
       MiniMap_CreateSurface(a2);
-      createCastle(a2, 85, 38, 1, 2, "Cantbelly", 0x11u, 0x11u, 0x11u, -1);
-      castle_index = createCastle(a2, 15, 23, 1, 2, "Stone Bell", 0x11u, -1);
+      createCastle(a2, 85, 38, 1, 2, "Cantbelly", UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, UNIT_TYPE_BUILDER, -1);
+      castle_index = createCastle(a2, 15, 23, 1, 2, "Stone Bell", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
       createUnit(a2, 85, 40, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_CATAPULT, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 86, 40, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_CATAPULT, UNIT_TYPE_KNIGHTS, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, -1);
       createUnit(a2, 15, 25, 1, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 16, 25, 1, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, -1);
-      createCastle(a2, 9, 89, 2, 2, "Timbran", 0x11u, -1);
+      createCastle(a2, 9, 89, 2, 2, "Timbran", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 9, 91, 2, UNIT_TYPE_EAGLE, UNIT_TYPE_FLY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, -1);
       createUnit(a2, 10, 91, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, -1);
       createUnit(a2, 11, 91, 2, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, -1);
-      createCastle(a2, 6, 5, 3, 2, "Hopenberg", 0x11u, 0x21u, -1);
-      createCastle(a2, 82, 55, 3, 2, "Katha Gha", 0x11u, 0x22u, -1);
+      createCastle(a2, 6, 5, 3, 2, "Hopenberg", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
+      createCastle(a2, 82, 55, 3, 2, "Katha Gha", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, -1);
       createUnit(a2, 6, 7, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 7, 7, 3, UNIT_TYPE_FLY, UNIT_TYPE_FLY, UNIT_TYPE_EAGLE, UNIT_TYPE_EAGLE, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, -1);
       stack_index = *(unsigned __int16 *)(TILE_INDEX(7, 7));
@@ -72702,8 +72748,8 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
       createUnit(a2, 84, 57, 3, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_WORM, -1);
       createUnit(a2, 6, 91, 3, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_ELEPHANT, UNIT_TYPE_SCORPION, -1);
-      createCastle(a2, 27, 49, 4, 2, "Werneom", 0x11u, -1);
-      createCastle(a2, 48, 72, 4, 1, "Bokumia", 0x11u, -1);
+      createCastle(a2, 27, 49, 4, 2, "Werneom", UNIT_TYPE_BUILDER, -1);
+      createCastle(a2, 48, 72, 4, 1, "Bokumia", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 27, 51, 4, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_TROLL, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 28, 51, 4, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_ELEPHANT, -1);
       createUnit(a2, 10, 51, 4, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_WIZARD, UNIT_TYPE_KNIGHTS, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_SCORPION, UNIT_TYPE_CATAPULT, -1);
@@ -72714,7 +72760,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       stack_index = *(unsigned __int16 *)(TILE_INDEX(49, 74));
       *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) &= 0xFCu;
       *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 2) + 28) |= 2u;
-      castle_index = createCastle(a2, 62, 79, 0, 1, "Fhur Tao", 0x11u, 0x21u, -1);
+      castle_index = createCastle(a2, 62, 79, 0, 1, "Fhur Tao", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) += 200;
       createUnit(a2, 62, 81, 0, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, -1);
@@ -72757,35 +72803,35 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       strcpy((char *)(PLAYER_DATA(3) + PLAYER_DISPLAY_NAME_OFFSET), "Longhand");
       strcpy((char *)(PLAYER_DATA(4) + PLAYER_DISPLAY_NAME_OFFSET), "Riludius");
       MiniMap_CreateSurface(a2);
-      castle_index = createCastle(a2, 83, 15, 1, 2, "Gorendberg", 0x11u, -1);
+      castle_index = createCastle(a2, 83, 15, 1, 2, "Gorendberg", UNIT_TYPE_BUILDER, -1);
       building_record = BUILDING_RECORD(castle_index);
       *(_DWORD *)(building_record + 438) -= 100;
-      createCastle(a2, 73, 68, 1, 2, "Timbran", 0x11u, -1);
+      createCastle(a2, 73, 68, 1, 2, "Timbran", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 83, 17, 1, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_CATAPULT, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_FLY, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       createUnit(a2, 84, 17, 1, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 73, 70, 1, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE, -1);
-      castle_index = createCastle(a2, 20, 9, 2, 2, "Ghettan", 0x11u, 0x21u, 0x21u, -1);
+      castle_index = createCastle(a2, 20, 9, 2, 2, "Ghettan", UNIT_TYPE_BUILDER, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, UNIT_TYPE_SPECIAL_FOOT_PERSONAGE, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 600;
-      createCastle(a2, 70, 30, 2, 2, "Drakefly", 0x11u, -1);
+      createCastle(a2, 70, 30, 2, 2, "Drakefly", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 20, 11, 2, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_KNIGHTS, UNIT_TYPE_KNIGHTS, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_WIZARD, -1);
       createUnit(a2, 21, 11, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_WIZARD, UNIT_TYPE_TROLL, UNIT_TYPE_CATAPULT, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, -1);
       createUnit(a2, 22, 11, 2, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CYCLOP, UNIT_TYPE_CANNON, UNIT_TYPE_EAGLE, -1);
       createUnit(a2, 70, 32, 2, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_DRAGON, UNIT_TYPE_PEGASUS, UNIT_TYPE_WINGER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 71, 32, 2, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_SCORPION, UNIT_TYPE_WIZARD, UNIT_TYPE_DRAGON, -1);
-      createCastle(a2, 36, 54, 3, 2, "Bhua Rock", 0x11u, -1);
+      createCastle(a2, 36, 54, 3, 2, "Bhua Rock", UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 35, 56, 3, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_TROLL, UNIT_TYPE_SCORPION, -1);
       createUnit(a2, 36, 56, 3, UNIT_TYPE_EAGLE, UNIT_TYPE_EAGLE, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_CANNON, UNIT_TYPE_WINGER, -1);
       createUnit(a2, 37, 56, 3, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, UNIT_TYPE_HEAVY_CAVALRY, -1);
       createUnit(a2, 38, 56, 3, UNIT_TYPE_WINGER, UNIT_TYPE_PEGASUS, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_WIZARD, -1);
       createUnit(a2, 36, 53, 3, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_CROSSBOWER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_TROLL, UNIT_TYPE_ELEPHANT, UNIT_TYPE_SCORPION, -1);
-      createCastle(a2, 79, 2, 4, 2, "Katha Gha", 0x11u, -1);
-      castle_index = createCastle(a2, 88, 63, 4, 1, "Stormus", 0x11u, -1);
+      createCastle(a2, 79, 2, 4, 2, "Katha Gha", UNIT_TYPE_BUILDER, -1);
+      castle_index = createCastle(a2, 88, 63, 4, 1, "Stormus", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 300;
       createUnit(a2, 79, 4, 4, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_TROLL, UNIT_TYPE_PEGASUS, -1);
       createUnit(a2, 80, 4, 4, UNIT_TYPE_WORM, UNIT_TYPE_WORM, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_ELEPHANT, UNIT_TYPE_ELEPHANT, UNIT_TYPE_ELEPHANT, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, UNIT_TYPE_WIZARD, -1);
       createUnit(a2, 88, 65, 4, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 89, 65, 4, UNIT_TYPE_SCORPION, UNIT_TYPE_FLY, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, -1);
-      castle_index = createCastle(a2, 95, 51, 0, 2, "Guluali", 0x11u, -1);
+      castle_index = createCastle(a2, 95, 51, 0, 2, "Guluali", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) += 300;
       createUnit(a2, 95, 53, 0, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_CANNON, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
       createUnit(a2, 96, 53, 0, UNIT_TYPE_SKELETON, UNIT_TYPE_SKELETON, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, -1);
