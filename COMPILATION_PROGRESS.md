@@ -6800,3 +6800,25 @@
 - Ambiguous candidates deferred:
   - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
   - the live full-game loop still needs an authentic finite shutdown/verification milestone rather than relying on an external forced kill
+
+## Batch 176 - Replace stale menu-capture smoke with full-route smoke
+- Current frontier:
+  - keep validation aligned with the default full `App_WinMain` route now that host-side menu-capture probes and menu-probe env controls are no longer active selectors
+- Blockers removed this batch:
+  - `ctest` no longer depends on the superseded `CLASH95_TRACE_MENU_PROBE` / capture-exit path
+  - the old `clash95_menu_capture_smoke` was replaced with `clash95_full_route_smoke`, which starts `clash95_bootstrap` under dummy SDL/audio, verifies that the recovered full route remains alive for a short interval, then shuts down the process group from the harness
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout -k 1s 2s build/bin/clash95_bootstrap`
+  - `timeout -k 1s 2s build/bin/clash95_cpp_regen`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool .agent/state.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged full-route milestone: both bootstrap executables enter the recovered `App_WinMain` path by default and stay alive until externally killed
+  - automated verification now matches that milestone directly instead of asserting removed finite menu-capture behavior
+- Ambiguous candidates deferred:
+  - this is a harness alignment step, not an authentic finite shutdown recovery
+  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path

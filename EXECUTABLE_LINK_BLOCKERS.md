@@ -174,4 +174,5 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - Host-side bootstrap modes are gone. Old probe switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the wrapper.
 - The menu-probe env surface is collapsed to fixed behavior; the tracked runtime code only keeps SDL presented-frame dump diagnostic env reads.
 - The retained log-file creation slice is now restored in the full route: `createLogFiles` matches the asm-observed create/truncate/close side effect for `clash.log` and `battle.log` and no longer depends on the malformed decompiler-local `sub_4762AE` corridor.
+- CTest now validates the current full route with `clash95_full_route_smoke` instead of the removed menu-capture probe path; it checks that `clash95_bootstrap` stays alive under dummy SDL/audio and then performs external process-group shutdown.
 - The remaining front-end blockers are after this full route: clean finite live-loop shutdown, the still-skipped DirectSound-era `CSS_Init` table, and the broader playable `App_WinMain` / `PlayGame` session milestone.

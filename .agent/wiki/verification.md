@@ -3,6 +3,8 @@
 ## 2026-04-16 Full-Route Startup Slice
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
   - passed
+- `ctest --test-dir build --output-on-failure`
+  - passed after replacing the superseded menu-capture probe with `clash95_full_route_smoke`
 - `timeout -k 1s 2s build/bin/clash95_bootstrap`
   - forced-timeout live-loop smoke; no lingering process after cleanup
 - `timeout -k 1s 2s build/bin/clash95_cpp_regen`
@@ -15,6 +17,7 @@
   - passed
 - Runtime note:
   - the executables now enter the recovered `App_WinMain` route by default and remain live until externally killed
+  - `clash95_full_route_smoke` is the current CTest coverage for that milestone; it does not recover an authentic finite quit path
   - `createLogFiles` now creates/truncates `clash.log` and `battle.log`; remove generated `clash.log` after smoke runs before committing
   - old host-side `--authentic-*` probe switches and menu-probe env controls are no longer current verification commands
 
