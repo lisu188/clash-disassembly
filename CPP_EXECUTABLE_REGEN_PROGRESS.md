@@ -176,3 +176,18 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `strcmp_` now has cached readable-range validation so malformed recovered pointers do not crash startup comparisons
 - CTest now includes `clash95_r_command_shutdown_smoke`; that new finite smoke passes.
 - The older default no-arg liveness test is no longer green in this branch: the no-arg path exits early through `UI_StartAnims -> Video_Avi_playIn -> App_RequestQuit` with `[platform_sdl] Clash: Clash CD not found!`. The next front-end runtime blocker is therefore the intro AVI/CD/resource path, not the finite lowercase `r` route.
+
+## Latest default full-route update
+- The default no-arg route is live again on the recovered `App_WinMain` path:
+  - `Win_BeginModeChange` now accepts directly readable loose AVI files when the recovered resource query misses them, which removes the previous `Clash CD not found!` early quit on the local install
+  - the reached AVI, event-handle, DirectDraw palette, compact render-surface, and main-menu widget dispatch scars were reduced in recovered C / SDL compat glue without adding a host-side fake probe mode
+  - the reached `CAviDecompressor` constructors now route through the shared byte-offset initializer, removing the pointer-scaled event-handle initialization crash observed on the default intro path
+  - `clash95_full_route_smoke` now passes by observing `clash95_bootstrap` alive in the recovered main-menu wait loop before external shutdown
+- The finite lowercase `r` route remains the clean recovered startup/shutdown verification for both `clash95_bootstrap` and `clash95_cpp_regen`.
+- Validation for this update:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - `ctest --test-dir build --output-on-failure`
+  - `ctest --test-dir build --output-on-failure --repeat until-fail:3`
+- The next executable-regeneration blocker is no longer intro AVI/CD availability. It is now deeper menu/session fidelity after the recovered main-menu liveness milestone, with `CSS_Init` still deferred independently.

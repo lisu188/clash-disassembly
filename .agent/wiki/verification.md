@@ -1,5 +1,24 @@
 # Verification
 
+## 2026-04-16 Default Full-Route Menu Liveness Slice
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - passed
+  - `clash95_full_route_smoke` observes the default no-arg bootstrap alive in the recovered main-menu loop
+  - `clash95_r_command_shutdown_smoke` still covers the finite lowercase `r` startup/shutdown route
+- `ctest --test-dir build --output-on-failure --repeat until-fail:3`
+  - passed
+  - repeated both smoke tests three times after the AVI constructor byte-offset fix
+- Runtime note:
+  - the previous no-arg `Clash CD not found!` blocker is removed for the local loose-AVI install path
+  - the reached `CAviDecompressor` constructors no longer use pointer-scaled event-handle initialization on the 64-bit host
+  - the no-arg route is a liveness milestone, while lowercase `r` remains the clean finite shutdown milestone
+
 ## 2026-04-16 Lowercase r Finite Shutdown Slice
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
   - passed

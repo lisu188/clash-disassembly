@@ -6853,3 +6853,35 @@
   - the default no-arg route now exits before the old liveness check through `Video_Avi_playIn -> App_RequestQuit` with `[platform_sdl] Clash: Clash CD not found!`; the next front-end blocker is the authentic intro AVI/CD/resource path, not the lowercase `r` finite shutdown route
   - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
   - `sub_492660` and the module-qualified symbol path remain suspect if that path is reached
+
+## Batch 178 - Restore default full-route menu liveness
+- Current frontier:
+  - keep the default no-arg `main -> App_WinMain -> Bootstrap_RunRecoveredGameEntry -> PlayGame_Dispatch` route alive under SDL instead of relying only on the finite lowercase `r` shutdown path
+- Blockers removed this batch:
+  - `Win_BeginModeChange` now treats direct readable loose AVI paths as valid when the recovered resource query misses them, so the local `/mnt/c/clash/AVI` install can satisfy the intro AVI availability check instead of immediately requesting quit with `Clash CD not found!`
+  - the AVI wrapper entrypoints now pass their recovered position/rect/source arguments into `CAviDecompressor_Init*`, and AVI cleanup no longer calls destructors through wrapper-slot or partially initialized handles
+  - the reached `CAviDecompressor` constructors now share the asm-backed `sub_464CE0` object initializer instead of repeating pointer-scaled `HANDLE *` arithmetic that walked past the 2236-byte AVI object on the 64-bit host
+  - recovered event handles are now compact public tokens in `compat/decomp_runtime_stubs.c`, preventing recovered 32-bit handle fields from truncating host event pointers
+  - `Render_SetPixelFormat` now creates and attaches the 8bpp DirectDraw palette through SDL compatibility helpers instead of reading native COM vtables through 32-bit decompiler pointers
+  - the first main-menu load path now uses the asm-backed `menu\main.s32` resource, explicit compact render-surface draw/load helpers, and a deterministic 371-byte copy of the rebuilt main-menu widget table
+  - the top-level widget walker now preserves host stack pointers with `uintptr_t`, so copied widget arrays can dispatch transition/action callbacks without truncation
+  - `Render_UnlockBackbuffer` now uses the recovered compact-surface slot-64 helper instead of reading an 8-byte function pointer from the original 32-bit vtable table
+  - the main-menu wait loop now uses the asm-backed zero sentinel and loops while `g_PlayGameMenuExitRequested` is still zero, removing the flaky early cleanup path
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - `ctest --test-dir build --output-on-failure`
+  - `ctest --test-dir build --output-on-failure --repeat until-fail:3`
+- Highest authentic runtime milestone reached:
+  - default `build/bin/clash95_bootstrap` now reaches the recovered main-menu presentation/wait loop and remains alive until the full-route smoke performs external process-group shutdown
+  - lowercase `r` remains the deterministic finite route for recovered startup/render init plus shutdown on both `clash95_bootstrap` and `clash95_cpp_regen`
+- Key evidence used:
+  - `clash95.asm:109727-109776` for the first main-menu draw, 371-byte widget table copy, language fixup loop, and `sub_419D80` handoff
+  - `clash95.asm:40282-40321` for the 53-byte widget-record walker and callback slot at `+0x1C`
+  - `clash95.asm:5986-5995` and the compact render-surface vtables around `off_50EE74` / `off_50EEC4` for `Render_UnlockBackbuffer`
+  - local installed game data under `/mnt/c/clash/AVI` as corroboration for loose intro AVI availability
+- Ambiguous candidates deferred:
+  - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+  - the default route is a main-menu liveness milestone, not a clean finite in-game quit path or playable-turn milestone
+  - deeper menu branches still contain copied widget tables and compact-surface vtable callsites that should be reduced only when reached by validation

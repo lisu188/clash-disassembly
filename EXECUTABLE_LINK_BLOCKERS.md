@@ -189,3 +189,22 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - direct no-arg smoke prints `[platform_sdl] Clash: Clash CD not found!`
   - the next honest blocker is therefore intro AVI/CD/resource-path recovery under SDL, not link failure or finite shutdown
 - `CSS_Init` is still deferred independently because the DirectSound-era table is not safe enough for x86-64 SDL execution yet.
+
+## Latest default-route blocker update
+- The default no-arg full route no longer exits at the intro AVI/CD availability check.
+- `Win_BeginModeChange` now verifies direct loose AVI paths after the recovered resource query fails, so the local installed game data can satisfy `Video_Avi_playIn` without faking the boot path.
+- The reached runtime blockers after that point were reduced in the live recovered path:
+  - AVI wrapper argument recovery and partial-init cleanup guards
+  - shared byte-offset `CAviDecompressor` object initialization, replacing duplicated pointer-scaled event-handle setup in the reached constructors
+  - compact public event handles for recovered 32-bit `HANDLE` fields
+  - SDL DirectDraw palette creation/attachment for 8bpp mode switches
+  - first main-menu sprite/resource load and compact render-surface calls
+  - pointer-width-safe widget table walking for copied stack-local menu records
+  - deterministic asm-backed main-menu widget-table copy and wait-loop sentinel
+  - compact render-surface slot-64 dispatch in `Render_UnlockBackbuffer`
+- `ctest --test-dir build --output-on-failure` is green again, and `ctest --test-dir build --output-on-failure --repeat until-fail:3` also passes: `clash95_full_route_smoke` observes the no-arg bootstrap alive in the recovered main-menu loop, and `clash95_r_command_shutdown_smoke` still covers the finite lowercase `r` shutdown route.
+- Remaining front-end blockers:
+  - deeper menu/session interactions beyond passive main-menu liveness
+  - clean finite default-route quit from the recovered game loop
+  - the still-deferred `CSS_Init` DirectSound-era table
+  - the broader playable-turn milestone

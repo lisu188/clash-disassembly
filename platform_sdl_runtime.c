@@ -2805,6 +2805,20 @@ HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height,
   return CompatDirectDraw_SetDisplayMode((CompatDirectDraw *)dd, width, height, bpp, refresh_rate, flags);
 }
 
+HRESULT Compat_DirectDraw_CreatePalette(LPDIRECTDRAW dd, DWORD flags, void *entries, void *out_palette)
+{
+  CompatDirectDrawPalette *palette;
+  HRESULT hr;
+
+  palette = 0;
+  hr = CompatDirectDraw_CreatePalette((CompatDirectDraw *)dd, flags, entries, &palette, 0);
+  if ( hr )
+    return hr;
+  if ( out_palette )
+    *(int *)out_palette = (int)(uintptr_t)palette;
+  return 0;
+}
+
 HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface)
 {
   CompatDirectDrawSurface *surface;

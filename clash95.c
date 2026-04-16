@@ -827,15 +827,15 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4);
 int  sub_419770(unsigned __int16 *a1, int a2, DWORD a3);
 int  sub_419780(unsigned __int16 *a1, int a2, DWORD a3);
 int  sub_419790(int result);
-BOOL  sub_4197A0(int a1, DWORD a2);
-signed int  sub_419B80(int a1, DWORD a2);
-int  sub_419D60(int result, int a2);
+BOOL  sub_4197A0(uintptr_t a1, DWORD a2);
+signed int  sub_419B80(uintptr_t a1, DWORD a2);
+int  sub_419D60(uintptr_t result, int a2);
 _DWORD * sub_419D80(_DWORD *result);
 signed int  sub_419DC0(_DWORD *a1, DWORD a2);
-int  sub_419E60(int a1, int a2);
-int  sub_419ED0(int a1);
-int  sub_419F20(int a1);
-int  sub_419F50(int a1, int a2);
+int  sub_419E60(uintptr_t a1, int a2);
+int  sub_419ED0(uintptr_t a1);
+int  sub_419F20(uintptr_t a1);
+int  sub_419F50(uintptr_t a1, int a2);
 int  UI_DrawUnitInfoPane(int a1, int a2, int a3, __int16 *a4, DWORD a5, int a6);
 int  Unit_Info(int a1, int a2, int a3, unsigned __int8 *a4, DWORD a5, DWORD a6);
 int  UI_DrawSpecialUnitInfoPane(int a1, int a2, int a3, unsigned __int8 *a4, DWORD a5, int a6);
@@ -1282,12 +1282,12 @@ int sub_4476B0();
 int __thiscall sub_4476C0(void *this);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
-int  MainMenu_RequestExit(int a1);
-int  MainMenu_RequestCampaignMenu(int a1);
-int  MainMenu_RequestMultiplayerMenu(int a1);
-int  MainMenu_RequestCreditsCinematic(int a1);
-int  MainMenu_RequestOptionsMenu(int a1);
-int  MainMenu_RequestLoadGameMenu(int a1);
+int  MainMenu_RequestExit(uintptr_t a1);
+int  MainMenu_RequestCampaignMenu(uintptr_t a1);
+int  MainMenu_RequestMultiplayerMenu(uintptr_t a1);
+int  MainMenu_RequestCreditsCinematic(uintptr_t a1);
+int  MainMenu_RequestOptionsMenu(uintptr_t a1);
+int  MainMenu_RequestLoadGameMenu(uintptr_t a1);
 signed int  sub_4477A0(int a1, int a2);
 signed int  UI_WaitForAnyKeyOrClick(int a1, int a2);
 DWORD  UI_StartAnims(int a1, char a2, DWORD a3);
@@ -4565,6 +4565,7 @@ HRESULT Compat_DirectDraw_QueryInterface(LPDIRECTDRAW dd, const void *riid, void
 ULONG Compat_DirectDraw_Release(LPDIRECTDRAW dd);
 HRESULT Compat_DirectDraw_SetCooperativeLevel(LPDIRECTDRAW dd, HWND hwnd, DWORD flags);
 HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height, int bpp, int refresh_rate, int flags);
+HRESULT Compat_DirectDraw_CreatePalette(LPDIRECTDRAW dd, DWORD flags, void *entries, void *out_palette);
 HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface);
 HRESULT Compat_DirectDrawSurface_GetAttachedSurface(LPDIRECTDRAWSURFACE surface, void *caps, void *out_surface);
 HRESULT Compat_DirectDrawSurface_Blt(LPDIRECTDRAWSURFACE surface, RECT *dest_rect, LPDIRECTDRAWSURFACE src_surface, RECT *src_rect, DWORD flags, void *blt_fx);
@@ -15397,12 +15398,10 @@ int  sub_4045E0(int result, int a2, int a3, int a4, int a5, int a6)
 int  Render_UnlockBackbuffer(int a1)
 {
   int v1; // eax
-  int v2; // ecx
 
-  v1 = (*(int (**)(void))(*(_DWORD *)(a1 + 184) + 64))();
-  return sub_473E30(v1, 0, v2);
+  v1 = RenderSurface_InvokeSlot64((_DWORD *)(uintptr_t)(unsigned int)a1);
+  return sub_473E30(v1, 0, 0);
 }
-// 40464C: variable 'v2' is possibly undefined
 
 //----- (00404660) --------------------------------------------------------
 int  sub_404660(int a1)
@@ -15436,6 +15435,10 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
   int v15; // edx
   int v16; // eax
   int result; // eax
+  HRESULT hr;
+  int render_context;
+  int surface_handle;
+  int palette_handle;
   _DWORD *v18; // [esp-8h] [ebp-41Ch]
   DWORD v19; // [esp+0h] [ebp-414h]
   _BYTE v20[1040]; // [esp+4h] [ebp-410h] BYREF
@@ -15475,15 +15478,31 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
       v20[v16 - 1] = 0;
     }
     while ( v15 < 256 );
-    (*(void (__stdcall **)(_DWORD, int, _BYTE *, int, _DWORD))(***(_DWORD ***)(a1 + 196) + 20))(
-      **(_DWORD **)(a1 + 196),
-      68,
-      v20,
-      *(_DWORD *)(a1 + 196) + 16,
-      0);
-    (*(void (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(*(_DWORD *)(a1 + 188) + 164) + 124))(
-      *(_DWORD *)(*(_DWORD *)(a1 + 188) + 164),
-      *(_DWORD *)(*(_DWORD *)(a1 + 196) + 16));
+    render_context = *(_DWORD *)(a1 + 196);
+    if ( render_context )
+    {
+      hr = Compat_DirectDraw_CreatePalette(
+             (LPDIRECTDRAW)(uintptr_t)(unsigned int)*(_DWORD *)render_context,
+             68,
+             v20,
+             (void *)(uintptr_t)(unsigned int)(render_context + 16));
+      if ( hr )
+        sub_4741F0(hr, 0);
+    }
+    surface_handle = 0;
+    palette_handle = 0;
+    if ( *(_DWORD *)(a1 + 188) )
+      surface_handle = *(_DWORD *)(*(_DWORD *)(a1 + 188) + 164);
+    if ( render_context )
+      palette_handle = *(_DWORD *)(render_context + 16);
+    if ( surface_handle && palette_handle )
+    {
+      hr = Compat_DirectDrawSurface_SetPalette(
+             (LPDIRECTDRAWSURFACE)(uintptr_t)(unsigned int)surface_handle,
+             (void *)(uintptr_t)(unsigned int)palette_handle);
+      if ( hr )
+        sub_4741F0(hr, 0);
+    }
     return sub_404C80((int *)a1, (const void *)(a1 + 220));
   }
   else
@@ -30564,32 +30583,32 @@ int  sub_419780(unsigned __int16 *a1, int a2, DWORD a3)
   return sub_419410(a1, a2, 10, a3);
 }
 
-static int UI_InvokeWidgetTransitionCallback(int widget, int callback_arg)
+static int UI_InvokeWidgetTransitionCallback(uintptr_t widget, int callback_arg)
 {
   unsigned int callback;
 
   callback = *(_DWORD *)(widget + 28);
   if ( !callback )
     return 0;
-  return ((int (__cdecl *)(int, int))(uintptr_t)callback)(widget, callback_arg);
+  return ((int (__cdecl *)(uintptr_t, int, DWORD))(uintptr_t)callback)(widget, callback_arg, 0);
 }
 
-static int UI_InvokeWidgetActionCallback(int widget)
+static int UI_InvokeWidgetActionCallback(uintptr_t widget)
 {
   unsigned int callback;
 
   callback = *(_DWORD *)(widget + 32);
   if ( !callback )
     return 0;
-  return ((int (__cdecl *)(int))(uintptr_t)callback)(widget);
+  return ((int (__cdecl *)(uintptr_t))(uintptr_t)callback)(widget);
 }
 
-static unsigned int Compat_WidgetPackedField(int widget, unsigned int field_offset)
+static unsigned int Compat_WidgetPackedField(uintptr_t widget, unsigned int field_offset)
 {
-  return (unsigned int)*(_DWORD *)(uintptr_t)(unsigned int)(widget + field_offset);
+  return (unsigned int)*(_DWORD *)(widget + field_offset);
 }
 
-static unsigned int Compat_WidgetSpriteSetHandle(int widget)
+static unsigned int Compat_WidgetSpriteSetHandle(uintptr_t widget)
 {
   unsigned int sprite_set_holder;
 
@@ -30599,7 +30618,7 @@ static unsigned int Compat_WidgetSpriteSetHandle(int widget)
   return (unsigned int)*(_DWORD *)(uintptr_t)sprite_set_holder;
 }
 
-static const char *Compat_WidgetPackedString(int widget, unsigned int field_offset)
+static const char *Compat_WidgetPackedString(uintptr_t widget, unsigned int field_offset)
 {
   return (const char *)(uintptr_t)Compat_WidgetPackedField(widget, field_offset);
 }
@@ -30613,7 +30632,7 @@ int  sub_419790(int result)
 // 526A2C: using guessed type int dword_526A2C;
 
 //----- (004197A0) --------------------------------------------------------
-BOOL  sub_4197A0(int a1, DWORD a2)
+BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
 {
   int v2; // ebx
   int TextXOffset; // eax
@@ -30762,14 +30781,14 @@ BOOL  sub_4197A0(int a1, DWORD a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00419B80) --------------------------------------------------------
-signed int  sub_419B80(int a1, DWORD a2)
+signed int  sub_419B80(uintptr_t a1, DWORD a2)
 {
   int v3; // esi
   int v4; // eax
   int v5; // eax
   int sprite_set_handle;
-  int v7; // eax
-  int v8; // eax
+  uintptr_t v7; // eax
+  uintptr_t v8; // eax
   int v9; // ecx
   char v10; // [esp+0h] [ebp-18h]
 
@@ -30845,11 +30864,11 @@ LABEL_34:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00419D60) --------------------------------------------------------
-int  sub_419D60(int result, int a2)
+int  sub_419D60(uintptr_t result, int a2)
 {
   if ( *(int *)result < 640 )
     return UI_InvokeWidgetTransitionCallback(result, a2);
-  return result;
+  return (int)result;
 }
 
 //----- (00419D80) --------------------------------------------------------
@@ -30868,7 +30887,7 @@ _DWORD * sub_419D80(_DWORD *result)
       if ( *(_DWORD *)widget == -1 )
         return result;
     }
-    UI_InvokeWidgetTransitionCallback((int)(uintptr_t)widget, 0);
+    UI_InvokeWidgetTransitionCallback((uintptr_t)widget, 0);
     widget += 53;
   }
   while ( *(_DWORD *)widget != -1 );
@@ -30878,12 +30897,12 @@ _DWORD * sub_419D80(_DWORD *result)
 //----- (00419DC0) --------------------------------------------------------
 signed int  sub_419DC0(_DWORD *a1, DWORD a2)
 {
-  int widget; // edx
+  uintptr_t widget; // edx
   int has_tooltip; // ebx
   signed int result; // ecx
   signed int widget_result; // eax
 
-  widget = (int)(uintptr_t)a1;
+  widget = (uintptr_t)a1;
   has_tooltip = 0;
   result = 0;
   if ( *a1 != -1 )
@@ -30922,7 +30941,7 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
 // 545150: using guessed type int dword_545150;
 
 //----- (00419E60) --------------------------------------------------------
-int  sub_419E60(int a1, int a2)
+int  sub_419E60(uintptr_t a1, int a2)
 {
   int v4; // edx
   int v5; // ecx
@@ -30958,7 +30977,7 @@ int  sub_419E60(int a1, int a2)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00419ED0) --------------------------------------------------------
-int  sub_419ED0(int a1)
+int  sub_419ED0(uintptr_t a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
     sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
@@ -30973,7 +30992,7 @@ int  sub_419ED0(int a1)
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00419F20) --------------------------------------------------------
-int  sub_419F20(int a1)
+int  sub_419F20(uintptr_t a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
     sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
@@ -30983,7 +31002,7 @@ int  sub_419F20(int a1)
 // 419F32: variable 'v1' is possibly undefined
 
 //----- (00419F50) --------------------------------------------------------
-int  sub_419F50(int a1, int a2)
+int  sub_419F50(uintptr_t a1, int a2)
 {
   *(_DWORD *)(a1 + 8) = 5;
   return sub_419D60(a1, a2);
@@ -61722,7 +61741,7 @@ int __thiscall sub_4476C0(void *this)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (004476E0) --------------------------------------------------------
-int  MainMenu_RequestExit(int a1)
+int  MainMenu_RequestExit(uintptr_t a1)
 {
   int result; // eax
 
@@ -61849,7 +61868,7 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
 }
 
 //----- (00447700) --------------------------------------------------------
-int  MainMenu_RequestCampaignMenu(int a1)
+int  MainMenu_RequestCampaignMenu(uintptr_t a1)
 {
   int result; // eax
 
@@ -61862,7 +61881,7 @@ int  MainMenu_RequestCampaignMenu(int a1)
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447720) --------------------------------------------------------
-int  MainMenu_RequestMultiplayerMenu(int a1)
+int  MainMenu_RequestMultiplayerMenu(uintptr_t a1)
 {
   int result; // eax
 
@@ -61875,7 +61894,7 @@ int  MainMenu_RequestMultiplayerMenu(int a1)
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447740) --------------------------------------------------------
-int  MainMenu_RequestCreditsCinematic(int a1)
+int  MainMenu_RequestCreditsCinematic(uintptr_t a1)
 {
   int result; // eax
 
@@ -61888,7 +61907,7 @@ int  MainMenu_RequestCreditsCinematic(int a1)
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447760) --------------------------------------------------------
-int  MainMenu_RequestOptionsMenu(int a1)
+int  MainMenu_RequestOptionsMenu(uintptr_t a1)
 {
   int result; // eax
 
@@ -61901,7 +61920,7 @@ int  MainMenu_RequestOptionsMenu(int a1)
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (00447780) --------------------------------------------------------
-int  MainMenu_RequestLoadGameMenu(int a1)
+int  MainMenu_RequestLoadGameMenu(uintptr_t a1)
 {
   int result; // eax
 
@@ -62149,9 +62168,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   {
     v10 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
     if ( v10 )
-      v10 = DLXSpriteSet_Load(v10, a2);
+      v10 = DLXSpriteSet_Load(v10, "menu\\main.s32");
     g_PlayGameMenuSpriteSetHandle = (int)v10;
-    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMain_gfx);
+    Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, 0);
     v11 = v128;
     sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
     if ( v11 && dword_5188C0 )
@@ -62162,17 +62181,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       sub_404D90((int *)&unk_51D4C0);
     DD_Pump((int)dword_544CD8, v11);
     Debug_Log(v14, v11, (DWORD)a3, (int)aDraw1);
-    (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
+    sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
     Debug_Log(v15, v11, (DWORD)a3, (int)aDraw2);
-    (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(92);
+    sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
     Debug_Log(v16, v11, (DWORD)a3, (int)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
     v17 = 0;
-    qmemcpy(v120, &g_MainMenuButtonWidgetsTemplate, 4 * v18);
-    v20 = (char *)&g_MainMenuButtonWidgetsTemplate + 4 * v18;
-    v19 = &v120[4 * v18];
-    *(_WORD *)v19 = *(_WORD *)v20;
-    v19[2] = v20[2];
+    qmemcpy(v120, g_MainMenuButtonWidgetsTemplate, sizeof(g_MainMenuButtonWidgetsTemplate));
     do
     {
       a3 = (char *)((unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v121 + v17));
@@ -62202,10 +62217,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       a2 = (signed int)dword_544CD8;
       do
       {
-        DD_Pump((int)dword_544CD8, (char)dword_544CD8);
-        sub_419DC0(v120, (DWORD)a3);
+        DD_Pump((int)dword_544CD8, 0);
+        sub_419DC0(v120, 0);
       }
-      while ( v24 == g_PlayGameMenuExitRequested );
+      while ( !g_PlayGameMenuExitRequested );
     }
     Render_Pump();
     sub_405920(&g_PlayGameMenuSpriteSetHandle);
@@ -74235,17 +74250,26 @@ signed int  Win_BeginModeChange(const char *a1, char *a2)
 {
   char *base_path;
   int query_handle;
+  int direct_file_available;
 
   query_handle = 0;
+  direct_file_available = 0;
   base_path = sub_4429C0();
   sprintf_(a2, "%savi\\%s.avi", base_path, a1);
   query_handle = sub_4427F0(a2, 0);
   if ( !query_handle )
-  {
-    sprintf_(a2, "avi\\%s.avi", a1);
-    query_handle = sub_4427F0(a2, 0);
-  }
+    direct_file_available = Compat_CanOpenReadPath(a2);
   if ( !query_handle )
+  {
+    if ( !direct_file_available )
+    {
+      sprintf_(a2, "avi\\%s.avi", a1);
+      query_handle = sub_4427F0(a2, 0);
+      if ( !query_handle )
+        direct_file_available = Compat_CanOpenReadPath(a2);
+    }
+  }
+  if ( !query_handle && !direct_file_available )
     App_RequestQuit((int)off_5199F0[(unsigned __int8)g_LanguageIndex]);
   sub_473EE0((int)&dword_543CC8, &query_handle);
   return 1;
@@ -74336,7 +74360,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     Debug_Log(a5, a4, (DWORD)a1, (int)aInit16bpp);
     LOBYTE(a4) = 16;
     Render_BeginModeSwitch(&unk_51D4C0);
-    Render_SetPixelFormat((int)&unk_51D4C0, v12, 16, (DWORD)a1);
+    Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 16, (DWORD)a1);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
     DD_Pump((int)dword_544CD8, 16);
@@ -74356,7 +74380,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     Debug_Log(v13, a4, (DWORD)a1, (int)aClose16bpp);
     LOBYTE(a4) = 8;
     Render_BeginModeSwitch(&unk_51D4C0);
-    Render_SetPixelFormat((int)&unk_51D4C0, v17, 8, (DWORD)a1);
+    Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 8, (DWORD)a1);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
     DD_Pump((int)dword_544CD8, 8);
@@ -75417,82 +75441,10 @@ unsigned int  sub_4635A0(unsigned int a1)
 int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2)
 {
   int v3; // eax
-  HANDLE *v5; // eax
-  HANDLE *v6; // eax
-  HANDLE *v7; // eax
-  HANDLE *v8; // ebx
-  HANDLE *v9; // eax
-  HANDLE *v10; // eax
-  char *v11; // eax
-  char *v12; // ebx
-  int v13; // ebx
 
   v3 = Mem_Alloc(2236, (int)&unk_50F578, 0, a2);
   if ( v3 )
-  {
-    v5 = (HANDLE *)(v3 + 167);
-    *((_BYTE *)v5 - 167) = 0;
-    *((_BYTE *)v5 - 166) = 1;
-    *(v5 - 41) = 0;
-    *(v5 - 40) = 0;
-    *(v5 - 4) = 0;
-    *(v5 - 1) = 0;
-    v6 = sub_464970(v5, 0, 0);
-    v7 = sub_464970(v6 + 1, 0, 0);
-    v8 = v7 + 1;
-    v7[1] = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v7 + 2));
-    v8[7] = 0;
-    v8[8] = 0;
-    v8[9] = 0;
-    v8[10] = 0;
-    v8[47] = 0;
-    v8[50] = 0;
-    v8[51] = 0;
-    v9 = sub_464970(v8 + 53, 0, 0) + 1;
-    *v9 = 0;
-    v9[1] = 0;
-    v9[2] = 0;
-    v10 = sub_464970(v9 + 3, 0, 0);
-    v11 = (char *)sub_464970(v10 + 1, 0, 0) - 407;
-    *(_DWORD *)(v11 + 411) = &off_50FDD4;
-    v11 += 415;
-    *(_DWORD *)v11 = 0;
-    v11 += 1509;
-    *(_DWORD *)(v11 - 1505) = 0;
-    v11 -= 1924;
-    *((_DWORD *)v11 + 485) = 0;
-    *((_DWORD *)v11 + 486) = 0;
-    *((_DWORD *)v11 + 487) = 0;
-    *((_DWORD *)v11 + 488) = 0;
-    *((_DWORD *)v11 + 489) = 0;
-    *((_DWORD *)v11 + 490) = 0;
-    *((_DWORD *)v11 + 491) = 0;
-    v12 = v11 + 1985;
-    v11[1968] = 0;
-    *(_DWORD *)(v11 + 1985) = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v11 + 1989));
-    *((_DWORD *)v12 + 7) = 0;
-    *((_DWORD *)v12 + 8) = 0;
-    v12[65] = 0;
-    v12[66] = 0;
-    *(_DWORD *)(v12 + 73) = 0;
-    v12[77] = 0;
-    *(_DWORD *)(v12 + 166) = 0;
-    *(_DWORD *)(v12 + 186) = 0;
-    *(_DWORD *)(v12 + 194) = 0;
-    v12[206] = 0;
-    v13 = (int)(v12 + 211);
-    *(_DWORD *)v13 = CreateEventA(0, 1, 1, 0);
-    v13 += 4;
-    *(_DWORD *)v13 = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v13 + 4));
-    v13 -= 2200;
-    *(_DWORD *)(v13 + 2228) = CreateEventA(0, 1, 1, 0);
-    *(_DWORD *)(v13 + 2232) = &off_50FDE4;
-    SetRect((LPRECT)(v13 + 1969), -100000, -100000, 100000, 100000);
-    v3 = v13;
-  }
+    v3 = sub_464CE0(v3);
   *a1 = v3;
   return a1;
 }
@@ -75517,85 +75469,14 @@ int * CAviDecompressor_ConstructAndInitCallbacks(
         int a4)
 {
   int v7; // eax
-  HANDLE *v9; // eax
-  HANDLE *v10; // eax
-  HANDLE *v11; // eax
-  HANDLE *v12; // ebx
-  HANDLE *v13; // eax
-  HANDLE *v14; // eax
-  char *v15; // eax
-  char *v16; // ebx
-  int v17; // ebx
 
   *a1 = 0;
   v7 = Mem_Alloc(2236, (int)&stru_50F60C, 0, (DWORD)a2);
   if ( v7 )
-  {
-    v9 = (HANDLE *)(v7 + 167);
-    *((_BYTE *)v9 - 167) = 0;
-    *((_BYTE *)v9 - 166) = 1;
-    *(v9 - 41) = 0;
-    *(v9 - 40) = 0;
-    *(v9 - 4) = 0;
-    *(v9 - 1) = 0;
-    v10 = sub_464970(v9, 0, 0);
-    v11 = sub_464970(v10 + 1, 0, 0);
-    v12 = v11 + 1;
-    v11[1] = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v11 + 2));
-    v12[7] = 0;
-    v12[8] = 0;
-    v12[9] = 0;
-    v12[10] = 0;
-    v12[47] = 0;
-    v12[50] = 0;
-    v12[51] = 0;
-    v13 = sub_464970(v12 + 53, 0, 0) + 1;
-    *v13 = 0;
-    v13[1] = 0;
-    v13[2] = 0;
-    v14 = sub_464970(v13 + 3, 0, 0);
-    v15 = (char *)sub_464970(v14 + 1, 0, 0) - 407;
-    *(_DWORD *)(v15 + 411) = &off_50FDD4;
-    v15 += 415;
-    *(_DWORD *)v15 = 0;
-    v15 += 1509;
-    *(_DWORD *)(v15 - 1505) = 0;
-    v15 -= 1924;
-    *((_DWORD *)v15 + 485) = 0;
-    *((_DWORD *)v15 + 486) = 0;
-    *((_DWORD *)v15 + 487) = 0;
-    *((_DWORD *)v15 + 488) = 0;
-    *((_DWORD *)v15 + 489) = 0;
-    *((_DWORD *)v15 + 490) = 0;
-    *((_DWORD *)v15 + 491) = 0;
-    v16 = v15 + 1985;
-    v15[1968] = 0;
-    *(_DWORD *)(v15 + 1985) = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v15 + 1989));
-    *((_DWORD *)v16 + 7) = 0;
-    *((_DWORD *)v16 + 8) = 0;
-    v16[65] = 0;
-    v16[66] = 0;
-    *(_DWORD *)(v16 + 73) = 0;
-    v16[77] = 0;
-    *(_DWORD *)(v16 + 166) = 0;
-    *(_DWORD *)(v16 + 186) = 0;
-    *(_DWORD *)(v16 + 194) = 0;
-    v16[206] = 0;
-    v17 = (int)(v16 + 211);
-    *(_DWORD *)v17 = CreateEventA(0, 1, 1, 0);
-    v17 += 4;
-    *(_DWORD *)v17 = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v17 + 4));
-    v17 -= 2200;
-    *(_DWORD *)(v17 + 2228) = CreateEventA(0, 1, 1, 0);
-    *(_DWORD *)(v17 + 2232) = &off_50FDE4;
-    SetRect((LPRECT)(v17 + 1969), -100000, -100000, 100000, 100000);
-    v7 = v17;
-  }
+    v7 = sub_464CE0(v7);
   *a1 = v7;
-  CAviDecompressor_Init(a1, a2, a3, a4);
+  if ( v7 )
+    CAviDecompressor_Init(a1, a2, a3, a4);
   return a1;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
@@ -75625,85 +75506,14 @@ void  CAviDecompressor_Init(
 int * CAviDecompressor_ConstructAndInitSource(int *a1, DWORD a2, int a3, int a4)
 {
   int v6; // eax
-  HANDLE *v8; // eax
-  HANDLE *v9; // eax
-  HANDLE *v10; // eax
-  HANDLE *v11; // ebx
-  HANDLE *v12; // eax
-  HANDLE *v13; // eax
-  char *v14; // eax
-  char *v15; // ebx
-  int v16; // ebx
 
   *a1 = 0;
   v6 = Mem_Alloc(2236, (int)&stru_50F6A0, 0, a2);
   if ( v6 )
-  {
-    v8 = (HANDLE *)(v6 + 167);
-    *((_BYTE *)v8 - 167) = 0;
-    *((_BYTE *)v8 - 166) = 1;
-    *(v8 - 41) = 0;
-    *(v8 - 40) = 0;
-    *(v8 - 4) = 0;
-    *(v8 - 1) = 0;
-    v9 = sub_464970(v8, 0, 0);
-    v10 = sub_464970(v9 + 1, 0, 0);
-    v11 = v10 + 1;
-    v10[1] = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v10 + 2));
-    v11[7] = 0;
-    v11[8] = 0;
-    v11[9] = 0;
-    v11[10] = 0;
-    v11[47] = 0;
-    v11[50] = 0;
-    v11[51] = 0;
-    v12 = sub_464970(v11 + 53, 0, 0) + 1;
-    *v12 = 0;
-    v12[1] = 0;
-    v12[2] = 0;
-    v13 = sub_464970(v12 + 3, 0, 0);
-    v14 = (char *)sub_464970(v13 + 1, 0, 0) - 407;
-    *(_DWORD *)(v14 + 411) = &off_50FDD4;
-    v14 += 415;
-    *(_DWORD *)v14 = 0;
-    v14 += 1509;
-    *(_DWORD *)(v14 - 1505) = 0;
-    v14 -= 1924;
-    *((_DWORD *)v14 + 485) = 0;
-    *((_DWORD *)v14 + 486) = 0;
-    *((_DWORD *)v14 + 487) = 0;
-    *((_DWORD *)v14 + 488) = 0;
-    *((_DWORD *)v14 + 489) = 0;
-    *((_DWORD *)v14 + 490) = 0;
-    *((_DWORD *)v14 + 491) = 0;
-    v15 = v14 + 1985;
-    v14[1968] = 0;
-    *(_DWORD *)(v14 + 1985) = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v14 + 1989));
-    *((_DWORD *)v15 + 7) = 0;
-    *((_DWORD *)v15 + 8) = 0;
-    v15[65] = 0;
-    v15[66] = 0;
-    *(_DWORD *)(v15 + 73) = 0;
-    v15[77] = 0;
-    *(_DWORD *)(v15 + 166) = 0;
-    *(_DWORD *)(v15 + 186) = 0;
-    *(_DWORD *)(v15 + 194) = 0;
-    v15[206] = 0;
-    v16 = (int)(v15 + 211);
-    *(_DWORD *)v16 = CreateEventA(0, 1, 1, 0);
-    v16 += 4;
-    *(_DWORD *)v16 = 0;
-    InitializeCriticalSection((LPCRITICAL_SECTION)(v16 + 4));
-    v16 -= 2200;
-    *(_DWORD *)(v16 + 2228) = CreateEventA(0, 1, 1, 0);
-    *(_DWORD *)(v16 + 2232) = &off_50FDE4;
-    SetRect((LPRECT)(v16 + 1969), -100000, -100000, 100000, 100000);
-    v6 = v16;
-  }
+    v6 = sub_464CE0(v6);
   *a1 = v6;
-  CAviDecompressor_InitSource(a4, a3);
+  if ( v6 )
+    CAviDecompressor_InitSource(a4, a3);
   return a1;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
@@ -75725,7 +75535,7 @@ void  CAviDecompressor_Done(_DWORD *a1)
   v1 = a1;
   v2 = *a1;
   if ( v2 )
-    (**(void (__fastcall ***)(_DWORD *, int))(v2 + 2232))(v1, 2);
+    (**(void (__fastcall ***)(int, int))(v2 + 2232))(v2, 2);
   *v1 = 0;
 }
 // 464229: variable 'v1' is possibly undefined
@@ -76107,8 +75917,6 @@ int  CAviDecompressor_SumSleepTime(int a1)
 //----- (004645D0) --------------------------------------------------------
 void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a5)(void), int a6)
 {
-  int v6; // edx
-  int v7; // ecx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   char *v9; // [esp+4h] [ebp-24h]
   IDirectDrawSurface *v10; // [esp+8h] [ebp-20h]
@@ -76120,8 +75928,8 @@ void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a
   v10 = &stru_50F734;
   CAviDecompressor_ConstructEmpty(v12, 0);
   v11 = 1;
-  CAviDecompressor_InitPos(v12, v6, a4);
-  CAviDecompressor_Init(v12, a2, (int)a1, v7);
+  CAviDecompressor_InitPos(v12, a3, a4);
+  CAviDecompressor_Init(v12, a2, (int)a1, a6);
   if ( CAviDecompressor_Initialized(v12) )
   {
     CAviDecompressor_Start(v12);
@@ -76139,8 +75947,6 @@ void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a
   }
   CAviDecompressor_dtor(v12);
 }
-// 464626: variable 'v6' is possibly undefined
-// 464637: variable 'v7' is possibly undefined
 // 464699: variable 'ExceptionList' is possibly undefined
 // 464699: variable 'v9' is possibly undefined
 // 464699: variable 'v10' is possibly undefined
@@ -76149,8 +75955,6 @@ void __stdcall PlayAvi(char *a1, IDirectDrawSurface *a2, int a3, int a4, int (*a
 //----- (004646B0) --------------------------------------------------------
 void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int (*a4)(void), int a5)
 {
-  _DWORD *v5; // edx
-  int v6; // ecx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   tagRECT *v8; // [esp+4h] [ebp-24h]
   IDirectDrawSurface *v9; // [esp+8h] [ebp-20h]
@@ -76162,8 +75966,8 @@ void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int
   v9 = &stru_50F740;
   CAviDecompressor_ConstructEmpty(v11, 0);
   v10 = 1;
-  CAviDecompressor_InitRect(v11, v5);
-  CAviDecompressor_Init(v11, a2, (int)a1, v6);
+  CAviDecompressor_InitRect(v11, a3);
+  CAviDecompressor_Init(v11, a2, (int)a1, a5);
   if ( CAviDecompressor_Initialized(v11) )
   {
     CAviDecompressor_Start(v11);
@@ -76181,8 +75985,6 @@ void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int
   }
   CAviDecompressor_dtor(v11);
 }
-// 464705: variable 'v5' is possibly undefined
-// 464712: variable 'v6' is possibly undefined
 // 464774: variable 'ExceptionList' is possibly undefined
 // 464774: variable 'v8' is possibly undefined
 // 464774: variable 'v9' is possibly undefined
@@ -76191,8 +75993,6 @@ void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int
 //----- (00464780) --------------------------------------------------------
 void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4, int (*a5)(void), int a6)
 {
-  int v6; // edx
-  int v7; // ecx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   char *v9; // [esp+4h] [ebp-24h]
   IDirectDrawSurface2 *v10; // [esp+8h] [ebp-20h]
@@ -76204,8 +76004,8 @@ void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4
   v10 = &stru_50F74C;
   CAviDecompressor_ConstructEmpty(v12, 0);
   v11 = 1;
-  CAviDecompressor_InitPos(v12, v6, a4);
-  CAviDecompressor_InitSource(v7, (int)a1);
+  CAviDecompressor_InitPos(v12, a3, a4);
+  CAviDecompressor_InitSource(a6, (int)a1);
   if ( CAviDecompressor_Initialized(v12) )
   {
     CAviDecompressor_Start(v12);
@@ -76223,8 +76023,6 @@ void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4
   }
   CAviDecompressor_dtor(v12);
 }
-// 4647D6: variable 'v6' is possibly undefined
-// 4647E7: variable 'v7' is possibly undefined
 // 464849: variable 'ExceptionList' is possibly undefined
 // 464849: variable 'v9' is possibly undefined
 // 464849: variable 'v10' is possibly undefined
@@ -76233,8 +76031,6 @@ void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4
 //----- (00464860) --------------------------------------------------------
 void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT *a3, int (*a4)(void), int a5)
 {
-  _DWORD *v5; // edx
-  int v6; // ecx
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
   tagRECT *v8; // [esp+4h] [ebp-24h]
   IDirectDrawSurface2 *v9; // [esp+8h] [ebp-20h]
@@ -76246,8 +76042,8 @@ void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT
   v9 = &stru_50F758;
   CAviDecompressor_ConstructEmpty(v11, 0);
   v10 = 1;
-  CAviDecompressor_InitRect(v11, v5);
-  CAviDecompressor_InitSource(v6, (int)a1);
+  CAviDecompressor_InitRect(v11, a3);
+  CAviDecompressor_InitSource(a5, (int)a1);
   if ( CAviDecompressor_Initialized(v11) )
   {
     CAviDecompressor_Start(v11);
@@ -76265,8 +76061,6 @@ void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT
   }
   CAviDecompressor_dtor(v11);
 }
-// 4648B5: variable 'v5' is possibly undefined
-// 4648C2: variable 'v6' is possibly undefined
 // 464924: variable 'ExceptionList' is possibly undefined
 // 464924: variable 'v8' is possibly undefined
 // 464924: variable 'v9' is possibly undefined
@@ -76418,76 +76212,23 @@ int  sub_464CD0(_DWORD *a1, int a2)
 //----- (00464CE0) --------------------------------------------------------
 int  sub_464CE0(int a1)
 {
-  int v1; // ebx
-  int v2; // eax
-  HANDLE *v3; // ebx
-  char *v4; // eax
-  int v5; // ebx
-  int v6; // ebx
-
+  memset((void *)(uintptr_t)(unsigned int)a1, 0, 2236);
   *(_BYTE *)a1 = 0;
   *(_BYTE *)(a1 + 1) = 1;
-  *(_DWORD *)(a1 + 3) = 0;
-  *(_DWORD *)(a1 + 7) = 0;
-  *(_DWORD *)(a1 + 151) = 0;
-  v1 = a1 + 167;
-  *(_DWORD *)(a1 + 163) = 0;
   *(_DWORD *)(a1 + 167) = CreateEventA(0, 0, 0, 0);
-  v1 += 4;
-  *(_DWORD *)v1 = CreateEventA(0, 0, 0, 0);
-  v1 += 4;
-  *(_DWORD *)v1 = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(v1 + 4));
-  *(_DWORD *)(v1 + 28) = 0;
-  *(_DWORD *)(v1 + 32) = 0;
-  *(_DWORD *)(v1 + 36) = 0;
-  v2 = v1 - 175;
-  *(_DWORD *)(v1 - 175 + 215) = 0;
-  *(_DWORD *)(v1 - 175 + 363) = 0;
-  *(_DWORD *)(v1 - 175 + 375) = 0;
-  v3 = (HANDLE *)(v1 - 175 + 387);
-  *(_DWORD *)(v2 + 379) = 0;
-  *v3 = CreateEventA(0, 0, 0, 0);
-  v3[1] = 0;
-  v3[2] = 0;
-  v3[3] = 0;
-  v3 += 4;
-  *v3++ = CreateEventA(0, 0, 0, 0);
-  *v3 = CreateEventA(0, 0, 0, 0);
-  v3[1] = &off_50FDD4;
-  v3[2] = 0;
-  v3[3] = 0;
-  v4 = (char *)v3 - 407;
-  *(HANDLE *)((char *)v3 + 1533) = 0;
-  *(HANDLE *)((char *)v3 + 1537) = 0;
-  *(HANDLE *)((char *)v3 + 1541) = 0;
-  *(HANDLE *)((char *)v3 + 1545) = 0;
-  *(HANDLE *)((char *)v3 + 1549) = 0;
-  *(HANDLE *)((char *)v3 + 1553) = 0;
-  *(HANDLE *)((char *)v3 + 1557) = 0;
-  v5 = (int)v3 + 1578;
-  v4[1968] = 0;
-  *(_DWORD *)v5 = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(v5 + 4));
-  *(_DWORD *)(v5 - 1985 + 2013) = 0;
-  *(_DWORD *)(v5 - 1985 + 2017) = 0;
-  *(_BYTE *)(v5 - 1985 + 2050) = 0;
-  *(_BYTE *)(v5 - 1985 + 2051) = 0;
-  *(_DWORD *)(v5 - 1985 + 2058) = 0;
-  *(_BYTE *)(v5 - 1985 + 2062) = 0;
-  *(_DWORD *)(v5 - 1985 + 2151) = 0;
-  *(_DWORD *)(v5 - 1985 + 2171) = 0;
-  *(_DWORD *)(v5 - 1985 + 2179) = 0;
-  *(_BYTE *)(v5 - 1985 + 2191) = 0;
-  v6 = v5 - 1985 + 2200;
-  *(_DWORD *)(v6 - 4) = CreateEventA(0, 1, 1, 0);
-  *(_DWORD *)v6 = 0;
-  InitializeCriticalSection((LPCRITICAL_SECTION)(v6 + 4));
-  v6 -= 2200;
-  *(_DWORD *)(v6 + 2228) = CreateEventA(0, 1, 1, 0);
-  *(_DWORD *)(v6 + 2232) = &off_50FDE4;
-  SetRect((LPRECT)(v6 + 1969), -100000, -100000, 100000, 100000);
-  return v6;
+  *(_DWORD *)(a1 + 171) = CreateEventA(0, 0, 0, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
+  *(_DWORD *)(a1 + 387) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(a1 + 403) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(a1 + 407) = CreateEventA(0, 0, 0, 0);
+  *(_DWORD *)(a1 + 411) = &off_50FDD4;
+  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
+  *(_DWORD *)(a1 + 2196) = CreateEventA(0, 1, 1, 0);
+  InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
+  *(_DWORD *)(a1 + 2228) = CreateEventA(0, 1, 1, 0);
+  *(_DWORD *)(a1 + 2232) = &off_50FDE4;
+  SetRect((LPRECT)(a1 + 1969), -100000, -100000, 100000, 100000);
+  return a1;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
 // 50FDE4: using guessed type int (*off_50FDE4)();
@@ -76495,15 +76236,7 @@ int  sub_464CE0(int a1)
 //----- (00464FD0) --------------------------------------------------------
 int  sub_464FD0(int a1, char a2)
 {
-  HANDLE *v3; // esi
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // esi
-  int v7; // ecx
-  int v8; // esi
-  int v9; // ecx
   int v11; // ecx
-  void *v12; // [esp-Ch] [ebp-58h]
 
   if ( (a2 & 4) != 0 )
   {
@@ -76514,38 +76247,27 @@ int  sub_464FD0(int a1, char a2)
   else
   {
     *(_DWORD *)(a1 + 2232) = &off_50FDE4;
-    v3 = (HANDLE *)(a1 + 2228);
     sub_4665A0(a1);
-    CloseHandle(*v3);
-    DeleteCriticalSection((LPCRITICAL_SECTION)v3 - 1);
-    v12 = *(v3 - 8);
-    v3 -= 8;
-    CloseHandle(v12);
-    DeleteCriticalSection((LPCRITICAL_SECTION)((char *)v3 - 207));
-    sub_4662B0((HANDLE *)((char *)v3 - 1781), (int)v3 - 1781, 16);
-    *(_DWORD *)(v4 - 4) = &off_50FDD4;
-    sub_465DD0(v4 - 415);
-    v6 = v5 + 407;
-    CloseHandle(*(HANDLE *)(v5 + 407));
-    CloseHandle(*(HANDLE *)(v6 - 4));
+    CloseHandle(*(HANDLE *)(a1 + 2228));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
+    CloseHandle(*(HANDLE *)(a1 + 2196));
+    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
+    sub_4662B0((_DWORD *)(a1 + 415), a1 + 415, 16);
+    *(_DWORD *)(a1 + 411) = &off_50FDD4;
+    sub_465DD0(a1);
+    CloseHandle(*(HANDLE *)(a1 + 407));
+    CloseHandle(*(HANDLE *)(a1 + 403));
     j_j__nfree_();
-    v8 = v7 - 4;
-    CloseHandle(*(HANDLE *)(v7 - 4));
+    CloseHandle(*(HANDLE *)(a1 + 387));
     j_j__nfree_();
-    v8 -= 184;
-    DeleteCriticalSection((LPCRITICAL_SECTION)(v8 - 24));
-    CloseHandle(*(HANDLE *)(v8 - 32));
-    CloseHandle(*(HANDLE *)(v8 - 36));
-    v9 = v8 - 203;
+    DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
+    CloseHandle(*(HANDLE *)(a1 + 171));
+    CloseHandle(*(HANDLE *)(a1 + 167));
     if ( (a2 & 2) != 0 )
       j__nfree_();
-    return v9;
+    return a1;
   }
 }
-// 4650A9: variable 'v4' is possibly undefined
-// 4650C9: variable 'v5' is possibly undefined
-// 46510C: variable 'v7' is possibly undefined
-// 46518F: variable 'v9' is possibly undefined
 // 4651BB: variable 'v11' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 // 50FDD4: using guessed type int (*off_50FDD4)();
@@ -77476,7 +77198,7 @@ _DWORD * sub_4665A0(int a1)
   int v3; // ecx
   int v4; // eax
   int v5; // eax
-  int *v6; // edx
+  int v6; // edx
   int v7; // eax
   int v8; // ecx
   int *v10; // eax
@@ -77541,30 +77263,45 @@ _DWORD * sub_4665A0(int a1)
   j_j__nfree_();
   v5 = *(_DWORD *)(a1 + 1952);
   *(_DWORD *)(a1 + 2058) = 0;
-  if ( v5 )
+  if ( v5 && *(_DWORD *)(a1 + 1956) )
   {
     (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 1956) + 8))(*(_DWORD *)(a1 + 1956));
     *(_DWORD *)(a1 + 1956) = 0;
     *(_DWORD *)(a1 + 1952) = 0;
   }
-  v6 = *(int **)(a1 + 1964);
+  else
+  {
+    *(_DWORD *)(a1 + 1956) = 0;
+    *(_DWORD *)(a1 + 1952) = 0;
+  }
+  v6 = *(_DWORD *)(a1 + 1964);
   if ( v6 )
   {
-    v2 = *v6;
-    (*(void (__stdcall **)(_DWORD))(*v6 + 8))(*(_DWORD *)(a1 + 1964));
+    v2 = *(_DWORD *)v6;
+    (*(void (__stdcall **)(int))(*(_DWORD *)v6 + 8))(v6);
     v7 = *(_DWORD *)(a1 + 1960);
     *(_DWORD *)(a1 + 1964) = 0;
-    (*(void (__stdcall **)(int))(*(_DWORD *)v7 + 8))(v7);
+    if ( v7 )
+      (*(void (__stdcall **)(int))(*(_DWORD *)v7 + 8))(v7);
+    *(_DWORD *)(a1 + 1960) = 0;
+  }
+  else
+  {
     *(_DWORD *)(a1 + 1960) = 0;
   }
   v8 = *(_DWORD *)(a1 + 2017);
-  if ( v8 )
+  if ( v8 && *(_DWORD *)(a1 + 2013) )
   {
     (*(void (__stdcall **)(int, _DWORD))(*(_DWORD *)v8 + 152))(v8, 0);
-    (*(void (__stdcall **)(_DWORD))(**(_DWORD **)(a1 + 2017) + 8))(*(_DWORD *)(a1 + 2017));
-    v12 = *(int **)(a1 + 2013);
+    (*(void (__stdcall **)(int))(*(_DWORD *)v8 + 8))(v8);
+    v12 = (int *)(uintptr_t)*(unsigned int *)(a1 + 2013);
     v2 = *v12;
     (*(void (__stdcall **)(int *))(*v12 + 8))(v12);
+    *(_DWORD *)(a1 + 2013) = 0;
+    *(_DWORD *)(a1 + 2017) = 0;
+  }
+  else
+  {
     *(_DWORD *)(a1 + 2013) = 0;
     *(_DWORD *)(a1 + 2017) = 0;
   }

@@ -106,3 +106,16 @@ This file classifies the current runtime/quarantine surface for executable regen
   - recovered compact software-surface destructors are invoked through an explicit 32-bit vtable helper.
   - native SDL DirectDraw-compat COM methods are invoked through an explicit native pointer-size helper.
 - The next default-route blocker is outside those wrappers: the no-arg route exits through the intro AVI/CD check before the old full-route liveness smoke can pass.
+
+## Latest default-route liveness note
+- The default route no longer needs a new host probe or fake loop to pass liveness.
+- Wrapper/seam changes in this batch stayed narrow:
+  - event `HANDLE`s created by `CreateEventA` are now compact public tokens backed by a private registry, so recovered 32-bit event fields can be waited, pulsed, and closed safely on the 64-bit host
+  - `Compat_DirectDraw_CreatePalette` exposes the existing SDL DirectDraw palette implementation through the same low32 handle style used by the recovered render context
+- The remaining fixes stayed in recovered C rather than the wrapper seam:
+  - AVI entrypoint argument recovery
+  - AVI constructor initialization through the shared byte-offset `sub_464CE0` path
+  - main-menu widget table copy/walk repair
+  - compact render-surface slot dispatch
+  - the main-menu wait-loop sentinel
+- The next runtime-wrapper candidate is still `CSS_Init` / DirectSound-era device table recovery, but it remains deferred until the original table semantics are safe enough for the SDL runtime seam.

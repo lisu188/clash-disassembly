@@ -1,15 +1,16 @@
 {
-  "phase": "lowercase_r_finite_app_winmain_shutdown_route",
-  "current_frontier": "Lowercase r is now the first finite recovered App_WinMain route. main compacts argv into the recovered command-line buffer and calls App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0). App_WinMain still enters Bootstrap_RunRecoveredEarlyStartupPrelude and Bootstrap_RunRecoveredRuntimeAndRenderInit, but command mode r skips Bootstrap_RunRecoveredGameEntry and proceeds through shutdown to exit 0. Router lookup, missing-logical-name diagnostics, mouse-speed setup, compact software-surface destructor dispatch, native SDL DirectDraw-compat COM dispatch, and readable-range guarded strcmp_ were repaired on the reached startup/shutdown surface.",
+  "phase": "default_full_route_main_menu_liveness",
+  "current_frontier": "The default no-arg route now reaches recovered main-menu presentation and the main-menu wait loop under SDL. main compacts argv into the recovered command-line buffer and calls App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0); App_WinMain enters the recovered early startup, runtime/render init, intro AVI, UI_StartAnims, and PlayGame_Dispatch path. The previous loose-AVI/CD availability failure is removed, and the reached AVI constructor, event-handle, DirectDraw palette, compact render-surface, and main-menu widget scars were reduced. Lowercase r remains the first finite recovered startup/shutdown route.",
   "last_green_targets": [
     "clash95_recovered",
     "clash95_bootstrap",
     "clash95_cpp_core",
     "clash95_cpp_regen"
   ],
-  "runtime_milestone": "build/bin/clash95_bootstrap r and build/bin/clash95_cpp_regen r both enter recovered early startup, initialize the runtime/render path, skip the game-entry handoff, run shutdown, and exit 0. The new clash95_r_command_shutdown_smoke passes. The default no-arg route is not currently a live-loop milestone in this branch: it exits through UI_StartAnims -> Video_Avi_playIn -> App_RequestQuit with [platform_sdl] Clash: Clash CD not found! before the old no-arg liveness smoke can observe a running process.",
+  "runtime_milestone": "Default build/bin/clash95_bootstrap reaches the recovered main-menu presentation/wait loop and passes clash95_full_route_smoke by staying alive until external process-group shutdown. build/bin/clash95_bootstrap r and build/bin/clash95_cpp_regen r both enter recovered early startup, initialize the runtime/render path, skip the game-entry handoff, run shutdown, and exit 0.",
   "blockers": [
-    "Recover the default no-arg intro AVI/CD/resource path under SDL; the current route exits early with Clash CD not found via Video_Avi_playIn -> App_RequestQuit.",
+    "Recover deeper menu/session interactions beyond passive main-menu liveness.",
+    "Recover a clean finite default-route quit from the recovered game loop; lowercase r is finite, but the no-arg menu route is still externally shut down by the smoke harness.",
     "CSS_Init remains deferred because the retained DirectSound-era device table is not recovered safely enough for x86-64 execution.",
     "The broader playable App_WinMain / PlayGame session milestone is still beyond the current startup route.",
     "sub_492660 and the module-qualified symbol path remain suspect if that path is reached.",
@@ -17,10 +18,11 @@
   ],
   "next_actions": [
     "Keep clash95_recovered, clash95_bootstrap, clash95_cpp_core, and clash95_cpp_regen green.",
+    "Use ctest --test-dir build --output-on-failure to verify both default full-route main-menu liveness and lowercase r finite shutdown; repeat with --repeat until-fail:3 when checking timing-sensitive default-route changes.",
     "Use tests/verify_r_command_shutdown.sh on both clash95_bootstrap and clash95_cpp_regen as the deterministic finite startup/shutdown verification.",
-    "Trace and recover the intro AVI/CD/resource path that currently calls App_RequestQuit on the default no-arg route.",
+    "Trace the next reached menu/session interaction from the recovered main-menu wait loop before broadening deeper gameplay code.",
     "Recover or quarantine the CSS_Init device-table path only when it is evidence-backed and x86-64 safe under the SDL runtime seam.",
     "Continue startup/runtime reductions without reintroducing host-side fake probe modes."
   ],
-  "resume_instructions": "On continue: reload AGENTS.md, the regenerate-cpp-executable skill, and the durable sidecars. Treat the current finite milestone as main -> App_WinMain -> Bootstrap_RunRecoveredEarlyStartupPrelude -> Bootstrap_RunRecoveredRuntimeAndRenderInit -> App_Shutdown -> exit 0 for command line r. Validate with cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j, tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap, tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen, JSON checks, and git diff --check. ctest --test-dir build --output-on-failure currently fails because the older no-arg clash95_full_route_smoke exits early through the intro AVI/CD path; do not claim full ctest is green until that default-route blocker is fixed. Remove any generated clash.log after smoke runs so it is not accidentally tracked. Do not rely on old --authentic-menu-probe, --authentic-video-init, --authentic-startup-prelude, --platform-window-only, or CLASH95 menu-probe env controls; those are no longer active bootstrap selectors."
+  "resume_instructions": "On continue: reload AGENTS.md, the regenerate-cpp-executable skill, and the durable sidecars. Treat the current default milestone as main -> App_WinMain -> Bootstrap_RunRecoveredGameEntry -> PlayGame_Dispatch -> recovered main-menu wait loop under SDL, verified by clash95_full_route_smoke. Treat lowercase r as the finite startup/shutdown route for both clash95_bootstrap and clash95_cpp_regen. Validate with cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j, tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap, tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen, ctest --test-dir build --output-on-failure, timing-sensitive repeat ctest --test-dir build --output-on-failure --repeat until-fail:3, JSON checks, and git diff --check. Remove any generated clash.log after smoke runs so it is not accidentally tracked. Do not rely on old --authentic-menu-probe, --authentic-video-init, --authentic-startup-prelude, --platform-window-only, or CLASH95 menu-probe env controls; those are no longer active bootstrap selectors."
 }

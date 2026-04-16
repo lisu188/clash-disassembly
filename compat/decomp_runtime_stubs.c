@@ -142,6 +142,8 @@ typedef struct CompatFindHandle {
 
 #define COMPAT_FIND_HANDLE_SLOTS 64
 #define COMPAT_STREAM_HANDLE_SLOTS 256
+#define COMPAT_EVENT_HANDLE_SLOTS 128
+#define COMPAT_EVENT_HANDLE_BASE 0x45560000u
 #define COMPAT_EVENT_MAGIC 0x45564E54u
 #define COMPAT_WAIT_OBJECT_0 0u
 #define COMPAT_WAIT_TIMEOUT 258u
@@ -158,6 +160,8 @@ typedef struct CompatEventHandle {
   int signaled;
 } CompatEventHandle;
 
+static CompatEventHandle *g_compat_event_handles[COMPAT_EVENT_HANDLE_SLOTS];
+
 typedef struct CompatTimeb {
   int time_value;
   unsigned short milliseconds;
@@ -165,11 +169,52 @@ typedef struct CompatTimeb {
   short dst_flag;
 } CompatTimeb;
 
+static unsigned int CompatEventHandleIndexFromHandle(HANDLE handle)
+{
+  unsigned int public_handle;
+
+  public_handle = (unsigned int)(uintptr_t)handle;
+  if ( public_handle <= COMPAT_EVENT_HANDLE_BASE
+    || public_handle > COMPAT_EVENT_HANDLE_BASE + COMPAT_EVENT_HANDLE_SLOTS )
+  {
+    return 0;
+  }
+  return public_handle - COMPAT_EVENT_HANDLE_BASE;
+}
+
+static HANDLE CompatRegisterEventHandle(CompatEventHandle *event_handle)
+{
+  unsigned int slot_index;
+
+  for ( slot_index = 0; slot_index < COMPAT_EVENT_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( !g_compat_event_handles[slot_index] )
+    {
+      g_compat_event_handles[slot_index] = event_handle;
+      return (HANDLE)(uintptr_t)(COMPAT_EVENT_HANDLE_BASE + slot_index + 1);
+    }
+  }
+  return 0;
+}
+
+static void CompatUnregisterEventHandle(HANDLE handle)
+{
+  unsigned int public_index;
+
+  public_index = CompatEventHandleIndexFromHandle(handle);
+  if ( public_index )
+    g_compat_event_handles[public_index - 1] = 0;
+}
+
 static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
 {
   CompatEventHandle *event_handle;
+  unsigned int public_index;
 
-  event_handle = (CompatEventHandle *)handle;
+  public_index = CompatEventHandleIndexFromHandle(handle);
+  if ( !public_index )
+    return 0;
+  event_handle = g_compat_event_handles[public_index - 1];
   if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
     return 0;
   return event_handle;
@@ -1829,6 +1874,7 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
   event_handle = CompatGetEventHandle(hObject);
   if ( event_handle )
   {
+    CompatUnregisterEventHandle(hObject);
     event_handle->magic = 0;
     free(event_handle);
   }
@@ -1874,6 +1920,7 @@ HANDLE __stdcall CreateEventA(
         LPCSTR lpName)
 {
   CompatEventHandle *event_handle;
+  HANDLE public_handle;
 
   (void)lpEventAttributes;
   (void)lpName;
@@ -1886,8 +1933,15 @@ HANDLE __stdcall CreateEventA(
   event_handle->magic = COMPAT_EVENT_MAGIC;
   event_handle->manual_reset = bManualReset != 0;
   event_handle->signaled = bInitialState != 0;
+  public_handle = CompatRegisterEventHandle(event_handle);
+  if ( !public_handle )
+  {
+    free(event_handle);
+    g_compat_last_error = (DWORD)ENOMEM;
+    return 0;
+  }
   g_compat_last_error = 0;
-  return (HANDLE)event_handle;
+  return public_handle;
 }
 
 DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
