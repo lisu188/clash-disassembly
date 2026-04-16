@@ -209,28 +209,131 @@ static int g_compat_signal_os_codes[COMPAT_SIGNAL_SLOT_COUNT] = {
 
 static unsigned char g_compat_ctrl_handler_installed;
 
-static int CompatPointerReadable(const void *ptr)
+#define COMPAT_READABLE_RANGE_COUNT 512
+
+typedef struct CompatReadableRange {
+  uintptr_t start;
+  uintptr_t end;
+} CompatReadableRange;
+
+static CompatReadableRange g_compat_readable_ranges[COMPAT_READABLE_RANGE_COUNT];
+static size_t g_compat_readable_range_count;
+static const CompatReadableRange *g_compat_last_readable_range;
+static int g_compat_readable_ranges_loaded;
+
+static void CompatInvalidateReadableRanges(void)
+{
+  g_compat_readable_range_count = 0;
+  g_compat_last_readable_range = 0;
+  g_compat_readable_ranges_loaded = 0;
+}
+
+static void CompatRefreshReadableRanges(void)
+{
+  FILE *maps_file;
+  char line[256];
+
+  g_compat_readable_range_count = 0;
+  g_compat_readable_ranges_loaded = 1;
+  maps_file = fopen("/proc/self/maps", "r");
+  if ( !maps_file )
+    return;
+  while ( fgets(line, sizeof(line), maps_file) )
+  {
+    unsigned long long start;
+    unsigned long long end;
+    char permissions[5];
+
+    if ( sscanf(line, "%llx-%llx %4s", &start, &end, permissions) != 3 )
+      continue;
+    if ( permissions[0] != 'r' || start >= end )
+      continue;
+    if ( g_compat_readable_range_count >= COMPAT_READABLE_RANGE_COUNT )
+      break;
+    g_compat_readable_ranges[g_compat_readable_range_count].start = (uintptr_t)start;
+    g_compat_readable_ranges[g_compat_readable_range_count].end = (uintptr_t)end;
+    ++g_compat_readable_range_count;
+  }
+  fclose(maps_file);
+}
+
+static const CompatReadableRange *CompatFindReadableRange(uintptr_t address)
+{
+  size_t left;
+  size_t right;
+
+  if ( !g_compat_readable_ranges_loaded )
+    CompatRefreshReadableRanges();
+  if ( g_compat_last_readable_range
+    && address >= g_compat_last_readable_range->start
+    && address < g_compat_last_readable_range->end )
+  {
+    return g_compat_last_readable_range;
+  }
+  left = 0;
+  right = g_compat_readable_range_count;
+  while ( left < right )
+  {
+    size_t middle;
+    const CompatReadableRange *range;
+
+    middle = left + (right - left) / 2;
+    range = &g_compat_readable_ranges[middle];
+    if ( address < range->start )
+      right = middle;
+    else if ( address >= range->end )
+      left = middle + 1;
+    else
+    {
+      g_compat_last_readable_range = range;
+      return range;
+    }
+  }
+  return 0;
+}
+
+static long CompatPageSize(void)
 {
   static long page_size;
-  uintptr_t address;
-  unsigned char residency;
 
-  if ( !ptr )
-    return 0;
   if ( !page_size )
   {
     page_size = sysconf(_SC_PAGESIZE);
     if ( page_size <= 0 )
       page_size = 4096;
   }
+  return page_size;
+}
+
+static uintptr_t CompatPointerPage(const void *ptr)
+{
+  uintptr_t address;
+
   address = (uintptr_t)ptr;
-  address &= ~((uintptr_t)page_size - 1u);
-  return mincore((void *)address, 1, &residency) == 0;
+  return address & ~((uintptr_t)CompatPageSize() - 1u);
+}
+
+static int CompatPointerPageReadable(uintptr_t page_address)
+{
+  if ( !page_address )
+    return 0;
+  return CompatFindReadableRange(page_address) != 0;
+}
+
+static int CompatPointerReadable(const void *ptr)
+{
+  if ( !ptr )
+    return 0;
+  return CompatPointerPageReadable(CompatPointerPage(ptr));
 }
 
 static int CompatSafeStrcmp(const char *lhs, const char *rhs)
 {
   size_t index;
+  uintptr_t lhs_page;
+  uintptr_t rhs_page;
+  int lhs_readable;
+  int rhs_readable;
 
   if ( lhs == rhs )
     return 0;
@@ -238,14 +341,32 @@ static int CompatSafeStrcmp(const char *lhs, const char *rhs)
     return -1;
   if ( !rhs )
     return 1;
+  lhs_page = (uintptr_t)-1;
+  rhs_page = (uintptr_t)-1;
+  lhs_readable = 0;
+  rhs_readable = 0;
   for ( index = 0; index < 4096; ++index )
   {
     unsigned char left_char;
     unsigned char right_char;
+    uintptr_t current_lhs_page;
+    uintptr_t current_rhs_page;
 
-    if ( !CompatPointerReadable(lhs + index) )
+    current_lhs_page = CompatPointerPage(lhs + index);
+    if ( current_lhs_page != lhs_page )
+    {
+      lhs_page = current_lhs_page;
+      lhs_readable = CompatPointerPageReadable(lhs_page);
+    }
+    if ( !lhs_readable )
       return CompatPointerReadable(rhs + index) ? -1 : 0;
-    if ( !CompatPointerReadable(rhs + index) )
+    current_rhs_page = CompatPointerPage(rhs + index);
+    if ( current_rhs_page != rhs_page )
+    {
+      rhs_page = current_rhs_page;
+      rhs_readable = CompatPointerPageReadable(rhs_page);
+    }
+    if ( !rhs_readable )
       return 1;
     left_char = (unsigned char)lhs[index];
     right_char = (unsigned char)rhs[index];
@@ -968,7 +1089,10 @@ static void *CompatAllocLow32(size_t size)
 #ifdef MAP_32BIT
   header = CompatTryMapSignedLow32(total_size, MAP_32BIT, 0);
   if ( header )
+  {
+    CompatInvalidateReadableRanges();
     return header + 1;
+  }
 #endif
 #ifdef MAP_FIXED_NOREPLACE
   page_size_result = sysconf(_SC_PAGESIZE);
@@ -981,7 +1105,10 @@ static void *CompatAllocLow32(size_t size)
   {
     header = CompatTryMapSignedLow32(total_size, MAP_FIXED_NOREPLACE, (void *)hint);
     if ( header )
+    {
+      CompatInvalidateReadableRanges();
       return header + 1;
+    }
   }
 #endif
   header = (CompatLow32AllocHeader *)malloc(total_size);
@@ -994,6 +1121,7 @@ static void *CompatAllocLow32(size_t size)
   }
   header->mapped_size = total_size;
   header->used_mmap = 0;
+  CompatInvalidateReadableRanges();
   return header + 1;
 }
 
@@ -1004,6 +1132,7 @@ static void CompatFreeLow32(void *ptr)
   if ( !ptr )
     return;
   header = ((CompatLow32AllocHeader *)ptr) - 1;
+  CompatInvalidateReadableRanges();
   if ( header->used_mmap )
     munmap(header, header->mapped_size);
   else

@@ -176,3 +176,16 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - The retained log-file creation slice is now restored in the full route: `createLogFiles` matches the asm-observed create/truncate/close side effect for `clash.log` and `battle.log` and no longer depends on the malformed decompiler-local `sub_4762AE` corridor.
 - CTest now validates the current full route with `clash95_full_route_smoke` instead of the removed menu-capture probe path; it checks that `clash95_bootstrap` stays alive under dummy SDL/audio and then performs external process-group shutdown.
 - The remaining front-end blockers are after this full route: clean finite live-loop shutdown, the still-skipped DirectSound-era `CSS_Init` table, and the broader playable `App_WinMain` / `PlayGame` session milestone.
+
+## Latest finite-route blocker update
+- Lowercase `r` is now a finite recovered `App_WinMain` route:
+  - `main()` still compacts argv into the recovered command-line buffer
+  - `App_WinMain` enters the recovered early startup and runtime/render init prelude
+  - command mode `r` skips `Bootstrap_RunRecoveredGameEntry`
+  - shutdown runs and the process exits `0`
+- The new `clash95_r_command_shutdown_smoke` CTest captures that route and passes for the current bootstrap binary; the same shell smoke also passes against `clash95_cpp_regen`.
+- The active front-end runtime blocker has shifted:
+  - the default no-arg route now exits early in the intro AVI/CD check, with the traced stack `App_RequestQuit -> Win_BeginModeChange -> Video_Avi_playIn -> UI_StartAnims -> PlayGame_Dispatch -> Bootstrap_RunRecoveredGameEntry -> App_WinMain -> main`
+  - direct no-arg smoke prints `[platform_sdl] Clash: Clash CD not found!`
+  - the next honest blocker is therefore intro AVI/CD/resource-path recovery under SDL, not link failure or finite shutdown
+- `CSS_Init` is still deferred independently because the DirectSound-era table is not safe enough for x86-64 SDL execution yet.

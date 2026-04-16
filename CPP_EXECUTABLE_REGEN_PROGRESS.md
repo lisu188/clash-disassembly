@@ -165,3 +165,14 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The retained log-file creation slice is back in the full route: `createLogFiles` now truncates/creates `clash.log` and `battle.log` from the asm-observed `logEnabled` branch without entering the unsafe Watcom stream-open local-variable scar.
 - CTest now tracks the same full route: the superseded menu-capture probe test was replaced by `clash95_full_route_smoke`, which starts `clash95_bootstrap` under dummy SDL/audio, requires the process to stay alive briefly, and then shuts down the process group from the harness.
 - The next executable-regeneration blockers are now authentic finite shutdown/verification, the still-skipped DirectSound-era `CSS_Init` table, and the broader playable session milestone after the full default startup route.
+
+## Latest finite shutdown update
+- The lowercase `r` command-line route is now the first finite authentic startup/shutdown milestone on the full `App_WinMain` path:
+  - `clash95_bootstrap r` enters recovered early startup and runtime/render init, skips `Bootstrap_RunRecoveredGameEntry`, runs shutdown, and exits `0`
+  - `clash95_cpp_regen r` follows the same route and exits `0`
+- The supporting recovered/runtime fixes in this batch stayed on the executable-regeneration seam:
+  - router lookup and missing-logical-name diagnostics now preserve the requested logical name and avoid early recursive `werror` diagnostics
+  - shutdown uses explicit compact-surface destructor dispatch for recovered 32-bit software-surface vtables and explicit native COM-method dispatch for SDL DirectDraw-compat vtables
+  - `strcmp_` now has cached readable-range validation so malformed recovered pointers do not crash startup comparisons
+- CTest now includes `clash95_r_command_shutdown_smoke`; that new finite smoke passes.
+- The older default no-arg liveness test is no longer green in this branch: the no-arg path exits early through `UI_StartAnims -> Video_Avi_playIn -> App_RequestQuit` with `[platform_sdl] Clash: Clash CD not found!`. The next front-end runtime blocker is therefore the intro AVI/CD/resource path, not the finite lowercase `r` route.

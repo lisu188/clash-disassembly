@@ -6822,3 +6822,34 @@
 - Ambiguous candidates deferred:
   - this is a harness alignment step, not an authentic finite shutdown recovery
   - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+
+## Batch 177 - Recover lowercase r finite startup/shutdown route
+- Current frontier:
+  - recover an authentic finite command-line route through `App_WinMain` so startup and shutdown can be verified without an external process kill
+- Blockers removed this batch:
+  - lowercase `r` command handling now matches the original route shape by entering the recovered early startup and runtime/render init prelude, then skipping `Bootstrap_RunRecoveredGameEntry`
+  - router lookup and missing-logical-name diagnostics now pass the requested logical name through the recovered `sub_4861B0` / `sub_4862C0` call shapes instead of hardcoding `werror` or recursing forever when the diagnostic router is unavailable early
+  - the mouse-speed setter now stores the asm-backed computed speed argument instead of undefined decompiler locals
+  - the shutdown path no longer calls recovered compact software-surface destructors or native SDL DirectDraw-compat COM methods through the wrong pointer width; compact-surface destructors and native COM vtable calls are now dispatched through explicit helpers
+  - `strcmp_` now uses a cached readable-range check from `/proc/self/maps`, invalidated on low32 alloc/free, so malformed recovered pointers fail safely while valid command/router names still compare normally
+  - CTest now includes `clash95_r_command_shutdown_smoke`, a deterministic finite smoke for the lowercase `r` route
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool .agent/state.json`
+  - `git diff --check`
+  - `ctest --test-dir build --output-on-failure` currently fails only because the older `clash95_full_route_smoke` no-arg liveness test exits early through the default intro AVI/CD path
+- Highest authentic runtime milestone reached:
+  - `main -> App_WinMain -> Bootstrap_RunRecoveredEarlyStartupPrelude -> Bootstrap_RunRecoveredRuntimeAndRenderInit -> App_Shutdown -> exit 0` for the lowercase `r` command
+  - the same finite route is green for both `clash95_bootstrap` and `clash95_cpp_regen`
+- Key evidence used:
+  - `clash95.asm` around `Output_Write`, `Lexer_PeekChar`, `sub_4861B0`, and `sub_4862C0` for logical-name/router diagnostics
+  - `clash95.asm` around `sub_4608D0`, `sub_44A9C0`, `sub_460580`, `sub_403E50`, `sub_404240`, `Render_BeginModeSwitch`, and `sub_474DE0` for startup/shutdown surface and vtable dispatch
+  - `bootstrap_main.c` for the current executable foothold and command-mode handoff
+- Ambiguous candidates deferred:
+  - the default no-arg route now exits before the old liveness check through `Video_Avi_playIn -> App_RequestQuit` with `[platform_sdl] Clash: Clash CD not found!`; the next front-end blocker is the authentic intro AVI/CD/resource path, not the lowercase `r` finite shutdown route
+  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+  - `sub_492660` and the module-qualified symbol path remain suspect if that path is reached

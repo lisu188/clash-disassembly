@@ -1,10 +1,39 @@
 # Verification
 
+## 2026-04-16 Lowercase r Finite Shutdown Slice
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - failed because the older no-arg `clash95_full_route_smoke` exits early; the new `clash95_r_command_shutdown_smoke` passes
+- Direct default route check:
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap`
+  - exit `1`
+  - prints `[platform_sdl] Clash: Clash CD not found!`
+- Traced default-route exit:
+  - `App_RequestQuit -> Win_BeginModeChange -> Video_Avi_playIn -> UI_StartAnims -> PlayGame_Dispatch -> Bootstrap_RunRecoveredGameEntry -> App_WinMain -> main`
+- `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - passed
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - passed
+- `python3 -m json.tool .agent/state.json`
+  - passed
+- `git diff --check`
+  - passed
+- `ps -C clash95_bootstrap -C clash95_cpp_regen -o pid,cmd`
+  - no lingering executable processes
+- Runtime note:
+  - the first finite authentic startup/shutdown milestone is now lowercase `r`, not the no-arg route
+  - the default no-arg route currently needs intro AVI/CD/resource recovery before the old liveness smoke can be made green again
+
 ## 2026-04-16 Full-Route Startup Slice
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
   - passed
 - `ctest --test-dir build --output-on-failure`
-  - passed after replacing the superseded menu-capture probe with `clash95_full_route_smoke`
+  - passed at this point after replacing the superseded menu-capture probe with `clash95_full_route_smoke`; superseded by the later lowercase `r` update above, where the no-arg route exits early through the intro AVI/CD check
 - `timeout -k 1s 2s build/bin/clash95_bootstrap`
   - forced-timeout live-loop smoke; no lingering process after cleanup
 - `timeout -k 1s 2s build/bin/clash95_cpp_regen`

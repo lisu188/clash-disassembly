@@ -1277,7 +1277,8 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
   if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(hInstance, lpCommandLine, &command_mode) )
     return 0;
   Bootstrap_RunRecoveredRuntimeAndRenderInit(command_mode, lpCommandLine);
-  Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
+  if ( command_mode != 'r' )
+    Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
 
   /*
    * The original boot slice invokes an object cleanup callback hanging off

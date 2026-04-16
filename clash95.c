@@ -1528,7 +1528,7 @@ _DWORD * sub_460410(int a1, int a2);
 int  sub_460490(int a1, int a2, char a3, DWORD a4);
 int  sub_460580(int a1);
 unsigned int  DD_Pump(int a1, int a2, ...);
-void  sub_4608D0(int a1, char a2, DWORD a3);
+void  sub_4608D0(int a1, int a2, DWORD a3);
 BOOL  DD_IsFlipping(int a1);
 BOOL  DD_IsLost(int a1);
 BOOL  Input_PollEventsUntil(int a1, char a2);
@@ -2243,7 +2243,7 @@ signed int sub_47C530();
 int sub_47C5E0();
 signed int  sub_47C610(int a1, int a2, int a3);
 signed int  sub_47C660(int a1, int a2, int a3);
-BOOL sub_47C680();
+BOOL sub_47C680(int a1);
 int sub_47C6B0();
 int  sub_47C6C0(int result);
 _DWORD * sub_47C6D0(_DWORD *a1, int (*a2)(void), int (*a3)(void));
@@ -2518,14 +2518,14 @@ int sub_485FF0();
 int sub_486020();
 signed int  sub_486080(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
 signed int  sub_486150(int a1);
-int sub_4861B0();
+int  sub_4861B0(int a1);
 int __fastcall sub_4861E0(int a1, int a2);
 signed int  sub_486200(int a1);
 signed int  sub_486240(int a1);
 int  sub_486280(int result);
 int  sub_486290(int result);
 int sub_4862A0();
-int sub_4862C0();
+int  sub_4862C0(int a1);
 // int __fastcall _wcpp_4_fatal_runtime_error__(_DWORD, _DWORD); weak
 char *__thiscall sub_486414(void *this);
 void  sub_486468(int result);
@@ -2648,7 +2648,7 @@ char * Str_Append(const char *a1, char *a2, unsigned int *a3, _DWORD *a4);
 char * sub_48B0F0(int a1, char *a2, _DWORD *a3, int a4, unsigned int *a5);
 char * Str_AppendCharEscaping(int a1, char *a2, unsigned int *a3, int *a4, unsigned int a5);
 _DWORD * sub_48B1E0(int a1, int a2, signed int a3, int a4);
-int  sub_48B270(_DWORD *a1, _DWORD *a2);
+int  sub_48B270(int a1, int a2, _DWORD *a3);
 int __fastcall sub_48B2E0(int a1, int a2);
 int __fastcall nullsub_11(_DWORD, _DWORD); // weak
 int __thiscall sub_48B3D0(void *this);
@@ -2665,7 +2665,7 @@ signed int  sub_48B530(int a1, int a2, double a3);
 signed int  sub_48B550(int a1, int a2, double a3);
 int  sub_48B570(int a1, int a2, int a3, int a4, int a5, int a6);
 signed int  sub_48B660(unsigned int a1, int a2, int a3);
-signed int sub_48B750();
+signed int sub_48B750(int a1);
 int __fastcall sub_48B790(int a1, _DWORD *a2);
 signed int  sub_48B840(int a1, double a2);
 signed int  sub_48B910(int a1, double a2);
@@ -14845,37 +14845,25 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
 //----- (00403E50) --------------------------------------------------------
 int  sub_403E50(int a1, char a2)
 {
-  int v3; // ecx
-  int v4; // eax
-  int v6; // ecx
-  int v7; // ecx
+  int result; // eax
 
   if ( (a2 & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(a1, &unk_50F020);
     j_j__nfree_();
-    return v6;
+    return a1;
   }
-  else
+  *(_DWORD *)(a1 + 184) = off_50EE24;
+  nfree_(*(_DWORD *)(a1 + 4));
+  *(_DWORD *)(a1 + 4) = 0;
+  result = sub_4732E0(a1 + 8) - 8;
+  if ( (a2 & 2) != 0 )
   {
-    *(_DWORD *)(a1 + 184) = off_50EE24;
-    nfree_(a1);
-    *(_DWORD *)(v3 + 4) = 0;
-    v4 = sub_4732E0(v3 + 8);
-    if ( (a2 & 2) != 0 )
-    {
-      j__nfree_();
-      return v7;
-    }
-    else
-    {
-      return v4 - 8;
-    }
+    j__nfree_();
+    return result;
   }
+  return result;
 }
-// 403E75: variable 'v3' is possibly undefined
-// 403E9D: variable 'v6' is possibly undefined
-// 403EA9: variable 'v7' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 50EE24: using guessed type int (*off_50EE24[5])();
@@ -15151,44 +15139,31 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
 //----- (00404240) --------------------------------------------------------
 int  sub_404240(_DWORD *a1, char a2)
 {
-  _DWORD *v2; // ecx
-  int v4; // edx
-  int v5; // eax
-  int v7; // ecx
-  int v8; // ecx
+  int owned_buffer; // edx
+  int result; // eax
 
-  v2 = a1;
   if ( (a2 & 4) != 0 )
   {
     _wcpp_4_dtor_array_store__(a1, &unk_50EFE0);
     j_j__nfree_();
-    return v7;
+    return (int)a1;
   }
-  else
+  owned_buffer = a1[47];
+  a1[46] = off_50EE74;
+  if ( owned_buffer && a1[48] )
   {
-    v4 = a1[47];
-    a1[46] = off_50EE74;
-    if ( v4 && a1[48] )
-    {
-      sub_4732E0(v4);
-      j__nfree_();
-    }
-    v5 = sub_4732E0((int)(v2 + 2));
-    if ( (a2 & 2) != 0 )
-    {
-      j__nfree_();
-      return v8;
-    }
-    else
-    {
-      return v5 - 8;
-    }
+    sub_4732E0(owned_buffer);
+    j__nfree_();
   }
+  result = sub_4732E0((int)(a1 + 2)) - 8;
+  if ( (a2 & 2) != 0 )
+  {
+    j__nfree_();
+    return result;
+  }
+  return result;
 }
 // 40426C: conditional instruction was optimized away because edx.4!=0
-// 40427F: variable 'v2' is possibly undefined
-// 4042A3: variable 'v7' is possibly undefined
-// 4042AF: variable 'v8' is possibly undefined
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 // 50EE74: using guessed type int (*off_50EE74[5])();
 
@@ -15520,6 +15495,36 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
 }
 // 404750: variable 'v12' is possibly undefined
 
+static void Compat_InvokeNativeComMethod0(int object_handle, unsigned int x86_vtable_offset)
+{
+  uintptr_t *vtable;
+  void (*method)(void *);
+
+  if ( !object_handle )
+    return;
+  vtable = *(uintptr_t **)(uintptr_t)(unsigned int)object_handle;
+  if ( !vtable )
+    return;
+  method = (void (*)(void *))(uintptr_t)vtable[x86_vtable_offset / 4];
+  if ( method )
+    method((void *)(uintptr_t)(unsigned int)object_handle);
+}
+
+static void Compat_InvokeCompactSurfaceDestructor(int surface_handle, int flags)
+{
+  int vtable;
+  int (*destructor)(int, int);
+
+  if ( !surface_handle )
+    return;
+  vtable = *(_DWORD *)(surface_handle + 184);
+  if ( !vtable )
+    return;
+  destructor = (int (*)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(vtable);
+  if ( destructor )
+    destructor(surface_handle, flags);
+}
+
 //----- (00404830) --------------------------------------------------------
 int  Render_BeginModeSwitch(_DWORD *a1)
 {
@@ -15529,7 +15534,7 @@ int  Render_BeginModeSwitch(_DWORD *a1)
 
   v2 = (_DWORD *)a1[49];
   if ( v2 && *v2 )
-    (*(void (__stdcall **)(_DWORD, HWND, int))(*(_DWORD *)*v2 + 80))(*v2, hWnd, 11);
+    Compat_DirectDraw_SetCooperativeLevel((LPDIRECTDRAW)(uintptr_t)(unsigned int)*v2, hWnd, 11);
   v3 = (_DWORD *)a1[49];
   a1[47] = 0;
   if ( v3 )
@@ -15539,7 +15544,7 @@ int  Render_BeginModeSwitch(_DWORD *a1)
   }
   result = a1[52];
   if ( result )
-    result = (**(int (***)(void))(result + 184))();
+    Compat_InvokeCompactSurfaceDestructor(result, 2);
   a1[49] = 0;
   a1[52] = 0;
   return result;
@@ -63444,7 +63449,7 @@ void  sub_44A9C0(int a1, int a2, DWORD a3)
   sub_404BC0((int)&unk_51D4C0, *(char *)(a1 + 26));
   _wcpp_4_copy_array__(v6[0]);
   sub_404C80((int *)&unk_51D4C0, v6);
-  sub_4608D0((int)dword_544CD8, 0, a3);
+  sub_4608D0((int)dword_544CD8, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
   if ( (int *)a1 == &dword_5188B0 )
   {
     if ( *(_DWORD *)(a1 + 16) )
@@ -73006,20 +73011,23 @@ int  sub_460490(int a1, int a2, char a3, DWORD a4)
 int  sub_460580(int a1)
 {
   int surface_handle;
-  void (**release_proc)(int, int);
+  int vtable;
+  int (*release_proc)(int, int);
 
   sub_405920((int *)(a1 + 64));
   surface_handle = *(_DWORD *)(a1 + 8);
   if ( surface_handle )
   {
-    release_proc = *(void (***)(int, int))(surface_handle + 184);
-    (*release_proc)(surface_handle, 2);
+    vtable = *(_DWORD *)(surface_handle + 184);
+    release_proc = (int (*)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(vtable);
+    release_proc(surface_handle, 2);
   }
   surface_handle = *(_DWORD *)(a1 + 12);
   if ( !surface_handle )
     return 0;
-  release_proc = *(void (***)(int, int))(surface_handle + 184);
-  (*release_proc)(surface_handle, 2);
+  vtable = *(_DWORD *)(surface_handle + 184);
+  release_proc = (int (*)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(vtable);
+  release_proc(surface_handle, 2);
   return 0;
 }
 
@@ -73179,16 +73187,11 @@ unsigned int  DD_Pump(int a1, int a2, ...)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004608D0) --------------------------------------------------------
-void  sub_4608D0(int a1, char a2, DWORD a3)
+void  sub_4608D0(int a1, int a2, DWORD a3)
 {
-  int v4; // edx
-  int v5; // ecx
-
   Debug_Log(a1, a2, a3, (int)aMouse_speedD);
-  *(_DWORD *)(v5 + 32) = v4;
+  *(_DWORD *)(a1 + 32) = a2;
 }
-// 4608E1: variable 'v4' is possibly undefined
-// 4608E1: variable 'v5' is possibly undefined
 
 //----- (004608F0) --------------------------------------------------------
 BOOL  DD_IsFlipping(int a1)
@@ -85622,13 +85625,13 @@ int  sub_472860(int a1, int a2, int a3)
 _BYTE * sub_4728F0(unsigned int a1)
 {
   signed int v1; // ecx
-  _DWORD **v2; // eax
-  _DWORD *v3; // edx
-  _DWORD *v4; // esi
+  int free_list_slot; // eax
+  int free_node; // edx
+  int block; // esi
   signed int i; // eax
   _BYTE *v7; // edx
-  int v8; // ecx
-  _BYTE *v9; // esi
+  int allocation_size; // ecx
+  int allocated_block; // esi
   int j; // eax
 
   v1 = a1;
@@ -85641,39 +85644,39 @@ _BYTE * sub_4728F0(unsigned int a1)
   {
     v1 = 4;
   }
-  v2 = (_DWORD **)(4 * v1 + dword_54DBA8);
-  v3 = *v2;
-  if ( *v2 )
+  free_list_slot = 4 * v1 + dword_54DBA8;
+  free_node = *(_DWORD *)free_list_slot;
+  if ( free_node )
   {
-    v4 = *v2;
-    *v2 = (_DWORD *)*v3;
-    for ( i = 0; i < v1; v3 = (_DWORD *)((char *)v3 + 1) )
+    block = free_node;
+    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
+    for ( i = 0; i < v1; ++free_node )
     {
       ++i;
-      *(_BYTE *)v3 = 0;
+      *(_BYTE *)free_node = 0;
     }
-    return v4;
+    return (_BYTE *)block;
   }
   else
   {
-    v7 = (_BYTE *)sub_472620((_DWORD *)v1);
-    v9 = v7;
-    for ( j = 0; j < v8; ++v7 )
+    allocation_size = v1;
+    v7 = (_BYTE *)sub_472620((_DWORD *)allocation_size);
+    allocated_block = (int)v7;
+    for ( j = 0; j < allocation_size; ++v7 )
     {
       ++j;
       *v7 = 0;
     }
-    return v9;
+    return (_BYTE *)allocated_block;
   }
 }
-// 472956: variable 'v8' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472980) --------------------------------------------------------
 _DWORD * sub_472980(unsigned int a1)
 {
-  _DWORD **v1; // ecx
-  _DWORD *v2; // edx
+  int free_list_slot; // ecx
+  int free_node; // edx
 
   if ( a1 >= 4 )
   {
@@ -85684,12 +85687,12 @@ _DWORD * sub_472980(unsigned int a1)
   {
     a1 = 4;
   }
-  v1 = (_DWORD **)(dword_54DBA8 + 4 * a1);
-  v2 = *v1;
-  if ( *v1 )
+  free_list_slot = dword_54DBA8 + 4 * a1;
+  free_node = *(_DWORD *)free_list_slot;
+  if ( free_node )
   {
-    *v1 = (_DWORD *)*v2;
-    return v2;
+    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
+    return (_DWORD *)free_node;
   }
   return (_DWORD *)sub_472620((_DWORD *)a1);
 }
@@ -85698,8 +85701,8 @@ _DWORD * sub_472980(unsigned int a1)
 //----- (004729C0) --------------------------------------------------------
 _DWORD * Mem_NewArray(unsigned int a1)
 {
-  _DWORD **v1; // ecx
-  _DWORD *v2; // edx
+  int free_list_slot; // ecx
+  int free_node; // edx
 
   if ( a1 >= 4 )
   {
@@ -85710,12 +85713,12 @@ _DWORD * Mem_NewArray(unsigned int a1)
   {
     a1 = 4;
   }
-  v1 = (_DWORD **)(dword_54DBA8 + 4 * a1);
-  v2 = *v1;
-  if ( *v1 )
+  free_list_slot = dword_54DBA8 + 4 * a1;
+  free_node = *(_DWORD *)free_list_slot;
+  if ( free_node )
   {
-    *v1 = (_DWORD *)*v2;
-    return v2;
+    *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
+    return (_DWORD *)free_node;
   }
   return (_DWORD *)sub_472620((_DWORD *)a1);
 }
@@ -87587,7 +87590,7 @@ _DWORD * sub_474DE0(_DWORD *a1)
   int v6; // edi
 
   if ( *a1 )
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)*a1 + 76))(*a1);
+    Compat_InvokeNativeComMethod0(*a1, 76);
   v2 = a1[2];
   if ( v2 )
   {
@@ -87603,24 +87606,24 @@ _DWORD * sub_474DE0(_DWORD *a1)
   v4 = a1[3];
   if ( v4 )
   {
-    (*(void (__thiscall **)(int, _DWORD))(*(_DWORD *)v4 + 8))(v4, a1[3]);
+    Compat_InvokeNativeComMethod0(v4, 8);
     a1[3] = 0;
   }
   v5 = a1[5];
   if ( v5 )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v5 + 8))(a1[5]);
+    Compat_InvokeNativeComMethod0(v5, 8);
     a1[5] = 0;
   }
   v6 = a1[4];
   if ( v6 )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)v6 + 8))(a1[4]);
+    Compat_InvokeNativeComMethod0(v6, 8);
     a1[4] = 0;
   }
   if ( *a1 )
   {
-    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)*a1 + 8))(*a1);
+    Compat_InvokeNativeComMethod0(*a1, 8);
     *a1 = 0;
   }
   return a1;
@@ -93371,16 +93374,18 @@ signed int  sub_47C4E0(int a1, int a2, int a3)
 signed int sub_47C530()
 {
   int i; // edx
-  int v1; // edx
+  int (*clear_callback)(void); // eax
   signed int result; // eax
-  int v3; // ecx
 
   sub_486240((int)off_51A618[0]);
   if ( sub_47C5E0() )
   {
     dword_51A180 = 1;
-    for ( i = dword_51A19C; i; i = *(_DWORD *)(v1 + 12) )
-      (*(void (**)(void))(i + 4))();
+    for ( i = dword_51A19C; i; i = *(_DWORD *)(i + 12) )
+    {
+      clear_callback = (int (*)(void))(uintptr_t)(unsigned int)*(_DWORD *)(i + 4);
+      clear_callback();
+    }
     result = sub_486200((int)off_51A618[0]);
     if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
       result = sub_48ACE0(1, 0);
@@ -93389,13 +93394,11 @@ signed int sub_47C530()
   else
   {
     sub_4859A0((int)aConstrct, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aSomeConstructs, v3);
+    Output_Write((int)off_51A614[0], (int)aSomeConstructs, 0);
     return sub_486200((int)off_51A618[0]);
   }
   return result;
 }
-// 47C55C: variable 'v1' is possibly undefined
-// 47C5C8: variable 'v3' is possibly undefined
 // 51A180: using guessed type int dword_51A180;
 // 51A19C: using guessed type int dword_51A19C;
 // 51A614: using guessed type char *off_51A614[5];
@@ -93407,25 +93410,25 @@ signed int sub_47C530()
 //----- (0047C5E0) --------------------------------------------------------
 int sub_47C5E0()
 {
-  int v0; // edx
+  int item; // edx
   int result; // eax
-  int v2; // edx
+  int (*query_callback)(void); // eax
 
-  v0 = dword_51A1A0;
-  if ( !dword_51A1A0 )
+  item = dword_51A1A0;
+  if ( !item )
     return 1;
   while ( 1 )
   {
-    result = (*(int (**)(void))(v0 + 4))();
+    query_callback = (int (*)(void))(uintptr_t)(unsigned int)*(_DWORD *)(item + 4);
+    result = query_callback();
     if ( !result )
       break;
-    v0 = *(_DWORD *)(v2 + 12);
-    if ( !v0 )
+    item = *(_DWORD *)(item + 12);
+    if ( !item )
       return 1;
   }
   return result;
 }
-// 47C5F4: variable 'v2' is possibly undefined
 // 51A1A0: using guessed type int dword_51A1A0;
 
 //----- (0047C610) --------------------------------------------------------
@@ -93445,11 +93448,11 @@ signed int  sub_47C660(int a1, int a2, int a3)
 // 51A19C: using guessed type int dword_51A19C;
 
 //----- (0047C680) --------------------------------------------------------
-BOOL sub_47C680()
+BOOL sub_47C680(int a1)
 {
   _DWORD v3[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  dword_51A19C = sub_48B270((_DWORD *)dword_51A19C, v3);
+  dword_51A19C = sub_48B270(a1, dword_51A19C, v3);
   return v3[0] != 0;
 }
 // 51A19C: using guessed type int dword_51A19C;
@@ -94017,7 +94020,7 @@ signed int sub_47CEC0()
     sub_495590();
     sub_495E00();
     dword_51A1AC = 0;
-    sub_47C680();
+    sub_47C680((int)aBload);
     return 1;
   }
 }
@@ -96052,58 +96055,43 @@ int sub_47F190()
 //----- (0047F1C0) --------------------------------------------------------
 int  sub_47F1C0(int a1)
 {
-  int result; // eax
-  int v2; // edx
-  int v3; // ecx
-  int v4; // ecx
-  int v5; // ecx
-  int v6; // ecx
-  _DWORD *v7; // eax
-  int *v8; // edx
-  int v9; // eax
-  int v10; // edx
+  int module; // ecx
+  int focus_entry; // edx
 
-  result = Module_Print(a1);
-  if ( !dword_51A200 || v2 != *(_DWORD *)dword_51A200 )
+  module = a1;
+  Module_Print(a1);
+  if ( !dword_51A200 || module != *(_DWORD *)dword_51A200 )
   {
     if ( dword_51A20C )
     {
-      Output_Write((int)off_51A618[0], (int)aFocus_0, v3);
-      Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)v4 + 16), v4);
+      Output_Write((int)off_51A618[0], (int)aFocus_0, 0);
+      Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)module + 16), module);
       if ( dword_51A200 )
       {
-        Output_Write((int)off_51A618[0], (int)aFrom, v5);
-        Output_Write((int)off_51A618[0], *(_DWORD *)(**(_DWORD **)dword_51A200 + 16), v6);
+        Output_Write((int)off_51A618[0], (int)aFrom, 0);
+        Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)*(_DWORD *)dword_51A200 + 16), dword_51A200);
       }
-      Output_Write((int)off_51A618[0], (int)asc_502E94, v5);
+      Output_Write((int)off_51A618[0], (int)asc_502E94, 0);
     }
-    v7 = *(_DWORD **)(dword_54DBA8 + 48);
-    if ( v7 )
+    focus_entry = *(_DWORD *)(dword_54DBA8 + 48);
+    if ( focus_entry )
     {
-      dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
-      *(_DWORD *)(dword_54DBA8 + 48) = *v7;
-      v8 = (int *)dword_54DBAC;
+      dword_54DBAC = focus_entry;
+      *(_DWORD *)(dword_54DBA8 + 48) = *(_DWORD *)focus_entry;
+      focus_entry = dword_54DBAC;
     }
     else
     {
-      v8 = (int *)sub_472620((_DWORD *)0xC);
+      focus_entry = sub_472620((_DWORD *)0xC);
     }
-    *v8 = v3;
-    v9 = sub_490D30(v3);
-    *(_DWORD *)(v10 + 4) = v9;
-    result = dword_51A200;
-    *(_DWORD *)(v10 + 8) = dword_51A200;
-    dword_51A200 = v10;
+    *(_DWORD *)focus_entry = module;
+    *(_DWORD *)(focus_entry + 4) = sub_490D30(module);
+    *(_DWORD *)(focus_entry + 8) = dword_51A200;
+    dword_51A200 = focus_entry;
     dword_51A204 = 1;
   }
-  return result;
+  return dword_51A200;
 }
-// 47F1D8: variable 'v2' is possibly undefined
-// 47F1F1: variable 'v3' is possibly undefined
-// 47F1F6: variable 'v4' is possibly undefined
-// 47F218: variable 'v5' is possibly undefined
-// 47F22E: variable 'v6' is possibly undefined
-// 47F264: variable 'v10' is possibly undefined
 // 51A200: using guessed type int dword_51A200;
 // 51A204: using guessed type int dword_51A204;
 // 51A20C: using guessed type int dword_51A20C;
@@ -98630,14 +98618,14 @@ signed int * Str_Intern(char *a1, int a2)
   v4 = *(_DWORD *)(4 * v15 + dword_54DD50);
   if ( v4 )
   {
-    while ( strcmp_(v4, *(_DWORD *)(v4 + 16)) )
+    while ( strcmp_(v2, *(_DWORD *)(v4 + 16)) )
     {
-      v3 = v5;
-      v4 = *v5;
+      v3 = (signed int *)v4;
+      v4 = *(_DWORD *)v4;
       if ( !v4 )
         goto LABEL_6;
     }
-    return v5;
+    return (signed int *)v4;
   }
   else
   {
@@ -98873,8 +98861,8 @@ int  sub_482100(_BYTE *a1, signed int a2)
   int v7; // eax
   signed int v8; // eax
   _BYTE *v9; // edx
-  _BYTE *v10; // ecx
-  _DWORD *v11; // edx
+  int v10; // ecx
+  int free_node; // edx
   signed int v12; // eax
   _DWORD *v13; // eax
   __int16 v14; // dx
@@ -98891,6 +98879,7 @@ int  sub_482100(_BYTE *a1, signed int a2)
   }
   v4 = sub_4824A0((int)a1, 0xA7u, a2);
   v6 = *(_DWORD *)(dword_54DD5C + 4 * v4);
+  v5 = 0;
   v20 = v4;
   if ( v6 )
   {
@@ -98903,10 +98892,10 @@ int  sub_482100(_BYTE *a1, signed int a2)
         if ( a2 > 0 )
         {
           v9 = a1;
-          v10 = *(_BYTE **)(v6 + 16);
+          v10 = *(_DWORD *)(v6 + 16);
           do
           {
-            if ( *v10 != *v9 )
+            if ( *(_BYTE *)v10 != *v9 )
               break;
             ++v9;
             ++v8;
@@ -98926,11 +98915,11 @@ int  sub_482100(_BYTE *a1, signed int a2)
   else
   {
 LABEL_10:
-    v11 = *(_DWORD **)(dword_54DBA8 + 88);
-    if ( v11 )
+    free_node = *(_DWORD *)(dword_54DBA8 + 88);
+    if ( free_node )
     {
-      dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 88);
-      *(_DWORD *)(dword_54DBA8 + 88) = *v11;
+      dword_54DBAC = free_node;
+      *(_DWORD *)(dword_54DBA8 + 88) = *(_DWORD *)free_node;
       v12 = dword_54DBAC;
     }
     else
@@ -99325,8 +99314,8 @@ _DWORD * sub_4826D0(int a1, int a2, int a3, int a4)
 //----- (004827B0) --------------------------------------------------------
 int  sub_4827B0(int a1, _DWORD *a2, int a3, int a4)
 {
-  _DWORD *v6; // ebp
-  _DWORD *v7; // eax
+  int free_node; // ebp
+  int link_node; // eax
   int result; // eax
 
   if ( *(_DWORD *)(a1 + 4) )
@@ -99335,25 +99324,24 @@ int  sub_4827B0(int a1, _DWORD *a2, int a3, int a4)
     sub_486020();
   }
   *(_BYTE *)(a1 + 12) |= 1u;
-  v6 = *(_DWORD **)(dword_54DBA8 + 32);
-  if ( v6 )
+  free_node = *(_DWORD *)(dword_54DBA8 + 32);
+  if ( free_node )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 32);
-    *(_DWORD *)(dword_54DBA8 + 32) = *v6;
-    v7 = (_DWORD *)dword_54DBAC;
+    dword_54DBAC = free_node;
+    *(_DWORD *)(dword_54DBA8 + 32) = *(_DWORD *)free_node;
+    link_node = dword_54DBAC;
   }
   else
   {
-    v7 = (_DWORD *)sub_472620((_DWORD *)8);
+    link_node = sub_472620((_DWORD *)8);
   }
-  *v7 = a1;
-  v7[1] = *a2;
-  *a2 = v7;
+  *(_DWORD *)link_node = a1;
+  *(_DWORD *)(link_node + 4) = *a2;
+  *a2 = link_node;
   result = ++dword_51A934;
   dword_51A938 += a4 + 8 + a3;
   return result;
 }
-// 4827EA: variable 'a3' is possibly undefined
 // 51A934: using guessed type int dword_51A934;
 // 51A938: using guessed type int dword_51A938;
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -101545,7 +101533,7 @@ signed int  sub_4856F0(signed int result, char *a2)
   char *v3; // ebx
   int v4; // ecx
   int v5; // edx
-  char v6; // cl
+  char saved_char; // cl
 
   v2 = result;
   v3 = a2;
@@ -101559,39 +101547,35 @@ signed int  sub_4856F0(signed int result, char *a2)
       v5 = (int)v3;
       v3 += 500;
       LOBYTE(v4) = *v3;
+      saved_char = *v3;
       *v3 = 0;
       Output_Write(v2, v5, v4);
-      *v3 = v6;
+      *v3 = saved_char;
     }
     return Output_Write(v2, (int)v3, v4);
   }
   return result;
 }
-// 485724: variable 'v6' is possibly undefined
 
 //----- (00485740) --------------------------------------------------------
 signed int  sub_485740(int a1, double a2)
 {
   int v2; // eax
-  int v3; // ecx
 
   v2 = sub_485D70(a1, a2);
-  return Output_Write(v3, v2, v3);
+  return Output_Write(a1, v2, a1);
 }
-// 485758: variable 'v3' is possibly undefined
 
 //----- (00485770) --------------------------------------------------------
 signed int __fastcall sub_485770(int a1, int a2)
 {
-  int v2; // ecx
   _BYTE v4[32]; // [esp+0h] [ebp-24h] BYREF
   int v5; // [esp+20h] [ebp-4h]
 
   v5 = a1;
   sprintf_(v4, "%ld", a2);
-  return Output_Write(v2, (int)v4, v2);
+  return Output_Write(v5, (int)v4, v5);
 }
-// 48578D: variable 'v2' is possibly undefined
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (004857A0) --------------------------------------------------------
@@ -102053,7 +102037,7 @@ int  Lexer_PeekChar(int a1, unsigned int a2)
   if ( !dword_51A604 )
   {
 LABEL_12:
-    sub_4862C0();
+    sub_4862C0(a1);
     return -1;
   }
   while ( !*(_DWORD *)(v4 + 24) || !sub_4861E0(a1, v4) )
@@ -102207,39 +102191,37 @@ signed int  sub_486080(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
 //----- (00486150) --------------------------------------------------------
 signed int  sub_486150(int a1)
 {
-  int v2; // ecx
-  _DWORD *v3; // esi
-  _DWORD *v4; // ecx
+  int router; // ecx
+  _DWORD *previous_router; // esi
 
-  v2 = dword_51A604;
-  v3 = 0;
-  if ( !dword_51A604 )
+  router = dword_51A604;
+  previous_router = 0;
+  if ( !router )
     return 0;
-  while ( strcmp_(v2, a1) )
+  while ( strcmp_(*(_DWORD *)router, a1) )
   {
-    v3 = v4;
-    v2 = v4[8];
-    if ( !v2 )
+    previous_router = (_DWORD *)router;
+    router = *(_DWORD *)(router + 32);
+    if ( !router )
       return 0;
   }
-  if ( v3 )
-    v3[8] = v4[8];
+  if ( previous_router )
+    previous_router[8] = *(_DWORD *)(router + 32);
   else
-    dword_51A604 = v4[8];
-  sub_472A00(v4, 36);
+    dword_51A604 = *(_DWORD *)(router + 32);
+  sub_472A00((_DWORD *)router, 36);
   return 1;
 }
-// 486173: variable 'v4' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A604: using guessed type int dword_51A604;
 
 //----- (004861B0) --------------------------------------------------------
-int sub_4861B0()
+int  sub_4861B0(int a1)
 {
   int logical_name; // ebx
   int router; // ecx
 
-  logical_name = (int)off_51A614[0];
+  logical_name = a1;
   router = dword_51A604;
   if ( !dword_51A604 )
     return 0;
@@ -102273,46 +102255,42 @@ int __fastcall sub_4861E0(int a1, int a2)
 //----- (00486200) --------------------------------------------------------
 signed int  sub_486200(int a1)
 {
-  int v2; // ecx
-  int v3; // ecx
+  int router; // ecx
 
-  v2 = dword_51A604;
-  if ( !dword_51A604 )
+  router = dword_51A604;
+  if ( !router )
     return 0;
-  while ( strcmp_(v2, a1) )
+  while ( strcmp_(*(_DWORD *)router, a1) )
   {
-    v2 = *(_DWORD *)(v3 + 32);
-    if ( !v2 )
+    router = *(_DWORD *)(router + 32);
+    if ( !router )
       return 0;
   }
-  *(_DWORD *)(v3 + 4) = 0;
+  *(_DWORD *)(router + 4) = 0;
   return 1;
 }
-// 48621C: variable 'v3' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A604: using guessed type int dword_51A604;
 
 //----- (00486240) --------------------------------------------------------
 signed int  sub_486240(int a1)
 {
-  int v2; // ecx
-  int v3; // ecx
+  int router; // ecx
   signed int result; // eax
 
-  v2 = dword_51A604;
-  if ( !dword_51A604 )
+  router = dword_51A604;
+  if ( !router )
     return 0;
-  while ( strcmp_(v2, a1) )
+  while ( strcmp_(*(_DWORD *)router, a1) )
   {
-    v2 = *(_DWORD *)(v3 + 32);
-    if ( !v2 )
+    router = *(_DWORD *)(router + 32);
+    if ( !router )
       return 0;
   }
   result = 1;
-  *(_DWORD *)(v3 + 4) = 1;
+  *(_DWORD *)(router + 4) = 1;
   return result;
 }
-// 48625C: variable 'v3' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A604: using guessed type int dword_51A604;
 
@@ -102340,20 +102318,22 @@ int sub_4862A0()
 // 51A608: using guessed type int dword_51A608;
 
 //----- (004862C0) --------------------------------------------------------
-int sub_4862C0()
+int  sub_4862C0(int a1)
 {
-  int v0; // ecx
-  int v1; // ecx
-  int v2; // ecx
+  static int reporting_router_error;
+  int result; // eax
 
+  if ( reporting_router_error )
+    return 0;
+  reporting_router_error = 1;
   sub_4859A0((int)aRouter, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aLogicalName, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aWasNotRecogniz, v2);
+  Output_Write((int)off_51A614[0], (int)aLogicalName, 0);
+  if ( a1 )
+    Output_Write((int)off_51A614[0], a1, 0);
+  result = Output_Write((int)off_51A614[0], (int)aWasNotRecogniz, 0);
+  reporting_router_error = 0;
+  return result;
 }
-// 4862E0: variable 'v0' is possibly undefined
-// 4862EC: variable 'v1' is possibly undefined
-// 4862FB: variable 'v2' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (00486414) --------------------------------------------------------
@@ -105856,7 +105836,7 @@ _DWORD * sub_48B1E0(int a1, int a2, signed int a3, int a4)
     v11 = a3;
     do
     {
-      if ( a2 >= *(_DWORD *)(v11 + 8) )
+      if ( a2 >= *(int *)(v11 + 8) )
         break;
       v8 = v11;
       v11 = *(_DWORD *)(v11 + 12);
@@ -105886,37 +105866,35 @@ _DWORD * sub_48B1E0(int a1, int a2, signed int a3, int a4)
 // 54DBAC: using guessed type int dword_54DBAC;
 
 //----- (0048B270) --------------------------------------------------------
-int  sub_48B270(_DWORD *a1, _DWORD *a2)
+int  sub_48B270(int a1, int a2, _DWORD *a3)
 {
-  int v2; // edi
-  _DWORD *v4; // ecx
-  _DWORD *v5; // ebx
-  _DWORD *v6; // ecx
+  int list_head; // edi
+  int current; // ecx
+  int previous; // ebx
 
-  v2 = (int)a1;
-  v4 = a1;
-  *a2 = 0;
-  v5 = 0;
-  if ( !a1 )
-    return v2;
-  while ( strcmp_(v4, *v4) )
+  list_head = a2;
+  current = a2;
+  *a3 = 0;
+  previous = 0;
+  if ( !current )
+    return list_head;
+  while ( strcmp_(a1, *(_DWORD *)current) )
   {
-    v5 = v6;
-    v4 = (_DWORD *)v6[3];
-    if ( !v4 )
-      return v2;
+    previous = current;
+    current = *(_DWORD *)(current + 12);
+    if ( !current )
+      return list_head;
   }
-  *a2 = 1;
-  if ( v5 )
-    v5[3] = v6[3];
+  *a3 = 1;
+  if ( previous )
+    *(_DWORD *)(previous + 12) = *(_DWORD *)(current + 12);
   else
-    v2 = v6[3];
-  dword_54DBAC = (int)v6;
-  *v6 = *(_DWORD *)(dword_54DBA8 + 64);
+    list_head = *(_DWORD *)(current + 12);
+  dword_54DBAC = current;
+  *(_DWORD *)current = *(_DWORD *)(dword_54DBA8 + 64);
   *(_DWORD *)(dword_54DBA8 + 64) = dword_54DBAC;
-  return v2;
+  return list_head;
 }
-// 48B295: variable 'v6' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -106037,26 +106015,25 @@ signed int  sub_48B550(int a1, int a2, double a3)
 //----- (0048B570) --------------------------------------------------------
 int  sub_48B570(int a1, int a2, int a3, int a4, int a5, int a6)
 {
-  int v9; // ecx
-  int v10; // ebx
+  int watch_item; // ecx
+  int previous_watch_item; // ebx
   int result; // eax
-  int v12; // ecx
   _DWORD *v13; // edx
   _DWORD *v14; // eax
 
-  v9 = dword_51A94C;
-  v10 = 0;
-  if ( dword_51A94C )
+  watch_item = dword_51A94C;
+  previous_watch_item = 0;
+  if ( watch_item )
   {
     while ( 1 )
     {
-      result = strcmp_(v9, a1);
+      result = strcmp_(*(_DWORD *)watch_item, a1);
       if ( !result )
         break;
-      if ( a3 < *(_DWORD *)(v12 + 12) )
-        v10 = v12;
-      v9 = *(_DWORD *)(v12 + 24);
-      if ( !v9 )
+      if ( a3 < *(_DWORD *)(watch_item + 12) )
+        previous_watch_item = watch_item;
+      watch_item = *(_DWORD *)(watch_item + 24);
+      if ( !watch_item )
         goto LABEL_6;
     }
   }
@@ -106080,10 +106057,10 @@ LABEL_6:
     v14[1] = a4;
     v14[4] = a5;
     v14[5] = a6;
-    if ( v10 )
+    if ( previous_watch_item )
     {
-      v14[6] = *(_DWORD *)(v10 + 24);
-      *(_DWORD *)(v10 + 24) = v14;
+      v14[6] = *(_DWORD *)(previous_watch_item + 24);
+      *(_DWORD *)(previous_watch_item + 24) = (int)v14;
       return 1;
     }
     else
@@ -106152,23 +106129,23 @@ signed int  sub_48B660(unsigned int a1, int a2, int a3)
 // 51A94C: using guessed type int dword_51A94C;
 
 //----- (0048B750) --------------------------------------------------------
-signed int sub_48B750()
+signed int sub_48B750(int a1)
 {
-  _DWORD *v0; // ecx
-  int v1; // ecx
+  int watch_item; // ecx
+  int value_pointer; // eax
 
-  v0 = (_DWORD *)dword_51A94C;
+  watch_item = dword_51A94C;
   if ( !dword_51A94C )
     return -1;
-  while ( strcmp_(v0, *v0) )
+  while ( strcmp_(a1, *(_DWORD *)watch_item) )
   {
-    v0 = *(_DWORD **)(v1 + 24);
-    if ( !v0 )
+    watch_item = *(_DWORD *)(watch_item + 24);
+    if ( !watch_item )
       return -1;
   }
-  return **(_DWORD **)(v1 + 4);
+  value_pointer = *(_DWORD *)(watch_item + 4);
+  return *(_DWORD *)(uintptr_t)(unsigned int)value_pointer;
 }
-// 48B76C: variable 'v1' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A94C: using guessed type int dword_51A94C;
 
@@ -108275,53 +108252,39 @@ LABEL_4:
 //----- (0048D970) --------------------------------------------------------
 int  sub_48D970(int a1, char a2)
 {
-  _DWORD *v4; // ecx
-  signed int v5; // edx
-  char v6; // ah
-  int v7; // ebx
-  int v8; // edx
-  int v9; // eax
-  int v10; // ecx
-  _DWORD *v11; // ecx
-  int v12; // ecx
+  int free_template_record; // ecx
+  int template_record; // edx
+  int module_data; // eax
 
-  v4 = *(_DWORD **)(dword_54DBA8 + 144);
-  if ( v4 )
+  free_template_record = *(_DWORD *)(dword_54DBA8 + 144);
+  if ( free_template_record )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 144);
-    *(_DWORD *)(dword_54DBA8 + 144) = *v4;
-    v5 = dword_54DBAC;
+    dword_54DBAC = free_template_record;
+    *(_DWORD *)(dword_54DBA8 + 144) = *(_DWORD *)free_template_record;
+    template_record = dword_54DBAC;
   }
   else
   {
-    v5 = sub_472620((_DWORD *)0x24);
+    template_record = sub_472620((_DWORD *)0x24);
   }
-  *(_DWORD *)(v5 + 4) = 0;
-  v6 = *(_BYTE *)(v5 + 24);
-  *(_DWORD *)v5 = a1;
-  *(_BYTE *)(v5 + 24) = v6 & 0xFE;
-  v7 = *(_DWORD *)(v5 + 24);
-  *(_DWORD *)(v5 + 20) = 0;
-  *(_DWORD *)(v5 + 24) = a2 & 1 | v7;
-  LOBYTE(v7) = *(_BYTE *)(v5 + 24);
-  *(_DWORD *)(v5 + 32) = 0;
-  *(_BYTE *)(v5 + 24) = v7 | 4;
-  LOWORD(v7) = *(_WORD *)(v5 + 24);
-  *(_DWORD *)(v5 + 28) = 0;
-  *(_DWORD *)(v5 + 16) = 0;
-  *(_WORD *)(v5 + 24) = v7 & 5;
-  if ( sub_48B750() )
-    sub_48B510(1, v8);
-  v9 = sub_491620(0, dword_54E654);
-  *(_DWORD *)(v10 + 8) = v9;
-  sub_4A8B40(v10);
-  sub_4BBF90(v11, (int)v11);
-  return v12;
+  *(_DWORD *)(template_record + 4) = 0;
+  *(_DWORD *)template_record = a1;
+  *(_BYTE *)(template_record + 24) &= 0xFEu;
+  *(_DWORD *)(template_record + 20) = 0;
+  *(_DWORD *)(template_record + 24) |= a2 & 1;
+  *(_DWORD *)(template_record + 32) = 0;
+  *(_BYTE *)(template_record + 24) |= 4u;
+  *(_DWORD *)(template_record + 28) = 0;
+  *(_DWORD *)(template_record + 16) = 0;
+  *(_WORD *)(template_record + 24) &= 5u;
+  if ( sub_48B750((int)aFacts_0) )
+    sub_48B510(1, template_record);
+  module_data = sub_491620(0, dword_54E654);
+  *(_DWORD *)(template_record + 8) = module_data;
+  sub_4A8B40(template_record);
+  sub_4BBF90((_DWORD *)template_record, template_record);
+  return template_record;
 }
-// 48DA38: variable 'v8' is possibly undefined
-// 48DA0B: variable 'v10' is possibly undefined
-// 48DA17: variable 'v11' is possibly undefined
-// 48DA1C: variable 'v12' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E654: using guessed type int dword_54E654;
@@ -111315,15 +111278,13 @@ signed int sub_490CB0()
 int  sub_490CF0(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
 
   result = sub_4A9400(a1, dword_54E648, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 64);
+  dword_54DBAC = a1;
+  *(_DWORD *)a1 = *(_DWORD *)(dword_54DBA8 + 64);
   *(_DWORD *)(dword_54DBA8 + 64) = dword_54DBAC;
   return result;
 }
-// 490D05: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E648: using guessed type int dword_54E648;
@@ -111850,21 +111811,17 @@ int sub_4914E0()
 //----- (004914F0) --------------------------------------------------------
 int  sub_4914F0(int a1)
 {
-  int v2; // ecx
-  int v3; // ecx
+  int current; // ecx
 
-  v2 = dword_51A9BC;
-  if ( !dword_51A9BC )
-    return 0;
-  while ( strcmp_(v2, a1) )
+  current = dword_51A9BC;
+  while ( current )
   {
-    v2 = *(_DWORD *)(v3 + 28);
-    if ( !v2 )
-      return 0;
+    if ( !strcmp_(*(_DWORD *)current, a1) )
+      return current;
+    current = *(_DWORD *)(current + 28);
   }
-  return v3;
+  return 0;
 }
-// 49150C: variable 'v3' is possibly undefined
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A9BC: using guessed type int dword_51A9BC;
 
@@ -111981,78 +111938,75 @@ int  sub_491620(int result, int a2)
 //----- (00491680) --------------------------------------------------------
 int sub_491680()
 {
-  _DWORD *v0; // edx
-  signed int v1; // ecx
-  signed int *v2; // eax
-  signed int **v3; // ecx
-  int v4; // ebx
-  _DWORD *v6; // eax
-  int v7; // ecx
-  int v8; // esi
-  int v9; // ecx
-  __int64 v10; // rax
+  int free_module; // edx
+  int module; // ecx
+  signed int *module_name; // eax
+  int index; // esi
+  int construct; // ecx
+  int slot_offset; // edx
+  int construct_data; // eax
+  int (__fastcall *construct_initializer)(int, int); // eax
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 128);
-  if ( v0 )
+  free_module = *(_DWORD *)(dword_54DBA8 + 128);
+  if ( free_module )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 128);
-    *(_DWORD *)(dword_54DBA8 + 128) = *v0;
-    v1 = dword_54DBAC;
+    dword_54DBAC = free_module;
+    *(_DWORD *)(dword_54DBA8 + 128) = *(_DWORD *)free_module;
+    module = dword_54DBAC;
   }
   else
   {
-    v1 = sub_472620((_DWORD *)0x20);
+    module = sub_472620((_DWORD *)0x20);
   }
-  v2 = Str_Intern(aMain_1, v1);
-  *v3 = v2;
-  ++v2[1];
-  v3[7] = 0;
-  v3[1] = 0;
-  v3[3] = 0;
-  v3[4] = 0;
-  v3[6] = 0;
-  v4 = (int)v3;
+  module_name = Str_Intern(aMain_1, module);
+  *(_DWORD *)module = module_name;
+  ++module_name[1];
+  *(_DWORD *)(module + 28) = 0;
+  *(_DWORD *)(module + 4) = 0;
+  *(_DWORD *)(module + 12) = 0;
+  *(_DWORD *)(module + 16) = 0;
+  *(_DWORD *)(module + 24) = 0;
   if ( dword_51A9B8 )
   {
-    v6 = sub_472980(4 * dword_51A9B8);
-    *(_DWORD *)(v7 + 8) = v6;
-    v8 = 0;
-    v9 = dword_51A9BC;
+    *(_DWORD *)(module + 8) = sub_472980(4 * dword_51A9B8);
+    index = 0;
+    construct = dword_51A9BC;
     if ( dword_51A9B8 > 0 )
     {
-      HIDWORD(v10) = 0;
+      slot_offset = 0;
       do
       {
-        if ( !v9 )
+        if ( !construct )
           break;
-        if ( *(_DWORD *)(v9 + 8) )
+        if ( *(_DWORD *)(construct + 8) )
         {
-          v10 = ((__int64 (__fastcall *)(int, _DWORD))*(_DWORD *)(v9 + 8))(v9, HIDWORD(v10));
-          *(_DWORD *)(HIDWORD(v10) + *(_DWORD *)(v4 + 8)) = v10;
-          LODWORD(v10) = *(_DWORD *)(HIDWORD(v10) + *(_DWORD *)(v4 + 8));
-          *(_DWORD *)(v10 + 4) = 0;
-          *(_DWORD *)(v10 + 8) = 0;
-          *(_DWORD *)v10 = v4;
+          construct_initializer = (int (__fastcall *)(int, int))(uintptr_t)(unsigned int)*(_DWORD *)(construct + 8);
+          construct_data = construct_initializer(construct, slot_offset);
+          *(_DWORD *)(slot_offset + *(_DWORD *)(module + 8)) = construct_data;
+          construct_data = *(_DWORD *)(slot_offset + *(_DWORD *)(module + 8));
+          *(_DWORD *)(construct_data + 4) = 0;
+          *(_DWORD *)(construct_data + 8) = 0;
+          *(_DWORD *)construct_data = module;
         }
         else
         {
-          *(_DWORD *)(HIDWORD(v10) + *(_DWORD *)(v4 + 8)) = 0;
+          *(_DWORD *)(slot_offset + *(_DWORD *)(module + 8)) = 0;
         }
-        HIDWORD(v10) += 4;
-        ++v8;
-        v9 = *(_DWORD *)(v9 + 28);
+        slot_offset += 4;
+        ++index;
+        construct = *(_DWORD *)(construct + 28);
       }
-      while ( v8 < dword_51A9B8 );
+      while ( index < dword_51A9B8 );
     }
   }
   else
   {
-    v3[2] = 0;
+    *(_DWORD *)(module + 8) = 0;
   }
   sub_4C11B0(1);
-  dword_51A9B4 = v4;
-  dword_51A9AC = v4;
-  return Module_Print(v4);
+  dword_51A9B4 = module;
+  dword_51A9AC = module;
+  return Module_Print(module);
 }
 // 4916B3: variable 'v3' is possibly undefined
 // 491728: variable 'v7' is possibly undefined
@@ -112105,22 +112059,22 @@ int  sub_4917E0(int a1)
 int sub_4917F0()
 {
   int result; // eax
-  int v1; // edx
+  int next_module; // edx
 
   if ( dword_51A9AC )
   {
     do
     {
+      next_module = *(_DWORD *)(dword_51A9AC + 28);
       result = sub_491840(dword_51A9AC);
-      dword_51A9AC = v1;
+      dword_51A9AC = next_module;
     }
-    while ( v1 );
+    while ( next_module );
   }
   dword_51A9B0 = 0;
   dword_51A9B4 = 0;
   return result;
 }
-// 491808: variable 'v1' is possibly undefined
 // 51A9AC: using guessed type int dword_51A9AC;
 // 51A9B0: using guessed type int dword_51A9B0;
 // 51A9B4: using guessed type int dword_51A9B4;
@@ -112128,86 +112082,91 @@ int sub_4917F0()
 //----- (00491840) --------------------------------------------------------
 int  sub_491840(int result)
 {
-  int v1; // esi
-  int v2; // ecx
-  int v3; // edx
-  int v4; // ecx
-  int v5; // ebx
-  int *v6; // edx
-  int v7; // ecx
-  int *v8; // edx
-  int v9; // ecx
+  int module; // esi
+  int construct; // edx
+  int construct_index; // ecx
+  int slot_offset; // ebx
+  int construct_data; // eax
+  void (*construct_cleanup)(int); // eax
+  int node; // edx
+  int next_node; // ecx
+  int module_name; // ebp
 
-  v1 = result;
+  module = result;
   if ( result )
   {
     Module_Print(result);
-    if ( *(_DWORD *)(v1 + 8) )
+    if ( *(_DWORD *)(module + 8) )
     {
-      v3 = dword_51A9BC;
-      v4 = 0;
+      construct = dword_51A9BC;
+      construct_index = 0;
       if ( dword_51A9B8 > 0 )
       {
-        v5 = 0;
+        slot_offset = 0;
         do
         {
-          if ( !v3 )
+          if ( !construct )
             break;
-          if ( *(_DWORD *)(v3 + 12) )
-            (*(void (__fastcall **)(int))(v3 + 12))(v4);
-          v5 += 4;
-          ++v4;
-          v3 = *(_DWORD *)(v3 + 28);
+          if ( *(_DWORD *)(construct + 12) )
+          {
+            construct_data = *(_DWORD *)(slot_offset + *(_DWORD *)(module + 8));
+            construct_cleanup = (void (*)(int))(uintptr_t)(unsigned int)*(_DWORD *)(construct + 12);
+            construct_cleanup(construct_data);
+          }
+          slot_offset += 4;
+          ++construct_index;
+          construct = *(_DWORD *)(construct + 28);
         }
-        while ( v4 < dword_51A9B8 );
+        while ( construct_index < dword_51A9B8 );
       }
-      sub_472A00(*(_DWORD **)(v1 + 8), 4 * dword_51A9B8);
+      sub_472A00((_DWORD *)*(_DWORD *)(module + 8), 4 * dword_51A9B8);
     }
-    sub_482530(*(_DWORD *)v1, v2);
-    v6 = *(int **)(v1 + 12);
-    if ( v6 )
+    sub_482530(*(_DWORD *)module, 0);
+    node = *(_DWORD *)(module + 12);
+    if ( node )
     {
       do
       {
-        v7 = v6[3];
-        if ( *v6 )
-          sub_482530(*v6, v7);
-        if ( v6[1] )
-          sub_482530(v6[1], v7);
-        if ( v6[2] )
-          sub_482530(v6[2], v7);
-        dword_54DBAC = (int)v6;
-        *v6 = *(_DWORD *)(dword_54DBA8 + 64);
+        next_node = *(_DWORD *)(node + 12);
+        if ( *(_DWORD *)node )
+          sub_482530(*(_DWORD *)node, 0);
+        if ( *(_DWORD *)(node + 4) )
+          sub_482530(*(_DWORD *)(node + 4), 0);
+        if ( *(_DWORD *)(node + 8) )
+          sub_482530(*(_DWORD *)(node + 8), 0);
+        dword_54DBAC = node;
+        *(_DWORD *)node = *(_DWORD *)(dword_54DBA8 + 64);
         *(_DWORD *)(dword_54DBA8 + 64) = dword_54DBAC;
-        v6 = (int *)v7;
+        node = next_node;
       }
-      while ( v7 );
+      while ( next_node );
     }
-    v8 = *(int **)(v1 + 16);
-    if ( v8 )
+    node = *(_DWORD *)(module + 16);
+    if ( node )
     {
       do
       {
-        v9 = v8[3];
-        if ( *v8 )
-          sub_482530(*v8, v9);
-        if ( v8[1] )
-          sub_482530(v8[1], v9);
-        if ( v8[2] )
-          sub_482530(v8[2], v9);
-        dword_54DBAC = (int)v8;
-        *v8 = *(_DWORD *)(dword_54DBA8 + 64);
+        next_node = *(_DWORD *)(node + 12);
+        if ( *(_DWORD *)node )
+          sub_482530(*(_DWORD *)node, 0);
+        if ( *(_DWORD *)(node + 4) )
+          sub_482530(*(_DWORD *)(node + 4), 0);
+        if ( *(_DWORD *)(node + 8) )
+          sub_482530(*(_DWORD *)(node + 8), 0);
+        dword_54DBAC = node;
+        *(_DWORD *)node = *(_DWORD *)(dword_54DBA8 + 64);
         *(_DWORD *)(dword_54DBA8 + 64) = dword_54DBAC;
-        v8 = (int *)v9;
+        node = next_node;
       }
-      while ( v9 );
+      while ( next_node );
     }
-    if ( *(_DWORD *)(v1 + 4) )
-      sub_472A00(*(_DWORD **)(v1 + 4), strlen(*(const char **)(v1 + 4)) + 1);
-    dword_54DBAC = v1;
-    *(_DWORD *)v1 = *(_DWORD *)(dword_54DBA8 + 128);
-    result = dword_54DBA8;
+    module_name = *(_DWORD *)(module + 4);
+    if ( module_name )
+      sub_472A00((_DWORD *)module_name, strlen((const char *)module_name) + 1);
+    dword_54DBAC = module;
+    *(_DWORD *)module = *(_DWORD *)(dword_54DBA8 + 128);
     *(_DWORD *)(dword_54DBA8 + 128) = dword_54DBAC;
+    result = dword_54DBAC;
   }
   return result;
 }
@@ -113023,28 +112982,26 @@ signed int * sub_4926A0(int a1, char *a2, int a3)
 //----- (00492700) --------------------------------------------------------
 int  sub_492700(_BYTE *a1)
 {
-  signed int v1; // eax
-  int v2; // ecx
-  int v3; // ebx
-  signed int *v5; // eax
-  int *v6; // eax
-  char *v7; // ecx
+  signed int qualifier_length; // eax
+  signed int *module_symbol; // eax
+  int *module_record; // eax
+  signed int *local_symbol; // eax
 
-  v1 = sub_492620(a1);
-  v3 = v1;
-  if ( !v1 )
-    return v2;
-  v5 = sub_492660(v1);
-  if ( !v5 )
+  qualifier_length = sub_492620(a1);
+  if ( !qualifier_length )
+    return (int)a1;
+  module_symbol = sub_492660(qualifier_length);
+  if ( !module_symbol )
     return 0;
-  v6 = sub_4919B0((_BYTE *)v5[4]);
-  if ( !v6 )
+  module_record = sub_4919B0((_BYTE *)module_symbol[4]);
+  if ( !module_record )
     return 0;
-  Module_Print((int)v6);
-  return sub_4926A0(v3, v7, (int)v7)[4];
+  Module_Print((int)module_record);
+  local_symbol = sub_4926A0(qualifier_length, (char *)a1, (int)a1);
+  if ( !local_symbol )
+    return 0;
+  return local_symbol[4];
 }
-// 492710: variable 'v2' is possibly undefined
-// 492746: variable 'v7' is possibly undefined
 
 //----- (00492760) --------------------------------------------------------
 int  sub_492760(char *a1, _DWORD *a2, _BYTE *a3, int a4, int a5)
@@ -113356,15 +113313,15 @@ signed int sub_492BE0()
 int  sub_492C10(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
+  _DWORD *freed_node; // ecx
 
   result = sub_4A9400(a1, dword_54E650, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 492C25: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E650: using guessed type int dword_54E650;
@@ -113372,7 +113329,7 @@ int  sub_492C10(int a1)
 //----- (00492C60) --------------------------------------------------------
 int  sub_492C60(_BYTE *a1, int a2)
 {
-  return sub_4A8BD0(a1, a2);
+  return sub_4A8BD0(a1, dword_54E650);
 }
 // 54E650: using guessed type int dword_54E650;
 
@@ -113533,107 +113490,104 @@ int **sub_492E10()
 //----- (00492EB0) --------------------------------------------------------
 __int16 * sub_492EB0(__int16 *result)
 {
-  __int16 *i; // ecx
-  int v2; // ecx
-  int v3; // ecx
+  __int16 *node; // ecx
+  int child_node; // eax
+  int next_node; // ecx
 
-  for ( i = result; i; i = *(__int16 **)(v3 + 10) )
+  for ( node = result; node; node = (__int16 *)(uintptr_t)(unsigned int)next_node )
   {
-    sub_48F790(*i, *(_DWORD *)(i + 1), (int)i);
-    result = (__int16 *)sub_492EB0(*(_DWORD *)(v2 + 6));
+    sub_48F790(*node, *(_DWORD *)(node + 1), (int)(uintptr_t)node);
+    child_node = *(_DWORD *)((char *)node + 6);
+    sub_492EB0((__int16 *)(uintptr_t)(unsigned int)child_node);
+    next_node = *(_DWORD *)((char *)node + 10);
   }
   return result;
 }
-// 492ECA: variable 'v2' is possibly undefined
-// 492ED2: variable 'v3' is possibly undefined
 
 //----- (00492EE0) --------------------------------------------------------
 __int16 * sub_492EE0(__int16 *result)
 {
-  __int16 *i; // ecx
-  int v2; // ecx
-  int v3; // ecx
+  __int16 *node; // ecx
+  int child_node; // eax
+  int next_node; // ecx
 
-  for ( i = result; i; i = *(__int16 **)(v3 + 10) )
+  for ( node = result; node; node = (__int16 *)(uintptr_t)(unsigned int)next_node )
   {
-    sub_48F800(*i, *(__int16 **)(i + 1), (int)i);
-    result = (__int16 *)sub_492EE0(*(_DWORD *)(v2 + 6));
+    sub_48F800(*node, *(__int16 **)(node + 1), (int)(uintptr_t)node);
+    child_node = *(_DWORD *)((char *)node + 6);
+    sub_492EE0((__int16 *)(uintptr_t)(unsigned int)child_node);
+    next_node = *(_DWORD *)((char *)node + 10);
   }
   return result;
 }
-// 492EFA: variable 'v2' is possibly undefined
-// 492F02: variable 'v3' is possibly undefined
 
 //----- (00492F10) --------------------------------------------------------
 _DWORD * sub_492F10(_DWORD *result)
 {
-  int v1; // eax
-  _DWORD *v2; // esi
-  int v3; // ecx
+  int node_count; // eax
+  _DWORD *copy; // esi
 
   if ( result )
   {
-    v1 = sub_4943A0((int)result);
-    v2 = Mem_NewArray(14 * v1);
-    sub_492F50(v3, (int)v2, 0);
-    return v2;
+    node_count = sub_4943A0((int)result);
+    copy = Mem_NewArray(14 * node_count);
+    sub_492F50((int)result, (int)copy, 0);
+    return copy;
   }
   return result;
 }
-// 492F3B: variable 'v3' is possibly undefined
 
 //----- (00492F50) --------------------------------------------------------
 int  sub_492F50(int a1, int a2, int a3)
 {
-  int v3; // ecx
-  int v5; // edi
-  int v6; // eax
-  int v7; // eax
+  int node; // ecx
+  int current_index; // edi
+  int output_node; // eax
+  int child_node; // edx
+  int next_node; // edi
 
-  v3 = a1;
+  node = a1;
   if ( !a1 )
     return a3;
-  while ( v3 )
+  while ( node )
   {
-    v5 = a3;
-    *(_WORD *)(a2 + 14 * a3) = *(_WORD *)v3;
-    v6 = a2 + 14 * a3;
-    *(_DWORD *)(v6 + 2) = *(_DWORD *)(v3 + 2);
+    current_index = a3;
+    output_node = a2 + 14 * a3;
+    *(_WORD *)output_node = *(_WORD *)node;
+    *(_DWORD *)(output_node + 2) = *(_DWORD *)(node + 2);
     ++a3;
-    if ( *(_DWORD *)(v3 + 6) )
+    child_node = *(_DWORD *)(node + 6);
+    if ( child_node )
     {
-      *(_DWORD *)(v6 + 6) = a2 + 14 * a3;
-      a3 = sub_492F50(*(_DWORD *)(v3 + 6), a2, a3);
+      *(_DWORD *)(output_node + 6) = a2 + 14 * a3;
+      a3 = sub_492F50(child_node, a2, a3);
     }
     else
     {
-      *(_DWORD *)(v6 + 6) = 0;
+      *(_DWORD *)(output_node + 6) = 0;
     }
-    v7 = a2 + 14 * v5;
-    if ( *(_DWORD *)(v3 + 10) )
-      *(_DWORD *)(v7 + 10) = a2 + 14 * a3;
+    next_node = *(_DWORD *)(node + 10);
+    if ( next_node )
+      *(_DWORD *)(a2 + 14 * current_index + 10) = a2 + 14 * a3;
     else
-      *(_DWORD *)(v7 + 10) = 0;
-    v3 = *(_DWORD *)(v3 + 10);
+      *(_DWORD *)(a2 + 14 * current_index + 10) = 0;
+    node = next_node;
   }
   return a3;
 }
-// 492F89: variable 'v3' is possibly undefined
 
 //----- (00492FD0) --------------------------------------------------------
 int  sub_492FD0(int result)
 {
-  int v1; // eax
-  _DWORD *v2; // ecx
+  int node_count; // eax
 
   if ( result )
   {
-    v1 = sub_4943A0(result);
-    return sub_472A60(v2, 14 * v1);
+    node_count = sub_4943A0(result);
+    return sub_472A60((_DWORD *)result, 14 * node_count);
   }
   return result;
 }
-// 492FF0: variable 'v2' is possibly undefined
 
 //----- (00492FF0) --------------------------------------------------------
 signed int AST_AllocNode()
@@ -114816,36 +114770,24 @@ signed int  sub_494330(int a1, int a2)
 //----- (004943A0) --------------------------------------------------------
 int  sub_4943A0(int a1)
 {
-  int v1; // edx
-  int v2; // ecx
-  int v4; // eax
-  int v5; // ecx
-  int v6; // edx
+  int node; // edx
+  int count; // ecx
+  int child_node; // ebx
 
-  v1 = a1;
-  v2 = 0;
+  node = a1;
+  count = 0;
   if ( !a1 )
-    return v2;
-  do
+    return count;
+  while ( node )
   {
-    while ( 1 )
-    {
-      ++v2;
-      if ( *(_DWORD *)(v1 + 6) )
-        break;
-      v1 = *(_DWORD *)(v1 + 10);
-      if ( !v1 )
-        return v2;
-    }
-    v4 = sub_4943A0(*(_DWORD *)(v1 + 6));
-    v2 = v4 + v5;
-    v1 = *(_DWORD *)(v6 + 10);
+    ++count;
+    child_node = *(_DWORD *)(node + 6);
+    if ( child_node )
+      count += sub_4943A0(child_node);
+    node = *(_DWORD *)(node + 10);
   }
-  while ( v1 );
-  return v2;
+  return count;
 }
-// 4943C7: variable 'v5' is possibly undefined
-// 4943C9: variable 'v6' is possibly undefined
 
 //----- (004943E0) --------------------------------------------------------
 signed int  AST_NewNode(__int16 a1, int a2)
@@ -117603,15 +117545,13 @@ signed int sub_497270()
 int  sub_4972A0(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
 
   result = sub_4A9400(a1, dword_54E69C, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  dword_54DBAC = a1;
+  *(_DWORD *)a1 = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 4972B5: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E69C: using guessed type int dword_54E69C;
@@ -119015,15 +118955,15 @@ signed int sub_498D40()
 int  sub_498D70(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
+  _DWORD *freed_node; // ecx
 
   result = sub_4A9400(a1, dword_54E6AC, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 498D85: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E6AC: using guessed type int dword_54E6AC;
@@ -119274,15 +119214,15 @@ signed int sub_499110()
 int  sub_499140(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
+  _DWORD *freed_node; // ecx
 
   result = sub_4A9400(a1, dword_54E6B4, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 499155: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E6B4: using guessed type int dword_54E6B4;
@@ -119559,61 +119499,42 @@ signed int __thiscall sub_4996D0(void *this)
 //----- (00499730) --------------------------------------------------------
 int sub_499730()
 {
-  int v0; // ecx
-  int v1; // ecx
-  int v2; // eax
-  int v3; // ecx
-  int v4; // ebp
-  int v5; // ecx
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // ecx
-  int v12; // esi
-  int v13; // ecx
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
-  int v18; // ecx
-  int v19; // edi
-  char v20; // ah
-  int v21; // ecx
+  int primitive_class; // ecx
+  int number_class; // ebp
+  int lexeme_class; // [esp+8h] [ebp-20h]
+  int address_class; // esi
+  int instance_class; // [esp+4h] [ebp-24h]
+  int user_class; // [esp+0h] [ebp-28h]
+  int initial_object_class; // edi
+  char initial_object_flags; // ah
   int result; // eax
-  int i; // edx
-  int v24; // edx
-  int v25; // [esp+0h] [ebp-28h]
-  int v26; // [esp+4h] [ebp-24h]
-  int v27; // [esp+8h] [ebp-20h]
-  int v28; // [esp+Ch] [ebp-1Ch]
+  int object_class; // [esp+Ch] [ebp-1Ch]
 
   sub_4B1010((_DWORD *)dword_54E6FC, 0, 1);
   sub_4B1010((_DWORD *)dword_54E6F8, 1, 1);
-  v28 = sub_499E00(aObject_0, 0, v0);
-  v2 = sub_499E00(aPrimitive, v28, v1);
-  v25 = sub_499E00(aUser, v28, v2);
-  v4 = sub_499E00(aNumber_1, v3, v3);
-  dword_51AD80 = sub_499E00(aInteger_2, v4, v5);
-  dword_51AD7C[0] = sub_499E00(aFloat_2, v4, v6);
-  v27 = sub_499E00(aLexeme_0, v7, v7);
-  dword_51AD84 = sub_499E00(aSymbol_3, v27, v8);
-  dword_51AD88 = sub_499E00(aString_2, v27, v9);
-  dword_51AD8C = sub_499E00(aMultifield_1, v10, v10);
-  v12 = sub_499E00(aAddress_0, v11, v11);
-  dword_51AD90 = sub_499E00(aExternalAddr_0, v12, v13);
-  dword_51AD94 = sub_499E00(aFactAddress_1, v12, v14);
-  v26 = sub_499E00(aInstance_3, v15, v15);
-  dword_51AD98 = sub_499E00(aInstanceAddr_7, v26, v16);
-  dword_51AD9C = sub_499E00(aInstanceName_2, v26, v17);
-  v19 = sub_499E00(aInitialObjec_0, v25, v18);
-  v20 = *(_BYTE *)(v19 + 20) & 0xFB;
-  *(_BYTE *)(v19 + 20) = v20;
-  *(_BYTE *)(v19 + 20) = v20 | 8;
-  sub_4B0BF0((unsigned __int16 *)(dword_51AD98 + 34), v12, -1);
-  sub_4B0BF0((unsigned __int16 *)(dword_51AD98 + 46), v12, 2);
-  sub_4B0BF0((unsigned __int16 *)(v12 + 40), dword_51AD98, -1);
+  object_class = sub_499E00(aObject_0, 0, 0);
+  primitive_class = sub_499E00(aPrimitive, object_class, 0);
+  user_class = sub_499E00(aUser, object_class, 0);
+  number_class = sub_499E00(aNumber_1, primitive_class, 0);
+  dword_51AD80 = sub_499E00(aInteger_2, number_class, 0);
+  dword_51AD7C[0] = sub_499E00(aFloat_2, number_class, 0);
+  lexeme_class = sub_499E00(aLexeme_0, primitive_class, 0);
+  dword_51AD84 = sub_499E00(aSymbol_3, lexeme_class, 0);
+  dword_51AD88 = sub_499E00(aString_2, lexeme_class, 0);
+  dword_51AD8C = sub_499E00(aMultifield_1, primitive_class, 0);
+  address_class = sub_499E00(aAddress_0, primitive_class, 0);
+  dword_51AD90 = sub_499E00(aExternalAddr_0, address_class, 0);
+  dword_51AD94 = sub_499E00(aFactAddress_1, address_class, 0);
+  instance_class = sub_499E00(aInstance_3, primitive_class, 0);
+  dword_51AD98 = sub_499E00(aInstanceAddr_7, instance_class, 0);
+  dword_51AD9C = sub_499E00(aInstanceName_2, instance_class, 0);
+  initial_object_class = sub_499E00(aInitialObjec_0, user_class, 0);
+  initial_object_flags = *(_BYTE *)(initial_object_class + 20) & 0xFB;
+  *(_BYTE *)(initial_object_class + 20) = initial_object_flags;
+  *(_BYTE *)(initial_object_class + 20) = initial_object_flags | 8;
+  sub_4B0BF0((unsigned __int16 *)(dword_51AD98 + 34), address_class, -1);
+  sub_4B0BF0((unsigned __int16 *)(dword_51AD98 + 46), address_class, 2);
+  sub_4B0BF0((unsigned __int16 *)(address_class + 40), dword_51AD98, -1);
   sub_4A8B40(dword_51AD7C[0]);
   sub_4A8B40(dword_51AD80);
   sub_4A8B40(dword_51AD84);
@@ -119623,40 +119544,22 @@ int sub_499730()
   sub_4A8B40(dword_51AD94);
   sub_4A8B40(dword_51AD98);
   sub_4A8B40(dword_51AD9C);
-  sub_4A8B40(v28);
-  sub_4A8B40(v21);
-  sub_4A8B40(v4);
-  sub_4A8B40(v27);
-  sub_4A8B40(v12);
-  sub_4A8B40(v26);
-  sub_4A8B40(v25);
-  sub_4A8B40(v19);
+  sub_4A8B40(object_class);
+  sub_4A8B40(primitive_class);
+  sub_4A8B40(number_class);
+  sub_4A8B40(lexeme_class);
+  sub_4A8B40(address_class);
+  sub_4A8B40(instance_class);
+  sub_4A8B40(user_class);
+  sub_4A8B40(initial_object_class);
   result = sub_4B0580(0);
-  for ( i = result; result; i = result )
+  while ( result )
   {
-    sub_4B0F60(i);
-    result = sub_4B0580(v24);
+    sub_4B0F60(result);
+    result = sub_4B0580(result);
   }
   return result;
 }
-// 499762: variable 'v0' is possibly undefined
-// 499772: variable 'v1' is possibly undefined
-// 499791: variable 'v3' is possibly undefined
-// 49979F: variable 'v5' is possibly undefined
-// 4997B0: variable 'v6' is possibly undefined
-// 4997C1: variable 'v7' is possibly undefined
-// 4997D1: variable 'v8' is possibly undefined
-// 4997E4: variable 'v9' is possibly undefined
-// 4997F5: variable 'v10' is possibly undefined
-// 499806: variable 'v11' is possibly undefined
-// 499814: variable 'v13' is possibly undefined
-// 499825: variable 'v14' is possibly undefined
-// 499836: variable 'v15' is possibly undefined
-// 499846: variable 'v16' is possibly undefined
-// 499859: variable 'v17' is possibly undefined
-// 49986B: variable 'v18' is possibly undefined
-// 499923: variable 'v21' is possibly undefined
-// 49996D: variable 'v24' is possibly undefined
 // 51AD7C: using guessed type int dword_51AD7C[];
 // 51AD80: using guessed type int dword_51AD80;
 // 51AD84: using guessed type int dword_51AD84;
@@ -119743,64 +119646,55 @@ int sub_499990()
 //----- (00499E00) --------------------------------------------------------
 int  sub_499E00(char *a1, int a2, int a3)
 {
-  signed int *v4; // eax
-  char v5; // dl
-  int v6; // eax
-  int v7; // eax
-  unsigned int v8; // eax
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // eax
-  unsigned int v13; // esi
-  int v14; // ecx
-  int v15; // edx
-  unsigned __int16 *v16; // eax
-  int v17; // ecx
-  int v18; // [esp+0h] [ebp-1Ch]
-  _BYTE v19[24]; // [esp+4h] [ebp-18h] BYREF
+  signed int *class_symbol; // eax
+  char class_flags; // dl
+  int symbol; // eax
+  unsigned int bucket_index; // eax
+  int expression; // eax
+  unsigned int inherited_index; // esi
+  int inherited_class; // edx
+  int class_record; // [esp+0h] [ebp-1Ch]
+  _BYTE *class_bitmap; // [esp+4h] [ebp-18h]
 
-  v4 = Str_Intern(a1, a3);
-  v18 = sub_4B0DC0((int)v4);
-  v5 = *(_BYTE *)(v18 + 20) | 4;
-  *(_BYTE *)(v18 + 20) = v5;
-  v6 = *(_DWORD *)v18;
-  *(_BYTE *)(v18 + 20) = v5 & 0xF7;
-  ++*(_DWORD *)(v6 + 4);
-  v7 = *(_DWORD *)v18;
-  *(_BYTE *)(v18 + 20) |= 3u;
-  v8 = sub_4B1820(v7);
-  *(_DWORD *)(v9 + 30) = v8;
-  sub_4B0BF0((unsigned __int16 *)(v18 + 46), v9, -1);
+  (void)a3;
+  class_symbol = Str_Intern(a1, a2);
+  class_record = sub_4B0DC0((int)class_symbol);
+  class_flags = *(_BYTE *)(class_record + 20) | 4;
+  *(_BYTE *)(class_record + 20) = class_flags;
+  symbol = *(_DWORD *)class_record;
+  *(_BYTE *)(class_record + 20) = class_flags & 0xF7;
+  ++*(_DWORD *)(symbol + 4);
+  symbol = *(_DWORD *)class_record;
+  *(_BYTE *)(class_record + 20) |= 3u;
+  bucket_index = sub_4B1820(symbol);
+  *(_DWORD *)(class_record + 30) = bucket_index;
+  sub_4B0BF0((unsigned __int16 *)(class_record + 46), class_record, -1);
   if ( a2 )
   {
-    sub_4B0BF0((unsigned __int16 *)(v10 + 34), a2, -1);
-    v13 = 1;
-    sub_4B0BF0((unsigned __int16 *)(a2 + 40), v14, -1);
-    v15 = a2;
-    v16 = (unsigned __int16 *)(v18 + 46);
+    sub_4B0BF0((unsigned __int16 *)(class_record + 34), a2, -1);
+    sub_4B0BF0((unsigned __int16 *)(a2 + 40), class_record, -1);
+    inherited_index = 1;
+    inherited_class = a2;
     while ( 1 )
     {
-      sub_4B0BF0(v16, v15, -1);
-      if ( v13 >= *(unsigned __int16 *)(a2 + 46) )
+      sub_4B0BF0((unsigned __int16 *)(class_record + 46), inherited_class, -1);
+      if ( inherited_index >= *(unsigned __int16 *)(a2 + 46) )
         break;
-      v16 = (unsigned __int16 *)(v18 + 46);
-      v15 = *(_DWORD *)(v17 + *(_DWORD *)(a2 + 48));
-      ++v13;
+      inherited_class = *(_DWORD *)(*(_DWORD *)(a2 + 48) + 4 * inherited_index);
+      ++inherited_index;
     }
   }
-  *(_DWORD *)(v18 + 100) = *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(v18 + 30));
-  *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(v18 + 30)) = v18;
-  Mem_AllocArray(v19, 1);
-  v19[0] |= 1u;
-  v11 = sub_482100(v19, 1);
-  *(_DWORD *)(v18 + 104) = v11;
-  ++*(_DWORD *)(v11 + 4);
-  return v18;
+  *(_DWORD *)(class_record + 100) = *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(class_record + 30));
+  *(_DWORD *)(dword_51AD68 + 4 * *(_DWORD *)(class_record + 30)) = class_record;
+  class_bitmap = sub_472980(1);
+  Mem_AllocArray(class_bitmap, 1);
+  class_bitmap[0] |= 1u;
+  expression = sub_482100(class_bitmap, 1);
+  sub_472A00((_DWORD *)class_bitmap, 1);
+  *(_DWORD *)(class_record + 104) = expression;
+  ++*(_DWORD *)(expression + 4);
+  return class_record;
 }
-// 499E49: variable 'v9' is possibly undefined
-// 499EC3: variable 'v10' is possibly undefined
-// 499EDC: variable 'v14' is possibly undefined
-// 499F0F: variable 'v17' is possibly undefined
 // 51AD68: using guessed type int dword_51AD68;
 
 //----- (00499F20) --------------------------------------------------------
@@ -119823,7 +119717,7 @@ int  sub_499F50(int a1)
 {
   _DWORD *v1; // eax
   _DWORD *v2; // eax
-  _DWORD *v3; // ecx
+  _DWORD *freed_node; // ecx
   int result; // eax
 
   sub_4A9400(a1, dword_54E6B8, a1);
@@ -119831,8 +119725,9 @@ int  sub_499F50(int a1)
   sub_4B1180(v1);
   v2 = (_DWORD *)sub_4B1700(1);
   sub_4B1180(v2);
-  dword_54DBAC = (int)v3;
-  *v3 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   result = dword_54DBA8;
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
@@ -121866,7 +121761,7 @@ int  sub_49C1C0(int a1, int a2)
     }
     while ( sub_49C2F0(a1, &v12, v8, v9) == 1 );
   }
-  if ( sub_48B750() == 1 || !sub_47C360() )
+  if ( sub_48B750((int)aCompilations) == 1 || !sub_47C360() )
   {
     sub_4946C0();
     return v13[0];
@@ -122091,7 +121986,7 @@ LABEL_23:
       }
     }
   }
-  if ( sub_48B750() == 1 && sub_47C360() )
+  if ( sub_48B750((int)aCompilations) == 1 && sub_47C360() )
   {
     if ( v44 )
       v22 = aRedefining;
@@ -123525,6 +123420,7 @@ int  sub_49E250(int a1, double a2)
   int v7; // ecx
   char *v8; // edx
   int v9; // eax
+  int logical_name; // ecx
   int v10; // [esp-4h] [ebp-2Ch] BYREF
   unsigned int v11; // [esp+0h] [ebp-28h]
   int v12; // [esp+4h] [ebp-24h]
@@ -123536,15 +123432,16 @@ int  sub_49E250(int a1, double a2)
   v5 = result;
   if ( result != -1 )
   {
-    if ( !sub_4817C0(1, (int)aStdout_0, v3, a2) )
+    logical_name = sub_4817C0(1, (int)aStdout_0, v3, a2);
+    if ( !logical_name )
     {
       sub_49F310();
       sub_48F610(1);
       return Lexer_ErrorRecover(1);
     }
-    result = sub_4861B0();
+    result = sub_4861B0(logical_name);
     if ( !result )
-      return sub_4862C0();
+      return sub_4862C0(logical_name);
     v6 = 2;
     if ( v4 >= 2 )
     {
@@ -123595,7 +123492,7 @@ LABEL_17:
 LABEL_11:
           v9 = v7;
 LABEL_12:
-          result = Output_Write(v9, (int)v8, v7);
+          result = Output_Write(logical_name, (int)v8, v7);
           if ( ++v6 > v5 )
             return result;
         }
@@ -123650,9 +123547,9 @@ signed int * sub_49E3E0(int a1, double a2)
   {
     v5 = aStdin;
   }
-  if ( !sub_4861B0() )
+  if ( !sub_4861B0((int)v5) )
   {
-    sub_4862C0();
+    sub_4862C0((int)v5);
     sub_48F610(1);
     Lexer_ErrorRecover(1);
     goto LABEL_14;
@@ -123944,7 +123841,7 @@ signed int * sub_49E930(double a1)
   v31 = v6;
   if ( v6 )
   {
-    if ( !strcmp_(v6, aNil_0) || sub_4861B0() )
+    if ( !strcmp_(v6, aNil_0) || sub_4861B0(v6) )
     {
       v8 = sub_49ECA0(v4, a1);
       if ( v8 )
@@ -124027,7 +123924,7 @@ signed int * sub_49E930(double a1)
     }
     else
     {
-      sub_4862C0();
+      sub_4862C0(v31);
       return v1;
     }
   }
@@ -124343,9 +124240,9 @@ LABEL_8:
   {
     v5 = aStdin;
   }
-  if ( !sub_4861B0() )
+  if ( !sub_4861B0((int)v5) )
   {
-    sub_4862C0();
+    sub_4862C0((int)v5);
     sub_48F610(1);
     Lexer_ErrorRecover(1);
     result = Str_Intern(aReadError, v13);
@@ -131514,15 +131411,14 @@ signed int sub_4A7730()
 //----- (004A7760) --------------------------------------------------------
 int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
 {
-  int v8; // ecx
+  int construct_code_count; // ecx
   _DWORD *v9; // ebx
   int v10; // ebp
   _DWORD *v11; // eax
   int v12; // ebx
   int v13; // edi
-  int v14; // ecx
   _DWORD *v15; // eax
-  int v16; // edx
+  int slot_offset; // edx
   char *v17; // esi
   char *v18; // edi
   int v19; // edx
@@ -131533,7 +131429,7 @@ int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
   int v25; // [esp+4h] [ebp-18h]
   char v27[16]; // [esp+Ch] [ebp-10h] BYREF
 
-  v8 = a6;
+  construct_code_count = a6;
   v9 = *(_DWORD **)(dword_54DBA8 + 112);
   v10 = 0;
   if ( v9 )
@@ -131552,18 +131448,19 @@ int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
   v11[3] = a5;
   v12 = (int)v11;
   v11[4] = a2;
-  if ( v8 )
+  if ( construct_code_count )
   {
-    if ( v8 + dword_51ACF8 > 44 )
+    if ( construct_code_count + dword_51ACF8 > 44 )
     {
-      sub_485C80(v8, 2);
+      sub_485C80((int)aConscomp, 2);
       sub_486020();
     }
-    v13 = 4 * v8;
-    *(_DWORD *)(v12 + 20) = sub_472980(4 * v8);
-    if ( v14 > 0 )
+    v13 = 4 * construct_code_count;
+    *(_DWORD *)(v12 + 20) = sub_472980(4 * construct_code_count);
+    if ( construct_code_count > 0 )
     {
       v25 = v13;
+      slot_offset = 0;
       do
       {
         if ( dword_51ACF8 >= 18 )
@@ -131572,10 +131469,10 @@ int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
           sprintf_(v27, "%c", (unsigned __int8)byte_5082C4[dword_51ACF8]);
         ++dword_51ACF8;
         v15 = sub_472980(strlen(v27) + 1);
-        *(_DWORD *)(*(_DWORD *)(v12 + 20) + v16) = v15;
+        *(_DWORD *)(*(_DWORD *)(v12 + 20) + slot_offset) = v15;
         v17 = v27;
-        v18 = *(char **)(v16 + *(_DWORD *)(v12 + 20));
-        v19 = v16 + 4;
+        v18 = (char *)v15;
+        v19 = slot_offset + 4;
         do
         {
           v20 = *v17;
@@ -131588,6 +131485,7 @@ int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
           v18 += 2;
         }
         while ( v21 );
+        slot_offset = v19;
       }
       while ( v19 < v25 );
     }
@@ -132670,36 +132568,36 @@ int __fastcall sub_4A8B80(int a1, int a2)
 //----- (004A8BD0) --------------------------------------------------------
 int  sub_4A8BD0(_BYTE *a1, int a2)
 {
-  _BYTE *v3; // eax
-  int v4; // ecx
-  int *v5; // ebx
-  int v6; // ecx
-  int v7; // ecx
-  int v9; // edx
+  _BYTE *local_name; // eax
+  int *target_symbol; // ebx
+  int get_name_func; // [ecx+10h]
+  int next_func; // [ecx+1Ch]
+  int current_item; // edx
 
   Module_BeginEnum();
-  v3 = (_BYTE *)sub_492700(a1);
-  if ( v3 && (v5 = sub_481EC0(v3)) != 0 && (*(int (__cdecl **)(int))(v4 + 28))(a2) )
+  local_name = (_BYTE *)sub_492700(a1);
+  if ( local_name )
   {
-    while ( v5 != (int *)(*(int (**)(void))(v6 + 16))() )
+    target_symbol = sub_481EC0(local_name);
+    if ( target_symbol )
     {
-      if ( !(*(int (**)(void))(v7 + 28))() )
-        goto LABEL_6;
+      get_name_func = *(_DWORD *)(a2 + 16);
+      next_func = *(_DWORD *)(a2 + 28);
+      current_item = ((int (*)(int))(uintptr_t)(unsigned int)next_func)(0);
+      while ( current_item )
+      {
+        if ( target_symbol == (int *)((int (*)(int))(uintptr_t)(unsigned int)get_name_func)(current_item) )
+        {
+          sub_4915E0();
+          return current_item;
+        }
+        current_item = ((int (*)(int))(uintptr_t)(unsigned int)next_func)(current_item);
+      }
     }
-    sub_4915E0();
-    return v9;
   }
-  else
-  {
-LABEL_6:
-    sub_4915E0();
-    return 0;
-  }
+  sub_4915E0();
+  return 0;
 }
-// 4A8BF9: variable 'v4' is possibly undefined
-// 4A8C04: variable 'v6' is possibly undefined
-// 4A8C0D: variable 'v7' is possibly undefined
-// 4A8C25: variable 'v9' is possibly undefined
 
 //----- (004A8C30) --------------------------------------------------------
 int __fastcall sub_4A8C30(int a1, int a2)
@@ -133303,38 +133201,44 @@ int  sub_4A9400(int a1, int a2, int a3)
 // 4A940D: variable 'v6' is possibly undefined
 // 4A9410: variable 'v5' is possibly undefined
 
+static signed int sub_4A9430_Impl(int (*callback)(int, intptr_t), int construct_index, intptr_t callback_context, int stop_on_watch);
+
 //----- (004A9430) --------------------------------------------------------
 signed int  sub_4A9430(void (*a1)(void), int a2)
 {
-  int Enum; // eax
-  int v5; // edx
-  int v6; // ebp
-  int v7; // edx
-  int v8; // ecx
-  int v9; // ecx
-  int v11; // [esp+4h] [ebp-10h]
+  return sub_4A9430_Impl((int (*)(int, intptr_t))a1, 0, 0, a2);
+}
+
+static signed int sub_4A9430_Impl(int (*callback)(int, intptr_t), int construct_index, intptr_t callback_context, int stop_on_watch)
+{
+  int module; // ebp
+  int module_index; // [esp+4h] [ebp-10h]
+  int construct_data; // eax
+  int item; // ecx
 
   Module_BeginEnum();
-  Enum = Module_NextEnum(0);
-  v11 = v5;
-  v6 = Enum;
-  if ( Enum )
+  module = Module_NextEnum(0);
+  module_index = 0;
+  if ( module )
   {
     while ( 1 )
     {
-      Module_Print(v6);
-      if ( *(_DWORD *)(sub_491620(v6, v7) + 4) )
+      Module_Print(module);
+      construct_data = sub_491620(module, construct_index);
+      item = *(_DWORD *)(construct_data + 4);
+      if ( item )
         break;
 LABEL_6:
-      v6 = Module_NextEnum(v6);
-      v11 = v9 + 1;
-      if ( !v6 )
+      module = Module_NextEnum(module);
+      ++module_index;
+      if ( !module )
         goto LABEL_7;
     }
-    while ( !a2 || sub_48F630() != 1 )
+    while ( !stop_on_watch || sub_48F630() != 1 )
     {
-      a1();
-      if ( !*(_DWORD *)(v8 + 16) )
+      callback(item, callback_context);
+      item = *(_DWORD *)(item + 16);
+      if ( !item )
         goto LABEL_6;
     }
     sub_4915E0();
@@ -133344,31 +133248,30 @@ LABEL_6:
   {
 LABEL_7:
     sub_4915E0();
-    return v11;
+    return module_index;
   }
 }
-// 4A944D: variable 'v5' is possibly undefined
-// 4A9463: variable 'v7' is possibly undefined
-// 4A9483: variable 'v8' is possibly undefined
-// 4A9498: variable 'v9' is possibly undefined
 
 //----- (004A94D0) --------------------------------------------------------
+static int sub_4A94D0_Impl(int construct_name, int construct_data, int owner_symbol)
+{
+  int construct_record; // eax
+  int module_data; // eax
+
+  construct_record = sub_4914F0(construct_name);
+  module_data = sub_491620(0, *(_DWORD *)(construct_record + 4));
+  *(_DWORD *)(construct_data + 4) = 0;
+  *(_DWORD *)(construct_data + 12) = 0;
+  *(_DWORD *)(construct_data + 16) = 0;
+  *(_DWORD *)(construct_data + 8) = module_data;
+  *(_DWORD *)construct_data = owner_symbol;
+  return module_data;
+}
+
 int  sub_4A94D0(int a1, int a2)
 {
-  int v2; // eax
-  int result; // eax
-  _DWORD *v4; // ecx
-
-  v2 = sub_4914F0(a1);
-  result = sub_491620(0, *(_DWORD *)(v2 + 4));
-  v4[1] = 0;
-  v4[3] = 0;
-  v4[4] = 0;
-  v4[2] = result;
-  *v4 = a2;
-  return result;
+  return sub_4A94D0_Impl(a1, a2, a2);
 }
-// 4A94E2: variable 'v4' is possibly undefined
 
 //----- (004A9500) --------------------------------------------------------
 signed int  sub_4A9500(signed int result, int a2)
@@ -137574,51 +137477,45 @@ signed int  sub_4AE270(int a1)
 //----- (004AE2F0) --------------------------------------------------------
 int  sub_4AE2F0(_BYTE *a1, char *a2, int a3, _BYTE *a4)
 {
-  int *v6; // eax
-  signed int *v7; // eax
-  _DWORD *v8; // ecx
-  _DWORD *v9; // eax
-  char v10; // bl
-  _DWORD *v11; // edx
-  _DWORD *v12; // edi
-  signed int v13; // eax
-  int **Symbol; // eax
-  int v15; // edx
+  int class_record; // ecx
+  signed int *message_name; // eax
+  _DWORD *message_handler; // eax
+  char handler_flags; // bl
+  int expression_node; // eax
+  int free_expression_node; // edi
+  int **symbol; // eax
   int result; // eax
 
-  v6 = sub_4B0480(a1);
-  v7 = Str_Intern(a2, (int)v6);
-  v9 = sub_4AE390(v8, (int)v7, 2);
-  ++*(_DWORD *)(v9[2] + 4);
+  class_record = (int)sub_4B0480(a1);
+  message_name = Str_Intern(a2, class_record);
+  message_handler = sub_4AE390((_DWORD *)class_record, (int)message_name, 2);
+  ++*(_DWORD *)(message_handler[2] + 4);
   ++a3;
-  v9[6] = 0;
-  v9[5] = a3;
-  v10 = *(_BYTE *)v9;
-  v9[4] = a3;
-  *(_BYTE *)v9 = v10 | 1;
-  v11 = v9;
-  v12 = *(_DWORD **)(dword_54DBA8 + 56);
-  if ( v12 )
+  message_handler[6] = 0;
+  message_handler[5] = a3;
+  handler_flags = *(_BYTE *)message_handler;
+  message_handler[4] = a3;
+  *(_BYTE *)message_handler = handler_flags | 1;
+  free_expression_node = *(_DWORD *)(dword_54DBA8 + 56);
+  if ( free_expression_node )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 56);
-    *(_DWORD *)(dword_54DBA8 + 56) = *v12;
-    v13 = dword_54DBAC;
+    dword_54DBAC = free_expression_node;
+    *(_DWORD *)(dword_54DBA8 + 56) = *(_DWORD *)free_expression_node;
+    expression_node = dword_54DBAC;
   }
   else
   {
-    v13 = sub_472620((_DWORD *)0xE);
+    expression_node = sub_472620((_DWORD *)0xE);
   }
-  v11[7] = v13;
-  *(_DWORD *)(v13 + 6) = 0;
-  *(_WORD *)v11[7] = 10;
-  Symbol = Rules_MakeSymbol(a4);
-  *(_DWORD *)(*(_DWORD *)(v15 + 28) + 2) = Symbol;
-  result = *(_DWORD *)(v15 + 28);
+  message_handler[7] = expression_node;
+  *(_DWORD *)(expression_node + 6) = 0;
+  *(_WORD *)message_handler[7] = 10;
+  symbol = Rules_MakeSymbol(a4);
+  *(_DWORD *)(*(_DWORD *)((char *)message_handler + 28) + 2) = symbol;
+  result = *(_DWORD *)((char *)message_handler + 28);
   *(_DWORD *)(result + 10) = 0;
   return result;
 }
-// 4AE30D: variable 'v8' is possibly undefined
-// 4AE364: variable 'v15' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 
@@ -139897,140 +139794,154 @@ int  sub_4B0BA0(int a1)
 //----- (004B0BF0) --------------------------------------------------------
 signed int  sub_4B0BF0(unsigned __int16 *a1, int a2, int a3)
 {
-  _DWORD *v4; // eax
-  _DWORD *v5; // edx
-  signed int result; // eax
-  unsigned __int16 v7; // [esp+0h] [ebp-1Ch]
-  signed int v8; // [esp+2h] [ebp-1Ah]
+  int old_count; // eax
+  int old_items; // esi
+  int new_items; // [esp+2h] [ebp-1Ah]
+  int insert_slot; // edx
+  unsigned __int16 new_count; // [esp+0h] [ebp-1Ch]
 
-  v4 = sub_472980(4 * *a1 + 4);
-  v8 = (signed int)v4;
+  old_count = *a1;
+  new_items = (int)(uintptr_t)sub_472980(4 * old_count + 4);
+  old_items = *(_DWORD *)(a1 + 1);
   if ( a3 == -1 )
   {
-    qmemcpy(v4, *(const void **)(a1 + 1), 4 * *a1);
-    v5 = &v4[*a1];
+    qmemcpy(
+      (void *)(uintptr_t)(unsigned int)new_items,
+      (const void *)(uintptr_t)(unsigned int)old_items,
+      4 * old_count);
+    insert_slot = new_items + 4 * old_count;
   }
   else
   {
     if ( a3 )
-      qmemcpy(v4, *(const void **)(a1 + 1), 4 * ((unsigned int)(4 * a3) >> 2));
-    v5 = &v4[a3];
-    qmemcpy(v5 + 1, (const void *)(4 * a3 + *(_DWORD *)(a1 + 1)), 4 * (*a1 - a3));
+      qmemcpy(
+        (void *)(uintptr_t)(unsigned int)new_items,
+        (const void *)(uintptr_t)(unsigned int)old_items,
+        4 * a3);
+    insert_slot = new_items + 4 * a3;
+    qmemcpy(
+      (void *)(uintptr_t)(unsigned int)(insert_slot + 4),
+      (const void *)(uintptr_t)(unsigned int)(old_items + 4 * a3),
+      4 * (old_count - a3));
   }
-  *v5 = a2;
-  v7 = *a1 + 1;
+  *(_DWORD *)(uintptr_t)(unsigned int)insert_slot = a2;
+  new_count = old_count + 1;
   sub_4B0F00(a1, 0);
-  *a1 = v7;
-  result = v8;
-  *(_DWORD *)(a1 + 1) = v8;
-  return result;
+  *a1 = new_count;
+  *(_DWORD *)(a1 + 1) = new_items;
+  return new_items;
 }
 
 //----- (004B0CE0) --------------------------------------------------------
 unsigned __int16  sub_4B0CE0(int a1, int a2)
 {
-  unsigned __int16 *v3; // ebx
-  unsigned int v4; // edx
-  int i; // eax
-  unsigned __int16 result; // ax
-  _DWORD *v7; // eax
-  int v8; // edx
-  unsigned __int16 v9; // [esp+0h] [ebp-18h]
-  _DWORD *v10; // [esp+2h] [ebp-16h]
+  unsigned __int16 *array_header; // ebx
+  unsigned int remove_index; // edx
+  int byte_offset; // eax
+  unsigned __int16 count; // ax
+  int old_items; // esi
+  int new_items; // [esp+2h] [ebp-16h]
+  unsigned __int16 new_count; // [esp+0h] [ebp-18h]
 
-  v3 = (unsigned __int16 *)(a1 + 40);
-  v4 = 0;
-  for ( i = 0; v4 < *v3 && a2 != *(_DWORD *)(*(_DWORD *)(v3 + 1) + i); i += 4 )
-    ++v4;
-  result = *v3;
-  if ( v4 != *v3 )
+  array_header = (unsigned __int16 *)(a1 + 40);
+  old_items = *(_DWORD *)(array_header + 1);
+  remove_index = 0;
+  byte_offset = 0;
+  while ( remove_index < *array_header
+       && a2 != *(_DWORD *)(uintptr_t)(unsigned int)(old_items + byte_offset) )
   {
-    if ( result <= 1u )
-    {
-      v10 = 0;
-    }
-    else
-    {
-      v7 = sub_472980(4 * *v3 - 4);
-      v10 = v7;
-      if ( v8 )
-        qmemcpy(v7, *(const void **)(v3 + 1), 4 * ((unsigned int)(4 * v8) >> 2));
-      qmemcpy(&v7[v8], (const void *)(4 * v8 + *(_DWORD *)(v3 + 1) + 4), 4 * (*v3 - v8) - 4);
-    }
-    v9 = *v3 - 1;
-    sub_4B0F00(v3, 0);
-    *v3 = v9;
-    result = (unsigned __int16)v10;
-    *(_DWORD *)(v3 + 1) = v10;
+    byte_offset += 4;
+    ++remove_index;
   }
-  return result;
+  count = *array_header;
+  if ( remove_index == count )
+    return count;
+  if ( count <= 1u )
+  {
+    new_items = 0;
+  }
+  else
+  {
+    new_items = (int)(uintptr_t)sub_472980(4 * count - 4);
+    if ( remove_index )
+      qmemcpy(
+        (void *)(uintptr_t)(unsigned int)new_items,
+        (const void *)(uintptr_t)(unsigned int)old_items,
+        4 * remove_index);
+    qmemcpy(
+      (void *)(uintptr_t)(unsigned int)(new_items + 4 * remove_index),
+      (const void *)(uintptr_t)(unsigned int)(old_items + 4 * remove_index + 4),
+      4 * (count - remove_index) - 4);
+  }
+  new_count = count - 1;
+  sub_4B0F00(array_header, 0);
+  *array_header = new_count;
+  *(_DWORD *)(array_header + 1) = new_items;
+  return (unsigned __int16)new_items;
 }
-// 4B0D39: variable 'v8' is possibly undefined
 
 //----- (004B0DC0) --------------------------------------------------------
 int  sub_4B0DC0(int a1)
 {
-  _DWORD *v2; // edx
-  int v3; // ecx
+  int free_record; // edx
+  int class_record; // ecx
   char v4; // ah
   char v5; // dl
   int v6; // eax
   char v7; // bl
   int v8; // esi
-  int v9; // ecx
 
-  v2 = *(_DWORD **)(dword_54DBA8 + 496);
-  if ( v2 )
+  free_record = *(_DWORD *)(dword_54DBA8 + 496);
+  if ( free_record )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 496);
-    *(_DWORD *)(dword_54DBA8 + 496) = *v2;
+    dword_54DBAC = free_record;
+    *(_DWORD *)(dword_54DBA8 + 496) = *(_DWORD *)free_record;
+    class_record = dword_54DBAC;
   }
   else
   {
-    sub_472620((_DWORD *)0x7C);
+    class_record = sub_472620((_DWORD *)0x7C);
   }
-  sub_4A94D0((int)aDefclass_2, a1);
-  v4 = *(_BYTE *)(v3 + 20);
-  *(_WORD *)(v3 + 24) = 0;
-  *(_BYTE *)(v3 + 20) = v4 & 0xF0;
-  v5 = *(_BYTE *)(v3 + 20);
-  *(_DWORD *)(v3 + 26) = 0;
+  sub_4A94D0_Impl((int)aDefclass_2, class_record, a1);
+  v4 = *(_BYTE *)(class_record + 20);
+  *(_WORD *)(class_record + 24) = 0;
+  *(_BYTE *)(class_record + 20) = v4 & 0xF0;
+  v5 = *(_BYTE *)(class_record + 20);
+  *(_DWORD *)(class_record + 26) = 0;
   v5 |= 8u;
-  *(_BYTE *)(v3 + 20) = v5;
+  *(_BYTE *)(class_record + 20) = v5;
   v6 = dword_51AD74 & 1;
-  *(_BYTE *)(v3 + 20) = v5 & 0xEF;
-  *(_DWORD *)(v3 + 20) |= 16 * v6;
+  *(_BYTE *)(class_record + 20) = v5 & 0xEF;
+  *(_DWORD *)(class_record + 20) |= 16 * v6;
   LOBYTE(v6) = dword_51AD78[0];
-  *(_DWORD *)(v3 + 30) = 0;
-  *(_WORD *)(v3 + 34) = 0;
-  *(_DWORD *)(v3 + 36) = 0;
-  *(_WORD *)(v3 + 40) = 0;
-  *(_DWORD *)(v3 + 42) = 0;
-  *(_WORD *)(v3 + 46) = 0;
-  *(_DWORD *)(v3 + 48) = 0;
-  *(_DWORD *)(v3 + 52) = 0;
-  *(_DWORD *)(v3 + 56) = 0;
-  *(_DWORD *)(v3 + 60) = 0;
-  *(_DWORD *)(v3 + 72) = 0;
-  *(_DWORD *)(v3 + 68) = 0;
-  *(_DWORD *)(v3 + 64) = 0;
-  *(_DWORD *)(v3 + 76) = 0;
-  *(_DWORD *)(v3 + 88) = 0;
-  *(_DWORD *)(v3 + 92) = 0;
-  *(_DWORD *)(v3 + 96) = 0;
-  *(_DWORD *)(v3 + 80) = 0;
-  v7 = *(_BYTE *)(v3 + 20);
-  *(_DWORD *)(v3 + 84) = 0;
-  *(_DWORD *)(v3 + 100) = 0;
-  *(_BYTE *)(v3 + 20) = v7 & 0xDF;
-  v8 = *(_DWORD *)(v3 + 20);
-  *(_DWORD *)(v3 + 104) = 0;
-  *(_DWORD *)(v3 + 20) = (32 * (v6 & 1)) | v8;
-  Mem_AllocArray((_BYTE *)(v3 + 108), 16);
-  return v9;
+  *(_DWORD *)(class_record + 30) = 0;
+  *(_WORD *)(class_record + 34) = 0;
+  *(_DWORD *)(class_record + 36) = 0;
+  *(_WORD *)(class_record + 40) = 0;
+  *(_DWORD *)(class_record + 42) = 0;
+  *(_WORD *)(class_record + 46) = 0;
+  *(_DWORD *)(class_record + 48) = 0;
+  *(_DWORD *)(class_record + 52) = 0;
+  *(_DWORD *)(class_record + 56) = 0;
+  *(_DWORD *)(class_record + 60) = 0;
+  *(_DWORD *)(class_record + 72) = 0;
+  *(_DWORD *)(class_record + 68) = 0;
+  *(_DWORD *)(class_record + 64) = 0;
+  *(_DWORD *)(class_record + 76) = 0;
+  *(_DWORD *)(class_record + 88) = 0;
+  *(_DWORD *)(class_record + 92) = 0;
+  *(_DWORD *)(class_record + 96) = 0;
+  *(_DWORD *)(class_record + 80) = 0;
+  v7 = *(_BYTE *)(class_record + 20);
+  *(_DWORD *)(class_record + 84) = 0;
+  *(_DWORD *)(class_record + 100) = 0;
+  *(_BYTE *)(class_record + 20) = v7 & 0xDF;
+  v8 = *(_DWORD *)(class_record + 20);
+  *(_DWORD *)(class_record + 104) = 0;
+  *(_DWORD *)(class_record + 20) = (32 * (v6 & 1)) | v8;
+  Mem_AllocArray((_BYTE *)(class_record + 108), 16);
+  return class_record;
 }
-// 4B0DFA: variable 'v3' is possibly undefined
-// 4B0EE8: variable 'v9' is possibly undefined
 // 51AD74: using guessed type int dword_51AD74;
 // 51AD78: using guessed type int dword_51AD78[];
 // 54DBA8: using guessed type int dword_54DBA8;
@@ -140040,11 +139951,15 @@ int  sub_4B0DC0(int a1)
 unsigned __int16 * sub_4B0F00(unsigned __int16 *result, int a2)
 {
   unsigned __int16 *v2; // ecx
+  int items; // eax
 
   v2 = result;
   if ( *result )
   {
-    result = (unsigned __int16 *)sub_472A00(*(_DWORD **)(result + 1), 4 * *result);
+    items = *(_DWORD *)(result + 1);
+    result = (unsigned __int16 *)sub_472A00(
+      (_DWORD *)(uintptr_t)(unsigned int)items,
+      4 * *result);
     *v2 = 0;
     *(_DWORD *)(v2 + 1) = 0;
     if ( !a2 )
@@ -140115,7 +140030,7 @@ unsigned int * sub_4B1010(_DWORD *a1, int a2, int a3)
   char v20; // al
   char v21; // al
   signed int *v22; // eax
-  int v23; // edx
+  unsigned int temp_name_bytes; // edx
   char *v24; // [esp-4h] [ebp-18h]
   _DWORD *v25; // [esp+0h] [ebp-14h]
 
@@ -140164,7 +140079,8 @@ unsigned int * sub_4B1010(_DWORD *a1, int a2, int a3)
     v12 = (const char *)a1[4];
     ++a1[1];
     v13 = aPut_0;
-    v14 = sub_472980(strlen(v12) + 5);
+    temp_name_bytes = strlen(v12) + 5;
+    v14 = sub_472980(temp_name_bytes);
     v25 = v14;
     v24 = v14;
     do
@@ -140197,13 +140113,12 @@ unsigned int * sub_4B1010(_DWORD *a1, int a2, int a3)
     v22 = Str_Intern(v24, ~v18);
     v11[4] = (unsigned int)v22;
     ++v22[1];
-    sub_472A00(v25, v23);
+    sub_472A00(v25, temp_name_bytes);
     v11[6] = 0;
     return v11;
   }
 }
 // 4B10B0: variable 'i' is possibly undefined
-// 4B1149: variable 'v23' is possibly undefined
 // 51AD70: using guessed type int dword_51AD70;
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
@@ -145454,26 +145369,25 @@ int * sub_4B8030(int a1, int a2)
 //----- (004B8080) --------------------------------------------------------
 int __fastcall sub_4B8080(int a1, int a2)
 {
-  _DWORD *v3; // ecx
-  int v4; // ecx
+  int item; // ecx
   int v5; // edx
   int result; // eax
 
-  v3 = (_DWORD *)dword_51B350;
-  if ( !dword_51B350 )
+  item = dword_51B350;
+  if ( !item )
     return 0;
-  while ( strcmp_(v3, *v3) )
+  while ( strcmp_(a1, *(_DWORD *)item) )
   {
-    v3 = *(_DWORD **)(v4 + 8);
-    if ( !v3 )
+    item = *(_DWORD *)(item + 8);
+    if ( !item )
       return 0;
   }
-  v5 = *(_DWORD *)(v4 + 4);
+  v5 = *(_DWORD *)(item + 4);
   if ( !v5 )
     return 1;
   if ( !a2 )
     return 1;
-  result = strcmp_(v4, v5);
+  result = strcmp_(a2, v5);
   if ( result )
     return 1;
   return result;
@@ -149247,7 +149161,7 @@ int  sub_4BBDA0(char *a1, double a2)
         v16 = sub_494810();
         *(_DWORD *)(v14 + 4) = v16;
       }
-      if ( (dword_51A948 & 1) != 0 || sub_48B750() )
+      if ( (dword_51A948 & 1) != 0 || sub_48B750((int)aFacts_0) )
         sub_48B510(1, v14);
       sub_4A8B40(v14);
       sub_4BBF90(v15, (int)v15);
@@ -152465,9 +152379,9 @@ signed int  sub_4BF450(int a1, double a2)
         sub_4BFC30(v13);
         if ( (dword_51B364 & 1) != 0 )
           sub_47F410(v15);
-        if ( (dword_51B364 & 2) != 0 || sub_48B750() )
+        if ( (dword_51B364 & 2) != 0 || sub_48B750((int)aActivations) )
           sub_4A8A80(1, v15);
-        if ( (dword_51B364 & 4) != 0 || sub_48B750() )
+        if ( (dword_51B364 & 4) != 0 || sub_48B750((int)aRules) )
         {
           sub_4A8AB0(1, v15);
           sub_4BCF80(v16, a2);
@@ -154107,18 +154021,16 @@ int sub_4C0F50()
 int sub_4C0FF0()
 {
   int result; // eax
-  int v1; // edx
 
   result = sub_47CEB0();
   if ( result != 1 )
   {
     sub_4917F0();
     result = sub_491680();
-    dword_51A9C4 = v1;
+    dword_51A9C4 = 1;
   }
   return result;
 }
-// 4C100B: variable 'v1' is possibly undefined
 // 4C0FF0: using guessed type int sub_4C0FF0();
 // 51A9C4: using guessed type int dword_51A9C4;
 
@@ -159615,55 +159527,42 @@ int  sub_4C71F0(int result, double a2)
 //----- (004C7220) --------------------------------------------------------
 int sub_4C7220()
 {
-  int **Symbol; // eax
-  _DWORD *v1; // ebx
-  int v2; // eax
-  signed int v3; // eax
-  int v4; // ecx
-  _DWORD *v5; // ecx
-  int v6; // eax
-  int v7; // edx
-  int v8; // ecx
-  signed int *v9; // eax
-  signed int **v10; // edx
-  _DWORD *v11; // eax
-  _DWORD *v12; // edx
-  int v13; // edx
+  int **assert_symbol; // eax
+  int assert_node; // ebx
+  int initial_template; // eax
+  int value_node; // eax
+  int deffacts_record; // edx
+  signed int *initial_name; // eax
+  _DWORD *rhs_copy; // eax
 
-  Symbol = Rules_MakeSymbol(aAssert_2);
-  v1 = (_DWORD *)AST_NewNode(10, (int)Symbol);
-  v2 = sub_492C60(aInitialFact_1, (int)v1);
-  v3 = AST_NewNode(35, v2);
-  *(_DWORD *)(v4 + 6) = v3;
-  sub_492EB0((__int16 *)v4);
-  v5 = *(_DWORD **)(dword_54DBA8 + 96);
-  if ( v5 )
+  assert_symbol = Rules_MakeSymbol(aAssert_2);
+  assert_node = AST_NewNode(10, (int)assert_symbol);
+  initial_template = sub_492C60(aInitialFact_1, assert_node);
+  value_node = AST_NewNode(35, initial_template);
+  *(_DWORD *)(assert_node + 6) = value_node;
+  sub_492EB0((__int16 *)assert_node);
+  deffacts_record = *(_DWORD *)(dword_54DBA8 + 96);
+  if ( deffacts_record )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 96);
-    *(_DWORD *)(dword_54DBA8 + 96) = *v5;
+    dword_54DBAC = deffacts_record;
+    *(_DWORD *)(dword_54DBA8 + 96) = *(_DWORD *)deffacts_record;
+    deffacts_record = dword_54DBAC;
   }
   else
   {
-    sub_472620((_DWORD *)0x18);
+    deffacts_record = sub_472620((_DWORD *)0x18);
   }
-  v6 = sub_4972E0(0);
-  *(_DWORD *)(v7 + 8) = v6;
-  v9 = Str_Intern(aInitialFact_1, v8);
-  *v10 = v9;
-  ++v9[1];
-  v11 = sub_492F10(v1);
-  v12[4] = 0;
-  v12[5] = v11;
-  v12[1] = 0;
-  AST_Free((int)v1);
-  return sub_4A8B40(v13);
+  *(_DWORD *)(deffacts_record + 8) = sub_4972E0(0);
+  initial_name = Str_Intern(aInitialFact_1, (int)aInitialFact_1);
+  *(_DWORD *)deffacts_record = initial_name;
+  ++initial_name[1];
+  rhs_copy = sub_492F10((_DWORD *)assert_node);
+  *(_DWORD *)(deffacts_record + 16) = 0;
+  *(_DWORD *)(deffacts_record + 20) = rhs_copy;
+  *(_DWORD *)(deffacts_record + 4) = 0;
+  AST_Free(assert_node);
+  return sub_4A8B40(deffacts_record);
 }
-// 4C7253: variable 'v4' is possibly undefined
-// 4C7282: variable 'v7' is possibly undefined
-// 4C728A: variable 'v8' is possibly undefined
-// 4C728F: variable 'v10' is possibly undefined
-// 4C729B: variable 'v12' is possibly undefined
-// 4C72B5: variable 'v13' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 
@@ -160327,15 +160226,15 @@ signed int sub_4C7E40()
 int  sub_4C7E70(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
+  _DWORD *freed_node; // ecx
 
   result = sub_4A9400(a1, dword_54E6A0, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 4C7E85: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E6A0: using guessed type int dword_54E6A0;
@@ -164404,7 +164303,7 @@ int  Lexer_ParseDefglobal(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
     goto LABEL_16;
   v7 = a3[1];
   IO_OutWriteToken(asc_50BC20);
-  if ( sub_48B750() == 1 && sub_47C360() )
+  if ( sub_48B750((int)aCompilations) == 1 && sub_47C360() )
   {
     if ( sub_499360() )
       v9 = aRedefiningDefg;
@@ -165940,48 +165839,42 @@ signed int  sub_4CE520(int a1, int a2)
 //----- (004CE530) --------------------------------------------------------
 int sub_4CE530()
 {
-  _DWORD *v0; // edx
-  int v1; // ecx
-  int **Symbol; // eax
-  _DWORD *v3; // ebx
-  int *v4; // eax
-  _DWORD *v5; // eax
-  int v6; // ecx
-  int v7; // ecx
-  int v8; // eax
-  int v9; // ecx
-  int v10; // ecx
+  int free_record; // edx
+  int definstances_record; // ecx
+  int **make_instance_symbol; // eax
+  int make_instance_node; // ebx
+  int initial_object_node; // eax
+  int *initial_object_class; // eax
+  _DWORD *rhs_copy; // eax
+  int owner_symbol; // eax
 
-  v0 = *(_DWORD **)(dword_54DBA8 + 112);
-  if ( v0 )
+  free_record = *(_DWORD *)(dword_54DBA8 + 112);
+  if ( free_record )
   {
-    dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 112);
-    *(_DWORD *)(dword_54DBA8 + 112) = *v0;
+    dword_54DBAC = free_record;
+    *(_DWORD *)(dword_54DBA8 + 112) = *(_DWORD *)free_record;
+    definstances_record = dword_54DBAC;
   }
   else
   {
-    sub_472620((_DWORD *)0x1C);
+    definstances_record = sub_472620((_DWORD *)0x1C);
   }
-  sub_4A94D0((int)aDefinstances, dword_54E6F4);
-  *(_DWORD *)(v1 + 20) = 0;
-  Symbol = Rules_MakeSymbol(aMakeInstance_2);
-  v3 = (_DWORD *)AST_NewNode(10, (int)Symbol);
-  *(_DWORD *)((char *)v3 + 6) = AST_NewNode(8, dword_54E6F4);
-  v4 = sub_4B0480(aInitialObjec_1);
-  *(_DWORD *)(*(_DWORD *)((char *)v3 + 6) + 10) = AST_NewNode(57, (int)v4);
-  v5 = sub_492F10(v3);
-  *(_DWORD *)(v6 + 24) = v5;
-  AST_Free((int)v3);
-  v8 = sub_4A8F50(v7);
-  ++*(_DWORD *)(v8 + 4);
-  sub_492EB0(*(__int16 **)(v9 + 24));
-  return sub_4A8B40(v10);
+  sub_4A94D0_Impl((int)aDefinstances, definstances_record, dword_54E6F4);
+  *(_DWORD *)(definstances_record + 20) = 0;
+  make_instance_symbol = Rules_MakeSymbol(aMakeInstance_2);
+  make_instance_node = AST_NewNode(10, (int)make_instance_symbol);
+  initial_object_node = AST_NewNode(8, dword_54E6F4);
+  *(_DWORD *)(make_instance_node + 6) = initial_object_node;
+  initial_object_class = sub_4B0480(aInitialObjec_1);
+  *(_DWORD *)(initial_object_node + 10) = AST_NewNode(57, (int)initial_object_class);
+  rhs_copy = sub_492F10((_DWORD *)make_instance_node);
+  *(_DWORD *)(definstances_record + 24) = rhs_copy;
+  AST_Free(make_instance_node);
+  owner_symbol = sub_4A8F50(definstances_record);
+  ++*(_DWORD *)(owner_symbol + 4);
+  sub_492EB0((__int16 *)rhs_copy);
+  return sub_4A8B40(definstances_record);
 }
-// 4CE56B: variable 'v1' is possibly undefined
-// 4CE5BB: variable 'v6' is possibly undefined
-// 4CE5C7: variable 'v7' is possibly undefined
-// 4CE5CF: variable 'v9' is possibly undefined
-// 4CE5D9: variable 'v10' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E6F4: using guessed type int dword_54E6F4;
@@ -166005,15 +165898,15 @@ signed int sub_4CE600()
 int  sub_4CE630(int a1)
 {
   int result; // eax
-  _DWORD *v2; // ecx
+  _DWORD *freed_node; // ecx
 
   result = sub_4A9400(a1, dword_54E8F4, a1);
-  dword_54DBAC = (int)v2;
-  *v2 = *(_DWORD *)(dword_54DBA8 + 48);
+  freed_node = (_DWORD *)a1;
+  dword_54DBAC = a1;
+  *freed_node = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = dword_54DBAC;
   return result;
 }
-// 4CE645: variable 'v2' is possibly undefined
 // 54DBA8: using guessed type int dword_54DBA8;
 // 54DBAC: using guessed type int dword_54DBAC;
 // 54E8F4: using guessed type int dword_54E8F4;
@@ -166025,7 +165918,7 @@ __int64 __fastcall sub_4CE670(int a1, int a2)
 
   HIDWORD(v3) = a2;
   LODWORD(v3) = 1;
-  sub_4A9430((void (*)(void))sub_4CE6A0, 0);
+  sub_4A9430_Impl((int (*)(int, intptr_t))sub_4CE6A0, dword_54E8F0, (intptr_t)&v3, 0);
   return v3;
 }
 // 54E8F0: using guessed type int dword_54E8F0;
@@ -179730,7 +179623,7 @@ _DWORD * sub_4DE370(int a1, _DWORD *a2, _DWORD *a3)
     if ( v29 == 1
       && sub_4DE6D0((_DWORD *)v10, v11, v28[2] & 1, SHIDWORD(v10), v22, (__int16 *)v28[13], v25, v5, i, (int)&v20[1]) )
     {
-      if ( sub_48B750() == 1 && sub_47C360() )
+      if ( sub_48B750((int)aCompilations) == 1 && sub_47C360() )
         Output_Write((int)off_51A61C[0], (int)aJ, v12);
       v3 = (_DWORD *)v12;
     }
@@ -179757,7 +179650,7 @@ _DWORD * sub_4DE370(int a1, _DWORD *a2, _DWORD *a3)
       }
       if ( v29 )
       {
-        if ( sub_48B750() == 1 && sub_47C360() )
+        if ( sub_48B750((int)aCompilations) == 1 && sub_47C360() )
         {
           Output_Write((int)off_51A61C[0], (int)aJ, v16);
           v3 = (_DWORD *)v3[5];
@@ -179775,7 +179668,7 @@ LABEL_19:
     }
     v28 = (_DWORD *)v28[17];
   }
-  if ( sub_48B750() != 1 || !sub_47C360() )
+  if ( sub_48B750((int)aCompilations) != 1 || !sub_47C360() )
     return v3;
   Output_Write((int)off_51A61C[0], (int)asc_50E03C, v18);
   return v3;
@@ -179933,7 +179826,7 @@ int  sub_4DE810(int a1, _DWORD *a2, int a3, int a4, char a5)
   char v17; // al
   int v18; // [esp+0h] [ebp-10h]
 
-  if ( sub_48B750() == 1 && sub_47C360() )
+  if ( sub_48B750((int)aCompilations) == 1 && sub_47C360() )
     Output_Write((int)off_51A61C[0], (int)aJ_0, v16);
   v8 = *(_DWORD **)(dword_54DBA8 + 160);
   if ( v8 )

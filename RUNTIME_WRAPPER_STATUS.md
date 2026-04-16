@@ -30,7 +30,7 @@ This file classifies the current runtime/quarantine surface for executable regen
 | `rand_` / `srand_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Narrow host-libc RNG bridges kept in the compat seam; good enough to remove the current retained link hole without claiming original CRT fidelity. |
 | `strlwr_` / `memmove_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Simple libc-backed wrappers kept quarantined as runtime glue rather than pulled into recovered gameplay code. |
 | `unknown_libname_2` | `recovered_impl` | `clash95.exe`/asm at `0x48523F`, `compat/decomp_runtime_stubs.c`, `clash95.c` callsites | Exact signed decimal parser recovered from the binary; no longer an `atoi` placeholder. |
-| filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit | Broad but understandable compatibility wrappers; still not proof of original runtime structure. |
+| filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit, lowercase `r` startup/shutdown route | Broad but understandable compatibility wrappers; `strcmp_` now uses a cached readable-range check invalidated on low32 alloc/free so malformed recovered pointers do not crash startup comparisons. |
 | `Render_LoadResourceSprite_v4` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:18215-18324`, live contained row-draw probes | Now matches the cache-query gate, companion `.pfn` palette load, and recolor contract closely enough to carry the authentic load-menu row-resource lane. |
 | `Render_LoadResourceSprite_v3` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:17529-17576`, gdb SIGINT in contained row draw | The missing non-newline cursor advance was restored from asm, removing the row-draw hang. |
 | `CSyncObject_Unlock` | `recovered_impl` | `src_cpp/csync_object.cpp`, `clash95.c` retained probes | Published through the conservative C++ seam as the original lock ABI rather than a new compat stub. |
@@ -98,3 +98,11 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained executable-regeneration blocker is still the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop`, not a wrapper, SDL, or `src_cpp` seam problem.
 - The latest retained widening also stayed in recovered C: `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` now restore their asm-backed helper bands without adding new compat wrappers.
+
+## Latest finite shutdown note
+- The lowercase `r` startup/shutdown route required no new speculative runtime stubs.
+- The reached wrapper changes are containment fixes:
+  - `strcmp_` now validates candidate low32 strings against cached readable host ranges instead of blindly dereferencing malformed recovered pointers.
+  - recovered compact software-surface destructors are invoked through an explicit 32-bit vtable helper.
+  - native SDL DirectDraw-compat COM methods are invoked through an explicit native pointer-size helper.
+- The next default-route blocker is outside those wrappers: the no-arg route exits through the intro AVI/CD check before the old full-route liveness smoke can pass.

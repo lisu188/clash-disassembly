@@ -2,6 +2,12 @@
 
 ## 2026-04-16
 
+- Continued the full `App_WinMain` startup/runtime slice by targeting a finite command-line route instead of broadening the default no-arg session path.
+- Recovered the lowercase `r` route enough for both `clash95_bootstrap r` and `clash95_cpp_regen r` to enter recovered early startup, run runtime/render init, skip the game-entry handoff, shut down cleanly, and exit `0`.
+- Repaired the reached router diagnostic and shutdown support code around logical-name lookup, `werror` recursion, mouse-speed setup, compact software-surface destructors, native SDL DirectDraw-compat COM vtable calls, and readable-range guarded `strcmp_`.
+- Added `tests/verify_r_command_shutdown.sh` plus `clash95_r_command_shutdown_smoke`; the new finite route smoke passes, while the older no-arg full-route smoke now exposes the next blocker by exiting through `Video_Avi_playIn -> App_RequestQuit` with `Clash CD not found`.
+- Updated the durable sidecars so the active front-end blocker is intro AVI/CD/resource-path recovery under SDL, with `CSS_Init` still deferred independently.
+
 - Continued the executable-regeneration startup/runtime slice on `codex/full-game-bootstrap-args`.
 - Kept the current default route on `main -> App_WinMain`; host-side probe switches and menu-probe env selectors remain removed.
 - Restored the retained log-file creation side effect: `createLogFiles` now gates on `logEnabled`, truncates/creates `clash.log` and `battle.log`, closes both handles, and clears `dword_526A20`.

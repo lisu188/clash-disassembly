@@ -118,3 +118,11 @@ add_test(
     $<TARGET_FILE:clash95_bootstrap>
 )
 set_tests_properties(clash95_full_route_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_r_command_shutdown_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_r_command_shutdown.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_r_command_shutdown_smoke PROPERTIES TIMEOUT 10)
