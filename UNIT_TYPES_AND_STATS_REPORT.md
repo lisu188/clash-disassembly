@@ -240,3 +240,6 @@
 
 ## 28. Batch 179 Note
 - `Batch 179` stayed on the executable startup/runtime frontier. The active work moved the direct `a` game route past the resource-context, building-sprite-cache, and frame-rendering crashes into the visible-tile renderer, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 29. Batch 180 Note
+- `Batch 180` stayed on the executable startup/runtime frontier. The active work moved the direct `a` game route from a `sub_416850` visible-tile-rendering crash to a CTest-covered liveness milestone, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.

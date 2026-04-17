@@ -199,3 +199,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `Render_DrawSprite` draws the recovered world-map frame through the existing format-0 linear sprite path instead of reading an eight-byte target from compact 32-bit vtables
 - Exploratory `timeout -k 1s 2s build/bin/clash95_bootstrap a` and `clash95_cpp_regen a` now stop later in `PlayGame -> sub_418700 -> sub_416850`.
 - The next direct-game blocker is visible-tile rendering and its remaining compact render-surface vtable callsites, not filesystem path handling or the top-level frame draw.
+
+## Latest direct-game liveness update
+- The reached `sub_416850` fog-covered-tile fill now uses a recovered linear-surface helper instead of compact render-surface slot `+0x1C`.
+- CTest now includes direct `a` route liveness smokes for both executable paths:
+  - `clash95_direct_a_route_smoke`
+  - `clash95_cpp_regen_direct_a_route_smoke`
+- The direct `a` route is no longer a crash-only exploratory path. It now reaches a smoke-testable world-map liveness milestone, with external harness shutdown still required.
+- The next executable-regeneration blocker remains deeper direct-game/menu/session fidelity, especially the unreduced compact render callsites still present beyond the first reached hidden-tile fill in `sub_416850`.

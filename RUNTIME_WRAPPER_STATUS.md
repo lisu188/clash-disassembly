@@ -127,3 +127,9 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the building sprite cache is represented as one recovered 650-byte slab instead of relying on adjacent weak globals
   - the reached `Render_DrawSprite` compact-vtable dispatch is replaced with an asm-backed call sequence into the existing recovered format-0 linear sprite decoder
 - The next runtime-wrapper-adjacent hazard is narrower and concrete: `sub_416850` still contains compact render-surface vtable calls that combine adjacent 32-bit entries on the 64-bit host when the direct game route reaches visible-tile rendering.
+
+## Latest direct-game liveness note
+- No SDL or broad compat wrapper was added for the latest direct `a` route step.
+- The reached `sub_416850` hidden-tile fill is handled in recovered C by writing the original solid rectangle into the resolved linear software surface.
+- This removes the first visible-tile compact-vtable crash and makes direct `a` route liveness testable for both `clash95_bootstrap` and `clash95_cpp_regen`.
+- Remaining compact render callsites in `sub_416850` stay deferred until validation reaches them.

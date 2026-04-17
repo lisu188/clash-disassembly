@@ -6913,3 +6913,29 @@
   - `sub_416850` contains additional compact render-surface vtable callsites and should be reduced as its own visible-tile-rendering batch
   - the exploratory `a` route still crashes at that deeper renderer frontier, so it is not yet a smoke-testable success path
   - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+
+## Batch 180 - Direct `a` route reaches liveness smoke
+- Current frontier:
+  - keep reducing only reached direct-game render hazards while preserving the recovered `PlayGame -> sub_418700 -> sub_416850` world-map tile path
+- Blockers removed this batch:
+  - the first reached `sub_416850` visible-tile rendering crash is gone: the fog-covered-tile rectangle fill no longer reads an eight-byte function pointer from compact 32-bit render-surface slot `+0x1C`
+  - the reached fill now uses the asm-backed rectangle `(left=a1, top=a2, right=a1+63, bottom=a2+63, color=1)` and writes directly into the SDL-backed linear software surface
+  - CTest now has direct `a` liveness smokes for both `clash95_bootstrap` and `clash95_cpp_regen`
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - exploratory `timeout -k 1s 5s build/bin/clash95_bootstrap a`
+  - exploratory `timeout -k 1s 5s build/bin/clash95_cpp_regen a`
+- Highest authentic runtime milestone reached:
+  - lowercase `r` remains the deterministic finite startup/render-init/shutdown route
+  - default no-arg remains a recovered main-menu liveness route
+  - direct `a` now reaches a smoke-testable `PlayGame` world-map liveness milestone for both executable paths instead of crashing in `sub_416850`
+- Key evidence used:
+  - `clash95.asm` `loc_417A98`, where the hidden-tile branch pushes color `1`, carries `a1/a2/a1+63/a2+63` in the recovered call registers, and dispatches compact render-surface slot `+0x1C`
+  - existing compact render-surface vtable initialization, where slot `+0x1C` resolves to the solid-rectangle fill family (`sub_4045A0`)
+  - runtime validation showing the previous direct-`a` crash no longer occurs under the new liveness smokes
+- Ambiguous candidates deferred:
+  - `sub_416850` still contains many additional compact sprite/line/fill callsites; only the reached fog-covered-tile fill was reduced in this batch
+  - the direct `a` route is a liveness milestone, not a clean finite quit path or playable-turn milestone
+  - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path

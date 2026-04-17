@@ -565,6 +565,12 @@ int  sub_405D00(int *a1, DWORD *a2, signed int a3);
 int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4);
 int  DLXSpriteSet_Save(int *a1, int a2, char a3);
 int  DLX_GetSpriteForChar(int a1, int a2);
+static int Compat_RenderDeviceFillSolidRect(
+        unsigned __int16 left,
+        unsigned __int16 top,
+        unsigned __int16 right,
+        unsigned __int16 bottom,
+        unsigned char color);
 static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode);
 int  sub_405ED0(int a1);
 __int16  DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
@@ -28826,7 +28832,7 @@ int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
   v94 = Map_ClassifyFogOfWarOverlayForPlayer(v3, v4, VIEWED_PLAYER_INDEX);
   if ( !v94 )
   {
-    (*(void (__fastcall **)(int, int, int, int))(*((_DWORD *)g_RenderDevice + 46) + 28))(v96, v98, v95, 1);
+    Compat_RenderDeviceFillSolidRect(v98, v97, v96, v95, 1u);
     goto LABEL_2;
   }
   if ( *(_BYTE *)(gameData + 140016) == 2 )
@@ -30190,6 +30196,44 @@ unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
+
+static int Compat_RenderDeviceFillSolidRect(
+        unsigned __int16 left,
+        unsigned __int16 top,
+        unsigned __int16 right,
+        unsigned __int16 bottom,
+        unsigned char color)
+{
+  _DWORD *surface;
+  unsigned char *surface_pixels;
+  int pitch;
+  int surface_width;
+  int surface_height;
+  int row;
+
+  if ( !g_RenderDevice )
+    return 0;
+  surface = RenderSurface_ResolvePrimaryCompanion((_DWORD *)g_RenderDevice);
+  if ( !surface || !RenderSurface_IsLinearSoftware(surface) )
+    return 0;
+  surface_pixels = (unsigned char *)(uintptr_t)(unsigned int)surface[1];
+  if ( !surface_pixels )
+    return 0;
+
+  pitch = *(unsigned __int16 *)surface;
+  surface_width = *(unsigned __int16 *)surface;
+  surface_height = *((unsigned __int16 *)surface + 1);
+  if ( left > right || top > bottom || left >= surface_width || top >= surface_height )
+    return 0;
+  if ( right >= surface_width )
+    right = surface_width - 1;
+  if ( bottom >= surface_height )
+    bottom = surface_height - 1;
+
+  for ( row = top; row <= bottom; ++row )
+    memset(surface_pixels + row * pitch + left, color, right - left + 1);
+  return 0;
+}
 
 static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode)
 {
