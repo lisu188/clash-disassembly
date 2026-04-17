@@ -237,3 +237,6 @@
 
 ## 27. Batch 175 Note
 - `Batch 175` stayed on the executable startup/runtime frontier. The active work restored the retained `createLogFiles` side effect on the full bootstrap route, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 28. Batch 179 Note
+- `Batch 179` stayed on the executable startup/runtime frontier. The active work moved the direct `a` game route past the resource-context, building-sprite-cache, and frame-rendering crashes into the visible-tile renderer, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.

@@ -191,3 +191,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `ctest --test-dir build --output-on-failure`
   - `ctest --test-dir build --output-on-failure --repeat until-fail:3`
 - The next executable-regeneration blocker is no longer intro AVI/CD availability. It is now deeper menu/session fidelity after the recovered main-menu liveness milestone, with `CSS_Init` still deferred independently.
+
+## Latest direct-game route update
+- The direct `a` command-line route now advances substantially farther through the recovered `PlayGame` entry:
+  - the direct branch passes resource context `16`, matching the original BL value before `WorldMap_Initialize` and `PlayGame`
+  - the building-sprite-cache slab is backed by a single 650-byte host block, so cache reset/load no longer corrupts the filesystem holder
+  - `Render_DrawSprite` draws the recovered world-map frame through the existing format-0 linear sprite path instead of reading an eight-byte target from compact 32-bit vtables
+- Exploratory `timeout -k 1s 2s build/bin/clash95_bootstrap a` and `clash95_cpp_regen a` now stop later in `PlayGame -> sub_418700 -> sub_416850`.
+- The next direct-game blocker is visible-tile rendering and its remaining compact render-surface vtable callsites, not filesystem path handling or the top-level frame draw.

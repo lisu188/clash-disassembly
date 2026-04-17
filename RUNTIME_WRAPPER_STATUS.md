@@ -119,3 +119,11 @@ This file classifies the current runtime/quarantine surface for executable regen
   - compact render-surface slot dispatch
   - the main-menu wait-loop sentinel
 - The next runtime-wrapper candidate is still `CSS_Init` / DirectSound-era device table recovery, but it remains deferred until the original table semantics are safe enough for the SDL runtime seam.
+
+## Latest direct-game route note
+- No new broad compat wrapper was added for the direct `a` route.
+- The reached fixes stayed in recovered C:
+  - direct-game startup now uses the original `0x10` resource context carried in BL
+  - the building sprite cache is represented as one recovered 650-byte slab instead of relying on adjacent weak globals
+  - the reached `Render_DrawSprite` compact-vtable dispatch is replaced with an asm-backed call sequence into the existing recovered format-0 linear sprite decoder
+- The next runtime-wrapper-adjacent hazard is narrower and concrete: `sub_416850` still contains compact render-surface vtable calls that combine adjacent 32-bit entries on the 64-bit host when the direct game route reaches visible-tile rendering.

@@ -1236,9 +1236,11 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
 {
   if ( command_mode == 'a' )
   {
-    WorldMap_Initialize(command_mode, 0);
+    const char direct_game_resource_context = 16;
+
+    WorldMap_Initialize(direct_game_resource_context, 0);
     sub_44C400(0, 0.0);
-    PlayGame(0, command_mode, 0, 0, 0.0);
+    PlayGame(0, direct_game_resource_context, 0, 0, 0.0);
   }
   else
   {

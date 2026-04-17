@@ -6885,3 +6885,31 @@
   - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
   - the default route is a main-menu liveness milestone, not a clean finite in-game quit path or playable-turn milestone
   - deeper menu branches still contain copied widget tables and compact-surface vtable callsites that should be reduced only when reached by validation
+
+## Batch 179 - Direct `a` route reaches visible-tile renderer
+- Current frontier:
+  - reduce the direct in-game command route (`clash95_bootstrap a`) only where asm/runtime evidence proves a concrete startup or host-width defect, without bypassing the recovered `PlayGame` world-map path
+- Blockers removed this batch:
+  - the direct `a` command now passes the asm-backed resource context `16` into `WorldMap_Initialize` and `PlayGame` instead of forwarding ASCII `'a'` as the recovered BL-equivalent context
+  - `BuildingSpriteCache_Reset` now marks the 50 building-cache entry key bytes from `byte_5438E8` in 13-byte steps instead of writing one stride past the pre-cache padding symbol
+  - the recovered building sprite-cache labels now share one 650-byte C backing block, so legitimate cache writes no longer overlap and corrupt `dword_543CC8` / the filesystem holder on the 64-bit host
+  - `Render_DrawSprite` no longer reads an eight-byte function pointer from compact 32-bit render-surface vtables; the reached frame draw now uses the asm-backed sprite indices/coordinates and the existing recovered format-0 linear sprite decoder
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout -k 1s 2s build/bin/clash95_bootstrap r`
+  - exploratory `timeout -k 1s 2s build/bin/clash95_bootstrap a`
+  - exploratory `timeout -k 1s 2s build/bin/clash95_cpp_regen a`
+- Highest authentic runtime milestone reached:
+  - lowercase `r` remains the deterministic finite startup/render-init/shutdown route
+  - the direct `a` route now gets through world-map init, filesystem-backed sprite loads, and the top-level frame draw, then reaches `PlayGame -> sub_418700 -> sub_416850`
+  - the new direct-`a` blocker is a compact render-surface vtable call inside visible-tile rendering (`sub_416850`), not the earlier filesystem root corruption or `Render_DrawSprite` compact-vtable crash
+- Key evidence used:
+  - `clash95.asm` direct-command branch around `loc_401555`, where BL remains `0x10` before `sub_40B640` and `PlayGame`
+  - `clash95.asm` `BuildingSpriteCache_Reset` loop and the existing `BuildingSpriteCacheEntry` structure evidence for the 50-entry / 13-byte cache block
+  - GDB watchpoints showing cache reset/storage writes corrupting `dword_543CC8` before the cache backing repair, followed by clean filesystem-holder state afterward
+  - `clash95.asm` `Render_DrawSprite` calls, which draw sprites `{0,1,2,3,5}` at `(0,0)`, `(314,0)`, `(0,237)`, `(315,238)`, and `(155,465)` on both render targets
+- Ambiguous candidates deferred:
+  - `sub_416850` contains additional compact render-surface vtable callsites and should be reduced as its own visible-tile-rendering batch
+  - the exploratory `a` route still crashes at that deeper renderer frontier, so it is not yet a smoke-testable success path
+  - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path

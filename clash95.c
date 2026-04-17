@@ -565,6 +565,7 @@ int  sub_405D00(int *a1, DWORD *a2, signed int a3);
 int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4);
 int  DLXSpriteSet_Save(int *a1, int a2, char a3);
 int  DLX_GetSpriteForChar(int a1, int a2);
+static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode);
 int  sub_405ED0(int a1);
 __int16  DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
 __int16  DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
@@ -12397,13 +12398,13 @@ int dword_5438BC; // weak
 int dword_5438C4; // weak
 int dword_5438C8; // weak
 char byte_5438DB[13]; // weak
-char byte_5438E8[]; // weak
-char byte_5438E9[]; // weak
-char byte_5438EA[]; // weak
-char byte_5438EB[]; // weak
-char byte_5438EC[]; // weak
-int dword_5438ED; // weak
-int dword_5438F1; // weak
+char byte_5438E8[650]; // weak
+#define byte_5438E9 (byte_5438E8 + 1)
+#define byte_5438EA (byte_5438E8 + 2)
+#define byte_5438EB (byte_5438E8 + 3)
+#define byte_5438EC (byte_5438E8 + 4)
+#define dword_5438ED (*(int *)(byte_5438E8 + 5))
+#define dword_5438F1 (*(int *)(byte_5438E8 + 9))
 int dword_543C54; // weak
 int dword_543C58[]; // weak
 int dword_543C80; // weak
@@ -17353,129 +17354,20 @@ int  sub_4066C0(unsigned __int16 *a1)
 //----- (00406740) --------------------------------------------------------
 int sub_406740()
 {
-  int SpriteForChar; // eax
-  int v1; // eax
-  int v2; // eax
-  int v3; // eax
-  int v4; // eax
-  int v5; // eax
-  int v6; // eax
-  int v7; // eax
-  int v8; // eax
-  int v9; // eax
+  int result; // eax
 
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  SpriteForChar = DLX_GetSpriteForChar(dword_5202BC, 0);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    0,
-    SpriteForChar,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v1 = DLX_GetSpriteForChar(dword_5202BC, 1);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    0,
-    v1,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v2 = DLX_GetSpriteForChar(dword_5202BC, 2);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    237,
-    v2,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v3 = DLX_GetSpriteForChar(dword_5202BC, 3);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    238,
-    v3,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v4 = DLX_GetSpriteForChar(dword_5202BC, 5);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    465,
-    v4,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
+  result = Compat_RenderDeviceDrawMenuSprite(0, 0, DLX_GetSpriteForChar(dword_5202BC, 0), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(314, 0, DLX_GetSpriteForChar(dword_5202BC, 1), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(0, 237, DLX_GetSpriteForChar(dword_5202BC, 2), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(315, 238, DLX_GetSpriteForChar(dword_5202BC, 3), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(155, 465, DLX_GetSpriteForChar(dword_5202BC, 5), 1u);
   g_RenderDevice = &unk_51D4C0;
-  v5 = DLX_GetSpriteForChar(dword_5202BC, 0);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    0,
-    v5,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v6 = DLX_GetSpriteForChar(dword_5202BC, 1);
-  (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    0,
-    v6,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v7 = DLX_GetSpriteForChar(dword_5202BC, 2);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    237,
-    v7,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v8 = DLX_GetSpriteForChar(dword_5202BC, 3);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    238,
-    v8,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
-  v9 = DLX_GetSpriteForChar(dword_5202BC, 5);
-  return (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-           465,
-           v9,
-           -1,
-           -1,
-           -1,
-           -1,
-           1,
-           0,
-           0);
+  result = Compat_RenderDeviceDrawMenuSprite(0, 0, DLX_GetSpriteForChar(dword_5202BC, 0), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(314, 0, DLX_GetSpriteForChar(dword_5202BC, 1), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(0, 237, DLX_GetSpriteForChar(dword_5202BC, 2), 1u);
+  result = Compat_RenderDeviceDrawMenuSprite(315, 238, DLX_GetSpriteForChar(dword_5202BC, 3), 1u);
+  return Compat_RenderDeviceDrawMenuSprite(155, 465, DLX_GetSpriteForChar(dword_5202BC, 5), 1u);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202BC: using guessed type int dword_5202BC;
@@ -56034,8 +55926,8 @@ int BuildingSpriteCache_Reset()
 {
   int result; // eax
 
-  for ( result = 0; result != 650; byte_5438DB[result] = -1 )
-    result += 13;
+  for ( result = 0; result != 650; result += 13 )
+    byte_5438E8[result] = -1;
   return result;
 }
 

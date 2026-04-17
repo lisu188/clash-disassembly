@@ -24,6 +24,11 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
   - `CSyncObject`
 - None of those required tightening `RECOVERED_STRUCTURES.json` yet because the C++ wrappers are still raw-handle views rather than committed ABI/layout claims.
 
+## Latest structure maintenance
+
+- `BuildingSpriteCacheEntry` remains the same 50-entry, 13-byte cache record, but the C backing storage now reflects that evidence directly: `byte_5438E8[650]` owns the slab and the nearby key/handle/timestamp labels are offset aliases inside it.
+- This was a host-layout correction, not a new semantic field claim. The change prevents the recovered cache reset/load paths from overlapping `dword_543CC8` in the x86-64 executable.
+
 ## What is ready for typed C++ views now
 
 - `DLXSpriteSet`

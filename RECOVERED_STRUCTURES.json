@@ -88,6 +88,7 @@
       "`BuildingSpriteCache_Reset`, `BuildingSpriteCache_Clear`, and `BuildingSpriteCache_CountEntries` walk 650 bytes in steps of 13, proving a fixed-size 50-entry cache family.",
       "`BuildingSpriteCache_GetOrLoadEntry` compares five one-byte visual keys at offsets `0..4`, refreshes the dword timestamp at offset `+9`, and returns the cached dword handle at offset `+5` on hits.",
       "`BuildingSpriteCache_LoadEntry` evicts the oldest occupied entry when the cache is full, stores the five key bytes plus the loaded handle/timestamp, and rebuilds the sprite-set from `buildin1.s32`, `buildin2.s32`, or `buildin3.s32` depending on the active language/resource mode byte.",
+      "`byte_5438E8` now owns the 650-byte recovered C backing storage; the adjacent `byte_5438E9`..`dword_5438F1` labels are offset aliases inside that same slab, matching the original DGROUP cache layout instead of allocating separate host globals.",
       "`WorldMap_DrawUnitStackWithOverlays` uses the cache for the current building footprint tile, while `WorldMap_Initialize` and `WorldMap_UnloadResources` reset or clear the same cache family."
     ]
   },
