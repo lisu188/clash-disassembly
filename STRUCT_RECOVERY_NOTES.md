@@ -34,6 +34,13 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - No recovered structure JSON changes were needed for the latest direct `a` route step.
 - The new fill helper is a reached render-surface host-width repair for `sub_416850`, not a new state layout or field claim.
 
+## Latest world-map action-widget maintenance
+
+- `RECOVERED_STRUCTURES.json` now records `WorldMapActionWidgetRecord`.
+- This is a real structure update: the weak symbols around `dword_511D40` were not independent globals, but one packed 0x35-byte table with six world-map action records plus a terminator.
+- The record layout reuses the already recovered menu-button field order, but this table has a distinct owner and button set: map mode, next unit, next building, join units, building, and ambush.
+- The building-button action callback remains quarantined in C until the authentic building/treasure-placement link surface is recovered; that quarantine does not change the record layout evidence.
+
 ## What is ready for typed C++ views now
 
 - `DLXSpriteSet`

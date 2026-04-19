@@ -6939,3 +6939,34 @@
   - `sub_416850` still contains many additional compact sprite/line/fill callsites; only the reached fog-covered-tile fill was reduced in this batch
   - the direct `a` route is a liveness milestone, not a clean finite quit path or playable-turn milestone
   - `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+
+## Batch 181 - Direct world-map controls and turn-advance scars
+- Current frontier:
+  - keep the direct `a` route and current full-route tests green while reducing only reached, asm-corroborated decompiler scars in the world-map/control path
+- Blockers removed this batch:
+  - `sub_418700` now advances the recovered row counter in both visible-tile loops; asm has the matching `inc ecx` in each loop body
+  - `sub_40A400` now loads the asm-backed `"map_butt.s32"` action-button sprite set instead of forwarding the unrelated caller register as a filename pointer
+  - `dword_511D40` is now represented as the packed six-record world-map action widget table plus terminator, with the two historical flag labels kept as offset aliases
+  - `sub_4191F0` now reads the 0x35-byte widget records through explicit 32-bit packed offsets instead of native pointer-width indexing
+  - `sub_405020` and `Unit_DebugDumpFormationSizes` now restore missing loop-counter initialization/increments seen in asm, removing two later direct-route live spins
+  - `Game_AdvanceToNextPlayerTurn` now checks `PLAYER_IS_ACTIVE(g_CurrentPlayerIndex)` and compares against the saved previous player index, matching the `nextPlayer` asm offsets
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - exploratory `timeout -k 1s 3s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-direct-a-check build/bin/clash95_bootstrap a`
+  - exploratory `timeout -k 1s 4s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy CLASH95_DUMP_PRESENTED_FRAMES_PREFIX=/tmp/clash95-scenario-A0 build/bin/clash95_bootstrap /A0`
+- Highest authentic runtime milestone reached:
+  - the required CTest routes remain green: default full-route main-menu liveness, lowercase `r` finite startup/shutdown, and direct `a` liveness for both executable paths
+  - direct `a` now moves past the earlier tile-fill, map-button load, widget-table draw, fade loop, diagnostic-unit dump loop, and bogus active-player offset issues
+  - live GDB sampling shows the direct `a` route now blocks in `Game_AdvanceToNextPlayerTurn` only because the autoloaded `save\\10.dat` path is absent locally, leaving all player-active flags zero
+- Key evidence used:
+  - `clash95.asm:37880-38190` for the two `sub_418700` row-counter increments
+  - `clash95.asm:15337-15361` for the hardcoded `map_butt.s32` load in `sub_40A400`
+  - `clash95.asm:408080-408290` for the six 0x35-byte world-map action widget records rooted at `dword_511D40`
+  - `clash95.asm:7115-7205` for the `sub_405020` loop counter
+  - `clash95.asm:26151-26234` for the diagnostic unit-dump counter
+  - `clash95.asm:15923-16112` for `nextPlayer` active-player and wraparound-turn semantics
+- Ambiguous candidates deferred:
+  - the building-action widget record is intentionally routed to `WorldMap_DeferBuildingActionCallback` for this batch because the authentic `sub_40A0E0` callback pulls the unresolved building/treasure placement link surface into the current executable target
+  - the direct `a` autosave branch still depends on local `save\\10.dat`; without that file it is a liveness route, not a playable initialized session
+  - the `/A0` scenario-start route currently fails in the known intro `Video_Avi_playIn -> Win_EndModeChange` surface before scenario initialization; that remains a separate startup/AVI blocker

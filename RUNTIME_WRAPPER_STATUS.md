@@ -133,3 +133,13 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The reached `sub_416850` hidden-tile fill is handled in recovered C by writing the original solid rectangle into the resolved linear software surface.
 - This removes the first visible-tile compact-vtable crash and makes direct `a` route liveness testable for both `clash95_bootstrap` and `clash95_cpp_regen`.
 - Remaining compact render callsites in `sub_416850` stay deferred until validation reaches them.
+
+## Latest direct-game control-path note
+- No new broad runtime wrapper or SDL shim was added for the latest direct `a` route step.
+- The active changes stayed in recovered C:
+  - direct tile redraw and fade loops now advance their asm-backed counters
+  - the world-map action-button sprite/table path is recovered as packed 0x35-byte records
+  - the reached widget draw helper reads original low32 fields explicitly instead of relying on host pointer width
+  - turn advance now checks the recovered player-active slot rather than a double-applied player-data offset
+- The only deliberate containment is the world-map building button action: record 4 is present, but its callback is temporarily routed to `WorldMap_DeferBuildingActionCallback` because the authentic `sub_40A0E0` callback still pulls unresolved building/treasure-placement symbols into the current executable surface.
+- `CSS_Init` and the intro AVI mode-switch surface remain separate wrapper/runtime frontiers.

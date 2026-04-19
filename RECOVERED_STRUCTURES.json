@@ -1176,6 +1176,106 @@
     ]
   },
   {
+    "name": "WorldMapActionWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "dword_511D40",
+    "stride": 53,
+    "count": 6,
+    "description": "0x35-byte world-map action-button widget record table rooted at `dword_511D40`. Batch 181 confirmed that the nearby weak labels are offsets inside one packed six-record table plus a `-1` terminator rather than independent globals.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The two-column world-map action panel uses x coordinates `416`, `480`, and `544`."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "The two rows use y coordinates `400` and `432`."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "int32",
+        "notes": "`dword_511D48` aliases this field for the first record, and `dword_511DE7` aliases this field for the join-units record at table offset `3 * 0x35 + 8`."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "All six records point at `dword_52030C`, the holder for the loaded `map_butt.s32` sprite set."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "Sprite ids are the even entries `0`, `2`, `4`, `6`, `8`, and `10`."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "Sprite ids are the adjacent selected entries `1`, `3`, `5`, `7`, `9`, and `11`."
+      },
+      {
+        "offset": 24,
+        "name": "overlay_sprite_index",
+        "type": "int32",
+        "notes": "The original table stores `14` here for this button family."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "All six records use the `sub_4191F0` draw/transition callback."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Callbacks are map mode, next unit, next building, join units, building, and ambush. The building callback is currently quarantined in the live executable until the `sub_40A0E0` link surface is recovered."
+      },
+      {
+        "offset": 36,
+        "name": "localized_label_pl_low32",
+        "type": "low32_pointer<char>",
+        "notes": "Polish tooltip label pointer."
+      },
+      {
+        "offset": 40,
+        "name": "localized_label_en_low32",
+        "type": "low32_pointer<char>",
+        "notes": "English tooltip label pointer."
+      },
+      {
+        "offset": 44,
+        "name": "localized_label_de_low32",
+        "type": "low32_pointer<char>",
+        "notes": "German tooltip label pointer."
+      },
+      {
+        "offset": 48,
+        "name": "label_or_sound_flag",
+        "type": "uint8",
+        "notes": "Set to `1` on all recovered records, matching the broader menu-widget family."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "All six records point at the action sound name `male`."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` stores six consecutive records at `dword_511D40`, `dword_511D40 + 0x35`, ..., `dword_511D40 + 5 * 0x35`, followed by a terminator record whose first dword is `-1`.",
+      "The first row coordinates are `(416,400)`, `(480,400)`, `(544,400)` and the second row coordinates are `(416,432)`, `(480,432)`, `(544,432)`, matching the live world-map action-button panel.",
+      "`sub_40A400` loads `map_butt.s32` into `dword_52030C`, and all records dereference that holder through offset `+12` before drawing through `sub_4191F0`.",
+      "The historical labels `dword_511D48`, `unk_511DDF`, and `dword_511DE7` correspond to field offsets inside the same table rather than standalone state."
+    ]
+  },
+  {
     "name": "LoadMenuButtonWidgetRecord",
     "kind": "recovered_struct",
     "base_symbol": "g_LoadMenuButtonWidgetsTemplate / unk_518808",

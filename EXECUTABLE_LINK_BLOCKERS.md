@@ -208,3 +208,18 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - clean finite default-route quit from the recovered game loop
   - the still-deferred `CSS_Init` DirectSound-era table
   - the broader playable-turn milestone
+
+## Latest direct-game blocker update
+- The direct `a` route now gets through the reached world-map redraw/control scars and remains covered by CTest liveness smokes for both `clash95_bootstrap` and `clash95_cpp_regen`.
+- The current direct `a` frontier is no longer a link failure or immediate renderer crash:
+  - the original branch tries to load `save\\10.dat` through `sub_44C400`
+  - that file is absent in the local data set, so the loaded roster is empty
+  - live sampling therefore stops in `Game_AdvanceToNextPlayerTurn` waiting for a nonzero `PLAYER_IS_ACTIVE` slot
+- A small link quarantine remains inside the newly reified world-map action widget table:
+  - the authentic building-button action is `sub_40A0E0`
+  - enabling it today pulls unresolved building/treasure placement helpers into the executable link
+  - the record is present, but its live callback is temporarily `WorldMap_DeferBuildingActionCallback`
+- The next executable blockers are:
+  - acquire or reconstruct the direct-route autosave/session initialization data path honestly
+  - recover the `sub_40A0E0` building/treasure placement link surface
+  - separately reduce the `/A0` scenario-start intro `Video_Avi_playIn -> Win_EndModeChange` crash

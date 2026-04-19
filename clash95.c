@@ -9030,10 +9030,14 @@ char *g_Text_NoBuilder[3] =
   "There's no builder in the army!",
   "Es befindet sich kein Pionier in der Armee."
 }; // weak
-_DWORD dword_511D40[2] = { 416, 400 }; // weak
-int dword_511D48 = 1; // weak
-_UNKNOWN unk_511DDF; // weak
-int dword_511DE7 = 1; // weak
+#define WORLD_MAP_ACTION_WIDGET_RECORD_SIZE 53
+#define WORLD_MAP_ACTION_WIDGET_COUNT 6
+
+_BYTE dword_511D40[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (WORLD_MAP_ACTION_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
+#define dword_511D48 (*(int *)(dword_511D40 + 8))
+#define unk_511DDF (*(unsigned char *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3))
+#define dword_511DE7 (*(int *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3 + 8))
+static int g_WorldMapActionWidgetsInitialized;
 int dword_511EC0 = -1; // weak
 typedef struct TextSpriteResourceSlotRecord {
   const char *source_stem;
@@ -16024,6 +16028,7 @@ int * sub_405020(int *result, unsigned __int8 *a2, signed int a3)
       }
       while ( v5 != a2 + 1024 );
       sub_404C80(v7, v9);
+      ++v4;
       result = (int *)Render_SaveBackbuffer((int)v7);
     }
     while ( v4 <= a3 );
@@ -19376,6 +19381,8 @@ int  sub_40A0A0(int a1, int a2)
 // 40A0A8: variable 'v3' is possibly undefined
 // 520308: using guessed type int dword_520308;
 
+static void WorldMap_EnsureActionButtonWidgetTable(void);
+
 //----- (0040A0E0) --------------------------------------------------------
 int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
 {
@@ -19458,6 +19465,7 @@ LABEL_13:
         }
       }
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+      WorldMap_EnsureActionButtonWidgetTable();
       sub_419D80(dword_511D40);
       sub_40A490(0x40u);
       sub_418700(1);
@@ -19495,6 +19503,148 @@ LABEL_13:
 // 520308: using guessed type int dword_520308;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
+static void WorldMap_WriteActionWidgetRecord(
+        unsigned char *record,
+        int left,
+        int top,
+        int flags,
+        int sprite_index_base,
+        int sprite_index_selected_base,
+        int action_callback,
+        const char *polish_label,
+        const char *english_label,
+        const char *german_label,
+        const char *sound_name)
+{
+  memset(record, 0, WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
+  *(_DWORD *)(record + 0) = left;
+  *(_DWORD *)(record + 4) = top;
+  *(_DWORD *)(record + 8) = flags;
+  *(_DWORD *)(record + 12) = (int)(uintptr_t)&dword_52030C;
+  *(_DWORD *)(record + 16) = sprite_index_base;
+  *(_DWORD *)(record + 20) = sprite_index_selected_base;
+  *(_DWORD *)(record + 24) = 14;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_4191F0;
+  *(_DWORD *)(record + 32) = action_callback;
+  *(_DWORD *)(record + 36) = (int)(uintptr_t)polish_label;
+  *(_DWORD *)(record + 40) = (int)(uintptr_t)english_label;
+  *(_DWORD *)(record + 44) = (int)(uintptr_t)german_label;
+  record[48] = 1;
+  *(_DWORD *)(record + 49) = (int)(uintptr_t)sound_name;
+}
+
+static int WorldMap_DeferBuildingActionCallback(uintptr_t widget)
+{
+  /* The authentic sub_40A0E0 callback still reopens the unresolved building-placement link surface. */
+  (void)widget;
+  return 0;
+}
+
+static void WorldMap_EnsureActionButtonWidgetTable(void)
+{
+  static const char action_sound[] = "male";
+  static const char label_map_mode_pl[] = "Tryb mapy";
+  static const char label_map_mode_en[] = "Map mode";
+  static const char label_map_mode_de[] = "Kartenmodus";
+  static const char label_next_unit_pl[] = "Nast\x91" "pna jednostka";
+  static const char label_next_unit_en[] = "Next unit";
+  static const char label_next_unit_de[] = "N\x84" "chste Einheit";
+  static const char label_next_building_pl[] = "Nast\x91" "pna budowla";
+  static const char label_next_building_en[] = "Next building";
+  static const char label_next_building_de[] = "N\x84" "chstes Geb\x84" "ude";
+  static const char label_join_units_pl[] = "\x9C\x86" "czenie oddzia\x92\xA2" "w";
+  static const char label_join_units_en[] = "Join units";
+  static const char label_join_units_de[] = "Einheiten verbinden";
+  static const char label_building_pl[] = "Budowanie";
+  static const char label_building_en[] = "Building";
+  static const char label_building_de[] = "Geb\x84" "ude";
+  static const char label_ambush_pl[] = "Zasadzka";
+  static const char label_ambush_en[] = "Ambush";
+  static const char label_ambush_de[] = "Hinterhalt";
+  int map_mode_flags;
+  int join_units_flags;
+
+  if ( g_WorldMapActionWidgetsInitialized )
+    return;
+  map_mode_flags = dword_511D48 ? dword_511D48 : 1;
+  join_units_flags = dword_511DE7 ? dword_511DE7 : 1;
+  memset(dword_511D40, 0, sizeof(dword_511D40));
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
+    416,
+    400,
+    map_mode_flags,
+    0,
+    1,
+    (int)(uintptr_t)&sub_409D80,
+    label_map_mode_pl,
+    label_map_mode_en,
+    label_map_mode_de,
+    action_sound);
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
+    480,
+    400,
+    1,
+    2,
+    3,
+    (int)(uintptr_t)&sub_409DF0,
+    label_next_unit_pl,
+    label_next_unit_en,
+    label_next_unit_de,
+    action_sound);
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
+    544,
+    400,
+    1,
+    4,
+    5,
+    (int)(uintptr_t)&sub_409F00,
+    label_next_building_pl,
+    label_next_building_en,
+    label_next_building_de,
+    action_sound);
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
+    416,
+    432,
+    join_units_flags,
+    6,
+    7,
+    (int)(uintptr_t)&sub_40A040,
+    label_join_units_pl,
+    label_join_units_en,
+    label_join_units_de,
+    action_sound);
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
+    480,
+    432,
+    1,
+    8,
+    9,
+    (int)(uintptr_t)&WorldMap_DeferBuildingActionCallback,
+    label_building_pl,
+    label_building_en,
+    label_building_de,
+    action_sound);
+  WorldMap_WriteActionWidgetRecord(
+    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
+    544,
+    432,
+    1,
+    10,
+    11,
+    (int)(uintptr_t)&sub_40A000,
+    label_ambush_pl,
+    label_ambush_en,
+    label_ambush_de,
+    action_sound);
+  *(_DWORD *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT) = -1;
+  g_WorldMapActionWidgetsInitialized = 1;
+}
+
 //----- (0040A360) --------------------------------------------------------
 int __thiscall sub_40A360(void *this)
 {
@@ -19502,6 +19652,7 @@ int __thiscall sub_40A360(void *this)
   int v2; // ecx
   int v3; // ecx
 
+  WorldMap_EnsureActionButtonWidgetTable();
   if ( g_SelectedUnitIndex == -1 )
   {
     dword_511D48 = 1;
@@ -19545,8 +19696,9 @@ int  sub_40A400(int a1, char a2, DWORD a3)
 
   v4 = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
   if ( v4 )
-    v4 = DLXSpriteSet_Load(v4, a2);
+    v4 = DLXSpriteSet_Load(v4, "map_butt.s32");
   dword_52030C = (int)v4;
+  WorldMap_EnsureActionButtonWidgetTable();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   sub_419D80(dword_511D40);
   sub_418700(1);
@@ -19572,6 +19724,7 @@ int  sub_40A460(DWORD a1)
   int v1; // edx
 
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  WorldMap_EnsureActionButtonWidgetTable();
   if ( sub_419DC0(dword_511D40, a1) == 1 )
     sub_406980(a1);
   return v1;
@@ -19833,14 +19986,14 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   v5 = g_CurrentPlayerIndex;
   do
     g_CurrentPlayerIndex = (g_CurrentPlayerIndex + 1) % 5;
-  while ( !*(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140024) );
+  while ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) );
   TURN_OWNER_PLAYER_INDEX = g_CurrentPlayerIndex;
   Debug_Log(v5, 5, a3, (int)aPlayerD);
   v7 = (unsigned __int8 *)g_CurrentPlayerIndex;
   v8 = PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex);
   if ( v8 )
     VIEWED_PLAYER_INDEX = g_CurrentPlayerIndex;
-  if ( v6 > g_CurrentPlayerIndex )
+  if ( v5 > g_CurrentPlayerIndex )
   {
     ++GAME_TURN_COUNTER;
     Debug_Log(v6, (char)v7, a3, (int)aNextTurnD);
@@ -19924,6 +20077,7 @@ int * WorldMap_RenderHook(DWORD a1)
   sub_404D90((int *)&unk_51D4C0);
   Render_DrawSprite();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
+  WorldMap_EnsureActionButtonWidgetTable();
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     sub_419D80(dword_511D40);
   else
@@ -24164,8 +24318,12 @@ signed int  sub_411350(int a1, DWORD a2)
   signed int v4; // ecx
 
   Debug_Log(0, a1, a2, (int)aUnitD0x08x);
+  v4 = 0;
   for ( result = Unit_GetSquadCount(a1); v4 < result; result = Unit_GetSquadCount(a1) )
+  {
     Debug_Log(v4 + 1, a1, a2, (int)a15sPl1dP);
+    ++v4;
+  }
   return result;
 }
 
@@ -29591,6 +29749,7 @@ int  sub_418700(int a1)
                  (unsigned __int16 *)(gameData
                                     + 1400 * (v3 + *(_DWORD *)(gameData + 140008))
                                     + 14 * (v2 + *(_DWORD *)(gameData + 140012))));
+      ++v3;
       v4 += 64;
     }
     while ( v3 < 9 );
@@ -29610,6 +29769,7 @@ int  sub_418700(int a1)
                  (unsigned __int16 *)(14 * (v2 + *(_DWORD *)(gameData + 140012))
                                     + gameData
                                     + 1400 * (v3 + *(_DWORD *)(gameData + 140008))));
+      ++v3;
       v9 += 64;
     }
     while ( v3 < 6 );
@@ -30023,6 +30183,8 @@ int  sub_419110(int result)
 }
 // 526A20: using guessed type int dword_526A20;
 
+static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode);
+
 static int Compat_CountPrintfArgs32(const char *format)
 {
   int count;
@@ -30113,86 +30275,50 @@ void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...)
 //----- (004191F0) --------------------------------------------------------
 unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2)
 {
-  unsigned __int16 *v2; // esi
-  int v3; // edi
-  unsigned __int16 v4; // cx
-  __int16 SpriteHeight; // ax
-  int SpriteForChar; // eax
-  int v7; // eax
-  unsigned __int16 v8; // cx
-  __int16 v9; // ax
-  unsigned __int16 v10; // cx
-  __int16 v11; // ax
-  unsigned __int16 v12; // [esp+28h] [ebp-2Ch]
-  unsigned __int16 v13; // [esp+2Ch] [ebp-28h]
-  unsigned __int16 v14; // [esp+30h] [ebp-24h]
-  unsigned __int16 v15; // [esp+30h] [ebp-24h]
-  unsigned __int16 v16; // [esp+30h] [ebp-24h]
-  int v17; // [esp+38h] [ebp-1Ch]
+  unsigned char *widget;
+  int left;
+  int top;
+  int flags;
+  unsigned int sprite_set_holder;
+  unsigned int sprite_set;
+  int sprite_index;
+  int overlay_sprite_index;
+  int sprite_for_char;
 
-  v2 = result;
-  if ( (result[4] & 1) != 0 )
-    v3 = *((_DWORD *)result + 4);
-  else
-    v3 = *((_DWORD *)result + 5);
-  if ( v3 != -1 )
+  widget = (unsigned char *)result;
+  left = *(_DWORD *)(widget + 0);
+  top = *(_DWORD *)(widget + 4);
+  flags = *(_DWORD *)(widget + 8);
+  sprite_set_holder = *(_DWORD *)(widget + 12);
+  sprite_set = sprite_set_holder ? *(_DWORD *)(uintptr_t)sprite_set_holder : 0;
+  sprite_index = (flags & 1) != 0 ? *(_DWORD *)(widget + 16) : *(_DWORD *)(widget + 20);
+  overlay_sprite_index = *(_DWORD *)(widget + 24);
+  if ( sprite_set && sprite_index != -1 )
   {
-    v17 = dword_544D10;
-    if ( g_RenderDevice == &unk_51D4C0 && dword_544D10 )
+    sprite_for_char = DLX_GetSpriteForChar(sprite_set, sprite_index);
+    Compat_RenderDeviceDrawMenuSprite(left, top, sprite_for_char, 0);
+    if ( (flags & 4) != 0 && overlay_sprite_index != -1 )
     {
-      v14 = result[2] + DLX_GetSpriteWidth(**((_DWORD **)result + 3), v3) - 1;
-      SpriteHeight = DLX_GetSpriteHeight(**((_DWORD **)v2 + 3), v4);
-      sub_460BB0(dword_544CD8, *v2, *v2 + SpriteHeight - 1, v2[2], v14);
+      sprite_for_char = DLX_GetSpriteForChar(sprite_set, overlay_sprite_index);
+      Compat_RenderDeviceDrawMenuSprite(left, top, sprite_for_char, 1);
     }
-    SpriteForChar = DLX_GetSpriteForChar(**((_DWORD **)v2 + 3), v3);
-    result = (unsigned __int16 *)(*(int (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-                                   *((_DWORD *)v2 + 1),
-                                   SpriteForChar,
-                                   -1,
-                                   -1,
-                                   -1,
-                                   -1,
-                                   1,
-                                   0,
-                                   0);
-    if ( (v2[4] & 4) != 0 && *((_DWORD *)v2 + 6) != -1 )
-    {
-      v7 = DLX_GetSpriteForChar(**((_DWORD **)v2 + 3), *((_DWORD *)v2 + 6));
-      result = (unsigned __int16 *)(*(int (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-                                     *((_DWORD *)v2 + 1),
-                                     v7,
-                                     -1,
-                                     -1,
-                                     -1,
-                                     -1,
-                                     1,
-                                     0,
-                                     0);
-    }
-    if ( g_RenderDevice == &unk_51D4C0 && v17 )
-      result = (unsigned __int16 *)Render_Present((int)dword_544CD8);
     if ( a2 && g_RenderDevice != &unk_51D4C0 )
     {
-      if ( v17 )
-      {
-        v15 = v2[2] + DLX_GetSpriteWidth(**((_DWORD **)v2 + 3), v3) - 1;
-        v9 = DLX_GetSpriteHeight(**((_DWORD **)v2 + 3), v8);
-        sub_460BB0(dword_544CD8, *v2, *v2 + v9 - 1, v2[2], v15);
-      }
-      v16 = v2[2];
-      v13 = *v2;
-      v12 = v16 + DLX_GetSpriteWidth(**((_DWORD **)v2 + 3), v3) - 1;
-      v11 = DLX_GetSpriteHeight(**((_DWORD **)v2 + 3), v10);
-      result = (unsigned __int16 *)Render_FillRect(g_RenderDevice, 0, v2[2], *v2, *v2 + v11 - 1, v12, v13, v16);
-      if ( v17 )
-        return (unsigned __int16 *)Render_Present((int)dword_544CD8);
+      Render_FillRect(
+        g_RenderDevice,
+        0,
+        (unsigned __int16)top,
+        (unsigned __int16)left,
+        (unsigned __int16)(top + DLX_GetSpriteHeight(sprite_set, sprite_index) - 1),
+        (unsigned __int16)(left + DLX_GetSpriteWidth(sprite_set, sprite_index) - 1),
+        (unsigned __int16)left,
+        (unsigned __int16)top);
     }
+    if ( g_RenderDevice == &unk_51D4C0 && dword_544D10 )
+      return (unsigned __int16 *)Render_Present((int)dword_544CD8);
   }
   return result;
 }
-// 419254: variable 'v4' is possibly undefined
-// 41935D: variable 'v8' is possibly undefined
-// 4193B0: variable 'v10' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 // 544D10: using guessed type int dword_544D10;
@@ -30802,6 +30928,11 @@ LABEL_34:
 //----- (00419D60) --------------------------------------------------------
 int  sub_419D60(uintptr_t result, int a2)
 {
+  if ( result == (uintptr_t)dword_511D40
+    || result == (uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3) )
+  {
+    WorldMap_EnsureActionButtonWidgetTable();
+  }
   if ( *(int *)result < 640 )
     return UI_InvokeWidgetTransitionCallback(result, a2);
   return (int)result;
@@ -30812,6 +30943,8 @@ _DWORD * sub_419D80(_DWORD *result)
 {
   unsigned char *widget;
 
+  if ( (uintptr_t)result == (uintptr_t)dword_511D40 )
+    WorldMap_EnsureActionButtonWidgetTable();
   widget = (unsigned char *)result;
   if ( *(_DWORD *)widget == -1 )
     return result;
@@ -30838,6 +30971,8 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
   signed int result; // ecx
   signed int widget_result; // eax
 
+  if ( (uintptr_t)a1 == (uintptr_t)dword_511D40 )
+    WorldMap_EnsureActionButtonWidgetTable();
   widget = (uintptr_t)a1;
   has_tooltip = 0;
   result = 0;

@@ -207,3 +207,17 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `clash95_cpp_regen_direct_a_route_smoke`
 - The direct `a` route is no longer a crash-only exploratory path. It now reaches a smoke-testable world-map liveness milestone, with external harness shutdown still required.
 - The next executable-regeneration blocker remains deeper direct-game/menu/session fidelity, especially the unreduced compact render callsites still present beyond the first reached hidden-tile fill in `sub_416850`.
+
+## Latest direct-game control-path update
+- The direct `a` route now gets past the next reached decompiler scars in the world-map/control corridor:
+  - the two `sub_418700` tile-row counters
+  - the `map_butt.s32` action-button sprite load
+  - the packed `dword_511D40` world-map action widget table
+  - the `sub_4191F0` packed-widget draw reads
+  - the `sub_405020` fade-loop counter
+  - the diagnostic unit-dump loop counter
+  - the `Game_AdvanceToNextPlayerTurn` active-player/wraparound check
+- The current executable targets still build and CTest remains green for the default full route, lowercase `r`, and both direct `a` liveness smokes.
+- The direct `a` route now exposes a data frontier: original `sub_44C400` tries to load `save\\10.dat`; that file is absent locally, so the roster remains all-zero and the route samples in `Game_AdvanceToNextPlayerTurn` waiting for an active player.
+- The world-map building-action record is present in the recovered table, but its action callback is quarantined behind `WorldMap_DeferBuildingActionCallback` until the authentic `sub_40A0E0` building/treasure-placement link surface is recovered.
+- A separate `/A0` scenario-start smoke still fails in `Video_Avi_playIn -> Win_EndModeChange`; that remains the intro-AVI/mode-switch blocker rather than a C++ executable target issue.
