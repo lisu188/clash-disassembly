@@ -80,3 +80,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 2. Continue freezing high-value `BattleRuntimeState` fields around actor selection and per-side turn state.
 3. Finish the remaining ambiguous renderer/animation bytes in `BuildingGarrisonDialogState` when those paths block executable progress.
 4. Keep `InputBackendState` as the typed landing zone for backend cleanup instead of re-splitting it into loose globals.
+
+## Latest low32 allocator maintenance
+
+- `RECOVERED_STRUCTURES.json` now records `CompatLow32ArenaBlock` as a host runtime allocator record.
+- This is not an original gameplay structure claim: it documents the current compatibility allocation shape needed to keep preserved 32-bit pointer storage viable during direct `/A0` startup.
+- The latest `/A0` fixes also strengthen the existing `UnitStackRecord` / `UnitSlotRecord` evidence through recovered slot predicate and sentinel handling, but they do not add new fields or rename any ambiguous top-bit/status lanes.

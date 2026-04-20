@@ -111,6 +111,14 @@ typedef struct CompatLow32AllocHeader {
   int used_mmap;
 } CompatLow32AllocHeader;
 
+typedef struct CompatLow32Arena {
+  CompatLow32AllocHeader *mapping;
+  unsigned char *base;
+  size_t capacity;
+  size_t offset;
+  struct CompatLow32Arena *next;
+} CompatLow32Arena;
+
 typedef struct CompatFileRuntimeMeta {
   int next_link;
   int stream_ptr;
@@ -153,6 +161,7 @@ typedef struct CompatFindHandle {
 
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
+static CompatLow32Arena *g_compat_low32_arenas;
 
 typedef struct CompatEventHandle {
   unsigned int magic;
@@ -1095,6 +1104,19 @@ static int CompatPointerFitsSigned32(const void *ptr)
   return ptr && (uintptr_t)ptr <= (uintptr_t)INT_MAX;
 }
 
+enum
+{
+  COMPAT_LOW32_ARENA_BLOCK = 2
+};
+
+#define COMPAT_LOW32_ARENA_SIZE ((size_t)16 * 1024 * 1024)
+#define COMPAT_LOW32_ARENA_MAX_ALLOC ((size_t)1024 * 1024)
+
+static size_t CompatAlignLow32Size(size_t size)
+{
+  return (size + 7u) & ~(size_t)7u;
+}
+
 static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int flags, void *hint)
 {
   CompatLow32AllocHeader *header;
@@ -1118,26 +1140,19 @@ static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int fl
   return header;
 }
 
-static void *CompatAllocLow32(size_t size)
+static CompatLow32AllocHeader *CompatMapSignedLow32(size_t total_size)
 {
   CompatLow32AllocHeader *header;
-  size_t total_size;
 #ifdef MAP_FIXED_NOREPLACE
   uintptr_t hint;
   size_t page_size;
   long page_size_result;
 #endif
 
-  if ( !size )
-    return 0;
-  total_size = sizeof(*header) + size;
 #ifdef MAP_32BIT
   header = CompatTryMapSignedLow32(total_size, MAP_32BIT, 0);
   if ( header )
-  {
-    CompatInvalidateReadableRanges();
-    return header + 1;
-  }
+    return header;
 #endif
 #ifdef MAP_FIXED_NOREPLACE
   page_size_result = sysconf(_SC_PAGESIZE);
@@ -1150,12 +1165,90 @@ static void *CompatAllocLow32(size_t size)
   {
     header = CompatTryMapSignedLow32(total_size, MAP_FIXED_NOREPLACE, (void *)hint);
     if ( header )
-    {
-      CompatInvalidateReadableRanges();
-      return header + 1;
-    }
+      return header;
   }
 #endif
+  return 0;
+}
+
+static void *CompatAllocLow32FromArena(size_t size)
+{
+  CompatLow32Arena *arena;
+  CompatLow32AllocHeader *mapping;
+  CompatLow32AllocHeader *block_header;
+  size_t header_size;
+  size_t payload_size;
+  size_t block_size;
+  size_t arena_capacity;
+  size_t mapping_size;
+
+  if ( size > COMPAT_LOW32_ARENA_MAX_ALLOC )
+    return 0;
+  header_size = CompatAlignLow32Size(sizeof(CompatLow32AllocHeader));
+  payload_size = CompatAlignLow32Size(size);
+  if ( payload_size > (size_t)-1 - header_size )
+    return 0;
+  block_size = header_size + payload_size;
+  for ( arena = g_compat_low32_arenas; arena; arena = arena->next )
+  {
+    if ( arena->offset <= arena->capacity && arena->capacity - arena->offset >= block_size )
+      break;
+  }
+  if ( !arena )
+  {
+    arena_capacity = COMPAT_LOW32_ARENA_SIZE;
+    if ( arena_capacity < block_size )
+      arena_capacity = block_size;
+    if ( arena_capacity > (size_t)-1 - sizeof(*mapping) )
+      return 0;
+    mapping_size = sizeof(*mapping) + arena_capacity;
+    mapping = CompatMapSignedLow32(mapping_size);
+    if ( !mapping )
+      return 0;
+    arena = (CompatLow32Arena *)malloc(sizeof(*arena));
+    if ( !arena )
+    {
+      munmap(mapping, mapping->mapped_size);
+      return 0;
+    }
+    arena->mapping = mapping;
+    arena->base = (unsigned char *)(mapping + 1);
+    arena->capacity = mapping->mapped_size - sizeof(*mapping);
+    arena->offset = 0;
+    arena->next = g_compat_low32_arenas;
+    g_compat_low32_arenas = arena;
+  }
+
+  block_header = (CompatLow32AllocHeader *)(void *)(arena->base + arena->offset);
+  if ( !CompatPointerFitsSigned32(block_header + 1) )
+    return 0;
+  arena->offset += block_size;
+  block_header->mapped_size = block_size;
+  block_header->used_mmap = COMPAT_LOW32_ARENA_BLOCK;
+  CompatInvalidateReadableRanges();
+  return block_header + 1;
+}
+
+static void *CompatAllocLow32(size_t size)
+{
+  CompatLow32AllocHeader *header;
+  void *arena_block;
+  size_t total_size;
+
+  if ( !size )
+    return 0;
+  arena_block = CompatAllocLow32FromArena(size);
+  if ( arena_block )
+    return arena_block;
+  if ( size > (size_t)-1 - sizeof(*header) )
+    return 0;
+  total_size = sizeof(*header) + size;
+  header = CompatMapSignedLow32(total_size);
+  if ( header )
+  {
+    CompatInvalidateReadableRanges();
+    return header + 1;
+  }
   header = (CompatLow32AllocHeader *)malloc(total_size);
   if ( !header )
     return 0;
@@ -1177,6 +1270,8 @@ static void CompatFreeLow32(void *ptr)
   if ( !ptr )
     return;
   header = ((CompatLow32AllocHeader *)ptr) - 1;
+  if ( header->used_mmap == COMPAT_LOW32_ARENA_BLOCK )
+    return;
   CompatInvalidateReadableRanges();
   if ( header->used_mmap )
     munmap(header, header->mapped_size);

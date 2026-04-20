@@ -256,3 +256,12 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - `clash95_cpp_regen_direct_a0_route_smoke`
 - This does not remove a new link blocker; it prevents regressions in the scenario-start corridor that now reaches map/player/unit/minimap setup plus the reached stack merge/delete path.
 - The remaining direct-scenario blockers are unchanged: rules/class fact health, finite shutdown or playable-turn proof, and the deferred minimap frame blit.
+
+## Latest direct-scenario new-turn blocker update
+- The direct `/A0` route no longer hits the reached new-turn crashes in parser/fact queue coalescing, building population/plague, garrison morale recovery, prisoner castle placement, unit fatigue/morale, queen relationship processing, building technology scanning, or the recovered allocator free-list walker under gdb.
+- This still does not remove a raw unresolved link symbol; it removes runtime fidelity blockers that appeared after the scenario-start route reached player-turn/new-turn work.
+- The only wrapper-surface change is the low32 small-allocation arena needed after the route reached sprite/resource allocation pressure.
+- Remaining blockers:
+  - underlying rules/class setup still needs recovery so army fact assertion and downstream session state are healthy
+  - `/A0` liveness is still timeout-based and not a clean finite shutdown, responsive UI, or playable-turn proof
+  - the `sub_402E80` minimap frame blit compact-vtable path remains deferred

@@ -7044,3 +7044,30 @@
 - Ambiguous candidates deferred:
   - direct `/A0` remains a liveness test, not a finite shutdown, input responsiveness, or playable-turn test
   - the null-fact containment and `sub_402E80` minimap frame blit remain deferred runtime frontiers
+
+## Batch 185 - Direct `/A0` new-turn and low32 allocator liveness
+- Current frontier:
+  - continue the direct scenario-start route past the reached player-turn/new-turn corridor without adding a host-side scenario harness or bypassing recovered gameplay flow
+- Blockers removed this batch:
+  - `sub_4B1B90` now walks the parser/fact update queue with explicit 32-bit node links and no longer lets a null queued instance reach `sub_4B2590`
+  - `Building_UpdatePopulationGrowth`, `Building_UpdatePlagueState`, `Queen_NewTurn`, and `Prisoner_SetInCastles` now use their asm-backed building/player/game-data operands instead of undefined decompiler locals in the reached new-turn path
+  - unit fatigue/morale helpers now use explicit slot/stack predicates, the reached garrison-recovery path no longer calls the unrelated `CSyncObject_Unlock` placeholder as a callback, and the building-garrison morale wrapper now forwards the asm `edx` morale delta
+  - `Building_CheckTechnology` now initializes the asm-backed building-scan counter before walking the 100-record building table
+  - `Unit_NewTurn` now guards invalid trailing unit-slot type bytes before indexing the 35-entry unit metadata roster
+  - the compatibility `nmalloc_` path now has a low-32-bit arena for small allocations, and `sub_472860` walks the recovered free-list table as 32-bit low-address links instead of host-width pointers
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - exploratory `timeout 40s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy gdb -q --batch ... build/bin/clash95_bootstrap /A0` ran until external timeout with no caught `SIGSEGV`
+  - exploratory `timeout 35s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy gdb -q --batch ... catch signal SIGSEGV SIGABRT SIGBUS SIGFPE SIGILL ... /A0` also ran until external timeout with no caught fatal signal
+  - repeated `ctest --test-dir build --output-on-failure -R "^clash95_direct_a0_route_smoke$"` / `-R "^clash95_cpp_regen_direct_a0_route_smoke$"` after the `Building_CheckTechnology` counter repair
+  - `ctest --test-dir build --output-on-failure`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` now gets through the previously reached parser/fact sync, building population/plague update, prisoner placement, unit new-turn, queen new-turn, and sprite-load allocation-pressure failures
+  - the headless smoke no longer presents a reproducible new-turn crash within the gdb timeout window
+- Key evidence used:
+  - `clash95.asm` `sub_4B1B90` queue logic, `Building_UpdatePopulationGrowth`, `Building_UpdatePlagueState`, `Building_CheckTechnology`, `Building_FindFirstValidAddonSlot`, `UnitSlot_Adjust*ByPredicate`, `Prisoner_SetInCastles`, and `Queen_NewTurn`
+  - live GDB traces moving the `/A0` blocker from parser/fact sync, to building/garrison/prisoner/unit/queen new-turn functions, to `DLXSpriteSet_Load` low32 allocation pressure, and then to timeout liveness after the allocator arena/free-list fix
+- Ambiguous candidates deferred:
+  - `/A0` remains a headless timeout liveness route, not finite shutdown, responsive UI, or playable-turn proof
+  - the low32 arena intentionally keeps small compatibility allocations mapped for process lifetime; deeper allocator free-list fidelity can be tightened after the boot/runtime path is stable
+  - the underlying rules/class fact health and the deferred `sub_402E80` minimap frame blit remain separate frontiers

@@ -109,3 +109,9 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 - The new `/A0` liveness tests did not require SDL backend changes.
 - `clash95_direct_a0_route_smoke` and `clash95_cpp_regen_direct_a0_route_smoke` use dummy SDL/audio with the existing message/timing/window seam and pass by observing liveness before external shutdown.
 - Future SDL work should still wait for a concrete input, window, present, or timing failure; the current direct-scenario frontier is below SDL.
+
+## Latest direct-scenario allocator/new-turn non-SDL evidence
+- The new `/A0` crashes were again below SDL: parser/fact queue coalescing, building population/plague state, garrison morale delta handling, prisoner castle placement, unit fatigue/morale predicates, queen relationship timers, building technology scanning, and recovered allocator free-list traversal.
+- `platform_sdl_runtime.c` was not changed.
+- The one host-side adjustment was the low32 allocator arena in the compat layer, needed after the authentic route reached sprite/resource allocation pressure. That remains separate from SDL input, window, present, and timing behavior.
+- Future SDL work should still be gated by a concrete backend failure; the current frontier is finite scenario/player-turn behavior below SDL.

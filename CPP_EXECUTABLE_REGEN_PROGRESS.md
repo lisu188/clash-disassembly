@@ -250,3 +250,14 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `clash95_cpp_regen_direct_a0_route_smoke`
 - The new harness reuses the established process-group smoke shape: start under dummy SDL/audio, require the recovered route to remain alive briefly, shut it down externally, and fail on early exit or crash text.
 - This is a validation promotion only. No recovered gameplay path, SDL shim, compat wrapper, or host-side scenario mode was added.
+
+## Latest direct-scenario new-turn update
+- The direct `/A0` route now runs through the reached parser/fact queue, building population/plague, prisoner castle-placement, unit fatigue/morale, queen relationship, building technology scan, and sprite-allocation corridor under gdb without a caught fatal signal until the external timeout.
+- The active fixes stayed in recovered C plus one narrow compatibility allocator improvement:
+  - `Queen_NewTurn` now uses the recovered unit-record pointers and turn-timer ranges for birth, departure, and accepted-marriage scheduling
+  - `Building_UpdatePlagueState`, `Building_UpdatePopulationGrowth`, `Building_CheckTechnology`, and the unit-slot morale/fatigue helpers no longer depend on undefined decompiler locals or counters
+  - `Building_AdjustAllGarrisonMoraleByDelta` now preserves the caller-supplied asm `edx` morale delta while scanning occupied garrison slots
+  - `CompatAllocLow32` now has a small-allocation low32 arena so recovered sprite/resource slabs do not exhaust low-address mappings during scenario startup
+  - `sub_472860` follows the recovered free-list table as 32-bit low-address links instead of host pointers
+- `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after these repairs.
+- The next frontier is finite direct-scenario behavior: rules/class health, clean shutdown or responsive player-turn evidence, and the still-deferred minimap frame blit through `sub_402E80`.

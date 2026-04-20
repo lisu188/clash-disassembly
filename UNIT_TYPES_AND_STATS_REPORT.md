@@ -255,3 +255,6 @@
 
 ## 33. Batch 184 Note
 - `Batch 184` stayed on the executable startup/runtime validation frontier. The active work added CTest liveness coverage for the direct `/A0` route on both executable paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 34. Batch 185 Note
+- `Batch 185` stayed on the executable startup/runtime frontier. The active work repaired the reached direct `/A0` new-turn corridor across parser/fact queue coalescing, building population/plague/technology updates, garrison morale delta handling, prisoner castle placement, unit fatigue/morale predicates, queen birth/marriage/departure timing, and low32 allocator pressure. This did not promote any new unit-type or stat semantics; the only unit-facing semantic guard added in this wave is the explicit `UNIT_TYPE_COUNT` bound and invalid trailing-slot sentinel handling, leaving the recovered roster names, stats, relationships, and confidence levels unchanged.

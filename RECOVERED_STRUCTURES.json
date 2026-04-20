@@ -1467,5 +1467,37 @@
       "The previous one-byte C declarations let `sub_40CE70` overwrite adjacent globals, producing a live `/A0` crash when `g_TerrainMoveProfileOffsets` contained minimap fill bytes such as `0x80808080`.",
       "`MiniMap_DrawTileCell` and `Map_GetTileSurfaceClassOrUnexplored` both read terrain ids through the selected color table, proving the tables are part of minimap/world-surface display state rather than transient scratch."
     ]
+  },
+  {
+    "name": "CompatLow32ArenaBlock",
+    "kind": "runtime_allocator_record",
+    "base_symbol": "CompatLow32AllocHeader / CompatLow32Arena",
+    "description": "Host compatibility allocation record used by the low32 arena for small nmalloc_ / PlatformAllocLow32 requests. This is runtime containment for preserved 32-bit pointer storage in the recovered C path, not original gameplay data.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "mapped_size",
+        "type": "size_t",
+        "notes": "For direct low32 mappings this records the full mmap span. Arena sub-blocks set this to zero because the owning CompatLow32Arena tracks the 16 MB mapping."
+      },
+      {
+        "offset": 8,
+        "name": "used_mmap",
+        "type": "int",
+        "notes": "1 marks a direct low32 mmap allocation and 2 marks a low32 arena sub-block. Arena sub-blocks are intentionally retained until process exit."
+      },
+      {
+        "offset": 16,
+        "name": "payload",
+        "type": "byte[]",
+        "notes": "Low32 pointer returned to recovered code after CompatLow32AllocHeader; small requests are aligned before the next arena allocation is served."
+      }
+    ],
+    "evidence": [
+      "Direct /A0 reached DLXSpriteSet_Load -> Mem_Alloc after the new-turn repairs and exited through App_RequestQuit with Not enough memory=%d, showing allocator pressure rather than a recovered gameplay semantic failure.",
+      "CompatAllocLow32 now serves small allocations from 16 MB low32 arenas before falling back to the older per-allocation low32 mapping path and then normal malloc.",
+      "CompatFreeLow32 deliberately no-ops arena sub-blocks because the arena is process-lifetime runtime containment, while direct low32 mmap and malloc-backed blocks retain their existing free behavior.",
+      "This entry documents host runtime shape only; no original Clash data structure or unit/stat layout is inferred from it."
+    ]
   }
 ]

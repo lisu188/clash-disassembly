@@ -167,3 +167,9 @@ This file classifies the current runtime/quarantine surface for executable regen
 - No wrapper change was needed to add direct `/A0` regression coverage.
 - `tests/verify_direct_a0_route_smoke.sh` starts the current executable under dummy SDL/audio and checks liveness/crash behavior from the outside, matching the already-established direct `a` smoke pattern.
 - The test formalizes the current wrapper boundary: the host seam can carry this route far enough for liveness, while the next blockers remain in recovered rules/session code.
+
+## Latest direct-scenario allocator/new-turn note
+- One narrow compat-wrapper change was needed for the latest direct `/A0` step: `CompatAllocLow32` now serves small requests from process-lifetime low32 arenas before falling back to per-allocation low32 mappings.
+- The allocator change addresses reached sprite/resource allocation pressure after recovered C new-turn crashes were removed; it is not a gameplay shortcut or a scenario harness.
+- The follow-on free-list crash stayed in recovered C: `sub_472860` now reads the original 32-bit low-address free-list links from `dword_54DBA8` instead of reading host-width pointers out of the table.
+- The remaining new-turn fixes stayed below the wrapper layer in recovered C. SDL/window/audio handling did not need a change for this milestone.
