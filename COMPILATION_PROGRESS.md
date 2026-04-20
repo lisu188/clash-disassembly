@@ -7071,3 +7071,27 @@
   - `/A0` remains a headless timeout liveness route, not finite shutdown, responsive UI, or playable-turn proof
   - the low32 arena intentionally keeps small compatibility allocations mapped for process lifetime; deeper allocator free-list fidelity can be tightened after the boot/runtime path is stable
   - the underlying rules/class fact health and the deferred `sub_402E80` minimap frame blit remain separate frontiers
+
+## Batch 186 - Direct `/A0` render companion creation liveness
+- Current frontier:
+  - continue the direct scenario-start route beyond the reached new-turn corridor into the first longer render/surface allocation window without inventing a host scenario harness or bypassing recovered render flow
+- Blockers removed this batch:
+  - `sub_473320` now reconstructs the asm-backed `DDSURFACEDESC` setup with a real 108-byte clear, the recovered height/width fields, and the existing `Compat_DirectDraw_CreateSurface` wrapper instead of dereferencing a raw compact vtable through undefined locals
+  - `sub_4732A0` now reports construction failure to its only caller when the DirectDraw companion cannot be created
+  - `sub_4041D0` now passes the asm-backed height/width register pair into the companion constructor and leaves the wrapper in software-only mode when `dword_51D584` has been cleared by a mode-switch gap, rather than storing a dead companion surface
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - exploratory 10-second hard-kill liveness probe for `env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - exploratory 10-second hard-kill liveness probe for `env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` now survives past the previously reproducible `sub_473320` null render-context crash in both executable paths and stays alive beyond the older 2-second CTest smoke window
+  - default full-route, lowercase `r`, direct `a`, and direct `/A0` CTest smokes remain green for the current build
+- Key evidence used:
+  - `clash95.asm:5430-5481` for `sub_4041D0` preserving `ecx = height`, `edi/ebx = width`, and passing `dword_51D584` as the render context
+  - `clash95.asm:178599-178671` for `sub_473320` filling the descriptor at `+0x38`, creating the surface into `+0xA4`, and only installing post-success fields after the DirectDraw create call succeeds
+  - the current SDL DirectDraw wrapper surface in `platform_sdl_runtime.c`, already used by `sub_475080`, as the safe x86-64 host path for the recovered `IDirectDraw::CreateSurface` call
+- Ambiguous candidates deferred:
+  - SIGTERM-triggered teardown can still expose a separate stack/allocator fault under `timeout` cleanup; hard-kill observation confirms the recovered `/A0` route itself stays alive past the old crash window
+  - direct `/A0` remains a liveness milestone, not clean finite shutdown, responsive player-turn proof, or playable-turn proof
+  - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain separate frontiers

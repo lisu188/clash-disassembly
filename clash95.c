@@ -2029,7 +2029,7 @@ int  sub_473F70(int a1, int a2);
 // int __fastcall vsprintf_(_DWORD, _DWORD); weak
 // int __fastcall memset_(_DWORD, _DWORD); weak
 // __int64 __fastcall nmalloc_(_DWORD, _DWORD); weak
-// int __thiscall nfree_(_DWORD); weak
+int __thiscall nfree_(_DWORD); // weak
 void  __noreturn sub_4741F0(unsigned int a1, int a2);
 _DWORD * sub_474D60(_DWORD *result);
 _DWORD * sub_474DE0(_DWORD *a1);
@@ -15316,10 +15316,10 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
 {
   int v5; // edi
   _DWORD *result; // eax
-  int v7; // ecx
   _DWORD *v8; // esi
   _DWORD *v9; // eax
-  int v10; // ecx
+  _DWORD *allocated_companion; // eax
+  int render_context; // edx
 
   v5 = a2;
   result = sub_401E00(a1, a2, a4);
@@ -15327,10 +15327,14 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
   result[46] = off_50EE74;
   if ( a3 )
   {
-    v9 = (_DWORD *)Mem_Alloc(176, v7, a4, a3);
-    if ( v9 )
-      v9 = sub_4732A0(v9, (_DWORD *)dword_51D584, v10, v5);
-    v8[48] = 1;
+    v9 = 0;
+    allocated_companion = (_DWORD *)Mem_Alloc(176, 0, a4, a3);
+    render_context = dword_51D584;
+    if ( allocated_companion && render_context )
+      v9 = sub_4732A0(allocated_companion, (_DWORD *)(uintptr_t)(unsigned int)render_context, a4, v5);
+    if ( allocated_companion && !v9 )
+      nfree_((int)(uintptr_t)allocated_companion);
+    v8[48] = v9 != 0;
     v8[47] = v9;
     return v8;
   }
@@ -15341,8 +15345,6 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
   }
   return result;
 }
-// 404211: variable 'v7' is possibly undefined
-// 404222: variable 'v10' is possibly undefined
 // 50EE74: using guessed type int (*off_50EE74[5])();
 // 51D584: using guessed type int dword_51D584;
 
@@ -85524,7 +85526,8 @@ _DWORD * sub_473250(_DWORD *result)
 _DWORD * sub_4732A0(_DWORD *a1, _DWORD *a2, int a3, int a4)
 {
   a1[43] = off_5108E0;
-  sub_473320(a1, a2, a3, a4);
+  if ( !sub_473320(a1, a2, a3, a4) )
+    return 0;
   return a1;
 }
 // 5108E0: using guessed type int (*off_5108E0[3])();
@@ -85551,19 +85554,31 @@ int  sub_4732E0(int result)
 //----- (00473320) --------------------------------------------------------
 signed int  sub_473320(_DWORD *a1, _DWORD *a2, int a3, int a4)
 {
-  int v7; // ecx
-  unsigned int v8; // eax
-  int v9; // ecx
+  HRESULT hr;
+  int direct_draw_handle;
 
-  memset_(a1 + 14, 0);
+  if ( !a1 )
+    return 0;
+  memset(a1 + 14, 0, 108);
   a1[14] = 108;
   a1[15] = 7;
   a1[40] = 64;
   a1[16] = a3;
   a1[17] = a4;
-  v8 = (*(int (__stdcall **)(_DWORD, int, _DWORD *, _DWORD))(*(_DWORD *)*a2 + 24))(*a2, v7, a1 + 41, 0);
-  if ( v8 )
-    sub_4741F0(v8, v9);
+  if ( !a2 )
+    return 0;
+  direct_draw_handle = *a2;
+  if ( !direct_draw_handle )
+    return 0;
+  hr = Compat_DirectDraw_CreateSurface(
+         (LPDIRECTDRAW)(uintptr_t)(unsigned int)direct_draw_handle,
+         (int *)(a1 + 14),
+         a1 + 41);
+  if ( hr )
+  {
+    sub_4741F0(hr, a2[9]);
+    return 0;
+  }
   a1[4] = -1;
   a1[10] = 0;
   a1[9] = 0;
@@ -85581,9 +85596,6 @@ signed int  sub_473320(_DWORD *a1, _DWORD *a2, int a3, int a4)
   a1[7] = *a1;
   return 1;
 }
-// 473372: variable 'v7' is possibly undefined
-// 4733D8: variable 'v9' is possibly undefined
-// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (004733F0) --------------------------------------------------------
 int  sub_4733F0(_DWORD *a1, int *a2, const CHAR *a3)

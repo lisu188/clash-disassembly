@@ -261,3 +261,12 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `sub_472860` follows the recovered free-list table as 32-bit low-address links instead of host pointers
 - `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after these repairs.
 - The next frontier is finite direct-scenario behavior: rules/class health, clean shutdown or responsive player-turn evidence, and the still-deferred minimap frame blit through `sub_402E80`.
+
+## Latest direct-scenario render companion update
+- The longer direct `/A0` route now gets past the reached `sub_473320` DirectDraw companion-surface creation crash in both executable paths.
+- The active fix stayed in recovered C and reused the existing SDL DirectDraw compatibility seam:
+  - `sub_4041D0` now passes the asm-backed height/width pair into the companion constructor and leaves the wrapper software-only if `dword_51D584` is absent during a mode-switch gap
+  - `sub_473320` now clears and fills the 108-byte descriptor explicitly and calls `Compat_DirectDraw_CreateSurface` instead of reading a raw compact vtable through undefined locals
+  - `sub_4732A0` now reports construction failure to its only caller so dead companion handles are not installed
+- `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the repair, and the full CTest suite remains green.
+- Hard-kill 10-second dummy SDL/audio observations confirm `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` remain alive beyond the previous crash window. SIGTERM teardown still has a separate allocator/stack fault, so clean finite shutdown remains a later frontier.

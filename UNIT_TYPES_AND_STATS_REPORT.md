@@ -258,3 +258,6 @@
 
 ## 34. Batch 185 Note
 - `Batch 185` stayed on the executable startup/runtime frontier. The active work repaired the reached direct `/A0` new-turn corridor across parser/fact queue coalescing, building population/plague/technology updates, garrison morale delta handling, prisoner castle placement, unit fatigue/morale predicates, queen birth/marriage/departure timing, and low32 allocator pressure. This did not promote any new unit-type or stat semantics; the only unit-facing semantic guard added in this wave is the explicit `UNIT_TYPE_COUNT` bound and invalid trailing-slot sentinel handling, leaving the recovered roster names, stats, relationships, and confidence levels unchanged.
+
+## 35. Batch 186 Note
+- `Batch 186` stayed on the executable startup/runtime frontier. The active work repaired the reached render companion surface construction path for longer direct `/A0` liveness by reconstructing the `sub_4041D0` / `sub_473320` DirectDraw descriptor and creation call. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

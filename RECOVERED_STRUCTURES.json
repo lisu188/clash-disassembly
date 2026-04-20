@@ -1499,5 +1499,55 @@
       "CompatFreeLow32 deliberately no-ops arena sub-blocks because the arena is process-lifetime runtime containment, while direct low32 mmap and malloc-backed blocks retain their existing free behavior.",
       "This entry documents host runtime shape only; no original Clash data structure or unit/stat layout is inferred from it."
     ]
+  },
+  {
+    "name": "RenderDirectDrawCompanionSurface",
+    "kind": "render_surface_record",
+    "base_symbol": "sub_4732A0 / sub_473320 0xB0-byte companion",
+    "description": "Recovered DirectDraw companion object allocated by `sub_4041D0` for render-surface wrappers when the primary render context at `unk_51D4C0 + 0xC4` is available. The record embeds the compact render handle state plus a `DDSURFACEDESC`-style descriptor at offset `0x38` and stores the created SDL DirectDraw surface handle at `0xA4`.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "width",
+        "type": "int32",
+        "notes": "Copied from the caller's original width register after the DirectDraw surface is created successfully."
+      },
+      {
+        "offset": 4,
+        "name": "height",
+        "type": "int32",
+        "notes": "Copied from the caller's original height register after the DirectDraw surface is created successfully."
+      },
+      {
+        "offset": 56,
+        "name": "surface_desc",
+        "type": "byte[108]",
+        "notes": "Descriptor block cleared before creation; fields `+0x00`, `+0x04`, `+0x08`, `+0x0C`, and `+0x68` are set to size `108`, flags `7`, height, width, and caps `0x40`."
+      },
+      {
+        "offset": 164,
+        "name": "direct_draw_surface_handle",
+        "type": "low32_pointer<CompatDirectDrawSurface>",
+        "notes": "Out parameter for `IDirectDraw::CreateSurface`, now routed through `Compat_DirectDraw_CreateSurface` on the SDL host seam."
+      },
+      {
+        "offset": 168,
+        "name": "render_context",
+        "type": "low32_pointer<RenderDirectDrawContext>",
+        "notes": "Back-pointer to the render context holder passed from `dword_51D584`."
+      },
+      {
+        "offset": 172,
+        "name": "compact_vtable",
+        "type": "low32_pointer<off_5108E0>",
+        "notes": "Compact render-handle operation table installed by `sub_4732A0` and restored by `sub_4732E0`."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` `sub_473320` clears 0x6C bytes at `a1 + 0x38`, writes descriptor fields, calls the DirectDraw vtable slot `+0x18` with out pointer `a1 + 0xA4`, and installs post-success fields only after that call returns zero.",
+      "`clash95.asm` `sub_4041D0` passes the render context from `dword_51D584`, the original height in `ecx`, and the original width in `ebx` into `sub_4732A0`.",
+      "The current SDL compatibility layer already exposes `Compat_DirectDraw_CreateSurface`, which preserves the recovered low32 handle contract while avoiding raw native pointer-width vtable reads in the reconstructed C path.",
+      "When `Render_BeginModeSwitch` clears `unk_51D4C0 + 0xC4`, the recovered wrapper can validly continue as a software-only surface with no companion handle; no unit/stat semantics are inferred from this render record."
+    ]
   }
 ]

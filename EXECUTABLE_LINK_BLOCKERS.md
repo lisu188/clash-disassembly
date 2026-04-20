@@ -265,3 +265,15 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - underlying rules/class setup still needs recovery so army fact assertion and downstream session state are healthy
   - `/A0` liveness is still timeout-based and not a clean finite shutdown, responsive UI, or playable-turn proof
   - the `sub_402E80` minimap frame blit compact-vtable path remains deferred
+
+## Latest direct-scenario render companion blocker update
+- The direct `/A0` route no longer stops at the reached `sub_473320` null/host-width DirectDraw companion-surface creation crash.
+- This was not a raw unresolved link symbol; it was a recovered render-wrapper fidelity issue:
+  - `sub_4041D0` was forwarding an undefined height local into the companion constructor
+  - `sub_473320` was still using a raw decompiler vtable call with undefined locals instead of the existing SDL DirectDraw wrapper
+  - mode-switch gaps can legitimately leave `dword_51D584` zero, so the wrapper now remains software-only instead of storing a partially constructed companion
+- Remaining blockers:
+  - clean SIGTERM/finite shutdown still exposes a separate teardown fault and needs its own recovery
+  - rules/class fact health remains below the current liveness route
+  - `/A0` is still liveness-only, not responsive UI or playable-turn proof
+  - the `sub_402E80` minimap frame blit compact-vtable path remains deferred

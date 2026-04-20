@@ -173,3 +173,9 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The allocator change addresses reached sprite/resource allocation pressure after recovered C new-turn crashes were removed; it is not a gameplay shortcut or a scenario harness.
 - The follow-on free-list crash stayed in recovered C: `sub_472860` now reads the original 32-bit low-address free-list links from `dword_54DBA8` instead of reading host-width pointers out of the table.
 - The remaining new-turn fixes stayed below the wrapper layer in recovered C. SDL/window/audio handling did not need a change for this milestone.
+
+## Latest direct-scenario render companion note
+- No new broad runtime wrapper or SDL shim was added for the latest direct `/A0` step.
+- The reached DirectDraw companion-surface creation now reuses the existing `Compat_DirectDraw_CreateSurface` wrapper instead of calling through a raw recovered vtable from `sub_473320`.
+- The recovered C path now treats a missing `dword_51D584` render context as a software-only wrapper state during mode-switch gaps, avoiding a dead companion handle while preserving the existing SDL DirectDraw seam.
+- The remaining teardown fault observed under SIGTERM is separate from route liveness and remains a clean-shutdown/runtime frontier, not a new SDL capability requirement.
