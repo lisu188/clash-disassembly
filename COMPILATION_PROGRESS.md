@@ -7118,3 +7118,29 @@
 - Ambiguous candidates deferred:
   - `/A0` is now classified as an all-AI/autoplay liveness route, so `WorldMap_RunHumanTurnLoop` is not the correct milestone for this command-line path
   - clean SIGTERM/finite shutdown, responsive UI, rules/class fact health, and the deferred `sub_402E80` minimap frame blit remain separate frontiers
+
+## Batch 188 - `PlayGame` loop register cleanup
+- Current frontier:
+  - keep the direct `/A0` route stable while reducing the central `PlayGame` setup/loop/teardown decompiler scars that every in-game route crosses
+- Blockers removed this batch:
+  - `PlayGame` now uses explicit player-index iteration to reveal tiles for non-human players instead of the old `v6` / `v7` ghost pair
+  - `gameData + 140016` is now named `MAP_THEME_INDEX`, and the background/tree sprite and main-map music setup uses that shared field explicitly
+  - the reached `PlayGame` setup path no longer forwards undefined locals into `sub_441720`, tooltip backdrop capture, action-button loading, unit-stack selection sync, startup logs, mission-status display, current-player info loading, AI dispatch, or `Game_AdvanceToNextPlayerTurn`
+  - the teardown path now restores the saved resource handle and render hook explicitly, uses the asm-backed `20` resource handle for `sub_404F20`, destroys minimap/action-button resources with explicit zero placeholders, and calls `sub_472860(-1, 0, 0)` instead of forwarding stale locals
+  - `WorldMap_Initialize` now calls the random view-jitter initializer `sub_4163F0(0)` instead of forwarding an undefined `this` local
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - GDB breakpoint sampling at `Game_AdvanceToNextPlayerTurn` for `build/bin/clash95_bootstrap /A0`
+  - 10-second hard-kill liveness probes for both `build/bin/clash95_bootstrap /A0` and `build/bin/clash95_cpp_regen /A0`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` still reaches and re-enters all-AI turn advance after the `PlayGame` cleanup; sampled entries still show all human flags clear and current-player cycling through active slots
+  - both executable paths still stay alive until the external 10-second hard-kill probe, and the full CTest suite remains green
+- Key evidence used:
+  - `clash95.asm:16926-17174` for `PlayGame` revealing non-human players, selecting `backgr*.s32` / `treemas*.s32`, setting `RedrawMainMap`, dispatching the human-vs-computer turn loop, and restoring resource/render state on exit
+  - `clash95.asm:99894-99971` and existing minimap evidence for `gameData + 140016` driving the main-map music/theme lane
+  - `clash95.asm:35091-35117` for `sub_4163F0` using no incoming object state while seeding the map-view jitter bytes
+- Ambiguous candidates deferred:
+  - the exact designer-facing names for the three `MAP_THEME_INDEX` values remain unpromoted; current naming only captures the shared map theme/palette selector role
+  - `WorldMap_RunHumanTurnLoop` still has its own unreduced register-loss surface and remains deferred until an authentic human-controlled route reaches it
+  - clean finite shutdown, rules/class fact health, and the deferred `sub_402E80` minimap frame blit remain separate frontiers

@@ -287,3 +287,14 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - a human-turn milestone must come from a route that actually seeds a human-controlled player, not direct `/A0`
   - clean finite shutdown and SIGTERM teardown remain separate runtime frontiers
   - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain below the current all-AI liveness milestone
+
+## Latest `PlayGame` loop blocker update
+- The central `PlayGame` setup/loop/teardown body no longer forwards the reached band of undefined decompiler locals through the direct `/A0` route.
+- This was not a raw unresolved link symbol; it removes runtime fidelity hazards in the recovered C body every in-game route crosses:
+  - non-human reveal, theme resource selection, current-player info loading, AI dispatch, and turn advance now use explicit operands
+  - the `RedrawMainMap` hook window now saves/restores the previous render hook and resource handle explicitly
+  - teardown calls now use the asm-backed resource handle `20`, zero placeholders for no-argument cleanup helpers, and `sub_472860(-1, 0, 0)`
+- Remaining blockers:
+  - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
+  - direct `/A0` is still all-AI liveness only, not clean finite shutdown or playable-turn proof
+  - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain below this cleanup

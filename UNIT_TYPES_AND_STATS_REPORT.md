@@ -264,3 +264,6 @@
 
 ## 36. Batch 187 Note
 - `Batch 187` stayed on the executable startup/runtime frontier. The active work clarified the direct `/A0` route as an all-AI/autoplay turn-advance path by renaming `sub_44C410` and removing undefined decompiler locals from `Game_AdvanceToNextPlayerTurn`. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 37. Batch 188 Note
+- `Batch 188` stayed on the executable startup/runtime frontier. The active work removed reached `PlayGame` setup/loop/teardown register-loss scars and named the world-map theme selector at `gameData + 140016`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

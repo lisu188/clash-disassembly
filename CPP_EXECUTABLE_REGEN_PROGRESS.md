@@ -278,3 +278,12 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The reached turn-advance body now uses explicit saved-player, human-controller, active-mission, cache-count, and present-rectangle values instead of forwarding undefined decompiler locals.
 - `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the cleanup, the full CTest suite remains green, and both `/A0` executable paths stay alive until the 10-second hard-kill liveness probe.
 - The next frontier remains finite/session fidelity below the all-AI liveness milestone: clean shutdown, rules/class fact health, and deferred minimap-frame blitting.
+
+## Latest `PlayGame` loop cleanup update
+- The central `PlayGame` setup/loop/teardown body now preserves the same reached runtime milestone with fewer decompiler scars:
+  - non-human tile reveal uses explicit five-player iteration and the recovered player human-controller field
+  - `MAP_THEME_INDEX` names the shared `gameData + 140016` selector used by background/tree sprite loads, main-map music, and minimap theme tables
+  - render hook/resource-handle switching stores and restores explicit locals instead of undefined temporaries
+  - AI turn dispatch, setup logs, selection sync, teardown, and `sub_472860(-1, 0, 0)` no longer forward ghost registers
+- `WorldMap_Initialize` now calls `sub_4163F0(0)` explicitly because the asm initializer reads no incoming object state.
+- `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the cleanup; CTest remains green, and both `/A0` executable paths still stay alive until the 10-second hard-kill probe.

@@ -186,3 +186,11 @@ This file classifies the current runtime/quarantine surface for executable regen
   - the `/A0` loader is now named for its all-AI multiplayer-map setup
   - `Game_AdvanceToNextPlayerTurn` no longer depends on undefined decompiler locals for turn wrap logging, selection sync, auto-move logs, queen/new-turn dispatch, or the final `0x140 x 0xF0` present region
 - The wrapper boundary is unchanged: dummy SDL/audio can carry both executable paths through repeated all-AI turn advance, while clean finite shutdown and deeper gameplay/rules state remain recovered-code frontiers.
+
+## Latest `PlayGame` loop cleanup note
+- No runtime wrapper, SDL shim, or host-only entry mode was added for the latest `PlayGame` cleanup.
+- The active changes stayed in recovered C and structure notes:
+  - `PlayGame` uses explicit saved render-hook/resource-handle locals for the `RedrawMainMap` render-hook window
+  - setup/AI/teardown calls no longer receive undefined decompiler locals
+  - `MAP_THEME_INDEX` records the shared map theme byte instead of leaving raw `gameData + 140016` reads in the central loop
+- The wrapper boundary is unchanged: current dummy SDL/audio liveness is sufficient for the route, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.

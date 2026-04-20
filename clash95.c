@@ -26,6 +26,7 @@
 #define PLAYER_QUEEN_RELATIONSHIP_STATE_OFFSET 1419
 #define PLAYER_QUEEN_PORTRAIT_INDEX_OFFSET 1420
 #define PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN_OFFSET 1421
+#define MAP_THEME_INDEX_OFFSET 140016
 #define ACTIVE_MISSION_INDEX_OFFSET 140017
 #define GAME_TURN_COUNTER_OFFSET 140022
 #define MAP_WIDTH_TILES_OFFSET 140000
@@ -100,6 +101,7 @@ extern int g_BootstrapSkipIntroAviPlayback;
 #define PLAYER_MINIMAP_VISIBLE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_MINIMAP_VISIBLE_OFFSET))
 #define PLAYER_HAS_HUMAN_CONTROLLER(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_IS_HUMAN_OFFSET))
 #define PLAYER_AI_INTELLIGENCE(playerIndex) (*(_DWORD *)(PLAYER_DATA(playerIndex) + PLAYER_AI_INTELLIGENCE_OFFSET))
+#define MAP_THEME_INDEX (*((unsigned __int8 *)(gameData + MAP_THEME_INDEX_OFFSET)))
 #define MAP_WIDTH_TILES (*(_DWORD *)(gameData + MAP_WIDTH_TILES_OFFSET))
 #define MAP_HEIGHT_TILES (*(_DWORD *)(gameData + MAP_HEIGHT_TILES_OFFSET))
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
@@ -20635,87 +20637,49 @@ LABEL_24:
 //----- (0040B640) --------------------------------------------------------
 unsigned int  WorldMap_Initialize(char a1, DWORD a2)
 {
-  void *v2; // ecx
-
   WorldMap_LoadResources(a1, a2);
   Map_InitTerrainMoveTableOffsets();
   sub_412F00();
   BuildingSpriteCache_Reset();
-  return sub_4163F0(v2);
+  return sub_4163F0(0);
 }
-// 40B654: variable 'v2' is possibly undefined
 
 //----- (0040B660) --------------------------------------------------------
 int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
 {
-  int v6; // edx
-  int v7; // ecx
-  unsigned __int8 v8; // al
-  _DWORD *v9; // eax
-  int v10; // ecx
-  _DWORD *v11; // eax
-  int v12; // edx
-  int v13; // ecx
-  int v14; // ecx
-  void *v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
-  int v18; // ecx
-  int v19; // ecx
-  int v20; // eax
-  int ( *v21)(int, char, DWORD); // ebx
-  int v22; // ecx
-  int v23; // ecx
-  _DWORD *v24; // eax
-  int v25; // ecx
-  _DWORD *v26; // eax
-  int v27; // ecx
-  int v28; // ecx
-  int v29; // edx
-  int v30; // ecx
-  int v31; // ecx
-  int v32; // ecx
-  int v33; // ecx
-  int v34; // ecx
-  signed int v35; // edx
-  void *v36; // ecx
-  int v37; // edx
-  int v38; // ecx
-  int v39; // ecx
-  int v40; // ecx
-  int v41; // ecx
-  int v42; // ebx
-  int v44; // ecx
+  int player_index;
+  _DWORD *background_sprite_set;
+  _DWORD *tree_sprite_set;
+  int previous_resource_handle;
+  int (*previous_render_hook)(int, char, DWORD);
+  int active_mission_index;
   const char *background_resource_name;
   const char *tree_resource_name;
 
+  (void)a1;
+  (void)a2;
+
   dword_5452E8 = 0;
-  Debug_Log(a1, a2, a3, (int)aPlaygame);
+  Debug_Log(0, 0, a3, (int)aPlaygame);
   nullsub_3(0);
-  v6 = 0;
-  v7 = 0;
-  do
+  for ( player_index = 0; player_index < 5; ++player_index )
   {
-    if ( !*(_DWORD *)(v7 + gameData + 140051) )
-      Map_RevealAllTilesForPlayer(v6);
-    ++v6;
-    v7 += 1423;
+    if ( !PLAYER_HAS_HUMAN_CONTROLLER(player_index) )
+      Map_RevealAllTilesForPlayer(player_index);
   }
-  while ( v6 < 5 );
-  v8 = *(_BYTE *)(gameData + 140016);
   background_resource_name = 0;
   tree_resource_name = 0;
-  if ( !v8 )
+  if ( MAP_THEME_INDEX == 0 )
   {
     background_resource_name = "backgr1.s32";
     tree_resource_name = "treemas1.s32";
   }
-  else if ( v8 == 1 )
+  else if ( MAP_THEME_INDEX == 1 )
   {
     background_resource_name = "backgr2.s32";
     tree_resource_name = "treemas2.s32";
   }
-  else if ( v8 == 2 )
+  else if ( MAP_THEME_INDEX == 2 )
   {
     background_resource_name = "backgr3.s32";
     tree_resource_name = "treemas3.s32";
@@ -20724,14 +20688,14 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   {
     if ( dword_5202C0 )
       sub_405920(&dword_5202C0);
-    v9 = (_DWORD *)Mem_Alloc(4112, 0, a2, a3);
-    if ( v9 )
-      v9 = DLXSpriteSet_Load(v9, background_resource_name);
-    dword_5202C0 = (int)v9;
-    v11 = (_DWORD *)Mem_Alloc(4112, 0, a2, a3);
-    if ( v11 )
-      v11 = DLXSpriteSet_Load(v11, tree_resource_name);
-    dword_5202D8 = (int)v11;
+    background_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, a3);
+    if ( background_sprite_set )
+      background_sprite_set = DLXSpriteSet_Load(background_sprite_set, background_resource_name);
+    dword_5202C0 = (int)background_sprite_set;
+    tree_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, a3);
+    if ( tree_sprite_set )
+      tree_sprite_set = DLXSpriteSet_Load(tree_sprite_set, tree_resource_name);
+    dword_5202D8 = (int)tree_sprite_set;
   }
   dword_545150 = (int)&unk_5196A0;
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
@@ -20741,113 +20705,82 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
   *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
   Locale_DrawInteger();
-  sub_441720(*(unsigned __int8 *)(gameData + 140016), v12, 7, a3);
+  sub_441720(MAP_THEME_INDEX, 0, 7, a3);
   Render_DrawSprite();
   sub_418700(1);
-  Tooltip_CaptureBackdrop(160, 473, v13, 467, 76);
-  sub_40A400(v14, 211, a3);
-  UnitStackSelection_SyncForCurrentSelection(v15, a3);
+  Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
+  sub_40A400(0, 0, a3);
+  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, a3);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   Render_Present((int)dword_544CD8);
   sub_418700(1);
-  Debug_Log(v16, 20, a3, (int)aStart);
-  LogAllUnits(v17, 20, a3);
-  LogAllBuildings(v18, 20, a3);
+  Debug_Log(0, 20, a3, (int)aStart);
+  LogAllUnits(0, 20, a3);
+  LogAllBuildings(0, 20, a3);
   if ( ACTIVE_MISSION_INDEX != -1 && GAME_TURN_COUNTER == 1 )
-    UI_ShowMissionStatusPanel(v19, a3);
+    UI_ShowMissionStatusPanel(0, a3);
   dword_520300 = 0;
   dword_520304 = 0;
   dword_5202FC = 0;
   dword_5202F8 = 0;
   dword_511B64 = -1;
-  v20 = Render_SetResourceHandle((int)&unk_51D4C0, (char *)WorldMap_RenderHook == (char *)Render_DefaultRH);
-  v21 = (int ( *)(int, char, DWORD))g_RenderHook;
+  previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  previous_render_hook = (int (*)(int, char, DWORD))g_RenderHook;
   g_RenderHook = (int (*)())WorldMap_RenderHook;
-  Debug_Log(v20, (char)v21, a3, (int)aSetrhS08x);
+  Debug_Log(previous_resource_handle, 0, a3, (int)aSetrhS08x, "RedrawMainMap", WorldMap_RenderHook);
   while ( 1 )
   {
-    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, v22, (char)v21, a3);
+    UI_LoadCurrentPlayerInfoSpriteSet(g_CurrentPlayerIndex, 0, 0, a3);
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     {
-      WorldMap_RunHumanTurnLoop(v23, v21, a3, a5);
+      WorldMap_RunHumanTurnLoop(previous_resource_handle, previous_render_hook, a3, a5);
     }
     else if ( GAME_TURN_COUNTER )
     {
       sub_460D80((int)dword_544CD8, (int)&dword_519808);
-      Debug_Log(v28, (char)v21, a3, (int)aComputerplay);
-      v29 = (int)&unk_5196A0;
+      Debug_Log(0, 0, a3, (int)aComputerplay);
       sub_451F70();
-      sub_460D80((int)dword_544CD8, v29);
+      sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     }
     if ( dword_5202F8 )
       break;
-    Game_AdvanceToNextPlayerTurn(v23, (char)v21, a3, a5);
+    Game_AdvanceToNextPlayerTurn(0, 0, a3, a5);
   }
   Render_Pump();
-  Debug_Log(v30, (char)v21, a3, (int)aUnsetrh08x_1);
-  g_RenderHook = (int (*)())v21;
-  Render_SetResourceHandle((int)&unk_51D4C0, v31);
-  Debug_Log(v32, (char)v21, a3, (int)aKoniecGryPoDTu);
-  LogAllUnits(v33, (char)v21, a3);
-  LogAllBuildings(v34, (char)v21, a3);
+  Debug_Log(0, 0, a3, (int)aUnsetrh08x_1, g_RenderHook);
+  g_RenderHook = (int (*)())previous_render_hook;
+  Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+  Debug_Log(0, 0, a3, (int)aKoniecGryPoDTu, GAME_TURN_COUNTER);
+  LogAllUnits(0, 20, a3);
+  LogAllBuildings(0, 20, a3);
   sub_4418E0();
-  sub_404F20((int *)&unk_51D4C0, v35);
-  MiniMap_DestroySurface(v36);
-  sub_40A450(v38, v37);
+  sub_404F20((int *)&unk_51D4C0, 20);
+  MiniMap_DestroySurface(0);
+  sub_40A450(0, 0);
   WorldMap_UnloadResources(a3);
   Tooltip_ReleaseBackdropSurface();
   Rules_ShowBanner_StrategicClash();
-  sub_472860(-1, 0, v39);
-  Debug_Log(v40, (char)v21, a3, (int)aPlaygameEnd);
-  nullsub_3(v41);
+  sub_472860(-1, 0, 0);
+  Debug_Log(0, 0, a3, (int)aPlaygameEnd);
+  nullsub_3(0);
   if ( dword_511B64 != -1 )
   {
-    WorldMap_Initialize((char)v21, a3);
+    WorldMap_Initialize(0, a3);
     sub_444490(dword_511B64, a3, a5);
-    PlayGame(v44, (char)v21, a3, a4, a5);
+    PlayGame(0, 0, a3, a4, a5);
     return 0;
   }
-  v42 = ACTIVE_MISSION_INDEX;
-  if ( v42 == -1 || !dword_520304 )
+  active_mission_index = ACTIVE_MISSION_INDEX;
+  if ( active_mission_index == -1 || !dword_520304 )
     return 0;
-  if ( v42 == 9 || v42 == 19 )
+  if ( active_mission_index == 9 || active_mission_index == 19 )
   {
     sub_4623C0(-1, aZwy02);
     return 0;
   }
-  Scenario_LoadMissionByIndexAndPlay((char *)(v42 + 1), -1, a3, a5);
+  Scenario_LoadMissionByIndexAndPlay((char *)(uintptr_t)(unsigned int)(active_mission_index + 1), -1, a3, a5);
   return 0;
 }
-// 40B685: variable 'v7' is possibly undefined
-// 40B8CC: variable 'v6' is possibly undefined
-// 40B6EB: variable 'v10' is possibly undefined
-// 40B784: variable 'v12' is possibly undefined
-// 40B7A9: variable 'v13' is possibly undefined
-// 40B7AE: variable 'v14' is possibly undefined
-// 40B7B3: variable 'v15' is possibly undefined
-// 40B7E6: variable 'v16' is possibly undefined
-// 40B7EE: variable 'v17' is possibly undefined
-// 40B7F3: variable 'v18' is possibly undefined
-// 40B817: variable 'v19' is possibly undefined
-// 40B88F: variable 'v22' is possibly undefined
-// 40B8B1: variable 'v23' is possibly undefined
-// 40B90B: variable 'v25' is possibly undefined
-// 40B957: variable 'v27' is possibly undefined
-// 40B9B1: variable 'v28' is possibly undefined
-// 40B9C5: variable 'v29' is possibly undefined
-// 40B9E5: variable 'v30' is possibly undefined
-// 40B9FA: variable 'v31' is possibly undefined
-// 40BA16: variable 'v32' is possibly undefined
-// 40BA23: variable 'v33' is possibly undefined
-// 40BA28: variable 'v34' is possibly undefined
-// 40BA37: variable 'v35' is possibly undefined
-// 40BA3C: variable 'v36' is possibly undefined
-// 40BA41: variable 'v38' is possibly undefined
-// 40BA41: variable 'v37' is possibly undefined
-// 40BA5C: variable 'v39' is possibly undefined
-// 40BA66: variable 'v40' is possibly undefined
-// 40BA6E: variable 'v41' is possibly undefined
-// 40BAC5: variable 'v44' is possibly undefined
 // 4476A0: using guessed type int __thiscall nullsub_3(_DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B64: using guessed type int dword_511B64;
