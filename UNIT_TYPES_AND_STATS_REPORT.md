@@ -246,3 +246,9 @@
 
 ## 30. Batch 181 Note
 - `Batch 181` stayed on the executable startup/runtime frontier. The active work repaired reached world-map action-widget, redraw-loop, fade-loop, diagnostic-loop, and turn-advance decompiler scars, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 31. Batch 182 Note
+- `Batch 182` stayed on the executable startup/runtime frontier. The active work moved the direct `/A0` scenario-start route through map loading, player-state seeding, first unit creation, minimap creation, and vision propagation under a headless timeout smoke, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 32. Batch 183 Note
+- `Batch 183` stayed on the executable startup/runtime frontier. The active work repaired reached army-fact, unit-stack merge, fact-retract, and unit-stack delete decompiler scars on the direct `/A0` route, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

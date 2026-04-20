@@ -6970,3 +6970,54 @@
   - the building-action widget record is intentionally routed to `WorldMap_DeferBuildingActionCallback` for this batch because the authentic `sub_40A0E0` callback pulls the unresolved building/treasure placement link surface into the current executable target
   - the direct `a` autosave branch still depends on local `save\\10.dat`; without that file it is a liveness route, not a playable initialized session
   - the `/A0` scenario-start route currently fails in the known intro `Video_Avi_playIn -> Win_EndModeChange` surface before scenario initialization; that remains a separate startup/AVI blocker
+
+## Batch 182 - Direct `/A0` scenario-start liveness
+- Current frontier:
+  - advance the direct scenario-start command route through authentic startup, map load, player setup, unit seeding, and minimap/vision updates without introducing a host-side scenario harness
+- Blockers removed this batch:
+  - `Bootstrap_RunRecoveredGameEntry` now calls `Video_Avi_playIn("logo", 0, 1, 0, 1, 1)` on the `/A0` branch, matching the recovered argument lane that survives the intro/mode-switch surface
+  - `PlayerRuntimeState_ResetDefaults`, `sub_44C410`, `Scenario_LoadMultiplayerMapAndSeedPlayers`, and `Map_LoadFromFile` now preserve pointer-width locals and compact low32 file/map buffers instead of truncating player-state and map-path storage
+  - the reached rules parser/evaluator lane now has compact-pointer repairs for token buffers, parse-result buffers, fact hashing, multifield retain/release, and the default evaluator dispatch, removing the earlier CLIPS/parser crashes during scenario map setup
+  - `sub_40CE70` now materializes the three 0x400 minimap terrain-color tables from asm-backed fill ranges instead of calling `memset_` with undefined registers
+  - `MiniMap_DrawTileCell` no longer reads 8-byte function pointers from compact 32-bit render-surface vtables; the reached minimap pixel/rectangle writes now go through bounded software-surface helpers
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - exploratory `timeout -k 1s 2s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - exploratory `timeout -k 1s 2s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+- Highest authentic runtime milestone reached:
+  - default full-route main-menu liveness, lowercase `r` finite startup/shutdown, and direct `a` liveness remain green through CTest
+  - direct `/A0` now reaches scenario map setup, player state seeding, first unit creation, minimap creation, and vision propagation without the previous intro/mode-switch, rules/parser, minimap table, or minimap draw crashes; under dummy SDL/audio it stays alive until the external timeout
+- Key evidence used:
+  - `clash95.asm` around `sub_44AD60`, `sub_44C410`, `Map_LoadFromFile`, `sub_40CE70`, and `sub_40D890`
+  - runtime GDB traces showing the crash sequence move from parser/evaluator, to minimap table initialization, to `MiniMap_DrawTileCell`, and then disappear under the headless `/A0` smoke
+  - existing compact render-surface vtable initialization around `off_50EE24`, where the minimap surface is a linear software surface rather than a native host function-pointer table
+- Ambiguous candidates deferred:
+  - `MiniMap_CreateSurface` still skips the decorative frame sprite blit because the authentic `sub_402E80` sprite blit path retains deeper compact-vtable scars
+  - direct `/A0` is now a liveness milestone, not a finite quit path or a proved playable turn
+  - direct `a` still depends on the absent local `save\\10.dat` autosave/session data path
+
+## Batch 183 - Direct `/A0` unit-stack merge liveness
+- Current frontier:
+  - keep the direct scenario-start route on authentic recovered setup code while reducing only the reached unit-stack/fact scars exposed after map load, unit seeding, minimap creation, and vision propagation
+- Blockers removed this batch:
+  - `Rules_CreateArmyFact` no longer recurses through `Rules_LinkArmyFact` when `Rules_AssertFact` fails to return a fact handle; the null fact is stored, and linking is skipped until rules/class setup is healthy enough to produce the fact
+  - `Unit_AddToGroup` now uses the asm-backed source index, target index, source stack, target stack, source count, target count, and `source_count * 31` copy length instead of undefined decompiler register artifacts
+  - `Rules_RetractArmyFact` and `Unit_Kill` now use their stack pointer arguments for fact retraction, diagnostic logging, tile clearing, slot clearing, and minimap redraw instead of undefined decompiler locals
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - exploratory `timeout -k 1s 2s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - exploratory `timeout -k 1s 2s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - wrapped status checks report `timeout_status=137` for both executable paths, matching external hard-timeout liveness rather than the previous immediate core dumps
+- Highest authentic runtime milestone reached:
+  - direct `/A0` now survives through the reached scenario unit-stack merge/delete corridor for both `clash95_bootstrap` and `clash95_cpp_regen`
+  - the route no longer stops in the army-fact recursion, `Unit_AddToGroup -> Unit_GetSquadCount`, or `UnitStack_KillByIndex -> Unit_Kill -> Unit_GetSquadCount` crashes
+- Key evidence used:
+  - `clash95.asm:53616-53787` for `Unit_AddToGroup` register flow, stack pointer derivation, adjacency check, queued-path copy, `31`-byte slot merge, source-stack kill, hidden flag clear, and target fact refresh
+  - `clash95.asm:124069-124118` for `Rules_RetractArmyFact` keeping the stack pointer live while retracting the fact id, logging the tile stack id, and clearing the fact field
+  - `clash95.asm:23213-23259` for `Unit_Kill` using `eax` as the stack pointer through diagnostic dump, fact retraction, `TILE_INDEX` clear, slot-type clears, and minimap redraw
+  - runtime GDB traces showing the crash move from army-fact recursion to `Unit_AddToGroup` diagnostics and then to `Unit_Kill`, followed by timeout liveness after the two recovered bodies were repaired
+- Ambiguous candidates deferred:
+  - the null `Rules_AssertFact` result is contained to prevent recursive reentry; the underlying rules/class assertion health still needs recovery
+  - the exact public semantics of the `Unit_AddToGroup` third argument remain under-labeled, so the implementation preserves the existing call-surface name and only removes reached register artifacts
+  - direct `/A0` is still a timeout liveness milestone, not a finite quit path, responsive UI proof, or playable-turn milestone

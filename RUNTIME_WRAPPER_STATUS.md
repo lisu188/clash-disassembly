@@ -143,3 +143,22 @@ This file classifies the current runtime/quarantine surface for executable regen
   - turn advance now checks the recovered player-active slot rather than a double-applied player-data offset
 - The only deliberate containment is the world-map building button action: record 4 is present, but its callback is temporarily routed to `WorldMap_DeferBuildingActionCallback` because the authentic `sub_40A0E0` callback still pulls unresolved building/treasure-placement symbols into the current executable surface.
 - `CSS_Init` and the intro AVI mode-switch surface remain separate wrapper/runtime frontiers.
+
+## Latest direct-scenario note
+- No broad runtime wrapper, SDL shim, or host-side scenario mode was added for the `/A0` route.
+- The active fixes stayed in recovered C and the existing bootstrap entry:
+  - logo AVI argument recovery in the recovered command branch
+  - pointer-width and low32-buffer repairs in player-state and map-load setup
+  - compact parser/evaluator/fact/multifield repairs in the reached rules setup lane
+  - asm-backed minimap color-table allocation/fill ranges
+  - direct bounded software-surface writes for the reached minimap tile draw path
+- The remaining containment is explicit and narrow: `MiniMap_CreateSurface` still defers the minimap frame sprite blit because the authentic `sub_402E80` blitter still contains deeper compact-vtable scars.
+- The direct `/A0` route is now a timeout liveness route for both executable targets, not a wrapper success or a proved playable turn.
+
+## Latest direct-scenario unit-stack note
+- No broad runtime wrapper or SDL shim was added for the reached `/A0` unit-stack crashes.
+- The active fixes stayed in recovered C:
+  - a null army-fact assertion no longer re-enters fact creation recursively through `Rules_LinkArmyFact`
+  - `Unit_AddToGroup` no longer forwards undefined source/target/count/copy-length locals into stack diagnostics and slot merging
+  - `Rules_RetractArmyFact` and `Unit_Kill` no longer forward undefined locals into fact cleanup, stack diagnostics, tile clearing, or minimap redraw
+- This reinforces the current runtime-wrapper boundary: the SDL and compat seams are sufficient for this milestone, while the remaining failures are recovered gameplay/rules/session fidelity below the wrapper layer.

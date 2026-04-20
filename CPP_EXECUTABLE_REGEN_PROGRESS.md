@@ -220,4 +220,26 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The current executable targets still build and CTest remains green for the default full route, lowercase `r`, and both direct `a` liveness smokes.
 - The direct `a` route now exposes a data frontier: original `sub_44C400` tries to load `save\\10.dat`; that file is absent locally, so the roster remains all-zero and the route samples in `Game_AdvanceToNextPlayerTurn` waiting for an active player.
 - The world-map building-action record is present in the recovered table, but its action callback is quarantined behind `WorldMap_DeferBuildingActionCallback` until the authentic `sub_40A0E0` building/treasure-placement link surface is recovered.
-- A separate `/A0` scenario-start smoke still fails in `Video_Avi_playIn -> Win_EndModeChange`; that remains the intro-AVI/mode-switch blocker rather than a C++ executable target issue.
+
+## Latest direct-scenario update
+- The separate `/A0` scenario-start route no longer fails in `Video_Avi_playIn -> Win_EndModeChange`.
+- The recovered full-game path now carries `/A0` through:
+  - intro-logo AVI argument recovery
+  - map-file load through compact low32 buffers
+  - local five-player runtime-state setup
+  - rules/parser fact setup far enough to seed the first scenario units
+  - minimap creation, color-table initialization, and vision propagation
+- The active fixes stayed in `bootstrap_main.c` and recovered C:
+  - no new host-side scenario probe was added
+  - no SDL backend change was needed
+  - `clash95_cpp_regen /A0` follows the same bootstrap wedge and stays alive under the same dummy SDL/audio timeout smoke as `clash95_bootstrap /A0`
+- The next direct-scenario blockers are deeper session/playability fidelity after the liveness milestone, plus the deliberately deferred minimap frame sprite blit through `sub_402E80`.
+
+## Latest direct-scenario unit-stack update
+- The `/A0` route now also survives the reached unit-stack merge/delete corridor in both executable paths.
+- The active fixes stayed in recovered C:
+  - `Rules_CreateArmyFact` skips `Rules_LinkArmyFact` when `Rules_AssertFact` returns null, preventing recursive `Rules_EnsureArmyFactForStack` reentry
+  - `Unit_AddToGroup` uses asm-backed source/target stack pointers and the original 31-byte slot merge copy length
+  - `Rules_RetractArmyFact` and `Unit_Kill` use their stack-pointer arguments for fact cleanup, diagnostic logging, tile clearing, slot clearing, and minimap redraw
+- Wrapped dummy SDL/audio smokes for `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` now run until the external hard timeout instead of dumping core in those reached functions.
+- The next direct-scenario blockers remain gameplay/session fidelity, clean shutdown, and the deferred minimap frame sprite blit; no host-side scenario harness or new SDL seam was added.

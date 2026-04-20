@@ -41,6 +41,20 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - The record layout reuses the already recovered menu-button field order, but this table has a distinct owner and button set: map mode, next unit, next building, join units, building, and ambush.
 - The building-button action callback remains quarantined in C until the authentic building/treasure-placement link surface is recovered; that quarantine does not change the record layout evidence.
 
+## Latest minimap table maintenance
+
+- `RECOVERED_STRUCTURES.json` now records `MiniMapTerrainColorTableFamily`.
+- This is a real storage/layout update: `byte_523350`, `unk_523750`, and `unk_523B50` are three adjacent 0x400-byte terrain-color tables, not standalone one-byte weak globals.
+- The evidence comes from `sub_40CE70` asm offsets up through `+0x303` and from the live `/A0` crash where the undersized C globals let minimap fills overwrite the terrain movement offset table.
+- The helper repair is host-width containment, not a new gameplay semantic claim: `MiniMap_DrawTileCell` now writes into the recovered linear software surface directly because the original minimap surface uses compact 32-bit vtable entries.
+
+## Latest unit-stack maintenance
+
+- `RECOVERED_STRUCTURES.json` keeps the existing `UnitStackRecord` and `UnitSlotRecord` layouts.
+- The latest `/A0` fix strengthens the existing evidence rather than adding a new structure: `Unit_AddToGroup` copies `source_count * 31` bytes from `source_stack + 6` into `target_stack + 6 + target_count * 31`, matching the documented ten-slot `UnitSlotRecord[10]` layout.
+- `Unit_Kill` also corroborates the same stack layout by clearing slot type words at `stack + 6` with a `31`-byte stride after removing the stack from `TILE_INDEX(row, column)`.
+- No new field names were promoted; the third `Unit_AddToGroup` argument and the deeper rules fact failure remain under-labeled runtime behavior rather than structure claims.
+
 ## What is ready for typed C++ views now
 
 - `DLXSpriteSet`

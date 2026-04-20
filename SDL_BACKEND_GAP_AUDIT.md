@@ -86,3 +86,21 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 - The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
 - The next retained blocker remains below SDL inside the deeper `WorldMap_RunHumanTurnLoop` gameplay/session surface after the repaired call-shape band.
 - The latest retained top-menu and split-panel helper repairs also stayed entirely in recovered C without touching `platform_sdl_runtime.c`.
+
+## Latest direct-scenario non-SDL evidence
+- The `/A0` scenario-start route now stays alive under dummy SDL/audio for both executable targets without changing `platform_sdl_runtime.c`.
+- The active blockers were recovered-code and host-width issues:
+  - direct command-branch AVI arguments
+  - scenario player-state and map-load pointer width
+  - rules parser/evaluator compact records
+  - minimap color tables and compact render-surface dispatch
+- This is negative evidence for the current SDL seam: the host window, timing, dummy audio, and message transport are good enough for the direct scenario-start liveness milestone.
+- Remaining direct-scenario work should stay below SDL unless validation reaches a concrete input, window, present, or timing failure.
+
+## Latest direct-scenario unit-stack non-SDL evidence
+- The follow-on `/A0` crashes were also below SDL:
+  - army-fact null assertion reentry
+  - `Unit_AddToGroup` undefined register artifacts in source/target stack handling
+  - `Rules_RetractArmyFact` and `Unit_Kill` undefined register artifacts in fact cleanup, stack diagnostics, and tile/minimap cleanup
+- Repairing those recovered C functions makes both executable paths run until external timeout under dummy SDL/audio, without any `platform_sdl_runtime.c` change.
+- The next SDL task remains evidence-driven: do not move gameplay stack merge/delete semantics into the backend seam.

@@ -222,4 +222,30 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - The next executable blockers are:
   - acquire or reconstruct the direct-route autosave/session initialization data path honestly
   - recover the `sub_40A0E0` building/treasure placement link surface
-  - separately reduce the `/A0` scenario-start intro `Video_Avi_playIn -> Win_EndModeChange` crash
+  - continue the `/A0` scenario-start route past the current liveness milestone toward finite/session-playability checks
+
+## Latest direct-scenario blocker update
+- The `/A0` scenario-start route is no longer blocked in the intro AVI/mode-switch surface.
+- It now stays alive under dummy SDL/audio for both `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` after reaching map load, player setup, unit creation, minimap creation, and vision propagation.
+- The removed blockers were not raw-link gaps:
+  - recovered command-branch AVI argument order
+  - pointer-width and low32-buffer bugs in scenario/map setup
+  - compact parser/evaluator/fact/multifield hazards in the reached rules setup lane
+  - minimap color-table storage and fill-size reconstruction
+  - compact 32-bit render-surface vtable reads in minimap tile drawing
+- Remaining blockers:
+  - the minimap frame sprite blit through `sub_402E80` is still deferred because that blitter has unreduced compact-vtable callsites
+  - `/A0` liveness does not yet prove a clean finite shutdown, responsive UI, or a playable turn
+  - direct `a` still has its separate absent-autosave/session-data frontier
+
+## Latest direct-scenario unit-stack blocker update
+- The direct `/A0` route no longer crashes in the reached unit-stack merge/delete corridor.
+- Removed blockers:
+  - army-fact assertion failure causing recursive `Rules_CreateArmyFact -> Rules_LinkArmyFact -> Rules_EnsureArmyFactForStack` reentry
+  - `Unit_AddToGroup` using undefined source/target stack locals before `Unit_GetSquadCount`
+  - `Rules_RetractArmyFact` and `Unit_Kill` using undefined stack locals before fact cleanup, diagnostic dumping, tile clearing, and minimap redraw
+- These were runtime fidelity blockers in recovered C, not raw unresolved link symbols.
+- Remaining blockers:
+  - underlying rules/class setup still needs recovery so army fact assertion succeeds instead of returning null
+  - `/A0` liveness is still external-timeout liveness, not clean finite shutdown or playable-turn proof
+  - the `sub_402E80` minimap frame blit compact-vtable path remains deferred

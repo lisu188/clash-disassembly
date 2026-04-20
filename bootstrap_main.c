@@ -1256,7 +1256,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
 
     if ( dword_51D01C )
     {
-      Video_Avi_playIn("logo", 0, 0, 1, 1, 1);
+      Video_Avi_playIn("logo", 0, 1, 0, 1, 1);
       WorldMap_Initialize(0, 0);
       sub_44C410(Bootstrap_ParseIntroMissionIndex(lpCommandLine));
       dword_5188B0 = 0;
