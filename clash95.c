@@ -1386,7 +1386,7 @@ enum
 _DWORD * sub_44B550(int this, DWORD a2, double a3);
 signed int Game_InitPlayerViewState();
 signed int  sub_44C400(DWORD a1, double a2);
-signed int  sub_44C410(int a1);
+signed int  Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
 DWORD  sub_44C7F0(int a1, DWORD a2, double a3);
 signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, uintptr_t a2);
 char  sub_44E2A0(int a1, int *a2);
@@ -20122,103 +20122,82 @@ int UI_LoadTurnBannerGfx(char a1, DWORD a2)
 //----- (0040AA60) --------------------------------------------------------
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
 {
-  int v5; // ecx
-  int v6; // ecx
-  unsigned __int8 *v7; // ebx
-  int v8; // esi
-  int v9; // ecx
-  int v10; // ecx
-  int v11; // ecx
-  int v12; // ecx
-  void *v13; // ecx
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // ecx
-  int v17; // ecx
-  int v18; // ecx
-  int v19; // ecx
-  unsigned __int16 v20; // dx
+  int previous_player_index;
+  int current_player_is_human;
+  int active_mission_index;
+  int clips_memory;
+  int used_memory;
+  int unit_cache_entries;
+  int building_cache_entries;
 
-  Debug_Log(a1, a2, a3, (int)aNextPlayer);
+  (void)a1;
+  (void)a2;
+
+  Debug_Log(0, 0, a3, (int)aNextPlayer);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   PLAYER_CAMERA_LEFT(g_CurrentPlayerIndex) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(g_CurrentPlayerIndex) = MAP_VIEW_TOP;
-  v5 = g_CurrentPlayerIndex;
+  previous_player_index = g_CurrentPlayerIndex;
   do
     g_CurrentPlayerIndex = (g_CurrentPlayerIndex + 1) % 5;
   while ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) );
   TURN_OWNER_PLAYER_INDEX = g_CurrentPlayerIndex;
-  Debug_Log(v5, 5, a3, (int)aPlayerD);
-  v7 = (unsigned __int8 *)g_CurrentPlayerIndex;
-  v8 = PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex);
-  if ( v8 )
+  Debug_Log(0, 0, a3, (int)aPlayerD, g_CurrentPlayerIndex);
+  current_player_is_human = PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex);
+  if ( current_player_is_human )
     VIEWED_PLAYER_INDEX = g_CurrentPlayerIndex;
-  if ( v5 > g_CurrentPlayerIndex )
+  if ( previous_player_index > g_CurrentPlayerIndex )
   {
     ++GAME_TURN_COUNTER;
-    Debug_Log(v6, (char)v7, a3, (int)aNextTurnD);
+    Debug_Log(0, 0, a3, (int)aNextTurnD, GAME_TURN_COUNTER);
     Map_AutoUpgradeVillages();
     Port_NewTurn(a3);
-    sub_472800();
-    Debug_Log(v9, (char)v7, a3, (int)aClipsMemoryD);
-    sub_4476B0();
-    Debug_Log(v10, (char)v7, a3, (int)aUsedmemD_3);
-    sub_413180();
-    Debug_Log(v11, (char)v7, a3, (int)aUnitsCacheEntr);
-    BuildingSpriteCache_CountEntries();
-    Debug_Log(v12, (char)v7, a3, (int)aBuildingsCache);
+    clips_memory = sub_472800();
+    Debug_Log(0, 0, a3, (int)aClipsMemoryD, clips_memory);
+    used_memory = sub_4476B0();
+    Debug_Log(0, 0, a3, (int)aUsedmemD_3, used_memory);
+    unit_cache_entries = sub_413180();
+    Debug_Log(0, 0, a3, (int)aUnitsCacheEntr, unit_cache_entries);
+    building_cache_entries = BuildingSpriteCache_CountEntries();
+    Debug_Log(0, 0, a3, (int)aBuildingsCache, building_cache_entries);
   }
   MAP_VIEW_LEFT = PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX);
   MAP_VIEW_TOP = PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX);
   Render_Pump();
-  if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  if ( current_player_is_human )
   {
-    UI_LoadTurnBannerGfx((char)v7, a3);
+    UI_LoadTurnBannerGfx((char)g_CurrentPlayerIndex, a3);
     g_SelectedUnitIndex = -1;
     Locale_DrawInteger();
     WorldMap_RenderHook(a3);
   }
   g_SelectedUnitIndex = -1;
   g_LastSelectedUnitIndex = -1;
-  if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
-    sub_40A360(v13);
-  UnitStackSelection_SyncForCurrentSelection(v13, 0xFFFFFFFF);
+  if ( current_player_is_human )
+    sub_40A360((void *)(uintptr_t)(unsigned int)gameData);
+  UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, 0xFFFFFFFF);
   sub_418700(1);
-  if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  if ( !current_player_is_human )
   {
     sub_40A600(1);
     Tooltip_RestoreBackdrop();
   }
-  if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  active_mission_index = ACTIVE_MISSION_INDEX;
+  if ( !current_player_is_human )
   {
-    v7 = (unsigned __int8 *)ACTIVE_MISSION_INDEX;
-    if ( v7 == (unsigned __int8 *)-1 || v7 == (unsigned __int8 *)19 || v7 == (unsigned __int8 *)9 )
-      AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, v14, 0xFFFFFFFF, a4);
+    if ( active_mission_index == -1 || active_mission_index == 19 || active_mission_index == 9 )
+      AI_ComputeNationStrengthPercent(g_CurrentPlayerIndex, 0, 0xFFFFFFFF, a4);
   }
-  Debug_Log(v14, (char)v7, 0xFFFFFFFF, (int)aAutoMovesBegin);
-  Unit_NewTurn(v15, (char)v7, 0xFFFFFFFF, a4);
-  Building_NewTurn(v16, v7, 0xFFFFFFFF, a4);
-  Prisoner_SetInCastles(v17, (char)v7, 0xFFFFFFFF);
-  Queen_NewTurn(v18, (int)v7, v8, a4);
-  Debug_Log(v19, 240, 0xFFFFFFFF, (int)aAutoMovesEnd);
+  Debug_Log(0, 0, 0xFFFFFFFF, (int)aAutoMovesBegin);
+  Unit_NewTurn(0, (char)active_mission_index, 0xFFFFFFFF, a4);
+  Building_NewTurn(0, (unsigned __int8 *)(uintptr_t)(unsigned int)active_mission_index, 0xFFFFFFFF, a4);
+  Prisoner_SetInCastles(0, (char)active_mission_index, 0xFFFFFFFF);
+  Queen_NewTurn(0, active_mission_index, current_player_is_human != 0, a4);
+  Debug_Log(0, 0, 0xFFFFFFFF, (int)aAutoMovesEnd);
   sub_418700(1);
-  sub_460AF0(dword_544CD8, v20, 0xF0u);
+  sub_460AF0(dword_544CD8, 0x140u, 0xF0u);
   return Render_Present((int)dword_544CD8);
 }
-// 40AB32: variable 'v6' is possibly undefined
-// 40AB78: variable 'v9' is possibly undefined
-// 40AB8B: variable 'v10' is possibly undefined
-// 40AB9E: variable 'v11' is possibly undefined
-// 40ABB1: variable 'v12' is possibly undefined
-// 40AC5B: variable 'v13' is possibly undefined
-// 40ACC0: variable 'v14' is possibly undefined
-// 40ACD2: variable 'v15' is possibly undefined
-// 40ACD2: variable 'a4' is possibly undefined
-// 40ACD7: variable 'v16' is possibly undefined
-// 40ACDC: variable 'v17' is possibly undefined
-// 40ACE1: variable 'v18' is possibly undefined
-// 40ACF0: variable 'v19' is possibly undefined
-// 40AD0C: variable 'v20' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B5C: using guessed type int g_LastSelectedUnitIndex;
@@ -63793,7 +63772,7 @@ signed int  sub_44C400(DWORD a1, double a2)
 }
 
 //----- (0044C410) --------------------------------------------------------
-signed int  sub_44C410(int a1)
+signed int  Scenario_LoadAllAiMultiplayerMapAndInitView(int a1)
 {
   int player_index; // ecx
   _BYTE player_states[PLAYER_DATA_STRIDE * 5]; // [esp+0h] [ebp-1BE4h] BYREF

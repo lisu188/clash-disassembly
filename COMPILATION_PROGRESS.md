@@ -7095,3 +7095,26 @@
   - SIGTERM-triggered teardown can still expose a separate stack/allocator fault under `timeout` cleanup; hard-kill observation confirms the recovered `/A0` route itself stays alive past the old crash window
   - direct `/A0` remains a liveness milestone, not clean finite shutdown, responsive player-turn proof, or playable-turn proof
   - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain separate frontiers
+
+## Batch 187 - Direct `/A0` all-AI turn advance clarification
+- Current frontier:
+  - clarify and stabilize the direct `/A0` route's reached turn-advance behavior before pursuing deeper finite/session-playability checks
+- Blockers removed this batch:
+  - `sub_44C410` is now named `Scenario_LoadAllAiMultiplayerMapAndInitView`, matching its direct evidence: it resets five player runtime records, marks all five active, clears all human-controller flags, seeds AI intelligence for player slots 1 and 2, then loads `multi%d.map` and initializes the camera/view state
+  - `Game_AdvanceToNextPlayerTurn` no longer forwards undefined decompiler locals through the reached turn-advance sequence; it now keeps explicit previous-player, current-human, active-mission, and cache-count locals and passes the asm-backed `0x140 x 0xF0` present rectangle into `sub_460AF0`
+  - log-only values for turn wrap, CLIPS memory, used memory, unit-cache entries, and building-cache entries are now captured from the same calls that the `nextPlayer` asm logs after a player-cycle wrap
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - GDB breakpoint sampling at `Game_AdvanceToNextPlayerTurn` for `build/bin/clash95_bootstrap /A0`
+  - 10-second hard-kill liveness probes for both `build/bin/clash95_bootstrap /A0` and `build/bin/clash95_cpp_regen /A0`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` reaches and repeatedly re-enters the recovered all-AI strategic turn-advance path, with sampled entries cycling `current=0,1,2,3...` while all five `PLAYER_HAS_HUMAN_CONTROLLER` slots remain zero
+  - both executable paths still stay alive until the external 10-second hard-kill probe after the turn-advance cleanup, and the full CTest suite remains green
+- Key evidence used:
+  - `clash95.c` `Scenario_LoadAllAiMultiplayerMapAndInitView` / `Scenario_LoadMultiplayerMapAndSeedPlayers` setup code for the all-active/all-AI player-state block
+  - `clash95.asm:15957-16124` for `nextPlayer` saving the outgoing camera, rotating to the next active player, logging cache counts after wrap, branching on the human-controller field, and presenting the `0x140 x 0xF0` surface region
+  - GDB breakpoint sampling showing `/A0` player-state setup as `active=1,1,1,1,1` and `human=0,0,0,0,0`, followed by current-player cycling through the all-AI slots
+- Ambiguous candidates deferred:
+  - `/A0` is now classified as an all-AI/autoplay liveness route, so `WorldMap_RunHumanTurnLoop` is not the correct milestone for this command-line path
+  - clean SIGTERM/finite shutdown, responsive UI, rules/class fact health, and the deferred `sub_402E80` minimap frame blit remain separate frontiers

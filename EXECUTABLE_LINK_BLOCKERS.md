@@ -277,3 +277,13 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - rules/class fact health remains below the current liveness route
   - `/A0` is still liveness-only, not responsive UI or playable-turn proof
   - the `sub_402E80` minimap frame blit compact-vtable path remains deferred
+
+## Latest direct-scenario all-AI turn blocker update
+- The direct `/A0` route is now classified from code and GDB evidence as an all-AI/autoplay turn-advance route, not a human-turn route.
+- This was not a raw unresolved link symbol; it was a recovered-flow clarification plus a reached decompiler-scar cleanup:
+  - `Scenario_LoadAllAiMultiplayerMapAndInitView` seeds all five players active and all five human-controller flags clear before loading `multi%d.map`
+  - `Game_AdvanceToNextPlayerTurn` now keeps the previous-player index, human flag, active mission, cache-count returns, and final `0x140 x 0xF0` present dimensions explicit instead of reading undefined locals
+- Remaining blockers:
+  - a human-turn milestone must come from a route that actually seeds a human-controlled player, not direct `/A0`
+  - clean finite shutdown and SIGTERM teardown remain separate runtime frontiers
+  - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain below the current all-AI liveness milestone

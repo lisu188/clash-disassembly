@@ -261,3 +261,6 @@
 
 ## 35. Batch 186 Note
 - `Batch 186` stayed on the executable startup/runtime frontier. The active work repaired the reached render companion surface construction path for longer direct `/A0` liveness by reconstructing the `sub_4041D0` / `sub_473320` DirectDraw descriptor and creation call. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 36. Batch 187 Note
+- `Batch 187` stayed on the executable startup/runtime frontier. The active work clarified the direct `/A0` route as an all-AI/autoplay turn-advance path by renaming `sub_44C410` and removing undefined decompiler locals from `Game_AdvanceToNextPlayerTurn`. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

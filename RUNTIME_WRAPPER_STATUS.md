@@ -179,3 +179,10 @@ This file classifies the current runtime/quarantine surface for executable regen
 - The reached DirectDraw companion-surface creation now reuses the existing `Compat_DirectDraw_CreateSurface` wrapper instead of calling through a raw recovered vtable from `sub_473320`.
 - The recovered C path now treats a missing `dword_51D584` render context as a software-only wrapper state during mode-switch gaps, avoiding a dead companion handle while preserving the existing SDL DirectDraw seam.
 - The remaining teardown fault observed under SIGTERM is separate from route liveness and remains a clean-shutdown/runtime frontier, not a new SDL capability requirement.
+
+## Latest direct-scenario all-AI turn note
+- No new runtime wrapper, SDL shim, or host-side scenario mode was added for the latest direct `/A0` step.
+- The active changes stayed in recovered C:
+  - the `/A0` loader is now named for its all-AI multiplayer-map setup
+  - `Game_AdvanceToNextPlayerTurn` no longer depends on undefined decompiler locals for turn wrap logging, selection sync, auto-move logs, queen/new-turn dispatch, or the final `0x140 x 0xF0` present region
+- The wrapper boundary is unchanged: dummy SDL/audio can carry both executable paths through repeated all-AI turn advance, while clean finite shutdown and deeper gameplay/rules state remain recovered-code frontiers.

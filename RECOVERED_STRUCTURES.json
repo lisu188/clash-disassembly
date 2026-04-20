@@ -270,7 +270,8 @@
       "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
       "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
       "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields.",
+      "`Scenario_LoadAllAiMultiplayerMapAndInitView` seeds the direct `/A0` runtime block with all five `is_active` dwords set and all five `controller_mode` dwords clear; breakpoint sampling confirms the route enters turn advance with `active=1,1,1,1,1` and `human=0,0,0,0,0`."
     ]
   },
   {
@@ -291,7 +292,8 @@
       "Map load computes offsets 140000 and 140004 by scanning the 14-byte tile grid until it reaches sentinel 0xFFFF rows and columns.",
       "`UI_ShowMissionStatusPanel`, the post-victory mission-advance path, and the mission jump table rooted at `Scenario_LoadMissionByIndex` all treat offset `140017` as the active mission id.",
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
-      "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
+      "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX).",
+      "Direct `/A0` all-AI sampling shows `Game_AdvanceToNextPlayerTurn` cycling `g_CurrentPlayerIndex` through active players while `viewed_player_index` remains the default view fallback because no seeded player has a human-controller flag."
     ]
   },
   {

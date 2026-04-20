@@ -270,3 +270,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `sub_4732A0` now reports construction failure to its only caller so dead companion handles are not installed
 - `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the repair, and the full CTest suite remains green.
 - Hard-kill 10-second dummy SDL/audio observations confirm `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` remain alive beyond the previous crash window. SIGTERM teardown still has a separate allocator/stack fault, so clean finite shutdown remains a later frontier.
+
+## Latest direct-scenario all-AI turn update
+- The direct `/A0` route is now explicitly documented as an all-AI/autoplay scenario path rather than a human-turn entry path:
+  - `Scenario_LoadAllAiMultiplayerMapAndInitView` seeds all five player runtime records as active and clears all five human-controller flags before loading `multi%d.map`
+  - GDB breakpoint sampling at `Game_AdvanceToNextPlayerTurn` shows the current player cycling through `0,1,2,3...` with all human flags still zero
+- The reached turn-advance body now uses explicit saved-player, human-controller, active-mission, cache-count, and present-rectangle values instead of forwarding undefined decompiler locals.
+- `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the cleanup, the full CTest suite remains green, and both `/A0` executable paths stay alive until the 10-second hard-kill liveness probe.
+- The next frontier remains finite/session fidelity below the all-AI liveness milestone: clean shutdown, rules/class fact health, and deferred minimap-frame blitting.
