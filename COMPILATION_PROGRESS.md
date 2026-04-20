@@ -7021,3 +7021,26 @@
   - the null `Rules_AssertFact` result is contained to prevent recursive reentry; the underlying rules/class assertion health still needs recovery
   - the exact public semantics of the `Unit_AddToGroup` third argument remain under-labeled, so the implementation preserves the existing call-surface name and only removes reached register artifacts
   - direct `/A0` is still a timeout liveness milestone, not a finite quit path, responsive UI proof, or playable-turn milestone
+
+## Batch 184 - Direct `/A0` CTest liveness coverage
+- Current frontier:
+  - promote the direct scenario-start route from exploratory timeout probes to stable regression coverage for both executable paths
+- Blockers removed this batch:
+  - no new recovered-code blocker was removed; this batch converts the Batch 183 `/A0` liveness milestone into formal CTest coverage
+  - added `tests/verify_direct_a0_route_smoke.sh`, mirroring the direct `a` liveness harness but launching `/A0`
+  - added `clash95_direct_a0_route_smoke` and `clash95_cpp_regen_direct_a0_route_smoke` CTest entries
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build -R direct_a0 --output-on-failure`
+  - `ctest --test-dir build -R clash95_cpp_regen_direct_a_route_smoke --output-on-failure --repeat until-fail:5`
+  - `ctest --test-dir build --output-on-failure`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` liveness is now covered by CTest for both `clash95_bootstrap` and `clash95_cpp_regen`
+  - the harness requires each process to remain alive under dummy SDL/audio for the smoke window, then externally shuts down the process group and fails if the route exits early or reports a crash
+- Key evidence used:
+  - Batch 183 runtime validation that both direct `/A0` executable paths now survive until external timeout after the reached fact/stack merge/delete repairs
+  - existing direct `a` CTest harness shape, reused for the direct scenario-start route without adding a new host-side scenario mode
+- Ambiguous candidates deferred:
+  - direct `/A0` remains a liveness test, not a finite shutdown, input responsiveness, or playable-turn test
+  - the null-fact containment and `sub_402E80` minimap frame blit remain deferred runtime frontiers

@@ -162,3 +162,8 @@ This file classifies the current runtime/quarantine surface for executable regen
   - `Unit_AddToGroup` no longer forwards undefined source/target/count/copy-length locals into stack diagnostics and slot merging
   - `Rules_RetractArmyFact` and `Unit_Kill` no longer forward undefined locals into fact cleanup, stack diagnostics, tile clearing, or minimap redraw
 - This reinforces the current runtime-wrapper boundary: the SDL and compat seams are sufficient for this milestone, while the remaining failures are recovered gameplay/rules/session fidelity below the wrapper layer.
+
+## Latest direct-scenario CTest note
+- No wrapper change was needed to add direct `/A0` regression coverage.
+- `tests/verify_direct_a0_route_smoke.sh` starts the current executable under dummy SDL/audio and checks liveness/crash behavior from the outside, matching the already-established direct `a` smoke pattern.
+- The test formalizes the current wrapper boundary: the host seam can carry this route far enough for liveness, while the next blockers remain in recovered rules/session code.

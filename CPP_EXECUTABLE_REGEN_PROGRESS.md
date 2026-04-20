@@ -243,3 +243,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `Rules_RetractArmyFact` and `Unit_Kill` use their stack-pointer arguments for fact cleanup, diagnostic logging, tile clearing, slot clearing, and minimap redraw
 - Wrapped dummy SDL/audio smokes for `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` now run until the external hard timeout instead of dumping core in those reached functions.
 - The next direct-scenario blockers remain gameplay/session fidelity, clean shutdown, and the deferred minimap frame sprite blit; no host-side scenario harness or new SDL seam was added.
+
+## Latest direct-scenario CTest update
+- Direct `/A0` liveness is now covered by CTest for both executable paths:
+  - `clash95_direct_a0_route_smoke`
+  - `clash95_cpp_regen_direct_a0_route_smoke`
+- The new harness reuses the established process-group smoke shape: start under dummy SDL/audio, require the recovered route to remain alive briefly, shut it down externally, and fail on early exit or crash text.
+- This is a validation promotion only. No recovered gameplay path, SDL shim, compat wrapper, or host-side scenario mode was added.

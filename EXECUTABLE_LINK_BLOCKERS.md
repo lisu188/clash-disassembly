@@ -249,3 +249,10 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - underlying rules/class setup still needs recovery so army fact assertion succeeds instead of returning null
   - `/A0` liveness is still external-timeout liveness, not clean finite shutdown or playable-turn proof
   - the `sub_402E80` minimap frame blit compact-vtable path remains deferred
+
+## Latest direct-scenario coverage update
+- The direct `/A0` route is now a formal CTest liveness surface for both executables:
+  - `clash95_direct_a0_route_smoke`
+  - `clash95_cpp_regen_direct_a0_route_smoke`
+- This does not remove a new link blocker; it prevents regressions in the scenario-start corridor that now reaches map/player/unit/minimap setup plus the reached stack merge/delete path.
+- The remaining direct-scenario blockers are unchanged: rules/class fact health, finite shutdown or playable-turn proof, and the deferred minimap frame blit.

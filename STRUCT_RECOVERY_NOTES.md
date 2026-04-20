@@ -55,6 +55,11 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - `Unit_Kill` also corroborates the same stack layout by clearing slot type words at `stack + 6` with a `31`-byte stride after removing the stack from `TILE_INDEX(row, column)`.
 - No new field names were promoted; the third `Unit_AddToGroup` argument and the deeper rules fact failure remain under-labeled runtime behavior rather than structure claims.
 
+## Latest CTest maintenance
+
+- No `RECOVERED_STRUCTURES.json` change was needed for the direct `/A0` CTest promotion.
+- The new tests cover the already-recorded scenario-start and unit-stack liveness milestone; they do not add new structure layout evidence or new field semantics.
+
 ## What is ready for typed C++ views now
 
 - `DLXSpriteSet`

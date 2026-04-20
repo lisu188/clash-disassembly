@@ -252,3 +252,6 @@
 
 ## 32. Batch 183 Note
 - `Batch 183` stayed on the executable startup/runtime frontier. The active work repaired reached army-fact, unit-stack merge, fact-retract, and unit-stack delete decompiler scars on the direct `/A0` route, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 33. Batch 184 Note
+- `Batch 184` stayed on the executable startup/runtime validation frontier. The active work added CTest liveness coverage for the direct `/A0` route on both executable paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

@@ -104,3 +104,8 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
   - `Rules_RetractArmyFact` and `Unit_Kill` undefined register artifacts in fact cleanup, stack diagnostics, and tile/minimap cleanup
 - Repairing those recovered C functions makes both executable paths run until external timeout under dummy SDL/audio, without any `platform_sdl_runtime.c` change.
 - The next SDL task remains evidence-driven: do not move gameplay stack merge/delete semantics into the backend seam.
+
+## Latest direct-scenario CTest non-SDL evidence
+- The new `/A0` liveness tests did not require SDL backend changes.
+- `clash95_direct_a0_route_smoke` and `clash95_cpp_regen_direct_a0_route_smoke` use dummy SDL/audio with the existing message/timing/window seam and pass by observing liveness before external shutdown.
+- Future SDL work should still wait for a concrete input, window, present, or timing failure; the current direct-scenario frontier is below SDL.
