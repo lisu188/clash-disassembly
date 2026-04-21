@@ -7372,6 +7372,9 @@
 - Compile/link/runtime status:
   - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
   - `ctest --test-dir build --output-on-failure`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124` without crash output
   - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
   - `python3 -m json.tool RECOVERED_STRUCTURES.json`
   - `git diff --check`
@@ -7439,4 +7442,30 @@
 - Ambiguous candidates deferred:
   - this batch does not recover deeper `mainmap` cache-loader internals beyond the ignored third operand
   - real front-end input and human-session route validation remain the next executable milestone
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 200 - Human-turn loop selected-stack cleanup
+- Current frontier:
+  - continue reducing the recovered human-turn loop surface while full-route Campaign/Load/Multiplayer input validation remains the next runtime proof point
+- Blockers removed this batch:
+  - named the `WorldMap_RunHumanTurnLoop` entry register values carried from `PlayGame` as the saved resource handle, render hook, runtime context, and x87 runtime value
+  - removed stale `a2` scratch writes from the right/left selected-stack facing hotkeys; the asm repurposes `ebx` locally for the render state during the key-hold pump loops, not as a semantic mutation of the entry render-hook argument
+  - rewrote the selected-stack facing, one-tile move-track, queued-path copy, required-AP check, and move-order sound operands through the existing `UNIT_STACK_*` macros
+  - replaced the remaining local `v15` / `v16` / `v17` / `v19` / `v20` / `v21` / `v23` / `v24` / `v25` / `v26` / `v28` residue in this loop slice with explicit selected-stack, queued-path, AP, and saved-render locals
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from earlier batches
+  - this is a recovered-C human-turn-loop cleanup; real front-end input still needs to prove a human-controlled route into this loop before claiming a new playable-turn milestone
+- Key evidence used:
+  - `clash95.asm:16442-16540` for the `WorldMap_RunHumanTurnLoop` entry call shape, zero-operand loop helpers, and debug render-hook/resource-handle save/restore
+  - `clash95.asm:16612-16682` for the selected-stack facing hotkeys, map redraw, and zero-operand `DD_Pump` hold loops
+  - `clash95.asm:16683-16752` for the selected-stack one-tile `Unit_MoveTrack` request, last-step required-AP comparison, queued-path copy, move-order sound, execute call, and redraw tail
+- Ambiguous candidates deferred:
+  - this batch does not change the deeper `WorldMap_HandleTileHoverAndClick` / building-interaction surface
+  - this batch does not add automated menu input for a Campaign, Load Game, or Multiplayer human route
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

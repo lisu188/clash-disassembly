@@ -355,3 +355,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `sub_460C70` and `WorldMapTopMenu_LoadSpriteSet` now expose only their effective argument surfaces, matching their original register usage at both world-map and castle-to-world reload sites.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
 - This removes shared world-map bootstrap operand hazards but does not yet prove a new full-route menu/input runtime milestone.
+
+## Latest human-turn loop cleanup update
+- The next executable-regeneration cleanup stayed in recovered C and left the C++ executable seam unchanged.
+- `WorldMap_RunHumanTurnLoop` now names its entry register values from `PlayGame`, removes stale render-hook scratch mutations from selected-stack facing hotkeys, and expresses the one-tile queued-path lane through the recovered `UNIT_STACK_*` macros.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
+- The retained `WorldMap_RunHumanTurnLoop` probe plus one-second bootstrap and C++ executable smokes still exit with the expected liveness timeout status `124`.
+- This reduces human-turn loop register-loss residue, but it still does not prove a new human-controlled route through real front-end input.

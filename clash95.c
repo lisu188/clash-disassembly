@@ -677,7 +677,11 @@ void sub_40AEB0();
 void Render_LoadResourceSprite_v2();
 _DWORD * WorldMap_LoadResources(char a1, DWORD a2);
 int  WorldMap_UnloadResources(DWORD a1);
-void  WorldMap_RunHumanTurnLoop(int a1, int ( *a2)(int a1, char a2, DWORD a3), DWORD a3, double a4);
+void  WorldMap_RunHumanTurnLoop(
+        int entry_resource_handle,
+        int ( *entry_render_hook)(int a1, char a2, DWORD a3),
+        DWORD runtime_context,
+        double st0_runtime);
 unsigned int  WorldMap_Initialize(char a1, DWORD a2);
 int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int  Render_ReleaseSurface(int a1, DWORD a2);
@@ -20423,39 +20427,22 @@ int  WorldMap_UnloadResources(DWORD a1)
 
 //----- (0040B0A0) --------------------------------------------------------
 void  WorldMap_RunHumanTurnLoop(
-        int a1,
-        int ( *a2)(int a1, char a2, DWORD a3),
-        DWORD a3,
-        double a4)
+        int entry_resource_handle,
+        int ( *entry_render_hook)(int a1, char a2, DWORD a3),
+        DWORD runtime_context,
+        double st0_runtime)
 {
-  int v6; // ecx
-  int v7; // edx
-  int v8; // edx
-  int v9; // ecx
-  int (*v10)(); // ecx
-  int v11; // ecx
-  int v12; // ecx
-  int (*v13)(); // ecx
-  int v14; // edx
-  int v15; // edx
-  int v16; // eax
-  char v17; // bl
-  int v18; // ecx
-  int v19; // edx
-  int v20; // eax
-  char v21; // cl
-  int v22; // ecx
-  int v23; // edx
-  int *v24; // esi
-  signed int v25; // eax
-  unsigned __int16 v26; // cx
-  int v27; // ecx
-  int v28; // eax
-  int previous_resource_handle; // eax
-  int (*previous_render_hook)(); // ecx
+  int selected_stack_record;
+  unsigned char new_facing;
+  int *queued_path;
+  signed int available_action_points;
+  unsigned __int16 required_action_points;
+  int last_path_step;
+  int saved_resource_handle;
+  int (*saved_render_hook)();
 
-  sub_4458E0(a1, (const char *)a2, a3);
-  sub_4459A0(0, a3);
+  sub_4458E0(entry_resource_handle, (const char *)entry_render_hook, runtime_context);
+  sub_4459A0(0, runtime_context);
   dword_5202FC = 0;
   dword_5202F8 = 0;
   do
@@ -20467,8 +20454,8 @@ void  WorldMap_RunHumanTurnLoop(
     MiniMap_UpdateViewportFromCursor();
     if ( !WorldMap_HandleTopMenuBar(0, 0) )
       break;
-    if ( !UnitStackSelection_HandleInput(0, a4) )
-      WorldMap_HandleTileHoverAndClick(a4);
+    if ( !UnitStackSelection_HandleInput(0, st0_runtime) )
+      WorldMap_HandleTileHoverAndClick(st0_runtime);
     if ( !dword_545140 )
     {
       if ( !Input_IsKeyPressed(56) )
@@ -20492,27 +20479,20 @@ LABEL_24:
       {
         if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
         {
-          v15 = 725 * g_SelectedUnitIndex;
-          v16 = gameData;
-          v17 = *(_BYTE *)(725 * g_SelectedUnitIndex + gameData + 147179) + 1;
-          *(_BYTE *)(v15 + gameData + 147179) = v17;
-          *(_BYTE *)(v15 + v16 + 147179) = v17 & 7;
-          a2 = (int ( *)(int, char, DWORD))dword_544CD8;
+          selected_stack_record = UNIT_STACK(g_SelectedUnitIndex);
+          new_facing = UNIT_STACK_FACING(selected_stack_record) + 1;
+          UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
           Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
           while ( Input_IsKeyPressed(205) )
             DD_Pump((int)dword_544CD8, 0);
         }
         if ( Input_IsKeyPressed(203) )
         {
-          a2 = (int ( *)(int, char, DWORD))g_SelectedUnitIndex;
           if ( g_SelectedUnitIndex != -1 )
           {
-            v19 = 725 * g_SelectedUnitIndex;
-            v20 = gameData;
-            v21 = *(_BYTE *)(725 * g_SelectedUnitIndex + gameData + 147179) - 1;
-            *(_BYTE *)(v19 + gameData + 147179) = v21;
-            *(_BYTE *)(v19 + v20 + 147179) = v21 & 7;
-            a2 = (int ( *)(int, char, DWORD))dword_544CD8;
+            selected_stack_record = UNIT_STACK(g_SelectedUnitIndex);
+            new_facing = UNIT_STACK_FACING(selected_stack_record) - 1;
+            UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
             Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
             while ( Input_IsKeyPressed(203) )
               DD_Pump((int)dword_544CD8, 0);
@@ -20522,25 +20502,27 @@ LABEL_24:
         {
           if ( g_SelectedUnitIndex != -1 )
           {
-            v23 = 725 * g_SelectedUnitIndex + gameData;
-            v24 = Unit_MoveTrack(
+            selected_stack_record = UNIT_STACK(g_SelectedUnitIndex);
+            queued_path = Unit_MoveTrack(
                     g_SelectedUnitIndex,
-                    *(__int16 *)(v23 + 147174),
-                    *(__int16 *)(v23 + 147174) + Map_NeighborDX[2 * *(unsigned __int8 *)(v23 + 147179)],
-                    *(__int16 *)(v23 + 147176),
+                    UNIT_STACK_TILE_ROW(selected_stack_record),
+                    UNIT_STACK_TILE_ROW(selected_stack_record)
+                      + Map_NeighborDX[2 * (unsigned __int8)UNIT_STACK_FACING(selected_stack_record)],
+                    UNIT_STACK_TILE_COLUMN(selected_stack_record),
                     0,
-                    *(__int16 *)(v23 + 147176) + Map_NeighborDY[2 * *(unsigned __int8 *)(v23 + 147179)]);
-            if ( v24 )
+                    UNIT_STACK_TILE_COLUMN(selected_stack_record)
+                      + Map_NeighborDY[2 * (unsigned __int8)UNIT_STACK_FACING(selected_stack_record)]);
+            if ( queued_path )
             {
-              v28 = v24[*v24];
-              v26 = HIWORD(v28);
-              v25 = UnitStack_GetMinCurrentActionPoints(gameData + 147174 + 725 * g_SelectedUnitIndex);
-              if ( v25 >= v26 )
+              last_path_step = queued_path[*queued_path];
+              required_action_points = HIWORD(last_path_step);
+              available_action_points = UnitStack_GetMinCurrentActionPoints(selected_stack_record);
+              if ( available_action_points >= required_action_points )
               {
-                qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v24, 0x194u);
+                qmemcpy((void *)UNIT_STACK_PATH_BUFFER(selected_stack_record), queued_path, UNIT_STACK_PATH_BYTES);
                 if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
-                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
-                UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, 0, 0, a4);
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)UNIT_STACK_SLOT(selected_stack_record, 0));
+                UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, 0, 0, st0_runtime);
               }
               j__nfree_();
               sub_418700(1);
@@ -20554,21 +20536,21 @@ LABEL_24:
     sub_40A460(0);
     if ( Input_IsKeyPressed(1) )
     {
-      previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
-      previous_render_hook = g_RenderHook;
+      saved_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
+      saved_render_hook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
-      Debug_Log(previous_resource_handle, 0, 0, (int)aSetrhS08x_0);
+      Debug_Log(saved_resource_handle, 0, 0, (int)aSetrhS08x_0);
       sub_409CC0(0, 0, 0);
       Debug_Log((int)g_RenderHook, 0, 0, (int)aUnsetrh08x);
-      g_RenderHook = previous_render_hook;
-      Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+      g_RenderHook = saved_render_hook;
+      Render_SetResourceHandle((int)&unk_51D4C0, saved_resource_handle);
     }
     if ( Player_CheckForDefeatAndHandleElimination(g_CurrentPlayerIndex, 0) )
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
     }
-  if ( ACTIVE_MISSION_INDEX != -1 && UI_CheckDialogAccepted() )
+    if ( ACTIVE_MISSION_INDEX != -1 && UI_CheckDialogAccepted() )
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
@@ -20587,7 +20569,7 @@ LABEL_24:
         return;
       }
     }
-    else if ( UI_CheckConfirmQuit(0, a4) )
+    else if ( UI_CheckConfirmQuit(0, st0_runtime) )
     {
       dword_520304 = 1;
       dword_5202F8 = 1;
@@ -20596,19 +20578,6 @@ LABEL_24:
   }
   while ( !dword_5202F8 && !dword_5202FC );
 }
-// 40B0B0: variable 'v6' is possibly undefined
-// 40B0B5: variable 'v7' is possibly undefined
-// 40B0D6: variable 'v8' is possibly undefined
-// 40B0D6: variable 'v9' is possibly undefined
-// 40B10C: variable 'a4' is possibly undefined
-// 40B17D: variable 'v11' is possibly undefined
-// 40B18E: variable 'v12' is possibly undefined
-// 40B19B: variable 'v13' is possibly undefined
-// 40B1A1: variable 'v14' is possibly undefined
-// 40B2EA: variable 'v18' is possibly undefined
-// 40B370: variable 'v22' is possibly undefined
-// 40B421: variable 'v26' is possibly undefined
-// 40B4E3: variable 'v27' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
