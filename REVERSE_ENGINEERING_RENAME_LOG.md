@@ -2319,3 +2319,8 @@
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
 | `Render_FillRect` recursively staging temp-to-primary copies after `&unk_51D4C0` lost its companion and compact handle | guarded primary mode-switch fallback no-op | runtime_path_fix | Rendering / Mode Switch Teardown | High | The original fallback stages primary copies through a temporary software surface, but the SIGTERM teardown trace reached it with destination `&unk_51D4C0`, no resolved companion, and `surface[47] == 0`, so the second temp-to-primary leg re-entered the same fallback until allocator/stack failure. The guard preserves the fallback when the primary still has a handle and skips only the impossible no-target mode-switch state. | c, asm, gdb, runtime | no |
+
+## Batch 191 - SDL SIGTERM Finite Termination
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| SDL default signal handling swallowing external SIGTERM into an unpumped `SDL_QUIT` event on direct `/A0` | `SDL_HINT_NO_SIGNAL_HANDLERS` set before `SDL_Init` | runtime_wrapper_fix | SDL Platform / Signal Handling | High | Setting the equivalent environment hint `SDL_NO_SIGNAL_HANDLERS=1` made both `/A0` executable paths finite under plain `timeout 5s`. Installing the same hint in `PlatformEnsureSdlVideo` preserves POSIX SIGTERM behavior under WSL while leaving recovered message-loop `SDL_QUIT` handling intact for actual pumped window events. | platform, runtime, gdb, ctest | no |

@@ -208,3 +208,8 @@ This file classifies the current runtime/quarantine surface for executable regen
   - `Render_FillRect` now skips the temporary primary-surface fallback when `&unk_51D4C0` has no resolved companion and no compact surface handle left after mode-switch teardown
   - the original temporary-surface fallback remains in place for primary copies that still have a recoverable target handle
 - This removes the observed allocator/stack recursion under SIGTERM, but it does not complete clean finite shutdown: the current process can still absorb SIGTERM and needs an external kill-after timeout in validation.
+
+## Latest SDL signal handling note
+- One narrow SDL seam change was needed after the recovered teardown crash was removed.
+- `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, so WSL/POSIX `SIGTERM` keeps normal process-termination semantics instead of being converted into an SDL quit event that direct `/A0` may not pump promptly.
+- This makes external timeout shutdown finite for both executable paths without adding a host-side scenario mode. It is still not a recovered `App_Shutdown` or in-game quit proof.

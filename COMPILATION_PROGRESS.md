@@ -7192,3 +7192,27 @@
   - the SIGTERM signal path still appears to be absorbed and does not exit cleanly without `timeout -k`; finite shutdown remains a separate runtime frontier
   - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
   - rules/class fact health remains below the current all-AI liveness milestone
+
+## Batch 191 - SDL SIGTERM finite termination
+- Current frontier:
+  - turn the post-crash SIGTERM behavior from "absorbed until SIGKILL" into finite host termination for the direct `/A0` executable paths
+- Blockers removed this batch:
+  - `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, preventing SDL from intercepting POSIX `SIGTERM` and converting it into an SDL quit event that `/A0` does not promptly pump
+  - plain `timeout 5s` now terminates both `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` with status `124`, without `timeout -k`, SIGKILL fallback, or core-dump output
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - GDB SIGTERM reproducer now reports normal process termination by `SIGTERM` after the all-AI turn-advance breakpoint, with no fatal-signal catchpoint hit
+- Highest authentic runtime milestone reached:
+  - direct `/A0` still reaches and re-enters the recovered all-AI strategic turn-advance path
+  - external SIGTERM now terminates the SDL-backed process finitely under WSL; this is not an authentic in-game quit path or proof that recovered shutdown cleanup completes
+- Key evidence used:
+  - setting the documented SDL environment hint `SDL_NO_SIGNAL_HANDLERS=1` made both `/A0` executable paths finite under plain `timeout 5s` before the code change
+  - the platform seam calls `SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER)` in `PlatformEnsureSdlVideo`, making the same hint safe and localized before SDL installs signal handlers
+  - `GetMessageA` / `PeekMessageA` already translate `SDL_QUIT` into the compatibility queue, but the direct `/A0` all-AI route spends long spans outside that queue, so SIGTERM should keep POSIX termination semantics instead of depending on event pumping
+- Ambiguous candidates deferred:
+  - recovered `App_Shutdown` / `App_RequestQuit` cleanup is still not a proved finite in-game quit path for `/A0`
+  - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
+  - rules/class fact health remains below the current all-AI liveness milestone

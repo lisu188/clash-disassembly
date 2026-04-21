@@ -273,3 +273,6 @@
 
 ## 39. Batch 190 Note
 - `Batch 190` stayed on the executable startup/runtime frontier. The active work guarded the `Render_FillRect` primary-surface fallback during SIGTERM/mode-switch teardown, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 40. Batch 191 Note
+- `Batch 191` stayed on the executable startup/runtime frontier. The active work set SDL's no-signal-handlers hint before `SDL_Init` so `/A0` terminates under plain POSIX `SIGTERM`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

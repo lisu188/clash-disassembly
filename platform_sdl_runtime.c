@@ -2005,6 +2005,7 @@ static int PlatformEnsureSdlVideo(void)
     return g_platform_sdl_available;
   g_platform_sdl_initialized = 1;
   SDL_SetMainReady();
+  SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
   if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == 0 )
   {
     g_platform_sdl_available = 1;

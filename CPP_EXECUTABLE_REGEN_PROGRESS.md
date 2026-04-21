@@ -303,3 +303,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `Render_FillRect` now returns from that no-target state instead of allocating another temporary surface
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the guard; CTest remains green.
 - `timeout -k 2s 5s` probes for both executable paths produce no core-dump message. The kill-after remains required, so the milestone is "no SIGTERM crash", not clean finite shutdown.
+
+## Latest SDL SIGTERM update
+- The direct `/A0` route now terminates under plain POSIX `SIGTERM` for both executable paths.
+- The active fix stayed in the SDL platform seam:
+  - `PlatformEnsureSdlVideo` sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`
+  - this prevents SDL from swallowing `SIGTERM` into an event that the long-running all-AI route may not pump before timeout
+- `timeout 5s` probes for both `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` now finish with status `124` and no core-dump output, without a kill-after timeout.
+- This is finite external termination, not proof that the recovered game cleanup path is complete.

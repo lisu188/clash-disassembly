@@ -115,3 +115,9 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 - `platform_sdl_runtime.c` was not changed.
 - The one host-side adjustment was the low32 allocator arena in the compat layer, needed after the authentic route reached sprite/resource allocation pressure. That remains separate from SDL input, window, present, and timing behavior.
 - Future SDL work should still be gated by a concrete backend failure; the current frontier is finite scenario/player-turn behavior below SDL.
+
+## Latest SDL signal handling evidence
+- A concrete SDL backend behavior did block finite external shutdown: SDL's default signal handlers can absorb WSL/POSIX `SIGTERM` into an `SDL_QUIT` event.
+- The existing message queue can translate `SDL_QUIT` when the recovered code pumps messages, but direct `/A0` can remain in all-AI gameplay work long enough that plain `timeout` needed SIGKILL.
+- `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, keeping signal termination at the host boundary instead of depending on gameplay code to pump SDL events.
+- This is an SDL seam tightening only; it does not move gameplay semantics into the backend and does not prove recovered in-game quit cleanup.

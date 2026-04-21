@@ -104,3 +104,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - No new original gameplay structure or unit/stat layout was promoted for the SIGTERM teardown guard.
 - `RECOVERED_STRUCTURES.json` now records one additional render-wrapper evidence note: after `Render_BeginModeSwitch` clears the primary compact handle, a `Render_FillRect` primary fallback with no companion and no handle has no recoverable copy target.
 - This is host/runtime containment around the existing render-surface record, not a new field claim.
+
+## Latest SDL SIGTERM maintenance
+
+- No `RECOVERED_STRUCTURES.json` change was needed for the SDL signal-handling fix.
+- The change records host boundary behavior: SDL should not install POSIX signal handlers for the WSL target because long-running recovered gameplay routes may not pump `SDL_QUIT` events promptly.
+- No original structure, unit/stat, or gameplay field semantics are inferred from this platform hint.

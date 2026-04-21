@@ -321,3 +321,14 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - SIGTERM is still not a clean finite shutdown and validation still needs a kill-after timeout
   - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
   - rules/class fact health remains below the current all-AI liveness milestone
+
+## Latest SDL SIGTERM blocker update
+- The direct `/A0` route no longer needs a kill-after timeout for external SIGTERM termination.
+- This was not a raw unresolved link symbol; it was an SDL host-seam behavior issue exposed after the recovered teardown recursion was fixed:
+  - SDL's default signal handling can convert `SIGTERM` into `SDL_QUIT`
+  - direct `/A0` can stay in all-AI gameplay code without promptly pumping the SDL/Win32 compatibility queue
+  - `PlatformEnsureSdlVideo` now opts out of SDL signal handlers before `SDL_Init`, preserving POSIX SIGTERM termination under WSL
+- Remaining blockers:
+  - this is external process termination, not recovered `App_Shutdown`/`App_RequestQuit` completion
+  - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
+  - rules/class fact health remains below the current all-AI liveness milestone
