@@ -7144,3 +7144,27 @@
   - the exact designer-facing names for the three `MAP_THEME_INDEX` values remain unpromoted; current naming only captures the shared map theme/palette selector role
   - `WorldMap_RunHumanTurnLoop` still has its own unreduced register-loss surface and remains deferred until an authentic human-controlled route reaches it
   - clean finite shutdown, rules/class fact health, and the deferred `sub_402E80` minimap frame blit remain separate frontiers
+
+## Batch 189 - Minimap frame sprite restoration
+- Current frontier:
+  - remove the contained minimap-frame authenticity gap below the direct `/A0` all-AI liveness milestone without reopening the unresolved generic `sub_402E80` compact-vtable ABI
+- Blockers removed this batch:
+  - `MiniMap_CreateSurface` now draws the asm-backed minimap frame sprite (`DLX_GetSpriteForChar(dword_5202BC, 4)`) onto the newly allocated minimap surface at `(0, 0)` with draw mode `1`
+  - the draw uses the existing bounded format-0 software sprite decoder instead of the unsafe generic `sub_402E80` compact-vtable call
+  - `MiniMap_CreateSurface` now reuses the named `MAP_THEME_INDEX` field when seeding the minimap terrain-color table
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - GDB breakpoint sampling confirmed the minimap frame draw reaches `Compat_RenderDeviceDrawMenuSprite` as `left=0 top=0 mode=1 format=0`
+  - GDB breakpoint sampling at `Game_AdvanceToNextPlayerTurn` for `build/bin/clash95_bootstrap /A0`
+  - 10-second hard-kill liveness probes for both `build/bin/clash95_bootstrap /A0` and `build/bin/clash95_cpp_regen /A0`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` still reaches and re-enters all-AI turn advance after the minimap frame restoration; sampled entries still show all human flags clear and current-player cycling through active slots
+  - both executable paths still stay alive until the external 10-second hard-kill probe, and the full CTest suite remains green
+- Key evidence used:
+  - `clash95.asm:19654-19689` for `MiniMap_CreateSurface` creating the backing surface, setting `g_RenderDevice`, fetching sprite char `4`, calling the surface draw-sprite slot with `x=0`, `y=0`, four unclipped `-1` bounds, and draw mode `1`
+  - GDB on `MiniMap_CreateSurface` for `/A0` confirmed sprite char `4` resolves to a `214 x 213` format-0 stream before the draw
+  - existing bounded format-0 software decoding was already carrying reached frame/menu/glyph sprite draws without calling the unresolved compact `sub_402E80` ABI
+- Ambiguous candidates deferred:
+  - the broad generic `sub_402E80` decoder remains unresolved for non-format-0 or clipped/masked callers; this batch only restores the proven minimap frame sprite call shape
+  - `WorldMap_RunHumanTurnLoop`, clean finite shutdown, and rules/class fact health remain separate frontiers

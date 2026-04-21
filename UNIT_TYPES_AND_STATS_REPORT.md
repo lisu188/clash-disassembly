@@ -267,3 +267,6 @@
 
 ## 37. Batch 188 Note
 - `Batch 188` stayed on the executable startup/runtime frontier. The active work removed reached `PlayGame` setup/loop/teardown register-loss scars and named the world-map theme selector at `gameData + 140016`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 38. Batch 189 Note
+- `Batch 189` stayed on the executable startup/runtime frontier. The active work restored the asm-backed minimap frame sprite draw in `MiniMap_CreateSurface`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

@@ -194,3 +194,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - setup/AI/teardown calls no longer receive undefined decompiler locals
   - `MAP_THEME_INDEX` records the shared map theme byte instead of leaving raw `gameData + 140016` reads in the central loop
 - The wrapper boundary is unchanged: current dummy SDL/audio liveness is sufficient for the route, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.
+
+## Latest minimap frame restoration note
+- No new runtime wrapper, SDL shim, or host-only scenario mode was added for the minimap frame restoration.
+- The active change stayed in recovered C:
+  - `MiniMap_CreateSurface` now draws the asm-backed minimap frame sprite through the existing bounded format-0 software sprite path
+  - the broad generic `sub_402E80` compact-vtable decoder remains unresolved and is not used as a host-width shortcut
+- The wrapper boundary is unchanged: current SDL-backed linear surfaces can carry this proven format-0 frame draw, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.

@@ -92,3 +92,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - `RECOVERED_STRUCTURES.json` now records `WorldViewState.map_theme_index` at `gameData + 140016`.
 - This field is not a new unit/stat semantic claim. It is the shared world-map theme selector used by `PlayGame` for `backgr1/2/3.s32`, `treemas1/2/3.s32`, and main-map music selection, and it corroborates the earlier minimap terrain-color table selector evidence.
 - The exact designer-facing labels for values `0`, `1`, and `2` remain deferred; current naming intentionally stops at the implementation-proven theme selector role.
+
+## Latest minimap frame maintenance
+
+- `RECOVERED_STRUCTURES.json` now notes that `MiniMap_CreateSurface` draws sprite char `4` as the minimap frame after allocating the backing surface.
+- This strengthens the existing `MiniMapState` evidence only; it does not add a new struct field.
+- The generic `sub_402E80` sprite decoder remains broader than this evidence. Current recovery covers the unclipped format-0 minimap frame call shape only.

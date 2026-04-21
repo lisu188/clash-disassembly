@@ -287,3 +287,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - AI turn dispatch, setup logs, selection sync, teardown, and `sub_472860(-1, 0, 0)` no longer forward ghost registers
 - `WorldMap_Initialize` now calls `sub_4163F0(0)` explicitly because the asm initializer reads no incoming object state.
 - `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the cleanup; CTest remains green, and both `/A0` executable paths still stay alive until the 10-second hard-kill probe.
+
+## Latest minimap frame restoration update
+- `MiniMap_CreateSurface` now restores the decorative minimap frame sprite draw that was previously deferred:
+  - the function still allocates the recovered minimap backing surface and sets `g_RenderDevice` to that surface
+  - it fetches `DLX_GetSpriteForChar(dword_5202BC, 4)` and draws it at `(0, 0)` with draw mode `1`
+  - it seeds the terrain-color table with `MAP_THEME_INDEX`
+- This does not claim the broad generic `sub_402E80` decoder is recovered. The restored frame path is the asm-proven unclipped format-0 sprite shape and uses the already-contained bounded software decoder.
+- `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the frame restoration; CTest remains green, and both `/A0` executable paths still stay alive until the 10-second hard-kill probe.

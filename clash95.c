@@ -21782,7 +21782,7 @@ int  sub_40CE70(unsigned int a1, int a2)
 int  MiniMap_CreateSurface(DWORD a1)
 {
   _DWORD *Surface; // eax
-  int SpriteForChar; // eax
+  int minimap_frame_sprite; // eax
 
   byte_523F54 = 2;
   if ( *(_DWORD *)(gameData + 140004) * *(_DWORD *)(gameData + 140000) <= 2500 )
@@ -21796,9 +21796,9 @@ int  MiniMap_CreateSurface(DWORD a1)
     Surface = Render_CreateSurface((int)Surface, word_523348, word_52334A);
   dword_52334C = (int)Surface;
   g_RenderDevice = Surface;
-  SpriteForChar = DLX_GetSpriteForChar(dword_5202BC, 4);
-  (void)SpriteForChar;
-  return sub_40CE70(*(unsigned __int8 *)(gameData + 140016), 0);
+  minimap_frame_sprite = DLX_GetSpriteForChar(dword_5202BC, 4);
+  Compat_RenderDeviceDrawMenuSprite(0, 0, minimap_frame_sprite, 1u);
+  return sub_40CE70(MAP_THEME_INDEX, 0);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202BC: using guessed type int dword_5202BC;
@@ -30057,13 +30057,12 @@ static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_c
     return 0;
 
   /*
-   * The top-menu button sprites currently reach the generic `sub_402E80`
-   * decoder, but that path is still polluted by several x86-sized helper
-   * objects that are unsafe on x86-64. The menu buttons all use the simple
-   * format-0 stream: literal runs, compressed back-references to prior literal
-   * runs in the byte stream, and high-bit transparent skips. Decode that
-   * narrow shape directly into the SDL-backed linear surface until the broader
-   * decoder scaffolding is recovered safely.
+   * Several recovered callers still reach the generic `sub_402E80` decoder,
+   * but that path is polluted by x86-sized helper objects that are unsafe on
+   * x86-64. The reached menu/frame/glyph sprites use the simple format-0
+   * stream: literal runs, compressed back-references to prior literal runs,
+   * and high-bit transparent skips. Decode that narrow shape directly into the
+   * SDL-backed linear surface until the broader decoder scaffolding is safe.
    */
   width = *(unsigned __int16 *)(uintptr_t)sprite_for_char;
   height = *(unsigned __int16 *)(uintptr_t)(sprite_for_char + 2);

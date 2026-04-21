@@ -764,7 +764,7 @@
       { "offset": 20, "name": "draw_layer_mask", "type": "uint32", "notes": "Actual symbol `dword_511FF0`. Bitmask controlling whether terrain, units, and buildings contribute to the minimap cell color." }
     ],
     "evidence": [
-      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, and seeds the terrain-color lookup state.",
+      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, draws sprite char `4` as the minimap frame, and seeds the terrain-color lookup state.",
       "`MiniMap_DrawTileCell` consults the draw-layer mask, terrain-color lookup, unit occupancy, building occupancy, and fog-of-war to paint a single minimap cell.",
       "`MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_RedrawTileRect`, `MiniMap_RedrawAllTiles`, `MiniMap_UpdateViewportFromCursor`, and `MiniMap_IsCursorInside` all use the same rect/surface/scale globals, proving one coherent minimap state block."
     ]

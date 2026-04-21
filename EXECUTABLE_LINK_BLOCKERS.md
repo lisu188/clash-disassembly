@@ -298,3 +298,15 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
   - direct `/A0` is still all-AI liveness only, not clean finite shutdown or playable-turn proof
   - rules/class fact health and the deferred `sub_402E80` minimap frame blit remain below this cleanup
+
+## Latest minimap frame blocker update
+- The specific `MiniMap_CreateSurface` frame-sprite gap is no longer deferred.
+- This was a contained runtime fidelity blocker rather than a raw unresolved link symbol:
+  - asm fetches `DLX_GetSpriteForChar(dword_5202BC, 4)` after allocating the minimap surface
+  - asm draws it at `(0, 0)` with draw mode `1` and unclipped `-1` bounds through the surface draw-sprite slot
+  - GDB confirms the reached frame sprite is a `214 x 213` format-0 stream, so the existing bounded format-0 software decoder can carry this call without invoking the unsafe generic compact ABI
+- Remaining blockers:
+  - the broad generic `sub_402E80` decoder is still not generally recovered for other sprite formats, masks, or clipped call shapes
+  - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
+  - direct `/A0` is still all-AI liveness only, not clean finite shutdown or playable-turn proof
+  - rules/class fact health remains below the current liveness milestone
