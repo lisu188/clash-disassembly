@@ -6,6 +6,7 @@ enable_testing()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
+find_package(X11 REQUIRED)
 
 add_library(clash95_recovered STATIC
   clash95.c
@@ -88,9 +89,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   target_link_options(clash95_cpp_regen PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
-target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2)
-target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 m)
-target_link_libraries(clash95_cpp_regen PRIVATE PkgConfig::SDL2 m)
+target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2 X11::X11)
+target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 X11::X11 m)
+target_link_libraries(clash95_cpp_regen PRIVATE PkgConfig::SDL2 X11::X11 m)
 
 set_target_properties(clash95_recovered PROPERTIES
   OUTPUT_NAME clash95_recovered

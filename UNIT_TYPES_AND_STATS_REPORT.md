@@ -288,3 +288,6 @@
 
 ## 44. Batch 195 Note
 - `Batch 195` stayed on the executable front-end and human-route frontier. The active work restored the Options/Load `.s32` menu resource strings and removed additional decompiler ghost operands from those submenu setup and polling paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 45. Batch 203 Note
+- `Batch 203` stayed on the SDL executable front-end input frontier. The active work made real top-level main-menu mouse input responsive through the SDL/X11 fallback corridor and proved an Exit-button click from a real Xvfb window reaches the recovered widget loop, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

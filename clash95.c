@@ -92257,6 +92257,26 @@ int  InputBackend_Unacquire(InputBackendState *state)
   return 0;
 }
 
+static int InputBackend_ScaleHostMouseDeltaToRecoveredUnits(int render_state, int host_delta)
+{
+  int sensitivity;
+  int fixed_shift;
+  int sign;
+  unsigned int abs_delta;
+  unsigned long long scaled_delta;
+
+  if ( !render_state || !host_delta )
+    return host_delta;
+  sensitivity = *(_DWORD *)(render_state + 32);
+  fixed_shift = *(unsigned __int8 *)(render_state + 1108);
+  if ( sensitivity <= 0 || fixed_shift < 0 || fixed_shift >= 24 )
+    return host_delta;
+  sign = host_delta < 0 ? -1 : 1;
+  abs_delta = (unsigned int)(host_delta < 0 ? -host_delta : host_delta);
+  scaled_delta = ((unsigned long long)abs_delta << fixed_shift) + (unsigned int)(sensitivity / 2);
+  return sign * (int)(scaled_delta / (unsigned int)sensitivity);
+}
+
 //----- (0047BFD0) --------------------------------------------------------
 int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
 {
@@ -92276,6 +92296,7 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
   signed char fallback_mouse_primary;
   signed char fallback_mouse_secondary;
   signed char fallback_keyboard_state[256];
+  int fallback_mouse_delta_is_host_pixels;
 
   v12 = a3;
   v11 = a2;
@@ -92285,6 +92306,7 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
   fallback_mouse_delta_y = 0;
   fallback_mouse_primary = 0;
   fallback_mouse_secondary = 0;
+  fallback_mouse_delta_is_host_pixels = 0;
   memset(fallback_keyboard_state, 0, sizeof(fallback_keyboard_state));
   if ( !(raw[77] && raw[2]) || !(raw[78] && raw[1]) )
   {
@@ -92294,7 +92316,13 @@ int  InputBackend_PollState(InputBackendState *state, int a2, int a3)
       &fallback_mouse_primary,
       &fallback_mouse_secondary,
       fallback_keyboard_state,
-      sizeof(fallback_keyboard_state));
+      sizeof(fallback_keyboard_state),
+      &fallback_mouse_delta_is_host_pixels);
+    if ( fallback_mouse_delta_is_host_pixels )
+    {
+      fallback_mouse_delta_x = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(v11, fallback_mouse_delta_x);
+      fallback_mouse_delta_y = InputBackend_ScaleHostMouseDeltaToRecoveredUnits(v11, fallback_mouse_delta_y);
+    }
   }
   if ( raw[77] && raw[2] )
   {

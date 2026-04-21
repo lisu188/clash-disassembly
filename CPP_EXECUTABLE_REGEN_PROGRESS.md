@@ -376,3 +376,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The top-level menu PCX load now passes `byte_543D80` as the palette output buffer, matching the original `PlayGame_Dispatch` assembly and allowing the main menu palette to be captured before text-cache setup.
 - Frame dumps confirm the default route reaches the real main menu frame and direct `/A0` still reaches nonblack world-map frames; this promotes "SDL presents authentic recovered frames" but does not yet claim menu input responsiveness or a playable human turn.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the repair; CTest, JSON validation, `git diff --check`, frame-dump inspection, the retained human-turn probe, and one-second bootstrap/C++ liveness smokes pass.
+
+## Latest SDL main-menu input update
+- The next executable-regeneration step stayed in the SDL platform seam plus the recovered input backend, not in a host-side probe.
+- The fallback input path now keeps SDL/X11 window geometry valid across shown/exposed events, polls the real X11 pointer state when SDL's global mouse state is stale under Xvfb/XTest, and latches host button-down edges until the recovered poll consumes them.
+- `InputBackend_PollState` scales real host pixel deltas into the recovered render state's relative input units before `sub_460A50` applies cursor sensitivity, while the old debug-prime helpers remain on their raw recovered-delta path.
+- A frame-waited Xvfb run can now move the real window pointer to the top-level Exit button, click it through `xdotool`, and let the recovered main-menu widget loop exit the process with status `0`.
+- This promotes real top-level menu mouse responsiveness; Campaign, Load Game, Multiplayer, and playable-turn routes still need separate full-route validation.

@@ -7535,3 +7535,37 @@
   - the second main-menu draw-stage argument observed in assembly remains deferred because the restored palette plus primary presentation is sufficient for the current black-screen blocker
   - the `/A0` world-map frame is nonblack but still needs separate artifact/minimap/tile-fidelity work before claiming rendering completeness
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 203 - SDL fallback main-menu input responsiveness
+- Current frontier:
+  - move from visible main-menu frames to real front-end input responsiveness on the default full `App_WinMain` route, with Campaign/Load/Multiplayer human-route validation still next
+- Blockers removed this batch:
+  - stopped `SDL_WINDOWEVENT_SHOWN` / `SDL_WINDOWEVENT_EXPOSED` from overwriting the stored host window size with zero-valued event data, while keeping real resize events authoritative
+  - added SDL-host X11 pointer polling through `SDL_GetWindowWMInfo` / `XQueryPointer` so WSL/Xvfb/XTest mouse motion and button state can reach the fallback input seam even when SDL's global pointer state is stale
+  - latched button-down edges until the next `Platform_ReadInputFallbackState` sample so a fast host click cannot collapse into an all-up state between recovered polls
+  - marked real host mouse deltas as pixel-space and converted them in `InputBackend_PollState` to the recovered render state's DirectInput-style relative units before `sub_460A50` applies cursor sensitivity
+  - kept the old debug-prime fallback helpers on their raw recovered-delta lane by passing an explicit `mouse_delta_is_host_pixels` flag out of the platform seam
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `xvfb-run -a bash -lc '<frame-wait default route, xdotool move/click Exit>'` exits `0` after the recovered main-menu Exit button is clicked
+  - `xvfb-run -a timeout 4s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash203-main-frame ./build/bin/clash95_bootstrap` exits `124`; `/tmp/clash203-main-frame-003.bmp` has `296141 / 307200` nonblack pixels
+  - `xvfb-run -a timeout 6s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash203-a0-frame ./build/bin/clash95_bootstrap /A0` exits `124`; `/tmp/clash203-a0-frame-003.bmp` has `254986 / 307200` nonblack pixels
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124`
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - JSON parse check for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - promoted: the default route now accepts real SDL/X11 mouse input on the visible main menu; a real Xvfb window click on the Exit button drives the recovered widget loop and exits cleanly
+  - retained: visible main-menu and `/A0` frames remain the rendering milestones from Batch 202
+  - still not claimed: Campaign, Load Game, or Multiplayer route entry via real input; keyboard menu control; or a playable human turn
+- Key evidence used:
+  - `Platform_HandleHostEvent` previously grouped shown/exposed with resize events even though SDL supplies zero dimensions for shown/exposed notifications
+  - `Platform_ReadInputFallbackState -> InputBackend_PollState -> sub_460A50` is the live fallback corridor reached because the DirectInput setup intentionally fails on SDL
+  - Xvfb validation showed `SDL_GetGlobalMouseState` could stay stale while `XQueryPointer` reported the real pointer at the clicked window coordinates
+  - the render-state cursor update multiplies input deltas by `*(render_state + 32)` and shifts by `*(render_state + 1108)`, so host pixel deltas must be scaled before entering the recovered update
+- Ambiguous candidates deferred:
+  - non-X11 SDL backends still rely on SDL's normal mouse state APIs rather than the X11-specific corroboration path
+  - this batch proves the top-level Exit button, not the deeper Campaign, Load Game, or Multiplayer submenu routes
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
