@@ -129,3 +129,11 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
   - `PlayGame_Dispatch` needed the original `menu\\kamp.s32` sprite filename
   - the first campaign selector callback needed the asm-backed `1` latch
 - Future SDL work should still be gated by concrete input/event evidence; this batch keeps menu semantics in recovered C rather than moving them into `platform_sdl_runtime.c`.
+
+## Latest campaign-submenu non-SDL evidence
+- The campaign submenu operand cleanup required no SDL backend change.
+- The active blockers were recovered-code operands in `PlayGame_Dispatch`:
+  - the submenu text cache needed `byte_543D80`
+  - the input loop needed zero pump/widget operands
+  - selector dispatch needed explicit mission-route operands instead of undefined locals
+- Future SDL input work should wait for a concrete backend failure after the recovered Campaign path is exercised end to end.

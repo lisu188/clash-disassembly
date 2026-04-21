@@ -319,3 +319,8 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - the first selector callback now writes the asm-backed `dword_544184 = 1` latch
 - Both executable paths still build after this recovered-C update, and the existing default/direct route CTest suite remains green.
 - The next human-route milestone is to validate real menu input through Campaign into `Scenario_LoadMissionByIndexAndPlay` and then into `WorldMap_RunHumanTurnLoop`; no host-side campaign shortcut or C++ replacement entrypoint was added.
+
+## Latest campaign submenu operand update
+- The follow-on human-route cleanup stayed in recovered C and did not change the C++ executable seam.
+- `PlayGame_Dispatch` no longer forwards undefined decompiler locals in the campaign submenu's sprite allocation, text-cache rebuild, zero-operand pump/UI poll, or selector dispatch.
+- Both executable targets still build after the cleanup; the validation target remains the same authentic Campaign menu path rather than a host-side campaign shortcut.

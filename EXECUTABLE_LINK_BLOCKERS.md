@@ -343,3 +343,15 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - real input validation still needs to drive the default front-end from the Campaign button into this submenu and through `Scenario_LoadMissionByIndexAndPlay`
   - `WorldMap_RunHumanTurnLoop` cleanup still needs that human-controlled route before deeper turn-loop behavior can be trusted
   - rules/class fact health and the skipped `CSS_Init` table remain separate executable-regeneration frontiers
+
+## Latest campaign-submenu operand blocker update
+- The campaign submenu branch had a second recovered-code fidelity blocker after the widget table was rebuilt: several calls still used decompiler ghost operands.
+- This was reduced by replacing those operands with the asm-backed values:
+  - size-only `Mem_Alloc(0x1010)` shape for `menu\\kamp.s32`
+  - `byte_543D80` as the submenu text-cache source
+  - zero operands for `DD_Pump` and `sub_419DC0` inside the submenu loop
+  - explicit selector dispatch operands instead of `v35` / `v36` / `v37`
+- Remaining blockers:
+  - real input validation still needs to exercise the Campaign button and submenu button path end to end
+  - the top-level main menu still has older unrelated ghost operands that should be reduced only with focused evidence
+  - `WorldMap_RunHumanTurnLoop`, rules/class fact health, and `CSS_Init` remain separate frontiers

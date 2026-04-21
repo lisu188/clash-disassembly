@@ -61696,14 +61696,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v23; // ecx
   int v24; // ecx
   _DWORD *v25; // eax
-  int v29; // edx
-  int v30; // ecx
   bool i; // zf
   int campaign_menu_cancelled_by_escape; // ecx
   int v33; // ecx
-  int v35; // ecx
-  int v36; // ecx
-  int v37; // edx
   int v38; // ecx
   int v39; // ecx
   _DWORD *v40; // eax
@@ -61875,11 +61870,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     switch ( g_MainMenuRequestedScreen )
     {
       case MAIN_MENU_REQUEST_CAMPAIGN:
-        v25 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
+        v25 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v25 )
           v25 = DLXSpriteSet_Load(v25, "menu\\kamp.s32");
         g_PlayGameMenuSpriteSetHandle = (int)v25;
-        a2 = (signed int)byte_543D80;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMain_gfx_0);
         (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(39);
         CampaignMenu_RebuildButtonWidgetTemplate();
@@ -61887,7 +61881,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v124);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, v29, v30, (DWORD)a3);
+        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
         a3 = (char *)&unk_5196A0;
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
@@ -61895,8 +61889,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
         {
-          DD_Pump((int)dword_544CD8, (char)byte_543D80);
-          sub_419DC0(v124, (DWORD)&unk_5196A0);
+          DD_Pump((int)dword_544CD8, 0);
+          sub_419DC0(v124, 0);
           if ( Input_IsKeyPressed(1) )
           {
             campaign_menu_cancelled_by_escape = 1;
@@ -61915,13 +61909,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             LOBYTE(a2) = 1;
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
             v128 = 1;
-            Scenario_LoadMissionByIndexAndPlay(0, v35, (DWORD)&unk_5196A0, a4);
+            Scenario_LoadMissionByIndexAndPlay(0, 0, (DWORD)&unk_5196A0, a4);
           }
           else
           {
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
-            Scenario_LoadMissionByIndexAndPlay((char *)0xA, v36, (DWORD)&unk_5196A0, a4);
-            v128 = v37;
+            Scenario_LoadMissionByIndexAndPlay((char *)0xA, 0, (DWORD)&unk_5196A0, a4);
+            v128 = 1;
           }
         }
         break;
@@ -62386,12 +62380,7 @@ LABEL_64:
 // 447B42: variable 'v18' is possibly undefined
 // 447BC9: variable 'v23' is possibly undefined
 // 447C24: variable 'v24' is possibly undefined
-// 447CD4: variable 'v29' is possibly undefined
-// 447CD4: variable 'v30' is possibly undefined
 // 447DA4: variable 'v33' is possibly undefined
-// 447E58: variable 'v35' is possibly undefined
-// 447E7C: variable 'v36' is possibly undefined
-// 447E81: variable 'v37' is possibly undefined
 // 447EDD: variable 'v38' is possibly undefined
 // 447EFF: variable 'v39' is possibly undefined
 // 447F3B: variable 'v41' is possibly undefined

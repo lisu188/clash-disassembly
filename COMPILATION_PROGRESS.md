@@ -7242,3 +7242,32 @@
   - the campaign path still needs real input or a future non-host-probe validation milestone to prove entry into `WorldMap_RunHumanTurnLoop`
   - deeper human-turn gameplay/session fidelity remains below this front-end table recovery
   - `CSS_Init` and broader rules/class fact health remain separate frontiers
+
+## Batch 193 - Campaign submenu operand cleanup
+- Current frontier:
+  - continue reducing the authentic main-menu Campaign path toward a human-controlled mission load by removing the remaining ghost-register operands inside the campaign submenu branch
+- Blockers removed this batch:
+  - the campaign submenu sprite allocation now uses the asm-backed size-only allocation shape (`Mem_Alloc(4112, 0, 0, 0)`) instead of forwarding stale `v9` / `a2` / `a3` locals
+  - the campaign submenu text-cache rebuild now hashes/draws from `byte_543D80`, matching the `edx = offset byte_543D80` setup preserved across `sub_419D80`
+  - the submenu polling loop now calls `DD_Pump(..., 0)` and `sub_419DC0(..., 0)`, matching the original `xor edx, edx` input loop rather than passing unrelated palette/cursor pointers
+  - campaign mission dispatch no longer forwards undefined `v35` / `v36` / `v37` locals; both selector paths now pass explicit unused operands and restore the post-mission menu-entry flag explicitly
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - GDB table probe at `main` calling `CampaignMenu_RebuildButtonWidgetTemplate()` and checking both records plus the terminator
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json > /tmp/unit_types_and_stats.json.check`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json > /tmp/recovered_structures.json.check`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged so far: default, lowercase `r`, direct `a`, and direct `/A0` remain the automated route-smoke frontier
+  - the campaign submenu branch now has fewer undefined operand hazards before real menu input can be used to prove entry into `Scenario_LoadMissionByIndexAndPlay`
+- Key evidence used:
+  - `clash95.asm:109830-109984` for the inlined campaign branch loading `menu\\kamp.s32`, rebuilding the menu cache from `byte_543D80`, polling the submenu with zero pump/UI operands, and dispatching selector `0` or `10`
+  - `clash95.asm:40283-40317` for `sub_419D80` preserving `edx`, which keeps the `byte_543D80` text-cache source live across widget initialization
+  - `clash95.asm:146079-146133` for `sub_460370` / `Scenario_LoadMissionByIndexAndPlay` ignoring the decompiler's second argument while using the carried campaign mission index
+- Ambiguous candidates deferred:
+  - this is still not automated proof of a human-turn route; the next milestone is real Campaign input through the recovered menu loop into `WorldMap_RunHumanTurnLoop`
+  - the top-level main-menu branch still contains older decompiler ghost operands outside this campaign-specific cleanup
+  - broader rules/class fact health and skipped `CSS_Init` remain separate executable-regeneration frontiers

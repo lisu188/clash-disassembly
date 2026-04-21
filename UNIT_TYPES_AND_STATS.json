@@ -41,7 +41,8 @@
     "Batch 189 stayed on executable startup/runtime recovery by restoring the asm-backed minimap frame sprite draw in MiniMap_CreateSurface. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
     "Batch 190 stayed on executable startup/runtime recovery by guarding the Render_FillRect primary-surface fallback during SIGTERM/mode-switch teardown. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
     "Batch 191 stayed on executable startup/runtime recovery by setting SDL's no-signal-handlers hint before SDL_Init so /A0 terminates under plain POSIX SIGTERM. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
-    "Batch 192 stayed on executable front-end and human-route recovery by rebuilding the campaign-choice menu widget blob and repairing its campaign selector callback. No new unit-type or stat semantics were promoted; the recovered roster names, stats, relationships, and confidence levels remain unchanged."
+    "Batch 192 stayed on executable front-end and human-route recovery by rebuilding the campaign-choice menu widget blob and repairing its campaign selector callback. No new unit-type or stat semantics were promoted; the recovered roster names, stats, relationships, and confidence levels remain unchanged.",
+    "Batch 193 stayed on executable front-end and human-route recovery by removing remaining decompiler ghost operands from the campaign submenu branch. No new unit-type or stat semantics were promoted; the recovered roster names, stats, relationships, and confidence levels remain unchanged."
   ],
   "unit_types": [
     {

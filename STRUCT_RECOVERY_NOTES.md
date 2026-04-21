@@ -117,3 +117,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - This is a real front-end structure update: the original `unk_518338` blob is two packed 0x35-byte campaign-choice records plus a 0x35-byte terminator slot, not a one-byte weak global.
 - The record layout reuses the recovered menu-button field order, but the campaign table uses `sub_419770` as its transition callback and `sub_448B90` / `sub_448BB0` as its two selector callbacks.
 - This update is a human-route recovery step, not a unit/stat semantic promotion: the table only lets the authentic Campaign submenu reach the already-recovered mission loader path.
+
+## Latest campaign-submenu operand maintenance
+
+- No new `RECOVERED_STRUCTURES.json` entry was needed for the follow-on campaign submenu operand cleanup.
+- The existing `CampaignMenuButtonWidgetRecord` evidence still covers the table; this batch only removed decompiler ghost operands around allocation, cache rebuild, input polling, and selector dispatch.
+- No new original structure, unit/stat field, or gameplay data layout is inferred from these operand repairs.

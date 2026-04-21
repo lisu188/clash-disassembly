@@ -279,3 +279,6 @@
 
 ## 41. Batch 192 Note
 - `Batch 192` stayed on the executable front-end and human-route frontier. The active work rebuilt the campaign-choice widget blob and repaired the first campaign selector callback so the real main-menu Campaign path can reach `Scenario_LoadMissionByIndexAndPlay` with a human-controlled player. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 42. Batch 193 Note
+- `Batch 193` stayed on the executable front-end and human-route frontier. The active work removed remaining decompiler ghost operands from the campaign submenu branch, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

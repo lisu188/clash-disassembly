@@ -221,3 +221,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - `PlayGame_Dispatch` now loads `menu\\kamp.s32` on the campaign submenu branch
   - `sub_448B90` now latches selector `1`, matching the original callback before `Scenario_LoadMissionByIndexAndPlay(0, ...)`
 - The wrapper boundary is unchanged: current host seams can carry the existing smokes, while the next human-route work is front-end input and recovered gameplay/session fidelity.
+
+## Latest campaign submenu operand note
+- No runtime wrapper, SDL shim, or host-only campaign mode was added for the follow-on campaign submenu cleanup.
+- The active changes stayed inside recovered `PlayGame_Dispatch`:
+  - sprite allocation, text-cache rebuild, loop pump/widget polling, and mission dispatch now use concrete asm-backed operands
+  - the prior undefined `v29` / `v30` / `v35` / `v36` / `v37` hazards are gone from this branch
+- The wrapper boundary is unchanged; the next proof still needs real Campaign menu input rather than a synthetic host campaign route.
