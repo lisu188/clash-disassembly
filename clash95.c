@@ -5462,6 +5462,7 @@ char aDraw1[6] = "draw1"; // weak
 char aDraw2[6] = "draw2"; // weak
 char aDrawend[8] = "drawend"; // weak
 char aMenuMain_gfx_0[14] = "menu\\main.gfx"; // weak
+char aMenuMultipl_s32[17] = "menu\\multipl.s32"; // weak
 char aMenuMultipl_gf[17] = "menu\\multipl.gfx"; // weak
 char aMale_2[5] = "male"; // weak
 char aW[2] = "W"; // weak
@@ -61684,24 +61685,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   bool i; // zf
   int campaign_menu_cancelled_by_escape; // ecx
   int v33; // ecx
-  int v38; // ecx
-  int v39; // ecx
   _DWORD *v40; // eax
-  int v41; // ecx
-  int v42; // ecx
-  int v43; // ecx
   int j; // edx
-  int v45; // ecx
-  int v46; // edx
-  int v47; // ecx
-  int v48; // ecx
-  int v49; // ecx
-  unsigned int v50; // eax
-  int v51; // edi
-  int v52; // edx
-  unsigned int v53; // eax
   int v54; // eax
-  void (*v55)(void); // edx
   DWORD v56; // ebp
   int v57; // ecx
   int v58; // edx
@@ -61712,9 +61698,6 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   char v63; // al
   char v64; // al
   int v65; // ecx
-  int v66; // ecx
-  int v67; // edx
-  int v68; // ecx
   int v69; // edx
   int v70; // edx
   int v71; // edx
@@ -61760,6 +61743,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v125[5]; // [esp+2100h] [ebp-3Ch] BYREF
   int previous_load_slot;
   int selected_load_slot;
+  int multiplayer_player_type_slot;
+  int multiplayer_selected_name_slot;
+  int multiplayer_previous_name_slot;
+  int multiplayer_map_row;
   int v126; // [esp+2114h] [ebp-28h]
   int (*v127)(); // [esp+2118h] [ebp-24h]
   int v128; // [esp+211Ch] [ebp-20h]
@@ -61899,73 +61886,69 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         break;
       case MAIN_MENU_REQUEST_MULTIPLAYER:
         a3 = 0;
-        memset_(5, 5);
+        memset(byte_544188, 5, 5);
         byte_544188[0] = 3;
         byte_544189 = 0;
         byte_54418B = 1;
         byte_54418A = 2;
-        qmemcpy(v125, &off_5184DC, 4 * v38);
+        qmemcpy(v125, &off_5184DC, sizeof(v125));
         sub_44E2A0(5, v125);
         dword_5441D8 = 0;
         dword_544198 = -1;
         dword_5441DC = 0;
-        v40 = (_DWORD *)Mem_Alloc(4112, v39, 1, 0);
+        v40 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v40 )
-          v40 = DLXSpriteSet_Load(v40, 1);
+          v40 = DLXSpriteSet_Load(v40, aMenuMultipl_s32);
         g_PlayGameMenuSpriteSetHandle = (int)v40;
         a2 = (signed int)byte_543D80;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMultipl_gf);
-        Render_LoadResourceSprite_v4(18, byte_543D80, v41, (char)byte_543D80, 0);
-        Render_LoadResourceSprite_v4(21, byte_543D80, v42, (char)byte_543D80, 0);
+        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
         g_RenderDevice = (_UNKNOWN *)dword_5202E0;
         sub_448EA0();
         (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
-        for ( j = 0; j < 5; sub_448D10(j, j + 1, v43) )
-          ;
+        for ( j = 0; j < 5; ++j )
+          sub_448D10(j, j + 1, 0);
         sub_449330();
-        qmemcpy(v122, &unk_5184F0, 4 * v45 + 1);
+        qmemcpy(v122, &unk_5184F0, 265);
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v122);
-        g_PlayGameMenuExitRequested = v46;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, v47, 0);
+        g_PlayGameMenuExitRequested = 0;
+        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-        dword_545150 = v48;
+        dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)dword_544CD8, a2);
+          DD_Pump((int)dword_544CD8, 0);
           if ( DD_IsFlipping((int)dword_544CD8)
             && dword_544CFC >> byte_54512C >= 176
             && dword_544CFC >> byte_54512C <= 236
             && (unsigned int)(((dword_544D00 >> byte_54512C) - 129) / 53) <= 4 )
           {
+            multiplayer_player_type_slot = ((dword_544D00 >> byte_54512C) - 129) / 53;
             sub_4425E0(aMale_2);
-            BYTE1(a2) = byte_544188[v66] + 1;
-            byte_544188[v66] = BYTE1(a2);
-            LOBYTE(a2) = 6;
-            byte_544188[v66] = BYTE1(a2) % 6;
+            byte_544188[multiplayer_player_type_slot] = ((unsigned __int8)byte_544188[multiplayer_player_type_slot] + 1) % 6;
             sub_448EA0();
-            sub_448D10(v68, v67, v68);
+            sub_448D10(multiplayer_player_type_slot, 0, 0);
             Render_Begin((int)dword_544CD8, 0);
           }
           if ( DD_IsFlipping((int)dword_544CD8) )
           {
             if ( dword_544CFC >> byte_54512C >= 239 && dword_544CFC >> byte_54512C <= 339 )
             {
-              v49 = 53;
-              v50 = ((dword_544D00 >> byte_54512C) - 144) / 53;
-              if ( v50 <= 4 )
+              multiplayer_selected_name_slot = ((dword_544D00 >> byte_54512C) - 144) / 53;
+              if ( multiplayer_selected_name_slot <= 4 )
               {
-                v51 = dword_544198;
-                if ( v50 != dword_544198 )
+                multiplayer_previous_name_slot = dword_544198;
+                if ( multiplayer_selected_name_slot != dword_544198 )
                 {
-                  v52 = dword_544198;
                   a3 = 0;
-                  dword_544198 = ((dword_544D00 >> byte_54512C) - 144) / 53;
+                  dword_544198 = multiplayer_selected_name_slot;
                   dword_544194 = 0;
-                  if ( v51 != -1 )
-                    sub_448D10(v51, v52, 53);
-                  sub_448D10(dword_544198, v52, v49);
+                  if ( multiplayer_previous_name_slot != -1 )
+                    sub_448D10(multiplayer_previous_name_slot, 0, 0);
+                  sub_448D10(dword_544198, 0, 0);
                 }
               }
             }
@@ -62025,7 +62008,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               sub_448D10(v83, -1, v82);
             }
             v84 = Input_PopKey();
-            Render_ReleaseSurface(18, (DWORD)a3);
+            Render_ReleaseSurface(18, 0);
             if ( v84 != -1 )
             {
               v129 = Input_KeyToChar(v84);
@@ -62059,22 +62042,22 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           {
             if ( dword_544CFC >> byte_54512C >= 356 && dword_544CFC >> byte_54512C <= 477 )
             {
-              v53 = ((dword_544D00 >> byte_54512C) - 134) / 22;
-              if ( v53 <= 0xA )
+              multiplayer_map_row = ((dword_544D00 >> byte_54512C) - 134) / 22;
+              if ( multiplayer_map_row <= 0xA )
               {
                 LOBYTE(a2) = dword_5441DC;
-                v54 = dword_5441DC + v53;
+                v54 = dword_5441DC + multiplayer_map_row;
                 if ( v54 != dword_5441D8 )
                 {
                   dword_5441D8 = v54;
                   sub_4425E0(aMale_1);
                   sub_449330();
-                  Render_Begin((int)dword_544CD8, v55);
+                  Render_Begin((int)dword_544CD8, 0);
                 }
               }
             }
           }
-          sub_419DC0(v122, (DWORD)a3);
+          sub_419DC0(v122, 0);
         }
         Render_Pump();
         if ( dword_544190 )
@@ -62347,25 +62330,9 @@ LABEL_64:
 // 447BC9: variable 'v23' is possibly undefined
 // 447C24: variable 'v24' is possibly undefined
 // 447DA4: variable 'v33' is possibly undefined
-// 447EDD: variable 'v38' is possibly undefined
-// 447EFF: variable 'v39' is possibly undefined
-// 447F3B: variable 'v41' is possibly undefined
-// 447F4A: variable 'v42' is possibly undefined
-// 447F71: variable 'j' is possibly undefined
-// 447F71: variable 'v43' is possibly undefined
-// 447F96: variable 'v45' is possibly undefined
-// 447FB1: variable 'v46' is possibly undefined
-// 447FBC: variable 'v47' is possibly undefined
-// 447FDA: variable 'v48' is possibly undefined
-// 44809E: variable 'v52' is possibly undefined
-// 44809E: variable 'v49' is possibly undefined
-// 44812D: variable 'v55' is possibly undefined
 // 4481BC: variable 'v58' is possibly undefined
 // 4481C3: variable 'v59' is possibly undefined
 // 44821C: variable 'v65' is possibly undefined
-// 448268: variable 'v66' is possibly undefined
-// 448293: variable 'v68' is possibly undefined
-// 448293: variable 'v67' is possibly undefined
 // 4482D9: variable 'v70' is possibly undefined
 // 44831B: variable 'v71' is possibly undefined
 // 448325: variable 'v73' is possibly undefined

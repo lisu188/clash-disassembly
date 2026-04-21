@@ -336,3 +336,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `sub_444490` is now applied in code as the already-documented `SaveSlot_LoadGame` helper, and the selected load slot is carried through `WorldMap_Initialize`, `SaveSlot_LoadGame`, and the final `PlayGame` call instead of relying on the stale `a2`/`v109` decompiler artifacts.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
 - The next executable-regeneration milestone is a real loaded-session runtime validation through the full-route Load Game menu path; the old host-side menu probe is superseded, and no replacement load shortcut was added.
+
+## Latest Multiplayer submenu update
+- The next recovered-C front-end cleanup stayed inside `PlayGame_Dispatch` and did not change the C++ executable seam.
+- The Multiplayer submenu now loads `menu\\multipl.s32` explicitly, initializes and redraws its five player-type rows from asm-backed operands, copies the exact player-name and widget templates, and polls the player-type, name, and map-list hit regions without undefined decompiler locals.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
+- This does not claim a new runtime milestone. The next executable-regeneration proof point remains real front-end input through the full-route menu path; the old host-side menu probe is superseded.

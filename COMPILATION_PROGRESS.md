@@ -7359,3 +7359,29 @@
   - the removed host-side menu-probe controls are not counted as validation for this batch
   - the Multiplayer branch still contains older ghost operands and remains below the human Campaign/Load priority
   - no unit-type, stat, or recovered-structure semantics were promoted in this batch
+
+## Batch 197 - Multiplayer submenu operand cleanup
+- Current frontier:
+  - continue reducing front-end undefined-register hazards in `PlayGame_Dispatch`, focused this batch on the Multiplayer submenu setup and polling path without adding a host-side shortcut
+- Blockers removed this batch:
+  - restored the missing asm-backed `menu\\multipl.s32` sprite-sheet string used by the Multiplayer submenu `DLXSpriteSet_Load` call
+  - initialized the five player-type bytes with `memset(byte_544188, 5, 5)` and then applied the original explicit slot overrides `3,0,2,1`
+  - copied the five default player-name pointers from `off_5184DC` and the exact 265-byte Multiplayer widget blob from `unk_5184F0`
+  - replaced Multiplayer sprite allocation, resource-sprite loads, menu exit latch, text-cache rebuild, pump, widget poll, and redraw calls with zero or explicit operands from the original register state
+  - promoted the player-type, player-name, and map-row hover/click calculations to explicit locals instead of forwarding `v66` / `v67` / `v68` / `v49` / `v52` / `v55` ghost values
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from earlier batches
+  - the old host-side menu probe remains superseded and is not counted as validation; the next proof point is still full-route menu/input driving Campaign, Load Game, or Multiplayer through the real front-end
+- Key evidence used:
+  - `clash95.asm:109990-110227` for Multiplayer player-type initialization, sprite/resource loads, widget-copy length, zero-operand pump/polling, and player/name/map row hit-testing
+  - `clash95.asm:389011-389014` for the missing `menu\\multipl.s32` data symbol and neighboring Multiplayer resource strings
+- Ambiguous candidates deferred:
+  - the post-confirm Multiplayer player-state handoff still contains older ghost operands around `v58` / `v59` / `v65` and remains a separate cleanup frontier
+  - human Campaign and Load Game full-route validation remains the higher runtime milestone before broad Multiplayer session claims
+  - no unit-type, stat, or recovered-structure semantics were promoted in this batch
