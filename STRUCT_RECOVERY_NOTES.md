@@ -98,3 +98,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - `RECOVERED_STRUCTURES.json` now notes that `MiniMap_CreateSurface` draws sprite char `4` as the minimap frame after allocating the backing surface.
 - This strengthens the existing `MiniMapState` evidence only; it does not add a new struct field.
 - The generic `sub_402E80` sprite decoder remains broader than this evidence. Current recovery covers the unclipped format-0 minimap frame call shape only.
+
+## Latest SIGTERM teardown maintenance
+
+- No new original gameplay structure or unit/stat layout was promoted for the SIGTERM teardown guard.
+- `RECOVERED_STRUCTURES.json` now records one additional render-wrapper evidence note: after `Render_BeginModeSwitch` clears the primary compact handle, a `Render_FillRect` primary fallback with no companion and no handle has no recoverable copy target.
+- This is host/runtime containment around the existing render-surface record, not a new field claim.

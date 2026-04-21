@@ -310,3 +310,14 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
   - direct `/A0` is still all-AI liveness only, not clean finite shutdown or playable-turn proof
   - rules/class fact health remains below the current liveness milestone
+
+## Latest SIGTERM teardown blocker update
+- The direct `/A0` route no longer dumps core in the reached SIGTERM/mode-switch `Render_FillRect` fallback.
+- This was not a raw unresolved link symbol; it was a runtime-fidelity blocker in recovered render code:
+  - `Render_BeginModeSwitch` can leave `&unk_51D4C0` with no resolved companion and no compact surface handle
+  - the old temporary-surface fallback then recursed through temp-to-primary copies even though the primary target no longer existed
+  - `Render_FillRect` now skips only that no-target primary fallback state
+- Remaining blockers:
+  - SIGTERM is still not a clean finite shutdown and validation still needs a kill-after timeout
+  - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
+  - rules/class fact health remains below the current all-AI liveness milestone

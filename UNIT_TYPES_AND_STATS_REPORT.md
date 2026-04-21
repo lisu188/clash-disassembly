@@ -270,3 +270,6 @@
 
 ## 38. Batch 189 Note
 - `Batch 189` stayed on the executable startup/runtime frontier. The active work restored the asm-backed minimap frame sprite draw in `MiniMap_CreateSurface`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 39. Batch 190 Note
+- `Batch 190` stayed on the executable startup/runtime frontier. The active work guarded the `Render_FillRect` primary-surface fallback during SIGTERM/mode-switch teardown, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

@@ -201,3 +201,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - `MiniMap_CreateSurface` now draws the asm-backed minimap frame sprite through the existing bounded format-0 software sprite path
   - the broad generic `sub_402E80` compact-vtable decoder remains unresolved and is not used as a host-width shortcut
 - The wrapper boundary is unchanged: current SDL-backed linear surfaces can carry this proven format-0 frame draw, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.
+
+## Latest SIGTERM teardown note
+- No new runtime wrapper, SDL shim, or host-only scenario mode was added for the SIGTERM teardown crash.
+- The active change stayed in recovered C:
+  - `Render_FillRect` now skips the temporary primary-surface fallback when `&unk_51D4C0` has no resolved companion and no compact surface handle left after mode-switch teardown
+  - the original temporary-surface fallback remains in place for primary copies that still have a recoverable target handle
+- This removes the observed allocator/stack recursion under SIGTERM, but it does not complete clean finite shutdown: the current process can still absorb SIGTERM and needs an external kill-after timeout in validation.

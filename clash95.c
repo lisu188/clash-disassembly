@@ -13930,6 +13930,8 @@ int  Render_FillRect(
   }
   else if ( dword_51D018 && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
   {
+    if ( (v8 == (_DWORD *)&unk_51D4C0 && !v8[47]) || (v9 == (_DWORD *)&unk_51D4C0 && !v9[47]) )
+      return 0;
     temp_surface = (_DWORD *)Mem_Alloc(196, 0, 0, 0);
     if ( !temp_surface )
       return 0;

@@ -295,3 +295,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - it seeds the terrain-color table with `MAP_THEME_INDEX`
 - This does not claim the broad generic `sub_402E80` decoder is recovered. The restored frame path is the asm-proven unclipped format-0 sprite shape and uses the already-contained bounded software decoder.
 - `clash95_recovered`, `clash95_bootstrap`, `clash95_cpp_core`, and `clash95_cpp_regen` build after the frame restoration; CTest remains green, and both `/A0` executable paths still stay alive until the 10-second hard-kill probe.
+
+## Latest SIGTERM teardown update
+- The direct `/A0` route no longer dumps core in the reached SIGTERM/mode-switch `Render_FillRect` fallback.
+- The active fix stayed in recovered C:
+  - GDB showed teardown reaching `Render_FillRect` with destination `&unk_51D4C0`, no resolved companion, no primary compact handle, and repeated temp-to-primary fallback recursion
+  - `Render_FillRect` now returns from that no-target state instead of allocating another temporary surface
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the guard; CTest remains green.
+- `timeout -k 2s 5s` probes for both executable paths produce no core-dump message. The kill-after remains required, so the milestone is "no SIGTERM crash", not clean finite shutdown.

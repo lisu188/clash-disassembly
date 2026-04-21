@@ -2314,3 +2314,8 @@
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
 |---|---|---|---|---|---|---|---|
 | `MiniMap_CreateSurface` discarding `DLX_GetSpriteForChar(dword_5202BC, 4)` | minimap frame sprite draw through bounded format-0 decoder | control_flow_fix | Map / MiniMap Rendering | High | The `sub_40D330` asm fetches sprite char `4`, sets `g_RenderDevice` to the newly allocated minimap surface, and calls the surface draw-sprite slot with `x=0`, `y=0`, four unclipped `-1` bounds, and draw mode `1`. GDB on `/A0` confirms the frame sprite is `214 x 213` format `0`, so the repaired C can use the existing safe format-0 software sprite path without invoking the unresolved generic `sub_402E80` compact ABI. | c, asm, gdb, ctest | no |
+
+## Batch 190 - Primary Teardown Fill Fallback Guard
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `Render_FillRect` recursively staging temp-to-primary copies after `&unk_51D4C0` lost its companion and compact handle | guarded primary mode-switch fallback no-op | runtime_path_fix | Rendering / Mode Switch Teardown | High | The original fallback stages primary copies through a temporary software surface, but the SIGTERM teardown trace reached it with destination `&unk_51D4C0`, no resolved companion, and `surface[47] == 0`, so the second temp-to-primary leg re-entered the same fallback until allocator/stack failure. The guard preserves the fallback when the primary still has a handle and skips only the impossible no-target mode-switch state. | c, asm, gdb, runtime | no |

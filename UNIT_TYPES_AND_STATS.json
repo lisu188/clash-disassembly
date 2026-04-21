@@ -38,7 +38,8 @@
     "Batch 186 stayed on executable startup/runtime recovery by repairing the reached render companion surface constructor used by longer direct /A0 liveness. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
     "Batch 187 stayed on executable startup/runtime recovery by clarifying direct /A0 as an all-AI/autoplay turn-advance route and removing undefined decompiler locals from Game_AdvanceToNextPlayerTurn. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
     "Batch 188 stayed on executable startup/runtime recovery by removing reached PlayGame setup/loop/teardown register-loss scars and naming the world-map theme selector at gameData + 140016. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
-    "Batch 189 stayed on executable startup/runtime recovery by restoring the asm-backed minimap frame sprite draw in MiniMap_CreateSurface. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged."
+    "Batch 189 stayed on executable startup/runtime recovery by restoring the asm-backed minimap frame sprite draw in MiniMap_CreateSurface. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged.",
+    "Batch 190 stayed on executable startup/runtime recovery by guarding the Render_FillRect primary-surface fallback during SIGTERM/mode-switch teardown. No new unit-type or stat semantics were promoted; the roster names, stats, relationships, and confidence levels remain unchanged."
   ],
   "unit_types": [
     {

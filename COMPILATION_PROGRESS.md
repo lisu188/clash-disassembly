@@ -7168,3 +7168,27 @@
 - Ambiguous candidates deferred:
   - the broad generic `sub_402E80` decoder remains unresolved for non-format-0 or clipped/masked callers; this batch only restores the proven minimap frame sprite call shape
   - `WorldMap_RunHumanTurnLoop`, clean finite shutdown, and rules/class fact health remain separate frontiers
+
+## Batch 190 - Primary teardown fill fallback guard
+- Current frontier:
+  - remove the clean-SIGTERM teardown crash exposed below the direct `/A0` all-AI liveness milestone without claiming a full finite shutdown path
+- Blockers removed this batch:
+  - `Render_FillRect` now treats the temporary-surface fallback as a no-op when the primary render surface `&unk_51D4C0` has already lost both its resolved companion and compact surface handle
+  - this prevents SIGTERM/mode-switch teardown from recursively allocating temporary surfaces for a primary target that cannot receive the staged copy
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout -k 2s 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - `timeout -k 2s 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - GDB SIGTERM reproducer no longer caught SIGSEGV/SIGABRT/SIGBUS/SIGFPE/SIGILL before returning to `Game_AdvanceToNextPlayerTurn`
+- Highest authentic runtime milestone reached:
+  - direct `/A0` still reaches and re-enters the recovered all-AI strategic turn-advance path
+  - SIGTERM teardown no longer reports the prior core-dump/allocator-recursion failure in either executable path; the process still needs an external kill-after timeout, so clean finite shutdown is not claimed
+- Key evidence used:
+  - `clash95.asm:2584-2630` for the original `Render_FillRect` temporary-surface fallback that stages primary copies through a local software surface
+  - GDB on the SIGTERM path showed the fallback reached with destination `&unk_51D4C0`, no primary companion, no primary compact handle, and a repeated temp-to-primary recursion into `Render_FillRect`
+  - `Render_BeginModeSwitch` explicitly clears the primary compact handle fields before this teardown state is reached
+- Ambiguous candidates deferred:
+  - the SIGTERM signal path still appears to be absorbed and does not exit cleanly without `timeout -k`; finite shutdown remains a separate runtime frontier
+  - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
+  - rules/class fact health remains below the current all-AI liveness milestone
