@@ -31703,33 +31703,19 @@ LABEL_44:
 //----- (0041B7D0) --------------------------------------------------------
 void  Unit_AttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
 {
-  int v5; // ecx
-  int v6; // ecx
   unsigned __int8 *v7; // ebp
   BOOL v8; // eax
-  int v9; // ecx
   int v10; // eax
   int v11; // edx
   int v12; // eax
   const void *v13; // eax
-  int (__cdecl *v14)(CSyncObject *, __int32, __int32 *); // ebx
-  int v15; // edx
   _WORD *v16; // edi
-  int v17; // ecx
-  int v18; // edx
   BOOL v19; // eax
-  int v20; // ecx
-  int v21; // eax
-  int v22; // edx
   signed int v23; // eax
-  int v24; // ecx
   signed int v25; // esi
   signed int v26; // eax
-  int v27; // ecx
   int v28; // eax
-  unsigned __int8 *v29; // ecx
   int v30; // ecx
-  int v31; // ecx
   int v32; // ebx
   int v33; // ecx
   unsigned __int8 *v34; // ebx
@@ -31744,11 +31730,7 @@ void  Unit_AttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
   __int16 *v43; // esi
   signed int v44; // eax
   _WORD *v45; // ecx
-  DWORD v46; // edx
-  int v47; // ecx
   int v48; // edx
-  DWORD v49; // edx
-  int v50; // ecx
   int v51; // [esp-10h] [ebp-364h]
   int v52; // [esp-Ch] [ebp-360h]
   int v53; // [esp-8h] [ebp-35Ch]
@@ -31764,11 +31746,10 @@ void  Unit_AttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
   v60 = a1;
   v59 = a2;
   Debug_Log(a1, a3, a4, (int)aUnit_attackbui);
-  Render_DrawSprite_v3(v5, 467 * v59);
-  v61 = (__int16 *)(725 * v6 + gameData + 147174);
+  Render_DrawSprite_v3(v60, 467 * v59);
+  v61 = (__int16 *)UNIT_STACK(v60);
   v7 = (unsigned __int8 *)(UNIT_RECORD(v59));
-  v8 = *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v61 + 4) + 140051)
-    && *(_DWORD *)(gameData + 1423 * v7[2] + 140051);
+  v8 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)v61)) && PLAYER_HAS_HUMAN_CONTROLLER(v7[2]);
   v56 = v8;
   if ( UnitStack_HasNormalCombatUnits((int)v61) )
   {
@@ -31784,7 +31765,7 @@ void  Unit_AttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
       if ( v12 <= 1 )
         goto LABEL_15;
     }
-    v13 = (const void *)Building_GenerateApproachTrack(v60, v59, v9, a3, (DWORD)v7);
+    v13 = (const void *)Building_GenerateApproachTrack(v60, v59, 0, 0, 0);
     if ( v13 )
     {
       qmemcpy(v61 + 158, v13, 0x194u);
@@ -31794,30 +31775,24 @@ void  Unit_AttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
 LABEL_15:
         if ( UnitStack_GetMinCurrentActionPoints((int)v61) >= 5 )
         {
-          v14 = CSyncObject_Unlock;
           UnitStack_SpendActionPointsByIndexClamped(v60, 5, (DWORD)v7, a5);
           UnitStack_SetSpentTurnFlag((int)v61);
-          UnitStack_AdjustFatigueByPredicate(v61, v15, UnitSlot_PredicateAlways, (DWORD)v7, a5);
+          UnitStack_AdjustFatigueByPredicate(v61, 10, UnitSlot_PredicateAlways, (DWORD)v7, a5);
           if ( ACTIVE_MISSION_INDEX == 15 )
             sub_45E630(*((unsigned __int8 *)v61 + 4), v7[2]);
           if ( ACTIVE_MISSION_INDEX == 5 )
             sub_45B3C0(*((unsigned __int8 *)v61 + 4), v7[2]);
           v16 = (_WORD *)UnitStack_HasSpecialPersonageUnits((int)v61);
           v57 = Building_HasSpecialPersonageGarrisonEntries((int)v7);
-          v19 = *(_DWORD *)(1423 * *(unsigned __int8 *)(v18 + 4) + gameData + 140051)
-             || *(_DWORD *)(1423 * *(unsigned __int8 *)(467 * v59 + gameData + 509676) + gameData + 140051);
-          if ( !v19
-            || (Building_CountGarrison(UNIT_RECORD(v59)),
-                v21 = Building_CountNonCombatGarrisonEntries(v20 + gameData + 509674),
-                v22 == v21) )
+          v19 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)v61)) || PLAYER_HAS_HUMAN_CONTROLLER(v7[2]);
+          if ( !v19 || Building_CountGarrison((int)v7) == Building_CountNonCombatGarrisonEntries((int)v7) )
           {
             v25 = 0;
           }
           else
           {
-            LOBYTE(v14) = (_BYTE)v7 + 18;
             v23 = Unit_GetSquadCount((int)v61);
-            v25 = UI_PromptLeadTroopsPersonally((int)(v61 + 3), v23, v24, (int)(v7 + 18), (DWORD)v7, (int)v16, 1) == 0;
+            v25 = UI_PromptLeadTroopsPersonally((int)(v61 + 3), v23, 12, (int)(v7 + 18), (DWORD)v7, (int)v16, 1) == 0;
           }
           if ( dword_51D01C )
           {
@@ -31833,7 +31808,7 @@ LABEL_28:
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
               UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
-              Unit_CaptureBuilding(v60, v49, v50, v25, a5);
+              Unit_CaptureBuilding(v60, v59, 0, v25, a5);
               ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
               --*(_WORD *)(1423 * v7[2] + gameData + 141441);
 LABEL_47:
@@ -31849,17 +31824,15 @@ LABEL_47:
             }
             Building_CompactGarrison(v7, (unsigned __int8 *)v61, a5);
             v26 = Unit_GetSquadCount((int)v61);
-            sub_412000((char *)(v27 + 6), v26, v54);
+            sub_412000((char *)v61 + 6, v26, v54);
             v28 = Building_CountGarrison((int)v7);
             sub_412000((char *)v7 + 18, v28, v55);
-            Building_CompactGarrison(v7, v29, a5);
-            v30 = 0;
-            do
+            Building_CompactGarrison(v7, v7 + 18, a5);
+            for ( v30 = 0; v30 < 12; ++v30 )
             {
               Building_ClearGarrisonTrainingTimer((int)v7, v30);
-              Building_ClearGarrisonRepairTimer((int)v7, v31);
+              Building_ClearGarrisonRepairTimer((int)v7, v30);
             }
-            while ( v30 < 12 );
             v32 = 467 * v59;
             if ( !v25 )
             {
@@ -31913,7 +31886,7 @@ LABEL_42:
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
                 UnitStack_CycleAllSlotOrders(v61, (DWORD)v7, a5);
-                Unit_CaptureBuilding(v60, v46, v47, 0, a5);
+                Unit_CaptureBuilding(v60, v59, 0, 0, a5);
                 ++*(_WORD *)(1423 * *((unsigned __int8 *)v61 + 4) + gameData + 141441);
                 --*(_WORD *)(1423 * v7[2] + gameData + 141441);
               }
@@ -31976,35 +31949,18 @@ LABEL_38:
             v38 = DLXSpriteSet_Load(v38, (char)v34);
             goto LABEL_37;
           }
-          sub_4620F0(aAtak_zam, 0, v17, (char)v14, (DWORD)v7);
+          sub_4620F0(aAtak_zam, 0, 0, 0, 0);
           goto LABEL_28;
         }
       }
     }
   }
 }
-// 41B807: variable 'v5' is possibly undefined
-// 41B82B: variable 'v6' is possibly undefined
-// 41B8DE: variable 'v9' is possibly undefined
-// 41B96C: variable 'v15' is possibly undefined
-// 41B9DE: variable 'v18' is possibly undefined
-// 41BA2F: variable 'v20' is possibly undefined
-// 41BA36: variable 'v22' is possibly undefined
-// 41BA62: variable 'v24' is possibly undefined
-// 41BA88: variable 'v17' is possibly undefined
-// 41BADD: variable 'v27' is possibly undefined
-// 41BB00: variable 'v29' is possibly undefined
-// 41BB14: variable 'v30' is possibly undefined
-// 41BB1E: variable 'v31' is possibly undefined
 // 41BB63: variable 'v33' is possibly undefined
 // 41BBEA: variable 'v35' is possibly undefined
 // 41BC45: variable 'v41' is possibly undefined
 // 41BE69: variable 'v45' is possibly undefined
-// 41BEF8: variable 'v46' is possibly undefined
-// 41BEF8: variable 'v47' is possibly undefined
 // 41BF5D: variable 'v48' is possibly undefined
-// 41C0BF: variable 'v49' is possibly undefined
-// 41C0BF: variable 'v50' is possibly undefined
 // 51D01C: using guessed type int dword_51D01C;
 // 5202BC: using guessed type int dword_5202BC;
 // 5202C0: using guessed type int dword_5202C0;

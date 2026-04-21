@@ -362,3 +362,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
 - The retained `WorldMap_RunHumanTurnLoop` probe plus one-second bootstrap and C++ executable smokes still exit with the expected liveness timeout status `124`.
 - This reduces human-turn loop register-loss residue, but it still does not prove a new human-controlled route through real front-end input.
+
+## Latest building attack prompt update
+- The next executable-regeneration cleanup stayed in recovered C and left the C++ executable seam unchanged.
+- `Unit_AttackBuilding` now uses the attacker stack index and building index explicitly for its prologue redraw, stack lookup, approach-track request, fatigue spend, human prompt gate, capture calls, and garrison timer cleanup loop.
+- The personal-lead prompt now follows the original human-controller plus combat-garrison-count gate and passes the fixed 12-slot building-garrison surface instead of undefined decompiler locals.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup; CTest, JSON validation, `git diff --check`, the retained human-turn probe, and one-second bootstrap/C++ liveness smokes pass.
+- This removes building-attack setup hazards below the human-turn loop, but the later tactical battle/render outcome tail and real front-end route into a building attack remain deferred.

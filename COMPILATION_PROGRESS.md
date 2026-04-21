@@ -7469,3 +7469,36 @@
   - this batch does not change the deeper `WorldMap_HandleTileHoverAndClick` / building-interaction surface
   - this batch does not add automated menu input for a Campaign, Load Game, or Multiplayer human route
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 201 - Building attack prompt gate cleanup
+- Current frontier:
+  - continue reducing the building-interaction surface below `WorldMap_HandleTileHoverAndClick`, focused on the early `Unit_AttackBuilding` attack setup, prompt gate, and garrison bookkeeping before the still-scarred tactical battle tail
+- Blockers removed this batch:
+  - replaced the `Unit_AttackBuilding` prologue's `v5` / `v6` ghost operands with the asm-backed attacker stack index for redraw and `UNIT_STACK(attacker_stack_index)` lookup
+  - made the near-building approach-track request use the attacker stack index plus building index, with explicit ignored extra operands instead of stale register residue
+  - restored the fixed building-attack fatigue delta of `10` after the action-point spend
+  - rewrote the "lead troops personally" prompt gate to use attacker/building human-controller flags and `Building_CountGarrison - Building_CountNonCombatGarrisonEntries`, then passed the asm-backed 12 building-garrison slots into the prompt
+  - routed building capture calls through the preserved building index instead of undefined `edx` / `ecx` locals
+  - replaced the garrison special-entry backup source with the attacker stack slots and converted the garrison timer cleanup into the original bounded 12-slot loop
+  - normalized the automatic building-attack video/audio prompt call to the observed zero-operand `sub_4620F0("atak_zam", 0)` shape
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124` without crash output
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from earlier batches
+  - this removes building-attack setup hazards inside recovered C, but it does not yet prove a human-controlled route through real front-end input into a building attack
+- Key evidence used:
+  - `clash95.asm:42630-42725` for the attacker/building entry registers, redraw operand, stack-record lookup, approach-track call, action-point spend, and fixed fatigue delta
+  - `clash95.asm:42731-42831` for the special-personage prompt gate, human-controller checks, combat-garrison count test, and 12-slot prompt call
+  - `clash95.asm:42840-42887` for garrison compaction, attacker/building special-entry backups, and the 12-slot training/repair timer cleanup loop
+  - `clash95.asm:43139-43286` for capture-outcome paths carrying the preserved building index into `Unit_CaptureBuilding`
+- Ambiguous candidates deferred:
+  - the later tactical battle/render tail still has `v33` / `v35` / `v41` and `v45` residue, plus a defeated-stack owner update still depending on `v48`
+  - this batch does not recover the broader `WorldMap_HandleTileHoverAndClick` building-click dispatch surface
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
