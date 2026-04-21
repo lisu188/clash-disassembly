@@ -348,3 +348,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - After Multiplayer confirmation, `PlayGame_Dispatch` now builds the five-player runtime-state block explicitly from `byte_544188` and `byte_5441A0`, then passes that block into `Scenario_LoadMultiplayerMapAndSeedPlayers` before entering `PlayGame`.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the handoff cleanup.
 - This removes the remaining Multiplayer handoff ghost operands but still does not prove the route through real menu input.
+
+## Latest world-map resource loader update
+- The next executable-regeneration cleanup stayed in recovered C and left the C++ executable seam unchanged.
+- `WorldMap_LoadResources` now uses asm-backed size-only allocations for the world-map sprite sets, fallback map surface, and `map.pal`, then calls the `mainmap` cache rebuild, mouse sprite reload, and top-menu sprite reload with explicit effective operands.
+- `sub_460C70` and `WorldMapTopMenu_LoadSpriteSet` now expose only their effective argument surfaces, matching their original register usage at both world-map and castle-to-world reload sites.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
+- This removes shared world-map bootstrap operand hazards but does not yet prove a new full-route menu/input runtime milestone.

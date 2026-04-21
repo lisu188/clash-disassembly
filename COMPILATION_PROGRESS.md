@@ -7412,3 +7412,31 @@
   - this batch does not add automated front-end input for selecting and confirming a Multiplayer game
   - `WorldMap_Initialize(0, ...)` keeps the no-explicit-selector shape used by the original callsite; broader `WorldMap_LoadResources` operand cleanup remains separate
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 199 - World-map resource loader operand cleanup
+- Current frontier:
+  - reduce `WorldMap_LoadResources` hazards used by Campaign, Load Game, and Multiplayer session handoffs before deeper full-route menu/input validation
+- Blockers removed this batch:
+  - replaced the `frame.s32`, `marks.s32`, `step.s32`, `fog.s32`, `flag.s32`, `whirl.s32`, and `turakomp.s32` allocations with explicit size-only `Mem_Alloc(0x1010)` call shapes
+  - normalized the fallback world-map surface allocation to the asm-backed `0xBC` size-only allocation before `Render_CreateSurface(640, 480)`
+  - normalized the `map.pal` allocation to the asm-backed `0x400` size-only allocation
+  - made the `mainmap` cache rebuild pass an explicit ignored third operand instead of forwarding a ghost register
+  - reduced `sub_460C70` and `WorldMapTopMenu_LoadSpriteSet` to their effective argument surfaces, then updated both world-map and castle-to-world reload call sites
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from earlier batches
+  - this reduces undefined-operand risk in the shared world-map resource bootstrap, but it does not yet prove real front-end input through Campaign, Load Game, or Multiplayer
+- Key evidence used:
+  - `clash95.asm:16280-16405` for `WorldMap_LoadResources`: size-only resource allocations, `mainmap` cache rebuild, mouse sprite reload, and top-menu sprite reload
+  - `clash95.asm:21970-21994` for `WorldMapTopMenu_LoadSpriteSet` using only a size-only allocation plus `menu.s32`
+  - `clash95.asm:147124-147155` for `sub_460C70` using only the render-state pointer in `EAX` and loading `mouse.s32`
+  - `clash95.asm:52826-52836` for the castle-to-world reload calling `sub_460C70` with only the render-state pointer after `Render_Pump`
+- Ambiguous candidates deferred:
+  - this batch does not recover deeper `mainmap` cache-loader internals beyond the ignored third operand
+  - real front-end input and human-session route validation remain the next executable milestone
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

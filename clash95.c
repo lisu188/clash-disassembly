@@ -721,7 +721,7 @@ int MiniMap_Hide();
 signed int  UI_MenuHitTestEntry(_WORD *a1);
 int  UI_RunMenu(_WORD *a1, DWORD a2);
 BOOL  WorldMap_HandleTopMenuBar(char a1, int a2);
-_DWORD * WorldMapTopMenu_LoadSpriteSet(int a1, char a2, DWORD a3);
+_DWORD * WorldMapTopMenu_LoadSpriteSet();
 int WorldMapTopMenu_FreeSpriteSet();
 int  UI_MenuEntry_Enable(int a1, int a2);
 int  UI_MenuEntry_Disable(int a1, int a2);
@@ -1597,7 +1597,7 @@ int  sub_460A50(int a1, int a2);
 unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3);
 _DWORD * sub_460B20(_DWORD *result, __int16 a2, __int16 a3, __int16 a4, __int16 a5);
 _DWORD * sub_460BB0(_DWORD *result, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5);
-_DWORD * sub_460C70(int a1, char a2, DWORD a3);
+_DWORD * sub_460C70(int a1);
 _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4);
 __int16  sub_460D80(int a1, int a2);
 int  Render_Present(int a1);
@@ -20323,81 +20323,61 @@ void sub_40AEC0()
 //----- (0040AED0) --------------------------------------------------------
 _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
 {
-  int v2; // ecx
   _DWORD *v3; // eax
-  int v4; // ecx
   _DWORD *v5; // eax
-  int v6; // ecx
   _DWORD *v7; // eax
-  int v8; // ecx
   _DWORD *v9; // eax
-  int v10; // ecx
   _DWORD *v11; // eax
-  int v12; // ecx
   _DWORD *v13; // eax
-  int v14; // ecx
   _DWORD *v15; // eax
-  int v16; // ecx
   _DWORD *Surface; // eax
   int v18; // eax
-  int v19; // ecx
-  int v20; // ecx
 
   sub_40C3F0();
   sub_404D90((int *)&unk_51D4C0);
-  v3 = (_DWORD *)Mem_Alloc(4112, v2, a1, a2);
+  v3 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v3 )
     v3 = DLXSpriteSet_Load(v3, "frame.s32");
   dword_5202BC = (int)v3;
-  v5 = (_DWORD *)Mem_Alloc(4112, v4, a1, a2);
+  v5 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, "marks.s32");
   dword_5202C8 = (int)v5;
-  v7 = (_DWORD *)Mem_Alloc(4112, v6, a1, a2);
+  v7 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v7 )
     v7 = DLXSpriteSet_Load(v7, "step.s32");
   dword_5202CC = (int)v7;
-  v9 = (_DWORD *)Mem_Alloc(4112, v8, a1, a2);
+  v9 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, "fog.s32");
   g_FogOverlaySpriteSet = (int)v9;
-  v11 = (_DWORD *)Mem_Alloc(4112, v10, a1, a2);
+  v11 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v11 )
     v11 = DLXSpriteSet_Load(v11, "flag.s32");
   dword_5202D4 = (int)v11;
-  v13 = (_DWORD *)Mem_Alloc(4112, v12, a1, a2);
+  v13 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v13 )
     v13 = DLXSpriteSet_Load(v13, "whirl.s32");
   dword_5202D0 = (int)v13;
-  v15 = (_DWORD *)Mem_Alloc(4112, v14, a1, a2);
+  v15 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v15 )
     v15 = DLXSpriteSet_Load(v15, "turakomp.s32");
   dword_5202DC = (int)v15;
   if ( !dword_5202E0 )
   {
-    Surface = (_DWORD *)Mem_Alloc(188, v16, a1, a2);
+    Surface = (_DWORD *)Mem_Alloc(188, 0, 0, 0);
     if ( Surface )
       Surface = Render_CreateSurface((int)Surface, 640, 480);
     dword_5202E0 = (int)Surface;
   }
-  v18 = Mem_Alloc(1024, v16, a1, a2);
+  v18 = Mem_Alloc(1024, 0, 0, 0);
   if ( v18 )
     v18 = sub_401AF0(v18, (DWORD)"map.pal");
   dword_5202F4 = v18;
-  sub_435ED0(aMainmap, v18, v19, a2);
-  sub_460C70((int)dword_544CD8, a1, a2);
-  return WorldMapTopMenu_LoadSpriteSet(v20, a1, a2);
+  sub_435ED0(aMainmap, v18, 0, a2);
+  sub_460C70((int)dword_544CD8);
+  return WorldMapTopMenu_LoadSpriteSet();
 }
-// 40AEE5: variable 'v2' is possibly undefined
-// 40AEFC: variable 'v4' is possibly undefined
-// 40AF19: variable 'v6' is possibly undefined
-// 40AF36: variable 'v8' is possibly undefined
-// 40AF53: variable 'v10' is possibly undefined
-// 40AF70: variable 'v12' is possibly undefined
-// 40AF8D: variable 'v14' is possibly undefined
-// 40AFB4: variable 'v16' is possibly undefined
-// 40B017: variable 'v19' is possibly undefined
-// 40AFFC: variable 'v20' is possibly undefined
 // 5202BC: using guessed type int dword_5202BC;
 // 5202C4: using guessed type int g_FogOverlaySpriteSet;
 // 5202C8: using guessed type int dword_5202C8;
@@ -22762,11 +22742,11 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0040ECF0) --------------------------------------------------------
-_DWORD * WorldMapTopMenu_LoadSpriteSet(int a1, char a2, DWORD a3)
+_DWORD * WorldMapTopMenu_LoadSpriteSet()
 {
   _DWORD *result; // eax
 
-  result = (_DWORD *)Mem_Alloc(4112, a1, a2, a3);
+  result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, "menu.s32");
@@ -36681,7 +36661,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
     }
   }
   Render_Pump();
-  sub_460C70((int)dword_544CD8, 144, v19);
+  sub_460C70((int)dword_544CD8);
   sub_441960(v24, 400);
   sub_404F20((int *)&unk_51D4C0, 20);
   sub_405920(&dword_523F5C);
@@ -72846,12 +72826,12 @@ _DWORD * sub_460BB0(
 }
 
 //----- (00460C70) --------------------------------------------------------
-_DWORD * sub_460C70(int a1, char a2, DWORD a3)
+_DWORD * sub_460C70(int a1)
 {
   _DWORD *result; // eax
   if ( *(_DWORD *)(a1 + 64) )
     sub_405920((int *)(a1 + 64));
-  result = (_DWORD *)Mem_Alloc(4112, 0, a2, a3);
+  result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
     result = DLXSpriteSet_Load(result, "mouse.s32");
@@ -72905,7 +72885,7 @@ _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
       return result;
     }
   }
-  sub_460C70(a1, 0, a4);
+  sub_460C70(a1);
   DLXSpriteSet_DrawText(*(_DWORD *)(a1 + 64), -1, a2, (unsigned __int8 *)(a1 + 80));
   result = *(_DWORD **)(a1 + 64);
   return result;
