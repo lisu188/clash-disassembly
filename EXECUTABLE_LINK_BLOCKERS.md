@@ -118,10 +118,10 @@ The current bootstrap chain is the recoverable host-side approximation:
 
 - `main()` in `bootstrap_main.c`
 - `App_WinMain()`
-- `Bootstrap_RunRecoveredStartupPrelude()`
+- `Bootstrap_RunRecoveredEarlyStartupPrelude()`
 - `Bootstrap_RunRecoveredRuntimeAndRenderInit()`
 - `Bootstrap_RunRecoveredGameEntry()`
-- `Bootstrap_RunMessageLoop()` or `Bootstrap_RunPlatformWindowLoop()`
+- `Bootstrap_RunMessageLoop()`
 
 The key point is that the bootstrap path is rooted in recovered behavior, not a dummy demo loop.
 
@@ -154,7 +154,7 @@ This is a staged executable-regeneration path, not a claim that the full native 
 - Treat those as the next executable-regeneration blockers beside the current raw link surface. They are runtime/startup fidelity problems, not missing SDL shims.
 
 ## Latest front-end runtime blocker update
-- The bootstrap executable now has a real default front-end route: `main()` builds the command line, runs the recovered early startup prelude, runs recovered video init, presents the recovered main-menu first frame, and then enters the message loop.
-- The old bare SDL window path is still available behind `--platform-window-only`; it is no longer the default executable milestone.
-- Pre-confirm menu rendering and screenshot capture are no longer blockers: `clash95_menu_capture_smoke` validates nonblank BMP captures for the default main-menu path and the auto-clicked load-game menu row/slot-selection path.
-- The remaining front-end blockers are after this wedge: clean finite live-loop shutdown, the post-confirm load-save class/bload prelude (`oddzial`), and the broader ungated `App_WinMain` / `PlayGame` session handoff.
+- The bootstrap executable now has one default route: `main()` builds the recovered command-line buffer from argv and always enters `App_WinMain`.
+- Host-side bootstrap modes are gone. Old probe switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the wrapper.
+- The menu-probe env surface is collapsed to fixed behavior; the tracked runtime code only keeps the SDL presented-frame dump diagnostic env read.
+- The remaining front-end blockers are after this full route: clean finite live-loop shutdown, the still-skipped DirectSound-era `CSS_Init` table, the still-skipped retained `createLogFiles` path, and the broader playable `App_WinMain` / `PlayGame` session milestone.

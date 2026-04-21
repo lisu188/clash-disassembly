@@ -399,8 +399,6 @@ static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
   if ( !g_platform_frame_dump_checked )
   {
     g_platform_frame_dump_prefix = getenv("CLASH95_DUMP_PRESENTED_FRAMES_PREFIX");
-    if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix )
-      g_platform_frame_dump_prefix = getenv("CLASH95_SCREENSHOT_PREFIX");
     g_platform_frame_dump_checked = 1;
   }
   if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )

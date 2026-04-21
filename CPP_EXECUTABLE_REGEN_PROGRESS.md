@@ -105,8 +105,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - `clash95_cpp_regen` now links and stays alive for the default one-second smoke run, matching the current bootstrap wedge
   - the deeper `--authentic-startup-prelude` path still faults with exit status `139`, so the next frontier remains the existing startup/runtime crash band rather than C++ target creation itself
 
-## Latest front-end runtime update
-- `clash95_bootstrap` now defaults to the recovered executable foothold: early startup prelude, recovered video init, and recovered main-menu first-frame presentation. The prior bare SDL host-window loop remains available as `--platform-window-only`.
-- The contained menu path now has deterministic capture-exit points for `main-menu` and `load-menu`, and load-menu save rows/slot highlighting are drawn by default inside the contained probe.
-- `CLASH95_SCREENSHOT_PREFIX` aliases the existing presented-frame dump prefix, and `ctest` now runs `clash95_menu_capture_smoke` to validate nonblank BMP captures for both the main menu and load-game menu.
-- The next executable-regeneration blocker remains the post-confirm load-save class/bload prelude (`class-lookup-no-table name=oddzial`) and the broader `App_WinMain` / `PlayGame` session handoff, not pre-confirm menu rendering or screenshot capture.
+## Superseded front-end runtime update
+- This front-end foothold has been superseded by the full-game bootstrap update below: host-side probe modes and menu/capture env controls are no longer active bootstrap selectors.
+
+## Latest full-game bootstrap update
+- `clash95_bootstrap` no longer has host-side bootstrap modes. `main()` compacts argv into the recovered command-line buffer and always enters `App_WinMain`, so old switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are now just forwarded command-line text rather than bootstrap selectors.
+- The menu-probe env surface has been collapsed: bootstrap auto-click/capture/broader-rules controls are fixed no-ops/defaults, and the recovered-core `CLASH95_TRACE_MENU_PROBE` gates are disabled constants. The only remaining tracked `CLASH95_*` env read is the SDL presented-frame dump diagnostic (`CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`).
+- The full route links and stays alive after adding the missing retained runtime helpers and hardening `strcmp_` against malformed retained parser/rules pointers. Validation uses forced-kill live smokes for both `clash95_bootstrap` and `clash95_cpp_regen`.
+- The next executable-regeneration blockers are now authentic finite shutdown/verification, the still-skipped DirectSound-era `CSS_Init` table, the skipped retained `createLogFiles` path, and the broader playable session milestone after the full default startup route.

@@ -3116,6 +3116,31 @@
   - `mapK8` raw slot-byte loops are still explicit case-local byte mutations
   - the contained save-slot repaint/name lane remains deferred after `load-menu-skip-save-slot-draw`
 
+## Batch 174 - Compact bootstrap args into full-game launch
+- Current frontier:
+  - make `clash95_bootstrap` always enter the recovered full-game `App_WinMain` route instead of keeping separate bootstrap probe modes
+  - collapse the old menu-probe environment controls so startup behavior is not selected through ad hoc env state
+- Blockers removed this batch:
+  - `main()` now builds the recovered WinMain command-line string from argv and unconditionally calls `App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0)`
+  - bootstrap-only switches such as `--authentic-startup-prelude`, `--authentic-video-init`, `--authentic-menu-probe`, and `--platform-window-only` are no longer interpreted by the host wrapper
+  - bootstrap menu-probe env controls now collapse to fixed defaults, and the recovered-core `CLASH95_TRACE_MENU_PROBE` trace reads are disabled constants
+  - the full route now seeds the runtime slab before `sub_472860`, uses the recovered early startup prelude, and links through missing retained runtime helpers such as `time_`, `beginthreadex_`, `SetThreadPriority`, `close_`, `fputs_`, `CSyncObject_Unlock`, and `unk_519AE8`
+  - `strcmp_` now uses a bounded readable-pointer compare so malformed retained parser/rules pointers do not immediately crash the full route
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `timeout -s KILL 2s build/bin/clash95_bootstrap`
+  - `timeout -s KILL 2s build/bin/clash95_cpp_regen`
+  - `ctest --test-dir build --output-on-failure`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - `clash95_bootstrap` and `clash95_cpp_regen` now both enter the recovered full-game startup route by default and stay alive until the forced two-second kill instead of requiring a probe flag
+  - tracked runtime code has only the SDL frame-dump diagnostic env read (`CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`) remaining; bootstrap/menu-probe env steering is no longer active
+- Ambiguous candidates deferred:
+  - `CSS_Init` remains skipped because the DirectSound-era device table is not recovered safely enough for the x86-64 SDL runtime path
+  - `createLogFiles` remains skipped because the retained log-file runtime still faults before it is needed for the full-game smoke
+  - the live full-game loop still needs an authentic finite shutdown/verification milestone rather than relying on an external forced kill
+
 ## Batch 173 - Default front-end menu capture smoke
 - Current frontier:
   - make the bootstrap executable runnable into the recovered front-end path by default, with the authentic main menu and load-game screen still contained before the full `App_WinMain` handoff
