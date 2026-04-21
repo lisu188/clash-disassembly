@@ -7303,3 +7303,33 @@
   - the `sub_435ED0` third operand in the top-level main-menu branch remains under-labeled until the surrounding register lifetime is isolated cleanly
   - real Campaign input through the top-level button and submenu selector remains the next human-route proof point
   - rules/class fact health and skipped `CSS_Init` remain separate executable-regeneration frontiers
+
+## Batch 195 - Options and Load submenu operand cleanup
+- Current frontier:
+  - continue reducing `PlayGame_Dispatch` front-end undefined-register hazards in the Options and Load branches, keeping the work on authentic menu/resource flow rather than synthetic host shortcuts
+- Blockers removed this batch:
+  - restored the missing asm-backed `menu\\opt.s32` and `menu\\load.s32` resource strings and wired the Options/Load sprite-set loads to those symbols
+  - replaced Options/Load `Render_LoadResourceSprite_v4(18/21, ...)` ghost operands with the concrete `eax`/`edx` call shape from the original code
+  - replaced the Options widget-template copy from undefined `v94` plus trailing bytes with the original 371-byte `rep movsd; movsw; movsb` copy from `unk_518690`
+  - cleaned Options menu cache rebuild, pump, widget-poll, and options-save calls so they no longer depend on `v99` / `v100` / `v101` / `v102` / `v103` decompiler artifacts
+  - cleaned Load menu row draw and polling setup by initializing the row loop explicitly, preserving the previous selected slot in a local, and removing stale `a3` mutation from the slot-hover path
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `ctest --test-dir build --output-on-failure -R direct_a0 --repeat until-fail:3`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0` reached expected timeout status `124`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0` reached expected timeout status `124`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` automated route smokes pass for both executable paths
+  - the Options and Load submenus now have fewer undefined operand hazards before real front-end input is used to drive the human-route Campaign and save-load paths
+- Key evidence used:
+  - `clash95.asm:110540-110760` for the Options branch loading `menu\\opt.s32`, selecting the localized `menu\\opt_*.gfx`, loading resource sprites `18` and `21`, copying 371 bytes from `unk_518690`, and polling with zero pump/widget operands
+  - `clash95.asm:110790-110920` for the Load branch loading `menu\\load.s32`, loading resource sprites `18` and `21`, drawing ten save rows, polling with `DD_Pump(..., 0)`, and redrawing the previous/current selected slots
+  - `clash95.asm:388990-389050` for the missing data-segment string symbols and their PlayGame dispatch xrefs
+- Ambiguous candidates deferred:
+  - the post-confirm Load path still forwards decompiler artifacts into `WorldMap_Initialize`, `sub_444490`, and `PlayGame`; that handoff should be isolated as its own batch
+  - the Multiplayer branch still contains older ghost operands and remains below the human Campaign/Load front-end priority
+  - no unit-type, stat, or recovered-structure semantics were promoted in this batch

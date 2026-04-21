@@ -285,3 +285,6 @@
 
 ## 43. Batch 194 Note
 - `Batch 194` stayed on the executable front-end and human-route frontier. The active work removed top-level main-menu prologue ghost operands around intro render-hook state, menu allocations, first-frame pumps, and submenu sprite allocations, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 44. Batch 195 Note
+- `Batch 195` stayed on the executable front-end and human-route frontier. The active work restored the Options/Load `.s32` menu resource strings and removed additional decompiler ghost operands from those submenu setup and polling paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

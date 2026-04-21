@@ -5470,7 +5470,9 @@ char aCre_an[7] = "cre_an"; // weak
 char aMenuOpt_p_gfx[15] = "menu\\opt_p.gfx"; // weak
 char aMenuOpt_a_gfx[15] = "menu\\opt_a.gfx"; // weak
 char aMenuOpt_g_gfx[15] = "menu\\opt_g.gfx"; // weak
+char aMenuOpt_s32[13] = "menu\\opt.s32"; // weak
 char aMusicMenu_0[11] = "music\\menu"; // weak
+char aMenuLoad_s32[14] = "menu\\load.s32"; // weak
 char aMenuLoad_gfx[14] = "menu\\load.gfx"; // weak
 char aUnsetrh08x_15[13] = "UnsetRH %08x"; // weak
 char aOptions_cfg[12] = "options.cfg"; // weak
@@ -61735,22 +61737,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v88; // ecx
   int v89; // edx
   _DWORD *v90; // eax
-  int v91; // ecx
-  int v92; // ecx
   int v93; // eax
-  int v94; // ecx
-  char *v95; // edi
-  char *v96; // esi
   DWORD v97; // ebp
   int v98; // ecx
-  int v99; // edx
-  int v100; // ecx
-  int v101; // ecx
-  int v102; // ecx
-  int v103; // ecx
   _DWORD *v104; // eax
-  int v105; // ecx
-  int v106; // ecx
   int k; // edx
   unsigned int v108; // eax
   int v109; // ecx
@@ -61769,6 +61759,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   _DWORD v123[40]; // [esp+1FC0h] [ebp-17Ch] BYREF
   char v124[160]; // [esp+2060h] [ebp-DCh] BYREF
   int v125[5]; // [esp+2100h] [ebp-3Ch] BYREF
+  int previous_load_slot;
   int v126; // [esp+2114h] [ebp-28h]
   int (*v127)(); // [esp+2118h] [ebp-24h]
   int v128; // [esp+211Ch] [ebp-20h]
@@ -62161,7 +62152,7 @@ LABEL_64:
       case MAIN_MENU_REQUEST_OPTIONS:
         v90 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v90 )
-          v90 = DLXSpriteSet_Load(v90, a2);
+          v90 = DLXSpriteSet_Load(v90, aMenuOpt_s32);
         g_PlayGameMenuSpriteSetHandle = (int)v90;
         if ( g_LanguageIndex )
         {
@@ -62181,16 +62172,12 @@ LABEL_64:
           a2 = (signed int)byte_543D80;
           (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuOpt_p_gfx);
         }
-        Render_LoadResourceSprite_v4(18, byte_543D80, v91, a2, (DWORD)a3);
-        Render_LoadResourceSprite_v4(21, byte_543D80, v92, a2, (DWORD)a3);
+        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
         g_RenderDevice = (_UNKNOWN *)dword_5202E0;
         (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(92);
         v93 = 0;
-        qmemcpy(v113, &unk_518690, 4 * v94);
-        v96 = (char *)&unk_518690 + 4 * v94;
-        v95 = &v113[4 * v94];
-        *(_WORD *)v95 = *(_WORD *)v96;
-        v95[2] = v96[2];
+        qmemcpy(v113, &unk_518690, 371);
         do
         {
           v97 = (unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v115 + v93);
@@ -62222,7 +62209,7 @@ LABEL_64:
         sub_419D80(v113);
         sub_44A880(word_518600, a2, v97);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, v99, v100, v97);
+        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
@@ -62230,16 +62217,15 @@ LABEL_64:
         {
           do
           {
-            DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+            DD_Pump((int)dword_544CD8, 0);
             sub_44A8B0(word_518600);
-            sub_419DC0(v113, (DWORD)&unk_5196A0);
+            sub_419DC0(v113, 0);
           }
-          while ( v101 == g_PlayGameMenuExitRequested );
+          while ( !g_PlayGameMenuExitRequested );
         }
         a2 = dword_5188C0;
         dword_5188BC = v114 == 2;
         dword_5188B0 = v116 == 2;
-        a3 = (char *)v118;
         dword_5188C0 = v117 == 2;
         dword_5188C4 = v118 == 2;
         byte_5188CA = ((unsigned __int16)(((_WORD)dword_51860C << 7)
@@ -62264,8 +62250,8 @@ LABEL_64:
             sub_4418F0(g_MainMenuMusicHandle);
           sub_441A00();
         }
-        sub_44A9C0((int)&dword_5188B0, v102, (DWORD)a3);
-        sub_44A980(v103, (DWORD)a3);
+        sub_44A9C0((int)&dword_5188B0, 0, 0);
+        sub_44A980(0, 0);
         sub_44A8E0(word_518600);
         Render_Pump();
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
@@ -62274,26 +62260,26 @@ LABEL_64:
         dword_5441E0 = -1;
         v104 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v104 )
-          v104 = DLXSpriteSet_Load(v104, a2);
+          v104 = DLXSpriteSet_Load(v104, aMenuLoad_s32);
         g_PlayGameMenuSpriteSetHandle = (int)v104;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuLoad_gfx);
-        Render_LoadResourceSprite_v4(18, byte_543D80, v105, (char)byte_543D80, (DWORD)a3);
-        Render_LoadResourceSprite_v4(21, byte_543D80, v106, (char)byte_543D80, (DWORD)a3);
+        Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
+        Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
         (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
-        for ( k = 0; k < 10; sub_44A140(k, (DWORD)a3) )
-          ;
+        for ( k = 0; k < 10; ++k )
+          sub_44A140(k, (DWORD)a3);
         LoadMenu_RebuildButtonWidgetTemplate();
         qmemcpy(v123, &g_LoadMenuButtonWidgetsTemplate, 0x9Fu);
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v123);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, (DWORD)a3);
+        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)dword_544CD8, (char)&unk_5196A0);
+          DD_Pump((int)dword_544CD8, 0);
           if ( DD_IsFlipping((int)dword_544CD8) )
           {
             if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
@@ -62301,12 +62287,12 @@ LABEL_64:
               v108 = ((dword_544D00 >> byte_54512C) - 155) / 22;
               if ( v108 <= 9 )
               {
-                a3 = (char *)dword_5441E0;
+                previous_load_slot = dword_5441E0;
                 if ( v108 != dword_5441E0 )
                 {
                   dword_5441E0 = ((dword_544D00 >> byte_54512C) - 155) / 22;
-                  if ( a3 != (char *)-1 )
-                    sub_44A140((int)a3, (DWORD)a3);
+                  if ( previous_load_slot != -1 )
+                    sub_44A140(previous_load_slot, (DWORD)a3);
                   sub_44A140(dword_5441E0, (DWORD)a3);
                 }
                 if ( sub_460950((int)dword_544CD8) )
@@ -62314,7 +62300,7 @@ LABEL_64:
               }
             }
           }
-          sub_419DC0(v123, (DWORD)a3);
+          sub_419DC0(v123, 0);
         }
         Render_Pump();
         if ( dword_544190 )
@@ -62392,17 +62378,6 @@ LABEL_64:
 // 448421: variable 'v82' is possibly undefined
 // 4484B1: variable 'v86' is possibly undefined
 // 44852A: variable 'v89' is possibly undefined
-// 448613: variable 'v91' is possibly undefined
-// 448622: variable 'v92' is possibly undefined
-// 44864D: variable 'v94' is possibly undefined
-// 44876B: variable 'v99' is possibly undefined
-// 44876B: variable 'v100' is possibly undefined
-// 4487CB: variable 'v101' is possibly undefined
-// 4488AD: variable 'v102' is possibly undefined
-// 4488B2: variable 'v103' is possibly undefined
-// 4489A6: variable 'v105' is possibly undefined
-// 4489B5: variable 'v106' is possibly undefined
-// 4489D3: variable 'k' is possibly undefined
 // 448B74: variable 'v109' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 47BB96: using guessed type int __fastcall memmove_(_DWORD, _DWORD);
