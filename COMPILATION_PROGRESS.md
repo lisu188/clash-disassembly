@@ -7502,3 +7502,36 @@
   - the later tactical battle/render tail still has `v33` / `v35` / `v41` and `v45` residue, plus a defeated-stack owner update still depending on `v48`
   - this batch does not recover the broader `WorldMap_HandleTileHoverAndClick` building-click dispatch surface
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 202 - SDL indexed primary frame presentation
+- Current frontier:
+  - continue the black-screen investigation at the SDL/recovered-render boundary, focused on getting the authentic menu and direct scenario frames presented through the real primary surface instead of a contained host-side probe
+- Blockers removed this batch:
+  - promoted the old bootstrap-only indexed-surface handoff into `Render_Present` through `Compat_PresentPrimaryIndexedSurfaceToPlatform`
+  - present now forwards the recovered primary companion surface handle from `unk_51D4C0 + 0xD0` plus the active converted palette at `unk_51D4C0 + 220` to `Platform_PresentRecoveredIndexedSurfaceHandle`
+  - repaired the top-level main-menu `Render_LoadPCXImage("menu\\main.gfx")` call to pass `byte_543D80` as the palette output buffer instead of `0`
+  - verified by frame dump and visual inspection that the no-arg executable route reaches the real main menu frame and direct `/A0` still reaches a nonblack recovered world-map frame
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `timeout 4s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash-present-frame ./build/bin/clash95_bootstrap` exits `124`; `/tmp/clash-present-frame-003.bmp` has `296141 / 307200` nonblack pixels and visually shows the main menu
+  - `timeout 6s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash-present-a0-frame ./build/bin/clash95_bootstrap /A0` exits `124`; `/tmp/clash-present-a0-frame-003.bmp` has `254986 / 307200` nonblack pixels and later frames remain nonblack
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124` without crash output
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124` without crash output
+  - JSON parse check for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - promoted: the default route now presents the authentic main menu through the SDL surface/palette path, confirmed by frame pixels and visual inspection
+  - retained: the direct `/A0` route presents a nonblack recovered world-map frame and remains alive until the external timeout
+  - still not claimed: menu responsiveness, real front-end input into Campaign/Load/Multiplayer, clean finite shutdown, or a playable human turn
+- Key evidence used:
+  - `bootstrap_main.c` contained probe code already used `Platform_PresentRecoveredIndexedSurfaceHandle` with the primary companion handle and `byte_543D80` palette while the normal `Render_Present` path did not
+  - `clash95.asm:109694-109706` proves the top-level menu PCX load passes `ebx = offset byte_543D80`, then passes the same palette pointer into `sub_435ED0`
+  - `Render_LoadPCXImage` only captures a palette when its fourth argument is nonzero, making the old recovered-C `0` argument a direct black-menu candidate
+  - `platform_sdl_runtime.c` frame-dump support gave pixel-level proof instead of relying on whether an SDL window existed
+- Ambiguous candidates deferred:
+  - the no-arg menu now draws, but real mouse/keyboard menu responsiveness is still a separate milestone
+  - the second main-menu draw-stage argument observed in assembly remains deferred because the restored palette plus primary presentation is sufficient for the current black-screen blocker
+  - the `/A0` world-map frame is nonblack but still needs separate artifact/minimap/tile-fidelity work before claiming rendering completeness
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

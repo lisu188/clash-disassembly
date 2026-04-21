@@ -61673,7 +61673,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     if ( v10 )
       v10 = DLXSpriteSet_Load(v10, "menu\\main.s32");
     g_PlayGameMenuSpriteSetHandle = (int)v10;
-    Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, 0);
+    Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, (int)byte_543D80);
     sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
     if ( v128 && dword_5188C0 )
       g_MainMenuMusicHandle = sub_441670(aMusicMenu, 64);
@@ -72855,6 +72855,19 @@ static _DWORD *Compat_RenderStateCursorDescriptor(int render_state)
   return (_DWORD *)(uintptr_t)descriptor_handle;
 }
 
+static void Compat_PresentPrimaryIndexedSurfaceToPlatform(void)
+{
+  unsigned int primary_surface_handle;
+
+  primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
+  if ( primary_surface_handle )
+  {
+    Platform_PresentRecoveredIndexedSurfaceHandle(
+      (void *)(uintptr_t)primary_surface_handle,
+      (const uint32_t *)(const void *)((unsigned char *)&unk_51D4C0 + 220));
+  }
+}
+
 static int Compat_RenderClearPresentedRect(int render_state)
 {
   _DWORD *present_surface;
@@ -72965,8 +72978,11 @@ int  Render_Present(int a1)
     *(_DWORD *)a1 = *(_DWORD *)(a1 + 48);
     *(_DWORD *)(a1 + 4) = *(_DWORD *)(a1 + 52);
     g_RenderDevice = v5;
-    return Render_SetResourceHandle((int)&unk_51D4C0, v3);
+    result = Render_SetResourceHandle((int)&unk_51D4C0, v3);
+    Compat_PresentPrimaryIndexedSurfaceToPlatform();
+    return result;
   }
+  Compat_PresentPrimaryIndexedSurfaceToPlatform();
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;

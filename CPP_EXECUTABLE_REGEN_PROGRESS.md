@@ -369,3 +369,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The personal-lead prompt now follows the original human-controller plus combat-garrison-count gate and passes the fixed 12-slot building-garrison surface instead of undefined decompiler locals.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup; CTest, JSON validation, `git diff --check`, the retained human-turn probe, and one-second bootstrap/C++ liveness smokes pass.
 - This removes building-attack setup hazards below the human-turn loop, but the later tactical battle/render outcome tail and real front-end route into a building attack remain deferred.
+
+## Latest SDL frame presentation update
+- The black-screen investigation stayed in the recovered C render path and reused the existing SDL platform presentation seam.
+- `Render_Present` now forwards the recovered primary companion surface handle and active palette to `Platform_PresentRecoveredIndexedSurfaceHandle`, replacing the old contained bootstrap probe workaround with the normal presentation path.
+- The top-level menu PCX load now passes `byte_543D80` as the palette output buffer, matching the original `PlayGame_Dispatch` assembly and allowing the main menu palette to be captured before text-cache setup.
+- Frame dumps confirm the default route reaches the real main menu frame and direct `/A0` still reaches nonblack world-map frames; this promotes "SDL presents authentic recovered frames" but does not yet claim menu input responsiveness or a playable human turn.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the repair; CTest, JSON validation, `git diff --check`, frame-dump inspection, the retained human-turn probe, and one-second bootstrap/C++ liveness smokes pass.
