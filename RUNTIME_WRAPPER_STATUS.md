@@ -228,3 +228,11 @@ This file classifies the current runtime/quarantine surface for executable regen
   - sprite allocation, text-cache rebuild, loop pump/widget polling, and mission dispatch now use concrete asm-backed operands
   - the prior undefined `v29` / `v30` / `v35` / `v36` / `v37` hazards are gone from this branch
 - The wrapper boundary is unchanged; the next proof still needs real Campaign menu input rather than a synthetic host campaign route.
+
+## Latest main-menu prologue operand note
+- No runtime wrapper, SDL shim, or host-only menu route was added for the top-level main-menu prologue cleanup.
+- The active changes stayed inside recovered C:
+  - `UI_StartAnims` now uses the original render-hook/resource-handle save-restore shape
+  - top-level menu allocations, first-frame pumps, and the `sub_460CB0` cache rebuild no longer receive undefined decompiler locals
+  - Options and Load submenu sprite allocations use the same original size-only allocation shape
+- The wrapper boundary is unchanged. Current SDL/dummy-audio seams still carry the automated route smokes; the next human-route proof remains real menu input into Campaign, not a host shortcut.

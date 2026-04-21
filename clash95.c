@@ -5444,6 +5444,7 @@ char aSetrhS08x_16[14] = "SetRH %s=%08x"; // weak
 char aUnsetrh08x_16[13] = "UnsetRH %08x"; // weak
 char aStartanims[11] = "StartAnims"; // weak
 char aSetrhS08x_14[14] = "SetRH %s=%08x"; // weak
+char aNull[5] = "NULL"; // weak
 char aLogo_0[5] = "logo"; // weak
 char aSoft2000[9] = "soft2000"; // weak
 char aInt_a[6] = "int_a"; // weak
@@ -5453,6 +5454,7 @@ char aUnsetrh08x_14[13] = "UnsetRH %08x"; // weak
 char aStartanimsEnd[15] = "StartAnims-end"; // weak
 char aStartmenu[10] = "StartMenu"; // weak
 char aSetrhS08x_15[14] = "SetRH %s=%08x"; // weak
+char aStdrh_10[6] = "StdRH"; // weak
 char aMenuMain_gfx[14] = "menu\\main.gfx"; // weak
 char aMenuMain[10] = "menu\\main"; // weak
 char aMusicMenu[11] = "music\\menu"; // weak
@@ -61619,26 +61621,21 @@ signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
   while ( v6 <= v7 );
   return 0;
 }
-// 447825: variable 'v5' is possibly undefined
-// 447825: variable 'v4' is possibly undefined
-// 44782C: variable 'v7' is possibly undefined
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00447840) --------------------------------------------------------
 DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
 {
-  int (*v4)(); // edi
-  int v5; // ecx
-  int v6; // edx
-  int v7; // ecx
+  int (*previous_render_hook)(); // edi
+  int previous_resource_handle; // esi
 
   Debug_Log(a1, a2, a3, (int)aStartanims);
-  Render_SetResourceHandle((int)&unk_51D4C0, 0);
-  v4 = g_RenderHook;
+  previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
+  previous_render_hook = g_RenderHook;
   g_RenderHook = 0;
-  Debug_Log(v5, a2, a3, (int)aSetrhS08x_14);
+  Debug_Log(0, 0, a3, (int)aSetrhS08x_14, aNull, 0);
   sub_404D90((int *)&unk_51D4C0);
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)dword_544CD8, 0);
   Sleep(0x4B0u);
   Video_Avi_playIn(aLogo_0, 0, 1, 0, 1, 0);
   if ( g_LanguageIndex == 2 )
@@ -61659,15 +61656,12 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
     Video_Avi_playIn(aInt_a, 0, 1, 0, 1, 1);
   }
   DD_Pump((int)dword_544CD8, 0);
-  Debug_Log((int)g_RenderHook, 0, a3, (int)aUnsetrh08x_14);
-  g_RenderHook = v4;
-  Render_SetResourceHandle((int)&unk_51D4C0, v6);
-  Debug_Log(v7, 0, a3, (int)aStartanimsEnd);
+  Debug_Log(0, 0, a3, (int)aUnsetrh08x_14, g_RenderHook);
+  g_RenderHook = previous_render_hook;
+  Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
+  Debug_Log(0, 0, a3, (int)aStartanimsEnd);
   return a3;
 }
-// 447879: variable 'v5' is possibly undefined
-// 447902: variable 'v6' is possibly undefined
-// 44790C: variable 'v7' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
@@ -61675,25 +61669,14 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
 //----- (004479C0) --------------------------------------------------------
 int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
 {
-  int v5; // ecx
   _DWORD *Surface; // eax
-  int v7; // ecx
-  int v8; // ecx
-  int v9; // ecx
   _DWORD *v10; // eax
-  int v11; // ebx
   int v12; // ecx
-  int v13; // edi
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // ecx
   int v17; // eax
   int v18; // ecx
   char *v19; // edi
   char *v20; // esi
   int v21; // ecx
-  int v22; // esi
-  int v23; // ecx
   int v24; // ecx
   _DWORD *v25; // eax
   bool i; // zf
@@ -61792,42 +61775,40 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   char v129; // [esp+2120h] [ebp-1Ch]
 
   Debug_Log(a1, a2, (DWORD)a3, (int)aStartmenu);
-  Surface = (_DWORD *)Mem_Alloc(188, v5, a2, (DWORD)a3);
+  Surface = (_DWORD *)Mem_Alloc(188, 0, 0, 0);
   if ( Surface )
   {
     LOBYTE(a2) = -32;
     Surface = Render_CreateSurface((int)Surface, 640, 480);
   }
   dword_5202E0 = (int)Surface;
-  UI_StartAnims(v7, a2, (DWORD)a3);
+  UI_StartAnims(0, a2, (DWORD)a3);
   v126 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
   v110 = Render_DefaultRH;
   v127 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
-  Debug_Log(v8, a2, (DWORD)a3, (int)aSetrhS08x_15);
+  Debug_Log(0, 0, (DWORD)a3, (int)aSetrhS08x_15, aStdrh_10, Render_DefaultRH);
   DD_Pump((int)dword_544CD8, a2);
-  v128 = v9;
+  v128 = 1;
   do
   {
-    v10 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
+    v10 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
     if ( v10 )
       v10 = DLXSpriteSet_Load(v10, "menu\\main.s32");
     g_PlayGameMenuSpriteSetHandle = (int)v10;
     Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, 0);
-    v11 = v128;
     sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
-    if ( v11 && dword_5188C0 )
+    if ( v128 && dword_5188C0 )
       g_MainMenuMusicHandle = sub_441670(aMusicMenu, 64);
-    v13 = v128;
-    DD_Pump((int)dword_544CD8, v11);
-    if ( v13 )
+    DD_Pump((int)dword_544CD8, 0);
+    if ( v128 )
       sub_404D90((int *)&unk_51D4C0);
-    DD_Pump((int)dword_544CD8, v11);
-    Debug_Log(v14, v11, (DWORD)a3, (int)aDraw1);
+    DD_Pump((int)dword_544CD8, 0);
+    Debug_Log(0, 0, (DWORD)a3, (int)aDraw1);
     sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
-    Debug_Log(v15, v11, (DWORD)a3, (int)aDraw2);
+    Debug_Log(0, 0, (DWORD)a3, (int)aDraw2);
     sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
-    Debug_Log(v16, v11, (DWORD)a3, (int)aDrawend);
+    Debug_Log(0, 0, (DWORD)a3, (int)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
     v17 = 0;
     qmemcpy(v120, g_MainMenuButtonWidgetsTemplate, sizeof(g_MainMenuButtonWidgetsTemplate));
@@ -61841,16 +61822,15 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     }
     while ( v17 != 371 );
     a2 = (signed int)&unk_51D4C0;
-    v22 = v128;
     g_RenderDevice = &unk_51D4C0;
     sub_419D80(v120);
-    if ( v22 )
+    if ( v128 )
     {
       a2 = 60;
       sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
     }
     g_PlayGameMenuExitRequested = 0;
-    sub_460CB0((int)dword_544CD8, (int)byte_543D80, v23, (DWORD)a3);
+    sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     dword_545150 = (int)&unk_5196A0;
     Render_Present((int)dword_544CD8);
@@ -62179,7 +62159,7 @@ LABEL_64:
         }
         break;
       case MAIN_MENU_REQUEST_OPTIONS:
-        v90 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
+        v90 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v90 )
           v90 = DLXSpriteSet_Load(v90, a2);
         g_PlayGameMenuSpriteSetHandle = (int)v90;
@@ -62292,7 +62272,7 @@ LABEL_64:
         break;
       case MAIN_MENU_REQUEST_LOAD_GAME:
         dword_5441E0 = -1;
-        v104 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
+        v104 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
         if ( v104 )
           v104 = DLXSpriteSet_Load(v104, a2);
         g_PlayGameMenuSpriteSetHandle = (int)v104;

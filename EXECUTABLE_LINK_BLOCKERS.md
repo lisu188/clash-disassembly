@@ -355,3 +355,15 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - real input validation still needs to exercise the Campaign button and submenu button path end to end
   - the top-level main menu still has older unrelated ghost operands that should be reduced only with focused evidence
   - `WorldMap_RunHumanTurnLoop`, rules/class fact health, and `CSS_Init` remain separate frontiers
+
+## Latest main-menu prologue operand blocker update
+- The top-level main menu blocker called out above has been reduced where the asm evidence is direct.
+- This was a recovered-code fidelity cleanup, not a raw link-symbol or host-seam blocker:
+  - `UI_StartAnims` now restores the previous render hook and resource handle instead of undefined locals
+  - the main-menu surface and sprite allocations use the original size-only allocation shape
+  - first-frame pre-draw pumps and `sub_460CB0` use zero/decorated operands visible in the original prologue
+  - Options and Load submenu sprite allocations no longer depend on the removed `v9` ghost local
+- Remaining blockers:
+  - the `sub_435ED0` top-level mode operand is still deferred until register lifetime evidence is stronger
+  - real input validation still needs to exercise Campaign from the top-level button through the submenu selector
+  - `WorldMap_RunHumanTurnLoop`, rules/class fact health, and skipped `CSS_Init` remain separate frontiers

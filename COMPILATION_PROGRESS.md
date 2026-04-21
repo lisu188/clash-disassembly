@@ -7271,3 +7271,35 @@
   - this is still not automated proof of a human-turn route; the next milestone is real Campaign input through the recovered menu loop into `WorldMap_RunHumanTurnLoop`
   - the top-level main-menu branch still contains older decompiler ghost operands outside this campaign-specific cleanup
   - broader rules/class fact health and skipped `CSS_Init` remain separate executable-regeneration frontiers
+
+## Batch 194 - Main menu prologue operand cleanup
+- Current frontier:
+  - reduce the top-level `PlayGame_Dispatch` menu prologue that feeds the Campaign submenu, without adding host-side menu shortcuts or changing the SDL seam
+- Blockers removed this batch:
+  - `UI_StartAnims` now preserves and restores the previous render hook and resource handle explicitly, matching the asm `edi` / `esi` save-restore pattern instead of restoring undefined `v4` / `v6` locals
+  - the intro animation wrapper now logs `SetRH NULL=00000000` and `UnsetRH %08x` with explicit asm-backed arguments and pumps `DD_Pump(..., 0)` around the AVI sequence
+  - the main-menu prologue now uses size-only allocations for the 188-byte menu surface and `menu\\main.s32` sprite set, and restores the exact `aNull`, `aStdrh_10`, and `aSetrh*` string globals used by the original logs
+  - first-frame main-menu drawing now gates palette redraw/music on the explicit carried entry flag while using zero operands for the pre-draw `DD_Pump` calls and the `sub_460CB0` cache rebuild
+  - the Options and Load submenu sprite allocations no longer depend on the removed `v9` ghost local; both use the original size-only `Mem_Alloc(4112, 0, 0, 0)` allocation shape
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `ctest --test-dir build --output-on-failure -R clash95_direct_a0_route_smoke --repeat until-pass:3`
+  - `ctest --test-dir build --output-on-failure -R direct_a0 --repeat until-fail:3`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` automated route smokes pass for the current executable targets
+  - the top-level menu now has fewer undefined-register hazards before real front-end input is used to drive Campaign into the human-controlled mission path
+- Key evidence used:
+  - `clash95.asm:109473-109599` for `UI_StartAnims` saving the previous `g_RenderHook` in `edi`, saving the previous resource handle in `esi`, clearing both around intro playback, pumping with `edx = 0`, then restoring them
+  - `clash95.asm:109620-109760` for the top-level menu prologue: size-only surface/sprite allocations, `Render_SetResourceHandle(&unk_51D4C0, 1)`, `SetRH StdRH=%08x`, the first-frame carried entry flag, and zero-operand pre-draw pumps
+  - `clash95.asm:109760-109820` for the main widget setup, optional first-frame palette fade, and `sub_460CB0(dword_544CD8, byte_543D80)` call shape
+  - `clash95.asm:110790-110820` and `clash95.asm:113200-113215` for the Options and Load submenu `Mem_Alloc(0x1010)` sprite allocations
+- Ambiguous candidates deferred:
+  - the `sub_435ED0` third operand in the top-level main-menu branch remains under-labeled until the surrounding register lifetime is isolated cleanly
+  - real Campaign input through the top-level button and submenu selector remains the next human-route proof point
+  - rules/class fact health and skipped `CSS_Init` remain separate executable-regeneration frontiers

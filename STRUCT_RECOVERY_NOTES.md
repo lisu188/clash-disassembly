@@ -123,3 +123,9 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - No new `RECOVERED_STRUCTURES.json` entry was needed for the follow-on campaign submenu operand cleanup.
 - The existing `CampaignMenuButtonWidgetRecord` evidence still covers the table; this batch only removed decompiler ghost operands around allocation, cache rebuild, input polling, and selector dispatch.
 - No new original structure, unit/stat field, or gameplay data layout is inferred from these operand repairs.
+
+## Latest main-menu prologue operand maintenance
+
+- No new `RECOVERED_STRUCTURES.json` entry was needed for the top-level main-menu prologue cleanup.
+- The existing main-menu and campaign-menu widget records still cover the front-end table layouts; this batch only removed decompiler ghost operands around intro render-hook state, menu allocations, first-frame pumps, and menu cache rebuilds.
+- No new original structure, unit/stat field, or gameplay data layout is inferred from these operand repairs.

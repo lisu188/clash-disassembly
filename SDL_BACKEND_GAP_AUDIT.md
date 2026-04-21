@@ -137,3 +137,11 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
   - the input loop needed zero pump/widget operands
   - selector dispatch needed explicit mission-route operands instead of undefined locals
 - Future SDL input work should wait for a concrete backend failure after the recovered Campaign path is exercised end to end.
+
+## Latest main-menu prologue non-SDL evidence
+- The top-level main-menu prologue cleanup required no SDL backend change.
+- The active blockers were recovered-code operands in `PlayGame_Dispatch` and `UI_StartAnims`:
+  - intro playback needed explicit render-hook/resource save-restore state
+  - menu surface/sprite allocations needed size-only `Mem_Alloc` operands
+  - first-frame menu pumps and text-cache rebuild needed the original zero/decorated operands
+- Future SDL input work should still wait for concrete event or present evidence after the authentic Campaign path is exercised through the recovered menu widgets.

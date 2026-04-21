@@ -324,3 +324,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The follow-on human-route cleanup stayed in recovered C and did not change the C++ executable seam.
 - `PlayGame_Dispatch` no longer forwards undefined decompiler locals in the campaign submenu's sprite allocation, text-cache rebuild, zero-operand pump/UI poll, or selector dispatch.
 - Both executable targets still build after the cleanup; the validation target remains the same authentic Campaign menu path rather than a host-side campaign shortcut.
+
+## Latest main-menu prologue operand update
+- The next front-end cleanup also stayed in recovered C and left the C++ executable seam unchanged.
+- `UI_StartAnims` now preserves the render hook and resource handle explicitly across intro playback, while the top-level `PlayGame_Dispatch` menu prologue no longer forwards undefined locals into surface/sprite allocations, render-hook logs, first-frame pumps, or the main menu text-cache rebuild.
+- Options and Load submenu sprite allocations were cleaned to the same asm-backed size-only allocation shape after removing the stale top-level `v9` local.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup; the full CTest suite and direct `/A0` timeout probes pass.
