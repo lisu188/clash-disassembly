@@ -330,3 +330,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `UI_StartAnims` now preserves the render hook and resource handle explicitly across intro playback, while the top-level `PlayGame_Dispatch` menu prologue no longer forwards undefined locals into surface/sprite allocations, render-hook logs, first-frame pumps, or the main menu text-cache rebuild.
 - Options and Load submenu sprite allocations were cleaned to the same asm-backed size-only allocation shape after removing the stale top-level `v9` local.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup; the full CTest suite and direct `/A0` timeout probes pass.
+
+## Latest Load Game handoff update
+- The post-confirm Load Game tail now stays on explicit recovered-C operands without changing the C++ executable seam.
+- `sub_444490` is now applied in code as the already-documented `SaveSlot_LoadGame` helper, and the selected load slot is carried through `WorldMap_Initialize`, `SaveSlot_LoadGame`, and the final `PlayGame` call instead of relying on the stale `a2`/`v109` decompiler artifacts.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
+- The next executable-regeneration milestone is a real loaded-session runtime validation through the full-route Load Game menu path; the old host-side menu probe is superseded, and no replacement load shortcut was added.

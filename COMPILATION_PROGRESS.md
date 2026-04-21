@@ -7333,3 +7333,29 @@
   - the post-confirm Load path still forwards decompiler artifacts into `WorldMap_Initialize`, `sub_444490`, and `PlayGame`; that handoff should be isolated as its own batch
   - the Multiplayer branch still contains older ghost operands and remains below the human Campaign/Load front-end priority
   - no unit-type, stat, or recovered-structure semantics were promoted in this batch
+
+## Batch 196 - Load Game post-confirm handoff cleanup
+- Current frontier:
+  - reduce the post-confirm Load Game handoff from `PlayGame_Dispatch` into the real loaded-session `PlayGame` path, preserving the original `CSS_StopSound -> WorldMap_Initialize -> load save slot -> PlayGame` order
+- Blockers removed this batch:
+  - applied the already-documented `SaveSlot_LoadGame` semantic name to the `sub_444490` code surface and all current C callsites
+  - carried the selected load slot through an explicit `selected_load_slot` local after the Load submenu exits, instead of mutating `a2` and then forwarding it through the post-confirm sequence
+  - replaced the final `PlayGame(v109, ...)` call with an explicit ignored first argument and asm-backed loaded-session mode flag `1`, removing the last undefined `v109` artifact from the Load Game post-confirm branch
+- Compile/link/runtime status:
+  - baseline before edits: `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - after edits: `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged so far: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from the previous batches
+  - the Load Game branch now reaches the loaded-session handoff with explicit operands in recovered C; the next milestone is exercising that handoff through the real full-route menu/input path, because the old host-side `--authentic-menu-probe` selector is superseded
+- Key evidence used:
+  - `clash95.asm:110931-110949` for the post-confirm Load Game tail: selected slot remains in `ebx`, `WorldMap_Initialize` runs first, then `sub_444490`, then `PlayGame` with `edi = 1`
+  - `clash95.asm:104838-105031` and `REVERSE_ENGINEERING_RENAME_LOG.md` Batch 49 for `sub_444490` / `SaveSlot_LoadGame` restoring the `.dat` payload, rebuilding transient rules facts, loading the `.fac` companion, and recreating world-map UI state
+- Ambiguous candidates deferred:
+  - this batch does not prove a finite loaded-session runtime milestone yet; it only removes the undefined handoff operands before that validation
+  - the removed host-side menu-probe controls are not counted as validation for this batch
+  - the Multiplayer branch still contains older ghost operands and remains below the human Campaign/Load priority
+  - no unit-type, stat, or recovered-structure semantics were promoted in this batch

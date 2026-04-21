@@ -1311,7 +1311,7 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
 int  sub_4443C0(int a1, char *a2);
 int  sub_4443D0(int a1, char *a2);
 signed int  saveGame(int a1, DWORD a2, double a3);
-signed int  sub_444490(int a1, DWORD a2, double a3);
+signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3);
 char  sub_4446E0(int a1, char *a2, DWORD a3);
 int  sub_444750(int a1, DWORD a2);
 int  sub_444780(int a1);
@@ -20773,7 +20773,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   if ( dword_511B64 != -1 )
   {
     WorldMap_Initialize(0, a3);
-    sub_444490(dword_511B64, a3, a5);
+    SaveSlot_LoadGame(dword_511B64, a3, a5);
     PlayGame(0, 0, a3, a4, a5);
     return 0;
   }
@@ -59517,7 +59517,7 @@ signed int  saveGame(int a1, DWORD a2, double a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00444490) --------------------------------------------------------
-signed int  sub_444490(int a1, DWORD a2, double a3)
+signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3)
 {
   int file_handle; // eax
   int trace_load_save; // eax
@@ -61743,7 +61743,6 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   _DWORD *v104; // eax
   int k; // edx
   unsigned int v108; // eax
-  int v109; // ecx
   int ( *v110)(int, char, DWORD); // [esp-4h] [ebp-2140h]
   _BYTE v112[7112]; // [esp+4h] [ebp-2138h] BYREF
   char v113[8]; // [esp+1BCCh] [ebp-570h] BYREF
@@ -61760,6 +61759,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   char v124[160]; // [esp+2060h] [ebp-DCh] BYREF
   int v125[5]; // [esp+2100h] [ebp-3Ch] BYREF
   int previous_load_slot;
+  int selected_load_slot;
   int v126; // [esp+2114h] [ebp-28h]
   int (*v127)(); // [esp+2118h] [ebp-24h]
   int v128; // [esp+211Ch] [ebp-20h]
@@ -62308,14 +62308,14 @@ LABEL_64:
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
         if ( !dword_544190 )
           dword_5441E0 = -1;
-        a2 = dword_5441E0;
-        if ( dword_5441E0 != -1 )
+        selected_load_slot = dword_5441E0;
+        if ( selected_load_slot != -1 )
         {
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
-          WorldMap_Initialize(a2, (DWORD)a3);
+          WorldMap_Initialize((char)selected_load_slot, (DWORD)a3);
           v128 = 1;
-          sub_444490(a2, (DWORD)a3, a4);
-          PlayGame(v109, a2, (DWORD)a3, 1, a4);
+          SaveSlot_LoadGame(selected_load_slot, (DWORD)a3, a4);
+          PlayGame(0, (char)selected_load_slot, (DWORD)a3, 1, a4);
         }
         break;
       default:
@@ -62378,7 +62378,6 @@ LABEL_64:
 // 448421: variable 'v82' is possibly undefined
 // 4484B1: variable 'v86' is possibly undefined
 // 44852A: variable 'v89' is possibly undefined
-// 448B74: variable 'v109' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 47BB96: using guessed type int __fastcall memmove_(_DWORD, _DWORD);
 // 511130: using guessed type char g_LanguageIndex;
@@ -63689,7 +63688,7 @@ LABEL_18:
 //----- (0044C400) --------------------------------------------------------
 signed int  sub_44C400(DWORD a1, double a2)
 {
-  return sub_444490(10, a1, a2);
+  return SaveSlot_LoadGame(10, a1, a2);
 }
 
 //----- (0044C410) --------------------------------------------------------
