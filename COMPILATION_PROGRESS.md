@@ -7385,3 +7385,30 @@
   - the post-confirm Multiplayer player-state handoff still contains older ghost operands around `v58` / `v59` / `v65` and remains a separate cleanup frontier
   - human Campaign and Load Game full-route validation remains the higher runtime milestone before broad Multiplayer session claims
   - no unit-type, stat, or recovered-structure semantics were promoted in this batch
+
+## Batch 198 - Multiplayer player-state handoff cleanup
+- Current frontier:
+  - continue reducing the Multiplayer branch after submenu confirmation, specifically the player-runtime-state block that feeds `Scenario_LoadMultiplayerMapAndSeedPlayers`
+- Blockers removed this batch:
+  - replaced the post-confirm Multiplayer handoff's `v58` / `v59` / `v65` ghost operands with an explicit five-record `PLAYER_DATA_STRIDE` local player-state block
+  - mapped `byte_544188` player-type values through the asm-backed active, human-controller, minimap-visible, AI-intelligence, and religion-flag fields before loading the selected multiplayer map
+  - copied the five 11-byte name rows from `byte_5441A0` into each player record's `PLAYER_DISPLAY_NAME_OFFSET`, matching the original per-record name copy
+  - passed the player-state block directly to `Scenario_LoadMultiplayerMapAndSeedPlayers(dword_5441D8, ...)` and normalized the following `PlayGame` call to explicit ignored first arguments plus the preserved runtime context
+  - removed stale `a3 = 0` mutations in the Multiplayer setup/name-selection path so the post-confirm handoff no longer loses the caller runtime context
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - unchanged: default, lowercase `r`, direct `a`, and direct `/A0` route coverage remain the automated runtime frontier from earlier batches
+  - this is still a recovered-C handoff repair; real full-route menu input is still required before claiming a Multiplayer runtime milestone
+- Key evidence used:
+  - `clash95.asm:110186-110255` for the Multiplayer post-confirm tail: stop menu audio, initialize world-map resources, build five 0x58F-byte player records, copy each name row, call `loadMultiplayerMaps`, then call `PlayGame`
+  - `clash95.asm:109603-109608` and `clash95.asm:110479-110516` for the six-way `byte_544188` switch mapping player-type values to active/controller/minimap/AI/religion fields
+  - existing recovered `PLAYER_*_OFFSET` macros and `PlayerRuntimeState_ResetDefaults` for the player-runtime record layout
+- Ambiguous candidates deferred:
+  - this batch does not add automated front-end input for selecting and confirming a Multiplayer game
+  - `WorldMap_Initialize(0, ...)` keeps the no-explicit-selector shape used by the original callsite; broader `WorldMap_LoadResources` operand cleanup remains separate
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

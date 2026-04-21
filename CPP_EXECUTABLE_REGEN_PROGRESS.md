@@ -342,3 +342,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The Multiplayer submenu now loads `menu\\multipl.s32` explicitly, initializes and redraws its five player-type rows from asm-backed operands, copies the exact player-name and widget templates, and polls the player-type, name, and map-list hit regions without undefined decompiler locals.
 - `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the cleanup.
 - This does not claim a new runtime milestone. The next executable-regeneration proof point remains real front-end input through the full-route menu path; the old host-side menu probe is superseded.
+
+## Latest Multiplayer handoff update
+- The follow-on Multiplayer cleanup stayed in recovered C and left the C++ executable seam unchanged.
+- After Multiplayer confirmation, `PlayGame_Dispatch` now builds the five-player runtime-state block explicitly from `byte_544188` and `byte_5441A0`, then passes that block into `Scenario_LoadMultiplayerMapAndSeedPlayers` before entering `PlayGame`.
+- `clash95_recovered`, `clash95_bootstrap`, and `clash95_cpp_regen` build after the handoff cleanup.
+- This removes the remaining Multiplayer handoff ghost operands but still does not prove the route through real menu input.

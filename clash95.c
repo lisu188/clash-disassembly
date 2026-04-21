@@ -61688,16 +61688,6 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   _DWORD *v40; // eax
   int j; // edx
   int v54; // eax
-  DWORD v56; // ebp
-  int v57; // ecx
-  int v58; // edx
-  int v59; // ecx
-  int v60; // eax
-  char *v61; // esi
-  char *v62; // edi
-  char v63; // al
-  char v64; // al
-  int v65; // ecx
   int v69; // edx
   int v70; // edx
   int v71; // edx
@@ -61743,6 +61733,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v125[5]; // [esp+2100h] [ebp-3Ch] BYREF
   int previous_load_slot;
   int selected_load_slot;
+  char multiplayer_player_states[PLAYER_DATA_STRIDE * 5];
+  int multiplayer_player_index;
+  int multiplayer_player_type;
+  char *multiplayer_player_state;
   int multiplayer_player_type_slot;
   int multiplayer_selected_name_slot;
   int multiplayer_previous_name_slot;
@@ -61885,7 +61879,6 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         v128 = 1;
         break;
       case MAIN_MENU_REQUEST_MULTIPLAYER:
-        a3 = 0;
         memset(byte_544188, 5, 5);
         byte_544188[0] = 3;
         byte_544189 = 0;
@@ -61943,7 +61936,6 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 multiplayer_previous_name_slot = dword_544198;
                 if ( multiplayer_selected_name_slot != dword_544198 )
                 {
-                  a3 = 0;
                   dword_544198 = multiplayer_selected_name_slot;
                   dword_544194 = 0;
                   if ( multiplayer_previous_name_slot != -1 )
@@ -62066,70 +62058,48 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         v128 = dword_544190;
         if ( dword_544190 )
         {
-          v56 = g_MainMenuMusicHandle;
           CSS_StopSound(g_MainMenuMusicHandle, 1000);
-          WorldMap_Initialize(a2, v56);
-          a3 = byte_5441A0;
-          v57 = 0;
-          a2 = (signed int)v112;
-          do
+          WorldMap_Initialize(0, (DWORD)a3);
+          for ( multiplayer_player_index = 0; multiplayer_player_index < 5; ++multiplayer_player_index )
           {
-            PlayerRuntimeState_ResetDefaults((uintptr_t)&v112[1423 * v57 - 4]);
-            *(_DWORD *)&v112[v58 - 4] = 1;
-            switch ( byte_544188[v59] )
+            multiplayer_player_state = &multiplayer_player_states[PLAYER_DATA_STRIDE * multiplayer_player_index];
+            PlayerRuntimeState_ResetDefaults((uintptr_t)multiplayer_player_state);
+            *(_DWORD *)multiplayer_player_state = 1;
+            multiplayer_player_type = (unsigned __int8)byte_544188[multiplayer_player_index];
+            switch ( multiplayer_player_type )
             {
               case 0:
-                v60 = 0;
-                *(_DWORD *)&v112[v58 + 23] = 0;
-                goto LABEL_64;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 0;
+                break;
               case 1:
-                *(_DWORD *)&v112[v58 + 23] = 0;
-                *(_DWORD *)&v112[v58 + 27] = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 1;
                 break;
               case 2:
-                v60 = 2;
-                *(_DWORD *)&v112[v58 + 23] = 0;
-LABEL_64:
-                *(_DWORD *)&v112[v58 + 27] = v60;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 0;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_AI_INTELLIGENCE_OFFSET) = 2;
                 break;
               case 3:
-                *(_DWORD *)&v112[v58 + 23] = 1;
-                *(_DWORD *)&v112[v58 + 19] = 1;
-                *(_DWORD *)&v112[v58 + 35] = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_MINIMAP_VISIBLE_OFFSET) = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_RELIGION_FLAG_OFFSET) = 1;
                 break;
               case 4:
-                *(_DWORD *)&v112[v58 + 23] = 1;
-                *(_DWORD *)&v112[v58 + 19] = 1;
-                *(_DWORD *)&v112[v58 + 35] = 0;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_IS_HUMAN_OFFSET) = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_MINIMAP_VISIBLE_OFFSET) = 1;
+                *(_DWORD *)(multiplayer_player_state + PLAYER_RELIGION_FLAG_OFFSET) = 0;
                 break;
               case 5:
-                *(_DWORD *)&v112[v58 - 4] = 0;
+                *(_DWORD *)multiplayer_player_state = 0;
                 break;
               default:
                 break;
             }
-            v61 = a3;
-            v62 = (char *)a2;
-            v110 = (int ( *)(int, char, DWORD))a2;
-            do
-            {
-              v63 = *v61;
-              *v62 = *v61;
-              if ( !v63 )
-                break;
-              v64 = v61[1];
-              v61 += 2;
-              v62[1] = v64;
-              v62 += 2;
-            }
-            while ( v64 );
-            v57 = v59 + 1;
-            a2 += 1423;
-            a3 += 11;
+            strcpy(multiplayer_player_state + PLAYER_DISPLAY_NAME_OFFSET, &byte_5441A0[11 * multiplayer_player_index]);
           }
-          while ( v57 < 5 );
-          Scenario_LoadMultiplayerMapAndSeedPlayers(dword_5441D8, (DWORD)a3);
-          PlayGame(v65, a2, (DWORD)a3, (char)v110, a4);
+          Scenario_LoadMultiplayerMapAndSeedPlayers(dword_5441D8, (uintptr_t)multiplayer_player_states);
+          PlayGame(0, 0, (DWORD)a3, 0, a4);
         }
         break;
       case MAIN_MENU_REQUEST_OPTIONS:
@@ -62330,9 +62300,6 @@ LABEL_64:
 // 447BC9: variable 'v23' is possibly undefined
 // 447C24: variable 'v24' is possibly undefined
 // 447DA4: variable 'v33' is possibly undefined
-// 4481BC: variable 'v58' is possibly undefined
-// 4481C3: variable 'v59' is possibly undefined
-// 44821C: variable 'v65' is possibly undefined
 // 4482D9: variable 'v70' is possibly undefined
 // 44831B: variable 'v71' is possibly undefined
 // 448325: variable 'v73' is possibly undefined
