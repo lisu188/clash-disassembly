@@ -1337,6 +1337,7 @@ int sub_4476B0();
 int __thiscall sub_4476C0(void *this);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
+void CampaignMenu_RebuildButtonWidgetTemplate(void);
 int  MainMenu_RequestExit(uintptr_t a1);
 int  MainMenu_RequestCampaignMenu(uintptr_t a1);
 int  MainMenu_RequestMultiplayerMenu(uintptr_t a1);
@@ -11064,7 +11065,7 @@ char *g_MissionStatusTextsByLanguage[63] =
 }; // weak
 char *g_MissionStatusFormatsByLanguage[3] = { "Misja %d\n\n%s", "Misssion %d\n\n%s", "Misssion %d\n\n%s" }; // weak
 _BYTE g_MainMenuButtonWidgetsTemplate[371]; // weak
-_UNKNOWN unk_518338; // weak
+_BYTE g_CampaignMenuButtonWidgetsTemplate[159]; // weak
 char aKarkhan[8] = "Karkhan"; // weak
 char *off_5184DC = &byte_5441A0; // weak
 _UNKNOWN unk_5184F0; // weak
@@ -61376,6 +61377,26 @@ static void MainMenu_WriteButtonWidgetTemplateRecord(
   *(_DWORD *)(record + 49) = (int)(uintptr_t)sound_name;
 }
 
+static void CampaignMenu_WriteButtonWidgetTemplateRecord(
+        unsigned char *record,
+        int left,
+        int top,
+        int sprite_index_base,
+        int sprite_index_selected_base,
+        int action_callback,
+        const char *sound_name)
+{
+  MainMenu_WriteButtonWidgetTemplateRecord(
+    record,
+    left,
+    top,
+    sprite_index_base,
+    sprite_index_selected_base,
+    action_callback,
+    sound_name);
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_419770;
+}
+
 //----- (004476D0) --------------------------------------------------------
 void MainMenu_RebuildButtonWidgetTemplate(void)
 {
@@ -61436,6 +61457,36 @@ void MainMenu_RebuildButtonWidgetTemplate(void)
     (int)(uintptr_t)&MainMenu_RequestCreditsCinematic,
     aMainMenuButtonClickSound);
   *(_DWORD *)(g_MainMenuButtonWidgetsTemplate + 53 * 6) = -1;
+}
+
+void CampaignMenu_RebuildButtonWidgetTemplate(void)
+{
+  static const char aCampaignMenuButtonClickSound[] = "menduze";
+
+  /*
+   * `unk_518338` is the original campaign choice blob: two 0x35-byte
+   * button records plus a 0x35-byte terminator slot whose first dword is
+   * `-1`. Rebuild it with live callback addresses and the slower
+   * `sub_419770` transition used by asm.
+   */
+  memset(g_CampaignMenuButtonWidgetsTemplate, 0, sizeof(g_CampaignMenuButtonWidgetsTemplate));
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_CampaignMenuButtonWidgetsTemplate + 53 * 0,
+    152,
+    279,
+    0,
+    1,
+    (int)(uintptr_t)&sub_448B90,
+    aCampaignMenuButtonClickSound);
+  CampaignMenu_WriteButtonWidgetTemplateRecord(
+    g_CampaignMenuButtonWidgetsTemplate + 53 * 1,
+    384,
+    279,
+    2,
+    3,
+    (int)(uintptr_t)&sub_448BB0,
+    aCampaignMenuButtonClickSound);
+  *(_DWORD *)(g_CampaignMenuButtonWidgetsTemplate + 53 * 2) = -1;
 }
 
 void LoadMenu_RebuildButtonWidgetTemplate(void)
@@ -61645,13 +61696,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   int v23; // ecx
   int v24; // ecx
   _DWORD *v25; // eax
-  int v26; // ecx
-  char *v27; // edi
-  char *v28; // esi
   int v29; // edx
   int v30; // ecx
   bool i; // zf
-  int v32; // ecx
+  int campaign_menu_cancelled_by_escape; // ecx
   int v33; // ecx
   int v35; // ecx
   int v36; // ecx
@@ -61829,16 +61877,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       case MAIN_MENU_REQUEST_CAMPAIGN:
         v25 = (_DWORD *)Mem_Alloc(4112, v9, a2, (DWORD)a3);
         if ( v25 )
-          v25 = DLXSpriteSet_Load(v25, a2);
+          v25 = DLXSpriteSet_Load(v25, "menu\\kamp.s32");
         g_PlayGameMenuSpriteSetHandle = (int)v25;
         a2 = (signed int)byte_543D80;
         (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aMenuMain_gfx_0);
         (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(39);
-        qmemcpy(v124, &unk_518338, 4 * v26);
-        v28 = (char *)&unk_518338 + 4 * v26;
-        v27 = &v124[4 * v26];
-        *(_WORD *)v27 = *(_WORD *)v28;
-        v27[2] = v28[2];
+        CampaignMenu_RebuildButtonWidgetTemplate();
+        qmemcpy(v124, g_CampaignMenuButtonWidgetsTemplate, sizeof(g_CampaignMenuButtonWidgetsTemplate));
         g_RenderDevice = &unk_51D4C0;
         sub_419D80(v124);
         g_PlayGameMenuExitRequested = 0;
@@ -61847,21 +61892,23 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)dword_544CD8);
+        campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
         {
           DD_Pump((int)dword_544CD8, (char)byte_543D80);
           sub_419DC0(v124, (DWORD)&unk_5196A0);
           if ( Input_IsKeyPressed(1) )
           {
+            campaign_menu_cancelled_by_escape = 1;
             g_PlayGameMenuExitRequested = 1;
             break;
           }
         }
         Render_Pump();
-        if ( !v32 )
+        if ( !campaign_menu_cancelled_by_escape )
           sub_404F20((int *)&unk_51D4C0, 20);
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
-        if ( !v9 && dword_544184 != -1 )
+        if ( !campaign_menu_cancelled_by_escape && dword_544184 != -1 )
         {
           if ( dword_544184 == 1 )
           {
@@ -62339,10 +62386,8 @@ LABEL_64:
 // 447B42: variable 'v18' is possibly undefined
 // 447BC9: variable 'v23' is possibly undefined
 // 447C24: variable 'v24' is possibly undefined
-// 447CAD: variable 'v26' is possibly undefined
 // 447CD4: variable 'v29' is possibly undefined
 // 447CD4: variable 'v30' is possibly undefined
-// 447D49: variable 'v32' is possibly undefined
 // 447DA4: variable 'v33' is possibly undefined
 // 447E58: variable 'v35' is possibly undefined
 // 447E7C: variable 'v36' is possibly undefined
@@ -62434,14 +62479,12 @@ LABEL_64:
 int  sub_448B90(int a1)
 {
   int result; // eax
-  int v3; // edx
 
   result = sub_419ED0(a1);
-  g_PlayGameMenuExitRequested = v3;
-  dword_544184 = v3;
+  g_PlayGameMenuExitRequested = 1;
+  dword_544184 = 1;
   return result;
 }
-// 448B9B: variable 'v3' is possibly undefined
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
 // 544184: using guessed type int dword_544184;
 

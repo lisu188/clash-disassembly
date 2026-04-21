@@ -213,3 +213,11 @@ This file classifies the current runtime/quarantine surface for executable regen
 - One narrow SDL seam change was needed after the recovered teardown crash was removed.
 - `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, so WSL/POSIX `SIGTERM` keeps normal process-termination semantics instead of being converted into an SDL quit event that direct `/A0` may not pump promptly.
 - This makes external timeout shutdown finite for both executable paths without adding a host-side scenario mode. It is still not a recovered `App_Shutdown` or in-game quit proof.
+
+## Latest campaign menu note
+- No new runtime wrapper, SDL shim, or host-only campaign mode was added for the campaign-menu recovery.
+- The active changes stayed in recovered C:
+  - `g_CampaignMenuButtonWidgetsTemplate` now rebuilds the original `unk_518338` widget blob as two live button records plus the terminator slot
+  - `PlayGame_Dispatch` now loads `menu\\kamp.s32` on the campaign submenu branch
+  - `sub_448B90` now latches selector `1`, matching the original callback before `Scenario_LoadMissionByIndexAndPlay(0, ...)`
+- The wrapper boundary is unchanged: current host seams can carry the existing smokes, while the next human-route work is front-end input and recovered gameplay/session fidelity.

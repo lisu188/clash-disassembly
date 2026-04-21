@@ -311,3 +311,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
   - this prevents SDL from swallowing `SIGTERM` into an event that the long-running all-AI route may not pump before timeout
 - `timeout 5s` probes for both `clash95_bootstrap /A0` and `clash95_cpp_regen /A0` now finish with status `124` and no core-dump output, without a kill-after timeout.
 - This is finite external termination, not proof that the recovered game cleanup path is complete.
+
+## Latest campaign menu update
+- The next human-route front-end blocker was reduced in recovered C, not in the C++ seam:
+  - the campaign-choice `unk_518338` widget blob is now rebuilt as live `g_CampaignMenuButtonWidgetsTemplate` records
+  - the campaign submenu loads `menu\\kamp.s32` explicitly
+  - the first selector callback now writes the asm-backed `dword_544184 = 1` latch
+- Both executable paths still build after this recovered-C update, and the existing default/direct route CTest suite remains green.
+- The next human-route milestone is to validate real menu input through Campaign into `Scenario_LoadMissionByIndexAndPlay` and then into `WorldMap_RunHumanTurnLoop`; no host-side campaign shortcut or C++ replacement entrypoint was added.

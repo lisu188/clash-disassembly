@@ -276,3 +276,6 @@
 
 ## 40. Batch 191 Note
 - `Batch 191` stayed on the executable startup/runtime frontier. The active work set SDL's no-signal-handlers hint before `SDL_Init` so `/A0` terminates under plain POSIX `SIGTERM`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 41. Batch 192 Note
+- `Batch 192` stayed on the executable front-end and human-route frontier. The active work rebuilt the campaign-choice widget blob and repaired the first campaign selector callback so the real main-menu Campaign path can reach `Scenario_LoadMissionByIndexAndPlay` with a human-controlled player. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

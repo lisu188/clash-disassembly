@@ -121,3 +121,11 @@ These are good enough for the existing `clash95_bootstrap` wedge and for the fir
 - The existing message queue can translate `SDL_QUIT` when the recovered code pumps messages, but direct `/A0` can remain in all-AI gameplay work long enough that plain `timeout` needed SIGKILL.
 - `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, keeping signal termination at the host boundary instead of depending on gameplay code to pump SDL events.
 - This is an SDL seam tightening only; it does not move gameplay semantics into the backend and does not prove recovered in-game quit cleanup.
+
+## Latest campaign-menu non-SDL evidence
+- The campaign-menu recovery required no SDL backend change.
+- The active blockers were recovered front-end data and callback issues:
+  - the `unk_518338` packed widget blob needed live low32 callback addresses
+  - `PlayGame_Dispatch` needed the original `menu\\kamp.s32` sprite filename
+  - the first campaign selector callback needed the asm-backed `1` latch
+- Future SDL work should still be gated by concrete input/event evidence; this batch keeps menu semantics in recovered C rather than moving them into `platform_sdl_runtime.c`.

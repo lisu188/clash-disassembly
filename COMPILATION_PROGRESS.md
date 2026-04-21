@@ -7216,3 +7216,29 @@
   - recovered `App_Shutdown` / `App_RequestQuit` cleanup is still not a proved finite in-game quit path for `/A0`
   - `WorldMap_RunHumanTurnLoop` still needs a route with a real human-controlled player before deeper cleanup can be validated
   - rules/class fact health remains below the current all-AI liveness milestone
+
+## Batch 192 - Campaign menu widget table recovery
+- Current frontier:
+  - move from all-AI `/A0` liveness toward the authentic human-controlled campaign path by reducing the front-end submenu that leads into `Scenario_LoadMissionByIndexAndPlay`
+- Blockers removed this batch:
+  - the weak `unk_518338` campaign-choice blob is now rebuilt as `g_CampaignMenuButtonWidgetsTemplate`: two 0x35-byte button records plus the original 0x35-byte terminator slot
+  - the campaign submenu now loads the asm-backed `menu\\kamp.s32` sprite sheet instead of forwarding an undefined decompiler argument into `DLXSpriteSet_Load`
+  - `sub_448B90` now latches `g_PlayGameMenuExitRequested = 1` and `dword_544184 = 1`, matching the original first campaign selector callback
+  - the campaign submenu loop now keeps the Esc-cancel path explicit and only dispatches a campaign mission when a selector callback has set `dword_544184`
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap /A0`
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_cpp_regen /A0`
+  - GDB table probe at `main` calling `CampaignMenu_RebuildButtonWidgetTemplate()` and dumping `g_CampaignMenuButtonWidgetsTemplate`
+- Highest authentic runtime milestone reached:
+  - unchanged for automated route smokes: default, lowercase `r`, direct `a`, and direct `/A0` CTest coverage remains green
+  - the campaign menu data path is now ready for real menu input to reach the already-recovered campaign mission loader rather than depending on the old one-byte weak data and undefined locals
+- Key evidence used:
+  - `clash95.asm:109830-109984` for the campaign branch loading `menu\\kamp.s32`, copying `0x9f` bytes from `unk_518338`, polling the submenu, and dispatching selector `0` or `10` into `sub_460370`
+  - `clash95.asm:426859-426945` for the two packed campaign records: `(152,279)` and `(384,279)`, sprite pairs `0/1` and `2/3`, transition callback `sub_419770`, action callbacks `sub_448B90` / `sub_448BB0`, `menduze`, and the third-slot `-1` terminator
+  - `clash95.asm:110960-110985` for the two selector callbacks writing `dword_544184 = 1` and `0`
+- Ambiguous candidates deferred:
+  - the campaign path still needs real input or a future non-host-probe validation milestone to prove entry into `WorldMap_RunHumanTurnLoop`
+  - deeper human-turn gameplay/session fidelity remains below this front-end table recovery
+  - `CSS_Init` and broader rules/class fact health remain separate frontiers

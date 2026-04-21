@@ -1348,6 +1348,74 @@
     ]
   },
   {
+    "name": "CampaignMenuButtonWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "g_CampaignMenuButtonWidgetsTemplate / unk_518338",
+    "description": "0x35-byte campaign-choice menu button record reused for the two campaign-side buttons shown after selecting Campaign from the main menu. Batch 192 rebuilt the weak `unk_518338` blob into two live records plus a zero-padded 0x35-byte terminator slot so `PlayGame_Dispatch` can enter `Scenario_LoadMissionByIndexAndPlay` without undefined copy counts or stale callback pointers.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The reconstructed campaign records place the first button at `152` and the second button at `384`."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "Both reconstructed campaign records use the shared y coordinate `279`."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "uint8",
+        "notes": "Both records use the same enabled/default flag lane as the other recovered menu button records."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "Points at `g_PlayGameMenuSpriteSetHandle`, matching the original `unk_518338` blob and the other menu button tables."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "The first campaign button uses sprite `0`; the second uses sprite `2`."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "The first campaign button uses selected sprite `1`; the second uses selected sprite `3`."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Both campaign records point this at `sub_419770`, the slower transition callback used by the original table."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "The first record points at `sub_448B90`, which latches campaign selector `1`; the second points at `sub_448BB0`, which latches selector `0`."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "Both records point at the `\"menduze\"` menu sound name."
+      }
+    ],
+    "evidence": [
+      "The asm blob at `unk_518338` stores exactly two 0x35-byte records followed by a terminator, with coordinates `152,279` and `384,279`, transition callback `sub_419770`, and action callbacks `sub_448B90` / `sub_448BB0`.",
+      "`PlayGame_Dispatch` copies `0x27` dwords plus one word and one byte from `unk_518338`, which is exactly 159 bytes: two 53-byte button records plus a zero-padded third 53-byte terminator slot whose first dword is `-1`.",
+      "The same campaign branch loads `menu\\kamp.s32`; after either callback sets `dword_544184`, it calls `Scenario_LoadMissionByIndexAndPlay(0, ...)` or `Scenario_LoadMissionByIndexAndPlay(10, ...)`, making this table the front-end corridor into human-controlled campaign missions.",
+      "A GDB table probe after `CampaignMenu_RebuildButtonWidgetTemplate` shows the rebuilt first record at `0x98,0x117`, the second at `0x180,0x117`, and the expected low32 callback slots."
+    ]
+  },
+  {
     "name": "RenderStateMethodTable",
     "kind": "recovered_struct",
     "base_symbol": "off_50F1E4 / off_50F204",

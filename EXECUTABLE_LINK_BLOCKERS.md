@@ -332,3 +332,14 @@ This is a staged executable-regeneration path, not a claim that the full native 
   - this is external process termination, not recovered `App_Shutdown`/`App_RequestQuit` completion
   - `WorldMap_RunHumanTurnLoop` still needs a real human-controlled route before deeper cleanup can be validated
   - rules/class fact health remains below the current all-AI liveness milestone
+
+## Latest campaign-menu blocker update
+- The front-end blocker between the main menu Campaign button and the campaign mission loader is reduced.
+- This was not a raw unresolved link symbol; it was a recovered data/control-flow fidelity issue:
+  - `unk_518338` was still represented as a one-byte weak global even though asm copies a full 159-byte table with two button records and a terminator slot
+  - the campaign submenu sprite load was still fed by an undefined decompiler argument instead of `menu\\kamp.s32`
+  - `sub_448B90` stored an undefined local where asm stores selector value `1`
+- Remaining blockers:
+  - real input validation still needs to drive the default front-end from the Campaign button into this submenu and through `Scenario_LoadMissionByIndexAndPlay`
+  - `WorldMap_RunHumanTurnLoop` cleanup still needs that human-controlled route before deeper turn-loop behavior can be trusted
+  - rules/class fact health and the skipped `CSS_Init` table remain separate executable-regeneration frontiers

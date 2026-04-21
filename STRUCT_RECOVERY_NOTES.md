@@ -110,3 +110,10 @@ These already exist in `RECOVERED_STRUCTURES.json` and remain the canonical type
 - No `RECOVERED_STRUCTURES.json` change was needed for the SDL signal-handling fix.
 - The change records host boundary behavior: SDL should not install POSIX signal handlers for the WSL target because long-running recovered gameplay routes may not pump `SDL_QUIT` events promptly.
 - No original structure, unit/stat, or gameplay field semantics are inferred from this platform hint.
+
+## Latest campaign-menu widget maintenance
+
+- `RECOVERED_STRUCTURES.json` now records `CampaignMenuButtonWidgetRecord`.
+- This is a real front-end structure update: the original `unk_518338` blob is two packed 0x35-byte campaign-choice records plus a 0x35-byte terminator slot, not a one-byte weak global.
+- The record layout reuses the recovered menu-button field order, but the campaign table uses `sub_419770` as its transition callback and `sub_448B90` / `sub_448BB0` as its two selector callbacks.
+- This update is a human-route recovery step, not a unit/stat semantic promotion: the table only lets the authentic Campaign submenu reach the already-recovered mission loader path.
