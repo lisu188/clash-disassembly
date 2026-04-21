@@ -88,6 +88,7 @@
       "`BuildingSpriteCache_Reset`, `BuildingSpriteCache_Clear`, and `BuildingSpriteCache_CountEntries` walk 650 bytes in steps of 13, proving a fixed-size 50-entry cache family.",
       "`BuildingSpriteCache_GetOrLoadEntry` compares five one-byte visual keys at offsets `0..4`, refreshes the dword timestamp at offset `+9`, and returns the cached dword handle at offset `+5` on hits.",
       "`BuildingSpriteCache_LoadEntry` evicts the oldest occupied entry when the cache is full, stores the five key bytes plus the loaded handle/timestamp, and rebuilds the sprite-set from `buildin1.s32`, `buildin2.s32`, or `buildin3.s32` depending on the active language/resource mode byte.",
+      "`byte_5438E8` now owns the 650-byte recovered C backing storage; the adjacent `byte_5438E9`..`dword_5438F1` labels are offset aliases inside that same slab, matching the original DGROUP cache layout instead of allocating separate host globals.",
       "`WorldMap_DrawUnitStackWithOverlays` uses the cache for the current building footprint tile, while `WorldMap_Initialize` and `WorldMap_UnloadResources` reset or clear the same cache family."
     ]
   },
@@ -111,7 +112,8 @@
       "UnitSlot_InitFromType writes the slot fields (type id, owner, action points, health, fatigue, morale, and control bits) at offsets relative to stackPtr + 6.",
       "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states.",
       "Path planners copy exactly `0x194` bytes into offset `+316`, while `QueuedPath_StartsAtTile`, `QueuedPath_StartsInBuildingFootprint`, and `UnitStack_ExecuteQueuedPath` treat that region as a persistent queued-path buffer.",
-      "The hide-action helper refuses stacks whose byte `+720` is already set, then sets it after spending the turn; merge/split helpers clear the same byte, and `UnitStack_RevealAndEngageHiddenEnemies` clears it on exposed enemy stacks."
+      "The hide-action helper refuses stacks whose byte `+720` is already set, then sets it after spending the turn; merge/split helpers clear the same byte, and `UnitStack_RevealAndEngageHiddenEnemies` clears it on exposed enemy stacks.",
+      "`Unit_AddToGroup` copies `source_count * 31` bytes from `source_stack + 6` into `target_stack + 6 + target_count * 31`, and `Unit_Kill` clears slot type words with the same `31`-byte stride, corroborating the ten embedded `UnitSlotRecord` layout during the direct `/A0` scenario route."
     ]
   },
   {
@@ -268,28 +270,32 @@
       "Castle creation, castle capture, and the player tech-notification path converge on offsets `+47` and `+48`: new strongholds inherit the player's low-three-bit tech tier from `+47`, while `Player_ShowTechLevelAdvanceNotification` compares `+47` against `+48` before showing the advancement message and then copies the current tier into the reported slot.",
       "Battle movement, melee attack, and wall-attack helpers all set the dword at offset `+49`, and the tactical turn loop resets or increments the paired dword at `+53` before calling `GodAnger`, proving this pair tracks per-player battle activity versus consecutive idle rounds.",
       "`Map_IsTileVisibleToPlayer`, the reveal-stamping helpers, and the fog overlay classifier all index `13 * row + ((column) >> 3)` into offset `+57`, which fills the full 1300-byte gap up to the prisoner queue and establishes this range as the per-player revealed-tile bitset.",
-      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields."
+      "`Game_AdvanceToNextPlayerTurn` and map-load helpers store and restore the per-player camera through offsets `+15` and `+19`, while the queen proposal/message/whim UI and `Queen_NewTurn` use the final bytes at `+1419..+1421` as stable per-player queen relationship, portrait, and review fields.",
+      "`Scenario_LoadAllAiMultiplayerMapAndInitView` seeds the direct `/A0` runtime block with all five `is_active` dwords set and all five `controller_mode` dwords clear; breakpoint sampling confirms the route enters turn advance with `active=1,1,1,1,1` and `human=0,0,0,0,0`."
     ]
   },
   {
     "name": "WorldViewState",
     "kind": "shared_state_region",
     "base_offset": 140000,
-    "description": "Shared gameData region that stores world dimensions, the active scripted mission id, the current camera origin, and which player owns the active turn versus the current human view.",
+    "description": "Shared gameData region that stores world dimensions, the world-map theme selector, the active scripted mission id, the current camera origin, and which player owns the active turn versus the current human view.",
     "fields": [
       { "offset": 140000, "name": "map_width_tiles", "type": "int32", "notes": "Horizontal tile count derived at map load and used to clamp camera movement." },
       { "offset": 140004, "name": "map_height_tiles", "type": "int32", "notes": "Vertical tile count derived at map load and used to clamp camera movement." },
       { "offset": 140008, "name": "map_view_left", "type": "int32", "notes": "Current leftmost visible tile in the main-map camera." },
       { "offset": 140012, "name": "map_view_top", "type": "int32", "notes": "Current topmost visible tile in the main-map camera." },
+      { "offset": 140016, "name": "map_theme_index", "type": "uint8", "notes": "Three-way world-map theme selector used for background/tree sprites, main-map music, tile-art branches, and minimap terrain-color table choice. Value labels remain intentionally generic." },
       { "offset": 140017, "name": "active_mission_index", "type": "int32", "notes": "`-1` for free/skirmish maps; otherwise indexes the scripted mission dispatcher, mission-status text table, and mission-specific victory/failure checks." },
       { "offset": 147139, "name": "turn_owner_player_index", "type": "int32", "notes": "Player id whose strategic turn is currently active; save/load restores g_CurrentPlayerIndex from this slot." },
       { "offset": 147143, "name": "viewed_player_index", "type": "int32", "notes": "Player id whose saved camera position and visibility should drive the current UI view; usually the current human player." }
     ],
     "evidence": [
       "Map load computes offsets 140000 and 140004 by scanning the 14-byte tile grid until it reaches sentinel 0xFFFF rows and columns.",
+      "`PlayGame` reads offset 140016 to choose `backgr1/2/3.s32`, `treemas1/2/3.s32`, and the `sub_441720` main-map sound lane; `sub_40CE70` and the minimap terrain-color table family select their fill table from the same byte.",
       "`UI_ShowMissionStatusPanel`, the post-victory mission-advance path, and the mission jump table rooted at `Scenario_LoadMissionByIndex` all treat offset `140017` as the active mission id.",
       "Render_RestoreLostSurfaces, keyboard scrolling, and recentering clamp offsets 140008 and 140012 against the width and height fields, proving they are the camera origin.",
-      "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX)."
+      "Game_AdvanceToNextPlayerTurn persists PLAYER_CAMERA_LEFT/TOP for g_CurrentPlayerIndex, writes TURN_OWNER_PLAYER_INDEX when the acting player changes, and restores MAP_VIEW_LEFT/TOP from PLAYER_CAMERA_LEFT/TOP(VIEWED_PLAYER_INDEX).",
+      "Direct `/A0` all-AI sampling shows `Game_AdvanceToNextPlayerTurn` cycling `g_CurrentPlayerIndex` through active players while `viewed_player_index` remains the default view fallback because no seeded player has a human-controller flag."
     ]
   },
   {
@@ -758,7 +764,7 @@
       { "offset": 20, "name": "draw_layer_mask", "type": "uint32", "notes": "Actual symbol `dword_511FF0`. Bitmask controlling whether terrain, units, and buildings contribute to the minimap cell color." }
     ],
     "evidence": [
-      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, and seeds the terrain-color lookup state.",
+      "`MiniMap_CreateSurface` computes `pixels_per_tile`, derives the minimap screen rect from world dimensions, allocates the backing surface, draws sprite char `4` as the minimap frame, and seeds the terrain-color lookup state.",
       "`MiniMap_DrawTileCell` consults the draw-layer mask, terrain-color lookup, unit occupancy, building occupancy, and fog-of-war to paint a single minimap cell.",
       "`MiniMap_BlitDirtyRectAndDrawViewportBox`, `MiniMap_RedrawTileRect`, `MiniMap_RedrawAllTiles`, `MiniMap_UpdateViewportFromCursor`, and `MiniMap_IsCursorInside` all use the same rect/surface/scale globals, proving one coherent minimap state block."
     ]
@@ -1175,6 +1181,106 @@
     ]
   },
   {
+    "name": "WorldMapActionWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "dword_511D40",
+    "stride": 53,
+    "count": 6,
+    "description": "0x35-byte world-map action-button widget record table rooted at `dword_511D40`. Batch 181 confirmed that the nearby weak labels are offsets inside one packed six-record table plus a `-1` terminator rather than independent globals.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The two-column world-map action panel uses x coordinates `416`, `480`, and `544`."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "The two rows use y coordinates `400` and `432`."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "int32",
+        "notes": "`dword_511D48` aliases this field for the first record, and `dword_511DE7` aliases this field for the join-units record at table offset `3 * 0x35 + 8`."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "All six records point at `dword_52030C`, the holder for the loaded `map_butt.s32` sprite set."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "Sprite ids are the even entries `0`, `2`, `4`, `6`, `8`, and `10`."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "Sprite ids are the adjacent selected entries `1`, `3`, `5`, `7`, `9`, and `11`."
+      },
+      {
+        "offset": 24,
+        "name": "overlay_sprite_index",
+        "type": "int32",
+        "notes": "The original table stores `14` here for this button family."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "All six records use the `sub_4191F0` draw/transition callback."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Callbacks are map mode, next unit, next building, join units, building, and ambush. The building callback is currently quarantined in the live executable until the `sub_40A0E0` link surface is recovered."
+      },
+      {
+        "offset": 36,
+        "name": "localized_label_pl_low32",
+        "type": "low32_pointer<char>",
+        "notes": "Polish tooltip label pointer."
+      },
+      {
+        "offset": 40,
+        "name": "localized_label_en_low32",
+        "type": "low32_pointer<char>",
+        "notes": "English tooltip label pointer."
+      },
+      {
+        "offset": 44,
+        "name": "localized_label_de_low32",
+        "type": "low32_pointer<char>",
+        "notes": "German tooltip label pointer."
+      },
+      {
+        "offset": 48,
+        "name": "label_or_sound_flag",
+        "type": "uint8",
+        "notes": "Set to `1` on all recovered records, matching the broader menu-widget family."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "All six records point at the action sound name `male`."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` stores six consecutive records at `dword_511D40`, `dword_511D40 + 0x35`, ..., `dword_511D40 + 5 * 0x35`, followed by a terminator record whose first dword is `-1`.",
+      "The first row coordinates are `(416,400)`, `(480,400)`, `(544,400)` and the second row coordinates are `(416,432)`, `(480,432)`, `(544,432)`, matching the live world-map action-button panel.",
+      "`sub_40A400` loads `map_butt.s32` into `dword_52030C`, and all records dereference that holder through offset `+12` before drawing through `sub_4191F0`.",
+      "The historical labels `dword_511D48`, `unk_511DDF`, and `dword_511DE7` correspond to field offsets inside the same table rather than standalone state."
+    ]
+  },
+  {
     "name": "LoadMenuButtonWidgetRecord",
     "kind": "recovered_struct",
     "base_symbol": "g_LoadMenuButtonWidgetsTemplate / unk_518808",
@@ -1239,6 +1345,74 @@
       "The asm blob at `unk_518808` stores exactly two 0x35-byte records followed by a terminator, with coordinates `249,392` and `329,408`, transition callback `sub_419780`, and action callbacks `sub_44A110` / `sub_448E80`.",
       "Batch 142 rebuilt that blob into `g_LoadMenuButtonWidgetsTemplate`, and the contained load-menu probe now auto-clicks widget `1` at `x = 347`, `y = 425`, reaching hover and click before exiting through the load-menu `back` callback.",
       "The reused field layout matches the already recovered `RecoveredMenuButtonWidgetRecord` structure, confirming the load-menu button blob is another instance of the same 0x35-byte widget format."
+    ]
+  },
+  {
+    "name": "CampaignMenuButtonWidgetRecord",
+    "kind": "recovered_struct",
+    "base_symbol": "g_CampaignMenuButtonWidgetsTemplate / unk_518338",
+    "description": "0x35-byte campaign-choice menu button record reused for the two campaign-side buttons shown after selecting Campaign from the main menu. Batch 192 rebuilt the weak `unk_518338` blob into two live records plus a zero-padded 0x35-byte terminator slot so `PlayGame_Dispatch` can enter `Scenario_LoadMissionByIndexAndPlay` without undefined copy counts or stale callback pointers.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left_x",
+        "type": "int32",
+        "notes": "The reconstructed campaign records place the first button at `152` and the second button at `384`."
+      },
+      {
+        "offset": 4,
+        "name": "top_y",
+        "type": "int32",
+        "notes": "Both reconstructed campaign records use the shared y coordinate `279`."
+      },
+      {
+        "offset": 8,
+        "name": "widget_flags",
+        "type": "uint8",
+        "notes": "Both records use the same enabled/default flag lane as the other recovered menu button records."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_handle_holder_low32",
+        "type": "low32_pointer<int>",
+        "notes": "Points at `g_PlayGameMenuSpriteSetHandle`, matching the original `unk_518338` blob and the other menu button tables."
+      },
+      {
+        "offset": 16,
+        "name": "default_sprite_index",
+        "type": "int32",
+        "notes": "The first campaign button uses sprite `0`; the second uses sprite `2`."
+      },
+      {
+        "offset": 20,
+        "name": "alternate_sprite_index",
+        "type": "int32",
+        "notes": "The first campaign button uses selected sprite `1`; the second uses selected sprite `3`."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "Both campaign records point this at `sub_419770`, the slower transition callback used by the original table."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback_low32",
+        "type": "low32_pointer<function>",
+        "notes": "The first record points at `sub_448B90`, which latches campaign selector `1`; the second points at `sub_448BB0`, which latches selector `0`."
+      },
+      {
+        "offset": 49,
+        "name": "ui_sound_name_low32",
+        "type": "low32_pointer<char>",
+        "notes": "Both records point at the `\"menduze\"` menu sound name."
+      }
+    ],
+    "evidence": [
+      "The asm blob at `unk_518338` stores exactly two 0x35-byte records followed by a terminator, with coordinates `152,279` and `384,279`, transition callback `sub_419770`, and action callbacks `sub_448B90` / `sub_448BB0`.",
+      "`PlayGame_Dispatch` copies `0x27` dwords plus one word and one byte from `unk_518338`, which is exactly 159 bytes: two 53-byte button records plus a zero-padded third 53-byte terminator slot whose first dword is `-1`.",
+      "The same campaign branch loads `menu\\kamp.s32`; after either callback sets `dword_544184`, it calls `Scenario_LoadMissionByIndexAndPlay(0, ...)` or `Scenario_LoadMissionByIndexAndPlay(10, ...)`, making this table the front-end corridor into human-controlled campaign missions.",
+      "A GDB table probe after `CampaignMenu_RebuildButtonWidgetTemplate` shows the rebuilt first record at `0x98,0x117`, the second at `0x180,0x117`, and the expected low32 callback slots."
     ]
   },
   {
@@ -1326,6 +1500,127 @@
       "`sub_40BC00`, `sub_40BC90`, and `sub_40BD40` all read `+4`, `+8`, and `+10` from `dword_520724`, proving the table entry is a contiguous record rather than unrelated globals.",
       "The original binary contains `23` live records followed by a null sentinel; `Singer` corroborated the exact count and the `lazur1` / `lazur2` zero-glyph-spacing entries directly from the exe and map.",
       "Batch 143 hit the remaining row-text crash inside that table corridor while lifting the contained load-menu slot strip, and Batch 144 reified that recovered layout into the live explicit table so the active C path no longer depends on 32-bit global adjacency."
+    ]
+  },
+  {
+    "name": "MiniMapTerrainColorTableFamily",
+    "kind": "recovered_struct",
+    "base_symbol": "byte_523350 / unk_523750 / unk_523B50",
+    "description": "Three 0x400-byte minimap terrain-color lookup tables selected by `sub_40CE70` according to the map palette/theme byte at `gameData + 140016`. Batch 182 confirmed these are full byte tables rather than one-byte weak globals by reconstructing the asm fill ranges and by observing the live `/A0` overflow when the C storage was undersized.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "default_palette_table",
+        "type": "uint8[0x400]",
+        "notes": "`byte_523350`; selected when the map palette mode is zero and used by `Map_GetTileSurfaceClassOrUnexplored` as the default terrain-color table."
+      },
+      {
+        "offset": 1024,
+        "name": "alternate_palette_table_1",
+        "type": "uint8[0x400]",
+        "notes": "`unk_523750`; selected by `sub_40CE70` for palette mode `1`."
+      },
+      {
+        "offset": 2048,
+        "name": "alternate_palette_table_2",
+        "type": "uint8[0x400]",
+        "notes": "`unk_523B50`; selected by `sub_40CE70` for palette mode `2`."
+      },
+      {
+        "offset": 3072,
+        "name": "active_table_low32",
+        "type": "low32_pointer<uint8[0x400]>",
+        "notes": "`g_MiniMapTerrainColorTable` / `dword_523F50`; `MiniMap_DrawTileCell` indexes this table by the terrain id when the base minimap layer is enabled."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` `sub_40CE70` writes `dword_523F50` to one of the three table bases, then fills byte ranges such as `+0x000`, `+0x02D`, `+0x0DE`, `+0x2B4`, and `+0x303` in each table.",
+      "The highest written range starts at `+0x303`, proving each table needs storage beyond a single weak byte and making 0x400 a conservative table size for the recovered C baseline.",
+      "The previous one-byte C declarations let `sub_40CE70` overwrite adjacent globals, producing a live `/A0` crash when `g_TerrainMoveProfileOffsets` contained minimap fill bytes such as `0x80808080`.",
+      "`MiniMap_DrawTileCell` and `Map_GetTileSurfaceClassOrUnexplored` both read terrain ids through the selected color table, proving the tables are part of minimap/world-surface display state rather than transient scratch."
+    ]
+  },
+  {
+    "name": "CompatLow32ArenaBlock",
+    "kind": "runtime_allocator_record",
+    "base_symbol": "CompatLow32AllocHeader / CompatLow32Arena",
+    "description": "Host compatibility allocation record used by the low32 arena for small nmalloc_ / PlatformAllocLow32 requests. This is runtime containment for preserved 32-bit pointer storage in the recovered C path, not original gameplay data.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "mapped_size",
+        "type": "size_t",
+        "notes": "For direct low32 mappings this records the full mmap span. Arena sub-blocks set this to zero because the owning CompatLow32Arena tracks the 16 MB mapping."
+      },
+      {
+        "offset": 8,
+        "name": "used_mmap",
+        "type": "int",
+        "notes": "1 marks a direct low32 mmap allocation and 2 marks a low32 arena sub-block. Arena sub-blocks are intentionally retained until process exit."
+      },
+      {
+        "offset": 16,
+        "name": "payload",
+        "type": "byte[]",
+        "notes": "Low32 pointer returned to recovered code after CompatLow32AllocHeader; small requests are aligned before the next arena allocation is served."
+      }
+    ],
+    "evidence": [
+      "Direct /A0 reached DLXSpriteSet_Load -> Mem_Alloc after the new-turn repairs and exited through App_RequestQuit with Not enough memory=%d, showing allocator pressure rather than a recovered gameplay semantic failure.",
+      "CompatAllocLow32 now serves small allocations from 16 MB low32 arenas before falling back to the older per-allocation low32 mapping path and then normal malloc.",
+      "CompatFreeLow32 deliberately no-ops arena sub-blocks because the arena is process-lifetime runtime containment, while direct low32 mmap and malloc-backed blocks retain their existing free behavior.",
+      "This entry documents host runtime shape only; no original Clash data structure or unit/stat layout is inferred from it."
+    ]
+  },
+  {
+    "name": "RenderDirectDrawCompanionSurface",
+    "kind": "render_surface_record",
+    "base_symbol": "sub_4732A0 / sub_473320 0xB0-byte companion",
+    "description": "Recovered DirectDraw companion object allocated by `sub_4041D0` for render-surface wrappers when the primary render context at `unk_51D4C0 + 0xC4` is available. The record embeds the compact render handle state plus a `DDSURFACEDESC`-style descriptor at offset `0x38` and stores the created SDL DirectDraw surface handle at `0xA4`.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "width",
+        "type": "int32",
+        "notes": "Copied from the caller's original width register after the DirectDraw surface is created successfully."
+      },
+      {
+        "offset": 4,
+        "name": "height",
+        "type": "int32",
+        "notes": "Copied from the caller's original height register after the DirectDraw surface is created successfully."
+      },
+      {
+        "offset": 56,
+        "name": "surface_desc",
+        "type": "byte[108]",
+        "notes": "Descriptor block cleared before creation; fields `+0x00`, `+0x04`, `+0x08`, `+0x0C`, and `+0x68` are set to size `108`, flags `7`, height, width, and caps `0x40`."
+      },
+      {
+        "offset": 164,
+        "name": "direct_draw_surface_handle",
+        "type": "low32_pointer<CompatDirectDrawSurface>",
+        "notes": "Out parameter for `IDirectDraw::CreateSurface`, now routed through `Compat_DirectDraw_CreateSurface` on the SDL host seam."
+      },
+      {
+        "offset": 168,
+        "name": "render_context",
+        "type": "low32_pointer<RenderDirectDrawContext>",
+        "notes": "Back-pointer to the render context holder passed from `dword_51D584`."
+      },
+      {
+        "offset": 172,
+        "name": "compact_vtable",
+        "type": "low32_pointer<off_5108E0>",
+        "notes": "Compact render-handle operation table installed by `sub_4732A0` and restored by `sub_4732E0`."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` `sub_473320` clears 0x6C bytes at `a1 + 0x38`, writes descriptor fields, calls the DirectDraw vtable slot `+0x18` with out pointer `a1 + 0xA4`, and installs post-success fields only after that call returns zero.",
+      "`clash95.asm` `sub_4041D0` passes the render context from `dword_51D584`, the original height in `ecx`, and the original width in `ebx` into `sub_4732A0`.",
+      "The current SDL compatibility layer already exposes `Compat_DirectDraw_CreateSurface`, which preserves the recovered low32 handle contract while avoiding raw native pointer-width vtable reads in the reconstructed C path.",
+      "When `Render_BeginModeSwitch` clears `unk_51D4C0 + 0xC4`, the recovered wrapper can validly continue as a software-only surface with no companion handle; no unit/stat semantics are inferred from this render record.",
+      "SIGTERM teardown can reach `Render_FillRect` after the primary companion and compact handle are both gone; the temporary primary fallback has no recoverable copy target in that state and is treated as a no-op."
     ]
   }
 ]

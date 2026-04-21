@@ -1,5 +1,76 @@
 # Verification
 
+## 2026-04-16 Default Full-Route Menu Liveness Slice
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - passed
+  - `clash95_full_route_smoke` observes the default no-arg bootstrap alive in the recovered main-menu loop
+  - `clash95_r_command_shutdown_smoke` still covers the finite lowercase `r` startup/shutdown route
+- `ctest --test-dir build --output-on-failure --repeat until-fail:3`
+  - passed
+  - repeated both smoke tests three times after the AVI constructor byte-offset fix
+- Runtime note:
+  - the previous no-arg `Clash CD not found!` blocker is removed for the local loose-AVI install path
+  - the reached `CAviDecompressor` constructors no longer use pointer-scaled event-handle initialization on the 64-bit host
+  - the no-arg route is a liveness milestone, while lowercase `r` remains the clean finite shutdown milestone
+
+## 2026-04-16 Lowercase r Finite Shutdown Slice
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_bootstrap`
+  - passed
+- `tests/verify_r_command_shutdown.sh build/bin/clash95_cpp_regen`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - failed because the older no-arg `clash95_full_route_smoke` exits early; the new `clash95_r_command_shutdown_smoke` passes
+- Direct default route check:
+  - `timeout 5s env SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy build/bin/clash95_bootstrap`
+  - exit `1`
+  - prints `[platform_sdl] Clash: Clash CD not found!`
+- Traced default-route exit:
+  - `App_RequestQuit -> Win_BeginModeChange -> Video_Avi_playIn -> UI_StartAnims -> PlayGame_Dispatch -> Bootstrap_RunRecoveredGameEntry -> App_WinMain -> main`
+- `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - passed
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - passed
+- `python3 -m json.tool .agent/state.json`
+  - passed
+- `git diff --check`
+  - passed
+- `ps -C clash95_bootstrap -C clash95_cpp_regen -o pid,cmd`
+  - no lingering executable processes
+- Runtime note:
+  - the first finite authentic startup/shutdown milestone is now lowercase `r`, not the no-arg route
+  - the default no-arg route currently needs intro AVI/CD/resource recovery before the old liveness smoke can be made green again
+
+## 2026-04-16 Full-Route Startup Slice
+- `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`
+  - passed
+- `ctest --test-dir build --output-on-failure`
+  - passed at this point after replacing the superseded menu-capture probe with `clash95_full_route_smoke`; superseded by the later lowercase `r` update above, where the no-arg route exits early through the intro AVI/CD check
+- `timeout -k 1s 2s build/bin/clash95_bootstrap`
+  - forced-timeout live-loop smoke; no lingering process after cleanup
+- `timeout -k 1s 2s build/bin/clash95_cpp_regen`
+  - forced-timeout live-loop smoke; no lingering process after cleanup
+- `python3 -m json.tool RECOVERED_STRUCTURES.json`
+  - passed
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`
+  - passed
+- `git diff --check`
+  - passed
+- Runtime note:
+  - the executables now enter the recovered `App_WinMain` route by default and remain live until externally killed
+  - `clash95_full_route_smoke` is the current CTest coverage for that milestone; it does not recover an authentic finite quit path
+  - `createLogFiles` now creates/truncates `clash.log` and `battle.log`; remove generated `clash.log` after smoke runs before committing
+  - old host-side `--authentic-*` probe switches and menu-probe env controls are no longer current verification commands
+
+## Historical Entries
+
 - `cmake -S . -B build`
   - passed
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j`
@@ -10,12 +81,15 @@
   - exit `124`
 - `timeout 1s build/bin/clash95_cpp_regen`
   - exit `124`
-- `bash -lc 'c++ -no-pie -Wl,--gc-sections -Wl,--undefined=PlayGame_Dispatch -o /tmp/clash95_playgame_dispatch_probe build/CMakeFiles/clash95_bootstrap.dir/bootstrap_main.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a $(pkg-config --libs sdl2) -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -o /tmp/clash95_playgame_dispatch_probe -Wl,--undefined=PlayGame_Dispatch build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_cpp_regen.dir/src_cpp/startup/cpp_regen_link_anchor.cpp.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a -lSDL2 -lm && timeout 1s /tmp/clash95_playgame_dispatch_probe'`
+  - links successfully
+  - exit `124`
+- `bash -lc 'c++ -no-pie -Wl,--gc-sections -o /tmp/clash95_playgame_probe -Wl,--undefined=PlayGame build/CMakeFiles/clash95_cpp_regen.dir/bootstrap_main.c.o build/CMakeFiles/clash95_cpp_regen.dir/src_cpp/startup/cpp_regen_link_anchor.cpp.o build/CMakeFiles/clash95_bootstrap_objects.dir/clash95.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/platform_sdl_runtime.c.o build/CMakeFiles/clash95_bootstrap_objects.dir/compat/decomp_runtime_stubs.c.o build/lib/libclash95_cpp_core.a -lSDL2 -lm && timeout 1s /tmp/clash95_playgame_probe'`
   - links successfully
   - exit `124`
 - Retained mission-loader status:
   - `Scenario_LoadMissionByIndex` now carries all 20 switch arms, cases `0` through `19`, in recovered C
-  - the next retained frontier is the gameplay/session surface after `Scenario_LoadMissionByIndexAndPlay` / `PlayGame`
+  - the next retained frontier is the deeper `WorldMap_RunHumanTurnLoop` surface after the repaired `Scenario_LoadMissionByIndexAndPlay` / `PlayGame` handoff, beginning from the remaining lost-register/usercall scars inside that loop
 - `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s build/bin/clash95_bootstrap --authentic-menu-probe`
   - exit `124`
   - logs `class-lookup-no-table name=oddzial`
@@ -30,6 +104,128 @@
   - passed
 - `git diff --check`
   - passed
+
+## Latest Update
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- Retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening starts after the repaired zero-init entry, `arama1` / `kon_por1` mission-success tail, zero-arg loop-entry helper lane, held-key `DD_Pump` loops, queued-path AP compare, and saved render-hook/resource-handle debug block
+
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol PlayGame`
+  - exit `124`
+- `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- Retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` helper bands, with first focus on `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`
+
+- `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - passed
+- `cmake --build /tmp/clash95-cmake-build --target clash95_recovered clash95_bootstrap clash95_cpp_regen`
+  - passed
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen`
+  - exit `124`
+- Latest retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired `WorldMap_HandleTileHoverAndClick` wrapper lane, lost-surface stack-selection tail, own-stack resource-reload lane, and zero-arg execute tails; the next local focus is the deeper enemy-building / enemy-stack attack band inside `sub_4084A0`
+- `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - passed
+- `git diff --check`
+  - passed
+- `cmake --build /tmp/clash95-cmake-build --target clash95_recovered clash95_bootstrap clash95_cpp_regen`
+  - passed
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- Latest retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired `WorldMap_HandleTileHoverAndClick` hovered stack-id reads in the own-stack merge/add-to-group and visible enemy-stack attack lanes; the next local focus is the deeper enemy-building `Unit_AttackBuilding` call-shape plus own-stack reselection clear-mask lane inside `sub_4084A0`
+- `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - passed
+- `git diff --check`
+  - passed
+- `cmake --build /tmp/clash95-cmake-build --target clash95_recovered clash95_bootstrap clash95_cpp_regen`
+  - passed
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- Latest retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired `WorldMap_HandleTileHoverAndClick` clear-mask helper semantics and reselection tail; the next local focus is the deeper enemy-building `Unit_AttackBuilding` / building-interaction band inside `sub_4084A0`
+- `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - passed
+- `git diff --check`
+  - passed
+- `cmake --build /tmp/clash95-cmake-build --target clash95_recovered clash95_bootstrap clash95_cpp_regen`
+  - passed
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- Latest retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired shared hovered-building-id reads in the building-interaction band of `WorldMap_HandleTileHoverAndClick`; the next local focus is the deeper enemy-building `Unit_AttackBuilding` call-shape plus own-building approach-path lane inside `sub_4084A0`
+- `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - passed
+- `git diff --check`
+  - passed
+- `cmake --build /tmp/clash95-cmake-build --target clash95_recovered clash95_bootstrap clash95_cpp_regen`
+  - passed
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_bootstrap`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen`
+  - exit `124`
+- `timeout 1s /tmp/clash95-cmake-build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop`
+  - exit `124`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `class-lookup-no-table name=oddzial`
+  - `timeout` also prints `the monitored command dumped core`
+- `env CLASH95_TRACE_MENU_PROBE=1 CLASH95_MENU_PROBE_AUTO_CLICK=load CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm CLASH95_LOAD_MENU_PROBE_DRAW_ROWS=1 CLASH95_LOAD_MENU_PROBE_AUTO_SLOT=0 CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1 CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0 timeout 2s /tmp/clash95-cmake-build/bin/clash95_bootstrap --authentic-menu-probe`
+  - exit `124`
+  - logs `symbol-lookup-missing-table MAIN`
+  - `timeout` also prints `the monitored command dumped core`
+- Latest retained frontier note:
+  - the next retained `WorldMap_RunHumanTurnLoop` widening now starts after the repaired building selected-stack-forwarding prelude in `WorldMap_HandleTileHoverAndClick`; the next local focus is the deeper mid-body `Unit_AttackBuilding` garrison/combat-resolution lane inside `sub_4084A0`
 
 ## Menu/loading screenshot capture smoke
 - `cmake -S . -B build`

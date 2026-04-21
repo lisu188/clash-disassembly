@@ -112,18 +112,49 @@ set_target_properties(clash95_cpp_regen PROPERTIES
 )
 
 add_test(
-  NAME clash95_bootstrap_full_game_smoke
+  NAME clash95_full_route_smoke
   COMMAND bash
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_full_game_smoke.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_full_route_smoke.sh
     $<TARGET_FILE:clash95_bootstrap>
 )
+set_tests_properties(clash95_full_route_smoke PROPERTIES TIMEOUT 10)
+
 add_test(
-  NAME clash95_cpp_regen_full_game_smoke
+  NAME clash95_r_command_shutdown_smoke
   COMMAND bash
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_full_game_smoke.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_r_command_shutdown.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_r_command_shutdown_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_direct_a_route_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a_route_smoke.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_direct_a_route_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_cpp_regen_direct_a_route_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a_route_smoke.sh
     $<TARGET_FILE:clash95_cpp_regen>
 )
-set_tests_properties(
-  clash95_bootstrap_full_game_smoke
-  clash95_cpp_regen_full_game_smoke
-  PROPERTIES TIMEOUT 10)
+set_tests_properties(clash95_cpp_regen_direct_a_route_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_direct_a0_route_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a0_route_smoke.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_direct_a0_route_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_cpp_regen_direct_a0_route_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a0_route_smoke.sh
+    $<TARGET_FILE:clash95_cpp_regen>
+)
+set_tests_properties(clash95_cpp_regen_direct_a0_route_smoke PROPERTIES TIMEOUT 10)

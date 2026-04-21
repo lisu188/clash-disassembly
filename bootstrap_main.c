@@ -127,7 +127,7 @@ signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
 signed int sub_444490(int a1, DWORD a2, double a3);
 signed int sub_44C400(DWORD a1, double a2);
-signed int sub_44C410(int a1);
+signed int Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
 int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4);
 int App_Shutdown(void);
@@ -351,6 +351,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   }
 
   CSS_SetDeviceSearch(device_search_mode);
+  logEnabled = 1;
   if ( !dword_54DBA8 )
     sub_4725B0(0, 0);
   sub_472860(-1, 0, 0);
@@ -359,6 +360,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
    * that table is not recovered safely enough for x86-64 execution yet.
    */
   dword_543CA0 = 1;
+  createLogFiles(0, 0, 0);
   sub_451E46();
   sub_472860(-1, 0, 0);
   nullsub_4();
@@ -1234,9 +1236,11 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
 {
   if ( command_mode == 'a' )
   {
-    WorldMap_Initialize(command_mode, 0);
+    const char direct_game_resource_context = 16;
+
+    WorldMap_Initialize(direct_game_resource_context, 0);
     sub_44C400(0, 0.0);
-    PlayGame(0, command_mode, 0, 0, 0.0);
+    PlayGame(0, direct_game_resource_context, 0, 0, 0.0);
   }
   else
   {
@@ -1252,9 +1256,9 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
 
     if ( dword_51D01C )
     {
-      Video_Avi_playIn("logo", 0, 0, 1, 1, 1);
+      Video_Avi_playIn("logo", 0, 1, 0, 1, 1);
       WorldMap_Initialize(0, 0);
-      sub_44C410(Bootstrap_ParseIntroMissionIndex(lpCommandLine));
+      Scenario_LoadAllAiMultiplayerMapAndInitView(Bootstrap_ParseIntroMissionIndex(lpCommandLine));
       dword_5188B0 = 0;
       PlayGame(0, 0, 0, 0, 0.0);
     }
@@ -1275,7 +1279,8 @@ static int App_WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCom
   if ( !Bootstrap_RunRecoveredEarlyStartupPrelude(hInstance, lpCommandLine, &command_mode) )
     return 0;
   Bootstrap_RunRecoveredRuntimeAndRenderInit(command_mode, lpCommandLine);
-  Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
+  if ( command_mode != 'r' )
+    Bootstrap_RunRecoveredGameEntry(command_mode, lpCommandLine);
 
   /*
    * The original boot slice invokes an object cleanup callback hanging off

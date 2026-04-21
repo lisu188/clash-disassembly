@@ -234,3 +234,57 @@
 
 ## 26. Batch 164 Note
 - `Batch 164` replaced the remaining confirmed gameplay/unit-slot raw unit-id literals with `UNIT_TYPE_*` names in `UI_DrawUnitInfoPane`, `UnitBattle_PlayShotAnimation`, `UnitBattle_ShotWall`, `Building_CalcRemainingConstructionTurns`, `Trap_New`, `UnitBattle_HandleBattlefieldInteraction`, `Building_UnitGetInto`, and the case-8 mission garrison scan, covering the `UNIT_TYPE_FORESTER`, `UNIT_TYPE_GORAL`, `UNIT_TYPE_BUILDER`, `UNIT_TYPE_RAM`, `UNIT_TYPE_CATAPULT`, `UNIT_TYPE_CANNON`, `UNIT_TYPE_DRAGON`, `UNIT_TYPE_WINGER`, `UNIT_TYPE_WIZARD`, `UNIT_TYPE_GOLD_CARGO`, `UNIT_TYPE_PEASANT_CARGO`, and `UNIT_TYPE_SPECIAL_FOOT_PERSONAGE` lanes. This wave still did not promote any new unit-type or stat semantics; the roster names and confidence levels remain unchanged, the remaining mixed-domain raw ids stay deferred where the field is not yet securely a `unit_type`, the `Unit_Create()` declaration intentionally stays loose, the `0xFFFFFFFF` sentinel lane remains a non-enum special case, and the `dword_515D10` / `dword_515D24` / `dword_515D40` symbol semantics remain under-evidenced.
+
+## 27. Batch 175 Note
+- `Batch 175` stayed on the executable startup/runtime frontier. The active work restored the retained `createLogFiles` side effect on the full bootstrap route, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 28. Batch 179 Note
+- `Batch 179` stayed on the executable startup/runtime frontier. The active work moved the direct `a` game route past the resource-context, building-sprite-cache, and frame-rendering crashes into the visible-tile renderer, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 29. Batch 180 Note
+- `Batch 180` stayed on the executable startup/runtime frontier. The active work moved the direct `a` game route from a `sub_416850` visible-tile-rendering crash to a CTest-covered liveness milestone, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 30. Batch 181 Note
+- `Batch 181` stayed on the executable startup/runtime frontier. The active work repaired reached world-map action-widget, redraw-loop, fade-loop, diagnostic-loop, and turn-advance decompiler scars, but it did not promote any new unit-type or stat semantics; the unit/stat artifacts remain unchanged apart from this maintenance note.
+
+## 31. Batch 182 Note
+- `Batch 182` stayed on the executable startup/runtime frontier. The active work moved the direct `/A0` scenario-start route through map loading, player-state seeding, first unit creation, minimap creation, and vision propagation under a headless timeout smoke, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 32. Batch 183 Note
+- `Batch 183` stayed on the executable startup/runtime frontier. The active work repaired reached army-fact, unit-stack merge, fact-retract, and unit-stack delete decompiler scars on the direct `/A0` route, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 33. Batch 184 Note
+- `Batch 184` stayed on the executable startup/runtime validation frontier. The active work added CTest liveness coverage for the direct `/A0` route on both executable paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 34. Batch 185 Note
+- `Batch 185` stayed on the executable startup/runtime frontier. The active work repaired the reached direct `/A0` new-turn corridor across parser/fact queue coalescing, building population/plague/technology updates, garrison morale delta handling, prisoner castle placement, unit fatigue/morale predicates, queen birth/marriage/departure timing, and low32 allocator pressure. This did not promote any new unit-type or stat semantics; the only unit-facing semantic guard added in this wave is the explicit `UNIT_TYPE_COUNT` bound and invalid trailing-slot sentinel handling, leaving the recovered roster names, stats, relationships, and confidence levels unchanged.
+
+## 35. Batch 186 Note
+- `Batch 186` stayed on the executable startup/runtime frontier. The active work repaired the reached render companion surface construction path for longer direct `/A0` liveness by reconstructing the `sub_4041D0` / `sub_473320` DirectDraw descriptor and creation call. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 36. Batch 187 Note
+- `Batch 187` stayed on the executable startup/runtime frontier. The active work clarified the direct `/A0` route as an all-AI/autoplay turn-advance path by renaming `sub_44C410` and removing undefined decompiler locals from `Game_AdvanceToNextPlayerTurn`. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 37. Batch 188 Note
+- `Batch 188` stayed on the executable startup/runtime frontier. The active work removed reached `PlayGame` setup/loop/teardown register-loss scars and named the world-map theme selector at `gameData + 140016`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 38. Batch 189 Note
+- `Batch 189` stayed on the executable startup/runtime frontier. The active work restored the asm-backed minimap frame sprite draw in `MiniMap_CreateSurface`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 39. Batch 190 Note
+- `Batch 190` stayed on the executable startup/runtime frontier. The active work guarded the `Render_FillRect` primary-surface fallback during SIGTERM/mode-switch teardown, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 40. Batch 191 Note
+- `Batch 191` stayed on the executable startup/runtime frontier. The active work set SDL's no-signal-handlers hint before `SDL_Init` so `/A0` terminates under plain POSIX `SIGTERM`, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 41. Batch 192 Note
+- `Batch 192` stayed on the executable front-end and human-route frontier. The active work rebuilt the campaign-choice widget blob and repaired the first campaign selector callback so the real main-menu Campaign path can reach `Scenario_LoadMissionByIndexAndPlay` with a human-controlled player. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 42. Batch 193 Note
+- `Batch 193` stayed on the executable front-end and human-route frontier. The active work removed remaining decompiler ghost operands from the campaign submenu branch, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 43. Batch 194 Note
+- `Batch 194` stayed on the executable front-end and human-route frontier. The active work removed top-level main-menu prologue ghost operands around intro render-hook state, menu allocations, first-frame pumps, and submenu sprite allocations, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 44. Batch 195 Note
+- `Batch 195` stayed on the executable front-end and human-route frontier. The active work restored the Options/Load `.s32` menu resource strings and removed additional decompiler ghost operands from those submenu setup and polling paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

@@ -1,12 +1,22 @@
 # Current Blockers
 
-- The contained authentic `Load Game` lane is still green through the slot-strip selection and bottom-row load confirm corridor.
-- The first broader contained widening adjacent to that green state still dies at a precisely identified startup-prelude gap:
-  - the broader-rules-contained probe reaches `parse-make-instance-before-class-lookup` on `oddzial`
-  - `sub_4B0480` reports `class-lookup-no-table name=oddzial`
-  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
-- The retained broader executable-regeneration slice is now blocked separately at a later front:
-  - `sub_451E46`, `sub_460490`, `UI_StartAnims`, and `PlayGame_Dispatch` all link and stay alive under `timeout 1s`
-  - the mission-loader helper-name gap `sub_40D330` / `sub_44C2A0` is gone
-  - the next honest retained blocker is the broader gameplay/session widening after the now-complete `Scenario_LoadMissionByIndex` switch
-- The contained probe still prints `load-menu-skip-save-slot-draw` after the row draws, so the deeper save-slot repaint/name lane is still deferred.
+## Active Full-Route Blockers
+- The default executable route is now `main -> App_WinMain`; host-side menu/startup probe modes are not active selectors anymore.
+- Lowercase `r` is now the first finite recovered startup/shutdown route: it enters early startup and runtime/render init, skips the game-entry handoff, shuts down, and exits `0`.
+- The default no-arg route now reaches the recovered main-menu presentation/wait loop and passes `clash95_full_route_smoke`; this is a liveness milestone, not a finite recovered quit path.
+- `CSS_Init` remains skipped because the retained DirectSound-era device table is not recovered safely enough for x86-64 execution under the SDL runtime seam.
+- Deeper menu/session interactions, clean finite default-route shutdown, and the broader playable-turn milestone after the full default startup route are still open.
+
+## Recently Removed
+- The intro AVI/CD availability blocker is removed for the local install: direct loose AVI paths can satisfy `Win_BeginModeChange` when the recovered resource query misses them.
+- The reached intro AVI constructor crash is removed: `CAviDecompressor` construction now shares the byte-offset initializer instead of repeating pointer-scaled event-handle setup on the 64-bit host.
+- The first main-menu liveness path no longer depends on undefined widget-copy counts, truncated stack-local widget pointers, 8-byte reads from original 32-bit compact vtables, or the undefined `v24` wait-loop sentinel.
+- Authentic finite shutdown is recovered for the lowercase `r` command route and is covered by `clash95_r_command_shutdown_smoke`.
+- `createLogFiles` no longer depends on malformed decompiler locals around the old stream-open corridor.
+- The retained log-file creation side effect is restored: when `logEnabled` is set, it truncates/creates `clash.log` and `battle.log`, closes both files, and clears `dword_526A20`.
+- The stale menu-capture CTest was replaced with a full-route live-loop smoke aligned to the current default startup path.
+- Bootstrap-only switches and menu-probe environment controls no longer decide startup behavior.
+
+## Historical Retained Gameplay Frontier
+- The deeper `WorldMap_RunHumanTurnLoop` / `WorldMap_HandleTileHoverAndClick` work remains useful historical context, but it is not the active front-end blocker for the current full-route startup slice.
+- If gameplay/session widening resumes, continue from the reduced `Unit_AttackBuilding` outcome-resolution tail inside `sub_4084A0`, with `sub_451F70` still secondary.

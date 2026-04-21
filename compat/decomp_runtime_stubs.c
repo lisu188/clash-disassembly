@@ -111,6 +111,14 @@ typedef struct CompatLow32AllocHeader {
   int used_mmap;
 } CompatLow32AllocHeader;
 
+typedef struct CompatLow32Arena {
+  CompatLow32AllocHeader *mapping;
+  unsigned char *base;
+  size_t capacity;
+  size_t offset;
+  struct CompatLow32Arena *next;
+} CompatLow32Arena;
+
 typedef struct CompatFileRuntimeMeta {
   int next_link;
   int stream_ptr;
@@ -142,6 +150,8 @@ typedef struct CompatFindHandle {
 
 #define COMPAT_FIND_HANDLE_SLOTS 64
 #define COMPAT_STREAM_HANDLE_SLOTS 256
+#define COMPAT_EVENT_HANDLE_SLOTS 128
+#define COMPAT_EVENT_HANDLE_BASE 0x45560000u
 #define COMPAT_EVENT_MAGIC 0x45564E54u
 #define COMPAT_WAIT_OBJECT_0 0u
 #define COMPAT_WAIT_TIMEOUT 258u
@@ -151,12 +161,15 @@ typedef struct CompatFindHandle {
 
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
+static CompatLow32Arena *g_compat_low32_arenas;
 
 typedef struct CompatEventHandle {
   unsigned int magic;
   int manual_reset;
   int signaled;
 } CompatEventHandle;
+
+static CompatEventHandle *g_compat_event_handles[COMPAT_EVENT_HANDLE_SLOTS];
 
 typedef struct CompatTimeb {
   int time_value;
@@ -165,11 +178,52 @@ typedef struct CompatTimeb {
   short dst_flag;
 } CompatTimeb;
 
+static unsigned int CompatEventHandleIndexFromHandle(HANDLE handle)
+{
+  unsigned int public_handle;
+
+  public_handle = (unsigned int)(uintptr_t)handle;
+  if ( public_handle <= COMPAT_EVENT_HANDLE_BASE
+    || public_handle > COMPAT_EVENT_HANDLE_BASE + COMPAT_EVENT_HANDLE_SLOTS )
+  {
+    return 0;
+  }
+  return public_handle - COMPAT_EVENT_HANDLE_BASE;
+}
+
+static HANDLE CompatRegisterEventHandle(CompatEventHandle *event_handle)
+{
+  unsigned int slot_index;
+
+  for ( slot_index = 0; slot_index < COMPAT_EVENT_HANDLE_SLOTS; ++slot_index )
+  {
+    if ( !g_compat_event_handles[slot_index] )
+    {
+      g_compat_event_handles[slot_index] = event_handle;
+      return (HANDLE)(uintptr_t)(COMPAT_EVENT_HANDLE_BASE + slot_index + 1);
+    }
+  }
+  return 0;
+}
+
+static void CompatUnregisterEventHandle(HANDLE handle)
+{
+  unsigned int public_index;
+
+  public_index = CompatEventHandleIndexFromHandle(handle);
+  if ( public_index )
+    g_compat_event_handles[public_index - 1] = 0;
+}
+
 static CompatEventHandle *CompatGetEventHandle(HANDLE handle)
 {
   CompatEventHandle *event_handle;
+  unsigned int public_index;
 
-  event_handle = (CompatEventHandle *)handle;
+  public_index = CompatEventHandleIndexFromHandle(handle);
+  if ( !public_index )
+    return 0;
+  event_handle = g_compat_event_handles[public_index - 1];
   if ( !event_handle || event_handle->magic != COMPAT_EVENT_MAGIC )
     return 0;
   return event_handle;
@@ -209,28 +263,131 @@ static int g_compat_signal_os_codes[COMPAT_SIGNAL_SLOT_COUNT] = {
 
 static unsigned char g_compat_ctrl_handler_installed;
 
-static int CompatPointerReadable(const void *ptr)
+#define COMPAT_READABLE_RANGE_COUNT 512
+
+typedef struct CompatReadableRange {
+  uintptr_t start;
+  uintptr_t end;
+} CompatReadableRange;
+
+static CompatReadableRange g_compat_readable_ranges[COMPAT_READABLE_RANGE_COUNT];
+static size_t g_compat_readable_range_count;
+static const CompatReadableRange *g_compat_last_readable_range;
+static int g_compat_readable_ranges_loaded;
+
+static void CompatInvalidateReadableRanges(void)
+{
+  g_compat_readable_range_count = 0;
+  g_compat_last_readable_range = 0;
+  g_compat_readable_ranges_loaded = 0;
+}
+
+static void CompatRefreshReadableRanges(void)
+{
+  FILE *maps_file;
+  char line[256];
+
+  g_compat_readable_range_count = 0;
+  g_compat_readable_ranges_loaded = 1;
+  maps_file = fopen("/proc/self/maps", "r");
+  if ( !maps_file )
+    return;
+  while ( fgets(line, sizeof(line), maps_file) )
+  {
+    unsigned long long start;
+    unsigned long long end;
+    char permissions[5];
+
+    if ( sscanf(line, "%llx-%llx %4s", &start, &end, permissions) != 3 )
+      continue;
+    if ( permissions[0] != 'r' || start >= end )
+      continue;
+    if ( g_compat_readable_range_count >= COMPAT_READABLE_RANGE_COUNT )
+      break;
+    g_compat_readable_ranges[g_compat_readable_range_count].start = (uintptr_t)start;
+    g_compat_readable_ranges[g_compat_readable_range_count].end = (uintptr_t)end;
+    ++g_compat_readable_range_count;
+  }
+  fclose(maps_file);
+}
+
+static const CompatReadableRange *CompatFindReadableRange(uintptr_t address)
+{
+  size_t left;
+  size_t right;
+
+  if ( !g_compat_readable_ranges_loaded )
+    CompatRefreshReadableRanges();
+  if ( g_compat_last_readable_range
+    && address >= g_compat_last_readable_range->start
+    && address < g_compat_last_readable_range->end )
+  {
+    return g_compat_last_readable_range;
+  }
+  left = 0;
+  right = g_compat_readable_range_count;
+  while ( left < right )
+  {
+    size_t middle;
+    const CompatReadableRange *range;
+
+    middle = left + (right - left) / 2;
+    range = &g_compat_readable_ranges[middle];
+    if ( address < range->start )
+      right = middle;
+    else if ( address >= range->end )
+      left = middle + 1;
+    else
+    {
+      g_compat_last_readable_range = range;
+      return range;
+    }
+  }
+  return 0;
+}
+
+static long CompatPageSize(void)
 {
   static long page_size;
-  uintptr_t address;
-  unsigned char residency;
 
-  if ( !ptr )
-    return 0;
   if ( !page_size )
   {
     page_size = sysconf(_SC_PAGESIZE);
     if ( page_size <= 0 )
       page_size = 4096;
   }
+  return page_size;
+}
+
+static uintptr_t CompatPointerPage(const void *ptr)
+{
+  uintptr_t address;
+
   address = (uintptr_t)ptr;
-  address &= ~((uintptr_t)page_size - 1u);
-  return mincore((void *)address, 1, &residency) == 0;
+  return address & ~((uintptr_t)CompatPageSize() - 1u);
+}
+
+static int CompatPointerPageReadable(uintptr_t page_address)
+{
+  if ( !page_address )
+    return 0;
+  return CompatFindReadableRange(page_address) != 0;
+}
+
+static int CompatPointerReadable(const void *ptr)
+{
+  if ( !ptr )
+    return 0;
+  return CompatPointerPageReadable(CompatPointerPage(ptr));
 }
 
 static int CompatSafeStrcmp(const char *lhs, const char *rhs)
 {
   size_t index;
+  uintptr_t lhs_page;
+  uintptr_t rhs_page;
+  int lhs_readable;
+  int rhs_readable;
 
   if ( lhs == rhs )
     return 0;
@@ -238,14 +395,32 @@ static int CompatSafeStrcmp(const char *lhs, const char *rhs)
     return -1;
   if ( !rhs )
     return 1;
+  lhs_page = (uintptr_t)-1;
+  rhs_page = (uintptr_t)-1;
+  lhs_readable = 0;
+  rhs_readable = 0;
   for ( index = 0; index < 4096; ++index )
   {
     unsigned char left_char;
     unsigned char right_char;
+    uintptr_t current_lhs_page;
+    uintptr_t current_rhs_page;
 
-    if ( !CompatPointerReadable(lhs + index) )
+    current_lhs_page = CompatPointerPage(lhs + index);
+    if ( current_lhs_page != lhs_page )
+    {
+      lhs_page = current_lhs_page;
+      lhs_readable = CompatPointerPageReadable(lhs_page);
+    }
+    if ( !lhs_readable )
       return CompatPointerReadable(rhs + index) ? -1 : 0;
-    if ( !CompatPointerReadable(rhs + index) )
+    current_rhs_page = CompatPointerPage(rhs + index);
+    if ( current_rhs_page != rhs_page )
+    {
+      rhs_page = current_rhs_page;
+      rhs_readable = CompatPointerPageReadable(rhs_page);
+    }
+    if ( !rhs_readable )
       return 1;
     left_char = (unsigned char)lhs[index];
     right_char = (unsigned char)rhs[index];
@@ -929,6 +1104,19 @@ static int CompatPointerFitsSigned32(const void *ptr)
   return ptr && (uintptr_t)ptr <= (uintptr_t)INT_MAX;
 }
 
+enum
+{
+  COMPAT_LOW32_ARENA_BLOCK = 2
+};
+
+#define COMPAT_LOW32_ARENA_SIZE ((size_t)16 * 1024 * 1024)
+#define COMPAT_LOW32_ARENA_MAX_ALLOC ((size_t)1024 * 1024)
+
+static size_t CompatAlignLow32Size(size_t size)
+{
+  return (size + 7u) & ~(size_t)7u;
+}
+
 static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int flags, void *hint)
 {
   CompatLow32AllocHeader *header;
@@ -952,23 +1140,19 @@ static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int fl
   return header;
 }
 
-static void *CompatAllocLow32(size_t size)
+static CompatLow32AllocHeader *CompatMapSignedLow32(size_t total_size)
 {
   CompatLow32AllocHeader *header;
-  size_t total_size;
 #ifdef MAP_FIXED_NOREPLACE
   uintptr_t hint;
   size_t page_size;
   long page_size_result;
 #endif
 
-  if ( !size )
-    return 0;
-  total_size = sizeof(*header) + size;
 #ifdef MAP_32BIT
   header = CompatTryMapSignedLow32(total_size, MAP_32BIT, 0);
   if ( header )
-    return header + 1;
+    return header;
 #endif
 #ifdef MAP_FIXED_NOREPLACE
   page_size_result = sysconf(_SC_PAGESIZE);
@@ -981,9 +1165,90 @@ static void *CompatAllocLow32(size_t size)
   {
     header = CompatTryMapSignedLow32(total_size, MAP_FIXED_NOREPLACE, (void *)hint);
     if ( header )
-      return header + 1;
+      return header;
   }
 #endif
+  return 0;
+}
+
+static void *CompatAllocLow32FromArena(size_t size)
+{
+  CompatLow32Arena *arena;
+  CompatLow32AllocHeader *mapping;
+  CompatLow32AllocHeader *block_header;
+  size_t header_size;
+  size_t payload_size;
+  size_t block_size;
+  size_t arena_capacity;
+  size_t mapping_size;
+
+  if ( size > COMPAT_LOW32_ARENA_MAX_ALLOC )
+    return 0;
+  header_size = CompatAlignLow32Size(sizeof(CompatLow32AllocHeader));
+  payload_size = CompatAlignLow32Size(size);
+  if ( payload_size > (size_t)-1 - header_size )
+    return 0;
+  block_size = header_size + payload_size;
+  for ( arena = g_compat_low32_arenas; arena; arena = arena->next )
+  {
+    if ( arena->offset <= arena->capacity && arena->capacity - arena->offset >= block_size )
+      break;
+  }
+  if ( !arena )
+  {
+    arena_capacity = COMPAT_LOW32_ARENA_SIZE;
+    if ( arena_capacity < block_size )
+      arena_capacity = block_size;
+    if ( arena_capacity > (size_t)-1 - sizeof(*mapping) )
+      return 0;
+    mapping_size = sizeof(*mapping) + arena_capacity;
+    mapping = CompatMapSignedLow32(mapping_size);
+    if ( !mapping )
+      return 0;
+    arena = (CompatLow32Arena *)malloc(sizeof(*arena));
+    if ( !arena )
+    {
+      munmap(mapping, mapping->mapped_size);
+      return 0;
+    }
+    arena->mapping = mapping;
+    arena->base = (unsigned char *)(mapping + 1);
+    arena->capacity = mapping->mapped_size - sizeof(*mapping);
+    arena->offset = 0;
+    arena->next = g_compat_low32_arenas;
+    g_compat_low32_arenas = arena;
+  }
+
+  block_header = (CompatLow32AllocHeader *)(void *)(arena->base + arena->offset);
+  if ( !CompatPointerFitsSigned32(block_header + 1) )
+    return 0;
+  arena->offset += block_size;
+  block_header->mapped_size = block_size;
+  block_header->used_mmap = COMPAT_LOW32_ARENA_BLOCK;
+  CompatInvalidateReadableRanges();
+  return block_header + 1;
+}
+
+static void *CompatAllocLow32(size_t size)
+{
+  CompatLow32AllocHeader *header;
+  void *arena_block;
+  size_t total_size;
+
+  if ( !size )
+    return 0;
+  arena_block = CompatAllocLow32FromArena(size);
+  if ( arena_block )
+    return arena_block;
+  if ( size > (size_t)-1 - sizeof(*header) )
+    return 0;
+  total_size = sizeof(*header) + size;
+  header = CompatMapSignedLow32(total_size);
+  if ( header )
+  {
+    CompatInvalidateReadableRanges();
+    return header + 1;
+  }
   header = (CompatLow32AllocHeader *)malloc(total_size);
   if ( !header )
     return 0;
@@ -994,6 +1259,7 @@ static void *CompatAllocLow32(size_t size)
   }
   header->mapped_size = total_size;
   header->used_mmap = 0;
+  CompatInvalidateReadableRanges();
   return header + 1;
 }
 
@@ -1004,6 +1270,9 @@ static void CompatFreeLow32(void *ptr)
   if ( !ptr )
     return;
   header = ((CompatLow32AllocHeader *)ptr) - 1;
+  if ( header->used_mmap == COMPAT_LOW32_ARENA_BLOCK )
+    return;
+  CompatInvalidateReadableRanges();
   if ( header->used_mmap )
     munmap(header, header->mapped_size);
   else
@@ -1700,6 +1969,7 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
   event_handle = CompatGetEventHandle(hObject);
   if ( event_handle )
   {
+    CompatUnregisterEventHandle(hObject);
     event_handle->magic = 0;
     free(event_handle);
   }
@@ -1745,6 +2015,7 @@ HANDLE __stdcall CreateEventA(
         LPCSTR lpName)
 {
   CompatEventHandle *event_handle;
+  HANDLE public_handle;
 
   (void)lpEventAttributes;
   (void)lpName;
@@ -1757,8 +2028,15 @@ HANDLE __stdcall CreateEventA(
   event_handle->magic = COMPAT_EVENT_MAGIC;
   event_handle->manual_reset = bManualReset != 0;
   event_handle->signaled = bInitialState != 0;
+  public_handle = CompatRegisterEventHandle(event_handle);
+  if ( !public_handle )
+  {
+    free(event_handle);
+    g_compat_last_error = (DWORD)ENOMEM;
+    return 0;
+  }
   g_compat_last_error = 0;
-  return (HANDLE)event_handle;
+  return public_handle;
 }
 
 DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)

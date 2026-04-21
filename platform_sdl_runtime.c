@@ -399,6 +399,8 @@ static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
   if ( !g_platform_frame_dump_checked )
   {
     g_platform_frame_dump_prefix = getenv("CLASH95_DUMP_PRESENTED_FRAMES_PREFIX");
+    if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix )
+      g_platform_frame_dump_prefix = getenv("CLASH95_SCREENSHOT_PREFIX");
     g_platform_frame_dump_checked = 1;
   }
   if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )
@@ -2005,6 +2007,7 @@ static int PlatformEnsureSdlVideo(void)
     return g_platform_sdl_available;
   g_platform_sdl_initialized = 1;
   SDL_SetMainReady();
+  SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
   if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) == 0 )
   {
     g_platform_sdl_available = 1;
@@ -2803,6 +2806,20 @@ HRESULT Compat_DirectDraw_SetCooperativeLevel(LPDIRECTDRAW dd, HWND hwnd, DWORD 
 HRESULT Compat_DirectDraw_SetDisplayMode(LPDIRECTDRAW dd, int width, int height, int bpp, int refresh_rate, int flags)
 {
   return CompatDirectDraw_SetDisplayMode((CompatDirectDraw *)dd, width, height, bpp, refresh_rate, flags);
+}
+
+HRESULT Compat_DirectDraw_CreatePalette(LPDIRECTDRAW dd, DWORD flags, void *entries, void *out_palette)
+{
+  CompatDirectDrawPalette *palette;
+  HRESULT hr;
+
+  palette = 0;
+  hr = CompatDirectDraw_CreatePalette((CompatDirectDraw *)dd, flags, entries, &palette, 0);
+  if ( hr )
+    return hr;
+  if ( out_palette )
+    *(int *)out_palette = (int)(uintptr_t)palette;
+  return 0;
 }
 
 HRESULT Compat_DirectDraw_CreateSurface(LPDIRECTDRAW dd, int *desc, void *out_surface)

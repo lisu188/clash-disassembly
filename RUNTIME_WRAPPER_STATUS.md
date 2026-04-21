@@ -30,7 +30,7 @@ This file classifies the current runtime/quarantine surface for executable regen
 | `rand_` / `srand_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Narrow host-libc RNG bridges kept in the compat seam; good enough to remove the current retained link hole without claiming original CRT fidelity. |
 | `strlwr_` / `memmove_` | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, retained `PlayGame_Dispatch` link surface | Simple libc-backed wrappers kept quarantined as runtime glue rather than pulled into recovered gameplay code. |
 | `unknown_libname_2` | `recovered_impl` | `clash95.exe`/asm at `0x48523F`, `compat/decomp_runtime_stubs.c`, `clash95.c` callsites | Exact signed decimal parser recovered from the binary; no longer an `atoi` placeholder. |
-| filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit | Broad but understandable compatibility wrappers; still not proof of original runtime structure. |
+| filesystem/string CRT wrappers (`strcmp`, `strlen`, `strrchr`, etc.) | `forwarding_wrapper` | `compat/decomp_runtime_stubs.c`, unresolved audit, lowercase `r` startup/shutdown route | Broad but understandable compatibility wrappers; `strcmp_` now uses a cached readable-range check invalidated on low32 alloc/free so malformed recovered pointers do not crash startup comparisons. |
 | `Render_LoadResourceSprite_v4` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:18215-18324`, live contained row-draw probes | Now matches the cache-query gate, companion `.pfn` palette load, and recolor contract closely enough to carry the authentic load-menu row-resource lane. |
 | `Render_LoadResourceSprite_v3` compat export | `recovered_impl` | `compat/decomp_runtime_stubs.c`, `clash95.asm:17529-17576`, gdb SIGINT in contained row draw | The missing non-newline cursor advance was restored from asm, removing the row-draw hang. |
 | `CSyncObject_Unlock` | `recovered_impl` | `src_cpp/csync_object.cpp`, `clash95.c` retained probes | Published through the conservative C++ seam as the original lock ABI rather than a new compat stub. |
@@ -50,6 +50,10 @@ This file classifies the current runtime/quarantine surface for executable regen
   - with `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0`, it dies earlier on `symbol-lookup-missing-table MAIN`
   - the live evidence still points at missing startup-prelude class/bload recovery, not an SDL or wrapper seam change
 - The retained executable-regeneration surface was also reduced without changing wrapper policy:
+  - the latest retained pass stayed in recovered C: `Scenario_LoadMissionByIndexAndPlay` now keeps its 27-byte campaign-state save/restore explicit and no longer forwards decompiler garbage into `PlayGame`
+  - the `PlayGame` prologue now restores the asm-backed `backgr1.s32` / `backgr2.s32` / `backgr3.s32` and `treemas1.s32` / `treemas2.s32` / `treemas3.s32` loads, and its first player scan no longer depends on uninitialized counters
+  - `WorldMap_RunHumanTurnLoop` now restores the asm-backed zero-init entry flags and the `sub_4623C0("arama1", "kon_por1")` mission-success tail in recovered C
+  - the direct retained `PlayGame` probe now links and stays alive under `timeout 1s`, so the first retained gameplay/session blocker is now explicit inside the deeper `WorldMap_RunHumanTurnLoop` surface rather than a wrapper gap
   - the exact retained data/helper slice `aJ_0`, `unknown_libname_13`, `ismbdprint_`, `sub_4B6DD0`, and `sub_4BDD40` now exists in recovered C
   - the exported parser names `Lexer_ParseSlotConstraint`, `Lexer_ParseFieldSpec`, `Lexer_ValidateMessageHandler`, `Lexer_ParseDefglobal`, `Lexer_ParseRuleRHS`, `Lexer_ParseDeclareOptions`, `Lexer_EmitSlotBinding`, `Lexer_BuildSlotNode`, and `Lexer_FindSymbolIndex` are now rebound onto their already-recovered bodies
   - the low-risk file/runtime wrapper band (`unknown_libname_2`, `MoveFileA`, `sscanf_`, `fgets_`) remains settled
@@ -77,7 +81,7 @@ This file classifies the current runtime/quarantine surface for executable regen
     - case `17` / `p_mapa8j.map` now also preserves its mission-local byte clear, the four `Rules_RetractTreasureFact` calls, the four-player `Raylin` / `Lord Ruwe` / `McGregor` / `Crowley` setup, the `Dark Town` `BUILDING_RECORD(+438) -= 100` cut, the four raw slot-state mutation bands, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
     - case `18` / `p_mapa9j.map` now also preserves its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the direct raw slot-state writes on the `+28` lane, and the absence of any post-`Game_InitPlayerViewState` camera override or `Rules_LogAssigned*` tail in recovered C instead of wrapper glue
     - case `19` / `p_map10z.map` was already present and is now corroborated against asm, so the full 20-case mission-loader switch remains recovered C rather than wrapper glue
-  - the next retained executable-regeneration blocker is now the broader gameplay/session surface beyond the fully covered mission-loader switch, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
+  - the next retained executable-regeneration blocker is now the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop` after the repaired entry/tail slice, not a runtime-wrapper, parser-export, SDL, or C++ seam problem
 
 ## What should not move yet
 
@@ -87,3 +91,148 @@ This file classifies the current runtime/quarantine surface for executable regen
 - the broader gameplay/session surface beyond the now-covered 20-case `Scenario_LoadMissionByIndex` / `sub_460360` switch
 - the parser/output/runtime helpers newly exposed by a direct `sub_444490` pull (`Lexer_OutputFieldRange`, `IO_OutWriteToken`, `IO_OutNewline`, `Module_AllocList`, `strtod_`)
 - any helper whose only current proof is “the code links if we stub it”
+
+## Latest retained runtime note
+- No new compat wrappers were added in the latest human-turn-loop batch.
+- The latest retained widening stayed in recovered C: `WorldMap_RunHumanTurnLoop` now restores the zero-arg loop-entry helper lane, the held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block.
+- The direct retained `WorldMap_RunHumanTurnLoop` probe now links and stays alive under `timeout 1s`.
+- The next retained executable-regeneration blocker is still the deeper gameplay/session surface inside `WorldMap_RunHumanTurnLoop`, not a wrapper, SDL, or `src_cpp` seam problem.
+- The latest retained widening also stayed in recovered C: `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` now restore their asm-backed helper bands without adding new compat wrappers.
+
+## Latest finite shutdown note
+- The lowercase `r` startup/shutdown route required no new speculative runtime stubs.
+- The reached wrapper changes are containment fixes:
+  - `strcmp_` now validates candidate low32 strings against cached readable host ranges instead of blindly dereferencing malformed recovered pointers.
+  - recovered compact software-surface destructors are invoked through an explicit 32-bit vtable helper.
+  - native SDL DirectDraw-compat COM methods are invoked through an explicit native pointer-size helper.
+- The next default-route blocker is outside those wrappers: the no-arg route exits through the intro AVI/CD check before the old full-route liveness smoke can pass.
+
+## Latest default-route liveness note
+- The default route no longer needs a new host probe or fake loop to pass liveness.
+- Wrapper/seam changes in this batch stayed narrow:
+  - event `HANDLE`s created by `CreateEventA` are now compact public tokens backed by a private registry, so recovered 32-bit event fields can be waited, pulsed, and closed safely on the 64-bit host
+  - `Compat_DirectDraw_CreatePalette` exposes the existing SDL DirectDraw palette implementation through the same low32 handle style used by the recovered render context
+- The remaining fixes stayed in recovered C rather than the wrapper seam:
+  - AVI entrypoint argument recovery
+  - AVI constructor initialization through the shared byte-offset `sub_464CE0` path
+  - main-menu widget table copy/walk repair
+  - compact render-surface slot dispatch
+  - the main-menu wait-loop sentinel
+- The next runtime-wrapper candidate is still `CSS_Init` / DirectSound-era device table recovery, but it remains deferred until the original table semantics are safe enough for the SDL runtime seam.
+
+## Latest direct-game route note
+- No new broad compat wrapper was added for the direct `a` route.
+- The reached fixes stayed in recovered C:
+  - direct-game startup now uses the original `0x10` resource context carried in BL
+  - the building sprite cache is represented as one recovered 650-byte slab instead of relying on adjacent weak globals
+  - the reached `Render_DrawSprite` compact-vtable dispatch is replaced with an asm-backed call sequence into the existing recovered format-0 linear sprite decoder
+- The next runtime-wrapper-adjacent hazard is narrower and concrete: `sub_416850` still contains compact render-surface vtable calls that combine adjacent 32-bit entries on the 64-bit host when the direct game route reaches visible-tile rendering.
+
+## Latest direct-game liveness note
+- No SDL or broad compat wrapper was added for the latest direct `a` route step.
+- The reached `sub_416850` hidden-tile fill is handled in recovered C by writing the original solid rectangle into the resolved linear software surface.
+- This removes the first visible-tile compact-vtable crash and makes direct `a` route liveness testable for both `clash95_bootstrap` and `clash95_cpp_regen`.
+- Remaining compact render callsites in `sub_416850` stay deferred until validation reaches them.
+
+## Latest direct-game control-path note
+- No new broad runtime wrapper or SDL shim was added for the latest direct `a` route step.
+- The active changes stayed in recovered C:
+  - direct tile redraw and fade loops now advance their asm-backed counters
+  - the world-map action-button sprite/table path is recovered as packed 0x35-byte records
+  - the reached widget draw helper reads original low32 fields explicitly instead of relying on host pointer width
+  - turn advance now checks the recovered player-active slot rather than a double-applied player-data offset
+- The only deliberate containment is the world-map building button action: record 4 is present, but its callback is temporarily routed to `WorldMap_DeferBuildingActionCallback` because the authentic `sub_40A0E0` callback still pulls unresolved building/treasure-placement symbols into the current executable surface.
+- `CSS_Init` and the intro AVI mode-switch surface remain separate wrapper/runtime frontiers.
+
+## Latest direct-scenario note
+- No broad runtime wrapper, SDL shim, or host-side scenario mode was added for the `/A0` route.
+- The active fixes stayed in recovered C and the existing bootstrap entry:
+  - logo AVI argument recovery in the recovered command branch
+  - pointer-width and low32-buffer repairs in player-state and map-load setup
+  - compact parser/evaluator/fact/multifield repairs in the reached rules setup lane
+  - asm-backed minimap color-table allocation/fill ranges
+  - direct bounded software-surface writes for the reached minimap tile draw path
+- The remaining containment is explicit and narrow: `MiniMap_CreateSurface` still defers the minimap frame sprite blit because the authentic `sub_402E80` blitter still contains deeper compact-vtable scars.
+- The direct `/A0` route is now a timeout liveness route for both executable targets, not a wrapper success or a proved playable turn.
+
+## Latest direct-scenario unit-stack note
+- No broad runtime wrapper or SDL shim was added for the reached `/A0` unit-stack crashes.
+- The active fixes stayed in recovered C:
+  - a null army-fact assertion no longer re-enters fact creation recursively through `Rules_LinkArmyFact`
+  - `Unit_AddToGroup` no longer forwards undefined source/target/count/copy-length locals into stack diagnostics and slot merging
+  - `Rules_RetractArmyFact` and `Unit_Kill` no longer forward undefined locals into fact cleanup, stack diagnostics, tile clearing, or minimap redraw
+- This reinforces the current runtime-wrapper boundary: the SDL and compat seams are sufficient for this milestone, while the remaining failures are recovered gameplay/rules/session fidelity below the wrapper layer.
+
+## Latest direct-scenario CTest note
+- No wrapper change was needed to add direct `/A0` regression coverage.
+- `tests/verify_direct_a0_route_smoke.sh` starts the current executable under dummy SDL/audio and checks liveness/crash behavior from the outside, matching the already-established direct `a` smoke pattern.
+- The test formalizes the current wrapper boundary: the host seam can carry this route far enough for liveness, while the next blockers remain in recovered rules/session code.
+
+## Latest direct-scenario allocator/new-turn note
+- One narrow compat-wrapper change was needed for the latest direct `/A0` step: `CompatAllocLow32` now serves small requests from process-lifetime low32 arenas before falling back to per-allocation low32 mappings.
+- The allocator change addresses reached sprite/resource allocation pressure after recovered C new-turn crashes were removed; it is not a gameplay shortcut or a scenario harness.
+- The follow-on free-list crash stayed in recovered C: `sub_472860` now reads the original 32-bit low-address free-list links from `dword_54DBA8` instead of reading host-width pointers out of the table.
+- The remaining new-turn fixes stayed below the wrapper layer in recovered C. SDL/window/audio handling did not need a change for this milestone.
+
+## Latest direct-scenario render companion note
+- No new broad runtime wrapper or SDL shim was added for the latest direct `/A0` step.
+- The reached DirectDraw companion-surface creation now reuses the existing `Compat_DirectDraw_CreateSurface` wrapper instead of calling through a raw recovered vtable from `sub_473320`.
+- The recovered C path now treats a missing `dword_51D584` render context as a software-only wrapper state during mode-switch gaps, avoiding a dead companion handle while preserving the existing SDL DirectDraw seam.
+- The remaining teardown fault observed under SIGTERM is separate from route liveness and remains a clean-shutdown/runtime frontier, not a new SDL capability requirement.
+
+## Latest direct-scenario all-AI turn note
+- No new runtime wrapper, SDL shim, or host-side scenario mode was added for the latest direct `/A0` step.
+- The active changes stayed in recovered C:
+  - the `/A0` loader is now named for its all-AI multiplayer-map setup
+  - `Game_AdvanceToNextPlayerTurn` no longer depends on undefined decompiler locals for turn wrap logging, selection sync, auto-move logs, queen/new-turn dispatch, or the final `0x140 x 0xF0` present region
+- The wrapper boundary is unchanged: dummy SDL/audio can carry both executable paths through repeated all-AI turn advance, while clean finite shutdown and deeper gameplay/rules state remain recovered-code frontiers.
+
+## Latest `PlayGame` loop cleanup note
+- No runtime wrapper, SDL shim, or host-only entry mode was added for the latest `PlayGame` cleanup.
+- The active changes stayed in recovered C and structure notes:
+  - `PlayGame` uses explicit saved render-hook/resource-handle locals for the `RedrawMainMap` render-hook window
+  - setup/AI/teardown calls no longer receive undefined decompiler locals
+  - `MAP_THEME_INDEX` records the shared map theme byte instead of leaving raw `gameData + 140016` reads in the central loop
+- The wrapper boundary is unchanged: current dummy SDL/audio liveness is sufficient for the route, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.
+
+## Latest minimap frame restoration note
+- No new runtime wrapper, SDL shim, or host-only scenario mode was added for the minimap frame restoration.
+- The active change stayed in recovered C:
+  - `MiniMap_CreateSurface` now draws the asm-backed minimap frame sprite through the existing bounded format-0 software sprite path
+  - the broad generic `sub_402E80` compact-vtable decoder remains unresolved and is not used as a host-width shortcut
+- The wrapper boundary is unchanged: current SDL-backed linear surfaces can carry this proven format-0 frame draw, while human-turn fidelity, finite shutdown, and rules/class health remain recovered-code frontiers.
+
+## Latest SIGTERM teardown note
+- No new runtime wrapper, SDL shim, or host-only scenario mode was added for the SIGTERM teardown crash.
+- The active change stayed in recovered C:
+  - `Render_FillRect` now skips the temporary primary-surface fallback when `&unk_51D4C0` has no resolved companion and no compact surface handle left after mode-switch teardown
+  - the original temporary-surface fallback remains in place for primary copies that still have a recoverable target handle
+- This removes the observed allocator/stack recursion under SIGTERM, but it does not complete clean finite shutdown: the current process can still absorb SIGTERM and needs an external kill-after timeout in validation.
+
+## Latest SDL signal handling note
+- One narrow SDL seam change was needed after the recovered teardown crash was removed.
+- `PlatformEnsureSdlVideo` now sets `SDL_HINT_NO_SIGNAL_HANDLERS` before `SDL_Init`, so WSL/POSIX `SIGTERM` keeps normal process-termination semantics instead of being converted into an SDL quit event that direct `/A0` may not pump promptly.
+- This makes external timeout shutdown finite for both executable paths without adding a host-side scenario mode. It is still not a recovered `App_Shutdown` or in-game quit proof.
+
+## Latest campaign menu note
+- No new runtime wrapper, SDL shim, or host-only campaign mode was added for the campaign-menu recovery.
+- The active changes stayed in recovered C:
+  - `g_CampaignMenuButtonWidgetsTemplate` now rebuilds the original `unk_518338` widget blob as two live button records plus the terminator slot
+  - `PlayGame_Dispatch` now loads `menu\\kamp.s32` on the campaign submenu branch
+  - `sub_448B90` now latches selector `1`, matching the original callback before `Scenario_LoadMissionByIndexAndPlay(0, ...)`
+- The wrapper boundary is unchanged: current host seams can carry the existing smokes, while the next human-route work is front-end input and recovered gameplay/session fidelity.
+
+## Latest campaign submenu operand note
+- No runtime wrapper, SDL shim, or host-only campaign mode was added for the follow-on campaign submenu cleanup.
+- The active changes stayed inside recovered `PlayGame_Dispatch`:
+  - sprite allocation, text-cache rebuild, loop pump/widget polling, and mission dispatch now use concrete asm-backed operands
+  - the prior undefined `v29` / `v30` / `v35` / `v36` / `v37` hazards are gone from this branch
+- The wrapper boundary is unchanged; the next proof still needs real Campaign menu input rather than a synthetic host campaign route.
+
+## Latest main-menu prologue operand note
+- No runtime wrapper, SDL shim, or host-only menu route was added for the top-level main-menu prologue cleanup.
+- The active changes stayed inside recovered C:
+  - `UI_StartAnims` now uses the original render-hook/resource-handle save-restore shape
+  - top-level menu allocations, first-frame pumps, and the `sub_460CB0` cache rebuild no longer receive undefined decompiler locals
+  - Options and Load submenu sprite allocations use the same original size-only allocation shape
+- The wrapper boundary is unchanged. Current SDL/dummy-audio seams still carry the automated route smokes; the next human-route proof remains real menu input into Campaign, not a host shortcut.

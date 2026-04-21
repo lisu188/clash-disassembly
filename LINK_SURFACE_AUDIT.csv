@@ -23,3 +23,10 @@ quarantine,Compat_WcppCtorArrayStorage1m / Compat_WcppCtorArrayStorage1s,build/s
 quarantine,CreateProcessA / CreateThread / WaitForSingleObject,build/stubs_unresolved.txt,quarantine,Process/thread helpers still need a clear home.
 quarantine,fopen/fread/fwrite/strcmp/strlen/strrchr family,build/stubs_unresolved.txt,wrapper,CRT/file wrappers remain broader than the current host seam.
 platform_stub,calloc/free/memset/fprintf/gettimeofday/usleep,build/platform_unresolved.txt,host seam,Expected SDL/host support surface for the platform object.
+runtime_route,direct /A0 scenario route,COMPILATION_PROGRESS.md,present,Now reaches map load/player setup/unit creation/minimap vision and stays alive under dummy SDL/audio timeout for both executable targets.
+rendering,sub_402E80 minimap frame blit,REVERSE_ENGINEERING_RENAME_LOG.md,deferred,Authentic minimap frame blit still has unreduced compact-vtable callsites and remains intentionally skipped in MiniMap_CreateSurface.
+runtime_route,direct /A0 unit-stack merge/delete,REVERSE_ENGINEERING_RENAME_LOG.md,present,Reached army-fact recursion plus Unit_AddToGroup Rules_RetractArmyFact and Unit_Kill undefined-register crashes are repaired in recovered C; both executable paths now run until external timeout.
+runtime_validation,direct /A0 CTest smoke,CMakeLists.txt;tests/verify_direct_a0_route_smoke.sh,present,Direct /A0 liveness is now covered by CTest for both clash95_bootstrap and clash95_cpp_regen without adding a host-side scenario harness.
+runtime_route,direct /A0 new-turn corridor,COMPILATION_PROGRESS.md,present,Direct /A0 now reaches through parser/fact queue building population/plague technology prisoner unit and queen new-turn failures under gdb timeout.
+runtime_wrapper,low32 small-allocation arena,compat/decomp_runtime_stubs.c,wrapper,Small nmalloc_/PlatformAllocLow32 requests now use a low32 arena to avoid mapping exhaustion while preserving 32-bit pointer storage.
+memory,sub_472860 free-list traversal,clash95.c,host_width_fix,Recovered allocator free-list table is traversed as 32-bit low-address links instead of host pointers.
