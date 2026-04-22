@@ -297,3 +297,6 @@
 
 ## 47. Batch 205 Note
 - `Batch 205` stayed on the executable front-end / human-turn runtime recovery frontier. The active work drove real Xvfb input through Campaign, skip-clicked mission/status panels, reached the live world-map human-turn loop, and repaired reached info-window, text-layout, palette-fade, unit-redraw, and animated-tile runtime hazards. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 48. Batch 206 Note
+- `Batch 206` stayed on the executable first-mission rendering/runtime frontier. The active work repaired the turn-banner-to-world-map palette handoff by fixing the fade source palette, presenting primary saveback through the SDL indexed surface seam, and preserving/restoring the primary and world-map pixel buffers around transient `tura*.gfx` loads. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

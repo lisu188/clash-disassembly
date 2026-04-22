@@ -1592,7 +1592,7 @@ int Compat_WcppCtorArrayStorage1m(void *base, int count, const void *descriptor)
   if ( !base )
     return 0;
   desc = (const CompatWcppArrayStoreDesc *)descriptor;
-  if ( !desc || desc->stride <= 0 || count <= 0 )
+  if ( !desc || desc->kind == 0 || desc->stride <= 0 || count <= 0 )
     return (int)(uintptr_t)base;
   cursor = (unsigned char *)base;
   for ( index = 0; index < count; ++index )

@@ -1104,7 +1104,8 @@
     "evidence": [
       "`sub_401E00` seeds the packed width/height header and the common surface object layout, while `Render_CreateSurface` allocates the linear pixel buffer, stores it at offset `+4`, and installs `off_50EE24` at offset `+184`.",
       "The live contained menu-display probe read the `unk_51D4C0` companion surface as `0x01e00280` at offset `0` and `0x401d1010` at offset `+4`, which matches the expected packed `640x480` dimensions plus low32 pixel pointer.",
-      "The new SDL helper only needs those recovered fields to present the already-composed indexed menu surface, corroborating the same layout from an independent runtime path."
+      "The new SDL helper only needs those recovered fields to present the already-composed indexed menu surface, corroborating the same layout from an independent runtime path.",
+      "Batch 206 scratch surfaces for the turn-banner handoff are destroyed through the compact surface vtable at offset `+184`; using the DLX sprite-set cleanup path, which expects a table at `+0x100C`, dereferenced pixel bytes instead."
     ]
   },
   {
