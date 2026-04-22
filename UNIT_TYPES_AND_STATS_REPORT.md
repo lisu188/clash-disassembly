@@ -300,3 +300,6 @@
 
 ## 48. Batch 206 Note
 - `Batch 206` stayed on the executable first-mission rendering/runtime frontier. The active work repaired the turn-banner-to-world-map palette handoff by fixing the fade source palette, presenting primary saveback through the SDL indexed surface seam, and preserving/restoring the primary and world-map pixel buffers around transient `tura*.gfx` loads. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 49. Batch 207 Note
+- `Batch 207` stayed on the executable first-mission castle-management frontier. The active work proved the real world-map click route into `Building_GetInto -> Castle_OpenManagementScreen` and restored the castle composite palette handoff into `byte_526A70`, eliminating the black castle-screen fade. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

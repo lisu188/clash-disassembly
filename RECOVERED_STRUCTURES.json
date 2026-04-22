@@ -1623,5 +1623,25 @@
       "When `Render_BeginModeSwitch` clears `unk_51D4C0 + 0xC4`, the recovered wrapper can validly continue as a software-only surface with no companion handle; no unit/stat semantics are inferred from this render record.",
       "SIGTERM teardown can reach `Render_FillRect` after the primary companion and compact handle are both gone; the temporary primary fallback has no recoverable copy target in that state and is treated as a no-op."
     ]
+  },
+  {
+    "name": "CastleCompositePaletteBuffer",
+    "kind": "render_palette_buffer",
+    "base_symbol": "byte_526A70",
+    "description": "0x400-byte packed RGB palette output buffer used by the castle composite screen and fade path. This is render/runtime state recovered from the castle-management entry path, not gameplay or unit-stat data.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "palette_entries",
+        "type": "uint32[256]",
+        "notes": "Packed RGB dwords produced by the first castle PCX load and consumed by the castle cursor/fade/resource path."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` `sub_421240` at `loc_42138A` loads `ebx = offset byte_526A70` before the first compact render-surface vtable slot `+0x30` PCX load, while later overlay loads clear the palette argument.",
+      "`clash95.asm` `sub_422020` passes `byte_526A70` through the castle resource/cursor/fade setup path, including `sub_435ED0`, `Render_LoadResourceSprite_v4`, `sub_460CB0`, and `sub_405020`.",
+      "GDB inspection before the repair showed nonzero castle composite surface pixels with zero sampled palette entries, matching the black SDL frame dumps after entering the castle screen.",
+      "The repaired build writes the first castle PCX palette into `byte_526A70`; the Xvfb route in `/tmp/clash-castle-fixed-HuI4lF` then reaches stable nonblack castle-management frames."
+    ]
   }
 ]

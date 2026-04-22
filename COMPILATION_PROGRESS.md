@@ -7676,3 +7676,31 @@
 - Ambiguous candidates deferred:
   - a manually timed post-map click can still enter a long turn-banner/wait corridor depending on the current player/AI sequence; this is a separate first playable-action investigation, not part of the fixed banner palette artifact
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 207 - First-mission castle entry palette repair
+- Current frontier:
+  - continue the authentic Campaign first-mission route from live world-map liveness toward playable human-turn interaction, with the immediate runtime frontier now inside castle/building-management screens and their action panels
+- Blockers removed this batch:
+  - proved a real SDL/X11 click path from the first-mission world map into `Building_GetInto -> Castle_OpenManagementScreen` for building index `0`
+  - restored the original first castle composite PCX load palette-output argument so `byte_526A70` receives the castle palette instead of remaining all black
+  - retained the previously repaired castle compact-surface dispatch and status-widget path; the castle screen now fades in with nonblack indexed pixels under the recovered SDL primary presenter
+- Compile/link/runtime status:
+  - `cmake --build build -j$(nproc)`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - GDB/Xvfb route confirmed `WorldMap_HandleTileHoverAndClick -> Building_GetInto -> Castle_OpenManagementScreen`
+  - Xvfb frame route captured 512 frames under `/tmp/clash-castle-fixed-HuI4lF`; inspected `contact.png` and `frame-511.png`
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route can now enter the castle management screen through real world-map input and present a stable nonblack castle scene
+  - retained: Batch 205 live human-turn world-map liveness and Batch 206 turn-banner/map visual handoff fidelity
+  - still not claimed: operating every castle action panel, selecting/moving a unit, completing a first-mission action, or finishing the first mission
+- Key evidence used:
+  - `clash95.asm:52717-52741` shows `sub_422020` receiving `byte_526A70`, then using it for castle sprite resources, cursor palette setup, and `sub_405020` palette fade-in
+  - `clash95.asm:51386-51392` shows `sub_421240` passing `ebx = offset byte_526A70` to the first compact surface slot `+0x30` PCX load; later overlay loads zero that palette argument
+  - GDB at `sub_405020` showed castle surface pixels were nonzero while sampled `byte_526A70` entries were zero before the fix, explaining the black SDL frames
+  - post-fix frame stats for frames `500..511` show nonblack `307200/307200` pixels with mean luminance `93.07`
+- Ambiguous candidates deferred:
+  - the red-outlined top-right rectangle is present in the inspected castle asset itself and is not yet classified as a recovery bug
+  - castle garrison-management case `254` still points at non-procedural asm label `00433C20` and remains disabled until recovered as a callable routine
+  - no unit-type or stat semantics were promoted in this batch
