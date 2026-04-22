@@ -562,7 +562,7 @@ int  sub_404BC0(int result, int a2);
 int  sub_404C80(int *a1, const void *a2);
 int  sub_404D90(int *a1);
 int * sub_404DA0(int *result, unsigned __int8 *a2, signed int a3);
-int  sub_404DE0(int *a1, unsigned __int8 *a2, __lock *a3, signed int a4);
+int  sub_404DE0(int *a1, unsigned __int8 *a2, int a3, signed int a4);
 int  sub_404F20(int *a1, signed int a2);
 int * sub_405020(int *result, unsigned __int8 *a2, signed int a3);
 void * sub_4050F0(int *a1, int a2, char a3, DWORD a4);
@@ -1322,7 +1322,7 @@ int  sub_444780(int a1);
 int  sub_444920(int result, int a2);
 signed int  sub_444950(int a1, int a2, DWORD a3, double a4);
 int  sub_444D50(int a1, char a2, DWORD a3, double a4);
-int  UI_ShowInfoWindow(int a1, unsigned int a2, int a3, DWORD a4, int a5, int a6);
+int  UI_ShowInfoWindow(const char *a1, unsigned int a2, int a3, DWORD a4, int a5, int a6);
 int  sub_4458E0(int a1, const char *a2, DWORD a3);
 int  sub_4459A0(int a1, DWORD a2);
 int  UI_CheatEditRepaint(DWORD a1, int a2);
@@ -12355,7 +12355,7 @@ int dword_51D018; // weak
 int dword_51D01C; // weak
 int dword_51D020; // weak
 CHAR Text[128]; // idb
-_UNKNOWN unk_51D0B0; // weak
+_BYTE unk_51D0B0[0x408]; // weak
 int dword_51D4B8; // weak
 RenderPrimarySurfaceStorage unk_51D4C0; // weak
 #define word_51D4C2 (*(__int16 *)((unsigned char *)&unk_51D4C0 + 2))
@@ -16107,8 +16107,10 @@ int  Render_SaveBackbuffer(int a1)
   _DWORD surface_device;
   uintptr_t *surface_vtable;
 
+  if ( a1 == (int)&unk_51D4C0 )
+    return 0;
   surface_wrapper = *(_DWORD *)(a1 + 196);
-  if ( !surface_wrapper )
+  if ( !surface_wrapper || (surface_wrapper & 3) != 0 )
     return 0;
   surface_device = *(_DWORD *)(uintptr_t)surface_wrapper;
   if ( !surface_device )
@@ -16165,6 +16167,8 @@ int  sub_404C80(int *a1, const void *a2)
 
     converted_palette[palette_index] = converted_entry;
   }
+  if ( a1 == (int *)&unk_51D4C0 || !a1[49] || (a1[49] & 3) != 0 )
+    return 0;
   return IO_StreamWrite(a1[49], 0, (int)converted_palette, 256);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
@@ -16180,25 +16184,22 @@ int * sub_404DA0(int *result, unsigned __int8 *a2, signed int a3)
 {
   int *v3; // ebp
   signed int i; // esi
-  __lock *v5; // ecx
+  int v5; // ecx
 
   v3 = result;
   for ( i = 0; i <= a3; result = (int *)sub_404DE0(v3, a2, v5, a3) )
-    v5 = (__lock *)i++;
+    v5 = i++;
   return result;
 }
 
 //----- (00404DE0) --------------------------------------------------------
-int  sub_404DE0(int *a1, unsigned __int8 *a2, __lock *a3, signed int a4)
+int  sub_404DE0(int *a1, unsigned __int8 *a2, int a3, signed int a4)
 {
-  int v5; // ecx
   unsigned __int8 *v6; // ecx
   int *v7; // esi
   unsigned __int8 *v8; // ebx
   int v12; // [esp+18h] [ebp-14h]
 
-  if ( !_wcpp_4_static_init__(a3) )
-    _wcpp_4_ctor_array__(v5, 256);
   if ( !a3 )
     qmemcpy(&unk_51D0B0, a1 + 55, 0x400u);
   v6 = a2;
@@ -16218,8 +16219,6 @@ int  sub_404DE0(int *a1, unsigned __int8 *a2, __lock *a3, signed int a4)
   sub_404C80(a1, a1 + 55);
   return Render_SaveBackbuffer((int)a1);
 }
-// 404EF5: variable 'v5' is possibly undefined
-// 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00404F20) --------------------------------------------------------
 int  sub_404F20(int *a1, signed int a2)
@@ -17850,11 +17849,12 @@ void  sub_406FA0(int ii)
         if ( v86 != 0xFFFF )
         {
           v7 = Time_Now(j, (int)v6);
-          if ( v7 > *(_DWORD *)(v8 + 6) )
+          if ( v7 > *(_DWORD *)((char *)v6 + 6) )
           {
-            v9 = Time_Now(j, (unsigned __int8)byte_52073A[3 * *(unsigned __int16 *)(v4 + j + gameData)]);
-            *(_DWORD *)(v4 + v11 + gameData + 6) = v9 + v10;
-            *(_WORD *)(v4 + v11 + gameData) = v86;
+            v20 = (unsigned __int8)byte_52073A[3 * *v6];
+            v9 = Time_Now(j, v20);
+            *(_DWORD *)((char *)v6 + 6) = v9 + v20;
+            *v6 = v86;
             sub_418A90(ii, i);
             if ( !*(_BYTE *)(gameData + 140016) && v86 == 36 )
             {
@@ -17862,8 +17862,9 @@ void  sub_406FA0(int ii)
               if ( *v12 == 36 )
               {
                 *v12 = 771;
-                v13 = Time_Now(j, (unsigned __int8)byte_521043);
-                *(_DWORD *)(14 * v5 + v15 + gameData + 6) = v13 + v14;
+                v14 = (unsigned __int8)byte_521043;
+                v13 = Time_Now(j, v14);
+                *(_DWORD *)((char *)v12 + 6) = v13 + v14;
                 sub_418A90(ii, i + 1);
               }
             }
@@ -17877,17 +17878,18 @@ void  sub_406FA0(int ii)
           if ( v87 != 0xFFFF )
           {
             v17 = Time_Now(j, v81);
-            if ( v17 > *(_DWORD *)(v18 + 10) )
+            if ( v17 > *(_DWORD *)((char *)v6 + 10) )
             {
               if ( v87 == 65534 )
               {
-                *(_WORD *)(v4 + j + gameData + 2) = -1;
+                v6[1] = -1;
               }
               else
               {
-                v19 = Time_Now(j, (unsigned __int8)byte_52073A[3 * *(unsigned __int16 *)(v4 + j + gameData + 2)]);
-                *(_DWORD *)(v4 + v21 + gameData + 10) = v19 + v20;
-                *(_WORD *)(v4 + v21 + gameData + 2) = v87;
+                v20 = (unsigned __int8)byte_52073A[3 * v6[1]];
+                v19 = Time_Now(j, v20);
+                *(_DWORD *)((char *)v6 + 10) = v19 + v20;
+                v6[1] = v87;
               }
               sub_418A90(ii, i);
             }
@@ -21035,163 +21037,102 @@ int  sub_40BEE0(
         int a5,
         unsigned __int8 *a6)
 {
-  unsigned __int8 *v6; // esi
-  unsigned __int16 v7; // ax
-  char *v8; // ecx
-  int v9; // edx
-  unsigned __int8 v10; // dh
-  int v11; // eax
-  int v12; // edx
-  int v13; // edx
-  _BYTE *v14; // ecx
-  int v15; // ebx
-  _BYTE *v16; // ecx
-  _BYTE *v17; // esi
-  int v18; // ecx
-  char v19; // dl
-  int TextXOffset; // eax
-  int v21; // edx
-  _BYTE *v22; // esi
-  char v23; // al
-  _BYTE *v24; // esi
-  char v25; // al
-  int v26; // eax
-  int v28; // eax
-  int v30; // [esp+4h] [ebp-1Ch]
-  int v31; // [esp+8h] [ebp-18h]
-  int v33; // [esp+10h] [ebp-10h]
-  unsigned __int16 v35; // [esp+18h] [ebp-8h]
+  unsigned __int8 *cursor;
+  unsigned __int8 *line_start;
+  _BYTE *line_break;
+  int text_width;
+  int extra_space_width;
+  int glyph_index;
+  int saved_x;
+  int line_step;
+  int wrap_width;
+  char saved_break_char;
 
-  v33 = a4;
-  v6 = a6;
-  v7 = Render_LoadResourceSprite_v3(a6);
-  v30 = v9;
-  v31 = v9;
-  if ( (unsigned int)(a3 - 1) <= 5 )
+  cursor = a6;
+  text_width = Render_LoadResourceSprite_v3(a6);
+  extra_space_width = 0;
+  glyph_index = 0;
+
+  switch ( a3 )
   {
-    switch ( a3 )
+    case 1:
+      a5 = a1;
+      break;
+    case 2:
+      a5 = a2 - text_width;
+      break;
+    case 3:
+      a5 = (a2 - a1 - text_width) / 2 + a1;
+      break;
+    case 4:
     {
-      case 1:
-        a5 = a1;
-        break;
-      case 2:
-        a5 = a2 - v7;
-        break;
-      case 3:
-        a5 = (a2 - a1 - v7) / 2 + a1;
-        break;
-      case 4:
-        a5 = a1;
-        v11 = sub_40BE20(v8);
-        v30 = v12 / v11;
-        break;
-      case 5:
-      case 6:
-        LOWORD(v13) = Render_LoadResourceSprite_v3(v8);
-        if ( v13 > a2 - a1 )
-          goto LABEL_16;
-        v22 = v14;
-        while ( *v22 != 10 )
-        {
-          if ( *v22 )
-          {
-            v23 = *++v22;
-            if ( *v22 == 10 )
-              break;
-            ++v22;
-            if ( v23 )
-              continue;
-          }
-          v22 = 0;
-          break;
-        }
-        if ( v22 )
-        {
-LABEL_16:
-          v15 = a2 - a1;
-          while ( 1 )
-          {
-            if ( (unsigned __int16)Render_LoadResourceSprite_v3(v14) <= v15 )
-            {
-              v24 = v16;
-              while ( *v24 != 10 )
-              {
-                if ( *v24 )
-                {
-                  v25 = *++v24;
-                  if ( *v24 == 10 )
-                    break;
-                  ++v24;
-                  if ( v25 )
-                    continue;
-                }
-                v24 = 0;
-                break;
-              }
-              if ( !v24 )
-                break;
-            }
-            v17 = sub_40BDA0(v16, v15);
-            *v17 = 0;
-            UI_DrawTextFmt(a5, a1, a2, v33, (a3 == 5) + 3, v18);
-            *v17 = v19;
-            TextXOffset = UI_GetTextXOffset(dword_520728);
-            v14 = v17 + 1;
-            v33 = TextXOffset + v21;
-          }
-          if ( a3 == 5 )
-            v26 = 1;
-          else
-            v26 = 3;
-          UI_DrawTextFmt(a5, a1, a2, v33, v26, (int)v16);
-          v6 = 0;
-        }
-        else
-        {
-          UI_DrawTextFmt(a5, a1, a2, a4, (a3 == 5) + 3, (int)v14);
-          v6 = 0;
-        }
-        break;
-      default:
-        break;
+      int space_count;
+
+      a5 = a1;
+      space_count = sub_40BE20((char *)a6);
+      if ( space_count > 0 )
+        extra_space_width = (a2 - a1 - text_width) / space_count;
+      break;
     }
+    case 5:
+    case 6:
+      wrap_width = a2 - a1;
+      line_start = a6;
+      while ( line_start && *line_start )
+      {
+        int line_width;
+        unsigned __int8 *newline;
+
+        line_width = (unsigned __int16)Render_LoadResourceSprite_v3(line_start);
+        newline = line_start;
+        while ( *newline && *newline != 10 )
+          ++newline;
+        if ( line_width <= wrap_width && !*newline )
+        {
+          UI_DrawTextFmt(a5, a1, a2, a4, a3 == 5 ? 1 : 3, (const char *)line_start);
+          return a5;
+        }
+
+        line_break = sub_40BDA0(line_start, wrap_width);
+        if ( !line_break )
+          line_break = (_BYTE *)newline;
+        if ( !line_break || !*line_break )
+        {
+          UI_DrawTextFmt(a5, a1, a2, a4, a3 == 5 ? 1 : 3, (const char *)line_start);
+          return a5;
+        }
+
+        saved_break_char = *line_break;
+        *line_break = 0;
+        UI_DrawTextFmt(a5, a1, a2, a4, (a3 == 5) + 3, (const char *)line_start);
+        *line_break = saved_break_char;
+        line_step = UI_GetTextXOffset(dword_520728);
+        a4 += line_step;
+        line_start = (unsigned __int8 *)line_break + 1;
+      }
+      return a5;
+    default:
+      break;
   }
-  while ( v6 && *v6 )
+
+  while ( cursor && *cursor )
   {
-    if ( *v6 == 32 )
-      a5 += v30;
-    v35 = a5;
-    v10 = *v6;
-    if ( *v6 == 10 )
-    {
-      ++v6;
-    }
-    else
-    {
-      ++v6;
-      a5 = (unsigned __int16)sub_40BC00((unsigned __int16)a5, v33, v10);
-    }
-    if ( v31 == dword_511EC0 )
-      sub_40BC00(v35, v33, 0x5Fu);
-    ++v31;
+    unsigned __int8 glyph;
+
+    if ( *cursor == 32 )
+      a5 += extra_space_width;
+    saved_x = a5;
+    glyph = *cursor++;
+    if ( glyph != 10 )
+      a5 = (unsigned __int16)sub_40BC00((unsigned __int16)a5, a4, glyph);
+    if ( glyph_index == dword_511EC0 )
+      sub_40BC00(saved_x, a4, 0x5Fu);
+    ++glyph_index;
   }
-  if ( v31 == dword_511EC0 )
-  {
-    HIWORD(v28) = HIWORD(dword_511EC0) ^ HIWORD(v31);
-    LOWORD(v28) = a5;
-    sub_40BC00(v28, v33, 0x5Fu);
-  }
+  if ( glyph_index == dword_511EC0 )
+    sub_40BC00((unsigned __int16)a5, a4, 0x5Fu);
   return a5;
 }
-// 40BF02: variable 'v9' is possibly undefined
-// 40BFA3: variable 'v8' is possibly undefined
-// 40BFB1: variable 'v12' is possibly undefined
-// 40BFCF: variable 'v13' is possibly undefined
-// 40BFE5: variable 'v14' is possibly undefined
-// 40BFFB: variable 'v16' is possibly undefined
-// 40C01D: variable 'v18' is possibly undefined
-// 40C022: variable 'v19' is possibly undefined
-// 40C039: variable 'v21' is possibly undefined
 // 511EC0: using guessed type int dword_511EC0;
 // 520728: using guessed type int dword_520728;
 
@@ -24747,128 +24688,101 @@ signed int  UnitStack_HasBuilder(int a1)
 //----- (00411B30) --------------------------------------------------------
 __int16  Map_RedrawUnitFootprintByIndex(int a1)
 {
-  __int16 *v1; // ecx
-  int v2; // eax
-  __int16 *v3; // ecx
-  __int16 *v4; // ecx
-  __int16 *v5; // ecx
-  __int16 *v6; // ecx
-  __int16 *v7; // ecx
-  __int16 *v8; // ecx
-  __int16 *v9; // ecx
-  __int16 *v10; // ecx
-  __int16 *v11; // ecx
-  __int16 *v12; // ecx
-  __int16 *v13; // ecx
+  __int16 *unit_stack; // ecx
+  int result; // eax
+  int unit_type; // eax
+  int unit_metadata_offset; // eax
+  int x; // eax
+  int y; // edx
 
-  sub_418A90(*(__int16 *)(gameData + 147174 + 725 * a1), *(__int16 *)(gameData + 147174 + 725 * a1 + 2));
-  v2 = 88 * v1[3];
-  if ( byte_512577[v2] )
+  unit_stack = (__int16 *)(gameData + 147174 + 725 * a1);
+  x = unit_stack[0];
+  y = unit_stack[1];
+  result = sub_418A90(x, y);
+  unit_type = unit_stack[3];
+  unit_metadata_offset = 88 * unit_type;
+  if ( byte_512577[unit_metadata_offset] )
   {
-    LOWORD(v2) = v1[3];
-    if ( (unsigned __int16)v2 >= 0x1Bu )
+    if ( (unsigned __int16)unit_type >= 0x1Bu )
     {
-      if ( (unsigned __int16)v2 > 0x1Bu )
+      if ( (unsigned __int16)unit_type > 0x1Bu )
       {
-        if ( (_WORD)v2 == 30 )
+        if ( (unsigned __int16)unit_type == 0x1E )
         {
-          sub_418A90(*v1 + 1, v1[1]);
-          sub_418A90(*v11, v11[1] - 1);
-          sub_418A90(*v12 - 1, v12[1]);
-          LOWORD(v2) = sub_418A90(*v13, v13[1] + 1);
+          sub_418A90(x + 1, y);
+          sub_418A90(x, y - 1);
+          sub_418A90(x - 1, y);
+          result = sub_418A90(x, y + 1);
         }
       }
       else
       {
-        LOWORD(v2) = *((unsigned __int8 *)v1 + 5);
-        switch ( *((_BYTE *)v1 + 5) )
+        switch ( *((_BYTE *)unit_stack + 5) )
         {
           case 0:
           case 4:
-            sub_418A90(*v1 - 1, v1[1]);
-            LOWORD(v2) = sub_418A90(*v3 + 1, v3[1]);
+            sub_418A90(x - 1, y);
+            result = sub_418A90(x + 1, y);
             break;
           case 1:
-            sub_418A90(*v1 + 1, v1[1]);
-            LOWORD(v2) = sub_418A90(*v10, v10[1] - 1);
+            sub_418A90(x + 1, y);
+            result = sub_418A90(x, y - 1);
             break;
           case 2:
           case 6:
-            sub_418A90(*v1, v1[1] - 1);
-            LOWORD(v2) = sub_418A90(*v4, v4[1] + 1);
+            sub_418A90(x, y - 1);
+            result = sub_418A90(x, y + 1);
             break;
           case 3:
-            sub_418A90(*v1 + 1, v1[1]);
-            sub_418A90(*v8, v8[1] + 1);
-            LOWORD(v2) = sub_418A90(*v9, v9[1] - 1);
+            sub_418A90(x + 1, y);
+            sub_418A90(x, y + 1);
+            result = sub_418A90(x, y - 1);
             break;
           case 5:
-            sub_418A90(*v1 - 1, v1[1]);
-            sub_418A90(*v6, v6[1] + 1);
-            LOWORD(v2) = sub_418A90(*v7, v7[1] - 1);
+            sub_418A90(x - 1, y);
+            sub_418A90(x, y + 1);
+            result = sub_418A90(x, y - 1);
             break;
           case 7:
-            sub_418A90(*v1 - 1, v1[1]);
-            LOWORD(v2) = sub_418A90(*v5, v5[1] - 1);
+            sub_418A90(x - 1, y);
+            result = sub_418A90(x, y - 1);
             break;
           default:
-            return v2;
+            return result;
         }
       }
     }
   }
-  return v2;
+  return result;
 }
-// 411B68: variable 'v1' is possibly undefined
-// 411BA8: variable 'v3' is possibly undefined
-// 411BC9: variable 'v4' is possibly undefined
-// 411BE6: variable 'v5' is possibly undefined
-// 411C03: variable 'v6' is possibly undefined
-// 411C10: variable 'v7' is possibly undefined
-// 411C2D: variable 'v8' is possibly undefined
-// 411C3A: variable 'v9' is possibly undefined
-// 411C57: variable 'v10' is possibly undefined
-// 411C74: variable 'v11' is possibly undefined
-// 411C7D: variable 'v12' is possibly undefined
-// 411C8E: variable 'v13' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00411CB0) --------------------------------------------------------
 int  Map_RedrawUnitNeighborhoodByIndex(int a1)
 {
   int result; // eax
-  __int16 *v3; // ecx
-  __int16 *v4; // ecx
-  __int16 *v5; // ecx
-  __int16 *v6; // ecx
-  __int16 *v7; // ecx
-  __int16 *v8; // ecx
-  __int16 *v9; // ecx
-  __int16 *v10; // ecx
+  __int16 *unit_stack; // ecx
+  int x; // eax
+  int y; // edx
 
-  sub_418A90(*(__int16 *)(725 * a1 + gameData + 147174), *(__int16 *)(725 * a1 + gameData + 147174 + 2));
+  unit_stack = (__int16 *)(725 * a1 + gameData + 147174);
+  x = unit_stack[0];
+  y = unit_stack[1];
+  result = sub_418A90(x, y);
   result = Unit_GetSpriteVerticalOffsetPx(a1);
   if ( result )
   {
-    sub_418A90(*v3, v3[1] - 1);
-    sub_418A90(*v4, v4[1] + 1);
-    sub_418A90(*v5 - 1, v5[1]);
-    sub_418A90(*v6 + 1, v6[1]);
-    sub_418A90(*v7 - 1, v7[1] - 1);
-    sub_418A90(*v8 - 1, v8[1] + 1);
-    sub_418A90(*v9 + 1, v9[1] - 1);
-    return sub_418A90(*v10 + 1, v10[1] + 1);
+    sub_418A90(x, y - 1);
+    sub_418A90(x, y + 1);
+    sub_418A90(x - 1, y);
+    sub_418A90(x + 1, y);
+    sub_418A90(x - 1, y - 1);
+    sub_418A90(x - 1, y + 1);
+    sub_418A90(x + 1, y - 1);
+    return sub_418A90(x + 1, y + 1);
   }
   return result;
 }
-// 411CFB: variable 'v3' is possibly undefined
-// 411D08: variable 'v4' is possibly undefined
-// 411D11: variable 'v5' is possibly undefined
-// 411D1E: variable 'v6' is possibly undefined
-// 411D2F: variable 'v7' is possibly undefined
-// 411D3D: variable 'v8' is possibly undefined
-// 411D4B: variable 'v9' is possibly undefined
-// 411D59: variable 'v10' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00411D70) --------------------------------------------------------
@@ -24906,7 +24820,7 @@ void Map_UpdateIdleAnimatedUnits()
           *(_BYTE *)(v1 + 23) = BYTE1(v5);
           *(_BYTE *)(v1 + 23) = BYTE1(v5) & 0xF8;
           *(_BYTE *)(v1 + 23) = BYTE1(v5);
-          Map_RedrawUnitFootprintByIndex(v6);
+          Map_RedrawUnitFootprintByIndex(v0);
         }
       }
     }
@@ -24915,13 +24829,8 @@ void Map_UpdateIdleAnimatedUnits()
   }
   while ( v0 < 500 );
   UI_UpdateWorldMapUnitAttentionFlash();
-  sub_418E50(v8, v7);
+  sub_418E50(0, 0);
 }
-// 411DBE: variable 'v0' is possibly undefined
-// 411DBE: variable 'v1' is possibly undefined
-// 411DF4: variable 'v6' is possibly undefined
-// 411E0D: variable 'v8' is possibly undefined
-// 411E0D: variable 'v7' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00411E20) --------------------------------------------------------
@@ -59991,7 +59900,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
 
 //----- (00445360) --------------------------------------------------------
 int  UI_ShowInfoWindow(
-        int a1,
+        const char *a1,
         unsigned int a2,
         int a3,
         DWORD a4,
@@ -60022,12 +59931,13 @@ int  UI_ShowInfoWindow(
   int result; // eax
   _DWORD *v29; // [esp+68h] [ebp-34h] BYREF
   int (*v30)(); // [esp+6Ch] [ebp-30h]
-  int v31; // [esp+70h] [ebp-2Ch]
+  const char *v31; // [esp+70h] [ebp-2Ch]
   _DWORD *v32; // [esp+74h] [ebp-28h]
   DWORD v33; // [esp+78h] [ebp-24h]
   int SpriteHeight; // [esp+7Ch] [ebp-20h]
   int v35; // [esp+80h] [ebp-1Ch]
   int SpriteWidth; // [esp+84h] [ebp-18h]
+  int info_header_height;
 
   v31 = a1;
   Debug_Log(a3, a2, a4, (int)aWindowmessageS);
@@ -60046,7 +59956,7 @@ int  UI_ShowInfoWindow(
     {
       v19 = (_DWORD *)Mem_Alloc(4112, v8, a2, 0);
       if ( v19 )
-        v19 = DLXSpriteSet_Load(v19, a2);
+        v19 = DLXSpriteSet_Load(v19, "pergamin.s32");
       v29 = v19;
       a6 = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)v19, 3u)) / 2;
       a5 = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)v29, 3u)) / 2;
@@ -60069,23 +59979,14 @@ int  UI_ShowInfoWindow(
       SpriteForChar = DLX_GetSpriteForChar((int)v29, 3);
       v33 = *((_DWORD *)g_RenderDevice + 46);
       v7 = v33;
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v33 + 52))(
-        a6,
-        SpriteForChar,
-        -1,
-        -1,
-        -1,
-        -1,
-        1,
-        0,
-        0);
+      Compat_RenderDeviceDrawMenuSprite(a6, a5, SpriteForChar, 1);
       UI_DrawTextFmt(a5, a5, a5 + SpriteHeight, a6 + 18, 3, v31);
     }
     else if ( a2 == 2 )
     {
       v23 = (_DWORD *)Mem_Alloc(4112, v8, 2, 0);
       if ( v23 )
-        v23 = DLXSpriteSet_Load(v23, 2);
+        v23 = DLXSpriteSet_Load(v23, "pergamin.s32");
       v29 = v23;
       a6 = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)v23, 2u)) / 2;
       a5 = (640 - (unsigned __int16)DLX_GetSpriteHeight((int)v29, 2u)) / 2;
@@ -60107,16 +60008,7 @@ int  UI_ShowInfoWindow(
       g_RenderDevice = &unk_51D4C0;
       v26 = DLX_GetSpriteForChar((int)v29, 2);
       v7 = *((_DWORD *)g_RenderDevice + 46);
-      (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v7 + 52))(
-        a6,
-        v26,
-        -1,
-        -1,
-        -1,
-        -1,
-        1,
-        0,
-        0);
+      Compat_RenderDeviceDrawMenuSprite(a6, a5, v26, 1);
       UI_DrawTextFmt(a5, a5 + 25, a5 + SpriteHeight - 25, a6 + 25, 6, v31);
     }
   }
@@ -60124,7 +60016,7 @@ int  UI_ShowInfoWindow(
   {
     v12 = (_DWORD *)Mem_Alloc(4112, v8, 0, 0);
     if ( v12 )
-      v12 = DLXSpriteSet_Load(v12, 0);
+      v12 = DLXSpriteSet_Load(v12, "temple.s32");
     LOWORD(a6) = 150;
     v29 = v12;
     DLX_GetSpriteWidth((int)v12, 0x17u);
@@ -60142,36 +60034,18 @@ int  UI_ShowInfoWindow(
     Render_FillRect(0, v16, 150, 0, 0x27Fu, SpriteWidth + 149, 0, 0);
     g_RenderDevice = &unk_51D4C0;
     v17 = DLX_GetSpriteForChar((int)v29, 22);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-      150,
-      v17,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      0,
-      0);
-    DLX_GetSpriteHeight((int)v29, 0x16u);
+    Compat_RenderDeviceDrawMenuSprite(150, 0, v17, 1);
+    info_header_height = (unsigned __int16)DLX_GetSpriteHeight((int)v29, 0x16u);
     v18 = DLX_GetSpriteForChar((int)v29, 23);
     v7 = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v7 + 52))(
-      156,
-      v18,
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      0,
-      0);
+    Compat_RenderDeviceDrawMenuSprite(156, info_header_height, v18, 1);
     UI_DrawTextFmt(0, 70, 569, 210, 6, v31);
   }
   sub_405920((int *)&v29);
   Render_Present((int)dword_544CD8);
   Render_Begin((int)dword_544CD8, 0);
-  while ( !DD_IsFlipping(v9) && !DD_IsLost(v10) )
-    DD_Pump(v11, 0);
+  while ( !DD_IsFlipping((int)dword_544CD8) && !DD_IsLost((int)dword_544CD8) )
+    DD_Pump((int)dword_544CD8, 0);
   Render_Begin((int)dword_544CD8, 0);
   Render_Pump();
   Debug_Log((int)g_RenderHook, 0, v7, (int)aUnsetrh08x_10);
@@ -60181,7 +60055,7 @@ int  UI_ShowInfoWindow(
   v27 = v32;
   result = Render_Present((int)dword_544CD8);
   if ( v27 )
-    return (*(int (**)(void))v27[46])();
+    return RenderSurface_InvokeSlot0(v27, 2);
   return result;
 }
 // 445457: variable 'v8' is possibly undefined
@@ -61258,7 +61132,7 @@ int  UI_ShowMissionStatusPanel(int a1, DWORD a2)
       v4,
       ACTIVE_MISSION_INDEX % 10 + 1,
       (&g_MissionStatusTextsByLanguage[3 * v3])[(unsigned __int8)g_LanguageIndex]);
-    return UI_ShowInfoWindow((int)v7, 2u, v5, a2, (int)&v8[3], (int)v4);
+    return UI_ShowInfoWindow((const char *)v7, 2u, v5, a2, (int)&v8[3], (int)v4);
   }
   return result;
 }

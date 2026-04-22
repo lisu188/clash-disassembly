@@ -7612,3 +7612,39 @@
   - the mission-info wait is reached, and the inspected later frame shows mission-info imagery beginning to draw over the menu shield, but full intro-page presentation is still not claimed
   - skip-clicking past the mission-info waits remains unvalidated and is the next route blocker
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 205 - Campaign skip-through to live human-turn world map
+- Current frontier:
+  - continue the authentic Campaign route past mission-info/session intro into the recovered world-map human-turn loop, with first-turn input and map-artifact fidelity still next
+- Blockers removed this batch:
+  - repaired `UI_ShowInfoWindow` so mission/status panels load the correct `temple.s32` / `pergamin.s32` sprite sheets, draw through compact-safe menu-sprite dispatch, pump explicit render state, and destroy temporary surfaces through the compact destructor helper
+  - preserved the stack text buffer pointer in `UI_ShowMissionStatusPanel` instead of truncating it to a single byte/word lane before `UI_ShowInfoWindow`
+  - rewrote `sub_40BEE0` text layout/draw flow from the reached assembly shape, removing ghost text pointers in multiline/wrapped text drawing
+  - kept primary SDL palette updates in recovered render storage instead of writing through stale DirectDraw stream handles in `sub_404C80`
+  - guarded primary `Render_SaveBackbuffer` against the same stale DirectDraw context while the SDL presenter owns the visible primary path
+  - sized `unk_51D0B0` as the recovered 0x400-byte palette fade snapshot block and made `sub_404DE0` treat its third operand as a scalar fade step, stopping the first human-turn palette fade from overwriting `unk_51D4C0`
+  - reconstructed `Map_RedrawUnitFootprintByIndex`, `Map_RedrawUnitNeighborhoodByIndex`, and the idle-animation caller from the assembly-held unit-stack pointer/index instead of undefined aliases
+  - repaired the first animated-map-tile loop in `sub_406FA0` to use the current tile pointer for terrain/overlay frame deadlines at byte offsets `+6` and `+10`
+- Compile/link/runtime status:
+  - `cmake --build build -j$(nproc)`
+  - `xvfb-run -a` default route with real `xdotool` clicks at Campaign `(220,190)`, first campaign selector `(220,298)`, and three intro/status skip clicks at `(320,240)` reaches the world map and stays alive for a 10-second human-turn hold
+  - frame dumps under `/tmp/clash205-world-aftertile.YPp3FA` were visually inspected; `frame-015.png` shows a nonblank live world map with terrain, grid, units, UI chrome, and map inset
+  - a longer 25-second hold under `/tmp/clash205-world-longhold.V0gQpl` stayed alive until the intentional `SIGTERM` kill (`status=143`, `ALIVE=1`)
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124`
+- Highest authentic runtime milestone reached:
+  - promoted: the real SDL/X11 Campaign route now skip-clicks through mission info/status panels into `WorldMap_RunHumanTurnLoop` and remains alive on the first human-controlled world-map frame
+  - retained: Campaign submenu/session-intro entry from Batch 204 and real top-level menu input from Batch 203
+  - still not claimed: selecting/moving a unit, completing a playable action, keyboard flow, or final map/minimap tile-art fidelity
+- Key evidence used:
+  - GDB route stacks showed sequential progress from `UI_ShowInfoWindow` and `UI_ShowMissionStatusPanel` crashes into `WorldMap_RunHumanTurnLoop -> WorldMap_RedrawFrame`
+  - a hardware watchpoint proved `sub_404DE0`'s 0x400-byte copy into one-byte `unk_51D0B0` was corrupting `unk_51D4C0`; the original symbol spacing places the palette snapshot block before the primary surface
+  - `clash95.asm:27063-27376` proves the unit footprint/neighborhood helpers keep the unit stack pointer in `ecx` and pass the idle-animation loop index in `eax`
+  - `clash95.asm:10772-10990` proves the animated tile loop reads and writes each 14-byte map tile's primary and overlay deadlines from the current tile pointer
+- Ambiguous candidates deferred:
+  - the final world-map frame is live and nonblank, but some map/minimap artifact fidelity remains visibly imperfect and is not claimed as fixed
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

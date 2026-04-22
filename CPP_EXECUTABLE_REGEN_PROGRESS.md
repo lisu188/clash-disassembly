@@ -389,3 +389,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - Real Xvfb input now clicks the visible top-level Campaign button, inspects the resulting Campaign submenu frame, then clicks the first campaign selector and reaches `Scenario_LoadMissionByIndexAndPlay -> sub_462480 -> UI_WaitForAnyKeyOrClick` without crashing.
 - The reached fixes repaired compact render-surface slot dispatch for PCX load/present/clear/destruction, widened the Campaign widget callbacks, restored `loadFileSusp` to the asm-backed 0x80000-byte copy loop, preserved PCX palette output pointers on stack-backed mission-info loads, and removed the first reached session-init crashes in army-fact strength sync, `createCastle`, and mission-fact logging.
 - A fresh post-fix route stayed alive after 24 seconds in `UI_WaitForAnyKeyOrClick -> sub_462480`, with frame inspection showing the Campaign submenu and mission-info imagery beginning to draw. This promotes Campaign submenu/session-intro entry through authentic front-end input. It does not yet claim skip-through to the world map or a playable human turn.
+
+## Latest Campaign world-map human-turn route update
+- The next executable-regeneration step stayed in recovered C and the SDL/X11 real-input route; no host-side campaign shortcut was added.
+- Real Xvfb input now clicks Campaign, selects the first campaign entry, skip-clicks the mission/status info panels, and reaches `WorldMap_RunHumanTurnLoop`.
+- Reached fixes repaired `UI_ShowInfoWindow` / `UI_ShowMissionStatusPanel` pointer-width/status-panel rendering, `sub_40BEE0` wrapped text layout, primary SDL palette/saveback guards, the `unk_51D0B0` palette snapshot storage, `sub_404DE0` fade-step typing, world-map unit redraw aliases, and the first animated-tile loop in `sub_406FA0`.
+- A 10-second inspected frame route and a 25-second hold route stayed alive on the live world map; frame inspection shows terrain/grid/units/UI/inset, with visible map/minimap artifact fidelity still deferred.
+- This promotes authentic Campaign skip-through to first human-turn world-map liveness, not selectable-unit movement or a completed playable action.

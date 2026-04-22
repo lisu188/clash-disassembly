@@ -294,3 +294,6 @@
 
 ## 46. Batch 204 Note
 - `Batch 204` stayed on the executable front-end and campaign session-route frontier. The active work drove real Xvfb input through the Campaign menu into `Scenario_LoadMissionByIndexAndPlay -> sub_462480 -> UI_WaitForAnyKeyOrClick` and repaired reached render dispatch, file-copy, callback-pointer, PCX-palette width, army-fact strength sync, `createCastle`, and mission-fact logging hazards. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 47. Batch 205 Note
+- `Batch 205` stayed on the executable front-end / human-turn runtime recovery frontier. The active work drove real Xvfb input through Campaign, skip-clicked mission/status panels, reached the live world-map human-turn loop, and repaired reached info-window, text-layout, palette-fade, unit-redraw, and animated-tile runtime hazards. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
