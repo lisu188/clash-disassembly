@@ -628,6 +628,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
           &fallback_probe_primary,
           &fallback_probe_secondary,
           0,
+          0,
           0);
         fprintf(
           stderr,
@@ -657,6 +658,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
           &fallback_probe_primary,
           &fallback_probe_secondary,
           0,
+          0,
           0);
         fprintf(
           stderr,
@@ -681,6 +683,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
           &fallback_probe_delta_y,
           &fallback_probe_primary,
           &fallback_probe_secondary,
+          0,
           0,
           0);
         fprintf(
@@ -960,6 +963,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           &fallback_probe_primary,
           &fallback_probe_secondary,
           0,
+          0,
           0);
         fprintf(
           stderr,
@@ -984,6 +988,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           &fallback_probe_delta_y,
           &fallback_probe_primary,
           &fallback_probe_secondary,
+          0,
           0,
           0);
         fprintf(
@@ -1027,6 +1032,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           &fallback_probe_primary,
           &fallback_probe_secondary,
           0,
+          0,
           0);
         fprintf(
           stderr,
@@ -1056,6 +1062,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           &fallback_probe_primary,
           &fallback_probe_secondary,
           0,
+          0,
           0);
         fprintf(
           stderr,
@@ -1080,6 +1087,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           &fallback_probe_delta_y,
           &fallback_probe_primary,
           &fallback_probe_secondary,
+          0,
           0,
           0);
         fprintf(

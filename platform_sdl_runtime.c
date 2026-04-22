@@ -8,6 +8,7 @@
 #define SDL_Palette SDL2_Palette
 #define SDL_Cursor SDL2_Cursor
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 #undef SDL_Window
 #undef SDL_Renderer
 #undef SDL_Texture
@@ -1829,8 +1830,11 @@ static int g_platform_host_mouse_x;
 static int g_platform_host_mouse_y;
 static int g_platform_host_mouse_delta_x;
 static int g_platform_host_mouse_delta_y;
+static int g_platform_host_mouse_delta_is_host_pixels;
 static signed char g_platform_host_mouse_primary;
 static signed char g_platform_host_mouse_secondary;
+static int g_platform_host_mouse_primary_pending_press;
+static int g_platform_host_mouse_secondary_pending_press;
 static int g_platform_debug_mouse_primary_pulse_reads;
 static int g_platform_debug_mouse_secondary_pulse_reads;
 static signed char g_platform_host_keyboard_state[256];
@@ -2136,13 +2140,21 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
         break;
       switch ( event->window.event )
       {
-        case SDL_WINDOWEVENT_EXPOSED:
         case SDL_WINDOWEVENT_SHOWN:
+        case SDL_WINDOWEVENT_EXPOSED:
+          PlatformQueuePush(hwnd, PLATFORM_WM_PAINT, 0, 0);
+          break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
         case SDL_WINDOWEVENT_RESIZED:
-          ((struct SDL_Window *)hwnd)->width = event->window.data1;
-          ((struct SDL_Window *)hwnd)->height = event->window.data2;
+          if ( event->window.data1 > 0 )
+            ((struct SDL_Window *)hwnd)->width = event->window.data1;
+          if ( event->window.data2 > 0 )
+            ((struct SDL_Window *)hwnd)->height = event->window.data2;
           PlatformQueuePush(hwnd, PLATFORM_WM_PAINT, 0, 0);
+          break;
+        case SDL_WINDOWEVENT_MOVED:
+          ((struct SDL_Window *)hwnd)->x = event->window.data1;
+          ((struct SDL_Window *)hwnd)->y = event->window.data2;
           break;
         case SDL_WINDOWEVENT_FOCUS_GAINED:
           PlatformQueuePush(hwnd, PLATFORM_WM_ACTIVATEAPP, 1, 0);
@@ -2163,17 +2175,27 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
       g_platform_host_mouse_y = event->motion.y;
       g_platform_host_mouse_delta_x += event->motion.xrel;
       g_platform_host_mouse_delta_y += event->motion.yrel;
+      g_platform_host_mouse_delta_is_host_pixels = 1;
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
       g_platform_host_mouse_delta_x += event->button.x - g_platform_host_mouse_x;
       g_platform_host_mouse_delta_y += event->button.y - g_platform_host_mouse_y;
+      g_platform_host_mouse_delta_is_host_pixels = 1;
       g_platform_host_mouse_x = event->button.x;
       g_platform_host_mouse_y = event->button.y;
       if ( event->button.button == SDL_BUTTON_LEFT )
+      {
+        if ( event->type == SDL_MOUSEBUTTONDOWN )
+          g_platform_host_mouse_primary_pending_press = 1;
         g_platform_host_mouse_primary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
+      }
       else if ( event->button.button == SDL_BUTTON_RIGHT )
+      {
+        if ( event->type == SDL_MOUSEBUTTONDOWN )
+          g_platform_host_mouse_secondary_pending_press = 1;
         g_platform_host_mouse_secondary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
+      }
       break;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
@@ -2186,6 +2208,122 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
   }
 }
 
+static int PlatformQueryX11PointerState(struct SDL_Window *window, int *mouse_x, int *mouse_y, Uint32 *mouse_buttons)
+{
+#if defined(SDL_VIDEO_DRIVER_X11)
+  SDL_SysWMinfo wm_info;
+  Window root_window;
+  Window child_window;
+  int root_x;
+  int root_y;
+  int window_x;
+  int window_y;
+  unsigned int state_mask;
+
+  if ( !window || !window->host_window || !mouse_x || !mouse_y || !mouse_buttons )
+    return 0;
+  SDL_VERSION(&wm_info.version);
+  if ( !SDL_GetWindowWMInfo(window->host_window, &wm_info) || wm_info.subsystem != SDL_SYSWM_X11 )
+    return 0;
+  if ( !wm_info.info.x11.display || !wm_info.info.x11.window )
+    return 0;
+  root_window = 0;
+  child_window = 0;
+  root_x = 0;
+  root_y = 0;
+  window_x = 0;
+  window_y = 0;
+  state_mask = 0;
+  if ( !XQueryPointer(
+          wm_info.info.x11.display,
+          wm_info.info.x11.window,
+          &root_window,
+          &child_window,
+          &root_x,
+          &root_y,
+          &window_x,
+          &window_y,
+          &state_mask) )
+  {
+    return 0;
+  }
+  if ( window_x < 0 || window_y < 0 || window_x >= window->width || window_y >= window->height )
+    return 0;
+  *mouse_x = window_x;
+  *mouse_y = window_y;
+  *mouse_buttons = 0;
+  if ( (state_mask & Button1Mask) != 0 )
+    *mouse_buttons |= SDL_BUTTON_LMASK;
+  if ( (state_mask & Button3Mask) != 0 )
+    *mouse_buttons |= SDL_BUTTON_RMASK;
+  return 1;
+#else
+  (void)window;
+  (void)mouse_x;
+  (void)mouse_y;
+  (void)mouse_buttons;
+  return 0;
+#endif
+}
+
+static void PlatformSyncPolledMouseState(void)
+{
+  struct SDL_Window *window;
+  int mouse_x;
+  int mouse_y;
+  int global_mouse_x;
+  int global_mouse_y;
+  int window_x;
+  int window_y;
+  Uint32 mouse_buttons;
+  int primary_down;
+  int secondary_down;
+
+  window = (struct SDL_Window *)g_platform_foreground_window;
+  if ( !window || !window->host_window )
+    return;
+  global_mouse_x = 0;
+  global_mouse_y = 0;
+  window_x = window->x;
+  window_y = window->y;
+  SDL_GetWindowPosition(window->host_window, &window_x, &window_y);
+  if ( PlatformQueryX11PointerState(window, &mouse_x, &mouse_y, &mouse_buttons) )
+  {
+    global_mouse_x = window_x + mouse_x;
+    global_mouse_y = window_y + mouse_y;
+  }
+  else
+  {
+    mouse_buttons = SDL_GetGlobalMouseState(&global_mouse_x, &global_mouse_y);
+    mouse_x = global_mouse_x - window_x;
+    mouse_y = global_mouse_y - window_y;
+  }
+  if ( mouse_x < 0 || mouse_y < 0 || mouse_x >= window->width || mouse_y >= window->height )
+  {
+    mouse_x = g_platform_host_mouse_x;
+    mouse_y = g_platform_host_mouse_y;
+    mouse_buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
+  }
+  if ( mouse_x < 0 || mouse_y < 0 || mouse_x >= window->width || mouse_y >= window->height )
+    return;
+
+  g_platform_host_mouse_delta_x += mouse_x - g_platform_host_mouse_x;
+  g_platform_host_mouse_delta_y += mouse_y - g_platform_host_mouse_y;
+  if ( mouse_x != g_platform_host_mouse_x || mouse_y != g_platform_host_mouse_y )
+    g_platform_host_mouse_delta_is_host_pixels = 1;
+  g_platform_host_mouse_x = mouse_x;
+  g_platform_host_mouse_y = mouse_y;
+
+  primary_down = (mouse_buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
+  secondary_down = (mouse_buttons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
+  if ( primary_down && !g_platform_host_mouse_primary )
+    g_platform_host_mouse_primary_pending_press = 1;
+  if ( secondary_down && !g_platform_host_mouse_secondary )
+    g_platform_host_mouse_secondary_pending_press = 1;
+  g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
+  g_platform_host_mouse_secondary = secondary_down ? (signed char)0x80 : 0;
+}
+
 static void PlatformPumpHostEvents(void)
 {
   SDL_Event event;
@@ -2194,6 +2332,7 @@ static void PlatformPumpHostEvents(void)
     return;
   while ( SDL_PollEvent(&event) )
     PlatformHandleHostEvent(&event);
+  PlatformSyncPolledMouseState();
 }
 
 ATOM __stdcall RegisterClassA(const WNDCLASSA *lpWndClass)
@@ -3001,8 +3140,11 @@ void Platform_ResetInputFallbackState(void)
   g_platform_host_mouse_y = 0;
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
+  g_platform_host_mouse_delta_is_host_pixels = 0;
   g_platform_host_mouse_primary = 0;
   g_platform_host_mouse_secondary = 0;
+  g_platform_host_mouse_primary_pending_press = 0;
+  g_platform_host_mouse_secondary_pending_press = 0;
   g_platform_debug_mouse_primary_pulse_reads = 0;
   g_platform_debug_mouse_secondary_pulse_reads = 0;
   memset(g_platform_host_keyboard_state, 0, sizeof(g_platform_host_keyboard_state));
@@ -3018,6 +3160,7 @@ void Platform_DebugPrimeInputFallbackMouseState(int x, int y, int primary_down, 
    */
   g_platform_host_mouse_delta_x += x - g_platform_host_mouse_x;
   g_platform_host_mouse_delta_y += y - g_platform_host_mouse_y;
+  g_platform_host_mouse_delta_is_host_pixels = 0;
   g_platform_host_mouse_x = x;
   g_platform_host_mouse_y = y;
   g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
@@ -3034,6 +3177,7 @@ void Platform_DebugPrimeInputFallbackMouseDelta(int delta_x, int delta_y, int pr
    */
   g_platform_host_mouse_delta_x += delta_x;
   g_platform_host_mouse_delta_y += delta_y;
+  g_platform_host_mouse_delta_is_host_pixels = 0;
   g_platform_host_mouse_x += delta_x;
   g_platform_host_mouse_y += delta_y;
   g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
@@ -3058,17 +3202,28 @@ void Platform_ReadInputFallbackState(
   signed char *mouse_button_primary,
   signed char *mouse_button_secondary,
   signed char *keyboard_state,
-  int keyboard_state_size)
+  int keyboard_state_size,
+  int *mouse_delta_is_host_pixels)
 {
   PlatformPumpHostEvents();
   if ( mouse_delta_x )
     *mouse_delta_x = g_platform_host_mouse_delta_x;
   if ( mouse_delta_y )
     *mouse_delta_y = g_platform_host_mouse_delta_y;
+  if ( mouse_delta_is_host_pixels )
+    *mouse_delta_is_host_pixels = g_platform_host_mouse_delta_is_host_pixels;
   if ( mouse_button_primary )
+  {
     *mouse_button_primary = g_platform_host_mouse_primary;
+    if ( !*mouse_button_primary && g_platform_host_mouse_primary_pending_press )
+      *mouse_button_primary = (signed char)0x80;
+  }
   if ( mouse_button_secondary )
+  {
     *mouse_button_secondary = g_platform_host_mouse_secondary;
+    if ( !*mouse_button_secondary && g_platform_host_mouse_secondary_pending_press )
+      *mouse_button_secondary = (signed char)0x80;
+  }
   if ( keyboard_state && keyboard_state_size > 0 )
   {
     size_t copy_size;
@@ -3080,6 +3235,9 @@ void Platform_ReadInputFallbackState(
   }
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
+  g_platform_host_mouse_delta_is_host_pixels = 0;
+  g_platform_host_mouse_primary_pending_press = 0;
+  g_platform_host_mouse_secondary_pending_press = 0;
   if ( g_platform_debug_mouse_primary_pulse_reads > 0 && --g_platform_debug_mouse_primary_pulse_reads == 0 )
     g_platform_host_mouse_primary = 0;
   if ( g_platform_debug_mouse_secondary_pulse_reads > 0 && --g_platform_debug_mouse_secondary_pulse_reads == 0 )

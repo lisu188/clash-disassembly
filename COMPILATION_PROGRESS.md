@@ -7535,3 +7535,116 @@
   - the second main-menu draw-stage argument observed in assembly remains deferred because the restored palette plus primary presentation is sufficient for the current black-screen blocker
   - the `/A0` world-map frame is nonblack but still needs separate artifact/minimap/tile-fidelity work before claiming rendering completeness
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 203 - SDL fallback main-menu input responsiveness
+- Current frontier:
+  - move from visible main-menu frames to real front-end input responsiveness on the default full `App_WinMain` route, with Campaign/Load/Multiplayer human-route validation still next
+- Blockers removed this batch:
+  - stopped `SDL_WINDOWEVENT_SHOWN` / `SDL_WINDOWEVENT_EXPOSED` from overwriting the stored host window size with zero-valued event data, while keeping real resize events authoritative
+  - added SDL-host X11 pointer polling through `SDL_GetWindowWMInfo` / `XQueryPointer` so WSL/Xvfb/XTest mouse motion and button state can reach the fallback input seam even when SDL's global pointer state is stale
+  - latched button-down edges until the next `Platform_ReadInputFallbackState` sample so a fast host click cannot collapse into an all-up state between recovered polls
+  - marked real host mouse deltas as pixel-space and converted them in `InputBackend_PollState` to the recovered render state's DirectInput-style relative units before `sub_460A50` applies cursor sensitivity
+  - kept the old debug-prime fallback helpers on their raw recovered-delta lane by passing an explicit `mouse_delta_is_host_pixels` flag out of the platform seam
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_regen -j2`
+  - `ctest --test-dir build --output-on-failure`
+  - `xvfb-run -a bash -lc '<frame-wait default route, xdotool move/click Exit>'` exits `0` after the recovered main-menu Exit button is clicked
+  - `xvfb-run -a timeout 4s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash203-main-frame ./build/bin/clash95_bootstrap` exits `124`; `/tmp/clash203-main-frame-003.bmp` has `296141 / 307200` nonblack pixels
+  - `xvfb-run -a timeout 6s env CLASH95_SCREENSHOT_PREFIX=/tmp/clash203-a0-frame ./build/bin/clash95_bootstrap /A0` exits `124`; `/tmp/clash203-a0-frame-003.bmp` has `254986 / 307200` nonblack pixels
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124`
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - JSON parse check for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - promoted: the default route now accepts real SDL/X11 mouse input on the visible main menu; a real Xvfb window click on the Exit button drives the recovered widget loop and exits cleanly
+  - retained: visible main-menu and `/A0` frames remain the rendering milestones from Batch 202
+  - still not claimed: Campaign, Load Game, or Multiplayer route entry via real input; keyboard menu control; or a playable human turn
+- Key evidence used:
+  - `Platform_HandleHostEvent` previously grouped shown/exposed with resize events even though SDL supplies zero dimensions for shown/exposed notifications
+  - `Platform_ReadInputFallbackState -> InputBackend_PollState -> sub_460A50` is the live fallback corridor reached because the DirectInput setup intentionally fails on SDL
+  - Xvfb validation showed `SDL_GetGlobalMouseState` could stay stale while `XQueryPointer` reported the real pointer at the clicked window coordinates
+  - the render-state cursor update multiplies input deltas by `*(render_state + 32)` and shifts by `*(render_state + 1108)`, so host pixel deltas must be scaled before entering the recovered update
+- Ambiguous candidates deferred:
+  - non-X11 SDL backends still rely on SDL's normal mouse state APIs rather than the X11-specific corroboration path
+  - this batch proves the top-level Exit button, not the deeper Campaign, Load Game, or Multiplayer submenu routes
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 204 - Campaign submenu to mission-info route
+- Current frontier:
+  - continue the authentic human-route front-end validation beyond top-level menu input, focused on Campaign -> campaign submenu -> first campaign selector -> recovered mission-info/session-intro setup
+- Blockers removed this batch:
+  - replaced raw compact render-surface slot `+48`, `+36`, and `+56` calls reached by the campaign/session route with width-safe helpers for PCX load, present/update, and software-surface clear/DirectDraw unlock dispatch
+  - widened the campaign submenu callbacks to keep the live widget pointer intact on x86-64 instead of sign-extending a truncated `int`
+  - repaired `loadFileSusp` to follow the asm-backed 0x80000-byte chunk copy path from `sub_4427F0` into the output file handle
+  - widened `Render_LoadPCXImage`'s palette-output argument so stack palette buffers in mission-info setup are not truncated
+  - cleaned the reached `sub_462480` mission-info setup by retaining the second surface handle, constructing the stack palette array, loading A/B/C PCX pages through compact slot `+48`, and using one `Time_Now` result for the staged waits
+  - repaired the mission-info teardown's compact slot `0` calls so temporary surfaces are destroyed through `(surface, flags=2)` instead of native-width raw vtable reads and decompiler ghost locals
+  - fixed the reached campaign session-init army-strength updater by making `UnitStack_CalcArmyFactStrength` walk the 31-byte unit slots explicitly and making `Rules_SyncArmyFactStrength` use the live stack record/fact handle
+  - moved `createCastle`'s building-index read to after `Building_New`, matching the asm path where the tile is reread after it is overwritten with the `0x8000` building id
+  - rewrote `sub_451EC0`'s mission/gameinfo fact loop from asm-backed player offsets and kept the facts in `Rules_Log` while skipping the unsafe auxiliary Watcom formatter echo
+- Compile/link/runtime status:
+  - `cmake --build build -j$(nproc)`
+  - `xvfb-run -a` default route with real `xdotool` click at `(220,190)` reaches the Campaign submenu; frame dump `/tmp/clash-campaign-click-fixed.ZZMoiJ/frame-006.png` was visually inspected and shows `kampania`, `miejsce`, `misje`, and `autorzy`
+  - `xvfb-run -a` default route with real `xdotool` clicks at `(220,190)` then `(220,298)` stays alive after 14 seconds in `Scenario_LoadMissionByIndexAndPlay -> sub_462480 -> UI_WaitForAnyKeyOrClick`; frame dumps were captured under `/tmp/clash-campaign-route-palettefix.S7gcl2`
+  - fresh post-fix `xvfb-run -a` Campaign route stays alive after 24 seconds in `UI_WaitForAnyKeyOrClick -> sub_462480`; frame dumps under `/tmp/clash204-route5.uE2FDa` were visually inspected at frame 006 and frame 010
+  - `ctest --test-dir build --output-on-failure`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124`
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - JSON parse check for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+- Highest authentic runtime milestone reached:
+  - promoted: real SDL/X11 mouse input now drives the visible main menu into the Campaign submenu and then drives the first Campaign selector into the recovered mission-info/session-intro route without crashing
+  - additionally removed reached session-init crashes behind the same route in `Rules_SyncArmyFactStrength`, `createCastle`, and `sub_451EC0`, although the currently retained milestone is still the mission-info wait rather than the world map
+  - retained: top-level Exit remains a clean real-input menu-exit proof from Batch 203, and direct `/A0` still covers the older non-interactive scenario liveness path
+  - still not claimed: skipping through the mission-info intro, reaching the world map from the full Campaign route, or completing a playable human turn
+- Key evidence used:
+  - `clash95.asm:109830-109846` shows the Campaign submenu loading `menu\\kamp.s32`, calling compact surface slot `+0x30` with `menu\\main.gfx` and `byte_543D80`, then slot `+0x24`
+  - the campaign crash pointer `0x406a4200404f57` was two adjacent 32-bit compact-vtable entries read as one 64-bit function pointer, matching the existing compact-vtable helper pattern
+  - `clash95.asm:102536-102635` shows `loadFileSusp` allocating a 0x80000 buffer, reading chunks through the query handle, writing them to the output handle, closing both resources, and freeing the buffer
+  - the reached mission-info route proved the palette argument can be a stack buffer, so `Render_LoadPCXImage` must preserve pointer width on the host build
+  - `clash95.asm:128323-128612` proves the army fact strength pass uses `stack + 6`, a 31-byte unit-slot stride, and the stack's fact handle at `+721`
+  - `clash95.asm:136242-136300` proves `createCastle` calls `Building_New` before rereading the tile value and converting it from a building marker to the building record index
+  - `clash95.asm:123714-123785` proves `sub_451EC0` logs the active mission and five player `gameinfo` facts from player-record strides of `1423`
+- Ambiguous candidates deferred:
+  - the Campaign submenu click coordinate remains calibrated around the current SDL/X11 fallback delta behavior; `(220,298)` reliably hits the first selector under Xvfb
+  - the mission-info wait is reached, and the inspected later frame shows mission-info imagery beginning to draw over the menu shield, but full intro-page presentation is still not claimed
+  - skip-clicking past the mission-info waits remains unvalidated and is the next route blocker
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 205 - Campaign skip-through to live human-turn world map
+- Current frontier:
+  - continue the authentic Campaign route past mission-info/session intro into the recovered world-map human-turn loop, with first-turn input and map-artifact fidelity still next
+- Blockers removed this batch:
+  - repaired `UI_ShowInfoWindow` so mission/status panels load the correct `temple.s32` / `pergamin.s32` sprite sheets, draw through compact-safe menu-sprite dispatch, pump explicit render state, and destroy temporary surfaces through the compact destructor helper
+  - preserved the stack text buffer pointer in `UI_ShowMissionStatusPanel` instead of truncating it to a single byte/word lane before `UI_ShowInfoWindow`
+  - rewrote `sub_40BEE0` text layout/draw flow from the reached assembly shape, removing ghost text pointers in multiline/wrapped text drawing
+  - kept primary SDL palette updates in recovered render storage instead of writing through stale DirectDraw stream handles in `sub_404C80`
+  - guarded primary `Render_SaveBackbuffer` against the same stale DirectDraw context while the SDL presenter owns the visible primary path
+  - sized `unk_51D0B0` as the recovered 0x400-byte palette fade snapshot block and made `sub_404DE0` treat its third operand as a scalar fade step, stopping the first human-turn palette fade from overwriting `unk_51D4C0`
+  - reconstructed `Map_RedrawUnitFootprintByIndex`, `Map_RedrawUnitNeighborhoodByIndex`, and the idle-animation caller from the assembly-held unit-stack pointer/index instead of undefined aliases
+  - repaired the first animated-map-tile loop in `sub_406FA0` to use the current tile pointer for terrain/overlay frame deadlines at byte offsets `+6` and `+10`
+- Compile/link/runtime status:
+  - `cmake --build build -j$(nproc)`
+  - `xvfb-run -a` default route with real `xdotool` clicks at Campaign `(220,190)`, first campaign selector `(220,298)`, and three intro/status skip clicks at `(320,240)` reaches the world map and stays alive for a 10-second human-turn hold
+  - frame dumps under `/tmp/clash205-world-aftertile.YPp3FA` were visually inspected; `frame-015.png` shows a nonblank live world map with terrain, grid, units, UI chrome, and map inset
+  - a longer 25-second hold under `/tmp/clash205-world-longhold.V0gQpl` stayed alive until the intentional `SIGTERM` kill (`status=143`, `ALIVE=1`)
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `UNIT_TYPES_AND_STATS.json` and `RECOVERED_STRUCTURES.json`
+  - `git diff --check`
+  - `timeout 1s build/bin/clash95_bootstrap` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen` exits `124`
+  - `timeout 1s build/bin/clash95_cpp_regen --probe-symbol WorldMap_RunHumanTurnLoop` exits `124`
+- Highest authentic runtime milestone reached:
+  - promoted: the real SDL/X11 Campaign route now skip-clicks through mission info/status panels into `WorldMap_RunHumanTurnLoop` and remains alive on the first human-controlled world-map frame
+  - retained: Campaign submenu/session-intro entry from Batch 204 and real top-level menu input from Batch 203
+  - still not claimed: selecting/moving a unit, completing a playable action, keyboard flow, or final map/minimap tile-art fidelity
+- Key evidence used:
+  - GDB route stacks showed sequential progress from `UI_ShowInfoWindow` and `UI_ShowMissionStatusPanel` crashes into `WorldMap_RunHumanTurnLoop -> WorldMap_RedrawFrame`
+  - a hardware watchpoint proved `sub_404DE0`'s 0x400-byte copy into one-byte `unk_51D0B0` was corrupting `unk_51D4C0`; the original symbol spacing places the palette snapshot block before the primary surface
+  - `clash95.asm:27063-27376` proves the unit footprint/neighborhood helpers keep the unit stack pointer in `ecx` and pass the idle-animation loop index in `eax`
+  - `clash95.asm:10772-10990` proves the animated tile loop reads and writes each 14-byte map tile's primary and overlay deadlines from the current tile pointer
+- Ambiguous candidates deferred:
+  - the final world-map frame is live and nonblank, but some map/minimap artifact fidelity remains visibly imperfect and is not claimed as fixed
+  - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch

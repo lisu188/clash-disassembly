@@ -519,6 +519,7 @@ void Platform_ReadInputFallbackState(
   signed char *mouse_button_primary,
   signed char *mouse_button_secondary,
   signed char *keyboard_state,
-  int keyboard_state_size);
+  int keyboard_state_size,
+  int *mouse_delta_is_host_pixels);
 
 #endif
