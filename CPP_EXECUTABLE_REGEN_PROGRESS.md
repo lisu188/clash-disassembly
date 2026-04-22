@@ -403,3 +403,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `UI_LoadTurnBannerGfx` now preserves the primary and world-map software surfaces around transient `tura*.gfx` loads, then restores them after the banner fades to black before `WorldMap_RenderHook` ramps the map palette.
 - Xvfb Campaign routes under `/tmp/clash-first-mission-restore3-dqQZ0A` and the post-rebase `/tmp/clash-first-mission-rebased-CGEVhT` were inspected at the banner/map transition; the old stale-banner pixels under the world-map palette are gone and the sequence fades from black into the actual map.
 - This promotes first-mission map/banner/map visual handoff fidelity. It still does not claim unit selection, movement, or first-mission completion.
+
+## Latest first-mission castle-entry update
+- The next executable-regeneration step stayed in recovered C and the existing SDL indexed-primary path; no host-side castle shortcut was added.
+- Real Xvfb input now reaches `Building_GetInto -> Castle_OpenManagementScreen` from the first-mission world map.
+- The first castle composite PCX load now passes `byte_526A70` as the palette output buffer, matching `sub_421240`'s original `ebx = offset byte_526A70` before compact surface slot `+0x30`.
+- Before the fix, GDB showed nonzero castle surface pixels with zero sampled `byte_526A70` palette entries, and frame dumps faded from the map to black; after the fix, `/tmp/clash-castle-fixed-HuI4lF/contact.png` and `frame-511.png` show a stable nonblack castle management screen.
+- This promotes real-input first-mission castle management presentation. Castle sub-panels, garrison-management label recovery, unit movement, and first-mission completion remain deferred.

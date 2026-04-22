@@ -21,6 +21,10 @@
 #define PLAYER_IS_HUMAN_OFFSET 27
 #define PLAYER_AI_INTELLIGENCE_OFFSET 31
 #define PLAYER_RELIGION_FLAG_OFFSET 39
+#define PLAYER_FACTION_COLOR_INDEX_OFFSET 47
+#define PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET 48
+#define PLAYER_BATTLE_IDLE_FLAG_OFFSET 49
+#define PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET 53
 #define PLAYER_REVEALED_TILES_OFFSET 57
 #define PLAYER_REVEALED_TILE_ROW_BYTES 13
 #define PLAYER_QUEEN_RELATIONSHIP_STATE_OFFSET 1419
@@ -624,7 +628,7 @@ int  sub_405ED0(int a1);
 __int16  DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
 __int16  DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
 char  DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
-int  sub_4060A0(DWORD a1, int a2, int a3, char a4);
+int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4);
 DWORD  sub_4060E0(DWORD a1, char *a2, int a3);
 int  sub_406260(int result, int a2, int a3);
 int  sub_406350(int a1, DWORD a2);
@@ -1608,7 +1612,7 @@ __int16  sub_460D80(int a1, int a2);
 int  Render_Present(int a1);
 int Render_Pump();
 void Input_Flush();
-int  sub_4610B0(__lock *a1);
+int  sub_4610B0(int a1);
 _DWORD * Device_GetParamA(int a1, int a2);
 int  Device_DoOp(int a1, int a2, DWORD a3);
 __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4);
@@ -5106,6 +5110,7 @@ char aSetrhS08x_6[14] = "SetRH %s=%08x"; // weak
 char aCastleD[11] = "Castle(%d)"; // weak
 char aCastle[7] = "castle"; // weak
 char aZamek_1Anim_s3[17] = "zamek_1\\anim.s32"; // weak
+char aDz_info_s32[12] = "dz_info.s32"; // weak
 char aMap_pal_0[8] = "map.pal"; // weak
 char aMap_pal_1[8] = "map.pal"; // weak
 char aSetrhS08x_7[14] = "SetRH %s=%08x"; // weak
@@ -8871,6 +8876,31 @@ static int RenderSurface_IsLinearSoftware(_DWORD *surface)
       || vtable == (unsigned int)(uintptr_t)off_50EDD4;
 }
 
+static int RenderSurface_InvokeSlot16ReadPixel(_DWORD *surface, int x, int y)
+{
+  uintptr_t method;
+
+  if ( !surface )
+    return 0;
+  if ( RenderSurface_IsLinearSoftware(surface) )
+  {
+    int width;
+    int height;
+    unsigned char *pixels;
+
+    width = *(unsigned __int16 *)surface;
+    height = *((unsigned __int16 *)surface + 1);
+    pixels = (unsigned char *)(uintptr_t)(unsigned int)surface[1];
+    if ( !pixels || x < 0 || y < 0 || x >= width || y >= height )
+      return 0;
+    return pixels[y * width + x];
+  }
+  method = RenderSurface_GetCompactMethodPointer(surface, 16);
+  if ( !method )
+    return 0;
+  return ((int (__cdecl *)(_DWORD *, int, int))method)(surface, x, y);
+}
+
 static void RenderSurface_WriteSoftwarePixel(_DWORD *surface, unsigned int x, unsigned int y, unsigned char color)
 {
   unsigned int width;
@@ -10192,7 +10222,8 @@ __int16 word_513C62[83] =
   0
 }; // weak
 __int16 word_513D08[4] = { 5, 6, 30, 29 }; // weak
-_DWORD dword_513D98[3] = { 31, 432, 1 }; // weak
+_BYTE dword_513D98[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE + 4] __attribute__((aligned(4))); // weak
+static int g_CastleCompositeStatusWidgetInitialized;
 _WORD word_513E08[5] = { 500, 60, 0, 0, 3 }; // weak
 int dword_513E22 = 1; // weak
 int dword_513FC2[] = { 1 }; // weak
@@ -17345,18 +17376,16 @@ char  DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4)
 }
 
 //----- (004060A0) --------------------------------------------------------
-int  sub_4060A0(DWORD a1, int a2, int a3, char a4)
+int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4)
 {
   unsigned __int8 *v6; // eax
-  int v7; // ecx
 
-  v6 = (unsigned __int8 *)Mem_Alloc(1024, a3, a4, a1);
+  v6 = (unsigned __int8 *)Mem_Alloc(1024, (int)(uintptr_t)a4, 0, a1);
   if ( v6 )
-    v6 = (unsigned __int8 *)sub_401AF0(v7, a1);
-  DLXSpriteSet_DrawText(a1, a2, v7, v6);
+    v6 = (unsigned __int8 *)sub_401AF0((int)(uintptr_t)v6, (DWORD)a4);
+  DLXSpriteSet_DrawText(a1, a2, a3, v6);
   return j__nfree_();
 }
-// 4060CF: variable 'v7' is possibly undefined
 
 //----- (004060E0) --------------------------------------------------------
 DWORD  sub_4060E0(DWORD a1, char *a2, int a3)
@@ -18630,17 +18659,15 @@ BOOL  MapTile_HasVisibleEnemyUnitStack(int a1, int a2)
 //----- (004082C0) --------------------------------------------------------
 BOOL  MapTile_HasOwnOrVisibleEnemyUnitStack(int a1, int a2)
 {
-  int v3; // ecx
   BOOL result; // eax
 
   if ( MapTile_HasOwnUnitStack(a1, a2) )
     return 1;
-  result = MapTile_HasVisibleEnemyUnitStack(v3, a2);
+  result = MapTile_HasVisibleEnemyUnitStack(a1, a2);
   if ( result )
     return 1;
   return result;
 }
-// 4082DB: variable 'v3' is possibly undefined
 
 //----- (004082F0) --------------------------------------------------------
 BOOL  MapTile_HasOwnBuilding(int a1, int a2)
@@ -18699,17 +18726,15 @@ BOOL  MapTile_HasEnemyBuilding(int a1, int a2)
 //----- (00408430) --------------------------------------------------------
 BOOL  MapTile_HasBuilding(int a1, int a2)
 {
-  int v3; // ecx
   BOOL result; // eax
 
   if ( MapTile_HasOwnBuilding(a1, a2) )
     return 1;
-  result = MapTile_HasEnemyBuilding(v3, a2);
+  result = MapTile_HasEnemyBuilding(a1, a2);
   if ( result )
     return 1;
   return result;
 }
-// 40844B: variable 'v3' is possibly undefined
 
 //----- (00408460) --------------------------------------------------------
 BOOL  Port_IsInsideFootprint(int a1, int a2)
@@ -19238,7 +19263,7 @@ LABEL_26:
   {
     if ( g_SelectedUnitIndex == -1 && MapTile_HasOwnBuilding(v1, v78) )
     {
-      v42 = *(unsigned __int16 *)(gameData + v41 + v40 + 556374) - 0x8000;
+      v42 = *(unsigned __int16 *)(TILE_INDEX(v1, v78)) - 0x8000;
       v43 = 467 * v42;
       v44 = *(_WORD *)(gameData + 467 * v42 + 509690);
       if ( v44 )
@@ -19278,8 +19303,8 @@ LABEL_26:
     {
       v32 = (const void *)Building_GenerateApproachTrack(
                             g_SelectedUnitIndex,
-                            *(unsigned __int16 *)(v49 + v46 + gameData + 556374) - 0x8000,
-                            v49,
+                            v48,
+                            v47,
                             v30,
                             v1);
       if ( v32 )
@@ -19305,10 +19330,10 @@ LABEL_205:
   }
   if ( MapTile_HasOwnUnitStack(v1, v78) )
   {
-    if ( dword_5202E8 && *(unsigned __int16 *)(v40 + v50 + gameData + 556374) != g_SelectedUnitIndex )
+    if ( dword_5202E8 && *(unsigned __int16 *)(TILE_INDEX(v1, v78)) != g_SelectedUnitIndex )
     {
       Render_Begin((int)&dword_544CD8, 0, v28);
-      Unit_AddToGroup(g_SelectedUnitIndex, *(unsigned __int16 *)(v40 + v58 + gameData + 556374), 0, v1, a1);
+      Unit_AddToGroup(g_SelectedUnitIndex, *(unsigned __int16 *)(TILE_INDEX(v1, v78)), 0, v1, a1);
       dword_5202E8 = 0;
       sub_40A360(v59);
       sub_406980(v1);
@@ -19333,12 +19358,12 @@ LABEL_205:
       }
       else
       {
-        v53 = 2 * v78 + gameData + 200 * v1;
+        v53 = TILE_INDEX(v1, v78);
         v54 = g_SelectedUnitIndex;
-        if ( *(unsigned __int16 *)(v53 + 556374) != g_SelectedUnitIndex )
+        if ( *(unsigned __int16 *)v53 != g_SelectedUnitIndex )
         {
           g_LastSelectedUnitIndex = g_SelectedUnitIndex;
-          g_SelectedUnitIndex = *(unsigned __int16 *)(v53 + 556374);
+          g_SelectedUnitIndex = *(unsigned __int16 *)v53;
           UnitStackSelection_ClearMask((void *)v52);
           sub_40A360(v55);
           sub_418700(1);
@@ -19359,7 +19384,7 @@ LABEL_205:
   if ( g_SelectedUnitIndex != -1 && MapTile_HasVisibleEnemyUnitStack(v1, v78) )
   {
     Render_Begin((int)&dword_544CD8, 0, v28);
-    Unit_Attack(g_SelectedUnitIndex, *(unsigned __int16 *)(v40 + v67 + gameData + 556374), v27, v1, a1);
+    Unit_Attack(g_SelectedUnitIndex, *(unsigned __int16 *)(TILE_INDEX(v1, v78)), v27, v1, a1);
     return;
   }
   if ( !MapTile_HasOwnOrVisibleEnemyUnitStack(v1, v78) && g_SelectedUnitIndex != -1 )
@@ -20156,12 +20181,12 @@ void * sub_40A600(int a1)
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   SpriteForChar = DLX_GetSpriteForChar(dword_5202DC, g_CurrentPlayerIndex);
   Compat_RenderDeviceDrawMenuSprite(416, 400, SpriteForChar, 0);
-  v3 = DLX_GetSpriteForChar(dword_5202DC, *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140055) + 5);
+  v3 = DLX_GetSpriteForChar(dword_5202DC, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex) + 5);
   v4 = g_RenderDevice;
   v5 = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(568, 404, v3, 1);
   Render_ReleaseSurface(7, v5);
-  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, PLAYER_DATA(g_CurrentPlayerIndex) + 140024 + 4);
+  UI_DrawTextFmt((int)v4, 416, 608, 436, 3, PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
   if ( *(_DWORD *)(gameData + 147155) )
   {
     sub_40BB60(3, 76, v5);
@@ -20711,7 +20736,7 @@ LABEL_24:
       sub_4623C0((int)aArama1, aKon_por1);
       return;
     }
-    if ( !*(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140024) )
+    if ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) )
       dword_5202FC = 1;
     if ( ACTIVE_MISSION_INDEX == -1 )
     {
@@ -32902,7 +32927,7 @@ int a5;
   v20 = *(_WORD *)(v60 + 432);
   *(_BYTE *)(v60 + 436) = v19 & 0xC0;
   *(_WORD *)(v60 + 432) = v20 & 0xF000;
-  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140071) & 7;
+  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) & 7;
   HIBYTE(v15) = *(_BYTE *)(v60 + 444) & 0xF8;
   *(_BYTE *)(v60 + 444) = HIBYTE(v15);
   *(_BYTE *)(v60 + 444) = v15 | HIBYTE(v15);
@@ -35508,68 +35533,31 @@ int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4)
 int Castle_DrawStatusPanel()
 {
   int SpriteForChar; // eax
-  DWORD v1; // ebp
   int v2; // eax
-  int v3; // edx
-  int v4; // ecx
-  int v5; // edx
-  int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
   int result; // eax
   int v10; // eax
 
   SpriteForChar = DLX_GetSpriteForChar(g_CastleStatusSpriteSet, g_CurrentPlayerIndex);
-  v1 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v1 + 52))(
-    5,
-    SpriteForChar,
-    -1,
-    -1,
-    -1,
-    -1,
-    0,
-    0,
-    0);
+  Compat_RenderDeviceDrawMenuSprite(5, 5, SpriteForChar, 0);
   if ( PLAYER_RELIGION_FLAG(g_CurrentPlayerIndex) )
   {
-    DLX_GetSpriteForChar(g_CastleStatusSpriteSet, g_CurrentPlayerIndex + 5);
-    v1 = *((_DWORD *)g_RenderDevice + 46);
-    (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v1 + 52))(-1, -1, -1, -1, 1, 0, 0);
+    SpriteForChar = DLX_GetSpriteForChar(g_CastleStatusSpriteSet, g_CurrentPlayerIndex + 5);
+    Compat_RenderDeviceDrawMenuSprite(9, 9, SpriteForChar, 1);
   }
-  Render_ReleaseSurface(7, v1);
+  Render_ReleaseSurface(7, 0);
   v2 = DLX_GetSpriteForChar(g_CastleStatusSpriteSet, *(unsigned __int8 *)(g_SelectedBuildingRecord + 421) + 3 * g_CurrentPlayerIndex + 11);
-  (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-    26,
-    v2,
-    -1,
-    -1,
-    -1,
-    -1,
-    1,
-    0,
-    0);
+  Compat_RenderDeviceDrawMenuSprite(26, 156, v2, 1);
   UI_DrawTextFmt(5, 41, 275, 10, 3, g_SelectedBuildingRecord + 5);
   UI_DrawTextFmt(5, 58, 87, 30, 2, (int)aD_42);
-  UI_DrawTextFmt(5, v3, 149, v4, 2, (int)aD_43);
+  UI_DrawTextFmt(5, 58, 149, 30, 2, (int)aD_43);
   UI_DrawUnitStatsValues(g_SelectedBuildingRecord);
-  UI_DrawTextFmt(5, v5, 211, v6, 2, (int)aD_44);
-  UI_DrawTextFmt(5, v7, 273, v8, 2, (int)aD_45);
+  UI_DrawTextFmt(5, 58, 211, 30, 2, (int)aD_44);
+  UI_DrawTextFmt(5, 58, 273, 30, 2, (int)aD_45);
   result = g_SelectedBuildingRecord;
   if ( (*(_BYTE *)(g_SelectedBuildingRecord + 435) & 7) != 0 )
   {
     v10 = DLX_GetSpriteForChar(g_CastleStatusSpriteSet, 10);
-    return (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                    + 52))(
-             43,
-             v10,
-             -1,
-             -1,
-             -1,
-             -1,
-             1,
-             0,
-             0);
+    return Compat_RenderDeviceDrawMenuSprite(43, 127, v10, 1);
   }
   return result;
 }
@@ -35584,6 +35572,28 @@ int Castle_DrawStatusPanel()
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 // 526E7C: using guessed type int g_CastleStatusSpriteSet;
+
+static void Castle_EnsureCompositeStatusWidget(void)
+{
+  static const char castle_status_button_sound[] = "duze";
+
+  if ( g_CastleCompositeStatusWidgetInitialized )
+    return;
+
+  memset(dword_513D98, 0, sizeof(dword_513D98));
+  *(_DWORD *)(dword_513D98 + 0) = 31;
+  *(_DWORD *)(dword_513D98 + 4) = 432;
+  *(_DWORD *)(dword_513D98 + 8) = 1;
+  *(_DWORD *)(dword_513D98 + 12) = (int)(uintptr_t)&g_CastleSceneIconSpriteSet;
+  *(_DWORD *)(dword_513D98 + 16) = 6;
+  *(_DWORD *)(dword_513D98 + 20) = 7;
+  *(_DWORD *)(dword_513D98 + 24) = -1;
+  *(_DWORD *)(dword_513D98 + 28) = (int)(uintptr_t)&sub_419770;
+  *(_DWORD *)(dword_513D98 + 32) = (int)(uintptr_t)&sub_420840;
+  *(_DWORD *)(dword_513D98 + 49) = (int)(uintptr_t)castle_status_button_sound;
+  *(_DWORD *)(dword_513D98 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE) = -1;
+  g_CastleCompositeStatusWidgetInitialized = 1;
+}
 
 //----- (00421240) --------------------------------------------------------
 char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
@@ -35642,6 +35652,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
   char v55; // bh
   char v56; // dl
   int SpriteForChar; // eax
+  int castle_icon_owner; // eax
   void *v58; // ecx
   int v59; // edx
   char v61[256]; // [esp+0h] [ebp-138h] BYREF
@@ -35773,7 +35784,11 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
       v24 += 2;
     }
     while ( v26 );
-    LOBYTE(a1) = (*(int (__thiscall **)(_DWORD))(*(_DWORD *)(v4 + 184) + 48))(0);
+    LOBYTE(a1) = RenderSurface_InvokeSlot48LoadPCX(
+                   (_DWORD *)(uintptr_t)(unsigned int)v4,
+                   v61,
+                   0,
+                   (uintptr_t)byte_526A70);
   }
   if ( v66 != 1 )
   {
@@ -35854,7 +35869,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
       v44 += 2;
     }
     while ( v46 );
-    (*(void (__thiscall **)(int))(*(_DWORD *)(v4 + 184) + 48))(1);
+    RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)v4, v61, 1, 0);
     a1 = *(char *)(g_SelectedBuildingRecord + 4);
     if ( a1 == 1 )
     {
@@ -35886,7 +35901,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
         v52 += 2;
       }
       while ( v54 );
-      LOBYTE(a1) = (*(int (__thiscall **)(int))(*(_DWORD *)(v4 + 184) + 48))(1);
+      LOBYTE(a1) = RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)v4, v61, 1, 0);
     }
   }
   if ( !v67 )
@@ -35894,31 +35909,17 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
     v64 = g_RenderDevice;
     g_RenderDevice = (_UNKNOWN *)v4;
     SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 0);
-    (*(void (__fastcall **)(_DWORD, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                    + 52))(
-      0,
-      SpriteForChar,
-      -1,
-      -1,
-      -1,
-      -1,
-      0,
-      0,
-      0);
+    Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 0);
     qmemcpy(v62, &unk_514158, sizeof(v62));
-    DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 8);
-    (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-      -1,
-      -1,
-      -1,
-      -1,
-      1,
-      0,
-      0);
+    castle_icon_owner = *(unsigned __int8 *)(g_SelectedBuildingRecord + 2);
+    SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 8);
+    Compat_RenderDeviceDrawMenuSprite(v62[2 * castle_icon_owner + 1], v62[2 * castle_icon_owner], SpriteForChar, 1);
+    v59 = g_SelectedBuildingRecord;
     g_SelectedBuildingRecord = v65;
     Castle_DrawAllAmbientAnimationLayers(v58);
     g_SelectedBuildingRecord = v59;
-    sub_419D80(dword_513D98);
+    Castle_EnsureCompositeStatusWidget();
+    sub_419D80((_DWORD *)dword_513D98);
     LOBYTE(a1) = (_BYTE)v64;
     g_RenderDevice = v64;
   }
@@ -35941,7 +35942,6 @@ int  sub_421740(
         unsigned __int8 a5)
 {
   int v6; // ebp
-  unsigned __int16 v7; // cx
   __int16 SpriteHeight; // ax
   int SpriteForChar; // eax
   int result; // eax
@@ -35951,21 +35951,11 @@ int  sub_421740(
   if ( dword_544D10 )
   {
     v11 = a2 + DLX_GetSpriteWidth(a4, a3);
-    SpriteHeight = DLX_GetSpriteHeight(a4, v7);
+    SpriteHeight = DLX_GetSpriteHeight(a4, a3);
     sub_460BB0(dword_544CD8, a1, a1 + SpriteHeight, a2, v11);
   }
   SpriteForChar = DLX_GetSpriteForChar(a4, a3);
-  result = (*(int (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                       + 52))(
-             a2,
-             SpriteForChar,
-             -1,
-             -1,
-             -1,
-             -1,
-             a5,
-             0,
-             0);
+  result = Compat_RenderDeviceDrawMenuSprite(a2, a1, SpriteForChar, a5);
   if ( v6 )
     return Render_Present((int)dword_544CD8);
   return result;
@@ -36382,9 +36372,6 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   int v4; // ecx
   int v5; // ecx
   int v6; // ecx
-  int v7; // edx
-  int v8; // ecx
-  int v9; // edx
   char v11[20]; // [esp-6h] [ebp-1Ch] BYREF
   int v12; // [esp+Eh] [ebp-8h]
 
@@ -36398,20 +36385,17 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   Render_LoadResourceSprite_v4(13, byte_526A70, v6, 0, a2);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Castle_DrawStatusPanel();
-  sub_460CB0((int)dword_544CD8, v7, v8, a2);
-  sub_4610B0((__lock *)dword_544CD8);
-  (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
+  sub_460CB0((int)dword_544CD8, (int)byte_526A70, 0, a2);
+  sub_4610B0((int)dword_544CD8);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
   Castle_UpdateAmbientAnimationLayers();
-  Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, v9, g_SelectedBuildingRecord, 0);
+  Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, 1, g_SelectedBuildingRecord, 0);
   return sub_405020((int *)&unk_51D4C0, byte_526A70, 20);
 }
 // 422057: variable 'v3' is possibly undefined
 // 422066: variable 'v4' is possibly undefined
 // 422075: variable 'v5' is possibly undefined
 // 422084: variable 'v6' is possibly undefined
-// 4220A2: variable 'v7' is possibly undefined
-// 4220A2: variable 'v8' is possibly undefined
-// 4220D6: variable 'v9' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -36433,6 +36417,21 @@ int Castle_UpdateGateToggles()
     return UI_MenuEntry_Disable((int)&word_513E08, 2);
 }
 // 526A64: using guessed type int g_SelectedBuildingRecord;
+
+typedef int (*CastleManagementPanelCallback)(int building_record, int callback_context, DWORD runtime_context);
+
+static int Castle_InvokePrisonerPanel(int building_record, int callback_context, DWORD runtime_context)
+{
+  (void)callback_context;
+  return Building_ShowPrisonerManagementPanel(building_record, NULL, runtime_context);
+}
+
+static int Castle_InvokeEconomyPanel(int building_record, int callback_context, DWORD runtime_context)
+{
+  (void)callback_context;
+  (void)runtime_context;
+  return BuildingEconomyDialog_Run(building_record);
+}
 
 //----- (00422180) --------------------------------------------------------
 int * Castle_OpenManagementScreen(DWORD a1, char a2)
@@ -36466,9 +36465,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   int *result; // eax
   int v31; // ecx
   int v32; // ecx
-  int v33; // ecx
   int v34; // ecx
-  void (*v35)(void); // ecx
   int v36; // edx
   int v37; // ecx
   _DWORD *v38; // eax
@@ -36482,6 +36479,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   int v46; // [esp+14h] [ebp-24h]
   int (*v47)(); // [esp+18h] [ebp-20h]
   int v48; // [esp+1Ch] [ebp-1Ch]
+  CastleManagementPanelCallback castle_panel_callback;
 
   v48 = Render_SetResourceHandle((int)&unk_51D4C0, (char *)Castle_RebuildSceneBuffers == (char *)Render_DefaultRH);
   v47 = g_RenderHook;
@@ -36492,8 +36490,8 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   sub_413120(v5, a1);
   CSS_EmptySampleCache();
   Debug_Log(467 * a1, a2, a1, (int)aCastleD);
-  g_SelectedBuildingRecord = v6 + gameData + 509674;
-  dword_526E70 = *(_DWORD *)(1423 * *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + gameData + 140063);
+  g_SelectedBuildingRecord = BUILDING_RECORD(a1);
+  dword_526E70 = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
   v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateGateToggles();
@@ -36501,7 +36499,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v45[6] = g_CurrentPlayerIndex + 49;
   v8 = (_DWORD *)Mem_Alloc(4112, v7, a2, a1);
   if ( v8 )
-    v8 = DLXSpriteSet_Load(v8, a2);
+    v8 = DLXSpriteSet_Load(v8, v45);
   v10 = aZamek_1Anim_s3;
   v11 = v45;
   g_CastleSceneIconSpriteSet = (int)v8;
@@ -36520,11 +36518,11 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v45[6] = g_CurrentPlayerIndex + 49;
   v14 = (_DWORD *)Mem_Alloc(4112, v9, a2, a1);
   if ( v14 )
-    v14 = DLXSpriteSet_Load(v14, a2);
+    v14 = DLXSpriteSet_Load(v14, v45);
   g_CastleAmbientSpriteSet = (int)v14;
   v16 = (_DWORD *)Mem_Alloc(4112, v15, a2, a1);
   if ( v16 )
-    v16 = DLXSpriteSet_Load(v16, a2);
+    v16 = DLXSpriteSet_Load(v16, aDz_info_s32);
   g_CastleStatusSpriteSet = (int)v16;
   sub_404F20((int *)&unk_51D4C0, 20);
   Render_Pump();
@@ -36534,8 +36532,8 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v19 = 467 * a1;
   g_CastleScreenSurface = (int)Surface;
   Castle_RebuildSceneBuffers((int)byte_526A70, v19);
-  sub_4060A0(dword_523F5C, v20, v21, (char)aMap_pal_0);
-  sub_4060A0(dword_523F5C, 4, (int)byte_526A70, (char)aMap_pal_1);
+  sub_4060A0(dword_523F5C, 3, (int)byte_526A70, aMap_pal_0);
+  sub_4060A0(dword_523F5C, 4, (int)byte_526A70, aMap_pal_1);
   DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)byte_526A70, (unsigned __int8 *)dword_5202F4);
   CSS_ResumeStreamReading();
   LOBYTE(v22) = -57;
@@ -36553,13 +36551,19 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
     sub_420910();
     sub_44E350(word_513D08);
     g_RenderDevice = &unk_51D4C0;
-    sub_419DC0(dword_513D98, v19);
+    Castle_EnsureCompositeStatusWidget();
+    sub_419DC0((_DWORD *)dword_513D98, v19);
     LOBYTE(v32) = byte_54512C;
     g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
     v22 = (char *)(dword_544D00 >> byte_54512C);
-    switch ( (*(int (__fastcall **)(int, int))(*(_DWORD *)(g_CastleScreenSurface + 184) + 16))(v32, dword_544CFC >> byte_54512C) )
+    castle_panel_callback = NULL;
+    switch ( RenderSurface_InvokeSlot16ReadPixel(
+               (_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface,
+               dword_544CFC >> byte_54512C,
+               dword_544D00 >> byte_54512C) )
     {
       case 248:
+        castle_panel_callback = Castle_InvokePrisonerPanel;
         if ( v23 != 134 )
         {
           v23 = 134;
@@ -36567,6 +36571,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 250:
+        castle_panel_callback = sub_43DCE0;
         if ( v23 != 153 )
         {
           v22 = UI_Locale_BuildingNames_J[(unsigned __int8)g_LanguageIndex];
@@ -36575,6 +36580,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 251:
+        castle_panel_callback = sub_43D8E0;
         if ( v23 != 156 )
         {
           v23 = 156;
@@ -36582,6 +36588,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 252:
+        castle_panel_callback = sub_43DEE0;
         if ( v23 != 159 )
         {
           v23 = 159;
@@ -36589,6 +36596,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 253:
+        castle_panel_callback = sub_43DAE0;
         if ( v23 != 166 )
         {
           v23 = 166;
@@ -36596,6 +36604,9 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 254:
+        // 00433C20 is the castle garrison-management dialog. IDA did not emit a
+        // standalone C function for that non-procedural label, so keep this
+        // action disabled until that label is recovered as an explicit routine.
         if ( v23 != 99 )
         {
           if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
@@ -36608,6 +36619,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 255:
+        castle_panel_callback = Castle_InvokeEconomyPanel;
         if ( v23 != 135 )
         {
           v23 = 135;
@@ -36620,18 +36632,18 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         v23 = 0;
         break;
     }
-    if ( DD_IsFlipping((int)dword_544CD8) && v33 )
+    if ( DD_IsFlipping((int)dword_544CD8) && castle_panel_callback )
     {
       sub_419790(8);
       Render_Pump();
       sub_404F20((int *)&unk_51D4C0, 20);
       if ( g_CastleScreenSurface )
-        (**(void (***)(void))(g_CastleScreenSurface + 184))();
-      Render_SetResourceHandle((int)&unk_51D4C0, 1);
+        RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
+      v36 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
       v22 = (char *)g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
       Debug_Log(v34, (char)v22, v19, (int)aSetrhS08x_7);
-      v35();
+      castle_panel_callback(g_SelectedBuildingRecord, 0, v19);
       Debug_Log((int)g_RenderHook, (char)v22, v19, (int)aUnsetrh08x_7);
       g_RenderHook = (int (*)())v22;
       Render_SetResourceHandle((int)&unk_51D4C0, v36);
@@ -36663,7 +36675,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v27 = g_CastleScreenSurface;
   dword_523F5C = (int)v26;
   if ( g_CastleScreenSurface )
-    (**(void (***)(void))(g_CastleScreenSurface + 184))();
+    RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
   sub_405920(&g_CastleSceneIconSpriteSet);
   sub_405920(&g_CastleAmbientSpriteSet);
   sub_405920(&g_CastleStatusSpriteSet);
@@ -41749,7 +41761,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0042A760) --------------------------------------------------------
-int  sub_42A760(DWORD a1, int a2)
+int  UI_DrawNoticeBoxSmall(DWORD a1, int a2)
 {
   int v2; // edx
   int SpriteForChar; // eax
@@ -41791,7 +41803,7 @@ int  sub_42A760(DWORD a1, int a2)
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
 
 //----- (0042A890) --------------------------------------------------------
-int  BuildingTransferDialog_DrawPeasantTransferAmount(DWORD a1, int a2)
+int  UI_DrawConfirmTop(DWORD a1, int a2)
 {
   void *v2; // esi
   int v3; // edx
@@ -41812,7 +41824,7 @@ int  BuildingTransferDialog_DrawPeasantTransferAmount(DWORD a1, int a2)
 // 531CEC: using guessed type int g_BuildingEconomyDialogPendingPeasantTransfer;
 
 //----- (0042A910) --------------------------------------------------------
-int  BuildingTransferDialog_DrawGoldTransferAmount(DWORD a1, int a2)
+int  UI_DrawConfirmBottom(DWORD a1, int a2)
 {
   void *v2; // esi
   int v3; // edx
@@ -44057,7 +44069,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
   UI_DrawTextFmt(v16, v18, v16, v19 + 40, 3, v13[(unsigned __int8)g_LanguageIndex]);
   Render_ReleaseSurface(8, v7);
   v10 = v18;
-  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, PLAYER_DATA(g_CurrentPlayerIndex) + 140024 + 4);
+  UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
   UI_DrawTextFmt(v17, v10, v9, v19 + 100, 3, *(_DWORD *)(v17 + 4 * (unsigned __int8)g_LanguageIndex));
   sub_419D80(v12);
   Render_Present((int)dword_544CD8);
@@ -45053,14 +45065,14 @@ LABEL_5:
     if ( v55 )
       break;
     v68 = PLAYER_DATA(g_CurrentPlayerIndex);
-    if ( *(_DWORD *)(v68 + 140073) )
-      *(_DWORD *)(v68 + 140077) = 0;
+    if ( *(_DWORD *)(v68 + PLAYER_BATTLE_IDLE_FLAG_OFFSET) )
+      *(_DWORD *)(v68 + PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET) = 0;
     else
-      ++*(_DWORD *)(v68 + 140077);
+      ++*(_DWORD *)(v68 + PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET);
     v69 = g_CurrentPlayerIndex;
-    if ( *(int *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140077) >= 2 )
+    if ( *(int *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET) >= 2 )
       GodAnger(g_CurrentPlayerIndex, g_CurrentPlayerIndex, v47);
-    *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140073) = 0;
+    *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_BATTLE_IDLE_FLAG_OFFSET) = 0;
     *(_DWORD *)(4 * g_CurrentPlayerIndex + dword_532048 + 3944) = g_SelectedUnitIndex;
     *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3934) = *(_BYTE *)(dword_532048 + 808);
     *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3935) = *(_BYTE *)(dword_532048 + 812);
@@ -49260,7 +49272,7 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
     if ( v2 )
       v2 = DLXSpriteSet_Load(v2, 0);
     g_BuildingTransferTargetListSpriteSet = (int)v2;
-    sub_4060A0((DWORD)v2, -1, v3, (char)aCas_list_pal);
+    sub_4060A0((DWORD)v2, -1, v3, aCas_list_pal);
   }
   Render_ReleaseSurface(5, a2);
   v16 = 0;
@@ -60235,10 +60247,10 @@ int  sub_4459A0(int a1, DWORD a2)
   v4[0] = (int)off_517EAC[0];
   v4[1] = (int)off_517EAC[1];
   v4[2] = (int)off_517EAC[2];
-  if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140071) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140072) )
+  if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET) )
     UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&off_517EAC[3]);
   result = PLAYER_DATA(g_CurrentPlayerIndex);
-  *(_BYTE *)(result + 140072) = *(_BYTE *)(result + 140071);
+  *(_BYTE *)(result + PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET) = *(_BYTE *)(result + PLAYER_FACTION_COLOR_INDEX_OFFSET);
   return result;
 }
 // 511130: using guessed type char g_LanguageIndex;
@@ -66756,7 +66768,7 @@ void sub_451C60()
   int v2; // edx
   char v3; // bl
 
-  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140071) = 3;
+  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) = 3;
   v0 = 0;
   while ( 1 )
   {
@@ -66985,7 +66997,7 @@ signed int sub_451F70()
   Map_RebuildCastleSiteAnchorCache();
   v1 = sprintf_(v21, "(tura %d)", *(unsigned __int16 *)(gameData + 140022));
   dword_54454C = (int)Rules_Log(v21, v2, v1);
-  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + 140055));
+  v3 = sprintf_(v21, "(gracz %d inteligencja %d)", g_CurrentPlayerIndex, PLAYER_AI_INTELLIGENCE(g_CurrentPlayerIndex));
   dword_544550 = (int)Rules_Log(v21, v4, v3);
   memset_(v6, v5);
   v7 = 0;
@@ -71105,6 +71117,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       PLAYER_MINIMAP_VISIBLE(0) = 1;
       PLAYER_MINIMAP_VISIBLE(1) = 0;
       PLAYER_HAS_HUMAN_CONTROLLER(0) = 1;
+      PLAYER_HAS_HUMAN_CONTROLLER(1) = 0;
       strcpy((char *)(PLAYER_DATA(0) + PLAYER_DISPLAY_NAME_OFFSET), "Alan");
       strcpy((char *)(PLAYER_DATA(1) + PLAYER_DISPLAY_NAME_OFFSET), "Bochuwit");
       MiniMap_CreateSurface(a2);
@@ -73026,37 +73039,20 @@ void Input_Flush()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004610B0) --------------------------------------------------------
-int  sub_4610B0(__lock *a1)
+int  sub_4610B0(int a1)
 {
-  int v1; // ecx
   void *v2; // esi
-  int v3; // ecx
   int SpriteForChar; // eax
   int result; // eax
 
-  if ( !_wcpp_4_static_init__(a1) )
-    _wcpp_4_ctor_array__(v1, 256);
   v2 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   sub_404C80((int *)&unk_51D4C0, &unk_5448B8);
-  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(v3 + 64), dword_519808[0] + 1);
-  result = (*(int (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                       + 52))(
-             0,
-             SpriteForChar,
-             -1,
-             -1,
-             -1,
-             -1,
-             1,
-             0,
-             0);
+  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), dword_519808[0] + 1);
+  result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
   g_RenderDevice = v2;
   return result;
 }
-// 461136: variable 'v1' is possibly undefined
-// 4610F0: variable 'v3' is possibly undefined
-// 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 519808: using guessed type int dword_519808;
 
