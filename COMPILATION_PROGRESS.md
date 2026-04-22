@@ -7648,3 +7648,31 @@
 - Ambiguous candidates deferred:
   - the final world-map frame is live and nonblank, but some map/minimap artifact fidelity remains visibly imperfect and is not claimed as fixed
   - no unit-type, stat, or recovered-structure JSON semantics were promoted in this batch
+
+## Batch 206 - Turn-banner palette handoff and first-mission frame artifacts
+- Current frontier:
+  - continue the authentic Campaign first-mission route from live world-map liveness toward playable human-turn interaction, with the immediate focus on map/banner/map graphics artifacts under SDL indexed presentation
+- Blockers removed this batch:
+  - fixed `sub_404F20` so fade-out copies the current surface palette from `surface + 0xDC` into a real 0x400-byte stack snapshot instead of depending on the placeholder `_wcpp_4_copy_array__`
+  - made primary `Render_SaveBackbuffer(&unk_51D4C0)` present through the recovered SDL indexed-primary seam, allowing palette fades to be frame-dumped and inspected from the normal recovered path
+  - preserved both the current primary pixels and `dword_5202E0` world-map pixels across `UI_LoadTurnBannerGfx`; the transient `tura*.gfx` banner no longer poisons the next world-map palette fade
+  - cleaned the scratch-surface lifetime by destroying temporary render surfaces through compact surface slot `0` with flags `2`, not the DLX sprite-set cleanup helper
+  - increased the SDL presented-frame dump cap to 512 so full first-mission turn/banner/map transitions can be inspected rather than stopping during the menu fade
+- Compile/link/runtime status:
+  - `cmake --build build -j$(nproc)`
+  - `xvfb-run -a` default route with real `xdotool` clicks at Campaign `(245,186)`, first campaign selector `(220,298)`, and six intro/status skip clicks at `(320,240)` reaches the first mission world-map/new-turn sequence and captures 512 frames under `/tmp/clash-first-mission-restore3-dqQZ0A`
+  - inspected `/tmp/clash-first-mission-restore3-dqQZ0A/transition-280-350.png`; frames `315..350` now fade from black into the real world map instead of showing stale turn-banner pixels under the map palette
+  - inspected `/tmp/clash-first-mission-restore3-dqQZ0A/overview-250-510.png`; repeated player-turn banners return to the map without the previous palette-mismatched artifact
+  - post-rebase validation under `/tmp/clash-first-mission-rebased-CGEVhT` captured the same fixed black-to-map transition at frames `315..335` on the exact rebased tree
+  - a GDB attach during a later banner wait showed the process alive in `UI_LoadTurnBannerGfx -> DD_Pump -> Platform_PumpMessagesAndBlitFrame`, not crashed
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route now survives and visually presents the turn-banner-to-world-map transitions without the stale-banner/map-palette artifact
+  - retained: Batch 205's live human-turn world-map liveness through real SDL/X11 Campaign input
+  - still not claimed: selecting/moving a unit, completing an action, or finishing the first mission
+- Key evidence used:
+  - PCX decode comparison showed the `tura*.gfx` source bytes matched the local PCX data and the source-to-primary copy diff was zero, ruling out RLE/copy corruption
+  - frame dumps before the fix showed clean turn-banner pixels being displayed with the world-map palette during `WorldMap_RenderHook`'s map fade-in
+  - GDB present tracing showed `sub_405020` in `WorldMap_RenderHook` ramping the map palette while primary pixels still came from the prior banner; preserving/restoring the primary and map surfaces removes that mismatch
+- Ambiguous candidates deferred:
+  - a manually timed post-map click can still enter a long turn-banner/wait corridor depending on the current player/AI sequence; this is a separate first playable-action investigation, not part of the fixed banner palette artifact
+  - no unit-type or stat semantics were promoted in this batch

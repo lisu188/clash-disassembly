@@ -75,6 +75,8 @@ static const char *g_platform_frame_dump_prefix;
 static int g_platform_frame_dump_index;
 static HWND g_platform_foreground_window;
 
+#define PLATFORM_PRESENTED_FRAME_DUMP_LIMIT 512
+
 int Compat_AllocLow32Bytes(int size);
 void Compat_FreeLow32Bytes(int ptr);
 
@@ -406,7 +408,7 @@ static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
   }
   if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )
     return;
-  if ( g_platform_frame_dump_index >= 16 )
+  if ( g_platform_frame_dump_index >= PLATFORM_PRESENTED_FRAME_DUMP_LIMIT )
     return;
   snprintf(frame_path, sizeof(frame_path), "%s-%03d.bmp", g_platform_frame_dump_prefix, g_platform_frame_dump_index++);
   if ( SDL_SaveBMP(surface, frame_path) != 0 )
@@ -2171,11 +2173,11 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
       }
       break;
     case SDL_MOUSEMOTION:
+      g_platform_host_mouse_delta_x += event->motion.x - g_platform_host_mouse_x;
+      g_platform_host_mouse_delta_y += event->motion.y - g_platform_host_mouse_y;
+      g_platform_host_mouse_delta_is_host_pixels = 1;
       g_platform_host_mouse_x = event->motion.x;
       g_platform_host_mouse_y = event->motion.y;
-      g_platform_host_mouse_delta_x += event->motion.xrel;
-      g_platform_host_mouse_delta_y += event->motion.yrel;
-      g_platform_host_mouse_delta_is_host_pixels = 1;
       break;
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:

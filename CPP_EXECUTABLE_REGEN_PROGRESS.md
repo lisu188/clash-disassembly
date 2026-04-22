@@ -396,3 +396,10 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - Reached fixes repaired `UI_ShowInfoWindow` / `UI_ShowMissionStatusPanel` pointer-width/status-panel rendering, `sub_40BEE0` wrapped text layout, primary SDL palette/saveback guards, the `unk_51D0B0` palette snapshot storage, `sub_404DE0` fade-step typing, world-map unit redraw aliases, and the first animated-tile loop in `sub_406FA0`.
 - A 10-second inspected frame route and a 25-second hold route stayed alive on the live world map; frame inspection shows terrain/grid/units/UI/inset, with visible map/minimap artifact fidelity still deferred.
 - This promotes authentic Campaign skip-through to first human-turn world-map liveness, not selectable-unit movement or a completed playable action.
+
+## Latest first-mission turn-banner artifact update
+- The next executable-regeneration step stayed in the recovered C render/UI path and reused the SDL indexed-primary seam; no host-side first-mission shortcut was added.
+- `sub_404F20` now fades from an explicit 0x400-byte copy of the current surface palette, and primary `Render_SaveBackbuffer` presents through `Compat_PresentPrimaryIndexedSurfaceToPlatform` so fade frames are visible under SDL.
+- `UI_LoadTurnBannerGfx` now preserves the primary and world-map software surfaces around transient `tura*.gfx` loads, then restores them after the banner fades to black before `WorldMap_RenderHook` ramps the map palette.
+- Xvfb Campaign routes under `/tmp/clash-first-mission-restore3-dqQZ0A` and the post-rebase `/tmp/clash-first-mission-rebased-CGEVhT` were inspected at the banner/map transition; the old stale-banner pixels under the world-map palette are gone and the sequence fades from black into the actual map.
+- This promotes first-mission map/banner/map visual handoff fidelity. It still does not claim unit selection, movement, or first-mission completion.
