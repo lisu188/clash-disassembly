@@ -383,3 +383,9 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - `InputBackend_PollState` scales real host pixel deltas into the recovered render state's relative input units before `sub_460A50` applies cursor sensitivity, while the old debug-prime helpers remain on their raw recovered-delta path.
 - A frame-waited Xvfb run can now move the real window pointer to the top-level Exit button, click it through `xdotool`, and let the recovered main-menu widget loop exit the process with status `0`.
 - This promotes real top-level menu mouse responsiveness; Campaign, Load Game, Multiplayer, and playable-turn routes still need separate full-route validation.
+
+## Latest Campaign mission-info route update
+- The next executable-regeneration step stayed in recovered C and real SDL/X11 input rather than adding a host-side campaign shortcut.
+- Real Xvfb input now clicks the visible top-level Campaign button, inspects the resulting Campaign submenu frame, then clicks the first campaign selector and reaches `Scenario_LoadMissionByIndexAndPlay -> sub_462480 -> UI_WaitForAnyKeyOrClick` without crashing.
+- The reached fixes repaired compact render-surface slot dispatch for PCX load/present/clear/destruction, widened the Campaign widget callbacks, restored `loadFileSusp` to the asm-backed 0x80000-byte copy loop, preserved PCX palette output pointers on stack-backed mission-info loads, and removed the first reached session-init crashes in army-fact strength sync, `createCastle`, and mission-fact logging.
+- A fresh post-fix route stayed alive after 24 seconds in `UI_WaitForAnyKeyOrClick -> sub_462480`, with frame inspection showing the Campaign submenu and mission-info imagery beginning to draw. This promotes Campaign submenu/session-intro entry through authentic front-end input. It does not yet claim skip-through to the world map or a playable human turn.

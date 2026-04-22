@@ -291,3 +291,6 @@
 
 ## 45. Batch 203 Note
 - `Batch 203` stayed on the SDL executable front-end input frontier. The active work made real top-level main-menu mouse input responsive through the SDL/X11 fallback corridor and proved an Exit-button click from a real Xvfb window reaches the recovered widget loop, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 46. Batch 204 Note
+- `Batch 204` stayed on the executable front-end and campaign session-route frontier. The active work drove real Xvfb input through the Campaign menu into `Scenario_LoadMissionByIndexAndPlay -> sub_462480 -> UI_WaitForAnyKeyOrClick` and repaired reached render dispatch, file-copy, callback-pointer, PCX-palette width, army-fact strength sync, `createCastle`, and mission-fact logging hazards. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
