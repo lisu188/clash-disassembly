@@ -303,3 +303,6 @@
 
 ## 49. Batch 207 Note
 - `Batch 207` stayed on the executable first-mission castle-management frontier. The active work proved the real world-map click route into `Building_GetInto -> Castle_OpenManagementScreen` and restored the castle composite palette handoff into `byte_526A70`, eliminating the black castle-screen fade. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 50. Batch 208 Note
+- `Batch 208` stayed on the executable first-mission castle-management frontier. The active work recovered the economy panel resource load, widget table, transfer-target list storage/draw path, and tested Back/list-arrow interaction from the real first-mission castle route. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.

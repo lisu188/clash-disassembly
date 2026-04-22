@@ -7704,3 +7704,37 @@
   - the red-outlined top-right rectangle is present in the inspected castle asset itself and is not yet classified as a recovery bug
   - castle garrison-management case `254` still points at non-procedural asm label `00433C20` and remains disabled until recovered as a callable routine
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 208 - First-mission castle economy panel interaction
+- Current frontier:
+  - continue the authentic first-mission route from castle entry into actionable castle sub-panels, with the next playable-turn frontier still selecting or commanding a real world-map unit after returning from castle management
+- Blockers removed this batch:
+  - restored the castle economy dialog's missing `dw_15.s32` sprite-set strings and loaded the economy background through compact-safe surface slot `+0x30` into the existing castle palette buffer
+  - rebuilt the original ten-record `dword_514840` economy widget table as 53-byte records with the asm-backed sprites, transition callbacks, action callbacks, tooltips, and sound keys
+  - recovered the 100-entry building-transfer target list as a bounded `int16` array with the original outside-castle sentinel `-2`
+  - rewrote the economy transfer-target list draw/rebuild paths from asm-backed operands, loading `cas_list.s32` / `cas_list.pal` and drawing the population/gold rows from building-record fields
+  - repaired shared widget press/release helpers `sub_419E60`, `sub_419ED0`, `sub_419F20`, and `sub_419F50` so they no longer depend on decompiler ghost locals during economy button clicks
+  - fixed the economy Back button and transfer-list arrow callbacks so they pass the actual clicked widget record through the release/redraw path
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - GDB/Xvfb route confirmed the real click path `WorldMap_HandleTileHoverAndClick -> Building_GetInto -> Castle_OpenManagementScreen -> Castle_InvokeEconomyPanel -> BuildingEconomyDialog_Run`
+  - GDB/Xvfb Back-button route hit `BuildingEconomyDialog_SetExitSignal` through `UI_InvokeWidgetActionCallback`
+  - GDB/Xvfb route with an economy list-arrow click followed by Back reached `Castle_OpenManagementScreen+0x8ef`, the instruction immediately after the castle-panel callback returns
+  - frame-dump route under `/tmp/clash-economy-reset-frames-F8B6Ux` was inspected; `frame-020.png` shows the readable economy panel after the fade-in
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route can enter the castle economy panel through real world-map and castle-screen input, display the economy panel, operate at least the transfer-list arrow path without crashing, and return to the castle management loop via the Back button
+  - retained: Batch 207 stable nonblack castle management presentation and Batch 205 live first human-turn world-map liveness
+  - still not claimed: transfer commit correctness, tax editing correctness, castle production/garrison panels, selecting/moving a unit, completing a playable first-mission action, or finishing the mission
+- Key evidence used:
+  - `clash95.asm:66385-66604` proves the `sub_42B0A0` economy dialog load sequence: rebuild transfer targets, load `castle.*\\dw_15.gfx`, load `castle.*\\dw_15.s32`, draw the title sprite, load resource sprites, initialize `dword_514840`, set list origin `(184,279)`, and loop until `dword_531CE8`
+  - `clash95.asm:417213-417583` proves the ten 53-byte economy widget records, including button coordinates, sprite ids, transition/action callbacks, labels, tooltip mode, and sound strings
+  - `clash95.asm:82784-83026` proves the transfer-target list draw path loads `cas_list.s32` / `cas_list.pal`, draws five rows around the selected index, and reads building name, population, and gold from building records
+  - `clash95.asm:83095-83168` proves the transfer-target list storage size, `-2` outside-castle sentinel, same-owner/current-building filters, and final selected-index reset
+  - `clash95.asm:40415-40550` proves the shared widget press/release helpers use `edx = 1`, a 20-tick press wait in `sub_419E60`, and no decompiler ghost return pointer
+- Ambiguous candidates deferred:
+  - the panel's initial dark frames are the visible fade-in; the inspected later frame is readable, but broader castle-panel visual fidelity is still not declared complete
+  - economy tax and transfer-amount callbacks still have decompiler residue beyond the tested Back/list-arrow path
+  - `BuildingEconomyDialog_CommitTransfers` is not claimed as correct until a real transfer scenario is validated
+  - no unit-type or stat semantics were promoted in this batch

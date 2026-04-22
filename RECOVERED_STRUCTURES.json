@@ -1643,5 +1643,127 @@
       "GDB inspection before the repair showed nonzero castle composite surface pixels with zero sampled palette entries, matching the black SDL frame dumps after entering the castle screen.",
       "The repaired build writes the first castle PCX palette into `byte_526A70`; the Xvfb route in `/tmp/clash-castle-fixed-HuI4lF` then reaches stable nonblack castle-management frames."
     ]
+  },
+  {
+    "name": "BuildingEconomyDialogWidgetRecordTable",
+    "kind": "ui_widget_table",
+    "base_symbol": "dword_514840",
+    "stride": 53,
+    "count": 10,
+    "description": "Recovered castle economy dialog widget table. The original data segment stores ten 53-byte button records followed by a `-1` terminator; the C build now reconstructs the table before drawing and polling the economy panel.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "left",
+        "type": "int32",
+        "notes": "Widget left coordinate."
+      },
+      {
+        "offset": 4,
+        "name": "top",
+        "type": "int32",
+        "notes": "Widget top coordinate."
+      },
+      {
+        "offset": 8,
+        "name": "state_flags",
+        "type": "int32",
+        "notes": "Initial economy button state; original records use `1` before the widget helpers mutate state bits."
+      },
+      {
+        "offset": 12,
+        "name": "sprite_set_holder",
+        "type": "low32_pointer<int>",
+        "notes": "Pointer to `g_BuildingEconomyDialogSpriteSet`, matching the original `dword_531CE4` indirection."
+      },
+      {
+        "offset": 16,
+        "name": "normal_sprite_id",
+        "type": "int32",
+        "notes": "Default sprite id for the economy button."
+      },
+      {
+        "offset": 20,
+        "name": "hover_sprite_id",
+        "type": "int32",
+        "notes": "Hover/pressed sprite id for the economy button."
+      },
+      {
+        "offset": 24,
+        "name": "extra_sprite_id",
+        "type": "int32",
+        "notes": "`-1` for all recovered economy records."
+      },
+      {
+        "offset": 28,
+        "name": "transition_callback",
+        "type": "low32_function_pointer",
+        "notes": "`sub_419780` for small buttons and `sub_419770` for Back/Transfer buttons."
+      },
+      {
+        "offset": 32,
+        "name": "action_callback",
+        "type": "low32_function_pointer",
+        "notes": "Economy action callback such as tax adjustment, transfer-list navigation, Back, or Transfer."
+      },
+      {
+        "offset": 36,
+        "name": "label_pl",
+        "type": "low32_pointer<char>",
+        "notes": "Polish tooltip label for labeled buttons."
+      },
+      {
+        "offset": 40,
+        "name": "label_en",
+        "type": "low32_pointer<char>",
+        "notes": "English tooltip label for labeled buttons."
+      },
+      {
+        "offset": 44,
+        "name": "label_de",
+        "type": "low32_pointer<char>",
+        "notes": "German tooltip label for labeled buttons."
+      },
+      {
+        "offset": 48,
+        "name": "tooltip_mode",
+        "type": "uint8",
+        "notes": "`2` for Back/Transfer buttons; zero for unlabeled small buttons."
+      },
+      {
+        "offset": 49,
+        "name": "sound_name",
+        "type": "low32_pointer<char>",
+        "notes": "Sound key such as `kasa`, `male`, or `duze`."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm:417213-417583` stores the ten economy records with 53-byte spacing, then writes the `-1` terminator before `word_514A88`.",
+      "The button records reference the economy sprite-set holder `dword_531CE4`, transition callbacks `sub_419780` / `sub_419770`, and action callbacks for tax adjustment, transfer target navigation, Back, and Transfer.",
+      "`BuildingEconomyDialog_Run` calls `sub_419D80(dword_514840)` before polling `sub_419DC0(dword_514840, ...)`, proving this table is the active panel widget surface rather than dead data.",
+      "GDB/Xvfb validation reached the Back callback through `UI_InvokeWidgetActionCallback`, and a list-arrow click followed by Back returned to `Castle_OpenManagementScreen` after the panel callback."
+    ]
+  },
+  {
+    "name": "BuildingTransferTargetList",
+    "kind": "ui_selection_list",
+    "base_symbol": "word_532360 / g_BuildingTransferTargetIds",
+    "stride": 2,
+    "count": 100,
+    "description": "Recovered castle economy transfer-target list. Entries are signed 16-bit building indices, with `-1` as empty and `-2` as the outside-castle sentinel shown when the caller requests it.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "target_building_index_or_sentinel",
+        "type": "int16",
+        "notes": "`-2` means outside the castle, `-1` means no entry, otherwise the value indexes the 100-record building table."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm:83095-83168` clears 0xC8 bytes at `word_532360`, writes `-2` to slot zero, optionally starts insertion after the sentinel, filters active same-owner buildings, excludes the current building, and resets `dword_53235C` to zero.",
+      "`clash95.asm:82784-83026` draws five rows around the selected index, treats `-2` as the localized outside-castle row, and otherwise reads the target building name at `building + 5`, population at `building + 0x1AE`, and gold at `building + 0x1B6`.",
+      "The current C storage is bounded to 100 signed 16-bit entries, matching the 0xC8-byte clear and preventing the prior decompiler-scarred `memset_(a2, -1)` crash.",
+      "The economy panel frame dump shows the outside-castle row, and the GDB/Xvfb arrow-plus-Back route returns through the castle callback without crashing."
+    ]
   }
 ]

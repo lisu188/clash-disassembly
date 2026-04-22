@@ -410,3 +410,11 @@ This file tracks the parallel executable-regeneration path that grows out of the
 - The first castle composite PCX load now passes `byte_526A70` as the palette output buffer, matching `sub_421240`'s original `ebx = offset byte_526A70` before compact surface slot `+0x30`.
 - Before the fix, GDB showed nonzero castle surface pixels with zero sampled `byte_526A70` palette entries, and frame dumps faded from the map to black; after the fix, `/tmp/clash-castle-fixed-HuI4lF/contact.png` and `frame-511.png` show a stable nonblack castle management screen.
 - This promotes real-input first-mission castle management presentation. Castle sub-panels, garrison-management label recovery, unit movement, and first-mission completion remain deferred.
+
+## Latest first-mission castle economy-panel update
+- The next executable-regeneration step stayed in recovered C and the existing SDL indexed-primary path; no host-side economy-panel shortcut was added.
+- Real Xvfb input now reaches `BuildingEconomyDialog_Run` from the first-mission castle management screen's economy hotspot.
+- The economy panel now loads the authentic `dw_15.gfx` / `dw_15.s32` resources through compact-safe dispatch, rebuilds the asm-backed ten-record widget table, and reconstructs the 100-entry transfer-target list with its outside-castle sentinel.
+- Shared widget press/release helpers were repaired from the original asm shape, and the economy Back/list-arrow callbacks no longer return through undefined decompiler locals.
+- GDB/Xvfb routes prove economy entry, Back-button callback dispatch, and a list-arrow click followed by a clean return to `Castle_OpenManagementScreen` after the sub-panel callback. Frame dump `/tmp/clash-economy-reset-frames-F8B6Ux/frame-020.png` shows the readable economy panel after fade-in.
+- This promotes first-mission castle economy panel entry and basic interaction/return. Tax edits, transfer commit, unit selection, movement, and mission completion remain deferred.
