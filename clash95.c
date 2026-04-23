@@ -36397,6 +36397,22 @@ static int Castle_InvokeEconomyPanel(int building_record, int callback_context, 
   return BuildingEconomyDialog_Run(building_record);
 }
 
+static void Diagnostics_ResetFrameDumpOnCastleReturn(void)
+{
+  static int checked;
+  static int enabled;
+  const char *value;
+
+  if ( !checked )
+  {
+    value = getenv("CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_CASTLE_RETURN");
+    enabled = value && *value;
+    checked = 1;
+  }
+  if ( enabled )
+    Platform_ResetPresentedFrameDump();
+}
+
 //----- (00422180) --------------------------------------------------------
 int * Castle_OpenManagementScreen(DWORD a1, char a2)
 {
@@ -36650,6 +36666,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Debug_Log(v29, v27, v19, (int)aUnsetrh08x_6);
   g_RenderHook = v47;
   Render_SetResourceHandle((int)&unk_51D4C0, v48);
+  Diagnostics_ResetFrameDumpOnCastleReturn();
   result = WorldMap_RenderHook(v19);
   if ( g_CastleDestroyConfirmed )
     return (int *)sub_4620F0(aZniszcze, 1, v31, v27, v19);

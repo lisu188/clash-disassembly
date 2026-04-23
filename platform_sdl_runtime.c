@@ -16,6 +16,7 @@
 #undef SDL_Palette
 #undef SDL_Cursor
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,10 +73,13 @@ struct SDL_Cursor {
 static struct SDL_Surface g_platform_default_surface;
 static int g_platform_frame_dump_checked;
 static const char *g_platform_frame_dump_prefix;
+static int g_platform_frame_present_index;
 static int g_platform_frame_dump_index;
+static int g_platform_frame_dump_skip;
+static int g_platform_frame_dump_limit;
 static HWND g_platform_foreground_window;
 
-#define PLATFORM_PRESENTED_FRAME_DUMP_LIMIT 512
+#define PLATFORM_PRESENTED_FRAME_DUMP_DEFAULT_LIMIT 512
 
 int Compat_AllocLow32Bytes(int size);
 void Compat_FreeLow32Bytes(int ptr);
@@ -395,24 +399,53 @@ static Uint32 CompatSurfaceReadPixelValue(const CompatDirectDrawSurface *surface
   return ((const Uint32 *)src_pixel)[0];
 }
 
+static int PlatformReadNonNegativeIntEnv(const char *name, int fallback)
+{
+  const char *value;
+  char *end;
+  long parsed;
+
+  value = getenv(name);
+  if ( !value || !*value )
+    return fallback;
+  parsed = strtol(value, &end, 10);
+  if ( end == value || *end || parsed < 0 || parsed > INT_MAX )
+    return fallback;
+  return (int)parsed;
+}
+
 static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
 {
   char frame_path[1024];
+  int current_present_index;
 
   if ( !g_platform_frame_dump_checked )
   {
     g_platform_frame_dump_prefix = getenv("CLASH95_DUMP_PRESENTED_FRAMES_PREFIX");
     if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix )
       g_platform_frame_dump_prefix = getenv("CLASH95_SCREENSHOT_PREFIX");
+    g_platform_frame_dump_skip = PlatformReadNonNegativeIntEnv("CLASH95_DUMP_PRESENTED_FRAMES_SKIP", 0);
+    g_platform_frame_dump_limit = PlatformReadNonNegativeIntEnv(
+      "CLASH95_DUMP_PRESENTED_FRAMES_LIMIT",
+      PLATFORM_PRESENTED_FRAME_DUMP_DEFAULT_LIMIT);
     g_platform_frame_dump_checked = 1;
   }
   if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )
     return;
-  if ( g_platform_frame_dump_index >= PLATFORM_PRESENTED_FRAME_DUMP_LIMIT )
+  current_present_index = g_platform_frame_present_index++;
+  if ( current_present_index < g_platform_frame_dump_skip )
+    return;
+  if ( g_platform_frame_dump_limit && g_platform_frame_dump_index >= g_platform_frame_dump_limit )
     return;
   snprintf(frame_path, sizeof(frame_path), "%s-%03d.bmp", g_platform_frame_dump_prefix, g_platform_frame_dump_index++);
   if ( SDL_SaveBMP(surface, frame_path) != 0 )
     fprintf(stderr, "[platform_sdl] SDL_SaveBMP failed for %s: %s\n", frame_path, SDL_GetError());
+}
+
+void Platform_ResetPresentedFrameDump(void)
+{
+  g_platform_frame_present_index = 0;
+  g_platform_frame_dump_index = 0;
 }
 
 static void PlatformPresentDirectDrawSurface(CompatDirectDrawSurface *surface)

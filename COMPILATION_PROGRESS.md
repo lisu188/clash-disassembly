@@ -7789,3 +7789,30 @@
   - the visible unit stacks below the first castle are owned by player `1` while the active player is `0`, so direct selection/Next Unit does not currently expose a playable owned stack in that view
   - the 512-frame dump cap still fills before the later castle-return frames in the long route; GDB/Xvfb was used for the exit-latch and crash-regression milestone
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 211 - Late-route frame dump controls
+- Current frontier:
+  - continue the authentic first-mission route from castle return into playable world-map actions, now with frame inspection that can target late route windows instead of only early menu/intro fades
+- Blockers removed this batch:
+  - made the SDL presented-frame dump window configurable with `CLASH95_DUMP_PRESENTED_FRAMES_SKIP` and `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT`
+  - preserved the old default cap of 512 frames while allowing `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT=0` for unlimited diagnostic dumps
+  - added `Platform_ResetPresentedFrameDump` and a castle-return diagnostic hook gated by `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_CASTLE_RETURN`
+  - used the reset hook to overwrite the early capture window with frames immediately after `Castle_OpenManagementScreen` restores the world-map render hook
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - `xvfb-run -a` first-mission route with held real X11 mouse input reached the castle screen and captured castle frames under `/tmp/clash-holdroute-5enzzj`
+  - post-rebase `xvfb-run -a` route with `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT=48` and `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_CASTLE_RETURN=1` captured 48 reset frames under `/tmp/clash-resetreturn-rebased-bFdozE`
+  - inspected `/tmp/clash-resetreturn-rebased-bFdozE/contact.jpg`; `frame-000..047` now show the post-castle return-to-world-map fade/live map instead of the initial menu fade
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 210: first-mission Campaign route can enter the castle through real world-map input, use the castle status/back control, and return to the world-map render path without the previous return-cleanup crash
+  - promoted diagnostic milestone: late castle-return frames are now directly inspectable through the normal SDL presented-frame dump hook
+- Renamed functions/helpers/globals/tables/structs:
+  - `Platform_ResetPresentedFrameDump`
+  - `Diagnostics_ResetFrameDumpOnCastleReturn`
+- Ambiguous candidates deferred:
+  - the reset hook is diagnostic-only and environment gated; it does not change normal runtime behavior
+  - broader graphics artifacts on the returned world map remain visible inspection targets for the next batch
+  - no unit-type or stat semantics were promoted in this batch

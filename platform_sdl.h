@@ -219,6 +219,7 @@ typedef struct tagSYSTEMTIME {
 } SYSTEMTIME;
 
 void Platform_PresentRecoveredIndexedSurfaceHandle(void *surface_handle, const uint32_t *palette_entries);
+void Platform_ResetPresentedFrameDump(void);
 void Platform_DebugPrimeInputFallbackMouseState(int x, int y, int primary_down, int secondary_down);
 void Platform_DebugPrimeInputFallbackMouseDelta(int delta_x, int delta_y, int primary_down, int secondary_down);
 void Platform_DebugPrimeInputFallbackMousePulse(
