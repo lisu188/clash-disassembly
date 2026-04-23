@@ -45,6 +45,8 @@
 #define PORT_SHORE_VARIANT_FLAG_OFFSET 586394
 #define BUILDING_RECORD_SIZE 467
 #define BUILDING_TABLE_OFFSET 509674
+#define BUILDING_TRANSFER_TARGET_LIST_CAPACITY 100
+#define BUILDING_ECONOMY_DIALOG_WIDGET_COUNT 10
 #define TILE_TERRAIN_RECORD_STRIDE 14
 #define TILE_TERRAIN_ROW_STRIDE 1400
 #define TILE_MAP_OFFSET 556374
@@ -1043,6 +1045,8 @@ int  UI_DrawConfirmTop(DWORD a1, int a2);
 int  UI_DrawConfirmBottom(DWORD a1, int a2);
 int  UI_SetCurrentSelection(int a1, int a2);
 int  UI_ConfirmSelectionApply(int a1, int a2, DWORD a3, char a4, double a5);
+int  BuildingEconomyDialog_SetExitSignal(int a1, int a2);
+int  BuildingEconomyDialog_CommitTransfers(int a1, int a2, DWORD a3, char a4, double a5);
 int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2);
 int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2);
 int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2);
@@ -5142,6 +5146,8 @@ char aD_8[3] = "%d"; // weak
 char aD_9[3] = "%d"; // weak
 char aCastle_chrDw_1[21] = "castle.chr\\dw_15.gfx"; // weak
 char aCastle_pogDw_1[21] = "castle.pog\\dw_15.gfx"; // weak
+char aCastle_chrDw_0[21] = "castle.chr\\dw_15.s32"; // weak
+char aCastle_pogDw_0[21] = "castle.pog\\dw_15.s32"; // weak
 char aCastle_chrDw_2[17] = "castle.chr\\dw_15"; // weak
 char aCastle_pogDw_2[17] = "castle.pog\\dw_15"; // weak
 char aD_32[3] = "%d"; // weak
@@ -5302,6 +5308,7 @@ char a_mtb[5] = ".mtb"; // weak
 char aWb_0[3] = "wb"; // weak
 char aD_39[3] = "%d"; // weak
 char aD_40[3] = "%d"; // weak
+char aCas_list_s32[13] = "cas_list.s32"; // weak
 char aCas_list_pal[13] = "cas_list.pal"; // weak
 char aD_10[3] = "%d"; // weak
 char aD_11[3] = "%d"; // weak
@@ -10281,7 +10288,8 @@ int dword_514394 = 1; // weak
 int dword_514500[] = { 0 }; // weak
 int dword_514504[] = { -1 }; // weak
 _UNKNOWN unk_514540; // weak
-_DWORD dword_514840[3] = { 174, 173, 1 }; // weak
+_BYTE dword_514840[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT + 4] __attribute__((aligned(4))); // weak
+static int g_BuildingEconomyDialogWidgetsInitialized;
 __int16 word_514A88[4] = { 199, 9, 438, 69 }; // weak
 char *off_514B3C[2] =
 {
@@ -12650,8 +12658,8 @@ int dword_53234C; // weak
 int dword_532350; // weak
 int dword_532354; // weak
 int g_BuildingTransferTargetListIndex; // weak
-__int16 g_BuildingTransferTargetIds[]; // weak
-__int16 word_532362[99]; // weak
+__int16 g_BuildingTransferTargetIds[BUILDING_TRANSFER_TARGET_LIST_CAPACITY]; // weak
+#define word_532362 (g_BuildingTransferTargetIds + 1)
 int g_BuildingTransferTargetListSpriteSet; // weak
 int g_BuildingTransferTargetListDrawX; // weak
 int g_BuildingTransferTargetListDrawY; // weak
@@ -30401,7 +30409,7 @@ static int UI_InvokeWidgetActionCallback(uintptr_t widget)
   callback = *(_DWORD *)(widget + 32);
   if ( !callback )
     return 0;
-  return ((int (__cdecl *)(uintptr_t))(uintptr_t)callback)(widget);
+  return ((int (__cdecl *)(uintptr_t, int, DWORD, char, double))(uintptr_t)callback)(widget, 0, 0, 0, 0.0);
 }
 
 static unsigned int Compat_WidgetPackedField(uintptr_t widget, unsigned int field_offset)
@@ -30753,37 +30761,20 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
 //----- (00419E60) --------------------------------------------------------
 int  sub_419E60(uintptr_t a1, int a2)
 {
-  int v4; // edx
-  int v5; // ecx
-  int v6; // edx
-  int v7; // ecx
-  unsigned int v8; // eax
-  unsigned int v9; // ecx
-  int v10; // ecx
+  unsigned int deadline; // ecx
 
+  (void)a2;
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0(*(char **)(a1 + 49));
+    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  sub_419D60(a1, a2);
-  v7 = Time_Now(v5, v4) + 20;
-  while ( 1 )
-  {
-    v8 = Time_Now(v7, v6);
-    if ( v8 >= v9 )
-      break;
-    DD_Pump((int)dword_544CD8, a1);
-  }
+  sub_419D60(a1, 1);
+  deadline = Time_Now(0, 0) + 20;
+  while ( Time_Now(0, 0) < deadline )
+    DD_Pump((int)dword_544CD8, 0);
   Render_Begin((int)dword_544CD8, 0);
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, v10);
+  return sub_419D60(a1, 1);
 }
-// 419E7A: variable 'a2' is possibly undefined
-// 419E7F: variable 'v5' is possibly undefined
-// 419E7F: variable 'v4' is possibly undefined
-// 419E87: variable 'v7' is possibly undefined
-// 419E87: variable 'v6' is possibly undefined
-// 419E8E: variable 'v9' is possibly undefined
-// 419EAA: variable 'v10' is possibly undefined
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00419ED0) --------------------------------------------------------
@@ -30792,13 +30783,11 @@ int  sub_419ED0(uintptr_t a1)
   if ( *(_DWORD *)(a1 + 49) )
     sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  sub_419D60(a1, a1);
+  sub_419D60(a1, 1);
   Render_Begin((int)dword_544CD8, 0);
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, a1);
+  return sub_419D60(a1, 1);
 }
-// 419EE2: variable 'v2' is possibly undefined
-// 419F01: variable 'v3' is possibly undefined
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00419F20) --------------------------------------------------------
@@ -30807,15 +30796,15 @@ int  sub_419F20(uintptr_t a1)
   if ( *(_DWORD *)(a1 + 49) )
     sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  return sub_419D60(a1, a1);
+  return sub_419D60(a1, 1);
 }
-// 419F32: variable 'v1' is possibly undefined
 
 //----- (00419F50) --------------------------------------------------------
 int  sub_419F50(uintptr_t a1, int a2)
 {
+  (void)a2;
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, a2);
+  return sub_419D60(a1, 1);
 }
 
 //----- (00419F70) --------------------------------------------------------
@@ -41765,12 +41754,14 @@ int  UI_DrawNoticeBoxSmall(DWORD a1, int a2)
 {
   int v2; // edx
   int SpriteForChar; // eax
+  int tax_rate; // ecx
 
   g_RenderDevice = &unk_51D4C0;
   Render_SaveBackbuffer((int)&unk_51D4C0);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 198, 208, 0x104u, 0xDAu, 0xD0u, 0xC6u);
   Render_ReleaseSurface(5, a1);
-  UI_DrawTextFmt(a2, 208, 260, 198, 3, (int)aD_D);
+  tax_rate = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
+  UI_DrawTextFmt(208, 208, 260, 198, 3, aD_D, tax_rate / 10, tax_rate % 10);
   if ( (__int16)(16 * *(_WORD *)(g_BuildingEconomyDialogBuilding + 432)) >> 4 <= 0
     || (*(_BYTE *)(g_BuildingEconomyDialogBuilding + 435) & 7) != 0 )
   {
@@ -41785,17 +41776,7 @@ int  UI_DrawNoticeBoxSmall(DWORD a1, int a2)
     v2 = 5;
   }
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingEconomyDialogSpriteSet, v2);
-  return (*(int (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
-                                                                                     + 52))(
-           19,
-           SpriteForChar,
-           -1,
-           -1,
-           -1,
-           -1,
-           0,
-           0,
-           0);
+  return Compat_RenderDeviceDrawMenuSprite(383, 19, SpriteForChar, 0);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
@@ -41806,19 +41787,17 @@ int  UI_DrawNoticeBoxSmall(DWORD a1, int a2)
 int  UI_DrawConfirmTop(DWORD a1, int a2)
 {
   void *v2; // esi
-  int v3; // edx
   int result; // eax
 
   v2 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   Render_ReleaseSurface(5, a1);
-  Render_SaveBackbuffer(v3);
+  Render_SaveBackbuffer((int)&unk_51D4C0);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 360, 548, 0x259u, 0x17Cu, 0x224u, 0x168u);
-  result = UI_DrawTextFmt(a2, 548, 601, 360, 3, (int)aD_8);
+  result = UI_DrawTextFmt(548, 548, 601, 360, 3, aD_8, g_BuildingEconomyDialogPendingPeasantTransfer);
   g_RenderDevice = v2;
   return result;
 }
-// 42A8B1: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 531CEC: using guessed type int g_BuildingEconomyDialogPendingPeasantTransfer;
@@ -41827,34 +41806,210 @@ int  UI_DrawConfirmTop(DWORD a1, int a2)
 int  UI_DrawConfirmBottom(DWORD a1, int a2)
 {
   void *v2; // esi
-  int v3; // edx
   int result; // eax
 
   v2 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   Render_ReleaseSurface(5, a1);
-  Render_SaveBackbuffer(v3);
+  Render_SaveBackbuffer((int)&unk_51D4C0);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 272, 548, 0x259u, 0x124u, 0x224u, 0x110u);
-  result = UI_DrawTextFmt(a2, 548, 601, 272, 3, (int)aD_9);
+  result = UI_DrawTextFmt(548, 548, 601, 272, 3, aD_9, g_BuildingEconomyDialogPendingGoldTransfer);
   g_RenderDevice = v2;
   return result;
 }
-// 42A931: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 531CF0: using guessed type int g_BuildingEconomyDialogPendingGoldTransfer;
+
+static void BuildingEconomyDialog_InitWidget(
+        unsigned char *record,
+        int left,
+        int top,
+        int normal_sprite,
+        int hover_sprite,
+        int (*transition_callback)(unsigned __int16 *, int, DWORD),
+        void *action_callback,
+        const char *text_pl,
+        const char *text_en,
+        const char *text_de,
+        unsigned char tooltip_mode,
+        const char *sound)
+{
+  memset(record, 0, WORLD_MAP_ACTION_WIDGET_RECORD_SIZE);
+  *(_DWORD *)(record + 0) = left;
+  *(_DWORD *)(record + 4) = top;
+  *(_DWORD *)(record + 8) = 1;
+  *(_DWORD *)(record + 12) = (int)(uintptr_t)&g_BuildingEconomyDialogSpriteSet;
+  *(_DWORD *)(record + 16) = normal_sprite;
+  *(_DWORD *)(record + 20) = hover_sprite;
+  *(_DWORD *)(record + 24) = -1;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)transition_callback;
+  *(_DWORD *)(record + 32) = (int)(uintptr_t)action_callback;
+  *(_DWORD *)(record + 36) = (int)(uintptr_t)text_pl;
+  *(_DWORD *)(record + 40) = (int)(uintptr_t)text_en;
+  *(_DWORD *)(record + 44) = (int)(uintptr_t)text_de;
+  *(_BYTE *)(record + 48) = tooltip_mode;
+  *(_DWORD *)(record + 49) = (int)(uintptr_t)sound;
+}
+
+static void BuildingEconomyDialog_EnsureWidgets(void)
+{
+  static const char sound_cash[] = "kasa";
+  static const char sound_small[] = "male";
+  static const char sound_large[] = "duze";
+  static const char text_back_pl[] = "Koniec";
+  static const char text_back_en[] = "Back";
+  static const char text_back_de[] = "Zuruck";
+  static const char text_transfer_pl[] = "Transferuj";
+  static const char text_transfer_en[] = "Transfer";
+  static const char text_transfer_de[] = "Uberfuhrung";
+
+  if ( g_BuildingEconomyDialogWidgetsInitialized )
+    return;
+
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
+    174,
+    173,
+    6,
+    7,
+    sub_419780,
+    BuildingEconomyDialog_IncreaseTaxRate,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_cash);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
+    174,
+    206,
+    8,
+    9,
+    sub_419780,
+    BuildingEconomyDialog_DecreaseTaxRate,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_cash);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
+    459,
+    270,
+    10,
+    11,
+    sub_419780,
+    BuildingTransferTargetList_SelectPrevious,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
+    459,
+    323,
+    12,
+    13,
+    sub_419780,
+    BuildingTransferTargetList_SelectNext,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
+    513,
+    331,
+    18,
+    19,
+    sub_419780,
+    BuildingTransferDialog_IncreasePeasantTransferAmount,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
+    513,
+    365,
+    20,
+    21,
+    sub_419780,
+    BuildingTransferDialog_DecreasePeasantTransferAmount,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 6,
+    513,
+    247,
+    14,
+    15,
+    sub_419780,
+    BuildingTransferDialog_IncreaseGoldTransferAmount,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 7,
+    513,
+    281,
+    16,
+    17,
+    sub_419780,
+    BuildingTransferDialog_DecreaseGoldTransferAmount,
+    NULL,
+    NULL,
+    NULL,
+    0,
+    sound_small);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 8,
+    42,
+    426,
+    22,
+    23,
+    sub_419770,
+    BuildingEconomyDialog_SetExitSignal,
+    text_back_pl,
+    text_back_en,
+    text_back_de,
+    2,
+    sound_large);
+  BuildingEconomyDialog_InitWidget(
+    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 9,
+    505,
+    426,
+    24,
+    25,
+    sub_419770,
+    BuildingEconomyDialog_CommitTransfers,
+    text_transfer_pl,
+    text_transfer_en,
+    text_transfer_de,
+    2,
+    sound_large);
+  *(_DWORD *)(dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT) = -1;
+  g_BuildingEconomyDialogWidgetsInitialized = 1;
+}
 
 //----- (0042A990) --------------------------------------------------------
 int  BuildingEconomyDialog_SetExitSignal(int a1, int a2)
 {
   int result; // eax
-  int v4; // edx
 
-  result = sub_419E60(a1, a2);
-  g_BuildingEconomyDialogExitSignal = v4;
+  result = sub_419E60((uintptr_t)a1, 1);
+  g_BuildingEconomyDialogExitSignal = 1;
   return result;
 }
-// 42A99B: variable 'v4' is possibly undefined
 // 531CE8: using guessed type int g_BuildingEconomyDialogExitSignal;
 
 //----- (0042A9B0) --------------------------------------------------------
@@ -42244,116 +42399,90 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
 //----- (0042B0A0) --------------------------------------------------------
 int  BuildingEconomyDialog_Run(int a1)
 {
-  int v1; // edi
-  int v2; // ecx
-  char *v3; // edx
-  DWORD v4; // ebp
-  int v5; // ecx
-  _DWORD *v6; // eax
-  int v7; // ecx
-  CHAR *v8; // eax
+  int player_has_religion; // edi
+  char *background_path; // edx
+  char *sprite_path; // edx
+  char *resource_base_path; // eax
+  _DWORD *dialog_sprite_set; // eax
   int SpriteForChar; // eax
-  int v10; // edi
-  _BYTE *v11; // edx
-  int v12; // ecx
-  int v13; // ecx
-  int v14; // ecx
-  int v15; // ecx
-  int v16; // edx
-  DWORD v17; // ebp
-  int v18; // ecx
-  int v19; // ecx
-  unsigned __int8 v21[1048]; // [esp+0h] [ebp-418h] BYREF
+  int exit_signal_snapshot; // ecx
+  unsigned __int8 *palette_buffer; // [esp+0h] [ebp-418h]
 
   g_BuildingEconomyDialogBuilding = a1;
-  v1 = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
+  player_has_religion = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(a1 + 2));
   BuildingTransferTargetList_Rebuild(a1, 1);
   g_BuildingEconomyDialogPendingPeasantTransfer = 0;
   g_BuildingEconomyDialogPendingGoldTransfer = 0;
-  _wcpp_4_ctor_array__(v2, 256);
-  if ( v1 )
-    v3 = aCastle_chrDw_1;
+  palette_buffer = byte_526A70;
+  memset(palette_buffer, 0, 0x400u);
+  if ( player_has_religion )
+    background_path = aCastle_chrDw_1;
   else
-    v3 = aCastle_pogDw_1;
-  v4 = *(_DWORD *)(dword_5202E0 + 184);
-  (*(void (__fastcall **)(_DWORD, char *))(v4 + 48))(0, v3);
-  v6 = (_DWORD *)Mem_Alloc(4112, v5, (char)v21, v4);
-  v7 = (int)v6;
-  if ( v6 )
-    v6 = DLXSpriteSet_Load(v6, (char)v21);
-  g_BuildingEconomyDialogSpriteSet = (int)v6;
-  if ( v1 )
-    v8 = aCastle_chrDw_2;
+    background_path = aCastle_pogDw_1;
+  RenderSurface_InvokeSlot48LoadPCX(
+    (_DWORD *)(uintptr_t)(unsigned int)dword_5202E0,
+    background_path,
+    0,
+    (uintptr_t)palette_buffer);
+  dialog_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
+  if ( player_has_religion )
+    sprite_path = aCastle_chrDw_0;
   else
-    v8 = aCastle_pogDw_2;
-  sub_435ED0(v8, (int)v21, v7, v4);
+    sprite_path = aCastle_pogDw_0;
+  if ( dialog_sprite_set )
+    dialog_sprite_set = DLXSpriteSet_Load(dialog_sprite_set, sprite_path);
+  g_BuildingEconomyDialogSpriteSet = (int)dialog_sprite_set;
+  if ( player_has_religion )
+    resource_base_path = aCastle_chrDw_2;
+  else
+    resource_base_path = aCastle_pogDw_2;
+  sub_435ED0(resource_base_path, (int)(uintptr_t)palette_buffer, (int)dialog_sprite_set, 0);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingEconomyDialogSpriteSet, (unsigned __int8)g_LanguageIndex);
-  v10 = *((_DWORD *)g_RenderDevice + 46);
-  (*(void (__fastcall **)(int, int, int, int, int, int, _DWORD, _DWORD, _DWORD))(v10 + 52))(
-    149,
-    SpriteForChar,
-    -1,
-    -1,
-    -1,
-    -1,
-    0,
-    0,
-    0);
-  (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
+  Compat_RenderDeviceDrawMenuSprite(267, 149, SpriteForChar, 0);
+  RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
   g_RenderDevice = &unk_51D4C0;
-  Render_ReleaseSurface(5, v4);
-  Render_LoadResourceSprite_v4(dword_526A2C, v11, v12, (char)&unk_51D4C0, v4);
-  Render_LoadResourceSprite_v4(5, v21, v13, (char)&unk_51D4C0, v4);
-  Render_LoadResourceSprite_v4(9, v21, v14, (char)&unk_51D4C0, v4);
-  Render_LoadResourceSprite_v4(16, v21, v15, (char)&unk_51D4C0, v4);
-  UI_DrawTextFmt(v10, 267, 343, 90, 2, (int)aD_32);
-  UI_DrawTextFmt(v10, 444, 503, 198, 3, (int)aD_33);
-  UI_DrawNoticeBoxSmall(v4, v10);
+  Render_ReleaseSurface(5, 0);
+  Render_LoadResourceSprite_v4(dword_526A2C, palette_buffer, 0, (char)&unk_51D4C0, 0);
+  Render_LoadResourceSprite_v4(5, palette_buffer, 0, (char)&unk_51D4C0, 0);
+  Render_LoadResourceSprite_v4(9, palette_buffer, 0, (char)&unk_51D4C0, 0);
+  Render_LoadResourceSprite_v4(16, palette_buffer, 0, (char)&unk_51D4C0, 0);
+  UI_DrawTextFmt(267, 267, 343, 90, 2, aD_32, *(signed char *)(a1 + 434));
+  UI_DrawTextFmt(444, 444, 503, 198, 3, aD_33, *(unsigned __int16 *)(a1 + 442));
+  UI_DrawNoticeBoxSmall(0, 0);
   g_RenderDevice = &unk_51D4C0;
   Render_FillRect((_DWORD *)dword_5202E0, 0, 20, 200, 0x17Cu, 0x41u, 0xC8u, 0x14u);
-  Render_ReleaseSurface(16, v4);
-  UI_DrawTextFmt(v10, 0, 370, 20, 2, (int)aD_47);
+  Render_ReleaseSurface(16, 0);
+  UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(g_BuildingEconomyDialogBuilding + 430));
+  BuildingEconomyDialog_EnsureWidgets();
   sub_419D80(dword_514840);
-  BuildingTransferTargetList_SetDrawOrigin(184, v16);
-  BuildingTransferTargetList_Draw((int)v21, v4);
-  UI_DrawConfirmTop(v4, v10);
-  UI_DrawConfirmBottom(v4, v10);
+  BuildingTransferTargetList_SetDrawOrigin(184, 279);
+  BuildingTransferTargetList_Draw((int)(uintptr_t)palette_buffer, 0);
+  UI_DrawConfirmTop(0, 0);
+  UI_DrawConfirmBottom(0, 0);
   g_RenderDevice = &unk_51D4C0;
   Render_FillRect((_DWORD *)dword_5202E0, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
-  Render_ReleaseSurface(5, v4);
-  v17 = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
-  UI_DrawTextFmt((int)&unk_51D4C0, 545, 602, 30, 3, (int)aD_46);
-  sub_405020((int *)&unk_51D4C0, v21, 20);
-  sub_460CB0((int)dword_544CD8, (int)v21, v18, v17);
+  Render_ReleaseSurface(5, 0);
+  UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
+  sub_405020((int *)&unk_51D4C0, palette_buffer, 20);
+  sub_460CB0((int)dword_544CD8, (int)(uintptr_t)palette_buffer, 0, 0);
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   Render_Present((int)dword_544CD8);
   g_BuildingEconomyDialogExitSignal = 0;
+  exit_signal_snapshot = 0;
   do
   {
     DD_Pump((int)dword_544CD8, (char)dword_544CD8);
-    BuildingTransferTargetList_HandleClick(v17);
-    sub_419DC0(dword_514840, v17);
+    BuildingTransferTargetList_HandleClick(0);
+    sub_419DC0(dword_514840, 0);
     sub_44E350(word_514A88);
   }
-  while ( v19 == g_BuildingEconomyDialogExitSignal );
+  while ( exit_signal_snapshot == g_BuildingEconomyDialogExitSignal );
   BuildingTransferTargetList_FreeSpriteSet();
   sub_405920(&g_BuildingEconomyDialogSpriteSet);
   Render_Pump();
   return sub_404F20((int *)&unk_51D4C0, 20);
 }
-// 42B0F1: variable 'v2' is possibly undefined
-// 42B11A: variable 'v5' is possibly undefined
-// 42B14D: variable 'v7' is possibly undefined
-// 42B1C0: variable 'v11' is possibly undefined
-// 42B1C0: variable 'v12' is possibly undefined
-// 42B1CC: variable 'v13' is possibly undefined
-// 42B1D8: variable 'v14' is possibly undefined
-// 42B1E4: variable 'v15' is possibly undefined
-// 42B2AE: variable 'v16' is possibly undefined
-// 42B33E: variable 'v18' is possibly undefined
-// 42B391: variable 'v19' is possibly undefined
-// 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 514840: using guessed type _DWORD dword_514840[3];
@@ -49243,120 +49372,101 @@ int  BuildingTransferTargetList_SetDrawOrigin(int result, int a2)
 void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
 {
   _DWORD *v2; // eax
-  int v3; // ecx
-  DWORD v4; // ebp
-  int v5; // edi
-  void *result; // eax
-  int v7; // eax
-  int v8; // eax
-  int v9; // edx
+  int row_y_offset; // ebp
+  int target_index; // edi
+  void *saved_render_device; // eax
+  int highlight_surface; // eax
+  int building_index; // eax
   int SpriteForChar; // eax
-  int v11; // ecx
-  int v12; // edx
   int v13; // eax
-  int v14; // ecx
   int v15[3]; // [esp+4h] [ebp-40h]
-  int v16; // [esp+10h] [ebp-34h]
-  unsigned int v17; // [esp+14h] [ebp-30h]
-  int v18; // [esp+18h] [ebp-2Ch]
-  int v19; // [esp+1Ch] [ebp-28h]
-  void *v20; // [esp+20h] [ebp-24h]
-  int v21; // [esp+24h] [ebp-20h]
-  int v22; // [esp+28h] [ebp-1Ch]
+  int row_index; // [esp+18h] [ebp-2Ch]
+  int building_record; // [esp+1Ch] [ebp-28h]
+  int row_bottom; // [esp+24h] [ebp-20h]
 
-  v20 = g_RenderDevice;
+  saved_render_device = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   if ( !g_BuildingTransferTargetListSpriteSet )
   {
     v2 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
     if ( v2 )
-      v2 = DLXSpriteSet_Load(v2, 0);
+      v2 = DLXSpriteSet_Load(v2, aCas_list_s32);
     g_BuildingTransferTargetListSpriteSet = (int)v2;
-    sub_4060A0((DWORD)v2, -1, v3, aCas_list_pal);
+    sub_4060A0((DWORD)v2, -1, a1, aCas_list_pal);
   }
   Render_ReleaseSurface(5, a2);
-  v16 = 0;
-  v18 = g_BuildingTransferTargetListIndex - 2;
-  v4 = 0;
-  v22 = 0;
-  v21 = 18;
-  v17 = 2 * (g_BuildingTransferTargetListIndex - 2);
-  while ( 1 )
+  row_index = g_BuildingTransferTargetListIndex - 2;
+  row_y_offset = 0;
+  row_bottom = 18;
+  while ( row_index <= g_BuildingTransferTargetListIndex + 2 )
   {
-    v5 = v18;
-    if ( g_BuildingTransferTargetListIndex + 2 < v18 )
-      break;
     Render_FillRect(
       (_DWORD *)dword_5202E0,
       0,
-      (unsigned __int16)(v22 + g_BuildingTransferTargetListDrawY),
+      (unsigned __int16)(row_y_offset + g_BuildingTransferTargetListDrawY),
       (unsigned __int16)g_BuildingTransferTargetListDrawX,
       g_BuildingTransferTargetListDrawX + 266,
-      v21 + g_BuildingTransferTargetListDrawY,
+      row_bottom + g_BuildingTransferTargetListDrawY,
       g_BuildingTransferTargetListDrawX,
-      v22 + g_BuildingTransferTargetListDrawY);
-    if ( v5 >= 0 && g_BuildingTransferTargetIds[v17 / 2] != -1 )
+      row_y_offset + g_BuildingTransferTargetListDrawY);
+    if ( row_index >= 0
+      && row_index < BUILDING_TRANSFER_TARGET_LIST_CAPACITY
+      && g_BuildingTransferTargetIds[row_index] != -1 )
     {
-      if ( v5 == g_BuildingTransferTargetListIndex )
-        v7 = 9;
+      if ( row_index == g_BuildingTransferTargetListIndex )
+        highlight_surface = 9;
       else
-        v7 = 5;
-      Render_ReleaseSurface(v7, v4);
-      v8 = g_BuildingTransferTargetIds[v17 / 2];
-      if ( v8 == -2 )
+        highlight_surface = 5;
+      Render_ReleaseSurface(highlight_surface, 0);
+      building_index = g_BuildingTransferTargetIds[row_index];
+      if ( building_index == -2 )
       {
         v15[0] = (int)off_5156E4[0];
         v15[1] = (int)off_5156E4[1];
         v15[2] = (int)off_5156E4[2];
-        UI_DrawText(g_BuildingTransferTargetListDrawX, v4 + g_BuildingTransferTargetListDrawY, v15[(unsigned __int8)g_LanguageIndex]);
+        UI_DrawText(
+          g_BuildingTransferTargetListDrawX,
+          row_y_offset + g_BuildingTransferTargetListDrawY,
+          v15[(unsigned __int8)g_LanguageIndex]);
       }
       else
       {
-        UI_DrawText(g_BuildingTransferTargetListDrawX, v4 + g_BuildingTransferTargetListDrawY, UNIT_RECORD(v8) + 5);
-        SpriteForChar = DLX_GetSpriteForChar(g_BuildingTransferTargetListSpriteSet, v9);
-        v19 = *((_DWORD *)g_RenderDevice + 46);
-        (*(void (__fastcall **)(DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v19 + 52))(
-          v4 + v11 - 4,
+        building_record = BUILDING_RECORD(building_index);
+        UI_DrawText(
+          g_BuildingTransferTargetListDrawX,
+          row_y_offset + g_BuildingTransferTargetListDrawY,
+          building_record + 5);
+        SpriteForChar = DLX_GetSpriteForChar(g_BuildingTransferTargetListSpriteSet, 1);
+        Compat_RenderDeviceDrawMenuSprite(
+          g_BuildingTransferTargetListDrawX + 108,
+          row_y_offset + g_BuildingTransferTargetListDrawY - 4,
           SpriteForChar,
-          -1,
-          -1,
-          -1,
-          -1,
-          1,
-          0,
-          0);
-        UI_DrawText(g_BuildingTransferTargetListDrawX + 124, v4 + g_BuildingTransferTargetListDrawY, (int)aD_10);
-        v13 = DLX_GetSpriteForChar(g_BuildingTransferTargetListSpriteSet, v12);
-        v19 = *((_DWORD *)g_RenderDevice + 46);
-        (*(void (__fastcall **)(DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(v19 + 52))(
-          v4 + v14 - 2,
+          1);
+        UI_DrawText(
+          g_BuildingTransferTargetListDrawX + 124,
+          row_y_offset + g_BuildingTransferTargetListDrawY,
+          (int)aD_10,
+          *(unsigned __int16 *)(building_record + 430));
+        v13 = DLX_GetSpriteForChar(g_BuildingTransferTargetListSpriteSet, 2);
+        Compat_RenderDeviceDrawMenuSprite(
+          g_BuildingTransferTargetListDrawX + 170,
+          row_y_offset + g_BuildingTransferTargetListDrawY - 2,
           v13,
-          -1,
-          -1,
-          -1,
-          -1,
-          1,
-          0,
-          0);
-        UI_DrawText(g_BuildingTransferTargetListDrawX + 206, v4 + g_BuildingTransferTargetListDrawY, (int)aD_11);
+          1);
+        UI_DrawText(
+          g_BuildingTransferTargetListDrawX + 206,
+          row_y_offset + g_BuildingTransferTargetListDrawY,
+          (int)aD_11,
+          *(_DWORD *)(building_record + 438));
       }
     }
-    v4 += 18;
-    v17 += 2;
-    ++v18;
-    v21 += 18;
-    v22 += 18;
-    ++v16;
+    row_y_offset += 18;
+    row_bottom += 18;
+    ++row_index;
   }
-  result = v20;
-  g_RenderDevice = v20;
-  return result;
+  g_RenderDevice = saved_render_device;
+  return saved_render_device;
 }
-// 436670: variable 'v3' is possibly undefined
-// 4367A4: variable 'v9' is possibly undefined
-// 4367B7: variable 'v11' is possibly undefined
-// 43681E: variable 'v12' is possibly undefined
-// 436831: variable 'v14' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5156E4: using guessed type char *off_5156E4[3];
@@ -49371,34 +49481,24 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
 //----- (004368F0) --------------------------------------------------------
 int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
 {
-  int v2; // edx
-  int v3; // ecx
-
   sub_419F20(a1);
   if ( g_BuildingTransferTargetListIndex )
     --g_BuildingTransferTargetListIndex;
   BuildingTransferTargetList_Draw((int)off_511234, a2);
-  return sub_419F50(v2, v3);
+  return sub_419F50(a1, 1);
 }
-// 43691A: variable 'v2' is possibly undefined
-// 43691A: variable 'v3' is possibly undefined
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
 
 //----- (00436930) --------------------------------------------------------
 int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
 {
-  int v2; // edx
-  int v3; // ecx
-
   sub_419F20(a1);
   if ( word_532362[g_BuildingTransferTargetListIndex] != -1 )
     ++g_BuildingTransferTargetListIndex;
   BuildingTransferTargetList_Draw((int)off_511234, a2);
-  return sub_419F50(v2, v3);
+  return sub_419F50(a1, 1);
 }
-// 43695D: variable 'v2' is possibly undefined
-// 43695D: variable 'v3' is possibly undefined
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
 // 532362: using guessed type __int16 word_532362[99];
@@ -49406,40 +49506,38 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
 //----- (00436970) --------------------------------------------------------
 int  BuildingTransferTargetList_Rebuild(int a1, int a2)
 {
-  int v2; // edx
-  int v3; // ecx
-  int v4; // ebp
+  int building_index; // edx
+  int insert_index; // ebx
   int result; // eax
-  int v6; // ebx
-  int v7; // ecx
+  int current_player; // ebp
+  int building_record; // ecx
 
-  memset_(a2, -1);
+  memset(g_BuildingTransferTargetIds, 0xFF, sizeof(g_BuildingTransferTargetIds));
   g_BuildingTransferTargetIds[0] = -2;
-  v2 = 0;
-  v4 = g_CurrentPlayerIndex;
+  building_index = 0;
+  current_player = g_CurrentPlayerIndex;
   result = 0;
-  v6 = 2 * (v3 != 0);
+  insert_index = a2 ? 1 : 0;
   do
   {
-    v7 = result + gameData;
+    building_record = result + gameData + BUILDING_TABLE_OFFSET;
     if ( *(char *)(result + gameData + 509678) != -1
       && *(_BYTE *)(result + gameData + 509678)
-      && *(unsigned __int8 *)(v7 + 509676) == v4
-      && result + gameData + 509674 != a1
-      && !*(_WORD *)(v7 + 509690) )
+      && *(unsigned __int8 *)(building_record + 2) == current_player
+      && building_record != a1
+      && !*(_WORD *)(building_record + 16)
+      && insert_index < BUILDING_TRANSFER_TARGET_LIST_CAPACITY )
     {
-      v6 += 2;
-      *(_WORD *)((char *)&g_BuildingTransferTargetListIndex + v6 + 2) = v2;
+      g_BuildingTransferTargetIds[insert_index] = building_index;
+      ++insert_index;
     }
-    ++v2;
+    ++building_index;
     result += 467;
   }
-  while ( v2 < 100 );
+  while ( building_index < 100 );
   g_BuildingTransferTargetListIndex = 0;
   return result;
 }
-// 4369A3: variable 'v3' is possibly undefined
-// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
