@@ -7738,3 +7738,21 @@
   - economy tax and transfer-amount callbacks still have decompiler residue beyond the tested Back/list-arrow path
   - `BuildingEconomyDialog_CommitTransfers` is not claimed as correct until a real transfer scenario is validated
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 209 - Remove parallel C++ regeneration goal
+- Current frontier:
+  - keep the executable recovery path focused on the recovered C + SDL runtime (`clash95_bootstrap`) and remove the parallel C++ regeneration track from active build/doc artifacts
+- Blockers removed this batch:
+  - removed `clash95_cpp_core` and `clash95_cpp_regen` targets from `CMakeLists.txt`, including C++-only compile/link options and CTest entries
+  - removed C++-goal planning/progress artifacts (`CPP_SUBSYSTEM_NOTES.md`, `CPP_EXECUTABLE_REGEN_PROGRESS.md`, `CPP_CLASS_CROSSWALK.csv`, `EXECUTABLE_REGEN_PLAN.md`)
+  - removed the `src_cpp/` implementation tree and the `regenerate-cpp-executable` agent skill instructions to avoid future drift back into the C++ goal
+- Compile/link/runtime status:
+  - `cmake -S . -B build`
+  - `cmake --build build -j4`
+  - `ctest --test-dir build --output-on-failure`
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 208: first-mission route reaches castle economy panel via authentic world-map/castle input path and returns to castle management loop
+- Renamed functions/helpers/globals/tables/structs:
+  - none
+- Ambiguous candidates deferred:
+  - historical references to prior C++ work remain in older log entries; they are retained as historical evidence rather than active goals

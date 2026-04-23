@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(clash95_recovered LANGUAGES C CXX)
+project(clash95_recovered LANGUAGES C)
 
 enable_testing()
 
@@ -25,17 +25,6 @@ add_executable(clash95_bootstrap
   $<TARGET_OBJECTS:clash95_bootstrap_objects>
 )
 
-add_library(clash95_cpp_core STATIC
-  src_cpp/dlx_sprite_set.cpp
-  src_cpp/cavi_decompressor.cpp
-  src_cpp/csync_object.cpp
-)
-
-add_executable(clash95_cpp_regen
-  bootstrap_main.c
-  src_cpp/startup/cpp_regen_link_anchor.cpp
-  $<TARGET_OBJECTS:clash95_bootstrap_objects>
-)
 target_include_directories(clash95_recovered
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -54,25 +43,6 @@ target_include_directories(clash95_bootstrap
     ${CMAKE_CURRENT_SOURCE_DIR}/compat
 )
 
-target_include_directories(clash95_cpp_core
-  PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-)
-
-target_include_directories(clash95_cpp_regen
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-target_link_libraries(clash95_cpp_regen
-  PRIVATE
-    clash95_cpp_core
-)
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(clash95_recovered PRIVATE -std=gnu89 -w)
   target_compile_options(clash95_bootstrap_objects PRIVATE -std=gnu89 -w -ffunction-sections -fdata-sections -fno-pie)
@@ -80,18 +50,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  target_compile_options(clash95_cpp_core PRIVATE -std=c++17 -Wall -Wextra -pedantic)
-  target_compile_options(clash95_cpp_regen PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-std=gnu89;-w;-ffunction-sections;-fdata-sections;-fno-pie>
-    $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>
-  )
-  target_link_options(clash95_cpp_regen PRIVATE -Wl,--gc-sections -no-pie)
-endif()
-
 target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2 X11::X11)
 target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 X11::X11 m)
-target_link_libraries(clash95_cpp_regen PRIVATE PkgConfig::SDL2 X11::X11 m)
 
 set_target_properties(clash95_recovered PROPERTIES
   OUTPUT_NAME clash95_recovered
@@ -100,15 +60,6 @@ set_target_properties(clash95_recovered PROPERTIES
 
 set_target_properties(clash95_bootstrap PROPERTIES
   OUTPUT_NAME clash95_bootstrap
-  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
-set_target_properties(clash95_cpp_core PROPERTIES
-  OUTPUT_NAME clash95_cpp_core
-  ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-)
-
-set_target_properties(clash95_cpp_regen PROPERTIES
-  OUTPUT_NAME clash95_cpp_regen
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
@@ -137,25 +88,9 @@ add_test(
 set_tests_properties(clash95_direct_a_route_smoke PROPERTIES TIMEOUT 10)
 
 add_test(
-  NAME clash95_cpp_regen_direct_a_route_smoke
-  COMMAND bash
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a_route_smoke.sh
-    $<TARGET_FILE:clash95_cpp_regen>
-)
-set_tests_properties(clash95_cpp_regen_direct_a_route_smoke PROPERTIES TIMEOUT 10)
-
-add_test(
   NAME clash95_direct_a0_route_smoke
   COMMAND bash
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a0_route_smoke.sh
     $<TARGET_FILE:clash95_bootstrap>
 )
 set_tests_properties(clash95_direct_a0_route_smoke PROPERTIES TIMEOUT 10)
-
-add_test(
-  NAME clash95_cpp_regen_direct_a0_route_smoke
-  COMMAND bash
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a0_route_smoke.sh
-    $<TARGET_FILE:clash95_cpp_regen>
-)
-set_tests_properties(clash95_cpp_regen_direct_a0_route_smoke PROPERTIES TIMEOUT 10)
