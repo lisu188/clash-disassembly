@@ -649,6 +649,7 @@ unsigned int  sub_407B20(int a1, int a2, int a3);
 int Render_RestoreLostSurfaces();
 int  sub_407D20(signed int a1, ...);
 BOOL UI_TrySelectFriendlyStackUnderCursor();
+static const char *Compat_WidgetPackedString(uintptr_t widget, unsigned int field_offset);
 BOOL  MapTile_HasOwnUnitStack(int a1, int a2);
 BOOL  MapTile_HasVisibleEnemyUnitStack(int a1, int a2);
 BOOL  MapTile_HasOwnOrVisibleEnemyUnitStack(int a1, int a2);
@@ -661,8 +662,8 @@ int  sub_409CC0(int a1, char a2, DWORD a3);
 int  sub_409CE0(char a1, DWORD a2, double a3);
 int  sub_409D00(DWORD a1, char a2, double a3);
 int  sub_409D30(int a1, char a2, DWORD a3, double a4);
-int  sub_409D80(int a1, DWORD a2);
-void  sub_409DF0(int a1, int a2, DWORD a3);
+int  sub_409D80(uintptr_t a1, DWORD a2);
+void  sub_409DF0(uintptr_t a1, int a2, DWORD a3);
 int  sub_409F00(int a1, int a2);
 int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5);
 char *sub_40A040();
@@ -953,7 +954,7 @@ int __fastcall Time_Now(int a1, int a2);
 int __thiscall nullsub_2(_DWORD); // weak
 unsigned int  sub_420800(int a1, int a2, int a3);
 int __thiscall sub_420820(void *this);
-int  sub_420840(int a1, int a2);
+int  sub_420840(uintptr_t a1, int a2);
 int Castle_RebuildMissingAddonFlags();
 void *sub_420910();
 int  Castle_PlayAddonConstructionReveal(int a1, int a2);
@@ -991,7 +992,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2);
 int  UnitStack_ShowSelectionDialog(int a1, int a2);
 signed int  UnitStackSelection_HandleInput(DWORD a1, double a2);
 signed int UnitStackSelection_HasSelectedSlots();
-int  UnitStackSelection_BeginForSelectedStack(int a1, DWORD a2);
+int  UnitStackSelection_BeginForSelectedStack(DWORD a1);
 int __thiscall UnitStackSelection_End(void *this);
 int __thiscall UnitStackSelection_ClearMask(void *this);
 int  UnitStackSelection_RefreshForSelectedStack(DWORD a1);
@@ -19565,11 +19566,8 @@ int  sub_409D30(int a1, char a2, DWORD a3, double a4)
 // 5202FC: using guessed type int dword_5202FC;
 
 //----- (00409D80) --------------------------------------------------------
-int  sub_409D80(int a1, DWORD a2)
+int  sub_409D80(uintptr_t a1, DWORD a2)
 {
-  void *v3; // ecx
-  void *v4; // ecx
-
   if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_2);
@@ -19577,83 +19575,72 @@ int  sub_409D80(int a1, DWORD a2)
   }
   else
   {
-    sub_4425E0(*(char **)(a1 + 49));
+    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
-    g_SelectedUnitIndex = (int)v3;
-    UnitStackSelection_SyncForCurrentSelection(v3, a2);
-    sub_40A360(v4);
+    g_SelectedUnitIndex = -1;
+    UnitStackSelection_SyncForCurrentSelection(NULL, a2);
+    sub_40A360(NULL);
     dword_526A34 = (int)&unk_5196A0;
     return sub_418700(1);
   }
 }
-// 409DA8: variable 'v3' is possibly undefined
-// 409DB3: variable 'v4' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 526A34: using guessed type int dword_526A34;
 // 544CD8: using guessed type _DWORD dword_544CD8[9];
 
 //----- (00409DF0) --------------------------------------------------------
-void  sub_409DF0(int a1, int a2, DWORD a3)
+void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
 {
-  int v4; // edx
-  int v5; // edx
-  int v6; // ebx
-  int v7; // ecx
-  int v8; // eax
-  void *v9; // ecx
-  int v10; // edx
-  void *v11; // ecx
+  int scan_index; // edx
+  int found; // ebx
+  int checked_count; // ecx
+  int unit_record; // eax
 
   sub_419E60(a1, a2);
   if ( g_SelectedUnitIndex == -1 )
   {
     if ( g_LastSelectedUnitIndex == -1 )
-      v4 = 0;
+      scan_index = 0;
     else
-      v4 = g_LastSelectedUnitIndex;
+      scan_index = g_LastSelectedUnitIndex;
   }
   else
   {
-    v4 = g_SelectedUnitIndex + 1;
+    scan_index = g_SelectedUnitIndex + 1;
   }
-  v5 = v4 % 500;
-  v6 = 0;
-  v7 = 0;
+  scan_index %= 500;
+  found = 0;
+  checked_count = 0;
   do
   {
-    v8 = 725 * v5 + gameData;
-    if ( *(__int16 *)(v8 + 147180) != -1
-      && *(unsigned __int8 *)(v8 + 147178) == g_CurrentPlayerIndex
-      && Unit_AttemptNeighborMove(v5) )
+    unit_record = 725 * scan_index + gameData;
+    if ( *(__int16 *)(unit_record + 147180) != -1
+      && *(unsigned __int8 *)(unit_record + 147178) == g_CurrentPlayerIndex
+      && Unit_AttemptNeighborMove(scan_index) )
     {
-      v6 = 1;
+      found = 1;
     }
     else
     {
-      v5 = (v5 + 1) % 500;
+      scan_index = (scan_index + 1) % 500;
     }
-    ++v7;
+    ++checked_count;
   }
-  while ( v7 < 500 && !v6 );
-  if ( v6 )
+  while ( checked_count < 500 && !found );
+  if ( found )
   {
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
-    g_SelectedUnitIndex = v5;
-    UnitStackSelection_ClearMask((void *)v7);
-    sub_40A360(v9);
-    Camera_CenterOnUnit(v10);
+    g_SelectedUnitIndex = scan_index;
+    UnitStackSelection_ClearMask(NULL);
+    sub_40A360(NULL);
+    Camera_CenterOnUnit(scan_index);
     Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     sub_418700(1);
     sub_406980(a3);
-    UnitStackSelection_SyncForCurrentSelection(v11, a3);
+    UnitStackSelection_SyncForCurrentSelection(NULL, a3);
   }
 }
-// 409E15: variable 'v5' is possibly undefined
-// 409E53: variable 'v7' is possibly undefined
-// 409E9F: variable 'v9' is possibly undefined
-// 409EA6: variable 'v10' is possibly undefined
-// 409EEC: variable 'v11' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
@@ -20024,9 +20011,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
 //----- (0040A360) --------------------------------------------------------
 int __thiscall sub_40A360(void *this)
 {
-  int v1; // ecx
-  int v2; // ecx
-  int v3; // ecx
+  (void)this;
 
   WorldMap_EnsureActionButtonWidgetTable();
   if ( g_SelectedUnitIndex == -1 )
@@ -20034,8 +20019,7 @@ int __thiscall sub_40A360(void *this)
     dword_511D48 = 1;
     sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
     dword_5202E8 = 0;
-    dword_511DE7 = v1;
-    v2 = (int)this;
+    dword_511DE7 = 1;
   }
   else
   {
@@ -20050,12 +20034,9 @@ int __thiscall sub_40A360(void *this)
   dword_511DE7 = 1;
 LABEL_4:
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D60((int)&dword_511D40, v2);
-  return sub_419D60((int)&unk_511DDF, v3);
+  sub_419D60((uintptr_t)dword_511D40, 1);
+  return sub_419D60((uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3), 1);
 }
-// 40A38F: variable 'v1' is possibly undefined
-// 40A3B5: variable 'v2' is possibly undefined
-// 40A3C4: variable 'v3' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511D48: using guessed type int dword_511D48;
@@ -20134,8 +20115,6 @@ void  sub_40A490(DWORD a1)
 //----- (0040A500) --------------------------------------------------------
 void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)
 {
-  int v2; // ecx
-
   if ( g_SelectedUnitIndex == -1 )
   {
     if ( dword_514194 == -1 )
@@ -20148,15 +20127,13 @@ LABEL_4:
     goto LABEL_4;
   if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && dword_514194 == -1 )
   {
-    UnitStackSelection_BeginForSelectedStack(v2, a2);
+    UnitStackSelection_BeginForSelectedStack(a2);
   }
   else if ( dword_514194 != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
   {
     UnitStackSelection_RefreshForSelectedStack(a2);
   }
 }
-// 40A51A: variable 'a1' is possibly undefined
-// 40A5EE: variable 'v2' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 // 5202E4: using guessed type int gameData;
@@ -35063,16 +35040,14 @@ int __thiscall sub_420820(void *this)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00420840) --------------------------------------------------------
-int  sub_420840(int a1, int a2)
+int  sub_420840(uintptr_t a1, int a2)
 {
   int result; // eax
-  int v4; // edx
 
   result = sub_419E60(a1, a2);
-  g_CastleScreenExitRequested = v4;
+  g_CastleScreenExitRequested = 1;
   return result;
 }
-// 42084B: variable 'v4' is possibly undefined
 // 526E80: using guessed type int g_CastleScreenExitRequested;
 
 //----- (00420870) --------------------------------------------------------
@@ -36660,7 +36635,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   sub_405920(&dword_523F5C);
   v26 = (_DWORD *)Mem_Alloc(4112, v25, 144, v19);
   if ( v26 )
-    v26 = DLXSpriteSet_Load(v26, 144);
+    v26 = DLXSpriteSet_Load(v26, "menu.s32");
   v27 = g_CastleScreenSurface;
   dword_523F5C = (int)v26;
   if ( g_CastleScreenSurface )
@@ -37544,15 +37519,14 @@ signed int UnitStackSelection_HasSelectedSlots()
 // 514194: using guessed type int dword_514194;
 
 //----- (00423B00) --------------------------------------------------------
-int  UnitStackSelection_BeginForSelectedStack(int a1, DWORD a2)
+int  UnitStackSelection_BeginForSelectedStack(DWORD a1)
 {
   dword_526994 = 1;
   dword_514194 = g_SelectedUnitIndex;
-  memset_(a1, 0);
-  UnitStackSelection_RedrawPanel(-1, a2);
+  memset(dword_526F78, 0, sizeof(dword_526F78));
+  UnitStackSelection_RedrawPanel(-1, a1);
   return sub_418700(1);
 }
-// 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
 // 526994: using guessed type int dword_526994;

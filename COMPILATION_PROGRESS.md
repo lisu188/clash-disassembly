@@ -7716,6 +7716,7 @@
   - repaired shared widget press/release helpers `sub_419E60`, `sub_419ED0`, `sub_419F20`, and `sub_419F50` so they no longer depend on decompiler ghost locals during economy button clicks
   - fixed the economy Back button and transfer-list arrow callbacks so they pass the actual clicked widget record through the release/redraw path
 - Compile/link/runtime status:
+  - `cmake -S . -B build`
   - `cmake --build build -j 4`
   - `ctest --test-dir build --output-on-failure`
   - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
@@ -7756,3 +7757,35 @@
   - none
 - Ambiguous candidates deferred:
   - historical references to prior C++ work remain in older log entries; they are retained as historical evidence rather than active goals
+
+## Batch 210 - First-mission castle exit and world action controls
+- Current frontier:
+  - continue the authentic first-mission route from castle management back into the live world map, with the next playable-action frontier now the lack of an owned movable stack in the inspected starting view
+- Blockers removed this batch:
+  - restored the castle composite status/back callback so it sets `g_CastleScreenExitRequested = 1` after the original pressed-widget redraw path
+  - repaired the world action button state refresh helper so map-mode and join-buttons redraw with explicit states instead of decompiler ghost locals
+  - repaired the map-mode/deselect action, next-unit scan callback, and selected-stack selection-panel begin path to use explicit selected-stack and widget operands
+  - fixed the castle-management return cleanup to reload `menu.s32` for `dword_523F5C` instead of passing an undefined integer as a sprite-set path
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - GDB/Xvfb route confirmed the real first-mission click path reaches `Building_GetInto` for building index `0`
+  - GDB/Xvfb route confirmed `sub_420840` is hit from `Castle_OpenManagementScreen -> sub_419DC0 -> UI_InvokeWidgetActionCallback`, and `g_CastleScreenExitRequested` is `1` after return
+  - no-GDB Xvfb route through world map -> castle -> castle exit remained alive after the `menu.s32` return cleanup fix
+  - GDB/Xvfb route confirmed the world-map Next Unit widget reaches `sub_409DF0` without crashing; in the inspected first-mission state it leaves `g_SelectedUnitIndex == -1` because no owned movable stack is present
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route can enter the castle through real world-map input and use the castle status/back control to request return to the world map without the previous return-cleanup sprite-load crash
+  - retained: Batch 208 economy panel display/list-arrow/Back interaction and Batch 207 stable nonblack castle presentation
+  - still not claimed: selecting/moving an owned first-mission unit, completing a playable unit action, transfer commit correctness, production/garrison panels, or finishing the mission
+- Key evidence used:
+  - `clash95.asm:50300-50307` proves `sub_420840` sets `edx = 1`, calls `sub_419E60`, and writes `dword_526E80`
+  - `clash95.asm:14752-14858` proves the next-unit scan callback loops over 500 unit stacks, stores the found stack in `dword_511B58`, centers the camera, plays the unit activation sound, redraws the info pane, and syncs selected-stack UI state
+  - `clash95.asm:15281-15328` proves `sub_40A360` explicitly writes map-mode/join-button states and redraws widget records `dword_511D40` and `unk_511DDF` with `edx = 1`
+  - `clash95.asm:15451-15546` and `clash95.asm:55019-55038` prove the selected-stack UI sync/begin path clears `dword_526F78` and starts the selection panel only when a selected stack has more than one squad
+  - `clash95.asm:52838-52845` proves the castle return cleanup reloads `menu.s32` into `dword_523F5C`
+- Ambiguous candidates deferred:
+  - the visible unit stacks below the first castle are owned by player `1` while the active player is `0`, so direct selection/Next Unit does not currently expose a playable owned stack in that view
+  - the 512-frame dump cap still fills before the later castle-return frames in the long route; GDB/Xvfb was used for the exit-latch and crash-regression milestone
+  - no unit-type or stat semantics were promoted in this batch
