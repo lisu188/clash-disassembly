@@ -7816,3 +7816,32 @@
   - the reset hook is diagnostic-only and environment gated; it does not change normal runtime behavior
   - broader graphics artifacts on the returned world map remain visible inspection targets for the next batch
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 212 - First-mission owned unit movement action
+- Current frontier:
+  - continue from a proven real-input owned-stack move into broader first-mission playable-turn actions: repeated movement, target selection, attack/building interactions, and turn-end behavior
+- Blockers removed this batch:
+  - repaired `UnitStack_HasNormalCombatUnits` to scan the incoming stack pointer at 31-byte slot stride instead of an undefined `edx` local
+  - widened reached stack-scanner helpers (`Unit_GetSquadCount`, `UnitStack_BuildMergedTerrainMoveProfile`, `UnitStack_GetMinCurrentActionPoints`, `UnitStack_HasNormalCombatUnits`, `UnitStack_HasSpecialPersonageUnits`, and `UnitStack_GetMaxOrderTier`) where real stack-local or native pointers reached them
+  - repaired first-mission move validation/execution scars in `UnitStack_CanReachQueuedPathTileWithFogOverlay` and `UnitStack_ExecuteQueuedPath`, including the stack-index operand, movement sprite resource path, trap context, destination delta, and post-step unit index
+  - repaired reached world-map foreground overlay drawing in `sub_415EA0` by restoring the missing y-coordinate operand and using the compact-safe sprite draw helper instead of a raw native vtable call
+  - fixed the reached temporary-surface cleanup in the selected-unit info redraw path by dispatching compact surface slot `0` with flags `2`
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure -R clash95_direct_a0_route_smoke`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - GDB/Xvfb held-click route proved Next Unit selects owned stack `1` at `(31,44)`
+  - GDB/Xvfb held-click route proved the selected stack's real world-map move executes from `(31,44)` to `(31,45)` and clears the queued path count to `0`
+  - no-GDB Xvfb frame-dumped route with the same held real mouse input stayed rendered and alive until the diagnostic timeout; inspected `/tmp/clash-real-move-frames-Nfrbae/contact.png`
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route can reach the world map, select an owned movable stack through the authentic Next Unit widget, select its unit slot, and execute a one-tile world-map move through `UnitStack_ExecuteQueuedPath`
+  - retained: first-mission castle entry/economy/exit milestones from Batches 207-211
+  - still not claimed: repeated movement after the first step, attack/building interactions, ending the turn, or completing the mission
+- Renamed functions/helpers/globals/tables/structs:
+  - no new symbol rename; this batch focused on asm-backed control-flow repairs in already named first-mission movement helpers
+- Ambiguous candidates deferred:
+  - world action buttons remain visually obscured/overdrawn in late frames even though the real held-click widget route works
+  - the selected unit's move is proven by state and stable presented frames, but fine-grained movement animation artifacts still need inspection frame-by-frame
+  - no new unit-type or stat semantics were promoted in this batch

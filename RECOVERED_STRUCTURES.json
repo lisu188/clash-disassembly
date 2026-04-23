@@ -113,7 +113,8 @@
       "UnitStack_UpdateVision and UnitStack_HasReadyUnits read these slots and field offsets to drive fog-of-war and readiness states.",
       "Path planners copy exactly `0x194` bytes into offset `+316`, while `QueuedPath_StartsAtTile`, `QueuedPath_StartsInBuildingFootprint`, and `UnitStack_ExecuteQueuedPath` treat that region as a persistent queued-path buffer.",
       "The hide-action helper refuses stacks whose byte `+720` is already set, then sets it after spending the turn; merge/split helpers clear the same byte, and `UnitStack_RevealAndEngageHiddenEnemies` clears it on exposed enemy stacks.",
-      "`Unit_AddToGroup` copies `source_count * 31` bytes from `source_stack + 6` into `target_stack + 6 + target_count * 31`, and `Unit_Kill` clears slot type words with the same `31`-byte stride, corroborating the ten embedded `UnitSlotRecord` layout during the direct `/A0` scenario route."
+      "`Unit_AddToGroup` copies `source_count * 31` bytes from `source_stack + 6` into `target_stack + 6 + target_count * 31`, and `Unit_Kill` clears slot type words with the same `31`-byte stride, corroborating the ten embedded `UnitSlotRecord` layout during the direct `/A0` scenario route.",
+      "The real first-mission movement route selected stack `1` through the Next Unit widget and proved `UnitStack_ExecuteQueuedPath` updates the same `tile_row` / `tile_column` fields from `(31,44)` to `(31,45)` while clearing `queued_path.waypoint_count`."
     ]
   },
   {
@@ -129,7 +130,8 @@
     "evidence": [
       "All world-map path generators allocate or copy exactly `404` bytes, matching one leading int plus 100 packed 4-byte nodes.",
       "`QueuedPath_StartsAtTile` and `QueuedPath_StartsInBuildingFootprint` read `a1[1]`, proving the first live node begins immediately after the count word.",
-      "`UnitStack_ExecuteQueuedPath` repeatedly decrements the count, reads the tail node, and subtracts the already-spent cost from the high word of each remaining node."
+      "`UnitStack_ExecuteQueuedPath` repeatedly decrements the count, reads the tail node, and subtracts the already-spent cost from the high word of each remaining node.",
+      "The first-mission held-click movement validation showed a selected stack entering `UnitStack_ExecuteQueuedPath` with `waypoint_count == 1` and returning with `waypoint_count == 0` after the stack moved one tile."
     ]
   },
   {
