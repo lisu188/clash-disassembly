@@ -7845,3 +7845,27 @@
   - world action buttons remain visually obscured/overdrawn in late frames even though the real held-click widget route works
   - the selected unit's move is proven by state and stable presented frames, but fine-grained movement animation artifacts still need inspection frame-by-frame
   - no new unit-type or stat semantics were promoted in this batch
+
+## Batch 213 - First-mission split-move helper repair
+- Current frontier:
+  - continue from the repaired first-mission split-stack movement corridor into a pure real-input selectable split move, then broaden into repeated movement, attack/building interaction, and turn-end flow
+- Blockers removed this batch:
+  - repaired `Unit_CanMoveSelectionFromGroupToTile` to count the selected-slot list explicitly, reject zero/full-stack split moves, build the temporary stack buffer from the selected slots, and validate same-owner merges or empty-tile placement from the real source stack instead of undefined locals
+  - repaired `Unit_MoveSelectionFromGroupToTile` to use the real source stack index, create a new destination stack when needed, copy only the selected 31-byte unit slots, compact the source stack, relink/sync army facts for both stacks, and trigger the destination reveal/trap corridor from the true target stack index
+  - hardened the SDL fallback host-click seam so short mouse down/up pulses survive one extra recovered input poll; this keeps host/X11 clicks aligned with the existing multi-read debug pulse corridor instead of being dropped after the first recovered sample
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - `git diff --check`
+  - GDB validation against the live `/A0` first-mission runtime proved `Map_IsTilePlacable(1, [0,-1], 45, 31) == 1`
+  - GDB validation against the same runtime proved `Unit_MoveSelectionFromGroupToTile(1, [0,-1], 45, 31, 0.0, 0) == 1`, created destination stack `10` at `(31,45)`, and left source stack `1` at `(31,44)`
+- Highest authentic runtime milestone reached:
+  - promoted logic/runtime milestone: the real first-mission runtime now supports detaching a selected squad from owned stack `1` into adjacent tile `(31,45)` through the repaired split-move validator/executor corridor
+  - retained pure real-input milestone from Batch 212: the authentic Next Unit route still performs the one-tile owned-stack move through `UnitStack_ExecuteQueuedPath`
+  - still not claimed: a fully pure host-click split move without debugger assistance, repeated movement after the first action, attack/building interactions, ending the turn, or completing the mission
+- Renamed functions/helpers/globals/tables/structs:
+  - no new symbol rename; this batch repaired reached first-mission split-move control flow inside already named helpers and tightened the SDL host-click fallback behavior
+- Ambiguous candidates deferred:
+  - the deterministic proof for the split move is still GDB-assisted; the no-debugger X11/xdotool click route remains timing- or harness-sensitive and is not yet a claimed runtime milestone
+  - the SDL host-click persistence change is intentionally narrow and only targets quick down/up pulses that would otherwise be consumed before the world-map handler samples them
+  - no new unit-type or stat semantics were promoted in this batch

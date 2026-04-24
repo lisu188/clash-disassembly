@@ -1845,6 +1845,7 @@ DWORD __stdcall timeGetTime(void);
 #define PLATFORM_WM_PAINT 0x000F
 #define PLATFORM_WM_QUIT 0x0012
 #define PLATFORM_WM_ACTIVATEAPP 0x001C
+#define PLATFORM_HOST_PENDING_PRESS_READS 2
 
 static WNDCLASSA g_platform_window_class;
 static int g_platform_has_window_class;
@@ -2222,13 +2223,13 @@ static void PlatformHandleHostEvent(const SDL_Event *event)
       if ( event->button.button == SDL_BUTTON_LEFT )
       {
         if ( event->type == SDL_MOUSEBUTTONDOWN )
-          g_platform_host_mouse_primary_pending_press = 1;
+          g_platform_host_mouse_primary_pending_press = PLATFORM_HOST_PENDING_PRESS_READS;
         g_platform_host_mouse_primary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
       }
       else if ( event->button.button == SDL_BUTTON_RIGHT )
       {
         if ( event->type == SDL_MOUSEBUTTONDOWN )
-          g_platform_host_mouse_secondary_pending_press = 1;
+          g_platform_host_mouse_secondary_pending_press = PLATFORM_HOST_PENDING_PRESS_READS;
         g_platform_host_mouse_secondary = event->type == SDL_MOUSEBUTTONDOWN ? (signed char)0x80 : 0;
       }
       break;
@@ -2248,6 +2249,7 @@ static int PlatformQueryX11PointerState(struct SDL_Window *window, int *mouse_x,
 #if defined(SDL_VIDEO_DRIVER_X11)
   SDL_SysWMinfo wm_info;
   Window root_window;
+  Window target_window;
   Window child_window;
   int root_x;
   int root_y;
@@ -2262,6 +2264,7 @@ static int PlatformQueryX11PointerState(struct SDL_Window *window, int *mouse_x,
     return 0;
   if ( !wm_info.info.x11.display || !wm_info.info.x11.window )
     return 0;
+  target_window = wm_info.info.x11.window;
   root_window = 0;
   child_window = 0;
   root_x = 0;
@@ -2271,7 +2274,7 @@ static int PlatformQueryX11PointerState(struct SDL_Window *window, int *mouse_x,
   state_mask = 0;
   if ( !XQueryPointer(
           wm_info.info.x11.display,
-          wm_info.info.x11.window,
+          target_window,
           &root_window,
           &child_window,
           &root_x,
@@ -2280,7 +2283,38 @@ static int PlatformQueryX11PointerState(struct SDL_Window *window, int *mouse_x,
           &window_y,
           &state_mask) )
   {
-    return 0;
+    root_window = DefaultRootWindow(wm_info.info.x11.display);
+    child_window = 0;
+    root_x = 0;
+    root_y = 0;
+    window_x = 0;
+    window_y = 0;
+    state_mask = 0;
+    if ( !XQueryPointer(
+            wm_info.info.x11.display,
+            root_window,
+            &root_window,
+            &child_window,
+            &root_x,
+            &root_y,
+            &window_x,
+            &window_y,
+            &state_mask) )
+    {
+      return 0;
+    }
+    if ( !XTranslateCoordinates(
+            wm_info.info.x11.display,
+            root_window,
+            target_window,
+            root_x,
+            root_y,
+            &window_x,
+            &window_y,
+            &child_window) )
+    {
+      return 0;
+    }
   }
   if ( window_x < 0 || window_y < 0 || window_x >= window->width || window_y >= window->height )
     return 0;
@@ -2352,9 +2386,9 @@ static void PlatformSyncPolledMouseState(void)
   primary_down = (mouse_buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
   secondary_down = (mouse_buttons & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
   if ( primary_down && !g_platform_host_mouse_primary )
-    g_platform_host_mouse_primary_pending_press = 1;
+    g_platform_host_mouse_primary_pending_press = PLATFORM_HOST_PENDING_PRESS_READS;
   if ( secondary_down && !g_platform_host_mouse_secondary )
-    g_platform_host_mouse_secondary_pending_press = 1;
+    g_platform_host_mouse_secondary_pending_press = PLATFORM_HOST_PENDING_PRESS_READS;
   g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
   g_platform_host_mouse_secondary = secondary_down ? (signed char)0x80 : 0;
 }
@@ -3249,15 +3283,37 @@ void Platform_ReadInputFallbackState(
     *mouse_delta_is_host_pixels = g_platform_host_mouse_delta_is_host_pixels;
   if ( mouse_button_primary )
   {
-    *mouse_button_primary = g_platform_host_mouse_primary;
-    if ( !*mouse_button_primary && g_platform_host_mouse_primary_pending_press )
+    if ( g_platform_host_mouse_primary )
+    {
+      *mouse_button_primary = g_platform_host_mouse_primary;
+      g_platform_host_mouse_primary_pending_press = 0;
+    }
+    else if ( g_platform_host_mouse_primary_pending_press > 0 )
+    {
       *mouse_button_primary = (signed char)0x80;
+      --g_platform_host_mouse_primary_pending_press;
+    }
+    else
+    {
+      *mouse_button_primary = 0;
+    }
   }
   if ( mouse_button_secondary )
   {
-    *mouse_button_secondary = g_platform_host_mouse_secondary;
-    if ( !*mouse_button_secondary && g_platform_host_mouse_secondary_pending_press )
+    if ( g_platform_host_mouse_secondary )
+    {
+      *mouse_button_secondary = g_platform_host_mouse_secondary;
+      g_platform_host_mouse_secondary_pending_press = 0;
+    }
+    else if ( g_platform_host_mouse_secondary_pending_press > 0 )
+    {
       *mouse_button_secondary = (signed char)0x80;
+      --g_platform_host_mouse_secondary_pending_press;
+    }
+    else
+    {
+      *mouse_button_secondary = 0;
+    }
   }
   if ( keyboard_state && keyboard_state_size > 0 )
   {
@@ -3271,8 +3327,6 @@ void Platform_ReadInputFallbackState(
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
   g_platform_host_mouse_delta_is_host_pixels = 0;
-  g_platform_host_mouse_primary_pending_press = 0;
-  g_platform_host_mouse_secondary_pending_press = 0;
   if ( g_platform_debug_mouse_primary_pulse_reads > 0 && --g_platform_debug_mouse_primary_pulse_reads == 0 )
     g_platform_host_mouse_primary = 0;
   if ( g_platform_debug_mouse_secondary_pulse_reads > 0 && --g_platform_debug_mouse_secondary_pulse_reads == 0 )
