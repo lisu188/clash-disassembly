@@ -306,3 +306,6 @@
 
 ## 50. Batch 208 Note
 - `Batch 208` stayed on the executable first-mission castle-management frontier. The active work recovered the economy panel resource load, widget table, transfer-target list storage/draw path, and tested Back/list-arrow interaction from the real first-mission castle route. It did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 51. Batch 212 Note
+- `Batch 212` stayed on the executable first-mission playable-action frontier. The active work repaired reached stack movement predicates and `UnitStack_ExecuteQueuedPath` enough for a real-input first-mission owned stack to move from `(31,44)` to `(31,45)` through the authentic world-map path. This did not promote new unit-type or stat semantics; the only category rule touched was the already-known normal-combat exclusion for type ids `31..34`, and the recovered roster names, stats, relationships, and confidence levels remain unchanged.

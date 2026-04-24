@@ -82,6 +82,7 @@
   - link/build check
   - executable launch smoke test
   - runtime milestone check
+  - when validating rendering or UI/runtime behavior, inspect captured frames instead of relying only on logs, counters, or breakpoints
 - When testing any SDL/windowed executable path, inspect actual presented frames in addition to process liveness. Use the frame-dump hook (`CLASH95_SCREENSHOT_PREFIX` or `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`) when practical, and verify that captured frames are not blank/all-black before treating a visual runtime milestone as reached.
 
 ## 11. Required Outputs

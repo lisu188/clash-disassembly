@@ -2781,12 +2781,12 @@ int Render_CreateSprite(void)
   return sub_40C5E0();
 }
 
-signed int Unit_GetSquadCount(int a1)
+signed int Unit_GetSquadCount(intptr_t a1)
 {
   unsigned char *slot;
   int squad_count;
 
-  slot = (unsigned char *)(uintptr_t)(a1 + 6);
+  slot = (unsigned char *)(a1 + 6);
   squad_count = 0;
   while ( squad_count < 10 )
   {

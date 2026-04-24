@@ -7789,3 +7789,83 @@
   - the visible unit stacks below the first castle are owned by player `1` while the active player is `0`, so direct selection/Next Unit does not currently expose a playable owned stack in that view
   - the 512-frame dump cap still fills before the later castle-return frames in the long route; GDB/Xvfb was used for the exit-latch and crash-regression milestone
   - no unit-type or stat semantics were promoted in this batch
+
+## Batch 211 - Late-route frame dump controls
+- Current frontier:
+  - continue the authentic first-mission route from castle return into playable world-map actions, now with frame inspection that can target late route windows instead of only early menu/intro fades
+- Blockers removed this batch:
+  - made the SDL presented-frame dump window configurable with `CLASH95_DUMP_PRESENTED_FRAMES_SKIP` and `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT`
+  - preserved the old default cap of 512 frames while allowing `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT=0` for unlimited diagnostic dumps
+  - added `Platform_ResetPresentedFrameDump` and a castle-return diagnostic hook gated by `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_CASTLE_RETURN`
+  - used the reset hook to overwrite the early capture window with frames immediately after `Castle_OpenManagementScreen` restores the world-map render hook
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - `xvfb-run -a` first-mission route with held real X11 mouse input reached the castle screen and captured castle frames under `/tmp/clash-holdroute-5enzzj`
+  - post-rebase `xvfb-run -a` route with `CLASH95_DUMP_PRESENTED_FRAMES_LIMIT=48` and `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_CASTLE_RETURN=1` captured 48 reset frames under `/tmp/clash-resetreturn-rebased-bFdozE`
+  - inspected `/tmp/clash-resetreturn-rebased-bFdozE/contact.jpg`; `frame-000..047` now show the post-castle return-to-world-map fade/live map instead of the initial menu fade
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 210: first-mission Campaign route can enter the castle through real world-map input, use the castle status/back control, and return to the world-map render path without the previous return-cleanup crash
+  - promoted diagnostic milestone: late castle-return frames are now directly inspectable through the normal SDL presented-frame dump hook
+- Renamed functions/helpers/globals/tables/structs:
+  - `Platform_ResetPresentedFrameDump`
+  - `Diagnostics_ResetFrameDumpOnCastleReturn`
+- Ambiguous candidates deferred:
+  - the reset hook is diagnostic-only and environment gated; it does not change normal runtime behavior
+  - broader graphics artifacts on the returned world map remain visible inspection targets for the next batch
+  - no unit-type or stat semantics were promoted in this batch
+
+## Batch 212 - First-mission owned unit movement action
+- Current frontier:
+  - continue from a proven real-input owned-stack move into broader first-mission playable-turn actions: repeated movement, target selection, attack/building interactions, and turn-end behavior
+- Blockers removed this batch:
+  - repaired `UnitStack_HasNormalCombatUnits` to scan the incoming stack pointer at 31-byte slot stride instead of an undefined `edx` local
+  - widened reached stack-scanner helpers (`Unit_GetSquadCount`, `UnitStack_BuildMergedTerrainMoveProfile`, `UnitStack_GetMinCurrentActionPoints`, `UnitStack_HasNormalCombatUnits`, `UnitStack_HasSpecialPersonageUnits`, and `UnitStack_GetMaxOrderTier`) where real stack-local or native pointers reached them
+  - repaired first-mission move validation/execution scars in `UnitStack_CanReachQueuedPathTileWithFogOverlay` and `UnitStack_ExecuteQueuedPath`, including the stack-index operand, movement sprite resource path, trap context, destination delta, and post-step unit index
+  - repaired reached world-map foreground overlay drawing in `sub_415EA0` by restoring the missing y-coordinate operand and using the compact-safe sprite draw helper instead of a raw native vtable call
+  - fixed the reached temporary-surface cleanup in the selected-unit info redraw path by dispatching compact surface slot `0` with flags `2`
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure -R clash95_direct_a0_route_smoke`
+  - `ctest --test-dir build --output-on-failure`
+  - JSON parse checks for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json`
+  - `git diff --check`
+  - GDB/Xvfb held-click route proved Next Unit selects owned stack `1` at `(31,44)`
+  - GDB/Xvfb held-click route proved the selected stack's real world-map move executes from `(31,44)` to `(31,45)` and clears the queued path count to `0`
+  - no-GDB Xvfb frame-dumped route with the same held real mouse input stayed rendered and alive until the diagnostic timeout; inspected `/tmp/clash-real-move-frames-Nfrbae/contact.png`
+- Highest authentic runtime milestone reached:
+  - promoted: first-mission Campaign route can reach the world map, select an owned movable stack through the authentic Next Unit widget, select its unit slot, and execute a one-tile world-map move through `UnitStack_ExecuteQueuedPath`
+  - retained: first-mission castle entry/economy/exit milestones from Batches 207-211
+  - still not claimed: repeated movement after the first step, attack/building interactions, ending the turn, or completing the mission
+- Renamed functions/helpers/globals/tables/structs:
+  - no new symbol rename; this batch focused on asm-backed control-flow repairs in already named first-mission movement helpers
+- Ambiguous candidates deferred:
+  - world action buttons remain visually obscured/overdrawn in late frames even though the real held-click widget route works
+  - the selected unit's move is proven by state and stable presented frames, but fine-grained movement animation artifacts still need inspection frame-by-frame
+  - no new unit-type or stat semantics were promoted in this batch
+
+## Batch 213 - First-mission split-move helper repair
+- Current frontier:
+  - continue from the repaired first-mission split-stack movement corridor into a pure real-input selectable split move, then broaden into repeated movement, attack/building interaction, and turn-end flow
+- Blockers removed this batch:
+  - repaired `Unit_CanMoveSelectionFromGroupToTile` to count the selected-slot list explicitly, reject zero/full-stack split moves, build the temporary stack buffer from the selected slots, and validate same-owner merges or empty-tile placement from the real source stack instead of undefined locals
+  - repaired `Unit_MoveSelectionFromGroupToTile` to use the real source stack index, create a new destination stack when needed, copy only the selected 31-byte unit slots, compact the source stack, relink/sync army facts for both stacks, and trigger the destination reveal/trap corridor from the true target stack index
+  - hardened the SDL fallback host-click seam so short mouse down/up pulses survive one extra recovered input poll; this keeps host/X11 clicks aligned with the existing multi-read debug pulse corridor instead of being dropped after the first recovered sample
+- Compile/link/runtime status:
+  - `cmake --build build -j 4`
+  - `ctest --test-dir build --output-on-failure`
+  - `git diff --check`
+  - GDB validation against the live `/A0` first-mission runtime proved `Map_IsTilePlacable(1, [0,-1], 45, 31) == 1`
+  - GDB validation against the same runtime proved `Unit_MoveSelectionFromGroupToTile(1, [0,-1], 45, 31, 0.0, 0) == 1`, created destination stack `10` at `(31,45)`, and left source stack `1` at `(31,44)`
+- Highest authentic runtime milestone reached:
+  - promoted logic/runtime milestone: the real first-mission runtime now supports detaching a selected squad from owned stack `1` into adjacent tile `(31,45)` through the repaired split-move validator/executor corridor
+  - retained pure real-input milestone from Batch 212: the authentic Next Unit route still performs the one-tile owned-stack move through `UnitStack_ExecuteQueuedPath`
+  - still not claimed: a fully pure host-click split move without debugger assistance, repeated movement after the first action, attack/building interactions, ending the turn, or completing the mission
+- Renamed functions/helpers/globals/tables/structs:
+  - no new symbol rename; this batch repaired reached first-mission split-move control flow inside already named helpers and tightened the SDL host-click fallback behavior
+- Ambiguous candidates deferred:
+  - the deterministic proof for the split move is still GDB-assisted; the no-debugger X11/xdotool click route remains timing- or harness-sensitive and is not yet a claimed runtime milestone
+  - the SDL host-click persistence change is intentionally narrow and only targets quick down/up pulses that would otherwise be consumed before the world-map handler samples them
+  - no new unit-type or stat semantics were promoted in this batch
