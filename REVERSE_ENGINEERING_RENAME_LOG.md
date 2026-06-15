@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Mission 04 Gate Wall Factor Note
+
+- No semantic renames were made in this batch.
+- Recovered the strided wall-factor table representation and repaired the reached `UnitBattle_AttackWall` damage arithmetic from asm/runtime evidence.
+- The mission-04 route now proves repeated authentic tactical gate attacks can breach the active gate, but no route was promoted to complete.
+
 ## 2026-06-15 - Soak Harness And Frame Sampling Note
 
 - No semantic renames were made in this batch.

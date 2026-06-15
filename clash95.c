@@ -10067,8 +10067,8 @@ char *off_513A00[3] =
 int dword_513A10[] = { 1 }; // weak
 int dword_513A14[23] = { 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 }; // weak
 __int16 word_513A70[4] = { 100, 300, 300, 0 }; // weak
-__int16 word_513A78[] = { 427 }; // weak
-char byte_513A7E[] = { '\x05' }; // weak
+__int16 word_513A78[5] = { 427, 0, 341, 261, 256 }; // weak
+char byte_513A7E[5] = { '\x05', '\x01', '\0', '\x01', '\n' }; // weak
 char byte_513A7F[5] = { '\x01', '\0', '\x01', '\n', '\x01' }; // weak
 char *off_513A84[50] =
 {
@@ -43499,6 +43499,10 @@ int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4)
   int wall_hp_before;
   int wall_hp_after;
   int unit_ap_before;
+  int wall_kind;
+  int wall_factor;
+  int effective_wall_attack;
+  int wall_damage;
 
   Debug_Log(a3, a4, a2, (int)aUnitbattle_a_0);
   if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
@@ -43539,7 +43543,8 @@ LABEL_18:
     if ( a4 != *(unsigned __int16 *)(v7 + 6) )
       return 0;
   }
-  if ( *(unsigned __int8 *)(v7 + 8) < 5u )
+  unit_ap_before = *(unsigned __int8 *)(v7 + 8);
+  if ( unit_ap_before < 5u )
     return 0;
   *(_BYTE *)(v7 + 8) -= 5;
   v10 = *(_WORD *)(v7 + 6);
@@ -43557,12 +43562,11 @@ LABEL_18:
   v20 = dword_532104;
   v19 = a4 + dword_532048 + 20 * a2;
   wall_hp_before = *(unsigned __int8 *)(v19 + 3134);
-  unit_ap_before = *(unsigned __int8 *)(v7 + 8);
-  LOWORD(v12) = word_513A78[2 * *(_DWORD *)(dword_532048 + 820)];
-  v13 = Unit_CalcEffectivenessD((char *)v7, 0);
-  *(_BYTE *)(v19 + 3134) -= (unsigned __int16)(v12 * v13
-                                             - (__CFSHL__(((unsigned __int16)v12 * v13) >> 31, 8)
-                                              + ((__int16)(((unsigned int)(unsigned __int16)v12 * v13) >> 16) >> 15 << 8))) >> 8;
+  wall_kind = *(_DWORD *)(dword_532048 + 820);
+  wall_factor = (unsigned __int16)word_513A78[2 * wall_kind];
+  effective_wall_attack = Unit_CalcEffectivenessD((char *)v7, 0);
+  wall_damage = wall_factor * effective_wall_attack / 256;
+  *(_BYTE *)(v19 + 3134) -= wall_damage;
   wall_hp_after = *(unsigned __int8 *)(v19 + 3134);
   v15 = v19;
   if ( *(char *)(v15 + 3134) <= 0 )
@@ -43575,14 +43579,19 @@ LABEL_18:
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
       stderr,
-      "[battle] wall_attack unit=%d tile=%lu,%d ap_before=%d ap_after=%d wall_before=%d wall_after=%d gate_column=%d gate_state=%d battle_result=%d\n",
+      "[battle] wall_attack unit=%d type=%d tile=%lu,%d ap_before=%d ap_after=%d wall_before=%d wall_after=%d wall_kind=%d wall_factor=%d effective_wall_attack=%d wall_damage=%d gate_column=%d gate_state=%d battle_result=%d\n",
       a1,
+      *(__int16 *)v7,
       (unsigned long)a2,
       a4,
       unit_ap_before,
       *(unsigned __int8 *)(v7 + 8),
       wall_hp_before,
       wall_hp_after,
+      wall_kind,
+      wall_factor,
+      effective_wall_attack,
+      wall_damage,
       *(_DWORD *)(dword_532048 + 828),
       *(_DWORD *)(dword_532048 + 832),
       dword_532104);

@@ -55,7 +55,7 @@ CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
 | First-mission attack/autoresolve endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=first-mission-attack CLASH95_SOAK_DURATION_SECONDS=20 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/first-mission-attack/latest.txt` |
 | Mission 04 route-replay endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=campaign-route CLASH95_SOAK_ROUTE_MISSION_ID=04 CLASH95_SOAK_DURATION_SECONDS=20 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/campaign-route/latest.txt` |
 | Campaign mission route scripts | `tests/run_campaign_route_script_smoke.sh` via CTest wrappers | `tests/first_campaign_arc_routes/`, `tests/frame_metrics.py` |
-| Mission 04 first gate-wall attack | `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` | `artifacts/campaign-routes/mission-04/20260615T180944Z-78503`, trace-gated `wall_attack` marker |
+| Mission 04 gate breach | `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` | `artifacts/campaign-routes/mission-04/20260615T195525Z-133642`, two trace-gated `wall_attack` markers ending with `wall_after=0` |
 
 ## Known Route Status
 
@@ -65,8 +65,8 @@ Run this for the current campaign route table:
 bash tests/summarize_campaign_arc_routes.sh
 ```
 
-At the time this index was added, missions `00` through `03` were marked
-complete, mission `04` had a partial gate-attack route, and missions `05`
+At the time this index was last updated, missions `00` through `03` were marked
+complete, mission `04` had a partial gate-breach route, and missions `05`
 through `19` had partial direct probes. The route env files are the canonical
 machine-readable status source.
 
