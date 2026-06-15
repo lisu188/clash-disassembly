@@ -7,6 +7,7 @@
     "clash95.exe"
   ],
   "maintenance_notes": [
+    "Batch 253 stayed on executable route-regression and artifact-retention work. No new unit-type or stat semantics were promoted; main-menu Exit, first-mission playable-turn, and starting-castle economy probes exercise already recovered stack/building/UI paths while durable route artifacts now prune by default with a 768 MiB repo-wide cap.",
     "Batch 252 stayed on route-regression harness recovery. No new unit-type or stat semantics were promoted; campaign route tests now have opt-in CTest entries and loose SDL frame metrics for mean luminance, nonblack pixels, color diversity, and frame progression.",
     "Batch 251 stayed on executable mission-04 tactical-battle routing. No new unit-type or stat semantics were promoted; the castle gate attack exercises the existing wall-attack metadata path and repairs animation/runtime scars needed to return from UnitBattle_AttackWall.",
     "Batch 250 stayed on campaign-route harness hygiene. No new unit-type or stat semantics were promoted; a dry-run-first repo-wide artifact pruner now bounds recognized durable probe run directories under artifacts/ and can be opted into after long route probes.",

@@ -1,5 +1,17 @@
 # Compilation Progress
 
+## 2026-06-15 - Route Regression Protection And Artifact Caps
+
+- Current frontier: SDL route regression protection and first-mission human-input proof; next gameplay frontier remains broader campaign route completion beyond the protected early first-mission/castle corridors.
+- Blockers removed: added `clash95_main_menu_exit_probe` to prove a nonblank authentic main menu frame and recovered Exit-button shutdown; added `clash95_castle_economy_regression` to drive Campaign -> first mission -> starting castle -> economy dialog -> transfer-list arrow -> Back through real Xvfb/xdotool input.
+- Diagnostics added: castle first-present now traces asm-backed hotspot pixels when world-click tracing is enabled, and the economy dialog traces enter/first-present/list-arrow/back/exit markers plus an optional frame-dump reset for transient screenshot capture.
+- Artifact controls tightened: durable first-mission and campaign-route artifact writers now default to `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` and a 768 MiB repo-wide artifacts cap through `tests/prune_artifacts.sh`, while retaining the existing per-run log/frame caps and per-mission run-count pruning.
+- Compile/link/runtime status: `make clash95_bootstrap` passed; `ctest -R 'clash95_main_menu_exit_probe|clash95_castle_economy_regression|clash95_first_mission_playability_probe' --output-on-failure` passed; full `ctest --output-on-failure` passed with 15 tests, 0 failures, and expected opt-in/manual skips.
+- Additional validation: `bash -n tests/run_castle_economy_probe.sh`, `bash -n tests/run_main_menu_exit_probe.sh`, `python3 -m json.tool RECOVERED_STRUCTURES.json`, `python3 -m json.tool UNIT_TYPES_AND_STATS.json`, `bash tests/summarize_campaign_arc_routes.sh`, and `git diff --check` passed.
+- Highest authentic runtime milestone reached: the real Campaign menu path reaches the first mission world map, selects owned stack 1 at `(31,44)`, toggles the selected unit slot, and split-moves it to `(31,45)` through recovered input; the starting castle economy panel opens from the recovered castle hotspot, renders nonblank frames, responds to the transfer-list arrow callback, and exits through Back.
+- Renamed functions/helpers/globals/tables/structs: none; new names are diagnostic helpers only (`Diagnostics_TraceCastleHotspots`, `Diagnostics_ResetFrameDumpOnEconomyEnter`) plus shell probes.
+- Ambiguous candidates deferred: no campaign route was promoted to complete, no objective state was mutated, economy transfer commit correctness and full campaign clear remain deferred, and the opt-in mission-route status still comes from route env files.
+
 ## 2026-06-15 - Source Hygiene And Navigation Compaction
 
 - Current frontier: source hygiene only; no recovered behavior, assembly offsets, route scripts, or generated metadata semantics were changed.

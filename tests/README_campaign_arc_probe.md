@@ -90,8 +90,12 @@ Artifact size controls:
   `bash tests/prune_artifacts.sh --apply`. The pruner only removes recognized
   durable run directories under repo-owned `artifacts/` roots.
 - `CLASH95_ARTIFACT_PRUNE_MAX_BYTES` can add a whole-`artifacts/` size cap to
-  the pruner. `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` opts campaign/mission-00
-  probes into a repo-wide prune sweep after their normal per-mission retention.
+  the pruner. Campaign route and mission-00 durable artifact writers now default
+  `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` and
+  `CLASH95_ARTIFACT_PRUNE_MAX_BYTES=805306368` (768 MiB), so high-volume route
+  runs prune repo-owned durable artifacts after their normal per-mission
+  retention. Set `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=0` to opt out for deep
+  investigations.
 
 Current repair state:
 

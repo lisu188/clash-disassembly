@@ -91,10 +91,11 @@ Artifact size controls:
   `artifacts/first-campaign/mission-00`; defaults to `12`.
 - Repo-wide cleanup is available through
   `bash tests/prune_artifacts.sh --dry-run` and explicit
-  `bash tests/prune_artifacts.sh --apply`. The same pruner can enforce
-  `CLASH95_ARTIFACT_PRUNE_MAX_BYTES`, and
-  `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` opts this probe into that sweep after its
-  per-mission retention pass.
+  `bash tests/prune_artifacts.sh --apply`. Mission-00 durable artifact runs now
+  default `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` and
+  `CLASH95_ARTIFACT_PRUNE_MAX_BYTES=805306368` (768 MiB), so the pruner runs
+  after the per-mission retention pass. Set
+  `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=0` to opt out for deep investigations.
 
 This wrapper is not final first-campaign acceptance. Final acceptance still runs
 `tests/run_first_campaign_arc_probe.sh bin/clash95_bootstrap` from the authentic

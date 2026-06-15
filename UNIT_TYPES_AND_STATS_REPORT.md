@@ -4,6 +4,7 @@
 - **Analyzed artifacts:** `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`.
 - **Primary reconstruction path:** the 88-byte `unit_stats` record family at `off_512568` / `unit_stats` in the data segment. `clash95.asm` exposes per-record xrefs to both the localized-name tables and resource-key pointers, while `clash95.exe` confirms the raw asset stems.
 - **Reliability rule used here:** names and ids are only promoted when at least two independent signals align. Resource-key order alone was treated as insufficient after the asm pass exposed duplicated localized-name tables for the final special prisoner records.
+- **2026-06-15 maintenance note:** the route-regression and artifact-retention batch did not promote new unit, category, stat, or relationship semantics. The first-mission playability and castle/economy probes exercise already recovered stack, slot, building, and UI paths.
 
 ## 2. Recovered Unit Roster
 

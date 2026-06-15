@@ -57,6 +57,8 @@ if [ "${CLASH95_FIRST_MISSION_MOVE_GDB:-0}" = "1" ] && ! command -v gdb >/dev/nu
 fi
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export CLASH95_ARTIFACT_PRUNE_AFTER_RUN="${CLASH95_ARTIFACT_PRUNE_AFTER_RUN:-1}"
+export CLASH95_ARTIFACT_PRUNE_MAX_BYTES="${CLASH95_ARTIFACT_PRUNE_MAX_BYTES:-805306368}"
 smoke_root="$(mktemp -d "${TMPDIR:-/tmp}/clash95-first-mission-move.XXXXXX")"
 log_path="$smoke_root/first-mission-move.log"
 frame_prefix="$smoke_root/frame"
