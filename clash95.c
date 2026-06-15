@@ -187747,4 +187747,4 @@ char * sub_4E7F70(char *a1, const char *a2, unsigned int a3)
 // 54E718: using guessed type int dword_54E718;
 
 // nfuncs=4362 queued=3899 decompiled=3899 lumina nreq=0 worse=0 better=0
-// Remaining decompiler scars are tracked in COMPILATION_PROGRESS.md and are no longer fatal to parsing.
+// Remaining decompiler scars are tracked in docs/archive/COMPILATION_PROGRESS.md and are no longer fatal to parsing.

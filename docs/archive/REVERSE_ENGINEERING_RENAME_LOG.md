@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Documentation Tree Consolidation Note
+
+- No semantic renames were made in this batch.
+- Historical rename/progress notes moved under `docs/archive/`, current policy docs moved under `docs/`, and focused probe notes moved under `docs/probes/`.
+- The change is repository navigation hygiene only and does not promote runtime, structure, unit, or route semantics.
+
 ## 2026-06-15 - Mission 04 Post-Breach Probe Note
 
 - No semantic renames were made in this batch.

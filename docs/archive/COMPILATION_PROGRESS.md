@@ -1,5 +1,19 @@
 # Compilation Progress
 
+## 2026-06-15 - Documentation Tree Consolidation
+
+- Current frontier: repository documentation hygiene only; no recovered runtime behavior, route scripts, objective logic, or assembly evidence were changed.
+- Blockers removed: root Markdown clutter was reduced by moving historical progress logs and legacy notes into `docs/archive/`, focused probe docs into `docs/probes/`, and the milestone/disassembly guide material into the requested `docs/RUNTIME_MILESTONES.md` and `docs/REVERSE_ENGINEERING.md` homes.
+- Documentation added: `docs/STATUS.md`, `docs/ROADMAP.md`, `docs/BUILD_AND_TEST.md`, `docs/STRUCTURES.md`, `docs/artifacts.md`, and `docs/archive/README.md` now provide the current status, recovery roadmap, validation commands, metadata policy, artifact policy, and archive index.
+- Link hygiene added: `tools/check_markdown_links.py` validates local links in README/current docs while skipping archived historical logs by default because those logs intentionally preserve old paths.
+- References updated: `AGENTS.md`, the local unit/stat recovery skill, `clash95.c` comments, `LINK_SURFACE_AUDIT.csv`, and `data/conversation_findings_crosswalk.csv` now point at the moved documentation paths.
+- Compile/link/runtime status: `make clash95_bootstrap` passed; `ctest --output-on-failure` passed with 16 tests, 0 failures, and expected opt-in skips; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --output-on-failure -R clash95_campaign_route_04_regression` passed.
+- Metadata/status validation: JSON validation for `RECOVERED_STRUCTURES.json` and `UNIT_TYPES_AND_STATS.json` passed; `python3 tools/check_markdown_links.py`, `git diff --check`, shell syntax checks for touched validation harnesses, and `bash tests/summarize_campaign_arc_routes.sh` passed.
+- Artifact status: `CLASH95_ARTIFACT_PRUNE_MAX_BYTES=805306368 bash tests/prune_artifacts.sh --dry-run --quiet` passed, and `artifacts/` measured `761203724` bytes after the opt-in route check.
+- Highest authentic runtime milestone reached: unchanged from the previous gameplay batch; mission 04 remains at direct load, stack0 march to Hopenberg, manual castle battle entry, repeated gate attacks, and active gate breach.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: `.agent/wiki/` relocation, deeper archive-log link rewriting, splitting large progress logs, and moving route scripts remain deferred to avoid losing evidence or breaking local workflows.
+
 ## 2026-06-15 - Mission 04 Post-Breach Probe Hygiene
 
 - Current frontier: mission-04 castle capture after the breached gate; the main route remains partial at the gate-breach milestone, while a quarantined post-breach probe now exercises movement deeper into the tactical map.
