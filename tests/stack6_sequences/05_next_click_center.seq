@@ -1,0 +1,3 @@
+# Select next tactical unit, then probe a central battlefield click.
+next-unit
+battle-click,320,240,battle_turn_loop_after_input_widgets,8,6,0.8

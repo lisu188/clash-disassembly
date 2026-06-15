@@ -1,0 +1,10 @@
+# Example expected-log file for the stack6 manual battle probe.
+# Use with:
+#
+#   CLASH95_FIRST_MISSION_MOVE_EXPECT_LOGS_FILE=tests/stack6_manual_expected_logs.example \
+#     bash tests/run_first_mission_stack6_manual_probe.sh build/bin/clash95_bootstrap
+
+manual battle input loop reached
+battle_turn_loop_after_input_widgets
+battle_action_next_unit_selected
+battle_action_prepare_defence_done

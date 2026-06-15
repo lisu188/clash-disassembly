@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <errno.h>
+#include <execinfo.h>
 #include <fcntl.h>
 #include <fnmatch.h>
 #include <limits.h>
@@ -87,6 +88,7 @@ _UNKNOWN unk_519AE8;
 #define COMPAT_FILE_ATTRIBUTE_DIRECTORY 0x10u
 #define COMPAT_INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #define COMPAT_WSL_GAME_ROOT "/mnt/c/clash"
+#define COMPAT_LOW32_ALLOC_MAGIC 0xC10A110Cu
 
 static DWORD g_compat_last_error;
 static LPVOID g_compat_tls_slots[COMPAT_TLS_SLOT_COUNT];
@@ -108,7 +110,9 @@ typedef struct CompatWcppArrayStoreDesc {
 
 typedef struct CompatLow32AllocHeader {
   size_t mapped_size;
+  unsigned int magic;
   int used_mmap;
+  struct CompatLow32AllocHeader *next_free;
 } CompatLow32AllocHeader;
 
 typedef struct CompatLow32Arena {
@@ -162,6 +166,12 @@ typedef struct CompatFindHandle {
 static CompatFindHandle *g_compat_find_handles[COMPAT_FIND_HANDLE_SLOTS];
 static int g_compat_stream_handles[COMPAT_STREAM_HANDLE_SLOTS];
 static CompatLow32Arena *g_compat_low32_arenas;
+static CompatLow32AllocHeader *g_compat_low32_free_blocks;
+static size_t g_compat_low32_arena_count;
+static size_t g_compat_low32_arena_capacity_total;
+static size_t g_compat_low32_arena_offset_total;
+static size_t g_compat_low32_arena_free_bytes;
+static size_t g_compat_low32_arena_reused_bytes;
 
 typedef struct CompatEventHandle {
   unsigned int magic;
@@ -516,7 +526,7 @@ void *plib_malloc__1(size_t size)
 
 int j_rand_(void)
 {
-  return rand();
+  return rand() & 0x7FFF;
 }
 
 void j_srand_(unsigned int seed)
@@ -526,7 +536,7 @@ void j_srand_(unsigned int seed)
 
 int rand_(void)
 {
-  return rand();
+  return rand() & 0x7FFF;
 }
 
 void srand_(unsigned int seed)
@@ -1106,7 +1116,8 @@ static int CompatPointerFitsSigned32(const void *ptr)
 
 enum
 {
-  COMPAT_LOW32_ARENA_BLOCK = 2
+  COMPAT_LOW32_ARENA_BLOCK = 2,
+  COMPAT_LOW32_ARENA_FREE_BLOCK = 3
 };
 
 #define COMPAT_LOW32_ARENA_SIZE ((size_t)16 * 1024 * 1024)
@@ -1136,7 +1147,9 @@ static CompatLow32AllocHeader *CompatTryMapSignedLow32(size_t total_size, int fl
     return 0;
   }
   header->mapped_size = total_size;
+  header->magic = COMPAT_LOW32_ALLOC_MAGIC;
   header->used_mmap = 1;
+  header->next_free = 0;
   return header;
 }
 
@@ -1145,6 +1158,7 @@ static CompatLow32AllocHeader *CompatMapSignedLow32(size_t total_size)
   CompatLow32AllocHeader *header;
 #ifdef MAP_FIXED_NOREPLACE
   uintptr_t hint;
+  uintptr_t step;
   size_t page_size;
   long page_size_result;
 #endif
@@ -1161,7 +1175,8 @@ static CompatLow32AllocHeader *CompatMapSignedLow32(size_t total_size)
   else
     page_size = 4096;
   total_size = (total_size + page_size - 1) & ~(page_size - 1);
-  for ( hint = 0x10000000u; hint + total_size <= 0x78000000u; hint += 0x01000000u )
+  step = total_size < 0x01000000u ? 0x00100000u : 0x01000000u;
+  for ( hint = 0x01000000u; hint + total_size <= 0x7F000000u; hint += step )
   {
     header = CompatTryMapSignedLow32(total_size, MAP_FIXED_NOREPLACE, (void *)hint);
     if ( header )
@@ -1176,6 +1191,7 @@ static void *CompatAllocLow32FromArena(size_t size)
   CompatLow32Arena *arena;
   CompatLow32AllocHeader *mapping;
   CompatLow32AllocHeader *block_header;
+  CompatLow32AllocHeader **free_link;
   size_t header_size;
   size_t payload_size;
   size_t block_size;
@@ -1189,6 +1205,25 @@ static void *CompatAllocLow32FromArena(size_t size)
   if ( payload_size > (size_t)-1 - header_size )
     return 0;
   block_size = header_size + payload_size;
+  for ( free_link = &g_compat_low32_free_blocks; *free_link; free_link = &(*free_link)->next_free )
+  {
+    if ( (*free_link)->magic == COMPAT_LOW32_ALLOC_MAGIC
+      && (*free_link)->used_mmap == COMPAT_LOW32_ARENA_FREE_BLOCK
+      && (*free_link)->mapped_size >= block_size )
+    {
+      block_header = *free_link;
+      *free_link = block_header->next_free;
+      block_header->next_free = 0;
+      block_header->used_mmap = COMPAT_LOW32_ARENA_BLOCK;
+      g_compat_low32_arena_reused_bytes += block_header->mapped_size;
+      if ( g_compat_low32_arena_free_bytes >= block_header->mapped_size )
+        g_compat_low32_arena_free_bytes -= block_header->mapped_size;
+      else
+        g_compat_low32_arena_free_bytes = 0;
+      CompatInvalidateReadableRanges();
+      return block_header + 1;
+    }
+  }
   for ( arena = g_compat_low32_arenas; arena; arena = arena->next )
   {
     if ( arena->offset <= arena->capacity && arena->capacity - arena->offset >= block_size )
@@ -1203,6 +1238,12 @@ static void *CompatAllocLow32FromArena(size_t size)
       return 0;
     mapping_size = sizeof(*mapping) + arena_capacity;
     mapping = CompatMapSignedLow32(mapping_size);
+    if ( !mapping && arena_capacity != block_size )
+    {
+      arena_capacity = block_size;
+      mapping_size = sizeof(*mapping) + arena_capacity;
+      mapping = CompatMapSignedLow32(mapping_size);
+    }
     if ( !mapping )
       return 0;
     arena = (CompatLow32Arena *)malloc(sizeof(*arena));
@@ -1217,16 +1258,40 @@ static void *CompatAllocLow32FromArena(size_t size)
     arena->offset = 0;
     arena->next = g_compat_low32_arenas;
     g_compat_low32_arenas = arena;
+    ++g_compat_low32_arena_count;
+    g_compat_low32_arena_capacity_total += arena->capacity;
   }
 
   block_header = (CompatLow32AllocHeader *)(void *)(arena->base + arena->offset);
   if ( !CompatPointerFitsSigned32(block_header + 1) )
     return 0;
   arena->offset += block_size;
+  g_compat_low32_arena_offset_total += block_size;
   block_header->mapped_size = block_size;
+  block_header->magic = COMPAT_LOW32_ALLOC_MAGIC;
   block_header->used_mmap = COMPAT_LOW32_ARENA_BLOCK;
+  block_header->next_free = 0;
   CompatInvalidateReadableRanges();
   return block_header + 1;
+}
+
+static void CompatLogLow32AllocFailure(size_t size)
+{
+  void *frames[16];
+  int frame_count;
+
+  fprintf(
+    stderr,
+    "[compat] low32 alloc failed size=%zu arenas=%zu arena_capacity=%zu arena_offset=%zu arena_free=%zu arena_reused=%zu\n",
+    size,
+    g_compat_low32_arena_count,
+    g_compat_low32_arena_capacity_total,
+    g_compat_low32_arena_offset_total,
+    g_compat_low32_arena_free_bytes,
+    g_compat_low32_arena_reused_bytes);
+  frame_count = backtrace(frames, 16);
+  if ( frame_count > 0 )
+    backtrace_symbols_fd(frames, frame_count, STDERR_FILENO);
 }
 
 static void *CompatAllocLow32(size_t size)
@@ -1241,7 +1306,10 @@ static void *CompatAllocLow32(size_t size)
   if ( arena_block )
     return arena_block;
   if ( size > (size_t)-1 - sizeof(*header) )
+  {
+    CompatLogLow32AllocFailure(size);
     return 0;
+  }
   total_size = sizeof(*header) + size;
   header = CompatMapSignedLow32(total_size);
   if ( header )
@@ -1251,14 +1319,20 @@ static void *CompatAllocLow32(size_t size)
   }
   header = (CompatLow32AllocHeader *)malloc(total_size);
   if ( !header )
+  {
+    CompatLogLow32AllocFailure(size);
     return 0;
+  }
   if ( !CompatPointerFitsSigned32(header + 1) )
   {
     free(header);
+    CompatLogLow32AllocFailure(size);
     return 0;
   }
   header->mapped_size = total_size;
+  header->magic = COMPAT_LOW32_ALLOC_MAGIC;
   header->used_mmap = 0;
+  header->next_free = 0;
   CompatInvalidateReadableRanges();
   return header + 1;
 }
@@ -1270,7 +1344,22 @@ static void CompatFreeLow32(void *ptr)
   if ( !ptr )
     return;
   header = ((CompatLow32AllocHeader *)ptr) - 1;
+  if ( !CompatPointerReadable(header)
+    || !CompatPointerReadable((const char *)header + sizeof(*header) - 1)
+    || header->magic != COMPAT_LOW32_ALLOC_MAGIC )
+  {
+    return;
+  }
   if ( header->used_mmap == COMPAT_LOW32_ARENA_BLOCK )
+  {
+    header->used_mmap = COMPAT_LOW32_ARENA_FREE_BLOCK;
+    header->next_free = g_compat_low32_free_blocks;
+    g_compat_low32_free_blocks = header;
+    g_compat_low32_arena_free_bytes += header->mapped_size;
+    CompatInvalidateReadableRanges();
+    return;
+  }
+  if ( header->used_mmap == COMPAT_LOW32_ARENA_FREE_BLOCK )
     return;
   CompatInvalidateReadableRanges();
   if ( header->used_mmap )

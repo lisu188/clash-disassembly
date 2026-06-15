@@ -1,0 +1,5 @@
+# Raw battle-input version of the basic stack6 playable-turn proof.
+wait 20
+click 577 386 6
+wait 8
+click 514 448 6

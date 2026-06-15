@@ -257,6 +257,7 @@
 - `Batch 184` stayed on the executable startup/runtime validation frontier. The active work added CTest liveness coverage for the direct `/A0` route on both executable paths, but it did not promote any new unit-type or stat semantics; the recovered roster names, stats, relationships, and confidence levels remain unchanged.
 
 ## 34. Batch 185 Note
+- `Batch 186` stayed on the first-campaign executable/runtime frontier. The active work repaired the reached mission-0 battle transition and GodAnger visual-effect stack-buffer path; no new unit type, category, stat, or relationship semantics were promoted.
 - `Batch 185` stayed on the executable startup/runtime frontier. The active work repaired the reached direct `/A0` new-turn corridor across parser/fact queue coalescing, building population/plague/technology updates, garrison morale delta handling, prisoner castle placement, unit fatigue/morale predicates, queen birth/marriage/departure timing, and low32 allocator pressure. This did not promote any new unit-type or stat semantics; the only unit-facing semantic guard added in this wave is the explicit `UNIT_TYPE_COUNT` bound and invalid trailing-slot sentinel handling, leaving the recovered roster names, stats, relationships, and confidence levels unchanged.
 
 ## 35. Batch 186 Note
@@ -309,3 +310,160 @@
 
 ## 51. Batch 212 Note
 - `Batch 212` stayed on the executable first-mission playable-action frontier. The active work repaired reached stack movement predicates and `UnitStack_ExecuteQueuedPath` enough for a real-input first-mission owned stack to move from `(31,44)` to `(31,45)` through the authentic world-map path. This did not promote new unit-type or stat semantics; the only category rule touched was the already-known normal-combat exclusion for type ids `31..34`, and the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 52. Batch 214 Note
+- `Batch 214` stayed on the executable first-mission playable-action frontier. The active work only stretched pending SDL host-click fallback pulses across multiple recovered input polls so real X11 clicks are less likely to be missed by the world-map handler; it did not promote any new unit-type or stat semantics, and the recovered roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 53. Batch 215 Note
+- `Batch 215` stayed on the executable first-mission playable-action frontier. The active work added an opt-in Xvfb/xdotool CTest harness for the real-input first-mission movement route, but it did not recover or promote any new unit-type or stat semantics; the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 54. Batch 216 Note
+- `Batch 216` stayed on the executable first-mission playable-action frontier. The active work only hardened the opt-in real-input movement smoke with route breadcrumbs, process-group cleanup checks, and optional frame-capture assertions; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 55. Batch 217 Note
+- `Batch 217` stayed on the executable first-mission playable-action frontier. The active work only hardened the opt-in Xvfb startup path and smoke diagnostics for the real-input movement harness; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 56. Batch 218 Note
+- `Batch 218` stayed on the executable first-mission playable-action frontier. The active work only added artifact preservation and richer expected-log assertions to the opt-in real-input movement smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 57. Batch 219 Note
+- `Batch 219` stayed on the executable first-mission playable-action frontier. The active work only added frame counting and optional all-black-frame rejection to the opt-in real-input movement smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 58. Batch 220 Note
+- `Batch 220` stayed on the executable first-mission playable-action frontier. The active work only added an opt-in second-action phase and timing controls to the real-input movement smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 59. Batch 221 Note
+- `Batch 221` stayed on the executable first-mission playable-action frontier. The active work only tightened successful-run cleanup in the opt-in real-input movement smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 60. Batch 222 Note
+- `Batch 222` stayed on the executable first-mission playable-action frontier. The active work only isolated the opt-in real-input movement CTest with serial execution and manual/real-input labels; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 61. Batch 223 Note
+- `Batch 223` stayed on the executable first-mission playable-action frontier. The active work only added a disabled-by-default end-turn phase to the opt-in real-input smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 62. Batch 224 Note
+- `Batch 224` stayed on the executable first-mission playable-action frontier. The active work only added disabled-by-default post-end-turn skip clicks to the opt-in real-input smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 63. Batch 225 Note
+- `Batch 225` stayed on the executable first-mission playable-action frontier. The active work only added expected-log assertion presets to the opt-in real-input smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 64. Batch 226 Note
+- `Batch 226` stayed on the executable first-mission playable-action frontier. The active work only documented the opt-in real-input smoke controls inside the harness script; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 65. Batch 227 Note
+- `Batch 227` stayed on the executable first-mission playable-action frontier. The active work only added a CTest-wired playability-probe wrapper around the opt-in real-input smoke; it did not recover or promote any new unit-type or stat semantics, and the roster names, stats, relationships, and confidence levels remain unchanged.
+
+## 52. Batch 213 Note
+- `Batch 213` stayed on the executable first-mission split-move frontier. The active work repaired the selected-slot split validator/executor enough for stack `1` at `(31,44)` to detach selected slot `0` into new stack `10` at `(31,45)` under GDB validation. This did not promote new unit-type or stat semantics; the repaired code only moves already-selected 31-byte unit slots and leaves recovered roster names, stats, relationships, and confidence levels unchanged.
+
+## 53. Batch 214 Note
+- `Batch 214` stayed on the executable first-mission playable-action frontier. The active work removed the reached selected-stack panel `memset_` scars and proved a pure real-input split move through the authentic Next Unit and selected-slot UI route. This did not promote new unit-type or stat semantics; no unit roster, stat table, category, or relationship interpretation changed.
+### 2026-04-25 Runtime Batch Note
+- No new unit-type or unit-stat semantics were recovered in this batch.
+- Runtime frontier moved in the tactical-entry path: the PCX palette loader now follows the recovered `gfx\\pal_grey.pcx` evidence, and unit/stat conclusions remain unchanged pending the next successful mission smoke.
+### Batch 233 - First-mission end-turn GDB breakpoint script
+- Stayed on executable first-mission playable-turn recovery. Added a GDB breakpoint script for the suspected end-turn evidence chain: `UI_CheckEndTurnHotkey`, `Game_AdvanceToNextPlayerTurn`, and `UI_LoadTurnBannerGfx`.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation remains blocked in this session by WSL `E_ACCESSDENIED`; the breakpoint script is queued for the next runnable WSL/SDL pass.
+
+### Batch 234 - First-mission playable split action
+- Stayed on executable first-mission playability. The real-input route now reaches the first human turn, selects owned stack `1` at `(31,44)` through the authentic Next Unit widget, toggles selected slot `0`, and completes a split move to `(31,45)`.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. This validates movement of already recovered stack/slot records and leaves roster/stat confidence unchanged.
+- Remaining gameplay semantics are unchanged: end-turn, combat/building interaction, repeated turns, and full mission completion are still outside the claimed unit/stat evidence.
+
+### Batch 235 - Mission objective gate correction
+- Stayed on executable first-mission completion recovery. The active-mission human-turn exit callsite now names `sub_460270` as `Mission_CheckObjectiveComplete`, reflecting its switch over `ACTIVE_MISSION_INDEX`.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. For mission `0`, the gate checks remaining player-1 unit stacks; that uses existing stack ownership evidence and does not change roster/stat interpretation.
+- The next unit/stat-adjacent frontier is objective/combat execution evidence only if it exposes new unit relationships; otherwise roster/stat confidence remains unchanged.
+
+### Batch 236 - First-mission enemy attack probe
+- Stayed on executable first-mission completion recovery. The real-input route now selects split stack `10` and reaches the recovered strategic `Unit_Attack` path against owner-1 stack `3` at `(46,45)`.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The attack probe uses already recovered stack owner, tile, slot-count, and normal-combat predicates; roster/stat confidence remains unchanged.
+- New diagnostics around defeated-stack capture and kill paths are for future combat/objective evidence. They do not change any unit/stat interpretation until a run actually mutates or removes stacks through those branches.
+
+### Batch 237 - First-mission autoresolve combat return
+- Stayed on executable first-mission completion recovery. The real-input route now clicks the recovered battle prompt, runs autoresolve against owner-1 stack `3`, and returns from `Unit_Attack` with the defender squad count reduced to zero.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The score-helper repairs only remove decompiler scars around already identified metadata fields such as base action points and do not change roster/stat confidence.
+- Mission `0` now advances its objective blocker from stack `3` at `(46,45)` to stack `4` at `(15,6)`. That is runtime objective-flow evidence, not a new unit/stat interpretation.
+
+### Batch 238 - First-mission tactical battle entry and return
+- Stayed on executable first-mission completion recovery. The real-input route now enters authentic tactical battle UI from the recovered `Unit_Attack` path, reaches the tactical turn loop after input widgets, and returns from battle without the previous post-return resource/allocator abort.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The repaired selected-unit panel, tactical grid, banner, idle-animation walker, and post-battle resource reload expose runtime stability, not new roster/stat meanings.
+- The tactical frame evidence confirms already recovered unit slots can be presented in battle, but selected-unit panel stat text formatting and broader tactical action callbacks remain deferred before promoting any additional unit/stat semantics.
+
+### Batch 232 - End-turn hotkey probe hook
+- Stayed on executable first-mission playable-turn recovery. Added an optional hotkey injection point before the end-turn click route so future runs can probe the suspected `UI_CheckEndTurnHotkey` path without harness edits.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation remains blocked in this session by WSL `E_ACCESSDENIED`; the actual end-turn key/button condition is still unproven.
+
+### Batch 231 - End-turn route evidence checkpoint
+- Stayed on executable first-mission playable-turn recovery. Consolidated connector-backed evidence for the likely human end-turn path: `UI_CheckEndTurnHotkey` as the UI-side candidate, `Game_AdvanceToNextPlayerTurn` as the turn-advance target, and `UI_LoadTurnBannerGfx` as the expected visual transition corridor.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation remains blocked in this session by WSL `E_ACCESSDENIED`; exact hotkey/body evidence and runtime assertions remain deferred.
+
+### Batch 230 - Host-click pulse trace gate
+- Stayed on executable first-mission playable-turn recovery. Added an env-gated SDL fallback-input trace for host-click pulse state so the next real-input run can separate input sampling failures from movement helper failures.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation remains blocked in this session by WSL `E_ACCESSDENIED`; the trace is diagnostic-only until a real WSL/SDL run captures logs and nonblank frames.
+
+### Batch 229 - First-mission turn probe wrapper
+- Stayed on executable first-mission playable-turn recovery. Added a manual turn probe that extends the real-input first-mission smoke through second-action, end-turn, and post-end-turn skip checks when host validation is available.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation remains blocked in this session by WSL `E_ACCESSDENIED`; the turn probe is a future validation gate, not a claimed playable mission milestone.
+
+### Batch 228 - Playability probe skip handling
+- Stayed on executable first-mission playable-action recovery. The new CTest-wired playability probe now inherits the smoke script's skip-code behavior for hosts that cannot run the real-input route.
+- No new unit-type, unit-stat, category, or relationship semantics were promoted. The recovered roster/stat confidence remains unchanged.
+- Validation is still blocked in this session by WSL `E_ACCESSDENIED`; a future pass must run the probe under WSL/SDL and inspect nonblank presented frames before claiming progress toward a playable first mission.
+## 2026-05-05 Runtime-Route Note
+
+- No unit-type or stat semantics were changed in this batch.
+- Runtime evidence still uses mission-0 blocker stack identities as route targets only: stack5 at tile 48,14 and stack6 at tile 35,11 were exercised through authentic `enemy_attack_call`/mission-objective logging. Stack7/8/9 remain route targets to validate, not recovered unit/stat semantic claims.
+- JSON unit/stat artifacts were intentionally left untouched while WSL read/validation access is blocked, to avoid unvalidated structure churn.
+# 2026-05-11 stack6 runtime probe note
+
+This batch did not add new unit type or stat recoveries. Work stayed on the first-mission runtime path and stack6 manual battle harness so the recovered tactical loop can be driven through SDL input instead of autoresolve.
+
+# 2026-05-11 barracks UI runtime note
+
+This batch did not add new unit type or stat recoveries. Work stayed on the castle-management to barracks/garrison UI runtime path: the dialog now presents through recovered SDL rendering enough to show the 12-slot barracks layout, but the visible roster/stat meanings and slot-action semantics remain unchanged pending deeper interaction evidence.
+
+# 2026-05-11 barracks slot-text runtime note
+
+This batch did not promote new unit type or stat meanings. It only repaired reached barracks UI text plumbing so already-known unit-slot fields display correctly: slot health at `slot +9`, building funds at `building +438`, and existing recovered stat helpers in the selected-unit panel. The selected slot in the current probe is identified as `Builder` through the existing `UnitType_GetLocalizedName` helper, not as a new semantic recovery.
+
+# 2026-05-11 barracks selected-detail runtime note
+
+No new unit type or stat meanings were promoted in this batch. Work stayed on executable UI/runtime stability: the fresh `bin/clash95_bootstrap` route now survives the minimap viewport-box draw, opens the barracks dialog, and drives the right-click selected-detail path for the already recovered `Builder` slot. The remaining visual-detail issue is a presentation/copy/palette frontier, not new roster/stat evidence.
+
+# 2026-05-11 save-slot DAT format note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work recovered and documented the save-slot DAT container shape: a 16-byte label followed by the raw `gameData` image, with rules facts stored in the companion `.fac` file. Existing unit stack and slot regions are only reported by the new read-only parser using previously recovered offsets.
+
+# 2026-05-28 mission-01 bridge route note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on executable campaign routing: a builder-containing stack now executes queued bridge-terrain steps consistently with the recovered bridge-aware path-generation seam, and mission `01` completes through authentic barracks release, turn advancement, bridge movement, and shrine entry. The only unit-related fact used here is the existing `UnitStack_HasBuilder` predicate; roster/stat confidence remains unchanged.
+
+# 2026-06-03 mission-02 Treg Rock route note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on executable campaign routing and rules-fact recovery: mission `02` now completes through authentic stack movement/rest cycles and Treg Rock castle capture, while `BuildingRecord.castle_fact_id` handling was repaired for direct mission capture paths. Roster/stat confidence remains unchanged.
+
+# 2026-06-04 mission-03 survival route note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on executable campaign routing and the world-map input/cursor seam: mission `03` now completes by authentic turn advancement through the recovered top-menu path until the existing survival objective sees `GAME_TURN_COUNTER > 10`. Roster/stat confidence remains unchanged.
+
+# 2026-06-04 artifact retention controls note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on campaign-route harness hygiene: durable route artifacts now retain bounded frame/log evidence and prune old runs so long playable-campaign probes remain diagnosable without unbounded `artifacts/` growth.
+
+# 2026-06-05 repo-wide artifact pruning note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on harness hygiene: `tests/prune_artifacts.sh` can dry-run or explicitly apply cleanup of recognized durable probe run directories under repo-owned `artifacts/` roots, with optional whole-folder byte caps.
+
+# 2026-06-15 mission-04 tactical gate attack note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on executable tactical-battle routing for mission `04`: the castle gate click now reaches `UnitBattle_AttackWall`, exercises the already recovered wall-attack metadata path, returns from the attack animation, and presents a nonblank tactical frame. The exact gate durability, repeat-attack count, breach/capture route, and objective-completion sequence remain deferred route work rather than new unit/stat semantics.
+
+# 2026-06-15 campaign route visual regression note
+
+No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on deterministic route-test protection: retained SDL frame dumps now receive loose visual assertions and opt-in campaign route CTest entries protect the already recovered direct-route milestones. Roster/stat confidence remains unchanged.

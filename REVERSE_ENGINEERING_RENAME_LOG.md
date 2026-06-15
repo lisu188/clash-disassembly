@@ -1954,6 +1954,8 @@
 |---|---|---|---|---|---|---|---|
 | `GetDriveTypeA` fixed-disk stub | `WSL-aware Clash CD root probe` | sdl_port_fix | SDL / WSL Platform | High | The recovered boot path tests drive type `5` when looking for the installed game data. Returning a fixed disk for every drive kept the authentic startup on the “Clash CD not found!” path even when `/mnt/c/clash` existed. The new wrapper probes `/mnt/<drive>/clash` and `/mnt/<drive>/CLASH`, returning CD-ROM only when the installed root is present under WSL. | c, prior-artifact | no |
 | `App_RequestQuit` decompiler-damaged variadic path | `message-string quit path with explicit text formatting` | boot_fix | Bootstrap / Error Handling | High | The current callsites on the live boot path pass a single message pointer, but the decompiled body tried to walk a broken variadic surface and crashed before the intended quit dialog/abort path could be observed. Collapsing it to explicit message formatting preserves the current recovered callers and lets the authentic boot path reach the real abort site. | c, asm | no |
+| `sub_4620F0` uninitialized `Win_EndModeChange` playback/fade locals | asm-backed `100,100` transition playback registers | runtime_fix | Battle / Turn Transition | High | The reached mission-0 continuation crashed after a human-turn transition with a `low32 alloc failed size=4294963200` abort. The asm shows `ecx` is deliberately preserved as `100` and copied into `ebx` immediately before `Win_EndModeChange`; the decompiled C had forwarded an undefined local for both values. Restoring the `100,100` call moved the live probe past that abort. | c, asm, runtime | no |
+| `GodAnger` stack palette passed through 32-bit `sub_401AF0` parameter | pointer-width-safe palette load plus recovered lightning sprite draw helper | runtime_fix | Battle / GodAnger Effect | High | The next mission-0 blocker occurred immediately after the `GodAnger` player banner. The routine loads `white.pal` into a stack palette buffer, so preserving that pointer as `intptr_t` is required on the WSL x86-64 port. The same asm block draws the lightning sprite at `(16,100)`, which now uses the existing recovered menu-sprite helper instead of a decompiler-scrambled vtable call. | c, asm, runtime | no |
 | `sub_471CA0` undefined temp-holder copy / stack-destroy ABI` | `pointer-safe holder join reconstruction` | runtime_fix | Runtime / String Holders | High | `Archimedes`' asm review confirmed `sub_471CA0` only builds a temporary holder from a source holder plus a suffix, copies that into the destination holder, and destroys the temp. The decompiled body lost the hidden source-holder input, wrote an undefined `v5`, and truncated the stack-holder destroy. Re-emitting it with the explicit low32 holder helpers removes that live crash from the authentic startup path. | c, asm | yes: Agent A, Agent B |
 | `sub_471D10` hidden-source append helper artifact | `compat holder append reconstruction` | runtime_fix | Runtime / String Holders | High | The asm shows `sub_471D10` allocates `old + suffix + 1`, copies the existing holder contents, appends the suffix, then deep-copies the result back into the holder. The decompiled `HIDWORD`/`sub_471BF0` surface was not faithfully recoverable on x86-64, so the helper was rewritten as a direct holder append. | c, asm | yes: Agent B |
 | `sub_471DE0` hidden-source prepend helper artifact | `compat holder prepend reconstruction` | runtime_fix | Runtime / String Holders | High | The asm shows `sub_471DE0` builds `prefix + old` into a fresh buffer, then deep-copies it into the holder. Replacing the decompiler-lost `sub_471BF0` path with a direct prepend helper moved the mounted-query crash out of `sub_471DE0` and further down the authentic boot path. | c, asm | yes: Agent B |
@@ -2491,3 +2493,240 @@
 | `Unit_CanMoveSelectionFromGroupToTile` comparing the selected-slot list against undefined locals and building its temporary stack buffer from ghost operands | asm-backed selected-slot split-move placability check | control_flow_fix | World Map / Split Movement | High | `clash95.asm:53796-54013` counts the selected slots, rejects zero/full-stack detach attempts, copies the chosen 31-byte unit slots into a temporary stack-local buffer, and then branches between empty-tile move-cost validation and same-owner merge checks. The repaired C now follows that corridor directly from the real source stack pointer. | c, asm, gdb | no |
 | `Unit_MoveSelectionFromGroupToTile` deriving the source stack, destination stack, and slot-copy loop from undefined locals | asm-backed split-stack transfer and destination-stack creation | control_flow_fix | World Map / Split Movement | High | `clash95.asm:54015-54312` uses the incoming unit index as the source stack, allocates a new destination stack when the target tile is empty, copies only the selected 31-byte unit slots, compacts the source stack, and relinks/syncs army facts before the reveal/trap follow-up. GDB proved the repaired helper moves selected slot `0` from stack `1` at `(31,44)` into new stack `10` at `(31,45)`. | c, asm, gdb | no |
 | one-read host quick-click pulse in `Platform_ReadInputFallbackState` | two-read SDL fallback host-click persistence | runtime_path_fix | SDL Input / World Map Clicks | Medium | The recovered runtime can poll input more than once between host mouse down/up and the world-map handler. The existing contained debug pulse path already supports configurable multi-read pulses; mirroring that for real host clicks keeps short X11/SDL clicks alive across one extra recovered poll without changing held-button behavior. | c, runtime | no |
+
+## Batch 214 - Pure Real-Input Split-Stack Move
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `UnitStackSelection_HandleInput` clearing the stack-local selected-slot list through the one-byte `memset_` compatibility stub | bounded selected-slot index-list clear | control_flow_fix | World Map / Split Movement | High | `clash95.asm:54915-54925` sets `ebx = 0x2C`, clears the stack-local selected-index buffer at `var_30`, then passes it to `UnitStackSelection_BuildSelectedSlotIndexList`. The prior C call only wrote one byte through the quarantined `memset_` stub and crashed when the pure real-input split route reached the helper. | c, asm, gdb, xvfb | no |
+| `UnitStackSelection_HandleInput` clearing `dword_526F78` through the one-byte `memset_` compatibility stub after a successful split | bounded selected-slot mask clear | control_flow_fix | World Map / Split Movement | High | `clash95.asm:54931-54936` clears `dword_526F78` with `ebx = 0x28` only after `Unit_MoveSelectionFromGroupToTile` succeeds. Replacing the scar with `memset(dword_526F78, 0, sizeof(dword_526F78))` preserves the 10-dword mask size already recovered in `UnitStackSelectionState`. | c, asm, gdb, xvfb | no |
+| no state trace around the real-input Next Unit / split-panel corridor | `Diagnostics_TraceWorldMapActionEvent` | diagnostic_fix | World Map / Split Movement | High | The environment-gated trace records Next Unit scan/selection, selected-slot toggles, and split attempts/completions alongside cursor and DirectDraw flip state. A no-debugger Xvfb route logged `next_unit_selected selected=1 a=31 b=44 c=7`, `selection_split_attempt selected=1 a=31 b=45 c=0`, and `selection_split_done selected=1 a=31 b=45 c=0`, while frame dump `/tmp/clash-split-rerun-frames.7idOBa-559.bmp` stayed nonblank on the live world map. | c, xvfb, frame_dump | no |
+### 2026-04-25 - Tactical palette loader repair
+- `sub_401BA0`: recovered as PCX palette loader. Original asm builds a `gfx\\` path from the `edx` filename, opens it, seeks `-0x300` from the PCX tail palette, reads 768 bytes, expands RGB triples into the destination palette table, and closes the query handle.
+- `sub_4050F0` / `sub_405330`: corrected tactical greyscale transition calls to load `pal_grey.pcx` instead of undefined register ghosts; initialized the greyscale ramp accumulator from the asm `xor ecx, ecx`; quarantined legacy compact-vtable surface refresh/destructor calls for SDL/x64 compatibility pending a fuller render-device wrapper.
+### 2026-04-25 - First-mission host-click pulse tolerance
+- `g_platform_host_mouse_primary_pending_hold_reads` / `g_platform_host_mouse_secondary_pending_hold_reads`: SDL fallback-input counters that stretch a pending host click over multiple recovered input polls. This is runtime containment for real X11 click timing; it does not introduce new gameplay semantics.
+
+### 2026-04-25 - First-mission real-input movement smoke
+- `tests/verify_first_mission_real_input_move_smoke.sh`: opt-in Xvfb/xdotool harness for the current first-mission movement frontier. It drives the authentic SDL window through Campaign and into a held world-map move click; coordinates and expected log matching are environment-overridable for validation tuning.
+
+### 2026-04-25 - First-mission smoke diagnostics
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added route breadcrumbs, process-group leftover checks, and optional presented-frame assertion for diagnosing missed real-input clicks without attaching GDB.
+
+### 2026-04-25 - First-mission smoke Xvfb startup hardening
+- `tests/verify_first_mission_real_input_move_smoke.sh`: changed Xvfb startup from one random display to a retry list with `CLASH95_XVFB_DISPLAY_NUMBER` override, added direct tool checks for `head`/`pgrep`, and logged the chosen `DISPLAY` plus bootstrap PID for reproduction.
+
+### 2026-04-25 - First-mission smoke artifact preservation and assertions
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added failure artifact preservation, `CLASH95_KEEP_SMOKE_ARTIFACTS`, newline/file-based expected-log assertions, and a shared failure helper so missed-click diagnostics keep their route logs and frame dumps.
+
+### 2026-04-25 - First-mission smoke frame sanity checks
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added captured-frame counting plus optional ImageMagick-backed all-black final-frame rejection through `CLASH95_FIRST_MISSION_MOVE_REJECT_BLANK_FRAMES`.
+
+### 2026-04-25 - Optional second-action movement smoke phase
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added `CLASH95_FIRST_MISSION_MOVE_SECOND_ACTION` and separate second-action click/timing overrides so the same real-input harness can calibrate repeated movement after the first proven owned-stack move.
+
+### 2026-04-25 - First-mission smoke cleanup tightening
+- `tests/verify_first_mission_real_input_move_smoke.sh`: clears the tracked bootstrap PID after successful shutdown/process-group checks so the exit trap does not issue a stale process-group kill on successful smoke runs.
+
+### 2026-04-25 - First-mission real-input CTest isolation
+- `clash95_first_mission_real_input_move_smoke`: marked as serial and labeled `manual`, `real_input`, and `first_mission` so the opt-in X11/input smoke can be selected explicitly and cannot run concurrently with other tests.
+
+### 2026-04-25 - Optional end-turn smoke phase
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added `CLASH95_FIRST_MISSION_MOVE_END_TURN` plus coordinate/timing overrides for a disabled-by-default end-turn click after movement-route calibration.
+
+### 2026-04-25 - Optional post-end-turn skip phase
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added `CLASH95_FIRST_MISSION_MOVE_POST_END_TURN_SKIPS` and post-end-turn skip coordinate/timing overrides so the opt-in route can continue through turn banners/status waits during live calibration.
+
+### 2026-04-25 - First-mission smoke expected-log presets
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added `CLASH95_FIRST_MISSION_MOVE_EXPECT_PRESET` with comma-separated presets `route`, `world-click`, `end-turn`, and `post-end-turn` for graduated smoke assertions during live route calibration.
+
+### 2026-04-25 - First-mission smoke usage documentation
+- `tests/verify_first_mission_real_input_move_smoke.sh`: documented the required opt-in flag, assertion/frame/artifact controls, and optional second-action/end-turn/post-end-turn phases in the script header.
+### 2026-04-25 - First-mission end-turn GDB breakpoint script
+- `tests/first_mission_turn_probe_breakpoints.gdb`: added a minimal GDB command file that logs and continues through the current end-turn evidence chain: `UI_CheckEndTurnHotkey`, `Game_AdvanceToNextPlayerTurn`, and `UI_LoadTurnBannerGfx`.
+- No recovered gameplay code or stat structures were changed.
+
+### 2026-04-25 - End-turn hotkey probe hook
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added optional `CLASH95_FIRST_MISSION_MOVE_END_TURN_KEY` support. When configured, the real-input route sends the requested `xdotool` key before the existing end-turn click, allowing direct probing of the suspected `UI_CheckEndTurnHotkey` path.
+- `tests/run_first_mission_turn_probe.sh`: carries `CLASH95_FIRST_MISSION_MOVE_END_TURN_KEY` through explicitly for manual end-turn candidate runs.
+- No gameplay symbols, structs, unit tables, or stat semantics were renamed in this batch.
+
+### 2026-04-25 - End-turn route evidence checkpoint
+- `UI_CheckEndTurnHotkey`: recorded as the strongest current UI-side end-turn candidate from the map/progress evidence, at map `0001:00050150` / likely linear `0x451150`. The exact trigger condition and call edge still need body/GDB confirmation.
+- `Game_AdvanceToNextPlayerTurn`: recorded as the likely turn-advance target from original `nextPlayer`, at map `0001:00009A60` / likely `0x40AA60`; expected to rotate `g_CurrentPlayerIndex`, synchronize turn-owner/viewed-player state, and run per-turn systems before dispatching human UI or AI.
+- `UI_LoadTurnBannerGfx`: retained as the expected end-turn visual-transition corridor at map `0001:00009820`, based on the prior turn-banner frame and GDB evidence.
+- `WorldMapActionWidgetRecord`: noted that the six recovered world-map action records rooted at `dword_511D40` cover map mode, next unit, next building, join units, building, and ambush, with no proven explicit end-turn button in that table.
+
+### 2026-04-25 - Host-click pulse trace gate
+- `PlatformTraceHostClickPulses`: added an environment-gated SDL fallback-input trace controlled by `CLASH95_TRACE_HOST_CLICK_PULSES`.
+- `Platform_ReadInputFallbackState`: now emits primary/secondary host button state and pending click-pulse counters when the trace is enabled, giving the pure real-input route a way to distinguish input loss from later movement validation/execution failures.
+- `tests/run_first_mission_turn_probe.sh`: enables `CLASH95_TRACE_HOST_CLICK_PULSES=1` by default for the stricter first-mission turn probe.
+
+### 2026-04-25 - First-mission turn probe wrapper
+- `tests/run_first_mission_turn_probe.sh`: added a stricter manual wrapper around the real-input first-mission smoke. It enables the second-action, end-turn, post-end-turn skip loop, route/world-click/end-turn expectations, frame capture, and blank-frame rejection for the current narrow playable-turn frontier.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: made the route timeout configurable through `CLASH95_FIRST_MISSION_MOVE_TIMEOUT_SECONDS` so longer end-turn probes stay on the same contained real-input route instead of needing a separate harness.
+- `clash95_first_mission_turn_probe`: added a CTest target labelled `manual;real_input;first_mission;first_mission_turn` with return-code `77` treated as an intentional skip.
+- No recovered gameplay symbols or unit/stat structures were renamed in this batch.
+
+### 2026-04-25 - Playability probe CTest skip handling
+- `clash95_first_mission_playability_probe`: added `SKIP_RETURN_CODE 77` so the manual first-mission playability probe reports intentional skips consistently with the lower-level real-input smoke when the required host tooling or opt-in environment is absent.
+- No gameplay symbols, recovered structures, unit tables, or stat semantics were renamed in this batch.
+
+### 2026-04-25 - First-mission playable split-action smoke
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added log-gated waits for the recovered first human turn, Next Unit stack selection, and selected-slot toggle, plus adaptive skip-click handling that stops once the first-mission human turn is observed.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: corrected the default selected-slot click from the minimap/status area to bottom-panel slot `0` at `(54,432)`, recalibrated the adjacent move target to `(320,304)`, and added a `playable-turn` expectation preset requiring `selection_split_attempt` and `selection_split_done` for tile `(31,45)`.
+- `tests/run_first_mission_playability_probe.sh`: now enforces the `playable-turn` preset by default; `clash95_first_mission_playability_probe` passed under CTest with real Xvfb/SDL input and nonblank frame capture.
+- `WorldMapActionWidgetRecord` / `UnitStackSelectionState`: structure evidence updated with the live route traces for Next Unit record `1`, slot `0` toggle, and one-slot split move completion.
+- No new unit/stat semantics were promoted; this batch validates an already recovered selected-stack movement corridor.
+
+### 2026-04-25 - Mission objective completion gate alias
+- `sub_460270` / former active-mission `UI_CheckConfirmQuit` callsite: renamed at the human-turn loop to `Mission_CheckObjectiveComplete`. The function body is a switch over `ACTIVE_MISSION_INDEX`, and mission `0` returns false while player-1 unit stacks remain alive, so this is mission-goal completion logic rather than a generic campaign end-turn or quit-confirm path.
+- `WorldMap_RunHumanTurnLoop`: added the `mission_objective_complete` diagnostic marker on the true branch.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added optional `turn-advance` and `mission-complete` expected-log presets for future probes that should assert real turn exit/objective completion instead of route breadcrumbs.
+- The non-mission `UI_CheckEndTurnHotkey` path remains separately named and deferred for free-play/non-campaign evidence.
+
+### 2026-04-25 - First-mission enemy attack-order smoke
+- `tests/run_first_mission_attack_probe.sh`: added a manual/CTest wrapper that extends the first-mission real-input route through the proven split action, selects stack `10`, clicks enemy stack `3` at tile `(46,45)`, and requires the recovered enemy attack markers before teardown.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added the `enemy-attack` preset plus an explicit `CLASH95_FIRST_MISSION_MOVE_WAIT_FOR_ENEMY_ATTACK` wait/retry gate for old-loop click sampling.
+- `Diagnostics_UnitStackIndexFromRecord`: added a diagnostic-only helper for deriving stack indices from 725-byte stack records when tracing capture/removal paths.
+- `Unit_Attack`: added `unit_attack_after_track`, `unit_attack_adjacent`, `unit_attack_autoresolve`, `unit_attack_battle_enter`, and `unit_attack_battle_return` markers. The validated route reaches `unit_attack_after_track selected=10 a=3 b=36 c=45`, proving the strategic attack order currently paths the split stack adjacent to enemy stack `3` without yet entering combat resolution.
+- `Mission_CheckObjectiveComplete`: added throttled `mission_objective_blocked` evidence for mission `0`; the latest run reports blocker stack `3` at `(46,45)` with five slots.
+- `UnitStack_CaptureDefeatedStack` / `Unit_Kill`: added capture-owner-transfer, merge/kill, retained-stack, and kill markers for the next combat/objective frontier.
+- No new unit-type names or stat meanings were promoted; this batch records executable attack-flow evidence.
+
+### 2026-04-25 - First-mission autoresolve combat return
+- `CalculateBattleResult`: retyped the fourth argument from `_WORD *` to `int` at the prototype, definition, and world-map/building callsites. The validated route passes the scalar value from `UnitStack_HasSpecialPersonageUnits` / prompt state rather than a slot pointer.
+- `UnitSlots_CalcCombatStrengthScore`: replaced undefined decompiler locals in the ranged/volley contribution with explicit reads from unit metadata offset `+24` and the local remaining-shot calculation.
+- `UnitSlots_CalcDefenseScore`: corrected the slot iterator advance from a stale pointer assignment to `a1 += 31`, matching the recovered unit-slot stride.
+- `CalculateBattleResult`: rebuilt the active autoresolve casualty path enough to return under the first-mission route. A no-progress guard prevents infinite loops when recovered priority metadata yields no positive loss, and the unstable `sub_42C130` battle-log slot dump calls remain deferred because they are debug-only in the current runtime and still need separate metadata recovery.
+- `UI_PromptLeadTroopsPersonally`: replaced undefined cleanup-rectangle locals with the recovered prompt sprite width/height before clearing the prompt surface.
+- `UnitStack_CycleAllSlotOrders`: replaced undefined `v9`/`v10` cursor updates with explicit `slot_index` and `slot_cursor` arithmetic over 31-byte unit slots, matching `sub_4129E0` asm and fixing the post-autoresolve crash before `unit_attack_autoresolve_return`.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: the fourth-action combat gates now wait for fresh `unit_attack_autoresolve_done selected=10` and `unit_attack_autoresolve_return selected=10` markers when the battle prompt is clicked.
+- Runtime evidence: `/tmp/clash95-first-mission-move.00ovZf/first-mission-move.log` reached `unit_attack_autoresolve_done selected=10 a=3 b=1 c=0`, then `unit_attack_autoresolve_return selected=10 a=3 b=45 c=45`. `Mission_CheckObjectiveComplete` subsequently reports blocker stack `4` at `(15,6)`, so stack `3` no longer blocks mission `0`.
+- No new unit-type names or stat meanings were promoted; this batch records combat-flow and slot-order recovery needed for executable playability.
+
+### 2026-04-25 - First-mission playability probe wrapper
+- `tests/run_first_mission_playability_probe.sh`: added a manual wrapper around the opt-in first-mission real-input move smoke. The wrapper enables the route/world-click expectations, nonblank presented-frame checks, and artifact retention so one command probes the current first-mission playability frontier.
+- `clash95_first_mission_playability_probe`: added a CTest entry labelled `manual;real_input;first_mission;first_mission_playability` with skip-code handling for hosts without the required real-input smoke tools.
+
+### 2026-04-25 - First-mission tactical battle entry and return
+- `UnitBattle_DrawSelectedUnitPanel`: repaired reached SDL/runtime scars around panel sprite draws, unit-info resource loading, temporary compact-surface cleanup, and render-device restoration. The function is now validated far enough for the tactical battle route to enter and return through the selected-unit panel corridor.
+- `UnitBattle_RedrawVisibleGrid`: added a bounded compatibility copy for the recovered bottom-strip restore instead of relying on the decompiled raw fill call that crashed in the reached tactical redraw path.
+- `UnitBattle_ShowPlayerMessageBanner`: recovered the reached banner resource/draw/name/flip-wait cleanup lane and bounded the legacy DirectDraw wait for SDL.
+- `UnitBattle_UpdateIdleAnimatedUnits`: reconstructed the reached idle-animation slot walker from `sub_431CC0` asm evidence: 22 tactical slots, 31-byte stride, animation timestamp byte at `+0x12`, animation state byte at `+0x11`, and redraw by slot index.
+- `Unit_Attack`: repaired the post-tactical world-map resource reload lane to load the recovered `backgr*.s32` and `frame.s32` resources, avoiding the previous unstable low32 allocation after battle return.
+- Runtime evidence: `/tmp/clash95-first-mission-move.J6xziE/first-mission-move.log` reached `unit_attack_battle_enter`, `battle_turn_loop_after_input_widgets`, and `unit_attack_battle_return`; `/tmp/clash95-first-mission-move.J6xziE/frame-047.bmp` is nonblank and shows the tactical battlefield UI.
+## 2026-05-05 - Scripted input timing and keyboard pulse seam
+
+- `MiniMap_UpdateViewportFromCursor`: added a smoke-only environment gate, `CLASH95_ALLOW_MINIMAP_UPDATE_OFF_FLIP`, so scripted real-input minimap clicks can reuse the recovered minimap viewport math without depending on the transient DirectDraw button-state gate.
+- `WorldMap_RunInputScriptStep`: added `key <scan_code> <reads>` command support for scripted keyboard pulses. This is intended for recovered world-map scroll scan codes such as 203/205/200/208 and remains inside the debug/scripted input seam.
+- `Platform_DebugPrimeInputFallbackKeyPulse`: added SDL fallback keyboard pulse support parallel to the existing debug mouse pulse path, including bounded per-scan-code release counters.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: lengthened stack5/stack6 world-script attack-pulse defaults and added `world_script_key_pulse` for future deterministic scroll fallback.
+- Evidence/status: prior WSL run confirmed stack5 defeat and stack6 attack entry (`enemy_attack_call selected=10 a=6 b=35 c=11`). Current follow-up rebuild/runtime validation is blocked by host WSL access denial.
+# 2026-05-11 runtime harness notes
+
+- Added a focused stack6 manual battle probe runner and sequence hooks for recovered tactical input.
+- Added example tactical sequence, raw battle script, expected-log file, and stack6 manual expected-log presets for runtime probing.
+- Added a stack6 smoke artifact summarizer for objective, unit-state, tactical action, attack-result, and frame evidence.
+- No new gameplay semantic renames are claimed in this batch.
+- Runtime evidence carried forward from the last successful WSL run:
+  - Stack5 targeting was corrected through recovered world input and advanced to the stack6 objective path.
+  - Stack6 autoresolve can remove player stack 10 before objective completion.
+  - Choosing the manual battle prompt reaches `battle_turn_loop_after_input_widgets` with nonblank SDL frame captures.
+- Deferred semantic work: identify the authentic tactical actions needed to defeat or survive stack6 from inside the recovered battle loop.
+
+### 2026-05-11 - Barracks/garrison UI presentation recovery
+
+- `BuildingGarrisonDialog_Run`: repaired the reached barracks setup flow by routing the background PCX load, post-widget surface copy, and first present through contained render helpers; added stage diagnostics from background load through `initial_present_done`.
+- `BuildingGarrisonDialog_RebuildSlotSprites`: replaced the decompiler-scarred non-advancing loop with a 12-slot rebuild matching the visible barracks grid.
+- `BuildingGarrisonDialog_DrawSlotGrid`: replaced reached raw fill/sprite vtable calls with bounded software fill and SDL render-device sprite draws; missing slot sprite sets now draw a placeholder instead of crashing.
+- `BuildingGarrisonDialog_DrawSelectedUnitPanel`: repaired the reached blank-panel sprite draw through `Compat_RenderDeviceDrawMenuSprite`.
+- `g_BuildingGarrisonDialogSlotSpriteSets`: recovered the live table as 12 sprite-set entries for the 12 barracks slots. The previous incomplete-array declaration allowed slot rebuilds to overwrite the adjacent animation-frame storage.
+- `tests/run_barracks_ui_probe.sh`: added the focused barracks UI route controls, optional GDB launch, held building-tile click timing, barracks hotspot click, and frame-capture retention used to validate the dialog.
+- Runtime evidence: the real first-mission route now reaches castle management, clicks the barracks hotspot (`pixel=254`), enters the barracks dialog, and presents nonblank castle-management and barracks-dialog frames in `artifacts/barracks-ui/`.
+
+### 2026-05-11 - Barracks slot text and selected-panel interaction
+
+- `BuildingGarrisonDialog_DrawSlotGrid`: recovered the dropped varargs for the slot-card and funds text calls from `clash95.asm`. Slot labels now use `UNIT_SLOT_HEALTH_PERCENT(slot + 9)`, repair/training countdown overlays use building status bits, and the funds panel reads building `+438`.
+- `BuildingGarrisonDialog_DrawSelectedUnitPanel`: replaced additional selected-panel raw vtable sprite draws with `Compat_RenderDeviceDrawMenuSprite` and supplied recovered stat/text varargs for base action points, defense icon value, morale, fatigue, melee/shot values, and selected-unit labels.
+- `BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets`: added pointer-safe selected-unit palette loading through `Compat_LoadPalCOLIntoTable`, fixing the crash on `units_i\\budowc_i.pal` caused by stack pointer truncation in the old `sub_401AF0` lane.
+- `UnitType_GetLocalizedName`: used as the safe selected-panel name source for the reached barracks slot detail path.
+- `tests/run_barracks_ui_probe.sh`: added optional barracks slot clicking plus configurable initial/campaign timing so the route can validate left-click slot toggles and right-click detail entry.
+- Runtime evidence: no-slot, left-click, and right-click barracks probes passed. The visible barracks frame now shows corrected `100` slot labels and `200` funds; right-click reaches `slot_detail_begin`, selected asset/palette load, selected-panel draw, `slot_detail_present`, and `slot_detail_end` without crashing.
+
+### 2026-05-11 - Barracks fresh-binary surface/copy recovery
+
+- `MiniMap_BlitDirtyRectAndDrawViewportBox`: contained the reached fresh-binary crash by drawing the viewport box with the existing linear `sub_404040` helper after resolving the primary companion surface, instead of dispatching through the still-scarred compact draw-box vtable path.
+- `BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets`: applies the selected-unit palette to the presented primary surface immediately after copying entries `224..255`, before the selected panel is drawn.
+- `BuildingGarrisonDialog_DrawSelectedUnitPanel`: kept the recovered offscreen draw then copy-to-primary flow for the right-click detail panel and aligned selected-panel sprite coordinates with the surrounding text coordinate convention.
+- Runtime evidence: `make clash95_bootstrap` passed, the no-slot barracks route passed on `bin/clash95_bootstrap`, and the final right-click probe `/tmp/clash95-barracks-ui.yJSOev` reached the `Builder` selected-detail path and captured 300 frames. The selected-detail visual content is still not distinct in the retained screenshot and remains the next focused UI blocker.
+
+### 2026-05-11 - Save-slot DAT format recovery
+
+| Old / Raw Surface | Recovered Name | Kind | Area | Confidence | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| `save\\%d.dat` outer file | `SaveSlotDatFile` | file_format | Save / Load | High | `saveGame` writes a 16-byte label followed by `586398` bytes from `gameData`; `SaveSlot_LoadGame` skips 16 bytes and reads `0x8F29E` bytes back into `gameData`; installed `0.dat..5.dat` files are all `586414` bytes. |
+| DAT payload at file offset `0x10` | `GameDataSaveImage` | file_format_region | Save / Load | High | The recovered `gameData` offset macros partition the raw payload into tile records, world/session fields, player records, unit stacks, buildings, occupancy, trap masks, and port runtime state. |
+| `save\\%d.fac` companion | `SaveSlotFactsSidecar` | sidecar_file | Save / Load / Rules | High | The writer/loader call the CLIPS facts save/load helpers on the `.fac` path, and local sidecars are text facts beginning with `(initial-fact)` when nonempty. |
+
+- Added `docs/SAVE_DAT_FORMAT.md`, `tools/dump_save_dat.py`, and `tests/verify_save_dat_format.sh` to make the recovered DAT layout reproducible without adding a save writer.
+- No new gameplay unit-type, stat, or relationship semantics are claimed by this batch.
+
+### 2026-05-28 - Builder bridge execution and mission-01 shrine route
+
+- `UnitStack_ExecuteQueuedPath`: recovered the reached bridge-execution acceptance gap for builder stacks. When a queued step is bridge terrain (`Map_GetBridgeCrossingCostOrZero(row, column)` nonzero), builder stacks now treat that step as passable during execution, matching the bridge-aware path construction path used by `Unit_MoveTrack`.
+- `Unit_MoveTrack` / `Pathing_EnableBridgeCrossings`: mission-01 evidence confirms the existing bridge-aware path-generation seam can build a shrine route through bridge terrain ids `603..610`; execution now follows the same passability rule instead of stopping after spending AP.
+- `tests/first_campaign_arc_routes/mission_01_stack_march_probe.script`: extended the route through the authentic second-turn continuation. The route releases a Stormus builder/light-infantry stack, queues the shrine path, crosses bridge waypoints to `(8,13)`, advances the turn, reselects the stack, and enters the shrine.
+- Runtime evidence: mission-01 direct repair route passed with `mission_objective_complete` in `artifacts/campaign-routes/mission-01/20260528T084916Z-589261/`.
+- No new unit-type names or stat meanings were promoted; this batch records movement/execution behavior required for campaign playability.
+
+### 2026-06-03 - Mission-02 Treg Rock capture route
+
+- `tests/first_campaign_arc_routes/mission_02_stack3_castle_probe.script`: extended the mission-02 route through real stack3 movement, fatigue recovery, final Treg Rock approach, and castle click; the direct route now reaches `mission_objective_complete`.
+- `tests/first_campaign_arc_routes/mission_02.env`: promoted to `complete`, with objective-required direct repair proof using the stack3 Treg Rock route.
+- `Unit_CaptureBuilding`: repaired reached capture cleanup scars by preserving the building offset and building record pointer through owner sync, building entry, prisoner transfer, and train/repair timer clearing.
+- `Rules_SyncCastleFactOwner`: now asserts a missing `BuildingRecord.castle_fact_id` before applying the `gracz` owner update. This matches the existing `Rules_AssertCastleFact` lifecycle used by building creation and save/load rebuilding, and fixes direct mission capture paths whose `.fac` castle fact was not present.
+- `Prisoner_Kill`: recovered the reached slot clear as `building + 445 + 6*slot`, replacing the undefined `edx/ecx` decompiler scar.
+- Runtime evidence: mission-02 direct repair route passed with `mission_objective_complete` in `artifacts/campaign-routes/mission-02/20260603T104251Z-801767/`.
+
+### 2026-06-04 - Mission-03 survival route and world-map top menu
+
+- `tests/first_campaign_arc_routes/mission_03_turn_survival_route.script`: added the mission-03 direct repair route. It repeatedly enters the recovered world-map top menu, closes the turn from the top-right menu region, waits for human turn counters `2..11`, and then observes `mission_objective_complete`.
+- `tests/first_campaign_arc_routes/mission_03.env`: promoted to `complete`, objective-required, and pointed at the survival route.
+- `WorldMap_RunHumanTurnLoop` / `PlayGame`: restored the asm-backed zero-hotspot world cursor descriptor (`unk_5196A0`) and recalculated render-state cursor bounds with `sub_460B20` after world-map button setup and at human-turn entry. Runtime traces now report `playgame_cursor_bounds_restored` / `human_turn_cursor_bounds` with min bounds `1,1`, allowing repeated recovered world-input pulses to reach `top_menu_enter`.
+- Runtime evidence: mission-03 direct repair route passed with `mission_objective_complete` in `artifacts/campaign-routes/mission-03/20260604T060053Z-846364/`; the run logged natural blockers for turns `1..10` and objective completion at turn `11`.
+
+### 2026-06-04 - Campaign artifact retention controls
+
+- `tests/run_campaign_route_script_smoke.sh`: added durable artifact caps for retained presented-frame BMPs and large logs, while preserving checkpoint screenshots and route summaries. The runner now records `captured_frames_total`, `copied_frames`, `frames_truncated`, `durable_log_bytes`, and `durable_log_truncated` in summaries.
+- `tests/verify_first_mission_real_input_move_smoke.sh`: added the same bounded retention mechanics for mission-00 durable smoke artifacts.
+- Added safe old-run pruning under repo-owned artifact roots only. The pruning helpers resolve absolute paths and skip roots outside `artifacts/` before removing old run directories.
+- Runtime evidence: a capped mission-04 direct blocker smoke passed with a 3-frame cap and 3000-byte log cap; the retained artifact summary confirmed frame sampling and log truncation.
+- No recovered gameplay functions or unit/stat semantics were renamed in this batch.
+
+### 2026-06-05 - Repo-wide artifact pruning utility
+
+- `tests/prune_artifacts.sh`: added a dry-run-first cleanup utility for recognized durable run directories under `artifacts/campaign-routes/mission-*` and `artifacts/first-campaign/mission-*`.
+- The utility supports newest-run retention, optional whole-artifacts byte caps, explicit `--apply`, and path-resolution guards that refuse candidates outside the repo artifact root.
+- `tests/run_campaign_route_script_smoke.sh` and `tests/verify_first_mission_real_input_move_smoke.sh`: added opt-in `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=1` hooks for repo-wide pruning after normal per-mission retention.
+- No recovered gameplay functions or unit/stat semantics were renamed in this batch.
+
+### 2026-06-15 - Mission-04 tactical gate attack path
+
+- `UnitBattle_HandleBattlefieldInteraction`: recovered the reached melee wall-click branch. Runtime evidence now shows gate tile `(10,3)` entering `battle_wall_move_track_enter`, receiving a valid near-wall path, and dispatching to `UnitBattle_AttackWall`.
+- `UnitBattle_AttackWall`: corrected the post-track movement call and wall-health pointer computation against `sub_4298E0` assembly evidence. The mission-04 route now reaches `battle_wall_attack_return` after attacking the castle gate.
+- `UnitBattle_PlayAttackAnimation`: repaired the reached wall-attack animation path by passing formatted DLX path buffers to `DLXSpriteSet_Load`, using explicit attacker/defender sprite pointers for extent projection, and fixing the no-defender facing-6 extent branch.
+- `sub_406540`, `sub_4065D0`, `sub_406650`, `sub_4066C0`: recorded the packed DLX sprite payload pointer as a 32-bit field at byte offset `+0x0A`. These helpers now read that field with original pointer width instead of interpreting adjacent sprite-header bytes as a native 64-bit pointer.
+- `UnitBattle_PlayAttackAnimation` loop repair: approach, strike, and return loops now use the asm-backed per-type frame-delay bytes, attacker unit offset, last-tick timestamps, and absolute displacement comparisons. This removes the non-returning gate-attack animation corridor exposed by the mission-04 probe.
+- `tests/run_campaign_route_script_smoke.sh`: added `CLASH95_CAMPAIGN_ROUTE_GDB=1` so long campaign route failures can produce gdb register/backtrace evidence without hand-running the executable.
+- Runtime evidence: `make clash95_bootstrap` passed; the direct mission-04 gate probe passed and retained nonblank visual evidence in `artifacts/campaign-routes/mission-04/20260615T101237Z-23713/`, including `battle_wall_attack_return selected=0 a=10 b=3 c=0`.
+- No new unit-type names or stat meanings were promoted; this batch records tactical runtime and packed-sprite structure recovery needed for mission-04 route progress.
+
+### 2026-06-15 - Campaign route visual regression harness
+
+- `tests/frame_metrics.py`: added a reusable BMP frame analyzer for route artifacts. It reports mean luminance, nonblack pixel count, unique color count, and frame-to-frame luminance progression, and can emit a PPM montage for failed visual route checks.
+- `tests/run_campaign_route_script_smoke.sh`: existing `nonblank` route-script assertions now use the new analyzer when available, preserving the route-script surface while strengthening visual checks. Durable summaries now record final-frame visual metrics and frame progression metrics.
+- `tests/run_campaign_route_regression.sh`: added an opt-in CTest wrapper for long Xvfb/SDL route regressions. It defaults to requiring an SDL window because the current direct campaign route scripts use authentic host clicks after direct mission boot.
+- `CMakeLists.txt`: added skipped-by-default route-regression CTest entries for missions `01..04`, labelled `manual;real_input;campaign_route`.
+- `tests/run_first_mission_turn_probe.sh`: made the unpromoted turn/end-turn route explicitly opt-in with `CLASH95_ENABLE_FIRST_MISSION_TURN_PROBE=1`, matching its manual repair-probe status.
+- Runtime evidence: default `ctest --output-on-failure` now passes with opt-in long routes skipped; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest -R clash95_campaign_route_04_regression --output-on-failure` passed and retained visual/progression evidence in `artifacts/campaign-routes/mission-04/20260615T102833Z-27814/`.
+- No gameplay names, unit-type names, or stat meanings were promoted in this harness batch.

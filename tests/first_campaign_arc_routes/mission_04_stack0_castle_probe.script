@@ -1,0 +1,16 @@
+# Mission 04 stack0 castle-capture path probe.
+wait_log 60 mission_load_done selected=-1 a=4
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission04-start
+nonblank mission04-start
+
+click 320 368 0.18 0.8 select-stack0
+wait_log 30 selected_stack_changed selected=0 a=41 b=50
+
+click 504 154 0.18 0.8 minimap-target-castle-56-69
+wait_log 20 minimap_update selected=0
+click 352 272 0.18 1.0 click-castle-56-69
+wait_log 30 tile_input
+wait_log 30 move_order_track_result selected=0
+screenshot mission04-after-target-path
+nonblank mission04-after-target-path

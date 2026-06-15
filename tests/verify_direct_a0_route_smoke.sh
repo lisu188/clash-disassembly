@@ -25,7 +25,7 @@ setsid env \
 pid=$!
 set -e
 
-sleep 2
+sleep "${CLASH95_DIRECT_A0_SMOKE_LIVENESS_SECONDS:-0.75}"
 
 if ! kill -0 "$pid" 2>/dev/null; then
   set +e

@@ -1,0 +1,7 @@
+# Probe charge toggle before prepare defence through raw battle input.
+wait 20
+click 577 386 6
+wait 8
+click 514 417 6
+wait 8
+click 514 448 6

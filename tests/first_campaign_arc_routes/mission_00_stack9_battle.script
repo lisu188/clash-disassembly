@@ -1,0 +1,26 @@
+wait 30
+# Final mission-00 defender tactical clear. Keep the same manual cadence so
+# the route proves battlefield input instead of falling back to autoresolve.
+# Stack9 deploys the attacker at battle tile 1,3 and the defender at 14,3.
+# Advance on the defender's row first; the older diagonal move to 5,5 spent
+# the whole action budget before any useful contact.
+click 352 240 12
+wait 80
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260

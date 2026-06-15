@@ -1,0 +1,33 @@
+wait 30
+click 160 240 12
+wait 80
+click 224 240 12
+wait 80
+click 288 240 12
+wait 80
+click 352 240 12
+wait 80
+click 520 14 12
+wait 260
+click 416 240 12
+wait 100
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 352 240 12
+wait 100
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 288 240 12
+wait 100
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260

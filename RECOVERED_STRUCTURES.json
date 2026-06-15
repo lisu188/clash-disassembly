@@ -343,6 +343,7 @@
       "`Building_UpdatePlagueState`, `Building_CollectGoldIncome`, the plague-notification UI, and the stack-to-building infection transfer logic all read or write the low three bits at `+435`, proving that byte is the building plague state/countdown.",
       "Prisoner_SetInCastles, BuildingPrisoner_SetAction, Prisoner_NewTurn, and Prisoner_Pay all operate on the 6-byte cells starting at `+445`, proving that the building record also embeds a fixed three-slot prison subarray.",
       "`Rules_AssertCastleFact` stores its returned fact id at `+463`, `Rules_RetractCastleFact` retracts and clears the same dword, and `Building_OnGarrisonChange` plus `Rules_SyncCastleFactOwner` use it to update the asserted castle fact's `moc` and `gracz` attributes.",
+      "Mission-02 Treg Rock capture proof showed direct mission boot can reach `Rules_SyncCastleFactOwner` with `+463 == 0`; asserting the missing castle fact before `gracz` sync restores the same fact lifecycle used by building creation and save/load rebuilding.",
       "`Building_TrainUnit`, `Building_ClearGarrisonTrainingTimer`, `Building_RepairUnit`, `Building_ClearGarrisonRepairTimer`, and `Building_UpdateGarrisonTrainRepairTimers` all read or write offset `+390 + slot` as one packed byte whose low three bits decrement training turns while bits `3..5` independently decrement repair turns; the upper two bits remain unresolved."
     ]
   },
@@ -825,7 +826,10 @@
     "evidence": [
       "`UnitStackSelection_SyncForCurrentSelection` opens, closes, or refreshes the split panel based on `g_SelectedUnitIndex`, current squad size, and whether `active_stack_index` is already latched.",
       "`UnitStackSelection_RedrawPanel`, `UnitStackSelection_HandleInput`, and `UnitStack_ShowSelectionDialog` all share the same selected-slot mask, active-stack pointer, and dialog-active latch when drawing the strip and moving only marked squad members.",
-      "Asm-backed subagent evidence also ties `dword_527C24` to the `info%d.s32` unit-info sprite family used exclusively by this panel cluster."
+      "`clash95.asm:54933-54936` clears `dword_526F78` with `ebx = 0x28`, independently confirming the selected-slot mask is a 10-dword region.",
+      "`clash95.asm:54919-54925` clears a separate `0x2C` stack-local selected-index list before building it from `dword_526F78`, separating the global mask from the temporary sentinel-terminated transfer list.",
+      "Asm-backed subagent evidence also ties `dword_527C24` to the `info%d.s32` unit-info sprite family used exclusively by this panel cluster.",
+      "The CTest-backed first-mission playability probe toggled slot `0` through the bottom-panel hitbox at cursor `(54,431)`, then logged `selection_split_attempt selected=1 a=31 b=45 c=0` and `selection_split_done selected=1 a=31 b=45 c=0`, confirming the mask-driven one-slot split move path in live SDL input."
     ]
   },
   {
@@ -1280,7 +1284,8 @@
       "`clash95.asm` stores six consecutive records at `dword_511D40`, `dword_511D40 + 0x35`, ..., `dword_511D40 + 5 * 0x35`, followed by a terminator record whose first dword is `-1`.",
       "The first row coordinates are `(416,400)`, `(480,400)`, `(544,400)` and the second row coordinates are `(416,432)`, `(480,432)`, `(544,432)`, matching the live world-map action-button panel.",
       "`sub_40A400` loads `map_butt.s32` into `dword_52030C`, and all records dereference that holder through offset `+12` before drawing through `sub_4191F0`.",
-      "The historical labels `dword_511D48`, `unk_511DDF`, and `dword_511DE7` correspond to field offsets inside the same table rather than standalone state."
+      "The historical labels `dword_511D48`, `unk_511DDF`, and `dword_511DE7` correspond to field offsets inside the same table rather than standalone state.",
+      "The first-mission playability probe hit record index `1` at cursor `(495,415)`, invoked the Next Unit callback, and logged `next_unit_selected selected=1 a=31 b=44 c=7`, confirming the `(480,400)` record's live action role."
     ]
   },
   {
@@ -1464,7 +1469,8 @@
     "evidence": [
       "`DD_Pump` calls render-state slot `+20` and then slot `+4` on every active menu update, and `Singer` corroborated from C plus asm that the non-replay path must dispatch `Device_UpdateRect -> sub_460A50` through that table.",
       "The contained Batch 141 trace showed `DD_Pump` firing without any `Device_UpdateRect` or `sub_460A50` calls while the slot helper treated the table as packed 32-bit entries. Rebinding the helper to native pointer-array indexing while preserving the original 32-bit slot numbering restored live hover/click updates immediately.",
-      "`Device_GetParamA` still installs `off_50F204` into the render-state slab after `sub_460410` seeds `off_50F1E4`, so the two tables are a stable recovered family rather than one-off probe scaffolding."
+      "`Device_GetParamA` still installs `off_50F204` into the render-state slab after `sub_460410` seeds `off_50F1E4`, so the two tables are a stable recovered family rather than one-off probe scaffolding.",
+      "The mission-03 survival route logged `playgame_cursor_bounds_restored` and `human_turn_cursor_bounds` as min bounds `1,1` after restoring the asm-backed zero-hotspot `unk_5196A0` cursor descriptor and recalculating bounds with `sub_460B20`; repeated recovered world-input pulses then reached `top_menu_enter` and `top_menu_close` before natural turn advancement."
     ]
   },
   {
@@ -1766,6 +1772,317 @@
       "`clash95.asm:82784-83026` draws five rows around the selected index, treats `-2` as the localized outside-castle row, and otherwise reads the target building name at `building + 5`, population at `building + 0x1AE`, and gold at `building + 0x1B6`.",
       "The current C storage is bounded to 100 signed 16-bit entries, matching the 0xC8-byte clear and preventing the prior decompiler-scarred `memset_(a2, -1)` crash.",
       "The economy panel frame dump shows the outside-castle row, and the GDB/Xvfb arrow-plus-Back route returns through the castle callback without crashing."
+    ]
+  },
+  {
+    "name": "WorldMapEnemyAttackOrderFlow",
+    "kind": "runtime_flow",
+    "base_symbol": "WorldMap_HandleTileHoverAndClick / Unit_Attack",
+    "description": "Recovered strategic world-map enemy-stack click flow. With a selected friendly combat-capable stack, clicking a visible enemy stack dispatches through the world-map enemy branch into Unit_Attack. The first validated mission-0 attack order paths split stack 10 adjacent to enemy stack 3 at (46,45), but does not yet prove tactical/autoresolve combat completion.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "selected_attacker_stack_index",
+        "type": "int",
+        "notes": "`g_SelectedUnitIndex`; validated as split stack `10` after stack `1` detached slot `0` to `(31,45)`."
+      },
+      {
+        "offset": 1,
+        "name": "target_enemy_stack_index",
+        "type": "int",
+        "notes": "Read from `TILE_INDEX(tile_x, tile_y)` in the enemy-stack click branch; validated target stack `3` at `(46,45)`."
+      },
+      {
+        "offset": 2,
+        "name": "target_tile",
+        "type": "int16 row, int16 column",
+        "notes": "World cursor `(384,367)` mapped to tile `(46,45)` with viewport `left=41 top=40` in the validated attack probe."
+      },
+      {
+        "offset": 3,
+        "name": "approach_result_tile",
+        "type": "int16 row, int16 column",
+        "notes": "`Unit_MoveTrackNearTile` / `UnitStack_ExecuteQueuedPath` moved attacker stack `10` to `(36,45)` before returning from the attack order."
+      }
+    ],
+    "evidence": [
+      "`WorldMap_HandleTileHoverAndClick` enemy-stack branch emits `enemy_attack_call`, calls `Unit_Attack(g_SelectedUnitIndex, target_stack, ...)`, then emits `enemy_attack_return` and `after_enemy_attack`.",
+      "`tests/run_first_mission_attack_probe.sh` reached `[world_click] tile_input cursor=384,367 tile=46,45 left=41 top=40 selected=10 ... enemy=1`.",
+      "The validated trace in `/tmp/clash95-first-mission-move.Zl5plL/first-mission-move.log` reached `enemy_attack_call selected=10 a=3 b=46 c=45`, `unit_attack_enter selected=10 a=3 b=46 c=45`, `unit_attack_track selected=10 a=3 b=46 c=45`, `unit_attack_after_track selected=10 a=3 b=36 c=45`, and `enemy_attack_return selected=10 a=3 b=46 c=45`.",
+      "`mission_objective_blocked selected=3 a=46 b=45 c=5` confirms mission 0 remains blocked by the same owner-1 stack after the attack-order route."
+    ]
+  },
+  {
+    "name": "WorldMapAutoresolveCombatFlow",
+    "kind": "runtime_flow",
+    "base_symbol": "Unit_Attack / CalculateBattleResult / UnitStack_CycleAllSlotOrders",
+    "description": "Recovered first-mission world-map autoresolve corridor. After split stack 10 has moved adjacent to owner-1 stack 3 at (46,45), the route clicks the lead-troops prompt, executes CalculateBattleResult, runs post-battle slot-order cleanup, and returns from Unit_Attack without crashing.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "attacker_stack_index",
+        "type": "int",
+        "notes": "Validated as split stack `10`; the stack has one normal combat slot during the autoresolve route."
+      },
+      {
+        "offset": 1,
+        "name": "defender_stack_index",
+        "type": "int",
+        "notes": "Validated as owner-1 stack `3` at tile `(46,45)` before combat resolution."
+      },
+      {
+        "offset": 2,
+        "name": "squad_counts_after_autoresolve",
+        "type": "int attacker_count, int defender_count",
+        "notes": "`unit_attack_autoresolve_done selected=10 a=3 b=1 c=0` records attacker squad count `1` and defender squad count `0`."
+      },
+      {
+        "offset": 3,
+        "name": "slot_order_cleanup",
+        "type": "31-byte slot loop",
+        "notes": "`UnitStack_CycleAllSlotOrders` walks slot records from stack offset `+6` with stride `31`, matching `sub_4129E0` asm and avoiding the previous undefined-cursor crash."
+      },
+      {
+        "offset": 4,
+        "name": "next_objective_blocker",
+        "type": "unit_stack_index",
+        "notes": "After the autoresolve return, `Mission_CheckObjectiveComplete` reports stack `4` at `(15,6)` with 9 slots, proving mission 0 advanced past stack `3` but is not complete."
+      }
+    ],
+    "evidence": [
+      "`Unit_Attack` emits `unit_attack_autoresolve`, calls `CalculateBattleResult`, emits `unit_attack_autoresolve_done`, then reaches `unit_attack_autoresolve_return` after post-battle cleanup.",
+      "`clash95.asm:28884-28927` shows `sub_4129E0` using `edx` as the slot index and `ecx += 0x1F` for each unit slot before syncing the army fact strength.",
+      "The validated trace in `/tmp/clash95-first-mission-move.00ovZf/first-mission-move.log` reached `unit_attack_adjacent selected=10 a=3 b=1 c=5`, `unit_attack_autoresolve selected=10 a=3 b=1 c=5`, `unit_attack_autoresolve_done selected=10 a=3 b=1 c=0`, and `unit_attack_autoresolve_return selected=10 a=3 b=45 c=45`.",
+      "The same run captured 48 nonblank 640x480 32-bpp presented frames, and `mission_objective_blocked selected=4 a=15 b=6 c=9` after autoresolve shows the mission objective scanner moved to the next owner-1 stack."
+    ]
+  },
+  {
+    "name": "TacticalBattleFirstMissionFlow",
+    "kind": "runtime_flow",
+    "base_symbol": "Unit_Attack / Battle_RunTacticalCombat / UnitBattle_RunTurnLoop",
+    "description": "Recovered first-mission tactical-battle corridor. The real-input route reaches tactical combat from Unit_Attack, renders the battle UI, runs through the selected-unit panel, banner, idle-animation, and input-widget stages, then returns to the world-map attack path without the previous post-return allocator abort.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "attacker_stack_index",
+        "type": "int",
+        "notes": "Validated tactical route entered with selected stack `1` in the retained smoke evidence."
+      },
+      {
+        "offset": 1,
+        "name": "defender_stack_index",
+        "type": "int",
+        "notes": "Validated tactical route targets stack `4`, the next mission-0 owner-1 blocker after the prior autoresolve route removed stack `3`."
+      },
+      {
+        "offset": 2,
+        "name": "tactical_idle_slots",
+        "type": "22 entries, 31-byte stride",
+        "notes": "`UnitBattle_UpdateIdleAnimatedUnits` walks from `dword_532048 + 0x354`; type byte at `+0`, animation state at `+0x11`, animation timestamp at `+0x12`, then redraws by slot index."
+      },
+      {
+        "offset": 3,
+        "name": "selected_unit_panel_runtime",
+        "type": "rendered panel flow",
+        "notes": "The reached panel path now restores the saved render device, draws sprites through the SDL render-device compatibility helper, and destroys temporary compact surfaces through the contained destructor bridge."
+      },
+      {
+        "offset": 4,
+        "name": "post_battle_resource_reload",
+        "type": "backgr*.s32 plus frame.s32",
+        "notes": "`Unit_Attack` reloads `backgr1.s32`, `backgr2.s32`, or `backgr3.s32` based on the game-data surface selector, then reloads `frame.s32` before returning to the world map."
+      }
+    ],
+    "evidence": [
+      "`clash95.asm` evidence for `sub_431CC0` matches the recovered 22-slot tactical idle-animation walker and 31-byte unit-slot stride.",
+      "The retained real-input smoke at `/tmp/clash95-first-mission-move.J6xziE/first-mission-move.log` reached `unit_attack_battle_enter selected=1 a=4 b=6 c=9`, `battle_banner_done`, `battle_turn_loop_after_input_widgets`, and `unit_attack_battle_return selected=1 a=4 b=0 c=0`.",
+      "The same run retained `/tmp/clash95-first-mission-move.J6xziE/frame-047.bmp`; manual inspection confirmed a nonblank tactical battlefield with castle, unit sprites, minimap, and bottom action UI.",
+      "The post-battle world-map reload fix removed the previous low32 allocation failure that followed `unit_attack_battle_return` when decompiled temporaries were passed to resource-loading allocation."
+    ]
+  },
+  {
+    "name": "BuildingGarrisonDialogRuntime",
+    "kind": "runtime_flow",
+    "base_symbol": "BuildingGarrisonDialog_Run",
+    "description": "Recovered enough of the castle barracks/garrison dialog runtime to present the real 12-slot UI from the first-mission castle-management route under SDL.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "background_surface",
+        "type": "castle.chr\\\\dw_12.gfx PCX-backed render surface",
+        "notes": "The reached setup path now loads the barracks background into `dword_5202E0` through `RenderSurface_InvokeSlot48LoadPCX` instead of calling a raw vtable entry with a null surface."
+      },
+      {
+        "offset": 1,
+        "name": "ui_sprite_set",
+        "type": "castle.chr\\\\dw_12.s32",
+        "notes": "The barracks UI sprite set is loaded before the resource cursor and action widgets are built."
+      },
+      {
+        "offset": 2,
+        "name": "slot_sprite_sets",
+        "type": "int[12]",
+        "notes": "`BuildingGarrisonDialog_RebuildSlotSprites` rebuilds 12 visible slot sprite-set entries; declaring the storage as a 12-entry table prevents adjacent animation-frame clobber during presentation."
+      },
+      {
+        "offset": 3,
+        "name": "action_widgets",
+        "type": "Production / Cure / Training / Leave widget row",
+        "notes": "The action widgets are drawn before the slot grid and selected-unit panel. Callback behavior is not yet claimed beyond safe presentation."
+      },
+      {
+        "offset": 4,
+        "name": "selected_unit_panel",
+        "type": "rendered panel flow",
+        "notes": "The reached blank-panel sprite draw uses the SDL render-device compatibility helper and reaches `selected_panel_drawn` before the first present. Right-click selected-unit detail now survives asset load, pointer-safe palette load/copy, selected palette application, offscreen panel draw, copy-to-primary, present, and detail-end cleanup, but its distinct visual presentation still needs further copy/palette/restore recovery."
+      }
+    ],
+    "evidence": [
+      "The focused barracks UI route reaches castle management, clicks the castle hotspot with `pixel=254`, and enters `BuildingGarrisonDialog_Run` from the recovered first-mission runtime.",
+      "The retained barracks log includes `[barracks] background_loaded`, `[barracks] ui_sprites_loaded`, `[barracks] action_widgets_drawn`, `[barracks] slot_sprites_rebuilt`, `[barracks] selected_panel_drawn`, and `[barracks] initial_present_done`.",
+      "`artifacts/barracks-ui/castle-management.png`, `artifacts/barracks-ui/barracks-dialog.png`, and `artifacts/barracks-ui/barracks-detail.png` are nonblank 640x480 presented-frame captures from validated routes.",
+      "`clash95.asm` for `sub_432940` proves slot-card `%d` values come from `slot +9`, repair/training timers from building slot status bits, and the funds panel from building `+438`; the current screenshot shows `100` health labels and `200` funds after that repair.",
+      "The right-click selected-detail probe reaches `slot_detail_begin`, loads `units_i\\\\budowc_i.s32`, loads/copies `units_i\\\\budowc_i.pal` through `Compat_LoadPalCOLIntoTable`, draws the selected panel for `Builder`, presents the detail path, and reaches `slot_detail_end` without the previous crash.",
+      "The fresh-binary route uses `bin/clash95_bootstrap`; the stale `build/bin/clash95_bootstrap` target is not the current validation binary.",
+      "`MiniMap_BlitDirtyRectAndDrawViewportBox` now avoids the reached compact-surface vtable crash by drawing the viewport box through `sub_404040` on the resolved primary companion surface.",
+      "The selected-detail panel's distinct visible presentation and the bottom action callbacks remain deferred; this entry only claims safe presentation plus stable slot-toggle/detail entry."
+    ]
+  },
+  {
+    "name": "SaveSlotDatFile",
+    "kind": "file_format",
+    "base_symbol": "save\\\\%d.dat",
+    "size": 586414,
+    "description": "Recovered save-slot DAT file shape: a 16-byte load-menu label followed by a raw `gameData` image of `0x8F29E` bytes.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "slot_label",
+        "type": "char[16]",
+        "notes": "`saveGame` writes the caller's 16-byte save label here, and `SaveSlot_LoadLabelOrPlaceholder` reads exactly these bytes before appending a temporary NUL for load-menu display."
+      },
+      {
+        "offset": 16,
+        "name": "game_data_image",
+        "type": "GameDataSaveImage",
+        "notes": "`saveGame` writes `586398` bytes from `gameData`; `SaveSlot_LoadGame` skips the label and reads `0x8F29E` bytes back into `gameData`."
+      }
+    ],
+    "evidence": [
+      "`clash95.c` `saveGame` formats `save\\\\%d.dat`, writes the 16-byte label, then writes `586398` bytes from `gameData`.",
+      "`SaveSlot_LoadGame` opens the same path, skips 16 bytes with `sub_47BA86`, and reads `0x8F29E` bytes into `gameData`.",
+      "Local installed saves under `/mnt/c/clash/save` corroborate the exact size: `0.dat..5.dat` are all `586414` bytes.",
+      "`save\\\\%d.fac` is a separate CLIPS facts sidecar; it is not embedded in the DAT file."
+    ]
+  },
+  {
+    "name": "GameDataSaveImage",
+    "kind": "file_format_region",
+    "base_offset": 16,
+    "size": 586398,
+    "description": "Raw persisted `gameData` payload inside each save-slot DAT file. File offsets are `0x10 + gameData offset`.",
+    "fields": [
+      {
+        "offset": 0,
+        "name": "map_tile_records",
+        "type": "MapTileRecord[100][100]",
+        "notes": "100x100 tile grid with 14-byte tile records, matching the recovered `TILE_TERRAIN_RECORD` row and record strides."
+      },
+      {
+        "offset": 140000,
+        "name": "world_session_header",
+        "type": "WorldViewState plus adjacent mission/turn fields",
+        "notes": "Contains map dimensions, camera origin, map theme, active mission index, and turn counter before the player records."
+      },
+      {
+        "offset": 140024,
+        "name": "player_runtime_records",
+        "type": "PlayerRuntimeState[5]",
+        "notes": "Five 1423-byte player runtime records, including controller/name/camera/visibility/religion/queen state."
+      },
+      {
+        "offset": 147139,
+        "name": "turn_owner_player_index_and_viewed_player_index",
+        "type": "int32[2]",
+        "notes": "Save/load restores `g_CurrentPlayerIndex` from the turn-owner slot after reading the DAT payload."
+      },
+      {
+        "offset": 147174,
+        "name": "unit_stack_records",
+        "type": "UnitStackRecord[500]",
+        "notes": "500 725-byte unit stack records, including 10 embedded 31-byte unit slots and queued path data."
+      },
+      {
+        "offset": 509674,
+        "name": "building_records",
+        "type": "BuildingRecord[100]",
+        "notes": "100 467-byte building records; load rebuilds castle facts by scanning this table after reading the DAT payload."
+      },
+      {
+        "offset": 556374,
+        "name": "occupancy_index_layer",
+        "type": "uint16[100][100]",
+        "notes": "Tile occupancy/index layer addressed through `TILE_INDEX(row, column)` with a 200-byte row stride."
+      },
+      {
+        "offset": 576374,
+        "name": "trap_owner_mask_layer",
+        "type": "uint8[100][100]",
+        "notes": "Trap owner masks addressed through `TILE_TRAP_OWNER_MASK(row, column)`."
+      },
+      {
+        "offset": 586374,
+        "name": "port_runtime_state",
+        "type": "PortRuntimeState",
+        "notes": "Final six dwords of the save image store the unique port's location and reinforcement schedule."
+      }
+    ],
+    "evidence": [
+      "The recovered top-of-file `gameData` offset macros partition the exact `0x8F29E` save image without overlap through `PortRuntimeState` at offsets `586374..586397`.",
+      "The new `tools/dump_save_dat.py` verifier decodes installed saves by applying the file-offset formula `0x10 + gameData offset` and validates the exact file size.",
+      "The paired `.fac` files are plain facts text beginning with `(initial-fact)` in the observed local saves, confirming rules facts are sidecar data rather than a DAT subregion."
+    ]
+  },
+  {
+    "name": "BridgeAwareQueuedPathExecution",
+    "kind": "runtime_mechanism",
+    "area": "World movement / campaign routing",
+    "confidence": "medium",
+    "description": "Queued world-map path execution must honor the same builder bridge-crossing allowance used while generating paths. Builder stacks may receive queued waypoints on bridge terrain ids 603..610; execution accepts those steps through Map_GetBridgeCrossingCostOrZero instead of treating them as impassable normal terrain.",
+    "participants": [
+      "UnitStack_ExecuteQueuedPath",
+      "Unit_MoveTrack",
+      "Pathing_EnableBridgeCrossings",
+      "Map_GetBridgeCrossingCostOrZero",
+      "UnitStack_HasBuilder"
+    ],
+    "evidence": [
+      "Mission 01 path generation for the Stormus builder/light-infantry stack produced queued bridge waypoints toward the shrine at (16,11).",
+      "Before the repair, UnitStack_ExecuteQueuedPath spent AP on the bridge step but rejected the actual move through UnitStack_GetTileMoveCostOrZero with bridge pathing disabled.",
+      "After accepting Map_GetBridgeCrossingCostOrZero for builder stacks during execution, the same route crossed bridge waypoints including (16,23), (15,23), (8,13), (9,13), and (10,13), then reached Temple_UnitGetInto and mission_objective_complete.",
+      "Durable runtime proof for the direct mission-01 repair route is stored under artifacts/campaign-routes/mission-01/20260528T084916Z-589261/."
+    ]
+  },
+  {
+    "name": "DLXSpritePackedPayloadPointer",
+    "kind": "runtime_structure_field",
+    "area": "DLX sprite rendering / battle animation",
+    "confidence": "high",
+    "description": "Individual DLX sprite records store their compressed pixel payload pointer as the original 32-bit value at byte offset +0x0A, after the width/height/compression header words. The 64-bit recovery must read this field as a 32-bit pointer-sized payload address instead of a native pointer.",
+    "participants": [
+      "sub_4064A0",
+      "sub_406540",
+      "sub_4065D0",
+      "sub_406650",
+      "sub_4066C0",
+      "DLX_GetSpriteForChar",
+      "UnitBattle_PlayAttackAnimation"
+    ],
+    "evidence": [
+      "The original assembly for sub_406540, sub_4065D0, sub_406650, and sub_4066C0 reads the payload with `mov eax, [eax+0Ah]` / `mov ecx, [eax+0Ah]`, proving a 32-bit field at byte offset +0x0A.",
+      "The mission-04 gate-attack probe previously crashed in sub_406540 with a plausible sprite header at the record base but an invalid 64-bit payload pointer assembled from adjacent header bytes.",
+      "After reading the +0x0A payload field as a 32-bit value in the four extent/projection helpers, the same mission-04 route completed the gate attack and logged battle_wall_attack_return.",
+      "Durable runtime proof for this repair is stored under artifacts/campaign-routes/mission-04/20260615T101237Z-23713/."
     ]
   }
 ]
