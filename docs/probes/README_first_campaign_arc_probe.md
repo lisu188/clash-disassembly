@@ -48,9 +48,11 @@ Acceptance requirements:
 
 Current repair state:
 
-- Mission `00` remains `partial` until the mission-00 gate logs
-  `mission_objective_complete`.
-- Missions `01..09` remain blocked on route recovery after mission `00` is
-  proven.
+- Missions `00..03` are currently marked `complete` by their route env files.
+- Mission `04` remains `partial`: the direct route reaches the castle tactical
+  battle and breaches the gate, but objective completion/castle capture still
+  needs proof.
+- Missions `05..09` are partial direct-load evidence probes until authentic
+  completion routes are repaired.
 - Use `tests/run_first_campaign_mission00_gate_build_probe.sh` only for the
-  mission-0 repair gate; it is not full-campaign acceptance.
+  mission-0 regression/repair gate; it is not full-campaign acceptance.

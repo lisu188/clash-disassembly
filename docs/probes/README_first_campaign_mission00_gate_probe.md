@@ -1,9 +1,9 @@
 # First Campaign Mission 00 Gate Probe
 
-This is a repair/proof entrypoint for the current first-campaign mission 0 route.
-It intentionally allows the route file to remain `partial` so the route can run
-while stack7/stack8/stack9 blockers are being repaired, but it still requires the
-real objective marker before passing.
+This is a repair/proof entrypoint for the first-campaign mission 0 route. It is
+kept as a focused regression gate even though the campaign route table now marks
+mission `00` complete. The wrapper still requires the real objective marker
+before passing.
 
 Run from the repo root:
 

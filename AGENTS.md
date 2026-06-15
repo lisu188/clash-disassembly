@@ -64,10 +64,10 @@
 - Continue until canceled, safely exhausted, or blocked by concrete repo-wide limits.
 - Revisit earlier conclusions when new evidence surfaces.
 - Continue the existing progress artifacts rather than recreating them:
-  - `COMPILATION_PROGRESS.md`
-  - `REVERSE_ENGINEERING_RENAME_LOG.md`
+  - `docs/archive/COMPILATION_PROGRESS.md`
+  - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
   - `RECOVERED_STRUCTURES.json`
-  - `UNIT_TYPES_AND_STATS_REPORT.md`
+  - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
   - `UNIT_TYPES_AND_STATS.json`
 - Prefer the current highest-value frontier in this order:
   1. executable/link blockers
@@ -86,10 +86,10 @@
 - When testing any SDL/windowed executable path, inspect actual presented frames in addition to process liveness. Use the frame-dump hook (`CLASH95_SCREENSHOT_PREFIX` or `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`) when practical, and verify that captured frames are not blank/all-black before treating a visual runtime milestone as reached.
 
 ## 11. Required Outputs
-- Maintain `COMPILATION_PROGRESS.md`.
-- Maintain `REVERSE_ENGINEERING_RENAME_LOG.md`.
+- Maintain `docs/archive/COMPILATION_PROGRESS.md`.
+- Maintain `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
 - Maintain `RECOVERED_STRUCTURES.json`.
-- Maintain `UNIT_TYPES_AND_STATS_REPORT.md`.
+- Maintain `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`.
 - Maintain `UNIT_TYPES_AND_STATS.json`.
 - After each batch, record:
   - current frontier

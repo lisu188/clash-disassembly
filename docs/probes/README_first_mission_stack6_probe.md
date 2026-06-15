@@ -1,12 +1,15 @@
 # First Mission Stack6 Manual Probe
 
-Current verified route evidence:
+Historical verified route evidence:
 
 - The first-mission world-map route can reach the stack6 objective path after stack5 is handled.
 - Autoresolve against stack6 can remove player stack 10 before the objective completes.
 - Choosing the manual battle prompt for stack6 reaches the recovered tactical battle loop with nonblank SDL frames.
 
-The current goal is to keep the route authentic while finding a tactical sequence that defeats or survives stack6. Do not bypass the recovered world-map attack, battle prompt, or tactical battle loop.
+Mission `00` is now marked complete in the campaign route table, but this probe
+remains useful when investigating regressions around the original stack6 tactical
+battle lane. Do not bypass the recovered world-map attack, battle prompt, or
+tactical battle loop.
 
 ## Environment Check
 
