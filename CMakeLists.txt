@@ -80,6 +80,19 @@ add_test(
 set_tests_properties(clash95_r_command_shutdown_smoke PROPERTIES TIMEOUT 10)
 
 add_test(
+  NAME clash95_main_menu_exit_probe
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_main_menu_exit_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_main_menu_exit_probe PROPERTIES
+  TIMEOUT 45
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "real_input;main_menu"
+)
+
+add_test(
   NAME clash95_direct_a_route_smoke
   COMMAND bash
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_direct_a_route_smoke.sh
@@ -132,6 +145,20 @@ set_tests_properties(clash95_first_mission_attack_probe PROPERTIES
   SKIP_RETURN_CODE 77
   RUN_SERIAL TRUE
   LABELS "manual;real_input;first_mission;first_mission_attack"
+)
+
+add_test(
+  NAME clash95_castle_economy_regression
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_castle_economy_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_castle_economy_regression PROPERTIES
+  TIMEOUT 110
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  ENVIRONMENT "CLASH95_ENABLE_CASTLE_ECONOMY_REGRESSION=1"
+  LABELS "manual;real_input;first_mission;castle;economy"
 )
 
 add_test(NAME clash95_first_mission_turn_probe

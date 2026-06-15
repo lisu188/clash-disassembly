@@ -40,6 +40,8 @@ if [ -n "$route_env_path" ]; then
 fi
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export CLASH95_ARTIFACT_PRUNE_AFTER_RUN="${CLASH95_ARTIFACT_PRUNE_AFTER_RUN:-1}"
+export CLASH95_ARTIFACT_PRUNE_MAX_BYTES="${CLASH95_ARTIFACT_PRUNE_MAX_BYTES:-805306368}"
 frame_metrics_tool="$repo_root/tests/frame_metrics.py"
 route_script="${CLASH95_CAMPAIGN_ROUTE_SCRIPT_FILE:-}"
 if [ -z "$route_script" ]; then

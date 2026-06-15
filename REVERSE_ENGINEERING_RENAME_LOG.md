@@ -1,5 +1,12 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Route Regression And Artifact Retention Note
+
+- No semantic renames were made in this batch.
+- Added diagnostic-only helpers around castle/economy route proof: `Diagnostics_TraceCastleHotspots` and `Diagnostics_ResetFrameDumpOnEconomyEnter`.
+- Added CTest-backed route probes for visible main-menu Exit and first-mission starting-castle economy dialog interaction.
+- Tightened durable artifact retention defaults for mission/campaign route writers; this does not change recovered gameplay semantics.
+
 ## 2026-06-15 - Source Hygiene Note
 
 - No semantic renames were made in this batch.

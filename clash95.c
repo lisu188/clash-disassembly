@@ -1026,8 +1026,10 @@ static void Diagnostics_TraceWorldMapActionEvent(
 static int Diagnostics_UnitStackIndexFromRecord(int stack_record);
 static void Diagnostics_TraceBootstrapEvent(const char *stage);
 static void Diagnostics_ResetFrameDumpOnCastleEnter(void);
+static void Diagnostics_ResetFrameDumpOnEconomyEnter(void);
 static void Diagnostics_ResetFrameDumpOnBarracksEnter(void);
 static void Diagnostics_ResetFrameDumpOnBarracksDetail(void);
+static void Diagnostics_TraceCastleHotspots(int surface_handle);
 static void Diagnostics_TraceWorldMapUnitSnapshot(const char *stage);
 static void Diagnostics_TraceBattleUnitSnapshot(const char *stage);
 static void Diagnostics_TraceWorldMapCursorSample(
@@ -38043,6 +38045,22 @@ static void Diagnostics_ResetFrameDumpOnCastleEnter(void)
     Platform_ResetPresentedFrameDump();
 }
 
+static void Diagnostics_ResetFrameDumpOnEconomyEnter(void)
+{
+  static int checked;
+  static int enabled;
+  const char *value;
+
+  if ( !checked )
+  {
+    value = getenv("CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_ECONOMY_ENTER");
+    enabled = value && *value;
+    checked = 1;
+  }
+  if ( enabled )
+    Platform_ResetPresentedFrameDump();
+}
+
 static void Diagnostics_ResetFrameDumpOnBarracksEnter(void)
 {
   static int checked;
@@ -38310,6 +38328,71 @@ static unsigned int Diagnostics_SurfaceByteChecksum(int surface_handle)
   for ( index = 0; index < pixel_count; index += step )
     checksum = (checksum ^ pixels[index]) * 16777619u;
   return checksum;
+}
+
+static void Diagnostics_TraceCastleHotspots(int surface_handle)
+{
+  _DWORD *surface;
+  int hotspot;
+  int x;
+  int y;
+  int pixel;
+  int index;
+  int count[8];
+  int min_x[8];
+  int min_y[8];
+  int max_x[8];
+  int max_y[8];
+
+  if ( !Diagnostics_IsWorldMapClickTraceEnabled() )
+    return;
+  surface = (_DWORD *)(uintptr_t)(unsigned int)surface_handle;
+  if ( !surface )
+    return;
+  for ( index = 0; index < 8; ++index )
+  {
+    count[index] = 0;
+    min_x[index] = 640;
+    min_y[index] = 480;
+    max_x[index] = -1;
+    max_y[index] = -1;
+  }
+  for ( y = 0; y < 480; ++y )
+  {
+    for ( x = 0; x < 640; ++x )
+    {
+      pixel = RenderSurface_InvokeSlot16ReadPixel(surface, x, y);
+      if ( pixel < 248 || pixel > 255 )
+        continue;
+      index = pixel - 248;
+      ++count[index];
+      if ( x < min_x[index] )
+        min_x[index] = x;
+      if ( y < min_y[index] )
+        min_y[index] = y;
+      if ( x > max_x[index] )
+        max_x[index] = x;
+      if ( y > max_y[index] )
+        max_y[index] = y;
+    }
+  }
+  for ( hotspot = 248; hotspot <= 255; ++hotspot )
+  {
+    index = hotspot - 248;
+    if ( !count[index] )
+      continue;
+    fprintf(
+      stderr,
+      "[castle] hotspot pixel=%d count=%d bounds=%d,%d..%d,%d center=%d,%d\n",
+      hotspot,
+      count[index],
+      min_x[index],
+      min_y[index],
+      max_x[index],
+      max_y[index],
+      (min_x[index] + max_x[index]) / 2,
+      (min_y[index] + max_y[index]) / 2);
+  }
 }
 
 static void Diagnostics_TraceWorldMapClickEvent(
@@ -38707,6 +38790,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Render_Present((int)dword_544CD8);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[castle] first_present building_idx=%u\n", (unsigned int)a1);
+  Diagnostics_TraceCastleHotspots(g_CastleScreenSurface);
   g_CastleDestroyConfirmed = 0;
   g_CastleScreenExitRequested = 0;
   dword_545150 = (int)&unk_5196A0;
@@ -44153,6 +44237,8 @@ int  BuildingEconomyDialog_SetExitSignal(int a1, int a2)
 
   result = sub_419E60((uintptr_t)a1, 1);
   g_BuildingEconomyDialogExitSignal = 1;
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(stderr, "[economy] back exit_signal=%d\n", g_BuildingEconomyDialogExitSignal);
   return result;
 }
 // 531CE8: using guessed type int g_BuildingEconomyDialogExitSignal;
@@ -44545,6 +44631,7 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
 int  BuildingEconomyDialog_Run(int a1)
 {
   int player_has_religion; // edi
+  int building_index;
   char *background_path; // edx
   char *sprite_path; // edx
   char *resource_base_path; // eax
@@ -44554,6 +44641,14 @@ int  BuildingEconomyDialog_Run(int a1)
   unsigned __int8 *palette_buffer; // [esp+0h] [ebp-418h]
 
   g_BuildingEconomyDialogBuilding = a1;
+  building_index = (a1 - (gameData + 509674)) / 467;
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[economy] enter building_idx=%d owner=%d\n",
+      building_index,
+      *(unsigned __int8 *)(a1 + 2));
+  Diagnostics_ResetFrameDumpOnEconomyEnter();
   player_has_religion = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(a1 + 2));
   BuildingTransferTargetList_Rebuild(a1, 1);
   g_BuildingEconomyDialogPendingPeasantTransfer = 0;
@@ -44613,6 +44708,13 @@ int  BuildingEconomyDialog_Run(int a1)
   sub_460CB0((int)dword_544CD8, (int)(uintptr_t)palette_buffer, 0, 0);
   sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
   Render_Present((int)dword_544CD8);
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[economy] first_present building_idx=%d list_index=%d target=%d\n",
+      building_index,
+      g_BuildingTransferTargetListIndex,
+      g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
   g_BuildingEconomyDialogExitSignal = 0;
   exit_signal_snapshot = 0;
   do
@@ -44623,6 +44725,13 @@ int  BuildingEconomyDialog_Run(int a1)
     sub_44E350(word_514A88);
   }
   while ( exit_signal_snapshot == g_BuildingEconomyDialogExitSignal );
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[economy] exit building_idx=%d list_index=%d exit_signal=%d\n",
+      building_index,
+      g_BuildingTransferTargetListIndex,
+      g_BuildingEconomyDialogExitSignal);
   BuildingTransferTargetList_FreeSpriteSet();
   sub_405920(&g_BuildingEconomyDialogSpriteSet);
   Render_Pump();
@@ -51487,9 +51596,19 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
 //----- (004368F0) --------------------------------------------------------
 int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
 {
+  int old_index;
+
+  old_index = g_BuildingTransferTargetListIndex;
   sub_419F20(a1);
   if ( g_BuildingTransferTargetListIndex )
     --g_BuildingTransferTargetListIndex;
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[economy] list_previous old=%d new=%d target=%d\n",
+      old_index,
+      g_BuildingTransferTargetListIndex,
+      g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
   BuildingTransferTargetList_Draw((int)off_511234, a2);
   return sub_419F50(a1, 1);
 }
@@ -51499,9 +51618,19 @@ int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
 //----- (00436930) --------------------------------------------------------
 int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
 {
+  int old_index;
+
+  old_index = g_BuildingTransferTargetListIndex;
   sub_419F20(a1);
   if ( word_532362[g_BuildingTransferTargetListIndex] != -1 )
     ++g_BuildingTransferTargetListIndex;
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[economy] list_next old=%d new=%d target=%d\n",
+      old_index,
+      g_BuildingTransferTargetListIndex,
+      g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
   BuildingTransferTargetList_Draw((int)off_511234, a2);
   return sub_419F50(a1, 1);
 }
