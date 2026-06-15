@@ -1,0 +1,4 @@
+# Basic playable-turn proof plus explicit battle-loop exit request.
+next-unit
+defence
+exit

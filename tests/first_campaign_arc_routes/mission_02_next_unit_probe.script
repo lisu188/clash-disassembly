@@ -1,0 +1,11 @@
+wait_log 60 mission_load_done selected=-1 a=2
+wait_log 60 playgame_before_human_turn
+nonblank mission02-next-unit-start
+
+click 496 416 0.22 0.35 next-unit-probe-1
+click 496 416 0.22 0.35 next-unit-probe-2
+click 496 416 0.22 0.35 next-unit-probe-3
+click 496 416 0.22 0.35 next-unit-probe-4
+click 496 416 0.22 0.35 next-unit-probe-5
+wait 1.0
+nonblank mission02-next-unit-after-cycles

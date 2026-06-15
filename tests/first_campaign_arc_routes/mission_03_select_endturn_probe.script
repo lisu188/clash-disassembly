@@ -1,0 +1,16 @@
+# Mission 03 end-turn probe through the normal action widget first.
+wait_log 60 mission_load_done selected=-1 a=3
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission03-select-endturn-start
+nonblank mission03-select-endturn-start
+click 496 416 0.22 0.8 mission03-next-unit-before-endturn
+wait_log 30 next_unit_selected
+click 500 2 0.18 1.0 mission03-top-menu-endturn-after-select
+wait 4.0
+click 320 240 0.12 0.65 mission03-post-endturn-skip-1
+click 320 240 0.12 0.65 mission03-post-endturn-skip-2
+click 320 240 0.12 0.65 mission03-post-endturn-skip-3
+click 320 240 0.12 0.65 mission03-post-endturn-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+screenshot mission03-select-endturn-turn-2
+nonblank mission03-select-endturn-turn-2

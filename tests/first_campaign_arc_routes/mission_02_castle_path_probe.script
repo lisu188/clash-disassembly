@@ -1,0 +1,18 @@
+# Mission 02 diagnostic route: click Treg Rock directly to harvest the raw
+# pathfinder waypoints before bridge-corner insertion overflows the path buffer.
+wait_log 60 mission_load_done selected=-1 a=2
+wait_log 60 playgame_before_human_turn
+nonblank mission02-start
+
+click 496 416 0.22 0.8 next-unit-main-stack
+wait_log 20 next_unit_selected selected=1 a=98 b=25
+
+click 475 153 0.18 0.8 minimap-treg-rock
+wait_log 20 minimap_update selected=1 a=37 b=64
+
+click 288 273 0.18 1.0 click-treg-rock
+wait_log 30 tile_input cursor=288,272 tile=41,68
+wait_log 30 unit_move_track_raw_sample selected=1
+nonblank mission02-castle-path-probe
+
+expect_log unit_move_track_raw_sample selected=1

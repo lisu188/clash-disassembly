@@ -1,0 +1,68 @@
+# Direct repair probe: release a Stormus unit, advance to the next human turn,
+# select the deployed stack, and issue a first authentic movement order.
+wait_log 60 mission_load_done selected=-1 a=1
+wait_log 60 playgame_before_human_turn selected=-1 a=0
+nonblank mission01-start
+
+click 565 191 0.18 0.8 minimap-stormus
+wait 0.8
+click 256 368 0.22 1.2 open-stormus
+wait_log 30 building_getinto_open building_idx=0
+wait_log 30 [castle] first_present building_idx=0
+click 105 359 0.25 1.0 open-barracks
+wait_log 30 [barracks] initial_present_done
+click 142 110 0.20 0.6 select-builder-slot
+wait_log 20 slot_toggle idx=0 selected=1
+click 426 110 0.20 0.8 select-light-infantry-slot
+wait_log 20 slot_toggle idx=4 selected=1
+platform_down 530 450 0.7 leave-selected-unit-down
+platform_up 530 450 1.5 leave-selected-unit-up
+wait_log 30 building_units_leave_spawn selected=5 a=45 b=48
+platform_down 60 450 0.4 close-barracks-down
+platform_up 60 450 1.0 close-barracks-up
+wait 1.5
+platform_down 60 450 0.4 close-castle-down
+platform_up 60 450 1.0 close-castle-up
+wait_log 30 building_getinto_return building_idx=0
+nonblank after-stormus-exit
+
+# End turn once so the released stack receives action points.
+click 500 2 0.18 1.0 end-human-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-skip-1
+click 320 240 0.12 0.65 post-end-turn-skip-2
+click 320 240 0.12 0.65 post-end-turn-skip-3
+click 320 240 0.12 0.65 post-end-turn-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=2
+
+# Pan lower around Stormus and select the released stack at (45,48).
+click 565 203 0.18 0.8 minimap-spawned-stack
+wait 0.8
+click 320 352 0.18 0.8 select-spawned-stack
+wait_log 20 selected_stack_changed selected=5 a=45 b=48
+
+# Issue a first march leg toward the mission shrine at (16,11). The minimap
+# click places the shrine under the center of the world view.
+click 449 55 0.18 0.8 minimap-shrine
+wait 0.8
+click 320 240 0.18 1.5 shrine-target
+wait_log 30 temple_path_queued selected=5 a=16 b=11
+click 320 240 0.18 2.5 shrine-target-confirm
+wait_log 30 unit_move_after_path_state selected=5
+nonblank after-first-march-leg
+
+# The bridge-crossing march can legitimately spend the stack's AP before the
+# shrine is reached. Advance to the next human turn, then continue the queued
+# path from the centered stack position.
+click 500 2 0.18 1.0 end-human-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-2-skip-1
+click 320 240 0.12 0.65 post-end-turn-2-skip-2
+click 320 240 0.12 0.65 post-end-turn-2-skip-3
+click 320 240 0.12 0.65 post-end-turn-2-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
+click 384 176 0.18 1.0 select-queued-stack-after-second-turn
+wait_log 20 selected_stack_changed selected=5 a=8 b=13
+click 384 176 0.18 3.0 continue-queued-shrine-path
+wait_log 45 mission_objective_complete
+nonblank after-shrine-complete

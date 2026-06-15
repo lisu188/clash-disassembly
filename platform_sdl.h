@@ -228,6 +228,7 @@ void Platform_DebugPrimeInputFallbackMousePulse(
   int primary_down,
   int secondary_down,
   int read_count);
+void Platform_DebugPrimeInputFallbackKeyPulse(int scan_code, int read_count);
 
 typedef struct _SECURITY_ATTRIBUTES {
   DWORD nLength;

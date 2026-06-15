@@ -1,0 +1,10 @@
+# Mission 03 first-turn end-turn probe using recovered world input coordinates.
+wait_log 60 mission_load_done selected=-1 a=3
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission03-world-endturn-start
+nonblank mission03-world-endturn-start
+world_click 500 2 4 0.8 world-end-survival-turn-1
+world_wait 180 0.2 wait-world-end-survival-turn-1
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+screenshot mission03-world-turn-2
+nonblank mission03-world-turn-2

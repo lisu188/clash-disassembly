@@ -1,0 +1,13 @@
+# Example raw CLASH95_BATTLE_INPUT_SCRIPT payload for the stack6 manual
+# battle probe. Use with:
+#
+#   CLASH95_STACK6_CHASE_MANUAL_BATTLE_SCRIPT_FILE=tests/stack6_manual_battle_script.example \
+#     bash tests/run_first_mission_stack6_manual_probe.sh build/bin/clash95_bootstrap
+#
+# Commands are consumed by Battle_RunInputScriptStep after the recovered
+# battle loop is reached.
+
+wait 20
+click 577 386 6
+wait 8
+click 514 448 6

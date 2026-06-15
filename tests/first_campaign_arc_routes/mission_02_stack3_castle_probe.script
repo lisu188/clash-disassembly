@@ -1,0 +1,299 @@
+wait_log 60 mission_load_done selected=-1 a=2
+wait_log 60 playgame_before_human_turn
+nonblank mission02-stack3-start
+
+click 496 416 0.22 0.5 next-unit-stack1-skip
+wait_log 20 next_unit_selected selected=1 a=98 b=25
+click 496 416 0.22 0.8 next-unit-stack3-select
+wait_log 20 next_unit_selected selected=3 a=97 b=24
+
+click 570 107 0.18 0.8 minimap-stack3-waypoint-89-45
+wait_log 20 minimap_update selected=3 a=84 b=41
+click 353 273 0.18 0.8 click-stack3-waypoint-89-45
+wait_log 30 tile_input cursor=353,272 tile=89,45
+wait_log 30 move_order_track_result selected=3 a=89 b=45
+click 353 273 0.05 1.5 confirm-stack3-waypoint-89-45
+wait 1.0
+nonblank mission02-stack3-after-first-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-1-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-1-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-1-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-1-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=2
+
+click 496 416 0.22 0.35 next-unit-stack1-turn-2
+wait_log 20 next_unit_selected selected=1 a=98 b=25
+click 496 416 0.22 0.8 next-unit-stack3-turn-2
+wait_log 20 next_unit_selected selected=3 a=93 b=26
+click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-2
+wait 1.0
+nonblank mission02-stack3-after-second-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-2-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-2-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-2-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-2-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
+click 496 416 0.22 0.45 next-unit-stack1-turn-3
+click 496 416 0.22 0.8 next-unit-stack3-turn-3
+click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-3
+wait 0.8
+nonblank mission02-stack3-after-third-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-3-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-3-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-3-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-3-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=4
+click 496 416 0.22 0.45 next-unit-stack1-turn-4
+click 496 416 0.22 0.8 next-unit-stack3-turn-4
+click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-4
+wait 0.8
+nonblank mission02-stack3-after-fourth-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-4-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-4-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-4-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-4-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=5
+click 496 416 0.22 0.45 next-unit-stack1-turn-5
+click 496 416 0.22 0.8 next-unit-stack3-turn-5
+click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-5
+wait 0.8
+wait_log 30 unit_move_after_path_state selected=3 a=89 b=45
+nonblank mission02-stack3-at-waypoint-89-45
+
+click 555 142 0.18 0.8 minimap-stack3-waypoint-82-63
+wait_log 20 minimap_update selected=3 a=77 b=59
+click 353 273 0.18 0.8 click-stack3-waypoint-82-63
+wait_log 30 tile_input cursor=353,272 tile=82,63
+wait_log 30 move_order_track_result selected=3 a=82 b=63
+click 353 273 0.05 1.5 confirm-stack3-waypoint-82-63
+wait 1.0
+nonblank mission02-stack3-after-82-63-first-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-5-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-5-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-5-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-5-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=6
+click 496 416 0.22 0.45 next-unit-stack1-turn-6
+click 496 416 0.22 0.8 next-unit-stack3-turn-6
+click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-6
+wait_log 60 unit_move_after_path_state selected=3 a=86 b=59
+nonblank mission02-stack3-after-82-63-second-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-6-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-6-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-6-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-6-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=7
+click 496 416 0.22 0.45 next-unit-stack1-turn-7
+click 496 416 0.22 0.8 next-unit-stack3-turn-7
+click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-7
+wait_log 60 unit_move_after_path_state selected=3 a=83 b=60
+nonblank mission02-stack3-after-82-63-third-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-7-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-7-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-7-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-7-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=8
+click 496 416 0.22 0.45 next-unit-stack1-turn-8
+click 496 416 0.22 0.8 next-unit-stack3-turn-8
+click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-8
+wait_log 60 unit_move_after_path_state selected=3 a=82 b=63
+nonblank mission02-stack3-at-waypoint-82-63
+
+click 512 154 0.18 0.8 minimap-stack3-waypoint-60-69
+wait_log 20 minimap_update selected=3 a=55 b=65
+click 353 273 0.18 0.8 click-stack3-waypoint-60-69
+wait_log 30 tile_input cursor=352,273 tile=60,69
+wait_log 30 move_order_track_result selected=3 a=60 b=69
+click 353 273 0.05 1.5 confirm-stack3-waypoint-60-69
+wait 3.0
+nonblank mission02-stack3-after-60-69-first-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-8-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-8-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-8-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-8-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=9
+click 496 416 0.22 0.45 next-unit-stack1-turn-9
+click 496 416 0.22 0.8 next-unit-stack3-turn-9
+click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-9
+nonblank mission02-stack3-after-60-69-second-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-9-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-9-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-9-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-9-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=10
+click 496 416 0.22 0.45 next-unit-stack1-turn-10
+click 496 416 0.22 0.8 next-unit-stack3-turn-10
+click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-10
+nonblank mission02-stack3-after-60-69-third-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-10
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-10-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-10-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-10-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-10-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=11
+
+click 500 2 0.18 1.0 rest-stack3-waypoint-60-69-turn-11
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-1
+click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-2
+click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-3
+click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=12
+click 496 416 0.22 0.45 next-unit-stack1-turn-11
+click 496 416 0.22 0.8 next-unit-stack3-turn-11
+click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-11
+nonblank mission02-stack3-after-60-69-fourth-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-11
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-11-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-11-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-11-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-11-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=13
+click 496 416 0.22 0.45 next-unit-stack1-turn-12
+click 496 416 0.22 0.8 next-unit-stack3-turn-12
+click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-12
+wait_log 60 unit_move_after_path_state selected=3 a=62 b=68
+nonblank mission02-stack3-after-60-69-fifth-leg-probe
+
+click 500 2 0.18 1.0 end-stack3-turn-12
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-turn-12-skip-1
+click 320 240 0.12 0.65 post-stack3-turn-12-skip-2
+click 320 240 0.12 0.65 post-stack3-turn-12-skip-3
+click 320 240 0.12 0.65 post-stack3-turn-12-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=14
+click 496 416 0.22 0.45 next-unit-stack1-turn-13
+click 496 416 0.22 0.8 next-unit-stack3-turn-13
+click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-13
+wait_log 60 unit_move_after_path_state selected=3 a=60 b=69
+nonblank mission02-stack3-at-waypoint-60-69
+
+click 475 153 0.18 0.8 minimap-stack3-treg-rock-castle
+wait_log 20 minimap_update selected=3 a=37 b=65
+click 320 240 0.18 3.0 click-stack3-treg-rock-castle
+wait_log 30 tile_input cursor=320,240 tile=41,68
+wait_log 30 building_path_ready selected=3
+wait_log 60 unit_move_after_path_state selected=3 a=57 b=72
+nonblank mission02-stack3-after-treg-rock-path-probe
+
+click 500 2 0.18 1.0 end-stack3-treg-approach-turn-15
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-15-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-15-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-15-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-15-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=15
+click 500 2 0.18 1.0 rest-stack3-treg-approach-turn-16
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=16
+click 496 416 0.22 0.45 next-unit-stack1-treg-turn-17
+click 496 416 0.22 0.8 next-unit-stack3-treg-turn-17
+wait_log 30 next_unit_selected selected=3 a=57 b=72
+click 320 240 0.18 4.0 continue-stack3-treg-approach-turn-17
+wait_log 60 unit_move_after_path_state selected=3 a=53 b=76
+nonblank mission02-stack3-after-treg-approach-turn-17-probe
+
+click 500 2 0.18 1.0 end-stack3-treg-approach-turn-16
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-16b-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-16b-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-16b-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-16b-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=17
+click 500 2 0.18 1.0 rest-stack3-treg-approach-turn-17
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=18
+click 496 416 0.22 0.45 next-unit-stack1-treg-turn-18
+click 496 416 0.22 0.8 next-unit-stack3-treg-turn-18
+wait_log 30 next_unit_selected selected=3 a=53 b=76
+click 320 240 0.18 4.0 continue-stack3-treg-approach-turn-18
+wait_log 60 unit_move_after_path_state selected=3 a=48 b=73
+nonblank mission02-stack3-after-treg-approach-turn-18-probe
+
+click 500 2 0.18 1.0 end-stack3-treg-approach-turn-18
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-18-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-18-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-18-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-18-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=19
+click 500 2 0.18 1.0 rest-stack3-treg-approach-turn-19
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=20
+click 496 416 0.22 0.45 next-unit-stack1-treg-turn-20
+click 496 416 0.22 0.8 next-unit-stack3-treg-turn-20
+wait_log 30 next_unit_selected selected=3 a=48 b=73
+click 320 240 0.18 4.0 continue-stack3-treg-approach-turn-20
+nonblank mission02-stack3-after-treg-approach-turn-20-probe
+wait_log 60 unit_move_after_path_state selected=3 a=43 b=69
+nonblank mission02-stack3-near-treg-rock-approach-probe
+
+click 500 2 0.18 1.0 end-stack3-treg-approach-turn-20
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-20-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-20-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-20-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-20-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=21
+click 500 2 0.18 1.0 rest-stack3-treg-approach-turn-21
+wait 4.0
+click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-1
+click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-2
+click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-3
+click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=22
+click 496 416 0.22 0.45 next-unit-stack1-treg-turn-22
+click 496 416 0.22 0.8 next-unit-stack3-treg-turn-22
+wait_log 30 next_unit_selected selected=3 a=43 b=69
+click 320 240 0.18 4.0 continue-stack3-treg-approach-turn-22
+wait_log 60 unit_move_after_path_state selected=3 a=43 b=69 c=0
+nonblank mission02-stack3-treg-rock-approach-path-cleared
+
+click 475 153 0.18 0.8 minimap-stack3-treg-rock-final
+wait_log 20 minimap_update selected=3 a=37 b=65
+click 320 240 0.18 4.0 attack-stack3-treg-rock-castle
+wait_log 30 tile_input cursor=320,240 tile=41,68
+nonblank mission02-stack3-treg-rock-final-click-probe

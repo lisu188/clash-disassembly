@@ -94,3 +94,85 @@ add_test(
     $<TARGET_FILE:clash95_bootstrap>
 )
 set_tests_properties(clash95_direct_a0_route_smoke PROPERTIES TIMEOUT 10)
+
+add_test(
+  NAME clash95_first_mission_real_input_move_smoke
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_first_mission_real_input_move_smoke.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_first_mission_real_input_move_smoke PROPERTIES
+  TIMEOUT 95
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;first_mission"
+)
+
+add_test(
+  NAME clash95_first_mission_playability_probe
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_first_mission_playability_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_first_mission_playability_probe PROPERTIES
+  TIMEOUT 95
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;first_mission;first_mission_playability"
+)
+
+add_test(
+  NAME clash95_first_mission_attack_probe
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_first_mission_attack_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_first_mission_attack_probe PROPERTIES
+  TIMEOUT 115
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;first_mission;first_mission_attack"
+)
+
+add_test(NAME clash95_first_mission_turn_probe
+  COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_first_mission_turn_probe.sh
+  $<TARGET_FILE:clash95_bootstrap>)
+set_tests_properties(clash95_first_mission_turn_probe PROPERTIES
+  TIMEOUT 105
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;first_mission;first_mission_turn"
+)
+
+add_test(
+  NAME clash95_save_dat_format
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/verify_save_dat_format.sh
+)
+set_tests_properties(clash95_save_dat_format PROPERTIES
+  TIMEOUT 20
+  SKIP_RETURN_CODE 77
+  LABELS "save;format"
+)
+
+function(add_campaign_route_regression_test mission_id timeout_seconds)
+  add_test(
+    NAME clash95_campaign_route_${mission_id}_regression
+    COMMAND bash
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_campaign_route_regression.sh
+      $<TARGET_FILE:clash95_bootstrap>
+      ${mission_id}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/first_campaign_arc_routes/mission_${mission_id}.env
+  )
+  set_tests_properties(clash95_campaign_route_${mission_id}_regression PROPERTIES
+    TIMEOUT ${timeout_seconds}
+    SKIP_RETURN_CODE 77
+    RUN_SERIAL TRUE
+    LABELS "manual;real_input;campaign_route;mission_${mission_id}"
+  )
+endfunction()
+
+add_campaign_route_regression_test(01 360)
+add_campaign_route_regression_test(02 900)
+add_campaign_route_regression_test(03 900)
+add_campaign_route_regression_test(04 360)

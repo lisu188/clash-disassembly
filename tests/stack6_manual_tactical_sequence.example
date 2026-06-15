@@ -1,0 +1,12 @@
+# Example sequence for the stack6 manual battle probe.
+# Use with:
+#   CLASH95_STACK6_CHASE_MANUAL_TACTICAL_SEQUENCE_FILE=tests/stack6_manual_tactical_sequence.example \
+#     bash tests/run_first_mission_stack6_manual_probe.sh build/bin/clash95_bootstrap
+#
+# One token per line. Blank lines and comments are ignored.
+
+next-unit
+defence
+
+# Keep exit disabled while searching for real attack/win actions.
+# exit
