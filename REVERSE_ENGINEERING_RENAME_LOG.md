@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Source Hygiene Note
+
+- No semantic renames were made in this batch.
+- Removed only stale committed agent launcher logs and unused C++ wrapper headers from the retired C++ regeneration track.
+- Added `README.md`, `docs/source-map.md`, `docs/milestone-index.md`, and `.gitignore` to make authoritative evidence, recovered source, shims, tests, generated metadata, and progress logs easier to find without changing recovered behavior.
+
 ## Batch 8 – Unit Stack Wave
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary |
 |---|---|---|---|---|---|

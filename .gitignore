@@ -1,0 +1,72 @@
+# Build trees and generated build system files.
+/build/
+/build-*/
+/cmake-build-*/
+/CMakeCache.txt
+/CMakeFiles/
+/CTestTestfile.cmake
+/Testing/
+/Makefile
+/cmake_install.cmake
+
+# Local build products. The original tracked clash95.exe is evidence; force-add
+# any future evidence binaries intentionally.
+/bin/
+/lib/
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+/clash95_bootstrap
+/clash95_recovered
+
+# Route runs, frame dumps, screenshots, and visual failure montages.
+/artifacts/
+*.bmp
+*.ppm
+*.png
+*.tga
+frame-*.*
+checkpoint-*.*
+visual-failure-montage.*
+
+# Runtime logs, crash dumps, profiling output, and debugger scratch.
+*.log
+*.jsonl
+*.core
+core
+core.*
+*.dmp
+*.trace
+*.prof
+*.gcda
+*.gcno
+gmon.out
+/clash.log
+/battle.log
+
+# Local editor/OS scratch.
+*~
+*.bak
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Agent-local scratch worktrees and session state. Durable repo-side agent
+# evidence lives in tracked .agent/ and .agents/.
+/.codex
+/.codex/
+/.codex-loop/
+/.worktrees/
+
+# Ad-hoc root-level debugger/linker scratch names seen during route recovery.
+/WorldMap_Initialize
+/sub_*
+/=*
+/[0-9]*
+/"*
+/; find *

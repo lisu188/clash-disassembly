@@ -1,5 +1,19 @@
 # Compilation Progress
 
+## 2026-06-15 - Source Hygiene And Navigation Compaction
+
+- Current frontier: source hygiene only; no recovered behavior, assembly offsets, route scripts, or generated metadata semantics were changed.
+- Blockers removed: committed `.codex-loop` launcher leftovers were removed after confirming they were empty JSONL files or stale launcher stderr already summarized as non-evidence in `.agent/wiki/log.md`.
+- Obsolete experiments removed: unused `include/clash95/cpp/*.hpp` raw-handle wrapper headers were deleted after confirming no active CMake target, test, or source file referenced them; the underlying class/name evidence remains in `clash95.asm`, `clash95.map`, `clash95.c`, and the progress logs.
+- Repository navigation added: `README.md`, `docs/source-map.md`, and `docs/milestone-index.md` now classify authoritative evidence, recovered source, shims, platform code, tests, generated metadata, progress logs, protected large files, and deferred compaction opportunities.
+- Generated-artifact policy added: `.gitignore` now excludes build trees, CMake outputs, route artifacts, frame dumps, logs, crash/profiling files, local worktrees, and observed root scratch files without ignoring tracked evidence.
+- Compile/link/runtime status: `cmake -S . -B /tmp/clash-source-hygiene-build -DCMAKE_BUILD_TYPE=Debug`, `cmake --build /tmp/clash-source-hygiene-build --target clash95_bootstrap -j2`, and `ctest --test-dir /tmp/clash-source-hygiene-build --output-on-failure` passed.
+- Route status: `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir /tmp/clash-source-hygiene-build -R clash95_campaign_route_04_regression --output-on-failure` passed; `bash tests/summarize_campaign_arc_routes.sh` still reports four complete routes and sixteen partial routes.
+- Metadata/status validation: `python3 -m json.tool RECOVERED_STRUCTURES.json`, `python3 -m json.tool UNIT_TYPES_AND_STATS.json`, `python3 -m json.tool .agent/state.json`, `git diff --check`, deleted-path grep checks, and `git ls-files -ci --exclude-standard` passed.
+- Highest authentic runtime milestone remains unchanged: existing SDL route tests still cover default main-menu liveness, direct Campaign/first-mission smoke paths, first-mission playability/attack probes, save-format validation, and the opt-in mission-04 gate-attack route regression.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: splitting `clash95.c`, moving top-level shims, moving `.agent/wiki`, trimming progress logs, and further route-wrapper consolidation all remain deferred pending stronger tooling or route evidence.
+
 ## 2026-05-24 - First Campaign Route Refusal Diagnostics
 
 - Current frontier: mission 0 remains the first-campaign gate; the route must still prove natural `mission_objective_complete` and nonblank frame evidence before `mission_00.env` can become `complete`.

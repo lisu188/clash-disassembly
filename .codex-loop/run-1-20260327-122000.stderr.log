@@ -1,2 +1,0 @@
-Error loading rules:
-/home/andrz/git/clash-disassembly/.codex/rules/shell.rules:1: starlark error: error: Parse error: unexpected new line here, expected one of "%=", "&=", ")", "*=", "+=", ",", "-=", "//=", "/=", ":", "<<=", "=", ">>=", "^=" or "|=" (problem is on or around line 1)
