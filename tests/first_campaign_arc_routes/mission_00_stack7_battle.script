@@ -1,0 +1,38 @@
+wait 30
+# Stack7 uses the same recovered tactical input channel as stack6. The route
+# enters manual combat from the world prompt, then lets the selected attacker
+# walk/attack through battlefield clicks instead of relying on autoresolve.
+click 416 360 12
+wait 80
+click 160 240 12
+wait 80
+click 224 240 12
+wait 80
+click 288 240 12
+wait 80
+click 352 240 12
+wait 80
+click 520 14 12
+wait 260
+click 416 240 12
+wait 100
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 352 240 12
+wait 100
+click 520 14 12
+wait 260
+key 205 16
+wait 32
+click 288 240 12
+wait 100
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260
+click 352 240 12
+wait 140
+click 520 14 12
+wait 260

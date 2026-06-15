@@ -1,0 +1,27 @@
+# Mission 01 natural-AI completion probe.
+wait_log 60 mission_load_done selected=-1 a=1
+wait_log 60 playgame_before_human_turn
+screenshot mission01-before-endturns
+nonblank mission01-before-endturns
+world_click 500 2 4 0.8 end-turn-01
+world_wait 120 0.2 wait-turn-01
+world_click 500 2 4 0.8 end-turn-02
+world_wait 120 0.2 wait-turn-02
+world_click 500 2 4 0.8 end-turn-03
+world_wait 120 0.2 wait-turn-03
+world_click 500 2 4 0.8 end-turn-04
+world_wait 120 0.2 wait-turn-04
+world_click 500 2 4 0.8 end-turn-05
+world_wait 120 0.2 wait-turn-05
+world_click 500 2 4 0.8 end-turn-06
+world_wait 120 0.2 wait-turn-06
+world_click 500 2 4 0.8 end-turn-07
+world_wait 120 0.2 wait-turn-07
+world_click 500 2 4 0.8 end-turn-08
+world_wait 120 0.2 wait-turn-08
+world_click 500 2 4 0.8 end-turn-09
+world_wait 120 0.2 wait-turn-09
+world_click 500 2 4 0.8 end-turn-10
+world_wait 120 0.2 wait-turn-10
+wait_log 10 mission_objective_complete
+expect_log mission_objective_complete

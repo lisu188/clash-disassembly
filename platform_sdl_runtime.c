@@ -78,6 +78,8 @@ static int g_platform_frame_dump_index;
 static int g_platform_frame_dump_skip;
 static int g_platform_frame_dump_limit;
 static HWND g_platform_foreground_window;
+static int g_platform_host_mouse_primary_pending_hold_reads;
+static int g_platform_host_mouse_secondary_pending_hold_reads;
 
 #define PLATFORM_PRESENTED_FRAME_DUMP_DEFAULT_LIMIT 512
 
@@ -412,6 +414,44 @@ static int PlatformReadNonNegativeIntEnv(const char *name, int fallback)
   if ( end == value || *end || parsed < 0 || parsed > INT_MAX )
     return fallback;
   return (int)parsed;
+}
+
+static int PlatformTraceHostClickPulses(void)
+{
+  const char *value;
+
+  value = getenv("CLASH95_TRACE_HOST_CLICK_PULSES");
+  return value && *value && strcmp(value, "0") != 0;
+}
+
+static int PlatformTraceInputScript(void)
+{
+  const char *value;
+
+  value = getenv("CLASH95_TRACE_INPUT_SCRIPT");
+  return value && *value && strcmp(value, "0") != 0;
+}
+
+static void PlatformTraceInputScriptCommand(
+  const char *command,
+  int a,
+  int b,
+  int c,
+  int d,
+  int e)
+{
+  if ( !PlatformTraceInputScript() )
+    return;
+  fprintf(
+    stderr,
+    "[platform_input] command=%s a=%d b=%d c=%d d=%d e=%d\n",
+    command,
+    a,
+    b,
+    c,
+    d,
+    e);
+  fflush(stderr);
 }
 
 static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
@@ -1873,7 +1913,28 @@ static int g_platform_host_mouse_primary_pending_press;
 static int g_platform_host_mouse_secondary_pending_press;
 static int g_platform_debug_mouse_primary_pulse_reads;
 static int g_platform_debug_mouse_secondary_pulse_reads;
+#define PLATFORM_DEBUG_KEYBOARD_PULSE_COUNT 256
+static int g_platform_debug_keyboard_pulse_reads[PLATFORM_DEBUG_KEYBOARD_PULSE_COUNT];
+static int g_platform_input_script_initialized;
+static int g_platform_input_script_wait_reads;
+static FILE *g_platform_input_script_file;
 static signed char g_platform_host_keyboard_state[256];
+
+static int Platform_ShouldSuppressPolledMouseSyncForScript(void)
+{
+  static int checked;
+  static int enabled;
+
+  if ( !checked )
+  {
+    const char *input_script = getenv("CLASH95_INPUT_SCRIPT");
+    const char *world_input_script = getenv("CLASH95_WORLD_INPUT_SCRIPT");
+
+    enabled = (input_script && *input_script) || (world_input_script && *world_input_script);
+    checked = 1;
+  }
+  return enabled;
+}
 
 static int PlatformSurfaceIsWindowDeviceContext(const struct SDL_Surface *surface)
 {
@@ -2401,7 +2462,8 @@ static void PlatformPumpHostEvents(void)
     return;
   while ( SDL_PollEvent(&event) )
     PlatformHandleHostEvent(&event);
-  PlatformSyncPolledMouseState();
+  if ( !Platform_ShouldSuppressPolledMouseSyncForScript() )
+    PlatformSyncPolledMouseState();
 }
 
 ATOM __stdcall RegisterClassA(const WNDCLASSA *lpWndClass)
@@ -3217,6 +3279,7 @@ void Platform_ResetInputFallbackState(void)
   g_platform_debug_mouse_primary_pulse_reads = 0;
   g_platform_debug_mouse_secondary_pulse_reads = 0;
   memset(g_platform_host_keyboard_state, 0, sizeof(g_platform_host_keyboard_state));
+  memset(g_platform_debug_keyboard_pulse_reads, 0, sizeof(g_platform_debug_keyboard_pulse_reads));
 }
 
 void Platform_DebugPrimeInputFallbackMouseState(int x, int y, int primary_down, int secondary_down)
@@ -3224,12 +3287,13 @@ void Platform_DebugPrimeInputFallbackMouseState(int x, int y, int primary_down, 
   /*
    * Keep the contained menu probe on the same fallback-input corridor the SDL
    * seam already uses. This only seeds the next `Platform_ReadInputFallbackState`
-   * sample; it does not bypass the recovered `DD_Pump -> InputBackend_PollState`
-   * path.
+   * sample with host-pixel movement; the recovered input backend applies its
+   * normal sensitivity scaling in `DD_Pump -> InputBackend_PollState`.
    */
   g_platform_host_mouse_delta_x += x - g_platform_host_mouse_x;
   g_platform_host_mouse_delta_y += y - g_platform_host_mouse_y;
-  g_platform_host_mouse_delta_is_host_pixels = 0;
+  if ( x != g_platform_host_mouse_x || y != g_platform_host_mouse_y )
+    g_platform_host_mouse_delta_is_host_pixels = 1;
   g_platform_host_mouse_x = x;
   g_platform_host_mouse_y = y;
   g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
@@ -3246,7 +3310,8 @@ void Platform_DebugPrimeInputFallbackMouseDelta(int delta_x, int delta_y, int pr
    */
   g_platform_host_mouse_delta_x += delta_x;
   g_platform_host_mouse_delta_y += delta_y;
-  g_platform_host_mouse_delta_is_host_pixels = 0;
+  if ( delta_x || delta_y )
+    g_platform_host_mouse_delta_is_host_pixels = 1;
   g_platform_host_mouse_x += delta_x;
   g_platform_host_mouse_y += delta_y;
   g_platform_host_mouse_primary = primary_down ? (signed char)0x80 : 0;
@@ -3265,6 +3330,108 @@ void Platform_DebugPrimeInputFallbackMousePulse(
   g_platform_debug_mouse_secondary_pulse_reads = secondary_down && read_count > 0 ? read_count : 0;
 }
 
+void Platform_DebugPrimeInputFallbackKeyPulse(int scan_code, int read_count)
+{
+  if ( scan_code < 0
+    || scan_code >= PLATFORM_DEBUG_KEYBOARD_PULSE_COUNT
+    || scan_code >= (int)sizeof(g_platform_host_keyboard_state)
+    || read_count <= 0 )
+    return;
+  g_platform_host_keyboard_state[scan_code] = (signed char)0x80;
+  g_platform_debug_keyboard_pulse_reads[scan_code] = read_count;
+}
+
+static void Platform_RunInputScriptStep(void)
+{
+  char line[256];
+  const char *script_path;
+
+  if ( !g_platform_input_script_initialized )
+  {
+    g_platform_input_script_initialized = 1;
+    script_path = getenv("CLASH95_INPUT_SCRIPT");
+    if ( script_path && *script_path )
+      g_platform_input_script_file = fopen(script_path, "r");
+  }
+  if ( g_platform_input_script_wait_reads > 0 )
+  {
+    --g_platform_input_script_wait_reads;
+    return;
+  }
+  while ( g_platform_input_script_file && fgets(line, sizeof(line), g_platform_input_script_file) )
+  {
+    char command[32];
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
+    int e = 0;
+    int fields;
+
+    fields = sscanf(line, " %31s %d %d %d %d %d", command, &a, &b, &c, &d, &e);
+    if ( fields <= 0 || command[0] == '#' )
+      continue;
+    if ( strcmp(command, "wait") == 0 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      if ( fields >= 2 && a > 0 )
+        g_platform_input_script_wait_reads = a - 1;
+      return;
+    }
+    if ( strcmp(command, "move") == 0 && fields >= 3 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMouseState(a, b, 0, 0);
+      return;
+    }
+    if ( strcmp(command, "click") == 0 && fields >= 3 )
+    {
+      int reads = fields >= 4 && c > 0 ? c : 2;
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMousePulse(
+        a - g_platform_host_mouse_x,
+        b - g_platform_host_mouse_y,
+        1,
+        0,
+        reads);
+      return;
+    }
+    if ( strcmp(command, "down") == 0 && fields >= 3 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMouseState(a, b, 1, 0);
+      return;
+    }
+    if ( strcmp(command, "up") == 0 && fields >= 3 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMouseState(a, b, 0, 0);
+      return;
+    }
+    if ( strcmp(command, "delta") == 0 && fields >= 3 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMouseDelta(a, b, fields >= 4 ? c : 0, fields >= 5 ? d : 0);
+      return;
+    }
+    if ( strcmp(command, "pulse") == 0 && fields >= 6 )
+    {
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackMousePulse(a, b, c, d, e);
+      return;
+    }
+    if ( strcmp(command, "key") == 0 && fields >= 2 )
+    {
+      int reads = fields >= 3 && b > 0 ? b : 2;
+      PlatformTraceInputScriptCommand(command, a, b, c, d, e);
+      Platform_DebugPrimeInputFallbackKeyPulse(a, reads);
+      return;
+    }
+  }
+  if ( g_platform_input_script_file && feof(g_platform_input_script_file) )
+    clearerr(g_platform_input_script_file);
+}
+
 void Platform_ReadInputFallbackState(
   int *mouse_delta_x,
   int *mouse_delta_y,
@@ -3275,6 +3442,7 @@ void Platform_ReadInputFallbackState(
   int *mouse_delta_is_host_pixels)
 {
   PlatformPumpHostEvents();
+  Platform_RunInputScriptStep();
   if ( mouse_delta_x )
     *mouse_delta_x = g_platform_host_mouse_delta_x;
   if ( mouse_delta_y )
@@ -3287,15 +3455,22 @@ void Platform_ReadInputFallbackState(
     {
       *mouse_button_primary = g_platform_host_mouse_primary;
       g_platform_host_mouse_primary_pending_press = 0;
+      g_platform_host_mouse_primary_pending_hold_reads = 0;
     }
     else if ( g_platform_host_mouse_primary_pending_press > 0 )
     {
       *mouse_button_primary = (signed char)0x80;
-      --g_platform_host_mouse_primary_pending_press;
+      if ( ++g_platform_host_mouse_primary_pending_hold_reads
+        >= PlatformReadNonNegativeIntEnv("CLASH95_HOST_CLICK_PULSE_READS", 3) )
+      {
+        g_platform_host_mouse_primary_pending_hold_reads = 0;
+        --g_platform_host_mouse_primary_pending_press;
+      }
     }
     else
     {
       *mouse_button_primary = 0;
+      g_platform_host_mouse_primary_pending_hold_reads = 0;
     }
   }
   if ( mouse_button_secondary )
@@ -3304,15 +3479,22 @@ void Platform_ReadInputFallbackState(
     {
       *mouse_button_secondary = g_platform_host_mouse_secondary;
       g_platform_host_mouse_secondary_pending_press = 0;
+      g_platform_host_mouse_secondary_pending_hold_reads = 0;
     }
     else if ( g_platform_host_mouse_secondary_pending_press > 0 )
     {
       *mouse_button_secondary = (signed char)0x80;
-      --g_platform_host_mouse_secondary_pending_press;
+      if ( ++g_platform_host_mouse_secondary_pending_hold_reads
+        >= PlatformReadNonNegativeIntEnv("CLASH95_HOST_CLICK_PULSE_READS", 3) )
+      {
+        g_platform_host_mouse_secondary_pending_hold_reads = 0;
+        --g_platform_host_mouse_secondary_pending_press;
+      }
     }
     else
     {
       *mouse_button_secondary = 0;
+      g_platform_host_mouse_secondary_pending_hold_reads = 0;
     }
   }
   if ( keyboard_state && keyboard_state_size > 0 )
@@ -3324,9 +3506,31 @@ void Platform_ReadInputFallbackState(
       copy_size = sizeof(g_platform_host_keyboard_state);
     memcpy(keyboard_state, g_platform_host_keyboard_state, copy_size);
   }
+  {
+    int scan_code;
+    int pulse_count;
+
+    pulse_count = PLATFORM_DEBUG_KEYBOARD_PULSE_COUNT;
+    if ( pulse_count > (int)sizeof(g_platform_host_keyboard_state) )
+      pulse_count = (int)sizeof(g_platform_host_keyboard_state);
+    for ( scan_code = 0; scan_code < pulse_count; ++scan_code )
+    {
+      if ( g_platform_debug_keyboard_pulse_reads[scan_code] > 0
+        && --g_platform_debug_keyboard_pulse_reads[scan_code] == 0 )
+      {
+        g_platform_host_keyboard_state[scan_code] = 0;
+      }
+    }
+  }
   g_platform_host_mouse_delta_x = 0;
   g_platform_host_mouse_delta_y = 0;
   g_platform_host_mouse_delta_is_host_pixels = 0;
+  if ( PlatformTraceHostClickPulses() )
+    fprintf(stderr, "[platform_sdl] host-click-pulse: primary=%d secondary=%d primary_pending=%d secondary_pending=%d\n",
+      (int)g_platform_host_mouse_primary,
+      (int)g_platform_host_mouse_secondary,
+      g_platform_host_mouse_primary_pending_press,
+      g_platform_host_mouse_secondary_pending_press);
   if ( g_platform_debug_mouse_primary_pulse_reads > 0 && --g_platform_debug_mouse_primary_pulse_reads == 0 )
     g_platform_host_mouse_primary = 0;
   if ( g_platform_debug_mouse_secondary_pulse_reads > 0 && --g_platform_debug_mouse_secondary_pulse_reads == 0 )

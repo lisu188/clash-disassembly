@@ -1,0 +1,4 @@
+# Probe whether enabling shoot mode before defence changes stack6 tactical state.
+next-unit
+shoot
+defence

@@ -1,0 +1,96 @@
+# Mission 03 survival route.
+# Objective evidence: Mission_CheckObjectiveComplete completes when GAME_TURN_COUNTER > 10.
+wait_log 60 mission_load_done selected=-1 a=3
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission03-start
+nonblank mission03-start
+
+click 500 2 0.18 1.0 end-survival-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-1-skip-1
+click 320 240 0.12 0.65 post-survival-turn-1-skip-2
+click 320 240 0.12 0.65 post-survival-turn-1-skip-3
+click 320 240 0.12 0.65 post-survival-turn-1-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+screenshot mission03-turn-2
+nonblank mission03-turn-2
+
+click 500 2 0.18 1.0 end-survival-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-2-skip-1
+click 320 240 0.12 0.65 post-survival-turn-2-skip-2
+click 320 240 0.12 0.65 post-survival-turn-2-skip-3
+click 320 240 0.12 0.65 post-survival-turn-2-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=3
+
+click 500 2 0.18 1.0 end-survival-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-3-skip-1
+click 320 240 0.12 0.65 post-survival-turn-3-skip-2
+click 320 240 0.12 0.65 post-survival-turn-3-skip-3
+click 320 240 0.12 0.65 post-survival-turn-3-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=4
+
+click 500 2 0.18 1.0 end-survival-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-4-skip-1
+click 320 240 0.12 0.65 post-survival-turn-4-skip-2
+click 320 240 0.12 0.65 post-survival-turn-4-skip-3
+click 320 240 0.12 0.65 post-survival-turn-4-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=5
+
+click 500 2 0.18 1.0 end-survival-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-5-skip-1
+click 320 240 0.12 0.65 post-survival-turn-5-skip-2
+click 320 240 0.12 0.65 post-survival-turn-5-skip-3
+click 320 240 0.12 0.65 post-survival-turn-5-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=6
+screenshot mission03-turn-6
+nonblank mission03-turn-6
+
+click 500 2 0.18 1.0 end-survival-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-6-skip-1
+click 320 240 0.12 0.65 post-survival-turn-6-skip-2
+click 320 240 0.12 0.65 post-survival-turn-6-skip-3
+click 320 240 0.12 0.65 post-survival-turn-6-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=7
+
+click 500 2 0.18 1.0 end-survival-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-7-skip-1
+click 320 240 0.12 0.65 post-survival-turn-7-skip-2
+click 320 240 0.12 0.65 post-survival-turn-7-skip-3
+click 320 240 0.12 0.65 post-survival-turn-7-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=8
+
+click 500 2 0.18 1.0 end-survival-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-8-skip-1
+click 320 240 0.12 0.65 post-survival-turn-8-skip-2
+click 320 240 0.12 0.65 post-survival-turn-8-skip-3
+click 320 240 0.12 0.65 post-survival-turn-8-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=9
+
+click 500 2 0.18 1.0 end-survival-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-9-skip-1
+click 320 240 0.12 0.65 post-survival-turn-9-skip-2
+click 320 240 0.12 0.65 post-survival-turn-9-skip-3
+click 320 240 0.12 0.65 post-survival-turn-9-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=10
+screenshot mission03-turn-10
+nonblank mission03-turn-10
+
+click 500 2 0.18 1.0 end-survival-turn-10
+wait 4.0
+click 320 240 0.12 0.65 post-survival-turn-10-skip-1
+click 320 240 0.12 0.65 post-survival-turn-10-skip-2
+click 320 240 0.12 0.65 post-survival-turn-10-skip-3
+click 320 240 0.12 0.65 post-survival-turn-10-skip-4
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=11
+wait_log 45 mission_objective_complete
+screenshot mission03-complete
+nonblank mission03-complete
+expect_log mission_objective_complete

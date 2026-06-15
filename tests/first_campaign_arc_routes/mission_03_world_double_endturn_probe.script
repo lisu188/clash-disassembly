@@ -1,0 +1,14 @@
+# Mission 03 end-turn probe using repeated recovered world-input pulses.
+wait_log 60 mission_load_done selected=-1 a=3
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission03-world-double-endturn-start
+nonblank mission03-world-double-endturn-start
+world_click 500 2 2 0.5 world-endturn-position-top
+world_click 500 2 4 1.0 world-endturn-trigger-top-menu
+world_click 500 2 4 1.0 world-endturn-close-top-menu
+wait 4.0
+world_click 320 240 2 0.5 world-post-endturn-skip-1
+world_click 320 240 2 0.5 world-post-endturn-skip-2
+wait_log 120 playgame_before_human_turn selected=-1 a=0 b=2
+screenshot mission03-world-double-turn-2
+nonblank mission03-world-double-turn-2

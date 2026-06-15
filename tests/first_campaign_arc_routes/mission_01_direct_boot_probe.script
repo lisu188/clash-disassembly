@@ -1,0 +1,9 @@
+# Quarantined direct-boot repair probe for campaign mission 01.
+# This validates mission loading, human turn entry, objective diagnostics, and
+# frame presentation. It is not a completion route and is not valid acceptance.
+wait_log 60 mission_load_done selected=-1 a=1
+wait_log 60 playgame_before_human_turn
+wait_log 30 mission_objective_blocked selected=1
+screenshot mission01-direct-boot
+nonblank mission01-direct-boot
+expect_log mission_load_done selected=-1 a=1

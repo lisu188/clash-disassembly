@@ -1,0 +1,291 @@
+# Mission 02 direct repair probe: select Alan's main stack near the start,
+# pan to Treg Rock, and issue an authentic enemy-castle click.
+wait_log 60 mission_load_done selected=-1 a=2
+wait_log 60 playgame_before_human_turn
+nonblank mission02-start
+
+# Initial stacks sit under the minimap overlay. Use the recovered Next Unit
+# widget instead of a direct tile click; stack 1 is the first active stack with AP.
+click 496 416 0.22 0.8 next-unit-main-stack
+wait_log 20 next_unit_selected selected=1 a=98 b=25
+
+# Stage the long march instead of asking the 100-slot path buffer to hold the
+# entire route to Treg Rock at once. The direct castle path's raw waypoints
+# include (89,45), so use that first route-backed waypoint.
+click 570 107 0.18 0.8 minimap-waypoint-89-45
+wait_log 20 minimap_update selected=1 a=84 b=41
+
+# With left=84 top=41, waypoint (89,45) is under roughly (352,272).
+# The window-local click lands one pixel high/left, so request x=353/y=273.
+click 353 273 0.18 2.0 click-waypoint-89-45
+wait_log 30 tile_input cursor=353,272 tile=89,45
+wait_log 30 move_order_track_result selected=1 a=89 b=45
+click 353 273 0.18 2.5 confirm-waypoint-89-45
+wait_log 45 unit_move_after_path_state selected=1
+nonblank mission02-after-first-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-1
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-1-skip-1
+click 320 240 0.12 0.65 post-end-turn-1-skip-2
+click 320 240 0.12 0.65 post-end-turn-1-skip-3
+click 320 240 0.12 0.65 post-end-turn-1-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=2
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-2
+wait_log 20 next_unit_selected selected=1 a=94 b=26
+click 320 240 0.18 3.0 continue-waypoint-89-45
+wait_log 60 unit_move_after_path_state selected=1 a=90 b=30
+nonblank mission02-after-second-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-2
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-2-skip-1
+click 320 240 0.12 0.65 post-end-turn-2-skip-2
+click 320 240 0.12 0.65 post-end-turn-2-skip-3
+click 320 240 0.12 0.65 post-end-turn-2-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-3
+wait_log 20 next_unit_selected selected=1 a=90 b=30
+click 320 240 0.18 3.0 continue-waypoint-89-45-turn-3
+wait_log 60 unit_move_after_path_state selected=1 a=90 b=37
+nonblank mission02-after-third-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-3-skip-1
+click 320 240 0.12 0.65 post-end-turn-3-skip-2
+click 320 240 0.12 0.65 post-end-turn-3-skip-3
+click 320 240 0.12 0.65 post-end-turn-3-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=4
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-4
+wait_log 20 next_unit_selected selected=1 a=90 b=37
+click 320 240 0.18 3.0 continue-waypoint-89-45-turn-4
+wait_log 60 unit_move_after_path_state selected=1 a=89 b=44
+
+click 500 2 0.18 1.0 end-human-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-4-skip-1
+click 320 240 0.12 0.65 post-end-turn-4-skip-2
+click 320 240 0.12 0.65 post-end-turn-4-skip-3
+click 320 240 0.12 0.65 post-end-turn-4-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=5
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-5
+wait_log 20 next_unit_selected selected=1 a=89 b=44
+click 320 240 0.18 2.5 continue-waypoint-89-45-turn-5
+wait_log 60 unit_move_after_path_state selected=1 a=89 b=45
+nonblank mission02-at-waypoint-89-45
+
+# Fresh route segment toward the next raw waypoint from the recovered direct
+# castle path. Minimap mapping is (x - 401) / 2, (y - 23) / 2, so this centers
+# the viewport at left=77/top=59.
+click 555 142 0.18 0.8 minimap-waypoint-82-63
+wait_log 20 minimap_update selected=1 a=77 b=59
+click 353 273 0.18 2.0 click-waypoint-82-63
+wait_log 30 tile_input cursor=353,272 tile=82,63
+wait_log 30 move_order_track_result selected=1 a=82 b=63
+click 353 273 0.18 5.0 confirm-waypoint-82-63
+wait 3.0
+nonblank mission02-after-82-63-first-leg
+
+click 500 2 0.18 1.0 end-human-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-5-skip-1
+click 320 240 0.12 0.65 post-end-turn-5-skip-2
+click 320 240 0.12 0.65 post-end-turn-5-skip-3
+click 320 240 0.12 0.65 post-end-turn-5-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=6
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-6
+wait_log 20 next_unit_selected selected=1 a=86 b=50
+click 320 240 0.18 3.0 continue-waypoint-82-63-turn-6
+wait_log 60 unit_move_after_path_state selected=1 a=86 b=58
+nonblank mission02-after-82-63-second-leg
+
+click 500 2 0.18 1.0 end-human-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-6-skip-1
+click 320 240 0.12 0.65 post-end-turn-6-skip-2
+click 320 240 0.12 0.65 post-end-turn-6-skip-3
+click 320 240 0.12 0.65 post-end-turn-6-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=7
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-7
+wait_log 20 next_unit_selected selected=1 a=86 b=58
+click 320 240 0.18 3.0 continue-waypoint-82-63-turn-7
+wait_log 60 unit_move_after_path_state selected=1 a=84 b=60
+nonblank mission02-after-82-63-third-leg
+
+click 500 2 0.18 1.0 end-human-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-7-skip-1
+click 320 240 0.12 0.65 post-end-turn-7-skip-2
+click 320 240 0.12 0.65 post-end-turn-7-skip-3
+click 320 240 0.12 0.65 post-end-turn-7-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=8
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-8
+wait_log 20 next_unit_selected selected=1 a=84 b=60
+click 320 240 0.18 2.5 continue-waypoint-82-63-turn-8
+wait_log 60 unit_move_after_path_state selected=1 a=82 b=63
+nonblank mission02-at-waypoint-82-63
+
+# Continue along the recovered direct-castle path to the next staging point.
+click 512 154 0.18 0.8 minimap-waypoint-60-69
+wait_log 20 minimap_update selected=1 a=55 b=65
+click 353 273 0.18 2.0 click-waypoint-60-69
+wait_log 30 tile_input cursor=352,273 tile=60,69
+wait_log 30 move_order_track_result selected=1 a=60 b=69
+click 353 273 0.05 0.8 confirm-waypoint-60-69
+wait 3.0
+nonblank mission02-after-60-69-first-leg
+
+click 500 2 0.18 1.0 end-human-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-8-skip-1
+click 320 240 0.12 0.65 post-end-turn-8-skip-2
+click 320 240 0.12 0.65 post-end-turn-8-skip-3
+click 320 240 0.12 0.65 post-end-turn-8-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=9
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-9
+wait_log 20 next_unit_selected selected=1 a=81 b=63
+click 320 240 0.18 3.0 continue-waypoint-60-69-turn-9
+wait_log 60 unit_move_after_path_state selected=1 a=76 b=63
+nonblank mission02-after-60-69-second-leg
+
+click 500 2 0.18 1.0 end-human-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-9-skip-1
+click 320 240 0.12 0.65 post-end-turn-9-skip-2
+click 320 240 0.12 0.65 post-end-turn-9-skip-3
+click 320 240 0.12 0.65 post-end-turn-9-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=10
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-10
+wait_log 20 next_unit_selected selected=1 a=76 b=63
+click 320 240 0.18 3.0 continue-waypoint-60-69-turn-10
+wait_log 60 unit_move_after_path_state selected=1 a=72 b=63
+nonblank mission02-after-60-69-third-leg
+
+click 500 2 0.18 1.0 end-human-turn-10
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-10-skip-1
+click 320 240 0.12 0.65 post-end-turn-10-skip-2
+click 320 240 0.12 0.65 post-end-turn-10-skip-3
+click 320 240 0.12 0.65 post-end-turn-10-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=11
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-11
+wait_log 20 next_unit_selected selected=1 a=72 b=63
+click 320 240 0.18 3.0 continue-waypoint-60-69-turn-11
+wait_log 60 unit_move_after_path_state selected=1 a=70 b=63
+nonblank mission02-after-60-69-fourth-leg
+
+click 500 2 0.18 1.0 end-human-turn-11
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-11-skip-1
+click 320 240 0.12 0.65 post-end-turn-11-skip-2
+click 320 240 0.12 0.65 post-end-turn-11-skip-3
+click 320 240 0.12 0.65 post-end-turn-11-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=12
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-12
+wait_log 20 next_unit_selected selected=1 a=70 b=63
+click 320 240 0.18 3.0 continue-waypoint-60-69-turn-12
+wait_log 60 unit_move_after_path_state selected=1 a=67 b=65
+nonblank mission02-after-60-69-fifth-leg
+
+click 500 2 0.18 1.0 end-human-turn-12
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-12-skip-1
+click 320 240 0.12 0.65 post-end-turn-12-skip-2
+click 320 240 0.12 0.65 post-end-turn-12-skip-3
+click 320 240 0.12 0.65 post-end-turn-12-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=13
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-13
+wait_log 20 next_unit_selected selected=1 a=67 b=65
+click 320 240 0.18 3.0 continue-waypoint-60-69-turn-13
+wait_log 60 unit_move_after_path_state selected=1 a=64 b=66
+nonblank mission02-after-60-69-sixth-leg
+
+click 500 2 0.18 1.0 end-human-turn-13
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-13-skip-1
+click 320 240 0.12 0.65 post-end-turn-13-skip-2
+click 320 240 0.12 0.65 post-end-turn-13-skip-3
+click 320 240 0.12 0.65 post-end-turn-13-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=14
+
+wait_log 20 human_turn_enter idx=1 owner=0 tile=64,66 first=0 slots=8 first_ap=0
+click 500 2 0.18 1.0 end-human-turn-14-rest-main-stack
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-14-skip-1
+click 320 240 0.12 0.65 post-end-turn-14-skip-2
+click 320 240 0.12 0.65 post-end-turn-14-skip-3
+click 320 240 0.12 0.65 post-end-turn-14-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=15
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-15
+wait_log 20 next_unit_selected selected=1 a=64 b=66
+click 320 240 0.18 2.5 continue-waypoint-60-69-turn-15
+wait_log 60 unit_move_after_path_state selected=1 a=62 b=68
+nonblank mission02-after-60-69-seventh-leg
+
+click 500 2 0.18 1.0 end-human-turn-15
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-15-skip-1
+click 320 240 0.12 0.65 post-end-turn-15-skip-2
+click 320 240 0.12 0.65 post-end-turn-15-skip-3
+click 320 240 0.12 0.65 post-end-turn-15-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=16
+
+wait_log 20 human_turn_enter idx=1 owner=0 tile=62,68 first=0 slots=8 first_ap=0
+click 500 2 0.18 1.0 end-human-turn-16-rest-main-stack
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-16-skip-1
+click 320 240 0.12 0.65 post-end-turn-16-skip-2
+click 320 240 0.12 0.65 post-end-turn-16-skip-3
+click 320 240 0.12 0.65 post-end-turn-16-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=17
+
+click 496 416 0.22 0.8 next-unit-main-stack-turn-17
+wait_log 20 next_unit_selected selected=1 a=62 b=68
+click 320 240 0.18 2.5 continue-waypoint-60-69-turn-17
+wait_log 60 unit_move_after_path_state selected=1 a=60 b=69
+nonblank mission02-at-waypoint-60-69
+
+click 475 153 0.18 0.8 minimap-treg-rock-castle
+wait_log 20 minimap_update selected=1 a=37 b=65
+click 320 240 0.18 0.8 click-treg-rock-castle
+wait_log 30 tile_input cursor=320,240 tile=41,68
+wait_log 30 building_path_ready selected=1
+click 514 156 0.18 0.8 minimap-return-main-stack-from-castle
+wait_log 20 minimap_update selected=1 a=56 b=66
+click 320 240 0.18 1.0 execute-treg-rock-path-turn-17
+wait_log 30 tile_input cursor=320,240 tile=60,69
+wait 0.8
+nonblank mission02-treg-rock-path-queued-no-ap
+
+click 500 2 0.18 1.0 end-human-turn-17-after-castle-path
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-17-skip-1
+click 320 240 0.12 0.65 post-end-turn-17-skip-2
+click 320 240 0.12 0.65 post-end-turn-17-skip-3
+click 320 240 0.12 0.65 post-end-turn-17-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=18
+
+click 320 240 0.18 0.8 select-main-stack-turn-18
+wait_log 20 selected_stack_changed selected=1 a=60 b=69
+click 320 240 0.18 2.5 execute-treg-rock-path-turn-18
+wait 1.0
+nonblank mission02-after-treg-rock-path-turn-18-probe
+
+expect_log tile_input cursor=353,272 tile=89,45
+expect_log tile_input cursor=353,272 tile=82,63
+expect_log tile_input cursor=352,273 tile=60,69
+expect_log tile_input cursor=320,240 tile=41,68

@@ -1,0 +1,11 @@
+# Mission 01 shrine-route calibration probe.
+wait_log 60 mission_load_done selected=-1 a=1
+wait_log 60 playgame_before_human_turn
+world_click 565 59 12 0.8 minimap-probe
+world_wait 12 0.3 minimap-settle
+world_click 320 240 8 0.6 center-tile-probe
+world_wait 12 0.3 post-center
+screenshot mission01-shrine-probe
+nonblank mission01-shrine-probe
+expect_log minimap_update
+expect_log tile_input

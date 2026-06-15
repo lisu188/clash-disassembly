@@ -1,0 +1,13 @@
+# Mission 04 minimap visibility/toggle probe.
+wait_log 60 mission_load_done selected=-1 a=4
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission04-minimap-toggle-start
+nonblank mission04-minimap-toggle-start
+
+# Scan code 50 is the recovered minimap visibility toggle in the world loop.
+world_key 50 12 0.8 toggle-minimap-visible
+world_wait 24 0.6 settle-after-minimap-toggle
+click 503 153 0.18 1.0 minimap-target-56-69
+wait_log 30 minimap_update
+screenshot mission04-after-minimap-toggle
+nonblank mission04-after-minimap-toggle

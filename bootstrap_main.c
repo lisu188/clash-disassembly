@@ -1,8 +1,12 @@
 #include "platform_sdl.h"
 
+#include <execinfo.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /*
  * Asm-backed bootstrap for the missing early startup slice:
@@ -130,6 +134,7 @@ signed int sub_44C400(DWORD a1, double a2);
 signed int Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
 int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4);
+void Scenario_LoadMissionByIndex(int mission_index, double a2);
 int App_Shutdown(void);
 HWND Platform_CreateMainWindow(HINSTANCE a1, int a2);
 BOOL Input_MousePresent(void);
@@ -139,6 +144,9 @@ int __stdcall CSS_SetDeviceSearch(int a1);
 signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4);
 int __stdcall CSS_StopSound(int a1, int a2);
 void Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
+extern int dword_519F0C;
+extern int dword_519F08;
+extern int dword_54DBBC;
 
 int _no_support_loaded(void)
 {
@@ -158,6 +166,24 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode);
 static void Bootstrap_TraceMenuProbe(const char *step)
 {
   (void)step;
+}
+
+static void Bootstrap_TraceDirectMission(const char *step)
+{
+  if ( !getenv("CLASH95_TRACE_BOOTSTRAP") )
+    return;
+  fprintf(stderr, "[bootstrap] %s\n", step);
+  fflush(stderr);
+}
+
+static void Bootstrap_ResetRecoveredParserAllocatorForDirectMission(void)
+{
+  if ( !dword_519F0C )
+    return;
+  Bootstrap_TraceDirectMission("direct-campaign-parser-allocator-reset");
+  dword_54DBBC = 0;
+  dword_519F08 = 0;
+  dword_519F0C = 0;
 }
 
 static int Bootstrap_GetMenuProbeAutoClickIndex(void)
@@ -194,6 +220,27 @@ static int Bootstrap_ShouldExitAfterCapturePhase(const char *phase)
 {
   (void)phase;
   return 0;
+}
+
+static void Bootstrap_CrashBacktraceHandler(int signal_number)
+{
+  void *frames[64];
+  int frame_count;
+
+  fprintf(stderr, "[bootstrap] crash_signal=%d\n", signal_number);
+  frame_count = backtrace(frames, (int)(sizeof(frames) / sizeof(frames[0])));
+  backtrace_symbols_fd(frames, frame_count, STDERR_FILENO);
+  _exit(128 + signal_number);
+}
+
+static void Bootstrap_InstallCrashBacktraceHandler(void)
+{
+  if ( !getenv("CLASH95_CRASH_BACKTRACE") )
+    return;
+  signal(SIGSEGV, Bootstrap_CrashBacktraceHandler);
+  signal(SIGABRT, Bootstrap_CrashBacktraceHandler);
+  signal(SIGBUS, Bootstrap_CrashBacktraceHandler);
+  signal(SIGILL, Bootstrap_CrashBacktraceHandler);
 }
 
 static int Bootstrap_GetMenuProbeWidgetClickCandidate(
@@ -1264,11 +1311,52 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
 
     if ( dword_51D01C )
     {
+      int saved_skip_intro_avi;
+      int mission_index;
+
+      saved_skip_intro_avi = g_BootstrapSkipIntroAviPlayback;
+      if ( getenv("CLASH95_SKIP_BOOT_AVI") )
+        g_BootstrapSkipIntroAviPlayback = 1;
+      Bootstrap_TraceDirectMission("direct-mission-logo");
       Video_Avi_playIn("logo", 0, 1, 0, 1, 1);
+      g_BootstrapSkipIntroAviPlayback = saved_skip_intro_avi;
+      mission_index = Bootstrap_ParseIntroMissionIndex(lpCommandLine);
+      if ( getenv("CLASH95_DIRECT_CAMPAIGN_MISSION") )
+      {
+        if ( getenv("CLASH95_SKIP_MISSION_BRIEFING") )
+        {
+          Bootstrap_TraceDirectMission("direct-campaign-mission-init");
+          Bootstrap_ResetRecoveredParserAllocatorForDirectMission();
+          WorldMap_Initialize((char)mission_index, 0);
+          if ( !dword_54DBA8 )
+          {
+            Bootstrap_TraceDirectMission("direct-campaign-rules-slab-init");
+            sub_4725B0(0, 0);
+          }
+          Bootstrap_TraceDirectMission("direct-campaign-rules-index-init");
+          sub_482260();
+          Bootstrap_TraceDirectMission("direct-campaign-parser-bootstrap");
+          sub_491B10();
+          Bootstrap_TraceDirectMission("direct-campaign-mission-load");
+          Scenario_LoadMissionByIndex(mission_index, 0.0);
+          Bootstrap_TraceDirectMission("direct-campaign-mission-playgame");
+          PlayGame(0, (char)mission_index, 0, 0, 0.0);
+          Bootstrap_TraceDirectMission("direct-campaign-mission-playgame-return");
+          return;
+        }
+        Bootstrap_TraceDirectMission("direct-campaign-mission-play");
+        Scenario_LoadMissionByIndexAndPlay((char *)(uintptr_t)(unsigned int)mission_index, -1, 0, 0.0);
+        Bootstrap_TraceDirectMission("direct-campaign-mission-return");
+        return;
+      }
+      Bootstrap_TraceDirectMission("direct-mission-worldmap-init");
       WorldMap_Initialize(0, 0);
-      Scenario_LoadAllAiMultiplayerMapAndInitView(Bootstrap_ParseIntroMissionIndex(lpCommandLine));
+      Bootstrap_TraceDirectMission("direct-mission-load");
+      Scenario_LoadAllAiMultiplayerMapAndInitView(mission_index);
       dword_5188B0 = 0;
+      Bootstrap_TraceDirectMission("direct-mission-playgame");
       PlayGame(0, 0, 0, 0, 0.0);
+      Bootstrap_TraceDirectMission("direct-mission-playgame-return");
     }
     else
     {
@@ -1322,6 +1410,7 @@ static int Bootstrap_RunPlatformWindowLoop(void)
 
 int main(int argc, char **argv)
 {
+  Bootstrap_InstallCrashBacktraceHandler();
   Bootstrap_BuildCommandLineFromArgv(argc, argv);
   return App_WinMain(GetModuleHandleA(0), 0, g_boot_command_line, 0);
 }

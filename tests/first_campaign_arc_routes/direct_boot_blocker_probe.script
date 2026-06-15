@@ -1,0 +1,9 @@
+# Shared quarantined direct-boot repair probe for incomplete campaign routes.
+# The generic route runner expands {mission_id} and {mission_number}.
+# This is not a completion route and is not valid final acceptance.
+wait_log 60 mission_load_done selected=-1 a={mission_number}
+wait_log 60 playgame_before_human_turn
+wait_log 45 mission_objective_blocked selected={mission_number}
+screenshot mission{mission_id}-direct-boot
+nonblank mission{mission_id}-direct-boot
+expect_log mission_load_done selected=-1 a={mission_number}

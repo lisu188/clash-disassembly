@@ -1,0 +1,4 @@
+# Probe whether enabling charge mode before defence changes stack6 tactical state.
+next-unit
+charge
+defence
