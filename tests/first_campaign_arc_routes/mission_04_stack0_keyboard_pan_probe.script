@@ -110,5 +110,7 @@ battle_click 577 386 4 1.0 select-light-infantry-after-peasant
 battle_key 205 80 1.0 pan-battle-right-to-gate
 battle_click 128 240 4 2.0 attack-gate-10-3
 wait_log 60 battle_wall_attack_return
+battle_click 288 240 4 2.0 attack-gate-10-3-repeat
+wait_log 60 wall_after=0
 screenshot mission04-gate-probe
 nonblank mission04-gate-probe

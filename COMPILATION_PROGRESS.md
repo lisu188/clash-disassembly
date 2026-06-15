@@ -1,5 +1,17 @@
 # Compilation Progress
 
+## 2026-06-15 - Mission 04 Gate Wall Factor Recovery
+
+- Current frontier: mission-04 castle capture after a breached gate; the route now gets through repeated tactical wall attacks, but battle exit, castle ownership transfer, and `mission_objective_complete` remain pending.
+- Blockers removed: recovered the strided wall-factor data at `word_513A78` from asm data bytes around `0x513A78` so wall kind `1` no longer reads a zero factor from the one-element C declaration; repaired the reached `UnitBattle_AttackWall` damage calculation to use the asm-backed full 32-bit product divided by 256 instead of the decompiler's narrowed 16-bit product.
+- Route advanced: `tests/first_campaign_arc_routes/mission_04_stack0_keyboard_pan_probe.script` now repeats the authentic gate click after the first attack recenters the battle viewport, retargeting the second click to the gate's new screen position and requiring `wall_after=0`.
+- Diagnostics refined: trace-gated `UnitBattle_AttackWall` output now includes unit type, true AP before/after, wall kind, wall factor, effective wall attack, and wall damage so future tactical route failures show whether arithmetic, table lookup, or input targeting is blocking progress.
+- Compile/link/runtime status: `make clash95_bootstrap` passed; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --output-on-failure -R clash95_campaign_route_04_regression` passed after the breach-route update.
+- Route evidence: latest retained mission-04 artifact `artifacts/campaign-routes/mission-04/20260615T195525Z-133642` logs two authentic wall attacks on tile `(10,3)`: first `wall_before=100 wall_after=14 wall_kind=1 wall_factor=341 effective_wall_attack=257 wall_damage=342`, then `wall_before=14 wall_after=0 gate_state=0`.
+- Highest authentic runtime milestone reached: direct mission 04 loads, marches stack0 to Hopenberg, enters the manual castle battle, damages and then breaches the active gate through recovered tactical input/control flow, and retains nonblank/progressive tactical frames.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: castle interior movement/combat after gate breach, battle-loop exit, `Unit_CaptureBuilding`, world-map reload, and mission-04 objective completion remain unrecovered; the route is still `partial`.
+
 ## 2026-06-15 - Opt-In Soak Harness And Route Frame Sampling
 
 - Current frontier: durability-road infrastructure for longer recovered-runtime sessions, while mission 04 remains the active route target after the first authentic gate-wall attack.
