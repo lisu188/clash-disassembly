@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Documentation Consolidation Note
+
+- No semantic renames in this batch.
+- Moved current reverse-engineering policy to `docs/REVERSE_ENGINEERING.md` and preserved historical rename evidence under `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
+- Updated current-facing references so future rename/stat/structure work writes to the archived canonical logs instead of recreating root-level Markdown.
+
 ## 2026-06-15 - Mission 04 Post-Breach Probe Note
 
 - No semantic renames were made in this batch.

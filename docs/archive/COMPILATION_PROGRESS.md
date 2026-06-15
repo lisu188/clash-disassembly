@@ -1,5 +1,16 @@
 # Compilation Progress
 
+## 2026-06-15 - Documentation Consolidation
+
+- Current frontier: repo hygiene; consolidate Markdown documentation, reduce root clutter, and keep default validation green without changing recovered runtime behavior.
+- Blockers removed: moved long-form progress/history docs into `docs/archive/`, moved focused route/probe READMEs into `docs/probes/`, replaced duplicated current-status prose with the canonical docs in `docs/`, and updated current-facing documentation references that pointed at old root progress-log paths.
+- Navigation added: `docs/STATUS.md`, `docs/BUILD_AND_TEST.md`, `docs/RUNTIME_MILESTONES.md`, `docs/ROADMAP.md`, `docs/REVERSE_ENGINEERING.md`, `docs/STRUCTURES.md`, `docs/artifacts.md`, and `docs/archive/INDEX.md`.
+- Validation helper added: `tests/check_markdown_links.py` checks current Markdown links and path references while skipping preserved historical archive prose.
+- Compile/link/runtime status: no recovered runtime behavior was intentionally changed. `git diff --check`, JSON validation for both metadata files, shell syntax checks, `python3 tests/check_markdown_links.py`, `cmake --build build --target clash95_bootstrap -j2`, and default `ctest --test-dir build --output-on-failure` all passed on 2026-06-16. Default CTest skipped the normal opt-in real-input, soak, and campaign-route probes.
+- Highest authentic runtime milestone reached: unchanged by this batch; see `docs/STATUS.md` and `docs/RUNTIME_MILESTONES.md`.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: none in the current navigation docs. Archived historical prose intentionally keeps some old paths where changing them would blur provenance.
+
 ## 2026-06-15 - Mission 04 Post-Breach Probe Hygiene
 
 - Current frontier: mission-04 castle capture after the breached gate; the main route remains partial at the gate-breach milestone, while a quarantined post-breach probe now exercises movement deeper into the tactical map.

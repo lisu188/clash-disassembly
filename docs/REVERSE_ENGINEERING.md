@@ -1,8 +1,19 @@
-# clash95 disassembly guide
+# Reverse Engineering
 
 This file is the working guide for contributors recovering `clash95` from the original binary artifacts and the current `clash-disassembly` repo.
 
 It is intentionally practical. The goal is not to restate everything already known, but to keep future reverse-engineering work consistent, evidence-driven, and easy to merge.
+
+## Current Rule Summary
+
+- `clash95.asm` is authoritative behavioral evidence and must not be edited.
+- `clash95.c` changes should be small, reached, and backed by assembly or live
+  route evidence.
+- Platform portability belongs behind `platform_sdl.h` and
+  `platform_sdl_runtime.c`.
+- Historical progress and rename evidence live in `docs/archive/`.
+- If a change would remove evidence, keep the file and document the deferred
+  cleanup instead.
 
 ---
 
@@ -20,9 +31,9 @@ When two sources disagree, prefer them in this order:
 
 3. **Repo recovery artifacts**
    - `RECOVERED_STRUCTURES.json`
-   - `REVERSE_ENGINEERING_RENAME_LOG.md`
-   - `UNIT_TYPES_AND_STATS_REPORT.md`
-   - `COMPILATION_PROGRESS.md`
+   - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
+   - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
+   - `docs/archive/COMPILATION_PROGRESS.md`
 
 4. **Portability / compatibility seam**
    - `platform_sdl.h`
@@ -43,7 +54,7 @@ Rule of thumb:
 Use these words consistently:
 
 - **map-confirmed**: exact public symbol exists in `clash95.map`.
-- **repo-confirmed**: a rename or struct already exists in `REVERSE_ENGINEERING_RENAME_LOG.md` or `RECOVERED_STRUCTURES.json`.
+- **repo-confirmed**: a rename or struct already exists in `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md` or `RECOVERED_STRUCTURES.json`.
 - **behavior-confirmed**: behavior is supported by at least two independent signals (for example asm + strings, or callers + table layout).
 - **inferred**: plausible semantic name, but still only backed by one strong line of evidence.
 - **compile-fix**: a change that restores buildability but does **not** prove original semantics.
@@ -514,7 +525,7 @@ A rename PR is good when it does all of this:
 2. States the new semantic name.
 3. Gives the evidence source(s): callers, strings, table shape, field offsets, or state-block usage.
 4. Updates adjacent family names if the rename affects them.
-5. Updates `REVERSE_ENGINEERING_RENAME_LOG.md`.
+5. Updates `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
 6. Updates `RECOVERED_STRUCTURES.json` if a struct boundary or field meaning was involved.
 7. Does not move original semantics into the SDL shim or compat stubs.
 
@@ -554,9 +565,9 @@ These are good starter tasks because each unlocks multiple nearby symbols.
 - `clash95.asm`
 - `clash95.c`
 - `RECOVERED_STRUCTURES.json`
-- `REVERSE_ENGINEERING_RENAME_LOG.md`
-- `UNIT_TYPES_AND_STATS_REPORT.md`
-- `COMPILATION_PROGRESS.md`
+- `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
+- `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
+- `docs/archive/COMPILATION_PROGRESS.md`
 - `platform_sdl.h`
 - `platform_sdl_runtime.c`
 - `compat/decomp_runtime_stubs.c`
