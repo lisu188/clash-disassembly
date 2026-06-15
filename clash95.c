@@ -23111,6 +23111,7 @@ int MiniMap_UpdateViewportFromCursor()
   int is_flipping;
   int allow_scripted_update;
   int trace_minimap;
+  int trace_minimap_verbose;
   int trace_cursor_on_minimap;
 
   result = DD_IsFlipping((int)dword_544CD8);
@@ -23121,11 +23122,12 @@ int MiniMap_UpdateViewportFromCursor()
     cursor_x = dword_544CFC >> byte_54512C;
     cursor_y = dword_544D00 >> byte_54512C;
     trace_minimap = getenv("CLASH95_TRACE_MINIMAP_CLICK") != 0;
+    trace_minimap_verbose = getenv("CLASH95_TRACE_MINIMAP_VERBOSE") != 0;
     trace_cursor_on_minimap = cursor_x >= word_523344
                            && cursor_x <= word_523344 + 220
                            && cursor_y >= word_523346
                            && cursor_y <= word_523346 + 220;
-    if ( trace_minimap && trace_cursor_on_minimap )
+    if ( trace_minimap_verbose && trace_cursor_on_minimap )
     {
       Diagnostics_TraceWorldMapActionEvent(
         "minimap_sample",
@@ -23145,7 +23147,7 @@ int MiniMap_UpdateViewportFromCursor()
     {
       v1 = (cursor_x - (unsigned __int16)word_523344 - 7) / (unsigned __int8)byte_523F54;
       result = (cursor_y - (unsigned __int16)word_523346 - 7) / (unsigned __int8)byte_523F54;
-      if ( trace_minimap && trace_cursor_on_minimap )
+      if ( trace_minimap_verbose && trace_cursor_on_minimap )
       {
         Diagnostics_TraceWorldMapActionEvent(
           "minimap_calc",

@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Mission 04 Post-Breach Probe Note
+
+- No semantic renames were made in this batch.
+- Split verbose minimap diagnostics from the compact route marker and added a quarantined mission-04 post-breach probe only.
+- The probe advances route evidence beyond the opened gate without promoting mission completion or unit/stat semantics.
+
 ## 2026-06-15 - Mission 04 Gate Wall Factor Note
 
 - No semantic renames were made in this batch.
