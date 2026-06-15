@@ -43496,6 +43496,9 @@ int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4)
   int v18; // eax
   DWORD v19; // [esp+4h] [ebp-1Ch]
   int v20; // [esp+8h] [ebp-18h]
+  int wall_hp_before;
+  int wall_hp_after;
+  int unit_ap_before;
 
   Debug_Log(a3, a4, a2, (int)aUnitbattle_a_0);
   if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
@@ -43553,18 +43556,36 @@ LABEL_18:
   UnitBattle_RedrawTile(a2, a4);
   v20 = dword_532104;
   v19 = a4 + dword_532048 + 20 * a2;
+  wall_hp_before = *(unsigned __int8 *)(v19 + 3134);
+  unit_ap_before = *(unsigned __int8 *)(v7 + 8);
   LOWORD(v12) = word_513A78[2 * *(_DWORD *)(dword_532048 + 820)];
   v13 = Unit_CalcEffectivenessD((char *)v7, 0);
   *(_BYTE *)(v19 + 3134) -= (unsigned __int16)(v12 * v13
                                              - (__CFSHL__(((unsigned __int16)v12 * v13) >> 31, 8)
                                               + ((__int16)(((unsigned int)(unsigned __int16)v12 * v13) >> 16) >> 15 << 8))) >> 8;
+  wall_hp_after = *(unsigned __int8 *)(v19 + 3134);
   v15 = v19;
   if ( *(char *)(v15 + 3134) <= 0 )
   {
     *(_BYTE *)(v15 + 3134) = 0;
     if ( a4 == *(_DWORD *)(dword_532048 + 828) )
       *(_DWORD *)(dword_532048 + 832) = 0;
+    wall_hp_after = *(unsigned __int8 *)(v15 + 3134);
   }
+  if ( Diagnostics_IsWorldMapClickTraceEnabled() )
+    fprintf(
+      stderr,
+      "[battle] wall_attack unit=%d tile=%lu,%d ap_before=%d ap_after=%d wall_before=%d wall_after=%d gate_column=%d gate_state=%d battle_result=%d\n",
+      a1,
+      (unsigned long)a2,
+      a4,
+      unit_ap_before,
+      *(unsigned __int8 *)(v7 + 8),
+      wall_hp_before,
+      wall_hp_after,
+      *(_DWORD *)(dword_532048 + 828),
+      *(_DWORD *)(dword_532048 + 832),
+      dword_532104);
   UnitBattle_RedrawTile(a2, a4);
   if ( v20 != dword_532104 )
     sub_4426C0(aBattleMurek, 64);

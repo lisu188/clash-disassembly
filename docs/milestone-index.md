@@ -36,6 +36,7 @@ CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
 | First mission attack probe | `ctest --test-dir build -R clash95_first_mission_attack_probe --output-on-failure` | `tests/run_first_mission_attack_probe.sh` |
 | Starting castle economy dialog | `CLASH95_ENABLE_CASTLE_ECONOMY_REGRESSION=1 ctest --test-dir build -R clash95_castle_economy_regression --output-on-failure` | `tests/run_castle_economy_probe.sh`, castle hotspot and economy frame metrics |
 | Campaign mission route scripts | `tests/run_campaign_route_script_smoke.sh` via CTest wrappers | `tests/first_campaign_arc_routes/`, `tests/frame_metrics.py` |
+| Mission 04 first gate-wall attack | `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` | `artifacts/campaign-routes/mission-04/20260615T180944Z-78503`, trace-gated `wall_attack` marker |
 
 ## Known Route Status
 
