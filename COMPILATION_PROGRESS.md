@@ -1,5 +1,16 @@
 # Compilation Progress
 
+## 2026-06-15 - Mission 04 Post-Breach Probe Hygiene
+
+- Current frontier: mission-04 castle capture after the breached gate; the main route remains partial at the gate-breach milestone, while a quarantined post-breach probe now exercises movement deeper into the tactical map.
+- Blockers removed: restored route-script minimap observability by enabling `CLASH95_TRACE_MINIMAP_CLICK` in the generic route harness, which keeps `minimap_update` available to routes without requiring per-frame cursor spam.
+- Diagnostics refined: split verbose minimap sample/calc/cursor traces behind `CLASH95_TRACE_MINIMAP_VERBOSE`, leaving the compact `minimap_update` marker under the existing route trace switch for durable route logs.
+- Route advanced: added `mission_04_post_breach_probe` as a direct-debug-only partial route that replays the proven Hopenberg gate breach, moves light infantry through the opened gate, and targets interior tile `(13,3)` using the corrected post-pan viewport coordinate.
+- Compile/link/runtime status: `make clash95_bootstrap` passed before this documentation update; `bash -n tests/run_campaign_route_script_smoke.sh` passed; the mission-02 opt-in route regression passed after the minimap trace export was restored.
+- Highest authentic runtime milestone reached: mission 04 still proves direct load, stack0 march to Hopenberg, manual castle battle entry, repeated gate attacks, and active gate breach; the quarantined probe has observed authentic movement through the open gate into interior tactical tiles, but castle capture and mission completion remain pending.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: defender engagement after the gate, battle-loop exit, `Unit_CaptureBuilding`, world-map return, and mission-04 objective completion remain unrecovered; no route status was promoted.
+
 ## 2026-06-15 - Mission 04 Gate Wall Factor Recovery
 
 - Current frontier: mission-04 castle capture after a breached gate; the route now gets through repeated tactical wall attacks, but battle exit, castle ownership transfer, and `mission_objective_complete` remain pending.

@@ -7,6 +7,7 @@
     "clash95.exe"
   ],
     "maintenance_notes": [
+        "Batch 257 stayed on executable mission-04 route recovery. No new unit-type or stat semantics were promoted; the work split verbose minimap diagnostics from the compact route marker and added a quarantined post-breach movement probe for the already breached gate.",
         "Batch 256 stayed on executable mission-04 route recovery. No new unit-type or stat semantics were promoted; the route exposed and repaired the strided wall-factor table used with the already recovered UnitStats_CalcEffectiveWallAttack path, allowing repeated authentic gate attacks to breach the active wall.",
         "Batch 255 stayed on durability-road harnessing. No new unit-type or stat semantics were promoted; the opt-in soak probe and bounded frame-metrics sampling only improve executable endurance evidence capture and artifact retention for already recovered menu, first-mission world-map, castle-economy, first-mission attack/autoresolve, and campaign-route behavior.",
         "Batch 254 stayed on executable mission-04 route recovery. No new unit-type or stat semantics were promoted; trace-gated UnitBattle_AttackWall diagnostics show the reached light-infantry gate attack uses the existing wall-attack path and currently leaves gate HP unchanged.",
