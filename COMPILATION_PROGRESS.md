@@ -1,5 +1,15 @@
 # Compilation Progress
 
+## 2026-06-15 - Mission 04 Wall Attack Evidence
+
+- Current frontier: mission-04 breach/capture route recovery; the route reaches the authentic castle tactical battle and returns from the first gate-wall attack, but objective completion and a capture route are still pending.
+- Blockers removed: none promoted as gameplay fixes in this batch; the added trace captures reached `UnitBattle_AttackWall` state without changing battle arithmetic or route outcome.
+- Diagnostics added: `UnitBattle_AttackWall` now emits trace-gated wall-attack evidence when world-click tracing is enabled, including selected unit id, target tile, action points before/after, wall hitpoints before/after, gate column/state, and battle result.
+- Compile/link/runtime status: `make clash95_bootstrap` passed; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest -R clash95_campaign_route_04_regression --output-on-failure` passed in the retained run `artifacts/campaign-routes/mission-04/20260615T180944Z-78503`.
+- Highest authentic runtime milestone reached: direct mission 04 loads, selects the player stack, enters the castle tactical battle, resolves the first gate attack through recovered input/control flow, and returns without crashing; the latest trace shows light infantry attacking gate tile `(10,3)` with wall HP remaining `100 -> 100`.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: the zero-damage gate hit is route evidence only, not a new wall-damage semantic promotion; mission 04 remains partial until an authentic route breaches/captures the castle and logs objective completion.
+
 ## 2026-06-15 - Route Regression Protection And Artifact Caps
 
 - Current frontier: SDL route regression protection and first-mission human-input proof; next gameplay frontier remains broader campaign route completion beyond the protected early first-mission/castle corridors.

@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Mission 04 Wall Attack Evidence Note
+
+- No semantic renames were made in this batch.
+- Added only trace-gated wall-attack diagnostics inside the already recovered `UnitBattle_AttackWall` path.
+- The mission-04 route evidence currently proves a real tactical gate-wall attack returns without crashing, but it does not promote route completion or unit/stat semantics.
+
 ## 2026-06-15 - Route Regression And Artifact Retention Note
 
 - No semantic renames were made in this batch.
