@@ -182,6 +182,19 @@ set_tests_properties(clash95_save_dat_format PROPERTIES
   LABELS "save;format"
 )
 
+add_test(
+  NAME clash95_soak_probe
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_clash95_soak_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_soak_probe PROPERTIES
+  TIMEOUT 3900
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;soak"
+)
+
 function(add_campaign_route_regression_test mission_id timeout_seconds)
   add_test(
     NAME clash95_campaign_route_${mission_id}_regression

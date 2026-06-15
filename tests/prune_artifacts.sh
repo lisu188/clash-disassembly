@@ -4,7 +4,7 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 artifact_root="${CLASH95_ARTIFACT_PRUNE_ROOT:-$repo_root/artifacts}"
 keep_runs="${CLASH95_ARTIFACT_PRUNE_KEEP_RUNS_PER_GROUP:-12}"
-min_runs_for_size_cap="${CLASH95_ARTIFACT_PRUNE_MIN_RUNS_PER_GROUP:-2}"
+min_runs_for_size_cap="${CLASH95_ARTIFACT_PRUNE_MIN_RUNS_PER_GROUP:-1}"
 max_bytes="${CLASH95_ARTIFACT_PRUNE_MAX_BYTES:-0}"
 apply=0
 quiet=0
@@ -21,6 +21,7 @@ Prunes durable probe run directories under repo-owned artifacts roots.
 Defaults are conservative:
   --dry-run          print what would be removed
   --keep 12         keep newest 12 runs per known mission artifact group
+  --min-keep 1      keep at least one newest run per group when enforcing --max-bytes
   --max-bytes 0     disable whole-artifacts size-cap pruning
 
 Environment knobs:
@@ -186,7 +187,7 @@ group_roots=()
 if [ -n "${CLASH95_ARTIFACT_PRUNE_GROUP_ROOTS:-}" ]; then
   add_colon_separated_group_roots "$CLASH95_ARTIFACT_PRUNE_GROUP_ROOTS"
 else
-  for root in "$artifacts_real"/campaign-routes/mission-* "$artifacts_real"/first-campaign/mission-*; do
+  for root in "$artifacts_real"/campaign-routes/mission-* "$artifacts_real"/first-campaign/mission-* "$artifacts_real"/soak/*; do
     add_group_root "$root"
   done
 fi
