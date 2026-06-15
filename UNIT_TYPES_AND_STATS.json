@@ -7,6 +7,7 @@
     "clash95.exe"
   ],
     "maintenance_notes": [
+        "Batch 255 stayed on durability-road harnessing. No new unit-type or stat semantics were promoted; the opt-in soak probe and bounded frame-metrics sampling only improve executable endurance evidence capture and artifact retention for already recovered menu, first-mission world-map, castle-economy, first-mission attack/autoresolve, and campaign-route behavior.",
         "Batch 254 stayed on executable mission-04 route recovery. No new unit-type or stat semantics were promoted; trace-gated UnitBattle_AttackWall diagnostics show the reached light-infantry gate attack uses the existing wall-attack path and currently leaves gate HP unchanged.",
         "Batch 253 stayed on executable route-regression and artifact-retention work. No new unit-type or stat semantics were promoted; main-menu Exit, first-mission playable-turn, and starting-castle economy probes exercise already recovered stack/building/UI paths while durable route artifacts now prune by default with a 768 MiB repo-wide cap.",
     "Batch 252 stayed on route-regression harness recovery. No new unit-type or stat semantics were promoted; campaign route tests now have opt-in CTest entries and loose SDL frame metrics for mean luminance, nonblack pixels, color diversity, and frame progression.",

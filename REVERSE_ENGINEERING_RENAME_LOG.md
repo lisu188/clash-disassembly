@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-15 - Soak Harness And Frame Sampling Note
+
+- No semantic renames were made in this batch.
+- Added opt-in main-menu, world-map, castle/economy, first-mission attack/autoresolve, and campaign-route endurance harness scenarios plus bounded route-frame diagnostic sampling only.
+- The changes improve runtime evidence capture and artifact durability without changing recovered gameplay semantics.
+
 ## 2026-06-15 - Mission 04 Wall Attack Evidence Note
 
 - No semantic renames were made in this batch.

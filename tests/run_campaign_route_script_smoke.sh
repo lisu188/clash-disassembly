@@ -110,14 +110,38 @@ latest_frame_path() {
 
 write_visual_failure_montage() {
   local montage_path="$smoke_root/visual-failure-montage.ppm"
+  local max_frames="${CLASH95_CAMPAIGN_ROUTE_MONTAGE_MAX_FRAMES:-48}"
+  local head_count="${CLASH95_CAMPAIGN_ROUTE_MONTAGE_FRAME_HEAD_COUNT:-8}"
+  local checkpoint_budget=0
+  local presented_budget=0
   local -a visual_frames=()
+  local -a presented_frames=()
+  local -a checkpoint_frames=()
 
   if ! command -v python3 >/dev/null 2>&1 || [ ! -f "$frame_metrics_tool" ]; then
     return 0
   fi
+  if ! is_unsigned_integer "$max_frames" || [ "$max_frames" = "0" ]; then
+    return 0
+  fi
+  if ! is_unsigned_integer "$head_count"; then
+    head_count=8
+  fi
   shopt -s nullglob
-  visual_frames=( "$frame_prefix"-*.bmp "$smoke_root"/checkpoint-*.bmp )
+  presented_frames=( "$frame_prefix"-*.bmp )
+  checkpoint_frames=( "$smoke_root"/checkpoint-*.bmp )
   shopt -u nullglob
+  if [ "${#checkpoint_frames[@]}" -gt 0 ]; then
+    checkpoint_budget=$((max_frames / 4))
+    if [ "$checkpoint_budget" -lt 1 ]; then
+      checkpoint_budget=1
+    fi
+    presented_budget=$((max_frames - checkpoint_budget))
+  else
+    presented_budget="$max_frames"
+  fi
+  sample_frame_array presented_frames visual_frames "$presented_budget" "$head_count"
+  sample_frame_array checkpoint_frames visual_frames "$checkpoint_budget" "$head_count"
   if [ "${#visual_frames[@]}" -eq 0 ]; then
     return 0
   fi
@@ -183,6 +207,76 @@ is_unsigned_integer() {
     ""|*[!0-9]*) return 1 ;;
     *) return 0 ;;
   esac
+}
+
+append_unique_frame_path() {
+  local -n destination_ref="$1"
+  local frame_path="$2"
+  local existing
+
+  if [ ! -f "$frame_path" ]; then
+    return 0
+  fi
+  for existing in "${destination_ref[@]}"; do
+    if [ "$existing" = "$frame_path" ]; then
+      return 0
+    fi
+  done
+  destination_ref+=( "$frame_path" )
+}
+
+sample_frame_array() {
+  local source_name="$1"
+  local destination_name="$2"
+  local -n source_ref="$source_name"
+  local -n destination_ref="$destination_name"
+  local max_frames="$3"
+  local head_count="$4"
+  local total
+  local tail_count
+  local start_index
+  local index
+
+  if ! is_unsigned_integer "$max_frames" || [ "$max_frames" = "0" ]; then
+    return 0
+  fi
+  if ! is_unsigned_integer "$head_count"; then
+    head_count=8
+  fi
+  total="${#source_ref[@]}"
+  if [ "$total" -eq 0 ]; then
+    return 0
+  fi
+  if [ "$total" -le "$max_frames" ]; then
+    for index in "${!source_ref[@]}"; do
+      append_unique_frame_path "$destination_name" "${source_ref[$index]}"
+    done
+    return 0
+  fi
+
+  if [ "$head_count" -ge "$max_frames" ]; then
+    head_count=$((max_frames - 1))
+  fi
+  if [ "$head_count" -lt 0 ]; then
+    head_count=0
+  fi
+  tail_count=$((max_frames - head_count))
+
+  index=0
+  while [ "$index" -lt "$head_count" ] && [ "$index" -lt "$total" ]; do
+    append_unique_frame_path "$destination_name" "${source_ref[$index]}"
+    index=$((index + 1))
+  done
+
+  start_index=$((total - tail_count))
+  if [ "$start_index" -lt 0 ]; then
+    start_index=0
+  fi
+  index="$start_index"
+  while [ "$index" -lt "$total" ]; do
+    append_unique_frame_path "$destination_name" "${source_ref[$index]}"
+    index=$((index + 1))
+  done
 }
 
 copy_capped_log() {
@@ -385,6 +479,7 @@ persist_route_artifacts() {
   local progression_metrics
   local summary_path
   local -a summary_frames=()
+  local -a sampled_summary_frames=()
 
   if [ "${CLASH95_CAMPAIGN_ROUTE_DURABLE_ARTIFACTS:-1}" != "1" ]; then
     return 0
@@ -426,10 +521,11 @@ persist_route_artifacts() {
     shopt -s nullglob
     summary_frames=( "$frame_prefix"-*.bmp )
     shopt -u nullglob
-    if [ "${#summary_frames[@]}" -ge 2 ]; then
+    sample_frame_array summary_frames sampled_summary_frames "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_MAX_FRAMES:-96}" "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_HEAD_COUNT:-8}"
+    if [ "${#sampled_summary_frames[@]}" -ge 2 ]; then
       progression_metrics="$(python3 "$frame_metrics_tool" \
         --min-diff "${CLASH95_CAMPAIGN_ROUTE_MIN_FRAME_DIFF:-0.25}" \
-        "${summary_frames[@]}" 2>/dev/null | tail -n 1 || true)"
+        "${sampled_summary_frames[@]}" 2>/dev/null | tail -n 1 || true)"
     fi
   fi
 
@@ -661,6 +757,7 @@ check_presented_frame_progression() {
   local min_changed_pairs="${CLASH95_CAMPAIGN_ROUTE_MIN_CHANGED_FRAME_PAIRS:-1}"
   local metrics_output
   local -a visual_frames=()
+  local -a sampled_frames=()
 
   if ! command -v python3 >/dev/null 2>&1 || [ ! -f "$frame_metrics_tool" ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; python3 frame metrics are unavailable"
@@ -671,18 +768,22 @@ check_presented_frame_progression() {
   if [ "${#visual_frames[@]}" -lt 2 ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; fewer than 2 frames captured"
   fi
+  sample_frame_array visual_frames sampled_frames "${CLASH95_CAMPAIGN_ROUTE_PROGRESS_METRICS_MAX_FRAMES:-96}" "${CLASH95_CAMPAIGN_ROUTE_PROGRESS_METRICS_HEAD_COUNT:-8}"
+  if [ "${#sampled_frames[@]}" -lt 2 ]; then
+    fail_smoke "campaign route script smoke cannot run frame progression check ${label}; fewer than 2 sampled frames"
+  fi
   if ! metrics_output="$(python3 "$frame_metrics_tool" \
         --min-diff "$min_diff" \
         --min-changed-pairs "$min_changed_pairs" \
-        "${visual_frames[@]}" 2>&1)"; then
+        "${sampled_frames[@]}" 2>&1)"; then
     {
-      echo "[campaign-route] visual-progression label=${label} min_diff=${min_diff} min_changed_pairs=${min_changed_pairs}"
+      echo "[campaign-route] visual-progression label=${label} min_diff=${min_diff} min_changed_pairs=${min_changed_pairs} sampled_frames=${#sampled_frames[@]} captured_frames=${#visual_frames[@]}"
       printf '%s\n' "$metrics_output"
     } >>"$log_path"
     fail_smoke "campaign route script smoke frame progression failed for ${label}"
   fi
   {
-    echo "[campaign-route] visual-progression label=${label} min_diff=${min_diff} min_changed_pairs=${min_changed_pairs}"
+    echo "[campaign-route] visual-progression label=${label} min_diff=${min_diff} min_changed_pairs=${min_changed_pairs} sampled_frames=${#sampled_frames[@]} captured_frames=${#visual_frames[@]}"
     printf '%s\n' "$metrics_output"
   } >>"$log_path"
 }
