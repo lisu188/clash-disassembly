@@ -906,12 +906,12 @@ int  sub_419770(unsigned __int16 *a1, int a2, DWORD a3);
 int  sub_419780(unsigned __int16 *a1, int a2, DWORD a3);
 int  sub_419790(int result);
 BOOL  sub_4197A0(uintptr_t a1, DWORD a2);
-signed int  sub_419B80(uintptr_t a1, DWORD a2);
+signed int  UIWidget_PollHitHoverAndClick(uintptr_t a1, DWORD a2);
 int  sub_419D60(uintptr_t result, int a2);
-_DWORD * sub_419D80(_DWORD *result);
-signed int  sub_419DC0(_DWORD *a1, DWORD a2);
+_DWORD * UIWidgetTable_InitDrawStates(_DWORD *result);
+signed int  UIWidgetTable_PollHoverAndActions(_DWORD *a1, DWORD a2);
 int  sub_419E60(uintptr_t a1, int a2);
-int  sub_419ED0(uintptr_t a1);
+int  UIWidget_PlayPressedReleaseAnimation(uintptr_t a1);
 int  sub_419F20(uintptr_t a1);
 int  sub_419F50(uintptr_t a1, int a2);
 int  UI_DrawUnitInfoPane(int a1, int a2, int a3, __int16 *a4, DWORD a5, int a6);
@@ -1221,15 +1221,15 @@ BOOL  UnitBattle_IsTileWithinMinRange(int a1, int a2, int a3);
 signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4);
 int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2);
 int  sub_437A90(int a1, int a2, int a3);
-signed int  sub_4382E0(int a1, int a2, int a3, signed int a4);
+signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed int a4);
 int  sub_43A800(int result, int a2);
 signed int __fastcall sub_43A880(int a1, int a2);
-signed int  sub_43A8B0(int a1, int a2);
+signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2);
 int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4);
-int  sub_43BE50(int a1, int a2, DWORD a3);
+int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3);
 signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1);
 signed int  sub_43C6B0(int a1, signed int a2);
-void sub_43CB80();
+void UnitBattle_ScanAiWallTargetColumns();
 signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2);
 signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1);
 _DWORD * sub_43CF50(_DWORD *result);
@@ -1344,7 +1344,7 @@ void Audio_StopUnitMoveSound();
 char * sub_4425E0(char *result);
 int  Audio_PlayArtifactSound(int result);
 int  sub_4426C0(char *a1, int a2);
-int  sub_442760(int a1, char a2, DWORD a3);
+int  FileSystem_InitRootMount(int a1, char a2, DWORD a3);
 int  sub_4427C0(int a1);
 int  sub_4427F0(char *a1, int a2);
 static const char *Compat_StringArgGetText(const void *arg);
@@ -1354,7 +1354,7 @@ static void Compat_RenderStateInvokeMethod(int render_state, unsigned int table_
 char  sub_442990(char *a1);
 char *sub_4429C0();
 int  sub_4429D0(int a1, const CHAR *a2, DWORD a3);
-int __thiscall sub_442AD0(int this);
+int __thiscall ResourceArchives_MountStartupArchives(int this);
 int  loadFileSusp(char *a1, const CHAR *a2);
 int Port_FindAndInit();
 _DWORD *Rules_LogPortLocation();
@@ -1369,12 +1369,12 @@ BOOL  MapTile_HasHiddenTreasure(int a1, int a2);
 signed int  Treasure_TryDigHere(int, char, DWORD, char, char *, double);
 signed int  UnitStack_TryHide(int a1, unsigned __int16 a2, DWORD a3, double a4);
 signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, double a2);
-int  sub_4443C0(int a1, char *a2);
-int  sub_4443D0(int a1, char *a2);
+int  SaveSlot_FormatDataFilePath(int a1, char *a2);
+int  SaveSlot_FormatFactsFilePath(int a1, char *a2);
 signed int  saveGame(int a1, DWORD a2, double a3);
 signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3);
-char  sub_4446E0(int a1, char *a2, DWORD a3);
-int  sub_444750(int a1, DWORD a2);
+char  SaveSlot_LoadLabelOrPlaceholder(int a1, char *a2, DWORD a3);
+int  SaveSlot_HasDataFile(int a1, DWORD a2);
 int  sub_444780(int a1);
 int  sub_444920(int result, int a2);
 signed int  sub_444950(int a1, int a2, DWORD a3, double a4);
@@ -1423,7 +1423,7 @@ int  sub_449C80(int a1);
 unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3);
 BOOL  sub_449D60(int a1);
 int  sub_44A110(int a1, DWORD a2);
-void * sub_44A140(int a1, DWORD a2);
+void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2);
 int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3);
 unsigned int  sub_44A6D0(int a1);
 unsigned __int16 * sub_44A880(unsigned __int16 *result, int a2, DWORD a3);
@@ -1654,13 +1654,13 @@ BOOL  Input_PollEventsUntil(int a1, char a2);
 BOOL  sub_460950(int a1);
 BOOL  Render_Begin(int a1, void (*a2)(void), ...);
 BOOL  Render_FlipRect(int a1, char a2);
-int  sub_460A50(int a1, int a2);
+int  RenderState_PollInputAndClampCursor(int a1, int a2);
 unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3);
-_DWORD * sub_460B20(_DWORD *result, __int16 a2, __int16 a3, __int16 a4, __int16 a5);
+_DWORD * RenderState_RecalculateCursorBoundsForRect(_DWORD *result, __int16 a2, __int16 a3, __int16 a4, __int16 a5);
 _DWORD * sub_460BB0(_DWORD *result, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5);
 _DWORD * sub_460C70(int a1);
 _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4);
-__int16  sub_460D80(int a1, int a2);
+__int16  RenderState_SelectCursorDescriptor(int a1, int a2);
 int  Render_Present(int a1);
 int Render_Pump();
 void Input_Flush();
@@ -9035,7 +9035,7 @@ int (*off_50F1E4[6])() =
   &nullsub_24,
   &Input_Init,
   &Input_Shutdown,
-  &sub_460A50
+  &RenderState_PollInputAndClampCursor
 }; // weak
 int (*off_50F204[6])() =
 {
@@ -11644,7 +11644,7 @@ int dword_519628[] = { 1 }; // weak
 int dword_51962C[] = { 149 }; // weak
 /*
  * Recovered 40-byte front-end cursor/overlay descriptor records consumed by
- * sub_460D80. The original binary stores these as ten consecutive dwords:
+ * RenderState_SelectCursorDescriptor. The original binary stores these as ten consecutive dwords:
  * start sprite, end sprite, an optional fixed animation/count value,
  * runtime-filled max height/width, hotspot x/y, and runtime counters.
  */
@@ -12600,9 +12600,9 @@ _UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
 _UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
 _UNKNOWN unk_511210; // weak
 _UNKNOWN unk_511220; // weak
-int dword_51D018; // weak
+int g_MousePresentAtStartup; // weak
 int dword_51D01C; // weak
-int dword_51D020; // weak
+int g_AppCommandLine; // weak
 CHAR Text[128]; // idb
 _BYTE unk_51D0B0[0x408]; // weak
 int dword_51D4B8; // weak
@@ -12979,9 +12979,9 @@ int dword_544CC4; // weak
 int dword_544CC8; // weak
 char byte_544CCC; // weak
 int dword_544CD0; // weak
-_DWORD dword_544CD8[286]; // weak
-#define dword_544CFC (*((int *)&dword_544CD8[9]))
-#define dword_544D00 (*((int *)&dword_544CD8[10]))
+_DWORD g_RenderState[286]; // weak
+#define dword_544CFC (*((int *)&g_RenderState[9]))
+#define dword_544D00 (*((int *)&g_RenderState[10]))
 int dword_544D10; // weak
 int dword_544D14; // weak
 char byte_54512C; // weak
@@ -13279,7 +13279,7 @@ int App_Shutdown()
 {
   int v0; // ecx
 
-  sub_460580((int)&dword_544CD8);
+  sub_460580((int)&g_RenderState);
   nullsub_4();
   CSS_Close();
   nullsub_2(v0);
@@ -13706,7 +13706,7 @@ int  sub_401A00(_DWORD *a1)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00401A40) --------------------------------------------------------
-__int16 sub_401A40()
+__int16 Render_LoadResourceBackbuffer()
 {
   Render_InitRecoveredVtableStorage();
   dword_51D4B8 = (int)off_50EF24;
@@ -14334,7 +14334,7 @@ int  Render_FillRect(
     sub_4737B0((_DWORD *)(uintptr_t)(unsigned int)v23, 0, v29, a7, a7 + v30);
     return RenderHandle_InvokeCopyDispatch(v23, v24);
   }
-  else if ( dword_51D018 && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
+  else if ( g_MousePresentAtStartup && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
   {
     if ( (v8 == (_DWORD *)&unk_51D4C0 && !v8[47]) || (v9 == (_DWORD *)&unk_51D4C0 && !v9[47]) )
       return 0;
@@ -14396,7 +14396,7 @@ int  Render_FillRect(
 // 40269C: variable 'v17' is possibly undefined
 // 4026D5: variable 'v18' is possibly undefined
 // 40277E: variable 'v25' is possibly undefined
-// 51D018: using guessed type int dword_51D018;
+// 51D018: using guessed type int g_MousePresentAtStartup;
 // 51D4B8: using guessed type int dword_51D4B8;
 
 //----- (00402850) --------------------------------------------------------
@@ -14488,7 +14488,7 @@ int  sub_402850(
     v37 = (*(int (**)(void))(v36 + 64))();
     return (*(int (__fastcall **)(int, _DWORD))(v40 + 8))(v37, a7);
   }
-  else if ( dword_51D018 && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
+  else if ( g_MousePresentAtStartup && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
   {
     sub_4041D0((int)v39, v50, 1u, v41);
     Render_FillRect(v8, v39, (unsigned __int16)v56, (unsigned __int16)v55, a5, a6, 0, 0);
@@ -14555,7 +14555,7 @@ int  sub_402850(
 // 402A70: variable 'v30' is possibly undefined
 // 402A77: variable 'v32' is possibly undefined
 // 402AAB: variable 'v34' is possibly undefined
-// 51D018: using guessed type int dword_51D018;
+// 51D018: using guessed type int g_MousePresentAtStartup;
 // 51D4B8: using guessed type int dword_51D4B8;
 
 //----- (00402BB0) --------------------------------------------------------
@@ -14621,7 +14621,7 @@ int  Render_BlendSurfaceRect(
   v38 = a7;
   v29 = a5;
   v37 = a7 - a5 + 1;
-  if ( dword_51D018 && v10 == (_DWORD *)&unk_51D4C0 )
+  if ( g_MousePresentAtStartup && v10 == (_DWORD *)&unk_51D4C0 )
   {
     sub_4041D0((int)v26, v32, 1u, v37);
     Render_BlendSurfaceRect(v26, a2, v33, v30, v29, v35, v38, 0, 0, a10);
@@ -14688,7 +14688,7 @@ int  Render_BlendSurfaceRect(
 }
 // 402C84: variable 'v15' is possibly undefined
 // 519A14: using guessed type int dword_519A14;
-// 51D018: using guessed type int dword_51D018;
+// 51D018: using guessed type int g_MousePresentAtStartup;
 
 //----- (00402E80) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
@@ -14878,11 +14878,11 @@ int  sub_402E80(
   v173 = *(_WORD *)(a2 + 4);
   v134 = 0;
   BYTE2(a26) = byte_51F28C;
-  if ( dword_51D018 && (_UNKNOWN *)v150 == &unk_51D4C0 )
+  if ( g_MousePresentAtStartup && (_UNKNOWN *)v150 == &unk_51D4C0 )
   {
     if ( *(_DWORD *)((char *)&a31 + 2) != -1 )
       App_RequestQuit((int)aDlxvscreenDraw);
-    Surface = (_DWORD *)Mem_Alloc(188, dword_51D018, a4, (DWORD)v130);
+    Surface = (_DWORD *)Mem_Alloc(188, g_MousePresentAtStartup, a4, (DWORD)v130);
     if ( Surface )
       Surface = Render_CreateSurface((int)Surface, *v148, v148[1]);
     v134 = Surface;
@@ -15423,7 +15423,7 @@ LABEL_180:
 // 403240: inconsistent variable size for '^1A0.16'
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 50ED94: using guessed type int (*off_50ED94[5])();
-// 51D018: using guessed type int dword_51D018;
+// 51D018: using guessed type int g_MousePresentAtStartup;
 // 51D4B8: using guessed type int dword_51D4B8;
 // 51E265: using guessed type char byte_51E265;
 // 51F28C: using guessed type char byte_51F28C;
@@ -16238,7 +16238,7 @@ int  Render_EndModeSwitch(int result, char a2, DWORD a3)
                      0,
                      0);
           if ( v7 )
-            result = Render_Present((int)dword_544CD8);
+            result = Render_Present((int)g_RenderState);
           *(_DWORD *)(v4 + 200) = 0;
         }
       }
@@ -16247,7 +16247,7 @@ int  Render_EndModeSwitch(int result, char a2, DWORD a3)
   return result;
 }
 // 404900: variable 'v6' is possibly undefined
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00404970) --------------------------------------------------------
@@ -16276,14 +16276,14 @@ _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4)
           dword_544D10 = 0;
           v6 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
           Render_FillRect(
-            *(_DWORD **)((int)&dword_544CD8 + 8),
+            *(_DWORD **)((int)&g_RenderState + 8),
             0,
             0,
             0,
-            *(_WORD *)(*(_DWORD *)((int)&dword_544CD8 + 60) + 12) - 1,
-            *(_WORD *)(*(_DWORD *)((int)&dword_544CD8 + 60) + 16) - 1,
-            *(unsigned __int16 *)&dword_544CD8,
-            *(unsigned __int16 *)((int)&dword_544CD8 + 4));
+            *(_WORD *)(*(_DWORD *)((int)&g_RenderState + 60) + 12) - 1,
+            *(_WORD *)(*(_DWORD *)((int)&g_RenderState + 60) + 16) - 1,
+            *(unsigned __int16 *)&g_RenderState,
+            *(unsigned __int16 *)((int)&g_RenderState + 4));
           Render_SetResourceHandle((int)&unk_51D4C0, v6);
         }
         result = (_DWORD *)Render_FillRect(
@@ -16296,7 +16296,7 @@ _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4)
                              0,
                              0);
         if ( v8 )
-          result = (_DWORD *)Render_Present((int)&dword_544CD8);
+          result = (_DWORD *)Render_Present((int)&g_RenderState);
         *(_DWORD *)(v5 + 200) = 0;
       }
       else
@@ -16316,14 +16316,14 @@ _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4)
               dword_544D10 = 0;
               v6 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
               Render_FillRect(
-                *(_DWORD **)((int)&dword_544CD8 + 8),
+                *(_DWORD **)((int)&g_RenderState + 8),
                 0,
                 0,
                 0,
-                *(_WORD *)(*(_DWORD *)((int)&dword_544CD8 + 60) + 12) - 1,
-                *(_WORD *)(*(_DWORD *)((int)&dword_544CD8 + 60) + 16) - 1,
-                *(unsigned __int16 *)&dword_544CD8,
-                *(unsigned __int16 *)((int)&dword_544CD8 + 4));
+                *(_WORD *)(*(_DWORD *)((int)&g_RenderState + 60) + 12) - 1,
+                *(_WORD *)(*(_DWORD *)((int)&g_RenderState + 60) + 16) - 1,
+                *(unsigned __int16 *)&g_RenderState,
+                *(unsigned __int16 *)((int)&g_RenderState + 4));
               Render_SetResourceHandle((int)&unk_51D4C0, v6);
             }
             result = (_DWORD *)Render_FillRect(
@@ -16336,7 +16336,7 @@ _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4)
                                  0,
                                  0);
             if ( v8 )
-              result = (_DWORD *)Render_Present((int)&dword_544CD8);
+              result = (_DWORD *)Render_Present((int)&g_RenderState);
             *(_DWORD *)(v5 + 200) = 0;
           }
         }
@@ -18034,7 +18034,7 @@ void * sub_406980(DWORD a1)
       dword_514194,
       dword_526F78[0],
       v2);
-    sub_460BB0(dword_544CD8, v2, 0x1F7u, 0x1D4u, 0x1DCu);
+    sub_460BB0(g_RenderState, v2, 0x1F7u, 0x1D4u, 0x1DCu);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_pump_rect",
       g_SelectedUnitIndex,
@@ -18118,7 +18118,7 @@ void * sub_406980(DWORD a1)
       dword_514194,
       dword_526F78[0],
       0);
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_present",
       g_SelectedUnitIndex,
@@ -18162,7 +18162,7 @@ void * sub_406980(DWORD a1)
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00406FA0) --------------------------------------------------------
 void  sub_406FA0(int ii)
@@ -18265,7 +18265,7 @@ void  sub_406FA0(int ii)
     for ( i = *(_DWORD *)(gameData + 140012); i < *(_DWORD *)(gameData + 140012) + 7; ++i )
     {
       v4 = 14 * i;
-      DD_Pump((int)&dword_544CD8, ii, i);
+      DD_Pump((int)&g_RenderState, ii, i);
       ii = *(_DWORD *)(gameData + 140008);
       v5 = i + 1;
       for ( j = 1400 * ii; ; j += 1400 )
@@ -18354,7 +18354,7 @@ void  sub_406FA0(int ii)
       v82 = 14 * v32;
       while ( v32 < *(_DWORD *)(gameData + 140012) + 7 )
       {
-        DD_Pump((int)&dword_544CD8, ii, v32);
+        DD_Pump((int)&g_RenderState, ii, v32);
         v33 = *(_DWORD *)(gameData + 140008);
         for ( ii = 1400 * v33; ; ii += 1400 )
         {
@@ -18693,10 +18693,10 @@ int Render_RestoreLostSurfaces()
   Render_Pump();
   v1 = dword_544CFC >> byte_54512C;
   v2 = dword_544D00 >> byte_54512C;
-  while ( DD_IsLost((int)dword_544CD8) )
+  while ( DD_IsLost((int)g_RenderState) )
   {
     WorldMap_RedrawFrame(v2);
-    DD_Pump((int)dword_544CD8, v2);
+    DD_Pump((int)g_RenderState, v2);
     v4 = (dword_544CFC >> byte_54512C) - v1;
     if ( v4 <= 0 )
       v4 = v1 - (dword_544CFC >> byte_54512C);
@@ -18738,10 +18738,10 @@ LABEL_7:
       v2 = dword_544D00 >> byte_54512C;
     }
   }
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -18818,19 +18818,19 @@ int  sub_407D20(signed int a1, ...)
     {
       MiniMap_ToggleVisibility();
       while ( Input_IsKeyPressed(50) )
-        DD_Pump((int)dword_544CD8, 50);
+        DD_Pump((int)g_RenderState, 50);
     }
     if ( Input_IsKeyPressed(59) )
     {
       nullsub_5();
       while ( Input_IsKeyPressed(59) )
-        DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+        DD_Pump((int)g_RenderState, (char)g_RenderState);
     }
     if ( Input_IsKeyPressed(60) )
     {
-      Debug_Log(v15, (char)dword_544CD8, a1, (int)asc_4EC5AC);
+      Debug_Log(v15, (char)g_RenderState, a1, (int)asc_4EC5AC);
       while ( Input_IsKeyPressed(60) )
-        DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+        DD_Pump((int)g_RenderState, (char)g_RenderState);
     }
   }
   result = MiniMap_IsCursorInside();
@@ -18841,7 +18841,7 @@ int  sub_407D20(signed int a1, ...)
           - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
            + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6)
         + *(_DWORD *)(gameData + 140008);
-    result = DD_IsLost((int)dword_544CD8);
+    result = DD_IsLost((int)g_RenderState);
     if ( result )
     {
       v18 = (((dword_544D00 >> byte_54512C)
@@ -18879,7 +18879,7 @@ int  sub_407D20(signed int a1, ...)
 // 5202A0: using guessed type int dword_5202A0;
 // 5202E4: using guessed type int gameData;
 // 5202F0: using guessed type int dword_5202F0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -18893,7 +18893,7 @@ BOOL UI_TrySelectFriendlyStackUnderCursor()
   int v2; // ecx
   unsigned int v3; // edx
 
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     v2 = (((dword_544D00 >> byte_54512C)
@@ -18931,7 +18931,7 @@ BOOL UI_TrySelectFriendlyStackUnderCursor()
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -19178,7 +19178,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
     || v78 >= *(_DWORD *)(gameData + 140004)
     || *(_DWORD *)(gameData + 140012) + 6 == v78 && v1 - *(_DWORD *)(gameData + 140008) >= 6 )
   {
-    if ( DD_IsLost((int)&dword_544CD8) || DD_IsFlipping((int)&dword_544CD8) )
+    if ( DD_IsLost((int)&g_RenderState) || DD_IsFlipping((int)&g_RenderState) )
       Diagnostics_TraceWorldMapClickEvent(
         "reject_out_of_bounds",
         v1,
@@ -19194,7 +19194,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
     *(_DWORD *)(gameData + 140008),
     *(_DWORD *)(gameData + 140012),
     g_SelectedUnitIndex);
-  if ( DD_IsLost((int)&dword_544CD8) || DD_IsFlipping((int)&dword_544CD8) )
+  if ( DD_IsLost((int)&g_RenderState) || DD_IsFlipping((int)&g_RenderState) )
     Diagnostics_TraceWorldMapClickEvent(
       "tile_input",
       v1,
@@ -19202,7 +19202,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
       *(_DWORD *)(gameData + 140008),
       *(_DWORD *)(gameData + 140012),
       g_SelectedUnitIndex);
-  if ( DD_IsFlipping((int)&dword_544CD8) || DD_IsLost((int)&dword_544CD8) )
+  if ( DD_IsFlipping((int)&g_RenderState) || DD_IsLost((int)&g_RenderState) )
     goto LABEL_12;
   LOBYTE(v3) = byte_54512C;
   if ( dword_544CFC >> byte_54512C == dword_5202A8 && dword_544D00 >> byte_54512C == dword_5202AC )
@@ -19329,7 +19329,7 @@ LABEL_12:
         *(_DWORD *)(gameData + 140012),
         g_SelectedUnitIndex);
 LABEL_35:
-    sub_460D80((int)&dword_544CD8, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_5196A0);
     return;
   }
   v5 = 0;
@@ -19341,14 +19341,14 @@ LABEL_35:
         && *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
       {
         v5 = 1;
-        sub_460D80((int)&dword_544CD8, (int)&unk_519920);
+        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_519920);
         dword_5202B4 = 1;
         goto LABEL_21;
       }
       v4 = (unsigned __int16 *)(200 * v1 + gameData);
       if ( v4[v78 + 278187] != g_SelectedUnitIndex && dword_5202E8 )
       {
-        sub_460D80((int)&dword_544CD8, (int)&unk_519858);
+        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_519858);
         dword_5202B4 = v6;
         goto LABEL_21;
       }
@@ -19359,7 +19359,7 @@ LABEL_35:
         v15 = &unk_5196F0;
       else
         v15 = &unk_5198A8;
-      sub_460D80((int)&dword_544CD8, (int)v15);
+      RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)v15);
       dword_5202B4 = 1;
       goto LABEL_21;
     }
@@ -19377,7 +19377,7 @@ LABEL_21:
 LABEL_24:
       v7 = &unk_519830;
 LABEL_25:
-      sub_460D80((int)&dword_544CD8, (int)v7);
+      RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)v7);
       goto LABEL_26;
     }
 LABEL_80:
@@ -19436,9 +19436,9 @@ LABEL_80:
     sub_40A360(v16);
   }
 LABEL_26:
-  if ( DD_IsLost((int)&dword_544CD8) && Port_IsInsideFootprint(v1, v78) )
+  if ( DD_IsLost((int)&g_RenderState) && Port_IsInsideFootprint(v1, v78) )
     UI_DrawPortStatusPanel(v5, v1);
-  if ( DD_IsLost((int)&dword_544CD8) )
+  if ( DD_IsLost((int)&g_RenderState) )
   {
     v8 = 2 * v78;
     v9 = 200 * v1;
@@ -19512,7 +19512,7 @@ LABEL_26:
       sub_446CB0(v76[(unsigned __int8)g_LanguageIndex], v26, 2, v1);
     }
   }
-  if ( !DD_IsFlipping((int)&dword_544CD8) )
+  if ( !DD_IsFlipping((int)&g_RenderState) )
     return;
   v27 = g_CurrentPlayerIndex;
   if ( Trap_GetTileOwnerMask(v1, v78, g_CurrentPlayerIndex) )
@@ -19544,7 +19544,7 @@ LABEL_26:
         j__nfree_();
         Diagnostics_TraceWorldMapActionEvent("temple_path_queued", g_SelectedUnitIndex, v1, v78, 1);
         sub_418700(1);
-        Render_Begin((int)&dword_544CD8, 0);
+        Render_Begin((int)&g_RenderState, 0);
       }
       if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
         return;
@@ -19636,8 +19636,8 @@ LABEL_26:
           v42,
           v44,
           g_CurrentPlayerIndex,
-          DD_IsFlipping((int)&dword_544CD8),
-          DD_IsLost((int)&dword_544CD8));
+          DD_IsFlipping((int)&g_RenderState),
+          DD_IsLost((int)&g_RenderState));
       if ( v44 )
       {
         if ( v44 != -1 )
@@ -19702,7 +19702,7 @@ LABEL_205:
   }
   if ( MapTile_HasOwnUnitStack(v1, v78) )
   {
-    if ( DD_IsLost((int)&dword_544CD8) )
+    if ( DD_IsLost((int)&g_RenderState) )
       Diagnostics_TraceWorldMapClickEvent(
         "own_stack",
         v1,
@@ -19712,7 +19712,7 @@ LABEL_205:
         g_SelectedUnitIndex);
     if ( dword_5202E8 && *(unsigned __int16 *)(TILE_INDEX(v1, v78)) != g_SelectedUnitIndex )
     {
-      Render_Begin((int)&dword_544CD8, 0, v28);
+      Render_Begin((int)&g_RenderState, 0, v28);
       Unit_AddToGroup(g_SelectedUnitIndex, *(unsigned __int16 *)(TILE_INDEX(v1, v78)), 0, v1, a1);
       dword_5202E8 = 0;
       sub_40A360(v59);
@@ -19727,7 +19727,7 @@ LABEL_205:
       if ( *(unsigned __int16 *)(TILE_INDEX(v1, v78)) == g_SelectedUnitIndex
         && (v52 = 145 * g_SelectedUnitIndex, *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490)) )
       {
-        Render_Begin((int)&dword_544CD8, 0, v28);
+        Render_Begin((int)&g_RenderState, 0, v28);
         if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
         {
           v61 = 725 * g_SelectedUnitIndex;
@@ -19761,7 +19761,7 @@ LABEL_205:
           sub_406980(v56);
           UnitStackSelection_SyncForCurrentSelection(v57, v56);
           Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
-          Render_Begin((int)&dword_544CD8, 0, v54);
+          Render_Begin((int)&g_RenderState, 0, v54);
         }
       }
     }
@@ -19769,7 +19769,7 @@ LABEL_205:
   }
   if ( g_SelectedUnitIndex != -1 && MapTile_HasVisibleEnemyUnitStack(v1, v78) )
   {
-    if ( DD_IsLost((int)&dword_544CD8) )
+    if ( DD_IsLost((int)&g_RenderState) )
       Diagnostics_TraceWorldMapClickEvent(
         "enemy_stack",
         v1,
@@ -19777,7 +19777,7 @@ LABEL_205:
         *(_DWORD *)(gameData + 140008),
         *(_DWORD *)(gameData + 140012),
         g_SelectedUnitIndex);
-    Render_Begin((int)&dword_544CD8, 0, v28);
+    Render_Begin((int)&g_RenderState, 0, v28);
     Diagnostics_TraceWorldMapActionEvent(
       "enemy_attack_call",
       g_SelectedUnitIndex,
@@ -19864,7 +19864,7 @@ LABEL_205:
       }
       else
       {
-        Render_Begin((int)&dword_544CD8, 0, v28);
+        Render_Begin((int)&g_RenderState, 0, v28);
         sub_418700(1);
       }
       return;
@@ -19995,7 +19995,7 @@ int  sub_409D80(uintptr_t a1, DWORD a2)
   if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_2);
-    return Render_Begin((int)dword_544CD8, 0);
+    return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
@@ -20011,7 +20011,7 @@ int  sub_409D80(uintptr_t a1, DWORD a2)
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 511B5C: using guessed type int g_LastSelectedUnitIndex;
 // 526A34: using guessed type int dword_526A34;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00409DF0) --------------------------------------------------------
 void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
@@ -20122,7 +20122,7 @@ int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5)
   if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_3);
-    return Render_Begin((int)dword_544CD8, 0);
+    return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
@@ -20131,7 +20131,7 @@ int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5)
   }
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A040) --------------------------------------------------------
 char *sub_40A040()
@@ -20140,7 +20140,7 @@ char *sub_40A040()
   char *result; // eax
   int v3; // ecx
 
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   if ( g_SelectedUnitIndex == -1 )
     return sub_4425E0(aWrong_4);
   result = sub_4425E0(*(char **)(v1 + 49));
@@ -20160,7 +20160,7 @@ char *sub_40A040()
 // 40A073: variable 'v3' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E8: using guessed type int dword_5202E8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A0A0) --------------------------------------------------------
 int  sub_40A0A0(int a1, int a2)
@@ -20189,21 +20189,21 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
   if ( g_SelectedUnitIndex == -1 )
   {
     sub_4425E0(aWrong_5);
-    return Render_Begin((int)dword_544CD8, 0);
+    return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
     sub_419E60(a1, a2);
     if ( UnitStack_HasBuilder(g_SelectedUnitIndex) )
     {
-      sub_419D80(g_UI_YesNoDims);
+      UIWidgetTable_InitDrawStates(g_UI_YesNoDims);
       sub_418700(1);
       dword_520308 = v6;
       while ( 1 )
       {
-        DD_Pump((int)dword_544CD8, a3);
+        DD_Pump((int)g_RenderState, a3);
         WorldMap_RedrawFrame(a3);
-        if ( UI_TrySelectFriendlyStackUnderCursor() || !sub_419DC0(g_UI_YesNoDims, 0x40u) && DD_IsFlipping((int)dword_544CD8) )
+        if ( UI_TrySelectFriendlyStackUnderCursor() || !UIWidgetTable_PollHoverAndActions(g_UI_YesNoDims, 0x40u) && DD_IsFlipping((int)g_RenderState) )
           break;
         a3 = dword_520308;
         if ( dword_520308 == -1 )
@@ -20214,7 +20214,7 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
             Builder_StartRoadBuildMode(0x40u, a5);
             break;
           case 1:
-            Treasure_TryDigHere(g_SelectedUnitIndex, dword_520308, 0x40u, (char)dword_544CD8, 0, a5);
+            Treasure_TryDigHere(g_SelectedUnitIndex, dword_520308, 0x40u, (char)g_RenderState, 0, a5);
             break;
           case 2:
             BuildBuilding(3, v7, dword_520308, a5);
@@ -20248,7 +20248,7 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
           default:
             break;
         }
-        if ( !DD_IsFlipping((int)dword_544CD8) )
+        if ( !DD_IsFlipping((int)g_RenderState) )
         {
 LABEL_13:
           if ( dword_520308 != -1 )
@@ -20261,7 +20261,7 @@ LABEL_13:
       }
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
       WorldMap_EnsureActionButtonWidgetTable();
-      sub_419D80(dword_511D40);
+      UIWidgetTable_InitDrawStates(dword_511D40);
       sub_40A490(0x40u);
       sub_418700(1);
       sub_406980(0x40u);
@@ -20296,7 +20296,7 @@ LABEL_13:
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 520308: using guessed type int dword_520308;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 static void WorldMap_WriteActionWidgetRecord(
         unsigned char *record,
@@ -20599,14 +20599,14 @@ int __thiscall sub_40A360(void *this)
   if ( g_SelectedUnitIndex == -1 )
   {
     dword_511D48 = 1;
-    sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
     dword_5202E8 = 0;
     dword_511DE7 = 1;
   }
   else
   {
     dword_511D48 = 2;
-    sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
     if ( dword_5202E8 )
     {
       dword_511DE7 = 2;
@@ -20625,7 +20625,7 @@ LABEL_4:
 // 511DE7: using guessed type int dword_511DE7;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E8: using guessed type int dword_5202E8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A400) --------------------------------------------------------
 int  sub_40A400(int a1, char a2, DWORD a3)
@@ -20639,7 +20639,7 @@ int  sub_40A400(int a1, char a2, DWORD a3)
   dword_52030C = (int)v4;
   WorldMap_EnsureActionButtonWidgetTable();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D80(dword_511D40);
+  UIWidgetTable_InitDrawStates(dword_511D40);
   sub_418700(1);
   return v5;
 }
@@ -20665,7 +20665,7 @@ int  sub_40A460(DWORD a1)
 
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   WorldMap_EnsureActionButtonWidgetTable();
-  widget_result = sub_419DC0(dword_511D40, a1);
+  widget_result = UIWidgetTable_PollHoverAndActions(dword_511D40, a1);
   Diagnostics_TraceWorldMapActionEvent(
     "action_widgets_after_poll",
     g_SelectedUnitIndex,
@@ -20865,12 +20865,12 @@ int  sub_40A820(char a1, DWORD a2)
   }
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
   sub_405020((int *)&unk_51D4C0, v6, 20);
-  while ( !DD_IsFlipping((int)dword_544CD8) )
+  while ( !DD_IsFlipping((int)g_RenderState) )
   {
     WorldMap_RunInputScriptStep();
-    DD_Pump((int)dword_544CD8, 20);
+    DD_Pump((int)g_RenderState, 20);
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   sub_404F20((int *)&unk_51D4C0, 20);
   UI_EndDraw(6);
   if ( saved_map_surface )
@@ -20904,7 +20904,7 @@ int UI_LoadTurnBannerGfx(char a1, DWORD a2)
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040AA60) --------------------------------------------------------
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
@@ -21043,14 +21043,14 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     GAME_TURN_COUNTER);
   Debug_Log(0, 0, 0xFFFFFFFF, (int)aAutoMovesEnd);
   sub_418700(1);
-  sub_460AF0(dword_544CD8, 0x140u, 0xF0u);
+  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_before_present",
     g_SelectedUnitIndex,
     g_CurrentPlayerIndex,
     current_player_is_human,
     GAME_TURN_COUNTER);
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -21058,7 +21058,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040AD40) --------------------------------------------------------
 int * WorldMap_RenderHook(DWORD a1)
@@ -21072,7 +21072,7 @@ int * WorldMap_RenderHook(DWORD a1)
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   WorldMap_EnsureActionButtonWidgetTable();
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
-    sub_419D80(dword_511D40);
+    UIWidgetTable_InitDrawStates(dword_511D40);
   else
     sub_40A600(0);
   sub_418700(1);
@@ -21099,7 +21099,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
   int previous_resource_handle; // ecx
   int mission_index; // edx
 
-  DD_Pump((int)dword_544CD8, 0);
+  DD_Pump((int)g_RenderState, 0);
   previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   Map_UpdateIdleAnimatedUnits();
   sub_406FA0(a1);
@@ -21120,7 +21120,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
 }
 // 419030: using guessed type int nullsub_1(void);
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040AE80) --------------------------------------------------------
 int  sub_40AE80(int a1)
@@ -21208,7 +21208,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
     v18 = sub_401AF0(v18, (intptr_t)"map.pal");
   dword_5202F4 = v18;
   sub_435ED0(aMainmap, v18, 0, a2);
-  sub_460C70((int)dword_544CD8);
+  sub_460C70((int)g_RenderState);
   return WorldMapTopMenu_LoadSpriteSet();
 }
 // 5202BC: using guessed type int dword_5202BC;
@@ -21220,7 +21220,7 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
 // 5202DC: using guessed type int dword_5202DC;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202F4: using guessed type int dword_5202F4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040B020) --------------------------------------------------------
 int  WorldMap_UnloadResources(DWORD a1)
@@ -21506,11 +21506,11 @@ void  WorldMap_RunHumanTurnLoop(
   unk_5196A0[5] = 0;
   unk_5196A0[6] = 0;
   dword_545150 = (int)&unk_5196A0;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  sub_460B20((_DWORD *)(uintptr_t)(unsigned int)dword_544CD8, 0, 640, 0, 480);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
   Diagnostics_TraceWorldMapActionEvent("human_turn_cursor_restored", g_SelectedUnitIndex, dword_544D14, dword_545150, 0);
   {
-    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)dword_544CD8;
+    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)g_RenderState;
     Diagnostics_TraceWorldMapActionEvent(
       "human_turn_cursor_bounds",
       g_SelectedUnitIndex,
@@ -21526,7 +21526,7 @@ void  WorldMap_RunHumanTurnLoop(
   {
     UI_ReadCheatString(0);
     WorldMap_RunInputScriptStep();
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     sub_407B20(0, 0, 0);
     WorldMap_RedrawFrame(0);
     MiniMap_UpdateViewportFromCursor();
@@ -21565,7 +21565,7 @@ LABEL_24:
           UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
           Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
           while ( Input_IsKeyPressed(205) )
-            DD_Pump((int)dword_544CD8, 0);
+            DD_Pump((int)g_RenderState, 0);
         }
         if ( Input_IsKeyPressed(203) )
         {
@@ -21576,7 +21576,7 @@ LABEL_24:
             UNIT_STACK_FACING(selected_stack_record) = new_facing & 7;
             Map_RedrawUnitNeighborhoodByIndex(g_SelectedUnitIndex);
             while ( Input_IsKeyPressed(203) )
-              DD_Pump((int)dword_544CD8, 0);
+              DD_Pump((int)g_RenderState, 0);
           }
         }
         if ( Input_IsKeyPressed(200) )
@@ -21685,7 +21685,7 @@ LABEL_24:
 // 5202FC: using guessed type int dword_5202FC;
 // 520300: using guessed type int dword_520300;
 // 520304: using guessed type int dword_520304;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545140: using guessed type int dword_545140;
 
 //----- (0040B640) --------------------------------------------------------
@@ -21752,7 +21752,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
     dword_5202D8 = (int)tree_sprite_set;
   }
   dword_545150 = (int)&unk_5196A0;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   sub_419790(8);
@@ -21767,10 +21767,10 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   unk_5196A0[5] = 0;
   unk_5196A0[6] = 0;
   dword_545150 = (int)&unk_5196A0;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  sub_460B20((_DWORD *)(uintptr_t)(unsigned int)dword_544CD8, 0, 640, 0, 480);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
   {
-    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)dword_544CD8;
+    _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)g_RenderState;
     Diagnostics_TraceWorldMapActionEvent(
       "playgame_cursor_bounds_restored",
       g_SelectedUnitIndex,
@@ -21780,7 +21780,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   }
   UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, a3);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   sub_418700(1);
   Debug_Log(0, 20, a3, (int)aStart);
   LogAllUnits(0, 20, a3);
@@ -21810,10 +21810,10 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
     else if ( GAME_TURN_COUNTER )
     {
       Diagnostics_TraceWorldMapActionEvent("playgame_before_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-      sub_460D80((int)dword_544CD8, (int)&dword_519808);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
       Debug_Log(0, 0, a3, (int)aComputerplay);
       sub_451F70();
-      sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, dword_5202F8);
     }
     if ( dword_5202F8 )
@@ -21890,7 +21890,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
 // 5202FC: using guessed type int dword_5202FC;
 // 520300: using guessed type int dword_520300;
 // 520304: using guessed type int dword_520304;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 // 5452E8: using guessed type int dword_5452E8;
 
@@ -23114,7 +23114,7 @@ int MiniMap_UpdateViewportFromCursor()
   int trace_minimap_verbose;
   int trace_cursor_on_minimap;
 
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   allow_scripted_update = !result && getenv("CLASH95_ALLOW_MINIMAP_UPDATE_OFF_FLIP");
   if ( result || allow_scripted_update )
   {
@@ -23189,7 +23189,7 @@ int MiniMap_UpdateViewportFromCursor()
 // 523344: using guessed type __int16 word_523344;
 // 523346: using guessed type __int16 word_523346;
 // 523F54: using guessed type char byte_523F54;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -23525,13 +23525,13 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
     v58,
     v61);
   LOBYTE(v22) = -1;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   v74 = 0;
   v70 = -1;
   v80 = (char *)v76 + v21;
-  while ( DD_IsFlipping((int)dword_544CD8) && !v74 )
+  while ( DD_IsFlipping((int)g_RenderState) && !v74 )
   {
-    DD_Pump((int)dword_544CD8, v22);
+    DD_Pump((int)g_RenderState, v22);
     v23 = dword_544D00 >> byte_54512C;
     v24 = dword_544CFC >> byte_54512C;
     for ( i = 0; i < WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT; ++i )
@@ -23611,7 +23611,7 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
 LABEL_52:
         Tooltip_RestoreBackdrop();
       v70 = v41;
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
       if ( v41 != -1 )
       {
         v52 = &v71[20 * v41];
@@ -23648,7 +23648,7 @@ LABEL_52:
       v62);
   }
   sub_402850(v73, 0, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( dword_523F60 != dword_5202E0 )
   {
     v31 = *((_DWORD *)g_RenderDevice + 46);
@@ -23689,7 +23689,7 @@ LABEL_52:
 // 5202E0: using guessed type int dword_5202E0;
 // 523F5C: using guessed type int dword_523F5C;
 // 523F60: using guessed type int dword_523F60;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -23715,7 +23715,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
     || dword_544D00 >> byte_54512C < 0
     || dword_544CFC >> byte_54512C > 640
     || dword_544D00 >> byte_54512C > 5
-    || DD_IsFlipping((int)dword_544CD8) )
+    || DD_IsFlipping((int)g_RenderState) )
   {
     return 1;
   }
@@ -23723,9 +23723,9 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   Debug_Log(0, a1, a2, (int)aMenuDraw);
   Render_Pump();
   previous_screen_handle = dword_544D14;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   surface = (_DWORD *)Mem_Alloc(188, 0, 0, a2);
   if ( surface )
     surface = Render_CreateSurface((int)surface, 640, 400);
@@ -23744,7 +23744,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   else
     UI_DrawTextFmt(0, 570, 11, 0, 2, (const char *)aD, GAME_TURN_COUNTER);
   Render_Pump();
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   should_hide_menu = 0;
   menu_callback = 0;
   while ( dword_544CFC >> byte_54512C >= 0
@@ -23753,7 +23753,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
        && dword_544D00 >> byte_54512C <= 25 )
   {
     WorldMap_RunInputScriptStep();
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     for ( i = 0; i < WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT; ++i )
     {
       top_menu_record = &g_WorldMapTopMenuHitRecords[i];
@@ -23764,7 +23764,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
         if ( mouse_y >= (unsigned __int16)top_menu_record->top
           && mouse_x <= (unsigned __int16)top_menu_record->right
           && mouse_y <= (unsigned __int16)top_menu_record->bottom
-          && DD_IsFlipping((int)dword_544CD8) )
+          && DD_IsFlipping((int)g_RenderState) )
         {
           menu_callback = (void (*)(void))UI_RunMenu(
                                          top_menu_record->menu,
@@ -23772,7 +23772,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
         }
       }
     }
-    if ( DD_IsFlipping((int)dword_544CD8) )
+    if ( DD_IsFlipping((int)g_RenderState) )
     {
       close_button_left = g_LanguageIndex == 2 ? 430 : 470;
       if ( dword_544CFC >> byte_54512C >= close_button_left
@@ -23780,7 +23780,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
         && dword_544CFC >> byte_54512C <= 590
         && dword_544D00 >> byte_54512C <= 25 )
       {
-        Render_Begin((int)dword_544CD8, 0);
+        Render_Begin((int)g_RenderState, 0);
         should_hide_menu = 1;
         Diagnostics_TraceWorldMapActionEvent("top_menu_close", g_SelectedUnitIndex, close_button_left, dword_544CFC >> byte_54512C, dword_544D00 >> byte_54512C);
         break;
@@ -23792,8 +23792,8 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
     RenderSurface_InvokeSlot0(surface, 2);
   Render_Pump();
   Render_FillRect((_DWORD *)dword_5202E0, 0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
-  sub_460D80((int)dword_544CD8, previous_screen_handle);
-  Render_Present((int)dword_544CD8);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, previous_screen_handle);
+  Render_Present((int)g_RenderState);
   previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 1);
   previous_render_hook = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
@@ -23819,7 +23819,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
 // 5202E4: using guessed type int gameData;
 // 523F5C: using guessed type int dword_523F5C;
 // 523F60: using guessed type int dword_523F60;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 544D14: using guessed type int dword_544D14;
@@ -24951,7 +24951,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
     if ( v101 )
       sub_418700(1);
     v92 = dword_544D14;
-    sub_460D80((int)dword_544CD8, (int)&dword_519808);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
     v11 = v107;
     *((_BYTE *)v7 + 720) = 0;
     UnitStack_RevealHiddenEnemiesAndAttackAdjacent(v11, a5);
@@ -25085,7 +25085,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                   if ( v71 >= v72 )
                     break;
                 }
-                DD_Pump((int)dword_544CD8, v66);
+                DD_Pump((int)g_RenderState, v66);
                 if ( sub_40FEF0() )
                 {
                   v109 = 0;
@@ -25225,7 +25225,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
         if ( v101 && *(_DWORD *)(gameData + 147159) )
         {
           Time_Now(v45, v44);
-          v13 = (int)dword_544CD8;
+          v13 = (int)g_RenderState;
           sub_418700(1);
           v56 = v55 + 10;
           while ( 1 )
@@ -25233,8 +25233,8 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
             v57 = Time_Now(v56, v54);
             if ( v57 >= v58 )
               break;
-            DD_Pump((int)dword_544CD8, (char)dword_544CD8);
-            WorldMap_RedrawFrame((int)dword_544CD8);
+            DD_Pump((int)g_RenderState, (char)g_RenderState);
+            WorldMap_RedrawFrame((int)g_RenderState);
           }
         }
         if ( v107 <= 0x1F4 && (unsigned int)*(__int16 *)(v91 + gameData + 147174 + 6) <= 0x28 )
@@ -25294,7 +25294,7 @@ LABEL_21:
       UnitStackSelection_RefreshForSelectedStack(v15);
       sub_418700(1);
     }
-    sub_460D80((int)dword_544CD8, v92);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, v92);
     sub_40A490(v15);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_move_after_path_state",
@@ -25353,7 +25353,7 @@ LABEL_21:
 // 523F74: using guessed type int dword_523F74;
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D14: using guessed type int dword_544D14;
 
 //----- (00411120) --------------------------------------------------------
@@ -28719,7 +28719,7 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
     v55 = dword_544D14;
     v56 = dword_544D14 != (_DWORD)&dword_519808;
     if ( dword_544D10 )
-      sub_460D80((int)dword_544CD8, (int)&dword_519808);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
     v11 = 2 * v53;
     v12 = 2 * v53 + gameData + 200 * v52;
     LOWORD(v11) = *(_WORD *)(v12 + 556374);
@@ -28788,7 +28788,7 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
     while ( 1 )
     {
       v23 = v61;
-      DD_Pump((int)dword_544CD8, v22);
+      DD_Pump((int)g_RenderState, v22);
       sub_40AE80(v22);
       v22 = 0;
       v64 = 0;
@@ -29059,7 +29059,7 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
       }
     }
     if ( v56 && dword_544D10 )
-      sub_460D80((int)dword_544CD8, v55);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, v55);
     return v32;
   }
   return result;
@@ -29080,7 +29080,7 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
 // 519808: using guessed type int dword_519808;
 // 5202E4: using guessed type int gameData;
 // 525570: using guessed type int dword_525570;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 // 544D14: using guessed type int dword_544D14;
 
@@ -30637,7 +30637,7 @@ int  sub_418700(int a1)
       Input_Flush();
     result = Render_FillRect((_DWORD *)dword_5202E0, 0, (unsigned __int16)v11, (unsigned __int16)v12, v6, v7, v12, v11);
     if ( v8 )
-      result = Render_Present((int)&dword_544CD8);
+      result = Render_Present((int)&g_RenderState);
     if ( (unsigned __int16)v6 != 607 )
       result = Render_FillRect(
                  (_DWORD *)dword_5202E0,
@@ -30687,10 +30687,10 @@ int  sub_418A90(int result, int a2)
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
       sub_416850(v3, v4, (unsigned __int16 *)(14 * a2 + gameData + 1400 * result));
       v5 = dword_544D10;
-      sub_460BB0(dword_544CD8, v3, v3 + 64, v4, v4 + 64);
+      sub_460BB0(g_RenderState, v3, v3 + 64, v4, v4 + 64);
       result = Render_FillRect((_DWORD *)dword_5202E0, 0, v4, v3, v3 + 63, v4 + 63, v3, v4);
       if ( v5 )
-        return Render_Present((int)dword_544CD8);
+        return Render_Present((int)g_RenderState);
     }
   }
   return result;
@@ -30699,7 +30699,7 @@ int  sub_418A90(int result, int a2)
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 526994: using guessed type int dword_526994;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00418C00) --------------------------------------------------------
@@ -31124,12 +31124,12 @@ unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2)
         (unsigned __int16)top);
     }
     if ( g_RenderDevice == &unk_51D4C0 && dword_544D10 )
-      return (unsigned __int16 *)Render_Present((int)dword_544CD8);
+      return (unsigned __int16 *)Render_Present((int)g_RenderState);
   }
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 static int Compat_RenderDeviceFillSolidRect(
@@ -31501,7 +31501,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
       v26 = a1[2] + DLX_GetSpriteWidth(sprite_set, result) - 1;
       SpriteHeight = DLX_GetSpriteHeight(sprite_set, v30);
       LOWORD(a3) = a1[2];
-      sub_460BB0(dword_544CD8, *a1, *a1 + SpriteHeight - 1, a3, v26);
+      sub_460BB0(g_RenderState, *a1, *a1 + SpriteHeight - 1, a3, v26);
     }
     if ( a2 )
     {
@@ -31518,7 +31518,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
           result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
         }
         if ( v33 )
-          return Render_Present((int)dword_544CD8);
+          return Render_Present((int)g_RenderState);
         return result;
       }
     }
@@ -31577,7 +31577,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
       result = Compat_RenderDeviceDrawMenuSprite(left, top, v24, 1);
     }
     if ( a2 && v33 )
-      return Render_Present((int)dword_544CD8);
+      return Render_Present((int)g_RenderState);
   }
   return result;
 }
@@ -31591,7 +31591,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
 // 4195EC: variable 'v23' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 526A30: using guessed type int (*dword_526A30)(void);
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00419770) --------------------------------------------------------
@@ -31745,7 +31745,7 @@ BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
   Render_Pump();
   Render_FillRect(0, v13, (unsigned __int16)v38, (unsigned __int16)v37, v32, v39, 0, 0);
   v14 = (int)v13;
-  Render_Present((int)&dword_544CD8);
+  Render_Present((int)&g_RenderState);
   g_RenderDevice = v13;
   UI_DrawText(0, 0, *(_DWORD *)(a1 + 4 * (unsigned __int8)g_LanguageIndex + 36));
   v34 = Time_Now(v16, v15);
@@ -31758,7 +31758,7 @@ BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
     Render_BlendSurfaceRect(0, v11, 0, (int)v13, 0, v43, v40, v37, v38, 255 * (v20 - v21) / 0x1Eu);
   }
   Render_FillRect(v13, 0, 0, 0, v43, v40, v37, v38);
-  Render_FlipRect((int)&dword_544CD8, 0);
+  Render_FlipRect((int)&g_RenderState, 0);
   v33 = Time_Now(v23, v22);
   v24 = v33 + 30;
   v25 = v37;
@@ -31777,7 +31777,7 @@ BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
     (**(void (***)(void))(v14 + 184))();
   Render_ReleaseSurface(v31, v24);
   g_RenderDevice = v35;
-  return Render_Begin((int)&dword_544CD8, 0);
+  return Render_Begin((int)&g_RenderState, 0);
 }
 // 419827: variable 'v4' is possibly undefined
 // 4198E5: variable 'v10' is possibly undefined
@@ -31804,7 +31804,7 @@ BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00419B80) --------------------------------------------------------
-signed int  sub_419B80(uintptr_t a1, DWORD a2)
+signed int  UIWidget_PollHitHoverAndClick(uintptr_t a1, DWORD a2)
 {
   int v3; // esi
   int v4; // eax
@@ -31826,7 +31826,7 @@ signed int  sub_419B80(uintptr_t a1, DWORD a2)
   if ( g_QueenMarriageProposalWidgetTableBase
     && a1 >= g_QueenMarriageProposalWidgetTableBase
     && a1 < g_QueenMarriageProposalWidgetTableBase + 2 * 53
-    && (DD_IsFlipping((int)dword_544CD8) || DD_IsLost((int)dword_544CD8)) )
+    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState)) )
   {
     queen_cursor_x = dword_544CFC >> byte_54512C;
     queen_cursor_y = dword_544D00 >> byte_54512C;
@@ -31857,7 +31857,7 @@ signed int  sub_419B80(uintptr_t a1, DWORD a2)
   if ( a1 >= (uintptr_t)BuildingGarrisonDialogActions
     && a1 < (uintptr_t)(BuildingGarrisonDialogActions
                       + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_GARRISON_DIALOG_WIDGET_COUNT)
-    && (DD_IsFlipping((int)dword_544CD8) || DD_IsLost((int)dword_544CD8) || getenv("CLASH95_TRACE_GARRISON_WIDGET_VERBOSE")) )
+    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState) || getenv("CLASH95_TRACE_GARRISON_WIDGET_VERBOSE")) )
   {
     int garrison_cursor_x = dword_544CFC >> byte_54512C;
     int garrison_cursor_y = dword_544D00 >> byte_54512C;
@@ -31917,7 +31917,7 @@ LABEL_23:
   }
   if ( (uintptr_t)a1 >= (uintptr_t)dword_511D40
     && (uintptr_t)a1 < (uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT)
-    && (DD_IsFlipping((int)dword_544CD8) || DD_IsLost((int)dword_544CD8)) )
+    && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState)) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "action_widget_hit",
@@ -31926,9 +31926,9 @@ LABEL_23:
       *(_DWORD *)(a1 + 4),
       *(_DWORD *)(a1 + 8));
   }
-  if ( DD_IsLost((int)dword_544CD8) && *(_BYTE *)(a1 + 48) == 2 )
+  if ( DD_IsLost((int)g_RenderState) && *(_BYTE *)(a1 + 48) == 2 )
     sub_4197A0(a1, a2);
-  if ( DD_IsFlipping((int)dword_544CD8) && *(_DWORD *)(a1 + 32) )
+  if ( DD_IsFlipping((int)g_RenderState) && *(_DWORD *)(a1 + 32) )
   {
     if ( a1 >= (uintptr_t)BuildingGarrisonDialogActions
       && a1 < (uintptr_t)(BuildingGarrisonDialogActions
@@ -31983,7 +31983,7 @@ LABEL_34:
 // 419D48: conditional instruction was optimized away because esi.4 is in (==0|==3)
 // 419CE5: variable 'v10' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -32004,7 +32004,7 @@ int  sub_419D60(uintptr_t result, int a2)
 }
 
 //----- (00419D80) --------------------------------------------------------
-_DWORD * sub_419D80(_DWORD *result)
+_DWORD * UIWidgetTable_InitDrawStates(_DWORD *result)
 {
   unsigned char *widget;
 
@@ -32031,7 +32031,7 @@ _DWORD * sub_419D80(_DWORD *result)
 }
 
 //----- (00419DC0) --------------------------------------------------------
-signed int  sub_419DC0(_DWORD *a1, DWORD a2)
+signed int  UIWidgetTable_PollHoverAndActions(_DWORD *a1, DWORD a2)
 {
   uintptr_t widget; // edx
   int has_tooltip; // ebx
@@ -32049,7 +32049,7 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
   {
     do
     {
-      widget_result = sub_419B80(widget, a2);
+      widget_result = UIWidget_PollHitHoverAndClick(widget, a2);
       if ( widget_result > result )
         result = widget_result;
       if ( (*(_BYTE *)(widget + 8) & 4) != 0 )
@@ -32061,13 +32061,13 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
   if ( !dword_526A24 && has_tooltip )
   {
     dword_526A34 = dword_544D14;
-    sub_460D80((int)dword_544CD8, dword_545150);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
     dword_526A24 = 1;
     return result;
   }
   if ( !dword_526A24 || has_tooltip )
     return result;
-  sub_460D80((int)dword_544CD8, dword_526A34);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_526A34);
   dword_526A24 = 0;
   return result;
 }
@@ -32076,7 +32076,7 @@ signed int  sub_419DC0(_DWORD *a1, DWORD a2)
 // 419E53: variable 'v9' is possibly undefined
 // 526A24: using guessed type int dword_526A24;
 // 526A34: using guessed type int dword_526A34;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D14: using guessed type int dword_544D14;
 // 545150: using guessed type int dword_545150;
 
@@ -32092,25 +32092,25 @@ int  sub_419E60(uintptr_t a1, int a2)
   sub_419D60(a1, 1);
   deadline = Time_Now(0, 0) + 20;
   while ( Time_Now(0, 0) < deadline )
-    DD_Pump((int)dword_544CD8, 0);
-  Render_Begin((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
+  Render_Begin((int)g_RenderState, 0);
   *(_DWORD *)(a1 + 8) = 5;
   return sub_419D60(a1, 1);
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00419ED0) --------------------------------------------------------
-int  sub_419ED0(uintptr_t a1)
+int  UIWidget_PlayPressedReleaseAnimation(uintptr_t a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
     sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
   sub_419D60(a1, 1);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   *(_DWORD *)(a1 + 8) = 5;
   return sub_419D60(a1, 1);
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00419F20) --------------------------------------------------------
 int  sub_419F20(uintptr_t a1)
@@ -32522,9 +32522,9 @@ int  Unit_Info(
   v17 = 0;
   g_RenderDevice = &unk_51D4C0;
   v33 = Time_Now(v18, (int)&unk_51D4C0);
-  while ( DD_IsLost((int)dword_544CD8) || DD_IsFlipping((int)dword_544CD8) )
+  while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
   {
-    DD_Pump((int)dword_544CD8, a6);
+    DD_Pump((int)g_RenderState, a6);
     if ( !a6 )
     {
       v20 = Time_Now(v19, v33 + 10);
@@ -32548,7 +32548,7 @@ int  Unit_Info(
     }
   }
   Render_FillRect(v30, 0, 0, 0, 0xC8u, 0x73u, v31, v28);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v25 )
     (**(void (***)(void))(v25 + 184))();
   return sub_405920((int *)&v27);
@@ -32563,7 +32563,7 @@ int  Unit_Info(
 // 41A91B: variable 'v25' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202F4: using guessed type int dword_5202F4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0041A960) --------------------------------------------------------
 int  UI_DrawSpecialUnitInfoPane(
@@ -32689,9 +32689,9 @@ int  UI_DrawSpecialUnitInfoPane(
   v37 = v35 + 11;
   v21 = 0;
   v36 = v34 + 5;
-  while ( DD_IsLost((int)dword_544CD8) || DD_IsFlipping((int)dword_544CD8) )
+  while ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
   {
-    DD_Pump((int)dword_544CD8, (char)v17);
+    DD_Pump((int)g_RenderState, (char)v17);
     v23 = Time_Now(v22, v20 + 10);
     if ( v24 < v23 )
     {
@@ -32713,7 +32713,7 @@ int  UI_DrawSpecialUnitInfoPane(
   }
   Render_FillRect(v33, 0, 0, 0, 0xC8u, 0x73u, v35, v34);
   v28 = v33;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v28 )
     (*(void (**)(void))v28[46])();
   sub_405920((int *)&v31);
@@ -32729,7 +32729,7 @@ int  UI_DrawSpecialUnitInfoPane(
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0041AD20) --------------------------------------------------------
 void  Unit_Attack(int a1, int a2, char a3, DWORD a4, double a5)
@@ -33911,10 +33911,10 @@ signed int  UI_PromptLeadTroopsPersonally(
   v47[2] = (int)off_513A00[2];
   Render_ReleaseSurface(17, a5);
   UI_DrawTextFmt((int)&v48, v55 + 160, v55 + 390, v54 + 10, 6, v47[(unsigned __int8)g_LanguageIndex]);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   v27 = v54;
   v28 = v55;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   v29 = v27 + 61;
   v30 = v28 + 279;
   v62 = v55 + 201;
@@ -33935,9 +33935,9 @@ signed int  UI_PromptLeadTroopsPersonally(
     do
     {
       WorldMap_RunInputScriptStep();
-      DD_Pump((int)dword_544CD8, v29);
+      DD_Pump((int)g_RenderState, v29);
     }
-    while ( !DD_IsFlipping((int)dword_544CD8) );
+    while ( !DD_IsFlipping((int)g_RenderState) );
     v31 = v29 + (unsigned __int16)DLX_GetSpriteWidth((int)v48, 1u);
     SpriteHeight = DLX_GetSpriteHeight((int)v48, 1u);
     if ( dword_544CFC >> byte_54512C >= v62
@@ -33969,7 +33969,7 @@ LABEL_34:
   SpriteWidth = DLX_GetSpriteWidth((int)v48, 0);
   v39 = DLX_GetSpriteHeight((int)v48, 0);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v54, v55, v55 + v39, v54 + SpriteWidth, v55, v54);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   sub_405920((int *)&v48);
   return v34;
 }
@@ -33989,7 +33989,7 @@ LABEL_34:
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -36028,7 +36028,7 @@ void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3)
     Building_DrawGarrisonRow((int)a1);
     UI_DrawTextFmt(v28, v36, v36 + 150, v29, 2, (int)aD_31);
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   v33 = v40;
   v32 = v36;
   v31 = DLX_GetSpriteWidth((int)v35, 0) - 1;
@@ -36038,7 +36038,7 @@ void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3)
   if ( v25 )
     (*(void (**)(void))v25[46])();
   sub_405920((int *)&v35);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   result = v39;
   g_RenderDevice = v39;
   return result;
@@ -36056,7 +36056,7 @@ void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 513B44: using guessed type char *off_513B44[2];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004202C0) --------------------------------------------------------
 int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double a4)
@@ -36177,9 +36177,9 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   {
     UI_DrawTextFmt(v33[(unsigned __int8)g_LanguageIndex], v13, v17, v20, 3, v33[(unsigned __int8)g_LanguageIndex]);
   }
-  sub_460D80((int)dword_544CD8, dword_545150);
-  Render_Present((int)dword_544CD8);
-  Render_Begin((int)dword_544CD8, 0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  Render_Present((int)g_RenderState);
+  Render_Begin((int)g_RenderState, 0);
   v42 = v48 + 103;
   v43 = v41 + 220;
   v21 = v41 + 175;
@@ -36191,8 +36191,8 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   while ( 1 )
   {
     do
-      DD_Pump((int)dword_544CD8, v22);
-    while ( !DD_IsFlipping((int)dword_544CD8) );
+      DD_Pump((int)g_RenderState, v22);
+    while ( !DD_IsFlipping((int)g_RenderState) );
     if ( dword_544CFC >> byte_54512C >= v44
       && dword_544D00 >> byte_54512C >= v22
       && dword_544CFC >> byte_54512C <= v23
@@ -36210,7 +36210,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
       break;
     }
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Render_Pump();
   v31 = v48;
   v30 = v41;
@@ -36220,7 +36220,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   if ( v40 )
     (*(void (**)(void))v40[46])();
   sub_405920((int *)&v39);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   g_RenderDevice = v46;
   return sub_418700(1);
 }
@@ -36241,7 +36241,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
 // 513BA4: using guessed type char *off_513BA4[9];
 // 513BB0: using guessed type char *off_513BB0[6];
 // 513BBC: using guessed type char *off_513BBC[3];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -36358,7 +36358,7 @@ void *sub_420910()
   void *v13; // [esp+1Ch] [ebp-1Ch]
 
   v13 = g_RenderDevice;
-  if ( !DD_IsFlipping((int)dword_544CD8) || dword_544CFC >> byte_54512C <= 509 || dword_544D00 >> byte_54512C >= 66 )
+  if ( !DD_IsFlipping((int)g_RenderState) || dword_544CFC >> byte_54512C <= 509 || dword_544D00 >> byte_54512C >= 66 )
     goto LABEL_4;
   Castle_RebuildMissingAddonFlags();
   v2 = &unk_51D4C0;
@@ -36392,12 +36392,12 @@ void *sub_420910()
       0,
       0);
     ++v3;
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
   }
   while ( v3 <= 5 );
   Render_Pump();
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 300, 0x27Fu, 0x12Cu, 0x12Cu, 0);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   dword_523F60 = dword_5202E0;
   v12 = (void (*)(void))UI_RunMenu(word_513E08, v11);
   if ( v12 )
@@ -36423,7 +36423,7 @@ LABEL_4:
 // 5202E0: using guessed type int dword_5202E0;
 // 523F60: using guessed type int dword_523F60;
 // 526E74: using guessed type int g_CastleSceneIconSpriteSet;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -36520,7 +36520,7 @@ int  Castle_PlayAddonConstructionReveal(int a1, int a2)
   Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, 1, g_SelectedBuildingRecord, 0);
   g_RenderDevice = &unk_51D4C0;
   Castle_DrawStatusPanel();
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 420B10: variable 'v4' is possibly undefined
 // 420B4F: variable 'v6' is possibly undefined
@@ -36534,7 +36534,7 @@ int  Castle_PlayAddonConstructionReveal(int a1, int a2)
 // 5202E0: using guessed type int dword_5202E0;
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 // 526A68: using guessed type int g_CastleScreenSurface;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00420CD0) --------------------------------------------------------
 int  Castle_BuildSchoolWithAnimation(char a1, DWORD a2)
@@ -37152,7 +37152,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
     Castle_DrawAllAmbientAnimationLayers(v58);
     g_SelectedBuildingRecord = v59;
     Castle_EnsureCompositeStatusWidget();
-    sub_419D80((_DWORD *)dword_513D98);
+    UIWidgetTable_InitDrawStates((_DWORD *)dword_513D98);
     LOBYTE(a1) = (_BYTE)v64;
     g_RenderDevice = v64;
   }
@@ -37185,17 +37185,17 @@ int  sub_421740(
   {
     v11 = a2 + DLX_GetSpriteWidth(a4, a3);
     SpriteHeight = DLX_GetSpriteHeight(a4, a3);
-    sub_460BB0(dword_544CD8, a1, a1 + SpriteHeight, a2, v11);
+    sub_460BB0(g_RenderState, a1, a1 + SpriteHeight, a2, v11);
   }
   SpriteForChar = DLX_GetSpriteForChar(a4, a3);
   result = Compat_RenderDeviceDrawMenuSprite(a2, a1, SpriteForChar, a5);
   if ( v6 )
-    return Render_Present((int)dword_544CD8);
+    return Render_Present((int)g_RenderState);
   return result;
 }
 // 42177B: variable 'v7' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00421830) --------------------------------------------------------
@@ -37619,8 +37619,8 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   Render_LoadResourceSprite_v4(13, byte_526A70, v6, 0, a2);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Castle_DrawStatusPanel();
-  sub_460CB0((int)dword_544CD8, (int)byte_526A70, 0, a2);
-  sub_4610B0((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)byte_526A70, 0, a2);
+  sub_4610B0((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
   {
     primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
@@ -37658,7 +37658,7 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 // 526A68: using guessed type int g_CastleScreenSurface;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00422100) --------------------------------------------------------
 int Castle_UpdateGateToggles()
@@ -37878,13 +37878,13 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] resource_sprites_loaded cursor_base=%d\n", dword_526A2C);
-  sub_460CB0((int)dword_544CD8, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
+  sub_460CB0((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
   sub_419790(8);
   BuildingGarrisonDialog_EnsureActionWidgets(building_record);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_ready\n");
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D80((_DWORD *)BuildingGarrisonDialogActions);
+  UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_drawn\n");
@@ -37898,10 +37898,10 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] selected_panel_drawn\n");
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   Render_Pump();
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] initial_present_done\n");
 
@@ -37911,9 +37911,9 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   while ( !dword_532148 && !Input_IsKeyPressed(1) )
   {
     BuildingGarrisonDialog_TickAnimations((double)runtime_context);
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     g_RenderDevice = &unk_51D4C0;
-    handled_widget = sub_419DC0((_DWORD *)BuildingGarrisonDialogActions, runtime_context);
+    handled_widget = UIWidgetTable_PollHoverAndActions((_DWORD *)BuildingGarrisonDialogActions, runtime_context);
     if ( handled_widget )
       continue;
 
@@ -37921,8 +37921,8 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
     if ( slot_index == -1 )
       continue;
     slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * slot_index;
-    primary_down = DD_IsFlipping((int)dword_544CD8);
-    secondary_down = DD_IsLost((int)dword_544CD8);
+    primary_down = DD_IsFlipping((int)g_RenderState);
+    secondary_down = DD_IsLost((int)g_RenderState);
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
       fprintf(
         stderr,
@@ -37947,11 +37947,11 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
             selected_count);
         sub_4426C0("marker", 64);
         BuildingGarrisonDialog_DrawSlotGrid(slot_index);
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
       }
-      while ( DD_IsFlipping((int)dword_544CD8) )
+      while ( DD_IsFlipping((int)g_RenderState) )
       {
-        DD_Pump((int)dword_544CD8, 0);
+        DD_Pump((int)g_RenderState, 0);
         BuildingGarrisonDialog_TickAnimations((double)runtime_context);
       }
     }
@@ -37969,18 +37969,18 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
         fprintf(stderr, "[barracks] slot_detail_begin idx=%d\n", slot_index);
       Diagnostics_ResetFrameDumpOnBarracksDetail();
       BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(0, 20, runtime_context);
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_present idx=%d\n", slot_index);
       sub_404C80((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
-      while ( DD_IsLost((int)dword_544CD8) )
+      while ( DD_IsLost((int)g_RenderState) )
       {
-        DD_Pump((int)dword_544CD8, 0);
+        DD_Pump((int)g_RenderState, 0);
         BuildingGarrisonDialog_TickAnimations((double)runtime_context);
       }
       g_BuildingGarrisonDialogSelectedSlotIndex = -1;
       BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(0, 20, runtime_context);
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_end idx=%d\n", slot_index);
     }
@@ -38447,8 +38447,8 @@ static void Diagnostics_TraceWorldMapClickEvent(
     g_CurrentPlayerIndex,
     VIEWED_PLAYER_INDEX,
     TURN_OWNER_PLAYER_INDEX,
-    DD_IsFlipping((int)&dword_544CD8),
-    DD_IsLost((int)&dword_544CD8),
+    DD_IsFlipping((int)&g_RenderState),
+    DD_IsLost((int)&g_RenderState),
     in_bounds ? MapTile_HasOwnUnitStack(tile_x, tile_y) : 0,
     in_bounds ? MapTile_HasVisibleEnemyUnitStack(tile_x, tile_y) : 0,
     in_bounds ? MapTile_HasBuilding(tile_x, tile_y) : 0,
@@ -38514,8 +38514,8 @@ static void Diagnostics_TraceBattlefieldClickEvent(
     occupant_flags,
     dword_53205C,
     dword_532060,
-    DD_IsFlipping((int)&dword_544CD8),
-    DD_IsLost((int)&dword_544CD8));
+    DD_IsFlipping((int)&g_RenderState),
+    DD_IsLost((int)&g_RenderState));
 }
 
 static void Diagnostics_TraceWorldMapActionEvent(
@@ -38539,8 +38539,8 @@ static void Diagnostics_TraceWorldMapActionEvent(
     detail_c,
     dword_544CFC >> byte_54512C,
     dword_544D00 >> byte_54512C,
-    DD_IsFlipping((int)&dword_544CD8),
-    DD_IsLost((int)&dword_544CD8));
+    DD_IsFlipping((int)&g_RenderState),
+    DD_IsLost((int)&g_RenderState));
   fflush(stderr);
 }
 
@@ -38651,8 +38651,8 @@ static void Diagnostics_TraceWorldMapCursorSample(
     return;
   cursor_x = dword_544CFC >> byte_54512C;
   cursor_y = dword_544D00 >> byte_54512C;
-  flipping = DD_IsFlipping((int)&dword_544CD8);
-  lost = DD_IsLost((int)&dword_544CD8);
+  flipping = DD_IsFlipping((int)&g_RenderState);
+  lost = DD_IsLost((int)&g_RenderState);
   if ( initialized
     && cursor_x == last_cursor_x
     && cursor_y == last_cursor_y
@@ -38789,26 +38789,26 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   CSS_ResumeStreamReading();
   LOBYTE(v22) = -57;
   Tooltip_CaptureBackdrop(190, 455, 7, 455, 248);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[castle] first_present building_idx=%u\n", (unsigned int)a1);
   Diagnostics_TraceCastleHotspots(g_CastleScreenSurface);
   g_CastleDestroyConfirmed = 0;
   g_CastleScreenExitRequested = 0;
   dword_545150 = (int)&unk_5196A0;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   v23 = 0;
   castle_loop_iterations = 0;
   while ( !Input_IsKeyPressed(1) && !g_CastleScreenExitRequested )
   {
     ++castle_loop_iterations;
-    DD_Pump((int)dword_544CD8, (char)v22);
+    DD_Pump((int)g_RenderState, (char)v22);
     Castle_UpdateAmbientAnimationLayers();
     sub_420910();
     sub_44E350(word_513D08);
     g_RenderDevice = &unk_51D4C0;
     Castle_EnsureCompositeStatusWidget();
-    sub_419DC0((_DWORD *)dword_513D98, v19);
+    UIWidgetTable_PollHoverAndActions((_DWORD *)dword_513D98, v19);
     LOBYTE(v32) = byte_54512C;
     g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
     v22 = (char *)(dword_544D00 >> byte_54512C);
@@ -38886,7 +38886,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         v23 = 0;
         break;
     }
-    if ( DD_IsFlipping((int)dword_544CD8) && castle_panel_callback )
+    if ( DD_IsFlipping((int)g_RenderState) && castle_panel_callback )
     {
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(
@@ -38921,12 +38921,12 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       g_CastleScreenSurface = (int)v38;
       Castle_RebuildSceneBuffers(v39, v19);
       g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-      sub_460CB0((int)dword_544CD8, (int)byte_526A70, v40, v19);
+      sub_460CB0((int)g_RenderState, (int)byte_526A70, v40, v19);
       Render_LoadResourceSprite_v4(8, byte_526A70, v41, (char)v22, v19);
       Render_LoadResourceSprite_v4(7, byte_526A70, v42, (char)v22, v19);
       Render_LoadResourceSprite_v4(13, byte_526A70, v43, (char)v22, v19);
-      sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-      Render_Present((int)dword_544CD8);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+      Render_Present((int)g_RenderState);
     }
   }
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -38938,7 +38938,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       Input_IsKeyPressed(1),
       g_CastleScreenExitRequested);
   Render_Pump();
-  sub_460C70((int)dword_544CD8);
+  sub_460C70((int)g_RenderState);
   sub_441960(v24, 400);
   sub_404F20((int *)&unk_51D4C0, 20);
   sub_405920(&dword_523F5C);
@@ -39015,7 +39015,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
 // 526E7C: using guessed type int g_CastleStatusSpriteSet;
 // 526E80: using guessed type int g_CastleScreenExitRequested;
 // 526E84: using guessed type int g_CastleDestroyConfirmed;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -39088,7 +39088,7 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
   v9 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   v3 = dword_520728;
-  sub_460BB0(dword_544CD8, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
+  sub_460BB0(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
     (_DWORD *)g_TooltipBackdropSurface,
     0,
@@ -39103,7 +39103,7 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
   sub_40C190(g_TooltipTop, g_TooltipBottom, a1, g_TooltipLeft, a2, args);
   va_end(args);
   v4 = (char *)&g_TooltipTextBuffer;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   v5 = a2;
   do
   {
@@ -39130,12 +39130,12 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
 // 526F00: using guessed type int g_TooltipBottom;
 // 526F04: using guessed type int g_TooltipRight;
 // 526F08: using guessed type int g_TooltipResourceHandle;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00422AC0) --------------------------------------------------------
 int Tooltip_RestoreBackdrop()
 {
-  sub_460BB0(dword_544CD8, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
+  sub_460BB0(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
     (_DWORD *)g_TooltipBackdropSurface,
     0,
@@ -39145,14 +39145,14 @@ int Tooltip_RestoreBackdrop()
     g_TooltipRight - g_TooltipLeft,
     g_TooltipTop,
     g_TooltipLeft);
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 526EF4: using guessed type int g_TooltipBackdropSurface;
 // 526EF8: using guessed type int g_TooltipTop;
 // 526EFC: using guessed type int g_TooltipLeft;
 // 526F00: using guessed type int g_TooltipBottom;
 // 526F04: using guessed type int g_TooltipRight;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00422B50) --------------------------------------------------------
 int  Tooltip_RestoreIfTextMatches(int a1, int a2)
@@ -39574,9 +39574,9 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   memset(dword_526F78, 0, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(a1, a1);
   sub_418700(1);
-  while ( DD_IsLost((int)dword_544CD8) )
+  while ( DD_IsLost((int)g_RenderState) )
   {
-    DD_Pump((int)dword_544CD8, a2);
+    DD_Pump((int)g_RenderState, a2);
     sub_407D20(a1);
     WorldMap_RedrawFrame(a2);
   }
@@ -39592,7 +39592,7 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
 // 526994: using guessed type int dword_526994;
 // 526F78: using guessed type _DWORD dword_526F78[10];
 // 526FA0: using guessed type int dword_526FA0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00423860) --------------------------------------------------------
 signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
@@ -39615,14 +39615,14 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
     && slot_index >= 0
     && slot_index <= 9 )
   {
-    sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-    if ( DD_IsLost((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    if ( DD_IsLost((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
       special_unit_info = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
       Unit_Info(100, 100, special_unit_info, (unsigned __int8 *)(dword_526FA0 + 31 * slot_index + 6), a1, 0);
       sub_418700(1);
     }
-    if ( DD_IsFlipping((int)dword_544CD8) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
+    if ( DD_IsFlipping((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
       LOBYTE(dword_526F78[slot_index]) ^= 1u;
       Diagnostics_TraceWorldMapActionEvent(
@@ -39651,7 +39651,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
         dword_514194,
         dword_526F78[0],
         dword_526F78[slot_index]);
-      Render_Begin((int)dword_544CD8, 0);
+      Render_Begin((int)g_RenderState, 0);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_render_begin",
         g_SelectedUnitIndex,
@@ -39661,7 +39661,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
     }
     handled_panel_input = 1;
   }
-  if ( DD_IsFlipping((int)dword_544CD8) )
+  if ( DD_IsFlipping((int)g_RenderState) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "selection_split_probe",
@@ -39670,7 +39670,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
       dword_526F78[0],
       UnitStackSelection_HasSelectedSlots());
   }
-  if ( DD_IsFlipping((int)dword_544CD8) && UnitStackSelection_HasSelectedSlots() )
+  if ( DD_IsFlipping((int)g_RenderState) && UnitStackSelection_HasSelectedSlots() )
   {
     target_tile_x = ((dword_544CFC >> byte_54512C) - 32) / 64 + *(_DWORD *)(gameData + 140008);
     target_tile_y = ((dword_544D00 >> byte_54512C) - 16) / 64 + *(_DWORD *)(gameData + 140012);
@@ -39684,7 +39684,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
         distance_y = -distance_y;
       if ( distance_y <= 1 )
       {
-        Render_Begin((int)dword_544CD8, 0);
+        Render_Begin((int)g_RenderState, 0);
         memset(selected_slot_indices, 0, sizeof(selected_slot_indices));
         UnitStackSelection_BuildSelectedSlotIndexList((int)dword_526F78, 10, selected_slot_indices);
         Diagnostics_TraceWorldMapActionEvent(
@@ -39724,7 +39724,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
 // 5202E4: using guessed type int gameData;
 // 526F78: using guessed type _DWORD dword_526F78[10];
 // 526FA0: using guessed type int dword_526FA0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -40631,7 +40631,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
   {
     v4 = 0;
     dword_545150 = (int)&unk_5196C8;
-    sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
     dword_52698C = v5;
     g_RoadBuildModeExitRequested = 0;
     dword_514394 = 2;
@@ -40640,7 +40640,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
     {
       while ( 1 )
       {
-        DD_Pump((int)dword_544CD8, v4);
+        DD_Pump((int)g_RenderState, v4);
         sub_407D20(a1);
         WorldMap_RedrawFrame(v4);
         if ( Time_Now(v8, v7) - 10 > (unsigned int)g_RoadBuildModeLastAnimationTick )
@@ -40661,16 +40661,16 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176) + 1);
         }
-        if ( !sub_419DC0(g_RoadBuildModeControlWidgets, a1) )
+        if ( !UIWidgetTable_PollHoverAndActions(g_RoadBuildModeControlWidgets, a1) )
         {
-          sub_460D80((int)dword_544CD8, dword_545150);
+          RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
           if ( UI_TrySelectFriendlyStackUnderCursor() )
           {
-            Render_Begin((int)dword_544CD8, 0);
+            Render_Begin((int)g_RenderState, 0);
             goto LABEL_13;
           }
         }
-        if ( DD_IsFlipping((int)dword_544CD8) )
+        if ( DD_IsFlipping((int)g_RenderState) )
         {
           LOBYTE(v6) = byte_54512C;
           v10 = 725 * g_SelectedUnitIndex + gameData;
@@ -40752,7 +40752,7 @@ LABEL_13:
 // 527C30: using guessed type int g_RoadBuildModeExitRequested;
 // 527C34: using guessed type int dword_527C34;
 // 527C38: using guessed type int g_RoadBuildModeAnimationFrameIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -41477,7 +41477,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   v53 = v6;
   if ( v6 && *v6 )
   {
-    sub_460D80((int)dword_544CD8, (int)&dword_519808);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
     g_SelectedUnitIndex = v50;
     v7 = 0;
     UnitBattle_DrawSelectedUnitPanel(0, 1, a3, 0);
@@ -41563,7 +41563,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
               if ( v44 >= v45 )
                 break;
             }
-            DD_Pump((int)dword_544CD8, v11);
+            DD_Pump((int)g_RenderState, v11);
             UnitBattle_UpdateIdleAnimatedUnits();
             if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
               UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(v34);
@@ -41668,7 +41668,7 @@ LABEL_15:
       *((unsigned __int8 *)v5 + 8),
       0,
       0);
-    LOWORD(v6) = sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
+    LOWORD(v6) = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
   }
   return (__int16)v6;
 }
@@ -41695,7 +41695,7 @@ LABEL_15:
 // 523F7C: using guessed type int dword_523F7C;
 // 527C40: using guessed type int dword_527C40;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00426E20) --------------------------------------------------------
 int  UnitBattle_CenterViewOnUnit(int a1)
@@ -41981,7 +41981,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   v99 = a4;
   v98 = a3;
   Debug_Log(a3, a4, (DWORD)a5, (int)aAttackanimDD);
-  sub_460D80((int)dword_544CD8, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
   v5 = (__int16 *)(dword_532048 + 852 + 31 * v102);
   if ( v101 == -1 )
     v100 = 0;
@@ -42124,7 +42124,7 @@ LABEL_22:
         break;
     }
     UnitBattle_UpdateIdleAnimatedUnits();
-    DD_Pump((int)dword_544CD8, v26);
+    DD_Pump((int)g_RenderState, v26);
     v30 = (unsigned __int8)byte_512571[88 * *v5];
     v32 = Time_Now(v31, v30);
     if ( v32 - v26 >= (unsigned int)v30 )
@@ -42231,7 +42231,7 @@ LABEL_22:
   while ( dword_523F7C < dword_512364 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    DD_Pump((int)dword_544CD8, v65);
+    DD_Pump((int)g_RenderState, v65);
     v69 = *(__int16 *)(v64 + dword_532048 + 852);
     v70 = (unsigned __int8)byte_512572[88 * v69];
     v67 = Time_Now(v66, v70);
@@ -42271,7 +42271,7 @@ LABEL_22:
       while ( v12 >= 0 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)dword_544CD8, v65);
+        DD_Pump((int)g_RenderState, v65);
         v79 = Time_Now(v78, v77);
         if ( (unsigned int)(v79 - v64) >= 3 )
         {
@@ -42308,7 +42308,7 @@ LABEL_22:
     while ( dword_523F70 || dword_523F74 )
     {
       UnitBattle_UpdateIdleAnimatedUnits();
-      DD_Pump((int)dword_544CD8, 0);
+      DD_Pump((int)g_RenderState, 0);
       v89 = (unsigned __int8)byte_512571[88 * *v5];
       v87 = Time_Now(v86, v89);
       if ( v87 - v88 >= v89 )
@@ -42390,7 +42390,7 @@ LABEL_22:
   if ( dword_5320F0 )
     sub_405920(&dword_5320F0);
   dword_5320F0 = 0;
-  sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
   dword_512360 = -1;
   return UnitBattle_RedrawVisibleGrid();
 }
@@ -42444,7 +42444,7 @@ LABEL_22:
 // 532060: using guessed type int dword_532060;
 // 5320EC: using guessed type int dword_5320EC;
 // 5320F0: using guessed type int dword_5320F0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00427FA0) --------------------------------------------------------
 int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
@@ -42901,7 +42901,7 @@ __int16  UnitBattle_PlayShotAnimation(
   int v133; // [esp+32Eh] [ebp+7Eh]
 
   v122 = a4;
-  sub_460D80((int)dword_544CD8, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
   v125 = (__int16 *)(dword_532048 + 852 + 31 * a1);
   if ( a2 == -1 )
   {
@@ -43061,7 +43061,7 @@ __int16  UnitBattle_PlayShotAnimation(
     do
     {
       UnitBattle_UpdateIdleAnimatedUnits();
-      DD_Pump((int)dword_544CD8, v25);
+      DD_Pump((int)g_RenderState, v25);
       v25 = v124;
       v34 = Time_Now(v33, (unsigned __int8)byte_512572[88 * *(__int16 *)(v32 + dword_532048 + 852)]);
       if ( v34 - v124 >= v36 )
@@ -43100,7 +43100,7 @@ __int16  UnitBattle_PlayShotAnimation(
     while ( 1 )
     {
       UnitBattle_UpdateIdleAnimatedUnits();
-      DD_Pump((int)dword_544CD8, v44);
+      DD_Pump((int)g_RenderState, v44);
       v48 = dword_512364;
       v49 = dword_523F7C % dword_512364;
       dword_523F7C = v49;
@@ -43142,7 +43142,7 @@ __int16  UnitBattle_PlayShotAnimation(
       v59 = v133;
       if ( v43 >= v133 )
         v59 = v43;
-      sub_460BB0(dword_544CD8, v133, v59 + SpriteHeight, v43, v108);
+      sub_460BB0(g_RenderState, v133, v59 + SpriteHeight, v43, v108);
       v60 = v43 + (unsigned __int16)DLX_GetSpriteWidth(v131, v132) + 1;
       if ( v60 > 464 )
         LOWORD(v60) = 464;
@@ -43214,7 +43214,7 @@ __int16  UnitBattle_PlayShotAnimation(
         1,
         0,
         0);
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
     }
   }
   dword_523F7C %= dword_512364;
@@ -43315,7 +43315,7 @@ LABEL_62:
   sub_405920(&dword_523F78);
   if ( v105 )
     nfree_(v105);
-  result = sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
+  result = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
   dword_512360 = -1;
   dword_512364 = 8;
   return result;
@@ -43377,7 +43377,7 @@ LABEL_62:
 // 5320F0: using guessed type int dword_5320F0;
 // 5320FC: using guessed type int dword_5320FC;
 // 532100: using guessed type int dword_532100;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004295D0) --------------------------------------------------------
 int  UnitBattle_CalcShotTargetHealthAfterHit(int a1, int a2)
@@ -43897,11 +43897,11 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   sub_418700(1);
   while ( !dword_531CD0 )
   {
-    DD_Pump((int)&dword_544CD8, v8, (char)sub_429EC0);
+    DD_Pump((int)&g_RenderState, v8, (char)sub_429EC0);
     WorldMap_RedrawFrame(v8);
-    if ( !sub_419DC0((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
+    if ( !UIWidgetTable_PollHoverAndActions((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
     {
-      Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
+      Render_Begin((int)&g_RenderState, 0, (char)sub_429EC0);
       break;
     }
     sub_407D20(v9);
@@ -43944,7 +43944,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
         sub_418A90(qword_531CD8 + 1, HIDWORD(qword_531CD8) + 1);
       }
     }
-    if ( DD_IsFlipping((int)&dword_544CD8) )
+    if ( DD_IsFlipping((int)&g_RenderState) )
     {
       if ( a1 == 3 )
       {
@@ -43956,7 +43956,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
           v22[1] = (int)off_514834[1];
           v22[2] = (int)off_514834[2];
           UI_ShowInfoWindow(v22[(unsigned __int8)g_LanguageIndex], 0, v21, 3u, (int)&v22[3], (int)&off_514834[3]);
-          Render_Begin((int)&dword_544CD8, 0, (char)&v22[3]);
+          Render_Begin((int)&g_RenderState, 0, (char)&v22[3]);
           dword_531CD0 = 1;
           break;
         }
@@ -43973,7 +43973,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
                0) == 1 )
         {
           sub_4426C0((int)aStruktur_2, 64);
-          Render_Begin((int)&dword_544CD8, 0, (char)sub_429EC0);
+          Render_Begin((int)&g_RenderState, 0, (char)sub_429EC0);
           dword_531CD0 = 1;
           break;
         }
@@ -44364,7 +44364,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   v6 = g_BuildingEconomyDialogBuilding;
   v7 = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436);
@@ -44377,7 +44377,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
   v8 = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
   do
   {
-    DD_Pump((int)dword_544CD8, v8);
+    DD_Pump((int)g_RenderState, v8);
     v11 = Time_Now(v10, v9);
     v13 = Time_Now(v12, v11);
     v16 = (v14 - v15) * (v13 - v15) / 0x15Eu;
@@ -44388,10 +44388,10 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
     v19 = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
     *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = v19;
     *(_BYTE *)(v18 + 436) = v17 & 0x3F | v19;
-    UI_DrawNoticeBoxSmall((DWORD)dword_544CD8, 0);
+    UI_DrawNoticeBoxSmall((DWORD)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v20);
 }
 // 42ABA6: variable 'v5' is possibly undefined
@@ -44403,7 +44403,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
 // 42ABEE: variable 'v15' is possibly undefined
 // 42AC46: variable 'v20' is possibly undefined
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042AC80) --------------------------------------------------------
 int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
@@ -44427,7 +44427,7 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   v6 = g_BuildingEconomyDialogBuilding;
   v7 = ((*(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F) + 1) & 0x3F;
@@ -44437,7 +44437,7 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
   v9 = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0x3F;
   do
   {
-    DD_Pump((int)dword_544CD8, v9);
+    DD_Pump((int)g_RenderState, v9);
     v12 = Time_Now(v11, v10);
     v14 = Time_Now(v13, v12);
     v17 = v9 + (v15 - v16) * (v14 - v16) / 0x15Eu;
@@ -44447,10 +44447,10 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
     BYTE1(v17) = *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) & 0xC0;
     *(_BYTE *)(g_BuildingEconomyDialogBuilding + 436) = BYTE1(v17);
     *(_BYTE *)(v18 + 436) = v17 & 0x3F | BYTE1(v17);
-    UI_DrawNoticeBoxSmall(0x15Eu, (int)dword_544CD8);
+    UI_DrawNoticeBoxSmall(0x15Eu, (int)g_RenderState);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v19);
 }
 // 42ACA3: variable 'v5' is possibly undefined
@@ -44462,7 +44462,7 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
 // 42AD06: variable 'v16' is possibly undefined
 // 42AD59: variable 'v19' is possibly undefined
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042AD70) --------------------------------------------------------
 int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2)
@@ -44481,22 +44481,22 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingPeasantTransfer -= 10;
   v6 = g_BuildingEconomyDialogPendingPeasantTransfer;
   do
   {
-    DD_Pump((int)dword_544CD8, v6);
+    DD_Pump((int)g_RenderState, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingPeasantTransfer < 0 )
       g_BuildingEconomyDialogPendingPeasantTransfer = 0;
-    UI_DrawConfirmTop((DWORD)dword_544CD8, 0);
+    UI_DrawConfirmTop((DWORD)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v14);
 }
 // 42AD96: variable 'v5' is possibly undefined
@@ -44508,7 +44508,7 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2)
 // 42ADCA: variable 'v13' is possibly undefined
 // 42AE1D: variable 'v14' is possibly undefined
 // 531CEC: using guessed type int g_BuildingEconomyDialogPendingPeasantTransfer;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042AE30) --------------------------------------------------------
 int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
@@ -44528,13 +44528,13 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingPeasantTransfer += 10;
   v6 = g_BuildingEconomyDialogPendingPeasantTransfer;
   do
   {
-    DD_Pump((int)dword_544CD8, v6);
+    DD_Pump((int)g_RenderState, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingPeasantTransfer = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
@@ -44544,10 +44544,10 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
     HIBYTE(v14) &= 0xFu;
     if ( v14 < g_BuildingEconomyDialogPendingPeasantTransfer )
       g_BuildingEconomyDialogPendingPeasantTransfer = v14;
-    UI_DrawConfirmTop(0xAu, (int)dword_544CD8);
+    UI_DrawConfirmTop(0xAu, (int)g_RenderState);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v15);
 }
 // 42AE53: variable 'v5' is possibly undefined
@@ -44560,7 +44560,7 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
 // 42AEEE: variable 'v15' is possibly undefined
 // 531CEC: using guessed type int g_BuildingEconomyDialogPendingPeasantTransfer;
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042AF10) --------------------------------------------------------
 int  BuildingTransferDialog_DecreaseGoldTransferAmount(int a1, char a2)
@@ -44579,22 +44579,22 @@ int  BuildingTransferDialog_DecreaseGoldTransferAmount(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingGoldTransfer -= 10;
   v6 = g_BuildingEconomyDialogPendingGoldTransfer;
   do
   {
-    DD_Pump((int)dword_544CD8, v6);
+    DD_Pump((int)g_RenderState, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((v6 - (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
     if ( g_BuildingEconomyDialogPendingGoldTransfer < 0 )
       g_BuildingEconomyDialogPendingGoldTransfer = 0;
-    UI_DrawConfirmBottom((DWORD)dword_544CD8, 0);
+    UI_DrawConfirmBottom((DWORD)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v14);
 }
 // 42AF36: variable 'v5' is possibly undefined
@@ -44606,7 +44606,7 @@ int  BuildingTransferDialog_DecreaseGoldTransferAmount(int a1, char a2)
 // 42AF6A: variable 'v13' is possibly undefined
 // 42AFBD: variable 'v14' is possibly undefined
 // 531CF0: using guessed type int g_BuildingEconomyDialogPendingGoldTransfer;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042AFD0) --------------------------------------------------------
 int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
@@ -44626,13 +44626,13 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
 
   sub_419F20(a1);
   Render_Pump();
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
   g_BuildingEconomyDialogPendingGoldTransfer += 10;
   v6 = g_BuildingEconomyDialogPendingGoldTransfer;
   do
   {
-    DD_Pump((int)dword_544CD8, v6);
+    DD_Pump((int)g_RenderState, v6);
     v9 = Time_Now(v8, v7);
     v11 = Time_Now(v10, v9);
     g_BuildingEconomyDialogPendingGoldTransfer = 10 * ((v6 + (v12 - v13) * (v11 - v13) / 0x32u) / 0xA);
@@ -44641,10 +44641,10 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
     v14 = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
     if ( g_BuildingEconomyDialogPendingGoldTransfer > v14 )
       g_BuildingEconomyDialogPendingGoldTransfer = *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438);
-    UI_DrawConfirmBottom(v14, (int)dword_544CD8);
+    UI_DrawConfirmBottom(v14, (int)g_RenderState);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v15);
 }
 // 42AFF3: variable 'v5' is possibly undefined
@@ -44657,7 +44657,7 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
 // 42B086: variable 'v15' is possibly undefined
 // 531CF0: using guessed type int g_BuildingEconomyDialogPendingGoldTransfer;
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042B0A0) --------------------------------------------------------
 int  BuildingEconomyDialog_Run(int a1)
@@ -44727,7 +44727,7 @@ int  BuildingEconomyDialog_Run(int a1)
   Render_ReleaseSurface(16, 0);
   UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(g_BuildingEconomyDialogBuilding + 430));
   BuildingEconomyDialog_EnsureWidgets();
-  sub_419D80(dword_514840);
+  UIWidgetTable_InitDrawStates(dword_514840);
   BuildingTransferTargetList_SetDrawOrigin(184, 279);
   BuildingTransferTargetList_Draw((int)(uintptr_t)palette_buffer, 0);
   UI_DrawConfirmTop(0, 0);
@@ -44737,9 +44737,9 @@ int  BuildingEconomyDialog_Run(int a1)
   Render_ReleaseSurface(5, 0);
   UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
   sub_405020((int *)&unk_51D4C0, palette_buffer, 20);
-  sub_460CB0((int)dword_544CD8, (int)(uintptr_t)palette_buffer, 0, 0);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
       stderr,
@@ -44751,9 +44751,9 @@ int  BuildingEconomyDialog_Run(int a1)
   exit_signal_snapshot = 0;
   do
   {
-    DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+    DD_Pump((int)g_RenderState, (char)g_RenderState);
     BuildingTransferTargetList_HandleClick(0);
-    sub_419DC0(dword_514840, 0);
+    UIWidgetTable_PollHoverAndActions(dword_514840, 0);
     sub_44E350(word_514A88);
   }
   while ( exit_signal_snapshot == g_BuildingEconomyDialogExitSignal );
@@ -44781,7 +44781,7 @@ int  BuildingEconomyDialog_Run(int a1)
 // 531CEC: using guessed type int g_BuildingEconomyDialogPendingPeasantTransfer;
 // 531CF0: using guessed type int g_BuildingEconomyDialogPendingGoldTransfer;
 // 531CF4: using guessed type int g_BuildingEconomyDialogBuilding;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042B3F0) --------------------------------------------------------
 BOOL  Trap_CanPlaceAtTile(int a1, int a2)
@@ -45149,8 +45149,8 @@ int  sub_42B9D0(int a1, int a2, char a3, DWORD a4)
   }
   UI_DrawTextFmt((int)&v30, v38 + 30, v38 + 250, v32 + 42, 3, v29[(unsigned __int8)g_LanguageIndex]);
 LABEL_9:
-  sub_460D80((int)dword_544CD8, dword_545150);
-  Render_Present((int)dword_544CD8);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  Render_Present((int)g_RenderState);
   v39 = v38 + 175;
   v34 = v38 + 220;
   v14 = v32 + 103;
@@ -45162,8 +45162,8 @@ LABEL_9:
   while ( 1 )
   {
     do
-      DD_Pump((int)dword_544CD8, v15);
-    while ( !DD_IsFlipping((int)dword_544CD8) );
+      DD_Pump((int)g_RenderState, v15);
+    while ( !DD_IsFlipping((int)g_RenderState) );
     if ( dword_544CFC >> byte_54512C >= v15
       && dword_544D00 >> byte_54512C >= v16
       && dword_544CFC >> byte_54512C <= v40
@@ -45180,7 +45180,7 @@ LABEL_9:
       break;
     }
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Render_Pump();
   v28 = v32;
   v27 = v38;
@@ -45190,7 +45190,7 @@ LABEL_9:
   if ( v31 )
     (*(void (__cdecl **)(int, int, int))v31[46])(v29[0], v29[1], v29[2]);
   sub_405920((int *)&v30);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   g_RenderDevice = v37;
   return sub_418700(1);
 }
@@ -45204,7 +45204,7 @@ LABEL_9:
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 514B3C: using guessed type char *off_514B3C[2];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -45431,7 +45431,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
     sub_404C80((int *)&unk_51D4C0, (const void *)dword_5202F4);
     sub_405920((int *)&v26);
     g_RenderDevice = v27;
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
     UnitBattle_RedrawVisibleGrid();
   }
   for ( k = 0; k != 682; k += 31 )
@@ -45471,7 +45471,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
 // 5202E4: using guessed type int gameData;
 // 5202F4: using guessed type int dword_5202F4;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042C4C0) --------------------------------------------------------
 int  Battle_NewTurn(int a1, char a2, DWORD a3)
@@ -45609,7 +45609,7 @@ LABEL_5:
       while ( Input_IsKeyPressed(205) )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+        DD_Pump((int)g_RenderState, (char)g_RenderState);
       }
     }
     if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
@@ -45623,7 +45623,7 @@ LABEL_5:
       while ( Input_IsKeyPressed(203) )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+        DD_Pump((int)g_RenderState, (char)g_RenderState);
       }
     }
     IsKeyPressed = Input_IsKeyPressed(200);
@@ -45669,7 +45669,7 @@ LABEL_5:
 // 513338: using guessed type int dword_513338[63];
 // 5202E4: using guessed type int gameData;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042C840) --------------------------------------------------------
 int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
@@ -45736,15 +45736,15 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
                       + 1534);
   if ( result == -1 )
   {
-    result = DD_IsLost((int)dword_544CD8);
+    result = DD_IsLost((int)g_RenderState);
     if ( result )
     {
       Render_Pump();
       v8 = dword_544CFC >> byte_54512C;
       v9 = dword_544D00 >> byte_54512C;
-      while ( DD_IsLost((int)dword_544CD8) )
+      while ( DD_IsLost((int)g_RenderState) )
       {
-        DD_Pump((int)dword_544CD8, v9);
+        DD_Pump((int)g_RenderState, v9);
         v10 = (dword_544CFC >> byte_54512C) - v8;
         if ( v10 <= 0 )
           v10 = v8 - (dword_544CFC >> byte_54512C);
@@ -45779,7 +45779,7 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
         v9 = dword_544D00 >> byte_54512C;
       }
       UnitBattle_RedrawVisibleGrid();
-      return Render_Present((int)dword_544CD8);
+      return Render_Present((int)g_RenderState);
     }
   }
   return result;
@@ -45788,7 +45788,7 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
 // 5202E4: using guessed type int gameData;
 // 532040: using guessed type int dword_532040;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -45836,7 +45836,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
   v3 = v1 + *(_DWORD *)(dword_532048 + 812);
   if ( v0 <= 6 && v1 <= 6 )
   {
-    if ( DD_IsLost((int)dword_544CD8) )
+    if ( DD_IsLost((int)g_RenderState) )
     {
       v4 = *(__int16 *)(dword_532048 + 40 * v2 + 2 * v3 + 1534);
       if ( v4 == -1 )
@@ -45850,7 +45850,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
       }
     }
     v5 = *(__int16 *)(dword_532048 + 40 * v2 + 2 * v3 + 1534);
-    if ( DD_IsLost((int)dword_544CD8) || DD_IsFlipping((int)dword_544CD8) )
+    if ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
       Diagnostics_TraceBattlefieldClickEvent("tile_input", v0, v1, v2, v3, v5);
     if ( v5 == -1 || *(unsigned __int8 *)(31 * v5 + dword_532048 + 854) != g_CurrentPlayerIndex )
     {
@@ -45866,14 +45866,14 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 && (v17 = dword_532048 + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(v17 + 860) >= 5u)
                 && (unsigned __int8)(2 * *(_BYTE *)(v17 + 864)) >> 5 < (*(_BYTE *)(v17 + 864) & 3) + 1 )
               {
-                if ( DD_IsFlipping((int)dword_544CD8) )
+                if ( DD_IsFlipping((int)g_RenderState) )
                 {
                   Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                   dword_5437A4 = v3;
                   Diagnostics_TraceWorldMapActionEvent("battle_wall_shot_enter", g_SelectedUnitIndex, v2, v3, 0);
                   UnitBattle_ShotWall(g_SelectedUnitIndex, v2);
                   Diagnostics_TraceWorldMapActionEvent("battle_wall_shot_return", g_SelectedUnitIndex, v2, v3, 0);
-                  Render_Begin((int)dword_544CD8, 0);
+                  Render_Begin((int)g_RenderState, 0);
                 }
               }
               else
@@ -45922,13 +45922,13 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 HIWORD(v26),
                 *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860),
                 v5);
-              if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
+              if ( DD_IsFlipping((int)g_RenderState) && v7 == &unk_5196F0 )
               {
                 Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_enter", g_SelectedUnitIndex, v2, v3, 0);
                 UnitBattle_AttackWall(g_SelectedUnitIndex, v2, 0, v3);
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_return", g_SelectedUnitIndex, v2, v3, 0);
-                Render_Begin((int)dword_544CD8, 0);
+                Render_Begin((int)g_RenderState, 0);
               }
             }
           }
@@ -45956,7 +45956,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
               v5);
             if ( HIWORD(v26) <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
             {
-              if ( DD_IsFlipping((int)dword_544CD8) )
+              if ( DD_IsFlipping((int)g_RenderState) )
               {
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_track_enter", g_SelectedUnitIndex, v2, v3, v5);
                 v21 = UnitBattle_MoveTrack(g_SelectedUnitIndex, v2, v2, v3, v5);
@@ -45967,7 +45967,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_enter", g_SelectedUnitIndex, v2, v3, v5);
                 UnitBattle_Move(g_SelectedUnitIndex, 0, 0, 0);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_return", g_SelectedUnitIndex, v2, v3, v5);
-                Render_Begin((int)dword_544CD8, v24);
+                Render_Begin((int)g_RenderState, v24);
               }
               else
               {
@@ -45982,7 +45982,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
           }
           goto LABEL_13;
         }
-        if ( DD_IsLost((int)dword_544CD8) )
+        if ( DD_IsLost((int)g_RenderState) )
           Unit_Info(100, 100, 0, (unsigned __int8 *)(dword_532048 + 852 + 31 * v5), v5, 0);
         BattleLog_Disable();
         v20 = UnitBattle_MoveTrackNear(g_SelectedUnitIndex, v2, v3, v5);
@@ -45995,12 +45995,12 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
           else
             v7 = &unk_5197B8;
           nfree_((int)(uintptr_t)v20);
-          if ( DD_IsFlipping((int)dword_544CD8) && v7 == &unk_5196F0 )
+          if ( DD_IsFlipping((int)g_RenderState) && v7 == &unk_5196F0 )
           {
             UnitBattle_Attack(g_SelectedUnitIndex, v5, dword_532060);
             if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
               UnitBattle_SelectNextControllableUnit(0, v12, v3);
-            Render_Begin((int)dword_544CD8, 0);
+            Render_Begin((int)g_RenderState, 0);
           }
           goto LABEL_13;
         }
@@ -46011,17 +46011,17 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
         if ( *(unsigned __int8 *)(v13 + 860) >= 5u
           && (unsigned __int8)(2 * *(_BYTE *)(v13 + 864)) >> 5 < (*(_BYTE *)(v13 + 864) & 3) + 1 )
         {
-          if ( DD_IsFlipping((int)dword_544CD8) )
+          if ( DD_IsFlipping((int)g_RenderState) )
           {
             UnitBattle_Shot(v7, v5);
-            Render_Begin((int)dword_544CD8, 0);
+            Render_Begin((int)g_RenderState, 0);
           }
           goto LABEL_13;
         }
       }
       v7 = &unk_5197B8;
     }
-    else if ( DD_IsFlipping((int)dword_544CD8) )
+    else if ( DD_IsFlipping((int)g_RenderState) )
     {
       v8 = g_CurrentPlayerIndex;
       if ( *(unsigned __int8 *)(v6 + dword_532048 + 854) == g_CurrentPlayerIndex )
@@ -46039,7 +46039,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
       }
     }
 LABEL_13:
-    LOWORD(v1) = sub_460D80((int)dword_544CD8, (int)v7);
+    LOWORD(v1) = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)v7);
   }
   return v1;
 }
@@ -46064,7 +46064,7 @@ LABEL_13:
 // 532048: using guessed type int dword_532048;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -46204,7 +46204,7 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
     result = (unsigned __int8)byte_512582[type_offset];
     if ( byte_512582[type_offset] )
     {
-      result = Render_Begin((int)dword_544CD8, 0);
+      result = Render_Begin((int)g_RenderState, 0);
       LOBYTE(dword_53205C) = dword_53205C ^ 1;
       if ( dword_53205C )
       {
@@ -46228,7 +46228,7 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
 // 532048: using guessed type int dword_532048;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042D560) --------------------------------------------------------
 int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4)
@@ -46269,7 +46269,7 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
   result = (unsigned __int8)byte_51257E[type_offset];
   if ( byte_51257E[type_offset] )
   {
-    Render_Begin((int)dword_544CD8, 0);
+    Render_Begin((int)g_RenderState, 0);
     LOBYTE(dword_532060) = dword_532060 ^ 1;
     dword_532074 = Time_Now(0, 0);
     result = UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
@@ -46305,7 +46305,7 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
 // 532074: using guessed type int dword_532074;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042D670) --------------------------------------------------------
 int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, char a5)
@@ -46356,7 +46356,7 @@ int UnitBattle_RequestActionLoopExit(uintptr_t widget, int a2, DWORD a3, char a4
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_loop_exit_requested", g_SelectedUnitIndex, g_CurrentPlayerIndex, (int)widget, 0);
   g_UnitBattleActionLoopExitRequested = 1;
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   if ( widget )
   {
     *(_BYTE *)(widget + 8) &= ~4u;
@@ -46366,7 +46366,7 @@ int UnitBattle_RequestActionLoopExit(uintptr_t widget, int a2, DWORD a3, char a4
 }
 // 42D70B: variable 'v1' is possibly undefined
 // 532068: using guessed type int g_UnitBattleActionLoopExitRequested;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042D730) --------------------------------------------------------
 int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
@@ -46439,24 +46439,24 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
   v15 = v31;
   UI_DrawTextFmt(v12, v31, v26, v28 + 55, 3, PLAYER_DATA(v27) + PLAYER_DISPLAY_NAME_OFFSET);
   UI_DrawTextFmt(v29, v15, v14, v28 + 100, 3, v29);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent("battle_banner_after_present", a1, a2, v22[1], v10);
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   if ( v22[1] )
   {
-    Diagnostics_TraceWorldMapActionEvent("battle_banner_before_flip_wait", a1, a2, DD_IsFlipping((int)dword_544CD8), v10);
-    Render_Begin((int)dword_544CD8, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_banner_before_flip_wait", a1, a2, DD_IsFlipping((int)g_RenderState), v10);
+    Render_Begin((int)g_RenderState, 0);
     flip_wait_pumps = 0;
-    while ( !DD_IsFlipping((int)dword_544CD8) && flip_wait_pumps < 8 )
+    while ( !DD_IsFlipping((int)g_RenderState) && flip_wait_pumps < 8 )
     {
-      DD_Pump((int)dword_544CD8, 0);
+      DD_Pump((int)g_RenderState, 0);
       ++flip_wait_pumps;
     }
-    Diagnostics_TraceWorldMapActionEvent("battle_banner_after_flip_wait", a1, a2, DD_IsFlipping((int)dword_544CD8), flip_wait_pumps);
+    Diagnostics_TraceWorldMapActionEvent("battle_banner_after_flip_wait", a1, a2, DD_IsFlipping((int)g_RenderState), flip_wait_pumps);
     if ( v10 )
     {
-      if ( DD_IsFlipping((int)dword_544CD8) )
-        Render_Begin((int)dword_544CD8, 0);
+      if ( DD_IsFlipping((int)g_RenderState) )
+        Render_Begin((int)g_RenderState, 0);
       Render_Pump();
       Render_FillRect((_DWORD *)v10, 0, 0, 0, v26 - v31, v25 - v28, v31, v28);
       Diagnostics_TraceWorldMapActionEvent("battle_banner_after_restore", a1, a2, v10, 0);
@@ -46464,11 +46464,11 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
   }
   Compat_InvokeCompactSurfaceDestructor(v10, 2);
   Diagnostics_TraceWorldMapActionEvent("battle_banner_after_surface_release", a1, a2, v10, 0);
-  sub_460AF0(dword_544CD8, 0x140u, 0xF0u);
+  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
   Debug_Log(v19, (char)g_RenderHook, v10, (int)aUnsetrh08x_8);
   g_RenderHook = v23;
   Render_SetResourceHandle((int)&unk_51D4C0, v24);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   g_RenderDevice = v30;
   Diagnostics_TraceWorldMapActionEvent("battle_banner_done", a1, a2, (int)(uintptr_t)g_RenderDevice, 0);
   return sub_405920(v22);
@@ -46487,7 +46487,7 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
 // 514CEC: using guessed type char *off_514CEC[3];
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (0042DAB0) --------------------------------------------------------
@@ -46583,17 +46583,17 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
   v10 = v18;
   UI_DrawTextFmt(v9, v18, v9, v19 + 55, 3, PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
   UI_DrawTextFmt(v17, v10, v9, v19 + 100, 3, *(_DWORD *)(v17 + 4 * (unsigned __int8)g_LanguageIndex));
-  sub_419D80(v12);
-  Render_Present((int)dword_544CD8);
-  sub_460D80((int)dword_544CD8, dword_545150);
-  while ( sub_419DC0(v12, v7) != 3 )
-    DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+  UIWidgetTable_InitDrawStates(v12);
+  Render_Present((int)g_RenderState);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
+  while ( UIWidgetTable_PollHoverAndActions(v12, v7) != 3 )
+    DD_Pump((int)g_RenderState, (char)g_RenderState);
   Render_Pump();
   Render_FillRect((_DWORD *)v7, 0, 0, 0, v16 - v18, v20 - v19, v18, v19);
   if ( v7 )
     (**(void (***)(void))(v7 + 184))();
-  sub_460AF0(dword_544CD8, 0x140u, 0xF0u);
-  Render_Present((int)dword_544CD8);
+  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
+  Render_Present((int)g_RenderState);
   g_RenderDevice = v15;
   sub_405920((int *)&v14);
   return g_UnitBattlePromptDialogResult;
@@ -46605,7 +46605,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 532080: using guessed type int g_UnitBattlePromptDialogResult;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (0042DEC0) --------------------------------------------------------
@@ -46713,7 +46713,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
     v22 = v16;
   }
   while ( v16 < 15 );
-  result = Render_Present((int)dword_544CD8);
+  result = Render_Present((int)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent("battle_panel_anim_after_present", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
   if ( !a1 )
   {
@@ -46737,7 +46737,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
 // 5202E0: using guessed type int dword_5202E0;
 // 532048: using guessed type int dword_532048;
 // 532054: using guessed type int dword_532054;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042E160) --------------------------------------------------------
 __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3)
@@ -46835,7 +46835,7 @@ __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3)
     else
     {
       Tooltip_ShowText(3, (&off_514DC8[3 * v3])[(unsigned __int8)g_LanguageIndex], a1);
-      LOWORD(v3) = sub_460D80((int)dword_544CD8, dword_545150);
+      LOWORD(v3) = RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
     }
   }
   return v3;
@@ -46844,7 +46844,7 @@ __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3)
 // 514C89: using guessed type char byte_514C89;
 // 514DC8: using guessed type char *off_514DC8[24];
 // 514E28: using guessed type int dword_514E28;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -46914,7 +46914,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_idle_anim", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       Battle_RunInputScriptStep();
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_input_script", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
-      DD_Pump((int)dword_544CD8, v4);
+      DD_Pump((int)g_RenderState, v4);
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_pump", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       UnitBattle_HandleBattlefieldInteraction();
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_interaction", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
@@ -46922,7 +46922,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_hover", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       sub_42C600();
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_input_widgets", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
-      if ( sub_419DC0(dword_514B78, v5) == 1 )
+      if ( UIWidgetTable_PollHoverAndActions(dword_514B78, v5) == 1 )
       {
         v4 = (int)(uintptr_t)UnitType_GetLocalizedName(
           (unit_type)*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
@@ -46949,7 +46949,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
 // 532048: using guessed type int dword_532048;
 // 532064: using guessed type int dword_532064;
 // 532068: using guessed type int g_UnitBattleActionLoopExitRequested;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042E5A0) --------------------------------------------------------
 void  HandleBattleResults(
@@ -47156,7 +47156,7 @@ int *sub_42E8B0()
   v4 = DLX_GetSpriteForChar(dword_5202BC, 3);
   v5 = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(243, 0, v4, 1);
-  sub_419D80(dword_514B78);
+  UIWidgetTable_InitDrawStates(dword_514B78);
   UnitBattle_DrawSelectedUnitPanel(0, v6, 20, v5);
   UnitBattle_RedrawVisibleGrid();
   return sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
@@ -47449,7 +47449,7 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_building_setup", (int)(uintptr_t)v37, *(_DWORD *)(dword_532048 + 848), 0, 0);
   *(_DWORD *)(dword_532048 + 848) = v74 == 0;
   g_RenderDevice = &unk_51D4C0;
-  sub_419D80(dword_514B78);
+  UIWidgetTable_InitDrawStates(dword_514B78);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_ui_sync", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
   UnitBattle_RedrawVisibleGrid();
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_first_grid_draw", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
@@ -47535,13 +47535,13 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_palette_cache", dword_5202F4, v49, (int)v41, 0);
   sub_435ED0(aMainmap_3, dword_5202F4, v49, v41);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_palette_cache", dword_5202F4, v49, (int)v41, 0);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_before_cursor_mode", (int)(uintptr_t)dword_544CD8, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196C8);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_cursor_mode", (int)(uintptr_t)dword_544CD8, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_before_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
   dword_545150 = (int)&unk_5196A0;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_before_present", (int)(uintptr_t)dword_544CD8, dword_545150, 0, 0);
-  Render_Present((int)dword_544CD8);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_present", (int)(uintptr_t)dword_544CD8, dword_545150, 0, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_before_present", (int)(uintptr_t)g_RenderState, dword_545150, 0, 0);
+  Render_Present((int)g_RenderState);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_present", (int)(uintptr_t)g_RenderState, dword_545150, 0, 0);
   v50 = PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) == 0;
   Debug_Log(v51, 20, v41, (int)aStart_0);
   v52 = 0;
@@ -47732,7 +47732,7 @@ DWORD  Battle_RunTacticalCombat(
 // 532064: using guessed type int dword_532064;
 // 53206C: using guessed type int dword_53206C;
 // 532070: using guessed type int dword_532070;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (0042F7C0) --------------------------------------------------------
@@ -48376,9 +48376,9 @@ int  UnitBattle_RedrawTile(int a1, int a2)
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v8 = (((_WORD)a2 - v7) << 6) + 80;
     sub_42FFB0(a1, a2);
-    sub_460BB0(dword_544CD8, v6 + 32, v6 + 96, v9, v8);
+    sub_460BB0(g_RenderState, v6 + 32, v6 + 96, v9, v8);
     Render_FillRect((_DWORD *)dword_5202E0, 0, v9, (unsigned __int16)(v6 + 32), v6 + 95, v9 + 63, v6 + 32, v9);
-    result = Render_Present((int)dword_544CD8);
+    result = Render_Present((int)g_RenderState);
     g_RenderDevice = v5;
   }
   return result;
@@ -48387,7 +48387,7 @@ int  UnitBattle_RedrawTile(int a1, int a2)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00430C20) --------------------------------------------------------
 int UnitBattle_RedrawVisibleGrid()
@@ -48481,7 +48481,7 @@ int UnitBattle_RedrawVisibleGrid()
   if ( v5 )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_grid_before_present", v7, v8, v3, v4);
-    result = Render_Present((int)dword_544CD8);
+    result = Render_Present((int)g_RenderState);
     Diagnostics_TraceWorldMapActionEvent("battle_grid_after_present", v7, v8, v3, v4);
   }
   if ( v3 != 479 )
@@ -48507,7 +48507,7 @@ int UnitBattle_RedrawVisibleGrid()
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 544D10: using guessed type int dword_544D10;
@@ -48762,11 +48762,11 @@ LABEL_36:
                   sub_405920(&v39);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_portrait_free", *v4, v39, 0, 0);
                   v36 = v40;
-                  sub_460BB0(dword_544CD8, 0x1F2u, 0x270u, 0xAu, 0x162u);
+                  sub_460BB0(g_RenderState, 0x1F2u, 0x270u, 0xAu, 0x162u);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_rect", *v4, v36, 0, 0);
                   if ( v36 )
                     Render_FillRect((_DWORD *)dword_5202E0, 0, 10, 498, 0x270u, 0x162u, 0x1F2u, 0xAu);
-                  Render_Present((int)dword_544CD8);
+                  Render_Present((int)g_RenderState);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_present", *v4, 0, 0, 0);
                   Tooltip_ShowText(3, UnitType_GetLocalizedName((unit_type)*v4), 0);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_tooltip", *v4, (int)(uintptr_t)v41, 0, 0);
@@ -48827,7 +48827,7 @@ LABEL_36:
 // 532048: using guessed type int dword_532048;
 // 532054: using guessed type int dword_532054;
 // 53210C: using guessed type int dword_53210C;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00431940) --------------------------------------------------------
 int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
@@ -48946,9 +48946,9 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
   v41 = Time_Now(v19, v18);
   v20 = v43 + 5;
   v44 = v47 + 11;
-  while ( DD_IsLost((int)dword_544CD8) )
+  while ( DD_IsLost((int)g_RenderState) )
   {
-    DD_Pump((int)dword_544CD8, v15);
+    DD_Pump((int)g_RenderState, v15);
     v22 = Time_Now(v21, v41 + 10);
     if ( v23 < v22 )
     {
@@ -48976,7 +48976,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
   v29 = DLX_GetSpriteHeight(dword_5202BC, 0xCu);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v30, v26, v26 + v29 - 1, v34, v36, v38);
   v31 = v45;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v31 )
     (*(void (**)(void))v31[46])();
   return sub_405920((int *)&v40);
@@ -48996,7 +48996,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E0: using guessed type int dword_5202E0;
 // 532048: using guessed type int dword_532048;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00431CC0) --------------------------------------------------------
 __int16 UnitBattle_UpdateIdleAnimatedUnits()
@@ -49445,11 +49445,11 @@ LABEL_13:
     v11 = (unsigned __int16)v17;
     v19 = (unsigned __int16)(v17 + 32);
     v20 = (unsigned __int16)v4;
-    sub_460BB0(dword_544CD8, v17, v17 + 32, v4, 131 * (v3 / 6) + 138);
+    sub_460BB0(g_RenderState, v17, v17 + 32, v4, 131 * (v3 / 6) + 138);
     v12 = 131 * (v3 / 6) + 139;
     Render_FillRect((_DWORD *)dword_5202E0, 0, v20, v11, v19, 131 * (v3 / 6) + 139, v11, v20);
     if ( v18 )
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
     if ( v23 != -1 )
       break;
     ++v3;
@@ -49472,7 +49472,7 @@ LABEL_13:
 // 5321C4: using guessed type int dword_5321C4[12];
 // 5321F4: using guessed type int g_BuildingGarrisonDialogPendingExitCountdown;
 // 5321F8: using guessed type int dword_5321F8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00432D30) --------------------------------------------------------
@@ -49695,7 +49695,7 @@ LABEL_10:
       SpriteHeight = DLX_GetSpriteHeight(g_BuildingGarrisonDialogUiSpriteSet, 0xAu);
       v16 = v51;
       v17 = v45;
-      sub_460BB0(dword_544CD8, v51, v51 + 49 + SpriteHeight, v45, v41);
+      sub_460BB0(g_RenderState, v51, v51 + 49 + SpriteHeight, v45, v41);
       v18 = *(__int16 *)(g_BuildingGarrisonDialogActiveBuilding + 31 * g_BuildingGarrisonDialogSelectedSlotIndex + 18);
       if ( v18 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v18 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         v19 = 33;
@@ -49720,7 +49720,7 @@ LABEL_10:
         v16);
       if ( !v47 )
         goto LABEL_4;
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
       result = v48;
       g_RenderDevice = v48;
       return result;
@@ -49832,7 +49832,7 @@ LABEL_28:
   g_RenderDevice = &unk_51D4C0;
   v40 = DLX_GetSpriteWidth(g_BuildingGarrisonDialogUiSpriteSet, 0x19u) + 289;
   v1 = DLX_GetSpriteHeight(g_BuildingGarrisonDialogUiSpriteSet, 0x19u);
-  sub_460BB0(dword_544CD8, 0xDCu, v1 + 220, 0x121u, v40);
+  sub_460BB0(g_RenderState, 0xDCu, v1 + 220, 0x121u, v40);
   v2 = DLX_GetSpriteForChar(g_BuildingGarrisonDialogUiSpriteSet, 25);
   Compat_RenderDeviceDrawMenuSprite(289, 220, v2, 0);
   if ( !v0 )
@@ -49842,7 +49842,7 @@ LABEL_4:
     g_RenderDevice = v48;
     return result;
   }
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   result = v48;
   g_RenderDevice = v48;
   return result;
@@ -49859,7 +49859,7 @@ LABEL_4:
 // 532188: using guessed type int g_BuildingGarrisonDialogSelectedSlotIndex;
 // 53218C: using guessed type int g_BuildingGarrisonDialogSelectedUnitSpriteSet;
 // 532190: using guessed type int g_BuildingGarrisonDialogSelectedUnitAnimFrame;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004336C0) --------------------------------------------------------
@@ -49975,7 +49975,7 @@ int  BuildingGarrisonDialog_RequestClose(int a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   dword_532148 = 1;
   return result;
 }
@@ -49994,7 +49994,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
   int v10; // ecx
   int v11; // ecx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   result = g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 2) != 0 )
   {
@@ -50012,23 +50012,23 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
     else
       v6 = aCastle_pogD_16;
     sub_435ED0(v6, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, a2);
-    sub_460CB0((int)dword_544CD8, g_BuildingGarrisonDialogResourceHandle, v7, a2);
+    sub_460CB0((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, a2);
     Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, v5, a2);
     Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, v5, a2);
     Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, v5, a2);
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     BuildingGarrisonDialog_EnsureActionWidgets(g_BuildingGarrisonDialogActiveBuilding);
-    sub_419D80((_DWORD *)BuildingGarrisonDialogActions);
+    UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
     (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, a2);
     sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
-    Render_Present((int)dword_544CD8);
-    sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    Render_Present((int)g_RenderState);
     Render_Pump();
-    return Render_Present((int)dword_544CD8);
+    return Render_Present((int)g_RenderState);
   }
   return result;
 }
@@ -50044,7 +50044,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
 // 53214C: using guessed type int g_BuildingGarrisonDialogUseChrTheme;
 // 532150: using guessed type int g_BuildingGarrisonDialogActiveBuilding;
 // 532154: using guessed type int dword_532154;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00433A40) --------------------------------------------------------
 void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2)
@@ -50053,7 +50053,7 @@ void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2)
   int v4; // ecx
   int v5; // ebx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 1) != 0 )
   {
@@ -50087,7 +50087,7 @@ void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int a1, DWORD a2)
   int v4; // ecx
   int v5; // ebx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 8) != 0 )
   {
@@ -50155,7 +50155,7 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
       Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding),
       0);
     sub_4425E0(aWrong_7);
-    return Render_Begin((int)dword_544CD8, 0);
+    return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
@@ -50168,7 +50168,7 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
 // 532150: using guessed type int g_BuildingGarrisonDialogActiveBuilding;
 // 532158: using guessed type int g_BuildingGarrisonDialogSelectedSlots[12];
 // 5321F4: using guessed type int g_BuildingGarrisonDialogPendingExitCountdown;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00433BF0) --------------------------------------------------------
 int  BuildingGarrisonDialog_TickAnimations(double a1)
@@ -50195,7 +50195,7 @@ int CastleProduction_DrawSelectedUnitPortrait()
   DLX_GetSpriteHeight(g_CastleProductionSelectedUnitSpriteSet, 0);
   SpriteWidth = DLX_GetSpriteWidth(g_CastleProductionSelectedUnitSpriteSet, 0);
   v2 = dword_544D10;
-  sub_460BB0(dword_544CD8, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
+  sub_460BB0(g_RenderState, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
   g_RenderDevice = &unk_51D4C0;
   SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, dword_5322CC);
   result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
@@ -50210,7 +50210,7 @@ int CastleProduction_DrawSelectedUnitPortrait()
              0,
              0);
   if ( v2 )
-    result = Render_Present((int)dword_544CD8);
+    result = Render_Present((int)g_RenderState);
   g_RenderDevice = v0;
   return result;
 }
@@ -50218,7 +50218,7 @@ int CastleProduction_DrawSelectedUnitPortrait()
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5322CC: using guessed type int dword_5322CC;
 // 5322D0: using guessed type int dword_5322D0[];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00434760) --------------------------------------------------------
@@ -50472,7 +50472,7 @@ void * CastleProduction_DrawLicenceGrid()
     if ( v0 % 4 >= 2 )
       v1 = 48 * (v0 % 4) + 425;
     v9 = dword_544D10;
-    sub_460BB0(dword_544CD8, v1, v1 + 31, v12, v12 + 63);
+    sub_460BB0(g_RenderState, v1, v1 + 31, v12, v12 + 63);
     if ( *(char *)(v0 + dword_532218 + 402) == -1 )
     {
       SpriteForChar = DLX_GetSpriteForChar(dword_53220C, 22);
@@ -50558,7 +50558,7 @@ void * CastleProduction_DrawLicenceGrid()
       }
     }
     if ( v9 )
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
     ++v0;
     ++v10;
   }
@@ -50576,7 +50576,7 @@ void * CastleProduction_DrawLicenceGrid()
 // 532334: using guessed type int dword_532334;
 // 532338: using guessed type int dword_532338;
 // 53233C: using guessed type int dword_53233C;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004350A0) --------------------------------------------------------
@@ -50808,7 +50808,7 @@ int  CastleProduction_SetExitSignal(int a1)
   int result; // eax
   int v3; // edx
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_CastleProductionExitSignal = v3;
   return result;
 }
@@ -50869,7 +50869,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   if ( !Building_BuyUnitLicence(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
     return sub_419F50(a1, v5);
   v13 = v5;
-  sub_460D80((int)dword_544CD8, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
   for ( i = 0; ; ++i )
   {
     v8 = dword_532224[g_CastleProductionSelectedAvailableUnitIndex];
@@ -50880,7 +50880,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   sub_4426C0(aDopen, 64);
   CastleProduction_ReloadLicenceSlotSprite(i, a1);
   UI_DrawActionBox(a3);
-  sub_460D80((int)dword_544CD8, v10);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, v10);
   CastleProduction_RebuildAvailableUnitList(v11);
   CastleProduction_RedrawSelectedUnitPanel(v12, a1, a2, a3, v8);
   return sub_419F50(a1, v13);
@@ -50896,7 +50896,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
 // 532220: using guessed type int dword_532220[];
 // 532224: using guessed type unit_type dword_532224[41];
 // 532334: using guessed type int dword_532334;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435770) --------------------------------------------------------
 int  CastleProduction_HandleRemoveLicenceAction(int a1)
@@ -50904,13 +50904,13 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
   int v2; // ecx
 
   sub_419F20(a1);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   if ( dword_5322C8 != -1 )
   {
     dword_532338 = dword_5322C8;
     sub_4426C0(aDclose_0, 64);
-    sub_460D80((int)dword_544CD8, (int)&dword_519808);
-    sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   }
   return sub_419F50(v2, v2);
 }
@@ -50918,7 +50918,7 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
 // 519808: using guessed type int dword_519808;
 // 5322C8: using guessed type int dword_5322C8;
 // 532338: using guessed type int dword_532338;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004357E0) --------------------------------------------------------
 int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
@@ -50928,7 +50928,7 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
   if ( dword_5322C8 != -1 )
   {
     sub_419F20(result);
-    Render_Begin((int)dword_544CD8, 0);
+    Render_Begin((int)g_RenderState, 0);
     Building_SetUnitProduction(dword_532218, a2, a3);
     CastleProduction_DrawLicenceGrid();
     CastleProduction_DrawProductionStatus(a3);
@@ -50939,7 +50939,7 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
 // 43581C: variable 'v4' is possibly undefined
 // 532218: using guessed type int dword_532218;
 // 5322C8: using guessed type int dword_5322C8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435830) --------------------------------------------------------
 int  CastleProduction_HandleStopProductionAction(int a1, char a2, DWORD a3)
@@ -50970,16 +50970,16 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   int v11; // [esp-4h] [ebp-8h]
 
   v11 = a2;
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   Render_Pump();
   sub_404F20((int *)&unk_51D4C0, 20);
   sub_413860(v10, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v5);
   (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, v10);
   (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
-  Render_Begin((int)dword_544CD8, 0);
-  while ( !DD_IsFlipping((int)dword_544CD8) )
-    DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+  Render_Begin((int)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)g_RenderState) )
+    DD_Pump((int)g_RenderState, (char)g_RenderState);
   sub_404F20((int *)&unk_51D4C0, 20);
   if ( dword_532214 )
     v6 = aCastle_chrD_23;
@@ -50989,14 +50989,14 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   (*(void (__fastcall **)(_DWORD, char *))(v7 + 48))(0, v6);
   sub_401AB0((_BYTE *)dword_53221C, 6);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D80(dword_515130);
+  UIWidgetTable_InitDrawStates(dword_515130);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v8, 20, a3, a4, v7);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(a3);
   UI_DrawActionBox(a4);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 43589A: variable 'v5' is possibly undefined
 // 435970: variable 'v8' is possibly undefined
@@ -51007,7 +51007,7 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
 // 532224: using guessed type unit_type dword_532224[41];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004359B0) --------------------------------------------------------
 BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
@@ -51046,7 +51046,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
   int v6; // edx
   int v7; // ecx
 
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     result = UI_GetGridIndexFromMouse();
@@ -51091,7 +51091,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
 // 532224: using guessed type unit_type dword_532224[41];
 // 532228: using guessed type int dword_532228[];
 // 5322C8: using guessed type int dword_5322C8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435AC0) --------------------------------------------------------
 int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
@@ -51101,7 +51101,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
   int v5; // ecx
 
   v3 = ((dword_544D00 >> byte_54512C) - 35) / 17 - 2;
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     if ( dword_544CFC >> byte_54512C >= 40 )
@@ -51117,8 +51117,8 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
         Render_Pump();
         CastleProduction_RedrawSelectedUnitPanel(v5, v3, a1, a2, a3);
         sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
-        Render_Present((int)dword_544CD8);
-        return Render_Begin((int)dword_544CD8, 0);
+        Render_Present((int)g_RenderState);
+        return Render_Begin((int)g_RenderState, 0);
       }
     }
   }
@@ -51129,7 +51129,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
 // 53221C: using guessed type int dword_53221C;
 // 532220: using guessed type int dword_532220[];
 // 532224: using guessed type unit_type dword_532224[41];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -51215,26 +51215,26 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   Render_LoadResourceSprite_v4(7, (_BYTE *)dword_53221C, v18, v11, v8);
   Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)dword_53221C, v19, v11, v8);
   sub_419790(8);
-  sub_460CB0((int)dword_544CD8, dword_53221C, v20, v8);
+  sub_460CB0((int)g_RenderState, dword_53221C, v20, v8);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D80(dword_515130);
-  sub_460D80((int)dword_544CD8, v21);
+  UIWidgetTable_InitDrawStates(dword_515130);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v22, 20, v8, a3, v10);
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(v8);
   UI_DrawActionBox(a3);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   g_CastleProductionExitSignal = 0;
   dword_526A30 = (int (*)(void))CastleProduction_TickAnimations;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     CastleProduction_TickAnimations(v8);
     sub_44E350(word_515310);
     g_RenderDevice = &unk_51D4C0;
-    if ( !sub_419DC0(dword_515130, v8) )
+    if ( !UIWidgetTable_PollHoverAndActions(dword_515130, v8) )
     {
       CastleProduction_HandleLicenceGridClick(v8, (int)&unk_51D4C0, (int)dword_515130);
       CastleProduction_HandleAvailableUnitStripClick(v8, (int)&unk_51D4C0, (int)dword_515130);
@@ -51292,7 +51292,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
 // 532304: using guessed type int dword_532304[12];
 // 532334: using guessed type int dword_532334;
 // 532338: using guessed type int dword_532338;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435ED0) --------------------------------------------------------
 int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4)
@@ -51430,7 +51430,7 @@ int  sub_436180(int a1)
   v4 = dword_532350;
   do
   {
-    DD_Pump((int)dword_544CD8, v4);
+    DD_Pump((int)g_RenderState, v4);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
     dword_532350 = 10 * ((v4 + (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
@@ -51442,10 +51442,10 @@ int  sub_436180(int a1)
       v12 = 10;
       dword_532350 = 10 * (*(_DWORD *)(dword_532354 + 438) / 0xAu);
     }
-    sub_436060(v12, (int)dword_544CD8);
+    sub_436060(v12, (int)g_RenderState);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v13);
 }
 // 436197: variable 'v3' is possibly undefined
@@ -51458,7 +51458,7 @@ int  sub_436180(int a1)
 // 436237: variable 'v13' is possibly undefined
 // 532350: using guessed type int dword_532350;
 // 532354: using guessed type int dword_532354;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00436250) --------------------------------------------------------
 int  sub_436250(int a1)
@@ -51482,16 +51482,16 @@ int  sub_436250(int a1)
   v4 = dword_532350;
   do
   {
-    DD_Pump((int)dword_544CD8, v4);
+    DD_Pump((int)g_RenderState, v4);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
     dword_532350 = 10 * ((v4 - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
     if ( dword_532350 < 0 )
       dword_532350 = 0;
-    sub_436060((DWORD)dword_544CD8, 0);
+    sub_436060((DWORD)g_RenderState, 0);
   }
-  while ( DD_IsFlipping((int)dword_544CD8) );
-  Render_Present((int)dword_544CD8);
+  while ( DD_IsFlipping((int)g_RenderState) );
+  Render_Present((int)g_RenderState);
   return sub_419F50(a1, v12);
 }
 // 43626A: variable 'v3' is possibly undefined
@@ -51503,7 +51503,7 @@ int  sub_436250(int a1)
 // 43629E: variable 'v11' is possibly undefined
 // 4362F1: variable 'v12' is possibly undefined
 // 532350: using guessed type int dword_532350;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00436610) --------------------------------------------------------
 int  BuildingTransferTargetList_SetDrawOrigin(int result, int a2)
@@ -51717,7 +51717,7 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
   int result; // eax
 
   v2 = ((dword_544D00 >> byte_54512C) - g_BuildingTransferTargetListDrawY) / 18 - 2;
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     if ( dword_544CFC >> byte_54512C >= g_BuildingTransferTargetListDrawX )
@@ -51734,8 +51734,8 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
           g_BuildingTransferTargetListIndex += v2;
           Render_Pump();
           BuildingTransferTargetList_Draw((int)off_511234, a1);
-          Render_Present((int)dword_544CD8);
-          return Render_Begin((int)dword_544CD8, 0);
+          Render_Present((int)g_RenderState);
+          return Render_Begin((int)g_RenderState, 0);
         }
       }
     }
@@ -51747,7 +51747,7 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
 // 532360: using guessed type __int16 g_BuildingTransferTargetIds[];
 // 53242C: using guessed type int g_BuildingTransferTargetListDrawX;
 // 532430: using guessed type int g_BuildingTransferTargetListDrawY;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -52743,7 +52743,7 @@ LABEL_19:
 // 532048: using guessed type int dword_532048;
 
 //----- (004382E0) --------------------------------------------------------
-signed int  sub_4382E0(int a1, int a2, int a3, signed int a4)
+signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed int a4)
 {
   int v5; // ecx
   int v6; // edi
@@ -54178,7 +54178,7 @@ signed int __fastcall sub_43A880(int a1, int a2)
 // 43A898: variable 'v4' is possibly undefined
 
 //----- (0043A8B0) --------------------------------------------------------
-signed int  sub_43A8B0(int a1, int a2)
+signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
 {
   int v2; // eax
   int v3; // ebx
@@ -54921,7 +54921,7 @@ LABEL_72:
 // 5437A4: using guessed type int dword_5437A4;
 
 //----- (0043BE50) --------------------------------------------------------
-int  sub_43BE50(int a1, int a2, DWORD a3)
+int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
 {
   DWORD v4; // ebx
   DWORD v5; // edi
@@ -55535,7 +55535,7 @@ LABEL_23:
 // 532070: using guessed type int dword_532070;
 
 //----- (0043CB80) --------------------------------------------------------
-void sub_43CB80()
+void UnitBattle_ScanAiWallTargetColumns()
 {
   int v0; // edx
   int v1; // ecx
@@ -55655,7 +55655,7 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
       *(_DWORD *)(dword_532048 + 828),
       *(_DWORD *)(dword_532048 + 800),
       *(_DWORD *)(dword_532048 + 804));
-    sub_43CB80();
+    UnitBattle_ScanAiWallTargetColumns();
     Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", a1, dword_5437B0, dword_5437B4, dword_5437B8);
   }
   Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", a1, g_SelectedUnitIndex, dword_532078, 0);
@@ -55681,12 +55681,12 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
         v4 = sub_43D250((int)&dword_5437C0, 0);
         v26 = v4;
         sub_436C50(a1);
-        sub_4382E0(v26, a1, 0, 1);
+        UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, 1);
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( sub_43A8B0(v26, a1) )
+        if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
-          sub_43BE50(v26, a1, 0);
+          UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
         }
         else
         {
@@ -55703,12 +55703,12 @@ LABEL_8:
         v12 = sub_43D250((int)&dword_5437C0, 0);
         v26 = v12;
         sub_436C50(a1);
-        sub_4382E0(v26, a1, 0, v10);
+        UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v10);
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( sub_43A8B0(v26, a1) )
+        if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
-          sub_43BE50(v26, a1, 0);
+          UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
         }
         sub_43D220((int)&dword_5437C0, v26);
       }
@@ -55747,10 +55747,10 @@ LABEL_21:
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     sub_436C50(a1);
-    if ( sub_4382E0(v26, a1, 0, v2) )
+    if ( UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v2) )
       return 1;
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( !sub_43A8B0(v26, a1) )
+    if ( !UnitBattle_SelectAiActionForUnit(v26, a1) )
     {
       sub_43D220((int)&dword_5437C0, v26);
 LABEL_19:
@@ -55758,7 +55758,7 @@ LABEL_19:
       goto LABEL_20;
     }
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( !sub_43BE50(v26, a1, 0) )
+    if ( !UnitBattle_ExecuteAiActionForUnit(v26, a1, 0) )
       goto LABEL_19;
   }
 }
@@ -56572,17 +56572,17 @@ int  sub_43D8E0(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_6);
   Render_ReleaseSurface(10, a3);
   sub_436B20(95, v15, v16, 140);
-  sub_419D80(dword_515A90);
+  UIWidgetTable_InitDrawStates(dword_515A90);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)dword_544CD8, (int)v20, v17, a3);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   dword_5438A4 = v18;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(dword_515A90, a3);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(dword_515A90, a3);
   }
   while ( !dword_5438A4 );
   sub_405920(&dword_5438A0);
@@ -56606,7 +56606,7 @@ int  sub_43D8E0(int a1, int a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 5438A0: using guessed type int dword_5438A0;
 // 5438A4: using guessed type int dword_5438A4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DAC0) --------------------------------------------------------
 int  sub_43DAC0(int a1, int a2)
@@ -56666,17 +56666,17 @@ int  sub_43DAE0(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_7);
   Render_ReleaseSurface(10, a3);
   sub_436B20(95, v15, v16, 140);
-  sub_419D80(dword_515B10);
+  UIWidgetTable_InitDrawStates(dword_515B10);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)dword_544CD8, (int)v20, v17, a3);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   dword_5438B0 = v18;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(dword_515B10, a3);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(dword_515B10, a3);
   }
   while ( !dword_5438B0 );
   sub_405920(&dword_5438AC);
@@ -56700,7 +56700,7 @@ int  sub_43DAE0(int a1, int a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 5438AC: using guessed type int dword_5438AC;
 // 5438B0: using guessed type int dword_5438B0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DCC0) --------------------------------------------------------
 int  sub_43DCC0(int a1, int a2)
@@ -56760,17 +56760,17 @@ int  sub_43DCE0(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_8);
   Render_ReleaseSurface(10, a3);
   sub_436B20(95, v15, v16, 140);
-  sub_419D80(dword_515B90);
+  UIWidgetTable_InitDrawStates(dword_515B90);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)dword_544CD8, (int)v20, v17, a3);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   dword_5438BC = v18;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(dword_515B90, a3);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(dword_515B90, a3);
   }
   while ( !dword_5438BC );
   sub_405920(&dword_5438B8);
@@ -56794,7 +56794,7 @@ int  sub_43DCE0(int a1, int a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 5438B8: using guessed type int dword_5438B8;
 // 5438BC: using guessed type int dword_5438BC;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DEC0) --------------------------------------------------------
 int  sub_43DEC0(int a1, int a2)
@@ -56854,17 +56854,17 @@ int  sub_43DEE0(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_9);
   Render_ReleaseSurface(10, a3);
   sub_436B20(95, v15, v16, 140);
-  sub_419D80(dword_515C10);
+  UIWidgetTable_InitDrawStates(dword_515C10);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)dword_544CD8, (int)v20, v17, a3);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
-  Render_Present((int)dword_544CD8);
+  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  Render_Present((int)g_RenderState);
   dword_5438C8 = v18;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(dword_515C10, a3);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(dword_515C10, a3);
   }
   while ( !dword_5438C8 );
   sub_405920(&dword_5438C4);
@@ -56888,7 +56888,7 @@ int  sub_43DEE0(int a1, int a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 5438C4: using guessed type int dword_5438C4;
 // 5438C8: using guessed type int dword_5438C8;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043E0C0) --------------------------------------------------------
 BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1)
@@ -58439,7 +58439,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
     v5 = DLXSpriteSet_Load(v5, a4);
   v20 = v5;
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   DLX_GetSpriteWidth((int)v20, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v20, 0x16u);
   v8 = v7 + 6;
@@ -58495,11 +58495,11 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
   }
   Render_ReleaseSurface(17, v13);
   UI_DrawTextFmt(v10, 70, 569, 210, 6, v23);
-  Render_Present((int)dword_544CD8);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Present((int)g_RenderState);
+  Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping(v14) && !DD_IsLost(v15) )
     DD_Pump(v19, 0);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   if ( v21 )
   {
     v16 = v25;
@@ -58509,7 +58509,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
   }
   Render_Pump();
   Render_FillRect((_DWORD *)v10, 0, 0, 0, 0x27Fu, v24 - 1, 0, 0x96u);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v10 )
     (**(void (***)(void))(v10 + 184))();
   return sub_405920((int *)&v20);
@@ -58519,7 +58519,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
 // 44015C: variable 'v15' is possibly undefined
 // 44016D: variable 'v19' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (004401A0) --------------------------------------------------------
@@ -59069,7 +59069,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   v17 = DLX_GetSpriteWidth(dword_543C54, 0) - 1;
   v12 = DLX_GetSpriteHeight(dword_543C54, 0);
   sub_402850(v19, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v19 )
     (*(void (**)(void))v19[46])();
   result = v18;
@@ -59084,7 +59084,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
 // 543C54: using guessed type int dword_543C54;
 // 543C58: using guessed type int dword_543C58[];
 // 543C80: using guessed type int dword_543C80;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004410B0) --------------------------------------------------------
 int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
@@ -59141,12 +59141,12 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
   LOBYTE(v12) = 10;
   memset_(40, 0);
   RenderHook_DemoText(v13, 10, a4);
-  sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   g_RenderDevice = v14;
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   while ( !dword_543C84 )
   {
-    DD_Pump((int)dword_544CD8, (char)v12);
+    DD_Pump((int)g_RenderState, (char)v12);
     v12 = 0;
     v18 = ((dword_544D00 >> byte_54512C) - 148) / 78;
     v19 = 0;
@@ -59165,14 +59165,14 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
       v12 += 5 * v18;
       if ( *(__int16 *)(31 * (_DWORD)v12 + dword_543C80 + 18) != -1 )
       {
-        if ( DD_IsFlipping((int)dword_544CD8) )
+        if ( DD_IsFlipping((int)g_RenderState) )
         {
           byte_543C88[(_DWORD)v12] ^= 1u;
           sub_4426C0(aMarker, 64);
           RenderHook_DemoText(v22, (char)v12, a4);
-          Render_Begin((int)dword_544CD8, 0);
+          Render_Begin((int)g_RenderState, 0);
         }
-        else if ( DD_IsLost((int)dword_544CD8) )
+        else if ( DD_IsLost((int)g_RenderState) )
         {
           v23 = Building_HasSpecialPersonageGarrisonEntries(dword_543C80);
           v12 = (unsigned __int8 *)(dword_543C80 + 18 + v24);
@@ -59180,7 +59180,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
         }
       }
     }
-    sub_419DC0(dword_516330, a4);
+    UIWidgetTable_PollHoverAndActions(dword_516330, a4);
   }
   sub_405920(&dword_543C54);
   v15 = 0;
@@ -59218,7 +59218,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
 // 543C58: using guessed type int dword_543C58[];
 // 543C80: using guessed type int dword_543C80;
 // 543C84: using guessed type int dword_543C84;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -60574,7 +60574,7 @@ int  sub_4426C0(char *a1, int a2)
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00442760) --------------------------------------------------------
-int  sub_442760(int a1, char a2, DWORD a3)
+int  FileSystem_InitRootMount(int a1, char a2, DWORD a3)
 {
   const char **filesystem_root; // eax
 
@@ -60694,7 +60694,7 @@ int  sub_4429D0(int a1, const CHAR *a2, DWORD a3)
 // 543CC8: using guessed type int dword_543CC8[11];
 
 //----- (00442AD0) --------------------------------------------------------
-int __thiscall sub_442AD0(int this)
+int __thiscall ResourceArchives_MountStartupArchives(int this)
 {
   const CHAR *v3; // edx
   char *v4; // eax
@@ -61385,7 +61385,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
       6,
       v18[(unsigned __int8)g_LanguageIndex]);
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   v17 = v23;
   v16 = v22;
   v15 = DLX_GetSpriteWidth((int)v20, 0) - 1;
@@ -61394,7 +61394,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   if ( v8 )
     (**(void (__cdecl ***)(int, int, int, int, int, int))(v8 + 184))(v18[0], v18[1], v18[2], v19[0], v19[1], v19[2]);
   sub_405920((int *)&v20);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   result = v21;
   g_RenderDevice = v21;
   return result;
@@ -61405,7 +61405,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
 // 517BD8: using guessed type char *g_PortReinforcementArrivedTexts[3];
 // 517BE4: using guessed type char *g_PortEmptyTexts[3];
 // 5202E4: using guessed type int gameData;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00443B60) --------------------------------------------------------
 int Rules_RebuildTreasureFacts()
@@ -61744,14 +61744,14 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
 // 5202E4: using guessed type int gameData;
 
 //----- (004443C0) --------------------------------------------------------
-int  sub_4443C0(int a1, char *a2)
+int  SaveSlot_FormatDataFilePath(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.dat", a1);
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (004443D0) --------------------------------------------------------
-int  sub_4443D0(int a1, char *a2)
+int  SaveSlot_FormatFactsFilePath(int a1, char *a2)
 {
   return sprintf_(a2, "save\\%d.fac", a1);
 }
@@ -61766,14 +61766,14 @@ signed int  saveGame(int a1, DWORD a2, double a3)
   int v8; // edx
   CHAR v10[120]; // [esp+0h] [ebp-78h] BYREF
 
-  sub_4443C0(a1, v10);
+  SaveSlot_FormatDataFilePath(a1, v10);
   PLAYER_CAMERA_LEFT(VIEWED_PLAYER_INDEX) = MAP_VIEW_LEFT;
   PLAYER_CAMERA_TOP(VIEWED_PLAYER_INDEX) = MAP_VIEW_TOP;
   v6 = sub_475CC8(v10, (unsigned __int8 *)aWb_4, v5, a2);
   fwrite_((const void *)a2, 16, v6, 1);
   fwrite_((const void *)gameData, 586398, v6, 1);
   fclose_(v7);
-  sub_4443D0(a1, v10);
+  SaveSlot_FormatFactsFilePath(a1, v10);
   return sub_47B4C0(v10, 2, 0, a3);
 }
 // 44443B: variable 'v5' is possibly undefined
@@ -61797,7 +61797,7 @@ signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3)
   trace_load_save = 0;
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] load-save-enter\n");
-  sub_4443C0(a1, v19);
+  SaveSlot_FormatDataFilePath(a1, v19);
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] load-save-path %s\n", v19);
   file_handle = sub_475CC8(v19, (unsigned __int8 *)aRb_5, 0, a2);
@@ -61854,7 +61854,7 @@ signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3)
     }
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-castle-loop\n");
-    sub_4443D0(a1, v19);
+    SaveSlot_FormatFactsFilePath(a1, v19);
     sub_47B890(v19, 0, a2, a3);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-sidecar-write\n");
@@ -61888,7 +61888,7 @@ signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004446E0) --------------------------------------------------------
-char  sub_4446E0(int a1, char *a2, DWORD a3)
+char  SaveSlot_LoadLabelOrPlaceholder(int a1, char *a2, DWORD a3)
 {
   int file_handle; // eax
   char result; // al
@@ -61924,7 +61924,7 @@ char  sub_4446E0(int a1, char *a2, DWORD a3)
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444750) --------------------------------------------------------
-int  sub_444750(int a1, DWORD a2)
+int  SaveSlot_HasDataFile(int a1, DWORD a2)
 {
   int file_handle; // eax
   int result; // eax
@@ -61978,12 +61978,12 @@ int  sub_444780(int a1)
   }
   else
   {
-    sub_4446E0(v12, v11, (DWORD)g_RenderDevice);
+    SaveSlot_LoadLabelOrPlaceholder(v12, v11, (DWORD)g_RenderDevice);
   }
   g_RenderDevice = &unk_51D4C0;
   v7 = (unsigned __int16)(22 * v12 + 157);
   v8 = 22 * v12 + 137;
-  sub_460BB0(dword_544CD8, 0xF4u, 0x1A4u, v8, v7);
+  sub_460BB0(g_RenderState, 0xF4u, 0x1A4u, v8, v7);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v8, 244, 0x1A4u, v7, 0xF4u, v8);
   if ( v12 == dword_543D18 )
     v9 = 18;
@@ -61994,7 +61994,7 @@ int  sub_444780(int a1)
     sub_40C430(dword_543D24);
   UI_DrawTextFmt(v7, 244, 410, 22 * v12 + 137, 3, (int)v11);
   sub_40C430(-1);
-  result = Render_Present((int)dword_544CD8);
+  result = Render_Present((int)g_RenderState);
   g_RenderDevice = v2;
   return result;
 }
@@ -62003,7 +62003,7 @@ int  sub_444780(int a1)
 // 543D18: using guessed type int dword_543D18;
 // 543D1C: using guessed type int dword_543D1C;
 // 543D24: using guessed type int dword_543D24;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00444920) --------------------------------------------------------
 int  sub_444920(int result, int a2)
@@ -62031,7 +62031,7 @@ signed int  sub_444950(int a1, int a2, DWORD a3, double a4)
     dword_543D14 = 1;
     goto LABEL_6;
   }
-  result = sub_444750(dword_543D18, a3);
+  result = SaveSlot_HasDataFile(dword_543D18, a3);
   if ( !result )
   {
 LABEL_6:
@@ -62106,7 +62106,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
   dword_543D24 = 0;
   dword_543D18 = -1;
   Render_Pump();
-  sub_460D80((int)dword_544CD8, v8);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, v8);
   dword_545150 = (int)&unk_5196A0;
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   SpriteForChar = DLX_GetSpriteForChar((int)v40, dword_543D1C != 0);
@@ -62145,9 +62145,9 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
   *(_DWORD *)((char *)&v38[17] + 1) = v13;
   *(_DWORD *)((char *)&v38[18] + 1) = (dword_543D1C != 0) + 2;
   g_RenderDevice = &unk_51D4C0;
-  sub_419D80(v38);
+  UIWidgetTable_InitDrawStates(v38);
   dword_543D14 = 0;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   v16 = Render_SetResourceHandle((int)&unk_51D4C0, v15);
   v17 = dword_543D14;
   v41 = v16;
@@ -62226,7 +62226,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
             }
             else
             {
-              sub_4446E0(dword_543D18, v39, v17);
+              SaveSlot_LoadLabelOrPlaceholder(dword_543D18, v39, v17);
             }
             Render_ReleaseSurface(21, v17);
             if ( (unsigned __int16)Render_LoadResourceSprite_v3(v39) < 0x97u )
@@ -62246,8 +62246,8 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
         }
       }
     }
-    DD_Pump((int)dword_544CD8, v14);
-    if ( DD_IsFlipping((int)dword_544CD8) )
+    DD_Pump((int)g_RenderState, v14);
+    if ( DD_IsFlipping((int)g_RenderState) )
     {
       if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
       {
@@ -62263,21 +62263,21 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
               sub_444780(v14);
             if ( dword_543D1C )
             {
-              sub_4446E0(dword_543D18, byte_543D28, v17);
+              SaveSlot_LoadLabelOrPlaceholder(dword_543D18, byte_543D28, v17);
               if ( !strcmp_(v19, asc_4F94C2) )
                 byte_543D28[0] = 0;
             }
             sub_444780(dword_543D18);
           }
-          if ( sub_460950((int)dword_544CD8) )
+          if ( sub_460950((int)g_RenderState) )
             sub_444950(0, v20, v17, a4);
         }
       }
     }
-    sub_419DC0(v38, v17);
+    UIWidgetTable_PollHoverAndActions(v38, v17);
   }
   Render_SetResourceHandle((int)&unk_51D4C0, v41);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Debug_Log(v21, v14, (DWORD)g_RenderHook, (int)aUnsetrh08x_22);
   g_RenderHook = v42;
   Render_SetResourceHandle((int)&unk_51D4C0, v43);
@@ -62312,7 +62312,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
 // 543D1C: using guessed type int dword_543D1C;
 // 543D20: using guessed type int dword_543D20;
 // 543D24: using guessed type int dword_543D24;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -62368,7 +62368,7 @@ int  UI_ShowInfoWindow(
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a2, a4, (int)aSetrhS08x_10);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   v7 = 0;
   Render_ReleaseSurface(17, 0);
   v29 = 0;
@@ -62464,11 +62464,11 @@ int  UI_ShowInfoWindow(
     UI_DrawTextFmt(0, 70, 569, 210, 6, v31);
   }
   sub_405920((int *)&v29);
-  Render_Present((int)dword_544CD8);
-  Render_Begin((int)dword_544CD8, 0);
-  while ( !DD_IsFlipping((int)dword_544CD8) && !DD_IsLost((int)dword_544CD8) )
-    DD_Pump((int)dword_544CD8, 0);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Present((int)g_RenderState);
+  Render_Begin((int)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)g_RenderState) && !DD_IsLost((int)g_RenderState) )
+    DD_Pump((int)g_RenderState, 0);
+  Render_Begin((int)g_RenderState, 0);
   Render_Pump();
   Debug_Log((int)g_RenderHook, 0, v7, (int)aUnsetrh08x_10);
   g_RenderHook = v30;
@@ -62478,7 +62478,7 @@ int  UI_ShowInfoWindow(
   if ( v32 )
     Render_FillRect(v32, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, a5, a6);
   v27 = v32;
-  result = Render_Present((int)dword_544CD8);
+  result = Render_Present((int)g_RenderState);
   if ( v27 )
     return RenderSurface_InvokeSlot0(v27, 2);
   return result;
@@ -62492,7 +62492,7 @@ int  UI_ShowInfoWindow(
 // 445767: variable 'v24' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5199D8: using guessed type int (*g_RenderHook)();
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (004458E0) --------------------------------------------------------
@@ -62577,20 +62577,20 @@ int  UI_CheatEditRepaint(DWORD a1, int a2)
   v5 = byte_543D48[0];
   strupr_(440, 200);
   byte_543D48[0] = v5;
-  sub_460BB0(dword_544CD8, v2, v3, 0x104u, 0x122u);
+  sub_460BB0(g_RenderState, v2, v3, 0x104u, 0x122u);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
   Render_ReleaseSurface(22, a1);
   sub_40C430(dword_543D44);
   UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)byte_543D48);
   sub_40C430(-1);
-  return Render_Present((int)dword_544CD8);
+  return Render_Present((int)g_RenderState);
 }
 // 445A7C: variable 'v2' is possibly undefined
 // 445A7C: variable 'v3' is possibly undefined
 // 47BBE3: using guessed type int __fastcall strupr_(_DWORD, _DWORD);
 // 5202E0: using guessed type int dword_5202E0;
 // 543D44: using guessed type int dword_543D44;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00445CE0) --------------------------------------------------------
 char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
@@ -62674,7 +62674,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
   v42 = v11;
   Render_Pump();
   v47 = v12;
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   DLX_GetSpriteWidth((int)v42, 0x17u);
   SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v42, 0x16u);
   v15 = v14 + 6;
@@ -62719,12 +62719,12 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
   v21 = -56;
   Render_FillRect(0, (_DWORD *)dword_5202E0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
   UI_CheatEditRepaint(v17, (int)byte_543D48);
-  Render_Present((int)dword_544CD8);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Present((int)g_RenderState);
+  Render_Begin((int)g_RenderState, 0);
   g_DecisionDialogExitSignal = 0;
-  while ( !DD_IsFlipping((int)dword_544CD8) && !g_DecisionDialogExitSignal )
+  while ( !DD_IsFlipping((int)g_RenderState) && !g_DecisionDialogExitSignal )
   {
-    DD_Pump((int)dword_544CD8, v21);
+    DD_Pump((int)g_RenderState, v21);
     if ( Input_IsKeyPressed(203) && dword_543D44 )
     {
       --dword_543D44;
@@ -62788,13 +62788,13 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
       }
     }
   }
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Render_Pump();
   Debug_Log(v36, (char)g_RenderHook, v17, (int)aUnsetrh08x_11);
   g_RenderHook = v44;
   Render_SetResourceHandle((int)&unk_51D4C0, v45);
   Render_FillRect((_DWORD *)v17, 0, 0, 0, 0x27Fu, v43 - 1, 0, v47);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v17 )
     (**(void (__cdecl ***)(int, int, int, int, int, int))(v17 + 184))(v40[0], v40[1], v40[2], v41[0], v41[1], v41[2]);
   v37 = byte_543D48;
@@ -62833,7 +62833,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
 // 5202E0: using guessed type int dword_5202E0;
 // 543D44: using guessed type int dword_543D44;
 // 543D54: using guessed type int g_DecisionDialogExitSignal;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (00446230) --------------------------------------------------------
@@ -62903,7 +62903,7 @@ int  sub_446230(char a1, DWORD a2)
   g_RenderDevice = v27;
   Time_Now(v15, 1);
   Render_BlitSurface(&unk_51D4C0, v16, 0, (DWORD)v12);
-  v17 = dword_544CD8;
+  v17 = g_RenderState;
   while ( !Input_PollEventsUntil((int)v17, (char)&g_InputBackendState) )
   {
     v20 = Time_Now(v19, v18);
@@ -62933,7 +62933,7 @@ int  sub_446230(char a1, DWORD a2)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202F4: using guessed type int dword_5202F4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00446430) --------------------------------------------------------
 int  DecisionDialog_ConfirmIfAllowed(uintptr_t a1, int a2)
@@ -63055,7 +63055,7 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a4, a5, (int)aSetrhS08x_18);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   Render_ReleaseSurface(17, a5);
   v18 = 0;
   v7 = (_DWORD *)Mem_Alloc(4112, v6, 0, a5);
@@ -63099,21 +63099,21 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
   *(_DWORD *)((char *)&v17[13] + 1) = v27 + 451;
   *(_DWORD *)((char *)&v17[14] + 1) = v21 + 175;
   *(_DWORD *)((char *)&v17[16] + 1) = &v18;
-  sub_419D80(v17);
-  Render_Present((int)dword_544CD8);
+  UIWidgetTable_InitDrawStates(v17);
+  Render_Present((int)g_RenderState);
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(v17, v10);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(v17, v10);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v15, (char)dword_544CD8, v10, (int)aUnsetrh08x_18);
+  Debug_Log(v15, (char)g_RenderState, v10, (int)aUnsetrh08x_18);
   g_RenderHook = v23;
   Render_SetResourceHandle((int)&unk_51D4C0, v24);
   Render_FillRect((_DWORD *)v10, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v27, v21);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v10 )
     RenderSurface_InvokeSlot0((_DWORD *)v10, 2);
   sub_405920((int *)&v18);
@@ -63134,7 +63134,7 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
 // 543D54: using guessed type int g_DecisionDialogExitSignal;
 // 543D58: using guessed type int g_DecisionDialogResult;
 // 543D5C: using guessed type int g_DecisionDialogConfirmDisabled;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 static _DWORD *g_YesNoWindowWidgetSpriteSet;
@@ -63221,7 +63221,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a4, a5, (int)aSetrhS08x_12);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   Render_ReleaseSurface(17, a5);
   if ( a2 )
     Render_LoadResourceSprite_v4(17, a2, v6, a4, a5);
@@ -63275,26 +63275,26 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   YesNoWindow_RebuildButtonWidgets((unsigned char *)v24, v16 + 72, v26 + 38, v32 + 146);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] before_widget_init holder=%p widget=%p\n", (void *)&g_YesNoWindowWidgetSpriteSet, (void *)v24);
-  sub_419D80(v24);
+  UIWidgetTable_InitDrawStates(v24);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] after_widget_init\n");
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[yesno] after_present\n");
   g_DecisionDialogConfirmDisabled = 0;
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(v24, v13);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(v24, v13);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v22, (char)dword_544CD8, v13, (int)aUnsetrh08x_12);
+  Debug_Log(v22, (char)g_RenderState, v13, (int)aUnsetrh08x_12);
   g_RenderHook = v28;
   Render_SetResourceHandle((int)&unk_51D4C0, v29);
   Render_FillRect((_DWORD *)v13, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v32, v26);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v13 )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)v13, 2);
   sub_405920((int *)&v25);
@@ -63313,7 +63313,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 // 5202F4: using guessed type int dword_5202F4;
 // 543D54: using guessed type int g_DecisionDialogExitSignal;
 // 543D58: using guessed type int g_DecisionDialogResult;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (00446CB0) --------------------------------------------------------
@@ -63346,7 +63346,7 @@ int  sub_446CB0(int a1, int a2, char a3, DWORD a4)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a3, a4, (int)aSetrhS08x_13);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   Render_ReleaseSurface(17, a4);
   v15 = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, 0, a4);
@@ -63386,12 +63386,12 @@ int  sub_446CB0(int a1, int a2, char a3, DWORD a4)
     0,
     0);
   UI_DrawTextFmt(v6 + 25, v6 + 25, v6 + 250, v23 + 34, 3, v20);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Debug_Log(v12, v6, v11, (int)aUnsetrh08x_13);
   g_RenderHook = v18;
   Render_SetResourceHandle((int)&unk_51D4C0, v16);
   Render_FillRect(v9, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v6, v13);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v9 )
     (*(void (**)(void))v9[46])();
   sub_405920((int *)&v15);
@@ -63403,7 +63403,7 @@ int  sub_446CB0(int a1, int a2, char a3, DWORD a4)
 // 446EEE: variable 'v13' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5199D8: using guessed type int (*g_RenderHook)();
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (00446F40) --------------------------------------------------------
@@ -63451,7 +63451,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
     ACTIVE_MISSION_INDEX,
     GAME_TURN_COUNTER);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_render_pump",
     g_SelectedUnitIndex,
@@ -63583,14 +63583,14 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
     v18[0],
     v18[1],
     *(_DWORD *)((char *)&v18[13] + 1));
-  sub_419D80(v18);
+  UIWidgetTable_InitDrawStates(v18);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_widget_init",
     g_SelectedUnitIndex,
     (int)(uintptr_t)v18,
     0,
     0);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent(
     "queen_dialog_after_present",
     g_SelectedUnitIndex,
@@ -63600,16 +63600,16 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
   g_DecisionDialogExitSignal = 0;
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
-    sub_419DC0(v18, v8);
+    DD_Pump((int)g_RenderState, 0);
+    UIWidgetTable_PollHoverAndActions(v18, v8);
   }
   while ( !g_DecisionDialogExitSignal );
   Render_Pump();
-  Debug_Log(v16, (char)dword_544CD8, v8, (int)aUnsetrh08x_17);
+  Debug_Log(v16, (char)g_RenderState, v8, (int)aUnsetrh08x_17);
   g_RenderHook = v23;
   Render_SetResourceHandle((int)&unk_51D4C0, v25);
   Render_FillRect((_DWORD *)v8, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v22, v21);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v8 )
     RenderSurface_InvokeSlot0((_DWORD *)v8, 2);
   sub_405920((int *)&v20);
@@ -63633,7 +63633,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 543D54: using guessed type int g_DecisionDialogExitSignal;
 // 543D58: using guessed type int g_DecisionDialogResult;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (00447330) --------------------------------------------------------
@@ -63665,7 +63665,7 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log((int)Render_DefaultRH, a3, a4, (int)aSetrhS08x_16);
   Render_Pump();
-  sub_460D80((int)dword_544CD8, dword_545150);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
   Render_ReleaseSurface(17, a4);
   v15 = 0;
   v5 = (_DWORD *)Mem_Alloc(4112, v4, 0, a4);
@@ -63705,16 +63705,16 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
     0,
     0);
   UI_DrawTextFmt(150, v6 + 175, v6 + 525, 205, 6, v16);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   while ( !DD_IsFlipping(v11) )
     DD_Pump(v12, 0);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   Render_Pump();
   Debug_Log(v13, 0, (DWORD)g_RenderHook, (int)aUnsetrh08x_16);
   g_RenderHook = v18;
   Render_SetResourceHandle((int)&unk_51D4C0, v20);
   Render_FillRect(v19, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, v6, 0x96u);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   if ( v19 )
     (*(void (**)(void))v19[46])();
   sub_405920((int *)&v15);
@@ -63729,7 +63729,7 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (00447610) --------------------------------------------------------
@@ -63784,7 +63784,7 @@ int  MainMenu_RequestExit(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_EXIT;
   return result;
@@ -63961,7 +63961,7 @@ int  MainMenu_RequestCampaignMenu(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CAMPAIGN;
   g_PlayGameMenuExitRequested = 1;
   return result;
@@ -63974,7 +63974,7 @@ int  MainMenu_RequestMultiplayerMenu(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_MULTIPLAYER;
   g_PlayGameMenuExitRequested = 1;
   return result;
@@ -63987,7 +63987,7 @@ int  MainMenu_RequestCreditsCinematic(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_CREDITS;
   g_PlayGameMenuExitRequested = 1;
   return result;
@@ -64000,7 +64000,7 @@ int  MainMenu_RequestOptionsMenu(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_OPTIONS;
   g_PlayGameMenuExitRequested = 1;
   return result;
@@ -64013,7 +64013,7 @@ int  MainMenu_RequestLoadGameMenu(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_MainMenuRequestedScreen = MAIN_MENU_REQUEST_LOAD_GAME;
   g_PlayGameMenuExitRequested = 1;
   return result;
@@ -64043,12 +64043,12 @@ signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
   Time_Now(a1, a2);
   do
   {
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     if ( Input_IsKeyPressed(1)
       || Input_IsKeyPressed(57)
       || Input_IsKeyPressed(28)
-      || DD_IsFlipping((int)dword_544CD8)
-      || DD_IsLost((int)dword_544CD8) )
+      || DD_IsFlipping((int)g_RenderState)
+      || DD_IsLost((int)g_RenderState) )
     {
       return 1;
     }
@@ -64057,7 +64057,7 @@ signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
   while ( v6 <= v7 );
   return 0;
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00447840) --------------------------------------------------------
 DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
@@ -64071,7 +64071,7 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   g_RenderHook = 0;
   Debug_Log(0, 0, a3, (int)aSetrhS08x_14, aNull, 0);
   sub_404D90((int *)&unk_51D4C0);
-  DD_Pump((int)dword_544CD8, 0);
+  DD_Pump((int)g_RenderState, 0);
   Sleep(0x4B0u);
   Video_Avi_playIn(aLogo_0, 0, 1, 0, 1, 0);
   if ( g_LanguageIndex == 2 )
@@ -64091,7 +64091,7 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   {
     Video_Avi_playIn(aInt_a, 0, 1, 0, 1, 1);
   }
-  DD_Pump((int)dword_544CD8, 0);
+  DD_Pump((int)g_RenderState, 0);
   Debug_Log(0, 0, a3, (int)aUnsetrh08x_14, g_RenderHook);
   g_RenderHook = previous_render_hook;
   Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
@@ -64100,7 +64100,7 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 5199D8: using guessed type int (*g_RenderHook)();
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004479C0) --------------------------------------------------------
 int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
@@ -64193,7 +64193,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   v127 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(0, 0, (DWORD)a3, (int)aSetrhS08x_15, aStdrh_10, Render_DefaultRH);
-  DD_Pump((int)dword_544CD8, a2);
+  DD_Pump((int)g_RenderState, a2);
   v128 = 1;
   do
   {
@@ -64205,10 +64205,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
     if ( v128 && dword_5188C0 )
       g_MainMenuMusicHandle = sub_441670(aMusicMenu, 64);
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     if ( v128 )
       sub_404D90((int *)&unk_51D4C0);
-    DD_Pump((int)dword_544CD8, 0);
+    DD_Pump((int)g_RenderState, 0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw1);
     sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw2);
@@ -64228,25 +64228,25 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     while ( v17 != 371 );
     a2 = (signed int)&unk_51D4C0;
     g_RenderDevice = &unk_51D4C0;
-    sub_419D80(v120);
+    UIWidgetTable_InitDrawStates(v120);
     if ( v128 )
     {
       a2 = 60;
       sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
     }
     g_PlayGameMenuExitRequested = 0;
-    sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
-    sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+    sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
     dword_545150 = (int)&unk_5196A0;
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
     v128 = 0;
     if ( !g_PlayGameMenuExitRequested )
     {
-      a2 = (signed int)dword_544CD8;
+      a2 = (signed int)g_RenderState;
       do
       {
-        DD_Pump((int)dword_544CD8, 0);
-        sub_419DC0(v120, 0);
+        DD_Pump((int)g_RenderState, 0);
+        UIWidgetTable_PollHoverAndActions(v120, 0);
       }
       while ( !g_PlayGameMenuExitRequested );
     }
@@ -64268,18 +64268,18 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         CampaignMenu_RebuildButtonWidgetTemplate();
         qmemcpy(v124, g_CampaignMenuButtonWidgetsTemplate, sizeof(g_CampaignMenuButtonWidgetsTemplate));
         g_RenderDevice = &unk_51D4C0;
-        sub_419D80(v124);
+        UIWidgetTable_InitDrawStates(v124);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
+        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
         a3 = (char *)&unk_5196A0;
-        sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
         campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
         {
-          DD_Pump((int)dword_544CD8, 0);
-          sub_419DC0(v124, 0);
+          DD_Pump((int)g_RenderState, 0);
+          UIWidgetTable_PollHoverAndActions(v124, 0);
           if ( Input_IsKeyPressed(1) )
           {
             campaign_menu_cancelled_by_escape = 1;
@@ -64342,16 +64342,16 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         sub_449330();
         qmemcpy(v122, &unk_5184F0, 265);
         g_RenderDevice = &unk_51D4C0;
-        sub_419D80(v122);
+        UIWidgetTable_InitDrawStates(v122);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
-        sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)dword_544CD8, 0);
-          if ( DD_IsFlipping((int)dword_544CD8)
+          DD_Pump((int)g_RenderState, 0);
+          if ( DD_IsFlipping((int)g_RenderState)
             && dword_544CFC >> byte_54512C >= 176
             && dword_544CFC >> byte_54512C <= 236
             && (unsigned int)(((dword_544D00 >> byte_54512C) - 129) / 53) <= 4 )
@@ -64361,9 +64361,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             byte_544188[multiplayer_player_type_slot] = ((unsigned __int8)byte_544188[multiplayer_player_type_slot] + 1) % 6;
             sub_448EA0();
             sub_448D10(multiplayer_player_type_slot, 0, 0);
-            Render_Begin((int)dword_544CD8, 0);
+            Render_Begin((int)g_RenderState, 0);
           }
-          if ( DD_IsFlipping((int)dword_544CD8) )
+          if ( DD_IsFlipping((int)g_RenderState) )
           {
             if ( dword_544CFC >> byte_54512C >= 239 && dword_544CFC >> byte_54512C <= 339 )
             {
@@ -64467,7 +64467,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               }
             }
           }
-          if ( DD_IsFlipping((int)dword_544CD8) )
+          if ( DD_IsFlipping((int)g_RenderState) )
           {
             if ( dword_544CFC >> byte_54512C >= 356 && dword_544CFC >> byte_54512C <= 477 )
             {
@@ -64481,12 +64481,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   dword_5441D8 = v54;
                   sub_4425E0(aMale_1);
                   sub_449330();
-                  Render_Begin((int)dword_544CD8, 0);
+                  Render_Begin((int)g_RenderState, 0);
                 }
               }
             }
           }
-          sub_419DC0(v122, 0);
+          UIWidgetTable_PollHoverAndActions(v122, 0);
         }
         Render_Pump();
         if ( dword_544190 )
@@ -64596,20 +64596,20 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                       - (__CFSHL__((unsigned __int8)byte_5188C9 << 8 >> 31, 4)
                        + 16 * ((unsigned __int8)byte_5188C9 << 8 >> 31))) >> 4;
         g_RenderDevice = &unk_51D4C0;
-        sub_419D80(v113);
+        UIWidgetTable_InitDrawStates(v113);
         sub_44A880(word_518600, a2, v97);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
-        sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
         if ( !g_PlayGameMenuExitRequested )
         {
           do
           {
-            DD_Pump((int)dword_544CD8, 0);
+            DD_Pump((int)g_RenderState, 0);
             sub_44A8B0(word_518600);
-            sub_419DC0(v113, 0);
+            UIWidgetTable_PollHoverAndActions(v113, 0);
           }
           while ( !g_PlayGameMenuExitRequested );
         }
@@ -64657,20 +64657,20 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
         (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
         for ( k = 0; k < 10; ++k )
-          sub_44A140(k, (DWORD)a3);
+          LoadMenu_RedrawSaveSlotRow(k, (DWORD)a3);
         LoadMenu_RebuildButtonWidgetTemplate();
         qmemcpy(v123, &g_LoadMenuButtonWidgetsTemplate, 0x9Fu);
         g_RenderDevice = &unk_51D4C0;
-        sub_419D80(v123);
+        UIWidgetTable_InitDrawStates(v123);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)dword_544CD8, (int)byte_543D80, 0, 0);
-        sub_460D80((int)dword_544CD8, (int)&unk_5196A0);
+        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
-          DD_Pump((int)dword_544CD8, 0);
-          if ( DD_IsFlipping((int)dword_544CD8) )
+          DD_Pump((int)g_RenderState, 0);
+          if ( DD_IsFlipping((int)g_RenderState) )
           {
             if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
             {
@@ -64682,15 +64682,15 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 {
                   dword_5441E0 = ((dword_544D00 >> byte_54512C) - 155) / 22;
                   if ( previous_load_slot != -1 )
-                    sub_44A140(previous_load_slot, (DWORD)a3);
-                  sub_44A140(dword_5441E0, (DWORD)a3);
+                    LoadMenu_RedrawSaveSlotRow(previous_load_slot, (DWORD)a3);
+                  LoadMenu_RedrawSaveSlotRow(dword_5441E0, (DWORD)a3);
                 }
-                if ( sub_460950((int)dword_544CD8) )
+                if ( sub_460950((int)g_RenderState) )
                   sub_44A110(0, (DWORD)a3);
               }
             }
           }
-          sub_419DC0(v123, 0);
+          UIWidgetTable_PollHoverAndActions(v123, 0);
         }
         Render_Pump();
         if ( dword_544190 )
@@ -64783,7 +64783,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
 // 5441D8: using guessed type int dword_5441D8;
 // 5441DC: using guessed type int dword_5441DC;
 // 5441E0: using guessed type int dword_5441E0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -64794,7 +64794,7 @@ int  sub_448B90(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
   dword_544184 = 1;
   return result;
@@ -64807,7 +64807,7 @@ int  sub_448BB0(uintptr_t a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
   dword_544184 = 0;
   return result;
@@ -64832,7 +64832,7 @@ int  sub_448D10(int a1, int a2, int a3)
   v5 = (unsigned __int16)(v4 + 167);
   v9 = v4 + 167;
   v6 = (unsigned __int16)(v4 + 144);
-  sub_460BB0(dword_544CD8, 0xEFu, 0x153u, v6, v9);
+  sub_460BB0(g_RenderState, 0xEFu, 0x153u, v6, v9);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v6, 234, 0x15Du, v5, 0xEAu, v6);
   Render_ReleaseSurface(18, v5);
   if ( a1 == dword_544198 )
@@ -64843,7 +64843,7 @@ int  sub_448D10(int a1, int a2, int a3)
     UI_DrawTextFmt(v6, 239, 339, 53 * a1 + 144, 3, (int)&byte_5441A0[11 * a1]);
   result = sub_40C430(-1);
   if ( v10 )
-    return Render_Present((int)dword_544CD8);
+    return Render_Present((int)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -64851,7 +64851,7 @@ int  sub_448D10(int a1, int a2, int a3)
 // 544194: using guessed type int dword_544194;
 // 544198: using guessed type int dword_544198;
 // 5441A0: using guessed type _BYTE byte_5441A0[11];
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00448E10) --------------------------------------------------------
@@ -64861,7 +64861,7 @@ signed int  sub_448E10(int a1)
   int v3; // edx
   int v4; // edx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   for ( result = 0; result < 5; ++result )
   {
     v3 = (unsigned __int8)byte_544188[result];
@@ -64895,7 +64895,7 @@ int  sub_448E80(int a1)
 {
   int result; // eax
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = 1;
   dword_544190 = 0;
   return result;
@@ -64916,7 +64916,7 @@ int sub_448EA0()
   v0 = 129;
   v5 = dword_544D10;
   v1 = 0;
-  sub_460BB0(dword_544CD8, 0xB0u, 0xECu, 0x81u, 0x18Au);
+  sub_460BB0(g_RenderState, 0xB0u, 0xECu, 0x81u, 0x18Au);
   do
   {
     SpriteForChar = DLX_GetSpriteForChar(g_PlayGameMenuSpriteSetHandle, (unsigned __int8)byte_544188[v1] + 8);
@@ -64937,12 +64937,12 @@ int sub_448EA0()
   }
   while ( v1 < 5 );
   if ( v5 )
-    return Render_Present((int)dword_544CD8);
+    return Render_Present((int)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 543D74: using guessed type int g_PlayGameMenuSpriteSetHandle;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00449330) --------------------------------------------------------
@@ -64956,7 +64956,7 @@ int sub_449330()
 
   v0 = dword_544D10;
   if ( dword_544D10 )
-    sub_460BB0(dword_544CD8, 0x164u, 0x1DDu, 0x86u, 0x175u);
+    sub_460BB0(g_RenderState, 0x164u, 0x1DDu, 0x86u, 0x175u);
   v1 = 134;
   v2 = 0;
   g_RenderDevice = &unk_51D4C0;
@@ -64977,20 +64977,20 @@ int sub_449330()
   }
   while ( v2 < 11 );
   if ( v0 )
-    return Render_Present((int)dword_544CD8);
+    return Render_Present((int)g_RenderState);
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 5441D8: using guessed type int dword_5441D8;
 // 5441DC: using guessed type int dword_5441DC;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004494B0) --------------------------------------------------------
 int  sub_4494B0(int a1)
 {
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   if ( dword_5441DC < 19 )
     ++dword_5441DC;
   return sub_449330();
@@ -65000,7 +65000,7 @@ int  sub_4494B0(int a1)
 //----- (004494E0) --------------------------------------------------------
 int  sub_4494E0(int a1)
 {
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   if ( dword_5441DC )
     --dword_5441DC;
   return sub_449330();
@@ -65031,7 +65031,7 @@ int  sub_449C80(int a1)
   int result; // eax
   int v3; // edx
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   g_PlayGameMenuExitRequested = v3;
   return result;
 }
@@ -65043,7 +65043,7 @@ unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3)
 {
   int v4; // ecx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   if ( (*(_BYTE *)(v4 - 98) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 98) = 2;
@@ -65084,9 +65084,9 @@ BOOL  sub_449D60(int a1)
   *(_BYTE *)(a1 + 8) = v2;
   *(_BYTE *)(a1 + 8) = v2 ^ 2;
   sub_4425E0(*(char **)(a1 + 49));
-  return Render_Begin((int)dword_544CD8, 0);
+  return Render_Begin((int)g_RenderState, 0);
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044A110) --------------------------------------------------------
 int  sub_44A110(int a1, DWORD a2)
@@ -65094,8 +65094,8 @@ int  sub_44A110(int a1, DWORD a2)
   int result; // eax
 
   if ( a1 )
-    sub_419ED0(a1);
-  result = sub_444750(dword_5441E0, a2);
+    UIWidget_PlayPressedReleaseAnimation(a1);
+  result = SaveSlot_HasDataFile(dword_5441E0, a2);
   if ( result )
   {
     dword_544190 = 1;
@@ -65108,7 +65108,7 @@ int  sub_44A110(int a1, DWORD a2)
 // 5441E0: using guessed type int dword_5441E0;
 
 //----- (0044A140) --------------------------------------------------------
-void * sub_44A140(int a1, DWORD a2)
+void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2)
 {
   int v4; // edi
   int v5; // eax
@@ -65121,11 +65121,11 @@ void * sub_44A140(int a1, DWORD a2)
   row_label = (char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes(20);
   if ( !row_label )
     return v8;
-  sub_4446E0(a1, row_label, a2);
+  SaveSlot_LoadLabelOrPlaceholder(a1, row_label, a2);
   v9 = dword_544D10;
   g_RenderDevice = &unk_51D4C0;
   v4 = (unsigned __int16)(22 * a1 + 155);
-  sub_460BB0(dword_544CD8, 0xF4u, 0x1A4u, v4, 22 * a1 + 175);
+  sub_460BB0(g_RenderState, 0xF4u, 0x1A4u, v4, 22 * a1 + 175);
   Render_FillRect((_DWORD *)dword_5202E0, 0, (unsigned __int16)v4, 244, 0x1A4u, 22 * a1 + 175, 0xF4u, v4);
   if ( a1 == dword_5441E0 )
     v5 = 18;
@@ -65134,7 +65134,7 @@ void * sub_44A140(int a1, DWORD a2)
   Render_ReleaseSurface(v5, (unsigned __int16)(22 * a1 + 175));
   UI_DrawTextFmt(v4, 244, 410, 22 * a1 + 155, 3, (int)(uintptr_t)row_label);
   if ( v9 )
-    Render_Present((int)dword_544CD8);
+    Render_Present((int)g_RenderState);
   Compat_FreeLow32Bytes((int)(uintptr_t)row_label);
   result = v8;
   g_RenderDevice = v8;
@@ -65143,7 +65143,7 @@ void * sub_44A140(int a1, DWORD a2)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
 // 5441E0: using guessed type int dword_5441E0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 
 //----- (0044A510) --------------------------------------------------------
@@ -65207,7 +65207,7 @@ int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3)
     0,
     0);
   g_RenderDevice = v19;
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   result = Render_SetResourceHandle((int)&unk_51D4C0, v5);
   if ( *((_DWORD *)a1 + 7) )
     return (*((int (**)(void))a1 + 7))();
@@ -65216,7 +65216,7 @@ int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3)
 // 44A54B: variable 'v4' is possibly undefined
 // 44A591: variable 'v9' is possibly undefined
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044A6D0) --------------------------------------------------------
 unsigned int  sub_44A6D0(int a1)
@@ -65234,7 +65234,7 @@ unsigned int  sub_44A6D0(int a1)
   unsigned __int16 SpriteHeight; // ax
   char v13; // cl
 
-  result = DD_IsFlipping((int)dword_544CD8);
+  result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     v3 = *(_DWORD *)(a1 + 12) * (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1);
@@ -65269,10 +65269,10 @@ unsigned int  sub_44A6D0(int a1)
           v8 = *(_DWORD *)(a1 + 12);
           while ( 1 )
           {
-            result = DD_IsFlipping((int)dword_544CD8);
+            result = DD_IsFlipping((int)g_RenderState);
             if ( !result )
               break;
-            DD_Pump((int)dword_544CD8, a1);
+            DD_Pump((int)g_RenderState, a1);
             if ( v6 != dword_544CFC >> byte_54512C )
             {
               v9 = (((dword_544CFC >> byte_54512C) - v7) << 8) / (*(_DWORD *)(a1 + 4) - *(_DWORD *)a1) + v8;
@@ -65297,7 +65297,7 @@ unsigned int  sub_44A6D0(int a1)
 }
 // 44A851: simplified comparisons for 'eax.4': <0 || >=101 became >=101u
 // 44A836: variable 'v13' is possibly undefined
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 54512C: using guessed type char byte_54512C;
@@ -65421,7 +65421,7 @@ void  sub_44A9C0(int a1, int a2, DWORD a3)
   sub_404BC0((int)&unk_51D4C0, *(char *)(a1 + 26));
   _wcpp_4_copy_array__(v6[0]);
   sub_404C80((int *)&unk_51D4C0, v6);
-  sub_4608D0((int)dword_544CD8, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
+  sub_4608D0((int)g_RenderState, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
   if ( (int *)a1 == &dword_5188B0 )
   {
     if ( *(_DWORD *)(a1 + 16) )
@@ -65445,7 +65445,7 @@ void  sub_44A9C0(int a1, int a2, DWORD a3)
 // 44AA23: variable 'v5' is possibly undefined
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
 // 5188B0: using guessed type int dword_5188B0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044AD60) --------------------------------------------------------
 char  PlayerRuntimeState_ResetDefaults(uintptr_t a1)
@@ -66768,7 +66768,7 @@ BOOL  sub_44E350(__int16 *a1)
   unsigned __int16 v42; // [esp+44h] [ebp-8h]
 
   v34 = g_RenderDevice;
-  result = DD_IsLost((int)dword_544CD8);
+  result = DD_IsLost((int)g_RenderState);
   if ( result )
   {
     while ( 1 )
@@ -66827,7 +66827,7 @@ BOOL  sub_44E350(__int16 *a1)
       Render_SaveBackbuffer((int)&unk_51D4C0);
       Render_Pump();
       Render_FillRect(0, (_DWORD *)v16, (unsigned __int16)v35, (unsigned __int16)v32, v37, v36, 0, 0);
-      Render_Present((int)dword_544CD8);
+      Render_Present((int)g_RenderState);
       g_RenderDevice = (_UNKNOWN *)v16;
       UI_DrawText(0, 0, *(_DWORD *)&a1[2 * (unsigned __int8)g_LanguageIndex + 4]);
       v38 = Time_Now(v18, v17);
@@ -66840,7 +66840,7 @@ BOOL  sub_44E350(__int16 *a1)
         Render_BlendSurfaceRect(0, v14, 0, v16, 0, v42, v39, v32, v35, 255 * (v22 - v23) / 0x1Eu);
       }
       Render_FillRect((_DWORD *)v16, 0, 0, 0, v42, v39, v32, v35);
-      Render_FlipRect((int)dword_544CD8, 0);
+      Render_FlipRect((int)g_RenderState, 0);
       v31 = Time_Now(v25, v24);
       v26 = v32;
       v27 = v35;
@@ -66888,7 +66888,7 @@ LABEL_4:
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 520728: using guessed type int dword_520728;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
 // 544D14: using guessed type int dword_544D14;
@@ -67595,7 +67595,7 @@ char * BuildingPrisonerActionButton_SelectBehead(int a1)
   _DWORD *v5; // ebx
   int v6; // ecx
 
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
@@ -67622,7 +67622,7 @@ char * BuildingPrisonerActionButton_SelectBehead(int a1)
 // 44F5BA: variable 'v6' is possibly undefined
 // 518DC8: using guessed type _DWORD dword_518DC8[2];
 // 518DD0: using guessed type int dword_518DD0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044F5F0) --------------------------------------------------------
 char * BuildingPrisonerActionButton_SelectTorture(int a1)
@@ -67632,7 +67632,7 @@ char * BuildingPrisonerActionButton_SelectTorture(int a1)
   _DWORD *v5; // ebx
   int v6; // ecx
 
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
@@ -67659,7 +67659,7 @@ char * BuildingPrisonerActionButton_SelectTorture(int a1)
 // 44F62A: variable 'v6' is possibly undefined
 // 518DC8: using guessed type _DWORD dword_518DC8[2];
 // 518DD0: using guessed type int dword_518DD0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044F660) --------------------------------------------------------
 char * BuildingPrisonerActionButton_SelectBribery(int a1)
@@ -67669,7 +67669,7 @@ char * BuildingPrisonerActionButton_SelectBribery(int a1)
   _DWORD *v5; // ebx
   int v6; // ecx
 
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
   result = (char *)BuildingPrisonerActionWidget_HasPrisoner(a1);
   if ( result )
   {
@@ -67696,7 +67696,7 @@ char * BuildingPrisonerActionButton_SelectBribery(int a1)
 // 44F69A: variable 'v6' is possibly undefined
 // 518DC8: using guessed type _DWORD dword_518DC8[2];
 // 518DD0: using guessed type int dword_518DD0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044F6D0) --------------------------------------------------------
 int  BuildingPrisonerPanel_BackButton(int a1)
@@ -67704,7 +67704,7 @@ int  BuildingPrisonerPanel_BackButton(int a1)
   int result; // eax
   int v3; // edx
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   dword_5443F4 = v3;
   return result;
 }
@@ -67919,7 +67919,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   Render_LoadResourceSprite_v4(8, (_BYTE *)dword_5443F8, v13, v11, a3);
   Render_LoadResourceSprite_v4(18, (_BYTE *)dword_5443F8, v14, v11, a3);
   Render_LoadResourceSprite_v4(17, (_BYTE *)dword_5443F8, v15, v11, a3);
-  sub_460CB0((int)dword_544CD8, dword_5443F8, v16, a3);
+  sub_460CB0((int)g_RenderState, dword_5443F8, v16, a3);
   (*(void (__thiscall **)(void *))(*(_DWORD *)(dword_5202E0 + 184) + 36))(&unk_51D4C0);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
@@ -68140,15 +68140,15 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   while ( v39 != 5 );
   Building_DrawPrisonerRows(v36);
   Queen_DrawRelationshipPanel(v36, 10);
-  sub_419D80(dword_518DC8);
+  UIWidgetTable_InitDrawStates(dword_518DC8);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
-  Render_Present((int)dword_544CD8);
+  Render_Present((int)g_RenderState);
   dword_5443F4 = v50;
   do
   {
-    DD_Pump((int)dword_544CD8, (char)dword_544CD8);
+    DD_Pump((int)g_RenderState, (char)g_RenderState);
     g_RenderDevice = &unk_51D4C0;
-    sub_419DC0(dword_518DC8, v36);
+    UIWidgetTable_PollHoverAndActions(dword_518DC8, v36);
   }
   while ( v51 == dword_5443F4 );
   if ( dword_518DD0 == 2 )
@@ -68256,7 +68256,7 @@ LABEL_49:
 // 5443F4: using guessed type int dword_5443F4;
 // 5443F8: using guessed type int dword_5443F8;
 // 5443FC: using guessed type int dword_5443FC;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004506B0) --------------------------------------------------------
 int  Queen_FindEligibleBirthHostBuilding(int a1)
@@ -68836,7 +68836,7 @@ int  sub_451230(int a1)
   int result; // eax
   int v3; // edx
 
-  result = sub_419ED0(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(a1);
   dword_54453C = v3;
   return result;
 }
@@ -68848,7 +68848,7 @@ unsigned __int16 * sub_451250(int a1, int a2, DWORD a3)
 {
   int v4; // ecx
 
-  sub_419ED0(a1);
+  UIWidget_PlayPressedReleaseAnimation(a1);
   if ( (*(_BYTE *)(v4 - 98) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 98) = 2;
@@ -68889,9 +68889,9 @@ BOOL  sub_451310(int a1)
   *(_BYTE *)(a1 + 8) = v2;
   *(_BYTE *)(a1 + 8) = v2 ^ 2;
   sub_4425E0(*(char **)(a1 + 49));
-  return Render_Begin((int)dword_544CD8, 0);
+  return Render_Begin((int)g_RenderState, 0);
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451340) --------------------------------------------------------
 int  sub_451340(int a1, char a2, DWORD a3)
@@ -68970,13 +68970,13 @@ int  sub_451340(int a1, char a2, DWORD a3)
     1,
     0,
     0);
-  sub_419D80(v19);
+  UIWidgetTable_InitDrawStates(v19);
   sub_44A880(word_519380, 132, v5);
   dword_54453C = v13;
   do
   {
-    DD_Pump((int)dword_544CD8, 132);
-    sub_419DC0(v19, v5);
+    DD_Pump((int)g_RenderState, 132);
+    UIWidgetTable_PollHoverAndActions(v19, v5);
     sub_44A8B0(word_519380);
   }
   while ( v14 == dword_54453C );
@@ -69017,7 +69017,7 @@ int  sub_451340(int a1, char a2, DWORD a3)
 // 5202E4: using guessed type int gameData;
 // 54453C: using guessed type int dword_54453C;
 // 544540: using guessed type int dword_544540;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451690) --------------------------------------------------------
 int sub_451690()
@@ -69248,10 +69248,10 @@ int  sub_451AE0(DWORD a1)
   (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
   (*(void (**)(void))(v7[46] + 36))();
   sub_405020((int *)&unk_51D4C0, v5, 20);
-  Render_Begin((int)dword_544CD8, 0);
-  while ( !DD_IsFlipping((int)dword_544CD8) )
-    DD_Pump((int)dword_544CD8, 20);
-  Render_Begin((int)dword_544CD8, 0);
+  Render_Begin((int)g_RenderState, 0);
+  while ( !DD_IsFlipping((int)g_RenderState) )
+    DD_Pump((int)g_RenderState, 20);
+  Render_Begin((int)g_RenderState, 0);
   sub_404F20((int *)&unk_51D4C0, 20);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
   sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
@@ -69264,7 +69264,7 @@ int  sub_451AE0(DWORD a1)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 5202E0: using guessed type int dword_5202E0;
 // 5202F4: using guessed type int dword_5202F4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451C50) --------------------------------------------------------
 void __noreturn sub_451C50()
@@ -69332,7 +69332,7 @@ int  UI_ReadCheatString(char a1)
   if ( result )
   {
     while ( Input_IsKeyPressed(v1) )
-      DD_Pump((int)dword_544CD8, a1);
+      DD_Pump((int)g_RenderState, a1);
     for ( i = v12; ; *(i - 1) = Input_KeyToChar(v5) )
     {
       while ( 1 )
@@ -69341,7 +69341,7 @@ int  UI_ReadCheatString(char a1)
         v5 = v4;
         if ( v4 != -1 )
           break;
-        DD_Pump((int)dword_544CD8, -1);
+        DD_Pump((int)g_RenderState, -1);
       }
       v6 = v4;
       while ( 1 )
@@ -69349,7 +69349,7 @@ int  UI_ReadCheatString(char a1)
         result = Input_IsKeyPressed(v6);
         if ( !result )
           break;
-        DD_Pump((int)dword_544CD8, v5);
+        DD_Pump((int)g_RenderState, v5);
       }
       if ( v5 == 28 )
         break;
@@ -69387,7 +69387,7 @@ int  UI_ReadCheatString(char a1)
 // 519590: using guessed type char *g_CheatTable;
 // 519594: using guessed type int (*off_519594)();
 // 519598: using guessed type char *off_519598;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451DF0) --------------------------------------------------------
 signed int Rules_ShowBanner_StrategicClash()
@@ -74852,20 +74852,20 @@ int __thiscall sub_4603F0(void *this)
   int v1; // edx
   int v2; // ecx
 
-  Device_GetParamA((int)dword_544CD8, (int)this);
+  Device_GetParamA((int)g_RenderState, (int)this);
   return CRT_RegisterFinalizableObject(v2, v1);
 }
 // 4603FF: variable 'v2' is possibly undefined
 // 4603FF: variable 'v1' is possibly undefined
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 /*
  * The original `unk_545158` descriptor lives far beyond the render-state slab
- * rooted at `dword_544CD8`. In the compacted C global layout those regions sit
+ * rooted at `g_RenderState`. In the compacted C global layout those regions sit
  * adjacent, so mutating the descriptor's width/height fields would overwrite
- * `dword_544CD8 + 0x3c`, which is the live descriptor pointer used by
- * `sub_460D80` and `sub_460B20`. Keep the bootstrap cursor descriptor in
+ * `g_RenderState + 0x3c`, which is the live descriptor pointer used by
+ * `RenderState_SelectCursorDescriptor` and `RenderState_RecalculateCursorBoundsForRect`. Keep the bootstrap cursor descriptor in
  * dedicated storage until the broader DGROUP layout is recovered safely.
  */
 static _DWORD g_RenderVideoInitCursorDescriptor[9];
@@ -74988,11 +74988,11 @@ int  sub_460490(int a1, int a2, char a3, DWORD a4)
   if ( surface )
     surface = Render_CreateSurface((int)surface, 64, 64);
   *(_DWORD *)(a1 + 12) = surface;
-  sub_460D80(a1, (int)(uintptr_t)g_RenderVideoInitCursorDescriptor);
+  RenderState_SelectCursorDescriptor(a1, (int)(uintptr_t)g_RenderVideoInitCursorDescriptor);
   Compat_RenderStateInvokeMethod(a1, 20);
   *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 20);
   *(_DWORD *)(a1 + 52) = (*(int *)(a1 + 40) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(*(_DWORD *)(a1 + 60) + 24);
-  sub_460B20((_DWORD *)a1, 0, 640, 0, 480);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)a1, 0, 640, 0, 480);
   return LoadPalCOL(a1 + 80, (intptr_t)aMap_pal_1, a4);
 }
 // 544D10: using guessed type int dword_544D10;
@@ -75279,7 +75279,7 @@ BOOL  Render_FlipRect(int a1, char a2)
 }
 
 //----- (00460A50) --------------------------------------------------------
-int  sub_460A50(int a1, int a2)
+int  RenderState_PollInputAndClampCursor(int a1, int a2)
 {
   _DWORD *v2; // edx
   int v3; // eax
@@ -75340,7 +75340,7 @@ unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3)
 }
 
 //----- (00460B20) --------------------------------------------------------
-_DWORD * sub_460B20(
+_DWORD * RenderState_RecalculateCursorBoundsForRect(
         _DWORD *result,
         __int16 a2,
         __int16 a3,
@@ -75529,7 +75529,7 @@ static int Compat_RenderClearPresentedRect(int render_state)
   return Render_SetResourceHandle((int)&unk_51D4C0, resource_handle);
 }
 
-__int16  sub_460D80(int a1, int a2)
+__int16  RenderState_SelectCursorDescriptor(int a1, int a2)
 {
   int descriptor;
   int result;
@@ -75569,7 +75569,7 @@ __int16  sub_460D80(int a1, int a2)
   *(_DWORD *)(descriptor + 16) = max_width;
   *(_DWORD *)(descriptor + 32) = 0;
   *(_DWORD *)(descriptor + 28) = 0;
-  sub_460B20((_DWORD *)a1, 0, 640, 0, 480);
+  RenderState_RecalculateCursorBoundsForRect((_DWORD *)a1, 0, 640, 0, 480);
   Compat_RenderStateInvokeMethod(a1, 20);
   Compat_RenderStateInvokeMethod(a1, 4);
   *(_DWORD *)(a1 + 48) = (*(int *)(a1 + 36) >> *(_BYTE *)(a1 + 1108)) - *(_DWORD *)(descriptor + 20);
@@ -75639,7 +75639,7 @@ int Render_Pump()
   {
     dword_544D10 = 0;
     v1 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
-    render_state = (int)dword_544CD8;
+    render_state = (int)g_RenderState;
     present_surface = Compat_RenderStateSurface(render_state, 8);
     cursor_descriptor = Compat_RenderStateCursorDescriptor(render_state);
     Render_FillRect(
@@ -75793,7 +75793,7 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
     tail->field_470_ticks,
     tail->field_474_handle);
   if ( !tail->field_468_active )
-    return sub_460A50((int)a1, a3);
+    return RenderState_PollInputAndClampCursor((int)a1, a3);
   v4 = Time_Now(a3, a2);
   v5 = dword_544CC0;
   v6 = tail->field_470_ticks;
@@ -75967,7 +75967,7 @@ BOOL  Input_ClearKey(int a1, int a2)
     ++dword_5199C0;
   else
     dword_5199C0 = 1;
-  for ( i = Time_Now(a1, a2); Input_IsKeyPressed(v3); DD_Pump((int)dword_544CD8, i) )
+  for ( i = Time_Now(a1, a2); Input_IsKeyPressed(v3); DD_Pump((int)g_RenderState, i) )
   {
     v6 = dword_5199C0 <= 1 ? 30 : 10;
     v7 = Time_Now(v5, i + v6);
@@ -75985,7 +75985,7 @@ BOOL  Input_ClearKey(int a1, int a2)
 // 461691: variable 'v8' is possibly undefined
 // 4616BB: variable 'v10' is possibly undefined
 // 5199C0: using guessed type int dword_5199C0;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 54517C: using guessed type int dword_54517C;
 
 //----- (004616E0) --------------------------------------------------------
@@ -76050,7 +76050,7 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
   if ( Msg <= 0xF )
   {
     Debug_Log(v7, Msg, v6, (int)aWm_paint);
-    if ( *(_BYTE *)dword_51D020 == 119 )
+    if ( *(_BYTE *)g_AppCommandLine == 119 )
       DefWindowProcA(hWnd, Msg, wParam, lParam);
     else
       ValidateRect(hWnd, 0);
@@ -76064,7 +76064,7 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
       Debug_Log((int)g_RenderHook, Msg, v6, (int)aRedrawhandler0);
       g_RenderHook(v13, Msg, v6);
     }
-    DD_Pump((int)dword_544CD8, Msg);
+    DD_Pump((int)g_RenderState, Msg);
     return 0;
   }
   else
@@ -76081,7 +76081,7 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
       if ( dword_51D57C )
         Render_RestoreLostSurfaceIfNeeded(dword_51D584);
       if ( g_ShouldPresentOnReactivate )
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
       if ( g_SoundPausedForInactiveApp )
         CSS_ResumeSound(dword_5174D0, 1000);
       g_SoundPausedForInactiveApp = 0;
@@ -76113,11 +76113,11 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
 // 5174D0: using guessed type int dword_5174D0;
 // 5199D4: using guessed type int g_AppIsActive;
 // 5199D8: using guessed type int ( *g_RenderHook)(int a1, char a2, DWORD a3);
-// 51D020: using guessed type int dword_51D020;
+// 51D020: using guessed type int g_AppCommandLine;
 // 51D57C: using guessed type int dword_51D57C;
 // 51D584: using guessed type int dword_51D584;
 // 51D594: using guessed type int dword_51D594;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544D10: using guessed type int dword_544D10;
 // 545190: using guessed type int g_SoundPausedForInactiveApp;
 // 545198: using guessed type _DWORD g_InputBackendState[80];
@@ -76144,7 +76144,7 @@ HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2)
   v5.lpszMenuName = 0;
   RegisterClassA(&v5);
   v3 = 0x80000000;
-  if ( *(_BYTE *)dword_51D020 && *(_BYTE *)(dword_51D020 + 1) == 119 )
+  if ( *(_BYTE *)g_AppCommandLine && *(_BYTE *)(g_AppCommandLine + 1) == 119 )
     v3 = -2133917696;
   result = CreateWindowExA(0, ClassName, WindowName, v3, 0, 0, 640, 480, 0, 0, a1, 0);
   hWnd = result;
@@ -76158,7 +76158,7 @@ HWND  Platform_CreateMainWindow(HINSTANCE a1, int a2)
   }
   return result;
 }
-// 51D020: using guessed type int dword_51D020;
+// 51D020: using guessed type int g_AppCommandLine;
 // 545198: using guessed type _DWORD g_InputBackendState[80];
 
 //----- (00461B30) --------------------------------------------------------
@@ -76212,12 +76212,12 @@ int  Mem_Alloc(int a1, int a2, char a3, DWORD a4)
 //----- (00461C80) --------------------------------------------------------
 BOOL  Video_CanContinuePlayback(char a1)
 {
-  DD_Pump((int)dword_544CD8, a1);
-  DD_Pump((int)dword_544CD8, a1);
-  DD_Pump((int)dword_544CD8, a1);
-  return !Input_IsAnyKeyPressed() && !DD_IsFlipping((int)dword_544CD8) && !DD_IsLost((int)dword_544CD8);
+  DD_Pump((int)g_RenderState, a1);
+  DD_Pump((int)g_RenderState, a1);
+  DD_Pump((int)g_RenderState, a1);
+  return !Input_IsAnyKeyPressed() && !DD_IsFlipping((int)g_RenderState) && !DD_IsLost((int)g_RenderState);
 }
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00461CE0) --------------------------------------------------------
 signed int  Win_BeginModeChange(const char *a1, char *a2)
@@ -76335,19 +76335,19 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     LOBYTE(a4) = 16;
     Render_BeginModeSwitch(&unk_51D4C0);
     Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 16, (DWORD)a1);
-    DD_Pump((int)dword_544CD8, 16);
-    DD_Pump((int)dword_544CD8, 16);
-    DD_Pump((int)dword_544CD8, 16);
+    DD_Pump((int)g_RenderState, 16);
+    DD_Pump((int)g_RenderState, 16);
+    DD_Pump((int)g_RenderState, 16);
     InputBackend_Acquire(&g_InputBackendState);
-    DD_Pump((int)dword_544CD8, 16);
-    DD_Pump((int)dword_544CD8, 16);
-    DD_Pump((int)dword_544CD8, 16);
+    DD_Pump((int)g_RenderState, 16);
+    DD_Pump((int)g_RenderState, 16);
+    DD_Pump((int)g_RenderState, 16);
   }
   if ( Win_BeginModeChange(a1, v18) )
   {
     LOBYTE(a4) = v20;
     Win_EndModeChange(v7, v18, a3, v20);
-    Render_Begin((int)dword_544CD8, 0);
+    Render_Begin((int)g_RenderState, 0);
   }
   if ( a6 && dword_51D594 != 8 )
   {
@@ -76355,13 +76355,13 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
     LOBYTE(a4) = 8;
     Render_BeginModeSwitch(&unk_51D4C0);
     Render_SetPixelFormat((int)&unk_51D4C0, (int)(intptr_t)hWnd, 8, (DWORD)a1);
-    DD_Pump((int)dword_544CD8, 8);
-    DD_Pump((int)dword_544CD8, 8);
-    DD_Pump((int)dword_544CD8, 8);
+    DD_Pump((int)g_RenderState, 8);
+    DD_Pump((int)g_RenderState, 8);
+    DD_Pump((int)g_RenderState, 8);
     InputBackend_Acquire(&g_InputBackendState);
-    DD_Pump((int)dword_544CD8, 8);
-    DD_Pump((int)dword_544CD8, 8);
-    DD_Pump((int)dword_544CD8, 8);
+    DD_Pump((int)g_RenderState, 8);
+    DD_Pump((int)g_RenderState, 8);
+    DD_Pump((int)g_RenderState, 8);
   }
   else
   {
@@ -76387,7 +76387,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
 // 462082: variable 'v17' is possibly undefined
 // 5199D8: using guessed type int (*g_RenderHook)();
 // 51D594: using guessed type int dword_51D594;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 // 5452E4: using guessed type int dword_5452E4;
 
 //----- (004620F0) --------------------------------------------------------
@@ -76529,7 +76529,7 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
         j__nfree_(v26);
         Diagnostics_TraceWorldMapActionEvent("transition_after_palette_free", g_SelectedUnitIndex, 0, 0, 0);
         v22 = v27;
-        Render_Present((int)dword_544CD8);
+        Render_Present((int)g_RenderState);
         Diagnostics_TraceWorldMapActionEvent("transition_after_present", g_SelectedUnitIndex, 0, 0, 0);
         Render_SetResourceHandle((int)&unk_51D4C0, v22);
         Debug_Log((int)g_RenderHook, (char)v20, v18, (int)aUnsetrh08x_20);
@@ -76556,7 +76556,7 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
-// 544CD8: using guessed type _DWORD dword_544CD8[9];
+// 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004623C0) --------------------------------------------------------
 void __fastcall sub_4623C0(int a1, const char *a2)
@@ -98700,8 +98700,8 @@ signed int  sub_480160(int a1, _BYTE *a2, int a3, _DWORD *a4, double a5)
       a4 ? a4[2] : -1,
       dword_544CFC >> byte_54512C,
       dword_544D00 >> byte_54512C,
-      DD_IsFlipping((int)&dword_544CD8),
-      DD_IsLost((int)&dword_544CD8));
+      DD_IsFlipping((int)&g_RenderState),
+      DD_IsLost((int)&g_RenderState));
     fflush(stderr);
   }
   if ( (*(_BYTE *)(a1 + 24) & 2) == 0 && a4 && (v6 = sub_480BC0(a1, a2)) != 0 )

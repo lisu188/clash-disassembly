@@ -18,8 +18,8 @@
  * to keep unrelated unresolved helpers out of the initial link surface.
  */
 
-extern int dword_51D020;
-extern int dword_51D018;
+extern int g_AppCommandLine;
+extern int g_MousePresentAtStartup;
 extern int dword_51D01C;
 extern int dword_511134;
 extern int g_AppIsActive;
@@ -36,7 +36,7 @@ extern int dword_545150;
 extern int dword_54DBA8;
 extern int logEnabled;
 extern HWND hWnd;
-extern unsigned int dword_544CD8[286];
+extern unsigned int g_RenderState[286];
 extern unsigned char g_LanguageIndex;
 extern unsigned char byte_54512C;
 extern unsigned char byte_543D80[1024];
@@ -47,8 +47,8 @@ extern unsigned char unk_51D4C0;
 extern void *g_RenderDevice;
 extern LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-#define dword_544CFC (*((int *)&dword_544CD8[9]))
-#define dword_544D00 (*((int *)&dword_544CD8[10]))
+#define dword_544CFC (*((int *)&g_RenderState[9]))
+#define dword_544D00 (*((int *)&g_RenderState[10]))
 
 typedef struct BootstrapProbeInputBackendState
 {
@@ -79,15 +79,15 @@ int (*g_RenderHook)(int a1, char a2, DWORD a3);
 int g_BootstrapSkipIntroAviPlayback;
 
 char __thiscall DetectGameCDPath(void *this);
-int __thiscall sub_442AD0(int this);
-int sub_442760(int a1, char a2, DWORD a3);
+int __thiscall ResourceArchives_MountStartupArchives(int this);
+int FileSystem_InitRootMount(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int sub_451E46(void);
 int __fastcall sub_4725B0(int a1, int a2);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
-int sub_401A40(void);
+int Render_LoadResourceBackbuffer(void);
 int Render_DefaultRH(int a1, char a2, DWORD a3);
 int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
 int Render_SetResourceHandle(int a1, int a2);
@@ -115,14 +115,14 @@ int *sub_405020(int *result, unsigned char *a2, signed int a3);
 int sub_405920(int *a1);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
-void *sub_419D80(void *result);
-signed int sub_419DC0(unsigned int *a1, DWORD a2);
+void *UIWidgetTable_InitDrawStates(void *result);
+signed int UIWidgetTable_PollHoverAndActions(unsigned int *a1, DWORD a2);
 void *sub_460CB0(int a1, int a2, int a3, DWORD a4);
-short sub_460D80(int a1, int a2);
+short RenderState_SelectCursorDescriptor(int a1, int a2);
 BOOL sub_460950(int a1);
 int Render_Present(int a1);
 int sub_44A110(int a1, DWORD a2);
-void *sub_44A140(int a1, DWORD a2);
+void *LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2);
 int sub_404F20(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
@@ -272,7 +272,7 @@ static int Bootstrap_GetMenuProbeWidgetClickCandidate(
     return 0;
 
   /*
-   * The original `unk_5181C0` blob and the `sub_419B80` / `sub_419410`
+   * The original `unk_5181C0` blob and the `UIWidget_PollHitHoverAndClick` / `sub_419410`
    * corridor corroborate `[+0]=left/x` and `[+4]=top/y` for the 0x35-byte
    * menu records. The sprite-size helpers are semantically swapped on this
    * menu path: `DLX_GetSpriteHeight` returns the horizontal span and
@@ -357,20 +357,20 @@ static int Bootstrap_RunRecoveredStartupPrelude(HINSTANCE hInstance, LPSTR lpCom
 {
   char command_mode;
 
-  dword_51D020 = (int)(intptr_t)lpCommandLine;
+  g_AppCommandLine = (int)(intptr_t)lpCommandLine;
   command_mode = lpCommandLine && *lpCommandLine ? *lpCommandLine : 0;
   if ( command_mode_out )
     *command_mode_out = command_mode;
   if ( !Platform_CreateMainWindow(hInstance, command_mode) )
     return 0;
 
-  dword_51D018 = Input_MousePresent();
+  g_MousePresentAtStartup = Input_MousePresent();
   if ( !Input_MouseAcquire() )
     (void)Input_MousePresent();
 
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
   DetectGameCDPath(0);
-  sub_442AD0(0);
+  ResourceArchives_MountStartupArchives(0);
   Game_Init(0, command_mode, 0);
   return 1;
 }
@@ -386,8 +386,8 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
    * `unk_51D4C0` and its palette/resource backing state are initialized before
    * `Render_SetPixelFormat`.
    */
-  sub_401A40();
-  Device_GetParamA((int)(intptr_t)dword_544CD8, 0);
+  Render_LoadResourceBackbuffer();
+  Device_GetParamA((int)(intptr_t)g_RenderState, 0);
   device_search_mode = 0;
   if ( command_mode == 'g' || command_mode == 'G' )
   {
@@ -412,7 +412,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   sub_472860(-1, 0, 0);
   nullsub_4();
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
-  sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);
+  sub_460490((int)(intptr_t)g_RenderState, 0, command_mode, 0);
   Render_CreateSprite();
   lodaOptionsCfg(0);
   initRandomSeed(command_mode, 0);
@@ -425,7 +425,7 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
 {
   char command_mode;
 
-  dword_51D020 = (int)(intptr_t)lpCommandLine;
+  g_AppCommandLine = (int)(intptr_t)lpCommandLine;
   command_mode = lpCommandLine && *lpCommandLine ? *lpCommandLine : 0;
   if ( command_mode_out )
     *command_mode_out = command_mode;
@@ -438,13 +438,13 @@ static int Bootstrap_RunRecoveredEarlyStartupPrelude(HINSTANCE hInstance, LPSTR 
    * the executable link. Keep it limited to real window/input/CD/game-state
    * bootstrap until the next runtime/helper wave is rebuilt.
    */
-  dword_51D018 = Input_MousePresent();
+  g_MousePresentAtStartup = Input_MousePresent();
   if ( !Input_MouseAcquire() )
     (void)Input_MousePresent();
   CSS_SetDirectSoundHWnd((int)(intptr_t)hWnd);
-  sub_442760(0, 0, 0);
+  FileSystem_InitRootMount(0, 0, 0);
   DetectGameCDPath(0);
-  sub_442AD0(0);
+  ResourceArchives_MountStartupArchives(0);
   Game_Init(0, command_mode, 0);
   if ( command_mode == 'r' )
     dword_51D014 = 1;
@@ -455,16 +455,16 @@ static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
 {
   Bootstrap_TraceMenuProbe("video-init-probe-start");
   dword_543CA0 = 1;
-  Bootstrap_TraceMenuProbe("video-init-sub_401A40");
-  sub_401A40();
+  Bootstrap_TraceMenuProbe("video-init-Render_LoadResourceBackbuffer");
+  Render_LoadResourceBackbuffer();
   Bootstrap_TraceMenuProbe("video-init-device-get-param-a");
-  Device_GetParamA((int)(intptr_t)dword_544CD8, 0);
+  Device_GetParamA((int)(intptr_t)g_RenderState, 0);
   Bootstrap_TraceMenuProbe("video-init-nullsub_4");
   nullsub_4();
   Bootstrap_TraceMenuProbe("video-init-set-pixel-format");
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   Bootstrap_TraceMenuProbe("video-init-sub_460490");
-  sub_460490((int)(intptr_t)dword_544CD8, 0, command_mode, 0);
+  sub_460490((int)(intptr_t)g_RenderState, 0, command_mode, 0);
   Bootstrap_TraceMenuProbe("video-init-render-create-sprite");
   Render_CreateSprite();
   Bootstrap_TraceMenuProbe("video-init-probe-end");
@@ -523,7 +523,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   g_RenderHook = Render_DefaultRH;
   menu_entry_mode = (unsigned char)command_mode;
   Bootstrap_TraceMenuProbe("first-dd-pump");
-  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
+  DD_Pump((int)(intptr_t)g_RenderState, menu_entry_mode);
 
   Bootstrap_TraceMenuProbe("load-menu-s32");
   surface = Mem_Alloc(0x1010, 0, command_mode, 0);
@@ -547,14 +547,14 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
    * return value of `DD_Pump`.
    */
   Bootstrap_TraceMenuProbe("second-dd-pump");
-  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
+  DD_Pump((int)(intptr_t)g_RenderState, menu_entry_mode);
   if ( menu_entry_mode )
   {
     Bootstrap_TraceMenuProbe("apply-palette-block");
     sub_404D90((int *)&unk_51D4C0);
   }
   Bootstrap_TraceMenuProbe("third-dd-pump");
-  DD_Pump((int)(intptr_t)dword_544CD8, menu_entry_mode);
+  DD_Pump((int)(intptr_t)g_RenderState, menu_entry_mode);
   Bootstrap_TraceMenuProbe("draw-menu-stage-1");
   Bootstrap_SurfaceRendererDrawStage(dword_5202E0, 0, 0);
   Bootstrap_TraceMenuProbe("draw-menu-stage-2");
@@ -578,7 +578,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   if ( have_menu_widget_template )
   {
     Bootstrap_TraceMenuProbe("init-menu-widgets");
-    sub_419D80((void *)menu_widgets);
+    UIWidgetTable_InitDrawStates((void *)menu_widgets);
   }
   else
   {
@@ -594,17 +594,17 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   if ( have_menu_widget_template )
   {
     Bootstrap_TraceMenuProbe("build-menu-text-cache");
-    sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
+    sub_460CB0((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
   }
   else
   {
     Bootstrap_TraceMenuProbe("skip-menu-text-cache-template-missing");
   }
   Bootstrap_TraceMenuProbe("select-cursor-descriptor");
-  sub_460D80((int)(intptr_t)dword_544CD8, (int)(intptr_t)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&unk_5196A0);
   dword_545150 = (int)(intptr_t)&unk_5196A0;
   Bootstrap_TraceMenuProbe("present-menu");
-  Render_Present((int)(intptr_t)dword_544CD8);
+  Render_Present((int)(intptr_t)g_RenderState);
 
   /*
    * The contained probe still lacks the dirty-bit/runtime invalidation that
@@ -629,7 +629,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
     while ( !g_PlayGameMenuExitRequested )
     {
       Bootstrap_TraceMenuProbe("menu-idle-pump");
-      DD_Pump((int)(intptr_t)dword_544CD8, 16);
+      DD_Pump((int)(intptr_t)g_RenderState, 16);
     }
     Compat_FreeLow32Bytes((int)(uintptr_t)menu_widgets);
     return;
@@ -776,15 +776,15 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
       }
     }
     Bootstrap_TraceMenuProbe("menu-loop-pump");
-    DD_Pump((int)(intptr_t)dword_544CD8, (char)(intptr_t)dword_544CD8);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)g_RenderState);
     Bootstrap_TraceMenuProbe("menu-loop-ui");
-    menu_ui_result = sub_419DC0((unsigned int *)menu_widgets, 0);
+    menu_ui_result = UIWidgetTable_PollHoverAndActions((unsigned int *)menu_widgets, 0);
     if ( g_boot_trace_menu_probe_enabled && auto_click_index >= 0 && menu_trace_loops < 256 )
     {
       const unsigned char widget_flags = *(menu_widgets + 0x35 * auto_click_index + 8);
       const unsigned char device_flags =
-        *((const unsigned char *)(const void *)dword_544CD8 + 44);
-      const unsigned int render_method_table = *((const unsigned int *)(const void *)((const unsigned char *)dword_544CD8 + 1120));
+        *((const unsigned char *)(const void *)g_RenderState + 44);
+      const unsigned int render_method_table = *((const unsigned int *)(const void *)((const unsigned char *)g_RenderState + 1120));
       const unsigned int render_method_input =
         render_method_table ? (unsigned int)(uintptr_t)((const uintptr_t *)(const void *)(uintptr_t)render_method_table)[5] : 0;
 
@@ -910,7 +910,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     for ( row_index = 0; row_index < 10; ++row_index )
     {
       Bootstrap_TraceMenuProbe("load-menu-row-draw");
-      sub_44A140(row_index, 0);
+      LoadMenu_RedrawSaveSlotRow(row_index, 0);
     }
   }
   Bootstrap_TraceMenuProbe("load-menu-draw-stage");
@@ -921,15 +921,15 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   memcpy(menu_widgets, &g_LoadMenuButtonWidgetsTemplate, menu_widgets_size);
   g_RenderDevice = &unk_51D4C0;
   Bootstrap_TraceMenuProbe("load-menu-init-widgets");
-  sub_419D80((void *)menu_widgets);
+  UIWidgetTable_InitDrawStates((void *)menu_widgets);
   g_PlayGameMenuExitRequested = 0;
   Bootstrap_TraceMenuProbe("load-menu-build-text-cache");
-  sub_460CB0((int)(intptr_t)dword_544CD8, (int)(intptr_t)byte_543D80, 0, 0);
+  sub_460CB0((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
   Bootstrap_TraceMenuProbe("load-menu-select-cursor-descriptor");
-  sub_460D80((int)(intptr_t)dword_544CD8, (int)(intptr_t)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&unk_5196A0);
   dword_545150 = (int)(intptr_t)&unk_5196A0;
   Bootstrap_TraceMenuProbe("load-menu-present");
-  Render_Present((int)(intptr_t)dword_544CD8);
+  Render_Present((int)(intptr_t)g_RenderState);
   Bootstrap_TraceMenuProbe("load-menu-force-window-present");
   Platform_PresentRecoveredIndexedSurfaceHandle(
     (void *)(uintptr_t)*(const unsigned int *)(const void *)((const unsigned char *)&unk_51D4C0 + 0xD0),
@@ -1181,7 +1181,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     }
 
     Bootstrap_TraceMenuProbe("load-menu-loop-pump");
-    DD_Pump((int)(intptr_t)dword_544CD8, (char)(intptr_t)&unk_5196A0);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)&unk_5196A0);
     if ( auto_hover_exit_on_select )
     {
       if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
@@ -1195,7 +1195,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
         }
       }
     }
-    if ( DD_IsFlipping((int)(intptr_t)dword_544CD8) )
+    if ( DD_IsFlipping((int)(intptr_t)g_RenderState) )
     {
       if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
       {
@@ -1207,15 +1207,15 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
           {
             dword_5441E0 = slot_index;
             if ( previous_slot_index != -1 )
-              sub_44A140(previous_slot_index, 0);
-            sub_44A140(dword_5441E0, 0);
+              LoadMenu_RedrawSaveSlotRow(previous_slot_index, 0);
+            LoadMenu_RedrawSaveSlotRow(dword_5441E0, 0);
           }
           if ( auto_hover_exit_on_select && dword_5441E0 == auto_hover_slot_index )
           {
             g_PlayGameMenuExitRequested = 1;
             Bootstrap_TraceMenuProbe("load-auto-hover-selected");
           }
-          if ( sub_460950((int)(intptr_t)dword_544CD8) )
+          if ( sub_460950((int)(intptr_t)g_RenderState) )
             sub_44A110(0, 0);
         }
       }
@@ -1223,7 +1223,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     if ( g_PlayGameMenuExitRequested )
       break;
     Bootstrap_TraceMenuProbe("load-menu-loop-ui");
-    menu_ui_result = sub_419DC0((unsigned int *)menu_widgets, 0);
+    menu_ui_result = UIWidgetTable_PollHoverAndActions((unsigned int *)menu_widgets, 0);
     if ( g_boot_trace_menu_probe_enabled && menu_trace_loops < 256 )
     {
       fprintf(
@@ -1402,7 +1402,7 @@ static int Bootstrap_RunMessageLoop(void)
 
 static int Bootstrap_RunPlatformWindowLoop(void)
 {
-  dword_51D020 = (int)(intptr_t)g_boot_command_line;
+  g_AppCommandLine = (int)(intptr_t)g_boot_command_line;
   if ( !Platform_CreateMainWindow(GetModuleHandleA(0), g_boot_command_line[0]) )
     return 1;
   return Bootstrap_RunMessageLoop();

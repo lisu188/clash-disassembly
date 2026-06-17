@@ -1,5 +1,38 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-17 - Multi-Agent Boot/Menu/Save And Battle-AI Rename Pass
+
+| Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |
+|---|---|---|---|---|---|---|---|
+| `dword_544CD8` | `g_RenderState` | global | Rendering / Input Runtime | High | This global is the central render/input state object passed through `DD_Pump`, `Render_Present`, cursor selection, text/cache rebuild, menu loops, and bootstrap render setup. | c, prior-artifact | yes: Sartre, Darwin |
+| `sub_460D80` | `RenderState_SelectCursorDescriptor` | function | Rendering / Cursor State | High | Installs the active cursor descriptor, mirrors it for widget save/restore, measures the cursor sprite range from `mouse.s32`, resets cursor animation fields, recalculates bounds, and refreshes/presents through the render state. | c, prior-artifact | yes: Darwin, Lorentz |
+| `sub_460B20` | `RenderState_RecalculateCursorBoundsForRect` | function | Rendering / Cursor State | High | Reads the active cursor descriptor and writes fixed-point cursor min/max bounds into the render-state fields used by menu, world-map, and human-turn input. | c, prior-artifact | yes: Darwin, Lorentz |
+| `sub_460A50` | `RenderState_PollInputAndClampCursor` | function | SDL / Input Runtime | High | The `DD_Pump` method-table path calls this helper to poll fallback input, apply deltas/buttons, clamp cursor coordinates to render-state bounds, and synchronize the recovered cursor globals. | c, prior-artifact | yes: Darwin |
+| `sub_419B80` | `UIWidget_PollHitHoverAndClick` | function | UI / Widgets | High | Tests the fixed cursor position against one 0x35-byte widget record, manages tooltip/cursor state, and fires the widget action callback on the recovered click gate. | c, prior-artifact | yes: Darwin |
+| `sub_419DC0` | `UIWidgetTable_PollHoverAndActions` | function | UI / Widgets | High | Iterates a terminated widget table, delegates per-widget hit/click handling, tracks hover/cursor state, and is called from the authentic main, campaign, options, load, and in-game menu loops after `DD_Pump`. | c, prior-artifact | yes: Darwin |
+| `sub_419D80` | `UIWidgetTable_InitDrawStates` | function | UI / Widgets | High | Walks enabled widget records and calls their state/draw transition callback with the initial state before the corresponding menu/dialog loop starts polling. | c | yes: Darwin |
+| `sub_419ED0` | `UIWidget_PlayPressedReleaseAnimation` | function | UI / Widgets | High | Plays the widget sound key, draws state `6`, enters the render pump, restores state `5`, and redraws, matching the pressed/released button animation lane seen in menu runtime evidence. | c, prior-artifact | yes: Darwin |
+| `sub_401A40` | `Render_LoadResourceBackbuffer` | function | Render / Bootstrap | High | `clash95.map` exposes this symbol at the same body, and bootstrap calls it before render pixel-format setup while the body initializes resource/backbuffer render state. | c, asm, map | yes: Sartre |
+| `sub_442760` | `FileSystem_InitRootMount` | function | File System / Bootstrap | High | Constructs the root filesystem object, attaches it to the global filesystem holder, and registers finalization before startup archive mounting. | c, prior-artifact | yes: Sartre |
+| `sub_442AD0` | `ResourceArchives_MountStartupArchives` | function | Resources / Bootstrap | High | Mounts the startup resource archives including `minimum.res`, `normal.res`, `maximum.res`, maps, graphics, language-specific info/mission archives, and music before probing core graphics. | c | yes: Sartre |
+| `dword_51D020` | `g_AppCommandLine` | global | Bootstrap / Command Line | High | `_WinMain@16` stores `lpCmdLine` here, and platform/window-proc startup paths read it for command-mode behavior. | c, prior-artifact | yes: Sartre |
+| `dword_51D018` | `g_MousePresentAtStartup` | global | Bootstrap / Input | High | `_WinMain@16` assigns it from `Input_MousePresent`, and render/backbuffer lanes gate mouse/primary-surface behavior on this startup result. | c, prior-artifact | yes: Sartre |
+| `sub_4443C0` | `SaveSlot_FormatDataFilePath` | function | Save / Load | High | Formats `save\\%d.dat`, and every caller uses it for the main save payload/header file. | c, prior-artifact | yes: Lorentz |
+| `sub_4443D0` | `SaveSlot_FormatFactsFilePath` | function | Save / Load / Rules | High | Formats `save\\%d.fac` for the CLIPS facts sidecar paired with each DAT save slot. | c, prior-artifact | yes: Lorentz |
+| `sub_4446E0` | `SaveSlot_LoadLabelOrPlaceholder` | function | Save / Load UI | High | Opens the DAT file, reads the fixed 16-byte save label into the caller buffer, terminates it, and falls back to the placeholder when the slot is absent. | c, asm, prior-artifact | yes: Lorentz |
+| `sub_444750` | `SaveSlot_HasDataFile` | function | Save / Load UI | High | Opens `save\\%d.dat` read-only, closes on success, and returns only existence; it does not validate the full save payload. | c, asm, prior-artifact | yes: Lorentz |
+| `sub_44A140` | `LoadMenu_RedrawSaveSlotRow` | function | Load Menu / Save Slots | High | Redraws a load-menu row using the save-slot label, selected/unselected row resources, and the row y-coordinate derived from the slot index. | c | yes: Lorentz |
+| `sub_43BE50` | `UnitBattle_ExecuteAiActionForUnit` | function | Battle / AI | Medium-High | Called only from the tactical AI turn runner after action selection; it switches on the selected grid action code and executes movement, melee, ranged/safe-distance, wall attack, or no-action outcomes for the queued unit. | c, asm, local inspection | no |
+| `sub_43A8B0` | `UnitBattle_SelectAiActionForUnit` | function | Battle / AI | Medium-High | Scans the scored action grid for the best target tile, writes action codes into the per-unit action grid, handles wall/ranged/action fallbacks, and returns whether the unit has an executable AI action. | c, asm, local inspection | no |
+| `sub_4382E0` | `UnitBattle_ScoreAiActionGridForUnit` | function | Battle / AI | Medium-High | Scores tactical grid candidates for one AI unit by considering enemy roles, reachable movement tracks, range gates, AP distance, wall sections, and current AI mode. | c, asm, local inspection | no |
+| `sub_43CB80` | `UnitBattle_ScanAiWallTargetColumns` | function | Battle / AI / Siege | Medium-High | Scans the active gate/wall column, records the wall row and adjacent candidate columns consumed by the wall-attack AI scoring and execution lanes. | c, asm, prior-artifact | no |
+
+### Deferred / Ambiguous
+
+- `sub_43C6B0` remains deferred. The body clearly participates in tactical AI plan-mode selection and ranged-line reachability, but `UnitBattle_AiHasReachableRangedLine` is still provisional until the exact mode semantics are corroborated against asm/runtime evidence.
+- `dword_5437C0` remains deferred until the adjacent queue/count globals can be named together as one battle-AI action queue/list layout.
+- Cursor descriptor fields and widget result enum values were not formalized in `RECOVERED_STRUCTURES.json`; this batch is a source-level semantic rename only.
+
 ## 2026-06-15 - Documentation Consolidation Note
 
 - No semantic renames in this batch.
