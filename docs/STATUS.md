@@ -1,6 +1,19 @@
 # Current Status
 
-Last consolidated: 2026-06-16.
+Last consolidated: 2026-06-30.
+
+## Disassembly Control-Flow Recovery: Complete
+
+All 17 remaining `JUMPOUT(...)` "control flows out of bounds" decompiler scars in
+`clash95.c` are recovered into authentic structured C, each backed by
+`clash95.asm`. `grep -c JUMPOUT clash95.c` is `0`. Fifteen were shared
+register-restore epilogues (now plain `return;`); ten were sprite-blitter thunks
+that set an inner-loop pointer table (`dword_519B94`) and tail-jumped into the
+shared span chunks `loc_46BB40` / `loc_46BB9A`, now recovered via the
+`Blit_SpanDispatch_46BB40` / `Blit_SpanDispatch_46BB9A` helpers. See
+`docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md` (2026-06-30 entry) for the full
+per-address table. This removes the "JUMPOUT control-flow scars" blocker family
+from AGENTS.md; the recovered C now has no out-of-bounds control-flow artifacts.
 
 ## Validated State
 

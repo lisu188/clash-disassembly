@@ -1,5 +1,41 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-30 - JUMPOUT Control-Flow Scar Elimination (Disassembly Recovery Completion)
+
+Recovered all 17 remaining `JUMPOUT(...)` decompiler scars in `clash95.c` into
+authentic structured C control flow, each backed directly by `clash95.asm`. This
+removes the last "control flows out of bounds" artifacts from the recovered
+source. `grep -c JUMPOUT clash95.c` is now `0`; the previously-undefined
+`JUMPOUT` symbol no longer appears in the compiled object.
+
+Two structural patterns, both behavior-preserving:
+
+| Address(es) | Function(s) | Pattern | Recovery | Confidence |
+|---|---|---|---|---|
+| `413918` | `sub_413860` | Shared register-restore epilogue (`pop edi/esi/ecx/ebx; retn`) shared with `sub_413920` | `return;` | High (asm-confirmed) |
+| `4517A0` | `sub_4517C0` | Shared epilogue (`pop edx/ecx/ebx; retn`) shared with `sub_451730` | `return;` | High (asm-confirmed) |
+| `451C1C` | `sub_451C60` | Shared epilogue shared with `sub_451AE0` | `return;` | High (asm-confirmed) |
+| `4B3453` (x2) | `sub_4B345A`, `sub_4B3744` | Shared epilogue (`pop ebp/es/edi/esi/ecx/ebx; retn`) shared with `sub_4B3378` | `return;` | High (asm-confirmed) |
+| `4B9BCE` | `sub_4B9C10` | Shared epilogue (`pop ebp/edi/esi/ecx/ebx; retn`) shared with `sub_4B9AF0` | `return;` | High (asm-confirmed) |
+| `4E5F83` | `sub_4E5F8A` | Shared register-restore epilogue in `putenv_` | `return;` | High (asm-confirmed) |
+| `46BB40` (x5) | `sub_46BE88/46C030/46C2FC/46C6B4/46CE10` | Set inner-loop table `dword_519B94`, tail-jump into shared blitter span chunk `loc_46BB40` (== `sub_46BCE4` body) | Load own table, then call new `Blit_SpanDispatch_46BB40` | High (asm-confirmed) |
+| `46BB9A` (x5) | `sub_46BF5E/46C1A2/46C472/46C996/46D2A6` | Set inner-loop table `dword_519B94`, tail-jump into shared blitter span chunk `loc_46BB9A` (== `sub_46BDC2` body) | Load own table, then call new `Blit_SpanDispatch_46BB9A` | High (asm-confirmed) |
+
+New helpers (extracted shared sprite-blitter span-dispatch chunks, mirroring the
+asm `FUNCTION CHUNK AT 0046BB40/0046BB9A` shared by these entries):
+
+| New Name | Kind | Subsystem | Evidence |
+|---|---|---|---|
+| `Blit_SpanDispatch_46BB40` | static function | Rendering / Sprite Blitter | c, asm (`loc_46BB40`; identical to `sub_46BCE4` inlined body) |
+| `Blit_SpanDispatch_46BB9A` | static function | Rendering / Sprite Blitter | c, asm (`loc_46BB9A`; identical to `sub_46BDC2` inlined body) |
+
+The ten blitter thunks gained their true `__usercall` register signatures
+(matching `sub_46BCE4` / `sub_46BDC2`), and their forward declarations were
+updated to match. Build (`clash95_bootstrap`, `clash95_recovered`) stays green;
+JSON, markdown-link, and whitespace checks pass; the CTest baseline is unchanged
+(the four CD-data-dependent runtime smokes remain environment-gated in this
+checkout, identical to before this change).
+
 ## 2026-06-17 - Multi-Agent Boot/Menu/Save And Battle-AI Rename Pass
 
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |

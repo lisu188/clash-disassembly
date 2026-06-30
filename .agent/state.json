@@ -9,6 +9,7 @@
   ],
   "runtime_milestone": "Default build/bin/clash95_bootstrap reaches the recovered main-menu presentation/wait loop and passes clash95_full_route_smoke by staying alive until external process-group shutdown. build/bin/clash95_bootstrap r and build/bin/clash95_cpp_regen r both enter recovered early startup, initialize the runtime/render path, skip the game-entry handoff, run shutdown, and exit 0.",
   "blockers": [
+    "JUMPOUT control-flow scars are fully eliminated (0 remaining in clash95.c); all 17 recovered into structured C backed by clash95.asm on 2026-06-30. No longer a blocker.",
     "Recover deeper menu/session interactions beyond passive main-menu liveness.",
     "Recover a clean finite default-route quit from the recovered game loop; lowercase r is finite, but the no-arg menu route is still externally shut down by the smoke harness.",
     "CSS_Init remains deferred because the retained DirectSound-era device table is not recovered safely enough for x86-64 execution.",
