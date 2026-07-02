@@ -37,12 +37,12 @@ int sub_406740(void);
 int DLX_GetSpriteForChar(int a1, unsigned __int16 a2);
 __int16 DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
 __int16 DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
-void sub_40AEC0(void);
-int sub_40BD40(_BYTE *a1);
-void sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
-int sub_40C5E0(void);
+void WorldMap_EnableFrameRedraw(void);
+int TextSprite_MeasureStringExtent(_BYTE *a1);
+void TextSprite_BuildOrLoadCachedFont(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
+int Font_InitGlyphFallbackTablesForLanguage(void);
 int sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
-int sub_4427F0(char *a1, int a2);
+int FileSystem_ResolveReadPath(char *a1, int a2);
 _DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
 int __fastcall sub_473EE0(int a1, int *a2);
@@ -2728,7 +2728,7 @@ static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palett
 
   strcpy(query_path, "gfx\\");
   strcat(query_path, palette_name);
-  query_handle = sub_4427F0(query_path, 1);
+  query_handle = FileSystem_ResolveReadPath(query_path, 1);
   if ( !query_handle )
     return 0;
 
@@ -2760,7 +2760,7 @@ static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palett
 
 void Render_LoadResourceSprite_v2(void)
 {
-  sub_40AEC0();
+  WorldMap_EnableFrameRedraw();
 }
 
 int Render_LoadResourceSprite_v3(_BYTE *a1)
@@ -2833,7 +2833,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   {
     strcpy(query_path, "gfx\\");
     strcat(query_path, cache_path);
-    cache_query_handle = sub_4427F0(query_path, 0);
+    cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
       sub_473EE0((int)&dword_543CC8, &cache_query_handle);
@@ -2867,7 +2867,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 
 int Render_CreateSprite(void)
 {
-  return sub_40C5E0();
+  return Font_InitGlyphFallbackTablesForLanguage();
 }
 
 signed int Unit_GetSquadCount(intptr_t a1)

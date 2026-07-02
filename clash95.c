@@ -275,7 +275,7 @@ int nullsub_24(void);
 int nullsub_29(void);
 int nullsub_30(void);
 int nullsub_32(void);
-_DWORD * sub_43D100(WCIsvListBase *this);
+_DWORD * WCIsvListBase_dtorVariant104(WCIsvListBase *this);
 _DWORD *unknown_libname_3(WCIsvListBase *this);
 int __fastcall nullsub_6(_DWORD, _DWORD);
 int nullsub_9(void);
@@ -499,101 +499,101 @@ int __fastcall mblen_(int a1, int a2);
 int __fastcall mblen__0(int a1, int a2);
 double dbl_502FDC = 0.5;
 char __thiscall DetectGameCDPath(void *this);
-int  sub_4015A0(_DWORD *a1);
-_DWORD * sub_4015D0(_DWORD *result);
-_BYTE * sub_401600(_BYTE *result);
-int __thiscall sub_401610(void *this);
-int * sub_401640(int *a1, _DWORD *a2, int a3);
-int  sub_4016E0(_DWORD *a1, char a2);
-_DWORD * sub_401720(_DWORD *result);
-int  sub_4017D0(int *a1, int a2);
-_DWORD * sub_401890(_DWORD *result, int a2, int a3);
-_DWORD * sub_401940(int a1);
-int  sub_401970(_DWORD *a1, _DWORD *a2);
-int  sub_4019C0(int a1, char a2);
-int  sub_401A00(_DWORD *a1);
+int  Str_ConstructHolderViaBaseCtor(_DWORD *a1);
+_DWORD * Str_ConstructHolderInline(_DWORD *result);
+_BYTE * Mem_ZeroFourByteGlobal(_BYTE *result);
+int __thiscall PathEntryArray_ConstructCapacity256(void *this);
+int * PathEntryArray_CopyConstruct(int *a1, _DWORD *a2, int a3);
+int  PathEntryArray_Destruct(_DWORD *a1, char a2);
+_DWORD * PathEntryArray_DestructElements(_DWORD *result);
+int  PathEntryArray_GrowByDelta(int *a1, int a2);
+_DWORD * PathEntryArray_RemoveAt(_DWORD *result, int a2, int a3);
+_DWORD * Mem_ZeroFieldOffset316(int a1);
+int  PathEntry_CopyConstruct(_DWORD *a1, _DWORD *a2);
+int  PathEntry_Destruct(int a1, char a2);
+int  PathEntry_ConstructDefault(_DWORD *a1);
 __int16 Render_LoadResourceBackbuffer();
-_BYTE * sub_401AB0(_BYTE *result, char a2);
-int  sub_401AF0(intptr_t a1, intptr_t a2);
-int  sub_401B20(int a1, int a2, int a3);
-int  sub_401BA0(int a1, const char *palette_name, DWORD a3);
+_BYTE * Palette_QuantizeChannelsInPlace(_BYTE *result, char a2);
+int  Palette_LoadFromQueryHandle(intptr_t a1, intptr_t a2);
+int  Palette_ExpandRGBTripletsToTable(int a1, int a2, int a3);
+int  LoadPalPCX(int a1, const char *palette_name, DWORD a3);
 int  LoadPalCOL(int a1, intptr_t a2, DWORD a3);
 static int Compat_LoadPalCOLIntoTable(int *palette_table, const char *palette_name, DWORD context);
-int  sub_401CE0(int a1, unsigned __int8 *a2);
-int  sub_401D10(int a1);
-_BYTE * sub_401D60(_BYTE *result, _BYTE *a2, unsigned int a3);
+int  Render_ApplyColorTripletBytes(int a1, unsigned __int8 *a2);
+int  Palette_BuildGrayscaleIdentityTable(int a1);
+_BYTE * Str_CompactSkippingZeroBytes(_BYTE *result, _BYTE *a2, unsigned int a3);
 void __cdecl __noreturn App_RequestQuit(int a1);
-_DWORD * sub_401E00(int a1, __int16 a2, __int16 a3);
-int  sub_401E30(_DWORD *a1);
-int  sub_401E60(unsigned __int16 *a1);
-int  sub_401E90(int a1, unsigned int a2);
-int  sub_401FA0(int a1, int a2, int a3, __int16 a4, __int16 a5, unsigned __int16 a6, unsigned __int16 a7, __int16 a8);
+_DWORD * Render_ConstructSurfaceObject(int a1, __int16 a2, __int16 a3);
+int  Render_ClearGameScreen(_DWORD *a1);
+int  Surface_ClearWholeArea(unsigned __int16 *a1);
+int  Render_FillClippedScanlines(int a1, unsigned int a2);
+int  Render_BlitRectViaVirtualSurfaces(int a1, int a2, int a3, __int16 a4, __int16 a5, unsigned __int16 a6, unsigned __int16 a7, __int16 a8);
 int  Render_LoadPCXImage(int a1, char *a2, int a3, uintptr_t a4);
 int  Render_FillRect(_DWORD *a1, _DWORD *a2, int a3, int a4, unsigned __int16 a5, unsigned __int16 a6, unsigned __int16 a7, unsigned __int16 a8);
-int  sub_402850(_DWORD *a1, _DWORD *a2, int a3, int a4, unsigned __int16 a5, unsigned __int16 a6, unsigned __int16 a7, unsigned __int16 a8);
+int  Render_BlitSurfaceRect(_DWORD *a1, _DWORD *a2, int a3, int a4, unsigned __int16 a5, unsigned __int16 a6, unsigned __int16 a7, unsigned __int16 a8);
 int  Render_BlendSurfaceRect(_DWORD *a1, int a2, int a3, int a4, unsigned __int16 a5, unsigned __int16 a6, unsigned __int16 a7, unsigned __int16 a8, unsigned __int16 a9, int a10);
-int  sub_402E80(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16, int a17, int a18, int a19, int a20, int a21, int a22, int a23, int a24, int a25, int a26, int a27, int a28, int a29, int a30, __int128 a31, int a32, int a33, __int64 a34);
+int  Render_BlitCompressedSpriteRLE(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16, int a17, int a18, int a19, int a20, int a21, int a22, int a23, int a24, int a25, int a26, int a27, int a28, int a29, int a30, __int128 a31, int a32, int a33, __int64 a34);
 _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3);
-int  sub_403E50(int a1, char a2);
-_DWORD * sub_403EB0(int a1, int a2, DWORD a3);
-_DWORD * sub_403EF0(int a1, int a2, DWORD a3);
-int  sub_403F30(unsigned __int16 *a1, int a2, char a3, int a4);
-int  sub_403F50(unsigned __int16 *a1, int a2, int a3);
-_BYTE * sub_403F70(unsigned __int16 *a1, unsigned __int16 a2, unsigned __int16 a3, int a4, unsigned __int16 a5, int a6);
-int  sub_404040(unsigned __int16 *a1, unsigned __int16 a2, unsigned __int16 a3, int a4, unsigned __int16 a5, unsigned __int8 a6);
-unsigned __int16 * sub_4040F0(unsigned __int16 *result, int a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int8 a5);
-__int16  sub_404160(unsigned __int16 *a1, int a2, int a3, int a4, int a5, char a6);
-_DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4);
-int  sub_404240(_DWORD *a1, char a2);
-int  sub_4042C0(int a1, int a2, int a3, DWORD a4);
-int  sub_404330(int a1, int a2, int a3, DWORD a4);
-int  sub_4043A0(int a1, int a2);
-int  sub_4043D0(int a1, int a2, int a3);
-unsigned __int16  sub_404400(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, __int16 a6);
-int  sub_404560(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, char a6);
-int  sub_4045A0(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, unsigned __int8 a6);
-int  sub_4045E0(int result, int a2, int a3, int a4, int a5, int a6);
+int  Surface_DestructRawBuffer(int a1, char a2);
+_DWORD * Surface_ConstructRegionViewA(int a1, int a2, DWORD a3);
+_DWORD * Surface_ConstructRegionViewB(int a1, int a2, DWORD a3);
+int  Surface_SetPixel8(unsigned __int16 *a1, int a2, char a3, int a4);
+int  Surface_GetPixel8(unsigned __int16 *a1, int a2, int a3);
+_BYTE * Surface_DrawDashedLine(unsigned __int16 *a1, unsigned __int16 a2, unsigned __int16 a3, int a4, unsigned __int16 a5, int a6);
+int  Surface_DrawRectOutline(unsigned __int16 *a1, unsigned __int16 a2, unsigned __int16 a3, int a4, unsigned __int16 a5, unsigned __int8 a6);
+unsigned __int16 * Surface_FillVerticalSpan(unsigned __int16 *result, int a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int8 a5);
+__int16  Surface_FillCheckerPattern(unsigned __int16 *a1, int a2, int a3, int a4, int a5, char a6);
+_DWORD * Render_ConstructScratchSurface(int a1, unsigned __int16 a2, DWORD a3, __int16 a4);
+int  Render_DestructScratchSurface(_DWORD *a1, char a2);
+int  Surface_ConstructLockedRegionView(int a1, int a2, int a3, DWORD a4);
+int  Surface_ConstructPitchRegionView(int a1, int a2, int a3, DWORD a4);
+int  Surface_DrawPix(int a1, int a2);
+int  Surface_GetPix(int a1, int a2, int a3);
+unsigned __int16  Surface_DrawLine(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, __int16 a6);
+int  Surface_DrawRect(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, char a6);
+int  Surface_DrawBox(int a1, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5, unsigned __int8 a6);
+int  Surface_DotBox(int result, int a2, int a3, int a4, int a5, int a6);
 int  Render_UnlockBackbuffer(int a1);
-int  sub_404660(int a1);
+int  Surface_ConstructBackbufferInstance(int a1);
 int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
 int  Render_BeginModeSwitch(_DWORD *a1);
 int  Render_EndModeSwitch(int result, char a2, DWORD a3);
 _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4);
 int  Render_SetResourceHandle(int, int);
 int * Render_ReleaseTempSurface(int *result);
-int  sub_404AA0(int a1, int a2, int a3, DWORD a4);
-int  sub_404B10(int a1, int a2, int a3, DWORD a4);
-int  sub_404B80(int a1, int a2);
+int  Surface_BeginPixelRead(int a1, int a2, int a3, DWORD a4);
+int  Surface_BeginPixelWrite(int a1, int a2, int a3, DWORD a4);
+int  Surface_DrawPixAndMarkDirty(int a1, int a2);
 int  Render_SaveBackbuffer(int a1);
-int  sub_404BC0(int result, int a2);
-int  sub_404C80(int *a1, const void *a2);
-int  sub_404D90(int *a1);
-int * sub_404DA0(int *result, unsigned __int8 *a2, signed int a3);
-int  sub_404DE0(int *a1, unsigned __int8 *a2, int a3, signed int a4);
-int  sub_404F20(int *a1, signed int a2);
-int * sub_405020(int *result, unsigned __int8 *a2, signed int a3);
-void * sub_4050F0(int *a1, int a2, char a3, DWORD a4);
-void * sub_405330(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5);
-int  sub_405510(int a1, int a2, int a3, int a4, int a5, int a6, int a7, unsigned __int8 a8);
-int  sub_405560(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, unsigned __int8 a11);
-void __noreturn sub_4055C0();
-void __noreturn sub_4055D0();
-void __noreturn sub_4055E0();
-void __noreturn sub_4055F0();
-void __stdcall __noreturn sub_405600(int a1, int a2);
-void __stdcall __noreturn sub_405610(int a1, int a2);
-void __stdcall __noreturn sub_405620(int a1, int a2);
-void __stdcall __noreturn sub_405630(int a1, int a2);
-int sub_405640();
-int sub_405650();
-int  sub_405660(int a1);
-int  sub_405670(int a1);
-int  sub_405680(_DWORD *a1);
-int  sub_4056B0(_DWORD *a1, char a2);
-int  sub_4056F0(int result, char a2);
-signed int sub_405720();
-signed int sub_405730();
-int sub_405750();
+int  Palette_SetBrightnessOffset(int result, int a2);
+int  Palette_ApplyWithBrightnessOffset(int *a1, const void *a2);
+int  Palette_ApplyDefaultPalette(int *a1);
+int * Palette_CrossfadeToTarget(int *result, unsigned __int8 *a2, signed int a3);
+int  Palette_CrossfadeStep(int *a1, unsigned __int8 *a2, int a3, signed int a4);
+int  Palette_FadeOutToBlack(int *a1, signed int a2);
+int * Palette_FadeInFromBlack(int *result, unsigned __int8 *a2, signed int a3);
+void * Video_EnterGreyscaleTransition(int *a1, int a2, char a3, DWORD a4);
+void * Video_ExitGreyscaleTransition(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5);
+int  Sprite_DrawSimpleTrackingOffset(int a1, int a2, int a3, int a4, int a5, int a6, int a7, unsigned __int8 a8);
+int  Sprite_DrawSimpleIgnoringRect(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, unsigned __int8 a11);
+void __noreturn Surface_GetReadIncrNotImplemented();
+void __noreturn Surface_GetWriteIncrNotImplemented();
+void __noreturn Surface_DrawPixNotImplemented();
+void __noreturn Surface_GetPixNotImplemented();
+void __stdcall __noreturn Surface_DrawLineNotImplemented(int a1, int a2);
+void __stdcall __noreturn Surface_DrawRectNotImplemented(int a1, int a2);
+void __stdcall __noreturn Surface_DrawBoxNotImplemented(int a1, int a2);
+void __stdcall __noreturn Surface_DotBoxNotImplemented(int a1, int a2);
+int Surface_GetReadIncrZero();
+int Surface_GetWriteIncrZero();
+int  Surface_GetReadIncrFromStride(int a1);
+int  Surface_GetWriteIncrFromStride(int a1);
+int  Surface_GetWriteIncrAndMarkDirty(_DWORD *a1);
+int  Surface_Destroy(_DWORD *a1, char a2);
+int  SurfaceCursor_Destroy(int result, char a2);
+signed int SurfaceCursor_GetIncrUnbounded();
+signed int SurfaceCursor_GetExtentUnbounded();
+int SurfaceCursor_GetOffsetZero();
 int  sub_405760(int a1, char a2);
 int  sub_4057B0(int a1);
 signed int sub_4057C0();
@@ -669,29 +669,29 @@ BOOL  MapTile_HasBuilding(int a1, int a2);
 BOOL  Port_IsInsideFootprint(int a1, int a2);
 void  WorldMap_HandleTileHoverAndClick(double);
 int  sub_409CC0(int a1, char a2, DWORD a3);
-int  sub_409CE0(char a1, DWORD a2, double a3);
-int  sub_409D00(DWORD a1, char a2, double a3);
-int  sub_409D30(int a1, char a2, DWORD a3, double a4);
-int  sub_409D80(uintptr_t a1, DWORD a2);
-void  sub_409DF0(uintptr_t a1, int a2, DWORD a3);
-int  sub_409F00(int a1, int a2);
-int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5);
-char *sub_40A040();
-int  sub_40A0A0(int a1, int a2);
-int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5);
-int __thiscall sub_40A360(void *this);
-int  sub_40A400(int a1, char a2, DWORD a3);
-int __fastcall sub_40A450(int a1, int a2);
-int  sub_40A460(DWORD a1);
-void  sub_40A490(DWORD a1);
+int  WorldMap_HandleSaveGameAction(char a1, DWORD a2, double a3);
+int  WorldMap_HandleLoadGameAction(DWORD a1, char a2, double a3);
+int  WorldMap_HandleSurrenderAction(int a1, char a2, DWORD a3, double a4);
+int  WorldMap_HandleDeselectUnitAction(uintptr_t a1, DWORD a2);
+void  WorldMap_SelectNextActiveUnitStack(uintptr_t a1, int a2, DWORD a3);
+int  WorldMap_CenterViewOnNextOwnedBuildingWithUnit(int a1, int a2);
+int  WorldMap_HandleHideUnitAction(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5);
+char *WorldMap_ToggleSelectedUnitModeFlag();
+int  WorldMap_ComputeBuildMenuActionFromCursor(int a1, int a2);
+int  WorldMap_HandleBuilderActionMenu(int a1, int a2, int a3, DWORD a4, double a5);
+int __thiscall WorldMap_RefreshActionButtonBarState(void *this);
+int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3);
+int __fastcall WorldMap_UnloadActionButtonSprites(int a1, int a2);
+int  WorldMap_PollActionButtonWidgets(DWORD a1);
+void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1);
 void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2);
-void * sub_40A600(int a1);
+void * WorldMap_DrawTurnBannerReveal(int a1);
 int  UI_LoadTurnBannerGfx(char a1, DWORD a2);
 int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4);
 int * WorldMap_RenderHook(DWORD a1);
 int  WorldMap_RedrawFrame(int a1, ...);
-int  sub_40AE80(int a1);
-void sub_40AEB0();
+int  WorldMap_RedrawFrameForAIWhenEnabled(int a1);
+void WorldMap_DisableFrameRedraw();
 void Render_LoadResourceSprite_v2();
 _DWORD * WorldMap_LoadResources(char a1, DWORD a2);
 int  WorldMap_UnloadResources(DWORD a1);
@@ -703,33 +703,33 @@ void  WorldMap_RunHumanTurnLoop(
 unsigned int  WorldMap_Initialize(char a1, DWORD a2);
 int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int  Render_ReleaseSurface(int a1, DWORD a2);
-char  sub_40BB60(int a1, char a2, DWORD a3);
-char  sub_40BBF0(char result);
-int  sub_40BC00(int a1, int a2, unsigned __int8 a3);
-int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4);
+char  TextSprite_ActivateResourceSlot(int a1, char a2, DWORD a3);
+char  TextSprite_SetStyleFlag(char result);
+int  TextSprite_DrawGlyphAndAdvance(int a1, int a2, unsigned __int8 a3);
+int  TextSprite_DrawStringWithOrientation(int a1, int a2, char a3, unsigned __int8 *a4);
 int  Render_LoadResourceSprite_v3(_BYTE *a1);
-_BYTE * sub_40BDA0(_BYTE *a1, int a2);
-int  sub_40BE20(char *a1);
+_BYTE * TextSprite_FindWordWrapBreak(_BYTE *a1, int a2);
+int  Str_CountSpaces(char *a1);
 int __cdecl UI_DrawText(int a1, int a2, int a3, ...);
-int  sub_40BEE0(int a1, int a2, int a3, int a4, int a5, unsigned __int8 *a6);
+int  UI_RenderAlignedTextWithCursor(int a1, int a2, int a3, int a4, int a5, unsigned __int8 *a6);
 int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, ...);
-int  sub_40C190(int a1, int a2, int a3, int a4, const char *format, va_list args);
+int  UI_DrawTextFmtV(int a1, int a2, int a3, int a4, const char *format, va_list args);
 int  UI_GetTextXOffset(int a1);
 void  Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
 int  UI_EndDraw(int a1);
-int sub_40C3F0();
-int  sub_40C430(int result);
-char  sub_40C450(_BYTE *result, int a2, int a3);
-_WORD * sub_40C4C0(_WORD *result);
-int  sub_40C4F0(int a1, unsigned __int16 a2, char a3, __int16 a4);
-int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, ...);
+int TextSprite_ReleaseAllResourceSlots();
+int  UI_SetTextCursorPosition(int result);
+char  Str_TitleCase(_BYTE *result, int a2, int a3);
+_WORD * Font_ResetGlyphFallbackTable(_WORD *result);
+int  Font_SetGlyphFallbackEntry(int a1, unsigned __int16 a2, char a3, __int16 a4);
+int __cdecl Font_BuildGlyphFallbackChain(int a1, char a2, unsigned __int16 a3, ...);
 int Render_CreateSprite();
-int  sub_40CE70(unsigned int a1, int a2);
+int  MiniMap_BuildTileColorTables(unsigned int a1, int a2);
 int  MiniMap_CreateSurface(DWORD a1);
 int __thiscall MiniMap_DestroySurface(void *this);
 int  MiniMap_BlitDirtyRectAndDrawViewportBox(int result, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4);
 int  MiniMap_RedrawTileRect(int a1, signed int a2, int a3, int a4);
-BOOL  sub_40D800(unsigned __int16 a1, unsigned __int16 a2);
+BOOL  MiniMap_IsSpanWithinViewportBounds(unsigned __int16 a1, unsigned __int16 a2);
 void Locale_DrawInteger();
 void * MiniMap_DrawTileCell(void *result, signed int a2);
 signed int  Map_GetTileSurfaceClassOrUnexplored(int a1, signed int a2);
@@ -771,7 +771,7 @@ int  UnitSlot_CalcActionPointsFromFatigue(__int16 *a1);
 int  UnitSlot_GetBaseActionPoints(__int16 *a1);
 int  UnitStack_GetMinBaseActionPoints(int a1);
 __int16 * UnitStack_ClearRemainingActionPoints(__int16 *result, DWORD a2, double a3);
-signed int sub_40FEF0();
+signed int WorldMap_HandleViewportScrollKeys();
 signed int  UnitStack_GetMinCurrentActionPoints(intptr_t a1);
 signed int  UnitStack_GetMaxOrderTier(intptr_t a1);
 signed int  UnitStack_HasPlagueFlag(int a1);
@@ -832,25 +832,25 @@ int  UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck(char *a1, int a2
 int  UnitStack_CalcMilitaryStrength(int a1);
 int  Building_CalcGarrisonStrength(int a1, signed int a2);
 int  Player_CalcMilitaryStrength(signed int a1);
-_DWORD * sub_412D00(_DWORD *result);
-int  sub_412D20(int a1, int a2, int a3);
+_DWORD * UnitTrackElementStack_BuildBlank(_DWORD *result);
+int  UnitStack_CopyFromTemplate(int a1, int a2, int a3);
 int  Unit_CopyFlagsFromTemplate(int result, int a2);
-int  sub_412EB0(_DWORD *a1, _DWORD *a2, int a3);
-int  sub_412EE0(int result, int a2);
-int sub_412F00();
+int  UnitTrackElementStack_CopyFromTemplate(_DWORD *a1, _DWORD *a2, int a3);
+int  UnitTrackElement_CopyFromTemplate(int result, int a2);
+int UnitSpriteCache_ClearAllEntries();
 int  Unit_SetFlag(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __int8 a4, DWORD a5, signed int a6);
-int  sub_413080(signed int a1, char a2, unsigned __int8 a3, unsigned __int8 a4);
-void  sub_413120(int a1, DWORD a2);
-int sub_413180();
-char  sub_4131B0(char *a1, unsigned __int8 a2, char a3);
+int  UnitSpriteCache_FindEntryOrLoad(signed int a1, char a2, unsigned __int8 a3, unsigned __int8 a4);
+void  UnitSpriteCache_FreeAllEntries(int a1, DWORD a2);
+int UnitSpriteCache_CountActiveEntries();
+char  Unit_BuildGoSpriteFilePath(char *a1, unsigned __int8 a2, char a3);
 char  UI_BeginUnitInfo(char *a1, unsigned __int8 a2, char a3);
-char  sub_413350(char *a1, unsigned __int8 a2, int a3);
-char  sub_413430(char *a1, unsigned __int8 a2, int a3);
-char  sub_413510(char *a1, unsigned __int8 a2, int a3);
-char  sub_4135F0(char *a1, unsigned __int8 a2, char a3);
-char  sub_4136D0(char *a1, unsigned __int8 a2, char a3);
-char  sub_4137B0(char *a1, unsigned __int8 a2);
-void  sub_413860(char *a1, unsigned __int8 a2, int a3);
+char  Unit_BuildGarrisonSlotIconSpritePath(char *a1, unsigned __int8 a2, int a3);
+char  Unit_BuildSelectedUnitPanelIconSpritePath(char *a1, unsigned __int8 a2, int a3);
+char  Unit_BuildSelectedUnitPanelIconPalettePath(char *a1, unsigned __int8 a2, int a3);
+char  Unit_BuildAttackAnimSpritePath(char *a1, unsigned __int8 a2, char a3);
+char  Unit_BuildShotAnimSpritePath(char *a1, unsigned __int8 a2, char a3);
+char  Unit_BuildShotAnimPaletteSpritePath(char *a1, unsigned __int8 a2);
+void  Unit_BuildBigInfoGraphicPath(char *a1, unsigned __int8 a2, int a3);
 signed int  UnitStack_BuildMergedTerrainMoveProfile(intptr_t a1, intptr_t a2);
 signed int Map_InitTerrainMoveTableOffsets();
 int  Map_GetUnitTileMoveCostOrZero(int a1, int a2, int a3, int a4);
@@ -871,24 +871,24 @@ int  Math_SinDegreesQ16(signed int a1);
 void  initRandomSeed(char a1, DWORD a2);
 unsigned int  Rng_RandRange(int a1, int a2);
 signed int  Math_CeilSqrt(signed int a1);
-__int16  sub_415EA0(int a1, int a2, unsigned __int16 *a3);
+__int16  WorldMap_DrawUnitStackOverlayGlyph(int a1, int a2, unsigned __int16 *a3);
 int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsigned __int16 *a5);
-unsigned int __thiscall sub_4163F0(void *this);
-unsigned __int8 *__thiscall sub_416430(void *this);
-unsigned int __thiscall sub_416610(void *this);
-int  sub_416750(int a1, int a2, unsigned int a3);
-int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3);
-int  sub_418700(int a1);
-int  sub_418A90(int result, int a2);
+unsigned int __thiscall Map_InitBuildingSwayJitterOffsets(void *this);
+unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this);
+unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this);
+int  WorldMap_DrawUnitAttentionFlashGlow(int a1, int a2, unsigned int a3);
+int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3);
+int  WorldMap_RedrawViewport(int a1);
+int  WorldMap_RedrawTileIfVisible(int result, int a2);
 int  UI_CenterWorldMapViewportOnRectIfFit(int result, int a2, int a3, int a4);
 int  UI_CenterWorldMapViewportOnTile(int a1, int a2);
 int  UI_StartWorldMapUnitAttentionFlash(int a1, int a2, int a3);
 void UI_UpdateWorldMapUnitAttentionFlash();
 BOOL UI_IsWorldMapUnitAttentionFlashActive();
-int  sub_418E30(int a1, int a2, int a3);
-void __fastcall sub_418E50(int a1, int a2);
-int  sub_418EC0(int a1, int a2, int a3);
-void __fastcall sub_418EE0(int a1, int a2);
+int  UI_StartUnitBlinkFlash(int a1, int a2, int a3);
+void __fastcall UI_UpdateUnitBlinkFlash(int a1, int a2);
+int  UI_StartTileBlinkFlash(int a1, int a2, int a3);
+void __fastcall UI_UpdateTileBlinkFlash(int a1, int a2);
 signed int  UI_HighlightTile(int a1, int a2);
 int __thiscall UI_ClearTileHighlight(void *this);
 int  UI_DrawTileHighlightOverlay(int a1, int a2, int a3, int a4);
@@ -896,22 +896,22 @@ int nullsub_1(void); // weak
 void BattleLog_Disable();
 void BattleLog_Enable();
 void  createLogFiles(int a1, int a2, DWORD a3);
-int  sub_419110(int result);
+int  Battle_StoreLastOutcomeValue(int result);
 void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...);
-unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2);
-int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4);
-int  sub_419770(unsigned __int16 *a1, int a2, DWORD a3);
-int  sub_419780(unsigned __int16 *a1, int a2, DWORD a3);
-int  sub_419790(int result);
-BOOL  sub_4197A0(uintptr_t a1, DWORD a2);
+unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int a2);
+int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int a2, int a3, DWORD a4);
+int  UI_DrawWidgetIconTransitionSlow(unsigned __int16 *a1, int a2, DWORD a3);
+int  UI_DrawWidgetIconTransitionFast(unsigned __int16 *a1, int a2, DWORD a3);
+int  UI_SetActiveWidgetTable(int result);
+BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD a2);
 signed int  UIWidget_PollHitHoverAndClick(uintptr_t a1, DWORD a2);
-int  sub_419D60(uintptr_t result, int a2);
+int  UIWidget_RefreshActionButtonState(uintptr_t result, int a2);
 _DWORD * UIWidgetTable_InitDrawStates(_DWORD *result);
 signed int  UIWidgetTable_PollHoverAndActions(_DWORD *a1, DWORD a2);
-int  sub_419E60(uintptr_t a1, int a2);
+int  UIWidget_PlayPressedReleaseAnimationWithDelay(uintptr_t a1, int a2);
 int  UIWidget_PlayPressedReleaseAnimation(uintptr_t a1);
-int  sub_419F20(uintptr_t a1);
-int  sub_419F50(uintptr_t a1, int a2);
+int  UIWidget_ShowPressedState(uintptr_t a1);
+int  UIWidget_ShowReleasedState(uintptr_t a1, int a2);
 int  UI_DrawUnitInfoPane(int a1, int a2, int a3, __int16 *a4, DWORD a5, int a6);
 int  Unit_Info(int a1, int a2, int a3, unsigned __int8 *a4, DWORD a5, DWORD a6);
 int  UI_DrawSpecialUnitInfoPane(int a1, int a2, int a3, unsigned __int8 *a4, DWORD a5, int a6);
@@ -957,28 +957,28 @@ _DWORD * Unit_CaptureBuilding(int a1, DWORD a2, int a3, signed int j, double a5)
 _DWORD * Building_Destroy(int a1, char a2, DWORD a3, double a4);
 int  Building_CalcRemainingConstructionTurns(int a1);
 signed int  Building_FindRandomOwnedCompletedCastle();
-void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3);
+void * Building_ShowHoverInfoPopup(unsigned __int8 *a1, char a2, int a3);
 int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double a4);
-DWORD sub_420770();
+DWORD Timer_InitPerfCounterFrequency();
 int __fastcall Time_Now(int a1, int a2);
 int __thiscall nullsub_2(_DWORD); // weak
-unsigned int  sub_420800(int a1, int a2, int a3);
-int __thiscall sub_420820(void *this);
-int  sub_420840(uintptr_t a1, int a2);
+unsigned int  Timer_BusyWaitWithCallback(int a1, int a2, int a3);
+int __thiscall Mem_ConstructObjectArray256(void *this);
+int  Castle_RequestManagementScreenExit(uintptr_t a1, int a2);
 int Castle_RebuildMissingAddonFlags();
-void *sub_420910();
+void *Castle_ShowNewBuildingMenu();
 int  Castle_PlayAddonConstructionReveal(int a1, int a2);
 int  Castle_BuildSchoolWithAnimation(char a1, DWORD a2);
 int  Castle_BuildWorkshopWithAnimation(char a1, DWORD a2);
 int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD a3);
 int  Castle_BuildHospitalWithAnimation(char a1, DWORD a2);
 int  Castle_BuildSmithsWithAnimation(char a1, DWORD a2);
-BOOL sub_420F70();
+BOOL Building_HandleUpgradeButtonAction();
 // int .fn_init(void); weak
 int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4);
 int Castle_DrawStatusPanel();
 char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4);
-int  sub_421740(unsigned __int16 a1, int a2, int a3, int a4, unsigned __int8 a5);
+int  Castle_DrawAmbientAnimationSprite(unsigned __int16 a1, int a2, int a3, int a4, unsigned __int8 a5);
 int  Castle_DrawAmbientAnimationLayer(int a1);
 int __thiscall Castle_DrawAllAmbientAnimationLayers(void *this);
 unsigned int Castle_UpdateAmbientAnimationLayers();
@@ -1082,9 +1082,9 @@ int  UnitBattle_Shot(int a1, int a2); // weak
 int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4);
 int  UnitBattle_ShotWall(int a1, int a2); // weak
 signed int  UnitBattle_Defence(int a1, char a2, DWORD a3);
-int  sub_429E90(int a1, int a2);
-void sub_429EB0();
-int  sub_429EC0(__int64 result);
+int  BuildCursor_HandleCancelButtonPress(int a1, int a2);
+void BuildCursor_RequestExit();
+int  BuildCursor_DrawPlacementOverlay(__int64 result);
 int  BuildBuilding(int, int, char, double);
 int  UI_DrawNoticeBoxSmall(DWORD a1, int a2);
 int  UI_DrawConfirmTop(DWORD a1, int a2);
@@ -1106,17 +1106,17 @@ int  Trap_ClearTileOwnerMask(int a1, int a2);
 __int16 * Trap_HurtStack(__int16 *a1, char a2, DWORD a3, double a4);
 int  Trap_GetTileOwnerMask(int a1, int a2, int a3);
 signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3);
-int  sub_42B9D0(int a1, int a2, char a3, DWORD a4);
-int  sub_42BF00(int a1);
-char  sub_42C060(int a1);
+int  Trap_ShowPitfallDiscoveryDialog(int a1, int a2, char a3, DWORD a4);
+int  Battle_LoadWallSegmentsFromBuildingRecord(int a1);
+char  Battle_SaveWallSegmentsToBuildingRecord(int a1);
 BOOL  UnitBattle_IsTileInViewport(int a1, int a2);
-void  sub_42C130(__int16 *a1, DWORD a2, ...);
+void  Battle_LogUnitEntry(__int16 *a1, DWORD a2, ...);
 void  Battle_LogAllUnits(int a1, char a2, DWORD a3);
 int  GodAnger(DWORD a1, int a2, char a3);
 int  Battle_NewTurn(int a1, char a2, DWORD a3);
 BOOL Battle_HasUnitsForBothSides();
-int  sub_42C560(int a1);
-_BOOL2 sub_42C600();
+int  Battle_ApplyPeriodicDamageToSideUnits(int a1);
+_BOOL2 UnitBattle_HandleManualRotateAndMoveInput();
 int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this);
 __int16 UnitBattle_HandleBattlefieldInteraction();
 __int16 UnitBattle_EnableSelectedChargeMode();
@@ -1140,13 +1140,13 @@ int UnitBattle_TemporarilyClearGateBlocker();
 char UnitBattle_RestoreGateBlocker();
 int  UnitBattle_OverrideControllerOrderBits(int a1, int a2, int a3, int a4);
 int UnitBattle_RestoreControllerOrderBits();
-int *sub_42E8B0();
+int *UnitBattle_InitBattleScreenFrame();
 DWORD  Battle_RunTacticalCombat(__int16 *a1, __int16 *a2, int a3, unsigned __int8 *a4, DWORD a5, int a6);
 int  UnitBattle_GetSpriteVerticalOffsetPx(int a1);
-int  sub_42F7F0(int a1, int a2, int a3, int a4);
-int  sub_42F820(int a1, int a2, int a3, int a4);
-int  sub_42FC30(int result, int a2, int a3, int a4);
-int  sub_42FFB0(int a1, int a2);
+int  UnitBattle_InitUnitFadeAnimation(int a1, int a2, int a3, int a4);
+int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4);
+int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4);
+int  UnitBattle_DrawTileContents(int a1, int a2);
 int  UnitBattle_RedrawTile(int a1, int a2);
 int UnitBattle_RedrawVisibleGrid();
 int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4);
@@ -1154,9 +1154,9 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5);
 __int16 UnitBattle_UpdateIdleAnimatedUnits();
 __int16  UnitBattle_RedrawUnitFootprint(int a1);
 unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1);
-int  sub_432090(int a1, int a2);
-__int16  sub_432120(int a1, int a2, int a3);
-int sub_4321D0();
+int  BuildingGarrisonDialog_HandleExitButtonPress(int a1, int a2);
+__int16  Battle_PlaceReservedUnitSlotAtTile(int a1, int a2, int a3);
+int Battle_ClearReservedUnitSlot();
 signed int Battle_RestoreSavedActionPointsBeforeResultCopy();
 signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4);
 int BuildingGarrisonDialog_CountSelectedSlots();
@@ -1197,13 +1197,13 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3);
 int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3);
 int  CastleProduction_TickAnimations(DWORD a1);
 int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3);
-int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4);
-int  sub_435FE0(DWORD a1, int a2);
-int  sub_436060(DWORD a1, int a2);
-int  sub_4360E0(int a1, int a2);
-int  sub_436100(int a1, int a2, DWORD a3, double a4);
-int  sub_436180(int a1);
-int  sub_436250(int a1);
+int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4);
+int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD a1, int a2);
+int  BuildingTransferDialog_DrawTransferAmountValue(DWORD a1, int a2);
+int  BuildingTransferDialog_HandleExitButtonPress(int a1, int a2);
+int  BuildingTransferDialog_CommitTransfer(int a1, int a2, DWORD a3, double a4);
+int  BuildingTransferDialog_IncreaseTransferAmount(int a1);
+int  BuildingTransferDialog_DecreaseTransferAmount(int a1);
 int  BuildingTransferTargetList_SetDrawOrigin(int result, int a2);
 void * BuildingTransferTargetList_Draw(int a1, DWORD a2);
 int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2);
@@ -1211,53 +1211,53 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2);
 int  BuildingTransferTargetList_Rebuild(int a1, int a2);
 int  BuildingTransferTargetList_HandleClick(DWORD a1);
 int BuildingTransferTargetList_FreeSpriteSet();
-int  sub_436B20(int a1, int a2, int a3, int a4);
-int __thiscall sub_436C10(void *this);
-int  sub_436C50(int a1);
+int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4);
+int __thiscall UnitBattle_ConstructAiCandidateQueue(void *this);
+int  UnitBattle_ResetAiReachGridForSide(int a1);
 signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4);
 BOOL  UnitBattle_IsTileWithinMinRange(int a1, int a2, int a3);
 signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4);
 int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2);
-int  sub_437A90(int a1, int a2, int a3);
+int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3);
 signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed int a4);
-int  sub_43A800(int result, int a2);
-signed int __fastcall sub_43A880(int a1, int a2);
+int  WCIsvListBase_TransferAllInto(int result, int a2);
+signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int a2);
 signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2);
 int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4);
 int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3);
 signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1);
-signed int  sub_43C6B0(int a1, signed int a2);
+signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2);
 void UnitBattle_ScanAiWallTargetColumns();
 signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2);
 signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1);
-_DWORD * sub_43CF50(_DWORD *result);
-int  sub_43CF60(int result, char a2);
-int __cdecl sub_43CF90();
-BOOL  sub_43CFA0(_DWORD *a1, _DWORD *a2);
-_DWORD * sub_43CFB0(_DWORD *result);
-int  sub_43CFF0(WCIsvListBase *a1, char a2);
-int  sub_43D030(_DWORD *a1, _DWORD *a2);
-_DWORD * sub_43D080(_DWORD *result);
-int  sub_43D0C0(WCIsvListBase *a1, char a2);
-_DWORD * sub_43D120(int a1, int a2);
-int  sub_43D160(int a1, int a2, int a3);
-int  sub_43D180(_DWORD *a1, _DWORD *a2, int a3);
-int  sub_43D1E0(WCIsvListBase *this, int a2);
-signed int  sub_43D220(int a1, int a2);
-int  sub_43D250(int a1, int a2);
-int  sub_43D280(_DWORD *a1, _DWORD *a2);
+_DWORD * WCIsvListBase_ctorRoot(_DWORD *result);
+int  WCIsvListBase_dtorRoot(int result, char a2);
+int __cdecl WCIsvListBase_dtorFreeOnly();
+BOOL  WCIsvListBase_ValuesEqual(_DWORD *a1, _DWORD *a2);
+_DWORD * WCIsvListBase_ctorVariant124(_DWORD *result);
+int  WCIsvListBase_dtorVariant124(WCIsvListBase *a1, char a2);
+int  WCIsvListBase_ctorVariant124AndCopy(_DWORD *a1, _DWORD *a2);
+_DWORD * WCIsvListBase_ctorVariant134(_DWORD *result);
+int  WCIsvListBase_dtorVariant134(WCIsvListBase *a1, char a2);
+_DWORD * WCIsvListBase_AllocLinkNode(int a1, int a2);
+int  WCIsvListBase_ReleaseLinkNode(int a1, int a2, int a3);
+int  WCIsvListBase_CopyAppendAll(_DWORD *a1, _DWORD *a2, int a3);
+int  WCIsvListBase_DestroyElementsAndDtor(WCIsvListBase *this, int a2);
+signed int  WCIsvListBase_AppendValue(int a1, int a2);
+int  WCIsvListBase_PopFrontValue(int a1, int a2);
+int  WCIsvListBase_CopyCtor(_DWORD *a1, _DWORD *a2);
 int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int a5);
 int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3);
-signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4);
+signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4);
 int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2);
-int  sub_43D8C0(int a1, int a2);
-int  sub_43D8E0(int a1, int a2, DWORD a3);
-int  sub_43DAC0(int a1, int a2);
-int  sub_43DAE0(int a1, int a2, DWORD a3);
-int  sub_43DCC0(int a1, int a2);
-int  sub_43DCE0(int a1, int a2, DWORD a3);
-int  sub_43DEC0(int a1, int a2);
-int  sub_43DEE0(int a1, int a2, DWORD a3);
+int  Building_HandleGateDoorDialogClose_v1(int a1, int a2);
+int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3);
+int  Building_HandleGateDoorDialogClose_v2(int a1, int a2);
+int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3);
+int  Building_HandleGateDoorDialogClose_v3(int a1, int a2);
+int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3);
+int  Building_HandleGateDoorDialogClose_v4(int a1, int a2);
+int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3);
 BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1);
 signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3);
 int  Building_CountFreeGarrisonSlots(int a1);
@@ -1303,30 +1303,30 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5);
 _DWORD * Temple_Random();
 void  Temple_ProcessGift(DWORD a1, __int16 *a2, int a3, char a4, double a5);
 int  Temple_UnitGetInto(int a1, int a2, int a3, DWORD a4, double a5);
-int  sub_440A20(int a1, int a2);
-_DWORD * sub_440A40(int a1, int a2, char a3, DWORD a4, double a5);
-int  sub_440A60(int a1, int a2, double a3);
+int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2);
+_DWORD * Temple_OutcomePopup_HandleDestroyBuildingClick(int a1, int a2, char a3, DWORD a4, double a5);
+int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3);
 void * RenderHook_DemoText(int a1, char a2, DWORD a3);
 int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4);
 void  BattleMapFileName(char *a1, int a2, int a3);
-char  sub_4414C0(char *a1, char *a2);
-char  sub_441550(char *a1, int a2, int a3);
+char  Str_SwapAndConcatInPlace(char *a1, char *a2);
+char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3);
 int  BattleMap_GetMoveSoundSurfaceClass(int a1, int a2);
-char * sub_4415E0(char *a1, char *a2, int a3);
-int  sub_441670(char *a1, int a2);
-int  sub_441720(int result, int a2, int a3, DWORD a4);
-int  sub_441800(char *a1, int a2);
-int  sub_441870(int result);
-int sub_4418E0();
-int  sub_4418F0(int result);
-void sub_441900();
-void sub_441930();
-int  sub_441960(int a1, signed int a2);
-void  sub_441980(int a1, int a2, int a3);
-int  sub_4419A0(int a1, DWORD a2);
-int sub_4419D0();
-void sub_4419F0();
-void sub_441A00();
+char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3);
+int  Sound_PlayNamedSfxFile(char *a1, int a2);
+int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4);
+int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2);
+int  Audio_ResumeMusicAndStopLoopedSound(int result);
+int Audio_StopMainMusic();
+int  Audio_StopMusicWithFade(int result);
+void Audio_DuckMusicVolume();
+void Audio_RestoreMusicVolume();
+int  Audio_SetMusicVolume(int a1, signed int a2);
+void  Audio_SetSoundLoopIfMusicActive(int a1, int a2, int a3);
+int  Audio_StartMainMusicIfStopped(int a1, DWORD a2);
+int Audio_StopMainMusicIfPlaying();
+void Audio_SetMusicActiveFlag();
+void Audio_ClearMusicActiveFlag();
 void Audio_EnableUnitSounds();
 void Audio_DisableUnitSounds();
 int  Audio_PlayUnitActivateSound(int result);
@@ -1335,23 +1335,23 @@ int  Audio_PlayUnitRangedAttackSound(int result);
 int  Audio_PlayUnitHitSound(int result);
 int  Audio_PlayUnitDeathSound(int result);
 int  Audio_PlayUnitMeleeAttackSound(int result);
-int  sub_441E60(int result);
+int  Audio_PlayUnitShotSound(int result);
 void  Audio_PlayWorldMapUnitMoveSound(int a1, int a2, signed int a3, unsigned int a4);
 void  Audio_PlayBattleMapUnitMoveSound(int a1, int a2, signed int a3, unsigned int a4);
 void Audio_StopUnitMoveSound();
-char * sub_4425E0(char *result);
+char * Audio_PlayButtonSound(char *result);
 int  Audio_PlayArtifactSound(int result);
-int  sub_4426C0(char *a1, int a2);
+int  Audio_PlaySoundEffectByName(char *a1, int a2);
 int  FileSystem_InitRootMount(int a1, char a2, DWORD a3);
-int  sub_4427C0(int a1);
-int  sub_4427F0(char *a1, int a2);
+int  IO_QueryVTableStreamSize(int a1);
+int  FileSystem_ResolveReadPath(char *a1, int a2);
 static const char *Compat_StringArgGetText(const void *arg);
 static int Compat_QueryRead(int query_handle, void *buffer, int byte_count);
 static int Compat_QuerySeek(int query_handle, int offset);
 static void Compat_RenderStateInvokeMethod(int render_state, unsigned int table_offset);
-char  sub_442990(char *a1);
-char *sub_4429C0();
-int  sub_4429D0(int a1, const CHAR *a2, DWORD a3);
+char  FileSystem_SetInstallRootPath(char *a1);
+char *FileSystem_GetInstallRootPath();
+int  FileSystem_MountArchiveAtIndex(int a1, const CHAR *a2, DWORD a3);
 int __thiscall ResourceArchives_MountStartupArchives(int this);
 int  loadFileSusp(char *a1, const CHAR *a2);
 int Port_FindAndInit();
@@ -1373,27 +1373,27 @@ signed int  saveGame(int a1, DWORD a2, double a3);
 signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3);
 char  SaveSlot_LoadLabelOrPlaceholder(int a1, char *a2, DWORD a3);
 int  SaveSlot_HasDataFile(int a1, DWORD a2);
-int  sub_444780(int a1);
-int  sub_444920(int result, int a2);
-signed int  sub_444950(int a1, int a2, DWORD a3, double a4);
-int  sub_444D50(int a1, char a2, DWORD a3, double a4);
+int  SaveSlotDialog_RepaintRow(int a1);
+int  SaveSlotDialog_HandleCancel(int result, int a2);
+signed int  SaveSlotDialog_HandleConfirm(int a1, int a2, DWORD a3, double a4);
+int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4);
 int  UI_ShowInfoWindow(const char *a1, unsigned int a2, int a3, DWORD a4, int a5, int a6);
-int  sub_4458E0(int a1, const char *a2, DWORD a3);
-int  sub_4459A0(int a1, DWORD a2);
+int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3);
+int  WorldMap_NotifyFactionColorChange(int a1, DWORD a2);
 int  UI_CheatEditRepaint(DWORD a1, int a2);
-char  sub_445CE0(int a1, int a2, char a3, DWORD a4);
-int  sub_446230(char a1, DWORD a2);
+char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4);
+int  Demo_ShowNumberedTextScreen(char a1, DWORD a2);
 int  DecisionDialog_ConfirmIfAllowed(uintptr_t a1, int a2);
 int  DecisionDialog_Cancel(uintptr_t a1, int a2);
 int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5);
 int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
-int  sub_446CB0(int a1, int a2, char a3, DWORD a4);
+int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4);
 int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3);
 int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4);
 int  UI_ShowMissionStatusPanel(int a1, DWORD a2);
 int __thiscall nullsub_3(_DWORD); // weak
-int sub_4476B0();
-int __thiscall sub_4476C0(void *this);
+int Debug_GetUsedMemoryCount();
+int __thiscall Object_ConstructInt256Array(void *this);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
 void CampaignMenu_RebuildButtonWidgetTemplate(void);
@@ -1403,38 +1403,38 @@ int  MainMenu_RequestMultiplayerMenu(uintptr_t a1);
 int  MainMenu_RequestCreditsCinematic(uintptr_t a1);
 int  MainMenu_RequestOptionsMenu(uintptr_t a1);
 int  MainMenu_RequestLoadGameMenu(uintptr_t a1);
-signed int  sub_4477A0(int a1, int a2);
+signed int  UI_WaitForKeyOrTimeout(int a1, int a2);
 signed int  UI_WaitForAnyKeyOrClick(int a1, int a2);
 DWORD  UI_StartAnims(int a1, char a2, DWORD a3);
 int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4);
-int  sub_448B90(uintptr_t a1);
-int  sub_448BB0(uintptr_t a1);
-int  sub_448D10(int a1, int a2, int a3);
-signed int  sub_448E10(int a1);
-int  sub_448E80(int a1);
-int sub_448EA0();
-int sub_449330();
-int  sub_4494B0(int a1);
-int  sub_4494E0(int a1);
-void  sub_449C30(int a1, DWORD a2);
-int  sub_449C80(int a1);
-unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3);
-BOOL  sub_449D60(int a1);
-int  sub_44A110(int a1, DWORD a2);
+int  MultiplayerSetup_HandleConfirmButtonRelease(uintptr_t a1);
+int  MultiplayerSetup_HandleCancelButtonRelease(uintptr_t a1);
+int  MultiplayerSetup_RepaintPlayerSlotRow(int a1, int a2, int a3);
+signed int  MultiplayerSetup_HandleStartButtonRelease(int a1);
+int  MultiplayerSetup_HandleBackButtonRelease(int a1);
+int MultiplayerSetup_RedrawPlayerSlotIcons();
+int MultiplayerSetup_RedrawOpponentNameList();
+int  MultiplayerSetup_HandleScrollListDownButton(int a1);
+int  PlayGameMenu_HandleScrollButtonRelease(int a1);
+void  Options_ApplyMainMenuSliders(int a1, DWORD a2);
+int  PlayGameMenu_HandleCloseButton(int a1);
+unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int a1, int a2, DWORD a3);
+BOOL  Options_ToggleCheckboxMainMenu(int a1);
+int  LoadMenu_HandleSlotConfirmButtonRelease(int a1, DWORD a2);
 void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2);
-int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3);
-unsigned int  sub_44A6D0(int a1);
-unsigned __int16 * sub_44A880(unsigned __int16 *result, int a2, DWORD a3);
-_DWORD * sub_44A8B0(_DWORD *result);
-_DWORD * sub_44A8E0(_DWORD *result);
+int  Options_DrawSliderThumb(unsigned __int16 *a1, char a2, DWORD a3);
+unsigned int  Options_AnimateSliderThumbDrag(int a1);
+unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2, DWORD a3);
+_DWORD * Options_AnimateAllSliderThumbs(_DWORD *result);
+_DWORD * Options_DestroySliderThumbList(_DWORD *result);
 void  lodaOptionsCfg(DWORD a1);
-int  sub_44A980(int a1, DWORD a2);
-void  sub_44A9C0(int a1, int a2, DWORD a3);
+int  Options_SaveConfigToFile(int a1, DWORD a2);
+void  Options_ApplyRecordSettings(int a1, int a2, DWORD a3);
 char  PlayerRuntimeState_ResetDefaults(uintptr_t a1);
 char  Game_ResetPlayerRuntimeStateByIndex(int a1);
 int  Map_LoadFromFile(uintptr_t a1);
-char sub_44B2F0();
-char sub_44B430();
+char Scenario_SetupSirArthurRosterVariantA();
+char Scenario_SetupSirArthurRosterVariantB();
 
 enum
 {
@@ -1445,14 +1445,14 @@ enum
   MAIN_MENU_REQUEST_OPTIONS = 4,
   MAIN_MENU_REQUEST_LOAD_GAME = 5
 };
-_DWORD * sub_44B550(int this, DWORD a2, double a3);
+_DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3);
 signed int Game_InitPlayerViewState();
-signed int  sub_44C400(DWORD a1, double a2);
+signed int  SaveSlot_LoadReservedSlot10(DWORD a1, double a2);
 signed int  Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
-DWORD  sub_44C7F0(int a1, DWORD a2, double a3);
+DWORD  Battle_RunPresetScenarioByIndex(int a1, DWORD a2, double a3);
 signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, uintptr_t a2);
-char  sub_44E2A0(int a1, int *a2);
-BOOL  sub_44E350(__int16 *a1);
+char  Player_AssignRandomUniqueRulerNames(int a1, int *a2);
+BOOL  UI_RunHoverTooltipZones(__int16 *a1);
 signed int  Prisoner_QueueCapturedUnit(char a1, int a2, __int16 a3, int a4, DWORD a5, __int16 a6);
 signed int  Building_FindFreePrisonerSlot(int a1);
 int  BuildingPrisoner_RecalculateRansomValue(int a1);
@@ -1485,29 +1485,29 @@ int  Player_Surrender(int a1, int a2, DWORD a3, double a4);
 int  AI_ComputeNationStrengthPercent(signed int a1, int a2, DWORD a3, double a4);
 int  Player_CheckForDefeatAndHandleElimination(int a1, DWORD a2);
 signed int  UI_CheckEndTurnHotkey(int a1);
-void  sub_4511D0(int a1, DWORD a2);
-int  sub_451230(int a1);
-unsigned __int16 * sub_451250(int a1, int a2, DWORD a3);
-BOOL  sub_451310(int a1);
-int  sub_451340(int a1, char a2, DWORD a3);
-int sub_451690();
-void sub_4516B0();
-signed int sub_451730();
-void sub_4517B0();
-void sub_4517C0();
-int  sub_451810(DWORD a1, double a2);
-int sub_451910();
-signed int sub_451A60();
-int  sub_451AE0(DWORD a1);
-void __noreturn sub_451C50();
-void sub_451C60();
+void  Options_ApplyInGameSliders(int a1, DWORD a2);
+int  Options_HandleCloseButtonInGame(int a1);
+unsigned __int16 * Options_InitInGameSlidersAndWidgets(int a1, int a2, DWORD a3);
+BOOL  Options_ToggleCheckboxInGame(int a1);
+int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3);
+int Cheat_RevealMapForCurrentPlayer();
+void Cheat_FillSelectedSquadWithCannons();
+signed int Cheat_ClearSelectedSquadDamageFlags();
+void Cheat_ForceWinCurrentMission();
+void Cheat_HealSelectedSquadAndClearDamage();
+int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2);
+int Cheat_TeleportSelectedUnitToCursor();
+signed int Cheat_FillSelectedSquadWithPegasi();
+int  Cheat_ShowDeveloperTeamImage(DWORD a1);
+void __noreturn Cheat_QuitWithJokeMessage();
+void Cheat_SetFactionColorAndCastleFlags();
 int  UI_ReadCheatString(char a1);
 signed int Rules_ShowBanner_StrategicClash();
-int sub_451E20();
-signed int sub_451E46();
-signed int sub_451E87();
-int sub_451EC0();
-signed int sub_451F70();
+int Rules_ResetEngineOnLoad();
+signed int Rules_CompileStrategicRulesFile();
+signed int Rules_RegisterAllHostFunctions();
+int Rules_LogMissionSetupInfo();
+signed int Rules_ExecuteAITurn();
 unsigned int  Rules_CreateArmyFact();
 _DWORD * Rules_RetractArmyFact(_DWORD *result, int a2, int a3, double a4);
 signed int Rules_RegisterStrategicActionHostFunctions();
@@ -1529,10 +1529,10 @@ BOOL  Player_CanEnterReligiousSiteTile(int a1, int a2, int a3);
 signed int  Move_CommitIfWithinCost(unsigned int a1, int a2, DWORD a3, double a4);
 signed int  Rules_MarchToTemple(unsigned int a1, int a2, int a3, double a4);
 signed int  Rules_MarchNearTile(DWORD a1, int a2, int a3, double a4);
-signed int  sub_4547F0(int a1, int a2, char a3, DWORD a4, double a5);
-signed int  sub_454800(int a1, int a2, double a3);
-signed int  sub_454860(unsigned int a1, unsigned int a2, DWORD a3, double a4);
-signed int  sub_454990(int a1, int a2, char a3, DWORD a4, double a5);
+signed int  Rules_HostUnitAttack(int a1, int a2, char a3, DWORD a4, double a5);
+signed int  Rules_HostUnitCaptureDefeatedStack(int a1, int a2, double a3);
+signed int  Rules_HostUnitMoveAndHide(unsigned int a1, unsigned int a2, DWORD a3, double a4);
+signed int  Rules_HostUnitAttackBuilding(int a1, int a2, char a3, DWORD a4, double a5);
 BOOL  UnitStack_HasNormalCombatUnitsByIndex(int a1);
 signed int  UnitStack_GetSquadCountByIndex(int a1);
 signed int  Rules_IsQueuedPathTargetBridgeCrossing(int a1);
@@ -1630,39 +1630,39 @@ void  AI_EvaluateStrategicTargetAtTile(int a1, int a2, int a3, int a4, int a5, i
 int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed int a5);
 signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...);
 int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, unit_type a7, unit_type a8, ...);
-int  sub_459ED0(int result, int a2, int a3, int a4);
-int  sub_45B3C0(int result, int a2);
-int  sub_45C000(int result, int a2);
-int  sub_45D430(int result, int a2, int a3, int a4);
-int  sub_45E630(int result, int a2);
-int  sub_45F190(int result, int a2);
+int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4);
+int  Mission_MarkObjective05CompleteOnAttack(int result, int a2);
+int  WorldMap_DrawMission07TreasureMarker(int result, int a2);
+int  WorldMap_DrawMission11ShrineMarker(int result, int a2, int a3, int a4);
+int  Mission_MarkObjective15CompleteOnAttack(int result, int a2);
+int  WorldMap_DrawMission17TreasureMarker(int result, int a2);
 BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2);
 int UI_CheckDialogAccepted();
 void Scenario_LoadMissionByIndex(int mission_index, double a2);
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4);
-int __thiscall sub_4603F0(void *this);
-_DWORD * sub_460410(int a1, int a2);
-int  sub_460490(int a1, int a2, char a3, DWORD a4);
-int  sub_460580(int a1);
+int __thiscall RenderState_ConstructGlobalInstance(void *this);
+_DWORD * RenderState_ConstructDefault(int a1, int a2);
+int  RenderState_InitCursorResources(int a1, int a2, char a3, DWORD a4);
+int  RenderState_ReleaseCursorResources(int a1);
 unsigned int  DD_Pump(int a1, int a2, ...);
-void  sub_4608D0(int a1, int a2, DWORD a3);
+void  RenderState_SetMouseSpeed(int a1, int a2, DWORD a3);
 BOOL  DD_IsFlipping(int a1);
 BOOL  DD_IsLost(int a1);
 BOOL  Input_PollEventsUntil(int a1, char a2);
-BOOL  sub_460950(int a1);
+BOOL  RenderState_IsCursorFlipStillActive(int a1);
 BOOL  Render_Begin(int a1, void (*a2)(void), ...);
 BOOL  Render_FlipRect(int a1, char a2);
 int  RenderState_PollInputAndClampCursor(int a1, int a2);
-unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3);
+unsigned int  RenderState_WarpCursorAndPump(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3);
 _DWORD * RenderState_RecalculateCursorBoundsForRect(_DWORD *result, __int16 a2, __int16 a3, __int16 a4, __int16 a5);
-_DWORD * sub_460BB0(_DWORD *result, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5);
-_DWORD * sub_460C70(int a1);
-_DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4);
+_DWORD * RenderState_PumpIfRectInViewBounds(_DWORD *result, unsigned __int16 a2, unsigned __int16 a3, unsigned __int16 a4, unsigned __int16 a5);
+_DWORD * RenderState_LoadDefaultCursorSprite(int a1);
+_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD a4);
 __int16  RenderState_SelectCursorDescriptor(int a1, int a2);
 int  Render_Present(int a1);
 int Render_Pump();
 void Input_Flush();
-int  sub_4610B0(int a1);
+int  RenderState_DrawCursorSpriteToPrimarySurface(int a1);
 _DWORD * Device_GetParamA(int a1, int a2);
 int  Device_DoOp(int a1, int a2, DWORD a3);
 __int16  Device_GetParamB(int a1, DWORD a2, int a3, int a4);
@@ -1691,37 +1691,37 @@ BOOL  Video_CanContinuePlayback(char a1);
 signed int  Win_BeginModeChange(const char *a1, char *a2);
 void  Win_EndModeChange(int a1, char *a2, int a3, int a4);
 void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
-signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...);
-void __fastcall sub_4623C0(int a1, const char *a2);
-int  sub_462480(int a1, char *a2);
-int __cdecl sub_462890(int a1, unsigned __int8 a2, unsigned __int8 a3, unsigned __int8 a4);
-int __cdecl sub_4628B0(int a1);
-int  sub_46293B(unsigned __int8 a1, unsigned __int8 a2, unsigned __int8 a3);
-int __cdecl sub_4629E1(char *a1, char *a2, unsigned __int8 *a3, int a4);
-int __cdecl sub_462B0B(unsigned __int8 *a1, int a2, int a3, int a4, int a5);
-_DWORD * sub_462BE0(_DWORD *result, int a2);
-_DWORD * sub_462BF0(_DWORD *a1, char a2);
-int  sub_462C90(int a1, int a2, signed int a3);
-BOOL  sub_462CA0(int a1);
-int  sub_462CB0(int a1);
-int sub_462CC0();
-_DWORD * sub_462CE0(int a1, char a2, DWORD a3);
-int  sub_462D00(_DWORD *a1);
-int  sub_462D20(_DWORD *a1);
-int  sub_462D30(int a1);
-int  sub_462D40(int a1);
-int  sub_462D50(_DWORD *a1);
-int sub_462D60();
-int sub_462D80();
-int  sub_462E40(_WORD *a1, _DWORD *a2, int a3);
-unsigned int  sub_462EA0(unsigned int *result, _WORD *a2, int a3);
-int  sub_462FE0(void *a1, const void *a2, int a3);
-int  sub_463010(void *a1, const void *a2, int a3);
-int  sub_463040(void *a1, const void *a2, int a3);
+signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, char a4, DWORD a5, ...);
+void __fastcall Video_PlayAviWithModeGuard(int a1, const char *a2);
+int  Mission_PlayInfoSlideshow(int a1, char *a2);
+int __cdecl Palette_QueryNearestColorIndex(int a1, unsigned __int8 a2, unsigned __int8 a3, unsigned __int8 a4);
+int __cdecl Palette_BuildNearestColorLUT(int a1);
+int  Palette_FindNearestColorIndex(unsigned __int8 a1, unsigned __int8 a2, unsigned __int8 a3);
+int __cdecl Palette_BlendIndexedPixelRun(char *a1, char *a2, unsigned __int8 *a3, int a4);
+int __cdecl Palette_OffsetIndexedPixelsRGB(unsigned __int8 *a1, int a2, int a3, int a4, int a5);
+_DWORD * IO_StreamAdapterConstruct(_DWORD *result, int a2);
+_DWORD * IO_StreamAdapterRelease(_DWORD *a1, char a2);
+int  IO_StreamAdapterReadBytes(int a1, int a2, signed int a3);
+BOOL  IO_StreamAdapterIsAtEnd(int a1);
+int  IO_StreamAdapterInvokeAtEnd(int a1);
+int IO_StreamAdapterReadStub();
+_DWORD * IO_StreamAdapterAlloc(int a1, char a2, DWORD a3);
+int  ExcString_ConstructEmpty(_DWORD *a1);
+int  ExcString_ReleaseText(_DWORD *a1);
+int  ExcString_GetTextPtr(int a1);
+int  ExcString_GetTextPtrDup(int a1);
+int  ExcString_ReleaseTextDup(_DWORD *a1);
+int ExcString_GetErrorCodeStub();
+int ExcString_GetErrorCodeStubDup();
+int  CAviDecompressor_ConvertRGB888to565Row(_WORD *a1, _DWORD *a2, int a3);
+unsigned int  CAviDecompressor_ConvertRGB565to888Row(unsigned int *result, _WORD *a2, int a3);
+int  CAviDecompressor_CopyPixelRow16bpp(void *a1, const void *a2, int a3);
+int  CAviDecompressor_CopyPixelRow24bpp(void *a1, const void *a2, int a3);
+int  CAviDecompressor_CopyPixelRow32bpp(void *a1, const void *a2, int a3);
 int (* sub_463070(int (**a1)(), int (**a2)()))();
-__int16  sub_463220(int (*a1)(), int a2, int a3, int a4, int a5);
-signed int  sub_4634A0(_DWORD *a1, char *a2, char *a3);
-unsigned int  sub_4635A0(unsigned int a1);
+__int16  CAviDecompressor_SetupBlitFormat(int (*a1)(), int a2, int a3, int a4, int a5);
+signed int  CAviDecompressor_BlitRows(_DWORD *a1, char *a2, char *a3);
+unsigned int  CAviDecompressor_NormalizeColorMask(unsigned int a1);
 int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2);
 int  CAviDecompressor_dtor(_DWORD *a1);
 int * CAviDecompressor_ConstructAndInitCallbacks(int *a1, int (__stdcall ***a2)(_DWORD, void *, _DWORD *), int a3, int a4);
@@ -1761,164 +1761,164 @@ int  CAviDecompressor_SumSleepTime(int a1);
 void __stdcall PlayAviStretch(char *a1, IDirectDrawSurface *a2, tagRECT *a3, int (*a4)(void), int a5); // idb
 void __stdcall PlayAviSurface2(char *a1, IDirectDrawSurface2 *a2, int a3, int a4, int (*a5)(void), int a6); // idb
 void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT *a3, int (*a4)(void), int a5); // idb
-int  sub_464930(int a1);
-int  sub_464950(int a1);
-HANDLE * sub_464970(HANDLE *a1, bool a2, bool a3);
-HANDLE * sub_464990(HANDLE *a1);
-int sub_4649B0();
-int sub_4649C0();
-int  sub_4649D0(int a1);
-char * sub_464B50(int a1, char a2);
-int  sub_464CC0(int a1);
-int  sub_464CD0(_DWORD *a1, int a2);
-int  sub_464CE0(int a1);
-int  sub_464FD0(int a1, char a2);
+int  CAviDecompressor_InitThreadGuard(int a1);
+int  CAviDecompressor_DoneThreadGuard(int a1);
+HANDLE * CAviDecompressor_ConstructEventHandle(HANDLE *a1, bool a2, bool a3);
+HANDLE * CAviDecompressor_DestroyEventHandle(HANDLE *a1);
+int CAviDecompressor_FreeMemberA();
+int CAviDecompressor_FreeMemberB();
+int  CAviDecompressor_ConstructSourceInterface(int a1);
+char * CAviDecompressor_DestroySourceInterface(int a1, char a2);
+int  CAviDecompressor_GetVideoFormat(int a1);
+int  CAviDecompressor_ReleaseVideoCodec(_DWORD *a1, int a2);
+int  CAviDecompressor_InitCommon(int a1);
+int  CAviDecompressor_Destroy(int a1, char a2);
 DWORD __stdcall StartAddress(char *lpThreadParameter);
-BOOL  sub_465560(int a1);
-signed int  sub_4655B0(int a1);
+BOOL  CAviDecompressor_RequestDecodeThreadStop(int a1);
+signed int  CAviDecompressor_GetNextAudioSampleOffset(int a1);
 signed int  AviPlayer_DecodeNextFrame(int a1);
-HANDLE  sub_465710(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int Buffer_2, __int64 Buffer_6, int Buffer_18, int Buffer_22, int Buffer_26, char Buffer_30, char Buffer_30a, __int64 a23, __int64 a24, int a25, int a26, __int64 ThreadId_2);
+HANDLE  AviPlayer_OpenFileAndStartDecodeThread(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int Buffer_2, __int64 Buffer_6, int Buffer_18, int Buffer_22, int Buffer_26, char Buffer_30, char Buffer_30a, __int64 a23, __int64 a24, int a25, int a26, __int64 ThreadId_2);
 char  AviPlayer_OpenAndPrepare(unsigned int *a1);
-int  sub_465D30(int a1);
-int  sub_465DD0(int a1);
-int  sub_465EC0(int a1, int a2, _DWORD *a3, _DWORD *a4);
-unsigned int  sub_465FB0(int a1, void *a2);
-char  sub_4660D0(int a1, int a2, int *a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, __int128 a12, __int64 a13, __int64 a14, __int64 a15, __int64 a16, __int64 a17, __int64 a18, __int64 a19, __int64 a20, int a21);
-_DWORD * sub_4662B0(_DWORD *result, int a2, int a3);
-void  sub_466310(int a1);
-DWORD __stdcall sub_466420(char *lpThreadParameter);
-struct _EXCEPTION_REGISTRATION_RECORD * sub_4664E0(int a1);
-BOOL  sub_466580(int a1);
-_DWORD * sub_4665A0(int a1);
-int  sub_466870(_DWORD *a1, int a2, int a3, int *a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16, int a17, int a18, int a19, int a20, int a21, int a22, int a23, int a24, int a25, int a26, int a27, int a28, int a29, int a30, __int64 a31);
-bool  sub_466BE0(int a1);
-char  sub_466C60(int a1);
+int  AviPlayer_FlushVideoFrameQueue(int a1);
+int  AviPlayer_CloseStreams(int a1);
+int  AviPlayer_GetBufferedAudioSample(int a1, int a2, _DWORD *a3, _DWORD *a4);
+unsigned int  AviPlayer_PopBufferedVideoFrame(int a1, void *a2);
+char  AviPlayer_OpenVideoCodec(int a1, int a2, int *a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, __int128 a12, __int64 a13, __int64 a14, __int64 a15, __int64 a16, __int64 a17, __int64 a18, __int64 a19, __int64 a20, int a21);
+_DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3);
+void  CAviDecompressor_RenderLoop(int a1);
+DWORD __stdcall CAviDecompressor_RenderThreadProc(char *lpThreadParameter);
+struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int a1);
+BOOL  CAviDecompressor_RequestRenderStop(int a1);
+_DWORD * AviPlayer_ShutdownDecodeState(int a1);
+int  AviPlayer_BlitFrameToSurface(_DWORD *a1, int a2, int a3, int *a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16, int a17, int a18, int a19, int a20, int a21, int a22, int a23, int a24, int a25, int a26, int a27, int a28, int a29, int a30, __int64 a31);
+bool  AviPlayer_UpdateTargetFrameFromClock(int a1);
+char  AviPlayer_CatchUpToTargetFrame(int a1);
 int  AviPlayer_Flip(int a1);
-int  sub_467DE0(int result, int a2, int a3, int a4);
-int  sub_467EC0(int a1, int a2);
-int  sub_467F50(int a1, int a2);
+int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4);
+int  AviPlayer_BltFastOverlayFromBackBuffer(int a1, int a2);
+int  AviPlayer_BltFrameToPrimarySurface(int a1, int a2);
 signed int  AviPlayer_RenderFrame(int a1, const RECT *a2);
-int  sub_4681C0(int a1, const RECT *a2);
-int  sub_468890(int a1, const RECT *a2);
-int  sub_468BB0(int result);
-char  sub_468C40(int a1);
-char  sub_468E10(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, __int64 a13, __int64 a14, __int64 a15, __int128 a16, __int128 a17, __int64 a18);
-int  sub_469310(int a1, int a2);
-int  sub_469500(int a1, int a2, int a3);
-int  sub_469590(int a1, int a2);
-int  sub_469680(int a1, int a2);
+int  CAviDecompressor_PresentFrameIfStale(int a1, const RECT *a2);
+int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2);
+int  AviPlayer_UpdateOverlayColorKey(int result);
+char  AviPlayer_ComputeFlipState(int a1);
+char  AviPlayer_ApplyOpenOptionsAndInitDecoder(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, __int64 a13, __int64 a14, __int64 a15, __int128 a16, __int128 a17, __int64 a18);
+int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2);
+int  AviPlayer_CreateOverlaySurface(int a1, int a2, int a3);
+int  AviPlayer_CreateOverlaySurfaceAndEnable(int a1, int a2);
+int  AviPlayer_AllocDecodedBitmapInfo(int a1, int a2);
 int __fastcall sub_4697E0(_DWORD, _DWORD); // weak
-_DWORD * sub_469C90(int a1, int a2);
-int __stdcall sub_469E60(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14);
-int sub_469EF0();
-int sub_469F50();
-int sub_469FB0();
-int  sub_46A010(int a1, char a2);
-int sub_46A0A0();
-BOOL  sub_46A100(HANDLE *a1);
-int  sub_46A110(int a1);
-int  sub_46A130(int a1);
-int  sub_46A140(int a1);
-int  sub_46A150(int result);
-int  sub_46A160(int a1);
-int  sub_46A170(int a1);
-int  sub_46A180(int a1);
-int  sub_46A190(int a1);
-int  sub_46A1A0(int a1);
-int  sub_46A1B0(int a1);
-int  sub_46A1D0(int a1);
-int  sub_46A1E0(int *a1, int a2, int a3, int a4, int a5, int a6, int a7);
-int  sub_46A350(int a1);
-int __fastcall sub_46A360(int a1, _DWORD *a2);
-bool  sub_46A370(int a1);
-bool  sub_46A380(int a1);
-bool  sub_46A3B0(int a1);
-bool  sub_46A3C0(int a1);
-bool  sub_46A3D0(int a1);
-bool  sub_46A430(int a1);
-bool  sub_46A450(int a1);
-bool  sub_46A480(int a1);
-bool  sub_46A4A0(int a1);
+_DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2);
+int __stdcall AviPlayer_SendICDrawBegin(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14);
+int AviException_CtorFromExceptionList();
+int AviException_CtorForSurfaceCreateFailure();
+int AviException_CtorForDrawFailure();
+int  AviException_ScalarDeletingDtor(int a1, char a2);
+int AviException_GetMessage();
+BOOL  AviPlayer_PulseEventHandle(HANDLE *a1);
+int  AviPlayer_LeaveBusySectionAndRelease(int a1);
+int  Mem_BitsToBytesCeil(int a1);
+int  AviPlayer_QueueBacklogCount(int a1);
+int  AviPlayer_IncrementFramesRenderedCount(int result);
+int  AviPlayer_AudioBytesQueued(int a1);
+int  AviPlayer_AudioSampleQueueCount(int a1);
+int  AviPlayer_AudioSampleQueueBase(int a1);
+int  AviPlayer_AudioFormatPtr(int a1);
+int  AviPlayer_BitmapWidth(int a1);
+int  AviPlayer_BitmapHeightAbs(int a1);
+int  AviPlayer_AudioBlockAlign(int a1);
+int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *a1, int a2, int a3, int a4, int a5, int a6, int a7);
+int  AviPlayer_StreamBitmapInfoPtr(int a1);
+int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *a2);
+bool  AviPlayer_IsUncompressedFormat(int a1);
+bool  AviPlayer_IsIcmDecoderIdle(int a1);
+bool  AviPlayer_TestModeFlagBit2(int a1);
+bool  AviPlayer_TestModeFlagBit3(int a1);
+bool  AviPlayer_TestActiveModeFlag(int a1);
+bool  AviPlayer_TestModeFlagBit2AndSubframe(int a1);
+bool  AviPlayer_SupportsRequiredPlaybackCaps(int a1);
+bool  AviPlayer_HasValidRateParams(int a1);
+bool  AviPlayer_IsPlaybackRateInRange(int a1);
 unsigned int  Audio_ReturnDSoundError(unsigned int result);
-int __cdecl sub_46A5F0(unsigned int a1);
-signed int __cdecl sub_46A610(_DWORD *a1);
-int __thiscall sub_46A6D0(void *this);
-signed int sub_46A750();
-unsigned int sub_46AB70();
-signed int __cdecl sub_46ABC0(int a1, char a2);
-unsigned int sub_46AD10();
-int __cdecl sub_46AD60(_DWORD *a1);
-unsigned int sub_46AD70();
-unsigned int __cdecl sub_46ADC0(_DWORD *a1);
+int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int a1);
+signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1);
+int __thiscall Audio_ComputeBytesPerFrame(void *this);
+signed int Audio_InitDSoundDevice();
+unsigned int Audio_ReleaseDSoundDevice();
+signed int __cdecl Audio_InitSoundSystem(int a1, char a2);
+unsigned int Audio_ShutdownSoundSystem();
+int __cdecl Audio_GetSoundFormatFlags(_DWORD *a1);
+unsigned int Audio_RefreshPlayCursor();
+unsigned int __cdecl Audio_FillDSoundBuffer(_DWORD *a1);
 int __cdecl Audio_MixInterleaved16(int a1, int a2, int a3, signed int *a4);
-_BYTE *__cdecl sub_46B169(int a1, int a2, int a3, int *a4);
-int __cdecl sub_46B1BA(int a1, int a2, int a3, signed int *a4);
-_BYTE *__cdecl sub_46B1D7(int a1, int a2, int a3, int *a4);
-int  sub_46B200(int a1, _DWORD *a2);
-void  sub_46B610(int *a1);
-int  sub_46BCE4(signed int a1, int a2, char a3, void *a4);
-unsigned int  sub_46BDC2(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
-void sub_46BE88();
-void sub_46BF5E();
-void sub_46C030();
-void sub_46C1A2();
-void sub_46C2FC();
-void sub_46C472();
-void sub_46C6B4();
-void sub_46C996();
-void sub_46CE10();
-void sub_46D2A6();
-int __cdecl sub_46D2B5(int a1);
-int  sub_46D2D1(int a1, void *a2);
-int __cdecl sub_46D2F0(_DWORD *a1);
-int __cdecl sub_46D300(int a1, int a2);
-int __cdecl sub_46D320(_DWORD *a1);
-int __cdecl sub_46D330(_DWORD *a1);
-int __cdecl sub_46D350(int a1, _DWORD *a2);
-int __cdecl sub_46D370(int a1, _DWORD *a2);
-int __cdecl sub_46D390(int a1);
-_DWORD * sub_46D3A0(_DWORD *a1, int a2, int a3, int a4);
-_DWORD * sub_46D460(_DWORD *a1, char a2, int a3, int a4, int a5);
-int  sub_46D530(int a1);
-int  sub_46D550(int a1, int a2, int a3, int a4);
-int  sub_46D5C0(_DWORD *a1, int a2);
-int  sub_46D620(_DWORD *a1);
-int  sub_46D6C0(int a1);
-int  sub_46D6E0(_DWORD *a1, char *a2, int a3);
-BOOL  sub_46D7C0(_DWORD *a1);
-int  sub_46D7F0(int a1);
-signed int  sub_46D800(_DWORD *a1, int a2, int a3);
-_DWORD * sub_46D830(_DWORD *result, _DWORD *a2, _DWORD *a3);
-signed int  sub_46D870(_DWORD *a1);
-int  sub_46D890(int a1);
-signed int  sub_46D8A0(int a1, int a2, int a3);
-_DWORD * sub_46D8D0(int a1, int a2);
-int sub_46D960();
-int sub_46D9F0();
-unsigned int  sub_46DA00(unsigned int a1, signed int a2);
-int  sub_46DB80(int a1, int a2);
-void  sub_46DCA0(unsigned int a1);
-int  sub_46DEF0(int a1, int a2);
-void  sub_46DF20(unsigned int a1, int *a2, int a3, int a4, int a5, int a6);
-int  sub_46E100(int *a1);
-signed int  sub_46E140(int **a1);
-int  sub_46E1B0(int a1);
-int  sub_46E220(int result, int a2);
-int  sub_46E240(int *a1);
-int  sub_46E270(int a1);
-struct _EXCEPTION_REGISTRATION_RECORD *sub_46E2D0();
-struct _EXCEPTION_REGISTRATION_RECORD *sub_46E350();
-int __stdcall sub_46E400(int a1);
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8(int a1, int a2, int a3, int *a4);
+int __cdecl Audio_ClipMixBufferToPCM16Stereo(int a1, int a2, int a3, signed int *a4);
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8Stereo(int a1, int a2, int a3, int *a4);
+int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2);
+void  Audio_MixResampledVoice(int *a1);
+int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4);
+unsigned int  Audio_MixPannedVoiceIntoBuffer(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
+void Audio_SelectMixFormat1Mono();
+void Audio_SelectMixFormat1Stereo();
+void Audio_SelectMixFormat2Mono();
+void Audio_SelectMixFormat2Stereo();
+void Audio_SelectMixFormat3Mono();
+void Audio_SelectMixFormat3Stereo();
+void Audio_SelectMixFormat4Mono();
+void Audio_SelectMixFormat4Stereo();
+void Audio_SelectMixFormat5Mono();
+void Audio_SelectMixFormat5Stereo();
+int __cdecl Audio_ClearGlobalMixBuffer(int a1);
+int  Audio_ZeroMixAccumulatorBuffer(int a1, void *a2);
+int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *a1);
+int __cdecl Audio_SetMixerParamValue(int a1, int a2);
+int __cdecl CSS_NullDriver_GetZero(_DWORD *a1);
+int __cdecl CSS_NullDriver_GetMasterVolume(_DWORD *a1);
+int __cdecl CSS_Mem_TryAllocRaw(int a1, _DWORD *a2);
+int __cdecl CSS_Mem_TryAlloc(int a1, _DWORD *a2);
+int __cdecl CSS_Mem_FreeIfSet(int a1);
+_DWORD * CSS_FileStream_Create(_DWORD *a1, int a2, int a3, int a4);
+_DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5);
+int  CSS_FileStream_FillSequential(int a1);
+int  CSS_FileStream_FillWithLoopWrap(int a1, int a2, int a3, int a4);
+int  CSS_FileStream_FillOneBlock(_DWORD *a1, int a2);
+int  CSS_FileStream_RefillBuffer(_DWORD *a1);
+int  CSS_FileStream_PreloadFully(int a1);
+int  CSS_FileStream_Read(_DWORD *a1, char *a2, int a3);
+BOOL  CSS_FileStream_IsFinished(_DWORD *a1);
+int  CSS_FileStream_QueryDone(int a1);
+signed int  CSS_FileStream_SetLoopRange(_DWORD *a1, int a2, int a3);
+_DWORD * CSS_FileStream_GetLoopRange(_DWORD *result, _DWORD *a2, _DWORD *a3);
+signed int  CSS_FileStream_ClearLoop(_DWORD *a1);
+int  CSS_FileStream_GetSourceBytesFetched(int a1);
+signed int  CSS_FileStream_DispatchIfInRange(int a1, int a2, int a3);
+_DWORD * CSS_FileStream_New(int a1, int a2);
+int CSS_InitStreamingLocks();
+int CSS_StreamService_NoOpHook();
+unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2);
+int  CSS_Channel_FillSilence(int a1, int a2);
+void  CSS_Channel_ServiceStream(unsigned int a1);
+int  CSS_Channel_StoreFormatParams(int a1, int a2);
+void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int a5, int a6);
+int  CSS_SampleCache_FreeEntry(int *a1);
+signed int  CSS_SampleCache_EvictEntry(int **a1);
+int  CSS_SampleCache_MakeRoom(int a1);
+int  CSS_SampleCache_AppendEntry(int result, int a2);
+int  CSS_SampleCache_TouchEntry(int *a1);
+int  CSS_SampleCache_FindAndTouch(int a1);
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels();
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels();
+int __stdcall CSS_StreamReadingThreadProc(int a1);
 _DWORD *__stdcall CSS_PauseStreamReading();
 DWORD __stdcall CSS_ResumeStreamReading();
-int __stdcall sub_46E5D0(int a1);
+int __stdcall CSS_StreamBufferServiceThreadProc(int a1);
 _DWORD *__stdcall CSS_EmptySampleCache();
-void  sub_46E910(unsigned int a1, int a2, int a3, int *a4, int a5, signed int a6);
-int  sub_46E9A0(int *a1, int a2, signed int a3, int a4);
-_DWORD * sub_46EA90(int a1, int a2, _DWORD *a3);
-int  sub_46EB80(int a1, int *a2, int a3, int a4, int a5);
+void  CSS_Channel_StartMemSound(unsigned int a1, int a2, int a3, int *a4, int a5, signed int a6);
+int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4);
+_DWORD * CSS_CreateSampleCacheEntry(int a1, int a2, _DWORD *a3);
+int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5);
 int __stdcall CSS_ResumeStream(int a1);
-int  sub_46ED10(int a1, int a2, int a3, DWORD a4);
+int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4);
 void __stdcall CSS_LoadSample(int a1);
 int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, int a6, signed int a7);
 int __stdcall CSS_PlaySound(int a1, int a2, int a3, signed int a4);
@@ -1937,94 +1937,94 @@ int __stdcall CSS_GetSoundVolume(int a1);
 void __stdcall CSS_SetSoundPanning(int a1, int a2);
 int __stdcall CSS_GetSoundPanning(int a1);
 BOOL __stdcall CSS_IsPlaying(int a1);
-signed int  sub_46F950(int a1, int a2, int a3);
-_DWORD *sub_46FA60();
-int  sub_46FB70(int a1);
-int  sub_46FBC0(int a1);
-int sub_46FC00();
-BOOL sub_46FC30();
-int sub_46FC50();
-int __stdcall sub_46FC80(int a1);
+signed int  CSS_InitVoicePool(int a1, int a2, int a3);
+_DWORD *CSS_ShutdownVoicePool();
+int  CSS_LockAudioThreads(int a1);
+int  CSS_UnlockAudioThreads(int a1);
+int CSS_InitDeviceSearchState();
+BOOL CSS_IsNullSoundDevice();
+int CSS_PollAudioDeviceChange();
+int __stdcall CSS_DeviceSearchThreadProc(int a1);
 int __stdcall CSS_SetDirectSoundHWnd(int a1);
 int __stdcall CSS_SetDeviceSearch(int a1);
-signed int sub_46FE30();
+signed int CSS_ResetDeviceConfigDefaults();
 int __stdcall CSS_SetMasterVolume(int a1);
 void __stdcall CSS_SetDefaults();
-void sub_46FEC0();
+void CSS_ResetDeviceHandleCache();
 void __stdcall CSS_Close();
 int __stdcall CSS_SetFileSystem(int a1);
 signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4);
-unsigned int  sub_470150(unsigned int result);
-int __cdecl sub_4701E0(_DWORD *a1);
-unsigned int __cdecl sub_470220(int a1, char a2);
-signed int sub_470620();
-int __cdecl sub_4707B0(_DWORD *a1);
-int __cdecl sub_4707C0(unsigned int a1);
-unsigned int __cdecl sub_4707F0(_DWORD *a1);
-void __thiscall __noreturn sub_470A00(void *this);
-int __cdecl sub_470A30(int a1);
-int __cdecl sub_470A40(int a1);
-int __cdecl sub_470A50(int a1);
-int  sub_470A60(int a1, int a2);
-int __cdecl sub_470AF0(int a1, int a2);
-int sub_470BD0();
-int __cdecl sub_470BF0(_DWORD *a1);
-int __cdecl sub_470C00(int a1);
-int sub_470C60();
-int sub_470C90();
-int __cdecl sub_470CD0(int a1);
-int __cdecl sub_470CE0(int a1);
-int __cdecl sub_470CF0(int a1);
-int __cdecl sub_470D00(_DWORD *a1);
-int __cdecl sub_470D10(int a1);
-int __cdecl sub_470DC0(int a1);
-void __cdecl sub_470E60(unsigned int a1, int a2);
-void __cdecl sub_470EC0(unsigned int a1, int a2, int a3);
-unsigned int __cdecl sub_470F40(unsigned int a1);
-int __cdecl sub_470F90(unsigned int a1, _DWORD *a2, _DWORD *a3);
-unsigned int __cdecl sub_471030(unsigned int a1);
-unsigned int __cdecl sub_471070(unsigned int a1);
-BOOL __cdecl sub_4710B0(unsigned int a1);
-int __cdecl sub_471100(unsigned int a1, int a2, signed int a3);
-_DWORD * sub_4711F0(_DWORD *result);
-unsigned int __cdecl sub_471260(unsigned int a1, int a2);
-void __cdecl sub_4712A0(unsigned int a1, _DWORD *a2);
-unsigned int __cdecl sub_4712F0(unsigned int a1, int a2);
-unsigned int __cdecl sub_471350(unsigned int a1, _DWORD *a2);
-void __cdecl sub_4713A0(unsigned int a1, int a2);
-void __cdecl sub_471430(unsigned int a1, int a2, signed int a3, int a4, int a5);
-unsigned int __cdecl sub_471480(int a1, signed int a2, int a3);
-_DWORD *__cdecl sub_471560(int a1);
-void __cdecl sub_471610(unsigned int a1, unsigned int a2);
-int __cdecl sub_471800(unsigned int a1, _DWORD *a2);
-void __cdecl sub_471890(unsigned int a1, int a2);
-int __cdecl sub_471910(unsigned int a1, _DWORD *a2);
-void  sub_471990(int a1, int a2);
-unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4, unsigned int a5);
-void __cdecl sub_471B40(unsigned int a1);
-void __cdecl sub_471BA0(unsigned int a1, unsigned int a2);
-char  sub_471BF0(_DWORD *a1);
-int sub_471C40(_DWORD *a1);
-int  sub_471C60(int a1, char a2);
+unsigned int  CSS_TranslateWaveOutError(unsigned int result);
+int __cdecl CSS_QueryWaveOutDevicePresent(_DWORD *a1);
+unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char a2);
+signed int CSS_CloseWaveOutDevice();
+int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *a1);
+int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int a1);
+unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1);
+void __thiscall __noreturn CSS_FatalErrorExit(void *this);
+int __cdecl CSS_GetFormatTableValue(int a1);
+int __cdecl CSS_GetFormatSampleSize(int a1);
+int __cdecl CSS_GetFormatSilenceValue(int a1);
+int  CSS_BuildMixLookupTables(int a1, int a2);
+int __cdecl CSS_InitMixBuffers(int a1, int a2);
+int CSS_FreeMixBuffers();
+int __cdecl CSS_GetMixSampleRate(_DWORD *a1);
+int __cdecl CSS_InitMixChannels(int a1);
+int CSS_FreeMixChannels();
+int CSS_ResetAllMixChannels();
+int __cdecl CSS_SetMixIdleChannelFlag(int a1);
+int __cdecl CSS_SetMixSuspended(int a1);
+int __cdecl CSS_SetMixMasterVolume(int a1);
+int __cdecl CSS_GetMixMasterVolume(_DWORD *a1);
+int __cdecl CSS_BuildVolumeScaleTable(int a1);
+int __cdecl CSS_ResetMixChannelRecord(int a1);
+void __cdecl CSS_StartMixChannelPlayback(unsigned int a1, int a2);
+void __cdecl CSS_SetMixChannelLoopPoints(unsigned int a1, int a2, int a3);
+unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int a1);
+int __cdecl CSS_ChannelGetLoopRange(unsigned int a1, _DWORD *a2, _DWORD *a3);
+unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int a1);
+unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int a1);
+BOOL __cdecl CSS_ChannelIsPlaying(unsigned int a1);
+int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3);
+_DWORD * CSS_AdvanceVolumeFades(_DWORD *result);
+unsigned int __cdecl CSS_ChannelSetRate(unsigned int a1, int a2);
+void __cdecl CSS_ChannelGetRate(unsigned int a1, _DWORD *a2);
+unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int a1, int a2);
+unsigned int __cdecl CSS_ChannelGetVolume(unsigned int a1, _DWORD *a2);
+void __cdecl CSS_ChannelAssignQueueSlot(unsigned int a1, int a2);
+void __cdecl CSS_ChannelQueueSound(unsigned int a1, int a2, signed int a3, int a4, int a5);
+unsigned int __cdecl CSS_QueueSoundDescriptor(int a1, signed int a2, int a3);
+_DWORD *__cdecl CSS_ChannelLoadQueuedSound(int a1);
+void __cdecl CSS_ChannelSetPlayPosition(unsigned int a1, unsigned int a2);
+int __cdecl CSS_ChannelGetPlayPosition(unsigned int a1, _DWORD *a2);
+void __cdecl CSS_ChannelSetPanning(unsigned int a1, int a2);
+int __cdecl CSS_ChannelGetPanning(unsigned int a1, _DWORD *a2);
+void  CSS_TickChannelLevels(int a1, int a2);
+unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int a1, int a2, unsigned int a3, int a4, unsigned int a5);
+void __cdecl CSS_ChannelStop(unsigned int a1);
+void __cdecl CSS_ChannelSetPositionOffset(unsigned int a1, unsigned int a2);
+char  Compat_StringHolderDestructor(_DWORD *a1);
+int Compat_StringHolderFreeText(_DWORD *a1);
+int  Compat_StringHolderScalarDeletingDtor(int a1, char a2);
 static const char *Compat_StringHolderGetText(_DWORD *holder);
 static void Compat_StringHolderCopyText(_DWORD *holder, const char *source);
-_DWORD * sub_471CA0(_DWORD *a1, _DWORD *a2, const char *a3);
-const char ** sub_471D10(const char **a1, const char *a2);
-const char ** sub_471DE0(const char **a1, const char *a2);
-int  sub_471EE0(_DWORD *a1, int a2, int a3);
-const char ** sub_471F10(const char **a1, unsigned int a2);
-int  sub_472120(const char **a1, char a2, signed int a3);
-int  sub_472190(_BYTE **a1);
-int  sub_4721C0(char **a1, signed int a2);
-char ** sub_472230(char **a1, int a2, unsigned int a3, int a4);
-const char ** sub_472320(const char **result, signed int a2, const char *a3);
-_DWORD * sub_472470(_DWORD *result);
+_DWORD * Compat_StringHolderConstructJoined(_DWORD *a1, _DWORD *a2, const char *a3);
+const char ** Compat_StringHolderAppendText(const char **a1, const char *a2);
+const char ** Compat_StringHolderPrependText(const char **a1, const char *a2);
+int  Compat_StringHolderFindSubstringOffset(_DWORD *a1, int a2, int a3);
+const char ** Compat_StringHolderUppercaseInPlace(const char **a1, unsigned int a2);
+int  Compat_StringHolderFindCharFrom(const char **a1, char a2, signed int a3);
+int  Compat_StringHolderFindLastBackslash(_BYTE **a1);
+int  Compat_StringHolderFindLastBackslashBefore(char **a1, signed int a2);
+char ** Compat_StringHolderRemoveRange(char **a1, int a2, unsigned int a3, int a4);
+const char ** Compat_StringHolderInsertTextChecked(const char **result, signed int a2, const char *a3);
+_DWORD * Compat_StringHolderInitBase(_DWORD *result);
 // int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD); weak
 void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3);
-void  __noreturn sub_472584(int a1, int a2, int a3);
-int __fastcall sub_4725B0(int a1, int a2);
-signed int  sub_472620(_DWORD *a1);
-signed int sub_4726C0();
+void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3);
+int __fastcall Mem_InitReserveBlock(int a1, int a2);
+signed int  Mem_HeapAllocWithRetry(_DWORD *a1);
+signed int Mem_FatalOutOfMemory();
 int unknown_libname_4(int a1);
 signed int  sub_472710(int a1, int a2);
 _DWORD * Mem_Realloc(char *a1, unsigned int a2, unsigned int a3);
@@ -8709,9 +8709,9 @@ static void Render_InitRecoveredVtableStorage(void)
     return;
   initialized = 1;
 
-  off_50EC84 = (int)(uintptr_t)&sub_471C60;
-  off_50EC94 = (int)(uintptr_t)&sub_4019C0;
-  off_50ECA4[0] = (int)(uintptr_t)&sub_4016E0;
+  off_50EC84 = (int)(uintptr_t)&Compat_StringHolderScalarDeletingDtor;
+  off_50EC94 = (int)(uintptr_t)&PathEntry_Destruct;
+  off_50ECA4[0] = (int)(uintptr_t)&PathEntryArray_Destruct;
   off_50ECA4[1] = (int)(uintptr_t)&nullsub_16;
 
   off_50ED94[0] = (int)(uintptr_t)&sub_405870;
@@ -8727,86 +8727,86 @@ static void Render_InitRecoveredVtableStorage(void)
   off_50EDB4[4] = (int)(uintptr_t)&sub_405850;
 
   off_50EDD4[0] = (int)(uintptr_t)&sub_405760;
-  off_50EDD4[1] = (int)(uintptr_t)&sub_4055C0;
-  off_50EDD4[2] = (int)(uintptr_t)&sub_4055D0;
-  off_50EDD4[3] = (int)(uintptr_t)&sub_4055E0;
-  off_50EDD4[4] = (int)(uintptr_t)&sub_4055F0;
-  off_50EDD4[5] = (int)(uintptr_t)&sub_405600;
-  off_50EDD4[6] = (int)(uintptr_t)&sub_405610;
-  off_50EDD4[7] = (int)(uintptr_t)&sub_405620;
-  off_50EDD4[8] = (int)(uintptr_t)&sub_401E90;
-  off_50EDD4[9] = (int)(uintptr_t)&sub_401E30;
-  off_50EDD4[10] = (int)(uintptr_t)&sub_405630;
-  off_50EDD4[11] = (int)(uintptr_t)&sub_401FA0;
+  off_50EDD4[1] = (int)(uintptr_t)&Surface_GetReadIncrNotImplemented;
+  off_50EDD4[2] = (int)(uintptr_t)&Surface_GetWriteIncrNotImplemented;
+  off_50EDD4[3] = (int)(uintptr_t)&Surface_DrawPixNotImplemented;
+  off_50EDD4[4] = (int)(uintptr_t)&Surface_GetPixNotImplemented;
+  off_50EDD4[5] = (int)(uintptr_t)&Surface_DrawLineNotImplemented;
+  off_50EDD4[6] = (int)(uintptr_t)&Surface_DrawRectNotImplemented;
+  off_50EDD4[7] = (int)(uintptr_t)&Surface_DrawBoxNotImplemented;
+  off_50EDD4[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  off_50EDD4[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  off_50EDD4[10] = (int)(uintptr_t)&Surface_DotBoxNotImplemented;
+  off_50EDD4[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
   off_50EDD4[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EDD4[13] = (int)(uintptr_t)&sub_402E80;
-  off_50EDD4[14] = (int)(uintptr_t)&sub_401E60;
-  off_50EDD4[15] = (int)(uintptr_t)&sub_405640;
-  off_50EDD4[16] = (int)(uintptr_t)&sub_405650;
+  off_50EDD4[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  off_50EDD4[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
+  off_50EDD4[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
+  off_50EDD4[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
 
-  off_50EE24[0] = (int)(uintptr_t)&sub_403E50;
-  off_50EE24[1] = (int)(uintptr_t)&sub_403EB0;
-  off_50EE24[2] = (int)(uintptr_t)&sub_403EF0;
-  off_50EE24[3] = (int)(uintptr_t)&sub_403F30;
-  off_50EE24[4] = (int)(uintptr_t)&sub_403F50;
-  off_50EE24[5] = (int)(uintptr_t)&sub_403F70;
-  off_50EE24[6] = (int)(uintptr_t)&sub_404040;
-  off_50EE24[7] = (int)(uintptr_t)&sub_4040F0;
-  off_50EE24[8] = (int)(uintptr_t)&sub_401E90;
-  off_50EE24[9] = (int)(uintptr_t)&sub_401E30;
-  off_50EE24[10] = (int)(uintptr_t)&sub_404160;
-  off_50EE24[11] = (int)(uintptr_t)&sub_401FA0;
+  off_50EE24[0] = (int)(uintptr_t)&Surface_DestructRawBuffer;
+  off_50EE24[1] = (int)(uintptr_t)&Surface_ConstructRegionViewA;
+  off_50EE24[2] = (int)(uintptr_t)&Surface_ConstructRegionViewB;
+  off_50EE24[3] = (int)(uintptr_t)&Surface_SetPixel8;
+  off_50EE24[4] = (int)(uintptr_t)&Surface_GetPixel8;
+  off_50EE24[5] = (int)(uintptr_t)&Surface_DrawDashedLine;
+  off_50EE24[6] = (int)(uintptr_t)&Surface_DrawRectOutline;
+  off_50EE24[7] = (int)(uintptr_t)&Surface_FillVerticalSpan;
+  off_50EE24[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  off_50EE24[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  off_50EE24[10] = (int)(uintptr_t)&Surface_FillCheckerPattern;
+  off_50EE24[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
   off_50EE24[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EE24[13] = (int)(uintptr_t)&sub_402E80;
-  off_50EE24[14] = (int)(uintptr_t)&sub_401E60;
-  off_50EE24[15] = (int)(uintptr_t)&sub_405640;
-  off_50EE24[16] = (int)(uintptr_t)&sub_405650;
+  off_50EE24[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  off_50EE24[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
+  off_50EE24[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
+  off_50EE24[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
 
-  off_50EE74[0] = (int)(uintptr_t)&sub_404240;
-  off_50EE74[1] = (int)(uintptr_t)&sub_4042C0;
-  off_50EE74[2] = (int)(uintptr_t)&sub_404330;
-  off_50EE74[3] = (int)(uintptr_t)&sub_4043A0;
-  off_50EE74[4] = (int)(uintptr_t)&sub_4043D0;
-  off_50EE74[5] = (int)(uintptr_t)&sub_404400;
-  off_50EE74[6] = (int)(uintptr_t)&sub_404560;
-  off_50EE74[7] = (int)(uintptr_t)&sub_4045A0;
-  off_50EE74[8] = (int)(uintptr_t)&sub_401E90;
-  off_50EE74[9] = (int)(uintptr_t)&sub_401E30;
-  off_50EE74[10] = (int)(uintptr_t)&sub_4045E0;
-  off_50EE74[11] = (int)(uintptr_t)&sub_401FA0;
+  off_50EE74[0] = (int)(uintptr_t)&Render_DestructScratchSurface;
+  off_50EE74[1] = (int)(uintptr_t)&Surface_ConstructLockedRegionView;
+  off_50EE74[2] = (int)(uintptr_t)&Surface_ConstructPitchRegionView;
+  off_50EE74[3] = (int)(uintptr_t)&Surface_DrawPix;
+  off_50EE74[4] = (int)(uintptr_t)&Surface_GetPix;
+  off_50EE74[5] = (int)(uintptr_t)&Surface_DrawLine;
+  off_50EE74[6] = (int)(uintptr_t)&Surface_DrawRect;
+  off_50EE74[7] = (int)(uintptr_t)&Surface_DrawBox;
+  off_50EE74[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  off_50EE74[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  off_50EE74[10] = (int)(uintptr_t)&Surface_DotBox;
+  off_50EE74[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
   off_50EE74[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EE74[13] = (int)(uintptr_t)&sub_402E80;
+  off_50EE74[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
   off_50EE74[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
-  off_50EE74[15] = (int)(uintptr_t)&sub_405660;
-  off_50EE74[16] = (int)(uintptr_t)&sub_405670;
+  off_50EE74[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
+  off_50EE74[16] = (int)(uintptr_t)&Surface_GetWriteIncrFromStride;
 
-  off_50EEC4[0] = (int)(uintptr_t)&sub_4056B0;
-  off_50EEC4[1] = (int)(uintptr_t)&sub_404AA0;
-  off_50EEC4[2] = (int)(uintptr_t)&sub_404B10;
-  off_50EEC4[3] = (int)(uintptr_t)&sub_404B80;
-  off_50EEC4[4] = (int)(uintptr_t)&sub_4043D0;
-  off_50EEC4[5] = (int)(uintptr_t)&sub_404400;
-  off_50EEC4[6] = (int)(uintptr_t)&sub_404560;
-  off_50EEC4[7] = (int)(uintptr_t)&sub_4045A0;
-  off_50EEC4[8] = (int)(uintptr_t)&sub_401E90;
-  off_50EEC4[9] = (int)(uintptr_t)&sub_401E30;
-  off_50EEC4[10] = (int)(uintptr_t)&sub_4045E0;
-  off_50EEC4[11] = (int)(uintptr_t)&sub_401FA0;
+  off_50EEC4[0] = (int)(uintptr_t)&Surface_Destroy;
+  off_50EEC4[1] = (int)(uintptr_t)&Surface_BeginPixelRead;
+  off_50EEC4[2] = (int)(uintptr_t)&Surface_BeginPixelWrite;
+  off_50EEC4[3] = (int)(uintptr_t)&Surface_DrawPixAndMarkDirty;
+  off_50EEC4[4] = (int)(uintptr_t)&Surface_GetPix;
+  off_50EEC4[5] = (int)(uintptr_t)&Surface_DrawLine;
+  off_50EEC4[6] = (int)(uintptr_t)&Surface_DrawRect;
+  off_50EEC4[7] = (int)(uintptr_t)&Surface_DrawBox;
+  off_50EEC4[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  off_50EEC4[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  off_50EEC4[10] = (int)(uintptr_t)&Surface_DotBox;
+  off_50EEC4[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
   off_50EEC4[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EEC4[13] = (int)(uintptr_t)&sub_402E80;
+  off_50EEC4[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
   off_50EEC4[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
-  off_50EEC4[15] = (int)(uintptr_t)&sub_405660;
-  off_50EEC4[16] = (int)(uintptr_t)&sub_405680;
+  off_50EEC4[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
+  off_50EEC4[16] = (int)(uintptr_t)&Surface_GetWriteIncrAndMarkDirty;
   off_50EEC4[17] = (int)(uintptr_t)&Render_SetPixelFormat;
   off_50EEC4[18] = (int)(uintptr_t)&Render_BeginModeSwitch;
   off_50EEC4[19] = (int)(uintptr_t)&Render_EndModeSwitch;
   off_50EEC4[20] = (int)(uintptr_t)&Render_BlitSurface;
 
-  off_50EF24[0] = (int)(uintptr_t)&sub_4056F0;
-  off_50EF24[1] = (int)(uintptr_t)&sub_405720;
-  off_50EF24[2] = (int)(uintptr_t)&sub_405730;
+  off_50EF24[0] = (int)(uintptr_t)&SurfaceCursor_Destroy;
+  off_50EF24[1] = (int)(uintptr_t)&SurfaceCursor_GetIncrUnbounded;
+  off_50EF24[2] = (int)(uintptr_t)&SurfaceCursor_GetExtentUnbounded;
   off_50EF24[3] = (int)(uintptr_t)&nullsub_19;
-  off_50EF24[4] = (int)(uintptr_t)&sub_405750;
+  off_50EF24[4] = (int)(uintptr_t)&SurfaceCursor_GetOffsetZero;
 }
 
 static int RenderSurface_InvokeSlot60(_DWORD *surface)
@@ -8815,9 +8815,9 @@ static int RenderSurface_InvokeSlot60(_DWORD *surface)
 
   vtable = (unsigned int)surface[46];
   if ( vtable == (unsigned int)(uintptr_t)off_50EEC4 || vtable == (unsigned int)(uintptr_t)off_50EE74 )
-    return sub_405660((int)surface);
+    return Surface_GetReadIncrFromStride((int)surface);
   if ( vtable == (unsigned int)(uintptr_t)off_50EE24 || vtable == (unsigned int)(uintptr_t)off_50EDD4 )
-    return sub_405640();
+    return Surface_GetReadIncrZero();
   return 0;
 }
 
@@ -8827,11 +8827,11 @@ static int RenderSurface_InvokeSlot64(_DWORD *surface)
 
   vtable = (unsigned int)surface[46];
   if ( vtable == (unsigned int)(uintptr_t)off_50EEC4 )
-    return sub_405680(surface);
+    return Surface_GetWriteIncrAndMarkDirty(surface);
   if ( vtable == (unsigned int)(uintptr_t)off_50EE74 )
-    return sub_405670((int)surface);
+    return Surface_GetWriteIncrFromStride((int)surface);
   if ( vtable == (unsigned int)(uintptr_t)off_50EE24 || vtable == (unsigned int)(uintptr_t)off_50EDD4 )
-    return sub_405650();
+    return Surface_GetWriteIncrZero();
   return 0;
 }
 
@@ -9016,12 +9016,12 @@ _UNKNOWN unk_50F000; // weak
 _UNKNOWN unk_50F020; // weak
 int (*off_50F044)() = &sub_405C60; // weak
 _UNKNOWN unk_50F050; // weak
-int (*off_50F0E4)() = &sub_43CF60; // weak
+int (*off_50F0E4)() = &WCIsvListBase_dtorRoot; // weak
 _DWORD (*off_50F0F4)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
-int (*off_50F104[2])() = { &unknown_libname_3, &sub_43CF90 }; // weak
-int (__thiscall *off_50F114)(WCIsvListBase *this) = &sub_43D1E0; // weak
-void *off_50F124 = &sub_43CFF0; // weak
-void *off_50F134 = &sub_43D0C0; // weak
+int (*off_50F104[2])() = { &unknown_libname_3, &WCIsvListBase_dtorFreeOnly }; // weak
+int (__thiscall *off_50F114)(WCIsvListBase *this) = &WCIsvListBase_DestroyElementsAndDtor; // weak
+void *off_50F124 = &WCIsvListBase_dtorVariant124; // weak
+void *off_50F134 = &WCIsvListBase_dtorVariant134; // weak
 _UNKNOWN unk_50F140; // weak
 _UNKNOWN unk_50F160; // weak
 _UNKNOWN unk_50F180; // weak
@@ -9044,7 +9044,7 @@ int (*off_50F204[6])() =
   &DD_GetSurfacePitch,
   &Device_UpdateRect
 }; // weak
-int (*off_50F364[4])() = { &sub_462C90, &sub_462CA0, &sub_462CB0, &sub_462CC0 }; // weak
+int (*off_50F364[4])() = { &IO_StreamAdapterReadBytes, &IO_StreamAdapterIsAtEnd, &IO_StreamAdapterInvokeAtEnd, &IO_StreamAdapterReadStub }; // weak
 _UNKNOWN unk_50F3B0; // weak
 _UNKNOWN unk_50F578; // weak
 IDirectDrawSurface stru_50F60C = { NULL }; // idb
@@ -9053,8 +9053,8 @@ IDirectDrawSurface stru_50F734 = { NULL }; // idb
 IDirectDrawSurface stru_50F740 = { NULL }; // idb
 IDirectDrawSurface2 stru_50F74C = { NULL }; // idb
 IDirectDrawSurface2 stru_50F758 = { NULL }; // idb
-int (*off_50FDD4)() = &sub_464B50; // weak
-int (*off_50FDE4)() = &sub_464FD0; // weak
+int (*off_50FDD4)() = &CAviDecompressor_DestroySourceInterface; // weak
+int (*off_50FDE4)() = &CAviDecompressor_Destroy; // weak
 _UNKNOWN unk_50FE10; // weak
 _UNKNOWN unk_50FE30; // weak
 _UNKNOWN unk_50FEA8; // weak
@@ -9068,22 +9068,22 @@ _UNKNOWN unk_510078; // weak
 _UNKNOWN unk_510084; // weak
 _UNKNOWN unk_510088; // weak
 _UNKNOWN unk_5100BC; // weak
-int (*off_510374[2])() = { &sub_46A010, &sub_46A0A0 }; // weak
+int (*off_510374[2])() = { &AviException_ScalarDeletingDtor, &AviException_GetMessage }; // weak
 _UNKNOWN unk_5103A0; // weak
 int (*off_5105B4[12])() =
 {
-  &sub_46D6E0,
-  &sub_46D7C0,
-  &sub_46D7F0,
-  &sub_46D800,
-  &sub_46D830,
-  &sub_46D870,
-  &sub_46D890,
-  &sub_46D8A0,
-  &sub_46D620,
-  &sub_46D6C0,
-  &sub_462D60,
-  &sub_46D460
+  &CSS_FileStream_Read,
+  &CSS_FileStream_IsFinished,
+  &CSS_FileStream_QueryDone,
+  &CSS_FileStream_SetLoopRange,
+  &CSS_FileStream_GetLoopRange,
+  &CSS_FileStream_ClearLoop,
+  &CSS_FileStream_GetSourceBytesFetched,
+  &CSS_FileStream_DispatchIfInRange,
+  &CSS_FileStream_RefillBuffer,
+  &CSS_FileStream_PreloadFully,
+  &ExcString_GetErrorCodeStub,
+  &CSS_FileStream_Destroy
 }; // weak
 _UNKNOWN unk_5105F0; // weak
 _UNKNOWN unk_510640; // weak
@@ -11631,7 +11631,7 @@ int dword_5193B0 = 128; // weak
 int dword_5193D4 = 128; // weak
 _UNKNOWN unk_519410; // weak
 char *g_CheatTable = "VH[S^]"; // weak
-int (*off_519594)() = &sub_4516B0; // weak
+int (*off_519594)() = &Cheat_FillSelectedSquadWithCannons; // weak
 char *off_519598 = "[_\\]FP^[\\V"; // weak
 int dword_5195F4 = 0; // weak
 __int16 word_519620 = 320; // weak
@@ -11709,7 +11709,7 @@ int dword_519A14 = 34894308; // weak
 char byte_519A18 = '\x05'; // weak
 int (*off_519A40[7])() =
 {
-  &sub_462E40,
+  &CAviDecompressor_ConvertRGB888to565Row,
   (int (*)())0xFF0000,
   (int (*)())0xFF00,
   (int (*)())0xFF,
@@ -11772,7 +11772,7 @@ int dword_519F00 = 0; // weak
 int dword_519F04 = 0; // weak
 int dword_519F08 = 0; // weak
 int dword_519F0C = 0; // weak
-signed int (*off_519F10)() = &sub_4726C0; // weak
+signed int (*off_519F10)() = &Mem_FatalOutOfMemory; // weak
 int dword_519F14 = 0; // weak
 char byte_519F20[] = { '0' }; // weak
 char byte_519F9F[] = { '\0' }; // weak
@@ -13277,7 +13277,7 @@ int App_Shutdown()
 {
   int v0; // ecx
 
-  sub_460580((int)&g_RenderState);
+  RenderState_ReleaseCursorResources((int)&g_RenderState);
   nullsub_4();
   CSS_Close();
   nullsub_2(v0);
@@ -13348,19 +13348,19 @@ char __thiscall DetectGameCDPath(void *this)
     v4 += 2;
   }
   while ( v6 );
-  LOBYTE(DriveTypeA) = sub_442990(v9);
+  LOBYTE(DriveTypeA) = FileSystem_SetInstallRootPath(v9);
   return DriveTypeA;
 }
 
 //----- (004015A0) --------------------------------------------------------
-int  sub_4015A0(_DWORD *a1)
+int  Str_ConstructHolderViaBaseCtor(_DWORD *a1)
 {
   int v2; // ecx
   int result; // eax
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   result = v2;
   *(_DWORD *)(v2 + 4) = &off_50EC94;
   return result;
@@ -13370,7 +13370,7 @@ int  sub_4015A0(_DWORD *a1)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004015D0) --------------------------------------------------------
-_DWORD * sub_4015D0(_DWORD *result)
+_DWORD * Str_ConstructHolderInline(_DWORD *result)
 {
   *result = 0;
   result[1] = &off_50EC84;
@@ -13381,7 +13381,7 @@ _DWORD * sub_4015D0(_DWORD *result)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00401600) --------------------------------------------------------
-_BYTE * sub_401600(_BYTE *result)
+_BYTE * Mem_ZeroFourByteGlobal(_BYTE *result)
 {
   *result = 0;
   result[1] = 0;
@@ -13391,14 +13391,14 @@ _BYTE * sub_401600(_BYTE *result)
 }
 
 //----- (00401610) --------------------------------------------------------
-int __thiscall sub_401610(void *this)
+int __thiscall PathEntryArray_ConstructCapacity256(void *this)
 {
   return _wcpp_4_ctor_array__(this, 256);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401640) --------------------------------------------------------
-int * sub_401640(int *a1, _DWORD *a2, int a3)
+int * PathEntryArray_CopyConstruct(int *a1, _DWORD *a2, int a3)
 {
   int v4; // eax
   int v6; // edi
@@ -13435,7 +13435,7 @@ int * sub_401640(int *a1, _DWORD *a2, int a3)
     v10 = (_DWORD *)(v9 + *a2);
     v11 = (_DWORD *)(v9 + *a1);
     *v11 = *v10;
-    sub_471BF0(v11 + 1);
+    Compat_StringHolderDestructor(v11 + 1);
     v11[3] = v10[3];
     ++v6;
     v9 += 16;
@@ -13447,7 +13447,7 @@ int * sub_401640(int *a1, _DWORD *a2, int a3)
 // 50ECA4: using guessed type int (*off_50ECA4[2])();
 
 //----- (004016E0) --------------------------------------------------------
-int  sub_4016E0(_DWORD *a1, char a2)
+int  PathEntryArray_Destruct(_DWORD *a1, char a2)
 {
   int v2; // ecx
   char v3; // dl
@@ -13462,7 +13462,7 @@ int  sub_4016E0(_DWORD *a1, char a2)
   else
   {
     a1[4] = off_50ECA4;
-    sub_401720(a1);
+    PathEntryArray_DestructElements(a1);
     if ( (v3 & 2) != 0 )
       j__nfree_();
     return v2;
@@ -13475,7 +13475,7 @@ int  sub_4016E0(_DWORD *a1, char a2)
 // 50ECA4: using guessed type int (*off_50ECA4[2])();
 
 //----- (00401720) --------------------------------------------------------
-_DWORD * sub_401720(_DWORD *result)
+_DWORD * PathEntryArray_DestructElements(_DWORD *result)
 {
   _DWORD *v1; // ecx
   int v2; // edi
@@ -13500,12 +13500,12 @@ _DWORD * sub_401720(_DWORD *result)
         v5 = v1[4];
         v7 = 0;
         v8 = &off_50EC84;
-        sub_471BF0(&v7);
+        Compat_StringHolderDestructor(&v7);
         v8 = &off_50EC94;
         v9 = *(_DWORD *)(v4 + 12);
         (*(void (**)(void))(v5 + 4))();
         ++v2;
-        sub_471C60((int)&v7, 0);
+        Compat_StringHolderScalarDeletingDtor((int)&v7, 0);
         v3 += 16;
       }
       while ( v2 < v1[2] );
@@ -13525,7 +13525,7 @@ _DWORD * sub_401720(_DWORD *result)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004017D0) --------------------------------------------------------
-int  sub_4017D0(int *a1, int a2)
+int  PathEntryArray_GrowByDelta(int *a1, int a2)
 {
   bool v4; // zf
   int v6; // eax
@@ -13578,7 +13578,7 @@ int  sub_4017D0(int *a1, int a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00401890) --------------------------------------------------------
-_DWORD * sub_401890(_DWORD *result, int a2, int a3)
+_DWORD * PathEntryArray_RemoveAt(_DWORD *result, int a2, int a3)
 {
   _DWORD *v3; // ebp
   int v6; // edi
@@ -13603,7 +13603,7 @@ _DWORD * sub_401890(_DWORD *result, int a2, int a3)
     v14 = &off_50EC94;
     v15 = v11[3];
     (*(void (__cdecl **)(int))(v10 + 4))(v12);
-    result = (_DWORD *)sub_471C60((int)&v13, 0);
+    result = (_DWORD *)Compat_StringHolderScalarDeletingDtor((int)&v13, 0);
   }
   a2 += 1;
   if ( a2 < v3[2] )
@@ -13631,7 +13631,7 @@ _DWORD * sub_401890(_DWORD *result, int a2, int a3)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00401940) --------------------------------------------------------
-_DWORD * sub_401940(int a1)
+_DWORD * Mem_ZeroFieldOffset316(int a1)
 {
   _DWORD *v1; // eax
 
@@ -13641,7 +13641,7 @@ _DWORD * sub_401940(int a1)
 }
 
 //----- (00401970) --------------------------------------------------------
-int  sub_401970(_DWORD *a1, _DWORD *a2)
+int  PathEntry_CopyConstruct(_DWORD *a1, _DWORD *a2)
 {
   *a1 = *a2;
   a1[1] = 0;
@@ -13655,7 +13655,7 @@ int  sub_401970(_DWORD *a1, _DWORD *a2)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (004019C0) --------------------------------------------------------
-int  sub_4019C0(int a1, char a2)
+int  PathEntry_Destruct(int a1, char a2)
 {
   int result; // eax
   int v4; // ecx
@@ -13669,7 +13669,7 @@ int  sub_4019C0(int a1, char a2)
   }
   else
   {
-    result = sub_471C60(a1, 1);
+    result = Compat_StringHolderScalarDeletingDtor(a1, 1);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -13683,7 +13683,7 @@ int  sub_4019C0(int a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00401A00) --------------------------------------------------------
-int  sub_401A00(_DWORD *a1)
+int  PathEntry_ConstructDefault(_DWORD *a1)
 {
   _DWORD *v1; // eax
   int v2; // ecx
@@ -13693,7 +13693,7 @@ int  sub_401A00(_DWORD *a1)
   a1[1] = 0;
   v1 = a1 + 1;
   v1[1] = &off_50EC84;
-  sub_471BF0(v1);
+  Compat_StringHolderDestructor(v1);
   result = v2 - 4;
   *(_DWORD *)(v2 + 4) = &off_50EC94;
   *(_DWORD *)(v2 - 4 + 12) = 0;
@@ -13708,13 +13708,13 @@ __int16 Render_LoadResourceBackbuffer()
 {
   Render_InitRecoveredVtableStorage();
   dword_51D4B8 = (int)off_50EF24;
-  sub_404660((int)&unk_51D4C0);
+  Surface_ConstructBackbufferInstance((int)&unk_51D4C0);
   CRT_RegisterFinalizableObject((int)&unk_511210, 640);
-  sub_401E00((int)&unk_51D9A0, 640, 480);
+  Render_ConstructSurfaceObject((int)&unk_51D9A0, 640, 480);
   CRT_RegisterFinalizableObject((int)&unk_511220, 256);
   _wcpp_4_ctor_array__((int)&unk_51DA60, 256);
   byte_51E265 = 0;
-  return (unsigned __int8)sub_401D10((int)byte_51DE60);
+  return (unsigned __int8)Palette_BuildGrayscaleIdentityTable((int)byte_51DE60);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -13723,7 +13723,7 @@ __int16 Render_LoadResourceBackbuffer()
 // 51E265: using guessed type char byte_51E265;
 
 //----- (00401AB0) --------------------------------------------------------
-_BYTE * sub_401AB0(_BYTE *result, char a2)
+_BYTE * Palette_QuantizeChannelsInPlace(_BYTE *result, char a2)
 {
   _BYTE *v2; // ecx
   int v3; // edx
@@ -13744,7 +13744,7 @@ _BYTE * sub_401AB0(_BYTE *result, char a2)
 }
 
 //----- (00401AF0) --------------------------------------------------------
-int  sub_401AF0(intptr_t a1, intptr_t a2)
+int  Palette_LoadFromQueryHandle(intptr_t a1, intptr_t a2)
 {
   int *palette_table;
 
@@ -13757,7 +13757,7 @@ int  sub_401AF0(intptr_t a1, intptr_t a2)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401B20) --------------------------------------------------------
-int  sub_401B20(int a1, int a2, int a3)
+int  Palette_ExpandRGBTripletsToTable(int a1, int a2, int a3)
 {
   int palette_offset;
   int write_ptr;
@@ -13785,7 +13785,7 @@ int  sub_401B20(int a1, int a2, int a3)
 }
 
 //----- (00401BA0) --------------------------------------------------------
-int  sub_401BA0(int a1, const char *palette_name, DWORD a3)
+int  LoadPalPCX(int a1, const char *palette_name, DWORD a3)
 {
   char path[256]; // [esp+0h] [ebp-114h] BYREF
   int query_handle; // [esp+100h] [ebp-14h] BYREF
@@ -13794,9 +13794,9 @@ int  sub_401BA0(int a1, const char *palette_name, DWORD a3)
   Debug_Log(63, (DWORD)(uintptr_t)palette_name, (DWORD)a1, (int)a_loadpalpcxS0x);
   strcpy(path, aGfx_7);
   strcat(path, palette_name);
-  query_handle = sub_4427F0(path, 1);
+  query_handle = FileSystem_ResolveReadPath(path, 1);
   sub_479CB0(query_handle, -0x300);
-  sub_401B20(a1, query_handle, 0);
+  Palette_ExpandRGBTripletsToTable(a1, query_handle, 0);
   return sub_473EE0((int)&dword_543CC8, &query_handle);
 }
 
@@ -13811,9 +13811,9 @@ int  LoadPalCOL(int a1, intptr_t a2, DWORD a3)
   Debug_Log(63, a1, a3, (int)a_loadpalcolS0x);
   strcpy(path, aGfx_0);
   strcat(path, palette_name);
-  query_handle = sub_4427F0(path, 1);
+  query_handle = FileSystem_ResolveReadPath(path, 1);
   sub_479CB0(query_handle, 8);
-  sub_401B20(a1, query_handle, 0);
+  Palette_ExpandRGBTripletsToTable(a1, query_handle, 0);
   return sub_473EE0((int)&dword_543CC8, &query_handle);
 }
 
@@ -13829,7 +13829,7 @@ static int Compat_LoadPalCOLIntoTable(int *palette_table, const char *palette_na
     return 0;
   strcpy(path, aGfx_0);
   strcat(path, palette_name);
-  query_handle = sub_4427F0(path, 1);
+  query_handle = FileSystem_ResolveReadPath(path, 1);
   sub_479CB0(query_handle, 8);
   Compat_QueryRead(query_handle, palette_bytes, sizeof(palette_bytes));
   for ( palette_index = 0; palette_index < 256; ++palette_index )
@@ -13843,13 +13843,13 @@ static int Compat_LoadPalCOLIntoTable(int *palette_table, const char *palette_na
 }
 
 //----- (00401CE0) --------------------------------------------------------
-int  sub_401CE0(int a1, unsigned __int8 *a2)
+int  Render_ApplyColorTripletBytes(int a1, unsigned __int8 *a2)
 {
-  return sub_462890(a1, *a2, a2[1], a2[2]);
+  return Palette_QueryNearestColorIndex(a1, *a2, a2[1], a2[2]);
 }
 
 //----- (00401D10) --------------------------------------------------------
-int  sub_401D10(int a1)
+int  Palette_BuildGrayscaleIdentityTable(int a1)
 {
   int v1; // edx
   int v2; // ecx
@@ -13871,7 +13871,7 @@ int  sub_401D10(int a1)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00401D60) --------------------------------------------------------
-_BYTE * sub_401D60(_BYTE *result, _BYTE *a2, unsigned int a3)
+_BYTE * Str_CompactSkippingZeroBytes(_BYTE *result, _BYTE *a2, unsigned int a3)
 {
   unsigned int i; // ecx
 
@@ -13910,7 +13910,7 @@ void __cdecl __noreturn App_RequestQuit(int a1)
 }
 
 //----- (00401E00) --------------------------------------------------------
-_DWORD * sub_401E00(int a1, __int16 a2, __int16 a3)
+_DWORD * Render_ConstructSurfaceObject(int a1, __int16 a2, __int16 a3)
 {
   _DWORD *v3; // eax
   _DWORD *v4; // eax
@@ -13926,19 +13926,19 @@ _DWORD * sub_401E00(int a1, __int16 a2, __int16 a3)
 // 50EDD4: using guessed type int (*off_50EDD4[5])();
 
 //----- (00401E30) --------------------------------------------------------
-int  sub_401E30(_DWORD *a1)
+int  Render_ClearGameScreen(_DWORD *a1)
 {
   return Render_FillRect(a1, &unk_51D4C0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
 }
 
 //----- (00401E60) --------------------------------------------------------
-int  sub_401E60(unsigned __int16 *a1)
+int  Surface_ClearWholeArea(unsigned __int16 *a1)
 {
   return (*(int (__fastcall **)(_DWORD, _DWORD, int))(*((_DWORD *)a1 + 46) + 32))(0, 0, a1[1] * *a1);
 }
 
 //----- (00401E90) --------------------------------------------------------
-int  sub_401E90(int a1, unsigned int a2)
+int  Render_FillClippedScanlines(int a1, unsigned int a2)
 {
   unsigned __int8 v3; // cl
   unsigned int v4; // eax
@@ -13989,7 +13989,7 @@ int  sub_401E90(int a1, unsigned int a2)
 // 51D4B8: using guessed type int dword_51D4B8;
 
 //----- (00401FA0) --------------------------------------------------------
-int  sub_401FA0(
+int  Render_BlitRectViaVirtualSurfaces(
         int a1,
         int a2,
         int a3,
@@ -14069,11 +14069,11 @@ int  Render_LoadPCXImage(int a1, char *a2, int a3, uintptr_t a4)
 
   strcpy(path, aGfx_8);
   strcat(path, a2);
-  query_handle = sub_4427F0(path, 1);
+  query_handle = FileSystem_ResolveReadPath(path, 1);
   if ( !query_handle )
     return 0;
 
-  file_size = (unsigned int)sub_4427C0(query_handle);
+  file_size = (unsigned int)IO_QueryVTableStreamSize(query_handle);
   if ( !file_size )
   {
     sub_473EE0((int)&dword_543CC8, &query_handle);
@@ -14339,10 +14339,10 @@ int  Render_FillRect(
     temp_surface = (_DWORD *)Mem_Alloc(196, 0, 0, 0);
     if ( !temp_surface )
       return 0;
-    sub_4041D0((int)temp_surface, v30, 1u, v38);
+    Render_ConstructScratchSurface((int)temp_surface, v30, 1u, v38);
     Render_FillRect(v8, temp_surface, (unsigned __int16)v47, (unsigned __int16)v46, a5, a6, 0, 0);
     Render_FillRect(temp_surface, v9, 0, 0, LOWORD(temp_surface[0]) - 1, HIWORD(temp_surface[0]) - 1, a7, a8);
-    return sub_404240(temp_surface, 2);
+    return Render_DestructScratchSurface(temp_surface, 2);
   }
   else
   {
@@ -14398,7 +14398,7 @@ int  Render_FillRect(
 // 51D4B8: using guessed type int dword_51D4B8;
 
 //----- (00402850) --------------------------------------------------------
-int  sub_402850(
+int  Render_BlitSurfaceRect(
         _DWORD *a1,
         _DWORD *a2,
         int a3,
@@ -14488,10 +14488,10 @@ int  sub_402850(
   }
   else if ( g_MousePresentAtStartup && (v8 == (_DWORD *)&unk_51D4C0 || v9 == (_DWORD *)&unk_51D4C0) )
   {
-    sub_4041D0((int)v39, v50, 1u, v41);
+    Render_ConstructScratchSurface((int)v39, v50, 1u, v41);
     Render_FillRect(v8, v39, (unsigned __int16)v56, (unsigned __int16)v55, a5, a6, 0, 0);
-    sub_402850(v39, v9, 0, 0, LOWORD(v39[0]) - 1, HIWORD(v39[0]) - 1, a7, a8);
-    return sub_404240(v39, 0);
+    Render_BlitSurfaceRect(v39, v9, 0, 0, LOWORD(v39[0]) - 1, HIWORD(v39[0]) - 1, a7, a8);
+    return Render_DestructScratchSurface(v39, 0);
   }
   else
   {
@@ -14525,7 +14525,7 @@ int  sub_402850(
         (*(void (__fastcall **)(unsigned int))(dword_51D4B8 + 16))(v21);
         (*(void (**)(void))(*(_DWORD *)v43 + 16))();
         v22 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)v54 + 16))();
-        sub_401D60((_BYTE *)v22, (_BYTE *)HIDWORD(v22), v23);
+        Str_CompactSkippingZeroBytes((_BYTE *)v22, (_BYTE *)HIDWORD(v22), v23);
         (*(void (__fastcall **)(int, int))(*(_DWORD *)v54 + 12))(v24, v24);
         (*(void (__fastcall **)(int, int))(*(_DWORD *)v43 + 12))(v25, v25);
         (*(void (__fastcall **)(int, int))(dword_51D4B8 + 12))(v26, v26);
@@ -14621,10 +14621,10 @@ int  Render_BlendSurfaceRect(
   v37 = a7 - a5 + 1;
   if ( g_MousePresentAtStartup && v10 == (_DWORD *)&unk_51D4C0 )
   {
-    sub_4041D0((int)v26, v32, 1u, v37);
+    Render_ConstructScratchSurface((int)v26, v32, 1u, v37);
     Render_BlendSurfaceRect(v26, a2, v33, v30, v29, v35, v38, 0, 0, a10);
     Render_FillRect(v26, v10, 0, 0, LOWORD(v26[0]) - 1, HIWORD(v26[0]) - 1, a8, a9);
-    return sub_404240(v26, 0);
+    return Render_DestructScratchSurface(v26, 0);
   }
   else
   {
@@ -14668,7 +14668,7 @@ int  Render_BlendSurfaceRect(
         v31 = v22;
         (*(void (**)(void))(v23 + 16))();
         v24 = ((__int64 (*)(void))*(_DWORD *)(*v40 + 16))();
-        sub_4629E1((char *)v24, (char *)HIDWORD(v24), v31, v21);
+        Palette_BlendIndexedPixelRun((char *)v24, (char *)HIDWORD(v24), v31, v21);
         (*(void (**)(void))(*v40 + 12))();
         (*(void (**)(void))(*(_DWORD *)v13 + 12))();
         (*(void (**)(void))(*(_DWORD *)v39 + 12))();
@@ -14690,7 +14690,7 @@ int  Render_BlendSurfaceRect(
 
 //----- (00402E80) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
-int  sub_402E80(
+int  Render_BlitCompressedSpriteRLE(
         int a1,
         int a2,
         int a3,
@@ -15111,7 +15111,7 @@ LABEL_40:
                 v141 = v131;
                 (*(void (**)(void))(v130[0] + 16))();
                 v90 = ((__int64 (*)(void))*(_DWORD *)(**(_DWORD **)((char *)&retaddr + 2) + 16))();
-                sub_4629E1((char *)v90, (char *)HIDWORD(v90), v141, v89);
+                Palette_BlendIndexedPixelRun((char *)v90, (char *)HIDWORD(v90), v141, v89);
                 (*(void (**)(void))(**(_DWORD **)((char *)&retaddr + 2) + 12))();
                 (*(void (**)(void))(v130[0] + 12))();
                 v131 += v89;
@@ -15172,7 +15172,7 @@ LABEL_40:
               v98 = *v162;
               qmemcpy(v167, v97, v99);
               if ( v96 > 1 || *v168 != v98[3] )
-                sub_462B0B(v167, v96, *v98, v98[1], v98[2]);
+                Palette_OffsetIndexedPixelsRGB(v167, v96, *v98, v98[1], v98[2]);
               (*(void (**)(void))(*(_DWORD *)v158 + 12))();
               v131 += v96;
               (*(void (__fastcall **)(int, int))(dword_51D4B8 + 12))(dword_51D4B8, v96);
@@ -15432,7 +15432,7 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
   _DWORD *surface;
   unsigned int pixel_count;
 
-  surface = sub_401E00(a1, a2, a3);
+  surface = Render_ConstructSurfaceObject(a1, a2, a3);
   surface[46] = off_50EE24;
   pixel_count = (unsigned __int16)*(unsigned __int16 *)surface * (unsigned __int16)*((unsigned __int16 *)surface + 1);
   surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
@@ -15451,7 +15451,7 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
 // 50EE24: using guessed type int (*off_50EE24[5])();
 
 //----- (00403E50) --------------------------------------------------------
-int  sub_403E50(int a1, char a2)
+int  Surface_DestructRawBuffer(int a1, char a2)
 {
   int result; // eax
 
@@ -15477,7 +15477,7 @@ int  sub_403E50(int a1, char a2)
 // 50EE24: using guessed type int (*off_50EE24[5])();
 
 //----- (00403EB0) --------------------------------------------------------
-_DWORD * sub_403EB0(int a1, int a2, DWORD a3)
+_DWORD * Surface_ConstructRegionViewA(int a1, int a2, DWORD a3)
 {
   _DWORD *result; // eax
   int v5; // edx
@@ -15503,7 +15503,7 @@ _DWORD * sub_403EB0(int a1, int a2, DWORD a3)
 // 50ED94: using guessed type int (*off_50ED94[5])();
 
 //----- (00403EF0) --------------------------------------------------------
-_DWORD * sub_403EF0(int a1, int a2, DWORD a3)
+_DWORD * Surface_ConstructRegionViewB(int a1, int a2, DWORD a3)
 {
   _DWORD *result; // eax
   int v5; // edx
@@ -15529,7 +15529,7 @@ _DWORD * sub_403EF0(int a1, int a2, DWORD a3)
 // 50ED94: using guessed type int (*off_50ED94[5])();
 
 //----- (00403F30) --------------------------------------------------------
-int  sub_403F30(unsigned __int16 *a1, int a2, char a3, int a4)
+int  Surface_SetPixel8(unsigned __int16 *a1, int a2, char a3, int a4)
 {
   int result; // eax
 
@@ -15539,13 +15539,13 @@ int  sub_403F30(unsigned __int16 *a1, int a2, char a3, int a4)
 }
 
 //----- (00403F50) --------------------------------------------------------
-int  sub_403F50(unsigned __int16 *a1, int a2, int a3)
+int  Surface_GetPixel8(unsigned __int16 *a1, int a2, int a3)
 {
   return *(unsigned __int8 *)(a2 + a3 * *a1 + *((_DWORD *)a1 + 1));
 }
 
 //----- (00403F70) --------------------------------------------------------
-_BYTE * sub_403F70(
+_BYTE * Surface_DrawDashedLine(
         unsigned __int16 *a1,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -15612,7 +15612,7 @@ _BYTE * sub_403F70(
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00404040) --------------------------------------------------------
-int  sub_404040(
+int  Surface_DrawRectOutline(
         unsigned __int16 *a1,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -15657,7 +15657,7 @@ int  sub_404040(
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (004040F0) --------------------------------------------------------
-unsigned __int16 * sub_4040F0(
+unsigned __int16 * Surface_FillVerticalSpan(
         unsigned __int16 *result,
         int a2,
         unsigned __int16 a3,
@@ -15688,7 +15688,7 @@ unsigned __int16 * sub_4040F0(
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00404160) --------------------------------------------------------
-__int16  sub_404160(
+__int16  Surface_FillCheckerPattern(
         unsigned __int16 *a1,
         int a2,
         int a3,
@@ -15719,7 +15719,7 @@ __int16  sub_404160(
 }
 
 //----- (004041D0) --------------------------------------------------------
-_DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
+_DWORD * Render_ConstructScratchSurface(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
 {
   int v5; // edi
   _DWORD *result; // eax
@@ -15729,7 +15729,7 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
   int render_context; // edx
 
   v5 = a2;
-  result = sub_401E00(a1, a2, a4);
+  result = Render_ConstructSurfaceObject(a1, a2, a4);
   v8 = result;
   result[46] = off_50EE74;
   if ( a3 )
@@ -15756,7 +15756,7 @@ _DWORD * sub_4041D0(int a1, unsigned __int16 a2, DWORD a3, __int16 a4)
 // 51D584: using guessed type int dword_51D584;
 
 //----- (00404240) --------------------------------------------------------
-int  sub_404240(_DWORD *a1, char a2)
+int  Render_DestructScratchSurface(_DWORD *a1, char a2)
 {
   int owned_buffer; // edx
   int result; // eax
@@ -15787,7 +15787,7 @@ int  sub_404240(_DWORD *a1, char a2)
 // 50EE74: using guessed type int (*off_50EE74[5])();
 
 //----- (004042C0) --------------------------------------------------------
-int  sub_4042C0(int a1, int a2, int a3, DWORD a4)
+int  Surface_ConstructLockedRegionView(int a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   int v6; // ecx
@@ -15818,7 +15818,7 @@ int  sub_4042C0(int a1, int a2, int a3, DWORD a4)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (00404330) --------------------------------------------------------
-int  sub_404330(int a1, int a2, int a3, DWORD a4)
+int  Surface_ConstructPitchRegionView(int a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   int v6; // ecx
@@ -15849,7 +15849,7 @@ int  sub_404330(int a1, int a2, int a3, DWORD a4)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (004043A0) --------------------------------------------------------
-int  sub_4043A0(int a1, int a2)
+int  Surface_DrawPix(int a1, int a2)
 {
   int v2; // esi
   int v3; // ecx
@@ -15866,7 +15866,7 @@ int  sub_4043A0(int a1, int a2)
 // 4043B3: variable 'v5' is possibly undefined
 
 //----- (004043D0) --------------------------------------------------------
-int  sub_4043D0(int a1, int a2, int a3)
+int  Surface_GetPix(int a1, int a2, int a3)
 {
   int v3; // eax
   int v4; // edx
@@ -15886,7 +15886,7 @@ int  sub_4043D0(int a1, int a2, int a3)
 // 4043F3: variable 'v7' is possibly undefined
 
 //----- (00404400) --------------------------------------------------------
-unsigned __int16  sub_404400(
+unsigned __int16  Surface_DrawLine(
         int a1,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -15959,7 +15959,7 @@ unsigned __int16  sub_404400(
 // 404548: variable 'v16' is possibly undefined
 
 //----- (00404560) --------------------------------------------------------
-int  sub_404560(
+int  Surface_DrawRect(
         int a1,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -15976,7 +15976,7 @@ int  sub_404560(
 // 40458C: variable 'v7' is possibly undefined
 
 //----- (004045A0) --------------------------------------------------------
-int  sub_4045A0(
+int  Surface_DrawBox(
         int a1,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -15993,7 +15993,7 @@ int  sub_4045A0(
 // 4045CE: variable 'v7' is possibly undefined
 
 //----- (004045E0) --------------------------------------------------------
-int  sub_4045E0(int result, int a2, int a3, int a4, int a5, int a6)
+int  Surface_DotBox(int result, int a2, int a3, int a4, int a5, int a6)
 {
   int v6; // edi
   int j; // esi
@@ -16022,11 +16022,11 @@ int  Render_UnlockBackbuffer(int a1)
 }
 
 //----- (00404660) --------------------------------------------------------
-int  sub_404660(int a1)
+int  Surface_ConstructBackbufferInstance(int a1)
 {
   int palette_array;
 
-  palette_array = (int)sub_4041D0(a1, 0x280u, 0, 480) + 0xDC;
+  palette_array = (int)Render_ConstructScratchSurface(a1, 0x280u, 0, 480) + 0xDC;
   *(_DWORD *)(palette_array - 24) = 0;
   *(_DWORD *)(palette_array - 20) = 1;
   *(_DWORD *)(palette_array - 16) = 1;
@@ -16121,7 +16121,7 @@ int  Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4)
       if ( hr )
         sub_4741F0(hr, 0);
     }
-    return sub_404C80((int *)a1, (const void *)(a1 + 220));
+    return Palette_ApplyWithBrightnessOffset((int *)a1, (const void *)(a1 + 220));
   }
   else
   {
@@ -16347,7 +16347,7 @@ _DWORD * Render_BlitSurface(_DWORD *result, int a2, char a3, DWORD a4)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00404A40) --------------------------------------------------------
-int  sub_404A40(int a1, int a2)
+int  Surface_SwapDirtyTrackingFlag(int a1, int a2)
 {
   int v3; // edx
 
@@ -16369,13 +16369,13 @@ int * Render_ReleaseTempSurface(int *result)
     (*(void (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(v2 + 164) + 124))(
       *(_DWORD *)(v2 + 164),
       *(_DWORD *)(result[49] + 16));
-    return (int *)sub_404C80(v1, v1 + 55);
+    return (int *)Palette_ApplyWithBrightnessOffset(v1, v1 + 55);
   }
   return result;
 }
 
 //----- (00404AA0) --------------------------------------------------------
-int  sub_404AA0(int a1, int a2, int a3, DWORD a4)
+int  Surface_BeginPixelRead(int a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   int v6; // ecx
@@ -16406,7 +16406,7 @@ int  sub_404AA0(int a1, int a2, int a3, DWORD a4)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (00404B10) --------------------------------------------------------
-int  sub_404B10(int a1, int a2, int a3, DWORD a4)
+int  Surface_BeginPixelWrite(int a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   int v6; // ecx
@@ -16437,11 +16437,11 @@ int  sub_404B10(int a1, int a2, int a3, DWORD a4)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (00404B80) --------------------------------------------------------
-int  sub_404B80(int a1, int a2)
+int  Surface_DrawPixAndMarkDirty(int a1, int a2)
 {
   int result; // eax
 
-  result = sub_4043A0(a1, a2);
+  result = Surface_DrawPix(a1, a2);
   *(_DWORD *)(a1 + 200) = 1;
   return result;
 }
@@ -16471,14 +16471,14 @@ int  Render_SaveBackbuffer(int a1)
 }
 
 //----- (00404BC0) --------------------------------------------------------
-int  sub_404BC0(int result, int a2)
+int  Palette_SetBrightnessOffset(int result, int a2)
 {
   *(_DWORD *)(result + 216) = a2;
   return result;
 }
 
 //----- (00404C80) --------------------------------------------------------
-int  sub_404C80(int *a1, const void *a2)
+int  Palette_ApplyWithBrightnessOffset(int *a1, const void *a2)
 {
   unsigned char *palette_bytes;
   unsigned int converted_palette[256];
@@ -16523,26 +16523,26 @@ int  sub_404C80(int *a1, const void *a2)
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00404D90) --------------------------------------------------------
-int  sub_404D90(int *a1)
+int  Palette_ApplyDefaultPalette(int *a1)
 {
-  return sub_404C80(a1, &unk_51DA60);
+  return Palette_ApplyWithBrightnessOffset(a1, &unk_51DA60);
 }
 
 //----- (00404DA0) --------------------------------------------------------
-int * sub_404DA0(int *result, unsigned __int8 *a2, signed int a3)
+int * Palette_CrossfadeToTarget(int *result, unsigned __int8 *a2, signed int a3)
 {
   int *v3; // ebp
   signed int i; // esi
   int v5; // ecx
 
   v3 = result;
-  for ( i = 0; i <= a3; result = (int *)sub_404DE0(v3, a2, v5, a3) )
+  for ( i = 0; i <= a3; result = (int *)Palette_CrossfadeStep(v3, a2, v5, a3) )
     v5 = i++;
   return result;
 }
 
 //----- (00404DE0) --------------------------------------------------------
-int  sub_404DE0(int *a1, unsigned __int8 *a2, int a3, signed int a4)
+int  Palette_CrossfadeStep(int *a1, unsigned __int8 *a2, int a3, signed int a4)
 {
   unsigned __int8 *v6; // ecx
   int *v7; // esi
@@ -16565,12 +16565,12 @@ int  sub_404DE0(int *a1, unsigned __int8 *a2, int a3, signed int a4)
     *(v7 - 1) = v12;
   }
   while ( v6 != a2 + 1024 );
-  sub_404C80(a1, a1 + 55);
+  Palette_ApplyWithBrightnessOffset(a1, a1 + 55);
   return Render_SaveBackbuffer((int)a1);
 }
 
 //----- (00404F20) --------------------------------------------------------
-int  sub_404F20(int *a1, signed int a2)
+int  Palette_FadeOutToBlack(int *a1, signed int a2)
 {
   _DWORD *v3; // esi
   int result; // eax
@@ -16614,7 +16614,7 @@ int  sub_404F20(int *a1, signed int a2)
         *(v7 - 1) = v13;
       }
       while ( v6 != (unsigned __int8 *)source_palette + sizeof(source_palette) );
-      sub_404C80(v12, v14);
+      Palette_ApplyWithBrightnessOffset(v12, v14);
       --v5;
       result = Render_SaveBackbuffer((int)v12);
     }
@@ -16625,7 +16625,7 @@ int  sub_404F20(int *a1, signed int a2)
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
 
 //----- (00405020) --------------------------------------------------------
-int * sub_405020(int *result, unsigned __int8 *a2, signed int a3)
+int * Palette_FadeInFromBlack(int *result, unsigned __int8 *a2, signed int a3)
 {
   signed int v4; // ecx
   unsigned __int8 *v5; // ebx
@@ -16653,7 +16653,7 @@ int * sub_405020(int *result, unsigned __int8 *a2, signed int a3)
         *(v6 - 1) = v10;
       }
       while ( v5 != a2 + 1024 );
-      sub_404C80(v7, v9);
+      Palette_ApplyWithBrightnessOffset(v7, v9);
       ++v4;
       result = (int *)Render_SaveBackbuffer((int)v7);
     }
@@ -16664,7 +16664,7 @@ int * sub_405020(int *result, unsigned __int8 *a2, signed int a3)
 // 405086: variable 'v4' is possibly undefined
 
 //----- (004050F0) --------------------------------------------------------
-void * sub_4050F0(int *a1, int a2, char a3, DWORD a4)
+void * Video_EnterGreyscaleTransition(int *a1, int a2, char a3, DWORD a4)
 {
   _DWORD *Surface; // eax
   int v6; // ecx
@@ -16698,8 +16698,8 @@ void * sub_4050F0(int *a1, int a2, char a3, DWORD a4)
   v27 = Surface;
   g_RenderDevice = Surface;
   Render_FillRect(a1, Surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  sub_401BA0((int)byte_51DE60, aPal_grey_pcx, 0);
-  sub_404DA0(a1, byte_51DE60, 20);
+  LoadPalPCX((int)byte_51DE60, aPal_grey_pcx, 0);
+  Palette_CrossfadeToTarget(a1, byte_51DE60, 20);
   v7 = 0;
   v28 = byte_51DE60;
   do
@@ -16761,7 +16761,7 @@ void * sub_4050F0(int *a1, int a2, char a3, DWORD a4)
     ++v23;
   }
   while ( v22 < 307200 );
-  sub_404C80(a1, byte_51DE60);
+  Palette_ApplyWithBrightnessOffset(a1, byte_51DE60);
   (void)g_RenderDevice;
   if ( v27 )
     j__nfree_(v27);
@@ -16772,7 +16772,7 @@ void * sub_4050F0(int *a1, int a2, char a3, DWORD a4)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 
 //----- (00405330) --------------------------------------------------------
-void * sub_405330(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5)
+void * Video_ExitGreyscaleTransition(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5)
 {
   _DWORD *Surface; // eax
   void *v7; // ebp
@@ -16809,7 +16809,7 @@ void * sub_405330(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5)
     ++v11;
   }
   (void)v11;
-  sub_404C80(a1, byte_51DE60);
+  Palette_ApplyWithBrightnessOffset(a1, byte_51DE60);
   Render_FillRect(g_RenderDevice, v8, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
   for ( k = 0; k < 307200; ++k )
   {
@@ -16819,11 +16819,11 @@ void * sub_405330(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5)
       *v14 = byte_51E268[v15];
   }
   (void)v15;
-  sub_401BA0((int)byte_51DE60, aPal_grey_pcx, 0);
-  sub_404C80(a1, byte_51DE60);
+  LoadPalPCX((int)byte_51DE60, aPal_grey_pcx, 0);
+  Palette_ApplyWithBrightnessOffset(a1, byte_51DE60);
   Render_FillRect(g_RenderDevice, v8, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
   (void)v8;
-  sub_404DA0(a1, a2, 20);
+  Palette_CrossfadeToTarget(a1, a2, 20);
   if ( v8 )
     j__nfree_(v8);
   result = v19;
@@ -16833,7 +16833,7 @@ void * sub_405330(int *a1, unsigned __int8 *a2, int a3, char a4, DWORD a5)
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 
 //----- (00405510) --------------------------------------------------------
-int  sub_405510(
+int  Sprite_DrawSimpleTrackingOffset(
         int a1,
         int a2,
         int a3,
@@ -16853,7 +16853,7 @@ int  sub_405510(
 // 519A14: using guessed type int dword_519A14;
 
 //----- (00405560) --------------------------------------------------------
-int  sub_405560(
+int  Sprite_DrawSimpleIgnoringRect(
         int a1,
         int a2,
         int a3,
@@ -16878,79 +16878,79 @@ int  sub_405560(
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 
 //----- (004055C0) --------------------------------------------------------
-void __noreturn sub_4055C0()
+void __noreturn Surface_GetReadIncrNotImplemented()
 {
   App_RequestQuit((int)aGetreadincrZap);
 }
 
 //----- (004055D0) --------------------------------------------------------
-void __noreturn sub_4055D0()
+void __noreturn Surface_GetWriteIncrNotImplemented()
 {
   App_RequestQuit((int)aGetwriteincrZa);
 }
 
 //----- (004055E0) --------------------------------------------------------
-void __noreturn sub_4055E0()
+void __noreturn Surface_DrawPixNotImplemented()
 {
   App_RequestQuit((int)aDrawpixZapisNa);
 }
 
 //----- (004055F0) --------------------------------------------------------
-void __noreturn sub_4055F0()
+void __noreturn Surface_GetPixNotImplemented()
 {
   App_RequestQuit((int)aGetpixZapisNaE);
 }
 
 //----- (00405600) --------------------------------------------------------
-void __stdcall __noreturn sub_405600(int a1, int a2)
+void __stdcall __noreturn Surface_DrawLineNotImplemented(int a1, int a2)
 {
   App_RequestQuit((int)aDrawlineZapisN);
 }
 
 //----- (00405610) --------------------------------------------------------
-void __stdcall __noreturn sub_405610(int a1, int a2)
+void __stdcall __noreturn Surface_DrawRectNotImplemented(int a1, int a2)
 {
   App_RequestQuit((int)aDrawrectZapisN);
 }
 
 //----- (00405620) --------------------------------------------------------
-void __stdcall __noreturn sub_405620(int a1, int a2)
+void __stdcall __noreturn Surface_DrawBoxNotImplemented(int a1, int a2)
 {
   App_RequestQuit((int)aDrawboxZapisNa);
 }
 
 //----- (00405630) --------------------------------------------------------
-void __stdcall __noreturn sub_405630(int a1, int a2)
+void __stdcall __noreturn Surface_DotBoxNotImplemented(int a1, int a2)
 {
   App_RequestQuit((int)aDotboxZapisNaE);
 }
 
 //----- (00405640) --------------------------------------------------------
-int sub_405640()
+int Surface_GetReadIncrZero()
 {
   return 0;
 }
 
 //----- (00405650) --------------------------------------------------------
-int sub_405650()
+int Surface_GetWriteIncrZero()
 {
   return 0;
 }
 
 //----- (00405660) --------------------------------------------------------
-int  sub_405660(int a1)
+int  Surface_GetReadIncrFromStride(int a1)
 {
   return *(_DWORD *)(a1 + 188);
 }
 
 //----- (00405670) --------------------------------------------------------
-int  sub_405670(int a1)
+int  Surface_GetWriteIncrFromStride(int a1)
 {
   return *(_DWORD *)(a1 + 188);
 }
 
 //----- (00405680) --------------------------------------------------------
-int  sub_405680(_DWORD *a1)
+int  Surface_GetWriteIncrAndMarkDirty(_DWORD *a1)
 {
   if ( a1[51] )
     a1[50] = 1;
@@ -16958,7 +16958,7 @@ int  sub_405680(_DWORD *a1)
 }
 
 //----- (004056B0) --------------------------------------------------------
-int  sub_4056B0(_DWORD *a1, char a2)
+int  Surface_Destroy(_DWORD *a1, char a2)
 {
   int result; // eax
   int v4; // ecx
@@ -16972,7 +16972,7 @@ int  sub_4056B0(_DWORD *a1, char a2)
   }
   else
   {
-    result = sub_404240(a1, 1);
+    result = Render_DestructScratchSurface(a1, 1);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -16986,7 +16986,7 @@ int  sub_4056B0(_DWORD *a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (004056F0) --------------------------------------------------------
-int  sub_4056F0(int result, char a2)
+int  SurfaceCursor_Destroy(int result, char a2)
 {
   int v3; // ecx
   int v4; // ecx
@@ -17009,19 +17009,19 @@ int  sub_4056F0(int result, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (00405720) --------------------------------------------------------
-signed int sub_405720()
+signed int SurfaceCursor_GetIncrUnbounded()
 {
   return 0x7FFFFFFF;
 }
 
 //----- (00405730) --------------------------------------------------------
-signed int sub_405730()
+signed int SurfaceCursor_GetExtentUnbounded()
 {
   return 0x7FFFFFFF;
 }
 
 //----- (00405750) --------------------------------------------------------
-int sub_405750()
+int SurfaceCursor_GetOffsetZero()
 {
   return 0;
 }
@@ -17186,7 +17186,7 @@ _BYTE * sub_4058E0(_BYTE *result, _BYTE *a2)
 //----- (00405900) --------------------------------------------------------
 _DWORD * sub_405900(int a1)
 {
-  return sub_401E00(a1, 640, 480);
+  return Render_ConstructSurfaceObject(a1, 640, 480);
 }
 
 //----- (00405920) --------------------------------------------------------
@@ -17269,7 +17269,7 @@ int  DLX_OpenArchive(char *a1, int a2)
     v3 += 2;
   }
   while ( v5 );
-  result = sub_4427F0(v8, 0);
+  result = FileSystem_ResolveReadPath(v8, 0);
   v9[0] = result;
   if ( result )
   {
@@ -17297,8 +17297,8 @@ _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
   Debug_Log(63, 0, (DWORD)resource_name, (int)aDlxspritesetDl);
   strcpy(path, aGfx);
   strcat(path, resource_name);
-  query_handle = sub_4427F0(path, 0);
-  a1[1026] = sub_4427C0(query_handle);
+  query_handle = FileSystem_ResolveReadPath(path, 0);
+  a1[1026] = IO_QueryVTableStreamSize(query_handle);
   if ( !query_handle || a1[1026] <= 4096 )
   {
     if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -17327,7 +17327,7 @@ _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
     if ( entry_end_offset )
       entry_size = entry_end_offset - dword_51F290[entry_index];
     else
-      entry_size = sub_4427C0(query_handle) - dword_51F290[entry_index];
+      entry_size = IO_QueryVTableStreamSize(query_handle) - dword_51F290[entry_index];
     a1[entry_index] = Mem_Alloc(22, entry_index, entry_size, (DWORD)a1);
     if ( a1[entry_index] )
       a1[entry_index] = sub_406260(a1[entry_index], dword_51F290[entry_index] + a1[1024] - 4096, entry_size);
@@ -17609,7 +17609,7 @@ int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4)
 
   v6 = (unsigned __int8 *)Mem_Alloc(1024, (int)(uintptr_t)a4, 0, a1);
   if ( v6 )
-    v6 = (unsigned __int8 *)sub_401AF0((intptr_t)v6, (intptr_t)a4);
+    v6 = (unsigned __int8 *)Palette_LoadFromQueryHandle((intptr_t)v6, (intptr_t)a4);
   DLXSpriteSet_DrawText(a1, a2, a3, v6);
   return j__nfree_();
 }
@@ -17627,7 +17627,7 @@ DWORD  sub_4060E0(DWORD a1, char *a2, int a3)
   *(_DWORD *)(a1 + 10) = 0;
   strcpy(path, aGfx_3);
   strcat(path, a2);
-  query_handle = sub_4427F0(path, 1);
+  query_handle = FileSystem_ResolveReadPath(path, 1);
   if ( !query_handle )
     return a1;
   Compat_QueryRead(query_handle, dword_51E288, 4096);
@@ -17635,7 +17635,7 @@ DWORD  sub_4060E0(DWORD a1, char *a2, int a3)
   if ( dword_51E28C[a3] )
     entry_end_offset = dword_51E28C[a3];
   else
-    entry_end_offset = sub_4427C0(query_handle);
+    entry_end_offset = IO_QueryVTableStreamSize(query_handle);
   *(_DWORD *)(a1 + 14) = entry_end_offset - entry_offset;
   Compat_QuerySeek(query_handle, entry_offset);
   Compat_QueryRead(query_handle, (void *)(uintptr_t)(unsigned int)a1, 10);
@@ -18003,7 +18003,7 @@ void * sub_406980(DWORD a1)
     dword_514194,
     dword_526F78[0],
     0);
-  sub_40A490(a1);
+  WorldMap_SyncSelectionForHumanPlayer(a1);
   Diagnostics_TraceWorldMapActionEvent(
     "status_panel_refresh_after_sync",
     g_SelectedUnitIndex,
@@ -18032,7 +18032,7 @@ void * sub_406980(DWORD a1)
       dword_514194,
       dword_526F78[0],
       v2);
-    sub_460BB0(g_RenderState, v2, 0x1F7u, 0x1D4u, 0x1DCu);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, v2, 0x1F7u, 0x1D4u, 0x1DCu);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_pump_rect",
       g_SelectedUnitIndex,
@@ -18284,7 +18284,7 @@ void  sub_406FA0(int ii)
               v9 = Time_Now(j, v20);
               *(_DWORD *)((char *)v6 + 6) = v9 + v20;
               *v6 = v86;
-              sub_418A90(ii, i);
+              WorldMap_RedrawTileIfVisible(ii, i);
               if ( !*(_BYTE *)(gameData + 140016) && v86 == 36 )
               {
                 v12 = (_WORD *)(14 * v5 + j + gameData);
@@ -18294,7 +18294,7 @@ void  sub_406FA0(int ii)
                   v14 = (unsigned __int8)byte_521043;
                   v13 = Time_Now(j, v14);
                   *(_DWORD *)((char *)v12 + 6) = v13 + v14;
-                  sub_418A90(ii, i + 1);
+                  WorldMap_RedrawTileIfVisible(ii, i + 1);
                 }
               }
             }
@@ -18305,7 +18305,7 @@ void  sub_406FA0(int ii)
         if ( v16 == 0xFFFE )
         {
           *(_WORD *)(v81 + 2) = -1;
-          sub_418A90(ii, i);
+          WorldMap_RedrawTileIfVisible(ii, i);
         }
         else if ( v16 != 0xFFFF && v16 < TERRAIN_ANIMATION_REMAP_COUNT )
         {
@@ -18326,7 +18326,7 @@ void  sub_406FA0(int ii)
                 *(_DWORD *)((char *)v6 + 10) = v19 + v20;
                 v6[1] = v87;
               }
-              sub_418A90(ii, i);
+              WorldMap_RedrawTileIfVisible(ii, i);
             }
           }
         }
@@ -18368,7 +18368,7 @@ void  sub_406FA0(int ii)
             || *(unsigned __int16 *)(ii + gameData + v82) >= 0x283u
             && *(unsigned __int16 *)(ii + gameData + v82) <= 0x2A2u )
           {
-            sub_418A90(v33, v32);
+            WorldMap_RedrawTileIfVisible(v33, v32);
           }
           ++v33;
         }
@@ -18396,7 +18396,7 @@ void  sub_406FA0(int ii)
               if ( *v47 == 7 && (unsigned __int16)v47[1] == 0xFFFF && (unsigned int)rand_(v45, 7) < 0x333 )
               {
                 *(_WORD *)(v46 + gameData + v84 + 2) = word_511B3A[(unsigned int)(rand_(v45, 0) / 0x7FFFuLL)];
-                sub_418A90(v48, v44);
+                WorldMap_RedrawTileIfVisible(v48, v44);
               }
               v46 += 1400;
               ++v45;
@@ -18422,7 +18422,7 @@ void  sub_406FA0(int ii)
                 if ( (unsigned int)v53 < 0x333 )
                 {
                   *(_WORD *)(v51 + gameData + v83 + 2) = word_511B3E[4 * (unsigned int)rand_(v50, HIDWORD(v53)) / 0x7FFF];
-                  sub_418A90(v54, v49);
+                  WorldMap_RedrawTileIfVisible(v54, v49);
                 }
               }
               v51 += 1400;
@@ -18447,7 +18447,7 @@ void  sub_406FA0(int ii)
             if ( *v41 == 7 && (unsigned __int16)v41[1] == 0xFFFF && (unsigned int)rand_(v39, 7) < 0x333 )
             {
               *(_WORD *)(v76 + v40 + gameData + 2) = word_511B2C[6 * (int)rand_(v39, v42) / 0x7FFFu];
-              sub_418A90(v43, v38);
+              WorldMap_RedrawTileIfVisible(v43, v38);
             }
             v40 += 1400;
             ++v39;
@@ -18471,13 +18471,13 @@ void  sub_406FA0(int ii)
             if ( *v58 == 771 && (unsigned int)rand_(v56, v58) < 0x199 )
             {
               *(_WORD *)(v77 + v57 + gameData) = 772;
-              sub_418A90(v56, v55);
+              WorldMap_RedrawTileIfVisible(v56, v55);
             }
           }
           else if ( *v58 == 36 && *(_WORD *)(v78 + v57 + gameData) == 36 && (unsigned int)rand_(v56, 36) < 0x28 )
           {
             *(_WORD *)(v77 + v57 + gameData) = 771;
-            sub_418A90(v56, v55);
+            WorldMap_RedrawTileIfVisible(v56, v55);
           }
           v57 += 1400;
           ++v56;
@@ -18597,7 +18597,7 @@ void  sub_406FA0(int ii)
                   break;
               }
             }
-            sub_418A90(v60, v79);
+            WorldMap_RedrawTileIfVisible(v60, v79);
           }
           ++v60;
         }
@@ -18665,7 +18665,7 @@ unsigned int  sub_407B20(int a1, int a2, int a3)
   if ( result >= dword_52029C && dword_520298 <= 10 )
   {
     v4 = (__lock *)dword_520298++;
-    sub_404DE0((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v4, 10);
+    Palette_CrossfadeStep((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v4, 10);
     result = Time_Now(v6, v5) + 5;
     dword_52029C = result;
   }
@@ -18731,7 +18731,7 @@ LABEL_7:
       v6 = *(_DWORD *)(gameData + 140004);
       if ( *(_DWORD *)(gameData + 140012) + 7 > v6 )
         *(_DWORD *)(gameData + 140012) = v6 - 7;
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
       v1 = dword_544CFC >> byte_54512C;
       v2 = dword_544D00 >> byte_54512C;
     }
@@ -18775,7 +18775,7 @@ int  sub_407D20(signed int a1, ...)
       {
         *(_DWORD *)(gameData + 140008) = v7 - 1;
         dword_5202A0 = Time_Now(v6, v5);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
         dword_5202F0 = 1;
       }
     }
@@ -18786,7 +18786,7 @@ int  sub_407D20(signed int a1, ...)
       {
         *(_DWORD *)(gameData + 140008) = a1 + 1;
         dword_5202A0 = Time_Now(v8, a1 + 1);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
         dword_5202F0 = v9;
       }
     }
@@ -18797,7 +18797,7 @@ int  sub_407D20(signed int a1, ...)
       {
         *(_DWORD *)(gameData + 140012) = v12 - 1;
         dword_5202A0 = Time_Now(v11, v10);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
         dword_5202F0 = 1;
       }
     }
@@ -18808,7 +18808,7 @@ int  sub_407D20(signed int a1, ...)
       {
         *(_DWORD *)(gameData + 140012) = a1 + 1;
         dword_5202A0 = Time_Now(v13, a1 + 1);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
         dword_5202F0 = v14;
       }
     }
@@ -19364,7 +19364,7 @@ LABEL_35:
   }
   if ( dword_5202B4 )
   {
-    sub_40A360(v4);
+    WorldMap_RefreshActionButtonBarState(v4);
     dword_5202B4 = 0;
   }
 LABEL_21:
@@ -19431,7 +19431,7 @@ LABEL_80:
     || (_UNKNOWN *)dword_544D14 == &unk_5198D0
     || (_UNKNOWN *)dword_544D14 == &unk_5198F8 )
   {
-    sub_40A360(v16);
+    WorldMap_RefreshActionButtonBarState(v16);
   }
 LABEL_26:
   if ( DD_IsLost((int)&g_RenderState) && Port_IsInsideFootprint(v1, v78) )
@@ -19449,7 +19449,7 @@ LABEL_26:
       else
       {
         UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + 556374), v5);
-        sub_419D60((int)&unk_511DDF, v10);
+        UIWidget_RefreshActionButtonState((int)&unk_511DDF, v10);
       }
     }
     else if ( MapTile_HasBuilding(v1, v78) )
@@ -19464,7 +19464,7 @@ LABEL_26:
       }
       else
       {
-        sub_41FDF0(v20, 0, v8);
+        Building_ShowHoverInfoPopup(v20, 0, v8);
       }
     }
     else if ( MapTile_GetReligiousSiteCategory(v1, v78) == RELIGIOUS_SITE_CATEGORY_SHRINE )
@@ -19472,49 +19472,49 @@ LABEL_26:
       v72[0] = (int)g_ShrineTexts[0];
       v72[1] = (int)g_ShrineTexts[1];
       v72[2] = (int)g_ShrineTexts[2];
-      sub_446CB0(v72[(unsigned __int8)g_LanguageIndex], v21, v5, v1);
+      UI_ShowSimpleTextInfoWindow(v72[(unsigned __int8)g_LanguageIndex], v21, v5, v1);
     }
     else if ( MapTile_GetReligiousSiteCategory(v1, v78) == RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE )
     {
       v74[0] = (int)g_EmptyShrineTexts[0];
       v74[1] = (int)g_EmptyShrineTexts[1];
       v74[2] = (int)g_EmptyShrineTexts[2];
-      sub_446CB0(v74[(unsigned __int8)g_LanguageIndex], v22, v5, v1);
+      UI_ShowSimpleTextInfoWindow(v74[(unsigned __int8)g_LanguageIndex], v22, v5, v1);
     }
     else if ( MapTile_GetReligiousSiteCategory(v1, v78) == RELIGIOUS_SITE_CATEGORY_CULT_PLACE )
     {
       v73[0] = (int)g_CultPlaceTexts[0];
       v73[1] = (int)g_CultPlaceTexts[1];
       v73[2] = (int)g_CultPlaceTexts[2];
-      sub_446CB0(v73[(unsigned __int8)g_LanguageIndex], v23, v5, v1);
+      UI_ShowSimpleTextInfoWindow(v73[(unsigned __int8)g_LanguageIndex], v23, v5, v1);
     }
     else if ( MapTile_GetReligiousSiteCategory(v1, v78) == RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE )
     {
       v75[0] = (int)g_EmptyCultPlaceTexts[0];
       v75[1] = (int)g_EmptyCultPlaceTexts[1];
       v75[2] = (int)g_EmptyCultPlaceTexts[2];
-      sub_446CB0(v75[(unsigned __int8)g_LanguageIndex], v24, v5, v1);
+      UI_ShowSimpleTextInfoWindow(v75[(unsigned __int8)g_LanguageIndex], v24, v5, v1);
     }
     else if ( MapTile_IsCastleFoundationTile(v1, v78, 2) )
     {
       v77[0] = (int)g_CastleFoundationTexts[0];
       v77[1] = (int)g_CastleFoundationTexts[1];
       v77[2] = (int)g_CastleFoundationTexts[2];
-      sub_446CB0(v77[(unsigned __int8)g_LanguageIndex], v25, 2, v1);
+      UI_ShowSimpleTextInfoWindow(v77[(unsigned __int8)g_LanguageIndex], v25, 2, v1);
     }
     else if ( MapTile_HasHiddenTreasure(v1, v78) )
     {
       v76[0] = (int)g_HiddenTreasureTexts[0];
       v76[1] = (int)g_HiddenTreasureTexts[1];
       v76[2] = (int)g_HiddenTreasureTexts[2];
-      sub_446CB0(v76[(unsigned __int8)g_LanguageIndex], v26, 2, v1);
+      UI_ShowSimpleTextInfoWindow(v76[(unsigned __int8)g_LanguageIndex], v26, 2, v1);
     }
   }
   if ( !DD_IsFlipping((int)&g_RenderState) )
     return;
   v27 = g_CurrentPlayerIndex;
   if ( Trap_GetTileOwnerMask(v1, v78, g_CurrentPlayerIndex) )
-    sub_42B9D0(v1, v78, v27, v1);
+    Trap_ShowPitfallDiscoveryDialog(v1, v78, v27, v1);
     if ( g_SelectedUnitIndex != -1
       && UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex)
       && MapTile_GetReligiousSiteCategory(v1, v78) )
@@ -19541,7 +19541,7 @@ LABEL_26:
         qmemcpy(v33, v32, 0x194u);
         j__nfree_();
         Diagnostics_TraceWorldMapActionEvent("temple_path_queued", g_SelectedUnitIndex, v1, v78, 1);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
         Render_Begin((int)&g_RenderState, 0);
       }
       if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
@@ -19598,7 +19598,7 @@ LABEL_26:
     {
       qmemcpy((void *)(gameData + 147174 + 725 * g_SelectedUnitIndex + 316), v29, 0x194u);
       j__nfree_();
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
       if ( !*(_DWORD *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316) )
       {
         v39 = (__int16 *)Port_CollectReinforcementShipment(725 * g_SelectedUnitIndex, v27, (DWORD)v29, a1);
@@ -19681,7 +19681,7 @@ LABEL_26:
       {
         qmemcpy((void *)(725 * g_SelectedUnitIndex + gameData + 147174 + 316), v32, 0x194u);
         j__nfree_();
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
       }
       if ( *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) != 1 )
         return;
@@ -19713,10 +19713,10 @@ LABEL_205:
       Render_Begin((int)&g_RenderState, 0, v28);
       Unit_AddToGroup(g_SelectedUnitIndex, *(unsigned __int16 *)(TILE_INDEX(v1, v78)), 0, v1, a1);
       dword_5202E8 = 0;
-      sub_40A360(v59);
+      WorldMap_RefreshActionButtonBarState(v59);
       sub_406980(v1);
       UnitStackSelection_SyncForCurrentSelection(v60, v1);
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
     }
     else
     {
@@ -19749,11 +19749,11 @@ LABEL_205:
             v78,
             g_LastSelectedUnitIndex);
           UnitStackSelection_ClearMask((void *)v52);
-          sub_40A360(v55);
-          sub_418700(1);
+          WorldMap_RefreshActionButtonBarState(v55);
+          WorldMap_RedrawViewport(1);
           v56 = g_LastSelectedUnitIndex;
           if ( g_LastSelectedUnitIndex != -1 )
-            sub_418A90(
+            WorldMap_RedrawTileIfVisible(
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147174),
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
           sub_406980(v56);
@@ -19849,7 +19849,7 @@ LABEL_205:
         if ( UnitStackSelection_HasSelectedSlots() )
         {
           *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) = 0;
-          sub_418700(1);
+          WorldMap_RedrawViewport(1);
         }
         else
         {
@@ -19857,13 +19857,13 @@ LABEL_205:
             Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v63, v65, a1);
           sub_406980(v65);
-          sub_418700(1);
+          WorldMap_RedrawViewport(1);
         }
       }
       else
       {
         Render_Begin((int)&g_RenderState, 0, v28);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
       }
       return;
     }
@@ -19933,23 +19933,23 @@ int  sub_409CC0(int a1, char a2, DWORD a3)
 // 5202F8: using guessed type int dword_5202F8;
 
 //----- (00409CE0) --------------------------------------------------------
-int  sub_409CE0(char a1, DWORD a2, double a3)
+int  WorldMap_HandleSaveGameAction(char a1, DWORD a2, double a3)
 {
-  sub_444D50(1, a1, a2, a3);
+  SaveSlotDialog_Run(1, a1, a2, a3);
   UnitStackSelection_RefreshForSelectedStack(a2);
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 
 //----- (00409D00) --------------------------------------------------------
-int  sub_409D00(DWORD a1, char a2, double a3)
+int  WorldMap_HandleLoadGameAction(DWORD a1, char a2, double a3)
 {
   int result; // eax
 
-  result = sub_444D50(0, a2, a1, a3);
+  result = SaveSlotDialog_Run(0, a2, a1, a3);
   dword_511B64 = result;
   if ( result == -1 )
   {
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
     return UnitStackSelection_RefreshForSelectedStack(a1);
   }
   else
@@ -19962,7 +19962,7 @@ int  sub_409D00(DWORD a1, char a2, double a3)
 // 5202F8: using guessed type int dword_5202F8;
 
 //----- (00409D30) --------------------------------------------------------
-int  sub_409D30(int a1, char a2, DWORD a3, double a4)
+int  WorldMap_HandleSurrenderAction(int a1, char a2, DWORD a3, double a4)
 {
   int result; // eax
   int v5; // ecx
@@ -19988,22 +19988,22 @@ int  sub_409D30(int a1, char a2, DWORD a3, double a4)
 // 5202FC: using guessed type int dword_5202FC;
 
 //----- (00409D80) --------------------------------------------------------
-int  sub_409D80(uintptr_t a1, DWORD a2)
+int  WorldMap_HandleDeselectUnitAction(uintptr_t a1, DWORD a2)
 {
   if ( g_SelectedUnitIndex == -1 )
   {
-    sub_4425E0(aWrong_2);
+    Audio_PlayButtonSound(aWrong_2);
     return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
-    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
+    Audio_PlayButtonSound((char *)Compat_WidgetPackedString(a1, 49));
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
     g_SelectedUnitIndex = -1;
     UnitStackSelection_SyncForCurrentSelection(NULL, a2);
-    sub_40A360(NULL);
+    WorldMap_RefreshActionButtonBarState(NULL);
     dword_526A34 = (int)&unk_5196A0;
-    return sub_418700(1);
+    return WorldMap_RedrawViewport(1);
   }
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -20012,7 +20012,7 @@ int  sub_409D80(uintptr_t a1, DWORD a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00409DF0) --------------------------------------------------------
-void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
+void  WorldMap_SelectNextActiveUnitStack(uintptr_t a1, int a2, DWORD a3)
 {
   int scan_index; // edx
   int found; // ebx
@@ -20020,7 +20020,7 @@ void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
   int unit_record; // eax
 
   Diagnostics_TraceWorldMapActionEvent("next_unit_enter", g_SelectedUnitIndex, g_LastSelectedUnitIndex, g_CurrentPlayerIndex, 0);
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   if ( g_SelectedUnitIndex == -1 )
   {
     if ( g_LastSelectedUnitIndex == -1 )
@@ -20057,10 +20057,10 @@ void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
     g_LastSelectedUnitIndex = g_SelectedUnitIndex;
     g_SelectedUnitIndex = scan_index;
     UnitStackSelection_ClearMask(NULL);
-    sub_40A360(NULL);
+    WorldMap_RefreshActionButtonBarState(NULL);
     Camera_CenterOnUnit(scan_index);
     Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
     sub_406980(a3);
     UnitStackSelection_SyncForCurrentSelection(NULL, a3);
     Diagnostics_TraceWorldMapActionEvent(
@@ -20077,13 +20077,13 @@ void  sub_409DF0(uintptr_t a1, int a2, DWORD a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (00409F00) --------------------------------------------------------
-int  sub_409F00(int a1, int a2)
+int  WorldMap_CenterViewOnNextOwnedBuildingWithUnit(int a1, int a2)
 {
   int i; // ecx
   int v4; // eax
   void *v5; // ecx
 
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_UnitSearchCursor = (g_UnitSearchCursor + 1) % 100;
   for ( i = 0; i < 100; ++i )
   {
@@ -20103,8 +20103,8 @@ int  sub_409F00(int a1, int a2)
     *(unsigned __int8 *)(UNIT_RECORD(g_UnitSearchCursor)),
     *(unsigned __int8 *)(467 * g_UnitSearchCursor + gameData + 509675));
   g_SelectedUnitIndex = -1;
-  sub_40A360(v5);
-  return sub_418700(1);
+  WorldMap_RefreshActionButtonBarState(v5);
+  return WorldMap_RedrawViewport(1);
 }
 // 409F38: simplified comparisons for '$g_UnitSearchCursor.4': <0 || >=65 became >=65u
 // 409F59: simplified comparisons for 'edx.4': <0 || >=4 became >=4u
@@ -20115,16 +20115,16 @@ int  sub_409F00(int a1, int a2)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A000) --------------------------------------------------------
-int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5)
+int  WorldMap_HandleHideUnitAction(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5)
 {
   if ( g_SelectedUnitIndex == -1 )
   {
-    sub_4425E0(aWrong_3);
+    Audio_PlayButtonSound(aWrong_3);
     return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
-    sub_419E60(a1, a2);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
     return UnitStack_TryHide(g_SelectedUnitIndex, a3, a4, a5);
   }
 }
@@ -20132,7 +20132,7 @@ int  sub_40A000(int a1, int a2, unsigned __int16 a3, DWORD a4, double a5)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A040) --------------------------------------------------------
-char *sub_40A040()
+char *WorldMap_ToggleSelectedUnitModeFlag()
 {
   int v1; // ecx
   char *result; // eax
@@ -20140,8 +20140,8 @@ char *sub_40A040()
 
   Render_Begin((int)g_RenderState, 0);
   if ( g_SelectedUnitIndex == -1 )
-    return sub_4425E0(aWrong_4);
-  result = sub_4425E0(*(char **)(v1 + 49));
+    return Audio_PlayButtonSound(aWrong_4);
+  result = Audio_PlayButtonSound(*(char **)(v1 + 49));
   if ( dword_5202E8 )
   {
     dword_5202E8 = 0;
@@ -20161,12 +20161,12 @@ char *sub_40A040()
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A0A0) --------------------------------------------------------
-int  sub_40A0A0(int a1, int a2)
+int  WorldMap_ComputeBuildMenuActionFromCursor(int a1, int a2)
 {
   int v3; // edx
   int result; // eax
 
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   result = (*(_DWORD *)(v3 + 16) - 15) / 2;
   dword_520308 = result;
   return result;
@@ -20177,7 +20177,7 @@ int  sub_40A0A0(int a1, int a2)
 static void WorldMap_EnsureActionButtonWidgetTable(void);
 
 //----- (0040A0E0) --------------------------------------------------------
-int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
+int  WorldMap_HandleBuilderActionMenu(int a1, int a2, int a3, DWORD a4, double a5)
 {
   int v6; // ecx
   int v7; // ecx
@@ -20186,16 +20186,16 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
 
   if ( g_SelectedUnitIndex == -1 )
   {
-    sub_4425E0(aWrong_5);
+    Audio_PlayButtonSound(aWrong_5);
     return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
-    sub_419E60(a1, a2);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
     if ( UnitStack_HasBuilder(g_SelectedUnitIndex) )
     {
       UIWidgetTable_InitDrawStates(g_UI_YesNoDims);
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
       dword_520308 = v6;
       while ( 1 )
       {
@@ -20226,7 +20226,7 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
                 MiniMap_DrawTileCell(
                   (void *)*(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
                   *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
-                sub_4426C0(aStruktur, 64);
+                Audio_PlaySoundEffectByName(aStruktur, 64);
               }
             }
             break;
@@ -20235,13 +20235,13 @@ int  sub_40A0E0(int a1, int a2, int a3, DWORD a4, double a5)
             {
               a3 = g_SelectedUnitIndex;
               if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&unk_4EC7A4, 0) )
-                sub_4426C0(aStruktur_0, 64);
+                Audio_PlaySoundEffectByName(aStruktur_0, 64);
             }
             break;
           case 5:
             a3 = g_SelectedUnitIndex;
             if ( Building_New(2, g_SelectedUnitIndex, a5, (char *)&unk_4EC7AE, 0) )
-              sub_4426C0(aStruktur_1, 64);
+              Audio_PlaySoundEffectByName(aStruktur_1, 64);
             break;
           default:
             break;
@@ -20260,14 +20260,14 @@ LABEL_13:
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
       WorldMap_EnsureActionButtonWidgetTable();
       UIWidgetTable_InitDrawStates(dword_511D40);
-      sub_40A490(0x40u);
-      sub_418700(1);
+      WorldMap_SyncSelectionForHumanPlayer(0x40u);
+      WorldMap_RedrawViewport(1);
       sub_406980(0x40u);
       return UnitStackSelection_RefreshForSelectedStack(0x40u);
     }
     else
     {
-      sub_4425E0(aWrong_6);
+      Audio_PlayButtonSound(aWrong_6);
       v10[0] = (int)g_Text_NoBuilder[0];
       v10[1] = (int)g_Text_NoBuilder[1];
       v10[2] = (int)g_Text_NoBuilder[2];
@@ -20317,7 +20317,7 @@ static void WorldMap_WriteActionWidgetRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = 14;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_4191F0;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIcon;
   *(_DWORD *)(record + 32) = action_callback;
   *(_DWORD *)(record + 36) = (int)(uintptr_t)polish_label;
   *(_DWORD *)(record + 40) = (int)(uintptr_t)english_label;
@@ -20369,7 +20369,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     map_mode_flags,
     0,
     1,
-    (int)(uintptr_t)&sub_409D80,
+    (int)(uintptr_t)&WorldMap_HandleDeselectUnitAction,
     label_map_mode_pl,
     label_map_mode_en,
     label_map_mode_de,
@@ -20381,7 +20381,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     1,
     2,
     3,
-    (int)(uintptr_t)&sub_409DF0,
+    (int)(uintptr_t)&WorldMap_SelectNextActiveUnitStack,
     label_next_unit_pl,
     label_next_unit_en,
     label_next_unit_de,
@@ -20393,7 +20393,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     1,
     4,
     5,
-    (int)(uintptr_t)&sub_409F00,
+    (int)(uintptr_t)&WorldMap_CenterViewOnNextOwnedBuildingWithUnit,
     label_next_building_pl,
     label_next_building_en,
     label_next_building_de,
@@ -20405,7 +20405,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     join_units_flags,
     6,
     7,
-    (int)(uintptr_t)&sub_40A040,
+    (int)(uintptr_t)&WorldMap_ToggleSelectedUnitModeFlag,
     label_join_units_pl,
     label_join_units_en,
     label_join_units_de,
@@ -20429,7 +20429,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     1,
     10,
     11,
-    (int)(uintptr_t)&sub_40A000,
+    (int)(uintptr_t)&WorldMap_HandleHideUnitAction,
     label_ambush_pl,
     label_ambush_en,
     label_ambush_de,
@@ -20460,7 +20460,7 @@ static void UnitBattle_WriteActionWidgetRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = overlay_sprite_index;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_4191F0;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIcon;
   *(_DWORD *)(record + 32) = action_callback;
   *(_DWORD *)(record + 36) = (int)(uintptr_t)polish_label;
   *(_DWORD *)(record + 40) = (int)(uintptr_t)english_label;
@@ -20589,7 +20589,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
 }
 
 //----- (0040A360) --------------------------------------------------------
-int __thiscall sub_40A360(void *this)
+int __thiscall WorldMap_RefreshActionButtonBarState(void *this)
 {
   (void)this;
 
@@ -20614,8 +20614,8 @@ int __thiscall sub_40A360(void *this)
   dword_511DE7 = 1;
 LABEL_4:
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  sub_419D60((uintptr_t)dword_511D40, 1);
-  return sub_419D60((uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3), 1);
+  UIWidget_RefreshActionButtonState((uintptr_t)dword_511D40, 1);
+  return UIWidget_RefreshActionButtonState((uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3), 1);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -20626,7 +20626,7 @@ LABEL_4:
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040A400) --------------------------------------------------------
-int  sub_40A400(int a1, char a2, DWORD a3)
+int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3)
 {
   _DWORD *v4; // eax
   int v5; // ecx
@@ -20638,7 +20638,7 @@ int  sub_40A400(int a1, char a2, DWORD a3)
   WorldMap_EnsureActionButtonWidgetTable();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   UIWidgetTable_InitDrawStates(dword_511D40);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   return v5;
 }
 // 40A431: variable 'v5' is possibly undefined
@@ -20648,7 +20648,7 @@ int  sub_40A400(int a1, char a2, DWORD a3)
 // 52030C: using guessed type int dword_52030C;
 
 //----- (0040A450) --------------------------------------------------------
-int __fastcall sub_40A450(int a1, int a2)
+int __fastcall WorldMap_UnloadActionButtonSprites(int a1, int a2)
 {
   sub_405920(&dword_52030C);
   return a2;
@@ -20656,7 +20656,7 @@ int __fastcall sub_40A450(int a1, int a2)
 // 52030C: using guessed type int dword_52030C;
 
 //----- (0040A460) --------------------------------------------------------
-int  sub_40A460(DWORD a1)
+int  WorldMap_PollActionButtonWidgets(DWORD a1)
 {
   int v1; // edx
   signed int widget_result;
@@ -20686,7 +20686,7 @@ int  sub_40A460(DWORD a1)
 // 5202E0: using guessed type int dword_5202E0;
 
 //----- (0040A490) --------------------------------------------------------
-void  sub_40A490(DWORD a1)
+void  WorldMap_SyncSelectionForHumanPlayer(DWORD a1)
 {
   void *v1; // ecx
 
@@ -20696,7 +20696,7 @@ void  sub_40A490(DWORD a1)
     if ( g_SelectedUnitIndex == -1 || *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180) == -1 )
     {
       g_SelectedUnitIndex = -1;
-      sub_40A360((void *)gameData);
+      WorldMap_RefreshActionButtonBarState((void *)gameData);
     }
     UnitStackSelection_SyncForCurrentSelection(v1, a1);
   }
@@ -20733,7 +20733,7 @@ LABEL_4:
 // 5202E4: using guessed type int gameData;
 
 //----- (0040A600) --------------------------------------------------------
-void * sub_40A600(int a1)
+void * WorldMap_DrawTurnBannerReveal(int a1)
 {
   int SpriteForChar; // eax
   int v3; // eax
@@ -20768,7 +20768,7 @@ void * sub_40A600(int a1)
   UI_DrawTextFmt((int)v4, 416, 608, 436, 3, PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_DISPLAY_NAME_OFFSET);
   if ( *(_DWORD *)(gameData + 147155) )
   {
-    sub_40BB60(3, 76, v5);
+    TextSprite_ActivateResourceSlot(3, 76, v5);
     UI_DrawText(421, 405, (int)aTuraD);
   }
   v10 = Time_Now(0, 0);
@@ -20802,7 +20802,7 @@ void * sub_40A600(int a1)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0040A820) --------------------------------------------------------
-int  sub_40A820(char a1, DWORD a2)
+int  WorldMap_RenderPlayerTurnIntroScreen(char a1, DWORD a2)
 {
   _DWORD *saved_primary_surface; // esi
   _DWORD *saved_map_surface; // edi
@@ -20830,7 +20830,7 @@ int  sub_40A820(char a1, DWORD a2)
     Render_FillRect(0, saved_primary_surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
   if ( saved_map_surface )
     Render_FillRect((_DWORD *)dword_5202E0, saved_map_surface, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   v4 = Mem_Alloc(1024, 0, a1, a2);
   if ( v4 )
     v4 = _wcpp_4_ctor_array__(v4, 256);
@@ -20862,14 +20862,14 @@ int  sub_40A820(char a1, DWORD a2)
     UI_DrawTextFmt((int)v6, 0, 639, 370, 3, (int)aGraczSTwojaTur, PLAYER_DATA(g_CurrentPlayerIndex) + 4);
   }
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
-  sub_405020((int *)&unk_51D4C0, v6, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v6, 20);
   while ( !DD_IsFlipping((int)g_RenderState) )
   {
     WorldMap_RunInputScriptStep();
     DD_Pump((int)g_RenderState, 20);
   }
   Render_Begin((int)g_RenderState, 0);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   UI_EndDraw(6);
   if ( saved_map_surface )
     Render_FillRect(saved_map_surface, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
@@ -20887,7 +20887,7 @@ int  sub_40A820(char a1, DWORD a2)
 
 int UI_LoadTurnBannerGfx(char a1, DWORD a2)
 {
-  return sub_40A820(a1, a2);
+  return WorldMap_RenderPlayerTurnIntroScreen(a1, a2);
 }
 // 40A867: variable 'v2' is possibly undefined
 // 40A883: variable 'v3' is possibly undefined
@@ -20946,9 +20946,9 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     Port_NewTurn(a3);
     clips_memory = sub_472800();
     Debug_Log(0, 0, a3, (int)aClipsMemoryD, clips_memory);
-    used_memory = sub_4476B0();
+    used_memory = Debug_GetUsedMemoryCount();
     Debug_Log(0, 0, a3, (int)aUsedmemD_3, used_memory);
-    unit_cache_entries = sub_413180();
+    unit_cache_entries = UnitSpriteCache_CountActiveEntries();
     Debug_Log(0, 0, a3, (int)aUnitsCacheEntr, unit_cache_entries);
     building_cache_entries = BuildingSpriteCache_CountEntries();
     Debug_Log(0, 0, a3, (int)aBuildingsCache, building_cache_entries);
@@ -20978,7 +20978,7 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
   g_SelectedUnitIndex = -1;
   g_LastSelectedUnitIndex = -1;
   if ( current_player_is_human )
-    sub_40A360((void *)(uintptr_t)(unsigned int)gameData);
+    WorldMap_RefreshActionButtonBarState((void *)(uintptr_t)(unsigned int)gameData);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_after_selection_reset",
     g_SelectedUnitIndex,
@@ -20986,10 +20986,10 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     current_player_is_human,
     GAME_TURN_COUNTER);
   UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, 0xFFFFFFFF);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   if ( !current_player_is_human )
   {
-    sub_40A600(1);
+    WorldMap_DrawTurnBannerReveal(1);
     Tooltip_RestoreBackdrop();
   }
   Diagnostics_TraceWorldMapActionEvent(
@@ -21040,8 +21040,8 @@ int  Game_AdvanceToNextPlayerTurn(int a1, char a2, DWORD a3, double a4)
     current_player_is_human,
     GAME_TURN_COUNTER);
   Debug_Log(0, 0, 0xFFFFFFFF, (int)aAutoMovesEnd);
-  sub_418700(1);
-  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
+  WorldMap_RedrawViewport(1);
+  RenderState_WarpCursorAndPump(g_RenderState, 0x140u, 0xF0u);
   Diagnostics_TraceWorldMapActionEvent(
     "turn_advance_before_present",
     g_SelectedUnitIndex,
@@ -21065,20 +21065,20 @@ int * WorldMap_RenderHook(DWORD a1)
   void *v2; // ecx
   int *result; // eax
 
-  sub_404D90((int *)&unk_51D4C0);
+  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   Render_DrawSprite();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   WorldMap_EnsureActionButtonWidgetTable();
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
     UIWidgetTable_InitDrawStates(dword_511D40);
   else
-    sub_40A600(0);
-  sub_418700(1);
+    WorldMap_DrawTurnBannerReveal(0);
+  WorldMap_RedrawViewport(1);
   UI_EndDraw(7);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
   sub_406980(a1);
   UnitStackSelection_SyncForCurrentSelection(v2, a1);
-  result = sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  result = Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   return result;
 }
@@ -21101,19 +21101,19 @@ int  WorldMap_RedrawFrame(int a1, ...)
   previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   Map_UpdateIdleAnimatedUnits();
   sub_406FA0(a1);
-  sub_416430(0);
-  sub_416610(0);
-  sub_418EE0(0, 0);
+  Map_UpdateConstructionSiteSwayAnimation(0);
+  Map_UpdateIdleAnimatedBuildings(0);
+  UI_UpdateTileBlinkFlash(0, 0);
   nullsub_1();
   mission_index = ACTIVE_MISSION_INDEX;
   if ( mission_index == 1 )
   {
-    sub_418A90(16, 11);
+    WorldMap_RedrawTileIfVisible(16, 11);
     return Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
   }
   if ( mission_index != 11 )
     return Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
-  sub_418A90(2, 44);
+  WorldMap_RedrawTileIfVisible(2, 44);
   return Render_SetResourceHandle((int)&unk_51D4C0, previous_resource_handle);
 }
 // 419030: using guessed type int nullsub_1(void);
@@ -21121,7 +21121,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0040AE80) --------------------------------------------------------
-int  sub_40AE80(int a1)
+int  WorldMap_RedrawFrameForAIWhenEnabled(int a1)
 {
   int result; // eax
 
@@ -21138,14 +21138,14 @@ int  sub_40AE80(int a1)
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AEB0) --------------------------------------------------------
-void sub_40AEB0()
+void WorldMap_DisableFrameRedraw()
 {
   dword_520310 = 1;
 }
 // 520310: using guessed type int dword_520310;
 
 //----- (0040AEC0) --------------------------------------------------------
-void sub_40AEC0()
+void WorldMap_EnableFrameRedraw()
 {
   dword_520310 = 0;
 }
@@ -21164,8 +21164,8 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   _DWORD *Surface; // eax
   int v18; // eax
 
-  sub_40C3F0();
-  sub_404D90((int *)&unk_51D4C0);
+  TextSprite_ReleaseAllResourceSlots();
+  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   v3 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v3 )
     v3 = DLXSpriteSet_Load(v3, "frame.s32");
@@ -21203,10 +21203,10 @@ _DWORD * WorldMap_LoadResources(char a1, DWORD a2)
   }
   v18 = Mem_Alloc(1024, 0, 0, 0);
   if ( v18 )
-    v18 = sub_401AF0(v18, (intptr_t)"map.pal");
+    v18 = Palette_LoadFromQueryHandle(v18, (intptr_t)"map.pal");
   dword_5202F4 = v18;
-  sub_435ED0(aMainmap, v18, 0, a2);
-  sub_460C70((int)g_RenderState);
+  Palette_LoadOrBuildBlendLookupTable(aMainmap, v18, 0, a2);
+  RenderState_LoadDefaultCursorSprite((int)g_RenderState);
   return WorldMapTopMenu_LoadSpriteSet();
 }
 // 5202BC: using guessed type int dword_5202BC;
@@ -21225,8 +21225,8 @@ int  WorldMap_UnloadResources(DWORD a1)
 {
   int v2; // ecx
 
-  sub_40C3F0();
-  sub_413120(v2, a1);
+  TextSprite_ReleaseAllResourceSlots();
+  UnitSpriteCache_FreeAllEntries(v2, a1);
   BuildingSpriteCache_Clear();
   CSS_EmptySampleCache();
   sub_405920(&dword_5202BC);
@@ -21497,10 +21497,10 @@ void  WorldMap_RunHumanTurnLoop(
   int (*saved_render_hook)();
 
   Diagnostics_TraceWorldMapActionEvent("human_turn_before_plague_notices", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
-  sub_4458E0(entry_resource_handle, (const char *)entry_render_hook, runtime_context);
+  WorldMap_NotifyPlagueOutbreak(entry_resource_handle, (const char *)entry_render_hook, runtime_context);
   Diagnostics_TraceWorldMapActionEvent("human_turn_after_plague_notices", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceWorldMapActionEvent("human_turn_before_color_notice", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
-  sub_4459A0(0, runtime_context);
+  WorldMap_NotifyFactionColorChange(0, runtime_context);
   unk_5196A0[5] = 0;
   unk_5196A0[6] = 0;
   dword_545150 = (int)&unk_5196A0;
@@ -21551,7 +21551,7 @@ void  WorldMap_RunHumanTurnLoop(
         {
           *(_DWORD *)(gameData + 147151) = 0;
 LABEL_24:
-          sub_418700(1);
+          WorldMap_RedrawViewport(1);
         }
       }
       if ( Input_IsKeyPressed(56) )
@@ -21604,7 +21604,7 @@ LABEL_24:
                 UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, 0, 0, st0_runtime);
               }
               j__nfree_();
-              sub_418700(1);
+              WorldMap_RedrawViewport(1);
               sub_406980(0);
             }
           }
@@ -21618,7 +21618,7 @@ LABEL_24:
       dword_514194,
       dword_526F78[0],
       0);
-    sub_40A460(0);
+    WorldMap_PollActionButtonWidgets(0);
     Diagnostics_TraceWorldMapActionEvent(
       "selection_after_action_widgets",
       g_SelectedUnitIndex,
@@ -21645,8 +21645,8 @@ LABEL_24:
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
-      sub_404F20((int *)&unk_51D4C0, 20);
-      sub_4623C0((int)aArama1, aKon_por1);
+      Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+      Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
       return;
     }
     if ( !PLAYER_IS_ACTIVE(g_CurrentPlayerIndex) )
@@ -21691,9 +21691,9 @@ unsigned int  WorldMap_Initialize(char a1, DWORD a2)
 {
   WorldMap_LoadResources(a1, a2);
   Map_InitTerrainMoveTableOffsets();
-  sub_412F00();
+  UnitSpriteCache_ClearAllEntries();
   BuildingSpriteCache_Reset();
-  return sub_4163F0(0);
+  return Map_InitBuildingSwayJitterOffsets(0);
 }
 
 //----- (0040B660) --------------------------------------------------------
@@ -21753,15 +21753,15 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
-  sub_419790(8);
+  UI_SetActiveWidgetTable(8);
   *(_DWORD *)(gameData + 140008) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140039);
   *(_DWORD *)(gameData + 140012) = *(_DWORD *)(1423 * *(_DWORD *)(gameData + 147143) + gameData + 140043);
   Locale_DrawInteger();
-  sub_441720(MAP_THEME_INDEX, 0, 7, a3);
+  Music_PlayMainMapTrack(MAP_THEME_INDEX, 0, 7, a3);
   Render_DrawSprite();
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
-  sub_40A400(0, 0, a3);
+  WorldMap_LoadActionButtonSprites(0, 0, a3);
   unk_5196A0[5] = 0;
   unk_5196A0[6] = 0;
   dword_545150 = (int)&unk_5196A0;
@@ -21777,9 +21777,9 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       unk_5196A0[6]);
   }
   UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, a3);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   Render_Present((int)g_RenderState);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   Debug_Log(0, 20, a3, (int)aStart);
   LogAllUnits(0, 20, a3);
   LogAllBuildings(0, 20, a3);
@@ -21810,7 +21810,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       Diagnostics_TraceWorldMapActionEvent("playgame_before_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
       RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
       Debug_Log(0, 0, a3, (int)aComputerplay);
-      sub_451F70();
+      Rules_ExecuteAITurn();
       RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, dword_5202F8);
     }
@@ -21828,10 +21828,10 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   Debug_Log(0, 0, a3, (int)aKoniecGryPoDTu, GAME_TURN_COUNTER);
   LogAllUnits(0, 20, a3);
   LogAllBuildings(0, 20, a3);
-  sub_4418E0();
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Audio_StopMainMusic();
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   MiniMap_DestroySurface(0);
-  sub_40A450(0, 0);
+  WorldMap_UnloadActionButtonSprites(0, 0);
   WorldMap_UnloadResources(a3);
   Tooltip_ReleaseBackdropSurface();
   Rules_ShowBanner_StrategicClash();
@@ -21862,7 +21862,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       active_mission_index,
       g_CurrentPlayerIndex,
       0);
-    sub_4623C0(-1, aZwy02);
+    Video_PlayAviWithModeGuard(-1, aZwy02);
     return 0;
   }
   Diagnostics_TraceWorldMapActionEvent(
@@ -21931,7 +21931,7 @@ int  Render_ReleaseSurface(int a1, DWORD a2)
 // 520728: using guessed type int dword_520728;
 
 //----- (0040BB60) --------------------------------------------------------
-char  sub_40BB60(int a1, char a2, DWORD a3)
+char  TextSprite_ActivateResourceSlot(int a1, char a2, DWORD a3)
 {
   TextSpriteResourceSlotRecord *slot;
   _DWORD *sprite_set;
@@ -21959,7 +21959,7 @@ char  sub_40BB60(int a1, char a2, DWORD a3)
 // 520728: using guessed type int dword_520728;
 
 //----- (0040BBF0) --------------------------------------------------------
-char  sub_40BBF0(char result)
+char  TextSprite_SetStyleFlag(char result)
 {
   byte_51F28C = result;
   return result;
@@ -21967,7 +21967,7 @@ char  sub_40BBF0(char result)
 // 51F28C: using guessed type char byte_51F28C;
 
 //----- (0040BC00) --------------------------------------------------------
-int  sub_40BC00(int a1, int a2, unsigned __int8 a3)
+int  TextSprite_DrawGlyphAndAdvance(int a1, int a2, unsigned __int8 a3)
 {
   TextSpriteResourceSlotRecord *slot;
   unsigned __int16 sprite_index;
@@ -21986,7 +21986,7 @@ int  sub_40BC00(int a1, int a2, unsigned __int8 a3)
 // 520724: using guessed type int dword_520724;
 
 //----- (0040BC90) --------------------------------------------------------
-int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
+int  TextSprite_DrawStringWithOrientation(int a1, int a2, char a3, unsigned __int8 *a4)
 {
   TextSpriteResourceSlotRecord *slot;
   int v7; // edx
@@ -21997,7 +21997,7 @@ int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
   {
     while ( *a4 )
     {
-      sub_40BC00((unsigned __int16)a1, a2, *a4);
+      TextSprite_DrawGlyphAndAdvance((unsigned __int16)a1, a2, *a4);
       LOWORD(v7) = slot ? slot->line_step_word : 0;
       ++a4;
       a2 += v7;
@@ -22008,7 +22008,7 @@ int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
     while ( *a4 )
     {
       v8 = *a4++;
-      a1 = sub_40BC00((unsigned __int16)a1, a2, v8);
+      a1 = TextSprite_DrawGlyphAndAdvance((unsigned __int16)a1, a2, v8);
     }
   }
   return a1;
@@ -22017,7 +22017,7 @@ int  sub_40BC90(int a1, int a2, char a3, unsigned __int8 *a4)
 // 520724: using guessed type int dword_520724;
 
 //----- (0040BD40) --------------------------------------------------------
-int  sub_40BD40(_BYTE *a1)
+int  TextSprite_MeasureStringExtent(_BYTE *a1)
 {
   TextSpriteResourceSlotRecord *slot;
   _BYTE *v1; // ecx
@@ -22046,7 +22046,7 @@ int  sub_40BD40(_BYTE *a1)
 // 520724: using guessed type int dword_520724;
 
 //----- (0040BDA0) --------------------------------------------------------
-_BYTE * sub_40BDA0(_BYTE *a1, int a2)
+_BYTE * TextSprite_FindWordWrapBreak(_BYTE *a1, int a2)
 {
   TextSpriteResourceSlotRecord *slot;
   _BYTE *v2; // ecx
@@ -22079,7 +22079,7 @@ _BYTE * sub_40BDA0(_BYTE *a1, int a2)
 // 520724: using guessed type int dword_520724;
 
 //----- (0040BE20) --------------------------------------------------------
-int  sub_40BE20(char *a1)
+int  Str_CountSpaces(char *a1)
 {
   int v1; // edx
   char v2; // bl
@@ -22110,13 +22110,13 @@ int __cdecl UI_DrawText(int a1, int a2, int a3, ...)
   }
   text = byte_520320;
   while ( *text )
-    a1 = (unsigned __int16)sub_40BC00((unsigned __int16)a1, a2, *text++);
+    a1 = (unsigned __int16)TextSprite_DrawGlyphAndAdvance((unsigned __int16)a1, a2, *text++);
   return a1;
 }
 // 520320: using guessed type unsigned __int8 byte_520320[512];
 
 //----- (0040BEE0) --------------------------------------------------------
-int  sub_40BEE0(
+int  UI_RenderAlignedTextWithCursor(
         int a1,
         int a2,
         int a3,
@@ -22156,7 +22156,7 @@ int  sub_40BEE0(
       int space_count;
 
       a5 = a1;
-      space_count = sub_40BE20((char *)a6);
+      space_count = Str_CountSpaces((char *)a6);
       if ( space_count > 0 )
         extra_space_width = (a2 - a1 - text_width) / space_count;
       break;
@@ -22180,7 +22180,7 @@ int  sub_40BEE0(
           return a5;
         }
 
-        line_break = sub_40BDA0(line_start, wrap_width);
+        line_break = TextSprite_FindWordWrapBreak(line_start, wrap_width);
         if ( !line_break )
           line_break = (_BYTE *)newline;
         if ( !line_break || !*line_break )
@@ -22211,13 +22211,13 @@ int  sub_40BEE0(
     saved_x = a5;
     glyph = *cursor++;
     if ( glyph != 10 )
-      a5 = (unsigned __int16)sub_40BC00((unsigned __int16)a5, a4, glyph);
+      a5 = (unsigned __int16)TextSprite_DrawGlyphAndAdvance((unsigned __int16)a5, a4, glyph);
     if ( glyph_index == dword_511EC0 )
-      sub_40BC00(saved_x, a4, 0x5Fu);
+      TextSprite_DrawGlyphAndAdvance(saved_x, a4, 0x5Fu);
     ++glyph_index;
   }
   if ( glyph_index == dword_511EC0 )
-    sub_40BC00((unsigned __int16)a5, a4, 0x5Fu);
+    TextSprite_DrawGlyphAndAdvance((unsigned __int16)a5, a4, 0x5Fu);
   return a5;
 }
 // 511EC0: using guessed type int dword_511EC0;
@@ -22236,12 +22236,12 @@ int  UI_DrawTextFmt(int a1, int a2, int a3, int a4, int a5, const char *format, 
     vsnprintf((char *)byte_520520, sizeof(byte_520520), format, args);
     va_end(args);
   }
-  return sub_40BEE0(a2, a3, a5, a4, a1, byte_520520);
+  return UI_RenderAlignedTextWithCursor(a2, a3, a5, a4, a1, byte_520520);
 }
 // 520520: using guessed type unsigned __int8 byte_520520[516];
 
 //----- (0040C190) --------------------------------------------------------
-int  sub_40C190(int a1, int a2, int a3, int a4, const char *format, va_list args)
+int  UI_DrawTextFmtV(int a1, int a2, int a3, int a4, const char *format, va_list args)
 {
   unsigned __int8 v10[524]; // [esp+0h] [ebp-20Ch] BYREF
 
@@ -22249,7 +22249,7 @@ int  sub_40C190(int a1, int a2, int a3, int a4, const char *format, va_list args
     v10[0] = 0;
   else
     vsnprintf((char *)v10, sizeof(v10), format, args);
-  return sub_40BEE0(a1, a2, a3, a4, a4, v10);
+  return UI_RenderAlignedTextWithCursor(a1, a2, a3, a4, a4, v10);
 }
 // 473FC3: using guessed type int __fastcall vsprintf_(_DWORD, _DWORD);
 
@@ -22265,7 +22265,7 @@ int  UI_GetTextXOffset(int a1)
 }
 
 //----- (0040C1F0) --------------------------------------------------------
-void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
+void  TextSprite_BuildOrLoadCachedFont(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 {
   TextSpriteResourceSlotRecord *slot;
   int v6; // edx
@@ -22345,7 +22345,7 @@ void  sub_40C1F0(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     while ( v21 );
     v9 = v26;
     v27[strlen(v28) + 97] = 'p';
-    sub_401AF0((int)v29, 12 * a1);
+    Palette_LoadFromQueryHandle((int)v29, 12 * a1);
     DLXSpriteSet_DrawText(slot->cached_sprite_set, -1, v22, v26);
     DLXSpriteSet_Save((int *)(uintptr_t)(unsigned int)slot->cached_sprite_set, (int)v27, (char)v26);
   }
@@ -22382,7 +22382,7 @@ int  UI_EndDraw(int a1)
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 
 //----- (0040C3F0) --------------------------------------------------------
-int sub_40C3F0()
+int TextSprite_ReleaseAllResourceSlots()
 {
   int slot_index;
   int result; // eax
@@ -22396,7 +22396,7 @@ int sub_40C3F0()
 }
 
 //----- (0040C430) --------------------------------------------------------
-int  sub_40C430(int result)
+int  UI_SetTextCursorPosition(int result)
 {
   dword_511EC0 = result;
   return result;
@@ -22404,7 +22404,7 @@ int  sub_40C430(int result)
 // 511EC0: using guessed type int dword_511EC0;
 
 //----- (0040C450) --------------------------------------------------------
-char  sub_40C450(_BYTE *result, int a2, int a3)
+char  Str_TitleCase(_BYTE *result, int a2, int a3)
 {
   _BYTE *cursor; // esi
 
@@ -22430,7 +22430,7 @@ char  sub_40C450(_BYTE *result, int a2, int a3)
 // 476271: using guessed type int __thiscall toupper_(_DWORD);
 
 //----- (0040C4C0) --------------------------------------------------------
-_WORD * sub_40C4C0(_WORD *result)
+_WORD * Font_ResetGlyphFallbackTable(_WORD *result)
 {
   _WORD *v1; // edx
 
@@ -22446,7 +22446,7 @@ _WORD * sub_40C4C0(_WORD *result)
 }
 
 //----- (0040C4F0) --------------------------------------------------------
-int  sub_40C4F0(int a1, unsigned __int16 a2, char a3, __int16 a4)
+int  Font_SetGlyphFallbackEntry(int a1, unsigned __int16 a2, char a3, __int16 a4)
 {
   int result; // eax
 
@@ -22457,7 +22457,7 @@ int  sub_40C4F0(int a1, unsigned __int16 a2, char a3, __int16 a4)
 }
 
 //----- (0040C510) --------------------------------------------------------
-int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, ...)
+int __cdecl Font_BuildGlyphFallbackChain(int a1, char a2, unsigned __int16 a3, ...)
 {
   unsigned __int16 current_id;
   unsigned __int16 fallback_id;
@@ -22472,7 +22472,7 @@ int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, ...)
     if ( current_id == 0xFFFF || current_id == 0xFFFE || *(unsigned __int16 *)(3 * (unsigned int)current_id + a1) != 0xFFFF )
       break;
     fallback_id = (unsigned __int16)va_arg(args, unsigned int);
-    result = sub_40C4F0(a1, current_id, a2, fallback_id);
+    result = Font_SetGlyphFallbackEntry(a1, current_id, a2, fallback_id);
     current_id = fallback_id;
   }
   va_end(args);
@@ -22480,21 +22480,21 @@ int __cdecl sub_40C510(int a1, char a2, unsigned __int16 a3, ...)
 }
 
 //----- (0040C5E0) --------------------------------------------------------
-int sub_40C5E0()
+int Font_InitGlyphFallbackTablesForLanguage()
 {
   unsigned int i;
   unsigned int base;
   unsigned char language;
 
-  sub_40C4C0(&word_520738);
-  sub_40C4C0(&word_521338);
-  sub_40C4C0(word_521F38);
+  Font_ResetGlyphFallbackTable(&word_520738);
+  Font_ResetGlyphFallbackTable(&word_521338);
+  Font_ResetGlyphFallbackTable(word_521F38);
   for ( i = 0; i < 0x400u; ++i )
     word_522B38[i] = i;
-  sub_40C510((int)&word_521338, 15, 0x24Bu, 0x24Cu, 0x24Du, 0x24Eu, 0x24Fu, 0x250u, 0x251u, 0x252u, 0x24Bu);
+  Font_BuildGlyphFallbackChain((int)&word_521338, 15, 0x24Bu, 0x24Cu, 0x24Du, 0x24Eu, 0x24Fu, 0x250u, 0x251u, 0x252u, 0x24Bu);
   for ( base = 0xDF; base <= 0xEA; ++base )
   {
-    sub_40C510(
+    Font_BuildGlyphFallbackChain(
       (int)&word_521338,
       15,
       (unsigned __int16)base,
@@ -22518,7 +22518,7 @@ int sub_40C5E0()
   for ( i = 6; i <= 9; ++i )
   {
     base = 0x253 + 8 * i;
-    sub_40C510(
+    Font_BuildGlyphFallbackChain(
       (int)&word_521338,
       15,
       (unsigned __int16)base,
@@ -22538,7 +22538,7 @@ int sub_40C5E0()
     case 0:
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
-        sub_40C510(
+        Font_BuildGlyphFallbackChain(
           (int)&word_521338,
           15,
           (unsigned __int16)base,
@@ -22563,7 +22563,7 @@ int sub_40C5E0()
     case 1:
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
-        sub_40C510(
+        Font_BuildGlyphFallbackChain(
           (int)&word_521338,
           15,
           (unsigned __int16)base,
@@ -22580,7 +22580,7 @@ int sub_40C5E0()
     case 2:
       for ( base = 0x19F; base <= 0x1A6; ++base )
       {
-        sub_40C510(
+        Font_BuildGlyphFallbackChain(
           (int)&word_521338,
           10,
           (unsigned __int16)base,
@@ -22609,7 +22609,7 @@ int sub_40C5E0()
   for ( i = 0; i <= 5; ++i )
   {
     base = 0x253 + 8 * i;
-    sub_40C510(
+    Font_BuildGlyphFallbackChain(
       (int)&word_520738,
       10,
       (unsigned __int16)base,
@@ -22623,33 +22623,33 @@ int sub_40C5E0()
       (unsigned __int16)base);
   }
   if ( language == 2 )
-    sub_40C510((int)&word_520738, 10, 0xBBu, 0x2BDu, 0x2BEu, 0x2BFu, 0x2C0u, 0x2C1u, 0x2C2u, 0xBBu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0xBBu, 0x2BDu, 0x2BEu, 0x2BFu, 0x2C0u, 0x2C1u, 0x2C2u, 0xBBu);
   if ( language )
-    sub_40C510((int)&word_520738, 15, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x303u, 0xFFFFu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 15, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x303u, 0xFFFFu);
   else
-    sub_40C510((int)&word_520738, 5, 0x303u, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x24u, 0xFFFFu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 5, 0x303u, 0x304u, 0x305u, 0x306u, 0x307u, 0x308u, 0x309u, 0x30Au, 0x24u, 0xFFFFu);
 
   if ( language == 0 )
   {
-    sub_40C510((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x321u, 0x322u, 0x323u, 0x324u, 0x325u, 0x326u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x327u, 0x328u, 0x329u, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x321u, 0x322u, 0x323u, 0x324u, 0x325u, 0x326u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x327u, 0x328u, 0x329u, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0xFFFEu);
   }
   else if ( language == 1 )
   {
-    sub_40C510((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0x313u, 0x314u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0x313u, 0x314u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0x31Du, 0x31Eu, 0xFFFEu);
   }
   else if ( language == 2 )
   {
-    sub_40C510((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0x321u, 0x322u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x323u, 0x324u, 0x325u, 0x326u, 0x327u, 0x328u, 0x329u, 0xFFFEu);
-    sub_40C510((int)&word_520738, 10, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0x333u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x30Bu, 0x30Cu, 0x30Du, 0x30Eu, 0x30Fu, 0x310u, 0x311u, 0x312u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x313u, 0x314u, 0x315u, 0x316u, 0x317u, 0x318u, 0x319u, 0x31Au, 0x31Bu, 0x31Cu, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x31Du, 0x31Eu, 0x31Fu, 0x320u, 0x321u, 0x322u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x323u, 0x324u, 0x325u, 0x326u, 0x327u, 0x328u, 0x329u, 0xFFFEu);
+    Font_BuildGlyphFallbackChain((int)&word_520738, 10, 0x32Au, 0x32Bu, 0x32Cu, 0x32Du, 0x32Eu, 0x32Fu, 0x330u, 0x331u, 0x332u, 0x333u, 0xFFFEu);
   }
 
   return language;
@@ -22661,7 +22661,7 @@ int sub_40C5E0()
 // 522B38: using guessed type __int16 word_522B38[223];
 
 //----- (0040CE70) --------------------------------------------------------
-int  sub_40CE70(unsigned int a1, int a2)
+int  MiniMap_BuildTileColorTables(unsigned int a1, int a2)
 {
   unsigned char *base0;
   unsigned char *base1;
@@ -22831,7 +22831,7 @@ int  MiniMap_CreateSurface(DWORD a1)
   g_RenderDevice = Surface;
   minimap_frame_sprite = DLX_GetSpriteForChar(dword_5202BC, 4);
   Compat_RenderDeviceDrawMenuSprite(0, 0, minimap_frame_sprite, 1u);
-  return sub_40CE70(MAP_THEME_INDEX, 0);
+  return MiniMap_BuildTileColorTables(MAP_THEME_INDEX, 0);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202BC: using guessed type int dword_5202BC;
@@ -22894,7 +22894,7 @@ int  MiniMap_BlitDirtyRectAndDrawViewportBox(
       top = (unsigned __int16)(word_523346 + 6 + (unsigned __int8)byte_523F54 * *(_WORD *)(gameData + 140012));
       left = (unsigned __int16)(word_523344 + 6 + (unsigned __int8)byte_523F54 * *(_WORD *)(gameData + 140008));
       bottom = (unsigned __int16)(word_523346 + 7 + (unsigned __int8)byte_523F54 * (*(_WORD *)(gameData + 140012) + 7));
-      sub_404040((unsigned __int16 *)surface, left, right, top, bottom, 0x4Cu);
+      Surface_DrawRectOutline((unsigned __int16 *)surface, left, right, top, bottom, 0x4Cu);
       return result;
     }
   }
@@ -22966,7 +22966,7 @@ int  MiniMap_RedrawTileRect(int a1, signed int a2, int a3, int a4)
 // 523F54: using guessed type char byte_523F54;
 
 //----- (0040D800) --------------------------------------------------------
-BOOL  sub_40D800(unsigned __int16 a1, unsigned __int16 a2)
+BOOL  MiniMap_IsSpanWithinViewportBounds(unsigned __int16 a1, unsigned __int16 a2)
 {
   return PLAYER_MINIMAP_VISIBLE(VIEWED_PLAYER_INDEX)
       && a1 >= (unsigned __int16)word_523344
@@ -23177,7 +23177,7 @@ int MiniMap_UpdateViewportFromCursor()
             *(_DWORD *)(gameData + 140012),
             is_flipping);
         }
-        return sub_418700(1);
+        return WorldMap_RedrawViewport(1);
       }
     }
   }
@@ -23196,7 +23196,7 @@ int MiniMap_UpdateViewportFromCursor()
 int MiniMap_ToggleVisibility()
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) ^= 1u;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -23226,7 +23226,7 @@ int MiniMap_ShowAllLayers()
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   dword_511FF0 = 7;
   Locale_DrawInteger();
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
@@ -23238,7 +23238,7 @@ int MiniMap_ShowUnitsOnly()
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   dword_511FF0 = 2;
   Locale_DrawInteger();
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
@@ -23250,7 +23250,7 @@ int MiniMap_ShowBuildingsOnly()
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
   dword_511FF0 = 4;
   Locale_DrawInteger();
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 511FF0: using guessed type int dword_511FF0;
 // 5202E4: using guessed type int gameData;
@@ -23260,7 +23260,7 @@ int MiniMap_ShowBuildingsOnly()
 int MiniMap_Hide()
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 0;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
@@ -23478,15 +23478,15 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
     if ( *(_DWORD *)(v18 + 13) )
     {
       v64 = 0xFFFFFF;
-      v39 = sub_401CE0((int)&unk_51D59C, (unsigned __int8 *)&v64);
+      v39 = Render_ApplyColorTripletBytes((int)&unk_51D59C, (unsigned __int8 *)&v64);
     }
     else
     {
       v65 = 10395294;
-      v39 = sub_401CE0((int)&unk_51D59C, (unsigned __int8 *)&v65);
+      v39 = Render_ApplyColorTripletBytes((int)&unk_51D59C, (unsigned __int8 *)&v65);
     }
-    sub_40BBF0(v39);
-    sub_40BC90(
+    TextSprite_SetStyleFlag(v39);
+    TextSprite_DrawStringWithOrientation(
       (unsigned __int16)v77,
       (unsigned __int16)v79,
       0,
@@ -23513,7 +23513,7 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
   v53 = v22 + DLX_GetSpriteWidth(dword_523F5C, 4u);
   SpriteHeight = DLX_GetSpriteHeight(dword_523F5C, 3u);
   v21 = v75;
-  sub_402850(
+  Render_BlitSurfaceRect(
     (_DWORD *)dword_523F60,
     0,
     (unsigned __int16)v71[1],
@@ -23569,15 +23569,15 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
           v42 = &v67;
           v67 = 10395294;
         }
-        v43 = sub_401CE0((int)&unk_51D59C, (unsigned __int8 *)v42);
+        v43 = Render_ApplyColorTripletBytes((int)&unk_51D59C, (unsigned __int8 *)v42);
         v44 = v70;
-        sub_40BBF0(v43);
+        TextSprite_SetStyleFlag(v43);
         v68 = &v71[20 * v44];
         LOWORD(v44) = (_WORD)v80;
         v22 = *(_DWORD *)&v68[2 * (unsigned __int8)g_LanguageIndex + 5];
         v81 = 22 * v70 + v78;
         v40 = (unsigned __int16)v81;
-        sub_40BC90((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
+        TextSprite_DrawStringWithOrientation((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
         v55 = v81 + 22;
         v45 = Render_LoadResourceSprite_v3(*(_BYTE **)&v68[2 * (unsigned __int8)g_LanguageIndex + 5]);
         LOBYTE(v22) = v44;
@@ -23590,13 +23590,13 @@ int  UI_RunMenu(_WORD *a1, DWORD a2)
       if ( !v46 )
         goto LABEL_52;
       v69 = 3342130;
-      v47 = sub_401CE0((int)&unk_51D59C, (unsigned __int8 *)&v69);
-      sub_40BBF0(v47);
+      v47 = Render_ApplyColorTripletBytes((int)&unk_51D59C, (unsigned __int8 *)&v69);
+      TextSprite_SetStyleFlag(v47);
       v22 = *(_DWORD *)&v72[2 * (unsigned __int8)g_LanguageIndex + 5];
       v48 = (unsigned __int16)v80;
       v81 = 22 * v41 + v78;
       v49 = (unsigned __int16)v81;
-      sub_40BC90((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
+      TextSprite_DrawStringWithOrientation((unsigned __int16)v80, (unsigned __int16)v81, 0, (unsigned __int8 *)v22);
       v56 = v81 + 22;
       v50 = Render_LoadResourceSprite_v3(*(_BYTE **)&v72[2 * (unsigned __int8)g_LanguageIndex + 5]);
       LOBYTE(v22) = v48;
@@ -23645,7 +23645,7 @@ LABEL_52:
       v59,
       v62);
   }
-  sub_402850(v73, 0, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
+  Render_BlitSurfaceRect(v73, 0, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
   Render_Present((int)g_RenderState);
   if ( dword_523F60 != dword_5202E0 )
   {
@@ -23660,7 +23660,7 @@ LABEL_52:
       v60,
       0);
   }
-  sub_402850(v73, (_DWORD *)dword_523F60, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
+  Render_BlitSurfaceRect(v73, (_DWORD *)dword_523F60, 0, 0, v82 - 1, v83 - 1, *v71, v71[1]);
   if ( v73 )
     (*(void (**)(void))v73[46])();
   if ( v70 != -1 && (v34 = &v71[20 * v70], *(_DWORD *)(v34 + 13)) )
@@ -23733,7 +23733,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   menu_sprite = DLX_GetSpriteForChar(dword_523F5C, (unsigned __int8)g_LanguageIndex % 3);
   (void)menu_sprite;
   Render_ReleaseSurface(2, 0);
-  sub_40BBF0(76);
+  TextSprite_SetStyleFlag(76);
   mission_index = ACTIVE_MISSION_INDEX;
   if ( mission_index == 3 || mission_index == 13 )
     UI_DrawTextFmt(0, 585, 11, 0, 2, (const char *)aDD, GAME_TURN_COUNTER, 10);
@@ -23990,7 +23990,7 @@ signed int  Map_ClassifyFogOfWarOverlayForPlayer(int a1, signed int a2, int a3)
   v9 = v7 | v8 & 0xFE;
   if ( !v9 )
     return 0;
-  sub_40BBF0(1);
+  TextSprite_SetStyleFlag(1);
   if ( (~v9 & 0x5A) == 0x5A && (v10 & 1) == 1 )
     return 12;
   if ( (~v10 & 0x5A) == 0x5A && v10 < 0 )
@@ -24455,7 +24455,7 @@ int  Camera_CenterOnUnit(int a1)
   v3 = *(_DWORD *)(gameData + 140004);
   if ( *(_DWORD *)(gameData + 140012) + 7 > v3 )
     *(_DWORD *)(gameData + 140012) = v3 - 7;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -24538,7 +24538,7 @@ __int16 * UnitStack_ClearRemainingActionPoints(__int16 *result, DWORD a2, double
 }
 
 //----- (0040FEF0) --------------------------------------------------------
-signed int sub_40FEF0()
+signed int WorldMap_HandleViewportScrollKeys()
 {
   int v0; // edx
   int v2; // ecx
@@ -24553,7 +24553,7 @@ signed int sub_40FEF0()
     {
       *(_DWORD *)(gameData + 140008) = v0 - 1;
 LABEL_4:
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
       dword_5202F0 = 1;
       return 1;
     }
@@ -24561,14 +24561,14 @@ LABEL_4:
   if ( Input_IsKeyPressed(205) && (v2 = *(_DWORD *)(gameData + 140008), *(_DWORD *)(gameData + 140000) - 9 > v2) )
   {
     *(_DWORD *)(gameData + 140008) = v2 + 1;
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
     dword_5202F0 = 1;
     return 1;
   }
   else if ( Input_IsKeyPressed(200) && (v3 = *(_DWORD *)(gameData + 140012), v3 > 0) )
   {
     *(_DWORD *)(gameData + 140012) = v3 - 1;
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
     dword_5202F0 = v5;
     return v5;
   }
@@ -24936,7 +24936,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
     if ( v101 && !*(_DWORD *)(gameData + 147159) )
     {
       v20 = *((_BYTE *)v7 + 4);
-      sub_4131B0(v87, *((_BYTE *)v7 + 6), v20);
+      Unit_BuildGoSpriteFilePath(v87, *((_BYTE *)v7 + 6), v20);
       v22 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
       if ( v22 )
         v22 = DLXSpriteSet_Load(v22, v87);
@@ -24947,7 +24947,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
     dword_523F74 = 0;
     dword_523F70 = 0;
     if ( v101 )
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
     v92 = dword_544D14;
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
     v11 = v107;
@@ -25084,7 +25084,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                     break;
                 }
                 DD_Pump((int)g_RenderState, v66);
-                if ( sub_40FEF0() )
+                if ( WorldMap_HandleViewportScrollKeys() )
                 {
                   v109 = 0;
                 }
@@ -25112,7 +25112,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                         {
                           v80 = v79 + v7[1];
                           ++v79;
-                          sub_418A90(v78 + *v7, v80);
+                          WorldMap_RedrawTileIfVisible(v78 + *v7, v80);
                         }
                         while ( v79 <= 1 );
                         ++v78;
@@ -25126,29 +25126,29 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                     else
                     {
                       v82 = v108;
-                      sub_418A90(*v7, v7[1]);
+                      WorldMap_RedrawTileIfVisible(*v7, v7[1]);
                       if ( v82 == 4 || v82 == 5 || v82 == 3 || v82 == 6 || v82 == 2 )
-                        sub_418A90(*v7, v7[1] + 1);
+                        WorldMap_RedrawTileIfVisible(*v7, v7[1] + 1);
                       if ( !v108 || v108 == 7 || v108 == 1 )
-                        sub_418A90(*v7, v7[1] - 1);
+                        WorldMap_RedrawTileIfVisible(*v7, v7[1] - 1);
                       if ( v108 == 2 || v108 == 3 || v108 == 1 || v108 == 4 )
-                        sub_418A90(*v7 + 1, v7[1]);
+                        WorldMap_RedrawTileIfVisible(*v7 + 1, v7[1]);
                       if ( v108 == 6 || v108 == 5 || v108 == 7 )
-                        sub_418A90(*v7 - 1, v7[1]);
+                        WorldMap_RedrawTileIfVisible(*v7 - 1, v7[1]);
                       v78 = v108;
                       switch ( v108 )
                       {
                         case 3:
-                          sub_418A90(*v7 + 1, v7[1] + 1);
+                          WorldMap_RedrawTileIfVisible(*v7 + 1, v7[1] + 1);
                           break;
                         case 1:
-                          sub_418A90(*v7 + 1, v7[1] - 1);
+                          WorldMap_RedrawTileIfVisible(*v7 + 1, v7[1] - 1);
                           break;
                         case 5:
-                          sub_418A90(*v7 - 1, v7[1] + 1);
+                          WorldMap_RedrawTileIfVisible(*v7 - 1, v7[1] + 1);
                           break;
                         case 7:
-                          sub_418A90(*v7 - 1, v7[1] - 1);
+                          WorldMap_RedrawTileIfVisible(*v7 - 1, v7[1] - 1);
                           break;
                       }
                     }
@@ -25215,7 +25215,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                 v53 = v97;
                 MiniMap_RedrawTileRect((int)v102, v52, v45, (int)v47);
                 if ( v53 )
-                  sub_418700(1);
+                  WorldMap_RedrawViewport(1);
               }
             }
           }
@@ -25224,7 +25224,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
         {
           Time_Now(v45, v44);
           v13 = (int)g_RenderState;
-          sub_418700(1);
+          WorldMap_RedrawViewport(1);
           v56 = v55 + 10;
           while ( 1 )
           {
@@ -25290,10 +25290,10 @@ LABEL_21:
     if ( v101 )
     {
       UnitStackSelection_RefreshForSelectedStack(v15);
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
     }
     RenderState_SelectCursorDescriptor((int)g_RenderState, v92);
-    sub_40A490(v15);
+    WorldMap_SyncSelectionForHumanPlayer(v15);
     Diagnostics_TraceWorldMapActionEvent(
       "unit_move_after_path_state",
       v107,
@@ -25419,7 +25419,7 @@ int  UnitStats_CalcEffectiveWallAttack(char *a1, int a2)
 }
 
 //----- (00411350) --------------------------------------------------------
-signed int  sub_411350(int a1, DWORD a2)
+signed int  Debug_LogUnitSquadDetails(int a1, DWORD a2)
 {
   signed int result; // eax
   signed int v4; // ecx
@@ -25436,20 +25436,20 @@ signed int  sub_411350(int a1, DWORD a2)
 
 signed int Unit_DebugDumpFormationSizes(int a1, DWORD a2)
 {
-  return sub_411350(a1, a2);
+  return Debug_LogUnitSquadDetails(a1, a2);
 }
 // 4113B7: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 
 //----- (00411420) --------------------------------------------------------
-signed int  sub_411420(int a1, DWORD a2)
+signed int  Unit_DebugDumpFormationSizesForStackIndex(int a1, DWORD a2)
 {
   return Unit_DebugDumpFormationSizes(725 * a1 + gameData + 147174, a2);
 }
 
 signed int Render_DrawSprite_v3(int a1, DWORD a2)
 {
-  return sub_411420(a1, a2);
+  return Unit_DebugDumpFormationSizesForStackIndex(a1, a2);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -25906,7 +25906,7 @@ __int16  Map_RedrawUnitFootprintByIndex(int a1)
   unit_stack = (__int16 *)(gameData + 147174 + 725 * a1);
   x = unit_stack[0];
   y = unit_stack[1];
-  result = sub_418A90(x, y);
+  result = WorldMap_RedrawTileIfVisible(x, y);
   unit_type = unit_stack[3];
   unit_metadata_offset = 88 * unit_type;
   if ( byte_512577[unit_metadata_offset] )
@@ -25917,10 +25917,10 @@ __int16  Map_RedrawUnitFootprintByIndex(int a1)
       {
         if ( (unsigned __int16)unit_type == 0x1E )
         {
-          sub_418A90(x + 1, y);
-          sub_418A90(x, y - 1);
-          sub_418A90(x - 1, y);
-          result = sub_418A90(x, y + 1);
+          WorldMap_RedrawTileIfVisible(x + 1, y);
+          WorldMap_RedrawTileIfVisible(x, y - 1);
+          WorldMap_RedrawTileIfVisible(x - 1, y);
+          result = WorldMap_RedrawTileIfVisible(x, y + 1);
         }
       }
       else
@@ -25929,31 +25929,31 @@ __int16  Map_RedrawUnitFootprintByIndex(int a1)
         {
           case 0:
           case 4:
-            sub_418A90(x - 1, y);
-            result = sub_418A90(x + 1, y);
+            WorldMap_RedrawTileIfVisible(x - 1, y);
+            result = WorldMap_RedrawTileIfVisible(x + 1, y);
             break;
           case 1:
-            sub_418A90(x + 1, y);
-            result = sub_418A90(x, y - 1);
+            WorldMap_RedrawTileIfVisible(x + 1, y);
+            result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
           case 2:
           case 6:
-            sub_418A90(x, y - 1);
-            result = sub_418A90(x, y + 1);
+            WorldMap_RedrawTileIfVisible(x, y - 1);
+            result = WorldMap_RedrawTileIfVisible(x, y + 1);
             break;
           case 3:
-            sub_418A90(x + 1, y);
-            sub_418A90(x, y + 1);
-            result = sub_418A90(x, y - 1);
+            WorldMap_RedrawTileIfVisible(x + 1, y);
+            WorldMap_RedrawTileIfVisible(x, y + 1);
+            result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
           case 5:
-            sub_418A90(x - 1, y);
-            sub_418A90(x, y + 1);
-            result = sub_418A90(x, y - 1);
+            WorldMap_RedrawTileIfVisible(x - 1, y);
+            WorldMap_RedrawTileIfVisible(x, y + 1);
+            result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
           case 7:
-            sub_418A90(x - 1, y);
-            result = sub_418A90(x, y - 1);
+            WorldMap_RedrawTileIfVisible(x - 1, y);
+            result = WorldMap_RedrawTileIfVisible(x, y - 1);
             break;
           default:
             return result;
@@ -25976,18 +25976,18 @@ int  Map_RedrawUnitNeighborhoodByIndex(int a1)
   unit_stack = (__int16 *)(725 * a1 + gameData + 147174);
   x = unit_stack[0];
   y = unit_stack[1];
-  result = sub_418A90(x, y);
+  result = WorldMap_RedrawTileIfVisible(x, y);
   result = Unit_GetSpriteVerticalOffsetPx(a1);
   if ( result )
   {
-    sub_418A90(x, y - 1);
-    sub_418A90(x, y + 1);
-    sub_418A90(x - 1, y);
-    sub_418A90(x + 1, y);
-    sub_418A90(x - 1, y - 1);
-    sub_418A90(x - 1, y + 1);
-    sub_418A90(x + 1, y - 1);
-    return sub_418A90(x + 1, y + 1);
+    WorldMap_RedrawTileIfVisible(x, y - 1);
+    WorldMap_RedrawTileIfVisible(x, y + 1);
+    WorldMap_RedrawTileIfVisible(x - 1, y);
+    WorldMap_RedrawTileIfVisible(x + 1, y);
+    WorldMap_RedrawTileIfVisible(x - 1, y - 1);
+    WorldMap_RedrawTileIfVisible(x - 1, y + 1);
+    WorldMap_RedrawTileIfVisible(x + 1, y - 1);
+    return WorldMap_RedrawTileIfVisible(x + 1, y + 1);
   }
   return result;
 }
@@ -26037,7 +26037,7 @@ void Map_UpdateIdleAnimatedUnits()
   }
   while ( v0 < 500 );
   UI_UpdateWorldMapUnitAttentionFlash();
-  sub_418E50(0, 0);
+  UI_UpdateUnitBlinkFlash(0, 0);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -26170,7 +26170,7 @@ void * UnitSlots_ExtractSpecialEntries(char *a1, int a2, char *a3)
   return result;
 }
 
-void * sub_412000(char *a1, int a2, char *a3)
+void * UnitSlots_ExtractSpecialEntriesForBuildingAttack(char *a1, int a2, char *a3)
 {
   return UnitSlots_ExtractSpecialEntries(a1, a2, a3);
 }
@@ -26198,7 +26198,7 @@ int  UnitSlots_AppendEntries(char *a1, char *a2)
   return result;
 }
 
-int  sub_4120B0(char *a1, char *a2)
+int  UnitSlots_AppendEntriesForBuildingAttack(char *a1, char *a2)
 {
   return UnitSlots_AppendEntries(a1, a2);
 }
@@ -27071,14 +27071,14 @@ LABEL_2:
 // 5202E4: using guessed type int gameData;
 
 //----- (00412D00) --------------------------------------------------------
-_DWORD * sub_412D00(_DWORD *result)
+_DWORD * UnitTrackElementStack_BuildBlank(_DWORD *result)
 {
   *result = 0;
   return result;
 }
 
 //----- (00412D20) --------------------------------------------------------
-int  sub_412D20(int a1, int a2, int a3)
+int  UnitStack_CopyFromTemplate(int a1, int a2, int a3)
 {
   int v4; // eax
   int result; // eax
@@ -27100,7 +27100,7 @@ int  sub_412D20(int a1, int a2, int a3)
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
 
 //----- (00412DA0) --------------------------------------------------------
-int  sub_412DA0(int result, int a2)
+int  BattleUnitEntry_CopyMergingPackedFlags(int result, int a2)
 {
   char v2; // bl
   char v3; // cl
@@ -27167,7 +27167,7 @@ int  sub_412DA0(int result, int a2)
 }
 
 //----- (00412EB0) --------------------------------------------------------
-int  sub_412EB0(_DWORD *a1, _DWORD *a2, int a3)
+int  UnitTrackElementStack_CopyFromTemplate(_DWORD *a1, _DWORD *a2, int a3)
 {
   *a1 = *a2;
   return _wcpp_4_copy_array__(a3) - 4;
@@ -27175,7 +27175,7 @@ int  sub_412EB0(_DWORD *a1, _DWORD *a2, int a3)
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
 
 //----- (00412EE0) --------------------------------------------------------
-int  sub_412EE0(int result, int a2)
+int  UnitTrackElement_CopyFromTemplate(int result, int a2)
 {
   *(_BYTE *)result = *(_BYTE *)a2;
   *(_BYTE *)(result + 1) = *(_BYTE *)(a2 + 1);
@@ -27184,7 +27184,7 @@ int  sub_412EE0(int result, int a2)
 }
 
 //----- (00412F00) --------------------------------------------------------
-int sub_412F00()
+int UnitSpriteCache_ClearAllEntries()
 {
   int result; // eax
 
@@ -27195,7 +27195,7 @@ int sub_412F00()
 // 523F78: using guessed type int dword_523F78;
 
 //----- (00412F30) --------------------------------------------------------
-int  sub_412F30(
+int  UnitSpriteCache_GetOrLoadEntry(
         unsigned __int16 a1,
         char a2,
         unsigned __int8 a3,
@@ -27246,7 +27246,7 @@ int  sub_412F30(
   g_UnitSpriteCacheRecords[record_offset + 6] = a3;
   *(unsigned int *)(void *)(g_UnitSpriteCacheRecords + record_offset + 11) = Time_Now(0, 0);
 
-  sub_4131B0(path, (unsigned __int8)a1, a2);
+  Unit_BuildGoSpriteFilePath(path, (unsigned __int8)a1, a2);
   sprite_record = Mem_Alloc(22, 0, 0, 0);
   if ( sprite_record )
     sprite_record = sub_4060E0(sprite_record, path, a3 + 8 * a4);
@@ -27256,7 +27256,7 @@ int  sub_412F30(
 
 int  Unit_SetFlag(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __int8 a4, DWORD a5, signed int a6)
 {
-  return sub_412F30(a1, a2, a3, a4, a5, a6);
+  return UnitSpriteCache_GetOrLoadEntry(a1, a2, a3, a4, a5, a6);
 }
 // 412FB8: variable 'v11' is possibly undefined
 // 412FDB: variable 'v7' is possibly undefined
@@ -27269,7 +27269,7 @@ int  Unit_SetFlag(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __i
 // 523F93: using guessed type int dword_523F93;
 
 //----- (00413080) --------------------------------------------------------
-int  sub_413080(signed int a1, char a2, unsigned __int8 a3, unsigned __int8 a4)
+int  UnitSpriteCache_FindEntryOrLoad(signed int a1, char a2, unsigned __int8 a3, unsigned __int8 a4)
 {
   int record_index;
   int record_offset;
@@ -27294,7 +27294,7 @@ int  sub_413080(signed int a1, char a2, unsigned __int8 a3, unsigned __int8 a4)
 // 523F93: using guessed type int dword_523F93;
 
 //----- (00413120) --------------------------------------------------------
-void  sub_413120(int a1, DWORD a2)
+void  UnitSpriteCache_FreeAllEntries(int a1, DWORD a2)
 {
   int i; // edx
   int sprite_record; // ecx
@@ -27320,7 +27320,7 @@ void  sub_413120(int a1, DWORD a2)
 // 523F8F: using guessed type int dword_523F8F;
 
 //----- (00413180) --------------------------------------------------------
-int sub_413180()
+int UnitSpriteCache_CountActiveEntries()
 {
   int v0; // edx
   int i; // eax
@@ -27381,7 +27381,7 @@ static const char *UnitType_GetResourceKey(int unit_type)
 }
 
 //----- (004131B0) --------------------------------------------------------
-char  sub_4131B0(char *a1, unsigned __int8 a2, char a3)
+char  Unit_BuildGoSpriteFilePath(char *a1, unsigned __int8 a2, char a3)
 {
   char *v3; // esi
   char *v4; // edi
@@ -27563,7 +27563,7 @@ char  UI_BeginUnitInfo(char *a1, unsigned __int8 a2, char a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413350) --------------------------------------------------------
-char  sub_413350(char *a1, unsigned __int8 a2, int a3)
+char  Unit_BuildGarrisonSlotIconSpritePath(char *a1, unsigned __int8 a2, int a3)
 {
   char *v4; // esi
   char *v5; // edi
@@ -27664,7 +27664,7 @@ char  sub_413350(char *a1, unsigned __int8 a2, int a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413430) --------------------------------------------------------
-char  sub_413430(char *a1, unsigned __int8 a2, int a3)
+char  Unit_BuildSelectedUnitPanelIconSpritePath(char *a1, unsigned __int8 a2, int a3)
 {
   char *v4; // esi
   char *v5; // edi
@@ -27765,7 +27765,7 @@ char  sub_413430(char *a1, unsigned __int8 a2, int a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413510) --------------------------------------------------------
-char  sub_413510(char *a1, unsigned __int8 a2, int a3)
+char  Unit_BuildSelectedUnitPanelIconPalettePath(char *a1, unsigned __int8 a2, int a3)
 {
   char *v4; // esi
   char *v5; // edi
@@ -27866,7 +27866,7 @@ char  sub_413510(char *a1, unsigned __int8 a2, int a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004135F0) --------------------------------------------------------
-char  sub_4135F0(char *a1, unsigned __int8 a2, char a3)
+char  Unit_BuildAttackAnimSpritePath(char *a1, unsigned __int8 a2, char a3)
 {
   char *v3; // esi
   char *v4; // edi
@@ -27966,7 +27966,7 @@ char  sub_4135F0(char *a1, unsigned __int8 a2, char a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004136D0) --------------------------------------------------------
-char  sub_4136D0(char *a1, unsigned __int8 a2, char a3)
+char  Unit_BuildShotAnimSpritePath(char *a1, unsigned __int8 a2, char a3)
 {
   char *v3; // esi
   char *v4; // edi
@@ -28066,7 +28066,7 @@ char  sub_4136D0(char *a1, unsigned __int8 a2, char a3)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (004137B0) --------------------------------------------------------
-char  sub_4137B0(char *a1, unsigned __int8 a2)
+char  Unit_BuildShotAnimPaletteSpritePath(char *a1, unsigned __int8 a2)
 {
   char *v2; // esi
   char *v3; // edi
@@ -28145,7 +28145,7 @@ char  sub_4137B0(char *a1, unsigned __int8 a2)
 // 51256C: using guessed type char *g_UnitTypeResourceKeys;
 
 //----- (00413860) --------------------------------------------------------
-void  sub_413860(char *a1, unsigned __int8 a2, int a3)
+void  Unit_BuildBigInfoGraphicPath(char *a1, unsigned __int8 a2, int a3)
 {
   char *v3; // esi
   char *v4; // edi
@@ -28787,7 +28787,7 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
     {
       v23 = v61;
       DD_Pump((int)g_RenderState, v22);
-      sub_40AE80(v22);
+      WorldMap_RedrawFrameForAIWhenEnabled(v22);
       v22 = 0;
       v64 = 0;
       v71 = v60;
@@ -29118,7 +29118,7 @@ _DWORD * Unit_MoveTrackNearTile(int a1, int a2, int a3, int a4, DWORD a5)
 
   saved_tile_occupant = *(__int16 *)(TILE_INDEX(a2, a4));
   *(_WORD *)(TILE_INDEX(a2, a4)) = -1;
-  sub_40AEB0();
+  WorldMap_DisableFrameRedraw();
   raw_path = Unit_MoveTrack(a1, source_row, a2, source_column, a4, a4);
   if ( raw_path )
   {
@@ -29211,7 +29211,7 @@ int * Building_GenerateApproachTrack(int a1, int a2, int a3, char a4, DWORD a5)
     *(_WORD *)(gameData + TILE_TERRAIN_ROW_STRIDE * (building_row + 1) + TILE_TERRAIN_RECORD_STRIDE * (building_column + 1) + 4) = 872;
   }
 
-  sub_40AEB0();
+  WorldMap_DisableFrameRedraw();
   stack_record = UNIT_STACK(a1);
   source_row = UNIT_STACK_TILE_ROW(stack_record);
   source_column = UNIT_STACK_TILE_COLUMN(stack_record);
@@ -29347,7 +29347,7 @@ int  Building_GenerateNearApproachTrack(int a1, int a2, int a3, char a4, DWORD a
     *(_WORD *)(gameData + v8 + 2 * v7 + 556376) = -1;
     *(_WORD *)(gameData + 200 * HIDWORD(v7) + 2 * v7 + 556376) = -1;
   }
-  sub_40AEB0();
+  WorldMap_DisableFrameRedraw();
   v9 *= 145;
   v10 = *(__int16 *)(gameData + 5 * v9 + 147176);
   v11 = Unit_MoveTrack(a1, *(__int16 *)(gameData + 5 * v9 + 147174), SHIDWORD(v7), v10, v6, v7);
@@ -29556,7 +29556,7 @@ signed int  Math_CeilSqrt(signed int a1)
 }
 
 //----- (00415EA0) --------------------------------------------------------
-__int16  sub_415EA0(int a1, int a2, unsigned __int16 *a3)
+__int16  WorldMap_DrawUnitStackOverlayGlyph(int a1, int a2, unsigned __int16 *a3)
 {
   unsigned int v3; // eax
   int sprite; // eax
@@ -29567,7 +29567,7 @@ __int16  sub_415EA0(int a1, int a2, unsigned __int16 *a3)
     LOWORD(v3) = a3[2];
     if ( (unsigned __int16)v3 == 0xFFFF )
     {
-      sub_40BBF0(1);
+      TextSprite_SetStyleFlag(1);
       sprite = DLX_GetSpriteForChar(dword_5202D8, *a3 - 45);
       LOWORD(v3) = Compat_RenderDeviceDrawMenuSprite(a1, a2, sprite, 1);
     }
@@ -29610,7 +29610,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
         v7 = gameData + 725 * v24;
         v8 = (unsigned __int8)byte_512577[88 * *(__int16 *)(v7 + 147180)];
         if ( dword_512360 == -1 || dword_512360 != v24 )
-          SpriteForChar = sub_413080(
+          SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
                             *(unsigned __int16 *)(gameData + 725 * v24 + 147180),
                             *(_BYTE *)(gameData + 725 * v24 + 147178),
                             *(_BYTE *)(gameData + 725 * v24 + 147197) & 7,
@@ -29625,7 +29625,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
           v11 = Time_Now(a3 + 63, v8);
           v12 = Math_SinDegreesQ16(30 * (g_WorldMapAttentionFlashStartTick - v11));
           v13 = a2 + 63;
-          sub_405510(
+          Sprite_DrawSimpleTrackingOffset(
             v23,
             a2,
             v10,
@@ -29640,7 +29640,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
           v13 = gameData;
           if ( *(_BYTE *)(725 * v24 + gameData + 147894) )
           {
-            sub_405510(SpriteForChar, a2, v10, a3, v22, a3 + 63, 128, 1u);
+            Sprite_DrawSimpleTrackingOffset(SpriteForChar, a2, v10, a3, v22, a3 + 63, 128, 1u);
           }
           else
           {
@@ -29648,7 +29648,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
           }
         }
         if ( (g_UnitTypeFlags[22 * *(__int16 *)(gameData + 725 * v24 + 147180)] & 1) == 0 )
-          sub_415EA0(a2, a3, a5);
+          WorldMap_DrawUnitStackOverlayGlyph(a2, a3, a5);
         v15 = Unit_GetSquadCount(725 * v24 + gameData + 147174);
         if ( v15 > 1 )
         {
@@ -29673,7 +29673,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
         result = gameData;
         if ( *(_DWORD *)(gameData + 147155) )
         {
-          sub_40BB60(3, 76, v13);
+          TextSprite_ActivateResourceSlot(3, 76, v13);
           return UI_DrawText(a2 + 20, a3 + 25, (int)aD_0);
         }
       }
@@ -29701,7 +29701,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
 // 5269A4: using guessed type int dword_5269A4;
 
 //----- (004163F0) --------------------------------------------------------
-unsigned int __thiscall sub_4163F0(void *this)
+unsigned int __thiscall Map_InitBuildingSwayJitterOffsets(void *this)
 {
   int offset;
   unsigned int result;
@@ -29720,7 +29720,7 @@ unsigned int __thiscall sub_4163F0(void *this)
 }
 
 //----- (00416430) --------------------------------------------------------
-unsigned __int8 *__thiscall sub_416430(void *this)
+unsigned __int8 *__thiscall Map_UpdateConstructionSiteSwayAnimation(void *this)
 {
   unsigned __int8 *result; // eax
   unsigned int now; // eax
@@ -29782,10 +29782,10 @@ unsigned __int8 *__thiscall sub_416430(void *this)
       {
         if ( building_record[4] )
         {
-          sub_418A90(building_record[0] + 1, building_record[1]);
-          sub_418A90(building_record[0], building_record[1]);
-          sub_418A90(building_record[0] + 1, building_record[1] + 1);
-          result = (unsigned __int8 *)sub_418A90(
+          WorldMap_RedrawTileIfVisible(building_record[0] + 1, building_record[1]);
+          WorldMap_RedrawTileIfVisible(building_record[0], building_record[1]);
+          WorldMap_RedrawTileIfVisible(building_record[0] + 1, building_record[1] + 1);
+          result = (unsigned __int8 *)WorldMap_RedrawTileIfVisible(
                                         building_record[0],
                                         building_record[1] + 1);
         }
@@ -29798,7 +29798,7 @@ unsigned __int8 *__thiscall sub_416430(void *this)
 // 526980: using guessed type int dword_526980;
 
 //----- (00416610) --------------------------------------------------------
-unsigned int __thiscall sub_416610(void *this)
+unsigned int __thiscall Map_UpdateIdleAnimatedBuildings(void *this)
 {
   unsigned int result; // eax
   int building_offset; // ecx
@@ -29822,17 +29822,17 @@ unsigned int __thiscall sub_416610(void *this)
         {
           if ( building_kind <= 2u )
           {
-            sub_418A90(building_record[0], building_record[1]);
-            sub_418A90(building_record[0] + 1, building_record[1]);
-            sub_418A90(building_record[0], building_record[1] + 1);
-            result = sub_418A90(
+            WorldMap_RedrawTileIfVisible(building_record[0], building_record[1]);
+            WorldMap_RedrawTileIfVisible(building_record[0] + 1, building_record[1]);
+            WorldMap_RedrawTileIfVisible(building_record[0], building_record[1] + 1);
+            result = WorldMap_RedrawTileIfVisible(
                        building_record[0] + 1,
                        building_record[1] + 1);
           }
         }
         else
         {
-          result = sub_418A90(building_record[0], building_record[1]);
+          result = WorldMap_RedrawTileIfVisible(building_record[0], building_record[1]);
         }
       }
     }
@@ -29845,7 +29845,7 @@ unsigned int __thiscall sub_416610(void *this)
 // 526998: using guessed type int dword_526998;
 
 //----- (00416750) --------------------------------------------------------
-int  sub_416750(int a1, int a2, unsigned int a3)
+int  WorldMap_DrawUnitAttentionFlashGlow(int a1, int a2, unsigned int a3)
 {
   int i; // esi
   int v4; // eax
@@ -29881,14 +29881,14 @@ int  sub_416750(int a1, int a2, unsigned int a3)
       v6 = -v6;
     v10 = 50 - (v4 + v6) / 3;
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 36);
-    result = sub_405510(SpriteForChar, a1, v5, a2, a1 + 63, a2 + 63, v10, 1u);
+    result = Sprite_DrawSimpleTrackingOffset(SpriteForChar, a1, v5, a2, a1 + 63, a2 + 63, v10, 1u);
   }
   return result;
 }
 // 5202C8: using guessed type int dword_5202C8;
 
 //----- (00416850) --------------------------------------------------------
-int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
+int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
 {
   int v3; // edi
   signed int v4; // esi
@@ -30008,7 +30008,7 @@ int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
   v96 = (unsigned __int16)(a1 + 63);
   v97 = a2;
   v98 = a1;
-  if ( sub_40D800(a1, a2 + 63) )
+  if ( MiniMap_IsSpanWithinViewportBounds(a1, a2 + 63) )
     goto LABEL_2;
   v94 = Map_ClassifyFogOfWarOverlayForPlayer(v3, v4, VIEWED_PLAYER_INDEX);
   if ( !v94 )
@@ -30058,11 +30058,11 @@ int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
   v8 = ACTIVE_MISSION_INDEX;
   if ( v8 == 7 )
   {
-    sub_45C000(v3, v4);
+    WorldMap_DrawMission07TreasureMarker(v3, v4);
   }
   else if ( v8 == 17 )
   {
-    sub_45F190(v3, v4);
+    WorldMap_DrawMission17TreasureMarker(v3, v4);
   }
   if ( a3[2] < 0x362u || a3[2] > 0x36Cu )
   {
@@ -30341,7 +30341,7 @@ int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
     Compat_RenderDeviceDrawMenuSprite(a1, a2, v47, 1);
     if ( *(__int16 *)(v102 + 16) == -1 && *(_BYTE *)(v102 + 4) )
     {
-      sub_416750(a1, a2, v103);
+      WorldMap_DrawUnitAttentionFlashGlow(a1, a2, v103);
     }
     else if ( !*(_WORD *)(v102 + 16) )
     {
@@ -30441,7 +30441,7 @@ int  sub_416850(unsigned __int16 a1, unsigned __int16 a2, unsigned __int16 *a3)
         v91 = DLX_GetSpriteForChar(dword_5202CC, v86);
         Compat_RenderDeviceDrawMenuSprite(a1, a2, v91, 1);
         if ( !v99 )
-          sub_415EA0(a1, a2, a3);
+          WorldMap_DrawUnitStackOverlayGlyph(a1, a2, a3);
       }
     }
   }
@@ -30459,15 +30459,15 @@ LABEL_133:
   v53 = ACTIVE_MISSION_INDEX;
   if ( v53 == 1 )
   {
-    sub_459ED0(v3, v4, a2, a1);
+    WorldMap_DrawMission01ShrineMarker(v3, v4, a2, a1);
   }
   else if ( v53 == 11 )
   {
-    sub_45D430(v3, v4, a2, a1);
+    WorldMap_DrawMission11ShrineMarker(v3, v4, a2, a1);
   }
   if ( v94 != -1 )
   {
-    sub_40BBF0(1);
+    TextSprite_SetStyleFlag(1);
     v55 = DLX_GetSpriteForChar(g_FogOverlaySpriteSet, v54);
     Compat_RenderDeviceDrawMenuSprite(a1, a2, v55, 1);
   }
@@ -30480,7 +30480,7 @@ LABEL_133:
       v57 = -9;
     else
       v57 = 76;
-    sub_40BB60(3, v57, v48);
+    TextSprite_ActivateResourceSlot(3, v57, v48);
     UI_DrawText(a1, a2, (int)aDD_0);
   }
 LABEL_2:
@@ -30527,7 +30527,7 @@ LABEL_2:
 // 5269B0: using guessed type int dword_5269B0;
 
 //----- (00418700) --------------------------------------------------------
-int  sub_418700(int a1)
+int  WorldMap_RedrawViewport(int a1)
 {
   int v2; // edi
   int v3; // ecx
@@ -30550,7 +30550,7 @@ int  sub_418700(int a1)
     v4 = 32;
     do
     {
-      result = sub_416850(
+      result = WorldMap_DrawMapTile(
                  v4,
                  v10,
                  (unsigned __int16 *)(gameData
@@ -30570,7 +30570,7 @@ int  sub_418700(int a1)
     v9 = 32;
     do
     {
-      result = sub_416850(
+      result = WorldMap_DrawMapTile(
                  v9,
                  ((_WORD)v2 << 6) + 16,
                  (unsigned __int16 *)(14 * (v2 + *(_DWORD *)(gameData + 140012))
@@ -30664,7 +30664,7 @@ int  sub_418700(int a1)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00418A90) --------------------------------------------------------
-int  sub_418A90(int result, int a2)
+int  WorldMap_RedrawTileIfVisible(int result, int a2)
 {
   int v2; // ebx
   unsigned __int16 v3; // si
@@ -30683,9 +30683,9 @@ int  sub_418A90(int result, int a2)
       v3 = (((_WORD)result - *(_WORD *)(gameData + 140008)) << 6) + 32;
       v4 = (((_WORD)a2 - *(_WORD *)(gameData + 140012)) << 6) + 16;
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-      sub_416850(v3, v4, (unsigned __int16 *)(14 * a2 + gameData + 1400 * result));
+      WorldMap_DrawMapTile(v3, v4, (unsigned __int16 *)(14 * a2 + gameData + 1400 * result));
       v5 = dword_544D10;
-      sub_460BB0(g_RenderState, v3, v3 + 64, v4, v4 + 64);
+      RenderState_PumpIfRectInViewBounds(g_RenderState, v3, v3 + 64, v4, v4 + 64);
       result = Render_FillRect((_DWORD *)dword_5202E0, 0, v4, v3, v3 + 63, v4 + 63, v3, v4);
       if ( v5 )
         return Render_Present((int)g_RenderState);
@@ -30720,7 +30720,7 @@ int  UI_CenterWorldMapViewportOnRectIfFit(int result, int a2, int a3, int a4)
       *(_DWORD *)(gameData + 140008) = 0;
     if ( *(int *)(gameData + 140012) < 0 )
       *(_DWORD *)(gameData + 140012) = 0;
-    return sub_418700(1);
+    return WorldMap_RedrawViewport(1);
   }
   return result;
 }
@@ -30744,7 +30744,7 @@ int  UI_CenterWorldMapViewportOnTile(int a1, int a2)
     *(_DWORD *)(gameData + 140008) = 0;
   if ( *(int *)(gameData + 140012) < 0 )
     *(_DWORD *)(gameData + 140012) = 0;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 5202E4: using guessed type int gameData;
 
@@ -30770,7 +30770,7 @@ void UI_UpdateWorldMapUnitAttentionFlash()
 
   if ( g_WorldMapAttentionFlashUnitIndex != -1 )
   {
-    sub_418A90(
+    WorldMap_RedrawTileIfVisible(
       *(__int16 *)(gameData + 725 * g_WorldMapAttentionFlashUnitIndex + 147174),
       *(__int16 *)(gameData + 725 * g_WorldMapAttentionFlashUnitIndex + 147176));
     if ( (unsigned int)(30 * (Time_Now(v1, v0) - g_WorldMapAttentionFlashStartTick)) >= 0x708 )
@@ -30795,7 +30795,7 @@ BOOL UI_IsWorldMapUnitAttentionFlashActive()
 // 5139F4: using guessed type int g_WorldMapAttentionFlashUnitIndex;
 
 //----- (00418E30) --------------------------------------------------------
-int  sub_418E30(int a1, int a2, int a3)
+int  UI_StartUnitBlinkFlash(int a1, int a2, int a3)
 {
   int result; // eax
 
@@ -30810,7 +30810,7 @@ int  sub_418E30(int a1, int a2, int a3)
 // 5269A4: using guessed type int dword_5269A4;
 
 //----- (00418E50) --------------------------------------------------------
-void __fastcall sub_418E50(int a1, int a2)
+void __fastcall UI_UpdateUnitBlinkFlash(int a1, int a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -30833,7 +30833,7 @@ void __fastcall sub_418E50(int a1, int a2)
 // 5269A4: using guessed type int dword_5269A4;
 
 //----- (00418EC0) --------------------------------------------------------
-int  sub_418EC0(int a1, int a2, int a3)
+int  UI_StartTileBlinkFlash(int a1, int a2, int a3)
 {
   int result; // eax
 
@@ -30849,7 +30849,7 @@ int  sub_418EC0(int a1, int a2, int a3)
 // 5269B0: using guessed type int dword_5269B0;
 
 //----- (00418EE0) --------------------------------------------------------
-void __fastcall sub_418EE0(int a1, int a2)
+void __fastcall UI_UpdateTileBlinkFlash(int a1, int a2)
 {
   int v2; // ecx
   int v3; // eax
@@ -30863,7 +30863,7 @@ void __fastcall sub_418EE0(int a1, int a2)
     v4 = dword_5269A8;
     if ( dword_5269B0 >= 8 )
       dword_5269A8 = -1;
-    sub_418A90(v4, dword_5269AC);
+    WorldMap_RedrawTileIfVisible(v4, dword_5269AC);
   }
 }
 // 418F00: variable 'v2' is possibly undefined
@@ -30939,7 +30939,7 @@ int  UI_DrawTileHighlightOverlay(int a1, int a2, int a3, int a4)
   SpriteHeight = DLX_GetSpriteHeight(dword_5202C8, 0x28u);
   centered_y = a4 + (64 - SpriteHeight) / 2;
   SpriteForChar = DLX_GetSpriteForChar(dword_5202C8, 40);
-  return sub_405510(SpriteForChar, centered_y, centered_x, a3, a4 + 63, a3 + 63, 80, 1u);
+  return Sprite_DrawSimpleTrackingOffset(SpriteForChar, centered_y, centered_x, a3, a4 + 63, a3 + 63, 80, 1u);
 }
 // 4190A8: positive sp value 8 has been found
 // 419030: using guessed type int nullsub_1(void);
@@ -30983,7 +30983,7 @@ void  createLogFiles(int a1, int a2, DWORD a3)
 // 526A20: using guessed type int dword_526A20;
 
 //----- (00419110) --------------------------------------------------------
-int  sub_419110(int result)
+int  Battle_StoreLastOutcomeValue(int result)
 {
   dword_526A20 = result;
   return result;
@@ -31080,7 +31080,7 @@ void  Debug_Log(int a1, char a2, DWORD a3, int a4, ...)
 // 526A20: using guessed type int dword_526A20;
 
 //----- (004191F0) --------------------------------------------------------
-unsigned __int16 * sub_4191F0(unsigned __int16 *result, int a2)
+unsigned __int16 * UI_DrawWidgetIcon(unsigned __int16 *result, int a2)
 {
   unsigned char *widget;
   int left;
@@ -31420,7 +31420,7 @@ static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_c
 }
 
 //----- (00419410) --------------------------------------------------------
-int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
+int  UI_DrawWidgetIconWithTransition(unsigned __int16 *a1, int a2, int a3, DWORD a4)
 {
   int result; // eax
   unsigned char *widget; // edi
@@ -31499,7 +31499,7 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
       v26 = a1[2] + DLX_GetSpriteWidth(sprite_set, result) - 1;
       SpriteHeight = DLX_GetSpriteHeight(sprite_set, v30);
       LOWORD(a3) = a1[2];
-      sub_460BB0(g_RenderState, *a1, *a1 + SpriteHeight - 1, a3, v26);
+      RenderState_PumpIfRectInViewBounds(g_RenderState, *a1, *a1 + SpriteHeight - 1, a3, v26);
     }
     if ( a2 )
     {
@@ -31593,15 +31593,15 @@ int  sub_419410(unsigned __int16 *a1, int a2, int a3, DWORD a4)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00419770) --------------------------------------------------------
-int  sub_419770(unsigned __int16 *a1, int a2, DWORD a3)
+int  UI_DrawWidgetIconTransitionSlow(unsigned __int16 *a1, int a2, DWORD a3)
 {
-  return sub_419410(a1, a2, 20, a3);
+  return UI_DrawWidgetIconWithTransition(a1, a2, 20, a3);
 }
 
 //----- (00419780) --------------------------------------------------------
-int  sub_419780(unsigned __int16 *a1, int a2, DWORD a3)
+int  UI_DrawWidgetIconTransitionFast(unsigned __int16 *a1, int a2, DWORD a3)
 {
-  return sub_419410(a1, a2, 10, a3);
+  return UI_DrawWidgetIconWithTransition(a1, a2, 10, a3);
 }
 
 static int UI_InvokeWidgetTransitionCallback(uintptr_t widget, int callback_arg)
@@ -31645,7 +31645,7 @@ static const char *Compat_WidgetPackedString(uintptr_t widget, unsigned int fiel
 }
 
 //----- (00419790) --------------------------------------------------------
-int  sub_419790(int result)
+int  UI_SetActiveWidgetTable(int result)
 {
   dword_526A2C = result;
   return result;
@@ -31653,7 +31653,7 @@ int  sub_419790(int result)
 // 526A2C: using guessed type int dword_526A2C;
 
 //----- (004197A0) --------------------------------------------------------
-BOOL  sub_4197A0(uintptr_t a1, DWORD a2)
+BOOL  UIWidget_ShowTextWithFadeTransition(uintptr_t a1, DWORD a2)
 {
   int v2; // ebx
   int TextXOffset; // eax
@@ -31925,7 +31925,7 @@ LABEL_23:
       *(_DWORD *)(a1 + 8));
   }
   if ( DD_IsLost((int)g_RenderState) && *(_BYTE *)(a1 + 48) == 2 )
-    sub_4197A0(a1, a2);
+    UIWidget_ShowTextWithFadeTransition(a1, a2);
   if ( DD_IsFlipping((int)g_RenderState) && *(_DWORD *)(a1 + 32) )
   {
     if ( a1 >= (uintptr_t)BuildingGarrisonDialogActions
@@ -31987,7 +31987,7 @@ LABEL_34:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00419D60) --------------------------------------------------------
-int  sub_419D60(uintptr_t result, int a2)
+int  UIWidget_RefreshActionButtonState(uintptr_t result, int a2)
 {
   if ( result == (uintptr_t)dword_511D40
     || result == (uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3) )
@@ -32079,21 +32079,21 @@ signed int  UIWidgetTable_PollHoverAndActions(_DWORD *a1, DWORD a2)
 // 545150: using guessed type int dword_545150;
 
 //----- (00419E60) --------------------------------------------------------
-int  sub_419E60(uintptr_t a1, int a2)
+int  UIWidget_PlayPressedReleaseAnimationWithDelay(uintptr_t a1, int a2)
 {
   unsigned int deadline; // ecx
 
   (void)a2;
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
+    Audio_PlayButtonSound((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  sub_419D60(a1, 1);
+  UIWidget_RefreshActionButtonState(a1, 1);
   deadline = Time_Now(0, 0) + 20;
   while ( Time_Now(0, 0) < deadline )
     DD_Pump((int)g_RenderState, 0);
   Render_Begin((int)g_RenderState, 0);
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, 1);
+  return UIWidget_RefreshActionButtonState(a1, 1);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
@@ -32101,30 +32101,30 @@ int  sub_419E60(uintptr_t a1, int a2)
 int  UIWidget_PlayPressedReleaseAnimation(uintptr_t a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
+    Audio_PlayButtonSound((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  sub_419D60(a1, 1);
+  UIWidget_RefreshActionButtonState(a1, 1);
   Render_Begin((int)g_RenderState, 0);
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, 1);
+  return UIWidget_RefreshActionButtonState(a1, 1);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00419F20) --------------------------------------------------------
-int  sub_419F20(uintptr_t a1)
+int  UIWidget_ShowPressedState(uintptr_t a1)
 {
   if ( *(_DWORD *)(a1 + 49) )
-    sub_4425E0((char *)Compat_WidgetPackedString(a1, 49));
+    Audio_PlayButtonSound((char *)Compat_WidgetPackedString(a1, 49));
   *(_DWORD *)(a1 + 8) = 6;
-  return sub_419D60(a1, 1);
+  return UIWidget_RefreshActionButtonState(a1, 1);
 }
 
 //----- (00419F50) --------------------------------------------------------
-int  sub_419F50(uintptr_t a1, int a2)
+int  UIWidget_ShowReleasedState(uintptr_t a1, int a2)
 {
   (void)a2;
   *(_DWORD *)(a1 + 8) = 5;
-  return sub_419D60(a1, 1);
+  return UIWidget_RefreshActionButtonState(a1, 1);
 }
 
 //----- (00419F70) --------------------------------------------------------
@@ -32862,9 +32862,9 @@ LABEL_22:
             UnitStack_AdjustFatigueByPredicate(v8, 10, UnitSlot_PredicateAlways, (DWORD)v8, a5);
             UnitStack_AdjustFatigueByPredicate(v62, 10, UnitSlot_PredicateAlways, (DWORD)v8, a5);
             if ( ACTIVE_MISSION_INDEX == 15 )
-              sub_45E630(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
+              Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             if ( ACTIVE_MISSION_INDEX == 5 )
-              sub_45B3C0(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
+              Mission_MarkObjective05CompleteOnAttack(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             v18 = (unsigned __int8 *)UnitStack_HasSpecialPersonageUnits((intptr_t)v8);
             v60 = UnitStack_HasSpecialPersonageUnits((intptr_t)v62);
             v19 = Unit_GetSquadCount((int)v8);
@@ -32900,7 +32900,7 @@ LABEL_22:
                 v30 = aBattle;
               }
               Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_transition_enter", v64, v58, v28, 0);
-              sub_4620F0(v30, v28, v29, (char)v20, (DWORD)v8);
+              Win_PlayModeChangeFrameTransition(v30, v28, v29, (char)v20, (DWORD)v8);
               Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_transition_return", v64, v58, v28, 0);
             }
             v31 = 0;
@@ -33007,15 +33007,15 @@ LABEL_52:
                 Rules_UnlinkArmyFact(v8, a5);
               if ( v62[3] == -1 )
                 Rules_UnlinkArmyFact(v62, a5);
-              sub_40A490((DWORD)v8);
+              WorldMap_SyncSelectionForHumanPlayer((DWORD)v8);
               v41 = v61;
               UnitStackSelection_RefreshForSelectedStack((DWORD)v8);
               if ( v41 )
                 WorldMap_RenderHook((DWORD)v8);
               else
-                sub_418700(1);
+                WorldMap_RedrawViewport(1);
               if ( v63 )
-                sub_4620F0(aChlop, 1, v42, (char)v20, (DWORD)v8);
+                Win_PlayModeChangeFrameTransition(aChlop, 1, v42, (char)v20, (DWORD)v8);
               if ( v65 )
                 Diagnostics_TraceWorldMapActionEvent("unit_attack_autoresolve_return", v64, v58, *v8, v8[1]);
               Render_DrawSprite_v3(v64, (DWORD)v8);
@@ -33042,17 +33042,17 @@ LABEL_52:
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_prepare", v64, v58, v33, 0);
             Render_Pump();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_render_pump", v64, v58, 0, 0);
-            sub_404F20((int *)&unk_51D4C0, 20);
+            Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_unlock", v64, v58, 0, 0);
             sub_405920(&dword_5202BC);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_frame_free", v64, v58, 0, 0);
             BuildingSpriteCache_Clear();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_building_cache_clear", v64, v58, 0, 0);
-            sub_413120(v34, (DWORD)v8);
+            UnitSpriteCache_FreeAllEntries(v34, (DWORD)v8);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_unit_cache_clear", v64, v58, 0, 0);
             CSS_EmptySampleCache();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_sample_clear", v64, v58, 0, 0);
-            sub_40C3F0();
+            TextSprite_ReleaseAllResourceSlots();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_text_enddraw", v64, v58, 0, 0);
             v54 = Unit_GetSquadCount((int)v62);
             v43 = Unit_GetSquadCount((int)v8);
@@ -33095,7 +33095,7 @@ LABEL_52:
               v39 = DLXSpriteSet_Load(v39, "frame.s32");
             dword_5202BC = (int)v39;
             Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
-            sub_435ED0(aMainmap_0, dword_5202F4, 1, (DWORD)v8);
+            Palette_LoadOrBuildBlendLookupTable(aMainmap_0, dword_5202F4, 1, (DWORD)v8);
             v61 = 1;
             goto LABEL_48;
           }
@@ -33214,9 +33214,9 @@ LABEL_15:
           UnitStack_SetSpentTurnFlag((int)v61);
           UnitStack_AdjustFatigueByPredicate(v61, 10, UnitSlot_PredicateAlways, (DWORD)v7, a5);
           if ( ACTIVE_MISSION_INDEX == 15 )
-            sub_45E630(*((unsigned __int8 *)v61 + 4), v7[2]);
+            Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)v61 + 4), v7[2]);
           if ( ACTIVE_MISSION_INDEX == 5 )
-            sub_45B3C0(*((unsigned __int8 *)v61 + 4), v7[2]);
+            Mission_MarkObjective05CompleteOnAttack(*((unsigned __int8 *)v61 + 4), v7[2]);
           v16 = UnitStack_HasSpecialPersonageUnits((intptr_t)v61);
           v57 = Building_HasSpecialPersonageGarrisonEntries((int)v7);
           v19 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)v61)) || PLAYER_HAS_HUMAN_CONTROLLER(v7[2]);
@@ -33249,7 +33249,7 @@ LABEL_28:
 LABEL_47:
               if ( v61[3] == -1 )
                 Rules_UnlinkArmyFact(v61, a5);
-              sub_40A490((DWORD)v7);
+              WorldMap_SyncSelectionForHumanPlayer((DWORD)v7);
               v42 = v58;
               UnitStackSelection_RefreshForSelectedStack(v58);
               if ( v42 )
@@ -33259,9 +33259,9 @@ LABEL_47:
             }
             Building_CompactGarrison(v7, (unsigned __int8 *)v61, a5);
             v26 = Unit_GetSquadCount((int)v61);
-            sub_412000((char *)v61 + 6, v26, v54);
+            UnitSlots_ExtractSpecialEntriesForBuildingAttack((char *)v61 + 6, v26, v54);
             v28 = Building_CountGarrison((int)v7);
-            sub_412000((char *)v7 + 18, v28, v55);
+            UnitSlots_ExtractSpecialEntriesForBuildingAttack((char *)v7 + 18, v28, v55);
             Building_CompactGarrison(v7, v7 + 18, a5);
             for ( v30 = 0; v30 < 12; ++v30 )
             {
@@ -33280,7 +33280,7 @@ LABEL_47:
               CalculateBattleResult(v43, v44, v45, v16, (DWORD)v7, v51, v52, v53, 0);
               v36 = 0;
 LABEL_42:
-              sub_4120B0((char *)v61 + 6, v54);
+              UnitSlots_AppendEntriesForBuildingAttack((char *)v61 + 6, v54);
               if ( v36 )
               {
                 if ( v36 == 1 )
@@ -33300,7 +33300,7 @@ LABEL_42:
                 if ( Building_CountGarrison(UNIT_RECORD(v59))
                   && !UnitStack_HasNormalCombatUnits(725 * v60 + gameData + 147174) )
                 {
-                  sub_4120B0((char *)v7 + 18, v55);
+                  UnitSlots_AppendEntriesForBuildingAttack((char *)v7 + 18, v55);
                   UnitStack_KillByIndex(v60, v40, (DWORD)v7, a5);
                   --*(_WORD *)(gameData + 1423 * *(unsigned __int8 *)(v48 + 4) + 141441);
                   ++*(_WORD *)(1423 * v7[2] + gameData + 141441);
@@ -33328,12 +33328,12 @@ LABEL_42:
               goto LABEL_47;
             }
             Render_Pump();
-            sub_404F20((int *)&unk_51D4C0, 20);
+            Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
             sub_405920(&dword_5202BC);
             BuildingSpriteCache_Clear();
-            sub_413120(v33, (DWORD)v7);
+            UnitSpriteCache_FreeAllEntries(v33, (DWORD)v7);
             CSS_EmptySampleCache();
-            sub_40C3F0();
+            TextSprite_ReleaseAllResourceSlots();
             v34 = (unsigned __int8 *)(gameData + 509674 + v32);
             v36 = Battle_RunTacticalCombat((__int16 *)(725 * v60 + gameData + 147174), 0, (int)v16, v34, (DWORD)v7, v57);
             v37 = *(_BYTE *)(gameData + 140016);
@@ -33365,7 +33365,7 @@ LABEL_38:
                   v40 = -45;
                   dword_5202BC = (int)v39;
                   Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
-                  sub_435ED0(aMainmap_1, dword_5202F4, v41, (DWORD)v7);
+                  Palette_LoadOrBuildBlendLookupTable(aMainmap_1, dword_5202F4, v41, (DWORD)v7);
                   v58 = 1;
                   if ( v56 )
                     UI_LoadTurnBannerGfx(211, (DWORD)v7);
@@ -33384,7 +33384,7 @@ LABEL_38:
             v38 = DLXSpriteSet_Load(v38, (char)v34);
             goto LABEL_37;
           }
-          sub_4620F0(aAtak_zam, 0, 0, 0, 0);
+          Win_PlayModeChangeFrameTransition(aAtak_zam, 0, 0, 0, 0);
           goto LABEL_28;
         }
       }
@@ -33628,7 +33628,7 @@ int  CalculateBattleResult(
 
   v49 = a1;
   v53 = a4;
-  sub_419110(1);
+  Battle_StoreLastOutcomeValue(1);
   Debug_Log(0, 0, a5, (int)aNewBattle);
   Debug_Log((int)v49, (char)a2, a5, (int)aCalculatebattl, (int)v49, a2, v53, (int)a3, a6, a7, a8, a9);
   Debug_Log(0, 0, a5, (int)aJednostka1);
@@ -33741,7 +33741,7 @@ int  CalculateBattleResult(
     *v56 = -1;
     v56 = (_WORD *)((char *)v56 + 31);
   }
-  return sub_419110(0);
+  return Battle_StoreLastOutcomeValue(0);
 }
 // 41C719: conditional instruction was optimized away because esi.4>=1
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
@@ -33953,11 +33953,11 @@ signed int  UI_PromptLeadTroopsPersonally(
       && dword_544D00 >> byte_54512C <= v31 )
     {
       v34 = 1;
-      sub_4425E0(aMale);
+      Audio_PlayButtonSound(aMale);
       goto LABEL_34;
     }
   }
-  sub_4425E0(aMale_0);
+  Audio_PlayButtonSound(aMale_0);
   v34 = 0;
 LABEL_34:
   Render_Pump();
@@ -34598,7 +34598,7 @@ char  Building_AssignUniqueGeneratedName(int a1)
     }
   }
   strcpy(v1, off_513A84[name_index]);
-  return sub_40C450((_BYTE *)v1, 0, 0);
+  return Str_TitleCase((_BYTE *)v1, 0, 0);
 }
 // 476253: using guessed type int __fastcall strlwr_(_DWORD, _DWORD);
 // 513A84: using guessed type char *off_513A84[50];
@@ -34671,7 +34671,7 @@ char  Building_FinishConstruction(unsigned __int8 *a1, int a2, char a3, double a
     {
       v16 = *a1;
       UI_CenterWorldMapViewportOnRectIfFit(v16, a1[1], a1[1] - 5, v16);
-      return sub_445CE0((int)a1, v17, v16, (DWORD)a1);
+      return Building_ShowConstructionFinishedDialog((int)a1, v17, v16, (DWORD)a1);
     }
   }
   return result;
@@ -35477,7 +35477,7 @@ signed int  Building_Transfer(int a1, int a2, int a3, int a4, double a5)
   }
   if ( Building_FindFreeAdjacentSpawnTile(v46, &v36, gameData + 509674 + v6, &v37) != 1 )
     return 0;
-  sub_40AEB0();
+  WorldMap_DisableFrameRedraw();
   *(_WORD *)(TILE_INDEX(*v46, v46[1])) = -1;
   v9 = v46;
   *(_WORD *)(gameData + 200 * (*v46 + 1) + 2 * v46[1] + 556374) = -1;
@@ -35608,7 +35608,7 @@ signed int  Building_Transfer(int a1, int a2, int a3, int a4, double a5)
 // 5202E4: using guessed type int gameData;
 
 //----- (0041F810) --------------------------------------------------------
-int  sub_41F810(int a1)
+int  Building_CalcGarrisonAverageHealthPercent(int a1)
 {
   int v1; // ebx
   int v2; // edx
@@ -35628,7 +35628,7 @@ int  sub_41F810(int a1)
 
 int  UI_DrawUnitStatsValues(int a1)
 {
-  return sub_41F810(a1);
+  return Building_CalcGarrisonAverageHealthPercent(a1);
 }
 
 //----- (0041F850) --------------------------------------------------------
@@ -35878,7 +35878,7 @@ signed int  Unit_FindById(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (0041FDF0) --------------------------------------------------------
-void * sub_41FDF0(unsigned __int8 *a1, char a2, int a3)
+void * Building_ShowHoverInfoPopup(unsigned __int8 *a1, char a2, int a3)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -36220,7 +36220,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   sub_405920((int *)&v39);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v46;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 4202F9: variable 'v4' is possibly undefined
 // 420359: variable 'v6' is possibly undefined
@@ -36246,7 +36246,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
 // 545150: using guessed type int dword_545150;
 
 //----- (00420770) --------------------------------------------------------
-DWORD sub_420770()
+DWORD Timer_InitPerfCounterFrequency()
 {
   LARGE_INTEGER v0; // rax
 
@@ -36270,7 +36270,7 @@ int __fastcall Time_Now(int a1, int a2)
 }
 
 //----- (00420800) --------------------------------------------------------
-unsigned int  sub_420800(int a1, int a2, int a3)
+unsigned int  Timer_BusyWaitWithCallback(int a1, int a2, int a3)
 {
   void (__cdecl *callback)(void);
   unsigned int deadline;
@@ -36291,18 +36291,18 @@ unsigned int  sub_420800(int a1, int a2, int a3)
 }
 
 //----- (00420820) --------------------------------------------------------
-int __thiscall sub_420820(void *this)
+int __thiscall Mem_ConstructObjectArray256(void *this)
 {
   return _wcpp_4_ctor_array__(this, 256);
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
 
 //----- (00420840) --------------------------------------------------------
-int  sub_420840(uintptr_t a1, int a2)
+int  Castle_RequestManagementScreenExit(uintptr_t a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_CastleScreenExitRequested = 1;
   return result;
 }
@@ -36338,7 +36338,7 @@ int Castle_RebuildMissingAddonFlags()
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420910) --------------------------------------------------------
-void *sub_420910()
+void *Castle_ShowNewBuildingMenu()
 {
   void *result; // eax
   int v1; // ecx
@@ -36558,7 +36558,7 @@ int  Castle_BuildSchoolWithAnimation(char a1, DWORD a2)
     v6[2] = *(_BYTE *)(v7 + 2);
     v8 = (int)v3;
     v3[416] &= ~8u;
-    sub_4426C0(aBudowaSzkola, 64);
+    Audio_PlaySoundEffectByName(aBudowaSzkola, 64);
     Castle_PlayAddonConstructionReveal(251, v8);
     Castle_UpdateGateToggles();
     return j__nfree_();
@@ -36592,7 +36592,7 @@ int  Castle_BuildWorkshopWithAnimation(char a1, DWORD a2)
     v6[2] = *(_BYTE *)(v7 + 2);
     v8 = (int)v3;
     v3[416] &= ~4u;
-    sub_4426C0(aBudowaWarszt_0, 64);
+    Audio_PlaySoundEffectByName(aBudowaWarszt_0, 64);
     Castle_PlayAddonConstructionReveal(252, v8);
     Castle_UpdateGateToggles();
     return j__nfree_();
@@ -36626,7 +36626,7 @@ int  Castle_BuildBarracksWithAnimation(int a1, char a2, DWORD a3)
     v7[2] = *(_BYTE *)(v8 + 2);
     v9 = (int)v4;
     v4[416] &= ~2u;
-    sub_4426C0(aBudowaBaraki, 64);
+    Audio_PlaySoundEffectByName(aBudowaBaraki, 64);
     Castle_PlayAddonConstructionReveal(254, v9);
     Castle_UpdateGateToggles();
     return j__nfree_();
@@ -36665,7 +36665,7 @@ int  Castle_BuildHospitalWithAnimation(char a1, DWORD a2)
       v9 = aBudowaChrzesci;
     else
       v9 = aBudowaPoganie;
-    sub_4426C0(v9, 64);
+    Audio_PlaySoundEffectByName(v9, 64);
     Castle_PlayAddonConstructionReveal(250, v8);
     Castle_UpdateGateToggles();
     return j__nfree_();
@@ -36700,7 +36700,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD a2)
     v6[2] = *(_BYTE *)(v7 + 2);
     v8 = (int)v3;
     v3[416] &= ~0x10u;
-    sub_4426C0(aBudowaKuznia, 64);
+    Audio_PlaySoundEffectByName(aBudowaKuznia, 64);
     Castle_PlayAddonConstructionReveal(253, v8);
     Castle_UpdateGateToggles();
     return j__nfree_();
@@ -36711,7 +36711,7 @@ int  Castle_BuildSmithsWithAnimation(char a1, DWORD a2)
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
 //----- (00420F70) --------------------------------------------------------
-BOOL sub_420F70()
+BOOL Building_HandleUpgradeButtonAction()
 {
   BOOL result; // eax
 
@@ -36737,7 +36737,7 @@ int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4)
   if ( result )
   {
     Building_Destroy(g_SelectedBuildingRecord, a2, a3, a4);
-    result = sub_4426C0(aNiszcz, v5);
+    result = Audio_PlaySoundEffectByName(aNiszcz, v5);
     g_CastleDestroyConfirmed = 1;
     g_CastleScreenExitRequested = 1;
   }
@@ -36810,8 +36810,8 @@ static void Castle_EnsureCompositeStatusWidget(void)
   *(_DWORD *)(dword_513D98 + 16) = 6;
   *(_DWORD *)(dword_513D98 + 20) = 7;
   *(_DWORD *)(dword_513D98 + 24) = -1;
-  *(_DWORD *)(dword_513D98 + 28) = (int)(uintptr_t)&sub_419770;
-  *(_DWORD *)(dword_513D98 + 32) = (int)(uintptr_t)&sub_420840;
+  *(_DWORD *)(dword_513D98 + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionSlow;
+  *(_DWORD *)(dword_513D98 + 32) = (int)(uintptr_t)&Castle_RequestManagementScreenExit;
   *(_DWORD *)(dword_513D98 + 49) = (int)(uintptr_t)castle_status_button_sound;
   *(_DWORD *)(dword_513D98 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE) = -1;
   g_CastleCompositeStatusWidgetInitialized = 1;
@@ -37165,7 +37165,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
 // 526E74: using guessed type int g_CastleSceneIconSpriteSet;
 
 //----- (00421740) --------------------------------------------------------
-int  sub_421740(
+int  Castle_DrawAmbientAnimationSprite(
         unsigned __int16 a1,
         int a2,
         int a3,
@@ -37183,7 +37183,7 @@ int  sub_421740(
   {
     v11 = a2 + DLX_GetSpriteWidth(a4, a3);
     SpriteHeight = DLX_GetSpriteHeight(a4, a3);
-    sub_460BB0(g_RenderState, a1, a1 + SpriteHeight, a2, v11);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, a1, a1 + SpriteHeight, a2, v11);
   }
   SpriteForChar = DLX_GetSpriteForChar(a4, a3);
   result = Compat_RenderDeviceDrawMenuSprite(a2, a1, SpriteForChar, a5);
@@ -37212,7 +37212,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C3C[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(
+          result = Castle_DrawAmbientAnimationSprite(
                      word_513C3C[20 * g_CurrentPlayerIndex],
                      word_513C3E[20 * g_CurrentPlayerIndex],
                      dword_526E8C,
@@ -37227,7 +37227,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C40[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C42[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C42[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 3:
@@ -37236,7 +37236,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C44[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C46[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C46[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 4:
@@ -37248,14 +37248,14 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
         {
           result = word_513C48[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
-            result = sub_421740(result, word_513C4A[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleAmbientSpriteSet, 1u);
+            result = Castle_DrawAmbientAnimationSprite(result, word_513C4A[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleAmbientSpriteSet, 1u);
         }
       }
       break;
     case 5:
       result = word_513C4C[20 * g_CurrentPlayerIndex];
       if ( result != -1 )
-        result = sub_421740(result, word_513C4E[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleAmbientSpriteSet, 0);
+        result = Castle_DrawAmbientAnimationSprite(result, word_513C4E[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleAmbientSpriteSet, 0);
       break;
     case 6:
       result = *(char *)(g_SelectedBuildingRecord + 4);
@@ -37263,7 +37263,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C50[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C52[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C52[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 7:
@@ -37272,7 +37272,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C54[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C56[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C56[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 8:
@@ -37281,7 +37281,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C58[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C5A[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C5A[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 9:
@@ -37290,7 +37290,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C5C[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C5E[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C5E[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 10:
@@ -37299,7 +37299,7 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       {
         result = word_513C60[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = sub_421740(result, word_513C62[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, word_513C62[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleAmbientSpriteSet, 0);
       }
       break;
     default:
@@ -37611,14 +37611,14 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   Castle_RenderCompositeSceneLayers(dword_5202E0, 0, g_SelectedBuildingRecord, 0);
   strcpy(v11, "zamek_1");
   v11[6] = g_CurrentPlayerIndex + 49;
-  sub_435ED0(v11, (int)byte_526A70, v3, a2);
+  Palette_LoadOrBuildBlendLookupTable(v11, (int)byte_526A70, v3, a2);
   Render_LoadResourceSprite_v4(8, byte_526A70, v4, 0, a2);
   Render_LoadResourceSprite_v4(7, byte_526A70, v5, 0, a2);
   Render_LoadResourceSprite_v4(13, byte_526A70, v6, 0, a2);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Castle_DrawStatusPanel();
-  sub_460CB0((int)g_RenderState, (int)byte_526A70, 0, a2);
-  sub_4610B0((int)g_RenderState);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_526A70, 0, a2);
+  RenderState_DrawCursorSpriteToPrimarySurface((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
   {
     primary_surface_handle = (unsigned int)*(_DWORD *)((unsigned char *)&unk_51D4C0 + 0xD0);
@@ -37644,7 +37644,7 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
   }
   Castle_UpdateAmbientAnimationLayers();
   Castle_RenderCompositeSceneLayers(g_CastleScreenSurface, 1, g_SelectedBuildingRecord, 0);
-  return sub_405020((int *)&unk_51D4C0, byte_526A70, 20);
+  return Palette_FadeInFromBlack((int *)&unk_51D4C0, byte_526A70, 20);
 }
 // 422057: variable 'v3' is possibly undefined
 // 422066: variable 'v4' is possibly undefined
@@ -37708,7 +37708,7 @@ static void BuildingGarrisonDialog_WriteActionWidgetRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = -1;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_419770;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionSlow;
   *(_DWORD *)(record + 32) = (int)(uintptr_t)action_callback;
   *(_DWORD *)(record + 36) = (int)(uintptr_t)text_pl;
   *(_DWORD *)(record + 40) = (int)(uintptr_t)text_en;
@@ -37868,7 +37868,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   g_BuildingGarrisonDialogUiSpriteSet = (int)(uintptr_t)sprite_set;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] ui_sprites_loaded path=%s sprite_set=%08x\n", sprite_path, g_BuildingGarrisonDialogUiSpriteSet);
-  sub_435ED0((CHAR *)resource_base, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, runtime_context);
+  Palette_LoadOrBuildBlendLookupTable((CHAR *)resource_base, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] palette_loaded base=%s\n", resource_base);
   Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
@@ -37876,8 +37876,8 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, 0, 0, runtime_context);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] resource_sprites_loaded cursor_base=%d\n", dword_526A2C);
-  sub_460CB0((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
-  sub_419790(8);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, 0, runtime_context);
+  UI_SetActiveWidgetTable(8);
   BuildingGarrisonDialog_EnsureActionWidgets(building_record);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] action_widgets_ready\n");
@@ -37895,7 +37895,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   BuildingGarrisonDialog_DrawSelectedUnitPanel();
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] selected_panel_drawn\n");
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   Render_Pump();
@@ -37943,7 +37943,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
             slot_index,
             g_BuildingGarrisonDialogSelectedSlots[slot_index],
             selected_count);
-        sub_4426C0("marker", 64);
+        Audio_PlaySoundEffectByName("marker", 64);
         BuildingGarrisonDialog_DrawSlotGrid(slot_index);
         Render_Present((int)g_RenderState);
       }
@@ -37970,7 +37970,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
       Render_Present((int)g_RenderState);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] slot_detail_present idx=%d\n", slot_index);
-      sub_404C80((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
+      Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
       while ( DD_IsLost((int)g_RenderState) )
       {
         DD_Pump((int)g_RenderState, 0);
@@ -37997,7 +37997,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
     }
   }
   Render_Pump();
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   if ( g_BuildingGarrisonDialogResourceHandle )
     nfree_(g_BuildingGarrisonDialogResourceHandle);
   g_BuildingGarrisonDialogResourceHandle = 0;
@@ -38734,14 +38734,14 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v47 = g_RenderHook;
   g_RenderHook = (int (*)())Castle_RebuildSceneBuffers;
   Debug_Log(v4, a2, a1, (int)aSetrhS08x_6);
-  sub_40C3F0();
+  TextSprite_ReleaseAllResourceSlots();
   BuildingSpriteCache_Clear();
-  sub_413120(v5, a1);
+  UnitSpriteCache_FreeAllEntries(v5, a1);
   CSS_EmptySampleCache();
   Debug_Log(467 * a1, a2, a1, (int)aCastleD);
   g_SelectedBuildingRecord = BUILDING_RECORD(a1);
   dword_526E70 = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
-  v46 = sub_441800(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
+  v46 = Audio_PauseMusicAndPlayLoopedSound(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateGateToggles();
   strcpy(v45, "zamek_1\\z_iko.s32");
@@ -38773,7 +38773,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   if ( v16 )
     v16 = DLXSpriteSet_Load(v16, aDz_info_s32);
   g_CastleStatusSpriteSet = (int)v16;
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   Render_Pump();
   Surface = (_DWORD *)Mem_Alloc(188, v17, a2, a1);
   if ( Surface )
@@ -38802,8 +38802,8 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
     ++castle_loop_iterations;
     DD_Pump((int)g_RenderState, (char)v22);
     Castle_UpdateAmbientAnimationLayers();
-    sub_420910();
-    sub_44E350(word_513D08);
+    Castle_ShowNewBuildingMenu();
+    UI_RunHoverTooltipZones(word_513D08);
     g_RenderDevice = &unk_51D4C0;
     Castle_EnsureCompositeStatusWidget();
     UIWidgetTable_PollHoverAndActions((_DWORD *)dword_513D98, v19);
@@ -38825,7 +38825,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 250:
-        castle_panel_callback = sub_43DCE0;
+        castle_panel_callback = Building_ShowGateDoorDialog_v3;
         if ( v23 != 153 )
         {
           v22 = UI_Locale_BuildingNames_J[(unsigned __int8)g_LanguageIndex];
@@ -38834,7 +38834,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 251:
-        castle_panel_callback = sub_43D8E0;
+        castle_panel_callback = Building_ShowGateDoorDialog_v1;
         if ( v23 != 156 )
         {
           v23 = 156;
@@ -38842,7 +38842,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 252:
-        castle_panel_callback = sub_43DEE0;
+        castle_panel_callback = Building_ShowGateDoorDialog_v4;
         if ( v23 != 159 )
         {
           v23 = 159;
@@ -38850,7 +38850,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         }
         break;
       case 253:
-        castle_panel_callback = sub_43DAE0;
+        castle_panel_callback = Building_ShowGateDoorDialog_v2;
         if ( v23 != 166 )
         {
           v23 = 166;
@@ -38897,9 +38897,9 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
           dword_544CFC >> byte_54512C,
           dword_544D00 >> byte_54512C,
           castle_loop_iterations);
-      sub_419790(8);
+      UI_SetActiveWidgetTable(8);
       Render_Pump();
-      sub_404F20((int *)&unk_51D4C0, 20);
+      Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
       if ( g_CastleScreenSurface )
         RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
       v36 = Render_SetResourceHandle((int)&unk_51D4C0, 1);
@@ -38919,7 +38919,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       g_CastleScreenSurface = (int)v38;
       Castle_RebuildSceneBuffers(v39, v19);
       g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
-      sub_460CB0((int)g_RenderState, (int)byte_526A70, v40, v19);
+      RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_526A70, v40, v19);
       Render_LoadResourceSprite_v4(8, byte_526A70, v41, (char)v22, v19);
       Render_LoadResourceSprite_v4(7, byte_526A70, v42, (char)v22, v19);
       Render_LoadResourceSprite_v4(13, byte_526A70, v43, (char)v22, v19);
@@ -38936,9 +38936,9 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       Input_IsKeyPressed(1),
       g_CastleScreenExitRequested);
   Render_Pump();
-  sub_460C70((int)g_RenderState);
-  sub_441960(v24, 400);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  RenderState_LoadDefaultCursorSprite((int)g_RenderState);
+  Audio_SetMusicVolume(v24, 400);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   sub_405920(&dword_523F5C);
   v26 = (_DWORD *)Mem_Alloc(4112, v25, 144, v19);
   if ( v26 )
@@ -38950,17 +38950,17 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   sub_405920(&g_CastleSceneIconSpriteSet);
   sub_405920(&g_CastleAmbientSpriteSet);
   sub_405920(&g_CastleStatusSpriteSet);
-  sub_40C3F0();
+  TextSprite_ReleaseAllResourceSlots();
   CSS_EmptySampleCache();
-  sub_435ED0(aMainmap_2, dword_5202F4, v28, v19);
-  sub_441870(v46);
+  Palette_LoadOrBuildBlendLookupTable(aMainmap_2, dword_5202F4, v28, v19);
+  Audio_ResumeMusicAndStopLoopedSound(v46);
   Debug_Log(v29, v27, v19, (int)aUnsetrh08x_6);
   g_RenderHook = v47;
   Render_SetResourceHandle((int)&unk_51D4C0, v48);
   Diagnostics_ResetFrameDumpOnCastleReturn();
   result = WorldMap_RenderHook(v19);
   if ( g_CastleDestroyConfirmed )
-    return (int *)sub_4620F0(aZniszcze, 1, v31, v27, v19);
+    return (int *)Win_PlayModeChangeFrameTransition(aZniszcze, 1, v31, v27, v19);
   return result;
 }
 // 4225A0: conditional instruction was optimized away because ecx.4!=0
@@ -39086,7 +39086,7 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
   v9 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   v3 = dword_520728;
-  sub_460BB0(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
     (_DWORD *)g_TooltipBackdropSurface,
     0,
@@ -39098,7 +39098,7 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
     g_TooltipLeft);
   Render_ReleaseSurface(g_TooltipResourceHandle, v3);
   va_start(args, a2);
-  sub_40C190(g_TooltipTop, g_TooltipBottom, a1, g_TooltipLeft, a2, args);
+  UI_DrawTextFmtV(g_TooltipTop, g_TooltipBottom, a1, g_TooltipLeft, a2, args);
   va_end(args);
   v4 = (char *)&g_TooltipTextBuffer;
   Render_Present((int)g_RenderState);
@@ -39133,7 +39133,7 @@ void * Tooltip_ShowText(int a1, char *a2, ...)
 //----- (00422AC0) --------------------------------------------------------
 int Tooltip_RestoreBackdrop()
 {
-  sub_460BB0(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, g_TooltipTop, g_TooltipBottom, g_TooltipLeft, g_TooltipRight);
   Render_FillRect(
     (_DWORD *)g_TooltipBackdropSurface,
     0,
@@ -39173,7 +39173,7 @@ int  Tooltip_SetResourceHandle(int result)
 // 526F08: using guessed type int g_TooltipResourceHandle;
 
 //----- (00422B80) --------------------------------------------------------
-signed int  sub_422B80(int a1)
+signed int  Unit_CountSelectedGroupMembers(int a1)
 {
   __int16 *v1; // edx
   signed int result; // eax
@@ -39571,7 +39571,7 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   dword_514194 = a1;
   memset(dword_526F78, 0, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(a1, a1);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   while ( DD_IsLost((int)g_RenderState) )
   {
     DD_Pump((int)g_RenderState, a2);
@@ -39583,7 +39583,7 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   dword_526FA0 = v5;
   qmemcpy(dword_526F78, v4, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(-1, a1);
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 514194: using guessed type int dword_514194;
@@ -39618,7 +39618,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
     {
       special_unit_info = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
       Unit_Info(100, 100, special_unit_info, (unsigned __int8 *)(dword_526FA0 + 31 * slot_index + 6), a1, 0);
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
     }
     if ( DD_IsFlipping((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
@@ -39642,7 +39642,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
         dword_514194,
         dword_526F78[0],
         dword_526F78[slot_index]);
-      sub_418700(1);
+      WorldMap_RedrawViewport(1);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_refresh",
         g_SelectedUnitIndex,
@@ -39709,7 +39709,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
         }
         Render_LoadResourceSprite_v2();
         UnitStackSelection_RedrawPanel(-1, a1);
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
       }
     }
   }
@@ -39763,7 +39763,7 @@ int  UnitStackSelection_BeginForSelectedStack(DWORD a1)
     0);
   memset(dword_526F78, 0, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(-1, a1);
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
@@ -39775,7 +39775,7 @@ int __thiscall UnitStackSelection_End(void *this)
   UI_ClearTileHighlight(this);
   dword_526994 = 0;
   dword_514194 = -1;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 514194: using guessed type int dword_514194;
 // 526994: using guessed type int dword_526994;
@@ -39799,7 +39799,7 @@ int  UnitStackSelection_RefreshForSelectedStack(DWORD a1)
 {
   dword_514194 = g_SelectedUnitIndex;
   UnitStackSelection_RedrawPanel(-1, a1);
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514194: using guessed type int dword_514194;
@@ -40466,7 +40466,7 @@ int  RoadBuildMode_RequestExitAfterWidgetPress(int a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_RoadBuildModeExitRequested = 1;
   return result;
 }
@@ -40554,7 +40554,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     && (result = Map_GetTileSurfaceClassOrUnexplored(a1, a2), result != 185) )
   {
     dword_527C34 = 1;
-    return sub_419D60((int)&dword_5142B8 + 53 * v6, v7);
+    return UIWidget_RefreshActionButtonState((int)&dword_5142B8 + 53 * v6, v7);
   }
   return result;
 }
@@ -40580,7 +40580,7 @@ int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3)
   int v4; // edx
   int v5; // ecx
 
-  sub_419E60(a1, a1);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a1);
   switch ( *(_DWORD *)(v5 + 16) )
   {
     case 0x1B:
@@ -40601,7 +40601,7 @@ int  RoadBuildMode_BuildInSelectedDirection(int a1, DWORD a2, double a3)
   dword_52698C = 0;
   Road_Build(g_SelectedUnitIndex, v4, (char)RoadBuildMode_HighlightBuildableAdjacentTile, a2, a3);
   dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))RoadBuildMode_HighlightBuildableAdjacentTile;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 4254EA: variable 'v5' is possibly undefined
 // 425510: variable 'v4' is possibly undefined
@@ -40633,7 +40633,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
     dword_52698C = v5;
     g_RoadBuildModeExitRequested = 0;
     dword_514394 = 2;
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
     if ( !g_RoadBuildModeExitRequested )
     {
       while ( 1 )
@@ -40646,16 +40646,16 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
           g_RoadBuildModeLastAnimationTick = Time_Now(v9, g_RoadBuildModeLastAnimationTick);
           v4 = ((_BYTE)g_RoadBuildModeAnimationFrameIndex + 1) & 7;
           g_RoadBuildModeAnimationFrameIndex = v4;
-          sub_418A90(
+          WorldMap_RedrawTileIfVisible(
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174) - 1,
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176));
-          sub_418A90(
+          WorldMap_RedrawTileIfVisible(
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
             *(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147176) - 1);
-          sub_418A90(
+          WorldMap_RedrawTileIfVisible(
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174) + 1,
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176));
-          sub_418A90(
+          WorldMap_RedrawTileIfVisible(
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147174),
             *(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147176) + 1);
         }
@@ -40713,7 +40713,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
             v12[2] = 2;
             RoadBuildMode_BuildInSelectedDirection((int)v12, a1, a2);
             dword_527C34 = 0;
-            sub_418700(1);
+            WorldMap_RedrawViewport(1);
             if ( !dword_527C34 )
               break;
           }
@@ -40726,8 +40726,8 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
 LABEL_13:
     dword_52698C = 0;
     dword_514394 = 1;
-    sub_419D60((int)g_RoadBuildModeControlWidgets, v6);
-    result = sub_418700(1);
+    UIWidget_RefreshActionButtonState((int)g_RoadBuildModeControlWidgets, v6);
+    result = WorldMap_RedrawViewport(1);
     dword_545150 = (int)&unk_5196A0;
   }
   return result;
@@ -41489,7 +41489,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
     dword_512360 = v50;
     v10 = dword_532048 + 31 * v50;
     LOWORD(v11) = *(unsigned __int8 *)(v10 + 854);
-    sub_4131B0(v48, *(_BYTE *)(v10 + 852), v11);
+    Unit_BuildGoSpriteFilePath(v48, *(_BYTE *)(v10 + 852), v11);
     v13 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
     if ( v13 )
       v13 = DLXSpriteSet_Load(v13, v48);
@@ -41994,7 +41994,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   if ( v100 )
     *((_BYTE *)v5 + 3) = Facing_DirectionFromDelta8(v100[2] - (unsigned __int16)v5[2], v100[3] - (unsigned __int16)v5[3]);
   v6 = *((_BYTE *)v5 + 2);
-  sub_4131B0(v97, *(_BYTE *)v5, v6);
+  Unit_BuildGoSpriteFilePath(v97, *(_BYTE *)v5, v6);
   v8 = (_DWORD *)Mem_Alloc(4112, v7, v6, (DWORD)a5);
   if ( v8 )
     v8 = DLXSpriteSet_Load(v8, v97);
@@ -42002,7 +42002,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   if ( v101 != -1 )
   {
     v9 = *((_BYTE *)v100 + 2);
-    sub_4131B0(v97, *(_BYTE *)v100, v9);
+    Unit_BuildGoSpriteFilePath(v97, *(_BYTE *)v100, v9);
     v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, (DWORD)a5);
     if ( v11 )
       v11 = DLXSpriteSet_Load(v11, v97);
@@ -42016,7 +42016,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     unsigned __int16 *defender_sprite;
     unsigned __int16 *attacker_sprite;
 
-    defender_sprite = (unsigned __int16 *)sub_413080(*v100, *((_BYTE *)v100 + 2), 0, *((_BYTE *)v100 + 3));
+    defender_sprite = (unsigned __int16 *)UnitSpriteCache_FindEntryOrLoad(*v100, *((_BYTE *)v100 + 2), 0, *((_BYTE *)v100 + 3));
     v14 = 8 * *((unsigned __int8 *)v5 + 3);
     if ( v13 == 7 || v13 == 6 || v13 == 5 )
     {
@@ -42214,7 +42214,7 @@ LABEL_22:
   }
   sub_405920(&dword_523F78);
   v59 = *((_BYTE *)v5 + 2);
-  sub_4135F0(v97, *(_BYTE *)v5, v59);
+  Unit_BuildAttackAnimSpritePath(v97, *(_BYTE *)v5, v59);
   v61 = (_DWORD *)Mem_Alloc(4112, v60, v59, v12);
   if ( v61 )
     v61 = DLXSpriteSet_Load(v61, v97);
@@ -42294,7 +42294,7 @@ LABEL_22:
   if ( !v71 )
   {
     v81 = *((_BYTE *)v5 + 2);
-    sub_4131B0(v97, *(_BYTE *)v5, v81);
+    Unit_BuildGoSpriteFilePath(v97, *(_BYTE *)v5, v81);
     v83 = (_DWORD *)Mem_Alloc(4112, v82, v81, v12);
     if ( v83 )
       v83 = DLXSpriteSet_Load(v83, v97);
@@ -42477,7 +42477,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
   if ( (g_UnitTypeFlags[22 * *v7] & 1) != 0 )
   {
     *(_BYTE *)(40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3] + 2334) = 48;
-    sub_42F7F0(a1, 255, -4, 255);
+    UnitBattle_InitUnitFadeAnimation(a1, 255, -4, 255);
     v9 = Time_Now(v8, 0);
     LOWORD(v11) = v7[2];
     v26 = v9;
@@ -42525,7 +42525,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
   }
   else
   {
-    sub_42F7F0(a1, 255, -8, 255);
+    UnitBattle_InitUnitFadeAnimation(a1, 255, -8, 255);
     if ( dword_5320F4 )
     {
       v24 = v6;
@@ -42929,7 +42929,7 @@ __int16  UnitBattle_PlayShotAnimation(
   }
   *((_BYTE *)v125 + 3) = Facing_DirectionFromDelta8(v122 - (unsigned __int16)v125[2], a3 - (unsigned __int16)v125[3]);
   v16 = *((_BYTE *)v125 + 2);
-  sub_4136D0(v110, *(_BYTE *)v125, v16);
+  Unit_BuildShotAnimSpritePath(v110, *(_BYTE *)v125, v16);
   v18 = (_DWORD *)Mem_Alloc(4112, v17, v16, (DWORD)v111);
   if ( v18 )
     v18 = DLXSpriteSet_Load(v18, v16);
@@ -42943,14 +42943,14 @@ __int16  UnitBattle_PlayShotAnimation(
   if ( a2 != -1 )
   {
     v19 = v113[2];
-    sub_4131B0(v110, *v113, v19);
+    Unit_BuildGoSpriteFilePath(v110, *v113, v19);
     v21 = (_DWORD *)Mem_Alloc(4112, v20, v19, (DWORD)v111);
     if ( v21 )
       v21 = DLXSpriteSet_Load(v21, v19);
     dword_5320F0 = (int)v21;
   }
   qmemcpy(v109, &unk_514540, sizeof(v109));
-  sub_4137B0(v112, *(_BYTE *)v125);
+  Unit_BuildShotAnimPaletteSpritePath(v112, *(_BYTE *)v125);
   v131 = 0;
   if ( DLX_OpenArchive(v112, v22) )
   {
@@ -43140,7 +43140,7 @@ __int16  UnitBattle_PlayShotAnimation(
       v59 = v133;
       if ( v43 >= v133 )
         v59 = v43;
-      sub_460BB0(g_RenderState, v133, v59 + SpriteHeight, v43, v108);
+      RenderState_PumpIfRectInViewBounds(g_RenderState, v133, v59 + SpriteHeight, v43, v108);
       v60 = v43 + (unsigned __int16)DLX_GetSpriteWidth(v131, v132) + 1;
       if ( v60 > 464 )
         LOWORD(v60) = 464;
@@ -43250,7 +43250,7 @@ LABEL_57:
         dword_514E54 = v122;
         dword_514E58 = a3;
         dword_532100 = 0;
-        sub_441E60(*(__int16 *)(dword_532048 + 31 * a1 + 852));
+        Audio_PlayUnitShotSound(*(__int16 *)(dword_532048 + 31 * a1 + 852));
         goto LABEL_62;
       }
       v76 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
@@ -43597,7 +43597,7 @@ LABEL_18:
       dword_532104);
   UnitBattle_RedrawTile(a2, a4);
   if ( v20 != dword_532104 )
-    sub_4426C0(aBattleMurek, 64);
+    Audio_PlaySoundEffectByName(aBattleMurek, 64);
   UnitBattle_RedrawTile(a2 + 1, a4);
   *(_DWORD *)(1423 * *(unsigned __int8 *)(v7 + 2) + gameData + 140073) = 1;
   UnitBattle_DrawSelectedUnitPanel(0, 1, v12, a4);
@@ -43669,7 +43669,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   }
   UnitBattle_RedrawTile(a2, v4);
   if ( v10 != dword_532104 )
-    sub_4426C0((int)aBattleMurek_0, 64);
+    Audio_PlaySoundEffectByName((int)aBattleMurek_0, 64);
   UnitBattle_RedrawTile(a2 + 1, v4);
   *(_DWORD *)(1423 * *(unsigned __int8 *)(v3 + 2) + gameData + 140073) = 1;
   UnitBattle_DrawSelectedUnitPanel(0, 1, a2, v4);
@@ -43693,25 +43693,25 @@ signed int  UnitBattle_Defence(int a1, char a2, DWORD a3)
 // 532048: using guessed type int dword_532048;
 
 //----- (00429E90) --------------------------------------------------------
-int  sub_429E90(int a1, int a2)
+int  BuildCursor_HandleCancelButtonPress(int a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_531CD0 = 1;
   return result;
 }
 // 531CD0: using guessed type int dword_531CD0;
 
 //----- (00429EB0) --------------------------------------------------------
-void sub_429EB0()
+void BuildCursor_RequestExit()
 {
   dword_531CD0 = 1;
 }
 // 531CD0: using guessed type int dword_531CD0;
 
 //----- (00429EC0) --------------------------------------------------------
-int  sub_429EC0(__int64 result)
+int  BuildCursor_DrawPlacementOverlay(__int64 result)
 {
   __int64 v1; // kr00_8
   int v2; // edi
@@ -43882,9 +43882,9 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   v6 = byte_54512C;
   v7 = dword_544CFC >> byte_54512C;
   *(int *)((char *)&dword_5146C8 + v5) = 2;
-  *(int (**)())((char *)&off_5146E0 + v5) = sub_429E90;
+  *(int (**)())((char *)&off_5146E0 + v5) = BuildCursor_HandleCancelButtonPress;
   v8 = gameData;
-  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))sub_429EC0;
+  dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))BuildCursor_DrawPlacementOverlay;
   LODWORD(qword_531CD8) = *(_DWORD *)(gameData + 140008)
                         + ((v7 - 32 - (__CFSHL__((v7 - 32) >> 31, 6) + ((v7 - 32) >> 31 << 6))) >> 6);
   HIDWORD(qword_531CD8) = *(_DWORD *)(gameData + 140012)
@@ -43892,14 +43892,14 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
                           - 16
                           - (__CFSHL__(((dword_544D00 >> v6) - 16) >> 31, 6)
                            + (((dword_544D00 >> v6) - 16) >> 31 << 6))) >> 6);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   while ( !dword_531CD0 )
   {
-    DD_Pump((int)&g_RenderState, v8, (char)sub_429EC0);
+    DD_Pump((int)&g_RenderState, v8, (char)BuildCursor_DrawPlacementOverlay);
     WorldMap_RedrawFrame(v8);
     if ( !UIWidgetTable_PollHoverAndActions((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
     {
-      Render_Begin((int)&g_RenderState, 0, (char)sub_429EC0);
+      Render_Begin((int)&g_RenderState, 0, (char)BuildCursor_DrawPlacementOverlay);
       break;
     }
     sub_407D20(v9);
@@ -43925,21 +43925,21 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
                                + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6);
       v11 = qword_531CD8;
       LODWORD(qword_531CD8) = v10;
-      sub_418A90(v11, v8);
+      WorldMap_RedrawTileIfVisible(v11, v8);
       if ( a1 == 2 || a1 == 1 )
       {
         v13 = v12 + 1;
         v14 = v8++;
-        sub_418A90(v12 + 1, v14);
-        sub_418A90(v15, v8);
-        sub_418A90(v13, v8);
+        WorldMap_RedrawTileIfVisible(v12 + 1, v14);
+        WorldMap_RedrawTileIfVisible(v15, v8);
+        WorldMap_RedrawTileIfVisible(v13, v8);
       }
-      sub_418A90(qword_531CD8, SHIDWORD(qword_531CD8));
+      WorldMap_RedrawTileIfVisible(qword_531CD8, SHIDWORD(qword_531CD8));
       if ( a1 == 2 || a1 == 1 )
       {
-        sub_418A90(qword_531CD8 + 1, SHIDWORD(qword_531CD8));
-        sub_418A90(qword_531CD8, HIDWORD(qword_531CD8) + 1);
-        sub_418A90(qword_531CD8 + 1, HIDWORD(qword_531CD8) + 1);
+        WorldMap_RedrawTileIfVisible(qword_531CD8 + 1, SHIDWORD(qword_531CD8));
+        WorldMap_RedrawTileIfVisible(qword_531CD8, HIDWORD(qword_531CD8) + 1);
+        WorldMap_RedrawTileIfVisible(qword_531CD8 + 1, HIDWORD(qword_531CD8) + 1);
       }
     }
     if ( DD_IsFlipping((int)&g_RenderState) )
@@ -43949,7 +43949,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
         v8 = g_SelectedUnitIndex;
         if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, g_SelectedUnitIndex, a4) == 1 )
         {
-          sub_4620F0(aZakl_pul, 1, v20, v8, 3u);
+          Win_PlayModeChangeFrameTransition(aZakl_pul, 1, v20, v8, 3u);
           v22[0] = (int)off_514834[0];
           v22[1] = (int)off_514834[1];
           v22[2] = (int)off_514834[2];
@@ -43970,8 +43970,8 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
                aZam,
                0) == 1 )
         {
-          sub_4426C0((int)aStruktur_2, 64);
-          Render_Begin((int)&g_RenderState, 0, (char)sub_429EC0);
+          Audio_PlaySoundEffectByName((int)aStruktur_2, 64);
+          Render_Begin((int)&g_RenderState, 0, (char)BuildCursor_DrawPlacementOverlay);
           dword_531CD0 = 1;
           break;
         }
@@ -43980,10 +43980,10 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   }
   v17 = 53 * (a1 + 2);
   *(int *)((char *)&dword_5146C8 + v17) = 1;
-  *(int (**)())((char *)&off_5146E0 + v17) = (int (*)())sub_429EB0;
-  sub_419D60((int)&unk_5146C0 + v17, 1);
+  *(int (**)())((char *)&off_5146E0 + v17) = (int (*)())BuildCursor_RequestExit;
+  UIWidget_RefreshActionButtonState((int)&unk_5146C0 + v17, 1);
   dword_52698C = 0;
-  return sub_418700(v18);
+  return WorldMap_RedrawViewport(v18);
 }
 // 42A425: variable 'v9' is possibly undefined
 // 42A4AD: variable 'v12' is possibly undefined
@@ -44132,7 +44132,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     173,
     6,
     7,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingEconomyDialog_IncreaseTaxRate,
     NULL,
     NULL,
@@ -44145,7 +44145,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     206,
     8,
     9,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingEconomyDialog_DecreaseTaxRate,
     NULL,
     NULL,
@@ -44158,7 +44158,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     270,
     10,
     11,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferTargetList_SelectPrevious,
     NULL,
     NULL,
@@ -44171,7 +44171,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     323,
     12,
     13,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferTargetList_SelectNext,
     NULL,
     NULL,
@@ -44184,7 +44184,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     331,
     18,
     19,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferDialog_IncreasePeasantTransferAmount,
     NULL,
     NULL,
@@ -44197,7 +44197,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     365,
     20,
     21,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferDialog_DecreasePeasantTransferAmount,
     NULL,
     NULL,
@@ -44210,7 +44210,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     247,
     14,
     15,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferDialog_IncreaseGoldTransferAmount,
     NULL,
     NULL,
@@ -44223,7 +44223,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     281,
     16,
     17,
-    sub_419780,
+    UI_DrawWidgetIconTransitionFast,
     BuildingTransferDialog_DecreaseGoldTransferAmount,
     NULL,
     NULL,
@@ -44236,7 +44236,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     426,
     22,
     23,
-    sub_419770,
+    UI_DrawWidgetIconTransitionSlow,
     BuildingEconomyDialog_SetExitSignal,
     text_back_pl,
     text_back_en,
@@ -44249,7 +44249,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     426,
     24,
     25,
-    sub_419770,
+    UI_DrawWidgetIconTransitionSlow,
     BuildingEconomyDialog_CommitTransfers,
     text_transfer_pl,
     text_transfer_en,
@@ -44265,7 +44265,7 @@ int  BuildingEconomyDialog_SetExitSignal(int a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60((uintptr_t)a1, 1);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay((uintptr_t)a1, 1);
   g_BuildingEconomyDialogExitSignal = 1;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[economy] back exit_signal=%d\n", g_BuildingEconomyDialogExitSignal);
@@ -44285,7 +44285,7 @@ int  BuildingEconomyDialog_CommitTransfers(
   int v6; // esi
   int v7; // esi
 
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   if ( g_BuildingEconomyDialogPendingPeasantTransfer )
   {
     v5 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
@@ -44360,7 +44360,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
   int v20; // ecx
   char v22; // dh
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44390,7 +44390,7 @@ int  BuildingEconomyDialog_DecreaseTaxRate(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v20);
+  return UIWidget_ShowReleasedState(a1, v20);
 }
 // 42ABA6: variable 'v5' is possibly undefined
 // 42ABA6: variable 'v4' is possibly undefined
@@ -44423,7 +44423,7 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
   int v18; // eax
   int v19; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44449,7 +44449,7 @@ int  BuildingEconomyDialog_IncreaseTaxRate(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v19);
+  return UIWidget_ShowReleasedState(a1, v19);
 }
 // 42ACA3: variable 'v5' is possibly undefined
 // 42ACA3: variable 'v4' is possibly undefined
@@ -44477,7 +44477,7 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2)
   int v13; // ecx
   int v14; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44495,7 +44495,7 @@ int  BuildingTransferDialog_DecreasePeasantTransferAmount(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v14);
+  return UIWidget_ShowReleasedState(a1, v14);
 }
 // 42AD96: variable 'v5' is possibly undefined
 // 42AD96: variable 'v4' is possibly undefined
@@ -44524,7 +44524,7 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
   unsigned __int16 v14; // ax
   int v15; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44546,7 +44546,7 @@ int  BuildingTransferDialog_IncreasePeasantTransferAmount(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v15);
+  return UIWidget_ShowReleasedState(a1, v15);
 }
 // 42AE53: variable 'v5' is possibly undefined
 // 42AE53: variable 'v4' is possibly undefined
@@ -44575,7 +44575,7 @@ int  BuildingTransferDialog_DecreaseGoldTransferAmount(int a1, char a2)
   int v13; // ecx
   int v14; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44593,7 +44593,7 @@ int  BuildingTransferDialog_DecreaseGoldTransferAmount(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v14);
+  return UIWidget_ShowReleasedState(a1, v14);
 }
 // 42AF36: variable 'v5' is possibly undefined
 // 42AF36: variable 'v4' is possibly undefined
@@ -44622,7 +44622,7 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
   DWORD v14; // ebp
   int v15; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   DD_Pump((int)g_RenderState, a2);
   Time_Now(v5, v4);
@@ -44643,7 +44643,7 @@ int  BuildingTransferDialog_IncreaseGoldTransferAmount(int a1, char a2)
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v15);
+  return UIWidget_ShowReleasedState(a1, v15);
 }
 // 42AFF3: variable 'v5' is possibly undefined
 // 42AFF3: variable 'v4' is possibly undefined
@@ -44706,7 +44706,7 @@ int  BuildingEconomyDialog_Run(int a1)
     resource_base_path = aCastle_chrDw_2;
   else
     resource_base_path = aCastle_pogDw_2;
-  sub_435ED0(resource_base_path, (int)(uintptr_t)palette_buffer, (int)dialog_sprite_set, 0);
+  Palette_LoadOrBuildBlendLookupTable(resource_base_path, (int)(uintptr_t)palette_buffer, (int)dialog_sprite_set, 0);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingEconomyDialogSpriteSet, (unsigned __int8)g_LanguageIndex);
   Compat_RenderDeviceDrawMenuSprite(267, 149, SpriteForChar, 0);
@@ -44734,8 +44734,8 @@ int  BuildingEconomyDialog_Run(int a1)
   Render_FillRect((_DWORD *)dword_5202E0, 0, 30, 545, 0x25Au, 0x32u, 0x221u, 0x1Eu);
   Render_ReleaseSurface(5, 0);
   UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
-  sub_405020((int *)&unk_51D4C0, palette_buffer, 20);
-  sub_460CB0((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, palette_buffer, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -44752,7 +44752,7 @@ int  BuildingEconomyDialog_Run(int a1)
     DD_Pump((int)g_RenderState, (char)g_RenderState);
     BuildingTransferTargetList_HandleClick(0);
     UIWidgetTable_PollHoverAndActions(dword_514840, 0);
-    sub_44E350(word_514A88);
+    UI_RunHoverTooltipZones(word_514A88);
   }
   while ( exit_signal_snapshot == g_BuildingEconomyDialogExitSignal );
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -44765,7 +44765,7 @@ int  BuildingEconomyDialog_Run(int a1)
   BuildingTransferTargetList_FreeSpriteSet();
   sub_405920(&g_BuildingEconomyDialogSpriteSet);
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 511130: using guessed type char g_LanguageIndex;
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -44870,7 +44870,7 @@ signed int  Trap_New(DWORD a1, int a2, int a3, int a4, double a5)
       if ( *(__int16 *)(gameData + v19 + 147180) == -1 )
       {
         Rules_UnlinkArmyFact(v19 + gameData + 147174, v17);
-        sub_40A490(v13);
+        WorldMap_SyncSelectionForHumanPlayer(v13);
       }
       return 1;
     }
@@ -45002,7 +45002,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
             if ( ((1 << v21) & TILE_TRAP_OWNER_MASK(v17, i)) == 0 )
             {
               TILE_TRAP_OWNER_MASK(v17, i) |= 1 << v21;
-              sub_418700(1);
+              WorldMap_RedrawViewport(1);
             }
           }
         }
@@ -45019,8 +45019,8 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
   if ( *(_DWORD *)(gameData + 1423 * v8 + 140059) )
   {
     TILE_TRAP_OWNER_MASK(*(__int16 *)(v6 + 147174), *(__int16 *)(v6 + 147176)) |= 1 << v8;
-    sub_418700(1);
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
+    WorldMap_RedrawViewport(1);
     v11 = Time_Now(v10, v9) + 200;
     while ( 1 )
     {
@@ -45029,7 +45029,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
         break;
       WorldMap_RedrawFrame(v7);
     }
-    sub_4620F0(aWpad_pul, 1, v14, v7, a2);
+    Win_PlayModeChangeFrameTransition(aWpad_pul, 1, v14, v7, a2);
   }
   v22 = gameData + 725 * a1;
   v23 = TILE_TRAP_OWNER_MASK_ROW_STRIDE * *(__int16 *)(v22 + 147174);
@@ -45049,7 +45049,7 @@ signed int  Trap_TriggerAtStackTile(int a1, DWORD a2, double a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (0042B9D0) --------------------------------------------------------
-int  sub_42B9D0(int a1, int a2, char a3, DWORD a4)
+int  Trap_ShowPitfallDiscoveryDialog(int a1, int a2, char a3, DWORD a4)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -45190,7 +45190,7 @@ LABEL_9:
   sub_405920((int *)&v30);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v37;
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 42BA03: variable 'v4' is possibly undefined
 // 42BA5D: variable 'v6' is possibly undefined
@@ -45209,7 +45209,7 @@ LABEL_9:
 // 545150: using guessed type int dword_545150;
 
 //----- (0042BF00) --------------------------------------------------------
-int  sub_42BF00(int a1)
+int  Battle_LoadWallSegmentsFromBuildingRecord(int a1)
 {
   int v2; // ebx
   int v3; // eax
@@ -45261,7 +45261,7 @@ int  sub_42BF00(int a1)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042C060) --------------------------------------------------------
-char  sub_42C060(int a1)
+char  Battle_SaveWallSegmentsToBuildingRecord(int a1)
 {
   int v2; // edx
   int i; // eax
@@ -45314,7 +45314,7 @@ BOOL  UnitBattle_IsTileInViewport(int a1, int a2)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042C130) --------------------------------------------------------
-void  sub_42C130(__int16 *a1, DWORD a2, ...)
+void  Battle_LogUnitEntry(__int16 *a1, DWORD a2, ...)
 {
   char *unit_name;
 
@@ -45344,7 +45344,7 @@ void  Battle_LogAllUnits(int a1, char a2, DWORD a3)
       if ( v4 >= 22 )
         return;
     }
-    sub_42C130(v5, a3);
+    Battle_LogUnitEntry(v5, a3);
     ++v4;
     v5 = (__int16 *)((char *)v5 + 31);
   }
@@ -45391,7 +45391,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
     Render_Pump();
     v27 = g_RenderDevice;
     memset(v23, 0, sizeof(v23));
-    sub_401AF0((intptr_t)v24, (intptr_t)"white.pal");
+    Palette_LoadFromQueryHandle((intptr_t)v24, (intptr_t)"white.pal");
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_white_palette", (int)a1, 0, 0, 0);
     v10 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
     if ( v10 )
@@ -45400,15 +45400,15 @@ int  GodAnger(DWORD a1, int a2, char a3)
     for ( i = 0; i < 300; ++i )
     {
       v12 = (__lock *)i;
-      sub_404DE0((int *)&unk_51D4C0, v23, v12, 450);
+      Palette_CrossfadeStep((int *)&unk_51D4C0, v23, v12, 450);
     }
     g_RenderDevice = &unk_51D4C0;
     SpriteForChar = DLX_GetSpriteForChar((int)v26, 0);
     Compat_RenderDeviceDrawMenuSprite(16, 100, SpriteForChar, 1);
     Diagnostics_TraceWorldMapActionEvent("god_anger_after_lightning_draw", (int)a1, (int)(uintptr_t)v26, SpriteForChar, 0);
     Audio_PlayArtifactSound(0);
-    sub_404DE0((int *)&unk_51D4C0, v24, 150, 200);
-    sub_420800(10, 0, 0);
+    Palette_CrossfadeStep((int *)&unk_51D4C0, v24, 150, 200);
+    Timer_BusyWaitWithCallback(10, 0, 0);
     v22 = DLX_GetSpriteWidth((int)v26, 0) + 16;
     SpriteHeight = DLX_GetSpriteHeight((int)v26, 0);
     v18 = 150;
@@ -45417,16 +45417,16 @@ int  GodAnger(DWORD a1, int a2, char a3)
     {
       v19 = (__lock *)v18;
       v18 -= 60;
-      sub_404DE0((int *)&unk_51D4C0, v24, v19, 200);
+      Palette_CrossfadeStep((int *)&unk_51D4C0, v24, v19, 200);
     }
     while ( v18 > 0 );
-    sub_404DE0((int *)&unk_51D4C0, v23, (__lock *)0x96, 200);
+    Palette_CrossfadeStep((int *)&unk_51D4C0, v23, (__lock *)0x96, 200);
     for ( j = 0; j < 150; ++j )
     {
       v21 = (__lock *)j;
-      sub_404DE0((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 150);
+      Palette_CrossfadeStep((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 150);
     }
-    sub_404C80((int *)&unk_51D4C0, (const void *)dword_5202F4);
+    Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_5202F4);
     sub_405920((int *)&v26);
     g_RenderDevice = v27;
     Render_Present((int)g_RenderState);
@@ -45515,7 +45515,7 @@ BOOL Battle_HasUnitsForBothSides()
 // 532048: using guessed type int dword_532048;
 
 //----- (0042C560) --------------------------------------------------------
-int  sub_42C560(int a1)
+int  Battle_ApplyPeriodicDamageToSideUnits(int a1)
 {
   int v2; // ebx
   __int16 *v3; // ecx
@@ -45561,7 +45561,7 @@ int  sub_42C560(int a1)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042C600) --------------------------------------------------------
-_BOOL2 sub_42C600()
+_BOOL2 UnitBattle_HandleManualRotateAndMoveInput()
 {
   int IsKeyPressed; // eax
   int v2; // ecx
@@ -46073,7 +46073,7 @@ __int16 UnitBattle_EnableSelectedChargeMode()
   dword_532060 = 1;
   dword_532074 = Time_Now(2, 1);
   dword_514BEA = 2;
-  sub_419D60((uintptr_t)&unk_514BE2, 2);
+  UIWidget_RefreshActionButtonState((uintptr_t)&unk_514BE2, 2);
   return UnitBattle_RedrawUnitFootprint(g_SelectedUnitIndex);
 }
 // 42D271: variable 'v1' is possibly undefined
@@ -46087,7 +46087,7 @@ __int16 UnitBattle_RefreshSelectedUnitUI()
 {
   dword_532060 = 0;
   dword_514BEA = 1;
-  sub_419D60((int)&unk_514BE2, 1);
+  UIWidget_RefreshActionButtonState((int)&unk_514BE2, 1);
   return UnitBattle_RedrawUnitFootprint(g_SelectedUnitIndex);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -46117,13 +46117,13 @@ int UnitBattle_RefreshSelectedActionButtons()
     dword_514B80 = 2;
     dword_53205C = 1;
 LABEL_6:
-    result = sub_419D60((uintptr_t)&dword_514B78, 1);
+    result = UIWidget_RefreshActionButtonState((uintptr_t)&dword_514B78, 1);
     g_RenderDevice = v0;
     return result;
   }
   dword_53205C = 1;
   dword_514B80 = 2;
-  result = sub_419D60((uintptr_t)&dword_514B78, 1);
+  result = UIWidget_RefreshActionButtonState((uintptr_t)&dword_514B78, 1);
   g_RenderDevice = v0;
   return result;
 }
@@ -46146,7 +46146,7 @@ int  UnitBattle_SelectNextControllableUnit(int a1, int a2, char a3)
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_next_unit_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, a2);
   if ( a1 )
-    sub_419E60(a1, a2);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   for ( i = (g_SelectedUnitIndex + 1) % 22; i != g_SelectedUnitIndex; i = (i + 1) % 22 )
   {
     v4 = 31 * i + dword_532048;
@@ -46234,7 +46234,7 @@ int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4)
   int result; // eax
   _DWORD v6[4]; // [esp+0h] [ebp-10h] BYREF
 
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   result = dword_532048;
   if ( g_CurrentPlayerIndex != *(_DWORD *)(dword_532048 + 840) || *(_DWORD *)(dword_532048 + 848) )
   {
@@ -46273,14 +46273,14 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
     result = UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
     if ( dword_532060 )
     {
-      result = sub_4426C0(aBattleSzarza, 64);
+      result = Audio_PlaySoundEffectByName(aBattleSzarza, 64);
       if ( widget )
         *(_DWORD *)(widget + 8) = 2;
       if ( dword_53205C )
       {
         dword_53205C = 0;
         dword_514B80 = 1;
-        return sub_419D60((uintptr_t)dword_514B78, 1);
+        return UIWidget_RefreshActionButtonState((uintptr_t)dword_514B78, 1);
       }
     }
     else
@@ -46319,7 +46319,7 @@ int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, ch
   result = 31 * g_SelectedUnitIndex;
   if ( (*(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 874) & 1) == 0 )
   {
-    sub_419E60(a1, g_SelectedUnitIndex);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(a1, g_SelectedUnitIndex);
     if ( !UnitBattle_Defence(g_SelectedUnitIndex, 0, a3) )
     {
       v9[0] = (int)off_514B68[0];
@@ -46358,7 +46358,7 @@ int UnitBattle_RequestActionLoopExit(uintptr_t widget, int a2, DWORD a3, char a4
   if ( widget )
   {
     *(_BYTE *)(widget + 8) &= ~4u;
-    return sub_419D60(widget, 1);
+    return UIWidget_RefreshActionButtonState(widget, 1);
   }
   return 0;
 }
@@ -46462,7 +46462,7 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
   }
   Compat_InvokeCompactSurfaceDestructor(v10, 2);
   Diagnostics_TraceWorldMapActionEvent("battle_banner_after_surface_release", a1, a2, v10, 0);
-  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
+  RenderState_WarpCursorAndPump(g_RenderState, 0x140u, 0xF0u);
   Debug_Log(v19, (char)g_RenderHook, v10, (int)aUnsetrh08x_8);
   g_RenderHook = v23;
   Render_SetResourceHandle((int)&unk_51D4C0, v24);
@@ -46494,7 +46494,7 @@ int  UnitBattleDialog_SelectAffirmativeResponse(int a1, int a2)
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_UnitBattlePromptDialogResult = v4;
   return result;
 }
@@ -46507,7 +46507,7 @@ int  UnitBattleDialog_SelectNegativeResponse(int a1, int a2)
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_UnitBattlePromptDialogResult = v4;
   return result;
 }
@@ -46590,7 +46590,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
   Render_FillRect((_DWORD *)v7, 0, 0, 0, v16 - v18, v20 - v19, v18, v19);
   if ( v7 )
     (**(void (***)(void))(v7 + 184))();
-  sub_460AF0(g_RenderState, 0x140u, 0xF0u);
+  RenderState_WarpCursorAndPump(g_RenderState, 0x140u, 0xF0u);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v15;
   sub_405920((int *)&v14);
@@ -46918,7 +46918,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_interaction", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(v6);
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_hover", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
-      sub_42C600();
+      UnitBattle_HandleManualRotateAndMoveInput();
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_input_widgets", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       if ( UIWidgetTable_PollHoverAndActions(dword_514B78, v5) == 1 )
       {
@@ -47133,7 +47133,7 @@ int UnitBattle_RestoreControllerOrderBits()
 // 532048: using guessed type int dword_532048;
 
 //----- (0042E8B0) --------------------------------------------------------
-int *sub_42E8B0()
+int *UnitBattle_InitBattleScreenFrame()
 {
   void *v0; // edx
   int SpriteForChar; // eax
@@ -47143,7 +47143,7 @@ int *sub_42E8B0()
   int v5; // edi
   int v6; // edx
 
-  sub_404D90((int *)&unk_51D4C0);
+  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   g_RenderDevice = v0;
   SpriteForChar = DLX_GetSpriteForChar(dword_5202BC, 0);
   Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
@@ -47157,7 +47157,7 @@ int *sub_42E8B0()
   UIWidgetTable_InitDrawStates(dword_514B78);
   UnitBattle_DrawSelectedUnitPanel(0, v6, 20, v5);
   UnitBattle_RedrawVisibleGrid();
-  return sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  return Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
 }
 // 42E8C9: variable 'v0' is possibly undefined
 // 42E9B6: variable 'v6' is possibly undefined
@@ -47260,13 +47260,13 @@ DWORD  Battle_RunTacticalCombat(
   v75 = a3;
   Diagnostics_ResetFrameDumpOnBattleEnter();
   Debug_Log(a3, (char)a4, a5, (int)aBattle_0);
-  sub_419110(1);
+  Battle_StoreLastOutcomeValue(1);
   Debug_Log(v6, (char)a4, a5, (int)aNewBattle_0);
-  v79 = Render_SetResourceHandle((int)&unk_51D4C0, (char *)sub_42E8B0 == (char *)Render_DefaultRH);
+  v79 = Render_SetResourceHandle((int)&unk_51D4C0, (char *)UnitBattle_InitBattleScreenFrame == (char *)Render_DefaultRH);
   v77 = g_RenderHook;
-  g_RenderHook = (int (*)())sub_42E8B0;
+  g_RenderHook = (int (*)())UnitBattle_InitBattleScreenFrame;
   Debug_Log(v7, (char)a4, a5, (int)aSetrhS08x_8);
-  v76 = sub_441800(aBattle_1, 1);
+  v76 = Audio_PauseMusicAndPlayLoopedSound(aBattle_1, 1);
   sub_405920(&dword_5202C0);
   v9 = *(_BYTE *)(gameData + 140016);
   battle_background_resource = 0;
@@ -47397,9 +47397,9 @@ DWORD  Battle_RunTacticalCombat(
   if ( v82 )
     BattleMapFileName(v70, *v82, v82[1]);
   else
-    sub_441550(v70, dword_532070, v74[1]);
+    BattleMap_GetOutcomeVariantFileName(v70, dword_532070, v74[1]);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_name", dword_53206C, dword_532070, v25, 0);
-  v73 = sub_4427F0(v70, 1);
+  v73 = FileSystem_ResolveReadPath(v70, 1);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_open", v73, 0, 0, 0);
   battle_map_bytes_read = Compat_QueryRead(v73, (void *)(uintptr_t)(unsigned int)dword_532048, 0x320);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_read", v73, battle_map_bytes_read, 0x320, 0);
@@ -47443,7 +47443,7 @@ DWORD  Battle_RunTacticalCombat(
   UnitBattle_InitPathingTables();
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_pathing", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), byte_531890[0], 0);
   if ( v37 )
-    sub_42BF00((int)v37);
+    Battle_LoadWallSegmentsFromBuildingRecord((int)v37);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_building_setup", (int)(uintptr_t)v37, *(_DWORD *)(dword_532048 + 848), 0, 0);
   *(_DWORD *)(dword_532048 + 848) = v74 == 0;
   g_RenderDevice = &unk_51D4C0;
@@ -47528,10 +47528,10 @@ DWORD  Battle_RunTacticalCombat(
   UnitBattle_DrawSelectedUnitPanel(0, v48, 20, (int)v43);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_selected_panel", g_SelectedUnitIndex, v48, (int)(uintptr_t)v43, v47);
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_palette_ramp", dword_5202F4, (int)(uintptr_t)&unk_51D4C0, 20, 0);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_palette_ramp", dword_5202F4, (int)(uintptr_t)&unk_51D4C0, 20, 0);
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_palette_cache", dword_5202F4, v49, (int)v41, 0);
-  sub_435ED0(aMainmap_3, dword_5202F4, v49, v41);
+  Palette_LoadOrBuildBlendLookupTable(aMainmap_3, dword_5202F4, v49, v41);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_palette_cache", dword_5202F4, v49, (int)v41, 0);
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
@@ -47637,7 +47637,7 @@ DWORD  Battle_RunTacticalCombat(
   v60 = 0;
   if ( Battle_HasUnitsForBothSides() )
   {
-    sub_42C560(g_CurrentPlayerIndex);
+    Battle_ApplyPeriodicDamageToSideUnits(g_CurrentPlayerIndex);
     if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836) )
       v60 = 1;
     else
@@ -47647,7 +47647,7 @@ DWORD  Battle_RunTacticalCombat(
   v63 = v74;
   HandleBattleResults((int)v81, (int)v82, v61, v74, v60);
   if ( v63 )
-    sub_42C060((int)v63);
+    Battle_SaveWallSegmentsToBuildingRecord((int)v63);
   if ( v60 == 2 && *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 840) + gameData + 140051)
     || v60 == 1 && *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 836) + 140051) )
   {
@@ -47657,7 +47657,7 @@ DWORD  Battle_RunTacticalCombat(
     UI_ShowInfoWindow(v71[(unsigned __int8)g_LanguageIndex], 0, v64, v60, (int)&v72, (int)&off_514E38[3]);
   }
   Render_Pump();
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   sub_405920(&dword_5202BC);
   sub_405920(&dword_53204C);
   sub_405920(&dword_532050);
@@ -47666,14 +47666,14 @@ DWORD  Battle_RunTacticalCombat(
   nfree_(dword_532048);
   dword_532048 = 0;
   Tooltip_ReleaseBackdropSurface();
-  sub_40C3F0();
-  sub_413120(v66, v60);
+  TextSprite_ReleaseAllResourceSlots();
+  UnitSpriteCache_FreeAllEntries(v66, v60);
   CSS_EmptySampleCache();
   g_SelectedUnitIndex = -1;
   g_CurrentPlayerIndex = v78;
   CSS_EmptySampleCache();
-  sub_441870(v76);
-  sub_419110(0);
+  Audio_ResumeMusicAndStopLoopedSound(v76);
+  Battle_StoreLastOutcomeValue(0);
   Debug_Log((int)g_RenderHook, v62, v60, (int)aUnsetrh08x_9);
   g_RenderHook = v77;
   Render_SetResourceHandle((int)&unk_51D4C0, v79);
@@ -47741,7 +47741,7 @@ int  UnitBattle_GetSpriteVerticalOffsetPx(int a1)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042F7F0) --------------------------------------------------------
-int  sub_42F7F0(int a1, int a2, int a3, int a4)
+int  UnitBattle_InitUnitFadeAnimation(int a1, int a2, int a3, int a4)
 {
   int result; // eax
 
@@ -47760,7 +47760,7 @@ int  sub_42F7F0(int a1, int a2, int a3, int a4)
 // 5320F8: using guessed type int dword_5320F8;
 
 //----- (0042F820) --------------------------------------------------------
-int  sub_42F820(int a1, int a2, int a3, int a4)
+int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4)
 {
   int v5; // edx
   int v6; // eax
@@ -47802,7 +47802,7 @@ int  sub_42F820(int a1, int a2, int a3, int a4)
   {
     if ( dword_514E44 == -1 || a1 != dword_514E44 )
     {
-      SpriteForChar = sub_413080(
+      SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
                         *(unsigned __int16 *)(dword_532048 + 31 * a1 + 852),
                         *(_BYTE *)(dword_532048 + 31 * a1 + 854),
                         *(_BYTE *)(dword_532048 + 31 * a1 + 869) & 7,
@@ -47826,7 +47826,7 @@ LABEL_7:
   {
     v12 = Time_Now(v11, v10);
     v13 = Math_SinDegreesQ16(2 * (v12 - dword_532074) - 90);
-    sub_405560(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, ((50 * v13) >> 16) + 50, 0, 0, 200, 1u);
+    Sprite_DrawSimpleIgnoringRect(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, ((50 * v13) >> 16) + 50, 0, 0, 200, 1u);
   }
   else if ( a1 == dword_514E48 )
   {
@@ -47839,13 +47839,13 @@ LABEL_7:
     if ( dword_5320F4 < 0 )
       dword_5320F4 = 0;
     dword_5320F8 = Time_Now(dword_514E4C, v26);
-    sub_405510(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, dword_5320F4, 1u);
+    Sprite_DrawSimpleTrackingOffset(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, dword_5320F4, 1u);
   }
   else
   {
     Compat_RenderDeviceDrawMenuSprite(a2, a3 + a4 - v28, SpriteForChar, 1);
   }
-  sub_40BB60(0, 1, (DWORD)savedregs);
+  TextSprite_ActivateResourceSlot(0, 1, (DWORD)savedregs);
 LABEL_13:
   result = UnitBattle_CountAdjacentEnemies(31 * a1 + dword_532048 + 852);
   v16 = result;
@@ -47875,7 +47875,7 @@ LABEL_13:
           else
             v23 = 25;
           v24 = DLX_GetSpriteForChar(dword_5202C8, v23 + v32);
-          result = sub_405510(v24, v25, a3, a3, a2 + 63, a3 + 63, v27, 1u);
+          result = Sprite_DrawSimpleTrackingOffset(v24, v25, a3, a3, a2 + 63, a3 + 63, v27, 1u);
         }
       }
       v18 += 2;
@@ -47913,7 +47913,7 @@ LABEL_13:
 // 5320F8: using guessed type int dword_5320F8;
 
 //----- (0042FC30) --------------------------------------------------------
-int  sub_42FC30(int result, int a2, int a3, int a4)
+int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
 {
   int v6; // eax
   int v7; // eax
@@ -47932,38 +47932,38 @@ int  sub_42FC30(int result, int a2, int a3, int a4)
       {
         v6 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1532);
         if ( v6 != -1 && dword_523F74 > 0 && v6 == dword_512360 )
-          sub_42F820(v6, a4, a3, dword_523F74 - 64);
+          UnitBattle_DrawUnitSprite(v6, a4, a3, dword_523F74 - 64);
       }
       if ( a2 < *(_DWORD *)(dword_532048 + 804) - 1 )
       {
         v7 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1536);
         if ( v7 != -1 && dword_523F74 < 0 && v7 == dword_512360 )
-          sub_42F820(v7, a4, a3, dword_523F74 + 64);
+          UnitBattle_DrawUnitSprite(v7, a4, a3, dword_523F74 + 64);
       }
       if ( v11 > 0 )
       {
         v8 = *(__int16 *)(dword_532048 + 40 * (v11 - 1) + 2 * a2 + 1534);
         if ( v8 != -1 && dword_523F70 > 0 && v8 == dword_512360 )
-          sub_42F820(v8, a4, a3, dword_523F74);
+          UnitBattle_DrawUnitSprite(v8, a4, a3, dword_523F74);
       }
       if ( *(_DWORD *)(dword_532048 + 804) - 1 > v11 )
       {
         v9 = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1534);
         if ( v9 != -1 && dword_523F70 < 0 && v9 == dword_512360 )
-          sub_42F820(v9, a4, a3, dword_523F74);
+          UnitBattle_DrawUnitSprite(v9, a4, a3, dword_523F74);
       }
       if ( v11 > 0 && a2 > 0 )
       {
         v10 = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1532);
         if ( v10 != -1 && dword_523F74 > 0 && dword_523F70 > 0 && v10 == dword_512360 )
-          sub_42F820(v10, a4, a3, dword_523F74 - 64);
+          UnitBattle_DrawUnitSprite(v10, a4, a3, dword_523F74 - 64);
       }
       result = v11;
       if ( v11 > 0 && a2 < *(_DWORD *)(dword_532048 + 800) )
       {
         result = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1536);
         if ( result != -1 && dword_523F74 < 0 && dword_523F70 > 0 && result == dword_512360 )
-          result = sub_42F820(result, a4, a3, dword_523F74 + 64);
+          result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
       }
       if ( a2 > 0 )
       {
@@ -47972,7 +47972,7 @@ int  sub_42FC30(int result, int a2, int a3, int a4)
         {
           result = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1532);
           if ( result != -1 && dword_523F74 > 0 && dword_523F70 < 0 && result == dword_512360 )
-            result = sub_42F820(result, a4, a3, dword_523F74 - 64);
+            result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 - 64);
         }
       }
       if ( a2 < *(_DWORD *)(dword_532048 + 800) )
@@ -47982,7 +47982,7 @@ int  sub_42FC30(int result, int a2, int a3, int a4)
         {
           result = *(__int16 *)(dword_532048 + 40 * (v11 + 1) + 2 * a2 + 1536);
           if ( result != -1 && dword_523F74 < 0 && dword_523F70 < 0 && result == dword_512360 )
-            return sub_42F820(result, a4, a3, dword_523F74 + 64);
+            return UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
         }
       }
     }
@@ -47995,7 +47995,7 @@ int  sub_42FC30(int result, int a2, int a3, int a4)
 // 532048: using guessed type int dword_532048;
 
 //----- (0042FFB0) --------------------------------------------------------
-int  sub_42FFB0(int a1, int a2)
+int  UnitBattle_DrawTileContents(int a1, int a2)
 {
   int v2; // esi
   int SpriteForChar; // eax
@@ -48063,7 +48063,7 @@ int  sub_42FFB0(int a1, int a2)
   {
     v41 = *(unsigned __int8 *)(v4 + 2335);
     v36 = DLX_GetSpriteForChar(dword_532058, v5);
-    sub_405510(v36, v2, v49, v49, v2 + 63, v49 + 63, v41, 1u);
+    Sprite_DrawSimpleTrackingOffset(v36, v2, v49, v49, v2 + 63, v49 + 63, v41, 1u);
   }
   if ( a2 != *(_DWORD *)(dword_532048 + 828) )
   {
@@ -48195,8 +48195,8 @@ LABEL_30:
   if ( dword_512360 == v46 )
     v44 = dword_523F74;
   if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) == 0 )
-    sub_42F820(v46, v2, v49, v44);
-  sub_42FC30(a1, a2, v49, v2);
+    UnitBattle_DrawUnitSprite(v46, v2, v49, v44);
+  UnitBattle_DrawMovingUnitInAdjacentTile(a1, a2, v49, v2);
   if ( *(_BYTE *)(a2 + dword_532048 + 20 * a1 + 3534) && a2 == *(_DWORD *)(dword_532048 + 828) && v45 )
   {
     v16 = DLX_GetSpriteForChar(dword_53204C, v48);
@@ -48212,7 +48212,7 @@ LABEL_30:
         v18 = 0;
         if ( v17 == dword_512360 )
           v18 = dword_523F74;
-        sub_42F820(v17, v2, v49, v18 - 64);
+        UnitBattle_DrawUnitSprite(v17, v2, v49, v18 - 64);
       }
     }
   }
@@ -48222,7 +48222,7 @@ LABEL_30:
     if ( v19 == dword_512360 )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
-        sub_42F820(v19, v2, v49, dword_523F74 - 64);
+        UnitBattle_DrawUnitSprite(v19, v2, v49, dword_523F74 - 64);
     }
   }
   if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 < *(_DWORD *)(dword_532048 + 804) && dword_512360 != -1 )
@@ -48231,7 +48231,7 @@ LABEL_30:
     if ( v20 == dword_512360 )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
-        sub_42F820(v20, v2, v49, dword_523F74 + 64);
+        UnitBattle_DrawUnitSprite(v20, v2, v49, dword_523F74 + 64);
     }
   }
   if ( a1 > 0 )
@@ -48245,12 +48245,12 @@ LABEL_30:
         v23 = 0;
         if ( v22 == dword_512360 )
           v23 = dword_523F74;
-        sub_42F820(v22, v2, v49, v23);
+        UnitBattle_DrawUnitSprite(v22, v2, v49, v23);
       }
     }
   }
   if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) != 0 )
-    sub_42F820(v46, v2, v49, v44);
+    UnitBattle_DrawUnitSprite(v46, v2, v49, v44);
   if ( a2 < *(_DWORD *)(dword_532048 + 800) )
   {
     v24 = 40 * a1 + dword_532048;
@@ -48262,7 +48262,7 @@ LABEL_30:
         v26 = 0;
         if ( v25 == dword_512360 )
           v26 = dword_523F74;
-        sub_42F820(v25, v2, v49, v26 + 64);
+        UnitBattle_DrawUnitSprite(v25, v2, v49, v26 + 64);
       }
     }
   }
@@ -48272,7 +48272,7 @@ LABEL_30:
     if ( v27 == dword_512360 )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
-        sub_42F820(v27, v2, v49, dword_523F74 + 64);
+        UnitBattle_DrawUnitSprite(v27, v2, v49, dword_523F74 + 64);
     }
   }
   if ( a2 > 0 && a1 < *(_DWORD *)(dword_532048 + 804) && dword_512360 != -1 )
@@ -48281,7 +48281,7 @@ LABEL_30:
     if ( v28 == dword_512360 )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
-        sub_42F820(v28, v2, v49, dword_523F74 - 64);
+        UnitBattle_DrawUnitSprite(v28, v2, v49, dword_523F74 - 64);
     }
   }
   if ( a1 < *(_DWORD *)(dword_532048 + 804) )
@@ -48295,7 +48295,7 @@ LABEL_30:
         v31 = 0;
         if ( v30 == dword_512360 )
           v31 = dword_523F74;
-        sub_42F820(v30, v2, v49, v31);
+        UnitBattle_DrawUnitSprite(v30, v2, v49, v31);
       }
     }
   }
@@ -48373,8 +48373,8 @@ int  UnitBattle_RedrawTile(int a1, int a2)
     v9 = (((_WORD)a2 - v7) << 6) + 16;
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v8 = (((_WORD)a2 - v7) << 6) + 80;
-    sub_42FFB0(a1, a2);
-    sub_460BB0(g_RenderState, v6 + 32, v6 + 96, v9, v8);
+    UnitBattle_DrawTileContents(a1, a2);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, v6 + 32, v6 + 96, v9, v8);
     Render_FillRect((_DWORD *)dword_5202E0, 0, v9, (unsigned __int16)(v6 + 32), v6 + 95, v9 + 63, v6 + 32, v9);
     result = Render_Present((int)g_RenderState);
     g_RenderDevice = v5;
@@ -48417,7 +48417,7 @@ int UnitBattle_RedrawVisibleGrid()
           j,
           *(__int16 *)(dword_532048 + 40 * i + 2 * j + 1534),
           g_SelectedUnitIndex);
-      sub_42FFB0(i, j);
+      UnitBattle_DrawTileContents(i, j);
       if ( Diagnostics_IsBattleTileDrawTraceEnabled() )
         Diagnostics_TraceWorldMapActionEvent(
           "battle_grid_after_tile",
@@ -48760,7 +48760,7 @@ LABEL_36:
                   sub_405920(&v39);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_portrait_free", *v4, v39, 0, 0);
                   v36 = v40;
-                  sub_460BB0(g_RenderState, 0x1F2u, 0x270u, 0xAu, 0x162u);
+                  RenderState_PumpIfRectInViewBounds(g_RenderState, 0x1F2u, 0x270u, 0xAu, 0x162u);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_rect", *v4, v36, 0, 0);
                   if ( v36 )
                     Render_FillRect((_DWORD *)dword_5202E0, 0, 10, 498, 0x270u, 0x162u, 0x1F2u, 0xAu);
@@ -49177,19 +49177,19 @@ unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1)
 // 532048: using guessed type int dword_532048;
 
 //----- (00432090) --------------------------------------------------------
-int  sub_432090(int a1, int a2)
+int  BuildingGarrisonDialog_HandleExitButtonPress(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   unk_53211C = v4;
   return result;
 }
 // 43209B: variable 'v4' is possibly undefined
 
 //----- (00432120) --------------------------------------------------------
-__int16  sub_432120(int a1, int a2, int a3)
+__int16  Battle_PlaceReservedUnitSlotAtTile(int a1, int a2, int a3)
 {
   int v3; // edi
   char v4; // al
@@ -49214,7 +49214,7 @@ __int16  sub_432120(int a1, int a2, int a3)
 // 532048: using guessed type int dword_532048;
 
 //----- (004321D0) --------------------------------------------------------
-int sub_4321D0()
+int Battle_ClearReservedUnitSlot()
 {
   int result; // eax
   int v1; // ebx
@@ -49376,8 +49376,8 @@ void * BuildingGarrisonDialog_DrawSlotGrid(int a1)
   v16[1] = -1;
   v16[2] = -1;
   v16[3] = 0;
-  v2 = sub_401CE0(g_BuildingGarrisonDialogResourceHandle, v16);
-  sub_404040((unsigned __int16 *)(uintptr_t)(unsigned int)dword_5321F8, 0, 32, 0, 63, (unsigned char)v2);
+  v2 = Render_ApplyColorTripletBytes(g_BuildingGarrisonDialogResourceHandle, v16);
+  Surface_DrawRectOutline((unsigned __int16 *)(uintptr_t)(unsigned int)dword_5321F8, 0, 32, 0, 63, (unsigned char)v2);
   v3 = 0;
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   do
@@ -49443,7 +49443,7 @@ LABEL_13:
     v11 = (unsigned __int16)v17;
     v19 = (unsigned __int16)(v17 + 32);
     v20 = (unsigned __int16)v4;
-    sub_460BB0(g_RenderState, v17, v17 + 32, v4, 131 * (v3 / 6) + 138);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, v17, v17 + 32, v4, 131 * (v3 / 6) + 138);
     v12 = 131 * (v3 / 6) + 139;
     Render_FillRect((_DWORD *)dword_5202E0, 0, v20, v11, v19, 131 * (v3 / 6) + 139, v11, v20);
     if ( v18 )
@@ -49494,7 +49494,7 @@ int  BuildingGarrisonDialog_ReloadSlotSprite(int result, int a2, int a3, DWORD a
   slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * slot_index;
   if ( *(__int16 *)(slot_record + 18) == -1 )
     return 0;
-  sub_413350(sprite_path, *(_BYTE *)(slot_record + 18), slot_index);
+  Unit_BuildGarrisonSlotIconSpritePath(sprite_path, *(_BYTE *)(slot_record + 18), slot_index);
   sprite_set = Mem_Alloc(4112, 0, 0, a4);
   if ( sprite_set )
     sprite_set = (int)DLXSpriteSet_Load((_DWORD *)sprite_set, sprite_path);
@@ -49635,8 +49635,8 @@ void *BuildingGarrisonDialog_DrawSelectedUnitPanel()
     v42[0] = -31;
     strcpy(v43, "d");
     v42[1] = -47;
-    v4 = sub_401CE0(g_BuildingGarrisonDialogResourceHandle, v42);
-    sub_40BB60(3, v4, (DWORD)savedregs);
+    v4 = Render_ApplyColorTripletBytes(g_BuildingGarrisonDialogResourceHandle, v42);
+    TextSprite_ActivateResourceSlot(3, v4, (DWORD)savedregs);
     v45 = 289;
     v46 = (__int16 *)(31
                     * g_BuildingGarrisonDialogSelectedSlotIndex
@@ -49693,7 +49693,7 @@ LABEL_10:
       SpriteHeight = DLX_GetSpriteHeight(g_BuildingGarrisonDialogUiSpriteSet, 0xAu);
       v16 = v51;
       v17 = v45;
-      sub_460BB0(g_RenderState, v51, v51 + 49 + SpriteHeight, v45, v41);
+      RenderState_PumpIfRectInViewBounds(g_RenderState, v51, v51 + 49 + SpriteHeight, v45, v41);
       v18 = *(__int16 *)(g_BuildingGarrisonDialogActiveBuilding + 31 * g_BuildingGarrisonDialogSelectedSlotIndex + 18);
       if ( v18 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v18 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
         v19 = 33;
@@ -49830,7 +49830,7 @@ LABEL_28:
   g_RenderDevice = &unk_51D4C0;
   v40 = DLX_GetSpriteWidth(g_BuildingGarrisonDialogUiSpriteSet, 0x19u) + 289;
   v1 = DLX_GetSpriteHeight(g_BuildingGarrisonDialogUiSpriteSet, 0x19u);
-  sub_460BB0(g_RenderState, 0xDCu, v1 + 220, 0x121u, v40);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0xDCu, v1 + 220, 0x121u, v40);
   v2 = DLX_GetSpriteForChar(g_BuildingGarrisonDialogUiSpriteSet, 25);
   Compat_RenderDeviceDrawMenuSprite(289, 220, v2, 0);
   if ( !v0 )
@@ -49884,7 +49884,7 @@ void  BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(int a1, char a2, DWO
     slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * g_BuildingGarrisonDialogSelectedSlotIndex;
     if ( *(__int16 *)(slot_record + 18) != -1 )
     {
-      sub_413430(asset_path, *(_BYTE *)(slot_record + 18), g_BuildingGarrisonDialogActiveBuilding);
+      Unit_BuildSelectedUnitPanelIconSpritePath(asset_path, *(_BYTE *)(slot_record + 18), g_BuildingGarrisonDialogActiveBuilding);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(
           stderr,
@@ -49898,7 +49898,7 @@ void  BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(int a1, char a2, DWO
       g_BuildingGarrisonDialogSelectedUnitSpriteSet = sprite_set;
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] selected_assets_unit_loaded sprite_set=%08x\n", sprite_set);
-      sub_413510(asset_path, *(_BYTE *)(slot_record + 18), g_BuildingGarrisonDialogActiveBuilding);
+      Unit_BuildSelectedUnitPanelIconPalettePath(asset_path, *(_BYTE *)(slot_record + 18), g_BuildingGarrisonDialogActiveBuilding);
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] selected_assets_palette_path path=%s\n", asset_path);
       Compat_LoadPalCOLIntoTable(palette_entries, asset_path, a3);
@@ -49908,7 +49908,7 @@ void  BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(int a1, char a2, DWO
         *(_DWORD *)(g_BuildingGarrisonDialogResourceHandle + 4 * palette_index) = palette_entries[palette_index];
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] selected_assets_palette_copied\n");
-      sub_404C80((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
+      Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)(uintptr_t)(unsigned int)g_BuildingGarrisonDialogResourceHandle);
       BuildingGarrisonDialog_DrawSelectedUnitPanel();
       if ( Diagnostics_IsWorldMapClickTraceEnabled() )
         fprintf(stderr, "[barracks] selected_assets_panel_drawn\n");
@@ -49996,7 +49996,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
   result = g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 2) != 0 )
   {
-    sub_404F20((int *)&unk_51D4C0, 20);
+    Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
     Render_Pump();
     Castle_ShowUnitProductionPanel(g_BuildingGarrisonDialogActiveBuilding, a2, a3);
     if ( g_BuildingGarrisonDialogUseChrTheme )
@@ -50009,8 +50009,8 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
       v6 = aCastle_chrD_16;
     else
       v6 = aCastle_pogD_16;
-    sub_435ED0(v6, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, a2);
-    sub_460CB0((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, a2);
+    Palette_LoadOrBuildBlendLookupTable(v6, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, a2);
+    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, a2);
     Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, v5, a2);
     Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, v5, a2);
     Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, v5, a2);
@@ -50021,7 +50021,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, a2);
-    sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
+    Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
     Render_Present((int)g_RenderState);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
     Render_Present((int)g_RenderState);
@@ -50152,15 +50152,15 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
       v11[0],
       Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding),
       0);
-    sub_4425E0(aWrong_7);
+    Audio_PlayButtonSound(aWrong_7);
     return Render_Begin((int)g_RenderState, 0);
   }
   else
   {
-    sub_419F20(a1);
+    UIWidget_ShowPressedState(a1);
     g_BuildingGarrisonDialogPendingExitCountdown = 1;
-    sub_4426C0(aDclose, 64);
-    return sub_419F50(a1, 1);
+    Audio_PlaySoundEffectByName(aDclose, 64);
+    return UIWidget_ShowReleasedState(a1, 1);
   }
 }
 // 532150: using guessed type int g_BuildingGarrisonDialogActiveBuilding;
@@ -50193,7 +50193,7 @@ int CastleProduction_DrawSelectedUnitPortrait()
   DLX_GetSpriteHeight(g_CastleProductionSelectedUnitSpriteSet, 0);
   SpriteWidth = DLX_GetSpriteWidth(g_CastleProductionSelectedUnitSpriteSet, 0);
   v2 = dword_544D10;
-  sub_460BB0(g_RenderState, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
   g_RenderDevice = &unk_51D4C0;
   SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, dword_5322CC);
   result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
@@ -50281,14 +50281,14 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
 
   if ( g_CastleProductionSelectedUnitSpriteSet )
     sub_405920(&g_CastleProductionSelectedUnitSpriteSet);
-  sub_413430(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], a1);
+  Unit_BuildSelectedUnitPanelIconSpritePath(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], a1);
   v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, a3);
   if ( v6 )
     v6 = DLXSpriteSet_Load(v6, v37);
   v35 = v7;
   g_CastleProductionSelectedUnitSpriteSet = (int)v6;
-  sub_413510(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v7);
-  sub_401AF0(v8, a3);
+  Unit_BuildSelectedUnitPanelIconPalettePath(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v7);
+  Palette_LoadFromQueryHandle(v8, a3);
   v9 = 224;
   v10 = &v36;
   do
@@ -50470,7 +50470,7 @@ void * CastleProduction_DrawLicenceGrid()
     if ( v0 % 4 >= 2 )
       v1 = 48 * (v0 % 4) + 425;
     v9 = dword_544D10;
-    sub_460BB0(g_RenderState, v1, v1 + 31, v12, v12 + 63);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, v1, v1 + 31, v12, v12 + 63);
     if ( *(char *)(v0 + dword_532218 + 402) == -1 )
     {
       SpriteForChar = DLX_GetSpriteForChar(dword_53220C, 22);
@@ -50602,7 +50602,7 @@ int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2)
       nfree_(sprite_set);
       dword_532304[a1] = 0;
     }
-    sub_413350(v9, *(_BYTE *)(a1 + dword_532218 + 402), a1);
+    Unit_BuildGarrisonSlotIconSpritePath(v9, *(_BYTE *)(a1 + dword_532218 + 402), a1);
     result = Mem_Alloc(4112, 0x1010, a2, sprite_set);
     if ( result )
       result = (int)DLXSpriteSet_Load((_DWORD *)result, v9);
@@ -50819,12 +50819,12 @@ int  CastleProduction_SelectPreviousAvailableUnit(int a1, int a2, DWORD a3, int 
   int v5; // ecx
   int v6; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   if ( g_CastleProductionSelectedAvailableUnitIndex )
     --g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
-  sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
-  return sub_419F50(v6, v6);
+  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+  return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43565E: variable 'v5' is possibly undefined
 // 435675: variable 'v6' is possibly undefined
@@ -50837,12 +50837,12 @@ int  CastleProduction_SelectNextAvailableUnit(int a1, int a2, DWORD a3, int a4, 
   int v5; // ecx
   int v6; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   if ( dword_532224[g_CastleProductionSelectedAvailableUnitIndex + 1] != -1 )
     ++g_CastleProductionSelectedAvailableUnitIndex;
   CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
-  sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
-  return sub_419F50(v6, v6);
+  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
+  return UIWidget_ShowReleasedState(v6, v6);
 }
 // 43569E: variable 'v5' is possibly undefined
 // 4356B5: variable 'v6' is possibly undefined
@@ -50863,9 +50863,9 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   int v12; // ecx
   int v13; // [esp-Ch] [ebp-10h]
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   if ( !Building_BuyUnitLicence(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
-    return sub_419F50(a1, v5);
+    return UIWidget_ShowReleasedState(a1, v5);
   v13 = v5;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
   for ( i = 0; ; ++i )
@@ -50875,13 +50875,13 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
       break;
   }
   dword_532334 = i;
-  sub_4426C0(aDopen, 64);
+  Audio_PlaySoundEffectByName(aDopen, 64);
   CastleProduction_ReloadLicenceSlotSprite(i, a1);
   UI_DrawActionBox(a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v10);
   CastleProduction_RebuildAvailableUnitList(v11);
   CastleProduction_RedrawSelectedUnitPanel(v12, a1, a2, a3, v8);
-  return sub_419F50(a1, v13);
+  return UIWidget_ShowReleasedState(a1, v13);
 }
 // 4356DB: variable 'v4' is possibly undefined
 // 4356E7: variable 'v5' is possibly undefined
@@ -50901,16 +50901,16 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
 {
   int v2; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Begin((int)g_RenderState, 0);
   if ( dword_5322C8 != -1 )
   {
     dword_532338 = dword_5322C8;
-    sub_4426C0(aDclose_0, 64);
+    Audio_PlaySoundEffectByName(aDclose_0, 64);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   }
-  return sub_419F50(v2, v2);
+  return UIWidget_ShowReleasedState(v2, v2);
 }
 // 435792: variable 'v2' is possibly undefined
 // 519808: using guessed type int dword_519808;
@@ -50925,12 +50925,12 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
 
   if ( dword_5322C8 != -1 )
   {
-    sub_419F20(result);
+    UIWidget_ShowPressedState(result);
     Render_Begin((int)g_RenderState, 0);
     Building_SetUnitProduction(dword_532218, a2, a3);
     CastleProduction_DrawLicenceGrid();
     CastleProduction_DrawProductionStatus(a3);
-    return sub_419F50(v4, v4);
+    return UIWidget_ShowReleasedState(v4, v4);
   }
   return result;
 }
@@ -50946,11 +50946,11 @@ int  CastleProduction_HandleStopProductionAction(int a1, char a2, DWORD a3)
   int v4; // edx
   int v5; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Building_StopUnitProduction(v3, a2, a3);
   CastleProduction_DrawLicenceGrid();
   CastleProduction_DrawProductionStatus(a3);
-  return sub_419F50(v4, v5);
+  return UIWidget_ShowReleasedState(v4, v5);
 }
 // 43583D: variable 'v3' is possibly undefined
 // 43584E: variable 'v4' is possibly undefined
@@ -50970,22 +50970,22 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   v11 = a2;
   UIWidget_PlayPressedReleaseAnimation(a1);
   Render_Pump();
-  sub_404F20((int *)&unk_51D4C0, 20);
-  sub_413860(v10, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v5);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  Unit_BuildBigInfoGraphicPath(v10, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v5);
   (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, v10);
   (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) )
     DD_Pump((int)g_RenderState, (char)g_RenderState);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   if ( dword_532214 )
     v6 = aCastle_chrD_23;
   else
     v6 = aCastle_pogD_23;
   v7 = *(_DWORD *)(dword_5202E0 + 184);
   (*(void (__fastcall **)(_DWORD, char *))(v7 + 48))(0, v6);
-  sub_401AB0((_BYTE *)dword_53221C, 6);
+  Palette_QuantizeChannelsInPlace((_BYTE *)dword_53221C, 6);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   UIWidgetTable_InitDrawStates(dword_515130);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
@@ -50993,7 +50993,7 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(a3);
   UI_DrawActionBox(a4);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
   return Render_Present((int)g_RenderState);
 }
 // 43589A: variable 'v5' is possibly undefined
@@ -51054,7 +51054,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
       result = *(char *)(result + dword_532218 + 402);
       if ( result != -1 && v4 != dword_5322C8 )
       {
-        sub_4426C0(aMarker_0, 64);
+        Audio_PlaySoundEffectByName(aMarker_0, 64);
         dword_5322C8 = v5;
         v6 = 0;
         v7 = *(char *)(v5 + dword_532218 + 402);
@@ -51075,7 +51075,7 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
         {
           g_CastleProductionSelectedAvailableUnitIndex = v6;
           CastleProduction_RedrawSelectedUnitPanel(v7, dword_532224[0], a1, a2, a3);
-          return sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
+          return Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
         }
       }
     }
@@ -51114,7 +51114,7 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
         g_CastleProductionSelectedAvailableUnitIndex += v3;
         Render_Pump();
         CastleProduction_RedrawSelectedUnitPanel(v5, v3, a1, a2, a3);
-        sub_404C80((int *)&unk_51D4C0, (const void *)dword_53221C);
+        Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_53221C);
         Render_Present((int)g_RenderState);
         return Render_Begin((int)g_RenderState, 0);
       }
@@ -51197,7 +51197,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   v10 = *(_DWORD *)(dword_5202E0 + 184);
   v11 = dword_53221C;
   (*(void (__fastcall **)(_DWORD, char *))(v10 + 48))(0, v9);
-  sub_401AB0((_BYTE *)dword_53221C, 6);
+  Palette_QuantizeChannelsInPlace((_BYTE *)dword_53221C, 6);
   v13 = (_DWORD *)Mem_Alloc(4112, v12, v11, v8);
   if ( v13 )
     v13 = DLXSpriteSet_Load(v13, dword_532214 ? aCastle_chrD_19 : aCastle_pogD_19);
@@ -51206,14 +51206,14 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
     v14 = aCastle_chrD_19;
   else
     v14 = aCastle_pogD_19;
-  sub_435ED0(v14, dword_53221C, dword_532214, v8);
+  Palette_LoadOrBuildBlendLookupTable(v14, dword_53221C, dword_532214, v8);
   Render_LoadResourceSprite_v4(5, (_BYTE *)dword_53221C, v15, v11, v8);
   Render_LoadResourceSprite_v4(20, (_BYTE *)dword_53221C, v16, v11, v8);
   Render_LoadResourceSprite_v4(9, (_BYTE *)dword_53221C, v17, v11, v8);
   Render_LoadResourceSprite_v4(7, (_BYTE *)dword_53221C, v18, v11, v8);
   Render_LoadResourceSprite_v4(dword_526A2C, (_BYTE *)dword_53221C, v19, v11, v8);
-  sub_419790(8);
-  sub_460CB0((int)g_RenderState, dword_53221C, v20, v8);
+  UI_SetActiveWidgetTable(8);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, dword_53221C, v20, v8);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   UIWidgetTable_InitDrawStates(dword_515130);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
@@ -51222,7 +51222,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   CastleProduction_ReloadLicenceSlotSprites(20);
   CastleProduction_DrawProductionStatus(v8);
   UI_DrawActionBox(a3);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_53221C, 20);
   Render_Present((int)g_RenderState);
   g_CastleProductionExitSignal = 0;
   dword_526A30 = (int (*)(void))CastleProduction_TickAnimations;
@@ -51230,7 +51230,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   {
     DD_Pump((int)g_RenderState, 0);
     CastleProduction_TickAnimations(v8);
-    sub_44E350(word_515310);
+    UI_RunHoverTooltipZones(word_515310);
     g_RenderDevice = &unk_51D4C0;
     if ( !UIWidgetTable_PollHoverAndActions(dword_515130, v8) )
     {
@@ -51252,7 +51252,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
     }
   }
   Render_Pump();
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   return nfree_(dword_53221C);
 }
 // 435C1C: variable 'v4' is possibly undefined
@@ -51293,7 +51293,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435ED0) --------------------------------------------------------
-int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4)
+int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
 {
   unsigned int cube_size;
   int query_handle;
@@ -51304,7 +51304,7 @@ int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4)
   strcpy(path, aGfx_5);
   strcat(path, a1);
   strcat(path, a_mtb);
-  query_handle = sub_4427F0(path, 0);
+  query_handle = FileSystem_ResolveReadPath(path, 0);
   if ( query_handle )
   {
     cube_size = 1u << byte_519A18;
@@ -51314,7 +51314,7 @@ int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4)
     return sub_473EE0((int)&dword_543CC8, &query_handle);
   }
 
-  sub_4628B0(a2);
+  Palette_BuildNearestColorLUT(a2);
   output_handle = sub_475CC8(path, (unsigned __int8 *)aWb_0, 0, a4);
   cube_size = 1u << byte_519A18;
   cube_size *= cube_size * cube_size;
@@ -51326,7 +51326,7 @@ int  sub_435ED0(CHAR *a1, int a2, int a3, DWORD a4)
 // 519A18: using guessed type char byte_519A18;
 
 //----- (00435FE0) --------------------------------------------------------
-int  sub_435FE0(DWORD a1, int a2)
+int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD a1, int a2)
 {
   void *v2; // esi
   int v3; // edx
@@ -51347,7 +51347,7 @@ int  sub_435FE0(DWORD a1, int a2)
 // 532354: using guessed type int dword_532354;
 
 //----- (00436060) --------------------------------------------------------
-int  sub_436060(DWORD a1, int a2)
+int  BuildingTransferDialog_DrawTransferAmountValue(DWORD a1, int a2)
 {
   void *v2; // esi
   int v3; // edx
@@ -51368,12 +51368,12 @@ int  sub_436060(DWORD a1, int a2)
 // 532350: using guessed type int dword_532350;
 
 //----- (004360E0) --------------------------------------------------------
-int  sub_4360E0(int a1, int a2)
+int  BuildingTransferDialog_HandleExitButtonPress(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_53234C = v4;
   return result;
 }
@@ -51381,12 +51381,12 @@ int  sub_4360E0(int a1, int a2)
 // 53234C: using guessed type int dword_53234C;
 
 //----- (00436100) --------------------------------------------------------
-int  sub_436100(int a1, int a2, DWORD a3, double a4)
+int  BuildingTransferDialog_CommitTransfer(int a1, int a2, DWORD a3, double a4)
 {
   int result; // eax
   int v6; // esi
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   if ( dword_532350 )
   {
     v6 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
@@ -51394,8 +51394,8 @@ int  sub_436100(int a1, int a2, DWORD a3, double a4)
       v6 = -1;
     Building_Transfer((dword_532354 - (gameData + 509674)) / 467, v6, 1, dword_532350, a4);
     dword_532350 = 0;
-    sub_436060(a3, 467);
-    return sub_435FE0(a3, 467);
+    BuildingTransferDialog_DrawTransferAmountValue(a3, 467);
+    return BuildingTransferDialog_DrawSourceRemainingValue(a3, 467);
   }
   return result;
 }
@@ -51406,7 +51406,7 @@ int  sub_436100(int a1, int a2, DWORD a3, double a4)
 // 532360: using guessed type __int16 g_BuildingTransferTargetIds[];
 
 //----- (00436180) --------------------------------------------------------
-int  sub_436180(int a1)
+int  BuildingTransferDialog_IncreaseTransferAmount(int a1)
 {
   int v2; // edx
   int v3; // ecx
@@ -51421,7 +51421,7 @@ int  sub_436180(int a1)
   DWORD v12; // ebp
   int v13; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   Time_Now(v3, v2);
   dword_532350 += 10;
@@ -51440,11 +51440,11 @@ int  sub_436180(int a1)
       v12 = 10;
       dword_532350 = 10 * (*(_DWORD *)(dword_532354 + 438) / 0xAu);
     }
-    sub_436060(v12, (int)g_RenderState);
+    BuildingTransferDialog_DrawTransferAmountValue(v12, (int)g_RenderState);
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v13);
+  return UIWidget_ShowReleasedState(a1, v13);
 }
 // 436197: variable 'v3' is possibly undefined
 // 436197: variable 'v2' is possibly undefined
@@ -51459,7 +51459,7 @@ int  sub_436180(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00436250) --------------------------------------------------------
-int  sub_436250(int a1)
+int  BuildingTransferDialog_DecreaseTransferAmount(int a1)
 {
   int v2; // edx
   int v3; // ecx
@@ -51473,7 +51473,7 @@ int  sub_436250(int a1)
   int v11; // ecx
   int v12; // ecx
 
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   Render_Pump();
   Time_Now(v3, v2);
   dword_532350 -= 10;
@@ -51486,11 +51486,11 @@ int  sub_436250(int a1)
     dword_532350 = 10 * ((v4 - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
     if ( dword_532350 < 0 )
       dword_532350 = 0;
-    sub_436060((DWORD)g_RenderState, 0);
+    BuildingTransferDialog_DrawTransferAmountValue((DWORD)g_RenderState, 0);
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return sub_419F50(a1, v12);
+  return UIWidget_ShowReleasedState(a1, v12);
 }
 // 43626A: variable 'v3' is possibly undefined
 // 43626A: variable 'v2' is possibly undefined
@@ -51629,7 +51629,7 @@ int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
   int old_index;
 
   old_index = g_BuildingTransferTargetListIndex;
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   if ( g_BuildingTransferTargetListIndex )
     --g_BuildingTransferTargetListIndex;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -51640,7 +51640,7 @@ int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
   BuildingTransferTargetList_Draw((int)off_511234, a2);
-  return sub_419F50(a1, 1);
+  return UIWidget_ShowReleasedState(a1, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
@@ -51651,7 +51651,7 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
   int old_index;
 
   old_index = g_BuildingTransferTargetListIndex;
-  sub_419F20(a1);
+  UIWidget_ShowPressedState(a1);
   if ( word_532362[g_BuildingTransferTargetListIndex] != -1 )
     ++g_BuildingTransferTargetListIndex;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -51662,7 +51662,7 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
   BuildingTransferTargetList_Draw((int)off_511234, a2);
-  return sub_419F50(a1, 1);
+  return UIWidget_ShowReleasedState(a1, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
@@ -51763,7 +51763,7 @@ int BuildingTransferTargetList_FreeSpriteSet()
 // 532428: using guessed type int g_BuildingTransferTargetListSpriteSet;
 
 //----- (00436B20) --------------------------------------------------------
-int  sub_436B20(int a1, int a2, int a3, int a4)
+int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
 {
   int v6; // esi
   int result; // eax
@@ -51792,7 +51792,7 @@ int  sub_436B20(int a1, int a2, int a3, int a4)
       v10 = *(_BYTE **)(v8 + 1);
       while ( (unsigned __int16)Render_LoadResourceSprite_v3(v10) > v6 )
       {
-        v12 = sub_40BDA0(v11, v6);
+        v12 = TextSprite_FindWordWrapBreak(v11, v6);
         v17 = *v12;
         *v12 = 0;
         UI_DrawTextFmt(a1, a1, a2, a4, 4, v13);
@@ -51822,7 +51822,7 @@ int  sub_436B20(int a1, int a2, int a3, int a4)
 // 520728: using guessed type int dword_520728;
 
 //----- (00436C10) --------------------------------------------------------
-int __thiscall sub_436C10(void *this)
+int __thiscall UnitBattle_ConstructAiCandidateQueue(void *this)
 {
   dword_5437C0 = 0;
   dword_5437C8 = 0;
@@ -51842,7 +51842,7 @@ int __thiscall sub_436C10(void *this)
 // 5437D4: using guessed type int dword_5437D4;
 
 //----- (00436C50) --------------------------------------------------------
-int  sub_436C50(int a1)
+int  UnitBattle_ResetAiReachGridForSide(int a1)
 {
   int v1; // edi
   int result; // eax
@@ -52398,7 +52398,7 @@ LABEL_41:
 // 532048: using guessed type int dword_532048;
 
 //----- (00437A90) --------------------------------------------------------
-int  sub_437A90(int a1, int a2, int a3)
+int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
 {
   int v3; // edx
   int v4; // eax
@@ -52981,7 +52981,7 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
           v147 = v177 + dword_532048;
           *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146;
           *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
-          v148 = sub_437A90(v211, a2, v143);
+          v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v211, a2, v143);
           *(int *)((char *)&dword_53244C[2 * v149] + v140) -= 2 * v148;
           v208 = v149;
           Debug_Log(v149, v140, v171, (int)aOddzial_w_zasi);
@@ -53234,7 +53234,7 @@ LABEL_29:
     v27 = v205 + dword_532048;
     *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26;
     *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
-    v28 = sub_437A90(v178, a2, a3);
+    v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v178, a2, a3);
     v30 = *(int *)((char *)&dword_53244C[2 * v29] + v21) - 2 * v28;
     *(int *)((char *)&dword_53244C[2 * v29] + v21) = v30;
     Debug_Log(v29, v21, v30, (int)aOddzial_w_zasi);
@@ -54139,16 +54139,16 @@ LABEL_47:
 // 5437B8: using guessed type int dword_5437B8;
 
 //----- (0043A800) --------------------------------------------------------
-int  sub_43A800(int result, int a2)
+int  WCIsvListBase_TransferAllInto(int result, int a2)
 {
   int v3; // ecx
   int v4; // ecx
 
   if ( *(_DWORD *)(result + 8) )
   {
-    sub_43D250(result, a2);
-    sub_43A800(v3, a2);
-    return sub_43D220(a2, v4);
+    WCIsvListBase_PopFrontValue(result, a2);
+    WCIsvListBase_TransferAllInto(v3, a2);
+    return WCIsvListBase_AppendValue(a2, v4);
   }
   return result;
 }
@@ -54156,7 +54156,7 @@ int  sub_43A800(int result, int a2)
 // 43A82C: variable 'v4' is possibly undefined
 
 //----- (0043A880) --------------------------------------------------------
-signed int __fastcall sub_43A880(int a1, int a2)
+signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int a2)
 {
   int v3; // eax
   int v4; // ecx
@@ -54165,7 +54165,7 @@ signed int __fastcall sub_43A880(int a1, int a2)
     return 0;
   while ( 1 )
   {
-    v3 = sub_43D250(a2, a2);
+    v3 = WCIsvListBase_PopFrontValue(a2, a2);
     if ( v3 == v4 )
       break;
     if ( !*(_DWORD *)(a2 + 8) )
@@ -54515,10 +54515,10 @@ LABEL_123:
                           v58 = 0;
                           v55 = &off_50F124;
                           v59 = 0;
-                          sub_43D180(&v54, &dword_5437C0, (int)v42);
+                          WCIsvListBase_CopyAppendAll(&v54, &dword_5437C0, (int)v42);
                           v55 = &off_50F134;
-                          v51 = sub_43A880(v49, (int)&v54) && dword_5437A8 < 20;
-                          sub_43D1E0(v50, (int)&v54);
+                          v51 = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&v54) && dword_5437A8 < 20;
+                          WCIsvListBase_DestroyElementsAndDtor(v50, (int)&v54);
                           if ( v51 )
                           {
                             if ( v52 )
@@ -55156,7 +55156,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
           if ( result != -1 )
           {
             v36 = *(__int16 *)((char *)v34 + i);
-            result = sub_43D220((int)&dword_5437C0, v36);
+            result = WCIsvListBase_AppendValue((int)&dword_5437C0, v36);
           }
         }
       }
@@ -55168,7 +55168,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
           if ( result != -1 )
           {
             v37 = *(__int16 *)((char *)v34 + j);
-            result = sub_43D220((int)&dword_5437C0, v37);
+            result = WCIsvListBase_AppendValue((int)&dword_5437C0, v37);
           }
         }
       }
@@ -55205,7 +55205,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       if ( *((__int16 *)v34 + v49) != -1 )
       {
         v38 = *((__int16 *)v34 + v49);
-        sub_43D220((int)&dword_5437C0, v38);
+        WCIsvListBase_AppendValue((int)&dword_5437C0, v38);
       }
       *((_WORD *)v34 + v49) = -1;
     }
@@ -55216,7 +55216,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       if ( v9 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v9 + dword_532048 + 852)] == 4 )
       {
         v39 = *(__int16 *)((char *)v34 + k);
-        sub_43D220((int)&dword_5437C0, v39);
+        WCIsvListBase_AppendValue((int)&dword_5437C0, v39);
         *(_WORD *)((char *)v34 + k) = -1;
       }
     }
@@ -55228,7 +55228,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
         if ( byte_512582[88 * *(__int16 *)(31 * result + dword_532048 + 852)] )
         {
           v40 = *(__int16 *)((char *)v34 + m);
-          result = sub_43D220((int)&dword_5437C0, v40);
+          result = WCIsvListBase_AppendValue((int)&dword_5437C0, v40);
           *(_WORD *)((char *)v34 + m) = -1;
         }
       }
@@ -55241,7 +55241,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     if ( v27 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v27 + dword_532048 + 852)] == 4 )
     {
       v41 = *(__int16 *)((char *)v34 + n);
-      sub_43D220((int)&dword_5437C0, v41);
+      WCIsvListBase_AppendValue((int)&dword_5437C0, v41);
       *(_WORD *)((char *)v34 + n) = -1;
     }
   }
@@ -55251,7 +55251,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     if ( v29 != -1 && byte_512582[88 * *(__int16 *)(dword_532048 + 31 * v29 + 852)] )
     {
       v42 = *(__int16 *)((char *)v34 + ii);
-      sub_43D220((int)&dword_5437C0, v42);
+      WCIsvListBase_AppendValue((int)&dword_5437C0, v42);
       *(_WORD *)((char *)v34 + ii) = -1;
     }
   }
@@ -55291,7 +55291,7 @@ LABEL_63:
     if ( *((__int16 *)v34 + v50) != -1 )
     {
       v43 = *((__int16 *)v34 + v50);
-      sub_43D220((int)&dword_5437C0, v43);
+      WCIsvListBase_AppendValue((int)&dword_5437C0, v43);
     }
     result = v50;
     v32 = v48;
@@ -55318,7 +55318,7 @@ LABEL_63:
 // 5437C0: using guessed type int dword_5437C0;
 
 //----- (0043C6B0) --------------------------------------------------------
-signed int  sub_43C6B0(int a1, signed int a2)
+signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
 {
   int i; // eax
   int v3; // edx
@@ -55595,7 +55595,7 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
   int v2; // edx
 
   v2 = a1;
-  if ( dword_532078 <= 3 && sub_43C6B0(a1, a2) )
+  if ( dword_532078 <= 3 && UnitBattle_ScanAiPlanRangeLine(a1, a2) )
     return 2;
   if ( *(int *)(dword_532048 + 828) <= 0 )
     return 4;
@@ -55676,9 +55676,9 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
       while ( dword_5437C8 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v4 = sub_43D250((int)&dword_5437C0, 0);
+        v4 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
         v26 = v4;
-        sub_436C50(a1);
+        UnitBattle_ResetAiReachGridForSide(a1);
         UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, 1);
         UnitBattle_UpdateIdleAnimatedUnits();
         if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
@@ -55688,7 +55688,7 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
         }
         else
         {
-          sub_43D220((int)&dword_5437C0, v26);
+          WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
         }
       }
       goto LABEL_8;
@@ -55698,9 +55698,9 @@ LABEL_8:
       for ( i = dword_5437CC; v10 < i; ++v10 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v12 = sub_43D250((int)&dword_5437C0, 0);
+        v12 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
         v26 = v12;
-        sub_436C50(a1);
+        UnitBattle_ResetAiReachGridForSide(a1);
         UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v10);
         UnitBattle_UpdateIdleAnimatedUnits();
         if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
@@ -55708,7 +55708,7 @@ LABEL_8:
           UnitBattle_UpdateIdleAnimatedUnits();
           UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
         }
-        sub_43D220((int)&dword_5437C0, v26);
+        WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
       dword_515A10 = UnitBattle_SelectAiPlanMode(a1, a1);
@@ -55727,7 +55727,7 @@ LABEL_13:
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    v26 = sub_43D250((int)&dword_5437C0, 0);
+    v26 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
     Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", v26, a1, dword_5437C8, v2);
     v19 = dword_532048 + 31 * v26;
     if ( *(__int16 *)(v19 + 852) != -1 && a1 == *(_BYTE *)(v19 + 854) )
@@ -55744,13 +55744,13 @@ LABEL_21:
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    sub_436C50(a1);
+    UnitBattle_ResetAiReachGridForSide(a1);
     if ( UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v2) )
       return 1;
     UnitBattle_UpdateIdleAnimatedUnits();
     if ( !UnitBattle_SelectAiActionForUnit(v26, a1) )
     {
-      sub_43D220((int)&dword_5437C0, v26);
+      WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
 LABEL_19:
       v2 = 0;
       goto LABEL_20;
@@ -55788,7 +55788,7 @@ LABEL_19:
 // 5437CC: using guessed type int dword_5437CC;
 
 //----- (0043CF50) --------------------------------------------------------
-_DWORD * sub_43CF50(_DWORD *result)
+_DWORD * WCIsvListBase_ctorRoot(_DWORD *result)
 {
   *result = 0;
   result[1] = &off_50F0E4;
@@ -55797,7 +55797,7 @@ _DWORD * sub_43CF50(_DWORD *result)
 // 50F0E4: using guessed type int (*off_50F0E4)();
 
 //----- (0043CF60) --------------------------------------------------------
-int  sub_43CF60(int result, char a2)
+int  WCIsvListBase_dtorRoot(int result, char a2)
 {
   int v3; // ecx
   int v4; // ecx
@@ -55820,19 +55820,19 @@ int  sub_43CF60(int result, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0043CF90) --------------------------------------------------------
-int __cdecl sub_43CF90()
+int __cdecl WCIsvListBase_dtorFreeOnly()
 {
   return j__nfree_();
 }
 
 //----- (0043CFA0) --------------------------------------------------------
-BOOL  sub_43CFA0(_DWORD *a1, _DWORD *a2)
+BOOL  WCIsvListBase_ValuesEqual(_DWORD *a1, _DWORD *a2)
 {
   return *a1 == *a2;
 }
 
 //----- (0043CFB0) --------------------------------------------------------
-_DWORD * sub_43CFB0(_DWORD *result)
+_DWORD * WCIsvListBase_ctorVariant124(_DWORD *result)
 {
   *result = 0;
   result[1] = &off_50F0E4;
@@ -55851,7 +55851,7 @@ _DWORD * sub_43CFB0(_DWORD *result)
 // 50F124: using guessed type void *off_50F124;
 
 //----- (0043CFF0) --------------------------------------------------------
-int  sub_43CFF0(WCIsvListBase *a1, char a2)
+int  WCIsvListBase_dtorVariant124(WCIsvListBase *a1, char a2)
 {
   int result; // eax
   int v4; // ecx
@@ -55865,7 +55865,7 @@ int  sub_43CFF0(WCIsvListBase *a1, char a2)
   }
   else
   {
-    result = sub_43D1E0(a1, (int)a1);
+    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)a1);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -55879,7 +55879,7 @@ int  sub_43CFF0(WCIsvListBase *a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0043D030) --------------------------------------------------------
-int  sub_43D030(_DWORD *a1, _DWORD *a2)
+int  WCIsvListBase_ctorVariant124AndCopy(_DWORD *a1, _DWORD *a2)
 {
   int v2; // ecx
 
@@ -55892,7 +55892,7 @@ int  sub_43D030(_DWORD *a1, _DWORD *a2)
   a1[1] = &off_50F0F4;
   a1[1] = &off_50F114;
   a1[1] = &off_50F124;
-  sub_43D180(a1, a2, (int)a1);
+  WCIsvListBase_CopyAppendAll(a1, a2, (int)a1);
   return v2;
 }
 // 43D076: variable 'v2' is possibly undefined
@@ -55902,7 +55902,7 @@ int  sub_43D030(_DWORD *a1, _DWORD *a2)
 // 50F124: using guessed type void *off_50F124;
 
 //----- (0043D080) --------------------------------------------------------
-_DWORD * sub_43D080(_DWORD *result)
+_DWORD * WCIsvListBase_ctorVariant134(_DWORD *result)
 {
   *result = 0;
   result[1] = &off_50F0E4;
@@ -55921,7 +55921,7 @@ _DWORD * sub_43D080(_DWORD *result)
 // 50F134: using guessed type void *off_50F134;
 
 //----- (0043D0C0) --------------------------------------------------------
-int  sub_43D0C0(WCIsvListBase *a1, char a2)
+int  WCIsvListBase_dtorVariant134(WCIsvListBase *a1, char a2)
 {
   int result; // eax
   int v4; // ecx
@@ -55935,7 +55935,7 @@ int  sub_43D0C0(WCIsvListBase *a1, char a2)
   }
   else
   {
-    result = sub_43D1E0(a1, (int)a1);
+    result = WCIsvListBase_DestroyElementsAndDtor(a1, (int)a1);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -55989,7 +55989,7 @@ _DWORD *unknown_libname_3(WCIsvListBase *this)
 }
 
 //----- (0043D100) --------------------------------------------------------
-_DWORD * sub_43D100(WCIsvListBase *this)
+_DWORD * WCIsvListBase_dtorVariant104(WCIsvListBase *this)
 {
   return unknown_libname_3(this);
 }
@@ -56068,7 +56068,7 @@ void WCIsvListBase_base_destroy(WCIsvListBase *this)
   int link_handle;
 
   for ( link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this); link_handle; link_handle = WCIsvListBase_base_sget((int)(uintptr_t)this) )
-    sub_43D160((int)(uintptr_t)this, link_handle, 8);
+    WCIsvListBase_ReleaseLinkNode((int)(uintptr_t)this, link_handle, 8);
 }
 
 _DWORD WCIsvListBase_dtor(WCIsvListBase *this)
@@ -56083,7 +56083,7 @@ _DWORD WCIsvListBase_dtor(WCIsvListBase *this)
 }
 
 //----- (0043D120) --------------------------------------------------------
-_DWORD * sub_43D120(int a1, int a2)
+_DWORD * WCIsvListBase_AllocLinkNode(int a1, int a2)
 {
   WCCompatListBase *list;
   WCCompatLink *link;
@@ -56103,7 +56103,7 @@ _DWORD * sub_43D120(int a1, int a2)
 }
 
 //----- (0043D160) --------------------------------------------------------
-int  sub_43D160(int a1, int a2, int a3)
+int  WCIsvListBase_ReleaseLinkNode(int a1, int a2, int a3)
 {
   if ( !a2 )
     return 0;
@@ -56113,7 +56113,7 @@ int  sub_43D160(int a1, int a2, int a3)
 }
 
 //----- (0043D180) --------------------------------------------------------
-int  sub_43D180(_DWORD *a1, _DWORD *a2, int a3)
+int  WCIsvListBase_CopyAppendAll(_DWORD *a1, _DWORD *a2, int a3)
 {
   int link_handle;
   WCCompatLink *link;
@@ -56127,14 +56127,14 @@ int  sub_43D180(_DWORD *a1, _DWORD *a2, int a3)
     link = WCCompat_LinkFromHandle(link_handle);
     if ( !link )
       break;
-    sub_43D220((int)(uintptr_t)a1, link->value);
+    WCIsvListBase_AppendValue((int)(uintptr_t)a1, link->value);
     link_handle = WCIsvListBase_base_next((int)(uintptr_t)a2, link_handle);
   }
   return link_handle;
 }
 
 //----- (0043D1E0) --------------------------------------------------------
-int  sub_43D1E0(WCIsvListBase *this, int a2)
+int  WCIsvListBase_DestroyElementsAndDtor(WCIsvListBase *this, int a2)
 {
   WCCompatListBase *list;
 
@@ -56150,12 +56150,12 @@ int  sub_43D1E0(WCIsvListBase *this, int a2)
 }
 
 //----- (0043D220) --------------------------------------------------------
-signed int  sub_43D220(int a1, int a2)
+signed int  WCIsvListBase_AppendValue(int a1, int a2)
 {
   WCCompatListBase *list;
   WCCompatLink *link;
 
-  link = (WCCompatLink *)sub_43D120(a1, a2);
+  link = (WCCompatLink *)WCIsvListBase_AllocLinkNode(a1, a2);
   if ( link )
   {
     list = WCCompat_ListFromHandle(a1);
@@ -56168,7 +56168,7 @@ signed int  sub_43D220(int a1, int a2)
 }
 
 //----- (0043D250) --------------------------------------------------------
-int  sub_43D250(int a1, int a2)
+int  WCIsvListBase_PopFrontValue(int a1, int a2)
 {
   int link_handle;
   WCCompatLink *link;
@@ -56180,12 +56180,12 @@ int  sub_43D250(int a1, int a2)
   if ( !link )
     return a2;
   a2 = link->value;
-  sub_43D160(a1, link_handle, 8);
+  WCIsvListBase_ReleaseLinkNode(a1, link_handle, 8);
   return a2;
 }
 
 //----- (0043D280) --------------------------------------------------------
-int  sub_43D280(_DWORD *a1, _DWORD *a2)
+int  WCIsvListBase_CopyCtor(_DWORD *a1, _DWORD *a2)
 {
   int v2; // ecx
   int result; // eax
@@ -56198,7 +56198,7 @@ int  sub_43D280(_DWORD *a1, _DWORD *a2)
   a1[5] = 0;
   a1[1] = &off_50F0F4;
   a1[1] = &off_50F124;
-  sub_43D180(a1, a2, (int)a1);
+  WCIsvListBase_CopyAppendAll(a1, a2, (int)a1);
   result = v2;
   *(_DWORD *)(v2 + 4) = &off_50F134;
   return result;
@@ -56340,7 +56340,7 @@ int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
 // 54386C: using guessed type int dword_54386C[];
 
 //----- (0043D560) --------------------------------------------------------
-signed int  sub_43D560(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
+signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
 {
   int v5; // ebp
   int v6; // edx
@@ -56496,7 +56496,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
         v7 = 48 * v3 + 4 * v4;
         if ( *(int *)((char *)dword_5437DC + v7) )
         {
-          result = sub_43D560(BattleDeploymentBucketReadPointer(v7), &v14, v17, &v13);
+          result = Battle_PlaceUnitAtNextOpenDeploymentTile(BattleDeploymentBucketReadPointer(v7), &v14, v17, &v13);
           *(int *)((char *)dword_5437DC + v7) = 0;
         }
       }
@@ -56513,12 +56513,12 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
 // 5437DC: using guessed type int dword_5437DC[];
 
 //----- (0043D8C0) --------------------------------------------------------
-int  sub_43D8C0(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v1(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_5438A4 = v4;
   return result;
 }
@@ -56526,7 +56526,7 @@ int  sub_43D8C0(int a1, int a2)
 // 5438A4: using guessed type int dword_5438A4;
 
 //----- (0043D8E0) --------------------------------------------------------
-int  sub_43D8E0(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
 {
   int v4; // esi
   int v5; // ecx
@@ -56562,18 +56562,18 @@ int  sub_43D8E0(int a1, int a2, DWORD a3)
     v12 = aCastle_chrDw_5;
   else
     v12 = aCastle_pogDw_5;
-  sub_435ED0(v12, (int)v20, v10, a3);
+  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_6);
   Render_ReleaseSurface(10, a3);
-  sub_436B20(95, v15, v16, 140);
+  UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(dword_515A90);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   dword_5438A4 = v18;
@@ -56585,7 +56585,7 @@ int  sub_43D8E0(int a1, int a2, DWORD a3)
   while ( !dword_5438A4 );
   sub_405920(&dword_5438A0);
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 43D934: variable 'v5' is possibly undefined
 // 43D93C: variable 'v8' is possibly undefined
@@ -56607,12 +56607,12 @@ int  sub_43D8E0(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DAC0) --------------------------------------------------------
-int  sub_43DAC0(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v2(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_5438B0 = v4;
   return result;
 }
@@ -56620,7 +56620,7 @@ int  sub_43DAC0(int a1, int a2)
 // 5438B0: using guessed type int dword_5438B0;
 
 //----- (0043DAE0) --------------------------------------------------------
-int  sub_43DAE0(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
 {
   int v4; // esi
   int v5; // ecx
@@ -56656,18 +56656,18 @@ int  sub_43DAE0(int a1, int a2, DWORD a3)
     v12 = aCastle_chrDw_8;
   else
     v12 = aCastle_pogDw_8;
-  sub_435ED0(v12, (int)v20, v10, a3);
+  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_7);
   Render_ReleaseSurface(10, a3);
-  sub_436B20(95, v15, v16, 140);
+  UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(dword_515B10);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   dword_5438B0 = v18;
@@ -56679,7 +56679,7 @@ int  sub_43DAE0(int a1, int a2, DWORD a3)
   while ( !dword_5438B0 );
   sub_405920(&dword_5438AC);
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 43DB34: variable 'v5' is possibly undefined
 // 43DB3C: variable 'v8' is possibly undefined
@@ -56701,12 +56701,12 @@ int  sub_43DAE0(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DCC0) --------------------------------------------------------
-int  sub_43DCC0(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v3(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_5438BC = v4;
   return result;
 }
@@ -56714,7 +56714,7 @@ int  sub_43DCC0(int a1, int a2)
 // 5438BC: using guessed type int dword_5438BC;
 
 //----- (0043DCE0) --------------------------------------------------------
-int  sub_43DCE0(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
 {
   int v4; // esi
   int v5; // ecx
@@ -56750,18 +56750,18 @@ int  sub_43DCE0(int a1, int a2, DWORD a3)
     v12 = aCastle_chrD_11;
   else
     v12 = aCastle_pogD_11;
-  sub_435ED0(v12, (int)v20, v10, a3);
+  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_8);
   Render_ReleaseSurface(10, a3);
-  sub_436B20(95, v15, v16, 140);
+  UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(dword_515B90);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   dword_5438BC = v18;
@@ -56773,7 +56773,7 @@ int  sub_43DCE0(int a1, int a2, DWORD a3)
   while ( !dword_5438BC );
   sub_405920(&dword_5438B8);
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 43DD34: variable 'v5' is possibly undefined
 // 43DD3C: variable 'v8' is possibly undefined
@@ -56795,12 +56795,12 @@ int  sub_43DCE0(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DEC0) --------------------------------------------------------
-int  sub_43DEC0(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v4(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_5438C8 = v4;
   return result;
 }
@@ -56808,7 +56808,7 @@ int  sub_43DEC0(int a1, int a2)
 // 5438C8: using guessed type int dword_5438C8;
 
 //----- (0043DEE0) --------------------------------------------------------
-int  sub_43DEE0(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
 {
   int v4; // esi
   int v5; // ecx
@@ -56844,18 +56844,18 @@ int  sub_43DEE0(int a1, int a2, DWORD a3)
     v12 = aCastle_chrD_14;
   else
     v12 = aCastle_pogD_14;
-  sub_435ED0(v12, (int)v20, v10, a3);
+  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
   Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
   Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Render_ReleaseSurface(8, a3);
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_9);
   Render_ReleaseSurface(10, a3);
-  sub_436B20(95, v15, v16, 140);
+  UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(dword_515C10);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  sub_405020((int *)&unk_51D4C0, v20, 20);
-  sub_460CB0((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
   Render_Present((int)g_RenderState);
   dword_5438C8 = v18;
@@ -56867,7 +56867,7 @@ int  sub_43DEE0(int a1, int a2, DWORD a3)
   while ( !dword_5438C8 );
   sub_405920(&dword_5438C4);
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 43DF34: variable 'v5' is possibly undefined
 // 43DF3C: variable 'v8' is possibly undefined
@@ -58589,16 +58589,16 @@ void  Temple_ProcessGift(DWORD a1, __int16 *a2, int a3, char a4, double a5)
       Temple_SpawnGiftUnitGroup(a4, v7, a5);
       return;
     case 1u:
-      sub_418EC0(*a2, a2[1], v8);
+      UI_StartTileBlinkFlash(*a2, a2[1], v8);
       Unit_Kill((int)a2, a4, a1, a5);
       return;
     case 2u:
       UnitStack_AdjustFatigueByPredicate(a2, -100, UnitSlot_PredicateAlways, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
       return;
     case 3u:
       UnitStack_AdjustMoraleByPredicate(a2, 20, UnitSlot_PredicateAlways, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
       return;
     case 4u:
       v11 = a2;
@@ -58630,7 +58630,7 @@ void  Temple_ProcessGift(DWORD a1, __int16 *a2, int a3, char a4, double a5)
       while ( v12 < 10 );
 LABEL_9:
       Rules_SyncArmyFactStrength(a2, v12, v13, a4, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
       return;
     case 6u:
       do
@@ -58639,14 +58639,14 @@ LABEL_9:
       goto LABEL_15;
     case 7u:
       UnitStack_AdjustMoraleByPredicate(a2, 2, UnitSlot_PredicateAlways, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
       return;
     case 8u:
       do
         UnitStack_CycleAllSlotOrders(a2, a1, a5);
       while ( v19 < 2 );
 LABEL_15:
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
       break;
     case 9u:
       Temple_SpawnGiftGoldCargoStack(100, a4, *((_BYTE *)a2 + 4), v7, a5);
@@ -58662,12 +58662,12 @@ LABEL_15:
       break;
     case 0xDu:
       UnitStack_AdjustMoraleByPredicate(a2, -20, UnitSlot_PredicateAlways, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
       break;
     case 0xEu:
       UnitStack_AdjustMoraleByPredicate(a2, -1, UnitSlot_PredicateAlways, a1, a5);
       UnitStack_AdjustFatigueByPredicate(a2, 50, UnitSlot_PredicateAlways, a1, a5);
-      sub_418E30(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
       break;
     default:
       return;
@@ -58754,7 +58754,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
       LOBYTE(v11) = 1;
       Temple_ShowOutcomePopup(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)v7);
     }
-    sub_418EC0(*v7, v7[1], v13);
+    UI_StartTileBlinkFlash(*v7, v7[1], v13);
     return Unit_Kill((int)v7, v11, (DWORD)v7, a5);
   }
   else
@@ -58819,7 +58819,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
           v23 = aSw_chs;
         else
           v23 = aSw_pog;
-        sub_4620F0(v23, 1, v21, v22, (DWORD)v7);
+        Win_PlayModeChangeFrameTransition(v23, 1, v21, v22, (DWORD)v7);
         Temple_ShowOutcomePopup(v18[(unsigned __int8)g_LanguageIndex + 3], v18[2], v24, 1, (DWORD)v7);
       }
       Temple_ProcessGift(*v18, v7, v32, v31, a5);
@@ -58843,12 +58843,12 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
 // 5202E4: using guessed type int gameData;
 
 //----- (00440A20) --------------------------------------------------------
-int  sub_440A20(int a1, int a2)
+int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_543C84 = v4;
   return result;
 }
@@ -58856,9 +58856,9 @@ int  sub_440A20(int a1, int a2)
 // 543C84: using guessed type int dword_543C84;
 
 //----- (00440A40) --------------------------------------------------------
-_DWORD * sub_440A40(int a1, int a2, char a3, DWORD a4, double a5)
+_DWORD * Temple_OutcomePopup_HandleDestroyBuildingClick(int a1, int a2, char a3, DWORD a4, double a5)
 {
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   dword_543C84 = 1;
   return Building_Destroy(dword_543C80, a3, a4, a5);
 }
@@ -58866,7 +58866,7 @@ _DWORD * sub_440A40(int a1, int a2, char a3, DWORD a4, double a5)
 // 543C84: using guessed type int dword_543C84;
 
 //----- (00440A60) --------------------------------------------------------
-int  sub_440A60(int a1, int a2, double a3)
+int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
 {
   int result; // eax
   int v5; // ecx
@@ -58887,7 +58887,7 @@ int  sub_440A60(int a1, int a2, double a3)
   int v20; // [esp+30h] [ebp-20h]
   int v21; // [esp+34h] [ebp-1Ch]
 
-  sub_419E60(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   result = 0;
   v5 = 0;
   v6 = 0;
@@ -58906,7 +58906,7 @@ int  sub_440A60(int a1, int a2, double a3)
   if ( v19[0] != -1 )
   {
     Building_UnitsLeave((unsigned __int8 *)dword_543C80, v19, a3);
-    sub_4426C0(aDclose_1, 64);
+    Audio_PlaySoundEffectByName(aDclose_1, 64);
     v21 = 12;
     g_RenderDevice = &unk_51D4C0;
     v10 = Time_Now(v8, v7);
@@ -59066,7 +59066,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   Render_Pump();
   v17 = DLX_GetSpriteWidth(dword_543C54, 0) - 1;
   v12 = DLX_GetSpriteHeight(dword_543C54, 0);
-  sub_402850(v19, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
+  Render_BlitSurfaceRect(v19, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
   Render_Present((int)g_RenderState);
   if ( v19 )
     (*(void (**)(void))v19[46])();
@@ -59166,7 +59166,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
         if ( DD_IsFlipping((int)g_RenderState) )
         {
           byte_543C88[(_DWORD)v12] ^= 1u;
-          sub_4426C0(aMarker, 64);
+          Audio_PlaySoundEffectByName(aMarker, 64);
           RenderHook_DemoText(v22, (char)v12, a4);
           Render_Begin((int)g_RenderState, 0);
         }
@@ -59194,7 +59194,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
     ++v15;
   }
   while ( v15 != 10 );
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 441273: simplified comparisons for 'edi.4': !=0 && !=1 became >=2u
 // 44127B: simplified comparisons for 'ebx.4': <0 || >=5 became >=5u
@@ -59259,7 +59259,7 @@ void  BattleMapFileName(char *a1, int a2, int a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (004414C0) --------------------------------------------------------
-char  sub_4414C0(char *a1, char *a2)
+char  Str_SwapAndConcatInPlace(char *a1, char *a2)
 {
   const char *v4; // esi
   char *v5; // edi
@@ -59322,7 +59322,7 @@ char  sub_4414C0(char *a1, char *a2)
 // 4730FB: using guessed type int __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00441550) --------------------------------------------------------
-char  sub_441550(char *a1, int a2, int a3)
+char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3)
 {
   char *name;
   int insert_offset;
@@ -59356,7 +59356,7 @@ int  BattleMap_GetMoveSoundSurfaceClass(int a1, int a2)
 // 532048: using guessed type int dword_532048;
 
 //----- (004415E0) --------------------------------------------------------
-char * sub_4415E0(char *a1, char *a2, int a3)
+char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
 {
   char *v4; // esi
   char *v5; // edi
@@ -59420,7 +59420,7 @@ char * sub_4415E0(char *a1, char *a2, int a3)
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (00441670) --------------------------------------------------------
-int  sub_441670(char *a1, int a2)
+int  Sound_PlayNamedSfxFile(char *a1, int a2)
 {
   char *v4; // edi
   char v5; // al
@@ -59463,7 +59463,7 @@ int  sub_441670(char *a1, int a2)
   }
   while ( v10 );
   v11 = CSS_PlaySound((int)v12, a2, 0, 0);
-  sub_441980(v11, 0, -1);
+  Audio_SetSoundLoopIfMusicActive(v11, 0, -1);
   dword_5174D0 = v11;
   return v11;
 }
@@ -59471,7 +59471,7 @@ int  sub_441670(char *a1, int a2)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441720) --------------------------------------------------------
-int  sub_441720(int result, int a2, int a3, DWORD a4)
+int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
 {
   int v4; // ecx
   int v5; // edx
@@ -59536,7 +59536,7 @@ int  sub_441720(int result, int a2, int a3, DWORD a4)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441800) --------------------------------------------------------
-int  sub_441800(char *a1, int a2)
+int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2)
 {
   int v5; // ebx
   char v6[108]; // [esp+0h] [ebp-6Ch] BYREF
@@ -59544,7 +59544,7 @@ int  sub_441800(char *a1, int a2)
   if ( !dword_5174D8 )
     return 0;
   CSS_PauseSound(dword_543C9C, 2000);
-  sub_4415E0(v6, a1, a2);
+  Sound_BuildMusicTrackPath(v6, a1, a2);
   v5 = CSS_PlaySound((int)v6, 64, 0, 2000);
   CSS_SetSoundLoop(v5, 0, -1);
   dword_5174D0 = v5;
@@ -59555,7 +59555,7 @@ int  sub_441800(char *a1, int a2)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441870) --------------------------------------------------------
-int  sub_441870(int result)
+int  Audio_ResumeMusicAndStopLoopedSound(int result)
 {
   int v1; // ebx
 
@@ -59574,14 +59574,14 @@ int  sub_441870(int result)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (004418E0) --------------------------------------------------------
-int sub_4418E0()
+int Audio_StopMainMusic()
 {
-  return sub_4418F0(dword_543C9C);
+  return Audio_StopMusicWithFade(dword_543C9C);
 }
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (004418F0) --------------------------------------------------------
-int  sub_4418F0(int result)
+int  Audio_StopMusicWithFade(int result)
 {
   if ( dword_5174D8 )
   {
@@ -59594,7 +59594,7 @@ int  sub_4418F0(int result)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441900) --------------------------------------------------------
-void sub_441900()
+void Audio_DuckMusicVolume()
 {
   if ( dword_5174D8 )
     CSS_SetSoundVolume(dword_543C9C, 16, 1000);
@@ -59603,7 +59603,7 @@ void sub_441900()
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441930) --------------------------------------------------------
-void sub_441930()
+void Audio_RestoreMusicVolume()
 {
   if ( dword_5174D8 )
     CSS_SetSoundVolume(dword_543C9C, 64, 1000);
@@ -59612,7 +59612,7 @@ void sub_441930()
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441960) --------------------------------------------------------
-int  sub_441960(int a1, signed int a2)
+int  Audio_SetMusicVolume(int a1, signed int a2)
 {
   int result; // eax
 
@@ -59624,7 +59624,7 @@ int  sub_441960(int a1, signed int a2)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441980) --------------------------------------------------------
-void  sub_441980(int a1, int a2, int a3)
+void  Audio_SetSoundLoopIfMusicActive(int a1, int a2, int a3)
 {
   if ( dword_5174D8 )
     CSS_SetSoundLoop(a1, a2, a3);
@@ -59632,14 +59632,14 @@ void  sub_441980(int a1, int a2, int a3)
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419A0) --------------------------------------------------------
-int  sub_4419A0(int a1, DWORD a2)
+int  Audio_StartMainMusicIfStopped(int a1, DWORD a2)
 {
   int result; // eax
 
   if ( !dword_5174D8 )
   {
     dword_5174D8 = 1;
-    return sub_441720(*(unsigned __int8 *)(gameData + 140016), a1, 1, a2);
+    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), a1, 1, a2);
   }
   return result;
 }
@@ -59647,14 +59647,14 @@ int  sub_4419A0(int a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004419D0) --------------------------------------------------------
-int sub_4419D0()
+int Audio_StopMainMusicIfPlaying()
 {
   int result; // eax
   int v1; // ecx
 
   if ( dword_5174D8 )
   {
-    result = sub_4418E0();
+    result = Audio_StopMainMusic();
     dword_5174D8 = v1;
   }
   return result;
@@ -59663,14 +59663,14 @@ int sub_4419D0()
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419F0) --------------------------------------------------------
-void sub_4419F0()
+void Audio_SetMusicActiveFlag()
 {
   dword_5174D8 = 1;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A00) --------------------------------------------------------
-void sub_441A00()
+void Audio_ClearMusicActiveFlag()
 {
   dword_5174D8 = 0;
 }
@@ -60007,7 +60007,7 @@ int  Audio_PlayUnitMeleeAttackSound(int result)
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (00441E60) --------------------------------------------------------
-int  sub_441E60(int result)
+int  Audio_PlayUnitShotSound(int result)
 {
   char *v1; // esi
   char *v2; // edi
@@ -60461,7 +60461,7 @@ void Audio_StopUnitMoveSound()
 // 543CB0: using guessed type int g_CurrentUnitMoveSoundTypeId;
 
 //----- (004425E0) --------------------------------------------------------
-char * sub_4425E0(char *result)
+char * Audio_PlayButtonSound(char *result)
 {
   char *v1; // esi
   char *v2; // edi
@@ -60526,7 +60526,7 @@ int  Audio_PlayArtifactSound(int result)
 // 5174D4: using guessed type int g_UnitSoundsEnabled;
 
 //----- (004426C0) --------------------------------------------------------
-int  sub_4426C0(char *a1, int a2)
+int  Audio_PlaySoundEffectByName(char *a1, int a2)
 {
   char *v4; // edi
   char v5; // al
@@ -60582,7 +60582,7 @@ int  FileSystem_InitRootMount(int a1, char a2, DWORD a3)
 }
 
 //----- (004427C0) --------------------------------------------------------
-int  sub_4427C0(int a1)
+int  IO_QueryVTableStreamSize(int a1)
 {
   int cursor;
   int size;
@@ -60604,7 +60604,7 @@ int  sub_4427C0(int a1)
 }
 
 //----- (004427F0) --------------------------------------------------------
-int  sub_4427F0(char *a1, int a2)
+int  FileSystem_ResolveReadPath(char *a1, int a2)
 {
   int v3; // esi
   char v13[100]; // [esp+0h] [ebp-7Ch] BYREF
@@ -60627,7 +60627,7 @@ int  sub_4427F0(char *a1, int a2)
 // 54DD08: using guessed type int dword_54DD08;
 
 //----- (00442990) --------------------------------------------------------
-char  sub_442990(char *a1)
+char  FileSystem_SetInstallRootPath(char *a1)
 {
   char *v1; // edi
   char result; // al
@@ -60649,13 +60649,13 @@ char  sub_442990(char *a1)
 }
 
 //----- (004429C0) --------------------------------------------------------
-char *sub_4429C0()
+char *FileSystem_GetInstallRootPath()
 {
   return aCClash;
 }
 
 //----- (004429D0) --------------------------------------------------------
-int  sub_4429D0(int a1, const CHAR *a2, DWORD a3)
+int  FileSystem_MountArchiveAtIndex(int a1, const CHAR *a2, DWORD a3)
 {
   int v3; // eax
   unsigned int v4; // eax
@@ -60703,17 +60703,17 @@ int __thiscall ResourceArchives_MountStartupArchives(int this)
   int v10[4]; // [esp+Ch] [ebp-10h] BYREF
 
   v10[2] = this;
-  sub_4429D0((int)aDot_MinimumResourcePrefix, aDataMinimum_re, 0x14u);
-  sub_4429D0((int)aDot_NormalResourcePrefix, aDataNormal_res, 1u);
-  sub_4429D0((int)aDot_MaximumResourcePrefix, aDataMaximum_re, 1u);
-  sub_4429D0((int)aMaps_0, aDataMaps_res, 1u);
-  sub_4429D0((int)aGfx_6, aDataGfx3_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)aDot_MinimumResourcePrefix, aDataMinimum_re, 0x14u);
+  FileSystem_MountArchiveAtIndex((int)aDot_NormalResourcePrefix, aDataNormal_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)aDot_MaximumResourcePrefix, aDataMaximum_re, 1u);
+  FileSystem_MountArchiveAtIndex((int)aMaps_0, aDataMaps_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)aGfx_6, aDataGfx3_res, 1u);
   if ( !g_LanguageIndex )
   {
     v3 = aDataInfopol_re;
     v4 = aGfxBiginfo_pol;
 LABEL_3:
-    sub_4429D0((int)v4, v3, 1u);
+    FileSystem_MountArchiveAtIndex((int)v4, v3, 1u);
     goto LABEL_4;
   }
   if ( (unsigned __int8)g_LanguageIndex <= 1u )
@@ -60734,12 +60734,12 @@ LABEL_4:
     v5 = aDataMisinfop_r;
     v6 = aGfxMisinfo;
 LABEL_6:
-    sub_4429D0((int)v6, v5, 1u);
+    FileSystem_MountArchiveAtIndex((int)v6, v5, 1u);
     goto LABEL_7;
   }
   if ( (unsigned __int8)g_LanguageIndex <= 1u )
   {
-    sub_4429D0((int)aGfxMisinfo_0, aDataMisinfoa_r, 1u);
+    FileSystem_MountArchiveAtIndex((int)aGfxMisinfo_0, aDataMisinfoa_r, 1u);
     v5 = aDataMiswava_re;
     v6 = aSfxMisinfo;
     goto LABEL_6;
@@ -60751,9 +60751,9 @@ LABEL_6:
     goto LABEL_6;
   }
 LABEL_7:
-  sub_4429D0((int)aSfxMusic_0, aDataMusic_res, 1u);
+  FileSystem_MountArchiveAtIndex((int)aSfxMusic_0, aDataMusic_res, 1u);
   CSS_SetFileSystem((int)dword_543CC8);
-  v10[0] = sub_4427F0(aGfxBackgr1_s32, 0);
+  v10[0] = FileSystem_ResolveReadPath(aGfxBackgr1_s32, 0);
   if ( !v10[0] )
   {
     v9[0] = (int)off_517B24[0];
@@ -60784,7 +60784,7 @@ int  loadFileSusp(char *a1, const CHAR *a2)
     Debug_Log(0, (char)a1, (DWORD)a2, (int)aNotEnoughMe_11);
     App_RequestQuit((int)aNotEnoughMe_12);
   }
-  query_handle = sub_4427F0(a1, 1);
+  query_handle = FileSystem_ResolveReadPath(a1, 1);
   if ( !query_handle )
     App_RequestQuit((int)aBrakPlikuS);
 
@@ -61498,7 +61498,7 @@ signed int  Treasure_TryDigHere(
   }
   if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v8 + 4) + 140051) )
   {
-    sub_4620F0((int)aKop_bud, 1, (int)v12, v6, (DWORD)v8, (char)a5);
+    Win_PlayModeChangeFrameTransition((int)aKop_bud, 1, (int)v12, v6, (DWORD)v8, (char)a5);
     Temple_ShowOutcomePopup(v13[(unsigned __int8)g_LanguageIndex + 3], v13[2], (int)v13, *v13 != 15, (DWORD)v8);
   }
   v14 = (unsigned __int16 *)(1400 * *v8 + gameData + 14 * v8[1]);
@@ -61558,7 +61558,7 @@ signed int  UnitStack_TryHide(int a1, unsigned __int16 a2, DWORD a3, double a4)
       v16[0] = (int)off_517DE8[0];
       v16[1] = (int)off_517DE8[1];
       v16[2] = (int)off_517DE8[2];
-      sub_4426C0(aWrong_0, 64);
+      Audio_PlaySoundEffectByName(aWrong_0, 64);
       UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 1u, v6, a3, (int)v17, (int)&off_517DE8[3]);
       return 0;
     }
@@ -61617,7 +61617,7 @@ LABEL_16:
     v17[0] = (int)off_517DF4[0];
     v17[1] = (int)off_517DF4[1];
     v17[2] = (int)off_517DF4[2];
-    sub_4426C0(aWrong_1, 64);
+    Audio_PlaySoundEffectByName(aWrong_1, 64);
     UI_ShowInfoWindow(v17[(unsigned __int8)g_LanguageIndex], 0, v10, 0, (int)&v18, (int)&off_517DF4[3]);
     return 0;
   }
@@ -61627,8 +61627,8 @@ LABEL_16:
     v15 = 1423 * *((unsigned __int8 *)v4 + 4);
     *((_BYTE *)v4 + 720) = 1;
     if ( *(_DWORD *)(gameData + v15 + 140051) )
-      sub_4620F0(aUkrycie, 1, v14, a2, 0);
-    sub_418A90(*v4, v4[1]);
+      Win_PlayModeChangeFrameTransition(aUkrycie, 1, v14, a2, 0);
+    WorldMap_RedrawTileIfVisible(*v4, v4[1]);
     return 1;
   }
 }
@@ -61693,7 +61693,7 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
             && *((_BYTE *)hidden_stack + 720) )
           {
             *((_BYTE *)hidden_stack + 720) = 0;
-            sub_418700(1);
+            WorldMap_RedrawViewport(1);
           }
         }
       }
@@ -61720,7 +61720,7 @@ signed int  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(unsigned int a1, doub
         UnitStack_ClearRemainingActionPoints(stack, 1u, a2);
         *((_BYTE *)adjacent_stack + 720) = 0;
         result = 1;
-        sub_418700(1);
+        WorldMap_RedrawViewport(1);
       }
     }
     if ( a1 > 0x1F4 )
@@ -61809,7 +61809,7 @@ signed int  SaveSlot_LoadGame(int a1, DWORD a2, double a3)
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-read\n");
     g_CurrentPlayerIndex = TURN_OWNER_PLAYER_INDEX;
-    sub_451E20();
+    Rules_ResetEngineOnLoad();
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] load-save-after-fact-reset\n");
     for ( stack_index = 0; stack_index < 500; ++stack_index )
@@ -61941,7 +61941,7 @@ int  SaveSlot_HasDataFile(int a1, DWORD a2)
 // 475DC3: using guessed type int __thiscall fclose_(_DWORD);
 
 //----- (00444780) --------------------------------------------------------
-int  sub_444780(int a1)
+int  SaveSlotDialog_RepaintRow(int a1)
 {
   void *v2; // ebp
   char *v3; // esi
@@ -61981,7 +61981,7 @@ int  sub_444780(int a1)
   g_RenderDevice = &unk_51D4C0;
   v7 = (unsigned __int16)(22 * v12 + 157);
   v8 = 22 * v12 + 137;
-  sub_460BB0(g_RenderState, 0xF4u, 0x1A4u, v8, v7);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, v8, v7);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v8, 244, 0x1A4u, v7, 0xF4u, v8);
   if ( v12 == dword_543D18 )
     v9 = 18;
@@ -61989,9 +61989,9 @@ int  sub_444780(int a1)
     v9 = 21;
   Render_ReleaseSurface(v9, (DWORD)v2);
   if ( dword_543D1C )
-    sub_40C430(dword_543D24);
+    UI_SetTextCursorPosition(dword_543D24);
   UI_DrawTextFmt(v7, 244, 410, 22 * v12 + 137, 3, (int)v11);
-  sub_40C430(-1);
+  UI_SetTextCursorPosition(-1);
   result = Render_Present((int)g_RenderState);
   g_RenderDevice = v2;
   return result;
@@ -62004,10 +62004,10 @@ int  sub_444780(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00444920) --------------------------------------------------------
-int  sub_444920(int result, int a2)
+int  SaveSlotDialog_HandleCancel(int result, int a2)
 {
   if ( result )
-    result = sub_419E60(result, a2);
+    result = UIWidget_PlayPressedReleaseAnimationWithDelay(result, a2);
   dword_543D20 = -1;
   dword_543D14 = 1;
   return result;
@@ -62016,13 +62016,13 @@ int  sub_444920(int result, int a2)
 // 543D20: using guessed type int dword_543D20;
 
 //----- (00444950) --------------------------------------------------------
-signed int  sub_444950(int a1, int a2, DWORD a3, double a4)
+signed int  SaveSlotDialog_HandleConfirm(int a1, int a2, DWORD a3, double a4)
 {
   signed int result; // eax
   void *v6; // ecx
 
   if ( a1 )
-    sub_419E60(a1, a2);
+    UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   if ( dword_543D1C && dword_543D18 != -1 )
   {
     result = saveGame(dword_543D18, (DWORD)byte_543D28, a4);
@@ -62050,7 +62050,7 @@ LABEL_6:
 // 543D20: using guessed type int dword_543D20;
 
 //----- (00444D50) --------------------------------------------------------
-int  sub_444D50(int a1, char a2, DWORD a3, double a4)
+int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
 {
   _DWORD *v5; // eax
   int v6; // ecx
@@ -62130,7 +62130,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
     1,
     0,
     0);
-  for ( i = 0; i < 10; sub_444780(i) )
+  for ( i = 0; i < 10; SaveSlotDialog_RepaintRow(i) )
     ;
   qmemcpy(v38, &unk_517E00, 0x9Fu);
   v38[3] = &v40;
@@ -62159,14 +62159,14 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
         if ( dword_543D24 )
         {
           --dword_543D24;
-          sub_444780(dword_543D18);
+          SaveSlotDialog_RepaintRow(dword_543D18);
           Input_ClearKey(203, v23);
         }
       }
       if ( Input_IsKeyPressed(205) && strlen(byte_543D28) > dword_543D24 )
       {
         v17 = ++dword_543D24;
-        sub_444780(dword_543D18);
+        SaveSlotDialog_RepaintRow(dword_543D18);
         Input_ClearKey(205, v24);
       }
       if ( Input_IsKeyPressed(211) )
@@ -62176,7 +62176,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
           &byte_543D28[dword_543D24],
           &byte_543D28[dword_543D24 + 1],
           strlen(&byte_543D28[dword_543D24 + 1]) + 1);
-        sub_444780(dword_543D18);
+        SaveSlotDialog_RepaintRow(dword_543D18);
         Input_ClearKey(211, v25);
       }
       if ( Input_IsKeyPressed(14) )
@@ -62188,14 +62188,14 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
           v27 = strlen(v26) + 1;
           LOBYTE(v14) = v27;
           memmove_(&byte_543D28[dword_543D24], &byte_543D28[dword_543D24 + 1], v27);
-          sub_444780(dword_543D18);
+          SaveSlotDialog_RepaintRow(dword_543D18);
           Input_ClearKey(14, v28);
         }
       }
       if ( Input_IsKeyPressed(28) )
-        sub_444950(0, v29, v17, a4);
+        SaveSlotDialog_HandleConfirm(0, v29, v17, a4);
       if ( Input_IsKeyPressed(1) )
-        sub_444920(0, v30);
+        SaveSlotDialog_HandleCancel(0, v30);
       v31 = Input_PopKey();
       v17 = v31;
       if ( v31 != -1 )
@@ -62237,7 +62237,7 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
               v36 = dword_543D24;
               byte_543D28[dword_543D24] = v44;
               dword_543D24 = v36 + 1;
-              sub_444780(dword_543D18);
+              SaveSlotDialog_RepaintRow(dword_543D18);
               Input_ClearKey(v17, v37);
             }
           }
@@ -62258,17 +62258,17 @@ int  sub_444D50(int a1, char a2, DWORD a3, double a4)
             dword_543D18 = ((dword_544D00 >> byte_54512C) - 142) / 22;
             dword_543D24 = 0;
             if ( v14 != -1 )
-              sub_444780(v14);
+              SaveSlotDialog_RepaintRow(v14);
             if ( dword_543D1C )
             {
               SaveSlot_LoadLabelOrPlaceholder(dword_543D18, byte_543D28, v17);
               if ( !strcmp_(v19, asc_4F94C2) )
                 byte_543D28[0] = 0;
             }
-            sub_444780(dword_543D18);
+            SaveSlotDialog_RepaintRow(dword_543D18);
           }
-          if ( sub_460950((int)g_RenderState) )
-            sub_444950(0, v20, v17, a4);
+          if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
+            SaveSlotDialog_HandleConfirm(0, v20, v17, a4);
         }
       }
     }
@@ -62494,7 +62494,7 @@ int  UI_ShowInfoWindow(
 // 545150: using guessed type int dword_545150;
 
 //----- (004458E0) --------------------------------------------------------
-int  sub_4458E0(int a1, const char *a2, DWORD a3)
+int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
 {
   int v4; // ecx
   int result; // eax
@@ -62518,7 +62518,7 @@ int  sub_4458E0(int a1, const char *a2, DWORD a3)
       if ( result == g_CurrentPlayerIndex )
       {
         Diagnostics_TraceWorldMapActionEvent("plague_notice_match", v4 / 467, v4, g_CurrentPlayerIndex, 0);
-        sub_4620F0(aZaraza, 1, v4, (char)a2, a3);
+        Win_PlayModeChangeFrameTransition(aZaraza, 1, v4, (char)a2, a3);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_after_transition", v4 / 467, v4, g_CurrentPlayerIndex, 0);
         a2 = (const char *)v9[(unsigned __int8)g_LanguageIndex];
         sprintf_(v8, a2, gameData + v4 + 509674 + 5);
@@ -62542,7 +62542,7 @@ int  sub_4458E0(int a1, const char *a2, DWORD a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004459A0) --------------------------------------------------------
-int  sub_4459A0(int a1, DWORD a2)
+int  WorldMap_NotifyFactionColorChange(int a1, DWORD a2)
 {
   int result; // eax
   int v4[6]; // [esp+0h] [ebp-18h] BYREF
@@ -62575,12 +62575,12 @@ int  UI_CheatEditRepaint(DWORD a1, int a2)
   v5 = byte_543D48[0];
   strupr_(440, 200);
   byte_543D48[0] = v5;
-  sub_460BB0(g_RenderState, v2, v3, 0x104u, 0x122u);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, v2, v3, 0x104u, 0x122u);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 260, 200, 0x1B8u, 0x122u, 0xC8u, 0x104u);
   Render_ReleaseSurface(22, a1);
-  sub_40C430(dword_543D44);
+  UI_SetTextCursorPosition(dword_543D44);
   UI_DrawTextFmt(a2, 200, 440, 260, 3, (int)byte_543D48);
-  sub_40C430(-1);
+  UI_SetTextCursorPosition(-1);
   return Render_Present((int)g_RenderState);
 }
 // 445A7C: variable 'v2' is possibly undefined
@@ -62591,7 +62591,7 @@ int  UI_CheatEditRepaint(DWORD a1, int a2)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00445CE0) --------------------------------------------------------
-char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
+char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
 {
   int v4; // ecx
   int v5; // ecx
@@ -62835,7 +62835,7 @@ char  sub_445CE0(int a1, int a2, char a3, DWORD a4)
 // 545150: using guessed type int dword_545150;
 
 //----- (00446230) --------------------------------------------------------
-int  sub_446230(char a1, DWORD a2)
+int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
 {
   int v2; // edi
   int v3; // ecx
@@ -62938,7 +62938,7 @@ int  DecisionDialog_ConfirmIfAllowed(uintptr_t a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   if ( !g_DecisionDialogConfirmDisabled )
   {
     g_DecisionDialogExitSignal = 1;
@@ -62955,7 +62955,7 @@ int  DecisionDialog_Cancel(uintptr_t a1, int a2)
 {
   int result; // eax
 
-  result = sub_419E60(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   g_DecisionDialogExitSignal = 1;
   g_DecisionDialogResult = 0;
   return result;
@@ -62983,7 +62983,7 @@ static void QueenMarriageProposal_WriteButtonWidgetRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = -1;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_4191F0;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIcon;
   *(_DWORD *)(record + 32) = action_callback;
   *(_DWORD *)(record + 49) = (int)(uintptr_t)sound_name;
 }
@@ -63155,7 +63155,7 @@ static void YesNoWindow_WriteButtonWidgetRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = -1;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_4191F0;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIcon;
   *(_DWORD *)(record + 32) = action_callback;
   *(_DWORD *)(record + 49) = (int)(uintptr_t)yesno_button_sound;
 }
@@ -63315,7 +63315,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 // 545150: using guessed type int dword_545150;
 
 //----- (00446CB0) --------------------------------------------------------
-int  sub_446CB0(int a1, int a2, char a3, DWORD a4)
+int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4)
 {
   int v4; // ecx
   _DWORD *v5; // eax
@@ -63765,13 +63765,13 @@ int  UI_ShowMissionStatusPanel(int a1, DWORD a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (004476B0) --------------------------------------------------------
-int sub_4476B0()
+int Debug_GetUsedMemoryCount()
 {
   return 0;
 }
 
 //----- (004476C0) --------------------------------------------------------
-int __thiscall sub_4476C0(void *this)
+int __thiscall Object_ConstructInt256Array(void *this)
 {
   return _wcpp_4_ctor_array__(this, 256);
 }
@@ -63808,7 +63808,7 @@ static void MainMenu_WriteButtonWidgetTemplateRecord(
   *(_DWORD *)(record + 16) = sprite_index_base;
   *(_DWORD *)(record + 20) = sprite_index_selected_base;
   *(_DWORD *)(record + 24) = -1;
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_419780;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionFast;
   *(_DWORD *)(record + 32) = action_callback;
   *(_DWORD *)(record + 49) = (int)(uintptr_t)sound_name;
 }
@@ -63830,7 +63830,7 @@ static void CampaignMenu_WriteButtonWidgetTemplateRecord(
     sprite_index_selected_base,
     action_callback,
     sound_name);
-  *(_DWORD *)(record + 28) = (int)(uintptr_t)&sub_419770;
+  *(_DWORD *)(record + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionSlow;
 }
 
 //----- (004476D0) --------------------------------------------------------
@@ -63912,7 +63912,7 @@ void CampaignMenu_RebuildButtonWidgetTemplate(void)
     279,
     0,
     1,
-    (int)(uintptr_t)&sub_448B90,
+    (int)(uintptr_t)&MultiplayerSetup_HandleConfirmButtonRelease,
     aCampaignMenuButtonClickSound);
   CampaignMenu_WriteButtonWidgetTemplateRecord(
     g_CampaignMenuButtonWidgetsTemplate + 53 * 1,
@@ -63920,7 +63920,7 @@ void CampaignMenu_RebuildButtonWidgetTemplate(void)
     279,
     2,
     3,
-    (int)(uintptr_t)&sub_448BB0,
+    (int)(uintptr_t)&MultiplayerSetup_HandleCancelButtonRelease,
     aCampaignMenuButtonClickSound);
   *(_DWORD *)(g_CampaignMenuButtonWidgetsTemplate + 53 * 2) = -1;
 }
@@ -63941,7 +63941,7 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
     392,
     0,
     1,
-    (int)(uintptr_t)&sub_44A110,
+    (int)(uintptr_t)&LoadMenu_HandleSlotConfirmButtonRelease,
     aLoadMenuButtonClickSound);
   MainMenu_WriteButtonWidgetTemplateRecord(
     g_LoadMenuButtonWidgetsTemplate + 53 * 1,
@@ -63949,7 +63949,7 @@ void LoadMenu_RebuildButtonWidgetTemplate(void)
     408,
     2,
     3,
-    (int)(uintptr_t)&sub_448E80,
+    (int)(uintptr_t)&MultiplayerSetup_HandleBackButtonRelease,
     aLoadMenuButtonClickSound);
   *(_DWORD *)(g_LoadMenuButtonWidgetsTemplate + 53 * 2) = -1;
 }
@@ -64020,7 +64020,7 @@ int  MainMenu_RequestLoadGameMenu(uintptr_t a1)
 // 543D7C: using guessed type int g_MainMenuRequestedScreen;
 
 //----- (004477A0) --------------------------------------------------------
-signed int  sub_4477A0(int a1, int a2)
+signed int  UI_WaitForKeyOrTimeout(int a1, int a2)
 {
   int v3; // eax
   int v4; // edx
@@ -64068,7 +64068,7 @@ DWORD  UI_StartAnims(int a1, char a2, DWORD a3)
   previous_render_hook = g_RenderHook;
   g_RenderHook = 0;
   Debug_Log(0, 0, a3, (int)aSetrhS08x_14, aNull, 0);
-  sub_404D90((int *)&unk_51D4C0);
+  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   DD_Pump((int)g_RenderState, 0);
   Sleep(0x4B0u);
   Video_Avi_playIn(aLogo_0, 0, 1, 0, 1, 0);
@@ -64200,17 +64200,17 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       v10 = DLXSpriteSet_Load(v10, "menu\\main.s32");
     g_PlayGameMenuSpriteSetHandle = (int)v10;
     Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, (uintptr_t)byte_543D80);
-    sub_435ED0(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
+    Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
     if ( v128 && dword_5188C0 )
-      g_MainMenuMusicHandle = sub_441670(aMusicMenu, 64);
+      g_MainMenuMusicHandle = Sound_PlayNamedSfxFile(aMusicMenu, 64);
     DD_Pump((int)g_RenderState, 0);
     if ( v128 )
-      sub_404D90((int *)&unk_51D4C0);
+      Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
     DD_Pump((int)g_RenderState, 0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw1);
-    sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDraw2);
-    sub_401E30((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
+    Render_ClearGameScreen((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
     Debug_Log(0, 0, (DWORD)a3, (int)aDrawend);
     MainMenu_RebuildButtonWidgetTemplate();
     v17 = 0;
@@ -64230,10 +64230,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     if ( v128 )
     {
       a2 = 60;
-      sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
+      Palette_FadeInFromBlack((int *)&unk_51D4C0, byte_543D80, 60);
     }
     g_PlayGameMenuExitRequested = 0;
-    sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
     dword_545150 = (int)&unk_5196A0;
     Render_Present((int)g_RenderState);
@@ -64268,7 +64268,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v124);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
         a3 = (char *)&unk_5196A0;
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
@@ -64287,7 +64287,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         }
         Render_Pump();
         if ( !campaign_menu_cancelled_by_escape )
-          sub_404F20((int *)&unk_51D4C0, 20);
+          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
         if ( !campaign_menu_cancelled_by_escape && dword_544184 != -1 )
         {
@@ -64308,7 +64308,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         break;
       case MAIN_MENU_REQUEST_CREDITS:
         CSS_StopSound(g_MainMenuMusicHandle, 1000);
-        sub_404F20((int *)&unk_51D4C0, 20);
+        Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
         LOBYTE(a2) = 0;
         Video_Avi_playIn(aCre_an, 0, 1, 0, 1, 1);
         v128 = 1;
@@ -64320,7 +64320,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         byte_54418B = 1;
         byte_54418A = 2;
         qmemcpy(v125, &off_5184DC, sizeof(v125));
-        sub_44E2A0(5, v125);
+        Player_AssignRandomUniqueRulerNames(5, v125);
         dword_5441D8 = 0;
         dword_544198 = -1;
         dword_5441DC = 0;
@@ -64333,16 +64333,16 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_LoadResourceSprite_v4(18, byte_543D80, 0, 0, 0);
         Render_LoadResourceSprite_v4(21, byte_543D80, 0, 0, 0);
         g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-        sub_448EA0();
+        MultiplayerSetup_RedrawPlayerSlotIcons();
         (*(void (**)(void))(*(_DWORD *)(dword_5202E0 + 184) + 36))();
         for ( j = 0; j < 5; ++j )
-          sub_448D10(j, j + 1, 0);
-        sub_449330();
+          MultiplayerSetup_RepaintPlayerSlotRow(j, j + 1, 0);
+        MultiplayerSetup_RedrawOpponentNameList();
         qmemcpy(v122, &unk_5184F0, 265);
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v122);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)g_RenderState);
@@ -64355,10 +64355,10 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             && (unsigned int)(((dword_544D00 >> byte_54512C) - 129) / 53) <= 4 )
           {
             multiplayer_player_type_slot = ((dword_544D00 >> byte_54512C) - 129) / 53;
-            sub_4425E0(aMale_2);
+            Audio_PlayButtonSound(aMale_2);
             byte_544188[multiplayer_player_type_slot] = ((unsigned __int8)byte_544188[multiplayer_player_type_slot] + 1) % 6;
-            sub_448EA0();
-            sub_448D10(multiplayer_player_type_slot, 0, 0);
+            MultiplayerSetup_RedrawPlayerSlotIcons();
+            MultiplayerSetup_RepaintPlayerSlotRow(multiplayer_player_type_slot, 0, 0);
             Render_Begin((int)g_RenderState, 0);
           }
           if ( DD_IsFlipping((int)g_RenderState) )
@@ -64374,8 +64374,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   dword_544198 = multiplayer_selected_name_slot;
                   dword_544194 = 0;
                   if ( multiplayer_previous_name_slot != -1 )
-                    sub_448D10(multiplayer_previous_name_slot, 0, 0);
-                  sub_448D10(dword_544198, 0, 0);
+                    MultiplayerSetup_RepaintPlayerSlotRow(multiplayer_previous_name_slot, 0, 0);
+                  MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, 0, 0);
                 }
               }
             }
@@ -64387,7 +64387,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               v69 = dword_544194;
               if ( dword_544194 )
               {
-                sub_448D10(dword_544198, v69, --dword_544194);
+                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v69, --dword_544194);
                 Input_ClearKey(203, v70);
               }
             }
@@ -64397,7 +64397,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
               if ( v72 - 1 > dword_544194 )
               {
                 ++dword_544194;
-                sub_448D10(dword_544198, v71, v72 - 1);
+                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v71, v72 - 1);
                 Input_ClearKey(205, v73);
               }
             }
@@ -64408,7 +64408,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 &byte_5441A0[11 * dword_544198 + dword_544194],
                 &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
                 strlen(&byte_5441A0[11 * dword_544198 + dword_544194 + 1]) + 1);
-              sub_448D10(dword_544198, v74, v75);
+              MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v74, v75);
               Input_ClearKey(211, v76);
             }
             if ( Input_IsKeyPressed(14) )
@@ -64424,7 +64424,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                   &byte_5441A0[11 * dword_544198 + dword_544194],
                   &byte_5441A0[11 * dword_544198 + dword_544194 + 1],
                   v78);
-                sub_448D10(dword_544198, v79, v80);
+                MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v79, v80);
                 Input_ClearKey(14, v81);
               }
             }
@@ -64432,7 +64432,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             {
               v83 = dword_544198;
               dword_544198 = -1;
-              sub_448D10(v83, -1, v82);
+              MultiplayerSetup_RepaintPlayerSlotRow(v83, -1, v82);
             }
             v84 = Input_PopKey();
             Render_ReleaseSurface(18, 0);
@@ -64458,7 +64458,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                     LOBYTE(v87) = v129;
                     byte_5441A0[11 * dword_544198 + dword_544194] = v129;
                     dword_544194 = v88;
-                    sub_448D10(dword_544198, v87, v88);
+                    MultiplayerSetup_RepaintPlayerSlotRow(dword_544198, v87, v88);
                     Input_ClearKey(v84, v89);
                   }
                 }
@@ -64477,8 +64477,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                 if ( v54 != dword_5441D8 )
                 {
                   dword_5441D8 = v54;
-                  sub_4425E0(aMale_1);
-                  sub_449330();
+                  Audio_PlayButtonSound(aMale_1);
+                  MultiplayerSetup_RedrawOpponentNameList();
                   Render_Begin((int)g_RenderState, 0);
                 }
               }
@@ -64488,7 +64488,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         }
         Render_Pump();
         if ( dword_544190 )
-          sub_404F20((int *)&unk_51D4C0, 20);
+          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
         v128 = dword_544190;
         if ( dword_544190 )
@@ -64595,9 +64595,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                        + 16 * ((unsigned __int8)byte_5188C9 << 8 >> 31))) >> 4;
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v113);
-        sub_44A880(word_518600, a2, v97);
+        Options_DrawAllSliderThumbs(word_518600, a2, v97);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)g_RenderState);
@@ -64606,7 +64606,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           do
           {
             DD_Pump((int)g_RenderState, 0);
-            sub_44A8B0(word_518600);
+            Options_AnimateAllSliderThumbs(word_518600);
             UIWidgetTable_PollHoverAndActions(v113, 0);
           }
           while ( !g_PlayGameMenuExitRequested );
@@ -64628,19 +64628,19 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                                         + ((__int16)((unsigned int)dword_518654 >> 12) >> 15 << 8))) >> 8;
         if ( v117 == 2 )
         {
-          sub_4419F0();
+          Audio_SetMusicActiveFlag();
           if ( !a2 )
-            g_MainMenuMusicHandle = sub_441670(aMusicMenu_0, 64);
+            g_MainMenuMusicHandle = Sound_PlayNamedSfxFile(aMusicMenu_0, 64);
         }
         else
         {
           if ( a2 )
-            sub_4418F0(g_MainMenuMusicHandle);
-          sub_441A00();
+            Audio_StopMusicWithFade(g_MainMenuMusicHandle);
+          Audio_ClearMusicActiveFlag();
         }
-        sub_44A9C0((int)&dword_5188B0, 0, 0);
-        sub_44A980(0, 0);
-        sub_44A8E0(word_518600);
+        Options_ApplyRecordSettings((int)&dword_5188B0, 0, 0);
+        Options_SaveConfigToFile(0, 0);
+        Options_DestroySliderThumbList(word_518600);
         Render_Pump();
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
         break;
@@ -64661,7 +64661,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v123);
         g_PlayGameMenuExitRequested = 0;
-        sub_460CB0((int)g_RenderState, (int)byte_543D80, 0, 0);
+        RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
         RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
         dword_545150 = (int)&unk_5196A0;
         Render_Present((int)g_RenderState);
@@ -64683,8 +64683,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
                     LoadMenu_RedrawSaveSlotRow(previous_load_slot, (DWORD)a3);
                   LoadMenu_RedrawSaveSlotRow(dword_5441E0, (DWORD)a3);
                 }
-                if ( sub_460950((int)g_RenderState) )
-                  sub_44A110(0, (DWORD)a3);
+                if ( RenderState_IsCursorFlipStillActive((int)g_RenderState) )
+                  LoadMenu_HandleSlotConfirmButtonRelease(0, (DWORD)a3);
               }
             }
           }
@@ -64692,7 +64692,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         }
         Render_Pump();
         if ( dword_544190 )
-          sub_404F20((int *)&unk_51D4C0, 20);
+          Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
         sub_405920(&g_PlayGameMenuSpriteSetHandle);
         if ( !dword_544190 )
           dword_5441E0 = -1;
@@ -64712,7 +64712,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
   }
   while ( g_MainMenuRequestedScreen );
   CSS_StopSound(g_MainMenuMusicHandle, 1000);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   Render_UnlockBackbuffer((int)&unk_51D4C0);
   HIBYTE(v110) = HIBYTE(g_RenderHook);
   Debug_Log(v33, a2, (DWORD)g_RenderHook, (int)aUnsetrh08x_15);
@@ -64788,7 +64788,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
 // 545150: using guessed type int dword_545150;
 
 //----- (00448B90) --------------------------------------------------------
-int  sub_448B90(uintptr_t a1)
+int  MultiplayerSetup_HandleConfirmButtonRelease(uintptr_t a1)
 {
   int result; // eax
 
@@ -64801,7 +64801,7 @@ int  sub_448B90(uintptr_t a1)
 // 544184: using guessed type int dword_544184;
 
 //----- (00448BB0) --------------------------------------------------------
-int  sub_448BB0(uintptr_t a1)
+int  MultiplayerSetup_HandleCancelButtonRelease(uintptr_t a1)
 {
   int result; // eax
 
@@ -64814,7 +64814,7 @@ int  sub_448BB0(uintptr_t a1)
 // 544184: using guessed type int dword_544184;
 
 //----- (00448D10) --------------------------------------------------------
-int  sub_448D10(int a1, int a2, int a3)
+int  MultiplayerSetup_RepaintPlayerSlotRow(int a1, int a2, int a3)
 {
   __int16 v4; // di
   DWORD v5; // ebp
@@ -64825,21 +64825,21 @@ int  sub_448D10(int a1, int a2, int a3)
   int v10; // [esp+0h] [ebp-1Ch]
 
   v4 = 53 * a1;
-  sub_40C450(&byte_5441A0[11 * dword_544198], a2, a3);
+  Str_TitleCase(&byte_5441A0[11 * dword_544198], a2, a3);
   v10 = dword_544D10;
   v5 = (unsigned __int16)(v4 + 167);
   v9 = v4 + 167;
   v6 = (unsigned __int16)(v4 + 144);
-  sub_460BB0(g_RenderState, 0xEFu, 0x153u, v6, v9);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0xEFu, 0x153u, v6, v9);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v6, 234, 0x15Du, v5, 0xEAu, v6);
   Render_ReleaseSurface(18, v5);
   if ( a1 == dword_544198 )
-    sub_40C430(dword_544194);
+    UI_SetTextCursorPosition(dword_544194);
   v7 = (unsigned __int8)byte_544188[a1];
   g_RenderDevice = &unk_51D4C0;
   if ( v7 != 5 )
     UI_DrawTextFmt(v6, 239, 339, 53 * a1 + 144, 3, (int)&byte_5441A0[11 * a1]);
-  result = sub_40C430(-1);
+  result = UI_SetTextCursorPosition(-1);
   if ( v10 )
     return Render_Present((int)g_RenderState);
   return result;
@@ -64853,7 +64853,7 @@ int  sub_448D10(int a1, int a2, int a3)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00448E10) --------------------------------------------------------
-signed int  sub_448E10(int a1)
+signed int  MultiplayerSetup_HandleStartButtonRelease(int a1)
 {
   signed int result; // eax
   int v3; // edx
@@ -64889,7 +64889,7 @@ signed int  sub_448E10(int a1)
 // 5441D8: using guessed type int dword_5441D8;
 
 //----- (00448E80) --------------------------------------------------------
-int  sub_448E80(int a1)
+int  MultiplayerSetup_HandleBackButtonRelease(int a1)
 {
   int result; // eax
 
@@ -64902,7 +64902,7 @@ int  sub_448E80(int a1)
 // 544190: using guessed type int dword_544190;
 
 //----- (00448EA0) --------------------------------------------------------
-int sub_448EA0()
+int MultiplayerSetup_RedrawPlayerSlotIcons()
 {
   int v0; // edi
   int v1; // esi
@@ -64914,7 +64914,7 @@ int sub_448EA0()
   v0 = 129;
   v5 = dword_544D10;
   v1 = 0;
-  sub_460BB0(g_RenderState, 0xB0u, 0xECu, 0x81u, 0x18Au);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0xB0u, 0xECu, 0x81u, 0x18Au);
   do
   {
     SpriteForChar = DLX_GetSpriteForChar(g_PlayGameMenuSpriteSetHandle, (unsigned __int8)byte_544188[v1] + 8);
@@ -64944,7 +64944,7 @@ int sub_448EA0()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00449330) --------------------------------------------------------
-int sub_449330()
+int MultiplayerSetup_RedrawOpponentNameList()
 {
   DWORD v0; // ebp
   int v1; // edi
@@ -64954,7 +64954,7 @@ int sub_449330()
 
   v0 = dword_544D10;
   if ( dword_544D10 )
-    sub_460BB0(g_RenderState, 0x164u, 0x1DDu, 0x86u, 0x175u);
+    RenderState_PumpIfRectInViewBounds(g_RenderState, 0x164u, 0x1DDu, 0x86u, 0x175u);
   v1 = 134;
   v2 = 0;
   g_RenderDevice = &unk_51D4C0;
@@ -64986,27 +64986,27 @@ int sub_449330()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004494B0) --------------------------------------------------------
-int  sub_4494B0(int a1)
+int  MultiplayerSetup_HandleScrollListDownButton(int a1)
 {
   UIWidget_PlayPressedReleaseAnimation(a1);
   if ( dword_5441DC < 19 )
     ++dword_5441DC;
-  return sub_449330();
+  return MultiplayerSetup_RedrawOpponentNameList();
 }
 // 5441DC: using guessed type int dword_5441DC;
 
 //----- (004494E0) --------------------------------------------------------
-int  sub_4494E0(int a1)
+int  PlayGameMenu_HandleScrollButtonRelease(int a1)
 {
   UIWidget_PlayPressedReleaseAnimation(a1);
   if ( dword_5441DC )
     --dword_5441DC;
-  return sub_449330();
+  return MultiplayerSetup_RedrawOpponentNameList();
 }
 // 5441DC: using guessed type int dword_5441DC;
 
 //----- (00449C30) --------------------------------------------------------
-void  sub_449C30(int a1, DWORD a2)
+void  Options_ApplyMainMenuSliders(int a1, DWORD a2)
 {
   byte_5188CA = ((unsigned __int16)(((_WORD)dword_51860C << 7)
                                   - (__CFSHL__(dword_51860C << 7 >> 31, 8)
@@ -65015,7 +65015,7 @@ void  sub_449C30(int a1, DWORD a2)
   byte_5188C9 = (unsigned __int16)(16 * dword_518654
                                  - (__CFSHL__((16 * dword_518654) >> 31, 8)
                                   + ((unsigned __int16)((16 * dword_518654) >> 31) << 8))) >> 8;
-  sub_44A9C0((int)&dword_5188B0, a1, a2);
+  Options_ApplyRecordSettings((int)&dword_5188B0, a1, a2);
 }
 // 51860C: using guessed type int dword_51860C;
 // 518654: using guessed type int dword_518654;
@@ -65024,7 +65024,7 @@ void  sub_449C30(int a1, DWORD a2)
 // 5188CA: using guessed type char byte_5188CA;
 
 //----- (00449C80) --------------------------------------------------------
-int  sub_449C80(int a1)
+int  PlayGameMenu_HandleCloseButton(int a1)
 {
   int result; // eax
   int v3; // edx
@@ -65037,7 +65037,7 @@ int  sub_449C80(int a1)
 // 543D78: using guessed type int g_PlayGameMenuExitRequested;
 
 //----- (00449CA0) --------------------------------------------------------
-unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3)
+unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int a1, int a2, DWORD a3)
 {
   int v4; // ecx
 
@@ -65045,27 +65045,27 @@ unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3)
   if ( (*(_BYTE *)(v4 - 98) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 98) = 2;
-    sub_419D60(v4 - 106, v4);
+    UIWidget_RefreshActionButtonState(v4 - 106, v4);
   }
   if ( (*(_BYTE *)(v4 - 151) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 151) = 2;
-    sub_419D60(v4 - 159, v4);
+    UIWidget_RefreshActionButtonState(v4 - 159, v4);
   }
   if ( (*(_BYTE *)(v4 - 204) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 204) = 2;
-    sub_419D60(v4 - 212, v4);
+    UIWidget_RefreshActionButtonState(v4 - 212, v4);
   }
   if ( (*(_BYTE *)(v4 - 257) & 1) == 0 )
   {
     *(_DWORD *)(v4 - 257) = 1;
-    sub_419D60(v4 - 265, v4);
+    UIWidget_RefreshActionButtonState(v4 - 265, v4);
   }
   dword_51860C = 128;
   dword_518630 = 128;
   dword_518654 = 128;
-  return sub_44A880(word_518600, a2, a3);
+  return Options_DrawAllSliderThumbs(word_518600, a2, a3);
 }
 // 449CA9: variable 'v4' is possibly undefined
 // 518600: using guessed type unsigned __int16 word_518600[6];
@@ -65074,20 +65074,20 @@ unsigned __int16 * sub_449CA0(int a1, int a2, DWORD a3)
 // 518654: using guessed type int dword_518654;
 
 //----- (00449D60) --------------------------------------------------------
-BOOL  sub_449D60(int a1)
+BOOL  Options_ToggleCheckboxMainMenu(int a1)
 {
   char v2; // dl
 
   v2 = *(_BYTE *)(a1 + 8) ^ 1;
   *(_BYTE *)(a1 + 8) = v2;
   *(_BYTE *)(a1 + 8) = v2 ^ 2;
-  sub_4425E0(*(char **)(a1 + 49));
+  Audio_PlayButtonSound(*(char **)(a1 + 49));
   return Render_Begin((int)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044A110) --------------------------------------------------------
-int  sub_44A110(int a1, DWORD a2)
+int  LoadMenu_HandleSlotConfirmButtonRelease(int a1, DWORD a2)
 {
   int result; // eax
 
@@ -65123,7 +65123,7 @@ void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2)
   v9 = dword_544D10;
   g_RenderDevice = &unk_51D4C0;
   v4 = (unsigned __int16)(22 * a1 + 155);
-  sub_460BB0(g_RenderState, 0xF4u, 0x1A4u, v4, 22 * a1 + 175);
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0xF4u, 0x1A4u, v4, 22 * a1 + 175);
   Render_FillRect((_DWORD *)dword_5202E0, 0, (unsigned __int16)v4, 244, 0x1A4u, 22 * a1 + 175, 0xF4u, v4);
   if ( a1 == dword_5441E0 )
     v5 = 18;
@@ -65145,7 +65145,7 @@ void * LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (0044A510) --------------------------------------------------------
-int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3)
+int  Options_DrawSliderThumb(unsigned __int16 *a1, char a2, DWORD a3)
 {
   int v4; // ecx
   int v5; // edi
@@ -65217,7 +65217,7 @@ int  sub_44A510(unsigned __int16 *a1, char a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0044A6D0) --------------------------------------------------------
-unsigned int  sub_44A6D0(int a1)
+unsigned int  Options_AnimateSliderThumbDrag(int a1)
 {
   unsigned int result; // eax
   int v3; // eax
@@ -65257,7 +65257,7 @@ unsigned int  sub_44A6D0(int a1)
           if ( result <= 0x100 )
           {
             *(_DWORD *)(a1 + 12) = result;
-            return sub_44A510((unsigned __int16 *)a1, a1, v11);
+            return Options_DrawSliderThumb((unsigned __int16 *)a1, a1, v11);
           }
         }
         else
@@ -65283,7 +65283,7 @@ unsigned int  sub_44A6D0(int a1)
               {
                 *(_DWORD *)(a1 + 12) = 256;
               }
-              sub_44A510((unsigned __int16 *)a1, a1, v8);
+              Options_DrawSliderThumb((unsigned __int16 *)a1, a1, v8);
               v6 = dword_544CFC >> byte_54512C;
             }
           }
@@ -65301,7 +65301,7 @@ unsigned int  sub_44A6D0(int a1)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (0044A880) --------------------------------------------------------
-unsigned __int16 * sub_44A880(unsigned __int16 *result, int a2, DWORD a3)
+unsigned __int16 * Options_DrawAllSliderThumbs(unsigned __int16 *result, int a2, DWORD a3)
 {
   unsigned __int16 *v3; // edx
   int v4; // edx
@@ -65311,7 +65311,7 @@ unsigned __int16 * sub_44A880(unsigned __int16 *result, int a2, DWORD a3)
   {
     do
     {
-      result = (unsigned __int16 *)sub_44A510(v3, a2, a3);
+      result = (unsigned __int16 *)Options_DrawSliderThumb(v3, a2, a3);
       a2 = *(_DWORD *)(v4 + 36);
       v3 = (unsigned __int16 *)(v4 + 36);
     }
@@ -65322,7 +65322,7 @@ unsigned __int16 * sub_44A880(unsigned __int16 *result, int a2, DWORD a3)
 // 44A893: variable 'v4' is possibly undefined
 
 //----- (0044A8B0) --------------------------------------------------------
-_DWORD * sub_44A8B0(_DWORD *result)
+_DWORD * Options_AnimateAllSliderThumbs(_DWORD *result)
 {
   int v1; // edx
   int v2; // edx
@@ -65333,7 +65333,7 @@ _DWORD * sub_44A8B0(_DWORD *result)
   {
     do
     {
-      result = (_DWORD *)sub_44A6D0(v1);
+      result = (_DWORD *)Options_AnimateSliderThumbDrag(v1);
       v3 = *(_DWORD *)(v2 + 36);
       v1 = v2 + 36;
     }
@@ -65344,7 +65344,7 @@ _DWORD * sub_44A8B0(_DWORD *result)
 // 44A8C3: variable 'v2' is possibly undefined
 
 //----- (0044A8E0) --------------------------------------------------------
-_DWORD * sub_44A8E0(_DWORD *result)
+_DWORD * Options_DestroySliderThumbList(_DWORD *result)
 {
   _DWORD *v1; // ecx
   int v2; // esi
@@ -65377,18 +65377,18 @@ void  lodaOptionsCfg(DWORD a1)
   int v5; // [esp-4h] [ebp-Ch]
   int v6; // [esp+0h] [ebp-8h] BYREF
 
-  v2 = sub_4427F0(aOptions_cfg, 0);
+  v2 = FileSystem_ResolveReadPath(aOptions_cfg, 0);
   v6 = v2;
   if ( v2 )
   {
     v5 = v3;
     (*(void (**)(void))(*(_DWORD *)v2 + 20))();
     sub_473EE0(v4, &v6);
-    sub_44A9C0((int)&dword_5188B0, v5, a1);
+    Options_ApplyRecordSettings((int)&dword_5188B0, v5, a1);
   }
   else
   {
-    sub_44A9C0((int)&dword_5188B0, v3, a1);
+    Options_ApplyRecordSettings((int)&dword_5188B0, v3, a1);
   }
 }
 // 44A93C: variable 'v3' is possibly undefined
@@ -65396,7 +65396,7 @@ void  lodaOptionsCfg(DWORD a1)
 // 5188B0: using guessed type int dword_5188B0;
 
 //----- (0044A980) --------------------------------------------------------
-int  sub_44A980(int a1, DWORD a2)
+int  Options_SaveConfigToFile(int a1, DWORD a2)
 {
   int v2; // eax
   int v3; // ecx
@@ -65410,30 +65410,30 @@ int  sub_44A980(int a1, DWORD a2)
 // 5188B0: using guessed type int dword_5188B0;
 
 //----- (0044A9C0) --------------------------------------------------------
-void  sub_44A9C0(int a1, int a2, DWORD a3)
+void  Options_ApplyRecordSettings(int a1, int a2, DWORD a3)
 {
   int v5; // edx
   _DWORD v6[260]; // [esp-40Ch] [ebp-410h] BYREF
 
   v6[258] = a2;
-  sub_404BC0((int)&unk_51D4C0, *(char *)(a1 + 26));
+  Palette_SetBrightnessOffset((int)&unk_51D4C0, *(char *)(a1 + 26));
   _wcpp_4_copy_array__(v6[0]);
-  sub_404C80((int *)&unk_51D4C0, v6);
-  sub_4608D0((int)g_RenderState, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
+  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, v6);
+  RenderState_SetMouseSpeed((int)g_RenderState, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
   if ( (int *)a1 == &dword_5188B0 )
   {
     if ( *(_DWORD *)(a1 + 16) )
-      sub_4419F0();
+      Audio_SetMusicActiveFlag();
     else
-      sub_441A00();
+      Audio_ClearMusicActiveFlag();
   }
   else if ( *(_DWORD *)(a1 + 16) )
   {
-    sub_4419A0(v5, a3);
+    Audio_StartMainMusicIfStopped(v5, a3);
   }
   else
   {
-    sub_4419D0();
+    Audio_StopMainMusicIfPlaying();
   }
   if ( *(_DWORD *)(a1 + 20) )
     Audio_EnableUnitSounds();
@@ -65553,7 +65553,7 @@ int  Map_LoadFromFile(uintptr_t a1)
     v7 += 2;
   }
   while ( v9 );
-  v46 = sub_4427F0(v45, 1);
+  v46 = FileSystem_ResolveReadPath(v45, 1);
   if ( !v46 )
   {
     Compat_FreeLow32Bytes(v3);
@@ -65604,7 +65604,7 @@ int  Map_LoadFromFile(uintptr_t a1)
     v19 += 200;
   }
   while ( v20 != 140000 );
-  sub_451E20();
+  Rules_ResetEngineOnLoad();
   v24 = v47;
   v25 = 0;
   Compat_QueryRead(v46, v47, 0x9C40);
@@ -65701,7 +65701,7 @@ int  Map_LoadFromFile(uintptr_t a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (0044B2F0) --------------------------------------------------------
-char sub_44B2F0()
+char Scenario_SetupSirArthurRosterVariantA()
 {
   int i; // edx
   char *v1; // esi
@@ -65791,7 +65791,7 @@ char sub_44B2F0()
 // 5202E4: using guessed type int gameData;
 
 //----- (0044B430) --------------------------------------------------------
-char sub_44B430()
+char Scenario_SetupSirArthurRosterVariantB()
 {
   int i; // edx
   char *v1; // esi
@@ -65879,7 +65879,7 @@ char sub_44B430()
 // 5202E4: using guessed type int gameData;
 
 //----- (0044B550) --------------------------------------------------------
-_DWORD * sub_44B550(int this, DWORD a2, double a3)
+_DWORD * Scenario_SeedCantbellyAndKopegonCastles(int this, DWORD a2, double a3)
 {
   int v3; // ecx
   int v4; // eax
@@ -66055,7 +66055,7 @@ LABEL_18:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (0044C400) --------------------------------------------------------
-signed int  sub_44C400(DWORD a1, double a2)
+signed int  SaveSlot_LoadReservedSlot10(DWORD a1, double a2)
 {
   return SaveSlot_LoadGame(10, a1, a2);
 }
@@ -66084,7 +66084,7 @@ signed int  Scenario_LoadAllAiMultiplayerMapAndInitView(int a1)
 }
 
 //----- (0044C7F0) --------------------------------------------------------
-DWORD  sub_44C7F0(int a1, DWORD a2, double a3)
+DWORD  Battle_RunPresetScenarioByIndex(int a1, DWORD a2, double a3)
 {
   int v3; // ebx
   int v4; // edx
@@ -66631,7 +66631,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, uintptr_t a2)
     v34 += 8;
   }
   while ( v7 < 5 );
-  sub_451EC0();
+  Rules_LogMissionSetupInfo();
   return Game_InitPlayerViewState();
 }
 // 44D4E8: variable 'v13' is possibly undefined
@@ -66654,7 +66654,7 @@ signed int  Scenario_LoadMultiplayerMapAndSeedPlayers(int a1, uintptr_t a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0044E2A0) --------------------------------------------------------
-char  sub_44E2A0(int a1, int *a2)
+char  Player_AssignRandomUniqueRulerNames(int a1, int *a2)
 {
   char result; // al
   int v3; // ebp
@@ -66707,7 +66707,7 @@ char  sub_44E2A0(int a1, int *a2)
           v8 += 2;
         }
         while ( v10 );
-        result = sub_40C450((_BYTE *)*v14, 5, v4);
+        result = Str_TitleCase((_BYTE *)*v14, 5, v4);
         v12[v3++] = v11;
         ++v14;
         if ( v3 >= v13 )
@@ -66721,7 +66721,7 @@ char  sub_44E2A0(int a1, int *a2)
 // 518C58: using guessed type char *off_518C58[39];
 
 //----- (0044E350) --------------------------------------------------------
-BOOL  sub_44E350(__int16 *a1)
+BOOL  UI_RunHoverTooltipZones(__int16 *a1)
 {
   BOOL result; // eax
   int v2; // edx
@@ -67047,7 +67047,7 @@ signed int  Prisoner_SetInCastles(int a1, char a2, DWORD a3)
     result = PLAYER_DATA_STRIDE * g_CurrentPlayerIndex;
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
       continue;
-    sub_4620F0(aUwiezic, 1, queued_index, prisoner_owner, building_offset);
+    Win_PlayModeChangeFrameTransition(aUwiezic, 1, queued_index, prisoner_owner, building_offset);
     message_table[0] = (int)g_PrisonerCastleIntakeTexts[0];
     message_table[1] = (int)g_PrisonerCastleIntakeTexts[1];
     message_table[2] = (int)g_PrisonerCastleIntakeTexts[2];
@@ -67119,7 +67119,7 @@ int  Prisoner_Behead(int a1, int a2, char a3, DWORD a4)
   result = gameData;
   if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v5 + 2) + gameData + 140051) )
   {
-    sub_4620F0(aZciecie, 1, v5, a3, a4);
+    Win_PlayModeChangeFrameTransition(aZciecie, 1, v5, a3, a4);
     v11[0] = (int)g_PrisonerBeheadingTexts[0];
     v11[1] = (int)g_PrisonerBeheadingTexts[1];
     v11[2] = (int)g_PrisonerBeheadingTexts[2];
@@ -67607,13 +67607,13 @@ char * BuildingPrisonerActionButton_SelectBehead(int a1)
       do
       {
         *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
-        sub_419D60((int)v5, v6 + 1);
+        UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
       while ( v6 < 9 );
       *(_DWORD *)(a1 + 8) = 2;
     }
-    return sub_4425E0(*(char **)(a1 + 49));
+    return Audio_PlayButtonSound(*(char **)(a1 + 49));
   }
   return result;
 }
@@ -67644,13 +67644,13 @@ char * BuildingPrisonerActionButton_SelectTorture(int a1)
       do
       {
         *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
-        sub_419D60((int)v5, v6 + 1);
+        UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
       while ( v6 < 9 );
       *(_DWORD *)(a1 + 8) = 2;
     }
-    return sub_4425E0(*(char **)(a1 + 49));
+    return Audio_PlayButtonSound(*(char **)(a1 + 49));
   }
   return result;
 }
@@ -67681,13 +67681,13 @@ char * BuildingPrisonerActionButton_SelectBribery(int a1)
       do
       {
         *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
-        sub_419D60((int)v5, v6 + 1);
+        UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
       while ( v6 < 9 );
       *(_DWORD *)(a1 + 8) = 2;
     }
-    return sub_4425E0(*(char **)(a1 + 49));
+    return Audio_PlayButtonSound(*(char **)(a1 + 49));
   }
   return result;
 }
@@ -67913,11 +67913,11 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   dword_5443F0 = (int)v10;
   v11 = dword_5443F8;
   (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(dword_5202E0 + 184) + 48))(0, aStat_gfx);
-  sub_435ED0(aStat, dword_5443F8, v12, a3);
+  Palette_LoadOrBuildBlendLookupTable(aStat, dword_5443F8, v12, a3);
   Render_LoadResourceSprite_v4(8, (_BYTE *)dword_5443F8, v13, v11, a3);
   Render_LoadResourceSprite_v4(18, (_BYTE *)dword_5443F8, v14, v11, a3);
   Render_LoadResourceSprite_v4(17, (_BYTE *)dword_5443F8, v15, v11, a3);
-  sub_460CB0((int)g_RenderState, dword_5443F8, v16, a3);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, dword_5443F8, v16, a3);
   (*(void (__thiscall **)(void *))(*(_DWORD *)(dword_5202E0 + 184) + 36))(&unk_51D4C0);
   g_RenderDevice = v17;
   Render_ReleaseSurface(18, a3);
@@ -68139,7 +68139,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   Building_DrawPrisonerRows(v36);
   Queen_DrawRelationshipPanel(v36, 10);
   UIWidgetTable_InitDrawStates(dword_518DC8);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
   Render_Present((int)g_RenderState);
   dword_5443F4 = v50;
   do
@@ -68218,7 +68218,7 @@ LABEL_49:
   sub_405920(&dword_5443F0);
   j__nfree_();
   Render_Pump();
-  return sub_404F20((int *)&unk_51D4C0, 20);
+  return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
 // 44FEBB: variable 'v7' is possibly undefined
 // 44FEE2: variable 'v9' is possibly undefined
@@ -68501,7 +68501,7 @@ LABEL_18:
               result,
               ACTIVE_MISSION_INDEX,
               GAME_TURN_COUNTER);
-            sub_4620F0((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
+            Win_PlayModeChangeFrameTransition((int)aP_posla, 1, gameData, a2, (DWORD)savedregs, a3);
             Diagnostics_TraceWorldMapActionEvent(
               "queen_proposal_dialog_enter",
               g_SelectedUnitIndex,
@@ -68749,8 +68749,8 @@ LABEL_9:
   }
   *(_DWORD *)(1423 * a1 + gameData + 140024) = 0;
   Render_Pump();
-  sub_4418E0();
-  sub_4623C0((int)aArama1, aKon_por1);
+  Audio_StopMainMusic();
+  Video_PlayAviWithModeGuard((int)aArama1, aKon_por1);
   v10 = 0;
   while ( 1 )
   {
@@ -68763,7 +68763,7 @@ LABEL_9:
     if ( ++v10 >= 5 )
       return 1;
   }
-  sub_441720(*(unsigned __int8 *)(gameData + 140016), v11, gameData, a2);
+  Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), v11, gameData, a2);
   return 0;
 }
 // 451044: conditional instruction was optimized away because edx.4<1F4u
@@ -68776,7 +68776,7 @@ LABEL_9:
 // 5202E4: using guessed type int gameData;
 
 //----- (00451150) --------------------------------------------------------
-signed int  sub_451150(int a1)
+signed int  Player_CheckSoleSurvivorAndShowVictoryBanner(int a1)
 {
   int v2; // eax
   int v3; // ecx
@@ -68791,11 +68791,11 @@ signed int  sub_451150(int a1)
     if ( v2 >= 7115 )
     {
       Render_Pump();
-      sub_4418E0();
-      sub_404F20((int *)&unk_51D4C0, v4);
+      Audio_StopMainMusic();
+      Palette_FadeOutToBlack((int *)&unk_51D4C0, v4);
       g_RenderDevice = &unk_51D4C0;
       (*(void (**)(void))(dword_51D578 + 56))();
-      sub_4623C0(v5, aZwy01);
+      Video_PlayAviWithModeGuard(v5, aZwy01);
       return 1;
     }
   }
@@ -68804,7 +68804,7 @@ signed int  sub_451150(int a1)
 
 signed int UI_CheckEndTurnHotkey(int a1)
 {
-  return sub_451150(a1);
+  return Player_CheckSoleSurvivorAndShowVictoryBanner(a1);
 }
 // 45119B: variable 'v4' is possibly undefined
 // 4511BB: variable 'v5' is possibly undefined
@@ -68813,7 +68813,7 @@ signed int UI_CheckEndTurnHotkey(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (004511D0) --------------------------------------------------------
-void  sub_4511D0(int a1, DWORD a2)
+void  Options_ApplyInGameSliders(int a1, DWORD a2)
 {
   *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)dword_51938C << 7)
                                                     - (__CFSHL__(dword_51938C << 7 >> 31, 8)
@@ -68822,14 +68822,14 @@ void  sub_4511D0(int a1, DWORD a2)
   *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * dword_5193D4
                                                    - (__CFSHL__((16 * dword_5193D4) >> 31, 8)
                                                     + ((unsigned __int16)((16 * dword_5193D4) >> 31) << 8))) >> 8;
-  sub_44A9C0(gameData + 147147, a1, a2);
+  Options_ApplyRecordSettings(gameData + 147147, a1, a2);
 }
 // 51938C: using guessed type int dword_51938C;
 // 5193D4: using guessed type int dword_5193D4;
 // 5202E4: using guessed type int gameData;
 
 //----- (00451230) --------------------------------------------------------
-int  sub_451230(int a1)
+int  Options_HandleCloseButtonInGame(int a1)
 {
   int result; // eax
   int v3; // edx
@@ -68842,7 +68842,7 @@ int  sub_451230(int a1)
 // 54453C: using guessed type int dword_54453C;
 
 //----- (00451250) --------------------------------------------------------
-unsigned __int16 * sub_451250(int a1, int a2, DWORD a3)
+unsigned __int16 * Options_InitInGameSlidersAndWidgets(int a1, int a2, DWORD a3)
 {
   int v4; // ecx
 
@@ -68850,27 +68850,27 @@ unsigned __int16 * sub_451250(int a1, int a2, DWORD a3)
   if ( (*(_BYTE *)(v4 - 98) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 98) = 2;
-    sub_419D60(v4 - 106, v4);
+    UIWidget_RefreshActionButtonState(v4 - 106, v4);
   }
   if ( (*(_BYTE *)(v4 - 151) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 151) = 2;
-    sub_419D60(v4 - 159, v4);
+    UIWidget_RefreshActionButtonState(v4 - 159, v4);
   }
   if ( (*(_BYTE *)(v4 - 204) & 2) == 0 )
   {
     *(_DWORD *)(v4 - 204) = 2;
-    sub_419D60(v4 - 212, v4);
+    UIWidget_RefreshActionButtonState(v4 - 212, v4);
   }
   if ( (*(_BYTE *)(v4 - 257) & 1) == 0 )
   {
     *(_DWORD *)(v4 - 257) = 1;
-    sub_419D60(v4 - 265, v4);
+    UIWidget_RefreshActionButtonState(v4 - 265, v4);
   }
   dword_51938C = 128;
   dword_5193B0 = 128;
   dword_5193D4 = 128;
-  return sub_44A880(word_519380, a2, a3);
+  return Options_DrawAllSliderThumbs(word_519380, a2, a3);
 }
 // 451259: variable 'v4' is possibly undefined
 // 519380: using guessed type unsigned __int16 word_519380[6];
@@ -68879,20 +68879,20 @@ unsigned __int16 * sub_451250(int a1, int a2, DWORD a3)
 // 5193D4: using guessed type int dword_5193D4;
 
 //----- (00451310) --------------------------------------------------------
-BOOL  sub_451310(int a1)
+BOOL  Options_ToggleCheckboxInGame(int a1)
 {
   char v2; // dl
 
   v2 = *(_BYTE *)(a1 + 8) ^ 1;
   *(_BYTE *)(a1 + 8) = v2;
   *(_BYTE *)(a1 + 8) = v2 ^ 2;
-  sub_4425E0(*(char **)(a1 + 49));
+  Audio_PlayButtonSound(*(char **)(a1 + 49));
   return Render_Begin((int)g_RenderState, 0);
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451340) --------------------------------------------------------
-int  sub_451340(int a1, char a2, DWORD a3)
+int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
 {
   _DWORD *v4; // eax
   int v5; // ebp
@@ -68969,13 +68969,13 @@ int  sub_451340(int a1, char a2, DWORD a3)
     0,
     0);
   UIWidgetTable_InitDrawStates(v19);
-  sub_44A880(word_519380, 132, v5);
+  Options_DrawAllSliderThumbs(word_519380, 132, v5);
   dword_54453C = v13;
   do
   {
     DD_Pump((int)g_RenderState, 132);
     UIWidgetTable_PollHoverAndActions(v19, v5);
-    sub_44A8B0(word_519380);
+    Options_AnimateAllSliderThumbs(word_519380);
   }
   while ( v14 == dword_54453C );
   *(_DWORD *)(gameData + 147159) = v20 == 2;
@@ -68992,13 +68992,13 @@ int  sub_451340(int a1, char a2, DWORD a3)
   *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * dword_5193D4
                                                    - (__CFSHL__((16 * dword_5193D4) >> 31, 8)
                                                     + ((unsigned __int16)((16 * dword_5193D4) >> 31) << 8))) >> 8;
-  sub_44A9C0(gameData + 147147, v14, v5);
-  sub_44A8E0(word_519380);
+  Options_ApplyRecordSettings(gameData + 147147, v14, v5);
+  Options_DestroySliderThumbList(word_519380);
   v18 = (int ( *)(int, char, DWORD))g_RenderHook;
   Debug_Log(v15, (char)g_RenderHook, v5, (int)aUnsetrh08x_24);
   g_RenderHook = v25;
   Render_SetResourceHandle((int)&unk_51D4C0, v5);
-  sub_418700(1);
+  WorldMap_RedrawViewport(1);
   return sub_405920(&dword_544540);
 }
 // 4513B8: variable 'v7' is possibly undefined
@@ -69018,15 +69018,15 @@ int  sub_451340(int a1, char a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451690) --------------------------------------------------------
-int sub_451690()
+int Cheat_RevealMapForCurrentPlayer()
 {
   Map_RevealAllTilesForPlayer(g_CurrentPlayerIndex);
-  return sub_418700(1);
+  return WorldMap_RedrawViewport(1);
 }
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004516B0) --------------------------------------------------------
-void sub_4516B0()
+void Cheat_FillSelectedSquadWithCannons()
 {
   int i; // esi
   signed int v2; // eax
@@ -69044,7 +69044,7 @@ void sub_4516B0()
         UNIT_TYPE_CANNON,
         *(_BYTE *)(gameData + 725 * g_SelectedUnitIndex + 147178));
     }
-    sub_418700(1);
+    WorldMap_RedrawViewport(1);
   }
 }
 // 4516DE: variable 'v3' is possibly undefined
@@ -69052,7 +69052,7 @@ void sub_4516B0()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451730) --------------------------------------------------------
-signed int sub_451730()
+signed int Cheat_ClearSelectedSquadDamageFlags()
 {
   signed int result; // eax
   int v1; // edx
@@ -69080,14 +69080,14 @@ signed int sub_451730()
 // 5202E4: using guessed type int gameData;
 
 //----- (004517B0) --------------------------------------------------------
-void sub_4517B0()
+void Cheat_ForceWinCurrentMission()
 {
   dword_5448A0 = 1;
 }
 // 5448A0: using guessed type int dword_5448A0;
 
 //----- (004517C0) --------------------------------------------------------
-void sub_4517C0()
+void Cheat_HealSelectedSquadAndClearDamage()
 {
   signed int v0; // eax
   int v1; // ecx
@@ -69112,7 +69112,7 @@ void sub_4517C0()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451810) --------------------------------------------------------
-int  sub_451810(DWORD a1, double a2)
+int  Cheat_KillUnitOrBuildingUnderCursor(DWORD a1, double a2)
 {
   int result; // eax
   unsigned int v3; // edx
@@ -69137,12 +69137,12 @@ int  sub_451810(DWORD a1, double a2)
     if ( v3 > 0x1F4 || (unsigned int)*(__int16 *)(gameData + 725 * v3 + 147180) > 0x28 )
     {
       Building_Destroy(467 * (v3 - 0x8000) + gameData + 509674, gameData, a1, a2);
-      return sub_418700(1);
+      return WorldMap_RedrawViewport(1);
     }
     else
     {
       UnitStack_KillByIndex(v3, gameData, a1, a2);
-      return sub_418700(1);
+      return WorldMap_RedrawViewport(1);
     }
   }
   return result;
@@ -69155,7 +69155,7 @@ int  sub_451810(DWORD a1, double a2)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00451910) --------------------------------------------------------
-int sub_451910()
+int Cheat_TeleportSelectedUnitToCursor()
 {
   int v0; // esi
   int result; // eax
@@ -69180,7 +69180,7 @@ int sub_451910()
     *(_WORD *)(TILE_INDEX(v0, v2)) = g_SelectedUnitIndex;
     *(_WORD *)(gameData + 725 * g_SelectedUnitIndex + 147174) = v0;
     *(_WORD *)(gameData + 725 * g_SelectedUnitIndex + 147176) = v2;
-    return sub_418700(1);
+    return WorldMap_RedrawViewport(1);
   }
   return result;
 }
@@ -69191,7 +69191,7 @@ int sub_451910()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00451A60) --------------------------------------------------------
-signed int sub_451A60()
+signed int Cheat_FillSelectedSquadWithPegasi()
 {
   int i; // esi
   signed int result; // eax
@@ -69217,7 +69217,7 @@ signed int sub_451A60()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451AE0) --------------------------------------------------------
-int  sub_451AE0(DWORD a1)
+int  Cheat_ShowDeveloperTeamImage(DWORD a1)
 {
   void *v1; // ebx
   int v2; // ecx
@@ -69230,7 +69230,7 @@ int  sub_451AE0(DWORD a1)
 
   LOBYTE(v1) = 0;
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   v3 = Mem_Alloc(1024, v2, 0, a1);
   if ( v3 )
   {
@@ -69245,14 +69245,14 @@ int  sub_451AE0(DWORD a1)
   v9 = Surface;
   (*(void (__fastcall **)(_DWORD, char *))(Surface[46] + 48))(0, aTeam1_gfx);
   (*(void (**)(void))(v7[46] + 36))();
-  sub_405020((int *)&unk_51D4C0, v5, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v5, 20);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) )
     DD_Pump((int)g_RenderState, 20);
   Render_Begin((int)g_RenderState, 0);
-  sub_404F20((int *)&unk_51D4C0, 20);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   Render_FillRect((_DWORD *)dword_5202E0, 0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
-  sub_405020((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   if ( v9 )
     (*(void (**)(void))v9[46])();
   return j__nfree_();
@@ -69265,13 +69265,13 @@ int  sub_451AE0(DWORD a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00451C50) --------------------------------------------------------
-void __noreturn sub_451C50()
+void __noreturn Cheat_QuitWithJokeMessage()
 {
   App_RequestQuit((int)aHeheNoBonus);
 }
 
 //----- (00451C60) --------------------------------------------------------
-void sub_451C60()
+void Cheat_SetFactionColorAndCastleFlags()
 {
   int v0; // eax
   int v1; // edx
@@ -69405,7 +69405,7 @@ signed int Rules_ShowBanner_StrategicClash()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451E20) --------------------------------------------------------
-int sub_451E20()
+int Rules_ResetEngineOnLoad()
 {
   int result; // eax
 
@@ -69416,7 +69416,7 @@ int sub_451E20()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451E46) --------------------------------------------------------
-signed int sub_451E46()
+signed int Rules_CompileStrategicRulesFile()
 {
   int v0; // ecx
   int v1; // edx
@@ -69436,7 +69436,7 @@ signed int sub_451E46()
 // 47E7B0: using guessed type int __fastcall unknown_libname_7(int);
 
 //----- (00451E87) --------------------------------------------------------
-signed int sub_451E87()
+signed int Rules_RegisterAllHostFunctions()
 {
   sub_47C181(32);
   Rules_RegisterStrategicActionHostFunctions();
@@ -69446,7 +69446,7 @@ signed int sub_451E87()
 // 47C181: using guessed type _DWORD __stdcall sub_47C181(_DWORD);
 
 //----- (00451EC0) --------------------------------------------------------
-int sub_451EC0()
+int Rules_LogMissionSetupInfo()
 {
   double formatted;
   int player_index;
@@ -69481,7 +69481,7 @@ int sub_451EC0()
 // 5202E4: using guessed type int gameData;
 
 //----- (00451F70) --------------------------------------------------------
-signed int sub_451F70()
+signed int Rules_ExecuteAITurn()
 {
   double v1; // st7
   double v3; // st7
@@ -70324,14 +70324,14 @@ signed int  Rules_MarchNearTile(DWORD a1, int a2, int a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (004547F0) --------------------------------------------------------
-signed int  sub_4547F0(int a1, int a2, char a3, DWORD a4, double a5)
+signed int  Rules_HostUnitAttack(int a1, int a2, char a3, DWORD a4, double a5)
 {
   Unit_Attack(a1, a2, a3, a4, a5);
   return 1;
 }
 
 //----- (00454800) --------------------------------------------------------
-signed int  sub_454800(int a1, int a2, double a3)
+signed int  Rules_HostUnitCaptureDefeatedStack(int a1, int a2, double a3)
 {
   UnitStack_CaptureDefeatedStack(
     (__int16 *)(gameData + 147174 + 725 * a1),
@@ -70344,7 +70344,7 @@ signed int  sub_454800(int a1, int a2, double a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454860) --------------------------------------------------------
-signed int  sub_454860(unsigned int a1, unsigned int a2, DWORD a3, double a4)
+signed int  Rules_HostUnitMoveAndHide(unsigned int a1, unsigned int a2, DWORD a3, double a4)
 {
   DWORD v5; // esi
   signed int result; // eax
@@ -70385,7 +70385,7 @@ signed int  sub_454860(unsigned int a1, unsigned int a2, DWORD a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (00454990) --------------------------------------------------------
-signed int  sub_454990(int a1, int a2, char a3, DWORD a4, double a5)
+signed int  Rules_HostUnitAttackBuilding(int a1, int a2, char a3, DWORD a4, double a5)
 {
   Unit_AttackBuilding(a1, a2, a3, a4, a5);
   return 1;
@@ -73016,7 +73016,7 @@ int  createCastle(
 // 5202E4: using guessed type int gameData;
 
 //----- (00459ED0) --------------------------------------------------------
-int  sub_459ED0(int result, int a2, int a3, int a4)
+int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4)
 {
   int v6; // eax
   int SpriteForChar; // eax
@@ -73027,14 +73027,14 @@ int  sub_459ED0(int result, int a2, int a3, int a4)
     v6 = Time_Now(a3, 11);
     v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C0, 730);
-    return sub_405560(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, v11, 0, 0, 0, 1u);
+    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, v11, 0, 0, 0, 1u);
   }
   return result;
 }
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045B3C0) --------------------------------------------------------
-int  sub_45B3C0(int result, int a2)
+int  Mission_MarkObjective05CompleteOnAttack(int result, int a2)
 {
   if ( g_LanguageIndex && !result && (a2 == 1 || a2 == 2) )
   {
@@ -73047,7 +73047,7 @@ int  sub_45B3C0(int result, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0045C000) --------------------------------------------------------
-int  sub_45C000(int result, int a2)
+int  WorldMap_DrawMission07TreasureMarker(int result, int a2)
 {
   int v2; // esi
 
@@ -73088,7 +73088,7 @@ int  sub_45C000(int result, int a2)
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045D430) --------------------------------------------------------
-int  sub_45D430(int result, int a2, int a3, int a4)
+int  WorldMap_DrawMission11ShrineMarker(int result, int a2, int a3, int a4)
 {
   int v6; // eax
   int SpriteForChar; // eax
@@ -73099,14 +73099,14 @@ int  sub_45D430(int result, int a2, int a3, int a4)
     v6 = Time_Now(a3, 44);
     v11 = ((50 * Math_SinDegreesQ16(2 * v6 - 90)) >> 16) + 50;
     SpriteForChar = DLX_GetSpriteForChar(dword_5202C0, 738);
-    return sub_405560(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, 0, 0, v11, 0, 1u);
+    return Sprite_DrawSimpleIgnoringRect(SpriteForChar, a4, a3, a3, a4 + 63, a3 + 63, 0, 0, v11, 0, 1u);
   }
   return result;
 }
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045E630) --------------------------------------------------------
-int  sub_45E630(int result, int a2)
+int  Mission_MarkObjective15CompleteOnAttack(int result, int a2)
 {
   if ( result == 1 && (a2 == 2 || a2 == 3) )
   {
@@ -73118,7 +73118,7 @@ int  sub_45E630(int result, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0045F190) --------------------------------------------------------
-int  sub_45F190(int result, int a2)
+int  WorldMap_DrawMission17TreasureMarker(int result, int a2)
 {
   int v2; // esi
 
@@ -73374,9 +73374,9 @@ LABEL_27:
             {
               Camera_CenterOnUnit(v13);
               Audio_PlayArtifactSound(0);
-              sub_418EC0(*(__int16 *)(v14 + gameData + 147174), *(__int16 *)(v14 + gameData + 147176), v16);
+              UI_StartTileBlinkFlash(*(__int16 *)(v14 + gameData + 147174), *(__int16 *)(v14 + gameData + 147176), v16);
               Unit_Kill(v14 + gameData + 147174, 0, a1, a2);
-              sub_420800(100, v17, v18);
+              Timer_BusyWaitWithCallback(100, v17, v18);
             }
           }
         }
@@ -73519,9 +73519,9 @@ LABEL_105:
           {
             Camera_CenterOnUnit(v26);
             Audio_PlayArtifactSound(0);
-            sub_418EC0(*(__int16 *)(v27 + gameData + 147174), *(__int16 *)(v27 + gameData + 147176), v29);
+            UI_StartTileBlinkFlash(*(__int16 *)(v27 + gameData + 147174), *(__int16 *)(v27 + gameData + 147176), v29);
             Unit_Kill(v27 + gameData + 147174, 1, a1, a2);
-            sub_420800(100, v30, v31);
+            Timer_BusyWaitWithCallback(100, v30, v31);
           }
         }
       }
@@ -73769,7 +73769,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       Unit_Create(UNIT_TYPE_ARCHER, 1, 40, 0, 3);
       Unit_Create(UNIT_TYPE_LIGHT_INFANTRY, 1, 19, 0, 12);
       Diagnostics_TraceBootstrapEvent("mission0-ai-init");
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Diagnostics_TraceBootstrapEvent("mission0-player-view");
       Game_InitPlayerViewState();
       Diagnostics_TraceBootstrapEvent("mission0-load-done");
@@ -73797,7 +73797,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 44, 24, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 18, 48, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 12, 0, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       PLAYER_CAMERA_LEFT(0) = 91;
       PLAYER_CAMERA_TOP(0) = 21;
@@ -73838,7 +73838,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 35, 69, 1, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 94, 77, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 74, 31, 1, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       PLAYER_CAMERA_LEFT(0) = 91;
       PLAYER_CAMERA_TOP(0) = 21;
@@ -73897,7 +73897,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 39, 35, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 49, 48, 3, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
       createUnit(a2, 1, 47, 3, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 4:
@@ -73946,7 +73946,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       *(_WORD *)(BUILDING_RECORD(castle_index) + 18) = -1;
       Building_OnGarrisonChange(castle_index, 0, a2);
       createUnit(a2, 25, 50, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Rules_LogAssignedCastleFact(*(unsigned __int16 *)(gameData + 567712) - 0x8000, 4);
       Game_InitPlayerViewState();
       break;
@@ -74015,7 +74015,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       for ( slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index )
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 9) |= 3u;
       createUnit(a2, 87, 66, 3, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Rules_LogAssignedPlayerFact(3, 5);
       Game_InitPlayerViewState();
       break;
@@ -74081,7 +74081,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
       createUnit(a2, 41, 69, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 42, 69, 2, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_MUSKETEER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       PLAYER_CAMERA_LEFT(0) = 10;
       PLAYER_CAMERA_TOP(0) = 0;
@@ -74151,7 +74151,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
           *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 27) | 2;
       }
       createUnit(a2, 77, 69, 3, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_MUSKETEER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 8:
@@ -74224,7 +74224,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       stack_index = *(unsigned __int16 *)(TILE_INDEX(102, 97));
       *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) =
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), 1) + 27) & 0xFC | 2;
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 9:
@@ -74295,7 +74295,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 33, 86, 4, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_KNIGHTS, UNIT_TYPE_KNIGHTS, UNIT_TYPE_WORM, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 34, 86, 4, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_PEGASUS, UNIT_TYPE_PEGASUS, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 32, 83, 4, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 10:
@@ -74326,7 +74326,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 11, 13, 2, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 4, 22, 2, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 10, 25, 2, UNIT_TYPE_LIGHT_INFANTRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 11:
@@ -74348,7 +74348,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 34, 7, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 35, 7, 2, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_FORESTER, UNIT_TYPE_FORESTER, -1);
       createUnit(a2, 36, 7, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 12:
@@ -74381,7 +74381,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 36, 52, 2, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, -1);
       createUnit(a2, 41, 49, 2, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, -1);
       createUnit(a2, 62, 94, 2, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       MAP_VIEW_LEFT = 67;
       PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
@@ -74428,7 +74428,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 48, 8, 4, UNIT_TYPE_FORESTER, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_PEASANT, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, -1);
       createUnit(a2, 21, 10, 4, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_CATAPULT, -1);
       createUnit(a2, 35, 17, 4, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, UNIT_TYPE_PIKEMAN, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 14:
@@ -74486,7 +74486,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 17, 36, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 18, 36, 3, UNIT_TYPE_PIKEMAN, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
       createUnit(a2, 25, 4, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Rules_LogAssignedCastleFact(*(unsigned __int16 *)(TILE_INDEX(52, 24)) - 0x8000, 14);
       Game_InitPlayerViewState();
       break;
@@ -74543,7 +74543,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       castle_index = createCastle(a2, 19, 32, 4, 2, "Guluali", UNIT_TYPE_BUILDER, -1);
       *(_DWORD *)(BUILDING_RECORD(castle_index) + 438) = 2000;
       createUnit(a2, 19, 34, 4, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Rules_LogAssignedPlayerFact(4, 15);
       Game_InitPlayerViewState();
       break;
@@ -74586,7 +74586,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 67, 47, 3, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_PEASANT, UNIT_TYPE_GORAL, -1);
       createUnit(a2, 21, 28, 3, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_GORAL, UNIT_TYPE_GORAL, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_LIGHT_INFANTRY, UNIT_TYPE_BUILDER, -1);
       createUnit(a2, 28, 76, 3, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_ARCHER, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_HEAVY_SPEARMAN, UNIT_TYPE_HEAVY_SPEARMAN, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       MAP_VIEW_LEFT = 17;
       PLAYER_CAMERA_LEFT(1) = MAP_VIEW_LEFT;
@@ -74664,7 +74664,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 12) |= 2u;
       }
       createUnit(a2, 58, 63, 4, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_MUSKETEER, UNIT_TYPE_HEAVY_INFANTRY, UNIT_TYPE_HEAVY_INFANTRY, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 18:
@@ -74748,7 +74748,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       stack_index = *(unsigned __int16 *)(TILE_INDEX(37, 29));
       for ( slot_index = 0; slot_index < 5; ++slot_index )
         *(_BYTE *)(UNIT_STACK_SLOT(UNIT_STACK(stack_index), slot_index) + 28) |= 3u;
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     case 19:
@@ -74810,7 +74810,7 @@ void Scenario_LoadMissionByIndex(int mission_index, double a2)
       createUnit(a2, 97, 53, 0, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_LIGHT_CAVALRY, UNIT_TYPE_KNIGHTS, UNIT_TYPE_KNIGHTS, UNIT_TYPE_WORM, UNIT_TYPE_GHOST, UNIT_TYPE_GHOST, -1);
       createUnit(a2, 55, 79, 0, UNIT_TYPE_CATAPULT, UNIT_TYPE_CATAPULT, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_DRAGON_CAVALRY, UNIT_TYPE_PEGASUS, UNIT_TYPE_PEGASUS, -1);
       createUnit(a2, 78, 98, 0, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_DRAGON, UNIT_TYPE_TROLL, UNIT_TYPE_TROLL, -1);
-      sub_451EC0();
+      Rules_LogMissionSetupInfo();
       Game_InitPlayerViewState();
       break;
     default:
@@ -74834,8 +74834,8 @@ int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
   mission_index = (int)(size_t)a1;
   qmemcpy(saved_campaign_state, (const void *)(gameData + 147147), 0x1Bu);
   if ( mission_index && mission_index != 10 )
-    sub_4623C0(0, aZwy01_0);
-  sub_462480(mission_index, a1);
+    Video_PlayAviWithModeGuard(0, aZwy01_0);
+  Mission_PlayInfoSlideshow(mission_index, a1);
   WorldMap_Initialize((char)mission_index, a3);
   Scenario_LoadMissionByIndex(mission_index, a4);
   if ( mission_index && mission_index != 10 )
@@ -74845,7 +74845,7 @@ int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (004603F0) --------------------------------------------------------
-int __thiscall sub_4603F0(void *this)
+int __thiscall RenderState_ConstructGlobalInstance(void *this)
 {
   int v1; // edx
   int v2; // ecx
@@ -74939,7 +74939,7 @@ static void Compat_MenuProbeTraceRenderInput(
 }
 
 //----- (00460410) --------------------------------------------------------
-_DWORD * sub_460410(int a1, int a2)
+_DWORD * RenderState_ConstructDefault(int a1, int a2)
 {
   int v2; // eax
   _DWORD *v3; // eax
@@ -74964,7 +74964,7 @@ _DWORD * sub_460410(int a1, int a2)
 // 50F1E4: using guessed type int (*off_50F1E4[6])();
 
 //----- (00460490) --------------------------------------------------------
-int  sub_460490(int a1, int a2, char a3, DWORD a4)
+int  RenderState_InitCursorResources(int a1, int a2, char a3, DWORD a4)
 {
   _DWORD *sprite_set;
   _DWORD *surface;
@@ -74996,7 +74996,7 @@ int  sub_460490(int a1, int a2, char a3, DWORD a4)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (00460580) --------------------------------------------------------
-int  sub_460580(int a1)
+int  RenderState_ReleaseCursorResources(int a1)
 {
   int surface_handle;
   int vtable;
@@ -75175,7 +75175,7 @@ unsigned int  DD_Pump(int a1, int a2, ...)
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004608D0) --------------------------------------------------------
-void  sub_4608D0(int a1, int a2, DWORD a3)
+void  RenderState_SetMouseSpeed(int a1, int a2, DWORD a3)
 {
   Debug_Log(a1, a2, a3, (int)aMouse_speedD);
   *(_DWORD *)(a1 + 32) = a2;
@@ -75209,7 +75209,7 @@ BOOL  Input_PollEventsUntil(int a1, char a2)
 // 5451C8: using guessed type char byte_5451C8;
 
 //----- (00460950) --------------------------------------------------------
-BOOL  sub_460950(int a1)
+BOOL  RenderState_IsCursorFlipStillActive(int a1)
 {
   int v4; // eax
   int v6; // eax
@@ -75329,7 +75329,7 @@ int  RenderState_PollInputAndClampCursor(int a1, int a2)
 // 5451C8: using guessed type char byte_5451C8;
 
 //----- (00460AF0) --------------------------------------------------------
-unsigned int  sub_460AF0(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3)
+unsigned int  RenderState_WarpCursorAndPump(_DWORD *a1, unsigned __int16 a2, unsigned __int16 a3)
 {
   a1[9] = a2 << a1[277];
   a1[10] = a3 << a1[277];
@@ -75365,7 +75365,7 @@ _DWORD * RenderState_RecalculateCursorBoundsForRect(
 }
 
 //----- (00460BB0) --------------------------------------------------------
-_DWORD * sub_460BB0(
+_DWORD * RenderState_PumpIfRectInViewBounds(
         _DWORD *result,
         unsigned __int16 a2,
         unsigned __int16 a3,
@@ -75386,7 +75386,7 @@ _DWORD * sub_460BB0(
 }
 
 //----- (00460C70) --------------------------------------------------------
-_DWORD * sub_460C70(int a1)
+_DWORD * RenderState_LoadDefaultCursorSprite(int a1)
 {
   _DWORD *result; // eax
   if ( *(_DWORD *)(a1 + 64) )
@@ -75405,7 +75405,7 @@ _DWORD * sub_460C70(int a1)
 }
 
 //----- (00460CB0) --------------------------------------------------------
-_DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
+_DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD a4)
 {
   unsigned __int8 *source_bytes; // eax
   unsigned __int8 checksum_xor; // bl
@@ -75434,7 +75434,7 @@ _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
   {
     strcpy(query_path, aGfx);
     strcat(query_path, cache_path);
-    cache_query_handle = sub_4427F0(query_path, 0);
+    cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
       sub_473EE0((int)&dword_543CC8, &cache_query_handle);
@@ -75445,7 +75445,7 @@ _DWORD * sub_460CB0(int a1, int a2, int a3, DWORD a4)
       return result;
     }
   }
-  sub_460C70(a1);
+  RenderState_LoadDefaultCursorSprite(a1);
   DLXSpriteSet_DrawText(*(_DWORD *)(a1 + 64), -1, a2, (unsigned __int8 *)(a1 + 80));
   result = *(_DWORD **)(a1 + 64);
   return result;
@@ -75663,7 +75663,7 @@ void Input_Flush()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004610B0) --------------------------------------------------------
-int  sub_4610B0(int a1)
+int  RenderState_DrawCursorSpriteToPrimarySurface(int a1)
 {
   void *v2; // esi
   int SpriteForChar; // eax
@@ -75671,7 +75671,7 @@ int  sub_4610B0(int a1)
 
   v2 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
-  sub_404C80((int *)&unk_51D4C0, &unk_5448B8);
+  Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, &unk_5448B8);
   SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), dword_519808[0] + 1);
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
   g_RenderDevice = v2;
@@ -75686,7 +75686,7 @@ _DWORD * Device_GetParamA(int a1, int a2)
   _DWORD *result; // eax
   CompatRenderStateTail *tail;
 
-  result = sub_460410(a1, a2);
+  result = RenderState_ConstructDefault(a1, a2);
   result[280] = off_50F204;
   tail = Compat_RenderStateTailFields(a1);
   tail->field_464_active = 0;
@@ -75841,7 +75841,7 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
         if ( v12 == -1 )
           goto LABEL_8;
       }
-      sub_446230(v5, dword_544CD0);
+      Demo_ShowNumberedTextScreen(v5, dword_544CD0);
     }
 LABEL_8:
     result = Input_IsKeyPressed(1);
@@ -76226,9 +76226,9 @@ signed int  Win_BeginModeChange(const char *a1, char *a2)
 
   query_handle = 0;
   direct_file_available = 0;
-  base_path = sub_4429C0();
+  base_path = FileSystem_GetInstallRootPath();
   sprintf_(a2, "%savi\\%s.avi", base_path, a1);
-  query_handle = sub_4427F0(a2, 0);
+  query_handle = FileSystem_ResolveReadPath(a2, 0);
   if ( !query_handle )
     direct_file_available = Compat_CanOpenReadPath(a2);
   if ( !query_handle )
@@ -76236,7 +76236,7 @@ signed int  Win_BeginModeChange(const char *a1, char *a2)
     if ( !direct_file_available )
     {
       sprintf_(a2, "avi\\%s.avi", a1);
-      query_handle = sub_4427F0(a2, 0);
+      query_handle = FileSystem_ResolveReadPath(a2, 0);
       if ( !query_handle )
         direct_file_available = Compat_CanOpenReadPath(a2);
     }
@@ -76317,7 +76317,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
   v21 = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   if ( a3 && dword_51D594 == 8 )
   {
-    sub_404F20((int *)&unk_51D4C0, 40);
+    Palette_FadeOutToBlack((int *)&unk_51D4C0, 40);
     Render_UnlockBackbuffer((int)&unk_51D4C0);
   }
   else if ( dword_51D594 == 8 )
@@ -76389,7 +76389,7 @@ void  Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6)
 // 5452E4: using guessed type int dword_5452E4;
 
 //----- (004620F0) --------------------------------------------------------
-signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
+signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
 {
   signed int result; // eax
   int v7; // edi
@@ -76456,7 +76456,7 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
         LOBYTE(v9) = 0;
         Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x1DFu, 0, 0);
         Diagnostics_TraceWorldMapActionEvent("transition_after_backbuffer_fill", g_SelectedUnitIndex, 0, 0, 0);
-        sub_4050F0((int *)&unk_51D4C0, v10, 0, a5);
+        Video_EnterGreyscaleTransition((int *)&unk_51D4C0, v10, 0, a5);
         Diagnostics_TraceWorldMapActionEvent("transition_after_gray_palette", g_SelectedUnitIndex, 0, 0, 0);
         v12 = Mem_Alloc(1024, 0, 0, a5);
         if ( v12 )
@@ -76501,7 +76501,7 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
         Diagnostics_TraceWorldMapActionEvent("transition_after_sprite_draw", g_SelectedUnitIndex, 0, 0, 0);
         sub_405920((int *)&v24);
         Diagnostics_TraceWorldMapActionEvent("transition_after_anim_free", g_SelectedUnitIndex, 0, 0, 0);
-        sub_441900();
+        Audio_DuckMusicVolume();
         Diagnostics_TraceWorldMapActionEvent("transition_after_fade_wait", g_SelectedUnitIndex, 0, 0, 0);
         Win_EndModeChange(100, v23, 0, 100);
         Diagnostics_TraceWorldMapActionEvent("transition_after_end_mode", g_SelectedUnitIndex, 0, 0, 0);
@@ -76514,8 +76514,8 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
         g_RenderDevice = (_UNKNOWN *)dword_5202E0;
         if ( v29 )
         {
-          sub_405330((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 0, v18);
-          sub_441930();
+          Video_ExitGreyscaleTransition((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 0, v18);
+          Audio_RestoreMusicVolume();
           Diagnostics_TraceWorldMapActionEvent("transition_after_palette_restore", g_SelectedUnitIndex, 0, 0, 0);
         }
         if ( v17 )
@@ -76557,7 +76557,7 @@ signed int  sub_4620F0(const char *a1, int a2, int a3, char a4, DWORD a5, ...)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004623C0) --------------------------------------------------------
-void __fastcall sub_4623C0(int a1, const char *a2)
+void __fastcall Video_PlayAviWithModeGuard(int a1, const char *a2)
 {
   if ( !strcmp_(a1, aKon_por1_1) )
   {
@@ -76566,15 +76566,15 @@ void __fastcall sub_4623C0(int a1, const char *a2)
     dword_5452E8 = 1;
   }
   Render_Pump();
-  sub_404F20((int *)&unk_51D4C0, 20);
-  sub_404D90((int *)&unk_51D4C0);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
+  Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   Video_Avi_playIn(a2, 0, 1, 0, 1, 1);
 }
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 5452E8: using guessed type int dword_5452E8;
 
 //----- (00462480) --------------------------------------------------------
-int  sub_462480(int a1, char *a2)
+int  Mission_PlayInfoSlideshow(int a1, char *a2)
 {
   int v2; // ecx
   int v3; // ecx
@@ -76700,8 +76700,8 @@ int  sub_462480(int a1, char *a2)
   RenderSurface_InvokeSlot48LoadPCX((_DWORD *)(uintptr_t)(unsigned int)v10, v40, 0, (uintptr_t)v39);
   RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
   intro_start_time = Time_Now(v20, v19);
-  v21 = sub_441670(aMusicCampain, 21);
-  sub_405020((int *)&unk_51D4C0, v39, 50);
+  v21 = Sound_PlayNamedSfxFile(aMusicCampain, 21);
+  Palette_FadeInFromBlack((int *)&unk_51D4C0, v39, 50);
   if ( !UI_WaitForAnyKeyOrClick(intro_start_time + 420, 0) )
   {
     RenderSurface_InvokeSlot36(v43);
@@ -76713,19 +76713,19 @@ int  sub_462480(int a1, char *a2)
         RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)v10);
         if ( g_LanguageIndex == 1 )
           v45 = CSS_PlaySound((int)aDataLector_w_2, 64, 0, 0);
-        while ( (g_LanguageIndex != 1 || CSS_IsPlaying(v45)) && !sub_4477A0(10, v33) )
+        while ( (g_LanguageIndex != 1 || CSS_IsPlaying(v45)) && !UI_WaitForKeyOrTimeout(10, v33) )
           RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)v10);
         if ( g_LanguageIndex == 1 )
           CSS_StopSound(v45, 0);
         RenderSurface_InvokeSlot36((_DWORD *)(uintptr_t)(unsigned int)dword_5202E0);
-        sub_4477A0(30, v34);
+        UI_WaitForKeyOrTimeout(30, v34);
       }
     }
   }
   sub_476A78((int)aDataLector_w_0, 0);
   Sleep(0x12Cu);
-  sub_404F20((int *)&unk_51D4C0, 60);
-  sub_4418F0(v21);
+  Palette_FadeOutToBlack((int *)&unk_51D4C0, 60);
+  Audio_StopMusicWithFade(v21);
   if ( v43 )
     RenderSurface_InvokeSlot0(v43, 2);
   if ( v10 )
@@ -76761,15 +76761,15 @@ int  sub_462480(int a1, char *a2)
 // 5202E0: using guessed type int dword_5202E0;
 
 //----- (00462890) --------------------------------------------------------
-int __cdecl sub_462890(int a1, unsigned __int8 a2, unsigned __int8 a3, unsigned __int8 a4)
+int __cdecl Palette_QueryNearestColorIndex(int a1, unsigned __int8 a2, unsigned __int8 a3, unsigned __int8 a4)
 {
   dword_519A10 = a1;
-  return sub_46293B(a2, a3, a4);
+  return Palette_FindNearestColorIndex(a2, a3, a4);
 }
 // 519A10: using guessed type int dword_519A10;
 
 //----- (004628B0) --------------------------------------------------------
-int __cdecl sub_4628B0(int a1)
+int __cdecl Palette_BuildNearestColorLUT(int a1)
 {
   int v2; // [esp+4h] [ebp-10h]
   int v3; // [esp+8h] [ebp-Ch]
@@ -76784,7 +76784,7 @@ int __cdecl sub_4628B0(int a1)
   {
     do
     {
-      byte_5452EC[1024 * v5 + 32 * v4 + v3] = sub_46293B(8 * v5, 8 * v4, 8 * v3);
+      byte_5452EC[1024 * v5 + 32 * v4 + v3] = Palette_FindNearestColorIndex(8 * v5, 8 * v4, 8 * v3);
       ++v5;
     }
     while ( v5 < 0x20 );
@@ -76802,7 +76802,7 @@ int __cdecl sub_4628B0(int a1)
 // 519A10: using guessed type int dword_519A10;
 
 //----- (0046293B) --------------------------------------------------------
-int  sub_46293B(unsigned __int8 a1, unsigned __int8 a2, unsigned __int8 a3)
+int  Palette_FindNearestColorIndex(unsigned __int8 a1, unsigned __int8 a2, unsigned __int8 a3)
 {
   char *v3; // esi
   int v4; // ecx
@@ -76867,7 +76867,7 @@ int  sub_46293B(unsigned __int8 a1, unsigned __int8 a2, unsigned __int8 a3)
 // 519A10: using guessed type int dword_519A10;
 
 //----- (004629E1) --------------------------------------------------------
-int __cdecl sub_4629E1(char *a1, char *a2, unsigned __int8 *a3, int a4)
+int __cdecl Palette_BlendIndexedPixelRun(char *a1, char *a2, unsigned __int8 *a3, int a4)
 {
   int v6; // ecx
   int v7; // ecx
@@ -76931,7 +76931,7 @@ int __cdecl sub_4629E1(char *a1, char *a2, unsigned __int8 *a3, int a4)
 // 519A14: using guessed type int dword_519A14;
 
 //----- (00462B0B) --------------------------------------------------------
-int __cdecl sub_462B0B(unsigned __int8 *a1, int a2, int a3, int a4, int a5)
+int __cdecl Palette_OffsetIndexedPixelsRGB(unsigned __int8 *a1, int a2, int a3, int a4, int a5)
 {
   int v7; // ecx
   int v8; // edx
@@ -76975,7 +76975,7 @@ int __cdecl sub_462B0B(unsigned __int8 *a1, int a2, int a3, int a4, int a5)
 // 519A10: using guessed type int dword_519A10;
 
 //----- (00462BE0) --------------------------------------------------------
-_DWORD * sub_462BE0(_DWORD *result, int a2)
+_DWORD * IO_StreamAdapterConstruct(_DWORD *result, int a2)
 {
   *result = off_50F364;
   result[1] = a2;
@@ -76984,7 +76984,7 @@ _DWORD * sub_462BE0(_DWORD *result, int a2)
 // 50F364: using guessed type int (*off_50F364[4])();
 
 //----- (00462BF0) --------------------------------------------------------
-_DWORD * sub_462BF0(_DWORD *a1, char a2)
+_DWORD * IO_StreamAdapterRelease(_DWORD *a1, char a2)
 {
   _DWORD *v3; // ecx
   int v5; // ecx
@@ -77010,7 +77010,7 @@ _DWORD * sub_462BF0(_DWORD *a1, char a2)
 // 50F364: using guessed type int (*off_50F364[4])();
 
 //----- (00462C90) --------------------------------------------------------
-int  sub_462C90(int a1, int a2, signed int a3)
+int  IO_StreamAdapterReadBytes(int a1, int a2, signed int a3)
 {
   int v3; // eax
   int v4; // ebp
@@ -77029,7 +77029,7 @@ int  sub_462C90(int a1, int a2, signed int a3)
     {
       if ( !*(_DWORD *)(v4 + 383) )
       {
-        v7 = sub_465FB0(v4, *(void **)(v4 + 379));
+        v7 = AviPlayer_PopBufferedVideoFrame(v4, *(void **)(v4 + 379));
         *(_DWORD *)(v4 + 383) = v7;
         if ( !v7 )
           break;
@@ -77051,95 +77051,95 @@ int  sub_462C90(int a1, int a2, signed int a3)
 }
 
 //----- (00462CA0) --------------------------------------------------------
-BOOL  sub_462CA0(int a1)
+BOOL  IO_StreamAdapterIsAtEnd(int a1)
 {
   return *(_BYTE *)(*(_DWORD *)(a1 + 4) + 1) != 0;
 }
 
 //----- (00462CB0) --------------------------------------------------------
-int  sub_462CB0(int a1)
+int  IO_StreamAdapterInvokeAtEnd(int a1)
 {
   return (*(int (**)(void))(*(_DWORD *)a1 + 4))();
 }
 
 //----- (00462CC0) --------------------------------------------------------
-int sub_462CC0()
+int IO_StreamAdapterReadStub()
 {
   return 0;
 }
 
 //----- (00462CE0) --------------------------------------------------------
-_DWORD * sub_462CE0(int a1, char a2, DWORD a3)
+_DWORD * IO_StreamAdapterAlloc(int a1, char a2, DWORD a3)
 {
   _DWORD *result; // eax
   int v5; // edx
 
   result = (_DWORD *)Mem_Alloc(8, a1, a2, a3);
   if ( result )
-    return sub_462BE0(result, v5);
+    return IO_StreamAdapterConstruct(result, v5);
   return result;
 }
 // 462CF3: variable 'v5' is possibly undefined
 
 //----- (00462D00) --------------------------------------------------------
-int  sub_462D00(_DWORD *a1)
+int  ExcString_ConstructEmpty(_DWORD *a1)
 {
   int v2; // ecx
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   return v2;
 }
 // 462D17: variable 'v2' is possibly undefined
 // 50EC84: using guessed type int (*off_50EC84)();
 
 //----- (00462D20) --------------------------------------------------------
-int  sub_462D20(_DWORD *a1)
+int  ExcString_ReleaseText(_DWORD *a1)
 {
   int v1; // ecx
 
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   return v1;
 }
 // 462D28: variable 'v1' is possibly undefined
 
 //----- (00462D30) --------------------------------------------------------
-int  sub_462D30(int a1)
+int  ExcString_GetTextPtr(int a1)
 {
   return *(_DWORD *)a1;
 }
 
 //----- (00462D40) --------------------------------------------------------
-int  sub_462D40(int a1)
+int  ExcString_GetTextPtrDup(int a1)
 {
   return *(_DWORD *)a1;
 }
 
 //----- (00462D50) --------------------------------------------------------
-int  sub_462D50(_DWORD *a1)
+int  ExcString_ReleaseTextDup(_DWORD *a1)
 {
   int v1; // ecx
 
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   return v1;
 }
 // 462D58: variable 'v1' is possibly undefined
 
 //----- (00462D60) --------------------------------------------------------
-int sub_462D60()
+int ExcString_GetErrorCodeStub()
 {
   return 0;
 }
 
 //----- (00462D80) --------------------------------------------------------
-int sub_462D80()
+int ExcString_GetErrorCodeStubDup()
 {
   return 0;
 }
 
 //----- (00462E40) --------------------------------------------------------
-int  sub_462E40(_WORD *a1, _DWORD *a2, int a3)
+int  CAviDecompressor_ConvertRGB888to565Row(_WORD *a1, _DWORD *a2, int a3)
 {
   int v6; // ebx
   unsigned __int64 v7; // rt0
@@ -77165,7 +77165,7 @@ int  sub_462E40(_WORD *a1, _DWORD *a2, int a3)
 }
 
 //----- (00462EA0) --------------------------------------------------------
-unsigned int  sub_462EA0(unsigned int *result, _WORD *a2, int a3)
+unsigned int  CAviDecompressor_ConvertRGB565to888Row(unsigned int *result, _WORD *a2, int a3)
 {
   unsigned int v6; // ebx
   unsigned int v7; // eax
@@ -77194,7 +77194,7 @@ unsigned int  sub_462EA0(unsigned int *result, _WORD *a2, int a3)
 }
 
 //----- (00462FE0) --------------------------------------------------------
-int  sub_462FE0(void *a1, const void *a2, int a3)
+int  CAviDecompressor_CopyPixelRow16bpp(void *a1, const void *a2, int a3)
 {
   int result; // eax
 
@@ -77204,7 +77204,7 @@ int  sub_462FE0(void *a1, const void *a2, int a3)
 }
 
 //----- (00463010) --------------------------------------------------------
-int  sub_463010(void *a1, const void *a2, int a3)
+int  CAviDecompressor_CopyPixelRow24bpp(void *a1, const void *a2, int a3)
 {
   int result; // eax
 
@@ -77214,7 +77214,7 @@ int  sub_463010(void *a1, const void *a2, int a3)
 }
 
 //----- (00463040) --------------------------------------------------------
-int  sub_463040(void *a1, const void *a2, int a3)
+int  CAviDecompressor_CopyPixelRow32bpp(void *a1, const void *a2, int a3)
 {
   int result; // eax
 
@@ -77245,7 +77245,7 @@ int (* sub_463070(int (**a1)(), int (**a2)()))()
 // 519A40: using guessed type int (*off_519A40[7])();
 
 //----- (00463220) --------------------------------------------------------
-__int16  sub_463220(int (*a1)(), int a2, int a3, int a4, int a5)
+__int16  CAviDecompressor_SetupBlitFormat(int (*a1)(), int a2, int a3, int a4, int a5)
 {
   int (*v5)(); // esi
   int v7; // ecx
@@ -77374,16 +77374,16 @@ LABEL_12:
       {
         if ( v8 <= 0x18 )
         {
-          *((_DWORD *)v5 + 5) = sub_463010;
+          *((_DWORD *)v5 + 5) = CAviDecompressor_CopyPixelRow24bpp;
         }
         else if ( v8 == 32 )
         {
-          *((_DWORD *)v5 + 5) = sub_463040;
+          *((_DWORD *)v5 + 5) = CAviDecompressor_CopyPixelRow32bpp;
         }
       }
       else if ( v8 == 16 )
       {
-        *((_DWORD *)v5 + 5) = sub_462FE0;
+        *((_DWORD *)v5 + 5) = CAviDecompressor_CopyPixelRow16bpp;
       }
     }
     else
@@ -77411,7 +77411,7 @@ LABEL_47:
 // 46333D: variable 'v15' is possibly undefined
 
 //----- (004634A0) --------------------------------------------------------
-signed int  sub_4634A0(_DWORD *a1, char *a2, char *a3)
+signed int  CAviDecompressor_BlitRows(_DWORD *a1, char *a2, char *a3)
 {
   _DWORD *v3; // ecx
   int v5; // edx
@@ -77449,7 +77449,7 @@ signed int  sub_4634A0(_DWORD *a1, char *a2, char *a3)
 // 4634D1: variable 'v3' is possibly undefined
 
 //----- (004635A0) --------------------------------------------------------
-unsigned int  sub_4635A0(unsigned int a1)
+unsigned int  CAviDecompressor_NormalizeColorMask(unsigned int a1)
 {
   char v1; // cl
   char v2; // cf
@@ -77472,7 +77472,7 @@ int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2)
 
   v3 = Mem_Alloc(2236, (int)&unk_50F578, 0, a2);
   if ( v3 )
-    v3 = sub_464CE0(v3);
+    v3 = CAviDecompressor_InitCommon(v3);
   *a1 = v3;
   return a1;
 }
@@ -77501,7 +77501,7 @@ int * CAviDecompressor_ConstructAndInitCallbacks(
   *a1 = 0;
   v7 = Mem_Alloc(2236, (int)&stru_50F60C, 0, (DWORD)a2);
   if ( v7 )
-    v7 = sub_464CE0(v7);
+    v7 = CAviDecompressor_InitCommon(v7);
   *a1 = v7;
   if ( v7 )
     CAviDecompressor_Init(a1, a2, a3, a4);
@@ -77538,7 +77538,7 @@ int * CAviDecompressor_ConstructAndInitSource(int *a1, DWORD a2, int a3, int a4)
   *a1 = 0;
   v6 = Mem_Alloc(2236, (int)&stru_50F6A0, 0, a2);
   if ( v6 )
-    v6 = sub_464CE0(v6);
+    v6 = CAviDecompressor_InitCommon(v6);
   *a1 = v6;
   if ( v6 )
     CAviDecompressor_InitSource(a4, a3);
@@ -77583,13 +77583,13 @@ int  CAviDecompressor_Fps(int a1)
 //----- (00464270) --------------------------------------------------------
 void  CAviDecompressor_Start(int *a1)
 {
-  sub_4664E0(*a1);
+  CAviDecompressor_BeginPlayback(*a1);
 }
 
 //----- (00464280) --------------------------------------------------------
 void  CAviDecompressor_Stop(int *a1)
 {
-  sub_466580(*a1);
+  CAviDecompressor_RequestRenderStop(*a1);
 }
 
 //----- (00464290) --------------------------------------------------------
@@ -77639,7 +77639,7 @@ int  CAviDecompressor_Header(int a1)
 //----- (00464340) --------------------------------------------------------
 int  CAviDecompressor_PixelSize(int *a1)
 {
-  return (*(unsigned __int16 *)(sub_464CC0(*a1) + 14) + 7) >> 3;
+  return (*(unsigned __int16 *)(CAviDecompressor_GetVideoFormat(*a1) + 14) + 7) >> 3;
 }
 
 //----- (00464360) --------------------------------------------------------
@@ -77738,8 +77738,8 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
   v6 = v5;
   if ( *(_BYTE *)(v5 + 1968) && *(_DWORD *)(v5 + 1964) )
   {
-    v7 = 1000 * sub_46A360(v5, (_DWORD *)(v5 + 2063));
-    v9 = v7 / sub_46A360(v8, (_DWORD *)(v8 + 2079));
+    v7 = 1000 * AviPlayer_SpanDelta(v5, (_DWORD *)(v5 + 2063));
+    v9 = v7 / AviPlayer_SpanDelta(v8, (_DWORD *)(v8 + 2079));
     if ( v9 < *(_DWORD *)(v10 + 2143) || v9 > *(_DWORD *)(v10 + 2147) )
     {
       if ( *(_BYTE *)(v6 + 1968) )
@@ -77770,7 +77770,7 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
                    0) )
             {
               ExcString_Ctor();
-              sub_469FB0();
+              AviException_CtorForDrawFailure();
               sub_4849EE();
             }
           }
@@ -77822,7 +77822,7 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
 //----- (00464410) --------------------------------------------------------
 void  CAviDecompressor_UpdateRect(int *a1, const RECT *a2)
 {
-  sub_468890(*a1, a2);
+  CAviDecompressor_PresentFrameForRect(*a1, a2);
 }
 
 //----- (00464420) --------------------------------------------------------
@@ -77832,7 +77832,7 @@ void  CAviDecompressor_Blit(int *a1)
 
   v1 = *a1;
   if ( *(_BYTE *)(v1 + 2191) )
-    sub_4681C0(v1, 0);
+    CAviDecompressor_PresentFrameIfStale(v1, 0);
 }
 
 //----- (00464440) --------------------------------------------------------
@@ -77853,10 +77853,10 @@ void  CAviDecompressor_BlitTo(int *a1, LONG a2, int a3, LONG a4)
     v9 = *(RECT *)dword_54E920;
     v9.left = a2;
     v9.top = a4;
-    v5 = sub_464CC0(v4);
+    v5 = CAviDecompressor_GetVideoFormat(v4);
     v9.right = *(_DWORD *)(v5 + 4) + v6;
-    v9.bottom = abs32(*(_DWORD *)(sub_464CC0(v7) + 8)) + a4;
-    sub_4681C0(v8, &v9);
+    v9.bottom = abs32(*(_DWORD *)(CAviDecompressor_GetVideoFormat(v7) + 8)) + a4;
+    CAviDecompressor_PresentFrameIfStale(v8, &v9);
   }
 }
 // 464479: variable 'v6' is possibly undefined
@@ -77870,7 +77870,7 @@ void  CAviDecompressor_StretchTo(int *a1, const RECT *a2)
 
   v2 = *a1;
   if ( *(_BYTE *)(v2 + 2191) )
-    sub_4681C0(v2, a2);
+    CAviDecompressor_PresentFrameIfStale(v2, a2);
 }
 
 //----- (004644C0) --------------------------------------------------------
@@ -78095,7 +78095,7 @@ void __stdcall PlayAviStretchSurface2(char *a1, IDirectDrawSurface2 *a2, tagRECT
 // 464924: variable 'v10' is possibly undefined
 
 //----- (00464930) --------------------------------------------------------
-int  sub_464930(int a1)
+int  CAviDecompressor_InitThreadGuard(int a1)
 {
   *(_DWORD *)a1 = 0;
   InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 4));
@@ -78103,28 +78103,28 @@ int  sub_464930(int a1)
 }
 
 //----- (00464950) --------------------------------------------------------
-int  sub_464950(int a1)
+int  CAviDecompressor_DoneThreadGuard(int a1)
 {
   DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 4));
   return a1;
 }
 
 //----- (00464970) --------------------------------------------------------
-HANDLE * sub_464970(HANDLE *a1, bool a2, bool a3)
+HANDLE * CAviDecompressor_ConstructEventHandle(HANDLE *a1, bool a2, bool a3)
 {
   *a1 = CreateEventA(0, a2, a3, 0);
   return a1;
 }
 
 //----- (00464990) --------------------------------------------------------
-HANDLE * sub_464990(HANDLE *a1)
+HANDLE * CAviDecompressor_DestroyEventHandle(HANDLE *a1)
 {
   CloseHandle(*a1);
   return a1;
 }
 
 //----- (004649B0) --------------------------------------------------------
-int sub_4649B0()
+int CAviDecompressor_FreeMemberA()
 {
   int v2; // ecx
 
@@ -78134,7 +78134,7 @@ int sub_4649B0()
 // 4649BA: variable 'v2' is possibly undefined
 
 //----- (004649C0) --------------------------------------------------------
-int sub_4649C0()
+int CAviDecompressor_FreeMemberB()
 {
   int v2; // ecx
 
@@ -78144,7 +78144,7 @@ int sub_4649C0()
 // 4649CA: variable 'v2' is possibly undefined
 
 //----- (004649D0) --------------------------------------------------------
-int  sub_4649D0(int a1)
+int  CAviDecompressor_ConstructSourceInterface(int a1)
 {
   int v1; // ebx
   int v2; // edx
@@ -78184,7 +78184,7 @@ int  sub_4649D0(int a1)
 // 50FDD4: using guessed type int (*off_50FDD4)();
 
 //----- (00464B50) --------------------------------------------------------
-char * sub_464B50(int a1, char a2)
+char * CAviDecompressor_DestroySourceInterface(int a1, char a2)
 {
   HANDLE *v3; // esi
   char *v4; // ecx
@@ -78200,7 +78200,7 @@ char * sub_464B50(int a1, char a2)
   {
     *(_DWORD *)(a1 + 411) = &off_50FDD4;
     v3 = (HANDLE *)(a1 + 407);
-    sub_465DD0(a1);
+    AviPlayer_CloseStreams(a1);
     CloseHandle(*v3);
     CloseHandle(*(v3 - 1));
     j_j__nfree_();
@@ -78222,23 +78222,23 @@ char * sub_464B50(int a1, char a2)
 // 50FDD4: using guessed type int (*off_50FDD4)();
 
 //----- (00464CC0) --------------------------------------------------------
-int  sub_464CC0(int a1)
+int  CAviDecompressor_GetVideoFormat(int a1)
 {
   return *(_DWORD *)(a1 + 151);
 }
 
 //----- (00464CD0) --------------------------------------------------------
-int  sub_464CD0(_DWORD *a1, int a2)
+int  CAviDecompressor_ReleaseVideoCodec(_DWORD *a1, int a2)
 {
   int v2; // ecx
 
-  sub_4662B0(a1, (int)a1, a2);
+  CAviDecompressor_CloseCodecHandle(a1, (int)a1, a2);
   return v2;
 }
 // 464CD8: variable 'v2' is possibly undefined
 
 //----- (00464CE0) --------------------------------------------------------
-int  sub_464CE0(int a1)
+int  CAviDecompressor_InitCommon(int a1)
 {
   memset((void *)(uintptr_t)(unsigned int)a1, 0, 2236);
   *(_BYTE *)a1 = 0;
@@ -78262,7 +78262,7 @@ int  sub_464CE0(int a1)
 // 50FDE4: using guessed type int (*off_50FDE4)();
 
 //----- (00464FD0) --------------------------------------------------------
-int  sub_464FD0(int a1, char a2)
+int  CAviDecompressor_Destroy(int a1, char a2)
 {
   int v11; // ecx
 
@@ -78275,14 +78275,14 @@ int  sub_464FD0(int a1, char a2)
   else
   {
     *(_DWORD *)(a1 + 2232) = &off_50FDE4;
-    sub_4665A0(a1);
+    AviPlayer_ShutdownDecodeState(a1);
     CloseHandle(*(HANDLE *)(a1 + 2228));
     DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
     CloseHandle(*(HANDLE *)(a1 + 2196));
     DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
-    sub_4662B0((_DWORD *)(a1 + 415), a1 + 415, 16);
+    CAviDecompressor_CloseCodecHandle((_DWORD *)(a1 + 415), a1 + 415, 16);
     *(_DWORD *)(a1 + 411) = &off_50FDD4;
-    sub_465DD0(a1);
+    AviPlayer_CloseStreams(a1);
     CloseHandle(*(HANDLE *)(a1 + 407));
     CloseHandle(*(HANDLE *)(a1 + 403));
     j_j__nfree_();
@@ -78368,9 +78368,9 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         v44 = 0;
         if ( *(_DWORD *)(lpThreadParameter + 215) )
         {
-          sub_46A170((int)v42);
-          sub_46A160((int)lpThreadParameter);
-          v3 = sub_46A1D0((int)lpThreadParameter);
+          AviPlayer_AudioSampleQueueCount((int)v42);
+          AviPlayer_AudioBytesQueued((int)lpThreadParameter);
+          v3 = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
           if ( v4 / v3 * v5 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)v39 + 9) <= *((_DWORD *)v41 + 2) )
           {
             Frame = AviPlayer_DecodeNextFrame((int)lpThreadParameter);
@@ -78383,12 +78383,12 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
               v43 = 1;
               v27 = *((_DWORD *)v39 + 10);
               v26 = Frame + *(_DWORD *)(lpThreadParameter + 375);
-              sub_46A180((int)lpThreadParameter);
-              LOWORD(v7) = *(_WORD *)(sub_46A190((int)lpThreadParameter) + 12);
+              AviPlayer_AudioSampleQueueBase((int)lpThreadParameter);
+              LOWORD(v7) = *(_WORD *)(AviPlayer_AudioFormatPtr((int)lpThreadParameter) + 12);
               v25 = v8 / v7;
-              v9 = sub_46A170((int)v42);
-              sub_46A160((int)lpThreadParameter);
-              v10 = sub_46A1D0((int)lpThreadParameter);
+              v9 = AviPlayer_AudioSampleQueueCount((int)v42);
+              AviPlayer_AudioBytesQueued((int)lpThreadParameter);
+              v10 = AviPlayer_AudioBlockAlign((int)lpThreadParameter);
               AVIStreamRead(
                 v10,
                 v11 % v10,
@@ -78409,9 +78409,9 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
           }
         }
         if ( *(_DWORD *)(lpThreadParameter + 215)
-          && (v14 = sub_46A170((int)v42),
-              sub_46A160((int)lpThreadParameter),
-              v15 = sub_46A1D0((int)lpThreadParameter),
+          && (v14 = AviPlayer_AudioSampleQueueCount((int)v42),
+              AviPlayer_AudioBytesQueued((int)lpThreadParameter),
+              v15 = AviPlayer_AudioBlockAlign((int)lpThreadParameter),
               *((_DWORD *)v41 + 2) > v16 / v15 * v14 / *(_DWORD *)(lpThreadParameter + 367) - *((_DWORD *)v39 + 9)) )
         {
           if ( v44 )
@@ -78425,7 +78425,7 @@ DWORD __stdcall StartAddress(char *lpThreadParameter)
         }
         else
         {
-          v17 = sub_4655B0((int)lpThreadParameter);
+          v17 = CAviDecompressor_GetNextAudioSampleOffset((int)lpThreadParameter);
           if ( v17 != -1 )
           {
             v18 = v17;
@@ -78505,7 +78505,7 @@ LABEL_28:
 // 4E9804: using guessed type int __fastcall AVIStreamRead(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00465560) --------------------------------------------------------
-BOOL  sub_465560(int a1)
+BOOL  CAviDecompressor_RequestDecodeThreadStop(int a1)
 {
   *(_BYTE *)(a1 + 1) = 1;
   CSS_StopSound(*(_DWORD *)(a1 + 359), 0);
@@ -78515,7 +78515,7 @@ BOOL  sub_465560(int a1)
 }
 
 //----- (004655B0) --------------------------------------------------------
-signed int  sub_4655B0(int a1)
+signed int  CAviDecompressor_GetNextAudioSampleOffset(int a1)
 {
   int v1; // ecx
   int v2; // edx
@@ -78575,7 +78575,7 @@ signed int  AviPlayer_DecodeNextFrame(int a1)
 
 //----- (00465710) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
-HANDLE  sub_465710(
+HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
         int a1,
         int a2,
         int a3,
@@ -78794,9 +78794,9 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
     *(_DWORD *)(v14 + 379) = v13;
     while ( 1 )
     {
-      v15 = sub_46A170((int)v12);
-      sub_46A160((int)v39);
-      v16 = sub_46A1D0((int)v39);
+      v15 = AviPlayer_AudioSampleQueueCount((int)v12);
+      AviPlayer_AudioBytesQueued((int)v39);
+      v16 = AviPlayer_AudioBlockAlign((int)v39);
       if ( v17 / v16 * v15 / *(int *)((char *)v39 + 367) >= *(_DWORD *)(v38 + 36) )
         break;
       Frame = AviPlayer_DecodeNextFrame((int)v39);
@@ -78804,12 +78804,12 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
         break;
       v32 = *(_DWORD *)(v38 + 40);
       v31 = Frame + *(_DWORD *)(v18 + 375);
-      sub_46A180(v18);
-      LOWORD(v21) = *(_WORD *)(sub_46A190(v20) + 12);
+      AviPlayer_AudioSampleQueueBase(v18);
+      LOWORD(v21) = *(_WORD *)(AviPlayer_AudioFormatPtr(v20) + 12);
       v30 = v22 / v21;
-      v23 = sub_46A170((int)v12);
-      sub_46A160((int)v39);
-      v24 = sub_46A1D0((int)v39);
+      v23 = AviPlayer_AudioSampleQueueCount((int)v12);
+      AviPlayer_AudioBytesQueued((int)v39);
+      v24 = AviPlayer_AudioBlockAlign((int)v39);
       AVIStreamRead(v24, v25 % v24, *(unsigned int *)((char *)v39 + 215), v23 * (v25 / v24), v30, v31, v32, &v36, 0);
       v34 = v36;
       v26 = v12[2];
@@ -78818,7 +78818,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
       *v27 = Frame;
       v27[1] = v34;
     }
-    v28 = sub_46ED10((int)v39, 64, 0, 0);
+    v28 = CSS_StartStreamVoice((int)v39, 64, 0, 0);
     v29 = (int)v39;
     *(unsigned int *)((char *)v39 + 359) = v28;
     if ( v28 )
@@ -78827,7 +78827,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
     }
     else
     {
-      sub_465D30(v29);
+      AviPlayer_FlushVideoFrameQueue(v29);
       return 0;
     }
   }
@@ -78848,7 +78848,7 @@ char  AviPlayer_OpenAndPrepare(unsigned int *a1)
 // 4E9804: using guessed type int __fastcall AVIStreamRead(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00465D30) --------------------------------------------------------
-int  sub_465D30(int a1)
+int  AviPlayer_FlushVideoFrameQueue(int a1)
 {
   int v2; // ebx
   HANDLE *i; // esi
@@ -78880,13 +78880,13 @@ int  sub_465D30(int a1)
 // 4E97C2: using guessed type int __stdcall AVIStreamRelease(_DWORD);
 
 //----- (00465DD0) --------------------------------------------------------
-int  sub_465DD0(int a1)
+int  AviPlayer_CloseStreams(int a1)
 {
   int v2; // ebp
   int result; // eax
   int v4; // ecx
 
-  sub_465560(a1);
+  CAviDecompressor_RequestDecodeThreadStop(a1);
   ++*(_DWORD *)(a1 + 175);
   EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
   LeaveCriticalSection((LPCRITICAL_SECTION)(a1 + 179));
@@ -78899,7 +78899,7 @@ int  sub_465DD0(int a1)
     *(_DWORD *)(a1 + 207) = v2 + 1;
     PulseEvent(*(HANDLE *)(a1 + 171));
   }
-  sub_465D30(a1);
+  AviPlayer_FlushVideoFrameQueue(a1);
   j_j__nfree_();
   *(_DWORD *)(a1 + 163) = 0;
   result = j_j__nfree_();
@@ -78929,7 +78929,7 @@ int  sub_465DD0(int a1)
 // 4E97C8: using guessed type int __stdcall AVIFileRelease(_DWORD);
 
 //----- (00465EC0) --------------------------------------------------------
-int  sub_465EC0(int a1, int a2, _DWORD *a3, _DWORD *a4)
+int  AviPlayer_GetBufferedAudioSample(int a1, int a2, _DWORD *a3, _DWORD *a4)
 {
   int v7; // ebx
   int v8; // edx
@@ -78964,7 +78964,7 @@ LABEL_12:
 }
 
 //----- (00465FB0) --------------------------------------------------------
-unsigned int  sub_465FB0(int a1, void *a2)
+unsigned int  AviPlayer_PopBufferedVideoFrame(int a1, void *a2)
 {
   int v5; // edx
   _DWORD *v6; // eax
@@ -78983,7 +78983,7 @@ unsigned int  sub_465FB0(int a1, void *a2)
 
 //----- (004660D0) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
-char  sub_4660D0(
+char  AviPlayer_OpenVideoCodec(
         int a1,
         int a2,
         int *a3,
@@ -79112,7 +79112,7 @@ char  sub_4660D0(
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (004662B0) --------------------------------------------------------
-_DWORD * sub_4662B0(_DWORD *result, int a2, int a3)
+_DWORD * CAviDecompressor_CloseCodecHandle(_DWORD *result, int a2, int a3)
 {
   _DWORD *v3; // ebx
 
@@ -79138,7 +79138,7 @@ _DWORD * sub_4662B0(_DWORD *result, int a2, int a3)
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00466310) --------------------------------------------------------
-void  sub_466310(int a1)
+void  CAviDecompressor_RenderLoop(int a1)
 {
   DWORD v2; // esi
   double v3; // st7
@@ -79150,10 +79150,10 @@ void  sub_466310(int a1)
   v6 = &j____wcpp_4_fs_handler_rtn_;
   while ( *(_BYTE *)(a1 + 2191) )
   {
-    if ( sub_466BE0(a1) && (*(_DWORD *)(a1 + 211) < *(_DWORD *)(a1 + 43) || sub_46A140(a1 + 203)) )
+    if ( AviPlayer_UpdateTargetFrameFromClock(a1) && (*(_DWORD *)(a1 + 211) < *(_DWORD *)(a1 + 43) || AviPlayer_QueueBacklogCount(a1 + 203)) )
     {
       v2 = 0;
-      if ( sub_466C60(a1) )
+      if ( AviPlayer_CatchUpToTargetFrame(a1) )
       {
         timeGetTime();
         v3 = (double)*(unsigned int *)(a1 + 31)
@@ -79169,7 +79169,7 @@ void  sub_466310(int a1)
     }
     else
     {
-      sub_466580(a1);
+      CAviDecompressor_RequestRenderStop(a1);
     }
   }
 }
@@ -79179,14 +79179,14 @@ void  sub_466310(int a1)
 // 501320: using guessed type double dbl_501320;
 
 //----- (00466420) --------------------------------------------------------
-DWORD __stdcall sub_466420(char *lpThreadParameter)
+DWORD __stdcall CAviDecompressor_RenderThreadProc(char *lpThreadParameter)
 {
   if ( lpThreadParameter[2191] )
   {
     ++*((_DWORD *)lpThreadParameter + 550);
     EnterCriticalSection((LPCRITICAL_SECTION)(lpThreadParameter + 2204));
     SetEvent(*((HANDLE *)lpThreadParameter + 557));
-    sub_466310((int)lpThreadParameter);
+    CAviDecompressor_RenderLoop((int)lpThreadParameter);
     LeaveCriticalSection((LPCRITICAL_SECTION)(lpThreadParameter + 2204));
     --*((_DWORD *)lpThreadParameter + 550);
   }
@@ -79194,16 +79194,16 @@ DWORD __stdcall sub_466420(char *lpThreadParameter)
 }
 
 //----- (004664E0) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD * sub_4664E0(int a1)
+struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int a1)
 {
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  sub_467DE0(a1, (int)&j____wcpp_4_fs_handler_rtn_, (int)&unk_50FF5C, 0);
+  AviException_RebuildClipperOnSurfaceLoss(a1, (int)&j____wcpp_4_fs_handler_rtn_, (int)&unk_50FF5C, 0);
   *(_DWORD *)(a1 + 2183) = 0;
   *(_DWORD *)(a1 + 2034) = 0;
   *(_DWORD *)(a1 + 2038) = 0;
-  sub_466C60(a1);
+  AviPlayer_CatchUpToTargetFrame(a1);
   *(_BYTE *)(a1 + 2) = 1;
   *(_DWORD *)(a1 + 2187) = timeGetTime();
   CSS_ResumeStream(*(_DWORD *)(a1 + 359));
@@ -79213,14 +79213,14 @@ struct _EXCEPTION_REGISTRATION_RECORD * sub_4664E0(int a1)
 }
 
 //----- (00466580) --------------------------------------------------------
-BOOL  sub_466580(int a1)
+BOOL  CAviDecompressor_RequestRenderStop(int a1)
 {
   *(_BYTE *)(a1 + 2191) = 0;
   return SetEvent(*(HANDLE *)(a1 + 2196));
 }
 
 //----- (004665A0) --------------------------------------------------------
-_DWORD * sub_4665A0(int a1)
+_DWORD * AviPlayer_ShutdownDecodeState(int a1)
 {
   int v2; // esi
   int v3; // ecx
@@ -79235,7 +79235,7 @@ _DWORD * sub_4665A0(int a1)
 
   if ( *(_BYTE *)(a1 + 2191) )
   {
-    sub_466580(a1);
+    CAviDecompressor_RequestRenderStop(a1);
     WaitForSingleObject(*(HANDLE *)(a1 + 2228), 0x7D0u);
     ++*(_DWORD *)(a1 + 2200);
     EnterCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
@@ -79246,8 +79246,8 @@ _DWORD * sub_4665A0(int a1)
   {
     ResumeThread(*(HANDLE *)(a1 + 2192));
   }
-  sub_465560(a1);
-  sub_465DD0(a1);
+  CAviDecompressor_RequestDecodeThreadStop(a1);
+  AviPlayer_CloseStreams(a1);
   v2 = a1;
   if ( *(_BYTE *)(a1 + 1968) )
   {
@@ -79333,13 +79333,13 @@ _DWORD * sub_4665A0(int a1)
     *(_DWORD *)(a1 + 2013) = 0;
     *(_DWORD *)(a1 + 2017) = 0;
   }
-  return sub_4662B0((_DWORD *)(a1 + 415), v8, v2);
+  return CAviDecompressor_CloseCodecHandle((_DWORD *)(a1 + 415), v8, v2);
 }
 // 466720: variable 'v8' is possibly undefined
 
 //----- (00466870) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
-int  sub_466870(
+int  AviPlayer_BlitFrameToSurface(
         _DWORD *a1,
         int a2,
         int a3,
@@ -79404,7 +79404,7 @@ int  sub_466870(
       else
         v35 = v42;
       a1[484] = v35;
-      sub_4634A0(a1 + 481, v43, *(char **)((char *)&a31 + 6));
+      CAviDecompressor_BlitRows(a1 + 481, v43, *(char **)((char *)&a31 + 6));
       result = (*(int (__stdcall **)(int, char *))(*(_DWORD *)a2 + 128))(a2, v43);
       if ( result )
       {
@@ -79483,7 +79483,7 @@ int  sub_466870(
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00466BE0) --------------------------------------------------------
-bool  sub_466BE0(int a1)
+bool  AviPlayer_UpdateTargetFrameFromClock(int a1)
 {
   DWORD Time; // eax
   double v3; // st7
@@ -79502,7 +79502,7 @@ bool  sub_466BE0(int a1)
 // 501370: using guessed type float flt_501370;
 
 //----- (00466C60) --------------------------------------------------------
-char  sub_466C60(int a1)
+char  AviPlayer_CatchUpToTargetFrame(int a1)
 {
   int v2; // ecx
   HANDLE *v3; // edx
@@ -79623,14 +79623,14 @@ char  sub_466C60(int a1)
         {
           if ( *(int *)(a1 + 2034) > 0 )
           {
-            sub_46A150(v49);
-            sub_46A100(v50);
+            AviPlayer_IncrementFramesRenderedCount(v49);
+            AviPlayer_PulseEventHandle(v50);
             --*(_DWORD *)(a1 + 2034);
           }
         }
         while ( *(_DWORD *)(a1 + 2034) );
       }
-      v51 = sub_465EC0(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
+      v51 = AviPlayer_GetBufferedAudioSample(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
       *(_DWORD *)(a1 + 2025) = v51;
       if ( v51 )
         ++*(_DWORD *)(a1 + 2034);
@@ -79645,14 +79645,14 @@ char  sub_466C60(int a1)
         {
           if ( *(int *)(a1 + 2034) > 0 )
           {
-            sub_46A150(v2);
-            sub_46A100(v3);
+            AviPlayer_IncrementFramesRenderedCount(v2);
+            AviPlayer_PulseEventHandle(v3);
             --*(_DWORD *)(a1 + 2034);
           }
         }
         while ( *(_DWORD *)(a1 + 2034) );
       }
-      v4 = sub_465EC0(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
+      v4 = AviPlayer_GetBufferedAudioSample(a1, *(_DWORD *)(a1 + 2183), (_DWORD *)(a1 + 2029), (_DWORD *)(a1 + 2021));
       *(_DWORD *)(a1 + 2025) = v4;
       if ( !v4 )
         return 0;
@@ -79675,21 +79675,21 @@ char  sub_466C60(int a1)
               && ((*(int (__stdcall **)(int))(*(_DWORD *)v21 + 108))(v21)
                || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v21 + 100))(v21, 0, v84, 33, 0)) )
             {
-              sub_464CC0(a1);
-              v91 = *(_DWORD *)(sub_464CC0(a1) + 4);
+              CAviDecompressor_GetVideoFormat(a1);
+              v91 = *(_DWORD *)(CAviDecompressor_GetVideoFormat(a1) + 4);
               v92 = v85;
               v93 = *(_DWORD *)(a1 + 2025);
               v101 = *(_DWORD *)(a1 + 2029);
               v23 = v84[4] / ((*(_DWORD *)(a1 + 2123) + 7) >> 3);
-              *(_DWORD *)(sub_46A350(a1 + 415) + 4) = v23;
+              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v23;
               v99 = v24 * v23;
-              v26 = sub_46A350(v25);
-              v27 = sub_46A130(*(unsigned __int16 *)(v26 + 14)) * v99;
-              v29 = sub_46A350(v28);
+              v26 = AviPlayer_StreamBitmapInfoPtr(v25);
+              v27 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v26 + 14)) * v99;
+              v29 = AviPlayer_StreamBitmapInfoPtr(v28);
               v53 = v30;
               *(_DWORD *)(v29 + 20) = v27;
-              v32 = sub_46A350(v31);
-              if ( sub_469E60(
+              v32 = AviPlayer_StreamBitmapInfoPtr(v31);
+              if ( AviPlayer_SendICDrawBegin(
                      *v33,
                      v101,
                      v33[1],
@@ -79706,7 +79706,7 @@ char  sub_466C60(int a1)
                      v53) < 0 )
               {
                 ExcString_Ctor();
-                sub_469FB0();
+                AviException_CtorForDrawFailure();
                 sub_4849EE();
               }
               v34 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v21 + 128))(v21, v85);
@@ -79731,7 +79731,7 @@ char  sub_466C60(int a1)
           }
           else
           {
-            sub_466870(
+            AviPlayer_BlitFrameToSurface(
               (_DWORD *)a1,
               *(_DWORD *)(a1 + 2017),
               *(_DWORD *)(a1 + 2025),
@@ -79777,21 +79777,21 @@ char  sub_466C60(int a1)
               && ((*(int (__stdcall **)(int))(*(_DWORD *)v35 + 108))(v35)
                || !(*(int (__stdcall **)(int, _DWORD, _DWORD *, int, _DWORD))(*(_DWORD *)v35 + 100))(v35, 0, v82, 33, 0)) )
             {
-              sub_464CC0(a1);
-              v94 = *(_DWORD *)(sub_464CC0(a1) + 4);
+              CAviDecompressor_GetVideoFormat(a1);
+              v94 = *(_DWORD *)(CAviDecompressor_GetVideoFormat(a1) + 4);
               v95 = v83;
               v96 = *(_DWORD *)(a1 + 2025);
               v97 = *(_DWORD *)(a1 + 2029);
               v37 = v82[4] / ((*(_DWORD *)(a1 + 2123) + 7) >> 3);
-              *(_DWORD *)(sub_46A350(a1 + 415) + 4) = v37;
+              *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v37;
               v100 = v38 * v37;
-              v40 = sub_46A350(v39);
-              v41 = sub_46A130(*(unsigned __int16 *)(v40 + 14)) * v100;
-              v43 = sub_46A350(v42);
+              v40 = AviPlayer_StreamBitmapInfoPtr(v39);
+              v41 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v40 + 14)) * v100;
+              v43 = AviPlayer_StreamBitmapInfoPtr(v42);
               v54 = v44;
               *(_DWORD *)(v43 + 20) = v41;
-              v46 = sub_46A350(v45);
-              if ( sub_469E60(
+              v46 = AviPlayer_StreamBitmapInfoPtr(v45);
+              if ( AviPlayer_SendICDrawBegin(
                      *v47,
                      v97,
                      v47[1],
@@ -79808,7 +79808,7 @@ char  sub_466C60(int a1)
                      v54) < 0 )
               {
                 ExcString_Ctor();
-                sub_469FB0();
+                AviException_CtorForDrawFailure();
                 sub_4849EE();
               }
               v48 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v35 + 128))(v35, v83);
@@ -79833,7 +79833,7 @@ char  sub_466C60(int a1)
           }
           else
           {
-            sub_466870(
+            AviPlayer_BlitFrameToSurface(
               (_DWORD *)a1,
               *(_DWORD *)(a1 + 1964),
               *(_DWORD *)(a1 + 2025),
@@ -79876,15 +79876,15 @@ char  sub_466C60(int a1)
         if ( *(_BYTE *)(a1 + 1923) )
         {
           v7 = *(_DWORD *)(a1 + 427);
-          *(_DWORD *)(sub_46A350(a1 + 415) + 4) = v7;
+          *(_DWORD *)(AviPlayer_StreamBitmapInfoPtr(a1 + 415) + 4) = v7;
           v98 = v7 * v8;
-          v10 = sub_46A350(v9);
-          v11 = sub_46A130(*(unsigned __int16 *)(v10 + 14)) * v98;
-          v13 = sub_46A350(v12);
+          v10 = AviPlayer_StreamBitmapInfoPtr(v9);
+          v11 = Mem_BitsToBytesCeil(*(unsigned __int16 *)(v10 + 14)) * v98;
+          v13 = AviPlayer_StreamBitmapInfoPtr(v12);
           v52 = v14;
           *(_DWORD *)(v13 + 20) = v11;
-          v16 = sub_46A350(v15);
-          if ( sub_469E60(
+          v16 = AviPlayer_StreamBitmapInfoPtr(v15);
+          if ( AviPlayer_SendICDrawBegin(
                  *v17,
                  v106,
                  v17[1],
@@ -79901,7 +79901,7 @@ char  sub_466C60(int a1)
                  v52) < 0 )
           {
             ExcString_Ctor();
-            sub_469FB0();
+            AviException_CtorForDrawFailure();
             sub_4849EE();
           }
         }
@@ -80107,18 +80107,18 @@ LABEL_19:
           || v16 > *(_DWORD *)(a1 + 2147) )
         {
           if ( !*(_DWORD *)(a1 + 1964) )
-            return sub_467F50(a1, *(_DWORD *)(a1 + 2017));
+            return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
           v38 = *(_DWORD *)(a1 + 2171);
           LOBYTE(v38) = v38 | 2;
           v39 = *(_DWORD *)(a1 + 2175) | v38;
           v17 = v39 & *(_DWORD *)(a1 + 2119);
           if ( v17 != v39 )
-            return sub_467F50(a1, *(_DWORD *)(a1 + 2017));
+            return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
         }
-        result = sub_467EC0(a1, v17);
+        result = AviPlayer_BltFastOverlayFromBackBuffer(a1, v17);
       }
       if ( !*(_BYTE *)(a1 + 1968) || !*(_DWORD *)(a1 + 1964) )
-        return sub_467F50(a1, *(_DWORD *)(a1 + 1964));
+        return AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 1964));
     }
   }
   else
@@ -80131,9 +80131,9 @@ LABEL_19:
         if ( *(_DWORD *)(a1 + 415) )
         {
           v2 = a1;
-          if ( (!*(_BYTE *)(a1 + 2052) || sub_46A3D0(a1))
-            && (*(_BYTE *)(a1 + 2052) || sub_46A430(a1))
-            && (sub_46A480(a1) && sub_46A4A0(a1) || *(_DWORD *)(a1 + 1964) && sub_46A450(a1)) )
+          if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
+            && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
+            && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
           {
             v3 = *(_DWORD *)(v2 + 1964);
             v4 = v2;
@@ -80152,8 +80152,8 @@ LABEL_19:
               v42 = *(_DWORD *)(v4 + 2029);
               v9 = v8 - v7;
               v40 = *(_DWORD *)(v4 + 2025);
-              v10 = sub_46A130(*(_DWORD *)(v4 + 2123));
-              sub_46A1E0((int *)(v4 + 415), v84, v83, v9, v11 / v10, v40, v42);
+              v10 = Mem_BitsToBytesCeil(*(_DWORD *)(v4 + 2123));
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v4 + 415), v84, v83, v9, v11 / v10, v40, v42);
               v12 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v3 + 128))(v3, v53);
               if ( v12
                 && (v12 != -2005532222
@@ -80201,13 +80201,13 @@ LABEL_19:
                      33,
                      0)) )
             {
-              sub_46A1B0(v18);
-              v21 = sub_46A1A0(v18);
+              AviPlayer_BitmapHeightAbs(v18);
+              v21 = AviPlayer_BitmapWidth(v18);
               v82 = v71;
               v43 = *(_DWORD *)(v18 + 2029);
               v41 = *(_DWORD *)(v18 + 2025);
-              v83 = sub_46A130(*(_DWORD *)(v18 + 2123));
-              sub_46A1E0((int *)(v18 + 415), v82, v23, v21, v22 / v83, v41, v43);
+              v83 = Mem_BitsToBytesCeil(*(_DWORD *)(v18 + 2123));
+              AviPlayer_UpdateStreamRectAndSendICDrawBegin((int *)(v18 + 415), v82, v23, v21, v22 / v83, v41, v43);
               v24 = (*(int (__stdcall **)(int, int))(*(_DWORD *)v19 + 128))(v19, v71);
               if ( v24
                 && (v24 != -2005532222
@@ -80238,11 +80238,11 @@ LABEL_19:
         else
         {
           v28 = *(_DWORD *)(a1 + 2025);
-          if ( (!*(_BYTE *)(a1 + 2052) || sub_46A3D0(a1))
-            && (*(_BYTE *)(a1 + 2052) || sub_46A430(a1))
-            && (sub_46A480(a1) && sub_46A4A0(a1) || *(_DWORD *)(a1 + 1964) && sub_46A450(a1)) )
+          if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
+            && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
+            && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
           {
-            sub_466870(
+            AviPlayer_BlitFrameToSurface(
               (_DWORD *)a1,
               *(_DWORD *)(a1 + 1964),
               v28,
@@ -80278,7 +80278,7 @@ LABEL_19:
           }
           else
           {
-            sub_466870(
+            AviPlayer_BlitFrameToSurface(
               (_DWORD *)a1,
               *(_DWORD *)(a1 + 2017),
               v28,
@@ -80322,11 +80322,11 @@ LABEL_19:
         goto LABEL_19;
       case 1:
         v29 = *(_DWORD *)(a1 + 2179);
-        if ( (!*(_BYTE *)(a1 + 2052) || sub_46A3D0(a1))
-          && (*(_BYTE *)(a1 + 2052) || sub_46A430(a1))
-          && (sub_46A480(a1) && sub_46A4A0(a1) || *(_DWORD *)(a1 + 1964) && sub_46A450(a1)) )
+        if ( (!*(_BYTE *)(a1 + 2052) || AviPlayer_TestActiveModeFlag(a1))
+          && (*(_BYTE *)(a1 + 2052) || AviPlayer_TestModeFlagBit2AndSubframe(a1))
+          && (AviPlayer_HasValidRateParams(a1) && AviPlayer_IsPlaybackRateInRange(a1) || *(_DWORD *)(a1 + 1964) && AviPlayer_SupportsRequiredPlaybackCaps(a1)) )
         {
-          sub_466870(
+          AviPlayer_BlitFrameToSurface(
             (_DWORD *)a1,
             *(_DWORD *)(a1 + 1964),
             v29,
@@ -80362,7 +80362,7 @@ LABEL_19:
         }
         else
         {
-          sub_466870(
+          AviPlayer_BlitFrameToSurface(
             (_DWORD *)a1,
             *(_DWORD *)(a1 + 2017),
             v29,
@@ -80412,17 +80412,17 @@ LABEL_19:
               v32 = v34 & *(_DWORD *)(a1 + 2119),
               v32 == v34) )
         {
-          sub_467EC0(a1, v32);
+          AviPlayer_BltFastOverlayFromBackBuffer(a1, v32);
           v85 = 3;
           goto LABEL_19;
         }
-        sub_467F50(a1, *(_DWORD *)(a1 + 2017));
+        AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 2017));
         LeaveCriticalSection((LPCRITICAL_SECTION)(v81 + 4));
         return (*(_DWORD *)v81)--;
       case 3:
         if ( !*(_BYTE *)(a1 + 1968) || (v35 = *(_DWORD *)(a1 + 1964)) == 0 )
         {
-          sub_467F50(a1, *(_DWORD *)(a1 + 1964));
+          AviPlayer_BltFrameToPrimarySurface(a1, *(_DWORD *)(a1 + 1964));
 LABEL_86:
           LeaveCriticalSection((LPCRITICAL_SECTION)(v81 + 4));
           return (*(_DWORD *)v81)--;
@@ -80463,7 +80463,7 @@ LABEL_86:
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00467DE0) --------------------------------------------------------
-int  sub_467DE0(int result, int a2, int a3, int a4)
+int  AviException_RebuildClipperOnSurfaceLoss(int result, int a2, int a3, int a4)
 {
   _DWORD **v4; // ebx
   int v5; // edx
@@ -80511,7 +80511,7 @@ int  sub_467DE0(int result, int a2, int a3, int a4)
 // 467EAD: variable 'v11' is possibly undefined
 
 //----- (00467EC0) --------------------------------------------------------
-int  sub_467EC0(int a1, int a2)
+int  AviPlayer_BltFastOverlayFromBackBuffer(int a1, int a2)
 {
   int result; // eax
 
@@ -80543,7 +80543,7 @@ int  sub_467EC0(int a1, int a2)
 }
 
 //----- (00467F50) --------------------------------------------------------
-int  sub_467F50(int a1, int a2)
+int  AviPlayer_BltFrameToPrimarySurface(int a1, int a2)
 {
   int result; // eax
   int v5; // edx
@@ -80581,7 +80581,7 @@ int  sub_467F50(int a1, int a2)
         (*(void (__stdcall **)(_DWORD, _DWORD))(**(_DWORD **)(a1 + 1956) + 124))(
           *(_DWORD *)(a1 + 1956),
           *(_DWORD *)(a1 + 1948));
-      sub_467DE0(a1, v5, v6, a2);
+      AviException_RebuildClipperOnSurfaceLoss(a1, v5, v6, a2);
     }
     if ( (*(int (__stdcall **)(int))(*(_DWORD *)a2 + 96))(a2) != -2005532222 )
       return (*(int (__stdcall **)(_DWORD, int, int, int, int, _DWORD))(**(_DWORD **)(a1 + 1956) + 20))(
@@ -80653,7 +80653,7 @@ signed int  AviPlayer_RenderFrame(int a1, const RECT *a2)
 }
 
 //----- (004681C0) --------------------------------------------------------
-int  sub_4681C0(int a1, const RECT *a2)
+int  CAviDecompressor_PresentFrameIfStale(int a1, const RECT *a2)
 {
   int result; // eax
   int v5; // edi
@@ -80675,8 +80675,8 @@ int  sub_4681C0(int a1, const RECT *a2)
       AviPlayer_Flip(a1);
       if ( !*(_BYTE *)(a1 + 1968) || !*(_DWORD *)(a1 + 1964) )
         goto LABEL_22;
-      v5 = 1000 * sub_46A360(a1, (_DWORD *)(a1 + 2063));
-      v7 = v5 / sub_46A360(v6, (_DWORD *)(a1 + 2079));
+      v5 = 1000 * AviPlayer_SpanDelta(a1, (_DWORD *)(a1 + 2063));
+      v7 = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(a1 + 2079));
       if ( v7 < *(_DWORD *)(a1 + 2143) || v7 > *(_DWORD *)(a1 + 2147) )
       {
         if ( !*(_BYTE *)(a1 + 1968) )
@@ -80709,7 +80709,7 @@ int  sub_4681C0(int a1, const RECT *a2)
           goto LABEL_22;
         }
         ExcString_Ctor();
-        sub_469FB0();
+        AviException_CtorForDrawFailure();
       }
       else
       {
@@ -80756,7 +80756,7 @@ LABEL_22:
 // 4682CF: variable 'v6' is possibly undefined
 
 //----- (00468890) --------------------------------------------------------
-int  sub_468890(int a1, const RECT *a2)
+int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
 {
   int v2; // ecx
   int result; // eax
@@ -80781,8 +80781,8 @@ int  sub_468890(int a1, const RECT *a2)
   v4 = v2;
   if ( *(_BYTE *)(v2 + 1968) && *(_DWORD *)(v2 + 1964) )
   {
-    v5 = 1000 * sub_46A360(v2, (_DWORD *)(v2 + 2063));
-    result = v5 / sub_46A360(v6, (_DWORD *)(v6 + 2079));
+    v5 = 1000 * AviPlayer_SpanDelta(v2, (_DWORD *)(v2 + 2063));
+    result = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(v6 + 2079));
     if ( result < *(_DWORD *)(v7 + 2143) || result > *(_DWORD *)(v7 + 2147) )
     {
       if ( *(_BYTE *)(v4 + 1968) )
@@ -80812,7 +80812,7 @@ int  sub_468890(int a1, const RECT *a2)
                              0)) != 0 )
             {
               ExcString_Ctor();
-              sub_469FB0();
+              AviException_CtorForDrawFailure();
               return sub_4849EE();
             }
           }
@@ -80866,7 +80866,7 @@ int  sub_468890(int a1, const RECT *a2)
 // 468A92: variable 'v10' is possibly undefined
 
 //----- (00468BB0) --------------------------------------------------------
-int  sub_468BB0(int result)
+int  AviPlayer_UpdateOverlayColorKey(int result)
 {
   int v1; // ebx
   int v2; // esi
@@ -80897,7 +80897,7 @@ int  sub_468BB0(int result)
 }
 
 //----- (00468C40) --------------------------------------------------------
-char  sub_468C40(int a1)
+char  AviPlayer_ComputeFlipState(int a1)
 {
   int v1; // ecx
   int v2; // edx
@@ -80923,12 +80923,12 @@ char  sub_468C40(int a1)
   if ( *(_BYTE *)(a1 + 2052) )
   {
     v8 = a1;
-    if ( !sub_46A380(a1) || !sub_46A3C0(v1) )
+    if ( !AviPlayer_IsIcmDecoderIdle(a1) || !AviPlayer_TestModeFlagBit3(v1) )
     {
-      LOBYTE(a1) = sub_46A380(v8);
+      LOBYTE(a1) = AviPlayer_IsIcmDecoderIdle(v8);
       if ( (_BYTE)a1 )
         goto LABEL_16;
-      LOBYTE(a1) = sub_46A3B0(v8);
+      LOBYTE(a1) = AviPlayer_TestModeFlagBit2(v8);
       if ( !(_BYTE)a1 )
       {
         *(_BYTE *)(v1 + 2033) = 2;
@@ -80938,10 +80938,10 @@ char  sub_468C40(int a1)
   }
   if ( !*(_BYTE *)(v4 + 2052) )
   {
-    LOBYTE(a1) = sub_46A3B0(v4);
+    LOBYTE(a1) = AviPlayer_TestModeFlagBit2(v4);
     if ( !(_BYTE)a1 )
       goto LABEL_16;
-    LOBYTE(a1) = sub_46A370(v9);
+    LOBYTE(a1) = AviPlayer_IsUncompressedFormat(v9);
     if ( !(_BYTE)a1 )
     {
       *(_BYTE *)(v1 + 2033) = 2;
@@ -80951,8 +80951,8 @@ char  sub_468C40(int a1)
   LOBYTE(a1) = *(_BYTE *)(v3 + 1968);
   if ( !(_BYTE)a1
     || !*(_DWORD *)(v3 + 1964)
-    || (v5 = 1000 * sub_46A360(v1, (_DWORD *)(v3 + 2063)),
-        a1 = v5 / sub_46A360(v6, (_DWORD *)(v3 + 2079)),
+    || (v5 = 1000 * AviPlayer_SpanDelta(v1, (_DWORD *)(v3 + 2063)),
+        a1 = v5 / AviPlayer_SpanDelta(v6, (_DWORD *)(v3 + 2079)),
         a1 < *(_DWORD *)(v3 + 2143))
     || a1 > *(_DWORD *)(v3 + 2147) )
   {
@@ -80993,7 +80993,7 @@ LABEL_8:
 
 //----- (00468E10) --------------------------------------------------------
 // local variable allocation has failed, the output may be wrong!
-char  sub_468E10(
+char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
         int a1,
         int a2,
         int a3,
@@ -81166,14 +81166,14 @@ char  sub_468E10(
         *(_DWORD *)((char *)&a18 + 2));
     }
   }
-  sub_469680(*(int *)((char *)&a18 + 6), v21);
+  AviPlayer_AllocDecodedBitmapInfo(*(int *)((char *)&a18 + 6), v21);
   v28 = *(_DWORD *)((char *)&a18 + 6);
   v29 = *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 151);
   *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2052) = 0;
   v30 = *(_DWORD *)(v29 + 16);
   if ( !v30 || v30 == 3 )
   {
-    sub_463220(
+    CAviDecompressor_SetupBlitFormat(
       (int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924),
       *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 2058),
       0,
@@ -81182,7 +81182,7 @@ char  sub_468E10(
   }
   else
   {
-    if ( sub_4660D0(
+    if ( AviPlayer_OpenVideoCodec(
            v28 + 415,
            *(_DWORD *)(*(_DWORD *)((char *)&a18 + 6) + 15),
            *(int **)(v28 + 2058),
@@ -81212,7 +81212,7 @@ char  sub_468E10(
     v39 = *(_DWORD *)((char *)&a18 + 6) + 423;
     v40 = j_Mem_Alloc(0);
     *(_DWORD *)(HIDWORD(v40) + 2179) = v40;
-    sub_463220((int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924), *(_DWORD *)(HIDWORD(v40) + 2058), v41, v39, 0);
+    CAviDecompressor_SetupBlitFormat((int (*)())(*(_DWORD *)((char *)&a18 + 6) + 1924), *(_DWORD *)(HIDWORD(v40) + 2058), v41, v39, 0);
   }
   *(_BYTE *)(*(_DWORD *)((char *)&a18 + 6) + 2052) = 1;
 LABEL_39:
@@ -81344,7 +81344,7 @@ LABEL_39:
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469310) --------------------------------------------------------
-int  sub_469310(int a1, int a2)
+int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
 {
   __int64 v3; // rax
   int v4; // ecx
@@ -81405,7 +81405,7 @@ int  sub_469310(int a1, int a2)
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469500) --------------------------------------------------------
-int  sub_469500(int a1, int a2, int a3)
+int  AviPlayer_CreateOverlaySurface(int a1, int a2, int a3)
 {
   __int64 v4; // rax
   int v5; // ecx
@@ -81429,7 +81429,7 @@ int  sub_469500(int a1, int a2, int a3)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469590) --------------------------------------------------------
-int  sub_469590(int a1, int a2)
+int  AviPlayer_CreateOverlaySurfaceAndEnable(int a1, int a2)
 {
   __int64 v3; // rax
   int v4; // ecx
@@ -81472,7 +81472,7 @@ int  sub_469590(int a1, int a2)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (00469680) --------------------------------------------------------
-int  sub_469680(int a1, int a2)
+int  AviPlayer_AllocDecodedBitmapInfo(int a1, int a2)
 {
   int v3; // edx
   int v4; // edx
@@ -81528,7 +81528,7 @@ int  sub_469680(int a1, int a2)
 // Deferred to compat/decomp_runtime_stubs.c until the late AVI init loop is reconstructed.
 
 //----- (00469C90) --------------------------------------------------------
-_DWORD * sub_469C90(int a1, int a2)
+_DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
 {
   _DWORD *result; // eax
   int i; // eax
@@ -81592,7 +81592,7 @@ _DWORD * sub_469C90(int a1, int a2)
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469E60) --------------------------------------------------------
-int __stdcall sub_469E60(
+int __stdcall AviPlayer_SendICDrawBegin(
         int a1,
         int a2,
         int a3,
@@ -81628,7 +81628,7 @@ int __stdcall sub_469E60(
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (00469EF0) --------------------------------------------------------
-int sub_469EF0()
+int AviException_CtorFromExceptionList()
 {
   int result; // eax
 
@@ -81639,7 +81639,7 @@ int sub_469EF0()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469F50) --------------------------------------------------------
-int sub_469F50()
+int AviException_CtorForSurfaceCreateFailure()
 {
   int result; // eax
 
@@ -81650,7 +81650,7 @@ int sub_469F50()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (00469FB0) --------------------------------------------------------
-int sub_469FB0()
+int AviException_CtorForDrawFailure()
 {
   int result; // eax
 
@@ -81661,7 +81661,7 @@ int sub_469FB0()
 // 510374: using guessed type int (*off_510374[2])();
 
 //----- (0046A010) --------------------------------------------------------
-int  sub_46A010(int a1, char a2)
+int  AviException_ScalarDeletingDtor(int a1, char a2)
 {
   int v3; // ecx
   int v5; // ecx
@@ -81685,7 +81685,7 @@ int  sub_46A010(int a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (0046A0A0) --------------------------------------------------------
-int sub_46A0A0()
+int AviException_GetMessage()
 {
   return ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))ExcString_AsCharPtr)(
            NtCurrentTeb()->NtTib.ExceptionList,
@@ -81696,13 +81696,13 @@ int sub_46A0A0()
 // 4842DE: using guessed type _DWORD ExcString_AsCharPtr();
 
 //----- (0046A100) --------------------------------------------------------
-BOOL  sub_46A100(HANDLE *a1)
+BOOL  AviPlayer_PulseEventHandle(HANDLE *a1)
 {
   return PulseEvent(*a1);
 }
 
 //----- (0046A110) --------------------------------------------------------
-int  sub_46A110(int a1)
+int  AviPlayer_LeaveBusySectionAndRelease(int a1)
 {
   _DWORD *v2; // ebx
 
@@ -81713,56 +81713,56 @@ int  sub_46A110(int a1)
 }
 
 //----- (0046A130) --------------------------------------------------------
-int  sub_46A130(int a1)
+int  Mem_BitsToBytesCeil(int a1)
 {
   return (a1 + 7) >> 3;
 }
 
 //----- (0046A140) --------------------------------------------------------
-int  sub_46A140(int a1)
+int  AviPlayer_QueueBacklogCount(int a1)
 {
   return *(_DWORD *)(a1 + 8) - *(_DWORD *)(a1 + 4);
 }
 
 //----- (0046A150) --------------------------------------------------------
-int  sub_46A150(int result)
+int  AviPlayer_IncrementFramesRenderedCount(int result)
 {
   ++*(_DWORD *)(result + 4);
   return result;
 }
 
 //----- (0046A160) --------------------------------------------------------
-int  sub_46A160(int a1)
+int  AviPlayer_AudioBytesQueued(int a1)
 {
   return *(_DWORD *)(a1 + 259);
 }
 
 //----- (0046A170) --------------------------------------------------------
-int  sub_46A170(int a1)
+int  AviPlayer_AudioSampleQueueCount(int a1)
 {
   return *(_DWORD *)(a1 + 8);
 }
 
 //----- (0046A180) --------------------------------------------------------
-int  sub_46A180(int a1)
+int  AviPlayer_AudioSampleQueueBase(int a1)
 {
   return a1 + 219;
 }
 
 //----- (0046A190) --------------------------------------------------------
-int  sub_46A190(int a1)
+int  AviPlayer_AudioFormatPtr(int a1)
 {
   return *(_DWORD *)(a1 + 363);
 }
 
 //----- (0046A1A0) --------------------------------------------------------
-int  sub_46A1A0(int a1)
+int  AviPlayer_BitmapWidth(int a1)
 {
   return *(_DWORD *)(*(_DWORD *)(a1 + 151) + 4);
 }
 
 //----- (0046A1B0) --------------------------------------------------------
-int  sub_46A1B0(int a1)
+int  AviPlayer_BitmapHeightAbs(int a1)
 {
   __int64 v1; // rax
 
@@ -81771,13 +81771,13 @@ int  sub_46A1B0(int a1)
 }
 
 //----- (0046A1D0) --------------------------------------------------------
-int  sub_46A1D0(int a1)
+int  AviPlayer_AudioBlockAlign(int a1)
 {
   return *(unsigned __int16 *)(*(_DWORD *)(a1 + 363) + 12);
 }
 
 //----- (0046A1E0) --------------------------------------------------------
-int  sub_46A1E0(int *a1, int a2, int a3, int a4, int a5, int a6, int a7)
+int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *a1, int a2, int a3, int a4, int a5, int a6, int a7)
 {
   int v8; // edx
   int v9; // esi
@@ -81826,25 +81826,25 @@ int  sub_46A1E0(int *a1, int a2, int a3, int a4, int a5, int a6, int a7)
 // 4E980A: using guessed type int __stdcall ICSendMessage(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);
 
 //----- (0046A350) --------------------------------------------------------
-int  sub_46A350(int a1)
+int  AviPlayer_StreamBitmapInfoPtr(int a1)
 {
   return a1 + 8;
 }
 
 //----- (0046A360) --------------------------------------------------------
-int __fastcall sub_46A360(int a1, _DWORD *a2)
+int __fastcall AviPlayer_SpanDelta(int a1, _DWORD *a2)
 {
   return a2[2] - *a2;
 }
 
 //----- (0046A370) --------------------------------------------------------
-bool  sub_46A370(int a1)
+bool  AviPlayer_IsUncompressedFormat(int a1)
 {
   return *(_BYTE *)(a1 + 1923) != 0;
 }
 
 //----- (0046A380) --------------------------------------------------------
-bool  sub_46A380(int a1)
+bool  AviPlayer_IsIcmDecoderIdle(int a1)
 {
   int v1; // edx
   int v2; // eax
@@ -81862,19 +81862,19 @@ bool  sub_46A380(int a1)
 }
 
 //----- (0046A3B0) --------------------------------------------------------
-bool  sub_46A3B0(int a1)
+bool  AviPlayer_TestModeFlagBit2(int a1)
 {
   return (*(_BYTE *)(a1 + 2120) & 4) != 0;
 }
 
 //----- (0046A3C0) --------------------------------------------------------
-bool  sub_46A3C0(int a1)
+bool  AviPlayer_TestModeFlagBit3(int a1)
 {
   return (*(_BYTE *)(a1 + 2120) & 8) != 0;
 }
 
 //----- (0046A3D0) --------------------------------------------------------
-bool  sub_46A3D0(int a1)
+bool  AviPlayer_TestActiveModeFlag(int a1)
 {
   return *(_BYTE *)(a1 + 2052) && !*(_DWORD *)(a1 + 1944) && !*(_DWORD *)(a1 + 1940) && (*(_BYTE *)(a1 + 2120) & 8) != 0
       || (!*(_BYTE *)(a1 + 2052) || *(_DWORD *)(a1 + 1944) || *(_DWORD *)(a1 + 1940))
@@ -81882,13 +81882,13 @@ bool  sub_46A3D0(int a1)
 }
 
 //----- (0046A430) --------------------------------------------------------
-bool  sub_46A430(int a1)
+bool  AviPlayer_TestModeFlagBit2AndSubframe(int a1)
 {
   return (*(_BYTE *)(a1 + 2120) & 4) != 0 && *(_BYTE *)(a1 + 1923);
 }
 
 //----- (0046A450) --------------------------------------------------------
-bool  sub_46A450(int a1)
+bool  AviPlayer_SupportsRequiredPlaybackCaps(int a1)
 {
   int v1; // edx
 
@@ -81898,13 +81898,13 @@ bool  sub_46A450(int a1)
 }
 
 //----- (0046A480) --------------------------------------------------------
-bool  sub_46A480(int a1)
+bool  AviPlayer_HasValidRateParams(int a1)
 {
   return *(_BYTE *)(a1 + 1968) && *(_DWORD *)(a1 + 1964);
 }
 
 //----- (0046A4A0) --------------------------------------------------------
-bool  sub_46A4A0(int a1)
+bool  AviPlayer_IsPlaybackRateInRange(int a1)
 {
   int v2; // eax
 
@@ -81913,7 +81913,7 @@ bool  sub_46A4A0(int a1)
 }
 
 //----- (0046A510) --------------------------------------------------------
-unsigned int  sub_46A510(unsigned int result)
+unsigned int  Audio_MapDSoundHResultToErrorCode(unsigned int result)
 {
   if ( result >= 0x8878001E )
   {
@@ -81985,7 +81985,7 @@ unsigned int  sub_46A510(unsigned int result)
 // 46A595: simplified comparisons for 'eax.4': <88780047u || !=88780064 became !=88780064
 
 //----- (0046A5F0) --------------------------------------------------------
-int __cdecl sub_46A5F0(unsigned int a1)
+int __cdecl Audio_ComputeMixChunkSampleCount(unsigned int a1)
 {
   unsigned int v1; // eax
 
@@ -82000,7 +82000,7 @@ int __cdecl sub_46A5F0(unsigned int a1)
 // 54D39C: using guessed type int dword_54D39C;
 
 //----- (0046A610) --------------------------------------------------------
-signed int __cdecl sub_46A610(_DWORD *a1)
+signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
 {
   signed int result; // eax
   int v2; // ecx
@@ -82057,7 +82057,7 @@ signed int __cdecl sub_46A610(_DWORD *a1)
 // 54D470: using guessed type int dword_54D470;
 
 //----- (0046A6D0) --------------------------------------------------------
-int __thiscall sub_46A6D0(void *this)
+int __thiscall Audio_ComputeBytesPerFrame(void *this)
 {
   int result; // eax
   int v2; // [esp+4h] [ebp-6Ch] BYREF
@@ -82084,7 +82084,7 @@ int __thiscall sub_46A6D0(void *this)
 // 54D388: using guessed type int dword_54D388;
 
 //----- (0046A750) --------------------------------------------------------
-signed int sub_46A750()
+signed int Audio_InitDSoundDevice()
 {
   unsigned int v1; // eax
   void *v2; // ecx
@@ -82117,7 +82117,7 @@ signed int sub_46A750()
   v1 = DirectSoundCreate(0, &dword_54D368, 0);
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
-  sub_46A6D0(v2);
+  Audio_ComputeBytesPerFrame(v2);
   if ( dword_519CF8 != 2
     || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)dword_54D368 + 24))(dword_54D368, dword_54D378, 4) )
   {
@@ -82256,7 +82256,7 @@ signed int sub_46A750()
 // 54D470: using guessed type int dword_54D470;
 
 //----- (0046AB70) --------------------------------------------------------
-unsigned int sub_46AB70()
+unsigned int Audio_ReleaseDSoundDevice()
 {
   unsigned int v0; // eax
 
@@ -82271,7 +82271,7 @@ unsigned int sub_46AB70()
 // 54D370: using guessed type int dword_54D370;
 
 //----- (0046ABC0) --------------------------------------------------------
-signed int __cdecl sub_46ABC0(int a1, char a2)
+signed int __cdecl Audio_InitSoundSystem(int a1, char a2)
 {
   signed int v2; // ebx
   signed int result; // eax
@@ -82289,8 +82289,8 @@ signed int __cdecl sub_46ABC0(int a1, char a2)
   dword_54D388 = ((dword_54D384 & 8) != 0) + 1;
   if ( (dword_54D384 & 2) != 0 )
     dword_54D388 = 2 * (((dword_54D384 & 8) != 0) + 1);
-  v2 = sub_46A750();
-  if ( v2 || (sub_470AF0(dword_54D39C, ((dword_54D384 & 2) != 0) + 1), (v2 = sub_46A5F0(100 * dword_519CF4)) != 0) )
+  v2 = Audio_InitDSoundDevice();
+  if ( v2 || (CSS_InitMixBuffers(dword_54D39C, ((dword_54D384 & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * dword_519CF4)) != 0) )
   {
     LeaveCriticalSection(&stru_54D350);
     return v2;
@@ -82300,16 +82300,16 @@ signed int __cdecl sub_46ABC0(int a1, char a2)
     switch ( dword_54D384 )
     {
       case 5:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B169;
+        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
         goto LABEL_11;
       case 6:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B1D7;
+        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
         goto LABEL_11;
       case 9:
         dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
         goto LABEL_11;
       case 10:
-        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B1BA;
+        dword_54D37C = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
 LABEL_11:
         LeaveCriticalSection(&stru_54D350);
         result = 0;
@@ -82329,13 +82329,13 @@ LABEL_11:
 // 54D39C: using guessed type int dword_54D39C;
 
 //----- (0046AD10) --------------------------------------------------------
-unsigned int sub_46AD10()
+unsigned int Audio_ShutdownSoundSystem()
 {
   unsigned int v0; // ebx
 
   EnterCriticalSection(&stru_54D350);
-  sub_470BD0();
-  v0 = sub_46AB70();
+  CSS_FreeMixBuffers();
+  v0 = Audio_ReleaseDSoundDevice();
   LeaveCriticalSection(&stru_54D350);
   if ( v0 )
     return v0;
@@ -82344,7 +82344,7 @@ unsigned int sub_46AD10()
 }
 
 //----- (0046AD60) --------------------------------------------------------
-int __cdecl sub_46AD60(_DWORD *a1)
+int __cdecl Audio_GetSoundFormatFlags(_DWORD *a1)
 {
   *a1 = dword_54D384;
   return 0;
@@ -82352,7 +82352,7 @@ int __cdecl sub_46AD60(_DWORD *a1)
 // 54D384: using guessed type int dword_54D384;
 
 //----- (0046AD70) --------------------------------------------------------
-unsigned int sub_46AD70()
+unsigned int Audio_RefreshPlayCursor()
 {
   unsigned int v0; // eax
   int v2; // [esp+Ch] [ebp-8h] BYREF
@@ -82370,7 +82370,7 @@ unsigned int sub_46AD70()
 // 54D374: using guessed type int dword_54D374;
 
 //----- (0046ADC0) --------------------------------------------------------
-unsigned int __cdecl sub_46ADC0(_DWORD *a1)
+unsigned int __cdecl Audio_FillDSoundBuffer(_DWORD *a1)
 {
   unsigned int v1; // ebp
   unsigned int v2; // edi
@@ -82442,7 +82442,7 @@ LABEL_8:
       v6 = v1;
     v5 -= v6;
     dword_54D394 -= v6;
-    sub_471990(v1, v6);
+    CSS_TickChannelLevels(v1, v6);
     while ( 1 )
     {
       v7 = (*(int (__stdcall **)(int, int, unsigned int, int *, unsigned int *, int *, _DWORD *, _DWORD))(*(_DWORD *)dword_54D370 + 44))(
@@ -82518,7 +82518,7 @@ LABEL_19:
 // 54DB98: using guessed type int dword_54DB98;
 
 //----- (0046B110) --------------------------------------------------------
-int __cdecl sub_46B110(int a1, int a2, int a3, signed int *a4)
+int __cdecl Audio_ClipMixBufferToPCM16(int a1, int a2, int a3, signed int *a4)
 {
   _WORD *v4; // edi
   int i; // ecx
@@ -82550,7 +82550,7 @@ int __cdecl sub_46B110(int a1, int a2, int a3, signed int *a4)
 }
 
 //----- (0046B169) --------------------------------------------------------
-_BYTE *__cdecl sub_46B169(int a1, int a2, int a3, int *a4)
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8(int a1, int a2, int a3, int *a4)
 {
   _BYTE *v4; // edi
   int i; // ecx
@@ -82584,19 +82584,19 @@ _BYTE *__cdecl sub_46B169(int a1, int a2, int a3, int *a4)
 }
 
 //----- (0046B1BA) --------------------------------------------------------
-int __cdecl sub_46B1BA(int a1, int a2, int a3, signed int *a4)
+int __cdecl Audio_ClipMixBufferToPCM16Stereo(int a1, int a2, int a3, signed int *a4)
 {
   return Audio_MixInterleaved16(2 * a1, a2, a3, a4);
 }
 
 //----- (0046B1D7) --------------------------------------------------------
-_BYTE *__cdecl sub_46B1D7(int a1, int a2, int a3, int *a4)
+_BYTE *__cdecl Audio_ClipMixBufferToPCM8Stereo(int a1, int a2, int a3, int *a4)
 {
-  return sub_46B169(2 * a1, a2, a3, a4);
+  return Audio_ClipMixBufferToPCM8(2 * a1, a2, a3, a4);
 }
 
 //----- (0046B200) --------------------------------------------------------
-int  sub_46B200(int a1, _DWORD *a2)
+int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2)
 {
   int result; // eax
   int v4; // eax
@@ -82656,7 +82656,7 @@ LABEL_3:
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046B610) --------------------------------------------------------
-void  sub_46B610(int *a1)
+void  Audio_MixResampledVoice(int *a1)
 {
   unsigned int *v2; // ebx
   unsigned int v3; // edx
@@ -82809,7 +82809,7 @@ LABEL_38:
               if ( !a1[2] )
               {
                 v19 = dword_519B7C;
-                sub_46D2D1(v11, (void *)dword_519B7C);
+                Audio_ZeroMixAccumulatorBuffer(v11, (void *)dword_519B7C);
                 dword_519B7C = v19;
               }
             }
@@ -82823,7 +82823,7 @@ LABEL_38:
                 goto LABEL_78;
               }
 LABEL_74:
-              sub_471560(a1[2]);
+              CSS_ChannelLoadQueuedSound(a1[2]);
               if ( v2[3] == 5 )
               {
                 dword_519B88 = v2[4];
@@ -82903,7 +82903,7 @@ LABEL_72:
   }
 LABEL_78:
   if ( !a1[2] )
-    sub_46D2D1(dword_519B78, (void *)dword_519B7C);
+    Audio_ZeroMixAccumulatorBuffer(dword_519B78, (void *)dword_519B7C);
 LABEL_80:
   v2[12] = dword_519B88;
   v2[13] = dword_519B8C;
@@ -82939,7 +82939,7 @@ LABEL_80:
 // 54DB9C: using guessed type int dword_54DB9C;
 
 //----- (0046BCE4) --------------------------------------------------------
-int  sub_46BCE4(signed int a1, int a2, char a3, void *a4)
+int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4)
 {
   int (__thiscall *v4)(signed int); // eax
   int result; // eax
@@ -82961,7 +82961,7 @@ int  sub_46BCE4(signed int a1, int a2, char a3, void *a4)
 // 54DB8C: using guessed type int dword_54DB8C;
 
 //----- (0046BDC2) --------------------------------------------------------
-unsigned int  sub_46BDC2(
+unsigned int  Audio_MixPannedVoiceIntoBuffer(
         unsigned int result,
         signed int a2,
         unsigned int a3,
@@ -83024,7 +83024,7 @@ unsigned int  sub_46BDC2(
 // 54DB8C: using guessed type int dword_54DB8C;
 
 //----- (0046BE88) --------------------------------------------------------
-void sub_46BE88()
+void Audio_SelectMixFormat1Mono()
 {
   dword_519B94 = (int)&off_46BDD1;
   JUMPOUT(0x46BB40);
@@ -83034,7 +83034,7 @@ void sub_46BE88()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046BF5E) --------------------------------------------------------
-void sub_46BF5E()
+void Audio_SelectMixFormat1Stereo()
 {
   dword_519B94 = (int)&off_46BE97;
   JUMPOUT(0x46BB9A);
@@ -83044,7 +83044,7 @@ void sub_46BF5E()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C030) --------------------------------------------------------
-void sub_46C030()
+void Audio_SelectMixFormat2Mono()
 {
   dword_519B94 = (int)&off_46BF6D;
   JUMPOUT(0x46BB40);
@@ -83054,7 +83054,7 @@ void sub_46C030()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C1A2) --------------------------------------------------------
-void sub_46C1A2()
+void Audio_SelectMixFormat2Stereo()
 {
   dword_519B94 = (int)&off_46C03F;
   JUMPOUT(0x46BB9A);
@@ -83064,7 +83064,7 @@ void sub_46C1A2()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C2FC) --------------------------------------------------------
-void sub_46C2FC()
+void Audio_SelectMixFormat3Mono()
 {
   dword_519B94 = (int)&off_46C1B1;
   JUMPOUT(0x46BB40);
@@ -83074,7 +83074,7 @@ void sub_46C2FC()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C472) --------------------------------------------------------
-void sub_46C472()
+void Audio_SelectMixFormat3Stereo()
 {
   dword_519B94 = (int)&off_46C30B;
   JUMPOUT(0x46BB9A);
@@ -83084,7 +83084,7 @@ void sub_46C472()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C6B4) --------------------------------------------------------
-void sub_46C6B4()
+void Audio_SelectMixFormat4Mono()
 {
   dword_519B94 = (int)&off_46C481;
   JUMPOUT(0x46BB40);
@@ -83094,7 +83094,7 @@ void sub_46C6B4()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C996) --------------------------------------------------------
-void sub_46C996()
+void Audio_SelectMixFormat4Stereo()
 {
   dword_519B94 = (int)&off_46C6C3;
   JUMPOUT(0x46BB9A);
@@ -83104,7 +83104,7 @@ void sub_46C996()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046CE10) --------------------------------------------------------
-void sub_46CE10()
+void Audio_SelectMixFormat5Mono()
 {
   dword_519B94 = (int)&off_46C9A5;
   JUMPOUT(0x46BB40);
@@ -83114,7 +83114,7 @@ void sub_46CE10()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046D2A6) --------------------------------------------------------
-void sub_46D2A6()
+void Audio_SelectMixFormat5Stereo()
 {
   dword_519B94 = (int)&off_46CE1F;
   JUMPOUT(0x46BB9A);
@@ -83124,14 +83124,14 @@ void sub_46D2A6()
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046D2B5) --------------------------------------------------------
-int __cdecl sub_46D2B5(int a1)
+int __cdecl Audio_ClearGlobalMixBuffer(int a1)
 {
-  sub_46D2D1(a1, (void *)dword_54DBA0);
+  Audio_ZeroMixAccumulatorBuffer(a1, (void *)dword_54DBA0);
   return 0;
 }
 
 //----- (0046D2D1) --------------------------------------------------------
-int  sub_46D2D1(int a1, void *a2)
+int  Audio_ZeroMixAccumulatorBuffer(int a1, void *a2)
 {
   int result; // eax
 
@@ -83147,14 +83147,14 @@ int  sub_46D2D1(int a1, void *a2)
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (0046D2F0) --------------------------------------------------------
-int __cdecl sub_46D2F0(_DWORD *a1)
+int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *a1)
 {
   *a1 = 1;
   return 0;
 }
 
 //----- (0046D300) --------------------------------------------------------
-int __cdecl sub_46D300(int a1, int a2)
+int __cdecl Audio_SetMixerParamValue(int a1, int a2)
 {
   dword_519BD0 = a2;
   return 0;
@@ -83162,14 +83162,14 @@ int __cdecl sub_46D300(int a1, int a2)
 // 519BD0: using guessed type int dword_519BD0;
 
 //----- (0046D320) --------------------------------------------------------
-int __cdecl sub_46D320(_DWORD *a1)
+int __cdecl CSS_NullDriver_GetZero(_DWORD *a1)
 {
   *a1 = 0;
   return 0;
 }
 
 //----- (0046D330) --------------------------------------------------------
-int __cdecl sub_46D330(_DWORD *a1)
+int __cdecl CSS_NullDriver_GetMasterVolume(_DWORD *a1)
 {
   *a1 = dword_519BD0;
   return 0;
@@ -83177,7 +83177,7 @@ int __cdecl sub_46D330(_DWORD *a1)
 // 519BD0: using guessed type int dword_519BD0;
 
 //----- (0046D350) --------------------------------------------------------
-int __cdecl sub_46D350(int a1, _DWORD *a2)
+int __cdecl CSS_Mem_TryAllocRaw(int a1, _DWORD *a2)
 {
   int v2; // ecx
   __int64 v3; // rax
@@ -83195,13 +83195,13 @@ int __cdecl sub_46D350(int a1, _DWORD *a2)
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (0046D370) --------------------------------------------------------
-int __cdecl sub_46D370(int a1, _DWORD *a2)
+int __cdecl CSS_Mem_TryAlloc(int a1, _DWORD *a2)
 {
-  return sub_46D350(a1, a2);
+  return CSS_Mem_TryAllocRaw(a1, a2);
 }
 
 //----- (0046D390) --------------------------------------------------------
-int __cdecl sub_46D390(int a1)
+int __cdecl CSS_Mem_FreeIfSet(int a1)
 {
   int v1; // ecx
   int result; // eax
@@ -83215,7 +83215,7 @@ int __cdecl sub_46D390(int a1)
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 
 //----- (0046D3A0) --------------------------------------------------------
-_DWORD * sub_46D3A0(_DWORD *a1, int a2, int a3, int a4)
+_DWORD * CSS_FileStream_Create(_DWORD *a1, int a2, int a3, int a4)
 {
   int v5; // edx
   int v6; // edx
@@ -83242,7 +83242,7 @@ _DWORD * sub_46D3A0(_DWORD *a1, int a2, int a3, int a4)
   v7 = a1[13] * (v6 + 1);
   a1[14] = v7;
   a1[12] = 0;
-  sub_46D370(v7, a1 + 15);
+  CSS_Mem_TryAlloc(v7, a1 + 15);
   a1[8] = a1[14];
   a1[10] = a1[14];
   return a1;
@@ -83250,7 +83250,7 @@ _DWORD * sub_46D3A0(_DWORD *a1, int a2, int a3, int a4)
 // 5105B4: using guessed type int (*off_5105B4[12])();
 
 //----- (0046D460) --------------------------------------------------------
-_DWORD * sub_46D460(_DWORD *a1, char a2, int a3, int a4, int a5)
+_DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5)
 {
   if ( (a2 & 4) != 0 )
   {
@@ -83261,7 +83261,7 @@ _DWORD * sub_46D460(_DWORD *a1, char a2, int a3, int a4, int a5)
   else
   {
     *a1 = off_5105B4;
-    sub_46D390(a1[15]);
+    CSS_Mem_FreeIfSet(a1[15]);
     (*(void (__cdecl **)(int, int, int))(*(_DWORD *)dword_54D4B8 + 20))(a3, a5, a4);
     if ( (a2 & 2) != 0 )
       j__nfree_();
@@ -83275,7 +83275,7 @@ _DWORD * sub_46D460(_DWORD *a1, char a2, int a3, int a4, int a5)
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046D530) --------------------------------------------------------
-int  sub_46D530(int a1)
+int  CSS_FileStream_FillSequential(int a1)
 {
   int result; // eax
   int v2; // ecx
@@ -83287,14 +83287,14 @@ int  sub_46D530(int a1)
 // 46D53C: variable 'v2' is possibly undefined
 
 //----- (0046D550) --------------------------------------------------------
-int  sub_46D550(int a1, int a2, int a3, int a4)
+int  CSS_FileStream_FillWithLoopWrap(int a1, int a2, int a3, int a4)
 {
   int v7; // ecx
   int v8; // eax
   int v9; // ecx
 
   if ( a3 < a4 - *(_DWORD *)(a1 + 8) )
-    return sub_46D530(a1);
+    return CSS_FileStream_FillSequential(a1);
   v7 = (*(int (**)(void))(**(_DWORD **)(a1 + 4) + 20))();
   (***(void (__fastcall ****)(int, int))(a1 + 4))(v7, a2);
   v8 = (*(int (**)(void))(**(_DWORD **)(a1 + 4) + 20))();
@@ -83304,7 +83304,7 @@ int  sub_46D550(int a1, int a2, int a3, int a4)
 // 46D5B2: variable 'v9' is possibly undefined
 
 //----- (0046D5C0) --------------------------------------------------------
-int  sub_46D5C0(_DWORD *a1, int a2)
+int  CSS_FileStream_FillOneBlock(_DWORD *a1, int a2)
 {
   int v3; // esi
 
@@ -83312,14 +83312,14 @@ int  sub_46D5C0(_DWORD *a1, int a2)
     return 0;
   v3 = a1[4];
   if ( a1[6] > v3 )
-    return sub_46D530((int)a1);
+    return CSS_FileStream_FillSequential((int)a1);
   if ( a1[2] <= a1[6] )
-    return sub_46D550((int)a1, a1[5], a2, a1[6]);
-  return sub_46D550((int)a1, a1[3], a2, a1[4]);
+    return CSS_FileStream_FillWithLoopWrap((int)a1, a1[5], a2, a1[6]);
+  return CSS_FileStream_FillWithLoopWrap((int)a1, a1[3], a2, a1[4]);
 }
 
 //----- (0046D620) --------------------------------------------------------
-int  sub_46D620(_DWORD *a1)
+int  CSS_FileStream_RefillBuffer(_DWORD *a1)
 {
   _DWORD *v1; // ecx
   int v2; // eax
@@ -83346,7 +83346,7 @@ int  sub_46D620(_DWORD *a1)
     {
       if ( v1[11] )
         break;
-      v8 = sub_46D5C0(v1, v1[13]);
+      v8 = CSS_FileStream_FillOneBlock(v1, v1[13]);
       *v6 += v8;
       if ( v8 != v1[13] )
         v1[11] = 1;
@@ -83360,7 +83360,7 @@ int  sub_46D620(_DWORD *a1)
 // 46D66B: variable 'v1' is possibly undefined
 
 //----- (0046D6C0) --------------------------------------------------------
-int  sub_46D6C0(int a1)
+int  CSS_FileStream_PreloadFully(int a1)
 {
   int v1; // edx
   int result; // eax
@@ -83374,7 +83374,7 @@ int  sub_46D6C0(int a1)
 // 46D6C4: variable 'v1' is possibly undefined
 
 //----- (0046D6E0) --------------------------------------------------------
-int  sub_46D6E0(_DWORD *a1, char *a2, int a3)
+int  CSS_FileStream_Read(_DWORD *a1, char *a2, int a3)
 {
   signed int v3; // ebx
   int v6; // [esp+8h] [ebp-1Ch]
@@ -83401,19 +83401,19 @@ int  sub_46D6E0(_DWORD *a1, char *a2, int a3)
 }
 
 //----- (0046D7C0) --------------------------------------------------------
-BOOL  sub_46D7C0(_DWORD *a1)
+BOOL  CSS_FileStream_IsFinished(_DWORD *a1)
 {
   return a1[11] && a1[9] == a1[7];
 }
 
 //----- (0046D7F0) --------------------------------------------------------
-int  sub_46D7F0(int a1)
+int  CSS_FileStream_QueryDone(int a1)
 {
   return (*(int (**)(void))(*(_DWORD *)a1 + 4))();
 }
 
 //----- (0046D800) --------------------------------------------------------
-signed int  sub_46D800(_DWORD *a1, int a2, int a3)
+signed int  CSS_FileStream_SetLoopRange(_DWORD *a1, int a2, int a3)
 {
   a1[5] = a2 + a1[3];
   if ( a3 < 0 )
@@ -83423,7 +83423,7 @@ signed int  sub_46D800(_DWORD *a1, int a2, int a3)
 }
 
 //----- (0046D830) --------------------------------------------------------
-_DWORD * sub_46D830(_DWORD *result, _DWORD *a2, _DWORD *a3)
+_DWORD * CSS_FileStream_GetLoopRange(_DWORD *result, _DWORD *a2, _DWORD *a3)
 {
   if ( result[6] == 0x7FFFFFFF )
   {
@@ -83439,7 +83439,7 @@ _DWORD * sub_46D830(_DWORD *result, _DWORD *a2, _DWORD *a3)
 }
 
 //----- (0046D870) --------------------------------------------------------
-signed int  sub_46D870(_DWORD *a1)
+signed int  CSS_FileStream_ClearLoop(_DWORD *a1)
 {
   a1[5] = a1[3];
   a1[6] = 0x7FFFFFFF;
@@ -83447,13 +83447,13 @@ signed int  sub_46D870(_DWORD *a1)
 }
 
 //----- (0046D890) --------------------------------------------------------
-int  sub_46D890(int a1)
+int  CSS_FileStream_GetSourceBytesFetched(int a1)
 {
   return *(_DWORD *)(a1 + 8) - *(_DWORD *)(a1 + 12);
 }
 
 //----- (0046D8A0) --------------------------------------------------------
-signed int  sub_46D8A0(int a1, int a2, int a3)
+signed int  CSS_FileStream_DispatchIfInRange(int a1, int a2, int a3)
 {
   int v3; // ecx
   int v4; // edx
@@ -83467,7 +83467,7 @@ signed int  sub_46D8A0(int a1, int a2, int a3)
 }
 
 //----- (0046D8D0) --------------------------------------------------------
-_DWORD * sub_46D8D0(int a1, int a2)
+_DWORD * CSS_FileStream_New(int a1, int a2)
 {
   _DWORD *v4; // eax
   int v5; // edx
@@ -83475,7 +83475,7 @@ _DWORD * sub_46D8D0(int a1, int a2)
 
   v4 = (_DWORD *)Mem_Alloc(64, a2, (char)&j____wcpp_4_fs_handler_rtn_, 0);
   if ( v4 )
-    return sub_46D3A0(v4, a1, v6, v5);
+    return CSS_FileStream_Create(v4, a1, v6, v5);
   else
     return 0;
 }
@@ -83483,7 +83483,7 @@ _DWORD * sub_46D8D0(int a1, int a2)
 // 46D937: variable 'v5' is possibly undefined
 
 //----- (0046D960) --------------------------------------------------------
-int sub_46D960()
+int CSS_InitStreamingLocks()
 {
   int v0; // edx
   int v1; // ecx
@@ -83522,13 +83522,13 @@ int sub_46D960()
 // 54D440: using guessed type int dword_54D440;
 
 //----- (0046D9F0) --------------------------------------------------------
-int sub_46D9F0()
+int CSS_StreamService_NoOpHook()
 {
   return 0;
 }
 
 //----- (0046DA00) --------------------------------------------------------
-unsigned int  sub_46DA00(unsigned int a1, signed int a2)
+unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
 {
   unsigned int result; // eax
   int *v4; // ebx
@@ -83543,14 +83543,14 @@ unsigned int  sub_46DA00(unsigned int a1, signed int a2)
     v4[10] = 0;
     if ( (v4[9] & 0xC) != 0 )
     {
-      sub_471B40(a1);
+      CSS_ChannelStop(a1);
       ++dword_54D3D8;
       EnterCriticalSection(&CriticalSection);
       ++dword_54D3F8;
       EnterCriticalSection(&stru_54D3FC);
       v4[9] = 0;
       v4[11] = 0;
-      sub_46D390(*v4);
+      CSS_Mem_FreeIfSet(*v4);
       *v4 = 0;
       v6 = v4[5];
       if ( v6 )
@@ -83569,9 +83569,9 @@ unsigned int  sub_46DA00(unsigned int a1, signed int a2)
     else
     {
       if ( a2 )
-        result = sub_471100(a1, 0, a2);
+        result = CSS_ChannelBeginVolumeFade(a1, 0, a2);
       else
-        result = sub_471030(a1);
+        result = CSS_ChannelMarkIdle(a1);
       *v4 = 0;
       v4[9] = 0;
     }
@@ -83584,7 +83584,7 @@ unsigned int  sub_46DA00(unsigned int a1, signed int a2)
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046DB80) --------------------------------------------------------
-int  sub_46DB80(int a1, int a2)
+int  CSS_Channel_FillSilence(int a1, int a2)
 {
   int result; // eax
   int v4; // edx
@@ -83618,7 +83618,7 @@ int  sub_46DB80(int a1, int a2)
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 
 //----- (0046DCA0) --------------------------------------------------------
-void  sub_46DCA0(unsigned int a1)
+void  CSS_Channel_ServiceStream(unsigned int a1)
 {
   int v2; // ebx
   int v3; // esi
@@ -83642,7 +83642,7 @@ void  sub_46DCA0(unsigned int a1)
   }
   if ( *(_DWORD *)v2 && *(_DWORD *)(dword_54D468 + 28) )
   {
-    sub_471800(a1, &v12);
+    CSS_ChannelGetPlayPosition(a1, &v12);
     if ( v12 )
       v3 = v12;
     else
@@ -83656,7 +83656,7 @@ void  sub_46DCA0(unsigned int a1)
       v9 = v5;
       if ( v5 - v4 > v5 )
         v8 = v5;
-      if ( !sub_46DB80(v2, v8) )
+      if ( !CSS_Channel_FillSilence(v2, v8) )
         goto LABEL_15;
       *(_DWORD *)(v10 + 12) = 0;
       v11 = v9 - v8;
@@ -83675,9 +83675,9 @@ void  sub_46DCA0(unsigned int a1)
       v6 = v5;
       v7 = v2;
     }
-    sub_46DB80(v7, v6);
+    CSS_Channel_FillSilence(v7, v6);
 LABEL_15:
-    sub_471BA0(a1, *(_DWORD *)(v2 + 12));
+    CSS_ChannelSetPositionOffset(a1, *(_DWORD *)(v2 + 12));
   }
 }
 // 46DD6D: variable 'v10' is possibly undefined
@@ -83685,18 +83685,18 @@ LABEL_15:
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046DEF0) --------------------------------------------------------
-int  sub_46DEF0(int a1, int a2)
+int  CSS_Channel_StoreFormatParams(int a1, int a2)
 {
   int result; // eax
 
-  *(_DWORD *)(a1 + 16) = sub_470A40(a2);
-  result = sub_470A50(a2);
+  *(_DWORD *)(a1 + 16) = CSS_GetFormatSampleSize(a2);
+  result = CSS_GetFormatSilenceValue(a2);
   *(_DWORD *)(a1 + 24) = result;
   return result;
 }
 
 //----- (0046DF20) --------------------------------------------------------
-void  sub_46DF20(unsigned int a1, int *a2, int a3, int a4, int a5, int a6)
+void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int a5, int a6)
 {
   _DWORD *v9; // ebx
   int v10; // eax
@@ -83707,25 +83707,25 @@ void  sub_46DF20(unsigned int a1, int *a2, int a3, int a4, int a5, int a6)
   v13 = a3;
   v12 = 0;
   v9 = (_DWORD *)(52 * a1 + dword_54D3D0);
-  sub_46DEF0((int)v9, *a2);
+  CSS_Channel_StoreFormatParams((int)v9, *a2);
   v10 = 3 * a2[2] / dword_519CB0;
   LOBYTE(v10) = v10 & 0xFC;
   v9[1] = v10;
   v9[2] = v9[1] * v9[4];
-  sub_46D370(v9[2], &v12);
+  CSS_Mem_TryAlloc(v9[2], &v12);
   v9[3] = 0;
   v9[7] = 0;
-  sub_471A30(a1, v12, v9[2], *a2, a2[2]);
-  sub_471030(a1);
-  sub_4712F0(a1, a4);
-  sub_471890(a1, v13);
+  CSS_ChannelInitPlayback(a1, v12, v9[2], *a2, a2[2]);
+  CSS_ChannelMarkIdle(a1);
+  CSS_ChannelSetVolumeImmediate(a1, a4);
+  CSS_ChannelSetPanning(a1, v13);
   v9[12] = 0;
   v9[11] = 0;
   v9[9] = a6;
   v11 = dword_519CB4++;
   v9[10] = v11;
   *v9 = v12;
-  sub_46DCA0(a1);
+  CSS_Channel_ServiceStream(a1);
   ++dword_54D3C4;
 }
 // 519CB0: using guessed type int dword_519CB0;
@@ -83734,17 +83734,17 @@ void  sub_46DF20(unsigned int a1, int *a2, int a3, int a4, int a5, int a6)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E100) --------------------------------------------------------
-int  sub_46E100(int *a1)
+int  CSS_SampleCache_FreeEntry(int *a1)
 {
   dword_54D3BC -= a1[2];
-  sub_46D390(*a1);
-  sub_46D390(a1[4]);
-  return sub_46D390((int)a1);
+  CSS_Mem_FreeIfSet(*a1);
+  CSS_Mem_FreeIfSet(a1[4]);
+  return CSS_Mem_FreeIfSet((int)a1);
 }
 // 54D3BC: using guessed type int dword_54D3BC;
 
 //----- (0046E140) --------------------------------------------------------
-signed int  sub_46E140(int **a1)
+signed int  CSS_SampleCache_EvictEntry(int **a1)
 {
   signed int v2; // ebx
   int v3; // esi
@@ -83756,13 +83756,13 @@ signed int  sub_46E140(int **a1)
 LABEL_7:
     v4 = *a1;
     *a1 = (int *)(*a1)[5];
-    sub_46E100(v4);
+    CSS_SampleCache_FreeEntry(v4);
     return 1;
   }
   else
   {
     v3 = 0;
-    while ( !*(_DWORD *)(v3 + dword_54D3D0 + 40) || *(_DWORD *)(v3 + dword_54D3D0) != **a1 || !sub_4710B0(v2) )
+    while ( !*(_DWORD *)(v3 + dword_54D3D0 + 40) || *(_DWORD *)(v3 + dword_54D3D0) != **a1 || !CSS_ChannelIsPlaying(v2) )
     {
       ++v2;
       v3 += 52;
@@ -83776,7 +83776,7 @@ LABEL_7:
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E1B0) --------------------------------------------------------
-int  sub_46E1B0(int a1)
+int  CSS_SampleCache_MakeRoom(int a1)
 {
   int **v1; // edx
   int v2; // ecx
@@ -83785,7 +83785,7 @@ int  sub_46E1B0(int a1)
 
   v1 = (int **)&dword_54D3B8;
   v2 = a1;
-  while ( v2 + dword_54D3BC > dword_54D3C0 && sub_46E140(v1) )
+  while ( v2 + dword_54D3BC > dword_54D3C0 && CSS_SampleCache_EvictEntry(v1) )
     ;
   result = v2 + dword_54D3BC;
   if ( v2 + dword_54D3BC > dword_54D3C0 )
@@ -83796,7 +83796,7 @@ int  sub_46E1B0(int a1)
       result = v2 + dword_54D3BC;
       if ( v2 + dword_54D3BC <= dword_54D3C0 || !*(_DWORD *)(v4 + 20) )
         break;
-      if ( !sub_46E140((int **)(v4 + 20)) )
+      if ( !CSS_SampleCache_EvictEntry((int **)(v4 + 20)) )
         v4 = *(_DWORD *)(v4 + 20);
     }
   }
@@ -83810,7 +83810,7 @@ int  sub_46E1B0(int a1)
 // 54D3C0: using guessed type int dword_54D3C0;
 
 //----- (0046E220) --------------------------------------------------------
-int  sub_46E220(int result, int a2)
+int  CSS_SampleCache_AppendEntry(int result, int a2)
 {
   for ( ; *(_DWORD *)(result + 20); result = *(_DWORD *)(result + 20) )
     ;
@@ -83819,12 +83819,12 @@ int  sub_46E220(int result, int a2)
 }
 
 //----- (0046E240) --------------------------------------------------------
-int  sub_46E240(int *a1)
+int  CSS_SampleCache_TouchEntry(int *a1)
 {
   int v2; // ecx
   int result; // eax
 
-  sub_46E220(*a1, *a1);
+  CSS_SampleCache_AppendEntry(*a1, *a1);
   *a1 = *(_DWORD *)(v2 + 20);
   result = v2;
   *(_DWORD *)(v2 + 20) = 0;
@@ -83833,7 +83833,7 @@ int  sub_46E240(int *a1)
 // 46E250: variable 'v2' is possibly undefined
 
 //----- (0046E270) --------------------------------------------------------
-int  sub_46E270(int a1)
+int  CSS_SampleCache_FindAndTouch(int a1)
 {
   int v3; // ecx
   int v4; // ecx
@@ -83845,12 +83845,12 @@ int  sub_46E270(int a1)
     while ( *(_DWORD *)(v3 + 20) )
     {
       if ( !stricmp_(v3, a1) )
-        return sub_46E240((int *)(v4 + 20));
+        return CSS_SampleCache_TouchEntry((int *)(v4 + 20));
       v3 = *(_DWORD *)(v4 + 20);
     }
     return 0;
   }
-  return sub_46E240(&dword_54D3B8);
+  return CSS_SampleCache_TouchEntry(&dword_54D3B8);
 }
 // 46E293: variable 'v3' is possibly undefined
 // 46E2AA: variable 'v4' is possibly undefined
@@ -83858,7 +83858,7 @@ int  sub_46E270(int a1)
 // 54D3B8: using guessed type int dword_54D3B8;
 
 //----- (0046E2D0) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD *sub_46E2D0()
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_SweepFinishedChannels()
 {
   int v0; // ebx
   signed int i; // ecx
@@ -83869,7 +83869,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *sub_46E2D0()
   for ( i = 0; i < dword_54D3C8; v0 += 52 )
   {
     if ( *(_DWORD *)(v0 + dword_54D3D0 + 48) )
-      sub_46DA00(i, 0);
+      CSS_CloseChannel(i, 0);
     ++i;
   }
   return ExceptionList;
@@ -83879,7 +83879,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *sub_46E2D0()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E350) --------------------------------------------------------
-struct _EXCEPTION_REGISTRATION_RECORD *sub_46E350()
+struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
 {
   int v0; // ebx
   signed int i; // esi
@@ -83894,14 +83894,14 @@ struct _EXCEPTION_REGISTRATION_RECORD *sub_46E350()
   v5 = &j____wcpp_4_fs_handler_rtn_;
   v6 = &unk_510654;
   v7 = 0;
-  sub_46D9F0();
+  CSS_StreamService_NoOpHook();
   for ( i = 0; i < dword_54D3C8; v0 += 52 )
   {
     v2 = v0 + dword_54D3D0;
     if ( *(_DWORD *)(v0 + dword_54D3D0 + 44)
       && *(_DWORD *)(v2 + 40)
       && (*(_BYTE *)(v2 + 36) & 0xC) != 0
-      && sub_4710B0(i) )
+      && CSS_ChannelIsPlaying(i) )
     {
       (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v0 + dword_54D3D0 + 20)
                                                                                            + 32))(
@@ -83912,7 +83912,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *sub_46E350()
     }
     ++i;
   }
-  return sub_46E2D0();
+  return CSS_SweepFinishedChannels();
 }
 // 46E3C9: variable 'ExceptionList' is possibly undefined
 // 46E3C9: variable 'v5' is possibly undefined
@@ -83922,7 +83922,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *sub_46E350()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E400) --------------------------------------------------------
-int __stdcall sub_46E400(int a1)
+int __stdcall CSS_StreamReadingThreadProc(int a1)
 {
   ++dword_54D420;
   EnterCriticalSection(&stru_54D424);
@@ -83930,7 +83930,7 @@ int __stdcall sub_46E400(int a1)
   {
     ++dword_54D3D8;
     EnterCriticalSection(&CriticalSection);
-    sub_46E350();
+    CSS_ServiceStreamingChannels();
     LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D3D8 + 1));
     --dword_54D3D8;
     Sleep(1000 / dword_519CB0);
@@ -83982,7 +83982,7 @@ DWORD __stdcall CSS_ResumeStreamReading()
 }
 
 //----- (0046E5D0) --------------------------------------------------------
-int __stdcall sub_46E5D0(int a1)
+int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
 {
   signed int v1; // ebx
   int v2; // esi
@@ -84004,9 +84004,9 @@ int __stdcall sub_46E5D0(int a1)
         if ( *(_DWORD *)(v2 + dword_54D3D0 + 44)
           && *(_DWORD *)(v3 + 40)
           && (*(_BYTE *)(v3 + 36) & 0xC) != 0
-          && sub_4710B0(v1) )
+          && CSS_ChannelIsPlaying(v1) )
         {
-          sub_46DCA0(v1);
+          CSS_Channel_ServiceStream(v1);
         }
         ++v1;
         v2 += 52;
@@ -84049,14 +84049,14 @@ _DWORD *__stdcall CSS_EmptySampleCache()
     result = (_DWORD *)(v1 + dword_54D3D0);
     v3 = *(_BYTE *)(v1 + dword_54D3D0 + 36);
     if ( (v3 & 1) != 0 || (v3 & 2) != 0 )
-      result = (_DWORD *)sub_46DA00(i, 0);
+      result = (_DWORD *)CSS_CloseChannel(i, 0);
     ++i;
   }
   while ( dword_54D3B8 )
   {
     v4 = (int *)dword_54D3B8;
     dword_54D3B8 = *(_DWORD *)(dword_54D3B8 + 20);
-    result = (_DWORD *)sub_46E100(v4);
+    result = (_DWORD *)CSS_SampleCache_FreeEntry(v4);
   }
   return result;
 }
@@ -84066,27 +84066,27 @@ _DWORD *__stdcall CSS_EmptySampleCache()
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E910) --------------------------------------------------------
-void  sub_46E910(unsigned int a1, int a2, int a3, int *a4, int a5, signed int a6)
+void  CSS_Channel_StartMemSound(unsigned int a1, int a2, int a3, int *a4, int a5, signed int a6)
 {
   int v8; // edx
   int v9; // ecx
 
-  sub_46DEF0(52 * a1 + dword_54D3D0, a4[1]);
+  CSS_Channel_StoreFormatParams(52 * a1 + dword_54D3D0, a4[1]);
   v8 = dword_54D3D0;
   *(_DWORD *)(v9 + dword_54D3D0 + 36) = 1;
   *(_DWORD *)(v9 + v8 + 48) = 0;
   *(_DWORD *)(v9 + v8 + 40) = a2;
   *(_DWORD *)(v8 + v9) = *a4;
-  sub_471430(a1, *a4, a4[2], a4[3], a4[1]);
-  sub_4712F0(a1, 0);
-  sub_471100(a1, a3, a6);
-  sub_471890(a1, a5);
+  CSS_ChannelQueueSound(a1, *a4, a4[2], a4[3], a4[1]);
+  CSS_ChannelSetVolumeImmediate(a1, 0);
+  CSS_ChannelBeginVolumeFade(a1, a3, a6);
+  CSS_ChannelSetPanning(a1, a5);
 }
 // 46E937: variable 'v9' is possibly undefined
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046E9A0) --------------------------------------------------------
-int  sub_46E9A0(int *a1, int a2, signed int a3, int a4)
+int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
 {
   unsigned int v5; // edi
   int v6; // eax
@@ -84116,9 +84116,9 @@ int  sub_46E9A0(int *a1, int a2, signed int a3, int a4)
   }
   if ( v5 == -1 )
     return 0;
-  sub_46DA00(v5, 0);
+  CSS_CloseChannel(v5, 0);
   v10 = dword_519CB4++;
-  sub_46E910(v5, v10, a2, a1, a4, a3);
+  CSS_Channel_StartMemSound(v5, v10, a2, a1, a4, a3);
   return v10;
 }
 // 519C8C: using guessed type int dword_519C8C[];
@@ -84128,7 +84128,7 @@ int  sub_46E9A0(int *a1, int a2, signed int a3, int a4)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046EA90) --------------------------------------------------------
-_DWORD * sub_46EA90(int a1, int a2, _DWORD *a3)
+_DWORD * CSS_CreateSampleCacheEntry(int a1, int a2, _DWORD *a3)
 {
   _BYTE *v4; // edi
   char v5; // al
@@ -84136,10 +84136,10 @@ _DWORD * sub_46EA90(int a1, int a2, _DWORD *a3)
   _DWORD *v7; // edi
   _DWORD *v10; // [esp+4h] [ebp-14h] BYREF
 
-  sub_46D9F0();
-  sub_46E1B0(a3[1]);
-  sub_46D370(24, &v10);
-  sub_46D370(strlen((const char *)a2) + 1, v10 + 4);
+  CSS_StreamService_NoOpHook();
+  CSS_SampleCache_MakeRoom(a3[1]);
+  CSS_Mem_TryAlloc(24, &v10);
+  CSS_Mem_TryAlloc(strlen((const char *)a2) + 1, v10 + 4);
   v4 = (_BYTE *)v10[4];
   do
   {
@@ -84153,7 +84153,7 @@ _DWORD * sub_46EA90(int a1, int a2, _DWORD *a3)
     v4 += 2;
   }
   while ( v6 );
-  sub_46D370(a3[1], v10);
+  CSS_Mem_TryAlloc(a3[1], v10);
   (*(void (**)(void))(*(_DWORD *)a1 + 20))();
   (*(void (**)(void))(*(_DWORD *)dword_54D4B8 + 20))();
   v10[5] = 0;
@@ -84162,7 +84162,7 @@ _DWORD * sub_46EA90(int a1, int a2, _DWORD *a3)
   *++v7 = a3[1];
   v7[1] = a3[2];
   if ( dword_54D3B8 )
-    sub_46E220(dword_54D3B8, (int)v10);
+    CSS_SampleCache_AppendEntry(dword_54D3B8, (int)v10);
   else
     dword_54D3B8 = (int)v10;
   dword_54D3BC += a3[1];
@@ -84173,7 +84173,7 @@ _DWORD * sub_46EA90(int a1, int a2, _DWORD *a3)
 // 54D4B8: using guessed type int dword_54D4B8;
 
 //----- (0046EB80) --------------------------------------------------------
-int  sub_46EB80(int a1, int *a2, int a3, int a4, int a5)
+int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5)
 {
   unsigned int v6; // edi
   int v7; // eax
@@ -84204,14 +84204,14 @@ int  sub_46EB80(int a1, int *a2, int a3, int a4, int a5)
     while ( v7 < dword_54D3C8 );
   }
   if ( v6 != -1 )
-    sub_46DA00(v6, 0);
+    CSS_CloseChannel(v6, 0);
   v11 = 52 * v6;
   v12 = dword_54D3CC * a2[2] / 1000;
-  v13 = sub_470A40(*a2);
-  *(_DWORD *)(dword_54D3D0 + v11 + 20) = sub_46D8D0(a1, v13 * v12);
-  sub_46DF20(v6, a2, a3, a4, a5, 4);
+  v13 = CSS_GetFormatSampleSize(*a2);
+  *(_DWORD *)(dword_54D3D0 + v11 + 20) = CSS_FileStream_New(a1, v13 * v12);
+  CSS_Channel_StartFileStream(v6, a2, a3, a4, a5, 4);
   *(_DWORD *)(v11 + dword_54D3D0 + 44) = 1;
-  sub_471070(v6);
+  CSS_ChannelMarkPlaying(v6);
   return *(_DWORD *)(dword_54D3D0 + 52 * v6 + 40);
 }
 // 46EB80: could not find valid save-restore pair for ebx
@@ -84245,7 +84245,7 @@ int __stdcall CSS_ResumeStream(int a1)
       if ( v2 != -1 )
       {
         *(_DWORD *)(result + dword_54D3D0 + 44) = 1;
-        return sub_471070(v2);
+        return CSS_ChannelMarkPlaying(v2);
       }
     }
   }
@@ -84255,7 +84255,7 @@ int __stdcall CSS_ResumeStream(int a1)
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046ED10) --------------------------------------------------------
-int  sub_46ED10(int a1, int a2, int a3, DWORD a4)
+int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
 {
   int v7; // ecx
   char v8; // al
@@ -84271,7 +84271,7 @@ int  sub_46ED10(int a1, int a2, int a3, DWORD a4)
 
   v17 = a2;
   v16 = a3;
-  if ( !dword_54D468 || !dword_54D3D0 || sub_46FC30() )
+  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
     return 0;
   if ( *(_WORD *)(*(_DWORD *)(a1 + 363) + 2) == 1 )
     v8 = 1;
@@ -84282,7 +84282,7 @@ int  sub_46ED10(int a1, int a2, int a3, DWORD a4)
     ++v14[0];
   v14[1] = *(_DWORD *)(a1 + 251);
   v14[2] = *(_DWORD *)(*(_DWORD *)(a1 + 363) + 4);
-  v15 = sub_462CE0(v7, 0, a4);
+  v15 = IO_StreamAdapterAlloc(v7, 0, a4);
   if ( !v15 )
     return 0;
   v9 = -1;
@@ -84305,9 +84305,9 @@ int  sub_46ED10(int a1, int a2, int a3, DWORD a4)
     while ( v10 < dword_54D3C8 );
   }
   if ( v9 != -1 )
-    sub_46DA00(v9, 0);
+    CSS_CloseChannel(v9, 0);
   *(_DWORD *)(dword_54D3D0 + 52 * v9 + 20) = v15;
-  sub_46DF20(v9, v14, a4, v17, v16, 8);
+  CSS_Channel_StartFileStream(v9, v14, a4, v17, v16, 8);
   return *(_DWORD *)(52 * v9 + dword_54D3D0 + 40);
 }
 // 46EDCD: variable 'v7' is possibly undefined
@@ -84330,13 +84330,13 @@ void __stdcall CSS_LoadSample(int a1)
   {
     if ( dword_54D3D0 )
     {
-      if ( !sub_46E270(a1) )
+      if ( !CSS_SampleCache_FindAndTouch(a1) )
       {
-        v3 = sub_46B200(v1, v4);
+        v3 = Audio_ReadWavHeaderFromStream(v1, v4);
         if ( v3 )
         {
           if ( v4[1] < dword_54D3C0 )
-            sub_46EA90(v3, v2, v4);
+            CSS_CreateSampleCacheEntry(v3, v2, v4);
         }
       }
     }
@@ -84360,7 +84360,7 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
   int v15; // eax
   int v16; // ecx
 
-  if ( !dword_54D468 || !dword_54D3D0 || sub_46FC30() )
+  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
     return 0;
   v9 = -1;
   v10 = dword_519C90 + dword_519CB4;
@@ -84383,18 +84383,18 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
   }
   if ( v9 == -1 )
     return 0;
-  sub_46DA00(v9, 0);
+  CSS_CloseChannel(v9, 0);
   v14 = dword_519CB4++;
-  sub_46DEF0(52 * v9 + dword_54D3D0, a2);
+  CSS_Channel_StoreFormatParams(52 * v9 + dword_54D3D0, a2);
   v15 = dword_54D3D0;
   *(_DWORD *)(v16 + dword_54D3D0 + 36) = 1;
   *(_DWORD *)(v16 + v15 + 48) = 0;
   *(_DWORD *)(v16 + v15 + 40) = v14;
   *(_DWORD *)(v16 + v15) = a1;
-  sub_471430(v9, a1, a3, a4, a2);
-  sub_4712F0(v9, 0);
-  sub_471100(v9, a5, a7);
-  sub_471890(v9, a6);
+  CSS_ChannelQueueSound(v9, a1, a3, a4, a2);
+  CSS_ChannelSetVolumeImmediate(v9, 0);
+  CSS_ChannelBeginVolumeFade(v9, a5, a7);
+  CSS_ChannelSetPanning(v9, a6);
   return v14;
 }
 // 46EFDA: variable 'v16' is possibly undefined
@@ -84413,20 +84413,20 @@ int __stdcall CSS_PlaySound(int a1, int a2, int a3, signed int a4)
   int *v8; // esi
   int v9[7]; // [esp+14h] [ebp-1Ch] BYREF
 
-  if ( !dword_54D468 || !dword_54D3D0 || sub_46FC30() )
+  if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
     return 0;
-  v6 = (int *)sub_46E270(a1);
+  v6 = (int *)CSS_SampleCache_FindAndTouch(a1);
   if ( v6 )
-    return sub_46E9A0(v6, a2, a4, a3);
-  v7 = sub_46B200(a1, v9);
+    return CSS_Channel_SelectAndPlay(v6, a2, a4, a3);
+  v7 = Audio_ReadWavHeaderFromStream(a1, v9);
   if ( !v7 )
     return 0;
   if ( v9[1] >= dword_54D3C0 )
-    return sub_46EB80(v7, v9, a3, a2, a4);
+    return CSS_StartSampleVoice(v7, v9, a3, a2, a4);
   CSS_PauseStreamReading();
-  v8 = sub_46EA90(v7, a1, v9);
+  v8 = CSS_CreateSampleCacheEntry(v7, a1, v9);
   CSS_ResumeStreamReading();
-  return sub_46E9A0(v8, a2, a4, a3);
+  return CSS_Channel_SelectAndPlay(v8, a2, a4, a3);
 }
 // 54D3C0: using guessed type int dword_54D3C0;
 // 54D3D0: using guessed type int dword_54D3D0;
@@ -84458,7 +84458,7 @@ int __stdcall CSS_StopSound(int a1, signed int a2)
           return result;
       }
       if ( v3 != -1 )
-        return sub_46DA00(v3, a2);
+        return CSS_CloseChannel(v3, a2);
     }
   }
   return result;
@@ -84498,7 +84498,7 @@ LABEL_10:
   if ( v4 == 4 || v4 == 8 )
     v6[0] = (*(int (**)(void))(**(_DWORD **)(dword_54D3D0 + 52 * v1 + 20) + 24))();
   else
-    sub_471800(v1, v6);
+    CSS_ChannelGetPlayPosition(v1, v6);
   return v6[0] / *(_DWORD *)(dword_54D3D0 + 52 * v3 + 16);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
@@ -84553,12 +84553,12 @@ LABEL_12:
       v7 = (_DWORD *)(52 * v4 + dword_54D3D0);
       if ( *v7 )
       {
-        sub_471800(v4, v10);
+        CSS_ChannelGetPlayPosition(v4, v10);
         v8 = v10[0];
         v7[3] = v10[0];
-        sub_471BA0(v4, v8);
+        CSS_ChannelSetPositionOffset(v4, v8);
       }
-      sub_46DCA0(v4);
+      CSS_Channel_ServiceStream(v4);
       LeaveCriticalSection(&CriticalSection);
       --dword_54D3D8;
       LeaveCriticalSection(&stru_54D3FC);
@@ -84566,7 +84566,7 @@ LABEL_12:
     }
     else
     {
-      sub_471610(v2, *(_DWORD *)(v5 + 16) * a2);
+      CSS_ChannelSetPlayPosition(v2, *(_DWORD *)(v5 + 16) * a2);
     }
   }
 }
@@ -84597,8 +84597,8 @@ int __stdcall CSS_PauseSound(int a1, signed int a2)
       }
       if ( v3 != -1 )
       {
-        sub_471350(v3, (_DWORD *)(result + dword_54D3D0 + 32));
-        return sub_471100(v3, 0, a2);
+        CSS_ChannelGetVolume(v3, (_DWORD *)(result + dword_54D3D0 + 32));
+        return CSS_ChannelBeginVolumeFade(v3, 0, a2);
       }
     }
   }
@@ -84628,7 +84628,7 @@ int __stdcall CSS_ResumeSound(int a1, signed int a2)
           return result;
       }
       if ( v3 != -1 )
-        return sub_471100(v3, *(_DWORD *)(result + dword_54D3D0 + 32), a2);
+        return CSS_ChannelBeginVolumeFade(v3, *(_DWORD *)(result + dword_54D3D0 + 32), a2);
     }
   }
   return result;
@@ -84671,7 +84671,7 @@ void __stdcall CSS_SetSoundLoop(int a1, int a2, int a3)
         }
         else
         {
-          sub_470EC0(v3, a2, a3);
+          CSS_SetMixChannelLoopPoints(v3, a2, a3);
           *(_DWORD *)(v5 + 36) = 2;
         }
       }
@@ -84726,7 +84726,7 @@ LABEL_10:
     }
     else
     {
-      return sub_470F90(v4, a2, a3);
+      return CSS_ChannelGetLoopRange(v4, a2, a3);
     }
   }
   return result;
@@ -84769,7 +84769,7 @@ LABEL_11:
     }
     else
     {
-      sub_470F40(v2);
+      CSS_ClearMixChannelLoopPoints(v2);
       result = dword_54D3D0;
       *(_DWORD *)(v3 + dword_54D3D0 + 36) = 1;
     }
@@ -84799,7 +84799,7 @@ void __stdcall CSS_SetSoundRate(int a1, unsigned __int32 a2)
           return;
       }
       if ( v2 != -1 )
-        sub_471260(v2, a2);
+        CSS_ChannelSetRate(v2, a2);
     }
   }
 }
@@ -84828,7 +84828,7 @@ int __stdcall CSS_GetSoundRate(int a1)
   }
   if ( v1 == -1 )
     return 0;
-  sub_4712A0(v1, v4);
+  CSS_ChannelGetRate(v1, v4);
   return v4[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
@@ -84857,7 +84857,7 @@ int __stdcall CSS_SetSoundVolume(int a1, int a2, signed int a3)
       if ( v4 != -1 )
       {
         *(_DWORD *)(result + dword_54D3D0 + 32) = a2;
-        return sub_471100(v4, a2, a3);
+        return CSS_ChannelBeginVolumeFade(v4, a2, a3);
       }
     }
   }
@@ -84888,7 +84888,7 @@ int __stdcall CSS_GetSoundVolume(int a1)
   }
   if ( v1 == -1 )
     return 0;
-  sub_471350(v1, v4);
+  CSS_ChannelGetVolume(v1, v4);
   return v4[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
@@ -84914,7 +84914,7 @@ void __stdcall CSS_SetSoundPanning(int a1, int a2)
           return;
       }
       if ( v2 != -1 )
-        sub_471890(v2, a2);
+        CSS_ChannelSetPanning(v2, a2);
     }
   }
 }
@@ -84943,7 +84943,7 @@ int __stdcall CSS_GetSoundPanning(int a1)
   }
   if ( v1 == -1 )
     return 0;
-  sub_471910(v1, v4);
+  CSS_ChannelGetPanning(v1, v4);
   return v4[0];
 }
 // 54D3C8: using guessed type int dword_54D3C8;
@@ -84968,13 +84968,13 @@ BOOL __stdcall CSS_IsPlaying(int a1)
     if ( v2 >= 52 * dword_54D3C8 )
       return 0;
   }
-  return v1 != -1 && sub_4710B0(v1);
+  return v1 != -1 && CSS_ChannelIsPlaying(v1);
 }
 // 54D3C8: using guessed type int dword_54D3C8;
 // 54D3D0: using guessed type int dword_54D3D0;
 
 //----- (0046F950) --------------------------------------------------------
-signed int  sub_46F950(int a1, int a2, int a3)
+signed int  CSS_InitVoicePool(int a1, int a2, int a3)
 {
   int v6; // ebx
   int v7; // eax
@@ -84983,7 +84983,7 @@ signed int  sub_46F950(int a1, int a2, int a3)
 
   dword_54D3C8 = a1;
   v6 = 52 * a1;
-  sub_46D370(52 * a1, &dword_54D3D0);
+  CSS_Mem_TryAlloc(52 * a1, &dword_54D3D0);
   if ( a1 > 0 )
   {
     v7 = 0;
@@ -85017,7 +85017,7 @@ signed int  sub_46F950(int a1, int a2, int a3)
 // 54D45C: using guessed type int dword_54D45C;
 
 //----- (0046FA60) --------------------------------------------------------
-_DWORD *sub_46FA60()
+_DWORD *CSS_ShutdownVoicePool()
 {
   _DWORD *result; // eax
   int v1; // edx
@@ -85048,9 +85048,9 @@ _DWORD *sub_46FA60()
     v6 = 2;
     sub_48509C(v2, v1);
     for ( i = 0; i < dword_54D3C8; i = v4 + 1 )
-      sub_46DA00(i, 0);
+      CSS_CloseChannel(i, 0);
     CSS_EmptySampleCache();
-    result = (_DWORD *)sub_46D390(dword_54D3D0);
+    result = (_DWORD *)CSS_Mem_FreeIfSet(dword_54D3D0);
     dword_54D3D0 = 0;
   }
   return result;
@@ -85066,7 +85066,7 @@ _DWORD *sub_46FA60()
 // 54D45C: using guessed type int dword_54D45C;
 
 //----- (0046FB70) --------------------------------------------------------
-int  sub_46FB70(int a1)
+int  CSS_LockAudioThreads(int a1)
 {
   ++dword_54D3D8;
   EnterCriticalSection(&CriticalSection);
@@ -85078,7 +85078,7 @@ int  sub_46FB70(int a1)
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046FBC0) --------------------------------------------------------
-int  sub_46FBC0(int a1)
+int  CSS_UnlockAudioThreads(int a1)
 {
   LeaveCriticalSection(&CriticalSection);
   --dword_54D3D8;
@@ -85090,7 +85090,7 @@ int  sub_46FBC0(int a1)
 // 54D3F8: using guessed type int dword_54D3F8;
 
 //----- (0046FC00) --------------------------------------------------------
-int sub_46FC00()
+int CSS_InitDeviceSearchState()
 {
   int v0; // edx
   int v1; // ecx
@@ -85105,20 +85105,20 @@ int sub_46FC00()
 // 54D498: using guessed type int dword_54D498;
 
 //----- (0046FC30) --------------------------------------------------------
-BOOL sub_46FC30()
+BOOL CSS_IsNullSoundDevice()
 {
   return dword_54D468 == (_DWORD)&unk_519BD4;
 }
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046FC50) --------------------------------------------------------
-int sub_46FC50()
+int CSS_PollAudioDeviceChange()
 {
   _DWORD *v0; // eax
   int result; // eax
 
   v0 = (_DWORD *)(*(int (**)(void))(dword_54D468 + 88))();
-  sub_4711F0(v0);
+  CSS_AdvanceVolumeFades(v0);
   do
     result = (*(int (__cdecl **)(int *))(dword_54D468 + 92))(&dword_54D460);
   while ( !result && dword_54D460 );
@@ -85128,13 +85128,13 @@ int sub_46FC50()
 // 54D468: using guessed type int dword_54D468;
 
 //----- (0046FC80) --------------------------------------------------------
-int __stdcall sub_46FC80(int a1)
+int __stdcall CSS_DeviceSearchThreadProc(int a1)
 {
   ++dword_54D498;
   EnterCriticalSection(&stru_54D49C);
   while ( dword_54D4B4 )
   {
-    sub_46FC50();
+    CSS_PollAudioDeviceChange();
     Sleep(1000 / dword_519CF4);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D498 + 1));
@@ -85168,7 +85168,7 @@ int __stdcall CSS_SetDeviceSearch(int a1)
 // 54D48C: using guessed type int dword_54D48C;
 
 //----- (0046FE30) --------------------------------------------------------
-signed int sub_46FE30()
+signed int CSS_ResetDeviceConfigDefaults()
 {
   signed int result; // eax
 
@@ -85182,7 +85182,7 @@ signed int sub_46FE30()
   dword_519CF4 = 10;
   dword_54D468 = 0;
   dword_519CF8 = 1;
-  dword_54D490 = (int)sub_470A00;
+  dword_54D490 = (int)CSS_FatalErrorExit;
   return result;
 }
 // 519CF4: using guessed type int dword_519CF4;
@@ -85199,18 +85199,18 @@ signed int sub_46FE30()
 //----- (0046FEA0) --------------------------------------------------------
 int __stdcall CSS_SetMasterVolume(int a1)
 {
-  return sub_470CF0(a1);
+  return CSS_SetMixMasterVolume(a1);
 }
 
 //----- (0046FEB0) --------------------------------------------------------
 void __stdcall CSS_SetDefaults()
 {
-  sub_46FE30();
-  sub_46FEC0();
+  CSS_ResetDeviceConfigDefaults();
+  CSS_ResetDeviceHandleCache();
 }
 
 //----- (0046FEC0) --------------------------------------------------------
-void sub_46FEC0()
+void CSS_ResetDeviceHandleCache()
 {
   dword_519D08 = -1;
   dword_519D0C = -1;
@@ -85232,11 +85232,11 @@ void __stdcall CSS_Close()
   EnterCriticalSection(&stru_54D49C);
   LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D498 + 1));
   --dword_54D498;
-  sub_46FEC0();
+  CSS_ResetDeviceHandleCache();
   if ( dword_54D488 )
   {
-    sub_46FA60();
-    sub_470C60();
+    CSS_ShutdownVoicePool();
+    CSS_FreeMixChannels();
     dword_54D480 = 0;
     (*(void (**)(void))(dword_54D468 + 56))();
     dword_54D488 = 0;
@@ -85270,7 +85270,7 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   int v10; // [esp+14h] [ebp-18h] BYREF
   _BYTE v11[20]; // [esp+18h] [ebp-14h] BYREF
 
-  sub_46FE30();
+  CSS_ResetDeviceConfigDefaults();
   if ( dword_519D08 == -1 )
   {
     v4 = dword_54D48C;
@@ -85313,12 +85313,12 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   {
     dword_54D480 = a1;
     dword_54D488 = 1;
-    sub_470C00(a1);
-    sub_470D10(a2);
+    CSS_InitMixChannels(a1);
+    CSS_BuildVolumeScaleTable(a2);
     dword_54D4B4 = 1;
     v9 = (void *)beginthreadex_(0, v11);
     SetThreadPriority(v9, 2);
-    sub_46F950(a1, a3, a4);
+    CSS_InitVoicePool(a1, a3, a4);
     return 1;
   }
 }
@@ -85338,7 +85338,7 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
 // 54D4B4: using guessed type int dword_54D4B4;
 
 //----- (00470150) --------------------------------------------------------
-unsigned int  sub_470150(unsigned int result)
+unsigned int  CSS_TranslateWaveOutError(unsigned int result)
 {
   if ( result >= 7 )
   {
@@ -85393,14 +85393,14 @@ unsigned int  sub_470150(unsigned int result)
 }
 
 //----- (004701E0) --------------------------------------------------------
-int __cdecl sub_4701E0(_DWORD *a1)
+int __cdecl CSS_QueryWaveOutDevicePresent(_DWORD *a1)
 {
   *a1 = waveOutGetNumDevs() != 0;
   return 0;
 }
 
 //----- (00470220) --------------------------------------------------------
-unsigned int __cdecl sub_470220(int a1, char a2)
+unsigned int __cdecl CSS_OpenWaveOutDevice(int a1, char a2)
 {
   bool v2; // zf
   unsigned int v3; // eax
@@ -85489,7 +85489,7 @@ LABEL_19:
   pwfx.cbSize = 0;
   v4 = waveOutOpen(&hwo, 0xFFFFFFFF, &pwfx, 0, 0, 0);
   if ( v4 )
-    return sub_470150(v4);
+    return CSS_TranslateWaveOutError(v4);
   v5 = 0;
   if ( dword_54D760 )
   {
@@ -85543,23 +85543,23 @@ LABEL_50:
     else
     {
 LABEL_57:
-      sub_470AF0(dword_54D768, ((dword_54D75C & 2) != 0) + 1);
-      result = sub_4707C0(100 * dword_519CF4);
+      CSS_InitMixBuffers(dword_54D768, ((dword_54D75C & 2) != 0) + 1);
+      result = CSS_SetWaveOutRefillThreshold(100 * dword_519CF4);
       if ( !result )
       {
         switch ( dword_54D75C )
         {
           case 5:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B169;
+            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8;
             goto LABEL_60;
           case 6:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B1D7;
+            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM8Stereo;
             goto LABEL_60;
           case 9:
             dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_MixInterleaved16;
             goto LABEL_60;
           case 10:
-            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))sub_46B1BA;
+            dword_54D750 = (int (__cdecl *)(_DWORD, _DWORD, _DWORD, _DWORD))Audio_ClipMixBufferToPCM16Stereo;
 LABEL_60:
             result = 0;
             break;
@@ -85585,7 +85585,7 @@ LABEL_60:
 // 54D768: using guessed type int dword_54D768;
 
 //----- (00470620) --------------------------------------------------------
-signed int sub_470620()
+signed int CSS_CloseWaveOutDevice()
 {
   MMRESULT v0; // eax
   int v1; // ebx
@@ -85598,10 +85598,10 @@ signed int sub_470620()
   int v8; // esi
   int i; // ebx
 
-  sub_470BD0();
+  CSS_FreeMixBuffers();
   v0 = waveOutReset(hwo);
   if ( v0 )
-    return sub_470150(v0);
+    return CSS_TranslateWaveOutError(v0);
   while ( 1 )
   {
     v1 = 1;
@@ -85632,7 +85632,7 @@ signed int sub_470620()
       {
         v0 = waveOutUnprepareHeader(hwo, *(LPWAVEHDR *)((char *)&pwh + v5 * 4), 0x20u);
         if ( v0 )
-          return sub_470150(v0);
+          return CSS_TranslateWaveOutError(v0);
       }
       ++v4;
       ++v5;
@@ -85641,7 +85641,7 @@ signed int sub_470620()
   }
   v0 = waveOutClose(hwo);
   if ( v0 )
-    return sub_470150(v0);
+    return CSS_TranslateWaveOutError(v0);
   v6 = 0;
   if ( dword_54D760 )
   {
@@ -85680,7 +85680,7 @@ LABEL_20:
 // 54D760: using guessed type int dword_54D760;
 
 //----- (004707B0) --------------------------------------------------------
-int __cdecl sub_4707B0(_DWORD *a1)
+int __cdecl CSS_GetWaveOutFormatFlags(_DWORD *a1)
 {
   *a1 = dword_54D75C;
   return 0;
@@ -85688,7 +85688,7 @@ int __cdecl sub_4707B0(_DWORD *a1)
 // 54D75C: using guessed type int dword_54D75C;
 
 //----- (004707C0) --------------------------------------------------------
-int __cdecl sub_4707C0(unsigned int a1)
+int __cdecl CSS_SetWaveOutRefillThreshold(unsigned int a1)
 {
   unsigned int v1; // eax
 
@@ -85703,7 +85703,7 @@ int __cdecl sub_4707C0(unsigned int a1)
 // 54D768: using guessed type int dword_54D768;
 
 //----- (004707F0) --------------------------------------------------------
-unsigned int __cdecl sub_4707F0(_DWORD *a1)
+unsigned int __cdecl CSS_PumpWaveOutBuffer(_DWORD *a1)
 {
   unsigned int v1; // esi
   LPWAVEHDR v2; // eax
@@ -85724,7 +85724,7 @@ unsigned int __cdecl sub_4707F0(_DWORD *a1)
     {
       v5 = waveOutUnprepareHeader(hwo, v2, 0x20u);
       if ( v5 )
-        return sub_470150(v5);
+        return CSS_TranslateWaveOutError(v5);
       dword_54D5C0[dword_54D740] = 0;
     }
     v3 = (dwBytes - dword_54D754) / dword_54D744;
@@ -85733,7 +85733,7 @@ unsigned int __cdecl sub_4707F0(_DWORD *a1)
     if ( v3 > v1 )
       v3 = v1;
     dword_54D74C -= v3;
-    sub_471990(dword_54D744, v3);
+    CSS_TickChannelLevels(dword_54D744, v3);
     dword_54D754 = dword_54D750(v3, dword_54D4C0[dword_54D740], dword_54D754, dword_54DBA0);
     if ( dword_54D754 >= dwBytes )
     {
@@ -85744,13 +85744,13 @@ unsigned int __cdecl sub_4707F0(_DWORD *a1)
       pwh[dword_54D740]->dwLoops = 0;
       v5 = waveOutPrepareHeader(hwo, pwh[dword_54D740], 0x20u);
       if ( v5 )
-        return sub_470150(v5);
+        return CSS_TranslateWaveOutError(v5);
       v7 = pwh[dword_54D740];
       v6 = hwo;
       dword_54D5C0[dword_54D740] = 1;
       v5 = waveOutWrite(v6, v7, 0x20u);
       if ( v5 )
-        return sub_470150(v5);
+        return CSS_TranslateWaveOutError(v5);
       dword_54D754 = 0;
       if ( ++dword_54D740 >= (unsigned int)dword_54D760 )
         dword_54D740 = 0;
@@ -85778,7 +85778,7 @@ unsigned int __cdecl sub_4707F0(_DWORD *a1)
 // 54DB98: using guessed type int dword_54DB98;
 
 //----- (00470A00) --------------------------------------------------------
-void __thiscall __noreturn sub_470A00(void *this)
+void __thiscall __noreturn CSS_FatalErrorExit(void *this)
 {
   int v1; // ecx
   int v2; // edx
@@ -85794,28 +85794,28 @@ void __thiscall __noreturn sub_470A00(void *this)
 // 4850C6: using guessed type int __fastcall fputs_(_DWORD, _DWORD);
 
 //----- (00470A30) --------------------------------------------------------
-int __cdecl sub_470A30(int a1)
+int __cdecl CSS_GetFormatTableValue(int a1)
 {
   return dword_519E90[a1];
 }
 // 519E90: using guessed type int dword_519E90[];
 
 //----- (00470A40) --------------------------------------------------------
-int __cdecl sub_470A40(int a1)
+int __cdecl CSS_GetFormatSampleSize(int a1)
 {
   return dword_519EAC[a1];
 }
 // 519EAC: using guessed type int dword_519EAC[7];
 
 //----- (00470A50) --------------------------------------------------------
-int __cdecl sub_470A50(int a1)
+int __cdecl CSS_GetFormatSilenceValue(int a1)
 {
   return dword_519EC8[a1];
 }
 // 519EC8: using guessed type int dword_519EC8[8];
 
 //----- (00470A60) --------------------------------------------------------
-int  sub_470A60(int a1, int a2)
+int  CSS_BuildMixLookupTables(int a1, int a2)
 {
   int i; // eax
   double v3; // st7
@@ -85853,7 +85853,7 @@ int  sub_470A60(int a1, int a2)
 // 54D968: using guessed type int dword_54D968[];
 
 //----- (00470AF0) --------------------------------------------------------
-int __cdecl sub_470AF0(int a1, int a2)
+int __cdecl CSS_InitMixBuffers(int a1, int a2)
 {
   int v2; // eax
   int v3; // ebx
@@ -85876,14 +85876,14 @@ int __cdecl sub_470AF0(int a1, int a2)
   LOBYTE(v2) = v2 & 0xF0;
   dword_54DB98 = v2;
   v3 = v2 + 34832;
-  sub_46D370(v2 + 34832, &dword_54DB70);
+  CSS_Mem_TryAlloc(v2 + 34832, &dword_54DB70);
   memset_(v4, 0);
   v5 = dword_54DB70 + 1023;
   LOWORD(v5) = (dword_54DB70 + 1023) & 0xFC00;
   dword_54DB8C = v5;
   dword_54DBA0 = v5 + 33792;
-  sub_46D370(160, &dword_54DB94);
-  return sub_470A60(v6, v3);
+  CSS_Mem_TryAlloc(160, &dword_54DB94);
+  return CSS_BuildMixLookupTables(v6, v3);
 }
 // 470B8C: variable 'v4' is possibly undefined
 // 470BC1: variable 'v6' is possibly undefined
@@ -85904,16 +85904,16 @@ int __cdecl sub_470AF0(int a1, int a2)
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (00470BD0) --------------------------------------------------------
-int sub_470BD0()
+int CSS_FreeMixBuffers()
 {
-  sub_46D390(dword_54DB70);
-  return sub_46D390(dword_54DB94);
+  CSS_Mem_FreeIfSet(dword_54DB70);
+  return CSS_Mem_FreeIfSet(dword_54DB94);
 }
 // 54DB70: using guessed type int dword_54DB70;
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00470BF0) --------------------------------------------------------
-int __cdecl sub_470BF0(_DWORD *a1)
+int __cdecl CSS_GetMixSampleRate(_DWORD *a1)
 {
   int result; // eax
 
@@ -85924,7 +85924,7 @@ int __cdecl sub_470BF0(_DWORD *a1)
 // 54DB9C: using guessed type int dword_54DB9C;
 
 //----- (00470C00) --------------------------------------------------------
-int __cdecl sub_470C00(int a1)
+int __cdecl CSS_InitMixChannels(int a1)
 {
   int result; // eax
 
@@ -85932,8 +85932,8 @@ int __cdecl sub_470C00(int a1)
   dword_54DB80 = a1;
   dword_54DB6C = 0;
   dword_54DB74 = 0;
-  sub_46D370(108 * a1, &dword_54DB90);
-  result = sub_470C90();
+  CSS_Mem_TryAlloc(108 * a1, &dword_54DB90);
+  result = CSS_ResetAllMixChannels();
   dword_54DB78 = 1;
   return result;
 }
@@ -85944,14 +85944,14 @@ int __cdecl sub_470C00(int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470C60) --------------------------------------------------------
-int sub_470C60()
+int CSS_FreeMixChannels()
 {
   int result; // eax
 
   if ( dword_54DB80 )
   {
     dword_54DB78 = 0;
-    result = sub_46D390(dword_54DB90);
+    result = CSS_Mem_FreeIfSet(dword_54DB90);
     dword_54DB80 = 0;
   }
   return result;
@@ -85961,19 +85961,19 @@ int sub_470C60()
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470C90) --------------------------------------------------------
-int sub_470C90()
+int CSS_ResetAllMixChannels()
 {
   unsigned int i; // ebx
   int result; // eax
 
   for ( i = 0; i < dword_54DB80; ++i )
-    result = sub_470DC0(i);
+    result = CSS_ResetMixChannelRecord(i);
   return result;
 }
 // 54DB80: using guessed type int dword_54DB80;
 
 //----- (00470CD0) --------------------------------------------------------
-int __cdecl sub_470CD0(int a1)
+int __cdecl CSS_SetMixIdleChannelFlag(int a1)
 {
   int result; // eax
 
@@ -85984,7 +85984,7 @@ int __cdecl sub_470CD0(int a1)
 // 54DB6C: using guessed type int dword_54DB6C;
 
 //----- (00470CE0) --------------------------------------------------------
-int __cdecl sub_470CE0(int a1)
+int __cdecl CSS_SetMixSuspended(int a1)
 {
   int result; // eax
 
@@ -85995,7 +85995,7 @@ int __cdecl sub_470CE0(int a1)
 // 54DB74: using guessed type int dword_54DB74;
 
 //----- (00470CF0) --------------------------------------------------------
-int __cdecl sub_470CF0(int a1)
+int __cdecl CSS_SetMixMasterVolume(int a1)
 {
   int result; // eax
 
@@ -86006,7 +86006,7 @@ int __cdecl sub_470CF0(int a1)
 // 54DB88: using guessed type int dword_54DB88;
 
 //----- (00470D00) --------------------------------------------------------
-int __cdecl sub_470D00(_DWORD *a1)
+int __cdecl CSS_GetMixMasterVolume(_DWORD *a1)
 {
   int result; // eax
 
@@ -86017,7 +86017,7 @@ int __cdecl sub_470D00(_DWORD *a1)
 // 54DB88: using guessed type int dword_54DB88;
 
 //----- (00470D10) --------------------------------------------------------
-int __cdecl sub_470D10(int a1)
+int __cdecl CSS_BuildVolumeScaleTable(int a1)
 {
   int v1; // esi
   int v2; // ecx
@@ -86059,7 +86059,7 @@ int __cdecl sub_470D10(int a1)
 // 54DB8C: using guessed type int dword_54DB8C;
 
 //----- (00470DC0) --------------------------------------------------------
-int __cdecl sub_470DC0(int a1)
+int __cdecl CSS_ResetMixChannelRecord(int a1)
 {
   int v1; // edx
   int result; // eax
@@ -86086,20 +86086,20 @@ int __cdecl sub_470DC0(int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470E60) --------------------------------------------------------
-void __cdecl sub_470E60(unsigned int a1, int a2)
+void __cdecl CSS_StartMixChannelPlayback(unsigned int a1, int a2)
 {
   if ( a1 < dword_54DB80 )
   {
     *(_DWORD *)(dword_54DB90 + 108 * a1 + 96) = 2;
-    sub_471260(a1, a2);
-    sub_471610(a1, 0);
+    CSS_ChannelSetRate(a1, a2);
+    CSS_ChannelSetPlayPosition(a1, 0);
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470EC0) --------------------------------------------------------
-void __cdecl sub_470EC0(unsigned int a1, int a2, int a3)
+void __cdecl CSS_SetMixChannelLoopPoints(unsigned int a1, int a2, int a3)
 {
   int v3; // ecx
   unsigned int v4; // eax
@@ -86126,7 +86126,7 @@ void __cdecl sub_470EC0(unsigned int a1, int a2, int a3)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470F40) --------------------------------------------------------
-unsigned int __cdecl sub_470F40(unsigned int a1)
+unsigned int __cdecl CSS_ClearMixChannelLoopPoints(unsigned int a1)
 {
   unsigned int result; // eax
   int v2; // edx
@@ -86146,7 +86146,7 @@ unsigned int __cdecl sub_470F40(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00470F90) --------------------------------------------------------
-int __cdecl sub_470F90(unsigned int a1, _DWORD *a2, _DWORD *a3)
+int __cdecl CSS_ChannelGetLoopRange(unsigned int a1, _DWORD *a2, _DWORD *a3)
 {
   int result; // eax
 
@@ -86162,7 +86162,7 @@ int __cdecl sub_470F90(unsigned int a1, _DWORD *a2, _DWORD *a3)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471030) --------------------------------------------------------
-unsigned int __cdecl sub_471030(unsigned int a1)
+unsigned int __cdecl CSS_ChannelMarkIdle(unsigned int a1)
 {
   unsigned int result; // eax
 
@@ -86177,7 +86177,7 @@ unsigned int __cdecl sub_471030(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471070) --------------------------------------------------------
-unsigned int __cdecl sub_471070(unsigned int a1)
+unsigned int __cdecl CSS_ChannelMarkPlaying(unsigned int a1)
 {
   unsigned int result; // eax
 
@@ -86192,7 +86192,7 @@ unsigned int __cdecl sub_471070(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004710B0) --------------------------------------------------------
-BOOL __cdecl sub_4710B0(unsigned int a1)
+BOOL __cdecl CSS_ChannelIsPlaying(unsigned int a1)
 {
   unsigned int v1; // eax
 
@@ -86205,7 +86205,7 @@ BOOL __cdecl sub_4710B0(unsigned int a1)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471100) --------------------------------------------------------
-int __cdecl sub_471100(unsigned int a1, int a2, signed int a3)
+int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3)
 {
   signed int v3; // ebx
   _DWORD *v4; // ecx
@@ -86230,7 +86230,7 @@ int __cdecl sub_471100(unsigned int a1, int a2, signed int a3)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004711F0) --------------------------------------------------------
-_DWORD * sub_4711F0(_DWORD *result)
+_DWORD * CSS_AdvanceVolumeFades(_DWORD *result)
 {
   int v1; // ebx
   int v2; // ecx
@@ -86279,7 +86279,7 @@ _DWORD * sub_4711F0(_DWORD *result)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471260) --------------------------------------------------------
-unsigned int __cdecl sub_471260(unsigned int a1, int a2)
+unsigned int __cdecl CSS_ChannelSetRate(unsigned int a1, int a2)
 {
   unsigned int result; // eax
 
@@ -86294,7 +86294,7 @@ unsigned int __cdecl sub_471260(unsigned int a1, int a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004712A0) --------------------------------------------------------
-void __cdecl sub_4712A0(unsigned int a1, _DWORD *a2)
+void __cdecl CSS_ChannelGetRate(unsigned int a1, _DWORD *a2)
 {
   unsigned int v2; // eax
 
@@ -86312,7 +86312,7 @@ void __cdecl sub_4712A0(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004712F0) --------------------------------------------------------
-unsigned int __cdecl sub_4712F0(unsigned int a1, int a2)
+unsigned int __cdecl CSS_ChannelSetVolumeImmediate(unsigned int a1, int a2)
 {
   unsigned int result; // eax
 
@@ -86328,7 +86328,7 @@ unsigned int __cdecl sub_4712F0(unsigned int a1, int a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471350) --------------------------------------------------------
-unsigned int __cdecl sub_471350(unsigned int a1, _DWORD *a2)
+unsigned int __cdecl CSS_ChannelGetVolume(unsigned int a1, _DWORD *a2)
 {
   unsigned int result; // eax
 
@@ -86343,7 +86343,7 @@ unsigned int __cdecl sub_471350(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (004713A0) --------------------------------------------------------
-void __cdecl sub_4713A0(unsigned int a1, int a2)
+void __cdecl CSS_ChannelAssignQueueSlot(unsigned int a1, int a2)
 {
   _DWORD *v2; // edx
   int v3; // eax
@@ -86357,7 +86357,7 @@ void __cdecl sub_4713A0(unsigned int a1, int a2)
     if ( *(_DWORD *)(v3 + 12) == 5 && v2[24] == 1 )
     {
       v2[24] = 3;
-      sub_471610(a1, *(_DWORD *)(v3 + 16));
+      CSS_ChannelSetPlayPosition(a1, *(_DWORD *)(v3 + 16));
     }
   }
 }
@@ -86366,18 +86366,18 @@ void __cdecl sub_4713A0(unsigned int a1, int a2)
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471430) --------------------------------------------------------
-void __cdecl sub_471430(unsigned int a1, int a2, signed int a3, int a4, int a5)
+void __cdecl CSS_ChannelQueueSound(unsigned int a1, int a2, signed int a3, int a4, int a5)
 {
   unsigned int v5; // ebx
 
-  v5 = sub_471480(a2, a3, a5);
-  sub_470DC0(a1);
-  sub_4713A0(a1, v5);
-  sub_470E60(a1, a4);
+  v5 = CSS_QueueSoundDescriptor(a2, a3, a5);
+  CSS_ResetMixChannelRecord(a1);
+  CSS_ChannelAssignQueueSlot(a1, v5);
+  CSS_StartMixChannelPlayback(a1, a4);
 }
 
 //----- (00471480) --------------------------------------------------------
-unsigned int __cdecl sub_471480(int a1, signed int a2, int a3)
+unsigned int __cdecl CSS_QueueSoundDescriptor(int a1, signed int a2, int a3)
 {
   unsigned int v3; // edx
   unsigned int v4; // esi
@@ -86391,7 +86391,7 @@ unsigned int __cdecl sub_471480(int a1, signed int a2, int a3)
     dword_519E38 = 0;
   v5 = (_DWORD *)(40 * (v3 - 1) + dword_54DB94);
   *v5 = a1;
-  v6 = sub_470A30(a3);
+  v6 = CSS_GetFormatTableValue(a3);
   v5[3] = 0;
   v5[4] = 0;
   v5[5] = 0;
@@ -86407,7 +86407,7 @@ unsigned int __cdecl sub_471480(int a1, signed int a2, int a3)
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471560) --------------------------------------------------------
-_DWORD *__cdecl sub_471560(int a1)
+_DWORD *__cdecl CSS_ChannelLoadQueuedSound(int a1)
 {
   _DWORD *result; // eax
   _DWORD *v2; // edx
@@ -86433,7 +86433,7 @@ _DWORD *__cdecl sub_471560(int a1)
 // 54DB94: using guessed type int dword_54DB94;
 
 //----- (00471610) --------------------------------------------------------
-void __cdecl sub_471610(unsigned int a1, unsigned int a2)
+void __cdecl CSS_ChannelSetPlayPosition(unsigned int a1, unsigned int a2)
 {
   int *v2; // ebx
   unsigned int v3; // esi
@@ -86443,8 +86443,8 @@ void __cdecl sub_471610(unsigned int a1, unsigned int a2)
   if ( a1 < dword_54DB80 )
   {
     v2 = (int *)(dword_54DB90 + 108 * a1);
-    v3 = a2 >> sub_470A30(v2[1]);
-    if ( !v2[18] || (sub_471560(a1), v2[3] == 2) || v2[3] == 3 || v2[24] != 4 )
+    v3 = a2 >> CSS_GetFormatTableValue(v2[1]);
+    if ( !v2[18] || (CSS_ChannelLoadQueuedSound(a1), v2[3] == 2) || v2[3] == 3 || v2[24] != 4 )
     {
       if ( v2[17] && v2[15] )
       {
@@ -86556,7 +86556,7 @@ LABEL_10:
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471800) --------------------------------------------------------
-int __cdecl sub_471800(unsigned int a1, _DWORD *a2)
+int __cdecl CSS_ChannelGetPlayPosition(unsigned int a1, _DWORD *a2)
 {
   unsigned int v2; // ebx
   int result; // eax
@@ -86564,7 +86564,7 @@ int __cdecl sub_471800(unsigned int a1, _DWORD *a2)
   if ( a1 < dword_54DB80 )
   {
     v2 = 108 * a1 + dword_54DB90;
-    result = *(_DWORD *)(v2 + 48) << sub_470A30(*(_DWORD *)(v2 + 4));
+    result = *(_DWORD *)(v2 + 48) << CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
     *a2 = result;
   }
   return result;
@@ -86573,7 +86573,7 @@ int __cdecl sub_471800(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471890) --------------------------------------------------------
-void __cdecl sub_471890(unsigned int a1, int a2)
+void __cdecl CSS_ChannelSetPanning(unsigned int a1, int a2)
 {
   int v2; // ecx
   unsigned int v3; // eax
@@ -86591,7 +86591,7 @@ void __cdecl sub_471890(unsigned int a1, int a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471910) --------------------------------------------------------
-int __cdecl sub_471910(unsigned int a1, _DWORD *a2)
+int __cdecl CSS_ChannelGetPanning(unsigned int a1, _DWORD *a2)
 {
   int result; // eax
 
@@ -86606,7 +86606,7 @@ int __cdecl sub_471910(unsigned int a1, _DWORD *a2)
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471990) --------------------------------------------------------
-void  sub_471990(int a1, int a2)
+void  CSS_TickChannelLevels(int a1, int a2)
 {
   unsigned int v2; // ebx
   int v3; // esi
@@ -86622,7 +86622,7 @@ void  sub_471990(int a1, int a2)
         if ( !*(_DWORD *)(v3 + dword_54DB90 + 92) && !dword_54DB6C )
           a1 = 1000;
         v3 += 108;
-        sub_46B610((int *)a1);
+        Audio_MixResampledVoice((int *)a1);
         a1 = dword_54DB80;
         ++v2;
       }
@@ -86631,7 +86631,7 @@ void  sub_471990(int a1, int a2)
   }
   else
   {
-    sub_46D2B5(a2);
+    Audio_ClearGlobalMixBuffer(a2);
   }
 }
 // 54DB6C: using guessed type int dword_54DB6C;
@@ -86643,7 +86643,7 @@ void  sub_471990(int a1, int a2)
 // 54DBA4: using guessed type int dword_54DBA4;
 
 //----- (00471A30) --------------------------------------------------------
-unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4, unsigned int a5)
+unsigned int __cdecl CSS_ChannelInitPlayback(unsigned int a1, int a2, unsigned int a3, int a4, unsigned int a5)
 {
   unsigned int result; // eax
   _DWORD *v6; // ebx
@@ -86661,8 +86661,8 @@ unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4
     v6[9] = 0;
     v6[4] = 0;
     v6[6] = 1;
-    v6[5] = a3 >> sub_470A30(a4);
-    v6[2] = a3 >> sub_470A30(a4);
+    v6[5] = a3 >> CSS_GetFormatTableValue(a4);
+    v6[2] = a3 >> CSS_GetFormatTableValue(a4);
     result = a5;
     v6[15] = a5;
     v6[16] = 1;
@@ -86686,34 +86686,34 @@ unsigned int __cdecl sub_471A30(unsigned int a1, int a2, unsigned int a3, int a4
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471B40) --------------------------------------------------------
-void __cdecl sub_471B40(unsigned int a1)
+void __cdecl CSS_ChannelStop(unsigned int a1)
 {
-  sub_471030(a1);
+  CSS_ChannelMarkIdle(a1);
 }
 
 //----- (00471BA0) --------------------------------------------------------
-void __cdecl sub_471BA0(unsigned int a1, unsigned int a2)
+void __cdecl CSS_ChannelSetPositionOffset(unsigned int a1, unsigned int a2)
 {
   unsigned int v2; // ebx
 
   if ( a1 < dword_54DB80 )
   {
     v2 = 108 * a1 + dword_54DB90;
-    *(_DWORD *)(v2 + 56) = a2 >> sub_470A30(*(_DWORD *)(v2 + 4));
+    *(_DWORD *)(v2 + 56) = a2 >> CSS_GetFormatTableValue(*(_DWORD *)(v2 + 4));
   }
 }
 // 54DB80: using guessed type int dword_54DB80;
 // 54DB90: using guessed type int dword_54DB90;
 
 //----- (00471BF0) --------------------------------------------------------
-char  sub_471BF0(_DWORD *a1)
+char  Compat_StringHolderDestructor(_DWORD *a1)
 {
-  sub_471C40(a1);
+  Compat_StringHolderFreeText(a1);
   return 0;
 }
 
 //----- (00471C40) --------------------------------------------------------
-int sub_471C40(_DWORD *a1)
+int Compat_StringHolderFreeText(_DWORD *a1)
 {
   if ( a1 )
   {
@@ -86725,7 +86725,7 @@ int sub_471C40(_DWORD *a1)
 }
 
 //----- (00471C60) --------------------------------------------------------
-int  sub_471C60(int a1, char a2)
+int  Compat_StringHolderScalarDeletingDtor(int a1, char a2)
 {
   if ( (a2 & 4) != 0 )
   {
@@ -86734,7 +86734,7 @@ int  sub_471C60(int a1, char a2)
     return a1;
   }
   *(_DWORD *)(a1 + 4) = &off_50EC84;
-  sub_471C40((_DWORD *)a1);
+  Compat_StringHolderFreeText((_DWORD *)a1);
   if ( (a2 & 2) != 0 )
     j__nfree_(a1);
   return a1;
@@ -86808,14 +86808,14 @@ static void Compat_StringHolderAssignJoined(_DWORD *holder, const char *prefix, 
     suffix_size = 0;
   if ( !prefix_size && !suffix_size )
   {
-    sub_471C40(holder);
+    Compat_StringHolderFreeText(holder);
     return;
   }
   total_size = prefix_size + suffix_size;
   copy = (unsigned char *)(uintptr_t)(unsigned int)Compat_AllocLow32Bytes((int)(total_size + 1));
   if ( !copy )
   {
-    sub_471C40(holder);
+    Compat_StringHolderFreeText(holder);
     return;
   }
   if ( prefix_size )
@@ -86823,7 +86823,7 @@ static void Compat_StringHolderAssignJoined(_DWORD *holder, const char *prefix, 
   if ( suffix_size )
     memcpy(copy + prefix_size, suffix, suffix_size);
   copy[total_size] = 0;
-  sub_471C40(holder);
+  Compat_StringHolderFreeText(holder);
   *holder = (int)(uintptr_t)copy;
 }
 
@@ -86858,7 +86858,7 @@ static void Compat_StringHolderInsertText(_DWORD *holder, signed int index, cons
   if ( existing_size > (unsigned int)index )
     memcpy(copy + index + inserted_size, existing_text + index, existing_size - (unsigned int)index);
   copy[total_size] = 0;
-  sub_471C40(holder);
+  Compat_StringHolderFreeText(holder);
   *holder = (int)(uintptr_t)copy;
 }
 
@@ -86869,7 +86869,7 @@ static void Compat_StringHolderCopyText(_DWORD *holder, const char *source)
 
   if ( !holder )
     return;
-  sub_471C40(holder);
+  Compat_StringHolderFreeText(holder);
   if ( !source || !*source )
     return;
   copy_size = (unsigned int)strlen(source) + 1;
@@ -86884,7 +86884,7 @@ static void Compat_StringHolderInitText(_DWORD *holder, const char *source)
 {
   if ( !holder )
     return;
-  sub_471C40(holder);
+  Compat_StringHolderFreeText(holder);
   if ( source && *source )
     Compat_StringHolderCopyText(holder, source);
 }
@@ -86896,11 +86896,11 @@ static const char **Compat_StringHolderBuildParentPath(_DWORD *holder, const cha
 
   holder[0] = 0;
   holder[1] = &off_50EC84;
-  sub_471BF0((const char **)holder);
+  Compat_StringHolderDestructor((const char **)holder);
   holder[1] = &off_50EC94;
   if ( source_text && *source_text )
     Compat_StringHolderCopyText(holder, source_text);
-  slash_index = sub_472190((_BYTE **)holder);
+  slash_index = Compat_StringHolderFindLastBackslash((_BYTE **)holder);
   if ( slash_index == -1 )
   {
     Compat_StringHolderCopyText(holder, "");
@@ -86908,7 +86908,7 @@ static const char **Compat_StringHolderBuildParentPath(_DWORD *holder, const cha
   }
   source_text = Compat_StringHolderGetText(holder);
   text_len = source_text ? (unsigned int)strlen(source_text) : 0;
-  sub_472230((char **)holder, slash_index, text_len, (int)(text_len - (unsigned int)slash_index));
+  Compat_StringHolderRemoveRange((char **)holder, slash_index, text_len, (int)(text_len - (unsigned int)slash_index));
   return (const char **)holder;
 }
 
@@ -86919,16 +86919,16 @@ static _DWORD *Compat_StringHolderBuildLeafName(_DWORD *holder, const char *sour
 
   holder[0] = 0;
   holder[1] = &off_50EC84;
-  sub_471BF0((const char **)holder);
+  Compat_StringHolderDestructor((const char **)holder);
   holder[1] = &off_50EC94;
   if ( source_text && *source_text )
     Compat_StringHolderCopyText(holder, source_text);
-  slash_index = sub_472190((_BYTE **)holder);
+  slash_index = Compat_StringHolderFindLastBackslash((_BYTE **)holder);
   if ( slash_index == -1 )
     return holder;
   source_text = Compat_StringHolderGetText(holder);
   text_len = source_text ? (unsigned int)strlen(source_text) : 0;
-  sub_472230((char **)holder, 0, text_len, slash_index + 1);
+  Compat_StringHolderRemoveRange((char **)holder, 0, text_len, slash_index + 1);
   return holder;
 }
 
@@ -86941,14 +86941,14 @@ static int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
     return (int)(uintptr_t)holder;
   }
   holder[1] = &off_50EC84;
-  sub_471C40(holder);
+  Compat_StringHolderFreeText(holder);
   if ( (flags & 2) != 0 )
     j__nfree_((int)(uintptr_t)holder);
   return (int)(uintptr_t)holder;
 }
 
 //----- (00471CA0) --------------------------------------------------------
-_DWORD * sub_471CA0(_DWORD *a1, _DWORD *a2, const char *a3)
+_DWORD * Compat_StringHolderConstructJoined(_DWORD *a1, _DWORD *a2, const char *a3)
 {
   a1[0] = 0;
   a1[1] = &off_50EC84;
@@ -86960,7 +86960,7 @@ _DWORD * sub_471CA0(_DWORD *a1, _DWORD *a2, const char *a3)
 // 50EC94: using guessed type int (*off_50EC94)();
 
 //----- (00471D10) --------------------------------------------------------
-const char ** sub_471D10(const char **a1, const char *a2)
+const char ** Compat_StringHolderAppendText(const char **a1, const char *a2)
 {
   _DWORD *holder;
 
@@ -86971,7 +86971,7 @@ const char ** sub_471D10(const char **a1, const char *a2)
 }
 
 //----- (00471DE0) --------------------------------------------------------
-const char ** sub_471DE0(const char **a1, const char *a2)
+const char ** Compat_StringHolderPrependText(const char **a1, const char *a2)
 {
   _DWORD *holder;
 
@@ -86982,7 +86982,7 @@ const char ** sub_471DE0(const char **a1, const char *a2)
 }
 
 //----- (00471EE0) --------------------------------------------------------
-int  sub_471EE0(_DWORD *a1, int a2, int a3)
+int  Compat_StringHolderFindSubstringOffset(_DWORD *a1, int a2, int a3)
 {
   int v4; // eax
   _DWORD *v5; // ecx
@@ -86995,7 +86995,7 @@ int  sub_471EE0(_DWORD *a1, int a2, int a3)
 // 471EFD: variable 'v5' is possibly undefined
 
 //----- (00471F10) --------------------------------------------------------
-const char ** sub_471F10(const char **a1, unsigned int a2)
+const char ** Compat_StringHolderUppercaseInPlace(const char **a1, unsigned int a2)
 {
   const char *v3; // eax
 
@@ -87011,7 +87011,7 @@ const char ** sub_471F10(const char **a1, unsigned int a2)
 // 47BBE3: using guessed type int __fastcall strupr_(_DWORD, _DWORD);
 
 //----- (00472120) --------------------------------------------------------
-int  sub_472120(const char **a1, char a2, signed int a3)
+int  Compat_StringHolderFindCharFrom(const char **a1, char a2, signed int a3)
 {
   const char *text;
   const char *match;
@@ -87030,7 +87030,7 @@ int  sub_472120(const char **a1, char a2, signed int a3)
 }
 
 //----- (00472190) --------------------------------------------------------
-int  sub_472190(_BYTE **a1)
+int  Compat_StringHolderFindLastBackslash(_BYTE **a1)
 {
   const char *text;
   char *last_slash;
@@ -87045,7 +87045,7 @@ int  sub_472190(_BYTE **a1)
 }
 
 //----- (004721C0) --------------------------------------------------------
-int  sub_4721C0(char **a1, signed int a2)
+int  Compat_StringHolderFindLastBackslashBefore(char **a1, signed int a2)
 {
   _DWORD *holder;
   char *text;
@@ -87070,7 +87070,7 @@ int  sub_4721C0(char **a1, signed int a2)
 }
 
 //----- (00472230) --------------------------------------------------------
-char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
+char ** Compat_StringHolderRemoveRange(char **a1, int a2, unsigned int a3, int a4)
 {
   _DWORD *holder;
   const char *text;
@@ -87092,12 +87092,12 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
     copy[a2] = 0;
     if ( (unsigned int)(a2 + a4) < text_len )
       Compat_CopyPrefixN(copy + a2, text + a2 + a4, text_len - (unsigned int)(a2 + a4) + 1);
-    sub_471C40(holder);
+    Compat_StringHolderFreeText(holder);
     *holder = (int)(uintptr_t)copy;
     j_j__nfree_();
     return a1;
   }
-  sub_471BF0((const char **)holder);
+  Compat_StringHolderDestructor((const char **)holder);
   return a1;
 }
 // 47228D: variable 'v9' is possibly undefined
@@ -87105,7 +87105,7 @@ char ** sub_472230(char **a1, int a2, unsigned int a3, int a4)
 // 48521A: using guessed type int __fastcall strncpy_(_DWORD, _DWORD);
 
 //----- (00472320) --------------------------------------------------------
-const char ** sub_472320(const char **result, signed int a2, const char *a3)
+const char ** Compat_StringHolderInsertTextChecked(const char **result, signed int a2, const char *a3)
 {
   if ( a2 >= 0 && a3 && *a3 )
     Compat_StringHolderInsertText((_DWORD *)result, a2, a3);
@@ -87113,7 +87113,7 @@ const char ** sub_472320(const char **result, signed int a2, const char *a3)
 }
 
 //----- (00472470) --------------------------------------------------------
-_DWORD * sub_472470(_DWORD *result)
+_DWORD * Compat_StringHolderInitBase(_DWORD *result)
 {
   *result = 0;
   result[1] = &off_50EC84;
@@ -87141,7 +87141,7 @@ void  __noreturn CRT_ExitProcessWithFinalizers(int a1, int a2, int a3)
 // 519EF4: using guessed type int (__fastcall *off_519EF4)(_DWORD, _DWORD);
 
 //----- (00472584) --------------------------------------------------------
-void  __noreturn sub_472584(int a1, int a2, int a3)
+void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3)
 {
   int v3; // edx
   int v4; // ecx
@@ -87178,7 +87178,7 @@ void  __noreturn sub_472584(int a1, int a2, int a3)
 // 51A5F4: using guessed type int (*dword_51A5F4)(void);
 
 //----- (004725B0) --------------------------------------------------------
-int __fastcall sub_4725B0(int a1, int a2)
+int __fastcall Mem_InitReserveBlock(int a1, int a2)
 {
   int result; // eax
   int v3; // ecx
@@ -87202,7 +87202,7 @@ int __fastcall sub_4725B0(int a1, int a2)
 // 54DBA8: using guessed type int dword_54DBA8;
 
 //----- (00472620) --------------------------------------------------------
-signed int  sub_472620(_DWORD *a1)
+signed int  Mem_HeapAllocWithRetry(_DWORD *a1)
 {
   int request_size;
   int grow_size;
@@ -87242,7 +87242,7 @@ LABEL_5:
 // 519F10: using guessed type signed int (*off_519F10)();
 
 //----- (004726C0) --------------------------------------------------------
-signed int sub_4726C0()
+signed int Mem_FatalOutOfMemory()
 {
   int v0; // ecx
 
@@ -87415,7 +87415,7 @@ _BYTE * sub_4728F0(unsigned int a1)
   if ( a1 >= 4 )
   {
     if ( (int)a1 >= 500 )
-      return (_BYTE *)sub_472620((_DWORD *)a1);
+      return (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)a1);
   }
   else
   {
@@ -87437,7 +87437,7 @@ _BYTE * sub_4728F0(unsigned int a1)
   else
   {
     allocation_size = v1;
-    v7 = (_BYTE *)sub_472620((_DWORD *)allocation_size);
+    v7 = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)allocation_size);
     allocated_block = (int)v7;
     for ( j = 0; j < allocation_size; ++v7 )
     {
@@ -87458,7 +87458,7 @@ _DWORD * sub_472980(unsigned int a1)
   if ( a1 >= 4 )
   {
     if ( (int)a1 >= 500 )
-      return (_DWORD *)sub_472620((_DWORD *)a1);
+      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
   }
   else
   {
@@ -87471,7 +87471,7 @@ _DWORD * sub_472980(unsigned int a1)
     *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
     return (_DWORD *)free_node;
   }
-  return (_DWORD *)sub_472620((_DWORD *)a1);
+  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
@@ -87484,7 +87484,7 @@ _DWORD * Mem_NewArray(unsigned int a1)
   if ( a1 >= 4 )
   {
     if ( (int)a1 >= 500 )
-      return (_DWORD *)sub_472620((_DWORD *)a1);
+      return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
   }
   else
   {
@@ -87497,7 +87497,7 @@ _DWORD * Mem_NewArray(unsigned int a1)
     *(_DWORD *)free_list_slot = *(_DWORD *)free_node;
     return (_DWORD *)free_node;
   }
-  return (_DWORD *)sub_472620((_DWORD *)a1);
+  return (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)a1);
 }
 // 54DBA8: using guessed type int dword_54DBA8;
 
@@ -90088,10 +90088,10 @@ int  sub_476AF0(int a1, int a2, const CHAR *a3, DWORD a4)
     open_mode_handle = sub_475CC8(a3, (unsigned __int8 *)aWt, a1, a4);
   entry_path_holder = 0;
   entry_path_vtable = &off_50EC84;
-  sub_471BF0(&entry_path_holder);
+  Compat_StringHolderDestructor(&entry_path_holder);
   entry_path_vtable = &off_50EC94;
   if ( *(_DWORD *)(a1 + 28) == *(_DWORD *)(a1 + 32) )
-    sub_4017D0((_DWORD *)(a1 + 20), *(_DWORD *)(a1 + 24));
+    PathEntryArray_GrowByDelta((_DWORD *)(a1 + 20), *(_DWORD *)(a1 + 24));
   entry_index = *(_DWORD *)(a1 + 28);
   *(_DWORD *)(a1 + 28) = entry_index + 1;
   entry_record = (_DWORD *)(16 * entry_index + *(_DWORD *)(a1 + 20));
@@ -90127,9 +90127,9 @@ int  sub_476C30(_DWORD *a1, char a2)
     *a1 = off_510964;
     sub_476CA0((int)a1, 0);
     v3[4] = off_50ECA4;
-    sub_401720(v3);
-    v5 = sub_471C60(v4 - 8, 0);
-    v6 = sub_471C60(v5 - 8, 0);
+    PathEntryArray_DestructElements(v3);
+    v5 = Compat_StringHolderScalarDeletingDtor(v4 - 8, 0);
+    v6 = Compat_StringHolderScalarDeletingDtor(v5 - 8, 0);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -90179,7 +90179,7 @@ _DWORD * sub_476CA0(int a1, int a2)
         fclose_(v2);
         *(_DWORD *)(v6 + *v5 + 12) = 0;
       }
-      result = sub_401890(v4, v2, 1);
+      result = PathEntryArray_RemoveAt(v4, v2, 1);
       v2 = v8 - 1;
       v6 -= 16;
     }
@@ -90205,29 +90205,29 @@ char  sub_476D20(int a1, const char **a2)
   path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
   if ( !path_text || !*path_text )
     return 0;
-  if ( sub_472120(a2, 58, 0) == -1 )
+  if ( Compat_StringHolderFindCharFrom(a2, 58, 0) == -1 )
   {
     if ( *path_text == 92 )
     {
-      sub_471DE0(a2, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4));
+      Compat_StringHolderPrependText(a2, (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 4));
     }
     else
     {
       v18[0] = 0;
       v18[1] = (int)&off_50EC94;
-      sub_471CA0(v18, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 12));
-      sub_471DE0(a2, Compat_StringHolderGetText(v18));
+      Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 12));
+      Compat_StringHolderPrependText(a2, Compat_StringHolderGetText(v18));
       Compat_StringHolderDestroyStack(v18, 1);
     }
   }
-  colon_index = sub_472120(a2, 58, 0) + 1;
+  colon_index = Compat_StringHolderFindCharFrom(a2, 58, 0) + 1;
   path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
   if ( !path_text || path_text[colon_index] != 92 )
-    sub_472320(a2, colon_index, asc_5024B0);
+    Compat_StringHolderInsertTextChecked(a2, colon_index, asc_5024B0);
   search_index = 0;
   while ( 1 )
   {
-    dot_index = sub_472120(a2, 46, search_index);
+    dot_index = Compat_StringHolderFindCharFrom(a2, 46, search_index);
     if ( dot_index == -1 )
       break;
     dot_next_index = dot_index + 1;
@@ -90236,27 +90236,27 @@ char  sub_476D20(int a1, const char **a2)
       break;
     if ( path_text[dot_next_index] == 46 )
     {
-      if ( path_text[dot_index - 1] != 92 || (parent_index = sub_4721C0((char **)a2, dot_index - 2), parent_index == -1) )
+      if ( path_text[dot_index - 1] != 92 || (parent_index = Compat_StringHolderFindLastBackslashBefore((char **)a2, dot_index - 2), parent_index == -1) )
       {
         Compat_StringHolderCopyText((_DWORD *)a2, "");
         return 0;
       }
-      sub_472230((char **)a2, parent_index, (unsigned int)(uintptr_t)a2, dot_index - parent_index + 2);
+      Compat_StringHolderRemoveRange((char **)a2, parent_index, (unsigned int)(uintptr_t)a2, dot_index - parent_index + 2);
     }
     else if ( path_text[dot_index - 1] == 92 )
     {
-      sub_472230((char **)a2, dot_index - 1, (unsigned int)(uintptr_t)a2, 2);
+      Compat_StringHolderRemoveRange((char **)a2, dot_index - 1, (unsigned int)(uintptr_t)a2, 2);
     }
     else
     {
       search_index = dot_next_index;
     }
   }
-  colon_index = sub_472120(a2, 58, 0) + 1;
+  colon_index = Compat_StringHolderFindCharFrom(a2, 58, 0) + 1;
   path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a2);
   if ( !path_text || path_text[colon_index] != 92 )
-    sub_472320(a2, colon_index, asc_5024B4);
-  return (char)(unsigned __int8)(uintptr_t)sub_471F10(a2, (unsigned int)(uintptr_t)a2);
+    Compat_StringHolderInsertTextChecked(a2, colon_index, asc_5024B4);
+  return (char)(unsigned __int8)(uintptr_t)Compat_StringHolderUppercaseInPlace(a2, (unsigned int)(uintptr_t)a2);
 }
 
 //----- (00476ED0) --------------------------------------------------------
@@ -90278,13 +90278,13 @@ const char ** sub_476ED0(int a1, int a2, unsigned int a3, const char **a4)
   {
     entry_path_len = 0;
   }
-  result = sub_472230((char **)a4, 0, a3, entry_path_len);
+  result = Compat_StringHolderRemoveRange((char **)a4, 0, a3, entry_path_len);
   holder_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)a4);
   if ( holder_text )
   {
     holder_len = (unsigned int)strlen(holder_text) + 1;
     if ( holder_len != 1 && *(const unsigned char *)holder_text == 92 )
-      return sub_472230((char **)a4, 0, holder_len - 1, 1);
+      return Compat_StringHolderRemoveRange((char **)a4, 0, holder_len - 1, 1);
   }
   return a4;
 }
@@ -90352,7 +90352,7 @@ int  sub_4770B0(int a1, int a2, int (*a3)(void))
 
   v11 = 0;
   v12 = &off_50EC84;
-  sub_471BF0(&v11);
+  Compat_StringHolderDestructor(&v11);
   v12 = &off_50EC94;
   sub_476D20(a1, &v11);
   if ( v11 && *v11 )
@@ -90364,7 +90364,7 @@ int  sub_4770B0(int a1, int a2, int (*a3)(void))
       matched_index = sub_476F60(a1, &v11, next_index);
       if ( matched_index == -1 )
         break;
-      sub_471BF0(&dword_54DD00);
+      Compat_StringHolderDestructor(&dword_54DD00);
       sub_476ED0(a1, matched_index, matched_index, (const char **)&dword_54DD00);
       callback_result = a3();
       if ( callback_result != a2 )
@@ -90461,24 +90461,24 @@ signed int  sub_4771D0(const char **a1, int a2)
   {
     path_len_with_nul = (unsigned int)strlen(v10) + 1;
     if ( path_len_with_nul >= 2 && v10[path_len_with_nul - 2] != 92 )
-      sub_472320(&v10, path_len_with_nul - 1, asc_5024C0);
-    colon_index = sub_472120(&v10, 58, 0);
+      Compat_StringHolderInsertTextChecked(&v10, path_len_with_nul - 1, asc_5024C0);
+    colon_index = Compat_StringHolderFindCharFrom(&v10, 58, 0);
     Compat_StringHolderCopyText(fs_words + 1, v10);
     root_text = Compat_StringHolderGetText(fs_words + 1);
     if ( root_text )
       root_text_len = (unsigned int)strlen(root_text);
     else
       root_text_len = 0;
-    sub_472230((char **)(fs_words + 1), colon_index + 1, root_text_len, (int)(root_text_len - (unsigned int)(colon_index + 1)));
+    Compat_StringHolderRemoveRange((char **)(fs_words + 1), colon_index + 1, root_text_len, (int)(root_text_len - (unsigned int)(colon_index + 1)));
     normalized_text_len = (unsigned int)strlen(v10);
-    sub_472230(&v10, 0, normalized_text_len, colon_index + 1);
+    Compat_StringHolderRemoveRange(&v10, 0, normalized_text_len, colon_index + 1);
     Compat_StringHolderCopyText(fs_words + 3, v10);
-    sub_471C60((int)&v10, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&v10, 1);
     return 1;
   }
   else
   {
-    sub_471C60((int)&v10, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&v10, 1);
     return 0;
   }
 }
@@ -90505,9 +90505,9 @@ int  sub_477300(int a1, int a2)
     CRT_RegisterFinalizableObject(0, a1);
     a2 = v5;
   }
-  sub_471CA0(v6, a2, *(const char **)(v3 + 12));
-  sub_471BF0(&dword_54DCF0);
-  sub_471C60((int)v6, 1);
+  Compat_StringHolderConstructJoined(v6, a2, *(const char **)(v3 + 12));
+  Compat_StringHolderDestructor(&dword_54DCF0);
+  Compat_StringHolderScalarDeletingDtor((int)v6, 1);
   return dword_54DCF0;
 }
 // 477312: variable 'v3' is possibly undefined
@@ -90543,13 +90543,13 @@ int  sub_477370(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4)
     v8 = strlen(v6);
     if ( v8 && v6[v8 - 1] == 92 )
     {
-      sub_472230((char **)&v18, (int)(v8 - 1), (unsigned int)(uintptr_t)&v18, 1);
+      Compat_StringHolderRemoveRange((char **)&v18, (int)(v8 - 1), (unsigned int)(uintptr_t)&v18, 1);
     }
     if ( v20 )
       archive_mode = sub_475CC8(v20, (unsigned __int8 *)aWt_0, 0, a4);
     v10 = a1 + 5;
     if ( a1[7] == a1[8] )
-      sub_4017D0(a1 + 5, a1[6]);
+      PathEntryArray_GrowByDelta(a1 + 5, a1[6]);
     v11 = v10[2];
     v10[2] = v11 + 1;
     v12 = (_DWORD *)(16 * v11 + *v10);
@@ -90781,14 +90781,14 @@ signed int  sub_477710(int (***a1)(void), int a2, int a3)
   v29 = a2;
   v20 = 0;
   v21 = &off_50EC84;
-  sub_471BF0(&v20);
+  Compat_StringHolderDestructor(&v20);
   v21 = &off_50EC94;
-  sub_471D10(&v20, asc_5024C5);
+  Compat_StringHolderAppendText(&v20, asc_5024C5);
   v22 = v4;
   v23 = &off_50EC84;
-  sub_471BF0(&v22);
+  Compat_StringHolderDestructor(&v22);
   v23 = &off_50EC94;
-  sub_471D10(&v22, asc_5024C7);
+  Compat_StringHolderAppendText(&v22, asc_5024C7);
   v16 = (**a1)();
   v18 = v29;
   v17 = a1;
@@ -90801,37 +90801,37 @@ signed int  sub_477710(int (***a1)(void), int a2, int a3)
       (**(void (__thiscall ***)(_DWORD))v16)(0);
       v24 = v6;
       v25 = &off_50EC84;
-      sub_471BF0(&v24);
+      Compat_StringHolderDestructor(&v24);
       v25 = &off_50EC94;
-      sub_471CA0(v28, v7, v24);
+      Compat_StringHolderConstructJoined(v28, v7, v24);
       if ( strcmp_(v8, a__34) && strcmp_(v9, a___1) )
       {
         if ( ((*(int (**)(void))(*(_DWORD *)v16 + 4))() & 0x10) != 0 )
         {
-          sub_471CA0(v27, v10, v24);
+          Compat_StringHolderConstructJoined(v27, v10, v24);
           v5 += sub_477660((int (__thiscall ***)(_DWORD))a1, v11);
-          sub_471C60((int)v27, 1);
+          Compat_StringHolderScalarDeletingDtor((int)v27, 1);
           (*a1)[6]();
-          sub_471CA0(v19, v29, v24);
+          Compat_StringHolderConstructJoined(v19, v29, v24);
           sub_477710((int)a1, v12, a3);
-          sub_471C60((int)v19, 1);
+          Compat_StringHolderScalarDeletingDtor((int)v19, 1);
         }
         else
         {
-          v14 = *sub_471CA0(v26, a3, v24);
+          v14 = *Compat_StringHolderConstructJoined(v26, a3, v24);
           LOBYTE(v14) = sub_4775E0((DWORD *)a1, v15, v14) == -1;
-          sub_471C60((int)v26, 1);
+          Compat_StringHolderScalarDeletingDtor((int)v26, 1);
           if ( (_BYTE)v14 )
           {
-            sub_471C60((int)v28, 1);
+            Compat_StringHolderScalarDeletingDtor((int)v28, 1);
             v5 = -1;
-            sub_471C60((int)&v24, 1);
+            Compat_StringHolderScalarDeletingDtor((int)&v24, 1);
             break;
           }
         }
       }
-      sub_471C60((int)v28, 1);
-      sub_471C60((int)&v24, 1);
+      Compat_StringHolderScalarDeletingDtor((int)v28, 1);
+      Compat_StringHolderScalarDeletingDtor((int)&v24, 1);
       (*(void (**)(void))(*(_DWORD *)v16 + 16))();
       sub_476AB0((int)&v16);
       if ( !v16 )
@@ -90839,8 +90839,8 @@ signed int  sub_477710(int (***a1)(void), int a2, int a3)
     }
   }
   (*v17)[1]();
-  sub_471C60((int)&v22, 1);
-  sub_471C60((int)&v20, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
   return v5;
 }
 // 47774A: variable 'v4' is possibly undefined
@@ -90882,9 +90882,9 @@ signed int __fastcall sub_477950(int a1, int a2)
 
   v22 = 0;
   v23 = &off_50EC84;
-  sub_471BF0(&v22);
+  Compat_StringHolderDestructor(&v22);
   v23 = &off_50EC94;
-  sub_471D10(&v22, asc_5024CE);
+  Compat_StringHolderAppendText(&v22, asc_5024CE);
   v15 = (**v3)(v3, v22);
   v16 = v4;
   v17 = 0;
@@ -90896,32 +90896,32 @@ signed int __fastcall sub_477950(int a1, int a2)
       (**(void (***)(void))v15)();
       v20 = 0;
       v21 = &off_50EC84;
-      sub_471BF0(&v20);
+      Compat_StringHolderDestructor(&v20);
       v21 = &off_50EC94;
       if ( strcmp_(v6, a__35) && strcmp_(v7, a___2) )
       {
         if ( ((*(int (**)(void))(*(_DWORD *)v15 + 4))() & 0x10) != 0 )
         {
-          v9 = sub_471CA0(v19, (int)v8, v20);
+          v9 = Compat_StringHolderConstructJoined(v19, (int)v8, v20);
           v11 = sub_477950(v10, *v9) == -1;
-          sub_471C60((int)v19, 1);
+          Compat_StringHolderScalarDeletingDtor((int)v19, 1);
           if ( v11 )
           {
-            sub_471C60((int)&v20, 1);
+            Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
             (*(void (**)(void))(*(_DWORD *)v16 + 4))();
-            sub_471C60((int)&v22, 1);
+            Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
             return -1;
           }
         }
         else
         {
           v14 = *v8;
-          sub_471CA0(v18, (int)v8, v20);
+          Compat_StringHolderConstructJoined(v18, (int)v8, v20);
           (*(void (**)(void))(v14 + 32))();
-          sub_471C60((int)v18, 1);
+          Compat_StringHolderScalarDeletingDtor((int)v18, 1);
         }
       }
-      sub_471C60((int)&v20, 1);
+      Compat_StringHolderScalarDeletingDtor((int)&v20, 1);
       (*(void (**)(void))(*(_DWORD *)v15 + 16))();
       sub_476AB0((int)&v15);
       if ( !v15 )
@@ -90930,7 +90930,7 @@ signed int __fastcall sub_477950(int a1, int a2)
   }
   v12 = (*(int (__fastcall **)(int, int))(*(_DWORD *)v5 + 28))(v5, a2);
   (*(void (**)(void))(*(_DWORD *)v16 + 4))();
-  sub_471C60((int)&v22, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v22, 1);
   return v12;
 }
 // 477991: variable 'v3' is possibly undefined
@@ -91211,13 +91211,13 @@ int  sub_477EC0(_DWORD *a1, int a2)
   *a1 = off_5109F4;
   v7 = 0;
   v8 = &off_50EC84;
-  sub_471BF0(&v7);
+  Compat_StringHolderDestructor(&v7);
   v8 = &off_50EC94;
-  sub_471D10(&v7, a__31);
+  Compat_StringHolderAppendText(&v7, a__31);
   v3 = sub_489E64(v7, (_DWORD *)(v2 + 4), v2);
   *(_DWORD *)(v4 + 284) = v3;
   *(_DWORD *)(v4 + 288) = v3;
-  sub_471C60((int)&v7, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v7, 1);
   return v5;
 }
 // 477F06: variable 'v2' is possibly undefined
@@ -91335,12 +91335,12 @@ const char ** sub_478030(const char **a1, int a2)
   *(_DWORD *)a1 = (int)off_510A14;
   if ( !a2 )
     return a1;
-  sub_471BF0((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
+  Compat_StringHolderDestructor((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
   path_text = Compat_StringHolderGetText((_DWORD *)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
   path_len = path_text ? (unsigned int)strlen(path_text) : 0;
   if ( !path_len || path_text[path_len - 1] == 92 )
     return a1;
-  sub_471D10((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4), asc_5024EA);
+  Compat_StringHolderAppendText((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4), asc_5024EA);
   return a1;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
@@ -91362,7 +91362,7 @@ int  sub_4780A0(_DWORD *a1, char a2)
   else
   {
     *a1 = off_510A14;
-    v3 = sub_471C60((int)(a1 + 1), 0);
+    v3 = Compat_StringHolderScalarDeletingDtor((int)(a1 + 1), 0);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -91390,7 +91390,7 @@ int  sub_4780F0(int a1, char a2, DWORD a3)
   result = (_DWORD *)Mem_Alloc(8, a1, a2, a3);
   if ( result )
   {
-    sub_471CA0(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), 0);
+    Compat_StringHolderConstructJoined(joined_path, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), 0);
     result = sub_477CE0(result, (const CHAR *)(uintptr_t)(unsigned int)joined_path[0], 0, a2, a3);
   }
   Compat_StringHolderDestroyStack(joined_path, 1);
@@ -91406,9 +91406,9 @@ int __fastcall sub_478140(int a1, const char *a2)
   _DWORD v7[4]; // [esp-Ch] [ebp-10h] BYREF
 
   v7[2] = a1;
-  sub_471CA0(v7, a1, a2);
+  Compat_StringHolderConstructJoined(v7, a1, a2);
   sub_476A78(v3, 1);
-  sub_471C60((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
   return v5;
 }
 // 478158: variable 'v3' is possibly undefined
@@ -91425,9 +91425,9 @@ int __fastcall sub_478170(int a1, const char *a2)
   _DWORD v7[3]; // [esp-Ch] [ebp-Ch] BYREF
 
   v7[2] = a1;
-  v3 = (const CHAR **)sub_471CA0(v7, a1, a2);
+  v3 = (const CHAR **)Compat_StringHolderConstructJoined(v7, a1, a2);
   sub_489FBA(*v3, 1);
-  sub_471C60((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
   return v5;
 }
 // 478190: variable 'v4' is possibly undefined
@@ -91442,9 +91442,9 @@ int __fastcall sub_4781A0(int a1, const char *a2)
   _DWORD v7[4]; // [esp-Ch] [ebp-10h] BYREF
 
   v7[2] = a1;
-  v3 = (const CHAR **)sub_471CA0(v7, a1, a2);
+  v3 = (const CHAR **)Compat_StringHolderConstructJoined(v7, a1, a2);
   sub_489FD7(*v3, 1);
-  sub_471C60((int)v7, v4);
+  Compat_StringHolderScalarDeletingDtor((int)v7, v4);
   return v5;
 }
 // 4781C1: variable 'v4' is possibly undefined
@@ -91494,20 +91494,20 @@ int __thiscall sub_478250(void *this)
   v8 = this;
   v6 = 0;
   v7 = &off_50EC84;
-  sub_471BF0(&v6);
+  Compat_StringHolderDestructor(&v6);
   v7 = &off_50EC94;
   if ( v6 && *v6 && v6[strlen(v6) - 1] != 92 )
-    sub_471D10(&v6, asc_5024EE);
-  sub_471D10(&v6, a__36);
+    Compat_StringHolderAppendText(&v6, asc_5024EE);
+  Compat_StringHolderAppendText(&v6, a__36);
   if ( sub_489E64(v6, &v5, v1) == -1 )
   {
-    sub_471C60((int)&v6, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&v6, 1);
     return 0;
   }
   else
   {
     findclose_(v2);
-    sub_471C60((int)&v6, 1);
+    Compat_StringHolderScalarDeletingDtor((int)&v6, 1);
     return v3;
   }
 }
@@ -91620,21 +91620,21 @@ const char ** sub_478450(const char **a1)
 
   *a1 = 0;
   a1[1] = (const char *)&off_50EC84;
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   a1[1] = (const char *)&off_50EC94;
-  if ( sub_472190((_BYTE **)a1) == -1 )
+  if ( Compat_StringHolderFindLastBackslash((_BYTE **)a1) == -1 )
   {
-    sub_471BF0(a1);
+    Compat_StringHolderDestructor(a1);
     return a1;
   }
   else
   {
-    v2 = (const char *)sub_462D30((int)a1);
+    v2 = (const char *)ExcString_GetTextPtr((int)a1);
     if ( v2 )
       v4 = strlen(v2);
     else
       v4 = 0;
-    sub_472230(a1, v3, v4, v4 - v3);
+    Compat_StringHolderRemoveRange(a1, v3, v4, v4 - v3);
     return a1;
   }
 }
@@ -91650,11 +91650,11 @@ _DWORD * sub_4784E0(_DWORD *a1)
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   a1[1] = &off_50EC94;
-  v2 = sub_472190((_BYTE **)a1);
+  v2 = Compat_StringHolderFindLastBackslash((_BYTE **)a1);
   if ( v2 != -1 )
-    sub_472230((const char **)a1, 0, v3, v2 + 1);
+    Compat_StringHolderRemoveRange((const char **)a1, 0, v3, v2 + 1);
   return a1;
 }
 // 478524: variable 'v3' is possibly undefined
@@ -91806,7 +91806,7 @@ int  sub_478720(_DWORD *a1, int a2)
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471BF0(a1);
+  Compat_StringHolderDestructor(a1);
   v3[1] = &off_50EC94;
   v3[2] = *(_DWORD *)(a2 + 8);
   v3[3] = 0;
@@ -91831,7 +91831,7 @@ int  sub_478770(_DWORD *a1, int *a2, int a3, int a4, const void *a5)
 
   *a1 = 0;
   a1[1] = &off_50EC84;
-  sub_471C40(a1);
+  Compat_StringHolderFreeText(a1);
   v14 = Compat_StringArgGetText(a5);
   if ( v14 && *v14 )
   {
@@ -91883,7 +91883,7 @@ int  sub_478830(_DWORD *a1, int a2, int a3)
 int  sub_478880(int a1)
 {
   sub_4788A0(a1);
-  return sub_471C60(sub_4785F0((_DWORD *)(a1 + 16)) - 16, 0);
+  return Compat_StringHolderScalarDeletingDtor(sub_4785F0((_DWORD *)(a1 + 16)) - 16, 0);
 }
 
 //----- (004788A0) --------------------------------------------------------
@@ -92286,11 +92286,11 @@ int  sub_478E30(_DWORD *a1, int a2, int a3, DWORD a4)
   a1[1] = a2;
   v12 = 0;
   v13 = &off_50EC84;
-  sub_471BF0(&v12);
+  Compat_StringHolderDestructor(&v12);
   v13 = &off_50EC94;
   v5 = sub_479420(*(_DWORD **)(v4 + 4), &v12, (const char *)v4, a4);
   *(_DWORD *)(v6 + 8) = v5;
-  sub_471C60((int)&v12, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v12, 1);
   if ( !*(_DWORD *)(v7 + 8) )
     return v7;
   v9 = (_DWORD *)Mem_Alloc(44, v7, 0, a4);
@@ -92498,7 +92498,7 @@ int  sub_4790E0(_DWORD *a1, char a2)
       sub_478880(v4);
       j__nfree_();
     }
-    v5 = sub_471C60(v3 + 12, 0);
+    v5 = Compat_StringHolderScalarDeletingDtor(v3 + 12, 0);
     if ( (a2 & 2) != 0 )
     {
       j__nfree_();
@@ -92753,7 +92753,7 @@ int  sub_479420(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a4)
     Compat_StringHolderCopyText(parent_holder, path_text);
     path_len = strlen(path_text);
     parent_len = (size_t)(last_slash - path_text);
-    sub_472230((char **)parent_holder, (int)parent_len, (unsigned int)path_len, (int)(path_len - parent_len));
+    Compat_StringHolderRemoveRange((char **)parent_holder, (int)parent_len, (unsigned int)path_len, (int)(path_len - parent_len));
   }
   parent_entry = sub_479420(a1, parent_holder, 0, a4);
   Compat_StringHolderDestroyStack(parent_holder, 1);
@@ -92807,12 +92807,12 @@ int  sub_479560(const char *a1, DWORD a2)
   v12[2] = a1;
   v3 = sub_478450(v12);
   sub_479420(v4, v3, v4, a2);
-  sub_471C60((int)v12, 1);
+  Compat_StringHolderScalarDeletingDtor((int)v12, 1);
   if ( !v5 )
     return 0;
   v7 = (const char **)sub_4784E0(v11);
   v9 = sub_478950(v8, v7);
-  sub_471C60((int)v11, 1);
+  Compat_StringHolderScalarDeletingDtor((int)v11, 1);
   *(_DWORD *)(v10 + 28) = 1;
   result = v9;
   *(_DWORD *)(v10 + 12) = 1;
@@ -92829,7 +92829,7 @@ char  sub_4795D0(int a1, int a2, DWORD a3)
   _DWORD *v4; // ecx
 
   *(_DWORD *)(sub_479560((const char *)(a1 + 12), a3) + 22) = a2;
-  return sub_471BF0(v4);
+  return Compat_StringHolderDestructor(v4);
 }
 // 4795E8: variable 'v4' is possibly undefined
 
@@ -92865,10 +92865,10 @@ _DWORD * sub_4795F0(char a1)
 
   v17 = 0;
   v18 = &off_50EC84;
-  sub_471BF0(&v17);
+  Compat_StringHolderDestructor(&v17);
   v18 = &off_50EC94;
   v2 = sub_4794F0(v1, v1, (DWORD)&off_50EC94);
-  sub_471C60((int)&v17, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v17, 1);
   if ( v2 )
   {
     if ( (a1 & 8) == 0 )
@@ -92886,32 +92886,32 @@ _DWORD * sub_4795F0(char a1)
   if ( (a1 & 8) == 0 )
     return 0;
   v6 = v3 + 12;
-  if ( sub_462D30(v3 + 12) && *(_BYTE *)sub_462D30(v6) )
+  if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(v6) )
     return 0;
   v21 = 0;
   v22 = &off_50EC84;
-  sub_471BF0(&v21);
+  Compat_StringHolderDestructor(&v21);
   v22 = &off_50EC94;
   v7 = sub_478450(v25);
   v9 = (_DWORD *)sub_479420(v8, v7, v8, (DWORD)&off_50EC94);
-  sub_471C60((int)v25, 1);
-  sub_471C60((int)&v21, 1);
+  Compat_StringHolderScalarDeletingDtor((int)v25, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v21, 1);
   v19 = 0;
   v20 = &off_50EC84;
-  sub_471BF0(&v19);
+  Compat_StringHolderDestructor(&v19);
   v20 = &off_50EC94;
   sub_4784E0(v26);
-  sub_471C60((int)&v19, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v19, 1);
   if ( v9 && (v11 = sub_478BA0(v9, v26)) != 0 )
   {
     v24 = &off_50EC84;
     v23 = 0;
     v12 = (_DWORD *)(v10 + 12);
-    sub_471BF0(&v23);
+    Compat_StringHolderDestructor(&v23);
     v24 = &off_50EC94;
-    sub_462D30((int)&v23);
-    sub_462D20(v12);
-    sub_471C60((int)&v23, 1);
+    ExcString_GetTextPtr((int)&v23);
+    ExcString_ReleaseText(v12);
+    Compat_StringHolderScalarDeletingDtor((int)&v23, 1);
     v14 = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&off_50EC84);
     if ( v14 )
     {
@@ -92919,12 +92919,12 @@ _DWORD * sub_4795F0(char a1)
       *v14 = off_510BA4;
     }
     v16 = v14;
-    sub_471C60((int)v26, 1);
+    Compat_StringHolderScalarDeletingDtor((int)v26, 1);
     return v16;
   }
   else
   {
-    sub_471C60((int)v26, 1);
+    Compat_StringHolderScalarDeletingDtor((int)v26, 1);
     return 0;
   }
 }
@@ -92957,30 +92957,30 @@ signed int  sub_4797F0(int a1, int a2)
   int (**v14)(); // [esp+14h] [ebp-18h]
   const char *v15[5]; // [esp+18h] [ebp-14h] BYREF
 
-  if ( sub_462D30(a1 + 12) && *(_BYTE *)sub_462D30(v2) )
+  if ( ExcString_GetTextPtr(a1 + 12) && *(_BYTE *)ExcString_GetTextPtr(v2) )
     return -1;
   if ( !a2 )
     a2 = *(_DWORD *)(v3 + 24);
   v13 = 0;
   v14 = &off_50EC84;
-  sub_471BF0(&v13);
+  Compat_StringHolderDestructor(&v13);
   v14 = &off_50EC94;
   v4 = sub_478450(v15);
   sub_479420(v5, v4, v5, (DWORD)&off_50EC94);
-  sub_471C60((int)v15, 1);
-  sub_471C60((int)&v13, 1);
+  Compat_StringHolderScalarDeletingDtor((int)v15, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v13, 1);
   v11 = 0;
   v12 = &off_50EC84;
-  sub_471BF0(&v11);
+  Compat_StringHolderDestructor(&v11);
   v12 = &off_50EC94;
   sub_4784E0(v10);
-  sub_471C60((int)&v11, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v11, 1);
   if ( v6 )
     v7 = sub_478B70(v6, v10, a2);
   else
     v7 = -1;
   v8 = v7;
-  sub_471C60((int)v10, 1);
+  Compat_StringHolderScalarDeletingDtor((int)v10, 1);
   return v8;
 }
 // 479810: variable 'v3' is possibly undefined
@@ -93022,10 +93022,10 @@ int  sub_479930(int a1, DWORD a2)
   v7 = a1;
   v5 = 0;
   v6 = &off_50EC84;
-  sub_471BF0(&v5);
+  Compat_StringHolderDestructor(&v5);
   v6 = &off_50EC94;
   sub_479420(v2, &v5, v2, a2);
-  sub_471C60((int)&v5, 1);
+  Compat_StringHolderScalarDeletingDtor((int)&v5, 1);
   return v3;
 }
 // 47995B: variable 'v2' is possibly undefined
@@ -95383,7 +95383,7 @@ _DWORD * sub_47C7A0(
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0x34);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x34);
   }
   *result = a1;
   result[1] = a2;
@@ -95613,7 +95613,7 @@ signed int  sub_47CBF0(
   do
   {
     chunk_bytes = a2 * chunk_count;
-    chunk_base = sub_472620((_DWORD *)chunk_bytes);
+    chunk_base = Mem_HeapAllocWithRetry((_DWORD *)chunk_bytes);
     if ( !chunk_base )
     {
       if ( chunk_count / 2 )
@@ -95672,10 +95672,10 @@ int  sub_47CCF0(int *a1, int *a2)
     *a2 = 0;
     return 0;
   }
-  names = (char *)(uintptr_t)(unsigned int)sub_472620((_DWORD *)string_bytes);
+  names = (char *)(uintptr_t)(unsigned int)Mem_HeapAllocWithRetry((_DWORD *)string_bytes);
   sub_47D5A0((uintptr_t)names, (unsigned int)string_bytes);
   table_bytes = 4 * function_count;
-  table = sub_472620((_DWORD *)table_bytes);
+  table = Mem_HeapAllocWithRetry((_DWORD *)table_bytes);
   resolved_function = 0;
   function_name = names;
   for ( i = 0; i < function_count; ++i )
@@ -95882,12 +95882,12 @@ void __fastcall sub_47D0E0(int a1, int a2)
   (void)a2;
   if ( !dword_51A1D4 )
   {
-    sub_4725B0(0, 0);
+    Mem_InitReserveBlock(0, 0);
     sub_482260();
     sub_485E30();
     sub_496643(1, sub_47D4E0);
     sub_47D320();
-    sub_451E87();
+    Rules_RegisterAllHostFunctions();
     sub_4967B0();
     sub_492DD0();
     sub_47C370();
@@ -96739,7 +96739,7 @@ _DWORD * sub_47DE80(int a1, int a2, double a3)
   }
   else
   {
-    activation = (uintptr_t)sub_472620((_DWORD *)0x20);
+    activation = (uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x20);
   }
   *(_DWORD *)activation = (int)join;
   *(_DWORD *)(activation + 4) = (int)partial_match;
@@ -97836,7 +97836,7 @@ int  sub_47F1C0(int a1)
     }
     else
     {
-      focus_entry = sub_472620((_DWORD *)0xC);
+      focus_entry = Mem_HeapAllocWithRetry((_DWORD *)0xC);
     }
     *(_DWORD *)focus_entry = module;
     *(_DWORD *)(focus_entry + 4) = sub_490D30(module);
@@ -99364,7 +99364,7 @@ signed int  Rules_RegisterHostFunction(
   }
   else
   {
-    host_function_ptr = sub_472620((_DWORD *)0x1F);
+    host_function_ptr = Mem_HeapAllocWithRetry((_DWORD *)0x1F);
   }
   symbol = Str_Intern(a1, host_function_ptr);
   *(_DWORD *)(host_function_ptr + 0) = symbol;
@@ -99594,7 +99594,7 @@ int * sub_481090(int a1)
   }
   else
   {
-    host_function_ptr = sub_472620((_DWORD *)8);
+    host_function_ptr = Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *(_DWORD *)(host_function_ptr + 0) = a1;
   bucket_head_ptr = (int *)(dword_54DD40 + 4 * sub_482370(*(_BYTE **)(*(_DWORD *)a1 + 16), 0x33u));
@@ -100410,7 +100410,7 @@ LABEL_6:
     }
     else
     {
-      v7 = sub_472620((_DWORD *)0x14);
+      v7 = Mem_HeapAllocWithRetry((_DWORD *)0x14);
     }
     v8 = v7;
     if ( v3 )
@@ -100515,7 +100515,7 @@ LABEL_4:
     }
     else
     {
-      v5 = sub_472620((_DWORD *)0x18);
+      v5 = Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     v6 = v5;
     if ( v3 )
@@ -100569,7 +100569,7 @@ int  sub_482000(int a1)
   }
   else
   {
-    new_node = sub_472620((_DWORD *)0x14);
+    new_node = Mem_HeapAllocWithRetry((_DWORD *)0x14);
   }
   if ( previous_node )
     *(_DWORD *)(uintptr_t)(unsigned int)previous_node = new_node;
@@ -100683,7 +100683,7 @@ LABEL_10:
     }
     else
     {
-      v12 = sub_472620((_DWORD *)0x16);
+      v12 = Mem_HeapAllocWithRetry((_DWORD *)0x16);
     }
     v6 = v12;
     if ( v5 )
@@ -101092,7 +101092,7 @@ int  sub_4827B0(int a1, _DWORD *a2, int a3, int a4)
   }
   else
   {
-    link_node = sub_472620((_DWORD *)8);
+    link_node = Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *(_DWORD *)link_node = a1;
   *(_DWORD *)(link_node + 4) = *a2;
@@ -103875,7 +103875,7 @@ signed int  sub_486080(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
   }
   else
   {
-    v11 = (_DWORD *)sub_472620(36);
+    v11 = (_DWORD *)Mem_HeapAllocWithRetry(36);
   }
   v11[1] = 1;
   v11[8] = 0;
@@ -106747,7 +106747,7 @@ _DWORD * sub_48A670(int *a1, int a2, char a3, int a4)
   }
   else
   {
-    v8 = sub_472620((_DWORD *)0x2C);
+    v8 = Mem_HeapAllocWithRetry((_DWORD *)0x2C);
   }
   *(_DWORD *)(v8 + 28) = 0;
   *(_DWORD *)(v8 + 40) = 0;
@@ -107116,7 +107116,7 @@ int * sub_48AB50(int a1, int a2)
   }
   else
   {
-    result = (int *)sub_472620((_DWORD *)8);
+    result = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *result = v2;
   bucket_head = dword_54E518 + 4 * a2;
@@ -107302,7 +107302,7 @@ signed int  sub_48AE10(int a1, int a2, int *a3, int a4)
   }
   else
   {
-    v8 = (_DWORD *)sub_472620((_DWORD *)0x10);
+    v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   *v8 = a1;
   v8[2] = a4;
@@ -107563,7 +107563,7 @@ _DWORD * sub_48B1E0(int a1, int a2, signed int a3, int a4)
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0x10);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   result[1] = a4;
   result[2] = a2;
@@ -107787,7 +107787,7 @@ LABEL_6:
     }
     else
     {
-      v14 = (_DWORD *)sub_472620((_DWORD *)0x1C);
+      v14 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x1C);
     }
     *v14 = a1;
     v14[2] = a2;
@@ -108658,7 +108658,7 @@ int sub_48C490()
   if ( dword_54E520 )
   {
     v1 = 44 * dword_54E520;
-    result = sub_472620((_DWORD *)(44 * dword_54E520));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(44 * dword_54E520));
     dword_54E51C = result;
   }
   else
@@ -109901,7 +109901,7 @@ int  sub_48D970(int a1, char a2)
   }
   else
   {
-    template_record = sub_472620((_DWORD *)0x24);
+    template_record = Mem_HeapAllocWithRetry((_DWORD *)0x24);
   }
   *(_DWORD *)(template_record + 4) = 0;
   *(_DWORD *)template_record = a1;
@@ -110027,7 +110027,7 @@ int  sub_48DBA0(int a1, int a2, int a3, int a4, double a5)
   }
   else
   {
-    v8 = sub_472620((_DWORD *)0x14);
+    v8 = Mem_HeapAllocWithRetry((_DWORD *)0x14);
   }
   *(_DWORD *)v8 = (unsigned __int8)*(_DWORD *)(a1 + 20) - 1;
   *(_WORD *)(v8 + 4) = HIBYTE(*(_WORD *)(a1 + 20));
@@ -110134,7 +110134,7 @@ int * sub_48DE30(int a1, _DWORD *a2, signed int *a3, double a4)
   }
   else
   {
-    link = sub_472620((_DWORD *)0xC);
+    link = Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *(_DWORD *)(a1 + 20) = link;
   *(_DWORD *)link = old_fact_links;
@@ -110848,7 +110848,7 @@ _DWORD * sub_48EA40(int a1, _BYTE *a2, double a3)
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0xC);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   result[2] = 0;
   *result = 0;
@@ -110968,7 +110968,7 @@ int  sub_48EC20(int a1, int a2)
     }
     else
     {
-      v6 = (_DWORD *)sub_472620((_DWORD *)8);
+      v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     *v6 = v3;
     v6[1] = v4[(*v4 << 17 >> 23) + 2 + (*v4 << 29 >> 31)];
@@ -110982,7 +110982,7 @@ int  sub_48EC20(int a1, int a2)
     }
     else
     {
-      v8 = (_DWORD *)sub_472620((_DWORD *)8);
+      v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     *v8 = v4;
     v8[1] = *(_DWORD *)(v3 + 4);
@@ -112095,7 +112095,7 @@ _DWORD * sub_48FE40(_DWORD *result, int a2, int a3, double a4)
       }
       else
       {
-        result = (_DWORD *)sub_472620((_DWORD *)0xC);
+        result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
       result[2] = 0;
       *result = 0;
@@ -112124,7 +112124,7 @@ _DWORD * sub_48FE40(_DWORD *result, int a2, int a3, double a4)
         }
         else
         {
-          result = (_DWORD *)sub_472620((_DWORD *)0xC);
+          result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
         }
         *result = v6;
         result[1] = *(_DWORD *)(v4 + 20);
@@ -112913,7 +112913,7 @@ signed int sub_490CB0()
   }
   else
   {
-    result = sub_472620((_DWORD *)0x10);
+    result = Mem_HeapAllocWithRetry((_DWORD *)0x10);
     *(_DWORD *)(result + 12) = 0;
   }
   return result;
@@ -113416,7 +113416,7 @@ int  sub_491430(int a1, int a2, int a3, int a4, int a5, int a6)
   }
   else
   {
-    v8 = (_DWORD *)sub_472620((_DWORD *)0x20);
+    v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
   }
   *v8 = a1;
   v8[2] = a2;
@@ -113526,7 +113526,7 @@ _DWORD *Module_BeginEnum()
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0xC);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *result = dword_51A9A8;
   dword_51A9A8 = 0;
@@ -113603,7 +113603,7 @@ int sub_491680()
   }
   else
   {
-    module = sub_472620((_DWORD *)0x20);
+    module = Mem_HeapAllocWithRetry((_DWORD *)0x20);
   }
   module_name = Str_Intern(aMain_1, module);
   *(_DWORD *)module = module_name;
@@ -114054,7 +114054,7 @@ signed int  sub_491D00(int a1, const void *a2, int a3, int a4)
   }
   else
   {
-    v6 = (_DWORD *)sub_472620((_DWORD *)0x18);
+    v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
   }
   name_length = strlen(v4) + 1;
   v6[0] = (int)sub_4728F0(name_length);
@@ -114141,7 +114141,7 @@ signed int  sub_491E80(int a1, const void *a2, int a3)
   }
   else
   {
-    v5 = (_DWORD *)sub_472620((_DWORD *)0x18);
+    v5 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
   }
   name_length = strlen(v3) + 1;
   v5[0] = (int)sub_4728F0(name_length);
@@ -114964,7 +114964,7 @@ signed int sub_492BE0()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -115252,7 +115252,7 @@ signed int AST_AllocNode()
   }
   else
   {
-    node = sub_472620((_DWORD *)0x48);
+    node = Mem_HeapAllocWithRetry((_DWORD *)0x48);
   }
 
   *(_DWORD *)node = 103;
@@ -115471,7 +115471,7 @@ __int16 * sub_493170(__int16 *result, int a2, int a3)
       }
       else
       {
-        v6 = (_DWORD *)sub_472620((_DWORD *)0x14);
+        v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
       }
       *v6 = v10[1];
       v6[1] = 1;
@@ -116457,7 +116457,7 @@ signed int  AST_NewNode(__int16 a1, int a2)
   }
   else
   {
-    result = sub_472620((_DWORD *)0xE);
+    result = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   *(_DWORD *)(result + 10) = 0;
   *(_DWORD *)(result + 6) = 0;
@@ -117289,7 +117289,7 @@ int sub_495160()
   result = sub_47D5A0((uintptr_t)&dword_54E684, 4u);
   if ( dword_54E684 )
   {
-    result = sub_472620((_DWORD *)(14 * dword_54E684));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(14 * dword_54E684));
     dword_54E688 = result;
   }
   else
@@ -117925,7 +117925,7 @@ int sub_495BB0()
   result = sub_47D5A0((uintptr_t)&dword_54E690, 4u);
   if ( dword_54E690 )
   {
-    dword_54E68C = sub_472620((_DWORD *)(42 * dword_54E690));
+    dword_54E68C = Mem_HeapAllocWithRetry((_DWORD *)(42 * dword_54E690));
     return sub_47CBF0(dword_54E690, 24, (void (__fastcall *)(signed int, signed int))sub_495C00);
   }
   return result;
@@ -118313,7 +118313,7 @@ _DWORD * sub_496180(int a1)
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)8);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   result[1] = 0;
   *result = a1;
@@ -118453,7 +118453,7 @@ signed int  sub_496340(
   }
   else
   {
-    v14 = (_DWORD *)sub_472620((_DWORD *)0x28);
+    v14 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x28);
   }
   v14[1] = a4;
   v14[5] = a3;
@@ -119133,7 +119133,7 @@ signed int sub_497270()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -120541,7 +120541,7 @@ signed int sub_498D40()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -120804,7 +120804,7 @@ signed int sub_499110()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -121293,7 +121293,7 @@ signed int sub_499F20()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -121750,7 +121750,7 @@ int (* sub_49A720(
   }
   else
   {
-    v8 = (_DWORD *)sub_472620((_DWORD *)0x18);
+    v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
   }
   *v8 = dword_51ABB8;
   v8[2] = dword_51ABBC;
@@ -122046,7 +122046,7 @@ __int16 * sub_49AC00(_DWORD *a1, int a2)
     }
     else
     {
-      v4 = sub_472620((_DWORD *)0x18);
+      v4 = Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     dword_51ABC8 = v4;
     *(_DWORD *)(v4 + 12) = 0;
@@ -122934,7 +122934,7 @@ _DWORD * sub_49BCC0(int a1, int a2, int a3, int a4)
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0x10);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   result[3] = 0;
   *result = a4;
@@ -123786,7 +123786,7 @@ int  sub_49CB10(_DWORD *a1, double a2)
   }
   else
   {
-    v4 = (int *)sub_472620((_DWORD *)8);
+    v4 = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *v4 = 0;
   v5 = v4;
@@ -124020,7 +124020,7 @@ LABEL_21:
     }
     else
     {
-      v12 = (_DWORD *)sub_472620((_DWORD *)0x18);
+      v12 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     v12[5] = 0;
     v13 = v12;
@@ -124739,7 +124739,7 @@ int  sub_49DD20(int a1, double a2)
   }
   else
   {
-    v5 = sub_472620((_DWORD *)0xE);
+    v5 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   *(_WORD *)v5 = **(_WORD **)(dword_51A960 + 6);
   v6 = *(_DWORD *)(*(_DWORD *)(dword_51A960 + 6) + 2);
@@ -124848,7 +124848,7 @@ int ** sub_49DEA0(int **result, _DWORD *a2, int a3, int *a4, double a5)
         }
         else
         {
-          v9 = sub_472620((_DWORD *)0xE);
+          v9 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
         }
         *(_WORD *)v9 = *(_WORD *)((char *)v5[2] + v7 + 14);
         v10 = *(int *)((char *)v5[2] + v7 + 16);
@@ -128170,7 +128170,7 @@ int  sub_4A20F0(_DWORD *a1, double a2)
   }
   else
   {
-    v4 = (_DWORD *)sub_472620((_DWORD *)0x10);
+    v4 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   *v4 = 2;
   v4[1] = dword_54DD70;
@@ -132879,7 +132879,7 @@ int  sub_4A7760(int a1, int a2, int a3, int a4, int a5, int a6)
   }
   else
   {
-    v11 = (_DWORD *)sub_472620((_DWORD *)0x1C);
+    v11 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x1C);
   }
   *v11 = a1;
   v11[2] = a3;
@@ -133271,7 +133271,7 @@ _DWORD * sub_4A7E20(int *a1, int a2, int a3)
   }
   else
   {
-    v5 = sub_472620((_DWORD *)(4 * (a3 + a2 + ((unsigned int)(*a1 << 17) >> 23)) + 8));
+    v5 = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a2 + ((unsigned int)(*a1 << 17) >> 23)) + 8));
   }
   v6 = *(_BYTE *)v5 | 1;
   *(_BYTE *)v5 = v6;
@@ -133331,7 +133331,7 @@ _WORD * sub_4A7F90(_DWORD *a1, _DWORD *a2, int a3, int a4)
   }
   else
   {
-    v7 = sub_472620((_DWORD *)(4 * (a3 + a4 + (*a1 << 17 >> 23) + (*a2 << 17 >> 23)) + 8));
+    v7 = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a4 + (*a1 << 17 >> 23) + (*a2 << 17 >> 23)) + 8));
   }
   v8 = *(_BYTE *)v7 | 1;
   *(_BYTE *)v7 = v8;
@@ -133416,7 +133416,7 @@ signed int  sub_4A81C0(int a1, _DWORD *a2, signed int *a3)
   }
   else
   {
-    v6 = sub_472620((_DWORD *)0xC);
+    v6 = Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *(_WORD *)v6 &= 0x8000u;
   v7 = *(_BYTE *)v6;
@@ -133432,7 +133432,7 @@ signed int  sub_4A81C0(int a1, _DWORD *a2, signed int *a3)
   }
   else
   {
-    v10 = (_DWORD *)sub_472620((_DWORD *)0xC);
+    v10 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   v10[2] = 0;
   v11 = v10;
@@ -133484,7 +133484,7 @@ signed int  sub_4A8280(_DWORD *a1, int a2, int a3, int a4)
   }
   else
   {
-    v6 = sub_472620((_DWORD *)(4 * (a3 + a4 + (*a1 << 17 >> 23)) + 12));
+    v6 = Mem_HeapAllocWithRetry((_DWORD *)(4 * (a3 + a4 + (*a1 << 17 >> 23)) + 12));
   }
   v7 = *(_BYTE *)v6 | 1;
   *(_BYTE *)v6 = v7;
@@ -133543,7 +133543,7 @@ _DWORD * sub_4A8410(_DWORD *a1)
     }
     else
     {
-      v5 = (_DWORD *)sub_472620((_DWORD *)0x14);
+      v5 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
     }
     v5[4] = 0;
     *v5 = *v1;
@@ -135282,7 +135282,7 @@ signed int  sub_4A9E90(int a1, double a2)
       }
       else
       {
-        deferred_node = sub_472620((_DWORD *)8);
+        deferred_node = Mem_HeapAllocWithRetry((_DWORD *)8);
       }
       *(_BYTE *)(instance + 24) |= 2u;
       *(_DWORD *)(uintptr_t)deferred_node = (int)instance;
@@ -135372,7 +135372,7 @@ signed int sub_4AA1A0()
   }
   else
   {
-    result = sub_472620((_DWORD *)0x50);
+    result = Mem_HeapAllocWithRetry((_DWORD *)0x50);
   }
   *(_DWORD *)result = (int)(uintptr_t)unk_51A290;
   *(_DWORD *)(result + 4) = 0;
@@ -137346,7 +137346,7 @@ _DWORD * sub_4AC620(int a1, int a2, int a3, int a4, double a5)
     }
     else
     {
-      v19 = (_DWORD *)sub_472620((_DWORD *)0x18);
+      v19 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     v19[1] = 57;
     v19[5] = 0;
@@ -138204,7 +138204,7 @@ LABEL_13:
         sub_486020();
       }
     }
-    dword_51AD28 = sub_472620((_DWORD *)dword_51AD2C);
+    dword_51AD28 = Mem_HeapAllocWithRetry((_DWORD *)dword_51AD2C);
     sub_47D5A0(dword_51AD28, dword_51AD2C);
     for ( i = 0; i < a2; *(_BYTE *)(a1 - 1) = v13 )
     {
@@ -138854,7 +138854,7 @@ int  sub_4AE2F0(_BYTE *a1, char *a2, int a3, _BYTE *a4)
   }
   else
   {
-    expression_node = sub_472620((_DWORD *)0xE);
+    expression_node = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   message_handler[7] = expression_node;
   *(_DWORD *)(expression_node + 6) = 0;
@@ -139867,7 +139867,7 @@ int  sub_4AF620(_DWORD *a1, uintptr_t a2, int a3, uintptr_t a4)
     }
     else
     {
-      node = (_DWORD *)(uintptr_t)(unsigned int)sub_472620((_DWORD *)8);
+      node = (_DWORD *)(uintptr_t)(unsigned int)Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     ++*(_DWORD *)(handler_base + 36 * *(_DWORD *)index_cursor + 4);
     sub_4B08E0(*(_DWORD *)(handler_base + 36 * *(_DWORD *)index_cursor + 12));
@@ -141200,7 +141200,7 @@ int  sub_4B0DC0(int a1)
   }
   else
   {
-    class_record = sub_472620((_DWORD *)0x7C);
+    class_record = Mem_HeapAllocWithRetry((_DWORD *)0x7C);
   }
   sub_4A94D0_Impl((int)aDefclass_2, class_record, a1);
   v4 = *(_BYTE *)(class_record + 20);
@@ -141365,7 +141365,7 @@ unsigned int * sub_4B1010(_DWORD *a1, int a2, int a3)
     }
     else
     {
-      v10 = (unsigned int *)sub_472620((_DWORD *)0x1C);
+      v10 = (unsigned int *)Mem_HeapAllocWithRetry((_DWORD *)0x1C);
     }
     v10[1] = 1;
     v10[3] = (unsigned int)a1;
@@ -142159,7 +142159,7 @@ unsigned __int16 * sub_4B1B90(unsigned __int16 *result, uintptr_t a2, signed int
   }
   else
   {
-    new_node = (uintptr_t)sub_472620((_DWORD *)0x10);
+    new_node = (uintptr_t)Mem_HeapAllocWithRetry((_DWORD *)0x10);
   }
   *(_DWORD *)new_node = (int)change_kind;
   *(_DWORD *)(new_node + 12) = 0;
@@ -142472,7 +142472,7 @@ LABEL_5:
     }
     else
     {
-      v11 = (_DWORD *)sub_472620((_DWORD *)0x14);
+      v11 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
     }
     *v11 = v5;
     v12 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)dword_51B47C + 8) + 12);
@@ -142566,7 +142566,7 @@ int * sub_4B2350(int *result, double a2)
       }
       else
       {
-        link_record = sub_472620((_DWORD *)0xC);
+        link_record = Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
       *(_DWORD *)(uintptr_t)(unsigned int)link_record = *(_DWORD *)((uintptr_t)(unsigned int)dword_51B478 + 16);
       *(_DWORD *)((uintptr_t)(unsigned int)link_record + 8) = pattern;
@@ -144978,7 +144978,7 @@ int  sub_4B54F0(
     }
     else
     {
-      sub_472620((_DWORD *)0xC);
+      Mem_HeapAllocWithRetry((_DWORD *)0xC);
     }
     v8 = a4;
     v10 = sub_472980(strlen(a4) + 1);
@@ -146623,7 +146623,7 @@ int * sub_4B8030(int a1, int a2)
   }
   else
   {
-    result = (int *)sub_472620((_DWORD *)0xC);
+    result = (int *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *result = v2;
   result[1] = a2;
@@ -146804,7 +146804,7 @@ signed int  sub_4B81F0(
   }
   else
   {
-    v26 = (_DWORD *)sub_472620((_DWORD *)0x60);
+    v26 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x60);
   }
   v26[1] = a4;
   v26[3] = a3;
@@ -148058,7 +148058,7 @@ int  sub_4B95D0(_DWORD *a1)
   }
   else
   {
-    v3 = sub_472620((_DWORD *)0x48);
+    v3 = Mem_HeapAllocWithRetry((_DWORD *)0x48);
   }
   sub_4B9640(v3, v1, 1);
   *(_DWORD *)(v3 + 64) = sub_4B95D0(*(_DWORD *)(v4 + 64));
@@ -148196,7 +148196,7 @@ signed int sub_4B97B0()
   }
   else
   {
-    result = sub_472620((_DWORD *)0x48);
+    result = Mem_HeapAllocWithRetry((_DWORD *)0x48);
   }
   *(_DWORD *)result = 103;
   *(_DWORD *)(result + 4) = 0;
@@ -148342,7 +148342,7 @@ int  sub_4B9980(int a1)
   }
   else
   {
-    v3 = sub_472620((_DWORD *)0xE);
+    v3 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   *(_WORD *)v3 = *(_WORD *)v1;
   *(_DWORD *)(v3 + 2) = *(_DWORD *)(v1 + 4);
@@ -148950,17 +148950,17 @@ int __thiscall sub_4BA360(void *this)
   if ( dword_54E850 )
   {
     v2[0] = 12 * dword_54E850;
-    result = sub_472620((_DWORD *)(12 * dword_54E850));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_54E850));
     dword_54E84C = result;
     if ( dword_54E848 )
     {
       v2[0] = 36 * dword_54E848;
-      result = sub_472620((_DWORD *)(36 * dword_54E848));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(36 * dword_54E848));
       dword_54E840 = result;
       if ( dword_54E854 )
       {
         v2[0] = 20 * dword_54E854;
-        result = sub_472620((_DWORD *)(20 * dword_54E854));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(20 * dword_54E854));
         dword_54E844 = result;
       }
       else
@@ -149947,14 +149947,14 @@ signed int sub_4BB550()
     dword_54E86C = 0;
   }
   v1[0] = 16 * dword_54E85C;
-  result = sub_472620((_DWORD *)(16 * dword_54E85C));
+  result = Mem_HeapAllocWithRetry((_DWORD *)(16 * dword_54E85C));
   dword_54E870 = result;
   if ( dword_54E864 )
   {
     v1[0] = 52 * dword_54E864;
-    dword_54E860 = sub_472620((_DWORD *)(52 * dword_54E864));
+    dword_54E860 = Mem_HeapAllocWithRetry((_DWORD *)(52 * dword_54E864));
     v1[0] = 40 * dword_54E868;
-    result = sub_472620((_DWORD *)(40 * dword_54E868));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(40 * dword_54E868));
     dword_54E86C = result;
   }
   else
@@ -150394,7 +150394,7 @@ int  sub_4BBDA0(char *a1, double a2)
       }
       else
       {
-        v10 = sub_472620((_DWORD *)0x24);
+        v10 = Mem_HeapAllocWithRetry((_DWORD *)0x24);
       }
       *(_DWORD *)(v10 + 16) = 0;
       *(_WORD *)(v10 + 24) = 0;
@@ -150689,7 +150689,7 @@ int  sub_4BC300(char *a1, int a2, int a3, int a4, double a5)
   }
   else
   {
-    v8 = (int *)sub_472620((_DWORD *)0x14);
+    v8 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x14);
   }
   v9 = v29;
   v10 = v31;
@@ -151833,7 +151833,7 @@ _DWORD *sub_4BD6C0()
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)0xC);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *result = dword_54E87C;
   result[1] = dword_54E878;
@@ -152756,7 +152756,7 @@ LABEL_19:
   }
   else
   {
-    v8 = sub_472620((_DWORD *)0xE);
+    v8 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
   }
   *(_DWORD *)(v8 + 10) = 0;
   *(_DWORD *)(v8 + 6) = *(_DWORD *)(v8 + 10);
@@ -153115,7 +153115,7 @@ LABEL_7:
     }
     else
     {
-      v12 = (_DWORD *)sub_472620((_DWORD *)0xC);
+      v12 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
     }
     v12[2] = 0;
     *v12 = a1;
@@ -153262,7 +153262,7 @@ int  sub_4BEF30(_DWORD *a1, int a2)
       v2 = (_DWORD *)v35[11];
       v3 = sub_4A8570((int)v2);
       v4 = v3 - 1;
-      v5 = sub_472620((_DWORD *)(12 * v3));
+      v5 = Mem_HeapAllocWithRetry((_DWORD *)(12 * v3));
       v36 = v5;
       v6 = v2;
       if ( v2 )
@@ -153290,7 +153290,7 @@ int  sub_4BEF30(_DWORD *a1, int a2)
 LABEL_16:
       sub_472710(v36, 12 * v3);
       v15 = *v2 << 16 >> 25;
-      v16 = sub_472620((_DWORD *)(12 * v15));
+      v16 = Mem_HeapAllocWithRetry((_DWORD *)(12 * v15));
       v37 = v16;
       v17 = v15 - 1;
       v18 = v2;
@@ -153800,7 +153800,7 @@ _DWORD * sub_4BF7F0(int a1, int a2, __int16 a3, int a4, int a5, int a6)
   }
   else
   {
-    v10 = sub_472620((_DWORD *)0x34);
+    v10 = Mem_HeapAllocWithRetry((_DWORD *)0x34);
   }
   *(_DWORD *)(v10 + 4) = 0;
   *(_DWORD *)(v10 + 16) = 0;
@@ -154633,7 +154633,7 @@ int sub_4C0550()
   }
   else
   {
-    v1 = (_BYTE *)sub_472620((_DWORD *)0x2A);
+    v1 = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)0x2A);
   }
   sub_4C0620(v1, 1);
   v3 = *(_BYTE *)(v2 + 2);
@@ -154756,7 +154756,7 @@ int  sub_4C06C0(int *a1)
   }
   else
   {
-    v3 = (_BYTE *)sub_472620((_DWORD *)0x2A);
+    v3 = (_BYTE *)Mem_HeapAllocWithRetry((_DWORD *)0x2A);
   }
   v4 = *v1;
   *v3 &= ~1u;
@@ -155462,7 +155462,7 @@ int * sub_4C11E0(int a1, int a2)
   }
   else
   {
-    result = (int *)sub_472620((_DWORD *)0xC);
+    result = (int *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   *result = v2;
   result[1] = a2;
@@ -155540,7 +155540,7 @@ signed int  sub_4C1230(int a1)
     }
     else
     {
-      v6 = (int *)sub_472620((_DWORD *)0x20);
+      v6 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     v6[7] = 0;
     v7 = (int)v6;
@@ -155934,7 +155934,7 @@ int  sub_4C1830(int a1, int a2, int *a3, int a4)
       }
       else
       {
-        v12 = (_DWORD *)sub_472620((_DWORD *)0x10);
+        v12 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
       }
       v12[1] = 0;
       v12[2] = 0;
@@ -155992,7 +155992,7 @@ int  sub_4C1830(int a1, int a2, int *a3, int a4)
       }
       else
       {
-        v17 = (_DWORD *)sub_472620((_DWORD *)0x10);
+        v17 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
       }
       v17[2] = 0;
       v17[3] = 0;
@@ -156053,7 +156053,7 @@ LABEL_24:
     }
     else
     {
-      v10 = (_DWORD *)sub_472620((_DWORD *)0x10);
+      v10 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
     }
     *v10 = v6;
     v10[1] = v22;
@@ -158019,12 +158019,12 @@ signed int sub_4C3F20()
     dword_54E890 = 0;
   }
   v1[0] = 12 * dword_54E88C;
-  result = sub_472620((_DWORD *)(12 * dword_54E88C));
+  result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_54E88C));
   dword_54E890 = result;
   if ( dword_51B374 )
   {
     v1[0] = 56 * dword_51B374;
-    result = sub_472620((_DWORD *)(56 * dword_51B374));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(56 * dword_51B374));
     dword_51B370 = result;
   }
   else
@@ -158644,27 +158644,27 @@ int sub_4C4950()
     if ( v1[0] )
     {
       v3[0] = 12 * v1[0];
-      result = sub_472620((_DWORD *)(12 * v1[0]));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(12 * v1[0]));
       dword_51B390 = result;
       if ( dword_51B380 )
       {
         v3[0] = 40 * dword_51B380;
-        result = sub_472620((_DWORD *)(40 * dword_51B380));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(40 * dword_51B380));
         dword_51B378 = result;
         if ( dword_51B384 )
         {
           v3[0] = 40 * dword_51B384;
-          result = sub_472620((_DWORD *)(40 * dword_51B384));
+          result = Mem_HeapAllocWithRetry((_DWORD *)(40 * dword_51B384));
           dword_51B394 = result;
           if ( dword_51B388 )
           {
             v3[0] = 12 * dword_51B388;
-            result = sub_472620((_DWORD *)(12 * dword_51B388));
+            result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_51B388));
             dword_51B398 = result;
             if ( dword_51B38C )
             {
               v3[0] = 4 * dword_51B38C;
-              result = sub_472620((_DWORD *)(4 * dword_51B38C));
+              result = Mem_HeapAllocWithRetry((_DWORD *)(4 * dword_51B38C));
               dword_51B39C = result;
             }
           }
@@ -159077,12 +159077,12 @@ int __thiscall sub_4C5200(void *this)
     if ( dword_51B3A8 )
     {
       v2[0] = 12 * dword_51B3A8;
-      result = sub_472620((_DWORD *)(12 * dword_51B3A8));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_51B3A8));
       dword_54E894 = result;
       if ( dword_51B3A4 )
       {
         v2[0] = 46 * dword_51B3A4;
-        result = sub_472620((_DWORD *)(46 * dword_51B3A4));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(46 * dword_51B3A4));
         dword_51B3A0 = result;
       }
       else
@@ -160033,52 +160033,52 @@ _DWORD *__thiscall sub_4C6310(void *this)
     if ( v2[0] )
     {
       v4[0] = 12 * v2[0];
-      result = (_DWORD *)sub_472620((_DWORD *)(12 * v2[0]));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(12 * v2[0]));
       dword_54E8B8 = (int)result;
     }
     if ( dword_54E8B0 )
     {
       v4[0] = 124 * dword_54E8B0;
-      dword_51B3AC = sub_472620((_DWORD *)(124 * dword_54E8B0));
+      dword_51B3AC = Mem_HeapAllocWithRetry((_DWORD *)(124 * dword_54E8B0));
       result = sub_472980(4 * (unsigned __int16)word_51AD6C);
       dword_51AD64 = (int)result;
     }
     if ( dword_54E8A8 )
     {
       v4[0] = 4 * dword_54E8A8;
-      result = (_DWORD *)sub_472620((_DWORD *)(4 * dword_54E8A8));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * dword_54E8A8));
       dword_51B3B0 = (int)result;
     }
     if ( dword_54E8B4 )
     {
       v4[0] = 44 * dword_54E8B4;
-      result = (_DWORD *)sub_472620((_DWORD *)(44 * dword_54E8B4));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(44 * dword_54E8B4));
       dword_51B3B4 = (int)result;
     }
     if ( dword_54E8AC )
     {
       v4[0] = 28 * dword_54E8AC;
-      result = (_DWORD *)sub_472620((_DWORD *)(28 * dword_54E8AC));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(28 * dword_54E8AC));
       dword_51B3BC = (int)result;
     }
     if ( dword_54E8A4 )
     {
       v4[0] = 4 * dword_54E8A4;
-      result = (_DWORD *)sub_472620((_DWORD *)(4 * dword_54E8A4));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * dword_54E8A4));
       dword_51B3B8 = (int)result;
     }
     if ( dword_54E8A0 )
     {
       v4[0] = 4 * dword_54E8A0;
-      result = (_DWORD *)sub_472620((_DWORD *)(4 * dword_54E8A0));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * dword_54E8A0));
       dword_51B3C0 = (int)result;
     }
     if ( dword_54E89C )
     {
       v4[0] = 36 * dword_54E89C;
-      dword_51B3C4 = sub_472620((_DWORD *)(36 * dword_54E89C));
+      dword_51B3C4 = Mem_HeapAllocWithRetry((_DWORD *)(36 * dword_54E89C));
       v4[0] = 4 * dword_54E89C;
-      result = (_DWORD *)sub_472620((_DWORD *)(4 * dword_54E89C));
+      result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)(4 * dword_54E89C));
       dword_51B3C8 = (int)result;
     }
   }
@@ -160430,7 +160430,7 @@ int  sub_4C6990(int *a1, int a2, double a3)
     }
     else
     {
-      v24 = sub_472620((_DWORD *)0x18);
+      v24 = Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     *(_DWORD *)(v3 + 16) = v24;
     v25 = (_DWORD *)v24;
@@ -160825,7 +160825,7 @@ int sub_4C7220()
   }
   else
   {
-    deffacts_record = sub_472620((_DWORD *)0x18);
+    deffacts_record = Mem_HeapAllocWithRetry((_DWORD *)0x18);
   }
   *(_DWORD *)(deffacts_record + 8) = sub_4972E0(0);
   initial_name = Str_Intern(aInitialFact_1, (int)aInitialFact_1);
@@ -160949,7 +160949,7 @@ signed int  sub_4C73E0(int a1)
     }
     else
     {
-      v8 = (int *)sub_472620((_DWORD *)0x18);
+      v8 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
     }
     *v8 = v2;
     ++*(_DWORD *)(v2 + 4);
@@ -161151,12 +161151,12 @@ int __fastcall sub_4C7860(int a1)
   if ( dword_54E8BC )
   {
     v2[0] = 12 * dword_54E8BC;
-    result = sub_472620((_DWORD *)(12 * dword_54E8BC));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_54E8BC));
     dword_54E8C0 = result;
     if ( dword_51B3D0 )
     {
       v2[0] = 24 * dword_51B3D0;
-      result = sub_472620((_DWORD *)(24 * dword_51B3D0));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(24 * dword_51B3D0));
       dword_51B3CC = result;
     }
     else
@@ -161489,7 +161489,7 @@ signed int sub_4C7E40()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -163326,7 +163326,7 @@ int  sub_4C9F10(int a1, signed int *a2, int *a3)
       }
       else
       {
-        v7 = (_DWORD *)sub_472620((_DWORD *)0xC);
+        v7 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
       sub_4C9A80(v7, 0);
       *(_DWORD *)(v8 + 4) = 0;
@@ -163441,7 +163441,7 @@ LABEL_8:
       }
       else
       {
-        v6 = (_DWORD *)sub_472620((_DWORD *)0xC);
+        v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
       }
       v6[1] = v23;
       sub_4C9A80(v6, v2);
@@ -163923,7 +163923,7 @@ _DWORD * sub_4CA9E0(int a1)
   }
   else
   {
-    sub_472620((_DWORD *)0x28);
+    Mem_HeapAllocWithRetry((_DWORD *)0x28);
   }
   sub_4A94D0((int)aDefgeneric_1, a1);
   v3[5] = 0;
@@ -165036,7 +165036,7 @@ int  sub_4CBC70(int a1, __int16 *a2, int a3, int a4, int a5, int a6)
     }
     else
     {
-      sub_472620((_DWORD *)0x2E);
+      Mem_HeapAllocWithRetry((_DWORD *)0x2E);
     }
     sub_4A94D0((int)aDeffunction_4, a1);
     ++*(_DWORD *)(a1 + 4);
@@ -165694,7 +165694,7 @@ char * sub_4CC860(int a1, int a2, __int16 *a3)
     }
     else
     {
-      v9 = sub_472620((_DWORD *)0x38);
+      v9 = Mem_HeapAllocWithRetry((_DWORD *)0x38);
     }
     v10 = (_DWORD *)v9;
   }
@@ -166876,7 +166876,7 @@ signed int  sub_4CE0A0(int a1)
   }
   else
   {
-    sub_472620((_DWORD *)0x1C);
+    Mem_HeapAllocWithRetry((_DWORD *)0x1C);
   }
   sub_4A94D0((int)aDefinstances, v3);
   v5[5] = 0;
@@ -167131,7 +167131,7 @@ int sub_4CE530()
   }
   else
   {
-    definstances_record = sub_472620((_DWORD *)0x1C);
+    definstances_record = Mem_HeapAllocWithRetry((_DWORD *)0x1C);
   }
   sub_4A94D0_Impl((int)aDefinstances, definstances_record, dword_54E6F4);
   *(_DWORD *)(definstances_record + 20) = 0;
@@ -167160,7 +167160,7 @@ signed int sub_4CE600()
 
   v0 = *(_DWORD **)(dword_54DBA8 + 48);
   if ( !v0 )
-    return sub_472620((_DWORD *)0xC);
+    return Mem_HeapAllocWithRetry((_DWORD *)0xC);
   dword_54DBAC = *(_DWORD *)(dword_54DBA8 + 48);
   *(_DWORD *)(dword_54DBA8 + 48) = *v0;
   return dword_54DBAC;
@@ -167368,7 +167368,7 @@ int * sub_4CE9B0(int a1, double a2)
     }
     else
     {
-      v4 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v4 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v4;
     *v4 = sub_472980(4 * v8[0]);
@@ -167424,7 +167424,7 @@ int * sub_4CEAC0(_DWORD *a1, double a2)
     }
     else
     {
-      v5 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v5 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v5;
     *v5 = sub_472980(4 * v13[0]);
@@ -167510,7 +167510,7 @@ int * sub_4CEC60(_DWORD *a1, double a2)
     }
     else
     {
-      v4 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v4 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v4;
     *v4 = sub_472980(4 * v14);
@@ -167595,7 +167595,7 @@ int * sub_4CEE40(int a1, int a2, double a3)
     }
     else
     {
-      v6 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v6;
     *v6 = sub_472980(4 * v8[0]);
@@ -167653,7 +167653,7 @@ int * sub_4CEF80(int a1, int a2, double a3)
     }
     else
     {
-      v6 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v6;
     *v6 = sub_472980(4 * v11[0]);
@@ -167716,7 +167716,7 @@ int * sub_4CF0E0(_DWORD *a1, double a2)
     }
     else
     {
-      v6 = (_DWORD *)sub_472620((_DWORD *)0x20);
+      v6 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x20);
     }
     dword_51B458 = (int)v6;
     *v6 = sub_472980(4 * v11[0]);
@@ -167791,7 +167791,7 @@ _DWORD *sub_4CF2F0()
   }
   else
   {
-    result = (_DWORD *)sub_472620((_DWORD *)8);
+    result = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *result = dword_51B458;
   result[1] = dword_51B45C;
@@ -167957,7 +167957,7 @@ int *__fastcall sub_4CF480(int a1, _DWORD *a2)
     }
     else
     {
-      v19 = (int *)sub_472620((_DWORD *)0x10);
+      v19 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
     }
     v20 = (int)v19;
     v21 = a2[2];
@@ -167989,7 +167989,7 @@ int *__fastcall sub_4CF480(int a1, _DWORD *a2)
         }
         else
         {
-          v27 = (int *)sub_472620((_DWORD *)0x10);
+          v27 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
         }
         v28 = (int)v27;
         *v27 = v25;
@@ -168043,7 +168043,7 @@ int *__fastcall sub_4CF480(int a1, _DWORD *a2)
           }
           else
           {
-            v14 = (int *)sub_472620((_DWORD *)0x10);
+            v14 = (int *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
           }
           v15 = v14;
           *v14 = v32;
@@ -170184,7 +170184,7 @@ LABEL_18:
     }
     else
     {
-      v11 = (_DWORD *)sub_472620((_DWORD *)0x2C);
+      v11 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x2C);
     }
     sub_4A8170((int)v11);
     v12 = (int)v21;
@@ -170272,7 +170272,7 @@ int * sub_4D21C0(int a1, _DWORD *a2, int a3, int a4)
   }
   else
   {
-    v8 = sub_472620((_DWORD *)0x28);
+    v8 = Mem_HeapAllocWithRetry((_DWORD *)0x28);
   }
   *(_DWORD *)(v8 + 32) = 0;
   *(_DWORD *)(v8 + 4) = 0;
@@ -172064,7 +172064,7 @@ int * sub_4D3FC0(int *a1, int a2, int a3, _DWORD *a4)
           }
           else
           {
-            v10 = (int *)sub_472620((_DWORD *)8);
+            v10 = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
           }
           *v10 = v7;
           v10[1] = (int)a1;
@@ -174073,7 +174073,7 @@ _DWORD * sub_4D6090(int a1, _BYTE *a2, int a3)
     }
     else
     {
-      v6 = (int *)sub_472620((_DWORD *)8);
+      v6 = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     v7 = v23[1];
     v6[1] = 0;
@@ -174103,7 +174103,7 @@ _DWORD * sub_4D6090(int a1, _BYTE *a2, int a3)
             }
             else
             {
-              v15 = (int *)sub_472620((_DWORD *)8);
+              v15 = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
             }
             *v15 = v11;
             v15[1] = (int)v24;
@@ -178111,12 +178111,12 @@ int __fastcall sub_4DB200(int a1)
   if ( dword_51C6F8 )
   {
     v2[0] = 32 * dword_51C6F8;
-    result = sub_472620((_DWORD *)(32 * dword_51C6F8));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(32 * dword_51C6F8));
     dword_51C704 = result;
     if ( dword_51C6FC )
     {
       v2[0] = 16 * dword_51C6FC;
-      result = sub_472620((_DWORD *)(16 * dword_51C6FC));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(16 * dword_51C6FC));
       dword_51C700 = result;
     }
     else
@@ -181108,7 +181108,7 @@ int  sub_4DE810(int a1, _DWORD *a2, int a3, int a4, char a5)
   }
   else
   {
-    v9 = sub_472620(40);
+    v9 = Mem_HeapAllocWithRetry(40);
   }
   *(_BYTE *)v9 &= ~4u;
   *(_DWORD *)v9 |= 4 * (a3 & 1);
@@ -181318,7 +181318,7 @@ int  sub_4DEA00(_DWORD *a1, char *a2, int a3, _DWORD *a4)
         }
         else
         {
-          v22 = sub_472620((_DWORD *)0xE);
+          v22 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
         }
         *(_DWORD *)(v22 + 10) = 0;
         *(_DWORD *)(v22 + 6) = v20;
@@ -181351,7 +181351,7 @@ int  sub_4DEA00(_DWORD *a1, char *a2, int a3, _DWORD *a4)
         }
         else
         {
-          v49 = sub_472620((_DWORD *)0xE);
+          v49 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
         }
         *(_DWORD *)(v49 + 10) = 0;
         *(_DWORD *)(v49 + 6) = v47;
@@ -181413,7 +181413,7 @@ LABEL_28:
       }
       else
       {
-        v40 = sub_472620((_DWORD *)0xE);
+        v40 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
       }
       *(_DWORD *)(v40 + 10) = 0;
       *(_DWORD *)(v40 + 6) = v26;
@@ -181453,7 +181453,7 @@ LABEL_28:
     }
     else
     {
-      v5 = sub_472620((_DWORD *)0xE);
+      v5 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
     }
     v6 = v5;
     v7 = *(_DWORD **)(dword_54DBA8 + 48);
@@ -181465,7 +181465,7 @@ LABEL_28:
     }
     else
     {
-      v8 = (_DWORD *)sub_472620((_DWORD *)0xC);
+      v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0xC);
     }
     sub_4C9A80(v8, 0);
     *(_DWORD *)(v9 + 4) = 0;
@@ -181523,7 +181523,7 @@ _DWORD *sub_4DEF00()
   }
   else
   {
-    v2 = sub_472620((_DWORD *)0xC);
+    v2 = Mem_HeapAllocWithRetry((_DWORD *)0xC);
   }
   v3 = (_DWORD *)v2;
   *(_DWORD *)(v2 + 4) = 0;
@@ -182345,12 +182345,12 @@ int __thiscall sub_4DFE80(void *this)
     if ( dword_51C714 )
     {
       v2[0] = 12 * dword_51C714;
-      result = sub_472620((_DWORD *)(12 * dword_51C714));
+      result = Mem_HeapAllocWithRetry((_DWORD *)(12 * dword_51C714));
       dword_54E914 = result;
       if ( dword_51C710 )
       {
         v2[0] = 28 * dword_51C710;
-        result = sub_472620((_DWORD *)(28 * dword_51C710));
+        result = Mem_HeapAllocWithRetry((_DWORD *)(28 * dword_51C710));
         dword_51C70C = result;
       }
       else
@@ -184564,7 +184564,7 @@ signed int sub_4E25F0()
   if ( counts[0] )
   {
     count_bytes = 44 * counts[0];
-    result = sub_472620((_DWORD *)(44 * counts[0]));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(44 * counts[0]));
     dword_51C720 = result;
   }
   else
@@ -184574,7 +184574,7 @@ signed int sub_4E25F0()
   if ( dword_51C71C )
   {
     count_bytes = 40 * dword_51C71C;
-    result = sub_472620((_DWORD *)(40 * dword_51C71C));
+    result = Mem_HeapAllocWithRetry((_DWORD *)(40 * dword_51C71C));
     dword_51C724 = result;
   }
   else
@@ -184845,7 +184845,7 @@ LABEL_23:
         }
         else
         {
-          v14 = sub_472620((_DWORD *)6);
+          v14 = Mem_HeapAllocWithRetry((_DWORD *)6);
           sub_4E3090(v14, v4);
         }
         return v15;
@@ -184912,7 +184912,7 @@ LABEL_14:
         }
         else
         {
-          v12 = (int **)sub_472620((_DWORD *)8);
+          v12 = (int **)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         *v12 = v10;
         if ( v4 )
@@ -185014,7 +185014,7 @@ int  sub_4E2D40(int a1, unsigned __int16 *a2)
     }
     else
     {
-      v5 = (_DWORD *)sub_472620((_DWORD *)0x10);
+      v5 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
     }
     v5[1] = 0;
     v5[2] = 0;
@@ -185105,7 +185105,7 @@ int  sub_4E2D40(int a1, unsigned __int16 *a2)
         }
         else
         {
-          v23 = (int *)sub_472620((_DWORD *)8);
+          v23 = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         v24 = *v21;
         v23[1] = 0;
@@ -185162,7 +185162,7 @@ int  sub_4E2D40(int a1, unsigned __int16 *a2)
       }
       else
       {
-        v26 = sub_472620((_DWORD *)8);
+        v26 = Mem_HeapAllocWithRetry((_DWORD *)8);
       }
       v27 = v36;
       v36 = (int *)v26;
@@ -185178,7 +185178,7 @@ int  sub_4E2D40(int a1, unsigned __int16 *a2)
     }
     else
     {
-      v29 = sub_472620((_DWORD *)6);
+      v29 = Mem_HeapAllocWithRetry((_DWORD *)6);
     }
     sub_4E3090(v29, v36);
     return v30;
@@ -185267,7 +185267,7 @@ _DWORD * sub_4E3110(_DWORD *a1, unsigned __int16 *a2)
       }
       else
       {
-        v8 = (_DWORD *)sub_472620((_DWORD *)0x10);
+        v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x10);
       }
       v9 = *(_DWORD *)(*(_DWORD *)(a2 + 1) + v4);
       v8[3] = 0;
@@ -185314,7 +185314,7 @@ __int16  sub_4E31E0(_DWORD *a1, int a2, unsigned int a3, unsigned __int16 *a4)
     }
     else
     {
-      sub_472620((_DWORD *)8);
+      Mem_HeapAllocWithRetry((_DWORD *)8);
     }
     v11 = sub_4E3270(a1, *(_DWORD *)(*(_DWORD *)(a4 + 1) + i));
     *v12 = v11;
@@ -185386,7 +185386,7 @@ signed int  sub_4E3280(_DWORD *a1)
         }
         else
         {
-          v8 = (_DWORD *)sub_472620((_DWORD *)8);
+          v8 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)8);
         }
         *v8 = j;
         v8[1] = v4[2];
@@ -185762,7 +185762,7 @@ int  sub_4E3A50(_DWORD *a1)
   }
   else
   {
-    v3 = sub_472620((_DWORD *)0x2C);
+    v3 = Mem_HeapAllocWithRetry((_DWORD *)0x2C);
   }
   *(_DWORD *)(v3 + 24) = 0;
   v4 = *(_WORD *)v3;
@@ -185807,7 +185807,7 @@ int * sub_4E3AE0(_DWORD *a1, int a2)
   }
   else
   {
-    result = (int *)sub_472620((_DWORD *)8);
+    result = (int *)Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   result[1] = 0;
   v6 = (int)result;
@@ -186031,7 +186031,7 @@ __int16  sub_4E3DE0(int a1, unsigned __int16 *a2, int a3, _BYTE *a4)
           }
           else
           {
-            v23 = (void *)sub_472620((_DWORD *)0x18);
+            v23 = (void *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
           }
           *(_DWORD *)(a1 + 16) = v23;
           qmemcpy(v23, *((const void **)v27 + 4), 0x18u);
@@ -186217,7 +186217,7 @@ signed int  sub_4E4180(int *a1, char *a2, double a3)
       }
       else
       {
-        v5 = (_DWORD *)sub_472620((_DWORD *)0x18);
+        v5 = (_DWORD *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
       }
       v6 = *a1;
       a1[4] = (int)v5;
@@ -186248,7 +186248,7 @@ LABEL_10:
       }
       else
       {
-        v16 = (void *)sub_472620((_DWORD *)0x18);
+        v16 = (void *)Mem_HeapAllocWithRetry((_DWORD *)0x18);
       }
       a1[4] = (int)v16;
       qmemcpy(v16, v19, 0x18u);
@@ -186872,7 +186872,7 @@ int  sub_4E56D0(int result)
     }
     else
     {
-      v3 = sub_472620((_DWORD *)0xE);
+      v3 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
     }
     *(_WORD *)v3 = *(_WORD *)v1;
     *(_DWORD *)(v3 + 2) = *(_DWORD *)(v1 + 4);
@@ -186927,7 +186927,7 @@ int  sub_4E5760(int result)
     }
     else
     {
-      v3 = sub_472620((_DWORD *)0xE);
+      v3 = Mem_HeapAllocWithRetry((_DWORD *)0xE);
     }
     *(_WORD *)v3 = *(_WORD *)v1;
     *(_DWORD *)(v3 + 2) = *(_DWORD *)(v1 + 4);

@@ -83,8 +83,8 @@ int __thiscall ResourceArchives_MountStartupArchives(int this);
 int FileSystem_InitRootMount(int a1, char a2, DWORD a3);
 int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
-signed int sub_451E46(void);
-int __fastcall sub_4725B0(int a1, int a2);
+signed int Rules_CompileStrategicRulesFile(void);
+int __fastcall Mem_InitReserveBlock(int a1, int a2);
 int sub_472860(int a1, int a2, int a3);
 int nullsub_4(void);
 int Render_LoadResourceBackbuffer(void);
@@ -93,9 +93,9 @@ int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
 int Render_SetResourceHandle(int a1, int a2);
 int Render_LoadPCXImage(int a1, char *a2, int a3, int a4);
 void Render_LoadResourceSprite_v4(int a1, unsigned char *a2, int a3, char a4, DWORD a5);
-int sub_401E30(unsigned int *a1);
+int Render_ClearGameScreen(unsigned int *a1);
 void *Device_GetParamA(int a1, int a2);
-int sub_460490(int a1, int a2, char a3, DWORD a4);
+int RenderState_InitCursorResources(int a1, int a2, char a3, DWORD a4);
 int Render_CreateSprite(void);
 int Render_Pump(void);
 DWORD UI_StartAnims(int a1, char a2, DWORD a3);
@@ -108,29 +108,29 @@ void Compat_FreeLow32Bytes(int ptr);
 short DLX_GetSpriteWidth(int a1, unsigned short a2);
 short DLX_GetSpriteHeight(int a1, unsigned short a2);
 void *DLXSpriteSet_Load(void *a1, const void *a2);
-int sub_435ED0(char *a1, int a2, int a3, DWORD a4);
-int sub_441670(char *a1, int a2);
-int sub_404D90(int *a1);
-int *sub_405020(int *result, unsigned char *a2, signed int a3);
+int Palette_LoadOrBuildBlendLookupTable(char *a1, int a2, int a3, DWORD a4);
+int Sound_PlayNamedSfxFile(char *a1, int a2);
+int Palette_ApplyDefaultPalette(int *a1);
+int *Palette_FadeInFromBlack(int *result, unsigned char *a2, signed int a3);
 int sub_405920(int *a1);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
 void *UIWidgetTable_InitDrawStates(void *result);
 signed int UIWidgetTable_PollHoverAndActions(unsigned int *a1, DWORD a2);
-void *sub_460CB0(int a1, int a2, int a3, DWORD a4);
+void *RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD a4);
 short RenderState_SelectCursorDescriptor(int a1, int a2);
-BOOL sub_460950(int a1);
+BOOL RenderState_IsCursorFlipStillActive(int a1);
 int Render_Present(int a1);
-int sub_44A110(int a1, DWORD a2);
+int LoadMenu_HandleSlotConfirmButtonRelease(int a1, DWORD a2);
 void *LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2);
-int sub_404F20(int *a1, int a2);
+int Palette_FadeOutToBlack(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
 int *sub_482260(void);
 signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
 signed int SaveSlot_LoadGame(int a1, DWORD a2, double a3);
-signed int sub_44C400(DWORD a1, double a2);
+signed int SaveSlot_LoadReservedSlot10(DWORD a1, double a2);
 signed int Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
 int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
 int PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4);
@@ -315,7 +315,7 @@ static void Bootstrap_SurfaceRendererDrawStage(int surface_handle, int value, in
 {
   (void)value;
   (void)has_value;
-  sub_401E30((unsigned int *)(uintptr_t)(unsigned int)surface_handle);
+  Render_ClearGameScreen((unsigned int *)(uintptr_t)(unsigned int)surface_handle);
 }
 
 static void Bootstrap_BuildCommandLineFromArgv(int argc, char **argv)
@@ -400,7 +400,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   CSS_SetDeviceSearch(device_search_mode);
   logEnabled = 1;
   if ( !dword_54DBA8 )
-    sub_4725B0(0, 0);
+    Mem_InitReserveBlock(0, 0);
   sub_472860(-1, 0, 0);
   /*
    * The retained full path now reaches the DirectSound-era device table, but
@@ -408,11 +408,11 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
    */
   dword_543CA0 = 1;
   createLogFiles(0, 0, 0);
-  sub_451E46();
+  Rules_CompileStrategicRulesFile();
   sub_472860(-1, 0, 0);
   nullsub_4();
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
-  sub_460490((int)(intptr_t)g_RenderState, 0, command_mode, 0);
+  RenderState_InitCursorResources((int)(intptr_t)g_RenderState, 0, command_mode, 0);
   Render_CreateSprite();
   lodaOptionsCfg(0);
   initRandomSeed(command_mode, 0);
@@ -464,7 +464,7 @@ static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
   Bootstrap_TraceMenuProbe("video-init-set-pixel-format");
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   Bootstrap_TraceMenuProbe("video-init-sub_460490");
-  sub_460490((int)(intptr_t)g_RenderState, 0, command_mode, 0);
+  RenderState_InitCursorResources((int)(intptr_t)g_RenderState, 0, command_mode, 0);
   Bootstrap_TraceMenuProbe("video-init-render-create-sprite");
   Render_CreateSprite();
   Bootstrap_TraceMenuProbe("video-init-probe-end");
@@ -534,11 +534,11 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   Bootstrap_TraceMenuProbe("load-menu-gfx");
   Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\main.gfx");
   Bootstrap_TraceMenuProbe("load-menu-pal");
-  sub_435ED0("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
+  Palette_LoadOrBuildBlendLookupTable("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
   if ( menu_entry_mode && dword_5188C0 )
   {
     Bootstrap_TraceMenuProbe("start-menu-music");
-    g_MainMenuMusicHandle = sub_441670("music\\menu", 64);
+    g_MainMenuMusicHandle = Sound_PlayNamedSfxFile("music\\menu", 64);
   }
 
   /*
@@ -551,7 +551,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   if ( menu_entry_mode )
   {
     Bootstrap_TraceMenuProbe("apply-palette-block");
-    sub_404D90((int *)&unk_51D4C0);
+    Palette_ApplyDefaultPalette((int *)&unk_51D4C0);
   }
   Bootstrap_TraceMenuProbe("third-dd-pump");
   DD_Pump((int)(intptr_t)g_RenderState, menu_entry_mode);
@@ -587,14 +587,14 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   if ( menu_entry_mode )
   {
     Bootstrap_TraceMenuProbe("apply-menu-fade");
-    sub_405020((int *)&unk_51D4C0, byte_543D80, 60);
+    Palette_FadeInFromBlack((int *)&unk_51D4C0, byte_543D80, 60);
   }
   g_PlayGameMenuExitRequested = 0;
   g_MainMenuRequestedScreen = 0;
   if ( have_menu_widget_template )
   {
     Bootstrap_TraceMenuProbe("build-menu-text-cache");
-    sub_460CB0((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
+    RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
   }
   else
   {
@@ -924,7 +924,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   UIWidgetTable_InitDrawStates((void *)menu_widgets);
   g_PlayGameMenuExitRequested = 0;
   Bootstrap_TraceMenuProbe("load-menu-build-text-cache");
-  sub_460CB0((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
+  RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
   Bootstrap_TraceMenuProbe("load-menu-select-cursor-descriptor");
   RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&unk_5196A0);
   dword_545150 = (int)(intptr_t)&unk_5196A0;
@@ -1215,8 +1215,8 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
             g_PlayGameMenuExitRequested = 1;
             Bootstrap_TraceMenuProbe("load-auto-hover-selected");
           }
-          if ( sub_460950((int)(intptr_t)g_RenderState) )
-            sub_44A110(0, 0);
+          if ( RenderState_IsCursorFlipStillActive((int)(intptr_t)g_RenderState) )
+            LoadMenu_HandleSlotConfirmButtonRelease(0, 0);
         }
       }
     }
@@ -1259,7 +1259,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   Bootstrap_TraceMenuProbe("load-menu-loop-cleanup");
   Render_Pump();
   if ( dword_544190 )
-    sub_404F20((int *)&unk_51D4C0, 20);
+    Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   sub_405920(&g_PlayGameMenuSpriteSetHandle);
   if ( !dword_544190 )
     dword_5441E0 = -1;
@@ -1274,7 +1274,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
       if ( !dword_54DBA8 )
       {
         Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-slab-init");
-        sub_4725B0(0, 0);
+        Mem_InitReserveBlock(0, 0);
       }
       Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
       sub_482260();
@@ -1294,7 +1294,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
     const char direct_game_resource_context = 16;
 
     WorldMap_Initialize(direct_game_resource_context, 0);
-    sub_44C400(0, 0.0);
+    SaveSlot_LoadReservedSlot10(0, 0.0);
     PlayGame(0, direct_game_resource_context, 0, 0, 0.0);
   }
   else
@@ -1331,7 +1331,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
           if ( !dword_54DBA8 )
           {
             Bootstrap_TraceDirectMission("direct-campaign-rules-slab-init");
-            sub_4725B0(0, 0);
+            Mem_InitReserveBlock(0, 0);
           }
           Bootstrap_TraceDirectMission("direct-campaign-rules-index-init");
           sub_482260();
