@@ -85,7 +85,7 @@ int Game_Init(int a1, char a2, DWORD a3);
 void createLogFiles(int a1, int a2, DWORD a3);
 signed int Rules_CompileStrategicRulesFile(void);
 int __fastcall Mem_InitReserveBlock(int a1, int a2);
-int sub_472860(int a1, int a2, int a3);
+int Mem_PurgeFreeListsForSpace(int a1, int a2, int a3);
 int nullsub_4(void);
 int Render_LoadResourceBackbuffer(void);
 int Render_DefaultRH(int a1, char a2, DWORD a3);
@@ -126,7 +126,7 @@ void *LoadMenu_RedrawSaveSlotRow(int a1, DWORD a2);
 int Palette_FadeOutToBlack(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
-int *sub_482260(void);
+int *Rules_InitAtomTables(void);
 signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
 signed int SaveSlot_LoadGame(int a1, DWORD a2, double a3);
@@ -401,7 +401,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   logEnabled = 1;
   if ( !dword_54DBA8 )
     Mem_InitReserveBlock(0, 0);
-  sub_472860(-1, 0, 0);
+  Mem_PurgeFreeListsForSpace(-1, 0, 0);
   /*
    * The retained full path now reaches the DirectSound-era device table, but
    * that table is not recovered safely enough for x86-64 execution yet.
@@ -409,7 +409,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   dword_543CA0 = 1;
   createLogFiles(0, 0, 0);
   Rules_CompileStrategicRulesFile();
-  sub_472860(-1, 0, 0);
+  Mem_PurgeFreeListsForSpace(-1, 0, 0);
   nullsub_4();
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   RenderState_InitCursorResources((int)(intptr_t)g_RenderState, 0, command_mode, 0);
@@ -1277,7 +1277,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
         Mem_InitReserveBlock(0, 0);
       }
       Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
-      sub_482260();
+      Rules_InitAtomTables();
       Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
       sub_491B10();
     }
@@ -1334,7 +1334,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
             Mem_InitReserveBlock(0, 0);
           }
           Bootstrap_TraceDirectMission("direct-campaign-rules-index-init");
-          sub_482260();
+          Rules_InitAtomTables();
           Bootstrap_TraceDirectMission("direct-campaign-parser-bootstrap");
           sub_491B10();
           Bootstrap_TraceDirectMission("direct-campaign-mission-load");

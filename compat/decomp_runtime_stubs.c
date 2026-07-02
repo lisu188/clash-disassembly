@@ -31,8 +31,8 @@
 
 int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
 void *Mem_Realloc(void *a1, int a2, int a3);
-int sub_489D18(int a1, int a2);
-int sub_48703D(int a1, __lock *a2, int a3);
+int CRT_DeleteFile(int a1, int a2);
+int CRT_RegisterFinalizer(int a1, __lock *a2, int a3);
 int Menu_DrawFrameBackdrop(void);
 int DLX_GetSpriteForChar(int a1, unsigned __int16 a2);
 __int16 DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
@@ -45,11 +45,11 @@ int Res_ProbeGfxFileExists(CHAR *a1, int a2, DWORD a3, int a4);
 int FileSystem_ResolveReadPath(char *a1, int a2);
 _DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
-int __fastcall sub_473EE0(int a1, int *a2);
-int sub_479CB0(int a1, int a2);
+int __fastcall Compat_FileSystemQueryRelease(int a1, int *a2);
+int Compat_QuerySkipBytes(int a1, int a2);
 signed int CRT_GetOsHandleFromFd(int a1, int a2);
-char sub_489EC6(int a1, _DWORD *a2);
-_DWORD * sub_47A730(signed int a1);
+char CRT_FillFindDataRecord(int a1, _DWORD *a2);
+_DWORD * Rules_CreateFact(signed int a1);
 int sub_48D0C0(int result, int a2, int a3, int a4, int a5);
 signed int sub_48D730(int *a1, int a2);
 _DWORD * sub_48D940(int a1, int a2, _DWORD *a3);
@@ -602,7 +602,7 @@ double strtod_(const char *text, char **endptr)
  */
 _DWORD *Module_AllocList(signed int a1)
 {
-  return sub_47A730(a1);
+  return Rules_CreateFact(a1);
 }
 
 int Lexer_OutputFieldRange(int result, int a2, int a3, int a4, int a5)
@@ -2563,14 +2563,14 @@ int sub_4849EE(void)
   return 0;
 }
 
-void __noreturn sub_4842DF(int a1, int a2)
+void __noreturn CRT_WatcomEHHandleNestedException(int a1, int a2)
 {
   (void)a1;
   (void)a2;
   abort();
 }
 
-int sub_48469F(void)
+int CRT_WatcomEHFrameHandler(void)
 {
   return 0;
 }
@@ -2732,20 +2732,20 @@ static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palett
   if ( !query_handle )
     return 0;
 
-  sub_479CB0(query_handle, 8);
+  Compat_QuerySkipBytes(query_handle, 8);
   query_vtable = (uintptr_t *)(uintptr_t)(unsigned int)*(_DWORD *)query_handle;
   if ( !query_vtable || !query_vtable[5] )
   {
-    sub_473EE0((int)&dword_543CC8, &query_handle);
+    Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
     return 0;
   }
   if ( ((int (*)(int, void *, int))(uintptr_t)query_vtable[5])(query_handle, palette_bytes, sizeof(palette_bytes))
     != (int)sizeof(palette_bytes) )
   {
-    sub_473EE0((int)&dword_543CC8, &query_handle);
+    Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
     return 0;
   }
-  sub_473EE0((int)&dword_543CC8, &query_handle);
+  Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
   palette_offset = 0;
   for ( palette_index = 0; palette_index < 256; ++palette_index )
   {
@@ -2836,7 +2836,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
     cache_query_handle = FileSystem_ResolveReadPath(query_path, 0);
     if ( cache_query_handle )
     {
-      sub_473EE0((int)&dword_543CC8, &cache_query_handle);
+      Compat_FileSystemQueryRelease((int)&dword_543CC8, &cache_query_handle);
       sprite_set = (_DWORD *)Mem_Alloc(0x1010, 0, 0, a5);
       if ( sprite_set )
         sprite_set = DLXSpriteSet_Load(sprite_set, cache_path);
@@ -2929,7 +2929,7 @@ int __fastcall sub_476322(_DWORD a1, _DWORD a2)
 
 int __fastcall sub_476A78(_DWORD a1, _DWORD a2)
 {
-  return sub_489D18((int)a1, (int)a2);
+  return CRT_DeleteFile((int)a1, (int)a2);
 }
 
 __int64 __fastcall nmalloc_(_DWORD a1, _DWORD a2)
@@ -3004,7 +3004,7 @@ int __fastcall findnext_(_DWORD a1, _DWORD a2)
 
   if ( !FindNextFileA((HANDLE)(uintptr_t)(unsigned int)a1, &find_data) )
     return _set_errno_nt_(0);
-  sub_489EC6((int)(intptr_t)&find_data, (_DWORD *)(uintptr_t)(unsigned int)a2);
+  CRT_FillFindDataRecord((int)(intptr_t)&find_data, (_DWORD *)(uintptr_t)(unsigned int)a2);
   return 0;
 }
 
