@@ -127,7 +127,7 @@ int Palette_FadeOutToBlack(int *a1, int a2);
 void lodaOptionsCfg(DWORD a1);
 void initRandomSeed(char a1, DWORD a2);
 int *Rules_InitAtomTables(void);
-signed int sub_491B10(void);
+signed int IO_RegisterStringRouter(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
 signed int SaveSlot_LoadGame(int a1, DWORD a2, double a3);
 signed int SaveSlot_LoadReservedSlot10(DWORD a1, double a2);
@@ -1279,7 +1279,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
       Bootstrap_TraceMenuProbe("load-menu-post-confirm-rules-index-init");
       Rules_InitAtomTables();
       Bootstrap_TraceMenuProbe("load-menu-post-confirm-parser-bootstrap");
-      sub_491B10();
+      IO_RegisterStringRouter();
     }
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-load-save");
     SaveSlot_LoadGame(dword_5441E0, 0, 0.0);
@@ -1336,7 +1336,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
           Bootstrap_TraceDirectMission("direct-campaign-rules-index-init");
           Rules_InitAtomTables();
           Bootstrap_TraceDirectMission("direct-campaign-parser-bootstrap");
-          sub_491B10();
+          IO_RegisterStringRouter();
           Bootstrap_TraceDirectMission("direct-campaign-mission-load");
           Scenario_LoadMissionByIndex(mission_index, 0.0);
           Bootstrap_TraceDirectMission("direct-campaign-mission-playgame");

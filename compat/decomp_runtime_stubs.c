@@ -50,13 +50,13 @@ int Compat_QuerySkipBytes(int a1, int a2);
 signed int CRT_GetOsHandleFromFd(int a1, int a2);
 char CRT_FillFindDataRecord(int a1, _DWORD *a2);
 _DWORD * Rules_CreateFact(signed int a1);
-int sub_48D0C0(int result, int a2, int a3, int a4, int a5);
-signed int sub_48D730(int *a1, int a2);
-_DWORD * sub_48D940(int a1, int a2, _DWORD *a3);
+int Rules_PrintMultifieldRange(int result, int a2, int a3, int a4, int a5);
+signed int Rules_CheckLiteralSlotValueConstraint(int *a1, int a2);
+_DWORD * Lexer_FindSlotWithIndex(int a1, int a2, _DWORD *a3);
 char * Str_Append(const char *a1, char *a2, unsigned int *a3, int *a4);
-char * sub_494720(char *result);
-int sub_4947D0(void);
-signed int sub_49C7D0(int a1, int a2, int a3);
+char * Rules_SavePPBuffer(char *result);
+int Rules_BackupPPBuffer(void);
+signed int Rules_ImportExportConflictMessage(int a1, int a2, int a3);
 errno_t __cdecl _set_errno_(int value);
 typedef struct TextSpriteResourceSlotRecord {
   const char *source_stem;
@@ -607,32 +607,32 @@ _DWORD *Module_AllocList(signed int a1)
 
 int Lexer_OutputFieldRange(int result, int a2, int a3, int a4, int a5)
 {
-  return sub_48D0C0(result, a2, a3, a4, a5);
+  return Rules_PrintMultifieldRange(result, a2, a3, a4, a5);
 }
 
 signed int Lexer_CheckValueList(int *a1, int a2)
 {
-  return sub_48D730(a1, a2);
+  return Rules_CheckLiteralSlotValueConstraint(a1, a2);
 }
 
 _DWORD *Lexer_FindTemplateSlot(int a1, int a2, _DWORD *a3)
 {
-  return sub_48D940(a1, a2, a3);
+  return Lexer_FindSlotWithIndex(a1, a2, a3);
 }
 
 char *IO_OutWriteToken(char *result)
 {
-  return sub_494720(result);
+  return Rules_SavePPBuffer(result);
 }
 
 int IO_OutNewline(void)
 {
-  return sub_4947D0();
+  return Rules_BackupPPBuffer();
 }
 
 signed int Lexer_WarnImpliedTemplate(int a1, int a2, int a3)
 {
-  return sub_49C7D0(a1, a2, a3);
+  return Rules_ImportExportConflictMessage(a1, a2, a3);
 }
 
 static void CompatSetLastErrorFromErrno(void)
