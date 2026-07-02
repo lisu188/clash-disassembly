@@ -89,8 +89,6 @@
 #define g_CastleFoundationTexts off_511B98
 #define g_HiddenTreasureTexts off_511BA4
 #define unit_stats g_UnitTypeCorpseSpriteBaseIndex
-#define Mission_CheckObjectiveComplete sub_460270
-#define UI_CheckDialogAccepted sub_4602F0
 #define dword_532060 g_UnitBattleChargeModeActive
 #define dword_532074 g_UnitBattleChargeModeStartTick
 
@@ -73170,7 +73168,7 @@ static void Mission_TraceObjectiveBlocked(int mission_index, int detail_a, int d
 }
 
 //----- (00460270) --------------------------------------------------------
-BOOL  sub_460270(DWORD a1, double a2)
+BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2)
 {
   static int mission0_last_blocker_index = -1;
   static int mission0_last_blocker_turn = -1;
@@ -73597,7 +73595,7 @@ LABEL_105:
 // 5448A0: using guessed type int dword_5448A0;
 
 //----- (004602F0) --------------------------------------------------------
-int sub_4602F0()
+int UI_CheckDialogAccepted()
 {
   int result; // eax
   int v1; // ebx
