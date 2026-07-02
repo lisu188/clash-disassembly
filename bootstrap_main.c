@@ -112,7 +112,7 @@ int Palette_LoadOrBuildBlendLookupTable(char *a1, int a2, int a3, DWORD a4);
 int Sound_PlayNamedSfxFile(char *a1, int a2);
 int Palette_ApplyDefaultPalette(int *a1);
 int *Palette_FadeInFromBlack(int *result, unsigned char *a2, signed int a3);
-int sub_405920(int *a1);
+int DLXSpriteSet_ReleaseAndClear(int *a1);
 void MainMenu_RebuildButtonWidgetTemplate(void);
 void LoadMenu_RebuildButtonWidgetTemplate(void);
 void *UIWidgetTable_InitDrawStates(void *result);
@@ -1260,7 +1260,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   Render_Pump();
   if ( dword_544190 )
     Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  sub_405920(&g_PlayGameMenuSpriteSetHandle);
+  DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
   if ( !dword_544190 )
     dword_5441E0 = -1;
   if ( Bootstrap_ShouldRunLoadMenuProbePostConfirm() && dword_5441E0 != -1 )

@@ -594,29 +594,29 @@ int  SurfaceCursor_Destroy(int result, char a2);
 signed int SurfaceCursor_GetIncrUnbounded();
 signed int SurfaceCursor_GetExtentUnbounded();
 int SurfaceCursor_GetOffsetZero();
-int  sub_405760(int a1, char a2);
-int  sub_4057B0(int a1);
-signed int sub_4057C0();
-int  sub_4057D0(int result, int a2);
-int  sub_4057E0(int a1);
-int  sub_4057F0(_DWORD *a1, char a2);
-signed int sub_405830();
-int  sub_405840(int result, int a2);
-int  sub_405850(int a1);
-int  sub_405860(int a1);
-int  sub_405870(int result, char a2);
-_DWORD * sub_4058A0(_DWORD *result);
-int __thiscall sub_4058C0(void *this);
-_BYTE * sub_4058E0(_BYTE *result, _BYTE *a2);
-_DWORD * sub_405900(int a1);
-int  sub_405920(int *a1);
-int  sub_405950(int *a1);
-int  sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
+int  RenderSurface_Destroy(int a1, char a2);
+int  RenderSurface_GetBlitCursorRowStride(int a1);
+signed int RenderSurface_GetBlitCursorCapacity();
+int  RenderSurface_AdvanceBlitCursor(int result, int a2);
+int  RenderSurface_GetBlitCursorPosition(int a1);
+int  RenderSurface_DestroyLinkedBlitCursor(_DWORD *a1, char a2);
+signed int RenderSurface_GetLinkedBlitCursorCapacity();
+int  RenderSurface_AdvanceLinkedBlitCursor(int result, int a2);
+int  RenderSurface_GetLinkedBlitCursorPosition(int a1);
+int  RenderSurface_GetLinkedSurfaceBuffer(int a1);
+int  RenderSurface_DestroyBlitCursor(int result, char a2);
+_DWORD * RenderSurface_ConstructNullBlitCursor(_DWORD *result);
+int __thiscall RenderSurface_CloneInternalArray(void *this);
+_BYTE * RenderSurface_CopyFourByteFields(_BYTE *result, _BYTE *a2);
+_DWORD * RenderSurface_ConstructFullScreenBuffer(int a1);
+int  DLXSpriteSet_ReleaseAndClear(int *a1);
+int  DLXSprite_ReleaseAndClear(int *a1);
+int  Res_ProbeGfxFileExists(CHAR *a1, int a2, DWORD a3, int a4);
 int  DLX_OpenArchive(char *a1, int a2);
 _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2);
-int * sub_405C60(int *a1, char a2, int a3);
-int  sub_405D00(int *a1, DWORD *a2, signed int a3);
-int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4);
+int * DLXSpriteSet_Destroy(int *a1, char a2, int a3);
+int  DLXSpriteSet_ConstructCopy(int *a1, DWORD *a2, signed int a3);
+int * DLXSpriteSet_CopyEntriesFrom(int *a1, DWORD *a2, int a3, signed int a4);
 int  DLXSpriteSet_Save(int *a1, int a2, char a3);
 int  DLX_GetSpriteForChar(int a1, int a2);
 static int Compat_RenderDeviceFillSolidRect(
@@ -636,28 +636,28 @@ static int Compat_RenderSurfaceCopyRect(
         int destination_top);
 static int Compat_RenderDeviceDrawMenuSprite(int left, int top, int sprite_for_char, unsigned char draw_mode);
 static void Compat_PresentPrimaryIndexedSurfaceToPlatform(void);
-int  sub_405ED0(int a1);
+int  DLXSpriteSet_GetLastCharIndex(int a1);
 __int16  DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
 __int16  DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
 char  DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
-int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4);
-DWORD  sub_4060E0(DWORD a1, char *a2, int a3);
-int  sub_406260(int result, int a2, int a3);
-int  sub_406350(int a1, DWORD a2);
-int  sub_406370(int result);
-int  sub_406390(int a1, DWORD a2);
-int  sub_406460(int a1, int a2);
-char  sub_4064A0(int a1, const unsigned __int8 *a2);
-signed int  sub_406540(unsigned __int16 *a1);
-int  sub_4065D0(unsigned __int16 *a1);
-int  sub_406650(unsigned __int16 *a1);
-int  sub_4066C0(unsigned __int16 *a1);
+int  DLXSpriteSet_DrawFormattedText(DWORD a1, int a2, int a3, const char *a4);
+DWORD  DLXSprite_LoadCachedEntry(DWORD a1, char *a2, int a3);
+int  DLXSprite_ConstructFromBuffer(int result, int a2, int a3);
+int  DLXSprite_ConstructOwningCopy(int a1, DWORD a2);
+int  DLXSprite_Destroy(int result);
+int  DLXSprite_CopyFrom(int a1, DWORD a2);
+int  DLXSprite_Save(int a1, int a2);
+char  DLXSprite_RemapPalette(int a1, const unsigned __int8 *a2);
+signed int  UnitBattle_ScanSpriteMinOpaqueRunLength(unsigned __int16 *a1);
+int  UnitBattle_ScanSpriteFirstOpaqueRunLength(unsigned __int16 *a1);
+int  UnitBattle_CountLeadingBlankSpriteRows(unsigned __int16 *a1);
+int  UnitBattle_CountTrailingBlankSpriteRows(unsigned __int16 *a1);
 int Render_DrawSprite();
-void * sub_406980(DWORD a1);
-void  sub_406FA0(int);
-unsigned int  sub_407B20(int a1, int a2, int a3);
+void * WorldMap_RefreshUnitStatusPanel(DWORD a1);
+void  WorldMap_TickAmbientMapAnimations(int);
+unsigned int  WorldMap_TickPaletteFlashEffect(int a1, int a2, int a3);
 int Render_RestoreLostSurfaces();
-int  sub_407D20(signed int a1, ...);
+int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...);
 BOOL UI_TrySelectFriendlyStackUnderCursor();
 static const char *Compat_WidgetPackedString(uintptr_t widget, unsigned int field_offset);
 BOOL  MapTile_HasOwnUnitStack(int a1, int a2);
@@ -668,7 +668,7 @@ BOOL  MapTile_HasEnemyBuilding(int a1, int a2);
 BOOL  MapTile_HasBuilding(int a1, int a2);
 BOOL  Port_IsInsideFootprint(int a1, int a2);
 void  WorldMap_HandleTileHoverAndClick(double);
-int  sub_409CC0(int a1, char a2, DWORD a3);
+int  WorldMap_ShowQuitConfirmDialog(int a1, char a2, DWORD a3);
 int  WorldMap_HandleSaveGameAction(char a1, DWORD a2, double a3);
 int  WorldMap_HandleLoadGameAction(DWORD a1, char a2, double a3);
 int  WorldMap_HandleSurrenderAction(int a1, char a2, DWORD a3, double a4);
@@ -8714,19 +8714,19 @@ static void Render_InitRecoveredVtableStorage(void)
   off_50ECA4[0] = (int)(uintptr_t)&PathEntryArray_Destruct;
   off_50ECA4[1] = (int)(uintptr_t)&nullsub_16;
 
-  off_50ED94[0] = (int)(uintptr_t)&sub_405870;
-  off_50ED94[1] = (int)(uintptr_t)&sub_4057B0;
-  off_50ED94[2] = (int)(uintptr_t)&sub_4057C0;
-  off_50ED94[3] = (int)(uintptr_t)&sub_4057D0;
-  off_50ED94[4] = (int)(uintptr_t)&sub_4057E0;
+  off_50ED94[0] = (int)(uintptr_t)&RenderSurface_DestroyBlitCursor;
+  off_50ED94[1] = (int)(uintptr_t)&RenderSurface_GetBlitCursorRowStride;
+  off_50ED94[2] = (int)(uintptr_t)&RenderSurface_GetBlitCursorCapacity;
+  off_50ED94[3] = (int)(uintptr_t)&RenderSurface_AdvanceBlitCursor;
+  off_50ED94[4] = (int)(uintptr_t)&RenderSurface_GetBlitCursorPosition;
 
-  off_50EDB4[0] = (int)(uintptr_t)&sub_4057F0;
-  off_50EDB4[1] = (int)(uintptr_t)&sub_405860;
-  off_50EDB4[2] = (int)(uintptr_t)&sub_405830;
-  off_50EDB4[3] = (int)(uintptr_t)&sub_405840;
-  off_50EDB4[4] = (int)(uintptr_t)&sub_405850;
+  off_50EDB4[0] = (int)(uintptr_t)&RenderSurface_DestroyLinkedBlitCursor;
+  off_50EDB4[1] = (int)(uintptr_t)&RenderSurface_GetLinkedSurfaceBuffer;
+  off_50EDB4[2] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorCapacity;
+  off_50EDB4[3] = (int)(uintptr_t)&RenderSurface_AdvanceLinkedBlitCursor;
+  off_50EDB4[4] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorPosition;
 
-  off_50EDD4[0] = (int)(uintptr_t)&sub_405760;
+  off_50EDD4[0] = (int)(uintptr_t)&RenderSurface_Destroy;
   off_50EDD4[1] = (int)(uintptr_t)&Surface_GetReadIncrNotImplemented;
   off_50EDD4[2] = (int)(uintptr_t)&Surface_GetWriteIncrNotImplemented;
   off_50EDD4[3] = (int)(uintptr_t)&Surface_DrawPixNotImplemented;
@@ -9014,7 +9014,7 @@ _UNKNOWN unk_50EFC0; // weak
 _UNKNOWN unk_50EFE0; // weak
 _UNKNOWN unk_50F000; // weak
 _UNKNOWN unk_50F020; // weak
-int (*off_50F044)() = &sub_405C60; // weak
+int (*off_50F044)() = &DLXSpriteSet_Destroy; // weak
 _UNKNOWN unk_50F050; // weak
 int (*off_50F0E4)() = &WCIsvListBase_dtorRoot; // weak
 _DWORD (*off_50F0F4)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
@@ -17027,7 +17027,7 @@ int SurfaceCursor_GetOffsetZero()
 }
 
 //----- (00405760) --------------------------------------------------------
-int  sub_405760(int a1, char a2)
+int  RenderSurface_Destroy(int a1, char a2)
 {
   int v3; // eax
   int v5; // ecx
@@ -17058,32 +17058,32 @@ int  sub_405760(int a1, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (004057B0) --------------------------------------------------------
-int  sub_4057B0(int a1)
+int  RenderSurface_GetBlitCursorRowStride(int a1)
 {
   return *(_DWORD *)(a1 + 8);
 }
 
 //----- (004057C0) --------------------------------------------------------
-signed int sub_4057C0()
+signed int RenderSurface_GetBlitCursorCapacity()
 {
   return 0x7FFFFFFF;
 }
 
 //----- (004057D0) --------------------------------------------------------
-int  sub_4057D0(int result, int a2)
+int  RenderSurface_AdvanceBlitCursor(int result, int a2)
 {
   *(_DWORD *)(result + 4) += a2;
   return result;
 }
 
 //----- (004057E0) --------------------------------------------------------
-int  sub_4057E0(int a1)
+int  RenderSurface_GetBlitCursorPosition(int a1)
 {
   return *(_DWORD *)(a1 + 4);
 }
 
 //----- (004057F0) --------------------------------------------------------
-int  sub_4057F0(_DWORD *a1, char a2)
+int  RenderSurface_DestroyLinkedBlitCursor(_DWORD *a1, char a2)
 {
   int v2; // ecx
   char v3; // dl
@@ -17111,32 +17111,32 @@ int  sub_4057F0(_DWORD *a1, char a2)
 // 50EDB4: using guessed type int (*off_50EDB4[5])();
 
 //----- (00405830) --------------------------------------------------------
-signed int sub_405830()
+signed int RenderSurface_GetLinkedBlitCursorCapacity()
 {
   return 0x7FFFFFFF;
 }
 
 //----- (00405840) --------------------------------------------------------
-int  sub_405840(int result, int a2)
+int  RenderSurface_AdvanceLinkedBlitCursor(int result, int a2)
 {
   *(_DWORD *)(result + 8) += a2;
   return result;
 }
 
 //----- (00405850) --------------------------------------------------------
-int  sub_405850(int a1)
+int  RenderSurface_GetLinkedBlitCursorPosition(int a1)
 {
   return *(_DWORD *)(a1 + 8);
 }
 
 //----- (00405860) --------------------------------------------------------
-int  sub_405860(int a1)
+int  RenderSurface_GetLinkedSurfaceBuffer(int a1)
 {
   return *(_DWORD *)(*(_DWORD *)(a1 + 4) + 72);
 }
 
 //----- (00405870) --------------------------------------------------------
-int  sub_405870(int result, char a2)
+int  RenderSurface_DestroyBlitCursor(int result, char a2)
 {
   int v3; // ecx
   int v4; // ecx
@@ -17159,7 +17159,7 @@ int  sub_405870(int result, char a2)
 // 47312B: using guessed type int __fastcall _wcpp_4_dtor_array_store__(_DWORD, _DWORD);
 
 //----- (004058A0) --------------------------------------------------------
-_DWORD * sub_4058A0(_DWORD *result)
+_DWORD * RenderSurface_ConstructNullBlitCursor(_DWORD *result)
 {
   *result = off_50EF24;
   return result;
@@ -17167,14 +17167,14 @@ _DWORD * sub_4058A0(_DWORD *result)
 // 50EF24: using guessed type int (*off_50EF24[5])();
 
 //----- (004058C0) --------------------------------------------------------
-int __thiscall sub_4058C0(void *this)
+int __thiscall RenderSurface_CloneInternalArray(void *this)
 {
   return _wcpp_4_copy_array__(this);
 }
 // 475A45: using guessed type int __cdecl _wcpp_4_copy_array__(_DWORD);
 
 //----- (004058E0) --------------------------------------------------------
-_BYTE * sub_4058E0(_BYTE *result, _BYTE *a2)
+_BYTE * RenderSurface_CopyFourByteFields(_BYTE *result, _BYTE *a2)
 {
   *result = *a2;
   result[1] = a2[1];
@@ -17184,13 +17184,13 @@ _BYTE * sub_4058E0(_BYTE *result, _BYTE *a2)
 }
 
 //----- (00405900) --------------------------------------------------------
-_DWORD * sub_405900(int a1)
+_DWORD * RenderSurface_ConstructFullScreenBuffer(int a1)
 {
   return Render_ConstructSurfaceObject(a1, 640, 480);
 }
 
 //----- (00405920) --------------------------------------------------------
-int  sub_405920(int *a1)
+int  DLXSpriteSet_ReleaseAndClear(int *a1)
 {
   int result; // eax
   uintptr_t method_table;
@@ -17207,7 +17207,7 @@ int  sub_405920(int *a1)
 }
 
 //----- (00405950) --------------------------------------------------------
-int  sub_405950(int *a1)
+int  DLXSprite_ReleaseAndClear(int *a1)
 {
   int *v1; // ecx
   int result; // eax
@@ -17216,7 +17216,7 @@ int  sub_405950(int *a1)
   result = *a1;
   if ( result )
   {
-    sub_406370(result);
+    DLXSprite_Destroy(result);
     result = j__nfree_();
   }
   *v1 = 0;
@@ -17225,7 +17225,7 @@ int  sub_405950(int *a1)
 // 405959: variable 'v1' is possibly undefined
 
 //----- (00405980) --------------------------------------------------------
-int  sub_405980(CHAR *a1, int a2, DWORD a3, int a4)
+int  Res_ProbeGfxFileExists(CHAR *a1, int a2, DWORD a3, int a4)
 {
   unsigned int v5; // kr04_4
   int open_handle;
@@ -17330,7 +17330,7 @@ _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
       entry_size = IO_QueryVTableStreamSize(query_handle) - dword_51F290[entry_index];
     a1[entry_index] = Mem_Alloc(22, entry_index, entry_size, (DWORD)a1);
     if ( a1[entry_index] )
-      a1[entry_index] = sub_406260(a1[entry_index], dword_51F290[entry_index] + a1[1024] - 4096, entry_size);
+      a1[entry_index] = DLXSprite_ConstructFromBuffer(a1[entry_index], dword_51F290[entry_index] + a1[1024] - 4096, entry_size);
     ++entry_index;
   }
   a1[1025] = entry_index;
@@ -17343,7 +17343,7 @@ _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
 // 51F294: using guessed type int dword_51F294[1022];
 
 //----- (00405C60) --------------------------------------------------------
-int * sub_405C60(int *a1, char a2, int a3)
+int * DLXSpriteSet_Destroy(int *a1, char a2, int a3)
 {
   int v4; // ebx
   int *v5; // ecx
@@ -17363,7 +17363,7 @@ int * sub_405C60(int *a1, char a2, int a3)
     {
       if ( *v5 )
       {
-        sub_406370(*v5);
+        DLXSprite_Destroy(*v5);
         j__nfree_();
       }
       ++v4;
@@ -17383,26 +17383,26 @@ int * sub_405C60(int *a1, char a2, int a3)
 // 50F044: using guessed type int (*off_50F044)();
 
 //----- (00405D00) --------------------------------------------------------
-int  sub_405D00(int *a1, DWORD *a2, signed int a3)
+int  DLXSpriteSet_ConstructCopy(int *a1, DWORD *a2, signed int a3)
 {
   int v3; // ecx
 
   a1[1027] = (int)&off_50F044;
-  sub_405D20(a1, a2, (int)a1, a3);
+  DLXSpriteSet_CopyEntriesFrom(a1, a2, (int)a1, a3);
   return v3;
 }
 // 405D12: variable 'v3' is possibly undefined
 // 50F044: using guessed type int (*off_50F044)();
 
 //----- (00405D20) --------------------------------------------------------
-int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4)
+int * DLXSpriteSet_CopyEntriesFrom(int *a1, DWORD *a2, int a3, signed int a4)
 {
   int v6; // ecx
   int v7; // edx
   int *v8; // esi
   int v10; // eax
 
-  sub_405C60(a1, 0, a3);
+  DLXSpriteSet_Destroy(a1, 0, a3);
   a1[1026] = a2[1026];
   a1[1025] = a2[1025];
   v6 = 0;
@@ -17417,7 +17417,7 @@ int * sub_405D20(int *a1, DWORD *a2, int a3, signed int a4)
       {
         v10 = Mem_Alloc(22, v6, (char)a2, a4);
         if ( v10 )
-          v10 = sub_406350(v10, *a2);
+          v10 = DLXSprite_ConstructOwningCopy(v10, *a2);
         *v8 = v10;
       }
       else
@@ -17504,7 +17504,7 @@ int  DLXSpriteSet_Save(int *a1, int a2, char a3)
     v19 = a1;
     do
     {
-      sub_406460(*v19, v15);
+      DLXSprite_Save(*v19, v15);
       v18 = v20 + 1;
       ++v19;
     }
@@ -17526,7 +17526,7 @@ int  DLX_GetSpriteForChar(int a1, int a2)
 }
 
 //----- (00405ED0) --------------------------------------------------------
-int  sub_405ED0(int a1)
+int  DLXSpriteSet_GetLastCharIndex(int a1)
 {
   LOWORD(a1) = *(_WORD *)(a1 + 4100);
   return a1 - 1;
@@ -17592,18 +17592,18 @@ char  DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4)
   }
   if ( a2 == -1 )
   {
-    last_char_index = (unsigned __int16)sub_405ED0(a1);
+    last_char_index = (unsigned __int16)DLXSpriteSet_GetLastCharIndex(a1);
     for ( remapped_sprite = 0; remapped_sprite <= (int)last_char_index; ++remapped_sprite )
     {
-      sub_4064A0(DLX_GetSpriteForChar(a1, remapped_sprite), (unsigned __int8 *)remap_table);
+      DLXSprite_RemapPalette(DLX_GetSpriteForChar(a1, remapped_sprite), (unsigned __int8 *)remap_table);
     }
     return (char)last_char_index;
   }
-  return sub_4064A0(DLX_GetSpriteForChar(a1, a2), (unsigned __int8 *)remap_table);
+  return DLXSprite_RemapPalette(DLX_GetSpriteForChar(a1, a2), (unsigned __int8 *)remap_table);
 }
 
 //----- (004060A0) --------------------------------------------------------
-int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4)
+int  DLXSpriteSet_DrawFormattedText(DWORD a1, int a2, int a3, const char *a4)
 {
   unsigned __int8 *v6; // eax
 
@@ -17615,7 +17615,7 @@ int  sub_4060A0(DWORD a1, int a2, int a3, const char *a4)
 }
 
 //----- (004060E0) --------------------------------------------------------
-DWORD  sub_4060E0(DWORD a1, char *a2, int a3)
+DWORD  DLXSprite_LoadCachedEntry(DWORD a1, char *a2, int a3)
 {
   int query_handle; // [esp+100h] [ebp-1Ch] BYREF
   int entry_offset; // [esp+104h] [ebp-18h]
@@ -17656,7 +17656,7 @@ DWORD  sub_4060E0(DWORD a1, char *a2, int a3)
 // 51E28C: using guessed type int dword_51E28C[1024];
 
 //----- (00406260) --------------------------------------------------------
-int  sub_406260(int result, int a2, int a3)
+int  DLXSprite_ConstructFromBuffer(int result, int a2, int a3)
 {
   *(_DWORD *)(result + 18) = 0;
   *(_DWORD *)(result + 14) = a3;
@@ -17667,19 +17667,19 @@ int  sub_406260(int result, int a2, int a3)
 }
 
 //----- (00406350) --------------------------------------------------------
-int  sub_406350(int a1, DWORD a2)
+int  DLXSprite_ConstructOwningCopy(int a1, DWORD a2)
 {
   int v2; // ecx
 
   *(_DWORD *)(a1 + 10) = 0;
   *(_DWORD *)(a1 + 18) = 1;
-  sub_406390(a1, a2);
+  DLXSprite_CopyFrom(a1, a2);
   return v2;
 }
 // 406366: variable 'v2' is possibly undefined
 
 //----- (00406370) --------------------------------------------------------
-int  sub_406370(int result)
+int  DLXSprite_Destroy(int result)
 {
   int v2; // ecx
 
@@ -17696,14 +17696,14 @@ int  sub_406370(int result)
 // 40638B: variable 'v2' is possibly undefined
 
 //----- (00406390) --------------------------------------------------------
-int  sub_406390(int a1, DWORD a2)
+int  DLXSprite_CopyFrom(int a1, DWORD a2)
 {
   unsigned int v6; // ecx
   int v7; // edx
   unsigned int v8; // ecx
   _DWORD v10[6]; // [esp+0h] [ebp-18h] BYREF
 
-  sub_406370(a1);
+  DLXSprite_Destroy(a1);
   qmemcpy((void *)a1, (const void *)a2, v6);
   *(_DWORD *)(a1 + 14) = *(_DWORD *)(a2 + 14);
   *(_DWORD *)(a1 + 18) = 1;
@@ -17723,14 +17723,14 @@ int  sub_406390(int a1, DWORD a2)
 // 473FF0: using guessed type __int64 __fastcall nmalloc_(_DWORD, _DWORD);
 
 //----- (00406460) --------------------------------------------------------
-int  sub_406460(int a1, int a2)
+int  DLXSprite_Save(int a1, int a2)
 {
   fwrite_((const void *)a1, 10, a2, 1);
   return fwrite_(*(const void **)(a1 + 10), *(_DWORD *)(a1 + 14) - 10, a2, 1);
 }
 
 //----- (004064A0) --------------------------------------------------------
-char  sub_4064A0(int a1, const unsigned __int8 *a2)
+char  DLXSprite_RemapPalette(int a1, const unsigned __int8 *a2)
 {
   unsigned __int16 *v3; // esi
   _BYTE *v5; // edx
@@ -17771,7 +17771,7 @@ char  sub_4064A0(int a1, const unsigned __int8 *a2)
 }
 
 //----- (00406540) --------------------------------------------------------
-signed int  sub_406540(unsigned __int16 *a1)
+signed int  UnitBattle_ScanSpriteMinOpaqueRunLength(unsigned __int16 *a1)
 {
   unsigned __int16 v2; // dx
   unsigned __int8 *v3; // eax
@@ -17822,7 +17822,7 @@ signed int  sub_406540(unsigned __int16 *a1)
 }
 
 //----- (004065D0) --------------------------------------------------------
-int  sub_4065D0(unsigned __int16 *a1)
+int  UnitBattle_ScanSpriteFirstOpaqueRunLength(unsigned __int16 *a1)
 {
   unsigned __int16 v2; // dx
   unsigned __int8 *v3; // eax
@@ -17876,7 +17876,7 @@ int  sub_4065D0(unsigned __int16 *a1)
 }
 
 //----- (00406650) --------------------------------------------------------
-int  sub_406650(unsigned __int16 *a1)
+int  UnitBattle_CountLeadingBlankSpriteRows(unsigned __int16 *a1)
 {
   char *v2; // ecx
   int v3; // esi
@@ -17908,7 +17908,7 @@ int  sub_406650(unsigned __int16 *a1)
 }
 
 //----- (004066C0) --------------------------------------------------------
-int  sub_4066C0(unsigned __int16 *a1)
+int  UnitBattle_CountTrailingBlankSpriteRows(unsigned __int16 *a1)
 {
   unsigned __int8 *v2; // eax
   int v3; // esi
@@ -17954,7 +17954,7 @@ int  sub_4066C0(unsigned __int16 *a1)
 }
 
 //----- (00406740) --------------------------------------------------------
-int sub_406740()
+int Menu_DrawFrameBackdrop()
 {
   int result; // eax
 
@@ -17976,7 +17976,7 @@ int sub_406740()
 // 5202E0: using guessed type int dword_5202E0;
 
 //----- (00406980) --------------------------------------------------------
-void * sub_406980(DWORD a1)
+void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
 {
   int v1; // ecx
   unsigned __int16 v2; // dx
@@ -18163,7 +18163,7 @@ void * sub_406980(DWORD a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00406FA0) --------------------------------------------------------
-void  sub_406FA0(int ii)
+void  WorldMap_TickAmbientMapAnimations(int ii)
 {
   int v1; // edx
   int j; // ecx
@@ -18649,7 +18649,7 @@ void  sub_406FA0(int ii)
 // 522FCE: using guessed type __int16 word_522FCE;
 
 //----- (00407B20) --------------------------------------------------------
-unsigned int  sub_407B20(int a1, int a2, int a3)
+unsigned int  WorldMap_TickPaletteFlashEffect(int a1, int a2, int a3)
 {
   unsigned int result; // eax
   __lock *v4; // ecx
@@ -18745,7 +18745,7 @@ LABEL_7:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00407D20) --------------------------------------------------------
-int  sub_407D20(signed int a1, ...)
+int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
 {
   unsigned int v3; // eax
   unsigned int v4; // edx
@@ -19215,7 +19215,7 @@ void  WorldMap_HandleTileHoverAndClick(double a1)
     dword_5202AC = dword_544D00 >> byte_54512C;
     dword_5202A4 = Time_Now(v3, v2);
     if ( dword_5202B0 )
-      sub_406980(v1);
+      WorldMap_RefreshUnitStatusPanel(v1);
     v2 = 0;
     dword_5202B0 = 0;
   }
@@ -19575,7 +19575,7 @@ LABEL_26:
           {
             Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
             UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v37, (DWORD)v35, a1);
-            sub_406980((DWORD)v35);
+            WorldMap_RefreshUnitStatusPanel((DWORD)v35);
           }
           if ( !*(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
           {
@@ -19687,7 +19687,7 @@ LABEL_26:
         return;
 LABEL_138:
       UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v30, (DWORD)v32, a1);
-      sub_406980((DWORD)v32);
+      WorldMap_RefreshUnitStatusPanel((DWORD)v32);
       return;
     }
     if ( !UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
@@ -19695,7 +19695,7 @@ LABEL_138:
 LABEL_205:
     Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v30, v1, a1);
-    sub_406980(v1);
+    WorldMap_RefreshUnitStatusPanel(v1);
     return;
   }
   if ( MapTile_HasOwnUnitStack(v1, v78) )
@@ -19714,7 +19714,7 @@ LABEL_205:
       Unit_AddToGroup(g_SelectedUnitIndex, *(unsigned __int16 *)(TILE_INDEX(v1, v78)), 0, v1, a1);
       dword_5202E8 = 0;
       WorldMap_RefreshActionButtonBarState(v59);
-      sub_406980(v1);
+      WorldMap_RefreshUnitStatusPanel(v1);
       UnitStackSelection_SyncForCurrentSelection(v60, v1);
       WorldMap_RedrawViewport(1);
     }
@@ -19731,7 +19731,7 @@ LABEL_205:
           v61 = 725 * g_SelectedUnitIndex;
           Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, v62, v51, v61, a1);
-          sub_406980(v61);
+          WorldMap_RefreshUnitStatusPanel(v61);
         }
       }
       else
@@ -19756,7 +19756,7 @@ LABEL_205:
             WorldMap_RedrawTileIfVisible(
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147174),
               *(__int16 *)(gameData + 725 * g_LastSelectedUnitIndex + 147176));
-          sub_406980(v56);
+          WorldMap_RefreshUnitStatusPanel(v56);
           UnitStackSelection_SyncForCurrentSelection(v57, v56);
           Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           Render_Begin((int)&g_RenderState, 0, v54);
@@ -19856,7 +19856,7 @@ LABEL_205:
           if ( UnitStack_CanExecuteQueuedPathNow(g_SelectedUnitIndex) )
             Audio_PlayUnitMoveOrderSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
           UnitStack_ExecuteQueuedPath(g_SelectedUnitIndex, 1, v63, v65, a1);
-          sub_406980(v65);
+          WorldMap_RefreshUnitStatusPanel(v65);
           WorldMap_RedrawViewport(1);
         }
       }
@@ -19920,7 +19920,7 @@ LABEL_205:
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00409CC0) --------------------------------------------------------
-int  sub_409CC0(int a1, char a2, DWORD a3)
+int  WorldMap_ShowQuitConfirmDialog(int a1, char a2, DWORD a3)
 {
   int result; // eax
 
@@ -20061,7 +20061,7 @@ void  WorldMap_SelectNextActiveUnitStack(uintptr_t a1, int a2, DWORD a3)
     Camera_CenterOnUnit(scan_index);
     Audio_PlayUnitActivateSound(*(__int16 *)(gameData + 725 * g_SelectedUnitIndex + 147180));
     WorldMap_RedrawViewport(1);
-    sub_406980(a3);
+    WorldMap_RefreshUnitStatusPanel(a3);
     UnitStackSelection_SyncForCurrentSelection(NULL, a3);
     Diagnostics_TraceWorldMapActionEvent(
       "next_unit_selected",
@@ -20262,7 +20262,7 @@ LABEL_13:
       UIWidgetTable_InitDrawStates(dword_511D40);
       WorldMap_SyncSelectionForHumanPlayer(0x40u);
       WorldMap_RedrawViewport(1);
-      sub_406980(0x40u);
+      WorldMap_RefreshUnitStatusPanel(0x40u);
       return UnitStackSelection_RefreshForSelectedStack(0x40u);
     }
     else
@@ -20650,7 +20650,7 @@ int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3)
 //----- (0040A450) --------------------------------------------------------
 int __fastcall WorldMap_UnloadActionButtonSprites(int a1, int a2)
 {
-  sub_405920(&dword_52030C);
+  DLXSpriteSet_ReleaseAndClear(&dword_52030C);
   return a2;
 }
 // 52030C: using guessed type int dword_52030C;
@@ -20671,7 +20671,7 @@ int  WorldMap_PollActionButtonWidgets(DWORD a1)
     dword_526F78[0],
     widget_result);
   if ( widget_result == 1 )
-    sub_406980(a1);
+    WorldMap_RefreshUnitStatusPanel(a1);
   Diagnostics_TraceWorldMapActionEvent(
     "action_widgets_after_refresh",
     g_SelectedUnitIndex,
@@ -21076,7 +21076,7 @@ int * WorldMap_RenderHook(DWORD a1)
   WorldMap_RedrawViewport(1);
   UI_EndDraw(7);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
-  sub_406980(a1);
+  WorldMap_RefreshUnitStatusPanel(a1);
   UnitStackSelection_SyncForCurrentSelection(v2, a1);
   result = Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
@@ -21100,7 +21100,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
   DD_Pump((int)g_RenderState, 0);
   previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   Map_UpdateIdleAnimatedUnits();
-  sub_406FA0(a1);
+  WorldMap_TickAmbientMapAnimations(a1);
   Map_UpdateConstructionSiteSwayAnimation(0);
   Map_UpdateIdleAnimatedBuildings(0);
   UI_UpdateTileBlinkFlash(0, 0);
@@ -21229,15 +21229,15 @@ int  WorldMap_UnloadResources(DWORD a1)
   UnitSpriteCache_FreeAllEntries(v2, a1);
   BuildingSpriteCache_Clear();
   CSS_EmptySampleCache();
-  sub_405920(&dword_5202BC);
-  sub_405920(&dword_5202C8);
-  sub_405920(&dword_5202CC);
-  sub_405920(&g_FogOverlaySpriteSet);
-  sub_405920(&dword_5202D8);
-  sub_405920(&dword_5202D4);
-  sub_405920(&dword_5202D0);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202BC);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202C8);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202CC);
+  DLXSpriteSet_ReleaseAndClear(&g_FogOverlaySpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202D8);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202D4);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202D0);
   UI_FreeCurrentPlayerInfoSpriteSet();
-  sub_405920(&dword_5202DC);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202DC);
   j__nfree_();
   return WorldMapTopMenu_FreeSpriteSet();
 }
@@ -21525,7 +21525,7 @@ void  WorldMap_RunHumanTurnLoop(
     UI_ReadCheatString(0);
     WorldMap_RunInputScriptStep();
     DD_Pump((int)g_RenderState, 0);
-    sub_407B20(0, 0, 0);
+    WorldMap_TickPaletteFlashEffect(0, 0, 0);
     WorldMap_RedrawFrame(0);
     MiniMap_UpdateViewportFromCursor();
     if ( !WorldMap_HandleTopMenuBar(0, 0) )
@@ -21605,13 +21605,13 @@ LABEL_24:
               }
               j__nfree_();
               WorldMap_RedrawViewport(1);
-              sub_406980(0);
+              WorldMap_RefreshUnitStatusPanel(0);
             }
           }
         }
       }
     }
-    sub_407D20(0);
+    WorldMap_HandleScrollKeysAndIdle(0);
     Diagnostics_TraceWorldMapActionEvent(
       "selection_after_sub407d20",
       g_SelectedUnitIndex,
@@ -21631,7 +21631,7 @@ LABEL_24:
       saved_render_hook = g_RenderHook;
       g_RenderHook = (int (*)())Render_DefaultRH;
       Debug_Log(saved_resource_handle, 0, 0, (int)aSetrhS08x_0);
-      sub_409CC0(0, 0, 0);
+      WorldMap_ShowQuitConfirmDialog(0, 0, 0);
       Debug_Log((int)g_RenderHook, 0, 0, (int)aUnsetrh08x);
       g_RenderHook = saved_render_hook;
       Render_SetResourceHandle((int)&unk_51D4C0, saved_resource_handle);
@@ -21739,7 +21739,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   if ( background_resource_name )
   {
     if ( dword_5202C0 )
-      sub_405920(&dword_5202C0);
+      DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
     background_sprite_set = (_DWORD *)Mem_Alloc(4112, 0, 0, a3);
     if ( background_sprite_set )
       background_sprite_set = DLXSpriteSet_Load(background_sprite_set, background_resource_name);
@@ -22314,7 +22314,7 @@ void  TextSprite_BuildOrLoadCachedFont(int a1, _BYTE *a2, int a3, char a4, DWORD
     v10 += BYTE1(v9);
   }
   sprintf_(v27, "cache\\%02x%02x%04x.s32", a1, (unsigned __int8)v9, v10);
-  sub_405980(v27, v13, a5, v12);
+  Res_ProbeGfxFileExists(v27, v13, a5, v12);
   if ( v15 )
   {
     v25 = (_DWORD *)Mem_Alloc(4112, v14, (char)v9, a5);
@@ -23846,7 +23846,7 @@ _DWORD * WorldMapTopMenu_LoadSpriteSet()
 //----- (0040ED20) --------------------------------------------------------
 int WorldMapTopMenu_FreeSpriteSet()
 {
-  return sub_405920(&dword_523F5C);
+  return DLXSpriteSet_ReleaseAndClear(&dword_523F5C);
 }
 // 523F5C: using guessed type int dword_523F5C;
 
@@ -25285,7 +25285,7 @@ LABEL_21:
       UnitStack_ClearReadyFlags((int)v7);
     }
     if ( dword_523F78 )
-      sub_405920(&dword_523F78);
+      DLXSpriteSet_ReleaseAndClear(&dword_523F78);
     dword_512360 = -1;
     if ( v101 )
     {
@@ -27249,7 +27249,7 @@ int  UnitSpriteCache_GetOrLoadEntry(
   Unit_BuildGoSpriteFilePath(path, (unsigned __int8)a1, a2);
   sprite_record = Mem_Alloc(22, 0, 0, 0);
   if ( sprite_record )
-    sprite_record = sub_4060E0(sprite_record, path, a3 + 8 * a4);
+    sprite_record = DLXSprite_LoadCachedEntry(sprite_record, path, a3 + 8 * a4);
   *(int *)(void *)(g_UnitSpriteCacheRecords + record_offset + 7) = sprite_record;
   return sprite_record;
 }
@@ -32426,7 +32426,7 @@ LABEL_50:
   Render_ReleaseSurface(7, v13);
   UI_DrawTextFmt(v6, v50 + 41, v50 + 70, v44 + 98, 3, (int)aD_18);
   Render_ReleaseSurface(7, v13);
-  return sub_405920((int *)&v42);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v42);
 }
 // 41A23D: simplified comparisons for 'eax.4': <0 || >=5 became >=5u
 // 419FBC: variable 'v9' is possibly undefined
@@ -32549,7 +32549,7 @@ int  Unit_Info(
   Render_Present((int)g_RenderState);
   if ( v25 )
     (**(void (***)(void))(v25 + 184))();
-  return sub_405920((int *)&v27);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v27);
 }
 // 41A6FD: variable 'v11' is possibly undefined
 // 41A73A: variable 'v13' is possibly undefined
@@ -32714,8 +32714,8 @@ int  UI_DrawSpecialUnitInfoPane(
   Render_Present((int)g_RenderState);
   if ( v28 )
     (*(void (**)(void))v28[46])();
-  sub_405920((int *)&v31);
-  return sub_405920((int *)&v32);
+  DLXSpriteSet_ReleaseAndClear((int *)&v31);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v32);
 }
 // 41A99F: variable 'v9' is possibly undefined
 // 41A9C2: variable 'v11' is possibly undefined
@@ -33044,7 +33044,7 @@ LABEL_52:
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_render_pump", v64, v58, 0, 0);
             Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_unlock", v64, v58, 0, 0);
-            sub_405920(&dword_5202BC);
+            DLXSpriteSet_ReleaseAndClear(&dword_5202BC);
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_frame_free", v64, v58, 0, 0);
             BuildingSpriteCache_Clear();
             Diagnostics_TraceWorldMapActionEvent("unit_attack_manual_after_building_cache_clear", v64, v58, 0, 0);
@@ -33068,7 +33068,7 @@ LABEL_52:
             Diagnostics_TraceWorldMapActionEvent("unit_attack_battle_return", v64, v58, v31, 0);
             v37 = *(_BYTE *)(gameData + 140016);
             if ( dword_5202C0 )
-              sub_405920(&dword_5202C0);
+              DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
             if ( v37 == 0 )
             {
               v38 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)v8);
@@ -33329,7 +33329,7 @@ LABEL_42:
             }
             Render_Pump();
             Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-            sub_405920(&dword_5202BC);
+            DLXSpriteSet_ReleaseAndClear(&dword_5202BC);
             BuildingSpriteCache_Clear();
             UnitSpriteCache_FreeAllEntries(v33, (DWORD)v7);
             CSS_EmptySampleCache();
@@ -33342,7 +33342,7 @@ LABEL_42:
               if ( v37 <= 1u )
               {
                 if ( dword_5202C0 )
-                  sub_405920(&dword_5202C0);
+                  DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
                 v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
                 if ( !v38 )
                   goto LABEL_37;
@@ -33352,7 +33352,7 @@ LABEL_42:
                 if ( v37 != 2 )
                   goto LABEL_38;
                 if ( dword_5202C0 )
-                  sub_405920(&dword_5202C0);
+                  DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
                 v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
                 if ( !v38 )
                 {
@@ -33376,7 +33376,7 @@ LABEL_38:
             else
             {
               if ( dword_5202C0 )
-                sub_405920(&dword_5202C0);
+                DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
               v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
               if ( !v38 )
                 goto LABEL_37;
@@ -33866,7 +33866,7 @@ signed int  UI_PromptLeadTroopsPersonally(
         Compat_RenderDeviceDrawMenuSprite(v65, v67, v20, 1);
         if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(v64 + 2) + 140051) )
           UI_DrawTextFmt((int)v16, v67, v67 + 32, v65 + 50, 3, (int)aD_3);
-        sub_405920((int *)&v49);
+        DLXSpriteSet_ReleaseAndClear((int *)&v49);
       }
       a5 = v61;
       ++v15;
@@ -33896,7 +33896,7 @@ signed int  UI_PromptLeadTroopsPersonally(
         Compat_RenderDeviceDrawMenuSprite(v66, v68, v26, 1);
         if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v63 + 2) + gameData + 140051) )
           UI_DrawTextFmt((int)v22, v68, v68 + 32, v66 + 50, 3, (int)aD_4);
-        sub_405920((int *)&v50);
+        DLXSpriteSet_ReleaseAndClear((int *)&v50);
       }
       a5 = v60;
       ++v21;
@@ -33968,7 +33968,7 @@ LABEL_34:
   v39 = DLX_GetSpriteHeight((int)v48, 0);
   Render_FillRect((_DWORD *)dword_5202E0, 0, v54, v55, v55 + v39, v54 + SpriteWidth, v55, v54);
   Render_Present((int)g_RenderState);
-  sub_405920((int *)&v48);
+  DLXSpriteSet_ReleaseAndClear((int *)&v48);
   return v34;
 }
 // 41C91A: variable 'v7' is possibly undefined
@@ -36035,7 +36035,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *a1, char a2, int a3)
   Render_FillRect(v38, 0, 0, 0, v24 - 1, v31, v32, v33);
   if ( v25 )
     (*(void (**)(void))v25[46])();
-  sub_405920((int *)&v35);
+  DLXSpriteSet_ReleaseAndClear((int *)&v35);
   Render_Present((int)g_RenderState);
   result = v39;
   g_RenderDevice = v39;
@@ -36217,7 +36217,7 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
   Render_FillRect(v40, 0, 0, 0, v26 - 1, v29, v30, v31);
   if ( v40 )
     (*(void (**)(void))v40[46])();
-  sub_405920((int *)&v39);
+  DLXSpriteSet_ReleaseAndClear((int *)&v39);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v46;
   return WorldMap_RedrawViewport(1);
@@ -37985,9 +37985,9 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   }
 
   dword_526A30 = saved_tick_callback;
-  sub_405920(&g_BuildingGarrisonDialogUiSpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&g_BuildingGarrisonDialogUiSpriteSet);
   if ( g_BuildingGarrisonDialogSelectedUnitSpriteSet )
-    sub_405920(&g_BuildingGarrisonDialogSelectedUnitSpriteSet);
+    DLXSpriteSet_ReleaseAndClear(&g_BuildingGarrisonDialogSelectedUnitSpriteSet);
   for ( slot_index = 0; slot_index < 12; ++slot_index )
   {
     if ( g_BuildingGarrisonDialogSlotSpriteSets[slot_index] )
@@ -38781,8 +38781,8 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   v19 = 467 * a1;
   g_CastleScreenSurface = (int)Surface;
   Castle_RebuildSceneBuffers((int)byte_526A70, v19);
-  sub_4060A0(dword_523F5C, 3, (int)byte_526A70, aMap_pal_0);
-  sub_4060A0(dword_523F5C, 4, (int)byte_526A70, aMap_pal_1);
+  DLXSpriteSet_DrawFormattedText(dword_523F5C, 3, (int)byte_526A70, aMap_pal_0);
+  DLXSpriteSet_DrawFormattedText(dword_523F5C, 4, (int)byte_526A70, aMap_pal_1);
   DLXSpriteSet_DrawText(g_CastleStatusSpriteSet, 10, (int)byte_526A70, (unsigned __int8 *)dword_5202F4);
   CSS_ResumeStreamReading();
   LOBYTE(v22) = -57;
@@ -38939,7 +38939,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   RenderState_LoadDefaultCursorSprite((int)g_RenderState);
   Audio_SetMusicVolume(v24, 400);
   Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  sub_405920(&dword_523F5C);
+  DLXSpriteSet_ReleaseAndClear(&dword_523F5C);
   v26 = (_DWORD *)Mem_Alloc(4112, v25, 144, v19);
   if ( v26 )
     v26 = DLXSpriteSet_Load(v26, "menu.s32");
@@ -38947,9 +38947,9 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   dword_523F5C = (int)v26;
   if ( g_CastleScreenSurface )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)(unsigned int)g_CastleScreenSurface, 2);
-  sub_405920(&g_CastleSceneIconSpriteSet);
-  sub_405920(&g_CastleAmbientSpriteSet);
-  sub_405920(&g_CastleStatusSpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&g_CastleSceneIconSpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&g_CastleAmbientSpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&g_CastleStatusSpriteSet);
   TextSprite_ReleaseAllResourceSlots();
   CSS_EmptySampleCache();
   Palette_LoadOrBuildBlendLookupTable(aMainmap_2, dword_5202F4, v28, v19);
@@ -39575,7 +39575,7 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   while ( DD_IsLost((int)g_RenderState) )
   {
     DD_Pump((int)g_RenderState, a2);
-    sub_407D20(a1);
+    WorldMap_HandleScrollKeysAndIdle(a1);
     WorldMap_RedrawFrame(a2);
   }
   dword_526994 = v6;
@@ -40343,7 +40343,7 @@ LABEL_14:
               j__nfree_();
               UnitStack_ExecuteQueuedPath(a1, v27, v26, v25, a5);
               UnitStack_SpendActionPointsClamped((__int16 *)(v25 + gameData + 147174), 1, v25, a5);
-              sub_406980(v25);
+              WorldMap_RefreshUnitStatusPanel(v25);
               return 1;
             }
           }
@@ -40393,7 +40393,7 @@ signed int  UnitStack_MoveOneTileInDirection(int a1, int a2, double a3)
     qmemcpy((void *)(v5 + gameData + 147174 + 316), (const void *)result, 0x194u);
     j__nfree_();
     UnitStack_ExecuteQueuedPath(a1, v9, v7, a1, a3);
-    sub_406980(a1);
+    WorldMap_RefreshUnitStatusPanel(a1);
     return 1;
   }
   return result;
@@ -40639,7 +40639,7 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
       while ( 1 )
       {
         DD_Pump((int)g_RenderState, v4);
-        sub_407D20(a1);
+        WorldMap_HandleScrollKeysAndIdle(a1);
         WorldMap_RedrawFrame(v4);
         if ( Time_Now(v8, v7) - 10 > (unsigned int)g_RoadBuildModeLastAnimationTick )
         {
@@ -41657,7 +41657,7 @@ LABEL_15:
     *(_DWORD *)((char *)v5 + 23) = 0;
     *(_DWORD *)(gameData + v21 + 140073) = 1;
     Audio_StopUnitMoveSound();
-    sub_405920(&dword_523F78);
+    DLXSpriteSet_ReleaseAndClear(&dword_523F78);
     dword_512360 = -1;
     UnitBattle_RedrawVisibleGrid();
     Diagnostics_TraceWorldMapActionEvent(
@@ -42021,24 +42021,24 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
     if ( v13 == 7 || v13 == 6 || v13 == 5 )
     {
       attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
-      v12 = -sub_4065D0(attacker_sprite) - sub_406540(defender_sprite);
+      v12 = -UnitBattle_ScanSpriteFirstOpaqueRunLength(attacker_sprite) - UnitBattle_ScanSpriteMinOpaqueRunLength(defender_sprite);
     }
     else if ( v13 == 1 || v13 == 2 || v13 == 3 )
     {
       attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
-      v12 = sub_406540(attacker_sprite) + sub_4065D0(defender_sprite);
+      v12 = UnitBattle_ScanSpriteMinOpaqueRunLength(attacker_sprite) + UnitBattle_ScanSpriteFirstOpaqueRunLength(defender_sprite);
     }
     if ( v13 == 7 || v13 < 2 )
     {
       attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
-      v22 = -sub_406650(attacker_sprite) - sub_4066C0(defender_sprite);
+      v22 = -UnitBattle_CountLeadingBlankSpriteRows(attacker_sprite) - UnitBattle_CountTrailingBlankSpriteRows(defender_sprite);
     }
     else
     {
       if ( v13 != 5 && v13 != 4 && v13 != 3 )
         goto LABEL_20;
       attacker_sprite = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, v14);
-      v22 = sub_4066C0(attacker_sprite) + sub_406650(defender_sprite);
+      v22 = UnitBattle_CountTrailingBlankSpriteRows(attacker_sprite) + UnitBattle_CountLeadingBlankSpriteRows(defender_sprite);
     }
     v103 = v22;
     goto LABEL_20;
@@ -42046,11 +42046,11 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   v48 = (unsigned __int16 *)DLX_GetSpriteForChar(dword_523F78, 8 * v13);
   if ( v13 == 6 )
   {
-    v12 = -sub_4065D0(v48);
+    v12 = -UnitBattle_ScanSpriteFirstOpaqueRunLength(v48);
   }
   else
   {
-    v12 = sub_406540(v48);
+    v12 = UnitBattle_ScanSpriteMinOpaqueRunLength(v48);
   }
 LABEL_20:
   if ( !v12 || !v103 )
@@ -42212,7 +42212,7 @@ LABEL_22:
       goto LABEL_22;
     }
   }
-  sub_405920(&dword_523F78);
+  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
   v59 = *((_BYTE *)v5 + 2);
   Unit_BuildAttackAnimSpritePath(v97, *(_BYTE *)v5, v59);
   v61 = (_DWORD *)Mem_Alloc(4112, v60, v59, v12);
@@ -42290,7 +42290,7 @@ LABEL_22:
     UnitBattle_PlayDeathAnimation(v102, v64, v65, v12);
   }
   v71 = v99;
-  sub_405920(&dword_523F78);
+  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
   if ( !v71 )
   {
     v81 = *((_BYTE *)v5 + 2);
@@ -42383,10 +42383,10 @@ LABEL_22:
         v88 = Time_Now(v95, v96);
       }
     }
-    sub_405920(&dword_523F78);
+    DLXSpriteSet_ReleaseAndClear(&dword_523F78);
   }
   if ( dword_5320F0 )
-    sub_405920(&dword_5320F0);
+    DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
   dword_5320F0 = 0;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
   dword_512360 = -1;
@@ -43281,7 +43281,7 @@ LABEL_62:
     Audio_PlayUnitHitSound(*(__int16 *)v113);
   v84 = Time_Now(v83, v82);
   v88 = Time_Now(v86, v85);
-  while ( v87 && (unsigned __int16)sub_405ED0(dword_5320FC) >= dword_532100 || v113 && dword_5320EC )
+  while ( v87 && (unsigned __int16)DLXSpriteSet_GetLastCharIndex(dword_5320FC) >= dword_532100 || v113 && dword_5320EC )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     v90 = Time_Now(v89, v84 + 5);
@@ -43296,7 +43296,7 @@ LABEL_62:
     dword_532100 = (unsigned int)(Time_Now(v92, v91) - v88) >> 1;
     if ( v95 )
     {
-      if ( (unsigned __int16)sub_405ED0(dword_5320FC) <= dword_532100 )
+      if ( (unsigned __int16)DLXSpriteSet_GetLastCharIndex(dword_5320FC) <= dword_532100 )
         break;
     }
     UnitBattle_RedrawTile(v122, a3);
@@ -43305,12 +43305,12 @@ LABEL_62:
   dword_514E54 = -1;
   UnitBattle_RedrawTile(v122, a3);
   if ( dword_5320FC )
-    sub_405920(&dword_5320FC);
+    DLXSpriteSet_ReleaseAndClear(&dword_5320FC);
   dword_514E44 = -1;
   if ( dword_5320F0 )
-    sub_405920(&dword_5320F0);
+    DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
   dword_5320F0 = 0;
-  sub_405920(&dword_523F78);
+  DLXSpriteSet_ReleaseAndClear(&dword_523F78);
   if ( v105 )
     nfree_(v105);
   result = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
@@ -43902,7 +43902,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
       Render_Begin((int)&g_RenderState, 0, (char)BuildCursor_DrawPlacementOverlay);
       break;
     }
-    sub_407D20(v9);
+    WorldMap_HandleScrollKeysAndIdle(v9);
     v10 = (((dword_544CFC >> byte_54512C)
           - 32
           - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
@@ -44763,7 +44763,7 @@ int  BuildingEconomyDialog_Run(int a1)
       g_BuildingTransferTargetListIndex,
       g_BuildingEconomyDialogExitSignal);
   BuildingTransferTargetList_FreeSpriteSet();
-  sub_405920(&g_BuildingEconomyDialogSpriteSet);
+  DLXSpriteSet_ReleaseAndClear(&g_BuildingEconomyDialogSpriteSet);
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
@@ -45187,7 +45187,7 @@ LABEL_9:
   Render_FillRect(v31, 0, 0, 0, v18 - 1, v26, v27, v28);
   if ( v31 )
     (*(void (__cdecl **)(int, int, int))v31[46])(v29[0], v29[1], v29[2]);
-  sub_405920((int *)&v30);
+  DLXSpriteSet_ReleaseAndClear((int *)&v30);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v37;
   return WorldMap_RedrawViewport(1);
@@ -45427,7 +45427,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
       Palette_CrossfadeStep((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, v21, 150);
     }
     Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, (const void *)dword_5202F4);
-    sub_405920((int *)&v26);
+    DLXSpriteSet_ReleaseAndClear((int *)&v26);
     g_RenderDevice = v27;
     Render_Present((int)g_RenderState);
     UnitBattle_RedrawVisibleGrid();
@@ -46469,7 +46469,7 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
   Render_Present((int)g_RenderState);
   g_RenderDevice = v30;
   Diagnostics_TraceWorldMapActionEvent("battle_banner_done", a1, a2, (int)(uintptr_t)g_RenderDevice, 0);
-  return sub_405920(v22);
+  return DLXSpriteSet_ReleaseAndClear(v22);
 }
 // 42D782: variable 'v4' is possibly undefined
 // 42D799: variable 'v5' is possibly undefined
@@ -46593,7 +46593,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
   RenderState_WarpCursorAndPump(g_RenderState, 0x140u, 0xF0u);
   Render_Present((int)g_RenderState);
   g_RenderDevice = v15;
-  sub_405920((int *)&v14);
+  DLXSpriteSet_ReleaseAndClear((int *)&v14);
   return g_UnitBattlePromptDialogResult;
 }
 // 42DB02: variable 'v4' is possibly undefined
@@ -47267,7 +47267,7 @@ DWORD  Battle_RunTacticalCombat(
   g_RenderHook = (int (*)())UnitBattle_InitBattleScreenFrame;
   Debug_Log(v7, (char)a4, a5, (int)aSetrhS08x_8);
   v76 = Audio_PauseMusicAndPlayLoopedSound(aBattle_1, 1);
-  sub_405920(&dword_5202C0);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
   v9 = *(_BYTE *)(gameData + 140016);
   battle_background_resource = 0;
   if ( !v9 )
@@ -47658,11 +47658,11 @@ DWORD  Battle_RunTacticalCombat(
   }
   Render_Pump();
   Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-  sub_405920(&dword_5202BC);
-  sub_405920(&dword_53204C);
-  sub_405920(&dword_532050);
-  sub_405920(&dword_532054);
-  sub_405920(&dword_532058);
+  DLXSpriteSet_ReleaseAndClear(&dword_5202BC);
+  DLXSpriteSet_ReleaseAndClear(&dword_53204C);
+  DLXSpriteSet_ReleaseAndClear(&dword_532050);
+  DLXSpriteSet_ReleaseAndClear(&dword_532054);
+  DLXSpriteSet_ReleaseAndClear(&dword_532058);
   nfree_(dword_532048);
   dword_532048 = 0;
   Tooltip_ReleaseBackdropSurface();
@@ -48757,7 +48757,7 @@ LABEL_36:
                   Compat_RenderDeviceDrawMenuSprite(501, 24, v35, 1);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_portrait_draw", *v4, (int)(uintptr_t)v34, v35, 0);
                   v39 = (int)(uintptr_t)v34;
-                  sub_405920(&v39);
+                  DLXSpriteSet_ReleaseAndClear(&v39);
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_after_portrait_free", *v4, v39, 0, 0);
                   v36 = v40;
                   RenderState_PumpIfRectInViewBounds(g_RenderState, 0x1F2u, 0x270u, 0xAu, 0x162u);
@@ -48977,7 +48977,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
   Render_Present((int)g_RenderState);
   if ( v31 )
     (*(void (**)(void))v31[46])();
-  return sub_405920((int *)&v40);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v40);
 }
 // 431971: variable 'v6' is possibly undefined
 // 4319C7: variable 'v10' is possibly undefined
@@ -49878,7 +49878,7 @@ void  BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(int a1, char a2, DWO
       g_BuildingGarrisonDialogSelectedSlotIndex,
       g_BuildingGarrisonDialogSelectedUnitSpriteSet);
   if ( g_BuildingGarrisonDialogSelectedUnitSpriteSet )
-    sub_405920(&g_BuildingGarrisonDialogSelectedUnitSpriteSet);
+    DLXSpriteSet_ReleaseAndClear(&g_BuildingGarrisonDialogSelectedUnitSpriteSet);
   if ( g_BuildingGarrisonDialogSelectedSlotIndex != -1 )
   {
     slot_record = g_BuildingGarrisonDialogActiveBuilding + 31 * g_BuildingGarrisonDialogSelectedSlotIndex;
@@ -50280,7 +50280,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   int v40; // [esp+46Ch] [ebp-Ch]
 
   if ( g_CastleProductionSelectedUnitSpriteSet )
-    sub_405920(&g_CastleProductionSelectedUnitSpriteSet);
+    DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
   Unit_BuildSelectedUnitPanelIconSpritePath(v37, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], a1);
   v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, a3);
   if ( v6 )
@@ -51240,9 +51240,9 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   }
   while ( !g_CastleProductionExitSignal );
   dword_526A30 = v23;
-  sub_405920(&dword_53220C);
+  DLXSpriteSet_ReleaseAndClear(&dword_53220C);
   if ( g_CastleProductionSelectedUnitSpriteSet )
-    sub_405920(&g_CastleProductionSelectedUnitSpriteSet);
+    DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
   for ( v24 = 0; v24 != 12; ++v24 )
   {
     if ( dword_532304[v24] )
@@ -51537,7 +51537,7 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
     if ( v2 )
       v2 = DLXSpriteSet_Load(v2, aCas_list_s32);
     g_BuildingTransferTargetListSpriteSet = (int)v2;
-    sub_4060A0((DWORD)v2, -1, a1, aCas_list_pal);
+    DLXSpriteSet_DrawFormattedText((DWORD)v2, -1, a1, aCas_list_pal);
   }
   Render_ReleaseSurface(5, a2);
   row_index = g_BuildingTransferTargetListIndex - 2;
@@ -51756,7 +51756,7 @@ int BuildingTransferTargetList_FreeSpriteSet()
   int result; // eax
 
   if ( g_BuildingTransferTargetListSpriteSet )
-    result = sub_405920(&g_BuildingTransferTargetListSpriteSet);
+    result = DLXSpriteSet_ReleaseAndClear(&g_BuildingTransferTargetListSpriteSet);
   g_BuildingTransferTargetListSpriteSet = 0;
   return result;
 }
@@ -56583,7 +56583,7 @@ int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
     UIWidgetTable_PollHoverAndActions(dword_515A90, a3);
   }
   while ( !dword_5438A4 );
-  sub_405920(&dword_5438A0);
+  DLXSpriteSet_ReleaseAndClear(&dword_5438A0);
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
@@ -56677,7 +56677,7 @@ int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
     UIWidgetTable_PollHoverAndActions(dword_515B10, a3);
   }
   while ( !dword_5438B0 );
-  sub_405920(&dword_5438AC);
+  DLXSpriteSet_ReleaseAndClear(&dword_5438AC);
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
@@ -56771,7 +56771,7 @@ int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
     UIWidgetTable_PollHoverAndActions(dword_515B90, a3);
   }
   while ( !dword_5438BC );
-  sub_405920(&dword_5438B8);
+  DLXSpriteSet_ReleaseAndClear(&dword_5438B8);
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
@@ -56865,7 +56865,7 @@ int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
     UIWidgetTable_PollHoverAndActions(dword_515C10, a3);
   }
   while ( !dword_5438C8 );
-  sub_405920(&dword_5438C4);
+  DLXSpriteSet_ReleaseAndClear(&dword_5438C4);
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
 }
@@ -58049,7 +58049,7 @@ int  BuildingSpriteCache_LoadEntry(
         entry_index = i;
       }
     }
-    sub_405950((int *)(void *)(byte_5438E8 + BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index + 5));
+    DLXSprite_ReleaseAndClear((int *)(void *)(byte_5438E8 + BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index + 5));
   }
   entry_offset = BUILDING_SPRITE_CACHE_RECORD_STRIDE * entry_index;
   byte_5438E8[entry_offset] = (char)a1;
@@ -58095,7 +58095,7 @@ int  BuildingSpriteCache_LoadEntry(
   {
     v22 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v22 )
-      v22 = sub_4060E0(v22, aBuildin1_s32, v18);
+      v22 = DLXSprite_LoadCachedEntry(v22, aBuildin1_s32, v18);
     *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v22;
     return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
   }
@@ -58103,7 +58103,7 @@ int  BuildingSpriteCache_LoadEntry(
   {
     v25 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v25 )
-      v25 = sub_4060E0(v25, aBuildin2_s32, v18);
+      v25 = DLXSprite_LoadCachedEntry(v25, aBuildin2_s32, v18);
     *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v25;
     return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
   }
@@ -58111,7 +58111,7 @@ int  BuildingSpriteCache_LoadEntry(
   {
     v27 = Mem_Alloc(22, entry_index, v18, a5);
     if ( v27 )
-      v27 = sub_4060E0(v27, aBuildin3_s32, v18);
+      v27 = DLXSprite_LoadCachedEntry(v27, aBuildin3_s32, v18);
     *(int *)(void *)(byte_5438E8 + entry_offset + 5) = v27;
     return *(int *)(void *)(byte_5438E8 + entry_offset + 5);
   }
@@ -58172,7 +58172,7 @@ int BuildingSpriteCache_Clear()
         return result;
     }
     byte_5438E8[i] = -1;
-    result = sub_405950((int *)(void *)&byte_5438E8[i + 5]);
+    result = DLXSprite_ReleaseAndClear((int *)(void *)&byte_5438E8[i + 5]);
     *(int *)(void *)(byte_5438E8 + i + 5) = 0;
   }
   return result;
@@ -58510,7 +58510,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
   Render_Present((int)g_RenderState);
   if ( v10 )
     (**(void (***)(void))(v10 + 184))();
-  return sub_405920((int *)&v20);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v20);
 }
 // 43FF56: variable 'v7' is possibly undefined
 // 44008E: variable 'v14' is possibly undefined
@@ -59180,7 +59180,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
     }
     UIWidgetTable_PollHoverAndActions(dword_516330, a4);
   }
-  sub_405920(&dword_543C54);
+  DLXSpriteSet_ReleaseAndClear(&dword_543C54);
   v15 = 0;
   g_RenderDevice = v26;
   v16 = 0;
@@ -61391,7 +61391,7 @@ void * UI_DrawPortStatusPanel(char a1, DWORD a2)
   Render_FillRect((_DWORD *)v8, 0, 0, 0, v12 - 1, v15, v16, v17);
   if ( v8 )
     (**(void (__cdecl ***)(int, int, int, int, int, int))(v8 + 184))(v18[0], v18[1], v18[2], v19[0], v19[1], v19[2]);
-  sub_405920((int *)&v20);
+  DLXSpriteSet_ReleaseAndClear((int *)&v20);
   Render_Present((int)g_RenderState);
   result = v21;
   g_RenderDevice = v21;
@@ -62279,7 +62279,7 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   Debug_Log(v21, v14, (DWORD)g_RenderHook, (int)aUnsetrh08x_22);
   g_RenderHook = v42;
   Render_SetResourceHandle((int)&unk_51D4C0, v43);
-  sub_405920((int *)&v40);
+  DLXSpriteSet_ReleaseAndClear((int *)&v40);
   return dword_543D20;
 }
 // 444FB0: simplified comparisons for 'eax.4': <0 || >=A became >=Au
@@ -62461,7 +62461,7 @@ int  UI_ShowInfoWindow(
     Compat_RenderDeviceDrawMenuSprite(156, info_header_height, v18, 1);
     UI_DrawTextFmt(0, 70, 569, 210, 6, v31);
   }
-  sub_405920((int *)&v29);
+  DLXSpriteSet_ReleaseAndClear((int *)&v29);
   Render_Present((int)g_RenderState);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping((int)g_RenderState) && !DD_IsLost((int)g_RenderState) )
@@ -62797,7 +62797,7 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
     (**(void (__cdecl ***)(int, int, int, int, int, int))(v17 + 184))(v40[0], v40[1], v40[2], v41[0], v41[1], v41[2]);
   v37 = byte_543D48;
   v38 = (char *)(v46 + 5);
-  sub_405920((int *)&v42);
+  DLXSpriteSet_ReleaseAndClear((int *)&v42);
   do
   {
     result = *v37;
@@ -62914,7 +62914,7 @@ int  Demo_ShowNumberedTextScreen(char a1, DWORD a2)
   Render_SetResourceHandle((int)&unk_51D4C0, v2);
   v22 = DLX_GetSpriteWidth((int)v25, 0);
   Render_FillRect(v12, 0, 0, 0, 0x27Fu, v22 - 1, 0, 0);
-  return sub_405920((int *)&v25);
+  return DLXSpriteSet_ReleaseAndClear((int *)&v25);
 }
 // 446278: variable 'v3' is possibly undefined
 // 446281: variable 'v4' is possibly undefined
@@ -63114,7 +63114,7 @@ int  Queen_ShowWhimDecisionDialog(int a1, int a2, int a3, int a4, DWORD a5)
   Render_Present((int)g_RenderState);
   if ( v10 )
     RenderSurface_InvokeSlot0((_DWORD *)v10, 2);
-  sub_405920((int *)&v18);
+  DLXSpriteSet_ReleaseAndClear((int *)&v18);
   result = g_DecisionDialogResult;
   g_DecisionDialogConfirmDisabled = 0;
   return result;
@@ -63295,7 +63295,7 @@ int  YesNoWindow(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
   Render_Present((int)g_RenderState);
   if ( v13 )
     RenderSurface_InvokeSlot0((_DWORD *)(uintptr_t)v13, 2);
-  sub_405920((int *)&v25);
+  DLXSpriteSet_ReleaseAndClear((int *)&v25);
   g_YesNoWindowWidgetSpriteSet = 0;
   UI_EndDraw(17);
   return g_DecisionDialogResult;
@@ -63392,7 +63392,7 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4)
   Render_Present((int)g_RenderState);
   if ( v9 )
     (*(void (**)(void))v9[46])();
-  sub_405920((int *)&v15);
+  DLXSpriteSet_ReleaseAndClear((int *)&v15);
   return UI_EndDraw(17);
 }
 // 446D40: variable 'v4' is possibly undefined
@@ -63610,7 +63610,7 @@ int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3)
   Render_Present((int)g_RenderState);
   if ( v8 )
     RenderSurface_InvokeSlot0((_DWORD *)v8, 2);
-  sub_405920((int *)&v20);
+  DLXSpriteSet_ReleaseAndClear((int *)&v20);
   g_QueenMarriageProposalWidgetSpriteSet = 0;
   g_QueenMarriageProposalWidgetTableBase = 0;
   UI_EndDraw(17);
@@ -63715,7 +63715,7 @@ int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4)
   Render_Present((int)g_RenderState);
   if ( v19 )
     (*(void (**)(void))v19[46])();
-  sub_405920((int *)&v15);
+  DLXSpriteSet_ReleaseAndClear((int *)&v15);
   return UI_EndDraw(17);
 }
 // 4473C0: variable 'v4' is possibly undefined
@@ -64249,7 +64249,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
       while ( !g_PlayGameMenuExitRequested );
     }
     Render_Pump();
-    sub_405920(&g_PlayGameMenuSpriteSetHandle);
+    DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
     switch ( g_MainMenuRequestedScreen )
     {
       case MAIN_MENU_REQUEST_CAMPAIGN:
@@ -64288,7 +64288,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_Pump();
         if ( !campaign_menu_cancelled_by_escape )
           Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-        sub_405920(&g_PlayGameMenuSpriteSetHandle);
+        DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         if ( !campaign_menu_cancelled_by_escape && dword_544184 != -1 )
         {
           if ( dword_544184 == 1 )
@@ -64489,7 +64489,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_Pump();
         if ( dword_544190 )
           Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-        sub_405920(&g_PlayGameMenuSpriteSetHandle);
+        DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         v128 = dword_544190;
         if ( dword_544190 )
         {
@@ -64642,7 +64642,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Options_SaveConfigToFile(0, 0);
         Options_DestroySliderThumbList(word_518600);
         Render_Pump();
-        sub_405920(&g_PlayGameMenuSpriteSetHandle);
+        DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         break;
       case MAIN_MENU_REQUEST_LOAD_GAME:
         dword_5441E0 = -1;
@@ -64693,7 +64693,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         Render_Pump();
         if ( dword_544190 )
           Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
-        sub_405920(&g_PlayGameMenuSpriteSetHandle);
+        DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         if ( !dword_544190 )
           dword_5441E0 = -1;
         selected_load_slot = dword_5441E0;
@@ -68215,7 +68215,7 @@ LABEL_49:
     v56 = 0;
   }
   BuildingPrisoner_SetAction(v57, v56, dword_518F0E);
-  sub_405920(&dword_5443F0);
+  DLXSpriteSet_ReleaseAndClear(&dword_5443F0);
   j__nfree_();
   Render_Pump();
   return Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
@@ -68999,7 +68999,7 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   g_RenderHook = v25;
   Render_SetResourceHandle((int)&unk_51D4C0, v5);
   WorldMap_RedrawViewport(1);
-  return sub_405920(&dword_544540);
+  return DLXSpriteSet_ReleaseAndClear(&dword_544540);
 }
 // 4513B8: variable 'v7' is possibly undefined
 // 4514FE: variable 'v13' is possibly undefined
@@ -75002,7 +75002,7 @@ int  RenderState_ReleaseCursorResources(int a1)
   int vtable;
   int (*release_proc)(int, int);
 
-  sub_405920((int *)(a1 + 64));
+  DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
   surface_handle = *(_DWORD *)(a1 + 8);
   if ( surface_handle )
   {
@@ -75390,7 +75390,7 @@ _DWORD * RenderState_LoadDefaultCursorSprite(int a1)
 {
   _DWORD *result; // eax
   if ( *(_DWORD *)(a1 + 64) )
-    sub_405920((int *)(a1 + 64));
+    DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
   result = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( result )
   {
@@ -75418,7 +75418,7 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD
   CHAR query_path[104]; // [esp+68h] [ebp-10h] BYREF
 
   if ( *(_DWORD *)(a1 + 64) )
-    sub_405920((int *)(a1 + 64));
+    DLXSpriteSet_ReleaseAndClear((int *)(a1 + 64));
   source_bytes = (unsigned __int8 *)a2;
   checksum_xor = 0;
   checksum_sum = 0;
@@ -75430,7 +75430,7 @@ _DWORD * RenderState_LoadOrRenderCursorLabelSprite(int a1, int a2, int a3, DWORD
   }
   sprintf_(cache_path, "cache\\m%02x%04x.s32", checksum_xor, checksum_sum);
   cache_query_handle = 0;
-  if ( sub_405980(cache_path, 0, a4, 0) )
+  if ( Res_ProbeGfxFileExists(cache_path, 0, a4, 0) )
   {
     strcpy(query_path, aGfx);
     strcat(query_path, cache_path);
@@ -76499,7 +76499,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         Compat_RenderDeviceDrawMenuSprite(80, 80, v12, 0);
         v18 = *((_DWORD *)g_RenderDevice + 46);
         Diagnostics_TraceWorldMapActionEvent("transition_after_sprite_draw", g_SelectedUnitIndex, 0, 0, 0);
-        sub_405920((int *)&v24);
+        DLXSpriteSet_ReleaseAndClear((int *)&v24);
         Diagnostics_TraceWorldMapActionEvent("transition_after_anim_free", g_SelectedUnitIndex, 0, 0, 0);
         Audio_DuckMusicVolume();
         Diagnostics_TraceWorldMapActionEvent("transition_after_fade_wait", g_SelectedUnitIndex, 0, 0, 0);

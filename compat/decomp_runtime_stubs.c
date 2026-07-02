@@ -33,7 +33,7 @@ int Mem_Alloc(int a1, int a2, char a3, _DWORD a4);
 void *Mem_Realloc(void *a1, int a2, int a3);
 int sub_489D18(int a1, int a2);
 int sub_48703D(int a1, __lock *a2, int a3);
-int sub_406740(void);
+int Menu_DrawFrameBackdrop(void);
 int DLX_GetSpriteForChar(int a1, unsigned __int16 a2);
 __int16 DLX_GetSpriteWidth(int a1, unsigned __int16 a2);
 __int16 DLX_GetSpriteHeight(int a1, unsigned __int16 a2);
@@ -41,7 +41,7 @@ void WorldMap_EnableFrameRedraw(void);
 int TextSprite_MeasureStringExtent(_BYTE *a1);
 void TextSprite_BuildOrLoadCachedFont(int a1, _BYTE *a2, int a3, char a4, DWORD a5);
 int Font_InitGlyphFallbackTablesForLanguage(void);
-int sub_405980(CHAR *a1, int a2, DWORD a3, int a4);
+int Res_ProbeGfxFileExists(CHAR *a1, int a2, DWORD a3, int a4);
 int FileSystem_ResolveReadPath(char *a1, int a2);
 _DWORD *DLXSpriteSet_Load(_DWORD *a1, const void *a2);
 char DLXSpriteSet_DrawText(int a1, int a2, int a3, unsigned __int8 *a4);
@@ -2703,7 +2703,7 @@ int Render_SetResourceHandle(int a1, int a2)
 
 int Render_DrawSprite(void)
 {
-  return sub_406740();
+  return Menu_DrawFrameBackdrop();
 }
 
 static int Compat_LoadFontPaletteTable(const char *source_stem, uint32_t *palette_out)
@@ -2829,7 +2829,7 @@ void Render_LoadResourceSprite_v4(int a1, _BYTE *a2, int a3, char a4, DWORD a5)
 
   sprite_set = 0;
   cache_query_handle = 0;
-  if ( sub_405980(cache_path, 0, a5, 0) )
+  if ( Res_ProbeGfxFileExists(cache_path, 0, a5, 0) )
   {
     strcpy(query_path, "gfx\\");
     strcat(query_path, cache_path);
