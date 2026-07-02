@@ -129,7 +129,7 @@ void initRandomSeed(char a1, DWORD a2);
 int *sub_482260(void);
 signed int sub_491B10(void);
 unsigned int WorldMap_Initialize(char a1, DWORD a2);
-signed int sub_444490(int a1, DWORD a2, double a3);
+signed int SaveSlot_LoadGame(int a1, DWORD a2, double a3);
 signed int sub_44C400(DWORD a1, double a2);
 signed int Scenario_LoadAllAiMultiplayerMapAndInitView(int a1);
 int PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...);
@@ -1282,7 +1282,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
       sub_491B10();
     }
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-load-save");
-    sub_444490(dword_5441E0, 0, 0.0);
+    SaveSlot_LoadGame(dword_5441E0, 0, 0.0);
     Bootstrap_TraceMenuProbe("load-menu-post-confirm-after-save");
   }
 }
