@@ -70,3 +70,5 @@ Thumbs.db
 /[0-9]*
 /"*
 /; find *
+
+__pycache__/
