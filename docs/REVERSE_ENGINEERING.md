@@ -436,6 +436,42 @@ Why first:
 - the object-system/compiler seam is central enough that one good struct pass helps a wide area,
 - backend emission and module/class enumeration make excellent "anchor families" for future parser work.
 
+#### Provenance: the rules engine is CLIPS 6.0
+
+The entire Queue F area (rules engine, COOL object system, and the
+constructs-to-C / bsave compiler front-end) is an embedded copy of **CLIPS
+6.0** - NASA's *C Language Integrated Production System* expert-system shell.
+The `Module_*`, `Class_*`, `Method_*`, `Instance_*`, `Deffunction_*`,
+`Defgeneric_*`, `MessageHandler_*`, `Deftemplate_*`, `Defrule_*`, `AST_*`, and
+`Compiler_*` families are not game-authored - they are the CLIPS 6.0 public API
+and internals. The rename evidence notes that hedge with "CLIPS-like" all refer
+to this same shell; treat CLIPS 6.0 as their authoritative external reference.
+
+Concrete in-repo evidence (all verifiable by grep against `clash95.c`):
+
+- **Version stamp `"V6.00"`** (`off_51A1C4`, `clash95.c:11924`) is used as the
+  bload/bsave version magic: written into the binary constructs image and
+  `strcmp`-verified on load (`clash95.c:95445-95446`, `118409`). A second
+  bsave subsystem stamps the same string via `off_51AD24` (`clash95.c:12182`,
+  used at `137555`, `137897-137898`). This is exactly CLIPS 6.0's
+  `VERSION_STRING "6.00"` binary-image version check.
+- **Standard CLIPS routers** `wwarning`, `werror`, `wtrace`, `wdialog`,
+  `wclips`, `wdisplay` (`off_51A610..51A620`, `clash95.c:12039-12043`) - the
+  CLIPS logical-name constants `WWARNING/WERROR/WTRACE/WDIALOG/WCLIPS/WDISPLAY`.
+- **Product strings**: `"CLIPS> "` prompt (`clash95.c:6456`), `"clips.hlp"`
+  (`7258`), `#include "clips.h"` code-generation header (`7309`),
+  `"***CLIPSFNXARGS***"` external-function arg marker (`7761`),
+  `"\n*** CLIPS SYSTEM ERROR ***\n"` (`6335`), and the
+  `"   PeriodicCleanup(CLIPS_TRUE,CLIPS_FALSE);\n"` GC banner (`7363`).
+
+Practical consequence for future recovery: when a Queue F function's role is
+unclear, match its shape and strings against the CLIPS 6.0 source (public;
+function names such as `EnvReset`, `Bload`, `Bsave`, `IncrementSymbolCount`,
+`FindDefmodule`, `NextDefclass`, `PrintRouter`, `PeriodicCleanup` are stable
+anchors). This upgrades many of the honest "low"-confidence mechanical
+descriptions in `docs/archive/SUB_RENAME_INDEX.md` to citable identifications
+without needing the retail game assets.
+
 ---
 
 ## 10. Function-family recovery strategy
