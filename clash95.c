@@ -3406,7 +3406,7 @@ _DWORD * Help_FreeTopicTree(_DWORD *result);
 signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3);
 signed int  Help_SetHelpFilePathCommand(int a1, double a2);
 int * Help_LoadHelpFileCommand(DWORD a1, double a2);
-int  Help_PrintTopicEntryCommand(double a1);
+int  Help_PrintRegionCommand(double a1);
 signed int  Help_UnloadHelpFileCommand(int a1, double a2);
 BOOL __thiscall Help_RouterQueryMatchesWhelp(void *this);
 int __fastcall Rules_HelpRouterPrint(int a1, int a2);
@@ -131345,7 +131345,7 @@ int * Help_LoadHelpFileCommand(DWORD a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004A60A0) --------------------------------------------------------
-int  Help_PrintTopicEntryCommand(double a1)
+int  Help_PrintRegionCommand(double a1)
 {
   _DWORD *v1; // edi
   _DWORD *v2; // ebp
@@ -131765,7 +131765,7 @@ signed int Rules_RegisterHelpFunctions()
   Rules_RegisterHostFunction(aHelpPath, 118, (int)aHelppathfuncti, (int)Help_SetHelpFilePathCommand, (int)a1k);
   Rules_RegisterHostFunction(aFetch, 117, (int)aFetchcommand, (int)Help_LoadHelpFileCommand, (int)a11k_2);
   Rules_RegisterHostFunction(aToss, 98, (int)aTosscommand, (int)Help_UnloadHelpFileCommand, (int)a11k_2);
-  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)aPrintregioncom, (int)Help_PrintTopicEntryCommand, (int)a2Wk);
+  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)aPrintregioncom, (int)Help_PrintRegionCommand, (int)a2Wk);
 }
 
 //----- (004A66B0) --------------------------------------------------------

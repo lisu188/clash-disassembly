@@ -472,6 +472,11 @@ anchors). This upgrades many of the honest "low"-confidence mechanical
 descriptions in `docs/archive/SUB_RENAME_INDEX.md` to citable identifications
 without needing the retail game assets.
 
+The game exposes its strategic AI to the CLIPS rule base through a fixed set of
+host functions registered with `DefineFunction2`; the decoded registration
+table (H/L command name, C-name, return type, arity, address) is documented in
+`docs/AI_SCRIPTING_API.md`.
+
 A first string-anchored cross-reference pass (recovered name vs. CLIPS 6.30
 core source) is recorded in `docs/archive/CLIPS_SOURCE_CROSSREF.md`. It found
 zero mis-named string-anchored Queue F functions and made one low->high
