@@ -43,6 +43,11 @@ static void clash_crash_handler(int sig) {
 }
 
 /* ---- test case files (included, not separately compiled) ---- */
+#include "cases/test_cov00.c"
+#include "cases/test_cov02.c"
+#include "cases/test_cov08.c"
+#include "cases/test_cov09.c"
+#include "cases/test_cov10.c"
 #include "cases/test_smoke.c"
 /* CASES-INCLUDE-MARKER (tooling appends #include lines above this marker) */
 
