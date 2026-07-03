@@ -216,3 +216,39 @@ add_campaign_route_regression_test(01 360)
 add_campaign_route_regression_test(02 900)
 add_campaign_route_regression_test(03 900)
 add_campaign_route_regression_test(04 360)
+
+# ---------------------------------------------------------------------------
+# Unit-test / coverage target (opt-in: -DCLASH95_COVERAGE=ON).
+#
+# tests/unit/test_all.c #includes clash95.c into a single TU so the recovered
+# pure functions (including static helpers) are directly callable. Coverage is
+# measured only over the frozen pure testable set (tests/unit/pure_set.json)
+# via tools/measure_pure_coverage.py. Kept off by default so ordinary builds
+# and the route smokes are unaffected.
+# ---------------------------------------------------------------------------
+option(CLASH95_COVERAGE "Build instrumented clash95 unit tests" OFF)
+
+if(CLASH95_COVERAGE)
+  add_executable(clash95_unit_tests
+    tests/unit/test_all.c
+    platform_sdl_runtime.c
+    compat/decomp_runtime_stubs.c
+  )
+  target_include_directories(clash95_unit_tests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit
+  )
+  target_compile_options(clash95_unit_tests PRIVATE
+    -std=gnu89 -w -g -O0 --coverage -fprofile-abs-path
+    -ffunction-sections -fdata-sections -fno-pie)
+  target_link_options(clash95_unit_tests PRIVATE --coverage -Wl,--gc-sections -no-pie)
+  target_link_libraries(clash95_unit_tests PRIVATE PkgConfig::SDL2 X11::X11 m)
+  set_target_properties(clash95_unit_tests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+  add_test(NAME clash95_unit_tests
+    COMMAND $<TARGET_FILE:clash95_unit_tests>)
+  set_tests_properties(clash95_unit_tests PROPERTIES
+    TIMEOUT 120 LABELS "unit")
+endif()
