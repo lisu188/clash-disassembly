@@ -1,9 +1,14 @@
 # Current Status
 
-Last consolidated: 2026-06-16.
+Last consolidated: 2026-07-03.
 
 ## Validated State
 
+- The `sub_XXXXXX` placeholder-rename campaign is complete: all 3031 distinct
+  `sub_` symbols carry evidence-based semantic names. Zero `sub_` identifiers
+  remain as code symbols; the surviving `sub_` spellings are IDA address-anchor
+  comments and trace strings only (per `docs/REVERSE_ENGINEERING.md` 3.1). The
+  full old->new mapping lives in `docs/archive/SUB_RENAME_INDEX.md`.
 - `clash95_bootstrap` is the current SDL-backed executable target.
 - Default CTest smoke routes cover menu liveness, direct route startup, save DAT
   format checks, and opt-in real-input probes.
@@ -43,6 +48,27 @@ Campaign menu entry plus natural mission completion and auto-advance.
 - Route/probe notes: `docs/probes/`
 
 ## Latest Validation
+
+2026-07-03 post-rename-campaign re-validation:
+
+- `sub_` inventory: 0 defined `sub_` functions and 0 non-comment `sub_` code
+  references remain in `clash95.c`, `bootstrap_main.c`, or
+  `platform_sdl_runtime.c`; all remaining spellings are comment/trace anchors.
+- `docs/archive/SUB_RENAME_INDEX.md`: 3031 rows, 3031 distinct recovered names,
+  no old->new name collisions; sampled recovered names all resolve to real
+  source symbols.
+- `git diff --check`: passed.
+- `python3 -m json.tool RECOVERED_STRUCTURES.json`: passed.
+- `python3 -m json.tool UNIT_TYPES_AND_STATS.json`: passed.
+- `python3 tests/check_markdown_links.py`: passed.
+- `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug`: passed.
+- `cmake --build build --target clash95_bootstrap -j4`: passed (compiles and
+  links clean).
+- `ctest --test-dir build --output-on-failure`: 12 pass, opt-in probes skipped;
+  the 4 default route smokes (`full_route`, `r_command_shutdown`, `direct_a`,
+  `direct_a0`) fail only because the retail Clash CD assets are absent in this
+  container (`[platform_sdl] Clash: Clash CD not found!`) — environmental, not
+  rename-induced.
 
 2026-06-16 repo-hygiene validation:
 
