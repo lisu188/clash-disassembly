@@ -2806,3 +2806,57 @@
 - `tests/run_first_mission_turn_probe.sh`: made the unpromoted turn/end-turn route explicitly opt-in with `CLASH95_ENABLE_FIRST_MISSION_TURN_PROBE=1`, matching its manual repair-probe status.
 - Runtime evidence: default `ctest --output-on-failure` now passes with opt-in long routes skipped; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest -R clash95_campaign_route_04_regression --output-on-failure` passed and retained visual/progression evidence in `artifacts/campaign-routes/mission-04/20260615T102833Z-27814/`.
 - No gameplay names, unit-type names, or stat meanings were promoted in this harness batch.
+
+### 2026-07-03 - Bulk sub_ placeholder rename campaign (full pass)
+
+Renamed every `sub_XXXXXX` placeholder function to an evidence-based semantic
+name. 3031 distinct `sub_` symbols were renamed across `clash95.c`,
+`bootstrap_main.c`, and `compat/decomp_runtime_stubs.c`; after the pass **zero
+`sub_` identifiers remain in any code file** (only IDA-generated address-anchor
+comments and trace strings still spell the old names, preserved as searchable
+anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
+
+- **Method**: address-clustered into 77 batches of ~40 functions. Each function
+  was analyzed from its body, callers/callees, string literals, gameData/struct
+  offsets, vtable-slot layouts, and (where the C was ambiguous) `clash95.asm`
+  and upstream CLIPS sources. Every proposed name was validated to be a unique
+  C identifier absent from the existing code surface; string literals and
+  comments were left untouched by a token-aware applier
+  (`tools/apply_sub_renames.py`).
+- **Confidence** (per section 2 grading): high 1746, medium 958, low 327.
+  "low" names are honest mechanical descriptions where the gameplay/exact role
+  is unproven; they never assert unproven semantics.
+- **Full old->new mapping with per-function evidence**: `docs/archive/SUB_RENAME_INDEX.md`
+  (machine-generated, 3031 rows).
+- **Largest recovered areas**: Rules (1215), Class (170), CRT (104), IO (77), CSS (74), FileSystem (61), Surface (57), Instance (57), Deffunction (56), MessageHandler (56), Defgeneric (55), AviPlayer (50), Audio (48), Module (47), AST (47), Defglobal (44).
+- **Name corrections made during the pass**:
+  - `Module_Print` (0x491530) -> `Module_SetCurrent`: its body stores into the
+    current-module global `dword_51A9B0` (returned by `Module_GetCurrent`),
+    runs the module-change callback list, and returns the previous module -
+    CLIPS `SetCurrentModule` semantics, not printing.
+  - Stale decompiler aliases whose definitions still carried the raw `sub_`
+    name were unified with their declared semantic names: `sub_444490` ->
+    `SaveSlot_LoadGame`, `sub_4C28B0` -> `Lexer_ParseModifyOrDuplicate`, and the
+    `#define`-only aliases `sub_460270`/`sub_4602F0` promoted to
+    `Mission_CheckObjectiveComplete`/`UI_CheckDialogAccepted`.
+  - Cross-batch duplicate proposals resolved against CLIPS vocabulary:
+    `Rules_AssertParsedFact`, `Rules_NextActivationToFire`, `Rules_ReorderAgenda`,
+    `Rules_FindConstructByNameGeneric`, `Defgeneric_InsertMethodSlot`.
+- **Major finding**: the bulk of the still-anonymous surface (~1200 functions)
+  was a near-verbatim embedded port of the **CLIPS expert-system engine**
+  (agenda, facts, deftemplate/defrule/defclass/defgeneric/defmethod/deffunction/
+  defglobal/definstances/defmodule constructs, COOL object system and message
+  passing, Rete pattern/join networks, bsave/bload persistence, constructs-to-C
+  compiler, and the full builtin library), confirmed by literal
+  `Rules_RegisterHostFunction` registration strings and CLIPS source-module
+  error tags (`PRNTUTIL`, `ROUTER`, `CLASSFUN`, `OBJRTMCH`, `INSMNGR`, ...).
+  The remaining functions resolved into the recovered game/render/audio/
+  filesystem subsystems and the Watcom C runtime.
+- **Build validated**: `clash95_bootstrap` compiles and links after every wave.
+  The default `ctest` route smokes that require the retail Clash CD assets
+  (absent in this environment: no `/mnt/c/clash`) fail identically on the
+  pre-campaign baseline, confirming the failures are environmental, not
+  rename-induced.
+- **Tooling added** (reusable for future placeholder passes):
+  `tools/sub_inventory.py`, `tools/make_sub_batches.py`,
+  `tools/apply_sub_renames.py`, `tools/gen_sub_rename_index.py`.

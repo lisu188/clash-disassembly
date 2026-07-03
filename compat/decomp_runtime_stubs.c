@@ -456,7 +456,7 @@ static int CompatSignalNeedsCtrlHandler(int signal_number)
  * the platform-specific console/FPU details here while SDL/WSL remains the
  * only supported runtime target.
  */
-intptr_t __fastcall sub_496643(int signal_number, intptr_t handler_value)
+intptr_t __fastcall CRT_RegisterSignalHandler(int signal_number, intptr_t handler_value)
 {
   intptr_t previous_handler;
 
@@ -513,7 +513,7 @@ int system_(const char *command)
  * Watcom runtime thunks that the authentic save-load path now reaches while
  * staying inside the recovered executable wedge.
  */
-_DWORD sub_47C181(_DWORD size)
+_DWORD CRT_ProbeStackFrame(_DWORD size)
 {
   (void)size;
   return 0;
@@ -2551,14 +2551,14 @@ errno_t __cdecl _set_errno_(int value)
   return value;
 }
 
-int __fastcall sub_4697E0(_DWORD a1, _DWORD a2)
+int __fastcall CAviDecompressor_ApplyDecoderFormatParams(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
   return 0;
 }
 
-int sub_4849EE(void)
+int CRT_ThrowExcStringException(void)
 {
   return 0;
 }
@@ -2920,14 +2920,14 @@ int __fastcall _wcpp_4_fatal_runtime_error__(_DWORD a1, _DWORD a2)
   abort();
 }
 
-int __fastcall sub_476322(_DWORD a1, _DWORD a2)
+int __fastcall IO_InertRouterCallbackSlot(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
   return 0;
 }
 
-int __fastcall sub_476A78(_DWORD a1, _DWORD a2)
+int __fastcall IO_RemoveFileByPath(_DWORD a1, _DWORD a2)
 {
   return CRT_DeleteFile((int)a1, (int)a2);
 }
@@ -3182,7 +3182,7 @@ int __cdecl _SetIOMode_(_DWORD a1, _DWORD a2, _DWORD a3)
   return 0;
 }
 
-int __fastcall sub_488A97(_DWORD a1, _DWORD a2)
+int __fastcall CRT_PutcToStream(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
@@ -3259,7 +3259,7 @@ int __fastcall _clib_ulltoa_(_DWORD a1, _DWORD a2)
   return (int)a2;
 }
 
-int __fastcall sub_4B5A33(_DWORD a1, _DWORD a2)
+int __fastcall CRT_SignedLongToDecimalString(_DWORD a1, _DWORD a2)
 {
   sprintf((char *)(uintptr_t)a2, "%d", (int)a1);
   return (int)a2;
