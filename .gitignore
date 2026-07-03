@@ -72,3 +72,4 @@ Thumbs.db
 /; find *
 
 __pycache__/
+build-cov/

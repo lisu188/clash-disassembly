@@ -1,0 +1,3595 @@
+{
+ "functions": [
+  {
+   "name": "Runtime_DescriptorNoop",
+   "start_line": 312,
+   "end_line": 317
+  },
+  {
+   "name": "RenderSurface_GetCompactMethodPointer",
+   "start_line": 8838,
+   "end_line": 8850
+  },
+  {
+   "name": "RenderSurface_InvokeSlot0",
+   "start_line": 8850,
+   "end_line": 8860
+  },
+  {
+   "name": "RenderSurface_InvokeSlot36",
+   "start_line": 8860,
+   "end_line": 8870
+  },
+  {
+   "name": "RenderSurface_InvokeSlot48LoadPCX",
+   "start_line": 8870,
+   "end_line": 8880
+  },
+  {
+   "name": "RenderHandle_InvokeCopyDispatch",
+   "start_line": 8907,
+   "end_line": 8917
+  },
+  {
+   "name": "RenderSurface_InvokeSlot16ReadPixel",
+   "start_line": 8943,
+   "end_line": 8968
+  },
+  {
+   "name": "RenderSurface_WriteSoftwarePixel",
+   "start_line": 8968,
+   "end_line": 8984
+  },
+  {
+   "name": "UnitType_GetWorldMoveCost",
+   "start_line": 9506,
+   "end_line": 9514
+  },
+  {
+   "name": "PathEntryArray_ConstructCapacity256",
+   "start_line": 13394,
+   "end_line": 13401
+  },
+  {
+   "name": "Palette_QuantizeChannelsInPlace",
+   "start_line": 13726,
+   "end_line": 13747
+  },
+  {
+   "name": "Palette_LoadFromQueryHandle",
+   "start_line": 13747,
+   "end_line": 13760
+  },
+  {
+   "name": "Palette_ExpandRGBTripletsToTable",
+   "start_line": 13760,
+   "end_line": 13788
+  },
+  {
+   "name": "Palette_BuildGrayscaleIdentityTable",
+   "start_line": 13852,
+   "end_line": 13874
+  },
+  {
+   "name": "Str_CompactSkippingZeroBytes",
+   "start_line": 13874,
+   "end_line": 13896
+  },
+  {
+   "name": "Compat_DirectDrawSurfaceHandleIsLost",
+   "start_line": 16165,
+   "end_line": 16178
+  },
+  {
+   "name": "Palette_SetBrightnessOffset",
+   "start_line": 16474,
+   "end_line": 16481
+  },
+  {
+   "name": "Palette_CrossfadeToTarget",
+   "start_line": 16532,
+   "end_line": 16545
+  },
+  {
+   "name": "Sprite_DrawSimpleIgnoringRect",
+   "start_line": 16856,
+   "end_line": 16881
+  },
+  {
+   "name": "SurfaceCursor_GetIncrUnbounded",
+   "start_line": 17012,
+   "end_line": 17018
+  },
+  {
+   "name": "SurfaceCursor_GetExtentUnbounded",
+   "start_line": 17018,
+   "end_line": 17024
+  },
+  {
+   "name": "SurfaceCursor_GetOffsetZero",
+   "start_line": 17024,
+   "end_line": 17030
+  },
+  {
+   "name": "RenderSurface_GetBlitCursorRowStride",
+   "start_line": 17061,
+   "end_line": 17067
+  },
+  {
+   "name": "RenderSurface_GetBlitCursorCapacity",
+   "start_line": 17067,
+   "end_line": 17073
+  },
+  {
+   "name": "RenderSurface_AdvanceBlitCursor",
+   "start_line": 17073,
+   "end_line": 17080
+  },
+  {
+   "name": "RenderSurface_GetBlitCursorPosition",
+   "start_line": 17080,
+   "end_line": 17086
+  },
+  {
+   "name": "RenderSurface_GetLinkedBlitCursorCapacity",
+   "start_line": 17114,
+   "end_line": 17120
+  },
+  {
+   "name": "RenderSurface_AdvanceLinkedBlitCursor",
+   "start_line": 17120,
+   "end_line": 17127
+  },
+  {
+   "name": "RenderSurface_GetLinkedBlitCursorPosition",
+   "start_line": 17127,
+   "end_line": 17133
+  },
+  {
+   "name": "RenderSurface_CloneInternalArray",
+   "start_line": 17170,
+   "end_line": 17177
+  },
+  {
+   "name": "RenderSurface_CopyFourByteFields",
+   "start_line": 17177,
+   "end_line": 17187
+  },
+  {
+   "name": "UnitBattle_ScanSpriteMinOpaqueRunLength",
+   "start_line": 17774,
+   "end_line": 17825
+  },
+  {
+   "name": "UnitBattle_ScanSpriteFirstOpaqueRunLength",
+   "start_line": 17825,
+   "end_line": 17879
+  },
+  {
+   "name": "UnitBattle_CountLeadingBlankSpriteRows",
+   "start_line": 17879,
+   "end_line": 17911
+  },
+  {
+   "name": "UnitBattle_CountTrailingBlankSpriteRows",
+   "start_line": 17911,
+   "end_line": 17957
+  },
+  {
+   "name": "MapTile_HasOwnOrVisibleEnemyUnitStack",
+   "start_line": 18976,
+   "end_line": 18989
+  },
+  {
+   "name": "MapTile_HasBuilding",
+   "start_line": 19043,
+   "end_line": 19056
+  },
+  {
+   "name": "WorldMap_HandleSaveGameAction",
+   "start_line": 19936,
+   "end_line": 19944
+  },
+  {
+   "name": "WorldMap_DeferBuildingActionCallback",
+   "start_line": 20329,
+   "end_line": 20336
+  },
+  {
+   "name": "WorldMap_Initialize",
+   "start_line": 21690,
+   "end_line": 21700
+  },
+  {
+   "name": "TextSprite_GetResourceSlot",
+   "start_line": 21895,
+   "end_line": 21902
+  },
+  {
+   "name": "UI_DrawTextFmtV",
+   "start_line": 22244,
+   "end_line": 22257
+  },
+  {
+   "name": "UI_GetTextXOffset",
+   "start_line": 22257,
+   "end_line": 22268
+  },
+  {
+   "name": "TextSprite_ReleaseAllResourceSlots",
+   "start_line": 22385,
+   "end_line": 22399
+  },
+  {
+   "name": "UI_MenuEntry_Enable",
+   "start_line": 23854,
+   "end_line": 23864
+  },
+  {
+   "name": "UI_MenuEntry_Disable",
+   "start_line": 23864,
+   "end_line": 23874
+  },
+  {
+   "name": "Map_ClassifyFogOfWarOverlayForPlayer",
+   "start_line": 23971,
+   "end_line": 24029
+  },
+  {
+   "name": "UnitSlot_InitFromType",
+   "start_line": 24059,
+   "end_line": 24099
+  },
+  {
+   "name": "UnitStack_KillByIndex",
+   "start_line": 24233,
+   "end_line": 24239
+  },
+  {
+   "name": "UnitStack_UnlinkIfEmpty",
+   "start_line": 24270,
+   "end_line": 24277
+  },
+  {
+   "name": "Rules_LinkArmyFinalize",
+   "start_line": 24277,
+   "end_line": 24283
+  },
+  {
+   "name": "Facing_DirectionFromDelta8",
+   "start_line": 24396,
+   "end_line": 24439
+  },
+  {
+   "name": "UnitSlot_GetBaseActionPoints",
+   "start_line": 24486,
+   "end_line": 24492
+  },
+  {
+   "name": "UnitStack_ClearRemainingActionPoints",
+   "start_line": 24516,
+   "end_line": 24541
+  },
+  {
+   "name": "UnitStack_SubtractActionPointsFloorZero",
+   "start_line": 24702,
+   "end_line": 24730
+  },
+  {
+   "name": "UnitStats_CalcEffectiveMeleeAttack",
+   "start_line": 25358,
+   "end_line": 25370
+  },
+  {
+   "name": "UnitStats_GetMeleeIconIndex",
+   "start_line": 25370,
+   "end_line": 25376
+  },
+  {
+   "name": "UnitStats_CalcEffectiveDefensePower",
+   "start_line": 25376,
+   "end_line": 25392
+  },
+  {
+   "name": "UnitStats_GetDefenseIconIndex",
+   "start_line": 25392,
+   "end_line": 25398
+  },
+  {
+   "name": "UnitStats_CalcEffectiveShotPower",
+   "start_line": 25398,
+   "end_line": 25404
+  },
+  {
+   "name": "UnitStats_GetBaseShotPower",
+   "start_line": 25404,
+   "end_line": 25410
+  },
+  {
+   "name": "UnitStats_CalcEffectiveWallAttack",
+   "start_line": 25410,
+   "end_line": 25422
+  },
+  {
+   "name": "UnitSlot_HasSevereFatigue",
+   "start_line": 25705,
+   "end_line": 25711
+  },
+  {
+   "name": "UnitSlots_ExtractSpecialEntries",
+   "start_line": 26124,
+   "end_line": 26173
+  },
+  {
+   "name": "UnitSlots_ExtractSpecialEntriesForBuildingAttack",
+   "start_line": 26173,
+   "end_line": 26179
+  },
+  {
+   "name": "UnitSlots_AppendEntriesForBuildingAttack",
+   "start_line": 26201,
+   "end_line": 26207
+  },
+  {
+   "name": "UnitStack_HasGoldCargo",
+   "start_line": 26256,
+   "end_line": 26278
+  },
+  {
+   "name": "UnitStack_HasPeasantCargo",
+   "start_line": 26278,
+   "end_line": 26300
+  },
+  {
+   "name": "UnitSlot_PredicateAlways",
+   "start_line": 26654,
+   "end_line": 26661
+  },
+  {
+   "name": "UnitSlot_CycleOrderState",
+   "start_line": 26784,
+   "end_line": 26808
+  },
+  {
+   "name": "UnitStack_CycleAllSlotOrders",
+   "start_line": 26808,
+   "end_line": 26832
+  },
+  {
+   "name": "UnitStack_HasSpecialPersonageUnits",
+   "start_line": 26950,
+   "end_line": 26972
+  },
+  {
+   "name": "UnitSlots_CalcCombatStrengthScoreWithSpecialPersonageCheck",
+   "start_line": 26972,
+   "end_line": 27001
+  },
+  {
+   "name": "UnitStack_CalcMilitaryStrength",
+   "start_line": 27001,
+   "end_line": 27012
+  },
+  {
+   "name": "Building_CalcGarrisonStrength",
+   "start_line": 27012,
+   "end_line": 27027
+  },
+  {
+   "name": "UnitTrackElementStack_BuildBlank",
+   "start_line": 27074,
+   "end_line": 27081
+  },
+  {
+   "name": "UnitStack_CopyFromTemplate",
+   "start_line": 27081,
+   "end_line": 27103
+  },
+  {
+   "name": "BattleUnitEntry_CopyMergingPackedFlags",
+   "start_line": 27103,
+   "end_line": 27170
+  },
+  {
+   "name": "UnitTrackElementStack_CopyFromTemplate",
+   "start_line": 27170,
+   "end_line": 27178
+  },
+  {
+   "name": "UnitTrackElement_CopyFromTemplate",
+   "start_line": 27178,
+   "end_line": 27187
+  },
+  {
+   "name": "UnitType_GetResourceKey",
+   "start_line": 27338,
+   "end_line": 27384
+  },
+  {
+   "name": "Unit_BuildGoSpriteFilePath",
+   "start_line": 27384,
+   "end_line": 27466
+  },
+  {
+   "name": "UI_BeginUnitInfo",
+   "start_line": 27466,
+   "end_line": 27566
+  },
+  {
+   "name": "Unit_BuildGarrisonSlotIconSpritePath",
+   "start_line": 27566,
+   "end_line": 27667
+  },
+  {
+   "name": "Unit_BuildSelectedUnitPanelIconSpritePath",
+   "start_line": 27667,
+   "end_line": 27768
+  },
+  {
+   "name": "Unit_BuildSelectedUnitPanelIconPalettePath",
+   "start_line": 27768,
+   "end_line": 27869
+  },
+  {
+   "name": "Unit_BuildAttackAnimSpritePath",
+   "start_line": 27869,
+   "end_line": 27969
+  },
+  {
+   "name": "Unit_BuildShotAnimSpritePath",
+   "start_line": 27969,
+   "end_line": 28069
+  },
+  {
+   "name": "Unit_BuildShotAnimPaletteSpritePath",
+   "start_line": 28069,
+   "end_line": 28148
+  },
+  {
+   "name": "QueuedPath_StartsAtTile",
+   "start_line": 29444,
+   "end_line": 29455
+  },
+  {
+   "name": "Math_CeilSqrt",
+   "start_line": 29533,
+   "end_line": 29559
+  },
+  {
+   "name": "UI_StartWorldMapUnitAttentionFlash",
+   "start_line": 30752,
+   "end_line": 30765
+  },
+  {
+   "name": "UI_IsWorldMapUnitAttentionFlashActive",
+   "start_line": 30791,
+   "end_line": 30798
+  },
+  {
+   "name": "UI_HighlightTile",
+   "start_line": 30875,
+   "end_line": 30910
+  },
+  {
+   "name": "UI_ClearTileHighlight",
+   "start_line": 30910,
+   "end_line": 30919
+  },
+  {
+   "name": "BattleLog_Disable",
+   "start_line": 30950,
+   "end_line": 30957
+  },
+  {
+   "name": "BattleLog_Enable",
+   "start_line": 30957,
+   "end_line": 30964
+  },
+  {
+   "name": "Compat_RenderDeviceFillSolidRect",
+   "start_line": 31133,
+   "end_line": 31171
+  },
+  {
+   "name": "UI_DrawWidgetIconTransitionSlow",
+   "start_line": 31596,
+   "end_line": 31602
+  },
+  {
+   "name": "UI_DrawWidgetIconTransitionFast",
+   "start_line": 31602,
+   "end_line": 31607
+  },
+  {
+   "name": "UI_InvokeWidgetTransitionCallback",
+   "start_line": 31607,
+   "end_line": 31617
+  },
+  {
+   "name": "UI_InvokeWidgetActionCallback",
+   "start_line": 31617,
+   "end_line": 31627
+  },
+  {
+   "name": "Compat_WidgetPackedField",
+   "start_line": 31627,
+   "end_line": 31632
+  },
+  {
+   "name": "Compat_WidgetSpriteSetHandle",
+   "start_line": 31632,
+   "end_line": 31642
+  },
+  {
+   "name": "Compat_WidgetPackedString",
+   "start_line": 31642,
+   "end_line": 31648
+  },
+  {
+   "name": "UIWidget_ShowReleasedState",
+   "start_line": 32123,
+   "end_line": 32131
+  },
+  {
+   "name": "UnitSlots_CalcDefenseScore",
+   "start_line": 33499,
+   "end_line": 33516
+  },
+  {
+   "name": "Building_ApplySiegeDamageToWallSections",
+   "start_line": 33516,
+   "end_line": 33559
+  },
+  {
+   "name": "Building_NewAt",
+   "start_line": 34312,
+   "end_line": 34325
+  },
+  {
+   "name": "Unit_NewTurnRegen",
+   "start_line": 34842,
+   "end_line": 34872
+  },
+  {
+   "name": "UnitSlot_NeedsMoraleRecovery",
+   "start_line": 34916,
+   "end_line": 34926
+  },
+  {
+   "name": "Building_CalcGarrisonAverageHealthPercent",
+   "start_line": 35611,
+   "end_line": 35629
+  },
+  {
+   "name": "UI_DrawUnitStatsValues",
+   "start_line": 35629,
+   "end_line": 35635
+  },
+  {
+   "name": "Building_CanStartUpgrade",
+   "start_line": 35635,
+   "end_line": 35641
+  },
+  {
+   "name": "Timer_InitPerfCounterFrequency",
+   "start_line": 36249,
+   "end_line": 36261
+  },
+  {
+   "name": "Time_Now",
+   "start_line": 36261,
+   "end_line": 36273
+  },
+  {
+   "name": "Timer_BusyWaitWithCallback",
+   "start_line": 36273,
+   "end_line": 36294
+  },
+  {
+   "name": "Castle_RequestManagementScreenExit",
+   "start_line": 36301,
+   "end_line": 36312
+  },
+  {
+   "name": "Building_HandleUpgradeButtonAction",
+   "start_line": 36714,
+   "end_line": 36727
+  },
+  {
+   "name": "Castle_DrawAllAmbientAnimationLayers",
+   "start_line": 37345,
+   "end_line": 37360
+  },
+  {
+   "name": "Castle_InvokePrisonerPanel",
+   "start_line": 37677,
+   "end_line": 37683
+  },
+  {
+   "name": "Castle_InvokeEconomyPanel",
+   "start_line": 37683,
+   "end_line": 37690
+  },
+  {
+   "name": "BuildingGarrisonDialog_WriteActionWidgetRecord",
+   "start_line": 37690,
+   "end_line": 37720
+  },
+  {
+   "name": "BuildingGarrisonDialog_EnsureActionWidgets",
+   "start_line": 37720,
+   "end_line": 37805
+  },
+  {
+   "name": "Diagnostics_IsBattleTileDrawTraceEnabled",
+   "start_line": 38215,
+   "end_line": 38230
+  },
+  {
+   "name": "Diagnostics_IsWorldMapClickTraceEnabled",
+   "start_line": 38230,
+   "end_line": 38245
+  },
+  {
+   "name": "Diagnostics_IsWorldMapActionVerbose",
+   "start_line": 38245,
+   "end_line": 38260
+  },
+  {
+   "name": "Diagnostics_ShouldTraceWorldMapActionStage",
+   "start_line": 38260,
+   "end_line": 38302
+  },
+  {
+   "name": "Diagnostics_SurfaceByteChecksum",
+   "start_line": 38302,
+   "end_line": 38333
+  },
+  {
+   "name": "Diagnostics_TraceCastleHotspots",
+   "start_line": 38333,
+   "end_line": 38398
+  },
+  {
+   "name": "Diagnostics_TraceBootstrapEvent",
+   "start_line": 38562,
+   "end_line": 38570
+  },
+  {
+   "name": "Diagnostics_TraceWorldMapUnitSnapshot",
+   "start_line": 38570,
+   "end_line": 38631
+  },
+  {
+   "name": "Tooltip_ReleaseBackdropSurface",
+   "start_line": 39062,
+   "end_line": 39075
+  },
+  {
+   "name": "Tooltip_RestoreIfTextMatches",
+   "start_line": 39156,
+   "end_line": 39168
+  },
+  {
+   "name": "Tooltip_SetResourceHandle",
+   "start_line": 39168,
+   "end_line": 39176
+  },
+  {
+   "name": "UnitStack_HasOnlyFlyingUnits",
+   "start_line": 39192,
+   "end_line": 39217
+  },
+  {
+   "name": "RoadBuildMode_RequestExitAfterWidgetPress",
+   "start_line": 40465,
+   "end_line": 40476
+  },
+  {
+   "name": "RoadBuildMode_RequestExit",
+   "start_line": 40476,
+   "end_line": 40483
+  },
+  {
+   "name": "UnitBattle_GetTargetCrowdingScale",
+   "start_line": 41757,
+   "end_line": 41785
+  },
+  {
+   "name": "BuildingEconomyDialog_SetExitSignal",
+   "start_line": 44264,
+   "end_line": 44277
+  },
+  {
+   "name": "UnitBattleDialog_SelectAffirmativeResponse",
+   "start_line": 46492,
+   "end_line": 46505
+  },
+  {
+   "name": "UnitBattleDialog_SelectNegativeResponse",
+   "start_line": 46505,
+   "end_line": 46518
+  },
+  {
+   "name": "BuildingGarrisonDialog_CountSelectedSlots",
+   "start_line": 49327,
+   "end_line": 49343
+  },
+  {
+   "name": "BuildingGarrisonDialog_RebuildSlotSprites",
+   "start_line": 49509,
+   "end_line": 49519
+  },
+  {
+   "name": "CastleProduction_ReloadLicenceSlotSprites",
+   "start_line": 50618,
+   "end_line": 50629
+  },
+  {
+   "name": "CastleProduction_SetExitSignal",
+   "start_line": 50804,
+   "end_line": 50817
+  },
+  {
+   "name": "BuildingTransferTargetList_SetDrawOrigin",
+   "start_line": 51507,
+   "end_line": 51517
+  },
+  {
+   "name": "WCIsvListBase_PopUntilMatchOrEmpty",
+   "start_line": 54159,
+   "end_line": 54179
+  },
+  {
+   "name": "WCIsvListBase_dtorFreeOnly",
+   "start_line": 55823,
+   "end_line": 55829
+  },
+  {
+   "name": "WCIsvListBase_ValuesEqual",
+   "start_line": 55829,
+   "end_line": 55835
+  },
+  {
+   "name": "WCCompat_ListFromBase",
+   "start_line": 55965,
+   "end_line": 55970
+  },
+  {
+   "name": "WCCompat_ListFromHandle",
+   "start_line": 55970,
+   "end_line": 55975
+  },
+  {
+   "name": "WCCompat_LinkFromHandle",
+   "start_line": 55975,
+   "end_line": 55981
+  },
+  {
+   "name": "WCIsvListBase_dtorVariant104",
+   "start_line": 55992,
+   "end_line": 55997
+  },
+  {
+   "name": "WCIsvListBase_base_next",
+   "start_line": 55997,
+   "end_line": 56013
+  },
+  {
+   "name": "WCIsvListBase_base_insert",
+   "start_line": 56013,
+   "end_line": 56040
+  },
+  {
+   "name": "WCIsvListBase_base_sget",
+   "start_line": 56040,
+   "end_line": 56066
+  },
+  {
+   "name": "WCIsvListBase_base_destroy",
+   "start_line": 56066,
+   "end_line": 56074
+  },
+  {
+   "name": "WCIsvListBase_CopyAppendAll",
+   "start_line": 56116,
+   "end_line": 56137
+  },
+  {
+   "name": "WCIsvListBase_AppendValue",
+   "start_line": 56153,
+   "end_line": 56171
+  },
+  {
+   "name": "WCIsvListBase_PopFrontValue",
+   "start_line": 56171,
+   "end_line": 56188
+  },
+  {
+   "name": "Building_ClearGarrisonTrainingTimer",
+   "start_line": 57342,
+   "end_line": 57349
+  },
+  {
+   "name": "Building_ClearGarrisonRepairTimer",
+   "start_line": 57367,
+   "end_line": 57374
+  },
+  {
+   "name": "Building_CountSpecialPersonageGarrisonEntries",
+   "start_line": 57392,
+   "end_line": 57423
+  },
+  {
+   "name": "Building_DrawGarrisonRow",
+   "start_line": 57423,
+   "end_line": 57429
+  },
+  {
+   "name": "Building_CountNonCombatGarrisonEntries",
+   "start_line": 57429,
+   "end_line": 57466
+  },
+  {
+   "name": "Building_HasSpecialPersonageGarrisonEntries",
+   "start_line": 57466,
+   "end_line": 57486
+  },
+  {
+   "name": "Building_IsUnitLicenceEligible",
+   "start_line": 57535,
+   "end_line": 57577
+  },
+  {
+   "name": "Building_UpdatePlagueState",
+   "start_line": 57771,
+   "end_line": 57809
+  },
+  {
+   "name": "Str_SwapAndConcatInPlace",
+   "start_line": 59262,
+   "end_line": 59325
+  },
+  {
+   "name": "BattleMap_GetOutcomeVariantFileName",
+   "start_line": 59325,
+   "end_line": 59352
+  },
+  {
+   "name": "SaveSlot_FormatDataFilePath",
+   "start_line": 61745,
+   "end_line": 61752
+  },
+  {
+   "name": "SaveSlot_FormatFactsFilePath",
+   "start_line": 61752,
+   "end_line": 61759
+  },
+  {
+   "name": "DecisionDialog_ConfirmIfAllowed",
+   "start_line": 62937,
+   "end_line": 62954
+  },
+  {
+   "name": "DecisionDialog_Cancel",
+   "start_line": 62954,
+   "end_line": 62968
+  },
+  {
+   "name": "QueenMarriageProposal_WriteButtonWidgetRecord",
+   "start_line": 62968,
+   "end_line": 62991
+  },
+  {
+   "name": "QueenMarriageProposal_RebuildButtonWidgets",
+   "start_line": 62991,
+   "end_line": 63023
+  },
+  {
+   "name": "YesNoWindow_WriteButtonWidgetRecord",
+   "start_line": 63140,
+   "end_line": 63163
+  },
+  {
+   "name": "YesNoWindow_RebuildButtonWidgets",
+   "start_line": 63163,
+   "end_line": 63184
+  },
+  {
+   "name": "Debug_GetUsedMemoryCount",
+   "start_line": 63768,
+   "end_line": 63774
+  },
+  {
+   "name": "Object_ConstructInt256Array",
+   "start_line": 63774,
+   "end_line": 63781
+  },
+  {
+   "name": "MainMenu_RequestExit",
+   "start_line": 63781,
+   "end_line": 63794
+  },
+  {
+   "name": "MainMenu_WriteButtonWidgetTemplateRecord",
+   "start_line": 63794,
+   "end_line": 63816
+  },
+  {
+   "name": "CampaignMenu_WriteButtonWidgetTemplateRecord",
+   "start_line": 63816,
+   "end_line": 63837
+  },
+  {
+   "name": "MainMenu_RequestCampaignMenu",
+   "start_line": 63958,
+   "end_line": 63971
+  },
+  {
+   "name": "MainMenu_RequestMultiplayerMenu",
+   "start_line": 63971,
+   "end_line": 63984
+  },
+  {
+   "name": "MainMenu_RequestCreditsCinematic",
+   "start_line": 63984,
+   "end_line": 63997
+  },
+  {
+   "name": "MainMenu_RequestOptionsMenu",
+   "start_line": 63997,
+   "end_line": 64010
+  },
+  {
+   "name": "MainMenu_RequestLoadGameMenu",
+   "start_line": 64010,
+   "end_line": 64023
+  },
+  {
+   "name": "UI_WaitForKeyOrTimeout",
+   "start_line": 64023,
+   "end_line": 64034
+  },
+  {
+   "name": "PlayGameMenu_HandleCloseButton",
+   "start_line": 65027,
+   "end_line": 65040
+  },
+  {
+   "name": "PlayerRuntimeState_ResetDefaults",
+   "start_line": 65449,
+   "end_line": 65479
+  },
+  {
+   "name": "SaveSlot_LoadReservedSlot10",
+   "start_line": 66058,
+   "end_line": 66064
+  },
+  {
+   "name": "Scenario_LoadAllAiMultiplayerMapAndInitView",
+   "start_line": 66064,
+   "end_line": 66087
+  },
+  {
+   "name": "Building_FindFreePrisonerSlot",
+   "start_line": 66938,
+   "end_line": 66953
+  },
+  {
+   "name": "BuildingPrisoner_GetAction",
+   "start_line": 67088,
+   "end_line": 67094
+  },
+  {
+   "name": "Map_RevealTilesInRadius2ForPlayer",
+   "start_line": 67253,
+   "end_line": 67287
+  },
+  {
+   "name": "Cheat_RevealMapForCurrentPlayer",
+   "start_line": 69021,
+   "end_line": 69029
+  },
+  {
+   "name": "Cheat_QuitWithJokeMessage",
+   "start_line": 69268,
+   "end_line": 69274
+  },
+  {
+   "name": "Rules_ShowBanner_StrategicClash",
+   "start_line": 69391,
+   "end_line": 69408
+  },
+  {
+   "name": "Rules_ResetEngineOnLoad",
+   "start_line": 69408,
+   "end_line": 69419
+  },
+  {
+   "name": "Rules_CompileStrategicRulesFile",
+   "start_line": 69419,
+   "end_line": 69439
+  },
+  {
+   "name": "Rules_RegisterAllHostFunctions",
+   "start_line": 69439,
+   "end_line": 69449
+  },
+  {
+   "name": "Rules_RegisterStrategicActionHostFunctions",
+   "start_line": 69649,
+   "end_line": 69686
+  },
+  {
+   "name": "Rules_PortCollectSupply",
+   "start_line": 69686,
+   "end_line": 69692
+  },
+  {
+   "name": "Rules_HostCollectPortSupply",
+   "start_line": 69692,
+   "end_line": 69697
+  },
+  {
+   "name": "Rules_HostPortHasSupplyReady",
+   "start_line": 69697,
+   "end_line": 69702
+  },
+  {
+   "name": "Rules_HostArmyHasBuilder",
+   "start_line": 69702,
+   "end_line": 69708
+  },
+  {
+   "name": "Rules_HostArmyHasNormalCombatUnits",
+   "start_line": 69708,
+   "end_line": 69715
+  },
+  {
+   "name": "Rules_HostUnitAttack",
+   "start_line": 70327,
+   "end_line": 70334
+  },
+  {
+   "name": "Rules_HostUnitAttackBuilding",
+   "start_line": 70388,
+   "end_line": 70395
+  },
+  {
+   "name": "UnitStack_CalcArmyFactStrength",
+   "start_line": 70585,
+   "end_line": 70608
+  },
+  {
+   "name": "Rules_SyncArmyFactStrength",
+   "start_line": 70687,
+   "end_line": 70726
+  },
+  {
+   "name": "Rules_LogTrapFact",
+   "start_line": 70808,
+   "end_line": 70821
+  },
+  {
+   "name": "Rules_RetractTrapFact",
+   "start_line": 70821,
+   "end_line": 70834
+  },
+  {
+   "name": "Rules_LogTempleFact",
+   "start_line": 70834,
+   "end_line": 70847
+  },
+  {
+   "name": "Rules_LogTreasureFact",
+   "start_line": 70847,
+   "end_line": 70875
+  },
+  {
+   "name": "Rules_AssertCastleFact",
+   "start_line": 70895,
+   "end_line": 70960
+  },
+  {
+   "name": "Rules_BuildCastle",
+   "start_line": 71193,
+   "end_line": 71199
+  },
+  {
+   "name": "Rules_LogCastleSiteFact",
+   "start_line": 71452,
+   "end_line": 71461
+  },
+  {
+   "name": "Rules_LogBuildingTransferFact",
+   "start_line": 71461,
+   "end_line": 71470
+  },
+  {
+   "name": "Rules_LogNewCastleFact",
+   "start_line": 71470,
+   "end_line": 71479
+  },
+  {
+   "name": "Rules_LogCastleDestroyedFact",
+   "start_line": 71479,
+   "end_line": 71488
+  },
+  {
+   "name": "Rules_LogCastleSchemeFact",
+   "start_line": 71488,
+   "end_line": 71499
+  },
+  {
+   "name": "Rules_LogBuildingCapturedFact",
+   "start_line": 71499,
+   "end_line": 71508
+  },
+  {
+   "name": "Rules_LogCastleUnderConstructionFact",
+   "start_line": 71508,
+   "end_line": 71517
+  },
+  {
+   "name": "Rules_LogCastleBuiltFactAndScheme",
+   "start_line": 71517,
+   "end_line": 71527
+  },
+  {
+   "name": "Rules_LogAssignedCastleFact",
+   "start_line": 71527,
+   "end_line": 71536
+  },
+  {
+   "name": "Rules_LogAssignedPlayerFact",
+   "start_line": 71536,
+   "end_line": 71545
+  },
+  {
+   "name": "Map_IsCastleSiteDistanceMinimal",
+   "start_line": 71609,
+   "end_line": 71630
+  },
+  {
+   "name": "Rules_RegisterBuildingHostFunctions",
+   "start_line": 71719,
+   "end_line": 71769
+  },
+  {
+   "name": "Rules_RegisterArmyHostFunctions",
+   "start_line": 71769,
+   "end_line": 71795
+  },
+  {
+   "name": "Script_UnitAddToGroup",
+   "start_line": 72018,
+   "end_line": 72024
+  },
+  {
+   "name": "Rules_HostArmyHasOnlyUnitType",
+   "start_line": 72211,
+   "end_line": 72223
+  },
+  {
+   "name": "AI_FindBestStrategicTargetNearTile",
+   "start_line": 72853,
+   "end_line": 72925
+  },
+  {
+   "name": "Mission_TraceObjectiveBlocked",
+   "start_line": 73146,
+   "end_line": 73171
+  },
+  {
+   "name": "Compat_RenderStateTailFields",
+   "start_line": 74891,
+   "end_line": 74897
+  },
+  {
+   "name": "Compat_MenuProbeTraceEnabled",
+   "start_line": 74897,
+   "end_line": 74909
+  },
+  {
+   "name": "RenderState_WarpCursorAndPump",
+   "start_line": 75332,
+   "end_line": 75341
+  },
+  {
+   "name": "RenderState_RecalculateCursorBoundsForRect",
+   "start_line": 75341,
+   "end_line": 75368
+  },
+  {
+   "name": "Compat_RenderStateMethodPointer",
+   "start_line": 75456,
+   "end_line": 75466
+  },
+  {
+   "name": "Compat_RenderStateSurface",
+   "start_line": 75475,
+   "end_line": 75480
+  },
+  {
+   "name": "Compat_RenderStateCursorDescriptor",
+   "start_line": 75480,
+   "end_line": 75493
+  },
+  {
+   "name": "DD_GetSurfacePitch",
+   "start_line": 75879,
+   "end_line": 75885
+  },
+  {
+   "name": "IO_StreamAdapterReadStub",
+   "start_line": 77066,
+   "end_line": 77072
+  },
+  {
+   "name": "ExcString_ReleaseText",
+   "start_line": 77098,
+   "end_line": 77108
+  },
+  {
+   "name": "ExcString_GetTextPtr",
+   "start_line": 77108,
+   "end_line": 77114
+  },
+  {
+   "name": "ExcString_GetTextPtrDup",
+   "start_line": 77114,
+   "end_line": 77120
+  },
+  {
+   "name": "ExcString_ReleaseTextDup",
+   "start_line": 77120,
+   "end_line": 77130
+  },
+  {
+   "name": "ExcString_GetErrorCodeStub",
+   "start_line": 77130,
+   "end_line": 77136
+  },
+  {
+   "name": "ExcString_GetErrorCodeStubDup",
+   "start_line": 77136,
+   "end_line": 77142
+  },
+  {
+   "name": "CAviDecompressor_ConvertRGB888to565Row",
+   "start_line": 77142,
+   "end_line": 77168
+  },
+  {
+   "name": "CAviDecompressor_ConvertRGB565to888Row",
+   "start_line": 77168,
+   "end_line": 77197
+  },
+  {
+   "name": "CAviDecompressor_CopyPixelRow16bpp",
+   "start_line": 77197,
+   "end_line": 77207
+  },
+  {
+   "name": "CAviDecompressor_CopyPixelRow24bpp",
+   "start_line": 77207,
+   "end_line": 77217
+  },
+  {
+   "name": "CAviDecompressor_BlitRows",
+   "start_line": 77414,
+   "end_line": 77452
+  },
+  {
+   "name": "CAviDecompressor_NormalizeColorMask",
+   "start_line": 77452,
+   "end_line": 77469
+  },
+  {
+   "name": "CAviDecompressor_dtor",
+   "start_line": 77483,
+   "end_line": 77493
+  },
+  {
+   "name": "CAviDecompressor_InitSource",
+   "start_line": 77551,
+   "end_line": 77558
+  },
+  {
+   "name": "CAviDecompressor_SetBackground",
+   "start_line": 77673,
+   "end_line": 77687
+  },
+  {
+   "name": "CAviDecompressor_InitColorKeys",
+   "start_line": 77889,
+   "end_line": 77900
+  },
+  {
+   "name": "CAviDecompressor_InitPos",
+   "start_line": 77900,
+   "end_line": 77913
+  },
+  {
+   "name": "CAviDecompressor_InitRect",
+   "start_line": 77913,
+   "end_line": 77926
+  },
+  {
+   "name": "CAviDecompressor_InitThreadGuard",
+   "start_line": 78098,
+   "end_line": 78106
+  },
+  {
+   "name": "CAviDecompressor_DoneThreadGuard",
+   "start_line": 78106,
+   "end_line": 78113
+  },
+  {
+   "name": "CAviDecompressor_ConstructEventHandle",
+   "start_line": 78113,
+   "end_line": 78120
+  },
+  {
+   "name": "CAviDecompressor_FreeMemberA",
+   "start_line": 78127,
+   "end_line": 78137
+  },
+  {
+   "name": "CAviDecompressor_FreeMemberB",
+   "start_line": 78137,
+   "end_line": 78147
+  },
+  {
+   "name": "CAviDecompressor_GetVideoFormat",
+   "start_line": 78225,
+   "end_line": 78231
+  },
+  {
+   "name": "CAviDecompressor_ReleaseVideoCodec",
+   "start_line": 78231,
+   "end_line": 78241
+  },
+  {
+   "name": "Compat_StringHolderDestructor",
+   "start_line": 86709,
+   "end_line": 86716
+  },
+  {
+   "name": "Compat_StringHolderGetText",
+   "start_line": 86745,
+   "end_line": 86752
+  },
+  {
+   "name": "Compat_StringHolderAssignJoined",
+   "start_line": 86792,
+   "end_line": 86830
+  },
+  {
+   "name": "Compat_StringHolderInsertText",
+   "start_line": 86830,
+   "end_line": 86865
+  },
+  {
+   "name": "Compat_StringHolderCopyText",
+   "start_line": 86865,
+   "end_line": 86883
+  },
+  {
+   "name": "Compat_StringHolderInitText",
+   "start_line": 86883,
+   "end_line": 86892
+  },
+  {
+   "name": "Compat_StringHolderAppendText",
+   "start_line": 86963,
+   "end_line": 86974
+  },
+  {
+   "name": "Compat_StringHolderPrependText",
+   "start_line": 86974,
+   "end_line": 86985
+  },
+  {
+   "name": "Compat_StringHolderFindSubstringOffset",
+   "start_line": 86985,
+   "end_line": 86998
+  },
+  {
+   "name": "Compat_StringHolderUppercaseInPlace",
+   "start_line": 86998,
+   "end_line": 87014
+  },
+  {
+   "name": "Compat_StringHolderFindCharFrom",
+   "start_line": 87014,
+   "end_line": 87033
+  },
+  {
+   "name": "Compat_StringHolderFindLastBackslash",
+   "start_line": 87033,
+   "end_line": 87048
+  },
+  {
+   "name": "Compat_StringHolderFindLastBackslashBefore",
+   "start_line": 87048,
+   "end_line": 87073
+  },
+  {
+   "name": "Compat_StringHolderRemoveRange",
+   "start_line": 87073,
+   "end_line": 87108
+  },
+  {
+   "name": "Compat_StringHolderInsertTextChecked",
+   "start_line": 87108,
+   "end_line": 87116
+  },
+  {
+   "name": "Compat_NoOpQueryCallback",
+   "start_line": 88593,
+   "end_line": 88598
+  },
+  {
+   "name": "Compat_FileSystemQueryResultRelease",
+   "start_line": 88639,
+   "end_line": 88661
+  },
+  {
+   "name": "Compat_FileSystemOpenIfReady",
+   "start_line": 88688,
+   "end_line": 88702
+  },
+  {
+   "name": "Str_FormatSignedRadixDigits",
+   "start_line": 89957,
+   "end_line": 89972
+  },
+  {
+   "name": "Output_WriteFormatted",
+   "start_line": 89978,
+   "end_line": 90017
+  },
+  {
+   "name": "Compat_FileSystemFreeFileRecordName",
+   "start_line": 90644,
+   "end_line": 90654
+  },
+  {
+   "name": "Compat_FileSystemFindMountedPathById",
+   "start_line": 90725,
+   "end_line": 90753
+  },
+  {
+   "name": "Compat_FileStreamUngetChar",
+   "start_line": 91156,
+   "end_line": 91162
+  },
+  {
+   "name": "Compat_FileFinderAdvance",
+   "start_line": 91279,
+   "end_line": 91292
+  },
+  {
+   "name": "Compat_FileFinderGetName",
+   "start_line": 91292,
+   "end_line": 91298
+  },
+  {
+   "name": "Compat_FileFinderGetAttributes",
+   "start_line": 91298,
+   "end_line": 91304
+  },
+  {
+   "name": "Compat_FileFinderGetSize",
+   "start_line": 91304,
+   "end_line": 91310
+  },
+  {
+   "name": "Res_StreamSeekClamped",
+   "start_line": 92212,
+   "end_line": 92232
+  },
+  {
+   "name": "Res_BuildTaggedRecordHeader",
+   "start_line": 92258,
+   "end_line": 92268
+  },
+  {
+   "name": "Res_XorDecodeByte",
+   "start_line": 93161,
+   "end_line": 93167
+  },
+  {
+   "name": "Compat_QueryXorDecodeBuffer",
+   "start_line": 93167,
+   "end_line": 93184
+  },
+  {
+   "name": "Compat_QueryGetLength",
+   "start_line": 93223,
+   "end_line": 93229
+  },
+  {
+   "name": "Rules_PrintFactWithIndex",
+   "start_line": 93296,
+   "end_line": 93313
+  },
+  {
+   "name": "Rules_PrintFactLabel",
+   "start_line": 93313,
+   "end_line": 93327
+  },
+  {
+   "name": "Rules_DecrementFactRefCount",
+   "start_line": 93360,
+   "end_line": 93367
+  },
+  {
+   "name": "Rules_IncrementFactRefCount",
+   "start_line": 93367,
+   "end_line": 93374
+  },
+  {
+   "name": "Rules_GetFactIndex",
+   "start_line": 93889,
+   "end_line": 93895
+  },
+  {
+   "name": "Rules_Log",
+   "start_line": 93895,
+   "end_line": 93906
+  },
+  {
+   "name": "Rules_FindFactByIndex",
+   "start_line": 93936,
+   "end_line": 93955
+  },
+  {
+   "name": "Rules_RegisterFactCommands",
+   "start_line": 93955,
+   "end_line": 93972
+  },
+  {
+   "name": "Rules_GetFactDuplicationCommand",
+   "start_line": 94136,
+   "end_line": 94147
+  },
+  {
+   "name": "Rules_ParsePositiveIntArg",
+   "start_line": 94293,
+   "end_line": 94315
+  },
+  {
+   "name": "Rules_ParseLoadFactsCommand",
+   "start_line": 94395,
+   "end_line": 94416
+  },
+  {
+   "name": "Rules_AssertParsedFact",
+   "start_line": 94691,
+   "end_line": 94708
+  },
+  {
+   "name": "Rules_ClearCommand",
+   "start_line": 95121,
+   "end_line": 95132
+  },
+  {
+   "name": "Rules_ResetCommand",
+   "start_line": 95132,
+   "end_line": 95139
+  },
+  {
+   "name": "Rules_BloadCommand",
+   "start_line": 95864,
+   "end_line": 95879
+  },
+  {
+   "name": "Rules_RegisterBuiltinFunctionGroups",
+   "start_line": 95913,
+   "end_line": 95930
+  },
+  {
+   "name": "Rules_ShutdownEngine",
+   "start_line": 96008,
+   "end_line": 96025
+  },
+  {
+   "name": "Rules_BloadDeleteFile",
+   "start_line": 96025,
+   "end_line": 96032
+  },
+  {
+   "name": "Rules_RenameFile",
+   "start_line": 96032,
+   "end_line": 96038
+  },
+  {
+   "name": "Rules_PlaceInDepthList",
+   "start_line": 96141,
+   "end_line": 96172
+  },
+  {
+   "name": "Rules_PlaceInBreadthList",
+   "start_line": 96172,
+   "end_line": 96203
+  },
+  {
+   "name": "Rules_PlaceInRandomList",
+   "start_line": 96392,
+   "end_line": 96432
+  },
+  {
+   "name": "Rules_GetStrategyName",
+   "start_line": 96667,
+   "end_line": 96702
+  },
+  {
+   "name": "Rules_ActivationsCommand",
+   "start_line": 96888,
+   "end_line": 96902
+  },
+  {
+   "name": "Rules_ClearActivationsForModule",
+   "start_line": 96973,
+   "end_line": 96993
+  },
+  {
+   "name": "Rules_ReorderAgenda",
+   "start_line": 97001,
+   "end_line": 97043
+  },
+  {
+   "name": "Rules_RefreshCommand",
+   "start_line": 97050,
+   "end_line": 97074
+  },
+  {
+   "name": "Rules_RefreshAgendaCommand",
+   "start_line": 97148,
+   "end_line": 97174
+  },
+  {
+   "name": "Rules_SalienceEvaluationModeName",
+   "start_line": 97268,
+   "end_line": 97280
+  },
+  {
+   "name": "Rules_ClearFocusStackCommand",
+   "start_line": 97857,
+   "end_line": 97868
+  },
+  {
+   "name": "Rules_SetBreakFlag",
+   "start_line": 97930,
+   "end_line": 97938
+  },
+  {
+   "name": "Rules_ClearBreakFlag",
+   "start_line": 97938,
+   "end_line": 97966
+  },
+  {
+   "name": "Rules_RemoveAllBreakFlags",
+   "start_line": 97966,
+   "end_line": 97984
+  },
+  {
+   "name": "Rules_RuleHasBreakFlag",
+   "start_line": 97998,
+   "end_line": 98004
+  },
+  {
+   "name": "Rules_GetFocusStackFunction",
+   "start_line": 98156,
+   "end_line": 98169
+  },
+  {
+   "name": "Rules_ListInstancesForClassOrModule",
+   "start_line": 99163,
+   "end_line": 99213
+  },
+  {
+   "name": "Rules_FindInstanceSlot",
+   "start_line": 99308,
+   "end_line": 99319
+  },
+  {
+   "name": "Rules_RegisterHostFunctionNoRestrictions",
+   "start_line": 99319,
+   "end_line": 99325
+  },
+  {
+   "name": "Rules_GetArgTypeName",
+   "start_line": 99444,
+   "end_line": 99517
+  },
+  {
+   "name": "Lexer_TokenExpect",
+   "start_line": 99781,
+   "end_line": 99813
+  },
+  {
+   "name": "Rules_CoerceFormToNumericArg",
+   "start_line": 99975,
+   "end_line": 100017
+  },
+  {
+   "name": "Rules_GetFileNameArg",
+   "start_line": 100063,
+   "end_line": 100081
+  },
+  {
+   "name": "Rules_GetConstructNameArg",
+   "start_line": 100142,
+   "end_line": 100170
+  },
+  {
+   "name": "Rules_ReportSymbolTypeError",
+   "start_line": 100312,
+   "end_line": 100331
+  },
+  {
+   "name": "Rules_HashDoubleValue",
+   "start_line": 100859,
+   "end_line": 100868
+  },
+  {
+   "name": "Rules_HashIntegerValue",
+   "start_line": 100868,
+   "end_line": 100880
+  },
+  {
+   "name": "Rules_HashBitmapValue",
+   "start_line": 100880,
+   "end_line": 100941
+  },
+  {
+   "name": "Rules_IncrementRefCountField40",
+   "start_line": 101574,
+   "end_line": 101581
+  },
+  {
+   "name": "Instance_DecrementBusyCount",
+   "start_line": 101581,
+   "end_line": 101588
+  },
+  {
+   "name": "Instance_FindByName",
+   "start_line": 101755,
+   "end_line": 101792
+  },
+  {
+   "name": "Instance_GetSlotValueBySymbol",
+   "start_line": 101831,
+   "end_line": 101846
+  },
+  {
+   "name": "Instance_ResolveSlotIndex",
+   "start_line": 101846,
+   "end_line": 101861
+  },
+  {
+   "name": "Instance_PutSlotValue",
+   "start_line": 101888,
+   "end_line": 101899
+  },
+  {
+   "name": "Instance_NotifyCreated",
+   "start_line": 102597,
+   "end_line": 102604
+  },
+  {
+   "name": "CRT_WatcomEHUnwindThreadToState",
+   "start_line": 103084,
+   "end_line": 103099
+  },
+  {
+   "name": "CRT_WatcomEHUnwindToExceptionList",
+   "start_line": 103099,
+   "end_line": 103112
+  },
+  {
+   "name": "Output_WriteLongString",
+   "start_line": 103279,
+   "end_line": 103310
+  },
+  {
+   "name": "Rules_PrintFloat",
+   "start_line": 103310,
+   "end_line": 103319
+  },
+  {
+   "name": "Rules_PrintLongInteger",
+   "start_line": 103319,
+   "end_line": 103331
+  },
+  {
+   "name": "Rules_PrintTally",
+   "start_line": 103433,
+   "end_line": 103460
+  },
+  {
+   "name": "Rules_FloatToSymbol",
+   "start_line": 103636,
+   "end_line": 103681
+  },
+  {
+   "name": "Rules_LongIntegerToSymbol",
+   "start_line": 103681,
+   "end_line": 103693
+  },
+  {
+   "name": "Rules_RegisterExitFunction",
+   "start_line": 103693,
+   "end_line": 103701
+  },
+  {
+   "name": "IO_RouterMatchesName",
+   "start_line": 103968,
+   "end_line": 103985
+  },
+  {
+   "name": "CRT_LockLeave",
+   "start_line": 104203,
+   "end_line": 104222
+  },
+  {
+   "name": "CRT_GetOrCreateThreadDataPreserveLastError",
+   "start_line": 104222,
+   "end_line": 104252
+  },
+  {
+   "name": "CRT_DetachThreadDataAndMaybeCloseHandle",
+   "start_line": 104321,
+   "end_line": 104347
+  },
+  {
+   "name": "CRT_DestroyTlsIndexAndThreadData",
+   "start_line": 104347,
+   "end_line": 104361
+  },
+  {
+   "name": "CRT_RegisterFinalizer",
+   "start_line": 104745,
+   "end_line": 104764
+  },
+  {
+   "name": "CRT_FarStrLenBounded",
+   "start_line": 105137,
+   "end_line": 105152
+  },
+  {
+   "name": "CRT_FormatPaddedHexDigits",
+   "start_line": 105186,
+   "end_line": 105214
+  },
+  {
+   "name": "CRT_ToUpperInPlace",
+   "start_line": 105838,
+   "end_line": 105855
+  },
+  {
+   "name": "CRT_OpenFile",
+   "start_line": 105861,
+   "end_line": 105867
+  },
+  {
+   "name": "CRT_OpenFileShared",
+   "start_line": 105867,
+   "end_line": 105873
+  },
+  {
+   "name": "Process_GetCurrentId",
+   "start_line": 105982,
+   "end_line": 105988
+  },
+  {
+   "name": "CRT_PutcCallbackForWrite",
+   "start_line": 106051,
+   "end_line": 106062
+  },
+  {
+   "name": "CRT_DeleteFile",
+   "start_line": 106180,
+   "end_line": 106190
+  },
+  {
+   "name": "Compat_FileTimeToUnixSeconds",
+   "start_line": 106253,
+   "end_line": 106264
+  },
+  {
+   "name": "CRT_FindFirstFile",
+   "start_line": 106264,
+   "end_line": 106278
+  },
+  {
+   "name": "CRT_FillFindDataRecord",
+   "start_line": 106278,
+   "end_line": 106305
+  },
+  {
+   "name": "CRT_MakeDirectory",
+   "start_line": 106305,
+   "end_line": 106315
+  },
+  {
+   "name": "CRT_RemoveDirectory",
+   "start_line": 106315,
+   "end_line": 106325
+  },
+  {
+   "name": "Rules_Builtin_0",
+   "start_line": 106337,
+   "end_line": 106343
+  },
+  {
+   "name": "Rules_Builtin_2",
+   "start_line": 106349,
+   "end_line": 106355
+  },
+  {
+   "name": "Rules_Builtin_3",
+   "start_line": 106355,
+   "end_line": 106361
+  },
+  {
+   "name": "IO_StreambufStubZero",
+   "start_line": 106361,
+   "end_line": 106367
+  },
+  {
+   "name": "Rules_Builtin_4",
+   "start_line": 106387,
+   "end_line": 106393
+  },
+  {
+   "name": "Rules_PatchDeftemplateSlotModuleRef",
+   "start_line": 106913,
+   "end_line": 106950
+  },
+  {
+   "name": "Rules_HashFactEntry",
+   "start_line": 106997,
+   "end_line": 107018
+  },
+  {
+   "name": "Rules_RegisterDeftemplateFunctions",
+   "start_line": 107641,
+   "end_line": 107661
+  },
+  {
+   "name": "Rules_InternInitialFactSymbol",
+   "start_line": 107661,
+   "end_line": 107672
+  },
+  {
+   "name": "Rules_GetFactWatchFlag",
+   "start_line": 107721,
+   "end_line": 107727
+  },
+  {
+   "name": "Rules_SetFactWatchFlag",
+   "start_line": 107727,
+   "end_line": 107738
+  },
+  {
+   "name": "Rules_WatchAlwaysTrueStub",
+   "start_line": 108109,
+   "end_line": 108116
+  },
+  {
+   "name": "Rules_RegisterFactQueryFunctions",
+   "start_line": 108116,
+   "end_line": 108126
+  },
+  {
+   "name": "Rules_CheckFactExistp",
+   "start_line": 108143,
+   "end_line": 108160
+  },
+  {
+   "name": "Rules_CheckFactStillAsserted",
+   "start_line": 108160,
+   "end_line": 108168
+  },
+  {
+   "name": "Rules_BuildFactAddressList",
+   "start_line": 108354,
+   "end_line": 108426
+  },
+  {
+   "name": "Rules_RegisterFactPatternNetworkPersistence",
+   "start_line": 108469,
+   "end_line": 108484
+  },
+  {
+   "name": "Rules_FactPatternNetworkNextNode",
+   "start_line": 108785,
+   "end_line": 108799
+  },
+  {
+   "name": "Rules_FactPatternNetworkToCodeClose",
+   "start_line": 108888,
+   "end_line": 108902
+  },
+  {
+   "name": "Rules_MaterializeMultifieldRange",
+   "start_line": 109190,
+   "end_line": 109207
+  },
+  {
+   "name": "Rules_PrintMultifieldRange",
+   "start_line": 109333,
+   "end_line": 109367
+  },
+  {
+   "name": "Rules_CheckLiteralSlotValueConstraint",
+   "start_line": 109720,
+   "end_line": 109745
+  },
+  {
+   "name": "Lexer_GetSlotByOrdinal",
+   "start_line": 109745,
+   "end_line": 109765
+  },
+  {
+   "name": "Lexer_FindSymbolIndex",
+   "start_line": 109765,
+   "end_line": 109785
+  },
+  {
+   "name": "Lexer_FindSlotWithIndex",
+   "start_line": 109863,
+   "end_line": 109889
+  },
+  {
+   "name": "Rules_CreateJoinPartialMatch",
+   "start_line": 110753,
+   "end_line": 110789
+  },
+  {
+   "name": "Rules_FindLogicalDependencyEntry",
+   "start_line": 111001,
+   "end_line": 111034
+  },
+  {
+   "name": "Rules_ArrayContainsValue",
+   "start_line": 111277,
+   "end_line": 111290
+  },
+  {
+   "name": "Rules_Dependencies",
+   "start_line": 111290,
+   "end_line": 111310
+  },
+  {
+   "name": "Rules_Dependents",
+   "start_line": 111310,
+   "end_line": 111330
+  },
+  {
+   "name": "Rules_SetMultifieldErrorValue",
+   "start_line": 111679,
+   "end_line": 111694
+  },
+  {
+   "name": "Rules_ComputeFieldHashValue",
+   "start_line": 111909,
+   "end_line": 111944
+  },
+  {
+   "name": "Lexer_SkipQuotedStringSpan",
+   "start_line": 112610,
+   "end_line": 112645
+  },
+  {
+   "name": "Lexer_SkipLineComment",
+   "start_line": 112645,
+   "end_line": 112665
+  },
+  {
+   "name": "Str_SkipInlineWhitespaceAt",
+   "start_line": 112665,
+   "end_line": 112685
+  },
+  {
+   "name": "Lexer_ClassifyNextStdinChar",
+   "start_line": 112829,
+   "end_line": 112842
+  },
+  {
+   "name": "Module_InitializeDefmodules",
+   "start_line": 113394,
+   "end_line": 113404
+  },
+  {
+   "name": "Module_GetPPForm",
+   "start_line": 113700,
+   "end_line": 113706
+  },
+  {
+   "name": "IO_RegisterStringRouter",
+   "start_line": 113931,
+   "end_line": 113937
+  },
+  {
+   "name": "IO_StringRouterPrint",
+   "start_line": 113954,
+   "end_line": 113979
+  },
+  {
+   "name": "IO_StringRouterGetc",
+   "start_line": 113979,
+   "end_line": 114009
+  },
+  {
+   "name": "Rules_ExtractModuleAndConstructName",
+   "start_line": 114648,
+   "end_line": 114672
+  },
+  {
+   "name": "Rules_FindImportExportConstruct",
+   "start_line": 114672,
+   "end_line": 114701
+  },
+  {
+   "name": "Rules_IncrementBusyCount",
+   "start_line": 115091,
+   "end_line": 115098
+  },
+  {
+   "name": "AST_CopyNodeChainToArray",
+   "start_line": 115190,
+   "end_line": 115229
+  },
+  {
+   "name": "AST_HashNodeChain",
+   "start_line": 115380,
+   "end_line": 115405
+  },
+  {
+   "name": "AST_GetHashedNodeIndex",
+   "start_line": 115497,
+   "end_line": 115512
+  },
+  {
+   "name": "Lexer_ReadToken",
+   "start_line": 115848,
+   "end_line": 115911
+  },
+  {
+   "name": "Rules_ExpressionConstraintsCompatible",
+   "start_line": 116270,
+   "end_line": 116299
+  },
+  {
+   "name": "Rules_TagIsConstantType",
+   "start_line": 116299,
+   "end_line": 116321
+  },
+  {
+   "name": "AST_CountListNodes",
+   "start_line": 116343,
+   "end_line": 116353
+  },
+  {
+   "name": "AST_CountTreeNodes",
+   "start_line": 116422,
+   "end_line": 116444
+  },
+  {
+   "name": "AST_AppendNodeList",
+   "start_line": 116626,
+   "end_line": 116643
+  },
+  {
+   "name": "Rules_BsaveAtomTables",
+   "start_line": 116830,
+   "end_line": 116846
+  },
+  {
+   "name": "Rules_BsaveSymbolTable",
+   "start_line": 116933,
+   "end_line": 116981
+  },
+  {
+   "name": "Rules_BsaveCommand",
+   "start_line": 118079,
+   "end_line": 118102
+  },
+  {
+   "name": "Event_ClearHandlers",
+   "start_line": 118200,
+   "end_line": 118210
+  },
+  {
+   "name": "Defgeneric_IsDeletable",
+   "start_line": 119344,
+   "end_line": 119353
+  },
+  {
+   "name": "Defgeneric_RemoveConstruct",
+   "start_line": 119428,
+   "end_line": 119459
+  },
+  {
+   "name": "Defgeneric_FormatMethodRestrictionsString",
+   "start_line": 119539,
+   "end_line": 119550
+  },
+  {
+   "name": "Defgeneric_GetTraceFlag",
+   "start_line": 119550,
+   "end_line": 119556
+  },
+  {
+   "name": "Defgeneric_SetTraceFlag",
+   "start_line": 119556,
+   "end_line": 119563
+  },
+  {
+   "name": "Defgeneric_SetMethodTraceFlag",
+   "start_line": 119574,
+   "end_line": 119589
+  },
+  {
+   "name": "Defgeneric_GetDefmethodListCommand",
+   "start_line": 119698,
+   "end_line": 119714
+  },
+  {
+   "name": "Defgeneric_GetMethodRestrictionsCommand",
+   "start_line": 119794,
+   "end_line": 119816
+  },
+  {
+   "name": "Defgeneric_IncrementGenericBusyCount",
+   "start_line": 119968,
+   "end_line": 119975
+  },
+  {
+   "name": "Method_PrintWatchStatusLine",
+   "start_line": 120286,
+   "end_line": 120311
+  },
+  {
+   "name": "Deffunction_Delete",
+   "start_line": 120369,
+   "end_line": 120392
+  },
+  {
+   "name": "Deffunction_IsDeletable",
+   "start_line": 120399,
+   "end_line": 120408
+  },
+  {
+   "name": "Deffunction_IncrementBusyCount",
+   "start_line": 120531,
+   "end_line": 120538
+  },
+  {
+   "name": "Deffunction_ReportCantDelete",
+   "start_line": 120663,
+   "end_line": 120669
+  },
+  {
+   "name": "Deffunction_SetWatchFlagField",
+   "start_line": 120742,
+   "end_line": 120749
+  },
+  {
+   "name": "Deffunction_GetWatchFlagField",
+   "start_line": 120749,
+   "end_line": 120755
+  },
+  {
+   "name": "Defglobal_IsDeletable",
+   "start_line": 120847,
+   "end_line": 120856
+  },
+  {
+   "name": "Class_IncrementBusyCount",
+   "start_line": 121035,
+   "end_line": 121042
+  },
+  {
+   "name": "ProcParam_GetWildcardArgumentValue",
+   "start_line": 122324,
+   "end_line": 122334
+  },
+  {
+   "name": "Parser_FindProcParamIndex",
+   "start_line": 122334,
+   "end_line": 122359
+  },
+  {
+   "name": "Rules_RegisterFileIOCommands",
+   "start_line": 122437,
+   "end_line": 122451
+  },
+  {
+   "name": "Dribble_GetcRouter",
+   "start_line": 122549,
+   "end_line": 122571
+  },
+  {
+   "name": "Rules_DribbleOnCommand",
+   "start_line": 122655,
+   "end_line": 122670
+  },
+  {
+   "name": "Rules_DribbleOffCommand",
+   "start_line": 122701,
+   "end_line": 122710
+  },
+  {
+   "name": "Rules_BatchQueryStdin",
+   "start_line": 122753,
+   "end_line": 122760
+  },
+  {
+   "name": "Rules_BatchGetChar",
+   "start_line": 122760,
+   "end_line": 122766
+  },
+  {
+   "name": "Rules_BatchExitFunction",
+   "start_line": 122876,
+   "end_line": 122883
+  },
+  {
+   "name": "Rules_BatchCommand",
+   "start_line": 122883,
+   "end_line": 122900
+  },
+  {
+   "name": "Rules_BatchStarCommand",
+   "start_line": 123065,
+   "end_line": 123080
+  },
+  {
+   "name": "Rules_LoadCommand",
+   "start_line": 123154,
+   "end_line": 123192
+  },
+  {
+   "name": "Rules_LoadStarCommand",
+   "start_line": 123192,
+   "end_line": 123225
+  },
+  {
+   "name": "Rules_SaveCommand",
+   "start_line": 123225,
+   "end_line": 123256
+  },
+  {
+   "name": "Rules_RegisterControlFlowFunctions",
+   "start_line": 123690,
+   "end_line": 123713
+  },
+  {
+   "name": "Rules_RegisterMiscFunctions",
+   "start_line": 124213,
+   "end_line": 124246
+  },
+  {
+   "name": "Rules_HostRandom",
+   "start_line": 124313,
+   "end_line": 124321
+  },
+  {
+   "name": "Rules_HostSeed",
+   "start_line": 124321,
+   "end_line": 124339
+  },
+  {
+   "name": "Rules_RegisterIOHostFunctions",
+   "start_line": 124964,
+   "end_line": 124977
+  },
+  {
+   "name": "Rules_HostRemoveFile",
+   "start_line": 125320,
+   "end_line": 125339
+  },
+  {
+   "name": "Rules_HostRenameFile",
+   "start_line": 125339,
+   "end_line": 125360
+  },
+  {
+   "name": "Rules_FormatCountConversionSpecs",
+   "start_line": 125515,
+   "end_line": 125563
+  },
+  {
+   "name": "Rules_ReadLineWithEscaping",
+   "start_line": 125850,
+   "end_line": 125871
+  },
+  {
+   "name": "Rules_RegisterPredicateHostFunctions",
+   "start_line": 125888,
+   "end_line": 125917
+  },
+  {
+   "name": "Rules_HostStringp",
+   "start_line": 126012,
+   "end_line": 126028
+  },
+  {
+   "name": "Rules_HostSymbolp",
+   "start_line": 126028,
+   "end_line": 126044
+  },
+  {
+   "name": "Rules_HostLexemep",
+   "start_line": 126044,
+   "end_line": 126061
+  },
+  {
+   "name": "Rules_HostNumberp",
+   "start_line": 126061,
+   "end_line": 126078
+  },
+  {
+   "name": "Rules_HostFloatp",
+   "start_line": 126078,
+   "end_line": 126094
+  },
+  {
+   "name": "Rules_HostIntegerp",
+   "start_line": 126094,
+   "end_line": 126110
+  },
+  {
+   "name": "Rules_HostMultifieldp",
+   "start_line": 126110,
+   "end_line": 126126
+  },
+  {
+   "name": "Rules_PointerpFunction",
+   "start_line": 126126,
+   "end_line": 126142
+  },
+  {
+   "name": "Parser_ParseNumericFormCompat",
+   "start_line": 126265,
+   "end_line": 126299
+  },
+  {
+   "name": "Parser_NumberValueAsInt",
+   "start_line": 126299,
+   "end_line": 126306
+  },
+  {
+   "name": "Parser_NumberValueAsDouble",
+   "start_line": 126306,
+   "end_line": 126313
+  },
+  {
+   "name": "Parser_NumberValueAsComparableDouble",
+   "start_line": 126313,
+   "end_line": 126319
+  },
+  {
+   "name": "Rules_RegisterArithmeticFunctions",
+   "start_line": 126528,
+   "end_line": 126545
+  },
+  {
+   "name": "Rules_IntegerFunction",
+   "start_line": 126982,
+   "end_line": 126997
+  },
+  {
+   "name": "Rules_FloatFunction",
+   "start_line": 126997,
+   "end_line": 127030
+  },
+  {
+   "name": "Rules_RegisterMultifieldFunctions",
+   "start_line": 127198,
+   "end_line": 127231
+  },
+  {
+   "name": "Rules_DeleteFunction",
+   "start_line": 127231,
+   "end_line": 127251
+  },
+  {
+   "name": "Rules_MVDeleteFunction",
+   "start_line": 127251,
+   "end_line": 127271
+  },
+  {
+   "name": "Rules_SubseqFunction",
+   "start_line": 127648,
+   "end_line": 127692
+  },
+  {
+   "name": "Rules_MVSubseqFunction",
+   "start_line": 127692,
+   "end_line": 127732
+  },
+  {
+   "name": "Rules_FirstFunction",
+   "start_line": 127732,
+   "end_line": 127763
+  },
+  {
+   "name": "Rules_RestFunction",
+   "start_line": 127763,
+   "end_line": 127794
+  },
+  {
+   "name": "Rules_NthFunction",
+   "start_line": 127794,
+   "end_line": 127830
+  },
+  {
+   "name": "Rules_MultifieldFindElementPosition",
+   "start_line": 127910,
+   "end_line": 127929
+  },
+  {
+   "name": "Rules_MultifieldReplaceRange",
+   "start_line": 128282,
+   "end_line": 128414
+  },
+  {
+   "name": "Rules_MultifieldInsertRange",
+   "start_line": 128414,
+   "end_line": 128552
+  },
+  {
+   "name": "Rules_MultifieldDeleteRange",
+   "start_line": 128599,
+   "end_line": 128687
+  },
+  {
+   "name": "Rules_RegisterStringBuiltins",
+   "start_line": 128687,
+   "end_line": 128702
+  },
+  {
+   "name": "Rules_StrCatBuiltin",
+   "start_line": 128702,
+   "end_line": 128708
+  },
+  {
+   "name": "Rules_SymCatBuiltin",
+   "start_line": 128708,
+   "end_line": 128714
+  },
+  {
+   "name": "Rules_StrCompareBuiltin",
+   "start_line": 128972,
+   "end_line": 129037
+  },
+  {
+   "name": "Rules_RegisterMathBuiltins",
+   "start_line": 129373,
+   "end_line": 129414
+  },
+  {
+   "name": "Rules_MathParseSingleArg",
+   "start_line": 129414,
+   "end_line": 129432
+  },
+  {
+   "name": "Rules_MathIsNearZero",
+   "start_line": 129432,
+   "end_line": 129438
+  },
+  {
+   "name": "Rules_CosBuiltin",
+   "start_line": 129495,
+   "end_line": 129510
+  },
+  {
+   "name": "Rules_SinBuiltin",
+   "start_line": 129510,
+   "end_line": 129525
+  },
+  {
+   "name": "Rules_AtanBuiltin",
+   "start_line": 129665,
+   "end_line": 129680
+  },
+  {
+   "name": "Rules_AcotBuiltin",
+   "start_line": 129716,
+   "end_line": 129747
+  },
+  {
+   "name": "Rules_CoshBuiltin",
+   "start_line": 129747,
+   "end_line": 129762
+  },
+  {
+   "name": "Rules_SinhBuiltin",
+   "start_line": 129762,
+   "end_line": 129777
+  },
+  {
+   "name": "Rules_MathTanh",
+   "start_line": 129777,
+   "end_line": 129792
+  },
+  {
+   "name": "Rules_MathSech",
+   "start_line": 129792,
+   "end_line": 129807
+  },
+  {
+   "name": "Rules_MathCsch",
+   "start_line": 129807,
+   "end_line": 129831
+  },
+  {
+   "name": "Rules_MathCoth",
+   "start_line": 129831,
+   "end_line": 129855
+  },
+  {
+   "name": "Rules_MathAsinh",
+   "start_line": 129873,
+   "end_line": 129888
+  },
+  {
+   "name": "Rules_MathAcsch",
+   "start_line": 129925,
+   "end_line": 129944
+  },
+  {
+   "name": "Rules_MathExp",
+   "start_line": 129963,
+   "end_line": 129978
+  },
+  {
+   "name": "Rules_MathLog",
+   "start_line": 129978,
+   "end_line": 130002
+  },
+  {
+   "name": "Rules_MathLog10",
+   "start_line": 130002,
+   "end_line": 130026
+  },
+  {
+   "name": "Rules_MathSqrt",
+   "start_line": 130026,
+   "end_line": 130048
+  },
+  {
+   "name": "Rules_MathPow",
+   "start_line": 130048,
+   "end_line": 130089
+  },
+  {
+   "name": "Rules_MathMod",
+   "start_line": 130089,
+   "end_line": 130160
+  },
+  {
+   "name": "Help_RouterQueryMatchesWhelp",
+   "start_line": 131447,
+   "end_line": 131454
+  },
+  {
+   "name": "Rules_HelpRouterPrint",
+   "start_line": 131454,
+   "end_line": 131461
+  },
+  {
+   "name": "Rules_HelpRouterGetc",
+   "start_line": 131461,
+   "end_line": 131467
+  },
+  {
+   "name": "Rules_HelpRouterUngetc",
+   "start_line": 131467,
+   "end_line": 131473
+  },
+  {
+   "name": "Rules_RegisterHelpFunctions",
+   "start_line": 131762,
+   "end_line": 131772
+  },
+  {
+   "name": "Rules_WriteExpressionRefToCode",
+   "start_line": 132577,
+   "end_line": 132590
+  },
+  {
+   "name": "Rules_RegisterConstructsToCFunction",
+   "start_line": 132845,
+   "end_line": 132851
+  },
+  {
+   "name": "Rules_ConstructCodeFileOpen",
+   "start_line": 133028,
+   "end_line": 133119
+  },
+  {
+   "name": "Rules_WriteConstructHeaderToCode",
+   "start_line": 133135,
+   "end_line": 133174
+  },
+  {
+   "name": "Rules_WriteConstructModuleItemHeaderToCode",
+   "start_line": 133174,
+   "end_line": 133218
+  },
+  {
+   "name": "IO_RenameFile",
+   "start_line": 133218,
+   "end_line": 133228
+  },
+  {
+   "name": "Rules_ResetDataObjectValue",
+   "start_line": 133377,
+   "end_line": 133397
+  },
+  {
+   "name": "Rules_PrintJoinNetworkSharingReport",
+   "start_line": 133620,
+   "end_line": 133632
+  },
+  {
+   "name": "Rules_ClearDefrules",
+   "start_line": 133809,
+   "end_line": 133819
+  },
+  {
+   "name": "Rules_SetInheritedFlagBit4",
+   "start_line": 133896,
+   "end_line": 133909
+  },
+  {
+   "name": "Rules_SetInheritedFlagBit5",
+   "start_line": 133909,
+   "end_line": 133922
+  },
+  {
+   "name": "Rules_GetConstructNameSymbol",
+   "start_line": 134242,
+   "end_line": 134248
+  },
+  {
+   "name": "Rules_SetConstructNextInModule",
+   "start_line": 134545,
+   "end_line": 134552
+  },
+  {
+   "name": "Rules_GetConstructOwnerModule",
+   "start_line": 134552,
+   "end_line": 134558
+  },
+  {
+   "name": "Rules_GetModuleConstructListHead",
+   "start_line": 134558,
+   "end_line": 134564
+  },
+  {
+   "name": "Class_Enum",
+   "start_line": 134564,
+   "end_line": 134577
+  },
+  {
+   "name": "Rules_GetModuleConstructData",
+   "start_line": 134577,
+   "end_line": 134586
+  },
+  {
+   "name": "sub_4A94D0_Impl",
+   "start_line": 134656,
+   "end_line": 134671
+  },
+  {
+   "name": "Rules_InitConstructModuleRecord",
+   "start_line": 134671,
+   "end_line": 134677
+  },
+  {
+   "name": "Instance_InitializeInstanceFunction",
+   "start_line": 135336,
+   "end_line": 135347
+  },
+  {
+   "name": "Instance_MakeInstanceFunction",
+   "start_line": 135347,
+   "end_line": 135358
+  },
+  {
+   "name": "Instance_RegisterModifyAndDuplicateFunctions",
+   "start_line": 136254,
+   "end_line": 136288
+  },
+  {
+   "name": "Instance_ModifyInstanceFunction",
+   "start_line": 136470,
+   "end_line": 136485
+  },
+  {
+   "name": "Instance_MessageModifyInstanceFunction",
+   "start_line": 136485,
+   "end_line": 136500
+  },
+  {
+   "name": "Instance_DuplicateInstanceFunction",
+   "start_line": 136500,
+   "end_line": 136515
+  },
+  {
+   "name": "Instance_MessageDuplicateInstanceFunction",
+   "start_line": 136515,
+   "end_line": 136530
+  },
+  {
+   "name": "Instance_DirectDuplicateFunction",
+   "start_line": 136530,
+   "end_line": 136536
+  },
+  {
+   "name": "Instance_MessageDuplicateFunction",
+   "start_line": 136536,
+   "end_line": 136542
+  },
+  {
+   "name": "Instance_DirectModifyFunction",
+   "start_line": 136542,
+   "end_line": 136548
+  },
+  {
+   "name": "Instance_MessageModifyFunction",
+   "start_line": 136548,
+   "end_line": 136554
+  },
+  {
+   "name": "Rules_RegisterInstanceIOCommands",
+   "start_line": 136966,
+   "end_line": 136976
+  },
+  {
+   "name": "Rules_BloadBuildSlotValue",
+   "start_line": 138044,
+   "end_line": 138099
+  },
+  {
+   "name": "Rules_RegisterMultifieldSlotCommands",
+   "start_line": 138246,
+   "end_line": 138263
+  },
+  {
+   "name": "MessageHandler_AnyHandlerBusy",
+   "start_line": 138956,
+   "end_line": 138973
+  },
+  {
+   "name": "MessageHandler_BuildPreviewHandlerCore",
+   "start_line": 139528,
+   "end_line": 139556
+  },
+  {
+   "name": "MessageHandler_PrintIndentedHandlerMarker",
+   "start_line": 139626,
+   "end_line": 139641
+  },
+  {
+   "name": "MessageHandler_SendToInstanceAddress",
+   "start_line": 139641,
+   "end_line": 139658
+  },
+  {
+   "name": "MessageHandler_BuildSendHandlerCore",
+   "start_line": 140387,
+   "end_line": 140415
+  },
+  {
+   "name": "Class_IsDeletableAlt",
+   "start_line": 140715,
+   "end_line": 140728
+  },
+  {
+   "name": "Class_GetWatchInstances",
+   "start_line": 140742,
+   "end_line": 140748
+  },
+  {
+   "name": "Class_SetWatchInstances",
+   "start_line": 140748,
+   "end_line": 140763
+  },
+  {
+   "name": "Class_GetWatchSlots",
+   "start_line": 140763,
+   "end_line": 140769
+  },
+  {
+   "name": "Class_SetWatchSlots",
+   "start_line": 140769,
+   "end_line": 140780
+  },
+  {
+   "name": "Class_PrintModuleList",
+   "start_line": 140866,
+   "end_line": 140905
+  },
+  {
+   "name": "Class_AddBusyReference",
+   "start_line": 140905,
+   "end_line": 140912
+  },
+  {
+   "name": "Class_GetSlotNameByID",
+   "start_line": 141765,
+   "end_line": 141776
+  },
+  {
+   "name": "Rules_RetractObjectPatternMatches",
+   "start_line": 142728,
+   "end_line": 142795
+  },
+  {
+   "name": "Rules_ValueSatisfiesRangeConstraint",
+   "start_line": 143079,
+   "end_line": 143102
+  },
+  {
+   "name": "IO_ScanfDigitValue",
+   "start_line": 144489,
+   "end_line": 144504
+  },
+  {
+   "name": "CRT_HasActiveWindow",
+   "start_line": 144522,
+   "end_line": 144540
+  },
+  {
+   "name": "CRT_RemoveUnhandledExceptionFilter",
+   "start_line": 144772,
+   "end_line": 144794
+  },
+  {
+   "name": "IO_InitializeFileIORouter",
+   "start_line": 144794,
+   "end_line": 144807
+  },
+  {
+   "name": "ismbdprint_",
+   "start_line": 144886,
+   "end_line": 144892
+  },
+  {
+   "name": "IO_FileIOQueryCallback",
+   "start_line": 144899,
+   "end_line": 144915
+  },
+  {
+   "name": "IO_FileIOUngetcCallback",
+   "start_line": 144943,
+   "end_line": 144953
+  },
+  {
+   "name": "CRT_MapAccessModeToCreateFileFlags",
+   "start_line": 145071,
+   "end_line": 145091
+  },
+  {
+   "name": "CRT_MapOpenFlagsToCreationDisposition",
+   "start_line": 145091,
+   "end_line": 145131
+  },
+  {
+   "name": "CRT_CheckReadOnlyBeforeOpen",
+   "start_line": 145131,
+   "end_line": 145146
+  },
+  {
+   "name": "CRT_GetThreadErrnoPtr",
+   "start_line": 145146,
+   "end_line": 145153
+  },
+  {
+   "name": "CRT_IsLeapYear",
+   "start_line": 145153,
+   "end_line": 145159
+  },
+  {
+   "name": "CRT_TzYearStartsInDaylightTime",
+   "start_line": 145223,
+   "end_line": 145248
+  },
+  {
+   "name": "CRT_CompareTzTransitionDate",
+   "start_line": 145438,
+   "end_line": 145462
+  },
+  {
+   "name": "Rules_RegisterDeftemplateBinaryItem",
+   "start_line": 148729,
+   "end_line": 148744
+  },
+  {
+   "name": "Rules_DeftemplateCodeGenCloseFiles",
+   "start_line": 149350,
+   "end_line": 149375
+  },
+  {
+   "name": "Rules_RegisterDefruleBinaryItem",
+   "start_line": 149518,
+   "end_line": 149533
+  },
+  {
+   "name": "Rules_BsavePackSharedRecordHeader",
+   "start_line": 149897,
+   "end_line": 149934
+  },
+  {
+   "name": "Parser_CollectFunctionArguments",
+   "start_line": 151960,
+   "end_line": 151996
+  },
+  {
+   "name": "Parser_RegisterProceduralFunctionParsers",
+   "start_line": 152239,
+   "end_line": 152259
+  },
+  {
+   "name": "Rules_RegisterRuleCommands",
+   "start_line": 153172,
+   "end_line": 153195
+  },
+  {
+   "name": "Rules_MatchesCommand",
+   "start_line": 153195,
+   "end_line": 153219
+  },
+  {
+   "name": "Rules_ParseDefruleRHS",
+   "start_line": 153895,
+   "end_line": 153932
+  },
+  {
+   "name": "Rules_PrepareDefrulesForCodeGen",
+   "start_line": 154183,
+   "end_line": 154193
+  },
+  {
+   "name": "Rules_CloseDefruleCodeFiles",
+   "start_line": 154353,
+   "end_line": 154378
+  },
+  {
+   "name": "Rules_SetLHSParseNodeDefaultFlags",
+   "start_line": 154670,
+   "end_line": 154707
+  },
+  {
+   "name": "Rules_SetLHSParseNodeExtendedFlags",
+   "start_line": 154845,
+   "end_line": 154874
+  },
+  {
+   "name": "Rules_ApplyPatternKeywordFlags",
+   "start_line": 155205,
+   "end_line": 155284
+  },
+  {
+   "name": "Module_RegisterDefmoduleCommands",
+   "start_line": 155284,
+   "end_line": 155300
+  },
+  {
+   "name": "Module_SaveAllPPFormsToFile",
+   "start_line": 155317,
+   "end_line": 155342
+  },
+  {
+   "name": "Module_PrintPPFormByName",
+   "start_line": 155360,
+   "end_line": 155387
+  },
+  {
+   "name": "Module_PrintAllNamesWithTally",
+   "start_line": 155399,
+   "end_line": 155423
+  },
+  {
+   "name": "Rules_RegisterModifyDuplicateFunctions",
+   "start_line": 156601,
+   "end_line": 156612
+  },
+  {
+   "name": "Rules_ModifyCommand",
+   "start_line": 156612,
+   "end_line": 156618
+  },
+  {
+   "name": "Rules_DuplicateCommand",
+   "start_line": 156618,
+   "end_line": 156624
+  },
+  {
+   "name": "Rules_FindTemplateForFactAddress",
+   "start_line": 156894,
+   "end_line": 156919
+  },
+  {
+   "name": "Rules_ParseModify",
+   "start_line": 156919,
+   "end_line": 156925
+  },
+  {
+   "name": "Rules_ParseDuplicate",
+   "start_line": 156925,
+   "end_line": 156931
+  },
+  {
+   "name": "Rules_RegisterDefglobalBinaryItem",
+   "start_line": 157888,
+   "end_line": 157904
+  },
+  {
+   "name": "Defgeneric_RegisterBinaryItem",
+   "start_line": 158142,
+   "end_line": 158157
+  },
+  {
+   "name": "Deffunction_RegisterBinaryItem",
+   "start_line": 158909,
+   "end_line": 158924
+  },
+  {
+   "name": "Class_RegisterBinaryItem",
+   "start_line": 159197,
+   "end_line": 159213
+  },
+  {
+   "name": "Class_BsaveWriteHandlerDispatchTable",
+   "start_line": 160001,
+   "end_line": 160007
+  },
+  {
+   "name": "Deffacts_CommandDefinitions",
+   "start_line": 160760,
+   "end_line": 160778
+  },
+  {
+   "name": "Deffacts_ResetAction",
+   "start_line": 160785,
+   "end_line": 160803
+  },
+  {
+   "name": "Deffacts_RegisterBinaryItem",
+   "start_line": 160988,
+   "end_line": 161003
+  },
+  {
+   "name": "Deffacts_CloseCodeFiles",
+   "start_line": 161388,
+   "end_line": 161415
+  },
+  {
+   "name": "Defgeneric_ClearDefgenericsReady",
+   "start_line": 161518,
+   "end_line": 161538
+  },
+  {
+   "name": "Defgeneric_ClearDefgenerics",
+   "start_line": 161658,
+   "end_line": 161698
+  },
+  {
+   "name": "Defgeneric_MethodsExecuting",
+   "start_line": 161773,
+   "end_line": 161790
+  },
+  {
+   "name": "Method_FindByIndex",
+   "start_line": 161790,
+   "end_line": 161809
+  },
+  {
+   "name": "Defgeneric_CloseCodeFiles",
+   "start_line": 162394,
+   "end_line": 162423
+  },
+  {
+   "name": "Defgeneric_RestrictionTypeToCode",
+   "start_line": 162545,
+   "end_line": 162559
+  },
+  {
+   "name": "Method_AppendParameterNode",
+   "start_line": 163625,
+   "end_line": 163648
+  },
+  {
+   "name": "Method_FindApplicableMethod",
+   "start_line": 164410,
+   "end_line": 164439
+  },
+  {
+   "name": "Deffunction_CloseCodeFiles",
+   "start_line": 164742,
+   "end_line": 164769
+  },
+  {
+   "name": "Defglobal_GetWatchFlagField",
+   "start_line": 165298,
+   "end_line": 165304
+  },
+  {
+   "name": "Defglobal_SetWatchFlagField",
+   "start_line": 165304,
+   "end_line": 165315
+  },
+  {
+   "name": "Defglobal_RegisterResetGlobalsCommands",
+   "start_line": 165333,
+   "end_line": 165341
+  },
+  {
+   "name": "Defglobals_ResetCallback",
+   "start_line": 165832,
+   "end_line": 165838
+  },
+  {
+   "name": "Defglobal_CloseConstructCodeFiles",
+   "start_line": 165950,
+   "end_line": 165977
+  },
+  {
+   "name": "Runtime_ExprDescriptorNoop",
+   "start_line": 166068,
+   "end_line": 166073
+  },
+  {
+   "name": "MessageHandler_EnumNext",
+   "start_line": 166129,
+   "end_line": 166139
+  },
+  {
+   "name": "MessageHandler_PrintHandlerListTally",
+   "start_line": 166335,
+   "end_line": 166375
+  },
+  {
+   "name": "MessageHandler_PreviewSendForSymbol",
+   "start_line": 166375,
+   "end_line": 166397
+  },
+  {
+   "name": "MessageHandler_RegisterSystemHandlers",
+   "start_line": 166420,
+   "end_line": 166432
+  },
+  {
+   "name": "MessageHandler_UndefineForClassOrAll",
+   "start_line": 166432,
+   "end_line": 166475
+  },
+  {
+   "name": "Definstances_IsDeletable",
+   "start_line": 166765,
+   "end_line": 166774
+  },
+  {
+   "name": "Definstances_DeleteRecord",
+   "start_line": 166788,
+   "end_line": 166811
+  },
+  {
+   "name": "Definstances_ReportCannotDelete",
+   "start_line": 167108,
+   "end_line": 167114
+  },
+  {
+   "name": "ObjectsCompiler_CloseConstructFileGroup",
+   "start_line": 168959,
+   "end_line": 168988
+  },
+  {
+   "name": "Rules_IsObjectPatternKeyword",
+   "start_line": 169711,
+   "end_line": 169718
+  },
+  {
+   "name": "Rules_IncrementBitmapRefCount",
+   "start_line": 170827,
+   "end_line": 170835
+  },
+  {
+   "name": "Rules_DecrementBitmapRefCountIfSet",
+   "start_line": 170835,
+   "end_line": 170843
+  },
+  {
+   "name": "Rules_IsClassBitmapEmpty",
+   "start_line": 170864,
+   "end_line": 170881
+  },
+  {
+   "name": "Rules_AndClassBitmaps",
+   "start_line": 171063,
+   "end_line": 171084
+  },
+  {
+   "name": "Rules_OrClassBitmaps",
+   "start_line": 171084,
+   "end_line": 171105
+  },
+  {
+   "name": "Rules_SetObjectPatternNegatedFlag",
+   "start_line": 171415,
+   "end_line": 171429
+  },
+  {
+   "name": "Rules_LinkClassToSuperclasses",
+   "start_line": 171881,
+   "end_line": 171910
+  },
+  {
+   "name": "Class_GenerateDefaultSlotHandlersAndFlag",
+   "start_line": 172173,
+   "end_line": 172211
+  },
+  {
+   "name": "Class_SuperclassPCommand",
+   "start_line": 172390,
+   "end_line": 172403
+  },
+  {
+   "name": "Class_SubclassPCommand",
+   "start_line": 172403,
+   "end_line": 172416
+  },
+  {
+   "name": "Class_SlotExistPCommand",
+   "start_line": 172416,
+   "end_line": 172455
+  },
+  {
+   "name": "Class_LookupClassOrReportError",
+   "start_line": 172683,
+   "end_line": 172699
+  },
+  {
+   "name": "Class_ParseClassNameArg",
+   "start_line": 172699,
+   "end_line": 172712
+  },
+  {
+   "name": "Class_PrintSeparatorLine",
+   "start_line": 172748,
+   "end_line": 172767
+  },
+  {
+   "name": "Class_ClassSlotsCommand",
+   "start_line": 173521,
+   "end_line": 173537
+  },
+  {
+   "name": "Class_ClassSuperclassesCommand",
+   "start_line": 173537,
+   "end_line": 173553
+  },
+  {
+   "name": "Class_ClassSubclassesCommand",
+   "start_line": 173553,
+   "end_line": 173569
+  },
+  {
+   "name": "Class_GetDefmessageHandlerListCommand",
+   "start_line": 173569,
+   "end_line": 173587
+  },
+  {
+   "name": "Class_IsAbstract",
+   "start_line": 173623,
+   "end_line": 173629
+  },
+  {
+   "name": "Math_CompareAbsToEpsilon",
+   "start_line": 174496,
+   "end_line": 174503
+  },
+  {
+   "name": "Compiler_GenerateConstructTables",
+   "start_line": 174503,
+   "end_line": 174534
+  },
+  {
+   "name": "Compiler_AssignModuleIndices",
+   "start_line": 175608,
+   "end_line": 175626
+  },
+  {
+   "name": "Rules_FetchJoinObjectSlotFieldSimple",
+   "start_line": 176156,
+   "end_line": 176172
+  },
+  {
+   "name": "Fpu_ClearExceptions",
+   "start_line": 176665,
+   "end_line": 176671
+  },
+  {
+   "name": "CRT_GetThreadMbcinfoPtr",
+   "start_line": 176738,
+   "end_line": 176745
+  },
+  {
+   "name": "Lexer_CheckDuplicateSlotName",
+   "start_line": 176928,
+   "end_line": 176948
+  },
+  {
+   "name": "AST_PropagateDepthTag",
+   "start_line": 177759,
+   "end_line": 177778
+  },
+  {
+   "name": "Module_RegisterBsaveBloadHandlers",
+   "start_line": 177833,
+   "end_line": 177850
+  },
+  {
+   "name": "Rules_ResetConstraintParsedFlags",
+   "start_line": 178431,
+   "end_line": 178438
+  },
+  {
+   "name": "Rules_IsConstraintAttributeKeyword",
+   "start_line": 178438,
+   "end_line": 178476
+  },
+  {
+   "name": "Rules_ParseStandardConstraintAttribute",
+   "start_line": 178476,
+   "end_line": 178534
+  },
+  {
+   "name": "Rules_MergeConstraintValueList",
+   "start_line": 178715,
+   "end_line": 178742
+  },
+  {
+   "name": "Rules_GetAllowedAttributeTokenCode",
+   "start_line": 179297,
+   "end_line": 179337
+  },
+  {
+   "name": "Rules_GetTypeNameTokenCode",
+   "start_line": 179337,
+   "end_line": 179406
+  },
+  {
+   "name": "Rules_TestConstraintAttributeParsedFlag",
+   "start_line": 179406,
+   "end_line": 179456
+  },
+  {
+   "name": "Rules_SetConstraintAllowedTypeFlag",
+   "start_line": 179456,
+   "end_line": 179532
+  },
+  {
+   "name": "Rules_MarkConstraintAttributeParsed",
+   "start_line": 179532,
+   "end_line": 179634
+  },
+  {
+   "name": "Rules_FindExistingJoinTestNode",
+   "start_line": 181011,
+   "end_line": 181047
+  },
+  {
+   "name": "Rules_SetupDefinstancesBsaveBload",
+   "start_line": 182180,
+   "end_line": 182195
+  },
+  {
+   "name": "Compiler_CloseDefinstancesCodeFiles",
+   "start_line": 182601,
+   "end_line": 182628
+  },
+  {
+   "name": "Parser_ParseInstanceQueryNoAction",
+   "start_line": 182685,
+   "end_line": 182737
+  },
+  {
+   "name": "Compiler_AssignObjectPatternAndRuleCodeIndices",
+   "start_line": 183313,
+   "end_line": 183339
+  },
+  {
+   "name": "Rules_GetNextObjectPatternNode",
+   "start_line": 183339,
+   "end_line": 183353
+  },
+  {
+   "name": "Compiler_WriteObjectPatternsAndRulesToCode",
+   "start_line": 183392,
+   "end_line": 183407
+  },
+  {
+   "name": "Rules_BuildSlotBoundTestNode",
+   "start_line": 183696,
+   "end_line": 183702
+  },
+  {
+   "name": "Rules_BuildSlotBoundTestExpression",
+   "start_line": 183702,
+   "end_line": 183713
+  },
+  {
+   "name": "Rules_BuildSlotRangeTestNode",
+   "start_line": 183713,
+   "end_line": 183719
+  },
+  {
+   "name": "mblen_",
+   "start_line": 183790,
+   "end_line": 183797
+  },
+  {
+   "name": "Rules_BuildSlotUnboundTestExpression",
+   "start_line": 183797,
+   "end_line": 183808
+  },
+  {
+   "name": "mblen__0",
+   "start_line": 183808,
+   "end_line": 183814
+  },
+  {
+   "name": "Rules_RegisterObjectPatternNetworkBinaryItem",
+   "start_line": 184320,
+   "end_line": 184335
+  },
+  {
+   "name": "Class_FindClassLinkNode",
+   "start_line": 185334,
+   "end_line": 185345
+  },
+  {
+   "name": "CRT_BeginThread",
+   "start_line": 186453,
+   "end_line": 186492
+  },
+  {
+   "name": "AST_AccumulateFieldAccessTestChain",
+   "start_line": 186604,
+   "end_line": 186631
+  },
+  {
+   "name": "CRT_StrToULongRadix",
+   "start_line": 187176,
+   "end_line": 187182
+  },
+  {
+   "name": "CRT_DigitCharToValue",
+   "start_line": 187182,
+   "end_line": 187198
+  },
+  {
+   "name": "CRT_DefaultZeroStub",
+   "start_line": 187660,
+   "end_line": 187666
+  },
+  {
+   "name": "CRT_IsExtendedMbcsLeadByte",
+   "start_line": 187694,
+   "end_line": 187706
+  }
+ ],
+ "count": 718
+}
