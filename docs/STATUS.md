@@ -9,6 +9,13 @@ Last consolidated: 2026-07-03.
   remain as code symbols; the surviving `sub_` spellings are IDA address-anchor
   comments and trace strings only (per `docs/REVERSE_ENGINEERING.md` 3.1). The
   full old->new mapping lives in `docs/archive/SUB_RENAME_INDEX.md`.
+- The embedded rules engine is identified as CLIPS 6.0 (see
+  `docs/REVERSE_ENGINEERING.md` Queue F provenance). A CLIPS 6.30-source
+  cross-reference of the string-anchored Queue F functions found zero
+  mis-namings (`docs/archive/CLIPS_SOURCE_CROSSREF.md`), and the game's
+  strategic-AI host-function API - the commands `strateg\clash.dat` rules call
+  into the engine - is decoded from the binary's own registration table in
+  `docs/AI_SCRIPTING_API.md`.
 - `clash95_bootstrap` is the current SDL-backed executable target.
 - Default CTest smoke routes cover menu liveness, direct route startup, save DAT
   format checks, and opt-in real-input probes.
@@ -45,12 +52,22 @@ Campaign menu entry plus natural mission completion and auto-advance.
 - Current milestone table: `docs/RUNTIME_MILESTONES.md`
 - Full historical progress: `docs/archive/COMPILATION_PROGRESS.md`
 - Rename/recovery log: `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
+- CLIPS engine provenance + source cross-reference:
+  `docs/archive/CLIPS_SOURCE_CROSSREF.md`
+- Strategic-AI host-function API: `docs/AI_SCRIPTING_API.md`
 - Route/probe notes: `docs/probes/`
 
 ## Latest Validation
 
 2026-07-03 post-rename-campaign re-validation:
 
+- CLIPS follow-up (this session): identified the rules engine as CLIPS 6.0,
+  cross-referenced string-anchored Queue F names against CLIPS 6.30 source
+  (zero mis-namings), decoded the strategic-AI host-function registration
+  table, and applied 2 name refinements plus 8 low/medium->high confidence
+  upgrades. After each change `clash95_bootstrap` still compiled and linked
+  clean; the index stayed at 3031 rows with no name collisions; markdown-link
+  and whitespace checks passed.
 - `sub_` inventory: 0 defined `sub_` functions and 0 non-comment `sub_` code
   references remain in `clash95.c`, `bootstrap_main.c`, or
   `platform_sdl_runtime.c`; all remaining spellings are comment/trace anchors.
