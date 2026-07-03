@@ -472,6 +472,15 @@ anchors). This upgrades many of the honest "low"-confidence mechanical
 descriptions in `docs/archive/SUB_RENAME_INDEX.md` to citable identifications
 without needing the retail game assets.
 
+A first string-anchored cross-reference pass (recovered name vs. CLIPS 6.30
+core source) is recorded in `docs/archive/CLIPS_SOURCE_CROSSREF.md`. It found
+zero mis-named string-anchored Queue F functions and made one low->high
+refinement (`Defgeneric_EmitQualifiedNameBanner` ->
+`Defgeneric_CreateDefaultPPForm`). Note that most low-confidence Queue F
+functions carry no string literals (trivial accessors, refcount helpers,
+vtable-slot thunks, Watcom destructors) and are not resolvable by string
+anchoring; their honest mechanical descriptions are correct as-is.
+
 ---
 
 ## 10. Function-family recovery strategy

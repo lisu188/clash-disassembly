@@ -4159,7 +4159,7 @@ int  Method_PackRestrictionTypes(_DWORD *a1, int a2);
 int  Method_FreeRestrictionChain(int result);
 int  Method_FindInsertionIndex(int a1, int a2, int a3, int a4, unsigned int *a5);
 signed int Defgeneric_ParseDeclaration();
-signed int  Defgeneric_EmitQualifiedNameBanner(int a1);
+signed int  Defgeneric_CreateDefaultPPForm(int a1);
 int  Method_ParseIndexModifier(int a1, _DWORD *a2);
 int  Method_ParseParameterList(int a1, signed int *a2, int *a3);
 int  Method_ParseParameterRestriction(int a1);
@@ -162664,7 +162664,7 @@ signed int  Defgeneric_ParseDefmethod(int a1)
   v4 = Defgeneric_AddConstruct(v3, &v29);
   v5 = (_DWORD *)v4;
   if ( v29 )
-    Defgeneric_EmitQualifiedNameBanner(v4);
+    Defgeneric_CreateDefaultPPForm(v4);
   Rules_IncrementIndentDepth(1);
   v34 = Method_ParseParameterList(v36, v6, &v32);
   Rules_DecrementIndentDepth(1);
@@ -163182,7 +163182,7 @@ signed int Defgeneric_ParseDeclaration()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004C9DB0) --------------------------------------------------------
-signed int  Defgeneric_EmitQualifiedNameBanner(int a1)
+signed int  Defgeneric_CreateDefaultPPForm(int a1)
 {
   int v2; // eax
   const char *Name; // esi
