@@ -23,6 +23,32 @@ Earlier validated milestones include first-mission completion, mission `01`
 shrine completion, mission `02` Treg Rock capture, and mission `03` survival
 completion through route gates.
 
+## Environment Requirement (runtime work)
+
+Any runtime, boot, menu, or gameplay-route work requires the installed retail
+Clash game data. The SDL platform layer (`platform_sdl_runtime.c`
+`GetDriveTypeA`) resolves the game's CD/install root to `/mnt/<drive>/clash`
+(or `/mnt/<drive>/CLASH`); `DetectGameCDPath` scans drive letters `C..Z` for a
+directory there. With no such directory, boot aborts immediately with the
+recovered `"Clash CD not found!"` message box and the process exits before any
+menu or mission code runs.
+
+Consequently, in an environment without the game data mounted (e.g. a fresh
+web/CI container with no `/mnt/c/clash`):
+
+- the `clash95_bootstrap` executable cannot boot, so the three route smokes
+  `clash95_r_command_shutdown_smoke`, `clash95_direct_a_route_smoke`, and
+  `clash95_direct_a0_route_smoke` fail by design (missing assets, not a
+  regression); the rest of the default CTest suite still passes;
+- only static work is possible: compilation/link, the unit-test coverage
+  target (`-DCLASH95_COVERAGE=ON`, see `docs/UNIT_TESTING.md`), and
+  asm-grounded (`clash95.asm`) source-fidelity edits.
+
+To unblock runtime/gameplay work, mount a copy of the installed game at
+`/mnt/c/clash` (or symlink a real install there), then the boot path and the
+campaign-route probes can run and validate as documented in
+`docs/RUNTIME_MILESTONES.md`.
+
 ## Active Blocker
 
 Mission `04` still needs a natural route from post-breach tactical battle state
