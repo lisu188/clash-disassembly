@@ -49,6 +49,18 @@ To unblock runtime/gameplay work, mount a copy of the installed game at
 campaign-route probes can run and validate as documented in
 `docs/RUNTIME_MILESTONES.md`.
 
+Empirically, boot requires the data at three levels (verified by running
+`clash95_bootstrap` headless):
+1. `/mnt/<drive>/clash` must exist (else `DetectGameCDPath` -> "Clash CD not
+   found!" at once);
+2. the startup resource archives must mount from it (`data\music.res`,
+   `gfx\*.res`, `sfx\*.res`, ... via `FileSystem_MountArchiveAtIndex`);
+3. specific resources must resolve from those archives -- the title path
+   `FileSystem_ResolveReadPath("gfx\backgr1.s32")` gates boot: if it is not
+   found, `App_RequestQuit` shows "Clash CD not found!" (clash95.c:60756).
+An empty `/mnt/c/clash` directory passes level 1 but still fails at level 3, so
+a real install (not just the directory) is required.
+
 ## Active Blocker
 
 Mission `04` still needs a natural route from post-breach tactical battle state
