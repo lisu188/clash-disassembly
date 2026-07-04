@@ -91,8 +91,9 @@ and `Rules_InitAtomTables()` first to initialize the global arenas.
 Line coverage of the 718-function pure testable set (6636 executable lines),
 measured by `tools/measure_pure_coverage.py`:
 
-- **Cumulative: ~90% (best observed 5972/6636 = 89.99%)** via
-  `tests/unit/run_coverage.sh` (accumulates gcov counters across runs).
+- **Cumulative: ≥90% (5983/6636 = 90.16% observed over 8 runs, and rising with
+  more)** via `tests/unit/run_coverage.sh` (accumulates gcov counters across
+  runs).
 - Single-run deterministic floor: ~89.7%.
 
 The gap between the single-run and cumulative figures, and the ~10% that stays
