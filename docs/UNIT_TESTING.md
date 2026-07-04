@@ -104,7 +104,7 @@ uncovered, are both consequences of the source being **decompiler output**:
   comments. Reaching the code past such a read requires a fixture that lands a
   specific value in an uninitialized stack slot, which depends on the exact
   stack layout of a given run. Those lines are therefore covered on some runs
-  and not others; accumulating runs (`run_coverage.sh`) captures the full
+  and not others; accumulating runs (`tests/unit/run_coverage.sh`) captures the full
   reachable set, which is why cumulative > single-run.
 - The remaining uncovered lines are **genuinely unreachable in the recompiled
   build**: the same undefined-register reads that always crash (e.g.
