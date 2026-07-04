@@ -93,3 +93,25 @@ TEST(objectives, mission07_treasure_blocked_when_one_remains) {
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
   gameData = gd; dword_5448A0 = ch;
 }
+
+/* Missions 03 and 13 (survival): complete iff the game turn counter
+ * (*(u16*)(gameData + 140022) == GAME_TURN_COUNTER) exceeds 10, i.e. the
+ * player has survived through turn 11. */
+TEST(objectives, mission03_survival_gate_on_turn_counter) {
+  int gd = gameData, ch = dword_5448A0;
+  cov_obj_reset(3);
+  GAME_TURN_COUNTER = 11; /* > 10 -> survived */
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  cov_obj_reset(3);
+  GAME_TURN_COUNTER = 10; /* not yet past 10 -> blocked */
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
+  gameData = gd; dword_5448A0 = ch;
+}
+
+TEST(objectives, mission13_shares_survival_gate) {
+  int gd = gameData, ch = dword_5448A0;
+  cov_obj_reset(13); /* case 0xD falls through to the same survival check */
+  GAME_TURN_COUNTER = 25;
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  gameData = gd; dword_5448A0 = ch;
+}
