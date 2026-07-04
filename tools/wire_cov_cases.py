@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate the #include block for coverage test-case files in test_all.c.
 
-Scans tests/unit/cases/test_cov*.c (skipping *.bad) and rewrites the region
+Scans tests/unit/cases/test_*.c (skipping *.bad and test_smoke.c) and rewrites the region
 between the BEGIN/END markers in tests/unit/test_all.c with one #include per
 present case file, in sorted order. test_smoke.c is included explicitly by
 test_all.c and is intentionally excluded here. Idempotent.
@@ -17,10 +17,12 @@ END = "/* <<< COV CASES END */"
 
 
 def main():
+    # All case files except test_smoke.c (included explicitly by test_all.c)
+    # and quarantined *.bad files.
     cases = sorted(
         os.path.basename(p)
-        for p in glob.glob(os.path.join(ROOT, "tests/unit/cases/test_cov*.c"))
-        if not p.endswith(".bad")
+        for p in glob.glob(os.path.join(ROOT, "tests/unit/cases/test_*.c"))
+        if not p.endswith(".bad") and os.path.basename(p) != "test_smoke.c"
     )
     block = [BEGIN]
     for c in cases:

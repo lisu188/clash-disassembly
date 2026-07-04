@@ -224,6 +224,13 @@ static void clash_crash_handler(int sig) {
 #include "cases/test_cov5_00.c"
 #include "cases/test_cov5_01.c"
 #include "cases/test_cov5_02.c"
+#include "cases/test_extra.c"
+#include "cases/test_gameplay_mission04.c"
+#include "cases/test_gameplay_objectives.c"
+#include "cases/test_thin00.c"
+#include "cases/test_thin01.c"
+#include "cases/test_thin02.c"
+#include "cases/test_thin03.c"
 /* <<< COV CASES END */
 
 /* Run one test in a child process; returns 0 pass, 1 fail, 2 crashed/exited. */
