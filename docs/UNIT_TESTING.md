@@ -23,9 +23,9 @@ Because ~300 of the recovered functions are `static` (internal linkage), the
 tests cannot link against them from a separate translation unit. Instead,
 `tests/unit/test_all.c` is a single aggregator TU that `#include`s `clash95.c`
 directly, making every recovered function — static or external — callable by
-name **without modifying the recovered source**. Each `tests/unit/cases/*.c`
-file is `#include`d into that TU (not compiled separately) and contributes
-`TEST(...)` cases.
+name **without modifying the recovered source**. Each case file under
+`tests/unit/cases/` is `#include`d into that TU (not compiled separately) and
+contributes `TEST(...)` cases.
 
 ### Fault isolation
 
@@ -46,7 +46,7 @@ the coverage accumulated by other tests.
 ### Link stubs
 
 The coverage target does not link `bootstrap_main.c` or Win32/CRT import
-libraries. `test_all.c` provides benign stubs for the handful of symbols the
+libraries. `tests/unit/test_all.c` provides benign stubs for the handful of symbols the
 game build resolves elsewhere (`_no_support_loaded`, `g_RenderHook`,
 `GetTimeZoneInformation`, thread/CRT helpers, `CreateThread`, `LoadLibraryA`,
 etc.) so that gc-sections-kept recovered code links and those functions become
@@ -61,7 +61,7 @@ cmake --build build-cov --target clash95_unit_tests -j4
 python3 tools/measure_pure_coverage.py build-cov --worst 40
 ```
 
-`measure_pure_coverage.py` runs `gcov` on the coverage TU and reports line
+`tools/measure_pure_coverage.py` runs `gcov` on the coverage TU and reports line
 coverage restricted to the pure-set line ranges, plus the least-covered
 functions. The unit tests are also registered as the `clash95_unit_tests` CTest
 test (label `unit`) when `CLASH95_COVERAGE=ON`.
@@ -71,12 +71,12 @@ test (label `unit`) when `CLASH95_COVERAGE=ON`.
 - `tools/pure_function_set.py` — regenerate the pure testable set (denominator).
 - `tools/gen_pure_decls.py` — extern prototypes for the pure set (reference).
 - `tools/wire_cov_cases.py` — regenerate the `#include` block of case files in
-  `test_all.c` (run after adding a `tests/unit/cases/test_*.c` file).
+  `tests/unit/test_all.c` (run after adding a new case file).
 - `tools/measure_pure_coverage.py` — measure coverage over the pure set.
 
 ## Adding tests
 
-1. Add a `tests/unit/cases/test_<name>.c` file containing `TEST(suite, name)`
+1. Add a new test file under `tests/unit/cases/` (see `tests/unit/cases/test_smoke.c`) containing `TEST(suite, name)`
    blocks. No `#include`s, no `main`; use a unique `suite` prefix.
 2. Run `python3 tools/wire_cov_cases.py`, rebuild, run, and re-measure.
 
