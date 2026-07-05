@@ -8,6 +8,11 @@
 /Testing/
 /Makefile
 /cmake_install.cmake
+/compile_commands.json
+/build.ninja
+/.ninja_deps
+/.ninja_log
+/rules.ninja
 
 # Local build products. The original tracked clash95.exe is evidence; force-add
 # any future evidence binaries intentionally.
@@ -43,6 +48,7 @@ core.*
 *.prof
 *.gcda
 *.gcno
+*.gcov
 gmon.out
 /clash.log
 /battle.log

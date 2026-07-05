@@ -22,6 +22,14 @@ The Markdown cleanup followed this classification:
 - Ignored local worktrees and generated artifacts are not part of the tracked
   documentation tree.
 
+The 2026-06-16 follow-up inventory found no git-visible untracked Markdown and
+only two root Markdown files: `README.md` and `AGENTS.md`. Both are intentionally
+retained at root: `README.md` is the public entrypoint, and `AGENTS.md` is
+tool/workflow context expected by agents.
+
+No additional Markdown moves were needed in that follow-up; the cleanup was a
+status/link consistency pass over the existing consolidated tree.
+
 | Current path | Original path | Classification |
 | --- | --- | --- |
 | `docs/archive/COMPILATION_PROGRESS.md` | `COMPILATION_PROGRESS.md` | durable progress history |
@@ -68,7 +76,9 @@ paths when changing them would blur provenance.
 No tracked Markdown evidence was deleted during this pass. Generated build
 products, frame dumps, crash dumps, route artifacts, and accidental local
 scratch are covered by `.gitignore` and the artifact pruning policy rather than
-being promoted into documentation.
+being promoted into documentation. The cleanup policy also ignores stray
+root-level CMake/Ninja metadata and coverage output so build experiments do not
+become evidence accidentally.
 
 ## Deferred Cleanup
 

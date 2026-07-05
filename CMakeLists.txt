@@ -195,6 +195,19 @@ set_tests_properties(clash95_soak_probe PROPERTIES
   LABELS "manual;real_input;soak"
 )
 
+add_test(
+  NAME clash95_multiplayer_map_probe
+  COMMAND bash
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_multiplayer_map_probe.sh
+    $<TARGET_FILE:clash95_bootstrap>
+)
+set_tests_properties(clash95_multiplayer_map_probe PROPERTIES
+  TIMEOUT 900
+  SKIP_RETURN_CODE 77
+  RUN_SERIAL TRUE
+  LABELS "manual;real_input;multiplayer;map"
+)
+
 function(add_campaign_route_regression_test mission_id timeout_seconds)
   add_test(
     NAME clash95_campaign_route_${mission_id}_regression
@@ -215,4 +228,4 @@ endfunction()
 add_campaign_route_regression_test(01 360)
 add_campaign_route_regression_test(02 900)
 add_campaign_route_regression_test(03 900)
-add_campaign_route_regression_test(04 360)
+add_campaign_route_regression_test(04 900)

@@ -1,5 +1,18 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-16 - Mission 04 First-Assault AI Handoff Note
+
+- No semantic renames were made in this batch.
+- Added route-harness-only `wait_log_new`, `wait_log_any_new`, `mark_log_count`, `wait_log_marked`, `wait_log_marked_any`, `if_last_wait_log_mark`, `fail_unless_last_wait_log_mark`, `stop`, `if_env`/`endif`, `stop_unless_env`, and `fail_if_log` commands so quarantined campaign routes can prove fresh markers, stop at deliberate partial milestones, guard small branch-specific blocks, opt into later route tails, and abort branch-specific tails without mutating recovered game state.
+- Updated mission `04` route evidence to keep the canonical regression at the first-assault defender-AI handoff while quarantined continuations observe both post-AI world return and attacker tactical-control resumption. The tactical branch now proves fresh counted post-AI attacks through defender `15,5` defeat plus selected unit `2` occupying the cleared tile; remaining branch-specific continuation, castle cleanup, and mission completion remain deferred.
+
+## 2026-06-16 - Multiplayer Map Probe Note
+
+- No semantic renames were made in this batch.
+- Added opt-in direct `/A#` multiplayer-map visual/liveness probes and artifact-pruner recognition for `artifacts/multiplayer-maps/map-*`.
+- Repaired reached direct-route/parser host-width defects needed for map probe coverage: direct `/A#` parser allocator reset, low32 token records in `sub_48CC80`, `sub_4BD280`, `Parser_ParseExpression`, `sub_4A9810`, `sub_4AA610`, and `sub_4AA7C0`; low32 normalization of `Lexer_ReadToken` handles in `Parser_NextToken`; the asm-backed failed-`make-instance` `nil` result invariant in `sub_4A9810`; and recovered-field string pointer masking in `sub_481090`.
+- The latest sweep proves direct all-AI map IDs `0..10` load and enter `PlayGame` with nonblank frames for 5-second probe windows, and map ID `0` holds a 30-second no-trace soak; it does not promote human multiplayer menu playability or campaign completion.
+
 ## 2026-06-15 - Documentation Consolidation Note
 
 - No semantic renames in this batch.
