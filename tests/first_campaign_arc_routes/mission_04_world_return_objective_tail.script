@@ -1,0 +1,75 @@
+# Shared mission 04 tail for the branch where the first assault returns to the
+# world map and then authentically re-enters Hopenberg.
+
+mark_log_count world_return_15_5_repeat_07_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_07_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-07
+wait_log_marked 60 world_return_15_5_repeat_07_exchange
+wait_log_marked 60 world_return_15_5_repeat_07_return
+
+mark_log_count world_return_15_5_repeat_08_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_08_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-08
+wait_log_marked 60 world_return_15_5_repeat_08_exchange
+wait_log_marked 60 world_return_15_5_repeat_08_return
+
+mark_log_count world_return_15_5_repeat_09_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_09_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-09
+wait_log_marked 60 world_return_15_5_repeat_09_exchange
+wait_log_marked 60 world_return_15_5_repeat_09_return
+
+mark_log_count world_return_15_5_repeat_10_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_10_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-10
+wait_log_marked 60 world_return_15_5_repeat_10_exchange
+wait_log_marked 60 world_return_15_5_repeat_10_return
+
+mark_log_count world_return_15_5_repeat_11_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_11_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-11
+wait_log_marked 60 world_return_15_5_repeat_11_exchange
+wait_log_marked 60 world_return_15_5_repeat_11_return
+
+mark_log_count world_return_15_5_repeat_12_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_12_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-12
+wait_log_marked 60 world_return_15_5_repeat_12_exchange
+wait_log_marked 60 world_return_15_5_repeat_12_return
+
+mark_log_count world_return_15_5_repeat_13_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_13_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-13
+wait_log_marked 60 world_return_15_5_repeat_13_exchange
+wait_log_marked 60 world_return_15_5_repeat_13_return
+
+mark_log_count world_return_15_5_repeat_14_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_14_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-14
+wait_log_marked 60 world_return_15_5_repeat_14_exchange
+wait_log_marked 60 world_return_15_5_repeat_14_return
+
+mark_log_count world_return_15_5_repeat_15_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count world_return_15_5_repeat_15_return battle_attack_return selected=2 a=19 b=0 c=1
+battle_click 448 368 4 0.5 slot2-world-return-attack-defender-15-5-repeat-15
+wait_log_marked 60 world_return_15_5_repeat_15_exchange
+wait_log_marked 60 world_return_15_5_repeat_15_return
+screenshot mission04-world-return-slot2-defender-15-5-defeated
+nonblank mission04-world-return-slot2-defender-15-5-defeated
+
+mark_log_count world_return_move_15_5 battle_move_execute_return selected=2 a=15 b=5
+battle_click 448 368 4 0.5 slot2-world-return-move-into-15-5
+wait_log 30 tile=15,5
+wait_log_marked 60 world_return_move_15_5
+screenshot mission04-world-return-slot2-occupy-15-5
+nonblank mission04-world-return-slot2-occupy-15-5
+
+mark_log_count world_return_14_5_first_exchange battle_attack_after_exchange selected=2 a=12
+battle_click 384 368 4 0.5 slot2-world-return-attack-defender-14-5
+wait_log 30 tile=14,5
+wait_log_marked 60 world_return_14_5_first_exchange
+wait_log 60 battle_attack_return selected=2 a=12 b=0
+screenshot mission04-world-return-slot2-attack-defender-14-5
+nonblank mission04-world-return-slot2-attack-defender-14-5
+
+include_script tests/first_campaign_arc_routes/mission_04_post_occupy_objective_tail.script
