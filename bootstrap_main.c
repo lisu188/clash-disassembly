@@ -176,11 +176,11 @@ static void Bootstrap_TraceDirectMission(const char *step)
   fflush(stderr);
 }
 
-static void Bootstrap_ResetRecoveredParserAllocatorForDirectMission(void)
+static void Bootstrap_ResetRecoveredParserAllocatorForDirectRoute(const char *trace_step)
 {
   if ( !dword_519F0C )
     return;
-  Bootstrap_TraceDirectMission("direct-campaign-parser-allocator-reset");
+  Bootstrap_TraceDirectMission(trace_step);
   dword_54DBBC = 0;
   dword_519F08 = 0;
   dword_519F0C = 0;
@@ -1326,7 +1326,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
         if ( getenv("CLASH95_SKIP_MISSION_BRIEFING") )
         {
           Bootstrap_TraceDirectMission("direct-campaign-mission-init");
-          Bootstrap_ResetRecoveredParserAllocatorForDirectMission();
+          Bootstrap_ResetRecoveredParserAllocatorForDirectRoute("direct-campaign-parser-allocator-reset");
           WorldMap_Initialize((char)mission_index, 0);
           if ( !dword_54DBA8 )
           {
@@ -1349,6 +1349,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
         Bootstrap_TraceDirectMission("direct-campaign-mission-return");
         return;
       }
+      Bootstrap_ResetRecoveredParserAllocatorForDirectRoute("direct-mission-parser-allocator-reset");
       Bootstrap_TraceDirectMission("direct-mission-worldmap-init");
       WorldMap_Initialize(0, 0);
       Bootstrap_TraceDirectMission("direct-mission-load");

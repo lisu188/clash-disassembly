@@ -47,8 +47,8 @@ click 449 55 0.18 0.8 minimap-shrine
 wait 0.8
 click 320 240 0.18 1.5 shrine-target
 wait_log 30 temple_path_queued selected=5 a=16 b=11
-click 320 240 0.18 2.5 shrine-target-confirm
-wait_log 30 unit_move_after_path_state selected=5
+click 320 240 0.03 2.5 shrine-target-confirm
+wait_log 30 unit_move_after_path_state selected=5 a=43 b=40 c=63
 nonblank after-first-march-leg
 
 # The bridge-crossing march can legitimately spend the stack's AP before the
@@ -61,8 +61,123 @@ click 320 240 0.12 0.65 post-end-turn-2-skip-2
 click 320 240 0.12 0.65 post-end-turn-2-skip-3
 click 320 240 0.12 0.65 post-end-turn-2-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
-click 384 176 0.18 1.0 select-queued-stack-after-second-turn
-wait_log 20 selected_stack_changed selected=5 a=8 b=13
-click 384 176 0.18 3.0 continue-queued-shrine-path
+click 320 48 0.18 1.0 select-queued-stack-after-second-turn
+wait_log 20 selected_stack_changed selected=5 a=43 b=40
+click 449 55 0.18 0.8 minimap-shrine-leg-2
+wait 0.8
+click 320 240 0.18 1.5 shrine-target-leg-2
+click 320 240 0.03 2.5 shrine-target-leg-2-confirm
+wait_log 45 unit_move_after_path_state selected=5 a=44 b=31 c=53
+nonblank after-second-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-3
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-3-skip-1
+click 320 240 0.12 0.65 post-end-turn-3-skip-2
+click 320 240 0.12 0.65 post-end-turn-3-skip-3
+click 320 240 0.12 0.65 post-end-turn-3-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=4
+click 384 48 0.18 1.0 select-queued-stack-after-third-turn
+wait_log 20 selected_stack_changed selected=5 a=44 b=31
+click 449 55 0.18 0.8 minimap-shrine-leg-3
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-3
+click 320 240 0.03 2.5 shrine-target-leg-3-confirm
+wait_log 45 unit_move_after_path_state selected=5 a=37 b=27 c=45
+nonblank after-third-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-4
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-4-skip-1
+click 320 240 0.12 0.65 post-end-turn-4-skip-2
+click 320 240 0.12 0.65 post-end-turn-4-skip-3
+click 320 240 0.12 0.65 post-end-turn-4-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=5
+click 64 176 0.18 1.0 select-queued-stack-after-fourth-turn
+wait_log 20 selected_stack_changed selected=5 a=37 b=27
+click 449 55 0.18 0.8 minimap-shrine-leg-4
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-4
+click 320 240 0.03 2.5 shrine-target-leg-4-confirm
+wait_log 45 unit_move_after_path_state selected=5 a=26 b=29 c=32
+nonblank after-fourth-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-5
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-5-skip-1
+click 320 240 0.12 0.65 post-end-turn-5-skip-2
+click 320 240 0.12 0.65 post-end-turn-5-skip-3
+click 320 240 0.12 0.65 post-end-turn-5-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=6
+click 128 240 0.18 1.0 select-queued-stack-after-fifth-turn
+wait_log 20 selected_stack_changed selected=5 a=26 b=29
+click 449 55 0.18 0.8 minimap-shrine-leg-5
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-5
+click 320 240 0.03 2.5 shrine-target-leg-5-confirm
+wait_log 45 unit_move_after_path_state selected=5 a=18 b=25 c=22
+nonblank after-fifth-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-6
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-6-skip-1
+click 320 240 0.12 0.65 post-end-turn-6-skip-2
+click 320 240 0.12 0.65 post-end-turn-6-skip-3
+click 320 240 0.12 0.65 post-end-turn-6-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=7
+click 256 176 0.18 1.0 select-queued-stack-after-sixth-turn
+wait_log 20 selected_stack_changed selected=5 a=18 b=25
+click 449 55 0.18 0.8 minimap-shrine-leg-6
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-6
+wait_log 45 unit_move_after_path_state selected=5 a=11 b=20 c=15
+nonblank after-sixth-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-7
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-7-skip-1
+click 320 240 0.12 0.65 post-end-turn-7-skip-2
+click 320 240 0.12 0.65 post-end-turn-7-skip-3
+click 320 240 0.12 0.65 post-end-turn-7-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=8
+click 128 48 0.18 1.0 select-queued-stack-after-seventh-turn
+wait_log 20 selected_stack_changed selected=5 a=11 b=20
+click 449 55 0.18 0.8 minimap-shrine-leg-7
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-7
+wait_log_any 60 mission_objective_complete || unit_move_after_path_state selected=5
+wait_log 45 unit_move_after_path_state selected=5 a=7 b=15 c=10
+nonblank after-seventh-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-8
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-8-skip-1
+click 320 240 0.12 0.65 post-end-turn-8-skip-2
+click 320 240 0.12 0.65 post-end-turn-8-skip-3
+click 320 240 0.12 0.65 post-end-turn-8-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=9
+click 256 112 0.18 1.0 select-queued-stack-after-eighth-turn
+wait_log 20 selected_stack_changed selected=5 a=7 b=15
+click 449 55 0.18 0.8 minimap-shrine-leg-8
+wait 0.8
+click 320 240 0.18 3.0 shrine-target-leg-8
+click 320 240 0.03 2.5 shrine-target-leg-8-confirm
+wait_log 60 unit_move_after_path_state selected=5 a=13 b=13 c=3
+nonblank after-eighth-march-leg
+
+click 500 2 0.18 1.0 end-human-turn-9
+wait 4.0
+click 320 240 0.12 0.65 post-end-turn-9-skip-1
+click 320 240 0.12 0.65 post-end-turn-9-skip-2
+click 320 240 0.12 0.65 post-end-turn-9-skip-3
+click 320 240 0.12 0.65 post-end-turn-9-skip-4
+wait_log 90 playgame_before_human_turn selected=-1 a=0 b=10
+click 449 55 0.18 0.8 minimap-shrine-leg-9-select
+wait 0.8
+click 128 368 0.18 1.0 select-queued-stack-after-ninth-turn
+wait_log 20 selected_stack_changed selected=5 a=13 b=13
+click 320 240 0.03 3.0 shrine-target-leg-9
+click 320 240 0.03 2.5 shrine-target-leg-9-confirm
+wait_log_any 60 mission_objective_complete || unit_move_after_path_state selected=5 a=16 b=11
 wait_log 45 mission_objective_complete
 nonblank after-shrine-complete

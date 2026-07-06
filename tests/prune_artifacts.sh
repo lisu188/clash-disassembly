@@ -89,7 +89,21 @@ if ! is_unsigned_integer "$max_bytes"; then
   exit 2
 fi
 
-mkdir -p "$artifact_root"
+if [ ! -d "$artifact_root" ]; then
+  if [ "$apply" = "1" ]; then
+    mkdir -p "$artifact_root"
+  else
+    print_status "artifact_root=$artifact_root"
+    print_status "mode=dry-run"
+    print_status "before_bytes=0"
+    print_status "group_root_count=0"
+    print_status "artifact_root_missing=1"
+    print_status "prune_candidate_count=0"
+    print_status "prune_candidate_bytes=0"
+    print_status "after_bytes=0"
+    exit 0
+  fi
+fi
 artifacts_real="$(cd "$artifact_root" && pwd -P)"
 
 path_size_bytes() {
@@ -183,11 +197,32 @@ add_colon_separated_group_roots() {
   IFS="$old_ifs"
 }
 
+report_unrecognized_artifact_children() {
+  local child
+  local name
+  local bytes
+
+  if [ ! -d "$artifacts_real" ]; then
+    return 0
+  fi
+  while IFS= read -r child; do
+    name="$(basename "$child")"
+    case "$name" in
+      campaign-routes|first-campaign|multiplayer-maps|soak)
+        ;;
+      *)
+        bytes="$(path_size_bytes "$child")"
+        print_status "unrecognized_artifact_child bytes=$bytes path=$child"
+        ;;
+    esac
+  done < <(find "$artifacts_real" -mindepth 1 -maxdepth 1 -print 2>/dev/null | sort)
+}
+
 group_roots=()
 if [ -n "${CLASH95_ARTIFACT_PRUNE_GROUP_ROOTS:-}" ]; then
   add_colon_separated_group_roots "$CLASH95_ARTIFACT_PRUNE_GROUP_ROOTS"
 else
-  for root in "$artifacts_real"/campaign-routes/mission-* "$artifacts_real"/first-campaign/mission-* "$artifacts_real"/soak/*; do
+  for root in "$artifacts_real"/campaign-routes/mission-* "$artifacts_real"/first-campaign/mission-* "$artifacts_real"/multiplayer-maps/map-* "$artifacts_real"/soak/*; do
     add_group_root "$root"
   done
 fi
@@ -200,6 +235,7 @@ print_status "artifact_root=$artifacts_real"
 print_status "mode=$([ "$apply" = "1" ] && echo apply || echo dry-run)"
 print_status "before_bytes=$before_bytes"
 print_status "group_root_count=${#group_roots[@]}"
+report_unrecognized_artifact_children
 
 if [ "$keep_runs" != "0" ]; then
   for root in "${group_roots[@]}"; do

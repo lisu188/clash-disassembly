@@ -2,6 +2,8 @@ wait_log 60 mission_load_done selected=-1 a=2
 wait_log 60 playgame_before_human_turn
 nonblank mission02-stack3-start
 
+click 496 416 0.22 0.5 next-unit-stack0-initial
+wait_log 20 next_unit_selected selected=0 a=98 b=24
 click 496 416 0.22 0.5 next-unit-stack1-skip
 wait_log 20 next_unit_selected selected=1 a=98 b=25
 click 496 416 0.22 0.8 next-unit-stack3-select
@@ -24,8 +26,8 @@ click 320 240 0.12 0.65 post-stack3-turn-1-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-1-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=2
 
+click 496 416 0.22 0.35 next-unit-stack0-turn-2
 click 496 416 0.22 0.35 next-unit-stack1-turn-2
-wait_log 20 next_unit_selected selected=1 a=98 b=25
 click 496 416 0.22 0.8 next-unit-stack3-turn-2
 wait_log 20 next_unit_selected selected=3 a=93 b=26
 click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-2
@@ -39,6 +41,7 @@ click 320 240 0.12 0.65 post-stack3-turn-2-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-2-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-2-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
+click 496 416 0.22 0.35 next-unit-stack0-turn-3
 click 496 416 0.22 0.45 next-unit-stack1-turn-3
 click 496 416 0.22 0.8 next-unit-stack3-turn-3
 click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-3
@@ -52,6 +55,7 @@ click 320 240 0.12 0.65 post-stack3-turn-3-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-3-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-3-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=4
+click 496 416 0.22 0.35 next-unit-stack0-turn-4
 click 496 416 0.22 0.45 next-unit-stack1-turn-4
 click 496 416 0.22 0.8 next-unit-stack3-turn-4
 click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-4
@@ -65,6 +69,7 @@ click 320 240 0.12 0.65 post-stack3-turn-4-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-4-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-4-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=5
+click 496 416 0.22 0.35 next-unit-stack0-turn-5
 click 496 416 0.22 0.45 next-unit-stack1-turn-5
 click 496 416 0.22 0.8 next-unit-stack3-turn-5
 click 320 240 0.18 2.0 continue-stack3-waypoint-89-45-turn-5
@@ -88,6 +93,7 @@ click 320 240 0.12 0.65 post-stack3-turn-5-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-5-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-5-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=6
+click 496 416 0.22 0.35 next-unit-stack0-turn-6
 click 496 416 0.22 0.45 next-unit-stack1-turn-6
 click 496 416 0.22 0.8 next-unit-stack3-turn-6
 click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-6
@@ -101,6 +107,7 @@ click 320 240 0.12 0.65 post-stack3-turn-6-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-6-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-6-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=7
+click 496 416 0.22 0.35 next-unit-stack0-turn-7
 click 496 416 0.22 0.45 next-unit-stack1-turn-7
 click 496 416 0.22 0.8 next-unit-stack3-turn-7
 click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-7
@@ -114,6 +121,7 @@ click 320 240 0.12 0.65 post-stack3-turn-7-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-7-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-7-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=8
+click 496 416 0.22 0.35 next-unit-stack0-turn-8
 click 496 416 0.22 0.45 next-unit-stack1-turn-8
 click 496 416 0.22 0.8 next-unit-stack3-turn-8
 click 320 240 0.18 2.0 continue-stack3-waypoint-82-63-turn-8
@@ -136,6 +144,7 @@ click 320 240 0.12 0.65 post-stack3-turn-8-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-8-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-8-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=9
+click 496 416 0.22 0.35 next-unit-stack0-turn-9
 click 496 416 0.22 0.45 next-unit-stack1-turn-9
 click 496 416 0.22 0.8 next-unit-stack3-turn-9
 click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-9
@@ -148,6 +157,7 @@ click 320 240 0.12 0.65 post-stack3-turn-9-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-9-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-9-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=10
+click 496 416 0.22 0.35 next-unit-stack0-turn-10
 click 496 416 0.22 0.45 next-unit-stack1-turn-10
 click 496 416 0.22 0.8 next-unit-stack3-turn-10
 click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-10
@@ -168,6 +178,7 @@ click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-2
 click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-3
 click 320 240 0.12 0.65 post-stack3-rest-turn-11-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=12
+click 496 416 0.22 0.35 next-unit-stack0-turn-11
 click 496 416 0.22 0.45 next-unit-stack1-turn-11
 click 496 416 0.22 0.8 next-unit-stack3-turn-11
 click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-11
@@ -180,6 +191,7 @@ click 320 240 0.12 0.65 post-stack3-turn-11-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-11-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-11-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=13
+click 496 416 0.22 0.35 next-unit-stack0-turn-12
 click 496 416 0.22 0.45 next-unit-stack1-turn-12
 click 496 416 0.22 0.8 next-unit-stack3-turn-12
 click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-12
@@ -193,6 +205,7 @@ click 320 240 0.12 0.65 post-stack3-turn-12-skip-2
 click 320 240 0.12 0.65 post-stack3-turn-12-skip-3
 click 320 240 0.12 0.65 post-stack3-turn-12-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=14
+click 496 416 0.22 0.35 next-unit-stack0-turn-13
 click 496 416 0.22 0.45 next-unit-stack1-turn-13
 click 496 416 0.22 0.8 next-unit-stack3-turn-13
 click 320 240 0.18 4.0 continue-stack3-waypoint-60-69-turn-13
@@ -221,6 +234,7 @@ click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-2
 click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-3
 click 320 240 0.12 0.65 post-stack3-treg-turn-16-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=16
+click 496 416 0.22 0.35 next-unit-stack0-treg-turn-17
 click 496 416 0.22 0.45 next-unit-stack1-treg-turn-17
 click 496 416 0.22 0.8 next-unit-stack3-treg-turn-17
 wait_log 30 next_unit_selected selected=3 a=57 b=72
@@ -242,6 +256,7 @@ click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-2
 click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-3
 click 320 240 0.12 0.65 post-stack3-treg-turn-17-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=18
+click 496 416 0.22 0.35 next-unit-stack0-treg-turn-18
 click 496 416 0.22 0.45 next-unit-stack1-treg-turn-18
 click 496 416 0.22 0.8 next-unit-stack3-treg-turn-18
 wait_log 30 next_unit_selected selected=3 a=53 b=76
@@ -263,6 +278,7 @@ click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-2
 click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-3
 click 320 240 0.12 0.65 post-stack3-treg-turn-19-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=20
+click 496 416 0.22 0.35 next-unit-stack0-treg-turn-20
 click 496 416 0.22 0.45 next-unit-stack1-treg-turn-20
 click 496 416 0.22 0.8 next-unit-stack3-treg-turn-20
 wait_log 30 next_unit_selected selected=3 a=48 b=73
@@ -285,6 +301,7 @@ click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-2
 click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-3
 click 320 240 0.12 0.65 post-stack3-treg-turn-21-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=22
+click 496 416 0.22 0.35 next-unit-stack0-treg-turn-22
 click 496 416 0.22 0.45 next-unit-stack1-treg-turn-22
 click 496 416 0.22 0.8 next-unit-stack3-treg-turn-22
 wait_log 30 next_unit_selected selected=3 a=43 b=69

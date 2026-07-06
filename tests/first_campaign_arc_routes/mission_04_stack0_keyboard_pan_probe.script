@@ -107,6 +107,8 @@ wait_log 30 tile_input cursor=64,273 tile=56,69
 click 354 160 0.18 3.0 lead-castle-battle-prompt
 wait 5.0
 battle_click 577 386 4 1.0 select-light-infantry-after-peasant
+battle_click 577 386 4 1.0 confirm-light-infantry-selected
+wait_log 30 battle_action_next_unit_selected selected=1
 battle_key 205 80 1.0 pan-battle-right-to-gate
 battle_click 128 240 4 2.0 attack-gate-10-3
 wait_log 60 battle_wall_attack_return
