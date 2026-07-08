@@ -91,7 +91,7 @@ static void cov3_02_install_lex_router(_DWORD *router, const char *seq) {
   router[3] = (_DWORD)(intptr_t)cov3_02_lex_query;  /* offset12 */
   router[6] = (_DWORD)(intptr_t)cov3_02_lex_read;   /* offset24 */
   router[7] = (_DWORD)(intptr_t)cov3_02_lex_skip;   /* offset28 */
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
   cov3_02_lex_seq = seq;
   cov3_02_lex_pos = 0;
 }
@@ -220,7 +220,7 @@ TEST(cov3_02_reorderagenda, single_module_with_activation_chain) {
   static _DWORD itemArray[4];
   static _DWORD fakeModuleItem[16];
   static _DWORD act1[16], act2[16];
-  int savedSort = dword_51A1D8;
+  int savedSort = g_Rules_ConflictResolutionStrategy;
 
   memset(fakeModule, 0, sizeof fakeModule);
   memset(itemArray, 0, sizeof itemArray);
@@ -234,10 +234,10 @@ TEST(cov3_02_reorderagenda, single_module_with_activation_chain) {
   act1[7] = (_DWORD)(intptr_t)act2;                  /* offset28: next activation */
   act2[7] = 0;
 
-  dword_51A1D8 = 0; /* depth-list sort strategy (default) */
+  g_Rules_ConflictResolutionStrategy = 0; /* depth-list sort strategy (default) */
   TOUCH(Rules_ReorderAgenda((int)(intptr_t)fakeModule));
 
-  dword_51A1D8 = savedSort;
+  g_Rules_ConflictResolutionStrategy = savedSort;
 }
 
 /* =========================================================================
@@ -258,7 +258,7 @@ TEST(cov3_02_reorderagenda, single_module_with_activation_chain) {
 TEST(cov3_02_collectargs, two_symbols_then_close_paren) {
   static _DWORD router[16];
   static _DWORD a1buf[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   memset(a1buf, 0, sizeof a1buf);
   cov3_02_install_lex_router(router, "ab cd)");
@@ -267,13 +267,13 @@ TEST(cov3_02_collectargs, two_symbols_then_close_paren) {
   Rules_InitAtomTables();
   TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 909090, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 TEST(cov3_02_collectargs, unexpected_token_sets_error_flag) {
   static _DWORD router[16];
   static _DWORD a1buf[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   memset(a1buf, 0, sizeof a1buf);
   cov3_02_install_lex_router(router, "|)");
@@ -282,7 +282,7 @@ TEST(cov3_02_collectargs, unexpected_token_sets_error_flag) {
   Rules_InitAtomTables();
   TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 909091, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 /* =========================================================================
@@ -298,7 +298,7 @@ TEST(cov3_02_collectargs, unexpected_token_sets_error_flag) {
  * query callback matches unconditionally. ========================================= */
 TEST(cov3_02_parsedefrulerhs, real_token_drives_success_branch) {
   static _DWORD router[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   cov3_02_install_lex_router(router, "ab)");
 
@@ -306,7 +306,7 @@ TEST(cov3_02_parsedefrulerhs, real_token_drives_success_branch) {
   Rules_InitAtomTables();
   TOUCH(Rules_ParseDefruleRHS(818181));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 /* =========================================================================
@@ -665,7 +665,7 @@ TEST(cov3_02_subclasspcommand, real_two_class_lookup_success) {
  * decompiler-lost `v1` comparison happens to land. ========================= */
 TEST(cov3_02_findfactbyindex, real_fact_chain) {
   static _DWORD fact1[16], fact2[16];
-  int saved = dword_51A15C;
+  int saved = g_Rules_FactListHead;
 
   memset(fact1, 0, sizeof fact1);
   memset(fact2, 0, sizeof fact2);
@@ -676,9 +676,9 @@ TEST(cov3_02_findfactbyindex, real_fact_chain) {
   *(_DWORD *)((char *)fact2 + 36) = 0; /* end of chain */
   fact2[6] = 222;
 
-  dword_51A15C = (int)(intptr_t)fact1;
+  g_Rules_FactListHead = (int)(intptr_t)fact1;
   TOUCH(Rules_FindFactByIndex());
-  dword_51A15C = saved;
+  g_Rules_FactListHead = saved;
 }
 
 /* =========================================================================

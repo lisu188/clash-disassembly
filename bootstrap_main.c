@@ -21,10 +21,10 @@
 extern int g_AppCommandLine;
 extern int g_MousePresentAtStartup;
 extern int dword_51D01C;
-extern int dword_511134;
+extern int g_SdlTransitionAnimSkipRequested;
 extern int g_AppIsActive;
-extern int dword_5188B0;
-extern int dword_5188C0;
+extern int g_OptionsConfigRecordBase;
+extern int g_Options_MusicEnabledFlag;
 extern int dword_5202E0;
 extern int g_PlayGameMenuSpriteSetHandle;
 extern int g_PlayGameMenuExitRequested;
@@ -42,7 +42,7 @@ extern unsigned char byte_54512C;
 extern unsigned char byte_543D80[1024];
 extern unsigned char g_MainMenuButtonWidgetsTemplate[371];
 extern unsigned char g_LoadMenuButtonWidgetsTemplate[159];
-extern unsigned char unk_5196A0;
+extern unsigned char g_CursorDesc_Default;
 extern unsigned char unk_51D4C0;
 extern void *g_RenderDevice;
 extern LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
@@ -86,7 +86,7 @@ void createLogFiles(int a1, int a2, DWORD a3);
 signed int Rules_CompileStrategicRulesFile(void);
 int __fastcall Mem_InitReserveBlock(int a1, int a2);
 int Mem_PurgeFreeListsForSpace(int a1, int a2, int a3);
-int nullsub_4(void);
+int Noop_AppShutdownPreAudioCloseHook(void);
 int Render_LoadResourceBackbuffer(void);
 int Render_DefaultRH(int a1, char a2, DWORD a3);
 int Render_SetPixelFormat(int a1, int a2, int a3, DWORD a4);
@@ -144,8 +144,8 @@ int __stdcall CSS_SetDeviceSearch(int a1);
 signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4);
 int __stdcall CSS_StopSound(int a1, int a2);
 void Video_Avi_playIn(const char *a1, int a2, int a3, int a4, int a5, int a6);
-extern int dword_519F0C;
-extern int dword_519F08;
+extern int g_Mem_PoolInitializedFlag;
+extern int g_Mem_ReservedBlockListHead;
 extern int dword_54DBBC;
 
 int _no_support_loaded(void)
@@ -178,12 +178,12 @@ static void Bootstrap_TraceDirectMission(const char *step)
 
 static void Bootstrap_ResetRecoveredParserAllocatorForDirectMission(void)
 {
-  if ( !dword_519F0C )
+  if ( !g_Mem_PoolInitializedFlag )
     return;
   Bootstrap_TraceDirectMission("direct-campaign-parser-allocator-reset");
   dword_54DBBC = 0;
-  dword_519F08 = 0;
-  dword_519F0C = 0;
+  g_Mem_ReservedBlockListHead = 0;
+  g_Mem_PoolInitializedFlag = 0;
 }
 
 static int Bootstrap_GetMenuProbeAutoClickIndex(void)
@@ -410,7 +410,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   createLogFiles(0, 0, 0);
   Rules_CompileStrategicRulesFile();
   Mem_PurgeFreeListsForSpace(-1, 0, 0);
-  nullsub_4();
+  Noop_AppShutdownPreAudioCloseHook();
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   RenderState_InitCursorResources((int)(intptr_t)g_RenderState, 0, command_mode, 0);
   Render_CreateSprite();
@@ -460,7 +460,7 @@ static void Bootstrap_RunRecoveredVideoInitProbe(char command_mode)
   Bootstrap_TraceMenuProbe("video-init-device-get-param-a");
   Device_GetParamA((int)(intptr_t)g_RenderState, 0);
   Bootstrap_TraceMenuProbe("video-init-nullsub_4");
-  nullsub_4();
+  Noop_AppShutdownPreAudioCloseHook();
   Bootstrap_TraceMenuProbe("video-init-set-pixel-format");
   Render_SetPixelFormat((int)(intptr_t)&unk_51D4C0, (int)(intptr_t)hWnd, 16, 0);
   Bootstrap_TraceMenuProbe("video-init-sub_460490");
@@ -535,7 +535,7 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
   Bootstrap_SurfaceRendererLoadGfx(dword_5202E0, "menu\\main.gfx");
   Bootstrap_TraceMenuProbe("load-menu-pal");
   Palette_LoadOrBuildBlendLookupTable("menu\\main", (int)(intptr_t)byte_543D80, 0, 0);
-  if ( menu_entry_mode && dword_5188C0 )
+  if ( menu_entry_mode && g_Options_MusicEnabledFlag )
   {
     Bootstrap_TraceMenuProbe("start-menu-music");
     g_MainMenuMusicHandle = Sound_PlayNamedSfxFile("music\\menu", 64);
@@ -601,8 +601,8 @@ static void Bootstrap_RunRecoveredMainMenuFirstFrameProbe(char command_mode)
     Bootstrap_TraceMenuProbe("skip-menu-text-cache-template-missing");
   }
   Bootstrap_TraceMenuProbe("select-cursor-descriptor");
-  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&unk_5196A0);
-  dword_545150 = (int)(intptr_t)&unk_5196A0;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  dword_545150 = (int)(intptr_t)&g_CursorDesc_Default;
   Bootstrap_TraceMenuProbe("present-menu");
   Render_Present((int)(intptr_t)g_RenderState);
 
@@ -926,8 +926,8 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
   Bootstrap_TraceMenuProbe("load-menu-build-text-cache");
   RenderState_LoadOrRenderCursorLabelSprite((int)(intptr_t)g_RenderState, (int)(intptr_t)byte_543D80, 0, 0);
   Bootstrap_TraceMenuProbe("load-menu-select-cursor-descriptor");
-  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&unk_5196A0);
-  dword_545150 = (int)(intptr_t)&unk_5196A0;
+  RenderState_SelectCursorDescriptor((int)(intptr_t)g_RenderState, (int)(intptr_t)&g_CursorDesc_Default);
+  dword_545150 = (int)(intptr_t)&g_CursorDesc_Default;
   Bootstrap_TraceMenuProbe("load-menu-present");
   Render_Present((int)(intptr_t)g_RenderState);
   Bootstrap_TraceMenuProbe("load-menu-force-window-present");
@@ -1181,7 +1181,7 @@ static void Bootstrap_RunRecoveredLoadGameMenuProbe(char command_mode)
     }
 
     Bootstrap_TraceMenuProbe("load-menu-loop-pump");
-    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)&unk_5196A0);
+    DD_Pump((int)(intptr_t)g_RenderState, (char)(intptr_t)&g_CursorDesc_Default);
     if ( auto_hover_exit_on_select )
     {
       if ( dword_544CFC >> byte_54512C >= 244 && dword_544CFC >> byte_54512C <= 410 )
@@ -1305,9 +1305,9 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
       dword_51D01C = 0;
 
     if ( !lpCommandLine[0] || (lpCommandLine[1] != 'n' && lpCommandLine[1] != 'N') )
-      dword_511134 = 1;
+      g_SdlTransitionAnimSkipRequested = 1;
     else
-      dword_511134 = 0;
+      g_SdlTransitionAnimSkipRequested = 0;
 
     if ( dword_51D01C )
     {
@@ -1353,7 +1353,7 @@ static void Bootstrap_RunRecoveredGameEntry(char command_mode, LPSTR lpCommandLi
       WorldMap_Initialize(0, 0);
       Bootstrap_TraceDirectMission("direct-mission-load");
       Scenario_LoadAllAiMultiplayerMapAndInitView(mission_index);
-      dword_5188B0 = 0;
+      g_OptionsConfigRecordBase = 0;
       Bootstrap_TraceDirectMission("direct-mission-playgame");
       PlayGame(0, 0, 0, 0, 0.0);
       Bootstrap_TraceDirectMission("direct-mission-playgame-return");

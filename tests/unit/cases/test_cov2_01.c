@@ -270,17 +270,17 @@ TEST(cov2_01_findfreeprisonerslot, found_and_full) {
 /* to exercise that guard explicitly. */
 /* ------------------------------------------------------------------ */
 TEST(cov2_01_definstdeleterecord, bloaded_guard) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   CHECK_EQ(Definstances_DeleteRecord(), 0);
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov2_01_definstdeleterecord, not_bloaded_variety) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 0;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 0;
   TOUCH(Definstances_DeleteRecord());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* ------------------------------------------------------------------ */

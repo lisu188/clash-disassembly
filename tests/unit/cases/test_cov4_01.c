@@ -94,7 +94,7 @@ static void cov4_01_install_lex_router(_DWORD *router, const char *seq) {
   router[3] = (_DWORD)(intptr_t)cov4_01_lex_query; /* offset12 */
   router[6] = (_DWORD)(intptr_t)cov4_01_lex_read;  /* offset24 */
   router[7] = (_DWORD)(intptr_t)cov4_01_lex_skip;  /* offset28 */
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
   cov4_01_lex_seq = seq;
   cov4_01_lex_pos = 0;
 }
@@ -150,7 +150,7 @@ static int *cov4_01_register_fake_class(const char *name) {
 TEST(cov4_01_collectargs, two_symbols_then_eof_fresh_context) {
   static _DWORD router[16];
   static _DWORD a1buf[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   char pad[64];
   memset(pad, 0x11, sizeof pad);
   memset(a1buf, 0, sizeof a1buf);
@@ -161,13 +161,13 @@ TEST(cov4_01_collectargs, two_symbols_then_eof_fresh_context) {
   TOUCH(pad[0]);
   TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 424242, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 TEST(cov4_01_collectargs, three_symbols_then_eof_fresh_context) {
   static _DWORD router[16];
   static _DWORD a1buf[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   char pad[128];
   memset(pad, 0x22, sizeof pad);
   memset(a1buf, 0, sizeof a1buf);
@@ -178,13 +178,13 @@ TEST(cov4_01_collectargs, three_symbols_then_eof_fresh_context) {
   TOUCH(pad[1]);
   TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 434343, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 TEST(cov4_01_collectargs, unexpected_token_immediately_fresh_context) {
   static _DWORD router[16];
   static _DWORD a1buf[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   char pad[32];
   memset(pad, 0x33, sizeof pad);
   memset(a1buf, 0, sizeof a1buf);
@@ -195,7 +195,7 @@ TEST(cov4_01_collectargs, unexpected_token_immediately_fresh_context) {
   TOUCH(pad[2]);
   TOUCH(Parser_CollectFunctionArguments((int)(intptr_t)a1buf, 444444, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 /* =========================================================================
@@ -406,7 +406,7 @@ TEST(cov4_01_genconstructtables, single_attempt_lost_filepath_chain) {
  * runs cleanly via Mem_Realloc. ========================================= */
 TEST(cov4_01_readlinewithescaping, one_char_then_newline) {
   static _DWORD router[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   int length = 0;
   unsigned int capacity = 0;
   unsigned int savedEvalErr = dword_51A968;
@@ -419,7 +419,7 @@ TEST(cov4_01_readlinewithescaping, one_char_then_newline) {
    * instead of walking the dword_51A604 router chain. */
   TOUCH(Rules_ReadLineWithEscaping(777, &length, &capacity, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
   dword_51A968 = savedEvalErr;
 }
 

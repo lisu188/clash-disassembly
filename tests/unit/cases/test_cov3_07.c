@@ -211,22 +211,22 @@ TEST(cov3_07_mainmenu, request_campaign_menu) {
  * from varied stack contexts too, TOUCH-only, in case leftover garbage
  * happens to land favorably. ============================================= */
 TEST(cov3_07_definstances, delete_record_bloaded_short_circuit) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   CHECK_EQ(Definstances_DeleteRecord(), 0);
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov3_07_definstances, delete_record_not_bloaded_retry_for_luck) {
   char pad[128];
-  int saved = dword_51A1AC;
+  int saved = g_Rules_FactsBloadedFlag;
   int i;
-  dword_51A1AC = 0;
+  g_Rules_FactsBloadedFlag = 0;
   for (i = 0; i < 4; ++i) {
     memset(pad, i + 1, (size_t)(29 + i * 13));
     TOUCH(Definstances_DeleteRecord());
   }
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* =======================================================================

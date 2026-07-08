@@ -387,7 +387,7 @@ TEST(cov3_01_printmultifieldrange, wider_range_multi_element) {
 TEST(cov3_01_readline, real_stream_chars) {
   static _DWORD strm[4]; /* {current-ptr, remaining-count} */
   static unsigned char text[8] = "ab";
-  int savedStream = dword_51A608;
+  int savedStream = g_IO_FastLoadFilePtr;
   int a2out = 0;
   unsigned int a3out = 0;
 
@@ -396,9 +396,9 @@ TEST(cov3_01_readline, real_stream_chars) {
   strm[1] = 2; /* remaining count */
 
   Mem_InitReserveBlock(0, 0);
-  dword_51A608 = (int)(intptr_t)strm;
+  g_IO_FastLoadFilePtr = (int)(intptr_t)strm;
   TOUCH(Rules_ReadLineWithEscaping((int)(intptr_t)strm, &a2out, &a3out, 0));
-  dword_51A608 = savedStream;
+  g_IO_FastLoadFilePtr = savedStream;
 }
 
 /* =====================================================================

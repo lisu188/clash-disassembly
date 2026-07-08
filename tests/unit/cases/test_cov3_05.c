@@ -213,10 +213,10 @@ TEST(cov3_05_lexreadtoken, bracket_multifield_name) {
   *(int *)(router + 28) = (int)(intptr_t)cov3_05_lex_skip;
   *(int *)(router + 32) = 0;
 
-  saved604 = dword_51A604;
-  saved608 = dword_51A608;
-  dword_51A604 = (int)(intptr_t)router;
-  dword_51A608 = 0x7A7A7A00; /* sentinel a1 will never equal */
+  saved604 = g_IO_RouterListHead;
+  saved608 = g_IO_FastLoadFilePtr;
+  g_IO_RouterListHead = (int)(intptr_t)router;
+  g_IO_FastLoadFilePtr = 0x7A7A7A00; /* sentinel a1 will never equal */
 
   cov3_05_lex_stream = "[ab] ";
   cov3_05_lex_pos = 0;
@@ -224,8 +224,8 @@ TEST(cov3_05_lexreadtoken, bracket_multifield_name) {
   memset(outType, 0, sizeof(outType));
   TOUCH(Lexer_ReadToken(0x1234, 0, outType, 999));
 
-  dword_51A604 = saved604;
-  dword_51A608 = saved608;
+  g_IO_RouterListHead = saved604;
+  g_IO_FastLoadFilePtr = saved608;
 }
 
 /* =======================================================================
@@ -279,26 +279,26 @@ TEST(cov3_05_placerandom, equal_keys_break) {
  * we cannot control, so we also just call it plainly a couple more times.
  * ======================================================================= */
 TEST(cov3_05_deffunctiondelete, isbloaded_true) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   TOUCH(Deffunction_Delete());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov3_05_deffunctiondelete, isbloaded_false_a) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 0;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 0;
   cov3_05_bootstrap();
   TOUCH(Deffunction_Delete());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov3_05_deffunctiondelete, isbloaded_false_b) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 0;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 0;
   cov3_05_bootstrap();
   TOUCH(Deffunction_Delete());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* =======================================================================
@@ -517,13 +517,13 @@ TEST(cov3_05_clearactivationsformodule, one_activation) {
  * "no matching router" fallback inside Lexer_PeekChar instead.
  * ======================================================================= */
 TEST(cov3_05_dribblegetcrouter, avoid_file_router_crash) {
-  int saved604 = dword_51A604;
-  int saved608 = dword_51A608;
-  dword_51A604 = 0;
-  dword_51A608 = 0x7A7A7A00;
+  int saved604 = g_IO_RouterListHead;
+  int saved608 = g_IO_FastLoadFilePtr;
+  g_IO_RouterListHead = 0;
+  g_IO_FastLoadFilePtr = 0x7A7A7A00;
   TOUCH(Dribble_GetcRouter());
-  dword_51A604 = saved604;
-  dword_51A608 = saved608;
+  g_IO_RouterListHead = saved604;
+  g_IO_FastLoadFilePtr = saved608;
 }
 
 TEST(cov3_05_dribblegetcrouter, plain_call) { TOUCH(Dribble_GetcRouter()); }

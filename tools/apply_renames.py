@@ -15,7 +15,15 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from apply_sub_renames import split_code_and_literals, CODE_FILES  # noqa: E402
+from apply_sub_renames import split_code_and_literals  # noqa: E402
+from apply_sub_renames import CODE_FILES as BASE_CODE_FILES  # noqa: E402
+import glob as _glob  # noqa: E402
+
+# Also rewrite the unit-test sources, which call recovered symbols by name.
+CODE_FILES = list(BASE_CODE_FILES) + sorted(
+    _glob.glob("tests/unit/**/*.c", recursive=True)
+    + _glob.glob("tests/unit/*.h")
+)
 
 IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 MACHINE_RE = re.compile(

@@ -398,7 +398,7 @@ TEST(cov2_07_diag, trace_castle_hotspots_partial) {
 
   memset(surface, 0, sizeof surface);
   memset(pixels, 0, sizeof pixels);
-  surface[46] = (unsigned int)(uintptr_t)off_50EE24;
+  surface[46] = (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable;
   surface[0] = 8 | (8 << 16); /* width=8 height=8 */
   surface[1] = (unsigned int)(uintptr_t)pixels;
   for (i = 0; i < 3; ++i)

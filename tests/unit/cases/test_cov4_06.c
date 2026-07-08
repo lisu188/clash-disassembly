@@ -552,8 +552,8 @@ TEST(cov4_06_writeexpressionreftocode, non_null_node_attempt) {
  * with Rules_IsBloaded() forced false so at least the guard clause is
  * skipped and whatever 'v0' resolves to at runtime gets exercised. ---- */
 TEST(cov4_06_isdeletablealt, not_bloaded_attempt) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 0;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 0;
   TOUCH(Class_IsDeletableAlt());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }

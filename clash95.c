@@ -76,18 +76,8 @@
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_SHRINE 2
 #define RELIGIOUS_SITE_CATEGORY_CULT_PLACE 3
 #define RELIGIOUS_SITE_CATEGORY_EMPTY_CULT_PLACE 4
-#define g_SettlementTaxBurdenThresholds byte_515D00
-#define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)dword_517B48)
-#define g_PrisonerDeathByExhaustionTexts off_518D98
-#define g_QueenSonBirthTexts off_519350
-#define g_QueenDaughterBirthTexts off_51935C
+#define g_PortReinforcementSpawnRingOffsets ((PortSpawnOffset *)g_PortSpawnRingOffsetsTable)
 #define g_QueenBirthMessageBuffer g_QueenDepartureEventMessageBuffer
-#define g_ShrineTexts off_511B68
-#define g_EmptyShrineTexts off_511B74
-#define g_CultPlaceTexts off_511B80
-#define g_EmptyCultPlaceTexts off_511B8C
-#define g_CastleFoundationTexts off_511B98
-#define g_HiddenTreasureTexts off_511BA4
 #define unit_stats g_UnitTypeCorpseSpriteBaseIndex
 #define dword_532060 g_UnitBattleChargeModeActive
 #define dword_532074 g_UnitBattleChargeModeStartTick
@@ -238,7 +228,7 @@ typedef struct TileHighlightSlot
   int tile_y;
 } TileHighlightSlot;
 
-#define g_QueenWhimRecords ((QueenWhimRecord *)&word_5191F0)
+#define g_QueenWhimRecords ((QueenWhimRecord *)&g_QueenWhimRecords_5191F0)
 #define dword_5451A8 (g_InputBackendState.mouse_delta_x)
 #define dword_5451AC (g_InputBackendState.mouse_delta_y)
 #define byte_5451C0 (*((signed char *)&g_InputBackendState.mouse_button_primary))
@@ -253,13 +243,13 @@ typedef struct TileHighlightSlot
 #define Unit_CalcEffectivenessC UnitStats_CalcEffectiveShotPower
 #define Unit_GetBaseC UnitStats_GetBaseShotPower
 #define Unit_CalcEffectivenessD UnitStats_CalcEffectiveWallAttack
-#define byte_51257E g_UnitTypeBaseMeleeAttack
-#define byte_51257F g_UnitTypeBaseDefensePower
-#define byte_512580 g_UnitTypeBaseActionPoints
-#define byte_512581 g_UnitTypeBaseShotPower
-#define byte_512582 g_UnitTypeMaxRange
-#define byte_512583 g_UnitTypeMinRange
-#define byte_512584 g_UnitTypeBaseWallAttack
+#define g_UnitTypeBaseMeleeAttack_51257E g_UnitTypeBaseMeleeAttack
+#define g_UnitTypeBaseDefensePower_51257F g_UnitTypeBaseDefensePower
+#define g_UnitTypeBaseActionPoints_512580 g_UnitTypeBaseActionPoints
+#define g_UnitTypeBaseShotPower_512581 g_UnitTypeBaseShotPower
+#define g_UnitTypeMaxRange_512582 g_UnitTypeMaxRange
+#define g_UnitTypeMinRange_512583 g_UnitTypeMinRange
+#define g_UnitTypeBaseWallAttack_512584 g_UnitTypeBaseWallAttack
 
 
 //-------------------------------------------------------------------------
@@ -267,19 +257,19 @@ typedef struct TileHighlightSlot
 
 int App_Shutdown();
 int  Game_Init(int a1, char a2, DWORD a3);
-int nullsub_15(void);
-int nullsub_16(void);
-int nullsub_19(void);
-int nullsub_23(void);
-int nullsub_24(void);
-int nullsub_29(void);
-int nullsub_30(void);
-int nullsub_32(void);
+int Noop_InputDeviceDoOp(void);
+int Noop_PathEntryArrayDeletingDtor(void);
+int Noop_SurfaceCursorUnboundedAdvance(void);
+int Noop_InputDeviceGetParamB(void);
+int Noop_InputDeviceSetParamA(void);
+int Noop_FatalQueryStreamDestruct(void);
+int Noop_FatalQueryStreamPutBackByte(void);
+int Noop_RulesRecordScalarDeletingDtor(void);
 _DWORD * WCIsvListBase_dtorVariant104(WCIsvListBase *this);
 _DWORD *unknown_libname_3(WCIsvListBase *this);
-int __fastcall nullsub_6(_DWORD, _DWORD);
-int nullsub_9(void);
-int nullsub_10(void);
+int __fastcall Noop_CrtExitHandlerPair(_DWORD, _DWORD);
+int Noop_CrtLockEnterLeaveResetStub(void);
+int Noop_CrtIoInitHook(void);
 int j___NTRemoveFileHandle_(void);
 int _no_support_loaded(void);
 __int64 __fastcall CRT_GetBootstrapThreadData(_DWORD, _DWORD);
@@ -289,8 +279,8 @@ int __cdecl ProcParam_RegisterPrimitiveTypes(void);
 int __cdecl Rules_RegisterPatternConstraintEvaluators(void);
 int __cdecl Parser_RegisterProceduralFunctionParsers(void);
 int __cdecl Rules_RegisterObjectPatternConstraintEvaluators(void);
-extern _UNKNOWN unk_511210;
-extern _UNKNOWN unk_511220;
+extern _UNKNOWN g_RenderBackbufferScanlineBuffer;
+extern _UNKNOWN g_RenderPaletteRemapBuffer;
 typedef struct RenderSurfaceStorage {
   unsigned char bytes[0xC0];
 } RenderSurfaceStorage;
@@ -345,14 +335,14 @@ typedef struct EvalMultifieldEntry {
 extern RenderPrimarySurfaceStorage unk_51D4C0;
 extern RenderSurfaceStorage unk_51D9A0;
 extern _BYTE byte_51DE60[1024];
-extern _UNKNOWN unk_512008;
-extern char *off_5123CC[102];
+extern _UNKNOWN g_WorldMapTopMenuHitTargetA;
+extern char *g_UnitTypeMetadataRecordsStorage[102];
 extern _BYTE byte_5441A0[11];
-extern _UNKNOWN unk_519AE8;
+extern _UNKNOWN g_Audio_DriverModuleTableBase;
 extern _UNKNOWN unk_51A8EC;
-extern char unk_50293C[];
-extern _DWORD unk_51A290[11];
-extern _UNKNOWN unk_508D50[];
+extern char g_CLIPS_BsaveHeaderMagic[];
+extern _DWORD g_Rules_ObjectPatternVTable[11];
+extern _UNKNOWN g_Runtime_CompactEvalClipsSignature[];
 typedef struct __attribute__((packed)) RenderSpriteRemapEntry {
   unsigned short sprite_id;
   unsigned char timing;
@@ -370,9 +360,9 @@ extern unsigned short word_522B28[1038];
 extern RenderSpriteRemapEntry word_521338[1024];
 #define byte_52133A (((unsigned char *)word_521338) + 2)
 extern __int16 word_522CF6;
-extern __int16 word_511B2C[7];
-extern __int16 word_511B3A[2];
-extern __int16 word_511B3E[5];
+extern __int16 g_WorldMapAmbientAnimFramesSetA[7];
+extern __int16 g_WorldMapAmbientAnimFramesSetB[2];
+extern __int16 g_WorldMapAmbientAnimFramesSetC[5];
 extern int dword_520294;
 extern int dword_5202A4;
 extern int dword_5202A8;
@@ -405,21 +395,21 @@ extern char aWbste[];
 extern char aBagno7pa[];
 extern char aSwamp7ap[];
 extern char aSumpf[];
-extern int unk_519920[];
-extern int unk_519858[];
-extern int unk_5198A8[];
-extern int unk_519830[];
-extern int unk_5198F8[];
-extern int unk_519718[];
-extern int unk_5198D0[];
-extern int unk_519880[];
+extern int g_CursorDesc_SelectedUnitHover[];
+extern int g_CursorDesc_CannotSelect[];
+extern int g_CursorDesc_CannotAttack[];
+extern int g_CursorDesc_EnterSite[];
+extern int g_CursorDesc_CannotEnter[];
+extern int g_CursorDesc_GoTo[];
+extern int g_CursorDesc_DeliverCargo[];
+extern int g_CursorDesc_VisitBuilding[];
 extern int dword_5202B4;
-extern char *off_511B68[21];
-extern char *off_511B74[18];
-extern char *off_511B80[15];
-extern char *off_511B8C[12];
-extern char *off_511B98[9];
-extern char *off_511BA4[6];
+extern char *g_ShrineTexts[21];
+extern char *g_EmptyShrineTexts[18];
+extern char *g_CultPlaceTexts[15];
+extern char *g_EmptyCultPlaceTexts[12];
+extern char *g_CastleFoundationTexts[9];
+extern char *g_HiddenTreasureTexts[6];
 extern char aBlad[];
 extern char aError[];
 extern char aError_0[];
@@ -467,25 +457,25 @@ extern char aSkipping[];
 extern char aBload[];
 char aJ_0[3] = "+j"; // weak
 extern char aResetdefglobal[];
-extern int dword_5146C8[];
-extern int (*off_5146E0[])();
-extern unsigned char unk_5146C0[];
-extern char *off_514834[];
-extern int dword_517B48[];
-extern int dword_517B4C[];
+extern int g_BuildBuildingActionWidgetStateBase[];
+extern int (*g_BuildBuildingActionWidgetHandlerBase[])();
+extern unsigned char g_BuildBuildingActionWidgetTable[];
+extern char *g_BuildBuildingCompletionMessageStrings[];
+extern int g_PortSpawnRingOffsetsTable[];
+extern int g_PortSpawnRingOffsetsOverlapTail[];
 extern unit_type g_PortReinforcementUnitTypePool[];
-extern unsigned char unk_517BF0[];
-extern unsigned char unk_517CE0[];
-extern unsigned char unk_517DB8[];
-extern unsigned char unk_517DD0[];
-extern char *off_519350[];
-extern char *off_51935C[];
+extern unsigned char g_TreasureDigOutcomeTable_TempleActive[];
+extern unsigned char g_TreasureDigOutcomeTable_TempleInactive[];
+extern unsigned char g_Mission7ScriptedTreasureEventData[];
+extern unsigned char g_Mission17ScriptedTreasureEventData[];
+extern char *g_QueenSonBirthTexts[];
+extern char *g_QueenDaughterBirthTexts[];
 extern char g_QueenDepartureEventMessageBuffer[];
 extern char *g_QueenDepartureTexts[];
 extern char *g_QueenCastleTreasuryTheftTexts[];
 extern char *g_QueenCastleWellPoisoningTexts[];
 extern char *g_QueenCastleArsonTexts[];
-extern __int16 word_5191F0;
+extern __int16 g_QueenWhimRecords_5191F0;
 extern char g_QueenBirthMessageBuffer[];
 #define dword_51ACC4 HIDWORD(qword_51ACC0)
 _DWORD ExcString_AsCharPtr(void);
@@ -497,7 +487,7 @@ int __fastcall unknown_libname_7(int a1);
 int __fastcall unknown_libname_8(int a1);
 int __fastcall mblen_(int a1, int a2);
 int __fastcall mblen__0(int a1, int a2);
-double dbl_502FDC = 0.5;
+double g_Rules_AverageRoundingBias = 0.5;
 char __thiscall DetectGameCDPath(void *this);
 int  Str_ConstructHolderViaBaseCtor(_DWORD *a1);
 _DWORD * Str_ConstructHolderInline(_DWORD *result);
@@ -892,7 +882,7 @@ void __fastcall UI_UpdateTileBlinkFlash(int a1, int a2);
 signed int  UI_HighlightTile(int a1, int a2);
 int __thiscall UI_ClearTileHighlight(void *this);
 int  UI_DrawTileHighlightOverlay(int a1, int a2, int a3, int a4);
-int nullsub_1(void); // weak
+int Noop_WorldMapFrameRedrawHook(void); // weak
 void BattleLog_Disable();
 void BattleLog_Enable();
 void  createLogFiles(int a1, int a2, DWORD a3);
@@ -961,7 +951,7 @@ void * Building_ShowHoverInfoPopup(unsigned __int8 *a1, char a2, int a3);
 int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double a4);
 DWORD Timer_InitPerfCounterFrequency();
 int __fastcall Time_Now(int a1, int a2);
-int __thiscall nullsub_2(_DWORD); // weak
+int __thiscall Noop_AppShutdownPostAudioCloseHook(_DWORD); // weak
 unsigned int  Timer_BusyWaitWithCallback(int a1, int a2, int a3);
 int __thiscall Mem_ConstructObjectArray256(void *this);
 int  Castle_RequestManagementScreenExit(uintptr_t a1, int a2);
@@ -1391,7 +1381,7 @@ int  UI_ShowSimpleTextInfoWindow(int a1, int a2, char a3, DWORD a4);
 int  Queen_ShowMarriageProposalDialog(int a1, char a2, DWORD a3);
 int  Queen_ShowMessageDialog(int a1, int a2, char a3, DWORD a4);
 int  UI_ShowMissionStatusPanel(int a1, DWORD a2);
-int __thiscall nullsub_3(_DWORD); // weak
+int __thiscall Noop_PlayGameSessionBoundaryHook(_DWORD); // weak
 int Debug_GetUsedMemoryCount();
 int __thiscall Object_ConstructInt256Array(void *this);
 void MainMenu_RebuildButtonWidgetTemplate(void);
@@ -1671,14 +1661,14 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3);
 int Input_Init();
 int Input_Shutdown();
 int  DD_GetSurfacePitch(int a1);
-int nullsub_4(void); // weak
+int Noop_AppShutdownPreAudioCloseHook(void); // weak
 BOOL  Input_IsKeyPressed(int a1);
 BOOL Input_IsAnyKeyPressed();
 signed int Input_PopKey();
 char  Input_KeyToChar(unsigned int a1);
 BOOL  Input_ClearKey(int a1, int a2);
 int Input_MouseInit();
-int nullsub_5(void); // weak
+int Noop_DebugHotkeyF1Handler(void); // weak
 BOOL Input_MousePresent();
 BOOL Input_MouseAcquire();
 int  Render_DefaultRH(int a1, char a2, DWORD a3);
@@ -2129,7 +2119,7 @@ int __fastcall WCIsvListBase_base_insert(int list_handle, int link_handle);
 int __fastcall WCIsvListBase_base_sget(int list_handle);
 void WCIsvListBase_base_destroy(WCIsvListBase *this);
 _DWORD WCIsvListBase_dtor(WCIsvListBase *this);
-int __thiscall nullsub_7(_DWORD); // weak
+int __thiscall Noop_WCIsvListErrorHook(_DWORD); // weak
 void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this);
 int __cdecl strrchr_();
 char *Compat_StrrchrChar(const char *text, int ch);
@@ -2605,7 +2595,7 @@ int  Str_ParseSignedInt(char *a1);
 // int __fastcall tolower_(_DWORD, _DWORD); weak
 // int __cdecl _set_errno_dos_(_DWORD); weak
 // int __cdecl _set_errno_nt_(_DWORD); weak
-_DWORD nullsub_8(); // weak
+_DWORD Noop_CrtSingleThreadLockStub(); // weak
 _DWORD j___NTAddFileHandle_(); // weak
 int  CRT_InitializeProcessStartupInfo(int a1, int a2, int a3, HMODULE a4);
 int  CRT_InitializeRuntimeBeforeWinMain(int a1, int a2);
@@ -2767,7 +2757,7 @@ char * Str_AppendCharEscaping(int a1, char *a2, unsigned int *a3, int *a4, unsig
 _DWORD * Rules_InsertPriorityCallbackReturningHead(int a1, int a2, signed int a3, int a4);
 int  Rules_RemoveNamedCallbackReturningHead(int a1, int a2, _DWORD *a3);
 int __fastcall Rules_RegisterDeftemplateFunctions(int a1, int a2);
-int __fastcall nullsub_11(_DWORD, _DWORD); // weak
+int __fastcall Noop_DeftemplateResetCallback(_DWORD, _DWORD); // weak
 int __thiscall Rules_InternInitialFactSymbol(void *this);
 int  Rules_ClearDeftemplateModuleData(signed int a1);
 int __thiscall Rules_UndeftemplateCommand(void *this);
@@ -4896,22 +4886,22 @@ _UNKNOWN loc_46C495; // weak
 _UNKNOWN loc_46C6D7; // weak
 _UNKNOWN loc_46C9B9; // weak
 _UNKNOWN loc_46CE33; // weak
-void *off_46BC89 = &loc_46BC9D; // weak
-void *off_46BCF3 = &loc_46BD07; // weak
-void *off_46BDD1 = &loc_46BDE5; // weak
-void *off_46BE97 = &loc_46BEAB; // weak
-void *off_46BF6D = &loc_46BF81; // weak
-void *off_46C03F = &loc_46C053; // weak
-void *off_46C1B1 = &loc_46C1C5; // weak
-void *off_46C30B = &loc_46C31F; // weak
-void *off_46C481 = &loc_46C495; // weak
-void *off_46C6C3 = &loc_46C6D7; // weak
-void *off_46C9A5 = &loc_46C9B9; // weak
-void *off_46CE1F = &loc_46CE33; // weak
+void *g_Audio_MixMonoVoiceDispatchBase = &loc_46BC9D; // weak
+void *g_Audio_MixPannedVoiceDispatchBase = &loc_46BD07; // weak
+void *g_Audio_SelectMixFormat1MonoDispatchBase = &loc_46BDE5; // weak
+void *g_Audio_SelectMixFormat1StereoDispatchBase = &loc_46BEAB; // weak
+void *g_Audio_SelectMixFormat2MonoDispatchBase = &loc_46BF81; // weak
+void *g_Audio_SelectMixFormat2StereoDispatchBase = &loc_46C053; // weak
+void *g_Audio_SelectMixFormat3MonoDispatchBase = &loc_46C1C5; // weak
+void *g_Audio_SelectMixFormat3StereoDispatchBase = &loc_46C31F; // weak
+void *g_Audio_SelectMixFormat4MonoDispatchBase = &loc_46C495; // weak
+void *g_Audio_SelectMixFormat4StereoDispatchBase = &loc_46C6D7; // weak
+void *g_Audio_SelectMixFormat5MonoDispatchBase = &loc_46C9B9; // weak
+void *g_Audio_SelectMixFormat5StereoDispatchBase = &loc_46CE33; // weak
 tagRECT j____wcpp_4_fs_handler_rtn_ = { 50130921, 1413568256, 1397575491, -1144944303 }; // idb
 _UNKNOWN strstr_; // weak
 // extern _UNKNOWN _wcpp_4_alloc_exc__; weak
-void *off_4C61F0 = (void *)0x487883; // weak
+void *g_Class_BsaveWriteUnknownSectionFn = (void *)0x487883; // weak
 _UNKNOWN strncat_; // weak
 int g_InputBackendMouseDataFormat[5] = { 24, 16, 2, 16, 7 }; // weak
 int g_InputBackendKeyboardDataFormat[5] = { 24, 16, 2, 256, 256 }; // weak
@@ -4957,11 +4947,11 @@ char aWrong_3[6] = "wrong"; // weak
 char aWrong_4[6] = "wrong"; // weak
 char aWrong_5[6] = "wrong"; // weak
 char aWrong_6[6] = "wrong"; // weak
-_UNKNOWN unk_4EC79A; // weak
+_UNKNOWN g_Building_FootprintTemplate_Type0; // weak
 char aStruktur[9] = "struktur"; // weak
-_UNKNOWN unk_4EC7A4; // weak
+_UNKNOWN g_Building_FootprintTemplate_Type1; // weak
 char aStruktur_0[9] = "struktur"; // weak
-_UNKNOWN unk_4EC7AE; // weak
+_UNKNOWN g_Building_FootprintTemplate_Type2; // weak
 char aStruktur_1[9] = "struktur"; // weak
 char aTuraD[8] = "tura %d"; // weak
 char aSetrhS08x_1[14] = "SetRH %s=%08x"; // weak
@@ -5264,18 +5254,18 @@ char *g_QueenCastleArsonTexts[3] = {
   "Your wife, before parting, ordered her servants to set %s on fire.",
   "Deine Frau konnte Dich nicht langer ertragen und liess %s vor ihrer Abreise in Brand setzen.",
 };
-char *off_519350[3] = {
+char *g_QueenSonBirthTexts[3] = {
   "Panie, krolowa urodzila Ci syna!!!! Nadworni medrcy i weterani Twoich najwiekszych bitew ksztalca go tak, by mogl rychlo sluzyc Ci jako oddany dowodca.",
   "Master, the Queen has given birth to your son!!! Your best scholars and knights train him in warcraft so that he can be your right hand soon.",
   "Herr, die Konigin hat Dir einen Sohn geschenkt! Deine besten Lehrer und Ritter unterweisen ihn in der Kriegskunst, so dass er schon bald Deine rechte Hand sein wird.",
 };
-char *off_51935C[3] = {
+char *g_QueenDaughterBirthTexts[3] = {
   "Krolu!!! Twa zona poczela corke. Nasi medrcy orzekli, ze odziedziczony po ojcu temperament i zacietosc matki uczynia z niej wspanialego dowodce Twych wojsk.",
   "Master. Your wife has given birth to your daughter. Scholars say that she has inherited your strength of character and your temperament. Soon she will become a great officer of your troops.",
   "Herr, die Konigin hat Dir eine Tochter geschenkt! Die Weisen sagen, sie habe Dein Temperament und Deine Charakterstarke geerbt. Schon bald wird sie eine grosse Anfuhrerin Eurer Truppen sein.",
 };
 /* Recovered port reinforcement ring offsets (12 x {row_delta, column_delta}). */
-int dword_517B48[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
+int g_PortSpawnRingOffsetsTable[24] = { 1, 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 };
 unit_type g_PortReinforcementUnitTypePool[12] = {
   UNIT_TYPE_PEASANT,
   UNIT_TYPE_LIGHT_INFANTRY,
@@ -5290,7 +5280,7 @@ unit_type g_PortReinforcementUnitTypePool[12] = {
   UNIT_TYPE_GORAL,
   UNIT_TYPE_BUILDER
 };
-__int16 word_5191F0 = 30;
+__int16 g_QueenWhimRecords_5191F0 = 30;
 char aSetrhS08x_8[14] = "SetRH %s=%08x"; // weak
 char aBattle_1[7] = "battle"; // weak
 char aBattleBat_bkg1[20] = "battle\\bat_bkg1.s32"; // weak
@@ -5371,8 +5361,8 @@ char aCofnij_oddzial[24] = "cofnij_oddzial %d,%d,%d"; // weak
 char aRuch_oddzialem[34] = "ruch_Oddzialem_Strzelajacym %d,%d"; // weak
 char aOddzial_w_zasi[27] = "oddzial_w_Zasiegu %d,%d,%d"; // weak
 char aPodejdz_na_bez[38] = "podejdz_na_Bezpieczna_Odleglosc %d,%d"; // weak
-double dbl_4F18A7 = 1.25; // weak
-double dbl_4F18AF = 0.75; // weak
+double g_Battle_RoleDeployRatioHighThreshold = 1.25; // weak
+double g_Battle_RoleDeployRatioLowThreshold = 0.75; // weak
 char aCastle_chrDw_3[21] = "castle.chr\\dw_20.gfx"; // weak
 char aCastle_pogDw_3[21] = "castle.pog\\dw_20.gfx"; // weak
 char aCastle_chrDw_5[17] = "castle.chr\\dw_20"; // weak
@@ -5686,7 +5676,7 @@ char aNie_2[4] = "NIE"; // weak
 char aTak_2[4] = "TAK"; // weak
 char aNie_3[4] = "NIE"; // weak
 char aTak_3[4] = "TAK"; // weak
-float flt_5000C6 = 40.0; // weak
+float g_Building_MaxTaxRate = 40.0; // weak
 char aMoc_1[4] = "moc"; // weak
 char aMoc_2[4] = "moc"; // weak
 char a11i_3[4] = "11i"; // weak
@@ -5826,7 +5816,7 @@ char aMouse_speedD[15] = "Mouse_speed=%d"; // weak
 char aWb_7[3] = "wb"; // weak
 char aAb[3] = "ab"; // weak
 char aRb_9[3] = "rb"; // weak
-_UNKNOWN unk_500FA2; // weak
+_UNKNOWN g_App_QuitReason_DemoSkipKey; // weak
 char aStdrhCall[11] = "StdRH-call"; // weak
 char aDmessage0x08xL[68] = "Dmessage=0x%08x, lost=%d, wParam=0x%08x, lParam=0x%08x, hwnd=0x%08x"; // weak
 char aWm_activateapp[18] = "WM_ACTIVATEAPP=%d"; // weak
@@ -5860,14 +5850,14 @@ char aDataLector_w_0[16] = "data\\lector.wav"; // weak
 char aMusicCampain[14] = "music\\campain"; // weak
 char aDataLector_w_2[16] = "data\\lector.wav"; // weak
 char aUnsetrh08x_21[13] = "UnsetRH %08x"; // weak
-double dbl_501320 = 1000.0; // weak
-float flt_501370 = 1000.0; // weak
+double g_CAviDecompressor_MillisecondsPerSecond = 1000.0; // weak
+float g_AviPlayer_MillisecondsPerSecond = 1000.0; // weak
 char aRiff[5] = "RIFF"; // weak
 char aWave[5] = "WAVE"; // weak
 char aFmt[5] = "fmt "; // weak
 char aData[5] = "data"; // weak
-double dbl_501984 = 22.6625; // weak
-double dbl_50198C = 4.0; // weak
+double g_CSS_MixLookupIndexScale = 22.6625; // weak
+double g_CSS_MixLookupIndexBias = 4.0; // weak
 char aMemory[7] = "MEMORY"; // weak
 char aOutOfMemory_[16] = "Out of memory.\n"; // weak
 char aReleaseErrorIn[27] = "Release error in genfree.\n"; // weak
@@ -6076,7 +6066,7 @@ char aCompilations[13] = "compilations"; // weak
 char aMain[5] = "MAIN"; // weak
 char aConstrct[9] = "CONSTRCT"; // weak
 char aSomeConstructs[58] = "Some constructs are still in use. Clear cannot continue.\n"; // weak
-char unk_50293C[12] = { 1, 2, 3, 4, 'C', 'L', 'I', 'P', 'S', 0, 0, 0 }; // weak
+char g_CLIPS_BsaveHeaderMagic[12] = { 1, 2, 3, 4, 'C', 'L', 'I', 'P', 'S', 0, 0, 0 }; // weak
 char aBload[6] = "bload"; // weak
 char aBload_0[6] = "BLOAD"; // weak
 char aFile[6] = "File "; // weak
@@ -6094,7 +6084,7 @@ char aSomeConstruc_0[63] = "Some constructs are still in use by the current bina
 char aBinaryClearCan[31] = "Binary clear cannot continue.\n"; // weak
 char aCannotLoad[13] = "Cannot load "; // weak
 char aConstructWithB[40] = " construct with binary load in effect.\n"; // weak
-double dbl_502B70 = 1000.0; // weak
+double g_Rules_MillisecondsPerSecond = 1000.0; // weak
 char aSystem_0[7] = "system"; // weak
 char aRb_1[3] = "rb"; // weak
 char aDepth[6] = "depth"; // weak
@@ -6352,7 +6342,7 @@ CHAR aDdcopybitmapFa[] = "ddcopybitmap failed\n"; // idb
 CHAR OutputString[] = "createcompatible dc failed\n"; // idb
 CHAR aLockResourceFa[] = "lock resource failed\n"; // idb
 char aCon_0[4] = "con"; // weak
-_UNKNOWN unk_50422C; // weak
+_UNKNOWN g_Rules_BuiltinSentinelAddress; // weak
 char aFacts_2[6] = "facts"; // weak
 char aDeftemplate_5[12] = "deftemplate"; // weak
 char aDeftemplate_0[12] = "deftemplate"; // weak
@@ -6470,7 +6460,7 @@ char aForall[7] = "forall"; // weak
 char aDefrules[9] = "defrules"; // weak
 char aDefrule[8] = "defrule"; // weak
 char aNil[4] = "nil"; // weak
-char byte_504A50[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_Rules_DefaultEmptyStringConstraint[4] = { '\0', '\0', '\0', '\0' }; // weak
 char asc_504A54[2] = " "; // weak
 char aNone_0[5] = "NONE"; // weak
 char aDerive[7] = "DERIVE"; // weak
@@ -6498,7 +6488,7 @@ char aARelationName[16] = "a relation name"; // weak
 char aDeftemplate[12] = "deftemplate"; // weak
 char aImpliedDeftemp[20] = "implied deftemplate"; // weak
 char asc_504C2C[2] = " "; // weak
-_BYTE byte_504C30[4] = { 0, 0, 0, 0 }; // weak
+_BYTE g_Rules_DefaultZeroBitmapValue[4] = { 0, 0, 0, 0 }; // weak
 char aAssert_str[11] = "assert_str"; // weak
 char aFactrhs[8] = "FACTRHS"; // weak
 char aTemplate[10] = "Template "; // weak
@@ -6525,7 +6515,7 @@ char asc_504D3C[2] = "~"; // weak
 char asc_504D40[2] = "|"; // weak
 char asc_504D44[2] = "&"; // weak
 char aStop[5] = "stop"; // weak
-char byte_504D50[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_Lexer_EmptyQuotedStringBuffer[4] = { '\0', '\0', '\0', '\0' }; // weak
 char aUnprintableCha[28] = "<<<unprintable character>>>"; // weak
 char asc_504D70[2] = "["; // weak
 char asc_504D74[2] = "]"; // weak
@@ -6919,7 +6909,7 @@ char aDeveloperFlagI[19] = "Developer flag is "; // weak
 char aRunTimeModuleI[20] = "Run time module is "; // weak
 char aMiscfun[8] = "MISCFUN"; // weak
 char aExpandMustBeUs[63] = "expand$ must be used in the argument list of a function call.\n"; // weak
-_UNKNOWN unk_5068A4; // weak
+_UNKNOWN g_Rules_HostFunctionErrorFallbackString; // weak
 char a0_0[4] = "0**"; // weak
 char a1_0[3] = "1*"; // weak
 char aPrintoutfuncti[17] = "PrintoutFunction"; // weak
@@ -6951,8 +6941,8 @@ char asc_5069C0[2] = "\t"; // weak
 char aVtab[5] = "vtab"; // weak
 char asc_5069CC[2] = "\v"; // weak
 char aFf[3] = "ff"; // weak
-_UNKNOWN unk_5069D4; // weak
-_UNKNOWN unk_5069D8; // weak
+_UNKNOWN g_Rules_PrintoutFormFeedChar; // weak
+_UNKNOWN g_Rules_PrintoutCrlfAliasName; // weak
 char aReadError[19] = "*** READ ERROR ***"; // weak
 char aStdin[6] = "stdin"; // weak
 char aEof[4] = "EOF"; // weak
@@ -6964,7 +6954,7 @@ char aR_4[3] = "r+"; // weak
 char aW_4[2] = "w"; // weak
 char aA_2[2] = "a"; // weak
 char aStringWithValu[41] = "string with value \"r\", \"r+\", \"w\", or \"a\""; // weak
-char byte_506A64[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_Rules_HostFormatEmptyResult[4] = { '\0', '\0', '\0', '\0' }; // weak
 char aNil_0[4] = "nil"; // weak
 char asc_506A6C[2] = "\r"; // weak
 char asc_506A70[3] = "%%"; // weak
@@ -7098,7 +7088,7 @@ char a00_7[3] = "00"; // weak
 char aGetPrognField[19] = "(get-progn$-field)"; // weak
 char aGetmvprogninde[16] = "GetMvPrognIndex"; // weak
 char aGetPrognIndex[19] = "(get-progn$-index)"; // weak
-char byte_5070B0[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_Rules_ImplodeEmptyResult[4] = { '\0', '\0', '\0', '\0' }; // weak
 char aNil_1[4] = "nil"; // weak
 char aPrimitiveDataT[20] = "primitive data type"; // weak
 char asc_5070CC[2] = " "; // weak
@@ -7137,7 +7127,7 @@ char aEvalfunction[13] = "EvalFunction"; // weak
 char aEval[5] = "eval"; // weak
 char aBuildfunction[14] = "BuildFunction"; // weak
 char aBuild[6] = "build"; // weak
-char byte_507290[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_Rules_EmptyStringLiteral[4] = { '\0', '\0', '\0', '\0' }; // weak
 char aNil_4[4] = "nil"; // weak
 char aStringInstance[49] = "string, instance name, symbol, float, or integer"; // weak
 char aMiscfun_0[8] = "MISCFUN"; // weak
@@ -7226,33 +7216,33 @@ char aDomainErrorFor[18] = "Domain error for "; // weak
 char aFunction__1[12] = " function.\n"; // weak
 char aArgumentOverfl[23] = "Argument overflow for "; // weak
 char aSingularityAtA[29] = "Singularity at asymptote in "; // weak
-double dbl_5076F8 = 1.0e-15; // weak
-double dbl_507700 = -1.0e-15; // weak
-double dbl_507708 = 1.0e-15; // weak
-double dbl_507710 = -1.0e-15; // weak
-double dbl_507718 = 1.0e-15; // weak
-double dbl_507720 = -1.0e-15; // weak
-double dbl_507728 = 1.0e-15; // weak
-double dbl_507730 = -1.0e-15; // weak
-double dbl_507738 = -1.0; // weak
-double dbl_507740 = -1.0; // weak
-double dbl_507748 = -1.0; // weak
-double dbl_507750 = -1.0; // weak
-double dbl_507758 = -1.0; // weak
-double dbl_507760 = -1.0; // weak
-double dbl_507768 = 0.5; // weak
-double dbl_507770 = -1.0; // weak
-double dbl_507778 = -1.0; // weak
-double dbl_507780 = 0.5; // weak
-double dbl_507788 = -1.0; // weak
-double dbl_507790 = 3.141592653589793; // weak
-double dbl_507798 = 180.0; // weak
-double dbl_5077A0 = 180.0; // weak
-double dbl_5077A8 = 3.141592653589793; // weak
-double dbl_5077B0 = 0.9; // weak
-double dbl_5077B8 = 0.9; // weak
-double dbl_5077C0 = -0.5; // weak
-unsigned __int8 byte_5077F0[4] = { 114u, 0u, 0u, 0u }; // weak
+double g_Rules_TanEpsilonPositive = 1.0e-15; // weak
+double g_Rules_TanEpsilonNegative = -1.0e-15; // weak
+double g_Rules_SecEpsilonPositive = 1.0e-15; // weak
+double g_Rules_SecDomainEpsilonNeg = -1.0e-15; // weak
+double g_Rules_CscDomainEpsilonPos = 1.0e-15; // weak
+double g_Rules_CscDomainEpsilonNeg = -1.0e-15; // weak
+double g_Rules_CotDomainEpsilonPos = 1.0e-15; // weak
+double g_Rules_CotDomainEpsilonNeg = -1.0e-15; // weak
+double g_Rules_AcosDomainLowerBound = -1.0; // weak
+double g_Rules_AsinDomainLowerBound = -1.0; // weak
+double g_Rules_AsecDomainLowerBound = -1.0; // weak
+double g_Rules_AcscDomainLowerBound = -1.0; // weak
+double g_Rules_AcoshDomainLowerBound = -1.0; // weak
+double g_Rules_AtanhDomainLowerBound = -1.0; // weak
+double g_Rules_AtanhHalfCoefficient = 0.5; // weak
+double g_Rules_AsechDomainLowerBound = -1.0; // weak
+double g_Rules_AcothDomainLowerBound = -1.0; // weak
+double g_Rules_AcothHalfCoefficient = 0.5; // weak
+double g_Rules_MathPiAcosArgument = -1.0; // weak
+double g_Rules_DegToRadPiConstant = 3.141592653589793; // weak
+double g_Rules_DegToRadDegreesConstant = 180.0; // weak
+double g_Rules_RadToDegDegreesConstant = 180.0; // weak
+double g_Rules_RadToDegPiConstant = 3.141592653589793; // weak
+double g_Rules_DegToGradConversionFactor = 0.9; // weak
+double g_Rules_GradToDegConversionFactor = 0.9; // weak
+double g_Rules_MathRoundHalfOffset = -0.5; // weak
+unsigned __int8 g_Help_FileOpenModeRead[4] = { 114u, 0u, 0u, 0u }; // weak
 char aEndEntry[10] = "END-ENTRY"; // weak
 char aBeginEntry[13] = "BEGIN-ENTRY-"; // weak
 char aClips_hlp[10] = "clips.hlp"; // weak
@@ -7385,8 +7375,8 @@ char aNull_2[6] = "NULL}"; // weak
 char aED_DLd_1[14] = "&E%d_%d[%ld]}"; // weak
 char a23Kii[7] = "23*kii"; // weak
 char aConstructstocc[21] = "ConstructsToCCommand"; // weak
-char byte_5082C4[6] = { 'A', 'D', 'G', 'H', 'J', 'K' }; // weak
-char byte_5082CA[] = { 'M' }; // weak
+char g_Rules_CodeGeneratorItemLetterTable[6] = { 'A', 'D', 'G', 'H', 'J', 'K' }; // weak
+char g_Rules_CodeGeneratorItemPrefixTable[] = { 'M' }; // weak
 char aSS_0[13] = "%s %s[] = {\n"; // weak
 char aExternSS[17] = "extern %s %s[];\n"; // weak
 char aNull_17[7] = ",NULL,"; // weak
@@ -7888,7 +7878,7 @@ char asc_50AD10[2] = " "; // weak
 char aTmpltrhs[9] = "TMPLTRHS"; // weak
 char aSlot_1[6] = "Slot "; // weak
 char aRequiresAValue[61] = " requires a value because of its (default ?NONE) attribute.\n"; // weak
-_BYTE byte_50AD7C[4] = { 0, 0, 0, 0 }; // weak
+_BYTE g_Rules_SlotAssertBitmapScratch[4] = { 0, 0, 0, 0 }; // weak
 char aModifycommand[14] = "ModifyCommand"; // weak
 char aModify[7] = "modify"; // weak
 char aDuplicatecomma[17] = "DuplicateCommand"; // weak
@@ -8685,21 +8675,21 @@ char aNoInheritSlots[40] = "no-inherit slots cannot also be public\n"; // weak
 char aCstrnchk_3[9] = "CSTRNCHK"; // weak
 char aExpressionFo_0[16] = "Expression for "; // weak
 char aDynamicDefault[22] = "dynamic default value"; // weak
-int off_50EC84; // weak
-int off_50EC94; // weak
-int off_50ECA4[2]; // weak
-_UNKNOWN unk_50ECB0; // weak
-_UNKNOWN unk_50ECF0; // weak
-_UNKNOWN unk_50ED10; // weak
-_UNKNOWN unk_50ED50; // weak
-uintptr_t off_50ED94[5]; // weak
-uintptr_t off_50EDB4[5]; // weak
-int off_50EDD4[17]; // weak
-int off_50EE24[17]; // weak
-int off_50EE74[17]; // weak
-int off_50EEC4[21]; // weak
-uintptr_t off_50EF24[5]; // weak
-_UNKNOWN unk_50EF40; // weak
+int g_CompatStringHolder_Vtable; // weak
+int g_PathEntry_Vtable; // weak
+int g_PathEntryArray_Vtable[2]; // weak
+_UNKNOWN g_Runtime_PaletteArrayCtorDescriptor; // weak
+_UNKNOWN g_PathEntryArray_ElementDtorDescriptor; // weak
+_UNKNOWN g_PathEntryArray_DtorDescriptor; // weak
+_UNKNOWN g_PathEntry_DtorDescriptor; // weak
+uintptr_t g_RenderSurface_BlitCursorVtable[5]; // weak
+uintptr_t g_RenderSurface_LinkedBlitCursorVtable[5]; // weak
+int g_Surface_BaseVtable[17]; // weak
+int g_Surface_RawBuffer8Vtable[17]; // weak
+int g_ScratchSurface_Vtable[17]; // weak
+int g_Surface_Vtable[21]; // weak
+uintptr_t g_NullBlitCursor_Vtable[5]; // weak
+_UNKNOWN g_SurfaceCursor_DtorArrayTag; // weak
 
 static void Render_InitRecoveredVtableStorage(void)
 {
@@ -8709,104 +8699,104 @@ static void Render_InitRecoveredVtableStorage(void)
     return;
   initialized = 1;
 
-  off_50EC84 = (int)(uintptr_t)&Compat_StringHolderScalarDeletingDtor;
-  off_50EC94 = (int)(uintptr_t)&PathEntry_Destruct;
-  off_50ECA4[0] = (int)(uintptr_t)&PathEntryArray_Destruct;
-  off_50ECA4[1] = (int)(uintptr_t)&nullsub_16;
+  g_CompatStringHolder_Vtable = (int)(uintptr_t)&Compat_StringHolderScalarDeletingDtor;
+  g_PathEntry_Vtable = (int)(uintptr_t)&PathEntry_Destruct;
+  g_PathEntryArray_Vtable[0] = (int)(uintptr_t)&PathEntryArray_Destruct;
+  g_PathEntryArray_Vtable[1] = (int)(uintptr_t)&Noop_PathEntryArrayDeletingDtor;
 
-  off_50ED94[0] = (int)(uintptr_t)&RenderSurface_DestroyBlitCursor;
-  off_50ED94[1] = (int)(uintptr_t)&RenderSurface_GetBlitCursorRowStride;
-  off_50ED94[2] = (int)(uintptr_t)&RenderSurface_GetBlitCursorCapacity;
-  off_50ED94[3] = (int)(uintptr_t)&RenderSurface_AdvanceBlitCursor;
-  off_50ED94[4] = (int)(uintptr_t)&RenderSurface_GetBlitCursorPosition;
+  g_RenderSurface_BlitCursorVtable[0] = (int)(uintptr_t)&RenderSurface_DestroyBlitCursor;
+  g_RenderSurface_BlitCursorVtable[1] = (int)(uintptr_t)&RenderSurface_GetBlitCursorRowStride;
+  g_RenderSurface_BlitCursorVtable[2] = (int)(uintptr_t)&RenderSurface_GetBlitCursorCapacity;
+  g_RenderSurface_BlitCursorVtable[3] = (int)(uintptr_t)&RenderSurface_AdvanceBlitCursor;
+  g_RenderSurface_BlitCursorVtable[4] = (int)(uintptr_t)&RenderSurface_GetBlitCursorPosition;
 
-  off_50EDB4[0] = (int)(uintptr_t)&RenderSurface_DestroyLinkedBlitCursor;
-  off_50EDB4[1] = (int)(uintptr_t)&RenderSurface_GetLinkedSurfaceBuffer;
-  off_50EDB4[2] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorCapacity;
-  off_50EDB4[3] = (int)(uintptr_t)&RenderSurface_AdvanceLinkedBlitCursor;
-  off_50EDB4[4] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorPosition;
+  g_RenderSurface_LinkedBlitCursorVtable[0] = (int)(uintptr_t)&RenderSurface_DestroyLinkedBlitCursor;
+  g_RenderSurface_LinkedBlitCursorVtable[1] = (int)(uintptr_t)&RenderSurface_GetLinkedSurfaceBuffer;
+  g_RenderSurface_LinkedBlitCursorVtable[2] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorCapacity;
+  g_RenderSurface_LinkedBlitCursorVtable[3] = (int)(uintptr_t)&RenderSurface_AdvanceLinkedBlitCursor;
+  g_RenderSurface_LinkedBlitCursorVtable[4] = (int)(uintptr_t)&RenderSurface_GetLinkedBlitCursorPosition;
 
-  off_50EDD4[0] = (int)(uintptr_t)&RenderSurface_Destroy;
-  off_50EDD4[1] = (int)(uintptr_t)&Surface_GetReadIncrNotImplemented;
-  off_50EDD4[2] = (int)(uintptr_t)&Surface_GetWriteIncrNotImplemented;
-  off_50EDD4[3] = (int)(uintptr_t)&Surface_DrawPixNotImplemented;
-  off_50EDD4[4] = (int)(uintptr_t)&Surface_GetPixNotImplemented;
-  off_50EDD4[5] = (int)(uintptr_t)&Surface_DrawLineNotImplemented;
-  off_50EDD4[6] = (int)(uintptr_t)&Surface_DrawRectNotImplemented;
-  off_50EDD4[7] = (int)(uintptr_t)&Surface_DrawBoxNotImplemented;
-  off_50EDD4[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
-  off_50EDD4[9] = (int)(uintptr_t)&Render_ClearGameScreen;
-  off_50EDD4[10] = (int)(uintptr_t)&Surface_DotBoxNotImplemented;
-  off_50EDD4[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
-  off_50EDD4[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EDD4[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
-  off_50EDD4[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
-  off_50EDD4[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
-  off_50EDD4[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
+  g_Surface_BaseVtable[0] = (int)(uintptr_t)&RenderSurface_Destroy;
+  g_Surface_BaseVtable[1] = (int)(uintptr_t)&Surface_GetReadIncrNotImplemented;
+  g_Surface_BaseVtable[2] = (int)(uintptr_t)&Surface_GetWriteIncrNotImplemented;
+  g_Surface_BaseVtable[3] = (int)(uintptr_t)&Surface_DrawPixNotImplemented;
+  g_Surface_BaseVtable[4] = (int)(uintptr_t)&Surface_GetPixNotImplemented;
+  g_Surface_BaseVtable[5] = (int)(uintptr_t)&Surface_DrawLineNotImplemented;
+  g_Surface_BaseVtable[6] = (int)(uintptr_t)&Surface_DrawRectNotImplemented;
+  g_Surface_BaseVtable[7] = (int)(uintptr_t)&Surface_DrawBoxNotImplemented;
+  g_Surface_BaseVtable[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  g_Surface_BaseVtable[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  g_Surface_BaseVtable[10] = (int)(uintptr_t)&Surface_DotBoxNotImplemented;
+  g_Surface_BaseVtable[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
+  g_Surface_BaseVtable[12] = (int)(uintptr_t)&Render_LoadPCXImage;
+  g_Surface_BaseVtable[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  g_Surface_BaseVtable[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
+  g_Surface_BaseVtable[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
+  g_Surface_BaseVtable[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
 
-  off_50EE24[0] = (int)(uintptr_t)&Surface_DestructRawBuffer;
-  off_50EE24[1] = (int)(uintptr_t)&Surface_ConstructRegionViewA;
-  off_50EE24[2] = (int)(uintptr_t)&Surface_ConstructRegionViewB;
-  off_50EE24[3] = (int)(uintptr_t)&Surface_SetPixel8;
-  off_50EE24[4] = (int)(uintptr_t)&Surface_GetPixel8;
-  off_50EE24[5] = (int)(uintptr_t)&Surface_DrawDashedLine;
-  off_50EE24[6] = (int)(uintptr_t)&Surface_DrawRectOutline;
-  off_50EE24[7] = (int)(uintptr_t)&Surface_FillVerticalSpan;
-  off_50EE24[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
-  off_50EE24[9] = (int)(uintptr_t)&Render_ClearGameScreen;
-  off_50EE24[10] = (int)(uintptr_t)&Surface_FillCheckerPattern;
-  off_50EE24[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
-  off_50EE24[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EE24[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
-  off_50EE24[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
-  off_50EE24[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
-  off_50EE24[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
+  g_Surface_RawBuffer8Vtable[0] = (int)(uintptr_t)&Surface_DestructRawBuffer;
+  g_Surface_RawBuffer8Vtable[1] = (int)(uintptr_t)&Surface_ConstructRegionViewA;
+  g_Surface_RawBuffer8Vtable[2] = (int)(uintptr_t)&Surface_ConstructRegionViewB;
+  g_Surface_RawBuffer8Vtable[3] = (int)(uintptr_t)&Surface_SetPixel8;
+  g_Surface_RawBuffer8Vtable[4] = (int)(uintptr_t)&Surface_GetPixel8;
+  g_Surface_RawBuffer8Vtable[5] = (int)(uintptr_t)&Surface_DrawDashedLine;
+  g_Surface_RawBuffer8Vtable[6] = (int)(uintptr_t)&Surface_DrawRectOutline;
+  g_Surface_RawBuffer8Vtable[7] = (int)(uintptr_t)&Surface_FillVerticalSpan;
+  g_Surface_RawBuffer8Vtable[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  g_Surface_RawBuffer8Vtable[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  g_Surface_RawBuffer8Vtable[10] = (int)(uintptr_t)&Surface_FillCheckerPattern;
+  g_Surface_RawBuffer8Vtable[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
+  g_Surface_RawBuffer8Vtable[12] = (int)(uintptr_t)&Render_LoadPCXImage;
+  g_Surface_RawBuffer8Vtable[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  g_Surface_RawBuffer8Vtable[14] = (int)(uintptr_t)&Surface_ClearWholeArea;
+  g_Surface_RawBuffer8Vtable[15] = (int)(uintptr_t)&Surface_GetReadIncrZero;
+  g_Surface_RawBuffer8Vtable[16] = (int)(uintptr_t)&Surface_GetWriteIncrZero;
 
-  off_50EE74[0] = (int)(uintptr_t)&Render_DestructScratchSurface;
-  off_50EE74[1] = (int)(uintptr_t)&Surface_ConstructLockedRegionView;
-  off_50EE74[2] = (int)(uintptr_t)&Surface_ConstructPitchRegionView;
-  off_50EE74[3] = (int)(uintptr_t)&Surface_DrawPix;
-  off_50EE74[4] = (int)(uintptr_t)&Surface_GetPix;
-  off_50EE74[5] = (int)(uintptr_t)&Surface_DrawLine;
-  off_50EE74[6] = (int)(uintptr_t)&Surface_DrawRect;
-  off_50EE74[7] = (int)(uintptr_t)&Surface_DrawBox;
-  off_50EE74[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
-  off_50EE74[9] = (int)(uintptr_t)&Render_ClearGameScreen;
-  off_50EE74[10] = (int)(uintptr_t)&Surface_DotBox;
-  off_50EE74[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
-  off_50EE74[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EE74[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
-  off_50EE74[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
-  off_50EE74[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
-  off_50EE74[16] = (int)(uintptr_t)&Surface_GetWriteIncrFromStride;
+  g_ScratchSurface_Vtable[0] = (int)(uintptr_t)&Render_DestructScratchSurface;
+  g_ScratchSurface_Vtable[1] = (int)(uintptr_t)&Surface_ConstructLockedRegionView;
+  g_ScratchSurface_Vtable[2] = (int)(uintptr_t)&Surface_ConstructPitchRegionView;
+  g_ScratchSurface_Vtable[3] = (int)(uintptr_t)&Surface_DrawPix;
+  g_ScratchSurface_Vtable[4] = (int)(uintptr_t)&Surface_GetPix;
+  g_ScratchSurface_Vtable[5] = (int)(uintptr_t)&Surface_DrawLine;
+  g_ScratchSurface_Vtable[6] = (int)(uintptr_t)&Surface_DrawRect;
+  g_ScratchSurface_Vtable[7] = (int)(uintptr_t)&Surface_DrawBox;
+  g_ScratchSurface_Vtable[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  g_ScratchSurface_Vtable[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  g_ScratchSurface_Vtable[10] = (int)(uintptr_t)&Surface_DotBox;
+  g_ScratchSurface_Vtable[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
+  g_ScratchSurface_Vtable[12] = (int)(uintptr_t)&Render_LoadPCXImage;
+  g_ScratchSurface_Vtable[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  g_ScratchSurface_Vtable[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
+  g_ScratchSurface_Vtable[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
+  g_ScratchSurface_Vtable[16] = (int)(uintptr_t)&Surface_GetWriteIncrFromStride;
 
-  off_50EEC4[0] = (int)(uintptr_t)&Surface_Destroy;
-  off_50EEC4[1] = (int)(uintptr_t)&Surface_BeginPixelRead;
-  off_50EEC4[2] = (int)(uintptr_t)&Surface_BeginPixelWrite;
-  off_50EEC4[3] = (int)(uintptr_t)&Surface_DrawPixAndMarkDirty;
-  off_50EEC4[4] = (int)(uintptr_t)&Surface_GetPix;
-  off_50EEC4[5] = (int)(uintptr_t)&Surface_DrawLine;
-  off_50EEC4[6] = (int)(uintptr_t)&Surface_DrawRect;
-  off_50EEC4[7] = (int)(uintptr_t)&Surface_DrawBox;
-  off_50EEC4[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
-  off_50EEC4[9] = (int)(uintptr_t)&Render_ClearGameScreen;
-  off_50EEC4[10] = (int)(uintptr_t)&Surface_DotBox;
-  off_50EEC4[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
-  off_50EEC4[12] = (int)(uintptr_t)&Render_LoadPCXImage;
-  off_50EEC4[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
-  off_50EEC4[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
-  off_50EEC4[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
-  off_50EEC4[16] = (int)(uintptr_t)&Surface_GetWriteIncrAndMarkDirty;
-  off_50EEC4[17] = (int)(uintptr_t)&Render_SetPixelFormat;
-  off_50EEC4[18] = (int)(uintptr_t)&Render_BeginModeSwitch;
-  off_50EEC4[19] = (int)(uintptr_t)&Render_EndModeSwitch;
-  off_50EEC4[20] = (int)(uintptr_t)&Render_BlitSurface;
+  g_Surface_Vtable[0] = (int)(uintptr_t)&Surface_Destroy;
+  g_Surface_Vtable[1] = (int)(uintptr_t)&Surface_BeginPixelRead;
+  g_Surface_Vtable[2] = (int)(uintptr_t)&Surface_BeginPixelWrite;
+  g_Surface_Vtable[3] = (int)(uintptr_t)&Surface_DrawPixAndMarkDirty;
+  g_Surface_Vtable[4] = (int)(uintptr_t)&Surface_GetPix;
+  g_Surface_Vtable[5] = (int)(uintptr_t)&Surface_DrawLine;
+  g_Surface_Vtable[6] = (int)(uintptr_t)&Surface_DrawRect;
+  g_Surface_Vtable[7] = (int)(uintptr_t)&Surface_DrawBox;
+  g_Surface_Vtable[8] = (int)(uintptr_t)&Render_FillClippedScanlines;
+  g_Surface_Vtable[9] = (int)(uintptr_t)&Render_ClearGameScreen;
+  g_Surface_Vtable[10] = (int)(uintptr_t)&Surface_DotBox;
+  g_Surface_Vtable[11] = (int)(uintptr_t)&Render_BlitRectViaVirtualSurfaces;
+  g_Surface_Vtable[12] = (int)(uintptr_t)&Render_LoadPCXImage;
+  g_Surface_Vtable[13] = (int)(uintptr_t)&Render_BlitCompressedSpriteRLE;
+  g_Surface_Vtable[14] = (int)(uintptr_t)&Render_UnlockBackbuffer;
+  g_Surface_Vtable[15] = (int)(uintptr_t)&Surface_GetReadIncrFromStride;
+  g_Surface_Vtable[16] = (int)(uintptr_t)&Surface_GetWriteIncrAndMarkDirty;
+  g_Surface_Vtable[17] = (int)(uintptr_t)&Render_SetPixelFormat;
+  g_Surface_Vtable[18] = (int)(uintptr_t)&Render_BeginModeSwitch;
+  g_Surface_Vtable[19] = (int)(uintptr_t)&Render_EndModeSwitch;
+  g_Surface_Vtable[20] = (int)(uintptr_t)&Render_BlitSurface;
 
-  off_50EF24[0] = (int)(uintptr_t)&SurfaceCursor_Destroy;
-  off_50EF24[1] = (int)(uintptr_t)&SurfaceCursor_GetIncrUnbounded;
-  off_50EF24[2] = (int)(uintptr_t)&SurfaceCursor_GetExtentUnbounded;
-  off_50EF24[3] = (int)(uintptr_t)&nullsub_19;
-  off_50EF24[4] = (int)(uintptr_t)&SurfaceCursor_GetOffsetZero;
+  g_NullBlitCursor_Vtable[0] = (int)(uintptr_t)&SurfaceCursor_Destroy;
+  g_NullBlitCursor_Vtable[1] = (int)(uintptr_t)&SurfaceCursor_GetIncrUnbounded;
+  g_NullBlitCursor_Vtable[2] = (int)(uintptr_t)&SurfaceCursor_GetExtentUnbounded;
+  g_NullBlitCursor_Vtable[3] = (int)(uintptr_t)&Noop_SurfaceCursorUnboundedAdvance;
+  g_NullBlitCursor_Vtable[4] = (int)(uintptr_t)&SurfaceCursor_GetOffsetZero;
 }
 
 static int RenderSurface_InvokeSlot60(_DWORD *surface)
@@ -8814,9 +8804,9 @@ static int RenderSurface_InvokeSlot60(_DWORD *surface)
   unsigned int vtable;
 
   vtable = (unsigned int)surface[46];
-  if ( vtable == (unsigned int)(uintptr_t)off_50EEC4 || vtable == (unsigned int)(uintptr_t)off_50EE74 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_Vtable || vtable == (unsigned int)(uintptr_t)g_ScratchSurface_Vtable )
     return Surface_GetReadIncrFromStride((int)surface);
-  if ( vtable == (unsigned int)(uintptr_t)off_50EE24 || vtable == (unsigned int)(uintptr_t)off_50EDD4 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable )
     return Surface_GetReadIncrZero();
   return 0;
 }
@@ -8826,11 +8816,11 @@ static int RenderSurface_InvokeSlot64(_DWORD *surface)
   unsigned int vtable;
 
   vtable = (unsigned int)surface[46];
-  if ( vtable == (unsigned int)(uintptr_t)off_50EEC4 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_Vtable )
     return Surface_GetWriteIncrAndMarkDirty(surface);
-  if ( vtable == (unsigned int)(uintptr_t)off_50EE74 )
+  if ( vtable == (unsigned int)(uintptr_t)g_ScratchSurface_Vtable )
     return Surface_GetWriteIncrFromStride((int)surface);
-  if ( vtable == (unsigned int)(uintptr_t)off_50EE24 || vtable == (unsigned int)(uintptr_t)off_50EDD4 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable )
     return Surface_GetWriteIncrZero();
   return 0;
 }
@@ -8885,9 +8875,9 @@ static int RenderSurface_InvokeSlot56(_DWORD *surface)
   if ( !surface )
     return 0;
   vtable = (unsigned int)surface[46];
-  if ( vtable == (unsigned int)(uintptr_t)off_50EEC4 || vtable == (unsigned int)(uintptr_t)off_50EE74 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_Vtable || vtable == (unsigned int)(uintptr_t)g_ScratchSurface_Vtable )
     return Render_UnlockBackbuffer((int)(uintptr_t)surface);
-  if ( vtable == (unsigned int)(uintptr_t)off_50EE24 || vtable == (unsigned int)(uintptr_t)off_50EDD4 )
+  if ( vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable )
   {
     unsigned int pixel_count;
     unsigned char *pixels;
@@ -8936,8 +8926,8 @@ static int RenderSurface_IsLinearSoftware(_DWORD *surface)
   if ( !surface[1] )
     return 0;
   vtable = (unsigned int)surface[46];
-  return vtable == (unsigned int)(uintptr_t)off_50EE24
-      || vtable == (unsigned int)(uintptr_t)off_50EDD4;
+  return vtable == (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable
+      || vtable == (unsigned int)(uintptr_t)g_Surface_BaseVtable;
 }
 
 static int RenderSurface_InvokeSlot16ReadPixel(_DWORD *surface, int x, int y)
@@ -9008,34 +8998,34 @@ static void RenderSurface_FillSoftwareRect(
   for ( y = y0; y <= y1; ++y )
     memset(pixels + y * width + x0, color, x1 - x0 + 1);
 }
-_UNKNOWN unk_50EF60; // weak
-_UNKNOWN unk_50EF80; // weak
-_UNKNOWN unk_50EFC0; // weak
-_UNKNOWN unk_50EFE0; // weak
-_UNKNOWN unk_50F000; // weak
-_UNKNOWN unk_50F020; // weak
-int (*off_50F044)() = &DLXSpriteSet_Destroy; // weak
-_UNKNOWN unk_50F050; // weak
-int (*off_50F0E4)() = &WCIsvListBase_dtorRoot; // weak
-_DWORD (*off_50F0F4)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
-int (*off_50F104[2])() = { &unknown_libname_3, &WCIsvListBase_dtorFreeOnly }; // weak
-int (__thiscall *off_50F114)(WCIsvListBase *this) = &WCIsvListBase_DestroyElementsAndDtor; // weak
-void *off_50F124 = &WCIsvListBase_dtorVariant124; // weak
-void *off_50F134 = &WCIsvListBase_dtorVariant134; // weak
-_UNKNOWN unk_50F140; // weak
-_UNKNOWN unk_50F160; // weak
-_UNKNOWN unk_50F180; // weak
-_UNKNOWN unk_50F1B0; // weak
-int (*off_50F1E4[6])() =
+_UNKNOWN g_RenderSurface_DtorArrayTag; // weak
+_UNKNOWN g_Surface_DtorArrayTag; // weak
+_UNKNOWN g_LinkedBlitCursor_DtorArrayTag; // weak
+_UNKNOWN g_ScratchSurface_DtorArrayTag; // weak
+_UNKNOWN g_BlitCursor_DtorArrayTag; // weak
+_UNKNOWN g_SurfaceRawBuffer_DtorArrayTag; // weak
+int (*g_DLXSpriteSet_Vtable)() = &DLXSpriteSet_Destroy; // weak
+_UNKNOWN g_DLXSpriteSet_DtorArrayTag; // weak
+int (*g_WCIsvListBaseRoot_Vtable)() = &WCIsvListBase_dtorRoot; // weak
+_DWORD (*g_WCIsvListBaseDtor_Vtable)(WCIsvListBase * this) = &WCIsvListBase_dtor; // weak
+int (*g_WCIsvListBaseFreeOnly_Vtable[2])() = { &unknown_libname_3, &WCIsvListBase_dtorFreeOnly }; // weak
+int (__thiscall *g_WCIsvListBaseDestroyElements_Vtable)(WCIsvListBase *this) = &WCIsvListBase_DestroyElementsAndDtor; // weak
+void *g_WCIsvListBaseVariant124_Vtable = &WCIsvListBase_dtorVariant124; // weak
+void *g_WCIsvListBaseVariant134_Vtable = &WCIsvListBase_dtorVariant134; // weak
+_UNKNOWN g_WCIsvListBaseRoot_DtorArrayTag; // weak
+_UNKNOWN g_WCIsvListBaseVariant124_DtorArrayTag; // weak
+_UNKNOWN g_WCIsvListBaseVariant134_DtorArrayTag; // weak
+_UNKNOWN g_FileSystemMountTable_DtorArrayTag; // weak
+int (*g_RenderState_Vtable[6])() =
 {
-  &nullsub_15,
-  &nullsub_23,
-  &nullsub_24,
+  &Noop_InputDeviceDoOp,
+  &Noop_InputDeviceGetParamB,
+  &Noop_InputDeviceSetParamA,
   &Input_Init,
   &Input_Shutdown,
   &RenderState_PollInputAndClampCursor
 }; // weak
-int (*off_50F204[6])() =
+int (*g_Device_Vtable[6])() =
 {
   &Device_DoOp,
   &Device_GetParamB,
@@ -9044,33 +9034,33 @@ int (*off_50F204[6])() =
   &DD_GetSurfacePitch,
   &Device_UpdateRect
 }; // weak
-int (*off_50F364[4])() = { &IO_StreamAdapterReadBytes, &IO_StreamAdapterIsAtEnd, &IO_StreamAdapterInvokeAtEnd, &IO_StreamAdapterReadStub }; // weak
-_UNKNOWN unk_50F3B0; // weak
-_UNKNOWN unk_50F578; // weak
+int (*g_IOStreamAdapter_Vtable[4])() = { &IO_StreamAdapterReadBytes, &IO_StreamAdapterIsAtEnd, &IO_StreamAdapterInvokeAtEnd, &IO_StreamAdapterReadStub }; // weak
+_UNKNOWN g_IOStreamAdapter_DtorArrayTag; // weak
+_UNKNOWN g_CAviDecompressor_AllocTypeTag; // weak
 IDirectDrawSurface stru_50F60C = { NULL }; // idb
 IDirectDrawSurface2 stru_50F6A0 = { NULL }; // idb
 IDirectDrawSurface stru_50F734 = { NULL }; // idb
 IDirectDrawSurface stru_50F740 = { NULL }; // idb
 IDirectDrawSurface2 stru_50F74C = { NULL }; // idb
 IDirectDrawSurface2 stru_50F758 = { NULL }; // idb
-int (*off_50FDD4)() = &CAviDecompressor_DestroySourceInterface; // weak
-int (*off_50FDE4)() = &CAviDecompressor_Destroy; // weak
-_UNKNOWN unk_50FE10; // weak
-_UNKNOWN unk_50FE30; // weak
-_UNKNOWN unk_50FEA8; // weak
-_UNKNOWN unk_50FEB4; // weak
-_UNKNOWN unk_50FF3C; // weak
-_UNKNOWN unk_50FF40; // weak
-_UNKNOWN unk_50FF5C; // weak
-_UNKNOWN unk_51000C; // weak
-_UNKNOWN unk_51006C; // weak
-_UNKNOWN unk_510078; // weak
-_UNKNOWN unk_510084; // weak
-_UNKNOWN unk_510088; // weak
-_UNKNOWN unk_5100BC; // weak
-int (*off_510374[2])() = { &AviException_ScalarDeletingDtor, &AviException_GetMessage }; // weak
-_UNKNOWN unk_5103A0; // weak
-int (*off_5105B4[12])() =
+int (*g_CAviSourceInterface_Vtable)() = &CAviDecompressor_DestroySourceInterface; // weak
+int (*g_CAviDecompressor_Vtable)() = &CAviDecompressor_Destroy; // weak
+_UNKNOWN g_CAviSourceInterface_DtorArrayTag; // weak
+_UNKNOWN g_CAviDecompressor_DtorArrayTag; // weak
+_UNKNOWN g_AviExceptionMessage_EHFrame; // weak
+_UNKNOWN g_AviStreamRectDrawBegin_EHFrame; // weak
+_UNKNOWN g_AviOpenFileDecodeThread_EHFrame; // weak
+_UNKNOWN g_AviOpenVideoCodec_EHFrame; // weak
+_UNKNOWN g_AviBeginPlayback_EHFrame; // weak
+_UNKNOWN g_AviPlayerFlip_EHFrame; // weak
+_UNKNOWN g_AviUpdatePos_EHFrame; // weak
+_UNKNOWN g_AviPresentFrameForRect_EHFrame; // weak
+_UNKNOWN g_AviApplyOpenOptions_EHFrame; // weak
+_UNKNOWN g_AviPlayerCreateBackSurface_EHScopeTable; // weak
+_UNKNOWN g_AviPlayerCreatePalette_EHScopeTable; // weak
+int (*g_AviException_VTable[2])() = { &AviException_ScalarDeletingDtor, &AviException_GetMessage }; // weak
+_UNKNOWN g_AviException_DtorArrayDescriptor; // weak
+int (*g_CSSFileStream_VTable[12])() =
 {
   &CSS_FileStream_Read,
   &CSS_FileStream_IsFinished,
@@ -9085,17 +9075,17 @@ int (*off_5105B4[12])() =
   &ExcString_GetErrorCodeStub,
   &CSS_FileStream_Destroy
 }; // weak
-_UNKNOWN unk_5105F0; // weak
-_UNKNOWN unk_510640; // weak
-_UNKNOWN unk_510654; // weak
-_UNKNOWN unk_51066C; // weak
-_UNKNOWN unk_5106A4; // weak
-_UNKNOWN unk_5106BC; // weak
-_UNKNOWN unk_5106C0; // weak
-_UNKNOWN unk_5106D0; // weak
-_UNKNOWN unk_5108C0; // weak
-int (*off_5108E0[3])() = { &Surface_BltOntoSurface, &Surface_BltFastOpaqueTo, &Surface_BltFastKeyedTo }; // weak
-int (*off_510964[13])() =
+_UNKNOWN g_CSSFileStream_DtorArrayDescriptor; // weak
+_UNKNOWN g_CSSCloseChannel_EHScopeTable; // weak
+_UNKNOWN g_CSSServiceStreamingChannels_EHScopeTable; // weak
+_UNKNOWN g_CSSPauseStreamReading_EHScopeTable; // weak
+_UNKNOWN g_CSSEmptySampleCache_EHScopeTable; // weak
+_UNKNOWN g_CSSStopSound_EHScopeTable; // weak
+_UNKNOWN g_CSSSetSoundPos_EHScopeTable; // weak
+_UNKNOWN g_CSSShutdownVoicePool_EHScopeTable; // weak
+_UNKNOWN g_CompatStringHolder_DtorArrayDescriptor; // weak
+int (*g_Surface_BlitFunctionTable[3])() = { &Surface_BltOntoSurface, &Surface_BltFastOpaqueTo, &Surface_BltFastKeyedTo }; // weak
+int (*g_FileSystemMountTable_VTable[13])() =
 {
   &Compat_FileSystemForEachMountInvokeSlot0,
   &Compat_FileSystemCloseQuery,
@@ -9111,7 +9101,7 @@ int (*off_510964[13])() =
   &FileSystem_OpenViaOpenSlotAndNotify,
   &Compat_FileSystemForEachMountInvokeCallback
 }; // weak
-int (*off_5109C4[9])() =
+int (*g_CompatFileStream_VTable[9])() =
 {
   &Compat_FileStreamSeekFromStart,
   &Compat_FileStreamTell,
@@ -9123,15 +9113,15 @@ int (*off_5109C4[9])() =
   &Compat_FileStreamReadChar,
   &Compat_FileStreamUngetChar
 }; // weak
-int (*off_5109F4[6])() = { &Compat_FileFinderGetName, &Compat_FileFinderGetAttributes, &Compat_FileFinderGetSize, &Compat_FileFinderHasEntry, &Compat_FileFinderAdvance, &Compat_FileFinderRelease }; // weak
-int (*off_510A14[4])() = { &Compat_FileFinderCreate, &Compat_FileSystemCloseQuery, &FileSystem_DiskMountScalarDeletingDtor, &Compat_FileSystemOpenIfReady }; // weak
-_UNKNOWN unk_510A90; // weak
-_UNKNOWN unk_510AB0; // weak
-_UNKNOWN unk_510AD0; // weak
-_UNKNOWN unk_510AF0; // weak
-int (*off_510B14[6])() = { &File_CacheNodeGetTag, &File_CacheNodeGetEntrySize, &File_CacheNodeGetChildTag, &File_CacheNodeCheckChildHeight, &File_CacheNodeRebalance, &File_CacheNodeScalarDtor }; // weak
-int (*off_510B34[4])() = { &File_CacheNodeNewValidated, &Compat_FileSystemCloseQuery, &File_SourceScalarDtor, &Compat_FileSystemOpenIfReady }; // weak
-int (*off_510B74[10])() =
+int (*g_CompatFileFinder_VTable[6])() = { &Compat_FileFinderGetName, &Compat_FileFinderGetAttributes, &Compat_FileFinderGetSize, &Compat_FileFinderHasEntry, &Compat_FileFinderAdvance, &Compat_FileFinderRelease }; // weak
+int (*g_FileSystemDiskMount_VTable[4])() = { &Compat_FileFinderCreate, &Compat_FileSystemCloseQuery, &FileSystem_DiskMountScalarDeletingDtor, &Compat_FileSystemOpenIfReady }; // weak
+_UNKNOWN g_CompatFileStream_DtorArrayDescriptor; // weak
+_UNKNOWN g_CompatFileFinder_DtorArrayDescriptor; // weak
+_UNKNOWN g_FileSystemDiskMount_DtorArrayDescriptor; // weak
+_UNKNOWN g_FileSystemDiskMountVariant_DtorArrayDescriptor; // weak
+int (*g_FileCacheNode_VTable[6])() = { &File_CacheNodeGetTag, &File_CacheNodeGetEntrySize, &File_CacheNodeGetChildTag, &File_CacheNodeCheckChildHeight, &File_CacheNodeRebalance, &File_CacheNodeScalarDtor }; // weak
+int (*g_FileSource_VTable[4])() = { &File_CacheNodeNewValidated, &Compat_FileSystemCloseQuery, &File_SourceScalarDtor, &Compat_FileSystemOpenIfReady }; // weak
+int (*g_FileArchiveEntryStream_VTable[10])() =
 {
   &Compat_QuerySkipBytes,
   &Compat_QueryGetLength,
@@ -9144,50 +9134,50 @@ int (*off_510B74[10])() =
   &Res_StreamPutBackDecodedByte,
   &Res_StreamSeekClamped
 }; // weak
-int (*off_510BA4[4])() = { &Compat_QuerySkipBytes, &Compat_QueryGetLength, &Compat_QuerySkipBytesFromBase, &File_DirNodeScalarDtor }; // weak
-int (*off_510BD4[10])() =
+int (*g_FileDirNode_VTable[4])() = { &Compat_QuerySkipBytes, &Compat_QueryGetLength, &Compat_QuerySkipBytesFromBase, &File_DirNodeScalarDtor }; // weak
+int (*g_FileSystemArchiveEntryStream_VTable[10])() =
 {
   &Compat_QuerySkipBytes,
   &Compat_QueryGetLength,
   &Compat_QuerySkipBytesFromBase,
-  &nullsub_29,
+  &Noop_FatalQueryStreamDestruct,
   &Compat_TriggerFatalRuntimeErrorOnce,
   &Compat_TriggerFatalRuntimeErrorOnce,
   &Compat_TriggerFatalRuntimeErrorOnce,
   &Compat_TriggerFatalRuntimeErrorOnce,
-  &nullsub_30,
+  &Noop_FatalQueryStreamPutBackByte,
   &Res_StreamSeekClamped
 }; // weak
-int (*off_510C04[4])() = { &File_CacheNodeNewValidated, &Compat_FileSystemCloseQuery, &Compat_QueryCloseAndDestruct, &Compat_FileSystemOpenIfReady }; // weak
-_UNKNOWN unk_510C40; // weak
-_UNKNOWN unk_510C60; // weak
-_UNKNOWN unk_510C80; // weak
-_UNKNOWN unk_510CA0; // weak
-_UNKNOWN unk_510CC0; // weak
-_UNKNOWN unk_510CE0; // weak
-_UNKNOWN unk_510DAC; // weak
-_UNKNOWN unk_510E20; // weak
-_DWORD (__cdecl *off_510F44)(bad_exception *this) = &bad_exception_dtor; // weak
-int (*off_511054[4])() = { &IO_StreambufAllocDerived, &Compat_FileSystemCloseQuery, &Rules_ConstructHandleVectorDtor, &Compat_FileSystemOpenIfReady }; // weak
+int (*g_FileReadOnlySource_VTable[4])() = { &File_CacheNodeNewValidated, &Compat_FileSystemCloseQuery, &Compat_QueryCloseAndDestruct, &Compat_FileSystemOpenIfReady }; // weak
+_UNKNOWN g_FileSystemArchiveRecordCache_CtorArrayDescriptor; // weak
+_UNKNOWN g_FileDirNode_DtorArrayDescriptor; // weak
+_UNKNOWN g_FileCacheNode_DtorArrayDescriptor; // weak
+_UNKNOWN g_FileSource_DtorArrayDescriptor; // weak
+_UNKNOWN g_CompatQuery_DtorArrayDescriptor; // weak
+_UNKNOWN g_CompatQueryCloseAndDestruct_DtorArrayDescriptor; // weak
+_UNKNOWN g_CRTWatcomEHHandleNestedException_ScopeTable; // weak
+_UNKNOWN g_CRTWatcomEHFrameHandler_ScopeTable; // weak
+_DWORD (__cdecl *g_BadException_VTable)(bad_exception *this) = &bad_exception_dtor; // weak
+int (*g_IOStreambuf_VTable[4])() = { &IO_StreambufAllocDerived, &Compat_FileSystemCloseQuery, &Rules_ConstructHandleVectorDtor, &Compat_FileSystemOpenIfReady }; // weak
 int (*g_FuncTable_511094[6])() =
 {
   &Rules_Builtin_1,
   &Rules_Builtin_2,
   &Rules_Builtin_3,
   &Rules_Builtin_0,
-  &nullsub_32,
+  &Noop_RulesRecordScalarDeletingDtor,
   &Rules_ConstructRecordVectorDtor
 }; // weak
-_UNKNOWN unk_5110B0; // weak
-_UNKNOWN unk_5110D0; // weak
-int dword_5110EE = 0; // weak
-int dword_5110F2 = 3866655; // weak
-int dword_511108 = 365; // weak
+_UNKNOWN g_RulesHandleVector_DtorArrayDescriptor; // weak
+_UNKNOWN g_RulesRecordArrayDtorSlot; // weak
+int g_CRT_NonLeapMonthDayTable = 0; // weak
+int g_CRT_NonLeapFebMarDayThreshold = 3866655; // weak
+int g_CRT_LeapMonthDayTable = 365; // weak
 char g_LanguageIndex = '\x01'; // weak
-int dword_511134 = 1; // weak
-_UNKNOWN unk_511140; // weak
+int g_SdlTransitionAnimSkipRequested = 1; // weak
+_UNKNOWN g_CDPathTemplate; // weak
 _UNKNOWN *g_RenderDevice = &unk_51D9A0; // weak
-char (*off_511234)[1024] = &byte_51DE60; // weak
+char (*g_BuildingTransferTargetListSurfaceBuffer)[1024] = &byte_51DE60; // weak
 char aGfx_7[5] = "gfx\\"; // weak
 char aGfx_0[5] = "gfx\\"; // weak
 char aGfx_8[5] = "gfx\\"; // weak
@@ -9211,10 +9201,10 @@ char *g_Text_QuitConfirm[3] =
 int g_UnitSearchCursor = -1; // weak
 int g_SelectedUnitIndex = -1; // weak
 int g_LastSelectedUnitIndex = -1; // weak
-int dword_511B64 = -1; // weak
-__int16 word_511B2C[7] = { 0x30B, 0x313, 0x31B, 0x321, 0x327, 0x32E, 0x32E }; // weak
-__int16 word_511B3A[2] = { 0x30B, 0x315 }; // weak
-__int16 word_511B3E[5] = { 0x30B, 0x313, 0x31D, 0x323, 0x32A }; // weak
+int g_PendingLoadGameSlotIndex = -1; // weak
+__int16 g_WorldMapAmbientAnimFramesSetA[7] = { 0x30B, 0x313, 0x31B, 0x321, 0x327, 0x32E, 0x32E }; // weak
+__int16 g_WorldMapAmbientAnimFramesSetB[2] = { 0x30B, 0x315 }; // weak
+__int16 g_WorldMapAmbientAnimFramesSetC[5] = { 0x30B, 0x313, 0x31D, 0x323, 0x32A }; // weak
 char aSwijtynia[] = "\x98wi\x86tynia"; // weak
 char aShrine[] = "Shrine"; // weak
 char aSchrein[] = "Schrein"; // weak
@@ -9263,12 +9253,12 @@ char aWasser[7] = "Wasser"; // weak
 char aBlad[5] = "Blad"; // weak
 char aError[6] = "Error"; // weak
 char aError_0[6] = "Error"; // weak
-char *off_511B68[21] = { aSwijtynia, aShrine, aSchrein }; // weak
-char *off_511B74[18] = { aPustaSwijtynia, aEmptyShrine, aLeererSchrein }; // weak
-char *off_511B80[15] = { aMiejsceKultu, aCultPlace, aKultstdtte }; // weak
-char *off_511B8C[12] = { aPusteMiejsceKu, aEmptyCultPlace, aLeereKultstdtt }; // weak
-char *off_511B98[9] = { aFundamenty, aFoundations, aFundamente }; // weak
-char *off_511BA4[6] = { aZakopanySkarb, aHiddenTreasure, aVersteckterSch }; // weak
+char *g_ShrineTexts[21] = { aSwijtynia, aShrine, aSchrein }; // weak
+char *g_EmptyShrineTexts[18] = { aPustaSwijtynia, aEmptyShrine, aLeererSchrein }; // weak
+char *g_CultPlaceTexts[15] = { aMiejsceKultu, aCultPlace, aKultstdtte }; // weak
+char *g_EmptyCultPlaceTexts[12] = { aPusteMiejsceKu, aEmptyCultPlace, aLeereKultstdtt }; // weak
+char *g_CastleFoundationTexts[9] = { aFundamenty, aFoundations, aFundamente }; // weak
+char *g_HiddenTreasureTexts[6] = { aZakopanySkarb, aHiddenTreasure, aVersteckterSch }; // weak
 char *g_Text_SurrenderConfirm[3] =
 {
   "Czy chcesz si\x91 podda\x8D?",
@@ -9285,12 +9275,12 @@ char *g_Text_NoBuilder[3] =
 #define WORLD_MAP_ACTION_WIDGET_RECORD_SIZE 53
 #define WORLD_MAP_ACTION_WIDGET_COUNT 6
 
-_BYTE dword_511D40[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (WORLD_MAP_ACTION_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
-#define dword_511D48 (*(int *)(dword_511D40 + 8))
-#define unk_511DDF (*(unsigned char *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3))
-#define dword_511DE7 (*(int *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3 + 8))
+_BYTE g_WorldMapActionButtonWidgetTable[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (WORLD_MAP_ACTION_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
+#define g_WorldMapMapModeWidgetFlags (*(int *)(g_WorldMapActionButtonWidgetTable + 8))
+#define g_WorldMapJoinUnitsWidgetRecord (*(unsigned char *)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3))
+#define g_WorldMapJoinUnitsWidgetFlags (*(int *)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3 + 8))
 static int g_WorldMapActionWidgetsInitialized;
-int dword_511EC0 = -1; // weak
+int g_UITextCursorGlyphIndex = -1; // weak
 typedef struct TextSpriteResourceSlotRecord {
   const char *source_stem;
   int cached_sprite_set;
@@ -9331,14 +9321,14 @@ static TextSpriteResourceSlotRecord g_TextSpriteResourceSlots[] =
 
 #define TEXT_SPRITE_RESOURCE_SLOT_COUNT ((int)(sizeof(g_TextSpriteResourceSlots) / sizeof(g_TextSpriteResourceSlots[0]) - 1))
 int g_MiniMapDrawMask = 7; // weak
-char byte_511FF8[] = { '\xF8' }; // weak
-__int16 word_512348[] = { 30 }; // weak
-__int16 word_51234A[] = { 1 }; // weak
-__int16 word_51234C[] = { 121 }; // weak
-__int16 word_51234E[] = { 25 }; // weak
-unsigned char unk_512008 = 0x14; // weak
-void *off_512350 = &unk_512008; // weak
-unsigned char unk_5121A8 = 0x74; // weak
+char g_MiniMapBuildingOwnerColorTable[] = { '\xF8' }; // weak
+__int16 g_WorldMapTopMenuHitLeft0[] = { 30 }; // weak
+__int16 g_WorldMapTopMenuHitTop0[] = { 1 }; // weak
+__int16 g_WorldMapTopMenuHitRight0[] = { 121 }; // weak
+__int16 g_WorldMapTopMenuHitBottom0[] = { 25 }; // weak
+unsigned char g_WorldMapTopMenuHitTargetA = 0x14; // weak
+void *g_WorldMapTopMenuHitMenuPtr0 = &g_WorldMapTopMenuHitTargetA; // weak
+unsigned char g_WorldMapTopMenuHitTargetB = 0x74; // weak
 typedef struct WorldMapTopMenuHitRecord {
   __int16 left;
   __int16 top;
@@ -9348,14 +9338,14 @@ typedef struct WorldMapTopMenuHitRecord {
 } WorldMapTopMenuHitRecord;
 static const WorldMapTopMenuHitRecord g_WorldMapTopMenuHitRecords[] =
 {
-  { 30, 1, 121, 25, (_WORD *)&unk_512008 },
-  { 126, 1, 218, 25, (_WORD *)&unk_5121A8 }
+  { 30, 1, 121, 25, (_WORD *)&g_WorldMapTopMenuHitTargetA },
+  { 126, 1, 218, 25, (_WORD *)&g_WorldMapTopMenuHitTargetB }
 };
 #define WORLD_MAP_TOP_MENU_HIT_RECORD_COUNT \
   ((int)(sizeof(g_WorldMapTopMenuHitRecords) / sizeof(g_WorldMapTopMenuHitRecords[0])))
-int dword_512360 = -1; // weak
-int dword_512364 = 8; // weak
-char *off_512368[3] =
+int g_ActiveUnitMoveTileIndex = -1; // weak
+int g_UnitBattleAnimFrameCount = 8; // weak
+char *g_Text_UnitDisbandedLowMoraleMessages[3] =
 {
   "Jedna z twoich jednostek uleg\x92a rozwi\x86zaniu, Panie. Nie chcieli Ci dalej s\x92u\xA7y\x8D, gdy\xA7 wiele przegranych bitew i og\xA2lne wyczerpanie drastycznie wp\x92yn\x91\x92o na ich morale.",
   "One of your troops fell apart. They did not want to serve you anymore, their morale was very low after many lost battles and many dead.",
@@ -9368,14 +9358,14 @@ char *off_512368[3] =
  * enough to keep the retained front-end link surface anchored to the authentic
  * data-segment root instead of an undefined symbol.
  */
-char *off_5123CC[102] =
+char *g_UnitTypeMetadataRecordsStorage[102] =
 {
   "Posp. ruszenie",
   "Peasant",
   "Bauern",
   0
 }; // weak
-char *(*g_UnitTypeMetadataRecords)[102] = &off_5123CC; // weak
+char *(*g_UnitTypeMetadataRecords)[102] = &g_UnitTypeMetadataRecordsStorage; // weak
 static char *g_RecoveredUnitTypeEnglishNames[UNIT_TYPE_COUNT] =
 {
   "Peasant",
@@ -9422,8 +9412,8 @@ static char *UnitType_GetLocalizedName(unit_type unitType)
   if ( unitType == UNIT_TYPE_PEASANT )
   {
     language_index = (unsigned __int8)g_LanguageIndex;
-    if ( language_index < 3 && off_5123CC[language_index] )
-      return off_5123CC[language_index];
+    if ( language_index < 3 && g_UnitTypeMetadataRecordsStorage[language_index] )
+      return g_UnitTypeMetadataRecordsStorage[language_index];
   }
   if ( unitType >= UNIT_TYPE_PEASANT && unitType < UNIT_TYPE_COUNT )
     return g_RecoveredUnitTypeEnglishNames[unitType];
@@ -9431,13 +9421,13 @@ static char *UnitType_GetLocalizedName(unit_type unitType)
 }
 
 char *g_UnitTypeResourceKeys = "peon"; // weak
-char byte_512570[] = { '\x03' }; // weak
-char byte_512571[] = { '\x03' }; // weak
-char byte_512572[] = { '\n' }; // weak
-char byte_512573[4] = { '\0', '\0', '\0', '\0' }; // weak
-char byte_512577[] = { '\0' }; // weak
-char byte_512578[] = { '\b' }; // weak
-char byte_512579[] = { '\b' }; // weak
+char g_UnitTypeBattleMoveStepPx[] = { '\x03' }; // weak
+char g_UnitTypeMoveAnimationTickIntervalMs[] = { '\x03' }; // weak
+char g_UnitTypeAnimationFrameIntervalMs[] = { '\n' }; // weak
+char g_UnitTypeHasIdleAnimationFlags[4] = { '\0', '\0', '\0', '\0' }; // weak
+char g_UnitTypeSpriteVerticalOffsetPx[] = { '\0' }; // weak
+char g_UnitTypeAttackAnimationFrameCount[] = { '\b' }; // weak
+char g_UnitTypeShotAnimationFrameCount[] = { '\b' }; // weak
 int g_UnitTypeFlags[] = { 0 }; // weak
 char g_UnitTypeBaseMeleeAttack[] = { '\x01' }; // weak
 char g_UnitTypeBaseDefensePower[] = { '\x01' }; // weak
@@ -9517,7 +9507,7 @@ static unsigned char UnitType_GetRoadMoveCost(int unit_type)
     return 0;
   return g_UnitTypeWorldMoveCosts[unit_type][0];
 }
-char byte_5125AE[] = { '\x03' }; // weak
+char g_UnitTypeVisionRadius[] = { '\x03' }; // weak
 char g_UnitTypeProductionTime[] = { '\x01' }; // weak
 char g_UnitTypeProductionCost[] = { '\x02' }; // weak
 __int16 g_UnitTypeProductionLicenceCost[] = { 0 }; // weak
@@ -9525,13 +9515,13 @@ char g_UnitTypeProductionRequiredTechLevelMode2[] = { '\x01' }; // weak
 char g_UnitTypeProductionRequiredTechLevelOtherModes[] = { '\x01' }; // weak
 char g_UnitTypeRole[] = { '\0' }; // weak
 char g_UnitTypeCorpseSpriteBaseIndex[] = { '\0' }; // weak
-char byte_5125B7[] = { '\x03' }; // weak
-char byte_5125B8[] = { '\0' }; // weak
+char g_UnitTypeAttackSoundFrameIndex[] = { '\x03' }; // weak
+char g_UnitTypeShotSoundFrameIndex[] = { '\0' }; // weak
 char *g_UnitMoveSoundStems = "b_lekkie\\krokb"; // weak
 char g_UnitMoveSoundVariantCounts[] = { '\x04' }; // weak
 char g_UnitMoveSoundBaseVolumes[] = { '\n' }; // weak
 char g_BuilderConstructionProgressPerTurn = '\x1A'; // weak
-char *off_513328[3] = { "pol\\", "eng\\", "ger\\" }; // weak
+char *g_LanguageDirectoryNames[3] = { "pol\\", "eng\\", "ger\\" }; // weak
 int Map_NeighborDX[64] =
 {
   0,
@@ -9665,7 +9655,7 @@ int Map_NeighborDY[63] =
   0,
   -1
 }; // weak
-int dword_513434[363] =
+int g_MathSinTableQ16[363] =
 {
   0,
   1143,
@@ -10031,7 +10021,7 @@ int dword_513434[363] =
   0,
   0
 }; // weak
-char byte_5139E1[19] =
+char g_BuildingFlagYOffsets[19] =
 {
   'L',
   '<',
@@ -10054,21 +10044,21 @@ char byte_5139E1[19] =
   '\0'
 }; // weak
 int g_WorldMapAttentionFlashUnitIndex = -1; // weak
-int dword_5139F8 = -1; // weak
+int g_UnitBlinkFlashUnitIndex = -1; // weak
 int battleLogEnabled = 1; // weak
-char *off_513A00[3] =
+char *g_LeadTroopsPersonallyPromptTexts[3] =
 {
   "Czy chcesz osobi\x9Ecie poprowadzi\x8D wojska?",
   "Do you want to lead the troops on your own?",
   "M\x94chtest Du allein Deine Truppen anf\x81hren?"
 }; // weak
-int dword_513A10[] = { 1 }; // weak
-int dword_513A14[23] = { 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 }; // weak
-__int16 word_513A70[4] = { 100, 300, 300, 0 }; // weak
-__int16 word_513A78[5] = { 427, 0, 341, 261, 256 }; // weak
-char byte_513A7E[5] = { '\x05', '\x01', '\0', '\x01', '\n' }; // weak
-char byte_513A7F[5] = { '\x01', '\0', '\x01', '\n', '\x01' }; // weak
-char *off_513A84[50] =
+int g_BuildingSpawnTileSearchOffsetsX[] = { 1 }; // weak
+int g_BuildingSpawnTileSearchOffsetsY[23] = { 2, 0, 2, 2, 2, -1, 2, 2, 1, -1, 1, 2, 0, -1, 0, 2, -1, -1, -1, 1, -1, 0, -1 }; // weak
+__int16 g_BuildingTypeMaxHitPoints[4] = { 100, 300, 300, 0 }; // weak
+__int16 g_WallKindDefenseFactor[5] = { 427, 0, 341, 261, 256 }; // weak
+char g_BuildingUpgradeDurationByLevel[5] = { '\x05', '\x01', '\0', '\x01', '\n' }; // weak
+char g_BuildingUpgradeCostByLevel[5] = { '\x01', '\0', '\x01', '\n', '\x01' }; // weak
+char *g_BuildingRandomNamePool[50] =
 {
   "cantown",
   "kenstone",
@@ -10186,7 +10176,7 @@ char *UI_Locale_BuildingNames_H[3] =
   "%d turns remaining.",
   "Sie ben\x94tigen %d Z\x81ge."
 }; // weak
-char *off_513BD0[27] =
+char *g_CastleBuildingIconTooltipNames[27] =
 {
   "Dw\xA2r",
   "Court",
@@ -10314,27 +10304,27 @@ char *UI_Locale_BuildingNames_M[9] =
   "Barracks",
   "Kaserne"
 }; // weak
-char *off_513C24[6] = { "Ch\x92opi", "Peasants", "Bauern", "Baraki", "Barracks", "Kaserne" }; // weak
-__int16 word_513C3C[] = { 251 }; // weak
-__int16 word_513C3E[] = { 254 }; // weak
-__int16 word_513C40[] = { 549 }; // weak
-__int16 word_513C42[] = { 192 }; // weak
-__int16 word_513C44[] = { 549 }; // weak
-__int16 word_513C46[] = { 274 }; // weak
-__int16 word_513C48[] = { -1 }; // weak
-__int16 word_513C4A[] = { -1 }; // weak
-__int16 word_513C4C[] = { 292 }; // weak
-__int16 word_513C4E[] = { 101 }; // weak
-__int16 word_513C50[] = { 535 }; // weak
-__int16 word_513C52[] = { 399 }; // weak
-__int16 word_513C54[] = { 459 }; // weak
-__int16 word_513C56[] = { 169 }; // weak
-__int16 word_513C58[] = { 74 }; // weak
-__int16 word_513C5A[] = { 123 }; // weak
-__int16 word_513C5C[] = { 154 }; // weak
-__int16 word_513C5E[] = { 409 }; // weak
-__int16 word_513C60[] = { 210 }; // weak
-__int16 word_513C62[83] =
+char *g_CastleBuildingIconTooltipNames_FromPeasants[6] = { "Ch\x92opi", "Peasants", "Bauern", "Baraki", "Barracks", "Kaserne" }; // weak
+__int16 g_CastleAmbientLayer1_SpriteIds[] = { 251 }; // weak
+__int16 g_CastleAmbientLayer1_XOffsets[] = { 254 }; // weak
+__int16 g_CastleAmbientLayer2_SpriteIds[] = { 549 }; // weak
+__int16 g_CastleAmbientLayer2_XOffsets[] = { 192 }; // weak
+__int16 g_CastleAmbientLayer3_SpriteIds[] = { 549 }; // weak
+__int16 g_CastleAmbientLayer3_XOffsets[] = { 274 }; // weak
+__int16 g_CastleAmbientLayer4_SpriteIds[] = { -1 }; // weak
+__int16 g_CastleAmbientLayer4_XOffsets[] = { -1 }; // weak
+__int16 g_CastleAmbientLayer5_SpriteIds[] = { 292 }; // weak
+__int16 g_CastleAmbientLayer5_XOffsets[] = { 101 }; // weak
+__int16 g_CastleAmbientLayer6_SpriteIds[] = { 535 }; // weak
+__int16 g_CastleAmbientLayer6_XOffsets[] = { 399 }; // weak
+__int16 g_CastleAmbientLayer7_SpriteIds[] = { 459 }; // weak
+__int16 g_CastleAmbientLayer7_XOffsets[] = { 169 }; // weak
+__int16 g_CastleAmbientLayer8_SpriteIds[] = { 74 }; // weak
+__int16 g_CastleAmbientLayer8_XOffsets[] = { 123 }; // weak
+__int16 g_CastleAmbientLayer9_SpriteIds[] = { 154 }; // weak
+__int16 g_CastleAmbientLayer9_XOffsets[] = { 409 }; // weak
+__int16 g_CastleAmbientLayer10_SpriteIds[] = { 210 }; // weak
+__int16 g_CastleAmbientLayer10_XOffsets[83] =
 {
   390,
   259,
@@ -10420,22 +10410,22 @@ __int16 word_513C62[83] =
   0,
   0
 }; // weak
-__int16 word_513D08[4] = { 5, 6, 30, 29 }; // weak
-_BYTE dword_513D98[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE + 4] __attribute__((aligned(4))); // weak
+__int16 g_CastleHoverTooltipZones[4] = { 5, 6, 30, 29 }; // weak
+_BYTE g_CastleStatusWidgetRecord[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE + 4] __attribute__((aligned(4))); // weak
 static int g_CastleCompositeStatusWidgetInitialized;
-_WORD word_513E08[5] = { 500, 60, 0, 0, 3 }; // weak
-int dword_513E22 = 1; // weak
-int dword_513FC2[] = { 1 }; // weak
-int dword_513FEA = 1; // weak
-int dword_514012 = 1; // weak
-int dword_51403A = 1; // weak
-int dword_514062 = 1; // weak
-char *off_514144[3] = { "Czy jeste\x9E pewien?", "Are you sure?", "Bist Du sicher?" }; // weak
-_UNKNOWN unk_514158; // weak
-int dword_51416C = 10; // weak
-int dword_514170 = 10; // weak
-int dword_514194 = -1; // weak
-int dword_5141A0[27] =
+_WORD g_CastleNewBuildingMenu[5] = { 500, 60, 0, 0, 3 }; // weak
+int g_CastleAnyAddonMissingFlag = 1; // weak
+int g_CastleAddonSchoolMissingFlags[] = { 1 }; // weak
+int g_CastleAddonHospitalMissingFlag = 1; // weak
+int g_CastleAddonBarracksMissingFlag = 1; // weak
+int g_CastleAddonWorkshopMissingFlag = 1; // weak
+int g_CastleAddonSmithsMissingFlag = 1; // weak
+char *g_CastleConfirmDestroyPrompt[3] = { "Czy jeste\x9E pewien?", "Are you sure?", "Bist Du sicher?" }; // weak
+_UNKNOWN g_CastleOwnerIconPositions; // weak
+int g_CastleAmbientLayer3_DelayJitter = 10; // weak
+int g_CastleAmbientLayer6_DelayJitter = 10; // weak
+int g_UnitStackSelectionActiveUnitIndex = -1; // weak
+int g_RoadOverlaySpriteByConnectionMask[27] =
 {
   0,
   0,
@@ -10467,28 +10457,28 @@ int dword_5141A0[27] =
 }; // weak
 int g_BridgeApproachRoadOverlayTileIds[] = { 544 }; // weak
 int g_RoadBuildModeMarkerBounceOffsets[9] = { -8, -4, 0, 4, 8, 4, 0, -4, 0 }; // weak
-int dword_5142B8 = 416; // weak
-int dword_5142BC = 400; // weak
-int dword_5142ED = 480; // weak
-int dword_5142F1 = 400; // weak
-int dword_514322 = 544; // weak
-int dword_514326 = 400; // weak
-int dword_514357 = 416; // weak
-int dword_51435B = 432; // weak
+int g_RoadBuildModeNorthMarkerX = 416; // weak
+int g_RoadBuildModeNorthMarkerY = 400; // weak
+int g_RoadBuildModeEastMarkerX = 480; // weak
+int g_RoadBuildModeEastMarkerY = 400; // weak
+int g_RoadBuildModeSouthMarkerX = 544; // weak
+int g_RoadBuildModeSouthMarkerY = 400; // weak
+int g_RoadBuildModeWestMarkerX = 416; // weak
+int g_RoadBuildModeWestMarkerY = 432; // weak
 _DWORD g_RoadBuildModeControlWidgets[2] = { 416, 400 }; // weak
-int dword_514394 = 1; // weak
-int dword_514500[] = { 0 }; // weak
-int dword_514504[] = { -1 }; // weak
-_UNKNOWN unk_514540; // weak
-_BYTE dword_514840[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT + 4] __attribute__((aligned(4))); // weak
+int g_RoadBuildModeControlWidgetState = 1; // weak
+int g_UnitBattleAdjacentTileDeltaX[] = { 0 }; // weak
+int g_UnitBattleAdjacentTileDeltaY[] = { -1 }; // weak
+_UNKNOWN g_UnitBattleShotAnimTemplate; // weak
+_BYTE g_BuildingEconomyDialogActionWidgets[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT + 4] __attribute__((aligned(4))); // weak
 static int g_BuildingEconomyDialogWidgetsInitialized;
-__int16 word_514A88[4] = { 199, 9, 438, 69 }; // weak
-char *off_514B3C[2] =
+__int16 g_BuildingEconomyDialogTooltipZoneRect[4] = { 199, 9, 438, 69 }; // weak
+char *g_TrapPitfallDiscoveryMessageStrings[2] =
 {
   "To wilczy d\xA2\x92. Czy pragniesz go zasypa\x8D, Panie",
   "This is a pitfall. Do you want to cover it, master?"
 }; // weak
-char *off_514B50[9] =
+char *g_GodAngerMessageStrings[9] =
 {
   "Gniew Bozy!",
   "God's Anger!",
@@ -10500,7 +10490,7 @@ char *off_514B50[9] =
   "Not enough AP to prepare to defence",
   "Nicht genug AP zur Verteidigung"
 }; // weak
-char *off_514B5C[6] =
+char *g_UnitBattleRetreatMessageStrings[6] =
 {
   "Odwr\xA2t",
   "Retreat",
@@ -10509,31 +10499,31 @@ char *off_514B5C[6] =
   "Not enough AP to prepare to defence",
   "Nicht genug AP zur Verteidigung"
 }; // weak
-char *off_514B68[3] =
+char *g_UnitBattlePrepareDefenceMessageStrings[3] =
 {
   "Zbyt malo PA aby sie okopac",
   "Not enough AP to prepare to defence",
   "Nicht genug AP zur Verteidigung"
 }; // weak
 #define UNIT_BATTLE_ACTION_WIDGET_COUNT 6
-_BYTE dword_514B78[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (UNIT_BATTLE_ACTION_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
-#define dword_514B80 (*(int *)(dword_514B78 + 8))
-#define unk_514BE2 (*(unsigned char *)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2))
-#define dword_514BEA (*(int *)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2 + 8))
-#define byte_514C89 (*(unsigned char *)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5 + 8))
-#define dword_514C99 (*(int *)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5 + 24))
-char *off_514CEC[3] = { "Gracz", "Player", "Spieler" }; // weak
-_UNKNOWN unk_514CF8; // weak
-char *off_514D98[2] = { "Gracz", "Player" }; // weak
-__int16 word_514DA4[] = { 498 }; // weak
-__int16 word_514DA6[] = { 143 }; // weak
-char byte_514DC0[] = { '$' }; // weak
-char byte_514DC1 = 'Q'; // weak
-char byte_514DC2 = 'Z'; // weak
-char byte_514DC3 = '\0'; // weak
-char byte_514DC4 = '-'; // weak
-char byte_514DC5 = 'c'; // weak
-char *off_514DC8[24] =
+_BYTE g_UnitBattleActionWidgetTable[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (UNIT_BATTLE_ACTION_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
+#define g_UnitBattleShootButtonState (*(int *)(g_UnitBattleActionWidgetTable + 8))
+#define g_UnitBattleChargeButtonWidget (*(unsigned char *)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2))
+#define g_UnitBattleChargeButtonState (*(int *)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2 + 8))
+#define g_UnitBattleExitButtonState (*(unsigned char *)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5 + 8))
+#define g_UnitBattleExitButtonOverlaySpriteIndex (*(int *)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5 + 24))
+char *g_UnitBattlePlayerLabelStrings[3] = { "Gracz", "Player", "Spieler" }; // weak
+_UNKNOWN g_UnitBattlePlayerPromptDialogTemplate; // weak
+char *g_UnitBattlePlayerPromptLabelStrings[2] = { "Gracz", "Player" }; // weak
+__int16 g_UnitBattlePanelStatIconX[] = { 498 }; // weak
+__int16 g_UnitBattlePanelStatIconY[] = { 143 }; // weak
+char g_UnitBattlePanelQuantityIconCharBase[] = { '$' }; // weak
+char g_UnitBattlePanelDefenseIconChar = 'Q'; // weak
+char g_UnitBattlePanelAttackIconChar = 'Z'; // weak
+char g_UnitBattlePanelVolleyIconChar = '\0'; // weak
+char g_UnitBattlePanelMoraleIconChar = '-'; // weak
+char g_UnitPanelRow3FallbackIconChar = 'c'; // weak
+char *g_UnitActionTooltipTexts[24] =
 {
   "Liczebno\x9E\x8D",
   "Quantity",
@@ -10560,8 +10550,8 @@ char *off_514DC8[24] =
   "Tiredness",
   "M\x81digkeit"
 }; // weak
-int dword_514E28 = -1; // weak
-char *off_514E2C[6] =
+int g_UnitActionTooltipLastShownAction = -1; // weak
+char *g_BattleYourTurnBannerTexts[6] =
 {
   "Tw\xA2j ruch",
   "Your turn",
@@ -10570,22 +10560,22 @@ char *off_514E2C[6] =
   "You had to withdraw your troops from this battle for your chances were small. Your units managed to flee from the battlefield, some were wounded.",
   "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
 }; // weak
-char *off_514E38[3] =
+char *g_BattleForcedRetreatOutcomeTexts[3] =
 {
   "Niewielkie szanse na zwyci\x91stwo zmusi\x92y Ci\x91 do wycofania rycerzy. Twe jednostki w szybkim tempie opu\x9Eci\x92y pole bitwy, jednak wr\xA2g zdo\x92a\x92 jeszcze zada\x8D im powa\xA7ne straty.",
   "You had to withdraw your troops from this battle for your chances were small. Your units managed to flee from the battlefield, some were wounded.",
   "Die nicht allzu gro\xE1\x65\x6E Siegeschancen zwangen Dich zum R\x81ckzug Deiner Ritter. In schnellem Tempo verlie\xE1\x65\x6E Deine Einheiten das Schlachtfeld, trotzdem konnte der Feind ihnen noch ernste Verluste zuf\x81gen."
 }; // weak
-int dword_514E44 = -1; // weak
-int dword_514E48 = -1; // weak
-int dword_514E4C = 100; // weak
-int dword_514E50 = 10; // weak
-int dword_514E54 = -1; // weak
-int dword_514E58 = -1; // weak
-char *off_514E5C[2] = { "Mur", "Wall" }; // weak
+int g_UnitBattleAnimatingUnitIndex = -1; // weak
+int g_UnitFadeAnimUnitIndex = -1; // weak
+int g_UnitFadeAnimTargetOffset = 100; // weak
+int g_UnitFadeAnimStepRate = 10; // weak
+int g_UnitBattleShotProjectileTileX = -1; // weak
+int g_UnitBattleShotProjectileTileY = -1; // weak
+char *g_WallInfoPopupLabelTexts[2] = { "Mur", "Wall" }; // weak
 _BYTE BuildingGarrisonDialogActions[WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * (BUILDING_GARRISON_DIALOG_WIDGET_COUNT + 1)] __attribute__((aligned(4))); // weak
-_DWORD dword_515130[3] = { 311, 24, 1 }; // weak
-__int16 word_515310[4] = { 32, 23, 337, 125 }; // weak
+_DWORD g_CastleUnitProductionWidgetTable[3] = { 311, 24, 1 }; // weak
+__int16 g_CastleUnitProductionTooltipZone[4] = { 32, 23, 337, 125 }; // weak
 char *UI_Locale_StatusHeader[2] = { "Do uko\xA4czenia", "%d turns until" }; // weak
 char *UI_Locale_StatusLine1[5] =
 {
@@ -10609,11 +10599,11 @@ char *UI_Locale_StatusHeader_Full[6] =
 }; // weak
 char *UI_Locale_StatusLine1_Full[3] = { "wstrzymana", "is stopped", "gestoppt" }; // weak
 char aGfx_5[5] = "gfx\\"; // weak
-char *off_5156E4[3] = { "Przed mury zamku", "Outside the castle", "Au\xE1\x65\x72halb des Schlosses" }; // weak
-_UNKNOWN unk_5156F0; // weak
-int dword_5159F0[8] = { 0, 10, 20, 30, 50, 40, 40, 0 }; // weak
-int dword_515A10 = -1; // weak
-char byte_515A70[16] =
+char *g_BuildingTransferOutsideCastleLabel[3] = { "Przed mury zamku", "Outside the castle", "Au\xE1\x65\x72halb des Schlosses" }; // weak
+_UNKNOWN g_UiFormattedMessageTemplateTable; // weak
+int g_UnitBattleAiRoleScoreWeights[8] = { 0, 10, 20, 30, 50, 40, 40, 0 }; // weak
+int g_UnitBattleAiCurrentPlanMode = -1; // weak
+char g_BattleRoleDeploymentBucketTable[16] =
 {
   '\v',
   '\n',
@@ -10632,10 +10622,10 @@ char byte_515A70[16] =
   '\0',
   '\0'
 }; // weak
-_DWORD dword_515A90[3] = { 39, 426, 1 }; // weak
-_DWORD dword_515B10[3] = { 39, 426, 1 }; // weak
-_DWORD dword_515B90[3] = { 39, 426, 1 }; // weak
-_DWORD dword_515C10[3] = { 39, 426, 1 }; // weak
+_DWORD g_GateDoorDialogWidgetTable_V1[3] = { 39, 426, 1 }; // weak
+_DWORD g_GateDoorDialogWidgetTable_V2[3] = { 39, 426, 1 }; // weak
+_DWORD g_GateDoorDialogWidgetTable_V3[3] = { 39, 426, 1 }; // weak
+_DWORD g_GateDoorDialogWidgetTable_V4[3] = { 39, 426, 1 }; // weak
 char g_ProductionLicenceSmithsRequiredUnitTypes[16] =
 {
   UNIT_TYPE_HEAVY_INFANTRY,
@@ -10665,7 +10655,7 @@ char g_ProductionLicenceWorkshopRequiredUnitTypes[8] = {
   '\0',
   '\0'
 }; // weak
-_DWORD unk_515C98[24] =
+_DWORD g_LargeBuildingNeighborOffsets[24] =
 {
   0, 2,
   1, 2,
@@ -10680,7 +10670,7 @@ _DWORD unk_515C98[24] =
   0, -1,
   0, 0
 }; // weak
-char byte_515D00[16] =
+char g_SettlementTaxBurdenThresholds[16] =
 {
   '\0',
   '\x05',
@@ -10699,14 +10689,14 @@ char byte_515D00[16] =
   '\0',
   '\0'
 }; // weak
-unit_type dword_515D10[5] = {
+unit_type g_TempleGiftUnitPool_MinorMonsters[5] = {
   UNIT_TYPE_FLY,
   UNIT_TYPE_CYCLOP,
   UNIT_TYPE_TROLL,
   UNIT_TYPE_SCORPION,
   UNIT_TYPE_SKELETON
 }; // weak
-unit_type dword_515D24[7] = {
+unit_type g_TempleGiftUnitPool_HumanTroops[7] = {
   UNIT_TYPE_LIGHT_INFANTRY,
   UNIT_TYPE_HEAVY_INFANTRY,
   UNIT_TYPE_PIKEMAN,
@@ -10715,12 +10705,12 @@ unit_type dword_515D24[7] = {
   UNIT_TYPE_KNIGHTS,
   UNIT_TYPE_DRAGON_CAVALRY
 }; // weak
-unit_type dword_515D40[] = { UNIT_TYPE_RAM }; // weak
-_UNKNOWN unk_515D50; // weak
-_UNKNOWN unk_515EE8; // weak
-_UNKNOWN unk_516050; // weak
-_UNKNOWN unk_5161B8; // weak
-char *off_5162F0[9] =
+unit_type g_TempleGiftUnitPool_ScriptedRam[] = { UNIT_TYPE_RAM }; // weak
+_UNKNOWN g_TempleGiftOutcomeTable_OwnCultActive; // weak
+_UNKNOWN g_TempleGiftOutcomeTable_ForeignCultActive; // weak
+_UNKNOWN g_TempleGiftOutcomeTable_OwnCultInactive; // weak
+_UNKNOWN g_TempleGiftOutcomeTable_ForeignCultInactive; // weak
+char *g_TempleSacrilegeUnitKilledTexts[9] =
 {
   "G\x92upcze! Jak \x9Emia\x92e\x9E zak\x92\xA2ca\x8D spok\xA2j boskich istot. \x98wi\x91tkradcy zostali unicestwieni.",
   "Yoy fool! How dare you disturb the peace of Gods. Perpetrators of sacrilige have been annihilated!",
@@ -10732,7 +10722,7 @@ char *off_5162F0[9] =
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 }; // weak
-char *off_5162FC[6] =
+char *g_TempleGiftRewardText[6] =
 {
   "Jeste\x9E grzesznikiem, a na takich B\xA2g nie spogl\x86da \x92askawym okiem. Odejd\xA6 i nigdy tu nie wracaj!",
   "You're a sinner. God has no mercy on you. Leave and never come back here again!",
@@ -10741,16 +10731,16 @@ char *off_5162FC[6] =
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 }; // weak
-char *off_516308[3] =
+char *g_TempleGiftEmptyText[3] =
 {
   "Twoje ofiary nie przynios\x92y po\xA7\x86danego skutku. Bogowie zignorowali twe mod\x92y.",
   "Your sacrifice has brought nothing. Gods gave you nothing in return for your prayers.",
   "Dein Opfer war wertlos. Die G\x94tter haben Deine Gebete nicht erh\x94rt."
 }; // weak
-__int16 word_516320[8] = { 26, 70, 113, 156, 199, 0, 0, 0 }; // weak
-_DWORD dword_516330[3] = { 210, 303, 1 }; // weak
-char *off_516410[7] = { "nt", "nt", "nt", "nt", "np", "np", "np" }; // weak
-char byte_517318[440] =
+__int16 g_DemoTextColumnXOffsets[8] = { 26, 70, 113, 156, 199, 0, 0, 0 }; // weak
+_DWORD g_DemoTextHoverWidgetTable[3] = { 210, 303, 1 }; // weak
+char *g_BattleMapFileSuffixByFactionTable[7] = { "nt", "nt", "nt", "nt", "np", "np", "np" }; // weak
+char g_MoveSoundSurfaceClassTable[440] =
 {
   '\0',
   '\0',
@@ -11193,9 +11183,9 @@ char byte_517318[440] =
   '\0',
   '\0'
 }; // weak
-int dword_5174D0 = -1; // weak
+int g_Audio_ActiveSoundHandle = -1; // weak
 int g_UnitSoundsEnabled = 1; // weak
-int dword_5174D8 = 1; // weak
+int g_Audio_MusicActiveFlag = 1; // weak
 char aSfx_0[5] = "sfx\\"; // weak
 char aSfxOddzialy[14] = "sfx\\oddzialy\\"; // weak
 char aSfxOddzialy_0[14] = "sfx\\oddzialy\\"; // weak
@@ -11206,21 +11196,21 @@ char aSfxOddzialy_4[14] = "sfx\\oddzialy\\"; // weak
 char aSfxOddzialy_5[14] = "sfx\\oddzialy\\"; // weak
 char aSfxRuchy[11] = "sfx\\ruchy\\"; // weak
 char aSfxRuchy_0[11] = "sfx\\ruchy\\"; // weak
-__int16 word_5178F4 = 48; // weak
+__int16 g_WorldMapUnitMoveSoundSuffixCode = 48; // weak
 char aSfxRuchy_1[11] = "sfx\\ruchy\\"; // weak
 char aSfxRuchy_2[11] = "sfx\\ruchy\\"; // weak
-__int16 word_5179CC = 48; // weak
+__int16 g_BattleMapUnitMoveSoundSuffixCode = 48; // weak
 char aSfxButtons[13] = "sfx\\buttons\\"; // weak
 char aSfx[5] = "sfx\\"; // weak
 char aCClash[10] = "c:\\clash\\"; // weak
-_UNKNOWN unk_517AA0; // weak
-char *off_517B14[3] =
+_UNKNOWN g_FileSystemRootMountObject; // weak
+char *g_ArchiveMountFailedErrorText[3] =
 {
   "Wloz plyte z gra do napedu!",
   "Clash CD not found!",
   "Clash CD nicht gefunden"
 }; // weak
-char *off_517B24[3] =
+char *g_StartupResourceMissingErrorText[3] =
 {
   "Wloz plyte z gra do napedu!",
   "Clash CD not found!",
@@ -11233,7 +11223,7 @@ char *g_PortReinforcementArrivedTexts[3] =
   "Truppen kommen"
 }; // weak
 char *g_PortEmptyTexts[3] = { "Port jest pusty", "Port is empty", "Hafen ist verlassen" }; // weak
-char *off_517DE8[6] =
+char *g_UnitHideFailedLowRankText[6] =
 {
   "Oddzia\x92 ma za ma\x92y status.",
   "Status of the unit is too low.",
@@ -11242,14 +11232,14 @@ char *off_517DE8[6] =
   "I can not hide. Enemy objects nearby.",
   "Ich kann mich nicht verstecken. Feindliche Objekte in der N\x84he."
 }; // weak
-char *off_517DF4[3] =
+char *g_UnitHideFailedNoSpotText[3] =
 {
   "Nie mog\x91 si\x91 ukry\x8D. Obiekty wroga w pobli\xA7u!",
   "I can not hide. Enemy objects nearby.",
   "Ich kann mich nicht verstecken. Feindliche Objekte in der N\x84he."
 }; // weak
-_UNKNOWN unk_517E00; // weak
-char *off_517EA0[12] =
+_UNKNOWN g_SaveSlotDialogWidgetTemplateBlob; // weak
+char *g_PlagueOutbreakNoticeFmtText[12] =
 {
   "Na %s wybuch\x92a zaraza. Z chat ch\x92opskich wydobywa si\x91 od\xA2r gnij\x86cego mi\x91sa, trupy nieszcz\x91\x9Enik\xA2w walaj\x86 si\x91 po ca\x92ym dziedzi\xA4cu. W kr\xA2tkim czasie epidemia dotkliwie zredukuje ilo\x9E\x8D wie\x9Eniak\xA2w w tym zamku.",
   "A terrible plague broke out at the castle %s. The pungent stench of rotten meat reeks out of peasants\x92 houses. Dead bodies are scattered everywhere. Soon the plague will outnumber the population of the inhabitants in the castle.",
@@ -11264,7 +11254,7 @@ char *off_517EA0[12] =
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 }; // weak
-char *off_517EAC[9] =
+char *g_FactionColorChangeNoticeText[9] =
 {
   "Dzi\x91ki Twojej dzia\x92alno\x9Eci osi\x86gn\x86\x92e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9Eci rozbudowy armii.",
   "Thanks to your wise rule you have achieved a higher technological level. Now you can expand your army in new ways.",
@@ -11276,7 +11266,7 @@ char *off_517EAC[9] =
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 }; // weak
-char *off_517EB8[6] =
+char *g_BuildingCompleteNoticeText[6] =
 {
   "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 zamku. Jak chcesz go nazwa\x8D?",
   "Master, your builders have finally accomplished the construction of the castle. How do you want to name this building?",
@@ -11285,7 +11275,7 @@ char *off_517EB8[6] =
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 }; // weak
-char *off_517EC4[3] =
+char *g_BuildingCompleteNoticeTextAlt[3] =
 {
   "Panie, Twoi poddani nareszcie uko\xA4czyli budow\x91 twierdzy. Jak chcesz j\x86 nazwa\x8D?",
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
@@ -11370,21 +11360,21 @@ char *g_MissionStatusFormatsByLanguage[3] = { "Misja %d\n\n%s", "Misssion %d\n\n
 _BYTE g_MainMenuButtonWidgetsTemplate[371]; // weak
 _BYTE g_CampaignMenuButtonWidgetsTemplate[159]; // weak
 char aKarkhan[8] = "Karkhan"; // weak
-char *off_5184DC = &byte_5441A0; // weak
-_UNKNOWN unk_5184F0; // weak
-unsigned __int16 word_518600[6] = { 323u, 0u, 473u, 0u, 140u, 0u }; // weak
-int dword_51860C = 128; // weak
-int dword_518630 = 128; // weak
-int dword_518654 = 128; // weak
-_UNKNOWN unk_518690; // weak
+char *g_MultiplayerDefaultRulerNamesTable = &byte_5441A0; // weak
+_UNKNOWN g_MultiplayerSetupWidgetTemplateBlob; // weak
+unsigned __int16 g_OptionsMenuSliderThumbPositions[6] = { 323u, 0u, 473u, 0u, 140u, 0u }; // weak
+int g_Options_BrightnessSliderValue = 128; // weak
+int g_Options_ScrollSpeedSliderValue = 128; // weak
+int g_Options_MouseSpeedSliderValue = 128; // weak
+_UNKNOWN g_OptionsMenuWidgetTemplateBlob; // weak
 _BYTE g_LoadMenuButtonWidgetsTemplate[159]; // weak
-int dword_5188B0 = 1; // weak
-int dword_5188BC = 0; // weak
-int dword_5188C0 = 0; // weak
-int dword_5188C4 = 0; // weak
-char byte_5188C8 = '\0'; // weak
-char byte_5188C9 = '\0'; // weak
-char byte_5188CA = '\0'; // weak
+int g_OptionsConfigRecordBase = 1; // weak
+int g_OptionsConfigRecordFlag0C = 0; // weak
+int g_Options_MusicEnabledFlag = 0; // weak
+int g_Options_UnitSoundsEnabledFlag = 0; // weak
+char g_OptionsMainMenuScrollSpeedRaw = '\0'; // weak
+char g_OptionsMainMenuSoundVolumeRaw = '\0'; // weak
+char g_OptionsMainMenuMusicVolumeRaw = '\0'; // weak
 char aMapsDirectory[6] = "maps\\"; // weak
 int g_MultiplayerStartRows[] = {
   14, 20, 90, 7, 60, 46, 90, 72, 47, 80,
@@ -11409,7 +11399,7 @@ int g_MultiplayerStartRows[] = {
   11, 11, 32, 9, 32, 28, 11, 46, 42, 40
 }; // weak
 #define g_MultiplayerStartColumns (g_MultiplayerStartRows + 1)
-char *off_518C58[39] =
+char *g_RulerNameCandidatesTable[39] =
 {
   "sir artur",
   "galaghan",
@@ -11451,7 +11441,7 @@ char *off_518C58[39] =
   "sir jonas",
   "drebegen"
 }; // weak
-_UNKNOWN unk_518CF4; // weak
+_UNKNOWN g_RulerNameHistorySeed; // weak
 char *g_PrisonerCastleIntakeTexts[21] =
 {
   "Panie, nasze wojska po wygranej bitwie z armi\x86 znienawidzonego wroga wzi\x91\x92y w niewol\x91 jego dow\xA2dc\x91 i doprowadzi\x92y do zamku %s.",
@@ -11557,7 +11547,7 @@ char *g_PrisonerTortureResistanceTexts[3] =
   "Neither pliers nor axe could make him talk. He survived even the most sophisticated tortures that they had inflicted on him.",
   "Weder die eisernen Zangen noch die Axt konnten ihn zum Reden bringen. Nicht einmal die schlimmsten Foltermethoden brachten ihn um."
 }; // weak
-_UNKNOWN unk_518D5C; // weak
+_UNKNOWN g_SpecialPersonageLeaveMaskTemplate; // weak
 char *g_PrisonerBriberyDefectionTexts[6] =
 {
   "Osadzony w zamku %s wi\x91zie\xA4 skuszony zaoferowanym przez Ciebie z\x92otem zdradzi\x92 swego w\x92adc\x91 i stan\x86\x92 po Twojej stronie.",
@@ -11567,25 +11557,25 @@ char *g_PrisonerBriberyDefectionTexts[6] =
   "One of the convicts died in pain in the castle.",
   "Auf der Burg %s starb einer der Gefangenen unter Schmerzen."
 }; // weak
-char *off_518D98[3] =
+char *g_PrisonerDeathByExhaustionTexts[3] =
 {
   "W zamku %s zmar\x92 z wyczerpania jeden z wiezni\xA2w.",
   "One of the convicts died in pain in the castle.",
   "Auf der Burg %s starb einer der Gefangenen unter Schmerzen."
 }; // weak
-__int16 word_518DB0[] = { 0 }; // weak
-__int16 word_518DB2[] = { 16 }; // weak
-__int16 word_518DBC[] = { 11 }; // weak
-_DWORD dword_518DC8[2] = { 92, 362 }; // weak
-int dword_518DD0 = 1; // weak
-int dword_518E05 = 1; // weak
-int dword_518E3A = 1; // weak
-int dword_518E6F = 1; // weak
-int dword_518EA4 = 1; // weak
-int dword_518ED9 = 1; // weak
-int dword_518F0E = 1; // weak
-int dword_518F43 = 1; // weak
-int dword_518F78 = 1; // weak
+__int16 g_PrisonerRowBarTopYTable[] = { 0 }; // weak
+__int16 g_PrisonerRowBarBottomYTable[] = { 16 }; // weak
+__int16 g_PrisonerRowTextXTable[] = { 11 }; // weak
+_DWORD g_PrisonerActionButtonWidgets[2] = { 92, 362 }; // weak
+int g_PrisonerActionButtonState0 = 1; // weak
+int g_PrisonerActionButtonState1 = 1; // weak
+int g_PrisonerActionButtonState2 = 1; // weak
+int g_PrisonerActionButtonState3 = 1; // weak
+int g_PrisonerActionButtonState4 = 1; // weak
+int g_PrisonerActionButtonState5 = 1; // weak
+int g_PrisonerActionButtonState6 = 1; // weak
+int g_PrisonerActionButtonState7 = 1; // weak
+int g_PrisonerActionButtonState8 = 1; // weak
 char *g_QueenRelationshipStateTexts[30] =
 {
   "Nie ma kr\xA2lowej.",
@@ -11619,59 +11609,59 @@ char *g_QueenRelationshipStateTexts[30] =
   "The Queen is in heaven. She wants to give you a baby.",
   "Die K\x94nigin ist im siebten Himmel. Sie will ein Kind von Dir."
 }; // weak
-char *off_519368[3] =
+char *g_AllyEliminatedNoticeTexts[3] =
 {
   "Gracz %s podda\x92 si\x91.",
   "Player %s surrended.",
   "Spieler %s hat sich ergeben."
 }; // weak
-unsigned __int16 word_519380[6] = { 325u, 0u, 475u, 0u, 127u, 0u }; // weak
-int dword_51938C = 128; // weak
-int dword_5193B0 = 128; // weak
-int dword_5193D4 = 128; // weak
-_UNKNOWN unk_519410; // weak
+unsigned __int16 g_InGameSliderThumbPositions[6] = { 325u, 0u, 475u, 0u, 127u, 0u }; // weak
+int g_OptionsInGameMusicVolumeRaw = 128; // weak
+int g_OptionsInGameScrollSpeedRaw = 128; // weak
+int g_OptionsInGameSoundVolumeRaw = 128; // weak
+_UNKNOWN g_InGameSettingsButtonWidgetsTemplate; // weak
 char *g_CheatTable = "VH[S^]"; // weak
-int (*off_519594)() = &Cheat_FillSelectedSquadWithCannons; // weak
-char *off_519598 = "[_\\]FP^[\\V"; // weak
-int dword_5195F4 = 0; // weak
-__int16 word_519620 = 320; // weak
-__int16 word_519622 = 240; // weak
-__int16 word_519624 = 320; // weak
-__int16 word_519626 = 240; // weak
-int dword_519628[] = { 1 }; // weak
-int dword_51962C[] = { 149 }; // weak
+int (*g_CheatCodeHandlerTable)() = &Cheat_FillSelectedSquadWithCannons; // weak
+char *g_CheatCodeStringTable = "[_\\]FP^[\\V"; // weak
+int g_RulesArmyFactCreatedCount = 0; // weak
+__int16 g_DeviceRectTargetWidth = 320; // weak
+__int16 g_DeviceRectTargetHeight = 240; // weak
+__int16 g_DeviceRectLastWidth = 320; // weak
+__int16 g_RenderCursor_TweenPrevY = 240; // weak
+int g_DemoScript_TriggerTickTable[] = { 1 }; // weak
+int g_DemoScript_MessageIdTable[] = { 149 }; // weak
 /*
  * Recovered 40-byte front-end cursor/overlay descriptor records consumed by
  * RenderState_SelectCursorDescriptor. The original binary stores these as ten consecutive dwords:
  * start sprite, end sprite, an optional fixed animation/count value,
  * runtime-filled max height/width, hotspot x/y, and runtime counters.
  */
-int unk_5196A0[10] = { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
-int unk_5196C8[10] = { 3, 3, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
-int unk_5196F0[10] = { 4, 4, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_519718[10] = { 5, 5, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_5197B8[10] = { 10, 10, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
-int dword_519808[10] = { 12, 26, 10, 0, 0, 0, 0, 0, 0, 0 }; // weak
-#define dword_51980C (dword_519808[1])
-#define dword_519810 (dword_519808[2])
-#define dword_519814 (dword_519808[3])
-#define dword_519818 (dword_519808[4])
-#define dword_51981C (dword_519808[5])
-#define dword_519820 (dword_519808[6])
-#define dword_519824 (dword_519808[7])
-#define dword_519828 (dword_519808[8])
-#define dword_51982C (dword_519808[9])
-int unk_519830[10] = { 31, 38, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_519858[10] = { 39, 39, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_519880[10] = { 40, 40, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_5198A8[10] = { 41, 41, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
-int unk_5198D0[10] = { 42, 42, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_5198F8[10] = { 43, 50, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
-int unk_519920[10] = { 51, 51, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int g_CursorDesc_Default[10] = { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int g_CursorDesc_ActionBusy[10] = { 3, 3, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int g_CursorDesc_Attack[10] = { 4, 4, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_GoTo[10] = { 5, 5, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_Blocked[10] = { 10, 10, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int g_CursorDesc_Busy[10] = { 12, 26, 10, 0, 0, 0, 0, 0, 0, 0 }; // weak
+#define g_CursorDesc_Busy_SecondaryId (g_CursorDesc_Busy[1])
+#define g_CursorDesc_Busy_Kind (g_CursorDesc_Busy[2])
+#define g_CursorDesc_Busy_Reserved1 (g_CursorDesc_Busy[3])
+#define g_CursorDesc_Busy_Reserved2 (g_CursorDesc_Busy[4])
+#define g_CursorDesc_Busy_HotspotX (g_CursorDesc_Busy[5])
+#define g_CursorDesc_Busy_HotspotY (g_CursorDesc_Busy[6])
+#define g_CursorDesc_Busy_Reserved3 (g_CursorDesc_Busy[7])
+#define g_CursorDesc_Busy_Reserved4 (g_CursorDesc_Busy[8])
+#define g_CursorDesc_Busy_Reserved5 (g_CursorDesc_Busy[9])
+int g_CursorDesc_EnterSite[10] = { 31, 38, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_CannotSelect[10] = { 39, 39, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_VisitBuilding[10] = { 40, 40, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_CannotAttack[10] = { 41, 41, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
+int g_CursorDesc_DeliverCargo[10] = { 42, 42, 0, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_CannotEnter[10] = { 43, 50, 10, 0, 0, 19, 20, 0, 0, 0 }; // weak
+int g_CursorDesc_SelectedUnitHover[10] = { 51, 51, 0, 0, 0, 0, 0, 0, 0, 0 }; // weak
 char aDefault_rec[12] = "default.rec"; // weak
-char byte_519970[2] = { 'o', 'r' }; // weak
-char byte_519972[2] = { 'd', 'e' }; // weak
-char byte_519974[17] =
+char g_Input_ScanCodeChars_TopRow[2] = { 'o', 'r' }; // weak
+char g_Input_ScanCodeChars_HomeRow[2] = { 'd', 'e' }; // weak
+char g_Input_ScanCodeChars_BottomRow[17] =
 {
   'r',
   '$',
@@ -11692,22 +11682,22 @@ char byte_519974[17] =
   't'
 }; // weak
 char g_KeyChar = 'y'; // weak
-char byte_5199A0 = 'z'; // weak
-char byte_5199AE[] = { '\0' }; // weak
-int dword_5199C0 = 1; // weak
+char g_Input_ScanCodeChar_LangSwap = 'z'; // weak
+char g_Input_ScanCodeChars_NumberRow[] = { '\0' }; // weak
+int g_Input_KeyRepeatCount = 1; // weak
 int g_AppIsActive = 1; // weak
 // extern int ( *g_RenderHook)(int a1, char a2, DWORD a3); weak
-char *off_5199F0[3] =
+char *g_UI_CdMissingMessageByLanguage[3] =
 {
   "Wloz plyte z gra do napedu!",
   "Clash CD not found!",
   "Clash CD nicht gefunden"
 }; // weak
-_DWORD dword_519A00[4] = { 0, 0, 640, 480 }; // idb
-int dword_519A10 = 268572261; // weak
-int dword_519A14 = 34894308; // weak
-char byte_519A18 = '\x05'; // weak
-int (*off_519A40[7])() =
+_DWORD g_Device_DefaultWindowRect[4] = { 0, 0, 640, 480 }; // idb
+int g_Palette_ActivePalettePtr = 268572261; // weak
+int g_Palette_BlendRatio = 34894308; // weak
+char g_Palette_ColorCubeBits = '\x05'; // weak
+int (*g_AviDecompressor_PixelCopyFnTable[7])() =
 {
   &CAviDecompressor_ConvertRGB888to565Row,
   (int (*)())0xFF0000,
@@ -11717,66 +11707,66 @@ int (*off_519A40[7])() =
   (int (*)())0x7E0,
   (int (*)())0x1F
 }; // weak
-int dword_519B58 = 0; // weak
-int dword_519B5C = 0; // weak
-int dword_519B60 = 0; // weak
-int dword_519B64 = 0; // weak
-int dword_519B68 = 0; // weak
-int dword_519B6C = 0; // weak
-int dword_519B70 = 0; // weak
-int dword_519B74 = 0; // weak
-int dword_519B78 = 0; // weak
-int dword_519B7C = 0; // weak
-int dword_519B80 = 0; // weak
-int dword_519B84 = 0; // weak
-int dword_519B88 = 0; // weak
-int dword_519B8C = 0; // weak
-int (__fastcall *dword_519B90)(_DWORD, _DWORD) = NULL; // weak
-int dword_519B94 = 0; // weak
-int dword_519B98 = 0; // weak
-int dword_519B9C = 0; // weak
-int dword_519BA0 = 0; // weak
-int dword_519BA4 = 0; // weak
-int (__cdecl *dword_519BA8)(_DWORD) = NULL; // weak
-char byte_519BAC = '\0'; // weak
-char byte_519BAD = '\0'; // weak
-int dword_519BAE = 0; // weak
-int dword_519BB2 = 0; // weak
-int dword_519BB6 = 0; // weak
-int dword_519BBA = 0; // weak
-int dword_519BC6 = 0; // weak
-int dword_519BD0 = 0; // weak
-_UNKNOWN unk_519BD4; // weak
-int dword_519C8C[] = { 0 }; // weak
-int dword_519C90 = 0; // weak
-int dword_519C9C = 1073741824; // weak
-int dword_519CAC = 1073741824; // weak
-int dword_519CB0 = 10; // weak
-int dword_519CB4 = 1; // weak
-int dword_519CF4 = 30; // weak
-int dword_519CF8 = 1; // weak
-void *off_519CFC = &unk_519AE8; // weak
-int dword_519D08 = -1; // weak
-int dword_519D0C = -1; // weak
-int dword_519D10 = -1; // weak
-int dword_519D14 = -1; // weak
-int dword_519D18 = -1; // weak
-int dword_519E38 = 0; // weak
-int dword_519E90[] = { 0 }; // weak
-int dword_519EAC[7] = { 0, 1, 2, 2, 4, 1, 2 }; // weak
-int dword_519EC8[8] = { 0, 128, 0, 128, 0, 0, 0, 0 }; // weak
-int (__fastcall *off_519EF4)(_DWORD, _DWORD) = &nullsub_6; // weak
-int (__cdecl *off_519EF8)(_DWORD) = &nullsub_6; // weak
-int dword_519EFC = 0; // weak
-int dword_519F00 = 0; // weak
-int dword_519F04 = 0; // weak
-int dword_519F08 = 0; // weak
-int dword_519F0C = 0; // weak
-signed int (*off_519F10)() = &Mem_FatalOutOfMemory; // weak
-int dword_519F14 = 0; // weak
-char byte_519F20[] = { '0' }; // weak
-char byte_519F9F[] = { '\0' }; // weak
-char byte_519FA0[116] =
+int g_Audio_VoiceMixSampleStep = 0; // weak
+int g_Audio_CurrentVoiceRecordPtr = 0; // weak
+int g_Audio_MixVoice_LoopBoundLow = 0; // weak
+int g_Audio_MixVoice_LoopBoundHigh = 0; // weak
+int g_Audio_MixVoice_LoopMode = 0; // weak
+int g_Audio_MixVoice_LoopDirection = 0; // weak
+int g_Audio_MixVoice_LoopBoundsSwitchPending = 0; // weak
+int g_Audio_MixVoice_LoopFinalFlag = 0; // weak
+int g_Audio_MixVoice_SamplesRemaining = 0; // weak
+int g_Audio_MixVoice_AccumBufferPtr = 0; // weak
+int g_Audio_MixVoice_ResampleStep = 0; // weak
+int g_Audio_MixVoice_MaxSourceAdvance = 0; // weak
+int g_Audio_MixVoice_PositionInt = 0; // weak
+int g_Audio_MixVoice_PositionFrac = 0; // weak
+int (__fastcall *g_Audio_MixVoice_MixFunc)(_DWORD, _DWORD) = NULL; // weak
+int g_Audio_MixFormatDispatchTable = 0; // weak
+int g_Audio_MixVoice_Pan = 0; // weak
+int g_Audio_MixVoice_PanStepFracArg = 0; // weak
+int g_Audio_MixVoice_StepIntArg = 0; // weak
+int g_Audio_MixVoice_ChannelIndexArg = 0; // weak
+int (__cdecl *g_Audio_MixVoice_LoopCallback)(_DWORD) = NULL; // weak
+char g_Audio_MixVoice_LeftVolume = '\0'; // weak
+char g_Audio_MixVoice_RightVolume = '\0'; // weak
+int g_Audio_MixVoice_SampleHistory0 = 0; // weak
+int g_Audio_MixVoice_SampleHistory1 = 0; // weak
+int g_Audio_MixVoice_LeftVolumeStep = 0; // weak
+int g_Audio_MixVoice_RightVolumeStep = 0; // weak
+int g_Audio_MixVoice_NextChunkEndScratch = 0; // weak
+int g_CSS_NullDriverMasterVolume = 0; // weak
+_UNKNOWN g_CSS_NullDriverSentinel; // weak
+int g_CSS_ChannelPriorityWeightTable[] = { 0 }; // weak
+int g_CSS_MemSoundStealBias = 0; // weak
+int g_CSS_SampleVoiceStealBias = 1073741824; // weak
+int g_CSS_StreamVoiceStealBias = 1073741824; // weak
+int g_CSS_StreamServiceRateHz = 10; // weak
+int g_CSS_VoiceSequenceCounter = 1; // weak
+int g_CSS_MixUpdateRateHz = 30; // weak
+int g_CSS_DSoundAccelDetectEnabled = 1; // weak
+void *g_CSS_DriverDescriptorTable = &g_Audio_DriverModuleTableBase; // weak
+int g_CSS_DeviceHandleCache_DriverIndex = -1; // weak
+int g_CSS_DeviceHandleCache_Param1 = -1; // weak
+int g_CSS_DeviceHandleCache_Param2 = -1; // weak
+int g_CSS_DeviceHandleCacheParam3 = -1; // weak
+int g_CSS_DeviceHandleCacheParam4 = -1; // weak
+int g_CSS_SoundDescriptorRingIndex = 0; // weak
+int g_CSS_FormatShiftTable[] = { 0 }; // weak
+int g_CSS_FormatSampleSizeTable[7] = { 0, 1, 2, 2, 4, 1, 2 }; // weak
+int g_CSS_FormatSilenceValueTable[8] = { 0, 128, 0, 128, 0, 0, 0, 0 }; // weak
+int (__fastcall *g_CRT_ExitFinalizerCallbackA)(_DWORD, _DWORD) = &Noop_CrtExitHandlerPair; // weak
+int (__cdecl *g_CRT_ExitFinalizerCallbackB)(_DWORD) = &Noop_CrtExitHandlerPair; // weak
+int g_Mem_TotalAllocatedBytes = 0; // weak
+int g_Mem_TotalAllocationCount = 0; // weak
+int g_Mem_AllocFlag = 0; // weak
+int g_Mem_ReservedBlockListHead = 0; // weak
+int g_Mem_PoolInitializedFlag = 0; // weak
+signed int (*g_Mem_OutOfMemoryHandler)() = &Mem_FatalOutOfMemory; // weak
+int g_CRT_HeapSegmentListHead = 0; // weak
+char g_Str_RadixDigitCharacters[] = { '0' }; // weak
+char g_FileSystem_CwdBufferSentinel[] = { '\0' }; // weak
+char g_FileSystem_CurrentDirectoryBuffer[116] =
 {
   '\0',
   '\0',
@@ -11895,157 +11885,157 @@ char byte_519FA0[116] =
   '\0',
   '\0'
 }; // weak
-int dword_51A110 = 0; // weak
-void *off_51A114 = &unk_51A8EC; // weak
-int dword_51A150 = 0; // weak
-int dword_51A154 = 0; // weak
-int dword_51A158 = 0; // weak
-int dword_51A15C = 0; // weak
-int dword_51A160 = 0; // weak
-int dword_51A164 = 0; // weak
-int dword_51A168 = -1; // weak
-int dword_51A180 = 0; // weak
-int dword_51A184 = 0; // weak
-int dword_51A188 = 0; // weak
-int dword_51A18C = 0; // weak
-int dword_51A190 = 1; // weak
-int dword_51A194 = 0; // weak
-int dword_51A198 = 0; // weak
-int dword_51A19C = 0; // weak
-int dword_51A1A0 = 0; // weak
-int dword_51A1A4 = 0; // weak
-int (*dword_51A1A8)(void) = NULL; // weak
-int dword_51A1AC = 0; // weak
-int dword_51A1B0 = 0; // weak
-int dword_51A1B4 = 0; // weak
-int dword_51A1B8 = 0; // weak
-int dword_51A1BC = 0; // weak
-void *off_51A1C0 = &unk_50293C; // weak
-char *off_51A1C4 = "V6.00"; // weak
-int (*dword_51A1C8)(void) = NULL; // weak
-int (*dword_51A1CC)(void) = NULL; // weak
-int (*dword_51A1D0)(void) = NULL; // weak
-int dword_51A1D4 = 0; // weak
-int dword_51A1D8 = 0; // weak
-int dword_51A1DC = 0; // weak
-int dword_51A1E0 = 0; // weak
-int dword_51A1E4 = 0; // weak
-int dword_51A1E8 = 0; // weak
-int dword_51A1EC = 0; // weak
-int dword_51A1F0 = 0; // weak
-int dword_51A1F4 = 0; // weak
-int dword_51A1F8 = 0; // weak
-int dword_51A1FC = 0; // weak
-int dword_51A200 = 0; // weak
-int dword_51A204 = 0; // weak
-int dword_51A208 = 0; // weak
-int dword_51A20C = 0; // weak
-int dword_51A210 = 0; // weak
-void *off_51A214 = unk_51A290; // weak
-int dword_51A264 = 0; // weak
-_DWORD dword_51A268 = 0; // weak
-_DWORD dword_51A26C = 0; // weak
-_DWORD dword_51A270 = 0; // weak
-_DWORD dword_51A274 = 0; // weak
-int dword_51A278 = 0; // weak
-int dword_51A27C = 0; // weak
-int dword_51A280 = 0; // weak
-int dword_51A284 = 1; // weak
-int dword_51A288 = 0; // weak
-int dword_51A28C = 0; // weak
-_DWORD unk_51A290[11]; // weak
-_UNKNOWN unk_51A340; // weak
-char byte_51A34C = '\x01'; // weak
-_UNKNOWN unk_51A35A; // weak
-_UNKNOWN unk_51A374; // weak
-int dword_51A549 = 256; // weak
+int g_Rules_FactListChangedFlag = 0; // weak
+void *g_Rules_DummyFactPtr = &unk_51A8EC; // weak
+int g_Rules_WatchFactsFlag = 0; // weak
+int g_Rules_GarbageFactListHead = 0; // weak
+int g_Rules_LastFactPointer = 0; // weak
+int g_Rules_FactListHead = 0; // weak
+int g_Rules_NextFactIndex = 0; // weak
+int g_Rules_InstalledFactCount = 0; // weak
+int g_Rules_LastFactModuleCache = -1; // weak
+int g_Rules_ClearInProgressFlag = 0; // weak
+int g_Rules_ResetInProgressFlag = 0; // weak
+int g_Rules_SaveFunctionListHead = 0; // weak
+int g_Rules_LoadInProgressFlag = 0; // weak
+int g_Rules_WatchCompilationsFlag = 1; // weak
+int g_Rules_ConstructTypeListHead = 0; // weak
+int g_Rules_ResetFunctionListHead = 0; // weak
+int g_Rules_ClearFunctionListHead = 0; // weak
+int g_Rules_ClearReadyFunctionListHead = 0; // weak
+int g_Rules_ReentryGuardFlag = 0; // weak
+int (*g_Rules_BeforeResetCallback)(void) = NULL; // weak
+int g_Rules_FactsBloadedFlag = 0; // weak
+int g_Rules_BeforeBloadFunctionListHead = 0; // weak
+int g_Rules_AfterBloadCallbackListHead = 0; // weak
+int g_Rules_BloadClearReadyCallbackListHead = 0; // weak
+int g_Rules_AbortBloadCallbackListHead = 0; // weak
+void *g_Rules_BloadFileHeaderID = &g_CLIPS_BsaveHeaderMagic; // weak
+char *g_Rules_BsaveVersionID = "V6.00"; // weak
+int (*g_Rules_SystemCommandPostShellHookB)(void) = NULL; // weak
+int (*g_Rules_SystemCommandPreShellHook)(void) = NULL; // weak
+int (*g_Rules_SystemCommandPostShellHookA)(void) = NULL; // weak
+int g_Rules_EngineInitializedFlag = 0; // weak
+int g_Rules_ConflictResolutionStrategy = 0; // weak
+int g_Rules_WatchActivationsFlag = 0; // weak
+int g_Rules_ActivationCount = 0; // weak
+int g_Rules_ActivationSequenceCounter = 0; // weak
+int g_Rules_AgendaChangedFlag = 0; // weak
+int g_Rules_SalienceEvaluationMode = 0; // weak
+int g_Rules_CurrentlyExecutingRule = 0; // weak
+int g_Rules_HaltRulesFlag = 0; // weak
+int g_Rules_CurrentLogicalJoin = 0; // weak
+int g_Rules_PostRuleFireCallbackListHead = 0; // weak
+int g_Rules_FocusStackTop = 0; // weak
+int g_Rules_FocusStackChangedFlag = 0; // weak
+int g_Rules_WatchStatisticsFlag = 0; // weak
+int g_Rules_WatchFocusFlag = 0; // weak
+int g_Rules_AgendaLoopRunningFlag = 0; // weak
+void *g_Instance_DummyInstanceRecord = g_Rules_ObjectPatternVTable; // weak
+int g_Rules_HostFunctionListHead = 0; // weak
+_DWORD g_Rules_EphemeralSymbolListHead = 0; // weak
+_DWORD g_Rules_EphemeralFloatListHead = 0; // weak
+_DWORD g_Rules_EphemeralIntegerListHead = 0; // weak
+_DWORD g_Rules_EphemeralBitmapListHead = 0; // weak
+int g_Instance_HashTableBase = 0; // weak
+int g_Instance_SlotInitInProgress = 0; // weak
+int g_Instance_PurgeInProgress = 0; // weak
+int g_Instance_UseMessageDispatchForInit = 1; // weak
+int g_Instance_InstancesChangedFlag = 0; // weak
+int g_Instance_DeletedListHead = 0; // weak
+_DWORD g_Rules_ObjectPatternVTable[11]; // weak
+_UNKNOWN g_IO_FileGetcSentinelAddr; // weak
+char g_IO_FileGetcStreamFlags = '\x01'; // weak
+_UNKNOWN g_CRT_StdoutStream; // weak
+_UNKNOWN g_CRT_StderrOutputStream; // weak
+int g_CRT_DefaultFileTranslationMode = 256; // weak
 DWORD dwTlsIndex = 4294967295u; // idb
 __int64 (__fastcall *g_CrtThreadDataAccessor)(_DWORD, _DWORD) = &CRT_GetBootstrapThreadData; // weak
-int (__thiscall *off_51A56C)(_DWORD) = &nullsub_8; // weak
-int (__fastcall *off_51A570)(_DWORD, _DWORD) = &nullsub_8; // weak
-_DWORD (*off_51A574)() = &j___NTAddFileHandle_; // weak
-int (*off_51A578[14])() =
+int (__thiscall *g_CRT_FileHandleLockAcquireHook)(_DWORD) = &Noop_CrtSingleThreadLockStub; // weak
+int (__fastcall *g_CRT_FileHandleLockReleaseHook)(_DWORD, _DWORD) = &Noop_CrtSingleThreadLockStub; // weak
+_DWORD (*g_CRT_AddFileHandleHook)() = &j___NTAddFileHandle_; // weak
+int (*g_CRT_FileHandleRemoveHookTable[14])() =
 {
   &j___NTRemoveFileHandle_,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub
 }; // weak
-_DWORD (*off_51A57C)() = &nullsub_8; // weak
-_DWORD (*off_51A580)() = &nullsub_8; // weak
-_DWORD (*off_51A584)() = &nullsub_8; // weak
-int (*off_51A588[10])() =
+_DWORD (*g_CRT_StaticLock1AcquireHook)() = &Noop_CrtSingleThreadLockStub; // weak
+_DWORD (*g_CRT_StaticLock1ReleaseHook)() = &Noop_CrtSingleThreadLockStub; // weak
+_DWORD (*g_CRT_StaticLock2AcquireHook)() = &Noop_CrtSingleThreadLockStub; // weak
+int (*g_CRT_StaticLock3AcquireHookTable[10])() =
 {
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub
 }; // weak
-_DWORD (*off_51A58C)() = &nullsub_8; // weak
-int (*off_51A590[8])() =
+_DWORD (*g_CRT_StaticLock2ReleaseHook)() = &Noop_CrtSingleThreadLockStub; // weak
+int (*g_CRT_StaticLock3ReleaseHookTable[8])() =
 {
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub
 }; // weak
-int (*off_51A594[7])() =
+int (*g_CRT_StaticLock4AcquireHookTable[7])() =
 {
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8,
-  &nullsub_8
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub,
+  &Noop_CrtSingleThreadLockStub
 }; // weak
-int (*off_51A598[6])() = { &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8 }; // weak
-int (*off_51A59C[5])() = { &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8 }; // weak
-int (*off_51A5A0[4])() = { &nullsub_8, &nullsub_8, &nullsub_8, &nullsub_8 }; // weak
-_DWORD (*off_51A5A4)() = &nullsub_8; // weak
-_DWORD (*off_51A5A8)() = &nullsub_8; // weak
-int (__cdecl *off_51A5AC)(_DWORD, _DWORD) = &nullsub_8; // weak
-int (__fastcall *dword_51A5B0)(_DWORD, _DWORD) = NULL; // weak
-int (*dword_51A5B4)(void) = NULL; // weak
-int (__cdecl *dword_51A5BC)(_DWORD, _DWORD, _DWORD) = NULL; // weak
-int (*dword_51A5DC)(void) = NULL; // weak
-int (*dword_51A5F4)(void) = NULL; // weak
-int dword_51A5F8 = 0; // weak
-int dword_51A5FC = 0; // weak
-int dword_51A600 = 0; // weak
-int dword_51A604 = 0; // weak
-int dword_51A608 = 0; // weak
-int dword_51A60C = 0; // weak
-char *off_51A610[6] = { "wwarning", "werror", "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
-char *off_51A614[5] = { "werror", "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
-char *off_51A618[4] = { "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
-char *off_51A61C[3] = { "wdialog", "wclips", "wdisplay" }; // weak
-char *off_51A620[2] = { "wclips", "wdisplay" }; // weak
-char *off_51A624 = "wdisplay"; // weak
-int dword_51A628 = -1; // weak
-int (*off_51A62C[3])() = { &nullsub_9, &nullsub_9, &nullsub_9 }; // weak
-int (*off_51A630[2])() = { &nullsub_9, &nullsub_9 }; // weak
-int (__fastcall *off_51A634)(_DWORD, _DWORD) = &nullsub_9; // weak
+int (*g_CRT_StaticLock4ReleaseHookTable[6])() = { &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub }; // weak
+int (*g_CRT_ThreadDataConstructHookTable[5])() = { &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub }; // weak
+int (*g_CRT_ThreadDataDestroyHookTable[4])() = { &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub, &Noop_CrtSingleThreadLockStub }; // weak
+_DWORD (*g_CRT_TlsIndexDestroyHook)() = &Noop_CrtSingleThreadLockStub; // weak
+_DWORD (*g_CRT_ThreadStartupHook)() = &Noop_CrtSingleThreadLockStub; // weak
+int (__cdecl *g_CRT_ThreadEndHook)(_DWORD, _DWORD) = &Noop_CrtSingleThreadLockStub; // weak
+int (__fastcall *g_CRT_ProcessExitThreadHook)(_DWORD, _DWORD) = NULL; // weak
+int (*g_CRT_CustomReadAvailablePredicateHook)(void) = NULL; // weak
+int (__cdecl *g_CRT_ConsoleOpenHook)(_DWORD, _DWORD, _DWORD) = NULL; // weak
+int (*g_CRT_CustomReadHook)(void) = NULL; // weak
+int (*g_CRT_ExitProcessFinalizerHook)(void) = NULL; // weak
+int g_Print_PreserveEscapedCharactersFlag = 0; // weak
+int g_Print_AddressesToStringsFlag = 0; // weak
+int g_Print_InstanceAddressesToNamesFlag = 0; // weak
+int g_IO_RouterListHead = 0; // weak
+int g_IO_FastLoadFilePtr = 0; // weak
+int g_IO_FastSaveFilePtr = 0; // weak
+char *g_IO_LogicalNameTable_WWarning[6] = { "wwarning", "werror", "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
+char *g_IO_LogicalNameTable_WError[5] = { "werror", "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
+char *g_IO_LogicalNameTable_WTrace[4] = { "wtrace", "wdialog", "wclips", "wdisplay" }; // weak
+char *g_IO_LogicalNameTable_WDialog[3] = { "wdialog", "wclips", "wdisplay" }; // weak
+char *g_IO_LogicalNameTable_WClips[2] = { "wclips", "wdisplay" }; // weak
+char *g_IO_LogicalName_WDisplay = "wdisplay"; // weak
+int g_Lexer_PendingLineCharIndex = -1; // weak
+int (*g_CRT_LockEnterHookTable[3])() = { &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub }; // weak
+int (*g_CRT_LockLeaveHookTable[2])() = { &Noop_CrtLockEnterLeaveResetStub, &Noop_CrtLockEnterLeaveResetStub }; // weak
+int (__fastcall *g_CRT_LockSlotResetHook)(_DWORD, _DWORD) = &Noop_CrtLockEnterLeaveResetStub; // weak
 __int16 word_51A644 = 0; // weak
 int g_CrtFinalizerListHead = 0; // weak
 int dword_51A64C = 0; // weak
@@ -12063,7 +12053,7 @@ int dword_51A8AB = 0; // weak
 int dword_51A8AF = 0; // weak
 int dword_51A8B3 = 0; // weak
 int dword_51A8B7 = 0; // weak
-int (*off_51A8BB)() = &nullsub_10; // weak
+int (*off_51A8BB)() = &Noop_CrtIoInitHook; // weak
 _UNKNOWN unk_51A8EC; // weak
 int dword_51A928 = 0; // weak
 int dword_51A92C = 0; // weak
@@ -12177,8 +12167,8 @@ int dword_51AD10 = 0; // weak
 int dword_51AD14 = 0; // weak
 int dword_51AD18 = 0; // weak
 int dword_51AD1C = 0; // weak
-_UNKNOWN unk_508D50[] = { 5, 6, 7, 'C', 'L', 'I', 'P', 'S', 0, 0 }; // weak
-void *off_51AD20 = unk_508D50; // weak
+_UNKNOWN g_Runtime_CompactEvalClipsSignature[] = { 5, 6, 7, 'C', 'L', 'I', 'P', 'S', 0, 0 }; // weak
+void *off_51AD20 = g_Runtime_CompactEvalClipsSignature; // weak
 char *off_51AD24 = "V6.00"; // weak
 int dword_51AD28 = 0; // weak
 int dword_51AD2C = 0; // weak
@@ -12596,8 +12586,8 @@ IID stru_51CA08 = { 3014063072u, 11075u, 4559u, { 162u, 222u, 0u, 170u, 0u, 185u
 _UNKNOWN g_InputBackendMouseDeviceGuid; // weak
 _UNKNOWN g_InputBackendKeyboardDeviceGuid; // weak
 _UNKNOWN g_InputBackendJoystickInterfaceIid; // weak
-_UNKNOWN unk_511210; // weak
-_UNKNOWN unk_511220; // weak
+_UNKNOWN g_RenderBackbufferScanlineBuffer; // weak
+_UNKNOWN g_RenderPaletteRemapBuffer; // weak
 int g_MousePresentAtStartup; // weak
 int dword_51D01C; // weak
 int g_AppCommandLine; // weak
@@ -12679,7 +12669,7 @@ unsigned char unk_523750[0x400]; // weak
 unsigned char unk_523B50[0x400]; // weak
 int g_MiniMapTerrainColorTable; // weak
 char g_MiniMapPixelsPerTile; // weak
-#define dword_511FF0 g_MiniMapDrawMask
+#define g_MiniMapDrawMask_511FF0 g_MiniMapDrawMask
 #define word_523344 g_MiniMapRectLeft
 #define word_523346 g_MiniMapRectTop
 #define word_523348 g_MiniMapRectWidth
@@ -13257,17 +13247,17 @@ static void Rules_EnsureObjectPatternVTable(void)
    * Original data at 0x51A290 is a packed 32-bit callback vector beginning
    * with dword 7, followed by low-address function pointers.
    */
-  unk_51A290[0] = 7;
-  unk_51A290[1] = (int)(uintptr_t)Instance_PrintStaleOrClassLabel;
-  unk_51A290[2] = (int)(uintptr_t)Instance_PrintNameOrDummyLabel;
-  unk_51A290[3] = (int)(uintptr_t)Rules_UnmakeInstance;
-  unk_51A290[4] = 0;
-  unk_51A290[5] = (int)(uintptr_t)Rules_GetNextInstance;
-  unk_51A290[6] = (int)(uintptr_t)Instance_DecrementBusyCount;
-  unk_51A290[7] = (int)(uintptr_t)Rules_IncrementRefCountField40;
-  unk_51A290[8] = (int)(uintptr_t)Instance_ReleaseSlotValueContainer;
-  unk_51A290[9] = (int)(uintptr_t)Instance_AcquireLocalSlotArray;
-  unk_51A290[10] = (int)(uintptr_t)Instance_NotifyCreated;
+  g_Rules_ObjectPatternVTable[0] = 7;
+  g_Rules_ObjectPatternVTable[1] = (int)(uintptr_t)Instance_PrintStaleOrClassLabel;
+  g_Rules_ObjectPatternVTable[2] = (int)(uintptr_t)Instance_PrintNameOrDummyLabel;
+  g_Rules_ObjectPatternVTable[3] = (int)(uintptr_t)Rules_UnmakeInstance;
+  g_Rules_ObjectPatternVTable[4] = 0;
+  g_Rules_ObjectPatternVTable[5] = (int)(uintptr_t)Rules_GetNextInstance;
+  g_Rules_ObjectPatternVTable[6] = (int)(uintptr_t)Instance_DecrementBusyCount;
+  g_Rules_ObjectPatternVTable[7] = (int)(uintptr_t)Rules_IncrementRefCountField40;
+  g_Rules_ObjectPatternVTable[8] = (int)(uintptr_t)Instance_ReleaseSlotValueContainer;
+  g_Rules_ObjectPatternVTable[9] = (int)(uintptr_t)Instance_AcquireLocalSlotArray;
+  g_Rules_ObjectPatternVTable[10] = (int)(uintptr_t)Instance_NotifyCreated;
   initialized = 1;
 }
 
@@ -13278,9 +13268,9 @@ int App_Shutdown()
   int v0; // ecx
 
   RenderState_ReleaseCursorResources((int)&g_RenderState);
-  nullsub_4();
+  Noop_AppShutdownPreAudioCloseHook();
   CSS_Close();
-  nullsub_2(v0);
+  Noop_AppShutdownPostAudioCloseHook(v0);
   return Render_BeginModeSwitch(&unk_51D4C0);
 }
 // 401036: variable 'v0' is possibly undefined
@@ -13323,7 +13313,7 @@ char __thiscall DetectGameCDPath(void *this)
 
   *(_DWORD *)&v9[44] = this;
   v1 = 67;
-  qmemcpy(v9, &unk_511140, 0x1Eu);
+  qmemcpy(v9, &g_CDPathTemplate, 0x1Eu);
   while ( 1 )
   {
     v9[0] = v1;
@@ -13359,10 +13349,10 @@ int  Str_ConstructHolderViaBaseCtor(_DWORD *a1)
   int result; // eax
 
   *a1 = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(a1);
   result = v2;
-  *(_DWORD *)(v2 + 4) = &off_50EC94;
+  *(_DWORD *)(v2 + 4) = &g_PathEntry_Vtable;
   return result;
 }
 // 4015B7: variable 'v2' is possibly undefined
@@ -13373,8 +13363,8 @@ int  Str_ConstructHolderViaBaseCtor(_DWORD *a1)
 _DWORD * Str_ConstructHolderInline(_DWORD *result)
 {
   *result = 0;
-  result[1] = &off_50EC84;
-  result[1] = &off_50EC94;
+  result[1] = &g_CompatStringHolder_Vtable;
+  result[1] = &g_PathEntry_Vtable;
   return result;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -13409,7 +13399,7 @@ int * PathEntryArray_CopyConstruct(int *a1, _DWORD *a2, int a3)
   _DWORD *v11; // esi
   int v12; // ecx
 
-  a1[4] = (int)off_50ECA4;
+  a1[4] = (int)g_PathEntryArray_Vtable;
   a1[1] = a2[1];
   a1[2] = a2[2];
   v4 = a2[3];
@@ -13424,7 +13414,7 @@ int * PathEntryArray_CopyConstruct(int *a1, _DWORD *a2, int a3)
   v7 = Compat_WcppCtorArrayStorage1s(
          (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
          a1[3],
-         &unk_50ECF0);
+         &g_PathEntryArray_ElementDtorDescriptor);
   v8 = a1[2];
   *a1 = v7;
   if ( v8 <= 0 )
@@ -13455,13 +13445,13 @@ int  PathEntryArray_Destruct(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50ED10);
+    _wcpp_4_dtor_array_store__(a1, &g_PathEntryArray_DtorDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    a1[4] = off_50ECA4;
+    a1[4] = g_PathEntryArray_Vtable;
     PathEntryArray_DestructElements(a1);
     if ( (v3 & 2) != 0 )
       j__nfree_();
@@ -13499,9 +13489,9 @@ _DWORD * PathEntryArray_DestructElements(_DWORD *result)
         v4 = v3 + *v1;
         v5 = v1[4];
         v7 = 0;
-        v8 = &off_50EC84;
+        v8 = &g_CompatStringHolder_Vtable;
         Compat_StringHolderDestructor(&v7);
-        v8 = &off_50EC94;
+        v8 = &g_PathEntry_Vtable;
         v9 = *(_DWORD *)(v4 + 12);
         (*(void (**)(void))(v5 + 4))();
         ++v2;
@@ -13510,7 +13500,7 @@ _DWORD * PathEntryArray_DestructElements(_DWORD *result)
       }
       while ( v2 < v1[2] );
     }
-    _wcpp_4_dtor_array_store__(v1, &unk_50ECF0);
+    _wcpp_4_dtor_array_store__(v1, &g_PathEntryArray_ElementDtorDescriptor);
     result = (_DWORD *)j_j__nfree_();
     *v6 = 0;
     v6[2] = 0;
@@ -13540,7 +13530,7 @@ int  PathEntryArray_GrowByDelta(int *a1, int a2)
   a1[3] = a2 + a1[3];
   if ( v4 )
   {
-    _wcpp_4_dtor_array_store__(*a1, &unk_50ECF0);
+    _wcpp_4_dtor_array_store__(*a1, &g_PathEntryArray_ElementDtorDescriptor);
     result = j_j__nfree_();
     *a1 = 0;
   }
@@ -13549,7 +13539,7 @@ int  PathEntryArray_GrowByDelta(int *a1, int a2)
     v6 = Compat_WcppCtorArrayStorage1s(
            (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(16 * a1[3] + 4),
            a1[3],
-           &unk_50ECF0);
+           &g_PathEntryArray_ElementDtorDescriptor);
     v14 = v6;
     v7 = 0;
     if ( a1[2] > 0 )
@@ -13567,7 +13557,7 @@ int  PathEntryArray_GrowByDelta(int *a1, int a2)
       }
       while ( v7 < a1[2] );
     }
-    _wcpp_4_dtor_array_store__(*a1, &unk_50ECF0);
+    _wcpp_4_dtor_array_store__(*a1, &g_PathEntryArray_ElementDtorDescriptor);
     j_j__nfree_();
     result = v14;
     *a1 = v14;
@@ -13598,9 +13588,9 @@ _DWORD * PathEntryArray_RemoveAt(_DWORD *result, int a2, int a3)
     v11 = (int *)(*result + 16 * a2);
     v12 = *v11;
     v13 = 0;
-    v14 = &off_50EC84;
+    v14 = &g_CompatStringHolder_Vtable;
     Compat_StringHolderCopyText((_DWORD *)&v13, Compat_StringHolderGetText((_DWORD *)(v11 + 1)));
-    v14 = &off_50EC94;
+    v14 = &g_PathEntry_Vtable;
     v15 = v11[3];
     (*(void (__cdecl **)(int))(v10 + 4))(v12);
     result = (_DWORD *)Compat_StringHolderScalarDeletingDtor((int)&v13, 0);
@@ -13645,9 +13635,9 @@ int  PathEntry_CopyConstruct(_DWORD *a1, _DWORD *a2)
 {
   *a1 = *a2;
   a1[1] = 0;
-  a1[2] = &off_50EC84;
+  a1[2] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderCopyText(a1 + 1, Compat_StringHolderGetText(a2 + 1));
-  a1[2] = &off_50EC94;
+  a1[2] = &g_PathEntry_Vtable;
   a1[3] = a2[3];
   return (int)a1;
 }
@@ -13663,7 +13653,7 @@ int  PathEntry_Destruct(int a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50ED50);
+    _wcpp_4_dtor_array_store__(a1, &g_PathEntry_DtorDescriptor);
     j_j__nfree_();
     return v4;
   }
@@ -13692,10 +13682,10 @@ int  PathEntry_ConstructDefault(_DWORD *a1)
   *a1 = 0;
   a1[1] = 0;
   v1 = a1 + 1;
-  v1[1] = &off_50EC84;
+  v1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(v1);
   result = v2 - 4;
-  *(_DWORD *)(v2 + 4) = &off_50EC94;
+  *(_DWORD *)(v2 + 4) = &g_PathEntry_Vtable;
   *(_DWORD *)(v2 - 4 + 12) = 0;
   return result;
 }
@@ -13707,11 +13697,11 @@ int  PathEntry_ConstructDefault(_DWORD *a1)
 __int16 Render_LoadResourceBackbuffer()
 {
   Render_InitRecoveredVtableStorage();
-  dword_51D4B8 = (int)off_50EF24;
+  dword_51D4B8 = (int)g_NullBlitCursor_Vtable;
   Surface_ConstructBackbufferInstance((int)&unk_51D4C0);
-  CRT_RegisterFinalizableObject((int)&unk_511210, 640);
+  CRT_RegisterFinalizableObject((int)&g_RenderBackbufferScanlineBuffer, 640);
   Render_ConstructSurfaceObject((int)&unk_51D9A0, 640, 480);
-  CRT_RegisterFinalizableObject((int)&unk_511220, 256);
+  CRT_RegisterFinalizableObject((int)&g_RenderPaletteRemapBuffer, 256);
   _wcpp_4_ctor_array__((int)&unk_51DA60, 256);
   byte_51E265 = 0;
   return (unsigned __int8)Palette_BuildGrayscaleIdentityTable((int)byte_51DE60);
@@ -13920,7 +13910,7 @@ _DWORD * Render_ConstructSurfaceObject(int a1, __int16 a2, __int16 a3)
   *((_WORD *)v3 - 4) = a2;
   *((_WORD *)v3 - 3) = a3;
   v4 = Surface_Construct(v3);
-  v4[44] = off_50EDD4;
+  v4[44] = g_Surface_BaseVtable;
   return v4 - 2;
 }
 // 50EDD4: using guessed type int (*off_50EDD4[5])();
@@ -14636,7 +14626,7 @@ int  Render_BlendSurfaceRect(
     v14 = *(_DWORD *)(v30 + 184);
     v36 = (void (***)(void))v13;
     v27 = (int (***)(void))(*(int (**)(void))(v14 + 4))();
-    dword_519A14 = a10;
+    g_Palette_BlendRatio = a10;
     v40 = v15;
     v46 = v37;
     v16 = *v15;
@@ -15058,7 +15048,7 @@ LABEL_40:
             v165 = v75 + 1;
           }
           v131 = v165;
-          v130[3] = off_50ED94;
+          v130[3] = g_RenderSurface_BlitCursorVtable;
           if ( BYTE2(a33) )
           {
             if ( BYTE2(a33) <= 1u )
@@ -15066,7 +15056,7 @@ LABEL_40:
               v130[1] = (*(int (__thiscall **)(_DWORD))(*(_DWORD *)v142 + 16))(0);
               LOBYTE(v86) = v174;
               v149 = v166;
-              v130[0] = off_50ED94;
+              v130[0] = g_RenderSurface_BlitCursorVtable;
               *(_UNKNOWN **)((char *)&retaddr + 2) = v142;
               v87 = v86;
               v88 = v163[5];
@@ -15433,7 +15423,7 @@ _DWORD * Render_CreateSurface(int a1, __int16 a2, __int16 a3)
   unsigned int pixel_count;
 
   surface = Render_ConstructSurfaceObject(a1, a2, a3);
-  surface[46] = off_50EE24;
+  surface[46] = g_Surface_RawBuffer8Vtable;
   pixel_count = (unsigned __int16)*(unsigned __int16 *)surface * (unsigned __int16)*((unsigned __int16 *)surface + 1);
   surface[1] = (unsigned int)nmalloc_(pixel_count, 4);
   if ( !surface[1] )
@@ -15457,11 +15447,11 @@ int  Surface_DestructRawBuffer(int a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50F020);
+    _wcpp_4_dtor_array_store__(a1, &g_SurfaceRawBuffer_DtorArrayTag);
     j_j__nfree_();
     return a1;
   }
-  *(_DWORD *)(a1 + 184) = off_50EE24;
+  *(_DWORD *)(a1 + 184) = g_Surface_RawBuffer8Vtable;
   nfree_(*(_DWORD *)(a1 + 4));
   *(_DWORD *)(a1 + 4) = 0;
   result = Surface_Destruct(a1 + 8) - 8;
@@ -15492,7 +15482,7 @@ _DWORD * Surface_ConstructRegionViewA(int a1, int a2, DWORD a3)
     v7 = *v6;
     v8 = *v6 * a2;
     v9 = *((_DWORD *)v6 + 1);
-    *result = off_50ED94;
+    *result = g_RenderSurface_BlitCursorVtable;
     result[2] = v7;
     result[1] = v5 + v8 + v9;
   }
@@ -15518,7 +15508,7 @@ _DWORD * Surface_ConstructRegionViewB(int a1, int a2, DWORD a3)
     v7 = *v6;
     v8 = *v6 * a2;
     v9 = *((_DWORD *)v6 + 1);
-    *result = off_50ED94;
+    *result = g_RenderSurface_BlitCursorVtable;
     result[2] = v7;
     result[1] = v5 + v8 + v9;
   }
@@ -15731,7 +15721,7 @@ _DWORD * Render_ConstructScratchSurface(int a1, unsigned __int16 a2, DWORD a3, _
   v5 = a2;
   result = Render_ConstructSurfaceObject(a1, a2, a4);
   v8 = result;
-  result[46] = off_50EE74;
+  result[46] = g_ScratchSurface_Vtable;
   if ( a3 )
   {
     v9 = 0;
@@ -15763,12 +15753,12 @@ int  Render_DestructScratchSurface(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50EFE0);
+    _wcpp_4_dtor_array_store__(a1, &g_ScratchSurface_DtorArrayTag);
     j_j__nfree_();
     return (int)a1;
   }
   owned_buffer = a1[47];
-  a1[46] = off_50EE74;
+  a1[46] = g_ScratchSurface_Vtable;
   if ( owned_buffer && a1[48] )
   {
     Surface_Destruct(owned_buffer);
@@ -15801,7 +15791,7 @@ int  Surface_ConstructLockedRegionView(int a1, int a2, int a3, DWORD a4)
   if ( result )
   {
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 60))();
-    *(_DWORD *)HIDWORD(v7) = off_50EDB4;
+    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
     v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( v8 )
@@ -15832,7 +15822,7 @@ int  Surface_ConstructPitchRegionView(int a1, int a2, int a3, DWORD a4)
   if ( result )
   {
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 64))();
-    *(_DWORD *)HIDWORD(v7) = off_50EDB4;
+    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
     v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( v8 )
@@ -16034,7 +16024,7 @@ int  Surface_ConstructBackbufferInstance(int a1)
   *(_DWORD *)(palette_array - 8) = 0;
   *(_DWORD *)(palette_array - 4) = 0;
   palette_array = _wcpp_4_ctor_array__(palette_array, 256);
-  *(_DWORD *)(palette_array - 36) = off_50EEC4;
+  *(_DWORD *)(palette_array - 36) = g_Surface_Vtable;
   return palette_array - 0xDC;
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
@@ -16389,7 +16379,7 @@ int  Surface_BeginPixelRead(int a1, int a2, int a3, DWORD a4)
   if ( result )
   {
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 60))();
-    *(_DWORD *)HIDWORD(v7) = off_50EDB4;
+    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
     v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( v8 )
@@ -16420,7 +16410,7 @@ int  Surface_BeginPixelWrite(int a1, int a2, int a3, DWORD a4)
   if ( result )
   {
     v7 = ((__int64 (*)(void))*(_DWORD *)(*(_DWORD *)(v6 + 184) + 64))();
-    *(_DWORD *)HIDWORD(v7) = off_50EDB4;
+    *(_DWORD *)HIDWORD(v7) = g_RenderSurface_LinkedBlitCursorVtable;
     *(_DWORD *)(HIDWORD(v7) + 4) = v7;
     v8 = Surface_LockWithRestore(v7, SHIDWORD(v7));
     if ( v8 )
@@ -16843,7 +16833,7 @@ int  Sprite_DrawSimpleTrackingOffset(
         int a7,
         unsigned __int8 a8)
 {
-  dword_519A14 = a7;
+  g_Palette_BlendRatio = a7;
   (void)a4;
   (void)a5;
   (void)a6;
@@ -16966,7 +16956,7 @@ int  Surface_Destroy(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50EF80);
+    _wcpp_4_dtor_array_store__(a1, &g_Surface_DtorArrayTag);
     j_j__nfree_();
     return v4;
   }
@@ -16993,7 +16983,7 @@ int  SurfaceCursor_Destroy(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_50EF40);
+    _wcpp_4_dtor_array_store__(result, &g_SurfaceCursor_DtorArrayTag);
     j_j__nfree_();
     return v3;
   }
@@ -17035,7 +17025,7 @@ int  RenderSurface_Destroy(int a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50EF60);
+    _wcpp_4_dtor_array_store__(a1, &g_RenderSurface_DtorArrayTag);
     j_j__nfree_();
     return v5;
   }
@@ -17091,13 +17081,13 @@ int  RenderSurface_DestroyLinkedBlitCursor(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50EFC0);
+    _wcpp_4_dtor_array_store__(a1, &g_LinkedBlitCursor_DtorArrayTag);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    *a1 = off_50EDB4;
+    *a1 = g_RenderSurface_LinkedBlitCursorVtable;
     Surface_Unlock(a1[1]);
     if ( (v3 & 2) != 0 )
       j__nfree_();
@@ -17143,7 +17133,7 @@ int  RenderSurface_DestroyBlitCursor(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_50F000);
+    _wcpp_4_dtor_array_store__(result, &g_BlitCursor_DtorArrayTag);
     j_j__nfree_();
     return v3;
   }
@@ -17161,7 +17151,7 @@ int  RenderSurface_DestroyBlitCursor(int result, char a2)
 //----- (004058A0) --------------------------------------------------------
 _DWORD * RenderSurface_ConstructNullBlitCursor(_DWORD *result)
 {
-  *result = off_50EF24;
+  *result = g_NullBlitCursor_Vtable;
   return result;
 }
 // 50EF24: using guessed type int (*off_50EF24[5])();
@@ -17293,7 +17283,7 @@ _DWORD * DLXSpriteSet_Load(_DWORD *a1, const void *a2)
 
   resource_name = a2 ? (const char *)a2 : "";
   a1[1024] = 0;
-  a1[1027] = &off_50F044;
+  a1[1027] = &g_DLXSpriteSet_Vtable;
   Debug_Log(63, 0, (DWORD)resource_name, (int)aDlxspritesetDl);
   strcpy(path, aGfx);
   strcat(path, resource_name);
@@ -17350,11 +17340,11 @@ int * DLXSpriteSet_Destroy(int *a1, char a2, int a3)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a3, &unk_50F050);
+    _wcpp_4_dtor_array_store__(a3, &g_DLXSpriteSet_DtorArrayTag);
     j_j__nfree_();
     return a1;
   }
-  a1[1027] = (int)&off_50F044;
+  a1[1027] = (int)&g_DLXSpriteSet_Vtable;
   v4 = 0;
   if ( a1[1025] > 0 )
   {
@@ -17387,7 +17377,7 @@ int  DLXSpriteSet_ConstructCopy(int *a1, DWORD *a2, signed int a3)
 {
   int v3; // ecx
 
-  a1[1027] = (int)&off_50F044;
+  a1[1027] = (int)&g_DLXSpriteSet_Vtable;
   DLXSpriteSet_CopyEntriesFrom(a1, a2, (int)a1, a3);
   return v3;
 }
@@ -18000,14 +17990,14 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
   Diagnostics_TraceWorldMapActionEvent(
     "status_panel_refresh_enter",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     0);
   WorldMap_SyncSelectionForHumanPlayer(a1);
   Diagnostics_TraceWorldMapActionEvent(
     "status_panel_refresh_after_sync",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     0);
   if ( g_SelectedUnitIndex == -1 )
@@ -18029,21 +18019,21 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_before_pump_rect",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       v2);
     RenderState_PumpIfRectInViewBounds(g_RenderState, v2, 0x1F7u, 0x1D4u, 0x1DCu);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_pump_rect",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     v3 = 100 * UnitStack_GetMinCurrentActionPoints(725 * g_SelectedUnitIndex + gameData + 147174);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_current_ap",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       v3);
     v4 = gameData;
@@ -18055,14 +18045,14 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_before_surface_alloc",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       v5);
     Surface = (_DWORD *)Mem_Alloc(188, 0, v4, v5);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_surface_alloc",
       (int)(uintptr_t)Surface,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       v5);
     v8 = (int)Surface;
@@ -18072,7 +18062,7 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       Diagnostics_TraceWorldMapActionEvent(
         "status_panel_after_sprite_width",
         SpriteWidth,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         v5);
       Surface = Render_CreateSurface(v8, 100, SpriteWidth);
@@ -18106,21 +18096,21 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_before_blit",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       v17 ? v17[1] : 0);
     Render_FillRect(v17, 0, 0, 0, 0x63u, v13 - 1, 0x16Bu, 0x1D4u);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_blit",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     Render_Present((int)g_RenderState);
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_after_present",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     if ( v17 )
@@ -18128,21 +18118,21 @@ void * WorldMap_RefreshUnitStatusPanel(DWORD a1)
       Diagnostics_TraceWorldMapActionEvent(
         "status_panel_before_destroy",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         (int)(uintptr_t)v17);
       RenderSurface_InvokeSlot0(v17, 2);
       Diagnostics_TraceWorldMapActionEvent(
         "status_panel_after_destroy",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         0);
     }
     Diagnostics_TraceWorldMapActionEvent(
       "status_panel_refresh_done",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     result = v18;
@@ -18395,7 +18385,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
               v47 = (_WORD *)(v84 + v46 + gameData);
               if ( *v47 == 7 && (unsigned __int16)v47[1] == 0xFFFF && (unsigned int)rand_(v45, 7) < 0x333 )
               {
-                *(_WORD *)(v46 + gameData + v84 + 2) = word_511B3A[(unsigned int)(rand_(v45, 0) / 0x7FFFuLL)];
+                *(_WORD *)(v46 + gameData + v84 + 2) = g_WorldMapAmbientAnimFramesSetB[(unsigned int)(rand_(v45, 0) / 0x7FFFuLL)];
                 WorldMap_RedrawTileIfVisible(v48, v44);
               }
               v46 += 1400;
@@ -18421,7 +18411,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
                 v53 = rand_(v50, 7);
                 if ( (unsigned int)v53 < 0x333 )
                 {
-                  *(_WORD *)(v51 + gameData + v83 + 2) = word_511B3E[4 * (unsigned int)rand_(v50, HIDWORD(v53)) / 0x7FFF];
+                  *(_WORD *)(v51 + gameData + v83 + 2) = g_WorldMapAmbientAnimFramesSetC[4 * (unsigned int)rand_(v50, HIDWORD(v53)) / 0x7FFF];
                   WorldMap_RedrawTileIfVisible(v54, v49);
                 }
               }
@@ -18446,7 +18436,7 @@ void  WorldMap_TickAmbientMapAnimations(int ii)
             v41 = (_WORD *)(v76 + v40 + gameData);
             if ( *v41 == 7 && (unsigned __int16)v41[1] == 0xFFFF && (unsigned int)rand_(v39, 7) < 0x333 )
             {
-              *(_WORD *)(v76 + v40 + gameData + 2) = word_511B2C[6 * (int)rand_(v39, v42) / 0x7FFFu];
+              *(_WORD *)(v76 + v40 + gameData + 2) = g_WorldMapAmbientAnimFramesSetA[6 * (int)rand_(v39, v42) / 0x7FFFu];
               WorldMap_RedrawTileIfVisible(v43, v38);
             }
             v40 += 1400;
@@ -18820,7 +18810,7 @@ int  WorldMap_HandleScrollKeysAndIdle(signed int a1, ...)
     }
     if ( Input_IsKeyPressed(59) )
     {
-      nullsub_5();
+      Noop_DebugHotkeyF1Handler();
       while ( Input_IsKeyPressed(59) )
         DD_Pump((int)g_RenderState, (char)g_RenderState);
     }
@@ -19327,7 +19317,7 @@ LABEL_12:
         *(_DWORD *)(gameData + 140012),
         g_SelectedUnitIndex);
 LABEL_35:
-    RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&g_CursorDesc_Default);
     return;
   }
   v5 = 0;
@@ -19339,14 +19329,14 @@ LABEL_35:
         && *(_DWORD *)(gameData + 725 * g_SelectedUnitIndex + 147490) )
       {
         v5 = 1;
-        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_519920);
+        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&g_CursorDesc_SelectedUnitHover);
         dword_5202B4 = 1;
         goto LABEL_21;
       }
       v4 = (unsigned __int16 *)(200 * v1 + gameData);
       if ( v4[v78 + 278187] != g_SelectedUnitIndex && dword_5202E8 )
       {
-        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&unk_519858);
+        RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)&g_CursorDesc_CannotSelect);
         dword_5202B4 = v6;
         goto LABEL_21;
       }
@@ -19354,9 +19344,9 @@ LABEL_35:
     else if ( MapTile_HasVisibleEnemyUnitStack(v1, v78) )
     {
       if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
-        v15 = &unk_5196F0;
+        v15 = &g_CursorDesc_Attack;
       else
-        v15 = &unk_5198A8;
+        v15 = &g_CursorDesc_CannotAttack;
       RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)v15);
       dword_5202B4 = 1;
       goto LABEL_21;
@@ -19373,20 +19363,20 @@ LABEL_21:
     if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
     {
 LABEL_24:
-      v7 = &unk_519830;
+      v7 = &g_CursorDesc_EnterSite;
 LABEL_25:
       RenderState_SelectCursorDescriptor((int)&g_RenderState, (int)v7);
       goto LABEL_26;
     }
 LABEL_80:
-    v7 = &unk_5198F8;
+    v7 = &g_CursorDesc_CannotEnter;
     goto LABEL_25;
   }
   if ( Port_IsInsideFootprint(v1, v78) )
   {
     if ( g_SelectedUnitIndex == -1 )
     {
-      v7 = &unk_519718;
+      v7 = &g_CursorDesc_GoTo;
       goto LABEL_25;
     }
     if ( UnitStack_HasNormalCombatUnits(gameData + 147174 + 725 * g_SelectedUnitIndex) )
@@ -19397,7 +19387,7 @@ LABEL_80:
   {
     if ( g_SelectedUnitIndex == -1 )
     {
-      v7 = &unk_519718;
+      v7 = &g_CursorDesc_GoTo;
       goto LABEL_25;
     }
     v17 = 2 * v78;
@@ -19409,27 +19399,27 @@ LABEL_80:
             *(_BYTE *)(gameData + 467 * (*(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) + 509678) == 1)
         && UnitStack_HasPeasantCargo(gameData + 147174 + 725 * g_SelectedUnitIndex) )
       {
-        v7 = &unk_5198D0;
+        v7 = &g_CursorDesc_DeliverCargo;
       }
       else
       {
-        v7 = &unk_519880;
+        v7 = &g_CursorDesc_VisitBuilding;
       }
       goto LABEL_25;
     }
     v5 += gameData;
     if ( !Building_CanAcceptUnitStack(g_SelectedUnitIndex, *(unsigned __int16 *)(v17 + v5 + 556374) - 0x8000) )
     {
-      v7 = &unk_5198F8;
+      v7 = &g_CursorDesc_CannotEnter;
       goto LABEL_25;
     }
     goto LABEL_24;
   }
-  if ( (_UNKNOWN *)dword_544D14 == &unk_519718
-    || (_UNKNOWN *)dword_544D14 == &unk_519830
-    || (_UNKNOWN *)dword_544D14 == &unk_519880
-    || (_UNKNOWN *)dword_544D14 == &unk_5198D0
-    || (_UNKNOWN *)dword_544D14 == &unk_5198F8 )
+  if ( (_UNKNOWN *)dword_544D14 == &g_CursorDesc_GoTo
+    || (_UNKNOWN *)dword_544D14 == &g_CursorDesc_EnterSite
+    || (_UNKNOWN *)dword_544D14 == &g_CursorDesc_VisitBuilding
+    || (_UNKNOWN *)dword_544D14 == &g_CursorDesc_DeliverCargo
+    || (_UNKNOWN *)dword_544D14 == &g_CursorDesc_CannotEnter )
   {
     WorldMap_RefreshActionButtonBarState(v16);
   }
@@ -19449,7 +19439,7 @@ LABEL_26:
       else
       {
         UnitStack_ShowSelectionDialog(*(unsigned __int16 *)(v8 + v9 + gameData + 556374), v5);
-        UIWidget_RefreshActionButtonState((int)&unk_511DDF, v10);
+        UIWidget_RefreshActionButtonState((int)&g_WorldMapJoinUnitsWidgetRecord, v10);
       }
     }
     else if ( MapTile_HasBuilding(v1, v78) )
@@ -19946,7 +19936,7 @@ int  WorldMap_HandleLoadGameAction(DWORD a1, char a2, double a3)
   int result; // eax
 
   result = SaveSlotDialog_Run(0, a2, a1, a3);
-  dword_511B64 = result;
+  g_PendingLoadGameSlotIndex = result;
   if ( result == -1 )
   {
     WorldMap_RedrawViewport(1);
@@ -20002,7 +19992,7 @@ int  WorldMap_HandleDeselectUnitAction(uintptr_t a1, DWORD a2)
     g_SelectedUnitIndex = -1;
     UnitStackSelection_SyncForCurrentSelection(NULL, a2);
     WorldMap_RefreshActionButtonBarState(NULL);
-    dword_526A34 = (int)&unk_5196A0;
+    dword_526A34 = (int)&g_CursorDesc_Default;
     return WorldMap_RedrawViewport(1);
   }
 }
@@ -20221,7 +20211,7 @@ int  WorldMap_HandleBuilderActionMenu(int a1, int a2, int a3, DWORD a4, double a
             if ( UnitStack_GetMinCurrentActionPoints(gameData + 147174 + 725 * g_SelectedUnitIndex) )
             {
               a3 = g_SelectedUnitIndex;
-              if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&unk_4EC79A, 0) )
+              if ( Building_New(0, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type0, 0) )
               {
                 MiniMap_DrawTileCell(
                   (void *)*(__int16 *)(725 * g_SelectedUnitIndex + gameData + 147174),
@@ -20234,13 +20224,13 @@ int  WorldMap_HandleBuilderActionMenu(int a1, int a2, int a3, DWORD a4, double a
             if ( !UnitStack_HasPeasantCargo(725 * g_SelectedUnitIndex + gameData + 147174) )
             {
               a3 = g_SelectedUnitIndex;
-              if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&unk_4EC7A4, 0) )
+              if ( Building_New(1, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type1, 0) )
                 Audio_PlaySoundEffectByName(aStruktur_0, 64);
             }
             break;
           case 5:
             a3 = g_SelectedUnitIndex;
-            if ( Building_New(2, g_SelectedUnitIndex, a5, (char *)&unk_4EC7AE, 0) )
+            if ( Building_New(2, g_SelectedUnitIndex, a5, (char *)&g_Building_FootprintTemplate_Type2, 0) )
               Audio_PlaySoundEffectByName(aStruktur_1, 64);
             break;
           default:
@@ -20259,7 +20249,7 @@ LABEL_13:
       }
       g_RenderDevice = (_UNKNOWN *)dword_5202E0;
       WorldMap_EnsureActionButtonWidgetTable();
-      UIWidgetTable_InitDrawStates(dword_511D40);
+      UIWidgetTable_InitDrawStates(g_WorldMapActionButtonWidgetTable);
       WorldMap_SyncSelectionForHumanPlayer(0x40u);
       WorldMap_RedrawViewport(1);
       WorldMap_RefreshUnitStatusPanel(0x40u);
@@ -20359,11 +20349,11 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
 
   if ( g_WorldMapActionWidgetsInitialized )
     return;
-  map_mode_flags = dword_511D48 ? dword_511D48 : 1;
-  join_units_flags = dword_511DE7 ? dword_511DE7 : 1;
-  memset(dword_511D40, 0, sizeof(dword_511D40));
+  map_mode_flags = g_WorldMapMapModeWidgetFlags ? g_WorldMapMapModeWidgetFlags : 1;
+  join_units_flags = g_WorldMapJoinUnitsWidgetFlags ? g_WorldMapJoinUnitsWidgetFlags : 1;
+  memset(g_WorldMapActionButtonWidgetTable, 0, sizeof(g_WorldMapActionButtonWidgetTable));
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     416,
     400,
     map_mode_flags,
@@ -20375,7 +20365,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_map_mode_de,
     action_sound);
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     480,
     400,
     1,
@@ -20387,7 +20377,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_next_unit_de,
     action_sound);
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
     544,
     400,
     1,
@@ -20399,7 +20389,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_next_building_de,
     action_sound);
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
     416,
     432,
     join_units_flags,
@@ -20411,7 +20401,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_join_units_de,
     action_sound);
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
     480,
     432,
     1,
@@ -20423,7 +20413,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_building_de,
     action_sound);
   WorldMap_WriteActionWidgetRecord(
-    dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
+    g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
     544,
     432,
     1,
@@ -20434,7 +20424,7 @@ static void WorldMap_EnsureActionButtonWidgetTable(void)
     label_ambush_en,
     label_ambush_de,
     action_sound);
-  *(_DWORD *)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT) = -1;
+  *(_DWORD *)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT) = -1;
   g_WorldMapActionWidgetsInitialized = 1;
 }
 
@@ -20471,8 +20461,8 @@ static void UnitBattle_WriteActionWidgetRecord(
 
 static int UnitBattle_IsActionButtonWidgetAddress(uintptr_t widget)
 {
-  return widget >= (uintptr_t)dword_514B78
-      && widget < (uintptr_t)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * UNIT_BATTLE_ACTION_WIDGET_COUNT);
+  return widget >= (uintptr_t)g_UnitBattleActionWidgetTable
+      && widget < (uintptr_t)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * UNIT_BATTLE_ACTION_WIDGET_COUNT);
 }
 
 static void UnitBattle_EnsureActionButtonWidgetTable(void)
@@ -20501,13 +20491,13 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
 
   if ( initialized )
     return;
-  shoot_flags = dword_514B80 ? dword_514B80 : 1;
-  charge_flags = dword_514BEA ? dword_514BEA : 1;
-  retreat_flags = byte_514C89 ? byte_514C89 : 1;
-  exit_overlay_sprite = dword_514C99 ? dword_514C99 : 13;
-  memset(dword_514B78, 0, sizeof(dword_514B78));
+  shoot_flags = g_UnitBattleShootButtonState ? g_UnitBattleShootButtonState : 1;
+  charge_flags = g_UnitBattleChargeButtonState ? g_UnitBattleChargeButtonState : 1;
+  retreat_flags = g_UnitBattleExitButtonState ? g_UnitBattleExitButtonState : 1;
+  exit_overlay_sprite = g_UnitBattleExitButtonOverlaySpriteIndex ? g_UnitBattleExitButtonOverlaySpriteIndex : 13;
+  memset(g_UnitBattleActionWidgetTable, 0, sizeof(g_UnitBattleActionWidgetTable));
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     498,
     370,
     shoot_flags,
@@ -20520,7 +20510,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     label_shoot_de,
     action_sound);
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     561,
     370,
     1,
@@ -20533,7 +20523,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     label_next_de,
     action_sound);
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
     498,
     401,
     charge_flags,
@@ -20546,7 +20536,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     label_charge_de,
     action_sound);
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
     498,
     432,
     1,
@@ -20559,7 +20549,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     label_defence_de,
     action_sound);
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
     561,
     401,
     1,
@@ -20572,7 +20562,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     label_retreat_de,
     action_sound);
   UnitBattle_WriteActionWidgetRecord(
-    dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
+    g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
     505,
     0,
     retreat_flags,
@@ -20584,7 +20574,7 @@ static void UnitBattle_EnsureActionButtonWidgetTable(void)
     0,
     0,
     action_sound);
-  *(_DWORD *)(dword_514B78 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * UNIT_BATTLE_ACTION_WIDGET_COUNT) = -1;
+  *(_DWORD *)(g_UnitBattleActionWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * UNIT_BATTLE_ACTION_WIDGET_COUNT) = -1;
   initialized = 1;
 }
 
@@ -20596,26 +20586,26 @@ int __thiscall WorldMap_RefreshActionButtonBarState(void *this)
   WorldMap_EnsureActionButtonWidgetTable();
   if ( g_SelectedUnitIndex == -1 )
   {
-    dword_511D48 = 1;
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    g_WorldMapMapModeWidgetFlags = 1;
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
     dword_5202E8 = 0;
-    dword_511DE7 = 1;
+    g_WorldMapJoinUnitsWidgetFlags = 1;
   }
   else
   {
-    dword_511D48 = 2;
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
+    g_WorldMapMapModeWidgetFlags = 2;
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
     if ( dword_5202E8 )
     {
-      dword_511DE7 = 2;
+      g_WorldMapJoinUnitsWidgetFlags = 2;
       goto LABEL_4;
     }
   }
-  dword_511DE7 = 1;
+  g_WorldMapJoinUnitsWidgetFlags = 1;
 LABEL_4:
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  UIWidget_RefreshActionButtonState((uintptr_t)dword_511D40, 1);
-  return UIWidget_RefreshActionButtonState((uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3), 1);
+  UIWidget_RefreshActionButtonState((uintptr_t)g_WorldMapActionButtonWidgetTable, 1);
+  return UIWidget_RefreshActionButtonState((uintptr_t)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3), 1);
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -20637,7 +20627,7 @@ int  WorldMap_LoadActionButtonSprites(int a1, char a2, DWORD a3)
   dword_52030C = (int)v4;
   WorldMap_EnsureActionButtonWidgetTable();
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  UIWidgetTable_InitDrawStates(dword_511D40);
+  UIWidgetTable_InitDrawStates(g_WorldMapActionButtonWidgetTable);
   WorldMap_RedrawViewport(1);
   return v5;
 }
@@ -20663,11 +20653,11 @@ int  WorldMap_PollActionButtonWidgets(DWORD a1)
 
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   WorldMap_EnsureActionButtonWidgetTable();
-  widget_result = UIWidgetTable_PollHoverAndActions(dword_511D40, a1);
+  widget_result = UIWidgetTable_PollHoverAndActions(g_WorldMapActionButtonWidgetTable, a1);
   Diagnostics_TraceWorldMapActionEvent(
     "action_widgets_after_poll",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     widget_result);
   if ( widget_result == 1 )
@@ -20675,7 +20665,7 @@ int  WorldMap_PollActionButtonWidgets(DWORD a1)
   Diagnostics_TraceWorldMapActionEvent(
     "action_widgets_after_refresh",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     widget_result);
   return v1;
@@ -20711,19 +20701,19 @@ void  UnitStackSelection_SyncForCurrentSelection(void *a1, DWORD a2)
 {
   if ( g_SelectedUnitIndex == -1 )
   {
-    if ( dword_514194 == -1 )
+    if ( g_UnitStackSelectionActiveUnitIndex == -1 )
       return;
 LABEL_4:
     UnitStackSelection_End(a1);
     return;
   }
-  if ( Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) == 1 && dword_514194 != -1 )
+  if ( Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) == 1 && g_UnitStackSelectionActiveUnitIndex != -1 )
     goto LABEL_4;
-  if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && dword_514194 == -1 )
+  if ( Unit_GetSquadCount(725 * g_SelectedUnitIndex + gameData + 147174) > 1 && g_UnitStackSelectionActiveUnitIndex == -1 )
   {
     UnitStackSelection_BeginForSelectedStack(a2);
   }
-  else if ( dword_514194 != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
+  else if ( g_UnitStackSelectionActiveUnitIndex != g_SelectedUnitIndex && Unit_GetSquadCount(gameData + 147174 + 725 * g_SelectedUnitIndex) > 1 )
   {
     UnitStackSelection_RefreshForSelectedStack(a2);
   }
@@ -21070,7 +21060,7 @@ int * WorldMap_RenderHook(DWORD a1)
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   WorldMap_EnsureActionButtonWidgetTable();
   if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
-    UIWidgetTable_InitDrawStates(dword_511D40);
+    UIWidgetTable_InitDrawStates(g_WorldMapActionButtonWidgetTable);
   else
     WorldMap_DrawTurnBannerReveal(0);
   WorldMap_RedrawViewport(1);
@@ -21104,7 +21094,7 @@ int  WorldMap_RedrawFrame(int a1, ...)
   Map_UpdateConstructionSiteSwayAnimation(0);
   Map_UpdateIdleAnimatedBuildings(0);
   UI_UpdateTileBlinkFlash(0, 0);
-  nullsub_1();
+  Noop_WorldMapFrameRedrawHook();
   mission_index = ACTIVE_MISSION_INDEX;
   if ( mission_index == 1 )
   {
@@ -21290,7 +21280,7 @@ static void WorldMap_RunInputScriptStep(void)
         dword_544D00 >> byte_54512C,
         g_SelectedUnitIndex,
         dword_526F78[0],
-        dword_514194);
+        g_UnitStackSelectionActiveUnitIndex);
     --wait_reads;
     return;
   }
@@ -21501,10 +21491,10 @@ void  WorldMap_RunHumanTurnLoop(
   Diagnostics_TraceWorldMapActionEvent("human_turn_after_plague_notices", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceWorldMapActionEvent("human_turn_before_color_notice", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   WorldMap_NotifyFactionColorChange(0, runtime_context);
-  unk_5196A0[5] = 0;
-  unk_5196A0[6] = 0;
-  dword_545150 = (int)&unk_5196A0;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  g_CursorDesc_Default[5] = 0;
+  g_CursorDesc_Default[6] = 0;
+  dword_545150 = (int)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
   Diagnostics_TraceWorldMapActionEvent("human_turn_cursor_restored", g_SelectedUnitIndex, dword_544D14, dword_545150, 0);
   {
@@ -21514,7 +21504,7 @@ void  WorldMap_RunHumanTurnLoop(
       g_SelectedUnitIndex,
       render_state[4] >> render_state[277],
       render_state[5] >> render_state[277],
-      unk_5196A0[6]);
+      g_CursorDesc_Default[6]);
   }
   Diagnostics_TraceWorldMapActionEvent("human_turn_after_color_notice", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   dword_5202FC = 0;
@@ -21615,14 +21605,14 @@ LABEL_24:
     Diagnostics_TraceWorldMapActionEvent(
       "selection_after_sub407d20",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     WorldMap_PollActionButtonWidgets(0);
     Diagnostics_TraceWorldMapActionEvent(
       "selection_after_action_widgets",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       0);
     if ( Input_IsKeyPressed(1) )
@@ -21713,7 +21703,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
 
   dword_5452E8 = 0;
   Debug_Log(0, 0, a3, (int)aPlaygame);
-  nullsub_3(0);
+  Noop_PlayGameSessionBoundaryHook(0);
   for ( player_index = 0; player_index < 5; ++player_index )
   {
     if ( !PLAYER_HAS_HUMAN_CONTROLLER(player_index) )
@@ -21749,8 +21739,8 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       tree_sprite_set = DLXSpriteSet_Load(tree_sprite_set, tree_resource_name);
     dword_5202D8 = (int)tree_sprite_set;
   }
-  dword_545150 = (int)&unk_5196A0;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  dword_545150 = (int)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   g_SelectedUnitIndex = -1;
   Locale_DrawInteger();
   UI_SetActiveWidgetTable(8);
@@ -21762,10 +21752,10 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   WorldMap_RedrawViewport(1);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
   WorldMap_LoadActionButtonSprites(0, 0, a3);
-  unk_5196A0[5] = 0;
-  unk_5196A0[6] = 0;
-  dword_545150 = (int)&unk_5196A0;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  g_CursorDesc_Default[5] = 0;
+  g_CursorDesc_Default[6] = 0;
+  dword_545150 = (int)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   RenderState_RecalculateCursorBoundsForRect((_DWORD *)(uintptr_t)(unsigned int)g_RenderState, 0, 640, 0, 480);
   {
     _DWORD *render_state = (_DWORD *)(uintptr_t)(unsigned int)g_RenderState;
@@ -21774,7 +21764,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
       g_SelectedUnitIndex,
       render_state[4] >> render_state[277],
       render_state[5] >> render_state[277],
-      unk_5196A0[6]);
+      g_CursorDesc_Default[6]);
   }
   UnitStackSelection_SyncForCurrentSelection((void *)(uintptr_t)(unsigned int)gameData, a3);
   Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
@@ -21789,7 +21779,7 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   dword_520304 = 0;
   dword_5202FC = 0;
   dword_5202F8 = 0;
-  dword_511B64 = -1;
+  g_PendingLoadGameSlotIndex = -1;
   previous_resource_handle = Render_SetResourceHandle((int)&unk_51D4C0, 0);
   previous_render_hook = (int (*)(int, char, DWORD))g_RenderHook;
   g_RenderHook = (int (*)())WorldMap_RenderHook;
@@ -21808,10 +21798,10 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
     else if ( GAME_TURN_COUNTER )
     {
       Diagnostics_TraceWorldMapActionEvent("playgame_before_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, 0);
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
       Debug_Log(0, 0, a3, (int)aComputerplay);
       Rules_ExecuteAITurn();
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
       Diagnostics_TraceWorldMapActionEvent("playgame_after_ai_turn", g_SelectedUnitIndex, g_CurrentPlayerIndex, GAME_TURN_COUNTER, dword_5202F8);
     }
     if ( dword_5202F8 )
@@ -21837,11 +21827,11 @@ int  PlayGame(int a1, char a2, DWORD a3, char a4, double a5, ...)
   Rules_ShowBanner_StrategicClash();
   Mem_PurgeFreeListsForSpace(-1, 0, 0);
   Debug_Log(0, 0, a3, (int)aPlaygameEnd);
-  nullsub_3(0);
-  if ( dword_511B64 != -1 )
+  Noop_PlayGameSessionBoundaryHook(0);
+  if ( g_PendingLoadGameSlotIndex != -1 )
   {
     WorldMap_Initialize(0, a3);
-    SaveSlot_LoadGame(dword_511B64, a3, a5);
+    SaveSlot_LoadGame(g_PendingLoadGameSlotIndex, a3, a5);
     PlayGame(0, 0, a3, a4, a5);
     return 0;
   }
@@ -22212,11 +22202,11 @@ int  UI_RenderAlignedTextWithCursor(
     glyph = *cursor++;
     if ( glyph != 10 )
       a5 = (unsigned __int16)TextSprite_DrawGlyphAndAdvance((unsigned __int16)a5, a4, glyph);
-    if ( glyph_index == dword_511EC0 )
+    if ( glyph_index == g_UITextCursorGlyphIndex )
       TextSprite_DrawGlyphAndAdvance(saved_x, a4, 0x5Fu);
     ++glyph_index;
   }
-  if ( glyph_index == dword_511EC0 )
+  if ( glyph_index == g_UITextCursorGlyphIndex )
     TextSprite_DrawGlyphAndAdvance((unsigned __int16)a5, a4, 0x5Fu);
   return a5;
 }
@@ -22398,7 +22388,7 @@ int TextSprite_ReleaseAllResourceSlots()
 //----- (0040C430) --------------------------------------------------------
 int  UI_SetTextCursorPosition(int result)
 {
-  dword_511EC0 = result;
+  g_UITextCursorGlyphIndex = result;
   return result;
 }
 // 511EC0: using guessed type int dword_511EC0;
@@ -23025,13 +23015,13 @@ void * MiniMap_DrawTileCell(void *result, signed int a2)
   previous_render_device = g_RenderDevice;
   g_RenderDevice = (_UNKNOWN *)(uintptr_t)(unsigned int)dword_52334C;
   color = 0xCFu;
-  if ( (dword_511FF0 & 1) != 0 )
+  if ( (g_MiniMapDrawMask_511FF0 & 1) != 0 )
   {
     terrain_tile = TILE_TERRAIN_RECORD(row, column);
     if ( terrain_tile[2] == 0xFFFF )
       color = *(_BYTE *)((uintptr_t)(unsigned int)dword_523F50 + *terrain_tile);
   }
-  if ( (dword_511FF0 & 2) != 0 )
+  if ( (g_MiniMapDrawMask_511FF0 & 2) != 0 )
   {
     tile_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
     if ( tile_index <= 0x1F4u
@@ -23039,14 +23029,14 @@ void * MiniMap_DrawTileCell(void *result, signed int a2)
     {
       stack_record = gameData + UNIT_STACK_TABLE_OFFSET + UNIT_STACK_STRIDE * tile_index;
       if ( !*(_BYTE *)(stack_record + 720) )
-        color = byte_511FF8[*(unsigned __int8 *)(stack_record + 4)];
+        color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(stack_record + 4)];
     }
   }
-  if ( (dword_511FF0 & 4) != 0 )
+  if ( (g_MiniMapDrawMask_511FF0 & 4) != 0 )
   {
     tile_index = *(unsigned __int16 *)(TILE_INDEX(row, column));
     if ( tile_index >= 0x8000 && tile_index != 0xFFFF )
-      color = byte_511FF8[*(unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - 0x8000) + 2)];
+      color = g_MiniMapBuildingOwnerColorTable[*(unsigned __int8 *)(gameData + BUILDING_TABLE_OFFSET + BUILDING_RECORD_SIZE * (tile_index - 0x8000) + 2)];
   }
   if ( !Map_IsTileVisibleToPlayer(row, column, *(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET)) )
     color = 1;
@@ -23224,7 +23214,7 @@ BOOL MiniMap_IsCursorInside()
 int MiniMap_ShowAllLayers()
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
-  dword_511FF0 = 7;
+  g_MiniMapDrawMask_511FF0 = 7;
   Locale_DrawInteger();
   return WorldMap_RedrawViewport(1);
 }
@@ -23236,7 +23226,7 @@ int MiniMap_ShowAllLayers()
 int MiniMap_ShowUnitsOnly()
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
-  dword_511FF0 = 2;
+  g_MiniMapDrawMask_511FF0 = 2;
   Locale_DrawInteger();
   return WorldMap_RedrawViewport(1);
 }
@@ -23248,7 +23238,7 @@ int MiniMap_ShowUnitsOnly()
 int MiniMap_ShowBuildingsOnly()
 {
   PLAYER_MINIMAP_VISIBLE(g_CurrentPlayerIndex) = 1;
-  dword_511FF0 = 4;
+  g_MiniMapDrawMask_511FF0 = 4;
   Locale_DrawInteger();
   return WorldMap_RedrawViewport(1);
 }
@@ -23721,7 +23711,7 @@ BOOL  WorldMap_HandleTopMenuBar(char a1, int a2)
   Debug_Log(0, a1, a2, (int)aMenuDraw);
   Render_Pump();
   previous_screen_handle = dword_544D14;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 0, 0x27Fu, 0x18Fu, 0, 0);
   Render_Present((int)g_RenderState);
   surface = (_DWORD *)Mem_Alloc(188, 0, 0, a2);
@@ -24291,13 +24281,13 @@ int  UnitStack_GetVisionRadius(int a1)
 
   v1 = 88 * *(__int16 *)(a1 + 6);
   v2 = (__int16 *)(a1 + 37);
-  v3 = (unsigned __int8)byte_5125AE[v1];
+  v3 = (unsigned __int8)g_UnitTypeVisionRadius[v1];
   for ( i = 1; i < 10; ++i )
   {
     v5 = *v2;
     if ( v5 == -1 )
       break;
-    v6 = (unsigned __int8)byte_5125AE[88 * v5];
+    v6 = (unsigned __int8)g_UnitTypeVisionRadius[88 * v5];
     if ( v6 > v3 )
       v3 = v6;
     v2 = (__int16 *)((char *)v2 + 31);
@@ -24942,14 +24932,14 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
         v22 = DLXSpriteSet_Load(v22, v87);
       dword_523F78 = (int)v22;
       dword_523F7C = 0;
-      dword_512360 = v107;
+      g_ActiveUnitMoveTileIndex = v107;
     }
     dword_523F74 = 0;
     dword_523F70 = 0;
     if ( v101 )
       WorldMap_RedrawViewport(1);
     v92 = dword_544D14;
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
     v11 = v107;
     *((_BYTE *)v7 + 720) = 0;
     UnitStack_RevealHiddenEnemiesAndAttackAdjacent(v11, a5);
@@ -25092,7 +25082,7 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                 {
                   WorldMap_RedrawFrame(v66);
                   v73 = 88 * v7[3];
-                  LOBYTE(v73) = byte_512571[v73];
+                  LOBYTE(v73) = g_UnitTypeMoveAnimationTickIntervalMs[v73];
                   v75 = Time_Now(v74, v73);
                   if ( v75 - v66 >= (unsigned int)v76 )
                   {
@@ -25152,10 +25142,10 @@ void  UnitStack_ExecuteQueuedPath(unsigned int a1, int a2, char a3, DWORD a4, do
                           break;
                       }
                     }
-                    dword_523F70 += (unsigned __int8)byte_512570[88 * v7[3]]
+                    dword_523F70 += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * v7[3]]
                                   * Map_NeighborDX[2 * *((unsigned __int8 *)v7 + 5)];
                     v81 = *((unsigned __int8 *)v7 + 5);
-                    dword_523F74 += Map_NeighborDY[2 * v81] * (unsigned __int8)byte_512570[88 * v7[3]];
+                    dword_523F74 += Map_NeighborDY[2 * v81] * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * v7[3]];
                     v66 = Time_Now(v78, v81);
                     v106 = 0;
                   }
@@ -25286,7 +25276,7 @@ LABEL_21:
     }
     if ( dword_523F78 )
       DLXSpriteSet_ReleaseAndClear(&dword_523F78);
-    dword_512360 = -1;
+    g_ActiveUnitMoveTileIndex = -1;
     if ( v101 )
     {
       UnitStackSelection_RefreshForSelectedStack(v15);
@@ -25611,10 +25601,10 @@ void  Unit_CheckLowMorale(_BYTE *a1, double a2)
   {
     v10 = *(__int16 *)a1;
     UI_CenterWorldMapViewportOnRectIfFit(v10, *((__int16 *)a1 + 1), *((__int16 *)a1 + 1) - 5, v10);
-    v16[0] = (int)off_512368[0];
-    v16[1] = (int)off_512368[1];
-    v16[2] = (int)off_512368[2];
-    UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, 0, (DWORD)a1, (int)v17, (int)&off_512368[3]);
+    v16[0] = (int)g_Text_UnitDisbandedLowMoraleMessages[0];
+    v16[1] = (int)g_Text_UnitDisbandedLowMoraleMessages[1];
+    v16[2] = (int)g_Text_UnitDisbandedLowMoraleMessages[2];
+    UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 0, 0, (DWORD)a1, (int)v17, (int)&g_Text_UnitDisbandedLowMoraleMessages[3]);
     UI_StartWorldMapUnitAttentionFlash(
       *(unsigned __int16 *)(gameData + 200 * *(__int16 *)a1 + 2 * *((__int16 *)a1 + 1) + 556374),
       *((__int16 *)a1 + 1),
@@ -25909,7 +25899,7 @@ __int16  Map_RedrawUnitFootprintByIndex(int a1)
   result = WorldMap_RedrawTileIfVisible(x, y);
   unit_type = unit_stack[3];
   unit_metadata_offset = 88 * unit_type;
-  if ( byte_512577[unit_metadata_offset] )
+  if ( g_UnitTypeSpriteVerticalOffsetPx[unit_metadata_offset] )
   {
     if ( (unsigned __int16)unit_type >= 0x1Bu )
     {
@@ -26014,9 +26004,9 @@ void Map_UpdateIdleAnimatedUnits()
     if ( v2 != -1 )
     {
       v3 = 88 * v2;
-      if ( (byte_512573[v3] & 1) != 0 )
+      if ( (g_UnitTypeHasIdleAnimationFlags[v3] & 1) != 0 )
       {
-        v4 = (unsigned __int8)byte_512572[v3] + *(_DWORD *)(v1 + 24);
+        v4 = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[v3] + *(_DWORD *)(v1 + 24);
         if ( v4 < Time_Now(v0, v1) )
         {
           v5 = Time_Now(v0, v1);
@@ -26044,7 +26034,7 @@ void Map_UpdateIdleAnimatedUnits()
 //----- (00411E20) --------------------------------------------------------
 int  Unit_GetSpriteVerticalOffsetPx(int a1)
 {
-  return (unsigned __int8)byte_512577[88 * *(__int16 *)(gameData + 725 * a1 + 147180)];
+  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(gameData + 725 * a1 + 147180)];
 }
 // 5202E4: using guessed type int gameData;
 
@@ -28166,9 +28156,9 @@ void  Unit_BuildBigInfoGraphicPath(char *a1, unsigned __int8 a2, int a3)
   int v20[7]; // [esp+0h] [ebp-1Ch]
 
   v20[5] = a3;
-  v20[0] = (int)off_513328[0];
-  v20[1] = (int)off_513328[1];
-  v20[2] = (int)off_513328[2];
+  v20[0] = (int)g_LanguageDirectoryNames[0];
+  v20[1] = (int)g_LanguageDirectoryNames[1];
+  v20[2] = (int)g_LanguageDirectoryNames[2];
   v3 = aBiginfo_;
   v4 = a1;
   do
@@ -28715,9 +28705,9 @@ int * Unit_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5, int a6)
   if ( result )
   {
     v55 = dword_544D14;
-    v56 = dword_544D14 != (_DWORD)&dword_519808;
+    v56 = dword_544D14 != (_DWORD)&g_CursorDesc_Busy;
     if ( dword_544D10 )
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
     v11 = 2 * v53;
     v12 = 2 * v53 + gameData + 200 * v52;
     LOWORD(v11) = *(_WORD *)(v12 + 556374);
@@ -29488,13 +29478,13 @@ int  Math_SinDegreesQ16(signed int a1)
     v3 = -a1;
     if ( -a1 >= 360 )
       v3 %= 360;
-    return -dword_513434[v3];
+    return -g_MathSinTableQ16[v3];
   }
   else
   {
     if ( a1 >= 360 )
       v1 = a1 % 360;
-    return dword_513434[v1];
+    return g_MathSinTableQ16[v1];
   }
 }
 // 513434: using guessed type int dword_513434[363];
@@ -29608,8 +29598,8 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
       if ( !*(_BYTE *)(result + 147894) || (result = *(unsigned __int8 *)(result + 147178), result == g_CurrentPlayerIndex) )
       {
         v7 = gameData + 725 * v24;
-        v8 = (unsigned __int8)byte_512577[88 * *(__int16 *)(v7 + 147180)];
-        if ( dword_512360 == -1 || dword_512360 != v24 )
+        v8 = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(v7 + 147180)];
+        if ( g_ActiveUnitMoveTileIndex == -1 || g_ActiveUnitMoveTileIndex != v24 )
           SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
                             *(unsigned __int16 *)(gameData + 725 * v24 + 147180),
                             *(_BYTE *)(gameData + 725 * v24 + 147178),
@@ -29665,7 +29655,7 @@ int  WorldMap_DrawUnitStackWithOverlays(int result, int a2, int a3, int a4, unsi
           v20 = DLX_GetSpriteForChar(dword_5202C8, 39);
           Compat_RenderDeviceDrawMenuSprite(a2 + 10, v10 + 5, v20, 1);
         }
-        if ( v24 == dword_5139F8 )
+        if ( v24 == g_UnitBlinkFlashUnitIndex )
         {
           v20 = DLX_GetSpriteForChar(dword_5202D0, dword_5269A4);
           Compat_RenderDeviceDrawMenuSprite(a2, a3, v20, 1);
@@ -30125,7 +30115,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
   v99 = 0;
   v100 = *(unsigned __int16 *)(TILE_INDEX(v3, v4));
   v101 = 0;
-  if ( dword_512360 == v100 )
+  if ( g_ActiveUnitMoveTileIndex == v100 )
     v101 = dword_523F74;
   if ( *(unsigned __int16 *)(TILE_INDEX(v3, v4)) <= 0x7FFFu
     && (g_UnitTypeFlags[22 * *(__int16 *)(gameData + 725 * v100 + 147180)] & 1) != 0 )
@@ -30168,31 +30158,31 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
     {
       if ( Unit_GetSpriteVerticalOffsetPx(v13) )
       {
-        if ( v14 == dword_512360 )
+        if ( v14 == g_ActiveUnitMoveTileIndex )
           v12 = dword_523F74;
         WorldMap_DrawUnitStackWithOverlays(v109, a1, a2, v12 - 64, (unsigned __int16 *)(1400 * v3 + gameData + 14 * (v4 - 1)));
         v99 = 1;
       }
     }
   }
-  if ( v4 > 0 && v3 > 0 && dword_512360 != -1 )
+  if ( v4 > 0 && v3 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v15 = *(__int16 *)(200 * (v3 - 1) + gameData + 2 * v4 + 556372);
-    if ( v15 == dword_512360 )
+    if ( v15 == g_ActiveUnitMoveTileIndex )
     {
-      if ( Unit_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( Unit_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
       {
         WorldMap_DrawUnitStackWithOverlays(v15, a1, a2, dword_523F74 - 64, (unsigned __int16 *)(gameData + 1400 * v16 + 14 * (v4 - 1)));
         v99 = 1;
       }
     }
   }
-  if ( v4 < *(_DWORD *)(gameData + 140004) - 1 && v3 < *(_DWORD *)(gameData + 140000) && dword_512360 != -1 )
+  if ( v4 < *(_DWORD *)(gameData + 140004) - 1 && v3 < *(_DWORD *)(gameData + 140000) && g_ActiveUnitMoveTileIndex != -1 )
   {
     v17 = *(__int16 *)(200 * (v3 + 1) + gameData + 2 * v4 + 556376);
-    if ( v17 == dword_512360 )
+    if ( v17 == g_ActiveUnitMoveTileIndex )
     {
-      if ( Unit_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( Unit_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
       {
         WorldMap_DrawUnitStackWithOverlays(v17, a1, a2, dword_523F74 + 64, (unsigned __int16 *)(gameData + 1400 * (v3 + 1) + 14 * (v4 + 1)));
         v99 = 1;
@@ -30208,7 +30198,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
       if ( Unit_GetSpriteVerticalOffsetPx(v18) )
       {
         v20 = 0;
-        if ( v19 == dword_512360 )
+        if ( v19 == g_ActiveUnitMoveTileIndex )
           v20 = dword_523F74;
         WorldMap_DrawUnitStackWithOverlays(v113, a1, a2, v20, (unsigned __int16 *)(gameData + 1400 * (v3 - 1) + 14 * v4));
         v99 = 1;
@@ -30224,31 +30214,31 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
       if ( Unit_GetSpriteVerticalOffsetPx(v21) )
       {
         v23 = 0;
-        if ( v22 == dword_512360 )
+        if ( v22 == g_ActiveUnitMoveTileIndex )
           v23 = dword_523F74;
         WorldMap_DrawUnitStackWithOverlays(v112, a1, a2, v23 + 64, (unsigned __int16 *)(1400 * v3 + gameData + 14 * (v4 + 1)));
         v99 = 1;
       }
     }
   }
-  if ( v4 < *(_DWORD *)(gameData + 140004) - 1 && v3 > 0 && dword_512360 != -1 )
+  if ( v4 < *(_DWORD *)(gameData + 140004) - 1 && v3 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v24 = *(__int16 *)(200 * (v3 - 1) + gameData + 2 * v4 + 556376);
-    if ( v24 == dword_512360 )
+    if ( v24 == g_ActiveUnitMoveTileIndex )
     {
-      if ( Unit_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( Unit_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
       {
         WorldMap_DrawUnitStackWithOverlays(v24, a1, a2, dword_523F74 + 64, (unsigned __int16 *)(1400 * (v3 - 1) + gameData + 14 * (v4 + 1)));
         v99 = 1;
       }
     }
   }
-  if ( v4 > 0 && v3 < *(_DWORD *)(gameData + 140000) - 1 && dword_512360 != -1 )
+  if ( v4 > 0 && v3 < *(_DWORD *)(gameData + 140000) - 1 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v25 = *(__int16 *)(200 * (v3 + 1) + gameData + 2 * v4 + 556372);
-    if ( v25 == dword_512360 )
+    if ( v25 == g_ActiveUnitMoveTileIndex )
     {
-      if ( Unit_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( Unit_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
       {
         WorldMap_DrawUnitStackWithOverlays(v25, a1, a2, dword_523F74 - 64, (unsigned __int16 *)(gameData + 1400 * v26 + 14 * (v4 - 1)));
         v99 = 1;
@@ -30264,62 +30254,62 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
       if ( Unit_GetSpriteVerticalOffsetPx(v27) )
       {
         v29 = 0;
-        if ( v28 == dword_512360 )
+        if ( v28 == g_ActiveUnitMoveTileIndex )
           v29 = dword_523F74;
         WorldMap_DrawUnitStackWithOverlays(v114, a1, a2, v29, (unsigned __int16 *)(1400 * (v3 + 1) + gameData + 14 * v4));
         v99 = 1;
       }
     }
   }
-  if ( dword_512360 != -1 )
+  if ( g_ActiveUnitMoveTileIndex != -1 )
   {
     if ( v4 > 0 )
     {
       v30 = *(unsigned __int16 *)(200 * v3 + gameData + 2 * v4 + 556372);
-      if ( v30 != 0xFFFF && dword_523F74 > 0 && v30 == dword_512360 )
+      if ( v30 != 0xFFFF && dword_523F74 > 0 && v30 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v30, a1, a2, dword_523F74 - 64, a3);
     }
     if ( v4 < *(_DWORD *)(gameData + 140004) - 1 )
     {
       v31 = *(unsigned __int16 *)(200 * v3 + gameData + 2 * v4 + 556376);
-      if ( v31 != 0xFFFF && dword_523F74 < 0 && v31 == dword_512360 )
+      if ( v31 != 0xFFFF && dword_523F74 < 0 && v31 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v31, a1, a2, dword_523F74 + 64, a3);
     }
     if ( v3 > 0 )
     {
       v32 = *(unsigned __int16 *)(TILE_INDEX((v3 - 1), v4));
-      if ( v32 != 0xFFFF && dword_523F70 > 0 && v32 == dword_512360 )
+      if ( v32 != 0xFFFF && dword_523F70 > 0 && v32 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v32, a1, a2, dword_523F74, a3);
     }
     if ( v3 < *(_DWORD *)(gameData + 140000) - 1 )
     {
       v33 = *(unsigned __int16 *)(200 * (v3 + 1) + gameData + 2 * v4 + 556374);
-      if ( v33 != 0xFFFF && dword_523F70 < 0 && v33 == dword_512360 )
+      if ( v33 != 0xFFFF && dword_523F70 < 0 && v33 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v33, a1, a2, dword_523F74, a3);
     }
     if ( v3 > 0 && v4 > 0 )
     {
       v34 = *(unsigned __int16 *)(gameData + 200 * (v3 - 1) + 2 * v4 + 556372);
-      if ( v34 != 0xFFFF && dword_523F74 > 0 && dword_523F70 > 0 && v34 == dword_512360 )
+      if ( v34 != 0xFFFF && dword_523F74 > 0 && dword_523F70 > 0 && v34 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v34, a1, a2, dword_523F74 - 64, a3);
     }
     if ( v3 > 0 && v4 < *(_DWORD *)(gameData + 140004) )
     {
       v35 = *(unsigned __int16 *)(200 * (v3 - 1) + gameData + 2 * v4 + 556376);
-      if ( v35 != 0xFFFF && dword_523F74 < 0 && dword_523F70 > 0 && v35 == dword_512360 )
+      if ( v35 != 0xFFFF && dword_523F74 < 0 && dword_523F70 > 0 && v35 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v35, a1, a2, dword_523F74 + 64, a3);
     }
     if ( v4 > 0 && v3 < *(_DWORD *)(gameData + 140000) )
     {
       v36 = *(unsigned __int16 *)(200 * (v3 + 1) + gameData + 2 * v4 + 556372);
-      if ( v36 != 0xFFFF && dword_523F74 > 0 && dword_523F70 < 0 && v36 == dword_512360 )
+      if ( v36 != 0xFFFF && dword_523F74 > 0 && dword_523F70 < 0 && v36 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v36, a1, a2, dword_523F74 - 64, a3);
     }
     v37 = *(_DWORD *)(gameData + 140000);
     if ( v4 < v37 && v3 < v37 )
     {
       v38 = *(unsigned __int16 *)(200 * (v3 + 1) + gameData + 2 * v4 + 556376);
-      if ( v38 != 0xFFFF && dword_523F74 < 0 && dword_523F70 < 0 && v38 == dword_512360 )
+      if ( v38 != 0xFFFF && dword_523F74 < 0 && dword_523F70 < 0 && v38 == g_ActiveUnitMoveTileIndex )
         WorldMap_DrawUnitStackWithOverlays(v38, a1, a2, dword_523F74 + 64, a3);
     }
   }
@@ -30333,7 +30323,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
     v43 = *(__int16 *)(v102 + 16);
     v44 = *(char *)(v42 + 509678);
     if ( v43 != -1 )
-      v43 = 3 * ((unsigned __int16)word_513A70[v44] - *(__int16 *)(v42 + 509690)) / (unsigned __int16)word_513A70[v44];
+      v43 = 3 * ((unsigned __int16)g_BuildingTypeMaxHitPoints[v44] - *(__int16 *)(v42 + 509690)) / (unsigned __int16)g_BuildingTypeMaxHitPoints[v44];
     v45 = v43;
     v46 = (unsigned __int8 *)(467 * v40 + gameData);
     v103 = v3 + 2 * (v4 - v46[509675]) - v46[509674];
@@ -30349,7 +30339,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
         v79 = 0;
       else
         v79 = 5;
-      v108 = (unsigned __int8)byte_5139E1[2 * *(unsigned __int8 *)(v102 + 3) + 2 * v79]
+      v108 = (unsigned __int8)g_BuildingFlagYOffsets[2 * *(unsigned __int8 *)(v102 + 3) + 2 * v79]
            + ((*(unsigned __int8 *)(v102 + 1) - *(_DWORD *)(gameData + 140012)) << 6)
            + 16;
       if ( *(_BYTE *)(v102 + 4) )
@@ -30378,8 +30368,8 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
       Compat_RenderDeviceDrawMenuSprite(a1, a2, v85, 1);
     }
   }
-  v48 = dword_512360;
-  if ( dword_512360 == -1 && g_SelectedUnitIndex != -1 )
+  v48 = g_ActiveUnitMoveTileIndex;
+  if ( g_ActiveUnitMoveTileIndex == -1 && g_SelectedUnitIndex != -1 )
   {
     v49 = 725 * g_SelectedUnitIndex + gameData + 147174;
     v50 = *(_DWORD *)(v49 + 316);
@@ -30446,7 +30436,7 @@ int  WorldMap_DrawMapTile(unsigned __int16 a1, unsigned __int16 a2, unsigned __i
     }
   }
 LABEL_133:
-  if ( v100 == g_SelectedUnitIndex && dword_512360 == -1 && PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
+  if ( v100 == g_SelectedUnitIndex && g_ActiveUnitMoveTileIndex == -1 && PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
   {
     v52 = DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
     Compat_RenderDeviceDrawMenuSprite(a1, a2, v52, 1);
@@ -30799,7 +30789,7 @@ int  UI_StartUnitBlinkFlash(int a1, int a2, int a3)
 {
   int result; // eax
 
-  dword_5139F8 = a1;
+  g_UnitBlinkFlashUnitIndex = a1;
   result = Time_Now(a3, a2);
   dword_5269A0 = result;
   dword_5269A4 = 0;
@@ -30816,14 +30806,14 @@ void __fastcall UI_UpdateUnitBlinkFlash(int a1, int a2)
   int v3; // eax
   int v4; // eax
 
-  if ( dword_5139F8 != -1 && Time_Now(a1, a2) > (unsigned int)(dword_5269A0 + 10) )
+  if ( g_UnitBlinkFlashUnitIndex != -1 && Time_Now(a1, a2) > (unsigned int)(dword_5269A0 + 10) )
   {
     v3 = Time_Now(v2, dword_5269A0 + 10);
     dword_5269A4 += (v3 - dword_5269A0) / 0xAu;
     dword_5269A0 = Time_Now(10, (v3 - dword_5269A0) % 0xAu);
-    v4 = dword_5139F8;
+    v4 = g_UnitBlinkFlashUnitIndex;
     if ( dword_5269A4 >= 12 )
-      dword_5139F8 = -1;
+      g_UnitBlinkFlashUnitIndex = -1;
     Map_RedrawUnitFootprintByIndex(v4);
   }
 }
@@ -30925,14 +30915,14 @@ int  UI_DrawTileHighlightOverlay(int a1, int a2, int a3, int a4)
   int centered_y; // edi
   int SpriteForChar; // eax
 
-  if ( dword_512360 != -1 )
-    return nullsub_1();
+  if ( g_ActiveUnitMoveTileIndex != -1 )
+    return Noop_WorldMapFrameRedrawHook();
   slot_index = 0;
   while ( a1 != g_TileHighlightSlots[slot_index].tile_x || a2 != g_TileHighlightSlots[slot_index].tile_y )
   {
     ++slot_index;
     if ( slot_index >= 8 )
-      return nullsub_1();
+      return Noop_WorldMapFrameRedrawHook();
   }
   SpriteWidth = DLX_GetSpriteWidth(dword_5202C8, 0x28u);
   centered_x = a3 + (64 - SpriteWidth) / 2;
@@ -31913,13 +31903,13 @@ LABEL_23:
     UI_InvokeWidgetTransitionCallback(a1, 1);
     return v3;
   }
-  if ( (uintptr_t)a1 >= (uintptr_t)dword_511D40
-    && (uintptr_t)a1 < (uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT)
+  if ( (uintptr_t)a1 >= (uintptr_t)g_WorldMapActionButtonWidgetTable
+    && (uintptr_t)a1 < (uintptr_t)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * WORLD_MAP_ACTION_WIDGET_COUNT)
     && (DD_IsFlipping((int)g_RenderState) || DD_IsLost((int)g_RenderState)) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "action_widget_hit",
-      (int)(((uintptr_t)a1 - (uintptr_t)dword_511D40) / WORLD_MAP_ACTION_WIDGET_RECORD_SIZE),
+      (int)(((uintptr_t)a1 - (uintptr_t)g_WorldMapActionButtonWidgetTable) / WORLD_MAP_ACTION_WIDGET_RECORD_SIZE),
       *(_DWORD *)a1,
       *(_DWORD *)(a1 + 4),
       *(_DWORD *)(a1 + 8));
@@ -31989,8 +31979,8 @@ LABEL_34:
 //----- (00419D60) --------------------------------------------------------
 int  UIWidget_RefreshActionButtonState(uintptr_t result, int a2)
 {
-  if ( result == (uintptr_t)dword_511D40
-    || result == (uintptr_t)(dword_511D40 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3) )
+  if ( result == (uintptr_t)g_WorldMapActionButtonWidgetTable
+    || result == (uintptr_t)(g_WorldMapActionButtonWidgetTable + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3) )
   {
     WorldMap_EnsureActionButtonWidgetTable();
   }
@@ -32006,9 +31996,9 @@ _DWORD * UIWidgetTable_InitDrawStates(_DWORD *result)
 {
   unsigned char *widget;
 
-  if ( (uintptr_t)result == (uintptr_t)dword_511D40 )
+  if ( (uintptr_t)result == (uintptr_t)g_WorldMapActionButtonWidgetTable )
     WorldMap_EnsureActionButtonWidgetTable();
-  if ( (uintptr_t)result == (uintptr_t)dword_514B78 )
+  if ( (uintptr_t)result == (uintptr_t)g_UnitBattleActionWidgetTable )
     UnitBattle_EnsureActionButtonWidgetTable();
   widget = (unsigned char *)result;
   if ( *(_DWORD *)widget == -1 )
@@ -32036,9 +32026,9 @@ signed int  UIWidgetTable_PollHoverAndActions(_DWORD *a1, DWORD a2)
   signed int result; // ecx
   signed int widget_result; // eax
 
-  if ( (uintptr_t)a1 == (uintptr_t)dword_511D40 )
+  if ( (uintptr_t)a1 == (uintptr_t)g_WorldMapActionButtonWidgetTable )
     WorldMap_EnsureActionButtonWidgetTable();
-  if ( (uintptr_t)a1 == (uintptr_t)dword_514B78 )
+  if ( (uintptr_t)a1 == (uintptr_t)g_UnitBattleActionWidgetTable )
     UnitBattle_EnsureActionButtonWidgetTable();
   widget = (uintptr_t)a1;
   has_tooltip = 0;
@@ -33585,7 +33575,7 @@ int  Building_CalcWallDefenseBonus(int a1, signed int a2)
       v3 = *(unsigned __int8 *)(v6 + 422);
     ++v6;
   }
-  v9 = (v3 + v7) / 2 * (unsigned __int16)word_513A78[2 * *(unsigned __int8 *)(a1 + 421)];
+  v9 = (v3 + v7) / 2 * (unsigned __int16)g_WallKindDefenseFactor[2 * *(unsigned __int8 *)(a1 + 421)];
   return (v9 - (__CFSHL__(v9 >> 31, 8) + (v9 >> 31 << 8))) >> 8;
 }
 // 513A78: using guessed type __int16 word_513A78[];
@@ -33904,12 +33894,12 @@ signed int  UI_PromptLeadTroopsPersonally(
     }
     while ( v21 < v60 );
   }
-  v47[0] = (int)off_513A00[0];
-  v47[1] = (int)off_513A00[1];
-  v47[2] = (int)off_513A00[2];
+  v47[0] = (int)g_LeadTroopsPersonallyPromptTexts[0];
+  v47[1] = (int)g_LeadTroopsPersonallyPromptTexts[1];
+  v47[2] = (int)g_LeadTroopsPersonallyPromptTexts[2];
   Render_ReleaseSurface(17, a5);
   UI_DrawTextFmt((int)&v48, v55 + 160, v55 + 390, v54 + 10, 6, v47[(unsigned __int8)g_LanguageIndex]);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   v27 = v54;
   v28 = v55;
   Render_Present((int)g_RenderState);
@@ -34124,7 +34114,7 @@ int a5;
   *(_BYTE *)(v60 + 3) = g_CurrentPlayerIndex;
   *(_BYTE *)(v60 + 2) = v14;
   *(_BYTE *)(v60 + 4) = a1;
-  v15 = word_513A70[a1];
+  v15 = g_BuildingTypeMaxHitPoints[a1];
   *(_BYTE *)(v60 + 421) = 0;
   *(_BYTE *)(v60 + 434) = 50;
   v16 = *(_BYTE *)(v60 + 416);
@@ -34589,15 +34579,15 @@ char  Building_AssignUniqueGeneratedName(int a1)
     strncpy(lower_name, v1, sizeof(lower_name) - 1);
     lower_name[sizeof(lower_name) - 1] = 0;
     strlwr_(lower_name);
-    if ( strcmp(lower_name, off_513A84[name_index]) )
+    if ( strcmp(lower_name, g_BuildingRandomNamePool[name_index]) )
       break;
     if ( ++duplicate_count >= 48 )
     {
-      strcpy(v1, off_513A84[Rng_RandRange(0, 47)]);
+      strcpy(v1, g_BuildingRandomNamePool[Rng_RandRange(0, 47)]);
       return *v1;
     }
   }
-  strcpy(v1, off_513A84[name_index]);
+  strcpy(v1, g_BuildingRandomNamePool[name_index]);
   return Str_TitleCase((_BYTE *)v1, 0, 0);
 }
 // 476253: using guessed type int __fastcall strlwr_(_DWORD, _DWORD);
@@ -34887,7 +34877,7 @@ int  Unit_UpdatePerTurn(int a1, int a2)
     memset((void *)(uintptr_t)(unsigned int)(a1 + 422), 100, 7);
     return a1 + 422;
   }
-  v4 = word_513A70[*(char *)(a1 + 4)];
+  v4 = g_BuildingTypeMaxHitPoints[*(char *)(a1 + 4)];
   v5 = 100 * (v4 - v3) / v4;
   v6 = v5 + 10;
   v7 = v5 - 10;
@@ -35393,8 +35383,8 @@ signed int  Building_FindFreeAdjacentSpawnTile(unsigned __int8 *a1, _DWORD *a2, 
   Debug_Log(a3, (char)a4, 0, (int)aBuildingFindFreePlaceNear);
   do
   {
-    v7 = dword_513A10[v6] + *a1;
-    v8 = dword_513A14[v6] + a1[1];
+    v7 = g_BuildingSpawnTileSearchOffsetsX[v6] + *a1;
+    v8 = g_BuildingSpawnTileSearchOffsetsY[v6] + a1[1];
     if ( *(unsigned __int16 *)(TILE_INDEX(v7, v8)) == 0xFFFF && Map_GetUnitTileMoveCostOrZero(a1[2], 31, v8, v7) )
       break;
     v6 += 2;
@@ -35403,8 +35393,8 @@ signed int  Building_FindFreeAdjacentSpawnTile(unsigned __int8 *a1, _DWORD *a2, 
   while ( v6 < 24 );
   if ( v5 == 12 )
     return 0;
-  *a2 = dword_513A10[2 * v5] + *a1;
-  *a4 = dword_513A14[2 * v5] + a1[1];
+  *a2 = g_BuildingSpawnTileSearchOffsetsX[2 * v5] + *a1;
+  *a4 = g_BuildingSpawnTileSearchOffsetsY[2 * v5] + a1[1];
   return 1;
 }
 // 513A10: using guessed type int dword_513A10[];
@@ -35646,11 +35636,11 @@ BOOL  Building_TryStartUpgrade(unsigned __int8 *a1)
   result = Building_CanStartUpgrade(a1);
   if ( result )
   {
-    if ( (unsigned int)(unsigned __int8)byte_513A7F[4 * *(unsigned __int8 *)(v2 + 421)] <= *(_DWORD *)(v2 + 438) )
+    if ( (unsigned int)(unsigned __int8)g_BuildingUpgradeCostByLevel[4 * *(unsigned __int8 *)(v2 + 421)] <= *(_DWORD *)(v2 + 438) )
     {
-      *(_BYTE *)(v2 + 429) = byte_513A7E[4 * *(unsigned __int8 *)(v2 + 421)];
+      *(_BYTE *)(v2 + 429) = g_BuildingUpgradeDurationByLevel[4 * *(unsigned __int8 *)(v2 + 421)];
       result = 1;
-      *(_DWORD *)(v2 + 438) -= (unsigned __int8)byte_513A7F[4 * *(unsigned __int8 *)(v2 + 421)];
+      *(_DWORD *)(v2 + 438) -= (unsigned __int8)g_BuildingUpgradeCostByLevel[4 * *(unsigned __int8 *)(v2 + 421)];
     }
     else
     {
@@ -36314,19 +36304,19 @@ int Castle_RebuildMissingAddonFlags()
   int v0; // edx
   int result; // eax
 
-  dword_513FC2[0] = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) == 0;
-  dword_513FEA = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) == 0;
-  dword_514012 = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) == 0;
-  dword_51403A = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 4) == 0;
+  g_CastleAddonSchoolMissingFlags[0] = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) == 0;
+  g_CastleAddonHospitalMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) == 0;
+  g_CastleAddonBarracksMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) == 0;
+  g_CastleAddonWorkshopMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 4) == 0;
   v0 = 0;
-  dword_514062 = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) == 0;
+  g_CastleAddonSmithsMissingFlag = (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) == 0;
   for ( result = 0; result != 50; result += 10 )
   {
-    if ( dword_513FC2[result] )
+    if ( g_CastleAddonSchoolMissingFlags[result] )
       v0 = 1;
   }
   if ( !v0 )
-    dword_513E22 = 0;
+    g_CastleAnyAddonMissingFlag = 0;
   return result * 4;
 }
 // 513E22: using guessed type int dword_513E22;
@@ -36397,7 +36387,7 @@ void *Castle_ShowNewBuildingMenu()
   Render_FillRect(0, (_DWORD *)dword_5202E0, 0, 300, 0x27Fu, 0x12Cu, 0x12Cu, 0);
   Render_Present((int)g_RenderState);
   dword_523F60 = dword_5202E0;
-  v12 = (void (*)(void))UI_RunMenu(word_513E08, v11);
+  v12 = (void (*)(void))UI_RunMenu(g_CastleNewBuildingMenu, v11);
   if ( v12 )
   {
     v12();
@@ -36730,9 +36720,9 @@ int  Castle_ConfirmDestroyCurrentBuilding(int a1, char a2, DWORD a3, double a4)
   int v5; // edx
   int v6[6]; // [esp+0h] [ebp-18h]
 
-  v6[0] = (int)off_514144[0];
-  v6[1] = (int)off_514144[1];
-  v6[2] = (int)off_514144[2];
+  v6[0] = (int)g_CastleConfirmDestroyPrompt[0];
+  v6[1] = (int)g_CastleConfirmDestroyPrompt[1];
+  v6[2] = (int)g_CastleConfirmDestroyPrompt[2];
   result = YesNoWindow(v6[(unsigned __int8)g_LanguageIndex], byte_526A70, a1, a2, a3);
   if ( result )
   {
@@ -36802,18 +36792,18 @@ static void Castle_EnsureCompositeStatusWidget(void)
   if ( g_CastleCompositeStatusWidgetInitialized )
     return;
 
-  memset(dword_513D98, 0, sizeof(dword_513D98));
-  *(_DWORD *)(dword_513D98 + 0) = 31;
-  *(_DWORD *)(dword_513D98 + 4) = 432;
-  *(_DWORD *)(dword_513D98 + 8) = 1;
-  *(_DWORD *)(dword_513D98 + 12) = (int)(uintptr_t)&g_CastleSceneIconSpriteSet;
-  *(_DWORD *)(dword_513D98 + 16) = 6;
-  *(_DWORD *)(dword_513D98 + 20) = 7;
-  *(_DWORD *)(dword_513D98 + 24) = -1;
-  *(_DWORD *)(dword_513D98 + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionSlow;
-  *(_DWORD *)(dword_513D98 + 32) = (int)(uintptr_t)&Castle_RequestManagementScreenExit;
-  *(_DWORD *)(dword_513D98 + 49) = (int)(uintptr_t)castle_status_button_sound;
-  *(_DWORD *)(dword_513D98 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE) = -1;
+  memset(g_CastleStatusWidgetRecord, 0, sizeof(g_CastleStatusWidgetRecord));
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 0) = 31;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 4) = 432;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 8) = 1;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 12) = (int)(uintptr_t)&g_CastleSceneIconSpriteSet;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 16) = 6;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 20) = 7;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 24) = -1;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 28) = (int)(uintptr_t)&UI_DrawWidgetIconTransitionSlow;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 32) = (int)(uintptr_t)&Castle_RequestManagementScreenExit;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + 49) = (int)(uintptr_t)castle_status_button_sound;
+  *(_DWORD *)(g_CastleStatusWidgetRecord + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE) = -1;
   g_CastleCompositeStatusWidgetInitialized = 1;
 }
 
@@ -37141,7 +37131,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
     g_RenderDevice = (_UNKNOWN *)v4;
     SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 0);
     Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 0);
-    qmemcpy(v62, &unk_514158, sizeof(v62));
+    qmemcpy(v62, &g_CastleOwnerIconPositions, sizeof(v62));
     castle_icon_owner = *(unsigned __int8 *)(g_SelectedBuildingRecord + 2);
     SpriteForChar = DLX_GetSpriteForChar(g_CastleSceneIconSpriteSet, 8);
     Compat_RenderDeviceDrawMenuSprite(v62[2 * castle_icon_owner + 1], v62[2 * castle_icon_owner], SpriteForChar, 1);
@@ -37150,7 +37140,7 @@ char  Castle_RenderCompositeSceneLayers(int a1, int a2, int a3, int a4)
     Castle_DrawAllAmbientAnimationLayers(v58);
     g_SelectedBuildingRecord = v59;
     Castle_EnsureCompositeStatusWidget();
-    UIWidgetTable_InitDrawStates((_DWORD *)dword_513D98);
+    UIWidgetTable_InitDrawStates((_DWORD *)g_CastleStatusWidgetRecord);
     LOBYTE(a1) = (_BYTE)v64;
     g_RenderDevice = v64;
   }
@@ -37210,11 +37200,11 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       v4 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
       if ( (v4 & 4) != 0 && (v4 & 1) != 0 )
       {
-        result = word_513C3C[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer1_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
           result = Castle_DrawAmbientAnimationSprite(
-                     word_513C3C[20 * g_CurrentPlayerIndex],
-                     word_513C3E[20 * g_CurrentPlayerIndex],
+                     g_CastleAmbientLayer1_SpriteIds[20 * g_CurrentPlayerIndex],
+                     g_CastleAmbientLayer1_XOffsets[20 * g_CurrentPlayerIndex],
                      dword_526E8C,
                      g_CastleAmbientSpriteSet,
                      1u);
@@ -37225,18 +37215,18 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
       v5 = *(_BYTE *)(g_SelectedBuildingRecord + 416);
       if ( (v5 & 0x10) != 0 && (v5 & 8) != 0 )
       {
-        result = word_513C40[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer2_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C42[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer2_XOffsets[20 * g_CurrentPlayerIndex], dword_526E94 + 12, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 3:
       result = g_SelectedBuildingRecord;
       if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 0x10) != 0 )
       {
-        result = word_513C44[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer3_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C46[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer3_XOffsets[20 * g_CurrentPlayerIndex], dword_526EA8 + 24, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 4:
@@ -37246,60 +37236,60 @@ int  Castle_DrawAmbientAnimationLayer(int a1)
         if ( g_CurrentPlayerIndex != 3
           || (result = *(_DWORD *)(g_SelectedBuildingRecord + 416) << 30 >> 31, (*(_DWORD *)(g_SelectedBuildingRecord + 416) & 2) != 0) )
         {
-          result = word_513C48[20 * g_CurrentPlayerIndex];
+          result = g_CastleAmbientLayer4_SpriteIds[20 * g_CurrentPlayerIndex];
           if ( result != -1 )
-            result = Castle_DrawAmbientAnimationSprite(result, word_513C4A[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleAmbientSpriteSet, 1u);
+            result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer4_XOffsets[20 * g_CurrentPlayerIndex], dword_526E9C + 36, g_CastleAmbientSpriteSet, 1u);
         }
       }
       break;
     case 5:
-      result = word_513C4C[20 * g_CurrentPlayerIndex];
+      result = g_CastleAmbientLayer5_SpriteIds[20 * g_CurrentPlayerIndex];
       if ( result != -1 )
-        result = Castle_DrawAmbientAnimationSprite(result, word_513C4E[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleAmbientSpriteSet, 0);
+        result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer5_XOffsets[20 * g_CurrentPlayerIndex], dword_526EB4 + 48, g_CastleAmbientSpriteSet, 0);
       break;
     case 6:
       result = *(char *)(g_SelectedBuildingRecord + 4);
       if ( result != 1 )
       {
-        result = word_513C50[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer6_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C52[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer6_XOffsets[20 * g_CurrentPlayerIndex], dword_526EBC + 71, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 7:
       result = g_SelectedBuildingRecord;
       if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 8) != 0 )
       {
-        result = word_513C54[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer7_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C56[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleAmbientSpriteSet, 1u);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer7_XOffsets[20 * g_CurrentPlayerIndex], dword_526EC4 + 83, g_CastleAmbientSpriteSet, 1u);
       }
       break;
     case 8:
       result = g_SelectedBuildingRecord;
       if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 1) != 0 )
       {
-        result = word_513C58[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer8_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C5A[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer8_XOffsets[20 * g_CurrentPlayerIndex], dword_526ED0 + 95, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 9:
       result = g_SelectedBuildingRecord;
       if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
       {
-        result = word_513C5C[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer9_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C5E[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer9_XOffsets[20 * g_CurrentPlayerIndex], dword_526EDC + 136, g_CastleAmbientSpriteSet, 0);
       }
       break;
     case 10:
       result = g_SelectedBuildingRecord;
       if ( (*(_BYTE *)(g_SelectedBuildingRecord + 416) & 2) != 0 )
       {
-        result = word_513C60[20 * g_CurrentPlayerIndex];
+        result = g_CastleAmbientLayer10_SpriteIds[20 * g_CurrentPlayerIndex];
         if ( result != -1 )
-          result = Castle_DrawAmbientAnimationSprite(result, word_513C62[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleAmbientSpriteSet, 0);
+          result = Castle_DrawAmbientAnimationSprite(result, g_CastleAmbientLayer10_XOffsets[20 * g_CurrentPlayerIndex], dword_526EE8 + 167, g_CastleAmbientSpriteSet, 0);
       }
       break;
     default:
@@ -37435,7 +37425,7 @@ unsigned int Castle_UpdateAmbientAnimationLayers()
   }
   if ( Time_Now(v10, v9) >= (unsigned int)dword_526EA0 )
   {
-    v13 = Time_Now(dword_51416C + dword_526EA4, v11);
+    v13 = Time_Now(g_CastleAmbientLayer3_DelayJitter + dword_526EA4, v11);
     if ( v12 < v13 )
     {
       dword_526EA4 = Time_Now(v12, v11);
@@ -37448,7 +37438,7 @@ unsigned int Castle_UpdateAmbientAnimationLayers()
         Time_Now(v14, 500);
         v16 = Rng_RandRange(0, v15);
         dword_526EA0 = v16 + v17;
-        dword_51416C = Rng_RandRange(2, 10);
+        g_CastleAmbientLayer3_DelayJitter = Rng_RandRange(2, 10);
       }
     }
   }
@@ -37468,12 +37458,12 @@ unsigned int Castle_UpdateAmbientAnimationLayers()
       }
     }
   }
-  v24 = Time_Now(dword_526EB8 + dword_514170, v18);
+  v24 = Time_Now(dword_526EB8 + g_CastleAmbientLayer6_DelayJitter, v18);
   if ( v26 < v24 )
   {
     dword_526EB8 = Time_Now(v26, v25);
     dword_526EBC = (dword_526EBC + 1) % 0xCu;
-    dword_514170 = Rng_RandRange(5, 15);
+    g_CastleAmbientLayer6_DelayJitter = Rng_RandRange(5, 15);
     Castle_DrawAmbientAnimationLayer(6);
   }
   v27 = Time_Now(dword_526EC0 + 10, v25);
@@ -37662,13 +37652,13 @@ int * Castle_RebuildSceneBuffers(int a1, DWORD a2)
 int Castle_UpdateGateToggles()
 {
   if ( (*(_BYTE *)(g_SelectedBuildingRecord + 420) & 1) != 0 )
-    UI_MenuEntry_Disable((int)&word_513E08, 0);
+    UI_MenuEntry_Disable((int)&g_CastleNewBuildingMenu, 0);
   else
-    UI_MenuEntry_Enable((int)&word_513E08, 0);
+    UI_MenuEntry_Enable((int)&g_CastleNewBuildingMenu, 0);
   if ( Building_CanStartUpgrade((unsigned __int8 *)g_SelectedBuildingRecord) )
-    return UI_MenuEntry_Enable((int)&word_513E08, 2);
+    return UI_MenuEntry_Enable((int)&g_CastleNewBuildingMenu, 2);
   else
-    return UI_MenuEntry_Disable((int)&word_513E08, 2);
+    return UI_MenuEntry_Disable((int)&g_CastleNewBuildingMenu, 2);
 }
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 
@@ -37896,7 +37886,7 @@ static int BuildingGarrisonDialog_Run(int building_record, int callback_context,
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(stderr, "[barracks] selected_panel_drawn\n");
   Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   Render_Pump();
   Render_Present((int)g_RenderState);
@@ -38793,8 +38783,8 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   Diagnostics_TraceCastleHotspots(g_CastleScreenSurface);
   g_CastleDestroyConfirmed = 0;
   g_CastleScreenExitRequested = 0;
-  dword_545150 = (int)&unk_5196A0;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  dword_545150 = (int)&g_CursorDesc_Default;
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   v23 = 0;
   castle_loop_iterations = 0;
   while ( !Input_IsKeyPressed(1) && !g_CastleScreenExitRequested )
@@ -38803,10 +38793,10 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
     DD_Pump((int)g_RenderState, (char)v22);
     Castle_UpdateAmbientAnimationLayers();
     Castle_ShowNewBuildingMenu();
-    UI_RunHoverTooltipZones(word_513D08);
+    UI_RunHoverTooltipZones(g_CastleHoverTooltipZones);
     g_RenderDevice = &unk_51D4C0;
     Castle_EnsureCompositeStatusWidget();
-    UIWidgetTable_PollHoverAndActions((_DWORD *)dword_513D98, v19);
+    UIWidgetTable_PollHoverAndActions((_DWORD *)g_CastleStatusWidgetRecord, v19);
     LOBYTE(v32) = byte_54512C;
     g_RenderDevice = (_UNKNOWN *)g_CastleScreenSurface;
     v22 = (char *)(dword_544D00 >> byte_54512C);
@@ -38821,7 +38811,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         if ( v23 != 134 )
         {
           v23 = 134;
-          Tooltip_ShowText(3, off_513BD0[(unsigned __int8)g_LanguageIndex], v45[0]);
+          Tooltip_ShowText(3, g_CastleBuildingIconTooltipNames[(unsigned __int8)g_LanguageIndex], v45[0]);
         }
         break;
       case 250:
@@ -38865,7 +38855,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
             v44 = 3;
           else
             v44 = 8;
-          v22 = (&off_513BD0[3 * v44])[(unsigned __int8)g_LanguageIndex];
+          v22 = (&g_CastleBuildingIconTooltipNames[3 * v44])[(unsigned __int8)g_LanguageIndex];
           v23 = 99;
           Tooltip_ShowText(3, v22, v45[0]);
         }
@@ -38875,7 +38865,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
         if ( v23 != 135 )
         {
           v23 = 135;
-          Tooltip_ShowText(3, off_513C24[(unsigned __int8)g_LanguageIndex], v45[0]);
+          Tooltip_ShowText(3, g_CastleBuildingIconTooltipNames_FromPeasants[(unsigned __int8)g_LanguageIndex], v45[0]);
         }
         break;
       default:
@@ -38923,7 +38913,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
       Render_LoadResourceSprite_v4(8, byte_526A70, v41, (char)v22, v19);
       Render_LoadResourceSprite_v4(7, byte_526A70, v42, (char)v22, v19);
       Render_LoadResourceSprite_v4(13, byte_526A70, v43, (char)v22, v19);
-      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+      RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
       Render_Present((int)g_RenderState);
     }
   }
@@ -39477,7 +39467,7 @@ int  UnitStackSelection_RedrawPanel(int result, DWORD a2)
   int j; // [esp+70h] [ebp-20h]
   int i; // [esp+74h] [ebp-1Ch]
 
-  if ( dword_514194 != -1 )
+  if ( g_UnitStackSelectionActiveUnitIndex != -1 )
   {
     if ( result == -1 )
     {
@@ -39563,12 +39553,12 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
   int v6; // [esp+2Ch] [ebp-1Ch]
   int v7; // [esp+30h] [ebp-18h]
 
-  v7 = dword_514194;
+  v7 = g_UnitStackSelectionActiveUnitIndex;
   v6 = dword_526994;
   v5 = dword_526FA0;
   qmemcpy(v4, dword_526F78, sizeof(v4));
   dword_526994 = 1;
-  dword_514194 = a1;
+  g_UnitStackSelectionActiveUnitIndex = a1;
   memset(dword_526F78, 0, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(a1, a1);
   WorldMap_RedrawViewport(1);
@@ -39579,7 +39569,7 @@ int  UnitStack_ShowSelectionDialog(int a1, int a2)
     WorldMap_RedrawFrame(a2);
   }
   dword_526994 = v6;
-  dword_514194 = v7;
+  g_UnitStackSelectionActiveUnitIndex = v7;
   dword_526FA0 = v5;
   qmemcpy(dword_526F78, v4, sizeof(dword_526F78));
   UnitStackSelection_RedrawPanel(-1, a1);
@@ -39604,7 +39594,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
   int distance_y; // eax
   int selected_slot_indices[12]; // [esp+0h] [ebp-30h] BYREF
 
-  if ( dword_514194 == -1 )
+  if ( g_UnitStackSelectionActiveUnitIndex == -1 )
     return 0;
   slot_index = ((dword_544CFC >> byte_54512C) - 35) / 38;
   handled_panel_input = 0;
@@ -39613,7 +39603,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
     && slot_index >= 0
     && slot_index <= 9 )
   {
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
     if ( DD_IsLost((int)g_RenderState) && *(__int16 *)(dword_526FA0 + 31 * slot_index + 6) != -1 )
     {
       special_unit_info = UnitStack_HasSpecialPersonageUnits(dword_526FA0);
@@ -39628,32 +39618,32 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
         g_SelectedUnitIndex,
         slot_index,
         dword_526F78[slot_index],
-        dword_514194);
+        g_UnitStackSelectionActiveUnitIndex);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_toggle_set",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         dword_526F78[slot_index]);
       UnitStackSelection_RedrawPanel(-1, a1);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_redraw",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         dword_526F78[slot_index]);
       WorldMap_RedrawViewport(1);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_refresh",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         dword_526F78[slot_index]);
       Render_Begin((int)g_RenderState, 0);
       Diagnostics_TraceWorldMapActionEvent(
         "selection_after_render_begin",
         g_SelectedUnitIndex,
-        dword_514194,
+        g_UnitStackSelectionActiveUnitIndex,
         dword_526F78[0],
         dword_526F78[slot_index]);
     }
@@ -39664,7 +39654,7 @@ signed int  UnitStackSelection_HandleInput(DWORD a1, double a2)
     Diagnostics_TraceWorldMapActionEvent(
       "selection_split_probe",
       g_SelectedUnitIndex,
-      dword_514194,
+      g_UnitStackSelectionActiveUnitIndex,
       dword_526F78[0],
       UnitStackSelection_HasSelectedSlots());
   }
@@ -39732,7 +39722,7 @@ signed int UnitStackSelection_HasSelectedSlots()
 {
   int byte_offset; // eax
 
-  if ( dword_514194 != -1 )
+  if ( g_UnitStackSelectionActiveUnitIndex != -1 )
   {
     byte_offset = 0;
     if ( *(_DWORD *)dword_526F78 )
@@ -39754,11 +39744,11 @@ signed int UnitStackSelection_HasSelectedSlots()
 int  UnitStackSelection_BeginForSelectedStack(DWORD a1)
 {
   dword_526994 = 1;
-  dword_514194 = g_SelectedUnitIndex;
+  g_UnitStackSelectionActiveUnitIndex = g_SelectedUnitIndex;
   Diagnostics_TraceWorldMapActionEvent(
     "selection_begin_clear",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     0);
   memset(dword_526F78, 0, sizeof(dword_526F78));
@@ -39774,7 +39764,7 @@ int __thiscall UnitStackSelection_End(void *this)
 {
   UI_ClearTileHighlight(this);
   dword_526994 = 0;
-  dword_514194 = -1;
+  g_UnitStackSelectionActiveUnitIndex = -1;
   return WorldMap_RedrawViewport(1);
 }
 // 514194: using guessed type int dword_514194;
@@ -39787,7 +39777,7 @@ int __thiscall UnitStackSelection_ClearMask(void *this)
   Diagnostics_TraceWorldMapActionEvent(
     "selection_mask_clear",
     g_SelectedUnitIndex,
-    dword_514194,
+    g_UnitStackSelectionActiveUnitIndex,
     dword_526F78[0],
     0);
   memset(dword_526F78, 0, sizeof(dword_526F78));
@@ -39797,7 +39787,7 @@ int __thiscall UnitStackSelection_ClearMask(void *this)
 //----- (00423B90) --------------------------------------------------------
 int  UnitStackSelection_RefreshForSelectedStack(DWORD a1)
 {
-  dword_514194 = g_SelectedUnitIndex;
+  g_UnitStackSelectionActiveUnitIndex = g_SelectedUnitIndex;
   UnitStackSelection_RedrawPanel(-1, a1);
   return WorldMap_RedrawViewport(1);
 }
@@ -39878,7 +39868,7 @@ int  Map_RebuildRoadOverlayAtTile(int a1, int a2)
   v3 = 8 * MapTile_HasWestRoadConnection(a1, a2);
   v5 = (4 * MapTile_HasSouthRoadConnection(a1, v4)) | v3;
   v7 = (2 * MapTile_HasEastRoadConnection(a1, v6)) | v5;
-  v9 = dword_5141A0[v7 | MapTile_HasNorthRoadConnection(a1, v8)];
+  v9 = g_RoadOverlaySpriteByConnectionMask[v7 | MapTile_HasNorthRoadConnection(a1, v8)];
   v11 = 14 * v10;
   result = gameData + 1400 * a1;
   if ( v9 )
@@ -40498,9 +40488,9 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
   if ( a1 == *(__int16 *)(v4 + 147174) && a2 - *(__int16 *)(v4 + 147176) == -1 )
   {
     v5 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
-    dword_5142B8 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
+    g_RoadBuildModeNorthMarkerX = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
     v6 = 0;
-    dword_5142BC = v5 + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
+    g_RoadBuildModeNorthMarkerY = v5 + 59 - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
   }
   else
   {
@@ -40511,8 +40501,8 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
       v10 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6)
           + 42
           - g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex];
-      dword_5142F1 = ((a2 - *(_DWORD *)(gameData + 140012)) << 6) + 41;
-      dword_5142ED = v10;
+      g_RoadBuildModeEastMarkerY = ((a2 - *(_DWORD *)(gameData + 140012)) << 6) + 41;
+      g_RoadBuildModeEastMarkerX = v10;
     }
     else
     {
@@ -40520,9 +40510,9 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
       if ( a1 == *(__int16 *)(v11 + 147174) && a2 - *(__int16 *)(v11 + 147176) == 1 )
       {
         v12 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
-        dword_514322 = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
+        g_RoadBuildModeSouthMarkerX = ((a1 - *(_DWORD *)(gameData + 140008)) << 6) + 57;
         v6 = 2;
-        dword_514326 = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + v12 + 26;
+        g_RoadBuildModeSouthMarkerY = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex] + v12 + 26;
       }
       else
       {
@@ -40534,10 +40524,10 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
           return result;
         v6 = 3;
         v13 = (a2 - *(_DWORD *)(gameData + 140012)) << 6;
-        dword_514357 = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
+        g_RoadBuildModeWestMarkerX = g_RoadBuildModeMarkerBounceOffsets[g_RoadBuildModeAnimationFrameIndex]
                      + ((a1 - *(_DWORD *)(gameData + 140008)) << 6)
                      + 75;
-        dword_51435B = v13 + 41;
+        g_RoadBuildModeWestMarkerY = v13 + 41;
       }
     }
   }
@@ -40554,7 +40544,7 @@ int  RoadBuildMode_HighlightBuildableAdjacentTile(int a1, int a2)
     && (result = Map_GetTileSurfaceClassOrUnexplored(a1, a2), result != 185) )
   {
     dword_527C34 = 1;
-    return UIWidget_RefreshActionButtonState((int)&dword_5142B8 + 53 * v6, v7);
+    return UIWidget_RefreshActionButtonState((int)&g_RoadBuildModeNorthMarkerX + 53 * v6, v7);
   }
   return result;
 }
@@ -40628,11 +40618,11 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
   if ( result != 185 )
   {
     v4 = 0;
-    dword_545150 = (int)&unk_5196C8;
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
+    dword_545150 = (int)&g_CursorDesc_ActionBusy;
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
     dword_52698C = v5;
     g_RoadBuildModeExitRequested = 0;
-    dword_514394 = 2;
+    g_RoadBuildModeControlWidgetState = 2;
     WorldMap_RedrawViewport(1);
     if ( !g_RoadBuildModeExitRequested )
     {
@@ -40692,21 +40682,21 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
               if ( v4 || v11 != 1 )
               {
                 if ( v4 == -1 && !v11 )
-                  v12 = &dword_514357;
+                  v12 = &g_RoadBuildModeWestMarkerX;
               }
               else
               {
-                v12 = &dword_514322;
+                v12 = &g_RoadBuildModeSouthMarkerX;
               }
             }
             else
             {
-              v12 = &dword_5142ED;
+              v12 = &g_RoadBuildModeEastMarkerX;
             }
           }
           else
           {
-            v12 = &dword_5142B8;
+            v12 = &g_RoadBuildModeNorthMarkerX;
           }
           if ( v12 )
           {
@@ -40725,10 +40715,10 @@ signed int  Builder_StartRoadBuildMode(DWORD a1, double a2)
     }
 LABEL_13:
     dword_52698C = 0;
-    dword_514394 = 1;
+    g_RoadBuildModeControlWidgetState = 1;
     UIWidget_RefreshActionButtonState((int)g_RoadBuildModeControlWidgets, v6);
     result = WorldMap_RedrawViewport(1);
-    dword_545150 = (int)&unk_5196A0;
+    dword_545150 = (int)&g_CursorDesc_Default;
   }
   return result;
 }
@@ -41475,7 +41465,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   v53 = v6;
   if ( v6 && *v6 )
   {
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
     g_SelectedUnitIndex = v50;
     v7 = 0;
     UnitBattle_DrawSelectedUnitPanel(0, 1, a3, 0);
@@ -41486,7 +41476,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
       UnitBattle_CenterViewOnUnit(v50);
     UnitBattle_RedrawVisibleGrid();
     *((_BYTE *)v5 + 22) &= ~1u;
-    dword_512360 = v50;
+    g_ActiveUnitMoveTileIndex = v50;
     v10 = dword_532048 + 31 * v50;
     LOWORD(v11) = *(unsigned __int8 *)(v10 + 854);
     Unit_BuildGoSpriteFilePath(v48, *(_BYTE *)(v10 + 852), v11);
@@ -41502,7 +41492,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
     dword_523F7C = v15;
     dword_523F74 = 0;
     dword_523F70 = 0;
-    dword_512364 = 8;
+    g_UnitBattleAnimFrameCount = 8;
     if ( *v53 )
     {
       v51 = 31 * v50;
@@ -41538,7 +41528,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           v57 = ((unsigned __int8)v54 - *(unsigned __int16 *)(v51 + dword_532048 + 856)) << 6;
           v56 = (BYTE1(v54) - v29) << 6;
           v36 = Time_Now(0, 0);
-          v37 = (unsigned __int8)byte_512571[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+          v37 = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *(__int16 *)(v51 + dword_532048 + 852)];
           v30 = 1;
           v55 = 8 * v7;
           while ( 1 )
@@ -41624,11 +41614,11 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
                   UnitBattle_RedrawTile((unsigned __int16)v5[2] - 1, (unsigned __int16)v5[3] - 1);
               }
               v30 = 0;
-              v49 = (unsigned __int8)byte_512570[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+              v49 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + dword_532048 + 852)];
               LOBYTE(v11) = v49;
               dword_523F70 += v49 * Map_NeighborDX[v55 / 4];
               dword_523F74 += Map_NeighborDY[v55 / 4]
-                            * (unsigned __int8)byte_512570[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+                            * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + dword_532048 + 852)];
             }
           }
           *(_WORD *)(dword_532048 + 40 * (unsigned __int16)v5[2] + 2 * (unsigned __int16)v5[3] + 1534) = -1;
@@ -41658,7 +41648,7 @@ LABEL_15:
     *(_DWORD *)(gameData + v21 + 140073) = 1;
     Audio_StopUnitMoveSound();
     DLXSpriteSet_ReleaseAndClear(&dword_523F78);
-    dword_512360 = -1;
+    g_ActiveUnitMoveTileIndex = -1;
     UnitBattle_RedrawVisibleGrid();
     Diagnostics_TraceWorldMapActionEvent(
       "battle_move_cleanup_skip_panel_redraw",
@@ -41666,7 +41656,7 @@ LABEL_15:
       *((unsigned __int8 *)v5 + 8),
       0,
       0);
-    LOWORD(v6) = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
+    LOWORD(v6) = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
   }
   return (__int16)v6;
 }
@@ -41735,10 +41725,10 @@ int  UnitBattle_CountAdjacentEnemies(int a1)
   v8 = *(unsigned __int16 *)(a1 + 4);
   for ( i = 0; i != 16; i += 2 )
   {
-    v4 = v8 + dword_514500[i];
+    v4 = v8 + g_UnitBattleAdjacentTileDeltaX[i];
     if ( v4 >= 0 && v4 < *(_DWORD *)(dword_532048 + 804) )
     {
-      v5 = dword_514504[i] + *(unsigned __int16 *)(a1 + 6);
+      v5 = g_UnitBattleAdjacentTileDeltaY[i] + *(unsigned __int16 *)(a1 + 6);
       if ( v5 >= 0 && v5 < *(_DWORD *)(dword_532048 + 800) )
       {
         v6 = *(__int16 *)(dword_532048 + 40 * v4 + 2 * v5 + 1534);
@@ -41979,7 +41969,7 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   v99 = a4;
   v98 = a3;
   Debug_Log(a3, a4, (DWORD)a5, (int)aAttackanimDD);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
   v5 = (__int16 *)(dword_532048 + 852 + 31 * v102);
   if ( v101 == -1 )
     v100 = 0;
@@ -42095,11 +42085,11 @@ LABEL_82:
 LABEL_21:
   v23 = 8;
   v24 = 0;
-  dword_512360 = v102;
+  g_ActiveUnitMoveTileIndex = v102;
   dword_523F70 = 0;
   dword_523F74 = 0;
   dword_523F7C = 0;
-  dword_512364 = 8;
+  g_UnitBattleAnimFrameCount = 8;
 LABEL_22:
   v26 = Time_Now(v24, v23);
   while ( 1 )
@@ -42123,7 +42113,7 @@ LABEL_22:
     }
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)g_RenderState, v26);
-    v30 = (unsigned __int8)byte_512571[88 * *v5];
+    v30 = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *v5];
     v32 = Time_Now(v31, v30);
     if ( v32 - v26 >= (unsigned int)v30 )
     {
@@ -42196,8 +42186,8 @@ LABEL_22:
       {
         v39 = 1;
       }
-      dword_523F70 += (unsigned __int8)byte_512570[88 * *v5] * v39;
-      v23 = (unsigned __int8)byte_512570[88 * *v5];
+      dword_523F70 += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v39;
+      v23 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5];
       if ( v103 - dword_523F74 <= 0 )
       {
         if ( v103 == dword_523F74 )
@@ -42222,21 +42212,21 @@ LABEL_22:
   dword_523F70 = v12;
   dword_523F7C = 0;
   dword_523F74 = v103;
-  dword_512364 = (unsigned __int8)byte_512578[88 * *v5];
+  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeAttackAnimationFrameCount[88 * *v5];
   v63 = Time_Now(v62, 0);
   v64 = 31 * v102;
   v65 = v63;
-  while ( dword_523F7C < dword_512364 )
+  while ( dword_523F7C < g_UnitBattleAnimFrameCount )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)g_RenderState, v65);
     v69 = *(__int16 *)(v64 + dword_532048 + 852);
-    v70 = (unsigned __int8)byte_512572[88 * v69];
+    v70 = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * v69];
     v67 = Time_Now(v66, v70);
     if ( v67 - v65 >= (unsigned int)v70 )
     {
       v69 = *(__int16 *)(v64 + dword_532048 + 852);
-      v70 = (unsigned __int8)byte_5125B7[88 * v69];
+      v70 = (unsigned __int8)g_UnitTypeAttackSoundFrameIndex[88 * v69];
       if ( v70 == dword_523F7C )
         Audio_PlayUnitMeleeAttackSound(v69);
       v65 = Time_Now(v64, v70);
@@ -42262,7 +42252,7 @@ LABEL_22:
     else
     {
       Audio_PlayUnitHitSound((__int16)*v100);
-      dword_514E44 = v74;
+      g_UnitBattleAnimatingUnitIndex = v74;
       dword_5320EC = Rng_RandRange(0, 7);
       Time_Now(v75, 3);
       v12 = Rng_RandRange(1, v76);
@@ -42280,7 +42270,7 @@ LABEL_22:
           dword_5320EC = (unsigned __int8)v65;
         }
       }
-      dword_514E44 = -1;
+      g_UnitBattleAnimatingUnitIndex = -1;
     }
   }
   if ( v99 )
@@ -42301,13 +42291,13 @@ LABEL_22:
     LOBYTE(v85) = 8;
     dword_523F78 = (int)v83;
     dword_523F7C = 0;
-    dword_512364 = 8;
+    g_UnitBattleAnimFrameCount = 8;
     v88 = Time_Now(0, v84);
     while ( dword_523F70 || dword_523F74 )
     {
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, 0);
-      v89 = (unsigned __int8)byte_512571[88 * *v5];
+      v89 = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *v5];
       v87 = Time_Now(v86, v89);
       if ( v87 - v88 >= v89 )
       {
@@ -42361,7 +42351,7 @@ LABEL_22:
         {
           v93 = 1;
         }
-        dword_523F70 += (unsigned __int8)byte_512570[88 * *v5] * v93;
+        dword_523F70 += (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v93;
         if ( -dword_523F74 < 0 || dword_523F74 == 0 )
         {
           if ( dword_523F74 )
@@ -42373,7 +42363,7 @@ LABEL_22:
         {
           v94 = 1;
         }
-        v95 = (unsigned __int8)byte_512570[88 * *v5] * v94 + dword_523F74;
+        v95 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *v5] * v94 + dword_523F74;
         v96 = dword_523F70 * v92;
         dword_523F74 = v95;
         if ( v96 < 0 )
@@ -42388,8 +42378,8 @@ LABEL_22:
   if ( dword_5320F0 )
     DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
   dword_5320F0 = 0;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
-  dword_512360 = -1;
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
+  g_ActiveUnitMoveTileIndex = -1;
   return UnitBattle_RedrawVisibleGrid();
 }
 // 427704: conditional instruction was optimized away because ebp.4<0
@@ -42899,7 +42889,7 @@ __int16  UnitBattle_PlayShotAnimation(
   int v133; // [esp+32Eh] [ebp+7Eh]
 
   v122 = a4;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
   v125 = (__int16 *)(dword_532048 + 852 + 31 * a1);
   if ( a2 == -1 )
   {
@@ -42936,10 +42926,10 @@ __int16  UnitBattle_PlayShotAnimation(
   dword_523F78 = (int)v18;
   v19 = 0;
   dword_523F70 = 0;
-  dword_512360 = a1;
+  g_ActiveUnitMoveTileIndex = a1;
   dword_523F74 = 0;
   dword_523F7C = 0;
-  dword_512364 = (unsigned __int8)byte_512579[88 * *v125];
+  g_UnitBattleAnimFrameCount = (unsigned __int8)g_UnitTypeShotAnimationFrameCount[88 * *v125];
   if ( a2 != -1 )
   {
     v19 = v113[2];
@@ -42949,7 +42939,7 @@ __int16  UnitBattle_PlayShotAnimation(
       v21 = DLXSpriteSet_Load(v21, v19);
     dword_5320F0 = (int)v21;
   }
-  qmemcpy(v109, &unk_514540, sizeof(v109));
+  qmemcpy(v109, &g_UnitBattleShotAnimTemplate, sizeof(v109));
   Unit_BuildShotAnimPaletteSpritePath(v112, *(_BYTE *)v125);
   v131 = 0;
   if ( DLX_OpenArchive(v112, v22) )
@@ -42962,7 +42952,7 @@ __int16  UnitBattle_PlayShotAnimation(
   v25 = v131;
   Debug_Log(-1, v131, (DWORD)v111, (int)aLoaded);
   v132 = v27;
-  v28 = dword_512364 - 1;
+  v28 = g_UnitBattleAnimFrameCount - 1;
   if ( v131 )
   {
     *(_DWORD *)((char *)&a7 + 2) = 32 - (unsigned __int16)DLX_GetSpriteHeight(v131, 0) / 2;
@@ -43061,11 +43051,11 @@ __int16  UnitBattle_PlayShotAnimation(
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, v25);
       v25 = v124;
-      v34 = Time_Now(v33, (unsigned __int8)byte_512572[88 * *(__int16 *)(v32 + dword_532048 + 852)]);
+      v34 = Time_Now(v33, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v32 + dword_532048 + 852)]);
       if ( v34 - v124 >= v36 )
       {
         v37 = *(__int16 *)(v32 + dword_532048 + 852);
-        v38 = (unsigned __int8)byte_5125B8[88 * v37];
+        v38 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v37];
         if ( v38 == dword_523F7C )
           Audio_PlayUnitRangedAttackSound(v37);
         v124 = Time_Now(v35, v38);
@@ -43079,7 +43069,7 @@ __int16  UnitBattle_PlayShotAnimation(
   {
     v39 = (unsigned __int16)DLX_GetSpriteHeight(v131, v132) / 2;
     SpriteWidth = DLX_GetSpriteWidth(v131, v40);
-    v42 = (unsigned __int8)byte_512577[88 * *v125];
+    v42 = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *v125];
     v118 = (((unsigned __int16)v125[2] - *(_DWORD *)(dword_532048 + 808)) << 6)
          + 32
          + *(_DWORD *)((char *)&a7 + 2)
@@ -43099,23 +43089,23 @@ __int16  UnitBattle_PlayShotAnimation(
     {
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, v44);
-      v48 = dword_512364;
-      v49 = dword_523F7C % dword_512364;
+      v48 = g_UnitBattleAnimFrameCount;
+      v49 = dword_523F7C % g_UnitBattleAnimFrameCount;
       dword_523F7C = v49;
       if ( v49 )
       {
-        v50 = Time_Now(v128, (unsigned __int8)byte_512572[88 * *(__int16 *)(v128 + dword_532048 + 852)]);
+        v50 = Time_Now(v128, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v128 + dword_532048 + 852)]);
         if ( v50 - v124 >= v49 )
         {
           v51 = *(__int16 *)(v48 + dword_532048 + 852);
           v52 = dword_523F7C;
-          v53 = (unsigned __int8)byte_5125B8[88 * v51];
+          v53 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v51];
           if ( v53 == dword_523F7C )
             Audio_PlayUnitRangedAttackSound(v51);
           v124 = Time_Now(v52, v53);
           UnitBattle_RedrawTile(*(unsigned __int16 *)(v128 + dword_532048 + 856), *(unsigned __int16 *)(v128 + dword_532048 + 858));
-          v48 = dword_512364;
-          v49 = (dword_523F7C + 1) % dword_512364;
+          v48 = g_UnitBattleAnimFrameCount;
+          v49 = (dword_523F7C + 1) % g_UnitBattleAnimFrameCount;
           dword_523F7C = v49;
         }
       }
@@ -43215,7 +43205,7 @@ __int16  UnitBattle_PlayShotAnimation(
       Render_Present((int)g_RenderState);
     }
   }
-  dword_523F7C %= dword_512364;
+  dword_523F7C %= g_UnitBattleAnimFrameCount;
   UnitBattle_RedrawTile(*(unsigned __int16 *)(dword_532048 + 31 * a1 + 856), *(unsigned __int16 *)(dword_532048 + 31 * a1 + 858));
   v72 = *v125;
   v73 = v72 == UNIT_TYPE_CATAPULT
@@ -43247,8 +43237,8 @@ LABEL_57:
             v78 = DLXSpriteSet_Load(v78, v25);
           dword_5320FC = (int)v78;
         }
-        dword_514E54 = v122;
-        dword_514E58 = a3;
+        g_UnitBattleShotProjectileTileX = v122;
+        g_UnitBattleShotProjectileTileY = a3;
         dword_532100 = 0;
         Audio_PlayUnitShotSound(*(__int16 *)(dword_532048 + 31 * a1 + 852));
         goto LABEL_62;
@@ -43273,7 +43263,7 @@ LABEL_62:
     }
     else
     {
-      dword_514E44 = a2;
+      g_UnitBattleAnimatingUnitIndex = a2;
     }
   }
   dword_5320EC = Rng_RandRange(3, 7);
@@ -43301,21 +43291,21 @@ LABEL_62:
     }
     UnitBattle_RedrawTile(v122, a3);
   }
-  dword_514E58 = -1;
-  dword_514E54 = -1;
+  g_UnitBattleShotProjectileTileY = -1;
+  g_UnitBattleShotProjectileTileX = -1;
   UnitBattle_RedrawTile(v122, a3);
   if ( dword_5320FC )
     DLXSpriteSet_ReleaseAndClear(&dword_5320FC);
-  dword_514E44 = -1;
+  g_UnitBattleAnimatingUnitIndex = -1;
   if ( dword_5320F0 )
     DLXSpriteSet_ReleaseAndClear(&dword_5320F0);
   dword_5320F0 = 0;
   DLXSpriteSet_ReleaseAndClear(&dword_523F78);
   if ( v105 )
     nfree_(v105);
-  result = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
-  dword_512360 = -1;
-  dword_512364 = 8;
+  result = RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
+  g_ActiveUnitMoveTileIndex = -1;
+  g_UnitBattleAnimFrameCount = 8;
   return result;
 }
 // 42897D: variable 'v17' is possibly undefined
@@ -43505,7 +43495,7 @@ int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4)
   int wall_damage;
 
   Debug_Log(a3, a4, a2, (int)aUnitbattle_a_0);
-  if ( !byte_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
+  if ( !g_UnitTypeBaseMeleeAttack_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
     return 0;
   g_SelectedUnitIndex = a1;
   v7 = dword_532048 + 852 + 31 * a1;
@@ -43563,7 +43553,7 @@ LABEL_18:
   v19 = a4 + dword_532048 + 20 * a2;
   wall_hp_before = *(unsigned __int8 *)(v19 + 3134);
   wall_kind = *(_DWORD *)(dword_532048 + 820);
-  wall_factor = (unsigned __int16)word_513A78[2 * wall_kind];
+  wall_factor = (unsigned __int16)g_WallKindDefenseFactor[2 * wall_kind];
   effective_wall_attack = Unit_CalcEffectivenessD((char *)v7, 0);
   wall_damage = wall_factor * effective_wall_attack / 256;
   *(_BYTE *)(v19 + 3134) -= wall_damage;
@@ -43658,7 +43648,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
   if ( *(__int16 *)v3 == UNIT_TYPE_CATAPULT && v9 > 3 )
     v6 = 9 * v6 / 10;
   v11 = dword_532048 + 40 * a2;
-  LOWORD(v12) = word_513A78[2 * *(_DWORD *)(dword_532048 + 820)];
+  LOWORD(v12) = g_WallKindDefenseFactor[2 * *(_DWORD *)(dword_532048 + 820)];
   v13 = *(signed __int8 *)(v11 + v4 + 3134) - ((v6 * (unsigned __int16)v12) >> 8);
   *(_BYTE *)(v11 + v4 + 3134) = v13;
   if ( v13 <= 0 )
@@ -43881,8 +43871,8 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   dword_531CD0 = 0;
   v6 = byte_54512C;
   v7 = dword_544CFC >> byte_54512C;
-  *(int *)((char *)&dword_5146C8 + v5) = 2;
-  *(int (**)())((char *)&off_5146E0 + v5) = BuildCursor_HandleCancelButtonPress;
+  *(int *)((char *)&g_BuildBuildingActionWidgetStateBase + v5) = 2;
+  *(int (**)())((char *)&g_BuildBuildingActionWidgetHandlerBase + v5) = BuildCursor_HandleCancelButtonPress;
   v8 = gameData;
   dword_52698C = (int (__fastcall *)(_DWORD, _DWORD))BuildCursor_DrawPlacementOverlay;
   LODWORD(qword_531CD8) = *(_DWORD *)(gameData + 140008)
@@ -43897,7 +43887,7 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
   {
     DD_Pump((int)&g_RenderState, v8, (char)BuildCursor_DrawPlacementOverlay);
     WorldMap_RedrawFrame(v8);
-    if ( !UIWidgetTable_PollHoverAndActions((int)&unk_5146C0, a1) && UI_TrySelectFriendlyStackUnderCursor() )
+    if ( !UIWidgetTable_PollHoverAndActions((int)&g_BuildBuildingActionWidgetTable, a1) && UI_TrySelectFriendlyStackUnderCursor() )
     {
       Render_Begin((int)&g_RenderState, 0, (char)BuildCursor_DrawPlacementOverlay);
       break;
@@ -43950,10 +43940,10 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
         if ( Trap_New(qword_531CD8, SHIDWORD(qword_531CD8), v16, g_SelectedUnitIndex, a4) == 1 )
         {
           Win_PlayModeChangeFrameTransition(aZakl_pul, 1, v20, v8, 3u);
-          v22[0] = (int)off_514834[0];
-          v22[1] = (int)off_514834[1];
-          v22[2] = (int)off_514834[2];
-          UI_ShowInfoWindow(v22[(unsigned __int8)g_LanguageIndex], 0, v21, 3u, (int)&v22[3], (int)&off_514834[3]);
+          v22[0] = (int)g_BuildBuildingCompletionMessageStrings[0];
+          v22[1] = (int)g_BuildBuildingCompletionMessageStrings[1];
+          v22[2] = (int)g_BuildBuildingCompletionMessageStrings[2];
+          UI_ShowInfoWindow(v22[(unsigned __int8)g_LanguageIndex], 0, v21, 3u, (int)&v22[3], (int)&g_BuildBuildingCompletionMessageStrings[3]);
           Render_Begin((int)&g_RenderState, 0, (char)&v22[3]);
           dword_531CD0 = 1;
           break;
@@ -43979,9 +43969,9 @@ int  BuildBuilding(int a1, int a2, char a3, double a4)
     }
   }
   v17 = 53 * (a1 + 2);
-  *(int *)((char *)&dword_5146C8 + v17) = 1;
-  *(int (**)())((char *)&off_5146E0 + v17) = (int (*)())BuildCursor_RequestExit;
-  UIWidget_RefreshActionButtonState((int)&unk_5146C0 + v17, 1);
+  *(int *)((char *)&g_BuildBuildingActionWidgetStateBase + v17) = 1;
+  *(int (**)())((char *)&g_BuildBuildingActionWidgetHandlerBase + v17) = (int (*)())BuildCursor_RequestExit;
+  UIWidget_RefreshActionButtonState((int)&g_BuildBuildingActionWidgetTable + v17, 1);
   dword_52698C = 0;
   return WorldMap_RedrawViewport(v18);
 }
@@ -44127,7 +44117,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     return;
 
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 0,
     174,
     173,
     6,
@@ -44140,7 +44130,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_cash);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 1,
     174,
     206,
     8,
@@ -44153,7 +44143,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_cash);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 2,
     459,
     270,
     10,
@@ -44166,7 +44156,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 3,
     459,
     323,
     12,
@@ -44179,7 +44169,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 4,
     513,
     331,
     18,
@@ -44192,7 +44182,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 5,
     513,
     365,
     20,
@@ -44205,7 +44195,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 6,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 6,
     513,
     247,
     14,
@@ -44218,7 +44208,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 7,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 7,
     513,
     281,
     16,
@@ -44231,7 +44221,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     0,
     sound_small);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 8,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 8,
     42,
     426,
     22,
@@ -44244,7 +44234,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     2,
     sound_large);
   BuildingEconomyDialog_InitWidget(
-    dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 9,
+    g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * 9,
     505,
     426,
     24,
@@ -44256,7 +44246,7 @@ static void BuildingEconomyDialog_EnsureWidgets(void)
     text_transfer_de,
     2,
     sound_large);
-  *(_DWORD *)(dword_514840 + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT) = -1;
+  *(_DWORD *)(g_BuildingEconomyDialogActionWidgets + WORLD_MAP_ACTION_WIDGET_RECORD_SIZE * BUILDING_ECONOMY_DIALOG_WIDGET_COUNT) = -1;
   g_BuildingEconomyDialogWidgetsInitialized = 1;
 }
 
@@ -44725,7 +44715,7 @@ int  BuildingEconomyDialog_Run(int a1)
   Render_ReleaseSurface(16, 0);
   UI_DrawTextFmt(0, 0, 370, 20, 2, aD_47, *(unsigned __int16 *)(g_BuildingEconomyDialogBuilding + 430));
   BuildingEconomyDialog_EnsureWidgets();
-  UIWidgetTable_InitDrawStates(dword_514840);
+  UIWidgetTable_InitDrawStates(g_BuildingEconomyDialogActionWidgets);
   BuildingTransferTargetList_SetDrawOrigin(184, 279);
   BuildingTransferTargetList_Draw((int)(uintptr_t)palette_buffer, 0);
   UI_DrawConfirmTop(0, 0);
@@ -44736,7 +44726,7 @@ int  BuildingEconomyDialog_Run(int a1)
   UI_DrawTextFmt(545, 545, 602, 30, 3, aD_46, *(_DWORD *)(g_BuildingEconomyDialogBuilding + 438));
   Palette_FadeInFromBlack((int *)&unk_51D4C0, palette_buffer, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)(uintptr_t)palette_buffer, 0, 0);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
     fprintf(
@@ -44751,8 +44741,8 @@ int  BuildingEconomyDialog_Run(int a1)
   {
     DD_Pump((int)g_RenderState, (char)g_RenderState);
     BuildingTransferTargetList_HandleClick(0);
-    UIWidgetTable_PollHoverAndActions(dword_514840, 0);
-    UI_RunHoverTooltipZones(word_514A88);
+    UIWidgetTable_PollHoverAndActions(g_BuildingEconomyDialogActionWidgets, 0);
+    UI_RunHoverTooltipZones(g_BuildingEconomyDialogTooltipZoneRect);
   }
   while ( exit_signal_snapshot == g_BuildingEconomyDialogExitSignal );
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -45126,9 +45116,9 @@ int  Trap_ShowPitfallDiscoveryDialog(int a1, int a2, char a3, DWORD a4)
     1,
     0,
     0);
-  v29[0] = (int)off_514B3C[0];
-  v29[1] = (int)off_514B3C[1];
-  v29[2] = (int)off_514B3C[2];
+  v29[0] = (int)g_TrapPitfallDiscoveryMessageStrings[0];
+  v29[1] = (int)g_TrapPitfallDiscoveryMessageStrings[1];
+  v29[2] = (int)g_TrapPitfallDiscoveryMessageStrings[2];
   if ( g_LanguageIndex )
   {
     v24 = v32 + 52;
@@ -45382,9 +45372,9 @@ int  GodAnger(DWORD a1, int a2, char a3)
   void *v27; // [esp+82Ch] [ebp-18h]
 
   Debug_Log(a2, a3, a1, (int)aGodanger);
-  v25[0] = (int)off_514B50[0];
-  v25[1] = (int)off_514B50[1];
-  v25[2] = (int)off_514B50[2];
+  v25[0] = (int)g_GodAngerMessageStrings[0];
+  v25[1] = (int)g_GodAngerMessageStrings[1];
+  v25[2] = (int)g_GodAngerMessageStrings[2];
   if ( *(_DWORD *)(gameData + 1423 * a1 + 140059) )
   {
     UnitBattle_ShowPlayerMessageBanner(v25[(unsigned __int8)g_LanguageIndex], a1, 0, a1);
@@ -45533,7 +45523,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int a1)
       result = *v3;
       if ( result != -1 && *((unsigned __int8 *)v3 + 2) == a1 )
       {
-        v5 = (unsigned __int8)byte_512580[88 * result] - 15;
+        v5 = (unsigned __int8)g_UnitTypeBaseActionPoints_512580[88 * result] - 15;
         v6 = Rng_RandRange(25, 35) - v5;
         if ( v6 < 0 )
           v6 = 0;
@@ -45821,7 +45811,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
   void (*v24)(void); // edx
   int v26; // [esp+0h] [ebp-20h]
 
-  v7 = &unk_5196A0;
+  v7 = &g_CursorDesc_Default;
   v0 = ((dword_544CFC >> byte_54512C)
       - 32
       - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
@@ -45876,7 +45866,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
               }
               else
               {
-                v7 = &unk_5197B8;
+                v7 = &g_CursorDesc_Blocked;
               }
             }
             else
@@ -45895,24 +45885,24 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 {
                   v26 = v20[1];
                   if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
-                    v7 = &unk_5196F0;
+                    v7 = &g_CursorDesc_Attack;
                   else
-                    v7 = &unk_5197B8;
+                    v7 = &g_CursorDesc_Blocked;
                   nfree_((int)(uintptr_t)v20);
                 }
                 else
                 {
                   v26 = 1000 << 16;
-                  v7 = &unk_5197B8;
+                  v7 = &g_CursorDesc_Blocked;
                 }
               }
               else
               {
                 v26 = 0;
                 if ( *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) >= 5u )
-                  v7 = &unk_5196F0;
+                  v7 = &g_CursorDesc_Attack;
                 else
-                  v7 = &unk_5197B8;
+                  v7 = &g_CursorDesc_Blocked;
               }
               Diagnostics_TraceWorldMapActionEvent(
                 "battle_wall_move_track_cost",
@@ -45920,7 +45910,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 HIWORD(v26),
                 *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860),
                 v5);
-              if ( DD_IsFlipping((int)g_RenderState) && v7 == &unk_5196F0 )
+              if ( DD_IsFlipping((int)g_RenderState) && v7 == &g_CursorDesc_Attack )
               {
                 Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_enter", g_SelectedUnitIndex, v2, v3, 0);
@@ -45974,7 +45964,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
             }
             else
             {
-              v7 = &unk_5197B8;
+              v7 = &g_CursorDesc_Blocked;
               Diagnostics_TraceWorldMapActionEvent("battle_move_insufficient_ap", g_SelectedUnitIndex, HIWORD(v26), *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860), v5);
             }
           }
@@ -45989,11 +45979,11 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
         {
           v26 = v20[0] ? v20[1] : 0;
           if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
-            v7 = &unk_5196F0;
+            v7 = &g_CursorDesc_Attack;
           else
-            v7 = &unk_5197B8;
+            v7 = &g_CursorDesc_Blocked;
           nfree_((int)(uintptr_t)v20);
-          if ( DD_IsFlipping((int)g_RenderState) && v7 == &unk_5196F0 )
+          if ( DD_IsFlipping((int)g_RenderState) && v7 == &g_CursorDesc_Attack )
           {
             UnitBattle_Attack(g_SelectedUnitIndex, v5, dword_532060);
             if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
@@ -46017,7 +46007,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
           goto LABEL_13;
         }
       }
-      v7 = &unk_5197B8;
+      v7 = &g_CursorDesc_Blocked;
     }
     else if ( DD_IsFlipping((int)g_RenderState) )
     {
@@ -46072,8 +46062,8 @@ __int16 UnitBattle_EnableSelectedChargeMode()
 {
   dword_532060 = 1;
   dword_532074 = Time_Now(2, 1);
-  dword_514BEA = 2;
-  UIWidget_RefreshActionButtonState((uintptr_t)&unk_514BE2, 2);
+  g_UnitBattleChargeButtonState = 2;
+  UIWidget_RefreshActionButtonState((uintptr_t)&g_UnitBattleChargeButtonWidget, 2);
   return UnitBattle_RedrawUnitFootprint(g_SelectedUnitIndex);
 }
 // 42D271: variable 'v1' is possibly undefined
@@ -46086,8 +46076,8 @@ __int16 UnitBattle_EnableSelectedChargeMode()
 __int16 UnitBattle_RefreshSelectedUnitUI()
 {
   dword_532060 = 0;
-  dword_514BEA = 1;
-  UIWidget_RefreshActionButtonState((int)&unk_514BE2, 1);
+  g_UnitBattleChargeButtonState = 1;
+  UIWidget_RefreshActionButtonState((int)&g_UnitBattleChargeButtonWidget, 1);
   return UnitBattle_RedrawUnitFootprint(g_SelectedUnitIndex);
 }
 // 511B58: using guessed type int g_SelectedUnitIndex;
@@ -46106,24 +46096,24 @@ int UnitBattle_RefreshSelectedActionButtons()
   if ( dword_532060 )
     UnitBattle_RefreshSelectedUnitUI();
   selected_type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
-  if ( !byte_512582[selected_type_offset] )
+  if ( !g_UnitTypeMaxRange_512582[selected_type_offset] )
   {
     dword_53205C = 0;
-    dword_514B80 = 1;
+    g_UnitBattleShootButtonState = 1;
     goto LABEL_6;
   }
-  if ( !byte_51257E[selected_type_offset] )
+  if ( !g_UnitTypeBaseMeleeAttack_51257E[selected_type_offset] )
   {
-    dword_514B80 = 2;
+    g_UnitBattleShootButtonState = 2;
     dword_53205C = 1;
 LABEL_6:
-    result = UIWidget_RefreshActionButtonState((uintptr_t)&dword_514B78, 1);
+    result = UIWidget_RefreshActionButtonState((uintptr_t)&g_UnitBattleActionWidgetTable, 1);
     g_RenderDevice = v0;
     return result;
   }
   dword_53205C = 1;
-  dword_514B80 = 2;
-  result = UIWidget_RefreshActionButtonState((uintptr_t)&dword_514B78, 1);
+  g_UnitBattleShootButtonState = 2;
+  result = UIWidget_RefreshActionButtonState((uintptr_t)&g_UnitBattleActionWidgetTable, 1);
   g_RenderDevice = v0;
   return result;
 }
@@ -46196,11 +46186,11 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_shoot_toggle_enter", g_SelectedUnitIndex, dword_53205C, (int)widget, 0);
   type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
-  result = (unsigned __int8)byte_51257E[type_offset];
-  if ( byte_51257E[type_offset] )
+  result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
+  if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
-    result = (unsigned __int8)byte_512582[type_offset];
-    if ( byte_512582[type_offset] )
+    result = (unsigned __int8)g_UnitTypeMaxRange_512582[type_offset];
+    if ( g_UnitTypeMaxRange_512582[type_offset] )
     {
       result = Render_Begin((int)g_RenderState, 0);
       LOBYTE(dword_53205C) = dword_53205C ^ 1;
@@ -46238,9 +46228,9 @@ int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4)
   result = dword_532048;
   if ( g_CurrentPlayerIndex != *(_DWORD *)(dword_532048 + 840) || *(_DWORD *)(dword_532048 + 848) )
   {
-    v6[0] = off_514B5C[0];
-    v6[1] = off_514B5C[1];
-    v6[2] = off_514B5C[2];
+    v6[0] = g_UnitBattleRetreatMessageStrings[0];
+    v6[1] = g_UnitBattleRetreatMessageStrings[1];
+    v6[2] = g_UnitBattleRetreatMessageStrings[2];
     result = UnitBattle_ShowCurrentPlayerPromptDialog((int)v6, a3, a4);
     dword_532064 = result;
   }
@@ -46264,8 +46254,8 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_charge_toggle_enter", g_SelectedUnitIndex, dword_532060, (int)widget, 0);
   type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
-  result = (unsigned __int8)byte_51257E[type_offset];
-  if ( byte_51257E[type_offset] )
+  result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
+  if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
     Render_Begin((int)g_RenderState, 0);
     LOBYTE(dword_532060) = dword_532060 ^ 1;
@@ -46279,8 +46269,8 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
       if ( dword_53205C )
       {
         dword_53205C = 0;
-        dword_514B80 = 1;
-        return UIWidget_RefreshActionButtonState((uintptr_t)dword_514B78, 1);
+        g_UnitBattleShootButtonState = 1;
+        return UIWidget_RefreshActionButtonState((uintptr_t)g_UnitBattleActionWidgetTable, 1);
       }
     }
     else
@@ -46322,9 +46312,9 @@ int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, ch
     UIWidget_PlayPressedReleaseAnimationWithDelay(a1, g_SelectedUnitIndex);
     if ( !UnitBattle_Defence(g_SelectedUnitIndex, 0, a3) )
     {
-      v9[0] = (int)off_514B68[0];
-      v9[1] = (int)off_514B68[1];
-      v9[2] = (int)off_514B68[2];
+      v9[0] = (int)g_UnitBattlePrepareDefenceMessageStrings[0];
+      v9[1] = (int)g_UnitBattlePrepareDefenceMessageStrings[1];
+      v9[2] = (int)g_UnitBattlePrepareDefenceMessageStrings[2];
       Tooltip_ShowText(3, (char *)v9[(unsigned __int8)g_LanguageIndex], a5);
     }
     UnitBattle_RedrawVisibleGrid();
@@ -46427,9 +46417,9 @@ int  UnitBattle_ShowPlayerMessageBanner(int a1, int a2, int a3, DWORD a4)
   SpriteForChar = DLX_GetSpriteForChar(v22[0], v27);
   Compat_RenderDeviceDrawMenuSprite(v28, v31, SpriteForChar, 1);
   Render_ReleaseSurface(7, v10);
-  v21[0] = (int)off_514CEC[0];
-  v21[1] = (int)off_514CEC[1];
-  v21[2] = (int)off_514CEC[2];
+  v21[0] = (int)g_UnitBattlePlayerLabelStrings[0];
+  v21[1] = (int)g_UnitBattlePlayerLabelStrings[1];
+  v21[2] = (int)g_UnitBattlePlayerLabelStrings[2];
   v12 = v21[(unsigned __int8)g_LanguageIndex];
   UI_DrawTextFmt(v12, v31, v26, v28 + 40, 3, v12);
   Render_ReleaseSurface(8, v10);
@@ -46548,7 +46538,7 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
   v19 = (480 - (unsigned __int16)DLX_GetSpriteWidth((int)v14, 0)) / 2;
   v16 = v18 + (unsigned __int16)DLX_GetSpriteHeight((int)v14, 0) - 1;
   v20 = v19 + (unsigned __int16)DLX_GetSpriteWidth((int)v14, 0) - 1;
-  qmemcpy(v12, &unk_514CF8, 0x9Fu);
+  qmemcpy(v12, &g_UnitBattlePlayerPromptDialogTemplate, 0x9Fu);
   v12[0] = v18 + 232;
   v12[1] = v19 + 108;
   v12[3] = &v14;
@@ -46572,9 +46562,9 @@ int  UnitBattle_ShowCurrentPlayerPromptDialog(int a1, char a2, DWORD a3)
     0,
     0);
   Render_ReleaseSurface(7, v7);
-  v13[0] = (int)off_514D98[0];
-  v13[1] = (int)off_514D98[1];
-  v13[2] = (int)off_514D98[2];
+  v13[0] = (int)g_UnitBattlePlayerPromptLabelStrings[0];
+  v13[1] = (int)g_UnitBattlePlayerPromptLabelStrings[1];
+  v13[2] = (int)g_UnitBattlePlayerPromptLabelStrings[2];
   v9 = v16;
   UI_DrawTextFmt(v16, v18, v16, v19 + 40, 3, v13[(unsigned __int8)g_LanguageIndex]);
   Render_ReleaseSurface(8, v7);
@@ -46646,22 +46636,22 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
   }
   v6 = 31 * g_SelectedUnitIndex + dword_532048;
   v7 = *(_BYTE *)(v6 + 864) & 3;
-  byte_514DC3 = 9 * v7;
+  g_UnitBattlePanelVolleyIconChar = 9 * v7;
   v8 = *(char *)(v6 + 863);
   if ( (unsigned int)v8 <= 4 )
   {
-    byte_514DC4 = 72;
+    g_UnitBattlePanelMoraleIconChar = 72;
   }
   else if ( v8 < 5 || v8 > 10 )
   {
     if ( v8 < 11 || v8 > 15 )
-      byte_514DC4 = 45;
+      g_UnitBattlePanelMoraleIconChar = 45;
     else
-      byte_514DC4 = 54;
+      g_UnitBattlePanelMoraleIconChar = 54;
   }
   else
   {
-    byte_514DC4 = 63;
+    g_UnitBattlePanelMoraleIconChar = 63;
   }
   v9 = 0;
   v23 = Time_Now(0, 0);
@@ -46681,16 +46671,16 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
       {
         if ( byte_532088[j] >= 9 && !a1 )
         {
-          v21 = word_514DA6[v13];
-          v20 = word_514DA4[v13];
+          v21 = g_UnitBattlePanelStatIconY[v13];
+          v20 = g_UnitBattlePanelStatIconX[v13];
           v19 = v21 + DLX_GetSpriteWidth(dword_532054, 0) + 1;
           SpriteHeight = DLX_GetSpriteHeight(dword_532054, 0);
           Render_FillRect(
             (_DWORD *)dword_5202E0,
             0,
-            (unsigned __int16)word_514DA6[v13],
-            (unsigned __int16)word_514DA4[v13],
-            word_514DA4[v13] + SpriteHeight + 1,
+            (unsigned __int16)g_UnitBattlePanelStatIconY[v13],
+            (unsigned __int16)g_UnitBattlePanelStatIconX[v13],
+            g_UnitBattlePanelStatIconX[v13] + SpriteHeight + 1,
             v19,
             v20,
             v21);
@@ -46700,7 +46690,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
       {
         if ( !a1 )
           v14 = 8 - v14;
-        v9 = DLX_GetSpriteForChar(dword_532054, v14 + (unsigned __int8)byte_514DC0[j]);
+        v9 = DLX_GetSpriteForChar(dword_532054, v14 + (unsigned __int8)g_UnitBattlePanelQuantityIconCharBase[j]);
         Compat_RenderDeviceDrawMenuSprite(-1, -1, v9, 1);
       }
       v15 = j;
@@ -46823,16 +46813,16 @@ __int16  UnitBattle_UpdateActionTooltip(char a1, int a2, int a3)
   {
     v3 = 0;
   }
-  if ( v3 != dword_514E28 && (byte_514C89 & 4) == 0 )
+  if ( v3 != g_UnitActionTooltipLastShownAction && (g_UnitBattleExitButtonState & 4) == 0 )
   {
-    dword_514E28 = v3;
+    g_UnitActionTooltipLastShownAction = v3;
     if ( v3 == -1 )
     {
       LOWORD(v3) = UnitBattle_DrawSelectedUnitPanel(0, 1, a2, a3);
     }
     else
     {
-      Tooltip_ShowText(3, (&off_514DC8[3 * v3])[(unsigned __int8)g_LanguageIndex], a1);
+      Tooltip_ShowText(3, (&g_UnitActionTooltipTexts[3 * v3])[(unsigned __int8)g_LanguageIndex], a1);
       LOWORD(v3) = RenderState_SelectCursorDescriptor((int)g_RenderState, dword_545150);
     }
   }
@@ -46891,9 +46881,9 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_grid", g_SelectedUnitIndex, *(_DWORD *)(dword_532048 + 808), *(_DWORD *)(dword_532048 + 812), 0);
   UnitBattle_DrawSelectedUnitPanel(0, 1, a1, (int)v8);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_panel", g_SelectedUnitIndex, a1, (int)(uintptr_t)v8, 0);
-  v8[0] = (int)off_514E2C[0];
-  v8[1] = (int)off_514E2C[1];
-  v8[2] = (int)off_514E2C[2];
+  v8[0] = (int)g_BattleYourTurnBannerTexts[0];
+  v8[1] = (int)g_BattleYourTurnBannerTexts[1];
+  v8[2] = (int)g_BattleYourTurnBannerTexts[2];
   v4 = 1;
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, v8[(unsigned __int8)g_LanguageIndex], (int)a2);
   UnitBattle_ShowPlayerMessageBanner(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
@@ -46920,7 +46910,7 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_hover", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
       UnitBattle_HandleManualRotateAndMoveInput();
       Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_input_widgets", g_SelectedUnitIndex, g_CurrentPlayerIndex, v4, 0);
-      if ( UIWidgetTable_PollHoverAndActions(dword_514B78, v5) == 1 )
+      if ( UIWidgetTable_PollHoverAndActions(g_UnitBattleActionWidgetTable, v5) == 1 )
       {
         v4 = (int)(uintptr_t)UnitType_GetLocalizedName(
           (unit_type)*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
@@ -47154,7 +47144,7 @@ int *UnitBattle_InitBattleScreenFrame()
   v4 = DLX_GetSpriteForChar(dword_5202BC, 3);
   v5 = *((_DWORD *)g_RenderDevice + 46);
   Compat_RenderDeviceDrawMenuSprite(243, 0, v4, 1);
-  UIWidgetTable_InitDrawStates(dword_514B78);
+  UIWidgetTable_InitDrawStates(g_UnitBattleActionWidgetTable);
   UnitBattle_DrawSelectedUnitPanel(0, v6, 20, v5);
   UnitBattle_RedrawVisibleGrid();
   return Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5202F4, 20);
@@ -47299,11 +47289,11 @@ DWORD  Battle_RunTacticalCombat(
   if ( v15 )
     v15 = DLXSpriteSet_Load(v15, aBattleTrupki_s);
   dword_532058 = (int)v15;
-  dword_514E28 = -1;
-  dword_514E48 = -1;
-  dword_512360 = -1;
-  dword_514C99 = (unsigned __int8)g_LanguageIndex + 13;
-  dword_514E44 = -1;
+  g_UnitActionTooltipLastShownAction = -1;
+  g_UnitFadeAnimUnitIndex = -1;
+  g_ActiveUnitMoveTileIndex = -1;
+  g_UnitBattleExitButtonOverlaySpriteIndex = (unsigned __int8)g_LanguageIndex + 13;
+  g_UnitBattleAnimatingUnitIndex = -1;
   v16 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v16 )
     v16 = DLXSpriteSet_Load(v16, aBattleFrame_s3);
@@ -47447,7 +47437,7 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_building_setup", (int)(uintptr_t)v37, *(_DWORD *)(dword_532048 + 848), 0, 0);
   *(_DWORD *)(dword_532048 + 848) = v74 == 0;
   g_RenderDevice = &unk_51D4C0;
-  UIWidgetTable_InitDrawStates(dword_514B78);
+  UIWidgetTable_InitDrawStates(g_UnitBattleActionWidgetTable);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_ui_sync", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
   UnitBattle_RedrawVisibleGrid();
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_first_grid_draw", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
@@ -47533,10 +47523,10 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_palette_cache", dword_5202F4, v49, (int)v41, 0);
   Palette_LoadOrBuildBlendLookupTable(aMainmap_3, dword_5202F4, v49, v41);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_palette_cache", dword_5202F4, v49, (int)v41, 0);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_before_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196C8);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&unk_5196C8, dword_545150, 0);
-  dword_545150 = (int)&unk_5196A0;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_before_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&g_CursorDesc_ActionBusy, dword_545150, 0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_ActionBusy);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_cursor_mode", (int)(uintptr_t)g_RenderState, (int)(uintptr_t)&g_CursorDesc_ActionBusy, dword_545150, 0);
+  dword_545150 = (int)&g_CursorDesc_Default;
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_present", (int)(uintptr_t)g_RenderState, dword_545150, 0, 0);
   Render_Present((int)g_RenderState);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_present", (int)(uintptr_t)g_RenderState, dword_545150, 0, 0);
@@ -47586,7 +47576,7 @@ DWORD  Battle_RunTacticalCombat(
         v47 = *(unsigned __int8 *)(v57 + 854);
         if ( v47 == g_CurrentPlayerIndex )
         {
-          *(_BYTE *)(v57 + 860) = byte_512580[88 * v58];
+          *(_BYTE *)(v57 + 860) = g_UnitTypeBaseActionPoints_512580[88 * v58];
           *(_BYTE *)(dword_532048 + m + 864) &= 0x8Fu;
         }
       }
@@ -47651,10 +47641,10 @@ DWORD  Battle_RunTacticalCombat(
   if ( v60 == 2 && *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 840) + gameData + 140051)
     || v60 == 1 && *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 836) + 140051) )
   {
-    v71[0] = (int)off_514E38[0];
-    v71[1] = (int)off_514E38[1];
-    v71[2] = (int)off_514E38[2];
-    UI_ShowInfoWindow(v71[(unsigned __int8)g_LanguageIndex], 0, v64, v60, (int)&v72, (int)&off_514E38[3]);
+    v71[0] = (int)g_BattleForcedRetreatOutcomeTexts[0];
+    v71[1] = (int)g_BattleForcedRetreatOutcomeTexts[1];
+    v71[2] = (int)g_BattleForcedRetreatOutcomeTexts[2];
+    UI_ShowInfoWindow(v71[(unsigned __int8)g_LanguageIndex], 0, v64, v60, (int)&v72, (int)&g_BattleForcedRetreatOutcomeTexts[3]);
   }
   Render_Pump();
   Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
@@ -47736,7 +47726,7 @@ DWORD  Battle_RunTacticalCombat(
 //----- (0042F7C0) --------------------------------------------------------
 int  UnitBattle_GetSpriteVerticalOffsetPx(int a1)
 {
-  return (unsigned __int8)byte_512577[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)];
+  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)];
 }
 // 532048: using guessed type int dword_532048;
 
@@ -47745,10 +47735,10 @@ int  UnitBattle_InitUnitFadeAnimation(int a1, int a2, int a3, int a4)
 {
   int result; // eax
 
-  dword_514E48 = a1;
+  g_UnitFadeAnimUnitIndex = a1;
   dword_5320F4 = a2;
-  dword_514E4C = a4;
-  dword_514E50 = a3;
+  g_UnitFadeAnimTargetOffset = a4;
+  g_UnitFadeAnimStepRate = a3;
   result = Time_Now(a3, a2);
   dword_5320F8 = result;
   return result;
@@ -47797,10 +47787,10 @@ int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4)
   v6 = *(__int16 *)(v5 + 852);
   if ( v6 == -1 )
     goto LABEL_13;
-  v28 = (unsigned __int8)byte_512577[88 * v6];
-  if ( dword_512360 == -1 || a1 != dword_512360 )
+  v28 = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * v6];
+  if ( g_ActiveUnitMoveTileIndex == -1 || a1 != g_ActiveUnitMoveTileIndex )
   {
-    if ( dword_514E44 == -1 || a1 != dword_514E44 )
+    if ( g_UnitBattleAnimatingUnitIndex == -1 || a1 != g_UnitBattleAnimatingUnitIndex )
     {
       SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
                         *(unsigned __int16 *)(dword_532048 + 31 * a1 + 852),
@@ -47809,18 +47799,18 @@ int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4)
                         *(_BYTE *)(dword_532048 + 31 * a1 + 855));
       goto LABEL_7;
     }
-    v7 = 8 * *(unsigned __int8 *)(31 * dword_514E44 + dword_532048 + 855) + dword_5320EC;
+    v7 = 8 * *(unsigned __int8 *)(31 * g_UnitBattleAnimatingUnitIndex + dword_532048 + 855) + dword_5320EC;
     v8 = dword_5320F0;
   }
   else
   {
-    v7 = dword_512364 * *(unsigned __int8 *)(v5 + 855) + dword_523F7C;
+    v7 = g_UnitBattleAnimFrameCount * *(unsigned __int8 *)(v5 + 855) + dword_523F7C;
     v8 = dword_523F78;
   }
   SpriteForChar = DLX_GetSpriteForChar(v8, v7);
 LABEL_7:
   v29 = SpriteForChar;
-  if ( dword_514E48 == -1 )
+  if ( g_UnitFadeAnimUnitIndex == -1 )
     dword_5320F8 = 0;
   if ( a1 == g_SelectedUnitIndex && dword_532060 )
   {
@@ -47828,17 +47818,17 @@ LABEL_7:
     v13 = Math_SinDegreesQ16(2 * (v12 - dword_532074) - 90);
     Sprite_DrawSimpleIgnoringRect(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, ((50 * v13) >> 16) + 50, 0, 0, 200, 1u);
   }
-  else if ( a1 == dword_514E48 )
+  else if ( a1 == g_UnitFadeAnimUnitIndex )
   {
     if ( !dword_5320F8 )
       dword_5320F8 = Time_Now(v11, v10);
-    v26 = dword_514E50 * (Time_Now(v11, v10) - dword_5320F8) + dword_5320F4;
+    v26 = g_UnitFadeAnimStepRate * (Time_Now(v11, v10) - dword_5320F8) + dword_5320F4;
     dword_5320F4 = v26;
-    if ( v26 > dword_514E4C )
-      dword_5320F4 = dword_514E4C;
+    if ( v26 > g_UnitFadeAnimTargetOffset )
+      dword_5320F4 = g_UnitFadeAnimTargetOffset;
     if ( dword_5320F4 < 0 )
       dword_5320F4 = 0;
-    dword_5320F8 = Time_Now(dword_514E4C, v26);
+    dword_5320F8 = Time_Now(g_UnitFadeAnimTargetOffset, v26);
     Sprite_DrawSimpleTrackingOffset(v29, a2, a3 + a4 - v28, a3, a2 + 63, a3 + 63, dword_5320F4, 1u);
   }
   else
@@ -47865,7 +47855,7 @@ LABEL_13:
       if ( result != -1 )
       {
         v19 = 31 * result + dword_532048;
-        if ( *(_BYTE *)(v19 + 854) != *(_BYTE *)(dword_532048 + v30 + 854) && result != dword_512360 )
+        if ( *(_BYTE *)(v19 + 854) != *(_BYTE *)(dword_532048 + v30 + 854) && result != g_ActiveUnitMoveTileIndex )
         {
           v20 = Time_Now(v19, 10 * v16);
           v21 = Math_SinDegreesQ16(v16 * v20);
@@ -47923,46 +47913,46 @@ int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
   int v11; // [esp+0h] [ebp-10h]
 
   v11 = result;
-  if ( dword_512360 != -1 )
+  if ( g_ActiveUnitMoveTileIndex != -1 )
   {
-    result = *(__int16 *)(dword_532048 + 31 * dword_512360 + 852);
+    result = *(__int16 *)(dword_532048 + 31 * g_ActiveUnitMoveTileIndex + 852);
     if ( result != 27 && result != 30 )
     {
       if ( a2 > 0 )
       {
         v6 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1532);
-        if ( v6 != -1 && dword_523F74 > 0 && v6 == dword_512360 )
+        if ( v6 != -1 && dword_523F74 > 0 && v6 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v6, a4, a3, dword_523F74 - 64);
       }
       if ( a2 < *(_DWORD *)(dword_532048 + 804) - 1 )
       {
         v7 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1536);
-        if ( v7 != -1 && dword_523F74 < 0 && v7 == dword_512360 )
+        if ( v7 != -1 && dword_523F74 < 0 && v7 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v7, a4, a3, dword_523F74 + 64);
       }
       if ( v11 > 0 )
       {
         v8 = *(__int16 *)(dword_532048 + 40 * (v11 - 1) + 2 * a2 + 1534);
-        if ( v8 != -1 && dword_523F70 > 0 && v8 == dword_512360 )
+        if ( v8 != -1 && dword_523F70 > 0 && v8 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v8, a4, a3, dword_523F74);
       }
       if ( *(_DWORD *)(dword_532048 + 804) - 1 > v11 )
       {
         v9 = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1534);
-        if ( v9 != -1 && dword_523F70 < 0 && v9 == dword_512360 )
+        if ( v9 != -1 && dword_523F70 < 0 && v9 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v9, a4, a3, dword_523F74);
       }
       if ( v11 > 0 && a2 > 0 )
       {
         v10 = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1532);
-        if ( v10 != -1 && dword_523F74 > 0 && dword_523F70 > 0 && v10 == dword_512360 )
+        if ( v10 != -1 && dword_523F74 > 0 && dword_523F70 > 0 && v10 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v10, a4, a3, dword_523F74 - 64);
       }
       result = v11;
       if ( v11 > 0 && a2 < *(_DWORD *)(dword_532048 + 800) )
       {
         result = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1536);
-        if ( result != -1 && dword_523F74 < 0 && dword_523F70 > 0 && result == dword_512360 )
+        if ( result != -1 && dword_523F74 < 0 && dword_523F70 > 0 && result == g_ActiveUnitMoveTileIndex )
           result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
       }
       if ( a2 > 0 )
@@ -47971,7 +47961,7 @@ int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
         if ( v11 < *(_DWORD *)(dword_532048 + 804) )
         {
           result = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1532);
-          if ( result != -1 && dword_523F74 > 0 && dword_523F70 < 0 && result == dword_512360 )
+          if ( result != -1 && dword_523F74 > 0 && dword_523F70 < 0 && result == g_ActiveUnitMoveTileIndex )
             result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 - 64);
         }
       }
@@ -47981,7 +47971,7 @@ int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
         if ( v11 < *(_DWORD *)(dword_532048 + 804) )
         {
           result = *(__int16 *)(dword_532048 + 40 * (v11 + 1) + 2 * a2 + 1536);
-          if ( result != -1 && dword_523F74 < 0 && dword_523F70 < 0 && result == dword_512360 )
+          if ( result != -1 && dword_523F74 < 0 && dword_523F70 < 0 && result == g_ActiveUnitMoveTileIndex )
             return UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
         }
       }
@@ -48192,7 +48182,7 @@ LABEL_29:
 LABEL_30:
   v46 = *(__int16 *)(40 * a1 + dword_532048 + 2 * a2 + 1534);
   v44 = 0;
-  if ( dword_512360 == v46 )
+  if ( g_ActiveUnitMoveTileIndex == v46 )
     v44 = dword_523F74;
   if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) == 0 )
     UnitBattle_DrawUnitSprite(v46, v2, v49, v44);
@@ -48210,27 +48200,27 @@ LABEL_30:
       if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(40 * a1 + dword_532048 + 2 * a2 + 1532)) )
       {
         v18 = 0;
-        if ( v17 == dword_512360 )
+        if ( v17 == g_ActiveUnitMoveTileIndex )
           v18 = dword_523F74;
         UnitBattle_DrawUnitSprite(v17, v2, v49, v18 - 64);
       }
     }
   }
-  if ( a2 > 0 && a1 > 0 && dword_512360 != -1 )
+  if ( a2 > 0 && a1 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v19 = *(__int16 *)(40 * (a1 - 1) + dword_532048 + 2 * a2 + 1532);
-    if ( v19 == dword_512360 )
+    if ( v19 == g_ActiveUnitMoveTileIndex )
     {
-      if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v19, v2, v49, dword_523F74 - 64);
     }
   }
-  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 < *(_DWORD *)(dword_532048 + 804) && dword_512360 != -1 )
+  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 < *(_DWORD *)(dword_532048 + 804) && g_ActiveUnitMoveTileIndex != -1 )
   {
     v20 = *(__int16 *)(40 * (a1 + 1) + dword_532048 + 2 * a2 + 1536);
-    if ( v20 == dword_512360 )
+    if ( v20 == g_ActiveUnitMoveTileIndex )
     {
-      if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v20, v2, v49, dword_523F74 + 64);
     }
   }
@@ -48243,7 +48233,7 @@ LABEL_30:
       if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(v21 + 2 * a2 + 1534)) )
       {
         v23 = 0;
-        if ( v22 == dword_512360 )
+        if ( v22 == g_ActiveUnitMoveTileIndex )
           v23 = dword_523F74;
         UnitBattle_DrawUnitSprite(v22, v2, v49, v23);
       }
@@ -48260,27 +48250,27 @@ LABEL_30:
       if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(v24 + 2 * a2 + 1536)) )
       {
         v26 = 0;
-        if ( v25 == dword_512360 )
+        if ( v25 == g_ActiveUnitMoveTileIndex )
           v26 = dword_523F74;
         UnitBattle_DrawUnitSprite(v25, v2, v49, v26 + 64);
       }
     }
   }
-  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 > 0 && dword_512360 != -1 )
+  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
     v27 = *(__int16 *)(40 * (a1 - 1) + dword_532048 + 2 * a2 + 1536);
-    if ( v27 == dword_512360 )
+    if ( v27 == g_ActiveUnitMoveTileIndex )
     {
-      if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v27, v2, v49, dword_523F74 + 64);
     }
   }
-  if ( a2 > 0 && a1 < *(_DWORD *)(dword_532048 + 804) && dword_512360 != -1 )
+  if ( a2 > 0 && a1 < *(_DWORD *)(dword_532048 + 804) && g_ActiveUnitMoveTileIndex != -1 )
   {
     v28 = *(__int16 *)(40 * (a1 + 1) + dword_532048 + 2 * a2 + 1532);
-    if ( v28 == dword_512360 )
+    if ( v28 == g_ActiveUnitMoveTileIndex )
     {
-      if ( UnitBattle_GetSpriteVerticalOffsetPx(dword_512360) )
+      if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v28, v2, v49, dword_523F74 - 64);
     }
   }
@@ -48293,13 +48283,13 @@ LABEL_30:
       if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(v29 + 2 * a2 + 1534)) )
       {
         v31 = 0;
-        if ( v30 == dword_512360 )
+        if ( v30 == g_ActiveUnitMoveTileIndex )
           v31 = dword_523F74;
         UnitBattle_DrawUnitSprite(v30, v2, v49, v31);
       }
     }
   }
-  if ( a1 == dword_514E54 && a2 == dword_514E58 )
+  if ( a1 == g_UnitBattleShotProjectileTileX && a2 == g_UnitBattleShotProjectileTileY )
   {
     v32 = DLX_GetSpriteForChar(dword_5320FC, dword_532100);
     Compat_RenderDeviceDrawMenuSprite(v2, v49, v32, 1);
@@ -48312,7 +48302,7 @@ LABEL_30:
       v32 = DLX_GetSpriteForChar(dword_5202C8, 16);
       Compat_RenderDeviceDrawMenuSprite(v2, v49 + 2, v32, 1);
     }
-    if ( v46 == g_SelectedUnitIndex && dword_512360 == -1 )
+    if ( v46 == g_SelectedUnitIndex && g_ActiveUnitMoveTileIndex == -1 )
     {
       v33 = DLX_GetSpriteForChar(dword_5202C8, *(unsigned __int8 *)(gameData + 140016) == 1);
       Compat_RenderDeviceDrawMenuSprite(v2, v49, v33, 1);
@@ -48653,7 +48643,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4)
       }
       else
       {
-        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC0[0] + 8);
+        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitBattlePanelQuantityIconCharBase[0] + 8);
         Compat_RenderDeviceDrawMenuSprite(498, 143, v19, 1);
       }
       if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v4 + 2) + 140051) )
@@ -48663,7 +48653,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4)
       }
       else
       {
-        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC2 + 8);
+        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitBattlePanelAttackIconChar + 8);
         Compat_RenderDeviceDrawMenuSprite(497, 211, v19, 1);
       }
       if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v4 + 2) + 140051) )
@@ -48676,7 +48666,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4)
       }
       else
       {
-        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC1 + 8);
+        v19 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitBattlePanelDefenseIconChar + 8);
         Compat_RenderDeviceDrawMenuSprite(497, 177, v19, 1);
       }
       if ( (unsigned int)*((char *)v4 + 11) > 4 )
@@ -48724,7 +48714,7 @@ LABEL_36:
                   }
                   else
                   {
-                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC3 + 8);
+                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitBattlePanelVolleyIconChar + 8);
                     Compat_RenderDeviceDrawMenuSprite(497, 245, v30, 1);
                   }
                   if ( *(_DWORD *)(1423 * *((unsigned __int8 *)v4 + 2) + gameData + 140051) )
@@ -48733,7 +48723,7 @@ LABEL_36:
                   }
                   else
                   {
-                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC4 + 8);
+                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitBattlePanelMoraleIconChar + 8);
                     Compat_RenderDeviceDrawMenuSprite(497, 279, v30, 1);
                   }
                   if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v4 + 2) + 140051) )
@@ -48742,7 +48732,7 @@ LABEL_36:
                   }
                   else
                   {
-                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)byte_514DC5 + 8);
+                    v30 = DLX_GetSpriteForChar(dword_532054, (unsigned __int8)g_UnitPanelRow3FallbackIconChar + 8);
                     Compat_RenderDeviceDrawMenuSprite(497, 313, v30, 1);
                   }
                   Diagnostics_TraceWorldMapActionEvent("battle_panel_before_portrait", *v4, *((unsigned __int8 *)v4 + 2), (int)(uintptr_t)g_RenderDevice, 0);
@@ -48914,9 +48904,9 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
     1,
     0,
     0);
-  v39[0] = (int)off_514E5C[0];
-  v39[1] = (int)off_514E5C[1];
-  v39[2] = (int)off_514E5C[2];
+  v39[0] = (int)g_WallInfoPopupLabelTexts[0];
+  v39[1] = (int)g_WallInfoPopupLabelTexts[1];
+  v39[2] = (int)g_WallInfoPopupLabelTexts[2];
   UI_DrawTextFmt((int)&v40, 51, 189, 5, 3, v39[(unsigned __int8)g_LanguageIndex]);
   Render_ReleaseSurface(14, (DWORD)Surface);
   UI_DrawTextFmt((int)&v40, 0, 111, 53, 2, (int)aD_34);
@@ -49013,9 +49003,9 @@ __int16 UnitBattle_UpdateIdleAnimatedUnits()
     unit_type = *(__int16 *)slot;
     if ( unit_type != -1 )
     {
-      if ( (byte_512573[88 * unit_type] & 1) != 0 )
+      if ( (g_UnitTypeHasIdleAnimationFlags[88 * unit_type] & 1) != 0 )
       {
-        next_animation_tick = *(unsigned int *)(slot + 0x12) + (unsigned __int8)byte_512572[88 * unit_type];
+        next_animation_tick = *(unsigned int *)(slot + 0x12) + (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * unit_type];
         if ( next_animation_tick < Time_Now(slot_index, (int)(uintptr_t)slot) )
         {
           *(unsigned int *)(slot + 0x12) = Time_Now(slot_index, (int)(uintptr_t)slot);
@@ -49029,7 +49019,7 @@ __int16 UnitBattle_UpdateIdleAnimatedUnits()
     result = UnitBattle_CountAdjacentEnemies((int)(uintptr_t)slot);
     if ( result >= 3 && unit_type != -1 )
     {
-      next_animation_tick = *(unsigned int *)(slot + 0x12) + (unsigned __int8)byte_512572[88 * unit_type];
+      next_animation_tick = *(unsigned int *)(slot + 0x12) + (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * unit_type];
       if ( next_animation_tick < Time_Now(slot_index, (int)(uintptr_t)slot) )
       {
         *(unsigned int *)(slot + 0x12) = Time_Now(slot_index, (int)(uintptr_t)slot);
@@ -49037,7 +49027,7 @@ __int16 UnitBattle_UpdateIdleAnimatedUnits()
       }
     }
   }
-  if ( dword_532060 && g_SelectedUnitIndex != dword_512360 )
+  if ( dword_532060 && g_SelectedUnitIndex != g_ActiveUnitMoveTileIndex )
     result = UnitBattle_RedrawUnitFootprint(g_SelectedUnitIndex);
   return result;
 }
@@ -49070,7 +49060,7 @@ __int16  UnitBattle_RedrawUnitFootprint(int a1)
     tile_x = (unsigned __int16)slot[2];
     tile_y = (unsigned __int16)slot[3];
     result = UnitBattle_RedrawTile(tile_x, tile_y);
-    if ( byte_512577[88 * unit_type] && unit_type >= 0x1B )
+    if ( g_UnitTypeSpriteVerticalOffsetPx[88 * unit_type] && unit_type >= 0x1B )
     {
       if ( unit_type == 0x1B )
       {
@@ -49207,7 +49197,7 @@ __int16  Battle_PlaceReservedUnitSlotAtTile(int a1, int a2, int a3)
     v4 = 2;
   *(_BYTE *)(dword_532048 + 1506) = v4;
   *(_WORD *)(dword_532048 + 40 * a2 + 2 * a3 + 1534) = 21;
-  dword_514E48 = 21;
+  g_UnitFadeAnimUnitIndex = 21;
   return UnitBattle_RedrawUnitFootprint(21);
 }
 // 514E48: using guessed type int dword_514E48;
@@ -49228,10 +49218,10 @@ int Battle_ClearReservedUnitSlot()
   {
     v2 = *(unsigned __int16 *)(dword_532048 + 1507);
     v3 = *(unsigned __int16 *)(dword_532048 + 1509);
-    v4 = byte_512577[88 * v1] != 0;
+    v4 = g_UnitTypeSpriteVerticalOffsetPx[88 * v1] != 0;
     *(_WORD *)(dword_532048 + 1503) = -1;
     *(_WORD *)(dword_532048 + 40 * (unsigned __int16)v2 + 2 * (unsigned __int16)v3 + 1534) = -1;
-    dword_514E48 = -1;
+    g_UnitFadeAnimUnitIndex = -1;
     if ( v4 )
       return UnitBattle_RedrawVisibleGrid();
     else
@@ -49303,7 +49293,7 @@ signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4)
   *(_BYTE *)(dword_532048 + v8 + 855) = a3;
   g_BattleSavedActionPointsBySlot[v6] = a1[8];
   v9 = dword_532048;
-  *(_BYTE *)(dword_532048 + v8 + 860) = byte_512580[88 * *(__int16 *)a1];
+  *(_BYTE *)(dword_532048 + v8 + 860) = g_UnitTypeBaseActionPoints_512580[88 * *(__int16 *)a1];
   *(_BYTE *)(dword_532048 + v8 + 874) &= ~1u;
   *(_BYTE *)(dword_532048 + v8 + 864) &= 0x8Fu;
   *(_WORD *)(40 * a2 + dword_532048 + 2 * a4 + 1534) = v6;
@@ -50023,7 +50013,7 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
     BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, a2);
     Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
     Render_Present((int)g_RenderState);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
     Render_Present((int)g_RenderState);
     Render_Pump();
     return Render_Present((int)g_RenderState);
@@ -50867,7 +50857,7 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
   if ( !Building_BuyUnitLicence(dword_532218, dword_532224[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
     return UIWidget_ShowReleasedState(a1, v5);
   v13 = v5;
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
   for ( i = 0; ; ++i )
   {
     v8 = dword_532224[g_CastleProductionSelectedAvailableUnitIndex];
@@ -50907,8 +50897,8 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
   {
     dword_532338 = dword_5322C8;
     Audio_PlaySoundEffectByName(aDclose_0, 64);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&dword_519808);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   }
   return UIWidget_ShowReleasedState(v2, v2);
 }
@@ -50987,7 +50977,7 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
   (*(void (__fastcall **)(_DWORD, char *))(v7 + 48))(0, v6);
   Palette_QuantizeChannelsInPlace((_BYTE *)dword_53221C, 6);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  UIWidgetTable_InitDrawStates(dword_515130);
+  UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v8, 20, a3, a4, v7);
   CastleProduction_ReloadLicenceSlotSprites(20);
@@ -51215,7 +51205,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   UI_SetActiveWidgetTable(8);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, dword_53221C, v20, v8);
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
-  UIWidgetTable_InitDrawStates(dword_515130);
+  UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   CastleProduction_RedrawSelectedUnitPanel(v22, 20, v8, a3, v10);
@@ -51230,12 +51220,12 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   {
     DD_Pump((int)g_RenderState, 0);
     CastleProduction_TickAnimations(v8);
-    UI_RunHoverTooltipZones(word_515310);
+    UI_RunHoverTooltipZones(g_CastleUnitProductionTooltipZone);
     g_RenderDevice = &unk_51D4C0;
-    if ( !UIWidgetTable_PollHoverAndActions(dword_515130, v8) )
+    if ( !UIWidgetTable_PollHoverAndActions(g_CastleUnitProductionWidgetTable, v8) )
     {
-      CastleProduction_HandleLicenceGridClick(v8, (int)&unk_51D4C0, (int)dword_515130);
-      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&unk_51D4C0, (int)dword_515130);
+      CastleProduction_HandleLicenceGridClick(v8, (int)&unk_51D4C0, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&unk_51D4C0, (int)g_CastleUnitProductionWidgetTable);
     }
   }
   while ( !g_CastleProductionExitSignal );
@@ -51307,16 +51297,16 @@ int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
   query_handle = FileSystem_ResolveReadPath(path, 0);
   if ( query_handle )
   {
-    cube_size = 1u << byte_519A18;
+    cube_size = 1u << g_Palette_ColorCubeBits;
     cube_size *= cube_size * cube_size;
-    dword_519A10 = a2;
+    g_Palette_ActivePalettePtr = a2;
     Compat_QueryRead(query_handle, byte_5452EC, (int)cube_size);
     return Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
   }
 
   Palette_BuildNearestColorLUT(a2);
   output_handle = IO_FOpen(path, (unsigned __int8 *)aWb_0, 0, a4);
-  cube_size = 1u << byte_519A18;
+  cube_size = 1u << g_Palette_ColorCubeBits;
   cube_size *= cube_size * cube_size;
   fwrite_(byte_5452EC, (int)cube_size, output_handle, 1);
   return fclose_(output_handle);
@@ -51566,9 +51556,9 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
       building_index = g_BuildingTransferTargetIds[row_index];
       if ( building_index == -2 )
       {
-        v15[0] = (int)off_5156E4[0];
-        v15[1] = (int)off_5156E4[1];
-        v15[2] = (int)off_5156E4[2];
+        v15[0] = (int)g_BuildingTransferOutsideCastleLabel[0];
+        v15[1] = (int)g_BuildingTransferOutsideCastleLabel[1];
+        v15[2] = (int)g_BuildingTransferOutsideCastleLabel[2];
         UI_DrawText(
           g_BuildingTransferTargetListDrawX,
           row_y_offset + g_BuildingTransferTargetListDrawY,
@@ -51639,7 +51629,7 @@ int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
       old_index,
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
-  BuildingTransferTargetList_Draw((int)off_511234, a2);
+  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a2);
   return UIWidget_ShowReleasedState(a1, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
@@ -51661,7 +51651,7 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
       old_index,
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
-  BuildingTransferTargetList_Draw((int)off_511234, a2);
+  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a2);
   return UIWidget_ShowReleasedState(a1, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
@@ -51731,7 +51721,7 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
         {
           g_BuildingTransferTargetListIndex += v2;
           Render_Pump();
-          BuildingTransferTargetList_Draw((int)off_511234, a1);
+          BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a1);
           Render_Present((int)g_RenderState);
           return Render_Begin((int)g_RenderState, 0);
         }
@@ -51780,7 +51770,7 @@ int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
 
   v6 = a2 - a1;
   v16 = 0;
-  v15 = (char *)&unk_5156F0 + 150 * a3;
+  v15 = (char *)&g_UiFormattedMessageTemplateTable + 150 * a3;
   do
   {
     result = (int)&v15[50 * (unsigned __int8)g_LanguageIndex];
@@ -51829,7 +51819,7 @@ int __thiscall UnitBattle_ConstructAiCandidateQueue(void *this)
   dword_5437CC = 0;
   dword_5437D0 = 0;
   dword_5437D4 = 0;
-  dword_5437C4 = (int)&off_50F134;
+  dword_5437C4 = (int)&g_WCIsvListBaseVariant134_Vtable;
   return CRT_RegisterFinalizableObject(this, 0);
 }
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
@@ -52015,7 +52005,7 @@ BOOL  UnitBattle_IsTileWithinMinRange(int a1, int a2, int a3)
        * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 4) - a2)
        + (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3)
        * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3));
-  return distance <= (unsigned __int8)byte_512583[88 * *(__int16 *)unit_record];
+  return distance <= (unsigned __int8)g_UnitTypeMinRange_512583[88 * *(__int16 *)unit_record];
 }
 // 532048: using guessed type int dword_532048;
 
@@ -52271,7 +52261,7 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2)
     v8 = Unit_CalcEffectivenessC(v31);
     if ( v8 > v9 )
       v29 = v8;
-    if ( byte_512582[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] )
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] )
     {
       v30 = *((char *)v31 + 9);
       HIWORD(v32) = 0;
@@ -52501,7 +52491,7 @@ LABEL_10:
       if ( !v22 )
       {
         v24 = 31 * a1 + dword_532048;
-        if ( byte_512582[88 * *(__int16 *)(v24 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v24 + 852)] )
         {
           if ( (*(_BYTE *)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v24 + 864)) >> 5) > 0 )
             v23 = UnitBattle_MoveTrackForce(a1, v7, (unsigned __int16)v7);
@@ -52518,7 +52508,7 @@ LABEL_10:
         goto LABEL_10;
       }
       v25 = dword_532048 + 31 * a1;
-      if ( byte_512582[88 * *(__int16 *)(v25 + 852)]
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v25 + 852)]
         && (*(_BYTE *)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v25 + 864)) >> 5) > 0 )
       {
         v45 = *(_WORD *)(v8 + 4);
@@ -52634,7 +52624,7 @@ LABEL_61:
       if ( !v34 )
       {
         v36 = 31 * a1 + dword_532048;
-        if ( byte_512582[88 * *(__int16 *)(v36 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
         {
           if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             v35 = UnitBattle_MoveTrackForce(a1, (unsigned __int16)v15, a3);
@@ -52651,7 +52641,7 @@ LABEL_61:
         goto LABEL_17;
       }
       v37 = dword_532048 + 31 * a1;
-      if ( byte_512582[88 * *(__int16 *)(v37 + 852)]
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v37 + 852)]
         && (*(_BYTE *)(v37 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v37 + 864)) >> 5) > 0 )
       {
         v59 = *(_WORD *)(v16 + 4);
@@ -52950,7 +52940,7 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
   int v211; // [esp+C4h] [ebp-1Ch]
 
   v167 = 1;
-  switch ( dword_515A10 )
+  switch ( g_UnitBattleAiCurrentPlanMode )
   {
     case 0:
     case 4:
@@ -52970,7 +52960,7 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
           v184 = *(unsigned __int16 *)(dword_532048 + v177 + 858);
           v140 = 160 * v171 + v175 * 4;
           v141 = 2 * v184 + dword_532048 + 40 * v171;
-          *(int *)((char *)&dword_53244C[2 * v184] + v140) -= dword_5159F0[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(dword_532048 + v177 + 852)]];
+          *(int *)((char *)&dword_53244C[2 * v184] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(dword_532048 + v177 + 852)]];
           v142 = *(_WORD *)(v141 + 1534);
           *(_WORD *)(v141 + 1534) = -1;
           v198 = v142;
@@ -53019,7 +53009,7 @@ LABEL_289:
           if ( !v157 )
           {
             v159 = dword_532048 + 31 * a1;
-            if ( byte_512582[88 * *(__int16 *)(v159 + 852)] )
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v159 + 852)] )
             {
               if ( (*(_BYTE *)(v159 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v159 + 864)) >> 5) > 0 )
                 v158 = UnitBattle_MoveTrackForce(a1, v208, v171);
@@ -53033,7 +53023,7 @@ LABEL_289:
             goto LABEL_278;
           }
           v160 = 31 * a1 + dword_532048;
-          if ( byte_512582[88 * *(__int16 *)(v160 + 852)]
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v160 + 852)]
             && (*(_BYTE *)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v160 + 864)) >> 5) > 0 )
           {
             v176 = *(_WORD *)(v150 + 4);
@@ -53223,7 +53213,7 @@ LABEL_29:
     v167 = 0;
     v21 = 160 * v170 + v194 * 4;
     v22 = 40 * v170 + dword_532048 + 2 * v172;
-    *(int *)((char *)&dword_53244C[2 * v172] + v21) -= dword_5159F0[(unsigned __int8)g_UnitTypeRole[88
+    *(int *)((char *)&dword_53244C[2 * v172] + v21) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
                                                                                                * *(__int16 *)(dword_532048 + v205 + 852)]];
     v23 = *(_WORD *)(v22 + 1534);
     *(_WORD *)(v22 + 1534) = -1;
@@ -53273,7 +53263,7 @@ LABEL_83:
     if ( !v86 )
     {
       v88 = 31 * a1 + dword_532048;
-      if ( byte_512582[88 * *(__int16 *)(v88 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v88 + 852)] )
       {
         if ( (*(_BYTE *)(v88 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v88 + 864)) >> 5) > 0 )
           v87 = UnitBattle_MoveTrackForce(a1, a3, a3);
@@ -53291,7 +53281,7 @@ LABEL_88:
       goto LABEL_35;
     }
     v89 = dword_532048 + 31 * a1;
-    if ( byte_512582[88 * *(__int16 *)(v89 + 852)]
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v89 + 852)]
       && (*(_BYTE *)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v89 + 864)) >> 5) > 0 )
     {
       v182 = *(_WORD *)(v31 + 4);
@@ -53402,7 +53392,7 @@ LABEL_39:
       {
         LOBYTE(v36) = dword_532048;
         v98 = dword_532048 + 31 * a1;
-        if ( byte_512582[88 * *(__int16 *)(v98 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v98 + 852)] )
         {
           v36 = *(_BYTE *)(v98 + 864) & 3;
           if ( v36 + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v98 + 864)) >> 5) > 0 )
@@ -53451,7 +53441,7 @@ LABEL_49:
         if ( !v106 )
         {
           v36 = 31 * a1 + dword_532048;
-          if ( byte_512582[88 * *(__int16 *)(v36 + 852)] )
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
           {
             if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             {
@@ -53499,7 +53489,7 @@ LABEL_56:
           if ( !v114 )
           {
             v36 = 31 * a1 + dword_532048;
-            if ( byte_512582[88 * *(__int16 *)(v36 + 852)] )
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
             {
               if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
               {
@@ -53547,7 +53537,7 @@ LABEL_63:
             {
               LOBYTE(v36) = dword_532048;
               v124 = dword_532048 + 31 * a1;
-              if ( byte_512582[88 * *(__int16 *)(v124 + 852)] )
+              if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v124 + 852)] )
               {
                 if ( (*(_BYTE *)(v124 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v124 + 864)) >> 5) > 0 )
                 {
@@ -53593,7 +53583,7 @@ LABEL_70:
               if ( !v131 )
               {
                 v133 = 31 * a1 + dword_532048;
-                if ( byte_512582[88 * *(__int16 *)(v133 + 852)] )
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v133 + 852)] )
                 {
                   if ( (*(_BYTE *)(v133 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v133 + 864)) >> 5) > 0 )
                     v132 = UnitBattle_MoveTrackForce(a1, v75, v74);
@@ -53604,7 +53594,7 @@ LABEL_70:
               if ( *v132 )
               {
                 v134 = 31 * a1 + dword_532048;
-                if ( byte_512582[88 * *(__int16 *)(v134 + 852)]
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v134 + 852)]
                   && (*(_BYTE *)(v134 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v134 + 864)) >> 5) > 0 )
                 {
                   v192 = *(_WORD *)(v77 + 4);
@@ -53696,7 +53686,7 @@ LABEL_67:
               goto LABEL_68;
             }
             v36 = 31 * a1 + dword_532048;
-            if ( byte_512582[88 * *(__int16 *)(v36 + 852)]
+            if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
               && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             {
               v196 = *(_WORD *)(v66 + 4);
@@ -53790,7 +53780,7 @@ LABEL_60:
             goto LABEL_61;
           }
           v36 = 31 * a1 + dword_532048;
-          if ( byte_512582[88 * *(__int16 *)(v36 + 852)]
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
             && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
           {
             v193 = *(_WORD *)(v57 + 4);
@@ -53884,7 +53874,7 @@ LABEL_53:
           goto LABEL_54;
         }
         v36 = 31 * a1 + dword_532048;
-        if ( byte_512582[88 * *(__int16 *)(v36 + 852)]
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
           && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
         {
           v188 = *(_WORD *)(v50 + 4);
@@ -53979,7 +53969,7 @@ LABEL_46:
       }
       LOBYTE(v36) = dword_532048;
       v99 = dword_532048 + 31 * a1;
-      if ( byte_512582[88 * *(__int16 *)(v99 + 852)]
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v99 + 852)]
         && (*(_BYTE *)(v99 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v99 + 864)) >> 5) > 0 )
       {
         v197 = *(_WORD *)(v38 + 4);
@@ -54281,7 +54271,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
     ++v4;
     v61 += 160;
   }
-  if ( dword_515A10 == 2 || dword_515A10 == 6 )
+  if ( g_UnitBattleAiCurrentPlanMode == 2 || g_UnitBattleAiCurrentPlanMode == 6 )
   {
     dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 6;
     return 1;
@@ -54290,7 +54280,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   if ( v3 < 0 )
   {
     v11 = 31 * v68 + dword_532048;
-    if ( byte_512582[88 * *(__int16 *)(v11 + 852)] )
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v11 + 852)] )
     {
       if ( (*(_BYTE *)(v11 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v11 + 864)) >> 5) > 0 )
       {
@@ -54342,7 +54332,7 @@ LABEL_58:
         if ( !v31 )
         {
           v33 = dword_532048 + 31 * v71;
-          if ( byte_512582[88 * *(__int16 *)(v33 + 852)] )
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v33 + 852)] )
           {
             if ( (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) > 0 )
               v32 = UnitBattle_MoveTrackForce(v71, v12, v12);
@@ -54353,7 +54343,7 @@ LABEL_58:
         if ( *v32 )
         {
           v35 = dword_532048 + 31 * v71;
-          if ( byte_512582[88 * *(__int16 *)(v35 + 852)]
+          if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v35 + 852)]
             && (*(_BYTE *)(v35 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v35 + 864)) >> 5) > 0 )
           {
             v62 = *(unsigned __int16 *)(v14 + 4);
@@ -54412,7 +54402,7 @@ LABEL_25:
                 }
 LABEL_63:
                 v34 = dword_532048 + 31 * v68;
-                if ( byte_512582[88 * *(__int16 *)(v34 + 852)]
+                if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v34 + 852)]
                   && (*(_BYTE *)(v34 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v34 + 864)) >> 5) <= 0 )
                 {
                   dword_532448[801 * v68 + 40 * dword_5437A0 + 2 * dword_5437A4] = 5;
@@ -54472,7 +54462,7 @@ LABEL_123:
                     v43 = dword_532048 + 31 * v68;
                     v65 = *(unsigned __int16 *)(v43 + 856);
                     v64 = *(unsigned __int16 *)(v43 + 858);
-                    if ( byte_512582[88 * *(__int16 *)(v43 + 852)]
+                    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v43 + 852)]
                       && (*(_BYTE *)(v43 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v43 + 864)) >> 5) > 0
                       && UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
                     {
@@ -54486,7 +54476,7 @@ LABEL_123:
                       *v42 = v45;
                       v66 = v42[v45 + 1];
                       v46 = v44 + dword_532048;
-                      if ( byte_512582[88 * *(__int16 *)(v44 + dword_532048 + 852)]
+                      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v44 + dword_532048 + 852)]
                         && (*(_BYTE *)(v46 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v46 + 864)) >> 5) > 0 )
                       {
                         *(_WORD *)(v46 + 856) = (unsigned __int8)v66;
@@ -54513,10 +54503,10 @@ LABEL_123:
                           v56 = v63 ^ v48;
                           v57 = 0;
                           v58 = 0;
-                          v55 = &off_50F124;
+                          v55 = &g_WCIsvListBaseVariant124_Vtable;
                           v59 = 0;
                           WCIsvListBase_CopyAppendAll(&v54, &dword_5437C0, (int)v42);
-                          v55 = &off_50F134;
+                          v55 = &g_WCIsvListBaseVariant134_Vtable;
                           v51 = WCIsvListBase_PopUntilMatchOrEmpty(v49, (int)&v54) && dword_5437A8 < 20;
                           WCIsvListBase_DestroyElementsAndDtor(v50, (int)&v54);
                           if ( v51 )
@@ -54811,7 +54801,7 @@ LABEL_44:
     if ( !v22 )
     {
       v24 = 31 * v16 + dword_532048;
-      if ( byte_512582[88 * *(__int16 *)(v24 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v24 + 852)] )
       {
         if ( (*(_BYTE *)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v24 + 864)) >> 5) > 0 )
         {
@@ -54831,7 +54821,7 @@ LABEL_44:
       goto LABEL_33;
     }
     v25 = dword_532048 + 31 * v16;
-    if ( byte_512582[88 * *(__int16 *)(v25 + 852)]
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v25 + 852)]
       && (*(_BYTE *)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v25 + 864)) >> 5) > 0 )
     {
       v39 = *(_WORD *)(v17 + 4);
@@ -54953,7 +54943,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
   switch ( dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v5] )
   {
     case 1:
-      if ( byte_512582[88 * *(__int16 *)(v4 + dword_532048 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v4 + dword_532048 + 852)] )
       {
         v6 = (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5);
         if ( v6 > 0 )
@@ -55018,7 +55008,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       result = UnitBattle_ApproachToSafeDistance(a1, dword_5437A0, v4, a3);
       break;
     case 8:
-      if ( byte_512582[88 * *v25] && (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5) > 0 )
+      if ( g_UnitTypeMaxRange_512582[88 * *v25] && (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5) > 0 )
       {
 LABEL_4:
         UnitBattle_UpdateIdleAnimatedUnits();
@@ -55143,9 +55133,9 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     v45 += 40;
     ++v44;
   }
-  if ( (unsigned int)dword_515A10 >= 2 )
+  if ( (unsigned int)g_UnitBattleAiCurrentPlanMode >= 2 )
   {
-    if ( (unsigned int)dword_515A10 <= 2 || dword_515A10 == 6 )
+    if ( (unsigned int)g_UnitBattleAiCurrentPlanMode <= 2 || g_UnitBattleAiCurrentPlanMode == 6 )
     {
       v19 = *(unsigned __int16 *)(dword_532048 + 31 * SLOWORD(v34[0]) + 856);
       if ( (unsigned __int16)v19 >= *(_DWORD *)(dword_532048 + 804) / 2 )
@@ -55175,7 +55165,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       return result;
     }
   }
-  else if ( !dword_515A10 )
+  else if ( !g_UnitBattleAiCurrentPlanMode )
   {
     do
     {
@@ -55188,7 +55178,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       do
       {
         v6 = *(__int16 *)((char *)v34 + v5);
-        if ( v6 != -1 && !byte_512582[88 * *(__int16 *)(31 * v6 + dword_532048 + 852)] )
+        if ( v6 != -1 && !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * v6 + dword_532048 + 852)] )
         {
           v47 = 1;
           if ( v3 < Unit_CalcEffectivenessA((char *)(31 * v6 + dword_532048 + 852), 0) )
@@ -55225,7 +55215,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       result = *(__int16 *)((char *)v34 + m);
       if ( result != -1 )
       {
-        if ( byte_512582[88 * *(__int16 *)(31 * result + dword_532048 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * result + dword_532048 + 852)] )
         {
           v40 = *(__int16 *)((char *)v34 + m);
           result = WCIsvListBase_AppendValue((int)&dword_5437C0, v40);
@@ -55248,7 +55238,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   for ( ii = 0; ii != 20; ii += 2 )
   {
     v29 = *(__int16 *)((char *)v34 + ii);
-    if ( v29 != -1 && byte_512582[88 * *(__int16 *)(dword_532048 + 31 * v29 + 852)] )
+    if ( v29 != -1 && g_UnitTypeMaxRange_512582[88 * *(__int16 *)(dword_532048 + 31 * v29 + 852)] )
     {
       v42 = *(__int16 *)((char *)v34 + ii);
       WCIsvListBase_AppendValue((int)&dword_5437C0, v42);
@@ -55444,7 +55434,7 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
     if ( !v16 )
     {
       v18 = dword_532048 + 31 * v33;
-      if ( byte_512582[88 * *(__int16 *)(v18 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v18 + 852)] )
       {
         if ( (*(_BYTE *)(v18 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v18 + 864)) >> 5) > 0 )
           v17 = UnitBattle_MoveTrackForce(v33, v7, v5);
@@ -55461,7 +55451,7 @@ LABEL_17:
       goto LABEL_23;
     }
     v19 = 31 * v33 + dword_532048;
-    if ( !byte_512582[88 * *(__int16 *)(v19 + 852)]
+    if ( !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v19 + 852)]
       || (*(_BYTE *)(v19 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v19 + 864)) >> 5) <= 0 )
     {
       if ( !*v17 )
@@ -55599,7 +55589,7 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
     return 2;
   if ( *(int *)(dword_532048 + 828) <= 0 )
     return 4;
-  if ( dword_532078 == 1 && v2 == *(_DWORD *)(dword_532048 + 840) && dword_515A10 != 6 )
+  if ( dword_532078 == 1 && v2 == *(_DWORD *)(dword_532048 + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
     return 6;
   if ( v2 == *(_DWORD *)(dword_532048 + 836) && dword_532078 < 3 )
     return 0;
@@ -55659,14 +55649,14 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
   Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", a1, g_SelectedUnitIndex, dword_532078, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
   Diagnostics_TraceWorldMapActionEvent("battle_ai_after_idle", a1, g_SelectedUnitIndex, dword_532078, 0);
-  dword_515A10 = UnitBattle_SelectAiPlanMode(a1, a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", a1, dword_515A10, dword_532078, 0);
+  g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", a1, g_UnitBattleAiCurrentPlanMode, dword_532078, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
   UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", a1, dword_515A10, dword_5437C8, dword_5437CC);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", a1, g_UnitBattleAiCurrentPlanMode, dword_5437C8, dword_5437CC);
   UnitBattle_UpdateIdleAnimatedUnits();
   dword_5437AC = 0;
-  switch ( dword_515A10 )
+  switch ( g_UnitBattleAiCurrentPlanMode )
   {
     case 0:
     case 1:
@@ -55711,11 +55701,11 @@ LABEL_8:
         WCIsvListBase_AppendValue((int)&dword_5437C0, v26);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
-      dword_515A10 = UnitBattle_SelectAiPlanMode(a1, a1);
+      g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
       UnitBattle_UpdateIdleAnimatedUnits();
       v2 = 0;
       UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", a1, dword_515A10, dword_5437C8, dword_5437CC);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", a1, g_UnitBattleAiCurrentPlanMode, dword_5437C8, dword_5437CC);
       UnitBattle_UpdateIdleAnimatedUnits();
 LABEL_13:
       if ( !dword_5437C8 )
@@ -55791,7 +55781,7 @@ LABEL_19:
 _DWORD * WCIsvListBase_ctorRoot(_DWORD *result)
 {
   *result = 0;
-  result[1] = &off_50F0E4;
+  result[1] = &g_WCIsvListBaseRoot_Vtable;
   return result;
 }
 // 50F0E4: using guessed type int (*off_50F0E4)();
@@ -55804,7 +55794,7 @@ int  WCIsvListBase_dtorRoot(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_50F140);
+    _wcpp_4_dtor_array_store__(result, &g_WCIsvListBaseRoot_DtorArrayTag);
     j_j__nfree_();
     return v3;
   }
@@ -55835,14 +55825,14 @@ BOOL  WCIsvListBase_ValuesEqual(_DWORD *a1, _DWORD *a2)
 _DWORD * WCIsvListBase_ctorVariant124(_DWORD *result)
 {
   *result = 0;
-  result[1] = &off_50F0E4;
+  result[1] = &g_WCIsvListBaseRoot_Vtable;
   result[2] = 0;
   result[3] = 0;
   result[4] = 0;
   result[5] = 0;
-  result[1] = &off_50F0F4;
-  result[1] = &off_50F114;
-  result[1] = &off_50F124;
+  result[1] = &g_WCIsvListBaseDtor_Vtable;
+  result[1] = &g_WCIsvListBaseDestroyElements_Vtable;
+  result[1] = &g_WCIsvListBaseVariant124_Vtable;
   return result;
 }
 // 50F0E4: using guessed type int (*off_50F0E4)();
@@ -55859,7 +55849,7 @@ int  WCIsvListBase_dtorVariant124(WCIsvListBase *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50F160);
+    _wcpp_4_dtor_array_store__(a1, &g_WCIsvListBaseVariant124_DtorArrayTag);
     j_j__nfree_();
     return v4;
   }
@@ -55884,14 +55874,14 @@ int  WCIsvListBase_ctorVariant124AndCopy(_DWORD *a1, _DWORD *a2)
   int v2; // ecx
 
   *a1 = 0;
-  a1[1] = &off_50F0E4;
+  a1[1] = &g_WCIsvListBaseRoot_Vtable;
   a1[2] = 0;
   a1[3] = 0;
   a1[4] = 0;
   a1[5] = 0;
-  a1[1] = &off_50F0F4;
-  a1[1] = &off_50F114;
-  a1[1] = &off_50F124;
+  a1[1] = &g_WCIsvListBaseDtor_Vtable;
+  a1[1] = &g_WCIsvListBaseDestroyElements_Vtable;
+  a1[1] = &g_WCIsvListBaseVariant124_Vtable;
   WCIsvListBase_CopyAppendAll(a1, a2, (int)a1);
   return v2;
 }
@@ -55905,14 +55895,14 @@ int  WCIsvListBase_ctorVariant124AndCopy(_DWORD *a1, _DWORD *a2)
 _DWORD * WCIsvListBase_ctorVariant134(_DWORD *result)
 {
   *result = 0;
-  result[1] = &off_50F0E4;
+  result[1] = &g_WCIsvListBaseRoot_Vtable;
   result[2] = 0;
   result[3] = 0;
   result[4] = 0;
   result[5] = 0;
-  result[1] = &off_50F0F4;
-  result[1] = &off_50F124;
-  result[1] = &off_50F134;
+  result[1] = &g_WCIsvListBaseDtor_Vtable;
+  result[1] = &g_WCIsvListBaseVariant124_Vtable;
+  result[1] = &g_WCIsvListBaseVariant134_Vtable;
   return result;
 }
 // 50F0E4: using guessed type int (*off_50F0E4)();
@@ -55929,7 +55919,7 @@ int  WCIsvListBase_dtorVariant134(WCIsvListBase *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50F180);
+    _wcpp_4_dtor_array_store__(a1, &g_WCIsvListBaseVariant134_DtorArrayTag);
     j_j__nfree_();
     return v4;
   }
@@ -55983,7 +55973,7 @@ _DWORD *unknown_libname_3(WCIsvListBase *this)
   WCCompatListBase *list;
 
   list = WCCompat_ListFromBase(this);
-  list->vtable = (int)(uintptr_t)off_50F104;
+  list->vtable = (int)(uintptr_t)g_WCIsvListBaseFreeOnly_Vtable;
   WCIsvListBase_dtor(this);
   return (_DWORD *)this;
 }
@@ -56076,9 +56066,9 @@ _DWORD WCIsvListBase_dtor(WCIsvListBase *this)
   WCCompatListBase *list;
 
   list = WCCompat_ListFromBase(this);
-  list->vtable = (int)(uintptr_t)off_50F0F4;
+  list->vtable = (int)(uintptr_t)g_WCIsvListBaseDtor_Vtable;
   if ( list->tail_link )
-    nullsub_7((int)(uintptr_t)this);
+    Noop_WCIsvListErrorHook((int)(uintptr_t)this);
   return (unsigned int)(uintptr_t)this;
 }
 
@@ -56139,13 +56129,13 @@ int  WCIsvListBase_DestroyElementsAndDtor(WCIsvListBase *this, int a2)
   WCCompatListBase *list;
 
   list = WCCompat_ListFromHandle(a2);
-  list->vtable = (int)(uintptr_t)off_50F114;
+  list->vtable = (int)(uintptr_t)g_WCIsvListBaseDestroyElements_Vtable;
   if ( list->tail_link )
   {
-    nullsub_7(a2);
+    Noop_WCIsvListErrorHook(a2);
     WCIsvListBase_base_destroy(this);
   }
-  list->vtable = (int)(uintptr_t)off_50F104;
+  list->vtable = (int)(uintptr_t)g_WCIsvListBaseFreeOnly_Vtable;
   return WCIsvListBase_dtor(this);
 }
 
@@ -56163,7 +56153,7 @@ signed int  WCIsvListBase_AppendValue(int a1, int a2)
     list->tail_link = (int)(uintptr_t)link;
     return 1;
   }
-  nullsub_7(a1);
+  Noop_WCIsvListErrorHook(a1);
   return 0;
 }
 
@@ -56191,16 +56181,16 @@ int  WCIsvListBase_CopyCtor(_DWORD *a1, _DWORD *a2)
   int result; // eax
 
   *a1 = 0;
-  a1[1] = &off_50F0E4;
+  a1[1] = &g_WCIsvListBaseRoot_Vtable;
   a1[2] = 0;
   a1[3] = 0;
   a1[4] = 0;
   a1[5] = 0;
-  a1[1] = &off_50F0F4;
-  a1[1] = &off_50F124;
+  a1[1] = &g_WCIsvListBaseDtor_Vtable;
+  a1[1] = &g_WCIsvListBaseVariant124_Vtable;
   WCIsvListBase_CopyAppendAll(a1, a2, (int)a1);
   result = v2;
-  *(_DWORD *)(v2 + 4) = &off_50F134;
+  *(_DWORD *)(v2 + 4) = &g_WCIsvListBaseVariant134_Vtable;
   return result;
 }
 // 43D2BF: variable 'v2' is possibly undefined
@@ -56272,7 +56262,7 @@ int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int
   else
     v30 = v5 / v28;
   v24 = (float)v30;
-  v19 = v24 < dbl_4F18A7 && (v24 <= dbl_4F18AF || SLODWORD(v25) > 1065353216);
+  v19 = v24 < g_Battle_RoleDeployRatioHighThreshold && (v24 <= g_Battle_RoleDeployRatioLowThreshold || SLODWORD(v25) > 1065353216);
   Battle_BuildRoleDeploymentBuckets((int)a1, a2, v19);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_deploy_after_build",
@@ -56315,7 +56305,7 @@ int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
     v7 = 0;
     do
     {
-      v10 = byte_515A70[7 * a3 + (unsigned __int8)g_UnitTypeRole[88 * *v4]];
+      v10 = g_BattleRoleDeploymentBucketTable[7 * a3 + (unsigned __int8)g_UnitTypeRole[88 * *v4]];
       if ( (v10 - v10 % 10) / 10 == 1 )
         dword_543808[++v6] = (int)v4;
       if ( (v10 - v10 % 10) / 10 == 2 )
@@ -56466,8 +56456,8 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
           best_candidate = BattleDeploymentBucketReadPointer(48 * v3 + 4 * v4);
           v9 = (char *)best_candidate;
           v10 = 88 * *(__int16 *)v9;
-          v15 = (unsigned __int8)byte_515A70[v8] % 10;
-          v11 = (unsigned __int8)byte_515A70[(unsigned __int8)g_UnitTypeRole[v10] + v24];
+          v15 = (unsigned __int8)g_BattleRoleDeploymentBucketTable[v8] % 10;
+          v11 = (unsigned __int8)g_BattleRoleDeploymentBucketTable[(unsigned __int8)g_UnitTypeRole[v10] + v24];
           v24 = 10;
           result = v11 / 10LL;
           if ( v11 % 10LL <= v15 )
@@ -56570,17 +56560,17 @@ int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_6);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
-  UIWidgetTable_InitDrawStates(dword_515A90);
+  UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V1);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   dword_5438A4 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(dword_515A90, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V1, a3);
   }
   while ( !dword_5438A4 );
   DLXSpriteSet_ReleaseAndClear(&dword_5438A0);
@@ -56664,17 +56654,17 @@ int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_7);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
-  UIWidgetTable_InitDrawStates(dword_515B10);
+  UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V2);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   dword_5438B0 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(dword_515B10, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V2, a3);
   }
   while ( !dword_5438B0 );
   DLXSpriteSet_ReleaseAndClear(&dword_5438AC);
@@ -56758,17 +56748,17 @@ int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_8);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
-  UIWidgetTable_InitDrawStates(dword_515B90);
+  UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V3);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   dword_5438BC = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(dword_515B90, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V3, a3);
   }
   while ( !dword_5438BC );
   DLXSpriteSet_ReleaseAndClear(&dword_5438B8);
@@ -56852,17 +56842,17 @@ int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
   UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_9);
   Render_ReleaseSurface(10, a3);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
-  UIWidgetTable_InitDrawStates(dword_515C10);
+  UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V4);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
   Palette_FadeInFromBlack((int *)&unk_51D4C0, v20, 20);
   RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   dword_5438C8 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(dword_515C10, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V4, a3);
   }
   while ( !dword_5438C8 );
   DLXSpriteSet_ReleaseAndClear(&dword_5438C4);
@@ -56897,7 +56887,7 @@ BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1)
   int v5; // ecx
 
   if ( a1[4] )
-    v2 = (int *)&unk_515C98;
+    v2 = (int *)&g_LargeBuildingNeighborOffsets;
   else
     v2 = Map_NeighborDX;
   for ( i = 0; i < 12; ++i )
@@ -56948,7 +56938,7 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3)
 
   Debug_Log(a2[3], a2[2], (DWORD)a1, (int)aBuildingUnitsLeave);
   if ( a1[4] )
-    v25 = (int *)&unk_515C98;
+    v25 = (int *)&g_LargeBuildingNeighborOffsets;
   else
     v25 = Map_NeighborDX;
   v4 = v25;
@@ -58314,7 +58304,7 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
     v5 = v17;
     for ( i = 0; i != 4; ++i )
     {
-      UnitSlot_InitFromType((int)v5, dword_515D40[i], v3);
+      UnitSlot_InitFromType((int)v5, g_TempleGiftUnitPool_ScriptedRam[i], v3);
       v5 = (_WORD *)((char *)v5 + 31);
     }
     v4 = 4;
@@ -58332,13 +58322,13 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
         {
           v11 = Rng_RandRange(0, 6);
           v13 = v12;
-          v14 = dword_515D24[v11];
+          v14 = g_TempleGiftUnitPool_HumanTroops[v11];
         }
         else
         {
           v15 = Rng_RandRange(0, 4);
           v13 = v16;
-          v14 = dword_515D10[v15];
+          v14 = g_TempleGiftUnitPool_MinorMonsters[v15];
         }
         UnitSlot_InitFromType((int)v9, v14, v13);
         ++v8;
@@ -58726,17 +58716,17 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
   if ( *(_DWORD *)(v8 + 140063) )
   {
     if ( *(_DWORD *)(v8 + 140051) )
-      v9 = &unk_515D50;
+      v9 = &g_TempleGiftOutcomeTable_OwnCultActive;
     else
-      v9 = &unk_516050;
+      v9 = &g_TempleGiftOutcomeTable_OwnCultInactive;
   }
   else if ( *(_DWORD *)(v8 + 140051) )
   {
-    v9 = &unk_515EE8;
+    v9 = &g_TempleGiftOutcomeTable_ForeignCultActive;
   }
   else
   {
-    v9 = &unk_5161B8;
+    v9 = &g_TempleGiftOutcomeTable_ForeignCultInactive;
   }
   v10 = MapTile_GetReligiousSiteCategory(v31, v32);
   v11 = 1423 * *((unsigned __int8 *)v7 + 4);
@@ -58746,9 +58736,9 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
     && (v10 == 1 || v10 == 2) )
   {
     Debug_Log(v12, v11, (DWORD)v7, (int)aTemple_unitg_0);
-    v30[0] = (int)off_5162F0[0];
-    v30[1] = (int)off_5162F0[1];
-    v30[2] = (int)off_5162F0[2];
+    v30[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
+    v30[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
+    v30[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
     if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v7 + 4) + 140051) )
     {
       LOBYTE(v11) = 1;
@@ -58774,12 +58764,12 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
     else if ( v10 == 2 || v10 == 4 )
     {
       Debug_Log(v15, gameData, (DWORD)v7, (int)aTemple_unitg_2);
-      v29[0] = (int)off_5162FC[0];
-      v29[1] = (int)off_5162FC[1];
-      v29[2] = (int)off_5162FC[2];
-      v28[0] = (int)off_516308[0];
-      v28[1] = (int)off_516308[1];
-      v28[2] = (int)off_516308[2];
+      v29[0] = (int)g_TempleGiftRewardText[0];
+      v29[1] = (int)g_TempleGiftRewardText[1];
+      v29[2] = (int)g_TempleGiftRewardText[2];
+      v28[0] = (int)g_TempleGiftEmptyText[0];
+      v28[1] = (int)g_TempleGiftEmptyText[1];
+      v28[2] = (int)g_TempleGiftEmptyText[2];
       result = 1423 * *((unsigned __int8 *)v7 + 4) + gameData;
       if ( *(_DWORD *)(result + 140051) )
       {
@@ -58801,7 +58791,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
         if ( ACTIVE_MISSION_INDEX == 2 && v31 == 95 && v32 == 16
           || ACTIVE_MISSION_INDEX == 12 && v31 == 58 && v32 == 77 )
         {
-          v18 = (DWORD *)&unk_515D50;
+          v18 = (DWORD *)&g_TempleGiftOutcomeTable_OwnCultActive;
         }
         else
         {
@@ -59052,8 +59042,8 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
       Render_ReleaseSurface(7, v8);
       UI_DrawTextFmt(
         v7,
-        (unsigned __int16)word_516320[v6 % 5],
-        (unsigned __int16)word_516320[v6 % 5] + 32,
+        (unsigned __int16)g_DemoTextColumnXOffsets[v6 % 5],
+        (unsigned __int16)g_DemoTextColumnXOffsets[v6 % 5] + 32,
         78 * (v6 / 5) + 98,
         3,
         (int)aD_78);
@@ -59139,7 +59129,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
   LOBYTE(v12) = 10;
   memset_(40, 0);
   RenderHook_DemoText(v13, 10, a4);
-  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
+  RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   g_RenderDevice = v14;
   Render_Begin((int)g_RenderState, 0);
   while ( !dword_543C84 )
@@ -59151,7 +59141,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
     v20 = (dword_544CFC >> byte_54512C) - 200;
     do
     {
-      v21 = (unsigned __int16)word_516320[v19];
+      v21 = (unsigned __int16)g_DemoTextColumnXOffsets[v19];
       if ( (unsigned __int16)v21 <= v20 && v20 <= v21 + 32 )
         break;
       ++v19;
@@ -59178,7 +59168,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
         }
       }
     }
-    UIWidgetTable_PollHoverAndActions(dword_516330, a4);
+    UIWidgetTable_PollHoverAndActions(g_DemoTextHoverWidgetTable, a4);
   }
   DLXSpriteSet_ReleaseAndClear(&dword_543C54);
   v15 = 0;
@@ -59236,17 +59226,17 @@ void  BattleMapFileName(char *a1, int a2, int a3)
   primary = *(_WORD *)tile;
   secondary = *(_WORD *)(tile + 2);
   tertiary = *(_WORD *)(tile + 4);
-  if ( secondary != 0xFFFF && secondary < 7 && off_516410[secondary] )
+  if ( secondary != 0xFFFF && secondary < 7 && g_BattleMapFileSuffixByFactionTable[secondary] )
   {
-    suffix = off_516410[secondary] + 1;
+    suffix = g_BattleMapFileSuffixByFactionTable[secondary] + 1;
   }
-  else if ( tertiary != 0xFFFF && tertiary < 7 && off_516410[tertiary] )
+  else if ( tertiary != 0xFFFF && tertiary < 7 && g_BattleMapFileSuffixByFactionTable[tertiary] )
   {
-    suffix = off_516410[tertiary];
+    suffix = g_BattleMapFileSuffixByFactionTable[tertiary];
   }
   else
   {
-    suffix = primary < 7 && off_516410[primary] ? off_516410[primary] : off_516410[0];
+    suffix = primary < 7 && g_BattleMapFileSuffixByFactionTable[primary] ? g_BattleMapFileSuffixByFactionTable[primary] : g_BattleMapFileSuffixByFactionTable[0];
   }
   strcat(a1, suffix);
   a1[strlen(a1) + 1] = 0;
@@ -59351,7 +59341,7 @@ char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3)
 //----- (004415A0) --------------------------------------------------------
 int  BattleMap_GetMoveSoundSurfaceClass(int a1, int a2)
 {
-  return (unsigned __int8)byte_517318[*(__int16 *)(40 * a1 + dword_532048 + 2 * a2)];
+  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * a1 + dword_532048 + 2 * a2)];
 }
 // 532048: using guessed type int dword_532048;
 
@@ -59432,7 +59422,7 @@ int  Sound_PlayNamedSfxFile(char *a1, int a2)
   int v11; // esi
   char v12[100]; // [esp+0h] [ebp-64h] BYREF
 
-  if ( !dword_5174D8 )
+  if ( !g_Audio_MusicActiveFlag )
     return 0;
   qmemcpy(v12, aSfx_0, sizeof(v12));
   v4 = &v12[strlen(v12)];
@@ -59464,7 +59454,7 @@ int  Sound_PlayNamedSfxFile(char *a1, int a2)
   while ( v10 );
   v11 = CSS_PlaySound((int)v12, a2, 0, 0);
   Audio_SetSoundLoopIfMusicActive(v11, 0, -1);
-  dword_5174D0 = v11;
+  g_Audio_ActiveSoundHandle = v11;
   return v11;
 }
 // 5174D0: using guessed type int dword_5174D0;
@@ -59492,7 +59482,7 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
 
   v19 = a3;
   v18 = a2;
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
   {
     sprintf_(v16, "data\\mainmap%d.wav", result + 1);
     if ( IO_FOpen(v16, (unsigned __int8 *)aRb, v4, a4) )
@@ -59512,7 +59502,7 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
     dword_543C9C = CSS_PlaySound((int)v16, 64, 0, 2000);
     CSS_SetSoundLoop(dword_543C9C, 0, -1);
     result = dword_543C9C;
-    dword_5174D0 = dword_543C9C;
+    g_Audio_ActiveSoundHandle = dword_543C9C;
   }
   return result;
 }
@@ -59541,13 +59531,13 @@ int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2)
   int v5; // ebx
   char v6[108]; // [esp+0h] [ebp-6Ch] BYREF
 
-  if ( !dword_5174D8 )
+  if ( !g_Audio_MusicActiveFlag )
     return 0;
   CSS_PauseSound(dword_543C9C, 2000);
   Sound_BuildMusicTrackPath(v6, a1, a2);
   v5 = CSS_PlaySound((int)v6, 64, 0, 2000);
   CSS_SetSoundLoop(v5, 0, -1);
-  dword_5174D0 = v5;
+  g_Audio_ActiveSoundHandle = v5;
   return v5;
 }
 // 5174D0: using guessed type int dword_5174D0;
@@ -59560,12 +59550,12 @@ int  Audio_ResumeMusicAndStopLoopedSound(int result)
   int v1; // ebx
 
   v1 = result;
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
   {
     CSS_ResumeSound(dword_543C9C, 2000);
     CSS_SetSoundVolume(dword_543C9C, 64, 1000);
     result = CSS_StopSound(v1, 0);
-    dword_5174D0 = dword_543C9C;
+    g_Audio_ActiveSoundHandle = dword_543C9C;
   }
   return result;
 }
@@ -59583,10 +59573,10 @@ int Audio_StopMainMusic()
 //----- (004418F0) --------------------------------------------------------
 int  Audio_StopMusicWithFade(int result)
 {
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
   {
     result = CSS_StopSound(result, 1000);
-    dword_5174D0 = -1;
+    g_Audio_ActiveSoundHandle = -1;
   }
   return result;
 }
@@ -59596,7 +59586,7 @@ int  Audio_StopMusicWithFade(int result)
 //----- (00441900) --------------------------------------------------------
 void Audio_DuckMusicVolume()
 {
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
     CSS_SetSoundVolume(dword_543C9C, 16, 1000);
 }
 // 5174D8: using guessed type int dword_5174D8;
@@ -59605,7 +59595,7 @@ void Audio_DuckMusicVolume()
 //----- (00441930) --------------------------------------------------------
 void Audio_RestoreMusicVolume()
 {
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
     CSS_SetSoundVolume(dword_543C9C, 64, 1000);
 }
 // 5174D8: using guessed type int dword_5174D8;
@@ -59616,7 +59606,7 @@ int  Audio_SetMusicVolume(int a1, signed int a2)
 {
   int result; // eax
 
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
     return CSS_SetSoundVolume(dword_543C9C, a1, a2);
   return result;
 }
@@ -59626,7 +59616,7 @@ int  Audio_SetMusicVolume(int a1, signed int a2)
 //----- (00441980) --------------------------------------------------------
 void  Audio_SetSoundLoopIfMusicActive(int a1, int a2, int a3)
 {
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
     CSS_SetSoundLoop(a1, a2, a3);
 }
 // 5174D8: using guessed type int dword_5174D8;
@@ -59636,9 +59626,9 @@ int  Audio_StartMainMusicIfStopped(int a1, DWORD a2)
 {
   int result; // eax
 
-  if ( !dword_5174D8 )
+  if ( !g_Audio_MusicActiveFlag )
   {
-    dword_5174D8 = 1;
+    g_Audio_MusicActiveFlag = 1;
     return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), a1, 1, a2);
   }
   return result;
@@ -59652,10 +59642,10 @@ int Audio_StopMainMusicIfPlaying()
   int result; // eax
   int v1; // ecx
 
-  if ( dword_5174D8 )
+  if ( g_Audio_MusicActiveFlag )
   {
     result = Audio_StopMainMusic();
-    dword_5174D8 = v1;
+    g_Audio_MusicActiveFlag = v1;
   }
   return result;
 }
@@ -59665,14 +59655,14 @@ int Audio_StopMainMusicIfPlaying()
 //----- (004419F0) --------------------------------------------------------
 void Audio_SetMusicActiveFlag()
 {
-  dword_5174D8 = 1;
+  g_Audio_MusicActiveFlag = 1;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441A00) --------------------------------------------------------
 void Audio_ClearMusicActiveFlag()
 {
-  dword_5174D8 = 0;
+  g_Audio_MusicActiveFlag = 0;
 }
 // 5174D8: using guessed type int dword_5174D8;
 
@@ -60120,7 +60110,7 @@ void  Audio_PlayWorldMapUnitMoveSound(int a1, int a2, signed int a3, unsigned in
     if ( (g_UnitTypeFlags[22 * a4] & 1) != 0 )
     {
       v17 = v32;
-      v32[1] = HIBYTE(word_5178F4);
+      v32[1] = HIBYTE(g_WorldMapUnitMoveSoundSuffixCode);
       v32[0] = g_CurrentUnitMoveSoundVariant + 49;
       goto LABEL_25;
     }
@@ -60375,7 +60365,7 @@ void  Audio_PlayBattleMapUnitMoveSound(int a1, int a2, signed int a3, unsigned i
       if ( (g_UnitTypeFlags[22 * a4] & 1) != 0 )
       {
         v17 = v32;
-        v32[1] = HIBYTE(word_5179CC);
+        v32[1] = HIBYTE(g_BattleMapUnitMoveSoundSuffixCode);
         v32[0] = g_CurrentUnitMoveSoundVariant + 49;
       }
       else
@@ -60578,7 +60568,7 @@ int  FileSystem_InitRootMount(int a1, char a2, DWORD a3)
 
   filesystem_root = FileSystem_DiskMountCreate(a1, a2, a3);
   FileSystem_ConstructMountTable((int)&dword_543CC8, (int)filesystem_root, 0, a3);
-  return CRT_RegisterFinalizableObject((int)&unk_517AA0, 0);
+  return CRT_RegisterFinalizableObject((int)&g_FileSystemRootMountObject, 0);
 }
 
 //----- (004427C0) --------------------------------------------------------
@@ -60676,10 +60666,10 @@ int  FileSystem_MountArchiveAtIndex(int a1, const CHAR *a2, DWORD a3)
     v3 = Compat_CanOpenReadPath(v21);
     if ( !v3 )
     {
-      v22[0] = (int)off_517B14[0];
-      v22[1] = (int)off_517B14[1];
-      v22[2] = (int)off_517B14[2];
-      v22[3] = (int)off_517B14[3];
+      v22[0] = (int)g_ArchiveMountFailedErrorText[0];
+      v22[1] = (int)g_ArchiveMountFailedErrorText[1];
+      v22[2] = (int)g_ArchiveMountFailedErrorText[2];
+      v22[3] = (int)g_ArchiveMountFailedErrorText[3];
       App_RequestQuit(v22[(unsigned __int8)g_LanguageIndex]);
     }
   }
@@ -60756,9 +60746,9 @@ LABEL_7:
   v10[0] = FileSystem_ResolveReadPath(aGfxBackgr1_s32, 0);
   if ( !v10[0] )
   {
-    v9[0] = (int)off_517B24[0];
-    v9[1] = (int)off_517B24[1];
-    v9[2] = (int)off_517B24[2];
+    v9[0] = (int)g_StartupResourceMissingErrorText[0];
+    v9[1] = (int)g_StartupResourceMissingErrorText[1];
+    v9[2] = (int)g_StartupResourceMissingErrorText[2];
     App_RequestQuit(v9[(unsigned __int8)g_LanguageIndex]);
   }
   return Compat_FileSystemQueryRelease(v7, v10);
@@ -61474,8 +61464,8 @@ signed int  Treasure_TryDigHere(
   if ( ACTIVE_MISSION_INDEX == 7
     && (*v8 == 55 && v8[1] == 45 || *v8 == 50 && v8[1] == 27 || *v8 == 35 && v8[1] == 63 || *v8 == 14 && v8[1] == 68) )
   {
-    qmemcpy(v20, &unk_517DB8, 0x18u);
-    a5 = (char *)&unk_517DB8 + 24;
+    qmemcpy(v20, &g_Mission7ScriptedTreasureEventData, 0x18u);
+    a5 = (char *)&g_Mission7ScriptedTreasureEventData + 24;
     v12 = v20;
   }
   else if ( ACTIVE_MISSION_INDEX == 17
@@ -61483,16 +61473,16 @@ signed int  Treasure_TryDigHere(
                                       || *v8 == 77 && v8[1] == 34
                                       || *v8 == 24 && v8[1] == 49) )
   {
-    qmemcpy(v19, &unk_517DD0, sizeof(v19));
-    a5 = (char *)&unk_517DD0 + 24;
+    qmemcpy(v19, &g_Mission17ScriptedTreasureEventData, sizeof(v19));
+    a5 = (char *)&g_Mission17ScriptedTreasureEventData + 24;
     v12 = v19;
   }
   else
   {
     if ( *(_DWORD *)(1423 * *((unsigned __int8 *)v8 + 4) + gameData + 140051) )
-      v17 = &unk_517BF0;
+      v17 = &g_TreasureDigOutcomeTable_TempleActive;
     else
-      v17 = &unk_517CE0;
+      v17 = &g_TreasureDigOutcomeTable_TempleInactive;
     v18 = Temple_Random((int)v17, v11, v6, (DWORD)v8, a4);
     Debug_Log(v18, v6, (DWORD)v8, (int)aTreasure_dig_0, v18);
   }
@@ -61555,11 +61545,11 @@ signed int  UnitStack_TryHide(int a1, unsigned __int16 a2, DWORD a3, double a4)
   {
     if ( *(_DWORD *)(1423 * *((unsigned __int8 *)v4 + 4) + gameData + 140051) )
     {
-      v16[0] = (int)off_517DE8[0];
-      v16[1] = (int)off_517DE8[1];
-      v16[2] = (int)off_517DE8[2];
+      v16[0] = (int)g_UnitHideFailedLowRankText[0];
+      v16[1] = (int)g_UnitHideFailedLowRankText[1];
+      v16[2] = (int)g_UnitHideFailedLowRankText[2];
       Audio_PlaySoundEffectByName(aWrong_0, 64);
-      UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 1u, v6, a3, (int)v17, (int)&off_517DE8[3]);
+      UI_ShowInfoWindow(v16[(unsigned __int8)g_LanguageIndex], 1u, v6, a3, (int)v17, (int)&g_UnitHideFailedLowRankText[3]);
       return 0;
     }
     return 0;
@@ -61614,11 +61604,11 @@ LABEL_16:
   {
     if ( !*(_DWORD *)(1423 * *((unsigned __int8 *)v4 + 4) + gameData + 140051) )
       return 0;
-    v17[0] = (int)off_517DF4[0];
-    v17[1] = (int)off_517DF4[1];
-    v17[2] = (int)off_517DF4[2];
+    v17[0] = (int)g_UnitHideFailedNoSpotText[0];
+    v17[1] = (int)g_UnitHideFailedNoSpotText[1];
+    v17[2] = (int)g_UnitHideFailedNoSpotText[2];
     Audio_PlaySoundEffectByName(aWrong_1, 64);
-    UI_ShowInfoWindow(v17[(unsigned __int8)g_LanguageIndex], 0, v10, 0, (int)&v18, (int)&off_517DF4[3]);
+    UI_ShowInfoWindow(v17[(unsigned __int8)g_LanguageIndex], 0, v10, 0, (int)&v18, (int)&g_UnitHideFailedNoSpotText[3]);
     return 0;
   }
   else
@@ -62105,7 +62095,7 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
   dword_543D18 = -1;
   Render_Pump();
   RenderState_SelectCursorDescriptor((int)g_RenderState, v8);
-  dword_545150 = (int)&unk_5196A0;
+  dword_545150 = (int)&g_CursorDesc_Default;
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   SpriteForChar = DLX_GetSpriteForChar((int)v40, dword_543D1C != 0);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -62132,7 +62122,7 @@ int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4)
     0);
   for ( i = 0; i < 10; SaveSlotDialog_RepaintRow(i) )
     ;
-  qmemcpy(v38, &unk_517E00, 0x9Fu);
+  qmemcpy(v38, &g_SaveSlotDialogWidgetTemplateBlob, 0x9Fu);
   v38[3] = &v40;
   *(_DWORD *)((char *)&v38[16] + 1) = &v40;
   if ( dword_543D1C )
@@ -62506,9 +62496,9 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
   result = 0;
   v9[6] = a1;
   v4 = 0;
-  v9[0] = (int)off_517EA0[0];
-  v9[1] = (int)off_517EA0[1];
-  v9[2] = (int)off_517EA0[2];
+  v9[0] = (int)g_PlagueOutbreakNoticeFmtText[0];
+  v9[1] = (int)g_PlagueOutbreakNoticeFmtText[1];
+  v9[2] = (int)g_PlagueOutbreakNoticeFmtText[2];
   do
   {
     result = v4 + gameData;
@@ -62523,7 +62513,7 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
         a2 = (const char *)v9[(unsigned __int8)g_LanguageIndex];
         sprintf_(v8, a2, gameData + v4 + 509674 + 5);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_before_info_window", v4 / 467, v4, g_CurrentPlayerIndex, 0);
-        result = UI_ShowInfoWindow((const char *)v8, 0, 0, a3, (int)&v9[3], (int)&off_517EA0[3]);
+        result = UI_ShowInfoWindow((const char *)v8, 0, 0, a3, (int)&v9[3], (int)&g_PlagueOutbreakNoticeFmtText[3]);
         Diagnostics_TraceWorldMapActionEvent("plague_notice_after_info_window", v4 / 467, v4, g_CurrentPlayerIndex, result);
       }
     }
@@ -62547,13 +62537,13 @@ int  WorldMap_NotifyFactionColorChange(int a1, DWORD a2)
   int result; // eax
   int v4[6]; // [esp+0h] [ebp-18h] BYREF
 
-  v4[0] = (int)off_517EAC[0];
-  v4[1] = (int)off_517EAC[1];
-  v4[2] = (int)off_517EAC[2];
+  v4[0] = (int)g_FactionColorChangeNoticeText[0];
+  v4[1] = (int)g_FactionColorChangeNoticeText[1];
+  v4[2] = (int)g_FactionColorChangeNoticeText[2];
   if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET) )
   {
     Diagnostics_TraceWorldMapActionEvent("color_notice_before_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
-    UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&off_517EAC[3]);
+    UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&g_FactionColorChangeNoticeText[3]);
     Diagnostics_TraceWorldMapActionEvent("color_notice_after_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
   }
   result = PLAYER_DATA(g_CurrentPlayerIndex);
@@ -62645,12 +62635,12 @@ char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4)
   v44 = g_RenderHook;
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(v4, a3, a4, (int)aSetrhS08x_11);
-  v41[0] = (int)off_517EB8[0];
-  v41[1] = (int)off_517EB8[1];
-  v41[2] = (int)off_517EB8[2];
-  v40[0] = (int)off_517EC4[0];
-  v40[1] = (int)off_517EC4[1];
-  v40[2] = (int)off_517EC4[2];
+  v41[0] = (int)g_BuildingCompleteNoticeText[0];
+  v41[1] = (int)g_BuildingCompleteNoticeText[1];
+  v41[2] = (int)g_BuildingCompleteNoticeText[2];
+  v40[0] = (int)g_BuildingCompleteNoticeTextAlt[0];
+  v40[1] = (int)g_BuildingCompleteNoticeTextAlt[1];
+  v40[2] = (int)g_BuildingCompleteNoticeTextAlt[2];
   v6 = byte_543D48;
   v7 = (char *)(v46 + 5);
   do
@@ -64201,7 +64191,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     g_PlayGameMenuSpriteSetHandle = (int)v10;
     Render_LoadPCXImage(dword_5202E0, aMenuMain_gfx, 0, (uintptr_t)byte_543D80);
     Palette_LoadOrBuildBlendLookupTable(aMenuMain, (int)byte_543D80, v12, (DWORD)a3);
-    if ( v128 && dword_5188C0 )
+    if ( v128 && g_Options_MusicEnabledFlag )
       g_MainMenuMusicHandle = Sound_PlayNamedSfxFile(aMusicMenu, 64);
     DD_Pump((int)g_RenderState, 0);
     if ( v128 )
@@ -64234,8 +64224,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
     }
     g_PlayGameMenuExitRequested = 0;
     RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
-    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
-    dword_545150 = (int)&unk_5196A0;
+    RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+    dword_545150 = (int)&g_CursorDesc_Default;
     Render_Present((int)g_RenderState);
     v128 = 0;
     if ( !g_PlayGameMenuExitRequested )
@@ -64269,9 +64259,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         UIWidgetTable_InitDrawStates(v124);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
-        a3 = (char *)&unk_5196A0;
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
-        dword_545150 = (int)&unk_5196A0;
+        a3 = (char *)&g_CursorDesc_Default;
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+        dword_545150 = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         campaign_menu_cancelled_by_escape = 0;
         for ( i = g_PlayGameMenuExitRequested == 0; i; i = g_PlayGameMenuExitRequested == 0 )
@@ -64296,12 +64286,12 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             LOBYTE(a2) = 1;
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
             v128 = 1;
-            Scenario_LoadMissionByIndexAndPlay(0, 0, (DWORD)&unk_5196A0, a4);
+            Scenario_LoadMissionByIndexAndPlay(0, 0, (DWORD)&g_CursorDesc_Default, a4);
           }
           else
           {
             CSS_StopSound(g_MainMenuMusicHandle, 1000);
-            Scenario_LoadMissionByIndexAndPlay((char *)0xA, 0, (DWORD)&unk_5196A0, a4);
+            Scenario_LoadMissionByIndexAndPlay((char *)0xA, 0, (DWORD)&g_CursorDesc_Default, a4);
             v128 = 1;
           }
         }
@@ -64319,7 +64309,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         byte_544189 = 0;
         byte_54418B = 1;
         byte_54418A = 2;
-        qmemcpy(v125, &off_5184DC, sizeof(v125));
+        qmemcpy(v125, &g_MultiplayerDefaultRulerNamesTable, sizeof(v125));
         Player_AssignRandomUniqueRulerNames(5, v125);
         dword_5441D8 = 0;
         dword_544198 = -1;
@@ -64338,13 +64328,13 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         for ( j = 0; j < 5; ++j )
           MultiplayerSetup_RepaintPlayerSlotRow(j, j + 1, 0);
         MultiplayerSetup_RedrawOpponentNameList();
-        qmemcpy(v122, &unk_5184F0, 265);
+        qmemcpy(v122, &g_MultiplayerSetupWidgetTemplateBlob, 265);
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v122);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
-        dword_545150 = (int)&unk_5196A0;
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+        dword_545150 = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
@@ -64565,7 +64555,7 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         g_RenderDevice = (_UNKNOWN *)dword_5202E0;
         (*(void (__thiscall **)(int))(*(_DWORD *)(dword_5202E0 + 184) + 36))(92);
         v93 = 0;
-        qmemcpy(v113, &unk_518690, 371);
+        qmemcpy(v113, &g_OptionsMenuWidgetTemplateBlob, 371);
         do
         {
           v97 = (unsigned __int8)g_LanguageIndex + *(_DWORD *)((char *)v115 + v93);
@@ -64575,57 +64565,57 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
           *(_DWORD *)&v112[v93 + 7079] = (unsigned __int8)g_LanguageIndex + v98;
         }
         while ( v93 != 212 );
-        if ( dword_5188BC )
+        if ( g_OptionsConfigRecordFlag0C )
           v114 = 2;
-        if ( dword_5188B0 )
+        if ( g_OptionsConfigRecordBase )
           v116 = 2;
-        if ( dword_5188C0 )
+        if ( g_Options_MusicEnabledFlag )
           v117 = 2;
-        if ( dword_5188C4 )
+        if ( g_Options_UnitSoundsEnabledFlag )
           v118 = 2;
-        dword_51860C = ((byte_5188CA << 8)
+        g_Options_BrightnessSliderValue = ((g_OptionsMainMenuMusicVolumeRaw << 8)
                       + 0x4000
-                      - (__CFSHL__(((byte_5188CA << 8) + 0x4000) >> 31, 7)
-                       + (((byte_5188CA << 8) + 0x4000) >> 31 << 7))) >> 7;
-        dword_518630 = (((unsigned __int8)byte_5188C8 << 8)
-                      - (__CFSHL__((unsigned __int8)byte_5188C8 << 8 >> 31, 4)
-                       + 16 * ((unsigned __int8)byte_5188C8 << 8 >> 31))) >> 4;
-        dword_518654 = (((unsigned __int8)byte_5188C9 << 8)
-                      - (__CFSHL__((unsigned __int8)byte_5188C9 << 8 >> 31, 4)
-                       + 16 * ((unsigned __int8)byte_5188C9 << 8 >> 31))) >> 4;
+                      - (__CFSHL__(((g_OptionsMainMenuMusicVolumeRaw << 8) + 0x4000) >> 31, 7)
+                       + (((g_OptionsMainMenuMusicVolumeRaw << 8) + 0x4000) >> 31 << 7))) >> 7;
+        g_Options_ScrollSpeedSliderValue = (((unsigned __int8)g_OptionsMainMenuScrollSpeedRaw << 8)
+                      - (__CFSHL__((unsigned __int8)g_OptionsMainMenuScrollSpeedRaw << 8 >> 31, 4)
+                       + 16 * ((unsigned __int8)g_OptionsMainMenuScrollSpeedRaw << 8 >> 31))) >> 4;
+        g_Options_MouseSpeedSliderValue = (((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8)
+                      - (__CFSHL__((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31, 4)
+                       + 16 * ((unsigned __int8)g_OptionsMainMenuSoundVolumeRaw << 8 >> 31))) >> 4;
         g_RenderDevice = &unk_51D4C0;
         UIWidgetTable_InitDrawStates(v113);
-        Options_DrawAllSliderThumbs(word_518600, a2, v97);
+        Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, v97);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
-        dword_545150 = (int)&unk_5196A0;
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+        dword_545150 = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         if ( !g_PlayGameMenuExitRequested )
         {
           do
           {
             DD_Pump((int)g_RenderState, 0);
-            Options_AnimateAllSliderThumbs(word_518600);
+            Options_AnimateAllSliderThumbs(g_OptionsMenuSliderThumbPositions);
             UIWidgetTable_PollHoverAndActions(v113, 0);
           }
           while ( !g_PlayGameMenuExitRequested );
         }
-        a2 = dword_5188C0;
-        dword_5188BC = v114 == 2;
-        dword_5188B0 = v116 == 2;
-        dword_5188C0 = v117 == 2;
-        dword_5188C4 = v118 == 2;
-        byte_5188CA = ((unsigned __int16)(((_WORD)dword_51860C << 7)
-                                        - (__CFSHL__(dword_51860C << 7 >> 31, 8)
-                                         + ((__int16)((unsigned int)dword_51860C >> 9) >> 15 << 8))) >> 8)
+        a2 = g_Options_MusicEnabledFlag;
+        g_OptionsConfigRecordFlag0C = v114 == 2;
+        g_OptionsConfigRecordBase = v116 == 2;
+        g_Options_MusicEnabledFlag = v117 == 2;
+        g_Options_UnitSoundsEnabledFlag = v118 == 2;
+        g_OptionsMainMenuMusicVolumeRaw = ((unsigned __int16)(((_WORD)g_Options_BrightnessSliderValue << 7)
+                                        - (__CFSHL__(g_Options_BrightnessSliderValue << 7 >> 31, 8)
+                                         + ((__int16)((unsigned int)g_Options_BrightnessSliderValue >> 9) >> 15 << 8))) >> 8)
                     - 64;
-        byte_5188C8 = (unsigned __int16)(16 * dword_518630
-                                       - (__CFSHL__((16 * dword_518630) >> 31, 8)
-                                        + ((__int16)((unsigned int)dword_518630 >> 12) >> 15 << 8))) >> 8;
-        byte_5188C9 = (unsigned __int16)(16 * dword_518654
-                                       - (__CFSHL__((16 * dword_518654) >> 31, 8)
-                                        + ((__int16)((unsigned int)dword_518654 >> 12) >> 15 << 8))) >> 8;
+        g_OptionsMainMenuScrollSpeedRaw = (unsigned __int16)(16 * g_Options_ScrollSpeedSliderValue
+                                       - (__CFSHL__((16 * g_Options_ScrollSpeedSliderValue) >> 31, 8)
+                                        + ((__int16)((unsigned int)g_Options_ScrollSpeedSliderValue >> 12) >> 15 << 8))) >> 8;
+        g_OptionsMainMenuSoundVolumeRaw = (unsigned __int16)(16 * g_Options_MouseSpeedSliderValue
+                                       - (__CFSHL__((16 * g_Options_MouseSpeedSliderValue) >> 31, 8)
+                                        + ((__int16)((unsigned int)g_Options_MouseSpeedSliderValue >> 12) >> 15 << 8))) >> 8;
         if ( v117 == 2 )
         {
           Audio_SetMusicActiveFlag();
@@ -64638,9 +64628,9 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
             Audio_StopMusicWithFade(g_MainMenuMusicHandle);
           Audio_ClearMusicActiveFlag();
         }
-        Options_ApplyRecordSettings((int)&dword_5188B0, 0, 0);
+        Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, 0, 0);
         Options_SaveConfigToFile(0, 0);
-        Options_DestroySliderThumbList(word_518600);
+        Options_DestroySliderThumbList(g_OptionsMenuSliderThumbPositions);
         Render_Pump();
         DLXSpriteSet_ReleaseAndClear(&g_PlayGameMenuSpriteSetHandle);
         break;
@@ -64662,8 +64652,8 @@ int  PlayGame_Dispatch(int a1, signed int a2, char *a3, double a4)
         UIWidgetTable_InitDrawStates(v123);
         g_PlayGameMenuExitRequested = 0;
         RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)byte_543D80, 0, 0);
-        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&unk_5196A0);
-        dword_545150 = (int)&unk_5196A0;
+        RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
+        dword_545150 = (int)&g_CursorDesc_Default;
         Render_Present((int)g_RenderState);
         while ( !g_PlayGameMenuExitRequested )
         {
@@ -65008,14 +64998,14 @@ int  PlayGameMenu_HandleScrollButtonRelease(int a1)
 //----- (00449C30) --------------------------------------------------------
 void  Options_ApplyMainMenuSliders(int a1, DWORD a2)
 {
-  byte_5188CA = ((unsigned __int16)(((_WORD)dword_51860C << 7)
-                                  - (__CFSHL__(dword_51860C << 7 >> 31, 8)
-                                   + ((unsigned __int16)(dword_51860C << 7 >> 31) << 8))) >> 8)
+  g_OptionsMainMenuMusicVolumeRaw = ((unsigned __int16)(((_WORD)g_Options_BrightnessSliderValue << 7)
+                                  - (__CFSHL__(g_Options_BrightnessSliderValue << 7 >> 31, 8)
+                                   + ((unsigned __int16)(g_Options_BrightnessSliderValue << 7 >> 31) << 8))) >> 8)
               - 64;
-  byte_5188C9 = (unsigned __int16)(16 * dword_518654
-                                 - (__CFSHL__((16 * dword_518654) >> 31, 8)
-                                  + ((unsigned __int16)((16 * dword_518654) >> 31) << 8))) >> 8;
-  Options_ApplyRecordSettings((int)&dword_5188B0, a1, a2);
+  g_OptionsMainMenuSoundVolumeRaw = (unsigned __int16)(16 * g_Options_MouseSpeedSliderValue
+                                 - (__CFSHL__((16 * g_Options_MouseSpeedSliderValue) >> 31, 8)
+                                  + ((unsigned __int16)((16 * g_Options_MouseSpeedSliderValue) >> 31) << 8))) >> 8;
+  Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, a1, a2);
 }
 // 51860C: using guessed type int dword_51860C;
 // 518654: using guessed type int dword_518654;
@@ -65062,10 +65052,10 @@ unsigned __int16 * Options_InitMainMenuSlidersAndWidgets(int a1, int a2, DWORD a
     *(_DWORD *)(v4 - 257) = 1;
     UIWidget_RefreshActionButtonState(v4 - 265, v4);
   }
-  dword_51860C = 128;
-  dword_518630 = 128;
-  dword_518654 = 128;
-  return Options_DrawAllSliderThumbs(word_518600, a2, a3);
+  g_Options_BrightnessSliderValue = 128;
+  g_Options_ScrollSpeedSliderValue = 128;
+  g_Options_MouseSpeedSliderValue = 128;
+  return Options_DrawAllSliderThumbs(g_OptionsMenuSliderThumbPositions, a2, a3);
 }
 // 449CA9: variable 'v4' is possibly undefined
 // 518600: using guessed type unsigned __int16 word_518600[6];
@@ -65384,11 +65374,11 @@ void  lodaOptionsCfg(DWORD a1)
     v5 = v3;
     (*(void (**)(void))(*(_DWORD *)v2 + 20))();
     Compat_FileSystemQueryRelease(v4, &v6);
-    Options_ApplyRecordSettings((int)&dword_5188B0, v5, a1);
+    Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, v5, a1);
   }
   else
   {
-    Options_ApplyRecordSettings((int)&dword_5188B0, v3, a1);
+    Options_ApplyRecordSettings((int)&g_OptionsConfigRecordBase, v3, a1);
   }
 }
 // 44A93C: variable 'v3' is possibly undefined
@@ -65402,7 +65392,7 @@ int  Options_SaveConfigToFile(int a1, DWORD a2)
   int v3; // ecx
 
   v2 = IO_FOpen(aOptions_cfg_0, (unsigned __int8 *)aWb_1, a1, a2);
-  fwrite_(&dword_5188B0, 27, v2, 1);
+  fwrite_(&g_OptionsConfigRecordBase, 27, v2, 1);
   return fclose_(v3);
 }
 // 44A9AD: variable 'v3' is possibly undefined
@@ -65420,7 +65410,7 @@ void  Options_ApplyRecordSettings(int a1, int a2, DWORD a3)
   _wcpp_4_copy_array__(v6[0]);
   Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, v6);
   RenderState_SetMouseSpeed((int)g_RenderState, 8 * *(unsigned __int8 *)(a1 + 25) + 20, a3);
-  if ( (int *)a1 == &dword_5188B0 )
+  if ( (int *)a1 == &g_OptionsConfigRecordBase )
   {
     if ( *(_DWORD *)(a1 + 16) )
       Audio_SetMusicActiveFlag();
@@ -65686,10 +65676,10 @@ int  Map_LoadFromFile(uintptr_t a1)
   }
   while ( v39 != 20000 );
   v43 = gameData + 147147;
-  qmemcpy((void *)(gameData + 147147), &dword_5188B0, 0x18u);
+  qmemcpy((void *)(gameData + 147147), &g_OptionsConfigRecordBase, 0x18u);
   v43 += 24;
-  *(_WORD *)v43 = *((_WORD *)&dword_5188B0 + 12);
-  *(_BYTE *)(v43 + 2) = *((_BYTE *)&dword_5188B0 + 26);
+  *(_WORD *)v43 = *((_WORD *)&g_OptionsConfigRecordBase + 12);
+  *(_BYTE *)(v43 + 2) = *((_BYTE *)&g_OptionsConfigRecordBase + 26);
   ACTIVE_MISSION_INDEX = -1;
   result = gameData;
   *(_BYTE *)(gameData + 140021) = 0;
@@ -66673,7 +66663,7 @@ char  Player_AssignRandomUniqueRulerNames(int a1, int *a2)
   v13 = a1;
   result = (char)a2;
   v3 = 0;
-  qmemcpy(v12, &unk_518CF4, sizeof(v12));
+  qmemcpy(v12, &g_RulerNameHistorySeed, sizeof(v12));
   if ( v13 > 0 )
   {
     v14 = a2;
@@ -66693,7 +66683,7 @@ char  Player_AssignRandomUniqueRulerNames(int a1, int *a2)
       }
       if ( v5 == 5 )
       {
-        v7 = off_518C58[v4];
+        v7 = g_RulerNameCandidatesTable[v4];
         v8 = (char *)*v14;
         do
         {
@@ -67427,7 +67417,7 @@ int  Building_CreateSpecialPersonageGarrisonUnit(DWORD a1, unit_type a2, int a3,
   }
   if ( slot_index == 12 )
   {
-    qmemcpy(leave_mask, &unk_518D5C, sizeof(leave_mask));
+    qmemcpy(leave_mask, &g_SpecialPersonageLeaveMaskTemplate, sizeof(leave_mask));
     Building_UnitsLeave((unsigned __int8 *)a1, leave_mask, a5);
     slot_index = 0;
   }
@@ -67581,7 +67571,7 @@ int  Building_CountPrisoners(int a1)
 //----- (0044F510) --------------------------------------------------------
 BOOL  BuildingPrisonerActionWidget_HasPrisoner(int a1)
 {
-  return *(char *)(dword_5443FC + 6 * ((a1 - (int)&dword_518DC8) / 53 / 3) + 445) != -1;
+  return *(char *)(dword_5443FC + 6 * ((a1 - (int)&g_PrisonerActionButtonWidgets) / 53 / 3) + 445) != -1;
 }
 // 5443FC: using guessed type int dword_5443FC;
 
@@ -67602,11 +67592,11 @@ char * BuildingPrisonerActionButton_SelectBehead(int a1)
     *(_BYTE *)(a1 + 8) = v4 ^ 2;
     if ( ((v4 ^ 2) & 2) != 0 )
     {
-      v5 = dword_518DC8;
+      v5 = g_PrisonerActionButtonWidgets;
       v6 = 0;
       do
       {
-        *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * v6) = 1;
         UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
@@ -67639,11 +67629,11 @@ char * BuildingPrisonerActionButton_SelectTorture(int a1)
     *(_BYTE *)(a1 + 8) = v4 ^ 2;
     if ( ((v4 ^ 2) & 2) != 0 )
     {
-      v5 = dword_518DC8;
+      v5 = g_PrisonerActionButtonWidgets;
       v6 = 0;
       do
       {
-        *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * v6) = 1;
         UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
@@ -67676,11 +67666,11 @@ char * BuildingPrisonerActionButton_SelectBribery(int a1)
     *(_BYTE *)(a1 + 8) = v4 ^ 2;
     if ( ((v4 ^ 2) & 2) != 0 )
     {
-      v5 = dword_518DC8;
+      v5 = g_PrisonerActionButtonWidgets;
       v6 = 0;
       do
       {
-        *(int *)((char *)&dword_518DD0 + 53 * v6) = 1;
+        *(int *)((char *)&g_PrisonerActionButtonState0 + 53 * v6) = 1;
         UIWidget_RefreshActionButtonState((int)v5, v6 + 1);
         v5 = (_DWORD *)((char *)v5 + 53);
       }
@@ -67751,8 +67741,8 @@ int  Building_DrawPrisonerRows(DWORD a1)
         0);
       result = UI_DrawTextFmt(
                  v1,
-                 (unsigned __int16)word_518DBC[v2] + 1,
-                 (unsigned __int16)word_518DBC[v2] + 68,
+                 (unsigned __int16)g_PrisonerRowTextXTable[v2] + 1,
+                 (unsigned __int16)g_PrisonerRowTextXTable[v2] + 68,
                  461,
                  3,
                  (int)aD_79);
@@ -67879,7 +67869,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   dword_5443FC = a1;
   for ( i = 0; i != 477; *(char **)((char *)g_PrisonerDeathByExhaustionTexts + i + 3) = (char *)1 )
     i += 53;
-  v4 = dword_518DC8;
+  v4 = g_PrisonerActionButtonWidgets;
   for ( j = 0; j < 3; ++j )
   {
     v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
@@ -67903,7 +67893,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   v8 = Mem_Alloc(1024, v7, (char)a2, a3);
   if ( v8 )
   {
-    a2 = &unk_50ECB0;
+    a2 = &g_Runtime_PaletteArrayCtorDescriptor;
     v8 = _wcpp_4_ctor_array__(v9, 256);
   }
   dword_5443F8 = v8;
@@ -68106,30 +68096,30 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
       Render_FillRect(
         (_DWORD *)dword_5202E0,
         0,
-        (unsigned __int16)(word_518DB0[v39] + 107),
+        (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         299,
         LOWORD(v62[v41]) + 299,
-        word_518DB2[v39] + 107,
+        g_PrisonerRowBarBottomYTable[v39] + 107,
         0x12Bu,
-        word_518DB0[v39] + 107);
+        g_PrisonerRowBarTopYTable[v39] + 107);
       Render_FillRect(
         (_DWORD *)dword_5202E0,
         0,
-        (unsigned __int16)(word_518DB0[v39] + 107),
+        (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         88,
         LOWORD(v61[v41]) + 88,
-        word_518DB2[v39] + 107,
+        g_PrisonerRowBarBottomYTable[v39] + 107,
         0x58u,
-        word_518DB0[v39] + 107);
+        g_PrisonerRowBarTopYTable[v39] + 107);
       Render_FillRect(
         (_DWORD *)dword_5202E0,
         0,
-        (unsigned __int16)(word_518DB0[v39] + 107),
+        (unsigned __int16)(g_PrisonerRowBarTopYTable[v39] + 107),
         510,
         LOWORD(v63[v41]) + 510,
-        word_518DB2[v39] + 107,
+        g_PrisonerRowBarBottomYTable[v39] + 107,
         0x1FEu,
-        word_518DB0[v39] + 107);
+        g_PrisonerRowBarTopYTable[v39] + 107);
     }
     ++v39;
     ++v41;
@@ -68138,7 +68128,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   while ( v39 != 5 );
   Building_DrawPrisonerRows(v36);
   Queen_DrawRelationshipPanel(v36, 10);
-  UIWidgetTable_InitDrawStates(dword_518DC8);
+  UIWidgetTable_InitDrawStates(g_PrisonerActionButtonWidgets);
   Palette_FadeInFromBlack((int *)&unk_51D4C0, (unsigned __int8 *)dword_5443F8, 20);
   Render_Present((int)g_RenderState);
   dword_5443F4 = v50;
@@ -68146,24 +68136,24 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   {
     DD_Pump((int)g_RenderState, (char)g_RenderState);
     g_RenderDevice = &unk_51D4C0;
-    UIWidgetTable_PollHoverAndActions(dword_518DC8, v36);
+    UIWidgetTable_PollHoverAndActions(g_PrisonerActionButtonWidgets, v36);
   }
   while ( v51 == dword_5443F4 );
-  if ( dword_518DD0 == 2 )
+  if ( g_PrisonerActionButtonState0 == 2 )
   {
     v52 = 1;
 LABEL_48:
     v53 = dword_5443FC;
     goto LABEL_49;
   }
-  if ( dword_518E05 == 2 )
+  if ( g_PrisonerActionButtonState1 == 2 )
   {
     v53 = dword_5443FC;
     v52 = 2;
   }
   else
   {
-    if ( dword_518E3A == 2 )
+    if ( g_PrisonerActionButtonState2 == 2 )
     {
       v52 = 3;
       goto LABEL_48;
@@ -68173,17 +68163,17 @@ LABEL_48:
   }
 LABEL_49:
   BuildingPrisoner_SetAction(v53, v52, v36);
-  if ( dword_518E6F == 2 )
+  if ( g_PrisonerActionButtonState3 == 2 )
   {
     v54 = 1;
     v55 = dword_5443FC;
   }
-  else if ( dword_518EA4 == 2 )
+  else if ( g_PrisonerActionButtonState4 == 2 )
   {
     v55 = dword_5443FC;
     v54 = 2;
   }
-  else if ( dword_518ED9 == 2 )
+  else if ( g_PrisonerActionButtonState5 == 2 )
   {
     v54 = 3;
     v55 = dword_5443FC;
@@ -68194,17 +68184,17 @@ LABEL_49:
     v54 = 0;
   }
   BuildingPrisoner_SetAction(v55, v54, v36);
-  if ( dword_518F0E == 2 )
+  if ( g_PrisonerActionButtonState6 == 2 )
   {
     v56 = 1;
     v57 = dword_5443FC;
   }
-  else if ( dword_518F43 == 2 )
+  else if ( g_PrisonerActionButtonState7 == 2 )
   {
     v56 = 2;
     v57 = dword_5443FC;
   }
-  else if ( dword_518F78 == 2 )
+  else if ( g_PrisonerActionButtonState8 == 2 )
   {
     v56 = 3;
     v57 = dword_5443FC;
@@ -68214,7 +68204,7 @@ LABEL_49:
     v57 = dword_5443FC;
     v56 = 0;
   }
-  BuildingPrisoner_SetAction(v57, v56, dword_518F0E);
+  BuildingPrisoner_SetAction(v57, v56, g_PrisonerActionButtonState6);
   DLXSpriteSet_ReleaseAndClear(&dword_5443F0);
   j__nfree_();
   Render_Pump();
@@ -68294,7 +68284,7 @@ extern char *g_QueenDepartureTexts[];
 extern char *g_QueenCastleTreasuryTheftTexts[];
 extern char *g_QueenCastleWellPoisoningTexts[];
 extern char *g_QueenCastleArsonTexts[];
-extern __int16 word_5191F0;
+extern __int16 g_QueenWhimRecords_5191F0;
 
 int  Queen_NewTurn(int a1, int a2, char a3, double a4)
 {
@@ -68681,12 +68671,12 @@ LABEL_10:
         }
         if ( v14 )
         {
-          v19[0] = (int)off_519368[0];
-          v19[1] = (int)off_519368[1];
-          v19[2] = (int)off_519368[2];
+          v19[0] = (int)g_AllyEliminatedNoticeTexts[0];
+          v19[1] = (int)g_AllyEliminatedNoticeTexts[1];
+          v19[2] = (int)g_AllyEliminatedNoticeTexts[2];
           v16 = (const char *)v19[(unsigned __int8)g_LanguageIndex];
           sprintf_(v18, v16, 1423 * v13 + gameData + 140024 + 4);
-          return UI_ShowInfoWindow((const char *)v18, 0, v17, a3, (int)v16, (int)&off_519368[3]);
+          return UI_ShowInfoWindow((const char *)v18, 0, v17, a3, (int)v16, (int)&g_AllyEliminatedNoticeTexts[3]);
         }
       }
     }
@@ -68815,13 +68805,13 @@ signed int UI_CheckEndTurnHotkey(int a1)
 //----- (004511D0) --------------------------------------------------------
 void  Options_ApplyInGameSliders(int a1, DWORD a2)
 {
-  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)dword_51938C << 7)
-                                                    - (__CFSHL__(dword_51938C << 7 >> 31, 8)
-                                                     + ((unsigned __int16)(dword_51938C << 7 >> 31) << 8))) >> 8)
+  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
+                                                    - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
+                                                     + ((unsigned __int16)(g_OptionsInGameMusicVolumeRaw << 7 >> 31) << 8))) >> 8)
                                 - 64;
-  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * dword_5193D4
-                                                   - (__CFSHL__((16 * dword_5193D4) >> 31, 8)
-                                                    + ((unsigned __int16)((16 * dword_5193D4) >> 31) << 8))) >> 8;
+  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
+                                                   - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
+                                                    + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
   Options_ApplyRecordSettings(gameData + 147147, a1, a2);
 }
 // 51938C: using guessed type int dword_51938C;
@@ -68867,10 +68857,10 @@ unsigned __int16 * Options_InitInGameSlidersAndWidgets(int a1, int a2, DWORD a3)
     *(_DWORD *)(v4 - 257) = 1;
     UIWidget_RefreshActionButtonState(v4 - 265, v4);
   }
-  dword_51938C = 128;
-  dword_5193B0 = 128;
-  dword_5193D4 = 128;
-  return Options_DrawAllSliderThumbs(word_519380, a2, a3);
+  g_OptionsInGameMusicVolumeRaw = 128;
+  g_OptionsInGameScrollSpeedRaw = 128;
+  g_OptionsInGameSoundVolumeRaw = 128;
+  return Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, a2, a3);
 }
 // 451259: variable 'v4' is possibly undefined
 // 519380: using guessed type unsigned __int16 word_519380[6];
@@ -68927,8 +68917,8 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   g_RenderHook = (int (*)())Render_DefaultRH;
   Debug_Log(92, a2, v5, (int)aSetrhS08x_24);
   v6 = 0;
-  qmemcpy(v19, &unk_519410, 4 * v7);
-  v9 = (char *)&unk_519410 + 4 * v7;
+  qmemcpy(v19, &g_InGameSettingsButtonWidgetsTemplate, 4 * v7);
+  v9 = (char *)&g_InGameSettingsButtonWidgetsTemplate + 4 * v7;
   v8 = &v19[4 * v7];
   *(_WORD *)v8 = *(_WORD *)v9;
   v8[2] = v9[2];
@@ -68949,11 +68939,11 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
   if ( *(_DWORD *)(gameData + 147167) )
     v24 = 2;
   v11 = (*(char *)(gameData + 147173) << 8) + 0x4000;
-  dword_51938C = (v11 - (__CFSHL__(v11 >> 31, 7) + (v11 >> 31 << 7))) >> 7;
-  dword_5193B0 = ((*(unsigned __int8 *)(gameData + 147171) << 8)
+  g_OptionsInGameMusicVolumeRaw = (v11 - (__CFSHL__(v11 >> 31, 7) + (v11 >> 31 << 7))) >> 7;
+  g_OptionsInGameScrollSpeedRaw = ((*(unsigned __int8 *)(gameData + 147171) << 8)
                 - (__CFSHL__(*(unsigned __int8 *)(gameData + 147171) << 8 >> 31, 4)
                  + 16 * (*(unsigned __int8 *)(gameData + 147171) << 8 >> 31))) >> 4;
-  dword_5193D4 = ((*(unsigned __int8 *)(gameData + 147172) << 8)
+  g_OptionsInGameSoundVolumeRaw = ((*(unsigned __int8 *)(gameData + 147172) << 8)
                 - (__CFSHL__(*(unsigned __int8 *)(gameData + 147172) << 8 >> 31, 4)
                  + 16 * (*(unsigned __int8 *)(gameData + 147172) << 8 >> 31))) >> 4;
   g_RenderDevice = &unk_51D4C0;
@@ -68969,31 +68959,31 @@ int  Options_RunInGameSettingsDialog(int a1, char a2, DWORD a3)
     0,
     0);
   UIWidgetTable_InitDrawStates(v19);
-  Options_DrawAllSliderThumbs(word_519380, 132, v5);
+  Options_DrawAllSliderThumbs(g_InGameSliderThumbPositions, 132, v5);
   dword_54453C = v13;
   do
   {
     DD_Pump((int)g_RenderState, 132);
     UIWidgetTable_PollHoverAndActions(v19, v5);
-    Options_AnimateAllSliderThumbs(word_519380);
+    Options_AnimateAllSliderThumbs(g_InGameSliderThumbPositions);
   }
   while ( v14 == dword_54453C );
   *(_DWORD *)(gameData + 147159) = v20 == 2;
   *(_DWORD *)(gameData + 147147) = v22 == 2;
   *(_DWORD *)(gameData + 147163) = v23 == 2;
   *(_DWORD *)(gameData + 147167) = v24 == 2;
-  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)dword_51938C << 7)
-                                                    - (__CFSHL__(dword_51938C << 7 >> 31, 8)
-                                                     + ((unsigned __int16)(dword_51938C << 7 >> 31) << 8))) >> 8)
+  *(_BYTE *)(gameData + 147173) = ((unsigned __int16)(((_WORD)g_OptionsInGameMusicVolumeRaw << 7)
+                                                    - (__CFSHL__(g_OptionsInGameMusicVolumeRaw << 7 >> 31, 8)
+                                                     + ((unsigned __int16)(g_OptionsInGameMusicVolumeRaw << 7 >> 31) << 8))) >> 8)
                                 - 64;
-  *(_BYTE *)(gameData + 147171) = (unsigned __int16)(16 * dword_5193B0
-                                                   - (__CFSHL__((16 * dword_5193B0) >> 31, 8)
-                                                    + ((unsigned __int16)((16 * dword_5193B0) >> 31) << 8))) >> 8;
-  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * dword_5193D4
-                                                   - (__CFSHL__((16 * dword_5193D4) >> 31, 8)
-                                                    + ((unsigned __int16)((16 * dword_5193D4) >> 31) << 8))) >> 8;
+  *(_BYTE *)(gameData + 147171) = (unsigned __int16)(16 * g_OptionsInGameScrollSpeedRaw
+                                                   - (__CFSHL__((16 * g_OptionsInGameScrollSpeedRaw) >> 31, 8)
+                                                    + ((unsigned __int16)((16 * g_OptionsInGameScrollSpeedRaw) >> 31) << 8))) >> 8;
+  *(_BYTE *)(gameData + 147172) = (unsigned __int16)(16 * g_OptionsInGameSoundVolumeRaw
+                                                   - (__CFSHL__((16 * g_OptionsInGameSoundVolumeRaw) >> 31, 8)
+                                                    + ((unsigned __int16)((16 * g_OptionsInGameSoundVolumeRaw) >> 31) << 8))) >> 8;
   Options_ApplyRecordSettings(gameData + 147147, v14, v5);
-  Options_DestroySliderThumbList(word_519380);
+  Options_DestroySliderThumbList(g_InGameSliderThumbPositions);
   v18 = (int ( *)(int, char, DWORD))g_RenderHook;
   Debug_Log(v15, (char)g_RenderHook, v5, (int)aUnsetrh08x_24);
   g_RenderHook = v25;
@@ -69234,7 +69224,7 @@ int  Cheat_ShowDeveloperTeamImage(DWORD a1)
   v3 = Mem_Alloc(1024, v2, 0, a1);
   if ( v3 )
   {
-    v1 = &unk_50ECB0;
+    v1 = &g_Runtime_PaletteArrayCtorDescriptor;
     v3 = _wcpp_4_ctor_array__(v4, 256);
   }
   v5 = (unsigned __int8 *)v3;
@@ -69369,8 +69359,8 @@ int  UI_ReadCheatString(char a1)
       {
         result = strcmp_(v9, v12);
         if ( !result )
-          result = (*(int (**)())((char *)&off_519594 + v10))();
-        v11 = *(int *)((char *)&off_519598 + v10);
+          result = (*(int (**)())((char *)&g_CheatCodeHandlerTable + v10))();
+        v11 = *(int *)((char *)&g_CheatCodeStringTable + v10);
         v9 = v10 + 8;
       }
       while ( v11 );
@@ -69585,7 +69575,7 @@ DWORD a5;
   result = a1[3];
   if ( result <= 0x28 )
   {
-    ++dword_5195F4;
+    ++g_RulesArmyFactCreatedCount;
     sprintf_(
       v15,
       "( ODDZIAL%d of oddzial (id %d)(gracz %d)(PA %d)(moc %d)(x %d)(y %d))",
@@ -71155,7 +71145,7 @@ void  Building_AdjustTaxRateByIndex(int a1, int ebx0, float a3)
 
   v3 = (double)(*(_BYTE *)(467 * a1 + gameData + 510110) & 0x3F) + a3;
   v7 = v3;
-  if ( v3 <= flt_5000C6 )
+  if ( v3 <= g_Building_MaxTaxRate )
   {
     v4 = v7;
     _CHP(ebx0, LODWORD(v7));
@@ -74957,7 +74947,7 @@ _DWORD * RenderState_ConstructDefault(int a1, int a2)
   v3[257] = 6;
   v3[258] = 2;
   v3[259] = 5;
-  v3[260] = off_50F1E4;
+  v3[260] = g_RenderState_Vtable;
   return v3 - 20;
 }
 // 472480: using guessed type int __fastcall _wcpp_4_ctor_array__(_DWORD, _DWORD);
@@ -75672,7 +75662,7 @@ int  RenderState_DrawCursorSpriteToPrimarySurface(int a1)
   v2 = g_RenderDevice;
   g_RenderDevice = &unk_51D4C0;
   Palette_ApplyWithBrightnessOffset((int *)&unk_51D4C0, &unk_5448B8);
-  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), dword_519808[0] + 1);
+  SpriteForChar = DLX_GetSpriteForChar(*(_DWORD *)(a1 + 64), g_CursorDesc_Busy[0] + 1);
   result = Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
   g_RenderDevice = v2;
   return result;
@@ -75687,7 +75677,7 @@ _DWORD * Device_GetParamA(int a1, int a2)
   CompatRenderStateTail *tail;
 
   result = RenderState_ConstructDefault(a1, a2);
-  result[280] = off_50F204;
+  result[280] = g_Device_Vtable;
   tail = Compat_RenderStateTailFields(a1);
   tail->field_464_active = 0;
   tail->field_468_active = 0;
@@ -75800,14 +75790,14 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
   {
     v13 = ((Time_Now(v6, v7) - tail->field_470_ticks - dword_544CC0) << 8)
         / (unsigned int)(dword_544CC8 - dword_544CC4);
-    a1[9] = (unsigned __int16)word_519624
-          + ((int)(v13 * ((unsigned __int16)word_519620 - (unsigned __int16)word_519624)
-                 - (__CFSHL__((int)(v13 * ((unsigned __int16)word_519620 - (unsigned __int16)word_519624)) >> 31, 8)
-                  + ((int)(v13 * ((unsigned __int16)word_519620 - (unsigned __int16)word_519624)) >> 31 << 8))) >> 8);
-    result = (unsigned __int16)word_519626
-           + ((int)(((unsigned __int16)word_519622 - (unsigned __int16)word_519626) * v13
-                  - (__CFSHL__((int)(((unsigned __int16)word_519622 - (unsigned __int16)word_519626) * v13) >> 31, 8)
-                   + ((int)(((unsigned __int16)word_519622 - (unsigned __int16)word_519626) * v13) >> 31 << 8))) >> 8);
+    a1[9] = (unsigned __int16)g_DeviceRectLastWidth
+          + ((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)
+                 - (__CFSHL__((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31, 8)
+                  + ((int)(v13 * ((unsigned __int16)g_DeviceRectTargetWidth - (unsigned __int16)g_DeviceRectLastWidth)) >> 31 << 8))) >> 8);
+    result = (unsigned __int16)g_RenderCursor_TweenPrevY
+           + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13
+                  - (__CFSHL__((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13) >> 31, 8)
+                   + ((int)(((unsigned __int16)g_DeviceRectTargetHeight - (unsigned __int16)g_RenderCursor_TweenPrevY) * v13) >> 31 << 8))) >> 8);
     a1[10] = result;
     Compat_SyncRenderCursorGlobals(a1);
   }
@@ -75815,10 +75805,10 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
   {
     dword_544CC0 = Time_Now(v6, v7) - tail->field_470_ticks;
     dword_544CC4 = dword_544CC8;
-    word_519624 = word_519620;
-    word_519626 = word_519622;
-    a1[9] = (unsigned __int16)word_519620;
-    a1[10] = (unsigned __int16)word_519622;
+    g_DeviceRectLastWidth = g_DeviceRectTargetWidth;
+    g_RenderCursor_TweenPrevY = g_DeviceRectTargetHeight;
+    a1[9] = (unsigned __int16)g_DeviceRectTargetWidth;
+    a1[10] = (unsigned __int16)g_DeviceRectTargetHeight;
     Compat_SyncRenderCursorGlobals(a1);
     v8 = tail->field_474_handle;
     a1[11] = (unsigned __int8)byte_544CCC;
@@ -75832,11 +75822,11 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
     }
     v9 = 0;
     v10 = 0;
-    if ( dword_519628[0] != -1 )
+    if ( g_DemoScript_TriggerTickTable[0] != -1 )
     {
-      while ( dword_544CD0 != dword_519628[v10] )
+      while ( dword_544CD0 != g_DemoScript_TriggerTickTable[v10] )
       {
-        v12 = dword_51962C[v10++];
+        v12 = g_DemoScript_MessageIdTable[v10++];
         ++v9;
         if ( v12 == -1 )
           goto LABEL_8;
@@ -75846,7 +75836,7 @@ int  Device_UpdateRect(_DWORD *a1, int a2, int a3)
 LABEL_8:
     result = Input_IsKeyPressed(1);
     if ( result )
-      App_RequestQuit((int)&unk_500FA2);
+      App_RequestQuit((int)&g_App_QuitReason_DemoSkipKey);
     ++dword_544CD0;
   }
   return result;
@@ -75931,16 +75921,16 @@ char  Input_KeyToChar(unsigned int a1)
   if ( g_LanguageIndex == 2 )
   {
     g_KeyChar = 122;
-    byte_5199A0 = 121;
+    g_Input_ScanCodeChar_LangSwap = 121;
   }
   if ( (int)a1 >= 16 && a1 <= 0x1A )
-    return byte_519970[a1];
+    return g_Input_ScanCodeChars_TopRow[a1];
   if ( (int)a1 >= 30 && a1 <= 0x29 )
-    return byte_519972[a1];
+    return g_Input_ScanCodeChars_HomeRow[a1];
   if ( (int)a1 >= 44 && a1 <= 0x35 )
-    return byte_519974[a1];
+    return g_Input_ScanCodeChars_BottomRow[a1];
   if ( (int)a1 >= 2 && a1 <= 0xE )
-    return byte_5199AE[a1];
+    return g_Input_ScanCodeChars_NumberRow[a1];
   if ( a1 == 57 )
     return 32;
   return 0;
@@ -75962,19 +75952,19 @@ BOOL  Input_ClearKey(int a1, int a2)
   int v10; // ecx
 
   if ( a1 == dword_54517C )
-    ++dword_5199C0;
+    ++g_Input_KeyRepeatCount;
   else
-    dword_5199C0 = 1;
+    g_Input_KeyRepeatCount = 1;
   for ( i = Time_Now(a1, a2); Input_IsKeyPressed(v3); DD_Pump((int)g_RenderState, i) )
   {
-    v6 = dword_5199C0 <= 1 ? 30 : 10;
+    v6 = g_Input_KeyRepeatCount <= 1 ? 30 : 10;
     v7 = Time_Now(v5, i + v6);
     if ( v7 >= v8 )
       break;
   }
   result = Input_IsKeyPressed(v5);
   if ( !result )
-    dword_5199C0 = 0;
+    g_Input_KeyRepeatCount = 0;
   dword_54517C = v10;
   return result;
 }
@@ -76081,7 +76071,7 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
       if ( g_ShouldPresentOnReactivate )
         Render_Present((int)g_RenderState);
       if ( g_SoundPausedForInactiveApp )
-        CSS_ResumeSound(dword_5174D0, 1000);
+        CSS_ResumeSound(g_Audio_ActiveSoundHandle, 1000);
       g_SoundPausedForInactiveApp = 0;
       Debug_Log(v11, 1, v6, (int)aResumedSoundD);
     }
@@ -76093,9 +76083,9 @@ LRESULT __thiscall Platform_MainWindowProc(void *this, HWND hWnd, UINT Msg, WPAR
       Debug_Log(v9, 0, v6, (int)aUnacquire);
       InputBackend_Unacquire(&g_InputBackendState);
       if ( !g_SoundPausedForInactiveApp )
-        CSS_PauseSound(dword_5174D0, 1000);
+        CSS_PauseSound(g_Audio_ActiveSoundHandle, 1000);
       g_SoundPausedForInactiveApp = 1;
-      Debug_Log(v10, 0, dword_5174D0, (int)aPausedSoundD);
+      Debug_Log(v10, 0, g_Audio_ActiveSoundHandle, (int)aPausedSoundD);
     }
     g_AppIsActive = (unsigned __int16)wParam;
     return 0;
@@ -76242,7 +76232,7 @@ signed int  Win_BeginModeChange(const char *a1, char *a2)
     }
   }
   if ( !query_handle && !direct_file_available )
-    App_RequestQuit((int)off_5199F0[(unsigned __int8)g_LanguageIndex]);
+    App_RequestQuit((int)g_UI_CdMissingMessageByLanguage[(unsigned __int8)g_LanguageIndex]);
   Compat_FileSystemQueryRelease((int)&dword_543CC8, &query_handle);
   return 1;
 }
@@ -76254,9 +76244,9 @@ void  Win_EndModeChange(int a1, char *a2, int a3, int a4)
 {
   tagRECT v4; // [esp+0h] [ebp-10h] BYREF
 
-  if ( dword_511134 )
+  if ( g_SdlTransitionAnimSkipRequested )
   {
-    v4 = *(tagRECT *)dword_519A00;
+    v4 = *(tagRECT *)g_Device_DefaultWindowRect;
     if ( a3 )
     {
       PlayAviStretch(
@@ -76418,7 +76408,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
   int SpriteHeight; // [esp+98h] [ebp-Ch]
 
   v29 = a2;
-  if ( dword_511134 && !getenv("CLASH95_ENABLE_SDL_TRANSITION_ANIMS") )
+  if ( g_SdlTransitionAnimSkipRequested && !getenv("CLASH95_ENABLE_SDL_TRANSITION_ANIMS") )
   {
     /*
      * The recovered transition animation path still uses the old temporary
@@ -76461,7 +76451,7 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         v12 = Mem_Alloc(1024, 0, 0, a5);
         if ( v12 )
         {
-          v9 = &unk_50ECB0;
+          v9 = &g_Runtime_PaletteArrayCtorDescriptor;
           v12 = _wcpp_4_ctor_array__(v12, 256);
         }
         v26 = v12;
@@ -76505,9 +76495,9 @@ signed int  Win_PlayModeChangeFrameTransition(const char *a1, int a2, int a3, ch
         Diagnostics_TraceWorldMapActionEvent("transition_after_fade_wait", g_SelectedUnitIndex, 0, 0, 0);
         Win_EndModeChange(100, v23, 0, 100);
         Diagnostics_TraceWorldMapActionEvent("transition_after_end_mode", g_SelectedUnitIndex, 0, 0, 0);
-        if ( dword_511134 )
-          Diagnostics_TraceWorldMapActionEvent("transition_skip_temp_release_sdl", g_SelectedUnitIndex, dword_511134, 0, 0);
-        Diagnostics_TraceWorldMapActionEvent("transition_after_temp_release", g_SelectedUnitIndex, dword_511134, 0, 0);
+        if ( g_SdlTransitionAnimSkipRequested )
+          Diagnostics_TraceWorldMapActionEvent("transition_skip_temp_release_sdl", g_SelectedUnitIndex, g_SdlTransitionAnimSkipRequested, 0, 0);
+        Diagnostics_TraceWorldMapActionEvent("transition_after_temp_release", g_SelectedUnitIndex, g_SdlTransitionAnimSkipRequested, 0, 0);
         LOBYTE(v20) = 0;
         Render_FillRect(v17, 0, 0, 0, SpriteHeight - 1, SpriteWidth - 1, 0x50u, 0x50u);
         Diagnostics_TraceWorldMapActionEvent("transition_after_restore_surface_fill", g_SelectedUnitIndex, 0, 0, 0);
@@ -76763,7 +76753,7 @@ int  Mission_PlayInfoSlideshow(int a1, char *a2)
 //----- (00462890) --------------------------------------------------------
 int __cdecl Palette_QueryNearestColorIndex(int a1, unsigned __int8 a2, unsigned __int8 a3, unsigned __int8 a4)
 {
-  dword_519A10 = a1;
+  g_Palette_ActivePalettePtr = a1;
   return Palette_FindNearestColorIndex(a2, a3, a4);
 }
 // 519A10: using guessed type int dword_519A10;
@@ -76776,7 +76766,7 @@ int __cdecl Palette_BuildNearestColorLUT(int a1)
   int v4; // [esp+Ch] [ebp-8h]
   unsigned int v5; // [esp+10h] [ebp-4h]
 
-  dword_519A10 = a1;
+  g_Palette_ActivePalettePtr = a1;
   v5 = 0;
   v4 = 0;
   v3 = 0;
@@ -76822,7 +76812,7 @@ int  Palette_FindNearestColorIndex(unsigned __int8 a1, unsigned __int8 a2, unsig
   int v22; // [esp+18h] [ebp-8h]
 
   v21 = -1;
-  v3 = (char *)dword_519A10;
+  v3 = (char *)g_Palette_ActivePalettePtr;
   v4 = 256;
   v5 = 0;
   do
@@ -76892,23 +76882,23 @@ int __cdecl Palette_BlendIndexedPixelRun(char *a1, char *a2, unsigned __int8 *a3
   do
   {
     v15 = v6;
-    v7 = *(unsigned __int8 *)(dword_519A10 + 4 * (unsigned __int8)*a2);
+    v7 = *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * (unsigned __int8)*a2);
     v8 = *a3;
-    v9 = (dword_519A14 * (*(unsigned __int8 *)(dword_519A10 + 4 * v8) - v7)) >> 8;
+    v9 = (g_Palette_BlendRatio * (*(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * v8) - v7)) >> 8;
     if ( v9 < 0 )
       v17 = -v9;
     else
-      v17 = (dword_519A14 * (*(unsigned __int8 *)(dword_519A10 + 4 * v8) - v7)) >> 8;
+      v17 = (g_Palette_BlendRatio * (*(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * v8) - v7)) >> 8;
     v21 = v7 + v9;
-    v10 = *(unsigned __int8 *)(dword_519A10 + 4 * (unsigned __int8)*a2 + 1);
-    v11 = (dword_519A14 * (*(unsigned __int8 *)(dword_519A10 + 4 * *a3 + 1) - v10)) >> 8;
+    v10 = *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * (unsigned __int8)*a2 + 1);
+    v11 = (g_Palette_BlendRatio * (*(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * *a3 + 1) - v10)) >> 8;
     if ( v11 < 0 )
       v18 = v17 - v11;
     else
       v18 = v11 + v17;
     v20 = v10 + v11;
-    v12 = *(unsigned __int8 *)(dword_519A10 + 4 * (unsigned __int8)*a2 + 2);
-    v13 = (dword_519A14 * (*(unsigned __int8 *)(dword_519A10 + 4 * *a3 + 2) - v12)) >> 8;
+    v12 = *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * (unsigned __int8)*a2 + 2);
+    v13 = (g_Palette_BlendRatio * (*(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * *a3 + 2) - v12)) >> 8;
     if ( v13 < 0 )
       v19 = v18 - v13;
     else
@@ -76948,19 +76938,19 @@ int __cdecl Palette_OffsetIndexedPixelsRGB(unsigned __int8 *a1, int a2, int a3, 
   do
   {
     v11 = v7;
-    v8 = a3 + *(unsigned __int8 *)(dword_519A10 + 4 * *a1);
+    v8 = a3 + *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * *a1);
     if ( v8 < 0 )
       v8 = 0;
     if ( (unsigned int)v8 > 0xFF )
       LOBYTE(v8) = -1;
     v14 = v8;
-    v9 = a4 + *(unsigned __int8 *)(dword_519A10 + 4 * *a1 + 1);
+    v9 = a4 + *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * *a1 + 1);
     if ( v9 < 0 )
       v9 = 0;
     if ( (unsigned int)v9 > 0xFF )
       LOBYTE(v9) = -1;
     v13 = v9;
-    v10 = a5 + *(unsigned __int8 *)(dword_519A10 + 4 * *a1 + 2);
+    v10 = a5 + *(unsigned __int8 *)(g_Palette_ActivePalettePtr + 4 * *a1 + 2);
     if ( v10 < 0 )
       v10 = 0;
     if ( (unsigned int)v10 > 0xFF )
@@ -76977,7 +76967,7 @@ int __cdecl Palette_OffsetIndexedPixelsRGB(unsigned __int8 *a1, int a2, int a3, 
 //----- (00462BE0) --------------------------------------------------------
 _DWORD * IO_StreamAdapterConstruct(_DWORD *result, int a2)
 {
-  *result = off_50F364;
+  *result = g_IOStreamAdapter_Vtable;
   result[1] = a2;
   return result;
 }
@@ -76992,13 +76982,13 @@ _DWORD * IO_StreamAdapterRelease(_DWORD *a1, char a2)
   v3 = a1;
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50F3B0);
+    _wcpp_4_dtor_array_store__(a1, &g_IOStreamAdapter_DtorArrayTag);
     j_j__nfree_();
     return (_DWORD *)v5;
   }
   else
   {
-    *a1 = off_50F364;
+    *a1 = g_IOStreamAdapter_Vtable;
     if ( (a2 & 2) != 0 )
       j__nfree_();
     return v3;
@@ -77087,7 +77077,7 @@ int  ExcString_ConstructEmpty(_DWORD *a1)
   int v2; // ecx
 
   *a1 = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(a1);
   return v2;
 }
@@ -77231,8 +77221,8 @@ int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))()
   int (**i)(); // edx
 
   v4 = 0;
-  v5 = &off_519A40[1];
-  for ( i = &off_519A40[4];
+  v5 = &g_AviDecompressor_PixelCopyFnTable[1];
+  for ( i = &g_AviDecompressor_PixelCopyFnTable[4];
         *v5 != *a1 || v5[1] != a1[1] || v5[2] != a1[2] || *i != *a2 || i[1] != a2[1] || i[2] != a2[2];
         i += 7 )
   {
@@ -77240,7 +77230,7 @@ int (* CAviDecompressor_FindColorConvertRoutine(int (**a1)(), int (**a2)()))()
     if ( ++v4 >= 2 )
       return 0;
   }
-  return off_519A40[7 * v4];
+  return g_AviDecompressor_PixelCopyFnTable[7 * v4];
 }
 // 519A40: using guessed type int (*off_519A40[7])();
 
@@ -77470,7 +77460,7 @@ int * CAviDecompressor_ConstructEmpty(int *a1, DWORD a2)
 {
   int v3; // eax
 
-  v3 = Mem_Alloc(2236, (int)&unk_50F578, 0, a2);
+  v3 = Mem_Alloc(2236, (int)&g_CAviDecompressor_AllocTypeTag, 0, a2);
   if ( v3 )
     v3 = CAviDecompressor_InitCommon(v3);
   *a1 = v3;
@@ -77723,7 +77713,7 @@ void  CAviDecompressor_UpdatePos(int *a1, LONG a2, int a3, LONG a4)
   v5 = v4;
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v19 = &j____wcpp_4_fs_handler_rtn_;
-  v20 = &unk_51006C;
+  v20 = &g_AviUpdatePos_EHFrame;
   v21 = 0;
   if ( !*(_BYTE *)(v4 + 2062) )
   {
@@ -78178,7 +78168,7 @@ int  CAviDecompressor_ConstructSourceInterface(int a1)
   v3 += 4;
   *v3++ = CreateEventA(0, 0, 0, 0);
   *v3 = CreateEventA(0, 0, 0, 0);
-  v3[1] = &off_50FDD4;
+  v3[1] = &g_CAviSourceInterface_Vtable;
   return (int)v3 - 407;
 }
 // 50FDD4: using guessed type int (*off_50FDD4)();
@@ -78192,13 +78182,13 @@ char * CAviDecompressor_DestroySourceInterface(int a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50FE10);
+    _wcpp_4_dtor_array_store__(a1, &g_CAviSourceInterface_DtorArrayTag);
     j_j__nfree_();
     return (char *)v6;
   }
   else
   {
-    *(_DWORD *)(a1 + 411) = &off_50FDD4;
+    *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
     v3 = (HANDLE *)(a1 + 407);
     AviPlayer_CloseStreams(a1);
     CloseHandle(*v3);
@@ -78249,12 +78239,12 @@ int  CAviDecompressor_InitCommon(int a1)
   *(_DWORD *)(a1 + 387) = CreateEventA(0, 0, 0, 0);
   *(_DWORD *)(a1 + 403) = CreateEventA(0, 0, 0, 0);
   *(_DWORD *)(a1 + 407) = CreateEventA(0, 0, 0, 0);
-  *(_DWORD *)(a1 + 411) = &off_50FDD4;
+  *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
   InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
   *(_DWORD *)(a1 + 2196) = CreateEventA(0, 1, 1, 0);
   InitializeCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
   *(_DWORD *)(a1 + 2228) = CreateEventA(0, 1, 1, 0);
-  *(_DWORD *)(a1 + 2232) = &off_50FDE4;
+  *(_DWORD *)(a1 + 2232) = &g_CAviDecompressor_Vtable;
   SetRect((LPRECT)(a1 + 1969), -100000, -100000, 100000, 100000);
   return a1;
 }
@@ -78268,20 +78258,20 @@ int  CAviDecompressor_Destroy(int a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50FE30);
+    _wcpp_4_dtor_array_store__(a1, &g_CAviDecompressor_DtorArrayTag);
     j_j__nfree_();
     return v11;
   }
   else
   {
-    *(_DWORD *)(a1 + 2232) = &off_50FDE4;
+    *(_DWORD *)(a1 + 2232) = &g_CAviDecompressor_Vtable;
     AviPlayer_ShutdownDecodeState(a1);
     CloseHandle(*(HANDLE *)(a1 + 2228));
     DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 2204));
     CloseHandle(*(HANDLE *)(a1 + 2196));
     DeleteCriticalSection((LPCRITICAL_SECTION)(a1 + 1989));
     CAviDecompressor_CloseCodecHandle((_DWORD *)(a1 + 415), a1 + 415, 16);
-    *(_DWORD *)(a1 + 411) = &off_50FDD4;
+    *(_DWORD *)(a1 + 411) = &g_CAviSourceInterface_Vtable;
     AviPlayer_CloseStreams(a1);
     CloseHandle(*(HANDLE *)(a1 + 407));
     CloseHandle(*(HANDLE *)(a1 + 403));
@@ -78621,7 +78611,7 @@ HANDLE  AviPlayer_OpenFileAndStartDecodeThread(
   *(_DWORD *)((char *)&ThreadId_2 + 2) = a3;
   *(_DWORD *)(&Buffer_30a + 2) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a23 + 2) = &j____wcpp_4_fs_handler_rtn_;
-  *(_DWORD *)((char *)&a23 + 6) = &unk_50FF3C;
+  *(_DWORD *)((char *)&a23 + 6) = &g_AviOpenFileDecodeThread_EHFrame;
   *(_DWORD *)((char *)&a24 + 2) = 0;
   if ( !*(_BYTE *)a1 )
   {
@@ -79022,7 +79012,7 @@ char  AviPlayer_OpenVideoCodec(
   *(_DWORD *)((char *)&a19 + 6) = a2;
   *(_DWORD *)((char *)&a17 + 6) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a18 + 2) = &j____wcpp_4_fs_handler_rtn_;
-  *(_DWORD *)((char *)&a18 + 6) = &unk_50FF40;
+  *(_DWORD *)((char *)&a18 + 6) = &g_AviOpenVideoCodec_EHFrame;
   *(_DWORD *)((char *)&a19 + 2) = 0;
   *(_DWORD *)(a1 + 4) = a4;
   if ( a3 && (*(unsigned __int16 *)(a4 + 14) > 8u || a3[2] >= 0) )
@@ -79158,7 +79148,7 @@ void  CAviDecompressor_RenderLoop(int a1)
         timeGetTime();
         v3 = (double)*(unsigned int *)(a1 + 31)
            * ((double)(*(_DWORD *)(a1 + 2021) + 1)
-            * dbl_501320)
+            * g_CAviDecompressor_MillisecondsPerSecond)
            / (double)*(unsigned int *)(a1 + 35);
         _CHP(ExceptionList, v6);
         if ( (int)v3 - v4 + 1 > 0 )
@@ -79199,7 +79189,7 @@ struct _EXCEPTION_REGISTRATION_RECORD * CAviDecompressor_BeginPlayback(int a1)
   struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList; // [esp+0h] [ebp-28h]
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
-  AviException_RebuildClipperOnSurfaceLoss(a1, (int)&j____wcpp_4_fs_handler_rtn_, (int)&unk_50FF5C, 0);
+  AviException_RebuildClipperOnSurfaceLoss(a1, (int)&j____wcpp_4_fs_handler_rtn_, (int)&g_AviBeginPlayback_EHFrame, 0);
   *(_DWORD *)(a1 + 2183) = 0;
   *(_DWORD *)(a1 + 2034) = 0;
   *(_DWORD *)(a1 + 2038) = 0;
@@ -79462,7 +79452,7 @@ int  AviPlayer_BlitFrameToSurface(
         {
           ExcString_Ctor();
           ExcString_Ctor();
-          v44 = off_510374;
+          v44 = g_AviException_VTable;
           return CRT_ThrowExcStringException();
         }
       }
@@ -79471,7 +79461,7 @@ int  AviPlayer_BlitFrameToSurface(
     {
       ExcString_Ctor();
       ExcString_Ctor();
-      v45 = off_510374;
+      v45 = g_AviException_VTable;
       return CRT_ThrowExcStringException();
     }
   }
@@ -79494,7 +79484,7 @@ bool  AviPlayer_UpdateTargetFrameFromClock(int a1)
   v6 = *(unsigned int *)(a1 + 35);
   v3 = ((double)Time - (double)*(int *)(a1 + 2187)) * (double)v6;
   LODWORD(v6) = *(_DWORD *)(a1 + 31);
-  v4 = v3 / ((double)v6 * flt_501370);
+  v4 = v3 / ((double)v6 * g_AviPlayer_MillisecondsPerSecond);
   _CHP(Time, 0);
   *(_DWORD *)(a1 + 2183) = (int)v4;
   return *(_DWORD *)(a1 + 43) > *(_DWORD *)(a1 + 2183);
@@ -79717,7 +79707,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
-                v87 = off_510374;
+                v87 = g_AviException_VTable;
                 CRT_ThrowExcStringException();
               }
             }
@@ -79725,7 +79715,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
             {
               ExcString_Ctor();
               ExcString_Ctor();
-              v89 = off_510374;
+              v89 = g_AviException_VTable;
               CRT_ThrowExcStringException();
             }
           }
@@ -79819,7 +79809,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
               {
                 ExcString_Ctor();
                 ExcString_Ctor();
-                v90 = off_510374;
+                v90 = g_AviException_VTable;
                 CRT_ThrowExcStringException();
               }
             }
@@ -79827,7 +79817,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
             {
               ExcString_Ctor();
               ExcString_Ctor();
-              v86 = off_510374;
+              v86 = g_AviException_VTable;
               CRT_ThrowExcStringException();
             }
           }
@@ -79915,7 +79905,7 @@ char  AviPlayer_CatchUpToTargetFrame(int a1)
         {
           ExcString_Ctor();
           ExcString_Ctor();
-          v88 = off_510374;
+          v88 = g_AviException_VTable;
           CRT_ThrowExcStringException();
         }
       }
@@ -80075,7 +80065,7 @@ int  AviPlayer_Flip(int a1)
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v78 = &j____wcpp_4_fs_handler_rtn_;
-  v79 = &unk_51000C;
+  v79 = &g_AviPlayerFlip_EHFrame;
   v80 = 0;
   v85 = *(_BYTE *)(a1 + 2033);
   v81 = a1 + 1985;
@@ -80173,7 +80163,7 @@ LABEL_19:
               ExcString_Ctor();
               v80 = v26;
               ExcString_Ctor();
-              v76 = off_510374;
+              v76 = g_AviException_VTable;
               v80 = 1;
               CRT_ThrowExcStringException();
             }
@@ -80217,7 +80207,7 @@ LABEL_19:
                 ExcString_Ctor();
                 v80 = 4;
                 ExcString_Ctor();
-                v74 = off_510374;
+                v74 = g_AviException_VTable;
                 v80 = 1;
                 CRT_ThrowExcStringException();
               }
@@ -80227,7 +80217,7 @@ LABEL_19:
               ExcString_Ctor();
               v80 = v25;
               ExcString_Ctor();
-              v72 = off_510374;
+              v72 = g_AviException_VTable;
               v80 = 1;
               CRT_ThrowExcStringException();
             }
@@ -80774,7 +80764,7 @@ int  CAviDecompressor_PresentFrameForRect(int a1, const RECT *a2)
   result = (int)v11;
   v11[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v11[1] = &j____wcpp_4_fs_handler_rtn_;
-  v11[2] = &unk_510078;
+  v11[2] = &g_AviPresentFrameForRect_EHFrame;
   v12 = 0;
   if ( !*(_BYTE *)(v2 + 2062) )
     result = AviPlayer_RenderFrame(v2, a2);
@@ -81071,7 +81061,7 @@ char  AviPlayer_ApplyOpenOptionsAndInitDecoder(
   *(_DWORD *)((char *)&a18 + 6) = a1;
   *(_DWORD *)((char *)&a17 + 2) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&a17 + 6) = &j____wcpp_4_fs_handler_rtn_;
-  *(_DWORD *)((char *)&a17 + 10) = &unk_510084;
+  *(_DWORD *)((char *)&a17 + 10) = &g_AviApplyOpenOptions_EHFrame;
   *(_DWORD *)((char *)&a17 + 14) = 0;
   memset_(a2, 0);
   memset_(v18, 0);
@@ -81356,7 +81346,7 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
 
   v8[180] = NtCurrentTeb()->NtTib.ExceptionList;
   v8[181] = &j____wcpp_4_fs_handler_rtn_;
-  v8[182] = &unk_510088;
+  v8[182] = &g_AviPlayerCreateBackSurface_EHScopeTable;
   v9 = 0;
   memset_(a2, 0);
   v8[0] = 108;
@@ -81380,7 +81370,7 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
     v9 = 3;
     ExcString_Ctor();
     v9 = 0;
-    v8[104] = off_510374;
+    v8[104] = g_AviException_VTable;
     return CRT_ThrowExcStringException();
   }
   else
@@ -81391,7 +81381,7 @@ int  AviPlayer_CreateSystemMemoryBackSurface(int a1, int a2)
       ExcString_Ctor();
       v9 = v7;
       ExcString_Ctor();
-      v8[78] = off_510374;
+      v8[78] = g_AviException_VTable;
       v9 = 0;
       return CRT_ThrowExcStringException();
     }
@@ -81543,7 +81533,7 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
   result = v10;
   v10[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v10[1] = &j____wcpp_4_fs_handler_rtn_;
-  v10[2] = &unk_5100BC;
+  v10[2] = &g_AviPlayerCreatePalette_EHScopeTable;
   v11 = 0;
   if ( (*(_BYTE *)(a1 + 2120) & 2) != 0 )
   {
@@ -81559,7 +81549,7 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
       ExcString_Ctor();
       v11 = v5;
       ExcString_Ctor();
-      v9 = off_510374;
+      v9 = g_AviException_VTable;
       v11 = 0;
       return (_DWORD *)CRT_ThrowExcStringException();
     }
@@ -81579,7 +81569,7 @@ _DWORD * AviPlayer_CreatePaletteFromBitmap(int a1, int a2)
           ExcString_Ctor();
           v11 = 3;
           ExcString_Ctor();
-          v8 = off_510374;
+          v8 = g_AviException_VTable;
           v11 = 0;
           return (_DWORD *)CRT_ThrowExcStringException();
         }
@@ -81633,7 +81623,7 @@ int AviException_CtorFromExceptionList()
   int result; // eax
 
   result = ExcString_CtorFromPtr((void *)NtCurrentTeb()->NtTib.ExceptionList);
-  *(_DWORD *)(result + 100) = off_510374;
+  *(_DWORD *)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -81644,7 +81634,7 @@ int AviException_CtorForSurfaceCreateFailure()
   int result; // eax
 
   result = ExcString_Ctor();
-  *(_DWORD *)(result + 100) = off_510374;
+  *(_DWORD *)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -81655,7 +81645,7 @@ int AviException_CtorForDrawFailure()
   int result; // eax
 
   result = ExcString_Ctor();
-  *(_DWORD *)(result + 100) = off_510374;
+  *(_DWORD *)(result + 100) = g_AviException_VTable;
   return result;
 }
 // 510374: using guessed type int (*off_510374[2])();
@@ -81669,7 +81659,7 @@ int  AviException_ScalarDeletingDtor(int a1, char a2)
   v3 = a1;
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_5103A0);
+    _wcpp_4_dtor_array_store__(a1, &g_AviException_DtorArrayDescriptor);
     j_j__nfree_();
     return v5;
   }
@@ -81690,7 +81680,7 @@ int AviException_GetMessage()
   return ((int (__cdecl *)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))ExcString_AsCharPtr)(
            NtCurrentTeb()->NtTib.ExceptionList,
            &j____wcpp_4_fs_handler_rtn_,
-           &unk_50FEA8,
+           &g_AviExceptionMessage_EHFrame,
            1);
 }
 // 4842DE: using guessed type _DWORD ExcString_AsCharPtr();
@@ -81791,7 +81781,7 @@ int  AviPlayer_UpdateStreamRectAndSendICDrawBegin(int *a1, int a2, int a3, int a
   v12[13] = NtCurrentTeb()->NtTib.ExceptionList;
   v12[14] = &j____wcpp_4_fs_handler_rtn_;
   v13 = 0;
-  v12[15] = &unk_50FEB4;
+  v12[15] = &g_AviStreamRectDrawBegin_EHFrame;
   a1[3] = a5;
   a1[7] = a5 * a3 * ((*((unsigned __int16 *)a1 + 11) + 7) >> 3);
   v8 = a1[1];
@@ -82007,7 +81997,7 @@ signed int __cdecl Audio_DetectDSoundHardwareAccel(_DWORD *a1)
   int v3; // [esp+4h] [ebp-68h] BYREF
   char v4; // [esp+8h] [ebp-64h]
 
-  if ( dword_519CF8 )
+  if ( g_CSS_DSoundAccelDetectEnabled )
   {
     if ( dword_54D470 )
     {
@@ -82118,7 +82108,7 @@ signed int Audio_InitDSoundDevice()
   if ( v1 )
     return Audio_ReturnDSoundError(v1);
   Audio_ComputeBytesPerFrame(v2);
-  if ( dword_519CF8 != 2
+  if ( g_CSS_DSoundAccelDetectEnabled != 2
     || (*(int (__stdcall **)(int, int, int))(*(_DWORD *)dword_54D368 + 24))(dword_54D368, dword_54D378, 4) )
   {
     if ( !dword_54D380 )
@@ -82156,7 +82146,7 @@ signed int Audio_InitDSoundDevice()
   {
     dword_54D380 = 1;
   }
-  v4 = dword_54D388 * 3 * dword_54D39C / (unsigned int)dword_519CF4;
+  v4 = dword_54D388 * 3 * dword_54D39C / (unsigned int)g_CSS_MixUpdateRateHz;
   v5 = v4 + 15;
   dword_54D36C = 0;
   LOWORD(v5) = (v4 + 15) & 0xFFF0;
@@ -82276,8 +82266,8 @@ signed int __cdecl Audio_InitSoundSystem(int a1, char a2)
   signed int v2; // ebx
   signed int result; // eax
 
-  if ( dword_519CF4 < 30 )
-    dword_519CF4 = 30;
+  if ( g_CSS_MixUpdateRateHz < 30 )
+    g_CSS_MixUpdateRateHz = 30;
   dword_54D39C = a1;
   InitializeCriticalSection(&stru_54D350);
   EnterCriticalSection(&stru_54D350);
@@ -82290,7 +82280,7 @@ signed int __cdecl Audio_InitSoundSystem(int a1, char a2)
   if ( (dword_54D384 & 2) != 0 )
     dword_54D388 = 2 * (((dword_54D384 & 8) != 0) + 1);
   v2 = Audio_InitDSoundDevice();
-  if ( v2 || (CSS_InitMixBuffers(dword_54D39C, ((dword_54D384 & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * dword_519CF4)) != 0) )
+  if ( v2 || (CSS_InitMixBuffers(dword_54D39C, ((dword_54D384 & 2) != 0) + 1), (v2 = Audio_ComputeMixChunkSampleCount(100 * g_CSS_MixUpdateRateHz)) != 0) )
   {
     LeaveCriticalSection(&stru_54D350);
     return v2;
@@ -82682,43 +82672,43 @@ void  Audio_MixResampledVoice(int *a1)
   __int64 v23; // rax
   int *v24; // [esp-2Ch] [ebp-2Ch]
 
-  dword_519B78 = a1[5];
-  dword_519BA4 = a1[2];
-  dword_519B7C = dword_54DBA0;
-  dword_519B90 = (int (__fastcall *)(_DWORD, _DWORD))a1[3];
+  g_Audio_MixVoice_SamplesRemaining = a1[5];
+  g_Audio_MixVoice_ChannelIndexArg = a1[2];
+  g_Audio_MixVoice_AccumBufferPtr = dword_54DBA0;
+  g_Audio_MixVoice_MixFunc = (int (__fastcall *)(_DWORD, _DWORD))a1[3];
   v2 = (unsigned int *)(108 * a1[2] + dword_54DB90);
-  dword_519B5C = (int)v2;
-  dword_519BA8 = (int (__cdecl *)(_DWORD))v2[26];
-  dword_519B6C = v2[16];
-  dword_519B88 = v2[12];
-  dword_519B8C = v2[13];
-  dword_519BAE = v2[10];
-  dword_519BB2 = v2[11];
+  g_Audio_CurrentVoiceRecordPtr = (int)v2;
+  g_Audio_MixVoice_LoopCallback = (int (__cdecl *)(_DWORD))v2[26];
+  g_Audio_MixVoice_LoopDirection = v2[16];
+  g_Audio_MixVoice_PositionInt = v2[12];
+  g_Audio_MixVoice_PositionFrac = v2[13];
+  g_Audio_MixVoice_SampleHistory0 = v2[10];
+  g_Audio_MixVoice_SampleHistory1 = v2[11];
   if ( v2[1] && v2[24] == 3 )
   {
-    dword_519B98 = v2[19];
+    g_Audio_MixVoice_Pan = v2[19];
     v3 = v2[15];
     LODWORD(v4) = v3 << 16;
     HIDWORD(v4) = HIWORD(v3);
-    dword_519B80 = v4 / (unsigned int)dword_54DB9C;
-    dword_519B84 = (((unsigned int)dword_519B80 * (unsigned __int64)(unsigned int)a1[5]) >> 16) + 2;
+    g_Audio_MixVoice_ResampleStep = v4 / (unsigned int)dword_54DB9C;
+    g_Audio_MixVoice_MaxSourceAdvance = (((unsigned int)g_Audio_MixVoice_ResampleStep * (unsigned __int64)(unsigned int)a1[5]) >> 16) + 2;
 LABEL_4:
     v5 = v2[24];
     if ( v5 > 2 )
     {
       if ( v5 == 3 )
       {
-        dword_519B70 = 0;
+        g_Audio_MixVoice_LoopBoundsSwitchPending = 0;
       }
       else
       {
         if ( v2[25] == 2 )
         {
-          dword_519B60 = v2[7];
-          dword_519B64 = v2[8];
-          dword_519B68 = v2[9];
+          g_Audio_MixVoice_LoopBoundLow = v2[7];
+          g_Audio_MixVoice_LoopBoundHigh = v2[8];
+          g_Audio_MixVoice_LoopMode = v2[9];
 LABEL_11:
-          dword_519B74 = v2[18]
+          g_Audio_MixVoice_LoopFinalFlag = v2[18]
                       && (v2[3] == 5 || v2[3] == 4)
                       && ((v6 = 40 * v2[17] + dword_54DB94, *(_DWORD *)(v6 + 12) == 4) || *(_DWORD *)(v6 + 12) == 5);
           v7 = *v2;
@@ -82736,88 +82726,88 @@ LABEL_22:
               v7 >>= 1;
               break;
           }
-          dword_519B58 = v7;
+          g_Audio_VoiceMixSampleStep = v7;
           while ( 1 )
           {
-            if ( !dword_519B78 )
+            if ( !g_Audio_MixVoice_SamplesRemaining )
               goto LABEL_80;
             if ( v2[17] == 5 )
             {
               v9 = v2[14];
-              if ( v9 >= dword_519B88 )
+              if ( v9 >= g_Audio_MixVoice_PositionInt )
               {
-                if ( v9 == dword_519B88 )
+                if ( v9 == g_Audio_MixVoice_PositionInt )
                   goto LABEL_78;
                 goto LABEL_37;
               }
             }
-            if ( !dword_519B68 )
+            if ( !g_Audio_MixVoice_LoopMode )
             {
               v9 = v2[2];
               goto LABEL_37;
             }
-            if ( dword_519B68 == 1 )
+            if ( g_Audio_MixVoice_LoopMode == 1 )
               break;
-            if ( dword_519B6C != -1 )
+            if ( g_Audio_MixVoice_LoopDirection != -1 )
             {
-              v9 = dword_519B64;
+              v9 = g_Audio_MixVoice_LoopBoundHigh;
 LABEL_37:
-              dword_519BC6 = v9 + dword_519B58;
-              v10 = ((unsigned __int64)(v9 - dword_519B88) << 16) - (unsigned int)dword_519B8C;
+              g_Audio_MixVoice_NextChunkEndScratch = v9 + g_Audio_VoiceMixSampleStep;
+              v10 = ((unsigned __int64)(v9 - g_Audio_MixVoice_PositionInt) << 16) - (unsigned int)g_Audio_MixVoice_PositionFrac;
               goto LABEL_38;
             }
-            v10 = (unsigned int)dword_519B8C + ((unsigned __int64)(unsigned int)(dword_519B88 - dword_519B60) << 16);
+            v10 = (unsigned int)g_Audio_MixVoice_PositionFrac + ((unsigned __int64)(unsigned int)(g_Audio_MixVoice_PositionInt - g_Audio_MixVoice_LoopBoundLow) << 16);
 LABEL_38:
-            if ( HIWORD(dword_519B84) < HIDWORD(v10) || dword_519B84 << 16 < (unsigned int)v10 )
+            if ( HIWORD(g_Audio_MixVoice_MaxSourceAdvance) < HIDWORD(v10) || g_Audio_MixVoice_MaxSourceAdvance << 16 < (unsigned int)v10 )
             {
-              v11 = dword_519B78;
+              v11 = g_Audio_MixVoice_SamplesRemaining;
             }
             else
             {
-              v12 = v10 % (unsigned int)dword_519B80;
-              v11 = v10 / (unsigned int)dword_519B80;
+              v12 = v10 % (unsigned int)g_Audio_MixVoice_ResampleStep;
+              v11 = v10 / (unsigned int)g_Audio_MixVoice_ResampleStep;
               if ( (_DWORD)v12 )
                 ++v11;
-              if ( v11 > (unsigned int)dword_519B78 )
-                v11 = dword_519B78;
+              if ( v11 > (unsigned int)g_Audio_MixVoice_SamplesRemaining )
+                v11 = g_Audio_MixVoice_SamplesRemaining;
             }
-            dword_519B78 -= v11;
+            g_Audio_MixVoice_SamplesRemaining -= v11;
             if ( a1[4] )
             {
               v24 = a1;
-              v13 = dword_519B88 + dword_519B58;
-              v14 = dword_519B8C;
-              v15 = dword_519B80;
-              v16 = dword_519B7C;
-              if ( dword_519B6C == -1 )
-                v15 = -dword_519B80;
-              dword_519B90(v11, v15);
-              dword_519B8C = v14;
-              dword_519B88 = v13 - dword_519B58;
-              dword_519B7C = v16;
+              v13 = g_Audio_MixVoice_PositionInt + g_Audio_VoiceMixSampleStep;
+              v14 = g_Audio_MixVoice_PositionFrac;
+              v15 = g_Audio_MixVoice_ResampleStep;
+              v16 = g_Audio_MixVoice_AccumBufferPtr;
+              if ( g_Audio_MixVoice_LoopDirection == -1 )
+                v15 = -g_Audio_MixVoice_ResampleStep;
+              g_Audio_MixVoice_MixFunc(v11, v15);
+              g_Audio_MixVoice_PositionFrac = v14;
+              g_Audio_MixVoice_PositionInt = v13 - g_Audio_VoiceMixSampleStep;
+              g_Audio_MixVoice_AccumBufferPtr = v16;
               a1 = v24;
             }
             else
             {
-              v17 = dword_519B80;
-              if ( dword_519B6C == -1 )
-                v17 = -dword_519B80;
-              v18 = dword_519B88 << 16;
-              LOWORD(v18) = dword_519B8C;
-              LOWORD(dword_519B8C) = v17 * v11 + dword_519B8C;
-              dword_519B88 = (__int64)(v17 * (__int64)v11 + __PAIR64__(dword_519B88 >> 16, v18)) >> 16;
+              v17 = g_Audio_MixVoice_ResampleStep;
+              if ( g_Audio_MixVoice_LoopDirection == -1 )
+                v17 = -g_Audio_MixVoice_ResampleStep;
+              v18 = g_Audio_MixVoice_PositionInt << 16;
+              LOWORD(v18) = g_Audio_MixVoice_PositionFrac;
+              LOWORD(g_Audio_MixVoice_PositionFrac) = v17 * v11 + g_Audio_MixVoice_PositionFrac;
+              g_Audio_MixVoice_PositionInt = (__int64)(v17 * (__int64)v11 + __PAIR64__(g_Audio_MixVoice_PositionInt >> 16, v18)) >> 16;
               if ( !a1[2] )
               {
-                v19 = dword_519B7C;
-                Audio_ZeroMixAccumulatorBuffer(v11, (void *)dword_519B7C);
-                dword_519B7C = v19;
+                v19 = g_Audio_MixVoice_AccumBufferPtr;
+                Audio_ZeroMixAccumulatorBuffer(v11, (void *)g_Audio_MixVoice_AccumBufferPtr);
+                g_Audio_MixVoice_AccumBufferPtr = v19;
               }
             }
-            if ( !dword_519B68 )
+            if ( !g_Audio_MixVoice_LoopMode )
             {
-              if ( dword_519B88 < v2[2] )
+              if ( g_Audio_MixVoice_PositionInt < v2[2] )
                 goto LABEL_80;
-              if ( dword_519B74 != 1 )
+              if ( g_Audio_MixVoice_LoopFinalFlag != 1 )
               {
                 v2[24] = 1;
                 goto LABEL_78;
@@ -82826,62 +82816,62 @@ LABEL_74:
               CSS_ChannelLoadQueuedSound(a1[2]);
               if ( v2[3] == 5 )
               {
-                dword_519B88 = v2[4];
-                dword_519B8C = 0;
+                g_Audio_MixVoice_PositionInt = v2[4];
+                g_Audio_MixVoice_PositionFrac = 0;
                 goto LABEL_4;
               }
               v2[24] = 1;
               goto LABEL_78;
             }
-            if ( dword_519B6C == -1 )
+            if ( g_Audio_MixVoice_LoopDirection == -1 )
             {
-              v22 = dword_519B88;
-              if ( dword_519B88 >= dword_519B60 )
+              v22 = g_Audio_MixVoice_PositionInt;
+              if ( g_Audio_MixVoice_PositionInt >= g_Audio_MixVoice_LoopBoundLow )
                 goto LABEL_80;
-              if ( dword_519BA8 )
-                v22 = dword_519BA8(a1[2]);
-              dword_519B6C = 1;
+              if ( g_Audio_MixVoice_LoopCallback )
+                v22 = g_Audio_MixVoice_LoopCallback(a1[2]);
+              g_Audio_MixVoice_LoopDirection = 1;
               HIDWORD(v23) = v22;
               LODWORD(v23) = v22 << 16;
               SHIDWORD(v23) >>= 16;
-              LOWORD(v23) = dword_519B8C;
-              LOWORD(dword_519B8C) = -(__int16)dword_519B8C;
-              dword_519B88 = ((2 * __PAIR64__(HIWORD(dword_519B60), dword_519B60 << 16) - v23) >> 32 << 16) | ((unsigned int)((dword_519B60 << 17) - v23) >> 16);
+              LOWORD(v23) = g_Audio_MixVoice_PositionFrac;
+              LOWORD(g_Audio_MixVoice_PositionFrac) = -(__int16)g_Audio_MixVoice_PositionFrac;
+              g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundLow), g_Audio_MixVoice_LoopBoundLow << 16) - v23) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundLow << 17) - v23) >> 16);
               goto LABEL_72;
             }
-            v20 = dword_519B88;
-            if ( dword_519B88 >= (unsigned int)dword_519B64 )
+            v20 = g_Audio_MixVoice_PositionInt;
+            if ( g_Audio_MixVoice_PositionInt >= (unsigned int)g_Audio_MixVoice_LoopBoundHigh )
             {
-              if ( dword_519BA8 )
-                v20 = dword_519BA8(a1[2]);
-              if ( dword_519B74 == 1 )
+              if ( g_Audio_MixVoice_LoopCallback )
+                v20 = g_Audio_MixVoice_LoopCallback(a1[2]);
+              if ( g_Audio_MixVoice_LoopFinalFlag == 1 )
                 goto LABEL_74;
-              if ( dword_519B70 == 1 )
+              if ( g_Audio_MixVoice_LoopBoundsSwitchPending == 1 )
               {
                 v2[25] = 2;
-                dword_519B70 = 0;
-                dword_519B60 = v2[7];
-                dword_519B64 = v2[8];
-                dword_519B68 = v2[9];
+                g_Audio_MixVoice_LoopBoundsSwitchPending = 0;
+                g_Audio_MixVoice_LoopBoundLow = v2[7];
+                g_Audio_MixVoice_LoopBoundHigh = v2[8];
+                g_Audio_MixVoice_LoopMode = v2[9];
               }
               else
               {
-                if ( dword_519B68 == 1 )
+                if ( g_Audio_MixVoice_LoopMode == 1 )
                 {
-                  dword_519B88 -= dword_519B64 - dword_519B60;
+                  g_Audio_MixVoice_PositionInt -= g_Audio_MixVoice_LoopBoundHigh - g_Audio_MixVoice_LoopBoundLow;
                 }
                 else
                 {
-                  dword_519B6C = -1;
+                  g_Audio_MixVoice_LoopDirection = -1;
                   HIDWORD(v21) = v20;
                   LODWORD(v21) = v20 << 16;
                   SHIDWORD(v21) >>= 16;
-                  LOWORD(v21) = dword_519B8C;
-                  LOWORD(dword_519B8C) = -(__int16)dword_519B8C;
-                  dword_519B88 = ((2 * __PAIR64__(HIWORD(dword_519B64), dword_519B64 << 16) - v21) >> 32 << 16) | ((unsigned int)((dword_519B64 << 17) - v21) >> 16);
+                  LOWORD(v21) = g_Audio_MixVoice_PositionFrac;
+                  LOWORD(g_Audio_MixVoice_PositionFrac) = -(__int16)g_Audio_MixVoice_PositionFrac;
+                  g_Audio_MixVoice_PositionInt = ((2 * __PAIR64__(HIWORD(g_Audio_MixVoice_LoopBoundHigh), g_Audio_MixVoice_LoopBoundHigh << 16) - v21) >> 32 << 16) | ((unsigned int)((g_Audio_MixVoice_LoopBoundHigh << 17) - v21) >> 16);
                 }
 LABEL_72:
-                if ( !dword_519B78 )
+                if ( !g_Audio_MixVoice_SamplesRemaining )
                   goto LABEL_80;
               }
             }
@@ -82890,26 +82880,26 @@ LABEL_72:
               goto LABEL_80;
             }
           }
-          v9 = dword_519B64;
+          v9 = g_Audio_MixVoice_LoopBoundHigh;
           goto LABEL_37;
         }
-        dword_519B70 = 1;
+        g_Audio_MixVoice_LoopBoundsSwitchPending = 1;
       }
-      dword_519B60 = v2[4];
-      dword_519B64 = v2[5];
-      dword_519B68 = v2[6];
+      g_Audio_MixVoice_LoopBoundLow = v2[4];
+      g_Audio_MixVoice_LoopBoundHigh = v2[5];
+      g_Audio_MixVoice_LoopMode = v2[6];
       goto LABEL_11;
     }
   }
 LABEL_78:
   if ( !a1[2] )
-    Audio_ZeroMixAccumulatorBuffer(dword_519B78, (void *)dword_519B7C);
+    Audio_ZeroMixAccumulatorBuffer(g_Audio_MixVoice_SamplesRemaining, (void *)g_Audio_MixVoice_AccumBufferPtr);
 LABEL_80:
-  v2[12] = dword_519B88;
-  v2[13] = dword_519B8C;
-  v2[16] = dword_519B6C;
-  v2[10] = dword_519BAE;
-  v2[11] = dword_519BB2;
+  v2[12] = g_Audio_MixVoice_PositionInt;
+  v2[13] = g_Audio_MixVoice_PositionFrac;
+  v2[16] = g_Audio_MixVoice_LoopDirection;
+  v2[10] = g_Audio_MixVoice_SampleHistory0;
+  v2[11] = g_Audio_MixVoice_SampleHistory1;
 }
 // 46B6CF: simplified comparisons for 'eax.4': ==0 || ==1 became <2u
 // 46B6CF: simplified comparisons for 'eax.4': <2u || ==2 became <3u
@@ -82944,13 +82934,13 @@ int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4)
   int (__thiscall *v4)(signed int); // eax
   int result; // eax
 
-  dword_519B94 = (int)&off_46BC89;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixMonoVoiceDispatchBase;
   if ( a2 )
   {
     if ( !a3 )
       memset(a4, 0, 4 * a2);
-    v4 = *(int (__thiscall **)(signed int))(dword_519B94 + -4 * (a2 & 3) + 16);
-    dword_519BA0 = a1 >> 16;
+    v4 = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (a2 & 3) + 16);
+    g_Audio_MixVoice_StepIntArg = a1 >> 16;
     return v4(a1 << 16);
   }
   return result;
@@ -82971,7 +82961,7 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
   int (__thiscall *v5)(unsigned int); // eax
   __int16 v6; // cx
 
-  dword_519B94 = (int)&off_46BCF3;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_MixPannedVoiceDispatchBase;
   if ( a3 )
   {
     if ( !(_BYTE)a4 )
@@ -82979,35 +82969,35 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
       HIWORD(result) = 0;
       memset(a5, 0, 8 * a3);
     }
-    if ( (_BYTE)dword_519B98 == 0x80 )
+    if ( (_BYTE)g_Audio_MixVoice_Pan == 0x80 )
     {
-      dword_519BB6 = -1;
-      dword_519BBA = 1;
-      byte_519BAC = HIBYTE(a4);
-      byte_519BAD = HIBYTE(a4);
+      g_Audio_MixVoice_LeftVolumeStep = -1;
+      g_Audio_MixVoice_RightVolumeStep = 1;
+      g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
+      g_Audio_MixVoice_RightVolume = HIBYTE(a4);
     }
     else
     {
-      dword_519BB6 = 0;
-      dword_519BBA = 0;
-      if ( (dword_519B98 & 0x80u) == 0 )
+      g_Audio_MixVoice_LeftVolumeStep = 0;
+      g_Audio_MixVoice_RightVolumeStep = 0;
+      if ( (g_Audio_MixVoice_Pan & 0x80u) == 0 )
       {
-        byte_519BAD = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(64 - dword_519B98) * HIBYTE(a4);
-        byte_519BAC = result >> 6;
+        g_Audio_MixVoice_RightVolume = HIBYTE(a4);
+        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(a4);
+        g_Audio_MixVoice_LeftVolume = result >> 6;
       }
       else
       {
-        byte_519BAC = HIBYTE(a4);
-        LOWORD(result) = (unsigned __int8)(dword_519B98 + 64) * HIBYTE(a4);
-        byte_519BAD = result >> 6;
+        g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
+        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(a4);
+        g_Audio_MixVoice_RightVolume = result >> 6;
       }
     }
-    dword_519B9C = a2 << 16;
-    v5 = *(int (__thiscall **)(unsigned int))(dword_519B94 + -4 * (a3 & 3) + 16);
+    g_Audio_MixVoice_PanStepFracArg = a2 << 16;
+    v5 = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (a3 & 3) + 16);
     LOBYTE(v6) = (a3 >> 2) + 1;
-    dword_519BA0 = a2 >> 16;
-    HIBYTE(v6) = (unsigned __int8)(byte_519BAD + 1) >> 1;
+    g_Audio_MixVoice_StepIntArg = a2 >> 16;
+    HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
     return v5(((unsigned int)dword_54DB8C >> 2) + (v6 & 0xFF00));
   }
   return result;
@@ -83026,7 +83016,7 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
 //----- (0046BE88) --------------------------------------------------------
 void Audio_SelectMixFormat1Mono()
 {
-  dword_519B94 = (int)&off_46BDD1;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1MonoDispatchBase;
   JUMPOUT(0x46BB40);
 }
 // 46BE92: control flows out of bounds to 46BB40
@@ -83036,7 +83026,7 @@ void Audio_SelectMixFormat1Mono()
 //----- (0046BF5E) --------------------------------------------------------
 void Audio_SelectMixFormat1Stereo()
 {
-  dword_519B94 = (int)&off_46BE97;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1StereoDispatchBase;
   JUMPOUT(0x46BB9A);
 }
 // 46BF68: control flows out of bounds to 46BB9A
@@ -83046,7 +83036,7 @@ void Audio_SelectMixFormat1Stereo()
 //----- (0046C030) --------------------------------------------------------
 void Audio_SelectMixFormat2Mono()
 {
-  dword_519B94 = (int)&off_46BF6D;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2MonoDispatchBase;
   JUMPOUT(0x46BB40);
 }
 // 46C03A: control flows out of bounds to 46BB40
@@ -83056,7 +83046,7 @@ void Audio_SelectMixFormat2Mono()
 //----- (0046C1A2) --------------------------------------------------------
 void Audio_SelectMixFormat2Stereo()
 {
-  dword_519B94 = (int)&off_46C03F;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2StereoDispatchBase;
   JUMPOUT(0x46BB9A);
 }
 // 46C1AC: control flows out of bounds to 46BB9A
@@ -83066,7 +83056,7 @@ void Audio_SelectMixFormat2Stereo()
 //----- (0046C2FC) --------------------------------------------------------
 void Audio_SelectMixFormat3Mono()
 {
-  dword_519B94 = (int)&off_46C1B1;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3MonoDispatchBase;
   JUMPOUT(0x46BB40);
 }
 // 46C306: control flows out of bounds to 46BB40
@@ -83076,7 +83066,7 @@ void Audio_SelectMixFormat3Mono()
 //----- (0046C472) --------------------------------------------------------
 void Audio_SelectMixFormat3Stereo()
 {
-  dword_519B94 = (int)&off_46C30B;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3StereoDispatchBase;
   JUMPOUT(0x46BB9A);
 }
 // 46C47C: control flows out of bounds to 46BB9A
@@ -83086,7 +83076,7 @@ void Audio_SelectMixFormat3Stereo()
 //----- (0046C6B4) --------------------------------------------------------
 void Audio_SelectMixFormat4Mono()
 {
-  dword_519B94 = (int)&off_46C481;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4MonoDispatchBase;
   JUMPOUT(0x46BB40);
 }
 // 46C6BE: control flows out of bounds to 46BB40
@@ -83096,7 +83086,7 @@ void Audio_SelectMixFormat4Mono()
 //----- (0046C996) --------------------------------------------------------
 void Audio_SelectMixFormat4Stereo()
 {
-  dword_519B94 = (int)&off_46C6C3;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4StereoDispatchBase;
   JUMPOUT(0x46BB9A);
 }
 // 46C9A0: control flows out of bounds to 46BB9A
@@ -83106,7 +83096,7 @@ void Audio_SelectMixFormat4Stereo()
 //----- (0046CE10) --------------------------------------------------------
 void Audio_SelectMixFormat5Mono()
 {
-  dword_519B94 = (int)&off_46C9A5;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5MonoDispatchBase;
   JUMPOUT(0x46BB40);
 }
 // 46CE1A: control flows out of bounds to 46BB40
@@ -83116,7 +83106,7 @@ void Audio_SelectMixFormat5Mono()
 //----- (0046D2A6) --------------------------------------------------------
 void Audio_SelectMixFormat5Stereo()
 {
-  dword_519B94 = (int)&off_46CE1F;
+  g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5StereoDispatchBase;
   JUMPOUT(0x46BB9A);
 }
 // 46D2B0: control flows out of bounds to 46BB9A
@@ -83156,7 +83146,7 @@ int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *a1)
 //----- (0046D300) --------------------------------------------------------
 int __cdecl Audio_SetMixerParamValue(int a1, int a2)
 {
-  dword_519BD0 = a2;
+  g_CSS_NullDriverMasterVolume = a2;
   return 0;
 }
 // 519BD0: using guessed type int dword_519BD0;
@@ -83171,7 +83161,7 @@ int __cdecl CSS_NullDriver_GetZero(_DWORD *a1)
 //----- (0046D330) --------------------------------------------------------
 int __cdecl CSS_NullDriver_GetMasterVolume(_DWORD *a1)
 {
-  *a1 = dword_519BD0;
+  *a1 = g_CSS_NullDriverMasterVolume;
   return 0;
 }
 // 519BD0: using guessed type int dword_519BD0;
@@ -83227,7 +83217,7 @@ _DWORD * CSS_FileStream_Create(_DWORD *a1, int a2, int a3, int a4)
   a1[9] = 0;
   a1[10] = 0;
   a1[14] = a3;
-  *a1 = off_5105B4;
+  *a1 = g_CSSFileStream_VTable;
   a1[2] = (*(int (**)(void))(*(_DWORD *)a2 + 4))();
   a1[3] = a1[2];
   a1[4] = a4 + a1[3];
@@ -83254,13 +83244,13 @@ _DWORD * CSS_FileStream_Destroy(_DWORD *a1, char a2, int a3, int a4, int a5)
 {
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a3, &unk_5105F0);
+    _wcpp_4_dtor_array_store__(a3, &g_CSSFileStream_DtorArrayDescriptor);
     j_j__nfree_();
     return a1;
   }
   else
   {
-    *a1 = off_5105B4;
+    *a1 = g_CSSFileStream_VTable;
     CSS_Mem_FreeIfSet(a1[15]);
     (*(void (__cdecl **)(int, int, int))(*(_DWORD *)dword_54D4B8 + 20))(a3, a5, a4);
     if ( (a2 & 2) != 0 )
@@ -83557,7 +83547,7 @@ unsigned int  CSS_CloseChannel(unsigned int a1, signed int a2)
         (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(*(_DWORD *)v6 + 44))(
           ExceptionList,
           &j____wcpp_4_fs_handler_rtn_,
-          &unk_510640,
+          &g_CSSCloseChannel_EHScopeTable,
           1);
       v4[5] = 0;
       --dword_54D3C4;
@@ -83708,7 +83698,7 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
   v12 = 0;
   v9 = (_DWORD *)(52 * a1 + dword_54D3D0);
   CSS_Channel_StoreFormatParams((int)v9, *a2);
-  v10 = 3 * a2[2] / dword_519CB0;
+  v10 = 3 * a2[2] / g_CSS_StreamServiceRateHz;
   LOBYTE(v10) = v10 & 0xFC;
   v9[1] = v10;
   v9[2] = v9[1] * v9[4];
@@ -83722,7 +83712,7 @@ void  CSS_Channel_StartFileStream(unsigned int a1, int *a2, int a3, int a4, int 
   v9[12] = 0;
   v9[11] = 0;
   v9[9] = a6;
-  v11 = dword_519CB4++;
+  v11 = g_CSS_VoiceSequenceCounter++;
   v9[10] = v11;
   *v9 = v12;
   CSS_Channel_ServiceStream(a1);
@@ -83892,7 +83882,7 @@ struct _EXCEPTION_REGISTRATION_RECORD *CSS_ServiceStreamingChannels()
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v0 = 0;
   v5 = &j____wcpp_4_fs_handler_rtn_;
-  v6 = &unk_510654;
+  v6 = &g_CSSServiceStreamingChannels_EHScopeTable;
   v7 = 0;
   CSS_StreamService_NoOpHook();
   for ( i = 0; i < dword_54D3C8; v0 += 52 )
@@ -83933,7 +83923,7 @@ int __stdcall CSS_StreamReadingThreadProc(int a1)
     CSS_ServiceStreamingChannels();
     LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D3D8 + 1));
     --dword_54D3D8;
-    Sleep(1000 / dword_519CB0);
+    Sleep(1000 / g_CSS_StreamServiceRateHz);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D420 + 1));
   --dword_54D420;
@@ -83956,7 +83946,7 @@ _DWORD *__stdcall CSS_PauseStreamReading()
   result = v2;
   v2[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v2[1] = &j____wcpp_4_fs_handler_rtn_;
-  v2[2] = &unk_51066C;
+  v2[2] = &g_CSSPauseStreamReading_EHScopeTable;
   v3 = 0;
   if ( dword_54D414 )
   {
@@ -84015,7 +84005,7 @@ int __stdcall CSS_StreamBufferServiceThreadProc(int a1)
     }
     LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D3F8 + 1));
     --dword_54D3F8;
-    Sleep(1000 / dword_519CB0);
+    Sleep(1000 / g_CSS_StreamServiceRateHz);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D440 + 1));
   --dword_54D440;
@@ -84042,7 +84032,7 @@ _DWORD *__stdcall CSS_EmptySampleCache()
   v5[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v1 = 0;
   v5[1] = &j____wcpp_4_fs_handler_rtn_;
-  v5[2] = &unk_5106A4;
+  v5[2] = &g_CSSEmptySampleCache_EHScopeTable;
   v5[3] = 0;
   for ( i = 0; i < dword_54D3C8; v1 += 52 )
   {
@@ -84097,16 +84087,16 @@ int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
 
   v5 = -1;
   v6 = 0;
-  v7 = dword_519C90 + dword_519CB4;
+  v7 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
   if ( dword_54D3C8 > 0 )
   {
     v8 = 0;
     do
     {
       v9 = *(_DWORD *)(v8 + dword_54D3D0 + 36);
-      if ( dword_519C8C[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40) < v7 )
+      if ( g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40) < v7 )
       {
-        v7 = dword_519C8C[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40);
+        v7 = g_CSS_ChannelPriorityWeightTable[v9] + *(_DWORD *)(v8 + dword_54D3D0 + 40);
         v5 = v6;
       }
       ++v6;
@@ -84117,7 +84107,7 @@ int  CSS_Channel_SelectAndPlay(int *a1, int a2, signed int a3, int a4)
   if ( v5 == -1 )
     return 0;
   CSS_CloseChannel(v5, 0);
-  v10 = dword_519CB4++;
+  v10 = g_CSS_VoiceSequenceCounter++;
   CSS_Channel_StartMemSound(v5, v10, a2, a1, a4, a3);
   return v10;
 }
@@ -84186,16 +84176,16 @@ int  CSS_StartSampleVoice(int a1, int *a2, int a3, int a4, int a5)
 
   v6 = -1;
   v7 = 0;
-  v8 = dword_519C9C + dword_519CB4;
+  v8 = g_CSS_SampleVoiceStealBias + g_CSS_VoiceSequenceCounter;
   if ( dword_54D3C8 > 0 )
   {
     v9 = 0;
     do
     {
       v10 = *(_DWORD *)(v9 + dword_54D3D0 + 36);
-      if ( dword_519C8C[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40) < v8 )
+      if ( g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40) < v8 )
       {
-        v8 = dword_519C8C[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40);
+        v8 = g_CSS_ChannelPriorityWeightTable[v10] + *(_DWORD *)(v9 + dword_54D3D0 + 40);
         v6 = v7;
       }
       ++v7;
@@ -84287,16 +84277,16 @@ int  CSS_StartStreamVoice(int a1, int a2, int a3, DWORD a4)
     return 0;
   v9 = -1;
   v10 = 0;
-  v11 = dword_519CAC + dword_519CB4;
+  v11 = g_CSS_StreamVoiceStealBias + g_CSS_VoiceSequenceCounter;
   if ( dword_54D3C8 > 0 )
   {
     v12 = 0;
     do
     {
       v13 = *(_DWORD *)(v12 + dword_54D3D0 + 36);
-      if ( dword_519C8C[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v11 )
+      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v11 )
       {
-        v11 = dword_519C8C[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
+        v11 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
         v9 = v10;
       }
       ++v10;
@@ -84363,7 +84353,7 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
   if ( !dword_54D468 || !dword_54D3D0 || CSS_IsNullSoundDevice() )
     return 0;
   v9 = -1;
-  v10 = dword_519C90 + dword_519CB4;
+  v10 = g_CSS_MemSoundStealBias + g_CSS_VoiceSequenceCounter;
   v11 = 0;
   if ( dword_54D3C8 > 0 )
   {
@@ -84371,9 +84361,9 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
     do
     {
       v13 = *(_DWORD *)(v12 + dword_54D3D0 + 36);
-      if ( dword_519C8C[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v10 )
+      if ( g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40) < v10 )
       {
-        v10 = dword_519C8C[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
+        v10 = g_CSS_ChannelPriorityWeightTable[v13] + *(_DWORD *)(v12 + dword_54D3D0 + 40);
         v9 = v11;
       }
       ++v11;
@@ -84384,7 +84374,7 @@ int __stdcall CSS_PlayMemSound(int a1, int a2, signed int a3, int a4, int a5, in
   if ( v9 == -1 )
     return 0;
   CSS_CloseChannel(v9, 0);
-  v14 = dword_519CB4++;
+  v14 = g_CSS_VoiceSequenceCounter++;
   CSS_Channel_StoreFormatParams(52 * v9 + dword_54D3D0, a2);
   v15 = dword_54D3D0;
   *(_DWORD *)(v16 + dword_54D3D0 + 36) = 1;
@@ -84442,7 +84432,7 @@ int __stdcall CSS_StopSound(int a1, signed int a2)
   result = (int)v4;
   v4[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v4[1] = &j____wcpp_4_fs_handler_rtn_;
-  v4[2] = &unk_5106BC;
+  v4[2] = &g_CSSStopSound_EHScopeTable;
   v4[3] = 0;
   if ( a1 )
   {
@@ -84548,7 +84538,7 @@ LABEL_12:
       (*(void (__cdecl **)(struct _EXCEPTION_REGISTRATION_RECORD *, tagRECT *, void *, int))(**(_DWORD **)(v5 + 20) + 28))(
         ExceptionList,
         &j____wcpp_4_fs_handler_rtn_,
-        &unk_5106C0,
+        &g_CSSSetSoundPos_EHScopeTable,
         1);
       v7 = (_DWORD *)(52 * v4 + dword_54D3D0);
       if ( *v7 )
@@ -85032,7 +85022,7 @@ _DWORD *CSS_ShutdownVoicePool()
   result = v5;
   v5[0] = NtCurrentTeb()->NtTib.ExceptionList;
   v5[1] = &j____wcpp_4_fs_handler_rtn_;
-  v5[2] = &unk_5106D0;
+  v5[2] = &g_CSSShutdownVoicePool_EHScopeTable;
   v6 = 0;
   if ( dword_54D3D0 )
   {
@@ -85107,7 +85097,7 @@ int CSS_InitDeviceSearchState()
 //----- (0046FC30) --------------------------------------------------------
 BOOL CSS_IsNullSoundDevice()
 {
-  return dword_54D468 == (_DWORD)&unk_519BD4;
+  return dword_54D468 == (_DWORD)&g_CSS_NullDriverSentinel;
 }
 // 54D468: using guessed type int dword_54D468;
 
@@ -85135,7 +85125,7 @@ int __stdcall CSS_DeviceSearchThreadProc(int a1)
   while ( dword_54D4B4 )
   {
     CSS_PollAudioDeviceChange();
-    Sleep(1000 / dword_519CF4);
+    Sleep(1000 / g_CSS_MixUpdateRateHz);
   }
   LeaveCriticalSection((LPCRITICAL_SECTION)(&dword_54D498 + 1));
   --dword_54D498;
@@ -85179,9 +85169,9 @@ signed int CSS_ResetDeviceConfigDefaults()
   dword_54D474 = 44100;
   dword_54D47C = -1;
   dword_54D46C = 0;
-  dword_519CF4 = 10;
+  g_CSS_MixUpdateRateHz = 10;
   dword_54D468 = 0;
-  dword_519CF8 = 1;
+  g_CSS_DSoundAccelDetectEnabled = 1;
   dword_54D490 = (int)CSS_FatalErrorExit;
   return result;
 }
@@ -85212,11 +85202,11 @@ void __stdcall CSS_SetDefaults()
 //----- (0046FEC0) --------------------------------------------------------
 void CSS_ResetDeviceHandleCache()
 {
-  dword_519D08 = -1;
-  dword_519D0C = -1;
-  dword_519D10 = -1;
-  dword_519D14 = -1;
-  dword_519D18 = -1;
+  g_CSS_DeviceHandleCache_DriverIndex = -1;
+  g_CSS_DeviceHandleCache_Param1 = -1;
+  g_CSS_DeviceHandleCache_Param2 = -1;
+  g_CSS_DeviceHandleCacheParam3 = -1;
+  g_CSS_DeviceHandleCacheParam4 = -1;
 }
 // 519D08: using guessed type int dword_519D08;
 // 519D0C: using guessed type int dword_519D0C;
@@ -85271,7 +85261,7 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   _BYTE v11[20]; // [esp+18h] [ebp-14h] BYREF
 
   CSS_ResetDeviceConfigDefaults();
-  if ( dword_519D08 == -1 )
+  if ( g_CSS_DeviceHandleCache_DriverIndex == -1 )
   {
     v4 = dword_54D48C;
     if ( dword_54D48C < 3 )
@@ -85279,10 +85269,10 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
       v5 = 4 * dword_54D48C;
       do
       {
-        if ( dword_519D08 != -1 )
+        if ( g_CSS_DeviceHandleCache_DriverIndex != -1 )
           break;
-        if ( !(*(int (__cdecl ***)(int *))((char *)&off_519CFC + v5))[12](&v10) && v10 == 1 )
-          dword_519D08 = v4;
+        if ( !(*(int (__cdecl ***)(int *))((char *)&g_CSS_DriverDescriptorTable + v5))[12](&v10) && v10 == 1 )
+          g_CSS_DeviceHandleCache_DriverIndex = v4;
         ++v4;
         v5 += 4;
       }
@@ -85291,22 +85281,22 @@ signed int __stdcall CSS_Init(int a1, int a2, int a3, int a4)
   }
   else
   {
-    (*((void (__cdecl **)(int *))*(&off_519CFC + dword_519D08) + 12))(&v10);
+    (*((void (__cdecl **)(int *))*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex) + 12))(&v10);
   }
-  v6 = (int)*(&off_519CFC + dword_519D08);
+  v6 = (int)*(&g_CSS_DriverDescriptorTable + g_CSS_DeviceHandleCache_DriverIndex);
   dword_54D468 = v6;
-  if ( dword_519D0C != -1 )
-    *(_DWORD *)(v6 + 8) = dword_519D0C;
-  if ( dword_519D10 != -1 )
-    *(_DWORD *)(dword_54D468 + 12) = dword_519D10;
-  if ( dword_519D14 != -1 )
-    *(_DWORD *)(dword_54D468 + 16) = dword_519D14;
-  if ( dword_519D18 != -1 )
-    *(_DWORD *)(dword_54D468 + 20) = dword_519D18;
+  if ( g_CSS_DeviceHandleCache_Param1 != -1 )
+    *(_DWORD *)(v6 + 8) = g_CSS_DeviceHandleCache_Param1;
+  if ( g_CSS_DeviceHandleCache_Param2 != -1 )
+    *(_DWORD *)(dword_54D468 + 12) = g_CSS_DeviceHandleCache_Param2;
+  if ( g_CSS_DeviceHandleCacheParam3 != -1 )
+    *(_DWORD *)(dword_54D468 + 16) = g_CSS_DeviceHandleCacheParam3;
+  if ( g_CSS_DeviceHandleCacheParam4 != -1 )
+    *(_DWORD *)(dword_54D468 + 20) = g_CSS_DeviceHandleCacheParam4;
   if ( (*(int (__cdecl **)(int, int))(dword_54D468 + 52))(dword_54D474, dword_54D478) )
   {
     dword_54D468 = 0;
-    dword_519D08 = -1;
+    g_CSS_DeviceHandleCache_DriverIndex = -1;
     return 0;
   }
   else
@@ -85474,7 +85464,7 @@ LABEL_19:
   dword_54D760 = 8;
   dword_54D754 = 0;
   dword_54D740 = 0;
-  v3 = dword_54D744 * (3 * dword_54D768 / (unsigned int)dword_519CF4) / 8 + 15;
+  v3 = dword_54D744 * (3 * dword_54D768 / (unsigned int)g_CSS_MixUpdateRateHz) / 8 + 15;
   LOBYTE(v3) = v3 & 0xF0;
   pwfx.wFormatTag = 1;
   dwBytes = v3;
@@ -85544,7 +85534,7 @@ LABEL_50:
     {
 LABEL_57:
       CSS_InitMixBuffers(dword_54D768, ((dword_54D75C & 2) != 0) + 1);
-      result = CSS_SetWaveOutRefillThreshold(100 * dword_519CF4);
+      result = CSS_SetWaveOutRefillThreshold(100 * g_CSS_MixUpdateRateHz);
       if ( !result )
       {
         switch ( dword_54D75C )
@@ -85784,8 +85774,8 @@ void __thiscall __noreturn CSS_FatalErrorExit(void *this)
   int v2; // edx
   int v3; // ecx
 
-  fputs_(this, &unk_51A374);
-  fputs_(v1, &unk_51A374);
+  fputs_(this, &g_CRT_StderrOutputStream);
+  fputs_(v1, &g_CRT_StderrOutputStream);
   CRT_ExitProcessWithFinalizers(255, v2, v3);
 }
 // 470A18: variable 'v1' is possibly undefined
@@ -85796,21 +85786,21 @@ void __thiscall __noreturn CSS_FatalErrorExit(void *this)
 //----- (00470A30) --------------------------------------------------------
 int __cdecl CSS_GetFormatTableValue(int a1)
 {
-  return dword_519E90[a1];
+  return g_CSS_FormatShiftTable[a1];
 }
 // 519E90: using guessed type int dword_519E90[];
 
 //----- (00470A40) --------------------------------------------------------
 int __cdecl CSS_GetFormatSampleSize(int a1)
 {
-  return dword_519EAC[a1];
+  return g_CSS_FormatSampleSizeTable[a1];
 }
 // 519EAC: using guessed type int dword_519EAC[7];
 
 //----- (00470A50) --------------------------------------------------------
 int __cdecl CSS_GetFormatSilenceValue(int a1)
 {
-  return dword_519EC8[a1];
+  return g_CSS_FormatSilenceValueTable[a1];
 }
 // 519EC8: using guessed type int dword_519EC8[8];
 
@@ -85831,7 +85821,7 @@ int  CSS_BuildMixLookupTables(int a1, int a2)
   v9 = a2;
   for ( i = 0; i < 0x8000; i = v4 + 1 )
   {
-    v3 = (double)i / dbl_501984 + dbl_50198C;
+    v3 = (double)i / g_CSS_MixLookupIndexScale + g_CSS_MixLookupIndexBias;
     _CHP(v9, v10);
     if ( v4 - (int)v3 > v6 )
       *(int *)((char *)&dword_54D770 + v5) = v4;
@@ -85869,9 +85859,9 @@ int __cdecl CSS_InitMixBuffers(int a1, int a2)
   dword_54DB6C = 0;
   dword_54DB74 = 0;
   dword_54DB88 = 64;
-  dword_54DB84 = 5 * a1 / (unsigned int)dword_519CF4;
+  dword_54DB84 = 5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz;
   if ( a2 == 2 )
-    dword_54DB84 = 2 * (5 * a1 / (unsigned int)dword_519CF4);
+    dword_54DB84 = 2 * (5 * a1 / (unsigned int)g_CSS_MixUpdateRateHz);
   v2 = 4 * dword_54DB84 + 15;
   LOBYTE(v2) = v2 & 0xF0;
   dword_54DB98 = v2;
@@ -86217,7 +86207,7 @@ int __cdecl CSS_ChannelBeginVolumeFade(unsigned int a1, int a2, signed int a3)
     v4 = (_DWORD *)(108 * a1 + dword_54DB90);
     if ( !a3 )
       v3 = 1;
-    v4[21] = 1000 * (1000 * a2 - v4[20]) / (dword_519CF4 * v3);
+    v4[21] = 1000 * (1000 * a2 - v4[20]) / (g_CSS_MixUpdateRateHz * v3);
     result = 1000 * a2;
     v4[22] = 1000 * a2;
     if ( (int)v4[21] > 0 && !v4[20] && !v4[24] )
@@ -86384,11 +86374,11 @@ unsigned int __cdecl CSS_QueueSoundDescriptor(int a1, signed int a2, int a3)
   _DWORD *v5; // ebx
   char v6; // al
 
-  v3 = dword_519E38 + 1;
-  dword_519E38 = v3;
+  v3 = g_CSS_SoundDescriptorRingIndex + 1;
+  g_CSS_SoundDescriptorRingIndex = v3;
   v4 = v3;
   if ( v3 >= 4 )
-    dword_519E38 = 0;
+    g_CSS_SoundDescriptorRingIndex = 0;
   v5 = (_DWORD *)(40 * (v3 - 1) + dword_54DB94);
   *v5 = a1;
   v6 = CSS_GetFormatTableValue(a3);
@@ -86729,11 +86719,11 @@ int  Compat_StringHolderScalarDeletingDtor(int a1, char a2)
 {
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_5108C0);
+    _wcpp_4_dtor_array_store__(a1, &g_CompatStringHolder_DtorArrayDescriptor);
     j_j__nfree_();
     return a1;
   }
-  *(_DWORD *)(a1 + 4) = &off_50EC84;
+  *(_DWORD *)(a1 + 4) = &g_CompatStringHolder_Vtable;
   Compat_StringHolderFreeText((_DWORD *)a1);
   if ( (a2 & 2) != 0 )
     j__nfree_(a1);
@@ -86757,7 +86747,7 @@ static const char *Compat_StringArgGetText(const void *arg)
   if ( !arg )
     return 0;
   words = (const _DWORD *)(uintptr_t)arg;
-  if ( words[1] == (unsigned int)(uintptr_t)&off_50EC84 || words[1] == (unsigned int)(uintptr_t)&off_50EC94 )
+  if ( words[1] == (unsigned int)(uintptr_t)&g_CompatStringHolder_Vtable || words[1] == (unsigned int)(uintptr_t)&g_PathEntry_Vtable )
     return Compat_StringHolderGetText((_DWORD *)(uintptr_t)arg);
   native_text_ptr = *(const uintptr_t *)arg;
   if ( !native_text_ptr )
@@ -86895,9 +86885,9 @@ static const char **Compat_StringHolderBuildParentPath(_DWORD *holder, const cha
   int slash_index;
 
   holder[0] = 0;
-  holder[1] = &off_50EC84;
+  holder[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor((const char **)holder);
-  holder[1] = &off_50EC94;
+  holder[1] = &g_PathEntry_Vtable;
   if ( source_text && *source_text )
     Compat_StringHolderCopyText(holder, source_text);
   slash_index = Compat_StringHolderFindLastBackslash((_BYTE **)holder);
@@ -86918,9 +86908,9 @@ static _DWORD *Compat_StringHolderBuildLeafName(_DWORD *holder, const char *sour
   int slash_index;
 
   holder[0] = 0;
-  holder[1] = &off_50EC84;
+  holder[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor((const char **)holder);
-  holder[1] = &off_50EC94;
+  holder[1] = &g_PathEntry_Vtable;
   if ( source_text && *source_text )
     Compat_StringHolderCopyText(holder, source_text);
   slash_index = Compat_StringHolderFindLastBackslash((_BYTE **)holder);
@@ -86936,11 +86926,11 @@ static int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
 {
   if ( (flags & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__((int)(uintptr_t)holder, &unk_5108C0);
+    _wcpp_4_dtor_array_store__((int)(uintptr_t)holder, &g_CompatStringHolder_DtorArrayDescriptor);
     j_j__nfree_();
     return (int)(uintptr_t)holder;
   }
-  holder[1] = &off_50EC84;
+  holder[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderFreeText(holder);
   if ( (flags & 2) != 0 )
     j__nfree_((int)(uintptr_t)holder);
@@ -86951,9 +86941,9 @@ static int Compat_StringHolderDestroyStack(_DWORD *holder, char flags)
 _DWORD * Compat_StringHolderConstructJoined(_DWORD *a1, _DWORD *a2, const char *a3)
 {
   a1[0] = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderAssignJoined(a1, Compat_StringHolderGetText(a2), a3);
-  a1[1] = &off_50EC94;
+  a1[1] = &g_PathEntry_Vtable;
   return a1;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -87116,7 +87106,7 @@ const char ** Compat_StringHolderInsertTextChecked(const char **result, signed i
 _DWORD * Compat_StringHolderInitBase(_DWORD *result)
 {
   *result = 0;
-  result[1] = &off_50EC84;
+  result[1] = &g_CompatStringHolder_Vtable;
   return result;
 }
 // 50EC84: using guessed type int (*off_50EC84)();
@@ -87148,21 +87138,21 @@ void  __noreturn CRT_ExitProcessRunFinalizers(int a1, int a2, int a3)
   UINT v5; // ebx
   int v6; // ecx
 
-  off_519EF4(a3, a1);
-  off_519EF8(a2);
-  if ( dword_51A5F4 )
-    dword_51A5F4();
+  g_CRT_ExitFinalizerCallbackA(a3, a1);
+  g_CRT_ExitFinalizerCallbackB(a2);
+  if ( g_CRT_ExitProcessFinalizerHook )
+    g_CRT_ExitProcessFinalizerHook();
   v5 = v3;
   if ( dword_54DD90 )
   {
-    if ( dword_51A5B0 )
-      dword_51A5B0(v4, 255);
+    if ( g_CRT_ProcessExitThreadHook )
+      g_CRT_ProcessExitThreadHook(v4, 255);
   }
   else
   {
     CRT_RemoveUnhandledExceptionFilter(v4, v3);
     _FiniRtns(v6, 15);
-    off_51A5A4();
+    g_CRT_TlsIndexDestroyHook();
   }
   ExitProcess(v5);
 }
@@ -87189,7 +87179,7 @@ int __fastcall Mem_InitReserveBlock(int a1, int a2)
   if ( !dword_54DBA8 )
   {
     Rules_PrintErrorID((int)aMemory, 1, 1);
-    Output_Write((int)off_51A614[0], (int)aOutOfMemory_, v3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfMemory_, v3);
     IO_RunRouterExitCallbacks();
   }
   for ( result = 0; result != 2000; result += 4 )
@@ -87221,12 +87211,12 @@ signed int  Mem_HeapAllocWithRetry(_DWORD *a1)
   if ( result || (Mem_PurgeFreeListsForSpace(-1, 1, request_size), (result = Mem_PoolAllocBlock((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size)) != 0) )
   {
 LABEL_5:
-    dword_519EFC += request_size;
-    ++dword_519F00;
+    g_Mem_TotalAllocatedBytes += request_size;
+    ++g_Mem_TotalAllocationCount;
   }
   else
   {
-    allocator_callback = (signed int (__fastcall *)(int))off_519F10;
+    allocator_callback = (signed int (__fastcall *)(int))g_Mem_OutOfMemoryHandler;
     while ( !allocator_callback(request_size) )
     {
       result = Mem_PoolAllocBlock((unsigned int)request_size, (_DWORD *)(uintptr_t)request_size);
@@ -87247,7 +87237,7 @@ signed int Mem_FatalOutOfMemory()
   int v0; // ecx
 
   Rules_PrintErrorID((int)aMemory, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aOutOfMemory_, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfMemory_, v0);
   IO_RunRouterExitCallbacks();
   return 1;
 }
@@ -87259,8 +87249,8 @@ int unknown_libname_4(int a1)
 {
   int previous_handler;
 
-  previous_handler = (int)(intptr_t)off_519F10;
-  off_519F10 = (signed int (*)())(intptr_t)a1;
+  previous_handler = (int)(intptr_t)g_Mem_OutOfMemoryHandler;
+  g_Mem_OutOfMemoryHandler = (signed int (*)())(intptr_t)a1;
   return previous_handler;
 }
 
@@ -87274,13 +87264,13 @@ signed int  Mem_ReleasePoolBlock(int a1, int a2)
   if ( Mem_PoolFreeCoalesce(a1, a2) )
   {
     result = 0;
-    dword_519EFC -= v2;
-    --dword_519F00;
+    g_Mem_TotalAllocatedBytes -= v2;
+    --g_Mem_TotalAllocationCount;
   }
   else
   {
     Rules_PrintErrorID((int)aMemory, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aReleaseErrorIn, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReleaseErrorIn, v4);
     return -1;
   }
   return result;
@@ -87344,14 +87334,14 @@ _DWORD * Mem_Realloc(char *a1, unsigned int a2, unsigned int a3)
 //----- (00472800) --------------------------------------------------------
 int Mem_GetTotalAllocatedBytes()
 {
-  return dword_519EFC;
+  return g_Mem_TotalAllocatedBytes;
 }
 // 519EFC: using guessed type int dword_519EFC;
 
 //----- (00472810) --------------------------------------------------------
 int Mem_GetTotalAllocationCount()
 {
-  return dword_519F00;
+  return g_Mem_TotalAllocationCount;
 }
 // 519F00: using guessed type int dword_519F00;
 
@@ -87366,7 +87356,7 @@ int  Mem_PurgeFreeListsForSpace(int a1, int a2, int a3)
 
   v4 = 0;
   if ( a2 == 1 )
-    Output_Write((int)off_51A61C[0], (int)aDeallocatingMe, a3);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDeallocatingMe, a3);
   v5 = 499;
   v6 = 1996;
   do
@@ -87391,7 +87381,7 @@ int  Mem_PurgeFreeListsForSpace(int a1, int a2, int a3)
   }
   while ( v5 >= 4 );
   if ( a2 == 1 )
-    Output_Write((int)off_51A61C[0], (int)aMemoryDealloca, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMemoryDealloca, v5);
   return v4;
 }
 // 47288E: variable 'v5' is possibly undefined
@@ -87556,7 +87546,7 @@ LABEL_5:
 //----- (00472B10) --------------------------------------------------------
 int Mem_GetAllocFlag()
 {
-  return dword_519F04;
+  return g_Mem_AllocFlag;
 }
 // 519F04: using guessed type int dword_519F04;
 
@@ -87595,12 +87585,12 @@ signed int  Mem_InitPool(unsigned int a1, char a2)
     *(_DWORD *)(first_block + 8) = 0;
     *(_DWORD *)first_block = 0;
     *(_DWORD *)(first_block + 12) = available_size;
-    dword_519F0C = 1;
+    g_Mem_PoolInitializedFlag = 1;
     return 1;
   }
   else
   {
-    Output_WriteFormatted(0, 0, (int)&unk_51A35A, (int)aUnableToAlloca, a2);
+    Output_WriteFormatted(0, 0, (int)&g_CRT_StdoutStream, (int)aUnableToAlloca, a2);
     return 0;
   }
 }
@@ -87657,7 +87647,7 @@ signed int  Mem_PoolAllocBlock(unsigned int a1, _DWORD *a2)
   signed int result; // eax
   int callback_arg;
 
-  if ( !dword_519F0C )
+  if ( !g_Mem_PoolInitializedFlag )
   {
     result = Mem_InitPool(a1, a1);
     if ( !result )
@@ -87907,9 +87897,9 @@ int __thiscall Mem_ReleaseAllPools(void *this)
     }
     while ( next_pool );
   }
-  result = dword_519F08;
+  result = g_Mem_ReservedBlockListHead;
   dword_54DBBC = 0;
-  if ( dword_519F08 )
+  if ( g_Mem_ReservedBlockListHead )
   {
     do
     {
@@ -87919,7 +87909,7 @@ int __thiscall Mem_ReleaseAllPools(void *this)
     }
     while ( freelist_next );
   }
-  dword_519F08 = 0;
+  g_Mem_ReservedBlockListHead = 0;
   return result;
 }
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
@@ -87936,7 +87926,7 @@ int __thiscall Mem_HeapExitHandler(void *this)
 //----- (00473250) --------------------------------------------------------
 _DWORD * Surface_Construct(_DWORD *result)
 {
-  result[43] = off_5108E0;
+  result[43] = g_Surface_BlitFunctionTable;
   result[41] = 0;
   result[3] = 0;
   result[13] = 0;
@@ -87953,7 +87943,7 @@ _DWORD * Surface_Construct(_DWORD *result)
 //----- (004732A0) --------------------------------------------------------
 _DWORD * Surface_ConstructWithSurface(_DWORD *a1, _DWORD *a2, int a3, int a4)
 {
-  a1[43] = off_5108E0;
+  a1[43] = g_Surface_BlitFunctionTable;
   if ( !Surface_CreateDDSurface(a1, a2, a3, a4) )
     return 0;
   return a1;
@@ -87968,7 +87958,7 @@ int  Surface_Destruct(int result)
 
   v1 = result;
   v2 = *(_DWORD *)(result + 164);
-  *(_DWORD *)(result + 172) = off_5108E0;
+  *(_DWORD *)(result + 172) = g_Surface_BlitFunctionTable;
   if ( v2 )
   {
     (*(void (__stdcall **)(int))(*(_DWORD *)v2 + 8))(v2);
@@ -89775,7 +89765,7 @@ LABEL_28:
       }
     }
   }
-  if ( !v5 && dword_51A549 == 512 )
+  if ( !v5 && g_CRT_DefaultFileTranslationMode == 512 )
     LOBYTE(Value) = Value | 0x40;
   return Value;
 }
@@ -89886,7 +89876,7 @@ int  IO_CloseStream(int a1, int a2)
   int *v8; // eax
   int v9; // edx
 
-  off_51A57C();
+  g_CRT_StaticLock1AcquireHook();
   for ( i = (_DWORD *)dword_54DD88; i; i = (_DWORD *)*i )
   {
     v5 = i[1];
@@ -89895,7 +89885,7 @@ int  IO_CloseStream(int a1, int a2)
       if ( (*(_BYTE *)(v5 + 12) & 3) != 0 )
         _doclose_(v3, 1);
 LABEL_6:
-      off_51A580();
+      g_CRT_StaticLock1ReleaseHook();
       return a1;
     }
   }
@@ -89914,7 +89904,7 @@ LABEL_6:
     }
   }
   _set_errno_(a2);
-  off_51A580();
+  g_CRT_StaticLock1ReleaseHook();
   return 0;
 }
 // 475CFA: variable 'v3' is possibly undefined
@@ -89939,7 +89929,7 @@ char * Str_FormatUnsignedRadixDigits(unsigned int a1, char *a2, unsigned int a3)
   do
   {
     v8 = a1 / a3;
-    *v4 = byte_519F20[a1 % a3];
+    *v4 = g_Str_RadixDigitCharacters[a1 % a3];
     a1 = v8;
     ++v4;
   }
@@ -90029,8 +90019,8 @@ void __thiscall Compat_TriggerFatalRuntimeErrorOnce(void *this)
 int FileSystem_InitCurrentEntryPathHolder()
 {
   dword_54DD00 = 0;
-  dword_54DD04 = (int)&off_50EC94;
-  return CRT_RegisterFinalizableObject(&off_50EC94, 0);
+  dword_54DD04 = (int)&g_PathEntry_Vtable;
+  return CRT_RegisterFinalizableObject(&g_PathEntry_Vtable, 0);
 }
 // 473ED5: using guessed type int __fastcall CRT_RegisterFinalizableObject(_DWORD, _DWORD);
 // 50EC94: using guessed type int (*off_50EC94)();
@@ -90074,22 +90064,22 @@ int  FileSystem_ConstructMountTable(int a1, int a2, const CHAR *a3, DWORD a4)
   int child_path;
 
   *(_DWORD *)(a1 + 4) = 0;
-  *(_DWORD *)(a1 + 8) = (int)&off_50EC94;
+  *(_DWORD *)(a1 + 8) = (int)&g_PathEntry_Vtable;
   *(_DWORD *)(a1 + 12) = 0;
-  *(_DWORD *)(a1 + 16) = (int)&off_50EC94;
+  *(_DWORD *)(a1 + 16) = (int)&g_PathEntry_Vtable;
   *(_DWORD *)(a1 + 24) = 1;
   *(_DWORD *)(a1 + 28) = 0;
   *(_DWORD *)(a1 + 32) = 0;
-  *(_DWORD *)(a1 + 36) = (int)off_50ECA4;
+  *(_DWORD *)(a1 + 36) = (int)g_PathEntryArray_Vtable;
   *(_DWORD *)(a1 + 20) = 0;
-  *(_DWORD *)a1 = (int)off_510964;
+  *(_DWORD *)a1 = (int)g_FileSystemMountTable_VTable;
   open_mode_handle = 0;
   if ( a3 )
     open_mode_handle = IO_FOpen(a3, (unsigned __int8 *)aWt, a1, a4);
   entry_path_holder = 0;
-  entry_path_vtable = &off_50EC84;
+  entry_path_vtable = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&entry_path_holder);
-  entry_path_vtable = &off_50EC94;
+  entry_path_vtable = &g_PathEntry_Vtable;
   if ( *(_DWORD *)(a1 + 28) == *(_DWORD *)(a1 + 32) )
     PathEntryArray_GrowByDelta((_DWORD *)(a1 + 20), *(_DWORD *)(a1 + 24));
   entry_index = *(_DWORD *)(a1 + 28);
@@ -90118,15 +90108,15 @@ int  FileSystem_DestructMountTable(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_50F1B0);
+    _wcpp_4_dtor_array_store__(a1, &g_FileSystemMountTable_DtorArrayTag);
     j_j__nfree_();
     return v8;
   }
   else
   {
-    *a1 = off_510964;
+    *a1 = g_FileSystemMountTable_VTable;
     FileSystem_RemoveMountsFromIndex((int)a1, 0);
-    v3[4] = off_50ECA4;
+    v3[4] = g_PathEntryArray_Vtable;
     PathEntryArray_DestructElements(v3);
     v5 = Compat_StringHolderScalarDeletingDtor(v4 - 8, 0);
     v6 = Compat_StringHolderScalarDeletingDtor(v5 - 8, 0);
@@ -90214,7 +90204,7 @@ char  FileSystem_NormalizePath(int a1, const char **a2)
     else
     {
       v18[0] = 0;
-      v18[1] = (int)&off_50EC94;
+      v18[1] = (int)&g_PathEntry_Vtable;
       Compat_StringHolderConstructJoined(v18, (_DWORD *)(uintptr_t)(unsigned int)(a1 + 4), (const char *)(uintptr_t)(unsigned int)*(_DWORD *)(a1 + 12));
       Compat_StringHolderPrependText(a2, Compat_StringHolderGetText(v18));
       Compat_StringHolderDestroyStack(v18, 1);
@@ -90351,9 +90341,9 @@ int  FileSystem_ResolveAndInvokeForPath(int a1, int a2, int (*a3)(void))
   int v13; // [esp+8h] [ebp-10h]
 
   v11 = 0;
-  v12 = &off_50EC84;
+  v12 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v11);
-  v12 = &off_50EC94;
+  v12 = &g_PathEntry_Vtable;
   FileSystem_NormalizePath(a1, &v11);
   if ( v11 && *v11 )
   {
@@ -90390,9 +90380,9 @@ static int Compat_FileSystemQuery(int filesystem, const char *requested_path, in
   int (**normalized_vtable)(); // [esp+4h] [ebp-14h]
 
   normalized_path = 0;
-  normalized_vtable = &off_50EC84;
+  normalized_vtable = &g_CompatStringHolder_Vtable;
   Compat_StringHolderCopyText((_DWORD *)&normalized_path, requested_path);
-  normalized_vtable = &off_50EC94;
+  normalized_vtable = &g_PathEntry_Vtable;
   FileSystem_NormalizePath(filesystem, &normalized_path);
   if ( normalized_path && *normalized_path )
   {
@@ -90453,9 +90443,9 @@ signed int  FileSystem_SetCurrentDirectoryFromPath(const char **a1, int a2)
   if ( !(*((int (__thiscall **)(int))*a1 + 12))(a2) )
     return 0;
   v10 = 0;
-  v11 = &off_50EC84;
+  v11 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderInitText((_DWORD *)&v10, (const char *)(uintptr_t)(unsigned int)a2);
-  v11 = &off_50EC94;
+  v11 = &g_PathEntry_Vtable;
   FileSystem_NormalizePath((int)a1, &v10);
   if ( v10 && *v10 )
   {
@@ -90501,7 +90491,7 @@ int  FileSystem_ResolveRelativeToCurrentDir(int a1, int a2)
     v5 = a2;
     byte_54DCF8 |= 1u;
     dword_54DCF0 = 0;
-    dword_54DCF4 = (int)&off_50EC94;
+    dword_54DCF4 = (int)&g_PathEntry_Vtable;
     CRT_RegisterFinalizableObject(0, a1);
     a2 = v5;
   }
@@ -90534,7 +90524,7 @@ int  FileSystem_AddMountEntry(int *a1, const CHAR *a2, const CHAR *a3, DWORD a4)
   archive_mode = 0;
   v20 = a3;
   v18 = 0;
-  v19 = &off_50EC84;
+  v19 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderInitText((_DWORD *)&v18, a2);
   FileSystem_NormalizePath((int)a1, &v18);
   v6 = Compat_StringHolderGetText((_DWORD *)&v18);
@@ -90780,14 +90770,14 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***a1)(void), int a2, int a3
 
   v29 = a2;
   v20 = 0;
-  v21 = &off_50EC84;
+  v21 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v20);
-  v21 = &off_50EC94;
+  v21 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v20, asc_5024C5);
   v22 = v4;
-  v23 = &off_50EC84;
+  v23 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v22);
-  v23 = &off_50EC94;
+  v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v22, asc_5024C7);
   v16 = (**a1)();
   v18 = v29;
@@ -90800,9 +90790,9 @@ signed int  Compat_FileSystemWalkDirectoryTree(int (***a1)(void), int a2, int a3
     {
       (**(void (__thiscall ***)(_DWORD))v16)(0);
       v24 = v6;
-      v25 = &off_50EC84;
+      v25 = &g_CompatStringHolder_Vtable;
       Compat_StringHolderDestructor(&v24);
-      v25 = &off_50EC94;
+      v25 = &g_PathEntry_Vtable;
       Compat_StringHolderConstructJoined(v28, v7, v24);
       if ( strcmp_(v8, a__34) && strcmp_(v9, a___1) )
       {
@@ -90881,9 +90871,9 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
   int (**v23)(); // [esp+28h] [ebp-18h]
 
   v22 = 0;
-  v23 = &off_50EC84;
+  v23 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v22);
-  v23 = &off_50EC94;
+  v23 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v22, asc_5024CE);
   v15 = (**v3)(v3, v22);
   v16 = v4;
@@ -90895,9 +90885,9 @@ signed int __fastcall Compat_FileSystemWalkDirectoryEntries(int a1, int a2)
     {
       (**(void (***)(void))v15)();
       v20 = 0;
-      v21 = &off_50EC84;
+      v21 = &g_CompatStringHolder_Vtable;
       Compat_StringHolderDestructor(&v20);
-      v21 = &off_50EC94;
+      v21 = &g_PathEntry_Vtable;
       if ( strcmp_(v6, a__35) && strcmp_(v7, a___2) )
       {
         if ( ((*(int (**)(void))(*(_DWORD *)v15 + 4))() & 0x10) != 0 )
@@ -91055,7 +91045,7 @@ _DWORD * Compat_FileStreamOpen(_DWORD *a1, const CHAR *a2, int a3, char a4, DWOR
 {
   char *v7; // edx
 
-  *a1 = off_5109C4;
+  *a1 = g_CompatFileStream_VTable;
   if ( (a4 & 0x10) != 0 )
   {
     if ( (a4 & 2) != 0 )
@@ -91095,12 +91085,12 @@ _DWORD * Compat_FileStreamRelease(_DWORD *result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_510A90);
+    _wcpp_4_dtor_array_store__(result, &g_CompatFileStream_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v4;
   }
   v3 = result[1];
-  *result = off_5109C4;
+  *result = g_CompatFileStream_VTable;
   if ( v3 )
   {
     fclose_(v3);
@@ -91208,11 +91198,11 @@ int  Compat_FileFinderOpen(_DWORD *a1, int a2)
 
   v9 = a2;
   a1[71] = -1;
-  *a1 = off_5109F4;
+  *a1 = g_CompatFileFinder_VTable;
   v7 = 0;
-  v8 = &off_50EC84;
+  v8 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v7);
-  v8 = &off_50EC94;
+  v8 = &g_PathEntry_Vtable;
   Compat_StringHolderAppendText(&v7, a__31);
   v3 = CRT_FindFirstFile(v7, (_DWORD *)(v2 + 4), v2);
   *(_DWORD *)(v4 + 284) = v3;
@@ -91238,12 +91228,12 @@ _DWORD * Compat_FileFinderRelease(_DWORD *result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_510AB0);
+    _wcpp_4_dtor_array_store__(result, &g_CompatFileFinder_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v4;
   }
   v3 = result[71];
-  *result = off_5109F4;
+  *result = g_CompatFileFinder_VTable;
   if ( v3 == -1 )
   {
     findclose_(result);
@@ -91331,8 +91321,8 @@ const char ** FileSystem_DiskMountCtor(const char **a1, int a2)
   unsigned int path_len;
 
   *(_DWORD *)(a1 + 4) = 0;
-  *(_DWORD *)(a1 + 8) = (int)&off_50EC94;
-  *(_DWORD *)a1 = (int)off_510A14;
+  *(_DWORD *)(a1 + 8) = (int)&g_PathEntry_Vtable;
+  *(_DWORD *)a1 = (int)g_FileSystemDiskMount_VTable;
   if ( !a2 )
     return a1;
   Compat_StringHolderDestructor((const char **)(uintptr_t)((unsigned int)(uintptr_t)a1 + 4));
@@ -91355,13 +91345,13 @@ int  FileSystem_DiskMountScalarDeletingDtor(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510AD0);
+    _wcpp_4_dtor_array_store__(a1, &g_FileSystemDiskMount_DtorArrayDescriptor);
     j_j__nfree_();
     return v5;
   }
   else
   {
-    *a1 = off_510A14;
+    *a1 = g_FileSystemDiskMount_VTable;
     v3 = Compat_StringHolderScalarDeletingDtor((int)(a1 + 1), 0);
     if ( (a2 & 2) != 0 )
     {
@@ -91386,7 +91376,7 @@ int  FileSystem_DiskMountOpenFileQuery(int a1, char a2, DWORD a3)
   _DWORD joined_path[2]; // [esp+0h] [ebp-8h] BYREF
 
   joined_path[0] = 0;
-  joined_path[1] = &off_50EC84;
+  joined_path[1] = &g_CompatStringHolder_Vtable;
   result = (_DWORD *)Mem_Alloc(8, a1, a2, a3);
   if ( result )
   {
@@ -91459,11 +91449,11 @@ char *__thiscall FileSystem_DiskMountGetCurrentDirectory(void *this)
   char v5; // al
 
   (void)this;
-  getcwd_(byte_519FA0, 100);
-  if ( byte_519F9F[strlen(byte_519FA0)] == 92 )
-    return byte_519FA0;
+  getcwd_(g_FileSystem_CurrentDirectoryBuffer, 100);
+  if ( g_FileSystem_CwdBufferSentinel[strlen(g_FileSystem_CurrentDirectoryBuffer)] == 92 )
+    return g_FileSystem_CurrentDirectoryBuffer;
   v2 = asc_5024EC;
-  v3 = &byte_519FA0[strlen(byte_519FA0)];
+  v3 = &g_FileSystem_CurrentDirectoryBuffer[strlen(g_FileSystem_CurrentDirectoryBuffer)];
   do
   {
     v4 = *v2;
@@ -91476,7 +91466,7 @@ char *__thiscall FileSystem_DiskMountGetCurrentDirectory(void *this)
     v3 += 2;
   }
   while ( v5 );
-  return byte_519FA0;
+  return g_FileSystem_CurrentDirectoryBuffer;
 }
 // 489FF2: using guessed type int __fastcall getcwd_(_DWORD, _DWORD);
 
@@ -91493,9 +91483,9 @@ int __thiscall FileSystem_DiskMountDirectoryExists(void *this)
 
   v8 = this;
   v6 = 0;
-  v7 = &off_50EC84;
+  v7 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v6);
-  v7 = &off_50EC94;
+  v7 = &g_PathEntry_Vtable;
   if ( v6 && *v6 && v6[strlen(v6) - 1] != 92 )
     Compat_StringHolderAppendText(&v6, asc_5024EE);
   Compat_StringHolderAppendText(&v6, a__36);
@@ -91562,7 +91552,7 @@ int  FileSystem_DiskMountVariantScalarDeletingDtor(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510AF0);
+    _wcpp_4_dtor_array_store__(a1, &g_FileSystemDiskMountVariant_DtorArrayDescriptor);
     j_j__nfree_();
     return v4;
   }
@@ -91619,9 +91609,9 @@ const char ** FileSystem_PathTrimToParentDir(const char **a1)
   unsigned int v4; // ecx
 
   *a1 = 0;
-  a1[1] = (const char *)&off_50EC84;
+  a1[1] = (const char *)&g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(a1);
-  a1[1] = (const char *)&off_50EC94;
+  a1[1] = (const char *)&g_PathEntry_Vtable;
   if ( Compat_StringHolderFindLastBackslash((_BYTE **)a1) == -1 )
   {
     Compat_StringHolderDestructor(a1);
@@ -91649,9 +91639,9 @@ _DWORD * FileSystem_PathExtractFileName(_DWORD *a1)
   unsigned int v3; // ecx
 
   *a1 = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(a1);
-  a1[1] = &off_50EC94;
+  a1[1] = &g_PathEntry_Vtable;
   v2 = Compat_StringHolderFindLastBackslash((_BYTE **)a1);
   if ( v2 != -1 )
     Compat_StringHolderRemoveRange((const char **)a1, 0, v3, v2 + 1);
@@ -91682,7 +91672,7 @@ int * FileSystem_ArchiveRecordCacheCtor(int *a1, int a2, int a3, int a4)
   a1[4] = Compat_WcppCtorArrayStorage1m(
             (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
             a1[2],
-            &unk_510C40);
+            &g_FileSystemArchiveRecordCache_CtorArrayDescriptor);
   v7 = a1[2];
   a1[1] = v7;
   result = a1;
@@ -91718,7 +91708,7 @@ _DWORD * FileSystem_ArchiveRecordCacheCopyCtor(int *a1, int *a2)
   v8 = Compat_WcppCtorArrayStorage1m(
          (void *)(uintptr_t)(unsigned int)j_Mem_Alloc(26 * a1[2]),
          a1[2],
-         &unk_510C40);
+         &g_FileSystemArchiveRecordCache_CtorArrayDescriptor);
   a1[4] = v8;
   v10 = a1[2];
   a1[1] = v10;
@@ -91805,9 +91795,9 @@ int  FileSystem_ArchiveEntryCopyConstruct(_DWORD *a1, int a2)
   int v4; // ecx
 
   *a1 = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(a1);
-  v3[1] = &off_50EC94;
+  v3[1] = &g_PathEntry_Vtable;
   v3[2] = *(_DWORD *)(a2 + 8);
   v3[3] = 0;
   FileSystem_ArchiveRecordCacheCopyCtor(v3 + 4, (int *)(a2 + 16));
@@ -91830,7 +91820,7 @@ int  FileSystem_ArchiveEntryReaderCtor(_DWORD *a1, int *a2, int a3, int a4, cons
   unsigned __int8 *v15; // [esp+0h] [ebp-10h]
 
   *a1 = 0;
-  a1[1] = &off_50EC84;
+  a1[1] = &g_CompatStringHolder_Vtable;
   Compat_StringHolderFreeText(a1);
   v14 = Compat_StringArgGetText(a5);
   if ( v14 && *v14 )
@@ -91838,7 +91828,7 @@ int  FileSystem_ArchiveEntryReaderCtor(_DWORD *a1, int *a2, int a3, int a4, cons
     *a1 = (int)(uintptr_t)j_Mem_Alloc((unsigned int)strlen(v14) + 1);
     Compat_CopyPrefixN((char *)(uintptr_t)*a1, v14, (unsigned int)strlen(v14) + 1);
   }
-  a1[1] = &off_50EC94;
+  a1[1] = &g_PathEntry_Vtable;
   a1[3] = 0;
   v9 = FileSystem_ArchiveRecordCacheCtor(a1 + 4, (int)a2, a3 + 4, (a4 - 4) / 0x1Au);
   v10 = (int)(v9 - 4);
@@ -91868,7 +91858,7 @@ int  FileSystem_ArchiveIndexCreateEmpty(_DWORD *a1, int a2, int a3)
   int v4; // eax
 
   *a1 = 0;
-  a1[1] = &off_50EC94;
+  a1[1] = &g_PathEntry_Vtable;
   a1[2] = 0;
   a1[3] = 0;
   v3 = a1 + 4;
@@ -91985,7 +91975,7 @@ _DWORD * FileSystem_ArchiveOpenEntryReader(int a1, const void *a2)
   _DWORD savedregs[4]; // [esp+8h] [ebp+0h] BYREF
 
   v8[0] = 0;
-  v8[1] = (int)&off_50EC94;
+  v8[1] = (int)&g_PathEntry_Vtable;
   path_text = Compat_StringArgGetText(a2);
   if ( path_text && *path_text )
   {
@@ -92101,7 +92091,7 @@ _DWORD * FileSystem_ArchiveEntryStreamCtor(_DWORD *result, int a2, int a3)
   result[2] = 0;
   result[1] = v3;
   v4 = *(_DWORD *)(a2 + 22);
-  *result = off_510BD4;
+  *result = g_FileSystemArchiveEntryStream_VTable;
   result[3] = v4;
   result[4] = a3;
   return result;
@@ -92236,13 +92226,13 @@ int  File_DirNodeScalarDtor(_DWORD *a1, char a2, DWORD a3)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510C60);
+    _wcpp_4_dtor_array_store__(a1, &g_FileDirNode_DtorArrayDescriptor);
     j_j__nfree_();
     return v6;
   }
   else
   {
-    *a1 = off_510BA4;
+    *a1 = g_FileDirNode_VTable;
     File_ApplyResolvedEntryFlag(a1[4], a1[3], a3);
     if ( (a2 & 2) != 0 )
       j__nfree_();
@@ -92282,12 +92272,12 @@ int  File_SourceEntryConstructor(_DWORD *a1, int a2, int a3, DWORD a4)
   a1[2] = 0;
   a1[3] = 0;
   a1[4] = -1;
-  *a1 = off_510B14;
+  *a1 = g_FileCacheNode_VTable;
   a1[1] = a2;
   v12 = 0;
-  v13 = &off_50EC84;
+  v13 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v12);
-  v13 = &off_50EC94;
+  v13 = &g_PathEntry_Vtable;
   v5 = File_ResolveCachedPathEntry(*(_DWORD **)(v4 + 4), &v12, (const char *)v4, a4);
   *(_DWORD *)(v6 + 8) = v5;
   Compat_StringHolderScalarDeletingDtor((int)&v12, 1);
@@ -92319,11 +92309,11 @@ _DWORD * File_CacheNodeScalarDtor(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510C80);
+    _wcpp_4_dtor_array_store__(a1, &g_FileCacheNode_DtorArrayDescriptor);
     j_j__nfree_();
     return (_DWORD *)v6;
   }
-  *a1 = off_510B14;
+  *a1 = g_FileCacheNode_VTable;
   v4 = a1[2];
   if ( v4 )
   {
@@ -92416,12 +92406,12 @@ int * File_SourceConstructFromStream(
         int a6)
 {
   a1[3] = 0;
-  a1[4] = (int)&off_50EC94;
+  a1[4] = (int)&g_PathEntry_Vtable;
   a1[8] = 0;
   a1[5] = a4;
   a1[9] = 0;
   a1[7] = a6;
-  *a1 = (int)off_510B34;
+  *a1 = (int)g_FileSource_VTable;
   File_SourceReadAndDecodeHeader(a1, a2, (int)a3, a3, a5);
   return a1;
 }
@@ -92446,13 +92436,13 @@ int * File_SourceBuildAndWriteHeader(
 
   a1[2] = 0;
   a1[3] = 0;
-  a1[4] = (int)&off_50EC94;
+  a1[4] = (int)&g_PathEntry_Vtable;
   a1[8] = 0;
   a1[9] = 0;
   a1[6] = a4;
   a1[7] = a6;
   a1[5] = a3;
-  *a1 = (int)off_510B34;
+  *a1 = (int)g_FileSource_VTable;
   CRT_DeleteFile(a2, (int)a2);
   a1[2] = Res_OpenBufferedStreamForWrite(v7, 0, (unsigned __int8 *)aWB, a5);
   Res_BuildTaggedRecordHeader(v13, 1, v8, a4);
@@ -92484,13 +92474,13 @@ int  File_SourceScalarDtor(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510CA0);
+    _wcpp_4_dtor_array_store__(a1, &g_FileSource_DtorArrayDescriptor);
     j_j__nfree_();
     return v7;
   }
   else
   {
-    *a1 = off_510B34;
+    *a1 = g_FileSource_VTable;
     File_CacheClearEntryTree((int)a1);
     v4 = *(_DWORD *)(v3 + 4);
     if ( v4 )
@@ -92585,7 +92575,7 @@ int  File_SourceReadAndDecodeHeader(
   v18 = Mem_Alloc(44, 0, 1, (DWORD)savedregs);
   v19 = (_DWORD *)v18;
   source_name_holder[0] = 0;
-  source_name_holder[1] = (int)&off_50EC94;
+  source_name_holder[1] = (int)&g_PathEntry_Vtable;
   if ( v18 )
   {
     v18 = FileSystem_ArchiveEntryReaderCtor(v19, v26, v26[12], 26 * v21[2] + 4, (const void *)source_name_holder);
@@ -92746,7 +92736,7 @@ int  File_ResolveCachedPathEntry(_DWORD *a1, _DWORD *a2, const char *a3, DWORD a
   }
   ++dword_54DD18;
   parent_holder[0] = 0;
-  parent_holder[1] = (int)&off_50EC94;
+  parent_holder[1] = (int)&g_PathEntry_Vtable;
   last_slash = Compat_StrrchrChar(path_text, '\\');
   if ( last_slash )
   {
@@ -92864,20 +92854,20 @@ _DWORD * File_OpenNodeByFlags(char a1)
   const char *v26[6]; // [esp+28h] [ebp-18h] BYREF
 
   v17 = 0;
-  v18 = &off_50EC84;
+  v18 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v17);
-  v18 = &off_50EC94;
-  v2 = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&off_50EC94);
+  v18 = &g_PathEntry_Vtable;
+  v2 = File_ResolvePathByParentAndLeaf(v1, v1, (DWORD)&g_PathEntry_Vtable);
   Compat_StringHolderScalarDeletingDtor((int)&v17, 1);
   if ( v2 )
   {
     if ( (a1 & 8) == 0 )
     {
-      result = (_DWORD *)Mem_Alloc(20, v3, a1, (DWORD)&off_50EC94);
+      result = (_DWORD *)Mem_Alloc(20, v3, a1, (DWORD)&g_PathEntry_Vtable);
       if ( result )
       {
         result = FileSystem_ArchiveEntryStreamCtor(result, v2, v5);
-        *result = off_510B74;
+        *result = g_FileArchiveEntryStream_VTable;
       }
       return result;
     }
@@ -92889,34 +92879,34 @@ _DWORD * File_OpenNodeByFlags(char a1)
   if ( ExcString_GetTextPtr(v3 + 12) && *(_BYTE *)ExcString_GetTextPtr(v6) )
     return 0;
   v21 = 0;
-  v22 = &off_50EC84;
+  v22 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v21);
-  v22 = &off_50EC94;
+  v22 = &g_PathEntry_Vtable;
   v7 = FileSystem_PathTrimToParentDir(v25);
-  v9 = (_DWORD *)File_ResolveCachedPathEntry(v8, v7, v8, (DWORD)&off_50EC94);
+  v9 = (_DWORD *)File_ResolveCachedPathEntry(v8, v7, v8, (DWORD)&g_PathEntry_Vtable);
   Compat_StringHolderScalarDeletingDtor((int)v25, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v21, 1);
   v19 = 0;
-  v20 = &off_50EC84;
+  v20 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v19);
-  v20 = &off_50EC94;
+  v20 = &g_PathEntry_Vtable;
   FileSystem_PathExtractFileName(v26);
   Compat_StringHolderScalarDeletingDtor((int)&v19, 1);
   if ( v9 && (v11 = FileSystem_ArchiveInsertDirectoryEntry(v9, v26)) != 0 )
   {
-    v24 = &off_50EC84;
+    v24 = &g_CompatStringHolder_Vtable;
     v23 = 0;
     v12 = (_DWORD *)(v10 + 12);
     Compat_StringHolderDestructor(&v23);
-    v24 = &off_50EC94;
+    v24 = &g_PathEntry_Vtable;
     ExcString_GetTextPtr((int)&v23);
     ExcString_ReleaseText(v12);
     Compat_StringHolderScalarDeletingDtor((int)&v23, 1);
-    v14 = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&off_50EC84);
+    v14 = (_DWORD *)Mem_Alloc(20, v13, (char)v12, (DWORD)&g_CompatStringHolder_Vtable);
     if ( v14 )
     {
       v14 = FileSystem_ArchiveEntryStreamCtor(v14, v11, v15);
-      *v14 = off_510BA4;
+      *v14 = g_FileDirNode_VTable;
     }
     v16 = v14;
     Compat_StringHolderScalarDeletingDtor((int)v26, 1);
@@ -92962,17 +92952,17 @@ signed int  File_OpenEntryForWrite(int a1, int a2)
   if ( !a2 )
     a2 = *(_DWORD *)(v3 + 24);
   v13 = 0;
-  v14 = &off_50EC84;
+  v14 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v13);
-  v14 = &off_50EC94;
+  v14 = &g_PathEntry_Vtable;
   v4 = FileSystem_PathTrimToParentDir(v15);
-  File_ResolveCachedPathEntry(v5, v4, v5, (DWORD)&off_50EC94);
+  File_ResolveCachedPathEntry(v5, v4, v5, (DWORD)&g_PathEntry_Vtable);
   Compat_StringHolderScalarDeletingDtor((int)v15, 1);
   Compat_StringHolderScalarDeletingDtor((int)&v13, 1);
   v11 = 0;
-  v12 = &off_50EC84;
+  v12 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v11);
-  v12 = &off_50EC94;
+  v12 = &g_PathEntry_Vtable;
   FileSystem_PathExtractFileName(v10);
   Compat_StringHolderScalarDeletingDtor((int)&v11, 1);
   if ( v6 )
@@ -93021,9 +93011,9 @@ int  File_PrimePathCacheEntry(int a1, DWORD a2)
 
   v7 = a1;
   v5 = 0;
-  v6 = &off_50EC84;
+  v6 = &g_CompatStringHolder_Vtable;
   Compat_StringHolderDestructor(&v5);
-  v6 = &off_50EC94;
+  v6 = &g_PathEntry_Vtable;
   File_ResolveCachedPathEntry(v2, &v5, v2, a2);
   Compat_StringHolderScalarDeletingDtor((int)&v5, 1);
   return v3;
@@ -93112,7 +93102,7 @@ int * File_ConstructReadOnlySource(int *a1, const CHAR *a2, int a3, int a4, int 
   int *result; // eax
 
   result = File_SourceConstructFromStream(a1, a2, (unsigned __int8 *)aRb_11, a4, a5, a3);
-  *result = (int)off_510C04;
+  *result = (int)g_FileReadOnlySource_VTable;
   return result;
 }
 // 510C04: using guessed type int (*off_510C04[4])();
@@ -93132,7 +93122,7 @@ _DWORD * File_OpenMountRootEntry(int a1, char a2, DWORD a3)
   if ( result )
   {
     result = FileSystem_ArchiveEntryStreamCtor(result, v5, a1);
-    *result = off_510B74;
+    *result = g_FileArchiveEntryStream_VTable;
   }
   return result;
 }
@@ -93152,7 +93142,7 @@ int * File_AllocateReadOnlySource(const CHAR *a1, int a2, char a3, DWORD a4, int
 //----- (00479C20) --------------------------------------------------------
 _DWORD * File_CacheNodeConstructBase(_DWORD *result)
 {
-  *result = off_510B14;
+  *result = g_FileCacheNode_VTable;
   return result;
 }
 // 510B14: using guessed type int (*off_510B14[6])();
@@ -93189,9 +93179,9 @@ _DWORD * Compat_QueryConstructDefault(int a1)
   v1 = (_DWORD *)(a1 + 12);
   *v1 = 0;
   result = v1 - 3;
-  result[4] = &off_50EC94;
+  result[4] = &g_PathEntry_Vtable;
   result[7] = 0;
-  *result = off_510B34;
+  *result = g_FileSource_VTable;
   return result;
 }
 // 50EC94: using guessed type int (*off_50EC94)();
@@ -93233,7 +93223,7 @@ int  Compat_QueryDestruct(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_510CC0);
+    _wcpp_4_dtor_array_store__(result, &g_CompatQuery_DtorArrayDescriptor);
     j_j__nfree_();
     return v3;
   }
@@ -93257,7 +93247,7 @@ int  Compat_QueryCloseAndDestruct(_DWORD *a1, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(a1, &unk_510CE0);
+    _wcpp_4_dtor_array_store__(a1, &g_CompatQueryCloseAndDestruct_DtorArrayDescriptor);
     j_j__nfree_();
     return v4;
   }
@@ -93284,7 +93274,7 @@ int Rules_InitFacts()
   Rules_AddClearReadyFunction((int)aFacts_0, (int)Rules_ClearFacts, 0);
   Rules_AddPeriodicFunction((int)aFacts_0, (int)Rules_RemoveGarbageFacts, 0);
   Rules_RegisterFactsConstruct();
-  Rules_AddWatchItem((int)aFacts_0, 0, 80, (int)&dword_51A150, (int)Rules_ToggleFactWatchFlag, (int)Rules_WatchPrintFactsState);
+  Rules_AddWatchItem((int)aFacts_0, 0, 80, (int)&g_Rules_WatchFactsFlag, (int)Rules_ToggleFactWatchFlag, (int)Rules_WatchPrintFactsState);
   Rules_RegisterFactCommands();
   Rules_RegisterFactQueryFunctions();
   Rules_RegisterFactPatternNetworkPersistence();
@@ -93333,9 +93323,9 @@ signed int  Rules_PrintFactIdentifier(int a1, int a2)
   int v7; // ecx
 
   v2 = a1;
-  if ( dword_51A5FC )
+  if ( g_Print_AddressesToStringsFlag )
     Output_Write(a1, (int)asc_502524, a1);
-  if ( (void **)a2 == &off_51A114 )
+  if ( (void **)a2 == &g_Rules_DummyFactPtr )
   {
     v5 = aDummyFact;
   }
@@ -93346,7 +93336,7 @@ signed int  Rules_PrintFactIdentifier(int a1, int a2)
     v5 = asc_502530;
   }
   result = Output_Write(v2, (int)v5, v2);
-  if ( dword_51A5FC )
+  if ( g_Print_AddressesToStringsFlag )
     return Output_Write(v7, (int)asc_502524, v7);
   return result;
 }
@@ -93407,28 +93397,28 @@ signed int  Rules_RetractFact(int a1, double a2)
   if ( dword_51A954 )
   {
     Rules_PrintErrorID((int)aFactmngr, 1, 1);
-    Output_Write((int)off_51A614[0], (int)aFactsMayNotBeR, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeR, 0);
     return 0;
   }
   if ( !fact )
   {
-    while ( dword_51A15C )
-      Rules_RetractFact(dword_51A15C, a2);
+    while ( g_Rules_FactListHead )
+      Rules_RetractFact(g_Rules_FactListHead, a2);
     return 1;
   }
   if ( *(char *)(fact + 29) < 0 )
     return 0;
   if ( (*(_BYTE *)((uintptr_t)(unsigned int)*(_DWORD *)(fact + 16) + 24) & 2) != 0 )
   {
-    Output_Write((int)off_51A618[0], (int)asc_502590, 0);
-    Rules_PrintFactWithIndex((int)off_51A618[0], (int)fact);
-    Output_Write((int)off_51A618[0], (int)asc_502598, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502590, 0);
+    Rules_PrintFactWithIndex((int)g_IO_LogicalNameTable_WTrace[0], (int)fact);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502598, 0);
   }
-  dword_51A110 = 1;
+  g_Rules_FactListChangedFlag = 1;
   Rules_ReleaseLogicalSupportList((int)fact);
   Rules_RemoveFactHashEntry((int)fact);
-  if ( (int)fact == dword_51A158 )
-    dword_51A158 = *(_DWORD *)(fact + 32);
+  if ( (int)fact == g_Rules_LastFactPointer )
+    g_Rules_LastFactPointer = *(_DWORD *)(fact + 32);
   if ( *(_DWORD *)(fact + 32) )
   {
     uintptr_t previous = (uintptr_t)(unsigned int)*(_DWORD *)(fact + 32);
@@ -93439,22 +93429,22 @@ signed int  Rules_RetractFact(int a1, double a2)
   }
   else
   {
-    int new_head = *(_DWORD *)((uintptr_t)(unsigned int)dword_51A15C + 36);
-    dword_51A15C = new_head;
+    int new_head = *(_DWORD *)((uintptr_t)(unsigned int)g_Rules_FactListHead + 36);
+    g_Rules_FactListHead = new_head;
     if ( new_head )
       *(_DWORD *)((uintptr_t)(unsigned int)new_head + 32) = 0;
   }
   Rules_DeinstallFact((int)fact);
   ++dword_51A934;
   dword_51A938 += 6 * *(_DWORD *)(fact + 46) + 60;
-  *(_DWORD *)(fact + 36) = dword_51A154;
-  dword_51A154 = (int)fact;
+  *(_DWORD *)(fact + 36) = g_Rules_GarbageFactListHead;
+  g_Rules_GarbageFactListHead = (int)fact;
   *(_BYTE *)(fact + 29) |= 0x80u;
   Lexer_ErrorRecover(0);
   dword_51A954 = 1;
   Rules_RetractFactFromNetwork(*(_DWORD **)(fact + 20), a2);
   dword_51A954 = 0;
-  if ( !dword_51A1F0 )
+  if ( !g_Rules_CurrentlyExecutingRule )
     Rules_FlushPendingNetworkGarbage();
   Rules_FlushPendingDependencyDestructors();
   if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
@@ -93483,8 +93473,8 @@ _DWORD *Rules_RemoveGarbageFacts()
   _DWORD *v2; // edx
   int v3; // ecx
 
-  result = (_DWORD *)dword_51A154;
-  if ( dword_51A154 )
+  result = (_DWORD *)g_Rules_GarbageFactListHead;
+  if ( g_Rules_GarbageFactListHead )
   {
     do
     {
@@ -93503,7 +93493,7 @@ _DWORD *Rules_RemoveGarbageFacts()
       if ( v3 )
         *(_DWORD *)(v3 + 36) = v2;
       else
-        dword_51A154 = (int)v2;
+        g_Rules_GarbageFactListHead = (int)v2;
       result = v2;
     }
     while ( v2 );
@@ -93539,7 +93529,7 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
   {
     Rules_ReturnFact(a1);
     Rules_PrintErrorID((int)aFactmngr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aFactsMayNotBeA, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactsMayNotBeA, v9);
     return 0;
   }
   v3 = (char *)a1 + 54;
@@ -93569,33 +93559,33 @@ _DWORD * Rules_AssertFactDriver(_DWORD *a1, double a2)
     Rules_InsertFactHashEntry((int)a1, v10);
     a1[9] = 0;
     a1[5] = 0;
-    v11 = dword_51A158;
-    a1[8] = dword_51A158;
+    v11 = g_Rules_LastFactPointer;
+    a1[8] = g_Rules_LastFactPointer;
     if ( v11 )
       *(_DWORD *)(v11 + 36) = a1;
     else
-      dword_51A15C = (int)a1;
-    v12 = dword_51A160;
-    dword_51A158 = (int)a1;
-    ++dword_51A160;
+      g_Rules_FactListHead = (int)a1;
+    v12 = g_Rules_NextFactIndex;
+    g_Rules_LastFactPointer = (int)a1;
+    ++g_Rules_NextFactIndex;
     a1[6] = v12;
     v13 = dword_51A998++;
     a1[3] = v13;
     Rules_InstallFact(a1);
     if ( (*(_BYTE *)(a1[4] + 24) & 2) != 0 )
     {
-      Output_Write((int)off_51A618[0], (int)asc_5025D4, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_5025D4, v14);
       Rules_PrintFactWithIndex(v15, (int)a1);
-      Output_Write((int)off_51A618[0], (int)asc_502598, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502598, v16);
     }
-    dword_51A110 = 1;
+    g_Rules_FactListChangedFlag = 1;
     Rules_CheckFactAgainstSlotConstraints((int)a1);
     Lexer_ErrorRecover(0);
     dword_51A954 = 1;
     Rules_MatchFactAgainstPatternNetwork((int)a1, *(_DWORD *)(a1[4] + 32), 0, 0, a2, 0);
     dword_51A954 = 0;
     Rules_FlushPendingDependencyDestructors();
-    if ( !dword_51A1F0 )
+    if ( !g_Rules_CurrentlyExecutingRule )
       Rules_FlushPendingNetworkGarbage();
     if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
       Rules_RunPeriodicCleanup(1, 0);
@@ -93633,7 +93623,7 @@ signed int  Rules_RemoveAllFacts(double a1)
 {
   signed int result; // eax
 
-  for ( ; dword_51A15C; result = Rules_RetractFact(dword_51A15C, a1) )
+  for ( ; g_Rules_FactListHead; result = Rules_RetractFact(g_Rules_FactListHead, a1) )
     ;
   return result;
 }
@@ -93791,7 +93781,7 @@ int  Rules_InstallFact(_DWORD *a1)
   int v4; // ecx
   int v5; // ecx
 
-  ++dword_51A164;
+  ++g_Rules_InstalledFactCount;
   result = a1[4];
   ++*(_DWORD *)(result + 28);
   v3 = 0;
@@ -93823,7 +93813,7 @@ int  Rules_DeinstallFact(int a1)
   int v6; // ecx
 
   v2 = a1 + 40;
-  --dword_51A164;
+  --g_Rules_InstalledFactCount;
   result = *(_DWORD *)(a1 + 16);
   --*(_DWORD *)(result + 28);
   v4 = 0;
@@ -93849,7 +93839,7 @@ int  Rules_DeinstallFact(int a1)
 int  Rules_GetNextFact(int a1)
 {
   if ( !a1 )
-    return dword_51A15C;
+    return g_Rules_FactListHead;
   if ( *(char *)(a1 + 29) >= 0 )
     return *(_DWORD *)(a1 + 36);
   return 0;
@@ -93869,11 +93859,11 @@ int  Rules_GetNextFactInModule(int a1)
   }
   else
   {
-    v1 = dword_51A15C;
-    if ( dword_51A168 != dword_51A9C0 )
+    v1 = g_Rules_FactListHead;
+    if ( g_Rules_LastFactModuleCache != dword_51A9C0 )
     {
       Lexer_MarkImpliedTemplates();
-      dword_51A168 = dword_51A9C0;
+      g_Rules_LastFactModuleCache = dword_51A9C0;
     }
   }
   while ( v1 && (*(_BYTE *)(*(_DWORD *)(v1 + 16) + 24) & 4) == 0 )
@@ -93905,7 +93895,7 @@ _DWORD * Rules_Log(const char *a1, int a2, double a3)
 //----- (0047AA80) --------------------------------------------------------
 int Rules_GetInstalledFactCount()
 {
-  return dword_51A164;
+  return g_Rules_InstalledFactCount;
 }
 // 51A164: using guessed type int dword_51A164;
 
@@ -93914,7 +93904,7 @@ signed int  Rules_ResetFacts(double a1)
 {
   signed int result; // eax
 
-  for ( dword_51A160 = 0; dword_51A15C; result = Rules_RetractFact(dword_51A15C, a1) )
+  for ( g_Rules_NextFactIndex = 0; g_Rules_FactListHead; result = Rules_RetractFact(g_Rules_FactListHead, a1) )
     ;
   return result;
 }
@@ -93924,9 +93914,9 @@ signed int  Rules_ResetFacts(double a1)
 //----- (0047AAD0) --------------------------------------------------------
 BOOL  Rules_ClearFacts(double a1)
 {
-  dword_51A160 = 0;
-  while ( dword_51A15C )
-    Rules_RetractFact(dword_51A15C, a1);
+  g_Rules_NextFactIndex = 0;
+  while ( g_Rules_FactListHead )
+    Rules_RetractFact(g_Rules_FactListHead, a1);
   return Rules_GetNextFact(0) == 0;
 }
 // 51A15C: using guessed type int dword_51A15C;
@@ -94193,7 +94183,7 @@ signed int  Rules_FactsCommand(double a1)
     return result;
   Module_GetCurrent();
   if ( !v2 )
-    return Rules_PrintFactRange((int)off_51A624, -1, -1, -1);
+    return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, -1, -1, -1);
   Rules_RtnUnknown(1, &v10, a1);
   if ( v11 != 2 )
   {
@@ -94222,7 +94212,7 @@ LABEL_8:
     {
       result = Rules_ParsePositiveIntArg(v6 + 3, v3, result, a1);
       if ( result != -2 )
-        return Rules_PrintFactRange((int)off_51A624, v7, v5, result);
+        return Rules_PrintFactRange((int)g_IO_LogicalName_WDisplay, v7, v5, result);
     }
   }
   return result;
@@ -94439,18 +94429,18 @@ signed int  Rules_SaveFactsToFile(const CHAR *a1, int a2, _DWORD *a3, double a4)
   if ( v5 )
   {
     IO_SetFastSaveFile(v5);
-    v17 = dword_51A5F8;
-    dword_51A5F8 = 1;
-    v18 = dword_51A5FC;
-    dword_51A5FC = 1;
-    v19 = dword_51A600;
-    dword_51A600 = 1;
+    v17 = g_Print_PreserveEscapedCharactersFlag;
+    g_Print_PreserveEscapedCharactersFlag = 1;
+    v18 = g_Print_AddressesToStringsFlag;
+    g_Print_AddressesToStringsFlag = 1;
+    v19 = g_Print_InstanceAddressesToNamesFlag;
+    g_Print_InstanceAddressesToNamesFlag = 1;
     v22 = Rules_CollectFactsToArray(a3, v21, &v16, &v15, a4);
     if ( v16 )
     {
-      dword_51A5F8 = v17;
-      dword_51A5FC = v18;
-      dword_51A600 = v19;
+      g_Print_PreserveEscapedCharactersFlag = v17;
+      g_Print_AddressesToStringsFlag = v18;
+      g_Print_InstanceAddressesToNamesFlag = v19;
       fclose_(v8);
       IO_SetFastSaveFile(0);
       return 0;
@@ -94481,9 +94471,9 @@ signed int  Rules_SaveFactsToFile(const CHAR *a1, int a2, _DWORD *a3, double a4)
 LABEL_6:
         ;
       }
-      dword_51A5F8 = v17;
-      dword_51A5FC = v18;
-      dword_51A600 = v19;
+      g_Print_PreserveEscapedCharactersFlag = v17;
+      g_Print_AddressesToStringsFlag = v18;
+      g_Print_InstanceAddressesToNamesFlag = v19;
       fclose_(v9);
       IO_SetFastSaveFile(0);
       if ( a3 )
@@ -94674,7 +94664,7 @@ int  Rules_ParseAssertFormFromFile(int a1, _DWORD *a2)
   *(_DWORD *)(v6 + 6) = Rules_ParseAssertRHSPattern(a1, (int)a2, 1, v8, 0, 1, 101);
   if ( v8[0] == 1 )
   {
-    Output_Write((int)off_51A614[0], (int)aFunctionLoadFa, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionLoadFa, v7);
     Lexer_ErrorRecover(1);
   }
   else if ( !AST_TreeContainsSpecialTag(v6, 1) )
@@ -94744,9 +94734,9 @@ signed int  IO_SeekStreamGuarded(int a1, int a2, unsigned int a3, int a4)
 
   (void)a4;
   fd_index = *(_DWORD *)(a1 + 16);
-  off_51A56C(fd_index);
+  g_CRT_FileHandleLockAcquireHook(fd_index);
   seek_result = Compat_StreamSeek(a1, a2, (int)a3);
-  off_51A570(fd_index, seek_result);
+  g_CRT_FileHandleLockReleaseHook(fd_index, seek_result);
   if ( seek_result == -1 )
     return -1;
   return 0;
@@ -95046,8 +95036,8 @@ int Rules_FindConstructByName()
   _DWORD *v0; // ecx
   int v1; // ecx
 
-  v0 = (_DWORD *)dword_51A194;
-  if ( !dword_51A194 )
+  v0 = (_DWORD *)g_Rules_ConstructTypeListHead;
+  if ( !g_Rules_ConstructTypeListHead )
     return 0;
   while ( strcmp_(v0, *v0) )
   {
@@ -95073,7 +95063,7 @@ signed int  Rules_Save(const CHAR *a1, int a2, DWORD a3)
   if ( result )
   {
     IO_SetFastSaveFile(result);
-    for ( i = dword_51A188; i; i = *(_DWORD *)(v6 + 12) )
+    for ( i = g_Rules_SaveFunctionListHead; i; i = *(_DWORD *)(v6 + 12) )
       (*(void (**)(void))(i + 4))();
     fclose_(v4);
     IO_SetFastSaveFile(0);
@@ -95089,14 +95079,14 @@ signed int  Rules_Save(const CHAR *a1, int a2, DWORD a3)
 //----- (0047C340) --------------------------------------------------------
 int Rules_GetWatchCompilations()
 {
-  return dword_51A190;
+  return g_Rules_WatchCompilationsFlag;
 }
 // 51A190: using guessed type int dword_51A190;
 
 //----- (0047C350) --------------------------------------------------------
 int  Rules_SetLoadInProgress(int result)
 {
-  dword_51A18C = result;
+  g_Rules_LoadInProgressFlag = result;
   return result;
 }
 // 51A18C: using guessed type int dword_51A18C;
@@ -95104,7 +95094,7 @@ int  Rules_SetLoadInProgress(int result)
 //----- (0047C360) --------------------------------------------------------
 int Rules_GetLoadInProgress()
 {
-  return dword_51A18C;
+  return g_Rules_LoadInProgressFlag;
 }
 // 51A18C: using guessed type int dword_51A18C;
 
@@ -95113,7 +95103,7 @@ int Rules_RegisterClearResetCommands()
 {
   Rules_RegisterHostFunction(aClear, 118, (int)aClearcommand, (int)Rules_ClearCommand, (int)a00_13);
   Rules_RegisterHostFunction(aReset, 118, (int)aResetcommand, (int)Rules_ResetCommand, (int)a00_13);
-  return Rules_AddWatchItem((int)aCompilations, 0, 30, (int)&dword_51A190, 0, 0);
+  return Rules_AddWatchItem((int)aCompilations, 0, 30, (int)&g_Rules_WatchCompilationsFlag, 0, 0);
 }
 // 51A190: using guessed type int dword_51A190;
 
@@ -95141,16 +95131,16 @@ void Rules_Reset()
   int v0; // edx
   int *v2; // eax
 
-  if ( !dword_51A184 )
+  if ( !g_Rules_ResetInProgressFlag )
   {
-    dword_51A184 = 1;
+    g_Rules_ResetInProgressFlag = 1;
     if ( !dword_51A96C )
       Rules_SetEvaluationErrorFlag(0);
-    if ( !dword_51A1A8 || dword_51A1A8() )
+    if ( !g_Rules_BeforeResetCallback || g_Rules_BeforeResetCallback() )
     {
-      if ( dword_51A198 )
+      if ( g_Rules_ResetFunctionListHead )
       {
-        v0 = dword_51A198;
+        v0 = g_Rules_ResetFunctionListHead;
         do
         {
           if ( Rules_GetEvaluationErrorFlag() )
@@ -95164,11 +95154,11 @@ void Rules_Reset()
       Module_SetCurrent((int)v2);
       if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
         Rules_RunPeriodicCleanup(1, 0);
-      dword_51A184 = 0;
+      g_Rules_ResetInProgressFlag = 0;
     }
     else
     {
-      dword_51A184 = 0;
+      g_Rules_ResetInProgressFlag = 0;
     }
   }
 }
@@ -95184,7 +95174,7 @@ void Rules_Reset()
 //----- (0047C4E0) --------------------------------------------------------
 signed int  Rules_AddResetFunction(int a1, int a2, int a3)
 {
-  dword_51A198 = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A198, a2);
+  g_Rules_ResetFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ResetFunctionListHead, a2);
   return 1;
 }
 // 51A198: using guessed type int dword_51A198;
@@ -95196,25 +95186,25 @@ signed int Rules_Clear()
   int (*clear_callback)(void); // eax
   signed int result; // eax
 
-  IO_ActivateRouter((int)off_51A618[0]);
+  IO_ActivateRouter((int)g_IO_LogicalNameTable_WTrace[0]);
   if ( Rules_ClearReady() )
   {
-    dword_51A180 = 1;
-    for ( i = dword_51A19C; i; i = *(_DWORD *)(i + 12) )
+    g_Rules_ClearInProgressFlag = 1;
+    for ( i = g_Rules_ClearFunctionListHead; i; i = *(_DWORD *)(i + 12) )
     {
       clear_callback = (int (*)(void))(uintptr_t)(unsigned int)*(_DWORD *)(i + 4);
       clear_callback();
     }
-    result = IO_DeactivateRouter((int)off_51A618[0]);
+    result = IO_DeactivateRouter((int)g_IO_LogicalNameTable_WTrace[0]);
     if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
       result = Rules_RunPeriodicCleanup(1, 0);
-    dword_51A180 = 0;
+    g_Rules_ClearInProgressFlag = 0;
   }
   else
   {
     Rules_PrintErrorID((int)aConstrct, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aSomeConstructs, 0);
-    return IO_DeactivateRouter((int)off_51A618[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSomeConstructs, 0);
+    return IO_DeactivateRouter((int)g_IO_LogicalNameTable_WTrace[0]);
   }
   return result;
 }
@@ -95233,7 +95223,7 @@ int Rules_ClearReady()
   int result; // eax
   int (*query_callback)(void); // eax
 
-  item = dword_51A1A0;
+  item = g_Rules_ClearReadyFunctionListHead;
   if ( !item )
     return 1;
   while ( 1 )
@@ -95253,7 +95243,7 @@ int Rules_ClearReady()
 //----- (0047C610) --------------------------------------------------------
 signed int  Rules_AddClearReadyFunction(int a1, int a2, int a3)
 {
-  dword_51A1A0 = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A1A0, a2);
+  g_Rules_ClearReadyFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ClearReadyFunctionListHead, a2);
   return 1;
 }
 // 51A1A0: using guessed type int dword_51A1A0;
@@ -95261,7 +95251,7 @@ signed int  Rules_AddClearReadyFunction(int a1, int a2, int a3)
 //----- (0047C660) --------------------------------------------------------
 signed int  Rules_AddClearFunction(int a1, int a2, int a3)
 {
-  dword_51A19C = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A19C, a2);
+  g_Rules_ClearFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_ClearFunctionListHead, a2);
   return 1;
 }
 // 51A19C: using guessed type int dword_51A19C;
@@ -95271,7 +95261,7 @@ BOOL Rules_RemoveClearFunction(int a1)
 {
   _DWORD v3[3]; // [esp+0h] [ebp-Ch] BYREF
 
-  dword_51A19C = Rules_RemoveNamedCallbackReturningHead(a1, dword_51A19C, v3);
+  g_Rules_ClearFunctionListHead = Rules_RemoveNamedCallbackReturningHead(a1, g_Rules_ClearFunctionListHead, v3);
   return v3[0] != 0;
 }
 // 51A19C: using guessed type int dword_51A19C;
@@ -95279,14 +95269,14 @@ BOOL Rules_RemoveClearFunction(int a1)
 //----- (0047C6B0) --------------------------------------------------------
 int Rules_GetReentryGuardFlag()
 {
-  return dword_51A1A4;
+  return g_Rules_ReentryGuardFlag;
 }
 // 51A1A4: using guessed type int dword_51A1A4;
 
 //----- (0047C6C0) --------------------------------------------------------
 int  Rules_SetReentryGuardFlag(int result)
 {
-  dword_51A1A4 = result;
+  g_Rules_ReentryGuardFlag = result;
   return result;
 }
 // 51A1A4: using guessed type int dword_51A1A4;
@@ -95397,8 +95387,8 @@ _DWORD * Rules_RegisterConstructType(
   result[9] = a10;
   result[10] = a11;
   result[11] = a12;
-  result[12] = dword_51A194;
-  dword_51A194 = (int)result;
+  result[12] = g_Rules_ConstructTypeListHead;
+  g_Rules_ConstructTypeListHead = (int)result;
   return result;
 }
 // 47C7CE: variable 'a3' is possibly undefined
@@ -95409,7 +95399,7 @@ _DWORD * Rules_RegisterConstructType(
 //----- (0047C830) --------------------------------------------------------
 signed int  Rules_AddSaveFunction(int a1, int a2, int a3)
 {
-  dword_51A188 = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A188, a2);
+  g_Rules_SaveFunctionListHead = (int)Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_SaveFunctionListHead, a2);
   return 1;
 }
 // 51A188: using guessed type int dword_51A188;
@@ -95432,37 +95422,37 @@ signed int  Rules_Bload(int a1, DWORD a2)
   result = Rules_BloadOpenFile((const CHAR *)(uintptr_t)(unsigned int)a1, a2);
   if ( !result )
     return result;
-  Rules_BloadReadBlock((uintptr_t)header, strlen((const char *)off_51A1C0) + 1);
-  if ( strcmp(header, (const char *)off_51A1C0) )
+  Rules_BloadReadBlock((uintptr_t)header, strlen((const char *)g_Rules_BloadFileHeaderID) + 1);
+  if ( strcmp(header, (const char *)g_Rules_BloadFileHeaderID) )
   {
     Rules_PrintErrorID((int)aBload_0, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aFile, 0);
-    Output_Write((int)off_51A614[0], a1, 0);
-    Output_Write((int)off_51A614[0], (int)aIsNotABinaryCo, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotABinaryCo, 0);
     Rules_BloadCloseFile(0);
     return 0;
   }
-  Rules_BloadReadBlock((uintptr_t)header, strlen(off_51A1C4) + 1);
-  if ( strcmp(header, off_51A1C4) )
+  Rules_BloadReadBlock((uintptr_t)header, strlen(g_Rules_BsaveVersionID) + 1);
+  if ( strcmp(header, g_Rules_BsaveVersionID) )
   {
     Rules_PrintErrorID((int)aBload_0, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aFile, 0);
-    Output_Write((int)off_51A614[0], a1, 0);
-    Output_Write((int)off_51A614[0], (int)aIsAnIncompatib, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFile, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsAnIncompatib, 0);
 LABEL_20:
     Rules_BloadCloseFile(0);
     return 0;
   }
-  if ( dword_51A1AC && !Rules_ClearBload() )
+  if ( g_Rules_FactsBloadedFlag && !Rules_ClearBload() )
     goto LABEL_20;
   if ( !Rules_ClearReady() )
   {
     Rules_BloadCloseFile(0);
-    Output_Write((int)off_51A614[0], (int)aTheClipsEnviro, 0);
-    Output_Write((int)off_51A614[0], (int)aBinaryLoadCann, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheClipsEnviro, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBinaryLoadCann, 0);
     return 0;
   }
-  for ( i = dword_51A1B0; i; i = *(_DWORD *)(i + 12) )
+  for ( i = g_Rules_BeforeBloadFunctionListHead; i; i = *(_DWORD *)(i + 12) )
   {
     callback = *(_DWORD *)(i + 4);
     if ( callback )
@@ -95478,7 +95468,7 @@ LABEL_20:
   Rules_BloadAtomTables();
   Rules_BloadAllocExpressionArray();
   Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
-  while ( strncmp(construct_name, (const char *)off_51A1C0, 0x14u) )
+  while ( strncmp(construct_name, (const char *)g_Rules_BloadFileHeaderID, 0x14u) )
   {
     construct = dword_51AA3C;
     if ( construct )
@@ -95501,9 +95491,9 @@ LABEL_29:
     Rules_BloadSeekFile(skip_size, 0);
     if ( skip_size )
     {
-      Output_Write((int)off_51A61C[0], (int)aSkipping, 0);
-      Output_Write((int)off_51A61C[0], a1, 0);
-      Output_Write((int)off_51A61C[0], (int)aConstructsBeca, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aSkipping, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], a1, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aConstructsBeca, 0);
       Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
     }
     else
@@ -95515,7 +95505,7 @@ LABEL_27:
   Rules_BloadRefreshExpressions();
   Rules_BloadConstraints();
   Rules_BloadReadBlock((uintptr_t)construct_name, 0x14u);
-  while ( strncmp(construct_name, (const char *)off_51A1C0, 0x14u) )
+  while ( strncmp(construct_name, (const char *)g_Rules_BloadFileHeaderID, 0x14u) )
   {
     construct_table = dword_51AA3C;
     if ( !construct_table )
@@ -95544,13 +95534,13 @@ LABEL_32:
   if ( dword_54DD24 )
     Mem_ReleasePoolBlock(dword_54DD24, 4 * function_table_count);
   Rules_FreeBloadAtomTables();
-  for ( i = dword_51A1B4; i; i = *(_DWORD *)(i + 12) )
+  for ( i = g_Rules_AfterBloadCallbackListHead; i; i = *(_DWORD *)(i + 12) )
   {
     callback = *(_DWORD *)(i + 4);
     if ( callback )
       ((void (*)(void))(uintptr_t)(unsigned int)callback)();
   }
-  dword_51A1AC = 1;
+  g_Rules_FactsBloadedFlag = 1;
   Rules_AddClearFunction((int)aBload, (int)Rules_ClearBload, 10000);
   return 1;
 }
@@ -95686,13 +95676,13 @@ int  Rules_ReadNeededFunctions(int *a1, int *a2)
       if ( !unresolved )
       {
         Rules_PrintErrorID((int)aBload_0, 6, 0);
-        Output_Write((int)off_51A614[0], (int)aTheFollowingUn, 0);
-        Output_Write((int)off_51A614[0], (int)aReferencedByTh, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheFollowingUn, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReferencedByTh, 0);
       }
-      Output_Write((int)off_51A614[0], (int)asc_502A88, 0);
-      Output_Write((int)off_51A614[0], (int)(uintptr_t)function_name, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A88, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)(uintptr_t)function_name, 0);
       unresolved = 1;
-      Output_Write((int)off_51A614[0], (int)asc_502A8C, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A8C, 0);
     }
     *(_DWORD *)(table + 4 * i) = resolved_function;
     function_name += strlen(function_name) + 1;
@@ -95738,7 +95728,7 @@ int __fastcall Rules_FindFunctionByName(int a1, int a2)
 //----- (0047CEB0) --------------------------------------------------------
 int Rules_IsBloaded()
 {
-  return dword_51A1AC;
+  return g_Rules_FactsBloadedFlag;
 }
 // 51A1AC: using guessed type int dword_51A1AC;
 
@@ -95751,7 +95741,7 @@ signed int Rules_ClearBload()
   int callback; // eax
 
   failed = 0;
-  for ( callback_node = dword_51A1B8; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
+  for ( callback_node = g_Rules_BloadClearReadyCallbackListHead; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
   {
     callback = *(_DWORD *)(callback_node + 4);
     if ( callback && !((int (*)(void))(uintptr_t)(unsigned int)callback)() )
@@ -95759,17 +95749,17 @@ signed int Rules_ClearBload()
       if ( !failed )
       {
         Rules_PrintErrorID((int)aBload_0, 5, 0);
-        Output_Write((int)off_51A614[0], (int)aSomeConstruc_0, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSomeConstruc_0, 0);
       }
-      Output_Write((int)off_51A614[0], (int)asc_502A88, 0);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(callback_node + 0), 0);
-      Output_Write((int)off_51A614[0], (int)asc_502A8C, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A88, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(callback_node + 0), 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_502A8C, 0);
       failed = 1;
     }
   }
   if ( failed == 1 )
   {
-    Output_Write((int)off_51A614[0], (int)aBinaryClearCan, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBinaryClearCan, 0);
     return 0;
   }
   else
@@ -95782,7 +95772,7 @@ signed int Rules_ClearBload()
     }
     Rules_FreeBloadedExpressions();
     Rules_ClearBloadedConstraints();
-    dword_51A1AC = 0;
+    g_Rules_FactsBloadedFlag = 0;
     Rules_RemoveClearFunction((int)aBload);
     return 1;
   }
@@ -95800,7 +95790,7 @@ int Rules_CallAbortBloadFunctions()
   int result; // eax
 
   result = 0;
-  for ( callback_node = dword_51A1BC; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
+  for ( callback_node = g_Rules_AbortBloadCallbackListHead; callback_node; callback_node = *(_DWORD *)(callback_node + 12) )
   {
     callback = *(_DWORD *)(callback_node + 4);
     if ( callback )
@@ -95815,8 +95805,8 @@ _DWORD * Rules_AddBeforeBloadFunction(int a1, int a2, int a3)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A1B0, a2);
-  dword_51A1B0 = (int)result;
+  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_BeforeBloadFunctionListHead, a2);
+  g_Rules_BeforeBloadFunctionListHead = (int)result;
   return result;
 }
 // 51A1B0: using guessed type int dword_51A1B0;
@@ -95826,8 +95816,8 @@ _DWORD * Rules_AddAfterBloadFunction(int a1, int a2, int a3)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A1B4, a2);
-  dword_51A1B4 = (int)result;
+  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_AfterBloadCallbackListHead, a2);
+  g_Rules_AfterBloadCallbackListHead = (int)result;
   return result;
 }
 // 51A1B4: using guessed type int dword_51A1B4;
@@ -95837,8 +95827,8 @@ _DWORD * Rules_AddAbortBloadFunction(int a1, int a2, int a3)
 {
   _DWORD *result; // eax
 
-  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, dword_51A1BC, a2);
-  dword_51A1BC = (int)result;
+  result = Rules_InsertPriorityCallbackReturningHead(a1, a3, g_Rules_AbortBloadCallbackListHead, a2);
+  g_Rules_AbortBloadCallbackListHead = (int)result;
   return result;
 }
 // 51A1BC: using guessed type int dword_51A1BC;
@@ -95851,9 +95841,9 @@ signed int Rules_ReportCannotLoadWithBload()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aBload_0, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aCannotLoad, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aConstructWithB, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotLoad, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConstructWithB, v2);
 }
 // 47D070: variable 'v0' is possibly undefined
 // 47D07C: variable 'v1' is possibly undefined
@@ -95880,7 +95870,7 @@ void __fastcall Rules_InitializeEngine(int a1, int a2)
 {
   (void)a1;
   (void)a2;
-  if ( !dword_51A1D4 )
+  if ( !g_Rules_EngineInitializedFlag )
   {
     Mem_InitReserveBlock(0, 0);
     Rules_InitAtomTables();
@@ -95901,7 +95891,7 @@ void __fastcall Rules_InitializeEngine(int a1, int a2)
     Module_InitializeDefmodules();
     ProcParam_RegisterPrimitiveTypes();
     Rules_Clear();
-    dword_51A1D4 = 1;
+    g_Rules_EngineInitializedFlag = 1;
   }
 }
 // 47D4E0: using guessed type int sub_47D4E0();
@@ -95938,7 +95928,7 @@ double Rules_TimeCommand()
   } v4;
 
   ftime_(&v4);
-  return (double)(v4.time_value % 10000) + (double)v4.milliseconds / dbl_502B70;
+  return (double)(v4.time_value % 10000) + (double)v4.milliseconds / g_Rules_MillisecondsPerSecond;
 }
 // 502B70: using guessed type double dbl_502B70;
 
@@ -95969,13 +95959,13 @@ int  Rules_SystemCommand(double a1)
 LABEL_6:
       if ( v1 )
       {
-        if ( dword_51A1CC )
-          dword_51A1CC();
+        if ( g_Rules_SystemCommandPreShellHook )
+          g_Rules_SystemCommandPreShellHook();
         system_(v1);
-        if ( dword_51A1D0 )
-          dword_51A1D0();
-        if ( dword_51A1C8 )
-          dword_51A1C8();
+        if ( g_Rules_SystemCommandPostShellHookA )
+          g_Rules_SystemCommandPostShellHookA();
+        if ( g_Rules_SystemCommandPostShellHookB )
+          g_Rules_SystemCommandPostShellHookB();
         return Mem_SmallBlockFree(v1, v10[0]);
       }
     }
@@ -96089,7 +96079,7 @@ _DWORD * Rules_InsertActivationSorted(int *a1, _DWORD *activation)
   predecessor = 0;
   if ( current )
   {
-    switch ( dword_51A1D8 )
+    switch ( g_Rules_ConflictResolutionStrategy )
     {
       case 0:
         predecessor = (uintptr_t)Rules_PlaceInDepthList((_DWORD *)current, (int)node);
@@ -96561,8 +96551,8 @@ int  Rules_SetStrategy(int a1)
 {
   int v1; // edx
 
-  v1 = dword_51A1D8;
-  dword_51A1D8 = a1;
+  v1 = g_Rules_ConflictResolutionStrategy;
+  g_Rules_ConflictResolutionStrategy = a1;
   if ( v1 != a1 )
     Rules_ReorderAgenda(0);
   return v1;
@@ -96577,7 +96567,7 @@ signed int *Rules_GetStrategyCommand()
   int v1; // ecx
 
   Lexer_TokenExpect(0);
-  v0 = Rules_GetStrategyName(dword_51A1D8);
+  v0 = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
   return Str_Intern(v0, v1);
 }
 // 47DBFA: variable 'v1' is possibly undefined
@@ -96602,10 +96592,10 @@ signed int * Rules_SetStrategyCommand(int a1, double a2)
   _DWORD v17[10]; // [esp-8h] [ebp-28h] BYREF
 
   v17[8] = a1;
-  v3 = dword_51A1D8;
+  v3 = g_Rules_ConflictResolutionStrategy;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v17, 2, a2) )
   {
-    v6 = dword_51A1D8;
+    v6 = g_Rules_ConflictResolutionStrategy;
     goto LABEL_5;
   }
   v4 = strcmp_(*(_DWORD *)(v17[2] + 16), aDepth);
@@ -96649,7 +96639,7 @@ LABEL_5:
     goto LABEL_4;
   }
   Parser_ReportError(1, (int)aSymbolWithVa_0);
-  v15 = Rules_GetStrategyName(dword_51A1D8);
+  v15 = Rules_GetStrategyName(g_Rules_ConflictResolutionStrategy);
   return Str_Intern(v15, v16);
 }
 // 47DC70: variable 'v8' is possibly undefined
@@ -96702,7 +96692,7 @@ char * Rules_GetStrategyName(int a1)
 signed int Rules_RegisterAgendaCommands()
 {
   Rules_AddClearFunction((int)aAgenda_0, (int)Rules_ResetActivationSequence, 0);
-  Rules_AddWatchItem((int)aActivations, 1, 40, (int)&dword_51A1DC, (int)Rules_DefruleWatchAccess, (int)Rules_DefruleWatchPrint);
+  Rules_AddWatchItem((int)aActivations, 1, 40, (int)&g_Rules_WatchActivationsFlag, (int)Rules_DefruleWatchAccess, (int)Rules_DefruleWatchPrint);
   Rules_RegisterHostFunction(aRefresh, 118, (int)aRefreshcommand, (int)Rules_RefreshCommand, (int)a11w);
   Rules_RegisterHostFunction(aRefreshAgenda, 118, (int)aRefreshagendac, (int)Rules_RefreshAgendaCommand, (int)a01w);
   Rules_RegisterHostFunction(aGetSalienceEva, 119, (int)aGetsalienceeva, (int)Rules_GetSalienceEvaluationCommand, (int)a00);
@@ -96743,7 +96733,7 @@ _DWORD * Rules_AddActivation(int a1, int a2, double a3)
   }
   *(_DWORD *)activation = (int)join;
   *(_DWORD *)(activation + 4) = (int)partial_match;
-  sequence = dword_51A1E4++;
+  sequence = g_Rules_ActivationSequenceCounter++;
   *(_DWORD *)(activation + 12) = sequence;
   salience = Rules_EvaluateSalience((int)join, a3);
   *(_DWORD *)(activation + 16) = 0;
@@ -96751,14 +96741,14 @@ _DWORD * Rules_AddActivation(int a1, int a2, double a3)
   *(_DWORD *)(activation + 24) = 0;
   *(_DWORD *)(activation + 28) = 0;
   *(_DWORD *)(activation + 20) = j_rand_();
-  ++dword_51A1E0;
+  ++g_Rules_ActivationCount;
   bucket = ((unsigned int)*(_DWORD *)partial_match << 17) >> 23;
   *(_DWORD *)(partial_match + 4 * bucket + 8) = (int)activation;
   if ( (*(_BYTE *)(join + 29) & 0x10) != 0 )
   {
-    Output_Write((int)off_51A618[0], (int)aActivation_0, (int)activation);
-    Rules_PrintActivation((int)off_51A618[0], (int)activation);
-    Output_Write((int)off_51A618[0], (int)asc_502D24, (int)activation);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aActivation_0, (int)activation);
+    Rules_PrintActivation((int)g_IO_LogicalNameTable_WTrace[0], (int)activation);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502D24, (int)activation);
   }
   agenda = (uintptr_t)(unsigned int)*(_DWORD *)(join + 8);
   return Rules_InsertActivationSorted((int *)(agenda + 12), (_DWORD *)activation);
@@ -96855,7 +96845,7 @@ signed int  Rules_DetachActivation(_DWORD *a1)
     *(_DWORD *)(v5 + 24) = v1[6];
   v1[6] = 0;
   v1[7] = 0;
-  dword_51A1E8 = 1;
+  g_Rules_AgendaChangedFlag = 1;
   return 1;
 }
 // 47E0DB: variable 'v1' is possibly undefined
@@ -96932,11 +96922,11 @@ int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
     }
     if ( (*(_BYTE *)(*v4 + 29) & 0x10) != 0 )
     {
-      Output_Write((int)off_51A618[0], (int)aActivation, (int)v4);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aActivation, (int)v4);
       Rules_PrintActivation(v8, v8);
-      Output_Write((int)off_51A618[0], (int)asc_502D24, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502D24, v9);
     }
-    dword_51A1E8 = 1;
+    g_Rules_AgendaChangedFlag = 1;
   }
   if ( a3 == 1 )
   {
@@ -96944,7 +96934,7 @@ int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
     if ( v10 )
       *(_DWORD *)(v4[1] + 4 * (*v10 << 17 >> 23) + 8) = 0;
   }
-  --dword_51A1E0;
+  --g_Rules_ActivationCount;
   if ( v4[4] )
     Rules_FreePartialMatch(v4[4]);
   dword_54DBAC = (int)v4;
@@ -96965,7 +96955,7 @@ int  Rules_RemoveActivation(_DWORD *a1, int a2, int a3)
 //----- (0047E2B0) --------------------------------------------------------
 void Rules_ResetActivationSequence()
 {
-  dword_51A1E4 = 0;
+  g_Rules_ActivationSequenceCounter = 0;
 }
 // 51A1E4: using guessed type int dword_51A1E4;
 
@@ -96992,7 +96982,7 @@ _DWORD *Rules_ClearActivationsForModule()
 //----- (0047E310) --------------------------------------------------------
 int  Rules_SetAgendaChanged(int result)
 {
-  dword_51A1E8 = result;
+  g_Rules_AgendaChangedFlag = result;
   return result;
 }
 // 51A1E8: using guessed type int dword_51A1E8;
@@ -97042,7 +97032,7 @@ int  Rules_ReorderAgenda(int result)
 //----- (0047E3A0) --------------------------------------------------------
 int Rules_GetActivationCount()
 {
-  return dword_51A1E0;
+  return g_Rules_ActivationCount;
 }
 // 51A1E0: using guessed type int dword_51A1E0;
 
@@ -97097,12 +97087,12 @@ signed int Rules_SalienceInformationError()
   int v4; // ecx
 
   Rules_PrintErrorID((int)aAgenda, 3, 1);
-  Output_Write((int)off_51A614[0], (int)aThisErrorOccur, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOccur, v0);
   if ( !v1 )
-    return Output_Write((int)off_51A614[0], (int)aDotNewline_Agenda, 0);
-  Output_Write((int)off_51A614[0], (int)aForRule, v1);
-  Output_Write((int)off_51A614[0], v3, v3);
-  return Output_Write((int)off_51A614[0], (int)aDotNewline_Agenda, v4);
+    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_Agenda, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForRule, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v3, v3);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_Agenda, v4);
 }
 // 47E473: variable 'v0' is possibly undefined
 // 47E47A: variable 'v1' is possibly undefined
@@ -97120,11 +97110,11 @@ signed int Rules_SalienceRangeError()
   int v4; // ecx
 
   Rules_PrintErrorID((int)aAgenda, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aSalienceValueO, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSalienceValueO, v0);
   Rules_PrintLongInteger(v1, -10000);
-  Output_Write((int)off_51A614[0], (int)aTo, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTo, v2);
   Rules_PrintLongInteger(v3, 10000);
-  return Output_Write((int)off_51A614[0], (int)aDotNewline_Agenda, v4);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_Agenda, v4);
 }
 // 47E4E0: variable 'v0' is possibly undefined
 // 47E4EF: variable 'v1' is possibly undefined
@@ -97139,7 +97129,7 @@ signed int Rules_SalienceNonIntegerError()
   int v0; // ecx
 
   Rules_PrintErrorID((int)aAgenda, 1, 1);
-  return Output_Write((int)off_51A614[0], (int)aSalienceValueM, v0);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSalienceValueM, v0);
 }
 // 47E54D: variable 'v0' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
@@ -97188,8 +97178,8 @@ int  Rules_RefreshAgenda(double a1)
     v2 = 1;
     Enum = Module_NextEnum(0);
   }
-  v4 = dword_51A1EC;
-  for ( dword_51A1EC = 1; Enum; Enum = Module_NextEnum(v7) )
+  v4 = g_Rules_SalienceEvaluationMode;
+  for ( g_Rules_SalienceEvaluationMode = 1; Enum; Enum = Module_NextEnum(v7) )
   {
     Module_SetCurrent(Enum);
     for ( i = (int *)Rules_GetNextActivation(0); i; i = (int *)Rules_GetNextActivation((int)i) )
@@ -97198,7 +97188,7 @@ int  Rules_RefreshAgenda(double a1)
     if ( !v2 )
       break;
   }
-  dword_51A1EC = v4;
+  g_Rules_SalienceEvaluationMode = v4;
   return Module_EndEnum();
 }
 // 47E5D1: variable 'v3' is possibly undefined
@@ -97219,7 +97209,7 @@ signed int * Rules_SetSalienceEvaluationCommand(int a1, double a2)
   _DWORD v9[11]; // [esp-8h] [ebp-2Ch] BYREF
 
   v9[9] = a1;
-  v3 = Rules_SalienceEvaluationModeName(dword_51A1EC);
+  v3 = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v9, 2, a2) )
   {
     v5 = v3;
@@ -97227,19 +97217,19 @@ signed int * Rules_SetSalienceEvaluationCommand(int a1, double a2)
   }
   if ( !strcmp_(*(_DWORD *)(v9[2] + 16), aWhenDefined) )
   {
-    dword_51A1EC = 0;
+    g_Rules_SalienceEvaluationMode = 0;
     v5 = v3;
     return Str_Intern(v5, v4);
   }
   if ( !strcmp_(v4, aWhenActivated) )
   {
-    dword_51A1EC = 1;
+    g_Rules_SalienceEvaluationMode = 1;
     return Str_Intern(v3, v7);
   }
   else
   {
     if ( !strcmp_(v7, aEveryCycle) )
-      dword_51A1EC = 2;
+      g_Rules_SalienceEvaluationMode = 2;
     else
       Parser_ReportError(1, (int)aSymbolWithVa_1);
     return Str_Intern(v3, v8);
@@ -97258,7 +97248,7 @@ signed int *Rules_GetSalienceEvaluationCommand()
   int v1; // ecx
 
   Lexer_TokenExpect(0);
-  v0 = Rules_SalienceEvaluationModeName(dword_51A1EC);
+  v0 = Rules_SalienceEvaluationModeName(g_Rules_SalienceEvaluationMode);
   return Str_Intern(v0, v1);
 }
 // 47E75A: variable 'v1' is possibly undefined
@@ -97279,7 +97269,7 @@ char * Rules_SalienceEvaluationModeName(unsigned int a1)
 //----- (0047E7A0) --------------------------------------------------------
 int Rules_GetSalienceEvaluation()
 {
-  return dword_51A1EC;
+  return g_Rules_SalienceEvaluationMode;
 }
 // 51A1EC: using guessed type int dword_51A1EC;
 
@@ -97288,8 +97278,8 @@ int __fastcall unknown_libname_7(int a1)
 {
   int result; // eax
 
-  result = dword_51A1EC;
-  dword_51A1EC = a1;
+  result = g_Rules_SalienceEvaluationMode;
+  g_Rules_SalienceEvaluationMode = a1;
   return result;
 }
 // 51A1EC: using guessed type int dword_51A1EC;
@@ -97306,7 +97296,7 @@ signed int  Rules_EvaluateSalience(int a1, double a2)
   int v9; // [esp+0h] [ebp-20h]
   int v10; // [esp+4h] [ebp-1Ch]
 
-  if ( !dword_51A1EC || !*(_DWORD *)(a1 + 32) )
+  if ( !g_Rules_SalienceEvaluationMode || !*(_DWORD *)(a1 + 32) )
     return *(_DWORD *)(a1 + 20);
   Lexer_ErrorRecover(0);
   if ( Parser_ParseForm(*(__int16 **)(v4 + 32), v5, v4, a2) )
@@ -97363,12 +97353,12 @@ int * Rules_AgendaCommand(int a1, double a2)
     {
       result = Rules_GetModuleNameArg(1, v3, v5, a2);
       if ( !v5[0] )
-        return (int *)Rules_ActivationsCommand((int)off_51A624, (int)result);
+        return (int *)Rules_ActivationsCommand((int)g_IO_LogicalName_WDisplay, (int)result);
     }
     else
     {
       v4 = Module_GetCurrent();
-      return (int *)Rules_ActivationsCommand((int)off_51A624, v4);
+      return (int *)Rules_ActivationsCommand((int)g_IO_LogicalName_WDisplay, v4);
     }
   }
   return result;
@@ -97382,7 +97372,7 @@ int __fastcall IO_PrintfToStdout(int a1, int a2, int a3, char a4)
   int v5[3]; // [esp+0h] [ebp-Ch] BYREF
 
   v5[0] = (int)&a4;
-  return CRT_VfprintfLockedWrite((int)&unk_51A35A, a1, v5);
+  return CRT_VfprintfLockedWrite((int)&g_CRT_StdoutStream, a1, v5);
 }
 
 //----- (0047E910) --------------------------------------------------------
@@ -97461,10 +97451,10 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
   v59 = 0;
   v62 = 0;
   v57 = 0.0;
-  if ( dword_51A210 )
+  if ( g_Rules_AgendaLoopRunningFlag )
     return 0;
-  dword_51A210 = 1;
-  if ( dword_51A208 )
+  g_Rules_AgendaLoopRunningFlag = 1;
+  if ( g_Rules_WatchStatisticsFlag )
   {
     v60 = Rules_GetInstalledFactCount();
     v63 = v60;
@@ -97477,27 +97467,27 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
   if ( !dword_51A96C )
     Rules_SetEvaluationErrorFlag(0);
   v50 = a2;
-  dword_51A1F4 = 0;
+  g_Rules_HaltRulesFlag = 0;
   v4 = (int *)Rules_NextActivationToFire();
   while ( v4 )
   {
-    if ( !v66 || dword_51A968 || dword_51A1F4 )
+    if ( !v66 || dword_51A968 || g_Rules_HaltRulesFlag )
       break;
     Rules_DetachActivation(v4);
     v6 = Rules_GetActivationRuleName((int)v4);
     v7 = (_DWORD *)v4[1];
-    dword_51A1F0 = *v4;
+    g_Rules_CurrentlyExecutingRule = *v4;
     ++v65;
     if ( v5 > 0 )
       v66 = v5 - 1;
-    if ( (*(_BYTE *)(dword_51A1F0 + 29) & 0x20) != 0 )
+    if ( (*(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
       a3 = sprintf_(v53, "FIRE %4ld ", v65);
-      Output_Write((int)off_51A618[0], (int)v53, v12);
-      Output_Write((int)off_51A618[0], v6, v13);
-      Output_Write((int)off_51A618[0], (int)asc_502E90, v14);
-      Rules_PrintArgumentValueList((int)off_51A618[0], v7);
-      Output_Write((int)off_51A618[0], (int)asc_502E94, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)v53, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v6, v13);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E90, v14);
+      Rules_PrintArgumentValueList((int)g_IO_LogicalNameTable_WTrace[0], v7);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E94, v15);
     }
     v7[(*v7 << 17 >> 23) + 2] = 0;
     v8 = 0;
@@ -97513,27 +97503,27 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
       ++v9;
       ++v8;
     }
-    dword_51A1F8 = *(_DWORD *)(dword_51A1F0 + 40);
+    g_Rules_CurrentLogicalJoin = *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 40);
     ++dword_51A96C;
     Lexer_ErrorRecover(0);
-    *(_BYTE *)(dword_51A1F0 + 29) |= 0x80u;
+    *(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) |= 0x80u;
     Rules_ExecuteRuleActions(
-      **(_DWORD **)(dword_51A1F0 + 8),
-      *(__int16 **)(dword_51A1F0 + 36),
+      **(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8),
+      *(__int16 **)(g_Rules_CurrentlyExecutingRule + 36),
       v55,
-      *(_DWORD *)(dword_51A1F0 + 24),
+      *(_DWORD *)(g_Rules_CurrentlyExecutingRule + 24),
       a3,
       0);
-    *(_BYTE *)(dword_51A1F0 + 29) &= ~0x80u;
+    *(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) &= ~0x80u;
     Lexer_ErrorRecover(0);
-    dword_51A1F8 = v16;
+    g_Rules_CurrentLogicalJoin = v16;
     --dword_51A96C;
-    if ( dword_51A968 || dword_51A1F4 && (*(_BYTE *)(dword_51A1F0 + 29) & 0x20) != 0 )
+    if ( dword_51A968 || g_Rules_HaltRulesFlag && (*(_BYTE *)(g_Rules_CurrentlyExecutingRule + 29) & 0x20) != 0 )
     {
       Rules_PrintErrorID((int)aPrccode, 4, 0);
-      Output_Write((int)off_51A614[0], (int)aExecutionHalte, v17);
-      Output_Write((int)off_51A614[0], v6, v18);
-      Output_Write((int)off_51A614[0], (int)aDotNewline_RuleRuntime, v19);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHalte, v17);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v6, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_RuleRuntime, v19);
     }
     v20 = v7;
     v21 = 0;
@@ -97558,7 +97548,7 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     Rules_RemoveActivation(v4, 0, 0);
     Rules_FlushPendingNetworkGarbage();
     Rules_RunPeriodicCleanup(0, 1);
-    if ( dword_51A208 )
+    if ( g_Rules_WatchStatisticsFlag )
     {
       v25 = Rules_GetInstalledFactCount();
       if ( v25 > v60 )
@@ -97578,28 +97568,28 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     }
     if ( Rules_GetSalienceEvaluation() == 2 )
       Rules_RefreshAgenda(a3);
-    for ( i = dword_51A1FC; i; i = *(_DWORD *)(v33 + 12) )
+    for ( i = g_Rules_PostRuleFireCallbackListHead; i; i = *(_DWORD *)(v33 + 12) )
       (*(void (**)(void))(i + 4))();
     if ( qword_51ACC0 == 1 )
-      Rules_RemoveModuleFocus(**(_DWORD **)(dword_51A1F0 + 8));
+      Rules_RemoveModuleFocus(**(_DWORD **)(g_Rules_CurrentlyExecutingRule + 8));
     qword_51ACC0 = 0;
     v34 = Rules_NextActivationToFire();
     v3 = v34;
     v4 = (int *)v34;
     if ( v34 && (*(_BYTE *)(*(_DWORD *)v34 + 29) & 8) != 0 )
     {
-      dword_51A1F4 = 1;
-      Output_Write((int)off_51A61C[0], (int)aBreakingOnRule, v34);
+      g_Rules_HaltRulesFlag = 1;
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aBreakingOnRule, v34);
       v36 = Rules_GetActivationRuleName(v35);
-      Output_Write((int)off_51A61C[0], v36, (int)off_51A61C[0]);
-      Output_Write((int)off_51A61C[0], (int)aDotNewline_RuleRuntime, v37);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], v36, (int)g_IO_LogicalNameTable_WDialog[0]);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aDotNewline_RuleRuntime, v37);
     }
   }
   if ( v66 == v65 )
-    Output_Write((int)off_51A61C[0], (int)aRuleFiringLimi, v3);
-  dword_51A1F0 = 0;
-  dword_51A1F4 = 0;
-  if ( dword_51A208 )
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRuleFiringLimi, v3);
+  g_Rules_CurrentlyExecutingRule = 0;
+  g_Rules_HaltRulesFlag = 0;
+  if ( g_Rules_WatchStatisticsFlag )
   {
     double runtime_end;
     double runtime_elapsed;
@@ -97608,38 +97598,38 @@ int  Rules_RunAgendaLoop(int a1, int a2, double a3)
     runtime_end = Rules_TimeCommand();
     v56 = runtime_end;
     Rules_PrintLongInteger(v38, v65);
-    Output_Write((int)off_51A61C[0], (int)aRulesFired, v39);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRulesFired, v39);
     if ( v57 >= runtime_end )
     {
       v44 = asc_502E94;
     }
     else
     {
-      Output_Write((int)off_51A61C[0], (int)aRunTimeIs, v40);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aRunTimeIs, v40);
       runtime_elapsed = runtime_end - v57;
       v56 = runtime_elapsed;
-      Rules_PrintFloat((int)off_51A61C[0], runtime_elapsed);
-      Output_Write((int)off_51A61C[0], (int)" seconds.\n", 0);
+      Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], runtime_elapsed);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)" seconds.\n", 0);
       v48 = (double)v65 / runtime_elapsed;
-      Rules_PrintFloat((int)off_51A61C[0], v48);
+      Rules_PrintFloat((int)g_IO_LogicalNameTable_WDialog[0], v48);
       v44 = " rules per second.\n";
     }
-    Output_Write((int)off_51A61C[0], (int)v44, v40);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v44, v40);
     sample_count = (double)(v65 + 1);
-    v67 = (int)((double)v63 / sample_count + dbl_502FDC);
+    v67 = (int)((double)v63 / sample_count + g_Rules_AverageRoundingBias);
     sprintf_(v54, "%ld mean number of facts (%ld maximum).\n", v67, v60);
-    Output_Write((int)off_51A61C[0], (int)v54, v45);
-    v67 = (int)((double)v62 / sample_count + dbl_502FDC);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v45);
+    v67 = (int)((double)v62 / sample_count + g_Rules_AverageRoundingBias);
     sprintf_(v54, "%ld mean number of instances (%ld maximum).\n", v67, v59);
-    Output_Write((int)off_51A61C[0], (int)v54, v46);
-    v67 = (int)((double)v61 / sample_count + dbl_502FDC);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v46);
+    v67 = (int)((double)v61 / sample_count + g_Rules_AverageRoundingBias);
     sprintf_(v54, "%ld mean number of activations (%ld maximum).\n", v67, v64);
-    Output_Write((int)off_51A61C[0], (int)v54, v47);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v54, v47);
   }
-  if ( dword_51A200 && Module_GetCurrent() != *(_DWORD *)dword_51A200 )
-    Module_SetCurrent(*(_DWORD *)dword_51A200);
+  if ( g_Rules_FocusStackTop && Module_GetCurrent() != *(_DWORD *)g_Rules_FocusStackTop )
+    Module_SetCurrent(*(_DWORD *)g_Rules_FocusStackTop);
   result = v65;
-  dword_51A210 = 0;
+  g_Rules_AgendaLoopRunningFlag = 0;
   return result;
 }
 // 47EAAA: inconsistent fpu stack
@@ -97697,19 +97687,19 @@ int Rules_NextActivationToFire()
   int v0; // edx
   int *v2; // eax
 
-  if ( !dword_51A200 )
+  if ( !g_Rules_FocusStackTop )
   {
     v2 = Module_FindByName(aMain_0);
     Rules_PushFocus((int)v2);
   }
-  v0 = *(_DWORD *)(*(_DWORD *)(dword_51A200 + 4) + 12);
+  v0 = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
   while ( !v0 )
   {
-    if ( !dword_51A200 )
+    if ( !g_Rules_FocusStackTop )
       break;
     Rules_PopFocus();
-    if ( dword_51A200 )
-      v0 = *(_DWORD *)(*(_DWORD *)(dword_51A200 + 4) + 12);
+    if ( g_Rules_FocusStackTop )
+      v0 = *(_DWORD *)(*(_DWORD *)(g_Rules_FocusStackTop + 4) + 12);
   }
   return v0;
 }
@@ -97731,9 +97721,9 @@ int  Rules_RemoveModuleFocus(int a1)
 
   v2 = 0;
   v3 = 0;
-  if ( !dword_51A200 )
+  if ( !g_Rules_FocusStackTop )
     return 0;
-  v4 = (_DWORD *)dword_51A200;
+  v4 = (_DWORD *)g_Rules_FocusStackTop;
   v5 = 0;
   do
   {
@@ -97754,7 +97744,7 @@ int  Rules_RemoveModuleFocus(int a1)
       else
       {
         v3 = 1;
-        dword_51A200 = v6;
+        g_Rules_FocusStackTop = v6;
       }
     }
     else
@@ -97765,25 +97755,25 @@ int  Rules_RemoveModuleFocus(int a1)
   }
   while ( v4 );
   if ( !v2 )
-    return *(_DWORD *)dword_51A200;
-  if ( dword_51A20C )
+    return *(_DWORD *)g_Rules_FocusStackTop;
+  if ( g_Rules_WatchFocusFlag )
   {
-    Output_Write((int)off_51A618[0], (int)aFocus, v5);
-    Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)a1 + 16), v7);
-    if ( dword_51A200 && v3 )
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aFocus, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)a1 + 16), v7);
+    if ( g_Rules_FocusStackTop && v3 )
     {
-      Output_Write((int)off_51A618[0], (int)aTo_0, v8);
-      Output_Write((int)off_51A618[0], *(_DWORD *)(**(_DWORD **)dword_51A200 + 16), v9);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aTo_0, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(**(_DWORD **)g_Rules_FocusStackTop + 16), v9);
     }
-    Output_Write((int)off_51A618[0], (int)asc_502E94, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E94, v8);
   }
-  if ( dword_51A200 )
+  if ( g_Rules_FocusStackTop )
   {
     if ( v3 )
-      Module_SetCurrent(*(_DWORD *)dword_51A200);
+      Module_SetCurrent(*(_DWORD *)g_Rules_FocusStackTop);
   }
   result = a1;
-  dword_51A204 = 1;
+  g_Rules_FocusStackChangedFlag = 1;
   return result;
 }
 // 47F0F4: variable 'v7' is possibly undefined
@@ -97799,8 +97789,8 @@ int  Rules_RemoveModuleFocus(int a1)
 //----- (0047F190) --------------------------------------------------------
 int Rules_PopFocus()
 {
-  if ( dword_51A200 )
-    return Rules_RemoveModuleFocus(*(_DWORD *)dword_51A200);
+  if ( g_Rules_FocusStackTop )
+    return Rules_RemoveModuleFocus(*(_DWORD *)g_Rules_FocusStackTop);
   else
     return 0;
 }
@@ -97814,18 +97804,18 @@ int  Rules_PushFocus(int a1)
 
   module = a1;
   Module_SetCurrent(a1);
-  if ( !dword_51A200 || module != *(_DWORD *)dword_51A200 )
+  if ( !g_Rules_FocusStackTop || module != *(_DWORD *)g_Rules_FocusStackTop )
   {
-    if ( dword_51A20C )
+    if ( g_Rules_WatchFocusFlag )
     {
-      Output_Write((int)off_51A618[0], (int)aFocus_0, 0);
-      Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)module + 16), module);
-      if ( dword_51A200 )
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aFocus_0, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)module + 16), module);
+      if ( g_Rules_FocusStackTop )
       {
-        Output_Write((int)off_51A618[0], (int)aFrom, 0);
-        Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)*(_DWORD *)dword_51A200 + 16), dword_51A200);
+        Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aFrom, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)*(_DWORD *)g_Rules_FocusStackTop + 16), g_Rules_FocusStackTop);
       }
-      Output_Write((int)off_51A618[0], (int)asc_502E94, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_502E94, 0);
     }
     focus_entry = *(_DWORD *)(dword_54DBA8 + 48);
     if ( focus_entry )
@@ -97840,11 +97830,11 @@ int  Rules_PushFocus(int a1)
     }
     *(_DWORD *)focus_entry = module;
     *(_DWORD *)(focus_entry + 4) = Rules_GetDefruleModuleItem(module);
-    *(_DWORD *)(focus_entry + 8) = dword_51A200;
-    dword_51A200 = focus_entry;
-    dword_51A204 = 1;
+    *(_DWORD *)(focus_entry + 8) = g_Rules_FocusStackTop;
+    g_Rules_FocusStackTop = focus_entry;
+    g_Rules_FocusStackChangedFlag = 1;
   }
-  return dword_51A200;
+  return g_Rules_FocusStackTop;
 }
 // 51A200: using guessed type int dword_51A200;
 // 51A204: using guessed type int dword_51A204;
@@ -97869,9 +97859,9 @@ int Rules_ClearFocusStack()
 {
   int result; // eax
 
-  for ( ; dword_51A200; result = Rules_PopFocus() )
+  for ( ; g_Rules_FocusStackTop; result = Rules_PopFocus() )
     ;
-  dword_51A204 = 1;
+  g_Rules_FocusStackChangedFlag = 1;
   return result;
 }
 // 51A200: using guessed type int dword_51A200;
@@ -97880,8 +97870,8 @@ int Rules_ClearFocusStack()
 //----- (0047F340) --------------------------------------------------------
 int Rules_RegisterAgendaWatchFlags()
 {
-  Rules_AddWatchItem((int)aStatistics, 0, 20, (int)&dword_51A208, 0, 0);
-  return Rules_AddWatchItem((int)aFocus_1, 0, 0, (int)&dword_51A20C, 0, 0);
+  Rules_AddWatchItem((int)aStatistics, 0, 20, (int)&g_Rules_WatchStatisticsFlag, 0, 0);
+  return Rules_AddWatchItem((int)aFocus_1, 0, 0, (int)&g_Rules_WatchFocusFlag, 0, 0);
 }
 // 51A208: using guessed type int dword_51A208;
 // 51A20C: using guessed type int dword_51A20C;
@@ -97921,7 +97911,7 @@ int Rules_HaltCommand()
   int result; // eax
 
   result = Lexer_TokenExpect(0);
-  dword_51A1F4 = 1;
+  g_Rules_HaltRulesFlag = 1;
   return result;
 }
 // 51A1F4: using guessed type int dword_51A1F4;
@@ -98058,9 +98048,9 @@ void  Rules_RemoveBreakCommand(int a1, double a2, int a3)
         {
           if ( !Rules_ClearBreakFlag(v4) )
           {
-            Output_Write((int)off_51A614[0], (int)aRule, v6);
-            Output_Write((int)off_51A614[0], v7, v7);
-            Output_Write((int)off_51A614[0], (int)aDoesNotHaveABr, v8);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRule, v6);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v7);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotHaveABr, v8);
           }
         }
         else
@@ -98097,12 +98087,12 @@ int * Rules_ShowBreaksCommand(int a1, double a2)
     {
       result = Rules_GetModuleNameArg(1, v3, v5, a2);
       if ( !v5[0] )
-        return (int *)Rules_ListRuleBreakpoints((int)off_51A624, (int)result);
+        return (int *)Rules_ListRuleBreakpoints((int)g_IO_LogicalName_WDisplay, (int)result);
     }
     else
     {
       v4 = Module_GetCurrent();
-      return (int *)Rules_ListRuleBreakpoints((int)off_51A624, v4);
+      return (int *)Rules_ListRuleBreakpoints((int)g_IO_LogicalName_WDisplay, v4);
     }
   }
   return result;
@@ -98117,7 +98107,7 @@ int Rules_ListFocusStackCommand()
 
   result = Lexer_TokenExpect(0);
   if ( result != -1 )
-    return Rules_PrintFocusStack((signed int)off_51A624);
+    return Rules_PrintFocusStack((signed int)g_IO_LogicalName_WDisplay);
   return result;
 }
 // 51A624: using guessed type char *off_51A624;
@@ -98133,8 +98123,8 @@ signed int  Rules_PrintFocusStack(signed int result)
   int v6; // ecx
 
   v1 = result;
-  v2 = (int *)dword_51A200;
-  if ( dword_51A200 )
+  v2 = (int *)g_Rules_FocusStackTop;
+  if ( g_Rules_FocusStackTop )
   {
     do
     {
@@ -98178,9 +98168,9 @@ signed int  Rules_BuildFocusStackList(_DWORD *a1)
   _DWORD *v9; // ecx
   int v10; // ecx
 
-  v2 = dword_51A200;
+  v2 = g_Rules_FocusStackTop;
   v3 = 0;
-  if ( dword_51A200 )
+  if ( g_Rules_FocusStackTop )
   {
     do
     {
@@ -98194,9 +98184,9 @@ signed int  Rules_BuildFocusStackList(_DWORD *a1)
     v4 = Rules_CreateEphemeralMultifield(v3);
     *(_DWORD *)(v5 + 8) = v4;
     v6 = v4;
-    v7 = dword_51A200;
+    v7 = g_Rules_FocusStackTop;
     result = 1;
-    if ( dword_51A200 )
+    if ( g_Rules_FocusStackTop )
     {
       v9 = v6;
       do
@@ -98255,8 +98245,8 @@ int Rules_GetFocusFunction()
 //----- (0047F820) --------------------------------------------------------
 int Rules_GetCurrentFocus()
 {
-  if ( dword_51A200 )
-    return *(_DWORD *)dword_51A200;
+  if ( g_Rules_FocusStackTop )
+    return *(_DWORD *)g_Rules_FocusStackTop;
   else
     return 0;
 }
@@ -98310,7 +98300,7 @@ signed int Rules_RegisterInstanceFunctions()
 
   Rules_EnsureObjectPatternVTable();
   Instance_InitHashTable();
-  Rules_RegisterEvaluationHandler((int)(uintptr_t)unk_51A290, 7);
+  Rules_RegisterEvaluationHandler((int)(uintptr_t)g_Rules_ObjectPatternVTable, 7);
   Rules_RegisterHostFunction(aInitializeInst, 117, v0, (int)Instance_InitializeInstanceFunction, 0);
   Rules_RegisterHostFunction(aActiveInitiali, 117, (int)aInitializeinst, (int)Instance_ActiveInitializeInstanceFunction, 0);
   Rules_AddFunctionParser(aActiveInitiali);
@@ -98377,8 +98367,8 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
   int i; // esi
 
   v3 = 1;
-  v4 = dword_51A280;
-  dword_51A280 = 1;
+  v4 = g_Instance_PurgeInProgress;
+  g_Instance_PurgeInProgress = 1;
   if ( a1 )
   {
     MessageHandler_SendToInstanceAddress(dword_51AD38, a1, 0, 0, a2);
@@ -98399,7 +98389,7 @@ BOOL  Rules_UnmakeInstance(int a1, double a2)
       }
     }
   }
-  dword_51A280 = v4;
+  g_Instance_PurgeInProgress = v4;
   Instance_PurgeDeletedInstances();
   if ( dword_51A96C || dword_51A97C || dword_51A960 )
     return v3;
@@ -98460,7 +98450,7 @@ void  Rules_InstancesCommand(double a1)
   if ( v12 <= 2 )
   {
 LABEL_16:
-    Rules_PrintInstancesByModule((int)off_51A624, v1, (int)v2);
+    Rules_PrintInstancesByModule((int)g_IO_LogicalName_WDisplay, v1, (int)v2);
     return;
   }
   if ( Lexer_ParseValueList(3, v10, 2, a1) )
@@ -98499,8 +98489,8 @@ signed int __thiscall Rules_PPInstanceCommand(void *this)
     v2 = *(_DWORD *)(result + 8);
     if ( (*(_BYTE *)(v2 + 24) & 2) == 0 )
     {
-      Rules_PrintInstanceSlots((int)off_51A624, v2, (int)asc_5033FC);
-      return Output_Write((int)off_51A624, (int)asc_5033FC, v3);
+      Rules_PrintInstanceSlots((int)g_IO_LogicalName_WDisplay, v2, (int)asc_5033FC);
+      return Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5033FC, v3);
     }
   }
   return result;
@@ -98846,9 +98836,9 @@ LABEL_5:
       break;
     default:
       Rules_PrintErrorID((int)aInscom, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aUndefinedTypeI, v9);
-      Output_Write((int)off_51A614[0], v3, v10);
-      Output_Write((int)off_51A614[0], (int)a__32, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedTypeI, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v3, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__32, v11);
       result = Lexer_ErrorRecover(1);
       break;
   }
@@ -99370,7 +99360,7 @@ signed int  Rules_RegisterHostFunction(
   *(_DWORD *)(host_function_ptr + 0) = symbol;
   *(_BYTE *)(host_function_ptr + 8) = a2;
   *(_DWORD *)(host_function_ptr + 9) = a4;
-  *(_DWORD *)(host_function_ptr + 27) = dword_51A264;
+  *(_DWORD *)(host_function_ptr + 27) = g_Rules_HostFunctionListHead;
   *(_DWORD *)(host_function_ptr + 4) = a3;
   if ( a5
     && ((argument_spec_len = strlen((const char *)a5), argument_spec_len < 2)
@@ -99385,7 +99375,7 @@ signed int  Rules_RegisterHostFunction(
   symbol_ptr = *(_DWORD *)(host_function_ptr + 0);
   *(_DWORD *)(host_function_ptr + 17) = a5;
   ++*(_DWORD *)(symbol_ptr + 4);
-  dword_51A264 = host_function_ptr;
+  g_Rules_HostFunctionListHead = host_function_ptr;
   Rules_InsertFunctionHashEntry(host_function_ptr);
   return 1;
 }
@@ -99410,7 +99400,7 @@ signed int  Rules_AddFunctionParser(_BYTE *a1)
   }
   else
   {
-    Output_Write((int)off_51A614[0], (int)aFunctionParser, v3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionParser, v3);
     return 0;
   }
 }
@@ -99433,7 +99423,7 @@ signed int  Rules_SetFunctionSeqOverloadFlags(_BYTE *a1, int a2)
   }
   else
   {
-    Output_Write((int)off_51A614[0], (int)aOnlyExistingFu, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOnlyExistingFu, 0);
     return 0;
   }
 }
@@ -99537,7 +99527,7 @@ signed int  Rules_GetArgRestrictionType(int a1, int a2)
 //----- (00480F70) --------------------------------------------------------
 int Rules_GetFunctionDefinitionListHead()
 {
-  return dword_51A264;
+  return g_Rules_HostFunctionListHead;
 }
 // 51A264: using guessed type int dword_51A264;
 
@@ -99826,13 +99816,13 @@ int  Rules_ArgRangeCheck(int a1, int a2)
   if ( result < v4 || result > a2 )
   {
     Rules_PrintErrorID((int)aArgacces, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aFunction, v5);
-    Output_Write((int)off_51A614[0], a1, v6);
-    Output_Write((int)off_51A614[0], (int)aExpectedAtLeas, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAtLeas, v7);
     Rules_PrintLongInteger(v8, v8);
-    Output_Write((int)off_51A614[0], (int)aAndNoMoreThan, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAndNoMoreThan, v9);
     Rules_PrintLongInteger(v10, a2);
-    Output_Write((int)off_51A614[0], (int)aArguments_, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArguments_, v11);
     Rules_SetEvaluationErrorFlag(1);
     Lexer_ErrorRecover(1);
     return -1;
@@ -99966,8 +99956,8 @@ int __fastcall unknown_libname_5(int a1, int a2)
   int previous_state;
 
   (void)a2;
-  previous_state = dword_519F04;
-  dword_519F04 = a1;
+  previous_state = g_Mem_AllocFlag;
+  g_Mem_AllocFlag = a1;
   return previous_state;
 }
 
@@ -100087,11 +100077,11 @@ signed int __fastcall Rules_OpenFileErrorMessage(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aArgacces, 2, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aWasUnableToOpe, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)aDotNewline_FileError, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasUnableToOpe, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_FileError, v7);
 }
 // 4818E2: variable 'v3' is possibly undefined
 // 4818EE: variable 'v4' is possibly undefined
@@ -100178,13 +100168,13 @@ signed int  Rules_NonexistentArgError(int a1, int a2)
   int v9; // ecx
 
   Rules_PrintErrorID((int)aArgacces, 3, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aReceivedAReque, v5);
-  Output_Write((int)off_51A614[0], a1, v6);
-  Output_Write((int)off_51A614[0], (int)aForArgument, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReceivedAReque, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument, v7);
   Rules_PrintLongInteger(v8, a2);
-  return Output_Write((int)off_51A614[0], (int)aWhichIsNonExis, v9);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhichIsNonExis, v9);
 }
 // 481A44: variable 'v3' is possibly undefined
 // 481A50: variable 'v4' is possibly undefined
@@ -100206,8 +100196,8 @@ signed int  Rules_ExpectedCountError(int a1, int a2)
   int v8; // ecx
 
   Rules_PrintErrorID((int)aArgacces, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction, v3);
-  Output_Write((int)off_51A614[0], a1, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v4);
   if ( v5 )
   {
     if ( v5 == 1 )
@@ -100227,9 +100217,9 @@ signed int  Rules_ExpectedCountError(int a1, int a2)
   {
     v6 = aExpectedExactl;
   }
-  Output_Write((int)off_51A614[0], (int)v6, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v6, v5);
   Rules_PrintLongInteger(v7, a2);
-  return Output_Write((int)off_51A614[0], (int)aArgumentS, v8);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentS, v8);
 }
 // 481AC4: variable 'v3' is possibly undefined
 // 481AD0: variable 'v4' is possibly undefined
@@ -100291,13 +100281,13 @@ signed int  Parser_ReportError(int a1, int a2)
   int v9; // ecx
 
   Rules_PrintErrorID((int)aArgacces, 5, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aExpectedArgume, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedArgume, v5);
   Rules_PrintLongInteger(v6, a1);
-  Output_Write((int)off_51A614[0], (int)aToBeOfType, v7);
-  Output_Write((int)off_51A614[0], a2, v8);
-  return Output_Write((int)off_51A614[0], (int)asc_503A24, v9);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aToBeOfType, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v8);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503A24, v9);
 }
 // 481C44: variable 'v3' is possibly undefined
 // 481C50: variable 'v4' is possibly undefined
@@ -100341,15 +100331,15 @@ signed int  Rules_ExpectedTypeError(int a1, int a2, int a3)
   int v13; // ecx
 
   Rules_PrintErrorID((int)aArgacces, 6, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction, v5);
-  Output_Write((int)off_51A614[0], a1, v6);
-  Output_Write((int)off_51A614[0], (int)aReceivedAReque, v7);
-  Output_Write((int)off_51A614[0], a2, v8);
-  Output_Write((int)off_51A614[0], (int)aForArgument, v9);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReceivedAReque, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument, v9);
   Rules_PrintLongInteger(v10, a3);
-  Output_Write((int)off_51A614[0], (int)aWhichIsNotOfTy, v11);
-  Output_Write((int)off_51A614[0], v12, v12);
-  return Output_Write((int)off_51A614[0], (int)asc_503A24, v13);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhichIsNotOfTy, v11);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v12, v12);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503A24, v13);
 }
 // 481CF4: variable 'v5' is possibly undefined
 // 481D00: variable 'v6' is possibly undefined
@@ -100437,7 +100427,7 @@ LABEL_6:
       v11 += 2;
     }
     while ( v13 );
-    Rules_AddEphemeralHashNode(v8, &dword_51A268, 10, 20);
+    Rules_AddEphemeralHashNode(v8, &g_Rules_EphemeralSymbolListHead, 10, 20);
     *(_DWORD *)((uintptr_t)(unsigned int)v8 + 8) = dword_51A96C;
     return (signed int *)(uintptr_t)(unsigned int)v8;
   }
@@ -100528,7 +100518,7 @@ LABEL_4:
     *(double *)(v5 + 16) = a1;
     *(_WORD *)(v5 + 12) = v7 & 3;
     *(_DWORD *)(v5 + 12) |= 4 * (v1 & 0x3FFF);
-    Rules_AddEphemeralHashNode(v5, &dword_51A26C, 0, 24);
+    Rules_AddEphemeralHashNode(v5, &g_Rules_EphemeralFloatListHead, 0, 24);
     *(_DWORD *)(v6 + 8) = dword_51A96C;
     return v6;
   }
@@ -100581,7 +100571,7 @@ int  Rules_AddIntegerValue(int a1)
   *(_DWORD *)((uintptr_t)(unsigned int)new_node + 4) = 0;
   *(_WORD *)((uintptr_t)(unsigned int)new_node + 12) = flags & 3;
   *(_DWORD *)((uintptr_t)(unsigned int)new_node + 12) |= 4 * (bucket_index & 0x3FFF);
-  Rules_AddEphemeralHashNode(new_node, &dword_51A270, 0, 20);
+  Rules_AddEphemeralHashNode(new_node, &g_Rules_EphemeralIntegerListHead, 0, 20);
   *(_DWORD *)((uintptr_t)(unsigned int)new_node + 8) = dword_51A96C;
   return new_node;
 }
@@ -100711,7 +100701,7 @@ LABEL_10:
       }
       while ( v16 < a2 );
     }
-    Rules_AddEphemeralHashNode(v6, &dword_51A274, 4, 22);
+    Rules_AddEphemeralHashNode(v6, &g_Rules_EphemeralBitmapListHead, 4, 22);
     *(_DWORD *)(v6 + 8) = dword_51A96C;
   }
   return v6;
@@ -100957,7 +100947,7 @@ int  Rules_DecrementSymbolCount(int result, int a2)
   v3 = *(_DWORD *)(v2 + 4) - 1;
   *(_DWORD *)(v2 + 4) = v3;
   if ( !v3 && (*(_BYTE *)(v2 + 12) & 1) == 0 )
-    return Rules_AddEphemeralHashNode(v2, &dword_51A268, 10, 20);
+    return Rules_AddEphemeralHashNode(v2, &g_Rules_EphemeralSymbolListHead, 10, 20);
   return result;
 }
 // 48254B: variable 'a2' is possibly undefined
@@ -100978,7 +100968,7 @@ int  Rules_DecrementFloatCount(int result, int a2)
   v3 = *(_DWORD *)(v2 + 4) - 1;
   *(_DWORD *)(v2 + 4) = v3;
   if ( !v3 && (*(_BYTE *)(v2 + 12) & 1) == 0 )
-    return Rules_AddEphemeralHashNode(v2, &dword_51A26C, 0, 24);
+    return Rules_AddEphemeralHashNode(v2, &g_Rules_EphemeralFloatListHead, 0, 24);
   return result;
 }
 // 51A26C: using guessed type _DWORD dword_51A26C;
@@ -100998,7 +100988,7 @@ int  Rules_DecrementIntegerCount(int result, int a2)
   v3 = *(_DWORD *)(v2 + 4) - 1;
   *(_DWORD *)(v2 + 4) = v3;
   if ( !v3 && (*(_BYTE *)(v2 + 12) & 1) == 0 )
-    return Rules_AddEphemeralHashNode(v2, &dword_51A270, 0, 20);
+    return Rules_AddEphemeralHashNode(v2, &g_Rules_EphemeralIntegerListHead, 0, 20);
   return result;
 }
 // 51A270: using guessed type _DWORD dword_51A270;
@@ -101023,7 +101013,7 @@ int  Rules_DecrementBitmapCount(int result, int a2)
   v3 = *(_DWORD *)(v2 + 4) - 1;
   *(_DWORD *)(v2 + 4) = v3;
   if ( !v3 && (*(_BYTE *)(v2 + 12) & 1) == 0 )
-    return Rules_AddEphemeralHashNode(v2, &dword_51A274, 4, 22);
+    return Rules_AddEphemeralHashNode(v2, &g_Rules_EphemeralBitmapListHead, 4, 22);
   return result;
 }
 // 48266B: variable 'a2' is possibly undefined
@@ -101109,10 +101099,10 @@ int  Rules_AddEphemeralHashNode(int a1, _DWORD *a2, int a3, int a4)
 //----- (00482830) --------------------------------------------------------
 int Rules_RemoveEphemeralAtoms()
 {
-  Rules_RemoveEphemeralHashNodes((uintptr_t)&dword_51A268, (uintptr_t)(unsigned int)dword_54DD50, 2, 20, 10);
-  Rules_RemoveEphemeralHashNodes((uintptr_t)&dword_51A26C, (uintptr_t)(unsigned int)dword_54DD58, 0, 24, 0);
-  Rules_RemoveEphemeralHashNodes((uintptr_t)&dword_51A270, (uintptr_t)(unsigned int)dword_54DD54, 1, 20, 0);
-  return Rules_RemoveEphemeralHashNodes((uintptr_t)&dword_51A274, (uintptr_t)(unsigned int)dword_54DD5C, 19, 22, 4);
+  Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralSymbolListHead, (uintptr_t)(unsigned int)dword_54DD50, 2, 20, 10);
+  Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralFloatListHead, (uintptr_t)(unsigned int)dword_54DD58, 0, 24, 0);
+  Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralIntegerListHead, (uintptr_t)(unsigned int)dword_54DD54, 1, 20, 0);
+  return Rules_RemoveEphemeralHashNodes((uintptr_t)&g_Rules_EphemeralBitmapListHead, (uintptr_t)(unsigned int)dword_54DD5C, 19, 22, 4);
 }
 // 51A268: using guessed type _DWORD dword_51A268;
 // 51A26C: using guessed type _DWORD dword_51A26C;
@@ -101589,9 +101579,9 @@ int Instance_InitHashTable()
 {
   int result; // eax
 
-  dword_51A278 = (int)Mem_SmallBlockAlloc(0xAACu);
+  g_Instance_HashTableBase = (int)Mem_SmallBlockAlloc(0xAACu);
   for ( result = 0; result != 2732; result += 4 )
-    *(_DWORD *)(dword_51A278 + result) = 0;
+    *(_DWORD *)(g_Instance_HashTableBase + result) = 0;
   return result;
 }
 // 51A278: using guessed type int dword_51A278;
@@ -101604,9 +101594,9 @@ void Instance_PurgeDeletedInstances()
   int object_record; // eax
   int next_node; // eax
 
-  if ( !dword_51A280 )
+  if ( !g_Instance_PurgeInProgress )
   {
-    current_node = dword_51A28C;
+    current_node = g_Instance_DeletedListHead;
     previous_node = 0;
     while ( current_node )
     {
@@ -101632,7 +101622,7 @@ void Instance_PurgeDeletedInstances()
       if ( previous_node )
         *(_DWORD *)(uintptr_t)(unsigned int)(previous_node + 4) = next_node;
       else
-        dword_51A28C = next_node;
+        g_Instance_DeletedListHead = next_node;
 
       dword_54DBAC = current_node;
       *(_DWORD *)(uintptr_t)(unsigned int)current_node = *(_DWORD *)(dword_54DBA8 + 32);
@@ -101664,9 +101654,9 @@ int  Instance_PrintClassInstanceSummary(double a1)
   int v4; // ecx
 
   Module_BeginEnum();
-  v1 = dword_51A280;
+  v1 = g_Instance_PurgeInProgress;
   i = (_DWORD *)dword_51AD0C;
-  dword_51A280 = 1;
+  g_Instance_PurgeInProgress = 1;
   if ( dword_51AD0C )
   {
     do
@@ -101681,7 +101671,7 @@ int  Instance_PrintClassInstanceSummary(double a1)
     }
     while ( i );
   }
-  dword_51A280 = v1;
+  g_Instance_PurgeInProgress = v1;
   return Module_EndEnum();
 }
 // 4831F0: variable 'v3' is possibly undefined
@@ -101797,7 +101787,7 @@ _DWORD * Instance_LookupInHashBucket(int a1, int a2, _DWORD *a3, int a4)
   unsigned int bucket_index; // edx
 
   bucket_index = 11329 * ((unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)a1 + 12) << 16 >> 18) % 0x2ABu;
-  instance = *(_DWORD *)((uintptr_t)(unsigned int)dword_51A278 + 4 * bucket_index);
+  instance = *(_DWORD *)((uintptr_t)(unsigned int)g_Instance_HashTableBase + 4 * bucket_index);
   while ( instance )
   {
     if ( a1 == *(_DWORD *)((uintptr_t)(unsigned int)instance + 28) )
@@ -101937,8 +101927,8 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *a1, int *a2, __int16 a3, uin
     && ((*(_BYTE *)(a1[11] + 20) & 8) != 0 || (*(_BYTE *)*a2 & 1) != 0) )
   {
     Rules_PrintErrorID((int)aInsfun, 5, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotModifyRe, v21);
-    Output_Write((int)off_51A614[0], (int)aPatternMatchin, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotModifyRe, v21);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPatternMatchin, v22);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -102012,18 +102002,18 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *a1, int *a2, __int16 a3, uin
         v12 = aSharedSlot;
       else
         v12 = aLocalSlot;
-      Output_Write((int)off_51A618[0], (int)v12, v11);
-      Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*a2 + 8) + 12) + 16), v13);
-      Output_Write((int)off_51A618[0], (int)aInInstance, v14);
-      Output_Write((int)off_51A618[0], *(_DWORD *)(a1[7] + 16), v15);
-      Output_Write((int)off_51A618[0], (int)asc_503AF0, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)v12, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*a2 + 8) + 12) + 16), v13);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aInInstance, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(a1[7] + 16), v15);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_503AF0, v16);
       if ( (a2[1] & 0xFC) == 0x10 )
-        Lexer_OutputFieldRange((int)off_51A618[0], a2[2], *(_DWORD *)(a2[2] + 6) - 1, 0, 1);
+        Lexer_OutputFieldRange((int)g_IO_LogicalNameTable_WTrace[0], a2[2], *(_DWORD *)(a2[2] + 6) - 1, 0, 1);
       else
-        Rules_PrintAtomValue((int)off_51A618[0], (unsigned int)(a2[1] << 24) >> 26, (int *)a2[2]);
-      Output_Write((int)off_51A618[0], (int)asc_503AF8, v17);
+        Rules_PrintAtomValue((int)g_IO_LogicalNameTable_WTrace[0], (unsigned int)(a2[1] << 24) >> 26, (int *)a2[2]);
+      Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_503AF8, v17);
     }
-    dword_51A288 = 1;
+    g_Instance_InstancesChangedFlag = 1;
     if ( (*(_BYTE *)(a1[11] + 20) & 8) == 0 )
       return 1;
     v18 = *a2;
@@ -102039,12 +102029,12 @@ signed int  Instance_StoreSlotValueAndMatch(_DWORD *a1, int *a2, __int16 a3, uin
         return 1;
       }
       Rules_PrintErrorID((int)aInsfun, 6, 0);
-      Output_Write((int)off_51A614[0], (int)aUnableToPatter, v29);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*a2 + 8) + 12) + 16), v30);
-      Output_Write((int)off_51A614[0], (int)aInClass, v31);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToPatter, v29);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*a2 + 8) + 12) + 16), v30);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInClass, v31);
       v32 = Rules_GetConstructNameString(*(_DWORD *)(*a2 + 4));
-      Output_Write((int)off_51A614[0], v32, (int)off_51A614[0]);
-      Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v33);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v32, (int)g_IO_LogicalNameTable_WError[0]);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v33);
       return 1;
     }
     else
@@ -102089,28 +102079,28 @@ signed int  Instance_ValidateSlotValueConstraints(_DWORD *a1, int a2, int a3)
   if ( (*(_BYTE *)a2 & 2) == 0 && a1[1] == 4 )
   {
     Rules_PrintErrorID((int)aInsfun, 7, 0);
-    Rules_PrintDataObject((int)off_51A614[0], (int)a1);
-    Output_Write((int)off_51A614[0], (int)aIllegalForSing, v6);
-    Instance_PrintSlotErrorContext((int)off_51A614[0], a2, v7, a3);
-    Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v8);
+    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], (int)a1);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalForSing, v6);
+    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], a2, v7, a3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v8);
     Lexer_ErrorRecover(1);
     return 0;
   }
   else if ( a1[1] == 105 )
   {
     Rules_PrintErrorID((int)aInsfun, 8, 0);
-    Output_Write((int)off_51A614[0], (int)aVoidFunctionIl, v9);
-    Instance_PrintSlotErrorContext((int)off_51A614[0], a2, v10, a3);
-    Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVoidFunctionIl, v9);
+    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], a2, v10, a3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v11);
     Lexer_ErrorRecover(1);
     return 0;
   }
   else if ( Rules_DynamicConstraintCheckingEnabled() && (v14 = Rules_CheckFieldAgainstConstraint(a1, *(_DWORD *)(a2 + 20))) != 0 )
   {
     Rules_PrintErrorID((int)aCstrnchk, 1, 0);
-    Rules_PrintDataObject((int)off_51A614[0], (int)a1);
-    Output_Write((int)off_51A614[0], (int)aFor, v12);
-    Instance_PrintSlotErrorContext((int)off_51A614[0], a2, v13, a3);
+    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], (int)a1);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFor, v12);
+    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], a2, v13, a3);
     Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, v14, *(_DWORD *)(a2 + 20), 0);
     Lexer_ErrorRecover(1);
     return 0;
@@ -102160,9 +102150,9 @@ _DWORD * Instance_ResolveArgumentToInstance(int a1, int a2, double a3)
     if ( v11 != 8 && v11 != 2 )
     {
       Rules_PrintErrorID((int)aInsfun, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedAVal_1, v7);
-      Output_Write((int)off_51A614[0], v8, v8);
-      Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_1, v7);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v8, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v9);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -102192,11 +102182,11 @@ int __fastcall Instance_ReportNoSuchInstanceError(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aInsfun, 2, 0);
-  Output_Write((int)off_51A614[0], (int)aNoSuchInstance, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aInFunction, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchInstance, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v7);
   return Lexer_ErrorRecover(1);
 }
 // 483BB2: variable 'v3' is possibly undefined
@@ -102216,11 +102206,11 @@ int __fastcall Instance_ReportNoSuchSlotError(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aInsfun, 3, 0);
-  Output_Write((int)off_51A614[0], (int)aNoSuchSlot, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aInFunction, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchSlot, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v7);
   return Lexer_ErrorRecover(1);
 }
 // 483C22: variable 'v3' is possibly undefined
@@ -102238,9 +102228,9 @@ signed int Instance_ReportInvalidInstanceAddressError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aInsfun, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aInvalidInstanc, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aDotNewline_InstanceError, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInvalidInstanc, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_InstanceError, v2);
 }
 // 483C90: variable 'v0' is possibly undefined
 // 483C9C: variable 'v1' is possibly undefined
@@ -102250,7 +102240,7 @@ signed int Instance_ReportInvalidInstanceAddressError()
 //----- (00483CD0) --------------------------------------------------------
 int  Instance_SetModifiedFlag(int result)
 {
-  dword_51A288 = result;
+  g_Instance_InstancesChangedFlag = result;
   return result;
 }
 // 51A288: using guessed type int dword_51A288;
@@ -102410,9 +102400,9 @@ signed int  Instance_PrintNameOrDummyLabel(int a1, void **a2)
   int v15; // ecx
 
   v2 = a1;
-  if ( dword_51A600 )
+  if ( g_Print_InstanceAddressesToNamesFlag )
   {
-    if ( a2 == &off_51A214 )
+    if ( a2 == &g_Instance_DummyInstanceRecord )
     {
       v5 = aDummyInstanc_0;
     }
@@ -102428,9 +102418,9 @@ signed int  Instance_PrintNameOrDummyLabel(int a1, void **a2)
   }
   else
   {
-    if ( dword_51A5FC )
+    if ( g_Print_AddressesToStringsFlag )
       Output_Write(a1, (int)asc_503C78, a1);
-    if ( a2 == &off_51A214 )
+    if ( a2 == &g_Instance_DummyInstanceRecord )
     {
       v10 = aDummyInstanc_1;
     }
@@ -102450,7 +102440,7 @@ signed int  Instance_PrintNameOrDummyLabel(int a1, void **a2)
       v10 = asc_503CA4;
     }
     result = Output_Write(v2, (int)v10, v2);
-    if ( dword_51A5FC )
+    if ( g_Print_AddressesToStringsFlag )
       return Output_Write(v11, (int)asc_503C78, v11);
   }
   return result;
@@ -102625,7 +102615,7 @@ void  __noreturn CRT_WatcomEHHandleNestedException(int a1, int a2)
 
   ExceptionList = NtCurrentTeb()->NtTib.ExceptionList;
   v16 = &j____wcpp_4_fs_handler_rtn_;
-  v17 = &unk_510DAC;
+  v17 = &g_CRTWatcomEHHandleNestedException_ScopeTable;
   v18 = 0;
   v21 = **(_DWORD **)(a1 + 8);
   v3 = *(int **)(v21 + 8);
@@ -102669,7 +102659,7 @@ void  __noreturn CRT_WatcomEHHandleNestedException(int a1, int a2)
         ExcString_Ctor();
         v18 = 5;
         ExcString_Ctor();
-        v13[25] = (_EXC_PR_FNEXC *)&off_510F44;
+        v13[25] = (_EXC_PR_FNEXC *)&g_BadException_VTable;
         v18 = 7;
         CRT_ThrowExcStringException();
         v19 = v13;
@@ -102751,7 +102741,7 @@ int  CRT_WatcomEHFrameHandler(
 
   *(_DWORD *)((char *)&ExceptionRecord_46 + 2) = NtCurrentTeb()->NtTib.ExceptionList;
   *(_DWORD *)((char *)&ExceptionRecord_46 + 6) = &j____wcpp_4_fs_handler_rtn_;
-  *(_DWORD *)((char *)&ExceptionRecord_46 + 10) = &unk_510E20;
+  *(_DWORD *)((char *)&ExceptionRecord_46 + 10) = &g_CRTWatcomEHFrameHandler_ScopeTable;
   *(_DWORD *)((char *)&ExceptionRecord_46 + 14) = 0;
   *(_DWORD *)((char *)&a18 + 2) = _wcpp_4_pgm_thread__(a2);
   *(_DWORD *)(*(_DWORD *)((char *)&a18 + 2) + 12) = 0;
@@ -102903,7 +102893,7 @@ int CRT_ConstructBadExceptionFromCurrentSEH()
   int result; // eax
 
   result = ExcString_CtorFromPtr((void *)NtCurrentTeb()->NtTib.ExceptionList);
-  *(_DWORD *)(result + 100) = &off_510F44;
+  *(_DWORD *)(result + 100) = &g_BadException_VTable;
   return result;
 }
 // 510F44: using guessed type _DWORD (__cdecl *off_510F44)(bad_exception *this);
@@ -102915,11 +102905,11 @@ int __thiscall CRT_WriteMessageAndCountNewline(void *this)
   int v2; // ecx
   int v3; // ebx
 
-  result = fputs_(this, &unk_51A35A);
+  result = fputs_(this, &g_CRT_StdoutStream);
   v3 = result;
   if ( result != -1 )
   {
-    result = CRT_PutcToStream(v2, &unk_51A35A);
+    result = CRT_PutcToStream(v2, &g_CRT_StdoutStream);
     if ( result == 10 )
       return v3 + 1;
   }
@@ -103263,7 +103253,7 @@ int  CRT_InitializeRuntimeBeforeWinMain(int a1, int a2)
   _init_stack_limits_();
   CRT_InstallUnhandledExceptionFilter(a1, v7);
   _InitRtns();
-  off_51A5A8();
+  g_CRT_ThreadStartupHook();
   return _InitRtns();
 }
 // 4855C6: variable 'v5' is possibly undefined
@@ -103365,7 +103355,7 @@ unsigned int  Rules_PrintAtomValue(int a1, unsigned int a2, int *a3)
   }
   if ( a2 <= 3 )
   {
-    if ( dword_51A5F8 )
+    if ( g_Print_PreserveEscapedCharactersFlag )
     {
       v6 = Str_InternQuotedEscapedString((int *)a3[4], v3);
       return Output_Write(v7, v6, v7);
@@ -103381,13 +103371,13 @@ unsigned int  Rules_PrintAtomValue(int a1, unsigned int a2, int *a3)
   {
     if ( a2 == 5 )
     {
-      if ( dword_51A5FC )
+      if ( g_Print_AddressesToStringsFlag )
         Output_Write(v3, (int)asc_503EA4, v3);
       Output_Write(v3, (int)aPointer, v3);
       sprintf_(v17, "%p", a3);
       Output_Write(v8, (int)v17, v8);
       result = Output_Write(v9, (int)asc_503EB8, v9);
-      if ( dword_51A5FC )
+      if ( g_Print_AddressesToStringsFlag )
         return Output_Write(v10, (int)asc_503EA4, v10);
       return result;
     }
@@ -103460,11 +103450,11 @@ int  Rules_PrintTally(int result, int a2, int a3, int a4)
 signed int  Rules_PrintErrorID(int a1, int a2, int a3)
 {
   if ( a3 )
-    Output_Write((int)off_51A614[0], (int)asc_503EF0, 0);
-  Output_Write((int)off_51A614[0], (int)asc_503EBC, 0);
-  Output_Write((int)off_51A614[0], a1, 0);
-  Rules_PrintLongInteger((int)off_51A614[0], a2);
-  return Output_Write((int)off_51A614[0], (int)asc_503EF4, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EF0, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EBC, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+  Rules_PrintLongInteger((int)g_IO_LogicalNameTable_WError[0], a2);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EF4, 0);
 }
 // 51A614: using guessed type char *off_51A614[5];
 
@@ -103472,11 +103462,11 @@ signed int  Rules_PrintErrorID(int a1, int a2, int a3)
 signed int  Rules_PrintWarningID(int a1, int a2, int a3)
 {
   if ( a3 )
-    Output_Write((int)off_51A610[0], (int)asc_503EF0, 0);
-  Output_Write((int)off_51A610[0], (int)asc_503EBC, 0);
-  Output_Write((int)off_51A610[0], a1, 0);
-  Rules_PrintLongInteger((int)off_51A610[0], a2);
-  return Output_Write((int)off_51A610[0], (int)aWarning, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)asc_503EF0, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)asc_503EBC, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WWarning[0], a1, 0);
+  Rules_PrintLongInteger((int)g_IO_LogicalNameTable_WWarning[0], a2);
+  return Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aWarning, 0);
 }
 // 51A610: using guessed type char *off_51A610[6];
 
@@ -103490,11 +103480,11 @@ signed int __fastcall Rules_ReportCantFindItem(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aUnableToFind, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)asc_503EE8, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)a__14, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFind, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EE8, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__14, v7);
 }
 // 485A82: variable 'v3' is possibly undefined
 // 485A8E: variable 'v4' is possibly undefined
@@ -103513,11 +103503,11 @@ signed int __fastcall Rules_ReportCantDeleteItem(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aUnableToDele_3, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)asc_503EE8, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)a__14, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDele_3, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EE8, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__14, v7);
 }
 // 485AF2: variable 'v3' is possibly undefined
 // 485AFE: variable 'v4' is possibly undefined
@@ -103533,12 +103523,12 @@ signed int __fastcall Rules_ReportAlreadyParsed(int a1, int a2)
   int v4; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 5, 1);
-  Output_Write((int)off_51A614[0], (int)aThe_0, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe_0, v3);
   if ( v4 )
-    Output_Write((int)off_51A614[0], v4, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
   if ( a2 )
-    Output_Write((int)off_51A614[0], a2, v4);
-  return Output_Write((int)off_51A614[0], (int)aHasAlreadyBeen, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v4);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasAlreadyBeen, v4);
 }
 // 485B65: variable 'v3' is possibly undefined
 // 485B6C: variable 'v4' is possibly undefined
@@ -103552,13 +103542,13 @@ int Parser_ReportSyntaxError()
   int v3; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aSyntaxError, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSyntaxError, v0);
   if ( v1 )
   {
-    Output_Write((int)off_51A614[0], (int)aCheckAppropria, v1);
-    Output_Write((int)off_51A614[0], v3, v3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCheckAppropria, v1);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v3, v3);
   }
-  Output_Write((int)off_51A614[0], (int)a__14, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__14, v1);
   return Lexer_ErrorRecover(1);
 }
 // 485BE3: variable 'v0' is possibly undefined
@@ -103574,9 +103564,9 @@ signed int Rules_ReportLocalVariableError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 6, 1);
-  Output_Write((int)off_51A614[0], (int)aLocalVariables, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)a__14, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aLocalVariables, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__14, v2);
 }
 // 485C53: variable 'v0' is possibly undefined
 // 485C5F: variable 'v1' is possibly undefined
@@ -103596,14 +103586,14 @@ signed int __fastcall Rules_ReportSystemError(int a1, int a2)
   int v10; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 3, 1);
-  Output_Write((int)off_51A614[0], (int)aClipsSystemErr, v3);
-  Output_Write((int)off_51A614[0], (int)aId, v4);
-  Output_Write((int)off_51A614[0], v5, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClipsSystemErr, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aId, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v5, v5);
   Rules_PrintLongInteger(v6, a2);
-  Output_Write((int)off_51A614[0], (int)asc_503EF0, v7);
-  Output_Write((int)off_51A614[0], (int)aClipsDataStruc, v8);
-  Output_Write((int)off_51A614[0], (int)aThisErrorMayHa, v9);
-  return Output_Write((int)off_51A614[0], (int)asc_504060, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_503EF0, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClipsDataStruc, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorMayHa, v9);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504060, v10);
 }
 // 485CA5: variable 'v3' is possibly undefined
 // 485CB4: variable 'v4' is possibly undefined
@@ -103623,9 +103613,9 @@ signed int Rules_ReportDivideByZeroError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aPrntutil, 7, 0);
-  Output_Write((int)off_51A614[0], (int)aAttemptToDivid, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aFunction__0, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttemptToDivid, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__0, v2);
 }
 // 485D40: variable 'v0' is possibly undefined
 // 485D4C: variable 'v1' is possibly undefined
@@ -103703,15 +103693,15 @@ signed int  Output_Write(int a1, int a2, int a3)
   int v5; // ecx
   void (__fastcall *router_write)(int, int); // ecx
 
-  if ( dword_51A60C && a1 == dword_51A60C )
+  if ( g_IO_FastSaveFilePtr && a1 == g_IO_FastSaveFilePtr )
   {
-    Output_WriteFormatted(0, 0, dword_51A60C, (int)aS_1, a2);
+    Output_WriteFormatted(0, 0, g_IO_FastSaveFilePtr, (int)aS_1, a2);
     return 2;
   }
   else
   {
-    v5 = dword_51A604;
-    if ( dword_51A604 )
+    v5 = g_IO_RouterListHead;
+    if ( g_IO_RouterListHead )
     {
       while ( !*(_DWORD *)(v5 + 16) || !IO_RouterMatchesName(a1, v5) )
       {
@@ -103726,7 +103716,7 @@ signed int  Output_Write(int a1, int a2, int a3)
     else
     {
 LABEL_5:
-      if ( strcmp_((int)off_51A614[0], a1) )
+      if ( strcmp_((int)g_IO_LogicalNameTable_WError[0], a1) )
         IO_ReportUnrecognizedRouter(a1);
       return 0;
     }
@@ -103746,24 +103736,24 @@ int  Lexer_PeekChar(int a1, unsigned int a2)
   int v4; // ecx
   int (__fastcall *router_read)(int); // eax
 
-  if ( a1 == dword_51A608 )
+  if ( a1 == g_IO_FastLoadFilePtr )
   {
-    if ( *(int *)(dword_51A608 + 4) > 0 && (a2 = **(unsigned __int8 **)dword_51A608 - 13, a2 > 0xFD) )
+    if ( *(int *)(g_IO_FastLoadFilePtr + 4) > 0 && (a2 = **(unsigned __int8 **)g_IO_FastLoadFilePtr - 13, a2 > 0xFD) )
     {
-      --*(_DWORD *)(dword_51A608 + 4);
-      v3 = (unsigned __int8 *)(*(_DWORD *)dword_51A608)++;
+      --*(_DWORD *)(g_IO_FastLoadFilePtr + 4);
+      v3 = (unsigned __int8 *)(*(_DWORD *)g_IO_FastLoadFilePtr)++;
       result = *v3;
     }
     else
     {
-      result = fgetc_(a2, dword_51A608);
+      result = fgetc_(a2, g_IO_FastLoadFilePtr);
     }
     if ( result != 13 )
       return result;
     return 10;
   }
-  v4 = dword_51A604;
-  if ( !dword_51A604 )
+  v4 = g_IO_RouterListHead;
+  if ( !g_IO_RouterListHead )
   {
 LABEL_12:
     IO_ReportUnrecognizedRouter(a1);
@@ -103792,10 +103782,10 @@ signed int  Lexer_SkipChar(signed int a1, int a2, int a3)
   int v4; // ecx
   int (__fastcall *router_skip)(int, int); // eax
 
-  if ( a2 == dword_51A608 )
+  if ( a2 == g_IO_FastLoadFilePtr )
     return CRT_FlushBufferAndPutChar(a1, a3);
-  v4 = dword_51A604;
-  if ( dword_51A604 )
+  v4 = g_IO_RouterListHead;
+  if ( g_IO_RouterListHead )
   {
     while ( !*(_DWORD *)(v4 + 28) || !IO_RouterMatchesName(a2, v4) )
     {
@@ -103838,7 +103828,7 @@ int a1;
   int result; // eax
 
   dword_54DD98 = 0;
-  router = dword_51A604;
+  router = g_IO_RouterListHead;
   while ( router )
   {
     next_router = *(_DWORD *)(router + 32);
@@ -103887,12 +103877,12 @@ signed int  IO_AddRouter(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
   v11[6] = a5;
   v11[7] = a6;
   v12 = (int)v11;
-  if ( !dword_51A604 )
+  if ( !g_IO_RouterListHead )
   {
-    dword_51A604 = (int)v11;
+    g_IO_RouterListHead = (int)v11;
     return 1;
   }
-  v13 = dword_51A604;
+  v13 = g_IO_RouterListHead;
   v14 = 0;
   do
   {
@@ -103904,8 +103894,8 @@ signed int  IO_AddRouter(int a1, int a2, int a3, int a4, int a5, int a6, int a7)
   while ( v13 );
   if ( !v14 )
   {
-    *(_DWORD *)(v12 + 32) = dword_51A604;
-    dword_51A604 = v12;
+    *(_DWORD *)(v12 + 32) = g_IO_RouterListHead;
+    g_IO_RouterListHead = v12;
     return 1;
   }
   *(_DWORD *)(v12 + 32) = v13;
@@ -103923,7 +103913,7 @@ signed int  IO_DeleteRouter(int a1)
   int router; // ecx
   _DWORD *previous_router; // esi
 
-  router = dword_51A604;
+  router = g_IO_RouterListHead;
   previous_router = 0;
   if ( !router )
     return 0;
@@ -103937,7 +103927,7 @@ signed int  IO_DeleteRouter(int a1)
   if ( previous_router )
     previous_router[8] = *(_DWORD *)(router + 32);
   else
-    dword_51A604 = *(_DWORD *)(router + 32);
+    g_IO_RouterListHead = *(_DWORD *)(router + 32);
   Mem_SmallBlockFree((_DWORD *)router, 36);
   return 1;
 }
@@ -103951,8 +103941,8 @@ int  IO_QueryRouters(int a1)
   int router; // ecx
 
   logical_name = a1;
-  router = dword_51A604;
-  if ( !dword_51A604 )
+  router = g_IO_RouterListHead;
+  if ( !g_IO_RouterListHead )
     return 0;
   while ( IO_RouterMatchesName(logical_name, router) != 1 )
   {
@@ -103986,7 +103976,7 @@ signed int  IO_DeactivateRouter(int a1)
 {
   int router; // ecx
 
-  router = dword_51A604;
+  router = g_IO_RouterListHead;
   if ( !router )
     return 0;
   while ( strcmp_(*(_DWORD *)router, a1) )
@@ -104007,7 +103997,7 @@ signed int  IO_ActivateRouter(int a1)
   int router; // ecx
   signed int result; // eax
 
-  router = dword_51A604;
+  router = g_IO_RouterListHead;
   if ( !router )
     return 0;
   while ( strcmp_(*(_DWORD *)router, a1) )
@@ -104026,7 +104016,7 @@ signed int  IO_ActivateRouter(int a1)
 //----- (00486280) --------------------------------------------------------
 int  IO_SetFastLoadFile(int result)
 {
-  dword_51A608 = result;
+  g_IO_FastLoadFilePtr = result;
   return result;
 }
 // 51A608: using guessed type int dword_51A608;
@@ -104034,7 +104024,7 @@ int  IO_SetFastLoadFile(int result)
 //----- (00486290) --------------------------------------------------------
 int  IO_SetFastSaveFile(int result)
 {
-  dword_51A60C = result;
+  g_IO_FastSaveFilePtr = result;
   return result;
 }
 // 51A60C: using guessed type int dword_51A60C;
@@ -104042,7 +104032,7 @@ int  IO_SetFastSaveFile(int result)
 //----- (004862A0) --------------------------------------------------------
 int IO_GetFastLoadFile()
 {
-  return dword_51A608;
+  return g_IO_FastLoadFilePtr;
 }
 // 51A608: using guessed type int dword_51A608;
 
@@ -104056,10 +104046,10 @@ int  IO_ReportUnrecognizedRouter(int a1)
     return 0;
   reporting_router_error = 1;
   Rules_PrintErrorID((int)aRouter, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aLogicalName, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aLogicalName, 0);
   if ( a1 )
-    Output_Write((int)off_51A614[0], a1, 0);
-  result = Output_Write((int)off_51A614[0], (int)aWasNotRecogniz, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, 0);
+  result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasNotRecogniz, 0);
   reporting_router_error = 0;
   return result;
 }
@@ -104360,27 +104350,27 @@ char *CRT_DestroyTlsIndexAndThreadData()
 //----- (0048674D) --------------------------------------------------------
 void CRT_InitializeThreadAndFileHandleHooks()
 {
-  off_51A56C = (int (__thiscall *)(_DWORD))CRT_AcquireFileHandleLock;
-  off_51A570 = (int (__fastcall *)(_DWORD, _DWORD))CRT_ReleaseFileHandleLock;
-  off_51A574 = j___NTAddFileHandle__0;
-  off_51A578[0] = (int (*)())CRT_ReleaseAndUnregisterFileHandle;
-  off_51A57C = (_DWORD (*)())CRT_AcquireStaticLock1;
-  off_51A580 = (_DWORD (*)())CRT_ReleaseStaticLock1;
-  off_51A594[0] = (int (*)())CRT_AcquireStaticLock4;
-  off_51A598[0] = (int (*)())CRT_ReleaseStaticLock4;
-  off_51A62C[0] = (int (*)())CRT_LockEnter;
-  off_51A630[0] = (int (*)())CRT_LockLeave;
-  off_51A634 = (int (__fastcall *)(_DWORD, _DWORD))CRT_ResetLockSlot;
-  off_51A584 = (_DWORD (*)())CRT_AcquireStaticLock2;
-  off_51A588[0] = (int (*)())CRT_AcquireStaticLock3;
-  off_51A58C = (_DWORD (*)())CRT_ReleaseStaticLock2;
-  off_51A590[0] = (int (*)())CRT_ReleaseStaticLock3;
+  g_CRT_FileHandleLockAcquireHook = (int (__thiscall *)(_DWORD))CRT_AcquireFileHandleLock;
+  g_CRT_FileHandleLockReleaseHook = (int (__fastcall *)(_DWORD, _DWORD))CRT_ReleaseFileHandleLock;
+  g_CRT_AddFileHandleHook = j___NTAddFileHandle__0;
+  g_CRT_FileHandleRemoveHookTable[0] = (int (*)())CRT_ReleaseAndUnregisterFileHandle;
+  g_CRT_StaticLock1AcquireHook = (_DWORD (*)())CRT_AcquireStaticLock1;
+  g_CRT_StaticLock1ReleaseHook = (_DWORD (*)())CRT_ReleaseStaticLock1;
+  g_CRT_StaticLock4AcquireHookTable[0] = (int (*)())CRT_AcquireStaticLock4;
+  g_CRT_StaticLock4ReleaseHookTable[0] = (int (*)())CRT_ReleaseStaticLock4;
+  g_CRT_LockEnterHookTable[0] = (int (*)())CRT_LockEnter;
+  g_CRT_LockLeaveHookTable[0] = (int (*)())CRT_LockLeave;
+  g_CRT_LockSlotResetHook = (int (__fastcall *)(_DWORD, _DWORD))CRT_ResetLockSlot;
+  g_CRT_StaticLock2AcquireHook = (_DWORD (*)())CRT_AcquireStaticLock2;
+  g_CRT_StaticLock3AcquireHookTable[0] = (int (*)())CRT_AcquireStaticLock3;
+  g_CRT_StaticLock2ReleaseHook = (_DWORD (*)())CRT_ReleaseStaticLock2;
+  g_CRT_StaticLock3ReleaseHookTable[0] = (int (*)())CRT_ReleaseStaticLock3;
   dword_54DECC = (int)CRT_AllocateLockSlot(CRT_LockLeave);
   InitializeCriticalSection((LPCRITICAL_SECTION)dword_54DECC);
   dword_54DED0 = 1;
-  off_51A5A0[0] = CRT_DestroyThreadDataBlock;
-  off_51A5A4 = (_DWORD (*)())CRT_DestroyTlsIndexAndThreadData;
-  off_51A59C[0] = CRT_ConstructThreadDataBlock;
+  g_CRT_ThreadDataDestroyHookTable[0] = CRT_DestroyThreadDataBlock;
+  g_CRT_TlsIndexDestroyHook = (_DWORD (*)())CRT_DestroyTlsIndexAndThreadData;
+  g_CRT_ThreadDataConstructHookTable[0] = CRT_ConstructThreadDataBlock;
   _AddThreadData_(CRT_ConstructThreadDataBlock, lpTlsValue);
   TlsSetValue(dwTlsIndex, lpTlsValue);
   g_CrtThreadDataAccessor = (__int64 (__fastcall *)(_DWORD, _DWORD))CRT_GetOrCreateThreadDataPreserveLastError;
@@ -104427,17 +104417,17 @@ int __thiscall CRT_ShutdownThreadAndFileHandleHooks(void *this)
   int v10; // edx
   int v11; // ecx
 
-  off_51A634(this, &unk_54DDBC);
+  g_CRT_LockSlotResetHook(this, &unk_54DDBC);
   v3 = v1 + 256;
   do
-    off_51A634(v2, v1 + 16);
+    g_CRT_LockSlotResetHook(v2, v1 + 16);
   while ( v1 != v3 );
-  off_51A634(v2, v1);
+  g_CRT_LockSlotResetHook(v2, v1);
   j___FreeThreadDataList_();
-  off_51A634(v5, v4);
-  off_51A634(v7, v6);
-  off_51A634(v9, v8);
-  off_51A634(v11, v10);
+  g_CRT_LockSlotResetHook(v5, v4);
+  g_CRT_LockSlotResetHook(v7, v6);
+  g_CRT_LockSlotResetHook(v9, v8);
+  g_CRT_LockSlotResetHook(v11, v10);
   return loc_48672B();
 }
 // 48687B: variable 'v1' is possibly undefined
@@ -105899,14 +105889,14 @@ unsigned int  CRT_CreateFileHandleFromPath(const CHAR *a1, int a2, int a3, DWORD
   SecurityAttributes.lpSecurityDescriptor = 0;
   SecurityAttributes.nLength = 12;
   SecurityAttributes.bInheritHandle = (v20 & 0x80u) == 0;
-  if ( dword_51A5BC && !stricmp_(v9, aCon_0) )
+  if ( g_CRT_ConsoleOpenHook && !stricmp_(v9, aCon_0) )
   {
     _NTGetFakeHandle_(
       SecurityAttributes.nLength,
       SecurityAttributes.lpSecurityDescriptor,
       SecurityAttributes.bInheritHandle);
-    v10 = off_51A574();
-    dword_51A5BC(0, v10, -1);
+    v10 = g_CRT_AddFileHandleHook();
+    g_CRT_ConsoleOpenHook(0, v10, -1);
     goto LABEL_26;
   }
   if ( (v20 & 0x20) != 0 )
@@ -105947,7 +105937,7 @@ LABEL_18:
     if ( FileA == (HANDLE)-1 )
       return _set_errno_nt_(SecurityAttributes.nLength);
   }
-  v10 = off_51A574();
+  v10 = g_CRT_AddFileHandleHook();
   if ( v10 >= dword_51A768 )
   {
     CloseHandle(v14);
@@ -106009,7 +105999,7 @@ signed int  CRT_MkTime(_DWORD *a1)
   if ( v5 < 0 )
     return -1;
   if ( CRT_IsLeapYear(v5 + 1900) )
-    v6 = (char *)&dword_511108 + 2;
+    v6 = (char *)&g_CRT_LeapMonthDayTable + 2;
   v7 = a1[3]
      + (v5 + 299) / 400
      + ((v5 + 3 - (__CFSHL__((v5 + 3) >> 31, 2) + 4 * ((v5 + 3) >> 31))) >> 2)
@@ -106070,14 +106060,14 @@ int  CRT_VfprintfLockedWrite(int a1, int a2, int *a3)
   unsigned char stream_flags;
 
   lock_key = *(_DWORD *)(a1 + 16);
-  off_51A56C(lock_key);
+  g_CRT_FileHandleLockAcquireHook(lock_key);
   stream_state = *(_DWORD *)(a1 + 8);
   busy_state = *(_DWORD *)(stream_state + 12);
   if ( busy_state != 1 )
   {
     if ( busy_state )
     {
-      off_51A570(lock_key, 0);
+      g_CRT_FileHandleLockReleaseHook(lock_key, 0);
       return 0;
     }
     *(_DWORD *)(stream_state + 12) = 1;
@@ -106105,7 +106095,7 @@ int  CRT_VfprintfLockedWrite(int a1, int a2, int *a3)
   if ( (*(_BYTE *)(a1 + 12) & 0x20) != 0 )
     write_result = -1;
   *(_DWORD *)(a1 + 12) |= saved_mode_bits;
-  off_51A570(lock_key, write_result);
+  g_CRT_FileHandleLockReleaseHook(lock_key, write_result);
   return write_result;
 }
 // 4886DD: using guessed type int __fastcall _flush_(_DWORD, _DWORD);
@@ -106128,21 +106118,21 @@ DWORD  CRT_ReadFileHandle(int a1, int a2, DWORD a3)
   v12 = a2;
   if ( a1 >= 0 && a1 <= (unsigned int)dword_51A768 )
   {
-    off_51A56C(a2);
-    if ( dword_51A5DC && dword_51A5B4() )
+    g_CRT_FileHandleLockAcquireHook(a2);
+    if ( g_CRT_CustomReadHook && g_CRT_CustomReadAvailablePredicateHook() )
     {
-      v6 = dword_51A5DC();
-      off_51A570(v7, v6);
+      v6 = g_CRT_CustomReadHook();
+      g_CRT_FileHandleLockReleaseHook(v7, v6);
       return v8;
     }
     else if ( ReadFile(*(HANDLE *)(dword_51AED0 + 4 * a1), v5, a3, &NumberOfBytesRead, 0) )
     {
-      off_51A570(v10, v9);
+      g_CRT_FileHandleLockReleaseHook(v10, v9);
       return NumberOfBytesRead;
     }
     else
     {
-      off_51A570(v10, v9);
+      g_CRT_FileHandleLockReleaseHook(v10, v9);
       return _set_errno_nt_(NumberOfBytesRead);
     }
   }
@@ -106200,7 +106190,7 @@ signed int  CRT_FlushBufferAndPutChar(signed int result, int a2)
   v3 = result;
   if ( result != -1 )
   {
-    off_51A56C(a2);
+    g_CRT_FileHandleLockAcquireHook(a2);
     v5 = v4[2];
     v6 = (unsigned __int8 *)*((_DWORD *)v5 + 3);
     if ( v6 != (unsigned __int8 *)1 )
@@ -106208,7 +106198,7 @@ signed int  CRT_FlushBufferAndPutChar(signed int result, int a2)
       if ( v6 )
       {
 LABEL_4:
-        off_51A570(v6, v4);
+        g_CRT_FileHandleLockReleaseHook(v6, v4);
         return -1;
       }
       *((_DWORD *)v5 + 3) = 1;
@@ -106240,7 +106230,7 @@ LABEL_4:
 LABEL_15:
     **v4 = v3;
     *((_BYTE *)v4 + 12) &= ~0x10u;
-    off_51A570(v6, v4);
+    g_CRT_FileHandleLockReleaseHook(v6, v4);
     return (unsigned __int8)v3;
   }
   return result;
@@ -106328,7 +106318,7 @@ _DWORD * IO_StreambufAlloc(int a1, char a2, DWORD a3)
 
   result = (_DWORD *)Mem_Alloc(4, a1, a2, a3);
   if ( result )
-    *result = off_511054;
+    *result = g_IOStreambuf_VTable;
   return result;
 }
 // 511054: using guessed type int (*off_511054[4])();
@@ -106342,7 +106332,7 @@ int Rules_Builtin_0()
 //----- (0048A0C0) --------------------------------------------------------
 void *Rules_Builtin_1()
 {
-  return &unk_50422C;
+  return &g_Rules_BuiltinSentinelAddress;
 }
 
 //----- (0048A0D0) --------------------------------------------------------
@@ -106378,7 +106368,7 @@ _DWORD * IO_StreambufAllocDerived(int a1, char a2, DWORD a3)
 //----- (0048A120) --------------------------------------------------------
 _DWORD * IO_StreambufInitVTable(_DWORD *result)
 {
-  *result = off_511054;
+  *result = g_IOStreambuf_VTable;
   return result;
 }
 // 511054: using guessed type int (*off_511054[4])();
@@ -106397,7 +106387,7 @@ int  Rules_ConstructHandleVectorDtor(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_5110B0);
+    _wcpp_4_dtor_array_store__(result, &g_RulesHandleVector_DtorArrayDescriptor);
     j_j__nfree_();
     return v3;
   }
@@ -106428,7 +106418,7 @@ int  Rules_ConstructRecordVectorDtor(int result, char a2)
 
   if ( (a2 & 4) != 0 )
   {
-    _wcpp_4_dtor_array_store__(result, &unk_5110D0);
+    _wcpp_4_dtor_array_store__(result, &g_RulesRecordArrayDtorSlot);
     j_j__nfree_();
     return v3;
   }
@@ -107642,7 +107632,7 @@ int __fastcall Rules_RegisterDeftemplateFunctions(int a1, int a2)
 {
   int v2; // ecx
 
-  Rules_AddResetFunction((int)aDeftemplate_0, (int)nullsub_11, 0);
+  Rules_AddResetFunction((int)aDeftemplate_0, (int)Noop_DeftemplateResetCallback, 0);
   Rules_AddClearFunction((int)aDeftemplate_0, (int)Rules_InternInitialFactSymbol, 0);
   Rules_AddSaveFunction((int)aDeftemplate_0, (int)Rules_ClearDeftemplateModuleData, 10);
   Rules_RegisterHostFunction(aGetDeftemplate, 109, v2, (int)Rules_GetDeftemplateListCommand, (int)a01w_1);
@@ -107652,7 +107642,7 @@ int __fastcall Rules_RegisterDeftemplateFunctions(int a1, int a2)
   Rules_RegisterHostFunction(aPpdeftemplate, 118, (int)aPpdeftemplatec, (int)Rules_PPDeftemplateCommand, (int)a11w_1);
   Rules_RegisterDeftemplateBinaryItem();
   Rules_RegisterDeftemplateCodeGen();
-  return nullsub_11(a1, a2);
+  return Noop_DeftemplateResetCallback(a1, a2);
 }
 // 48B332: variable 'v2' is possibly undefined
 // 48B3C0: using guessed type int __fastcall nullsub_11(_DWORD, _DWORD);
@@ -108034,12 +108024,12 @@ signed int  Rules_ListWatchItemsCommand(int a1, double a2)
         }
         else
         {
-          Output_Write((int)off_51A624, *v8, (int)v8);
+          Output_Write((int)g_IO_LogicalName_WDisplay, *v8, (int)v8);
           if ( **(_DWORD **)(v9 + 4) )
             v10 = aOn;
           else
             v10 = aOff;
-          result = Output_Write((int)off_51A624, (int)v10, v9);
+          result = Output_Write((int)g_IO_LogicalName_WDisplay, (int)v10, v9);
           if ( *(_DWORD *)(v11 + 20) )
           {
             result = (*(int (__fastcall **)(int, _DWORD))(v11 + 20))(v11, *(_DWORD *)(v11 + 8));
@@ -108062,12 +108052,12 @@ signed int  Rules_ListWatchItemsCommand(int a1, double a2)
     {
       do
       {
-        Output_Write((int)off_51A624, *v3, (int)v3);
+        Output_Write((int)g_IO_LogicalName_WDisplay, *v3, (int)v3);
         if ( **(_DWORD **)(v4 + 4) )
           v5 = aOn;
         else
           v5 = aOff;
-        result = Output_Write((int)off_51A624, (int)v5, v4);
+        result = Output_Write((int)g_IO_LogicalName_WDisplay, (int)v5, v4);
         v3 = *(int **)(v6 + 24);
       }
       while ( v3 );
@@ -108091,8 +108081,8 @@ signed int Rules_RegisterWatchFunctions()
   Rules_RegisterHostFunction(aWatch, 118, (int)aWatchcommand, (int)Rules_WatchCommand, (int)a1W);
   Rules_RegisterHostFunction(aUnwatch, 118, (int)aUnwatchcommand, (int)Rules_UnwatchCommand, (int)a1W);
   Rules_RegisterHostFunction(aListWatchItems, 118, (int)aListwatchitems, (int)Rules_ListWatchItemsCommand, (int)a0W);
-  IO_AddRouter((int)off_51A618[0], 1000, (int)Rules_WatchAlwaysTrueStub, (int)Rules_WatchNameMatches, 0, 0, 0);
-  return IO_DeactivateRouter((int)off_51A618[0]);
+  IO_AddRouter((int)g_IO_LogicalNameTable_WTrace[0], 1000, (int)Rules_WatchAlwaysTrueStub, (int)Rules_WatchNameMatches, 0, 0, 0);
+  return IO_DeactivateRouter((int)g_IO_LogicalNameTable_WTrace[0]);
 }
 // 48BBF0: using guessed type int sub_48BBF0();
 // 51A618: using guessed type char *off_51A618[4];
@@ -108100,7 +108090,7 @@ signed int Rules_RegisterWatchFunctions()
 //----- (0048BBD0) --------------------------------------------------------
 BOOL __thiscall Rules_WatchNameMatches(void *this)
 {
-  return strcmp_(this, off_51A618[0]) == 0;
+  return strcmp_(this, g_IO_LogicalNameTable_WTrace[0]) == 0;
 }
 // 476330: using guessed type int __fastcall strcmp_(_DWORD, _DWORD);
 // 51A618: using guessed type char *off_51A618[4];
@@ -109558,11 +109548,11 @@ signed int __fastcall Rules_ReportInvalidSlotError(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aTmpltdef, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aInvalidSlot, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aNotDefinedInCo, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)a__10, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInvalidSlot, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNotDefinedInCo, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__10, v7);
 }
 // 48D4D2: variable 'v3' is possibly undefined
 // 48D4DE: variable 'v4' is possibly undefined
@@ -109579,9 +109569,9 @@ signed int Rules_ReportSingleFieldSlotCardError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aTmpltdef, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aTheSingleField, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aCanOnlyContain, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheSingleField, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCanOnlyContain, v2);
 }
 // 48D543: variable 'v0' is possibly undefined
 // 48D54F: variable 'v1' is possibly undefined
@@ -109603,32 +109593,32 @@ int __fastcall Rules_ReportMultifieldAssertIntoSingleSlotError(int a1, int a2)
   int v12; // ecx
 
   Rules_PrintErrorID((int)aTmpltfun, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aAttemptedToAss, v3);
-  Output_Write((int)off_51A614[0], (int)aIntoTheSingleF, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttemptedToAss, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIntoTheSingleF, v4);
   if ( v5 )
   {
-    v7 = off_51A614[0];
+    v7 = g_IO_LogicalNameTable_WError[0];
     v6 = *(char **)(*(_DWORD *)v5 + 16);
   }
   else
   {
     v6 = aUnknown_2;
-    v7 = off_51A614[0];
+    v7 = g_IO_LogicalNameTable_WError[0];
   }
   Output_Write((int)v7, (int)v6, v5);
-  Output_Write((int)off_51A614[0], (int)aOfDeftemplate, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfDeftemplate, v8);
   if ( a2 )
   {
-    v10 = off_51A614[0];
+    v10 = g_IO_LogicalNameTable_WError[0];
     v11 = *(char **)(*(_DWORD *)a2 + 16);
   }
   else
   {
     v11 = aUnknown_2;
-    v10 = off_51A614[0];
+    v10 = g_IO_LogicalNameTable_WError[0];
   }
   Output_Write((int)v10, (int)v11, v9);
-  Output_Write((int)off_51A614[0], (int)a__10, v12);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__10, v12);
   return Lexer_ErrorRecover(1);
 }
 // 48D595: variable 'v3' is possibly undefined
@@ -109698,9 +109688,9 @@ int  Rules_CheckFactAgainstSlotConstraints(int a1)
           }
           sprintf_(v17, "fact f-%-5ld ", *(_DWORD *)(a1 + 24));
           Rules_PrintErrorID((int)aCstrnchk_0, 1, 1);
-          Output_Write((int)off_51A614[0], (int)aSlotValue, v9);
-          Rules_PrintDataObject((int)off_51A614[0], (int)&v12);
-          Output_Write((int)off_51A614[0], (int)asc_5046F0, v10);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlotValue, v9);
+          Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], (int)&v12);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5046F0, v10);
           Rules_PrintConstraintViolationMessage(0, (int)v17, 0, 0, *v11, 0, v8, v11[2], 1);
           return Rules_SetEvaluationErrorFlag(1);
         }
@@ -110273,10 +110263,10 @@ signed int  Rules_ReportPatternNetworkError(signed int a1)
   _BYTE v15[72]; // [esp+0h] [ebp-48h] BYREF
 
   Rules_PrintErrorID((int)aFactmch, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aThisErrorOcc_0, v3);
-  Output_Write((int)off_51A614[0], (int)aCurrentlyActiv, v4);
-  Rules_PrintFact((int)off_51A614[0], dword_54E528);
-  Output_Write((int)off_51A614[0], (int)asc_504794, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOcc_0, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCurrentlyActiv, v4);
+  Rules_PrintFact((int)g_IO_LogicalNameTable_WError[0], dword_54E528);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504794, v5);
   v7 = *(_DWORD *)(dword_54E528 + 16);
   if ( (*(_BYTE *)(v7 + 24) & 1) != 0 )
   {
@@ -110291,9 +110281,9 @@ signed int  Rules_ReportPatternNetworkError(signed int a1)
     sprintf_(v15, "   Problem resides in slot %s\n", *(const char **)(*v8 + 16));
     v10 = v14;
   }
-  Output_Write((int)off_51A614[0], (int)v15, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v15, v10);
   Rules_ReportPatternNetworkRules(a1, 0, v11);
-  return Output_Write((int)off_51A614[0], (int)asc_504794, v12);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504794, v12);
 }
 // 48E043: variable 'v3' is possibly undefined
 // 48E052: variable 'v4' is possibly undefined
@@ -110325,7 +110315,7 @@ signed int  Rules_ReportPatternNetworkRules(signed int result, int a2, int j)
       {
         v5 = Rules_CountJoinNetworkEntryNodes(j);
         sprintf_(v8, "      Of pattern #%d in rule(s):\n", v5);
-        Output_Write((int)off_51A614[0], (int)v8, v6);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v8, v6);
         result = Rules_PrintJoinNetworkSharingReport();
       }
     }
@@ -110926,12 +110916,12 @@ signed int __fastcall Rules_ReportJoinNetworkError(int a1, int a2)
   (void)a2;
   join = (uintptr_t)(unsigned int)a1;
   Rules_PrintErrorID((int)aDrive, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aThisErrorOcc_1, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOcc_1, 0);
   sprintf_(v7, "   Problem resides in join #%d in rule(s):\n", join ? (*(_DWORD *)join << 16) >> 25 : 0);
-  Output_Write((int)off_51A614[0], (int)(uintptr_t)v7, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)(uintptr_t)v7, 0);
   Rules_ClearJoinNetworkMarkedFlags();
   Rules_PrintJoinNetworkNodeRuleOwners((int)join, (int)(uintptr_t)"      ");
-  return Output_Write((int)off_51A614[0], (int)asc_504874, 0);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504874, 0);
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 // 51A614: using guessed type char *off_51A614[5];
@@ -110947,7 +110937,7 @@ int  Rules_AddLogicalDependencyLink(int a1, int a2)
   _DWORD *v7; // edi
   _DWORD *v8; // eax
 
-  if ( !dword_51A1F8 )
+  if ( !g_Rules_CurrentLogicalJoin )
   {
     if ( a2 )
       Rules_ReleaseLogicalSupportList(a1);
@@ -110955,7 +110945,7 @@ int  Rules_AddLogicalDependencyLink(int a1, int a2)
   }
   if ( a2 && !*(_DWORD *)(a1 + 4) )
     return 1;
-  result = (int)Rules_FindLogicalDependencyEntry(dword_51A1F8, dword_51ACFC);
+  result = (int)Rules_FindLogicalDependencyEntry(g_Rules_CurrentLogicalJoin, dword_51ACFC);
   v4 = (_DWORD *)result;
   if ( result )
   {
@@ -111214,12 +111204,12 @@ signed int  Rules_PrintDependencyList(signed int result, int a2)
   int v5; // ecx
 
   if ( !*(_DWORD *)(result + 4) )
-    return Output_Write((int)off_51A624, (int)aNone, a2);
+    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone, a2);
   v2 = *(_DWORD ***)(result + 4);
   do
   {
-    Rules_PrintArgumentValueList((int)off_51A624, *v2);
-    v4 = Output_Write((int)off_51A624, (int)asc_504880, v3);
+    Rules_PrintArgumentValueList((int)g_IO_LogicalName_WDisplay, *v2);
+    v4 = Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504880, v3);
     v2 = *(_DWORD ***)(v5 + 4);
   }
   while ( v2 );
@@ -111257,7 +111247,7 @@ signed int  Rules_PrintDependentList(int a1, int a2)
           goto LABEL_7;
       }
       if ( v5 )
-        Output_Write((int)off_51A624, (int)asc_504884, v7);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504884, v7);
       v5 = 1;
       (*(void (**)(void))(*v9 + 4))();
     }
@@ -111265,9 +111255,9 @@ LABEL_7:
     Rules_FindPatternParser(v10, &v9);
   }
   if ( v5 )
-    return Output_Write((int)off_51A624, (int)asc_504880, v4);
+    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_504880, v4);
   else
-    return Output_Write((int)off_51A624, (int)aNone, v4);
+    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone, v4);
 }
 // 48F06D: variable 'v7' is possibly undefined
 // 48F0A6: variable 'v4' is possibly undefined
@@ -111494,9 +111484,9 @@ LABEL_10:
         if ( Rules_FindBoundVariable(a2, *(_DWORD *)(a1 + 1)) )
           goto LABEL_5;
         Rules_PrintErrorID((int)aEvaluatn, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aVariable, v14);
-        Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(a1 + 1) + 16), v15);
-        Output_Write((int)off_51A614[0], (int)aIsUnbound, v16);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(a1 + 1) + 16), v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUnbound, v16);
         v5[1] = 2;
         v5[2] = dword_54DD70;
         dword_51A964 = 1;
@@ -112454,14 +112444,14 @@ BOOL  Lexer_AppendCharToPendingToken(int a1)
 {
   int v1; // esi
 
-  v1 = dword_51A628;
+  v1 = g_Lexer_PendingLineCharIndex;
   dword_51A980 = (int)Str_AppendCharEscaping(
                         a1,
                         (char *)dword_51A980,
                         (unsigned int *)&dword_51A984,
-                        &dword_51A628,
+                        &g_Lexer_PendingLineCharIndex,
                         dword_51A984 + 80);
-  return v1 != dword_51A628;
+  return v1 != g_Lexer_PendingLineCharIndex;
 }
 // 51A628: using guessed type int dword_51A628;
 // 51A980: using guessed type int dword_51A980;
@@ -112476,7 +112466,7 @@ signed int Lexer_ResetPendingTokenBuffer()
     result = Mem_SmallBlockFree((_DWORD *)dword_51A980, dword_51A984);
   dword_51A980 = 0;
   dword_51A984 = 0;
-  dword_51A628 = 0;
+  g_Lexer_PendingLineCharIndex = 0;
   return result;
 }
 // 51A628: using guessed type int dword_51A628;
@@ -112686,7 +112676,7 @@ signed int __thiscall Rules_PrintPrompt(void *this)
 {
   signed int result; // eax
 
-  result = Output_Write((int)off_51A620[0], (int)aClips, (int)this);
+  result = Output_Write((int)g_IO_LogicalNameTable_WClips[0], (int)aClips, (int)this);
   if ( dword_51A994 )
     return dword_51A994();
   return result;
@@ -112740,7 +112730,7 @@ int  Rules_RouteCommand(int result, int a2, int a3, double a4)
     if ( v24 != 100 )
     {
       Rules_PrintErrorID((int)aCommline, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedACon_0, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedACon_0, v15);
       IO_CloseStringRouter((int)aCommand_2);
       return 0;
     }
@@ -112753,10 +112743,10 @@ int  Rules_RouteCommand(int result, int a2, int a3, double a4)
         IO_CloseStringRouter((int)aCommand_2);
         if ( v9 == 1 )
         {
-          Output_Write((int)off_51A614[0], (int)aError_1, v8);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_1, v8);
           v10 = (char *)Rules_GetPPBuffer();
-          Output_WriteLongString((signed int)off_51A614[0], v10);
-          Output_Write((int)off_51A614[0], (int)asc_504990, v11);
+          Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], v10);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504990, v11);
         }
         Rules_DestroyPPBuffer();
         return v7;
@@ -112785,7 +112775,7 @@ int  Rules_RouteCommand(int result, int a2, int a3, double a4)
     else
     {
       Rules_PrintErrorID((int)aCommline, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedAComma, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAComma, v16);
       IO_CloseStringRouter((int)aCommand_2);
     }
     return 0;
@@ -113037,7 +113027,7 @@ LABEL_10:
   }
   if ( (v18 & 4) != 0 )
   {
-    v19 = Str_Intern(byte_504A50, (int)v4);
+    v19 = Str_Intern(g_Rules_DefaultEmptyStringConstraint, (int)v4);
     v8 = (int)a1;
     v9 = (int)v19;
     v10 = 3;
@@ -113072,13 +113062,13 @@ LABEL_10:
   if ( (v18 & 0x40) != 0 )
   {
     LOWORD(v11) = 7;
-    v13 = &off_51A214;
+    v13 = &g_Instance_DummyInstanceRecord;
     goto LABEL_11;
   }
   if ( (a1[1] & 1) != 0 )
   {
     LOWORD(v11) = 6;
-    v13 = &off_51A114;
+    v13 = &g_Rules_DummyFactPtr;
     goto LABEL_11;
   }
   if ( *a1 >= 0 )
@@ -113284,7 +113274,7 @@ LABEL_37:
           if ( v33[1] == 4 && !v37 && !*a8 )
           {
             Rules_PrintErrorID((int)aDefault_0, 1, 1);
-            Output_Write((int)off_51A614[0], (int)aTheDefaultValu, v30);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheDefaultValu, v30);
             *a8 = 1;
 LABEL_47:
             v16 = (_WORD *)v27;
@@ -113301,7 +113291,7 @@ LABEL_47:
       }
     }
     Rules_PrintErrorID((int)aDefault_0, 1, 1);
-    Output_Write((int)off_51A614[0], (int)aTheDefaultValu, v24);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheDefaultValu, v24);
     AST_Free(v9);
     return 0;
   }
@@ -113922,7 +113912,7 @@ signed int Module_ReportIllegalSpecifierError()
   int v0; // ecx
 
   Rules_PrintErrorID((int)aModuldef, 1, 1);
-  return Output_Write((int)off_51A614[0], (int)aIllegalUseOfTh, v0);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalUseOfTh, v0);
 }
 // 491AFD: variable 'v0' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
@@ -114381,7 +114371,7 @@ LABEL_20:
       IO_OutNewline();
       IO_OutNewline();
       IO_OutWriteToken(*(char **)(a2 + 8));
-      v25 = Rules_AddBitmapValue(byte_504C30, v24);
+      v25 = Rules_AddBitmapValue(g_Rules_DefaultZeroBitmapValue, v24);
       v26 = AST_NewNode(34, v25);
       *(_DWORD *)(v31 + 10) = v26;
       *(_DWORD *)(v26 + 6) = v35;
@@ -114551,9 +114541,9 @@ signed int Rules_ReportNoTemplateError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aFactrhs, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aTemplate, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aDoesNotExistFo, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTemplate, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotExistFo, v2);
 }
 // 4925F0: variable 'v0' is possibly undefined
 // 4925FC: variable 'v1' is possibly undefined
@@ -114705,11 +114695,11 @@ signed int  Rules_ReportAmbiguousReferenceError(int a1, int a2)
   int v5; // ecx
   int v6; // ecx
 
-  Output_Write((int)off_51A614[0], (int)aAmbiguousRefer, a1);
-  Output_Write((int)off_51A614[0], v3, v3);
-  Output_Write((int)off_51A614[0], (int)asc_504CA8, v4);
-  Output_Write((int)off_51A614[0], a2, v5);
-  return Output_Write((int)off_51A614[0], (int)a_ItIsImportedF, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAmbiguousRefer, a1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v3, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_504CA8, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v5);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a_ItIsImportedF, v6);
 }
 // 4927FC: variable 'v3' is possibly undefined
 // 49280B: variable 'v4' is possibly undefined
@@ -115081,7 +115071,7 @@ int  Rules_FreeTemplateSlotList(int result)
 //----- (00492DB0) --------------------------------------------------------
 int  Rules_DecrementBusyCount(int result)
 {
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
     --*(_DWORD *)(result + 28);
   return result;
 }
@@ -115705,7 +115695,7 @@ LABEL_37:
 LABEL_66:
       *(_DWORD *)a2 = 102;
       v36 = Str_Intern(aStop, v4);
-      *(_DWORD *)(a2 + 8) = byte_504D50;
+      *(_DWORD *)(a2 + 8) = g_Lexer_EmptyQuotedStringBuffer;
       *(_DWORD *)(a2 + 4) = v36;
       goto LABEL_15;
     }
@@ -115931,9 +115921,9 @@ signed int * Lexer_ReadQuotedString(int a1, unsigned int a2)
     appended = Str_AppendCharEscaping(i, appended, v11, &v10, v11[0] + 80);
   }
   if ( i == -1 && !dword_51AA0C )
-    Output_Write((int)off_51A614[0], (int)aEncounteredEnd, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aEncounteredEnd, v6);
   if ( !appended )
-    return Str_Intern(byte_504D50, v6);
+    return Str_Intern(g_Lexer_EmptyQuotedStringBuffer, v6);
   Str_Intern(appended, v6);
   Mem_SmallBlockFree(appended, v11[0]);
   return (signed int *)v9;
@@ -116179,7 +116169,7 @@ LABEL_18:
               if ( v14 == 0x7FFFFFFF || v14 == 0x80000000 )
               {
                 Rules_PrintWarningID((int)aScanner, 1, 0);
-                Output_Write((int)off_51A610[0], (int)aOverOrUnderflo, v16);
+                Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aOverOrUnderflo, v16);
               }
               *v34 = 1;
               v17 = Rules_AddIntegerValue(v15);
@@ -117366,12 +117356,12 @@ LABEL_12:
     {
       if ( v5 > 6u )
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = &off_51A214;
+        *(_DWORD *)(v4 + dword_54E688 + 2) = &g_Instance_DummyInstanceRecord;
         Rules_IncrementRefCountField40(*(_DWORD *)(v4 + dword_54E688 + 2));
       }
       else
       {
-        *(_DWORD *)(v4 + dword_54E688 + 2) = &off_51A114;
+        *(_DWORD *)(v4 + dword_54E688 + 2) = &g_Rules_DummyFactPtr;
         Rules_IncrementFactRefCount(*(_DWORD *)(v4 + dword_54E688 + 2));
       }
       goto LABEL_7;
@@ -117803,8 +117793,8 @@ const void * Rules_BsaveWriteConstraints(int a1)
   {
     v12[0] = 0;
     Rules_PrintWarningID((int)aCstrnbin, 1, 0);
-    Output_Write((int)off_51A610[0], (int)aConstraintsAre, v5);
-    Output_Write((int)off_51A610[0], (int)aWhenDynamicCon, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aConstraintsAre, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aWhenDynamicCon, v6);
   }
   result = Rules_BsaveWriteBlock(4, a1, v12);
   if ( v12[0] )
@@ -118122,7 +118112,7 @@ signed int  Rules_PerformBsave(const CHAR *a1, DWORD a2, int a3)
   if ( Rules_IsBloaded() )
   {
     Rules_PrintErrorID((int)aBsave_1, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotPerformA, v19);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotPerformA, v19);
     return 0;
   }
   else
@@ -118405,8 +118395,8 @@ LABEL_4:
 //----- (004962C0) --------------------------------------------------------
 const void * Rules_BsaveWriteHeader(int a1)
 {
-  Rules_BsaveWriteBlock(strlen((const char *)off_51A1C0) + 1, a1, off_51A1C0);
-  return Rules_BsaveWriteBlock(strlen(off_51A1C4) + 1, a1, off_51A1C4);
+  Rules_BsaveWriteBlock(strlen((const char *)g_Rules_BloadFileHeaderID) + 1, a1, g_Rules_BloadFileHeaderID);
+  return Rules_BsaveWriteBlock(strlen(g_Rules_BsaveVersionID) + 1, a1, g_Rules_BsaveVersionID);
 }
 // 51A1C0: using guessed type void *off_51A1C0;
 // 51A1C4: using guessed type char *off_51A1C4;
@@ -118418,7 +118408,7 @@ const void * Rules_BsaveWriteEndTag(int a1, int a2)
   _DWORD v4[8]; // [esp-1Ch] [ebp-20h] BYREF
 
   v4[6] = a2;
-  strncpy_(a1, off_51A1C0);
+  strncpy_(a1, g_Rules_BloadFileHeaderID);
   return Rules_BsaveWriteBlock(20, v2, v4);
 }
 // 496333: variable 'v2' is possibly undefined
@@ -119185,7 +119175,7 @@ int Rules_DeffactsIsDeletable()
   result = Rules_IsBloaded();
   if ( result )
     return 0;
-  if ( !dword_51A184 )
+  if ( !g_Rules_ResetInProgressFlag )
     return 1;
   return result;
 }
@@ -119392,7 +119382,7 @@ signed int  Defgeneric_UndefmethodCommand(int a1, double a2)
         {
 LABEL_7:
           Rules_PrintErrorID((int)aGenrccom, 2, 0);
-          return Output_Write((int)off_51A614[0], (int)aExpectedAVal_0, v5);
+          return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_0, v5);
         }
       }
       else
@@ -119408,9 +119398,9 @@ LABEL_7:
     else
     {
       Rules_PrintErrorID((int)aGenrccom, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aNoSuchGenericF, v6);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(v11 + 16), v7);
-      return Output_Write((int)off_51A614[0], (int)aInFunctionUnde, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchGenericF, v6);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v11 + 16), v7);
+      return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionUnde, v8);
     }
   }
   return result;
@@ -119475,19 +119465,19 @@ int __fastcall Defgeneric_RemoveMethod(int a1, int a2)
   if ( Rules_IsBloaded() == 1 )
   {
     Rules_PrintErrorID((int)aPrntutil_0, 4, 0);
-    Output_Write((int)off_51A614[0], (int)aUnableToDelete, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDelete, v7);
     if ( v8 )
     {
       v9 = Rules_GetConstructNameString(v8);
-      Output_Write((int)off_51A614[0], v9, (int)off_51A614[0]);
-      Output_Write((int)off_51A614[0], (int)asc_505344, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v9, (int)g_IO_LogicalNameTable_WError[0]);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505344, v10);
       Rules_PrintLongInteger(v11, a2);
     }
     else
     {
-      Output_Write((int)off_51A614[0], (int)asc_50529C, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50529C, 0);
     }
-    Output_Write((int)off_51A614[0], (int)a__15, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__15, v12);
     return 0;
   }
   else if ( v4 )
@@ -119516,7 +119506,7 @@ int __fastcall Defgeneric_RemoveMethod(int a1, int a2)
     if ( v3 )
     {
       Rules_PrintErrorID((int)aGenrccom, 3, 0);
-      Output_Write((int)off_51A614[0], (int)aIncompleteMeth, v5);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIncompleteMeth, v5);
       return 0;
     }
     return Defgeneric_ClearDefgenericsReady();
@@ -119620,7 +119610,7 @@ int  Defgeneric_PpdefmethodCommand(int a1, double a2)
           result *= 40;
           v5 = result + *(_DWORD *)(v4 + 28);
           if ( *(_DWORD *)(v5 + 36) )
-            return Output_WriteLongString((signed int)off_51A624, *(char **)(v5 + 36));
+            return Output_WriteLongString((signed int)g_IO_LogicalName_WDisplay, *(char **)(v5 + 36));
         }
       }
     }
@@ -119639,13 +119629,13 @@ int  Defgeneric_ListDefmethodsCommand(int a1, double a2)
 
   v4[7] = a1;
   if ( !Rules_RtnArgCount() )
-    return Defgeneric_ListMethodsAndTally((int)off_51A624, 0, v2);
+    return Defgeneric_ListMethodsAndTally((int)g_IO_LogicalName_WDisplay, 0, v2);
   result = Lexer_ParseValueList(1, v4, 2, a2);
   if ( result )
   {
     result = Defgeneric_CheckGenericExists((int)aListDefmethods, *(_BYTE **)(v4[2] + 16));
     if ( result )
-      return Defgeneric_ListMethodsAndTally((int)off_51A624, result, (int)off_51A624);
+      return Defgeneric_ListMethodsAndTally((int)g_IO_LogicalName_WDisplay, result, (int)g_IO_LogicalName_WDisplay);
   }
   return result;
 }
@@ -119958,7 +119948,7 @@ int  Defgeneric_EvaluateGenericFunctionCall(int a1, _DWORD *a2, double a3)
 //----- (004982C0) --------------------------------------------------------
 int  Defgeneric_DecrementGenericBusyCount(int result)
 {
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
     --*(_DWORD *)(result + 20);
   return result;
 }
@@ -120042,10 +120032,10 @@ signed int  Defgeneric_DeleteMethod(int a1, int a2)
   {
     Lexer_ErrorRecover(1);
     Rules_PrintErrorID((int)aGenrccom, v9, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotRemoveIm, v10);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRemoveIm, v10);
     v11 = Rules_GetConstructNameString(a1);
-    Output_Write((int)off_51A614[0], v11, v12);
-    return Output_Write((int)off_51A614[0], (int)a__15, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v11, v12);
+    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__15, v13);
   }
   else
   {
@@ -120521,7 +120511,7 @@ int  Deffunction_CallForBooleanResult(int a1, _DWORD *a2, double a3)
 //----- (00498D20) --------------------------------------------------------
 int  Deffunction_DecrementBusyCount(int result)
 {
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
     --*(_DWORD *)(result + 20);
   return result;
 }
@@ -120631,10 +120621,10 @@ LABEL_11:
     if ( *(_DWORD *)(v7 + 20) )
     {
       Rules_PrintWarningID((int)aDffnxfun, 1, 0);
-      Output_Write((int)off_51A610[0], (int)aDeffunction_6, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aDeffunction_6, v8);
       v10 = Rules_GetConstructNameString(v9);
-      Output_Write((int)off_51A610[0], v10, v11);
-      Output_Write((int)off_51A610[0], (int)aOnlyPartiallyD, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], v10, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aOnlyPartiallyD, v12);
       v0 = 0;
       Rules_ReplaceConstructPPForm(v13, 0);
       goto LABEL_11;
@@ -120902,13 +120892,13 @@ int  Defglobal_SetValue(int a1, _DWORD *a2, int a3, double a4)
   }
   if ( (*(_BYTE *)(record + 20) & 1) != 0 )
   {
-    Output_Write((int)off_51A618[0], (int)aDefglobalWatchPrefix, record);
-    Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)record + 16), record);
-    Output_Write((int)off_51A618[0], (int)asc_5055F8, record);
-    Rules_PrintDataObject((int)off_51A618[0], (int)a2);
-    Output_Write((int)off_51A618[0], (int)asc_505600, record);
-    Rules_PrintDataObject((int)off_51A618[0], record + 28);
-    Output_Write((int)off_51A618[0], (int)asc_505608, record);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aDefglobalWatchPrefix, record);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)record + 16), record);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_5055F8, record);
+    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WTrace[0], (int)a2);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_505600, record);
+    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WTrace[0], record + 28);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_505608, record);
   }
   Rules_ValueDeinstall(record + 28, record);
   if ( *(_DWORD *)(record + 32) == 4 )
@@ -120968,9 +120958,9 @@ signed int  Defglobal_EvaluateReference(int a1, _DWORD *a2, int a3)
   if ( !v5 )
   {
     Rules_PrintErrorID((int)aGlobldef, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aGlobalVariab_0, v7);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(a1 + 16), v8);
-    Output_Write((int)off_51A614[0], (int)aIsUnbound_, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGlobalVariab_0, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a1 + 16), v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUnbound_, v9);
     goto LABEL_4;
   }
   if ( v10[0] > 1 )
@@ -121025,7 +121015,7 @@ signed int  Mem_CopyDataObjectRecord(_DWORD *a1, _DWORD *a2)
 //----- (00499590) --------------------------------------------------------
 int  Class_DecrementBusyCount(int result)
 {
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
     --*(_DWORD *)(result + 24);
   return result;
 }
@@ -121446,7 +121436,7 @@ int  Parser_ParseProcParameters(
             goto LABEL_9;
         }
         Rules_PrintErrorID((int)aPrccode_0, 7, 0);
-        Output_Write((int)off_51A614[0], (int)aDuplicatePar_0, v19);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicatePar_0, v19);
         AST_Free(v9);
         return 0;
       }
@@ -121454,7 +121444,7 @@ LABEL_9:
       if ( *a3 )
       {
         Rules_PrintErrorID((int)aPrccode_0, 8, 0);
-        Output_Write((int)off_51A614[0], (int)aNoParameters_0, v20);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoParameters_0, v20);
         AST_Free(v9);
         return 0;
       }
@@ -121660,11 +121650,11 @@ signed int  Parser_ReplaceProcVars(
       else if ( !a5 || a5() != 1 )
       {
         Rules_PrintErrorID((int)aPrccode_0, 3, 1);
-        Output_Write((int)off_51A614[0], (int)aUndefinedVaria, v11);
-        Output_Write((int)off_51A614[0], *(_DWORD *)(v12 + 16), v12);
-        Output_Write((int)off_51A614[0], (int)aReferencedIn, v13);
-        Output_Write((int)off_51A614[0], v31, v14);
-        Output_Write((int)off_51A614[0], (int)aDotNewline_ExpressionError, v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedVaria, v11);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v12 + 16), v12);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReferencedIn, v13);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], v31, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ExpressionError, v15);
         return 1;
       }
     }
@@ -121927,7 +121917,7 @@ int  Rules_ExecuteRuleActions(
   if ( a6 && dword_51A968 )
   {
     Rules_PrintErrorID((int)aPrccode_0, 4, 0);
-    Output_Write((int)off_51A614[0], (int)aExecutionHal_0, v16);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExecutionHal_0, v16);
     a6();
   }
   v17 = dword_51ABC8;
@@ -122158,18 +122148,18 @@ _DWORD * ProcParam_EvaluateArgumentExpressions(uintptr_t result, int a2, int a3,
       if ( parsed[1] == 105 )
       {
         Rules_PrintErrorID((int)aPrccode_0, 2, 0);
-        Output_Write((int)off_51A614[0], (int)aFunctionsWitho, 0);
-        Output_Write((int)off_51A614[0], a3, 0);
-        Output_Write((int)off_51A614[0], (int)aArguments__0, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionsWitho, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], a3, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArguments__0, 0);
         Lexer_ErrorRecover(1);
       }
       Rules_PrintErrorID((int)aPrccode_0, 6, 0);
-      Output_Write((int)off_51A614[0], (int)aThisErrorOcc_3, 0);
-      Output_Write((int)off_51A614[0], (int)aForThe, 0);
-      Output_Write((int)off_51A614[0], a3, 0);
-      Output_Write((int)off_51A614[0], (int)asc_505C54, 0);
-      Output_Write((int)off_51A614[0], a4, 0);
-      Output_Write((int)off_51A614[0], (int)aDotNewline_ExpressionError, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOcc_3, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForThe, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], a3, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505C54, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], a4, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ExpressionError, 0);
       return (_DWORD *)Mem_SmallBlockFree(argument_values, 24 * a2);
     }
     else
@@ -122255,19 +122245,19 @@ LABEL_6:
   {
     Rules_PrintErrorID((int)aPrccode_0, 5, 0);
     Lexer_ErrorRecover(1);
-    Output_Write((int)off_51A614[0], (int)aVariable, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable, 0);
     Output_Write(
-      (int)off_51A614[0],
+      (int)g_IO_LogicalNameTable_WError[0],
       *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)expression + 2) + 16),
       0);
     if ( dword_51ABD0 )
     {
-      Output_Write((int)off_51A614[0], (int)aUnboundIn, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnboundIn, 0);
       dword_51ABD0();
     }
     else
     {
-      Output_Write((int)off_51A614[0], (int)aUnbound_, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnbound_, 0);
     }
     a2[1] = 2;
     a2[2] = dword_54DD70;
@@ -122460,12 +122450,12 @@ BOOL  Dribble_QueryRouter(int a1)
 
   return !strcmp_(a1, aStdout_2)
       || !strcmp_(v1, aStdin_2)
-      || !strcmp_(v3, off_51A620[0])
-      || !strcmp_(v4, off_51A618[0])
-      || !strcmp_(v5, off_51A614[0])
-      || !strcmp_(v6, off_51A610[0])
-      || !strcmp_(v7, off_51A624)
-      || !strcmp_(v8, off_51A61C[0]);
+      || !strcmp_(v3, g_IO_LogicalNameTable_WClips[0])
+      || !strcmp_(v4, g_IO_LogicalNameTable_WTrace[0])
+      || !strcmp_(v5, g_IO_LogicalNameTable_WError[0])
+      || !strcmp_(v6, g_IO_LogicalNameTable_WWarning[0])
+      || !strcmp_(v7, g_IO_LogicalName_WDisplay)
+      || !strcmp_(v8, g_IO_LogicalNameTable_WDialog[0]);
 }
 // 49B4B1: variable 'v1' is possibly undefined
 // 49B4C2: variable 'v3' is possibly undefined
@@ -122580,7 +122570,7 @@ char * Dribble_AppendChar(char *result, int a2, int a3)
       *(_BYTE *)dword_54E6C4 = 0;
     }
   }
-  else if ( dword_51A628 >= 0 )
+  else if ( g_Lexer_PendingLineCharIndex >= 0 )
   {
     result = Str_AppendCharEscaping(
                (int)result,
@@ -123309,10 +123299,10 @@ int  Rules_LoadConstructsFromLogicalName(int a1, int a2)
       Rules_FlushPPBuffer();
       if ( Rules_ParseConstruct() == 1 )
       {
-        Output_Write((int)off_51A614[0], (int)aError_2, v6);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_2, v6);
         v7 = (char *)Rules_GetPPBuffer();
-        Output_WriteLongString((signed int)off_51A614[0], v7);
-        Output_Write((int)off_51A614[0], (int)asc_505E94, (int)v13);
+        Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], v7);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505E94, (int)v13);
         v13[0] = 0;
         Parser_NextToken(a1, (int)&v12);
         v9 = 1;
@@ -123332,7 +123322,7 @@ int  Rules_LoadConstructsFromLogicalName(int a1, int a2)
   }
   else
   {
-    Output_Write((int)off_51A61C[0], (int)asc_505E94, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_505E94, v11);
     Rules_DestroyPPBuffer();
     return v13[0];
   }
@@ -123376,7 +123366,7 @@ LABEL_4:
         a4 = 1;
         *a3 = 0;
         Rules_PrintErrorID((int)aCstrcpsr, 1, 1);
-        Output_Write((int)off_51A614[0], (int)aExpectedTheBeg, v10);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedTheBeg, v10);
       }
     }
     v8 = 0;
@@ -123389,7 +123379,7 @@ LABEL_4:
       *a3 = 0;
       a4 = 1;
       Rules_PrintErrorID((int)aCstrcpsr, 1, 1);
-      Output_Write((int)off_51A614[0], (int)aExpectedTheBeg, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedTheBeg, v12);
     }
     v8 = 0;
     goto LABEL_4;
@@ -123483,9 +123473,9 @@ int  Rules_GetConstructNameAndComment(
   if ( *(_DWORD *)a2 != 2 )
   {
     Rules_PrintErrorID((int)aCstrcpsr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aMissingNameFor, v31);
-    Output_Write((int)off_51A614[0], (int)a4, v32);
-    Output_Write((int)off_51A614[0], (int)aConstruct, v33);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMissingNameFor, v31);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a4, v32);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConstruct, v33);
     return 0;
   }
   v12 = Rules_FindModuleSeparator(*(_BYTE **)(*(_DWORD *)(a2 + 4) + 16));
@@ -123540,11 +123530,11 @@ LABEL_23:
         if ( !a5() )
         {
           Rules_PrintErrorID((int)aCstrcpsr, 4, 1);
-          Output_Write((int)off_51A614[0], (int)aCannotRedefine, v37);
-          Output_Write((int)off_51A614[0], (int)a4, v38);
-          Output_Write((int)off_51A614[0], (int)asc_505F44, v39);
-          Output_Write((int)off_51A614[0], *(_DWORD *)(v40 + 16), v40);
-          Output_Write((int)off_51A614[0], (int)aWhileItIsInUse, v41);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRedefine, v37);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a4, v38);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v39);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v40 + 16), v40);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWhileItIsInUse, v41);
           return 0;
         }
       }
@@ -123556,10 +123546,10 @@ LABEL_23:
       v22 = aRedefining;
     else
       v22 = aDefining;
-    Output_Write((int)off_51A61C[0], (int)v22, v21);
-    Output_Write((int)off_51A61C[0], (int)a4, v23);
-    Output_Write((int)off_51A61C[0], (int)asc_505F78, v24);
-    Output_Write((int)off_51A61C[0], *(_DWORD *)(v25 + 16), v25);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v22, v21);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)a4, v23);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_505F78, v24);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(v25 + 16), v25);
     if ( a7 )
       v27 = asc_505E94;
     else
@@ -123570,7 +123560,7 @@ LABEL_23:
   {
     v27 = a6;
 LABEL_15:
-    Output_Write((int)off_51A61C[0], (int)v27, v26);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v27, v26);
   }
   Parser_NextToken(a1, a2);
   if ( *(_DWORD *)a2 == 3 && a8 )
@@ -123661,19 +123651,19 @@ signed int  Rules_ImportExportConflictMessage(int a1, int a2, int a3)
   int v14; // ecx
 
   Rules_PrintErrorID((int)aCstrcpsr, 3, 1);
-  Output_Write((int)off_51A614[0], (int)aCannotDefine, v5);
-  Output_Write((int)off_51A614[0], a1, v6);
-  Output_Write((int)off_51A614[0], (int)asc_505F44, v7);
-  Output_Write((int)off_51A614[0], a2, v8);
-  Output_Write((int)off_51A614[0], (int)aBecauseOfAnImp, v9);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotDefine, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBecauseOfAnImp, v9);
   if ( a3 )
   {
-    Output_Write((int)off_51A614[0], (int)aCausedByThe, v10);
-    Output_Write((int)off_51A614[0], a3, v12);
-    Output_Write((int)off_51A614[0], (int)asc_505F44, v13);
-    Output_Write((int)off_51A614[0], v14, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedByThe, v10);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a3, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_505F44, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v14, v14);
   }
-  return Output_Write((int)off_51A614[0], (int)aDotNewline_ConstructError, v10);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ConstructError, v10);
 }
 // 49C7F7: variable 'v5' is possibly undefined
 // 49C803: variable 'v6' is possibly undefined
@@ -124453,8 +124443,8 @@ int ** Rules_HostApropos(double a1)
         v2 = (int ***)result;
         if ( !result )
           break;
-        Output_Write((int)off_51A624, (int)result[4], v5);
-        Output_Write((int)off_51A624, (int)asc_5063E0, v6);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)result[4], v5);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v6);
       }
     }
   }
@@ -124550,84 +124540,84 @@ int Rules_HostOptionsCommand()
   result = Lexer_TokenExpect(0);
   if ( result != -1 )
   {
-    Output_Write((int)off_51A624, (int)aMachineType, v1);
-    Output_Write((int)off_51A624, (int)aUnixSystemIiiV, v2);
-    Output_Write((int)off_51A624, (int)asc_5063E0, v3);
-    Output_Write((int)off_51A624, (int)aAnsiCompilerIs, v4);
-    Output_Write((int)off_51A624, (int)aOn_1, v5);
-    Output_Write((int)off_51A624, (int)aDefruleConstru, v6);
-    Output_Write((int)off_51A624, (int)aOn_1, v7);
-    Output_Write((int)off_51A624, (int)aConflictResolu, v8);
-    Output_Write((int)off_51A624, (int)aOn_1, v9);
-    Output_Write((int)off_51A624, (int)aDynamicSalienc, v10);
-    Output_Write((int)off_51A624, (int)aOn_1, v11);
-    Output_Write((int)off_51A624, (int)aIncrementalRes, v12);
-    Output_Write((int)off_51A624, (int)aOn_1, v13);
-    Output_Write((int)off_51A624, (int)aLogicalDepende, v14);
-    Output_Write((int)off_51A624, (int)aOn_1, v15);
-    Output_Write((int)off_51A624, (int)aDefmoduleConst, v16);
-    Output_Write((int)off_51A624, (int)aOn_1, v17);
-    Output_Write((int)off_51A624, (int)aDeftemplateCon, v18);
-    Output_Write((int)off_51A624, (int)aOn_1, v19);
-    Output_Write((int)off_51A624, (int)aDeffactsConstr, v20);
-    Output_Write((int)off_51A624, (int)aOn_1, v21);
-    Output_Write((int)off_51A624, (int)aDefglobalConst, v22);
-    Output_Write((int)off_51A624, (int)aOn_1, v23);
-    Output_Write((int)off_51A624, (int)aDeffunctionCon, v24);
-    Output_Write((int)off_51A624, (int)aOn_1, v25);
-    Output_Write((int)off_51A624, (int)aDefgenericDefm, v26);
-    Output_Write((int)off_51A624, (int)aOn_1, v27);
-    Output_Write((int)off_51A624, (int)aImperativeMeth, v28);
-    Output_Write((int)off_51A624, (int)aOn_1, v29);
-    Output_Write((int)off_51A624, (int)aObjectSystemIs, v30);
-    Output_Write((int)off_51A624, (int)aOn_1, v31);
-    Output_Write((int)off_51A624, (int)aDefinstancesCo, v32);
-    Output_Write((int)off_51A624, (int)aOn_1, v33);
-    Output_Write((int)off_51A624, (int)aImperativeArou, v34);
-    Output_Write((int)off_51A624, (int)aOn_1, v35);
-    Output_Write((int)off_51A624, (int)aAuxiliaryBefor, v36);
-    Output_Write((int)off_51A624, (int)aOn_1, v37);
-    Output_Write((int)off_51A624, (int)aInstanceSetQue, v38);
-    Output_Write((int)off_51A624, (int)aOn_1, v39);
-    Output_Write((int)off_51A624, (int)aDirectPatternM, v40);
-    Output_Write((int)off_51A624, (int)aOn_1, v41);
-    Output_Write((int)off_51A624, (int)aBinaryLoadingO, v42);
-    Output_Write((int)off_51A624, (int)aOn_1, v43);
-    Output_Write((int)off_51A624, (int)aBinarySavingOf, v44);
-    Output_Write((int)off_51A624, (int)aOn_1, v45);
-    Output_Write((int)off_51A624, (int)aExtendedMathPa, v46);
-    Output_Write((int)off_51A624, (int)aOn_1, v47);
-    Output_Write((int)off_51A624, (int)aTextProcessing, v48);
-    Output_Write((int)off_51A624, (int)aOn_1, v49);
-    Output_Write((int)off_51A624, (int)aHelpSystemIs, v50);
-    Output_Write((int)off_51A624, (int)aOn_1, v51);
-    Output_Write((int)off_51A624, (int)aBloadCapabilit, v52);
-    Output_Write((int)off_51A624, (int)aBloadAndBsave, v53);
-    Output_Write((int)off_51A624, (int)asc_5063E0, v54);
-    Output_Write((int)off_51A624, (int)aEmacsEditorIs, v55);
-    Output_Write((int)off_51A624, (int)aOff_1, v56);
-    Output_Write((int)off_51A624, (int)aConstructCompi, v57);
-    Output_Write((int)off_51A624, (int)aOn_1, v58);
-    Output_Write((int)off_51A624, (int)aBasicIOIs, v59);
-    Output_Write((int)off_51A624, (int)aOn_1, v60);
-    Output_Write((int)off_51A624, (int)aExtendedIOIs, v61);
-    Output_Write((int)off_51A624, (int)aOn_1, v62);
-    Output_Write((int)off_51A624, (int)aStringFunction, v63);
-    Output_Write((int)off_51A624, (int)aOn_1, v64);
-    Output_Write((int)off_51A624, (int)aMultifieldFunc, v65);
-    Output_Write((int)off_51A624, (int)aOn_1, v66);
-    Output_Write((int)off_51A624, (int)aDebuggingFunct, v67);
-    Output_Write((int)off_51A624, (int)aOn_1, v68);
-    Output_Write((int)off_51A624, (int)aBlockMemoryIs, v69);
-    Output_Write((int)off_51A624, (int)aOn_1, v70);
-    Output_Write((int)off_51A624, (int)aWindowInterfac, v71);
-    Output_Write((int)off_51A624, (int)aOff_1, v72);
-    Output_Write((int)off_51A624, (int)aShortLinkNames, v73);
-    Output_Write((int)off_51A624, (int)aOff_1, v74);
-    Output_Write((int)off_51A624, (int)aDeveloperFlagI, v75);
-    Output_Write((int)off_51A624, (int)aOff_1, v76);
-    Output_Write((int)off_51A624, (int)aRunTimeModuleI, v77);
-    return Output_Write((int)off_51A624, (int)aOff_1, v78);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aMachineType, v1);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aUnixSystemIiiV, v2);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v3);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aAnsiCompilerIs, v4);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v5);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefruleConstru, v6);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v7);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aConflictResolu, v8);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v9);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDynamicSalienc, v10);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v11);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aIncrementalRes, v12);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v13);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aLogicalDepende, v14);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v15);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefmoduleConst, v16);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v17);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeftemplateCon, v18);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v19);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeffactsConstr, v20);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v21);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefglobalConst, v22);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v23);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeffunctionCon, v24);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v25);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefgenericDefm, v26);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v27);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aImperativeMeth, v28);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v29);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aObjectSystemIs, v30);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v31);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDefinstancesCo, v32);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v33);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aImperativeArou, v34);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v35);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aAuxiliaryBefor, v36);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v37);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aInstanceSetQue, v38);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v39);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDirectPatternM, v40);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v41);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBinaryLoadingO, v42);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v43);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBinarySavingOf, v44);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v45);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aExtendedMathPa, v46);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v47);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aTextProcessing, v48);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v49);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aHelpSystemIs, v50);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v51);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBloadCapabilit, v52);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBloadAndBsave, v53);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5063E0, v54);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aEmacsEditorIs, v55);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v56);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aConstructCompi, v57);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v58);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBasicIOIs, v59);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v60);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aExtendedIOIs, v61);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v62);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aStringFunction, v63);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v64);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aMultifieldFunc, v65);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v66);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDebuggingFunct, v67);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v68);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aBlockMemoryIs, v69);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOn_1, v70);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aWindowInterfac, v71);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v72);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aShortLinkNames, v73);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v74);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aDeveloperFlagI, v75);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v76);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aRunTimeModuleI, v77);
+    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)aOff_1, v78);
   }
   return result;
 }
@@ -124791,7 +124781,7 @@ signed int  Rules_HostExpandDummy(int a1)
   *(_DWORD *)(a1 + 8) = dword_54DD70;
   Lexer_ErrorRecover(1);
   Rules_PrintErrorID((int)aMiscfun, v1, 0);
-  return Output_Write((int)off_51A614[0], (int)aExpandMustBeUs, v2);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpandMustBeUs, v2);
 }
 // 49DE88: variable 'v1' is possibly undefined
 // 49DE97: variable 'v2' is possibly undefined
@@ -124940,7 +124930,7 @@ signed int * Rules_HostGetFunctionRestrictions(int a1, double a2)
   v9 = a1;
   if ( !Lexer_ParseValueList(1, &v7, 2, a2) )
   {
-    v5 = (char *)&unk_5068A4;
+    v5 = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(v5, v3);
   }
   Symbol = Rules_MakeSymbol(*(_BYTE **)(v8 + 16));
@@ -124948,7 +124938,7 @@ signed int * Rules_HostGetFunctionRestrictions(int a1, double a2)
   {
     Rules_ReportCantFindItem(v3, *(_DWORD *)(v8 + 16));
     Lexer_ErrorRecover(1);
-    v5 = (char *)&unk_5068A4;
+    v5 = (char *)&g_Rules_HostFunctionErrorFallbackString;
     return Str_Intern(v5, v3);
   }
   if ( !*(int **)((char *)Symbol + 17) )
@@ -125041,10 +125031,10 @@ LABEL_26:
             }
             if ( !strcmp_(v7, aFf) )
             {
-              v8 = (char *)&unk_5069D4;
+              v8 = (char *)&g_Rules_PrintoutFormFeedChar;
               goto LABEL_11;
             }
-            if ( strcmp_(v7, &unk_5069D8) )
+            if ( strcmp_(v7, &g_Rules_PrintoutCrlfAliasName) )
             {
 LABEL_17:
               v9 = v7;
@@ -125123,7 +125113,7 @@ signed int * Rules_HostRead(int a1, double a2)
   else
     Parser_NextToken((int)v5, (int)&v13);
   v8 = v13;
-  dword_51A628 = -1;
+  g_Lexer_PendingLineCharIndex = -1;
   *(_DWORD *)(v4 + 4) = v13;
   switch ( v8 )
   {
@@ -125176,7 +125166,7 @@ signed int * Rules_ReadStdinLineToken(_DWORD *a1, unsigned int a2)
   do
   {
     appended = 0;
-    dword_51A628 = 0;
+    g_Lexer_PendingLineCharIndex = 0;
     v7[0] = 0;
     for ( i = Lexer_PeekChar((int)aStdin, a2); i != 10; i = Lexer_PeekChar((int)aStdin, v5) )
     {
@@ -125186,7 +125176,7 @@ signed int * Rules_ReadStdinLineToken(_DWORD *a1, unsigned int a2)
         break;
       if ( Rules_GetEvaluationErrorFlag() )
         break;
-      appended = Str_AppendCharEscaping(i, appended, v7, &dword_51A628, v7[0] + 80);
+      appended = Str_AppendCharEscaping(i, appended, v7, &g_Lexer_PendingLineCharIndex, v7[0] + 80);
     }
     IO_OpenStringSource((int)aRead, appended, 0);
     Parser_NextToken((int)aRead, (int)a1);
@@ -125251,9 +125241,9 @@ const CHAR * Rules_HostOpen(double a1)
       Rules_SetEvaluationErrorFlag(1);
       Lexer_ErrorRecover(1);
       Rules_PrintErrorID((int)aIofun, v9, 0);
-      Output_Write((int)off_51A614[0], (int)aLogicalName_0, v10);
-      Output_Write((int)off_51A614[0], (int)v5, v11);
-      Output_Write((int)off_51A614[0], (int)aAlreadyInUse_, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aLogicalName_0, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v5, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAlreadyInUse_, v12);
       return 0;
     }
     if ( v1 == 2 )
@@ -125395,7 +125385,7 @@ signed int * Rules_HostFormat(double a1)
   v26 = 0;
   v27 = 0;
   v28 = 0;
-  v1 = Str_Intern(byte_506A64, 0);
+  v1 = Str_Intern(g_Rules_HostFormatEmptyResult, 0);
   v32 = v1;
   v2 = 0;
   v4 = Lexer_TokenExpect(2);
@@ -125478,7 +125468,7 @@ signed int * Rules_HostFormat(double a1)
         }
         else
         {
-          return Str_Intern(byte_506A64, v7);
+          return Str_Intern(g_Rules_HostFormatEmptyResult, v7);
         }
       }
       else
@@ -125723,8 +125713,8 @@ LABEL_6:
       goto LABEL_6;
     }
 LABEL_17:
-    Output_Write((int)off_51A614[0], (int)aErrorInFormatT, a3);
-    Output_Write((int)off_51A614[0], (int)aForFormattedOu, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aErrorInFormatT, a3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForFormattedOu, v13);
     return 0;
   }
   if ( a4 <= 0x64 )
@@ -125813,9 +125803,9 @@ LABEL_8:
     *(_DWORD *)(v14 + 8) = result;
     return result;
   }
-  dword_51A628 = 0;
-  v7 = Rules_ReadLineWithEscaping((int)v5, &dword_51A628, v18, v6);
-  dword_51A628 = -1;
+  g_Lexer_PendingLineCharIndex = 0;
+  v7 = Rules_ReadLineWithEscaping((int)v5, &g_Lexer_PendingLineCharIndex, v18, v6);
+  g_Lexer_PendingLineCharIndex = -1;
   if ( !Rules_GetEvaluationErrorFlag() )
   {
     if ( v7 )
@@ -125875,9 +125865,9 @@ signed int Rules_ReportIllegalLogicalName()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aIofun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aIllegalLogical, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aFunction_, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalLogical, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_, v2);
 }
 // 49F330: variable 'v0' is possibly undefined
 // 49F33C: variable 'v1' is possibly undefined
@@ -127443,7 +127433,7 @@ signed int * Rules_ImplodeFunction(double a1)
 
   v2 = 0;
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, &v43, 4, a1) )
-    return Str_Intern(byte_5070B0, v1);
+    return Str_Intern(g_Rules_ImplodeEmptyResult, v1);
   v3 = v45 + 1;
   v4 = v44;
   v5 = v44 + 6 * (v45 + 1) - 6;
@@ -127504,7 +127494,7 @@ LABEL_9:
     }
   }
   if ( !v2 )
-    return Str_Intern(byte_5070B0, v1);
+    return Str_Intern(g_Rules_ImplodeEmptyResult, v1);
   v11 = (char *)Mem_SmallBlockAlloc(v2);
   v48 = v45 + 1;
   v12 = v4 + 6 * (v45 + 1) - 6;
@@ -128027,7 +128017,7 @@ LABEL_25:
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(v24);
       Rules_PrintErrorID((int)aMultifun, v18, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotRebindFi, v19);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindFi, v19);
       AST_Free(a1);
       return 0;
     }
@@ -128563,26 +128553,26 @@ signed int  Rules_MultifieldIndexRangeError(int a1, int a2, int a3)
   int v15; // ecx
 
   Rules_PrintErrorID((int)aMultifun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aMultifieldInde, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMultifieldInde, v5);
   if ( a1 == a2 )
   {
     v9 = a1;
   }
   else
   {
-    Output_Write((int)off_51A614[0], (int)aRange, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRange, v6);
     Rules_PrintLongInteger(v7, a1);
-    Output_Write((int)off_51A614[0], (int)a__, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__, v8);
     v9 = a2;
   }
   Rules_PrintLongInteger(v6, v9);
-  Output_Write((int)off_51A614[0], (int)aOutOfRange1__, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutOfRange1__, v10);
   Rules_PrintLongInteger(v11, a3);
   if ( !v12 )
-    return Output_Write((int)off_51A614[0], (int)a__16, 0);
-  Output_Write((int)off_51A614[0], (int)aInFunction_0, v12);
-  Output_Write((int)off_51A614[0], v14, v14);
-  return Output_Write((int)off_51A614[0], (int)a__16, v15);
+    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__16, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_0, v12);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v14, v14);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__16, v15);
 }
 // 4A2834: variable 'v5' is possibly undefined
 // 4A2847: variable 'v6' is possibly undefined
@@ -128745,7 +128735,7 @@ signed int  Rules_ConcatBuiltinCore(int a1, int a2, int a3, double a4)
   *(_DWORD *)(a1 + 4) = a2;
   if ( a2 == 3 )
   {
-    v4 = Str_Intern(byte_507290, (int)aStrCat);
+    v4 = Str_Intern(g_Rules_EmptyStringLiteral, (int)aStrCat);
     v29 = v23;
   }
   else
@@ -128868,7 +128858,7 @@ signed int * Rules_UpcaseBuiltin(int a1, double a2)
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v12, 111, a2) )
   {
     *(_DWORD *)(a1 + 4) = 3;
-    result = Str_Intern(byte_507290, v3);
+    result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
     *(_DWORD *)(a1 + 8) = result;
   }
   else
@@ -128927,7 +128917,7 @@ signed int * Rules_LowcaseBuiltin(int a1, double a2)
   if ( Lexer_TokenExpect(1) == -1 || !Lexer_ParseValueList(1, v12, 111, a2) )
   {
     *(_DWORD *)(a1 + 4) = 3;
-    result = Str_Intern(byte_507290, v3);
+    result = Str_Intern(g_Rules_EmptyStringLiteral, v3);
     *(_DWORD *)(a1 + 8) = result;
   }
   else
@@ -129053,7 +129043,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   int v16; // [esp+1Ch] [ebp-1Ch]
 
   if ( Lexer_TokenExpect(3) == -1 || !Lexer_ParseValueList(1, &v12, 1, a1) )
-    return Str_Intern(byte_507290, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
   if ( v13 == 1 )
   {
     v16 = *(_DWORD *)(v14 + 16);
@@ -129066,7 +129056,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   }
   v2 = v16 - 1;
   if ( !Lexer_ParseValueList(2, &v12, 1, a1) )
-    return Str_Intern(byte_507290, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
   if ( v13 == 1 )
   {
     v15 = *(_DWORD *)(v14 + 16);
@@ -129079,7 +129069,7 @@ signed int * Rules_SubStringBuiltin(double a1)
   }
   v3 = v15 - 1;
   if ( !Lexer_ParseValueList(3, &v12, 111, a1) )
-    return Str_Intern(byte_507290, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
   if ( v2 < 0 )
     v2 = 0;
   v1 = strlen(*(const char **)(v14 + 16));
@@ -129089,7 +129079,7 @@ signed int * Rules_SubStringBuiltin(double a1)
     v3 = v1;
   }
   if ( v2 > v3 )
-    return Str_Intern(byte_507290, v1);
+    return Str_Intern(g_Rules_EmptyStringLiteral, v1);
   v4 = Mem_SmallBlockAlloc(v3 - v2 + 2);
   v5 = v2;
   v6 = (char *)v4;
@@ -129249,7 +129239,7 @@ BOOL __fastcall Rules_EvalStringCore(_DWORD a1, _DWORD *a2)
       if ( *v11 == 14 || *v11 == 16 )
       {
         Rules_PrintErrorID((int)aMiscfun_0, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aExpandMustBe_0, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpandMustBe_0, v14);
         Lexer_ErrorRecover(1);
         IO_CloseStringRouter((int)v17);
         a2[1] = 2;
@@ -129261,7 +129251,7 @@ BOOL __fastcall Rules_EvalStringCore(_DWORD a1, _DWORD *a2)
       else if ( AST_TreeContainsSpecialTag((int)v11, 0) )
       {
         Rules_PrintErrorID((int)aStrngfun, 2, 0);
-        Output_Write((int)off_51A614[0], (int)aSomeVariablesC, v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSomeVariablesC, v15);
         Lexer_ErrorRecover(1);
         IO_CloseStringRouter((int)v17);
         a2[1] = 2;
@@ -129353,10 +129343,10 @@ signed int  Rules_BuildConstructFromString(const char *a1)
     IO_CloseStringRouter((int)aBuild);
     if ( v4 == 1 )
     {
-      Output_Write((int)off_51A614[0], (int)aError_3, v3);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aError_3, v3);
       v5 = (char *)Rules_GetPPBuffer();
-      Output_WriteLongString((signed int)off_51A614[0], v5);
-      Output_Write((int)off_51A614[0], (int)asc_507374, v6);
+      Output_WriteLongString((signed int)g_IO_LogicalNameTable_WError[0], v5);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_507374, v6);
     }
     Rules_DestroyPPBuffer();
     return !v2;
@@ -129442,9 +129432,9 @@ int Rules_MathDomainError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aEmathfun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aDomainErrorFor, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  Output_Write((int)off_51A614[0], (int)aFunction__1, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDomainErrorFor, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -129461,9 +129451,9 @@ int Rules_MathArgumentOverflowError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aEmathfun, 2, 0);
-  Output_Write((int)off_51A614[0], (int)aArgumentOverfl, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  Output_Write((int)off_51A614[0], (int)aFunction__1, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentOverfl, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -129480,9 +129470,9 @@ int Rules_MathSingularityError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aEmathfun, 3, 0);
-  Output_Write((int)off_51A614[0], (int)aSingularityAtA, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  Output_Write((int)off_51A614[0], (int)aFunction__1, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSingularityAtA, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction__1, v2);
   Rules_SetEvaluationErrorFlag(1);
   return Lexer_ErrorRecover(1);
 }
@@ -129536,7 +129526,7 @@ double  Rules_TanBuiltin(int a1, int a2, int a3, double a4)
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
   v7 = cos(v6);
-  if ( v7 >= dbl_5076F8 || v7 <= dbl_507700 )
+  if ( v7 >= g_Rules_TanEpsilonPositive || v7 <= g_Rules_TanEpsilonNegative )
     return sin(v6) / v7;
   Rules_MathSingularityError();
   LODWORD(v8) = v5;
@@ -129562,7 +129552,7 @@ double  Rules_SecBuiltin(int a1, int a2, int a3, double a4)
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
   v7 = cos(v6);
-  if ( v7 >= dbl_507708 || v7 <= dbl_507710 )
+  if ( v7 >= g_Rules_SecEpsilonPositive || v7 <= g_Rules_SecDomainEpsilonNeg )
     return 1.0 / v7;
   Rules_MathSingularityError();
   LODWORD(v8) = v5;
@@ -129588,7 +129578,7 @@ double  Rules_CscBuiltin(int a1, int a2, int a3, double a4)
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
   v7 = sin(v6);
-  if ( v7 >= dbl_507718 || v7 <= dbl_507720 )
+  if ( v7 >= g_Rules_CscDomainEpsilonPos || v7 <= g_Rules_CscDomainEpsilonNeg )
     return 1.0 / v7;
   Rules_MathSingularityError();
   LODWORD(v8) = v5;
@@ -129614,7 +129604,7 @@ double  Rules_CotBuiltin(int a1, int a2, int a3, double a4)
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
   v7 = sin(v6);
-  if ( v7 >= dbl_507728 || v7 <= dbl_507730 )
+  if ( v7 >= g_Rules_CotDomainEpsilonPos || v7 <= g_Rules_CotDomainEpsilonNeg )
     return cos(v6) / v7;
   Rules_MathSingularityError();
   LODWORD(v8) = v5;
@@ -129636,7 +129626,7 @@ double  Rules_AcosBuiltin(int a1, int a2, int a3, double a4)
   v9 = a2;
   if ( !Rules_MathParseSingleArg(&v7, a3, a4) )
     return 0.0;
-  if ( v7 <= 1.0 && v7 >= dbl_507738 )
+  if ( v7 <= 1.0 && v7 >= g_Rules_AcosDomainLowerBound )
     return acos(v7);
   Rules_MathDomainError();
   return 0.0;
@@ -129654,7 +129644,7 @@ double  Rules_AsinBuiltin(int a1, int a2, int a3, double a4)
   v9 = a2;
   if ( !Rules_MathParseSingleArg(&v7, a3, a4) )
     return 0.0;
-  if ( v7 <= 1.0 && v7 >= dbl_507740 )
+  if ( v7 <= 1.0 && v7 >= g_Rules_AsinDomainLowerBound )
     return asin(v7);
   Rules_MathDomainError();
   return 0.0;
@@ -129687,7 +129677,7 @@ double  Rules_AsecBuiltin(int a1, int a2, int a3, double a4)
   v9 = a2;
   if ( !Rules_MathParseSingleArg(&v7, a3, a4) )
     return 0.0;
-  if ( v7 >= 1.0 || v7 <= dbl_507748 )
+  if ( v7 >= 1.0 || v7 <= g_Rules_AsecDomainLowerBound )
     return acos(1.0 / v7);
   Rules_MathDomainError();
   return 0.0;
@@ -129705,7 +129695,7 @@ double  Rules_AcscBuiltin(int a1, int a2, int a3, double a4)
   v9 = a2;
   if ( !Rules_MathParseSingleArg(&v7, a3, a4) )
     return 0.0;
-  if ( v7 >= 1.0 || v7 <= dbl_507750 )
+  if ( v7 >= 1.0 || v7 <= g_Rules_AcscDomainLowerBound )
     return asin(1.0 / v7);
   Rules_MathDomainError();
   return 0.0;
@@ -129895,7 +129885,7 @@ double  Rules_MathAtanh(int a1, int a2, int a3, double a4)
   v8 = a2;
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
-  if ( v6 < 1.0 && v6 > dbl_507760 )
+  if ( v6 < 1.0 && v6 > g_Rules_AtanhDomainLowerBound )
     return atanh(v6);
   Rules_MathDomainError();
   return 0.0;
@@ -129951,7 +129941,7 @@ double  Rules_MathAcoth(int a1, int a2, int a3, double a4)
   v8 = a2;
   if ( !Rules_MathParseSingleArg(&v6, a3, a4) )
     return 0.0;
-  if ( v6 > 1.0 || v6 < dbl_507778 )
+  if ( v6 > 1.0 || v6 < g_Rules_AcothDomainLowerBound )
     return atanh(1.0 / v6);
   Rules_MathDomainError();
   return 0.0;
@@ -130160,7 +130150,7 @@ LABEL_20:
 double Rules_MathPi()
 {
   Lexer_TokenExpect(0);
-  return acos(dbl_507788);
+  return acos(g_Rules_MathPiAcosArgument);
 }
 // 507788: using guessed type double dbl_507788;
 
@@ -130174,7 +130164,7 @@ double  Rules_MathDegToRad(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( Rules_MathParseSingleArg(v5, a3, a4) )
-    return v5[0] * dbl_507790 / dbl_507798;
+    return v5[0] * g_Rules_DegToRadPiConstant / g_Rules_DegToRadDegreesConstant;
   v5[1] = 0.0;
   return 0.0;
 }
@@ -130191,7 +130181,7 @@ double  Rules_MathRadToDeg(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( Rules_MathParseSingleArg(v5, a3, a4) )
-    return v5[0] * dbl_5077A0 / dbl_5077A8;
+    return v5[0] * g_Rules_RadToDegDegreesConstant / g_Rules_RadToDegPiConstant;
   v5[1] = 0.0;
   return 0.0;
 }
@@ -130208,7 +130198,7 @@ double  Rules_MathDegToGrad(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( Rules_MathParseSingleArg(v5, a3, a4) )
-    return v5[0] / dbl_5077B0;
+    return v5[0] / g_Rules_DegToGradConversionFactor;
   v5[1] = 0.0;
   return 0.0;
 }
@@ -130224,7 +130214,7 @@ double  Rules_MathGradToDeg(int a1, int a2, int a3, double a4)
   v7 = a1;
   v6 = a2;
   if ( Rules_MathParseSingleArg(v5, a3, a4) )
-    return v5[0] * dbl_5077B8;
+    return v5[0] * g_Rules_GradToDegConversionFactor;
   v5[1] = 0.0;
   return 0.0;
 }
@@ -130247,7 +130237,7 @@ signed int  Rules_MathRound(int a1, double a2)
     return result;
   if ( v5 == 1 )
     return *(_DWORD *)(v6 + 16);
-  return (int)ceil(*(double *)(v6 + 16) + dbl_5077C0);
+  return (int)ceil(*(double *)(v6 + 16) + g_Rules_MathRoundHalfOffset);
 }
 // 5077C0: using guessed type double dbl_5077C0;
 
@@ -130274,7 +130264,7 @@ _DWORD * Help_IndexTopicFile(CHAR *a1, _BYTE *a2, int a3, int a4, DWORD a5)
   v15 = a4;
   if ( a4 > 0 )
     *a2 = 0;
-  v6 = (int *)IO_FOpen(a1, byte_5077F0, a3, a5);
+  v6 = (int *)IO_FOpen(a1, g_Help_FileOpenModeRead, a3, a5);
   if ( v6 )
   {
     v18 = Help_GetOrCreateFileRecord(a1);
@@ -130418,7 +130408,7 @@ int  Help_OpenFileAtNavigatedTopic(const CHAR *a1, _DWORD *a2, _DWORD *a3, _BYTE
   v7 = Help_FindOrAdvanceTopicEntry((int)a1, a2, a3, a4);
   if ( v7 < 0 )
     return 0;
-  result = IO_FOpen(a1, byte_5077F0, v6, v7);
+  result = IO_FOpen(a1, g_Help_FileOpenModeRead, v6, v7);
   if ( result )
   {
     if ( IO_SeekStreamGuarded(result, v7, 0, (int)a3) < 0 )
@@ -130474,7 +130464,7 @@ int  Help_ReopenFileAtActiveEntry(const CHAR *a1, _DWORD *a2, DWORD a3)
     *a2 = -25;
     return 0;
   }
-  result = IO_FOpen(a1, byte_5077F0, v5, a3);
+  result = IO_FOpen(a1, g_Help_FileOpenModeRead, v5, a3);
   v9 = result;
   if ( result )
   {
@@ -131026,16 +131016,16 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
       }
       while ( v26 );
     }
-    Output_Write((int)off_51A61C[0], (int)aLoadingHelpFil, a1);
-    Output_Write((int)off_51A61C[0], dword_51ACEC, v3);
-    Output_Write((int)off_51A61C[0], (int)a_PleaseWait___, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aLoadingHelpFil, a1);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], dword_51ACEC, v3);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)a_PleaseWait___, v4);
     v37 = Help_IndexTopicFile((CHAR *)dword_51ACEC, v36, v5, 256, a2);
     if ( !v37 )
     {
       Rules_PrintErrorID((int)aTextpro, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aUnableToAccess, v27);
-      Output_Write((int)off_51A614[0], (int)v36, v28);
-      return Output_Write((int)off_51A614[0], (int)asc_50797C, v29);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToAccess, v27);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v36, v28);
+      return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50797C, v29);
     }
     IO_AddRouter((int)aWhelp, 10, (int)Rules_HelpRouterPrint, (int)Help_RouterQueryMatchesWhelp, (int)Rules_HelpRouterGetc, (int)Rules_HelpRouterUngetc, 0);
     dword_51ACE8 = 1;
@@ -131090,7 +131080,7 @@ signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3)
           goto LABEL_37;
         Output_Write((int)aWhelp, (int)aPressReturnFor, v15);
         Output_Write((int)aWhelp, (int)aPressAReturnTo, v30);
-        dword_51A628 = 0;
+        g_Lexer_PendingLineCharIndex = 0;
 LABEL_29:
         v32 = Lexer_PeekChar((int)aWhelp, v31);
         v33 = v32;
@@ -131102,13 +131092,13 @@ LABEL_29:
             v33 = 65;
             goto LABEL_32;
           case 8:
-            v31 = dword_51A628;
-            if ( dword_51A628 )
-              --dword_51A628;
+            v31 = g_Lexer_PendingLineCharIndex;
+            if ( g_Lexer_PendingLineCharIndex )
+              --g_Lexer_PendingLineCharIndex;
             break;
           default:
 LABEL_32:
-            ++dword_51A628;
+            ++g_Lexer_PendingLineCharIndex;
             break;
         }
         Lexer_PeekChar((int)aWhelp, v31);
@@ -131116,7 +131106,7 @@ LABEL_34:
         if ( v33 == 10 || v33 == 65 )
         {
           v15 = 0;
-          dword_51A628 = -1;
+          g_Lexer_PendingLineCharIndex = -1;
           if ( v33 == 65 )
             goto LABEL_42;
 LABEL_37:
@@ -131144,7 +131134,7 @@ LABEL_43:
   }
   Rules_PrintErrorID((int)aTextpro, 1, 0);
   v18 = aUnableToAccess;
-  v19 = off_51A614[0];
+  v19 = g_IO_LogicalNameTable_WError[0];
 LABEL_11:
   Output_Write((int)v19, (int)v18, v17);
 LABEL_12:
@@ -131215,9 +131205,9 @@ signed int  Help_SetHelpFilePathCommand(int a1, double a2)
     {
       if ( dword_51ACE8 == 1 )
       {
-        Output_Write((int)off_51A61C[0], (int)aReleasingHelpE, v2);
-        Output_Write((int)off_51A61C[0], dword_51ACEC, v3);
-        Output_Write((int)off_51A61C[0], (int)a___, v4);
+        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aReleasingHelpE, v2);
+        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], dword_51ACEC, v3);
+        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)a___, v4);
         Help_UnloadTopicFile(dword_51ACEC);
         IO_DeleteRouter((int)aWhelp);
         dword_51ACE8 = 0;
@@ -131243,26 +131233,26 @@ signed int  Help_SetHelpFilePathCommand(int a1, double a2)
         v14 += 2;
       }
       while ( v16 );
-      Output_Write((int)off_51A61C[0], v12, v13);
-      Output_Write((int)off_51A61C[0], (int)v10, v17);
-      return Output_Write((int)off_51A61C[0], (int)asc_50797C, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], v12, v13);
+      Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v10, v17);
+      return Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50797C, v18);
     }
   }
   else
   {
-    Output_Write((int)off_51A61C[0], (int)aTheCurrentHelp, v2);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aTheCurrentHelp, v2);
     if ( dword_51ACEC )
     {
-      v7 = off_51A61C[0];
+      v7 = g_IO_LogicalNameTable_WDialog[0];
       v8 = (char *)dword_51ACEC;
     }
     else
     {
       v8 = aClips_hlp;
-      v7 = off_51A61C[0];
+      v7 = g_IO_LogicalNameTable_WDialog[0];
     }
     Output_Write((int)v7, (int)v8, v6);
-    return Output_Write((int)off_51A61C[0], (int)asc_50797C, v9);
+    return Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50797C, v9);
   }
   return result;
 }
@@ -131326,13 +131316,13 @@ int * Help_LoadHelpFileCommand(DWORD a1, double a2)
     else
     {
       Rules_PrintErrorID((int)aTextpro, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aUnableToLoadFi, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToLoadFi, v10);
       if ( v15[0] )
         v12 = v15;
       else
         v12 = aNoEntriesFound;
-      Output_Write((int)off_51A614[0], (int)v12, v11);
-      return (int *)Output_Write((int)off_51A614[0], (int)asc_50797C, v13);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v12, v11);
+      return (int *)Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50797C, v13);
     }
   }
   return result;
@@ -131563,7 +131553,7 @@ int  Rules_HelpReadTopicListFromInput(int a1, int *a2, int a3)
   Output_Write((int)aWhelp, *a2, a3);
   Output_Write((int)aWhelp, (int)aTopic_, v4);
   v5 = 0;
-  dword_51A628 = 0;
+  g_Lexer_PendingLineCharIndex = 0;
   v6 = -2;
   while ( 1 )
   {
@@ -131578,19 +131568,19 @@ int  Rules_HelpReadTopicListFromInput(int a1, int *a2, int a3)
     }
     if ( v7 == 8 && v5 )
     {
-      dword_51A628 += v6;
+      g_Lexer_PendingLineCharIndex += v6;
       v5 = v5 - 2 + 1;
-      ++dword_51A628;
+      ++g_Lexer_PendingLineCharIndex;
     }
     else
     {
 LABEL_14:
       ++v5;
-      ++dword_51A628;
+      ++g_Lexer_PendingLineCharIndex;
     }
   }
   v8 = dword_51A968;
-  dword_51A628 = -1;
+  g_Lexer_PendingLineCharIndex = -1;
   if ( dword_51A968 )
   {
     Output_Write((int)aWhelp, (int)asc_50797C, dword_51A968);
@@ -131793,9 +131783,9 @@ int  Rules_ConstructsToCCommand(double a1)
       if ( (int)strlen(v3) > 3 )
       {
         Rules_PrintWarningID((int)aConscomp, 1, 0);
-        Output_Write((int)off_51A610[0], (int)aBaseFileNameEx, v4);
-        Output_Write((int)off_51A610[0], (int)aThisMayCauseFi, v5);
-        Output_Write((int)off_51A610[0], (int)aIsLimitedOnYou, v6);
+        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aBaseFileNameEx, v4);
+        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aThisMayCauseFi, v5);
+        Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aIsLimitedOnYou, v6);
       }
       result = Lexer_ParseValueList(2, v9, 1, a1);
       if ( result )
@@ -132903,9 +132893,9 @@ int  Rules_AddCodeGeneratorItem(int a1, int a2, int a3, int a4, int a5, int a6)
       do
       {
         if ( dword_51ACF8 >= 18 )
-          sprintf_(v27, "%c_", (unsigned __int8)byte_5082CA[dword_51ACF8]);
+          sprintf_(v27, "%c_", (unsigned __int8)g_Rules_CodeGeneratorItemPrefixTable[dword_51ACF8]);
         else
-          sprintf_(v27, "%c", (unsigned __int8)byte_5082C4[dword_51ACF8]);
+          sprintf_(v27, "%c", (unsigned __int8)g_Rules_CodeGeneratorItemLetterTable[dword_51ACF8]);
         ++dword_51ACF8;
         v15 = Mem_SmallBlockAlloc(strlen(v27) + 1);
         *(_DWORD *)(*(_DWORD *)(v12 + 20) + slot_offset) = v15;
@@ -133645,9 +133635,9 @@ signed int  Rules_PrintJoinNetworkNodeRuleOwners(signed int result, int a2)
     {
       *(_BYTE *)node |= 0x20u;
       rule_name = Rules_GetConstructNameString(*(_DWORD *)(node + 36));
-      Output_Write((int)off_51A614[0], a2, 0);
-      Output_Write((int)off_51A614[0], rule_name, 0);
-      result = Output_Write((int)off_51A614[0], (int)asc_5083B4, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], rule_name, 0);
+      result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5083B4, 0);
       node = (uintptr_t)(unsigned int)*(_DWORD *)(node + 28);
     }
     else
@@ -133790,7 +133780,7 @@ int Rules_ClearDefrulesReady()
   int result; // eax
   int v1; // edx
 
-  if ( dword_51A1F0 )
+  if ( g_Rules_CurrentlyExecutingRule )
     return 0;
   Rules_ClearFocusStack();
   result = Module_GetCurrent();
@@ -134058,7 +134048,7 @@ int __fastcall Rules_PPConstructCommand(int a1, const char **a2)
   result = Rules_GetConstructNameArg((int)v8, v5, v4);
   if ( result )
   {
-    result = Rules_PrintConstructPPForm((int)off_51A624, result, (int)a2);
+    result = Rules_PrintConstructPPForm((int)g_IO_LogicalName_WDisplay, result, (int)a2);
     if ( !result )
       return Rules_ReportCantFindItem(v7, v7);
   }
@@ -134463,7 +134453,7 @@ int  Rules_ListConstructsCommand(int a1, int a2, double a3)
     {
       v5 = (int *)Module_GetCurrent();
     }
-    return Rules_PrintConstructNamesByModule(a1, (int)off_51A624, (int)v5);
+    return Rules_PrintConstructNamesByModule(a1, (int)g_IO_LogicalName_WDisplay, (int)v5);
   }
   return result;
 }
@@ -134499,7 +134489,7 @@ int  Rules_PrintConstructNamesByModule(int a1, int a2, int a3)
     if ( !Enum )
     {
 LABEL_14:
-      Rules_PrintTally((int)off_51A624, v5, *(_DWORD *)(a1 + 4), *(_DWORD *)a1);
+      Rules_PrintTally((int)g_IO_LogicalName_WDisplay, v5, *(_DWORD *)(a1 + 4), *(_DWORD *)a1);
       return Module_EndEnum();
     }
     if ( v14 )
@@ -134523,7 +134513,7 @@ LABEL_13:
     if ( v8 )
     {
       if ( v14 )
-        Output_Write((int)off_51A624, (int)asc_5084B8, v7);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_5084B8, v7);
       Output_Write(a2, *(_DWORD *)(v8 + 16), v7);
       Output_Write(a2, (int)asc_50849C, v9);
     }
@@ -134714,7 +134704,7 @@ signed int  Rules_ApplyWatchFlagCommand(
         double a5,
         void (*a6)(void))
 {
-  return Rules_ProcessWatchFlagRequest(a1, (int)aWatch_0, a4, (int)off_51A614[0], a5, 1, a2, a3, a6);
+  return Rules_ProcessWatchFlagRequest(a1, (int)aWatch_0, a4, (int)g_IO_LogicalNameTable_WError[0], a5, 1, a2, a3, a6);
 }
 // 51A614: using guessed type char *off_51A614[5];
 
@@ -134893,7 +134883,7 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
   if ( parsed[1] != 2 && parsed[1] != 8 )
   {
     Rules_PrintErrorID((int)aInsmngr, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aExpectedAVal_2, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_2, 0);
     return (_DWORD *)Lexer_ErrorRecover(1);
   }
   expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
@@ -134908,7 +134898,7 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
     if ( parsed[1] != 2 )
     {
       Rules_PrintErrorID((int)aInsmngr, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedAVal_3, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_3, 0);
       return (_DWORD *)Lexer_ErrorRecover(1);
     }
     class_record = (int)Class_LookupInScope(*(_BYTE **)(parsed[2] + 16));
@@ -134954,7 +134944,7 @@ signed int * Instance_GetQualifiedName(int a1, int a2)
   signed int *symbol; // ebx
 
   instance = (uintptr_t)(unsigned int)a1;
-  if ( instance == (uintptr_t)&off_51A214 )
+  if ( instance == (uintptr_t)&g_Instance_DummyInstanceRecord )
     return Str_Intern(aDummyInstance, a2);
   instance_name_symbol = (uintptr_t)(unsigned int)*(_DWORD *)(instance + 28);
   if ( (*(_BYTE *)(instance + 24) & 2) != 0 )
@@ -135015,18 +135005,18 @@ _DWORD * Instance_BuildInstance(int a1, int a2, int a3, double a4)
   if ( dword_51A954 && (*(_BYTE *)(a2 + 20) & 8) != 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 10, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotCreate_0, v18);
-    Output_Write((int)off_51A614[0], (int)aPatternMatch_0, v19);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotCreate_0, v18);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPatternMatch_0, v19);
     Lexer_ErrorRecover(1);
     return 0;
   }
   if ( (*(_BYTE *)(a2 + 20) & 4) != 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotCreate_1, v20);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotCreate_1, v20);
     v21 = Rules_GetConstructNameString(a2);
-    Output_Write((int)off_51A614[0], v21, (int)off_51A614[0]);
-    Output_Write((int)off_51A614[0], (int)a__17, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v21, (int)g_IO_LogicalNameTable_WError[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, v22);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135037,7 +135027,7 @@ _DWORD * Instance_BuildInstance(int a1, int a2, int a3, double a4)
     if ( !v7 || v7 != ***(signed int ****)(a2 + 8) )
     {
       Rules_PrintErrorID((int)aInsmngr, 11, 1);
-      Output_Write((int)off_51A614[0], (int)aInvalidModuleS, v23);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInvalidModuleS, v23);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -135050,9 +135040,9 @@ _DWORD * Instance_BuildInstance(int a1, int a2, int a3, double a4)
   if ( (v9[6] & 1) == 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 4, 0);
-    Output_Write((int)off_51A614[0], (int)aTheInstance, v24);
-    Output_Write((int)off_51A614[0], v4[4], v25);
-    Output_Write((int)off_51A614[0], (int)aHasASlotValueW, v26);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheInstance, v24);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v4[4], v25);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasASlotValueW, v26);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135060,7 +135050,7 @@ _DWORD * Instance_BuildInstance(int a1, int a2, int a3, double a4)
   ++v4[1];
   if ( (v9[6] & 2) == 0 )
   {
-    if ( dword_51A284 )
+    if ( g_Instance_UseMessageDispatchForInit )
     {
       v34 = dword_51AD38;
       MessageHandler_SendToInstanceAddress(dword_51AD38, (int)v9, 0, 0, a4);
@@ -135075,9 +135065,9 @@ _DWORD * Instance_BuildInstance(int a1, int a2, int a3, double a4)
   if ( (v11[6] & 2) == 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 5, 0);
-    Output_Write((int)off_51A614[0], (int)aUnableToDele_0, v27);
-    Output_Write((int)off_51A614[0], v4[4], v28);
-    Output_Write((int)off_51A614[0], (int)a__17, v29);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDele_0, v27);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v4[4], v28);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, v29);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135104,11 +135094,11 @@ LABEL_14:
       }
       else
       {
-        *(_DWORD *)(dword_51AD14 + 60) = *(_DWORD *)(dword_51A278 + 4 * v12);
-        v13 = *(_DWORD *)(dword_51A278 + 4 * v33);
+        *(_DWORD *)(dword_51AD14 + 60) = *(_DWORD *)(g_Instance_HashTableBase + 4 * v12);
+        v13 = *(_DWORD *)(g_Instance_HashTableBase + 4 * v33);
         if ( v13 )
           *(_DWORD *)(v13 + 56) = dword_51AD14;
-        *(_DWORD *)(4 * v33 + dword_51A278) = dword_51AD14;
+        *(_DWORD *)(4 * v33 + g_Instance_HashTableBase) = dword_51AD14;
       }
       v14 = *(_DWORD *)(dword_51AD14 + 44);
       if ( *(_DWORD *)(v14 + 80) )
@@ -135123,7 +135113,7 @@ LABEL_14:
       else
         dword_51AD0C = v15;
       *(_DWORD *)(dword_51AD14 + 64) = dword_51AD18;
-      dword_51A288 = 1;
+      g_Instance_InstancesChangedFlag = 1;
       dword_51AD18 = dword_51AD14;
       Instance_SetActiveFlag(dword_51AD14, 1);
       v16 = (_DWORD *)dword_51AD14;
@@ -135221,8 +135211,8 @@ signed int  Instance_DeleteInstance(int a1, double a2)
   if ( dword_51A954 && (*(_BYTE *)(class_record + 20) & 8) != 0 )
   {
     Rules_PrintErrorID((int)aInsmngr, 12, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotDeleteIn, v14);
-    Output_Write((int)off_51A614[0], (int)aPatternMatch_0, v15);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotDeleteIn, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPatternMatch_0, v15);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135240,7 +135230,7 @@ signed int  Instance_DeleteInstance(int a1, double a2)
     if ( previous_hash_link )
       *(_DWORD *)((uintptr_t)previous_hash_link + 60) = *(_DWORD *)(instance + 60);
     else
-      *(_DWORD *)((uintptr_t)(unsigned int)dword_51A278 + 4 * *(_DWORD *)(instance + 36)) = *(_DWORD *)(instance + 60);
+      *(_DWORD *)((uintptr_t)(unsigned int)g_Instance_HashTableBase + 4 * *(_DWORD *)(instance + 36)) = *(_DWORD *)(instance + 60);
     next_hash_link = *(_DWORD *)(instance + 60);
     if ( next_hash_link )
       *(_DWORD *)((uintptr_t)next_hash_link + 56) = *(_DWORD *)(instance + 56);
@@ -135270,7 +135260,7 @@ signed int  Instance_DeleteInstance(int a1, double a2)
       Instance_ReleaseSlotValues((int)instance);
     if ( *(_DWORD *)(instance + 40)
       || dword_51A96C >= *(_DWORD *)(instance + 32)
-      || dword_51A280
+      || g_Instance_PurgeInProgress
       || *(_DWORD *)(instance + 8) )
     {
       deferred_node = *(_DWORD *)((uintptr_t)(unsigned int)dword_54DBA8 + 32);
@@ -135286,11 +135276,11 @@ signed int  Instance_DeleteInstance(int a1, double a2)
       }
       *(_BYTE *)(instance + 24) |= 2u;
       *(_DWORD *)(uintptr_t)deferred_node = (int)instance;
-      *(_DWORD *)((uintptr_t)deferred_node + 4) = dword_51A28C;
-      dword_51A28C = deferred_node;
+      *(_DWORD *)((uintptr_t)deferred_node + 4) = g_Instance_DeletedListHead;
+      g_Instance_DeletedListHead = deferred_node;
       dword_51A934 += 2;
       dword_51A938 += 88;
-      dword_51A288 = 1;
+      g_Instance_InstancesChangedFlag = 1;
       return 1;
     }
     else
@@ -135299,16 +135289,16 @@ signed int  Instance_DeleteInstance(int a1, double a2)
       dword_54DBAC = (int)instance;
       *(_DWORD *)instance = *(_DWORD *)((uintptr_t)(unsigned int)dword_54DBA8 + 320);
       *(_DWORD *)((uintptr_t)(unsigned int)dword_54DBA8 + 320) = dword_54DBAC;
-      dword_51A288 = 1;
+      g_Instance_InstancesChangedFlag = 1;
       return 1;
     }
   }
   else
   {
     Rules_PrintErrorID((int)aInsmngr, 6, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotDelete_0, v16);
-    Output_Write((int)off_51A614[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(instance + 28) + 16), v17);
-    Output_Write((int)off_51A614[0], (int)aDuringInitiali, v18);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotDelete_0, v16);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(instance + 28) + 16), v17);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuringInitiali, v18);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135374,7 +135364,7 @@ signed int Instance_AllocateInstanceRecord()
   {
     result = Mem_HeapAllocWithRetry((_DWORD *)0x50);
   }
-  *(_DWORD *)result = (int)(uintptr_t)unk_51A290;
+  *(_DWORD *)result = (int)(uintptr_t)g_Rules_ObjectPatternVTable;
   *(_DWORD *)(result + 4) = 0;
   *(_DWORD *)(result + 8) = 0;
   *(_DWORD *)(result + 12) = 0;
@@ -135410,7 +135400,7 @@ _DWORD * Instance_FindHashEntryForBuild(int a1, int a2, _DWORD *a3, _DWORD *a4)
 
   bucket = Instance_HashNameToBucket(a2);
   *a4 = bucket;
-  result = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)dword_51A278 + 4 * bucket);
+  result = (_DWORD *)(uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)g_Instance_HashTableBase + 4 * bucket);
   for ( *a3 = 0; result; result = (_DWORD *)(uintptr_t)(unsigned int)result[15] )
   {
     if ( a2 == (int)result[7] )
@@ -135563,22 +135553,22 @@ BOOL  Instance_InitializeSlots(int a1, int a2, double a3)
     if ( Instance_ApplySlotOverrideList((_DWORD *)a1, a2, v4, a3) )
     {
       *(_BYTE *)(a1 + 24) |= 4u;
-      v7 = dword_51A27C;
-      dword_51A27C = 1;
-      if ( dword_51A284 )
+      v7 = g_Instance_SlotInitInProgress;
+      g_Instance_SlotInitInProgress = 1;
+      if ( g_Instance_UseMessageDispatchForInit )
         MessageHandler_SendToInstanceAddress(dword_51AD34, a1, 0, v17, a3);
       else
         Instance_InitSlots(a1, v6, a3);
-      dword_51A27C = v7;
+      g_Instance_SlotInitInProgress = v7;
       v8 = *(_BYTE *)(a1 + 24) | 1;
       --*(_DWORD *)(a1 + 40);
       *(_BYTE *)(a1 + 24) = v8;
       if ( dword_51A964 )
       {
         Rules_PrintErrorID((int)aInsmngr, 8, 0);
-        Output_Write((int)off_51A614[0], (int)aAnErrorOccurre, v14);
-        Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(a1 + 28) + 16), v15);
-        Output_Write((int)off_51A614[0], (int)a__17, v16);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAnErrorOccurre, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(a1 + 28) + 16), v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, v16);
         return 0;
       }
       else
@@ -135597,9 +135587,9 @@ BOOL  Instance_InitializeSlots(int a1, int a2, double a3)
   else
   {
     Rules_PrintErrorID((int)aInsmngr, 7, 0);
-    Output_Write((int)off_51A614[0], (int)aInstance_4, v10);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(a1 + 28) + 16), v11);
-    Output_Write((int)off_51A614[0], (int)aIsAlreadyBeing, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInstance_4, v10);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(a1 + 28) + 16), v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsAlreadyBeing, v12);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -135628,7 +135618,7 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
 
   slot_override = a2;
   dword_51A964 = 0;
-  saved_context = dword_51A27C;
+  saved_context = g_Instance_SlotInitInProgress;
   if ( !a2 )
     return 1;
   while ( 1 )
@@ -135640,7 +135630,7 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
     if ( Parser_ParseForm((__int16 *)(uintptr_t)(unsigned int)slot_override, parsed, a3, a4) == 1 || parsed[1] != 2 )
     {
       Rules_PrintErrorID((int)aInsmngr, 9, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedAVal_4, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_4, 0);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -135649,10 +135639,10 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
     saved_slot_value = slot_value;
     if ( !slot_value )
       break;
-    dword_51A27C = 1;
+    g_Instance_SlotInitInProgress = 1;
     pair_node = *(_DWORD *)((uintptr_t)(unsigned int)slot_override + 10);
     value_expression = *(_DWORD *)((uintptr_t)(unsigned int)pair_node + 6);
-    if ( dword_51A284 )
+    if ( g_Instance_UseMessageDispatchForInit )
     {
       MessageHandler_SendToInstanceAddress(*(_DWORD *)((uintptr_t)(unsigned int)*slot_value + 12), (int)(uintptr_t)a1, value_expression, 0, a4);
     }
@@ -135660,7 +135650,7 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
     {
       Instance_PutSlotValue(a1, slot_value, parsed, a4);
     }
-    dword_51A27C = saved_context;
+    g_Instance_SlotInitInProgress = saved_context;
     if ( dword_51A964 )
       return 0;
     *((_BYTE *)saved_slot_value + 4) |= 2u;
@@ -135669,11 +135659,11 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
       return 1;
   }
   Rules_PrintErrorID((int)aInsmngr, 13, 0);
-  Output_Write((int)off_51A614[0], (int)aSlot_2, 0);
-  Output_Write((int)off_51A614[0], *(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16), 0);
-  Output_Write((int)off_51A614[0], (int)aDoesNotExistIn, 0);
-  Output_Write((int)off_51A614[0], *(_DWORD *)((uintptr_t)(unsigned int)a1[7] + 16), 0);
-  Output_Write((int)off_51A614[0], (int)a__17, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_2, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16), 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotExistIn, 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)a1[7] + 16), 0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, 0);
   Lexer_ErrorRecover(1);
   return 0;
 }
@@ -135735,17 +135725,17 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
           if ( (*(_BYTE *)((uintptr_t)(unsigned int)slot_value + 4) & 1) != 0 )
           {
             Rules_PrintErrorID((int)aInsmngr, 14, 0);
-            Output_Write((int)off_51A614[0], (int)aOverrideRequir, 0);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOverrideRequir, 0);
             Output_Write(
-              (int)off_51A614[0],
+              (int)g_IO_LogicalNameTable_WError[0],
               *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)slot_descriptor + 8) + 12) + 16),
               0);
-            Output_Write((int)off_51A614[0], (int)aInInstance_0, 0);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInInstance_0, 0);
             Output_Write(
-              (int)off_51A614[0],
+              (int)g_IO_LogicalNameTable_WError[0],
               *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)a1 + 28) + 16),
               0);
-            Output_Write((int)off_51A614[0], (int)a__17, 0);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, 0);
             result = Lexer_ErrorRecover(1);
           }
         }
@@ -135763,10 +135753,10 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
       if ( (*(_BYTE *)((uintptr_t)(unsigned int)a1 + 24) & 2) != 0 )
       {
         Output_Write(
-          (int)off_51A614[0],
+          (int)g_IO_LogicalNameTable_WError[0],
           *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)a1 + 28) + 16),
           0);
-        Output_Write((int)off_51A614[0], (int)aInstanceDelete, 0);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInstanceDelete, 0);
         result = Lexer_ErrorRecover(1);
       }
       if ( dword_51A964 )
@@ -135779,7 +135769,7 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
   {
     Rules_PrintErrorID((int)aInsmngr, 15, 0);
     Lexer_ErrorRecover(1);
-    result = Output_Write((int)off_51A614[0], (int)aInitSlotsNotVa, 0);
+    result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInitSlotsNotVa, 0);
   }
   return result;
 }
@@ -135792,9 +135782,9 @@ signed int  Instance_PrintWatchTrace(int a1, int a2)
   int v2; // ecx
   int v3; // ecx
 
-  Output_Write((int)off_51A618[0], a1, a2);
-  Output_Write((int)off_51A618[0], (int)aInstance, v2);
-  return Instance_PrintNameOfClass((int)off_51A618[0], v3, 1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], a1, a2);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aInstance, v2);
+  return Instance_PrintNameOfClass((int)g_IO_LogicalNameTable_WTrace[0], v3, 1);
 }
 // 4AA9A2: variable 'v2' is possibly undefined
 // 4AA9AE: variable 'v3' is possibly undefined
@@ -136231,9 +136221,9 @@ signed int  Rules_ResolveClassNameNode(int a1)
           class_name ? (const char *)(uintptr_t)(unsigned int)class_name : "<null>",
           (void *)(uintptr_t)(unsigned int)class_record);
       Rules_PrintErrorID((int)aInsmngr_0, 3, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotCreateIn, 0);
-      Output_Write((int)off_51A614[0], class_name, class_name);
-      Output_Write((int)off_51A614[0], (int)a__7, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotCreateIn, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], class_name, class_name);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__7, 0);
       return 0;
     }
     *(_WORD *)a1 = 57;
@@ -136651,7 +136641,7 @@ _DWORD * Rules_ModifyInstanceCore(int a1, int a2, double a3)
   if ( !dword_51AD1C )
   {
     Rules_PrintErrorID((int)aInsmoddp, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aDirectMessageM, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDirectMessageM, v11);
     return (_DWORD *)Lexer_ErrorRecover(1);
   }
   dword_51AD1C = 0;
@@ -136778,7 +136768,7 @@ _DWORD * Rules_DuplicateInstanceCore(int *a1, int a2, double a3)
   if ( !dword_51AD1C )
   {
     Rules_PrintErrorID((int)aInsmoddp, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aDirectMessageD, v10);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDirectMessageD, v10);
     return (_DWORD *)Lexer_ErrorRecover(1);
   }
   dword_51AD1C = 0;
@@ -136793,14 +136783,14 @@ _DWORD * Rules_DuplicateInstanceCore(int *a1, int a2, double a3)
   if ( v4 == *(_DWORD *)(v3 + 28) )
   {
     Rules_PrintErrorID((int)aInsmoddp, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aInstanceCopyMu, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInstanceCopyMu, v11);
     return (_DWORD *)Lexer_ErrorRecover(1);
   }
-  v32 = dword_51A284;
-  dword_51A284 = v31;
+  v32 = g_Instance_UseMessageDispatchForInit;
+  g_Instance_UseMessageDispatchForInit = v31;
   result = Instance_BuildInstance(v4, *(_DWORD *)(v3 + 44), 1, a3);
   v7 = (int)result;
-  dword_51A284 = v32;
+  g_Instance_UseMessageDispatchForInit = v32;
   if ( result )
   {
     ++result[10];
@@ -136881,10 +136871,10 @@ LABEL_21:
             *(_BYTE *)(v19 + 4) |= 2u;
           }
           *(_BYTE *)(v7 + 24) |= 4u;
-          v32 = dword_51A27C;
-          dword_51A27C = 1;
+          v32 = g_Instance_SlotInitInProgress;
+          g_Instance_SlotInitInProgress = 1;
           MessageHandler_SendToInstanceAddress(dword_51AD34, v7, 0, v34, a3);
-          dword_51A27C = v32;
+          g_Instance_SlotInitInProgress = v32;
         }
         v20 = *(_BYTE *)(v7 + 24);
         --*(_DWORD *)(v7 + 40);
@@ -137141,19 +137131,19 @@ _DWORD * Rules_SaveInstancesTextFile(const CHAR *a1, int a2, DWORD a3, int a4, d
     v9 = IO_FOpen(a1, (unsigned __int8 *)aW_5, v8, a3);
     if ( v9 )
     {
-      v14 = dword_51A5F8;
-      dword_51A5F8 = 1;
-      v15 = dword_51A5FC;
-      dword_51A5FC = 1;
-      v16 = dword_51A600;
-      dword_51A600 = 1;
+      v14 = g_Print_PreserveEscapedCharactersFlag;
+      g_Print_PreserveEscapedCharactersFlag = 1;
+      v15 = g_Print_AddressesToStringsFlag;
+      g_Print_AddressesToStringsFlag = 1;
+      v16 = g_Print_InstanceAddressesToNamesFlag;
+      g_Print_InstanceAddressesToNamesFlag = 1;
       IO_SetFastSaveFile(v9);
       v12 = Rules_ForEachInstanceForSave(a2, a3, (int)v7, v11, (void (__fastcall *)(int, int))Rules_WriteInstanceTextRecord);
       fclose_(v13);
       IO_SetFastSaveFile(0);
-      dword_51A5F8 = v14;
-      dword_51A5FC = v15;
-      dword_51A600 = v16;
+      g_Print_PreserveEscapedCharactersFlag = v14;
+      g_Print_AddressesToStringsFlag = v15;
+      g_Print_InstanceAddressesToNamesFlag = v16;
       Rules_FreeClassList(v7);
       return (_DWORD *)v12;
     }
@@ -137789,8 +137779,8 @@ signed int  Rules_ReadInstancesTextFile(
     AST_NewNode(10, (int)Symbol);
     v8 = v6;
     Parser_NextToken(v6, (int)&dword_54E8FC);
-    v10 = dword_51A284;
-    dword_51A284 = a2;
+    v10 = g_Instance_UseMessageDispatchForInit;
+    g_Instance_UseMessageDispatchForInit = a2;
     if ( dword_54E8FC != 102 )
     {
       while ( dword_51A968 != 1 )
@@ -137804,14 +137794,14 @@ signed int  Rules_ReadInstancesTextFile(
           fclose_(v18);
           IO_SetFastLoadFile(v20);
           Lexer_ErrorRecover(1);
-          dword_51A284 = v10;
+          g_Instance_UseMessageDispatchForInit = v10;
           return v5;
         }
         if ( !Rules_ParseMakeInstanceNode((int)v9, v8) )
         {
           fclose_(v11);
           IO_SetFastLoadFile(v20);
-          dword_51A284 = v10;
+          g_Instance_UseMessageDispatchForInit = v10;
           Lexer_ErrorRecover(1);
           return v5;
         }
@@ -137831,7 +137821,7 @@ signed int  Rules_ReadInstancesTextFile(
     *(_DWORD *)(dword_54DBA8 + 56) = dword_54DBAC;
     fclose_(v9);
     IO_SetFastLoadFile(v20);
-    dword_51A284 = v10;
+    g_Instance_UseMessageDispatchForInit = v10;
     return v5;
   }
   else
@@ -137866,11 +137856,11 @@ signed int __fastcall Rules_ReportInstanceFileProcessError(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aInsfile, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aFunction_1, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aCouldNotComple, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)a__18, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_1, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCouldNotComple, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__18, v7);
 }
 // 4AD0B2: variable 'v3' is possibly undefined
 // 4AD0BE: variable 'v4' is possibly undefined
@@ -137902,16 +137892,16 @@ signed int  Rules_ValidateBloadInstancesHeader(int a1, int a2)
     else
     {
       Rules_PrintErrorID((int)aInsfile, 3, 0);
-      Output_Write((int)off_51A614[0], a1, v9);
-      Output_Write((int)off_51A614[0], (int)aFileIsNotAComp, v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFileIsNotAComp, v10);
       return 0;
     }
   }
   else
   {
     Rules_PrintErrorID((int)aInsfile, 2, 0);
-    Output_Write((int)off_51A614[0], a1, v7);
-    Output_Write((int)off_51A614[0], (int)aFileIsNotABina, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFileIsNotABina, v8);
     return 0;
   }
 }
@@ -138029,9 +138019,9 @@ signed int  Rules_ReportBloadInstanceError(int a1)
   int v5; // ecx
 
   Rules_PrintErrorID((int)aInsfile, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aFunctionBloadI, v2);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(a1 + 16), v3);
-  Output_Write((int)off_51A614[0], (int)aOfClass_0, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionBloadI, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a1 + 16), v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfClass_0, v4);
   return Class_PrintName(v5, 1);
 }
 // 4AD452: variable 'v2' is possibly undefined
@@ -138117,7 +138107,7 @@ void ** Rules_BloadLookupAtomByIndex(_DWORD *a1, int a2)
       result = 0;
       break;
     case 6:
-      result = &off_51A114;
+      result = &g_Rules_DummyFactPtr;
       break;
     default:
       Rules_ReportSystemError(a2, 1);
@@ -138612,13 +138602,13 @@ BOOL  Rules_ParseMultifieldSlotEditArgs(
   if ( (**v11 & 2) == 0 )
   {
     Rules_PrintErrorID((int)aInsmult, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aFunction_2, v18);
-    Output_Write((int)off_51A614[0], a2, v19);
-    Output_Write((int)off_51A614[0], (int)aCannotBeUsedOn, v20);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(*((_DWORD *)*v13 + 2) + 12) + 16), v21);
-    Output_Write((int)off_51A614[0], (int)aInInstance_1, v22);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(v29 + 28) + 16), v23);
-    Output_Write((int)off_51A614[0], (int)a__19, v24);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunction_2, v18);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v19);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeUsedOn, v20);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*((_DWORD *)*v13 + 2) + 12) + 16), v21);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInInstance_1, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v29 + 28) + 16), v23);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__19, v24);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -138681,8 +138671,8 @@ _DWORD * Rules_MakeMultifieldRangeDescriptor(_DWORD *result, int a2)
 //----- (004AE040) --------------------------------------------------------
 signed int __thiscall Rules_ReportUndefinedMessageHandlerName(void *this)
 {
-  Output_Write((int)off_51A614[0], (int)aMessageHandl_3, (int)this);
-  return MessageHandler_PrintNameTypeAndClass((int)off_51A614[0], *(_DWORD **)dword_51AD58, 1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMessageHandl_3, (int)this);
+  return MessageHandler_PrintNameTypeAndClass((int)g_IO_LogicalNameTable_WError[0], *(_DWORD **)dword_51AD58, 1);
 }
 // 51A614: using guessed type char *off_51A614[5];
 // 51AD58: using guessed type int dword_51AD58;
@@ -138695,9 +138685,9 @@ signed int MessageHandler_PrintNoApplicableHandlerError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aMsgfun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aNoApplicablePr, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)a__20, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoApplicablePr, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__20, v2);
 }
 // 4AE090: variable 'v0' is possibly undefined
 // 4AE09C: variable 'v1' is possibly undefined
@@ -138735,21 +138725,21 @@ signed int MessageHandler_CheckArgCount()
   }
   Lexer_ErrorRecover(1);
   Rules_PrintErrorID((int)aMsgfun, v2, 0);
-  Output_Write((int)off_51A614[0], (int)aMessageHandl_4, v3);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(v4 + 8) + 16), v4);
-  Output_Write((int)off_51A614[0], (int)asc_5092EC, v5);
-  Output_Write((int)off_51A614[0], (int)off_51AD3C[*v6 << 29 >> 30], (int)v6);
-  Output_Write((int)off_51A614[0], (int)aInClass_0, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMessageHandl_4, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v4 + 8) + 16), v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_5092EC, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)off_51AD3C[*v6 << 29 >> 30], (int)v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInClass_0, v7);
   v9 = Rules_GetConstructNameString(*(_DWORD *)(v8 + 12));
-  Output_Write((int)off_51A614[0], v9, v10);
-  Output_Write((int)off_51A614[0], (int)aExpected, v11);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v9, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpected, v11);
   if ( *(_DWORD *)(v12 + 20) == -1 )
     v13 = aAtLeast;
   else
     v13 = aExactly;
-  Output_Write((int)off_51A614[0], (int)v13, v12);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v13, v12);
   Rules_PrintLongInteger(v14, *(_DWORD *)(v14 + 16) - 1);
-  Output_Write((int)off_51A614[0], (int)aArgumentS_, v15);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aArgumentS_, v15);
   return 0;
 }
 // 4AE119: variable 'v2' is possibly undefined
@@ -138779,18 +138769,18 @@ signed int  MessageHandler_ReportSlotWriteAccessDenied(int a1, int a2)
   int v9; // ecx
 
   Rules_PrintErrorID((int)aMsgfun, 3, 0);
-  Output_Write((int)off_51A614[0], a1, v4);
-  Output_Write((int)off_51A614[0], (int)aSlotIn, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlotIn, v5);
   if ( a2 )
   {
-    Instance_PrintNameOfClass((int)off_51A614[0], v6, 0);
+    Instance_PrintNameOfClass((int)g_IO_LogicalNameTable_WError[0], v6, 0);
   }
   else
   {
-    Output_Write((int)off_51A614[0], (int)aClass_1, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClass_1, v6);
     Class_PrintName(v9, 0);
   }
-  return Output_Write((int)off_51A614[0], (int)aWriteAccessDen, v7);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWriteAccessDen, v7);
 }
 // 4AE201: variable 'v4' is possibly undefined
 // 4AE210: variable 'v5' is possibly undefined
@@ -138809,11 +138799,11 @@ signed int  MessageHandler_ReportPrivateSlotAccessDenied(int a1)
   int v6; // ecx
 
   Rules_PrintErrorID((int)aMsgfun, 6, 0);
-  Output_Write((int)off_51A614[0], (int)aPrivateSlot, v2);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(a1 + 8) + 12) + 16), v3);
-  Output_Write((int)off_51A614[0], (int)aOfClass_1, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPrivateSlot, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(a1 + 8) + 12) + 16), v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfClass_1, v4);
   Class_PrintName(*(_DWORD *)(a1 + 4), 0);
-  Output_Write((int)off_51A614[0], (int)aCannotBeAccess, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeAccess, v5);
   return Class_PrintName(v6, 1);
 }
 // 4AE292: variable 'v2' is possibly undefined
@@ -139007,7 +138997,7 @@ signed int  MessageHandler_RemoveByNameAndType(_DWORD *a1, int a2, int a3, int a
           if ( (*(_BYTE *)v9 & 1) != 0 )
           {
             Rules_PrintErrorID((int)aMsgpsr_0, 3, 0);
-            Output_Write((int)off_51A614[0], (int)aSystemMessag_0, v13);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSystemMessag_0, v13);
             v19 = 0;
           }
           else
@@ -139050,7 +139040,7 @@ LABEL_19:
       if ( v15 )
       {
         Rules_PrintErrorID((int)aMsgpsr_0, 3, 0);
-        Output_Write((int)off_51A614[0], (int)aSystemMessag_0, v18);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSystemMessag_0, v18);
       }
     }
     else
@@ -139270,8 +139260,8 @@ signed int __fastcall MessageHandler_CheckCurrentMessage(int a1, int a2)
     if ( a2 == 1 && *(_DWORD *)(v3 + 4) != 7 )
     {
       Rules_PrintErrorID((int)aMsgfun, 5, 0);
-      Output_Write((int)off_51A614[0], v7, v7);
-      Output_Write((int)off_51A614[0], (int)aOperatesOnlyOn, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v7);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOperatesOnlyOn, v8);
       Lexer_ErrorRecover(1);
       return 0;
     }
@@ -139289,8 +139279,8 @@ signed int __fastcall MessageHandler_CheckCurrentMessage(int a1, int a2)
   else
   {
     Rules_PrintErrorID((int)aMsgfun, 4, 0);
-    Output_Write((int)off_51A614[0], v5, v5);
-    Output_Write((int)off_51A614[0], (int)aMayOnlyBeCalle, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v5, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMayOnlyBeCalle, v6);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -139465,9 +139455,9 @@ signed int MessageHandler_ReportUnableToDelete()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aMsgfun, 8, 0);
-  Output_Write((int)off_51A614[0], (int)aUnableToDele_2, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)a__20, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDele_2, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__20, v2);
 }
 // 4AEED0: variable 'v0' is possibly undefined
 // 4AEEDC: variable 'v1' is possibly undefined
@@ -139591,7 +139581,7 @@ signed int  MessageHandler_TraceHandlerCall(int a1, int *a2, int a3)
   Output_Write(a1, (int)aHnd, a1);
   Output_Write(v4, a3, v4);
   Output_Write(v5, (int)asc_5092EC, v5);
-  MessageHandler_PrintNameTypeAndClass((int)off_51A618[0], (_DWORD *)*a2, 1);
+  MessageHandler_PrintNameTypeAndClass((int)g_IO_LogicalNameTable_WTrace[0], (_DWORD *)*a2, 1);
   Output_Write(v6, (int)aEd, v6);
   Rules_PrintLongInteger(v7, dword_51A96C);
   return ProcParam_PrintArguments(v8);
@@ -139758,7 +139748,7 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *a1, double a2)
     if ( !MessageHandler_HasNextHandler() )
     {
       Rules_PrintErrorID((int)aMsgpass, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aShadowedMessag, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aShadowedMessag, v12);
       return (_DWORD *)Lexer_ErrorRecover(1);
     }
     Symbol = Rules_MakeSymbol(aOverrideNext_0);
@@ -139797,7 +139787,7 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *a1, double a2)
       dword_51AD58 = dword_51AD60;
       dword_51AD60 = *(_DWORD *)(dword_51AD60 + 4);
       if ( (*(_BYTE *)*v11 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], v11, (int)asc_509548);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], v11, (int)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
           **(_DWORD **)(*(_DWORD *)(*(_DWORD *)dword_51AD58 + 12) + 8),
@@ -139808,7 +139798,7 @@ _DWORD * MessageHandler_CallNextHandler(_DWORD *a1, double a2)
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
       result = *(_DWORD **)dword_51AD58;
       if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-        result = (_DWORD *)MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_50954C);
+        result = (_DWORD *)MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_50954C);
     }
     dword_51AD60 = (int)v11;
     dword_51AD58 = v10;
@@ -140029,7 +140019,7 @@ signed int  MessageHandler_PutSelfSlotDirect(int a1, _DWORD *a2, double a3)
     }
   }
   slot_descriptor = *(_DWORD *)(uintptr_t)(unsigned int)slot_value;
-  if ( (*(_BYTE *)(uintptr_t)(unsigned int)slot_descriptor & 0x20) != 0 && !dword_51A27C )
+  if ( (*(_BYTE *)(uintptr_t)(unsigned int)slot_descriptor & 0x20) != 0 && !g_Instance_SlotInitInProgress )
   {
     MessageHandler_ReportSlotWriteAccessDenied(*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)slot_descriptor + 8) + 12) + 16), 1);
 LABEL_6:
@@ -140140,7 +140130,7 @@ signed int  MessageHandler_DynamicPutSlot(_DWORD *a1, int a2, double a3)
       if ( v7 )
       {
         v10 = *(_BYTE *)*v7;
-        if ( (v10 & 0x10) != 0 && ((v10 & 0x20) == 0 || !dword_51A27C ? (v12 = 1) : (v12 = 0), v12) )
+        if ( (v10 & 0x10) != 0 && ((v10 & 0x20) == 0 || !g_Instance_SlotInitInProgress ? (v12 = 1) : (v12 = 0), v12) )
         {
           MessageHandler_ReportSlotWriteAccessDenied(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*v9 + 8) + 12) + 16), 1);
           return Lexer_ErrorRecover(1);
@@ -140280,9 +140270,9 @@ LABEL_7:
     if ( !v19 )
     {
       Rules_PrintErrorID((int)aMsgpass, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aNoSuchInstan_0, 0);
-      Output_Write((int)off_51A614[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(dword_51ABB8 + 8) + 16), 0);
-      Output_Write((int)off_51A614[0], (int)aInFunctionSend, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchInstan_0, 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(dword_51ABB8 + 8) + 16), 0);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionSend, 0);
       goto LABEL_7;
     }
     *(_DWORD *)(dword_51ABB8 + 8) = (int)(uintptr_t)v19;
@@ -140313,7 +140303,7 @@ LABEL_8:
         dword_51AD60 = v14;
         dword_51AD58 = 0;
         if ( dword_51AD50 )
-          MessageHandler_TraceMessageSend((int)off_51A618[0], (int)asc_509548);
+          MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_509548);
         MessageHandler_CallHandlers(a1, a4);
       }
       else
@@ -140321,9 +140311,9 @@ LABEL_8:
         dword_51AD58 = v14;
         dword_51AD60 = *(_DWORD *)(v14 + 4);
         if ( dword_51AD50 )
-          MessageHandler_TraceMessageSend((int)off_51A618[0], (int)asc_509548);
+          MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_509548);
         if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-          MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_509548);
+          MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_509548);
         if ( MessageHandler_CheckArgCount() )
           Rules_ExecuteRuleActions(
             **(_DWORD **)(*(_DWORD *)(*(_DWORD *)dword_51AD58 + 12) + 8),
@@ -140333,10 +140323,10 @@ LABEL_8:
             a4,
             (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
         if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-          MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_50954C);
+          MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_50954C);
       }
       if ( dword_51AD50 )
-        MessageHandler_TraceMessageSend((int)off_51A618[0], (int)asc_50954C);
+        MessageHandler_TraceMessageSend((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50954C);
       MessageHandler_FreeHandlerCore(dword_51AD5C);
       dword_51AD60 = v15;
       dword_51AD58 = v23;
@@ -140436,7 +140426,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
       dword_51AD58 = dword_51AD60;
       dword_51AD60 = *(_DWORD *)(dword_51AD60 + 4);
       if ( (*(_BYTE *)*v5 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], v5, (int)asc_509548);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], v5, (int)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
           **(_DWORD **)(*(_DWORD *)(*(_DWORD *)dword_51AD58 + 12) + 8),
@@ -140446,7 +140436,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
       if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_50954C);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_50954C);
       result = 0;
       qword_51ACC0 = 0;
       if ( !dword_51AD60 || dword_51A968 )
@@ -140457,7 +140447,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
       dword_51AD58 = dword_51AD60;
       dword_51AD60 = *(_DWORD *)(dword_51AD60 + 4);
       if ( (*(_BYTE *)*v5 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], v5, (int)asc_509548);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], v5, (int)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
           **(_DWORD **)(*(_DWORD *)(*(_DWORD *)dword_51AD58 + 12) + 8),
@@ -140468,7 +140458,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
       result = *(_DWORD **)dword_51AD58;
       if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-        result = (_DWORD *)MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_50954C);
+        result = (_DWORD *)MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_50954C);
       qword_51ACC0 = 0;
       if ( !dword_51AD60 || dword_51A968 )
         goto LABEL_14;
@@ -140489,7 +140479,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
       dword_51AD58 = dword_51AD60;
       dword_51AD60 = *(_DWORD *)(dword_51AD60 + 4);
       if ( (*(_BYTE *)*v7 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], v7, (int)asc_509548);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], v7, (int)asc_509548);
       if ( MessageHandler_CheckArgCount() )
         Rules_ExecuteRuleActions(
           **(_DWORD **)(*(_DWORD *)(*(_DWORD *)dword_51AD58 + 12) + 8),
@@ -140499,7 +140489,7 @@ _DWORD * MessageHandler_CallHandlers(_DWORD *result, double a2)
           a2,
           (void (*)(void))Rules_ReportUndefinedMessageHandlerName);
       if ( (**(_BYTE **)dword_51AD58 & 0x10) != 0 )
-        MessageHandler_TraceHandlerCall((int)off_51A618[0], (int *)dword_51AD58, (int)asc_50954C);
+        MessageHandler_TraceHandlerCall((int)g_IO_LogicalNameTable_WTrace[0], (int *)dword_51AD58, (int)asc_50954C);
       result = (_DWORD *)dword_51AD60;
       qword_51ACC0 = 0;
       if ( !dword_51AD60 )
@@ -140530,12 +140520,12 @@ signed int  MessageHandler_ReportStaticSlotAccessError(int a1, int a2, int a3)
 
   v4 = *(_DWORD *)(*(_DWORD *)(a2 + 56) + 4 * *(_DWORD *)(*(_DWORD *)(a2 + 60) + 4 * a3) - 4);
   Rules_PrintErrorID((int)aMsgpass, 3, 0);
-  Output_Write((int)off_51A614[0], (int)aStaticReferenc, v5);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v4 + 8) + 12) + 16), v6);
-  Output_Write((int)off_51A614[0], (int)aOfClass_2, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aStaticReferenc, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v4 + 8) + 12) + 16), v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfClass_2, v7);
   Class_PrintName(v8, 0);
-  Output_Write((int)off_51A614[0], (int)aDoesNotApplyTo, v9);
-  return Instance_PrintNameOfClass((int)off_51A614[0], a1, 1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotApplyTo, v9);
+  return Instance_PrintNameOfClass((int)g_IO_LogicalNameTable_WError[0], a1, 1);
 }
 // 4B031F: variable 'v5' is possibly undefined
 // 4B0332: variable 'v6' is possibly undefined
@@ -140911,7 +140901,7 @@ int  Class_AddBusyReference(int result)
 //----- (004B08F0) --------------------------------------------------------
 int  Class_ReleaseBusyReference(int result)
 {
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
     --*(_DWORD *)(result + 26);
   return result;
 }
@@ -140977,11 +140967,11 @@ int __fastcall Class_ReportLookupError(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aClassfun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aUnableToFindCl, v3);
-  Output_Write((int)off_51A614[0], a2, v4);
-  Output_Write((int)off_51A614[0], (int)aInFunction_1, v5);
-  Output_Write((int)off_51A614[0], v6, v6);
-  Output_Write((int)off_51A614[0], (int)a__21, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFindCl, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_1, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v6, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__21, v7);
   return Lexer_ErrorRecover(1);
 }
 // 4B0A02: variable 'v3' is possibly undefined
@@ -141811,9 +141801,9 @@ signed int Class_NewTraversalID()
   if ( (unsigned __int8)byte_51ADA0 >= 0x80u )
   {
     Rules_PrintErrorID((int)aClassfun, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aMaximumNumberO, v3);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMaximumNumberO, v3);
     Rules_PrintLongInteger(v4, 128);
-    Output_Write((int)off_51A614[0], (int)a__21, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__21, v5);
     Lexer_ErrorRecover(1);
     return -1;
   }
@@ -142809,18 +142799,18 @@ signed int Rules_PrintObjectPatternNetworkError()
   int v12; // ecx
 
   Rules_PrintErrorID((int)aObjrtmch, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aThisErrorOcc_2, v0);
-  Output_Write((int)off_51A614[0], (int)aCurrentlyAct_0, v1);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(dword_51B478 + 28) + 16), v2);
-  Output_Write((int)off_51A614[0], (int)asc_509714, v3);
-  Output_Write((int)off_51A614[0], (int)aProblemResid_2, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThisErrorOcc_2, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCurrentlyAct_0, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(dword_51B478 + 28) + 16), v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509714, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aProblemResid_2, v4);
   v6 = Class_GetSlotNameByID(*(_DWORD *)(v5 + 8));
-  Output_Write((int)off_51A614[0], *(_DWORD *)(v6 + 16), v7);
-  Output_Write((int)off_51A614[0], (int)aField, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v6 + 16), v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField, v8);
   Rules_PrintLongInteger((int)v9, *v9 << 21 >> 24);
-  Output_Write((int)off_51A614[0], (int)asc_509740, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509740, v10);
   Rules_PrintObjectPatternErrorDetail(1, v11, (int)v11);
-  return Output_Write((int)off_51A614[0], (int)asc_509740, v12);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_509740, v12);
 }
 // 4B26A0: variable 'v0' is possibly undefined
 // 4B26AF: variable 'v1' is possibly undefined
@@ -142855,9 +142845,9 @@ int  Rules_PrintObjectPatternErrorDetail(int result, int *a2, int j)
     {
       for ( j = *(_DWORD *)(v5 + 8); j; j = *(_DWORD *)(v8 + 32) )
       {
-        Output_Write((int)off_51A614[0], (int)aOfPattern, j);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfPattern, j);
         Rules_PrintLongInteger((int)v6, *v6 << 16 >> 25);
-        Output_Write((int)off_51A614[0], (int)aInRuleS, v7);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInRuleS, v7);
         Rules_PrintJoinNetworkSharingReport();
       }
     }
@@ -143133,23 +143123,23 @@ signed int  Rules_PrintConstraintViolationMessage(
     if ( !a1 )
       goto LABEL_5;
     Rules_PrintErrorID((int)aCstrnchk_1, 1, 1);
-    Output_Write((int)off_51A614[0], a1, v19);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v19);
     v14 = asc_50979C;
   }
-  Output_Write((int)off_51A614[0], (int)v14, v13);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v14, v13);
 LABEL_5:
   if ( a2 )
   {
-    Output_Write((int)off_51A614[0], (int)aFoundIn_0, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundIn_0, v12);
     if ( a4 )
-      Output_Write((int)off_51A614[0], (int)aThe, v15);
-    Output_Write((int)off_51A614[0], a2, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe, v15);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v15);
     if ( a4 )
-      Output_Write((int)off_51A614[0], (int)aCommand_0, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCommand_0, v12);
   }
   if ( a3 > 0 )
   {
-    Output_Write((int)off_51A614[0], (int)aFoundInCe, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInCe, v12);
     Rules_PrintLongInteger(v16, a3);
   }
 LABEL_12:
@@ -143159,11 +143149,11 @@ LABEL_12:
     case 4:
       v17 = aDoesNotMatchTh;
 LABEL_14:
-      Output_Write((int)off_51A614[0], (int)v17, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v17, v12);
       break;
     case 2:
-      Output_Write((int)off_51A614[0], (int)aDoesNotFallInT, 2);
-      Rules_PrintConstraintRange((int)off_51A614[0], a8);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotFallInT, 2);
+      Rules_PrintConstraintRange((int)g_IO_LogicalNameTable_WError[0], a8);
       break;
     case 3:
       v17 = aDoesNotMatch_0;
@@ -143174,15 +143164,15 @@ LABEL_14:
   }
   if ( a5 )
   {
-    Output_Write((int)off_51A614[0], (int)aForSlot, v12);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(a5 + 16), v20);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForSlot, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a5 + 16), v20);
   }
   else if ( a6 > 0 )
   {
-    Output_Write((int)off_51A614[0], (int)aForField, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForField, v12);
     Rules_PrintLongInteger(v21, a6);
   }
-  return Output_Write((int)off_51A614[0], (int)a__29, v12);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__29, v12);
 }
 // 4B2BD2: variable 'v13' is possibly undefined
 // 4B2BE8: variable 'v12' is possibly undefined
@@ -144822,22 +144812,22 @@ int __thiscall IO_FindOpenFileByLogicalName(void *this)
     result = strcmp_(v2, aStdin_0);
     if ( result )
     {
-      result = strcmp_(v3, off_51A618[0]);
+      result = strcmp_(v3, g_IO_LogicalNameTable_WTrace[0]);
       if ( result )
       {
-        result = strcmp_(v4, off_51A61C[0]);
+        result = strcmp_(v4, g_IO_LogicalNameTable_WDialog[0]);
         if ( result )
         {
-          result = strcmp_(v5, off_51A620[0]);
+          result = strcmp_(v5, g_IO_LogicalNameTable_WClips[0]);
           if ( result )
           {
-            result = strcmp_(v6, off_51A624);
+            result = strcmp_(v6, g_IO_LogicalName_WDisplay);
             if ( result )
             {
-              result = strcmp_(v7, off_51A614[0]);
+              result = strcmp_(v7, g_IO_LogicalNameTable_WError[0]);
               if ( result )
               {
-                result = strcmp_(v8, off_51A610[0]);
+                result = strcmp_(v8, g_IO_LogicalNameTable_WWarning[0]);
                 if ( result )
                 {
                   v9 = (_DWORD *)dword_51AEF8;
@@ -144932,8 +144922,8 @@ int __thiscall IO_FileIOGetcCallback(void *this)
   {
     v2 = fgetc_(v1, v2);
   }
-  if ( v2 == __PAIR64__(&unk_51A340, -1) )
-    byte_51A34C &= 0xCFu;
+  if ( v2 == __PAIR64__(&g_IO_FileGetcSentinelAddr, -1) )
+    g_IO_FileGetcStreamFlags &= 0xCFu;
   return v2;
 }
 // 488F44: using guessed type __int64 __fastcall fgetc_(_DWORD, _DWORD);
@@ -145183,14 +145173,14 @@ int  CRT_TzRuleDayOfYear(_DWORD *a1, int a2)
     if ( CRT_IsLeapYear(a2 + 1900) )
     {
       v5 = a1[4];
-      v6 = *(int *)((char *)&dword_511108 + 2 * v5 + 2);
-      v7 = *(int *)((char *)&dword_511108 + 2 * v5);
+      v6 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * v5 + 2);
+      v7 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * v5);
     }
     else
     {
       v8 = a1[4];
-      v6 = *(int *)((char *)&dword_5110EE + 2 * v8 + 2);
-      v7 = *(int *)((char *)&dword_5110EE + 2 * v8);
+      v6 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * v8 + 2);
+      v7 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * v8);
     }
     v9 = (v6 >> 16) - (v7 >> 16);
     memset(v14, 0, 12);
@@ -145295,13 +145285,13 @@ int  CRT_IsDaylightTime(_DWORD *a1)
   v6 = *(_DWORD *)(v3 + 16);
   if ( CRT_IsLeapYear(*(_DWORD *)(v3 + 20) + 1900) )
   {
-    v7 = *(int *)((char *)&dword_511108 + 2 * v6 + 2);
-    v8 = *(int *)((char *)&dword_511108 + 2 * v6);
+    v7 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * v6 + 2);
+    v8 = *(int *)((char *)&g_CRT_LeapMonthDayTable + 2 * v6);
   }
   else
   {
-    v7 = *(int *)((char *)&dword_5110EE + 2 * v6 + 2);
-    v8 = *(int *)((char *)&dword_5110EE + 2 * v6);
+    v7 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * v6 + 2);
+    v8 = *(int *)((char *)&g_CRT_NonLeapMonthDayTable + 2 * v6);
   }
   v28 = (v7 >> 16) - (v8 >> 16);
   v9 = v4[8];
@@ -145310,7 +145300,7 @@ int  CRT_IsDaylightTime(_DWORD *a1)
     v13 = v4[7];
     if ( v9 == 1 )
     {
-      if ( CRT_IsLeapYear(v1[5] + 1900) && v14 > dword_5110F2 >> 16 )
+      if ( CRT_IsLeapYear(v1[5] + 1900) && v14 > g_CRT_NonLeapFebMarDayThreshold >> 16 )
         ++v14;
       v13 = v14 - 1;
     }
@@ -145370,7 +145360,7 @@ LABEL_28:
     v22 = v5[7];
     if ( v16 == 1 )
     {
-      if ( CRT_IsLeapYear(v1[5] + 1900) && v23 > dword_5110F2 >> 16 )
+      if ( CRT_IsLeapYear(v1[5] + 1900) && v23 > g_CRT_NonLeapFebMarDayThreshold >> 16 )
         ++v23;
       v22 = v23 - 1;
     }
@@ -146537,12 +146527,12 @@ int __fastcall Rules_CreateInitialFactPatternNode(int a1, int a2)
   if ( !Rules_FindImportExportConstruct(aDeftemplate_7, v17, aInitialFact, 1, 0) )
   {
     Rules_PrintWarningID((int)aFactlhs, 1, 0);
-    Output_Write((int)off_51A610[0], (int)aCreatingImplie, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aCreatingImplie, v9);
     v10 = Module_GetCurrent();
     Name = Module_GetName(v10);
-    Output_Write((int)off_51A610[0], Name, (int)off_51A610[0]);
-    Output_Write((int)off_51A610[0], (int)a__22, v12);
-    Output_Write((int)off_51A610[0], (int)aYouProbablyWan, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], Name, (int)g_IO_LogicalNameTable_WWarning[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)a__22, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aYouProbablyWan, v13);
     v15 = Str_Intern(aInitialFact, v14);
     Rules_CreateDeftemplateRecord((int)v15, v16);
   }
@@ -146677,12 +146667,12 @@ signed int __fastcall Rules_PrintReservedSymbolErrorMessage(int a1, int a2)
   int v8; // ecx
 
   Rules_PrintErrorID((int)aPattern, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aTheSymbol, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aHasSpecialMean, v5);
-  Output_Write((int)off_51A614[0], (int)aAndMayNotBeUse, v6);
-  Output_Write((int)off_51A614[0], a2, v7);
-  return Output_Write((int)off_51A614[0], (int)a__8, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheSymbol, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasSpecialMean, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAndMayNotBeUse, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v7);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__8, v8);
 }
 // 4B80F2: variable 'v3' is possibly undefined
 // 4B80FE: variable 'v4' is possibly undefined
@@ -147407,7 +147397,7 @@ LABEL_7:
   if ( !v1 && !v9 )
     return 0;
   Rules_PrintErrorID((int)aPattern, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aSingleAndMulti, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSingleAndMulti, v7);
   return 1;
 }
 // 4B8B48: conditional instruction was optimized away because %var_24.4!=0
@@ -149037,7 +149027,7 @@ int  Rules_DeftemplateBloadRefreshRecord(_DWORD *a1, int a2)
   v7 = a1[4];
   *(_BYTE *)(v4 + 24) &= ~1u;
   *(_DWORD *)(v4 + 24) |= v7 & 1;
-  v8 = dword_51A150 & 1;
+  v8 = g_Rules_WatchFactsFlag & 1;
   *(_BYTE *)(v4 + 24) &= ~2u;
   *(_DWORD *)(v4 + 24) |= 2 * v8;
   *(_BYTE *)(v4 + 24) &= ~4u;
@@ -150068,7 +150058,7 @@ int  Rules_JoinBloadFixup(_DWORD *a1, int a2)
   *(_BYTE *)(dword_54E860 + v15 + 29) &= ~0x80u;
   *(_BYTE *)(dword_54E860 + v15 + 29) &= ~8u;
   v20 = dword_54E860;
-  v21 = dword_51A1DC & 1;
+  v21 = g_Rules_WatchActivationsFlag & 1;
   *(_BYTE *)(dword_54E860 + v15 + 29) &= ~0x10u;
   *(_DWORD *)(v20 + v15 + 28) |= v21 << 12;
   result = dword_54E860 + v15;
@@ -151561,7 +151551,7 @@ int  Rules_SetIncrementalResetCommand(int a1, double a2)
   if ( Rules_GetNextDefrule(0) )
   {
     Rules_PrintErrorID((int)aIncrrset, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aTheIncremental, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheIncremental, v7);
     Lexer_ErrorRecover(1);
     return v8;
   }
@@ -151619,7 +151609,7 @@ int a2;
   if ( v6[0] == 2 )
     return Parser_ParseFunctionCallExpr(v3, *(_BYTE **)(v6[1] + 16));
   Rules_PrintErrorID((int)aExprnpsr, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aAFunctionNameM, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAFunctionNameM, v4);
   return 0;
 }
 // 4BD2F0: variable 'v4' is possibly undefined
@@ -151670,9 +151660,9 @@ int  Parser_ParseFunctionCallExpr(int a1, _BYTE *a2)
       if ( !Symbol )
       {
         Rules_PrintErrorID((int)aExprnpsr, 3, 1);
-        Output_Write((int)off_51A614[0], (int)aMissingFunctio, v15);
-        Output_Write((int)off_51A614[0], (int)a2, v16);
-        Output_Write((int)off_51A614[0], (int)aDotNewline_ParserError, v17);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMissingFunctio, v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a2, v16);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ParserError, v17);
         return 0;
       }
       v10 = 10;
@@ -151807,9 +151797,9 @@ LABEL_13:
       return 0;
   }
   Rules_PrintErrorID((int)aExprnpsr, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aSequenceOperat, v13);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(**(_DWORD **)(a2 + 2) + 16), v14);
-  Output_Write((int)off_51A614[0], (int)aDotNewline_ParserError, v15);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSequenceOperat, v13);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(a2 + 2) + 16), v14);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDotNewline_ParserError, v15);
   return 1;
 }
 // 4BD667: variable 'v13' is possibly undefined
@@ -152015,7 +152005,7 @@ signed int  Parser_ParseArgument(int a1, _DWORD *a2, int a3)
   else
   {
     Rules_PrintErrorID((int)aExprnpsr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aExpectedAConst, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAConst, v6);
     *a2 = 1;
     return 0;
   }
@@ -152051,7 +152041,7 @@ int  Parser_ParseSingleExpression(int a1, __int16 *a2, int a3)
   if ( v5 != 100 )
   {
     Rules_PrintErrorID((int)aExprnpsr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aExpectedAConst, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAConst, v8);
     return 0;
   }
   result = Parser_ParseExpression(v3, v3);
@@ -152180,7 +152170,7 @@ LABEL_11:
             goto LABEL_11;
         }
         Rules_PrintErrorID((int)aExprnpsr, 7, 0);
-        Output_Write((int)off_51A614[0], (int)aOnlyConstantAr, v8);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOnlyConstantAr, v8);
         AST_Free(v9);
         *a2 = 1;
         IO_CloseStringRouter((int)aClipsfnxargs);
@@ -152190,7 +152180,7 @@ LABEL_11:
     else
     {
       Rules_PrintErrorID((int)aExprnpsr, 6, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotReadArgu, v7);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotReadArgu, v7);
       *a2 = 1;
       return 0;
     }
@@ -152230,7 +152220,7 @@ signed int Parser_AddFunctionParser(_BYTE *function_name, int handler)
     *(int **)((char *)symbol + 13) = (int *)handler;
     return 1;
   }
-  Output_Write((int)off_51A614[0], (int)aFunctionParser, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFunctionParser, v3);
   return 0;
 }
 // 51A614: using guessed type char *off_51A614[5];
@@ -152528,7 +152518,7 @@ LABEL_13:
   Parser_FreeLoopContextStack();
   dword_54E880 = v29;
   Rules_PrintErrorID((int)aPrcdrpsr, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aCannotRebindLo, v24);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindLo, v24);
   AST_Free(a1);
   return 0;
 }
@@ -152804,7 +152794,7 @@ int __fastcall Parser_ParseReturn(int a1, int a2)
   else if ( !dword_54E87C )
   {
     Rules_PrintErrorID((int)aPrcdrpsr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aTheReturnFunct, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheReturnFunct, v9);
     AST_Free(v10);
     return 0;
   }
@@ -152852,7 +152842,7 @@ int __fastcall Parser_ParseBreak(int a1, int a2)
   if ( !*(_DWORD *)(dword_51B35C + 4) )
   {
     Rules_PrintErrorID((int)aPrcdrpsr, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aTheBreakFuncti, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheBreakFuncti, v6);
     goto LABEL_4;
   }
   IO_OutWriteToken(asc_50A54C);
@@ -152948,7 +152938,7 @@ int  Parser_ParseSwitch(int a1, int a2)
             goto LABEL_15;
         }
         Rules_PrintErrorID((int)aPrcdrpsr, 3, 1);
-        Output_Write((int)off_51A614[0], (int)aDuplicateCaseF, v21);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateCaseF, v21);
         goto LABEL_5;
       }
 LABEL_15:
@@ -153315,9 +153305,9 @@ LABEL_16:
           result = Rules_GetEvaluationErrorFlag();
           if ( result == 1 )
             return result;
-          Output_Write((int)off_51A624, (int)aPartialMatches, v22);
+          Output_Write((int)g_IO_LogicalName_WDisplay, (int)aPartialMatches, v22);
           Rules_PrintLongInteger(v23, v20 + 1);
-          Output_Write((int)off_51A624, (int)asc_50A998, v24);
+          Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50A998, v24);
           v25 = *v21;
           for ( i = 0; v25; v25 = v27[1] )
           {
@@ -153326,13 +153316,13 @@ LABEL_16:
               return result;
             if ( (*(_BYTE *)v27 & 0x20) == 0 )
             {
-              Rules_PrintArgumentValueList((int)off_51A624, v27);
+              Rules_PrintArgumentValueList((int)g_IO_LogicalName_WDisplay, v27);
               ++i;
-              Output_Write((int)off_51A624, (int)asc_50A998, v28);
+              Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50A998, v28);
             }
           }
           if ( !i )
-            Output_Write((int)off_51A624, (int)aNone_3, v25);
+            Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone_3, v25);
           ++v20;
           ++v21;
         }
@@ -153349,19 +153339,19 @@ LABEL_16:
       result = Rules_GetEvaluationErrorFlag();
       if ( result == 1 )
         break;
-      Output_Write((int)off_51A624, (int)aMatchesForPatt, v11);
+      Output_Write((int)g_IO_LogicalName_WDisplay, (int)aMatchesForPatt, v11);
       Rules_PrintLongInteger(v12, v8 + 1);
-      Output_Write((int)off_51A624, (int)asc_50A998, v13);
+      Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50A998, v13);
       v14 = *v9;
       if ( !*v9 )
-        Output_Write((int)off_51A624, (int)aNone_3, 0);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone_3, 0);
       while ( v14 )
       {
         result = Rules_GetEvaluationErrorFlag();
         if ( result == 1 )
           return result;
-        Rules_PrintArgumentValueList((int)off_51A624, v31);
-        Output_Write((int)off_51A624, (int)asc_50A998, v32);
+        Rules_PrintArgumentValueList((int)g_IO_LogicalName_WDisplay, v31);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50A998, v32);
         v14 = *(_DWORD *)(v33 + 4);
       }
       ++v8;
@@ -153373,7 +153363,7 @@ LABEL_16:
   else
   {
 LABEL_31:
-    Output_Write((int)off_51A624, (int)aActivations_1, a2);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aActivations_1, a2);
     v30 = (_DWORD **)Rules_GetNextActivation(0);
     if ( v30 )
     {
@@ -153384,8 +153374,8 @@ LABEL_31:
           break;
         if ( *a1 == **v30 )
         {
-          Rules_PrintArgumentValueList((int)off_51A624, v30[1]);
-          Output_Write((int)off_51A624, (int)asc_50A998, 0);
+          Rules_PrintArgumentValueList((int)g_IO_LogicalName_WDisplay, v30[1]);
+          Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50A998, 0);
         }
         v30 = (_DWORD **)Rules_GetNextActivation((int)v30);
         if ( !v30 )
@@ -153396,7 +153386,7 @@ LABEL_31:
     {
 LABEL_36:
       if ( v29 )
-        Output_Write((int)off_51A624, (int)aNone_3, v29);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNone_3, v29);
       return 1;
     }
   }
@@ -153465,7 +153455,7 @@ void  Rules_FreeDefruleDisjunctChain(int a1)
       v1 = v3;
     }
     while ( v3 );
-    if ( !dword_51A1F0 )
+    if ( !g_Rules_CurrentlyExecutingRule )
       Rules_FlushPendingNetworkGarbage();
   }
 }
@@ -154051,13 +154041,13 @@ signed int  Rules_ValidateLogicalCEPlacement(signed int result)
         if ( !v4 )
         {
           Rules_PrintErrorID((int)aRulepsr_0, 1, 1);
-          Output_Write((int)off_51A614[0], (int)aLogicalCesMust, v5);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aLogicalCesMust, v5);
           return -1;
         }
         if ( v3 )
         {
           Rules_PrintErrorID((int)aRulepsr_0, 2, 1);
-          Output_Write((int)off_51A614[0], (int)aGapsMayNotExis, v6);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGapsMayNotExis, v6);
           return -1;
         }
         v1 = *(_DWORD *)(result + 48);
@@ -155351,7 +155341,7 @@ _BYTE * Module_PPDefmoduleCommand(int a1, double a2)
 
   result = (_BYTE *)Rules_GetConstructNameArg((int)aDefmoduleNam_3, a1, a2);
   if ( result )
-    return (_BYTE *)Module_PrintPPFormByName(result, (signed int)off_51A624);
+    return (_BYTE *)Module_PrintPPFormByName(result, (signed int)g_IO_LogicalName_WDisplay);
   return result;
 }
 // 51A624: using guessed type char *off_51A624;
@@ -155390,7 +155380,7 @@ int Module_ListDefmodulesCommand()
 
   result = Lexer_TokenExpect(0);
   if ( result != -1 )
-    return Module_PrintAllNamesWithTally((int)off_51A624);
+    return Module_PrintAllNamesWithTally((int)g_IO_LogicalName_WDisplay);
   return result;
 }
 // 51A624: using guessed type char *off_51A624;
@@ -156185,32 +156175,32 @@ signed int  Rules_ReportConstructNotExported(int a1, char *a2)
   int v13; // ecx
 
   Rules_PrintErrorID((int)aModulpsr, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aModule, v3);
-  Output_Write((int)off_51A614[0], a1, v4);
-  Output_Write((int)off_51A614[0], (int)aDoesNotExport, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aModule, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDoesNotExport, v5);
   if ( v6 )
   {
     if ( a2 )
     {
-      Output_Write((int)off_51A614[0], (int)aThe_1, v6);
-      Output_Write((int)off_51A614[0], v12, v12);
-      Output_Write((int)off_51A614[0], (int)asc_50AC58, v13);
-      v9 = off_51A614[0];
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe_1, v6);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v12, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50AC58, v13);
+      v9 = g_IO_LogicalNameTable_WError[0];
       v8 = a2;
       goto LABEL_5;
     }
-    Output_Write((int)off_51A614[0], (int)aAny, v6);
-    Output_Write((int)off_51A614[0], v7, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAny, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v7);
     v8 = aConstructs;
   }
   else
   {
     v8 = aAnyConstructs;
   }
-  v9 = off_51A614[0];
+  v9 = g_IO_LogicalNameTable_WError[0];
 LABEL_5:
   Output_Write((int)v9, (int)v8, v6);
-  return Output_Write((int)off_51A614[0], (int)a__30, v10);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__30, v10);
 }
 // 4C1CD4: variable 'v3' is possibly undefined
 // 4C1CE0: variable 'v4' is possibly undefined
@@ -156550,9 +156540,9 @@ signed int  Rules_GetSlotAssertValues(_DWORD *a1, int a2, int a3, _DWORD *a4)
     if ( (v6 & 2) != 0 )
     {
       Rules_PrintErrorID((int)aTmpltrhs, 1, 1);
-      Output_Write((int)off_51A614[0], (int)aSlot_1, v12);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)v13 + 16), v13);
-      Output_Write((int)off_51A614[0], (int)aRequiresAValue, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_1, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)v13 + 16), v13);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRequiresAValue, v14);
       *a4 = 1;
       return 0;
     }
@@ -156569,7 +156559,7 @@ signed int  Rules_GetSlotAssertValues(_DWORD *a1, int a2, int a3, _DWORD *a4)
   }
   if ( (*(_BYTE *)(v5 + 4) & 1) != 0 )
   {
-    v9 = Rules_AddBitmapValue(byte_50AD7C, 1);
+    v9 = Rules_AddBitmapValue(g_Rules_SlotAssertBitmapScratch, 1);
     v10 = AST_NewNode(34, v9);
     *(_DWORD *)(v10 + 6) = v8;
     return v10;
@@ -156970,9 +156960,9 @@ int  Lexer_ParseModifyOrDuplicate(int a1, int a2, _BYTE *a3)
     if ( !Rules_IsEvaluatingTopLevelCommand() )
     {
       Rules_PrintErrorID((int)aTmpltfun_0, v4, v4);
-      Output_Write((int)off_51A614[0], (int)aFactIndexesCan, v14);
-      Output_Write((int)off_51A614[0], (int)a3, v15);
-      Output_Write((int)off_51A614[0], (int)aAsATopLevelCom, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFactIndexesCan, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a3, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAsATopLevelCom, v16);
       AST_Free(v22);
       return 0;
     }
@@ -159562,7 +159552,7 @@ const void * Class_BsaveWriteData(int a1)
     while ( v6 != 668 );
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteHandlerRecords, 0);
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteSlotNameTable, 0);
-    Rules_DoForAllConstructs((void (*)(void))&off_4C61F0, 0);
+    Rules_DoForAllConstructs((void (*)(void))&g_Class_BsaveWriteUnknownSectionFn, 0);
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteSlotRecords, 0);
     Rules_DoForAllConstructs((void (*)(void))Class_BsaveWriteHandlerDispatchTable, 0);
     result = (const void *)Rules_IsBloaded();
@@ -161703,10 +161693,10 @@ signed int Defgeneric_PrintCannotModifyError()
   int v3; // ecx
 
   Rules_PrintErrorID((int)aGenrcfun, 1, 0);
-  Output_Write((int)off_51A614[0], (int)aDefgeneric_0, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefgeneric_0, v0);
   v2 = Rules_GetConstructNameString(v1);
-  Output_Write((int)off_51A614[0], v2, (int)off_51A614[0]);
-  return Output_Write((int)off_51A614[0], (int)aCannotBeModifi, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v2, (int)g_IO_LogicalNameTable_WError[0]);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeModifi, v3);
 }
 // 4C8160: variable 'v0' is possibly undefined
 // 4C8167: variable 'v1' is possibly undefined
@@ -161855,9 +161845,9 @@ signed int  Defgeneric_PreviewGenericCommand(double a1)
     else
     {
       Rules_PrintErrorID((int)aGenrcfun, 3, 0);
-      Output_Write((int)off_51A614[0], (int)aUnableToFindGe, v6);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(v10 + 16), v7);
-      return Output_Write((int)off_51A614[0], (int)aInFunctionPrev, v8);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFindGe, v6);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v10 + 16), v7);
+      return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionPrev, v8);
     }
   }
   return result;
@@ -161986,11 +161976,11 @@ int  Defgeneric_CheckGenericExists(int a1, _BYTE *a2)
   if ( !result )
   {
     Rules_PrintErrorID((int)aGenrcfun, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aUnableToFindGe, v4);
-    Output_Write((int)off_51A614[0], v5, v5);
-    Output_Write((int)off_51A614[0], (int)aInFunction_2, v6);
-    Output_Write((int)off_51A614[0], a1, v7);
-    Output_Write((int)off_51A614[0], (int)a__23, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFindGe, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v5, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_2, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__23, v8);
     Lexer_ErrorRecover(1);
     return 0;
   }
@@ -162020,14 +162010,14 @@ signed int  Defgeneric_CheckMethodExists(int a1, int a2, int a3)
   if ( result == -1 )
   {
     Rules_PrintErrorID((int)aGenrcfun, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aUnableToFindMe, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFindMe, v6);
     v7 = Rules_GetConstructNameString(a2);
-    Output_Write((int)off_51A614[0], v7, v8);
-    Output_Write((int)off_51A614[0], (int)asc_50B158, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50B158, v9);
     Rules_PrintLongInteger(v10, v10);
-    Output_Write((int)off_51A614[0], (int)aInFunction_2, v11);
-    Output_Write((int)off_51A614[0], a1, v12);
-    Output_Write((int)off_51A614[0], (int)a__23, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_2, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__23, v13);
     Lexer_ErrorRecover(1);
     return -1;
   }
@@ -162072,12 +162062,12 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
       if ( Method_RestrictionsSatisfiedByArgs(v5 + *(_DWORD *)(v2 + 28), a2) )
       {
         v6 = Rules_GetConstructNameString(v2);
-        Output_Write((int)off_51A624, v6, v7);
-        Output_Write((int)off_51A624, (int)asc_50B158, v8);
+        Output_Write((int)g_IO_LogicalName_WDisplay, v6, v7);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50B158, v8);
         Defgeneric_AppendMethodSignatureText(v15, 255, v9, v5 + *(_DWORD *)(v9 + 28));
-        Output_Write((int)off_51A624, (int)v15, v10);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)v15, v10);
         v3 = 1;
-        Output_Write((int)off_51A624, (int)asc_50B160, v11);
+        Output_Write((int)g_IO_LogicalName_WDisplay, (int)asc_50B160, v11);
       }
       --*(_DWORD *)(v5 + *(_DWORD *)(v2 + 28) + 4);
       ++v4;
@@ -162088,10 +162078,10 @@ unsigned int  Defgeneric_PrintApplicableMethods(unsigned int result, double a2)
   }
   if ( !v3 )
   {
-    Output_Write((int)off_51A624, (int)aNoApplicableMe, v2);
+    Output_Write((int)g_IO_LogicalName_WDisplay, (int)aNoApplicableMe, v2);
     v13 = Rules_GetConstructNameString(v12);
-    Output_Write((int)off_51A624, v13, (int)off_51A624);
-    return Output_Write((int)off_51A624, (int)a__23, v14);
+    Output_Write((int)g_IO_LogicalName_WDisplay, v13, (int)g_IO_LogicalName_WDisplay);
+    return Output_Write((int)g_IO_LogicalName_WDisplay, (int)a__23, v14);
   }
   return result;
 }
@@ -162597,7 +162587,7 @@ signed int  Defgeneric_ParseDefgeneric(int a1)
   else
   {
     Rules_PrintErrorID((int)aGenrcpsr, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aExpectedToComp, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedToComp, v6);
     return 1;
   }
 }
@@ -162695,11 +162685,11 @@ LABEL_9:
       Rules_PrintErrorID((int)aGenrcpsr, 17, 0);
       v13 = aCannotReplaceT;
 LABEL_17:
-      Output_Write((int)off_51A614[0], (int)v13, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v13, v12);
       v15 = *v14;
 LABEL_18:
       Rules_PrintLongInteger((int)v14, v15);
-      Output_Write((int)off_51A614[0], (int)a__12, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__12, v16);
 LABEL_19:
       Method_FreeRestrictionChain(v31);
       goto LABEL_9;
@@ -162707,7 +162697,7 @@ LABEL_19:
     if ( v33 && v33 != *(_DWORD *)v10 )
     {
       Rules_PrintErrorID((int)aGenrcpsr, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aNewMethod, v24);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNewMethod, v24);
       Rules_PrintLongInteger(v25, v33);
       v13 = aWouldBeIndisti;
       goto LABEL_17;
@@ -162723,7 +162713,7 @@ LABEL_19:
     else if ( (*(_BYTE *)(v5[7] + 40 * v26 + 24) & 1) != 0 )
     {
       Rules_PrintErrorID((int)aGenrcpsr, 17, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotReplaceT, v27);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotReplaceT, v27);
       v15 = v33;
       goto LABEL_18;
     }
@@ -162747,14 +162737,14 @@ LABEL_19:
   Method_FreeRestrictionChain(v31);
   if ( Rules_GetLoadInProgress() && Rules_GetWatchCompilations() )
   {
-    Output_Write((int)off_51A61C[0], (int)aMethod_0, v19);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aMethod_0, v19);
     v20 = v35;
     Rules_PrintLongInteger((int)v21, *v21);
     if ( v20 )
       v23 = aDefined_;
     else
       v23 = aRedefined_;
-    Output_Write((int)off_51A61C[0], (int)v23, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v23, v22);
   }
   return 0;
 }
@@ -163109,7 +163099,7 @@ signed int Defgeneric_ParseDeclaration()
   if ( Rules_FindConstructByName() )
   {
     Rules_PrintErrorID((int)aGenrcpsr, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aDefgenericsAre, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefgenericsAre, v14);
     return 0;
   }
   else
@@ -163123,18 +163113,18 @@ signed int Defgeneric_ParseDeclaration()
       if ( v5 == v4 )
       {
         Rules_PrintErrorID((int)aGenrcpsr, 5, 0);
-        Output_Write((int)off_51A614[0], (int)aDefgenericsA_0, v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefgenericsA_0, v15);
       }
       else
       {
         Rules_PrintErrorID((int)aGenrcpsr, 4, 0);
-        Output_Write((int)off_51A614[0], (int)aDeffunction_0, v6);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunction_0, v6);
         v7 = Rules_GetConstructNameString(v3);
-        Output_Write((int)off_51A614[0], v7, v8);
-        Output_Write((int)off_51A614[0], (int)aImportedFromMo, v9);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, v8);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aImportedFromMo, v9);
         Name = Module_GetName(v10);
-        Output_Write((int)off_51A614[0], Name, (int)off_51A614[0]);
-        Output_Write((int)off_51A614[0], (int)aConflictsWithT, v12);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], Name, (int)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConflictsWithT, v12);
       }
       return 0;
     }
@@ -163152,9 +163142,9 @@ signed int Defgeneric_ParseDeclaration()
         if ( Symbol && !*(_WORD *)((char *)Symbol + 21) )
         {
           Rules_PrintErrorID((int)aGenrcpsr, 16, 0);
-          Output_Write((int)off_51A614[0], (int)aTheSystemFunct, v19);
-          Output_Write((int)off_51A614[0], v20, v20);
-          Output_Write((int)off_51A614[0], (int)aCannotBeOverlo, v21);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheSystemFunct, v19);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], v20, v20);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotBeOverlo, v21);
           return 0;
         }
         else
@@ -163231,7 +163221,7 @@ int  Method_ParseIndexModifier(int a1, _DWORD *a2)
       if ( v10 < v11 )
       {
         Rules_PrintErrorID((int)aGenrcpsr, 6, 0);
-        Output_Write((int)off_51A614[0], (int)aMethodIndexOut, v13);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMethodIndexOut, v13);
         return 0;
       }
       *a2 = v10;
@@ -163297,7 +163287,7 @@ int  Method_ParseParameterList(int a1, signed int *a2, int *a3)
   if ( dword_54E8D0 != 100 )
   {
     Rules_PrintErrorID((int)aGenrcpsr, 7, 0);
-    Output_Write((int)off_51A614[0], (int)aExpectedAToBeg, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAToBeg, v13);
     return -1;
   }
   Parser_NextToken(a1, (int)&dword_54E8D0);
@@ -163307,7 +163297,7 @@ int  Method_ParseParameterList(int a1, signed int *a2, int *a3)
     {
       Method_FreeRestrictionChain(v4);
       Rules_PrintErrorID((int)aPrccode_1, v14, 0);
-      Output_Write((int)off_51A614[0], (int)aNoParametersAl, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoParametersAl, v15);
       return -1;
     }
     if ( dword_54E8D0 == 15 || dword_54E8D0 == 16 )
@@ -163341,7 +163331,7 @@ int  Method_ParseParameterList(int a1, signed int *a2, int *a3)
       {
         Method_FreeRestrictionChain(v4);
         Rules_PrintErrorID((int)aGenrcpsr, v19, 0);
-        Output_Write((int)off_51A614[0], (int)aExpectedAVar_0, v20);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVar_0, v20);
         return -1;
       }
       Parser_NextToken(a1, (int)&dword_54E8D0);
@@ -163349,7 +163339,7 @@ int  Method_ParseParameterList(int a1, signed int *a2, int *a3)
       {
         Method_FreeRestrictionChain(v4);
         Rules_PrintErrorID((int)aGenrcpsr, v17, 0);
-        Output_Write((int)off_51A614[0], (int)aExpectedAVaria, v18);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVaria, v18);
         return -1;
       }
       v16 = dword_54E8D4;
@@ -163450,7 +163440,7 @@ LABEL_8:
     else
     {
       Rules_PrintErrorID((int)aGenrcpsr, 13, 0);
-      Output_Write((int)off_51A614[0], (int)aExpectedAValid, v22);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAValid, v22);
       return 0;
     }
   }
@@ -163459,7 +163449,7 @@ LABEL_8:
     if ( v23 )
     {
       Rules_PrintErrorID((int)aGenrcpsr, 10, 0);
-      Output_Write((int)off_51A614[0], (int)aQueryMustBeLas, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aQueryMustBeLas, v9);
       AST_Free(v23);
       AST_Free(v2);
       return 0;
@@ -163474,7 +163464,7 @@ LABEL_8:
       if ( Parser_GetLoopContextStack() )
       {
         Rules_PrintErrorID((int)aGenrcpsr, 12, 0);
-        Output_Write((int)off_51A614[0], (int)aBindsAreNotAll, v19);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBindsAreNotAll, v19);
         AST_Free(v20);
 LABEL_30:
         AST_Free(v2);
@@ -163486,7 +163476,7 @@ LABEL_30:
       if ( dword_54E8D0 != 13 )
       {
         Rules_PrintErrorID((int)aGenrcpsr, 13, 0);
-        Output_Write((int)off_51A614[0], (int)aExpectedAValid, v21);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAValid, v21);
         AST_Free(0);
         AST_Free(v2);
         return 0;
@@ -163540,7 +163530,7 @@ LABEL_23:
       goto LABEL_23;
   }
   Rules_PrintErrorID((int)aGenrcpsr, 11, 0);
-  Output_Write((int)off_51A614[0], (int)aDuplicateClass, v18);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateClass, v18);
 LABEL_26:
   AST_Free(0);
   AST_Free(v2);
@@ -163615,7 +163605,7 @@ signed int  Method_CheckDuplicateParameterName(int a1, _DWORD *a2, int a3)
       return 0;
   }
   Rules_PrintErrorID((int)aPrccode_1, 7, v3 ^ a3);
-  Output_Write((int)off_51A614[0], (int)aDuplicateParam, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateParam, v5);
   return 1;
 }
 // 4CA4DA: variable 'v5' is possibly undefined
@@ -163666,7 +163656,7 @@ signed int  Method_ParseParameterClassName(int a1)
     else
     {
       Rules_PrintErrorID((int)aGenrcpsr, 14, 0);
-      Output_Write((int)off_51A614[0], (int)aUnknownClassIn, v3);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnknownClassIn, v3);
       return 0;
     }
   }
@@ -163690,8 +163680,8 @@ signed int  Method_CheckRedundantClassPair(int a1, int a2)
 LABEL_3:
     Rules_GetConstructNameString(v4);
     Rules_PrintErrorID((int)aGenrcpsr, 15, 0);
-    Output_Write((int)off_51A614[0], v5, v5);
-    Output_Write((int)off_51A614[0], (int)aClassIsRedunda, v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v5, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClassIsRedunda, v6);
     return 1;
   }
   result = Class_HasSuperclass(a2, v3);
@@ -164019,12 +164009,12 @@ int  Method_DispatchGenericCall(
           Rules_PrintErrorID((int)aGenrcexe, 4, 0);
           Lexer_ErrorRecover(1);
           dword_51B3D8 = v14;
-          Output_Write((int)off_51A614[0], v15, v14);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], v15, v14);
           v16 = Rules_GetConstructNameString(a1);
-          Output_Write((int)off_51A614[0], v16, v17);
-          Output_Write((int)off_51A614[0], (int)aMethod_2, v18);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], v16, v17);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMethod_2, v18);
           Rules_PrintLongInteger(v19, *a4);
-          Output_Write((int)off_51A614[0], (int)aIsNotApplicabl, v20);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotApplicabl, v20);
         }
       }
       else
@@ -164064,10 +164054,10 @@ int  Method_DispatchGenericCall(
       else if ( !dword_51A964 )
       {
         Rules_PrintErrorID((int)aGenrcexe, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aNoApplicable_0, v21);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoApplicable_0, v21);
         v22 = Rules_GetConstructNameString(a1);
-        Output_Write((int)off_51A614[0], v22, v23);
-        Output_Write((int)off_51A614[0], (int)a__24, v24);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], v22, v23);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__24, v24);
         Lexer_ErrorRecover(1);
       }
       --*(_DWORD *)(a1 + 20);
@@ -164111,12 +164101,12 @@ signed int __thiscall Method_PrintCallErrorBanner(void *this)
   int v3; // ecx
   int v4; // ecx
 
-  Output_Write((int)off_51A614[0], (int)aGenericFunct_5, (int)this);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGenericFunct_5, (int)this);
   v1 = Rules_GetConstructNameString(dword_51B3D4);
-  Output_Write((int)off_51A614[0], v1, (int)off_51A614[0]);
-  Output_Write((int)off_51A614[0], (int)aMethod_2, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, (int)g_IO_LogicalNameTable_WError[0]);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMethod_2, v2);
   Rules_PrintLongInteger(v3, *(_DWORD *)dword_51B3D8);
-  return Output_Write((int)off_51A614[0], (int)a__24, v4);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__24, v4);
 }
 // 4CADB4: variable 'v2' is possibly undefined
 // 4CADC6: variable 'v3' is possibly undefined
@@ -164306,7 +164296,7 @@ int  Method_OverrideNextMethod(_DWORD *a1, int a2, double a3)
     {
       dword_51B3D8 = v5;
       Rules_PrintErrorID((int)aGenrcexe, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aShadowedMethod, v6);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aShadowedMethod, v6);
       return Lexer_ErrorRecover(1);
     }
   }
@@ -164381,7 +164371,7 @@ _DWORD * Method_CallNextMethod(_DWORD *result, double a2)
     else
     {
       Rules_PrintErrorID((int)aGenrcexe, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aShadowedMethod, v2);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aShadowedMethod, v2);
       return (_DWORD *)Lexer_ErrorRecover(1);
     }
   }
@@ -164449,21 +164439,21 @@ signed int  Method_PrintGenericCallTrace(int a1)
   int Name; // eax
   int v11; // ecx
 
-  Output_Write((int)off_51A618[0], (int)aGnc, a1);
-  Output_Write((int)off_51A618[0], v1, v1);
-  Output_Write((int)off_51A618[0], (int)asc_50B7D0, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aGnc, a1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D0, v2);
   v3 = Module_GetCurrent();
   if ( v3 != *v5 )
   {
     Name = Module_GetName(**(_DWORD **)(dword_51B3D4 + 8));
-    Output_Write((int)off_51A618[0], Name, (int)off_51A618[0]);
-    Output_Write((int)off_51A618[0], (int)asc_50B7D4, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], Name, (int)g_IO_LogicalNameTable_WTrace[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D4, v11);
   }
-  Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)dword_51B3D4 + 16), v4);
-  Output_Write((int)off_51A618[0], (int)asc_50B7D0, v6);
-  Output_Write((int)off_51A618[0], (int)aEd_1, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)dword_51B3D4 + 16), v4);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D0, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aEd_1, v7);
   Rules_PrintLongInteger(v8, dword_51A96C);
-  return ProcParam_PrintArguments((int)off_51A618[0]);
+  return ProcParam_PrintArguments((int)g_IO_LogicalNameTable_WTrace[0]);
 }
 // 4CB2EA: variable 'v1' is possibly undefined
 // 4CB2F9: variable 'v2' is possibly undefined
@@ -164493,25 +164483,25 @@ signed int  Method_PrintMethodCallTrace(int a1)
   int v11; // ecx
   int v12; // ecx
 
-  Output_Write((int)off_51A618[0], (int)aMth, a1);
-  Output_Write((int)off_51A618[0], v1, v1);
-  Output_Write((int)off_51A618[0], (int)asc_50B7D0, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aMth, a1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D0, v2);
   v3 = Module_GetCurrent();
   if ( v3 != *v5 )
   {
     Name = Module_GetName(**(_DWORD **)(dword_51B3D4 + 8));
-    Output_Write((int)off_51A618[0], Name, (int)off_51A618[0]);
-    Output_Write((int)off_51A618[0], (int)asc_50B7D4, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], Name, (int)g_IO_LogicalNameTable_WTrace[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D4, v7);
   }
-  Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)dword_51B3D4 + 16), v4);
-  Output_Write((int)off_51A618[0], (int)asc_50B7E8, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)dword_51B3D4 + 16), v4);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7E8, v8);
   if ( (*(_BYTE *)(dword_51B3D8 + 24) & 1) != 0 )
-    Output_Write((int)off_51A618[0], (int)aSys_0, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aSys_0, v9);
   Rules_PrintLongInteger(v9, *(_DWORD *)dword_51B3D8);
-  Output_Write((int)off_51A618[0], (int)asc_50B7D0, v10);
-  Output_Write((int)off_51A618[0], (int)aEd_1, v11);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50B7D0, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aEd_1, v11);
   Rules_PrintLongInteger(v12, dword_51A96C);
-  return ProcParam_PrintArguments((int)off_51A618[0]);
+  return ProcParam_PrintArguments((int)g_IO_LogicalNameTable_WTrace[0]);
 }
 // 4CB3AA: variable 'v1' is possibly undefined
 // 4CB3B9: variable 'v2' is possibly undefined
@@ -164563,12 +164553,12 @@ LABEL_5:
   {
     Lexer_ErrorRecover(1);
     Rules_PrintErrorID((int)aGenrcexe, v4, 0);
-    Output_Write((int)off_51A614[0], (int)aUnableToDeterm, v5);
-    Rules_PrintDataObject((int)off_51A614[0], v6);
-    Output_Write((int)off_51A614[0], (int)aInGenericFunct, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDeterm, v5);
+    Rules_PrintDataObject((int)g_IO_LogicalNameTable_WError[0], v6);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInGenericFunct, v7);
     v8 = Rules_GetConstructNameString(dword_51B3D4);
-    Output_Write((int)off_51A614[0], v8, (int)off_51A614[0]);
-    Output_Write((int)off_51A614[0], (int)a__24, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v8, (int)g_IO_LogicalNameTable_WError[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__24, v9);
   }
   return v3;
 }
@@ -164921,13 +164911,13 @@ signed int Deffunction_ValidateNewName()
   if ( Rules_FindConstructByName() )
   {
     Rules_PrintErrorID((int)aDffnxpsr, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aDeffunctionsAr, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctionsAr, v12);
     return 0;
   }
   else if ( Rules_MakeSymbol(v0) )
   {
     Rules_PrintErrorID((int)aDffnxpsr, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aDeffunctions_3, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctions_3, v13);
     return 0;
   }
   else
@@ -164939,18 +164929,18 @@ signed int Deffunction_ValidateNewName()
       if ( v4 == Module_GetCurrent() )
       {
         Rules_PrintErrorID((int)aDffnxpsr, 3, 0);
-        Output_Write((int)off_51A614[0], (int)aDeffunctions_4, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunctions_4, v14);
       }
       else
       {
         Rules_PrintErrorID((int)aDffnxpsr, 5, 0);
-        Output_Write((int)off_51A614[0], (int)aDefgeneric_4, v5);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefgeneric_4, v5);
         v7 = Rules_GetConstructNameString(v6);
-        Output_Write((int)off_51A614[0], v7, (int)off_51A614[0]);
-        Output_Write((int)off_51A614[0], (int)aImportedFrom_0, v8);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], v7, (int)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aImportedFrom_0, v8);
         Name = Module_GetName(v4);
-        Output_Write((int)off_51A614[0], Name, (int)off_51A614[0]);
-        Output_Write((int)off_51A614[0], (int)aConflictsWit_0, v10);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], Name, (int)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aConflictsWit_0, v10);
       }
       return 0;
     }
@@ -164960,10 +164950,10 @@ signed int Deffunction_ValidateNewName()
       if ( v15 && *(_DWORD *)(v15 + 24) )
       {
         Rules_PrintErrorID((int)aDfnxpsr, 4, 0);
-        Output_Write((int)off_51A614[0], (int)aDeffunction_5, v16);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunction_5, v16);
         v18 = Rules_GetConstructNameString(v17);
-        Output_Write((int)off_51A614[0], v18, (int)off_51A614[0]);
-        Output_Write((int)off_51A614[0], (int)aMayNotBeRedefi, v19);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], v18, (int)g_IO_LogicalNameTable_WError[0]);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMayNotBeRedefi, v19);
         return 0;
       }
       else
@@ -165154,10 +165144,10 @@ signed int __thiscall Deffunction_PrintErrorContext(void *this)
   int v1; // eax
   int v2; // ecx
 
-  Output_Write((int)off_51A614[0], (int)aDeffunction_9, (int)this);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDeffunction_9, (int)this);
   v1 = Rules_GetConstructNameString(dword_51B3E8);
-  Output_Write((int)off_51A614[0], v1, (int)off_51A614[0]);
-  return Output_Write((int)off_51A614[0], (int)a__33, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, (int)g_IO_LogicalNameTable_WError[0]);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__33, v2);
 }
 // 4CBF64: variable 'v2' is possibly undefined
 // 51A614: using guessed type char *off_51A614[5];
@@ -165175,19 +165165,19 @@ signed int  Deffunction_PrintCallTrace(int a1)
   int Name; // eax
   int v9; // ecx
 
-  Output_Write((int)off_51A618[0], (int)aDfn, a1);
-  Output_Write((int)off_51A618[0], v1, v1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aDfn, a1);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], v1, v1);
   v2 = Module_GetCurrent();
   if ( v2 != *v4 )
   {
     Name = Module_GetName(**(_DWORD **)(dword_51B3E8 + 8));
-    Output_Write((int)off_51A618[0], Name, (int)off_51A618[0]);
-    Output_Write((int)off_51A618[0], (int)asc_50BA6C, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], Name, (int)g_IO_LogicalNameTable_WTrace[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)asc_50BA6C, v9);
   }
-  Output_Write((int)off_51A618[0], *(_DWORD *)(*(_DWORD *)dword_51B3E8 + 16), v3);
-  Output_Write((int)off_51A618[0], (int)aEd_2, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], *(_DWORD *)(*(_DWORD *)dword_51B3E8 + 16), v3);
+  Output_Write((int)g_IO_LogicalNameTable_WTrace[0], (int)aEd_2, v5);
   Rules_PrintLongInteger(v6, dword_51A96C);
-  return ProcParam_PrintArguments((int)off_51A618[0]);
+  return ProcParam_PrintArguments((int)g_IO_LogicalNameTable_WTrace[0]);
 }
 // 4CBF8A: variable 'v1' is possibly undefined
 // 4CBF9C: variable 'v4' is possibly undefined
@@ -165582,8 +165572,8 @@ int  Lexer_ParseDefglobal(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
       v9 = aRedefiningDefg;
     else
       v9 = aDefiningDefglo;
-    Output_Write((int)off_51A61C[0], (int)v9, v8);
-    Output_Write((int)off_51A61C[0], *(_DWORD *)(v7 + 16), v10);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v9, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(v7 + 16), v10);
     v12 = asc_50BC64;
     goto LABEL_10;
   }
@@ -165591,7 +165581,7 @@ int  Lexer_ParseDefglobal(int a1, _DWORD *a2, _DWORD *a3, int a4, double a5)
   {
     v12 = asc_50BC68;
 LABEL_10:
-    Output_Write((int)off_51A61C[0], (int)v12, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v12, v11);
   }
   v13 = *(_BYTE **)(v7 + 16);
   v14 = Module_GetCurrent();
@@ -165800,9 +165790,9 @@ signed int Defglobal_PrintUndefinedVariableError()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aGloblpsr, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aGlobalVariable, v0);
-  Output_Write((int)off_51A614[0], v1, v1);
-  return Output_Write((int)off_51A614[0], (int)aWasReferencedB, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aGlobalVariable, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v1, v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasReferencedB, v2);
 }
 // 4CCA70: variable 'v0' is possibly undefined
 // 4CCA7C: variable 'v1' is possibly undefined
@@ -166166,7 +166156,7 @@ int  MessageHandler_UndefineCommand(int a1, double a2)
   if ( Rules_IsBloaded() )
   {
     Rules_PrintErrorID((int)aMsgcom, 3, 0);
-    return Output_Write((int)off_51A614[0], (int)aUnableToDele_1, v3);
+    return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToDele_1, v3);
   }
   result = Lexer_ParseValueList(1, v11, 2, a2);
   if ( result )
@@ -166247,18 +166237,18 @@ signed int  MessageHandler_PrettyPrintCommand(double a1)
           if ( v2 && v5 && (v7 = Class_FindMessageHandler(v2, (int)v5, v6), result = v7 == 0, v7) )
           {
             if ( v7[8] )
-              return Output_WriteLongString((signed int)off_51A624, (char *)v7[8]);
+              return Output_WriteLongString((signed int)g_IO_LogicalName_WDisplay, (char *)v7[8]);
           }
           else
           {
             Rules_PrintErrorID((int)aMsgcom, 2, 0);
-            Output_Write((int)off_51A614[0], (int)aUnableToFind_0, v8);
-            Output_Write((int)off_51A614[0], v5[4], v9);
-            Output_Write((int)off_51A614[0], (int)asc_50C030, v10);
-            Output_Write((int)off_51A614[0], v11, v11);
-            Output_Write((int)off_51A614[0], (int)aForClass, v12);
-            Output_Write((int)off_51A614[0], v3[4], v13);
-            Output_Write((int)off_51A614[0], (int)aInFunctionPpde, v14);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUnableToFind_0, v8);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], v5[4], v9);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50C030, v10);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], v11, v11);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForClass, v12);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], v3[4], v13);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunctionPpde, v14);
             return Lexer_ErrorRecover(1);
           }
         }
@@ -166287,10 +166277,10 @@ int * MessageHandler_ListCommand(double a1)
   int v3[3]; // [esp+0h] [ebp-Ch] BYREF
 
   if ( !Rules_RtnArgCount() )
-    return (int *)MessageHandler_PrintHandlerListTally((int)off_51A624, 0, v1, 0);
+    return (int *)MessageHandler_PrintHandlerListTally((int)g_IO_LogicalName_WDisplay, 0, v1, 0);
   result = Class_ParseClassNameAndInheritFlag((int)aListDefmessage, v3, a1);
   if ( result )
-    return (int *)MessageHandler_PrintHandlerListTally((int)off_51A624, (int)result, (int)off_51A624, v3[0]);
+    return (int *)MessageHandler_PrintHandlerListTally((int)g_IO_LogicalName_WDisplay, (int)result, (int)g_IO_LogicalName_WDisplay, v3[0]);
   return result;
 }
 // 4CD61D: variable 'v1' is possibly undefined
@@ -166313,7 +166303,7 @@ int * MessageHandler_PreviewSendCommand(int a1, double a2)
     {
       result = (int *)Lexer_ParseValueList(2, v4, 2, a2);
       if ( result )
-        return MessageHandler_PreviewSendForSymbol((int)off_51A624, *(_BYTE **)(v5 + 16));
+        return MessageHandler_PreviewSendForSymbol((int)g_IO_LogicalName_WDisplay, *(_BYTE **)(v5 + 16));
     }
     else
     {
@@ -169676,7 +169666,7 @@ signed int __thiscall Rules_RegisterObjectPatternType(void *this)
     (int)aObjects_0,
     20,
     (int)Rules_IsObjectPatternKeyword,
-    (int)(uintptr_t)unk_51A290,
+    (int)(uintptr_t)g_Rules_ObjectPatternVTable,
     (int)Rules_ParseObjectPattern,
     (int)Rules_AnalyzeObjectPatternRestrictions,
     (int)Rules_AddObjectPatternNode,
@@ -169757,7 +169747,7 @@ _DWORD * Rules_ParseObjectPattern(int a1)
   if ( Rules_IsClassBitmapEmpty(v2) )
   {
     Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aNoObjectsOfExi, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v7);
     Mem_SmallBlockFree(v2, ((int)*v2 >> 3) + 3);
     return 0;
   }
@@ -169817,9 +169807,9 @@ _DWORD * Rules_ParseObjectPattern(int a1)
         if ( Rules_IsClassBitmapEmpty(v4) )
         {
           Rules_PrintErrorID((int)aObjrtbld, 2, 0);
-          Output_Write((int)off_51A614[0], (int)aNoObjectsOfE_0, v17);
-          Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(v18 + 36) + 16), v18);
-          Output_Write((int)off_51A614[0], (int)aRestrictionInO, v19);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_0, v17);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v18 + 36) + 16), v18);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aRestrictionInO, v19);
           AST_FreeNode(v20);
           goto LABEL_5;
         }
@@ -169839,7 +169829,7 @@ _DWORD * Rules_ParseObjectPattern(int a1)
           goto LABEL_20;
       }
       Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aNoObjectsOfExi, v21);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v21);
       AST_FreeNode(v22);
       goto LABEL_5;
     }
@@ -169849,7 +169839,7 @@ LABEL_20:
       if ( Rules_IsClassBitmapEmpty(v3) )
       {
         Rules_PrintErrorID((int)aObjrtbld, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aNoObjectsOfExi, v23);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfExi, v23);
 LABEL_5:
         Mem_SmallBlockFree(v3, ((int)*v3 >> 3) + 3);
         Mem_SmallBlockFree(v4, ((int)*v4 >> 3) + 3);
@@ -170069,9 +170059,9 @@ LABEL_7:
       {
         Rules_PrintErrorID((int)aObjrtbld, 3, 1);
         Mem_SmallBlockFree(v41, ((int)(unsigned __int16)*v41 >> 3) + 3);
-        Output_Write((int)off_51A614[0], (int)aNoObjectsOfE_1, v33);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_1, v33);
         Rules_PrintLongInteger(v34, *(_DWORD *)(v42 + 28));
-        Output_Write((int)off_51A614[0], (int)a__25, v35);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__25, v35);
         return 1;
       }
       else
@@ -170513,8 +170503,8 @@ int * Rules_UnlinkObjectPatternFromGlobalLists(int *result)
   v1 = (int)result;
   for ( i = dword_51AD0C; i; i = *(_DWORD *)(v3 + 68) )
     result = Rules_RemoveMatchingPatternListEntry(i, v1);
-  v4 = (int *)dword_51A28C;
-  if ( dword_51A28C )
+  v4 = (int *)g_Instance_DeletedListHead;
+  if ( g_Instance_DeletedListHead )
   {
     do
     {
@@ -170591,9 +170581,9 @@ signed int  Rules_CheckDuplicateAttributeRestriction(int a1, int a2)
       return 0;
   }
   Rules_PrintErrorID((int)aObjrtbld, 4, 1);
-  Output_Write((int)off_51A614[0], (int)aMultipleRestri, v3);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(v4 + 16), v4);
-  Output_Write((int)off_51A614[0], (int)aNotAllowed_, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMultipleRestri, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v4 + 16), v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNotAllowed_, v5);
   return 1;
 }
 // 4D26F6: variable 'v3' is possibly undefined
@@ -170845,7 +170835,7 @@ void  Rules_AdjustClassBusyCountFromBitmap(int a1, int a2)
   unsigned __int16 *v2; // edi
   unsigned __int16 i; // si
 
-  if ( !dword_51A180 )
+  if ( !g_Rules_ClearInProgressFlag )
   {
     v2 = *(unsigned __int16 **)(a1 + 16);
     for ( i = 0; i <= (int)*v2; ++i )
@@ -170946,7 +170936,7 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *a1, int *a2, int a
           if ( !v14 )
           {
             Rules_PrintErrorID((int)aObjrtbld, 5, 0);
-            Output_Write((int)off_51A614[0], (int)aUndefinedClass, v18);
+            Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUndefinedClass, v18);
             Mem_SmallBlockFree(v5, ((int)*v5 >> 3) + 3);
             Mem_SmallBlockFree(v10, ((int)*v10 >> 3) + 3);
             return 0;
@@ -170975,8 +170965,8 @@ signed int  Rules_ProcessObjectPatternClassRestriction(_WORD *a1, int *a2, int a
     if ( Rules_IsClassBitmapEmpty(v5) )
     {
       Rules_PrintErrorID((int)aObjrtbld, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aNoObjectsOfE_0, v19);
-      Output_Write((int)off_51A614[0], (int)aIsARestriction, v20);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoObjectsOfE_0, v19);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsARestriction, v20);
       Mem_SmallBlockFree(v5, ((int)*v5 >> 3) + 3);
       Mem_SmallBlockFree(v10, ((int)*v10 >> 3) + 3);
       return 0;
@@ -171604,7 +171594,7 @@ LABEL_11:
     if ( v26 && v28 )
     {
       Rules_PrintErrorID((int)aClasspsr, 1, 0);
-      Output_Write((int)off_51A614[0], (int)aAnAbstractClas, v23);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAnAbstractClas, v23);
       Class_FreeOrRecycleArray(v30, 1);
       Class_FreeOrRecycleArray((unsigned __int16 *)v9, 1);
       Class_DeleteSlotList((int)v3);
@@ -171675,7 +171665,7 @@ signed int __fastcall Rules_ValidateClassRedefinition(int a1, int *a2)
   if ( (*(_BYTE *)(v2 + 20) & 2) != 0 )
   {
     Rules_PrintErrorID((int)aClasspsr, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotRedefi_0, v4);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRedefi_0, v4);
     return 0;
   }
   else
@@ -171684,9 +171674,9 @@ signed int __fastcall Rules_ValidateClassRedefinition(int a1, int *a2)
       return 1;
     Rules_PrintErrorID((int)aClasspsr, 3, 0);
     v6 = Rules_GetConstructNameString(*v5);
-    Output_Write((int)off_51A614[0], v6, (int)off_51A614[0]);
-    Output_Write((int)off_51A614[0], (int)aClassCannotBeR, v7);
-    Output_Write((int)off_51A614[0], (int)aOutstandingRef, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v6, (int)g_IO_LogicalNameTable_WError[0]);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClassCannotBeR, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOutstandingRef, v8);
     return 0;
   }
 }
@@ -171709,9 +171699,9 @@ signed int  Rules_ParseClassAttributeFlag(int a1, int a2, int a3, _DWORD *a4, _D
   if ( *a4 )
   {
     Rules_PrintErrorID((int)aClasspsr, 4, 0);
-    Output_Write((int)off_51A614[0], (int)aClass_2, v11);
-    Output_Write((int)off_51A614[0], a2, v12);
-    Output_Write((int)off_51A614[0], (int)aAlreadyDeclare, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aClass_2, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAlreadyDeclare, v13);
     return 0;
   }
   IO_OutWriteToken(asc_50CAF8);
@@ -172221,7 +172211,7 @@ int  Class_BrowseClassesCommand(int a1, double a2)
   if ( !Rules_RtnArgCount() )
   {
     v2 = Class_LookupByQualifiedName(aObject_1);
-    return Class_PrintClassBrowse((int)off_51A624, (int)v2, 0);
+    return Class_PrintClassBrowse((int)g_IO_LogicalName_WDisplay, (int)v2, 0);
   }
   result = Lexer_ParseValueList(1, &v5, 2, a2);
   if ( result )
@@ -172229,7 +172219,7 @@ int  Class_BrowseClassesCommand(int a1, double a2)
     v2 = Class_LookupByQualifiedName(*(_BYTE **)(v6 + 16));
     if ( !v2 )
       return Class_ReportLookupError(v4, *(_DWORD *)(v6 + 16));
-    return Class_PrintClassBrowse((int)off_51A624, (int)v2, 0);
+    return Class_PrintClassBrowse((int)g_IO_LogicalName_WDisplay, (int)v2, 0);
   }
   return result;
 }
@@ -172247,7 +172237,7 @@ int * Class_DescribeClassCommand(int a1, double a2)
   {
     result = Class_LookupClassOrReportError(v3, result);
     if ( result )
-      return (int *)Class_PrintClassDescription((int)off_51A624, (int)result);
+      return (int *)Class_PrintClassDescription((int)g_IO_LogicalName_WDisplay, (int)result);
   }
   return result;
 }
@@ -172633,13 +172623,13 @@ signed int  Class_CheckSlotExists(int a1, int **a2, int a3, int a4, double a5)
       else
       {
         Rules_PrintErrorID((int)aClassexm, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aInheritedSlot, v14);
-        Output_Write((int)off_51A614[0], *(_DWORD *)(v15 + 16), v15);
-        Output_Write((int)off_51A614[0], (int)aFromClass, v16);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInheritedSlot, v14);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v15 + 16), v15);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFromClass, v16);
         Class_PrintName(*(_DWORD *)(v13 + 4), 0);
-        Output_Write((int)off_51A614[0], (int)aIsNotValidForF, v17);
-        Output_Write((int)off_51A614[0], a1, v18);
-        Output_Write((int)off_51A614[0], (int)asc_50CE14, v19);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsNotValidForF, v17);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], a1, v18);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50CE14, v19);
         Lexer_ErrorRecover(1);
         return 0;
       }
@@ -175462,8 +175452,8 @@ int  Compiler_WriteConstraintTableFile(const char *a1, int a2, DWORD a3, int a4,
   if ( !Rules_DynamicConstraintCheckingEnabled() && v51 )
   {
     Rules_PrintWarningID((int)aCstrncmp, 1, 0);
-    Output_Write((int)off_51A610[0], (int)aConstraintsA_0, v8);
-    Output_Write((int)off_51A610[0], (int)aWhenDynamicC_0, v9);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aConstraintsA_0, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WWarning[0], (int)aWhenDynamicC_0, v9);
     return -1;
   }
   if ( !v51 )
@@ -177397,7 +177387,7 @@ LABEL_5:
   if ( dword_51C6F0 && v48 )
   {
     Rules_PrintErrorID((int)aRulelhs, 1, 1);
-    Output_Write((int)off_51A614[0], (int)aTheLogicalCeCa, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheLogicalCeCa, v22);
     *a1 = 1;
     return 0;
   }
@@ -177641,7 +177631,7 @@ int  Lexer_ParsePatternBinding(int a1, _DWORD *a2)
   if ( dword_51C6F0 )
   {
     Rules_PrintErrorID((int)aRulelhs, 2, 1);
-    Output_Write((int)off_51A614[0], (int)aAPatternCeCann, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAPatternCeCann, v8);
     *a2 = 1;
     return 0;
   }
@@ -178414,11 +178404,11 @@ signed int __fastcall Rules_ReportAttributeConflict(int a1, int a2)
   int v7; // ecx
 
   Rules_PrintErrorID((int)aCstrnpsr, 1, 1);
-  Output_Write((int)off_51A614[0], (int)aThe_2, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aAttributeConfl, v5);
-  Output_Write((int)off_51A614[0], a2, v6);
-  return Output_Write((int)off_51A614[0], (int)aAttribute_, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe_2, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttributeConfl, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v6);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttribute_, v7);
 }
 // 4DB872: variable 'v3' is possibly undefined
 // 4DB87E: variable 'v4' is possibly undefined
@@ -178928,9 +178918,9 @@ LABEL_70:
       if ( v6 )
       {
         Rules_PrintErrorID((int)aCstrnpsr, 4, 1);
-        Output_Write((int)off_51A614[0], (int)aValueDoesNotMa, v25);
-        Output_Write((int)off_51A614[0], (int)v34, v26);
-        Output_Write((int)off_51A614[0], (int)aAttribute_0, v27);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aValueDoesNotMa, v25);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v34, v26);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttribute_0, v27);
         return 0;
       }
       if ( v7 && v37 )
@@ -179062,12 +179052,12 @@ signed int __fastcall Rules_ReportAttributeCannotCombine(int a1, int a2)
   int v8; // ecx
 
   Rules_PrintErrorID((int)aCstrnpsr, 3, 1);
-  Output_Write((int)off_51A614[0], (int)aThe_2, v3);
-  Output_Write((int)off_51A614[0], v4, v4);
-  Output_Write((int)off_51A614[0], (int)aAttributeCanno, v5);
-  Output_Write((int)off_51A614[0], (int)aInConjunctionW, v6);
-  Output_Write((int)off_51A614[0], a2, v7);
-  return Output_Write((int)off_51A614[0], (int)aAttribute_, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aThe_2, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v4, v4);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttributeCanno, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInConjunctionW, v6);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], a2, v7);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAttribute_, v8);
 }
 // 4DC575: variable 'v3' is possibly undefined
 // 4DC581: variable 'v4' is possibly undefined
@@ -179195,8 +179185,8 @@ signed int  Rules_ParseRangeOrCardinalityAttribute(
     if ( !a6 )
     {
       Rules_PrintErrorID((int)aCstrnpsr, 5, 1);
-      Output_Write((int)off_51A614[0], (int)aTheCardinality, v15);
-      Output_Write((int)off_51A614[0], (int)aCanOnlyBeUsedW, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aTheCardinality, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCanOnlyBeUsedW, v16);
       return 0;
     }
   }
@@ -179254,8 +179244,8 @@ signed int  Rules_ParseRangeOrCardinalityAttribute(
              **(__int16 **)(a2 + 14)) != 1 )
         return 1;
       Rules_PrintErrorID((int)aCstrnpsr, 2, 1);
-      Output_Write((int)off_51A614[0], (int)aMinimumRangeVa, v18);
-      Output_Write((int)off_51A614[0], (int)aOrEqualToTheMa, v19);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMinimumRangeVa, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOrEqualToTheMa, v19);
       return 0;
     }
     else
@@ -179267,8 +179257,8 @@ signed int  Rules_ParseRangeOrCardinalityAttribute(
              **(__int16 **)(a2 + 22)) != 1 )
         return 1;
       Rules_PrintErrorID((int)aCstrnpsr, 2, 1);
-      Output_Write((int)off_51A614[0], (int)aMinimumCardina, v20);
-      Output_Write((int)off_51A614[0], (int)aOrEqualToThe_0, v21);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMinimumCardina, v20);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOrEqualToThe_0, v21);
       return 0;
     }
   }
@@ -179665,22 +179655,22 @@ signed int  Rules_CEDetectDuplicatePatternBinding(_DWORD *a1)
         if ( *(_DWORD *)(v2 + 32) == -1 )
         {
           Rules_PrintErrorID((int)aAnalysis, 1, 1);
-          Output_Write((int)off_51A614[0], (int)aDuplicatePatte, v3);
-          Output_Write((int)off_51A614[0], *(_DWORD *)(v1[1] + 16), v4);
-          Output_Write((int)off_51A614[0], (int)aFoundInCe_0, v5);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicatePatte, v3);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v1[1] + 16), v4);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInCe_0, v5);
           Rules_PrintLongInteger(v6, v1[2] << 19 >> 25);
           v8 = a__26;
         }
         else
         {
           Rules_PrintErrorID((int)aAnalysis, 2, 1);
-          Output_Write((int)off_51A614[0], (int)aPatternAddress, v10);
-          Output_Write((int)off_51A614[0], *(_DWORD *)(v1[1] + 16), v11);
-          Output_Write((int)off_51A614[0], (int)aUsedInCe, v12);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPatternAddress, v10);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v1[1] + 16), v11);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aUsedInCe, v12);
           Rules_PrintLongInteger(v13, v1[2] << 19 >> 25);
           v8 = aWasPreviouslyB;
         }
-        Output_Write((int)off_51A614[0], (int)v8, v7);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v8, v7);
       }
     }
     if ( Rules_CEPropagateVariableBindingCheck((int)v1) )
@@ -180112,32 +180102,32 @@ signed int  Rules_ReportUnboundVariableUsage(int a1, int a2, int a3, int a4, int
   int v20; // ecx
 
   Rules_PrintErrorID((int)aAnalysis, 4, 1);
-  Output_Write((int)off_51A614[0], (int)aVariable_, v7);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(a1 + 16), v8);
-  Output_Write((int)off_51A614[0], (int)asc_50DE28, v9);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable_, v7);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a1 + 16), v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DE28, v9);
   if ( a2 )
   {
     v11 = Rules_CECloneBindingList(a2);
     AST_Free(*(_DWORD *)(v11 + 10));
     *(_DWORD *)(v12 + 10) = 0;
-    Output_Write((int)off_51A614[0], (int)aFoundInTheExpr, v12);
-    Rules_PrintFieldExprList((signed int)off_51A614[0], v13);
-    Output_Write((int)off_51A614[0], (int)asc_50DE48, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInTheExpr, v12);
+    Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DE48, v14);
     AST_Free(v15);
   }
-  Output_Write((int)off_51A614[0], (int)aWasReferencedI, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aWasReferencedI, v10);
   Rules_PrintLongInteger(v16, a4);
   if ( a3 )
   {
-    Output_Write((int)off_51A614[0], (int)aSlot_8, v17);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(a3 + 16), v20);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_8, v17);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a3 + 16), v20);
   }
   else if ( a5 > 0 )
   {
-    Output_Write((int)off_51A614[0], (int)aField_1, v17);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_1, v17);
     Rules_PrintLongInteger(v19, a5);
   }
-  return Output_Write((int)off_51A614[0], (int)aBeforeBeingDef, v17);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBeforeBeingDef, v17);
 }
 // 4DD84D: variable 'v7' is possibly undefined
 // 4DD85D: variable 'v8' is possibly undefined
@@ -180161,9 +180151,9 @@ signed int Rules_ReportVariableFieldTypeConflict()
   int v2; // ecx
 
   Rules_PrintErrorID((int)aAnalysis, 3, 1);
-  Output_Write((int)off_51A614[0], (int)aVariable_, v0);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(v1 + 16), v1);
-  return Output_Write((int)off_51A614[0], (int)aIsUsedAsBothAS, v2);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable_, v0);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v1 + 16), v1);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIsUsedAsBothAS, v2);
 }
 // 4DD963: variable 'v0' is possibly undefined
 // 4DD96D: variable 'v1' is possibly undefined
@@ -180209,27 +180199,27 @@ signed int  Rules_ReportConstraintReferenceConflict(int a1, int a2, int a3)
   Rules_PrintErrorID((int)aRulecstr, 1, 1);
   if ( a1 )
   {
-    Output_Write((int)off_51A614[0], (int)aVariable__0, v5);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(a1 + 16), v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aVariable__0, v5);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a1 + 16), v12);
     v6 = aInCe;
   }
   else
   {
     v6 = aPattern_0;
   }
-  Output_Write((int)off_51A614[0], (int)v6, v5);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)v6, v5);
   Rules_PrintLongInteger(v7, a2);
   if ( v8 )
   {
-    Output_Write((int)off_51A614[0], (int)aSlot_9, v8);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(v13 + 16), v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_9, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(v13 + 16), v13);
   }
   else
   {
-    Output_Write((int)off_51A614[0], (int)aField_2, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_2, 0);
     Rules_PrintLongInteger(v9, a3);
   }
-  return Output_Write((int)off_51A614[0], (int)aHasConstraintC, v10);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aHasConstraintC, v10);
 }
 // 4DD9F8: variable 'v5' is possibly undefined
 // 4DDA04: variable 'v7' is possibly undefined
@@ -180460,35 +180450,35 @@ signed int  Rules_PrintVariableBindingConstraintViolation(int a1, int a2, int a3
   int v25; // ecx
 
   Rules_PrintErrorID((int)aRulecstr, 2, 1);
-  Output_Write((int)off_51A614[0], (int)aPreviousVariab, v8);
-  Output_Write((int)off_51A614[0], *(_DWORD *)(a1 + 16), v9);
-  Output_Write((int)off_51A614[0], (int)aCausedTheTypeR, v10);
-  Output_Write((int)off_51A614[0], (int)aForArgument_0, v11);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPreviousVariab, v8);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a1 + 16), v9);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedTheTypeR, v10);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument_0, v11);
   Rules_PrintLongInteger(v12, a4);
-  Output_Write((int)off_51A614[0], (int)aOfTheExpressio, v13);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfTheExpressio, v13);
   v14 = Rules_CECloneBindingList(a2);
   AST_Free(*(_DWORD *)(v14 + 10));
   *(_DWORD *)(v15 + 10) = 0;
-  Rules_PrintFieldExprList((signed int)off_51A614[0], (__int16 *)v15);
-  Output_Write((int)off_51A614[0], (int)asc_50DFD4, v16);
+  Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], (__int16 *)v15);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50DFD4, v16);
   AST_Free(v17);
-  Output_Write((int)off_51A614[0], v18, v19);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], v18, v19);
   Rules_PrintLongInteger(v20, a3);
   if ( a5 )
   {
-    Output_Write((int)off_51A614[0], (int)aSlot_9, v21);
-    Output_Write((int)off_51A614[0], *(_DWORD *)(a5 + 16), v25);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_9, v21);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a5 + 16), v25);
   }
   else
   {
     v22 = a6;
     if ( a6 > 0 )
     {
-      Output_Write((int)off_51A614[0], (int)aField_2, a6);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aField_2, a6);
       Rules_PrintLongInteger(v24, v24);
     }
   }
-  return Output_Write((int)off_51A614[0], (int)aToBeViolated_, v22);
+  return Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aToBeViolated_, v22);
 }
 // 4DDE3D: variable 'v8' is possibly undefined
 // 4DDE4D: variable 'v9' is possibly undefined
@@ -180800,18 +180790,18 @@ signed int  Rules_CheckFieldRestrictionAgainstRHSAction(int a1, int a2, int a3, 
     if ( Rules_StaticConstraintCheckingEnabled() )
     {
       Rules_PrintErrorID((int)aRulecstr, 3, 1);
-      Output_Write((int)off_51A614[0], (int)aPreviousVariab, v15);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(a1 + 2) + 16), v16);
-      Output_Write((int)off_51A614[0], (int)aCausedTheTypeR, v17);
-      Output_Write((int)off_51A614[0], (int)aForArgument_0, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPreviousVariab, v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(a1 + 2) + 16), v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCausedTheTypeR, v17);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aForArgument_0, v18);
       Rules_PrintLongInteger(v19, a4);
-      Output_Write((int)off_51A614[0], (int)aOfTheExpressio, v20);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOfTheExpressio, v20);
       v21 = *(_DWORD *)(a2 + 10);
       *(_DWORD *)(a2 + 10) = 0;
-      Rules_PrintFieldExprList((signed int)off_51A614[0], (__int16 *)a2);
+      Rules_PrintFieldExprList((signed int)g_IO_LogicalNameTable_WError[0], (__int16 *)a2);
       *(_DWORD *)(a2 + 10) = v21;
       v8 = 1;
-      Output_Write((int)off_51A614[0], (int)aFoundInTheRule, v22);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFoundInTheRule, v22);
     }
   }
   AST_DecrementNodeRefCount(v26);
@@ -180895,7 +180885,7 @@ _DWORD * Rules_BuildJoinTestExpressionChain(int a1, _DWORD *a2, _DWORD *a3)
       && Rules_FindExistingJoinTestNode((_DWORD *)v10, v11, v28[2] & 1, SHIDWORD(v10), v22, (__int16 *)v28[13], v25, v5, i, (int)&v20[1]) )
     {
       if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
-        Output_Write((int)off_51A61C[0], (int)aJ, v12);
+        Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ, v12);
       v3 = (_DWORD *)v12;
     }
     else
@@ -180923,7 +180913,7 @@ _DWORD * Rules_BuildJoinTestExpressionChain(int a1, _DWORD *a2, _DWORD *a3)
       {
         if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
         {
-          Output_Write((int)off_51A61C[0], (int)aJ, v16);
+          Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ, v16);
           v3 = (_DWORD *)v3[5];
         }
         else
@@ -180941,7 +180931,7 @@ LABEL_19:
   }
   if ( Rules_GetWatchItemState((int)aCompilations) != 1 || !Rules_GetLoadInProgress() )
     return v3;
-  Output_Write((int)off_51A61C[0], (int)asc_50E03C, v18);
+  Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50E03C, v18);
   return v3;
 }
 // 4DE3A3: variable 'v4' is possibly undefined
@@ -181098,7 +181088,7 @@ int  Rules_InternJoinTestNode(int a1, _DWORD *a2, int a3, int a4, char a5)
   int v18; // [esp+0h] [ebp-10h]
 
   if ( Rules_GetWatchItemState((int)aCompilations) == 1 && Rules_GetLoadInProgress() )
-    Output_Write((int)off_51A61C[0], (int)aJ_0, v16);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aJ_0, v16);
   v8 = *(_DWORD **)(dword_54DBA8 + 160);
   if ( v8 )
   {
@@ -181706,23 +181696,23 @@ signed int  MessageHandler_ParseDefinition(int a1)
   if ( !v5 )
   {
     Rules_PrintErrorID((int)aMsgpsr, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aAClassMustBeDe, v21);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMustBeDe, v21);
     return 1;
   }
   if ( v5 == (int *)dword_51AD9C || v5 == (int *)dword_51AD98 || v5 == **(int ***)(dword_51AD9C + 36) )
   {
     Rules_PrintErrorID((int)aMsgpsr, 8, 0);
-    Output_Write((int)off_51A614[0], (int)aMessageHandl_1, v22);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMessageHandl_1, v22);
     v23 = Rules_GetConstructNameString((int)v40);
-    Output_Write((int)off_51A614[0], v23, v24);
-    Output_Write((int)off_51A614[0], (int)a__13, v25);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], v23, v24);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__13, v25);
     return 1;
   }
   if ( MessageHandler_AnyHandlerBusy((int)v5) )
   {
     Rules_PrintErrorID((int)aMsgpsr, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aCannotReDefine, v26);
-    Output_Write((int)off_51A614[0], (int)aOtherMessageHa, v27);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotReDefine, v26);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aOtherMessageHa, v27);
     return 1;
   }
   if ( dword_54E8FC != 2 )
@@ -181765,20 +181755,20 @@ LABEL_17:
   v11 = v10;
   if ( Rules_GetLoadInProgress() && Rules_GetWatchCompilations() )
   {
-    Output_Write((int)off_51A61C[0], (int)aHandler, v12);
-    Output_Write((int)off_51A61C[0], *(_DWORD *)(v39 + 16), v13);
-    Output_Write((int)off_51A61C[0], (int)asc_50E190, v14);
-    Output_Write((int)off_51A61C[0], (int)off_51AD3C[v41], v15);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)aHandler, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], *(_DWORD *)(v39 + 16), v13);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)asc_50E190, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)off_51AD3C[v41], v15);
     if ( v10 )
       v17 = aRedefined__0;
     else
       v17 = aDefined__0;
-    Output_Write((int)off_51A61C[0], (int)v17, v16);
+    Output_Write((int)g_IO_LogicalNameTable_WDialog[0], (int)v17, v16);
   }
   if ( v10 && (*v10 & 1) != 0 )
   {
     Rules_PrintErrorID((int)aMsgpsr, 3, 0);
-    Output_Write((int)off_51A614[0], (int)aSystemMessageH, v28);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSystemMessageH, v28);
     return 1;
   }
   else
@@ -181965,7 +181955,7 @@ signed int  MessageHandler_CheckParamNotSelfReference(int a1)
   if ( strncmp_(a1, aSelf_0) || *(_BYTE *)(v1 + 4) != 58 )
     return 0;
   Rules_PrintErrorID((int)aMsgpsr, 4, 0);
-  Output_Write((int)off_51A614[0], (int)aIllegalSlotRef, v3);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalSlotRef, v3);
   return 1;
 }
 // 4DF7C8: variable 'v1' is possibly undefined
@@ -182028,7 +182018,7 @@ signed int  MessageHandler_ResolveSelfSlotBindRef(int a1, int a2)
   if ( !strcmp_(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(a1 + 6) + 2) + 16), aSelf_0) )
   {
     Rules_PrintErrorID((int)aMsgpsr, 5, 0);
-    Output_Write((int)off_51A614[0], (int)aActiveInstance, v7);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aActiveInstance, v7);
     return -1;
   }
   else if ( !strncmp_(v4, aSelf_0)
@@ -182096,12 +182086,12 @@ int  MessageHandler_BuildSlotAccessNode(int a1, int a2, int a3, int a4, int *a5)
     if ( v6 == -1 )
     {
       Rules_PrintErrorID((int)aMsgpsr, 6, 0);
-      Output_Write((int)off_51A614[0], (int)aNoSuchSlot_0, v12);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(a4 + 16), v13);
-      Output_Write((int)off_51A614[0], (int)aInClass_1, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoSuchSlot_0, v12);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(a4 + 16), v13);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInClass_1, v14);
       v15 = Rules_GetConstructNameString(a1);
-      Output_Write((int)off_51A614[0], v15, v16);
-      Output_Write((int)off_51A614[0], (int)aFor_selfRefere, v17);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], v15, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFor_selfRefere, v17);
       return 0;
     }
     else
@@ -182124,8 +182114,8 @@ int  MessageHandler_BuildSlotAccessNode(int a1, int a2, int a3, int a4, int *a5)
           if ( !v9 )
             return v8;
           Rules_PrintErrorID((int)aCstrnchk_2, 1, 0);
-          Output_Write((int)off_51A614[0], (int)aExpressionFor, (int)aDirectSlotWrit);
-          Instance_PrintSlotErrorContext((int)off_51A614[0], v8, v18, 0);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpressionFor, (int)aDirectSlotWrit);
+          Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], v8, v18, 0);
           Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, v9, *(_DWORD *)(v8 + 20), 0);
           return 0;
         }
@@ -182140,7 +182130,7 @@ int  MessageHandler_BuildSlotAccessNode(int a1, int a2, int a3, int a4, int *a5)
   else
   {
     Rules_PrintErrorID((int)aMsgpsr, 7, 0);
-    Output_Write((int)off_51A614[0], (int)aIllegalValueFo, v11);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aIllegalValueFo, v11);
     return 0;
   }
 }
@@ -182845,9 +182835,9 @@ int  Parser_ParseInstanceQueryRestrictions(int a1, int *a2)
             goto LABEL_12;
         }
         Rules_PrintErrorID((int)aInsqypsr, 1, 0);
-        Output_Write((int)off_51A614[0], (int)aDuplicateIns_0, v20);
-        Output_Write((int)off_51A614[0], *(_DWORD *)(**(_DWORD **)(a1 + 2) + 16), v21);
-        Output_Write((int)off_51A614[0], (int)a__27, v22);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateIns_0, v20);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(a1 + 2) + 16), v21);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v22);
         goto LABEL_3;
       }
 LABEL_12:
@@ -182983,9 +182973,9 @@ signed int __fastcall Parser_ParseInstanceQueryTestExpression(int a1, int a2)
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(v3);
       Rules_PrintErrorID((int)aInsqypsr, v8, 0);
-      Output_Write((int)off_51A614[0], (int)aBindsAreNotA_0, v9);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(**(_DWORD **)(v10 + 2) + 16), v10);
-      Output_Write((int)off_51A614[0], (int)a__27, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aBindsAreNotA_0, v9);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(v10 + 2) + 16), v10);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v11);
       AST_Free(v12);
       return 0;
     }
@@ -183069,11 +183059,11 @@ LABEL_7:
       Parser_FreeLoopContextStack();
       Parser_SetLoopContextStack(v5);
       Rules_PrintErrorID((int)aInsqypsr, v13, 0);
-      Output_Write((int)off_51A614[0], (int)aCannotRebindIn, v14);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(*(_DWORD *)(v15 + 2) + 16), v15);
-      Output_Write((int)off_51A614[0], (int)aInFunction_3, v16);
-      Output_Write((int)off_51A614[0], *(_DWORD *)(**(_DWORD **)(a1 + 2) + 16), v17);
-      Output_Write((int)off_51A614[0], (int)a__27, v18);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCannotRebindIn, v14);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(*(_DWORD *)(v15 + 2) + 16), v15);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInFunction_3, v16);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)(**(_DWORD **)(a1 + 2) + 16), v17);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__27, v18);
       AST_Free(a1);
       return 0;
     }
@@ -184853,7 +184843,7 @@ LABEL_23:
       else
       {
         Rules_PrintErrorID((int)aInherpsr, 4, 0);
-        Output_Write((int)off_51A614[0], (int)aMustHaveAtLeas, v23);
+        Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aMustHaveAtLeas, v23);
         return 0;
       }
     }
@@ -184876,7 +184866,7 @@ LABEL_23:
         if ( a2 == dword_54E900 )
         {
           Rules_PrintErrorID((int)aInherpsr, 1, 0);
-          Output_Write((int)off_51A614[0], (int)aAClassMayNotHa, v16);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMayNotHa, v16);
           Mem_ReturnListToFreePool(v4);
           return 0;
         }
@@ -184889,17 +184879,17 @@ LABEL_14:
         if ( !v9 )
         {
           Rules_PrintErrorID((int)aInherpsr, 3, 0);
-          Output_Write((int)off_51A614[0], (int)aAClassMustBe_0, v18);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMustBe_0, v18);
           Mem_ReturnListToFreePool(v4);
           return 0;
         }
         if ( v9 == (int *)dword_51AD9C || v9 == (int *)dword_51AD98 || v9 == **(int ***)(dword_51AD9C + 36) )
         {
           Rules_PrintErrorID((int)aInherpsr, 6, 0);
-          Output_Write((int)off_51A614[0], (int)aAUserDefinedCl, v19);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAUserDefinedCl, v19);
           v21 = Rules_GetConstructNameString(v20);
-          Output_Write((int)off_51A614[0], v21, (int)off_51A614[0]);
-          Output_Write((int)off_51A614[0], (int)a__28, v22);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], v21, (int)g_IO_LogicalNameTable_WError[0]);
+          Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__28, v22);
           Mem_ReturnListToFreePool(v4);
           return 0;
         }
@@ -184933,7 +184923,7 @@ LABEL_14:
           goto LABEL_14;
       }
       Rules_PrintErrorID((int)aInherpsr, 2, 0);
-      Output_Write((int)off_51A614[0], (int)aAClassMayInher, v17);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAClassMayInher, v17);
       Mem_ReturnListToFreePool(v4);
       return 0;
     }
@@ -185125,7 +185115,7 @@ int  Class_BuildPrecedenceList(int a1, unsigned __int16 *a2)
   if ( v3 )
   {
     Rules_PrintErrorID((int)aInherpsr, 5, 0);
-    Class_PrintClassNameList((int)off_51A614[0], (int)aPartialPrecede, v36);
+    Class_PrintClassNameList((int)g_IO_LogicalNameTable_WError[0], (int)aPartialPrecede, v36);
     Class_ReportPrecedenceLoop(v3);
     do
     {
@@ -185404,20 +185394,20 @@ signed int  Class_ReportPrecedenceLoop(_DWORD *a1)
     k[1] = 0;
   for ( m = i; !m[1]; m = *(int **)m[2] )
     m[1] = 1;
-  Output_Write((int)off_51A614[0], (int)aPrecedenceLoop, (int)i);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aPrecedenceLoop, (int)i);
   if ( m[1] == 1 )
   {
     v11 = 0;
     do
     {
-      Output_Write((int)off_51A614[0], (int)asc_50E6E8, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50E6E8, v11);
       Class_PrintName(*m, v12);
       m[1] = v11;
       m = *(int **)m[2];
     }
     while ( m[1] == 1 );
   }
-  Output_Write((int)off_51A614[0], (int)asc_50E6E8, v11);
+  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)asc_50E6E8, v11);
   return Class_PrintName(*m, 1);
 }
 // 4E32C7: variable 'i' is possibly undefined
@@ -185828,7 +185818,7 @@ int * Class_InsertSlot(_DWORD *a1, int a2)
     *(_DWORD *)(v6 + 4) = a1;
     Class_DeleteSlotList(v6);
     Rules_PrintErrorID((int)aClsltpsr, v9, 0);
-    Output_Write((int)off_51A614[0], (int)aDuplicateSlots, v10);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDuplicateSlots, v10);
     return 0;
   }
   return result;
@@ -185867,8 +185857,8 @@ signed int  Class_ParseSimpleFacet(
   if ( (*v11 & (unsigned __int8)v12) != 0 )
   {
     Rules_PrintErrorID((int)aClsltpsr, 2, 0);
-    Output_Write((int)off_51A614[0], a4, v17);
-    Output_Write((int)off_51A614[0], (int)aFacetAlreadySp, v18);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], a4, v17);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aFacetAlreadySp, v18);
     return -1;
   }
   *v11 |= v12;
@@ -185923,7 +185913,7 @@ signed int  Class_ParseDefaultFacet(int a1, _BYTE *a2, int a3, int a4, double a5
   if ( (*a2 & 0x40) != 0 )
   {
     Rules_PrintErrorID((int)aClsltpsr, 2, 0);
-    Output_Write((int)off_51A614[0], (int)aDefaultFacetAl, v8);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aDefaultFacetAl, v8);
     return 0;
   }
   *a2 |= 0x40u;
@@ -186122,7 +186112,7 @@ signed int  Class_CheckForFacetConflicts(int a1, int a2)
     if ( (*(_BYTE *)(a2 + 1) & 4) != 0 )
     {
       Rules_PrintErrorID((int)aClsltpsr, 3, 1);
-      Output_Write((int)off_51A614[0], (int)aCardinalityFac, v11);
+      Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aCardinalityFac, v11);
       return 0;
     }
     AST_Free(*(_DWORD *)(*(_DWORD *)(a1 + 20) + 18));
@@ -186137,19 +186127,19 @@ signed int  Class_CheckForFacetConflicts(int a1, int a2)
   if ( (*(_BYTE *)(v2 + 1) & 1) != 0 && (*(_BYTE *)v2 & 0x10) != 0 )
   {
     Rules_PrintErrorID((int)aClsltpsr, 4, 1);
-    Output_Write((int)off_51A614[0], (int)aReadOnlySlotsM, v12);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReadOnlySlotsM, v12);
     return 0;
   }
   else if ( (*(_BYTE *)v2 & 0x10) != 0 && ((v9 = *(_BYTE *)(v2 + 1), (v9 & 0x10) != 0) || (v9 & 0x20) != 0) )
   {
     Rules_PrintErrorID((int)aClsltpsr, 5, 1);
-    Output_Write((int)off_51A614[0], (int)aReadOnlySlotsC, v13);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aReadOnlySlotsC, v13);
     return 0;
   }
   else if ( (*(_BYTE *)v2 & 8) != 0 && (*(_BYTE *)(v2 + 1) & 4) != 0 )
   {
     Rules_PrintErrorID((int)aClsltpsr, 6, 1);
-    Output_Write((int)off_51A614[0], (int)aNoInheritSlots, v14);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aNoInheritSlots, v14);
     return 0;
   }
   else
@@ -186197,8 +186187,8 @@ signed int  Class_EvaluateSlotDefaultValue(int *a1, char *a2, double a3)
     if ( !v17 )
       return 1;
     Rules_PrintErrorID((int)aCstrnchk_3, 1, 0);
-    Output_Write((int)off_51A614[0], (int)aExpressionFo_0, (int)aDynamicDefault);
-    Instance_PrintSlotErrorContext((int)off_51A614[0], (int)a1, v18, 0);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpressionFo_0, (int)aDynamicDefault);
+    Instance_PrintSlotErrorContext((int)g_IO_LogicalNameTable_WError[0], (int)a1, v18, 0);
     Rules_PrintConstraintViolationMessage(0, 0, 0, 0, 0, 0, v17, a1[5], 0);
     return 0;
   }
@@ -186276,15 +186266,15 @@ _DWORD * CRT_ResizeHeapBlockLocked(_DWORD *a1, unsigned int a2, unsigned int a3)
   unsigned int v6[4]; // [esp-Ch] [ebp-10h] BYREF
 
   v6[2] = a3;
-  off_51A584();
+  g_CRT_StaticLock2AcquireHook();
   if ( CRT_ResizeHeapBlockInPlace(__DS__, a1, v6, a2, a1) )
   {
-    off_51A58C();
+    g_CRT_StaticLock2ReleaseHook();
     return 0;
   }
   else
   {
-    off_51A58C();
+    g_CRT_StaticLock2ReleaseHook();
     return a1;
   }
 }
@@ -186341,7 +186331,7 @@ signed int  CRT_ResizeHeapBlockInPlace(
       *(unsigned int *)((char *)v19 + v6) = v15;
       if ( __DS__ == a1 )
       {
-        for ( i = (_DWORD *)dword_519F14; i[2] && (i > a2 || (_DWORD *)((char *)i + *i) <= a2); i = (_DWORD *)i[2] )
+        for ( i = (_DWORD *)g_CRT_HeapSegmentListHead; i[2] && (i > a2 || (_DWORD *)((char *)i + *i) <= a2); i = (_DWORD *)i[2] )
           ;
       }
       ++i[6];
@@ -186364,7 +186354,7 @@ signed int  CRT_ResizeHeapBlockInPlace(
       v20 = j[1];
       if ( __DS__ == a1 )
       {
-        for ( i = (_DWORD *)dword_519F14; i[2] && (i > a2 || (_DWORD *)((char *)i + *i) <= a2); i = (_DWORD *)i[2] )
+        for ( i = (_DWORD *)g_CRT_HeapSegmentListHead; i[2] && (i > a2 || (_DWORD *)((char *)i + *i) <= a2); i = (_DWORD *)i[2] )
           ;
       }
       v12 = (unsigned int *)i[3];
@@ -186432,7 +186422,7 @@ BOOL __cdecl CRT_ThreadStartTrampoline(LPVOID lpThreadParameter)
     *(_DWORD *)(g_CrtThreadDataAccessor(v1, v2) + 222) = v7;
     SetEvent(*((HANDLE *)lpThreadParameter + 3));
     CRT_InstallUnhandledExceptionFilter((int)v9, v8);
-    off_51A5A8();
+    g_CRT_ThreadStartupHook();
     v10();
     endthread_();
   }
@@ -186494,7 +186484,7 @@ void __fastcall __noreturn CRT_EndThread(int a1, int a2)
   int v2; // edx
   int v3; // ecx
 
-  off_51A5AC(a2, a1);
+  g_CRT_ThreadEndHook(a2, a1);
   CRT_RemoveUnhandledExceptionFilter(v3, v2);
   if ( !dword_54DD90 )
     CRT_DetachThreadDataAndMaybeCloseHandle((char *)1);

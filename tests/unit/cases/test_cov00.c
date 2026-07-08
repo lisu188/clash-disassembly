@@ -18,7 +18,7 @@ TEST(cov00_rsurf, get_compact_method_pointer) {
 
   /* surface valid, vtable != 0: read straight out of a real global table,
    * without ever calling through the returned value (safe). */
-  surface[46] = (unsigned int)(uintptr_t)off_50EE24;
+  surface[46] = (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable;
   TOUCH(RenderSurface_GetCompactMethodPointer(surface, 0));
   TOUCH(RenderSurface_GetCompactMethodPointer(surface, 4));
 }
@@ -95,7 +95,7 @@ TEST(cov00_rsurf, invoke_slot16_read_pixel) {
   /* linear software surface, in-bounds read */
   surfaceLinear[0] = 4u | (4u << 16); /* width=4 height=4 */
   surfaceLinear[1] = (unsigned int)(uintptr_t)pixels;
-  surfaceLinear[46] = (unsigned int)(uintptr_t)off_50EE24;
+  surfaceLinear[46] = (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable;
   CHECK_EQ(RenderSurface_InvokeSlot16ReadPixel(surfaceLinear, 1, 1), 0x42);
 
   /* linear software surface, out-of-bounds read */
@@ -123,7 +123,7 @@ TEST(cov00_rsurf, write_software_pixel) {
   RenderSurface_WriteSoftwarePixel(surface, 0, 0, 7);
 
   /* linear software, but no pixel buffer -> early return */
-  surface[46] = (unsigned int)(uintptr_t)off_50EE24;
+  surface[46] = (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable;
   RenderSurface_WriteSoftwarePixel(surface, 0, 0, 7);
 
   /* linear software, valid pixel buffer, out-of-bounds -> early return */

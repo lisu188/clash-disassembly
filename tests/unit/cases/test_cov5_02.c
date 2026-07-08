@@ -278,7 +278,7 @@ static void cov5_02_install_lex_router(_DWORD *router, const char *text) {
   router[3] = (_DWORD)(intptr_t)cov5_02_lex_query; /* offset12: query */
   router[6] = (_DWORD)(intptr_t)cov5_02_lex_read;  /* offset24: read */
   router[7] = (_DWORD)(intptr_t)cov5_02_lex_skip;  /* offset28: skip */
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
   cov5_02_lex_seq = text;
   cov5_02_lex_pos = 0;
 }
@@ -286,7 +286,7 @@ static void cov5_02_install_lex_router(_DWORD *router, const char *text) {
 TEST(cov5_02_parsedefrulerhs, primed_v2_real_token_drives_success) {
   static _DWORD router[16];
   static _DWORD v2target[64];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   memset(v2target, 0, sizeof v2target);
   cov5_02_install_lex_router(router, "a)");
@@ -296,7 +296,7 @@ TEST(cov5_02_parsedefrulerhs, primed_v2_real_token_drives_success) {
   cov5_02_prime_int((int)(intptr_t)v2target);
   TOUCH(Rules_ParseDefruleRHS(717171));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 /* =========================================================================

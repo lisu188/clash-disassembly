@@ -137,7 +137,7 @@ TEST(cov04_diag, trace_castle_hotspots) {
   /* mark surface as "linear software" via a real global vtable table (as in
    * test_cov00.c) so InvokeSlot16ReadPixel takes the safe direct-read path
    * instead of calling through an unpopulated method-table slot. */
-  surface[46] = (unsigned int)(uintptr_t)off_50EE24;
+  surface[46] = (unsigned int)(uintptr_t)g_Surface_RawBuffer8Vtable;
   surface[0] = 8 | (8 << 16); /* width=8 height=8 */
   surface[1] = (unsigned int)(uintptr_t)pixels;
   for (i = 0; i < 8; ++i)

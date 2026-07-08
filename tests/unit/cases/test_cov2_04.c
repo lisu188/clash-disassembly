@@ -97,7 +97,7 @@ static int cov2_04_lex_read(int a1) {
 
 TEST(cov2_04_lexreadtoken, plain_symbol_else_branch) {
   static _DWORD router[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   int outflag = 0;
 
   memset(router, 0, sizeof router);
@@ -105,7 +105,7 @@ TEST(cov2_04_lexreadtoken, plain_symbol_else_branch) {
   router[3] = (_DWORD)(intptr_t)cov2_04_lex_query;
   router[6] = (_DWORD)(intptr_t)cov2_04_lex_read;
   router[7] = (_DWORD)(intptr_t)cov2_04_lex_skip;
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -115,12 +115,12 @@ TEST(cov2_04_lexreadtoken, plain_symbol_else_branch) {
   TOUCH(Lexer_ReadToken(424242, 0, (_DWORD *)&outflag, 0));
   CHECK_EQ(outflag, 2);
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 TEST(cov2_04_lexreadtoken, bracket_if_branch) {
   static _DWORD router[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
   int outflag = 0;
 
   memset(router, 0, sizeof router);
@@ -128,7 +128,7 @@ TEST(cov2_04_lexreadtoken, bracket_if_branch) {
   router[3] = (_DWORD)(intptr_t)cov2_04_lex_query;
   router[6] = (_DWORD)(intptr_t)cov2_04_lex_read;
   router[7] = (_DWORD)(intptr_t)cov2_04_lex_skip;
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
 
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
@@ -138,7 +138,7 @@ TEST(cov2_04_lexreadtoken, bracket_if_branch) {
   TOUCH(Lexer_ReadToken(424242, 0, (_DWORD *)&outflag, 0));
   CHECK_EQ(outflag, 8);
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 /* ---- Instance_RegisterModifyAndDuplicateFunctions: straight-line chain of

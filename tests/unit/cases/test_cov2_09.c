@@ -93,11 +93,11 @@ TEST(cov2_09_rules, find_instance_slot_found) {
  * the node's own +27 "next" field being 0. ---- */
 TEST(cov2_09_event, clear_handlers_one_node) {
   static _DWORD node[16];
-  int saved = dword_51A264;
+  int saved = g_Rules_HostFunctionListHead;
   memset(node, 0, sizeof node);
-  dword_51A264 = (int)(intptr_t)node;
+  g_Rules_HostFunctionListHead = (int)(intptr_t)node;
   TOUCH(Event_ClearHandlers());
-  dword_51A264 = saved;
+  g_Rules_HostFunctionListHead = saved;
 }
 
 /* ---- UnitStack_CycleAllSlotOrders: MUST use a STATIC backing buffer --
@@ -234,16 +234,16 @@ TEST(cov2_09_rules, remove_all_break_flags_one_module_one_rule) {
  * normally. ---- */
 TEST(cov2_09_rules, find_fact_by_index_two_facts) {
   static _DWORD fact1[16], fact2[16];
-  int saved = dword_51A15C;
+  int saved = g_Rules_FactListHead;
   memset(fact1, 0, sizeof fact1);
   memset(fact2, 0, sizeof fact2);
   *(_DWORD *)((char *)fact1 + 24) = 0xdead;      /* likely mismatches the
                                                      uninitialized comparator */
   *(_DWORD *)((char *)fact1 + 36) = (_DWORD)(intptr_t)fact2; /* next fact */
   /* fact2 is all-zero: +24 == 0 and +36 == 0 (chain terminator). */
-  dword_51A15C = (int)(intptr_t)fact1;
+  g_Rules_FactListHead = (int)(intptr_t)fact1;
   TOUCH(Rules_FindFactByIndex());
-  dword_51A15C = saved;
+  g_Rules_FactListHead = saved;
 }
 
 /* ---- Defgeneric_CloseCodeFiles: the do/while always runs exactly 5 times

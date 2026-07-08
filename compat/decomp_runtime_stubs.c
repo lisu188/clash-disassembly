@@ -80,7 +80,7 @@ extern char IsTable[256];
 unsigned __int16 __ES__;
 unsigned __int16 __DS__;
 __lock unk_51A638;
-_UNKNOWN unk_519AE8;
+_UNKNOWN g_Audio_DriverModuleTableBase;
 
 #define COMPAT_TLS_SLOT_COUNT 64
 #define COMPAT_TLS_SEARCH_START 3u
@@ -2580,104 +2580,104 @@ int CRT_WatcomEHFrameHandler(void)
  * Returning zero here is a compile/link quarantine choice, not a claim that
  * the original callers depended on a specific non-void result.
  */
-int nullsub_1(void)
+int Noop_WorldMapFrameRedrawHook(void)
 {
   return 0;
 }
 
-int __thiscall nullsub_2(_DWORD a1)
-{
-  (void)a1;
-  return 0;
-}
-
-int __thiscall nullsub_3(_DWORD a1)
+int __thiscall Noop_AppShutdownPostAudioCloseHook(_DWORD a1)
 {
   (void)a1;
   return 0;
 }
 
-int nullsub_4(void)
-{
-  return 0;
-}
-
-int nullsub_5(void)
-{
-  return 0;
-}
-
-int __fastcall nullsub_6(_DWORD a1, _DWORD a2)
-{
-  (void)a1;
-  (void)a2;
-  return 0;
-}
-
-int __thiscall nullsub_7(_DWORD a1)
+int __thiscall Noop_PlayGameSessionBoundaryHook(_DWORD a1)
 {
   (void)a1;
   return 0;
 }
 
-_DWORD nullsub_8(void)
+int Noop_AppShutdownPreAudioCloseHook(void)
 {
   return 0;
 }
 
-int nullsub_9(void)
+int Noop_DebugHotkeyF1Handler(void)
 {
   return 0;
 }
 
-int nullsub_10(void)
-{
-  return 0;
-}
-
-int __fastcall nullsub_11(_DWORD a1, _DWORD a2)
+int __fastcall Noop_CrtExitHandlerPair(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
   return 0;
 }
 
-int nullsub_15(void)
+int __thiscall Noop_WCIsvListErrorHook(_DWORD a1)
+{
+  (void)a1;
+  return 0;
+}
+
+_DWORD Noop_CrtSingleThreadLockStub(void)
 {
   return 0;
 }
 
-int nullsub_16(void)
+int Noop_CrtLockEnterLeaveResetStub(void)
 {
   return 0;
 }
 
-int nullsub_19(void)
+int Noop_CrtIoInitHook(void)
 {
   return 0;
 }
 
-int nullsub_23(void)
+int __fastcall Noop_DeftemplateResetCallback(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return 0;
+}
+
+int Noop_InputDeviceDoOp(void)
 {
   return 0;
 }
 
-int nullsub_24(void)
+int Noop_PathEntryArrayDeletingDtor(void)
 {
   return 0;
 }
 
-int nullsub_29(void)
+int Noop_SurfaceCursorUnboundedAdvance(void)
 {
   return 0;
 }
 
-int nullsub_30(void)
+int Noop_InputDeviceGetParamB(void)
 {
   return 0;
 }
 
-int nullsub_32(void)
+int Noop_InputDeviceSetParamA(void)
+{
+  return 0;
+}
+
+int Noop_FatalQueryStreamDestruct(void)
+{
+  return 0;
+}
+
+int Noop_FatalQueryStreamPutBackByte(void)
+{
+  return 0;
+}
+
+int Noop_RulesRecordScalarDeletingDtor(void)
 {
   return 0;
 }

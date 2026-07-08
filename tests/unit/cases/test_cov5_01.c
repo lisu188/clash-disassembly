@@ -606,7 +606,7 @@ static void cov5_01_iq_install_router(_DWORD *router, const char *seq) {
   router[3] = (_DWORD)(intptr_t)cov5_01_iq_lex_query; /* offset12 */
   router[6] = (_DWORD)(intptr_t)cov5_01_iq_lex_read;  /* offset24 */
   router[7] = (_DWORD)(intptr_t)cov5_01_iq_lex_skip;  /* offset28 */
-  dword_51A604 = (int)(intptr_t)router;
+  g_IO_RouterListHead = (int)(intptr_t)router;
   cov5_01_iq_lex_seq = seq;
   cov5_01_iq_lex_pos = 0;
 }
@@ -615,7 +615,7 @@ TEST(cov5_01_parseinstancequery, no_action_two_restrictions_then_close) {
   static _DWORD router[16];
   static unsigned char safebuf[256];
   static _DWORD a1construct[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   memset(safebuf, 0, sizeof safebuf);
   memset(a1construct, 0, sizeof a1construct);
@@ -632,14 +632,14 @@ TEST(cov5_01_parseinstancequery, no_action_two_restrictions_then_close) {
   cov5_01_stack_prime((int)(intptr_t)safebuf);
   TOUCH(Parser_ParseInstanceQueryNoAction((int)(intptr_t)a1construct, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }
 
 TEST(cov5_01_parseinstancequery, no_action_immediate_close_paren) {
   static _DWORD router[16];
   static unsigned char safebuf[256];
   static _DWORD a1construct[16];
-  int saved604 = dword_51A604;
+  int saved604 = g_IO_RouterListHead;
 
   memset(safebuf, 0, sizeof safebuf);
   memset(a1construct, 0, sizeof a1construct);
@@ -650,5 +650,5 @@ TEST(cov5_01_parseinstancequery, no_action_immediate_close_paren) {
   cov5_01_stack_prime((int)(intptr_t)safebuf);
   TOUCH(Parser_ParseInstanceQueryNoAction((int)(intptr_t)a1construct, 0));
 
-  dword_51A604 = saved604;
+  g_IO_RouterListHead = saved604;
 }

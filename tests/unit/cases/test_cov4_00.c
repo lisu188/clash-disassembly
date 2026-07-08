@@ -129,12 +129,12 @@ TEST(cov4_00_mathcoth, math_coth_attempt) {
  * bload flag cleared so at least the early `Rules_IsBloaded()` truthy
  * shortcut is bypassed. */
 TEST(cov4_00_definstdel, delete_record_attempt) {
-  int saved = dword_51A1AC;
+  int saved = g_Rules_FactsBloadedFlag;
   Mem_InitReserveBlock(0, 0);
   Rules_InitAtomTables();
-  dword_51A1AC = 0;
+  g_Rules_FactsBloadedFlag = 0;
   TOUCH(Definstances_DeleteRecord());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* =========================================================================

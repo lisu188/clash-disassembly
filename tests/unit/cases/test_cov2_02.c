@@ -486,7 +486,7 @@ TEST(cov2_02_msghandler, tally_shapes) {
  * (single-row rect, color 0) chasing the one remaining uncovered line. ---- */
 TEST(cov2_02_render, fill_solid_rect_edge_shapes) {
   extern _UNKNOWN *g_RenderDevice;
-  extern int off_50EDD4[17];
+  extern int g_Surface_BaseVtable[17];
   _UNKNOWN *saved_device = g_RenderDevice;
   static _DWORD fake_surface[64];
   static unsigned char pixels[4096];
@@ -495,7 +495,7 @@ TEST(cov2_02_render, fill_solid_rect_edge_shapes) {
   memset(pixels, 0, sizeof(pixels));
   fake_surface[0] = (32u << 16) | 32u;
   fake_surface[1] = (_DWORD)(uintptr_t)pixels;
-  fake_surface[46] = (_DWORD)(uintptr_t)off_50EDD4;
+  fake_surface[46] = (_DWORD)(uintptr_t)g_Surface_BaseVtable;
   g_RenderDevice = (_UNKNOWN *)fake_surface;
 
   TOUCH(Compat_RenderDeviceFillSolidRect(5, 5, 5, 5, 0));   /* single pixel */
@@ -640,10 +640,10 @@ TEST(cov2_02_map, reveal_tiles_radius2) {
  * plus the empty-module-list immediate "return 1" (a real defgeneric-bearing
  * module is out of reach without a full rules-engine bring-up). ---- */
 TEST(cov2_02_defgenclear, bloaded_and_not) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   CHECK_EQ(Defgeneric_ClearDefgenerics(), 0);
-  dword_51A1AC = 0;
+  g_Rules_FactsBloadedFlag = 0;
   CHECK_EQ(Defgeneric_ClearDefgenerics(), 1);
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }

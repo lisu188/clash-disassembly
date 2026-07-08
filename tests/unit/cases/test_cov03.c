@@ -94,7 +94,7 @@ TEST(cov03_battlelog, enable_disable) {
 /* ---- Compat_RenderDeviceFillSolidRect ---- */
 TEST(cov03_render, fill_solid_rect) {
   extern _UNKNOWN *g_RenderDevice;
-  extern int off_50EE24[17];
+  extern int g_Surface_RawBuffer8Vtable[17];
   _UNKNOWN *saved_device = g_RenderDevice;
   static _DWORD fake_surface[64];
   static unsigned char pixels[8192];
@@ -117,7 +117,7 @@ TEST(cov03_render, fill_solid_rect) {
    * as two u16 halves. */
   fake_surface[0] = (50u << 16) | 50u; /* width=50 (lo16), height=50 (hi16) */
   fake_surface[1] = (_DWORD)(uintptr_t)pixels;
-  fake_surface[46] = (_DWORD)(uintptr_t)off_50EE24;
+  fake_surface[46] = (_DWORD)(uintptr_t)g_Surface_RawBuffer8Vtable;
 
   /* left > right -> guard returns 0. */
   CHECK_EQ(Compat_RenderDeviceFillSolidRect(20, 0, 10, 10, 1), 0);

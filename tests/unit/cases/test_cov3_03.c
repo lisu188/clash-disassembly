@@ -142,26 +142,26 @@ TEST(cov3_03_class, parseclassnamearg_evaluation_halted) {
  * `if (!Defgeneric_ClearDefgenerics()) return 0;` true branch (since
  * Defgeneric_ClearDefgenerics() itself now deterministically returns 0). */
 TEST(cov3_03_defgeneric, clear_defgenerics_bloaded) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   TOUCH(Defgeneric_ClearDefgenerics());
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov3_03_defgeneric, remove_construct_nonzero_bloaded) {
   static _DWORD obj[128];
-  int saved = dword_51A1AC;
+  int saved = g_Rules_FactsBloadedFlag;
   memset(obj, 0, sizeof obj);
-  dword_51A1AC = 1;
+  g_Rules_FactsBloadedFlag = 1;
   TOUCH(Defgeneric_RemoveConstruct((int)(intptr_t)obj));
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 TEST(cov3_03_defgeneric, remove_construct_zero_bloaded) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   TOUCH(Defgeneric_RemoveConstruct(0));
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* ---- Rules_ListInstancesForClassOrModule ----

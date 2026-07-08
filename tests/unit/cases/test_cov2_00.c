@@ -431,10 +431,10 @@ TEST(cov2_00_rules, math_exp_matching_arg_count) {
  * add the bloaded==true shape here, which deterministically short-circuits
  * before ever touching 'v0'. ---- */
 TEST(cov2_00_class, is_deletable_alt_bloaded) {
-  int saved = dword_51A1AC;
-  dword_51A1AC = 1;
+  int saved = g_Rules_FactsBloadedFlag;
+  g_Rules_FactsBloadedFlag = 1;
   CHECK_EQ(Class_IsDeletableAlt(), 0);
-  dword_51A1AC = saved;
+  g_Rules_FactsBloadedFlag = saved;
 }
 
 /* ---- Rules_FindExistingJoinTestNode: cov23 already covers the null head,
