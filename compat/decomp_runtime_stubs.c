@@ -65,11 +65,18 @@ typedef struct TextSpriteResourceSlotRecord {
   unsigned __int16 glyph_spacing_word;
 } TextSpriteResourceSlotRecord;
 TextSpriteResourceSlotRecord *TextSprite_GetResourceSlot(int slot_index);
+_DWORD __stdcall GetLastError(void);
+extern __int64 (__fastcall *off_51A568)(_DWORD, _DWORD);
+extern int dword_51A648;
 extern void *lpTlsValue;
 extern int dword_543CC8[11];
 extern int dword_520728;
 extern _UNKNOWN *g_RenderDevice;
 extern char IsTable[256];
+
+static const signed char k_DosErrnoMap[20] = {
+  0, 9, 1, 1, 11, 6, 4, 5, 5, 5, 2, 3, -1, -1, 7, 9, 6, 8, 1, -1
+};
 
 /*
  * Narrow compile-time quarantine for late runtime helpers that still need
@@ -90,7 +97,8 @@ _UNKNOWN g_Audio_DriverModuleTableBase;
 #define COMPAT_WSL_GAME_ROOT "/mnt/c/clash"
 #define COMPAT_LOW32_ALLOC_MAGIC 0xC10A110Cu
 
-static DWORD g_compat_last_error;
+/* Shared with platform_sdl_runtime.c, which owns GetLastError/SetLastError. */
+extern DWORD g_platform_last_error;
 static LPVOID g_compat_tls_slots[COMPAT_TLS_SLOT_COUNT];
 static unsigned char g_compat_tls_slot_in_use[COMPAT_TLS_SLOT_COUNT];
 
@@ -638,68 +646,9 @@ signed int Lexer_WarnImpliedTemplate(int a1, int a2, int a3)
 static void CompatSetLastErrorFromErrno(void)
 {
   if ( errno )
-    g_compat_last_error = (DWORD)errno;
+    g_platform_last_error = (DWORD)errno;
   else
-    g_compat_last_error = (DWORD)EIO;
-}
-
-static DWORD CompatResolveOsErrorCode(DWORD fallback)
-{
-  if ( g_compat_last_error )
-    return g_compat_last_error;
-  if ( fallback )
-    return fallback;
-  if ( errno )
-    return (DWORD)errno;
-  return (DWORD)EIO;
-}
-
-static int CompatMapOsErrorToErrno(DWORD error_code)
-{
-  switch ( error_code )
-  {
-    case 0:
-      return 0;
-    case 2:
-    case 3:
-      return ENOENT;
-    case 5:
-      return EACCES;
-    case 6:
-      return EBADF;
-    case 8:
-    case 12:
-    case 14:
-      return ENOMEM;
-    case 13:
-      return EACCES;
-    case 16:
-    case 32:
-      return EBUSY;
-    case 17:
-    case 80:
-    case 183:
-      return EEXIST;
-    case 20:
-    case 267:
-      return ENOTDIR;
-    case 21:
-      return EISDIR;
-    case 22:
-    case 87:
-      return EINVAL;
-    case 28:
-    case 112:
-      return ENOSPC;
-    case 145:
-      return ENOTEMPTY;
-    case 258:
-      return EAGAIN;
-    default:
-      if ( error_code <= 255 )
-        return (int)error_code;
-      return EIO;
-  }
+    g_platform_last_error = (DWORD)EIO;
 }
 
 static int CompatTlsSlotIsValid(DWORD dwTlsIndex)
@@ -731,7 +680,7 @@ static HANDLE CompatRegisterFindHandle(CompatFindHandle *handle)
       return (HANDLE)(uintptr_t)(slot_index + 1);
     }
   }
-  g_compat_last_error = (DWORD)ENOMEM;
+  g_platform_last_error = (DWORD)ENOMEM;
   return (HANDLE)-1;
 }
 
@@ -886,7 +835,7 @@ static int CompatFillFindData(const char *directory, const char *entry_name, LPW
   Compat_CopyPrefixN(full_path, directory, (unsigned int)strlen(directory) + 1);
   if ( !CompatAppendPathComponent(full_path, sizeof(full_path), entry_name) )
   {
-    g_compat_last_error = (DWORD)ENAMETOOLONG;
+    g_platform_last_error = (DWORD)ENAMETOOLONG;
     return 0;
   }
   if ( stat(full_path, &st) != 0 )
@@ -910,7 +859,7 @@ static int CompatFillFindData(const char *directory, const char *entry_name, LPW
   find_data->nFileSizeHigh = (DWORD)(((unsigned long long)st.st_size >> 32) & 0xFFFFFFFFu);
   Compat_CopyPrefixN(find_data->cFileName, entry_name, (unsigned int)strlen(entry_name) + 1);
   find_data->cAlternateFileName[0] = 0;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -920,7 +869,7 @@ static int CompatFindNextMatch(CompatFindHandle *handle, LPWIN32_FIND_DATAA find
 
   if ( !handle || !handle->dir || !find_data )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   while ( (entry = readdir(handle->dir)) != 0 )
@@ -932,7 +881,7 @@ static int CompatFindNextMatch(CompatFindHandle *handle, LPWIN32_FIND_DATAA find
     if ( CompatFillFindData(handle->directory, entry->d_name, find_data) )
       return 1;
   }
-  g_compat_last_error = (DWORD)ENOENT;
+  g_platform_last_error = (DWORD)ENOENT;
   return 0;
 }
 
@@ -1482,7 +1431,7 @@ int Compat_OpenFileDescriptor(const char *path, int mode_char, int open_flags)
   if ( !path || !*path )
   {
     errno = EINVAL;
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return -1;
   }
   effective_path = path;
@@ -1510,7 +1459,7 @@ int Compat_OpenFileDescriptor(const char *path, int mode_char, int open_flags)
       break;
     default:
       errno = EINVAL;
-      g_compat_last_error = (DWORD)EINVAL;
+      g_platform_last_error = (DWORD)EINVAL;
       return -1;
   }
   fd = open(effective_path, flags, 0666);
@@ -1519,7 +1468,7 @@ int Compat_OpenFileDescriptor(const char *path, int mode_char, int open_flags)
     CompatSetLastErrorFromErrno();
     return -1;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return fd;
 }
 
@@ -1632,7 +1581,7 @@ int Compat_StreamSeek(int stream_ptr, int offset, int whence)
       break;
     default:
       errno = EINVAL;
-      g_compat_last_error = (DWORD)EINVAL;
+      g_platform_last_error = (DWORD)EINVAL;
       return -1;
   }
   position = lseek(os_fd, (off_t)offset, seek_whence);
@@ -1703,28 +1652,6 @@ int Compat_WcppCtorArrayStorage1s(void *block, int count, const void *descriptor
   return Compat_WcppCtorArrayStorage1m(data, count, descriptor);
 }
 
-DWORD __stdcall GetLastError(void)
-{
-  return g_compat_last_error;
-}
-
-void __stdcall SetLastError(DWORD dwErrCode)
-{
-  g_compat_last_error = dwErrCode;
-}
-
-int __cdecl _set_errno_dos_(DWORD error_code)
-{
-  errno = CompatMapOsErrorToErrno(CompatResolveOsErrorCode(error_code));
-  return -1;
-}
-
-int __cdecl _set_errno_nt_(DWORD error_code)
-{
-  errno = CompatMapOsErrorToErrno(CompatResolveOsErrorCode(error_code));
-  return -1;
-}
-
 DWORD __stdcall TlsAlloc(void)
 {
   DWORD index;
@@ -1735,7 +1662,7 @@ DWORD __stdcall TlsAlloc(void)
     {
       g_compat_tls_slot_in_use[index] = 1;
       g_compat_tls_slots[index] = 0;
-      g_compat_last_error = 0;
+      g_platform_last_error = 0;
       return index;
     }
   }
@@ -1745,11 +1672,11 @@ DWORD __stdcall TlsAlloc(void)
     {
       g_compat_tls_slot_in_use[index] = 1;
       g_compat_tls_slots[index] = 0;
-      g_compat_last_error = 0;
+      g_platform_last_error = 0;
       return index;
     }
   }
-  g_compat_last_error = (DWORD)ENOMEM;
+  g_platform_last_error = (DWORD)ENOMEM;
   return (DWORD)-1;
 }
 
@@ -1757,12 +1684,12 @@ BOOL __stdcall TlsFree(DWORD dwTlsIndex)
 {
   if ( !CompatTlsSlotIsValid(dwTlsIndex) )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   g_compat_tls_slot_in_use[dwTlsIndex] = 0;
   g_compat_tls_slots[dwTlsIndex] = 0;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -1770,10 +1697,10 @@ LPVOID __stdcall TlsGetValue(DWORD dwTlsIndex)
 {
   if ( !CompatTlsSlotIsValid(dwTlsIndex) )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return g_compat_tls_slots[dwTlsIndex];
 }
 
@@ -1781,11 +1708,11 @@ BOOL __stdcall TlsSetValue(DWORD dwTlsIndex, LPVOID lpTlsValue)
 {
   if ( !CompatTlsSlotIsValid(dwTlsIndex) )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   g_compat_tls_slots[dwTlsIndex] = lpTlsValue;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -1796,7 +1723,7 @@ BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
 
   if ( !lpFileName || !*lpFileName )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   effective_path = lpFileName;
@@ -1804,7 +1731,7 @@ BOOL __stdcall DeleteFileA(LPCSTR lpFileName)
     effective_path = translated_path;
   if ( unlink(effective_path) == 0 )
   {
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return 1;
   }
   CompatSetLastErrorFromErrno();
@@ -1820,7 +1747,7 @@ BOOL __stdcall MoveFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName)
 
   if ( !lpExistingFileName || !*lpExistingFileName || !lpNewFileName || !*lpNewFileName )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   existing_path = lpExistingFileName;
@@ -1832,12 +1759,12 @@ BOOL __stdcall MoveFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName)
   if ( access(new_path, F_OK) == 0 )
   {
     errno = EEXIST;
-    g_compat_last_error = (DWORD)EEXIST;
+    g_platform_last_error = (DWORD)EEXIST;
     return 0;
   }
   if ( rename(existing_path, new_path) == 0 )
   {
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return 1;
   }
   CompatSetLastErrorFromErrno();
@@ -1852,7 +1779,7 @@ BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecur
   (void)lpSecurityAttributes;
   if ( !lpPathName || !*lpPathName )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   effective_path = lpPathName;
@@ -1860,7 +1787,7 @@ BOOL __stdcall CreateDirectoryA(LPCSTR lpPathName, LPSECURITY_ATTRIBUTES lpSecur
     effective_path = translated_path;
   if ( mkdir(effective_path, 0777) == 0 )
   {
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return 1;
   }
   CompatSetLastErrorFromErrno();
@@ -1874,7 +1801,7 @@ BOOL __stdcall RemoveDirectoryA(LPCSTR lpPathName)
 
   if ( !lpPathName || !*lpPathName )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   effective_path = lpPathName;
@@ -1882,7 +1809,7 @@ BOOL __stdcall RemoveDirectoryA(LPCSTR lpPathName)
     effective_path = translated_path;
   if ( rmdir(effective_path) == 0 )
   {
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return 1;
   }
   CompatSetLastErrorFromErrno();
@@ -1898,7 +1825,7 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
 
   if ( !lpFileName || !*lpFileName )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return COMPAT_INVALID_FILE_ATTRIBUTES;
   }
   effective_path = lpFileName;
@@ -1914,7 +1841,7 @@ DWORD __stdcall GetFileAttributesA(LPCSTR lpFileName)
     attributes |= COMPAT_FILE_ATTRIBUTE_DIRECTORY;
   if ( access(effective_path, W_OK) != 0 )
     attributes |= COMPAT_FILE_ATTRIBUTE_READONLY;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return attributes;
 }
 
@@ -1930,7 +1857,7 @@ HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFile
 
   if ( !lpFileName || !*lpFileName || !lpFindFileData )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return (HANDLE)-1;
   }
   CompatNormalizePathSlashes(lpFileName, normalized_search, sizeof(normalized_search));
@@ -1956,7 +1883,7 @@ HANDLE __stdcall FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFile
   handle = (CompatFindHandle *)calloc(1, sizeof(*handle));
   if ( !handle )
   {
-    g_compat_last_error = (DWORD)ENOMEM;
+    g_platform_last_error = (DWORD)ENOMEM;
     return (HANDLE)-1;
   }
   Compat_CopyPrefixN(handle->directory, directory_spec, (unsigned int)strlen(directory_spec) + 1);
@@ -1991,7 +1918,7 @@ BOOL __stdcall FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData
   slot_index = CompatFindHandleIndexFromHandle(hFindFile);
   if ( slot_index < 0 || !lpFindFileData )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   return CompatFindNextMatch(g_compat_find_handles[slot_index], lpFindFileData);
@@ -2005,7 +1932,7 @@ BOOL __stdcall FindClose(HANDLE hFindFile)
   slot_index = CompatFindHandleIndexFromHandle(hFindFile);
   if ( slot_index < 0 )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   handle = g_compat_find_handles[slot_index];
@@ -2013,7 +1940,7 @@ BOOL __stdcall FindClose(HANDLE hFindFile)
   if ( handle->dir )
     closedir(handle->dir);
   free(handle);
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2052,7 +1979,7 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
 
   if ( !hObject )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   event_handle = CompatGetEventHandle(hObject);
@@ -2062,7 +1989,7 @@ BOOL __stdcall CloseHandle(HANDLE hObject)
     event_handle->magic = 0;
     free(event_handle);
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2070,10 +1997,10 @@ DWORD __stdcall ResumeThread(HANDLE hThread)
 {
   if ( !hThread )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return (DWORD)-1;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 0;
 }
 
@@ -2081,7 +2008,7 @@ HANDLE __stdcall beginthreadex_(_DWORD a1, _DWORD a2)
 {
   (void)a1;
   (void)a2;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return (HANDLE)(uintptr_t)1;
 }
 
@@ -2090,10 +2017,10 @@ BOOL __stdcall SetThreadPriority(HANDLE hThread, int nPriority)
   (void)nPriority;
   if ( !hThread )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2121,10 +2048,10 @@ HANDLE __stdcall CreateEventA(
   if ( !public_handle )
   {
     free(event_handle);
-    g_compat_last_error = (DWORD)ENOMEM;
+    g_platform_last_error = (DWORD)ENOMEM;
     return 0;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return public_handle;
 }
 
@@ -2135,19 +2062,19 @@ DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
   event_handle = CompatGetEventHandle(hHandle);
   if ( !event_handle )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return COMPAT_WAIT_FAILED;
   }
   if ( event_handle->signaled )
   {
     if ( !event_handle->manual_reset )
       event_handle->signaled = 0;
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return COMPAT_WAIT_OBJECT_0;
   }
   if ( dwMilliseconds == 0 )
   {
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return COMPAT_WAIT_TIMEOUT;
   }
   if ( dwMilliseconds != COMPAT_WAIT_INFINITE )
@@ -2158,10 +2085,10 @@ DWORD __stdcall WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
   {
     if ( !event_handle->manual_reset )
       event_handle->signaled = 0;
-    g_compat_last_error = 0;
+    g_platform_last_error = 0;
     return COMPAT_WAIT_OBJECT_0;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return COMPAT_WAIT_TIMEOUT;
 }
 
@@ -2172,11 +2099,11 @@ BOOL __stdcall PulseEvent(HANDLE hEvent)
   event_handle = CompatGetEventHandle(hEvent);
   if ( !event_handle )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   event_handle->signaled = event_handle->manual_reset;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2187,11 +2114,11 @@ BOOL __stdcall ResetEvent(HANDLE hEvent)
   event_handle = CompatGetEventHandle(hEvent);
   if ( !event_handle )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   event_handle->signaled = 0;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2202,11 +2129,11 @@ BOOL __stdcall SetEvent(HANDLE hEvent)
   event_handle = CompatGetEventHandle(hEvent);
   if ( !event_handle )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return 0;
   }
   event_handle->signaled = 1;
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 1;
 }
 
@@ -2214,10 +2141,10 @@ DWORD __stdcall SuspendThread(HANDLE hThread)
 {
   if ( !hThread )
   {
-    g_compat_last_error = (DWORD)EINVAL;
+    g_platform_last_error = (DWORD)EINVAL;
     return (DWORD)-1;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return 0;
 }
 
@@ -2377,6 +2304,25 @@ __int64 __thiscall j_Mem_Alloc(_DWORD a1)
    * Mem_Alloc body at 0x461C00.
    */
   return (unsigned int)Mem_Alloc((int)a1, 0, 0, 0);
+}
+
+int __fastcall sub_473ED5(_DWORD a1, _DWORD a2)
+{
+  _DWORD *node;
+
+  (void)a2;
+  node = (_DWORD *)(uintptr_t)a1;
+  off_51A568(a1, a1);
+  *node = dword_51A648;
+  dword_51A648 = (int)(uintptr_t)node;
+  return 0;
+}
+
+__int64 __fastcall sub_485374(_DWORD a1, _DWORD a2)
+{
+  (void)a1;
+  (void)a2;
+  return (unsigned int)(uintptr_t)lpTlsValue;
 }
 
 int __fastcall strcmp_(_DWORD a1, _DWORD a2)
@@ -2549,6 +2495,28 @@ errno_t __cdecl _set_errno_(int value)
 {
   errno = value;
   return value;
+}
+
+int __cdecl _set_errno_dos_(unsigned int code)
+{
+  int mapped;
+
+  if ( code == 0x7B )
+    mapped = 1;
+  else if ( code == 0xCE )
+    mapped = 9;
+  else if ( code == 0xB7 )
+    mapped = 7;
+  else
+    mapped = k_DosErrnoMap[code <= 0x13 ? code : 0x13];
+  errno = mapped;
+  return -1;
+}
+
+int __cdecl _set_errno_nt_(_DWORD ignored)
+{
+  (void)ignored;
+  return _set_errno_dos_(GetLastError());
 }
 
 int __fastcall CAviDecompressor_ApplyDecoderFormatParams(_DWORD a1, _DWORD a2)
@@ -3309,7 +3277,7 @@ HANDLE __stdcall CreateFileA(
     CompatSetLastErrorFromErrno();
     return (HANDLE)-1;
   }
-  g_compat_last_error = 0;
+  g_platform_last_error = 0;
   return (HANDLE)(uintptr_t)fd;
 }
 

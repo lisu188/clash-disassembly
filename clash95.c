@@ -195,6 +195,14 @@ typedef enum unit_type
 
 #define UNIT_TYPE_COUNT 35
 
+enum BuildingPrisonerAction
+{
+  BUILDING_PRISONER_ACTION_NONE = 0,
+  BUILDING_PRISONER_ACTION_BEHEAD = 1,
+  BUILDING_PRISONER_ACTION_TORTURE = 2,
+  BUILDING_PRISONER_ACTION_PAY = 3
+};
+
 typedef struct QueenWhimRecord
 {
   unsigned __int16 required_stronghold_funds;
@@ -22978,7 +22986,6 @@ void MiniMap_RedrawAllTiles()
 {
   char *v0; // ebx
   signed int i; // ecx
-  int v2; // ecx
 
   v0 = 0;
   g_RenderDevice = (_UNKNOWN *)dword_52334C;
@@ -22990,6 +22997,7 @@ void MiniMap_RedrawAllTiles()
   }
   return;
 }
+// 40D86A: control flows out of bounds to 40D410
 
 void Locale_DrawInteger()
 {
@@ -67369,7 +67377,7 @@ unsigned int  Prisoner_Torture(int a1, int a2, int a3, char a4, DWORD a5)
       return UI_ShowInfoWindow((const char *)&unk_5442C0, 0, v15, a5, (int)v14, (int)v12);
     case 4u:
       Debug_Log(v7, a4, a5, (int)aPrisoner_tor_4);
-      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = 0;
+      BUILDING_PRISONER_ACTION(BUILDING_PRISONER_SLOT(v24, a2)) = BUILDING_PRISONER_ACTION_NONE;
       v26[0] = (int)g_PrisonerTortureResistanceTexts[0];
       v26[1] = (int)g_PrisonerTortureResistanceTexts[1];
       v26[2] = (int)g_PrisonerTortureResistanceTexts[2];
@@ -67506,7 +67514,7 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
       {
         ++v8[447];
         if ( !*(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140051) && v8[447] == 9 )
-          v8[448] = 3;
+          v8[448] = BUILDING_PRISONER_ACTION_PAY;
         BuildingPrisoner_RecalculateRansomValue(v13);
         if ( v8[447] == 10 )
         {
@@ -67524,18 +67532,18 @@ char  Prisoner_NewTurn(DWORD a1, int a2, char a3, double a4)
         else
         {
           LOBYTE(v6) = v8[448];
-          if ( (unsigned __int8)v6 >= 2u )
+          if ( (unsigned __int8)v6 >= BUILDING_PRISONER_ACTION_TORTURE )
           {
-            if ( (unsigned __int8)v6 <= 2u )
+            if ( (unsigned __int8)v6 <= BUILDING_PRISONER_ACTION_TORTURE )
             {
               LOBYTE(v6) = Prisoner_Torture(a1, v7, (int)v8, v7, a1);
             }
-            else if ( (_BYTE)v6 == 3 )
+            else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_PAY )
             {
               LOBYTE(v6) = Prisoner_Pay(a1, v7, a1, a4);
             }
           }
-          else if ( (_BYTE)v6 == 1 )
+          else if ( (_BYTE)v6 == BUILDING_PRISONER_ACTION_BEHEAD )
           {
             LOBYTE(v6) = Prisoner_Behead(a1, (int)v8, v7, a1);
           }
@@ -67879,18 +67887,18 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   for ( j = 0; j < 3; ++j )
   {
     v6 = BuildingPrisoner_GetAction(dword_5443FC, j);
-    if ( v6 >= 2 )
+    if ( v6 >= BUILDING_PRISONER_ACTION_TORTURE )
     {
-      if ( v6 <= 2 )
+      if ( v6 <= BUILDING_PRISONER_ACTION_TORTURE )
       {
         *(_DWORD *)((char *)v4 + 61) = v7;
       }
-      else if ( v6 == 3 )
+      else if ( v6 == BUILDING_PRISONER_ACTION_PAY )
       {
         *(_DWORD *)((char *)v4 + 114) = v7;
       }
     }
-    else if ( v6 == 1 )
+    else if ( v6 == BUILDING_PRISONER_ACTION_BEHEAD )
     {
       v4[2] = v7;
     }
@@ -68147,7 +68155,7 @@ int  Building_ShowPrisonerManagementPanel(int a1, void *a2, DWORD a3)
   while ( v51 == dword_5443F4 );
   if ( g_PrisonerActionButtonState0 == 2 )
   {
-    v52 = 1;
+    v52 = BUILDING_PRISONER_ACTION_BEHEAD;
 LABEL_48:
     v53 = dword_5443FC;
     goto LABEL_49;
@@ -68155,60 +68163,60 @@ LABEL_48:
   if ( g_PrisonerActionButtonState1 == 2 )
   {
     v53 = dword_5443FC;
-    v52 = 2;
+    v52 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else
   {
     if ( g_PrisonerActionButtonState2 == 2 )
     {
-      v52 = 3;
+      v52 = BUILDING_PRISONER_ACTION_PAY;
       goto LABEL_48;
     }
     v53 = dword_5443FC;
-    v52 = 0;
+    v52 = BUILDING_PRISONER_ACTION_NONE;
   }
 LABEL_49:
   BuildingPrisoner_SetAction(v53, v52, v36);
   if ( g_PrisonerActionButtonState3 == 2 )
   {
-    v54 = 1;
+    v54 = BUILDING_PRISONER_ACTION_BEHEAD;
     v55 = dword_5443FC;
   }
   else if ( g_PrisonerActionButtonState4 == 2 )
   {
     v55 = dword_5443FC;
-    v54 = 2;
+    v54 = BUILDING_PRISONER_ACTION_TORTURE;
   }
   else if ( g_PrisonerActionButtonState5 == 2 )
   {
-    v54 = 3;
+    v54 = BUILDING_PRISONER_ACTION_PAY;
     v55 = dword_5443FC;
   }
   else
   {
     v55 = dword_5443FC;
-    v54 = 0;
+    v54 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v55, v54, v36);
   if ( g_PrisonerActionButtonState6 == 2 )
   {
-    v56 = 1;
+    v56 = BUILDING_PRISONER_ACTION_BEHEAD;
     v57 = dword_5443FC;
   }
   else if ( g_PrisonerActionButtonState7 == 2 )
   {
-    v56 = 2;
+    v56 = BUILDING_PRISONER_ACTION_TORTURE;
     v57 = dword_5443FC;
   }
   else if ( g_PrisonerActionButtonState8 == 2 )
   {
-    v56 = 3;
+    v56 = BUILDING_PRISONER_ACTION_PAY;
     v57 = dword_5443FC;
   }
   else
   {
     v57 = dword_5443FC;
-    v56 = 0;
+    v56 = BUILDING_PRISONER_ACTION_NONE;
   }
   BuildingPrisoner_SetAction(v57, v56, g_PrisonerActionButtonState6);
   DLXSpriteSet_ReleaseAndClear(&dword_5443F0);

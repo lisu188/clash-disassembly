@@ -2575,6 +2575,18 @@ BOOL __stdcall GetClientRect(HWND hWnd, LPRECT lpRect)
   return 1;
 }
 
+DWORD g_platform_last_error;
+
+DWORD __stdcall GetLastError(void)
+{
+  return g_platform_last_error;
+}
+
+void __stdcall SetLastError(DWORD dwErrCode)
+{
+  g_platform_last_error = dwErrCode;
+}
+
 HDC __stdcall GetDC(HWND hWnd)
 {
   struct SDL_Window *window;
