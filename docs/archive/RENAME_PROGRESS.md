@@ -195,3 +195,83 @@
 | 52 | 52 | Function | clash95.c | sub_4114B0 | Unit_CompactSquad | High | Core helper that removes `type == -1` slots by shifting subsequent entries and relinking army facts, used whenever units desert or are killed. |
 | 53 | 53 | Function | clash95.c | sub_411560 | UnitSlots_RemoveGaps | Medium | Secondary slot-compaction helper invoked with an explicit slot count after battle resolution to close gaps without touching the entire squad record. |
 | 54 | 54 | Function | clash95.c | sub_4115E0 | Unit_CheckLowMorale | High | Implements the low-morale deserter check: rolls RNG, logs via `Unit_CheckLowMorale` strings, shows the disband message, and compacts the squad when troops flee. |
+
+---
+
+## Addendum: branch `refactor-function-renames` (March 2026, merged 2026-07-12)
+
+> Historical log recovered during the merge of `refactor-function-renames`. The
+> function names and several global names below are the branch's original
+> proposals; many were later superseded by evidence-based names on main
+> (e.g. Battle_RunLoop -> UnitBattle_RunTurnLoop, Tile_CheckPassability ->
+> UnitBattle_GetTileMoveCostOrZero, Castle_BuildTemple/Forge ->
+> Castle_BuildHospitalWithAnimation/Castle_BuildSmithsWithAnimation,
+> dword_532060/dword_532074 -> g_UnitBattleChargeModeActive/StartTick,
+> dword_532068 -> g_UnitBattleActionLoopExitRequested). The globals actually
+> ported to main in that merge were: g_MapData, g_BattleLoopExitCode,
+> g_AttackerStartsOnLeft, g_DefenderStartsOnLeft, g_BattleHudSprites,
+> g_MapIgnoreUnitOccupancy, g_TilePassabilityMask,
+> g_ActiveCastleOwnerIsChristian.
+
+### Batch 5 tail (branch-only rows)
+
+| Kind | Subsystem | File | Old Name | New Name | Confidence | Rationale |
+| --- | --- | --- | --- | --- | --- | --- |
+| global | castle | clash95.c | dword_526E80 | g_CastleScreenShouldClose | high | Boolean flag that forces the castle screen loop to exit (set by close events and destruction prompt). |
+| parameter | tile | clash95.c:Tile_CheckPassability | a1 | unitIndex | high | Explicitly denotes the unit index used when evaluating tile occupancy rules. |
+| parameter | tile | clash95.c:Tile_CheckPassability | a2 | tileX | high | Makes clear this argument is the map X coordinate. |
+| parameter | tile | clash95.c:Tile_CheckPassability | a3 | tileY | high | Makes clear this argument is the map Y coordinate. |
+| function | castle | clash95.c | sub_42C4E0 | Battle_BothPlayersActive | high | Checks the map grid to confirm both players still have at least one unit alive during castle battles. |
+| function | castle | clash95.c | sub_42C4C0 | Battle_HandleNewTurn | medium | Logs the "battle new turn" event and forwards to the routine that rebuilds state at the start of each round. |
+| global | unit | clash95.c | dword_53205C | g_SelectionHighlightActive | medium | Tracks whether the selected unit's highlight overlay is currently shown during blinking animations. |
+| function | unit | clash95.c | sub_42D4E0 | Unit_ToggleSelectionBlink | medium | Toggles the blinking highlight state for the currently selected unit. |
+| global | castle | clash95.c | dword_513E22 | g_CastleHasBuildOptions | medium | Tracks whether any build buttons remain available after refreshing castle construction states. |
+| global | castle | clash95.c | dword_513FC2 | g_CastleBuildCategoryOpen | medium | Array storing per-category availability bits used while scanning castle construction options. |
+| global | unit | clash95.c | dword_5202EC | g_CurrentPlayerIndex | high | Used across combat/castle/map routines as the active player index, so renaming clarifies its role everywhere. |
+
+### Batch 6 (branch cumulative: 100)
+
+
+| Kind | Subsystem | File | Old Name | New Name | Confidence | Rationale |
+| --- | --- | --- | --- | --- | --- | --- |
+| global | unit | clash95.c | dword_532060 | g_SelectionBlinkActive | high | Flag toggled while the selected unit’s highlight is blinking during combat targeting. |
+| global | unit | clash95.c | dword_532074 | g_SelectionBlinkStartTime | high | Timestamp used to animate the blinking intensity for the selected unit. |
+| global | castle | clash95.c | dword_526E70 | g_ActiveCastleOwnerIsChristian | high | Cached owner religion flag read from the player block when opening the castle UI. |
+| global | unit | clash95.c | dword_532064 | g_BattleLoopExitCode | medium | Stores the exit code returned by battle loop dialogs and win/lose checks. |
+| global | unit | clash95.c | dword_532068 | g_BattleDialogDismissed | medium | Set when modal battle dialogs have been acknowledged, allowing the loop to continue. |
+| global | unit | clash95.c | dword_514E28 | g_BattleHintIndex | medium | Remembers which battle status hint is currently displayed to prevent redundant popups. |
+| global | unit | clash95.c | byte_514C89 | g_BattleHintFlags | medium | Bitfield controlling whether battle hints may be shown again. |
+| global | unit | clash95.c | dword_53204C | g_BattleHudSprites | high | Holds the sprite set used to draw battle HUD elements and overlays. |
+| global | unit | clash95.c | dword_53206C | g_AttackerStartsOnLeft | medium | Indicates whether the attacking army should be positioned on the left side of the battle map. |
+| global | unit | clash95.c | dword_532070 | g_DefenderStartsOnLeft | medium | Complementary flag indicating the defender’s starting side on the battle grid. |
+| global | castle | clash95.c | dword_513FEA | g_CastleTempleAvailable | high | Tracks whether the temple/faith building is still constructable. |
+| global | castle | clash95.c | dword_514012 | g_CastleBarracksAvailable | high | Tracks whether the barracks building can still be constructed. |
+| global | castle | clash95.c | dword_51403A | g_CastleWorkshopAvailable | high | Availability flag for the workshop upgrade. |
+| global | castle | clash95.c | dword_514062 | g_CastleForgeAvailable | high | Indicates whether the forge/smithy is still buildable. |
+| function | unit | clash95.c | sub_42C180 | Battle_LogAllUnits | high | Emits log entries for every unit slot by iterating the battle roster. |
+| function | unit | clash95.c | sub_42C130 | Battle_LogUnitEntry | high | Logs a single unit entry via the off_512568 descriptor table. |
+| function | unit | clash95.c | sub_42C0F0 | Battle_IsTileInViewport | high | Checks whether a tile coordinate lies inside the 7x7 combat viewport. |
+| function | unit | clash95.c | sub_42E3C0 | Battle_RunLoop | medium | Main per-frame battle loop that processes input/events until an exit code is set. |
+| function | unit | clash95.c | sub_4327B0 | Battle_PlaceUnit | high | Handles placing a unit record onto the battle grid and updates selection indices. |
+| function | unit | clash95.c | sub_432770 | Battle_ResetUnitColors | medium | Resets each unit’s highlight color from the default palette at the start of combat. |
+| function | unit | clash95.c | sub_42D6F0 | Battle_DismissDialog | medium | Marks modal battle dialogs as closed and restores the render state. |
+| function | unit | clash95.c | sub_4321D0 | Battle_ClearPlacementPreview | medium | Removes the currently previewed unit placement and restores the previous selection tile. |
+| parameter | unit | clash95.c:Battle_IsTileInViewport | a1 | tileX | high | Makes the first coordinate parameter explicit as the map X coordinate. |
+| parameter | unit | clash95.c:Battle_IsTileInViewport | a2 | tileY | high | Clarifies the second coordinate as the map Y value. |
+| parameter | unit | clash95.c:Battle_LogUnitEntry | a1 | unitEntry | high | Shows the pointer is a unit roster entry. |
+| parameter | unit | clash95.c:Battle_LogUnitEntry | a2 | logHandle | medium | Indicates the DWORD argument is the active log handle. |
+| parameter | unit | clash95.c:Battle_LogAllUnits | a1 | logContext | medium | Makes the logging context parameter explicit. |
+| parameter | unit | clash95.c:Battle_LogAllUnits | a2 | logCategory | medium | Clarifies the category byte forwarded to the logger. |
+| parameter | unit | clash95.c:Battle_LogAllUnits | a3 | logHandle | medium | Documents the DWORD passed to `Battle_LogUnitEntry`. |
+| parameter | unit | clash95.c:Battle_PlaceUnit | a1 | unitData | high | Highlights that the first argument is the unit record being placed. |
+| parameter | unit | clash95.c:Battle_PlaceUnit | a2 | tileX | high | Explicitly names the destination X tile. |
+| parameter | unit | clash95.c:Battle_PlaceUnit | a3 | facing | medium | Captures that the byte controls the unit’s battlefield facing. |
+| parameter | unit | clash95.c:Battle_PlaceUnit | a4 | tileY | high | Explicitly names the destination Y tile. |
+
+### Final Summary (branch)
+
+- **Total renames completed:** 100
+- **Target met:** yes (100 high-confidence renames logged)
+- **Remaining ambiguous identifiers:** `dword_526A20` (logging router), `dword_514BEA` (selection blink helper) still lack clear semantics.
+- **Patterns noticed:** battle-related helpers often log with descriptive string constants that can be promoted to stable names; castle build availability uses bitmasks in `g_ActiveCastlePtr + 416` where each bit maps cleanly to a specific building; tile/battle data lives in `g_MapData` with fixed 31-byte unit slots.
+- **Suggested next targets:** clarify remaining battle dialog globals (`dword_514E48`, `dword_514E4C`) and castle economy fields (e.g., income arrays around `gameData + 140063`) once more context is recovered.

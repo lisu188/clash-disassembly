@@ -2867,3 +2867,33 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
 - Historical rename/progress notes moved under `docs/archive/`, current policy docs moved under `docs/`, and focused probe notes moved under `docs/probes/`.
 - The change is repository navigation hygiene only and does not promote runtime, structure, unit, or route semantics.
 
+## 2026-07-12 - Merge of branch `refactor-function-renames` (re-expressed)
+
+- Merged the March-2026 semantic-naming branch; its clash95.c diff was
+  re-expressed onto main's current symbols (the branch predated the sweeping
+  rename waves and had also converted the file's line endings).
+- **Globals ported** (whole-word renames of machine names still present on
+  main): `dword_532048` -> `g_MapData` (987 uses), `dword_532064` ->
+  `g_BattleLoopExitCode`, `dword_53206C` -> `g_AttackerStartsOnLeft`,
+  `dword_532070` -> `g_DefenderStartsOnLeft`, `dword_53204C` ->
+  `g_BattleHudSprites`, `dword_531CB8` -> `g_MapIgnoreUnitOccupancy`,
+  `byte_531890` -> `g_TilePassabilityMask`, `dword_526E70` ->
+  `g_ActiveCastleOwnerIsChristian`.
+- **Superseded (kept main's names)**: all ~99 function renames (every touched
+  address already carries an evidence-based name on main, e.g. branch
+  `Battle_RunLoop` = main `UnitBattle_RunTurnLoop`, branch
+  `Tile_CheckPassability` = main `UnitBattle_GetTileMoveCostOrZero`);
+  `dword_532060`/`dword_532074` (main: `g_UnitBattleChargeModeActive`/
+  `g_UnitBattleChargeModeStartTick`); `dword_532068` (main:
+  `g_UnitBattleActionLoopExitRequested`); the castle availability flags
+  `dword_513E22/513FC2/513FEA/514012/51403A/514062` (main:
+  `g_CastleAnyAddonMissingFlag` / `g_CastleAddon*MissingFlag` family);
+  `dword_514E28`/`byte_514C89` (main: `g_UnitActionTooltipLastShownAction`/
+  `g_UnitBattleExitButtonState`).
+- **Rejected hypothesis**: branch `g_SelectionHighlightActive` for
+  `dword_53205C` - usage sites are the battle "shoot mode" toggle
+  (`battle_action_shoot_toggle_*` trace strings), contradicting the
+  selection-blink reading; left machine-named pending an evidence pass.
+- The branch's `RENAME_PROGRESS.md` tail (Batch 5 tail rows, Batch 6, final
+  summary) was union-appended to `docs/archive/RENAME_PROGRESS.md` as a
+  historical addendum; the root file was not resurrected.

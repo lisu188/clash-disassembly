@@ -12727,7 +12727,7 @@ LARGE_INTEGER Frequency; // idb
 int g_SelectedBuildingRecord; // weak
 int g_CastleScreenSurface; // weak
 _BYTE byte_526A70[1024]; // weak
-int dword_526E70; // weak
+int g_ActiveCastleOwnerIsChristian; // weak
 int g_CastleSceneIconSpriteSet; // weak
 int g_CastleAmbientSpriteSet; // weak
 int g_CastleStatusSpriteSet; // weak
@@ -12774,10 +12774,10 @@ int g_RoadBuildModeExitRequested; // weak
 int dword_527C34; // weak
 int g_RoadBuildModeAnimationFrameIndex; // weak
 int dword_527C40; // weak
-char byte_531890[1023]; // weak
+char g_TilePassabilityMask[1023]; // weak
 char byte_531C8F[]; // weak
 char byte_531C90[40]; // weak
-int dword_531CB8; // weak
+int g_MapIgnoreUnitOccupancy; // weak
 int dword_531CBC; // weak
 int dword_531CC0; // weak
 int dword_531CC4; // weak
@@ -12790,17 +12790,17 @@ int g_BuildingEconomyDialogPendingPeasantTransfer; // weak
 int g_BuildingEconomyDialogPendingGoldTransfer; // weak
 int g_BuildingEconomyDialogBuilding; // weak
 int dword_532040; // weak
-int dword_532048; // weak
-int dword_53204C; // weak
+int g_MapData; // weak
+int g_BattleHudSprites; // weak
 int dword_532050; // weak
 int dword_532054; // weak
 int dword_532058; // weak
 int dword_53205C; // weak
 int dword_532060; // weak
-int dword_532064; // weak
+int g_BattleLoopExitCode; // weak
 int g_UnitBattleActionLoopExitRequested; // weak
-int dword_53206C; // weak
-int dword_532070; // weak
+int g_AttackerStartsOnLeft; // weak
+int g_DefenderStartsOnLeft; // weak
 int dword_532074; // weak
 int dword_532078; // weak
 int g_UnitBattlePromptDialogResult; // weak
@@ -38120,13 +38120,13 @@ static int Diagnostics_CountBattleUnitsForOwner(int owner)
   int count;
   int offset;
 
-  if ( !dword_532048 )
+  if ( !g_MapData )
     return 0;
   count = 0;
   for ( offset = 0; offset != 682; offset += 31 )
   {
-    if ( *(__int16 *)(dword_532048 + offset + 852) != -1
-      && *(unsigned __int8 *)(dword_532048 + offset + 854) == owner )
+    if ( *(__int16 *)(g_MapData + offset + 852) != -1
+      && *(unsigned __int8 *)(g_MapData + offset + 854) == owner )
     {
       ++count;
     }
@@ -38139,12 +38139,12 @@ static int Diagnostics_CountBattleUnitsTotal(void)
   int count;
   int offset;
 
-  if ( !dword_532048 )
+  if ( !g_MapData )
     return 0;
   count = 0;
   for ( offset = 0; offset != 682; offset += 31 )
   {
-    if ( *(__int16 *)(dword_532048 + offset + 852) != -1 )
+    if ( *(__int16 *)(g_MapData + offset + 852) != -1 )
       ++count;
   }
   return count;
@@ -38154,11 +38154,11 @@ static void Diagnostics_TraceBattleUnitSnapshot(const char *stage)
 {
   int slot_index;
 
-  if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !dword_532048 )
+  if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !g_MapData )
     return;
   for ( slot_index = 0; slot_index < 22; ++slot_index )
   {
-    int unit_record = dword_532048 + 852 + 31 * slot_index;
+    int unit_record = g_MapData + 852 + 31 * slot_index;
     int unit_type = *(__int16 *)unit_record;
 
     if ( unit_type == -1 )
@@ -38177,8 +38177,8 @@ static void Diagnostics_TraceBattleUnitSnapshot(const char *stage)
       (unsigned)*(unsigned char *)(unit_record + 12),
       g_SelectedUnitIndex,
       g_CurrentPlayerIndex,
-      *(_DWORD *)(dword_532048 + 808),
-      *(_DWORD *)(dword_532048 + 812));
+      *(_DWORD *)(g_MapData + 808),
+      *(_DWORD *)(g_MapData + 812));
   }
   fflush(stderr);
 }
@@ -38467,13 +38467,13 @@ static void Diagnostics_TraceBattlefieldClickEvent(
   int occupant_ap = -1;
   int occupant_flags = -1;
 
-  if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !dword_532048 )
+  if ( !Diagnostics_IsWorldMapClickTraceEnabled() || !g_MapData )
     return;
   if ( g_SelectedUnitIndex >= 0 && g_SelectedUnitIndex < 22 )
-    selected_type = *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
+    selected_type = *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852);
   if ( occupant_slot >= 0 && occupant_slot < 22 )
   {
-    int occupant_record = dword_532048 + 31 * occupant_slot;
+    int occupant_record = g_MapData + 31 * occupant_slot;
 
     occupant_type = *(__int16 *)(occupant_record + 852);
     occupant_owner = *(unsigned __int8 *)(occupant_record + 854);
@@ -38490,8 +38490,8 @@ static void Diagnostics_TraceBattlefieldClickEvent(
     local_y,
     tile_x,
     tile_y,
-    *(_DWORD *)(dword_532048 + 808),
-    *(_DWORD *)(dword_532048 + 812),
+    *(_DWORD *)(g_MapData + 808),
+    *(_DWORD *)(g_MapData + 812),
     g_SelectedUnitIndex,
     selected_type,
     g_CurrentPlayerIndex,
@@ -38730,7 +38730,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
   CSS_EmptySampleCache();
   Debug_Log(467 * a1, a2, a1, (int)aCastleD);
   g_SelectedBuildingRecord = BUILDING_RECORD(a1);
-  dword_526E70 = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
+  g_ActiveCastleOwnerIsChristian = PLAYER_RELIGION_FLAG(*(unsigned __int8 *)(g_SelectedBuildingRecord + 2));
   v46 = Audio_PauseMusicAndPlayLoopedSound(aCastle, *(unsigned __int8 *)(g_SelectedBuildingRecord + 2) + 1);
   CSS_PauseStreamReading();
   Castle_UpdateGateToggles();
@@ -38997,7 +38997,7 @@ int * Castle_OpenManagementScreen(DWORD a1, char a2)
 // 526A64: using guessed type int g_SelectedBuildingRecord;
 // 526A68: using guessed type int g_CastleScreenSurface;
 // 526A70: using guessed type _BYTE byte_526A70[1024];
-// 526E70: using guessed type int dword_526E70;
+// 526E70: using guessed type int g_ActiveCastleOwnerIsChristian;
 // 526E74: using guessed type int g_CastleSceneIconSpriteSet;
 // 526E78: using guessed type int g_CastleAmbientSpriteSet;
 // 526E7C: using guessed type int g_CastleStatusSpriteSet;
@@ -40764,15 +40764,15 @@ int UnitBattle_InitPathingTables()
   v9 = 0;
   v8 = 0;
   v10 = 0;
-  while ( v9 < *(_DWORD *)(dword_532048 + 804) )
+  while ( v9 < *(_DWORD *)(g_MapData + 804) )
   {
     v0 = v10;
     v1 = 0;
     v2 = 0;
     v3 = v10;
-    while ( v1 < *(_DWORD *)(dword_532048 + 800) )
+    while ( v1 < *(_DWORD *)(g_MapData + 800) )
     {
-      v4 = *(__int16 *)(v2 + v8 + dword_532048);
+      v4 = *(__int16 *)(v2 + v8 + g_MapData);
       if ( v4 == 313
         || v4 >= 315 && v4 <= 320
         || v4 == 322
@@ -40782,11 +40782,11 @@ int UnitBattle_InitPathingTables()
         || v4 >= 344 && v4 <= 352
         || v4 == 356 )
       {
-        byte_531890[v3] = 0;
+        g_TilePassabilityMask[v3] = 0;
       }
       else
       {
-        byte_531890[v0] = *(_BYTE *)(dword_532048 + 816);
+        g_TilePassabilityMask[v0] = *(_BYTE *)(g_MapData + 816);
       }
       v2 += 2;
       ++v0;
@@ -40810,21 +40810,21 @@ int UnitBattle_InitPathingTables()
   return result;
 }
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00425970) --------------------------------------------------------
 signed int  UnitBattle_GetTileMoveCostOrZero(int a1, int a2, int a3)
 {
-  if ( !dword_531CB8 && *(__int16 *)(40 * a2 + dword_532048 + 2 * a3 + 1534) != -1 )
+  if ( !g_MapIgnoreUnitOccupancy && *(__int16 *)(40 * a2 + g_MapData + 2 * a3 + 1534) != -1 )
     return 0;
   if ( byte_531C90[a1] )
     return 5;
-  if ( *(_BYTE *)(dword_532048 + 20 * a2 + a3 + 3134) )
+  if ( *(_BYTE *)(g_MapData + 20 * a2 + a3 + 3134) )
     return 0;
-  return (unsigned __int8)byte_531890[32 * a2 + a3];
+  return (unsigned __int8)g_TilePassabilityMask[32 * a2 + a3];
 }
-// 531CB8: using guessed type int dword_531CB8;
-// 532048: using guessed type int dword_532048;
+// 531CB8: using guessed type int g_MapIgnoreUnitOccupancy;
+// 532048: using guessed type int g_MapData;
 
 //----- (00425A00) --------------------------------------------------------
 int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
@@ -40908,13 +40908,13 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
   v59 = a2;
   v60 = a4;
   Debug_Log(a3, a1, a5, (int)aUnitbattle_m_0);
-  v61 = *(__int16 *)(dword_532048 + 31 * a1 + 852);
-  v62 = *(unsigned __int16 *)(dword_532048 + 31 * a1 + 856);
-  v63 = *(unsigned __int16 *)(dword_532048 + 31 * a1 + 858);
+  v61 = *(__int16 *)(g_MapData + 31 * a1 + 852);
+  v62 = *(unsigned __int16 *)(g_MapData + 31 * a1 + 856);
+  v63 = *(unsigned __int16 *)(g_MapData + 31 * a1 + 858);
   if ( v59 < 0
     || v60 < 0
-    || v59 >= *(_DWORD *)(dword_532048 + 804)
-    || v60 >= *(_DWORD *)(dword_532048 + 800)
+    || v59 >= *(_DWORD *)(g_MapData + 804)
+    || v60 >= *(_DWORD *)(g_MapData + 800)
     || !UnitBattle_GetTileMoveCostOrZero(v61, v59, v60) )
   {
     return 0;
@@ -40931,13 +40931,13 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
     while ( v9 != v7 );
     v7 += 40;
   }
-  v10 = 40 * v62 + dword_532048;
+  v10 = 40 * v62 + g_MapData;
   v11 = v10 + 2 * v63;
   LOWORD(v10) = *(_WORD *)(v11 + 1534);
   *(_WORD *)(v11 + 1534) = -1;
   v77 = v10;
-  if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836)
-    && *(unsigned __int8 *)(31 * v58 + dword_532048 + 854) == *(_DWORD *)(dword_532048 + 840) )
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836)
+    && *(unsigned __int8 *)(31 * v58 + g_MapData + 854) == *(_DWORD *)(g_MapData + 840) )
   {
     UnitBattle_TemporarilyClearGateBlocker();
   }
@@ -40947,12 +40947,12 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
   {
     v13 = 0;
     v64 = 0;
-    while ( v13 < *(_DWORD *)(dword_532048 + 804) )
+    while ( v13 < *(_DWORD *)(g_MapData + 804) )
     {
       v14 = 0;
       v74 = 40 * v13;
       v75 = 40 * v13;
-      while ( v14 < *(_DWORD *)(dword_532048 + 800) )
+      while ( v14 < *(_DWORD *)(g_MapData + 800) )
       {
         i = v75;
         v15 = (unsigned __int16)v55[v75 / 2 + 1];
@@ -40964,7 +40964,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
           {
             v16 = v13 + Map_NeighborDX[v56 / 4];
             i = v14 + Map_NeighborDY[v56 / 4];
-            if ( v16 >= 0 && v16 < *(_DWORD *)(dword_532048 + 804) && i >= 0 && i < *(_DWORD *)(dword_532048 + 800) )
+            if ( v16 >= 0 && v16 < *(_DWORD *)(g_MapData + 804) && i >= 0 && i < *(_DWORD *)(g_MapData + 800) )
             {
               LOWORD(v17) = UnitBattle_GetTileMoveCostOrZero(v61, v13 + Map_NeighborDX[v56 / 4], v14 + Map_NeighborDY[v56 / 4]);
               if ( (_WORD)v17 )
@@ -40980,7 +40980,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
                       v19 = v13;
                     else
                       v19 = v16;
-                    v66 = dword_532048 + 20 * (v19 - 1) + 3134;
+                    v66 = g_MapData + 20 * (v19 - 1) + 3134;
                     if ( i <= v14 )
                       v20 = v14;
                     else
@@ -40989,7 +40989,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
                       goto LABEL_30;
                     v21 = v16 <= v13 ? v13 : v16;
                     v73 = 20 * v21;
-                    v67 = 20 * v21 + dword_532048 + 3134;
+                    v67 = 20 * v21 + g_MapData + 3134;
                     v22 = i <= v14 ? v14 : i;
                     if ( *(_BYTE *)(v67 + v22 - 1) )
                       goto LABEL_30;
@@ -41000,7 +41000,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
                       v23 = v13;
                     else
                       v23 = v16;
-                    v68 = dword_532048 + 20 * (v23 - 1) + 3134;
+                    v68 = g_MapData + 20 * (v23 - 1) + 3134;
                     if ( i <= v14 )
                       v24 = v14;
                     else
@@ -41009,7 +41009,7 @@ int * UnitBattle_MoveTrack(int a1, int a2, int a3, int a4, DWORD a5)
                       goto LABEL_30;
                     v25 = v16 <= v13 ? v13 : v16;
                     v73 = 20 * v25;
-                    v69 = 20 * v25 + dword_532048 + 3134;
+                    v69 = 20 * v25 + g_MapData + 3134;
                     v26 = i <= v14 ? v14 : i;
                     if ( *(_BYTE *)(v69 + v26) )
                       goto LABEL_30;
@@ -41081,12 +41081,12 @@ LABEL_73:
           v35 = v79 + v32;
           if ( v35 < 0 )
             goto LABEL_84;
-          if ( v35 >= *(_DWORD *)(dword_532048 + 804) )
+          if ( v35 >= *(_DWORD *)(g_MapData + 804) )
             goto LABEL_84;
           v36 = v80 + v33;
           if ( v36 < 0 )
             goto LABEL_84;
-          if ( v36 >= *(_DWORD *)(dword_532048 + 800) )
+          if ( v36 >= *(_DWORD *)(g_MapData + 800) )
             goto LABEL_84;
           v73 = 40 * v35;
           if ( (unsigned __int16)v78 <= (unsigned __int16)v55[20 * v35 + 1 + v36] )
@@ -41101,7 +41101,7 @@ LABEL_73:
             if ( v34 > v35 )
               v35 = v34;
             v45 = v80;
-            v46 = dword_532048 + 20 * (v35 - 1) + 3134;
+            v46 = g_MapData + 20 * (v35 - 1) + 3134;
             if ( v80 <= v80 + v33 )
               v45 = v80 + v33;
             if ( !*(_BYTE *)(v46 + v45) )
@@ -41110,7 +41110,7 @@ LABEL_73:
               if ( v79 <= v79 + v32 )
                 v47 = v79 + v32;
               v48 = v80 + v33;
-              v49 = 20 * v47 + dword_532048 + 3134;
+              v49 = 20 * v47 + g_MapData + 3134;
               if ( v80 <= v48 )
               {
                 if ( *(_BYTE *)(v49 + v48 - 1) )
@@ -41136,7 +41136,7 @@ LABEL_82:
             if ( v34 > v35 )
               v35 = v34;
             v50 = v80;
-            v51 = dword_532048 + 20 * (v35 - 1) + 3134;
+            v51 = g_MapData + 20 * (v35 - 1) + 3134;
             if ( v80 <= v80 + v33 )
               v50 = v80 + v33;
             if ( !*(_BYTE *)(v51 + v50 - 1) )
@@ -41145,7 +41145,7 @@ LABEL_82:
               if ( v79 <= v79 + v32 )
                 v52 = v79 + v32;
               v53 = v80 + v33;
-              v54 = 20 * v52 + dword_532048 + 3134;
+              v54 = 20 * v52 + g_MapData + 3134;
               if ( v80 <= v53 )
               {
                 if ( *(_BYTE *)(v54 + v53) )
@@ -41187,9 +41187,9 @@ LABEL_84:
     }
     --*v65;
   }
-  *(_WORD *)(2 * v63 + dword_532048 + 40 * v62 + 1534) = v77;
-  if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836)
-    && *(unsigned __int8 *)(31 * v58 + dword_532048 + 854) == *(_DWORD *)(dword_532048 + 840) )
+  *(_WORD *)(2 * v63 + g_MapData + 40 * v62 + 1534) = v77;
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836)
+    && *(unsigned __int8 *)(31 * v58 + g_MapData + 854) == *(_DWORD *)(g_MapData + 840) )
   {
     UnitBattle_RestoreGateBlocker();
   }
@@ -41202,7 +41202,7 @@ LABEL_84:
 // 513338: using guessed type int dword_513338[63];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 531CBC: using guessed type int dword_531CBC;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004262D0) --------------------------------------------------------
 int * UnitBattle_MoveTrackNear(int a1, int a2, int a3, DWORD a4)
@@ -41225,15 +41225,15 @@ int * UnitBattle_MoveTrackNear(int a1, int a2, int a3, DWORD a4)
   Debug_Log(a2, a3, a4, (int)aUnitbattle_mov);
   if ( target_row < 0
     || target_col < 0
-    || target_row >= *(_DWORD *)(dword_532048 + 804)
-    || target_col >= *(_DWORD *)(dword_532048 + 800) )
+    || target_row >= *(_DWORD *)(g_MapData + 804)
+    || target_col >= *(_DWORD *)(g_MapData + 800) )
   {
     return 0;
   }
   target_grid_row_offset = 40 * target_row;
   target_cost_row_offset = 20 * target_row;
-  target_grid_offset = dword_532048 + target_grid_row_offset + 2 * target_col + 1534;
-  target_cost_offset = dword_532048 + target_cost_row_offset + target_col + 3134;
+  target_grid_offset = g_MapData + target_grid_row_offset + 2 * target_col + 1534;
+  target_cost_offset = g_MapData + target_cost_row_offset + target_col + 3134;
   saved_occupant = *(_WORD *)target_grid_offset;
   saved_cost = *(_BYTE *)target_cost_offset;
   *(_WORD *)target_grid_offset = -1;
@@ -41295,7 +41295,7 @@ int * UnitBattle_MoveTrackNear(int a1, int a2, int a3, DWORD a4)
 // 42638F: variable 'v13' is possibly undefined
 // 4263E7: variable 'v21' is possibly undefined
 // 426420: variable 'v22' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004264D0) --------------------------------------------------------
 int * UnitBattle_MoveTrackNearWall(int a1, int a2, int a3, DWORD a4)
@@ -41315,10 +41315,10 @@ int * UnitBattle_MoveTrackNearWall(int a1, int a2, int a3, DWORD a4)
   target_row = a2;
   target_col = a3;
   Debug_Log(a1, a2, a4, (int)aUnitbattle_m_2);
-  if ( target_col < 0 || target_col >= *(_DWORD *)(dword_532048 + 800) )
+  if ( target_col < 0 || target_col >= *(_DWORD *)(g_MapData + 800) )
     return 0;
-  current_row = *(unsigned __int16 *)(31 * a1 + dword_532048 + 856);
-  current_col = *(unsigned __int16 *)(31 * a1 + dword_532048 + 858);
+  current_row = *(unsigned __int16 *)(31 * a1 + g_MapData + 856);
+  current_col = *(unsigned __int16 *)(31 * a1 + g_MapData + 858);
   row_delta = current_row - target_row;
   if ( row_delta < 0 )
     row_delta = -row_delta;
@@ -41331,7 +41331,7 @@ int * UnitBattle_MoveTrackNearWall(int a1, int a2, int a3, DWORD a4)
     path_after_wall = 0;
     if ( target_row > 0 )
       path_before_wall = UnitBattle_MoveTrack(a1, target_row - 1, target_row - 1, target_col, a4);
-    if ( target_row + 1 < *(_DWORD *)(dword_532048 + 804) )
+    if ( target_row + 1 < *(_DWORD *)(g_MapData + 804) )
       path_after_wall = UnitBattle_MoveTrack(a1, target_row + 1, target_row + 1, target_col, a4);
     if ( path_before_wall && (!path_after_wall || HIWORD(path_before_wall[1]) <= HIWORD(path_after_wall[1])) )
       result = path_before_wall;
@@ -41366,7 +41366,7 @@ int * UnitBattle_MoveTrackNearWall(int a1, int a2, int a3, DWORD a4)
 // 4265A6: variable 'v17' is possibly undefined
 // 4265BF: variable 'v14' is possibly undefined
 // 4265BF: variable 'v13' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00426650) --------------------------------------------------------
 int * UnitBattle_MoveTrackForce(int a1, int a2, DWORD a3)
@@ -41378,27 +41378,27 @@ int * UnitBattle_MoveTrackForce(int a1, int a2, DWORD a3)
   Debug_Log(a1, a2, a3, (int)aUnitbattle_m_3);
   target_col = a2;
   target_row = (int)a3;
-  if ( target_row < 0 || target_row >= *(_DWORD *)(dword_532048 + 804) || target_col < 0 || target_col >= *(_DWORD *)(dword_532048 + 800) )
+  if ( target_row < 0 || target_row >= *(_DWORD *)(g_MapData + 804) || target_col < 0 || target_col >= *(_DWORD *)(g_MapData + 800) )
     return 0;
-  dword_531CB8 = 1;
-  if ( *(char *)(target_col + dword_532048 + 20 * target_row + 3134) <= 0 )
+  g_MapIgnoreUnitOccupancy = 1;
+  if ( *(char *)(target_col + g_MapData + 20 * target_row + 3134) <= 0 )
     goto LABEL_4;
-  if ( *(unsigned __int16 *)(dword_532048 + 31 * a1 + 856) < target_row )
+  if ( *(unsigned __int16 *)(g_MapData + 31 * a1 + 856) < target_row )
   {
     --target_row;
 LABEL_4:
     result = UnitBattle_MoveTrack(a1, target_row, target_row, target_col, a3);
-    dword_531CB8 = 0;
+    g_MapIgnoreUnitOccupancy = 0;
     return result;
   }
   result = UnitBattle_MoveTrack(a1, target_row + 1, target_row + 1, target_col, a3);
-  dword_531CB8 = 0;
+  g_MapIgnoreUnitOccupancy = 0;
   return result;
 }
 // 42667C: variable 'v3' is possibly undefined
 // 42669B: variable 'v4' is possibly undefined
-// 531CB8: using guessed type int dword_531CB8;
-// 532048: using guessed type int dword_532048;
+// 531CB8: using guessed type int g_MapIgnoreUnitOccupancy;
+// 532048: using guessed type int g_MapData;
 
 //----- (004266E0) --------------------------------------------------------
 __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
@@ -41460,7 +41460,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
   v50 = a1;
   v4 = a1;
   Debug_Log(a2, a3, a4, (int)aUnitbattle_m_1);
-  v5 = (__int16 *)(dword_532048 + 852 + 31 * v4);
+  v5 = (__int16 *)(g_MapData + 852 + 31 * v4);
   v6 = *(_DWORD **)((char *)v5 + 23);
   v53 = v6;
   if ( v6 && *v6 )
@@ -41477,7 +41477,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
     UnitBattle_RedrawVisibleGrid();
     *((_BYTE *)v5 + 22) &= ~1u;
     g_ActiveUnitMoveTileIndex = v50;
-    v10 = dword_532048 + 31 * v50;
+    v10 = g_MapData + 31 * v50;
     LOWORD(v11) = *(unsigned __int8 *)(v10 + 854);
     Unit_BuildGoSpriteFilePath(v48, *(_BYTE *)(v10 + 852), v11);
     v13 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
@@ -41508,7 +41508,7 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           break;
         v23 = (unsigned __int8)v54;
         LOWORD(v11) = BYTE1(v54);
-        if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v51 + dword_532048 + 852), (unsigned __int8)v54, BYTE1(v54)) )
+        if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v51 + g_MapData + 852), (unsigned __int8)v54, BYTE1(v54)) )
         {
           v25 = BYTE1(v54) - (unsigned __int16)v5[3];
           LOWORD(v11) = v23 - v5[2];
@@ -41524,11 +41524,11 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
           }
           dword_523F70 %= 64;
           dword_523F74 %= 64;
-          v29 = *(_WORD *)(v51 + dword_532048 + 858);
-          v57 = ((unsigned __int8)v54 - *(unsigned __int16 *)(v51 + dword_532048 + 856)) << 6;
+          v29 = *(_WORD *)(v51 + g_MapData + 858);
+          v57 = ((unsigned __int8)v54 - *(unsigned __int16 *)(v51 + g_MapData + 856)) << 6;
           v56 = (BYTE1(v54) - v29) << 6;
           v36 = Time_Now(0, 0);
-          v37 = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+          v37 = (unsigned __int8)g_UnitTypeMoveAnimationTickIntervalMs[88 * *(__int16 *)(v51 + g_MapData + 852)];
           v30 = 1;
           v55 = 8 * v7;
           while ( 1 )
@@ -41614,17 +41614,17 @@ __int16  UnitBattle_Move(int a1, int a2, __int16 a3, DWORD a4)
                   UnitBattle_RedrawTile((unsigned __int16)v5[2] - 1, (unsigned __int16)v5[3] - 1);
               }
               v30 = 0;
-              v49 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+              v49 = (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + g_MapData + 852)];
               LOBYTE(v11) = v49;
               dword_523F70 += v49 * Map_NeighborDX[v55 / 4];
               dword_523F74 += Map_NeighborDY[v55 / 4]
-                            * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + dword_532048 + 852)];
+                            * (unsigned __int8)g_UnitTypeBattleMoveStepPx[88 * *(__int16 *)(v51 + g_MapData + 852)];
             }
           }
-          *(_WORD *)(dword_532048 + 40 * (unsigned __int16)v5[2] + 2 * (unsigned __int16)v5[3] + 1534) = -1;
+          *(_WORD *)(g_MapData + 40 * (unsigned __int16)v5[2] + 2 * (unsigned __int16)v5[3] + 1534) = -1;
           v5[2] = (unsigned __int8)v54;
           v5[3] = BYTE1(v54);
-          *(_WORD *)(2 * BYTE1(v54) + 40 * (unsigned __int16)v5[2] + dword_532048 + 1534) = v50;
+          *(_WORD *)(2 * BYTE1(v54) + 40 * (unsigned __int16)v5[2] + g_MapData + 1534) = v50;
           if ( *v53 )
             continue;
         }
@@ -41682,7 +41682,7 @@ LABEL_15:
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
 // 527C40: using guessed type int dword_527C40;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00426E20) --------------------------------------------------------
@@ -41694,22 +41694,22 @@ int  UnitBattle_CenterViewOnUnit(int a1)
   int v4; // esi
 
   v1 = 31 * a1;
-  *(_DWORD *)(dword_532048 + 808) = *(unsigned __int16 *)(dword_532048 + v1 + 856) - 3;
-  *(_DWORD *)(dword_532048 + 812) = *(unsigned __int16 *)(dword_532048 + v1 + 858) - 3;
-  if ( *(int *)(dword_532048 + 808) < 0 )
-    *(_DWORD *)(dword_532048 + 808) = 0;
-  v2 = *(_DWORD *)(dword_532048 + 804);
-  if ( *(_DWORD *)(dword_532048 + 808) + 7 > v2 )
-    *(_DWORD *)(dword_532048 + 808) = v2 - 7;
-  if ( *(int *)(dword_532048 + 812) < 0 )
-    *(_DWORD *)(dword_532048 + 812) = 0;
-  result = dword_532048;
-  v4 = *(_DWORD *)(dword_532048 + 800);
-  if ( *(_DWORD *)(dword_532048 + 812) + 7 > v4 )
-    *(_DWORD *)(dword_532048 + 812) = v4 - 7;
+  *(_DWORD *)(g_MapData + 808) = *(unsigned __int16 *)(g_MapData + v1 + 856) - 3;
+  *(_DWORD *)(g_MapData + 812) = *(unsigned __int16 *)(g_MapData + v1 + 858) - 3;
+  if ( *(int *)(g_MapData + 808) < 0 )
+    *(_DWORD *)(g_MapData + 808) = 0;
+  v2 = *(_DWORD *)(g_MapData + 804);
+  if ( *(_DWORD *)(g_MapData + 808) + 7 > v2 )
+    *(_DWORD *)(g_MapData + 808) = v2 - 7;
+  if ( *(int *)(g_MapData + 812) < 0 )
+    *(_DWORD *)(g_MapData + 812) = 0;
+  result = g_MapData;
+  v4 = *(_DWORD *)(g_MapData + 800);
+  if ( *(_DWORD *)(g_MapData + 812) + 7 > v4 )
+    *(_DWORD *)(g_MapData + 812) = v4 - 7;
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00426EF0) --------------------------------------------------------
 int  UnitBattle_CountAdjacentEnemies(int a1)
@@ -41726,13 +41726,13 @@ int  UnitBattle_CountAdjacentEnemies(int a1)
   for ( i = 0; i != 16; i += 2 )
   {
     v4 = v8 + g_UnitBattleAdjacentTileDeltaX[i];
-    if ( v4 >= 0 && v4 < *(_DWORD *)(dword_532048 + 804) )
+    if ( v4 >= 0 && v4 < *(_DWORD *)(g_MapData + 804) )
     {
       v5 = g_UnitBattleAdjacentTileDeltaY[i] + *(unsigned __int16 *)(a1 + 6);
-      if ( v5 >= 0 && v5 < *(_DWORD *)(dword_532048 + 800) )
+      if ( v5 >= 0 && v5 < *(_DWORD *)(g_MapData + 800) )
       {
-        v6 = *(__int16 *)(dword_532048 + 40 * v4 + 2 * v5 + 1534);
-        if ( v6 != -1 && *(_BYTE *)(31 * v6 + dword_532048 + 854) != *(_BYTE *)(a1 + 2) )
+        v6 = *(__int16 *)(g_MapData + 40 * v4 + 2 * v5 + 1534);
+        if ( v6 != -1 && *(_BYTE *)(31 * v6 + g_MapData + 854) != *(_BYTE *)(a1 + 2) )
           ++v2;
       }
     }
@@ -41741,7 +41741,7 @@ int  UnitBattle_CountAdjacentEnemies(int a1)
 }
 // 514500: using guessed type int dword_514500[];
 // 514504: using guessed type int dword_514504[];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00426F90) --------------------------------------------------------
 signed int  UnitBattle_GetTargetCrowdingScale(int a1)
@@ -41791,8 +41791,8 @@ int  UnitBattle_CalcMeleeExchange(int a1, int a2, int *a3, _DWORD *a4, int a5)
   signed int v21; // [esp+0h] [ebp-14h]
   signed int v22; // [esp+0h] [ebp-14h]
 
-  v7 = (char *)(dword_532048 + 852 + 31 * a1);
-  v8 = (char *)(31 * a2 + dword_532048 + 852);
+  v7 = (char *)(g_MapData + 852 + 31 * a1);
+  v8 = (char *)(31 * a2 + g_MapData + 852);
   *a4 = v7[9];
   *a3 = v8[9];
   UnitBattle_GetTargetCrowdingScale((int)v8);
@@ -41860,7 +41860,7 @@ int  UnitBattle_CalcMeleeExchange(int a1, int a2, int *a3, _DWORD *a4, int a5)
 // 42700A: variable 'v9' is possibly undefined
 // 427014: variable 'v11' is possibly undefined
 // 42712D: variable 'v13' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004272A0) --------------------------------------------------------
 int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __int16 *a5)
@@ -41970,11 +41970,11 @@ int  UnitBattle_PlayAttackAnimation(int a1, int a2, int a3, int a4, unsigned __i
   v98 = a3;
   Debug_Log(a3, a4, (DWORD)a5, (int)aAttackanimDD);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
-  v5 = (__int16 *)(dword_532048 + 852 + 31 * v102);
+  v5 = (__int16 *)(g_MapData + 852 + 31 * v102);
   if ( v101 == -1 )
     v100 = 0;
   else
-    v100 = (unsigned __int16 *)(31 * v101 + dword_532048 + 852);
+    v100 = (unsigned __int16 *)(31 * v101 + g_MapData + 852);
   if ( !UnitBattle_IsTileInViewport((unsigned __int16)v5[2], (unsigned __int16)v5[3])
     || (a5 = v100) != 0 && !UnitBattle_IsTileInViewport(v100[2], v100[3]) )
   {
@@ -42220,12 +42220,12 @@ LABEL_22:
   {
     UnitBattle_UpdateIdleAnimatedUnits();
     DD_Pump((int)g_RenderState, v65);
-    v69 = *(__int16 *)(v64 + dword_532048 + 852);
+    v69 = *(__int16 *)(v64 + g_MapData + 852);
     v70 = (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * v69];
     v67 = Time_Now(v66, v70);
     if ( v67 - v65 >= (unsigned int)v70 )
     {
-      v69 = *(__int16 *)(v64 + dword_532048 + 852);
+      v69 = *(__int16 *)(v64 + g_MapData + 852);
       v70 = (unsigned __int8)g_UnitTypeAttackSoundFrameIndex[88 * v69];
       if ( v70 == dword_523F7C )
         Audio_PlayUnitMeleeAttackSound(v69);
@@ -42428,7 +42428,7 @@ LABEL_22:
 // 523F7C: using guessed type int dword_523F7C;
 // 531CC0: using guessed type int dword_531CC0;
 // 531CC4: using guessed type int dword_531CC4;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532060: using guessed type int dword_532060;
 // 5320EC: using guessed type int dword_5320EC;
 // 5320F0: using guessed type int dword_5320F0;
@@ -42462,20 +42462,20 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
 
   Debug_Log(a2, a3, a4, (int)aDeathanimD);
   v6 = 31 * v5;
-  v7 = (__int16 *)(dword_532048 + 852 + 31 * v5);
+  v7 = (__int16 *)(g_MapData + 852 + 31 * v5);
   Audio_PlayUnitDeathSound(*v7);
   if ( (g_UnitTypeFlags[22 * *v7] & 1) != 0 )
   {
-    *(_BYTE *)(40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3] + 2334) = 48;
+    *(_BYTE *)(40 * (unsigned __int16)v7[2] + g_MapData + 2 * (unsigned __int16)v7[3] + 2334) = 48;
     UnitBattle_InitUnitFadeAnimation(a1, 255, -4, 255);
     v9 = Time_Now(v8, 0);
     LOWORD(v11) = v7[2];
     v26 = v9;
     v25 = v6;
-    *(_BYTE *)(dword_532048 + 40 * v11 + 2 * (unsigned __int16)v7[3] + 2335) = -1;
+    *(_BYTE *)(g_MapData + 40 * v11 + 2 * (unsigned __int16)v7[3] + 2335) = -1;
     while ( 1 )
     {
-      v12 = 40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3];
+      v12 = 40 * (unsigned __int16)v7[2] + g_MapData + 2 * (unsigned __int16)v7[3];
       if ( *(char *)(v12 + 2334) >= 56 )
         break;
       v13 = v26 + 10;
@@ -42489,10 +42489,10 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
       v26 = Time_Now(v15, v13);
       UnitBattle_RedrawUnitNeighborhood(a1);
       UnitBattle_RedrawUnitNeighborhood(a1);
-      v10 = *(unsigned __int8 *)(v25 + dword_532048 + 855);
-      v21 = *(unsigned __int16 *)(v25 + dword_532048 + 856);
-      v22 = *(unsigned __int16 *)(v25 + dword_532048 + 858);
-      if ( !*(_BYTE *)(v25 + dword_532048 + 855) || v10 == 7 || v10 == 1 )
+      v10 = *(unsigned __int8 *)(v25 + g_MapData + 855);
+      v21 = *(unsigned __int16 *)(v25 + g_MapData + 856);
+      v22 = *(unsigned __int16 *)(v25 + g_MapData + 858);
+      if ( !*(_BYTE *)(v25 + g_MapData + 855) || v10 == 7 || v10 == 1 )
         UnitBattle_RedrawTile(v21, v22 - 1);
       if ( v10 == 1 )
         UnitBattle_RedrawTile(v21 + 1, v22 - 1);
@@ -42508,7 +42508,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
         UnitBattle_RedrawTile(v21 - 1, v22);
       if ( v10 == 7 )
         UnitBattle_RedrawTile(v21 - 1, v22 - 1);
-      v23 = 40 * (unsigned __int16)v7[2] + dword_532048;
+      v23 = 40 * (unsigned __int16)v7[2] + g_MapData;
       ++*(_BYTE *)(v23 + 2 * (unsigned __int16)v7[3] + 2334);
     }
     *(_BYTE *)(v12 + 2334) = -1;
@@ -42523,10 +42523,10 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         UnitBattle_RedrawUnitNeighborhood(a1);
-        v16 = *(unsigned __int8 *)(v24 + dword_532048 + 855);
-        v17 = *(unsigned __int16 *)(v24 + dword_532048 + 856);
-        v18 = *(unsigned __int16 *)(v24 + dword_532048 + 858);
-        if ( !*(_BYTE *)(v24 + dword_532048 + 855) || v16 == 7 || v16 == 1 )
+        v16 = *(unsigned __int8 *)(v24 + g_MapData + 855);
+        v17 = *(unsigned __int16 *)(v24 + g_MapData + 856);
+        v18 = *(unsigned __int16 *)(v24 + g_MapData + 858);
+        if ( !*(_BYTE *)(v24 + g_MapData + 855) || v16 == 7 || v16 == 1 )
           UnitBattle_RedrawTile(v17, v18 - 1);
         if ( v16 == 1 )
           UnitBattle_RedrawTile(v17 + 1, v18 - 1);
@@ -42542,15 +42542,15 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
           UnitBattle_RedrawTile(v17 - 1, v18);
         if ( v16 == 7 )
           UnitBattle_RedrawTile(v17 - 1, v18 - 1);
-        *(_BYTE *)(40 * (unsigned __int16)v7[2] + dword_532048 + 2 * (unsigned __int16)v7[3] + 2335) = -1 - dword_5320F4;
+        *(_BYTE *)(40 * (unsigned __int16)v7[2] + g_MapData + 2 * (unsigned __int16)v7[3] + 2335) = -1 - dword_5320F4;
       }
       while ( dword_5320F4 );
     }
   }
   v19 = 31 * a1;
-  *(_WORD *)(dword_532048 + v19 + 852) = -1;
-  result = *(unsigned __int16 *)(dword_532048 + v19 + 858);
-  *(_WORD *)(40 * *(unsigned __int16 *)(dword_532048 + v19 + 856) + dword_532048 + 2 * result + 1534) = -1;
+  *(_WORD *)(g_MapData + v19 + 852) = -1;
+  result = *(unsigned __int16 *)(g_MapData + v19 + 858);
+  *(_WORD *)(40 * *(unsigned __int16 *)(g_MapData + v19 + 856) + g_MapData + 2 * result + 1534) = -1;
   return result;
 }
 // 427FC9: variable 'v5' is possibly undefined
@@ -42561,7 +42561,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
 // 42811D: variable 'v16' is possibly undefined
 // 428273: variable 'v15' is possibly undefined
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5320F4: using guessed type int dword_5320F4;
 
 //----- (004283D0) --------------------------------------------------------
@@ -42589,13 +42589,13 @@ signed int  UnitBattle_Attack(int attacker_index, int defender_index, int charge
 
   Debug_Log(charge_mode, charge_mode, attacker_index, (int)aUnitbattle_att);
   Diagnostics_TraceWorldMapActionEvent("battle_attack_enter", attacker_index, defender_index, charge_mode, 0);
-  if ( !dword_532048 || attacker_index < 0 || attacker_index >= 22 || defender_index < 0 || defender_index >= 22 )
+  if ( !g_MapData || attacker_index < 0 || attacker_index >= 22 || defender_index < 0 || defender_index >= 22 )
   {
     Diagnostics_TraceWorldMapActionEvent("battle_attack_invalid_index", attacker_index, defender_index, charge_mode, 0);
     return 0;
   }
-  attacker_unit = (__int16 *)(dword_532048 + 852 + 31 * attacker_index);
-  defender_unit = (__int16 *)(dword_532048 + 852 + 31 * defender_index);
+  attacker_unit = (__int16 *)(g_MapData + 852 + 31 * attacker_index);
+  defender_unit = (__int16 *)(g_MapData + 852 + 31 * defender_index);
   attacker_type = *attacker_unit;
   if ( attacker_type == -1
     || !g_UnitTypeBaseMeleeAttack[UNIT_TYPE_METADATA_STRIDE * attacker_type]
@@ -42667,14 +42667,14 @@ signed int  UnitBattle_Attack(int attacker_index, int defender_index, int charge
   if ( !*(unsigned char *)((char *)defender_unit + 9) )
   {
     corpse_sprite = UnitBattle_GetCorpseSpriteIndex(defender_unit);
-    *(_BYTE *)(dword_532048 + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 2334) = corpse_sprite;
-    *(_BYTE *)(dword_532048 + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 2335) = 0;
+    *(_BYTE *)(g_MapData + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 2334) = corpse_sprite;
+    *(_BYTE *)(g_MapData + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 2335) = 0;
   }
   if ( !*(unsigned char *)((char *)attacker_unit + 9) )
   {
     corpse_sprite = UnitBattle_GetCorpseSpriteIndex(attacker_unit);
-    *(_BYTE *)(dword_532048 + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 2334) = corpse_sprite;
-    *(_BYTE *)(dword_532048 + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 2335) = 0;
+    *(_BYTE *)(g_MapData + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 2334) = corpse_sprite;
+    *(_BYTE *)(g_MapData + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 2335) = 0;
   }
   defender_dead = *(unsigned char *)((char *)defender_unit + 9) == 0;
   attacker_dead = *(unsigned char *)((char *)attacker_unit + 9) == 0;
@@ -42682,14 +42682,14 @@ signed int  UnitBattle_Attack(int attacker_index, int defender_index, int charge
   if ( defender_dead )
   {
     *defender_unit = -1;
-    *(_WORD *)(dword_532048 + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 1534) = -1;
+    *(_WORD *)(g_MapData + 40 * (unsigned __int16)defender_unit[2] + 2 * (unsigned __int16)defender_unit[3] + 1534) = -1;
   }
   owner_index = *(unsigned __int8 *)((char *)attacker_unit + 2);
   if ( attacker_dead )
   {
     UnitBattle_RefreshSelectedUnitUI();
     *attacker_unit = -1;
-    *(_WORD *)(dword_532048 + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 1534) = -1;
+    *(_WORD *)(g_MapData + 40 * (unsigned __int16)attacker_unit[2] + 2 * (unsigned __int16)attacker_unit[3] + 1534) = -1;
     if ( *(_DWORD *)(gameData + 1423 * owner_index + 140051) )
       UnitBattle_SelectNextControllableUnit(0, 0, (char)defender_unit);
   }
@@ -42718,7 +42718,7 @@ attack_failed:
 // 4740DD: using guessed type int __thiscall nfree_(_DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004287E0) --------------------------------------------------------
 BOOL  UnitBattle_IsTileWithinRange(int a1, int a2, int a3)
@@ -42727,31 +42727,31 @@ BOOL  UnitBattle_IsTileWithinRange(int a1, int a2, int a3)
   int unit_type_offset;
   signed int distance; // eax
 
-  if ( !dword_532048 || a1 < 0 || a1 >= 22 )
+  if ( !g_MapData || a1 < 0 || a1 >= 22 )
     return 0;
-  unit_record = dword_532048 + 31 * a1 + 852;
+  unit_record = g_MapData + 31 * a1 + 852;
   if ( *(__int16 *)unit_record == -1 )
     return 0;
   distance = Math_CeilSqrt(
-         (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 4) - a2)
-       * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 4) - a2)
-       + (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3)
-       * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3));
+         (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
+       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
+       + (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3)
+       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3));
   unit_type_offset = 88 * *(__int16 *)unit_record;
   return distance <= (unsigned __int8)g_UnitTypeMaxRange[unit_type_offset]
       && distance > (unsigned __int8)g_UnitTypeMinRange[unit_type_offset];
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00428850) --------------------------------------------------------
 BOOL  UnitBattle_IsUnitWithinRange(int a1, int a2)
 {
   return UnitBattle_IsTileWithinRange(
            a1,
-           *(unsigned __int16 *)(dword_532048 + 31 * a2 + 856),
-           *(unsigned __int16 *)(dword_532048 + 31 * a2 + 858));
+           *(unsigned __int16 *)(g_MapData + 31 * a2 + 856),
+           *(unsigned __int16 *)(g_MapData + 31 * a2 + 858));
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00428880) --------------------------------------------------------
 __int16  UnitBattle_PlayShotAnimation(
@@ -42890,7 +42890,7 @@ __int16  UnitBattle_PlayShotAnimation(
 
   v122 = a4;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
-  v125 = (__int16 *)(dword_532048 + 852 + 31 * a1);
+  v125 = (__int16 *)(g_MapData + 852 + 31 * a1);
   if ( a2 == -1 )
   {
     LOBYTE(a4) = 0;
@@ -42898,23 +42898,23 @@ __int16  UnitBattle_PlayShotAnimation(
   }
   else
   {
-    v113 = (unsigned __int8 *)(31 * a2 + dword_532048 + 852);
+    v113 = (unsigned __int8 *)(31 * a2 + g_MapData + 852);
   }
   Debug_Log(a2, a4, (DWORD)v111, (int)a_shotanimDDDDD);
   if ( !UnitBattle_IsTileInViewport((unsigned __int16)v125[2], (unsigned __int16)v125[3]) || !UnitBattle_IsTileInViewport(v122, a3) )
   {
-    *(_DWORD *)(dword_532048 + 808) = (v122 + (unsigned __int16)v125[2]) / 2 - 3;
-    *(_DWORD *)(dword_532048 + 812) = (a3 + (unsigned __int16)v125[3]) / 2 - 3;
-    if ( *(int *)(dword_532048 + 808) < 0 )
-      *(_DWORD *)(dword_532048 + 808) = 0;
-    v96 = *(_DWORD *)(dword_532048 + 804);
-    if ( *(_DWORD *)(dword_532048 + 808) + 7 > v96 )
-      *(_DWORD *)(dword_532048 + 808) = v96 - 7;
-    if ( *(int *)(dword_532048 + 812) < 0 )
-      *(_DWORD *)(dword_532048 + 812) = 0;
-    v97 = *(_DWORD *)(dword_532048 + 800);
-    if ( *(_DWORD *)(dword_532048 + 812) + 7 > v97 )
-      *(_DWORD *)(dword_532048 + 812) = v97 - 7;
+    *(_DWORD *)(g_MapData + 808) = (v122 + (unsigned __int16)v125[2]) / 2 - 3;
+    *(_DWORD *)(g_MapData + 812) = (a3 + (unsigned __int16)v125[3]) / 2 - 3;
+    if ( *(int *)(g_MapData + 808) < 0 )
+      *(_DWORD *)(g_MapData + 808) = 0;
+    v96 = *(_DWORD *)(g_MapData + 804);
+    if ( *(_DWORD *)(g_MapData + 808) + 7 > v96 )
+      *(_DWORD *)(g_MapData + 808) = v96 - 7;
+    if ( *(int *)(g_MapData + 812) < 0 )
+      *(_DWORD *)(g_MapData + 812) = 0;
+    v97 = *(_DWORD *)(g_MapData + 800);
+    if ( *(_DWORD *)(g_MapData + 812) + 7 > v97 )
+      *(_DWORD *)(g_MapData + 812) = v97 - 7;
     UnitBattle_RedrawVisibleGrid();
   }
   *((_BYTE *)v125 + 3) = Facing_DirectionFromDelta8(v122 - (unsigned __int16)v125[2], a3 - (unsigned __int16)v125[3]);
@@ -43051,15 +43051,15 @@ __int16  UnitBattle_PlayShotAnimation(
       UnitBattle_UpdateIdleAnimatedUnits();
       DD_Pump((int)g_RenderState, v25);
       v25 = v124;
-      v34 = Time_Now(v33, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v32 + dword_532048 + 852)]);
+      v34 = Time_Now(v33, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v32 + g_MapData + 852)]);
       if ( v34 - v124 >= v36 )
       {
-        v37 = *(__int16 *)(v32 + dword_532048 + 852);
+        v37 = *(__int16 *)(v32 + g_MapData + 852);
         v38 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v37];
         if ( v38 == dword_523F7C )
           Audio_PlayUnitRangedAttackSound(v37);
         v124 = Time_Now(v35, v38);
-        UnitBattle_RedrawTile(*(unsigned __int16 *)(v32 + dword_532048 + 856), *(unsigned __int16 *)(v32 + dword_532048 + 858));
+        UnitBattle_RedrawTile(*(unsigned __int16 *)(v32 + g_MapData + 856), *(unsigned __int16 *)(v32 + g_MapData + 858));
         ++dword_523F7C;
       }
     }
@@ -43070,14 +43070,14 @@ __int16  UnitBattle_PlayShotAnimation(
     v39 = (unsigned __int16)DLX_GetSpriteHeight(v131, v132) / 2;
     SpriteWidth = DLX_GetSpriteWidth(v131, v40);
     v42 = (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *v125];
-    v118 = (((unsigned __int16)v125[2] - *(_DWORD *)(dword_532048 + 808)) << 6)
+    v118 = (((unsigned __int16)v125[2] - *(_DWORD *)(g_MapData + 808)) << 6)
          + 32
          + *(_DWORD *)((char *)&a7 + 2)
          - v42;
-    v43 = *(_DWORD *)((char *)&a7 + 6) + (((unsigned __int16)v125[3] - *(_DWORD *)(dword_532048 + 812)) << 6) + 16 - v42;
+    v43 = *(_DWORD *)((char *)&a7 + 6) + (((unsigned __int16)v125[3] - *(_DWORD *)(g_MapData + 812)) << 6) + 16 - v42;
     v119 = v43;
-    v123 = ((v122 - *(_DWORD *)(dword_532048 + 808)) << 6) + 64 - v39;
-    v115 = ((a3 - *(_DWORD *)(dword_532048 + 812)) << 6) + 48 - SpriteWidth / 2;
+    v123 = ((v122 - *(_DWORD *)(g_MapData + 808)) << 6) + 64 - v39;
+    v115 = ((a3 - *(_DWORD *)(g_MapData + 812)) << 6) + 48 - SpriteWidth / 2;
     v133 = v118;
     v44 = v115 - v43;
     v127 = Math_CeilSqrt(v44 * v44 + (v123 - v118) * (v123 - v118)) / *(_DWORD *)((char *)&a7 + 10);
@@ -43094,16 +43094,16 @@ __int16  UnitBattle_PlayShotAnimation(
       dword_523F7C = v49;
       if ( v49 )
       {
-        v50 = Time_Now(v128, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v128 + dword_532048 + 852)]);
+        v50 = Time_Now(v128, (unsigned __int8)g_UnitTypeAnimationFrameIntervalMs[88 * *(__int16 *)(v128 + g_MapData + 852)]);
         if ( v50 - v124 >= v49 )
         {
-          v51 = *(__int16 *)(v48 + dword_532048 + 852);
+          v51 = *(__int16 *)(v48 + g_MapData + 852);
           v52 = dword_523F7C;
           v53 = (unsigned __int8)g_UnitTypeShotSoundFrameIndex[88 * v51];
           if ( v53 == dword_523F7C )
             Audio_PlayUnitRangedAttackSound(v51);
           v124 = Time_Now(v52, v53);
-          UnitBattle_RedrawTile(*(unsigned __int16 *)(v128 + dword_532048 + 856), *(unsigned __int16 *)(v128 + dword_532048 + 858));
+          UnitBattle_RedrawTile(*(unsigned __int16 *)(v128 + g_MapData + 856), *(unsigned __int16 *)(v128 + g_MapData + 858));
           v48 = g_UnitBattleAnimFrameCount;
           v49 = (dword_523F7C + 1) % g_UnitBattleAnimFrameCount;
           dword_523F7C = v49;
@@ -43206,7 +43206,7 @@ __int16  UnitBattle_PlayShotAnimation(
     }
   }
   dword_523F7C %= g_UnitBattleAnimFrameCount;
-  UnitBattle_RedrawTile(*(unsigned __int16 *)(dword_532048 + 31 * a1 + 856), *(unsigned __int16 *)(dword_532048 + 31 * a1 + 858));
+  UnitBattle_RedrawTile(*(unsigned __int16 *)(g_MapData + 31 * a1 + 856), *(unsigned __int16 *)(g_MapData + 31 * a1 + 858));
   v72 = *v125;
   v73 = v72 == UNIT_TYPE_CATAPULT
      || v72 == UNIT_TYPE_CANNON
@@ -43240,7 +43240,7 @@ LABEL_57:
         g_UnitBattleShotProjectileTileX = v122;
         g_UnitBattleShotProjectileTileY = a3;
         dword_532100 = 0;
-        Audio_PlayUnitShotSound(*(__int16 *)(dword_532048 + 31 * a1 + 852));
+        Audio_PlayUnitShotSound(*(__int16 *)(g_MapData + 31 * a1 + 852));
         goto LABEL_62;
       }
       v76 = (_DWORD *)Mem_Alloc(4112, v74, v25, (DWORD)v111);
@@ -43360,7 +43360,7 @@ LABEL_62:
 // 523F74: using guessed type int dword_523F74;
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5320EC: using guessed type int dword_5320EC;
 // 5320F0: using guessed type int dword_5320F0;
 // 5320FC: using guessed type int dword_5320FC;
@@ -43380,8 +43380,8 @@ int  UnitBattle_CalcShotTargetHealthAfterHit(int a1, int a2)
   int v10; // ecx
   int result; // eax
 
-  v3 = dword_532048 + 852 + 31 * a1;
-  v4 = (__int16 *)(31 * a2 + dword_532048 + 852);
+  v3 = g_MapData + 852 + 31 * a1;
+  v4 = (__int16 *)(31 * a2 + g_MapData + 852);
   Unit_CalcEffectivenessC((__int16 *)v3);
   Math_CeilSqrt(
     (*(unsigned __int16 *)(v3 + 4) - (unsigned __int16)v4[2])
@@ -43402,14 +43402,14 @@ LABEL_2:
   }
   v10 = 4 * v6;
 LABEL_3:
-  result = *(char *)(dword_532048 + 31 * a2 + 861) - v10;
+  result = *(char *)(g_MapData + 31 * a2 + 861) - v10;
   if ( result < 0 )
     return 0;
   return result;
 }
 // 4296BD: variable 'v7' is possibly undefined
 // 4296E6: variable 'v6' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00429740) --------------------------------------------------------
 int  UnitBattle_Shot(int a1, int a2)
@@ -43422,8 +43422,8 @@ int  UnitBattle_Shot(int a1, int a2)
   unsigned __int16 v8; // ax
 
   Debug_Log(a1, a2, 0, (int)aUnitbattle_sho, a1, a2);
-  v3 = (char *)(dword_532048 + 852 + 31 * a1);
-  v4 = (char *)(dword_532048 + 852 + 31 * a2);
+  v3 = (char *)(g_MapData + 852 + 31 * a1);
+  v4 = (char *)(g_MapData + 852 + 31 * a2);
   if ( !UnitBattle_IsUnitWithinRange(a1, a2) )
     return 0;
   v5 = UNIT_SLOT_VOLLEYS_USED(v3);
@@ -43458,10 +43458,10 @@ int  UnitBattle_Shot(int a1, int a2)
   {
     v7 = *(unsigned __int16 *)(v4 + 4);
     v8 = *(unsigned __int16 *)(v4 + 6);
-    *(_BYTE *)(40 * v7 + dword_532048 + 2 * v8 + 2334) = UnitBattle_GetCorpseSpriteIndex((__int16 *)v4);
+    *(_BYTE *)(40 * v7 + g_MapData + 2 * v8 + 2334) = UnitBattle_GetCorpseSpriteIndex((__int16 *)v4);
     UnitBattle_PlayDeathAnimation(a2, 0, 0, 0);
     *(_WORD *)v4 = -1;
-    *(_WORD *)(40 * v7 + dword_532048 + 2 * v8 + 1534) = -1;
+    *(_WORD *)(40 * v7 + g_MapData + 2 * v8 + 1534) = -1;
   }
   *(_DWORD *)(1423 * *(unsigned __int8 *)(v3 + 2) + gameData + 140073) = 1;
   UnitBattle_RedrawVisibleGrid();
@@ -43495,10 +43495,10 @@ int  UnitBattle_AttackWall(int a1, DWORD a2, int a3, int a4)
   int wall_damage;
 
   Debug_Log(a3, a4, a2, (int)aUnitbattle_a_0);
-  if ( !g_UnitTypeBaseMeleeAttack_51257E[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] || !*(_BYTE *)(a4 + dword_532048 + 20 * a2 + 3134) )
+  if ( !g_UnitTypeBaseMeleeAttack_51257E[88 * *(__int16 *)(g_MapData + 31 * a1 + 852)] || !*(_BYTE *)(a4 + g_MapData + 20 * a2 + 3134) )
     return 0;
   g_SelectedUnitIndex = a1;
-  v7 = dword_532048 + 852 + 31 * a1;
+  v7 = g_MapData + 852 + 31 * a1;
   UnitBattle_RefreshSelectedUnitUI();
   v8 = *(unsigned __int16 *)(v7 + 4) - a2;
   if ( v8 <= 0 )
@@ -43550,9 +43550,9 @@ LABEL_18:
   UnitBattle_PlayAttackAnimation(a1, -1, 0, 0, (unsigned __int16 *)a2);
   UnitBattle_RedrawTile(a2, a4);
   v20 = dword_532104;
-  v19 = a4 + dword_532048 + 20 * a2;
+  v19 = a4 + g_MapData + 20 * a2;
   wall_hp_before = *(unsigned __int8 *)(v19 + 3134);
-  wall_kind = *(_DWORD *)(dword_532048 + 820);
+  wall_kind = *(_DWORD *)(g_MapData + 820);
   wall_factor = (unsigned __int16)g_WallKindDefenseFactor[2 * wall_kind];
   effective_wall_attack = Unit_CalcEffectivenessD((char *)v7, 0);
   wall_damage = wall_factor * effective_wall_attack / 256;
@@ -43562,8 +43562,8 @@ LABEL_18:
   if ( *(char *)(v15 + 3134) <= 0 )
   {
     *(_BYTE *)(v15 + 3134) = 0;
-    if ( a4 == *(_DWORD *)(dword_532048 + 828) )
-      *(_DWORD *)(dword_532048 + 832) = 0;
+    if ( a4 == *(_DWORD *)(g_MapData + 828) )
+      *(_DWORD *)(g_MapData + 832) = 0;
     wall_hp_after = *(unsigned __int8 *)(v15 + 3134);
   }
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -43582,8 +43582,8 @@ LABEL_18:
       wall_factor,
       effective_wall_attack,
       wall_damage,
-      *(_DWORD *)(dword_532048 + 828),
-      *(_DWORD *)(dword_532048 + 832),
+      *(_DWORD *)(g_MapData + 828),
+      *(_DWORD *)(g_MapData + 832),
       dword_532104);
   UnitBattle_RedrawTile(a2, a4);
   if ( v20 != dword_532104 )
@@ -43600,7 +43600,7 @@ LABEL_18:
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 513A78: using guessed type __int16 word_513A78[];
 // 5202E4: using guessed type int gameData;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532104: using guessed type int dword_532104;
 
 //----- (00429BD0) --------------------------------------------------------
@@ -43621,7 +43621,7 @@ int  UnitBattle_ShotWall(int a1, int a2)
 
   v4 = dword_5437A4;
   Debug_Log(a1, a2, v4, (int)aUnitbattle_s_0, a1, a2, v4);
-  v3 = (char *)(dword_532048 + 852 + 31 * a1);
+  v3 = (char *)(g_MapData + 852 + 31 * a1);
   if ( !UnitBattle_IsTileWithinRange(a1, a2, v4) )
     return 0;
   v5 = UNIT_SLOT_VOLLEYS_USED(v3);
@@ -43647,15 +43647,15 @@ int  UnitBattle_ShotWall(int a1, int a2)
     v6 = 9 * v6 / 10;
   if ( *(__int16 *)v3 == UNIT_TYPE_CATAPULT && v9 > 3 )
     v6 = 9 * v6 / 10;
-  v11 = dword_532048 + 40 * a2;
-  LOWORD(v12) = g_WallKindDefenseFactor[2 * *(_DWORD *)(dword_532048 + 820)];
+  v11 = g_MapData + 40 * a2;
+  LOWORD(v12) = g_WallKindDefenseFactor[2 * *(_DWORD *)(g_MapData + 820)];
   v13 = *(signed __int8 *)(v11 + v4 + 3134) - ((v6 * (unsigned __int16)v12) >> 8);
   *(_BYTE *)(v11 + v4 + 3134) = v13;
   if ( v13 <= 0 )
   {
     *(_BYTE *)(v11 + v4 + 3134) = 0;
-    if ( v4 == *(_DWORD *)(dword_532048 + 828) )
-      *(_DWORD *)(dword_532048 + 832) = 0;
+    if ( v4 == *(_DWORD *)(g_MapData + 828) )
+      *(_DWORD *)(g_MapData + 832) = 0;
   }
   UnitBattle_RedrawTile(a2, v4);
   if ( v10 != dword_532104 )
@@ -43674,13 +43674,13 @@ signed int  UnitBattle_Defence(int a1, char a2, DWORD a3)
 
   Debug_Log(a1, a2, a3, (int)aUnitbattle_def);
   v5 = 31 * a1;
-  if ( *(unsigned __int8 *)(dword_532048 + v5 + 860) < 5u )
+  if ( *(unsigned __int8 *)(g_MapData + v5 + 860) < 5u )
     return 0;
-  *(_BYTE *)(dword_532048 + v5 + 860) = 0;
-  *(_BYTE *)(v5 + dword_532048 + 874) |= 1u;
+  *(_BYTE *)(g_MapData + v5 + 860) = 0;
+  *(_BYTE *)(v5 + g_MapData + 874) |= 1u;
   return 1;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00429E90) --------------------------------------------------------
 int  BuildCursor_HandleCancelButtonPress(int a1, int a2)
@@ -45217,21 +45217,21 @@ int  Battle_LoadWallSegmentsFromBuildingRecord(int a1)
   v11 = 40;
   v10 = 0;
   v9 = 20;
-  while ( *(_DWORD *)(dword_532048 + 804) - 1 > v12 )
+  while ( *(_DWORD *)(g_MapData + 804) - 1 > v12 )
   {
     v2 = a1;
     v3 = 0;
     v4 = 0;
-    while ( v3 < *(_DWORD *)(dword_532048 + 800) )
+    while ( v3 < *(_DWORD *)(g_MapData + 800) )
     {
-      v5 = *(__int16 *)(v4 + dword_532048 + v11);
+      v5 = *(__int16 *)(v4 + g_MapData + v11);
       if ( v5 >= 388 && v5 <= 403 )
       {
-        v6 = *(__int16 *)(v4 + dword_532048 + 40 * v10);
-        if ( v6 < 388 || v6 > 403 || (v7 = *(__int16 *)(40 * (v12 + 1) + dword_532048 + v4), v7 < 388) || v7 > 403 )
+        v6 = *(__int16 *)(v4 + g_MapData + 40 * v10);
+        if ( v6 < 388 || v6 > 403 || (v7 = *(__int16 *)(40 * (v12 + 1) + g_MapData + v4), v7 < 388) || v7 > 403 )
         {
-          *(_BYTE *)(v9 + dword_532048 + v3 + 3134) = *(_BYTE *)(v2 + 422);
-          *(_BYTE *)(v9 + dword_532048 + v3 + 3534) = 100;
+          *(_BYTE *)(v9 + g_MapData + v3 + 3134) = *(_BYTE *)(v2 + 422);
+          *(_BYTE *)(v9 + g_MapData + v3 + 3534) = 100;
         }
       }
       v4 += 2;
@@ -45243,12 +45243,12 @@ int  Battle_LoadWallSegmentsFromBuildingRecord(int a1)
     v9 += 20;
     ++v12;
   }
-  *(_DWORD *)(dword_532048 + 828) = *(_DWORD *)(dword_532048 + 800) / 2;
+  *(_DWORD *)(g_MapData + 828) = *(_DWORD *)(g_MapData + 800) / 2;
   result = *(unsigned __int8 *)(a1 + 421);
-  *(_DWORD *)(dword_532048 + 820) = result;
+  *(_DWORD *)(g_MapData + 820) = result;
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C060) --------------------------------------------------------
 char  Battle_SaveWallSegmentsToBuildingRecord(int a1)
@@ -45262,27 +45262,27 @@ char  Battle_SaveWallSegmentsToBuildingRecord(int a1)
   char result; // al
 
   v2 = 0;
-  for ( i = 0; v2 < *(_DWORD *)(dword_532048 + 804) && !*(_BYTE *)(dword_532048 + i + 3534); i += 20 )
+  for ( i = 0; v2 < *(_DWORD *)(g_MapData + 804) && !*(_BYTE *)(g_MapData + i + 3534); i += 20 )
     ++v2;
   v4 = a1;
   v5 = 0;
   v6 = 20 * v2;
-  while ( v5 < *(_DWORD *)(dword_532048 + 800) )
+  while ( v5 < *(_DWORD *)(g_MapData + 800) )
   {
     ++v4;
-    v7 = *(_BYTE *)(v6 + dword_532048 + v5++ + 3134);
+    v7 = *(_BYTE *)(v6 + g_MapData + v5++ + 3134);
     *(_BYTE *)(v4 + 421) = v7;
   }
   result = g_CurrentPlayerIndex;
-  if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 840) )
+  if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
   {
-    result = *(_BYTE *)(dword_532048 + 832);
-    *(_BYTE *)(*(_DWORD *)(dword_532048 + 828) + a1 + 422) = result;
+    result = *(_BYTE *)(g_MapData + 832);
+    *(_BYTE *)(*(_DWORD *)(g_MapData + 828) + a1 + 422) = result;
   }
   return result;
 }
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C0F0) --------------------------------------------------------
 BOOL  UnitBattle_IsTileInViewport(int a1, int a2)
@@ -45291,17 +45291,17 @@ BOOL  UnitBattle_IsTileInViewport(int a1, int a2)
   int v3; // esi
   BOOL result; // eax
 
-  v2 = *(_DWORD *)(dword_532048 + 808);
+  v2 = *(_DWORD *)(g_MapData + 808);
   result = 0;
   if ( a1 >= v2 && a1 < v2 + 7 )
   {
-    v3 = *(_DWORD *)(dword_532048 + 812);
+    v3 = *(_DWORD *)(g_MapData + 812);
     if ( a2 >= v3 && a2 < v3 + 7 )
       return 1;
   }
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C130) --------------------------------------------------------
 void  Battle_LogUnitEntry(__int16 *a1, DWORD a2, ...)
@@ -45324,7 +45324,7 @@ void  Battle_LogAllUnits(int a1, char a2, DWORD a3)
 
   Debug_Log(a1, a2, a3, (int)aBattle_logallu);
   v4 = 0;
-  v5 = (__int16 *)(dword_532048 + 852);
+  v5 = (__int16 *)(g_MapData + 852);
   do
   {
     while ( *v5 == -1 )
@@ -45341,7 +45341,7 @@ void  Battle_LogAllUnits(int a1, char a2, DWORD a3)
   while ( v4 < 22 );
 }
 // 42C1BF: variable 'v6' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C1D0) --------------------------------------------------------
 int  GodAnger(DWORD a1, int a2, char a3)
@@ -45424,20 +45424,20 @@ int  GodAnger(DWORD a1, int a2, char a3)
   }
   for ( k = 0; k != 682; k += 31 )
   {
-    v5 = k + dword_532048;
-    result = *(__int16 *)(k + dword_532048 + 852);
+    v5 = k + g_MapData;
+    result = *(__int16 *)(k + g_MapData + 852);
     if ( result != -1 )
     {
       result = *(unsigned __int8 *)(v5 + 854);
       if ( result == a1 )
       {
         *(_BYTE *)(v5 + 861) -= Rng_RandRange(20, 30);
-        result = *(char *)(k + dword_532048 + 861);
+        result = *(char *)(k + g_MapData + 861);
         if ( result <= 0 )
         {
-          *(_WORD *)(k + dword_532048 + 852) = -1;
-          result = *(unsigned __int16 *)(k + dword_532048 + 858);
-          *(_WORD *)(dword_532048 + 40 * *(unsigned __int16 *)(k + dword_532048 + 856) + 2 * result + 1534) = -1;
+          *(_WORD *)(k + g_MapData + 852) = -1;
+          result = *(unsigned __int16 *)(k + g_MapData + 858);
+          *(_WORD *)(g_MapData + 40 * *(unsigned __int16 *)(k + g_MapData + 856) + 2 * result + 1534) = -1;
         }
       }
     }
@@ -45458,7 +45458,7 @@ int  GodAnger(DWORD a1, int a2, char a3)
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
 // 5202F4: using guessed type int dword_5202F4;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042C4C0) --------------------------------------------------------
@@ -45487,14 +45487,14 @@ BOOL Battle_HasUnitsForBothSides()
   v1 = 0;
   for ( i = 0; i != 682; i += 31 )
   {
-    if ( *(__int16 *)(i + dword_532048 + 852) != -1 )
+    if ( *(__int16 *)(i + g_MapData + 852) != -1 )
     {
-      v3 = *(unsigned __int8 *)(i + dword_532048 + 854);
-      if ( v3 == *(_DWORD *)(dword_532048 + 836) )
+      v3 = *(unsigned __int8 *)(i + g_MapData + 854);
+      if ( v3 == *(_DWORD *)(g_MapData + 836) )
       {
         v0 = 1;
       }
-      else if ( v3 == *(_DWORD *)(dword_532048 + 840) )
+      else if ( v3 == *(_DWORD *)(g_MapData + 840) )
       {
         v1 = 1;
       }
@@ -45502,7 +45502,7 @@ BOOL Battle_HasUnitsForBothSides()
   }
   return v0 && v1;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C560) --------------------------------------------------------
 int  Battle_ApplyPeriodicDamageToSideUnits(int a1)
@@ -45515,7 +45515,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int a1)
   char v7; // ah
 
   v2 = 0;
-  v3 = (__int16 *)(dword_532048 + 852);
+  v3 = (__int16 *)(g_MapData + 852);
   do
   {
     while ( 1 )
@@ -45548,7 +45548,7 @@ int  Battle_ApplyPeriodicDamageToSideUnits(int a1)
   return result;
 }
 // 42C5B3: variable 'v3' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042C600) --------------------------------------------------------
 _BOOL2 UnitBattle_HandleManualRotateAndMoveInput()
@@ -45588,10 +45588,10 @@ LABEL_5:
   {
     if ( Input_IsKeyPressed(205) && g_SelectedUnitIndex != -1 )
     {
-      v2 = dword_532048;
+      v2 = g_MapData;
       v3 = 31 * g_SelectedUnitIndex;
-      v4 = *(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 855) + 1;
-      *(_BYTE *)(dword_532048 + v3 + 855) = v4;
+      v4 = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) + 1;
+      *(_BYTE *)(g_MapData + v3 + 855) = v4;
       *(_BYTE *)(v2 + v3 + 855) = v4 & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(205) )
@@ -45602,10 +45602,10 @@ LABEL_5:
     }
     if ( Input_IsKeyPressed(203) && g_SelectedUnitIndex != -1 )
     {
-      v5 = dword_532048;
+      v5 = g_MapData;
       v6 = 31 * g_SelectedUnitIndex;
-      v7 = *(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 855) - 1;
-      *(_BYTE *)(dword_532048 + v6 + 855) = v7;
+      v7 = *(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 855) - 1;
+      *(_BYTE *)(g_MapData + v6 + 855) = v7;
       *(_BYTE *)(v5 + v6 + 855) = v7 & 7;
       UnitBattle_RedrawUnitNeighborhood(g_SelectedUnitIndex);
       while ( Input_IsKeyPressed(203) )
@@ -45619,7 +45619,7 @@ LABEL_5:
     {
       if ( g_SelectedUnitIndex != -1 )
       {
-        v8 = 31 * g_SelectedUnitIndex + dword_532048 + 852;
+        v8 = 31 * g_SelectedUnitIndex + g_MapData + 852;
         v9 = *(unsigned __int8 *)(v8 + 3);
         v10 = Map_NeighborDY[2 * v9];
         v12 = UnitBattle_MoveTrack(
@@ -45629,7 +45629,7 @@ LABEL_5:
                 v10 + *(unsigned __int16 *)(v8 + 6),
                 v10);
         LOWORD(IsKeyPressed) = 31 * g_SelectedUnitIndex;
-        *(_DWORD *)(dword_532048 + 31 * g_SelectedUnitIndex + 875) = v12;
+        *(_DWORD *)(g_MapData + 31 * g_SelectedUnitIndex + 875) = v12;
         if ( v12 )
         {
           v13 = HIWORD(*(_DWORD *)(*(_DWORD *)(v11 + 23) + 4));
@@ -45640,7 +45640,7 @@ LABEL_5:
           }
           else
           {
-            Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+            Audio_PlayUnitMoveOrderSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
             LOWORD(IsKeyPressed) = UnitBattle_Move(g_SelectedUnitIndex, v14, v13, v10);
           }
         }
@@ -45656,7 +45656,7 @@ LABEL_5:
 // 513334: using guessed type int dword_513334[];
 // 513338: using guessed type int dword_513338[63];
 // 5202E4: using guessed type int gameData;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0042C840) --------------------------------------------------------
@@ -45681,46 +45681,46 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
   {
     if ( Input_IsKeyPressed(203) )
     {
-      v6 = *(_DWORD *)(dword_532048 + 808);
+      v6 = *(_DWORD *)(g_MapData + 808);
       if ( v6 )
       {
-        *(_DWORD *)(dword_532048 + 808) = v6 - 1;
+        *(_DWORD *)(g_MapData + 808) = v6 - 1;
         UnitBattle_RedrawVisibleGrid();
       }
     }
-    if ( Input_IsKeyPressed(205) && *(_DWORD *)(dword_532048 + 808) + 7 < *(_DWORD *)(dword_532048 + 804) )
+    if ( Input_IsKeyPressed(205) && *(_DWORD *)(g_MapData + 808) + 7 < *(_DWORD *)(g_MapData + 804) )
     {
-      ++*(_DWORD *)(dword_532048 + 808);
+      ++*(_DWORD *)(g_MapData + 808);
       UnitBattle_RedrawVisibleGrid();
     }
     if ( Input_IsKeyPressed(200) )
     {
-      v7 = *(_DWORD *)(dword_532048 + 812);
+      v7 = *(_DWORD *)(g_MapData + 812);
       if ( v7 )
       {
-        *(_DWORD *)(dword_532048 + 812) = v7 - 1;
+        *(_DWORD *)(g_MapData + 812) = v7 - 1;
         UnitBattle_RedrawVisibleGrid();
       }
     }
-    if ( Input_IsKeyPressed(208) && *(_DWORD *)(dword_532048 + 812) + 7 < *(_DWORD *)(dword_532048 + 800) )
+    if ( Input_IsKeyPressed(208) && *(_DWORD *)(g_MapData + 812) + 7 < *(_DWORD *)(g_MapData + 800) )
     {
-      ++*(_DWORD *)(dword_532048 + 812);
+      ++*(_DWORD *)(g_MapData + 812);
       UnitBattle_RedrawVisibleGrid();
     }
   }
   result = *(__int16 *)(40
-                      * (*(_DWORD *)(dword_532048 + 808)
+                      * (*(_DWORD *)(g_MapData + 808)
                        + (((dword_544CFC >> byte_54512C)
                          - 32
                          - (__CFSHL__(((dword_544CFC >> byte_54512C) - 32) >> 31, 6)
                           + (((dword_544CFC >> byte_54512C) - 32) >> 31 << 6))) >> 6))
-                      + dword_532048
+                      + g_MapData
                       + 2
                       * ((((dword_544D00 >> byte_54512C)
                          - 16
                          - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
                           + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6)
-                       + *(_DWORD *)(dword_532048 + 812))
+                       + *(_DWORD *)(g_MapData + 812))
                       + 1534);
   if ( result == -1 )
   {
@@ -45744,24 +45744,24 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
           if ( v13 < 8 )
             continue;
         }
-        *(_DWORD *)(dword_532048 + 808) += ((dword_544CFC >> byte_54512C)
+        *(_DWORD *)(g_MapData + 808) += ((dword_544CFC >> byte_54512C)
                                           - v8
                                           - (__CFSHL__(((dword_544CFC >> byte_54512C) - v8) >> 31, 3)
                                            + 8 * (((dword_544CFC >> byte_54512C) - v8) >> 31))) >> 3;
-        *(_DWORD *)(dword_532048 + 812) += ((dword_544D00 >> byte_54512C)
+        *(_DWORD *)(g_MapData + 812) += ((dword_544D00 >> byte_54512C)
                                           - v9
                                           - (__CFSHL__(((dword_544D00 >> byte_54512C) - v9) >> 31, 3)
                                            + 8 * (((dword_544D00 >> byte_54512C) - v9) >> 31))) >> 3;
-        if ( *(int *)(dword_532048 + 808) < 0 )
-          *(_DWORD *)(dword_532048 + 808) = 0;
-        v11 = *(_DWORD *)(dword_532048 + 804);
-        if ( *(_DWORD *)(dword_532048 + 808) + 7 > v11 )
-          *(_DWORD *)(dword_532048 + 808) = v11 - 7;
-        if ( *(int *)(dword_532048 + 812) < 0 )
-          *(_DWORD *)(dword_532048 + 812) = 0;
-        v12 = *(_DWORD *)(dword_532048 + 800);
-        if ( *(_DWORD *)(dword_532048 + 812) + 7 > v12 )
-          *(_DWORD *)(dword_532048 + 812) = v12 - 7;
+        if ( *(int *)(g_MapData + 808) < 0 )
+          *(_DWORD *)(g_MapData + 808) = 0;
+        v11 = *(_DWORD *)(g_MapData + 804);
+        if ( *(_DWORD *)(g_MapData + 808) + 7 > v11 )
+          *(_DWORD *)(g_MapData + 808) = v11 - 7;
+        if ( *(int *)(g_MapData + 812) < 0 )
+          *(_DWORD *)(g_MapData + 812) = 0;
+        v12 = *(_DWORD *)(g_MapData + 800);
+        if ( *(_DWORD *)(g_MapData + 812) + 7 > v12 )
+          *(_DWORD *)(g_MapData + 812) = v12 - 7;
         UnitBattle_RedrawVisibleGrid();
         v8 = dword_544CFC >> byte_54512C;
         v9 = dword_544D00 >> byte_54512C;
@@ -45775,7 +45775,7 @@ int __thiscall UnitBattle_UpdateViewportFromInputAndGetHoveredSlot(int this)
 // 42C86E: variable 'v4' is possibly undefined
 // 5202E4: using guessed type int gameData;
 // 532040: using guessed type int dword_532040;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -45820,43 +45820,43 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
       - 16
       - (__CFSHL__(((dword_544D00 >> byte_54512C) - 16) >> 31, 6)
        + (((dword_544D00 >> byte_54512C) - 16) >> 31 << 6))) >> 6;
-  v2 = v0 + *(_DWORD *)(dword_532048 + 808);
-  v3 = v1 + *(_DWORD *)(dword_532048 + 812);
+  v2 = v0 + *(_DWORD *)(g_MapData + 808);
+  v3 = v1 + *(_DWORD *)(g_MapData + 812);
   if ( v0 <= 6 && v1 <= 6 )
   {
     if ( DD_IsLost((int)g_RenderState) )
     {
-      v4 = *(__int16 *)(dword_532048 + 40 * v2 + 2 * v3 + 1534);
+      v4 = *(__int16 *)(g_MapData + 40 * v2 + 2 * v3 + 1534);
       if ( v4 == -1 )
       {
-        if ( *(_BYTE *)(v3 + 20 * v2 + dword_532048 + 3134) )
+        if ( *(_BYTE *)(v3 + 20 * v2 + g_MapData + 3134) )
           UnitBattle_ShowWallInfoPopup(100, 100, v3, v2, v0);
       }
       else
       {
-        Unit_Info(100, 100, 0, (unsigned __int8 *)(dword_532048 + 852 + 31 * v4), v0, 0);
+        Unit_Info(100, 100, 0, (unsigned __int8 *)(g_MapData + 852 + 31 * v4), v0, 0);
       }
     }
-    v5 = *(__int16 *)(dword_532048 + 40 * v2 + 2 * v3 + 1534);
+    v5 = *(__int16 *)(g_MapData + 40 * v2 + 2 * v3 + 1534);
     if ( DD_IsLost((int)g_RenderState) || DD_IsFlipping((int)g_RenderState) )
       Diagnostics_TraceBattlefieldClickEvent("tile_input", v0, v1, v2, v3, v5);
-    if ( v5 == -1 || *(unsigned __int8 *)(31 * v5 + dword_532048 + 854) != g_CurrentPlayerIndex )
+    if ( v5 == -1 || *(unsigned __int8 *)(31 * v5 + g_MapData + 854) != g_CurrentPlayerIndex )
     {
-      if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(dword_532048 + 31 * v5 + 854) == g_CurrentPlayerIndex )
+      if ( !dword_53205C || v5 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v5 + 854) == g_CurrentPlayerIndex )
       {
-        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + dword_532048 + 852) == UNIT_TYPE_RAM )
+        if ( v5 == -1 || *(_WORD *)(31 * g_SelectedUnitIndex + g_MapData + 852) == UNIT_TYPE_RAM )
         {
-          if ( *(_BYTE *)(dword_532048 + 20 * v2 + v3 + 3134) )
+          if ( *(_BYTE *)(g_MapData + 20 * v2 + v3 + 3134) )
           {
             if ( dword_53205C )
             {
               if ( UnitBattle_IsTileWithinRange(g_SelectedUnitIndex, v2, v3)
-                && (v17 = dword_532048 + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(v17 + 860) >= 5u)
+                && (v17 = g_MapData + 31 * g_SelectedUnitIndex, *(unsigned __int8 *)(v17 + 860) >= 5u)
                 && (unsigned __int8)(2 * *(_BYTE *)(v17 + 864)) >> 5 < (*(_BYTE *)(v17 + 864) & 3) + 1 )
               {
                 if ( DD_IsFlipping((int)g_RenderState) )
                 {
-                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                  Audio_PlayUnitMoveOrderSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
                   dword_5437A4 = v3;
                   Diagnostics_TraceWorldMapActionEvent("battle_wall_shot_enter", g_SelectedUnitIndex, v2, v3, 0);
                   UnitBattle_ShotWall(g_SelectedUnitIndex, v2);
@@ -45871,10 +45871,10 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
             }
             else
             {
-              v14 = *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 856) - v2;
+              v14 = *(unsigned __int16 *)(31 * g_SelectedUnitIndex + g_MapData + 856) - v2;
               if ( v14 <= 0 )
-                v14 = v2 - *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 856);
-              if ( v14 != 1 || *(unsigned __int16 *)(31 * g_SelectedUnitIndex + dword_532048 + 858) != v3 )
+                v14 = v2 - *(unsigned __int16 *)(31 * g_SelectedUnitIndex + g_MapData + 856);
+              if ( v14 != 1 || *(unsigned __int16 *)(31 * g_SelectedUnitIndex + g_MapData + 858) != v3 )
               {
                 BattleLog_Disable();
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_move_track_enter", g_SelectedUnitIndex, v2, v3, v5);
@@ -45884,7 +45884,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 if ( v20 )
                 {
                   v26 = v20[1];
-                  if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
+                  if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
                     v7 = &g_CursorDesc_Attack;
                   else
                     v7 = &g_CursorDesc_Blocked;
@@ -45899,7 +45899,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
               else
               {
                 v26 = 0;
-                if ( *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) >= 5u )
+                if ( *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860) >= 5u )
                   v7 = &g_CursorDesc_Attack;
                 else
                   v7 = &g_CursorDesc_Blocked;
@@ -45908,11 +45908,11 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 "battle_wall_move_track_cost",
                 g_SelectedUnitIndex,
                 HIWORD(v26),
-                *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860),
+                *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860),
                 v5);
               if ( DD_IsFlipping((int)g_RenderState) && v7 == &g_CursorDesc_Attack )
               {
-                Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_enter", g_SelectedUnitIndex, v2, v3, 0);
                 UnitBattle_AttackWall(g_SelectedUnitIndex, v2, 0, v3);
                 Diagnostics_TraceWorldMapActionEvent("battle_wall_attack_return", g_SelectedUnitIndex, v2, v3, 0);
@@ -45940,18 +45940,18 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
               "battle_move_track_cost",
               g_SelectedUnitIndex,
               HIWORD(v26),
-              *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860),
+              *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860),
               v5);
-            if ( HIWORD(v26) <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
+            if ( HIWORD(v26) <= (int)*(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
             {
               if ( DD_IsFlipping((int)g_RenderState) )
               {
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_track_enter", g_SelectedUnitIndex, v2, v3, v5);
                 v21 = UnitBattle_MoveTrack(g_SelectedUnitIndex, v2, v2, v3, v5);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_track_return", g_SelectedUnitIndex, v2, v3, v5);
-                v22 = dword_532048;
-                *(_DWORD *)(31 * g_SelectedUnitIndex + dword_532048 + 875) = v21;
-                Audio_PlayUnitMoveOrderSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+                v22 = g_MapData;
+                *(_DWORD *)(31 * g_SelectedUnitIndex + g_MapData + 875) = v21;
+                Audio_PlayUnitMoveOrderSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_enter", g_SelectedUnitIndex, v2, v3, v5);
                 UnitBattle_Move(g_SelectedUnitIndex, 0, 0, 0);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_return", g_SelectedUnitIndex, v2, v3, v5);
@@ -45965,20 +45965,20 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
             else
             {
               v7 = &g_CursorDesc_Blocked;
-              Diagnostics_TraceWorldMapActionEvent("battle_move_insufficient_ap", g_SelectedUnitIndex, HIWORD(v26), *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860), v5);
+              Diagnostics_TraceWorldMapActionEvent("battle_move_insufficient_ap", g_SelectedUnitIndex, HIWORD(v26), *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860), v5);
             }
           }
           goto LABEL_13;
         }
         if ( DD_IsLost((int)g_RenderState) )
-          Unit_Info(100, 100, 0, (unsigned __int8 *)(dword_532048 + 852 + 31 * v5), v5, 0);
+          Unit_Info(100, 100, 0, (unsigned __int8 *)(g_MapData + 852 + 31 * v5), v5, 0);
         BattleLog_Disable();
         v20 = UnitBattle_MoveTrackNear(g_SelectedUnitIndex, v2, v3, v5);
         BattleLog_Enable();
         if ( v20 )
         {
           v26 = v20[0] ? v20[1] : 0;
-          if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860) )
+          if ( HIWORD(v26) + 5 <= (int)*(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860) )
             v7 = &g_CursorDesc_Attack;
           else
             v7 = &g_CursorDesc_Blocked;
@@ -45986,7 +45986,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
           if ( DD_IsFlipping((int)g_RenderState) && v7 == &g_CursorDesc_Attack )
           {
             UnitBattle_Attack(g_SelectedUnitIndex, v5, dword_532060);
-            if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
+            if ( *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
               UnitBattle_SelectNextControllableUnit(0, v12, v3);
             Render_Begin((int)g_RenderState, 0);
           }
@@ -45995,7 +45995,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
       }
       else if ( UnitBattle_IsUnitWithinRange(g_SelectedUnitIndex, v5) )
       {
-        v13 = dword_532048 + 31 * g_SelectedUnitIndex;
+        v13 = g_MapData + 31 * g_SelectedUnitIndex;
         if ( *(unsigned __int8 *)(v13 + 860) >= 5u
           && (unsigned __int8)(2 * *(_BYTE *)(v13 + 864)) >> 5 < (*(_BYTE *)(v13 + 864) & 3) + 1 )
         {
@@ -46012,7 +46012,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
     else if ( DD_IsFlipping((int)g_RenderState) )
     {
       v8 = g_CurrentPlayerIndex;
-      if ( *(unsigned __int8 *)(v6 + dword_532048 + 854) == g_CurrentPlayerIndex )
+      if ( *(unsigned __int8 *)(v6 + g_MapData + 854) == g_CurrentPlayerIndex )
       {
         v9 = g_SelectedUnitIndex;
         if ( v5 != g_SelectedUnitIndex )
@@ -46022,7 +46022,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
           UnitBattle_RedrawUnitFootprint(v9);
           UnitBattle_RedrawUnitFootprint(v5);
           UnitBattle_DrawSelectedUnitPanel(0, 1, v8, v3);
-          Audio_PlayUnitActivateSound(*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+          Audio_PlayUnitActivateSound(*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
         }
       }
     }
@@ -46049,7 +46049,7 @@ LABEL_13:
 // 429BD0: using guessed type int __fastcall UnitBattle_ShotWall(_DWORD, _DWORD);
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -46095,7 +46095,7 @@ int UnitBattle_RefreshSelectedActionButtons()
   g_RenderDevice = &unk_51D4C0;
   if ( dword_532060 )
     UnitBattle_RefreshSelectedUnitUI();
-  selected_type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
+  selected_type_offset = 88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852);
   if ( !g_UnitTypeMaxRange_512582[selected_type_offset] )
   {
     dword_53205C = 0;
@@ -46120,7 +46120,7 @@ LABEL_6:
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B80: using guessed type int dword_514B80;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
 
@@ -46139,26 +46139,26 @@ int  UnitBattle_SelectNextControllableUnit(int a1, int a2, char a3)
     UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
   for ( i = (g_SelectedUnitIndex + 1) % 22; i != g_SelectedUnitIndex; i = (i + 1) % 22 )
   {
-    v4 = 31 * i + dword_532048;
+    v4 = 31 * i + g_MapData;
     if ( *(__int16 *)(v4 + 852) != -1 && *(unsigned __int8 *)(v4 + 854) == g_CurrentPlayerIndex )
       break;
   }
-  v5 = dword_532048;
+  v5 = g_MapData;
   g_SelectedUnitIndex = i;
   Diagnostics_TraceWorldMapActionEvent(
     "battle_action_next_unit_selected",
     g_SelectedUnitIndex,
-    *(unsigned __int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 856),
-    *(unsigned __int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 858),
+    *(unsigned __int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 856),
+    *(unsigned __int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 858),
     0);
   if ( !UnitBattle_IsTileInViewport(
-          *(unsigned __int16 *)(dword_532048 + 31 * i + 856),
-          *(unsigned __int16 *)(dword_532048 + 31 * i + 858)) )
+          *(unsigned __int16 *)(g_MapData + 31 * i + 856),
+          *(unsigned __int16 *)(g_MapData + 31 * i + 858)) )
     UnitBattle_CenterViewOnUnit(i);
   UnitBattle_RefreshSelectedActionButtons();
   UnitBattle_RedrawVisibleGrid();
   UnitBattle_DrawSelectedUnitPanel(0, 1, v5, a3);
-  v7 = dword_532048 + 31 * g_SelectedUnitIndex;
+  v7 = g_MapData + 31 * g_SelectedUnitIndex;
   result = *(__int16 *)(v7 + 852);
   if ( result != -1 )
   {
@@ -46171,7 +46171,7 @@ int  UnitBattle_SelectNextControllableUnit(int a1, int a2, char a3)
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042D4E0) --------------------------------------------------------
 int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, char a4, double a5)
@@ -46185,7 +46185,7 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
   (void)a5;
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_shoot_toggle_enter", g_SelectedUnitIndex, dword_53205C, (int)widget, 0);
-  type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
+  type_offset = 88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852);
   result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
   if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
@@ -46213,7 +46213,7 @@ int UnitBattle_ToggleSelectedShootingMode(uintptr_t widget, int a2, DWORD a3, ch
 }
 // 42D53C: variable 'v2' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -46225,21 +46225,21 @@ int  UnitBattle_HandleRetreatAction(int a1, int a2, char a3, DWORD a4)
   _DWORD v6[4]; // [esp+0h] [ebp-10h] BYREF
 
   UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
-  result = dword_532048;
-  if ( g_CurrentPlayerIndex != *(_DWORD *)(dword_532048 + 840) || *(_DWORD *)(dword_532048 + 848) )
+  result = g_MapData;
+  if ( g_CurrentPlayerIndex != *(_DWORD *)(g_MapData + 840) || *(_DWORD *)(g_MapData + 848) )
   {
     v6[0] = g_UnitBattleRetreatMessageStrings[0];
     v6[1] = g_UnitBattleRetreatMessageStrings[1];
     v6[2] = g_UnitBattleRetreatMessageStrings[2];
     result = UnitBattle_ShowCurrentPlayerPromptDialog((int)v6, a3, a4);
-    dword_532064 = result;
+    g_BattleLoopExitCode = result;
   }
   return result;
 }
 // 514B5C: using guessed type char *off_514B5C[6];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 532048: using guessed type int dword_532048;
-// 532064: using guessed type int dword_532064;
+// 532048: using guessed type int g_MapData;
+// 532064: using guessed type int g_BattleLoopExitCode;
 
 //----- (0042D5B0) --------------------------------------------------------
 int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char a4, double a5)
@@ -46253,7 +46253,7 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
   (void)a5;
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_charge_toggle_enter", g_SelectedUnitIndex, dword_532060, (int)widget, 0);
-  type_offset = 88 * *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852);
+  type_offset = 88 * *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852);
   result = (unsigned __int8)g_UnitTypeBaseMeleeAttack_51257E[type_offset];
   if ( g_UnitTypeBaseMeleeAttack_51257E[type_offset] )
   {
@@ -46289,7 +46289,7 @@ int UnitBattle_ToggleSelectedChargeMode(uintptr_t widget, int a2, DWORD a3, char
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514B80: using guessed type int dword_514B80;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 53205C: using guessed type int dword_53205C;
 // 532060: using guessed type int dword_532060;
 // 532074: using guessed type int dword_532074;
@@ -46305,9 +46305,9 @@ int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, ch
 
   Diagnostics_TraceWorldMapActionEvent("battle_action_prepare_defence_enter", g_SelectedUnitIndex, a1, a2, 0);
   v9[4] = a2;
-  v6 = dword_532048;
+  v6 = g_MapData;
   result = 31 * g_SelectedUnitIndex;
-  if ( (*(_BYTE *)(dword_532048 + 31 * g_SelectedUnitIndex + 874) & 1) == 0 )
+  if ( (*(_BYTE *)(g_MapData + 31 * g_SelectedUnitIndex + 874) & 1) == 0 )
   {
     UIWidget_PlayPressedReleaseAnimationWithDelay(a1, g_SelectedUnitIndex);
     if ( !UnitBattle_Defence(g_SelectedUnitIndex, 0, a3) )
@@ -46321,8 +46321,8 @@ int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, ch
     Diagnostics_TraceWorldMapActionEvent(
       "battle_action_prepare_defence_done",
       g_SelectedUnitIndex,
-      *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 860),
-      *(unsigned __int8 *)(dword_532048 + 31 * g_SelectedUnitIndex + 864),
+      *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 860),
+      *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 864),
       0);
     return UnitBattle_DrawSelectedUnitPanel(0, 1, v6, a4);
   }
@@ -46332,7 +46332,7 @@ int  UnitBattle_HandlePrepareDefenceAction(int a1, int a2, DWORD a3, char a4, ch
 // 511130: using guessed type char g_LanguageIndex;
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 514B68: using guessed type char *off_514B68[3];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042D6F0) --------------------------------------------------------
 int UnitBattle_RequestActionLoopExit(uintptr_t widget, int a2, DWORD a3, char a4, double a5)
@@ -46623,7 +46623,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
   int j; // [esp+24h] [ebp-1Ch]
 
   Diagnostics_TraceWorldMapActionEvent("battle_panel_anim_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
-  UnitBattle_DrawSelectedUnitPanel(dword_532048 + 852 + 31 * g_SelectedUnitIndex, 0, a2, a3);
+  UnitBattle_DrawSelectedUnitPanel(g_MapData + 852 + 31 * g_SelectedUnitIndex, 0, a2, a3);
   Diagnostics_TraceWorldMapActionEvent("battle_panel_anim_after_panel", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
   Render_Pump();
   g_RenderDevice = &unk_51D4C0;
@@ -46634,7 +46634,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
     v5 = -(char)i;
     byte_532088[v4] = v5;
   }
-  v6 = 31 * g_SelectedUnitIndex + dword_532048;
+  v6 = 31 * g_SelectedUnitIndex + g_MapData;
   v7 = *(_BYTE *)(v6 + 864) & 3;
   g_UnitBattlePanelVolleyIconChar = 9 * v7;
   v8 = *(char *)(v6 + 863);
@@ -46723,7 +46723,7 @@ int  UnitBattle_AnimateSelectedUnitPanel(int a1, int a2, int a3)
 // 514DC3: using guessed type char byte_514DC3;
 // 514DC4: using guessed type char byte_514DC4;
 // 5202E0: using guessed type int dword_5202E0;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532054: using guessed type int dword_532054;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
@@ -46849,19 +46849,19 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   int v8[9]; // [esp+0h] [ebp-24h] BYREF
 
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_enter", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, (int)a2);
-  g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * g_CurrentPlayerIndex + 3944);
+  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_restore_selected", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceBattleUnitSnapshot("turn_loop_after_restore_selected");
-  if ( *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852) == -1 )
+  if ( *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852) == -1 )
   {
-    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_selected_empty", g_SelectedUnitIndex, *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852), 0, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_selected_empty", g_SelectedUnitIndex, *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852), 0, 0);
     v2 = g_SelectedUnitIndex + 1;
     if ( g_SelectedUnitIndex + 1 != g_SelectedUnitIndex )
     {
       a1 = g_SelectedUnitIndex;
       do
       {
-        v3 = dword_532048 + 31 * v2;
+        v3 = g_MapData + 31 * v2;
         if ( *(__int16 *)(v3 + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == g_CurrentPlayerIndex )
           break;
         v2 = (v2 + 1) % 22;
@@ -46869,16 +46869,16 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       while ( v2 != g_SelectedUnitIndex );
     }
     g_SelectedUnitIndex = v2;
-    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_find_selected", g_SelectedUnitIndex, a1, *(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852), 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_find_selected", g_SelectedUnitIndex, a1, *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852), 0);
   }
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_action_buttons", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   UnitBattle_RefreshSelectedActionButtons();
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_action_buttons", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
-  *(_DWORD *)(dword_532048 + 808) = *(unsigned __int8 *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3934);
-  *(_DWORD *)(dword_532048 + 812) = *(unsigned __int8 *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3935);
-  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_grid", g_SelectedUnitIndex, *(_DWORD *)(dword_532048 + 808), *(_DWORD *)(dword_532048 + 812), 0);
+  *(_DWORD *)(g_MapData + 808) = *(unsigned __int8 *)(g_MapData + 2 * g_CurrentPlayerIndex + 3934);
+  *(_DWORD *)(g_MapData + 812) = *(unsigned __int8 *)(g_MapData + 2 * g_CurrentPlayerIndex + 3935);
+  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_grid", g_SelectedUnitIndex, *(_DWORD *)(g_MapData + 808), *(_DWORD *)(g_MapData + 812), 0);
   UnitBattle_RedrawVisibleGrid();
-  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_grid", g_SelectedUnitIndex, *(_DWORD *)(dword_532048 + 808), *(_DWORD *)(dword_532048 + 812), 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_grid", g_SelectedUnitIndex, *(_DWORD *)(g_MapData + 808), *(_DWORD *)(g_MapData + 812), 0);
   UnitBattle_DrawSelectedUnitPanel(0, 1, a1, (int)v8);
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_panel", g_SelectedUnitIndex, a1, (int)(uintptr_t)v8, 0);
   v8[0] = (int)g_BattleYourTurnBannerTexts[0];
@@ -46887,11 +46887,11 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
   v4 = 1;
   Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_before_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, v8[(unsigned __int8)g_LanguageIndex], (int)a2);
   UnitBattle_ShowPlayerMessageBanner(v8[(unsigned __int8)g_LanguageIndex], g_CurrentPlayerIndex, 1, a2);
-  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, dword_532064, 0);
-  v5 = dword_532064;
+  Diagnostics_TraceWorldMapActionEvent("battle_turn_loop_after_banner", g_SelectedUnitIndex, g_CurrentPlayerIndex, g_BattleLoopExitCode, 0);
+  v5 = g_BattleLoopExitCode;
   g_UnitBattleActionLoopExitRequested = 0;
   Diagnostics_PrimeBattleSafeCursorOnTurnLoop();
-  if ( !dword_532064 )
+  if ( !g_BattleLoopExitCode )
   {
     while ( !g_UnitBattleActionLoopExitRequested )
     {
@@ -46913,19 +46913,19 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
       if ( UIWidgetTable_PollHoverAndActions(g_UnitBattleActionWidgetTable, v5) == 1 )
       {
         v4 = (int)(uintptr_t)UnitType_GetLocalizedName(
-          (unit_type)*(__int16 *)(dword_532048 + 31 * g_SelectedUnitIndex + 852));
+          (unit_type)*(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852));
         Tooltip_ShowText(3, (char *)v4, v8[0]);
       }
       if ( !Battle_HasUnitsForBothSides() )
       {
-        dword_532064 = 1;
+        g_BattleLoopExitCode = 1;
         return 1;
       }
-      if ( dword_532064 )
-        return dword_532064;
+      if ( g_BattleLoopExitCode )
+        return g_BattleLoopExitCode;
     }
   }
-  return dword_532064;
+  return g_BattleLoopExitCode;
 }
 // 42E4F2: variable 'v6' is possibly undefined
 // 511130: using guessed type char g_LanguageIndex;
@@ -46934,8 +46934,8 @@ signed int  UnitBattle_RunTurnLoop(int a1, DWORD a2)
 // 514B78: using guessed type _DWORD dword_514B78[2];
 // 514E2C: using guessed type char *off_514E2C[6];
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
-// 532048: using guessed type int dword_532048;
-// 532064: using guessed type int dword_532064;
+// 532048: using guessed type int g_MapData;
+// 532064: using guessed type int g_BattleLoopExitCode;
 // 532068: using guessed type int g_UnitBattleActionLoopExitRequested;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
@@ -46999,11 +46999,11 @@ void  HandleBattleResults(
     v10 = a4 + 18;
   for ( k = 0; k != 682; k += 31 )
   {
-    v12 = dword_532048;
-    v13 = k + dword_532048;
-    if ( *(__int16 *)(k + dword_532048 + 852) != -1 )
+    v12 = g_MapData;
+    v13 = k + g_MapData;
+    if ( *(__int16 *)(k + g_MapData + 852) != -1 )
     {
-      if ( *(unsigned __int8 *)(v13 + 854) == *(_DWORD *)(dword_532048 + 836) )
+      if ( *(unsigned __int8 *)(v13 + 854) == *(_DWORD *)(g_MapData + 836) )
       {
         v14 = v9;
         v15 = (char *)(v13 + 852);
@@ -47031,7 +47031,7 @@ void  HandleBattleResults(
     Building_DebugDump(a4, (char)v10, a5);
 }
 // 42E5D1: variable 'v5' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042E6F0) --------------------------------------------------------
 int UnitBattle_TemporarilyClearGateBlocker()
@@ -47039,34 +47039,34 @@ int UnitBattle_TemporarilyClearGateBlocker()
   int result; // eax
   char v1; // bl
 
-  if ( *(_DWORD *)(dword_532048 + 828) != -1 )
+  if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
-    result = *(_DWORD *)(dword_532048 + 828) + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824);
+    result = *(_DWORD *)(g_MapData + 828) + g_MapData + 20 * *(_DWORD *)(g_MapData + 824);
     v1 = *(_BYTE *)(result + 3134);
     if ( v1 )
     {
-      *(_DWORD *)(dword_532048 + 832) = v1;
-      result = *(_DWORD *)(dword_532048 + 828) + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824);
+      *(_DWORD *)(g_MapData + 832) = v1;
+      result = *(_DWORD *)(g_MapData + 828) + g_MapData + 20 * *(_DWORD *)(g_MapData + 824);
       *(_BYTE *)(result + 3134) = 0;
     }
   }
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042E770) --------------------------------------------------------
 char UnitBattle_RestoreGateBlocker()
 {
   char result; // al
 
-  if ( *(_DWORD *)(dword_532048 + 828) != -1 )
+  if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
-    result = *(_BYTE *)(dword_532048 + 832);
-    *(_BYTE *)(dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824) + *(_DWORD *)(dword_532048 + 828) + 3134) = result;
+    result = *(_BYTE *)(g_MapData + 832);
+    *(_BYTE *)(g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + *(_DWORD *)(g_MapData + 828) + 3134) = result;
   }
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042E7C0) --------------------------------------------------------
 int  UnitBattle_OverrideControllerOrderBits(int a1, int a2, int a3, int a4)
@@ -47079,12 +47079,12 @@ int  UnitBattle_OverrideControllerOrderBits(int a1, int a2, int a3, int a4)
   result = 0;
   do
   {
-    v8 = dword_532048;
-    *(_DWORD *)&dword_532090[v6] = *(_BYTE *)(dword_532048 + result + 864) & 3;
+    v8 = g_MapData;
+    *(_DWORD *)&dword_532090[v6] = *(_BYTE *)(g_MapData + result + 864) & 3;
     if ( *(unsigned __int8 *)(v8 + result + 854) == a1 && a2
-      || *(unsigned __int8 *)(dword_532048 + result + 854) == a4 && a3 )
+      || *(unsigned __int8 *)(g_MapData + result + 854) == a4 && a3 )
     {
-      *(_BYTE *)(dword_532048 + result + 864) |= 3u;
+      *(_BYTE *)(g_MapData + result + 864) |= 3u;
     }
     v6 += 4;
     result += 31;
@@ -47093,7 +47093,7 @@ int  UnitBattle_OverrideControllerOrderBits(int a1, int a2, int a3, int a4)
   return result;
 }
 // 42E7C0: could not find valid save-restore pair for ebx
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042E860) --------------------------------------------------------
 int UnitBattle_RestoreControllerOrderBits()
@@ -47108,19 +47108,19 @@ int UnitBattle_RestoreControllerOrderBits()
   v1 = 0;
   do
   {
-    result = dword_532048;
+    result = g_MapData;
     v3 = dword_532090[v0] & 3;
-    v4 = *(_BYTE *)(v1 + dword_532048 + 864);
+    v4 = *(_BYTE *)(v1 + g_MapData + 864);
     v1 += 31;
     v4 &= 0xFCu;
-    *(_BYTE *)(v1 + dword_532048 + 833) = v4;
+    *(_BYTE *)(v1 + g_MapData + 833) = v4;
     v0 += 4;
     *(_BYTE *)(v1 + result + 833) = v3 | v4;
   }
   while ( v0 != 88 );
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042E8B0) --------------------------------------------------------
 int *UnitBattle_InitBattleScreenFrame()
@@ -47276,7 +47276,7 @@ DWORD  Battle_RunTacticalCombat(
   {
     v10 = 0;
   }
-  dword_53204C = (int)v10;
+  g_BattleHudSprites = (int)v10;
   v11 = (_DWORD *)Mem_Alloc(4112, 0, 0, 0);
   if ( v11 )
     v11 = DLXSpriteSet_Load(v11, aBattleButtons_);
@@ -47298,7 +47298,7 @@ DWORD  Battle_RunTacticalCombat(
   if ( v16 )
     v16 = DLXSpriteSet_Load(v16, aBattleFrame_s3);
   dword_5202BC = (int)v16;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_resources", dword_5202BC, dword_53204C, dword_532050, dword_532054);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_resources", dword_5202BC, g_BattleHudSprites, dword_532050, dword_532054);
   g_RenderDevice = &unk_51D4C0;
   SpriteForChar = DLX_GetSpriteForChar((int)v16, 0);
   Compat_RenderDeviceDrawMenuSprite(0, 0, SpriteForChar, 1);
@@ -47311,41 +47311,41 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_frame_draw", dword_5202BC, SpriteForChar, v18, v19);
   Tooltip_CaptureBackdrop(160, 473, 7, 467, 76);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_backdrop", 0, 0, 0, 0);
-  dword_532048 = (int)nmalloc_(0xF7C, 4);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_state_alloc", dword_532048, 0xF7C, 0, 0);
-  if ( !dword_532048 )
+  g_MapData = (int)nmalloc_(0xF7C, 4);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_state_alloc", g_MapData, 0xF7C, 0, 0);
+  if ( !g_MapData )
   {
     Debug_Log(0, 211, (DWORD)&unk_51D4C0, (int)aNotEnoughMem_9);
     App_RequestQuit((int)aNotEnoughMe_10);
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_init_before_player_state", dword_532048, (int)v81, (int)v82, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_before_player_state", g_MapData, (int)v81, (int)v82, 0);
   v78 = g_CurrentPlayerIndex;
   g_CurrentPlayerIndex = *((unsigned __int8 *)v81 + 4);
-  *(_DWORD *)(dword_532048 + 836) = g_CurrentPlayerIndex;
+  *(_DWORD *)(g_MapData + 836) = g_CurrentPlayerIndex;
   if ( v82 )
     v23 = *((_BYTE *)v82 + 4);
   else
     v23 = v74[2];
-  *(_DWORD *)(dword_532048 + 840) = v23;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_players", *(_DWORD *)(dword_532048 + 836), *(_DWORD *)(dword_532048 + 840), 0, 0);
-  *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 836) + gameData + 140077) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 840) + 140077) = 0;
-  *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 836) + gameData + 140073) = 0;
-  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 840) + 140073) = 0;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_player_counters", *(_DWORD *)(dword_532048 + 836), *(_DWORD *)(dword_532048 + 840), 0, 0);
+  *(_DWORD *)(g_MapData + 840) = v23;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_players", *(_DWORD *)(g_MapData + 836), *(_DWORD *)(g_MapData + 840), 0, 0);
+  *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 836) + gameData + 140077) = 0;
+  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 840) + 140077) = 0;
+  *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 836) + gameData + 140073) = 0;
+  *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 840) + 140073) = 0;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_player_counters", *(_DWORD *)(g_MapData + 836), *(_DWORD *)(g_MapData + 840), 0, 0);
   if ( *((_BYTE *)v81 + 720) )
   {
-    *(_DWORD *)(dword_532048 + 844) = *((unsigned __int8 *)v81 + 4);
+    *(_DWORD *)(g_MapData + 844) = *((unsigned __int8 *)v81 + 4);
   }
   else if ( v82 && *((_BYTE *)v82 + 720) )
   {
-    *(_DWORD *)(dword_532048 + 844) = *((unsigned __int8 *)v82 + 4);
+    *(_DWORD *)(g_MapData + 844) = *((unsigned __int8 *)v82 + 4);
   }
   else
   {
-    *(_DWORD *)(dword_532048 + 844) = -1;
+    *(_DWORD *)(g_MapData + 844) = -1;
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_castle_owner", *(_DWORD *)(dword_532048 + 844), 0, 0, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_castle_owner", *(_DWORD *)(g_MapData + 844), 0, 0, 0);
   if ( v82 )
     v24 = *v82;
   else
@@ -47362,104 +47362,104 @@ DWORD  Battle_RunTacticalCombat(
       if ( v81[1] >= v25 )
       {
         v25 = 1;
-        dword_532070 = 1;
-        dword_53206C = 0;
+        g_DefenderStartsOnLeft = 1;
+        g_AttackerStartsOnLeft = 0;
       }
       else
       {
-        dword_53206C = 1;
-        dword_532070 = 0;
+        g_AttackerStartsOnLeft = 1;
+        g_DefenderStartsOnLeft = 0;
       }
     }
     else
     {
-      dword_532070 = 1;
-      dword_53206C = 0;
+      g_DefenderStartsOnLeft = 1;
+      g_AttackerStartsOnLeft = 0;
     }
   }
   else
   {
     v25 = 0;
-    dword_53206C = 1;
-    dword_532070 = 0;
+    g_AttackerStartsOnLeft = 1;
+    g_DefenderStartsOnLeft = 0;
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_orientation", dword_53206C, dword_532070, v24, v25);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_orientation", g_AttackerStartsOnLeft, g_DefenderStartsOnLeft, v24, v25);
   if ( v82 )
     BattleMapFileName(v70, *v82, v82[1]);
   else
-    BattleMap_GetOutcomeVariantFileName(v70, dword_532070, v74[1]);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_name", dword_53206C, dword_532070, v25, 0);
+    BattleMap_GetOutcomeVariantFileName(v70, g_DefenderStartsOnLeft, v74[1]);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_name", g_AttackerStartsOnLeft, g_DefenderStartsOnLeft, v25, 0);
   v73 = FileSystem_ResolveReadPath(v70, 1);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_open", v73, 0, 0, 0);
-  battle_map_bytes_read = Compat_QueryRead(v73, (void *)(uintptr_t)(unsigned int)dword_532048, 0x320);
+  battle_map_bytes_read = Compat_QueryRead(v73, (void *)(uintptr_t)(unsigned int)g_MapData, 0x320);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_read", v73, battle_map_bytes_read, 0x320, 0);
   Compat_FileSystemQueryRelease(v27, &v73);
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_map_close", v73, 0, 0, 0);
   v28 = 0;
   for ( i = 0; i < 800; i += 40 )
   {
-    if ( *(__int16 *)(dword_532048 + i) == -1 )
+    if ( *(__int16 *)(g_MapData + i) == -1 )
       break;
     ++v28;
   }
-  *(_DWORD *)(dword_532048 + 804) = v28;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_row_count", v28, i, *(__int16 *)dword_532048, 0);
+  *(_DWORD *)(g_MapData + 804) = v28;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_row_count", v28, i, *(__int16 *)g_MapData, 0);
   v30 = 0;
   for ( j = 0; j < 40; j += 2 )
   {
-    v32 = *(__int16 *)(dword_532048 + j);
+    v32 = *(__int16 *)(g_MapData + j);
     if ( v32 == -1 )
       break;
     ++v30;
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_col_count", v30, j, *(__int16 *)dword_532048, 0);
-  *(_DWORD *)(dword_532048 + 800) = 7;
-  *(_DWORD *)(dword_532048 + 808) = 0;
-  *(_DWORD *)(dword_532048 + 812) = 0;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_dims_store", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
-  memset((void *)(uintptr_t)(unsigned int)(dword_532048 + 0x5FE), -1, 0x320);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_overlay_clear", dword_532048, 0x5FE, 0x320, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_col_count", v30, j, *(__int16 *)g_MapData, 0);
+  *(_DWORD *)(g_MapData + 800) = 7;
+  *(_DWORD *)(g_MapData + 808) = 0;
+  *(_DWORD *)(g_MapData + 812) = 0;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_dims_store", *(_DWORD *)(g_MapData + 800), *(_DWORD *)(g_MapData + 804), 0, 0);
+  memset((void *)(uintptr_t)(unsigned int)(g_MapData + 0x5FE), -1, 0x320);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_overlay_clear", g_MapData, 0x5FE, 0x320, 0);
   for ( k = UNIT_STACK_SLOT_STRIDE; k <= 0x2AA; k += UNIT_STACK_SLOT_STRIDE )
-    *(_WORD *)(dword_532048 + k + 0x335) = -1;
+    *(_WORD *)(g_MapData + k + 0x335) = -1;
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_slot_sentinels", k, 0, 0, 0);
-  memset((void *)(uintptr_t)(unsigned int)(dword_532048 + 0xC3E), 0, 0x190);
-  memset((void *)(uintptr_t)(unsigned int)(dword_532048 + 0xDCE), 0, 0x190);
-  *(_DWORD *)(dword_532048 + 828) = -1;
-  memset((void *)(uintptr_t)(unsigned int)(dword_532048 + 0x91E), -1, 0x320);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_grid_clears", dword_532048, *(_DWORD *)(dword_532048 + 828), 0, 0);
+  memset((void *)(uintptr_t)(unsigned int)(g_MapData + 0xC3E), 0, 0x190);
+  memset((void *)(uintptr_t)(unsigned int)(g_MapData + 0xDCE), 0, 0x190);
+  *(_DWORD *)(g_MapData + 828) = -1;
+  memset((void *)(uintptr_t)(unsigned int)(g_MapData + 0x91E), -1, 0x320);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_grid_clears", g_MapData, *(_DWORD *)(g_MapData + 828), 0, 0);
   v37 = v74;
-  *(_DWORD *)(dword_532048 + 816) = 5;
-  Diagnostics_TraceWorldMapActionEvent("battle_init_before_pathing", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), *(_DWORD *)(dword_532048 + 816), 0);
+  *(_DWORD *)(g_MapData + 816) = 5;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_before_pathing", *(_DWORD *)(g_MapData + 800), *(_DWORD *)(g_MapData + 804), *(_DWORD *)(g_MapData + 816), 0);
   UnitBattle_InitPathingTables();
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_pathing", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), byte_531890[0], 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_pathing", *(_DWORD *)(g_MapData + 800), *(_DWORD *)(g_MapData + 804), g_TilePassabilityMask[0], 0);
   if ( v37 )
     Battle_LoadWallSegmentsFromBuildingRecord((int)v37);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_building_setup", (int)(uintptr_t)v37, *(_DWORD *)(dword_532048 + 848), 0, 0);
-  *(_DWORD *)(dword_532048 + 848) = v74 == 0;
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_building_setup", (int)(uintptr_t)v37, *(_DWORD *)(g_MapData + 848), 0, 0);
+  *(_DWORD *)(g_MapData + 848) = v74 == 0;
   g_RenderDevice = &unk_51D4C0;
   UIWidgetTable_InitDrawStates(g_UnitBattleActionWidgetTable);
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_ui_sync", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_ui_sync", *(_DWORD *)(g_MapData + 800), *(_DWORD *)(g_MapData + 804), 0, 0);
   UnitBattle_RedrawVisibleGrid();
-  Diagnostics_TraceWorldMapActionEvent("battle_init_after_first_grid_draw", *(_DWORD *)(dword_532048 + 800), *(_DWORD *)(dword_532048 + 804), 0, 0);
-  *(_DWORD *)(dword_532048 + 824) = 0;
-  *(_DWORD *)(dword_532048 + 832) = 0;
-  if ( *(_DWORD *)(dword_532048 + 828) != -1 )
+  Diagnostics_TraceWorldMapActionEvent("battle_init_after_first_grid_draw", *(_DWORD *)(g_MapData + 800), *(_DWORD *)(g_MapData + 804), 0, 0);
+  *(_DWORD *)(g_MapData + 824) = 0;
+  *(_DWORD *)(g_MapData + 832) = 0;
+  if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
-    for ( ; ; ++*(_DWORD *)(dword_532048 + 824) )
+    for ( ; ; ++*(_DWORD *)(g_MapData + 824) )
     {
-      if ( *(_DWORD *)(dword_532048 + 824) >= *(_DWORD *)(dword_532048 + 804) )
+      if ( *(_DWORD *)(g_MapData + 824) >= *(_DWORD *)(g_MapData + 804) )
         App_RequestQuit((int)aBattleActiveTi);
-      v38 = dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824);
+      v38 = g_MapData + 20 * *(_DWORD *)(g_MapData + 824);
       if ( *(_BYTE *)(v38 + 3534) )
         break;
     }
-    Diagnostics_TraceWorldMapActionEvent("battle_init_after_active_tile", *(_DWORD *)(dword_532048 + 824), v38, *(_BYTE *)(v38 + 3534), 0);
-    *(_DWORD *)(dword_532048 + 832) = *(char *)(*(_DWORD *)(dword_532048 + 828) + v38 + 3134);
-    Diagnostics_TraceWorldMapActionEvent("battle_init_after_active_cost", *(_DWORD *)(dword_532048 + 832), *(_DWORD *)(dword_532048 + 828), 0, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_init_after_active_tile", *(_DWORD *)(g_MapData + 824), v38, *(_BYTE *)(v38 + 3534), 0);
+    *(_DWORD *)(g_MapData + 832) = *(char *)(*(_DWORD *)(g_MapData + 828) + v38 + 3134);
+    Diagnostics_TraceWorldMapActionEvent("battle_init_after_active_cost", *(_DWORD *)(g_MapData + 832), *(_DWORD *)(g_MapData + 828), 0, 0);
   }
   else
   {
-    Diagnostics_TraceWorldMapActionEvent("battle_init_no_active_gate", *(_DWORD *)(dword_532048 + 824), *(_DWORD *)(dword_532048 + 828), 0, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_init_no_active_gate", *(_DWORD *)(g_MapData + 824), *(_DWORD *)(g_MapData + 828), 0, 0);
   }
   v39 = v82;
   v80 = Unit_GetSquadCount((int)v81);
@@ -47473,45 +47473,45 @@ DWORD  Battle_RunTacticalCombat(
   else
     v42 = (char *)(v74 + 18);
   v43 = (char *)(v81 + 3);
-  Battle_DeploySideUnitsByRoleBuckets((char *)v81 + 6, v80, v42, dword_53206C, v40);
+  Battle_DeploySideUnitsByRoleBuckets((char *)v81 + 6, v80, v42, g_AttackerStartsOnLeft, v40);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_init_after_deploy_attacker",
-    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(dword_532048 + 836)),
-    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(dword_532048 + 840)),
+    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(g_MapData + 836)),
+    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(g_MapData + 840)),
     Diagnostics_CountBattleUnitsTotal(),
     g_SelectedUnitIndex);
-  Battle_DeploySideUnitsByRoleBuckets(v42, v41, v43, dword_532070, v80);
+  Battle_DeploySideUnitsByRoleBuckets(v42, v41, v43, g_DefenderStartsOnLeft, v80);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_init_after_deploy_defender",
-    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(dword_532048 + 836)),
-    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(dword_532048 + 840)),
+    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(g_MapData + 836)),
+    Diagnostics_CountBattleUnitsForOwner(*(_DWORD *)(g_MapData + 840)),
     Diagnostics_CountBattleUnitsTotal(),
     g_SelectedUnitIndex);
   Diagnostics_TraceBattleUnitSnapshot("after_deploy_defender");
-  UnitBattle_OverrideControllerOrderBits(*(_DWORD *)(dword_532048 + 836), v75, a6, *(_DWORD *)(dword_532048 + 840));
-  if ( dword_53206C )
+  UnitBattle_OverrideControllerOrderBits(*(_DWORD *)(g_MapData + 836), v75, a6, *(_DWORD *)(g_MapData + 840));
+  if ( g_AttackerStartsOnLeft )
     v44 = 0;
   else
-    v44 = *(_DWORD *)(dword_532048 + 804) - 7;
-  *(_BYTE *)(dword_532048 + 2 * *(_DWORD *)(dword_532048 + 836) + 3934) = v44;
-  if ( dword_532070 )
+    v44 = *(_DWORD *)(g_MapData + 804) - 7;
+  *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 836) + 3934) = v44;
+  if ( g_DefenderStartsOnLeft )
     v45 = 0;
   else
-    v45 = *(_DWORD *)(dword_532048 + 804) - 7;
-  *(_BYTE *)(dword_532048 + 2 * *(_DWORD *)(dword_532048 + 840) + 3934) = v45;
-  v46 = 2 * *(_DWORD *)(dword_532048 + 840) + dword_532048;
-  *(_BYTE *)(v46 + 3935) = (*(_DWORD *)(dword_532048 + 800) - 7) / 2;
-  *(_BYTE *)(dword_532048 + 2 * *(_DWORD *)(dword_532048 + 836) + 3935) = *(_BYTE *)(v46 + 3935);
-  g_CurrentPlayerIndex = *(_DWORD *)(dword_532048 + 836);
+    v45 = *(_DWORD *)(g_MapData + 804) - 7;
+  *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 840) + 3934) = v45;
+  v46 = 2 * *(_DWORD *)(g_MapData + 840) + g_MapData;
+  *(_BYTE *)(v46 + 3935) = (*(_DWORD *)(g_MapData + 800) - 7) / 2;
+  *(_BYTE *)(g_MapData + 2 * *(_DWORD *)(g_MapData + 836) + 3935) = *(_BYTE *)(v46 + 3935);
+  g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
   dword_53205C = 0;
-  dword_532064 = 0;
-  g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * g_CurrentPlayerIndex + 3944);
+  g_BattleLoopExitCode = 0;
+  g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
   UnitBattle_RedrawVisibleGrid();
   Diagnostics_TraceWorldMapActionEvent(
     "battle_init_after_selected_grid_draw",
     g_SelectedUnitIndex,
     g_CurrentPlayerIndex,
-    *(_DWORD *)(dword_532048 + 4 * g_CurrentPlayerIndex + 3944),
+    *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944),
     0);
   v47 = 20;
   Diagnostics_TraceWorldMapActionEvent("battle_init_before_selected_panel", g_SelectedUnitIndex, v48, (int)(uintptr_t)v43, v47);
@@ -47538,17 +47538,17 @@ DWORD  Battle_RunTacticalCombat(
   Diagnostics_TraceWorldMapActionEvent("battle_init_after_log_units", g_CurrentPlayerIndex, v47, v52, 0);
   while ( 1 )
   {
-    v54 = *(_DWORD *)(dword_532048 + 828);
+    v54 = *(_DWORD *)(g_MapData + 828);
     if ( v54 != -1 )
     {
-      if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 840) )
+      if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
       {
-        *(_DWORD *)(dword_532048 + 832) = *(char *)(v54 + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824) + 3134);
-        *(_BYTE *)(*(_DWORD *)(dword_532048 + 828) + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824) + 3134) = 0;
+        *(_DWORD *)(g_MapData + 832) = *(char *)(v54 + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134);
+        *(_BYTE *)(*(_DWORD *)(g_MapData + 828) + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134) = 0;
       }
       else
       {
-        *(_BYTE *)(v54 + dword_532048 + 20 * *(_DWORD *)(dword_532048 + 824) + 3134) = *(_BYTE *)(dword_532048 + 832);
+        *(_BYTE *)(v54 + g_MapData + 20 * *(_DWORD *)(g_MapData + 824) + 3134) = *(_BYTE *)(g_MapData + 832);
       }
     }
     if ( PLAYER_HAS_HUMAN_CONTROLLER(g_CurrentPlayerIndex) )
@@ -47569,15 +47569,15 @@ DWORD  Battle_RunTacticalCombat(
     }
     for ( m = 0; m != 682; m += 31 )
     {
-      v57 = m + dword_532048;
-      v58 = *(__int16 *)(m + dword_532048 + 852);
+      v57 = m + g_MapData;
+      v58 = *(__int16 *)(m + g_MapData + 852);
       if ( v58 != -1 )
       {
         v47 = *(unsigned __int8 *)(v57 + 854);
         if ( v47 == g_CurrentPlayerIndex )
         {
           *(_BYTE *)(v57 + 860) = g_UnitTypeBaseActionPoints_512580[88 * v58];
-          *(_BYTE *)(dword_532048 + m + 864) &= 0x8Fu;
+          *(_BYTE *)(g_MapData + m + 864) &= 0x8Fu;
         }
       }
     }
@@ -47592,17 +47592,17 @@ DWORD  Battle_RunTacticalCombat(
     if ( *(int *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET) >= 2 )
       GodAnger(g_CurrentPlayerIndex, g_CurrentPlayerIndex, v47);
     *(_DWORD *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_BATTLE_IDLE_FLAG_OFFSET) = 0;
-    *(_DWORD *)(4 * g_CurrentPlayerIndex + dword_532048 + 3944) = g_SelectedUnitIndex;
-    *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3934) = *(_BYTE *)(dword_532048 + 808);
-    *(_BYTE *)(dword_532048 + 2 * g_CurrentPlayerIndex + 3935) = *(_BYTE *)(dword_532048 + 812);
-    if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 844) )
+    *(_DWORD *)(4 * g_CurrentPlayerIndex + g_MapData + 3944) = g_SelectedUnitIndex;
+    *(_BYTE *)(g_MapData + 2 * g_CurrentPlayerIndex + 3934) = *(_BYTE *)(g_MapData + 808);
+    *(_BYTE *)(g_MapData + 2 * g_CurrentPlayerIndex + 3935) = *(_BYTE *)(g_MapData + 812);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 844) )
     {
       if ( v52 )
       {
-        if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836) )
-          g_CurrentPlayerIndex = *(_DWORD *)(dword_532048 + 840);
+        if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
+          g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 840);
         else
-          g_CurrentPlayerIndex = *(_DWORD *)(dword_532048 + 836);
+          g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
         v52 = 0;
       }
       else
@@ -47612,14 +47612,14 @@ DWORD  Battle_RunTacticalCombat(
     }
     else
     {
-      v69 = *(_DWORD *)(dword_532048 + 836);
+      v69 = *(_DWORD *)(g_MapData + 836);
       if ( g_CurrentPlayerIndex == v69 )
-        g_CurrentPlayerIndex = *(_DWORD *)(dword_532048 + 840);
+        g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 840);
       else
-        g_CurrentPlayerIndex = *(_DWORD *)(dword_532048 + 836);
+        g_CurrentPlayerIndex = *(_DWORD *)(g_MapData + 836);
     }
-    g_SelectedUnitIndex = *(_DWORD *)(dword_532048 + 4 * g_CurrentPlayerIndex + 3944);
-    if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836) )
+    g_SelectedUnitIndex = *(_DWORD *)(g_MapData + 4 * g_CurrentPlayerIndex + 3944);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
       Battle_NewTurn(v69, v47, v52);
   }
   UnitBattle_RestoreControllerOrderBits();
@@ -47628,7 +47628,7 @@ DWORD  Battle_RunTacticalCombat(
   if ( Battle_HasUnitsForBothSides() )
   {
     Battle_ApplyPeriodicDamageToSideUnits(g_CurrentPlayerIndex);
-    if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 836) )
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 836) )
       v60 = 1;
     else
       v60 = 2;
@@ -47638,8 +47638,8 @@ DWORD  Battle_RunTacticalCombat(
   HandleBattleResults((int)v81, (int)v82, v61, v74, v60);
   if ( v63 )
     Battle_SaveWallSegmentsToBuildingRecord((int)v63);
-  if ( v60 == 2 && *(_DWORD *)(1423 * *(_DWORD *)(dword_532048 + 840) + gameData + 140051)
-    || v60 == 1 && *(_DWORD *)(gameData + 1423 * *(_DWORD *)(dword_532048 + 836) + 140051) )
+  if ( v60 == 2 && *(_DWORD *)(1423 * *(_DWORD *)(g_MapData + 840) + gameData + 140051)
+    || v60 == 1 && *(_DWORD *)(gameData + 1423 * *(_DWORD *)(g_MapData + 836) + 140051) )
   {
     v71[0] = (int)g_BattleForcedRetreatOutcomeTexts[0];
     v71[1] = (int)g_BattleForcedRetreatOutcomeTexts[1];
@@ -47649,12 +47649,12 @@ DWORD  Battle_RunTacticalCombat(
   Render_Pump();
   Palette_FadeOutToBlack((int *)&unk_51D4C0, 20);
   DLXSpriteSet_ReleaseAndClear(&dword_5202BC);
-  DLXSpriteSet_ReleaseAndClear(&dword_53204C);
+  DLXSpriteSet_ReleaseAndClear(&g_BattleHudSprites);
   DLXSpriteSet_ReleaseAndClear(&dword_532050);
   DLXSpriteSet_ReleaseAndClear(&dword_532054);
   DLXSpriteSet_ReleaseAndClear(&dword_532058);
-  nfree_(dword_532048);
-  dword_532048 = 0;
+  nfree_(g_MapData);
+  g_MapData = 0;
   Tooltip_ReleaseBackdropSurface();
   TextSprite_ReleaseAllResourceSlots();
   UnitSpriteCache_FreeAllEntries(v66, v60);
@@ -47711,24 +47711,24 @@ DWORD  Battle_RunTacticalCombat(
 // 5202E4: using guessed type int gameData;
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 5202F4: using guessed type int dword_5202F4;
-// 532048: using guessed type int dword_532048;
-// 53204C: using guessed type int dword_53204C;
+// 532048: using guessed type int g_MapData;
+// 53204C: using guessed type int g_BattleHudSprites;
 // 532050: using guessed type int dword_532050;
 // 532054: using guessed type int dword_532054;
 // 532058: using guessed type int dword_532058;
 // 53205C: using guessed type int dword_53205C;
-// 532064: using guessed type int dword_532064;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 532064: using guessed type int g_BattleLoopExitCode;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 // 545150: using guessed type int dword_545150;
 
 //----- (0042F7C0) --------------------------------------------------------
 int  UnitBattle_GetSpriteVerticalOffsetPx(int a1)
 {
-  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)];
+  return (unsigned __int8)g_UnitTypeSpriteVerticalOffsetPx[88 * *(__int16 *)(g_MapData + 31 * a1 + 852)];
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042F7F0) --------------------------------------------------------
 int  UnitBattle_InitUnitFadeAnimation(int a1, int a2, int a3, int a4)
@@ -47783,7 +47783,7 @@ int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4)
 
   if ( a1 == -1 )
     goto LABEL_13;
-  v5 = dword_532048 + 31 * a1;
+  v5 = g_MapData + 31 * a1;
   v6 = *(__int16 *)(v5 + 852);
   if ( v6 == -1 )
     goto LABEL_13;
@@ -47793,13 +47793,13 @@ int  UnitBattle_DrawUnitSprite(int a1, int a2, int a3, int a4)
     if ( g_UnitBattleAnimatingUnitIndex == -1 || a1 != g_UnitBattleAnimatingUnitIndex )
     {
       SpriteForChar = UnitSpriteCache_FindEntryOrLoad(
-                        *(unsigned __int16 *)(dword_532048 + 31 * a1 + 852),
-                        *(_BYTE *)(dword_532048 + 31 * a1 + 854),
-                        *(_BYTE *)(dword_532048 + 31 * a1 + 869) & 7,
-                        *(_BYTE *)(dword_532048 + 31 * a1 + 855));
+                        *(unsigned __int16 *)(g_MapData + 31 * a1 + 852),
+                        *(_BYTE *)(g_MapData + 31 * a1 + 854),
+                        *(_BYTE *)(g_MapData + 31 * a1 + 869) & 7,
+                        *(_BYTE *)(g_MapData + 31 * a1 + 855));
       goto LABEL_7;
     }
-    v7 = 8 * *(unsigned __int8 *)(31 * g_UnitBattleAnimatingUnitIndex + dword_532048 + 855) + dword_5320EC;
+    v7 = 8 * *(unsigned __int8 *)(31 * g_UnitBattleAnimatingUnitIndex + g_MapData + 855) + dword_5320EC;
     v8 = dword_5320F0;
   }
   else
@@ -47837,7 +47837,7 @@ LABEL_7:
   }
   TextSprite_ActivateResourceSlot(0, 1, (DWORD)savedregs);
 LABEL_13:
-  result = UnitBattle_CountAdjacentEnemies(31 * a1 + dword_532048 + 852);
+  result = UnitBattle_CountAdjacentEnemies(31 * a1 + g_MapData + 852);
   v16 = result;
   if ( !v17 && !a4 && result >= 3 )
   {
@@ -47848,19 +47848,19 @@ LABEL_13:
     {
       if ( v16 > 6 )
         v16 = 6;
-      result = *(__int16 *)(dword_532048
-                          + 40 * (Map_NeighborDX[v18] + *(unsigned __int16 *)(dword_532048 + v30 + 856))
-                          + 2 * (Map_NeighborDY[v18] + *(unsigned __int16 *)(dword_532048 + v30 + 858))
+      result = *(__int16 *)(g_MapData
+                          + 40 * (Map_NeighborDX[v18] + *(unsigned __int16 *)(g_MapData + v30 + 856))
+                          + 2 * (Map_NeighborDY[v18] + *(unsigned __int16 *)(g_MapData + v30 + 858))
                           + 1534);
       if ( result != -1 )
       {
-        v19 = 31 * result + dword_532048;
-        if ( *(_BYTE *)(v19 + 854) != *(_BYTE *)(dword_532048 + v30 + 854) && result != g_ActiveUnitMoveTileIndex )
+        v19 = 31 * result + g_MapData;
+        if ( *(_BYTE *)(v19 + 854) != *(_BYTE *)(g_MapData + v30 + 854) && result != g_ActiveUnitMoveTileIndex )
         {
           v20 = Time_Now(v19, 10 * v16);
           v21 = Math_SinDegreesQ16(v16 * v20);
           v27 = v22 + 120 + ((v22 * v21) >> 16);
-          if ( *(unsigned __int8 *)(v30 + dword_532048 + 854) == *(_DWORD *)(dword_532048 + 836) )
+          if ( *(unsigned __int8 *)(v30 + g_MapData + 854) == *(_DWORD *)(g_MapData + 836) )
             v23 = 17;
           else
             v23 = 25;
@@ -47894,7 +47894,7 @@ LABEL_13:
 // 5202C8: using guessed type int dword_5202C8;
 // 523F78: using guessed type int dword_523F78;
 // 523F7C: using guessed type int dword_523F7C;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532060: using guessed type int dword_532060;
 // 532074: using guessed type int dword_532074;
 // 5320EC: using guessed type int dword_5320EC;
@@ -47915,62 +47915,62 @@ int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
   v11 = result;
   if ( g_ActiveUnitMoveTileIndex != -1 )
   {
-    result = *(__int16 *)(dword_532048 + 31 * g_ActiveUnitMoveTileIndex + 852);
+    result = *(__int16 *)(g_MapData + 31 * g_ActiveUnitMoveTileIndex + 852);
     if ( result != 27 && result != 30 )
     {
       if ( a2 > 0 )
       {
-        v6 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1532);
+        v6 = *(__int16 *)(g_MapData + 40 * v11 + 2 * a2 + 1532);
         if ( v6 != -1 && dword_523F74 > 0 && v6 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v6, a4, a3, dword_523F74 - 64);
       }
-      if ( a2 < *(_DWORD *)(dword_532048 + 804) - 1 )
+      if ( a2 < *(_DWORD *)(g_MapData + 804) - 1 )
       {
-        v7 = *(__int16 *)(dword_532048 + 40 * v11 + 2 * a2 + 1536);
+        v7 = *(__int16 *)(g_MapData + 40 * v11 + 2 * a2 + 1536);
         if ( v7 != -1 && dword_523F74 < 0 && v7 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v7, a4, a3, dword_523F74 + 64);
       }
       if ( v11 > 0 )
       {
-        v8 = *(__int16 *)(dword_532048 + 40 * (v11 - 1) + 2 * a2 + 1534);
+        v8 = *(__int16 *)(g_MapData + 40 * (v11 - 1) + 2 * a2 + 1534);
         if ( v8 != -1 && dword_523F70 > 0 && v8 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v8, a4, a3, dword_523F74);
       }
-      if ( *(_DWORD *)(dword_532048 + 804) - 1 > v11 )
+      if ( *(_DWORD *)(g_MapData + 804) - 1 > v11 )
       {
-        v9 = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1534);
+        v9 = *(__int16 *)(40 * (v11 + 1) + g_MapData + 2 * a2 + 1534);
         if ( v9 != -1 && dword_523F70 < 0 && v9 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v9, a4, a3, dword_523F74);
       }
       if ( v11 > 0 && a2 > 0 )
       {
-        v10 = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1532);
+        v10 = *(__int16 *)(40 * (v11 - 1) + g_MapData + 2 * a2 + 1532);
         if ( v10 != -1 && dword_523F74 > 0 && dword_523F70 > 0 && v10 == g_ActiveUnitMoveTileIndex )
           UnitBattle_DrawUnitSprite(v10, a4, a3, dword_523F74 - 64);
       }
       result = v11;
-      if ( v11 > 0 && a2 < *(_DWORD *)(dword_532048 + 800) )
+      if ( v11 > 0 && a2 < *(_DWORD *)(g_MapData + 800) )
       {
-        result = *(__int16 *)(40 * (v11 - 1) + dword_532048 + 2 * a2 + 1536);
+        result = *(__int16 *)(40 * (v11 - 1) + g_MapData + 2 * a2 + 1536);
         if ( result != -1 && dword_523F74 < 0 && dword_523F70 > 0 && result == g_ActiveUnitMoveTileIndex )
           result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
       }
       if ( a2 > 0 )
       {
         result = v11;
-        if ( v11 < *(_DWORD *)(dword_532048 + 804) )
+        if ( v11 < *(_DWORD *)(g_MapData + 804) )
         {
-          result = *(__int16 *)(40 * (v11 + 1) + dword_532048 + 2 * a2 + 1532);
+          result = *(__int16 *)(40 * (v11 + 1) + g_MapData + 2 * a2 + 1532);
           if ( result != -1 && dword_523F74 > 0 && dword_523F70 < 0 && result == g_ActiveUnitMoveTileIndex )
             result = UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 - 64);
         }
       }
-      if ( a2 < *(_DWORD *)(dword_532048 + 800) )
+      if ( a2 < *(_DWORD *)(g_MapData + 800) )
       {
         result = v11;
-        if ( v11 < *(_DWORD *)(dword_532048 + 804) )
+        if ( v11 < *(_DWORD *)(g_MapData + 804) )
         {
-          result = *(__int16 *)(dword_532048 + 40 * (v11 + 1) + 2 * a2 + 1536);
+          result = *(__int16 *)(g_MapData + 40 * (v11 + 1) + 2 * a2 + 1536);
           if ( result != -1 && dword_523F74 < 0 && dword_523F70 < 0 && result == g_ActiveUnitMoveTileIndex )
             return UnitBattle_DrawUnitSprite(result, a4, a3, dword_523F74 + 64);
         }
@@ -47982,7 +47982,7 @@ int  UnitBattle_DrawMovingUnitInAdjacentTile(int result, int a2, int a3, int a4)
 // 512360: using guessed type int dword_512360;
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0042FFB0) --------------------------------------------------------
 int  UnitBattle_DrawTileContents(int a1, int a2)
@@ -48036,18 +48036,18 @@ int  UnitBattle_DrawTileContents(int a1, int a2)
   int v48; // [esp+20h] [ebp-10h]
   int v49; // [esp+24h] [ebp-Ch]
 
-  v2 = ((a1 - *(_DWORD *)(dword_532048 + 808)) << 6) + 32;
-  v49 = ((a2 - *(_DWORD *)(dword_532048 + 812)) << 6) + 16;
+  v2 = ((a1 - *(_DWORD *)(g_MapData + 808)) << 6) + 32;
+  v49 = ((a2 - *(_DWORD *)(g_MapData + 812)) << 6) + 16;
   if ( a1 < 0
     || a2 < 0
-    || a1 >= *(_DWORD *)(dword_532048 + 804)
-    || a2 >= *(_DWORD *)(dword_532048 + 800) )
+    || a1 >= *(_DWORD *)(g_MapData + 804)
+    || a2 >= *(_DWORD *)(g_MapData + 800) )
     return 0;
   v42 = 40 * a1;
   v43 = 2 * a2;
-  SpriteForChar = DLX_GetSpriteForChar(dword_53204C, *(__int16 *)(2 * a2 + 40 * a1 + dword_532048));
+  SpriteForChar = DLX_GetSpriteForChar(g_BattleHudSprites, *(__int16 *)(2 * a2 + 40 * a1 + g_MapData));
   Compat_RenderDeviceDrawMenuSprite(v2, v49, SpriteForChar, 1);
-  v4 = v43 + v42 + dword_532048;
+  v4 = v43 + v42 + g_MapData;
   v5 = *(char *)(v4 + 2334);
   if ( v5 != -1 )
   {
@@ -48055,9 +48055,9 @@ int  UnitBattle_DrawTileContents(int a1, int a2)
     v36 = DLX_GetSpriteForChar(dword_532058, v5);
     Sprite_DrawSimpleTrackingOffset(v36, v2, v49, v49, v2 + 63, v49 + 63, v41, 1u);
   }
-  if ( a2 != *(_DWORD *)(dword_532048 + 828) )
+  if ( a2 != *(_DWORD *)(g_MapData + 828) )
   {
-    v6 = a2 + dword_532048 + 20 * a1;
+    v6 = a2 + g_MapData + 20 * a1;
     v7 = *(_BYTE *)(v6 + 3134);
     if ( v7 )
     {
@@ -48072,7 +48072,7 @@ int  UnitBattle_DrawTileContents(int a1, int a2)
         goto LABEL_10;
       v47 = 3;
     }
-    v8 = *(_DWORD *)(dword_532048 + 820);
+    v8 = *(_DWORD *)(g_MapData + 820);
     if ( v8 )
     {
       if ( v8 <= 1 )
@@ -48088,17 +48088,17 @@ int  UnitBattle_DrawTileContents(int a1, int a2)
     {
       v47 += 420;
     }
-    v9 = DLX_GetSpriteForChar(dword_53204C, v47);
+    v9 = DLX_GetSpriteForChar(g_BattleHudSprites, v47);
     Compat_RenderDeviceDrawMenuSprite(v2, v49, v9, 1);
     dword_532104 = v47;
   }
 LABEL_10:
-  v10 = a2 + dword_532048 + 20 * a1;
+  v10 = a2 + g_MapData + 20 * a1;
   v45 = 1;
-  if ( *(_BYTE *)(v10 + 3534) && a2 == *(_DWORD *)(dword_532048 + 828) )
+  if ( *(_BYTE *)(v10 + 3534) && a2 == *(_DWORD *)(g_MapData + 828) )
   {
-    if ( g_CurrentPlayerIndex == *(_DWORD *)(dword_532048 + 840) )
-      v11 = *(_DWORD *)(dword_532048 + 832);
+    if ( g_CurrentPlayerIndex == *(_DWORD *)(g_MapData + 840) )
+      v11 = *(_DWORD *)(g_MapData + 832);
     else
       v11 = *(char *)(v10 + 3134);
     if ( v11 )
@@ -48108,12 +48108,12 @@ LABEL_10:
       else
         v48 = 2;
     }
-    else if ( *(_BYTE *)(a2 + dword_532048 + 20 * a1 + 3534) )
+    else if ( *(_BYTE *)(a2 + g_MapData + 20 * a1 + 3534) )
     {
       v48 = 3;
       v45 = 0;
     }
-    v12 = *(_DWORD *)(dword_532048 + 820);
+    v12 = *(_DWORD *)(g_MapData + 820);
     if ( v12 )
     {
       if ( v12 <= 1 )
@@ -48131,37 +48131,37 @@ LABEL_10:
     }
     if ( !v45 )
     {
-      v38 = DLX_GetSpriteForChar(dword_53204C, v48);
+      v38 = DLX_GetSpriteForChar(g_BattleHudSprites, v48);
       Compat_RenderDeviceDrawMenuSprite(v2, v49, v38, 1);
     }
     dword_532104 = v48;
   }
   if ( a1 > 0 )
   {
-    v13 = dword_532048 + 20 * (a1 - 1) + a2;
+    v13 = g_MapData + 20 * (a1 - 1) + a2;
     if ( *(_BYTE *)(v13 + 3134) )
     {
-      if ( a2 != *(_DWORD *)(dword_532048 + 828) )
+      if ( a2 != *(_DWORD *)(g_MapData + 828) )
       {
-        v14 = a2 <= 0 || *(_BYTE *)(v13 + 3133) && a2 - 1 != *(_DWORD *)(dword_532048 + 828);
+        v14 = a2 <= 0 || *(_BYTE *)(v13 + 3133) && a2 - 1 != *(_DWORD *)(g_MapData + 828);
         goto LABEL_29;
       }
     }
   }
   if ( a1 > 0 )
   {
-    v39 = a2 + dword_532048 + 20 * (a1 - 1);
+    v39 = a2 + g_MapData + 20 * (a1 - 1);
     if ( *(_BYTE *)(v39 + 3534) )
     {
-      if ( a2 > 0 && *(_BYTE *)(v39 + 3133) && a2 - 1 != *(_DWORD *)(dword_532048 + 828) )
+      if ( a2 > 0 && *(_BYTE *)(v39 + 3133) && a2 - 1 != *(_DWORD *)(g_MapData + 828) )
       {
         v14 = 2;
 LABEL_29:
-        v15 = DLX_GetSpriteForChar(dword_53204C, v14 + 5 * *(_DWORD *)(dword_532048 + 820) + 428);
+        v15 = DLX_GetSpriteForChar(g_BattleHudSprites, v14 + 5 * *(_DWORD *)(g_MapData + 820) + 428);
         Compat_RenderDeviceDrawMenuSprite(v2, v49, v15, 1);
         goto LABEL_30;
       }
-      if ( a2 == *(_DWORD *)(dword_532048 + 828) && *(_DWORD *)(dword_532048 + 832) )
+      if ( a2 == *(_DWORD *)(g_MapData + 828) && *(_DWORD *)(g_MapData + 832) )
       {
         v14 = 4;
         goto LABEL_29;
@@ -48170,34 +48170,34 @@ LABEL_29:
   }
   if ( a2 > 0 )
   {
-    v40 = (_BYTE *)(a2 + dword_532048 + 20 * a1);
+    v40 = (_BYTE *)(a2 + g_MapData + 20 * a1);
     if ( !v40[3134]
       && v40[3534]
-      && (v40[3133] || a2 - 1 == *(_DWORD *)(dword_532048 + 828) && *(_DWORD *)(dword_532048 + 832)) )
+      && (v40[3133] || a2 - 1 == *(_DWORD *)(g_MapData + 828) && *(_DWORD *)(g_MapData + 832)) )
     {
       v14 = 3;
       goto LABEL_29;
     }
   }
 LABEL_30:
-  v46 = *(__int16 *)(40 * a1 + dword_532048 + 2 * a2 + 1534);
+  v46 = *(__int16 *)(40 * a1 + g_MapData + 2 * a2 + 1534);
   v44 = 0;
   if ( g_ActiveUnitMoveTileIndex == v46 )
     v44 = dword_523F74;
-  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) == 0 )
+  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(g_MapData + 31 * v46 + 852)] & 1) == 0 )
     UnitBattle_DrawUnitSprite(v46, v2, v49, v44);
   UnitBattle_DrawMovingUnitInAdjacentTile(a1, a2, v49, v2);
-  if ( *(_BYTE *)(a2 + dword_532048 + 20 * a1 + 3534) && a2 == *(_DWORD *)(dword_532048 + 828) && v45 )
+  if ( *(_BYTE *)(a2 + g_MapData + 20 * a1 + 3534) && a2 == *(_DWORD *)(g_MapData + 828) && v45 )
   {
-    v16 = DLX_GetSpriteForChar(dword_53204C, v48);
+    v16 = DLX_GetSpriteForChar(g_BattleHudSprites, v48);
     Compat_RenderDeviceDrawMenuSprite(v2, v49, v16, 1);
   }
   if ( a2 > 0 )
   {
-    v17 = *(__int16 *)(40 * a1 + dword_532048 + 2 * a2 + 1532);
+    v17 = *(__int16 *)(40 * a1 + g_MapData + 2 * a2 + 1532);
     if ( v17 != -1 )
     {
-      if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(40 * a1 + dword_532048 + 2 * a2 + 1532)) )
+      if ( UnitBattle_GetSpriteVerticalOffsetPx(*(__int16 *)(40 * a1 + g_MapData + 2 * a2 + 1532)) )
       {
         v18 = 0;
         if ( v17 == g_ActiveUnitMoveTileIndex )
@@ -48208,16 +48208,16 @@ LABEL_30:
   }
   if ( a2 > 0 && a1 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
-    v19 = *(__int16 *)(40 * (a1 - 1) + dword_532048 + 2 * a2 + 1532);
+    v19 = *(__int16 *)(40 * (a1 - 1) + g_MapData + 2 * a2 + 1532);
     if ( v19 == g_ActiveUnitMoveTileIndex )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v19, v2, v49, dword_523F74 - 64);
     }
   }
-  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 < *(_DWORD *)(dword_532048 + 804) && g_ActiveUnitMoveTileIndex != -1 )
+  if ( a2 < *(_DWORD *)(g_MapData + 800) && a1 < *(_DWORD *)(g_MapData + 804) && g_ActiveUnitMoveTileIndex != -1 )
   {
-    v20 = *(__int16 *)(40 * (a1 + 1) + dword_532048 + 2 * a2 + 1536);
+    v20 = *(__int16 *)(40 * (a1 + 1) + g_MapData + 2 * a2 + 1536);
     if ( v20 == g_ActiveUnitMoveTileIndex )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
@@ -48226,7 +48226,7 @@ LABEL_30:
   }
   if ( a1 > 0 )
   {
-    v21 = 40 * (a1 - 1) + dword_532048;
+    v21 = 40 * (a1 - 1) + g_MapData;
     v22 = *(__int16 *)(v21 + 2 * a2 + 1534);
     if ( v22 != -1 )
     {
@@ -48239,11 +48239,11 @@ LABEL_30:
       }
     }
   }
-  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(dword_532048 + 31 * v46 + 852)] & 1) != 0 )
+  if ( v46 != -1 && (g_UnitTypeFlags[22 * *(__int16 *)(g_MapData + 31 * v46 + 852)] & 1) != 0 )
     UnitBattle_DrawUnitSprite(v46, v2, v49, v44);
-  if ( a2 < *(_DWORD *)(dword_532048 + 800) )
+  if ( a2 < *(_DWORD *)(g_MapData + 800) )
   {
-    v24 = 40 * a1 + dword_532048;
+    v24 = 40 * a1 + g_MapData;
     v25 = *(__int16 *)(v24 + 2 * a2 + 1536);
     if ( v25 != -1 )
     {
@@ -48256,27 +48256,27 @@ LABEL_30:
       }
     }
   }
-  if ( a2 < *(_DWORD *)(dword_532048 + 800) && a1 > 0 && g_ActiveUnitMoveTileIndex != -1 )
+  if ( a2 < *(_DWORD *)(g_MapData + 800) && a1 > 0 && g_ActiveUnitMoveTileIndex != -1 )
   {
-    v27 = *(__int16 *)(40 * (a1 - 1) + dword_532048 + 2 * a2 + 1536);
+    v27 = *(__int16 *)(40 * (a1 - 1) + g_MapData + 2 * a2 + 1536);
     if ( v27 == g_ActiveUnitMoveTileIndex )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v27, v2, v49, dword_523F74 + 64);
     }
   }
-  if ( a2 > 0 && a1 < *(_DWORD *)(dword_532048 + 804) && g_ActiveUnitMoveTileIndex != -1 )
+  if ( a2 > 0 && a1 < *(_DWORD *)(g_MapData + 804) && g_ActiveUnitMoveTileIndex != -1 )
   {
-    v28 = *(__int16 *)(40 * (a1 + 1) + dword_532048 + 2 * a2 + 1532);
+    v28 = *(__int16 *)(40 * (a1 + 1) + g_MapData + 2 * a2 + 1532);
     if ( v28 == g_ActiveUnitMoveTileIndex )
     {
       if ( UnitBattle_GetSpriteVerticalOffsetPx(g_ActiveUnitMoveTileIndex) )
         UnitBattle_DrawUnitSprite(v28, v2, v49, dword_523F74 - 64);
     }
   }
-  if ( a1 < *(_DWORD *)(dword_532048 + 804) )
+  if ( a1 < *(_DWORD *)(g_MapData + 804) )
   {
-    v29 = 40 * (a1 + 1) + dword_532048;
+    v29 = 40 * (a1 + 1) + g_MapData;
     v30 = *(__int16 *)(v29 + 2 * a2 + 1534);
     if ( v30 != -1 )
     {
@@ -48296,8 +48296,8 @@ LABEL_30:
   }
   if ( v46 != -1 )
   {
-    if ( *(unsigned __int8 *)(dword_532048 + 31 * v46 + 854) == g_CurrentPlayerIndex
-      && (*(_BYTE *)(dword_532048 + 31 * v46 + 874) & 1) != 0 )
+    if ( *(unsigned __int8 *)(g_MapData + 31 * v46 + 854) == g_CurrentPlayerIndex
+      && (*(_BYTE *)(g_MapData + 31 * v46 + 874) & 1) != 0 )
     {
       v32 = DLX_GetSpriteForChar(dword_5202C8, 16);
       Compat_RenderDeviceDrawMenuSprite(v2, v49 + 2, v32, 1);
@@ -48311,10 +48311,10 @@ LABEL_30:
   result = gameData;
   if ( *(_DWORD *)(gameData + 147151) )
   {
-    if ( a2 > *(_DWORD *)(dword_532048 + 812) )
+    if ( a2 > *(_DWORD *)(g_MapData + 812) )
       Compat_RenderDeviceFillSolidRect(v2, v49, (unsigned __int16)(v2 + 63), v49, 1u);
-    result = dword_532048;
-    if ( a1 > *(_DWORD *)(dword_532048 + 808) )
+    result = g_MapData;
+    if ( a1 > *(_DWORD *)(g_MapData + 808) )
       return Compat_RenderDeviceFillSolidRect(v2, v49, v2, (unsigned __int16)(v49 + 63), 1u);
   }
   return result;
@@ -48334,8 +48334,8 @@ LABEL_30:
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 // 523F70: using guessed type int dword_523F70;
 // 523F74: using guessed type int dword_523F74;
-// 532048: using guessed type int dword_532048;
-// 53204C: using guessed type int dword_53204C;
+// 532048: using guessed type int g_MapData;
+// 53204C: using guessed type int g_BattleHudSprites;
 // 532058: using guessed type int dword_532058;
 // 5320FC: using guessed type int dword_5320FC;
 // 532100: using guessed type int dword_532100;
@@ -48351,15 +48351,15 @@ int  UnitBattle_RedrawTile(int a1, int a2)
   unsigned __int16 v8; // di
   unsigned __int16 v9; // [esp+4h] [ebp-10h]
 
-  result = dword_532048;
+  result = g_MapData;
   v5 = g_RenderDevice;
-  if ( a1 < *(_DWORD *)(dword_532048 + 808) + 7
-    && a2 < *(_DWORD *)(dword_532048 + 812) + 7
-    && a1 >= *(_DWORD *)(dword_532048 + 808)
-    && a2 >= *(_DWORD *)(dword_532048 + 812) )
+  if ( a1 < *(_DWORD *)(g_MapData + 808) + 7
+    && a2 < *(_DWORD *)(g_MapData + 812) + 7
+    && a1 >= *(_DWORD *)(g_MapData + 808)
+    && a2 >= *(_DWORD *)(g_MapData + 812) )
   {
-    v6 = ((_WORD)a1 - *(_WORD *)(dword_532048 + 808)) << 6;
-    v7 = *(_WORD *)(dword_532048 + 812);
+    v6 = ((_WORD)a1 - *(_WORD *)(g_MapData + 808)) << 6;
+    v7 = *(_WORD *)(g_MapData + 812);
     v9 = (((_WORD)a2 - v7) << 6) + 16;
     g_RenderDevice = (_UNKNOWN *)dword_5202E0;
     v8 = (((_WORD)a2 - v7) << 6) + 80;
@@ -48374,7 +48374,7 @@ int  UnitBattle_RedrawTile(int a1, int a2)
 // 430B20: could not find valid save-restore pair for ebx
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00430C20) --------------------------------------------------------
@@ -48392,20 +48392,20 @@ int UnitBattle_RedrawVisibleGrid()
   g_RenderDevice = (_UNKNOWN *)dword_5202E0;
   Diagnostics_TraceWorldMapActionEvent(
     "battle_grid_redraw_enter",
-    *(_DWORD *)(dword_532048 + 808),
-    *(_DWORD *)(dword_532048 + 812),
-    *(_DWORD *)(dword_532048 + 800),
-    *(_DWORD *)(dword_532048 + 804));
-  for ( i = *(_DWORD *)(dword_532048 + 808); i < *(_DWORD *)(dword_532048 + 808) + 7; ++i )
+    *(_DWORD *)(g_MapData + 808),
+    *(_DWORD *)(g_MapData + 812),
+    *(_DWORD *)(g_MapData + 800),
+    *(_DWORD *)(g_MapData + 804));
+  for ( i = *(_DWORD *)(g_MapData + 808); i < *(_DWORD *)(g_MapData + 808) + 7; ++i )
   {
-    for ( j = *(_DWORD *)(dword_532048 + 812); j < *(_DWORD *)(dword_532048 + 812) + 7; ++j )
+    for ( j = *(_DWORD *)(g_MapData + 812); j < *(_DWORD *)(g_MapData + 812) + 7; ++j )
     {
       if ( Diagnostics_IsBattleTileDrawTraceEnabled() )
         Diagnostics_TraceWorldMapActionEvent(
           "battle_grid_before_tile",
           i,
           j,
-          *(__int16 *)(dword_532048 + 40 * i + 2 * j + 1534),
+          *(__int16 *)(g_MapData + 40 * i + 2 * j + 1534),
           g_SelectedUnitIndex);
       UnitBattle_DrawTileContents(i, j);
       if ( Diagnostics_IsBattleTileDrawTraceEnabled() )
@@ -48413,7 +48413,7 @@ int UnitBattle_RedrawVisibleGrid()
           "battle_grid_after_tile",
           i,
           j,
-          *(__int16 *)(dword_532048 + 40 * i + 2 * j + 1534),
+          *(__int16 *)(g_MapData + 40 * i + 2 * j + 1534),
           g_SelectedUnitIndex);
     }
   }
@@ -48494,7 +48494,7 @@ int UnitBattle_RedrawVisibleGrid()
 // 430CD0: conditional instruction was optimized away because edi.4>=21
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
 // 5202E0: using guessed type int dword_5202E0;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 // 544CFC: using guessed type int dword_544CFC;
 // 544D00: using guessed type int dword_544D00;
@@ -48560,7 +48560,7 @@ int  UnitBattle_DrawSelectedUnitPanel(int result, int a2, int a3, int a4)
   else if ( g_SelectedUnitIndex != -1 )
   {
     result = 31 * g_SelectedUnitIndex;
-    v4 = (__int16 *)(uintptr_t)(unsigned int)(dword_532048 + 852 + 31 * g_SelectedUnitIndex);
+    v4 = (__int16 *)(uintptr_t)(unsigned int)(g_MapData + 852 + 31 * g_SelectedUnitIndex);
   }
   Diagnostics_TraceWorldMapActionEvent("battle_panel_candidate", g_SelectedUnitIndex, result, (int)(uintptr_t)v4, 0);
   if ( v4 )
@@ -48812,7 +48812,7 @@ LABEL_36:
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E0: using guessed type int dword_5202E0;
 // 5202E4: using guessed type int gameData;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532054: using guessed type int dword_532054;
 // 53210C: using guessed type int dword_53210C;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -48891,7 +48891,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
     1,
     0,
     0);
-  v12 = *(_DWORD *)(dword_532048 + 820) + 14;
+  v12 = *(_DWORD *)(g_MapData + 820) + 14;
   v45 = Surface;
   v13 = DLX_GetSpriteForChar(dword_5202BC, v12);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -48911,7 +48911,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
   Render_ReleaseSurface(14, (DWORD)Surface);
   UI_DrawTextFmt((int)&v40, 0, 111, 53, 2, (int)aD_34);
   UI_DrawTextFmt((int)&v40, 0, 177, 53, 2, (int)aD_35);
-  v14 = DLX_GetSpriteForChar((int)v40, 8 * *(_DWORD *)(dword_532048 + 840));
+  v14 = DLX_GetSpriteForChar((int)v40, 8 * *(_DWORD *)(g_MapData + 840));
   v15 = 0;
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
     5,
@@ -48942,7 +48942,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
     {
       v41 = Time_Now(v24, v23);
       v17 = (v17 + 1) % 8;
-      v25 = DLX_GetSpriteForChar((int)v40, v17 + 8 * *(_DWORD *)(dword_532048 + 840));
+      v25 = DLX_GetSpriteForChar((int)v40, v17 + 8 * *(_DWORD *)(g_MapData + 840));
       v15 = v44;
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
         v20,
@@ -48983,7 +48983,7 @@ int  UnitBattle_ShowWallInfoPopup(int a1, int a2, int a3, int a4, DWORD a5)
 // 514E5C: using guessed type char *off_514E5C[2];
 // 5202BC: using guessed type int dword_5202BC;
 // 5202E0: using guessed type int dword_5202E0;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00431CC0) --------------------------------------------------------
@@ -48997,7 +48997,7 @@ __int16 UnitBattle_UpdateIdleAnimatedUnits()
   __int16 result;
 
   result = 0;
-  slot = (unsigned char *)(uintptr_t)(unsigned int)(dword_532048 + 0x354);
+  slot = (unsigned char *)(uintptr_t)(unsigned int)(g_MapData + 0x354);
   for ( slot_index = 0; slot_index < 22; ++slot_index, slot += UNIT_STACK_SLOT_STRIDE )
   {
     unit_type = *(__int16 *)slot;
@@ -49039,7 +49039,7 @@ __int16 UnitBattle_UpdateIdleAnimatedUnits()
 // 431DA6: variable 'v15' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
 // 512360: using guessed type int dword_512360;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532060: using guessed type int dword_532060;
 
 //----- (00431DE0) --------------------------------------------------------
@@ -49052,7 +49052,7 @@ __int16  UnitBattle_RedrawUnitFootprint(int a1)
   unsigned __int8 facing;
   __int16 result;
 
-  slot = (__int16 *)(31 * a1 + dword_532048 + 852);
+  slot = (__int16 *)(31 * a1 + g_MapData + 852);
   unit_type = (unsigned __int16)*slot;
   result = *slot;
   if ( unit_type <= 0x28 )
@@ -49123,7 +49123,7 @@ __int16  UnitBattle_RedrawUnitFootprint(int a1)
 // 431F70: variable 'v13' is possibly undefined
 // 431F7E: variable 'v14' is possibly undefined
 // 431F94: variable 'v15' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00431FB0) --------------------------------------------------------
 unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1)
@@ -49133,7 +49133,7 @@ unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1)
   unsigned __int16 tile_x;
   unsigned __int16 tile_y;
 
-  slot = (__int16 *)(31 * a1 + dword_532048 + 852);
+  slot = (__int16 *)(31 * a1 + g_MapData + 852);
   result = (unsigned __int16)*slot;
   if ( result <= 0x28 )
   {
@@ -49164,7 +49164,7 @@ unsigned int  UnitBattle_RedrawUnitNeighborhood(int a1)
 // 432057: variable 'v9' is possibly undefined
 // 43206A: variable 'v10' is possibly undefined
 // 43207D: variable 'v11' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00432090) --------------------------------------------------------
 int  BuildingGarrisonDialog_HandleExitButtonPress(int a1, int a2)
@@ -49184,24 +49184,24 @@ __int16  Battle_PlaceReservedUnitSlotAtTile(int a1, int a2, int a3)
   int v3; // edi
   char v4; // al
 
-  v3 = dword_532048 + 1503;
-  qmemcpy((void *)(dword_532048 + 1503), (const void *)a1, 0x1Cu);
+  v3 = g_MapData + 1503;
+  qmemcpy((void *)(g_MapData + 1503), (const void *)a1, 0x1Cu);
   v3 += 28;
   *(_WORD *)v3 = *(_WORD *)(a1 + 28);
   *(_BYTE *)(v3 + 2) = *(_BYTE *)(a1 + 30);
-  *(_WORD *)(dword_532048 + 1507) = a2;
-  *(_WORD *)(dword_532048 + 1509) = a3;
-  if ( *(_DWORD *)(dword_532048 + 804) / 2 < a2 )
+  *(_WORD *)(g_MapData + 1507) = a2;
+  *(_WORD *)(g_MapData + 1509) = a3;
+  if ( *(_DWORD *)(g_MapData + 804) / 2 < a2 )
     v4 = 6;
   else
     v4 = 2;
-  *(_BYTE *)(dword_532048 + 1506) = v4;
-  *(_WORD *)(dword_532048 + 40 * a2 + 2 * a3 + 1534) = 21;
+  *(_BYTE *)(g_MapData + 1506) = v4;
+  *(_WORD *)(g_MapData + 40 * a2 + 2 * a3 + 1534) = 21;
   g_UnitFadeAnimUnitIndex = 21;
   return UnitBattle_RedrawUnitFootprint(21);
 }
 // 514E48: using guessed type int dword_514E48;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004321D0) --------------------------------------------------------
 int Battle_ClearReservedUnitSlot()
@@ -49212,15 +49212,15 @@ int Battle_ClearReservedUnitSlot()
   int v3; // edx
   bool v4; // si
 
-  result = dword_532048;
-  v1 = *(__int16 *)(dword_532048 + 1503);
+  result = g_MapData;
+  v1 = *(__int16 *)(g_MapData + 1503);
   if ( v1 != -1 )
   {
-    v2 = *(unsigned __int16 *)(dword_532048 + 1507);
-    v3 = *(unsigned __int16 *)(dword_532048 + 1509);
+    v2 = *(unsigned __int16 *)(g_MapData + 1507);
+    v3 = *(unsigned __int16 *)(g_MapData + 1509);
     v4 = g_UnitTypeSpriteVerticalOffsetPx[88 * v1] != 0;
-    *(_WORD *)(dword_532048 + 1503) = -1;
-    *(_WORD *)(dword_532048 + 40 * (unsigned __int16)v2 + 2 * (unsigned __int16)v3 + 1534) = -1;
+    *(_WORD *)(g_MapData + 1503) = -1;
+    *(_WORD *)(g_MapData + 40 * (unsigned __int16)v2 + 2 * (unsigned __int16)v3 + 1534) = -1;
     g_UnitFadeAnimUnitIndex = -1;
     if ( v4 )
       return UnitBattle_RedrawVisibleGrid();
@@ -49230,7 +49230,7 @@ int Battle_ClearReservedUnitSlot()
   return result;
 }
 // 514E48: using guessed type int dword_514E48;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00432770) --------------------------------------------------------
 signed int Battle_RestoreSavedActionPointsBeforeResultCopy()
@@ -49244,14 +49244,14 @@ signed int Battle_RestoreSavedActionPointsBeforeResultCopy()
   do
   {
     ++result;
-    v2 = v1 + dword_532048;
+    v2 = v1 + g_MapData;
     v1 += 31;
     *(_BYTE *)(v2 + 860) = g_BattleSavedActionPointsBySlot[result - 1];
   }
   while ( result < 22 );
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004327B0) --------------------------------------------------------
 signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4)
@@ -49269,35 +49269,35 @@ signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4)
     a1[2],
     a2,
     a4);
-  if ( *(__int16 *)(40 * a2 + dword_532048 + 2 * a4 + 1534) != -1 )
+  if ( *(__int16 *)(40 * a2 + g_MapData + 2 * a4 + 1534) != -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "battle_place_unit_occupied",
       *(__int16 *)a1,
       a2,
       a4,
-      *(__int16 *)(40 * a2 + dword_532048 + 2 * a4 + 1534));
+      *(__int16 *)(40 * a2 + g_MapData + 2 * a4 + 1534));
     return 0;
   }
   v6 = 0;
   for ( i = 0; i < 682; i += 31 )
   {
-    if ( *(__int16 *)(dword_532048 + i + 852) == -1 )
+    if ( *(__int16 *)(g_MapData + i + 852) == -1 )
       break;
     ++v6;
   }
   v8 = 31 * v6;
-  qmemcpy((void *)(dword_532048 + 31 * v6 + 852), a1, 0x1Fu);
-  *(_WORD *)(dword_532048 + v8 + 856) = a2;
-  *(_WORD *)(dword_532048 + v8 + 858) = a4;
-  *(_BYTE *)(dword_532048 + v8 + 855) = a3;
+  qmemcpy((void *)(g_MapData + 31 * v6 + 852), a1, 0x1Fu);
+  *(_WORD *)(g_MapData + v8 + 856) = a2;
+  *(_WORD *)(g_MapData + v8 + 858) = a4;
+  *(_BYTE *)(g_MapData + v8 + 855) = a3;
   g_BattleSavedActionPointsBySlot[v6] = a1[8];
-  v9 = dword_532048;
-  *(_BYTE *)(dword_532048 + v8 + 860) = g_UnitTypeBaseActionPoints_512580[88 * *(__int16 *)a1];
-  *(_BYTE *)(dword_532048 + v8 + 874) &= ~1u;
-  *(_BYTE *)(dword_532048 + v8 + 864) &= 0x8Fu;
-  *(_WORD *)(40 * a2 + dword_532048 + 2 * a4 + 1534) = v6;
-  *(_DWORD *)(dword_532048 + 4 * a1[2] + 3944) = v6;
+  v9 = g_MapData;
+  *(_BYTE *)(g_MapData + v8 + 860) = g_UnitTypeBaseActionPoints_512580[88 * *(__int16 *)a1];
+  *(_BYTE *)(g_MapData + v8 + 874) &= ~1u;
+  *(_BYTE *)(g_MapData + v8 + 864) &= 0x8Fu;
+  *(_WORD *)(40 * a2 + g_MapData + 2 * a4 + 1534) = v6;
+  *(_DWORD *)(g_MapData + 4 * a1[2] + 3944) = v6;
   g_SelectedUnitIndex = v6;
   Diagnostics_TraceWorldMapActionEvent(
     "battle_place_unit_placed",
@@ -49311,7 +49311,7 @@ signed int  Battle_PlaceUnit(unsigned __int8 *a1, int a2, char a3, int a4)
 }
 // 4327DE: variable 'v5' is possibly undefined
 // 511B58: using guessed type int g_SelectedUnitIndex;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00432910) --------------------------------------------------------
 int BuildingGarrisonDialog_CountSelectedSlots()
@@ -51844,8 +51844,8 @@ int  UnitBattle_ResetAiReachGridForSide(int a1)
   v6 = 0;
   do
   {
-    result = v6 + dword_532048;
-    if ( *(__int16 *)(v6 + dword_532048 + 852) != -1 )
+    result = v6 + g_MapData;
+    if ( *(__int16 *)(v6 + g_MapData + 852) != -1 )
     {
       result = *(unsigned __int8 *)(result + 854);
       if ( result == a1 )
@@ -51874,7 +51874,7 @@ int  UnitBattle_ResetAiReachGridForSide(int a1)
   while ( v1 != 70488 );
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532440: using guessed type int dword_532440;
 // 532444: using guessed type int dword_532444;
 
@@ -51901,7 +51901,7 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
   int v22; // [esp+24h] [ebp-14h]
 
   Debug_Log(a2, a3, a4, (int)aCofnij_oddzial);
-  v6 = (__int16 *)(31 * v5 + dword_532048 + 852);
+  v6 = (__int16 *)(31 * v5 + g_MapData + 852);
   v14 = 0;
   v20 = (unsigned __int16)v6[2];
   v18 = 1;
@@ -51922,14 +51922,14 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
           v22 = v18 * v17 + v20;
           if ( v22 < 0 )
             v22 = 0;
-          if ( v22 > *(_DWORD *)(dword_532048 + 804) )
-            v22 = *(_DWORD *)(dword_532048 + 804);
+          if ( v22 > *(_DWORD *)(g_MapData + 804) )
+            v22 = *(_DWORD *)(g_MapData + 804);
           if ( v21 < 0 )
             v21 = 0;
-          v8 = *(_DWORD *)(dword_532048 + 800);
+          v8 = *(_DWORD *)(g_MapData + 800);
           if ( v21 > v8 )
-            v21 = *(_DWORD *)(dword_532048 + 800);
-          if ( *(__int16 *)(40 * v22 + dword_532048 + 2 * v21 + 1534) == -1 )
+            v21 = *(_DWORD *)(g_MapData + 800);
+          if ( *(__int16 *)(40 * v22 + g_MapData + 2 * v21 + 1534) == -1 )
           {
             v8 = v21;
             if ( UnitBattle_GetTileMoveCostOrZero(*v6, v22, v21) )
@@ -51939,17 +51939,17 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
               v6[3] = v21;
               while ( 1 )
               {
-                v11 = v10 + dword_532048;
-                if ( *(__int16 *)(v10 + dword_532048 + 852) != -1 && *(_BYTE *)(v11 + 854) != *((_BYTE *)v6 + 2) )
+                v11 = v10 + g_MapData;
+                if ( *(__int16 *)(v10 + g_MapData + 852) != -1 && *(_BYTE *)(v11 + 854) != *((_BYTE *)v6 + 2) )
                 {
                   v8 = *(unsigned __int16 *)(v11 + 858);
                   if ( UnitBattle_IsTileWithinRange(a1, *(unsigned __int16 *)(v11 + 856), (unsigned __int16)v8) )
                   {
                     v6[2] = v20;
                     v6[3] = v19;
-                    dword_5437A0 = *(unsigned __int16 *)(v10 + dword_532048 + 856);
+                    dword_5437A0 = *(unsigned __int16 *)(v10 + g_MapData + 856);
                     v8 = v21;
-                    dword_5437A4 = *(unsigned __int16 *)(v10 + dword_532048 + 858);
+                    dword_5437A4 = *(unsigned __int16 *)(v10 + g_MapData + 858);
                     v12 = UnitBattle_MoveTrack(a1, v22, (int)v6, v21, j);
                     *(_DWORD *)((char *)v6 + 23) = v12;
                     if ( v12 )
@@ -51985,7 +51985,7 @@ LABEL_14:
 // 436D3B: variable 'v5' is possibly undefined
 // 436E82: variable 'v6' is possibly undefined
 // 436F3B: variable 'v13' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5437A0: using guessed type int dword_5437A0;
 // 5437A4: using guessed type int dword_5437A4;
 
@@ -51995,19 +51995,19 @@ BOOL  UnitBattle_IsTileWithinMinRange(int a1, int a2, int a3)
   int unit_record;
   signed int distance; // eax
 
-  if ( !dword_532048 || a1 < 0 || a1 >= 22 )
+  if ( !g_MapData || a1 < 0 || a1 >= 22 )
     return 0;
-  unit_record = dword_532048 + 31 * a1 + 852;
+  unit_record = g_MapData + 31 * a1 + 852;
   if ( *(__int16 *)unit_record == -1 )
     return 0;
   distance = Math_CeilSqrt(
-         (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 4) - a2)
-       * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 4) - a2)
-       + (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3)
-       * (*(unsigned __int16 *)(31 * a1 + dword_532048 + 852 + 6) - a3));
+         (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
+       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
+       + (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3)
+       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3));
   return distance <= (unsigned __int8)g_UnitTypeMinRange_512583[88 * *(__int16 *)unit_record];
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004370B0) --------------------------------------------------------
 signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
@@ -52049,11 +52049,11 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
 
   Debug_Log(a1, a3, a4, (int)aRuch_oddzialem);
   v5 = 31 * v4;
-  v6 = dword_532048 + 852 + 31 * v4;
+  v6 = g_MapData + 852 + 31 * v4;
   dword_5437AC = 1;
   if ( UnitBattle_IsTileWithinRange(v7, dword_5437A0, dword_5437A4) )
   {
-    v9 = dword_532048 + 40 * dword_5437A0;
+    v9 = g_MapData + 40 * dword_5437A0;
     v10 = *(__int16 *)(v9 + 2 * dword_5437A4 + 1534);
     if ( v10 != -1 )
     {
@@ -52063,13 +52063,13 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         v14 = UnitBattle_Shot(v13, v11);
-        if ( !v14 && *(unsigned __int8 *)(v5 + dword_532048 + 860) < 5u )
+        if ( !v14 && *(unsigned __int8 *)(v5 + g_MapData + 860) < 5u )
           break;
-        if ( !v14 && *(unsigned __int8 *)(v5 + dword_532048 + 860) >= 5u )
+        if ( !v14 && *(unsigned __int8 *)(v5 + g_MapData + 860) >= 5u )
           return 1;
-        if ( *(__int16 *)(dword_532048 + v5 + 852) == -1 )
+        if ( *(__int16 *)(g_MapData + v5 + 852) == -1 )
           break;
-        if ( *(__int16 *)(v12 + dword_532048 + 852) == -1 )
+        if ( *(__int16 *)(v12 + g_MapData + 852) == -1 )
           return 1;
       }
       return 0;
@@ -52081,8 +52081,8 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
     if ( !result )
       return result;
   }
-  if ( *(char *)(dword_5437A4 + dword_532048 + 20 * dword_5437A0 + 3134) > 0
-    && *(unsigned __int8 *)(dword_532048 + 31 * v16 + 854) == *(_DWORD *)(dword_532048 + 836) )
+  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+    && *(unsigned __int8 *)(g_MapData + 31 * v16 + 854) == *(_DWORD *)(g_MapData + 836) )
   {
     v17 = UnitBattle_MoveTrackNearWall(v16, dword_5437A0, dword_5437A4, v5);
   }
@@ -52147,26 +52147,26 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
 LABEL_40:
   *(_DWORD *)(v6 + 23) = 0;
 LABEL_41:
-  if ( *(char *)(dword_5437A4 + dword_532048 + 20 * dword_5437A0 + 3134) <= 0
-    || *(unsigned __int8 *)(dword_532048 + 31 * v19 + 854) != *(_DWORD *)(dword_532048 + 836)
-    || (v25 = *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), v25 != -1)
-    && *(unsigned __int8 *)(31 * v25 + dword_532048 + 854) != a2 )
+  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) <= 0
+    || *(unsigned __int8 *)(g_MapData + 31 * v19 + 854) != *(_DWORD *)(g_MapData + 836)
+    || (v25 = *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), v25 != -1)
+    && *(unsigned __int8 *)(31 * v25 + g_MapData + 854) != a2 )
   {
     if ( UnitBattle_IsTileWithinRange(v19, dword_5437A0, dword_5437A4) )
     {
-      v30 = *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534);
+      v30 = *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534);
       v31 = 31 * v29;
       while ( 1 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         v33 = UnitBattle_Shot(v32, v30);
-        if ( !v33 && *(unsigned __int8 *)(v31 + dword_532048 + 860) < 5u )
+        if ( !v33 && *(unsigned __int8 *)(v31 + g_MapData + 860) < 5u )
           break;
-        if ( !v33 && *(unsigned __int8 *)(v31 + dword_532048 + 860) >= 5u )
+        if ( !v33 && *(unsigned __int8 *)(v31 + g_MapData + 860) >= 5u )
           return 1;
-        if ( *(__int16 *)(dword_532048 + v31 + 852) == -1 )
+        if ( *(__int16 *)(g_MapData + v31 + 852) == -1 )
           return 0;
-        if ( *(__int16 *)(31 * v30 + dword_532048 + 852) == -1 )
+        if ( *(__int16 *)(31 * v30 + g_MapData + 852) == -1 )
           return 1;
       }
     }
@@ -52178,13 +52178,13 @@ LABEL_41:
   do
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( *(char *)(dword_5437A4 + 20 * dword_5437A0 + dword_532048 + 3134) <= 0 )
+    if ( *(char *)(dword_5437A4 + 20 * dword_5437A0 + g_MapData + 3134) <= 0 )
       return 1;
     v34 = UnitBattle_ShotWall(v28, dword_5437A0);
-    if ( !v34 && *(unsigned __int8 *)(v27 + dword_532048 + 860) < 5u )
+    if ( !v34 && *(unsigned __int8 *)(v27 + g_MapData + 860) < 5u )
       return 0;
   }
-  while ( v34 || *(unsigned __int8 *)(v27 + dword_532048 + 860) < 5u );
+  while ( v34 || *(unsigned __int8 *)(v27 + g_MapData + 860) < 5u );
   return 1;
 }
 // 4370DD: variable 'v4' is possibly undefined
@@ -52202,7 +52202,7 @@ LABEL_41:
 // 4375CE: variable 'v28' is possibly undefined
 // 429740: using guessed type int __fastcall UnitBattle_Shot(_DWORD, _DWORD);
 // 429BD0: using guessed type int __fastcall UnitBattle_ShotWall(_DWORD, _DWORD);
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5437A0: using guessed type int dword_5437A0;
 // 5437A4: using guessed type int dword_5437A4;
 // 5437AC: using guessed type int dword_5437AC;
@@ -52241,18 +52241,18 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2)
   int v32; // [esp+24h] [ebp-1Ch]
   int *v33; // [esp+28h] [ebp-18h]
 
-  v4 = (__int16 *)(dword_532048 + 852 + 31 * a1);
+  v4 = (__int16 *)(g_MapData + 852 + 31 * a1);
   v27 = (unsigned __int16)v4[2];
   v28 = (unsigned __int16)v4[3];
   v24 = *((_BYTE *)v4 + 8);
   v5 = *v4;
-  v31 = (__int16 *)(31 * a2 + dword_532048 + 852);
+  v31 = (__int16 *)(31 * a2 + g_MapData + 852);
   if ( v5 == UNIT_TYPE_RAM )
     return 0;
   result = (int *)UnitBattle_MoveTrackNear(
                     a1,
-                    31 * a2 + dword_532048 + 852,
-                    *(unsigned __int16 *)(31 * a2 + dword_532048 + 852 + 6),
+                    31 * a2 + g_MapData + 852,
+                    *(unsigned __int16 *)(31 * a2 + g_MapData + 852 + 6),
                     a2);
   v33 = result;
   if ( result )
@@ -52261,7 +52261,7 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2)
     v8 = Unit_CalcEffectivenessC(v31);
     if ( v8 > v9 )
       v29 = v8;
-    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(dword_532048 + 31 * a1 + 852)] )
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * a1 + 852)] )
     {
       v30 = *((char *)v31 + 9);
       HIWORD(v32) = 0;
@@ -52350,7 +52350,7 @@ LABEL_41:
       }
       else if ( *((unsigned __int8 *)v4 + 8) < 5u )
       {
-        v30 = *(char *)(31 * a2 + dword_532048 + 861);
+        v30 = *(char *)(31 * a2 + g_MapData + 861);
         UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
         j__nfree_();
         return (int *)(v29 * (v30 - v26) / 100);
@@ -52385,7 +52385,7 @@ LABEL_41:
 // 4376AC: variable 'v7' is possibly undefined
 // 4376C4: variable 'v9' is possibly undefined
 // 437A40: variable 'v16' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (00437A90) --------------------------------------------------------
 int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
@@ -52450,25 +52450,25 @@ int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
   v46 = 31 * a1;
   do
   {
-    v3 = *(__int16 *)(dword_532048 + v43 + 852);
-    if ( v3 != -1 && *(unsigned __int8 *)(dword_532048 + v43 + 854) == a2 && g_UnitTypeRole[88 * v3] == 4 )
+    v3 = *(__int16 *)(g_MapData + v43 + 852);
+    if ( v3 != -1 && *(unsigned __int8 *)(g_MapData + v43 + 854) == a2 && g_UnitTypeRole[88 * v3] == 4 )
     {
-      Unit_CalcEffectivenessA((char *)(v46 + dword_532048 + 852), 0);
-      v4 = Unit_CalcEffectivenessC((__int16 *)(v46 + dword_532048 + 852));
+      Unit_CalcEffectivenessA((char *)(v46 + g_MapData + 852), 0);
+      v4 = Unit_CalcEffectivenessC((__int16 *)(v46 + g_MapData + 852));
       if ( v5 <= v4 )
-        v6 = Unit_CalcEffectivenessC((__int16 *)(v46 + dword_532048 + 852));
+        v6 = Unit_CalcEffectivenessC((__int16 *)(v46 + g_MapData + 852));
       else
-        v6 = Unit_CalcEffectivenessA((char *)(v46 + dword_532048 + 852), 0);
+        v6 = Unit_CalcEffectivenessA((char *)(v46 + g_MapData + 852), 0);
       v52 = v6;
-      v7 = *(unsigned __int16 *)(v43 + dword_532048 + 858);
-      v57 = *(unsigned __int16 *)(v43 + dword_532048 + 856);
+      v7 = *(unsigned __int16 *)(v43 + g_MapData + 858);
+      v57 = *(unsigned __int16 *)(v43 + g_MapData + 856);
       Debug_Log(v43, v7, a3, (int)aOddzial_w_zasi);
-      v8 = v46 + dword_532048 + 852;
+      v8 = v46 + g_MapData + 852;
       a3 = (unsigned __int16)v7;
       if ( UnitBattle_IsTileWithinRange(a1, v9, (unsigned __int16)v7)
-        && (*(_BYTE *)(v46 + dword_532048 + 864) & 3)
+        && (*(_BYTE *)(v46 + g_MapData + 864) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(v46 + dword_532048 + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(v46 + g_MapData + 864)) >> 5) > 0 )
       {
         v10 = 0;
 LABEL_10:
@@ -52476,9 +52476,9 @@ LABEL_10:
         goto LABEL_11;
       }
       v20 = v57;
-      if ( *(char *)(dword_532048 + 20 * v57 + v7 + 3134) <= 0
-        || (v20 = dword_532048 + 40 * v57, *(__int16 *)(v20 + 2 * v7 + 1534) != -1)
-        && ((v21 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
+      if ( *(char *)(g_MapData + 20 * v57 + v7 + 3134) <= 0
+        || (v20 = g_MapData + 40 * v57, *(__int16 *)(v20 + 2 * v7 + 1534) != -1)
+        && ((v21 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
          || (*(_BYTE *)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v21 + 864)) >> 5) > 0) )
       {
         v22 = (int *)UnitBattle_MoveTrackNear(a1, v20, v7, (unsigned __int16)v7);
@@ -52490,7 +52490,7 @@ LABEL_10:
       v23 = v22;
       if ( !v22 )
       {
-        v24 = 31 * a1 + dword_532048;
+        v24 = 31 * a1 + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v24 + 852)] )
         {
           if ( (*(_BYTE *)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v24 + 864)) >> 5) > 0 )
@@ -52507,7 +52507,7 @@ LABEL_10:
         j__nfree_();
         goto LABEL_10;
       }
-      v25 = dword_532048 + 31 * a1;
+      v25 = g_MapData + 31 * a1;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v25 + 852)]
         && (*(_BYTE *)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v25 + 864)) >> 5) > 0 )
       {
@@ -52577,22 +52577,22 @@ LABEL_54:
 LABEL_11:
       if ( v52 * (v10 / 5) <= v50 )
         goto LABEL_19;
-      Unit_CalcEffectivenessA((char *)(v46 + dword_532048 + 852), 0);
-      v11 = Unit_CalcEffectivenessC((__int16 *)(v46 + dword_532048 + 852));
+      Unit_CalcEffectivenessA((char *)(v46 + g_MapData + 852), 0);
+      v11 = Unit_CalcEffectivenessC((__int16 *)(v46 + g_MapData + 852));
       if ( v12 <= v11 )
-        v13 = Unit_CalcEffectivenessC((__int16 *)(v46 + dword_532048 + 852));
+        v13 = Unit_CalcEffectivenessC((__int16 *)(v46 + g_MapData + 852));
       else
-        v13 = Unit_CalcEffectivenessA((char *)(v46 + dword_532048 + 852), 0);
+        v13 = Unit_CalcEffectivenessA((char *)(v46 + g_MapData + 852), 0);
       v51 = v13;
-      LOWORD(v15) = *(_WORD *)(v43 + dword_532048 + 858);
+      LOWORD(v15) = *(_WORD *)(v43 + g_MapData + 858);
       v58 = (unsigned __int16)v15;
       Debug_Log(v14, v15, a3, (int)aOddzial_w_zasi);
-      v16 = dword_532048 + 852 + v46;
+      v16 = g_MapData + 852 + v46;
       a3 = v17;
       if ( UnitBattle_IsTileWithinRange(a1, v17, (unsigned __int16)v15)
-        && (*(_BYTE *)(v46 + dword_532048 + 864) & 3)
+        && (*(_BYTE *)(v46 + g_MapData + 864) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(v46 + dword_532048 + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(v46 + g_MapData + 864)) >> 5) > 0 )
       {
         v18 = 0;
 LABEL_17:
@@ -52602,15 +52602,15 @@ LABEL_18:
         goto LABEL_19;
       }
       v32 = (unsigned __int16)v15;
-      if ( *(char *)((unsigned __int16)v15 + dword_532048 + 20 * a3 + 3134) <= 0 )
+      if ( *(char *)((unsigned __int16)v15 + g_MapData + 20 * a3 + 3134) <= 0 )
       {
         v15 = (unsigned __int16)v15;
       }
       else
       {
-        v32 = dword_532048 + 40 * a3;
+        v32 = g_MapData + 40 * a3;
         if ( *(__int16 *)(v32 + 2 * (unsigned __int16)v15 + 1534) == -1
-          || (v33 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
+          || (v33 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
           && (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) <= 0 )
         {
           v34 = UnitBattle_MoveTrackNearWall(a1, a3, (unsigned __int16)v15, a3);
@@ -52623,7 +52623,7 @@ LABEL_61:
       v35 = v34;
       if ( !v34 )
       {
-        v36 = 31 * a1 + dword_532048;
+        v36 = 31 * a1 + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
         {
           if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
@@ -52640,7 +52640,7 @@ LABEL_61:
         j__nfree_();
         goto LABEL_17;
       }
-      v37 = dword_532048 + 31 * a1;
+      v37 = g_MapData + 31 * a1;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v37 + 852)]
         && (*(_BYTE *)(v37 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v37 + 864)) >> 5) > 0 )
       {
@@ -52728,7 +52728,7 @@ LABEL_19:
 // 438221: variable 'v39' is possibly undefined
 // 43829A: variable 'v42' is possibly undefined
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004382E0) --------------------------------------------------------
 signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed int a4)
@@ -52952,15 +52952,15 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
       v186 = 31 * a1;
       do
       {
-        if ( *(__int16 *)(v177 + dword_532048 + 852) != -1 && *(unsigned __int8 *)(v177 + dword_532048 + 854) != a2 )
+        if ( *(__int16 *)(v177 + g_MapData + 852) != -1 && *(unsigned __int8 *)(v177 + g_MapData + 854) != a2 )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
           v167 = 0;
-          v171 = *(unsigned __int16 *)(dword_532048 + v177 + 856);
-          v184 = *(unsigned __int16 *)(dword_532048 + v177 + 858);
+          v171 = *(unsigned __int16 *)(g_MapData + v177 + 856);
+          v184 = *(unsigned __int16 *)(g_MapData + v177 + 858);
           v140 = 160 * v171 + v175 * 4;
-          v141 = 2 * v184 + dword_532048 + 40 * v171;
-          *(int *)((char *)&dword_53244C[2 * v184] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(dword_532048 + v177 + 852)]];
+          v141 = 2 * v184 + g_MapData + 40 * v171;
+          *(int *)((char *)&dword_53244C[2 * v184] + v140) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v177 + 852)]];
           v142 = *(_WORD *)(v141 + 1534);
           *(_WORD *)(v141 + 1534) = -1;
           v198 = v142;
@@ -52968,18 +52968,18 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
           *(int *)((char *)&dword_53244C[2 * v184] + v140) = v143;
           v144 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v211);
           v146 = *(int *)((char *)&dword_53244C[2 * v145] + v140) - 15 * (_DWORD)v144;
-          v147 = v177 + dword_532048;
+          v147 = v177 + g_MapData;
           *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146;
           *(int *)((char *)&dword_53244C[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
           v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v211, a2, v143);
           *(int *)((char *)&dword_53244C[2 * v149] + v140) -= 2 * v148;
           v208 = v149;
           Debug_Log(v149, v140, v171, (int)aOddzial_w_zasi);
-          v150 = v186 + dword_532048 + 852;
+          v150 = v186 + g_MapData + 852;
           if ( UnitBattle_IsTileWithinRange(a1, v151, v152)
-            && (*(_BYTE *)(v186 + dword_532048 + 864) & 3)
+            && (*(_BYTE *)(v186 + g_MapData + 864) & 3)
              + 1
-             - ((unsigned __int8)(2 * *(_BYTE *)(v186 + dword_532048 + 864)) >> 5) > 0 )
+             - ((unsigned __int8)(2 * *(_BYTE *)(v186 + g_MapData + 864)) >> 5) > 0 )
           {
             v153 = 0;
 LABEL_278:
@@ -52987,15 +52987,15 @@ LABEL_278:
             goto LABEL_279;
           }
           v154 = v208;
-          if ( *(char *)(v208 + dword_532048 + 20 * v171 + 3134) <= 0 )
+          if ( *(char *)(v208 + g_MapData + 20 * v171 + 3134) <= 0 )
           {
             v156 = v208;
           }
           else
           {
-            v154 = dword_532048 + 40 * v171;
+            v154 = g_MapData + 40 * v171;
             if ( *(__int16 *)(v154 + 2 * v208 + 1534) == -1
-              || (v155 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
+              || (v155 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
               && (*(_BYTE *)(v155 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v155 + 864)) >> 5) <= 0 )
             {
               v157 = UnitBattle_MoveTrackNearWall(a1, v171, v208, v171);
@@ -53008,7 +53008,7 @@ LABEL_289:
           v158 = v157;
           if ( !v157 )
           {
-            v159 = dword_532048 + 31 * a1;
+            v159 = g_MapData + 31 * a1;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v159 + 852)] )
             {
               if ( (*(_BYTE *)(v159 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v159 + 864)) >> 5) > 0 )
@@ -53022,7 +53022,7 @@ LABEL_289:
             j__nfree_();
             goto LABEL_278;
           }
-          v160 = 31 * a1 + dword_532048;
+          v160 = 31 * a1 + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v160 + 852)]
             && (*(_BYTE *)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v160 + 864)) >> 5) > 0 )
           {
@@ -53078,7 +53078,7 @@ LABEL_279:
 LABEL_280:
                 dword_53244C[40 * v171 + 2 * v184 + v175] -= 5 * (v153 / 5);
 LABEL_281:
-                *(_WORD *)(40 * v171 + dword_532048 + 2 * v184 + 1534) = v198;
+                *(_WORD *)(40 * v171 + g_MapData + 2 * v184 + 1534) = v198;
                 goto LABEL_282;
               }
 LABEL_294:
@@ -53110,77 +53110,77 @@ LABEL_282:
       return v167;
     case 2:
     case 6:
-      if ( a2 == *(_DWORD *)(dword_532048 + 836) )
+      if ( a2 == *(_DWORD *)(g_MapData + 836) )
       {
-        if ( dword_53206C == 1 )
+        if ( g_AttackerStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
       }
-      if ( a2 == *(_DWORD *)(dword_532048 + 840) )
+      if ( a2 == *(_DWORD *)(g_MapData + 840) )
       {
-        if ( dword_532070 == 1 )
+        if ( g_DefenderStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
       }
       v6 = 801 * a1;
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(31 * a1 + dword_532048 + 852),
-             *(unsigned __int16 *)(31 * a1 + dword_532048 + 856) + 3 * a4,
-             *(unsigned __int16 *)(31 * a1 + dword_532048 + 858)) )
+             *(__int16 *)(31 * a1 + g_MapData + 852),
+             *(unsigned __int16 *)(31 * a1 + g_MapData + 856) + 3 * a4,
+             *(unsigned __int16 *)(31 * a1 + g_MapData + 858)) )
       {
         dword_53244C[120 * a4
-                   + 40 * *(unsigned __int16 *)(dword_532048 + v5 + 856)
-                   + 2 * *(unsigned __int16 *)(dword_532048 + v5 + 858)
+                   + 40 * *(unsigned __int16 *)(g_MapData + v5 + 856)
+                   + 2 * *(unsigned __int16 *)(g_MapData + v5 + 858)
                    + v6] -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v5 + dword_532048 + 852),
-             4 * a4 + *(unsigned __int16 *)(v5 + dword_532048 + 856),
-             *(unsigned __int16 *)(v5 + dword_532048 + 858)) )
+             *(__int16 *)(v5 + g_MapData + 852),
+             4 * a4 + *(unsigned __int16 *)(v5 + g_MapData + 856),
+             *(unsigned __int16 *)(v5 + g_MapData + 858)) )
       {
         dword_53244C[160 * a4
-                   + 40 * *(unsigned __int16 *)(dword_532048 + v8 + 856)
-                   + 2 * *(unsigned __int16 *)(dword_532048 + v8 + 858)
+                   + 40 * *(unsigned __int16 *)(g_MapData + v8 + 856)
+                   + 2 * *(unsigned __int16 *)(g_MapData + v8 + 858)
                    + v6] -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v8 + dword_532048 + 852),
-             2 * a4 + *(unsigned __int16 *)(v8 + dword_532048 + 856),
-             *(unsigned __int16 *)(v8 + dword_532048 + 858)) )
+             *(__int16 *)(v8 + g_MapData + 852),
+             2 * a4 + *(unsigned __int16 *)(v8 + g_MapData + 856),
+             *(unsigned __int16 *)(v8 + g_MapData + 858)) )
       {
-        v10 = dword_532048 + v9;
+        v10 = g_MapData + v9;
         v11 = 160 * (*(unsigned __int16 *)(v10 + 856) + 2 * a4) + v6 * 4;
         *(int *)((char *)&dword_53244C[2 * *(unsigned __int16 *)(v10 + 858)] + v11) -= 500;
         return 0;
       }
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(v9 + dword_532048 + 852),
-             5 * a4 + *(unsigned __int16 *)(v9 + dword_532048 + 856),
-             *(unsigned __int16 *)(v9 + dword_532048 + 858)) )
+             *(__int16 *)(v9 + g_MapData + 852),
+             5 * a4 + *(unsigned __int16 *)(v9 + g_MapData + 856),
+             *(unsigned __int16 *)(v9 + g_MapData + 858)) )
       {
         dword_53244C[200 * a4
-                   + 40 * *(unsigned __int16 *)(dword_532048 + v12 + 856)
-                   + 2 * *(unsigned __int16 *)(dword_532048 + v12 + 858)
+                   + 40 * *(unsigned __int16 *)(g_MapData + v12 + 856)
+                   + 2 * *(unsigned __int16 *)(g_MapData + v12 + 858)
                    + v6] -= 500;
         return 0;
       }
-      a3 = *(unsigned __int16 *)(v12 + dword_532048 + 856);
+      a3 = *(unsigned __int16 *)(v12 + g_MapData + 856);
       v13 = 6 * a4;
-      if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v12 + dword_532048 + 852), v13 + a3, *(unsigned __int16 *)(v12 + dword_532048 + 858)) )
+      if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)(v12 + g_MapData + 852), v13 + a3, *(unsigned __int16 *)(v12 + g_MapData + 858)) )
       {
-        v19 = dword_532048 + v14;
+        v19 = g_MapData + v14;
         v20 = 160 * (v13 + *(unsigned __int16 *)(v19 + 856)) + v6 * 4;
         *(int *)((char *)&dword_53244C[2 * *(unsigned __int16 *)(v19 + 858)] + v20) -= 500;
         return 0;
       }
       for ( i = 0; i < 682; i += 31 )
       {
-        v16 = i + dword_532048;
-        if ( *(__int16 *)(i + dword_532048 + 852) != -1 && *(unsigned __int8 *)(v16 + 854) != a2 )
+        v16 = i + g_MapData;
+        if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v16 + 854) != a2 )
         {
           v17 = (int *)UnitBattle_MoveTrackNear(a1, i, *(unsigned __int16 *)(v16 + 858), a3);
           if ( v17 && *v17 > 3 )
@@ -53205,35 +53205,35 @@ LABEL_29:
   }
   while ( 1 )
   {
-    if ( *(__int16 *)(v205 + dword_532048 + 852) == -1 || *(unsigned __int8 *)(v205 + dword_532048 + 854) == a2 )
+    if ( *(__int16 *)(v205 + g_MapData + 852) == -1 || *(unsigned __int8 *)(v205 + g_MapData + 854) == a2 )
       goto LABEL_39;
     UnitBattle_UpdateIdleAnimatedUnits();
-    v170 = *(unsigned __int16 *)(dword_532048 + v205 + 856);
-    v172 = *(unsigned __int16 *)(dword_532048 + v205 + 858);
+    v170 = *(unsigned __int16 *)(g_MapData + v205 + 856);
+    v172 = *(unsigned __int16 *)(g_MapData + v205 + 858);
     v167 = 0;
     v21 = 160 * v170 + v194 * 4;
-    v22 = 40 * v170 + dword_532048 + 2 * v172;
+    v22 = 40 * v170 + g_MapData + 2 * v172;
     *(int *)((char *)&dword_53244C[2 * v172] + v21) -= g_UnitBattleAiRoleScoreWeights[(unsigned __int8)g_UnitTypeRole[88
-                                                                                               * *(__int16 *)(dword_532048 + v205 + 852)]];
+                                                                                               * *(__int16 *)(g_MapData + v205 + 852)]];
     v23 = *(_WORD *)(v22 + 1534);
     *(_WORD *)(v22 + 1534) = -1;
     v168 = v23;
     *(int *)((char *)&dword_53244C[2 * v172] + v21) -= 800;
     v24 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v178);
     v26 = *(int *)((char *)&dword_53244C[2 * v25] + v21) - 15 * (_DWORD)v24;
-    v27 = v205 + dword_532048;
+    v27 = v205 + g_MapData;
     *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26;
     *(int *)((char *)&dword_53244C[2 * v25] + v21) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
     v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v178, a2, a3);
     v30 = *(int *)((char *)&dword_53244C[2 * v29] + v21) - 2 * v28;
     *(int *)((char *)&dword_53244C[2 * v29] + v21) = v30;
     Debug_Log(v29, v21, v30, (int)aOddzial_w_zasi);
-    v31 = v179 + dword_532048 + 852;
+    v31 = v179 + g_MapData + 852;
     a3 = v32;
     if ( UnitBattle_IsTileWithinRange(a1, v33, v32)
-      && (*(_BYTE *)(v179 + dword_532048 + 864) & 3)
+      && (*(_BYTE *)(v179 + g_MapData + 864) & 3)
        + 1
-       - ((unsigned __int8)(2 * *(_BYTE *)(v179 + dword_532048 + 864)) >> 5) > 0 )
+       - ((unsigned __int8)(2 * *(_BYTE *)(v179 + g_MapData + 864)) >> 5) > 0 )
     {
       v34 = 0;
 LABEL_35:
@@ -53241,15 +53241,15 @@ LABEL_35:
       goto LABEL_36;
     }
     v83 = v170;
-    if ( *(char *)(dword_532048 + 20 * v170 + a3 + 3134) <= 0 )
+    if ( *(char *)(g_MapData + 20 * v170 + a3 + 3134) <= 0 )
     {
       v85 = a3;
     }
     else
     {
-      v83 = dword_532048 + 40 * v170;
+      v83 = g_MapData + 40 * v170;
       if ( *(__int16 *)(v83 + 2 * a3 + 1534) == -1
-        || (v84 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
+        || (v84 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
         && (*(_BYTE *)(v84 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v84 + 864)) >> 5) <= 0 )
       {
         v86 = UnitBattle_MoveTrackNearWall(a1, v170, a3, a3);
@@ -53262,7 +53262,7 @@ LABEL_83:
     v87 = v86;
     if ( !v86 )
     {
-      v88 = 31 * a1 + dword_532048;
+      v88 = 31 * a1 + g_MapData;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v88 + 852)] )
       {
         if ( (*(_BYTE *)(v88 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v88 + 864)) >> 5) > 0 )
@@ -53280,7 +53280,7 @@ LABEL_88:
       j__nfree_();
       goto LABEL_35;
     }
-    v89 = dword_532048 + 31 * a1;
+    v89 = g_MapData + 31 * a1;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v89 + 852)]
       && (*(_BYTE *)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v89 + 864)) >> 5) > 0 )
     {
@@ -53354,34 +53354,34 @@ LABEL_36:
 LABEL_37:
     dword_53244C[40 * v170 + 2 * v172 + v194] -= 5 * (v34 / 5);
 LABEL_38:
-    *(_WORD *)(dword_532048 + 40 * v170 + 2 * v172 + 1534) = v168;
+    *(_WORD *)(g_MapData + 40 * v170 + 2 * v172 + 1534) = v168;
 LABEL_39:
     v205 += 31;
     if ( (int)++v178 >= 22 )
     {
       v35 = dword_5437B0;
-      if ( dword_5437B0 <= 0 || *(unsigned __int16 *)(dword_532048 + 31 * a1 + 856) == dword_5437B0 )
+      if ( dword_5437B0 <= 0 || *(unsigned __int16 *)(g_MapData + 31 * a1 + 856) == dword_5437B0 )
         return v167;
       v36 = dword_5437B4;
-      if ( *(char *)(dword_5437B4 + dword_532048 + 20 * dword_5437B0 + 3134) <= 0 )
+      if ( *(char *)(dword_5437B4 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
         goto LABEL_49;
       Debug_Log(31 * a1, dword_5437B4, dword_5437B0, (int)aOddzial_w_zasi);
-      v38 = v37 + dword_532048 + 852;
+      v38 = v37 + g_MapData + 852;
       v39 = v36;
       if ( UnitBattle_IsTileWithinRange(a1, v35, v36)
-        && (*(_BYTE *)(v40 + dword_532048 + 864) & 3)
+        && (*(_BYTE *)(v40 + g_MapData + 864) & 3)
          + 1
-         - ((unsigned __int8)(2 * *(_BYTE *)(v40 + dword_532048 + 864)) >> 5) > 0 )
+         - ((unsigned __int8)(2 * *(_BYTE *)(v40 + g_MapData + 864)) >> 5) > 0 )
       {
         v41 = 0;
         goto LABEL_46;
       }
-      if ( *(char *)(v36 + dword_532048 + 20 * v35 + 3134) <= 0
-        || *(__int16 *)(dword_532048 + 40 * v35 + 2 * v36 + 1534) != -1
-        && ((v95 = dword_532048 + 31 * a1, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
+      if ( *(char *)(v36 + g_MapData + 20 * v35 + 3134) <= 0
+        || *(__int16 *)(g_MapData + 40 * v35 + 2 * v36 + 1534) != -1
+        && ((v95 = g_MapData + 31 * a1, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
          || (*(_BYTE *)(v95 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v95 + 864)) >> 5) > 0) )
       {
-        v96 = (int *)UnitBattle_MoveTrackNear(a1, dword_532048, v36, v35);
+        v96 = (int *)UnitBattle_MoveTrackNear(a1, g_MapData, v36, v35);
       }
       else
       {
@@ -53390,8 +53390,8 @@ LABEL_39:
       v97 = v96;
       if ( !v96 )
       {
-        LOBYTE(v36) = dword_532048;
-        v98 = dword_532048 + 31 * a1;
+        LOBYTE(v36) = g_MapData;
+        v98 = g_MapData + 31 * a1;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v98 + 852)] )
         {
           v36 = *(_BYTE *)(v98 + 864) & 3;
@@ -53406,27 +53406,27 @@ LABEL_39:
       {
 LABEL_49:
         dword_5437B8 = dword_5437B4 + 1;
-        if ( *(char *)(dword_5437B4 + 1 + dword_532048 + 20 * dword_5437B0 + 3134) <= 0 )
+        if ( *(char *)(dword_5437B4 + 1 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
           goto LABEL_56;
         v48 = dword_5437B0;
-        Debug_Log(dword_532048, v36, v35, (int)aOddzial_w_zasi);
+        Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
         v35 = v49;
-        v50 = 31 * a1 + dword_532048 + 852;
+        v50 = 31 * a1 + g_MapData + 852;
         if ( UnitBattle_IsTileWithinRange(a1, v48, v49) )
         {
           LOBYTE(v36) = 31 * a1;
-          if ( (*(_BYTE *)(31 * a1 + dword_532048 + 864) & 3)
+          if ( (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
              + 1
-             - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + dword_532048 + 864)) >> 5) > 0 )
+             - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
           {
             v51 = 0;
             goto LABEL_53;
           }
         }
-        v105 = dword_532048;
-        if ( *(char *)(dword_532048 + 20 * v48 + v35 + 3134) <= 0
-          || *(__int16 *)(dword_532048 + 40 * v48 + 2 * v35 + 1534) != -1
-          && ((v105 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
+        v105 = g_MapData;
+        if ( *(char *)(g_MapData + 20 * v48 + v35 + 3134) <= 0
+          || *(__int16 *)(g_MapData + 40 * v48 + 2 * v35 + 1534) != -1
+          && ((v105 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
            || (*(_BYTE *)(v105 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v105 + 864)) >> 5) > 0) )
         {
           LOBYTE(v36) = v35;
@@ -53440,7 +53440,7 @@ LABEL_49:
         v107 = v106;
         if ( !v106 )
         {
-          v36 = 31 * a1 + dword_532048;
+          v36 = 31 * a1 + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
           {
             if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
@@ -53454,27 +53454,27 @@ LABEL_49:
         {
 LABEL_56:
           dword_5437B8 = dword_5437B4 - 1;
-          if ( *(char *)(dword_5437B4 - 1 + dword_532048 + 20 * dword_5437B0 + 3134) <= 0 )
+          if ( *(char *)(dword_5437B4 - 1 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
             goto LABEL_63;
           v55 = dword_5437B0;
-          Debug_Log(dword_532048, v36, v35, (int)aOddzial_w_zasi);
+          Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
           v35 = v56;
-          v57 = 31 * a1 + dword_532048 + 852;
+          v57 = 31 * a1 + g_MapData + 852;
           if ( UnitBattle_IsTileWithinRange(a1, v55, v56) )
           {
             LOBYTE(v36) = 31 * a1;
-            if ( (*(_BYTE *)(31 * a1 + dword_532048 + 864) & 3)
+            if ( (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
                + 1
-               - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + dword_532048 + 864)) >> 5) > 0 )
+               - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
             {
               v58 = 0;
               goto LABEL_60;
             }
           }
-          v113 = dword_532048;
-          if ( *(char *)(dword_532048 + 20 * v55 + v35 + 3134) <= 0
-            || *(__int16 *)(dword_532048 + 40 * v55 + 2 * v35 + 1534) != -1
-            && ((v113 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
+          v113 = g_MapData;
+          if ( *(char *)(g_MapData + 20 * v55 + v35 + 3134) <= 0
+            || *(__int16 *)(g_MapData + 40 * v55 + 2 * v35 + 1534) != -1
+            && ((v113 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
              || (*(_BYTE *)(v113 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v113 + 864)) >> 5) > 0) )
           {
             LOBYTE(v36) = v35;
@@ -53488,7 +53488,7 @@ LABEL_56:
           v115 = v114;
           if ( !v114 )
           {
-            v36 = 31 * a1 + dword_532048;
+            v36 = 31 * a1 + g_MapData;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
             {
               if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
@@ -53502,26 +53502,26 @@ LABEL_56:
           {
 LABEL_63:
             dword_5437B8 = dword_5437B4 + 2;
-            if ( *(char *)(dword_5437B4 + 2 + dword_532048 + 20 * dword_5437B0 + 3134) <= 0 )
+            if ( *(char *)(dword_5437B4 + 2 + g_MapData + 20 * dword_5437B0 + 3134) <= 0 )
               goto LABEL_70;
             v35 = dword_5437B0;
             v62 = dword_5437B4 + 2;
             v36 = dword_5437B4 + 2;
             Debug_Log(a1, dword_5437B4 + 2, dword_5437B0, (int)aOddzial_w_zasi);
-            v63 = dword_532048 + 852;
+            v63 = g_MapData + 852;
             v64 = UnitBattle_IsTileWithinRange(a1, v35, v36);
             v66 = v65 + v63;
             if ( v64
-              && (*(_BYTE *)(v65 + dword_532048 + 864) & 3)
+              && (*(_BYTE *)(v65 + g_MapData + 864) & 3)
                + 1
-               - ((unsigned __int8)(2 * *(_BYTE *)(v65 + dword_532048 + 864)) >> 5) > 0 )
+               - ((unsigned __int8)(2 * *(_BYTE *)(v65 + g_MapData + 864)) >> 5) > 0 )
             {
               v67 = 0;
               goto LABEL_67;
             }
-            if ( *(char *)(v62 + dword_532048 + 20 * v35 + 3134) <= 0
-              || *(__int16 *)(dword_532048 + 40 * v35 + 2 * v62 + 1534) != -1
-              && ((v65 = a1, v121 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
+            if ( *(char *)(v62 + g_MapData + 20 * v35 + 3134) <= 0
+              || *(__int16 *)(g_MapData + 40 * v35 + 2 * v62 + 1534) != -1
+              && ((v65 = a1, v121 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
                || (*(_BYTE *)(v121 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v121 + 864)) >> 5) > 0) )
             {
               LOBYTE(v36) = v62;
@@ -53535,8 +53535,8 @@ LABEL_63:
             v123 = v122;
             if ( !v122 )
             {
-              LOBYTE(v36) = dword_532048;
-              v124 = dword_532048 + 31 * a1;
+              LOBYTE(v36) = g_MapData;
+              v124 = g_MapData + 31 * a1;
               if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v124 + 852)] )
               {
                 if ( (*(_BYTE *)(v124 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v124 + 864)) >> 5) > 0 )
@@ -53551,26 +53551,26 @@ LABEL_63:
 LABEL_70:
               dword_5437B8 = dword_5437B4 - 2;
               v71 = dword_5437B4 - 2;
-              v72 = dword_5437B4 - 2 + 20 * dword_5437B0 + dword_532048;
+              v72 = dword_5437B4 - 2 + 20 * dword_5437B0 + g_MapData;
               if ( *(char *)(v72 + 3134) <= 0 )
                 return v167;
               Debug_Log(v72, v36, v35, (int)aOddzial_w_zasi);
               v74 = v73;
               v75 = v71;
               v76 = v71;
-              v77 = 31 * a1 + dword_532048 + 852;
+              v77 = 31 * a1 + g_MapData + 852;
               if ( UnitBattle_IsTileWithinRange(a1, v73, v76)
-                && (*(_BYTE *)(31 * a1 + dword_532048 + 864) & 3)
+                && (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
                  + 1
-                 - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + dword_532048 + 864)) >> 5) > 0 )
+                 - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
               {
                 v78 = 0;
                 goto LABEL_74;
               }
-              v130 = dword_532048;
-              if ( *(char *)(v75 + dword_532048 + 20 * v74 + 3134) <= 0
-                || *(__int16 *)(dword_532048 + 40 * v74 + 2 * v75 + 1534) != -1
-                && ((v130 = 31 * a1 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
+              v130 = g_MapData;
+              if ( *(char *)(v75 + g_MapData + 20 * v74 + 3134) <= 0
+                || *(__int16 *)(g_MapData + 40 * v74 + 2 * v75 + 1534) != -1
+                && ((v130 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
                  || (*(_BYTE *)(v130 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v130 + 864)) >> 5) > 0) )
               {
                 v131 = (int *)UnitBattle_MoveTrackNear(a1, v130, v75, v74);
@@ -53582,7 +53582,7 @@ LABEL_70:
               v132 = v131;
               if ( !v131 )
               {
-                v133 = 31 * a1 + dword_532048;
+                v133 = 31 * a1 + g_MapData;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v133 + 852)] )
                 {
                   if ( (*(_BYTE *)(v133 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v133 + 864)) >> 5) > 0 )
@@ -53593,7 +53593,7 @@ LABEL_70:
                 return v167;
               if ( *v132 )
               {
-                v134 = 31 * a1 + dword_532048;
+                v134 = 31 * a1 + g_MapData;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v134 + 852)]
                   && (*(_BYTE *)(v134 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v134 + 864)) >> 5) > 0 )
                 {
@@ -53629,7 +53629,7 @@ LABEL_76:
                     v79 = 8 * dword_5437B8 + 3204 * a1 + 160 * dword_5437B0;
                     v80 = *(int *)((char *)dword_53244C + v79) - 640 - 5 * (v78 / 5);
                     v81 = dword_5437B8;
-                    v82 = dword_532048 + 20 * dword_5437B0;
+                    v82 = g_MapData + 20 * dword_5437B0;
                     *(int *)((char *)dword_53244C + v79) -= 640;
                     *(int *)((char *)dword_53244C + v79) = v80;
                     *(int *)((char *)dword_53244C + v79) = *(char *)(v81 + v82 + 3134) + v80;
@@ -53685,7 +53685,7 @@ LABEL_67:
               LOBYTE(v67) = *(_BYTE *)(v66 + 8);
               goto LABEL_68;
             }
-            v36 = 31 * a1 + dword_532048;
+            v36 = 31 * a1 + g_MapData;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
               && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             {
@@ -53724,7 +53724,7 @@ LABEL_69:
                 v68 = 3204 * a1 + 160 * dword_5437B0 + 8 * dword_5437B8;
                 v35 = *(int *)((char *)dword_53244C + v68) - 640 - 5 * (v67 / 5);
                 v69 = dword_5437B8;
-                v70 = dword_532048 + 20 * dword_5437B0;
+                v70 = g_MapData + 20 * dword_5437B0;
                 *(int *)((char *)dword_53244C + v68) -= 640;
                 *(int *)((char *)dword_53244C + v68) = v35;
                 v36 = *(char *)(v69 + v70 + 3134) + v35;
@@ -53779,7 +53779,7 @@ LABEL_60:
             LOBYTE(v58) = *(_BYTE *)(v57 + 8);
             goto LABEL_61;
           }
-          v36 = 31 * a1 + dword_532048;
+          v36 = 31 * a1 + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
             && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
           {
@@ -53818,8 +53818,8 @@ LABEL_62:
               v59 = 160 * dword_5437B0 + 3204 * a1 + 8 * dword_5437B8;
               *(int *)((char *)dword_53244C + v59) -= 640;
               v60 = *(int *)((char *)dword_53244C + v59) - 5 * (v58 / 5);
-              LOBYTE(v36) = dword_532048;
-              v61 = dword_5437B8 + dword_532048 + 20 * dword_5437B0;
+              LOBYTE(v36) = g_MapData;
+              v61 = dword_5437B8 + g_MapData + 20 * dword_5437B0;
               *(int *)((char *)dword_53244C + v59) = v60;
               v35 = v60 + *(char *)(v61 + 3134);
               *(int *)((char *)dword_53244C + v59) = v35;
@@ -53873,7 +53873,7 @@ LABEL_53:
           LOBYTE(v51) = *(_BYTE *)(v50 + 8);
           goto LABEL_54;
         }
-        v36 = 31 * a1 + dword_532048;
+        v36 = 31 * a1 + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
           && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
         {
@@ -53912,8 +53912,8 @@ LABEL_55:
             v52 = 3204 * a1 + 160 * dword_5437B0 + 8 * dword_5437B8;
             *(int *)((char *)dword_53244C + v52) -= 640;
             v53 = *(int *)((char *)dword_53244C + v52) - 5 * (v51 / 5);
-            LOBYTE(v36) = dword_532048;
-            v54 = dword_5437B8 + dword_532048 + 20 * dword_5437B0;
+            LOBYTE(v36) = g_MapData;
+            v54 = dword_5437B8 + g_MapData + 20 * dword_5437B0;
             *(int *)((char *)dword_53244C + v52) = v53;
             v35 = v53 + *(char *)(v54 + 3134);
             *(int *)((char *)dword_53244C + v52) = v35;
@@ -53967,8 +53967,8 @@ LABEL_46:
         LOBYTE(v41) = *(_BYTE *)(v38 + 8);
         goto LABEL_47;
       }
-      LOBYTE(v36) = dword_532048;
-      v99 = dword_532048 + 31 * a1;
+      LOBYTE(v36) = g_MapData;
+      v99 = g_MapData + 31 * a1;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v99 + 852)]
         && (*(_BYTE *)(v99 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v99 + 864)) >> 5) > 0 )
       {
@@ -54011,8 +54011,8 @@ LABEL_48:
           v45 = 4 * dword_5437B0;
           *(int *)((char *)dword_53244C + v42) = v36;
           v46 = v36 - 650;
-          LOBYTE(v36) = dword_532048;
-          v47 = dword_5437B4 + dword_532048 + 4 * (v44 + v45);
+          LOBYTE(v36) = g_MapData;
+          v47 = dword_5437B4 + g_MapData + 4 * (v44 + v45);
           *(int *)((char *)dword_53244C + v42) = v46;
           v35 = v46 + *(char *)(v47 + 3134);
           *(int *)((char *)dword_53244C + v42) = v35;
@@ -54120,9 +54120,9 @@ LABEL_47:
 // 51257A: using guessed type int g_UnitTypeFlags[];
 // 5159F0: using guessed type int dword_5159F0[8];
 // 515A10: using guessed type int dword_515A10;
-// 532048: using guessed type int dword_532048;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 532048: using guessed type int g_MapData;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 // 53244C: using guessed type int dword_53244C[17621];
 // 5437B0: using guessed type int dword_5437B0;
 // 5437B4: using guessed type int dword_5437B4;
@@ -54242,7 +54242,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   v63 = a2;
   dword_5437A4 = -1;
   dword_5437A0 = -1;
-  v2 = dword_532048 + 31 * a1;
+  v2 = g_MapData + 31 * a1;
   v3 = 0;
   if ( g_UnitTypeRole[88 * *(__int16 *)(v2 + 852)] == 4
     && (*(_BYTE *)(v2 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v2 + 864)) >> 5) <= 0 )
@@ -54252,11 +54252,11 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   }
   v4 = 0;
   v61 = 0;
-  while ( v4 < *(_DWORD *)(dword_532048 + 804) )
+  while ( v4 < *(_DWORD *)(g_MapData + 804) )
   {
     v5 = 0;
     v6 = 0;
-    while ( v5 < *(_DWORD *)(dword_532048 + 800) )
+    while ( v5 < *(_DWORD *)(g_MapData + 800) )
     {
       v8 = v6 + v61 + 3204 * v68;
       if ( v3 > *(int *)((char *)dword_53244C + v8) )
@@ -54279,7 +54279,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   v9 = 801 * v68;
   if ( v3 < 0 )
   {
-    v11 = 31 * v68 + dword_532048;
+    v11 = 31 * v68 + g_MapData;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v11 + 852)] )
     {
       if ( (*(_BYTE *)(v11 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v11 + 864)) >> 5) > 0 )
@@ -54287,9 +54287,9 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
         LOBYTE(v3) = dword_5437A4;
         if ( UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
         {
-          if ( *(char *)(dword_5437A4 + dword_532048 + 20 * dword_5437A0 + 3134) > 0
-            && *(unsigned __int8 *)(dword_532048 + 31 * v68 + 854) == *(_DWORD *)(dword_532048 + 836)
-            && *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534) == -1 )
+          if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+            && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
+            && *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534) == -1 )
           {
             dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v9] = 8;
             return 1;
@@ -54306,24 +54306,24 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
     v71 = v68;
     v67 = dword_5437A0;
     Debug_Log(31 * v68, v3, dword_5437A4, (int)aOddzial_w_zasi);
-    v14 = dword_532048 + 852 + v13;
+    v14 = g_MapData + 852 + v13;
     if ( UnitBattle_IsTileWithinRange(v68, v67, v12)
-      && (*(_BYTE *)(dword_532048 + v15 + 864) & 3)
+      && (*(_BYTE *)(g_MapData + v15 + 864) & 3)
        + 1
-       - ((unsigned __int8)(2 * *(_BYTE *)(dword_532048 + v15 + 864)) >> 5) > 0 )
+       - ((unsigned __int8)(2 * *(_BYTE *)(g_MapData + v15 + 864)) >> 5) > 0 )
     {
       goto LABEL_24;
     }
     v27 = v67;
-    if ( *(char *)(dword_532048 + 20 * v67 + v12 + 3134) <= 0 )
+    if ( *(char *)(g_MapData + 20 * v67 + v12 + 3134) <= 0 )
     {
       v29 = v71;
       v30 = v12;
     }
     else
     {
-      if ( *(__int16 *)(dword_532048 + 40 * v67 + 2 * v12 + 1534) == -1
-        || (v27 = v71, v28 = 31 * v71 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v28 + 852)] & 1) == 0)
+      if ( *(__int16 *)(g_MapData + 40 * v67 + 2 * v12 + 1534) == -1
+        || (v27 = v71, v28 = 31 * v71 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v28 + 852)] & 1) == 0)
         && (v27 = (*(_BYTE *)(v28 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v28 + 864)) >> 5), v27 <= 0) )
       {
         v31 = UnitBattle_MoveTrackNearWall(v71, v67, v12, v12);
@@ -54331,7 +54331,7 @@ LABEL_58:
         v32 = v31;
         if ( !v31 )
         {
-          v33 = dword_532048 + 31 * v71;
+          v33 = g_MapData + 31 * v71;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v33 + 852)] )
           {
             if ( (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) > 0 )
@@ -54342,7 +54342,7 @@ LABEL_58:
           goto LABEL_63;
         if ( *v32 )
         {
-          v35 = dword_532048 + 31 * v71;
+          v35 = g_MapData + 31 * v71;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v35 + 852)]
             && (*(_BYTE *)(v35 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v35 + 864)) >> 5) > 0 )
           {
@@ -54386,9 +54386,9 @@ LABEL_80:
 LABEL_25:
                 if ( v16 >= 5 )
                 {
-                  if ( *(char *)(dword_5437A4 + dword_532048 + 20 * dword_5437A0 + 3134) > 0
-                    && *(unsigned __int8 *)(dword_532048 + 31 * v68 + 854) == *(_DWORD *)(dword_532048 + 836)
-                    && *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534) == -1 )
+                  if ( *(char *)(dword_5437A4 + g_MapData + 20 * dword_5437A0 + 3134) > 0
+                    && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
+                    && *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534) == -1 )
                   {
                     v17 = 160 * dword_5437A0 + 3204 * v68;
                     *(int *)((char *)&dword_532448[2 * dword_5437A4] + v17) = 8;
@@ -54401,7 +54401,7 @@ LABEL_25:
                   goto LABEL_30;
                 }
 LABEL_63:
-                v34 = dword_532048 + 31 * v68;
+                v34 = g_MapData + 31 * v68;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v34 + 852)]
                   && (*(_BYTE *)(v34 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v34 + 864)) >> 5) <= 0 )
                 {
@@ -54421,18 +54421,18 @@ LABEL_30:
                   for ( i = 0; i != 66; i += 3 )
                   {
                     v53[i] = -1;
-                    v22 = dword_532048 + v20;
-                    if ( *(unsigned __int8 *)(dword_532048 + v20 + 854) == v19 && *(__int16 *)(v22 + 852) != -1 )
+                    v22 = g_MapData + v20;
+                    if ( *(unsigned __int8 *)(g_MapData + v20 + 854) == v19 && *(__int16 *)(v22 + 852) != -1 )
                     {
                       v53[i] = *(__int16 *)(40 * *(unsigned __int16 *)(v22 + 856)
-                                          + dword_532048
+                                          + g_MapData
                                           + 2 * *(unsigned __int16 *)(v22 + 858)
                                           + 1534);
-                      v53[i + 1] = *(unsigned __int16 *)(dword_532048 + v20 + 856);
-                      v53[i + 2] = *(unsigned __int16 *)(dword_532048 + v20 + 858);
-                      v23 = 40 * *(unsigned __int16 *)(dword_532048 + v20 + 856);
-                      v22 = v23 + dword_532048;
-                      *(_WORD *)(v23 + dword_532048 + 2 * *(unsigned __int16 *)(dword_532048 + v20 + 858) + 1534) = -1;
+                      v53[i + 1] = *(unsigned __int16 *)(g_MapData + v20 + 856);
+                      v53[i + 2] = *(unsigned __int16 *)(g_MapData + v20 + 858);
+                      v23 = 40 * *(unsigned __int16 *)(g_MapData + v20 + 856);
+                      v22 = v23 + g_MapData;
+                      *(_WORD *)(v23 + g_MapData + 2 * *(unsigned __int16 *)(g_MapData + v20 + 858) + 1534) = -1;
                     }
                     v20 += 31;
                   }
@@ -54440,7 +54440,7 @@ LABEL_30:
                   for ( j = 0; j != 66; j += 3 )
                   {
                     if ( v53[j] != -1 )
-                      *(_WORD *)(40 * v53[j + 1] + dword_532048 + 2 * v53[j + 2] + 1534) = v53[j];
+                      *(_WORD *)(40 * v53[j + 1] + g_MapData + 2 * v53[j + 2] + 1534) = v53[j];
                   }
                   v26 = dword_5437A8++;
                   if ( v26 > 20 )
@@ -54459,7 +54459,7 @@ LABEL_123:
                   j__nfree_();
                   if ( HIWORD(v66) < HIWORD(v60) )
                   {
-                    v43 = dword_532048 + 31 * v68;
+                    v43 = g_MapData + 31 * v68;
                     v65 = *(unsigned __int16 *)(v43 + 856);
                     v64 = *(unsigned __int16 *)(v43 + 858);
                     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v43 + 852)]
@@ -54475,28 +54475,28 @@ LABEL_123:
                       v45 = *v42 - 1;
                       *v42 = v45;
                       v66 = v42[v45 + 1];
-                      v46 = v44 + dword_532048;
-                      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v44 + dword_532048 + 852)]
+                      v46 = v44 + g_MapData;
+                      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v44 + g_MapData + 852)]
                         && (*(_BYTE *)(v46 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v46 + 864)) >> 5) > 0 )
                       {
                         *(_WORD *)(v46 + 856) = (unsigned __int8)v66;
-                        *(_WORD *)(dword_532048 + v44 + 858) = BYTE1(v66);
-                        if ( *(__int16 *)(40 * (unsigned __int8)v66 + dword_532048 + 2 * BYTE1(v66) + 1534) == -1
+                        *(_WORD *)(g_MapData + v44 + 858) = BYTE1(v66);
+                        if ( *(__int16 *)(40 * (unsigned __int8)v66 + g_MapData + 2 * BYTE1(v66) + 1534) == -1
                           && UnitBattle_IsTileWithinRange(v68, dword_5437A0, dword_5437A4) )
                         {
-                          *(_WORD *)(v44 + dword_532048 + 856) = v65;
-                          *(_WORD *)(dword_532048 + v44 + 858) = v64;
+                          *(_WORD *)(v44 + g_MapData + 856) = v65;
+                          *(_WORD *)(g_MapData + v44 + 858) = v64;
                           if ( !v42 )
                             return 1;
                           goto LABEL_123;
                         }
-                        *(_WORD *)(v44 + dword_532048 + 856) = v65;
-                        *(_WORD *)(v44 + dword_532048 + 858) = v64;
+                        *(_WORD *)(v44 + g_MapData + 856) = v65;
+                        *(_WORD *)(v44 + g_MapData + 858) = v64;
                       }
-                      v47 = *(__int16 *)(dword_532048 + 40 * (unsigned __int8)v66 + 2 * BYTE1(v66) + 1534);
+                      v47 = *(__int16 *)(g_MapData + 40 * (unsigned __int8)v66 + 2 * BYTE1(v66) + 1534);
                       if ( v47 != -1 )
                       {
-                        v48 = *(unsigned __int8 *)(31 * v47 + dword_532048 + 854);
+                        v48 = *(unsigned __int8 *)(31 * v47 + g_MapData + 854);
                         if ( v48 == v63 )
                         {
                           v54 = 0;
@@ -54590,7 +54590,7 @@ LABEL_24:
 // 50F134: using guessed type void *off_50F134;
 // 51257A: using guessed type int g_UnitTypeFlags[];
 // 515A10: using guessed type int dword_515A10;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532448: using guessed type int dword_532448[];
 // 53244C: using guessed type int dword_53244C[17621];
 // 5437A0: using guessed type int dword_5437A0;
@@ -54641,10 +54641,10 @@ int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
   unsigned __int8 v43; // [esp+2Ch] [ebp-18h]
 
   Debug_Log(a2, a3, a4, (int)aPodejdz_na_bez);
-  v5 = 31 * v4 + dword_532048 + 852;
+  v5 = 31 * v4 + g_MapData + 852;
   v35 = *(unsigned __int8 *)(v5 + 8);
   v37 = v5;
-  v6 = 40 * dword_5437A0 + dword_532048;
+  v6 = 40 * dword_5437A0 + g_MapData;
   if ( *(__int16 *)(v6 + 2 * dword_5437A4 + 1534) == -1 )
   {
     v7 = dword_5437A4;
@@ -54716,8 +54716,8 @@ LABEL_8:
         v43 = BYTE1(v14[a4 + 1]);
         v42 = v14[a4 + 1];
       }
-      v15 = 31 * *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534);
-      v10 = (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(dword_532048 + v15 + 852)];
+      v15 = 31 * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534);
+      v10 = (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v15 + 852)];
       if ( v10 != 4 )
         break;
 LABEL_35:
@@ -54750,27 +54750,27 @@ LABEL_35:
         goto LABEL_7;
       }
     }
-    v36 = Unit_CalcEffectivenessA((char *)(v15 + dword_532048 + 852), 0);
+    v36 = Unit_CalcEffectivenessA((char *)(v15 + g_MapData + 852), 0);
     if ( v36 < Unit_CalcEffectivenessC((__int16 *)(31
-                                                 * *(__int16 *)(dword_532048
+                                                 * *(__int16 *)(g_MapData
                                                               + 40 * dword_5437A0
                                                               + 2 * dword_5437A4
                                                               + 1534)
-                                                 + dword_532048
+                                                 + g_MapData
                                                  + 852)) )
       v36 = Unit_CalcEffectivenessC((__int16 *)(31
-                                              * *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
-                                              + dword_532048
+                                              * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
+                                              + g_MapData
                                               + 852));
     LOWORD(v10) = BYTE1(v34);
-    v16 = *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534);
+    v16 = *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534);
     Debug_Log(v16, SBYTE1(v34), a4, (int)aOddzial_w_zasi);
-    v17 = dword_532048 + 852 + 31 * v16;
+    v17 = g_MapData + 852 + 31 * v16;
     a4 = v18;
     if ( UnitBattle_IsTileWithinRange(v19, v18, BYTE1(v34))
-      && (*(_BYTE *)(31 * v16 + dword_532048 + 864) & 3)
+      && (*(_BYTE *)(31 * v16 + g_MapData + 864) & 3)
        + 1
-       - ((unsigned __int8)(2 * *(_BYTE *)(31 * v16 + dword_532048 + 864)) >> 5) > 0 )
+       - ((unsigned __int8)(2 * *(_BYTE *)(31 * v16 + g_MapData + 864)) >> 5) > 0 )
     {
       v20 = 0;
 LABEL_33:
@@ -54779,14 +54779,14 @@ LABEL_34:
       v9 = v20 / 5;
       goto LABEL_35;
     }
-    if ( *(char *)(BYTE1(v34) + dword_532048 + 20 * a4 + 3134) <= 0 )
+    if ( *(char *)(BYTE1(v34) + g_MapData + 20 * a4 + 3134) <= 0 )
     {
       v10 = BYTE1(v34);
     }
     else
     {
-      if ( *(__int16 *)(dword_532048 + 40 * a4 + 2 * BYTE1(v34) + 1534) == -1
-        || (v21 = 31 * v16 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) == 0)
+      if ( *(__int16 *)(g_MapData + 40 * a4 + 2 * BYTE1(v34) + 1534) == -1
+        || (v21 = 31 * v16 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) == 0)
         && (*(_BYTE *)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v21 + 864)) >> 5) <= 0 )
       {
         LOWORD(v10) = BYTE1(v34);
@@ -54800,7 +54800,7 @@ LABEL_44:
     v23 = v22;
     if ( !v22 )
     {
-      v24 = 31 * v16 + dword_532048;
+      v24 = 31 * v16 + g_MapData;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v24 + 852)] )
       {
         if ( (*(_BYTE *)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v24 + 864)) >> 5) > 0 )
@@ -54820,7 +54820,7 @@ LABEL_44:
       j__nfree_();
       goto LABEL_33;
     }
-    v25 = dword_532048 + 31 * v16;
+    v25 = g_MapData + 31 * v16;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v25 + 852)]
       && (*(_BYTE *)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v25 + 864)) >> 5) > 0 )
     {
@@ -54904,7 +54904,7 @@ LABEL_72:
 // 43BD15: variable 'v27' is possibly undefined
 // 43BD8E: variable 'v31' is possibly undefined
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5437A0: using guessed type int dword_5437A0;
 // 5437A4: using guessed type int dword_5437A4;
 
@@ -54935,7 +54935,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
   __int16 *v25; // [esp+14h] [ebp-18h]
 
   v4 = 31 * a1;
-  v25 = (__int16 *)(31 * a1 + dword_532048 + 852);
+  v25 = (__int16 *)(31 * a1 + g_MapData + 852);
   v5 = 801 * a1;
   v23 = 0;
   UnitBattle_UpdateIdleAnimatedUnits();
@@ -54943,7 +54943,7 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
   switch ( dword_532448[40 * dword_5437A0 + 2 * dword_5437A4 + v5] )
   {
     case 1:
-      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v4 + dword_532048 + 852)] )
+      if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v4 + g_MapData + 852)] )
       {
         v6 = (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5);
         if ( v6 > 0 )
@@ -54963,27 +54963,27 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        v14 = *(char *)(31 * *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
-                      + dword_532048
+        v14 = *(char *)(31 * *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534)
+                      + g_MapData
                       + 861);
         v15 = *((char *)v25 + 9);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(dword_532048 + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), &v21, &v20, 0);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(g_MapData + 40 * dword_5437A0 + 2 * dword_5437A4 + 1534), &v21, &v20, 0);
         v22 = v14 - v21 - (v15 - v20);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534), &v21, &v20, 1);
+        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534), &v21, &v20, 1);
         v16 = v14 - v21;
         v17 = v15 - v20;
         if ( v16 <= 0 && v17 <= 0
           || !UnitBattle_Attack(
                 a1,
-                *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534),
+                *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534),
                 v16 - v17 > v22)
-          || *(__int16 *)(dword_532048 + v24 + 852) == -1 )
+          || *(__int16 *)(g_MapData + v24 + 852) == -1 )
         {
           goto LABEL_5;
         }
       }
-      while ( *(__int16 *)(40 * dword_5437A0 + dword_532048 + 2 * dword_5437A4 + 1534) != -1 );
-      if ( *(unsigned __int8 *)(dword_532048 + v24 + 860) <= 4u )
+      while ( *(__int16 *)(40 * dword_5437A0 + g_MapData + 2 * dword_5437A4 + 1534) != -1 );
+      if ( *(unsigned __int8 *)(g_MapData + v24 + 860) <= 4u )
         goto LABEL_5;
       v23 = 1;
       result = 1;
@@ -55019,11 +55019,11 @@ LABEL_4:
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( !UnitBattle_AttackWall(a1, dword_5437A0, v19, dword_5437A4) || *(__int16 *)(dword_532048 + v18 + 852) == -1 )
+        if ( !UnitBattle_AttackWall(a1, dword_5437A0, v19, dword_5437A4) || *(__int16 *)(g_MapData + v18 + 852) == -1 )
           goto LABEL_5;
       }
-      while ( *(_BYTE *)(dword_5437A4 + 20 * dword_5437A0 + dword_532048 + 3134) );
-      if ( *(unsigned __int8 *)(dword_532048 + v18 + 860) <= 4u )
+      while ( *(_BYTE *)(dword_5437A4 + 20 * dword_5437A0 + g_MapData + 3134) );
+      if ( *(unsigned __int8 *)(g_MapData + v18 + 860) <= 4u )
         goto LABEL_5;
       v23 = 1;
       result = 1;
@@ -55038,7 +55038,7 @@ LABEL_5:
 // 43BF67: variable 'v10' is possibly undefined
 // 43BF9E: variable 'v13' is possibly undefined
 // 43C147: variable 'v19' is possibly undefined
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532448: using guessed type int dword_532448[];
 // 5437A0: using guessed type int dword_5437A0;
 // 5437A4: using guessed type int dword_5437A4;
@@ -55104,17 +55104,17 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   v51 = 0;
   v44 = 0;
   v45 = 0;
-  while ( *(_DWORD *)(dword_532048 + 804) - 1 >= v44 )
+  while ( *(_DWORD *)(g_MapData + 804) - 1 >= v44 )
   {
     v12 = 0;
     v35 = v45;
     v13 = 0;
     v14 = 2 * v51;
-    while ( v12 <= *(_DWORD *)(dword_532048 + 800) - 1 )
+    while ( v12 <= *(_DWORD *)(g_MapData + 800) - 1 )
     {
-      v15 = v13 + dword_532048 + v35;
+      v15 = v13 + g_MapData + v35;
       v16 = *(__int16 *)(v15 + 1534);
-      if ( v16 == -1 || *(unsigned __int8 *)(dword_532048 + 31 * v16 + 854) != v46 )
+      if ( v16 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v16 + 854) != v46 )
       {
         v13 += 2;
         ++v12;
@@ -55137,8 +55137,8 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   {
     if ( (unsigned int)g_UnitBattleAiCurrentPlanMode <= 2 || g_UnitBattleAiCurrentPlanMode == 6 )
     {
-      v19 = *(unsigned __int16 *)(dword_532048 + 31 * SLOWORD(v34[0]) + 856);
-      if ( (unsigned __int16)v19 >= *(_DWORD *)(dword_532048 + 804) / 2 )
+      v19 = *(unsigned __int16 *)(g_MapData + 31 * SLOWORD(v34[0]) + 856);
+      if ( (unsigned __int16)v19 >= *(_DWORD *)(g_MapData + 804) / 2 )
       {
         for ( i = 0; i != 20; i += 2 )
         {
@@ -55178,12 +55178,12 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       do
       {
         v6 = *(__int16 *)((char *)v34 + v5);
-        if ( v6 != -1 && !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * v6 + dword_532048 + 852)] )
+        if ( v6 != -1 && !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * v6 + g_MapData + 852)] )
         {
           v47 = 1;
-          if ( v3 < Unit_CalcEffectivenessA((char *)(31 * v6 + dword_532048 + 852), 0) )
+          if ( v3 < Unit_CalcEffectivenessA((char *)(31 * v6 + g_MapData + 852), 0) )
           {
-            v7 = (char *)(31 * *(__int16 *)((char *)v34 + v5) + dword_532048 + 852);
+            v7 = (char *)(31 * *(__int16 *)((char *)v34 + v5) + g_MapData + 852);
             v49 = v4;
             v3 = Unit_CalcEffectivenessA(v7, 0);
           }
@@ -55203,7 +55203,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     for ( k = 0; k != 20; k += 2 )
     {
       v9 = *(__int16 *)((char *)v34 + k);
-      if ( v9 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v9 + dword_532048 + 852)] == 4 )
+      if ( v9 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v9 + g_MapData + 852)] == 4 )
       {
         v39 = *(__int16 *)((char *)v34 + k);
         WCIsvListBase_AppendValue((int)&dword_5437C0, v39);
@@ -55215,7 +55215,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       result = *(__int16 *)((char *)v34 + m);
       if ( result != -1 )
       {
-        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * result + dword_532048 + 852)] )
+        if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * result + g_MapData + 852)] )
         {
           v40 = *(__int16 *)((char *)v34 + m);
           result = WCIsvListBase_AppendValue((int)&dword_5437C0, v40);
@@ -55228,7 +55228,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   for ( n = 0; n != 20; n += 2 )
   {
     v27 = *(__int16 *)((char *)v34 + n);
-    if ( v27 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v27 + dword_532048 + 852)] == 4 )
+    if ( v27 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v27 + g_MapData + 852)] == 4 )
     {
       v41 = *(__int16 *)((char *)v34 + n);
       WCIsvListBase_AppendValue((int)&dword_5437C0, v41);
@@ -55238,7 +55238,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   for ( ii = 0; ii != 20; ii += 2 )
   {
     v29 = *(__int16 *)((char *)v34 + ii);
-    if ( v29 != -1 && g_UnitTypeMaxRange_512582[88 * *(__int16 *)(dword_532048 + 31 * v29 + 852)] )
+    if ( v29 != -1 && g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * v29 + 852)] )
     {
       v42 = *(__int16 *)((char *)v34 + ii);
       WCIsvListBase_AppendValue((int)&dword_5437C0, v42);
@@ -55266,11 +55266,11 @@ LABEL_45:
     }
     v31 = 31 * v30;
     v48 = 1;
-    if ( g_UnitTypeRole[88 * *(__int16 *)(dword_532048 + v31 + 852)] != 4 )
+    if ( g_UnitTypeRole[88 * *(__int16 *)(g_MapData + v31 + 852)] != 4 )
     {
-      if ( v24 < Unit_CalcEffectivenessA((char *)(dword_532048 + 852 + v31), 0) )
+      if ( v24 < Unit_CalcEffectivenessA((char *)(g_MapData + 852 + v31), 0) )
       {
-        v23 = (char *)(31 * *(__int16 *)((char *)v34 + v25) + dword_532048 + 852);
+        v23 = (char *)(31 * *(__int16 *)((char *)v34 + v25) + g_MapData + 852);
         v50 = v22;
         v24 = Unit_CalcEffectivenessA(v23, 0);
       }
@@ -55304,7 +55304,7 @@ LABEL_63:
 // 43C5FF: variable 'ii' is possibly undefined
 // 473FD8: using guessed type int __fastcall memset_(_DWORD, _DWORD);
 // 515A10: using guessed type int dword_515A10;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5437C0: using guessed type int dword_5437C0;
 
 //----- (0043C6B0) --------------------------------------------------------
@@ -55344,25 +55344,25 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
   int v33; // [esp+20h] [ebp-1Ch]
 
   v32 = -20;
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_enter", a1, a2, dword_53206C, dword_532070);
-  if ( *(_DWORD *)(dword_532048 + 836) == a1 )
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_enter", a1, a2, g_AttackerStartsOnLeft, g_DefenderStartsOnLeft);
+  if ( *(_DWORD *)(g_MapData + 836) == a1 )
   {
-    if ( dword_53206C )
+    if ( g_AttackerStartsOnLeft )
       a2 = 1;
     else
       a2 = -1;
   }
-  if ( a1 == *(_DWORD *)(dword_532048 + 840) )
+  if ( a1 == *(_DWORD *)(g_MapData + 840) )
   {
-    if ( dword_532070 )
+    if ( g_DefenderStartsOnLeft )
       a2 = 1;
     else
       a2 = -1;
   }
   for ( i = 0; i != 682; i += 31 )
   {
-    v3 = i + dword_532048;
-    if ( *(__int16 *)(i + dword_532048 + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == a1 )
+    v3 = i + g_MapData;
+    if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == a1 )
     {
       v4 = a2 * *(unsigned __int16 *)(v3 + 856);
       if ( v4 > v32 )
@@ -55372,8 +55372,8 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
   v33 = 0;
   v29 = 0;
   v5 = a2 * (v32 + 3);
-  battle_width = *(_DWORD *)(dword_532048 + 800);
-  battle_height = *(_DWORD *)(dword_532048 + 804);
+  battle_width = *(_DWORD *)(g_MapData + 800);
+  battle_height = *(_DWORD *)(g_MapData + 804);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_ai_plan_range_line",
     a1,
@@ -55384,8 +55384,8 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
     return 0;
   while ( 1 )
   {
-    v6 = dword_532048 + v29;
-    if ( *(__int16 *)(dword_532048 + v29 + 852) == -1 || *(unsigned __int8 *)(v6 + 854) == a1 )
+    v6 = g_MapData + v29;
+    if ( *(__int16 *)(g_MapData + v29 + 852) == -1 || *(unsigned __int8 *)(v6 + 854) == a1 )
       goto LABEL_23;
     v7 = *(unsigned __int16 *)(v6 + 858);
     Diagnostics_TraceWorldMapActionEvent(
@@ -55399,29 +55399,29 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
       Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_skip_oob_target", v33, v5, v7, battle_width);
       goto LABEL_23;
     }
-    if ( *(__int16 *)(40 * v5 + dword_532048 + 2 * v7 + 1534) != -1 )
+    if ( *(__int16 *)(40 * v5 + g_MapData + 2 * v7 + 1534) != -1 )
     {
       Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_target_occupied", v33, v5, v7, 0);
       return 0;
     }
     Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_log", v33, v5, v7, a1);
     Debug_Log(a1, v7, v5, (int)aOddzial_w_zasi);
-    v8 = dword_532048 + 852;
+    v8 = g_MapData + 852;
     Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_range", v33, v5, v7, a1);
     v10 = UnitBattle_IsTileWithinRange(v33, v5, v7);
     Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_after_range", v33, v5, v7, v10);
-    v12 = dword_532048 + v29 + 852;
+    v12 = g_MapData + v29 + 852;
     if ( v10
-      && (*(_BYTE *)(v29 + dword_532048 + 864) & 3)
+      && (*(_BYTE *)(v29 + g_MapData + 864) & 3)
        + 1
-       - ((unsigned __int8)(2 * *(_BYTE *)(v29 + dword_532048 + 864)) >> 5) > 0 )
+       - ((unsigned __int8)(2 * *(_BYTE *)(v29 + g_MapData + 864)) >> 5) > 0 )
     {
       goto LABEL_17;
     }
     v14 = v7;
-    if ( *(char *)(v7 + dword_532048 + 20 * v5 + 3134) <= 0
-      || (v14 = dword_532048 + 40 * v5, *(__int16 *)(v14 + 2 * v7 + 1534) != -1)
-      && ((v15 = 31 * v33 + dword_532048, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
+    if ( *(char *)(v7 + g_MapData + 20 * v5 + 3134) <= 0
+      || (v14 = g_MapData + 40 * v5, *(__int16 *)(v14 + 2 * v7 + 1534) != -1)
+      && ((v15 = 31 * v33 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
        || (v14 = (unsigned __int8)(2 * *(_BYTE *)(v15 + 864)) >> 5, (*(_BYTE *)(v15 + 864) & 3) + 1 - v14 > 0)) )
     {
       v16 = UnitBattle_MoveTrackNear(v33, v5, v7, v5);
@@ -55433,7 +55433,7 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
     v17 = v16;
     if ( !v16 )
     {
-      v18 = dword_532048 + 31 * v33;
+      v18 = g_MapData + 31 * v33;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v18 + 852)] )
       {
         if ( (*(_BYTE *)(v18 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v18 + 864)) >> 5) > 0 )
@@ -55450,7 +55450,7 @@ LABEL_17:
         return 0;
       goto LABEL_23;
     }
-    v19 = 31 * v33 + dword_532048;
+    v19 = 31 * v33 + g_MapData;
     if ( !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v19 + 852)]
       || (*(_BYTE *)(v19 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v19 + 864)) >> 5) <= 0 )
     {
@@ -55518,9 +55518,9 @@ LABEL_23:
 // 43CB00: variable 'v24' is possibly undefined
 // 43CB45: variable 'v25' is possibly undefined
 // 51257A: using guessed type int g_UnitTypeFlags[];
-// 532048: using guessed type int dword_532048;
-// 53206C: using guessed type int dword_53206C;
-// 532070: using guessed type int dword_532070;
+// 532048: using guessed type int g_MapData;
+// 53206C: using guessed type int g_AttackerStartsOnLeft;
+// 532070: using guessed type int g_DefenderStartsOnLeft;
 
 //----- (0043CB80) --------------------------------------------------------
 void UnitBattle_ScanAiWallTargetColumns()
@@ -55534,9 +55534,9 @@ void UnitBattle_ScanAiWallTargetColumns()
   int battle_height;
   int wall_column;
 
-  battle_width = *(_DWORD *)(dword_532048 + 800);
-  battle_height = *(_DWORD *)(dword_532048 + 804);
-  wall_column = *(_DWORD *)(dword_532048 + 828);
+  battle_width = *(_DWORD *)(g_MapData + 800);
+  battle_height = *(_DWORD *)(g_MapData + 804);
+  wall_column = *(_DWORD *)(g_MapData + 828);
   Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_enter", wall_column, battle_width, battle_height, dword_5437B0);
   if ( wall_column < 0 || wall_column >= battle_width || battle_width <= 2 || battle_height <= 2 )
   {
@@ -55548,7 +55548,7 @@ void UnitBattle_ScanAiWallTargetColumns()
   v1 = 20;
   while ( v0 < battle_height - 1 )
   {
-    if ( *(char *)(dword_532048 + v1 + wall_column + 3135) > 0 )
+    if ( *(char *)(g_MapData + v1 + wall_column + 3135) > 0 )
       dword_5437B0 = v0;
     v1 += 20;
     ++v0;
@@ -55559,8 +55559,8 @@ void UnitBattle_ScanAiWallTargetColumns()
   v3 = 20 * dword_5437B0;
   while ( v2 < battle_width - 1 )
   {
-    v4 = dword_532048 + v3 + v2;
-    if ( *(char *)(v4 + 3134) >= 0 && *(_BYTE *)(v4 + 3134) < *(_BYTE *)(dword_5437B4 + dword_532048 + v3 + 3134) )
+    v4 = g_MapData + v3 + v2;
+    if ( *(char *)(v4 + 3134) >= 0 && *(_BYTE *)(v4 + 3134) < *(_BYTE *)(dword_5437B4 + g_MapData + v3 + 3134) )
     {
       dword_5437B8 = dword_5437B4;
       dword_5437B4 = v2++;
@@ -55574,7 +55574,7 @@ void UnitBattle_ScanAiWallTargetColumns()
   return;
 }
 // 43CBE0: control flows out of bounds to 43C853
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 5437B0: using guessed type int dword_5437B0;
 // 5437B4: using guessed type int dword_5437B4;
 // 5437B8: using guessed type int dword_5437B8;
@@ -55587,19 +55587,19 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
   v2 = a1;
   if ( dword_532078 <= 3 && UnitBattle_ScanAiPlanRangeLine(a1, a2) )
     return 2;
-  if ( *(int *)(dword_532048 + 828) <= 0 )
+  if ( *(int *)(g_MapData + 828) <= 0 )
     return 4;
-  if ( dword_532078 == 1 && v2 == *(_DWORD *)(dword_532048 + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
+  if ( dword_532078 == 1 && v2 == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
     return 6;
-  if ( v2 == *(_DWORD *)(dword_532048 + 836) && dword_532078 < 3 )
+  if ( v2 == *(_DWORD *)(g_MapData + 836) && dword_532078 < 3 )
     return 0;
-  if ( v2 == *(_DWORD *)(dword_532048 + 836) && dword_532078 >= 3 )
+  if ( v2 == *(_DWORD *)(g_MapData + 836) && dword_532078 >= 3 )
     return 4;
   return 1;
 }
 // 43CC79: variable 'v2' is possibly undefined
 // 515A10: using guessed type int dword_515A10;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532078: using guessed type int dword_532078;
 
 //----- (0043CD00) --------------------------------------------------------
@@ -55635,14 +55635,14 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
   Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", a1, g_CurrentPlayerIndex, dword_532078, 0);
   dword_5437A8 = 0;
   ++dword_532078;
-  if ( *(_DWORD *)(dword_532048 + 828) != -1 )
+  if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "battle_ai_before_wall_scan",
       a1,
-      *(_DWORD *)(dword_532048 + 828),
-      *(_DWORD *)(dword_532048 + 800),
-      *(_DWORD *)(dword_532048 + 804));
+      *(_DWORD *)(g_MapData + 828),
+      *(_DWORD *)(g_MapData + 800),
+      *(_DWORD *)(g_MapData + 804));
     UnitBattle_ScanAiWallTargetColumns();
     Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", a1, dword_5437B0, dword_5437B4, dword_5437B8);
   }
@@ -55719,7 +55719,7 @@ LABEL_13:
     UnitBattle_UpdateIdleAnimatedUnits();
     v26 = WCIsvListBase_PopFrontValue((int)&dword_5437C0, 0);
     Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", v26, a1, dword_5437C8, v2);
-    v19 = dword_532048 + 31 * v26;
+    v19 = g_MapData + 31 * v26;
     if ( *(__int16 *)(v19 + 852) != -1 && a1 == *(_BYTE *)(v19 + 854) )
       break;
 LABEL_20:
@@ -55769,7 +55769,7 @@ LABEL_19:
 // 43CF28: variable 'v8' is possibly undefined
 // 43CF40: variable 'v23' is possibly undefined
 // 515A10: using guessed type int dword_515A10;
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 // 532078: using guessed type int dword_532078;
 // 5437A8: using guessed type int dword_5437A8;
 // 5437AC: using guessed type int dword_5437AC;
@@ -56347,9 +56347,9 @@ signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD
   {
     while ( 1 )
     {
-      v5 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(dword_532048 + 804) - 3;
-      v15 = *(_DWORD *)(dword_532048 + 800) / 2 + *a2;
-      if ( v15 < *(_DWORD *)(dword_532048 + 800) )
+      v5 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(g_MapData + 804) - 3;
+      v15 = *(_DWORD *)(g_MapData + 800) / 2 + *a2;
+      if ( v15 < *(_DWORD *)(g_MapData + 800) )
         break;
       *a2 = 0;
       v6 = ++*a4 % 3;
@@ -56364,8 +56364,8 @@ signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD
     }
     while ( 1 )
     {
-      v7 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(dword_532048 + 804) - 3;
-      v8 = *(_DWORD *)(dword_532048 + 800) / 2 - *a2;
+      v7 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(g_MapData + 804) - 3;
+      v8 = *(_DWORD *)(g_MapData + 800) / 2 - *a2;
       v14 = v7;
       if ( v8 >= 0 )
         break;
@@ -56387,7 +56387,7 @@ signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD
   }
   return result;
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (0043D6E0) --------------------------------------------------------
 int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
@@ -59341,9 +59341,9 @@ char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3)
 //----- (004415A0) --------------------------------------------------------
 int  BattleMap_GetMoveSoundSurfaceClass(int a1, int a2)
 {
-  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * a1 + dword_532048 + 2 * a2)];
+  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * a1 + g_MapData + 2 * a2)];
 }
-// 532048: using guessed type int dword_532048;
+// 532048: using guessed type int g_MapData;
 
 //----- (004415E0) --------------------------------------------------------
 char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
