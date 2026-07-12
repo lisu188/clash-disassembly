@@ -211,7 +211,7 @@ void sub_1EA7A();
 void sub_1EAEE();
 int __fastcall sub_1EBC4(int a1);
 int sub_1EDD1();
-// int __usercall sub_1EFE4@<eax>(long double a1@<st0>);
+// int __usercall nextPlayer@<eax>(long double a1@<st0>);
 int sub_1F30E();
 int sub_1F3BE();
 char *sub_1F441();
@@ -332,7 +332,7 @@ int __fastcall sub_26BF5(int a1);
 int __fastcall sub_26C46(int a1, int a2);
 signed int __fastcall sub_26CDB(int a1);
 signed int __fastcall sub_26E06(int a1);
-int sub_26E42();
+int LogAllUnits();
 // signed int __usercall sub_26EB6@<eax>(int a1@<eax>, long double a2@<st0>);
 int __fastcall sub_26F78(int a1, int a2);
 // int __usercall sub_27015@<eax>(int a1@<eax>, long double a2@<st0>);
@@ -340,7 +340,7 @@ int __fastcall sub_26F78(int a1, int a2);
 bool __fastcall sub_2730C(int a1);
 bool __fastcall sub_27364(int a1);
 bool __fastcall sub_273AA(int a1);
-// int __usercall sub_273F3@<eax>(long double a1@<st0>);
+// int __usercall Unit_NewTurn@<eax>(long double a1@<st0>);
 signed int __fastcall sub_2763B(int a1);
 char __fastcall sub_276C1(int a1);
 int __fastcall sub_2792A(int a1);
@@ -388,7 +388,7 @@ int __fastcall sub_295FC(int result, int a2);
 signed int sub_29640();
 int __fastcall sub_29686(int a1, char a2, unsigned __int8 a3, unsigned __int8 a4);
 int __fastcall sub_29817(unsigned __int16 a1, char a2, unsigned __int8 a3, unsigned __int8 a4);
-void sub_298F1();
+void UnitsCache_Clear();
 int sub_299B3();
 int __fastcall sub_29A10(int a1, unsigned __int8 a2, char a3);
 int __fastcall sub_29A7D(int a1, unsigned __int8 a2, char a3);
@@ -410,8 +410,8 @@ int __fastcall sub_2AFD6(int a1, int a2, int a3, int a4, int a5);
 int __fastcall sub_2BAF5(int a1, int a2, int a3);
 int __fastcall sub_2BD33(int a1, int a2);
 int __fastcall sub_2C16B(int a1, int a2);
-void sub_2C492();
-void sub_2C4C9();
+void Track_BridgesOn();
+void Track_BridgesOff();
 bool __fastcall sub_2C500(int a1, int a2, int a3);
 bool __fastcall sub_2C580(int a1, int a2);
 bool __fastcall sub_2C680(int a1, int a2, char a3);
@@ -446,10 +446,10 @@ int sub_2FFAA();
 int __fastcall sub_2FFD0(int a1);
 char sub_30000();
 char sub_30020();
-void sub_30040();
-void sub_30069();
-void sub_30092();
-int __fastcall sub_300E6(int result);
+void unsetLogEnabled();
+void setLogEnabled();
+void createLogFIles();
+int __fastcall setInBatttle(int result);
 void __cdecl log(int a1, char a2);
 int __fastcall sub_30204(int a1, int a2);
 int __fastcall sub_30465(int a1, int a2, int a3);
@@ -501,8 +501,8 @@ bool __fastcall sub_36693(int a1);
 // signed int __usercall sub_366FE@<eax>(int a1@<eax>, long double a2@<st0>);
 char *__fastcall sub_367C9(int a1);
 void __fastcall sub_36998(char a1, int a2);
-char *sub_36AA8();
-// char *__usercall sub_36B1C@<eax>(long double a1@<st0>);
+char *LogAllBuildings();
+// char *__usercall Building_NewTurn@<eax>(long double a1@<st0>);
 char __fastcall sub_36D28(int a1);
 signed int __fastcall sub_36DC3(int a1);
 signed int __fastcall sub_36E86(int a1);
@@ -527,7 +527,7 @@ void sub_38B1C();
 int *__fastcall sub_38CAD(int a1, void (*a2)(void));
 int sub_38CF8();
 int __fastcall sub_38D40(int a1);
-int sub_38DA2();
+bool sub_38DA2();
 int sub_38EC3();
 int __fastcall sub_38FF9(int a1, int a2);
 int sub_3926A();
@@ -625,9 +625,9 @@ int __fastcall sub_4154B(int a1);
 char __fastcall sub_416FA(int a1);
 bool __fastcall sub_417CA(int a1, int a2);
 void __fastcall sub_41856(char a1, int a2);
-int sub_418E0();
-int __fastcall sub_41950(int a1);
-int sub_41D3A();
+int Battle_LogAllUnits();
+int __fastcall GodAnger(int a1);
+int Battle_NewTurn();
 bool sub_41D9F();
 int __fastcall sub_41E75(int a1);
 int sub_41F4F();
@@ -770,7 +770,7 @@ int __fastcall sub_520C8(int a1, int a2);
 int __fastcall sub_520FD(int a1);
 int __fastcall sub_523C4(int a1);
 int __fastcall sub_52411(int a1);
-signed int __fastcall sub_52468(char *a1, int a2);
+bool __fastcall sub_52468(char *a1, int a2);
 char sub_5258D();
 void sub_5265C();
 int sub_526CC();
@@ -850,7 +850,7 @@ int __fastcall sub_58F9C(int a1);
 bool __fastcall sub_59210(int a1);
 // signed int __usercall sub_59315@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 int __fastcall sub_596B5(int a1);
-// signed int __usercall sub_59749@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
+// signed int __usercall buildingUnitGetInto@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 bool __fastcall sub_599ED(int a1, int a2);
 signed int __fastcall sub_59AE4(int a1, int a2);
 signed int __fastcall sub_59B49(int a1, int a2);
@@ -872,7 +872,7 @@ int (*sub_5A480())();
 char __fastcall sub_5A4A4(int a1);
 signed int __fastcall sub_5A55A(int a1);
 int __fastcall sub_5A7C4(int a1);
-signed int __fastcall sub_5A897(unsigned int a1);
+unsigned int __fastcall sub_5A897(unsigned int a1);
 int __fastcall sub_5A9A3(int a1);
 int __fastcall sub_5AAB5(int a1);
 int __fastcall sub_5AC5A(int a1);
@@ -888,9 +888,9 @@ int __fastcall sub_5B626(int a1, int a2, int a3);
 // int __usercall sub_5B6FF@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // int __usercall sub_5B8CE@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 void __fastcall sub_5B9DC(int a1, int a2, int a3);
-int __fastcall sub_5BC2C(int a1);
-// unsigned int __usercall sub_5BCDB@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
-// void __usercall templeUnitGet(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
+int __fastcall templeRandom(int a1);
+// int __usercall templeProcessGift@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
+// void __usercall templeUnitGetInto(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 signed int sub_5C5AC();
 int __fastcall sub_5C5D0(int a1);
 // signed int __usercall sub_5C606@<eax>(int a1@<eax>, long double a2@<st0>);
@@ -977,7 +977,7 @@ int sub_5F79D();
 int sub_5F862();
 int sub_5FB1E();
 int __fastcall sub_5FB50(int a1);
-// int __usercall sub_5FE5C@<eax>(long double a1@<st0>);
+// int __usercall Port_GetSupply@<eax>(long double a1@<st0>);
 int sub_601E3();
 // int __usercall sub_60464@<eax>(long double a1@<st0>);
 bool __fastcall sub_604E3(int a1, int a2);
@@ -1004,7 +1004,7 @@ void sub_61F8C();
 int sub_62074();
 char sub_6211D();
 int sub_6215A();
-unsigned int __fastcall sub_62207(int a1, int a2, int a3);
+int __fastcall sub_62207(int a1, int a2, int a3);
 int __fastcall sub_623C7(int a1);
 void __fastcall sub_6267E(int a1);
 int __fastcall sub_627F5(int a1);
@@ -1012,7 +1012,7 @@ int __fastcall sub_6283E(int a1);
 int __fastcall sub_6287E(int a1, int a2, int a3);
 int __fastcall sub_62BD7(int a1, int a2);
 int __fastcall sub_62EAA(int a1);
-int sub_630BB();
+int NewQueenWindow();
 int __fastcall sub_63398(int a1);
 int sub_635EC();
 void sub_63678();
@@ -1071,13 +1071,13 @@ int sub_66604();
 int sub_66705();
 // signed int __usercall sub_667E0@<eax>(long double a1@<st0>);
 // signed int __usercall sub_67771@<eax>(long double a1@<st0>);
-// int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
+// int __usercall startMultiMap@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 int __fastcall sub_68CBB(int a1, int a2);
 char __fastcall sub_68D84(int a1, int a2, int a3);
 char *__fastcall sub_69150(char a1, char a2, int a3, __int16 a4, char *a5);
 signed int __fastcall sub_69221(int a1);
 int __fastcall sub_69281(int a1);
-void sub_692FE();
+void Prisoner_SetInCastles();
 char __fastcall sub_696A1(int a1, int a2, char a3);
 int __fastcall sub_696F1(int a1, int a2);
 int __fastcall sub_6972B(int a1, int a2);
@@ -1102,7 +1102,7 @@ int sub_6ACEE();
 int sub_6AE2C();
 int __fastcall sub_6AF35(int a1);
 char *__fastcall sub_6B2DC(int a1);
-// __int16 __usercall sub_6B3A4@<ax>(int a1@<ebx>, long double a2@<st0>);
+// __int16 __usercall Queen_NewTurn@<ax>(int a1@<ebx>, long double a2@<st0>);
 // int __usercall sub_6BA34@<eax>(int a1@<eax>, long double a2@<st0>);
 // signed int __usercall sub_6BB2C@<eax>(int a1@<eax>, long double a2@<st0>);
 signed int __fastcall sub_6BD2F(int a1);
@@ -1132,36 +1132,36 @@ signed int registerClipFunctionsAll();
 // int __usercall sub_6D08A@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 // int __usercall sub_6D130@<eax>(int a1@<eax>, long double a2@<st0>);
 signed int registerClipsFunctions2();
-// int __usercall sub_6D67E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_6D6CA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D706@<eax>(long double a1@<st0>);
-int sub_6D732();
-// signed int __usercall sub_6D75E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D79A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D7D6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D832@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D88E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D8EA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D946@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6D9A2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6D9FE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6DA5A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_6DAB6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6DB12@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6DB6E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_6DBCA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_6DC26@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_6DC82@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DCDE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DD2A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DD76@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6DDD2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DE0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DE4A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_6DE96@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DED2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DF0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_6DF6A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall swiatynia00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall kop_skarb00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall pobierz_oddzial_z_portu00@<eax>(long double a1@<st0>);
+int pelny_port00();
+// signed int __usercall jest_pracownik_w_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jednostka_bitewna00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga_w_poblize00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga_w_poblize_zamku00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga_do_portu00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga_do_zamku00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall jest_droga_do_swiatyni00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall oddzial_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall budowla_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall odleglosc_od_obiektu00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall swiatynia_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall swiatynia_OK00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall maszeruj00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall maszeruj_do_swiatyni00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall maszeruj_blisko00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall atakuj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall przejmuj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ukryj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall jest_armia00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall liczba_jednostek_w_oddziale00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall atakuj_budowle00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall jest_brod00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall buduj_droge00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall buduj_pulapke00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall Unit_CanMove00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 int __fastcall sub_6DFA8(int a1, int a2);
 // int __usercall sub_6DFDE@<eax>(int a1@<eax>, long double a2@<st0>);
 // signed int __usercall sub_6E010@<eax>(long double a1@<st0>);
@@ -1263,69 +1263,69 @@ int sub_71CFA();
 int __fastcall sub_71DD4(int a1);
 // signed int __usercall sub_71F0B@<eax>(int a1@<eax>, long double a2@<st0>);
 signed int registerClipsFunctions();
-// int __usercall sub_7251C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_7254A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72578@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_725A6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// void __usercall sub_725D4(int a1@<ecx>, int a2@<ebx>, long double a3@<st0>);
-// int __usercall sub_72612@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_7264C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72686@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_726C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_726FA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72730@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72772@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_727A8@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_727DE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72814@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_7284A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_72880(); // weak
-// signed int __usercall sub_728AC@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72911@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72953@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72989@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_729BF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_729F5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72A2B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72A61@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72A97@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_72ACD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72B03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72B39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72B93@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72BD5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72C17@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_72C4D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72C83@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_72CB9@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72CFB@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72D55@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_72D8B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72DC1@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72E03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72E39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_72E7B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_72EB1@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
+// int __usercall Leczenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall Szkolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall PalBudowle@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall UpgradeWall@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// void __usercall ZmienPodatek(int a1@<ecx>, int a2@<ebx>, long double a3@<st0>);
+// int __usercall RemoveLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall ZacznijLeczenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall ZacznijSzkolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall ZacznijProdukcje@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall Podatek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall IsLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall KupSzkola@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall KupKuznia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall Pieniadze@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SilaMurow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SilaZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int NumerTury(); // weak
+// signed int __usercall BudujZamek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall BuyLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall KupKoszary@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall KupSzpital@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall PoziomTech@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall TypBudowli@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SilaGracza@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall KupWarsztat@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall Zadowolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall IsProduction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall IloscChlopow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall CzyMinimalny@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall CanBuyLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall LicencjaIndex@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall LicencjaInd@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall CanUpgradeWall@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall IloscOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall IsProductionAny@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall WyprowadzChlopow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall JednostkiDoSzkoly@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall MaxIloscOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall JestJednostkaWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall JednostkiDoSzpitala@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall WyprowadzenieOddzialu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall WyprowadzenieOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall NazwaZamku@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
 signed int registerClipsFunctions3();
-// bool __usercall sub_73153@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_73195@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_731D7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_73219@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_7325B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_7329D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_732DF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_73321@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_73357@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_7338D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_733CF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_73405@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_7343B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_73471@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_734A7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_734DD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_73513@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// bool __usercall sub_73555@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_7358B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall WejdzDoZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall DolaczDoArmii@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall PrzegrupujArmie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall PrzegrupujZamek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall StanOsobArmii@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ArmiaMaJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ArmiaTylkoJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall LiczbaWolnychMiejscWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall MocPrzeciwnikaPodMurami2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ZnajdzDrogeWPoblizeZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall MaJednostkiDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall ZnajdzZamekDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall IdzDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall JestZarazaWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall JestZarazaWOddziale@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall OdlaczJednostkiSlabe@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall OdlaczJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// bool __usercall MaszerujWzdluzDrogi@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall Znajdz_Najlepszy@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 signed int __fastcall sub_735F0(int a1);
 bool __fastcall sub_73696(int a1);
 // bool __usercall sub_737F7@<eax>(int a1@<eax>, long double a2@<st0>);
@@ -1402,7 +1402,7 @@ bool sub_7B858();
 // int __usercall startMap20@<eax>(int a1@<ebx>, long double a2@<st0>);
 signed int sub_7BF3E();
 // signed int __usercall sub_7BFB8@<eax>(long double a1@<st0>);
-int sub_7C17E();
+bool sub_7C17E();
 // int __usercall startMap@<eax>(int result@<eax>, int a2@<ebx>, long double a3@<st0>);
 // int __usercall sub_7C3AC@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 int sub_7C440();
@@ -1450,7 +1450,7 @@ int __cdecl sub_7CED7(int a1, int a2, int a3, int a4);
 // signed __int16 __usercall sub_7D538@<ax>(void **a1@<edi>, const void *a2@<esi>);
 // void __usercall sub_7D5C3(int a1@<edi>, int a2@<esi>);
 // void __usercall sub_7D728(int a1@<edi>, unsigned __int8 *a2@<esi>);
-char sub_7D810();
+unsigned __int8 sub_7D810();
 int __cdecl sub_7D828(int a1);
 signed int __cdecl sub_7D83B(int a1, char a2);
 int sub_7DA8D();
@@ -1552,7 +1552,7 @@ signed int sub_829F0();
 int __cdecl sub_82A70(int a1);
 int __cdecl sub_82A80(int a1);
 int __cdecl sub_82A90(int a1);
-unsigned int __cdecl sub_82AA0(int a1, int a2);
+int __cdecl sub_82AA0(int a1, int a2);
 int __cdecl sub_82B20(int a1);
 unsigned int __cdecl sub_82B50(int a1, unsigned int a2, int a3);
 int __cdecl sub_82C30(int a1);
@@ -1727,20 +1727,20 @@ void sub_88900();
 int __fastcall sub_88950(int result);
 int __fastcall sub_88960(int result);
 int sub_889E0();
-// int __usercall __spoils<ecx,st0> sub_889F0@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall __spoils<ecx,st0> RefreshCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 // signed int __usercall sub_88A30@<eax>(int a1@<eax>, long double a2@<st0>);
 signed int sub_88A90();
 signed int sub_88B00();
 signed int sub_88B70();
-// int __usercall sub_88BA0@<eax>(int a1@<edx>, long double a2@<st0>);
+// int __usercall RefreshAgendaCommand@<eax>(int a1@<edx>, long double a2@<st0>);
 // int __usercall sub_88C00@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_88CA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_88DA0(); // weak
+// int __usercall SetSalienceEvaluationCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetSalienceEvaluationCommand(); // weak
 int __fastcall sub_88DD0(unsigned int a1);
 int sub_88E10();
 int __fastcall sub_88E20(int a1);
 // signed int __usercall __spoils<ecx,st0> sub_88E40@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_88F10@<eax>(int a1@<edx>, long double a2@<st0>);
+// signed int __usercall AgendaCommand@<eax>(int a1@<edx>, long double a2@<st0>);
 signed int __fastcall sub_89140(int a1);
 signed int __fastcall sub_891E0(int a1, int a2, int a3);
 signed int __fastcall sub_892A0(int a1, int a2, int a3, int a4, int a5, int a6, signed int a7);
@@ -1781,20 +1781,20 @@ signed int __fastcall sub_8ADE0(int a1, int a2, int a3);
 signed int __fastcall sub_8AE40(int a1, int a2, int a3);
 signed int sub_8AE70();
 signed int sub_8AE80();
-// int __usercall sub_8AED0@<eax>(long double a1@<st0>);
+// int __usercall BloadCommand@<eax>(long double a1@<st0>);
 signed int sub_8AF20();
-// void __usercall sub_8B0A0(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_8B180(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_8B270(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_8B3A0(int a1@<eax>, long double a2@<st0>);
-// long double __usercall sub_8B570@<st0>(long double result@<st0>);
-// int __usercall sub_8B6C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_8B730(); // weak
-// long double __usercall sub_8B7E0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// void __usercall sub_8B850(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_8B900(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_8BA30(int a1@<eax>, long double a2@<st0>);
-// bool __usercall sub_8BB60@<eax>(long double a1@<st0>);
+// void __usercall AdditionFunction(int a1@<eax>, long double a2@<st0>);
+// void __usercall MultiplicationFunction(int a1@<eax>, long double a2@<st0>);
+// void __usercall SubtractionFunction(int a1@<eax>, long double a2@<st0>);
+// void __usercall DivisionFunction(int a1@<eax>, long double a2@<st0>);
+// long double __usercall DivFunction@<st0>(long double result@<st0>);
+// int __usercall SetAutoFloatDividendCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetAutoFloatDividendCommand(); // weak
+// long double __usercall FloatFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// void __usercall AbsFunction(int a1@<eax>, long double a2@<st0>);
+// void __usercall MinFunction(int a1@<eax>, long double a2@<st0>);
+// void __usercall MaxFunction(int a1@<eax>, long double a2@<st0>);
+// bool __usercall BsaveCommand@<eax>(long double a1@<st0>);
 signed int __fastcall sub_8BBB0(int a1, int a2, int a3, int a4);
 int __fastcall sub_8BE30(int a1, int a2, int a3, int a4);
 int sub_8BF10();
@@ -1812,7 +1812,7 @@ int __fastcall sub_8C470(int a1);
 bool sub_8C490();
 // int __usercall sub_8C4D0@<eax>(int a1@<ecx>, long double a2@<st0>);
 // int __usercall sub_8C4F0@<eax>(int a1@<ebp>);
-// int __usercall sub_8C520@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDefclassCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 // signed int __usercall sub_8C540@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_8C580(int a1);
 int __fastcall sub_8C5A0(int result, int a2);
@@ -1820,25 +1820,25 @@ int __fastcall sub_8C5D0(int a1);
 int __fastcall sub_8C5F0(char a1, int a2);
 // signed int __usercall sub_8C610@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // signed int __usercall sub_8C650@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
-// int __usercall sub_8C690@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDefclassListFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
 signed int __fastcall sub_8C6E0(int a1, int a2);
 // signed int __usercall sub_8C730@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 signed int sub_8C7A0();
 void __fastcall sub_8C7D0(int a1, int a2);
-// int __usercall sub_8C840@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_8C8E0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall BrowseClassesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall DescribeClassCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 signed int __fastcall sub_8C950(int a1, int a2, int a3, int a4);
 int __fastcall sub_8CB70(int a1);
-// int __usercall sub_8CBD0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_8CBF0@<eax>(int a1@<edx>, long double a2@<st0>);
-// signed int __usercall sub_8CC50@<eax>(int a1@<edx>, long double a2@<st0>);
-// int __usercall sub_8CCA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_8CD70@<eax>(long double a1@<st0>);
-// int __usercall sub_8CE50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_8CEC0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_8CF40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_8CFB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_8D040@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall GetDefclassModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall SuperclassPCommand@<eax>(int a1@<edx>, long double a2@<st0>);
+// signed int __usercall SubclassPCommand@<eax>(int a1@<edx>, long double a2@<st0>);
+// int __usercall SlotExistPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall MessageHandlerExistPCommand@<eax>(long double a1@<st0>);
+// int __usercall SlotWritablePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SlotInitablePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SlotPublicPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SlotDirectAccessPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall ClassExistPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_8D090@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // int __usercall sub_8D130@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 int __fastcall sub_8D220(int a1, int a2, int a3);
@@ -1880,18 +1880,18 @@ void sub_8E8A0();
 unsigned int __fastcall sub_8E8C0(int a1);
 int sub_8E920();
 // int __usercall sub_8E980@<eax>(int result@<eax>, int a2@<ebp>);
-// signed int __usercall sub_8EA40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_8EAA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ClassAbstractPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ClassReactivePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_8EB00@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
-// signed int __usercall sub_8EBF0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_8EC70@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_8ECB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_8ED00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_8ED50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_8EDA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_8EDF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_8EE40@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_8EE90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall ClassSlotsCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ClassSubclassesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall GetDefmessageHandlersListCmd@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall SlotFacetsCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SlotSourcesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SlotTypesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SlotAllowedValuesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SlotRangeCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SlotCardinalityCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_8EEE0(int a1);
 signed int __fastcall sub_8EF20(int a1, int a2, int a3);
 int __fastcall sub_8EFE0(int a1, int a2, int a3);
@@ -1939,7 +1939,7 @@ signed int sub_928F0();
 // int __usercall sub_92930@<eax>(int result@<eax>, int a2@<ecx>, long double a3@<st0>);
 signed int sub_92BC0();
 int sub_92C30();
-// signed int __usercall sub_92C40@<eax>(long double a1@<st0>);
+// signed int __usercall ConstructsToCCommand@<eax>(long double a1@<st0>);
 signed int __fastcall sub_92D80(int a1, int a2, int a3);
 int __fastcall __spoils<ecx> sub_93030(int a1);
 int __fastcall sub_931D0(int a1);
@@ -1963,8 +1963,8 @@ int sub_943B0();
 int __fastcall sub_943C0(int result);
 int sub_943D0();
 int sub_943E0();
-signed int sub_94450();
-signed int sub_94480();
+signed int ClearCommand();
+signed int ResetCommand();
 void sub_944B0();
 signed int __fastcall sub_94590(int a1, int a2, int a3);
 signed int sub_94600();
@@ -1986,10 +1986,10 @@ unsigned int __fastcall sub_94C00(int a1);
 signed int __fastcall sub_94E70(int a1, int a2);
 int __fastcall sub_95160(int result);
 int __fastcall sub_951E0(int a1, int a2, int a3, int a4);
-// int __usercall sub_95270@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_952F0(); // weak
-// int __usercall sub_95320@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_953A0(); // weak
+// int __usercall SDCCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GDCCommand(); // weak
+// int __usercall SSCCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GSCCommand(); // weak
 int __fastcall sub_953D0(int a1);
 int sub_953F0();
 int sub_95420();
@@ -2004,8 +2004,8 @@ int __fastcall sub_95790(int a1, int a2);
 signed int __fastcall sub_957E0(int a1);
 signed int __fastcall sub_95880(int a1, int a2);
 int __fastcall sub_959E0(int a1);
-int sub_95A20(); // weak
-// int __usercall sub_95A50@<eax>(long double a1@<st0>);
+int GetStrategyCommand(); // weak
+// int __usercall SetStrategyCommand@<eax>(long double a1@<st0>);
 int __fastcall sub_95C80(int a1);
 int __fastcall sub_95CD0(int result, int a2);
 int __fastcall sub_95CF0(int result, int a2);
@@ -2110,11 +2110,11 @@ int __fastcall sub_9C110(int a1);
 int __fastcall sub_9C130(int a1);
 bool sub_9C150();
 // int __usercall sub_9C180@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9C1A0@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDefinstancesModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 signed int __fastcall sub_9C1C0(int a1);
 // int __usercall sub_9C220@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_9C240@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9C280@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDefinstancesCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDefinstancesListFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
 signed int __fastcall sub_9C2D0(int a1, int a2, int a3);
 int __fastcall sub_9C570(int a1, int a2);
 int __fastcall sub_9C660(int a1);
@@ -2144,12 +2144,12 @@ signed int sub_9D020();
 // void __usercall sub_9D050(int a1@<eax>, long double a2@<st0>);
 int sub_9D080(); // weak
 int __fastcall sub_9D140(int a1);
-// int __usercall sub_9D160@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall UndeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_9D180(int a1);
 // int __usercall sub_9D1A0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9D1F0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9D210@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_9D250@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall DeffactsModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int sub_9D290();
 signed int sub_9D2C0();
 signed int __fastcall sub_9D2E0(int a1, int a2, int a3, int a4, int a5);
@@ -2200,10 +2200,10 @@ int __fastcall sub_9E7D0(int a1);
 bool sub_9E7F0();
 int __fastcall sub_9E820(int result);
 // int __usercall sub_9E880@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9E8A0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9E8C0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_9E8E0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_9E920@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDeffunctionModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDeffunctionCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDeffunctionsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDeffunctionListFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_9E970(int result, int a2);
 void sub_9E9D0();
 // int __usercall sub_9E9E0@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
@@ -2256,65 +2256,65 @@ signed int sub_A05C0();
 int sub_A0AB0();
 int sub_A0B20();
 int sub_A0B90();
-// long double __usercall sub_A0C00@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0C40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0C80@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0DA0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0E30@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0EC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0F40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A0FC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1000@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1080@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1100@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1190@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A11D0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A1210@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A1250@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A12A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1370@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1440@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A14C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A1510@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A15A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A1630@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A16C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
-// long double __usercall sub_A1750@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1790@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1840@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A18F0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
-// long double __usercall sub_A1960@<st0>(long double a1@<st0>);
-// void __usercall sub_A1AE0(int a1@<eax>, long double a2@<st0>);
-long double sub_A1CD0();
-// long double __usercall sub_A1D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1D60@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1DB0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// long double __usercall sub_A1DF0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_A1E30@<eax>(int a1@<ecx>, long double a2@<st0>);
+// long double __usercall CosFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall SinFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall TanFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall SecFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall CscFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall CotFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AcosFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AsinFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AtanFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AsecFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AcscFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AcotFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall CoshFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall SinhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall TanhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall SechFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall CschFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall CothFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AcoshFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall AsinhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall AtanhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall AsechFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall AcschFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall AcothFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>);
+// long double __usercall ExpFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall LogFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall Log10Function@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall SqrtFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
+// long double __usercall PowFunction@<st0>(long double a1@<st0>);
+// void __usercall ModFunction(int a1@<eax>, long double a2@<st0>);
+long double PiFunction();
+// long double __usercall DegRadFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall RadDegFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall DegGradFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// long double __usercall GradDegFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall __spoils<ecx,st0> RoundFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
 // int __usercall sub_A2000@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 int sub_A2670();
 int __fastcall sub_A26D0(int a1);
 int sub_A27F0();
 int __fastcall sub_A2840(int a1);
-signed int sub_A2920();
+signed int ClearFocusStackCommand();
 int sub_A2960();
 int sub_A2A00();
-// void __usercall sub_A2A50(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-signed int sub_A2AB0();
+// void __usercall RunCommand(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+signed int HaltCommand();
 int __fastcall sub_A2AE0(int result);
 int sub_A2B40();
 int __fastcall sub_A2BC0(int a1);
-// signed int __usercall sub_A2BE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_A2C50@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_A2D30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-signed int sub_A2DB0();
+// signed int __usercall SetBreakCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall __spoils<ecx,st0> RemoveBreakCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ShowBreaksCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+signed int ListFocusStackCommand();
 signed int __fastcall sub_A2DE0(signed int result);
-signed int sub_A2E30();
+signed int GetFocusStackFunction();
 signed int __fastcall __spoils<ecx> sub_A2E60(int a1);
-int sub_A2F00(); // weak
-int sub_A2F40(); // weak
-// signed int __usercall __spoils<ecx,st0> sub_A2FA0@<eax>(int a1@<ecx>, long double a2@<st0>);
+int PopFocusFunction(); // weak
+int GetFocusFunction(); // weak
+// signed int __usercall __spoils<ecx,st0> FocusCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 // int __usercall sub_A30B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_A33E0(int result, int a2);
 int __fastcall sub_A3420(int result);
@@ -2332,7 +2332,7 @@ int __fastcall sub_A3700(int a1);
 int __fastcall sub_A3790(int result, int a2);
 signed int __fastcall sub_A39B0(int a1);
 int __fastcall sub_A3A70(int a1, int a2, int a3);
-signed int sub_A3AD0();
+unsigned int sub_A3AD0();
 int sub_A3B20();
 int __fastcall sub_A3BC0(int result, int a2, int a3, int a4);
 void __fastcall sub_A3C00(int a1);
@@ -2376,7 +2376,7 @@ signed int __fastcall sub_A5530(int a1, int a2, int a3, int a4);
 int __fastcall sub_A55F0(int a1, int a2, int a3, int a4);
 int __fastcall sub_A5690(int a1, int a2, signed int a3);
 int __fastcall sub_A57B0(int a1);
-int sub_A57D0(); // weak
+int GetSequenceOperatorRecognition(); // weak
 int __fastcall sub_A57E0(int result, int a2);
 signed int __fastcall sub_A58F0(int a1, int a2, int a3, int a4);
 signed int __fastcall registerClipsCallback(int a1, int a2, int a3, int a4, int a5);
@@ -2386,7 +2386,7 @@ int __fastcall sub_A5BB0(char a1);
 signed int __fastcall sub_A5C50(int a1, int a2);
 int sub_A5CD0();
 _DWORD *__fastcall __spoils<ecx> sub_A5D60(int a1);
-unsigned int __fastcall sub_A5DF0(int a1);
+int __fastcall sub_A5DF0(int a1);
 signed int sub_A5E90();
 int __spoils<ecx> sub_A5ED0();
 int __fastcall sub_A5F50(int result, int a2, int a3);
@@ -2413,29 +2413,29 @@ int __fastcall sub_A6DA0(int a1, int a2, int a3, signed int a4);
 int __fastcall sub_A6F50(int a1, int a2, int a3, signed int a4);
 signed int sub_A6FB0();
 // int __usercall sub_A7110@<eax>(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_A7260(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// int __usercall sub_A7380@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_A73F0(); // weak
-// signed int __usercall sub_A7420@<eax>(int a1@<edx>, long double a2@<st0>);
-// void __usercall sub_A7490(long double a1@<st0>);
+// void __usercall RetractCommand(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// int __usercall SetFactDuplicationCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetFactDuplicationCommand(); // weak
+// signed int __usercall FactIndexFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// void __usercall FactsCommand(long double a1@<st0>);
 int __fastcall sub_A7610(int a1, int a2, int a3, int a4, int a5);
 // signed int __usercall sub_A76F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_A7760@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// int __usercall sub_A77E0@<eax>(long double a1@<st0>);
-// signed int __usercall sub_A78E0@<eax>(long double a1@<st0>);
+// signed int __usercall AssertStringFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall SaveFactsCommand@<eax>(long double a1@<st0>);
+// signed int __usercall LoadFactsCommand@<eax>(long double a1@<st0>);
 // signed int __usercall sub_A7930@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // int __usercall sub_A7AE0@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 // bool __usercall sub_A7D00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_A7DB0(int a1, int a2, int a3, int a4);
 int __fastcall sub_A7E70(int a1, int a2, int a3, int a4);
 signed int sub_A7ED0();
-// int __usercall sub_A7F80@<eax>(long double a1@<st0>);
-// int __usercall __spoils<ecx,st0> sub_A7FE0@<eax>(long double a1@<st0>);
-// signed int __usercall sub_A8050@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall FactRelationFunction@<eax>(long double a1@<st0>);
+// int __usercall __spoils<ecx,st0> FactExistpFunction@<eax>(long double a1@<st0>);
+// signed int __usercall FactSlotValueFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_A80D0(int a1, int a2, int a3);
-// int __usercall sub_A8180@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall FactSlotNamesFunction@<eax>(int a1@<eax>, long double a2@<st0>);
 int __fastcall sub_A81E0(int a1, int a2);
-// int __usercall sub_A82A0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall GetFactListFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 int __fastcall sub_A8370(int a1);
 // int __usercall sub_A8450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 int sub_A84F0();
@@ -2528,26 +2528,26 @@ int sub_AC760();
 int __fastcall sub_AC7A0(int result);
 int __fastcall sub_AC880(int a1);
 signed int sub_AC8E0();
-// int __usercall sub_AC930@<eax>(long double a1@<st0>);
+// int __usercall DribbleOnCommand@<eax>(long double a1@<st0>);
 signed int __fastcall sub_AC980(int a1);
-signed int sub_ACA40();
+signed int DribbleOffCommand();
 signed int sub_ACA70();
 bool __fastcall sub_ACB30(int a1);
 int __fastcall sub_ACB60(int a1);
 int __fastcall sub_ACB80(int a1, int a2);
 int __fastcall sub_ACD00(int a1);
 signed int sub_ACD60();
-// int __usercall sub_ACD80@<eax>(long double a1@<st0>);
+// int __usercall BatchCommand@<eax>(long double a1@<st0>);
 signed int __fastcall sub_ACDF0(int a1, int a2);
 signed int __fastcall sub_ACEE0(int a1, int a2, int a3, int a4);
 signed int sub_ACF90();
 bool sub_AD080();
 signed int sub_AD0A0();
-// int __usercall sub_AD110@<eax>(long double a1@<st0>);
+// int __usercall BatchStarCommand@<eax>(long double a1@<st0>);
 // signed int __usercall sub_AD160@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall __spoils<ecx,st0> sub_AD270@<eax>(long double a1@<st0>);
-// int __usercall __spoils<ecx,st0> sub_AD2F0@<eax>(long double a1@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_AD360@<eax>(long double a1@<st0>);
+// int __usercall __spoils<ecx,st0> LoadCommand@<eax>(long double a1@<st0>);
+// int __usercall __spoils<ecx,st0> LoadStarCommand@<eax>(long double a1@<st0>);
+// signed int __usercall __spoils<ecx,st0> SaveCommand@<eax>(long double a1@<st0>);
 signed int sub_AD3C0();
 int __fastcall sub_AD400(int a1);
 bool __fastcall sub_AD4E0(int a1);
@@ -2607,25 +2607,25 @@ int __fastcall sub_AFA80(int a1);
 int __fastcall sub_AFAA0(int a1);
 int __fastcall sub_AFAD0(int a1);
 int __fastcall sub_AFB00(int a1);
-unsigned int __fastcall sub_AFB20(int a1, int a2);
+int __fastcall sub_AFB20(int a1, int a2);
 bool sub_AFB70();
 // int __usercall sub_AFBF0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_AFC10@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_AFC30@<eax>(int a1@<ecx>, long double a2@<st0>);
-bool __fastcall sub_AFDB0(int a1);
+// int __usercall GetDefgenericModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall __spoils<ecx,st0> UndefmethodCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+signed int __fastcall sub_AFDB0(int a1);
 signed int __fastcall sub_AFE20(int a1, int a2);
 int __fastcall sub_AFF90(int a1);
 int __fastcall sub_AFFA0(int result, int a2);
-unsigned int __fastcall sub_AFFE0(char a1, int a2, int a3);
-// int __usercall sub_B0030@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_B0050@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_B0100@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
-// signed int __usercall sub_B01A0@<eax>(int a1@<ecx>, long double a2@<st0>);
+int __fastcall sub_AFFE0(char a1, int a2, int a3);
+// int __usercall PPDefgenericCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDefmethodCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall ListDefmethodsCommand@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
+// signed int __usercall ListDefgenericsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_B01E0(int a1, int a2, int a3, int a4);
-// int __usercall sub_B0260@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_B02B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall GetDefgenericListFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall GetDefmethodListCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 signed int __fastcall sub_B0330(int a1, int a2);
-// signed int __usercall sub_B0450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall GetMethodRestrictionsCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_B0520(int a1, int a2);
 void sub_B0730();
 // int __usercall sub_B0740@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
@@ -2646,7 +2646,7 @@ signed int __fastcall sub_B0D60(int a1, int a2, int a3, int a4);
 signed int sub_B1120();
 // int __usercall sub_B1190@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_B1360@<eax>(long double a1@<st0>);
-// int __usercall sub_B13A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall CallNextMethod@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 // signed int __usercall sub_B14C0@<eax>(int a1@<eax>, long double a2@<st0>);
 // void __usercall sub_B1590(int result@<eax>, long double a2@<st0>);
 int __fastcall sub_B1610(int result);
@@ -2664,8 +2664,8 @@ int sub_B1C60();
 signed int sub_B1CE0();
 int __fastcall sub_B1D40(int a1, int a2, int a3);
 signed int __fastcall sub_B1E10(int a1);
-unsigned int __fastcall sub_B1E60(int a1, int a2);
-// signed int __usercall sub_B1EB0@<eax>(long double a1@<st0>);
+signed int __fastcall sub_B1E60(int a1, int a2);
+// signed int __usercall PreviewGeneric@<eax>(long double a1@<st0>);
 int __fastcall sub_B2010(int a1, int a2, int a3);
 int __fastcall sub_B21D0(int a1, int a2);
 signed int __fastcall sub_B2260(int a1, int a2, int a3);
@@ -2675,7 +2675,7 @@ int __fastcall sub_B25B0(int a1, int a2, int a3);
 int __fastcall sub_B2940(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11);
 void __fastcall sub_B2C00(int a1, int a2);
 int __fastcall sub_B2C70(int result);
-unsigned int __fastcall sub_B2CF0(int a1, int a2, int a3, int a4, int a5);
+int __fastcall sub_B2CF0(int a1, int a2, int a3, int a4, int a5);
 signed int __fastcall sub_B2D90(int a1);
 signed int __fastcall sub_B2F20(int a1);
 int __fastcall sub_B2F80(int a1, int a2);
@@ -2704,12 +2704,12 @@ int sub_B41D0();
 int sub_B42D0(); // weak
 // int __usercall sub_B4310@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
 int __fastcall sub_B4360(int a1);
-// int __usercall sub_B4380@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall UndefglobalCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_B43A0(int a1);
 // int __usercall sub_B43C0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_B4410@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_B4430@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_B4470@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall DefglobalModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDefglobalCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDefglobalsCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_B44B0(int a1);
 int __fastcall sub_B44D0(char a1, int a2);
 // signed int __usercall sub_B44F0@<eax>(int a1@<edx>, int a2@<ebx>, long double a3@<st0>);
@@ -2724,10 +2724,10 @@ int __fastcall sub_B4850(int a1, int a2, int a3, int a4, signed int a5);
 int __fastcall sub_B4910(int a1, signed int a2, int a3, signed int a4);
 int __fastcall sub_B4950(int a1, int a2, int a3, signed int a4);
 signed int sub_B49B0();
-// int __usercall sub_B4A20@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_B4AC0(); // weak
+// int __usercall SetResetGlobalsCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetResetGlobalsCommand(); // weak
 int sub_B4AF0();
-// signed int __usercall sub_B4B00@<eax>(int a1@<edx>, long double a2@<st0>);
+// signed int __usercall ShowDefglobalsCommand@<eax>(int a1@<edx>, long double a2@<st0>);
 int __fastcall sub_B4B60(int result, int a2);
 int __fastcall sub_B4C10(int a1);
 signed int sub_B4C50();
@@ -2756,8 +2756,8 @@ int __fastcall sub_B6020(int result, int a2);
 // signed int __usercall sub_B60B0@<eax>(signed int result@<eax>, long double a2@<st0>);
 // signed int __usercall sub_B6140@<eax>(signed int result@<eax>, long double a2@<st0>);
 int sub_B61D0();
-// int __usercall sub_B6220@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_B62F0(); // weak
+// int __usercall SetIncrementalResetCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetIncrementalResetCommand(); // weak
 int __fastcall sub_B6320(int a1, int a2);
 int __fastcall sub_B6610(int a1, int a2);
 int __fastcall sub_B6940(int a1, int a2);
@@ -2768,8 +2768,8 @@ signed int __fastcall sub_B6C90(int a1, int a2, int a3);
 signed int sub_B6CE0();
 // signed int __usercall sub_B6F90@<eax>(int a1@<eax>, long double a2@<st0>);
 // signed int __usercall sub_B7000@<eax>(int a1@<eax>, long double a2@<st0>);
-// void __usercall sub_B70C0(long double a1@<st0>);
-signed int sub_B7250();
+// void __usercall InstancesCommand(long double a1@<st0>);
+signed int PPInstanceCommand();
 void __fastcall sub_B72A0(int a1, int a2, int a3);
 // signed int __usercall sub_B7370@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_B7510(int a1, int a2, int a3);
@@ -2779,28 +2779,28 @@ int sub_B7690();
 int __fastcall sub_B76A0(int a1);
 int __fastcall sub_B76D0(int a1);
 int __fastcall sub_B7720(int a1, int a2);
-// int __usercall sub_B77A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// signed int __usercall sub_B78B0@<eax>(long double a1@<st0>);
-// signed int __usercall sub_B78E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_B79E0@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_B7A30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// void __usercall sub_B7A70(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_B7C20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// bool __usercall sub_B7CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// bool __usercall sub_B7CF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// bool __usercall sub_B7D20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// bool __usercall sub_B7D60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// int __usercall ClassCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// signed int __usercall DeleteInstanceCommand@<eax>(long double a1@<st0>);
+// signed int __usercall UnmakeInstanceCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// signed int __usercall __spoils<ecx,st0> SymbolToInstanceName@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall InstanceNameToSymbol@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// void __usercall InstanceAddressCommand(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall InstanceNameCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// bool __usercall InstanceAddressPCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// bool __usercall InstanceNamePCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// bool __usercall InstancePCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// bool __usercall InstanceExistPCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
 int __fastcall sub_B7DF0(signed int a1, int a2, int a3, int a4, int a5);
 int __fastcall sub_B7EB0(signed int a1, int a2, int a3, int a4, int a5);
 signed int __fastcall sub_B7FA0(int a1, int a2, int a3);
 signed int sub_B80B0();
-// signed int __usercall sub_B8160@<eax>(long double a1@<st0>);
-// signed int __usercall sub_B8180@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_B8200@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_B8280@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall SaveInstancesCommand@<eax>(long double a1@<st0>);
+// signed int __usercall LoadInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall RestoreInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall BinaryLoadInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_B82E0@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 // int __usercall sub_B8400@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
-// signed int __usercall sub_B8570@<eax>(long double a1@<st0>);
+// signed int __usercall BinarySaveInstancesCommand@<eax>(long double a1@<st0>);
 // int __usercall sub_B8590@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 // signed int __usercall sub_B8720@<eax>(int a1@<eax>, int (*a2)(void)@<edx>, long double a3@<st0>);
 // int __usercall sub_B8870@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
@@ -2847,8 +2847,8 @@ signed int __fastcall sub_BA9A0(int a1, void **a2);
 int __fastcall sub_BAB60(int result);
 int __fastcall sub_BAC10(int result, int a2);
 // unsigned int __usercall sub_BAC90@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_BACB0@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int a4@<ebx>);
-// void __usercall sub_BAD10(int a1@<eax>, int a2@<ecx>, long double a3@<st0>, int a4@<ebx>, int a5@<edx>);
+// int __usercall InitializeInstanceCommand@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int a4@<ebx>);
+// void __usercall MakeInstanceCommand(int a1@<eax>, int a2@<ecx>, long double a3@<st0>, int a4@<ebx>, int a5@<edx>);
 int __fastcall sub_BAE70(int a1);
 // int __usercall sub_BAF20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // signed int __usercall sub_BB310@<eax>(int a1@<eax>, long double a2@<st0>);
@@ -2864,28 +2864,28 @@ int __fastcall sub_BB820(char a1);
 // void __usercall sub_BBC80(int a1@<eax>, __int16 a2@<cx>, long double a3@<st0>, int a4@<ebx>);
 signed int __fastcall sub_BBE10(int a1);
 signed int sub_BBE50();
-// int __usercall sub_BC020@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_BC110@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_BC200@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_BC360@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_BC4C0@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall ModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall MsgModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall DuplicateInstance@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall MsgDuplicateInstance@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall InactiveModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_BC4F0@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_BC520@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_BC550@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_BC580@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_BC5A0@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall DirectDuplicateMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall MsgDuplicateMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>);
 // signed int __usercall sub_BC5C0@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_BC5E0@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall MsgModifyMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_BC600@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // void __usercall sub_BC780(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 // void __usercall sub_BC950(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
 signed int sub_BCD70();
-// int __usercall sub_BCEF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// int __usercall sub_BCFE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// int __usercall sub_BD0C0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_BD1B0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_BD280@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_BD350@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall MVSlotReplaceCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall MVSlotInsertCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall MVSlotDeleteCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall DirectMVReplaceCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall DirectMVInsertCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall DirectMVDeleteCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_BD420@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 // int __userpurge sub_BD4B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>, int a6, int a7, int a8);
 int __fastcall sub_BD6E0(int a1);
@@ -2893,9 +2893,9 @@ int __fastcall sub_BDAA0(int a1, int a2, int a3);
 int __fastcall sub_BDBA0(int a1, int a2, int a3, int a4);
 signed int __fastcall sub_BDE00(int a1);
 signed int sub_BDEA0();
-int sub_BE000(); // weak
-// void __usercall sub_BE060(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// int __usercall sub_BE160@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetQueryInstance(); // weak
+// void __usercall GetQueryInstanceSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// int __usercall AnyInstances@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // int __usercall sub_BE290@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 // int __usercall sub_BE440@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 // int __usercall sub_BE680@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
@@ -2920,17 +2920,17 @@ int __fastcall sub_BFD60(int a1, int a2, int a3, signed int a4);
 int __fastcall sub_BFE60(int a1, int a2, int a3, signed int a4);
 signed int __fastcall sub_BFFC0(int a1);
 signed int sub_C0030();
-// void __usercall sub_C0140(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
-// int __usercall sub_C0330@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// void __usercall PrintoutFunction(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
+// int __usercall ReadFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 int __fastcall sub_C04C0(int result);
-// int __usercall sub_C05C0@<eax>(long double a1@<st0>);
-// signed int __usercall sub_C0770@<eax>(long double a1@<st0>);
-// int __usercall sub_C07F0@<eax>(long double a1@<st0>);
-// int __usercall sub_C0840@<eax>(long double a1@<st0>);
+// int __usercall OpenFunction@<eax>(long double a1@<st0>);
+// signed int __usercall CloseFunction@<eax>(long double a1@<st0>);
+// int __usercall RemoveFunction@<eax>(long double a1@<st0>);
+// int __usercall RenameFunction@<eax>(long double a1@<st0>);
 // signed int __usercall sub_C0BD0@<eax>(int a1@<eax>, long double a2@<st0>);
 char __fastcall sub_C0C80(int a1, int a2, int a3, int a4);
 // signed int __usercall sub_C0DE0@<eax>(const char *a1@<eax>, int a2@<edx>, unsigned int a3@<ebx>, long double a4@<st0>, int a5@<ecx>);
-// int __usercall sub_C1050@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall ReadlineFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 signed int __fastcall sub_C11B0(int a1, int *a2, unsigned int a3);
 signed int sub_C1230();
 int __fastcall sub_C1280(int a1, int a2);
@@ -2943,8 +2943,8 @@ int sub_C15E0();
 signed int __fastcall sub_C1650(signed int result);
 signed int __fastcall sub_C16B0(int a1, int a2, int a3, int a4);
 signed int __fastcall sub_C1760(int a1, int a2);
-// signed int __usercall sub_C17A0@<eax>(int a1@<edx>, long double a2@<st0>);
-// int __usercall sub_C17E0@<eax>(int a1@<edx>, long double a2@<st0>);
+// signed int __usercall DependenciesCommand@<eax>(int a1@<edx>, long double a2@<st0>);
+// int __usercall DependentsCommand@<eax>(int a1@<edx>, long double a2@<st0>);
 // int __usercall sub_C1820@<eax>(int a1@<eax>, int a2@<ecx>, long double a3@<st0>);
 signed int __fastcall sub_C18E0(int a1, int a2, int a3);
 signed int sub_C1970();
@@ -2972,25 +2972,25 @@ int __fastcall sub_C22D0(int a1, int a2);
 int sub_C2480();
 signed int sub_C24D0();
 signed int sub_C24F0();
-// int __usercall sub_C27C0@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_C27F0@<eax>(int a1@<ecx>, long double a2@<st0>);
-int __fastcall sub_C2880(int a1, int a2);
-int __fastcall sub_C28D0(int a1, int a2);
-int sub_C2930(); // weak
-// signed int __usercall sub_C2960@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_C29B0@<eax>(int a1@<edx>, long double a2@<st0>);
-int sub_C2A40(); // weak
-// signed int __usercall sub_C2A80@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-int sub_C2B10(); // weak
-int sub_C2B40(); // weak
-// signed int __usercall sub_C2B70@<eax>(long double a1@<st0>);
-signed int sub_C2C10();
-// void __usercall sub_C30D0(int a1@<eax>, long double a2@<st0>);
-signed int __fastcall sub_C3200(int a1);
+// int __usercall CreateFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall __spoils<ecx,st0> SetgenFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+int __fastcall GensymFunction(int a1, int a2);
+int __fastcall GensymStarFunction(int a1, int a2);
+int RandomFunction(); // weak
+// signed int __usercall SeedFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall LengthFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+int ReleaseMemCommand(); // weak
+// signed int __usercall ConserveMemCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int MemUsedCommand(); // weak
+int MemRequestsCommand(); // weak
+// signed int __usercall AproposCommand@<eax>(long double a1@<st0>);
+signed int OptionsCommand();
+// void __usercall ExpandFuncCall(int a1@<eax>, long double a2@<st0>);
+signed int __fastcall DummyExpandFuncMultifield(int a1);
 // int __usercall sub_C3250@<eax>(int result@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 int sub_C3430();
-// int __usercall sub_C3450@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_C34A0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall SetSORCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall GetFunctionRestrictions@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 signed int sub_C3540();
 int __fastcall sub_C35B0(int result, int a2, int a3, int a4);
 int __fastcall sub_C3600(int result, int a2);
@@ -3006,9 +3006,9 @@ int sub_C3EC0();
 int __fastcall sub_C3F60(int a1, int a2, int a3);
 int __spoils<ecx> sub_C3F90();
 signed int __fastcall sub_C3FF0(int a1);
-// int __usercall sub_C4010@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDefmoduleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 signed int __fastcall sub_C4040(int a1);
-signed int sub_C4090();
+signed int ListDefmodulesCommand();
 int __fastcall sub_C40C0(int a1);
 int sub_C4120();
 int __spoils<ecx> sub_C4160();
@@ -3035,8 +3035,8 @@ int __fastcall sub_C4D60(int a1);
 void __fastcall sub_C4D70(int a1, int a2, int a3);
 int __fastcall sub_C4DB0(int result, int a2, int a3);
 int __fastcall sub_C4F30(int a1);
-int sub_C4F70(); // weak
-// int __usercall sub_C4FB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+int GetCurrentModuleCommand(); // weak
+// int __usercall SetCurrentModuleCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 signed int sub_C50C0();
 int sub_C50F0();
 int __fastcall sub_C5100(int result);
@@ -3063,10 +3063,10 @@ int sub_C63B0();
 int __fastcall sub_C6630(int a1, int a2);
 int __fastcall sub_C6690(int a1, int a2);
 int __fastcall sub_C66F0(char a1, int a2, int a3);
-// void __usercall sub_C67C0(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
-// void __usercall sub_C69A0(long double a1@<st0>);
-// int __usercall sub_C6B50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_C6BA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// void __usercall UndefmessageHandlerCommand(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
+// void __usercall PPDefmessageHandlerCommand(long double a1@<st0>);
+// int __usercall ListDefmessageHandlersCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall PreviewSendCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 int __fastcall sub_C6C30(int a1, int a2);
 int __fastcall sub_C6C50(int a1, int a2, int a3, int a4);
 int __fastcall sub_C6CF0(int a1, int a2, int a3);
@@ -3103,9 +3103,9 @@ int __fastcall sub_C85C0(int a1, int *a2, int a3);
 signed int __fastcall sub_C8640(int a1, int *a2, int a3, int a4);
 // int __usercall sub_C8690@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>);
 int __fastcall sub_C8790(int result);
-// signed int __usercall sub_C87E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SendCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_C8870(int a1);
-bool sub_C88A0();
+bool NextHandlerAvailable();
 // void __usercall sub_C8900(int a1@<eax>, long double a2@<st0>);
 int __fastcall sub_C8B40(int a1, int a2, int a3, int a4);
 int __fastcall sub_C8CF0(int a1, int a2, int a3);
@@ -3113,8 +3113,8 @@ void sub_C8D60();
 signed int __fastcall sub_C8D70(int a1, int a2);
 void sub_C8E40();
 // signed int __usercall sub_C8E50@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>);
-// void __usercall sub_C8F60(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// void __usercall sub_C9080(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
+// void __usercall DynamicHandlerGetSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// void __usercall DynamicHandlerPutSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 // int __usercall sub_C9210@<eax>(int a1@<eax>, signed int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
 int __fastcall sub_C95D0(int a1, int a2);
 // void __usercall sub_C9630(long double a1@<st0>, int a2@<ebx>);
@@ -3141,26 +3141,26 @@ int __fastcall sub_CAA10(int result, int a2, int a3, int a4, int a5);
 signed int __fastcall sub_CAD10(int a1, int a2);
 int __fastcall sub_CADB0(int a1, int a2);
 signed int sub_CAE40();
-// signed int __usercall sub_CB100@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CB1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CB220@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CB300@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CB3A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CB450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// int __usercall sub_CB510@<eax>(long double a1@<st0>);
-// signed int __usercall sub_CB7C0@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_CB8E0@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall sub_CB9F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CBA60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// int __usercall sub_CBAD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_CBBE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// signed int __usercall sub_CBC90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall DeleteFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall MVDeleteFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall ReplaceFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall MVReplaceFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall InsertFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall ExplodeFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall ImplodeFunction@<eax>(long double a1@<st0>);
+// signed int __usercall SubseqFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall MVSubseqFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall FirstFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall RestFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// int __usercall NthFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall SubsetpFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall MemberFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 int __fastcall sub_CBD70(int a1, int a2, int a3);
 int __fastcall sub_CBDE0(int a1, int a2, int a3);
 int __fastcall sub_CC040(int a1, int a2, signed int a3);
-// int __usercall sub_CC140@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall MultifieldPrognFunction@<eax>(int a1@<eax>, long double a2@<st0>);
 int __fastcall sub_CC2B0(int a1);
-int sub_CC2F0(); // weak
+int GetMvPrognIndex(); // weak
 signed int __fastcall sub_CC320(int a1, int a2, int a3, int a4, int a5, int a6);
 signed int __fastcall sub_CC520(int a1, int a2, int a3, int a4, int a5);
 signed int __fastcall sub_CC770(int a1, int a2, int a3);
@@ -3299,7 +3299,7 @@ signed int __fastcall sub_D3D30(int a1, int a2);
 int __fastcall sub_D3D90(int a1, int a2, int a3);
 signed int __fastcall sub_D4050(int a1);
 signed int __fastcall sub_D40B0(int a1, int a2, int a3);
-// void __usercall sub_D47F0(int a1@<eax>, long double a2@<st0>);
+// void __usercall ObjectMatchDelay(int a1@<eax>, long double a2@<st0>);
 // int __usercall sub_D48A0@<eax>(int a1@<eax>, long double a2@<st0>);
 int sub_D48F0();
 int sub_D4900();
@@ -3364,17 +3364,17 @@ signed int __fastcall sub_D7690(int a1, int a2);
 signed int __fastcall sub_D7980(int a1, int (__fastcall *a2)(_DWORD, _DWORD, _DWORD), int a3);
 int __fastcall sub_D7A10(int result);
 signed int sub_D7A70();
-// int __usercall sub_D7BD0@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_D7CE0@<eax>(int a1@<eax>, long double a2@<st0>);
-int sub_D7EC0(); // weak
-// signed int __usercall __spoils<ecx,st0> sub_D7EF0@<eax>(long double a1@<st0>);
-// int __usercall sub_D7FA0@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
+// int __usercall WhileFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall LoopForCountFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+int GetLoopCount(); // weak
+// signed int __usercall __spoils<ecx,st0> IfFunction@<eax>(long double a1@<st0>);
+// int __usercall BindFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 signed int __fastcall sub_D8120(int a1, int a2);
 int sub_D8170();
-// int __usercall sub_D8190@<eax>(long double a1@<st0>);
-// int __usercall sub_D8200@<eax>(long double a1@<st0>);
-void sub_D8240();
-// void __usercall sub_D8260(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// int __usercall PrognFunction@<eax>(long double a1@<st0>);
+// int __usercall ReturnFunction@<eax>(long double a1@<st0>);
+void BreakFunction();
+// void __usercall SwitchFunction(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
 signed int sub_D8340();
 int sub_D83D0();
 int __fastcall sub_D83E0(int result);
@@ -3395,27 +3395,27 @@ int sub_D92C0();
 signed int __fastcall sub_D92E0(int a1, int a2);
 int __fastcall sub_D9380(int a1);
 signed int sub_D9400();
-// int __usercall sub_D96F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// signed int __usercall sub_D9780@<eax>(long double a1@<st0>);
-// bool __usercall sub_D9810@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D9860@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D98B0@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D9900@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D9950@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D99A0@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D99F0@<eax>(int a1@<edx>, long double a2@<st0>);
-// bool __usercall sub_D9A40@<eax>(int a1@<edx>, long double a2@<st0>);
-// int __usercall __spoils<ecx,st0> sub_D9A90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// int __usercall sub_D9AE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// signed int __usercall sub_D9B50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
-// long double __usercall sub_D9BB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// long double __usercall sub_D9CB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// long double __usercall sub_D9DB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// long double __usercall sub_D9EB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// long double __usercall sub_D9FB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// long double __usercall sub_DA0A0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
-// int __usercall __spoils<ecx,st0> sub_DA190@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall __spoils<ecx,st0> sub_DA200@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall EqFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// signed int __usercall NeqFunction@<eax>(long double a1@<st0>);
+// bool __usercall StringpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall SymbolpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall LexemepFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall NumberpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall FloatpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall IntegerpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall MultifieldpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// bool __usercall PointerpFunction@<eax>(int a1@<edx>, long double a2@<st0>);
+// int __usercall __spoils<ecx,st0> NotFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// int __usercall AndFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// signed int __usercall OrFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
+// long double __usercall LessThanOrEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// long double __usercall GreaterThanOrEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// long double __usercall LessThanFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// long double __usercall GreaterThanFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// long double __usercall NumericEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// long double __usercall NumericNotEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>);
+// int __usercall __spoils<ecx,st0> OddpFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall __spoils<ecx,st0> EvenpFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
 void __fastcall sub_DA270(int a1, int a2);
 signed int __fastcall sub_DA2D0(int a1, int a2, int a3, int a4, int a5, int a6);
 signed int __fastcall sub_DA300(int a1, int a2);
@@ -3477,7 +3477,7 @@ signed int sub_DCD30();
 signed int __fastcall sub_DCD70(int a1, int a2);
 int __fastcall __spoils<ecx> sub_DCE00(int a1);
 int __fastcall sub_DCEC0(int a1, int a2);
-signed int sub_DCF30();
+signed int ExitCommand();
 int __fastcall sub_DCF60(int result);
 signed int __fastcall sub_DCFE0(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
 signed int __fastcall sub_DD0B0(int a1);
@@ -3516,12 +3516,12 @@ int sub_DE890(); // weak
 int sub_DE8C0(); // weak
 int sub_DE900(); // weak
 int __fastcall sub_DE920(int a1);
-// int __usercall sub_DE940@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall UndefruleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_DE960(int a1);
-// int __usercall sub_DE980@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_DE9D0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_DE9F0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_DEA30@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall GetDefruleListFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall DefruleModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDefruleCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDefrulesCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 signed int __fastcall sub_DEA70(signed int result);
 signed int __fastcall sub_DEAA0(signed int result);
 int __fastcall sub_DEAD0(char a1, int a2);
@@ -3537,7 +3537,7 @@ int __fastcall sub_DEFA0(int a1, int a2, int a3, int a4, signed int a5);
 int __fastcall sub_DF160(int a1, int a2, int a3, signed int a4);
 int __fastcall sub_DF440(int a1, signed int a2, int a3, signed int a4);
 signed int sub_DF480();
-// int __usercall __spoils<ecx,st0> sub_DF6B0@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall __spoils<ecx,st0> MatchesCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_DF6F0(int a1);
 int __fastcall sub_DF9A0(int a1);
 signed int __fastcall sub_DF9E0(int a1, int a2, int a3);
@@ -3589,18 +3589,18 @@ int __fastcall sub_E2520(int a1, int a2, int a3, int a4);
 int __fastcall sub_E25D0(int a1, int a2, int a3);
 int __fastcall sub_E2C00(int result, int a2);
 signed int sub_E2C20();
-// signed int __usercall sub_E2D60@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
-// signed int __usercall sub_E2D80@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
+// signed int __usercall StrCatFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
+// signed int __usercall SymCatFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 // signed int __usercall sub_E2DC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>);
-// signed int __usercall sub_E2F40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
-// int __usercall sub_E2FA0@<eax>(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_E30B0@<eax>(int a1@<eax>, long double a2@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_E31C0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_E32C0@<eax>(long double a1@<st0>);
-// void __usercall sub_E3480(int a1@<eax>, long double a2@<st0>);
-// int __usercall sub_E3580@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall StrLengthFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// int __usercall UpcaseFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall LowcaseFunction@<eax>(int a1@<eax>, long double a2@<st0>);
+// signed int __usercall __spoils<ecx,st0> StrCompareFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall SubStringFunction@<eax>(long double a1@<st0>);
+// void __usercall StrIndexFunction(int a1@<eax>, long double a2@<st0>);
+// int __usercall EvalFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
 // bool __usercall sub_E3610@<eax>(int a1@<edx>, long double a2@<st0>);
-// signed int __usercall sub_E3820@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall BuildFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 signed int __fastcall __spoils<ecx> sub_E3880(int a1, int a2, int a3, int a4);
 signed int sub_E3970();
 signed int __fastcall sub_E39B0(int a1);
@@ -3642,7 +3642,7 @@ int __fastcall sub_E58E0(signed int a1);
 int __fastcall __spoils<ecx> sub_E59C0(signed int a1);
 int __fastcall sub_E5A00(int a1, unsigned int a2);
 void sub_E5B40();
-unsigned int __fastcall sub_E5C40(int a1, unsigned int a2);
+int __fastcall sub_E5C40(int a1, unsigned int a2);
 unsigned int __fastcall sub_E5D70(int a1, unsigned int a2, unsigned int a3);
 int __fastcall sub_E5E10(int result);
 int __fastcall sub_E5E90(int result);
@@ -3662,8 +3662,8 @@ int __fastcall sub_E6620(int a1, int a2);
 int __fastcall sub_E66B0(int a1);
 int sub_E67F0();
 int __fastcall initAllClipsCallbacks(int result, int a2, int a3);
-long double __fastcall sub_E6BA0(int a1, int a2);
-// int __usercall sub_E6C10@<eax>(long double a1@<st0>);
+long double __fastcall gentime(int a1, int a2);
+// int __usercall gensystem@<eax>(long double a1@<st0>);
 int __fastcall sub_E6D20(int a1, int a2, int a3);
 void __fastcall __noreturn sub_E6D50(int a1);
 int __fastcall sub_E6D60(int a1);
@@ -3686,9 +3686,9 @@ int __fastcall sub_E7500(int a1, int a2, int a3, int a4, signed int a5, int a6);
 signed int __fastcall sub_E76B0(int a1, int a2, int a3, int a4, int a5, signed int a6, int a7);
 signed int __fastcall sub_E7820(int a1, int a2, int a3, int a4);
 signed int __fastcall sub_E79A0(signed int result);
-// signed int __usercall sub_E7D20@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
-// signed int __usercall sub_E7E50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
-// signed int __usercall sub_E8000@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
+// signed int __usercall HelpPathFunction@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>);
+// signed int __usercall FetchCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>);
+// signed int __usercall TossCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 // signed int __usercall sub_E8120@<eax>(long double a1@<st0>);
 signed int __fastcall sub_E8210(signed int a1, int *a2);
 int __fastcall sub_E83A0(int a1, int a2, int a3, int a4);
@@ -3708,12 +3708,12 @@ int sub_E8E00();
 void sub_E8EF0();
 int sub_E8F00(); // weak
 int __fastcall sub_E8F20(int a1);
-// int __usercall sub_E8F40@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall UndeftemplateCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_E8F60(int a1);
 // int __usercall sub_E8F80@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_E8FD0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// int __usercall sub_E8FF0@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall sub_E9030@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall DeftemplateModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>);
+// int __usercall PPDeftemplateCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall ListDeftemplatesCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
 int __fastcall sub_E9070(int a1);
 int __fastcall sub_E9090(char a1, int a2);
 // signed int __usercall sub_E90B0@<eax>(int a1@<edx>, int a2@<ebx>, long double a3@<st0>);
@@ -3786,9 +3786,9 @@ int __fastcall sub_EC050(int a1, int a2, int a3, int a4, int a5, int a6);
 signed int __fastcall sub_EC150(int a1, int a2, int a3);
 signed int __fastcall sub_EC240(int a1);
 int __fastcall sub_EC290(int a1, int a2);
-// signed int __usercall __spoils<ecx,st0> sub_EC360@<eax>(int a1@<ecx>, long double a2@<st0>);
-// signed int __usercall __spoils<ecx,st0> sub_EC440@<eax>(int a1@<ecx>, long double a2@<st0>);
-// void __usercall sub_EC510(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
+// signed int __usercall __spoils<ecx,st0> WatchCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// signed int __usercall __spoils<ecx,st0> UnwatchCommand@<eax>(int a1@<ecx>, long double a2@<st0>);
+// void __usercall ListWatchItemsCommand(int a1@<ecx>, long double a2@<st0>, int a3@<edx>);
 signed int sub_EC660();
 bool __fastcall sub_EC700(int a1);
 signed int sub_EC730();
@@ -4304,11 +4304,11 @@ int __fastcall sub_FE7F2(int a1, int a2);
 // int __usercall sub_FEA60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<esi>);
 // int __usercall sub_FEA8A@<eax>(unsigned __int64 a1@<edx:eax>, unsigned int a2@<ecx>, unsigned int a3@<ebx>, signed int a4@<esi>);
 void sub_FEBDB();
-unsigned int __fastcall sub_FEBE0(int a1);
+int __fastcall sub_FEBE0(int a1);
 int __fastcall sub_FEC4A(int a1, int a2);
 int __fastcall sub_FEC5B(int _EAX, int a2);
 // int __usercall sub_FEC90@<eax>(__int64 a1@<edx:eax>, int a2@<ebx>, int a3@<ebp>);
-unsigned int __fastcall sub_FED10(int a1);
+int __fastcall sub_FED10(int a1);
 // int __usercall sub_FED8F@<eax>(int a1@<eax>, int a2@<ebp>);
 signed int __fastcall sub_FEE56(signed int result, int a2);
 unsigned int __fastcall sub_FEF1B(unsigned int result, signed __int16 a2);
@@ -11517,7 +11517,7 @@ void __usercall __noreturn main(signed int a1@<eax>, int a2@<edx>, int a3@<ebx>,
   sub_10291(v4, v5, a3);
   isLogEnabled2 = v15 <= 1 || **(_BYTE **)(v17 + 4) != 108;
   isLogEnabled2 = 0;
-  sub_30092();
+  createLogFIles();
   v6 = sub_636F1();
   log((int)aUsedmemD, v6);
   v7 = sub_636F1();
@@ -13842,7 +13842,7 @@ int __fastcall sub_1435C(int a1, int a2, int a3)
   v8 = sub_5EBB5(&v7);
   if ( v8 )
   {
-    sub_30040();
+    unsetLogEnabled();
     v9 = sub_5EB3A(v8);
     if ( !v13 )
     {
@@ -13860,7 +13860,7 @@ int __fastcall sub_1435C(int a1, int a2, int a3)
     (*(void (__fastcall **)(int, int, int))(*(_DWORD *)v8 + 20))(v8, v13, v9);
     sub_F2590((int)&unk_1AFBAC, (int)&v8);
     *(_DWORD *)(v13 + 4092) = v9;
-    sub_30069();
+    setLogEnabled();
     log((int)a_loads32Loaded, v13);
     v6 = v13;
   }
@@ -13896,7 +13896,7 @@ int __fastcall sub_144C9(int a1, int a2)
   v15 = a1;
   v16 = a2;
   log((int)a_loadonesprite, a1);
-  sub_30040();
+  unsetLogEnabled();
   qmemcpy(&v8, &unk_12FB9C, 0xFFu);
   strcat(&v8, v15);
   v2 = sub_16760();
@@ -13928,7 +13928,7 @@ int __fastcall sub_144C9(int a1, int a2)
   v12 = v9;
   (*(void (__fastcall **)(int, int, int))(*(_DWORD *)v9 + 20))(v9, v6, v7);
   sub_F2590((int)&unk_1AFBAC, (int)&v9);
-  sub_30069();
+  setLogEnabled();
   log((int)a_loadonespri_0, v6);
   return v6;
 }
@@ -18502,7 +18502,7 @@ LABEL_53:
               }
               if ( sub_203D4((int)((char *)&loc_23EE3 + 725 * currentStack + gameDataOffset + 319)) )
               {
-                v35 = sub_5FE5C(a1);
+                v35 = Port_GetSupply(a1);
                 if ( v35 )
                   sub_2F7D1(
                     *(_WORD *)((char *)&loc_23EE3 + 725 * currentStack + gameDataOffset + 3),
@@ -18527,7 +18527,7 @@ LABEL_53:
           v1 = sub_203D4((int)((char *)&loc_23EE3 + 725 * currentStack + gameDataOffset + 319));
           if ( v1 )
           {
-            v1 = sub_5FE5C(a1);
+            v1 = Port_GetSupply(a1);
             if ( v1 )
               LOBYTE(v1) = sub_2F7D1(
                              *(_WORD *)((char *)&loc_23EE3 + 725 * currentStack + gameDataOffset + 3),
@@ -19417,7 +19417,7 @@ int sub_1EDD1()
 // 1845F4: using guessed type int currentPlayer;
 
 //----- (0001EFE4) --------------------------------------------------------
-int __usercall sub_1EFE4@<eax>(long double a1@<st0>)
+int __usercall nextPlayer@<eax>(long double a1@<st0>)
 {
   int v1; // ebx@2
   char v2; // al@6
@@ -19500,10 +19500,10 @@ int __usercall sub_1EFE4@<eax>(long double a1@<st0>)
      || *(_DWORD *)((char *)&loc_222EF + gameDataOffset + 2) == 19
      || *(_DWORD *)((char *)&loc_222EF + gameDataOffset + 2) == 9) )
     sub_6BB2C(currentPlayer, a1);
-  sub_273F3(a1);
-  sub_36B1C(a1);
-  sub_692FE();
-  sub_6B3A4(v1, a1);
+  Unit_NewTurn(a1);
+  Building_NewTurn(a1);
+  Prisoner_SetInCastles();
+  Queen_NewTurn(v1, a1);
   v7 = sub_20078();
   sub_2F2BB(v7);
   sub_168E4(320, 240);
@@ -19683,7 +19683,7 @@ void sub_1F661()
   int v0; // eax@2
 
   sub_20F79();
-  sub_298F1();
+  UnitsCache_Clear();
   sub_5B2DE();
   sub_845B0();
   nfree(dword_1845C4);
@@ -19906,8 +19906,8 @@ int __usercall playGame@<eax>(long double a1@<st0>)
   sub_2F2BB(v8);
   sub_1EAEE();
   log((int)aStart_0, v14);
-  sub_26E42();
-  sub_36AA8();
+  LogAllUnits();
+  LogAllBuildings();
   if ( *(_DWORD *)((char *)&loc_222EF + gameDataOffset + 2) != -1
     && *(__int16 *)((char *)&word_222F6 + gameDataOffset) == 1 )
     sub_635EC();
@@ -19932,12 +19932,12 @@ int __usercall playGame@<eax>(long double a1@<st0>)
     }
     if ( isEndGame )
       break;
-    sub_1EFE4(a1);
+    nextPlayer(a1);
   }
   sub_17198();
   log((int)aKoniecGryPoDTu, *(__int16 *)((char *)&word_222F6 + gameDataOffset));
-  sub_26E42();
-  sub_36AA8();
+  LogAllUnits();
+  LogAllBuildings();
   sub_5D461();
   sub_122D0(20);
   sub_22491();
@@ -22771,7 +22771,7 @@ void __usercall unitMove(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
              + gameDataOffset) == *(_BYTE *)(v29 + 4) )
         {
           sub_5E0A3();
-          sub_59749(
+          buildingUnitGetInto(
             v41,
             *(_WORD *)((char *)&off_87D55 + 200 * (unsigned __int8)v27 + 2 * BYTE1(v27) + gameDataOffset + 1) - 0x8000,
             a3);
@@ -22786,7 +22786,7 @@ void __usercall unitMove(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
       if ( sub_5B559((unsigned __int8)v27, BYTE1(v27)) )
       {
         sub_5E0A3();
-        templeUnitGet(v41, (unsigned __int8)v27, BYTE1(v27), a3);
+        templeUnitGetInto(v41, (unsigned __int8)v27, BYTE1(v27), a3);
         sub_203A4(v29 + 316);
         break;
       }
@@ -23092,7 +23092,7 @@ signed int __fastcall sub_26E06(int a1)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00026E42) --------------------------------------------------------
-int sub_26E42()
+int LogAllUnits()
 {
   int result; // eax@1
   char v1; // [sp+0h] [bp-8h]@0
@@ -23316,7 +23316,7 @@ bool __fastcall sub_273AA(int a1)
 }
 
 //----- (000273F3) --------------------------------------------------------
-int __usercall sub_273F3@<eax>(long double a1@<st0>)
+int __usercall Unit_NewTurn@<eax>(long double a1@<st0>)
 {
   int v1; // eax@14
   char v3; // [sp+0h] [bp-10h]@0
@@ -23359,7 +23359,7 @@ int __usercall sub_273F3@<eax>(long double a1@<st0>)
              + gameDataOffset) != *(_BYTE *)(v5 + 4) )
         {
           sub_25116(v5);
-          return sub_26E42();
+          return LogAllUnits();
         }
         if ( sub_203D4(v5 + 316) )
           sub_25116(v5);
@@ -23368,7 +23368,7 @@ int __usercall sub_273F3@<eax>(long double a1@<st0>)
       }
     }
   }
-  return sub_26E42();
+  return LogAllUnits();
 }
 // 87D55: using guessed type int (*(*off_87D55)[9])();
 // 1845EC: using guessed type int gameDataOffset;
@@ -24633,7 +24633,7 @@ int __fastcall sub_29817(unsigned __int16 a1, char a2, unsigned __int8 a3, unsig
 // 18805F: using guessed type int dword_18805F;
 
 //----- (000298F1) --------------------------------------------------------
-void sub_298F1()
+void UnitsCache_Clear()
 {
   int v0; // ST10_4@4
   char v1; // [sp+0h] [bp-4h]@0
@@ -25891,7 +25891,7 @@ int __fastcall sub_2C16B(int a1, int a2)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0002C492) --------------------------------------------------------
-void sub_2C492()
+void Track_BridgesOn()
 {
   char savedregs; // [sp+0h] [bp+0h]@0
 
@@ -25901,7 +25901,7 @@ void sub_2C492()
 // 189630: using guessed type int dword_189630;
 
 //----- (0002C4C9) --------------------------------------------------------
-void sub_2C4C9()
+void Track_BridgesOff()
 {
   char savedregs; // [sp+0h] [bp+0h]@0
 
@@ -27462,21 +27462,21 @@ char sub_30020()
 }
 
 //----- (00030040) --------------------------------------------------------
-void sub_30040()
+void unsetLogEnabled()
 {
   isLogEnabled = 0;
 }
 // 133860: using guessed type int isLogEnabled;
 
 //----- (00030069) --------------------------------------------------------
-void sub_30069()
+void setLogEnabled()
 {
   isLogEnabled = 1;
 }
 // 133860: using guessed type int isLogEnabled;
 
 //----- (00030092) --------------------------------------------------------
-void sub_30092()
+void createLogFIles()
 {
   int v0; // eax@2
   int v1; // eax@2
@@ -27496,7 +27496,7 @@ void sub_30092()
 // 18AAD4: using guessed type int isInBattle;
 
 //----- (000300E6) --------------------------------------------------------
-int __fastcall sub_300E6(int result)
+int __fastcall setInBatttle(int result)
 {
   isInBattle = result;
   return result;
@@ -28564,7 +28564,7 @@ int __usercall sub_31E98@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
           log((int)a__memfreeSD_26, (unsigned int)aBattle_a_cpp);
           dword_1845C4 = 0;
           sub_5B2DE();
-          sub_298F1();
+          UnitsCache_Clear();
           sub_845B0();
           sub_20F79();
           v56 = sub_443B6(725 * v59 + gameDataOffset + 147174, gameDataOffset + 147174 + 725 * v60, 0, v51, v52);
@@ -28855,7 +28855,7 @@ signed int __usercall sub_3289B@<eax>(int a1@<eax>, int a2@<edx>, long double a3
             log((int)a__memfreeSD_27, (unsigned int)aBattle_a_cpp_0);
             dword_1845C4 = 0;
             sub_5B2DE();
-            sub_298F1();
+            UnitsCache_Clear();
             sub_845B0();
             sub_20F79();
             v43 = sub_443B6(
@@ -29201,7 +29201,7 @@ int __fastcall sub_335FD(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
   v44 = a2;
   v45 = a3;
   v46 = a4;
-  sub_300E6(1);
+  setInBatttle(1);
   log((int)aNewBattle, v11);
   log((int)aCalculatebattl, v43);
   log((int)aJednostka1, v8);
@@ -29329,7 +29329,7 @@ int __fastcall sub_335FD(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
     v38 += 31;
     *(_WORD *)v9 = -1;
   }
-  return sub_300E6(0);
+  return setInBatttle(0);
 }
 // F43E0: using guessed type int __fastcall memset(_DWORD, _DWORD, _DWORD);
 // 335FD: using guessed type char var_70[12];
@@ -29705,7 +29705,7 @@ signed int __userpurge sub_34CB0@<eax>(char a1@<al>, int a2@<ecx>, int a3@<ebx>,
     for ( l = 1; l < 12; ++l )
       *(_BYTE *)(l + v25 + 402) = -1;
     *(_BYTE *)(v25 + 414) = -1;
-    sub_59749(a3, v24, a4);
+    buildingUnitGetInto(a3, v24, a4);
     *(_WORD *)((char *)&off_87D55 + 200 * v29 + 2 * v30 + gameDataOffset + 1) = v24 + -32768;
     if ( v31 != 1 && v31 != 2 )
     {
@@ -30437,7 +30437,7 @@ void __fastcall sub_36998(char a1, int a2)
 }
 
 //----- (00036AA8) --------------------------------------------------------
-char *sub_36AA8()
+char *LogAllBuildings()
 {
   char *result; // eax@1
   char v1; // [sp+0h] [bp-8h]@0
@@ -30461,7 +30461,7 @@ char *sub_36AA8()
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00036B1C) --------------------------------------------------------
-char *__usercall sub_36B1C@<eax>(long double a1@<st0>)
+char *__usercall Building_NewTurn@<eax>(long double a1@<st0>)
 {
   char v2; // [sp+0h] [bp-10h]@0
   __int16 v3; // [sp+0h] [bp-10h]@8
@@ -30519,7 +30519,7 @@ char *__usercall sub_36B1C@<eax>(long double a1@<st0>)
       }
     }
   }
-  sub_36AA8();
+  LogAllBuildings();
   return sub_367C9(currentPlayer);
 }
 // 1329C4: using guessed type char byte_1329C4;
@@ -31003,7 +31003,7 @@ signed int __usercall sub_37A86@<eax>(int a1@<eax>, int a2@<edx>, long double a3
                 + 1423 * (unsigned __int8)*(&byte_7C6EC[467 * v12] + gameDataOffset)
                 + gameDataOffset
                 + 2) = -1;
-    sub_59749(v11, v12, a3);
+    buildingUnitGetInto(v11, v12, a3);
     for ( i = 0; i < 3; ++i )
     {
       if ( *(_BYTE *)(v6 + 6 * i + 445) != -1 && *(_BYTE *)(v6 + 6 * i + 446) == *(_BYTE *)(v6 + 2) )
@@ -31535,9 +31535,9 @@ int __fastcall sub_38D40(int a1)
 // 18AE10: using guessed type int dword_18AE10;
 
 //----- (00038DA2) --------------------------------------------------------
-int sub_38DA2()
+bool sub_38DA2()
 {
-  int result; // eax@1
+  bool result; // eax@1
   signed int v1; // [sp+0h] [bp-1Ch]@1
   signed int i; // [sp+4h] [bp-18h]@1
 
@@ -32467,7 +32467,7 @@ signed int __fastcall sub_3A78E(int a1)
   v25 = a1;
   sub_20F79();
   sub_5B2DE();
-  sub_298F1();
+  UnitsCache_Clear();
   sub_845B0();
   log((int)aCastleD, v25);
   dword_18AAF8 = (int)(&byte_7C6EA[467 * v25] + gameDataOffset);
@@ -35983,7 +35983,7 @@ void __fastcall sub_41856(char a1, int a2)
 // 1323D4: using guessed type char *(*off_1323D4)[2];
 
 //----- (000418E0) --------------------------------------------------------
-int sub_418E0()
+int Battle_LogAllUnits()
 {
   int result; // eax@1
   char v1; // [sp+0h] [bp-8h]@0
@@ -36007,7 +36007,7 @@ int sub_418E0()
 // 18BF48: using guessed type int dword_18BF48;
 
 //----- (00041950) --------------------------------------------------------
-int __fastcall sub_41950(int a1)
+int __fastcall GodAnger(int a1)
 {
   int result; // eax@1
   int v2; // ebx@8
@@ -36133,14 +36133,14 @@ int __fastcall sub_41950(int a1)
 // 41950: using guessed type int var_14[3];
 
 //----- (00041D3A) --------------------------------------------------------
-int sub_41D3A()
+int Battle_NewTurn()
 {
   int result; // eax@1
   char v1; // [sp+0h] [bp-8h]@0
   signed int v2; // [sp+4h] [bp-4h]@1
 
   log((int)aBattle_newturn, v1);
-  sub_418E0();
+  Battle_LogAllUnits();
   result = *(_DWORD *)(dword_18BF48 + 836);
   v2 = 0;
   while ( v2 < 2 )
@@ -36501,9 +36501,9 @@ int __fastcall sub_4247E(int a1, int a2, int a3)
         v9 = sub_202C8();
         sub_3184F(100, 100, dword_18BF48 + 852 + 31 * v30, 0, v9);
       }
-      sub_30040();
+      unsetLogEnabled();
       v23 = sub_48AEF(currentStack, v27, v28);
-      sub_30069();
+      setLogEnabled();
       if ( v23 )
       {
         HIWORD(v22) = HIWORD(dword_18BF7C);
@@ -36566,9 +36566,9 @@ int __fastcall sub_4247E(int a1, int a2, int a3)
         }
         else
         {
-          sub_30040();
+          unsetLogEnabled();
           v20 = sub_48D0E(currentStack, v27, v28);
-          sub_30069();
+          setLogEnabled();
           if ( v20 )
           {
             v13 = sub_20374(v20);
@@ -36595,9 +36595,9 @@ int __fastcall sub_4247E(int a1, int a2, int a3)
     }
     else
     {
-      sub_30040();
+      unsetLogEnabled();
       v19 = sub_48088(currentStack, v27, v28);
-      sub_30069();
+      setLogEnabled();
       if ( v19 )
       {
         v16 = sub_20374(v19);
@@ -37607,7 +37607,7 @@ int __fastcall sub_443B6(int a1, int a2, int a3, int a4, int a5)
   v54 = a3;
   v55 = a4;
   log((int)aBattle_0, v24);
-  sub_300E6(1);
+  setInBatttle(1);
   log((int)aNewBattle_0, v5);
   v40 = sub_5D33E((int)aBattle_1, 1);
   v51 = *(_BYTE *)(gameDataOffset + 140016);
@@ -37784,7 +37784,7 @@ int __fastcall sub_443B6(int a1, int a2, int a3, int a4, int a5)
   v29 = *(_DWORD *)((char *)&loc_22312 + 1423 * currentPlayer + gameDataOffset + 1) == 0;
   v48 = v29;
   log((int)aStart, v25);
-  sub_418E0();
+  Battle_LogAllUnits();
   v49 = 0;
   while ( !v47 )
   {
@@ -37834,7 +37834,7 @@ int __fastcall sub_443B6(int a1, int a2, int a3, int a4, int a5)
     else
       ++*(_DWORD *)((char *)&loc_2232B + 1423 * currentPlayer + gameDataOffset + 2);
     if ( *(_DWORD *)((char *)&loc_2232B + 1423 * currentPlayer + gameDataOffset + 2) >= 2 )
-      sub_41950(currentPlayer);
+      GodAnger(currentPlayer);
     *(_DWORD *)((char *)&loc_22326 + 1423 * currentPlayer + gameDataOffset + 3) = 0;
     *(_DWORD *)(dword_18BF48 + 4 * currentPlayer + 3944) = currentStack;
     *(_BYTE *)(dword_18BF48 + 2 * currentPlayer + 3934) = *(_BYTE *)(dword_18BF48 + 808);
@@ -37864,7 +37864,7 @@ int __fastcall sub_443B6(int a1, int a2, int a3, int a4, int a5)
     }
     currentStack = *(_DWORD *)(4 * currentPlayer + dword_18BF48 + 3944);
     if ( currentPlayer == *(_DWORD *)(dword_18BF48 + 836) )
-      sub_41D3A();
+      Battle_NewTurn();
   }
   sub_44356();
   log((int)aEndOfBattle, v26);
@@ -37913,13 +37913,13 @@ int __fastcall sub_443B6(int a1, int a2, int a3, int a4, int a5)
   dword_18BF48 = 0;
   sub_3AFCB();
   sub_20F79();
-  sub_298F1();
+  UnitsCache_Clear();
   sub_845B0();
   currentStack = -1;
   currentPlayer = v43;
   sub_845B0();
   sub_5D3C1(v40);
-  sub_300E6(0);
+  setInBatttle(0);
   return v50;
 }
 // F3767: using guessed type int __fastcall nmalloc(_DWORD, _DWORD, _DWORD);
@@ -44118,10 +44118,10 @@ int __fastcall sub_52411(int a1)
 // 19E2C2: using guessed type __int16 word_19E2C2[];
 
 //----- (00052468) --------------------------------------------------------
-signed int __fastcall sub_52468(char *a1, int a2)
+bool __fastcall sub_52468(char *a1, int a2)
 {
   int v2; // ST10_4@1
-  signed int result; // eax@1
+  bool result; // eax@1
   int v4; // edx@12
   signed int v5; // [sp+0h] [bp-14h]@1
   int v6; // [sp+4h] [bp-10h]@1
@@ -47260,7 +47260,7 @@ int __fastcall sub_596B5(int a1)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (00059749) --------------------------------------------------------
-signed int __usercall sub_59749@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
+signed int __usercall buildingUnitGetInto@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
 {
   int v3; // ST30_4@1
   unsigned __int16 v4; // bx@17
@@ -47925,7 +47925,7 @@ int __fastcall sub_5A7C4(int a1)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0005A897) --------------------------------------------------------
-signed int __fastcall sub_5A897(unsigned int a1)
+unsigned int __fastcall sub_5A897(unsigned int a1)
 {
   char v1; // dl@2
   __int16 v2; // cx@2
@@ -47934,7 +47934,7 @@ signed int __fastcall sub_5A897(unsigned int a1)
   unsigned int v5; // eax@2
   unsigned __int16 v6; // cx@2
   unsigned int v7; // edx@2
-  signed int result; // eax@2
+  unsigned int result; // eax@2
   unsigned __int16 v9; // ax@3
   unsigned __int16 v10; // ax@4
   unsigned int v11; // [sp+0h] [bp-4h]@1
@@ -47961,12 +47961,12 @@ signed int __fastcall sub_5A897(unsigned int a1)
     v9 = *(_WORD *)(a1 + 430);
     HIBYTE(v9) &= 0xFu;
     result = v9;
-    if ( result >= 1000 )
+    if ( (signed int)result >= 1000 )
     {
       v10 = *(_WORD *)(v11 + 430);
       HIBYTE(v10) &= 0xFu;
       result = sub_2C7F6(0, 2000 - v10 + 300);
-      if ( (unsigned int)result < 0x64 )
+      if ( result < 0x64 )
       {
         *(_BYTE *)(v11 + 435) &= 0xF8u;
         result = v11;
@@ -48551,7 +48551,7 @@ void __fastcall sub_5B9DC(int a1, int a2, int a3)
 // 13F0FC: using guessed type int dword_13F0FC;
 
 //----- (0005BC2C) --------------------------------------------------------
-int __fastcall sub_5BC2C(int a1)
+int __fastcall templeRandom(int a1)
 {
   char v2; // [sp+0h] [bp-18h]@0
   int v3; // [sp+4h] [bp-14h]@1
@@ -48585,9 +48585,9 @@ int __fastcall sub_5BC2C(int a1)
 }
 
 //----- (0005BCDB) --------------------------------------------------------
-unsigned int __usercall sub_5BCDB@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>)
+int __usercall templeProcessGift@<eax>(unsigned int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>)
 {
-  unsigned int result; // eax@1
+  int result; // eax@1
   signed int l; // [sp+0h] [bp-24h]@21
   signed int k; // [sp+4h] [bp-20h]@16
   signed int j; // [sp+8h] [bp-1Ch]@11
@@ -48717,7 +48717,7 @@ unsigned int __usercall sub_5BCDB@<eax>(unsigned int a1@<eax>, int a2@<edx>, int
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0005C135) --------------------------------------------------------
-void __usercall templeUnitGet(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
+void __usercall templeUnitGetInto(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
 {
   int v4; // ebx@20
   int v5; // eax@59
@@ -48771,7 +48771,7 @@ void __usercall templeUnitGet(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long dou
       if ( v15 != 2 && v15 != 4 )
       {
         v16 = v14;
-        v14 = sub_5BC2C(v14);
+        v14 = templeRandom(v14);
         if ( (*(_DWORD *)(gameDataOffset + 140017) == 2
            || *(_DWORD *)(gameDataOffset + 140017) == 6
            || *(_DWORD *)(gameDataOffset + 140017) == 12
@@ -48786,7 +48786,7 @@ void __usercall templeUnitGet(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long dou
           else
           {
             while ( *(_DWORD *)v14 && *(_DWORD *)v14 != 15 )
-              v14 = sub_5BC2C(v16);
+              v14 = templeRandom(v16);
           }
         }
         log((int)aTemple_unitg_2, v14);
@@ -48800,7 +48800,7 @@ void __usercall templeUnitGet(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long dou
           v5 = sub_5C5AC();
           sub_5B9DC(*(_DWORD *)(v14 + 4 * (unsigned __int8)isEnglish + 12), *(_DWORD *)(v14 + 8), v5);
         }
-        sub_5BCDB(*(_DWORD *)v14, v12, v22, v21, a4);
+        templeProcessGift(*(_DWORD *)v14, v12, v22, v21, a4);
         ++*(_WORD *)(14 * v22 + 1400 * v21 + gameDataOffset + 2);
         sub_70618(v21, v22, a4);
       }
@@ -51069,7 +51069,7 @@ int __fastcall sub_5FB50(int a1)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0005FE5C) --------------------------------------------------------
-int __usercall sub_5FE5C@<eax>(long double a1@<st0>)
+int __usercall Port_GetSupply@<eax>(long double a1@<st0>)
 {
   __int16 v1; // ax@18
   int v2; // ST00_4@23
@@ -51346,9 +51346,9 @@ int __usercall sub_60569@<eax>(int a1@<eax>, long double a2@<st0>)
     else
     {
       if ( *(_DWORD *)((char *)&loc_22312 + 1423 * *(_BYTE *)(v9 + 4) + gameDataOffset + 1) )
-        v2 = sub_5BC2C((int)&unk_137A54);
+        v2 = templeRandom((int)&unk_137A54);
       else
-        v2 = sub_5BC2C((int)&unk_137B44);
+        v2 = templeRandom((int)&unk_137B44);
       v10 = (char *)v2;
       log((int)aTreasure_dig_0, v2);
     }
@@ -51371,7 +51371,7 @@ int __usercall sub_60569@<eax>(int a1@<eax>, long double a2@<st0>)
       }
     }
     sub_705C8(*(_WORD *)v9, *(_WORD *)(v9 + 2), a2);
-    sub_5BCDB(*(_DWORD *)v10, v9, *(_WORD *)(v9 + 2), *(_WORD *)v9, a2);
+    templeProcessGift(*(_DWORD *)v10, v9, *(_WORD *)(v9 + 2), *(_WORD *)v9, a2);
     v8 = 1;
   }
   else
@@ -52283,9 +52283,9 @@ int sub_6215A()
 // 1AFC10: using guessed type int dword_1AFC10;
 
 //----- (00062207) --------------------------------------------------------
-unsigned int __fastcall sub_62207(int a1, int a2, int a3)
+int __fastcall sub_62207(int a1, int a2, int a3)
 {
-  unsigned int result; // eax@14
+  int result; // eax@14
   int v4; // edx@15
   int v5; // edx@17
   int v6; // eax@19
@@ -52331,7 +52331,7 @@ unsigned int __fastcall sub_62207(int a1, int a2, int a3)
     if ( v9 )
     {
       result = strlen(byte_1AFC14, v4, a3);
-      if ( result < 0xA )
+      if ( (unsigned int)result < 0xA )
       {
         v6 = strlen(&byte_1AFC14[dword_1AFC10], v5, a3);
         memmove(&byte_1AFC14[dword_1AFC10 + 1], &byte_1AFC14[dword_1AFC10], v6 + 1);
@@ -52755,7 +52755,7 @@ int __fastcall sub_62EAA(int a1)
 // 13F0FC: using guessed type int dword_13F0FC;
 
 //----- (000630BB) --------------------------------------------------------
-int sub_630BB()
+int NewQueenWindow()
 {
   int v0; // ebx@1
   int v1; // eax@1
@@ -53791,7 +53791,7 @@ int __usercall sub_64AE2@<eax>(long double a1@<st0>)
       JUMPOUT(__CS__, *(&off_64C58 + (unsigned __int8)v2));
     strcpy(&v3[1423 * i + 4], &byte_1AFF54[11 * i]);
   }
-  sub_67862(dword_1AFF8C, (int)v3, a1);
+  startMultiMap(dword_1AFF8C, (int)v3, a1);
   return playGame(a1);
 }
 // 64C58: using guessed type void *off_64C58;
@@ -54931,7 +54931,7 @@ signed int __usercall sub_67771@<eax>(long double a1@<st0>)
 }
 
 //----- (00067862) --------------------------------------------------------
-int __usercall sub_67862@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
+int __usercall startMultiMap@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // edx@1
@@ -55550,7 +55550,7 @@ int __fastcall sub_69281(int a1)
 }
 
 //----- (000692FE) --------------------------------------------------------
-void sub_692FE()
+void Prisoner_SetInCastles()
 {
   int v0; // ebx@19
   int v1; // eax@20
@@ -56566,7 +56566,7 @@ char *__fastcall sub_6B2DC(int a1)
 // 1845EC: using guessed type int gameDataOffset;
 
 //----- (0006B3A4) --------------------------------------------------------
-__int16 __usercall sub_6B3A4@<ax>(int a1@<ebx>, long double a2@<st0>)
+__int16 __usercall Queen_NewTurn@<ax>(int a1@<ebx>, long double a2@<st0>)
 {
   int v2; // eax@1
   char v3; // al@5
@@ -56742,7 +56742,7 @@ __int16 __usercall sub_6B3A4@<ax>(int a1@<ebx>, long double a2@<st0>)
           {
             v4 = sub_34214();
             sub_5E398((int)aP_posla, v4);
-            v27 = sub_630BB();
+            v27 = NewQueenWindow();
           }
           if ( v27 )
           {
@@ -57512,40 +57512,40 @@ int __usercall sub_6D130@<eax>(int a1@<eax>, long double a2@<st0>)
 //----- (0006D2BD) --------------------------------------------------------
 signed int registerClipsFunctions2()
 {
-  registerClipsCallback((int)aSwiatynia, 105, (int)sub_6D67E, (int)aSwiatynia00, (int)a22i);
-  registerClipsCallback((int)aKop_skarb, 105, (int)sub_6D6CA, (int)aKop_skarb00, (int)a11i);
-  registerClipsCallback((int)aPobierz_oddz_0, 105, (int)sub_6D706, (int)aPobierz_oddzia, (int)a00i);
-  registerClipsCallback((int)aPelny_port, 98, (int)sub_6D732, (int)aPelny_port00, (int)a00i);
-  registerClipsCallback((int)aJest_pracown_0, 98, (int)sub_6D75E, (int)aJest_pracownik, (int)a11i);
-  registerClipsCallback((int)aJednostka_bi_0, 98, (int)sub_6D79A, (int)aJednostka_bite, (int)a11i);
-  registerClipsCallback((int)aJest_droga, 98, (int)sub_6D7D6, (int)aJest_droga00, (int)a33i);
-  registerClipsCallback((int)aJest_droga_w_0, 98, (int)sub_6D832, (int)aJest_droga_w_p, (int)a33i);
-  registerClipsCallback((int)aJest_droga_w_2, 98, (int)sub_6D88E, (int)aJest_droga_w_1, (int)a33i);
-  registerClipsCallback((int)aJest_droga_d_0, 98, (int)sub_6D8EA, (int)aJest_droga_do, (int)a33i);
-  registerClipsCallback((int)aJest_droga_d_2, 98, (int)sub_6D946, (int)aJest_droga_d_1, (int)a33i);
-  registerClipsCallback((int)aJest_droga_d_4, 98, (int)sub_6D9A2, (int)aJest_droga_d_3, (int)a33i);
-  registerClipsCallback((int)aOddzial_w_za_0, 98, (int)sub_6D9FE, (int)aOddzial_w_zasi, (int)a33i);
-  registerClipsCallback((int)aBudowla_w_za_0, 98, (int)sub_6DA5A, (int)aBudowla_w_zasi, (int)a33i);
-  registerClipsCallback((int)aOdleglosc_od_0, 105, (int)sub_6DAB6, (int)aOdleglosc_od_o, (int)a33i);
-  registerClipsCallback((int)aSwiatynia_w__0, 98, (int)sub_6DB12, (int)aSwiatynia_w_za, (int)a33i);
-  registerClipsCallback((int)aSwiatynia_ok, 98, (int)sub_6DB6E, (int)aSwiatynia_ok00, (int)a33i);
-  registerClipsCallback((int)aMaszeruj, 105, (int)sub_6DBCA, (int)aMaszeruj00, (int)a33i);
-  registerClipsCallback((int)aMaszeruj_do__0, 105, (int)sub_6DC26, (int)aMaszeruj_do_sw, (int)a33i);
-  registerClipsCallback((int)aMaszeruj_bli_0, 105, (int)sub_6DC82, (int)aMaszeruj_blisk, (int)a33i);
-  registerClipsCallback((int)aAtakuj_oddzi_0, 105, (int)sub_6DCDE, (int)aAtakuj_oddzial, (int)a22i);
-  registerClipsCallback((int)aPrzejmuj_odd_0, 105, (int)sub_6DD2A, (int)aPrzejmuj_oddzi, (int)a22i);
-  registerClipsCallback((int)aUkryj_oddzial, 105, (int)sub_6DD76, (int)aUkryj_oddzial0, (int)a33i);
-  registerClipsCallback((int)aJest_armia, 98, (int)sub_6DDD2, (int)aJest_armia00, (int)a11i);
-  registerClipsCallback((int)aLiczba_jedno_0, 105, (int)sub_6DE0E, (int)aLiczba_jednost, (int)a11i);
-  registerClipsCallback((int)aAtakuj_budow_0, 105, (int)sub_6DE4A, (int)aAtakuj_budowle, (int)a22i);
-  registerClipsCallback((int)aJest_brod, 98, (int)sub_6DE96, (int)aJest_brod00, (int)a11i);
-  registerClipsCallback((int)aBuduj_droge, 98, (int)sub_6DED2, (int)aBuduj_droge00, (int)a11i);
-  registerClipsCallback((int)aBuduj_pulapke, 105, (int)sub_6DF0E, (int)aBuduj_pulapke0, (int)a33i);
-  return registerClipsCallback((int)aUnit_canmove, 105, (int)sub_6DF6A, (int)aUnit_canmove00, (int)a11i);
+  registerClipsCallback((int)aSwiatynia, 105, (int)swiatynia00, (int)aSwiatynia00, (int)a22i);
+  registerClipsCallback((int)aKop_skarb, 105, (int)kop_skarb00, (int)aKop_skarb00, (int)a11i);
+  registerClipsCallback((int)aPobierz_oddz_0, 105, (int)pobierz_oddzial_z_portu00, (int)aPobierz_oddzia, (int)a00i);
+  registerClipsCallback((int)aPelny_port, 98, (int)pelny_port00, (int)aPelny_port00, (int)a00i);
+  registerClipsCallback((int)aJest_pracown_0, 98, (int)jest_pracownik_w_armii00, (int)aJest_pracownik, (int)a11i);
+  registerClipsCallback((int)aJednostka_bi_0, 98, (int)jednostka_bitewna00, (int)aJednostka_bite, (int)a11i);
+  registerClipsCallback((int)aJest_droga, 98, (int)jest_droga00, (int)aJest_droga00, (int)a33i);
+  registerClipsCallback((int)aJest_droga_w_0, 98, (int)jest_droga_w_poblize00, (int)aJest_droga_w_p, (int)a33i);
+  registerClipsCallback((int)aJest_droga_w_2, 98, (int)jest_droga_w_poblize_zamku00, (int)aJest_droga_w_1, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_0, 98, (int)jest_droga_do_portu00, (int)aJest_droga_do, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_2, 98, (int)jest_droga_do_zamku00, (int)aJest_droga_d_1, (int)a33i);
+  registerClipsCallback((int)aJest_droga_d_4, 98, (int)jest_droga_do_swiatyni00, (int)aJest_droga_d_3, (int)a33i);
+  registerClipsCallback((int)aOddzial_w_za_0, 98, (int)oddzial_w_zasiegu_armii00, (int)aOddzial_w_zasi, (int)a33i);
+  registerClipsCallback((int)aBudowla_w_za_0, 98, (int)budowla_w_zasiegu_armii00, (int)aBudowla_w_zasi, (int)a33i);
+  registerClipsCallback((int)aOdleglosc_od_0, 105, (int)odleglosc_od_obiektu00, (int)aOdleglosc_od_o, (int)a33i);
+  registerClipsCallback((int)aSwiatynia_w__0, 98, (int)swiatynia_w_zasiegu_armii00, (int)aSwiatynia_w_za, (int)a33i);
+  registerClipsCallback((int)aSwiatynia_ok, 98, (int)swiatynia_OK00, (int)aSwiatynia_ok00, (int)a33i);
+  registerClipsCallback((int)aMaszeruj, 105, (int)maszeruj00, (int)aMaszeruj00, (int)a33i);
+  registerClipsCallback((int)aMaszeruj_do__0, 105, (int)maszeruj_do_swiatyni00, (int)aMaszeruj_do_sw, (int)a33i);
+  registerClipsCallback((int)aMaszeruj_bli_0, 105, (int)maszeruj_blisko00, (int)aMaszeruj_blisk, (int)a33i);
+  registerClipsCallback((int)aAtakuj_oddzi_0, 105, (int)atakuj_oddzial00, (int)aAtakuj_oddzial, (int)a22i);
+  registerClipsCallback((int)aPrzejmuj_odd_0, 105, (int)przejmuj_oddzial00, (int)aPrzejmuj_oddzi, (int)a22i);
+  registerClipsCallback((int)aUkryj_oddzial, 105, (int)ukryj_oddzial00, (int)aUkryj_oddzial0, (int)a33i);
+  registerClipsCallback((int)aJest_armia, 98, (int)jest_armia00, (int)aJest_armia00, (int)a11i);
+  registerClipsCallback((int)aLiczba_jedno_0, 105, (int)liczba_jednostek_w_oddziale00, (int)aLiczba_jednost, (int)a11i);
+  registerClipsCallback((int)aAtakuj_budow_0, 105, (int)atakuj_budowle00, (int)aAtakuj_budowle, (int)a22i);
+  registerClipsCallback((int)aJest_brod, 98, (int)jest_brod00, (int)aJest_brod00, (int)a11i);
+  registerClipsCallback((int)aBuduj_droge, 98, (int)buduj_droge00, (int)aBuduj_droge00, (int)a11i);
+  registerClipsCallback((int)aBuduj_pulapke, 105, (int)buduj_pulapke00, (int)aBuduj_pulapke0, (int)a33i);
+  return registerClipsCallback((int)aUnit_canmove, 105, (int)Unit_CanMove00, (int)aUnit_canmove00, (int)a11i);
 }
 
 //----- (0006D67E) --------------------------------------------------------
-int __usercall sub_6D67E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall swiatynia00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57558,7 +57558,7 @@ int __usercall sub_6D67E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006D6CA) --------------------------------------------------------
-int __usercall sub_6D6CA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall kop_skarb00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57567,19 +57567,19 @@ int __usercall sub_6D6CA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006D706) --------------------------------------------------------
-signed int __usercall sub_6D706@<eax>(long double a1@<st0>)
+signed int __usercall pobierz_oddzial_z_portu00@<eax>(long double a1@<st0>)
 {
   return sub_6E010(a1);
 }
 
 //----- (0006D732) --------------------------------------------------------
-int sub_6D732()
+int pelny_port00()
 {
   return sub_6E040();
 }
 
 //----- (0006D75E) --------------------------------------------------------
-signed int __usercall sub_6D75E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_pracownik_w_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57588,7 +57588,7 @@ signed int __usercall sub_6D75E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D79A) --------------------------------------------------------
-signed int __usercall sub_6D79A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jednostka_bitewna00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57597,7 +57597,7 @@ signed int __usercall sub_6D79A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D7D6) --------------------------------------------------------
-signed int __usercall sub_6D7D6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57614,7 +57614,7 @@ signed int __usercall sub_6D7D6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D832) --------------------------------------------------------
-signed int __usercall sub_6D832@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga_w_poblize00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57631,7 +57631,7 @@ signed int __usercall sub_6D832@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D88E) --------------------------------------------------------
-signed int __usercall sub_6D88E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga_w_poblize_zamku00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57648,7 +57648,7 @@ signed int __usercall sub_6D88E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D8EA) --------------------------------------------------------
-signed int __usercall sub_6D8EA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga_do_portu00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57665,7 +57665,7 @@ signed int __usercall sub_6D8EA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D946) --------------------------------------------------------
-signed int __usercall sub_6D946@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga_do_zamku00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57682,7 +57682,7 @@ signed int __usercall sub_6D946@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D9A2) --------------------------------------------------------
-signed int __usercall sub_6D9A2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall jest_droga_do_swiatyni00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57699,7 +57699,7 @@ signed int __usercall sub_6D9A2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006D9FE) --------------------------------------------------------
-bool __usercall sub_6D9FE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall oddzial_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57716,7 +57716,7 @@ bool __usercall sub_6D9FE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DA5A) --------------------------------------------------------
-bool __usercall sub_6DA5A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall budowla_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57733,7 +57733,7 @@ bool __usercall sub_6DA5A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DAB6) --------------------------------------------------------
-int __usercall sub_6DAB6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall odleglosc_od_obiektu00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57750,7 +57750,7 @@ int __usercall sub_6DAB6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006DB12) --------------------------------------------------------
-bool __usercall sub_6DB12@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall swiatynia_w_zasiegu_armii00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57767,7 +57767,7 @@ bool __usercall sub_6DB12@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DB6E) --------------------------------------------------------
-bool __usercall sub_6DB6E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall swiatynia_OK00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57784,7 +57784,7 @@ bool __usercall sub_6DB6E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DBCA) --------------------------------------------------------
-int __usercall sub_6DBCA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall maszeruj00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57801,7 +57801,7 @@ int __usercall sub_6DBCA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006DC26) --------------------------------------------------------
-int __usercall sub_6DC26@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall maszeruj_do_swiatyni00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57818,7 +57818,7 @@ int __usercall sub_6DC26@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006DC82) --------------------------------------------------------
-int __usercall sub_6DC82@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall maszeruj_blisko00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57835,7 +57835,7 @@ int __usercall sub_6DC82@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0006DCDE) --------------------------------------------------------
-signed int __usercall sub_6DCDE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall atakuj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57848,7 +57848,7 @@ signed int __usercall sub_6DCDE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DD2A) --------------------------------------------------------
-signed int __usercall sub_6DD2A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall przejmuj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57861,7 +57861,7 @@ signed int __usercall sub_6DD2A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DD76) --------------------------------------------------------
-signed int __usercall sub_6DD76@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ukryj_oddzial00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57878,7 +57878,7 @@ signed int __usercall sub_6DD76@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DDD2) --------------------------------------------------------
-bool __usercall sub_6DDD2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall jest_armia00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57887,7 +57887,7 @@ bool __usercall sub_6DDD2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DE0E) --------------------------------------------------------
-signed int __usercall sub_6DE0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall liczba_jednostek_w_oddziale00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57896,7 +57896,7 @@ signed int __usercall sub_6DE0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DE4A) --------------------------------------------------------
-signed int __usercall sub_6DE4A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall atakuj_budowle00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57909,7 +57909,7 @@ signed int __usercall sub_6DE4A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DE96) --------------------------------------------------------
-bool __usercall sub_6DE96@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall jest_brod00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57918,7 +57918,7 @@ bool __usercall sub_6DE96@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0006DED2) --------------------------------------------------------
-signed int __usercall sub_6DED2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall buduj_droge00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57927,7 +57927,7 @@ signed int __usercall sub_6DED2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DF0E) --------------------------------------------------------
-signed int __usercall sub_6DF0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall buduj_pulapke00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -57944,7 +57944,7 @@ signed int __usercall sub_6DF0E@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0006DF6A) --------------------------------------------------------
-signed int __usercall sub_6DF6A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall Unit_CanMove00@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -57967,7 +57967,7 @@ int __usercall sub_6DFDE@<eax>(int a1@<eax>, long double a2@<st0>)
 //----- (0006E010) --------------------------------------------------------
 signed int __usercall sub_6E010@<eax>(long double a1@<st0>)
 {
-  sub_5FE5C(a1);
+  Port_GetSupply(a1);
   return 1;
 }
 
@@ -58009,14 +58009,14 @@ signed int __fastcall sub_6E0E6(int a1, int a2, int a3)
     || abs(a3 - HIBYTE(v5)) )
   {
     if ( sub_2763B(v8) )
-      sub_2C492();
+      Track_BridgesOn();
     v7 = sub_2AFD6(
            v8,
            *(_WORD *)(gameDataOffset + 725 * v8 + 147174),
            *(_WORD *)(725 * v8 + gameDataOffset + 147176),
            v9,
            a3);
-    sub_2C4C9();
+    Track_BridgesOff();
     if ( v7 )
     {
       if ( !sub_203D4(gameDataOffset + 147174 + 725 * v8 + 316) )
@@ -58059,9 +58059,9 @@ signed int __fastcall sub_6E282(int a1, int a2, int a3)
     || (unsigned __int8)v5 == v9 && HIBYTE(v5) == a3 )
   {
     if ( sub_2763B(v8) )
-      sub_2C492();
+      Track_BridgesOn();
     v7 = sub_2BAF5(v8, v9, a3);
-    sub_2C4C9();
+    Track_BridgesOff();
     if ( v7 )
     {
       if ( !sub_203D4(gameDataOffset + 147174 + 725 * v8 + 316) )
@@ -58104,9 +58104,9 @@ signed int __fastcall sub_6E40B(int a1, int a2, int a3)
     || (unsigned __int8)v5 == v9 && HIBYTE(v5) == a3 )
   {
     if ( sub_2763B(v8) )
-      sub_2C492();
+      Track_BridgesOn();
     v7 = sub_2C16B(v8, *(_WORD *)((char *)&off_87D55 + 200 * v9 + 2 * a3 + gameDataOffset + 1) - 0x8000);
-    sub_2C4C9();
+    Track_BridgesOff();
     if ( v7 )
     {
       if ( !sub_203D4(gameDataOffset + 147174 + 725 * v8 + 316) )
@@ -58149,9 +58149,9 @@ signed int __fastcall sub_6E5B5(int a1, int a2, int a3)
     || abs(a3 - HIBYTE(v5)) )
   {
     if ( sub_2763B(v8) )
-      sub_2C492();
+      Track_BridgesOn();
     v7 = sub_5FB50(v8);
-    sub_2C4C9();
+    Track_BridgesOff();
     if ( v7 )
     {
       if ( !sub_203D4(gameDataOffset + 147174 + 725 * v8 + 316) )
@@ -58194,9 +58194,9 @@ signed int __fastcall sub_6E71E(int a1, int a2, int a3)
     || (unsigned __int8)v5 == v9 && HIBYTE(v5) == a3 )
   {
     if ( sub_2763B(v8) )
-      sub_2C492();
+      Track_BridgesOn();
     v7 = sub_2BD33(v8, *(_WORD *)((char *)&off_87D55 + 200 * v9 + 2 * a3 + gameDataOffset + 1) - 0x8000);
-    sub_2C4C9();
+    Track_BridgesOff();
     if ( v7 )
     {
       if ( !sub_203D4(gameDataOffset + 147174 + 725 * v8 + 316) )
@@ -60088,54 +60088,54 @@ signed int __usercall sub_71F0B@<eax>(int a1@<eax>, long double a2@<st0>)
 //----- (00071FC8) --------------------------------------------------------
 signed int registerClipsFunctions()
 {
-  registerClipsCallback((int)aLeczenie, 118, (int)sub_7251C, (int)aLeczenie, (int)a11i_0);
-  registerClipsCallback((int)aSzkolenie, 118, (int)sub_7254A, (int)aSzkolenie, (int)a11i_0);
-  registerClipsCallback((int)aPalBudowle, 118, (int)sub_72578, (int)aPalbudowle, (int)a11i_0);
-  registerClipsCallback((int)aUpgradeWall, 118, (int)sub_725A6, (int)aUpgradewall, (int)a11i_0);
-  registerClipsCallback((int)aZmienPodatek, 118, (int)sub_725D4, (int)aZmienpodatek, (int)a22iif);
-  registerClipsCallback((int)aRemoveLicence, 118, (int)sub_72612, (int)aRemovelicence, (int)a22i_0);
-  registerClipsCallback((int)aZacznijLeczeni, 118, (int)sub_7264C, (int)aZacznijleczeni, (int)a22i_0);
-  registerClipsCallback((int)aZacznijSzkolen, 118, (int)sub_72686, (int)aZacznijszkolen, (int)a22i_0);
-  registerClipsCallback((int)aZacznijProdukc, 118, (int)sub_726C0, (int)aZacznijprodukc, (int)a22i_0);
-  registerClipsCallback((int)aKupSzkola, 98, (int)sub_72772, (int)aKupszkola, (int)a11i_0);
-  registerClipsCallback((int)aKupKuznia, 98, (int)sub_727A8, (int)aKupkuznia, (int)a11i_0);
-  registerClipsCallback((int)aIsLicence, 98, (int)sub_72730, (int)aIslicence, (int)a22i_0);
-  registerClipsCallback((int)aBuyLicence, 98, (int)sub_72911, (int)aBuylicence, (int)a22i_0);
-  registerClipsCallback((int)aKupSzpital, 98, (int)sub_72989, (int)aKupszpital, (int)a11i_0);
-  registerClipsCallback((int)aBudujZamek, 98, (int)sub_728AC, (int)aBudujzamek, (int)a55iiiiis);
-  registerClipsCallback((int)aKupKoszary, 98, (int)sub_72953, (int)aKupkoszary, (int)a11i_0);
-  registerClipsCallback((int)aKupWarsztat, 98, (int)sub_72A61, (int)aKupwarsztat, (int)a11i_0);
-  registerClipsCallback((int)aIsProduction, 98, (int)sub_72ACD, (int)aIsproduction, (int)a11i_0);
-  registerClipsCallback((int)aCzyMinimalny, 98, (int)sub_72B39, (int)aCzyminimalny, (int)a44i);
-  registerClipsCallback((int)aCanBuyLicence, 98, (int)sub_72B93, (int)aCanbuylicence, (int)a22i_0);
-  registerClipsCallback((int)aIsProductionAn, 98, (int)sub_72CB9, (int)aIsproductionan, (int)a22i_0);
-  registerClipsCallback((int)aMaxIloscOddzia, 98, (int)sub_72D8B, (int)aMaxiloscoddzia, (int)a11i_0);
-  registerClipsCallback((int)aJednostkiDoSzk, 98, (int)sub_72D55, (int)aJednostkidoszk, (int)a11i_0);
-  registerClipsCallback((int)aJednostkiDoSzp, 98, (int)sub_72E03, (int)aJednostkidoszp, (int)a11i_0);
-  registerClipsCallback((int)aJestJednostkaW, 98, (int)sub_72DC1, (int)aJestjednostkaw, (int)a22i_0);
-  registerClipsCallback((int)aPodatek, 105, (int)sub_726FA, (int)aPodatek, (int)a11i_0);
-  registerClipsCallback((int)aPieniadze, 105, (int)sub_727DE, (int)aPieniadze, (int)a11i_0);
-  registerClipsCallback((int)aSilaMurow, 105, (int)sub_72814, (int)aSilamurow, (int)a11i_0);
-  registerClipsCallback((int)aSilaZamku, 105, (int)sub_7284A, (int)aSilazamku, (int)a11i_0);
-  registerClipsCallback((int)aNumerTury, 105, (int)sub_72880, (int)aNumertury, (int)a00i_0);
-  registerClipsCallback((int)aPoziomTech, 105, (int)sub_729BF, (int)aPoziomtech, (int)a11i_0);
-  registerClipsCallback((int)aZadowolenie, 105, (int)sub_72A97, (int)aZadowolenie, (int)a11i_0);
-  registerClipsCallback((int)aTypBudowli, 105, (int)sub_729F5, (int)aTypbudowli, (int)a11i_0);
-  registerClipsCallback((int)aSilaGracza, 105, (int)sub_72A2B, (int)aSilagracza, (int)a11i_0);
-  registerClipsCallback((int)aIloscChlopow, 105, (int)sub_72B03, (int)aIloscchlopow, (int)a11i_0);
-  registerClipsCallback((int)aLicencjaIndex, 105, (int)sub_72BD5, (int)aLicencjaindex, (int)a22i_0);
-  registerClipsCallback((int)aLicencjaInd, 105, (int)sub_72C17, (int)aLicencjaind, (int)a11i_0);
-  registerClipsCallback((int)aIloscOddzialow, 105, (int)sub_72C83, (int)aIloscoddzialow, (int)a11i_0);
-  registerClipsCallback((int)aCanUpgradeWall, 105, (int)sub_72C4D, (int)aCanupgradewall, (int)a11i_0);
-  registerClipsCallback((int)aWyprowadzChlop, 105, (int)sub_72CFB, (int)aWyprowadzchlop, (int)a44i);
-  registerClipsCallback((int)aWyprowadzenieO, 105, (int)sub_72E39, (int)aWyprowadzenieo, (int)a22i_0);
-  registerClipsCallback((int)aWyprowadzeni_1, 105, (int)sub_72E7B, (int)aWyprowadzeni_0, (int)a11i_0);
-  return registerClipsCallback((int)aNazwaZamku, 115, (int)sub_72EB1, (int)aNazwazamku, (int)a11i_0);
+  registerClipsCallback((int)aLeczenie, 118, (int)Leczenie, (int)aLeczenie, (int)a11i_0);
+  registerClipsCallback((int)aSzkolenie, 118, (int)Szkolenie, (int)aSzkolenie, (int)a11i_0);
+  registerClipsCallback((int)aPalBudowle, 118, (int)PalBudowle, (int)aPalbudowle, (int)a11i_0);
+  registerClipsCallback((int)aUpgradeWall, 118, (int)UpgradeWall, (int)aUpgradewall, (int)a11i_0);
+  registerClipsCallback((int)aZmienPodatek, 118, (int)ZmienPodatek, (int)aZmienpodatek, (int)a22iif);
+  registerClipsCallback((int)aRemoveLicence, 118, (int)RemoveLicence, (int)aRemovelicence, (int)a22i_0);
+  registerClipsCallback((int)aZacznijLeczeni, 118, (int)ZacznijLeczenie, (int)aZacznijleczeni, (int)a22i_0);
+  registerClipsCallback((int)aZacznijSzkolen, 118, (int)ZacznijSzkolenie, (int)aZacznijszkolen, (int)a22i_0);
+  registerClipsCallback((int)aZacznijProdukc, 118, (int)ZacznijProdukcje, (int)aZacznijprodukc, (int)a22i_0);
+  registerClipsCallback((int)aKupSzkola, 98, (int)KupSzkola, (int)aKupszkola, (int)a11i_0);
+  registerClipsCallback((int)aKupKuznia, 98, (int)KupKuznia, (int)aKupkuznia, (int)a11i_0);
+  registerClipsCallback((int)aIsLicence, 98, (int)IsLicence, (int)aIslicence, (int)a22i_0);
+  registerClipsCallback((int)aBuyLicence, 98, (int)BuyLicence, (int)aBuylicence, (int)a22i_0);
+  registerClipsCallback((int)aKupSzpital, 98, (int)KupSzpital, (int)aKupszpital, (int)a11i_0);
+  registerClipsCallback((int)aBudujZamek, 98, (int)BudujZamek, (int)aBudujzamek, (int)a55iiiiis);
+  registerClipsCallback((int)aKupKoszary, 98, (int)KupKoszary, (int)aKupkoszary, (int)a11i_0);
+  registerClipsCallback((int)aKupWarsztat, 98, (int)KupWarsztat, (int)aKupwarsztat, (int)a11i_0);
+  registerClipsCallback((int)aIsProduction, 98, (int)IsProduction, (int)aIsproduction, (int)a11i_0);
+  registerClipsCallback((int)aCzyMinimalny, 98, (int)CzyMinimalny, (int)aCzyminimalny, (int)a44i);
+  registerClipsCallback((int)aCanBuyLicence, 98, (int)CanBuyLicence, (int)aCanbuylicence, (int)a22i_0);
+  registerClipsCallback((int)aIsProductionAn, 98, (int)IsProductionAny, (int)aIsproductionan, (int)a22i_0);
+  registerClipsCallback((int)aMaxIloscOddzia, 98, (int)MaxIloscOddzialow, (int)aMaxiloscoddzia, (int)a11i_0);
+  registerClipsCallback((int)aJednostkiDoSzk, 98, (int)JednostkiDoSzkoly, (int)aJednostkidoszk, (int)a11i_0);
+  registerClipsCallback((int)aJednostkiDoSzp, 98, (int)JednostkiDoSzpitala, (int)aJednostkidoszp, (int)a11i_0);
+  registerClipsCallback((int)aJestJednostkaW, 98, (int)JestJednostkaWZamku, (int)aJestjednostkaw, (int)a22i_0);
+  registerClipsCallback((int)aPodatek, 105, (int)Podatek, (int)aPodatek, (int)a11i_0);
+  registerClipsCallback((int)aPieniadze, 105, (int)Pieniadze, (int)aPieniadze, (int)a11i_0);
+  registerClipsCallback((int)aSilaMurow, 105, (int)SilaMurow, (int)aSilamurow, (int)a11i_0);
+  registerClipsCallback((int)aSilaZamku, 105, (int)SilaZamku, (int)aSilazamku, (int)a11i_0);
+  registerClipsCallback((int)aNumerTury, 105, (int)NumerTury, (int)aNumertury, (int)a00i_0);
+  registerClipsCallback((int)aPoziomTech, 105, (int)PoziomTech, (int)aPoziomtech, (int)a11i_0);
+  registerClipsCallback((int)aZadowolenie, 105, (int)Zadowolenie, (int)aZadowolenie, (int)a11i_0);
+  registerClipsCallback((int)aTypBudowli, 105, (int)TypBudowli, (int)aTypbudowli, (int)a11i_0);
+  registerClipsCallback((int)aSilaGracza, 105, (int)SilaGracza, (int)aSilagracza, (int)a11i_0);
+  registerClipsCallback((int)aIloscChlopow, 105, (int)IloscChlopow, (int)aIloscchlopow, (int)a11i_0);
+  registerClipsCallback((int)aLicencjaIndex, 105, (int)LicencjaIndex, (int)aLicencjaindex, (int)a22i_0);
+  registerClipsCallback((int)aLicencjaInd, 105, (int)LicencjaInd, (int)aLicencjaind, (int)a11i_0);
+  registerClipsCallback((int)aIloscOddzialow, 105, (int)IloscOddzialow, (int)aIloscoddzialow, (int)a11i_0);
+  registerClipsCallback((int)aCanUpgradeWall, 105, (int)CanUpgradeWall, (int)aCanupgradewall, (int)a11i_0);
+  registerClipsCallback((int)aWyprowadzChlop, 105, (int)WyprowadzChlopow, (int)aWyprowadzchlop, (int)a44i);
+  registerClipsCallback((int)aWyprowadzenieO, 105, (int)WyprowadzenieOddzialu, (int)aWyprowadzenieo, (int)a22i_0);
+  registerClipsCallback((int)aWyprowadzeni_1, 105, (int)WyprowadzenieOddzialow, (int)aWyprowadzeni_0, (int)a11i_0);
+  return registerClipsCallback((int)aNazwaZamku, 115, (int)NazwaZamku, (int)aNazwazamku, (int)a11i_0);
 }
-// 72880: using guessed type int sub_72880();
+// 72880: using guessed type int NumerTury();
 
 //----- (0007251C) --------------------------------------------------------
-int __usercall sub_7251C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Leczenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60144,7 +60144,7 @@ int __usercall sub_7251C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0007254A) --------------------------------------------------------
-int __usercall sub_7254A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Szkolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60153,7 +60153,7 @@ int __usercall sub_7254A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072578) --------------------------------------------------------
-signed int __usercall sub_72578@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall PalBudowle@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60162,7 +60162,7 @@ signed int __usercall sub_72578@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000725A6) --------------------------------------------------------
-signed int __usercall sub_725A6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall UpgradeWall@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60171,7 +60171,7 @@ signed int __usercall sub_725A6@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000725D4) --------------------------------------------------------
-void __usercall sub_725D4(int a1@<ecx>, int a2@<ebx>, long double a3@<st0>)
+void __usercall ZmienPodatek(int a1@<ecx>, int a2@<ebx>, long double a3@<st0>)
 {
   long double v3; // fst7@1
   float v4; // ST00_4@1
@@ -60188,7 +60188,7 @@ void __usercall sub_725D4(int a1@<ecx>, int a2@<ebx>, long double a3@<st0>)
 }
 
 //----- (00072612) --------------------------------------------------------
-int __usercall sub_72612@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall RemoveLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60201,7 +60201,7 @@ int __usercall sub_72612@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0007264C) --------------------------------------------------------
-int __usercall sub_7264C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ZacznijLeczenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60214,7 +60214,7 @@ int __usercall sub_7264C@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072686) --------------------------------------------------------
-int __usercall sub_72686@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ZacznijSzkolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60227,7 +60227,7 @@ int __usercall sub_72686@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (000726C0) --------------------------------------------------------
-int __usercall sub_726C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ZacznijProdukcje@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60240,7 +60240,7 @@ int __usercall sub_726C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (000726FA) --------------------------------------------------------
-int __usercall sub_726FA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Podatek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60249,7 +60249,7 @@ int __usercall sub_726FA@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072730) --------------------------------------------------------
-signed int __usercall sub_72730@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall IsLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60262,7 +60262,7 @@ signed int __usercall sub_72730@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072772) --------------------------------------------------------
-signed int __usercall sub_72772@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall KupSzkola@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60271,7 +60271,7 @@ signed int __usercall sub_72772@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000727A8) --------------------------------------------------------
-signed int __usercall sub_727A8@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall KupKuznia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60280,7 +60280,7 @@ signed int __usercall sub_727A8@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000727DE) --------------------------------------------------------
-int __usercall sub_727DE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Pieniadze@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60289,7 +60289,7 @@ int __usercall sub_727DE@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072814) --------------------------------------------------------
-int __usercall sub_72814@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SilaMurow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60298,7 +60298,7 @@ int __usercall sub_72814@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0007284A) --------------------------------------------------------
-int __usercall sub_7284A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SilaZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60307,14 +60307,14 @@ int __usercall sub_7284A@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072880) --------------------------------------------------------
-int sub_72880()
+int NumerTury()
 {
   return sub_7083A();
 }
-// 72880: using guessed type int sub_72880();
+// 72880: using guessed type int NumerTury();
 
 //----- (000728AC) --------------------------------------------------------
-signed int __usercall sub_728AC@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall BudujZamek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -60337,7 +60337,7 @@ signed int __usercall sub_728AC@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072911) --------------------------------------------------------
-signed int __usercall sub_72911@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall BuyLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60350,7 +60350,7 @@ signed int __usercall sub_72911@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072953) --------------------------------------------------------
-signed int __usercall sub_72953@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall KupKoszary@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60359,7 +60359,7 @@ signed int __usercall sub_72953@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072989) --------------------------------------------------------
-signed int __usercall sub_72989@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall KupSzpital@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60368,7 +60368,7 @@ signed int __usercall sub_72989@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000729BF) --------------------------------------------------------
-int __usercall sub_729BF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall PoziomTech@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60377,7 +60377,7 @@ int __usercall sub_729BF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (000729F5) --------------------------------------------------------
-int __usercall sub_729F5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall TypBudowli@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60386,7 +60386,7 @@ int __usercall sub_729F5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072A2B) --------------------------------------------------------
-int __usercall sub_72A2B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SilaGracza@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60395,7 +60395,7 @@ int __usercall sub_72A2B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072A61) --------------------------------------------------------
-signed int __usercall sub_72A61@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall KupWarsztat@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60404,7 +60404,7 @@ signed int __usercall sub_72A61@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072A97) --------------------------------------------------------
-int __usercall sub_72A97@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Zadowolenie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60413,7 +60413,7 @@ int __usercall sub_72A97@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072ACD) --------------------------------------------------------
-bool __usercall sub_72ACD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall IsProduction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60422,7 +60422,7 @@ bool __usercall sub_72ACD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00072B03) --------------------------------------------------------
-int __usercall sub_72B03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall IloscChlopow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60431,7 +60431,7 @@ int __usercall sub_72B03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072B39) --------------------------------------------------------
-signed int __usercall sub_72B39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall CzyMinimalny@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // edx@1
@@ -60452,7 +60452,7 @@ signed int __usercall sub_72B39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072B93) --------------------------------------------------------
-signed int __usercall sub_72B93@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall CanBuyLicence@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60465,7 +60465,7 @@ signed int __usercall sub_72B93@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072BD5) --------------------------------------------------------
-signed int __usercall sub_72BD5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall LicencjaIndex@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60478,7 +60478,7 @@ signed int __usercall sub_72BD5@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072C17) --------------------------------------------------------
-signed int __usercall sub_72C17@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall LicencjaInd@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60487,7 +60487,7 @@ signed int __usercall sub_72C17@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072C4D) --------------------------------------------------------
-bool __usercall sub_72C4D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall CanUpgradeWall@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60496,7 +60496,7 @@ bool __usercall sub_72C4D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00072C83) --------------------------------------------------------
-int __usercall sub_72C83@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall IloscOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60505,7 +60505,7 @@ int __usercall sub_72C83@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00072CB9) --------------------------------------------------------
-bool __usercall sub_72CB9@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall IsProductionAny@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60518,7 +60518,7 @@ bool __usercall sub_72CB9@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00072CFB) --------------------------------------------------------
-signed int __usercall sub_72CFB@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall WyprowadzChlopow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // edx@1
@@ -60539,7 +60539,7 @@ signed int __usercall sub_72CFB@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072D55) --------------------------------------------------------
-signed int __usercall sub_72D55@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall JednostkiDoSzkoly@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60548,7 +60548,7 @@ signed int __usercall sub_72D55@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072D8B) --------------------------------------------------------
-bool __usercall sub_72D8B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall MaxIloscOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60557,7 +60557,7 @@ bool __usercall sub_72D8B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00072DC1) --------------------------------------------------------
-signed int __usercall sub_72DC1@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall JestJednostkaWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60570,7 +60570,7 @@ signed int __usercall sub_72DC1@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072E03) --------------------------------------------------------
-signed int __usercall sub_72E03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall JednostkiDoSzpitala@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60579,7 +60579,7 @@ signed int __usercall sub_72E03@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072E39) --------------------------------------------------------
-signed int __usercall sub_72E39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall WyprowadzenieOddzialu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60592,7 +60592,7 @@ signed int __usercall sub_72E39@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072E7B) --------------------------------------------------------
-signed int __usercall sub_72E7B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall WyprowadzenieOddzialow@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60601,7 +60601,7 @@ signed int __usercall sub_72E7B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00072EB1) --------------------------------------------------------
-int __usercall sub_72EB1@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
+int __usercall NazwaZamku@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
 {
   int v4; // eax@1
   int v5; // edx@1
@@ -60613,29 +60613,29 @@ int __usercall sub_72EB1@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long do
 //----- (00072EE7) --------------------------------------------------------
 signed int registerClipsFunctions3()
 {
-  registerClipsCallback((int)aWejdzDoZamku, 98, (int)sub_73153, (int)aWejdzdozamku, (int)a22i_1);
-  registerClipsCallback((int)aDolaczDoOddzia, 98, (int)sub_73195, (int)aDolaczdoarmii, (int)a22i_1);
-  registerClipsCallback((int)aPrzegrupujOddz, 98, (int)sub_731D7, (int)aPrzegrupujarmi, (int)a22i_1);
-  registerClipsCallback((int)aPrzegrupujZame, 98, (int)sub_73219, (int)aPrzegrupujzame, (int)a22i_1);
-  registerClipsCallback((int)aLiczbaWolnychM, 105, (int)sub_73321, (int)aLiczbawolnychm, (int)a11i_1);
-  registerClipsCallback((int)aZnajdzDrogeWPo, 98, (int)sub_7338D, (int)aZnajdzdrogewpo, (int)a22i_1);
-  registerClipsCallback((int)aMocPrzeciwnika, 105, (int)sub_73357, (int)aMocprzeciwnika, (int)a11i_1);
-  registerClipsCallback((int)aStanOsobArmii, 105, (int)sub_7325B, (int)aStanosobarmii, (int)a22i_1);
-  registerClipsCallback((int)aArmiaMaJednost, 98, (int)sub_7329D, (int)aArmiamajednost, (int)a22i_1);
-  registerClipsCallback((int)aArmiaTylkoJedn, 98, (int)sub_732DF, (int)aArmiatylkojedn, (int)a22i_1);
-  registerClipsCallback((int)aMaJednostkiDoL, 98, (int)sub_733CF, (int)aMajednostkidol, (int)a11i_1);
-  registerClipsCallback((int)aZnajdzZamekDoL, 98, (int)sub_73405, (int)aZnajdzzamekdol, (int)a11i_1);
-  registerClipsCallback((int)aIdzDoLeczenia, 98, (int)sub_7343B, (int)aIdzdoleczenia, (int)a11i_1);
-  registerClipsCallback((int)aJestZarazaWZam, 98, (int)sub_73471, (int)aJestzarazawzam, (int)a11i_1);
-  registerClipsCallback((int)aJestZarazaWOdd, 98, (int)sub_734A7, (int)aJestzarazawodd, (int)a11i_1);
-  registerClipsCallback((int)aOdlaczJednostk, 98, (int)sub_734DD, (int)aOdlaczjednostk, (int)a11i_1);
-  registerClipsCallback((int)aOdlaczJednos_0, 98, (int)sub_73513, (int)aOdlaczjednos_0, (int)a22i_1);
-  registerClipsCallback((int)aMaszerujWzdluz, 98, (int)sub_73555, (int)aMaszerujwzdluz, (int)a11i_1);
-  return registerClipsCallback((int)aZnajdzNajlepsz, 105, (int)sub_7358B, (int)aZnajdz_najleps, (int)a55i);
+  registerClipsCallback((int)aWejdzDoZamku, 98, (int)WejdzDoZamku, (int)aWejdzdozamku, (int)a22i_1);
+  registerClipsCallback((int)aDolaczDoOddzia, 98, (int)DolaczDoArmii, (int)aDolaczdoarmii, (int)a22i_1);
+  registerClipsCallback((int)aPrzegrupujOddz, 98, (int)PrzegrupujArmie, (int)aPrzegrupujarmi, (int)a22i_1);
+  registerClipsCallback((int)aPrzegrupujZame, 98, (int)PrzegrupujZamek, (int)aPrzegrupujzame, (int)a22i_1);
+  registerClipsCallback((int)aLiczbaWolnychM, 105, (int)LiczbaWolnychMiejscWZamku, (int)aLiczbawolnychm, (int)a11i_1);
+  registerClipsCallback((int)aZnajdzDrogeWPo, 98, (int)ZnajdzDrogeWPoblizeZamku, (int)aZnajdzdrogewpo, (int)a22i_1);
+  registerClipsCallback((int)aMocPrzeciwnika, 105, (int)MocPrzeciwnikaPodMurami2, (int)aMocprzeciwnika, (int)a11i_1);
+  registerClipsCallback((int)aStanOsobArmii, 105, (int)StanOsobArmii, (int)aStanosobarmii, (int)a22i_1);
+  registerClipsCallback((int)aArmiaMaJednost, 98, (int)ArmiaMaJednostkiTypu, (int)aArmiamajednost, (int)a22i_1);
+  registerClipsCallback((int)aArmiaTylkoJedn, 98, (int)ArmiaTylkoJednostkiTypu, (int)aArmiatylkojedn, (int)a22i_1);
+  registerClipsCallback((int)aMaJednostkiDoL, 98, (int)MaJednostkiDoLeczenia, (int)aMajednostkidol, (int)a11i_1);
+  registerClipsCallback((int)aZnajdzZamekDoL, 98, (int)ZnajdzZamekDoLeczenia, (int)aZnajdzzamekdol, (int)a11i_1);
+  registerClipsCallback((int)aIdzDoLeczenia, 98, (int)IdzDoLeczenia, (int)aIdzdoleczenia, (int)a11i_1);
+  registerClipsCallback((int)aJestZarazaWZam, 98, (int)JestZarazaWZamku, (int)aJestzarazawzam, (int)a11i_1);
+  registerClipsCallback((int)aJestZarazaWOdd, 98, (int)JestZarazaWOddziale, (int)aJestzarazawodd, (int)a11i_1);
+  registerClipsCallback((int)aOdlaczJednostk, 98, (int)OdlaczJednostkiSlabe, (int)aOdlaczjednostk, (int)a11i_1);
+  registerClipsCallback((int)aOdlaczJednos_0, 98, (int)OdlaczJednostkiTypu, (int)aOdlaczjednos_0, (int)a22i_1);
+  registerClipsCallback((int)aMaszerujWzdluz, 98, (int)MaszerujWzdluzDrogi, (int)aMaszerujwzdluz, (int)a11i_1);
+  return registerClipsCallback((int)aZnajdzNajlepsz, 105, (int)Znajdz_Najlepszy, (int)aZnajdz_najleps, (int)a55i);
 }
 
 //----- (00073153) --------------------------------------------------------
-bool __usercall sub_73153@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall WejdzDoZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60648,7 +60648,7 @@ bool __usercall sub_73153@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00073195) --------------------------------------------------------
-signed int __usercall sub_73195@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall DolaczDoArmii@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60661,7 +60661,7 @@ signed int __usercall sub_73195@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000731D7) --------------------------------------------------------
-int __usercall sub_731D7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall PrzegrupujArmie@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60674,7 +60674,7 @@ int __usercall sub_731D7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00073219) --------------------------------------------------------
-int __usercall sub_73219@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall PrzegrupujZamek@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60687,7 +60687,7 @@ int __usercall sub_73219@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0007325B) --------------------------------------------------------
-signed int __usercall sub_7325B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall StanOsobArmii@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60700,7 +60700,7 @@ signed int __usercall sub_7325B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0007329D) --------------------------------------------------------
-signed int __usercall sub_7329D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ArmiaMaJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60713,7 +60713,7 @@ signed int __usercall sub_7329D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000732DF) --------------------------------------------------------
-signed int __usercall sub_732DF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ArmiaTylkoJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60726,7 +60726,7 @@ signed int __usercall sub_732DF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00073321) --------------------------------------------------------
-int __usercall sub_73321@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall LiczbaWolnychMiejscWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60735,7 +60735,7 @@ int __usercall sub_73321@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (00073357) --------------------------------------------------------
-int __usercall sub_73357@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall MocPrzeciwnikaPodMurami2@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60744,7 +60744,7 @@ int __usercall sub_73357@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0007338D) --------------------------------------------------------
-signed int __usercall sub_7338D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ZnajdzDrogeWPoblizeZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60757,7 +60757,7 @@ signed int __usercall sub_7338D@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000733CF) --------------------------------------------------------
-signed int __usercall sub_733CF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall MaJednostkiDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60766,7 +60766,7 @@ signed int __usercall sub_733CF@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00073405) --------------------------------------------------------
-bool __usercall sub_73405@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall ZnajdzZamekDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60775,7 +60775,7 @@ bool __usercall sub_73405@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0007343B) --------------------------------------------------------
-bool __usercall sub_7343B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall IdzDoLeczenia@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60784,7 +60784,7 @@ bool __usercall sub_7343B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (00073471) --------------------------------------------------------
-int __usercall sub_73471@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall JestZarazaWZamku@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60793,7 +60793,7 @@ int __usercall sub_73471@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (000734A7) --------------------------------------------------------
-signed int __usercall sub_734A7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall JestZarazaWOddziale@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60802,7 +60802,7 @@ signed int __usercall sub_734A7@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000734DD) --------------------------------------------------------
-signed int __usercall sub_734DD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall OdlaczJednostkiSlabe@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60811,7 +60811,7 @@ signed int __usercall sub_734DD@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00073513) --------------------------------------------------------
-signed int __usercall sub_73513@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall OdlaczJednostkiTypu@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -60824,7 +60824,7 @@ signed int __usercall sub_73513@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (00073555) --------------------------------------------------------
-bool __usercall sub_73555@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+bool __usercall MaszerujWzdluzDrogi@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
 
@@ -60833,7 +60833,7 @@ bool __usercall sub_73555@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>
 }
 
 //----- (0007358B) --------------------------------------------------------
-int __usercall sub_7358B@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall Znajdz_Najlepszy@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ST00_4@1
   int v4; // edx@1
@@ -62117,7 +62117,7 @@ int __usercall startMap5@<eax>(int a1@<ebx>, long double a2@<st0>)
   v11 = addCastle(a2, 56, 69, 1, 2, (int)aHopenberg, 17, 9, 9);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v11 + gameDataOffset + 4) = 9;
   addUnit(a2, 56, 71, 1, 9, 9, -1);
-  sub_59749(*(_WORD *)((char *)&loc_8A99F + gameDataOffset + 5), v11, a2);
+  buildingUnitGetInto(*(_WORD *)((char *)&loc_8A99F + gameDataOffset + 5), v11, a2);
   for ( j = 0; j < 12; ++j )
     *((_BYTE *)&loc_7C708 + 467 * v11 + 31 * j + gameDataOffset) |= 3u;
   *(&byte_7C8A7[467 * v11] + gameDataOffset) = 33;
@@ -63075,7 +63075,7 @@ int __usercall startMap15@<eax>(int a1@<ebx>, long double a2@<st0>)
   v12 = addCastle(a2, 52, 24, 2, 2, (int)aTimbran_2, 17, 15, 15);
   *(_WORD *)((char *)&loc_7C6F8 + 467 * v12 + gameDataOffset + 4) = 15;
   addUnit(a2, 52, 26, 2, 9, 9, -1);
-  sub_59749(*(_WORD *)((char *)&loc_8A62A + gameDataOffset), v12, a2);
+  buildingUnitGetInto(*(_WORD *)((char *)&loc_8A62A + gameDataOffset), v12, a2);
   for ( j = 0; j < 12; ++j )
   {
     v5 = 31 * j + 467 * v12 + gameDataOffset;
@@ -63861,7 +63861,7 @@ signed int __usercall sub_7BFB8@<eax>(long double a1@<st0>)
 // 1B0604: using guessed type int dword_1B0604;
 
 //----- (0007C17E) --------------------------------------------------------
-int sub_7C17E()
+bool sub_7C17E()
 {
   int v1; // [sp+0h] [bp-8h]@2
   unsigned int v2; // [sp+4h] [bp-4h]@1
@@ -65584,16 +65584,16 @@ LABEL_23:
 // 1B0EC4: using guessed type int dword_1B0EC4;
 
 //----- (0007D810) --------------------------------------------------------
-char sub_7D810()
+unsigned __int8 sub_7D810()
 {
   signed int v0; // ecx@1
-  char result; // al@2
+  unsigned __int8 result; // al@2
 
   v0 = 0x8000;
   do
   {
     result = __inbyte(dword_13947F + 4);
-    if ( result >= 0 )
+    if ( (result & 0x80u) == 0 )
       break;
     --v0;
   }
@@ -69268,7 +69268,7 @@ int __cdecl sub_82A90(int a1)
 // 139A8C: using guessed type int dword_139A8C[];
 
 //----- (00082AA0) --------------------------------------------------------
-unsigned int __cdecl sub_82AA0(int a1, int a2)
+int __cdecl sub_82AA0(int a1, int a2)
 {
   char *v2; // ebx@1
   unsigned __int8 v3; // al@2
@@ -69280,7 +69280,7 @@ unsigned int __cdecl sub_82AA0(int a1, int a2)
   unsigned __int8 v9; // al@4
   int v10; // eax@4
   unsigned int v11; // eax@8
-  unsigned int result; // eax@9
+  int result; // eax@9
 
   v2 = (char *)&unk_139AE0 + 36 * *(_DWORD *)(a1 + 20);
   __outbyte(*((_DWORD *)v2 + 7), 0);
@@ -73947,13 +73947,13 @@ signed int sub_88370()
 {
   sub_94780((int)aAgenda_0, (int)sub_888E0, 0);
   sub_EC050((int)aActivations, 1, (int)&dword_13A960, 40, (int)sub_DEB50, (int)sub_DEB90);
-  registerClipsCallback((int)aRefresh, 118, (int)sub_889F0, (int)aRefreshcommand, (int)a11w_0);
-  registerClipsCallback((int)aRefreshAgenda, 118, (int)sub_88BA0, (int)aRefreshagendac, (int)a01w);
-  registerClipsCallback((int)aGetSalienceEva, 119, (int)sub_88DA0, (int)aGetsalienceeva, (int)a00_5);
-  registerClipsCallback((int)aSetSalienceEva, 119, (int)sub_88CA0, (int)aSetsalienceeva, (int)a11w_0);
-  return registerClipsCallback((int)aAgenda_0, 118, (int)sub_88F10, (int)aAgendacommand, (int)a01w);
+  registerClipsCallback((int)aRefresh, 118, (int)RefreshCommand, (int)aRefreshcommand, (int)a11w_0);
+  registerClipsCallback((int)aRefreshAgenda, 118, (int)RefreshAgendaCommand, (int)aRefreshagendac, (int)a01w);
+  registerClipsCallback((int)aGetSalienceEva, 119, (int)GetSalienceEvaluationCommand, (int)aGetsalienceeva, (int)a00_5);
+  registerClipsCallback((int)aSetSalienceEva, 119, (int)SetSalienceEvaluationCommand, (int)aSetsalienceeva, (int)a11w_0);
+  return registerClipsCallback((int)aAgenda_0, 118, (int)AgendaCommand, (int)aAgendacommand, (int)a01w);
 }
-// 88DA0: using guessed type int sub_88DA0();
+// 88DA0: using guessed type int GetSalienceEvaluationCommand();
 // 13A960: using guessed type int dword_13A960;
 
 //----- (00088450) --------------------------------------------------------
@@ -74277,7 +74277,7 @@ int sub_889E0()
 // 13A964: using guessed type int dword_13A964;
 
 //----- (000889F0) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_889F0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall __spoils<ecx,st0> RefreshCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // eax@2
@@ -74361,7 +74361,7 @@ signed int sub_88B70()
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (00088BA0) --------------------------------------------------------
-int __usercall sub_88BA0@<eax>(int a1@<edx>, long double a2@<st0>)
+int __usercall RefreshAgendaCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // ecx@1
@@ -74421,7 +74421,7 @@ int __usercall sub_88C00@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B1494: using guessed type int dword_1B1494;
 
 //----- (00088CA0) --------------------------------------------------------
-int __usercall sub_88CA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetSalienceEvaluationCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -74469,7 +74469,7 @@ int __usercall sub_88CA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 13A970: using guessed type int dword_13A970;
 
 //----- (00088DA0) --------------------------------------------------------
-int sub_88DA0()
+int GetSalienceEvaluationCommand()
 {
   int v0; // eax@1
 
@@ -74477,7 +74477,7 @@ int sub_88DA0()
   v0 = sub_88DD0(dword_13A970);
   return sub_E5680(v0);
 }
-// 88DA0: using guessed type int sub_88DA0();
+// 88DA0: using guessed type int GetSalienceEvaluationCommand();
 // 13A970: using guessed type int dword_13A970;
 
 //----- (00088DD0) --------------------------------------------------------
@@ -74584,7 +74584,7 @@ signed int __usercall __spoils<ecx,st0> sub_88E40@<eax>(int a1@<eax>, long doubl
 // 13A970: using guessed type int dword_13A970;
 
 //----- (00088F10) --------------------------------------------------------
-signed int __usercall sub_88F10@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall AgendaCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // ecx@1
@@ -76290,7 +76290,7 @@ signed int sub_8AE80()
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (0008AED0) --------------------------------------------------------
-int __usercall sub_8AED0@<eax>(long double a1@<st0>)
+int __usercall BloadCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -76313,24 +76313,24 @@ int __usercall sub_8AED0@<eax>(long double a1@<st0>)
 //----- (0008AF20) --------------------------------------------------------
 signed int sub_8AF20()
 {
-  registerClipsCallback((int)asc_122DC4, 110, (int)sub_8B0A0, (int)aAdditionfuncti, (int)a2N_0);
-  registerClipsCallback((int)asc_122DE0, 110, (int)sub_8B180, (int)aMultiplication, (int)a2N_0);
-  registerClipsCallback((int)asc_122DF8, 110, (int)sub_8B270, (int)aSubtractionfun, (int)a2N_0);
-  registerClipsCallback((int)asc_122E10, 110, (int)sub_8B3A0, (int)aDivisionfuncti, (int)a2N_0);
-  registerClipsCallback((int)aDiv, 108, (int)sub_8B570, (int)aDivfunction, (int)a2N_0);
-  registerClipsCallback((int)aSetAutoFloatDi, 98, (int)sub_8B6C0, (int)aSetautofloatdi, (int)a11_0);
-  registerClipsCallback((int)aGetAutoFloatDi, 98, (int)sub_8B730, (int)aGetautofloatdi, (int)a00_0);
+  registerClipsCallback((int)asc_122DC4, 110, (int)AdditionFunction, (int)aAdditionfuncti, (int)a2N_0);
+  registerClipsCallback((int)asc_122DE0, 110, (int)MultiplicationFunction, (int)aMultiplication, (int)a2N_0);
+  registerClipsCallback((int)asc_122DF8, 110, (int)SubtractionFunction, (int)aSubtractionfun, (int)a2N_0);
+  registerClipsCallback((int)asc_122E10, 110, (int)DivisionFunction, (int)aDivisionfuncti, (int)a2N_0);
+  registerClipsCallback((int)aDiv, 108, (int)DivFunction, (int)aDivfunction, (int)a2N_0);
+  registerClipsCallback((int)aSetAutoFloatDi, 98, (int)SetAutoFloatDividendCommand, (int)aSetautofloatdi, (int)a11_0);
+  registerClipsCallback((int)aGetAutoFloatDi, 98, (int)GetAutoFloatDividendCommand, (int)aGetautofloatdi, (int)a00_0);
   registerClipsCallback((int)aInteger_0, 108, (int)dword_8B790, (int)aIntegerfunctio, (int)a11n);
-  registerClipsCallback((int)aFloat_0, 100, (int)sub_8B7E0, (int)aFloatfunction, (int)a11n);
-  registerClipsCallback((int)aAbs, 110, (int)sub_8B850, (int)aAbsfunction, (int)a11n);
-  registerClipsCallback((int)aMin, 110, (int)sub_8B900, (int)aMinfunction, (int)a2N_0);
-  return registerClipsCallback((int)aMax, 110, (int)sub_8BA30, (int)aMaxfunction, (int)a2N_0);
+  registerClipsCallback((int)aFloat_0, 100, (int)FloatFunction, (int)aFloatfunction, (int)a11n);
+  registerClipsCallback((int)aAbs, 110, (int)AbsFunction, (int)aAbsfunction, (int)a11n);
+  registerClipsCallback((int)aMin, 110, (int)MinFunction, (int)aMinfunction, (int)a2N_0);
+  return registerClipsCallback((int)aMax, 110, (int)MaxFunction, (int)aMaxfunction, (int)a2N_0);
 }
-// 8B730: using guessed type int sub_8B730();
+// 8B730: using guessed type int GetAutoFloatDividendCommand();
 // 8B790: using guessed type int dword_8B790[5];
 
 //----- (0008B0A0) --------------------------------------------------------
-void __usercall sub_8B0A0(int a1@<eax>, long double a2@<st0>)
+void __usercall AdditionFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebp@1
   int v3; // edi@1
@@ -76394,7 +76394,7 @@ LABEL_12:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (0008B180) --------------------------------------------------------
-void __usercall sub_8B180(int a1@<eax>, long double a2@<st0>)
+void __usercall MultiplicationFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // ebp@1
@@ -76458,7 +76458,7 @@ LABEL_12:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (0008B270) --------------------------------------------------------
-void __usercall sub_8B270(int a1@<eax>, long double a2@<st0>)
+void __usercall SubtractionFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebp@1
   int v3; // edi@1
@@ -76547,7 +76547,7 @@ LABEL_18:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (0008B3A0) --------------------------------------------------------
-void __usercall sub_8B3A0(int a1@<eax>, long double a2@<st0>)
+void __usercall DivisionFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // esi@1
@@ -76660,7 +76660,7 @@ LABEL_32:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (0008B570) --------------------------------------------------------
-long double __usercall sub_8B570@<st0>(long double result@<st0>)
+long double __usercall DivFunction@<st0>(long double result@<st0>)
 {
   int v1; // esi@1
   int v2; // edi@1
@@ -76750,7 +76750,7 @@ LABEL_9:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (0008B6C0) --------------------------------------------------------
-int __usercall sub_8B6C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetAutoFloatDividendCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ecx@1
   int v5; // [sp-4h] [bp-28h]@2
@@ -76772,16 +76772,16 @@ int __usercall sub_8B6C0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (0008B730) --------------------------------------------------------
-int sub_8B730()
+int GetAutoFloatDividendCommand()
 {
   sub_89D20((int)aGetAutoFloatDi, 0, 0);
   return dword_13A990;
 }
-// 8B730: using guessed type int sub_8B730();
+// 8B730: using guessed type int GetAutoFloatDividendCommand();
 // 13A990: using guessed type int dword_13A990;
 
 //----- (0008B7E0) --------------------------------------------------------
-long double __usercall sub_8B7E0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall FloatFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   signed int v4; // eax@3
   int v6; // [sp-8h] [bp-30h]@3
@@ -76816,7 +76816,7 @@ long double __usercall sub_8B7E0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 }
 
 //----- (0008B850) --------------------------------------------------------
-void __usercall sub_8B850(int a1@<eax>, long double a2@<st0>)
+void __usercall AbsFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   int v3; // eax@2
@@ -76852,7 +76852,7 @@ LABEL_10:
 }
 
 //----- (0008B900) --------------------------------------------------------
-void __usercall sub_8B900(int a1@<eax>, long double a2@<st0>)
+void __usercall MinFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   signed int v3; // ebp@1
@@ -76921,7 +76921,7 @@ LABEL_17:
 }
 
 //----- (0008BA30) --------------------------------------------------------
-void __usercall sub_8BA30(int a1@<eax>, long double a2@<st0>)
+void __usercall MaxFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   signed int v3; // ebp@1
@@ -76990,7 +76990,7 @@ LABEL_17:
 }
 
 //----- (0008BB60) --------------------------------------------------------
-bool __usercall sub_8BB60@<eax>(long double a1@<st0>)
+bool __usercall BsaveCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int v2; // eax@2
@@ -77601,7 +77601,7 @@ int __usercall sub_8C4F0@<eax>(int a1@<ebp>)
 }
 
 //----- (0008C520) --------------------------------------------------------
-int __usercall sub_8C520@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDefclassCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1040, a1, a2);
 }
@@ -77679,7 +77679,7 @@ signed int __usercall sub_8C650@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, 
 // 1B1040: using guessed type int dword_1B1040;
 
 //----- (0008C690) --------------------------------------------------------
-int __usercall sub_8C690@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefclassListFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96210((int)aGetDefclassL_0, a1, dword_1B1040, a2);
 }
@@ -77796,7 +77796,7 @@ void __fastcall sub_8C7D0(int a1, int a2)
 }
 
 //----- (0008C840) --------------------------------------------------------
-int __usercall sub_8C840@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall BrowseClassesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@2
   int result; // eax@3
@@ -77830,7 +77830,7 @@ int __usercall sub_8C840@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 13B508: using guessed type char *off_13B508;
 
 //----- (0008C8E0) --------------------------------------------------------
-signed int __usercall sub_8C8E0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall DescribeClassCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // edx@2
@@ -77997,14 +77997,14 @@ int __fastcall sub_8CB70(int a1)
 }
 
 //----- (0008CBD0) --------------------------------------------------------
-int __usercall sub_8CBD0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefclassModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDefclassModu_0, dword_1B1040, a1, a2);
 }
 // 1B1040: using guessed type int dword_1B1040;
 
 //----- (0008CBF0) --------------------------------------------------------
-signed int __usercall sub_8CBF0@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall SuperclassPCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // [sp+0h] [bp-10h]@1
@@ -78019,7 +78019,7 @@ signed int __usercall sub_8CBF0@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (0008CC50) --------------------------------------------------------
-signed int __usercall sub_8CC50@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall SubclassPCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // [sp+0h] [bp-10h]@1
@@ -78034,7 +78034,7 @@ signed int __usercall sub_8CC50@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (0008CCA0) --------------------------------------------------------
-int __usercall sub_8CCA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SlotExistPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   signed int v4; // esi@1
@@ -78075,7 +78075,7 @@ int __usercall sub_8CCA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // F4A70: using guessed type int __fastcall strcmp(_DWORD, _DWORD);
 
 //----- (0008CD70) --------------------------------------------------------
-signed int __usercall sub_8CD70@<eax>(long double a1@<st0>)
+signed int __usercall MessageHandlerExistPCommand@<eax>(long double a1@<st0>)
 {
   int v1; // esi@1
   signed int result; // eax@1
@@ -78124,7 +78124,7 @@ LABEL_13:
 }
 
 //----- (0008CE50) --------------------------------------------------------
-int __usercall sub_8CE50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SlotWritablePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // [sp-Ch] [bp-10h]@1
@@ -78140,7 +78140,7 @@ int __usercall sub_8CE50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0008CEC0) --------------------------------------------------------
-int __usercall sub_8CEC0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SlotInitablePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // [sp-Ch] [bp-10h]@1
@@ -78156,7 +78156,7 @@ int __usercall sub_8CEC0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0008CF40) --------------------------------------------------------
-int __usercall sub_8CF40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SlotPublicPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // [sp-Ch] [bp-10h]@1
@@ -78172,7 +78172,7 @@ int __usercall sub_8CF40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0008CFB0) --------------------------------------------------------
-int __usercall sub_8CFB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SlotDirectAccessPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // [sp+0h] [bp-10h]@1
@@ -78188,7 +78188,7 @@ int __usercall sub_8CFB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0008D040) --------------------------------------------------------
-int __usercall sub_8D040@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ClassExistPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // [sp-8h] [bp-24h]@1
@@ -79719,7 +79719,7 @@ int __usercall sub_8E980@<eax>(int result@<eax>, int a2@<ebp>)
 // 13A9A4: using guessed type __int16 word_13A9A4;
 
 //----- (0008EA40) --------------------------------------------------------
-signed int __usercall sub_8EA40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ClassAbstractPCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // eax@2
@@ -79750,7 +79750,7 @@ signed int __usercall sub_8EA40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0008EAA0) --------------------------------------------------------
-signed int __usercall sub_8EAA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ClassReactivePCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // eax@2
@@ -79830,7 +79830,7 @@ signed int __usercall sub_8EB00@<eax>(int a1@<eax>, int a2@<edx>, long double a3
 // F4A70: using guessed type int __fastcall strcmp(_DWORD, _DWORD);
 
 //----- (0008EBF0) --------------------------------------------------------
-signed int __usercall sub_8EBF0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ClassSlotsCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -79850,7 +79850,7 @@ signed int __usercall sub_8EBF0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0008EC70) --------------------------------------------------------
-signed int __usercall sub_8EC70@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ClassSubclassesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -79870,7 +79870,7 @@ signed int __usercall sub_8EC70@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (0008ECB0) --------------------------------------------------------
-int __usercall sub_8ECB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall GetDefmessageHandlersListCmd@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@1
   int v4; // ecx@1
@@ -79901,7 +79901,7 @@ int __usercall sub_8ECB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 }
 
 //----- (0008ED00) --------------------------------------------------------
-signed int __usercall sub_8ED00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotFacetsCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -79928,7 +79928,7 @@ signed int __usercall sub_8ED00@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (0008ED50) --------------------------------------------------------
-signed int __usercall sub_8ED50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotSourcesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -79955,7 +79955,7 @@ signed int __usercall sub_8ED50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (0008EDA0) --------------------------------------------------------
-signed int __usercall sub_8EDA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotTypesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -79982,7 +79982,7 @@ signed int __usercall sub_8EDA0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (0008EDF0) --------------------------------------------------------
-signed int __usercall sub_8EDF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotAllowedValuesCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -80009,7 +80009,7 @@ signed int __usercall sub_8EDF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (0008EE40) --------------------------------------------------------
-signed int __usercall sub_8EE40@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotRangeCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -80036,7 +80036,7 @@ signed int __usercall sub_8EE40@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (0008EE90) --------------------------------------------------------
-signed int __usercall sub_8EE90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SlotCardinalityCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebx@1
   signed int v5; // eax@1
@@ -80869,7 +80869,7 @@ signed int sub_8FD00()
     (int)sub_D2670,
     (int)sub_D24E0,
     (int)sub_D26F0);
-  registerClipsCallback((int)aObjectPatternM, 117, (int)sub_D47F0, (int)aObjectmatchdel, 0);
+  registerClipsCallback((int)aObjectPatternM, 117, (int)ObjectMatchDelay, (int)aObjectmatchdel, 0);
   sub_A5A70((int)aObjectPatternM, (int)sub_D25D0);
   sub_A5AF0((int)aObjectPatternM, 0, 0);
   sub_D26B0();
@@ -81002,32 +81002,32 @@ int sub_8FFD0()
   registerClipsCallback((int)aUndefclass, 118, (int)sub_8C4D0, v0, (int)a11w_7);
   sub_94990((int)aDefclass, (int)sub_8C7A0, 10);
   registerClipsCallback((int)aListDefclasses, 118, (int)sub_8C540, v1, (int)a01_2);
-  registerClipsCallback((int)aPpdefclass, 118, (int)sub_8C520, (int)aPpdefclasscomm, (int)a11w_7);
-  registerClipsCallback((int)aDescribeClass, 118, (int)sub_8C8E0, (int)aDescribeclassc, (int)a11w_7);
-  registerClipsCallback((int)aBrowseClasses, 118, (int)sub_8C840, (int)aBrowseclassesc, (int)a01w_6);
-  registerClipsCallback((int)aGetDefclassLis, 109, (int)sub_8C690, (int)aGetdefclasslis, (int)a01_2);
-  registerClipsCallback((int)aSuperclassp, 98, (int)sub_8CBF0, (int)aSuperclasspcom, (int)a22w);
-  registerClipsCallback((int)aSubclassp, 98, (int)sub_8CC50, (int)aSubclasspcomma, (int)a22w);
-  registerClipsCallback((int)aClassExistp, 98, (int)sub_8D040, (int)aClassexistpcom, (int)a11w_7);
-  registerClipsCallback((int)aMessageHandl_1, 98, (int)sub_8CD70, (int)aMessagehandler, (int)a23w);
-  registerClipsCallback((int)aClassAbstractp, 98, (int)sub_8EA40, (int)aClassabstractp, (int)a11w_7);
-  registerClipsCallback((int)aClassReactivep, 98, (int)sub_8EAA0, (int)aClassreactivep, (int)a11w_7);
-  registerClipsCallback((int)aClassSlots, 109, (int)sub_8EBF0, (int)aClassslotscomm, (int)a12w);
+  registerClipsCallback((int)aPpdefclass, 118, (int)PPDefclassCommand, (int)aPpdefclasscomm, (int)a11w_7);
+  registerClipsCallback((int)aDescribeClass, 118, (int)DescribeClassCommand, (int)aDescribeclassc, (int)a11w_7);
+  registerClipsCallback((int)aBrowseClasses, 118, (int)BrowseClassesCommand, (int)aBrowseclassesc, (int)a01w_6);
+  registerClipsCallback((int)aGetDefclassLis, 109, (int)GetDefclassListFunction, (int)aGetdefclasslis, (int)a01_2);
+  registerClipsCallback((int)aSuperclassp, 98, (int)SuperclassPCommand, (int)aSuperclasspcom, (int)a22w);
+  registerClipsCallback((int)aSubclassp, 98, (int)SubclassPCommand, (int)aSubclasspcomma, (int)a22w);
+  registerClipsCallback((int)aClassExistp, 98, (int)ClassExistPCommand, (int)aClassexistpcom, (int)a11w_7);
+  registerClipsCallback((int)aMessageHandl_1, 98, (int)MessageHandlerExistPCommand, (int)aMessagehandler, (int)a23w);
+  registerClipsCallback((int)aClassAbstractp, 98, (int)ClassAbstractPCommand, (int)aClassabstractp, (int)a11w_7);
+  registerClipsCallback((int)aClassReactivep, 98, (int)ClassReactivePCommand, (int)aClassreactivep, (int)a11w_7);
+  registerClipsCallback((int)aClassSlots, 109, (int)ClassSlotsCommand, (int)aClassslotscomm, (int)a12w);
   registerClipsCallback((int)aClassSuperclas, 109, (int)dword_8EC30, (int)aClasssuperclas, (int)a12w);
-  registerClipsCallback((int)aClassSubclasse, 109, (int)sub_8EC70, (int)aClasssubclasse, (int)a12w);
-  registerClipsCallback((int)aGetDefmessageH, 109, (int)sub_8ECB0, (int)aGetdefmessageh, (int)a02w);
-  registerClipsCallback((int)aSlotExistp, 98, (int)sub_8CCA0, (int)aSlotexistpcomm, (int)a23w);
-  registerClipsCallback((int)aSlotFacets, 109, (int)sub_8ED00, (int)aSlotfacetscomm, (int)a22w);
-  registerClipsCallback((int)aSlotSources, 109, (int)sub_8ED50, (int)aSlotsourcescom, (int)a22w);
-  registerClipsCallback((int)aSlotTypes, 109, (int)sub_8EDA0, (int)aSlottypescomma, (int)a22w);
-  registerClipsCallback((int)aSlotAllowedVal, 109, (int)sub_8EDF0, (int)aSlotallowedval, (int)a22w);
-  registerClipsCallback((int)aSlotRange, 109, (int)sub_8EE40, (int)aSlotrangecomma, (int)a22w);
-  registerClipsCallback((int)aSlotCardinalit, 109, (int)sub_8EE90, (int)aSlotcardinalit, (int)a22w);
-  registerClipsCallback((int)aSlotWritablep, 98, (int)sub_8CE50, (int)aSlotwritablepc, (int)a22we);
-  registerClipsCallback((int)aSlotInitablep, 98, (int)sub_8CEC0, (int)aSlotinitablepc, (int)a22we);
-  registerClipsCallback((int)aSlotPublicp, 98, (int)sub_8CF40, (int)aSlotpublicpcom, (int)a22we);
-  registerClipsCallback((int)aSlotDirectAcce, 98, (int)sub_8CFB0, (int)aSlotdirectacce, (int)a22we);
-  registerClipsCallback((int)aDefclassModule, 119, (int)sub_8CBD0, (int)aGetdefclassmod, (int)a11w_7);
+  registerClipsCallback((int)aClassSubclasse, 109, (int)ClassSubclassesCommand, (int)aClasssubclasse, (int)a12w);
+  registerClipsCallback((int)aGetDefmessageH, 109, (int)GetDefmessageHandlersListCmd, (int)aGetdefmessageh, (int)a02w);
+  registerClipsCallback((int)aSlotExistp, 98, (int)SlotExistPCommand, (int)aSlotexistpcomm, (int)a23w);
+  registerClipsCallback((int)aSlotFacets, 109, (int)SlotFacetsCommand, (int)aSlotfacetscomm, (int)a22w);
+  registerClipsCallback((int)aSlotSources, 109, (int)SlotSourcesCommand, (int)aSlotsourcescom, (int)a22w);
+  registerClipsCallback((int)aSlotTypes, 109, (int)SlotTypesCommand, (int)aSlottypescomma, (int)a22w);
+  registerClipsCallback((int)aSlotAllowedVal, 109, (int)SlotAllowedValuesCommand, (int)aSlotallowedval, (int)a22w);
+  registerClipsCallback((int)aSlotRange, 109, (int)SlotRangeCommand, (int)aSlotrangecomma, (int)a22w);
+  registerClipsCallback((int)aSlotCardinalit, 109, (int)SlotCardinalityCommand, (int)aSlotcardinalit, (int)a22w);
+  registerClipsCallback((int)aSlotWritablep, 98, (int)SlotWritablePCommand, (int)aSlotwritablepc, (int)a22we);
+  registerClipsCallback((int)aSlotInitablep, 98, (int)SlotInitablePCommand, (int)aSlotinitablepc, (int)a22we);
+  registerClipsCallback((int)aSlotPublicp, 98, (int)SlotPublicPCommand, (int)aSlotpublicpcom, (int)a22we);
+  registerClipsCallback((int)aSlotDirectAcce, 98, (int)SlotDirectAccessPCommand, (int)aSlotdirectacce, (int)a22we);
+  registerClipsCallback((int)aDefclassModule, 119, (int)GetDefclassModuleCommand, (int)aGetdefclassmod, (int)a11w_7);
   sub_EC050((int)aInstances, 0, (int)&dword_13A9AC, 75, (int)sub_8C610, (int)sub_8C650);
   return sub_EC050((int)aSlots, 1, (int)dword_13A9B0, 74, (int)sub_8C610, (int)sub_8C650);
 }
@@ -83092,7 +83092,7 @@ int sub_92C30()
 // 13AA18: using guessed type int dword_13AA18;
 
 //----- (00092C40) --------------------------------------------------------
-signed int __usercall sub_92C40@<eax>(long double a1@<st0>)
+signed int __usercall ConstructsToCCommand@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   signed int v2; // ebp@1
@@ -83860,7 +83860,7 @@ LABEL_42:
 //----- (00093CA0) --------------------------------------------------------
 signed int sub_93CA0()
 {
-  return registerClipsCallback((int)aConstructsToC, 118, (int)sub_92C40, (int)aConstructstocc, (int)a23Kii);
+  return registerClipsCallback((int)aConstructsToC, 118, (int)ConstructsToCCommand, (int)aConstructstocc, (int)a23Kii);
 }
 
 //----- (00093CD0) --------------------------------------------------------
@@ -84243,14 +84243,14 @@ int sub_943D0()
 //----- (000943E0) --------------------------------------------------------
 int sub_943E0()
 {
-  registerClipsCallback((int)aClear, 118, (int)sub_94450, (int)aClearcommand, (int)a00_15);
-  registerClipsCallback((int)aReset, 118, (int)sub_94480, (int)aResetcommand, (int)a00_15);
+  registerClipsCallback((int)aClear, 118, (int)ClearCommand, (int)aClearcommand, (int)a00_15);
+  registerClipsCallback((int)aReset, 118, (int)ResetCommand, (int)aResetcommand, (int)a00_15);
   return sub_EC050((int)aCompilations_0, 0, (int)&dword_13AA44, 30, 0, 0);
 }
 // 13AA44: using guessed type int dword_13AA44;
 
 //----- (00094450) --------------------------------------------------------
-signed int sub_94450()
+signed int ClearCommand()
 {
   signed int result; // eax@1
 
@@ -84261,7 +84261,7 @@ signed int sub_94450()
 }
 
 //----- (00094480) --------------------------------------------------------
-signed int sub_94480()
+signed int ResetCommand()
 {
   signed int result; // eax@1
 
@@ -84568,13 +84568,13 @@ signed int sub_949C0()
   do
     *(_DWORD *)(dword_1B1080 + 4 * v0++) = 0;
   while ( v0 < 167 );
-  registerClipsCallback((int)aGetDynamicCons, 98, (int)sub_952F0, (int)aGdccommand, (int)a00_4);
-  registerClipsCallback((int)aSetDynamicCons, 98, (int)sub_95270, (int)aSdccommand, (int)a11_1);
-  registerClipsCallback((int)aGetStaticConst, 98, (int)sub_953A0, (int)aGsccommand, (int)a00_4);
-  return registerClipsCallback((int)aSetStaticConst, 98, (int)sub_95320, (int)aSsccommand, (int)a11_1);
+  registerClipsCallback((int)aGetDynamicCons, 98, (int)GDCCommand, (int)aGdccommand, (int)a00_4);
+  registerClipsCallback((int)aSetDynamicCons, 98, (int)SDCCommand, (int)aSdccommand, (int)a11_1);
+  registerClipsCallback((int)aGetStaticConst, 98, (int)GSCCommand, (int)aGsccommand, (int)a00_4);
+  return registerClipsCallback((int)aSetStaticConst, 98, (int)SSCCommand, (int)aSsccommand, (int)a11_1);
 }
-// 952F0: using guessed type int sub_952F0();
-// 953A0: using guessed type int sub_953A0();
+// 952F0: using guessed type int GDCCommand();
+// 953A0: using guessed type int GSCCommand();
 // 1B1080: using guessed type int dword_1B1080;
 
 //----- (00094A80) --------------------------------------------------------
@@ -84994,7 +84994,7 @@ int __fastcall sub_951E0(int a1, int a2, int a3, int a4)
 }
 
 //----- (00095270) --------------------------------------------------------
-int __usercall sub_95270@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SDCCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -85026,18 +85026,18 @@ int __usercall sub_95270@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000952F0) --------------------------------------------------------
-int sub_952F0()
+int GDCCommand()
 {
   int v0; // ecx@1
 
   sub_89D20((int)aGetDynamicCo_0, 0, 0);
   return v0;
 }
-// 952F0: using guessed type int sub_952F0();
+// 952F0: using guessed type int GDCCommand();
 // 13AA64: using guessed type int dword_13AA64;
 
 //----- (00095320) --------------------------------------------------------
-int __usercall sub_95320@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SSCCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -85069,14 +85069,14 @@ int __usercall sub_95320@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000953A0) --------------------------------------------------------
-int sub_953A0()
+int GSCCommand()
 {
   int v0; // ecx@1
 
   sub_89D20((int)aGetStaticCon_0, 0, 0);
   return v0;
 }
-// 953A0: using guessed type int sub_953A0();
+// 953A0: using guessed type int GSCCommand();
 // 13AA60: using guessed type int dword_13AA60;
 
 //----- (000953D0) --------------------------------------------------------
@@ -85558,7 +85558,7 @@ int __fastcall sub_959E0(int a1)
 // 13AA68: using guessed type int dword_13AA68;
 
 //----- (00095A20) --------------------------------------------------------
-int sub_95A20()
+int GetStrategyCommand()
 {
   int v0; // eax@1
 
@@ -85566,11 +85566,11 @@ int sub_95A20()
   v0 = sub_95C80(dword_13AA68);
   return sub_E5680(v0);
 }
-// 95A20: using guessed type int sub_95A20();
+// 95A20: using guessed type int GetStrategyCommand();
 // 13AA68: using guessed type int dword_13AA68;
 
 //----- (00095A50) --------------------------------------------------------
-int __usercall sub_95A50@<eax>(long double a1@<st0>)
+int __usercall SetStrategyCommand@<eax>(long double a1@<st0>)
 {
   int v1; // esi@1
   int v2; // eax@2
@@ -91409,9 +91409,9 @@ int sub_9BFA0()
   sub_94990((int)aDefinstances, (int)sub_9C6C0, 0);
   sub_94780((int)aDefinstances, (int)sub_9C790, -1000);
   registerClipsCallback((int)aPpdefinstanc_0, 118, (int)sub_9C220, v1, (int)a11w_8);
-  registerClipsCallback((int)aListDefinstanc, 118, (int)sub_9C240, (int)aListdefinstanc, (int)a01_3);
-  registerClipsCallback((int)aGetDefinstance, 109, (int)sub_9C280, (int)aGetdefinstance, (int)a01_3);
-  registerClipsCallback((int)aDefinstancesMo, 119, (int)sub_9C1A0, (int)aGetdefinstan_0, (int)a11w_8);
+  registerClipsCallback((int)aListDefinstanc, 118, (int)ListDefinstancesCommand, (int)aListdefinstanc, (int)a01_3);
+  registerClipsCallback((int)aGetDefinstance, 109, (int)GetDefinstancesListFunction, (int)aGetdefinstance, (int)a01_3);
+  registerClipsCallback((int)aDefinstancesMo, 119, (int)GetDefinstancesModuleCommand, (int)aGetdefinstan_0, (int)a11w_8);
   sub_94590((int)aDefinstances, (int)sub_9C940, 0);
   sub_9F280();
   return sub_9F7C0();
@@ -91455,7 +91455,7 @@ int __usercall sub_9C180@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B10A4: using guessed type int dword_1B10A4;
 
 //----- (0009C1A0) --------------------------------------------------------
-int __usercall sub_9C1A0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefinstancesModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDefinstancesMo, dword_1B10A4, a1, a2);
 }
@@ -91509,14 +91509,14 @@ int __usercall sub_9C220@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B10A4: using guessed type int dword_1B10A4;
 
 //----- (0009C240) --------------------------------------------------------
-signed int __usercall sub_9C240@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDefinstancesCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDefinstanc, dword_1B10A4, a1, a2);
 }
 // 1B10A4: using guessed type int dword_1B10A4;
 
 //----- (0009C280) --------------------------------------------------------
-int __usercall sub_9C280@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefinstancesListFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96210((int)aGetDefinstance, a1, dword_1B10A4, a2);
 }
@@ -92264,10 +92264,10 @@ int sub_9CF30()
   sub_94780((int)aDeffacts, (int)sub_9D080, 0);
   sub_94990((int)aDeffacts, (int)sub_9D140, 10);
   registerClipsCallback((int)aGetDeffactsLis, 109, (int)sub_9D1A0, v0, (int)a01w_2);
-  registerClipsCallback((int)aUndeffacts, 118, (int)sub_9D160, (int)aUndeffactscomm, (int)a11w_3);
-  registerClipsCallback((int)aDeffactsModule, 119, (int)sub_9D1F0, (int)aDeffactsmodule, (int)a11w_3);
-  registerClipsCallback((int)aListDeffacts, 118, (int)sub_9D250, (int)aListdeffactsco, (int)a01w_2);
-  registerClipsCallback((int)aPpdeffacts, 118, (int)sub_9D210, (int)aPpdeffactscomm, (int)a11w_3);
+  registerClipsCallback((int)aUndeffacts, 118, (int)UndeffactsCommand, (int)aUndeffactscomm, (int)a11w_3);
+  registerClipsCallback((int)aDeffactsModule, 119, (int)DeffactsModuleFunction, (int)aDeffactsmodule, (int)a11w_3);
+  registerClipsCallback((int)aListDeffacts, 118, (int)ListDeffactsCommand, (int)aListdeffactsco, (int)a01w_2);
+  registerClipsCallback((int)aPpdeffacts, 118, (int)PPDeffactsCommand, (int)aPpdeffactscomm, (int)a11w_3);
   sub_9C9E0();
   return sub_9D290();
 }
@@ -92351,7 +92351,7 @@ int __fastcall sub_9D140(int a1)
 // 1B10D4: using guessed type int dword_1B10D4;
 
 //----- (0009D160) --------------------------------------------------------
-int __usercall sub_9D160@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall UndeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95EA0((int)aUndeffacts, dword_1B10D4, a1, a2);
 }
@@ -92372,21 +92372,21 @@ int __usercall sub_9D1A0@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B10D4: using guessed type int dword_1B10D4;
 
 //----- (0009D1F0) --------------------------------------------------------
-int __usercall sub_9D1F0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall DeffactsModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDeffactsModule, dword_1B10D4, a1, a2);
 }
 // 1B10D4: using guessed type int dword_1B10D4;
 
 //----- (0009D210) --------------------------------------------------------
-int __usercall sub_9D210@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B10D4, a1, a2);
 }
 // 1B10D4: using guessed type int dword_1B10D4;
 
 //----- (0009D250) --------------------------------------------------------
-signed int __usercall sub_9D250@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDeffactsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDeffacts, dword_1B10D4, a1, a2);
 }
@@ -93444,10 +93444,10 @@ int sub_9E550()
   sub_94990((int)aDeffunctionHea, (int)sub_9EC30, 1000);
   sub_94990((int)aDeffunctions, (int)sub_9ED10, 0);
   registerClipsCallback((int)aUndeffunction, 118, (int)sub_9E880, v0, (int)a11w_5);
-  registerClipsCallback((int)aListDeffunctio, 118, (int)sub_9E8E0, (int)aListdeffunctio, (int)a01_1);
-  registerClipsCallback((int)aPpdeffunction, 118, (int)sub_9E8C0, (int)aPpdeffunctionc, (int)a11w_5);
-  registerClipsCallback((int)aGetDeffunction, 109, (int)sub_9E920, (int)aGetdeffunction, (int)a01_1);
-  registerClipsCallback((int)aDeffunctionMod, 119, (int)sub_9E8A0, (int)aGetdeffuncti_0, (int)a11w_5);
+  registerClipsCallback((int)aListDeffunctio, 118, (int)ListDeffunctionsCommand, (int)aListdeffunctio, (int)a01_1);
+  registerClipsCallback((int)aPpdeffunction, 118, (int)PPDeffunctionCommand, (int)aPpdeffunctionc, (int)a11w_5);
+  registerClipsCallback((int)aGetDeffunction, 109, (int)GetDeffunctionListFunction, (int)aGetdeffunction, (int)a01_1);
+  registerClipsCallback((int)aDeffunctionMod, 119, (int)GetDeffunctionModuleCommand, (int)aGetdeffuncti_0, (int)a11w_5);
   sub_9D9B0();
   sub_9DEF0();
   return sub_EC050((int)aDeffunctions, 0, (int)&dword_13AA84, 32, (int)sub_9ED30, (int)sub_9ED60);
@@ -93547,28 +93547,28 @@ int __usercall sub_9E880@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B1104: using guessed type int dword_1B1104;
 
 //----- (0009E8A0) --------------------------------------------------------
-int __usercall sub_9E8A0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDeffunctionModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDeffunctionMod, dword_1B1104, a1, a2);
 }
 // 1B1104: using guessed type int dword_1B1104;
 
 //----- (0009E8C0) --------------------------------------------------------
-int __usercall sub_9E8C0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDeffunctionCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1104, a1, a2);
 }
 // 1B1104: using guessed type int dword_1B1104;
 
 //----- (0009E8E0) --------------------------------------------------------
-signed int __usercall sub_9E8E0@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDeffunctionsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDeffunctio, dword_1B1104, a1, a2);
 }
 // 1B1104: using guessed type int dword_1B1104;
 
 //----- (0009E920) --------------------------------------------------------
-int __usercall sub_9E920@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDeffunctionListFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96210((int)aGetDeffunction, a1, dword_1B1104, a2);
 }
@@ -94924,42 +94924,42 @@ signed int __fastcall sub_A0540(int a1, int a2, int a3, int a4)
 //----- (000A05C0) --------------------------------------------------------
 signed int sub_A05C0()
 {
-  registerClipsCallback((int)aCos, 100, (int)sub_A0C00, (int)aCosfunction, (int)a11n_0);
-  registerClipsCallback((int)aSin, 100, (int)sub_A0C40, (int)aSinfunction, (int)a11n_0);
-  registerClipsCallback((int)aTan, 100, (int)sub_A0C80, (int)aTanfunction, (int)a11n_0);
-  registerClipsCallback((int)aSec, 100, (int)sub_A0D10, (int)aSecfunction, (int)a11n_0);
-  registerClipsCallback((int)aCsc, 100, (int)sub_A0DA0, (int)aCscfunction, (int)a11n_0);
-  registerClipsCallback((int)aCot, 100, (int)sub_A0E30, (int)aCotfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcos, 100, (int)sub_A0EC0, (int)aAcosfunction, (int)a11n_0);
-  registerClipsCallback((int)aAsin, 100, (int)sub_A0F40, (int)aAsinfunction, (int)a11n_0);
-  registerClipsCallback((int)aAtan, 100, (int)sub_A0FC0, (int)aAtanfunction, (int)a11n_0);
-  registerClipsCallback((int)aAsec, 100, (int)sub_A1000, (int)aAsecfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcsc, 100, (int)sub_A1080, (int)aAcscfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcot, 100, (int)sub_A1100, (int)aAcotfunction, (int)a11n_0);
-  registerClipsCallback((int)aCosh, 100, (int)sub_A1190, (int)aCoshfunction, (int)a11n_0);
-  registerClipsCallback((int)aSinh, 100, (int)sub_A11D0, (int)aSinhfunction, (int)a11n_0);
-  registerClipsCallback((int)aTanh, 100, (int)sub_A1210, (int)aTanhfunction, (int)a11n_0);
-  registerClipsCallback((int)aSech, 100, (int)sub_A1250, (int)aSechfunction, (int)a11n_0);
-  registerClipsCallback((int)aCsch, 100, (int)sub_A12A0, (int)aCschfunction, (int)a11n_0);
-  registerClipsCallback((int)aCoth, 100, (int)sub_A1370, (int)aCothfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcosh, 100, (int)sub_A1440, (int)aAcoshfunction, (int)a11n_0);
-  registerClipsCallback((int)aAsinh, 100, (int)sub_A14C0, (int)aAsinhfunction, (int)a11n_0);
-  registerClipsCallback((int)aAtanh, 100, (int)sub_A1510, (int)aAtanhfunction, (int)a11n_0);
-  registerClipsCallback((int)aAsech, 100, (int)sub_A15A0, (int)aAsechfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcsch, 100, (int)sub_A1630, (int)aAcschfunction, (int)a11n_0);
-  registerClipsCallback((int)aAcoth, 100, (int)sub_A16C0, (int)aAcothfunction, (int)a11n_0);
-  registerClipsCallback((int)aMod, 110, (int)sub_A1AE0, (int)aModfunction, (int)a22n);
-  registerClipsCallback((int)aExp, 100, (int)sub_A1750, (int)aExpfunction, (int)a11n_0);
-  registerClipsCallback((int)aLog, 100, (int)sub_A1790, (int)aLogfunction, (int)a11n_0);
-  registerClipsCallback((int)aLog10, 100, (int)sub_A1840, (int)aLog10function, (int)a11n_0);
-  registerClipsCallback((int)aSqrt, 100, (int)sub_A18F0, (int)aSqrtfunction, (int)a11n_0);
-  registerClipsCallback((int)aPi, 100, (int)sub_A1CD0, (int)aPifunction, (int)a00_3);
-  registerClipsCallback((int)aDegRad, 100, (int)sub_A1D10, (int)aDegradfunction, (int)a11n_0);
-  registerClipsCallback((int)aRadDeg, 100, (int)sub_A1D60, (int)aRaddegfunction, (int)a11n_0);
-  registerClipsCallback((int)aDegGrad, 100, (int)sub_A1DB0, (int)aDeggradfunctio, (int)a11n_0);
-  registerClipsCallback((int)aGradDeg, 100, (int)sub_A1DF0, (int)aGraddegfunctio, (int)a11n_0);
-  registerClipsCallback((int)asc_125F24, 100, (int)sub_A1960, (int)aPowfunction, (int)a22n);
-  return registerClipsCallback((int)aRound, 108, (int)sub_A1E30, (int)aRoundfunction, (int)a11n_0);
+  registerClipsCallback((int)aCos, 100, (int)CosFunction, (int)aCosfunction, (int)a11n_0);
+  registerClipsCallback((int)aSin, 100, (int)SinFunction, (int)aSinfunction, (int)a11n_0);
+  registerClipsCallback((int)aTan, 100, (int)TanFunction, (int)aTanfunction, (int)a11n_0);
+  registerClipsCallback((int)aSec, 100, (int)SecFunction, (int)aSecfunction, (int)a11n_0);
+  registerClipsCallback((int)aCsc, 100, (int)CscFunction, (int)aCscfunction, (int)a11n_0);
+  registerClipsCallback((int)aCot, 100, (int)CotFunction, (int)aCotfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcos, 100, (int)AcosFunction, (int)aAcosfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsin, 100, (int)AsinFunction, (int)aAsinfunction, (int)a11n_0);
+  registerClipsCallback((int)aAtan, 100, (int)AtanFunction, (int)aAtanfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsec, 100, (int)AsecFunction, (int)aAsecfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcsc, 100, (int)AcscFunction, (int)aAcscfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcot, 100, (int)AcotFunction, (int)aAcotfunction, (int)a11n_0);
+  registerClipsCallback((int)aCosh, 100, (int)CoshFunction, (int)aCoshfunction, (int)a11n_0);
+  registerClipsCallback((int)aSinh, 100, (int)SinhFunction, (int)aSinhfunction, (int)a11n_0);
+  registerClipsCallback((int)aTanh, 100, (int)TanhFunction, (int)aTanhfunction, (int)a11n_0);
+  registerClipsCallback((int)aSech, 100, (int)SechFunction, (int)aSechfunction, (int)a11n_0);
+  registerClipsCallback((int)aCsch, 100, (int)CschFunction, (int)aCschfunction, (int)a11n_0);
+  registerClipsCallback((int)aCoth, 100, (int)CothFunction, (int)aCothfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcosh, 100, (int)AcoshFunction, (int)aAcoshfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsinh, 100, (int)AsinhFunction, (int)aAsinhfunction, (int)a11n_0);
+  registerClipsCallback((int)aAtanh, 100, (int)AtanhFunction, (int)aAtanhfunction, (int)a11n_0);
+  registerClipsCallback((int)aAsech, 100, (int)AsechFunction, (int)aAsechfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcsch, 100, (int)AcschFunction, (int)aAcschfunction, (int)a11n_0);
+  registerClipsCallback((int)aAcoth, 100, (int)AcothFunction, (int)aAcothfunction, (int)a11n_0);
+  registerClipsCallback((int)aMod, 110, (int)ModFunction, (int)aModfunction, (int)a22n);
+  registerClipsCallback((int)aExp, 100, (int)ExpFunction, (int)aExpfunction, (int)a11n_0);
+  registerClipsCallback((int)aLog, 100, (int)LogFunction, (int)aLogfunction, (int)a11n_0);
+  registerClipsCallback((int)aLog10, 100, (int)Log10Function, (int)aLog10function, (int)a11n_0);
+  registerClipsCallback((int)aSqrt, 100, (int)SqrtFunction, (int)aSqrtfunction, (int)a11n_0);
+  registerClipsCallback((int)aPi, 100, (int)PiFunction, (int)aPifunction, (int)a00_3);
+  registerClipsCallback((int)aDegRad, 100, (int)DegRadFunction, (int)aDegradfunction, (int)a11n_0);
+  registerClipsCallback((int)aRadDeg, 100, (int)RadDegFunction, (int)aRaddegfunction, (int)a11n_0);
+  registerClipsCallback((int)aDegGrad, 100, (int)DegGradFunction, (int)aDeggradfunctio, (int)a11n_0);
+  registerClipsCallback((int)aGradDeg, 100, (int)GradDegFunction, (int)aGraddegfunctio, (int)a11n_0);
+  registerClipsCallback((int)asc_125F24, 100, (int)PowFunction, (int)aPowfunction, (int)a22n);
+  return registerClipsCallback((int)aRound, 108, (int)RoundFunction, (int)aRoundfunction, (int)a11n_0);
 }
 
 //----- (000A0A10) --------------------------------------------------------
@@ -95034,7 +95034,7 @@ int sub_A0B90()
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (000A0C00) --------------------------------------------------------
-long double __usercall sub_A0C00@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CosFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95059,7 +95059,7 @@ long double __usercall sub_A0C00@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F541E: using guessed type double IF_COS();
 
 //----- (000A0C40) --------------------------------------------------------
-long double __usercall sub_A0C40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall SinFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95084,7 +95084,7 @@ long double __usercall sub_A0C40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F5428: using guessed type double IF_SIN();
 
 //----- (000A0C80) --------------------------------------------------------
-long double __usercall sub_A0C80@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall TanFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   int v5; // edx@5
@@ -95125,7 +95125,7 @@ long double __usercall sub_A0C80@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FA9: using guessed type double dbl_125FA9;
 
 //----- (000A0D10) --------------------------------------------------------
-long double __usercall sub_A0D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall SecFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   int v5; // edx@5
@@ -95162,7 +95162,7 @@ long double __usercall sub_A0D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FB9: using guessed type double dbl_125FB9;
 
 //----- (000A0DA0) --------------------------------------------------------
-long double __usercall sub_A0DA0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CscFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   int v5; // edx@5
@@ -95199,7 +95199,7 @@ long double __usercall sub_A0DA0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FC9: using guessed type double dbl_125FC9;
 
 //----- (000A0E30) --------------------------------------------------------
-long double __usercall sub_A0E30@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CotFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   int v5; // edx@5
@@ -95240,7 +95240,7 @@ long double __usercall sub_A0E30@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FD9: using guessed type double dbl_125FD9;
 
 //----- (000A0EC0) --------------------------------------------------------
-long double __usercall sub_A0EC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AcosFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // edx@5
   long double v6; // fst7@6
@@ -95273,7 +95273,7 @@ long double __usercall sub_A0EC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FE1: using guessed type double dbl_125FE1;
 
 //----- (000A0F40) --------------------------------------------------------
-long double __usercall sub_A0F40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AsinFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // edx@5
   long double v6; // fst7@6
@@ -95307,7 +95307,7 @@ long double __usercall sub_A0F40@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FE9: using guessed type double dbl_125FE9;
 
 //----- (000A0FC0) --------------------------------------------------------
-long double __usercall sub_A0FC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AtanFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95332,7 +95332,7 @@ long double __usercall sub_A0FC0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F54EE: using guessed type double __cdecl IF_ATAN(_DWORD, _DWORD);
 
 //----- (000A1000) --------------------------------------------------------
-long double __usercall sub_A1000@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AsecFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // edx@5
   long double v6; // fst7@6
@@ -95366,7 +95366,7 @@ long double __usercall sub_A1000@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FF1: using guessed type double dbl_125FF1;
 
 //----- (000A1080) --------------------------------------------------------
-long double __usercall sub_A1080@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AcscFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // edx@5
   long double v6; // fst7@6
@@ -95401,7 +95401,7 @@ long double __usercall sub_A1080@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 125FF9: using guessed type double dbl_125FF9;
 
 //----- (000A1100) --------------------------------------------------------
-long double __usercall sub_A1100@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AcotFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   bool v4; // eax@5
   long double v6; // fst7@9
@@ -95436,7 +95436,7 @@ long double __usercall sub_A1100@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126009: using guessed type double dbl_126009;
 
 //----- (000A1190) --------------------------------------------------------
-long double __usercall sub_A1190@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CoshFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95461,7 +95461,7 @@ long double __usercall sub_A1190@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F5568: using guessed type double IF_DCOSH();
 
 //----- (000A11D0) --------------------------------------------------------
-long double __usercall sub_A11D0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall SinhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95489,7 +95489,7 @@ long double __usercall sub_A11D0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F5534: using guessed type double __fastcall IF_DSINH(_DWORD, _DWORD, _DWORD);
 
 //----- (000A1210) --------------------------------------------------------
-long double __usercall sub_A1210@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall TanhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95517,7 +95517,7 @@ long double __usercall sub_A1210@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F55A2: using guessed type double __fastcall IF_DTANH(_DWORD, _DWORD, _DWORD);
 
 //----- (000A1250) --------------------------------------------------------
-long double __usercall sub_A1250@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall SechFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95542,7 +95542,7 @@ long double __usercall sub_A1250@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F5568: using guessed type double IF_DCOSH();
 
 //----- (000A12A0) --------------------------------------------------------
-long double __usercall sub_A12A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CschFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   bool v5; // eax@8
   int v6; // ecx@11
@@ -95587,7 +95587,7 @@ long double __usercall sub_A12A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126019: using guessed type double dbl_126019;
 
 //----- (000A1370) --------------------------------------------------------
-long double __usercall sub_A1370@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall CothFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   bool v5; // eax@8
   int v6; // ecx@11
@@ -95632,7 +95632,7 @@ long double __usercall sub_A1370@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126029: using guessed type double dbl_126029;
 
 //----- (000A1440) --------------------------------------------------------
-long double __usercall sub_A1440@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall AcoshFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95683,7 +95683,7 @@ long double __usercall sub_A1440@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126031: using guessed type double dbl_126031;
 
 //----- (000A14C0) --------------------------------------------------------
-long double __usercall sub_A14C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall AsinhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95717,7 +95717,7 @@ long double __usercall sub_A14C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F56B2: using guessed type double __fastcall IF_LOG(_DWORD, _DWORD, _DWORD);
 
 //----- (000A1510) --------------------------------------------------------
-long double __usercall sub_A1510@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall AtanhFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95764,7 +95764,7 @@ long double __usercall sub_A1510@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126041: using guessed type double dbl_126041;
 
 //----- (000A15A0) --------------------------------------------------------
-long double __usercall sub_A15A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall AsechFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95811,7 +95811,7 @@ long double __usercall sub_A15A0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126049: using guessed type double dbl_126049;
 
 //----- (000A1630) --------------------------------------------------------
-long double __usercall sub_A1630@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall AcschFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   signed int v4; // eax@1
   int v5; // ebx@3
@@ -95856,7 +95856,7 @@ long double __usercall sub_A1630@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F56B2: using guessed type double __fastcall IF_LOG(_DWORD, _DWORD, _DWORD);
 
 //----- (000A16C0) --------------------------------------------------------
-long double __usercall sub_A16C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
+long double __usercall AcothFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>, int a5@<ebx>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -95913,7 +95913,7 @@ long double __usercall sub_A16C0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126059: using guessed type double dbl_126059;
 
 //----- (000A1750) --------------------------------------------------------
-long double __usercall sub_A1750@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall ExpFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   long double v4; // fst7@3
   double v6; // [sp+0h] [bp-18h]@1
@@ -95938,7 +95938,7 @@ long double __usercall sub_A1750@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F572A: using guessed type double IF_EXP();
 
 //----- (000A1790) --------------------------------------------------------
-long double __usercall sub_A1790@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall LogFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   signed int v4; // eax@1
   __int16 v5; // fps@3
@@ -95989,7 +95989,7 @@ long double __usercall sub_A1790@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F56B2: using guessed type double __fastcall IF_LOG(_DWORD, _DWORD, _DWORD);
 
 //----- (000A1840) --------------------------------------------------------
-long double __usercall sub_A1840@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall Log10Function@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   signed int v4; // eax@1
   __int16 v5; // fps@3
@@ -96040,7 +96040,7 @@ long double __usercall sub_A1840@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F56F9: using guessed type double __fastcall IF_LOG10(_DWORD, _DWORD, _DWORD);
 
 //----- (000A18F0) --------------------------------------------------------
-long double __usercall sub_A18F0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>)
+long double __usercall SqrtFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@<ebx>, long double a5@<st0>)
 {
   signed int v5; // eax@1
   int v6; // edx@1
@@ -96084,7 +96084,7 @@ long double __usercall sub_A18F0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // F567A: using guessed type double __fastcall IF_SQRT(_DWORD, _DWORD, _DWORD);
 
 //----- (000A1960) --------------------------------------------------------
-long double __usercall sub_A1960@<st0>(long double a1@<st0>)
+long double __usercall PowFunction@<st0>(long double a1@<st0>)
 {
   int v2; // edx@7
   int v3; // ebx@7
@@ -96137,7 +96137,7 @@ long double __usercall sub_A1960@<st0>(long double a1@<st0>)
 // F57F0: using guessed type double __usercall IF_DPOW@<st0>(_DWORD@<eax>, _DWORD@<edx>, _DWORD@<ebx>, double@<st0>);
 
 //----- (000A1AE0) --------------------------------------------------------
-void __usercall sub_A1AE0(int a1@<eax>, long double a2@<st0>)
+void __usercall ModFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   int v3; // eax@2
@@ -96236,7 +96236,7 @@ LABEL_32:
 }
 
 //----- (000A1CD0) --------------------------------------------------------
-long double sub_A1CD0()
+long double PiFunction()
 {
   long double v0; // fst7@1
 
@@ -96248,7 +96248,7 @@ long double sub_A1CD0()
 // 126061: using guessed type double dbl_126061;
 
 //----- (000A1D10) --------------------------------------------------------
-long double __usercall sub_A1D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall DegRadFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   double v5; // [sp+0h] [bp-18h]@1
   double v6; // [sp+8h] [bp-10h]@2
@@ -96267,7 +96267,7 @@ long double __usercall sub_A1D10@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126071: using guessed type double dbl_126071;
 
 //----- (000A1D60) --------------------------------------------------------
-long double __usercall sub_A1D60@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall RadDegFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   double v5; // [sp+0h] [bp-18h]@1
   double v6; // [sp+8h] [bp-10h]@2
@@ -96286,7 +96286,7 @@ long double __usercall sub_A1D60@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126081: using guessed type double dbl_126081;
 
 //----- (000A1DB0) --------------------------------------------------------
-long double __usercall sub_A1DB0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall DegGradFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   double v5; // [sp+0h] [bp-18h]@1
   double v6; // [sp+8h] [bp-10h]@2
@@ -96304,7 +96304,7 @@ long double __usercall sub_A1DB0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126089: using guessed type double dbl_126089;
 
 //----- (000A1DF0) --------------------------------------------------------
-long double __usercall sub_A1DF0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+long double __usercall GradDegFunction@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   double v5; // [sp+0h] [bp-18h]@1
   double v6; // [sp+8h] [bp-10h]@2
@@ -96322,7 +96322,7 @@ long double __usercall sub_A1DF0@<st0>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
 // 126091: using guessed type double dbl_126091;
 
 //----- (000A1E30) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_A1E30@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> RoundFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@3
   int v3; // eax@7
@@ -96430,7 +96430,7 @@ int __usercall sub_A2000@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
       v48 = v46;
       HIDWORD(v43) = sub_889E0();
       v45 = HIDWORD(v43);
-      a3 = sub_E6BA0(SHIDWORD(v43), v4);
+      a3 = gentime(SHIDWORD(v43), v4);
       __asm { fstp    [esp+0E4h+var_44] }
     }
     if ( !dword_13AAF8 )
@@ -96553,7 +96553,7 @@ int __usercall sub_A2000@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
     dword_13AACC = 0;
     if ( dword_13AAE0 )
     {
-      sub_E6BA0(dword_13AAE0, v5);
+      gentime(dword_13AAE0, v5);
       __asm { fstp    [esp+0E4h+var_54] }
       sub_DA300((int)off_13B500[0], v49);
       sub_DCD70((int)off_13B500[0], (int)aRulesFired);
@@ -96824,7 +96824,7 @@ int __fastcall sub_A2840(int a1)
 // 1B1398: using guessed type int dword_1B1398;
 
 //----- (000A2920) --------------------------------------------------------
-signed int sub_A2920()
+signed int ClearFocusStackCommand()
 {
   signed int result; // eax@1
 
@@ -96866,7 +96866,7 @@ int sub_A2A00()
 // 13AAE4: using guessed type int dword_13AAE4;
 
 //----- (000A2A50) --------------------------------------------------------
-void __usercall sub_A2A50(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+void __usercall RunCommand(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -96893,7 +96893,7 @@ LABEL_7:
 }
 
 //----- (000A2AB0) --------------------------------------------------------
-signed int sub_A2AB0()
+signed int HaltCommand()
 {
   signed int result; // eax@1
 
@@ -96952,7 +96952,7 @@ int __fastcall sub_A2BC0(int a1)
 }
 
 //----- (000A2BE0) --------------------------------------------------------
-signed int __usercall sub_A2BE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall SetBreakCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // [sp-8h] [bp-24h]@2
@@ -96987,7 +96987,7 @@ signed int __usercall sub_A2BE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000A2C50) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_A2C50@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> RemoveBreakCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // ebx@5
@@ -97044,7 +97044,7 @@ signed int __usercall __spoils<ecx,st0> sub_A2C50@<eax>(int a1@<ecx>, long doubl
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (000A2D30) --------------------------------------------------------
-signed int __usercall sub_A2D30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ShowBreaksCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // ecx@1
@@ -97084,7 +97084,7 @@ signed int __usercall sub_A2D30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000A2DB0) --------------------------------------------------------
-signed int sub_A2DB0()
+signed int ListFocusStackCommand()
 {
   signed int result; // eax@1
 
@@ -97121,7 +97121,7 @@ signed int __fastcall sub_A2DE0(signed int result)
 // 13AAD8: using guessed type int dword_13AAD8;
 
 //----- (000A2E30) --------------------------------------------------------
-signed int sub_A2E30()
+signed int GetFocusStackFunction()
 {
   signed int result; // eax@1
   int v1; // ecx@1
@@ -97181,7 +97181,7 @@ signed int __fastcall __spoils<ecx> sub_A2E60(int a1)
 // 13AAD8: using guessed type int dword_13AAD8;
 
 //----- (000A2F00) --------------------------------------------------------
-int sub_A2F00()
+int PopFocusFunction()
 {
   int v0; // eax@2
   int result; // eax@5
@@ -97197,12 +97197,12 @@ int sub_A2F00()
     result = dword_1B14E0;
   return result;
 }
-// A2F00: using guessed type int sub_A2F00();
+// A2F00: using guessed type int PopFocusFunction();
 // 13AAD8: using guessed type int dword_13AAD8;
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A2F40) --------------------------------------------------------
-int sub_A2F40()
+int GetFocusFunction()
 {
   int *v0; // eax@2
   int result; // eax@5
@@ -97218,12 +97218,12 @@ int sub_A2F40()
     result = dword_1B14E0;
   return result;
 }
-// A2F40: using guessed type int sub_A2F40();
+// A2F40: using guessed type int GetFocusFunction();
 // 13AAD8: using guessed type int dword_13AAD8;
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A2FA0) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_A2FA0@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> FocusCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int v2; // eax@1
   signed int result; // eax@2
@@ -97848,16 +97848,16 @@ int __fastcall sub_A3A70(int a1, int a2, int a3)
 }
 
 //----- (000A3AD0) --------------------------------------------------------
-signed int sub_A3AD0()
+unsigned int sub_A3AD0()
 {
-  signed int result; // eax@1
+  unsigned int result; // eax@1
 
   sub_A3B20();
   dword_13AAFC = sub_C1CC0(2012);
   result = 0;
   do
     *(_DWORD *)(dword_13AAFC + 4 * result++) = 0;
-  while ( (unsigned int)result < 0x1F7 );
+  while ( result < 0x1F7 );
   return result;
 }
 // 13AAFC: using guessed type int dword_13AAFC;
@@ -99651,11 +99651,11 @@ int __fastcall sub_A57B0(int a1)
 // 13AB04: using guessed type int dword_13AB04;
 
 //----- (000A57D0) --------------------------------------------------------
-int sub_A57D0()
+int GetSequenceOperatorRecognition()
 {
   return dword_13AB04;
 }
-// A57D0: using guessed type int sub_A57D0();
+// A57D0: using guessed type int GetSequenceOperatorRecognition();
 // 13AB04: using guessed type int dword_13AB04;
 
 //----- (000A57E0) --------------------------------------------------------
@@ -100004,13 +100004,13 @@ _DWORD *__fastcall __spoils<ecx> sub_A5D60(int a1)
 // 1B12A0: using guessed type int dword_1B12A0;
 
 //----- (000A5DF0) --------------------------------------------------------
-unsigned int __fastcall sub_A5DF0(int a1)
+int __fastcall sub_A5DF0(int a1)
 {
   int v1; // ecx@1
   signed int v2; // eax@2
   int v3; // ebx@4
   signed int v4; // ebx@5
-  unsigned int result; // eax@7
+  int result; // eax@7
   int v6; // edx@7
 
   v1 = a1;
@@ -101138,20 +101138,20 @@ int __fastcall sub_A6F50(int a1, int a2, int a3, signed int a4)
 //----- (000A6FB0) --------------------------------------------------------
 signed int sub_A6FB0()
 {
-  registerClipsCallback((int)aFacts_1, 118, (int)sub_A7490, (int)aFactscommand, (int)a4iu);
+  registerClipsCallback((int)aFacts_1, 118, (int)FactsCommand, (int)aFactscommand, (int)a4iu);
   sub_A58F0((int)aAssert, 117, (int)sub_A7110, (int)aAssertcommand);
-  registerClipsCallback((int)aRetract_0, 118, (int)sub_A7260, (int)aRetractcommand, (int)a1Z);
-  registerClipsCallback((int)aAssertString, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
-  registerClipsCallback((int)aStrAssert, 117, (int)sub_A7760, (int)aAssertstringfu, (int)a11s_0);
-  registerClipsCallback((int)aGetFactDuplica, 98, (int)sub_A73F0, (int)aGetfactduplica, (int)a00_13);
-  registerClipsCallback((int)aSetFactDuplica, 98, (int)sub_A7380, (int)aSetfactduplica, (int)a11_5);
-  registerClipsCallback((int)aSaveFacts, 98, (int)sub_A77E0, (int)aSavefactscomma, (int)a1Wk);
-  registerClipsCallback((int)aLoadFacts, 98, (int)sub_A78E0, (int)aLoadfactscomma, (int)a11k_4);
-  registerClipsCallback((int)aFactIndex, 108, (int)sub_A7420, (int)aFactindexfunct, (int)a11y);
+  registerClipsCallback((int)aRetract_0, 118, (int)RetractCommand, (int)aRetractcommand, (int)a1Z);
+  registerClipsCallback((int)aAssertString, 117, (int)AssertStringFunction, (int)aAssertstringfu, (int)a11s_0);
+  registerClipsCallback((int)aStrAssert, 117, (int)AssertStringFunction, (int)aAssertstringfu, (int)a11s_0);
+  registerClipsCallback((int)aGetFactDuplica, 98, (int)GetFactDuplicationCommand, (int)aGetfactduplica, (int)a00_13);
+  registerClipsCallback((int)aSetFactDuplica, 98, (int)SetFactDuplicationCommand, (int)aSetfactduplica, (int)a11_5);
+  registerClipsCallback((int)aSaveFacts, 98, (int)SaveFactsCommand, (int)aSavefactscomma, (int)a1Wk);
+  registerClipsCallback((int)aLoadFacts, 98, (int)LoadFactsCommand, (int)aLoadfactscomma, (int)a11k_4);
+  registerClipsCallback((int)aFactIndex, 108, (int)FactIndexFunction, (int)aFactindexfunct, (int)a11y);
   sub_A5A70((int)aAssert, (int)sub_A7E70);
   return sub_A5AF0((int)aAssert, 0, 0);
 }
-// A73F0: using guessed type int sub_A73F0();
+// A73F0: using guessed type int GetFactDuplicationCommand();
 
 //----- (000A7110) --------------------------------------------------------
 int __usercall sub_A7110@<eax>(int a1@<eax>, long double a2@<st0>)
@@ -101247,7 +101247,7 @@ int __usercall sub_A7110@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A7260) --------------------------------------------------------
-void __usercall sub_A7260(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+void __usercall RetractCommand(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // esi@1
   int v6; // ecx@1
@@ -101326,7 +101326,7 @@ LABEL_17:
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000A7380) --------------------------------------------------------
-int __usercall sub_A7380@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetFactDuplicationCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // esi@1
   int v4; // ecx@1
@@ -101360,7 +101360,7 @@ int __usercall sub_A7380@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A73F0) --------------------------------------------------------
-int sub_A73F0()
+int GetFactDuplicationCommand()
 {
   int v0; // ecx@1
 
@@ -101368,10 +101368,10 @@ int sub_A73F0()
   sub_89D20((int)aGetFactDuplica, 0, 0);
   return v0;
 }
-// A73F0: using guessed type int sub_A73F0();
+// A73F0: using guessed type int GetFactDuplicationCommand();
 
 //----- (000A7420) --------------------------------------------------------
-signed int __usercall sub_A7420@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall FactIndexFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // [sp-4h] [bp-20h]@2
@@ -101401,7 +101401,7 @@ signed int __usercall sub_A7420@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000A7490) --------------------------------------------------------
-void __usercall sub_A7490(long double a1@<st0>)
+void __usercall FactsCommand(long double a1@<st0>)
 {
   int v1; // esi@1
   int v2; // ebx@1
@@ -101566,7 +101566,7 @@ signed int __usercall sub_A76F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000A7760) --------------------------------------------------------
-signed int __usercall sub_A7760@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall AssertStringFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -101601,7 +101601,7 @@ signed int __usercall sub_A7760@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A77E0) --------------------------------------------------------
-int __usercall sub_A77E0@<eax>(long double a1@<st0>)
+int __usercall SaveFactsCommand@<eax>(long double a1@<st0>)
 {
   int v1; // esi@1
   int v2; // ecx@1
@@ -101655,7 +101655,7 @@ int __usercall sub_A77E0@<eax>(long double a1@<st0>)
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000A78E0) --------------------------------------------------------
-signed int __usercall sub_A78E0@<eax>(long double a1@<st0>)
+signed int __usercall LoadFactsCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   signed int result; // eax@2
@@ -102012,15 +102012,15 @@ int __fastcall sub_A7E70(int a1, int a2, int a3, int a4)
 //----- (000A7ED0) --------------------------------------------------------
 signed int sub_A7ED0()
 {
-  registerClipsCallback((int)aFactExistp, 98, (int)sub_A7FE0, (int)aFactexistpfunc, (int)a11z);
-  registerClipsCallback((int)aFactRelation, 119, (int)sub_A7F80, (int)aFactrelationfu, (int)a11z);
-  registerClipsCallback((int)aFactSlotValue, 117, (int)sub_A8050, (int)aFactslotvaluef, (int)a22Zw);
-  registerClipsCallback((int)aFactSlotNames, 117, (int)sub_A8180, (int)aFactslotnamesf, (int)a11z);
-  return registerClipsCallback((int)aGetFactList, 109, (int)sub_A82A0, (int)aGetfactlistfun, (int)a01w_7);
+  registerClipsCallback((int)aFactExistp, 98, (int)FactExistpFunction, (int)aFactexistpfunc, (int)a11z);
+  registerClipsCallback((int)aFactRelation, 119, (int)FactRelationFunction, (int)aFactrelationfu, (int)a11z);
+  registerClipsCallback((int)aFactSlotValue, 117, (int)FactSlotValueFunction, (int)aFactslotvaluef, (int)a22Zw);
+  registerClipsCallback((int)aFactSlotNames, 117, (int)FactSlotNamesFunction, (int)aFactslotnamesf, (int)a11z);
+  return registerClipsCallback((int)aGetFactList, 109, (int)GetFactListFunction, (int)aGetfactlistfun, (int)a01w_7);
 }
 
 //----- (000A7F80) --------------------------------------------------------
-int __usercall sub_A7F80@<eax>(long double a1@<st0>)
+int __usercall FactRelationFunction@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -102043,7 +102043,7 @@ int __usercall sub_A7F80@<eax>(long double a1@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000A7FE0) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_A7FE0@<eax>(long double a1@<st0>)
+int __usercall __spoils<ecx,st0> FactExistpFunction@<eax>(long double a1@<st0>)
 {
   int result; // eax@1
   int v2; // ecx@1
@@ -102059,7 +102059,7 @@ int __usercall __spoils<ecx,st0> sub_A7FE0@<eax>(long double a1@<st0>)
 }
 
 //----- (000A8050) --------------------------------------------------------
-signed int __usercall sub_A8050@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall FactSlotValueFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -102144,7 +102144,7 @@ int __fastcall sub_A80D0(int a1, int a2, int a3)
 // F4A70: using guessed type int __fastcall strcmp(_DWORD, _DWORD);
 
 //----- (000A8180) --------------------------------------------------------
-int __usercall sub_A8180@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall FactSlotNamesFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // ecx@1
@@ -102220,7 +102220,7 @@ int __fastcall sub_A81E0(int a1, int a2)
 }
 
 //----- (000A82A0) --------------------------------------------------------
-int __usercall sub_A82A0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall GetFactListFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -103142,7 +103142,7 @@ int __fastcall sub_A9610(int a1)
   int v7; // eax@4
   int v8; // eax@5
   int v9; // ST04_4@5
-  unsigned int v10; // eax@8
+  int v10; // eax@8
 
   v1 = a1 + 14;
   v2 = *(_DWORD *)(a1 + 6);
@@ -105636,15 +105636,15 @@ signed int sub_AC460()
 //----- (000AC4B0) --------------------------------------------------------
 signed int sub_AC4B0()
 {
-  registerClipsCallback((int)aBatch, 98, (int)sub_ACD80, (int)aBatchcommand, (int)a11k_0);
-  registerClipsCallback((int)aBatch_0, 98, (int)sub_AD110, (int)aBatchstarcomma, (int)a11k_0);
-  registerClipsCallback((int)aDribbleOn, 98, (int)sub_AC930, (int)aDribbleoncomma, (int)a11k_0);
-  registerClipsCallback((int)aDribbleOff, 98, (int)sub_ACA40, (int)aDribbleoffcomm, (int)a00_1);
-  registerClipsCallback((int)aSave, 98, (int)sub_AD360, (int)aSavecommand, (int)a11k_0);
-  registerClipsCallback((int)aLoad, 98, (int)sub_AD270, (int)aLoadcommand, (int)a11k_0);
-  registerClipsCallback((int)aLoad_0, 98, (int)sub_AD2F0, (int)aLoadstarcomman, (int)a11k_0);
-  registerClipsCallback((int)aBsave, 98, (int)sub_8BB60, (int)aBsavecommand, (int)a11k_0);
-  return registerClipsCallback((int)aBload_1, 98, (int)sub_8AED0, (int)aBloadcommand, (int)a11k_0);
+  registerClipsCallback((int)aBatch, 98, (int)BatchCommand, (int)aBatchcommand, (int)a11k_0);
+  registerClipsCallback((int)aBatch_0, 98, (int)BatchStarCommand, (int)aBatchstarcomma, (int)a11k_0);
+  registerClipsCallback((int)aDribbleOn, 98, (int)DribbleOnCommand, (int)aDribbleoncomma, (int)a11k_0);
+  registerClipsCallback((int)aDribbleOff, 98, (int)DribbleOffCommand, (int)aDribbleoffcomm, (int)a00_1);
+  registerClipsCallback((int)aSave, 98, (int)SaveCommand, (int)aSavecommand, (int)a11k_0);
+  registerClipsCallback((int)aLoad, 98, (int)LoadCommand, (int)aLoadcommand, (int)a11k_0);
+  registerClipsCallback((int)aLoad_0, 98, (int)LoadStarCommand, (int)aLoadstarcomman, (int)a11k_0);
+  registerClipsCallback((int)aBsave, 98, (int)BsaveCommand, (int)aBsavecommand, (int)a11k_0);
+  return registerClipsCallback((int)aBload_1, 98, (int)BloadCommand, (int)aBloadcommand, (int)a11k_0);
 }
 
 //----- (000AC5D0) --------------------------------------------------------
@@ -105802,7 +105802,7 @@ signed int sub_AC8E0()
 // 1B1304: using guessed type int dword_1B1304;
 
 //----- (000AC930) --------------------------------------------------------
-int __usercall sub_AC930@<eax>(long double a1@<st0>)
+int __usercall DribbleOnCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -105852,7 +105852,7 @@ signed int __fastcall sub_AC980(int a1)
 // 13AE24: using guessed type int (__fastcall *dword_13AE24)(_DWORD, _DWORD, _DWORD);
 
 //----- (000ACA40) --------------------------------------------------------
-signed int sub_ACA40()
+signed int DribbleOffCommand()
 {
   signed int result; // eax@2
 
@@ -106025,7 +106025,7 @@ signed int sub_ACD60()
 }
 
 //----- (000ACD80) --------------------------------------------------------
-int __usercall sub_ACD80@<eax>(long double a1@<st0>)
+int __usercall BatchCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -106228,7 +106228,7 @@ signed int sub_AD0A0()
 // 1B1300: using guessed type int dword_1B1300;
 
 //----- (000AD110) --------------------------------------------------------
-int __usercall sub_AD110@<eax>(long double a1@<st0>)
+int __usercall BatchStarCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -106316,7 +106316,7 @@ signed int __usercall sub_AD160@<eax>(int a1@<eax>, long double a2@<st0>)
 // F59FA: using guessed type int __fastcall fgetc(_DWORD);
 
 //----- (000AD270) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_AD270@<eax>(long double a1@<st0>)
+int __usercall __spoils<ecx,st0> LoadCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -106351,7 +106351,7 @@ int __usercall __spoils<ecx,st0> sub_AD270@<eax>(long double a1@<st0>)
 }
 
 //----- (000AD2F0) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_AD2F0@<eax>(long double a1@<st0>)
+int __usercall __spoils<ecx,st0> LoadStarCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -106382,7 +106382,7 @@ int __usercall __spoils<ecx,st0> sub_AD2F0@<eax>(long double a1@<st0>)
 }
 
 //----- (000AD360) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_AD360@<eax>(long double a1@<st0>)
+signed int __usercall __spoils<ecx,st0> SaveCommand@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   signed int result; // eax@2
@@ -108418,8 +108418,8 @@ int sub_AF6F0()
   sub_94990((int)aDefgeneric_1, (int)sub_B07C0, 1000);
   sub_94990((int)aDefmethod_0, (int)sub_B07E0, -1000);
   registerClipsCallback((int)aUndefgeneric, 118, (int)sub_AFBF0, v0, (int)a11w_4);
-  registerClipsCallback((int)aUndefmethod, 118, (int)sub_AFC30, (int)aUndefmethodcom, (int)a22Wg);
-  registerClipsCallback((int)aCallNextMethod, 117, (int)sub_B13A0, (int)aCallnextmethod, (int)a00_7);
+  registerClipsCallback((int)aUndefmethod, 118, (int)UndefmethodCommand, (int)aUndefmethodcom, (int)a22Wg);
+  registerClipsCallback((int)aCallNextMethod, 117, (int)CallNextMethod, (int)aCallnextmethod, (int)a00_7);
   sub_A5AF0((int)aCallNextMethod, 1, 0);
   registerClipsCallback((int)aCallSpecificMe, 117, (int)sub_B14C0, v1, (int)a2Wi);
   sub_A5AF0((int)aCallSpecificMe, 1, 0);
@@ -108428,16 +108428,16 @@ int sub_AF6F0()
   registerClipsCallback((int)aNextMethodp, 98, (int)sub_B1360, v3, (int)a00_7);
   sub_A5AF0((int)aNextMethodp, 1, 0);
   registerClipsCallback((int)aGnrcCurrentA_0, 117, (int)sub_B1610, v4, 0);
-  registerClipsCallback((int)aPpdefgeneric, 118, (int)sub_B0030, (int)aPpdefgenericco, (int)a11w_4);
-  registerClipsCallback((int)aListDefgeneric, 118, (int)sub_B01A0, (int)aListdefgeneric, (int)a01_0);
-  registerClipsCallback((int)aPpdefmethod, 118, (int)sub_B0050, (int)aPpdefmethodcom, (int)a22Wi);
-  registerClipsCallback((int)aListDefmethods, 118, (int)sub_B0100, (int)aListdefmethods, (int)a01w_3);
-  registerClipsCallback((int)aPreviewGeneric, 118, (int)sub_B1EB0, (int)aPreviewgeneric, (int)a1W_0);
-  registerClipsCallback((int)aGetDefgenericL, 109, (int)sub_B0260, (int)aGetdefgenericl, (int)a01_0);
-  registerClipsCallback((int)aGetDefmethodLi, 109, (int)sub_B02B0, (int)aGetdefmethodli, (int)a01w_3);
-  registerClipsCallback((int)aGetMethodRestr, 109, (int)sub_B0450, (int)aGetmethodrestr, (int)a22iw);
-  registerClipsCallback((int)aDefgenericModu, 119, (int)sub_AFC10, (int)aGetdefgenericm, (int)a11w_4);
-  registerClipsCallback((int)aType, 117, (int)sub_B77A0, (int)aClasscommand, (int)a11_3);
+  registerClipsCallback((int)aPpdefgeneric, 118, (int)PPDefgenericCommand, (int)aPpdefgenericco, (int)a11w_4);
+  registerClipsCallback((int)aListDefgeneric, 118, (int)ListDefgenericsCommand, (int)aListdefgeneric, (int)a01_0);
+  registerClipsCallback((int)aPpdefmethod, 118, (int)PPDefmethodCommand, (int)aPpdefmethodcom, (int)a22Wi);
+  registerClipsCallback((int)aListDefmethods, 118, (int)ListDefmethodsCommand, (int)aListdefmethods, (int)a01w_3);
+  registerClipsCallback((int)aPreviewGeneric, 118, (int)PreviewGeneric, (int)aPreviewgeneric, (int)a1W_0);
+  registerClipsCallback((int)aGetDefgenericL, 109, (int)GetDefgenericListFunction, (int)aGetdefgenericl, (int)a01_0);
+  registerClipsCallback((int)aGetDefmethodLi, 109, (int)GetDefmethodListCommand, (int)aGetdefmethodli, (int)a01w_3);
+  registerClipsCallback((int)aGetMethodRestr, 109, (int)GetMethodRestrictionsCommand, (int)aGetmethodrestr, (int)a22iw);
+  registerClipsCallback((int)aDefgenericModu, 119, (int)GetDefgenericModuleCommand, (int)aGetdefgenericm, (int)a11w_4);
+  registerClipsCallback((int)aType, 117, (int)ClassCommand, (int)aClasscommand, (int)a11_3);
   sub_EC050((int)aGenericFunct_0, 0, (int)&dword_13AEA8, 34, (int)sub_B0A50, (int)sub_B0A80);
   return sub_EC050((int)aMethods, 0, (int)&dword_13AEAC, 33, (int)sub_B0AB0, (int)sub_B0AF0);
 }
@@ -108475,12 +108475,12 @@ int __fastcall sub_AFB00(int a1)
 // 1B1324: using guessed type int dword_1B1324;
 
 //----- (000AFB20) --------------------------------------------------------
-unsigned int __fastcall sub_AFB20(int a1, int a2)
+int __fastcall sub_AFB20(int a1, int a2)
 {
   int v2; // ebx@1
-  unsigned int *v3; // ecx@2
-  unsigned int result; // eax@3
-  unsigned int v5; // eax@5
+  int *v3; // ecx@2
+  int result; // eax@3
+  int v5; // eax@5
   int v6; // edx@5
 
   v2 = a1;
@@ -108495,7 +108495,7 @@ unsigned int __fastcall sub_AFB20(int a1, int a2)
   }
   else
   {
-    v3 = *(unsigned int **)(a1 + 28);
+    v3 = *(int **)(a1 + 28);
     if ( v3 )
       result = *v3;
     else
@@ -108525,14 +108525,14 @@ int __usercall sub_AFBF0@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B1320: using guessed type int dword_1B1320;
 
 //----- (000AFC10) --------------------------------------------------------
-int __usercall sub_AFC10@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefgenericModuleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDefgenericModu, dword_1B1320, a1, a2);
 }
 // 1B1320: using guessed type int dword_1B1320;
 
 //----- (000AFC30) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_AFC30@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> UndefmethodCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   char v3; // zf@3
@@ -108591,10 +108591,10 @@ signed int __usercall __spoils<ecx,st0> sub_AFC30@<eax>(int a1@<ecx>, long doubl
 // 1B1320: using guessed type int dword_1B1320;
 
 //----- (000AFDB0) --------------------------------------------------------
-bool __fastcall sub_AFDB0(int a1)
+signed int __fastcall sub_AFDB0(int a1)
 {
   signed int v1; // ebx@1
-  bool result; // eax@6
+  signed int result; // eax@6
   int v3; // edx@7
   char v4; // zf@8
   int v5; // ecx@11
@@ -108713,12 +108713,12 @@ int __fastcall sub_AFFA0(int result, int a2)
 }
 
 //----- (000AFFE0) --------------------------------------------------------
-unsigned int __fastcall sub_AFFE0(char a1, int a2, int a3)
+int __fastcall sub_AFFE0(char a1, int a2, int a3)
 {
   char v3; // si@1
-  unsigned int v4; // eax@1
+  signed int v4; // eax@1
   int v5; // ecx@1
-  unsigned int result; // eax@1
+  int result; // eax@1
 
   v3 = a1;
   v4 = sub_B1E60(a2, a3);
@@ -108729,14 +108729,14 @@ unsigned int __fastcall sub_AFFE0(char a1, int a2, int a3)
 }
 
 //----- (000B0030) --------------------------------------------------------
-int __usercall sub_B0030@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDefgenericCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1320, a1, a2);
 }
 // 1B1320: using guessed type int dword_1B1320;
 
 //----- (000B0050) --------------------------------------------------------
-int __usercall sub_B0050@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall PPDefmethodCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // esi@2
@@ -108775,7 +108775,7 @@ int __usercall sub_B0050@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000B0100) --------------------------------------------------------
-signed int __usercall sub_B0100@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
+signed int __usercall ListDefmethodsCommand@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
 {
   int v4; // ecx@1
   int v5; // eax@2
@@ -108811,7 +108811,7 @@ signed int __usercall sub_B0100@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, 
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000B01A0) --------------------------------------------------------
-signed int __usercall sub_B01A0@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDefgenericsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDefgeneric, dword_1B1320, a1, a2);
 }
@@ -108851,14 +108851,14 @@ int __fastcall sub_B01E0(int a1, int a2, int a3, int a4)
 // 1B1324: using guessed type int dword_1B1324;
 
 //----- (000B0260) --------------------------------------------------------
-int __usercall sub_B0260@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefgenericListFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96210((int)aGetDefgenericL, a1, dword_1B1320, a2);
 }
 // 1B1320: using guessed type int dword_1B1320;
 
 //----- (000B02B0) --------------------------------------------------------
-signed int __usercall sub_B02B0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall GetDefmethodListCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@2
@@ -108972,7 +108972,7 @@ signed int __fastcall sub_B0330(int a1, int a2)
 // 1B1324: using guessed type int dword_1B1324;
 
 //----- (000B0450) --------------------------------------------------------
-signed int __usercall sub_B0450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall GetMethodRestrictionsCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@2
@@ -109018,7 +109018,7 @@ signed int __usercall sub_B0450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 int __fastcall sub_B0520(int a1, int a2)
 {
   int v2; // esi@1
-  unsigned int v3; // eax@1
+  signed int v3; // eax@1
   int v4; // ebx@1
   int v5; // edx@1
   signed int v6; // eax@4
@@ -109322,7 +109322,7 @@ signed int __userpurge sub_B0B20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
   int v18; // ecx@7
   int v19; // edi@7
   int v20; // edx@8
-  unsigned int v21; // esi@9
+  int v21; // esi@9
   bool v23; // eax@19
   int v24; // ecx@20
   int v25; // eax@23
@@ -109457,7 +109457,7 @@ signed int __userpurge sub_B0B20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>,
           else
           {
             sub_DCD70(v9, (int)asc_1277E0);
-            ((void (__fastcall *)(int, int, unsigned int))v39)(v9, v19, v21);
+            ((void (__fastcall *)(_DWORD, _DWORD, _DWORD))v39)(v9, v19, v21);
           }
           v20 = v21;
           v17 = v19;
@@ -109477,10 +109477,10 @@ signed int __fastcall sub_B0D60(int a1, int a2, int a3, int a4)
   int v4; // esi@1
   int v5; // eax@1
   int v6; // ecx@1
-  unsigned int v7; // eax@1
+  signed int v7; // eax@1
   int v8; // ecx@1
   int v9; // ecx@1
-  unsigned int v10; // eax@1
+  signed int v10; // eax@1
   int v11; // ecx@1
   int v12; // edx@2
   int v14; // [sp-48h] [bp-48h]@1
@@ -109776,7 +109776,7 @@ int __usercall sub_B1360@<eax>(long double a1@<st0>)
 // 13AEA0: using guessed type int dword_13AEA0;
 
 //----- (000B13A0) --------------------------------------------------------
-int __usercall sub_B13A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall CallNextMethod@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ecx@1
   int result; // eax@1
@@ -110396,11 +110396,11 @@ signed int __fastcall sub_B1E10(int a1)
 }
 
 //----- (000B1E60) --------------------------------------------------------
-unsigned int __fastcall sub_B1E60(int a1, int a2)
+signed int __fastcall sub_B1E60(int a1, int a2)
 {
   int v2; // esi@1
   unsigned int v3; // edx@1
-  unsigned int result; // eax@2
+  signed int result; // eax@2
 
   v2 = a2;
   v3 = 0;
@@ -110423,7 +110423,7 @@ unsigned int __fastcall sub_B1E60(int a1, int a2)
 }
 
 //----- (000B1EB0) --------------------------------------------------------
-signed int __usercall sub_B1EB0@<eax>(long double a1@<st0>)
+signed int __usercall PreviewGeneric@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   int v2; // esi@2
@@ -110791,10 +110791,10 @@ int __fastcall sub_B25B0(int a1, int a2, int a3)
   int v10; // eax@7
   int v11; // edx@7
   int i; // esi@8
-  unsigned int v13; // eax@13
+  int v13; // eax@13
   int *v14; // esi@13
   signed int v15; // ebx@13
-  unsigned int v16; // eax@20
+  signed int v16; // eax@20
   int v17; // edx@28
   int v18; // edx@28
   int v19; // edx@28
@@ -111168,7 +111168,7 @@ int __fastcall sub_B2C70(int result)
 // 1B1398: using guessed type int dword_1B1398;
 
 //----- (000B2CF0) --------------------------------------------------------
-unsigned int __fastcall sub_B2CF0(int a1, int a2, int a3, int a4, int a5)
+int __fastcall sub_B2CF0(int a1, int a2, int a3, int a4, int a5)
 {
   int v5; // ebp@1
   unsigned int i; // esi@4
@@ -112343,10 +112343,10 @@ int sub_B41D0()
   sub_94990((int)aDefglobal_0, (int)sub_B4360, 40);
   sub_94590((int)aDefglobal_0, (int)sub_B42D0, 50);
   registerClipsCallback((int)aGetDefglobalLi, 109, (int)sub_B43C0, v0, (int)a01w_4);
-  registerClipsCallback((int)aUndefglobal, 118, (int)sub_B4380, (int)aUndefglobalcom, (int)a11w_6);
-  registerClipsCallback((int)aDefglobalModul, 119, (int)sub_B4410, (int)aDefglobalmodul, (int)a11w_6);
-  registerClipsCallback((int)aListDefglobals, 118, (int)sub_B4470, (int)aListdefglobals, (int)a01w_4);
-  registerClipsCallback((int)aPpdefglobal, 118, (int)sub_B4430, (int)aPpdefglobalcom, (int)a11w_6);
+  registerClipsCallback((int)aUndefglobal, 118, (int)UndefglobalCommand, (int)aUndefglobalcom, (int)a11w_6);
+  registerClipsCallback((int)aDefglobalModul, 119, (int)DefglobalModuleFunction, (int)aDefglobalmodul, (int)a11w_6);
+  registerClipsCallback((int)aListDefglobals, 118, (int)ListDefglobalsCommand, (int)aListdefglobals, (int)a01w_4);
+  registerClipsCallback((int)aPpdefglobal, 118, (int)PPDefglobalCommand, (int)aPpdefglobalcom, (int)a11w_6);
   sub_EC050((int)aGlobals, 0, (int)&dword_13AEB8, 0, (int)sub_B44F0, (int)sub_B4520);
   sub_B3CA0();
   return sub_B4550();
@@ -112394,7 +112394,7 @@ int __fastcall sub_B4360(int a1)
 // 1B1374: using guessed type int dword_1B1374;
 
 //----- (000B4380) --------------------------------------------------------
-int __usercall sub_B4380@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall UndefglobalCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95EA0((int)aUndefglobal, dword_1B1374, a1, a2);
 }
@@ -112415,21 +112415,21 @@ int __usercall sub_B43C0@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B1374: using guessed type int dword_1B1374;
 
 //----- (000B4410) --------------------------------------------------------
-int __usercall sub_B4410@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall DefglobalModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDefglobalModul, dword_1B1374, a1, a2);
 }
 // 1B1374: using guessed type int dword_1B1374;
 
 //----- (000B4430) --------------------------------------------------------
-int __usercall sub_B4430@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDefglobalCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1374, a1, a2);
 }
 // 1B1374: using guessed type int dword_1B1374;
 
 //----- (000B4470) --------------------------------------------------------
-signed int __usercall sub_B4470@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDefglobalsCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDefglobals, dword_1B1374, a1, a2);
 }
@@ -112678,14 +112678,14 @@ int __fastcall sub_B4950(int a1, int a2, int a3, signed int a4)
 //----- (000B49B0) --------------------------------------------------------
 signed int sub_B49B0()
 {
-  registerClipsCallback((int)aSetResetGlobal, 98, (int)sub_B4A20, (int)aSetresetglobal, (int)a11_6);
-  registerClipsCallback((int)aGetResetGlobal, 98, (int)sub_B4AC0, (int)aGetresetglobal, (int)a00_8);
-  return registerClipsCallback((int)aShowDefglobals, 118, (int)sub_B4B00, (int)aShowdefglobals, (int)a01w_5);
+  registerClipsCallback((int)aSetResetGlobal, 98, (int)SetResetGlobalsCommand, (int)aSetresetglobal, (int)a11_6);
+  registerClipsCallback((int)aGetResetGlobal, 98, (int)GetResetGlobalsCommand, (int)aGetresetglobal, (int)a00_8);
+  return registerClipsCallback((int)aShowDefglobals, 118, (int)ShowDefglobalsCommand, (int)aShowdefglobals, (int)a01w_5);
 }
-// B4AC0: using guessed type int sub_B4AC0();
+// B4AC0: using guessed type int GetResetGlobalsCommand();
 
 //----- (000B4A20) --------------------------------------------------------
-int __usercall sub_B4A20@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetResetGlobalsCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -112717,14 +112717,14 @@ int __usercall sub_B4A20@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B4AC0) --------------------------------------------------------
-int sub_B4AC0()
+int GetResetGlobalsCommand()
 {
   int v0; // ecx@1
 
   sub_89D20((int)aGetResetGlobal, 0, 0);
   return v0;
 }
-// B4AC0: using guessed type int sub_B4AC0();
+// B4AC0: using guessed type int GetResetGlobalsCommand();
 // 13AEBC: using guessed type int dword_13AEBC;
 
 //----- (000B4AF0) --------------------------------------------------------
@@ -112735,7 +112735,7 @@ int sub_B4AF0()
 // 13AEBC: using guessed type int dword_13AEBC;
 
 //----- (000B4B00) --------------------------------------------------------
-signed int __usercall sub_B4B00@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall ShowDefglobalsCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // ecx@1
@@ -114058,7 +114058,7 @@ int sub_B61D0()
 // 13AF30: using guessed type int dword_13AF30;
 
 //----- (000B6220) --------------------------------------------------------
-int __usercall sub_B6220@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetIncrementalResetCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -114107,14 +114107,14 @@ int __usercall sub_B6220@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B62F0) --------------------------------------------------------
-int sub_B62F0()
+int GetIncrementalResetCommand()
 {
   int v0; // ecx@1
 
   sub_89D20((int)aGetIncrement_0, 0, 0);
   return v0;
 }
-// B62F0: using guessed type int sub_B62F0();
+// B62F0: using guessed type int GetIncrementalResetCommand();
 // 13AF30: using guessed type int dword_13AF30;
 
 //----- (000B6320) --------------------------------------------------------
@@ -114774,27 +114774,27 @@ signed int sub_B6CE0()
   sub_B9A90();
   sub_A33E0((int)&unk_13AFB0, 7);
   registerClipsCallback((int)aInitializeInst, 117, (int)sub_BB600, v0, 0);
-  registerClipsCallback((int)aActiveInitiali, 117, (int)sub_BACB0, (int)aInitializeinst, 0);
+  registerClipsCallback((int)aActiveInitiali, 117, (int)InitializeInstanceCommand, (int)aInitializeinst, 0);
   sub_A5A70((int)aActiveInitiali, (int)sub_BD6E0);
   registerClipsCallback((int)aMakeInstance, 117, (int)sub_BB630, v1, 0);
-  registerClipsCallback((int)aActiveMakeInst, 117, (int)sub_BAD10, (int)aMakeinstanceco, 0);
+  registerClipsCallback((int)aActiveMakeInst, 117, (int)MakeInstanceCommand, (int)aMakeinstanceco, 0);
   sub_A5A70((int)aActiveMakeInst, (int)sub_BD6E0);
   sub_A5A70((int)aInitializeInst, (int)sub_BD6E0);
   sub_A5A70((int)aMakeInstance, (int)sub_BD6E0);
   registerClipsCallback((int)aInitSlots, 117, (int)sub_BB310, v2, (int)a00_9);
-  registerClipsCallback((int)aDeleteInstance, 98, (int)sub_B78B0, (int)aDeleteinstance, (int)a00_9);
-  registerClipsCallback((int)aUnmakeInstance, 98, (int)sub_B78E0, (int)aUnmakeinstance, (int)a1E);
-  registerClipsCallback((int)aInstances_0, 118, (int)sub_B70C0, (int)aInstancescomma, (int)a3w);
-  registerClipsCallback((int)aPpinstance, 118, (int)sub_B7250, (int)aPpinstancecomm, (int)a00_9);
-  registerClipsCallback((int)aSymbolToInstan, 117, (int)sub_B79E0, (int)aSymboltoinstan, (int)a11w_9);
-  registerClipsCallback((int)aInstanceNameTo, 119, (int)sub_B7A30, (int)aInstancenameto, (int)a11p);
-  registerClipsCallback((int)aInstanceAddr_2, 117, (int)sub_B7A70, (int)aInstanceaddres, (int)a12eep);
-  registerClipsCallback((int)aInstanceAddr_3, 98, (int)sub_B7CC0, (int)aInstanceaddr_0, (int)a11_4);
-  registerClipsCallback((int)aInstanceNamep, 98, (int)sub_B7CF0, (int)aInstancenamepc, (int)a11_4);
-  registerClipsCallback((int)aInstanceName_0, 117, (int)sub_B7C20, (int)aInstancenameco, (int)a11e);
-  registerClipsCallback((int)aInstancep, 98, (int)sub_B7D20, (int)aInstancepcomma, (int)a11_4);
-  registerClipsCallback((int)aInstanceExistp, 98, (int)sub_B7D60, (int)aInstanceexistp, (int)a11e);
-  registerClipsCallback((int)aClass_0, 117, (int)sub_B77A0, (int)aClasscommand_0, (int)a11_4);
+  registerClipsCallback((int)aDeleteInstance, 98, (int)DeleteInstanceCommand, (int)aDeleteinstance, (int)a00_9);
+  registerClipsCallback((int)aUnmakeInstance, 98, (int)UnmakeInstanceCommand, (int)aUnmakeinstance, (int)a1E);
+  registerClipsCallback((int)aInstances_0, 118, (int)InstancesCommand, (int)aInstancescomma, (int)a3w);
+  registerClipsCallback((int)aPpinstance, 118, (int)PPInstanceCommand, (int)aPpinstancecomm, (int)a00_9);
+  registerClipsCallback((int)aSymbolToInstan, 117, (int)SymbolToInstanceName, (int)aSymboltoinstan, (int)a11w_9);
+  registerClipsCallback((int)aInstanceNameTo, 119, (int)InstanceNameToSymbol, (int)aInstancenameto, (int)a11p);
+  registerClipsCallback((int)aInstanceAddr_2, 117, (int)InstanceAddressCommand, (int)aInstanceaddres, (int)a12eep);
+  registerClipsCallback((int)aInstanceAddr_3, 98, (int)InstanceAddressPCommand, (int)aInstanceaddr_0, (int)a11_4);
+  registerClipsCallback((int)aInstanceNamep, 98, (int)InstanceNamePCommand, (int)aInstancenamepc, (int)a11_4);
+  registerClipsCallback((int)aInstanceName_0, 117, (int)InstanceNameCommand, (int)aInstancenameco, (int)a11e);
+  registerClipsCallback((int)aInstancep, 98, (int)InstancePCommand, (int)aInstancepcomma, (int)a11_4);
+  registerClipsCallback((int)aInstanceExistp, 98, (int)InstanceExistPCommand, (int)aInstanceexistp, (int)a11e);
+  registerClipsCallback((int)aClass_0, 117, (int)ClassCommand, (int)aClasscommand_0, (int)a11_4);
   sub_BBE50();
   sub_B80B0();
   sub_BCD70();
@@ -114889,7 +114889,7 @@ signed int __usercall sub_B7000@<eax>(int a1@<eax>, long double a2@<st0>)
 // 13B0DC: using guessed type int dword_13B0DC;
 
 //----- (000B70C0) --------------------------------------------------------
-void __usercall sub_B70C0(long double a1@<st0>)
+void __usercall InstancesCommand(long double a1@<st0>)
 {
   int v1; // edi@1
   int v2; // esi@1
@@ -114951,7 +114951,7 @@ LABEL_21:
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000B7250) --------------------------------------------------------
-signed int sub_B7250()
+signed int PPInstanceCommand()
 {
   signed int result; // eax@1
   int v1; // edx@2
@@ -115246,7 +115246,7 @@ int __fastcall sub_B7720(int a1, int a2)
 }
 
 //----- (000B77A0) --------------------------------------------------------
-int __usercall sub_B77A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+int __usercall ClassCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ebx@1
   int v6; // ecx@1
@@ -115316,7 +115316,7 @@ LABEL_4:
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B78B0) --------------------------------------------------------
-signed int __usercall sub_B78B0@<eax>(long double a1@<st0>)
+signed int __usercall DeleteInstanceCommand@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   int v2; // eax@2
@@ -115331,7 +115331,7 @@ signed int __usercall sub_B78B0@<eax>(long double a1@<st0>)
 }
 
 //----- (000B78E0) --------------------------------------------------------
-signed int __usercall sub_B78E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+signed int __usercall UnmakeInstanceCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // esi@1
   signed int v6; // edi@1
@@ -115392,7 +115392,7 @@ signed int __usercall sub_B78E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, 
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000B79E0) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_B79E0@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> SymbolToInstanceName@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   signed int result; // eax@1
@@ -115414,7 +115414,7 @@ signed int __usercall __spoils<ecx,st0> sub_B79E0@<eax>(int a1@<eax>, long doubl
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B7A30) --------------------------------------------------------
-int __usercall sub_B7A30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall InstanceNameToSymbol@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@2
   int v4; // [sp-8h] [bp-24h]@1
@@ -115433,7 +115433,7 @@ int __usercall sub_B7A30@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B7A70) --------------------------------------------------------
-void __usercall sub_B7A70(int a1@<eax>, long double a2@<st0>)
+void __usercall InstanceAddressCommand(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   int v3; // edi@3
@@ -115519,7 +115519,7 @@ LABEL_21:
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B7C20) --------------------------------------------------------
-signed int __usercall sub_B7C20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall InstanceNameCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -115565,7 +115565,7 @@ signed int __usercall sub_B7C20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000B7CC0) --------------------------------------------------------
-bool __usercall sub_B7CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+bool __usercall InstanceAddressPCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v6; // [sp-4h] [bp-1Ch]@1
   int v7; // [sp+0h] [bp-18h]@1
@@ -115578,7 +115578,7 @@ bool __usercall sub_B7CC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000B7CF0) --------------------------------------------------------
-bool __usercall sub_B7CF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+bool __usercall InstanceNamePCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v6; // [sp-4h] [bp-1Ch]@1
   int v7; // [sp+0h] [bp-18h]@1
@@ -115591,7 +115591,7 @@ bool __usercall sub_B7CF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000B7D20) --------------------------------------------------------
-bool __usercall sub_B7D20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+bool __usercall InstancePCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v6; // [sp-4h] [bp-1Ch]@1
   int v7; // [sp+0h] [bp-18h]@1
@@ -115604,7 +115604,7 @@ bool __usercall sub_B7D20@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000B7D60) --------------------------------------------------------
-bool __usercall sub_B7D60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+bool __usercall InstanceExistPCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   bool result; // eax@2
   int v6; // [sp-4h] [bp-20h]@1
@@ -115786,21 +115786,21 @@ signed int __fastcall sub_B7FA0(int a1, int a2, int a3)
 //----- (000B80B0) --------------------------------------------------------
 signed int sub_B80B0()
 {
-  registerClipsCallback((int)aSaveInstances, 108, (int)sub_B8160, (int)aSaveinstancesc, (int)&unk_1289B8);
-  registerClipsCallback((int)aLoadInstances, 108, (int)sub_B8180, (int)aLoadinstancesc, (int)a11k_2);
-  registerClipsCallback((int)aRestoreInstanc, 108, (int)sub_B8200, (int)aRestoreinstanc, (int)a11k_2);
-  registerClipsCallback((int)aBsaveInstances, 108, (int)sub_B8570, (int)aBinarysaveinst, (int)&unk_1289B8);
-  return registerClipsCallback((int)aBloadInstances, 108, (int)sub_B8280, (int)aBinaryloadinst, (int)a11k_2);
+  registerClipsCallback((int)aSaveInstances, 108, (int)SaveInstancesCommand, (int)aSaveinstancesc, (int)&unk_1289B8);
+  registerClipsCallback((int)aLoadInstances, 108, (int)LoadInstancesCommand, (int)aLoadinstancesc, (int)a11k_2);
+  registerClipsCallback((int)aRestoreInstanc, 108, (int)RestoreInstancesCommand, (int)aRestoreinstanc, (int)a11k_2);
+  registerClipsCallback((int)aBsaveInstances, 108, (int)BinarySaveInstancesCommand, (int)aBinarysaveinst, (int)&unk_1289B8);
+  return registerClipsCallback((int)aBloadInstances, 108, (int)BinaryLoadInstancesCommand, (int)aBinaryloadinst, (int)a11k_2);
 }
 
 //----- (000B8160) --------------------------------------------------------
-signed int __usercall sub_B8160@<eax>(long double a1@<st0>)
+signed int __usercall SaveInstancesCommand@<eax>(long double a1@<st0>)
 {
   return sub_B8720((int)aSaveInstances, (int (*)(void))sub_B8400, a1);
 }
 
 //----- (000B8180) --------------------------------------------------------
-signed int __usercall sub_B8180@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall LoadInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   signed int v4; // ecx@2
@@ -115824,7 +115824,7 @@ signed int __usercall sub_B8180@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // 13AAF0: using guessed type int dword_13AAF0;
 
 //----- (000B8200) --------------------------------------------------------
-signed int __usercall sub_B8200@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall RestoreInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   signed int v4; // ecx@2
@@ -115848,7 +115848,7 @@ signed int __usercall sub_B8200@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // 13AAF0: using guessed type int dword_13AAF0;
 
 //----- (000B8280) --------------------------------------------------------
-signed int __usercall sub_B8280@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall BinaryLoadInstancesCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   signed int v4; // ecx@2
@@ -116027,7 +116027,7 @@ int __usercall sub_B8400@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, int a4@
 // 1B1398: using guessed type int dword_1B1398;
 
 //----- (000B8570) --------------------------------------------------------
-signed int __usercall sub_B8570@<eax>(long double a1@<st0>)
+signed int __usercall BinarySaveInstancesCommand@<eax>(long double a1@<st0>)
 {
   return sub_B8720((int)aBsaveInstances, (int (*)(void))sub_B8590, a1);
 }
@@ -118108,7 +118108,7 @@ unsigned int __usercall sub_BAC90@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000BACB0) --------------------------------------------------------
-int __usercall sub_BACB0@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int a4@<ebx>)
+int __usercall InitializeInstanceCommand@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int a4@<ebx>)
 {
   int result; // eax@1
   int v5; // ecx@1
@@ -118135,7 +118135,7 @@ int __usercall sub_BACB0@<eax>(int a1@<eax>, int a2@<edx>, long double a3@<st0>,
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BAD10) --------------------------------------------------------
-void __usercall sub_BAD10(int a1@<eax>, int a2@<ecx>, long double a3@<st0>, int a4@<ebx>, int a5@<edx>)
+void __usercall MakeInstanceCommand(int a1@<eax>, int a2@<ecx>, long double a3@<st0>, int a4@<ebx>, int a5@<edx>)
 {
   int v5; // ecx@1
   int v6; // eax@4
@@ -118596,7 +118596,7 @@ int __usercall sub_BB600@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   v3 = sub_D48A0(1, a2);
-  sub_BACB0(v2, v3, a2, v2);
+  InitializeInstanceCommand(v2, v3, a2, v2);
   return sub_D48A0(v4, a2);
 }
 
@@ -118610,7 +118610,7 @@ int __usercall sub_BB630@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   v3 = sub_D48A0(1, a2);
-  sub_BAD10(v2, v4, a2, v2, v3);
+  MakeInstanceCommand(v2, v4, a2, v2, v3);
   return sub_D48A0(v5, a2);
 }
 
@@ -119041,22 +119041,22 @@ signed int sub_BBE50()
   int v2; // ecx@1
   int v3; // ecx@1
 
-  registerClipsCallback((int)aModifyInstance, 117, (int)sub_BC4C0, (int)aInactivemodify, 0);
-  registerClipsCallback((int)aActiveModifyIn, 117, (int)sub_BC020, (int)aModifyinstance, 0);
+  registerClipsCallback((int)aModifyInstance, 117, (int)InactiveModifyInstance, (int)aInactivemodify, 0);
+  registerClipsCallback((int)aActiveModifyIn, 117, (int)ModifyInstance, (int)aModifyinstance, 0);
   sub_A5A70((int)aActiveModifyIn, (int)sub_BD6E0);
   registerClipsCallback((int)aMessageModifyI, 117, (int)sub_BC4F0, v0, 0);
-  registerClipsCallback((int)aActiveMessageM, 117, (int)sub_BC110, (int)aMsgmodifyinsta, 0);
+  registerClipsCallback((int)aActiveMessageM, 117, (int)MsgModifyInstance, (int)aMsgmodifyinsta, 0);
   sub_A5A70((int)aActiveMessag_0, (int)sub_BD6E0);
   registerClipsCallback((int)aDuplicateInsta, 117, (int)sub_BC520, v1, 0);
-  registerClipsCallback((int)aActiveDuplicat, 117, (int)sub_BC200, (int)aDuplicateinsta, 0);
+  registerClipsCallback((int)aActiveDuplicat, 117, (int)DuplicateInstance, (int)aDuplicateinsta, 0);
   sub_A5A70((int)aActiveDuplicat, (int)sub_BD6E0);
   registerClipsCallback((int)aMessageDuplica, 117, (int)sub_BC550, v2, 0);
-  registerClipsCallback((int)aActiveMessageD, 117, (int)sub_BC360, (int)aMsgduplicatein, 0);
+  registerClipsCallback((int)aActiveMessageD, 117, (int)MsgDuplicateInstance, (int)aMsgduplicatein, 0);
   sub_A5A70((int)aActiveMessag_1, (int)sub_BD6E0);
   registerClipsCallback((int)aDirectModify, 117, (int)sub_BC5C0, v3, 0);
-  registerClipsCallback((int)aMessageModify, 117, (int)sub_BC5E0, (int)aMsgmodifymsgha, 0);
-  registerClipsCallback((int)aDirectDuplicat, 117, (int)sub_BC580, (int)aDirectduplicat, 0);
-  registerClipsCallback((int)aMessageDupli_0, 117, (int)sub_BC5A0, (int)aMsgduplicatems, 0);
+  registerClipsCallback((int)aMessageModify, 117, (int)MsgModifyMsgHandler, (int)aMsgmodifymsgha, 0);
+  registerClipsCallback((int)aDirectDuplicat, 117, (int)DirectDuplicateMsgHandler, (int)aDirectduplicat, 0);
+  registerClipsCallback((int)aMessageDupli_0, 117, (int)MsgDuplicateMsgHandler, (int)aMsgduplicatems, 0);
   sub_A5A70((int)aModifyInstance, (int)sub_BD6E0);
   sub_A5A70((int)aMessageModifyI, (int)sub_BD6E0);
   sub_A5A70((int)aDuplicateInsta, (int)sub_BD6E0);
@@ -119064,7 +119064,7 @@ signed int sub_BBE50()
 }
 
 //----- (000BC020) --------------------------------------------------------
-int __usercall sub_BC020@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall ModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // ecx@1
@@ -119111,7 +119111,7 @@ int __usercall sub_BC020@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BC110) --------------------------------------------------------
-int __usercall sub_BC110@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall MsgModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // ecx@1
@@ -119158,7 +119158,7 @@ int __usercall sub_BC110@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BC200) --------------------------------------------------------
-signed int __usercall sub_BC200@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall DuplicateInstance@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // ecx@1
@@ -119226,7 +119226,7 @@ signed int __usercall sub_BC200@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BC360) --------------------------------------------------------
-signed int __usercall sub_BC360@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall MsgDuplicateInstance@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   int v3; // ecx@1
@@ -119294,14 +119294,14 @@ signed int __usercall sub_BC360@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BC4C0) --------------------------------------------------------
-int __usercall sub_BC4C0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall InactiveModifyInstance@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebx@1
   int v3; // edx@1
 
   v2 = a1;
   sub_D48A0(1, a2);
-  sub_BC020(v2, a2);
+  ModifyInstance(v2, a2);
   return sub_D48A0(v3, a2);
 }
 
@@ -119313,7 +119313,7 @@ int __usercall sub_BC4F0@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   sub_D48A0(1, a2);
-  sub_BC110(v2, a2);
+  MsgModifyInstance(v2, a2);
   return sub_D48A0(v3, a2);
 }
 
@@ -119325,7 +119325,7 @@ int __usercall sub_BC520@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   sub_D48A0(1, a2);
-  sub_BC200(v2, a2);
+  DuplicateInstance(v2, a2);
   return sub_D48A0(v3, a2);
 }
 
@@ -119337,12 +119337,12 @@ int __usercall sub_BC550@<eax>(int a1@<eax>, long double a2@<st0>)
 
   v2 = a1;
   sub_D48A0(1, a2);
-  sub_BC360(v2, a2);
+  MsgDuplicateInstance(v2, a2);
   return sub_D48A0(v3, a2);
 }
 
 //----- (000BC580) --------------------------------------------------------
-int __usercall sub_BC580@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall DirectDuplicateMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int result; // eax@1
 
@@ -119351,7 +119351,7 @@ int __usercall sub_BC580@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000BC5A0) --------------------------------------------------------
-int __usercall sub_BC5A0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall MsgDuplicateMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int result; // eax@1
 
@@ -119369,7 +119369,7 @@ signed int __usercall sub_BC5C0@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000BC5E0) --------------------------------------------------------
-signed int __usercall sub_BC5E0@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall MsgModifyMsgHandler@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   signed int result; // eax@1
 
@@ -119749,22 +119749,22 @@ LABEL_37:
 //----- (000BCD70) --------------------------------------------------------
 signed int sub_BCD70()
 {
-  registerClipsCallback((int)aDirectMvReplac, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
-  registerClipsCallback((int)aDirectMvInsert, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
-  registerClipsCallback((int)aDirectMvDelete, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
-  registerClipsCallback((int)aMvSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
-  registerClipsCallback((int)aMvSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
-  registerClipsCallback((int)aMvSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
-  registerClipsCallback((int)aSlotDirectRepl, 98, (int)sub_BD1B0, (int)aDirectmvreplac, (int)a4Wii);
-  registerClipsCallback((int)aSlotDirectInse, 98, (int)sub_BD280, (int)aDirectmvinsert, (int)a3Wi);
-  registerClipsCallback((int)aSlotDirectDele, 98, (int)sub_BD350, (int)aDirectmvdelete, (int)a33iw);
-  registerClipsCallback((int)aSlotReplace, 117, (int)sub_BCEF0, (int)aMvslotreplacec, (int)a5Uewii);
-  registerClipsCallback((int)aSlotInsert, 117, (int)sub_BCFE0, (int)aMvslotinsertco, (int)a4Uewi);
-  return registerClipsCallback((int)aSlotDelete, 117, (int)sub_BD0C0, (int)aMvslotdeleteco, (int)a44iew);
+  registerClipsCallback((int)aDirectMvReplac, 98, (int)DirectMVReplaceCommand, (int)aDirectmvreplac, (int)a4Wii);
+  registerClipsCallback((int)aDirectMvInsert, 98, (int)DirectMVInsertCommand, (int)aDirectmvinsert, (int)a3Wi);
+  registerClipsCallback((int)aDirectMvDelete, 98, (int)DirectMVDeleteCommand, (int)aDirectmvdelete, (int)a33iw);
+  registerClipsCallback((int)aMvSlotReplace, 117, (int)MVSlotReplaceCommand, (int)aMvslotreplacec, (int)a5Uewii);
+  registerClipsCallback((int)aMvSlotInsert, 117, (int)MVSlotInsertCommand, (int)aMvslotinsertco, (int)a4Uewi);
+  registerClipsCallback((int)aMvSlotDelete, 117, (int)MVSlotDeleteCommand, (int)aMvslotdeleteco, (int)a44iew);
+  registerClipsCallback((int)aSlotDirectRepl, 98, (int)DirectMVReplaceCommand, (int)aDirectmvreplac, (int)a4Wii);
+  registerClipsCallback((int)aSlotDirectInse, 98, (int)DirectMVInsertCommand, (int)aDirectmvinsert, (int)a3Wi);
+  registerClipsCallback((int)aSlotDirectDele, 98, (int)DirectMVDeleteCommand, (int)aDirectmvdelete, (int)a33iw);
+  registerClipsCallback((int)aSlotReplace, 117, (int)MVSlotReplaceCommand, (int)aMvslotreplacec, (int)a5Uewii);
+  registerClipsCallback((int)aSlotInsert, 117, (int)MVSlotInsertCommand, (int)aMvslotinsertco, (int)a4Uewi);
+  return registerClipsCallback((int)aSlotDelete, 117, (int)MVSlotDeleteCommand, (int)aMvslotdeleteco, (int)a44iew);
 }
 
 //----- (000BCEF0) --------------------------------------------------------
-int __usercall sub_BCEF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall MVSlotReplaceCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebp@1
   int result; // eax@1
@@ -119824,7 +119824,7 @@ int __usercall sub_BCEF0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long do
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BCFE0) --------------------------------------------------------
-int __usercall sub_BCFE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall MVSlotInsertCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebp@1
   int result; // eax@1
@@ -119883,7 +119883,7 @@ int __usercall sub_BCFE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long do
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BD0C0) --------------------------------------------------------
-int __usercall sub_BD0C0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall MVSlotDeleteCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // ebp@1
   int result; // eax@1
@@ -119942,7 +119942,7 @@ int __usercall sub_BD0C0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long do
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BD1B0) --------------------------------------------------------
-signed int __usercall sub_BD1B0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall DirectMVReplaceCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // eax@2
@@ -119997,7 +119997,7 @@ signed int __usercall sub_BD1B0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000BD280) --------------------------------------------------------
-signed int __usercall sub_BD280@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall DirectMVInsertCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // eax@2
@@ -120051,7 +120051,7 @@ signed int __usercall sub_BD280@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000BD350) --------------------------------------------------------
-signed int __usercall sub_BD350@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall DirectMVDeleteCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // eax@2
@@ -120646,9 +120646,9 @@ signed int sub_BDEA0()
   v0 = sub_E5680((int)aQds);
   dword_13B000 = v0;
   ++*(_DWORD *)(v0 + 4);
-  registerClipsCallback((int)aQueryInstance, 111, (int)sub_BE000, (int)aGetqueryinstan, 0);
-  registerClipsCallback((int)aQueryInstanceS, 117, (int)sub_BE060, (int)aGetqueryinst_0, 0);
-  registerClipsCallback((int)aAnyInstancep, 98, (int)sub_BE160, (int)aAnyinstances, 0);
+  registerClipsCallback((int)aQueryInstance, 111, (int)GetQueryInstance, (int)aGetqueryinstan, 0);
+  registerClipsCallback((int)aQueryInstanceS, 117, (int)GetQueryInstanceSlot, (int)aGetqueryinst_0, 0);
+  registerClipsCallback((int)aAnyInstancep, 98, (int)AnyInstances, (int)aAnyinstances, 0);
   sub_A5A70((int)aAnyInstancep, (int)sub_BF6B0);
   registerClipsCallback((int)aFindInstance, 109, (int)sub_BE290, v1, 0);
   sub_A5A70((int)aFindInstance, (int)sub_BF6B0);
@@ -120661,11 +120661,11 @@ signed int sub_BDEA0()
   registerClipsCallback((int)aDelayedDoForAl, 117, (int)sub_BE980, v5, 0);
   return sub_A5A70((int)aDelayedDoForAl, (int)sub_BF770);
 }
-// BE000: using guessed type int sub_BE000();
+// BE000: using guessed type int GetQueryInstance();
 // 13B000: using guessed type int dword_13B000;
 
 //----- (000BE000) --------------------------------------------------------
-int sub_BE000()
+int GetQueryInstance()
 {
   signed int v0; // eax@1
   int v1; // eax@2
@@ -120689,13 +120689,13 @@ int sub_BE000()
   return sub_BAE70(*(_DWORD *)(*(_DWORD *)v1
                              + 4 * *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(dword_13AAEC + 6) + 10) + 2) + 16)));
 }
-// BE000: using guessed type int sub_BE000();
+// BE000: using guessed type int GetQueryInstance();
 // 13AAEC: using guessed type int dword_13AAEC;
 // 13B004: using guessed type int dword_13B004;
 // 13B008: using guessed type int dword_13B008;
 
 //----- (000BE060) --------------------------------------------------------
-void __usercall sub_BE060(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+void __usercall GetQueryInstanceSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ebx@1
   signed int v6; // eax@1
@@ -120764,7 +120764,7 @@ void __usercall sub_BE060(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000BE160) --------------------------------------------------------
-int __usercall sub_BE160@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall AnyInstances@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@1
   int v4; // ebx@1
@@ -122436,7 +122436,7 @@ signed int __fastcall sub_BFFC0(int a1)
   if ( *(_WORD *)a1 != 10 )
     goto LABEL_17;
   v1 = *(int (__usercall **)@<eax>(int@<edx>, int@<ecx>, long double@<st0>))(*(_DWORD *)(a1 + 2) + 9);
-  if ( v1 == sub_BE160 )
+  if ( v1 == AnyInstances )
     return 1;
   if ( (char *)v1 == (char *)sub_BE290 )
     return 1;
@@ -122457,19 +122457,19 @@ LABEL_17:
 //----- (000C0030) --------------------------------------------------------
 signed int sub_C0030()
 {
-  registerClipsCallback((int)aPrintout, 118, (int)sub_C0140, (int)aPrintoutfuncti, (int)a1_1);
-  registerClipsCallback((int)aRead, 117, (int)sub_C0330, (int)aReadfunction, (int)a1);
-  registerClipsCallback((int)aOpen, 98, (int)sub_C05C0, (int)aOpenfunction, (int)a23K);
-  registerClipsCallback((int)aClose, 98, (int)sub_C0770, (int)aClosefunction, (int)a1);
-  registerClipsCallback((int)aRemove, 98, (int)sub_C07F0, (int)aRemovefunction, (int)a11k);
-  registerClipsCallback((int)aRename, 98, (int)sub_C0840, (int)aRenamefunction, (int)a22k);
+  registerClipsCallback((int)aPrintout, 118, (int)PrintoutFunction, (int)aPrintoutfuncti, (int)a1_1);
+  registerClipsCallback((int)aRead, 117, (int)ReadFunction, (int)aReadfunction, (int)a1);
+  registerClipsCallback((int)aOpen, 98, (int)OpenFunction, (int)aOpenfunction, (int)a23K);
+  registerClipsCallback((int)aClose, 98, (int)CloseFunction, (int)aClosefunction, (int)a1);
+  registerClipsCallback((int)aRemove, 98, (int)RemoveFunction, (int)aRemovefunction, (int)a11k);
+  registerClipsCallback((int)aRename, 98, (int)RenameFunction, (int)aRenamefunction, (int)a22k);
   registerClipsCallback((int)aFormat, 115, (int)&off_C08A0, (int)aFormatfunction, (int)a2Us);
-  return registerClipsCallback((int)aReadline, 107, (int)sub_C1050, (int)aReadlinefuncti, (int)a1);
+  return registerClipsCallback((int)aReadline, 107, (int)ReadlineFunction, (int)aReadlinefuncti, (int)a1);
 }
 // C08A0: using guessed type void *off_C08A0;
 
 //----- (000C0140) --------------------------------------------------------
-void __usercall sub_C0140(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
+void __usercall PrintoutFunction(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 {
   int v3; // ecx@1
   signed int v4; // esi@1
@@ -122580,7 +122580,7 @@ LABEL_26:
 // 13AAF4: using guessed type int dword_13AAF4;
 
 //----- (000C0330) --------------------------------------------------------
-int __usercall sub_C0330@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ReadFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int v3; // eax@1
   int v4; // ecx@1
@@ -122732,7 +122732,7 @@ int __fastcall sub_C04C0(int result)
 // 13B50C: using guessed type int dword_13B50C;
 
 //----- (000C05C0) --------------------------------------------------------
-int __usercall sub_C05C0@<eax>(long double a1@<st0>)
+int __usercall OpenFunction@<eax>(long double a1@<st0>)
 {
   signed int v1; // ebx@1
   int result; // eax@2
@@ -122802,7 +122802,7 @@ int __usercall sub_C05C0@<eax>(long double a1@<st0>)
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (000C0770) --------------------------------------------------------
-signed int __usercall sub_C0770@<eax>(long double a1@<st0>)
+signed int __usercall CloseFunction@<eax>(long double a1@<st0>)
 {
   signed int v1; // eax@1
   int v2; // ecx@1
@@ -122837,7 +122837,7 @@ signed int __usercall sub_C0770@<eax>(long double a1@<st0>)
 }
 
 //----- (000C07F0) --------------------------------------------------------
-int __usercall sub_C07F0@<eax>(long double a1@<st0>)
+int __usercall RemoveFunction@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -122856,7 +122856,7 @@ int __usercall sub_C07F0@<eax>(long double a1@<st0>)
 }
 
 //----- (000C0840) --------------------------------------------------------
-int __usercall sub_C0840@<eax>(long double a1@<st0>)
+int __usercall RenameFunction@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int result; // eax@2
@@ -123153,7 +123153,7 @@ LABEL_31:
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (000C1050) --------------------------------------------------------
-int __usercall sub_C1050@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall ReadlineFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   signed int v4; // eax@1
   int v5; // ecx@1
@@ -123626,7 +123626,7 @@ signed int __fastcall sub_C1760(int a1, int a2)
 }
 
 //----- (000C17A0) --------------------------------------------------------
-signed int __usercall sub_C17A0@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall DependenciesCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // ecx@1
@@ -123645,7 +123645,7 @@ signed int __usercall sub_C17A0@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000C17E0) --------------------------------------------------------
-int __usercall sub_C17E0@<eax>(int a1@<edx>, long double a2@<st0>)
+int __usercall DependentsCommand@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // ecx@1
@@ -124473,46 +124473,46 @@ signed int sub_C24F0()
 {
   int v0; // ecx@1
 
-  registerClipsCallback((int)aGensym, 119, (int)sub_C2880, (int)aGensymfunction, (int)a00);
-  registerClipsCallback((int)aGensym_0, 119, (int)sub_C28D0, (int)aGensymstarfunc, (int)a00);
-  registerClipsCallback((int)aSetgen, 108, (int)sub_C27F0, (int)aSetgenfunction, (int)a11i_2);
-  registerClipsCallback((int)aSystem, 118, (int)sub_E6C10, (int)aGensystem, (int)a1K);
-  registerClipsCallback((int)aLength, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
-  registerClipsCallback((int)aLength_0, 108, (int)sub_C29B0, (int)aLengthfunction, (int)a11q);
-  registerClipsCallback((int)aTime, 100, (int)sub_E6BA0, (int)aGentime, (int)a00);
-  registerClipsCallback((int)aRandom, 108, (int)sub_C2930, (int)aRandomfunction, (int)a00);
-  registerClipsCallback((int)aSeed, 118, (int)sub_C2960, (int)aSeedfunction, (int)a11i_2);
-  registerClipsCallback((int)aConserveMem, 118, (int)sub_C2A80, (int)aConservememcom, (int)a11w);
-  registerClipsCallback((int)aReleaseMem, 108, (int)sub_C2A40, (int)aReleasememcomm, (int)a00);
-  registerClipsCallback((int)aMemUsed, 108, (int)sub_C2B10, (int)aMemusedcommand, (int)a00);
-  registerClipsCallback((int)aMemRequests, 108, (int)sub_C2B40, (int)aMemrequestscom, (int)a00);
-  registerClipsCallback((int)aOptions, 118, (int)sub_C2C10, (int)aOptionscommand, (int)a00);
-  registerClipsCallback((int)aExpansionCal_0, 117, (int)sub_C30D0, (int)aExpandfunccall, 0);
-  registerClipsCallback((int)aExpand_0, 117, (int)sub_C3200, (int)aDummyexpandfun, (int)a11m);
+  registerClipsCallback((int)aGensym, 119, (int)GensymFunction, (int)aGensymfunction, (int)a00);
+  registerClipsCallback((int)aGensym_0, 119, (int)GensymStarFunction, (int)aGensymstarfunc, (int)a00);
+  registerClipsCallback((int)aSetgen, 108, (int)SetgenFunction, (int)aSetgenfunction, (int)a11i_2);
+  registerClipsCallback((int)aSystem, 118, (int)gensystem, (int)aGensystem, (int)a1K);
+  registerClipsCallback((int)aLength, 108, (int)LengthFunction, (int)aLengthfunction, (int)a11q);
+  registerClipsCallback((int)aLength_0, 108, (int)LengthFunction, (int)aLengthfunction, (int)a11q);
+  registerClipsCallback((int)aTime, 100, (int)gentime, (int)aGentime, (int)a00);
+  registerClipsCallback((int)aRandom, 108, (int)RandomFunction, (int)aRandomfunction, (int)a00);
+  registerClipsCallback((int)aSeed, 118, (int)SeedFunction, (int)aSeedfunction, (int)a11i_2);
+  registerClipsCallback((int)aConserveMem, 118, (int)ConserveMemCommand, (int)aConservememcom, (int)a11w);
+  registerClipsCallback((int)aReleaseMem, 108, (int)ReleaseMemCommand, (int)aReleasememcomm, (int)a00);
+  registerClipsCallback((int)aMemUsed, 108, (int)MemUsedCommand, (int)aMemusedcommand, (int)a00);
+  registerClipsCallback((int)aMemRequests, 108, (int)MemRequestsCommand, (int)aMemrequestscom, (int)a00);
+  registerClipsCallback((int)aOptions, 118, (int)OptionsCommand, (int)aOptionscommand, (int)a00);
+  registerClipsCallback((int)aExpansionCal_0, 117, (int)ExpandFuncCall, (int)aExpandfunccall, 0);
+  registerClipsCallback((int)aExpand_0, 117, (int)DummyExpandFuncMultifield, (int)aDummyexpandfun, (int)a11m);
   sub_A5AF0((int)aExpand_0, 0, 0);
   registerClipsCallback((int)aSetEvaluationE, 119, (int)sub_C3430, v0, 0);
-  registerClipsCallback((int)aSetSequenceOpe, 98, (int)sub_C3450, (int)aSetsorcommand, (int)a11w);
-  registerClipsCallback((int)aGetSequenceOpe, 98, (int)sub_A57D0, (int)aGetsequenceope, (int)a00);
-  registerClipsCallback((int)aGetFunctionRes, 115, (int)sub_C34A0, (int)aGetfunctionres, (int)a11w);
-  registerClipsCallback((int)aCreate, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
-  registerClipsCallback((int)aMvAppend, 109, (int)sub_C27C0, (int)aCreatefunction, 0);
-  return registerClipsCallback((int)aApropos, 118, (int)sub_C2B70, (int)aAproposcommand, (int)a11w);
+  registerClipsCallback((int)aSetSequenceOpe, 98, (int)SetSORCommand, (int)aSetsorcommand, (int)a11w);
+  registerClipsCallback((int)aGetSequenceOpe, 98, (int)GetSequenceOperatorRecognition, (int)aGetsequenceope, (int)a00);
+  registerClipsCallback((int)aGetFunctionRes, 115, (int)GetFunctionRestrictions, (int)aGetfunctionres, (int)a11w);
+  registerClipsCallback((int)aCreate, 109, (int)CreateFunction, (int)aCreatefunction, 0);
+  registerClipsCallback((int)aMvAppend, 109, (int)CreateFunction, (int)aCreatefunction, 0);
+  return registerClipsCallback((int)aApropos, 118, (int)AproposCommand, (int)aAproposcommand, (int)a11w);
 }
-// A57D0: using guessed type int sub_A57D0();
-// C2930: using guessed type int sub_C2930();
-// C2A40: using guessed type int sub_C2A40();
-// C2B10: using guessed type int sub_C2B10();
-// C2B40: using guessed type int sub_C2B40();
+// A57D0: using guessed type int GetSequenceOperatorRecognition();
+// C2930: using guessed type int RandomFunction();
+// C2A40: using guessed type int ReleaseMemCommand();
+// C2B10: using guessed type int MemUsedCommand();
+// C2B40: using guessed type int MemRequestsCommand();
 
 //----- (000C27C0) --------------------------------------------------------
-int __usercall sub_C27C0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall CreateFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   return sub_CAA80(a1, *(_DWORD *)(dword_13AAEC + 6), 1, a2);
 }
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000C27F0) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_C27F0@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> SetgenFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@2
   int v3; // [sp-8h] [bp-24h]@3
@@ -124546,7 +124546,7 @@ signed int __usercall __spoils<ecx,st0> sub_C27F0@<eax>(int a1@<ecx>, long doubl
 // 13B030: using guessed type int dword_13B030;
 
 //----- (000C2880) --------------------------------------------------------
-int __fastcall sub_C2880(int a1, int a2)
+int __fastcall GensymFunction(int a1, int a2)
 {
   char v3; // [sp+0h] [bp-18h]@1
   int v4; // [sp+10h] [bp-8h]@1
@@ -124560,7 +124560,7 @@ int __fastcall sub_C2880(int a1, int a2)
 // 13B030: using guessed type int dword_13B030;
 
 //----- (000C28D0) --------------------------------------------------------
-int __fastcall sub_C28D0(int a1, int a2)
+int __fastcall GensymStarFunction(int a1, int a2)
 {
   char v3; // [sp+0h] [bp-18h]@2
   int v4; // [sp+10h] [bp-8h]@1
@@ -124576,17 +124576,17 @@ int __fastcall sub_C28D0(int a1, int a2)
 // 13B030: using guessed type int dword_13B030;
 
 //----- (000C2930) --------------------------------------------------------
-int sub_C2930()
+int RandomFunction()
 {
   int v0; // eax@1
 
   v0 = sub_89D20((int)aRandom, 0, 0);
   return sub_E6D60(v0);
 }
-// C2930: using guessed type int sub_C2930();
+// C2930: using guessed type int RandomFunction();
 
 //----- (000C2960) --------------------------------------------------------
-signed int __usercall sub_C2960@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall SeedFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // [sp-8h] [bp-24h]@2
@@ -124607,7 +124607,7 @@ signed int __usercall sub_C2960@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000C29B0) --------------------------------------------------------
-signed int __usercall sub_C29B0@<eax>(int a1@<edx>, long double a2@<st0>)
+signed int __usercall LengthFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // edx@7
@@ -124646,7 +124646,7 @@ signed int __usercall sub_C29B0@<eax>(int a1@<edx>, long double a2@<st0>)
 // F494C: using guessed type int __fastcall strlen(_DWORD, _DWORD, _DWORD);
 
 //----- (000C2A40) --------------------------------------------------------
-int sub_C2A40()
+int ReleaseMemCommand()
 {
   int result; // eax@2
 
@@ -124656,10 +124656,10 @@ int sub_C2A40()
     result = sub_C1BB0(-1, 0);
   return result;
 }
-// C2A40: using guessed type int sub_C2A40();
+// C2A40: using guessed type int ReleaseMemCommand();
 
 //----- (000C2A80) --------------------------------------------------------
-signed int __usercall sub_C2A80@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall ConserveMemCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // ebx@3
@@ -124696,7 +124696,7 @@ signed int __usercall sub_C2A80@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // F4A70: using guessed type int __fastcall strcmp(_DWORD, _DWORD);
 
 //----- (000C2B10) --------------------------------------------------------
-int sub_C2B10()
+int MemUsedCommand()
 {
   int result; // eax@2
 
@@ -124706,10 +124706,10 @@ int sub_C2B10()
     result = sub_C1B50();
   return result;
 }
-// C2B10: using guessed type int sub_C2B10();
+// C2B10: using guessed type int MemUsedCommand();
 
 //----- (000C2B40) --------------------------------------------------------
-int sub_C2B40()
+int MemRequestsCommand()
 {
   int result; // eax@2
 
@@ -124719,10 +124719,10 @@ int sub_C2B40()
     result = sub_C1B60();
   return result;
 }
-// C2B40: using guessed type int sub_C2B40();
+// C2B40: using guessed type int MemRequestsCommand();
 
 //----- (000C2B70) --------------------------------------------------------
-signed int __usercall sub_C2B70@<eax>(long double a1@<st0>)
+signed int __usercall AproposCommand@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   int v2; // esi@1
@@ -124758,7 +124758,7 @@ signed int __usercall sub_C2B70@<eax>(long double a1@<st0>)
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000C2C10) --------------------------------------------------------
-signed int sub_C2C10()
+signed int OptionsCommand()
 {
   signed int result; // eax@1
 
@@ -124850,7 +124850,7 @@ signed int sub_C2C10()
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000C30D0) --------------------------------------------------------
-void __usercall sub_C30D0(int a1@<eax>, long double a2@<st0>)
+void __usercall ExpandFuncCall(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   int v3; // eax@1
@@ -124928,7 +124928,7 @@ LABEL_11:
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C3200) --------------------------------------------------------
-signed int __fastcall sub_C3200(int a1)
+signed int __fastcall DummyExpandFuncMultifield(int a1)
 {
   int v1; // edx@1
 
@@ -125053,7 +125053,7 @@ int sub_C3430()
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C3450) --------------------------------------------------------
-int __usercall sub_C3450@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetSORCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@2
   int v4; // [sp-8h] [bp-24h]@1
@@ -125073,7 +125073,7 @@ int __usercall sub_C3450@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C34A0) --------------------------------------------------------
-int __usercall sub_C34A0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall GetFunctionRestrictions@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // eax@2
   _DWORD *v4; // eax@3
@@ -125678,8 +125678,8 @@ int sub_C3EC0()
   sub_94780((int)aDefmodule_0, (int)sub_C3F60, 2000);
   sub_94990((int)aDefmodule_0, (int)sub_C3F90, 1100);
   registerClipsCallback((int)aGetDefmoduleLi, 109, (int)sub_C3FF0, v0, (int)a00_11);
-  registerClipsCallback((int)aListDefmodules, 118, (int)sub_C4090, (int)aListdefmodules, (int)a00_11);
-  registerClipsCallback((int)aPpdefmodule, 118, (int)sub_C4010, (int)aPpdefmodulecom, (int)a11w_11);
+  registerClipsCallback((int)aListDefmodules, 118, (int)ListDefmodulesCommand, (int)aListdefmodules, (int)a00_11);
+  registerClipsCallback((int)aPpdefmodule, 118, (int)PPDefmoduleCommand, (int)aPpdefmodulecom, (int)a11w_11);
   sub_C3540();
   return sub_C4120();
 }
@@ -125732,7 +125732,7 @@ signed int __fastcall sub_C3FF0(int a1)
 }
 
 //----- (000C4010) --------------------------------------------------------
-int __usercall sub_C4010@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDefmoduleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   int result; // eax@1
 
@@ -125771,7 +125771,7 @@ signed int __fastcall sub_C4040(int a1)
 }
 
 //----- (000C4090) --------------------------------------------------------
-signed int sub_C4090()
+signed int ListDefmodulesCommand()
 {
   signed int result; // eax@1
 
@@ -126169,10 +126169,10 @@ signed int sub_C48D0()
   sub_C3EC0();
   sub_C4BC0();
   sub_948F0((int)aDefmodule_3, (int)aDefmodules, (int)sub_C5190, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  registerClipsCallback((int)aGetCurrentModu, 119, (int)sub_C4F70, (int)aGetcurrentmodu, (int)a00_12);
-  return registerClipsCallback((int)aSetCurrentModu, 119, (int)sub_C4FB0, (int)aSetcurrentmodu, (int)a11w_12);
+  registerClipsCallback((int)aGetCurrentModu, 119, (int)GetCurrentModuleCommand, (int)aGetcurrentmodu, (int)a00_12);
+  return registerClipsCallback((int)aSetCurrentModu, 119, (int)SetCurrentModuleCommand, (int)aSetcurrentmodu, (int)a11w_12);
 }
-// C4F70: using guessed type int sub_C4F70();
+// C4F70: using guessed type int GetCurrentModuleCommand();
 
 //----- (000C4950) --------------------------------------------------------
 int __fastcall sub_C4950(int a1, int a2, int a3, int a4, int a5, int a6)
@@ -126616,7 +126616,7 @@ int __fastcall sub_C4F30(int a1)
 // 13B054: using guessed type int dword_13B054;
 
 //----- (000C4F70) --------------------------------------------------------
-int sub_C4F70()
+int GetCurrentModuleCommand()
 {
   int result; // eax@2
 
@@ -126627,12 +126627,12 @@ int sub_C4F70()
     result = dword_1B14E0;
   return result;
 }
-// C4F70: using guessed type int sub_C4F70();
+// C4F70: using guessed type int GetCurrentModuleCommand();
 // 13B058: using guessed type int dword_13B058;
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C4FB0) --------------------------------------------------------
-int __usercall sub_C4FB0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall SetCurrentModuleCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int result; // eax@2
   int v4; // esi@3
@@ -128088,21 +128088,21 @@ int sub_C63B0()
   dword_13B108 = v2;
   ++*(_DWORD *)(v2 + 4);
   sub_948F0((int)aDefmessageHa_2, (int)aDefmessageHa_1, (int)sub_C9920, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  registerClipsCallback((int)aUndefmessageHa, 118, (int)sub_C67C0, (int)aUndefmessageha, (int)a23w_0);
-  registerClipsCallback((int)aSend, 117, (int)sub_C87E0, (int)aSendcommand, (int)a2Uuw);
-  registerClipsCallback((int)aPreviewSend, 118, (int)sub_C6BA0, (int)aPreviewsendcom, (int)a22w_0);
-  registerClipsCallback((int)aPpdefmessageHa, 118, (int)sub_C69A0, (int)aPpdefmessageha, (int)a23w_0);
-  registerClipsCallback((int)aListDefmessage, 118, (int)sub_C6B50, (int)aListdefmessage, (int)a02w_0);
-  registerClipsCallback((int)aNextHandlerp, 98, (int)sub_C88A0, (int)aNexthandlerava, (int)a00_10);
+  registerClipsCallback((int)aUndefmessageHa, 118, (int)UndefmessageHandlerCommand, (int)aUndefmessageha, (int)a23w_0);
+  registerClipsCallback((int)aSend, 117, (int)SendCommand, (int)aSendcommand, (int)a2Uuw);
+  registerClipsCallback((int)aPreviewSend, 118, (int)PreviewSendCommand, (int)aPreviewsendcom, (int)a22w_0);
+  registerClipsCallback((int)aPpdefmessageHa, 118, (int)PPDefmessageHandlerCommand, (int)aPpdefmessageha, (int)a23w_0);
+  registerClipsCallback((int)aListDefmessage, 118, (int)ListDefmessageHandlersCommand, (int)aListdefmessage, (int)a02w_0);
+  registerClipsCallback((int)aNextHandlerp, 98, (int)NextHandlerAvailable, (int)aNexthandlerava, (int)a00_10);
   sub_A5AF0((int)aNextHandlerp, 1, 0);
   registerClipsCallback((int)aCallNextHandle, 117, (int)sub_C8900, v3, (int)a00_10);
   sub_A5AF0((int)aCallNextHandle, 1, 0);
   registerClipsCallback((int)aOverrideNextHa, 117, (int)sub_C8900, v4, 0);
   sub_A5AF0((int)aOverrideNextHa, 1, 0);
-  registerClipsCallback((int)aDynamicGet, 117, (int)sub_C8F60, v5, (int)a11w_10);
-  registerClipsCallback((int)aDynamicPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
-  registerClipsCallback((int)aGet, 117, (int)sub_C8F60, (int)aDynamichandler, (int)a11w_10);
-  registerClipsCallback((int)aPut, 117, (int)sub_C9080, (int)aDynamichandl_0, (int)a1W_1);
+  registerClipsCallback((int)aDynamicGet, 117, (int)DynamicHandlerGetSlot, v5, (int)a11w_10);
+  registerClipsCallback((int)aDynamicPut, 117, (int)DynamicHandlerPutSlot, (int)aDynamichandl_0, (int)a1W_1);
+  registerClipsCallback((int)aGet, 117, (int)DynamicHandlerGetSlot, (int)aDynamichandler, (int)a11w_10);
+  registerClipsCallback((int)aPut, 117, (int)DynamicHandlerPutSlot, (int)aDynamichandl_0, (int)a1W_1);
   sub_EC050((int)aMessages, 0, (int)&dword_13B0F4, 36, 0, 0);
   return sub_EC050((int)aMessageHandl_2, 0, (int)&dword_13B0F0, 35, (int)sub_C6F10, (int)sub_C6F50);
 }
@@ -128152,7 +128152,7 @@ int __fastcall sub_C66F0(char a1, int a2, int a3)
 }
 
 //----- (000C67C0) --------------------------------------------------------
-void __usercall sub_C67C0(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
+void __usercall UndefmessageHandlerCommand(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 {
   int v3; // edi@4
   char v4; // zf@5
@@ -128209,7 +128209,7 @@ void __usercall sub_C67C0(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 // 13B4F8: using guessed type char *off_13B4F8[5];
 
 //----- (000C69A0) --------------------------------------------------------
-void __usercall sub_C69A0(long double a1@<st0>)
+void __usercall PPDefmessageHandlerCommand(long double a1@<st0>)
 {
   int v1; // edi@1
   int v2; // ebp@2
@@ -128286,7 +128286,7 @@ void __usercall sub_C69A0(long double a1@<st0>)
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000C6B50) --------------------------------------------------------
-int __usercall sub_C6B50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+int __usercall ListDefmessageHandlersCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   int v3; // ecx@1
   int v4; // eax@2
@@ -128320,7 +128320,7 @@ int __usercall sub_C6B50@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 // 13B508: using guessed type char *off_13B508;
 
 //----- (000C6BA0) --------------------------------------------------------
-signed int __usercall sub_C6BA0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall PreviewSendCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // esi@2
@@ -129802,7 +129802,7 @@ int __fastcall sub_C8790(int result)
 // 1B1398: using guessed type int dword_1B1398;
 
 //----- (000C87E0) --------------------------------------------------------
-signed int __usercall sub_C87E0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall SendCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -129842,7 +129842,7 @@ int __fastcall sub_C8870(int a1)
 // 13B3D4: using guessed type int dword_13B3D4;
 
 //----- (000C88A0) --------------------------------------------------------
-bool sub_C88A0()
+bool NextHandlerAvailable()
 {
   bool result; // eax@3
 
@@ -129883,7 +129883,7 @@ void __usercall sub_C8900(int a1@<eax>, long double a2@<st0>)
   dword_13AAF0 = 0;
   if ( dword_13AAF4 )
     return;
-  if ( !sub_C88A0() )
+  if ( !NextHandlerAvailable() )
   {
     sub_DA560((int)aMsgpass, 1, v2);
     sub_DCD70((int)off_13B4F8[0], (int)aShadowedMessag);
@@ -130222,7 +130222,7 @@ LABEL_13:
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C8F60) --------------------------------------------------------
-void __usercall sub_C8F60(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+void __usercall DynamicHandlerGetSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ebx@1
   int v6; // ecx@1
@@ -130281,7 +130281,7 @@ void __usercall sub_C8F60(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000C9080) --------------------------------------------------------
-void __usercall sub_C9080(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
+void __usercall DynamicHandlerPutSlot(int a1@<eax>, int a2@<edx>, int a3@<ebx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int v5; // ecx@1
@@ -131873,35 +131873,35 @@ signed int sub_CAE40()
 {
   int v0; // ecx@1
 
-  registerClipsCallback((int)aFirst, 109, (int)sub_CB9F0, (int)aFirstfunction, (int)a11m_0);
-  registerClipsCallback((int)aRest, 109, (int)sub_CBA60, (int)aRestfunction, (int)a11m_0);
-  registerClipsCallback((int)aSubseq, 109, (int)sub_CB7C0, (int)aSubseqfunction, (int)a33im);
-  registerClipsCallback((int)aDelete, 109, (int)sub_CB100, (int)aDeletefunction, (int)a33im);
-  registerClipsCallback((int)aReplace, 109, (int)sub_CB220, (int)aReplacefunctio, (int)a4Mii);
-  registerClipsCallback((int)aInsert, 109, (int)sub_CB3A0, (int)aInsertfunction, (int)a3Mi);
-  registerClipsCallback((int)aExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
-  registerClipsCallback((int)aImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
-  registerClipsCallback((int)aNth, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
-  registerClipsCallback((int)aMember, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
-  registerClipsCallback((int)aSubsetp, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
-  registerClipsCallback((int)aProgn_2, 117, (int)sub_CC140, (int)aMultifieldprog, 0);
-  registerClipsCallback((int)aStrImplode, 115, (int)sub_CB510, (int)aImplodefunctio, (int)a11m_0);
-  registerClipsCallback((int)aStrExplode, 109, (int)sub_CB450, (int)aExplodefunctio, (int)a11s);
-  registerClipsCallback((int)aSubset, 98, (int)sub_CBBE0, (int)aSubsetpfunctio, (int)a22Mm);
-  registerClipsCallback((int)aNth_0, 117, (int)sub_CBAD0, (int)aNthfunction, (int)a22Im);
-  registerClipsCallback((int)aMvReplace, 109, (int)sub_CB300, (int)aMvreplacefunct, (int)a33Im);
-  registerClipsCallback((int)aMember_0, 117, (int)sub_CBC90, (int)aMemberfunction, (int)a22Um);
-  registerClipsCallback((int)aMvSubseq, 109, (int)sub_CB8E0, (int)aMvsubseqfuncti, (int)a33Iim);
-  registerClipsCallback((int)aMvDelete, 109, (int)sub_CB1A0, (int)aMvdeletefuncti, (int)a22Im);
+  registerClipsCallback((int)aFirst, 109, (int)FirstFunction, (int)aFirstfunction, (int)a11m_0);
+  registerClipsCallback((int)aRest, 109, (int)RestFunction, (int)aRestfunction, (int)a11m_0);
+  registerClipsCallback((int)aSubseq, 109, (int)SubseqFunction, (int)aSubseqfunction, (int)a33im);
+  registerClipsCallback((int)aDelete, 109, (int)DeleteFunction, (int)aDeletefunction, (int)a33im);
+  registerClipsCallback((int)aReplace, 109, (int)ReplaceFunction, (int)aReplacefunctio, (int)a4Mii);
+  registerClipsCallback((int)aInsert, 109, (int)InsertFunction, (int)aInsertfunction, (int)a3Mi);
+  registerClipsCallback((int)aExplode, 109, (int)ExplodeFunction, (int)aExplodefunctio, (int)a11s);
+  registerClipsCallback((int)aImplode, 115, (int)ImplodeFunction, (int)aImplodefunctio, (int)a11m_0);
+  registerClipsCallback((int)aNth, 117, (int)NthFunction, (int)aNthfunction, (int)a22Im);
+  registerClipsCallback((int)aMember, 117, (int)MemberFunction, (int)aMemberfunction, (int)a22Um);
+  registerClipsCallback((int)aSubsetp, 98, (int)SubsetpFunction, (int)aSubsetpfunctio, (int)a22Mm);
+  registerClipsCallback((int)aProgn_2, 117, (int)MultifieldPrognFunction, (int)aMultifieldprog, 0);
+  registerClipsCallback((int)aStrImplode, 115, (int)ImplodeFunction, (int)aImplodefunctio, (int)a11m_0);
+  registerClipsCallback((int)aStrExplode, 109, (int)ExplodeFunction, (int)aExplodefunctio, (int)a11s);
+  registerClipsCallback((int)aSubset, 98, (int)SubsetpFunction, (int)aSubsetpfunctio, (int)a22Mm);
+  registerClipsCallback((int)aNth_0, 117, (int)NthFunction, (int)aNthfunction, (int)a22Im);
+  registerClipsCallback((int)aMvReplace, 109, (int)MVReplaceFunction, (int)aMvreplacefunct, (int)a33Im);
+  registerClipsCallback((int)aMember_0, 117, (int)MemberFunction, (int)aMemberfunction, (int)a22Um);
+  registerClipsCallback((int)aMvSubseq, 109, (int)MVSubseqFunction, (int)aMvsubseqfuncti, (int)a33Iim);
+  registerClipsCallback((int)aMvDelete, 109, (int)MVDeleteFunction, (int)aMvdeletefuncti, (int)a22Im);
   sub_A5A70((int)aProgn_2, (int)sub_CBDE0);
   sub_A5AF0((int)aProgn_2, 0, 0);
   registerClipsCallback((int)aGetPrognField, 117, (int)sub_CC2B0, v0, (int)a00_2);
-  return registerClipsCallback((int)aGetPrognIndex, 108, (int)sub_CC2F0, (int)aGetmvprogninde, (int)a00_2);
+  return registerClipsCallback((int)aGetPrognIndex, 108, (int)GetMvPrognIndex, (int)aGetmvprogninde, (int)a00_2);
 }
-// CC2F0: using guessed type int sub_CC2F0();
+// CC2F0: using guessed type int GetMvPrognIndex();
 
 //----- (000CB100) --------------------------------------------------------
-signed int __usercall sub_CB100@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall DeleteFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@4
@@ -131928,7 +131928,7 @@ signed int __usercall sub_CB100@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000CB1A0) --------------------------------------------------------
-signed int __usercall sub_CB1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall MVDeleteFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@3
@@ -131952,7 +131952,7 @@ signed int __usercall sub_CB1A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000CB220) --------------------------------------------------------
-signed int __usercall sub_CB220@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall ReplaceFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int v5; // ecx@3
@@ -131984,7 +131984,7 @@ signed int __usercall sub_CB220@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000CB300) --------------------------------------------------------
-signed int __usercall sub_CB300@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall MVReplaceFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int v5; // ecx@2
@@ -132012,7 +132012,7 @@ signed int __usercall sub_CB300@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000CB3A0) --------------------------------------------------------
-signed int __usercall sub_CB3A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall InsertFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int v5; // ecx@2
@@ -132041,7 +132041,7 @@ signed int __usercall sub_CB3A0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000CB450) --------------------------------------------------------
-signed int __usercall sub_CB450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall ExplodeFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@2
@@ -132091,7 +132091,7 @@ signed int __usercall sub_CB450@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000CB510) --------------------------------------------------------
-int __usercall sub_CB510@<eax>(long double a1@<st0>)
+int __usercall ImplodeFunction@<eax>(long double a1@<st0>)
 {
   signed int v1; // esi@1
   int v3; // ebx@3
@@ -132335,7 +132335,7 @@ LABEL_54:
 // F494C: using guessed type int __fastcall strlen(_DWORD, _DWORD, _DWORD);
 
 //----- (000CB7C0) --------------------------------------------------------
-signed int __usercall sub_CB7C0@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall SubseqFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   signed int result; // eax@2
@@ -132404,7 +132404,7 @@ signed int __usercall sub_CB7C0@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000CB8E0) --------------------------------------------------------
-signed int __usercall sub_CB8E0@<eax>(int a1@<eax>, long double a2@<st0>)
+signed int __usercall MVSubseqFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   signed int result; // eax@2
@@ -132469,7 +132469,7 @@ signed int __usercall sub_CB8E0@<eax>(int a1@<eax>, long double a2@<st0>)
 }
 
 //----- (000CB9F0) --------------------------------------------------------
-signed int __usercall sub_CB9F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall FirstFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@2
@@ -132506,7 +132506,7 @@ signed int __usercall sub_CB9F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000CBA60) --------------------------------------------------------
-signed int __usercall sub_CBA60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall RestFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@2
@@ -132542,7 +132542,7 @@ signed int __usercall sub_CBA60@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 }
 
 //----- (000CBAD0) --------------------------------------------------------
-int __usercall sub_CBAD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall NthFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int result; // eax@2
@@ -132591,7 +132591,7 @@ int __usercall sub_CBAD0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long do
 }
 
 //----- (000CBBE0) --------------------------------------------------------
-signed int __usercall sub_CBBE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall SubsetpFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@2
   int v4; // ecx@5
@@ -132636,7 +132636,7 @@ signed int __usercall sub_CBBE0@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 }
 
 //----- (000CBC90) --------------------------------------------------------
-signed int __usercall sub_CBC90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall MemberFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -132936,7 +132936,7 @@ int __fastcall sub_CC040(int a1, int a2, signed int a3)
 // F53CF: using guessed type int __fastcall strncmp(_DWORD, _DWORD, _DWORD);
 
 //----- (000CC140) --------------------------------------------------------
-int __usercall sub_CC140@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall MultifieldPrognFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // esi@1
   int v3; // edx@1
@@ -133051,7 +133051,7 @@ int __fastcall sub_CC2B0(int a1)
 // 13B110: using guessed type int dword_13B110;
 
 //----- (000CC2F0) --------------------------------------------------------
-int sub_CC2F0()
+int GetMvPrognIndex()
 {
   int v0; // edx@1
   int v1; // eax@1
@@ -133065,7 +133065,7 @@ int sub_CC2F0()
   }
   return *(_DWORD *)(v0 + 8);
 }
-// CC2F0: using guessed type int sub_CC2F0();
+// CC2F0: using guessed type int GetMvPrognIndex();
 // 13AAEC: using guessed type int dword_13AAEC;
 // 13B110: using guessed type int dword_13B110;
 
@@ -139788,7 +139788,7 @@ LABEL_28:
 // 1B1270: using guessed type int dword_1B1270;
 
 //----- (000D47F0) --------------------------------------------------------
-void __usercall sub_D47F0(int a1@<eax>, long double a2@<st0>)
+void __usercall ObjectMatchDelay(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ecx@1
   int v3; // ecx@1
@@ -142794,15 +142794,15 @@ int __fastcall sub_D7A10(int result)
 //----- (000D7A70) --------------------------------------------------------
 signed int sub_D7A70()
 {
-  registerClipsCallback((int)aIf, 117, (int)sub_D7EF0, (int)aIffunction, 0);
-  registerClipsCallback((int)aWhile, 117, (int)sub_D7BD0, (int)aWhilefunction, 0);
-  registerClipsCallback((int)aLoopForCount, 117, (int)sub_D7CE0, (int)aLoopforcountfu, 0);
-  registerClipsCallback((int)aGetLoopCount, 108, (int)sub_D7EC0, (int)aGetloopcount, 0);
-  registerClipsCallback((int)aBind_0, 117, (int)sub_D7FA0, (int)aBindfunction, 0);
-  registerClipsCallback((int)aProgn_0, 117, (int)sub_D8190, (int)aPrognfunction, 0);
-  registerClipsCallback((int)aReturn, 117, (int)sub_D8200, (int)aReturnfunction, 0);
-  registerClipsCallback((int)aBreak, 118, (int)sub_D8240, (int)aBreakfunction, 0);
-  registerClipsCallback((int)aSwitch, 117, (int)sub_D8260, (int)aSwitchfunction, 0);
+  registerClipsCallback((int)aIf, 117, (int)IfFunction, (int)aIffunction, 0);
+  registerClipsCallback((int)aWhile, 117, (int)WhileFunction, (int)aWhilefunction, 0);
+  registerClipsCallback((int)aLoopForCount, 117, (int)LoopForCountFunction, (int)aLoopforcountfu, 0);
+  registerClipsCallback((int)aGetLoopCount, 108, (int)GetLoopCount, (int)aGetloopcount, 0);
+  registerClipsCallback((int)aBind_0, 117, (int)BindFunction, (int)aBindfunction, 0);
+  registerClipsCallback((int)aProgn_0, 117, (int)PrognFunction, (int)aPrognfunction, 0);
+  registerClipsCallback((int)aReturn, 117, (int)ReturnFunction, (int)aReturnfunction, 0);
+  registerClipsCallback((int)aBreak, 118, (int)BreakFunction, (int)aBreakfunction, 0);
+  registerClipsCallback((int)aSwitch, 117, (int)SwitchFunction, (int)aSwitchfunction, 0);
   sub_D8340();
   sub_A5AF0((int)aProgn_0, 0, 0);
   sub_A5AF0((int)aIf, 0, 0);
@@ -142811,10 +142811,10 @@ signed int sub_D7A70()
   sub_A5AF0((int)aReturn, 0, 0);
   return sub_A5AF0((int)aSwitch, 0, 0);
 }
-// D7EC0: using guessed type int sub_D7EC0();
+// D7EC0: using guessed type int GetLoopCount();
 
 //----- (000D7BD0) --------------------------------------------------------
-int __usercall sub_D7BD0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall WhileFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebx@1
   int i; // edx@1
@@ -142866,7 +142866,7 @@ int __usercall sub_D7BD0@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D7CE0) --------------------------------------------------------
-int __usercall sub_D7CE0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall LoopForCountFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebp@1
   int v3; // edx@1
@@ -142966,7 +142966,7 @@ int __usercall sub_D7CE0@<eax>(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D7EC0) --------------------------------------------------------
-int sub_D7EC0()
+int GetLoopCount()
 {
   int v0; // edx@1
   int v1; // eax@1
@@ -142980,12 +142980,12 @@ int sub_D7EC0()
   }
   return *(_DWORD *)v0;
 }
-// D7EC0: using guessed type int sub_D7EC0();
+// D7EC0: using guessed type int GetLoopCount();
 // 13AAEC: using guessed type int dword_13AAEC;
 // 13B4BC: using guessed type int dword_13B4BC;
 
 //----- (000D7EF0) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_D7EF0@<eax>(long double a1@<st0>)
+signed int __usercall __spoils<ecx,st0> IfFunction@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   int v2; // ecx@1
@@ -143024,7 +143024,7 @@ signed int __usercall __spoils<ecx,st0> sub_D7EF0@<eax>(long double a1@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D7FA0) --------------------------------------------------------
-int __usercall sub_D7FA0@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
+int __usercall BindFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   int v3; // edi@1
   int v4; // ecx@1
@@ -143180,7 +143180,7 @@ int sub_D8170()
 // 13B4C0: using guessed type int dword_13B4C0;
 
 //----- (000D8190) --------------------------------------------------------
-int __usercall sub_D8190@<eax>(long double a1@<st0>)
+int __usercall PrognFunction@<eax>(long double a1@<st0>)
 {
   int v1; // ecx@1
   int v2; // esi@1
@@ -143216,7 +143216,7 @@ LABEL_12:
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D8200) --------------------------------------------------------
-int __usercall sub_D8200@<eax>(long double a1@<st0>)
+int __usercall ReturnFunction@<eax>(long double a1@<st0>)
 {
   int v1; // edx@1
   int result; // eax@2
@@ -143238,14 +143238,14 @@ int __usercall sub_D8200@<eax>(long double a1@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D8240) --------------------------------------------------------
-void sub_D8240()
+void BreakFunction()
 {
   dword_13B4B8 = 1;
 }
 // 13B4B8: using guessed type int dword_13B4B8;
 
 //----- (000D8260) --------------------------------------------------------
-void __usercall sub_D8260(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+void __usercall SwitchFunction(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ecx@1
   int v6; // ebx@2
@@ -144323,34 +144323,34 @@ int __fastcall sub_D9380(int a1)
 //----- (000D9400) --------------------------------------------------------
 signed int sub_D9400()
 {
-  registerClipsCallback((int)aNot, 98, (int)sub_D9A90, (int)aNotfunction, (int)a11_7);
-  registerClipsCallback((int)aAnd, 98, (int)sub_D9AE0, (int)aAndfunction, (int)a2);
-  registerClipsCallback((int)aOr, 98, (int)sub_D9B50, (int)aOrfunction, (int)a2);
-  registerClipsCallback((int)aEq, 98, (int)sub_D96F0, (int)aEqfunction, (int)a2);
-  registerClipsCallback((int)aNeq, 98, (int)sub_D9780, (int)aNeqfunction, (int)a2);
-  registerClipsCallback((int)asc_12C830, 98, (int)sub_D9BB0, (int)aLessthanorequa, (int)a2N);
-  registerClipsCallback((int)asc_12C850, 98, (int)sub_D9CB0, (int)aGreaterthanore, (int)a2N);
-  registerClipsCallback((int)asc_12C868, 98, (int)sub_D9DB0, (int)aLessthanfuncti, (int)a2N);
-  registerClipsCallback((int)asc_12C880, 98, (int)sub_D9EB0, (int)aGreaterthanfun, (int)a2N);
-  registerClipsCallback((int)asc_12C89C, 98, (int)sub_D9FB0, (int)aNumericequalfu, (int)a2N);
-  registerClipsCallback((int)asc_12C8B8, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
-  registerClipsCallback((int)asc_12C8BC, 98, (int)sub_DA0A0, (int)aNumericnotequa, (int)a2N);
-  registerClipsCallback((int)aSymbolp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
-  registerClipsCallback((int)aWordp, 98, (int)sub_D9860, (int)aSymbolpfunctio, (int)a11_7);
-  registerClipsCallback((int)aStringp, 98, (int)sub_D9810, (int)aStringpfunctio, (int)a11_7);
-  registerClipsCallback((int)aLexemep, 98, (int)sub_D98B0, (int)aLexemepfunctio, (int)a11_7);
-  registerClipsCallback((int)aNumberp, 98, (int)sub_D9900, (int)aNumberpfunctio, (int)a11_7);
-  registerClipsCallback((int)aIntegerp, 98, (int)sub_D99A0, (int)aIntegerpfuncti, (int)a11_7);
-  registerClipsCallback((int)aFloatp, 98, (int)sub_D9950, (int)aFloatpfunction, (int)a11_7);
-  registerClipsCallback((int)aOddp, 98, (int)sub_DA190, (int)aOddpfunction, (int)a11i_3);
-  registerClipsCallback((int)aEvenp, 98, (int)sub_DA200, (int)aEvenpfunction, (int)a11i_3);
-  registerClipsCallback((int)aMultifieldp, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
-  registerClipsCallback((int)aSequencep, 98, (int)sub_D99F0, (int)aMultifieldpfun, (int)a11_7);
-  return registerClipsCallback((int)aPointerp, 98, (int)sub_D9A40, (int)aPointerpfuncti, (int)a11_7);
+  registerClipsCallback((int)aNot, 98, (int)NotFunction, (int)aNotfunction, (int)a11_7);
+  registerClipsCallback((int)aAnd, 98, (int)AndFunction, (int)aAndfunction, (int)a2);
+  registerClipsCallback((int)aOr, 98, (int)OrFunction, (int)aOrfunction, (int)a2);
+  registerClipsCallback((int)aEq, 98, (int)EqFunction, (int)aEqfunction, (int)a2);
+  registerClipsCallback((int)aNeq, 98, (int)NeqFunction, (int)aNeqfunction, (int)a2);
+  registerClipsCallback((int)asc_12C830, 98, (int)LessThanOrEqualFunction, (int)aLessthanorequa, (int)a2N);
+  registerClipsCallback((int)asc_12C850, 98, (int)GreaterThanOrEqualFunction, (int)aGreaterthanore, (int)a2N);
+  registerClipsCallback((int)asc_12C868, 98, (int)LessThanFunction, (int)aLessthanfuncti, (int)a2N);
+  registerClipsCallback((int)asc_12C880, 98, (int)GreaterThanFunction, (int)aGreaterthanfun, (int)a2N);
+  registerClipsCallback((int)asc_12C89C, 98, (int)NumericEqualFunction, (int)aNumericequalfu, (int)a2N);
+  registerClipsCallback((int)asc_12C8B8, 98, (int)NumericNotEqualFunction, (int)aNumericnotequa, (int)a2N);
+  registerClipsCallback((int)asc_12C8BC, 98, (int)NumericNotEqualFunction, (int)aNumericnotequa, (int)a2N);
+  registerClipsCallback((int)aSymbolp, 98, (int)SymbolpFunction, (int)aSymbolpfunctio, (int)a11_7);
+  registerClipsCallback((int)aWordp, 98, (int)SymbolpFunction, (int)aSymbolpfunctio, (int)a11_7);
+  registerClipsCallback((int)aStringp, 98, (int)StringpFunction, (int)aStringpfunctio, (int)a11_7);
+  registerClipsCallback((int)aLexemep, 98, (int)LexemepFunction, (int)aLexemepfunctio, (int)a11_7);
+  registerClipsCallback((int)aNumberp, 98, (int)NumberpFunction, (int)aNumberpfunctio, (int)a11_7);
+  registerClipsCallback((int)aIntegerp, 98, (int)IntegerpFunction, (int)aIntegerpfuncti, (int)a11_7);
+  registerClipsCallback((int)aFloatp, 98, (int)FloatpFunction, (int)aFloatpfunction, (int)a11_7);
+  registerClipsCallback((int)aOddp, 98, (int)OddpFunction, (int)aOddpfunction, (int)a11i_3);
+  registerClipsCallback((int)aEvenp, 98, (int)EvenpFunction, (int)aEvenpfunction, (int)a11i_3);
+  registerClipsCallback((int)aMultifieldp, 98, (int)MultifieldpFunction, (int)aMultifieldpfun, (int)a11_7);
+  registerClipsCallback((int)aSequencep, 98, (int)MultifieldpFunction, (int)aMultifieldpfun, (int)a11_7);
+  return registerClipsCallback((int)aPointerp, 98, (int)PointerpFunction, (int)aPointerpfuncti, (int)a11_7);
 }
 
 //----- (000D96F0) --------------------------------------------------------
-int __usercall sub_D96F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+int __usercall EqFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int result; // eax@1
   int v6; // esi@1
@@ -144401,7 +144401,7 @@ int __usercall sub_D96F0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9780) --------------------------------------------------------
-signed int __usercall sub_D9780@<eax>(long double a1@<st0>)
+signed int __usercall NeqFunction@<eax>(long double a1@<st0>)
 {
   signed int result; // eax@1
   signed int v2; // esi@1
@@ -144448,7 +144448,7 @@ signed int __usercall sub_D9780@<eax>(long double a1@<st0>)
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9810) --------------------------------------------------------
-bool __usercall sub_D9810@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall StringpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@3
   int v3; // [sp-4h] [bp-20h]@2
@@ -144467,7 +144467,7 @@ bool __usercall sub_D9810@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D9860) --------------------------------------------------------
-bool __usercall sub_D9860@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall SymbolpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@3
   int v3; // [sp-4h] [bp-20h]@2
@@ -144486,7 +144486,7 @@ bool __usercall sub_D9860@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D98B0) --------------------------------------------------------
-bool __usercall sub_D98B0@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall LexemepFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@4
   int v3; // [sp-4h] [bp-20h]@2
@@ -144505,7 +144505,7 @@ bool __usercall sub_D98B0@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D9900) --------------------------------------------------------
-bool __usercall sub_D9900@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall NumberpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@4
   int v3; // [sp-4h] [bp-20h]@2
@@ -144524,7 +144524,7 @@ bool __usercall sub_D9900@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D9950) --------------------------------------------------------
-bool __usercall sub_D9950@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall FloatpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@3
   int v3; // [sp-4h] [bp-20h]@2
@@ -144543,7 +144543,7 @@ bool __usercall sub_D9950@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D99A0) --------------------------------------------------------
-bool __usercall sub_D99A0@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall IntegerpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@2
   int v3; // [sp-4h] [bp-20h]@3
@@ -144564,7 +144564,7 @@ bool __usercall sub_D99A0@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D99F0) --------------------------------------------------------
-bool __usercall sub_D99F0@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall MultifieldpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@2
   int v3; // [sp-4h] [bp-20h]@3
@@ -144585,7 +144585,7 @@ bool __usercall sub_D99F0@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D9A40) --------------------------------------------------------
-bool __usercall sub_D9A40@<eax>(int a1@<edx>, long double a2@<st0>)
+bool __usercall PointerpFunction@<eax>(int a1@<edx>, long double a2@<st0>)
 {
   bool result; // eax@2
   int v3; // [sp-4h] [bp-20h]@3
@@ -144606,7 +144606,7 @@ bool __usercall sub_D9A40@<eax>(int a1@<edx>, long double a2@<st0>)
 }
 
 //----- (000D9A90) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_D9A90@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+int __usercall __spoils<ecx,st0> NotFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int result; // eax@1
   int v6; // [sp-4h] [bp-1Ch]@2
@@ -144622,7 +144622,7 @@ int __usercall __spoils<ecx,st0> sub_D9A90@<eax>(int a1@<eax>, int a2@<edx>, int
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D9AE0) --------------------------------------------------------
-int __usercall sub_D9AE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+int __usercall AndFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ebx@1
   int result; // eax@2
@@ -144656,7 +144656,7 @@ int __usercall sub_D9AE0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D9B50) --------------------------------------------------------
-signed int __usercall sub_D9B50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
+signed int __usercall OrFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>)
 {
   int v5; // ebx@1
   signed int result; // eax@2
@@ -144690,7 +144690,7 @@ signed int __usercall sub_D9B50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, 
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000D9BB0) --------------------------------------------------------
-long double __usercall sub_D9BB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall LessThanOrEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -144752,7 +144752,7 @@ long double __usercall sub_D9BB0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9CB0) --------------------------------------------------------
-long double __usercall sub_D9CB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall GreaterThanOrEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -144814,7 +144814,7 @@ long double __usercall sub_D9CB0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9DB0) --------------------------------------------------------
-long double __usercall sub_D9DB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall LessThanFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -144876,7 +144876,7 @@ long double __usercall sub_D9DB0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9EB0) --------------------------------------------------------
-long double __usercall sub_D9EB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall GreaterThanFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -144938,7 +144938,7 @@ long double __usercall sub_D9EB0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000D9FB0) --------------------------------------------------------
-long double __usercall sub_D9FB0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall NumericEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -144998,7 +144998,7 @@ long double __usercall sub_D9FB0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000DA0A0) --------------------------------------------------------
-long double __usercall sub_DA0A0@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
+long double __usercall NumericNotEqualFunction@<st0>(int a1@<edx>, int a2@<ecx>, long double result@<st0>)
 {
   int v3; // esi@1
   int v4; // eax@2
@@ -145058,7 +145058,7 @@ long double __usercall sub_DA0A0@<st0>(int a1@<edx>, int a2@<ecx>, long double r
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000DA190) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_DA190@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall __spoils<ecx,st0> OddpFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   int result; // eax@2
   int v3; // [sp-8h] [bp-24h]@3
@@ -145080,7 +145080,7 @@ int __usercall __spoils<ecx,st0> sub_DA190@<eax>(int a1@<ecx>, long double a2@<s
 }
 
 //----- (000DA200) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_DA200@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall __spoils<ecx,st0> EvenpFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   int result; // eax@2
   int v3; // [sp-8h] [bp-24h]@3
@@ -147767,7 +147767,7 @@ void sub_DCC70()
 //----- (000DCD30) --------------------------------------------------------
 signed int sub_DCD30()
 {
-  registerClipsCallback((int)aExit, 118, (int)sub_DCF30, (int)aExitcommand, (int)a00_16);
+  registerClipsCallback((int)aExit, 118, (int)ExitCommand, (int)aExitcommand, (int)a00_16);
   sub_AD3C0();
   return sub_E3970();
 }
@@ -147902,7 +147902,7 @@ int __fastcall sub_DCEC0(int a1, int a2)
 // 13B4EC: using guessed type int dword_13B4EC;
 
 //----- (000DCF30) --------------------------------------------------------
-signed int sub_DCF30()
+signed int ExitCommand()
 {
   signed int result; // eax@1
 
@@ -149357,12 +149357,12 @@ int sub_DE750()
   sub_94710((int)aDefrule, (int)sub_DE8C0, 0);
   sub_94780((int)aDefrule, (int)sub_DE900, 0);
   sub_EC050((int)aRules, 0, (int)&dword_13B510, 70, (int)sub_DEB50, (int)sub_DEB90);
-  registerClipsCallback((int)aGetDefruleList, 109, (int)sub_DE980, (int)aGetdefrulelist, (int)a01w_0);
-  registerClipsCallback((int)aUndefrule, 118, (int)sub_DE940, (int)aUndefrulecomma, (int)a11w_1);
-  registerClipsCallback((int)aDefruleModule, 119, (int)sub_DE9D0, (int)aDefrulemodulef, (int)a11w_1);
-  registerClipsCallback((int)aRules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
-  registerClipsCallback((int)aListDefrules, 118, (int)sub_DEA30, (int)aListdefrulesco, (int)a01w_0);
-  registerClipsCallback((int)aPpdefrule, 118, (int)sub_DE9F0, (int)aPpdefrulecomma, (int)a11w_1);
+  registerClipsCallback((int)aGetDefruleList, 109, (int)GetDefruleListFunction, (int)aGetdefrulelist, (int)a01w_0);
+  registerClipsCallback((int)aUndefrule, 118, (int)UndefruleCommand, (int)aUndefrulecomma, (int)a11w_1);
+  registerClipsCallback((int)aDefruleModule, 119, (int)DefruleModuleFunction, (int)aDefrulemodulef, (int)a11w_1);
+  registerClipsCallback((int)aRules, 118, (int)ListDefrulesCommand, (int)aListdefrulesco, (int)a01w_0);
+  registerClipsCallback((int)aListDefrules, 118, (int)ListDefrulesCommand, (int)aListdefrulesco, (int)a01w_0);
+  registerClipsCallback((int)aPpdefrule, 118, (int)PPDefruleCommand, (int)aPpdefrulecomma, (int)a11w_1);
   sub_DD2C0();
   return sub_DEBC0();
 }
@@ -149428,7 +149428,7 @@ int __fastcall sub_DE920(int a1)
 // 1B1490: using guessed type int dword_1B1490;
 
 //----- (000DE940) --------------------------------------------------------
-int __usercall sub_DE940@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall UndefruleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95EA0((int)aUndefrule, dword_1B1490, a1, a2);
 }
@@ -149442,28 +149442,28 @@ int __fastcall sub_DE960(int a1)
 // 1B1490: using guessed type int dword_1B1490;
 
 //----- (000DE980) --------------------------------------------------------
-int __usercall sub_DE980@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall GetDefruleListFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96210((int)aGetDefruleList, a1, dword_1B1490, a2);
 }
 // 1B1490: using guessed type int dword_1B1490;
 
 //----- (000DE9D0) --------------------------------------------------------
-int __usercall sub_DE9D0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall DefruleModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDefruleModule, dword_1B1490, a1, a2);
 }
 // 1B1490: using guessed type int dword_1B1490;
 
 //----- (000DE9F0) --------------------------------------------------------
-int __usercall sub_DE9F0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDefruleCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1490, a1, a2);
 }
 // 1B1490: using guessed type int dword_1B1490;
 
 //----- (000DEA30) --------------------------------------------------------
-signed int __usercall sub_DEA30@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDefrulesCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDefrules, dword_1B1490, a1, a2);
 }
@@ -149967,32 +149967,32 @@ int __fastcall sub_DF440(int a1, signed int a2, int a3, signed int a4)
 //----- (000DF480) --------------------------------------------------------
 signed int sub_DF480()
 {
-  registerClipsCallback((int)aRun, 118, (int)sub_A2A50, (int)aRuncommand, (int)a1i);
-  registerClipsCallback((int)aHalt, 118, (int)sub_A2AB0, (int)aHaltcommand, (int)a00_6);
-  registerClipsCallback((int)aFocus_2, 98, (int)sub_A2FA0, (int)aFocuscommand, (int)a1W);
-  registerClipsCallback((int)aClearFocusStac, 118, (int)sub_A2920, (int)aClearfocusstac, (int)a00_6);
-  registerClipsCallback((int)aGetFocusStack, 109, (int)sub_A2E30, (int)aGetfocusstackf, (int)a00_6);
-  registerClipsCallback((int)aPopFocus, 119, (int)sub_A2F00, (int)aPopfocusfuncti, (int)a00_6);
-  registerClipsCallback((int)aGetFocus, 119, (int)sub_A2F40, (int)aGetfocusfuncti, (int)a00_6);
-  registerClipsCallback((int)aSetBreak, 118, (int)sub_A2BE0, (int)aSetbreakcomman, (int)a11w_2);
-  registerClipsCallback((int)aRemoveBreak, 118, (int)sub_A2C50, (int)aRemovebreakcom, (int)a1w);
-  registerClipsCallback((int)aShowBreaks, 118, (int)sub_A2D30, (int)aShowbreakscomm, (int)a01w_1);
-  registerClipsCallback((int)aMatches, 118, (int)sub_DF6B0, (int)aMatchescommand, (int)a11w_2);
-  registerClipsCallback((int)aListFocusStack, 118, (int)sub_A2DB0, (int)aListfocusstack, (int)a00_6);
-  registerClipsCallback((int)aDependencies, 118, (int)sub_C17A0, (int)aDependenciesco, (int)a11h);
-  registerClipsCallback((int)aDependents, 118, (int)sub_C17E0, (int)aDependentscomm, (int)a11h);
-  registerClipsCallback((int)aGetIncremental, 98, (int)sub_B62F0, (int)aGetincremental, (int)a00_6);
-  registerClipsCallback((int)aSetIncremental, 98, (int)sub_B6220, (int)aSetincremental, (int)a11_2);
-  registerClipsCallback((int)aGetStrategy, 119, (int)sub_95A20, (int)aGetstrategycom, (int)a00_6);
-  return registerClipsCallback((int)aSetStrategy, 119, (int)sub_95A50, (int)aSetstrategycom, (int)a11w_2);
+  registerClipsCallback((int)aRun, 118, (int)RunCommand, (int)aRuncommand, (int)a1i);
+  registerClipsCallback((int)aHalt, 118, (int)HaltCommand, (int)aHaltcommand, (int)a00_6);
+  registerClipsCallback((int)aFocus_2, 98, (int)FocusCommand, (int)aFocuscommand, (int)a1W);
+  registerClipsCallback((int)aClearFocusStac, 118, (int)ClearFocusStackCommand, (int)aClearfocusstac, (int)a00_6);
+  registerClipsCallback((int)aGetFocusStack, 109, (int)GetFocusStackFunction, (int)aGetfocusstackf, (int)a00_6);
+  registerClipsCallback((int)aPopFocus, 119, (int)PopFocusFunction, (int)aPopfocusfuncti, (int)a00_6);
+  registerClipsCallback((int)aGetFocus, 119, (int)GetFocusFunction, (int)aGetfocusfuncti, (int)a00_6);
+  registerClipsCallback((int)aSetBreak, 118, (int)SetBreakCommand, (int)aSetbreakcomman, (int)a11w_2);
+  registerClipsCallback((int)aRemoveBreak, 118, (int)RemoveBreakCommand, (int)aRemovebreakcom, (int)a1w);
+  registerClipsCallback((int)aShowBreaks, 118, (int)ShowBreaksCommand, (int)aShowbreakscomm, (int)a01w_1);
+  registerClipsCallback((int)aMatches, 118, (int)MatchesCommand, (int)aMatchescommand, (int)a11w_2);
+  registerClipsCallback((int)aListFocusStack, 118, (int)ListFocusStackCommand, (int)aListfocusstack, (int)a00_6);
+  registerClipsCallback((int)aDependencies, 118, (int)DependenciesCommand, (int)aDependenciesco, (int)a11h);
+  registerClipsCallback((int)aDependents, 118, (int)DependentsCommand, (int)aDependentscomm, (int)a11h);
+  registerClipsCallback((int)aGetIncremental, 98, (int)GetIncrementalResetCommand, (int)aGetincremental, (int)a00_6);
+  registerClipsCallback((int)aSetIncremental, 98, (int)SetIncrementalResetCommand, (int)aSetincremental, (int)a11_2);
+  registerClipsCallback((int)aGetStrategy, 119, (int)GetStrategyCommand, (int)aGetstrategycom, (int)a00_6);
+  return registerClipsCallback((int)aSetStrategy, 119, (int)SetStrategyCommand, (int)aSetstrategycom, (int)a11w_2);
 }
-// 95A20: using guessed type int sub_95A20();
-// A2F00: using guessed type int sub_A2F00();
-// A2F40: using guessed type int sub_A2F40();
-// B62F0: using guessed type int sub_B62F0();
+// 95A20: using guessed type int GetStrategyCommand();
+// A2F00: using guessed type int PopFocusFunction();
+// A2F40: using guessed type int GetFocusFunction();
+// B62F0: using guessed type int GetIncrementalResetCommand();
 
 //----- (000DF6B0) --------------------------------------------------------
-int __usercall __spoils<ecx,st0> sub_DF6B0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall __spoils<ecx,st0> MatchesCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   int result; // eax@1
   int v3; // eax@2
@@ -153195,26 +153195,26 @@ int __fastcall sub_E2C00(int result, int a2)
 //----- (000E2C20) --------------------------------------------------------
 signed int sub_E2C20()
 {
-  registerClipsCallback((int)aStrCat, 107, (int)sub_E2D60, (int)aStrcatfunction, (int)a1_0);
-  registerClipsCallback((int)aSymCat, 107, (int)sub_E2D80, (int)aSymcatfunction, (int)a1_0);
-  registerClipsCallback((int)aStrLength, 108, (int)sub_E2F40, (int)aStrlengthfunct, (int)a11j);
-  registerClipsCallback((int)aStrCompare, 108, (int)sub_E31C0, (int)aStrcomparefunc, (int)a23Jji);
-  registerClipsCallback((int)aUpcase, 106, (int)sub_E2FA0, (int)aUpcasefunction, (int)a11j);
-  registerClipsCallback((int)aLowcase, 106, (int)sub_E30B0, (int)aLowcasefunctio, (int)a11j);
-  registerClipsCallback((int)aSubString, 115, (int)sub_E32C0, (int)aSubstringfunct, (int)a33Iij);
-  registerClipsCallback((int)aStrIndex, 117, (int)sub_E3480, (int)aStrindexfuncti, (int)a22j);
-  registerClipsCallback((int)aEval, 117, (int)sub_E3580, (int)aEvalfunction, (int)a11k_1);
-  return registerClipsCallback((int)aBuild, 98, (int)sub_E3820, (int)aBuildfunction, (int)a11k_1);
+  registerClipsCallback((int)aStrCat, 107, (int)StrCatFunction, (int)aStrcatfunction, (int)a1_0);
+  registerClipsCallback((int)aSymCat, 107, (int)SymCatFunction, (int)aSymcatfunction, (int)a1_0);
+  registerClipsCallback((int)aStrLength, 108, (int)StrLengthFunction, (int)aStrlengthfunct, (int)a11j);
+  registerClipsCallback((int)aStrCompare, 108, (int)StrCompareFunction, (int)aStrcomparefunc, (int)a23Jji);
+  registerClipsCallback((int)aUpcase, 106, (int)UpcaseFunction, (int)aUpcasefunction, (int)a11j);
+  registerClipsCallback((int)aLowcase, 106, (int)LowcaseFunction, (int)aLowcasefunctio, (int)a11j);
+  registerClipsCallback((int)aSubString, 115, (int)SubStringFunction, (int)aSubstringfunct, (int)a33Iij);
+  registerClipsCallback((int)aStrIndex, 117, (int)StrIndexFunction, (int)aStrindexfuncti, (int)a22j);
+  registerClipsCallback((int)aEval, 117, (int)EvalFunction, (int)aEvalfunction, (int)a11k_1);
+  return registerClipsCallback((int)aBuild, 98, (int)BuildFunction, (int)aBuildfunction, (int)a11k_1);
 }
 
 //----- (000E2D60) --------------------------------------------------------
-signed int __usercall sub_E2D60@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
+signed int __usercall StrCatFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   return sub_E2DC0(a1, 3, a2, a3);
 }
 
 //----- (000E2D80) --------------------------------------------------------
-signed int __usercall sub_E2D80@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
+signed int __usercall SymCatFunction@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   return sub_E2DC0(a1, 2, a2, a3);
 }
@@ -153324,7 +153324,7 @@ signed int __usercall sub_E2DC0@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ebx>, 
 // 13AAF0: using guessed type int dword_13AAF0;
 
 //----- (000E2F40) --------------------------------------------------------
-signed int __usercall sub_E2F40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall StrLengthFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // edx@2
@@ -153348,7 +153348,7 @@ signed int __usercall sub_E2F40@<eax>(int a1@<edx>, int a2@<ecx>, long double a3
 // F494C: using guessed type int __fastcall strlen(_DWORD, _DWORD, _DWORD);
 
 //----- (000E2FA0) --------------------------------------------------------
-int __usercall sub_E2FA0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall UpcaseFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int result; // eax@2
   int v3; // edx@2
@@ -153405,7 +153405,7 @@ int __usercall sub_E2FA0@<eax>(int a1@<eax>, long double a2@<st0>)
 // F498A: using guessed type int __fastcall toupper(_DWORD);
 
 //----- (000E30B0) --------------------------------------------------------
-int __usercall sub_E30B0@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall LowcaseFunction@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int result; // eax@2
   int v3; // edx@2
@@ -153462,7 +153462,7 @@ int __usercall sub_E30B0@<eax>(int a1@<eax>, long double a2@<st0>)
 // F5E7F: using guessed type int __fastcall tolower(_DWORD, _DWORD, _DWORD);
 
 //----- (000E31C0) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_E31C0@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> StrCompareFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int v2; // esi@1
   signed int result; // eax@2
@@ -153527,7 +153527,7 @@ signed int __usercall __spoils<ecx,st0> sub_E31C0@<eax>(int a1@<ecx>, long doubl
 // F53CF: using guessed type int __fastcall strncmp(_DWORD, _DWORD, _DWORD);
 
 //----- (000E32C0) --------------------------------------------------------
-int __usercall sub_E32C0@<eax>(long double a1@<st0>)
+int __usercall SubStringFunction@<eax>(long double a1@<st0>)
 {
   int result; // eax@2
   int v2; // edx@3
@@ -153631,7 +153631,7 @@ int __usercall sub_E32C0@<eax>(long double a1@<st0>)
 // F50DC: using guessed type double __fastcall _CHP(_DWORD, _DWORD, _DWORD);
 
 //----- (000E3480) --------------------------------------------------------
-void __usercall sub_E3480(int a1@<eax>, long double a2@<st0>)
+void __usercall StrIndexFunction(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // ebp@1
   int v3; // edx@3
@@ -153690,7 +153690,7 @@ void __usercall sub_E3480(int a1@<eax>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000E3580) --------------------------------------------------------
-int __usercall sub_E3580@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+int __usercall EvalFunction@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   int result; // eax@2
@@ -153819,7 +153819,7 @@ bool __usercall sub_E3610@<eax>(int a1@<edx>, long double a2@<st0>)
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000E3820) --------------------------------------------------------
-signed int __usercall sub_E3820@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall BuildFunction@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@2
   int v4; // edx@3
@@ -155611,7 +155611,7 @@ int __fastcall sub_E5680(int a1)
 {
   int v1; // ebx@1
   int v2; // ecx@3
-  unsigned int v3; // edi@3
+  int v3; // edi@3
   int i; // esi@3
   int v5; // edx@7
   signed int v6; // eax@8
@@ -155958,7 +155958,7 @@ void sub_E5B40()
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000E5C40) --------------------------------------------------------
-unsigned int __fastcall sub_E5C40(int a1, unsigned int a2)
+int __fastcall sub_E5C40(int a1, unsigned int a2)
 {
   int v2; // edi@1
   int v3; // edx@4
@@ -155968,7 +155968,7 @@ unsigned int __fastcall sub_E5C40(int a1, unsigned int a2)
   int v7; // eax@10
   char v8; // dh@12
   unsigned int v9; // edx@13
-  unsigned int result; // eax@14
+  int result; // eax@14
   int k; // [sp+0h] [bp-28h]@6
   unsigned int v12; // [sp+4h] [bp-24h]@1
   int v13; // [sp+8h] [bp-20h]@1
@@ -156724,7 +156724,7 @@ int __fastcall initAllClipsCallbacks(int result, int a2, int a3)
 // 13B568: using guessed type int dword_13B568;
 
 //----- (000E6BA0) --------------------------------------------------------
-long double __fastcall sub_E6BA0(int a1, int a2)
+long double __fastcall gentime(int a1, int a2)
 {
   int v3; // [sp+0h] [bp-28h]@1
   unsigned __int16 v4; // [sp+4h] [bp-24h]@1
@@ -156740,7 +156740,7 @@ long double __fastcall sub_E6BA0(int a1, int a2)
 // 12DDD5: using guessed type double dbl_12DDD5;
 
 //----- (000E6C10) --------------------------------------------------------
-int __usercall sub_E6C10@<eax>(long double a1@<st0>)
+int __usercall gensystem@<eax>(long double a1@<st0>)
 {
   int v1; // edi@1
   int result; // eax@1
@@ -157660,7 +157660,7 @@ signed int __fastcall sub_E79A0(signed int result)
 }
 
 //----- (000E7D20) --------------------------------------------------------
-signed int __usercall sub_E7D20@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
+signed int __usercall HelpPathFunction@<eax>(int a1@<edx>, int a2@<ecx>, int a3@<ebx>, long double a4@<st0>)
 {
   int v4; // edx@1
   int v5; // eax@3
@@ -157730,7 +157730,7 @@ LABEL_12:
 // 13B578: using guessed type int dword_13B578;
 
 //----- (000E7E50) --------------------------------------------------------
-signed int __usercall sub_E7E50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
+signed int __usercall FetchCommand@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, long double a4@<st0>)
 {
   int v4; // esi@1
   signed int result; // eax@1
@@ -157778,7 +157778,7 @@ signed int __usercall sub_E7E50@<eax>(int a1@<eax>, int a2@<edx>, int a3@<ecx>, 
 // 1B14E0: using guessed type int dword_1B14E0;
 
 //----- (000E8000) --------------------------------------------------------
-signed int __usercall sub_E8000@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
+signed int __usercall TossCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>)
 {
   signed int result; // eax@1
   int v4; // ebx@2
@@ -158068,9 +158068,9 @@ LABEL_14:
 signed int sub_E8460()
 {
   registerClipsCallback((int)aHelp, 118, (int)&off_E79E0, (int)aHelpfunction, 0);
-  registerClipsCallback((int)aHelpPath, 118, (int)sub_E7D20, (int)aHelppathfuncti, (int)a1k);
-  registerClipsCallback((int)aFetch, 117, (int)sub_E7E50, (int)aFetchcommand, (int)a11k_3);
-  registerClipsCallback((int)aToss, 98, (int)sub_E8000, (int)aTosscommand, (int)a11k_3);
+  registerClipsCallback((int)aHelpPath, 118, (int)HelpPathFunction, (int)aHelppathfuncti, (int)a1k);
+  registerClipsCallback((int)aFetch, 117, (int)FetchCommand, (int)aFetchcommand, (int)a11k_3);
+  registerClipsCallback((int)aToss, 98, (int)TossCommand, (int)aTosscommand, (int)a11k_3);
   return registerClipsCallback((int)aPrintRegion, 98, (int)&off_E7F30, (int)aPrintregioncom, (int)a2Wk);
 }
 // E79E0: using guessed type void *off_E79E0;
@@ -158575,10 +158575,10 @@ int sub_E8E00()
   sub_94780((int)aDeftemplate_1, (int)sub_E8F00, 0);
   sub_94990((int)aDeftemplate_1, (int)sub_E8F20, 10);
   registerClipsCallback((int)aGetDeftemplate, 109, (int)sub_E8F80, v0, (int)a01w_8);
-  registerClipsCallback((int)aUndeftemplate, 118, (int)sub_E8F40, (int)aUndeftemplatec, (int)a11w_13);
-  registerClipsCallback((int)aDeftemplateMod, 119, (int)sub_E8FD0, (int)aDeftemplatemod, (int)a11w_13);
-  registerClipsCallback((int)aListDeftemplat, 118, (int)sub_E9030, (int)aListdeftemplat, (int)a01w_8);
-  registerClipsCallback((int)aPpdeftemplate, 118, (int)sub_E8FF0, (int)aPpdeftemplatec, (int)a11w_13);
+  registerClipsCallback((int)aUndeftemplate, 118, (int)UndeftemplateCommand, (int)aUndeftemplatec, (int)a11w_13);
+  registerClipsCallback((int)aDeftemplateMod, 119, (int)DeftemplateModuleFunction, (int)aDeftemplatemod, (int)a11w_13);
+  registerClipsCallback((int)aListDeftemplat, 118, (int)ListDeftemplatesCommand, (int)aListdeftemplat, (int)a01w_8);
+  registerClipsCallback((int)aPpdeftemplate, 118, (int)PPDeftemplateCommand, (int)aPpdeftemplatec, (int)a11w_13);
   sub_E8510();
   return sub_E9110();
 }
@@ -158609,7 +158609,7 @@ int __fastcall sub_E8F20(int a1)
 // 1B1530: using guessed type int dword_1B1530;
 
 //----- (000E8F40) --------------------------------------------------------
-int __usercall sub_E8F40@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall UndeftemplateCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95EA0((int)aUndeftemplate, dword_1B1530, a1, a2);
 }
@@ -158630,21 +158630,21 @@ int __usercall sub_E8F80@<eax>(int a1@<ecx>, long double a2@<st0>)
 // 1B1530: using guessed type int dword_1B1530;
 
 //----- (000E8FD0) --------------------------------------------------------
-int __usercall sub_E8FD0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall DeftemplateModuleFunction@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95FC0((int)aDeftemplateMod, dword_1B1530, a1, a2);
 }
 // 1B1530: using guessed type int dword_1B1530;
 
 //----- (000E8FF0) --------------------------------------------------------
-int __usercall sub_E8FF0@<eax>(int a1@<ecx>, long double a2@<st0>)
+int __usercall PPDeftemplateCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_95F20(dword_1B1530, a1, a2);
 }
 // 1B1530: using guessed type int dword_1B1530;
 
 //----- (000E9030) --------------------------------------------------------
-signed int __usercall sub_E9030@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall ListDeftemplatesCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   return sub_96460((int)aListDeftemplat, dword_1B1530, a1, a2);
 }
@@ -161712,7 +161712,7 @@ int __fastcall sub_EC290(int a1, int a2)
 // 13B5CC: using guessed type int dword_13B5CC;
 
 //----- (000EC360) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_EC360@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> WatchCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // eax@2
@@ -161752,7 +161752,7 @@ signed int __usercall __spoils<ecx,st0> sub_EC360@<eax>(int a1@<ecx>, long doubl
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000EC440) --------------------------------------------------------
-signed int __usercall __spoils<ecx,st0> sub_EC440@<eax>(int a1@<ecx>, long double a2@<st0>)
+signed int __usercall __spoils<ecx,st0> UnwatchCommand@<eax>(int a1@<ecx>, long double a2@<st0>)
 {
   signed int result; // eax@1
   int v3; // eax@2
@@ -161792,7 +161792,7 @@ signed int __usercall __spoils<ecx,st0> sub_EC440@<eax>(int a1@<ecx>, long doubl
 // 13AAEC: using guessed type int dword_13AAEC;
 
 //----- (000EC510) --------------------------------------------------------
-void __usercall sub_EC510(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
+void __usercall ListWatchItemsCommand(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 {
   int *i; // ecx@2
   int v4; // ecx@3
@@ -161866,9 +161866,9 @@ void __usercall sub_EC510(int a1@<ecx>, long double a2@<st0>, int a3@<edx>)
 //----- (000EC660) --------------------------------------------------------
 signed int sub_EC660()
 {
-  registerClipsCallback((int)aWatch, 118, (int)sub_EC360, (int)aWatchcommand, (int)a1W_2);
-  registerClipsCallback((int)aUnwatch, 118, (int)sub_EC440, (int)aUnwatchcommand, (int)a1W_2);
-  registerClipsCallback((int)aListWatchItems, 118, (int)sub_EC510, (int)aListwatchitems, (int)a0W);
+  registerClipsCallback((int)aWatch, 118, (int)WatchCommand, (int)aWatchcommand, (int)a1W_2);
+  registerClipsCallback((int)aUnwatch, 118, (int)UnwatchCommand, (int)aUnwatchcommand, (int)a1W_2);
+  registerClipsCallback((int)aListWatchItems, 118, (int)ListWatchItemsCommand, (int)aListwatchitems, (int)a0W);
   sub_DCFE0((int)off_13B4FC[0], 1000, (int)sub_EC700, (int)sub_EC730, 0, 0, 0);
   return sub_DD1A0((int)off_13B4FC[0]);
 }
@@ -170139,7 +170139,7 @@ void sub_FEBDB()
 }
 
 //----- (000FEBE0) --------------------------------------------------------
-unsigned int __fastcall sub_FEBE0(int a1)
+int __fastcall sub_FEBE0(int a1)
 {
   __int16 v1; // cx@1
   unsigned __int8 v2; // of@1
@@ -170150,7 +170150,7 @@ unsigned int __fastcall sub_FEBE0(int a1)
   char v7; // ch@5
   char v8; // cl@7
   char v9; // ch@7
-  unsigned int result; // eax@7
+  int result; // eax@7
 
   v1 = *(_WORD *)(a1 + 8) & 0x7FFF;
   v2 = __OFSUB__(v1, 16382);
@@ -170291,14 +170291,14 @@ int __usercall sub_FEC90@<eax>(__int64 a1@<edx:eax>, int a2@<ebx>, int a3@<ebp>)
 }
 
 //----- (000FED10) --------------------------------------------------------
-unsigned int __fastcall sub_FED10(int a1)
+int __fastcall sub_FED10(int a1)
 {
   int v1; // ebx@1
   signed int v2; // edx@1
   unsigned int v3; // eax@1
   unsigned int v4; // ecx@1
   unsigned __int8 v5; // cf@5
-  unsigned int result; // eax@7
+  int result; // eax@7
   __int16 v7; // bx@7
   __int16 v8; // cx@7
   unsigned __int64 v9; // rt0@14
@@ -170327,7 +170327,7 @@ unsigned int __fastcall sub_FED10(int a1)
   {
     if ( v8 == 0x7FFF )
     {
-      result = __RCR__((2 * result >> 8) | 0xFF000000, __CFADD__(v7, v7));
+      result = __RCR__(((unsigned int)(2 * result) >> 8) | 0xFF000000, __CFADD__(v7, v7));
     }
     else
     {
