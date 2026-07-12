@@ -1,0 +1,1882 @@
+[
+{
+"ea": "0x10464",
+"name": "main"
+},
+{
+"ea": "0x10e2c",
+"name": "logDeleteTPalette"
+},
+{
+"ea": "0x10e6c",
+"name": "logNewTPalette"
+},
+{
+"ea": "0x16ad9",
+"name": "drawScreen"
+},
+{
+"ea": "0x1a330",
+"name": "chooseBackground"
+},
+{
+"ea": "0x1efe4",
+"name": "nextPlayer"
+},
+{
+"ea": "0x1f8c1",
+"name": "playHuman"
+},
+{
+"ea": "0x1fb91",
+"name": "playGame"
+},
+{
+"ea": "0x24a7c",
+"name": "createUnit"
+},
+{
+"ea": "0x25e32",
+"name": "unitMove"
+},
+{
+"ea": "0x26e42",
+"name": "LogAllUnits"
+},
+{
+"ea": "0x273f3",
+"name": "Unit_NewTurn"
+},
+{
+"ea": "0x298f1",
+"name": "UnitsCache_Clear"
+},
+{
+"ea": "0x2c492",
+"name": "Track_BridgesOn"
+},
+{
+"ea": "0x2c4c9",
+"name": "Track_BridgesOff"
+},
+{
+"ea": "0x30040",
+"name": "unsetLogEnabled"
+},
+{
+"ea": "0x30069",
+"name": "setLogEnabled"
+},
+{
+"ea": "0x30092",
+"name": "createLogFIles"
+},
+{
+"ea": "0x300e6",
+"name": "setInBatttle"
+},
+{
+"ea": "0x30112",
+"name": "log"
+},
+{
+"ea": "0x36aa8",
+"name": "LogAllBuildings"
+},
+{
+"ea": "0x36b1c",
+"name": "Building_NewTurn"
+},
+{
+"ea": "0x418e0",
+"name": "Battle_LogAllUnits"
+},
+{
+"ea": "0x41950",
+"name": "GodAnger"
+},
+{
+"ea": "0x41d3a",
+"name": "Battle_NewTurn"
+},
+{
+"ea": "0x59749",
+"name": "buildingUnitGetInto"
+},
+{
+"ea": "0x5bc2c",
+"name": "templeRandom"
+},
+{
+"ea": "0x5bcdb",
+"name": "templeProcessGift"
+},
+{
+"ea": "0x5c135",
+"name": "templeUnitGetInto"
+},
+{
+"ea": "0x5e634",
+"name": "showCredits"
+},
+{
+"ea": "0x5ed50",
+"name": "loadRes"
+},
+{
+"ea": "0x5ee29",
+"name": "loadResources"
+},
+{
+"ea": "0x5f3b8",
+"name": "returnTrue"
+},
+{
+"ea": "0x5fe5c",
+"name": "Port_GetSupply"
+},
+{
+"ea": "0x630bb",
+"name": "NewQueenWindow"
+},
+{
+"ea": "0x63990",
+"name": "mainLoop"
+},
+{
+"ea": "0x65d2d",
+"name": "loadMapData"
+},
+{
+"ea": "0x66464",
+"name": "loadMap"
+},
+{
+"ea": "0x67862",
+"name": "startMultiMap"
+},
+{
+"ea": "0x692fe",
+"name": "Prisoner_SetInCastles"
+},
+{
+"ea": "0x6b3a4",
+"name": "Queen_NewTurn"
+},
+{
+"ea": "0x6cc70",
+"name": "initClips"
+},
+{
+"ea": "0x6ccaf",
+"name": "registerClipFunctionsAll"
+},
+{
+"ea": "0x6cdd0",
+"name": "playComputer"
+},
+{
+"ea": "0x6d2bd",
+"name": "registerClipsFunctions2"
+},
+{
+"ea": "0x6d67e",
+"name": "swiatynia00"
+},
+{
+"ea": "0x6d6ca",
+"name": "kop_skarb00"
+},
+{
+"ea": "0x6d706",
+"name": "pobierz_oddzial_z_portu00"
+},
+{
+"ea": "0x6d732",
+"name": "pelny_port00"
+},
+{
+"ea": "0x6d75e",
+"name": "jest_pracownik_w_armii00"
+},
+{
+"ea": "0x6d79a",
+"name": "jednostka_bitewna00"
+},
+{
+"ea": "0x6d7d6",
+"name": "jest_droga00"
+},
+{
+"ea": "0x6d832",
+"name": "jest_droga_w_poblize00"
+},
+{
+"ea": "0x6d88e",
+"name": "jest_droga_w_poblize_zamku00"
+},
+{
+"ea": "0x6d8ea",
+"name": "jest_droga_do_portu00"
+},
+{
+"ea": "0x6d946",
+"name": "jest_droga_do_zamku00"
+},
+{
+"ea": "0x6d9a2",
+"name": "jest_droga_do_swiatyni00"
+},
+{
+"ea": "0x6d9fe",
+"name": "oddzial_w_zasiegu_armii00"
+},
+{
+"ea": "0x6da5a",
+"name": "budowla_w_zasiegu_armii00"
+},
+{
+"ea": "0x6dab6",
+"name": "odleglosc_od_obiektu00"
+},
+{
+"ea": "0x6db12",
+"name": "swiatynia_w_zasiegu_armii00"
+},
+{
+"ea": "0x6db6e",
+"name": "swiatynia_OK00"
+},
+{
+"ea": "0x6dbca",
+"name": "maszeruj00"
+},
+{
+"ea": "0x6dc26",
+"name": "maszeruj_do_swiatyni00"
+},
+{
+"ea": "0x6dc82",
+"name": "maszeruj_blisko00"
+},
+{
+"ea": "0x6dcde",
+"name": "atakuj_oddzial00"
+},
+{
+"ea": "0x6dd2a",
+"name": "przejmuj_oddzial00"
+},
+{
+"ea": "0x6dd76",
+"name": "ukryj_oddzial00"
+},
+{
+"ea": "0x6ddd2",
+"name": "jest_armia00"
+},
+{
+"ea": "0x6de0e",
+"name": "liczba_jednostek_w_oddziale00"
+},
+{
+"ea": "0x6de4a",
+"name": "atakuj_budowle00"
+},
+{
+"ea": "0x6de96",
+"name": "jest_brod00"
+},
+{
+"ea": "0x6ded2",
+"name": "buduj_droge00"
+},
+{
+"ea": "0x6df0e",
+"name": "buduj_pulapke00"
+},
+{
+"ea": "0x6df6a",
+"name": "Unit_CanMove00"
+},
+{
+"ea": "0x71fc8",
+"name": "registerClipsFunctions"
+},
+{
+"ea": "0x7251c",
+"name": "Leczenie"
+},
+{
+"ea": "0x7254a",
+"name": "Szkolenie"
+},
+{
+"ea": "0x72578",
+"name": "PalBudowle"
+},
+{
+"ea": "0x725a6",
+"name": "UpgradeWall"
+},
+{
+"ea": "0x725d4",
+"name": "ZmienPodatek"
+},
+{
+"ea": "0x72612",
+"name": "RemoveLicence"
+},
+{
+"ea": "0x7264c",
+"name": "ZacznijLeczenie"
+},
+{
+"ea": "0x72686",
+"name": "ZacznijSzkolenie"
+},
+{
+"ea": "0x726c0",
+"name": "ZacznijProdukcje"
+},
+{
+"ea": "0x726fa",
+"name": "Podatek"
+},
+{
+"ea": "0x72730",
+"name": "IsLicence"
+},
+{
+"ea": "0x72772",
+"name": "KupSzkola"
+},
+{
+"ea": "0x727a8",
+"name": "KupKuznia"
+},
+{
+"ea": "0x727de",
+"name": "Pieniadze"
+},
+{
+"ea": "0x72814",
+"name": "SilaMurow"
+},
+{
+"ea": "0x7284a",
+"name": "SilaZamku"
+},
+{
+"ea": "0x72880",
+"name": "NumerTury"
+},
+{
+"ea": "0x728ac",
+"name": "BudujZamek"
+},
+{
+"ea": "0x72911",
+"name": "BuyLicence"
+},
+{
+"ea": "0x72953",
+"name": "KupKoszary"
+},
+{
+"ea": "0x72989",
+"name": "KupSzpital"
+},
+{
+"ea": "0x729bf",
+"name": "PoziomTech"
+},
+{
+"ea": "0x729f5",
+"name": "TypBudowli"
+},
+{
+"ea": "0x72a2b",
+"name": "SilaGracza"
+},
+{
+"ea": "0x72a61",
+"name": "KupWarsztat"
+},
+{
+"ea": "0x72a97",
+"name": "Zadowolenie"
+},
+{
+"ea": "0x72acd",
+"name": "IsProduction"
+},
+{
+"ea": "0x72b03",
+"name": "IloscChlopow"
+},
+{
+"ea": "0x72b39",
+"name": "CzyMinimalny"
+},
+{
+"ea": "0x72b93",
+"name": "CanBuyLicence"
+},
+{
+"ea": "0x72bd5",
+"name": "LicencjaIndex"
+},
+{
+"ea": "0x72c17",
+"name": "LicencjaInd"
+},
+{
+"ea": "0x72c4d",
+"name": "CanUpgradeWall"
+},
+{
+"ea": "0x72c83",
+"name": "IloscOddzialow"
+},
+{
+"ea": "0x72cb9",
+"name": "IsProductionAny"
+},
+{
+"ea": "0x72cfb",
+"name": "WyprowadzChlopow"
+},
+{
+"ea": "0x72d55",
+"name": "JednostkiDoSzkoly"
+},
+{
+"ea": "0x72d8b",
+"name": "MaxIloscOddzialow"
+},
+{
+"ea": "0x72dc1",
+"name": "JestJednostkaWZamku"
+},
+{
+"ea": "0x72e03",
+"name": "JednostkiDoSzpitala"
+},
+{
+"ea": "0x72e39",
+"name": "WyprowadzenieOddzialu"
+},
+{
+"ea": "0x72e7b",
+"name": "WyprowadzenieOddzialow"
+},
+{
+"ea": "0x72eb1",
+"name": "NazwaZamku"
+},
+{
+"ea": "0x72ee7",
+"name": "registerClipsFunctions3"
+},
+{
+"ea": "0x73153",
+"name": "WejdzDoZamku"
+},
+{
+"ea": "0x73195",
+"name": "DolaczDoArmii"
+},
+{
+"ea": "0x731d7",
+"name": "PrzegrupujArmie"
+},
+{
+"ea": "0x73219",
+"name": "PrzegrupujZamek"
+},
+{
+"ea": "0x7325b",
+"name": "StanOsobArmii"
+},
+{
+"ea": "0x7329d",
+"name": "ArmiaMaJednostkiTypu"
+},
+{
+"ea": "0x732df",
+"name": "ArmiaTylkoJednostkiTypu"
+},
+{
+"ea": "0x73321",
+"name": "LiczbaWolnychMiejscWZamku"
+},
+{
+"ea": "0x73357",
+"name": "MocPrzeciwnikaPodMurami2"
+},
+{
+"ea": "0x7338d",
+"name": "ZnajdzDrogeWPoblizeZamku"
+},
+{
+"ea": "0x733cf",
+"name": "MaJednostkiDoLeczenia"
+},
+{
+"ea": "0x73405",
+"name": "ZnajdzZamekDoLeczenia"
+},
+{
+"ea": "0x7343b",
+"name": "IdzDoLeczenia"
+},
+{
+"ea": "0x73471",
+"name": "JestZarazaWZamku"
+},
+{
+"ea": "0x734a7",
+"name": "JestZarazaWOddziale"
+},
+{
+"ea": "0x734dd",
+"name": "OdlaczJednostkiSlabe"
+},
+{
+"ea": "0x73513",
+"name": "OdlaczJednostkiTypu"
+},
+{
+"ea": "0x73555",
+"name": "MaszerujWzdluzDrogi"
+},
+{
+"ea": "0x7358b",
+"name": "Znajdz_Najlepszy"
+},
+{
+"ea": "0x753b0",
+"name": "addUnit"
+},
+{
+"ea": "0x754a7",
+"name": "addCastle"
+},
+{
+"ea": "0x756ba",
+"name": "startMap1"
+},
+{
+"ea": "0x75931",
+"name": "startMap2"
+},
+{
+"ea": "0x75c00",
+"name": "startMap3"
+},
+{
+"ea": "0x75f52",
+"name": "startMap4"
+},
+{
+"ea": "0x764c6",
+"name": "startMap5"
+},
+{
+"ea": "0x76982",
+"name": "startMap6"
+},
+{
+"ea": "0x76fbe",
+"name": "startMap7"
+},
+{
+"ea": "0x774d1",
+"name": "startMap8"
+},
+{
+"ea": "0x77d3e",
+"name": "startMap9"
+},
+{
+"ea": "0x7850a",
+"name": "startMap10"
+},
+{
+"ea": "0x78b98",
+"name": "startMap11"
+},
+{
+"ea": "0x78e5d",
+"name": "startMap12"
+},
+{
+"ea": "0x79101",
+"name": "startMap13"
+},
+{
+"ea": "0x7943c",
+"name": "startMap14"
+},
+{
+"ea": "0x79890",
+"name": "startMap15"
+},
+{
+"ea": "0x79dc9",
+"name": "startMap16"
+},
+{
+"ea": "0x7a3c3",
+"name": "startMap17"
+},
+{
+"ea": "0x7a7bc",
+"name": "startMap18"
+},
+{
+"ea": "0x7b082",
+"name": "startMap19"
+},
+{
+"ea": "0x7b9b7",
+"name": "startMap20"
+},
+{
+"ea": "0x7c255",
+"name": "startMap"
+},
+{
+"ea": "0x889f0",
+"name": "RefreshCommand"
+},
+{
+"ea": "0x88ba0",
+"name": "RefreshAgendaCommand"
+},
+{
+"ea": "0x88ca0",
+"name": "SetSalienceEvaluationCommand"
+},
+{
+"ea": "0x88da0",
+"name": "GetSalienceEvaluationCommand"
+},
+{
+"ea": "0x88f10",
+"name": "AgendaCommand"
+},
+{
+"ea": "0x8aed0",
+"name": "BloadCommand"
+},
+{
+"ea": "0x8b0a0",
+"name": "AdditionFunction"
+},
+{
+"ea": "0x8b180",
+"name": "MultiplicationFunction"
+},
+{
+"ea": "0x8b270",
+"name": "SubtractionFunction"
+},
+{
+"ea": "0x8b3a0",
+"name": "DivisionFunction"
+},
+{
+"ea": "0x8b570",
+"name": "DivFunction"
+},
+{
+"ea": "0x8b6c0",
+"name": "SetAutoFloatDividendCommand"
+},
+{
+"ea": "0x8b730",
+"name": "GetAutoFloatDividendCommand"
+},
+{
+"ea": "0x8b7e0",
+"name": "FloatFunction"
+},
+{
+"ea": "0x8b850",
+"name": "AbsFunction"
+},
+{
+"ea": "0x8b900",
+"name": "MinFunction"
+},
+{
+"ea": "0x8ba30",
+"name": "MaxFunction"
+},
+{
+"ea": "0x8bb60",
+"name": "BsaveCommand"
+},
+{
+"ea": "0x8c520",
+"name": "PPDefclassCommand"
+},
+{
+"ea": "0x8c690",
+"name": "GetDefclassListFunction"
+},
+{
+"ea": "0x8c840",
+"name": "BrowseClassesCommand"
+},
+{
+"ea": "0x8c8e0",
+"name": "DescribeClassCommand"
+},
+{
+"ea": "0x8cbd0",
+"name": "GetDefclassModuleCommand"
+},
+{
+"ea": "0x8cbf0",
+"name": "SuperclassPCommand"
+},
+{
+"ea": "0x8cc50",
+"name": "SubclassPCommand"
+},
+{
+"ea": "0x8cca0",
+"name": "SlotExistPCommand"
+},
+{
+"ea": "0x8cd70",
+"name": "MessageHandlerExistPCommand"
+},
+{
+"ea": "0x8ce50",
+"name": "SlotWritablePCommand"
+},
+{
+"ea": "0x8cec0",
+"name": "SlotInitablePCommand"
+},
+{
+"ea": "0x8cf40",
+"name": "SlotPublicPCommand"
+},
+{
+"ea": "0x8cfb0",
+"name": "SlotDirectAccessPCommand"
+},
+{
+"ea": "0x8d040",
+"name": "ClassExistPCommand"
+},
+{
+"ea": "0x8ea40",
+"name": "ClassAbstractPCommand"
+},
+{
+"ea": "0x8eaa0",
+"name": "ClassReactivePCommand"
+},
+{
+"ea": "0x8ebf0",
+"name": "ClassSlotsCommand"
+},
+{
+"ea": "0x8ec70",
+"name": "ClassSubclassesCommand"
+},
+{
+"ea": "0x8ecb0",
+"name": "GetDefmessageHandlersListCmd"
+},
+{
+"ea": "0x8ed00",
+"name": "SlotFacetsCommand"
+},
+{
+"ea": "0x8ed50",
+"name": "SlotSourcesCommand"
+},
+{
+"ea": "0x8eda0",
+"name": "SlotTypesCommand"
+},
+{
+"ea": "0x8edf0",
+"name": "SlotAllowedValuesCommand"
+},
+{
+"ea": "0x8ee40",
+"name": "SlotRangeCommand"
+},
+{
+"ea": "0x8ee90",
+"name": "SlotCardinalityCommand"
+},
+{
+"ea": "0x92c40",
+"name": "ConstructsToCCommand"
+},
+{
+"ea": "0x94450",
+"name": "ClearCommand"
+},
+{
+"ea": "0x94480",
+"name": "ResetCommand"
+},
+{
+"ea": "0x95270",
+"name": "SDCCommand"
+},
+{
+"ea": "0x952f0",
+"name": "GDCCommand"
+},
+{
+"ea": "0x95320",
+"name": "SSCCommand"
+},
+{
+"ea": "0x953a0",
+"name": "GSCCommand"
+},
+{
+"ea": "0x95a20",
+"name": "GetStrategyCommand"
+},
+{
+"ea": "0x95a50",
+"name": "SetStrategyCommand"
+},
+{
+"ea": "0x9c1a0",
+"name": "GetDefinstancesModuleCommand"
+},
+{
+"ea": "0x9c240",
+"name": "ListDefinstancesCommand"
+},
+{
+"ea": "0x9c280",
+"name": "GetDefinstancesListFunction"
+},
+{
+"ea": "0x9d160",
+"name": "UndeffactsCommand"
+},
+{
+"ea": "0x9d1f0",
+"name": "DeffactsModuleFunction"
+},
+{
+"ea": "0x9d210",
+"name": "PPDeffactsCommand"
+},
+{
+"ea": "0x9d250",
+"name": "ListDeffactsCommand"
+},
+{
+"ea": "0x9e8a0",
+"name": "GetDeffunctionModuleCommand"
+},
+{
+"ea": "0x9e8c0",
+"name": "PPDeffunctionCommand"
+},
+{
+"ea": "0x9e8e0",
+"name": "ListDeffunctionsCommand"
+},
+{
+"ea": "0x9e920",
+"name": "GetDeffunctionListFunction"
+},
+{
+"ea": "0xa0c00",
+"name": "CosFunction"
+},
+{
+"ea": "0xa0c40",
+"name": "SinFunction"
+},
+{
+"ea": "0xa0c80",
+"name": "TanFunction"
+},
+{
+"ea": "0xa0d10",
+"name": "SecFunction"
+},
+{
+"ea": "0xa0da0",
+"name": "CscFunction"
+},
+{
+"ea": "0xa0e30",
+"name": "CotFunction"
+},
+{
+"ea": "0xa0ec0",
+"name": "AcosFunction"
+},
+{
+"ea": "0xa0f40",
+"name": "AsinFunction"
+},
+{
+"ea": "0xa0fc0",
+"name": "AtanFunction"
+},
+{
+"ea": "0xa1000",
+"name": "AsecFunction"
+},
+{
+"ea": "0xa1080",
+"name": "AcscFunction"
+},
+{
+"ea": "0xa1100",
+"name": "AcotFunction"
+},
+{
+"ea": "0xa1190",
+"name": "CoshFunction"
+},
+{
+"ea": "0xa11d0",
+"name": "SinhFunction"
+},
+{
+"ea": "0xa1210",
+"name": "TanhFunction"
+},
+{
+"ea": "0xa1250",
+"name": "SechFunction"
+},
+{
+"ea": "0xa12a0",
+"name": "CschFunction"
+},
+{
+"ea": "0xa1370",
+"name": "CothFunction"
+},
+{
+"ea": "0xa1440",
+"name": "AcoshFunction"
+},
+{
+"ea": "0xa14c0",
+"name": "AsinhFunction"
+},
+{
+"ea": "0xa1510",
+"name": "AtanhFunction"
+},
+{
+"ea": "0xa15a0",
+"name": "AsechFunction"
+},
+{
+"ea": "0xa1630",
+"name": "AcschFunction"
+},
+{
+"ea": "0xa16c0",
+"name": "AcothFunction"
+},
+{
+"ea": "0xa1750",
+"name": "ExpFunction"
+},
+{
+"ea": "0xa1790",
+"name": "LogFunction"
+},
+{
+"ea": "0xa1840",
+"name": "Log10Function"
+},
+{
+"ea": "0xa18f0",
+"name": "SqrtFunction"
+},
+{
+"ea": "0xa1960",
+"name": "PowFunction"
+},
+{
+"ea": "0xa1ae0",
+"name": "ModFunction"
+},
+{
+"ea": "0xa1cd0",
+"name": "PiFunction"
+},
+{
+"ea": "0xa1d10",
+"name": "DegRadFunction"
+},
+{
+"ea": "0xa1d60",
+"name": "RadDegFunction"
+},
+{
+"ea": "0xa1db0",
+"name": "DegGradFunction"
+},
+{
+"ea": "0xa1df0",
+"name": "GradDegFunction"
+},
+{
+"ea": "0xa1e30",
+"name": "RoundFunction"
+},
+{
+"ea": "0xa2920",
+"name": "ClearFocusStackCommand"
+},
+{
+"ea": "0xa2a50",
+"name": "RunCommand"
+},
+{
+"ea": "0xa2ab0",
+"name": "HaltCommand"
+},
+{
+"ea": "0xa2be0",
+"name": "SetBreakCommand"
+},
+{
+"ea": "0xa2c50",
+"name": "RemoveBreakCommand"
+},
+{
+"ea": "0xa2d30",
+"name": "ShowBreaksCommand"
+},
+{
+"ea": "0xa2db0",
+"name": "ListFocusStackCommand"
+},
+{
+"ea": "0xa2e30",
+"name": "GetFocusStackFunction"
+},
+{
+"ea": "0xa2f00",
+"name": "PopFocusFunction"
+},
+{
+"ea": "0xa2f40",
+"name": "GetFocusFunction"
+},
+{
+"ea": "0xa2fa0",
+"name": "FocusCommand"
+},
+{
+"ea": "0xa57d0",
+"name": "GetSequenceOperatorRecognition"
+},
+{
+"ea": "0xa5910",
+"name": "registerClipsCallback"
+},
+{
+"ea": "0xa7110",
+"name": "AssertCommand"
+},
+{
+"ea": "0xa7260",
+"name": "RetractCommand"
+},
+{
+"ea": "0xa7380",
+"name": "SetFactDuplicationCommand"
+},
+{
+"ea": "0xa73f0",
+"name": "GetFactDuplicationCommand"
+},
+{
+"ea": "0xa7420",
+"name": "FactIndexFunction"
+},
+{
+"ea": "0xa7490",
+"name": "FactsCommand"
+},
+{
+"ea": "0xa7760",
+"name": "AssertStringFunction"
+},
+{
+"ea": "0xa77e0",
+"name": "SaveFactsCommand"
+},
+{
+"ea": "0xa78e0",
+"name": "LoadFactsCommand"
+},
+{
+"ea": "0xa7f80",
+"name": "FactRelationFunction"
+},
+{
+"ea": "0xa7fe0",
+"name": "FactExistpFunction"
+},
+{
+"ea": "0xa8050",
+"name": "FactSlotValueFunction"
+},
+{
+"ea": "0xa8180",
+"name": "FactSlotNamesFunction"
+},
+{
+"ea": "0xa82a0",
+"name": "GetFactListFunction"
+},
+{
+"ea": "0xaa6b0",
+"name": "addClipsFact"
+},
+{
+"ea": "0xac930",
+"name": "DribbleOnCommand"
+},
+{
+"ea": "0xaca40",
+"name": "DribbleOffCommand"
+},
+{
+"ea": "0xacd80",
+"name": "BatchCommand"
+},
+{
+"ea": "0xad110",
+"name": "BatchStarCommand"
+},
+{
+"ea": "0xad270",
+"name": "LoadCommand"
+},
+{
+"ea": "0xad2f0",
+"name": "LoadStarCommand"
+},
+{
+"ea": "0xad360",
+"name": "SaveCommand"
+},
+{
+"ea": "0xafc10",
+"name": "GetDefgenericModuleCommand"
+},
+{
+"ea": "0xafc30",
+"name": "UndefmethodCommand"
+},
+{
+"ea": "0xb0030",
+"name": "PPDefgenericCommand"
+},
+{
+"ea": "0xb0050",
+"name": "PPDefmethodCommand"
+},
+{
+"ea": "0xb0100",
+"name": "ListDefmethodsCommand"
+},
+{
+"ea": "0xb01a0",
+"name": "ListDefgenericsCommand"
+},
+{
+"ea": "0xb0260",
+"name": "GetDefgenericListFunction"
+},
+{
+"ea": "0xb02b0",
+"name": "GetDefmethodListCommand"
+},
+{
+"ea": "0xb0450",
+"name": "GetMethodRestrictionsCommand"
+},
+{
+"ea": "0xb13a0",
+"name": "CallNextMethod"
+},
+{
+"ea": "0xb1eb0",
+"name": "PreviewGeneric"
+},
+{
+"ea": "0xb4380",
+"name": "UndefglobalCommand"
+},
+{
+"ea": "0xb4410",
+"name": "DefglobalModuleFunction"
+},
+{
+"ea": "0xb4430",
+"name": "PPDefglobalCommand"
+},
+{
+"ea": "0xb4470",
+"name": "ListDefglobalsCommand"
+},
+{
+"ea": "0xb4a20",
+"name": "SetResetGlobalsCommand"
+},
+{
+"ea": "0xb4ac0",
+"name": "GetResetGlobalsCommand"
+},
+{
+"ea": "0xb4b00",
+"name": "ShowDefglobalsCommand"
+},
+{
+"ea": "0xb6220",
+"name": "SetIncrementalResetCommand"
+},
+{
+"ea": "0xb62f0",
+"name": "GetIncrementalResetCommand"
+},
+{
+"ea": "0xb70c0",
+"name": "InstancesCommand"
+},
+{
+"ea": "0xb7250",
+"name": "PPInstanceCommand"
+},
+{
+"ea": "0xb77a0",
+"name": "ClassCommand"
+},
+{
+"ea": "0xb78b0",
+"name": "DeleteInstanceCommand"
+},
+{
+"ea": "0xb78e0",
+"name": "UnmakeInstanceCommand"
+},
+{
+"ea": "0xb79e0",
+"name": "SymbolToInstanceName"
+},
+{
+"ea": "0xb7a30",
+"name": "InstanceNameToSymbol"
+},
+{
+"ea": "0xb7a70",
+"name": "InstanceAddressCommand"
+},
+{
+"ea": "0xb7c20",
+"name": "InstanceNameCommand"
+},
+{
+"ea": "0xb7cc0",
+"name": "InstanceAddressPCommand"
+},
+{
+"ea": "0xb7cf0",
+"name": "InstanceNamePCommand"
+},
+{
+"ea": "0xb7d20",
+"name": "InstancePCommand"
+},
+{
+"ea": "0xb7d60",
+"name": "InstanceExistPCommand"
+},
+{
+"ea": "0xb8160",
+"name": "SaveInstancesCommand"
+},
+{
+"ea": "0xb8180",
+"name": "LoadInstancesCommand"
+},
+{
+"ea": "0xb8200",
+"name": "RestoreInstancesCommand"
+},
+{
+"ea": "0xb8280",
+"name": "BinaryLoadInstancesCommand"
+},
+{
+"ea": "0xb8570",
+"name": "BinarySaveInstancesCommand"
+},
+{
+"ea": "0xbacb0",
+"name": "InitializeInstanceCommand"
+},
+{
+"ea": "0xbad10",
+"name": "MakeInstanceCommand"
+},
+{
+"ea": "0xbc020",
+"name": "ModifyInstance"
+},
+{
+"ea": "0xbc110",
+"name": "MsgModifyInstance"
+},
+{
+"ea": "0xbc200",
+"name": "DuplicateInstance"
+},
+{
+"ea": "0xbc360",
+"name": "MsgDuplicateInstance"
+},
+{
+"ea": "0xbc4c0",
+"name": "InactiveModifyInstance"
+},
+{
+"ea": "0xbc580",
+"name": "DirectDuplicateMsgHandler"
+},
+{
+"ea": "0xbc5a0",
+"name": "MsgDuplicateMsgHandler"
+},
+{
+"ea": "0xbc5e0",
+"name": "MsgModifyMsgHandler"
+},
+{
+"ea": "0xbcef0",
+"name": "MVSlotReplaceCommand"
+},
+{
+"ea": "0xbcfe0",
+"name": "MVSlotInsertCommand"
+},
+{
+"ea": "0xbd0c0",
+"name": "MVSlotDeleteCommand"
+},
+{
+"ea": "0xbd1b0",
+"name": "DirectMVReplaceCommand"
+},
+{
+"ea": "0xbd280",
+"name": "DirectMVInsertCommand"
+},
+{
+"ea": "0xbd350",
+"name": "DirectMVDeleteCommand"
+},
+{
+"ea": "0xbe000",
+"name": "GetQueryInstance"
+},
+{
+"ea": "0xbe060",
+"name": "GetQueryInstanceSlot"
+},
+{
+"ea": "0xbe160",
+"name": "AnyInstances"
+},
+{
+"ea": "0xc0140",
+"name": "PrintoutFunction"
+},
+{
+"ea": "0xc0330",
+"name": "ReadFunction"
+},
+{
+"ea": "0xc05c0",
+"name": "OpenFunction"
+},
+{
+"ea": "0xc0770",
+"name": "CloseFunction"
+},
+{
+"ea": "0xc07f0",
+"name": "RemoveFunction"
+},
+{
+"ea": "0xc0840",
+"name": "RenameFunction"
+},
+{
+"ea": "0xc1050",
+"name": "ReadlineFunction"
+},
+{
+"ea": "0xc17a0",
+"name": "DependenciesCommand"
+},
+{
+"ea": "0xc17e0",
+"name": "DependentsCommand"
+},
+{
+"ea": "0xc27c0",
+"name": "CreateFunction"
+},
+{
+"ea": "0xc27f0",
+"name": "SetgenFunction"
+},
+{
+"ea": "0xc2880",
+"name": "GensymFunction"
+},
+{
+"ea": "0xc28d0",
+"name": "GensymStarFunction"
+},
+{
+"ea": "0xc2930",
+"name": "RandomFunction"
+},
+{
+"ea": "0xc2960",
+"name": "SeedFunction"
+},
+{
+"ea": "0xc29b0",
+"name": "LengthFunction"
+},
+{
+"ea": "0xc2a40",
+"name": "ReleaseMemCommand"
+},
+{
+"ea": "0xc2a80",
+"name": "ConserveMemCommand"
+},
+{
+"ea": "0xc2b10",
+"name": "MemUsedCommand"
+},
+{
+"ea": "0xc2b40",
+"name": "MemRequestsCommand"
+},
+{
+"ea": "0xc2b70",
+"name": "AproposCommand"
+},
+{
+"ea": "0xc2c10",
+"name": "OptionsCommand"
+},
+{
+"ea": "0xc30d0",
+"name": "ExpandFuncCall"
+},
+{
+"ea": "0xc3200",
+"name": "DummyExpandFuncMultifield"
+},
+{
+"ea": "0xc3450",
+"name": "SetSORCommand"
+},
+{
+"ea": "0xc34a0",
+"name": "GetFunctionRestrictions"
+},
+{
+"ea": "0xc4010",
+"name": "PPDefmoduleCommand"
+},
+{
+"ea": "0xc4090",
+"name": "ListDefmodulesCommand"
+},
+{
+"ea": "0xc4f70",
+"name": "GetCurrentModuleCommand"
+},
+{
+"ea": "0xc4fb0",
+"name": "SetCurrentModuleCommand"
+},
+{
+"ea": "0xc67c0",
+"name": "UndefmessageHandlerCommand"
+},
+{
+"ea": "0xc69a0",
+"name": "PPDefmessageHandlerCommand"
+},
+{
+"ea": "0xc6b50",
+"name": "ListDefmessageHandlersCommand"
+},
+{
+"ea": "0xc6ba0",
+"name": "PreviewSendCommand"
+},
+{
+"ea": "0xc87e0",
+"name": "SendCommand"
+},
+{
+"ea": "0xc88a0",
+"name": "NextHandlerAvailable"
+},
+{
+"ea": "0xc8f60",
+"name": "DynamicHandlerGetSlot"
+},
+{
+"ea": "0xc9080",
+"name": "DynamicHandlerPutSlot"
+},
+{
+"ea": "0xcb100",
+"name": "DeleteFunction"
+},
+{
+"ea": "0xcb1a0",
+"name": "MVDeleteFunction"
+},
+{
+"ea": "0xcb220",
+"name": "ReplaceFunction"
+},
+{
+"ea": "0xcb300",
+"name": "MVReplaceFunction"
+},
+{
+"ea": "0xcb3a0",
+"name": "InsertFunction"
+},
+{
+"ea": "0xcb450",
+"name": "ExplodeFunction"
+},
+{
+"ea": "0xcb510",
+"name": "ImplodeFunction"
+},
+{
+"ea": "0xcb7c0",
+"name": "SubseqFunction"
+},
+{
+"ea": "0xcb8e0",
+"name": "MVSubseqFunction"
+},
+{
+"ea": "0xcb9f0",
+"name": "FirstFunction"
+},
+{
+"ea": "0xcba60",
+"name": "RestFunction"
+},
+{
+"ea": "0xcbad0",
+"name": "NthFunction"
+},
+{
+"ea": "0xcbbe0",
+"name": "SubsetpFunction"
+},
+{
+"ea": "0xcbc90",
+"name": "MemberFunction"
+},
+{
+"ea": "0xcc140",
+"name": "MultifieldPrognFunction"
+},
+{
+"ea": "0xcc2f0",
+"name": "GetMvPrognIndex"
+},
+{
+"ea": "0xd47f0",
+"name": "ObjectMatchDelay"
+},
+{
+"ea": "0xd7bd0",
+"name": "WhileFunction"
+},
+{
+"ea": "0xd7ce0",
+"name": "LoopForCountFunction"
+},
+{
+"ea": "0xd7ec0",
+"name": "GetLoopCount"
+},
+{
+"ea": "0xd7ef0",
+"name": "IfFunction"
+},
+{
+"ea": "0xd7fa0",
+"name": "BindFunction"
+},
+{
+"ea": "0xd8190",
+"name": "PrognFunction"
+},
+{
+"ea": "0xd8200",
+"name": "ReturnFunction"
+},
+{
+"ea": "0xd8240",
+"name": "BreakFunction"
+},
+{
+"ea": "0xd8260",
+"name": "SwitchFunction"
+},
+{
+"ea": "0xd96f0",
+"name": "EqFunction"
+},
+{
+"ea": "0xd9780",
+"name": "NeqFunction"
+},
+{
+"ea": "0xd9810",
+"name": "StringpFunction"
+},
+{
+"ea": "0xd9860",
+"name": "SymbolpFunction"
+},
+{
+"ea": "0xd98b0",
+"name": "LexemepFunction"
+},
+{
+"ea": "0xd9900",
+"name": "NumberpFunction"
+},
+{
+"ea": "0xd9950",
+"name": "FloatpFunction"
+},
+{
+"ea": "0xd99a0",
+"name": "IntegerpFunction"
+},
+{
+"ea": "0xd99f0",
+"name": "MultifieldpFunction"
+},
+{
+"ea": "0xd9a40",
+"name": "PointerpFunction"
+},
+{
+"ea": "0xd9a90",
+"name": "NotFunction"
+},
+{
+"ea": "0xd9ae0",
+"name": "AndFunction"
+},
+{
+"ea": "0xd9b50",
+"name": "OrFunction"
+},
+{
+"ea": "0xd9bb0",
+"name": "LessThanOrEqualFunction"
+},
+{
+"ea": "0xd9cb0",
+"name": "GreaterThanOrEqualFunction"
+},
+{
+"ea": "0xd9db0",
+"name": "LessThanFunction"
+},
+{
+"ea": "0xd9eb0",
+"name": "GreaterThanFunction"
+},
+{
+"ea": "0xd9fb0",
+"name": "NumericEqualFunction"
+},
+{
+"ea": "0xda0a0",
+"name": "NumericNotEqualFunction"
+},
+{
+"ea": "0xda190",
+"name": "OddpFunction"
+},
+{
+"ea": "0xda200",
+"name": "EvenpFunction"
+},
+{
+"ea": "0xdcf30",
+"name": "ExitCommand"
+},
+{
+"ea": "0xde940",
+"name": "UndefruleCommand"
+},
+{
+"ea": "0xde980",
+"name": "GetDefruleListFunction"
+},
+{
+"ea": "0xde9d0",
+"name": "DefruleModuleFunction"
+},
+{
+"ea": "0xde9f0",
+"name": "PPDefruleCommand"
+},
+{
+"ea": "0xdea30",
+"name": "ListDefrulesCommand"
+},
+{
+"ea": "0xdf6b0",
+"name": "MatchesCommand"
+},
+{
+"ea": "0xe2d60",
+"name": "StrCatFunction"
+},
+{
+"ea": "0xe2d80",
+"name": "SymCatFunction"
+},
+{
+"ea": "0xe2f40",
+"name": "StrLengthFunction"
+},
+{
+"ea": "0xe2fa0",
+"name": "UpcaseFunction"
+},
+{
+"ea": "0xe30b0",
+"name": "LowcaseFunction"
+},
+{
+"ea": "0xe31c0",
+"name": "StrCompareFunction"
+},
+{
+"ea": "0xe32c0",
+"name": "SubStringFunction"
+},
+{
+"ea": "0xe3480",
+"name": "StrIndexFunction"
+},
+{
+"ea": "0xe3580",
+"name": "EvalFunction"
+},
+{
+"ea": "0xe3820",
+"name": "BuildFunction"
+},
+{
+"ea": "0xe68f0",
+"name": "initAllClipsCallbacks"
+},
+{
+"ea": "0xe6ba0",
+"name": "gentime"
+},
+{
+"ea": "0xe6c10",
+"name": "gensystem"
+},
+{
+"ea": "0xe7d20",
+"name": "HelpPathFunction"
+},
+{
+"ea": "0xe7e50",
+"name": "FetchCommand"
+},
+{
+"ea": "0xe8000",
+"name": "TossCommand"
+},
+{
+"ea": "0xe8f40",
+"name": "UndeftemplateCommand"
+},
+{
+"ea": "0xe8fd0",
+"name": "DeftemplateModuleFunction"
+},
+{
+"ea": "0xe8ff0",
+"name": "PPDeftemplateCommand"
+},
+{
+"ea": "0xe9030",
+"name": "ListDeftemplatesCommand"
+},
+{
+"ea": "0xe9b20",
+"name": "ModifyCommand"
+},
+{
+"ea": "0xe9b40",
+"name": "DuplicateCommand"
+},
+{
+"ea": "0xec360",
+"name": "WatchCommand"
+},
+{
+"ea": "0xec440",
+"name": "UnwatchCommand"
+},
+{
+"ea": "0xec510",
+"name": "ListWatchItemsCommand"
+}
+]

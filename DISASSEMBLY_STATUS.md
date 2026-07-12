@@ -29,15 +29,33 @@ stack manipulation / non-returning code / mis-identified function boundary);
 "call analysis failed" is an indirect-call/jump-table it could not resolve
 (`0xFE03E`, adjacent, is a bare `JUMPOUT` jump-table dispatch — a clue).
 
-**These 5 cannot be fixed from `clash.c` alone.** Resolving them requires the
-original binary + IDA/Hex-Rays: fix the stack-pointer delta or function bounds,
-define the jump table, and re-decompile. They are inherent decompiler limits,
-not missing analysis.
+**Update (2026-07-12): these are now being fixed at the source.** With the
+original `clash.i64` + IDA Pro 9.0 in hand, a validated regeneration path exists
+(see `tools/dos/README.md`): IDA-9 `decompile_many` reproduces the exact marker
+format and all 4,219 addresses (zero set difference), and **Hex-Rays 9.0 already
+resolves the 4 "positive sp value" failures**. Of the residual: the 3 that show
+up as "call analysis failed" all trace to one callee (`sub_E1E30`) whose
+prototype needs setting, leaving a **single genuinely-hard residual** — `0xFDF26`,
+a coroutine/jump-table dispatcher (`jmp cs:off_FDF2E[ebx*4]` + computed
+`jmp [ebp+76h]` returns) that even Hex-Rays 9.0 declines. Expected post-regen
+decompilation coverage: **≥ 4,218 / 4,219 (99.98%)**.
 
-## 2. Naming / analysis: 470 / 4219 named (11.1%)
+## 2. Naming / analysis: 470 / 4219 named (11.1%), +130 CLIPS anchors staged
 
-Up from 48 at the previous commit — **414 names recovered this session**, all
-derived from evidence embedded in the binary (no guessing):
+An **IDA-9 regeneration + CLIPS cross-reference campaign** is now underway to lift
+this substantially (see `tools/dos/README.md`, `docs/DOS_CLIPS_PIN.md`). The
+embedded engine is pinned to **CLIPS 6.2x** (98.5% error-id match to 6.24 source),
+and **130 CLIPS functions are already named with high confidence** from their
+unique `PrintErrorID(module,id)` fingerprint (`tools/dos/dos_clips_anchors.json`).
+These, the 470 existing names, and the `sub_E1E30` decompile fix will be seeded
+into the database and applied via a single regeneration. Full-campaign target
+(sequence-alignment + call-graph over the ~2,015 CLIPS functions, adversarially
+verified): **roughly 35–45% naming coverage.**
+
+### The 470 already in `clash.c`
+
+Up from 48 two commits earlier — **414 names recovered**, all derived from
+evidence embedded in the binary (no guessing):
 
 | Method | Names | Confidence |
 |---|---:|---|
