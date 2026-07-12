@@ -35,6 +35,8 @@ visual-failure-montage.*
 # Runtime logs, crash dumps, profiling output, and debugger scratch.
 *.log
 *.jsonl
+__pycache__/
+*.pyc
 *.core
 core
 core.*

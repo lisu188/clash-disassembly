@@ -2860,3 +2860,10 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
 - **Tooling added** (reusable for future placeholder passes):
   `tools/sub_inventory.py`, `tools/make_sub_batches.py`,
   `tools/apply_sub_renames.py`, `tools/gen_sub_rename_index.py`.
+
+## 2026-06-15 - Documentation Tree Consolidation Note
+
+- No semantic renames were made in this batch.
+- Historical rename/progress notes moved under `docs/archive/`, current policy docs moved under `docs/`, and focused probe notes moved under `docs/probes/`.
+- The change is repository navigation hygiene only and does not promote runtime, structure, unit, or route semantics.
+
