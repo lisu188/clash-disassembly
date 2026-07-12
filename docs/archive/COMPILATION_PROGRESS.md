@@ -8891,3 +8891,51 @@ Additional harness notes:
   - the world-return branch still needs stable castle reentry proof from the
     returned world state; current branch variance prevented validating that path
     in this batch.
+
+## Batch 258 - Recovered 100 Hz performance timer and wait deadlines (2026-07-10)
+
+- Current frontier: authentic runtime timing fidelity is restored; campaign
+  completion remains on mission `04` after the retained July second-assault
+  diagnostic returned to the world map with three castle defenders remaining.
+- Blockers removed:
+  - restored `Timer_InitPerfCounterFrequency` from the original startup
+    sequence immediately after `CSS_SetDeviceSearch`.
+  - recovered the assembly-backed divide-by-100 operation, converting SDL's
+    1000000 Hz microsecond performance counter into the original 100 Hz
+    centisecond timebase instead of clobbering `Frequency` to zero.
+  - removed the undefined decompiler temporaries from
+    `UI_WaitForKeyOrTimeout` and `UI_WaitForAnyKeyOrClick`; both helpers now
+    preserve the requested delay/deadline demonstrated by the assembly.
+  - increased the first-mission attack probe's battle-prompt wait to 45 seconds
+    because authentic movement/animation timing makes the 13-tile approach
+    legitimately exceed the former 10-second harness assumption.
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_bootstrap -j2` passed.
+  - the optional coverage target built, and the new timer assertions completed
+    without a timer-test failure; the experimental full coverage binary still
+    reports its pre-existing unrelated best-effort failures/crashes.
+  - `ctest --test-dir build --output-on-failure` completed with zero failures:
+    nine tests passed and eight opt-in probes skipped by their normal guards.
+  - the real-input first-mission attack probe passed in 56.51 seconds under the
+    restored timebase.
+- Highest authentic runtime milestone reached:
+  - startup, visible main-menu Exit, first-mission playability/attack,
+    castle-economy, save-format, and direct-route smokes all pass using the
+    recovered 100 Hz timing domain.
+  - the strongest retained mission `04` diagnostic remains the July 5 failed
+    objective probe: stable world-return/reentry, a second castle assault,
+    defender cleanup through occupied tile `14,1`, an attack on `14,2`, and a
+    return with three defenders still present. This is informative exploratory
+    evidence, not a promoted complete route.
+- Renamed functions/helpers/globals/tables/structs:
+  - no symbols were renamed. Evidence and behavior were strengthened for
+    `Timer_InitPerfCounterFrequency`, `Time_Now`,
+    `UI_WaitForKeyOrTimeout`, `UI_WaitForAnyKeyOrClick`, and the
+    `CentisecondPerformanceTimer` runtime mechanism.
+- Ambiguous candidates deferred:
+  - `CSS_Init` and its three-entry legacy audio/device table remain
+    quarantined; restoring the timer does not claim that wider startup family.
+  - mission `04` still needs a further authentic reentry/assault, removal of
+    the final three defenders, `Unit_CaptureBuilding`, and natural
+    `mission_objective_complete`.
+  - no unit roster/stat confidence changed in this batch.

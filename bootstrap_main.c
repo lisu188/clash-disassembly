@@ -398,6 +398,7 @@ static void Bootstrap_RunRecoveredRuntimeAndRenderInit(char command_mode, LPSTR 
   }
 
   CSS_SetDeviceSearch(device_search_mode);
+  Timer_InitPerfCounterFrequency();
   logEnabled = 1;
   if ( !dword_54DBA8 )
     Mem_InitReserveBlock(0, 0);

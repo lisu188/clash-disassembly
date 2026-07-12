@@ -2070,19 +2070,85 @@
     "confidence": "high",
     "description": "Individual DLX sprite records store their compressed pixel payload pointer as the original 32-bit value at byte offset +0x0A, after the width/height/compression header words. The 64-bit recovery must read this field as a 32-bit pointer-sized payload address instead of a native pointer.",
     "participants": [
-      "sub_4064A0",
-      "sub_406540",
-      "sub_4065D0",
-      "sub_406650",
-      "sub_4066C0",
+      "DLXSprite_RemapPalette",
+      "UnitBattle_ScanSpriteMinOpaqueRunLength",
+      "UnitBattle_ScanSpriteFirstOpaqueRunLength",
+      "UnitBattle_CountLeadingBlankSpriteRows",
+      "UnitBattle_CountTrailingBlankSpriteRows",
       "DLX_GetSpriteForChar",
       "UnitBattle_PlayAttackAnimation"
     ],
     "evidence": [
-      "The original assembly for sub_406540, sub_4065D0, sub_406650, and sub_4066C0 reads the payload with `mov eax, [eax+0Ah]` / `mov ecx, [eax+0Ah]`, proving a 32-bit field at byte offset +0x0A.",
-      "The mission-04 gate-attack probe previously crashed in sub_406540 with a plausible sprite header at the record base but an invalid 64-bit payload pointer assembled from adjacent header bytes.",
+      "The original assembly at 0x406540, 0x4065D0, 0x406650, and 0x4066C0 reads the payload with `mov eax, [eax+0Ah]` / `mov ecx, [eax+0Ah]`, proving a 32-bit field at byte offset +0x0A.",
+      "The mission-04 gate-attack probe previously crashed in UnitBattle_ScanSpriteMinOpaqueRunLength with a plausible sprite header at the record base but an invalid 64-bit payload pointer assembled from adjacent header bytes.",
       "After reading the +0x0A payload field as a 32-bit value in the four extent/projection helpers, the same mission-04 route completed the gate attack and logged battle_wall_attack_return.",
-      "Durable runtime proof for this repair is stored under artifacts/campaign-routes/mission-04/20260615T101237Z-23713/."
+      "The route is reproducible through tests/first_campaign_arc_routes/mission_04_post_breach_probe.script and the mission-04 route regression."
+    ]
+  },
+  {
+    "name": "CentisecondPerformanceTimer",
+    "kind": "runtime_mechanism",
+    "area": "Startup / UI timing",
+    "confidence": "high",
+    "description": "The recovered runtime converts the host performance-counter frequency into a 100 Hz denominator. Time_Now therefore returns centisecond ticks used by widget animations, mission information screens, and key-or-timeout waits.",
+    "participants": [
+      "Bootstrap_RunRecoveredRuntimeAndRenderInit",
+      "Timer_InitPerfCounterFrequency",
+      "Time_Now",
+      "UI_WaitForKeyOrTimeout",
+      "UI_WaitForAnyKeyOrClick"
+    ],
+    "evidence": [
+      "The original startup sequence calls Timer_InitPerfCounterFrequency immediately after CSS_SetDeviceSearch and before CSS_Init.",
+      "The assembly for the timer initializer loads divisor 100 into EBX before __I8D and stores the quotient back to Frequency, proving the 100 Hz timebase.",
+      "The SDL compatibility layer reports a 1000000 Hz microsecond counter, so the recovered denominator is 10000 host ticks per centisecond.",
+      "The assembly for the two UI wait helpers preserves the requested delay and absolute deadline in registers; the recovered C now uses those values instead of undefined decompiler temporaries.",
+      "The default 17-test SDL suite passes with the restored timebase, including real-input main-menu, first-mission attack, and castle-economy probes."
+    ]
+  },
+  {
+    "name": "Mission04CastleCaptureObjectivePath",
+    "kind": "runtime_mechanism",
+    "area": "Building combat / campaign objectives",
+    "confidence": "high",
+    "description": "Mission 04 completes when Hopenberg's building owner becomes player 0. Unit_AttackBuilding transfers an empty-garrison castle through Unit_CaptureBuilding after tactical combat, and the next human world-loop objective check observes that owner transition.",
+    "participants": [
+      "Unit_AttackBuilding",
+      "Battle_RunTacticalCombat",
+      "Building_CountGarrison",
+      "Unit_CaptureBuilding",
+      "Mission_CheckObjectiveComplete",
+      "WorldMap_RunHumanTurnLoop"
+    ],
+    "evidence": [
+      "The mission-04 branch of Mission_CheckObjectiveComplete returns true only when the target building owner byte is 0; otherwise it traces the fixed Hopenberg tile (56,69) and current owner.",
+      "After Battle_RunTacticalCombat returns, Unit_AttackBuilding calls Unit_CaptureBuilding when the garrison count is zero and the attacking stack still has normal combat units.",
+      "The complete route records successive strategic returns with garrison counts 6, 3, and 0, then mission_objective_complete selected=-1 a=4 b=0 c=0 without modifying objective state.",
+      "Durable runtime proof is stored at artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt.",
+      "The final retained objective checkpoint has 294268 nonblack pixels and 204 colors and differs from the last tactical checkpoint by mean absolute pixel delta 68.345217."
+    ]
+  },
+  {
+    "name": "Mission05LanguageDependentEliminationObjective",
+    "kind": "runtime_mechanism",
+    "area": "Campaign objectives / defeat conditions",
+    "confidence": "high",
+    "description": "Mission 05 uses a language-dependent conquest target. With a nonzero language index, objective completion requires eliminating every building and world stack owned by player 3 (Agordeh); attacking players 1 or 2 instead raises the mission-local failure flag. The zero-language branch instead requires eliminating all player-1 and player-2 buildings and stacks.",
+    "participants": [
+      "Scenario_LoadMissionByIndex",
+      "Mission_CheckObjectiveComplete",
+      "Mission_MarkObjective05CompleteOnAttack",
+      "UI_CheckDialogAccepted",
+      "Unit_Attack",
+      "Unit_AttackBuilding"
+    ],
+    "evidence": [
+      "Scenario_LoadMissionByIndex names player 3 Agordeh in every language branch and assigns that player to the mission-05 rules fact.",
+      "For nonzero g_LanguageIndex, Mission_CheckObjectiveComplete first scans all live buildings and then all live stacks for owner 3, returning true only when neither scan finds a survivor.",
+      "For zero g_LanguageIndex, the same function scans for surviving owners 1 or 2 instead.",
+      "Mission_MarkObjective05CompleteOnAttack sets the mission-local byte when player 0 attacks player 1 or 2 in the nonzero-language branch; UI_CheckDialogAccepted reads that byte as the mission-ending failure condition before the objective-complete check.",
+      "The retained direct mission-05 probe takes the nonzero-language path and traces mission_objective_blocked selected=5 a=4 b=3 c=0, identifying player-3 building index 4 as the first current blocker.",
+      "Scenario setup creates one player-3 castle and six player-3 world stacks, including a remote stack at (87,66)."
     ]
   }
 ]

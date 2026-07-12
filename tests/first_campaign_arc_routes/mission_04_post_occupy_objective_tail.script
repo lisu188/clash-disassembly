@@ -304,14 +304,17 @@ battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-05
 wait 1.0
 mark_log_count mission04_14_2_ap_world_return unit_attack_building_battle_return selected=0
 mark_log_count mission04_14_2_ap_tactical_return battle_turn_loop_after_input_widgets selected=0 a=0 b=1
+mark_log_count mission04_14_2_ap_action_exit battle_action_loop_exit_requested selected=0
 battle_click 510 16 4 1.0 end-battle-turn-after-14-2-ap-exhausted
-wait_log 30 battle_action_loop_exit_requested selected=0
+wait_log_marked 30 mission04_14_2_ap_action_exit
 wait_log_marked_any 120 mission04_14_2_ap_world_return || mission04_14_2_ap_tactical_return
 if_last_wait_log_mark mission04_14_2_ap_world_return
 wait 2.0
 screenshot mission04-14-2-ap-world-return
 nonblank mission04-14-2-ap-world-return
-stop mission04-14-2-ap-world-return
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_SECOND_ASSAULT_WORLD_RETURN 1 mission04-14-2-ap-world-return
+include_script tests/first_campaign_arc_routes/mission_04_third_assault_objective_tail.script
+stop mission04-third-assault-objective-complete
 endif
 if_last_wait_log_mark mission04_14_2_ap_tactical_return
 battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-06-after-turn

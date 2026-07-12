@@ -123,14 +123,10 @@ Artifact size controls:
 
 Current repair state:
 
-- Missions `00..03` are currently marked `complete` by their route env files.
-- Mission `04` remains `partial`: the direct route breaches the castle gate,
-  clears chained courtyard defenders through the first assault's `15,4`/`15,5`
-  boundary, hands off to defender AI, and has quarantined tactical-branch
-  post-AI proof through defender `15,5` defeat plus selected unit `2` occupying
-  the cleared `15,5` battle tile, then ending that tactical turn and returning
-  to tactical control after defender AI, then attacking defender `14,5`.
-  Objective completion, castle capture, and remaining defender cleanup still
-  need proof.
+- Missions `00..04` are currently marked `complete` by their route env files.
+- Mission `04` has a complete direct-boot route through three authentic
+  Hopenberg assaults, empty-garrison capture, natural objective completion, and
+  a fresh nonblank final checkpoint. Full Campaign-menu auto-advance remains
+  an arc-level acceptance gate.
 - Missions `05..19` are partial direct-load evidence probes until authentic
   completion routes are repaired.

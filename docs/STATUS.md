@@ -1,16 +1,17 @@
 # Current Status
 
-Last consolidated: 2026-06-16.
+Last consolidated: 2026-07-12.
 
 ## Validated State
 
 - `clash95_bootstrap` is the current SDL-backed executable target.
+- Startup now initializes the assembly-backed 100 Hz performance-counter
+  timebase; UI animation and timeout helpers run in recovered centiseconds.
 - Default CTest smoke routes cover menu liveness, direct route startup, save DAT
   format checks, and opt-in real-input probes.
 - Campaign route env files are the canonical machine-readable status source.
   `tests/summarize_campaign_arc_routes.sh` currently reports:
-  - missions `00..03`: `complete`
-  - mission `04`: `partial`
+  - missions `00..04`: `complete`
   - missions `05..19`: `partial` direct-load evidence probes
 
 ## Highest Runtime Milestone
@@ -21,22 +22,17 @@ route. Each map reaches the bootstrap load marker, enters `PlayGame`, remains
 live through the 5-second probe window, and captures nonblank SDL frame
 evidence. Map ID `0` also passed a 30-second no-trace `multiplayer-map` soak.
 
-The validated campaign-route frontier is mission `04`: the canonical regression
-route reaches the castle tactical battle, breaches the gate with authentic wall
-attacks, moves inside, defeats chained courtyard defenders through the first
-assault's `15,4`/`15,5` boundary, and hands off to defender AI after authentic
-tactical input. Quarantined opt-in continuations have now observed both
-post-AI outcomes: a recovered world-return branch via
-`unit_attack_building_battle_return selected=0 a=1 b=2 c=9`, and an earlier
-attacker tactical-control branch at selected unit `2`. The tactical-control
-branch now proves fresh counted authentic post-AI attacks through defender
-`15,5` defeat after the branch marker, then moves selected unit `2` into the
-cleared `15,5` battle tile, and ends that tactical turn through recovered
-input. The post-occupy AI handoff returns to tactical control without crashing.
-The next focused continuation also attacks defender `14,5` and logs
-`battle_attack_after_exchange selected=2 a=12 b=100 c=43`. Remaining defender
-cleanup, castle capture, objective completion, and full mission promotion are
-still unproven.
+The canonical campaign-route frontier is now a complete direct-boot mission
+`04` route. It breaches Hopenberg, clears the castle over three authentic
+tactical assaults, and records successive battle returns with six, three, and
+zero defenders. The empty-garrison return enters `Unit_CaptureBuilding`; the
+world loop then logs `mission_objective_complete selected=-1 a=4 b=0 c=0`.
+The definitive replay routed 347 inputs, retained all 61 checkpoints, and
+recorded one objective completion. Its final objective checkpoint is current,
+nonblank (`294268` nonblack pixels, `204` colors), and differs from the last
+tactical checkpoint by a mean absolute pixel delta of `68.345217`. Durable
+evidence is at
+`artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt`.
 
 Earlier validated milestones include first-mission completion, mission `01`
 shrine completion, mission `02` Treg Rock capture, and mission `03` survival
@@ -82,20 +78,23 @@ a real install (not just the directory) is required.
 
 ## Active Blocker
 
-Mission `04` still needs branch-specific continuation after the first-assault
-defender-AI handoff. The tactical branch can now defeat defender `15,5`, occupy
-the cleared tile, end the tactical turn, and attack defender `14,5`; the next
-proof must continue that defender cleanup through capture. The world-return
-branch still needs a stable castle reentry proof from the returned world state.
-Both paths must continue without mutating objective state or skipping recovered
-mission logic.
+Mission `05` is the first incomplete campaign route. In the active
+nonzero-language branch, `Mission_CheckObjectiveComplete` requires every
+building and stack owned by player `3` (Agordeh) to be eliminated. The retained
+direct-load trace stops on player-3 building index `4`; scenario setup also
+creates six player-3 stacks, including one remote stack at `(87,66)`.
+`UI_CheckDialogAccepted` separately treats a player-0 attack on players `1`
+or `2` as mission failure. No authentic sequence through that conquest
+objective has yet been recovered, and full-menu campaign auto-advance across
+the completed route gates also remains unproven.
 
 ## Next Target
 
-Short-term focus is expanding multiplayer-map probe coverage with opt-in
-visual/liveness evidence beyond direct all-AI map loading, toward human-usable
-multiplayer setup/input proof. The campaign repair target remains mission `04`
-route fidelity through natural castle capture and objective completion.
+Trace mission `05` through several authentic turn advances to measure allied
+AI progress against player `3`, then choose the smallest route that removes
+the surviving Agordeh castle/stacks without striking players `1` or `2`.
+The next broader startup debt remains `CSS_Init` and its quarantined legacy
+audio/device table.
 
 ## Evidence Trail
 
@@ -105,6 +104,41 @@ route fidelity through natural castle capture and objective completion.
 - Route/probe notes: `docs/probes/`
 
 ## Latest Validation
+
+2026-07-12 mission-04 completion validation:
+
+- two complete direct route replays reached
+  `unit_attack_building_battle_return selected=0 a=1 b=0 c=0` followed by
+  `mission_objective_complete selected=-1 a=4 b=0 c=0`.
+- the definitive capture-corrected replay completed in 1103.9 seconds with 347
+  routed inputs, one objective completion, 61 retained checkpoints, and a
+  nonblank current objective frame.
+- the route runner now orders presented frames by modification time across
+  battle-entry filename resets, resolves dynamic tactical selection from the
+  clicked unit's occupant index, and waits for fresh attack completion before
+  retrying bounded attacks.
+- `bash tests/summarize_campaign_arc_routes.sh` reports
+  `complete_count=5`, `partial_count=15`, and no unknown/missing routes.
+- `bash -n` for the touched runner/route scripts and `git diff --check`
+  passed.
+
+2026-07-10 timing-recovery validation:
+
+- `cmake --build build --target clash95_bootstrap -j2`: passed.
+- `ctest --test-dir build --output-on-failure`: completed with zero failures;
+  nine tests passed and eight guarded opt-in probes skipped normally.
+- `clash95_main_menu_exit_probe`: passed with real input and nonblank frame
+  validation under the restored 100 Hz timebase.
+- `clash95_first_mission_attack_probe`: passed in 56.51 seconds after its
+  battle-prompt harness timeout was recalibrated for authentic movement timing.
+- The optional coverage target built, and the new timer assertions did not
+  fail. Its full best-effort executable continues to report unrelated known
+  decompiler-artifact failures/crashes and is not a clean CTest gate.
+- The retained July mission-04 diagnostic remains partial: zero objective
+  completions, eight blocker observations, and three defenders at the final
+  battle return.
+
+## Previous Consolidated Validation
 
 2026-06-16 focused validation:
 
@@ -209,39 +243,21 @@ route fidelity through natural castle capture and objective completion.
   attacks defender `14,5`, logs
   `battle_attack_after_exchange selected=2 a=12 b=100 c=43`, and retains
   `checkpoint-mission04-slot2-post-occupy-attack-defender-14-5.bmp`.
-- `bash tests/summarize_campaign_arc_routes.sh`: `complete_count=4`,
-  `partial_count=16`, `incomplete_count=0`, `missing_count=0`.
+- `bash tests/summarize_campaign_arc_routes.sh`: `complete_count=5`,
+  `partial_count=15`, `incomplete_count=0`, `missing_count=0`.
 
 ## Carried-Forward Focused Route Evidence
 
-The latest focused mission `04` route regression evidence remains:
+The definitive mission `04` route evidence is
+`artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt`.
+It records tactical garrison reductions `12 -> 6 -> 3 -> 0`, the final
+empty-garrison strategic return, natural mission objective completion, and
+current/nonblank frame evidence after that transition. The preceding
+`20260711T195933Z-178905` replay independently proves the same gameplay and
+objective sequence; its final checkpoint is intentionally not the visual proof
+because that run exhausted the denser frame-sampling cap before the last
+transition.
 
-- `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1
-  CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_FRAMES=4
-  CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_CHECKPOINTS=12
-  CLASH95_CAMPAIGN_ROUTE_MAX_LOG_BYTES=2000000
-  tests/run_campaign_route_regression.sh build/bin/clash95_bootstrap 04
-  tests/first_campaign_arc_routes/mission_04.env`: passed for
-  `artifacts/campaign-routes/mission-04/20260616T154441Z-570279`, with 240
-  captured frames capped to 4 retained frames, 17 checkpoint frames capped to 12
-  retained checkpoints, capped retained logs/frames, and
-  `battle_ai_turn_enter selected=1`.
-
-The latest quarantined post-AI tactical continuation evidence is
-`artifacts/campaign-routes/mission-04/20260616T203419Z-692412/summary.txt`.
-It observes the tactical-control branch, executes fresh counted authentic
-attacks through defender `15,5` defeat, moves selected unit `2` into the cleared
-`15,5` battle tile, captures hover diagnostics, ends the tactical turn, and
-attacks defender `14,5`. Earlier post-occupy end-turn evidence remains at
-`artifacts/campaign-routes/mission-04/20260616T202028Z-688394/summary.txt`;
-earlier occupy-only evidence remains at
-`artifacts/campaign-routes/mission-04/20260616T165526Z-619297/summary.txt`;
-earlier defeat-only evidence remains at
-`artifacts/campaign-routes/mission-04/20260616T161142Z-587899/summary.txt`.
-The latest world-return branch observation remains
-`artifacts/campaign-routes/mission-04/20260616T142830Z-516601/summary.txt`.
-It observes `battle_ai_turn_exit selected=1 a=1 b=0` followed by
-`unit_attack_building_battle_return selected=0 a=1 b=2 c=9` and retains a
-nonblank `checkpoint-mission04-post-ai-branch-observed.bmp` checkpoint. Earlier
-evidence at `artifacts/campaign-routes/mission-04/20260616T135453Z-487823/`
-observed the alternate attacker tactical-control branch.
+Mission `05` now owns the campaign-route frontier. Its canonical env remains a
+partial direct-load blocker probe pending objective and actionable-state
+recovery.

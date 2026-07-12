@@ -2872,3 +2872,45 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
 - **Tooling added** (reusable for future placeholder passes):
   `tools/sub_inventory.py`, `tools/make_sub_batches.py`,
   `tools/apply_sub_renames.py`, `tools/gen_sub_rename_index.py`.
+
+### 2026-07-10 - Performance-counter timebase and UI deadline recovery
+
+- `Timer_InitPerfCounterFrequency`: corrected the decompiler's
+  `_I8D(0)` scar. Assembly loads divisor `100` before `__I8D` and stores the
+  quotient back to `Frequency`, establishing the original centisecond
+  timebase.
+- `Bootstrap_RunRecoveredRuntimeAndRenderInit`: restored the original timer
+  initialization call immediately after `CSS_SetDeviceSearch`.
+- `UI_WaitForKeyOrTimeout` and `UI_WaitForAnyKeyOrClick`: replaced undefined
+  delay/deadline temporaries with the explicit values preserved in EDX/ECX by
+  the original assembly.
+- No symbol names changed in this batch. `CentisecondPerformanceTimer` was
+  added to `RECOVERED_STRUCTURES.json` as a high-confidence runtime mechanism.
+- Runtime evidence: the default 17-test SDL suite passes under the restored
+  100 Hz timing domain; the first-mission attack harness now allows the
+  authentic long approach animation to reach its battle prompt.
+
+### 2026-07-12 - Mission-04 castle capture and objective-route recovery
+
+- No recovered C symbols were renamed in this batch.
+- `PlatformMaybeDumpPresentedFrame` now supports a configurable presented-frame
+  stride and six-digit frame indices, preserving bounded visual evidence during
+  long tactical replays.
+- The generic route harness now orders frame files by modification time across
+  battle-entry counter resets, uses adaptive authentic key pulses to reach a
+  requested world viewport, resolves the selected tactical unit from the fresh
+  clicked-tile occupant trace, and substitutes that runtime index into later
+  exact markers.
+- Bounded repeated attacks now wait for a fresh per-exchange completion marker
+  before deciding whether another click is needed, preventing queued lethal
+  overshoot.
+- Runtime evidence at
+  `artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt`
+  records three strategic returns with garrison counts `6`, `3`, and `0`,
+  followed by `mission_objective_complete` and a fresh nonblank final frame.
+- `Mission04CastleCaptureObjectivePath` was added to
+  `RECOVERED_STRUCTURES.json` as a high-confidence runtime mechanism.
+- The next-frontier audit added `Mission05LanguageDependentEliminationObjective`
+  to `RECOVERED_STRUCTURES.json`: the active language branch must remove all
+  player-3 buildings/stacks, while attacking players 1 or 2 raises its failure
+  flag.

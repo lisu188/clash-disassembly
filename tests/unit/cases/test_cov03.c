@@ -361,16 +361,11 @@ TEST(cov03_timer, perf_counter_and_time_now) {
   LARGE_INTEGER saved_frequency = Frequency;
 
   TOUCH(Timer_InitPerfCounterFrequency());
-  /* Frequency.QuadPart == 0 branch (the real, always-reachable case in
-   * this harness: Timer_InitPerfCounterFrequency's own recovered body
-   * clobbers the real QueryPerformanceFrequency result back to 0 via an
-   * "_I8D(0)" stub -> LowPart). */
+  CHECK_EQ(Frequency.QuadPart, 10000);
   TOUCH(Time_Now(0, 0));
 
-  /* Force the "Frequency.QuadPart != 0" scaled-division branch directly;
-   * Frequency is a plain global the recovered code never otherwise lets
-   * us set to non-zero from the outside. */
-  Frequency.QuadPart = 1000000;
+  /* Keep explicit coverage for Time_Now's pre-initialization fallback. */
+  Frequency.QuadPart = 0;
   TOUCH(Time_Now(0, 0));
   Frequency = saved_frequency;
 
@@ -383,18 +378,18 @@ static int cov03_busywait_calls = 0;
 static void cov03_busywait_cb(void) { ++cov03_busywait_calls; }
 
 TEST(cov03_timer, busy_wait_with_callback) {
-  /* a2 decoded as a callback pointer: exercise the "callback truthy"
-   * branch with a real no-op function. Time_Now() runs off raw
-   * microseconds here (Frequency.QuadPart == 0 in this harness), so a
-   * ~3ms deadline delta forces the loop to actually spin and invoke the
-   * callback at least once while still finishing near-instantly. */
-  TOUCH(Timer_BusyWaitWithCallback(3000, (int)(uintptr_t)cov03_busywait_cb, 0));
+  LARGE_INTEGER saved_frequency = Frequency;
+
+  Timer_InitPerfCounterFrequency();
+  /* Two recovered ticks are about 20 ms in the 100 Hz timer domain. */
+  TOUCH(Timer_BusyWaitWithCallback(2, (int)(uintptr_t)cov03_busywait_cb, 0));
   CHECK(cov03_busywait_calls > 0);
+  Frequency = saved_frequency;
 }
 
 /* Castle_RequestManagementScreenExit is intentionally NOT exercised here:
  * it unconditionally calls UIWidget_PlayPressedReleaseAnimationWithDelay,
- * which busy-waits ~20 real seconds via DD_Pump/Time_Now and drives the
+ * which busy-waits ~200 ms via DD_Pump/Time_Now and drives the
  * full SDL/X11 render-pump + vtable-method-invoke pipeline on g_RenderState.
  * That is both far too slow for a unit test and relies on rendering
  * subsystem state this harness never initializes, so it is left uncovered

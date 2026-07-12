@@ -36350,14 +36350,10 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
 //----- (00420770) --------------------------------------------------------
 DWORD Timer_InitPerfCounterFrequency()
 {
-  LARGE_INTEGER v0; // rax
-
   QueryPerformanceFrequency(&Frequency);
-  v0.QuadPart = _I8D(0);
-  Frequency = v0;
-  return v0.LowPart;
+  Frequency.QuadPart /= 100;
+  return Frequency.LowPart;
 }
-// 4763D2: using guessed type __int64 __thiscall _I8D(_DWORD);
 
 //----- (004207B0) --------------------------------------------------------
 int __fastcall Time_Now(int a1, int a2)
@@ -64132,23 +64128,18 @@ int  MainMenu_RequestLoadGameMenu(uintptr_t a1)
 //----- (004477A0) --------------------------------------------------------
 signed int  UI_WaitForKeyOrTimeout(int a1, int a2)
 {
-  int v3; // eax
-  int v4; // edx
-
-  v3 = Time_Now(a2, a1);
-  return UI_WaitForAnyKeyOrClick(v4 + v3, v4);
+  (void)a2;
+  return UI_WaitForAnyKeyOrClick(Time_Now(0, 0) + a1, 0);
 }
-// 4477A8: variable 'v4' is possibly undefined
 
 //----- (004477C0) --------------------------------------------------------
 signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
 {
-  int v4; // edx
-  int v5; // ecx
-  unsigned int v6; // eax
-  unsigned int v7; // ecx
+  unsigned int deadline;
 
-  Time_Now(a1, a2);
+  (void)a2;
+  deadline = (unsigned int)a1;
+  Time_Now(0, 0);
   do
   {
     DD_Pump((int)g_RenderState, 0);
@@ -64160,9 +64151,8 @@ signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
     {
       return 1;
     }
-    v6 = Time_Now(v5, v4);
   }
-  while ( v6 <= v7 );
+  while ( (unsigned int)Time_Now(0, 0) <= deadline );
   return 0;
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];

@@ -45,6 +45,7 @@ CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
 | --- | --- | --- | --- |
 | Default main menu liveness | `ctest --test-dir build -R clash95_full_route_smoke --output-on-failure` | `tests/verify_full_route_smoke.sh`, `docs/archive/COMPILATION_PROGRESS.md` | Keep as smoke coverage while deeper campaign routes advance. |
 | Visible main menu plus Exit | `ctest --test-dir build -R clash95_main_menu_exit_probe --output-on-failure` | `tests/run_main_menu_exit_probe.sh`, frame nonblank metrics | Opt-in real-input coverage depends on SDL/X11 availability. |
+| Recovered 100 Hz runtime timebase | `ctest --test-dir build --output-on-failure` | `Timer_InitPerfCounterFrequency`, `Time_Now`, and the wait helpers; assembly address `0x420770` | `CSS_Init` and its quarantined legacy audio/device table remain separate startup debt. |
 | Lowercase `r` startup/shutdown | `ctest --test-dir build -R clash95_r_command_shutdown_smoke --output-on-failure` | `tests/verify_r_command_shutdown.sh` | Smoke route only, not gameplay completion proof. |
 | Direct Campaign route smoke | `ctest --test-dir build -R clash95_direct_a_route_smoke --output-on-failure` | `tests/verify_direct_a_route_smoke.sh` | Direct route remains diagnostic, not final campaign acceptance. |
 | Direct first mission route smoke | `ctest --test-dir build -R clash95_direct_a0_route_smoke --output-on-failure` | `tests/verify_direct_a0_route_smoke.sh` | Direct route remains diagnostic, not final campaign acceptance. |
@@ -55,15 +56,10 @@ CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
 | First-mission world-map endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=world-map-pan CLASH95_SOAK_DURATION_SECONDS=120 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/world-map-pan/latest.txt` | Soak probe only. |
 | Starting castle economy endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=castle-economy CLASH95_SOAK_DURATION_SECONDS=120 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/castle-economy/latest.txt` | Soak probe only. |
 | First-mission attack/autoresolve endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=first-mission-attack CLASH95_SOAK_DURATION_SECONDS=20 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/first-mission-attack/latest.txt` | Soak probe only. |
-| Mission 04 route-replay endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=campaign-route CLASH95_SOAK_ROUTE_MISSION_ID=04 CLASH95_SOAK_DURATION_SECONDS=20 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/campaign-route/latest.txt` | Mission `04` still needs objective completion proof. |
+| Mission 04 route-replay endurance smoke | `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=campaign-route CLASH95_SOAK_ROUTE_MISSION_ID=04 CLASH95_SOAK_DURATION_SECONDS=20 ctest --test-dir build -R clash95_soak_probe --output-on-failure` | `tests/run_clash95_soak_probe.sh`, `artifacts/soak/campaign-route/latest.txt` | Replays the now-complete canonical route; full-menu campaign auto-advance remains separate. |
 | Direct multiplayer map visual/liveness probe | `CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 ctest --test-dir build -R clash95_multiplayer_map_probe --output-on-failure` | `tests/run_multiplayer_map_probe.sh`, `artifacts/multiplayer-maps/map-NN/latest.txt` | Opt-in diagnostic path using recovered `/A#` all-AI map loading, not campaign acceptance or human multiplayer menu proof. |
 | Campaign mission route scripts | `tests/run_campaign_route_script_smoke.sh` via CTest wrappers | `tests/first_campaign_arc_routes/`, `tests/frame_metrics.py` | Route env statuses remain canonical. |
-| Mission 04 first-assault defender-AI handoff probe | `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` | `tests/first_campaign_arc_routes/mission_04.env`, `tests/first_campaign_arc_routes/mission_04_post_breach_probe.script`, `artifacts/campaign-routes/mission-04/20260616T154441Z-570279/summary.txt` | Need remaining castle defenders, castle capture, and mission objective completion. |
-| Mission 04 post-AI branch probe | `bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 04 tests/first_campaign_arc_routes/mission_04_post_breach_probe.env` | Latest world-return proof: `artifacts/campaign-routes/mission-04/20260616T142830Z-516601/summary.txt`; earlier tactical-control proof: `artifacts/campaign-routes/mission-04/20260616T135453Z-487823/summary.txt` | Quarantined direct debug proof only; world-return reentry remains pending. |
-| Mission 04 post-AI tactical attack probe | `bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 04 tests/first_campaign_arc_routes/mission_04_post_ai_attack_probe.env` | `artifacts/campaign-routes/mission-04/20260616T161142Z-587899/summary.txt`, `checkpoint-mission04-slot2-post-ai-defender-15-5-defeated.bmp` | Proves fresh counted authentic post-AI attacks through defender `15,5` defeat; remaining defender cleanup and castle capture are pending. |
-| Mission 04 post-AI tactical occupation probe | `bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 04 tests/first_campaign_arc_routes/mission_04_post_ai_branch_progress_probe.env` | `artifacts/campaign-routes/mission-04/20260616T165526Z-619297/summary.txt`, `checkpoint-mission04-slot2-post-ai-occupy-15-5.bmp` | Proves defender `15,5` defeat plus selected unit `2` occupying the cleared tile; remaining defenders, castle capture, and objective completion are pending. |
-| Mission 04 post-AI tactical end-turn probe | `bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 04 tests/first_campaign_arc_routes/mission_04_post_ai_branch_end_turn_probe.env` | `artifacts/campaign-routes/mission-04/20260616T202028Z-688394/summary.txt`, `checkpoint-mission04-slot2-post-ai-after-occupy-end-turn-branch.bmp` | Proves the occupied `15,5` tactical branch can send recovered end-turn input and return to tactical control after defender AI; battle-entry frame-dump reset keeps late tactical checkpoint BMPs current. Remaining defender cleanup, castle capture, and objective completion are pending. |
-| Mission 04 post-end-turn defender `14,5` attack probe | `bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap 04 tests/first_campaign_arc_routes/mission_04_post_ai_after_end_turn_attack_probe.env` | `artifacts/campaign-routes/mission-04/20260616T203419Z-692412/summary.txt`, `checkpoint-mission04-slot2-post-occupy-attack-defender-14-5.bmp` | Proves the tactical branch can continue after the post-occupy end-turn marker and attack defender `14,5` through authentic battle input; defender cleanup, castle capture, and objective completion are pending. |
+| Mission 04 complete canonical route | `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` | `tests/first_campaign_arc_routes/mission_04.env`, `tests/first_campaign_arc_routes/mission_04_post_breach_probe.script`, and `artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt` | Direct-boot route proves three assaults, empty-garrison capture, one objective completion, and a fresh nonblank final frame; full-menu auto-advance remains. |
 
 Latest multiplayer-map sweep:
 
@@ -106,17 +102,12 @@ Run this for the current campaign route table:
 bash tests/summarize_campaign_arc_routes.sh
 ```
 
-At the time this index was last updated, missions `00` through `03` were marked
-complete, mission `04` had a partial post-breach tactical route that clears a
-courtyard defender chain through the first assault's `15,4`/`15,5` boundary,
-hands off to defender AI, and has quarantined opt-in proof of both observed
-post-AI branches: world return and attacker tactical-control resumption.
-The tactical branch has a quarantined continuation proof through defender
-`15,5` defeat, selected unit `2` occupying that cleared tile, and a recovered
-end-turn/AI handoff back to tactical control, plus a follow-up authentic attack
-against defender `14,5`.
-Missions `05` through `19` had partial direct probes. The route env files are
-the canonical machine-readable status source.
+At the time this index was last updated, missions `00` through `04` were
+marked complete. Mission `04` now has a passing three-assault Hopenberg route:
+the final tactical return reports an empty garrison, capture transfers the
+castle to player `0`, and the world loop logs `mission_objective_complete`.
+Missions `05` through `19` have partial direct probes. The route env files
+remain the canonical machine-readable status source.
 
 ## Artifact Policy
 

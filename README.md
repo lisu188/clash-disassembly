@@ -4,10 +4,11 @@ Evidence-driven C/SDL reconstruction of the original `clash95` game binary.
 `clash95.asm` is the protected behavioral source of truth; `clash95.c` is the
 recovered implementation under build and route validation.
 
-Current validated campaign-route state: missions `00..03` are complete through
-their route gates, mission `04` is partial after breaching the castle gate,
-clearing chained courtyard defenders through tile `14,1`, and occupying that
-cleared tile; missions `05..19` are direct-load evidence probes. See
+Current validated campaign-route state: missions `00..04` are complete through
+their route gates. Mission `04` now clears Hopenberg through three authentic
+tactical assaults, transfers the empty-garrison castle, and reaches
+`mission_objective_complete`; missions `05..19` remain direct-load evidence
+probes. See
 `docs/STATUS.md` for the active blocker and latest milestone.
 
 ## Quick Start

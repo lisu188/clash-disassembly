@@ -78,6 +78,7 @@ preserve_artifacts=0
 route_input_step=0
 last_wait_log_any_pattern=""
 last_wait_log_any_mark=""
+route_runtime_selected_unit=""
 declare -A marked_log_counts=()
 declare -A marked_log_patterns=()
 : >"$log_path"
@@ -89,6 +90,7 @@ declare -A marked_log_patterns=()
 fail_smoke() {
   local message="$1"
 
+  echo "[campaign-route] failure message=${message}" >>"$log_path" 2>/dev/null || true
   echo "$message" >&2
   write_visual_failure_montage || true
   if [ "${CLASH95_CAMPAIGN_ROUTE_FAIL_FULL_LOG:-0}" = "1" ]; then
@@ -100,16 +102,29 @@ fail_smoke() {
   exit 1
 }
 
-latest_frame_path() {
-  local captured_frame
-  local last_frame=""
+collect_presented_frames_by_mtime() {
+  local destination_name="$1"
+  local -n destination_ref="$destination_name"
+  local frame_dir="${frame_prefix%/*}"
+  local frame_name="${frame_prefix##*/}"
+  local timestamped_path
 
-  for captured_frame in "$frame_prefix"-*.bmp; do
-    if [ -f "$captured_frame" ]; then
-      last_frame="$captured_frame"
-    fi
-  done
-  printf '%s' "$last_frame"
+  destination_ref=()
+  while IFS= read -r -d '' timestamped_path; do
+    destination_ref+=( "${timestamped_path#* }" )
+  done < <(
+    find "$frame_dir" -maxdepth 1 -type f -name "${frame_name}-*.bmp" -printf '%T@ %p\0' |
+      sort -z -n
+  )
+}
+
+latest_frame_path() {
+  local -a captured_frames=()
+
+  collect_presented_frames_by_mtime captured_frames
+  if [ "${#captured_frames[@]}" -gt 0 ]; then
+    printf '%s' "${captured_frames[$((${#captured_frames[@]} - 1))]}"
+  fi
 }
 
 write_visual_failure_montage() {
@@ -131,8 +146,8 @@ write_visual_failure_montage() {
   if ! is_unsigned_integer "$head_count"; then
     head_count=8
   fi
+  collect_presented_frames_by_mtime presented_frames
   shopt -s nullglob
-  presented_frames=( "$frame_prefix"-*.bmp )
   checkpoint_frames=( "$smoke_root"/checkpoint-*.bmp )
   shopt -u nullglob
   if [ "${#checkpoint_frames[@]}" -gt 0 ]; then
@@ -358,14 +373,13 @@ copy_capped_presented_frames() {
     head_count=8
   fi
 
-  shopt -s nullglob
-  local captured_frames=( "$frame_prefix"-*.bmp )
-  shopt -u nullglob
+  local -a captured_frames=()
+  collect_presented_frames_by_mtime captured_frames
   captured_frames_total="${#captured_frames[@]}"
   if [ "$captured_frames_total" -eq 0 ]; then
     return 0
   fi
-  last_frame="${captured_frames[$((captured_frames_total - 1))]}"
+  last_frame="$(latest_frame_path)"
   if [ "$max_frames" -eq 0 ]; then
     frames_truncated=1
     return 0
@@ -581,9 +595,7 @@ persist_route_artifacts() {
     fi
   fi
   if command -v python3 >/dev/null 2>&1 && [ -f "$frame_metrics_tool" ]; then
-    shopt -s nullglob
-    summary_frames=( "$frame_prefix"-*.bmp )
-    shopt -u nullglob
+    collect_presented_frames_by_mtime summary_frames
     sample_frame_array summary_frames sampled_summary_frames "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_MAX_FRAMES:-96}" "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_HEAD_COUNT:-8}"
     if [ "${#sampled_summary_frames[@]}" -ge 2 ]; then
       progression_metrics="$(python3 "$frame_metrics_tool" \
@@ -1078,9 +1090,7 @@ check_presented_frame_progression() {
   if ! command -v python3 >/dev/null 2>&1 || [ ! -f "$frame_metrics_tool" ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; python3 frame metrics are unavailable"
   fi
-  shopt -s nullglob
-  visual_frames=( "$frame_prefix"-*.bmp )
-  shopt -u nullglob
+  collect_presented_frames_by_mtime visual_frames
   if [ "${#visual_frames[@]}" -lt 2 ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; fewer than 2 frames captured"
   fi
@@ -1119,6 +1129,36 @@ execute_route_script() {
   local env_name
   local expected_value
   local actual_value
+  local click_x
+  local click_y
+  local click_reads
+  local click_gap
+  local max_clicks
+  local click_label
+  local click_attempts
+  local terminal_mark
+  local completion_mark
+  local terminal_count
+  local completion_count
+  local completion_baseline
+  local attempt_timeout
+  local attempt_deadline
+  local click_completed
+  local current_count
+  local target_left
+  local target_top
+  local max_pan_attempts
+  local pan_attempts
+  local viewport_line
+  local current_left
+  local current_top
+  local scan_code
+  local cursor_baseline
+  local cursor_count
+  local cursor_deadline
+  local probe_x=319
+  local selected_line
+  local selected_value
 
   while IFS= read -r line || [ -n "$line" ]; do
     line_number=$((line_number + 1))
@@ -1134,6 +1174,12 @@ execute_route_script() {
     fi
     args="${args//\{mission_id\}/$mission_id}"
     args="${args//\{mission_number\}/$mission_number}"
+    if [ -n "$route_runtime_selected_unit" ]; then
+      args="${args//\{selected_unit\}/$route_runtime_selected_unit}"
+    fi
+    if [ "$skip_depth" -eq 0 ] && [[ "$args" == *"{selected_unit}"* ]]; then
+      fail_smoke "campaign route script line ${line_number}: selected_unit placeholder used before capture_battle_selected_unit"
+    fi
 
     case "$command" in
       if_env)
@@ -1421,12 +1467,157 @@ execute_route_script() {
         fi
         write_world_script key "key $1 ${2:-4}" "${3:-0.40}" "" "" "${4:-world-key-${line_number}}"
         ;;
+      world_pan_viewport)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires left top"
+        fi
+        target_left="$1"
+        target_top="$2"
+        max_pan_attempts="${3:-160}"
+        if ! is_unsigned_integer "$target_left" ||
+           ! is_unsigned_integer "$target_top" ||
+           ! is_unsigned_integer "$max_pan_attempts" ||
+           [ "$max_pan_attempts" = "0" ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires nonnegative left/top and positive max-attempts"
+        fi
+        pan_attempts=0
+        while [ "$pan_attempts" -lt "$max_pan_attempts" ]; do
+          viewport_line="$(grep -F "[world_cursor]" "$log_path" | grep -Fv "[campaign-route]" | tail -n 1 || true)"
+          if [[ "$viewport_line" != *" left="* ]] || [[ "$viewport_line" != *" top="* ]]; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport cannot read a world cursor viewport"
+          fi
+          current_left="${viewport_line#* left=}"
+          current_left="${current_left%% *}"
+          current_top="${viewport_line#* top=}"
+          current_top="${current_top%% *}"
+          if ! is_unsigned_integer "$current_left" || ! is_unsigned_integer "$current_top"; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport parsed invalid viewport: left=${current_left} top=${current_top}"
+          fi
+          if [ "$current_left" = "$target_left" ] && [ "$current_top" = "$target_top" ]; then
+            echo "[campaign-route] world-pan-viewport-done line=${line_number} left=${current_left} top=${current_top} attempts=${pan_attempts}" >>"$log_path"
+            break
+          fi
+          if [ "$current_left" -lt "$target_left" ]; then
+            scan_code=205
+          elif [ "$current_left" -gt "$target_left" ]; then
+            scan_code=203
+          elif [ "$current_top" -lt "$target_top" ]; then
+            scan_code=208
+          else
+            scan_code=200
+          fi
+          pan_attempts=$((pan_attempts + 1))
+          write_world_script key "key ${scan_code} 12" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
+          cursor_baseline="$(game_log_count "[world_cursor]")"
+          if [ "$probe_x" = "319" ]; then
+            probe_x=320
+          else
+            probe_x=319
+          fi
+          write_world_script move "move ${probe_x} 239" 0.25 "" "" "world-pan-viewport-${line_number}-probe-${pan_attempts}"
+          cursor_deadline=$((SECONDS + 5))
+          cursor_count="$cursor_baseline"
+          while [ "$SECONDS" -lt "$cursor_deadline" ]; do
+            cursor_count="$(game_log_count "[world_cursor]")"
+            if [ "${cursor_count:-0}" -gt "${cursor_baseline:-0}" ]; then
+              break
+            fi
+            if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+              fail_smoke "campaign route script smoke process exited during world_pan_viewport"
+            fi
+            sleep 0.1
+          done
+          if [ "${cursor_count:-0}" -le "${cursor_baseline:-0}" ]; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport timed out waiting for cursor probe"
+          fi
+        done
+        if [ "$current_left" != "$target_left" ] || [ "$current_top" != "$target_top" ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport exhausted ${max_pan_attempts} attempts at left=${current_left} top=${current_top}"
+        fi
+        ;;
+      capture_battle_selected_unit)
+        selected_line="$(grep -F "[battle_click] tile_input" "$log_path" |
+          grep -F "occupant_type=1 occupant_owner=0" |
+          grep -Fv "[campaign-route]" |
+          tail -n 1 || true)"
+        if [ -z "$selected_line" ]; then
+          fail_smoke "campaign route script line ${line_number}: capture_battle_selected_unit found no clicked infantry trace"
+        fi
+        selected_value="${selected_line#* occupant=}"
+        selected_value="${selected_value%% *}"
+        if ! is_unsigned_integer "$selected_value" || [ "$selected_value" -gt 21 ]; then
+          fail_smoke "campaign route script line ${line_number}: capture_battle_selected_unit parsed invalid index: ${selected_value}"
+        fi
+        route_runtime_selected_unit="$selected_value"
+        echo "[campaign-route] capture-battle-selected-unit line=${line_number} selected=${route_runtime_selected_unit} label=${args:-captured}" >>"$log_path"
+        ;;
       battle_click)
         set -- $args
         if [ "$#" -lt 2 ]; then
           fail_smoke "campaign route script line ${line_number}: battle_click requires x y"
         fi
         write_battle_script click "click $1 $2 ${3:-4}" "${4:-0.70}" "" "" "${5:-battle-click-${line_number}}"
+        ;;
+      battle_click_until_marked)
+        set -- $args
+        if [ "$#" -lt 7 ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked requires x y reads gap max-clicks terminal-mark completion-mark"
+        fi
+        click_x="$1"
+        click_y="$2"
+        click_reads="$3"
+        click_gap="$4"
+        max_clicks="$5"
+        terminal_mark="$6"
+        completion_mark="$7"
+        click_label="${8:-battle-click-until-${terminal_mark}}"
+        if ! is_unsigned_integer "$max_clicks" || [ "$max_clicks" = "0" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked max-clicks must be a positive integer"
+        fi
+        if [ -z "${marked_log_counts[$terminal_mark]+x}" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked references unknown terminal mark: ${terminal_mark}"
+        fi
+        if [ -z "${marked_log_counts[$completion_mark]+x}" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked references unknown completion mark: ${completion_mark}"
+        fi
+        attempt_timeout="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-60}"
+        if ! is_unsigned_integer "$attempt_timeout" || [ "$attempt_timeout" = "0" ]; then
+          attempt_timeout=60
+        fi
+        click_attempts=0
+        while [ "$click_attempts" -lt "$max_clicks" ]; do
+          terminal_count="$(game_log_count "${marked_log_patterns[$terminal_mark]}")"
+          if [ "${terminal_count:-0}" -gt "${marked_log_counts[$terminal_mark]:-0}" ]; then
+            break
+          fi
+          completion_baseline="$(game_log_count "${marked_log_patterns[$completion_mark]}")"
+          click_attempts=$((click_attempts + 1))
+          write_battle_script click "click ${click_x} ${click_y} ${click_reads}" "$click_gap" "" "" "${click_label}-${click_attempts}"
+          attempt_deadline=$((SECONDS + attempt_timeout))
+          click_completed=0
+          while [ "$SECONDS" -lt "$attempt_deadline" ]; do
+            terminal_count="$(game_log_count "${marked_log_patterns[$terminal_mark]}")"
+            if [ "${terminal_count:-0}" -gt "${marked_log_counts[$terminal_mark]:-0}" ]; then
+              click_completed=1
+              break
+            fi
+            completion_count="$(game_log_count "${marked_log_patterns[$completion_mark]}")"
+            if [ "${completion_count:-0}" -gt "${completion_baseline:-0}" ]; then
+              click_completed=1
+              break
+            fi
+            if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+              fail_smoke "campaign route script smoke process exited during battle_click_until_marked ${terminal_mark}"
+            fi
+            sleep 0.1
+          done
+          if [ "$click_completed" != "1" ]; then
+            fail_smoke "campaign route script line ${line_number}: battle_click_until_marked timed out waiting for attack completion: ${completion_mark}"
+          fi
+        done
+        echo "[campaign-route] battle-click-until-marked line=${line_number} terminal=${terminal_mark} completion=${completion_mark} attempts=${click_attempts} max=${max_clicks}" >>"$log_path"
+        wait_for_marked_log_pattern "$terminal_mark" "script:${line_number}" "$attempt_timeout" ""
         ;;
       battle_move)
         set -- $args

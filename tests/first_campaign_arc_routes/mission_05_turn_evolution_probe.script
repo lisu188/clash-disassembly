@@ -1,0 +1,80 @@
+# Mission 05 turn-evolution probe.
+# Current nonzero-language objective evidence: eliminate every player-3
+# (Agordeh) building and world stack. Attacking player 1 or 2 raises the
+# mission-local failure flag, so this diagnostic advances turns without combat.
+
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+wait_log 60 mission_objective_blocked selected=5 a=4 b=3
+screenshot mission05-turn-01-start
+nonblank mission05-turn-01-start
+
+mark_log_count mission05_turn_02 playgame_before_human_turn selected=-1 a=0 b=2
+mark_log_count mission05_turn_02_blocked mission_objective_blocked selected=5
+mark_log_count mission05_turn_02_complete mission_objective_complete selected=-1 a=5
+world_click 500 2 2 0.5 turn-01-position-top
+world_click 500 2 4 0.5 turn-01-open-top-menu
+world_click 500 2 4 1.0 turn-01-end-human-turn
+wait 6.0
+world_click 320 240 2 0.35 turn-01-skip-1
+world_click 320 240 2 0.35 turn-01-skip-2
+wait_log_marked 300 mission05_turn_02
+wait_log_marked_any 60 mission05_turn_02_complete || mission05_turn_02_blocked
+if_last_wait_log_mark mission05_turn_02_complete
+wait 2.0
+screenshot mission05-objective-complete-turn-02
+nonblank mission05-objective-complete-turn-02
+expect_log mission_objective_complete
+stop mission05-objective-complete-turn-02
+endif
+if_last_wait_log_mark mission05_turn_02_blocked
+screenshot mission05-turn-02
+nonblank mission05-turn-02
+endif
+
+mark_log_count mission05_turn_03 playgame_before_human_turn selected=-1 a=0 b=3
+mark_log_count mission05_turn_03_blocked mission_objective_blocked selected=5
+mark_log_count mission05_turn_03_complete mission_objective_complete selected=-1 a=5
+world_click 500 2 2 0.5 turn-02-position-top
+world_click 500 2 4 0.5 turn-02-open-top-menu
+world_click 500 2 4 1.0 turn-02-end-human-turn
+wait 6.0
+world_click 320 240 2 0.35 turn-02-skip-1
+world_click 320 240 2 0.35 turn-02-skip-2
+wait_log_marked 300 mission05_turn_03
+wait_log_marked_any 60 mission05_turn_03_complete || mission05_turn_03_blocked
+if_last_wait_log_mark mission05_turn_03_complete
+wait 2.0
+screenshot mission05-objective-complete-turn-03
+nonblank mission05-objective-complete-turn-03
+expect_log mission_objective_complete
+stop mission05-objective-complete-turn-03
+endif
+if_last_wait_log_mark mission05_turn_03_blocked
+screenshot mission05-turn-03
+nonblank mission05-turn-03
+endif
+
+mark_log_count mission05_turn_04 playgame_before_human_turn selected=-1 a=0 b=4
+mark_log_count mission05_turn_04_blocked mission_objective_blocked selected=5
+mark_log_count mission05_turn_04_complete mission_objective_complete selected=-1 a=5
+world_click 500 2 2 0.5 turn-03-position-top
+world_click 500 2 4 0.5 turn-03-open-top-menu
+world_click 500 2 4 1.0 turn-03-end-human-turn
+wait 6.0
+world_click 320 240 2 0.35 turn-03-skip-1
+world_click 320 240 2 0.35 turn-03-skip-2
+wait_log_marked 300 mission05_turn_04
+wait_log_marked_any 60 mission05_turn_04_complete || mission05_turn_04_blocked
+if_last_wait_log_mark mission05_turn_04_complete
+wait 2.0
+screenshot mission05-objective-complete-turn-04
+nonblank mission05-objective-complete-turn-04
+expect_log mission_objective_complete
+stop mission05-objective-complete-turn-04
+endif
+if_last_wait_log_mark mission05_turn_04_blocked
+screenshot mission05-turn-04
+nonblank mission05-turn-04
+expect_log playgame_before_human_turn selected=-1 a=0 b=4
+endif

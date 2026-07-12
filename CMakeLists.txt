@@ -228,7 +228,8 @@ endfunction()
 add_campaign_route_regression_test(01 360)
 add_campaign_route_regression_test(02 900)
 add_campaign_route_regression_test(03 900)
-add_campaign_route_regression_test(04 900)
+# Leave CTest headroom above mission_04.env's 3600-second route timeout.
+add_campaign_route_regression_test(04 3900)
 
 # ---------------------------------------------------------------------------
 # Unit-test / coverage target (opt-in: -DCLASH95_COVERAGE=ON).

@@ -10,12 +10,17 @@ platform_down 320 368 0.20 select-stack0-down
 platform_up 320 368 0.80 select-stack0-up
 wait_log 30 selected_stack_changed selected=0 a=41 b=50
 
-world_key 205 35 1.0 pan-right-toward-target
-world_key 208 320 7.0 pan-down-toward-target
+world_pan_viewport 47 65 160
 platform_down 609 273 0.05 click-target-56-69-down
 platform_up 609 273 1.50 click-target-56-69-up
 wait_log 30 building_path_ready selected=0 a=56 b=69
 wait_log 30 unit_move_after_path_state selected=0 a=45 b=54
+
+if_env CLASH95_MISSION04_STOP_AFTER_INITIAL_PATH 1
+screenshot mission04-initial-path-timing-probe
+nonblank mission04-initial-path-timing-probe
+stop mission04-initial-path-timing-probe
+endif
 
 world_move 491 2 0.20 position-end-human-turn-1
 world_click 491 2 8 0.35 open-end-human-turn-1

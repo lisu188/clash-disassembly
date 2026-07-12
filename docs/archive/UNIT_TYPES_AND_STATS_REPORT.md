@@ -472,3 +472,25 @@ No new unit type, stat, category, or relationship meanings were promoted in this
 # 2026-06-15 campaign route visual regression note
 
 No new unit type, stat, category, or relationship meanings were promoted in this batch. Work stayed on deterministic route-test protection: retained SDL frame dumps now receive loose visual assertions and opt-in campaign route CTest entries protect the already recovered direct-route milestones. Roster/stat confidence remains unchanged.
+
+# 2026-07-10 centisecond timer and mission-04 frontier note
+
+No new unit type, stat, category, or relationship meanings were promoted in
+Batch 258. The assembly-backed startup timer now runs at 100 Hz and the UI wait
+helpers preserve their real delay/deadline values; this changes runtime pacing,
+not unit semantics. The strongest retained mission `04` diagnostic reaches a
+second castle assault and returns with three defenders remaining, which is
+route/capture evidence only. Roster/stat confidence and all ambiguous unit
+candidates remain unchanged.
+
+# 2026-07-12 mission-04 completion route note
+
+No new unit type, stat, category, or relationship meanings were promoted in
+Batch 259. The recovered route now clears Hopenberg over three authentic
+tactical assaults, captures the empty-garrison castle, and reaches the natural
+mission-04 objective check. Dynamic deployment changed the clicked infantry's
+tactical slot index between retained runs, so the harness resolves that runtime
+occupant index instead of assigning a new unit identity. The next-frontier
+mission-05 audit recovered language-dependent player-elimination and friendly-
+attack failure predicates, not unit semantics. Roster/stat confidence and all
+ambiguous unit candidates remain unchanged.
