@@ -21,8 +21,8 @@
 #define PLAYER_IS_HUMAN_OFFSET 27
 #define PLAYER_AI_INTELLIGENCE_OFFSET 31
 #define PLAYER_RELIGION_FLAG_OFFSET 39
-#define PLAYER_FACTION_COLOR_INDEX_OFFSET 47
-#define PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET 48
+#define PLAYER_TECH_LEVEL_OFFSET 47
+#define PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET 48
 #define PLAYER_BATTLE_IDLE_FLAG_OFFSET 49
 #define PLAYER_BATTLE_IDLE_TURN_COUNT_OFFSET 53
 #define PLAYER_REVEALED_TILES_OFFSET 57
@@ -942,7 +942,7 @@ _BYTE * Unit_NewTurnRegen(_BYTE *result);
 int  Unit_UpdatePerTurn(int a1, int a2);
 BOOL  UnitSlot_NeedsMoraleRecovery(__int16 *a1);
 int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *a1, double a2);
-unsigned __int8 * Building_CheckTechnology(int a1, int a2, DWORD a3);
+unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int a1, int a2, DWORD a3);
 void  Building_DebugDump(unsigned __int8 *a1, char a2, DWORD a3);
 void  LogAllBuildings(int a1, char a2, DWORD a3);
 unsigned __int8 * Building_NewTurn(int a1, unsigned __int8 *a2, DWORD a3, double a4);
@@ -1383,7 +1383,7 @@ signed int  SaveSlotDialog_HandleConfirm(int a1, int a2, DWORD a3, double a4);
 int  SaveSlotDialog_Run(int a1, char a2, DWORD a3, double a4);
 int  UI_ShowInfoWindow(const char *a1, unsigned int a2, int a3, DWORD a4, int a5, int a6);
 int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3);
-int  WorldMap_NotifyFactionColorChange(int a1, DWORD a2);
+int  UI_ShowTechnologyLevelUpIfChanged(int a1, DWORD a2);
 int  UI_CheatEditRepaint(DWORD a1, int a2);
 char  Building_ShowConstructionFinishedDialog(int a1, int a2, char a3, DWORD a4);
 int  Demo_ShowNumberedTextScreen(char a1, DWORD a2);
@@ -5099,7 +5099,7 @@ char aBuilding_newDD[31] = "Building_New(%d,%d,%d,%d,\"%s\")"; // weak
 char aBuilding_stop0[22] = "Building_Stop(0x%08x)"; // weak
 char aBuilding_build[33] = "Building_BuildFinished() - %d,%d"; // weak
 char aBuilding_produ[45] = "Building_Production(0x%08x) - nowa jednostka"; // weak
-char aBuilding_check[29] = "Building_CheckTechnology(%d)"; // weak
+char aBuilding_check[29] = "Player_UpdateTechnologyLevelFromSettlements(%d)"; // weak
 char aD0x08xDDTDPDGD[52] = "%d(0x%08x): (%d,%d), t:%d, p:%d g:%d pop:%d bpa:%d "; // weak
 char aUDDDDDDDDDD[45] = "            u:%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,"; // weak
 char aLogallbuilding[16] = "LogAllBuildings"; // weak
@@ -11268,7 +11268,7 @@ char *g_PlagueOutbreakNoticeFmtText[12] =
   "Master, your builders have finally accomplished construction of the fortress. How do you want to name this building?",
   "Deine Untergebenen haben den Bau der Festung endlich beendet. Wie willst Du sie nennen?"
 }; // weak
-char *g_FactionColorChangeNoticeText[9] =
+char *g_TechLevelUpNoticeText[9] =
 {
   "Dzi\x91ki Twojej dzia\x92alno\x9Eci osi\x86gn\x86\x92e\x9E wy\xA7szy poziom technologiczny. Otwieraj\x86 si\x91 przed Tob\x86 nowe mo\xA7liwo\x9Eci rozbudowy armii.",
   "Thanks to your wise rule you have achieved a higher technological level. Now you can expand your army in new ways.",
@@ -21504,7 +21504,7 @@ void  WorldMap_RunHumanTurnLoop(
   WorldMap_NotifyPlagueOutbreak(entry_resource_handle, (const char *)entry_render_hook, runtime_context);
   Diagnostics_TraceWorldMapActionEvent("human_turn_after_plague_notices", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
   Diagnostics_TraceWorldMapActionEvent("human_turn_before_color_notice", g_SelectedUnitIndex, g_CurrentPlayerIndex, 0, 0);
-  WorldMap_NotifyFactionColorChange(0, runtime_context);
+  UI_ShowTechnologyLevelUpIfChanged(0, runtime_context);
   g_CursorDesc_Default[5] = 0;
   g_CursorDesc_Default[6] = 0;
   dword_545150 = (int)&g_CursorDesc_Default;
@@ -34142,7 +34142,7 @@ int a5;
   v20 = *(_WORD *)(v60 + 432);
   *(_BYTE *)(v60 + 436) = v19 & 0xC0;
   *(_WORD *)(v60 + 432) = v20 & 0xF000;
-  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) & 7;
+  LOBYTE(v15) = *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) & 7;
   HIBYTE(v15) = *(_BYTE *)(v60 + 444) & 0xF8;
   *(_BYTE *)(v60 + 444) = HIBYTE(v15);
   *(_BYTE *)(v60 + 444) = v15 | HIBYTE(v15);
@@ -34960,7 +34960,7 @@ int  Building_RecoverGarrisonFatigueAndMorale(unsigned __int8 *a1, double a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0041E890) --------------------------------------------------------
-unsigned __int8 * Building_CheckTechnology(int a1, int a2, DWORD a3)
+unsigned __int8 * Player_UpdateTechnologyLevelFromSettlements(int a1, int a2, DWORD a3)
 {
   int v4; // esi
   int v5; // edi
@@ -35170,7 +35170,7 @@ unsigned __int8 * Building_NewTurn(
     }
   }
   LogAllBuildings(v6, (char)a2, a3);
-  return Building_CheckTechnology(g_CurrentPlayerIndex, v7, a3);
+  return Player_UpdateTechnologyLevelFromSettlements(g_CurrentPlayerIndex, v7, a3);
 }
 // 41EB6A: variable 'v6' is possibly undefined
 // 41EB74: variable 'v7' is possibly undefined
@@ -62546,22 +62546,22 @@ int  WorldMap_NotifyPlagueOutbreak(int a1, const char *a2, DWORD a3)
 // 5202EC: using guessed type int g_CurrentPlayerIndex;
 
 //----- (004459A0) --------------------------------------------------------
-int  WorldMap_NotifyFactionColorChange(int a1, DWORD a2)
+int  UI_ShowTechnologyLevelUpIfChanged(int a1, DWORD a2)
 {
   int result; // eax
   int v4[6]; // [esp+0h] [ebp-18h] BYREF
 
-  v4[0] = (int)g_FactionColorChangeNoticeText[0];
-  v4[1] = (int)g_FactionColorChangeNoticeText[1];
-  v4[2] = (int)g_FactionColorChangeNoticeText[2];
-  if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET) )
+  v4[0] = (int)g_TechLevelUpNoticeText[0];
+  v4[1] = (int)g_TechLevelUpNoticeText[1];
+  v4[2] = (int)g_TechLevelUpNoticeText[2];
+  if ( *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) != *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) )
   {
     Diagnostics_TraceWorldMapActionEvent("color_notice_before_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
-    UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&g_FactionColorChangeNoticeText[3]);
+    UI_ShowInfoWindow(v4[(unsigned __int8)g_LanguageIndex], 0, a1, a2, (int)&v4[3], (int)&g_TechLevelUpNoticeText[3]);
     Diagnostics_TraceWorldMapActionEvent("color_notice_after_info_window", g_SelectedUnitIndex, g_CurrentPlayerIndex, a1, 0);
   }
   result = PLAYER_DATA(g_CurrentPlayerIndex);
-  *(_BYTE *)(result + PLAYER_PREVIOUS_FACTION_COLOR_INDEX_OFFSET) = *(_BYTE *)(result + PLAYER_FACTION_COLOR_INDEX_OFFSET);
+  *(_BYTE *)(result + PLAYER_LAST_SHOWN_TECH_LEVEL_OFFSET) = *(_BYTE *)(result + PLAYER_TECH_LEVEL_OFFSET);
   return result;
 }
 // 511130: using guessed type char g_LanguageIndex;
@@ -69282,7 +69282,7 @@ void Cheat_SetFactionColorAndCastleFlags()
   int v2; // edx
   char v3; // bl
 
-  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_FACTION_COLOR_INDEX_OFFSET) = 3;
+  *(_BYTE *)(PLAYER_DATA(g_CurrentPlayerIndex) + PLAYER_TECH_LEVEL_OFFSET) = 3;
   v0 = 0;
   while ( 1 )
   {
