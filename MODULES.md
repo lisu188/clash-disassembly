@@ -17,7 +17,7 @@ anchors is *inferred* and marked accordingly.
 | CLIPS 6.x expert system (73 modules) | `089860`–`0EB580` | 2015 | CLIPS module-id anchors |
 | Trailing library / math / DPMI runtime | `0EB580`–`1208EB` | 470 | unanchored |
 
-**Total:** 4219 functions. **Named:** 468 (11.1%).
+**Total:** 4219 functions. **Named:** 470 (11.1%).
 
 ## Game modules (`0x12C6E`–`0x654D5`)
 

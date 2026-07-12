@@ -34,15 +34,20 @@ original binary + IDA/Hex-Rays: fix the stack-pointer delta or function bounds,
 define the jump table, and re-decompile. They are inherent decompiler limits,
 not missing analysis.
 
-## 2. Naming / analysis: 468 / 4219 named (11.1%)
+## 2. Naming / analysis: 470 / 4219 named (11.1%)
 
-Up from 48 at the previous commit — **412 names recovered this session**, all
+Up from 48 at the previous commit — **414 names recovered this session**, all
 derived from evidence embedded in the binary (no guessing):
 
 | Method | Names | Confidence |
 |---|---:|---|
 | Function-entry debug-log traces (`log(aName())` as first statement) | 15 | exact — original names |
 | CLIPS `DefineFunction2` registration tables (`registerClipsCallback`, `sub_A58F0`) — the `actualName` argument is each handler's C name | 397 | exact — recovered from binary |
+| C++ debug new/delete trace hooks (`logNewTPalette`, `logDeleteTPalette`) | 2 | exact — from trace string |
+
+The embedded-name veins are now **exhausted**: an exhaustive re-scan for any
+function that logs a unique identifier-like label at entry returns zero further
+candidates. Everything named is recovered evidence, not inference.
 
 Examples of exact recovered names: `Building_NewTurn`, `Queen_NewTurn`,
 `Battle_NewTurn`, `GodAnger`, `Port_GetSupply`, `Prisoner_SetInCastles`,
@@ -68,7 +73,7 @@ game predicates.
 
 ## Why 100% naming is not an automated result
 
-The remaining 3751 `sub_XXXX` functions have **no name embedded in the binary**
+The remaining 3739 `sub_XXXX` functions have **no name embedded in the binary**
 (unlike the CLIPS handlers, whose names were stored as data). Naming them
 requires one of:
 

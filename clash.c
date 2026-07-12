@@ -36,8 +36,8 @@ int __fastcall sub_10D88(int result);
 signed int sub_10DC0();
 int sub_10DE4();
 int sub_10E08();
-int __fastcall sub_10E2C(int a1);
-int __fastcall sub_10E6C(int a1);
+int __fastcall logDeleteTPalette(int a1);
+int __fastcall logNewTPalette(int a1);
 int __fastcall sub_10EAC(int a1, int a2);
 void sub_10EF0();
 void __fastcall sub_10F18(int a1, const char *a2, int a3, int a4);
@@ -11361,9 +11361,9 @@ int __fastcall sub_1007E(int a1, int a2, int a3)
   char v12; // [sp+610h] [bp-4h]@1
 
   v12 |= 1u;
-  v8 = sub_10E6C((int)&v7);
+  v8 = logNewTPalette((int)&v7);
   v12 = v12 & 0xFE | 1;
-  v9 = sub_10E6C((int)&v6);
+  v9 = logNewTPalette((int)&v6);
   v12 &= 0xFEu;
   v10 = (int)sub_12C6E(640, 480, a3);
   v3 = sub_10E08();
@@ -11390,8 +11390,8 @@ int __fastcall sub_1007E(int a1, int a2, int a3)
   while ( !sub_16978() );
   sub_122D0(20);
   sub_12D8D(v10);
-  sub_10E2C((int)&v6);
-  return sub_10E2C((int)&v7);
+  logDeleteTPalette((int)&v6);
+  return logDeleteTPalette((int)&v7);
 }
 // 130268: using guessed type char *off_130268;
 // 133B1C: using guessed type int *off_133B1C;
@@ -11883,7 +11883,7 @@ int sub_10E08()
 }
 
 //----- (00010E2C) --------------------------------------------------------
-int __fastcall sub_10E2C(int a1)
+int __fastcall logDeleteTPalette(int a1)
 {
   int v1; // ST0C_4@1
 
@@ -11893,7 +11893,7 @@ int __fastcall sub_10E2C(int a1)
 }
 
 //----- (00010E6C) --------------------------------------------------------
-int __fastcall sub_10E6C(int a1)
+int __fastcall logNewTPalette(int a1)
 {
   int v1; // ST0C_4@1
 
@@ -12468,9 +12468,9 @@ int sub_11D78()
   int result; // eax@1
 
   _wcpp_2_mod_register_(&unk_12F778);
-  sub_10E6C((int)byte_13DA7C);
+  logNewTPalette((int)byte_13DA7C);
   dword_12F780 = 1;
-  result = sub_10E6C((int)byte_13DD80);
+  result = logNewTPalette((int)byte_13DD80);
   dword_12F780 = 2;
   return result;
 }
@@ -12673,7 +12673,7 @@ int __fastcall sub_122D0(signed int a1)
   sub_844C0();
   v5 = (int)operator new(v3);
   if ( v5 )
-    v7 = sub_10E6C(v5);
+    v7 = logNewTPalette(v5);
   else
     v7 = 0;
   memcpy(v7, byte_13DA7C, 768);
@@ -12690,7 +12690,7 @@ int __fastcall sub_122D0(signed int a1)
   result = v7;
   if ( v7 )
   {
-    v2 = sub_10E2C(v7);
+    v2 = logDeleteTPalette(v7);
     result = sub_F4064(v2);
   }
   return result;
@@ -12737,7 +12737,7 @@ int __fastcall sub_124E3(int a1, signed int a2, int a3)
   if ( !(byte_13DA70 & 1) )
   {
     byte_13DA70 |= 1u;
-    sub_10E6C((int)byte_13D770);
+    logNewTPalette((int)byte_13D770);
     j___wcpp_2_mod_register_(&unk_12F784);
   }
   if ( !a3 )
@@ -12771,7 +12771,7 @@ int __fastcall sub_12649(int a1, signed int a2)
   v10 = a2;
   v6 = (int)operator new(v4);
   if ( v6 )
-    v8 = sub_10E6C(v6);
+    v8 = logNewTPalette(v6);
   else
     v8 = 0;
   memcpy(v8, byte_13DA7C, 768);
@@ -12789,7 +12789,7 @@ int __fastcall sub_12649(int a1, signed int a2)
   result = v8;
   if ( v8 )
   {
-    v3 = sub_10E2C(v8);
+    v3 = logDeleteTPalette(v8);
     result = sub_F4064(v3);
   }
   return result;
@@ -13730,7 +13730,7 @@ int __fastcall sub_13F24(int a1, int a2, int a3, int a4)
     if ( v30 )
     {
       v25 |= 1u;
-      sub_10E6C((int)v13);
+      logNewTPalette((int)v13);
       v25 &= 0xFEu;
       memcpy(v13, v21, 768);
       for ( i = 0; i < 256; ++i )
@@ -13743,7 +13743,7 @@ int __fastcall sub_13F24(int a1, int a2, int a3, int a4)
           *(_BYTE *)(v9 + 2) = v10[2];
         }
       }
-      sub_10E2C((int)v13);
+      logDeleteTPalette((int)v13);
     }
     else
     {
@@ -14908,7 +14908,7 @@ int __fastcall sub_16219(int a1, int a2, int a3, int a4)
   v11 = a4;
   v7 = (int)operator new(v6);
   if ( v7 )
-    v8 = sub_10E6C(v7);
+    v8 = logNewTPalette(v7);
   else
     v8 = 0;
   sub_14288(a3, v8);
@@ -14916,7 +14916,7 @@ int __fastcall sub_16219(int a1, int a2, int a3, int a4)
   result = v8;
   if ( v8 )
   {
-    v5 = sub_10E2C(v8);
+    v5 = logDeleteTPalette(v8);
     result = sub_F4064(v5);
   }
   return result;
@@ -15154,9 +15154,9 @@ int sub_16784()
   int result; // eax@1
 
   _wcpp_2_mod_register_(&unk_12FF9C);
-  sub_10E6C((int)&unk_13F10C);
+  logNewTPalette((int)&unk_13F10C);
   dword_12FFA4 = 1;
-  result = sub_10E6C((int)&unk_13F418);
+  result = logNewTPalette((int)&unk_13F418);
   dword_12FFA4 = 2;
   return result;
 }
@@ -19348,7 +19348,7 @@ int sub_1EDD1()
   v9 = v10;
   if ( v10 )
   {
-    v8 = sub_10E6C(v10);
+    v8 = logNewTPalette(v10);
     v13 = v8;
   }
   else
@@ -19404,7 +19404,7 @@ int sub_1EDD1()
   v12 = v11;
   if ( v11 )
   {
-    v5 = sub_10E2C(v12);
+    v5 = logDeleteTPalette(v12);
     result = sub_F4064(v5);
   }
   return result;
@@ -19658,7 +19658,7 @@ int sub_1F4E2()
     dword_1845E8 = (int)sub_12C6E(640, 480, v12);
   v17 = (int)operator new(v15);
   if ( v17 )
-    v16 = sub_10E6C(v17);
+    v16 = logNewTPalette(v17);
   else
     v16 = 0;
   dword_1845FC = v16;
@@ -19721,7 +19721,7 @@ void sub_1F661()
   dword_1845E4 = 0;
   if ( dword_1845FC )
   {
-    v0 = sub_10E2C(dword_1845FC);
+    v0 = logDeleteTPalette(dword_1845FC);
     sub_F4064(v0);
   }
   sub_24041();
@@ -20547,7 +20547,7 @@ void __fastcall sub_20C97(int a1, int a2)
     v15 = v16;
     if ( v16 )
     {
-      v14 = sub_10E6C(v16);
+      v14 = logNewTPalette(v16);
       v13 = v14;
     }
     else
@@ -20562,7 +20562,7 @@ void __fastcall sub_20C97(int a1, int a2)
     v10 = v12;
     if ( v12 )
     {
-      v8 = sub_10E2C(v10);
+      v8 = logDeleteTPalette(v10);
       LOBYTE(v9) = sub_F4064(v8);
     }
     else
@@ -31516,7 +31516,7 @@ int sub_38CF8()
   int result; // eax@1
 
   _wcpp_2_mod_register_(&unk_133B20);
-  result = sub_10E6C((int)&unk_18AB00);
+  result = logNewTPalette((int)&unk_18AB00);
   dword_133B28 = 1;
   return result;
 }
@@ -36048,12 +36048,12 @@ int __fastcall GodAnger(int a1)
     v14 = dword_13DA74;
     v15 = (int)operator new(v12);
     if ( v15 )
-      v21 = sub_10E6C(v15);
+      v21 = logNewTPalette(v15);
     else
       v21 = 0;
     v16 = (int)operator new(v13);
     if ( v16 )
-      v22 = sub_10E6C(v16);
+      v22 = logNewTPalette(v16);
     else
       v22 = 0;
     v2 = sub_178F0();
@@ -36087,12 +36087,12 @@ int __fastcall GodAnger(int a1)
     log((int)a__memfreeSD_44, (unsigned int)aBattleBattle_c);
     if ( v21 )
     {
-      v8 = sub_10E2C(v21);
+      v8 = logDeleteTPalette(v21);
       sub_F4064(v8);
     }
     if ( v22 )
     {
-      v9 = sub_10E2C(v22);
+      v9 = logDeleteTPalette(v22);
       sub_F4064(v9);
     }
     sub_12E0B(v14);
@@ -42049,7 +42049,7 @@ void sub_4E950()
     v8 = v9;
     if ( v9 )
     {
-      v7 = sub_10E6C(v9);
+      v7 = logNewTPalette(v9);
       v4 = v7;
     }
     else
@@ -42062,7 +42062,7 @@ void sub_4E950()
     v10 = v6;
     if ( v6 )
     {
-      v2 = sub_10E2C(v10);
+      v2 = logDeleteTPalette(v10);
       sub_F4064(v2);
     }
     sub_4E18F();
@@ -42352,7 +42352,7 @@ int __usercall sub_4EFC9@<eax>(int a1@<eax>, long double a2@<st0>)
   dword_134FDF = v18;
   v26 = (int)operator new(v14);
   if ( v26 )
-    v19 = sub_10E6C(v26);
+    v19 = logNewTPalette(v26);
   else
     v19 = 0;
   dword_1960C4 = v19;
@@ -42468,7 +42468,7 @@ int __usercall sub_4EFC9@<eax>(int a1@<eax>, long double a2@<st0>)
   sub_122D0(20);
   if ( dword_1960C4 )
   {
-    v12 = sub_10E2C(dword_1960C4);
+    v12 = logDeleteTPalette(dword_1960C4);
     sub_F4064(v12);
   }
   sub_12D8D(dword_196168);
@@ -42697,7 +42697,7 @@ int sub_4FC96()
   v9 = v10;
   if ( v10 )
   {
-    v8 = sub_10E6C(v10);
+    v8 = logNewTPalette(v10);
     v5 = v8;
   }
   else
@@ -42710,7 +42710,7 @@ int sub_4FC96()
   v11 = v7;
   if ( v7 )
   {
-    v2 = sub_10E2C(v11);
+    v2 = logDeleteTPalette(v11);
     sub_F4064(v2);
   }
   return sub_4F690();
@@ -43383,7 +43383,7 @@ int __fastcall sub_50D94(int a1)
   sub_50B1A();
   v15 = (int)operator new(v7);
   if ( v15 )
-    v8 = sub_10E6C(v15);
+    v8 = logNewTPalette(v15);
   else
     v8 = 0;
   dword_196188 = v8;
@@ -43465,7 +43465,7 @@ int __fastcall sub_50D94(int a1)
   result = dword_196188;
   if ( dword_196188 )
   {
-    v6 = sub_10E2C(dword_196188);
+    v6 = logDeleteTPalette(dword_196188);
     result = sub_F4064(v6);
   }
   return result;
@@ -50153,7 +50153,7 @@ int __fastcall sub_5E398(int a1, int a2)
       v19 = v20;
       if ( v20 )
       {
-        v18 = sub_10E6C(v20);
+        v18 = logNewTPalette(v20);
         v14 = v18;
       }
       else
@@ -50192,7 +50192,7 @@ int __fastcall sub_5E398(int a1, int a2)
       v25 = v17;
       if ( v17 )
       {
-        v12 = sub_10E2C(v25);
+        v12 = logDeleteTPalette(v25);
         sub_F4064(v12);
       }
       result = sub_1708E();
@@ -50268,7 +50268,7 @@ int sub_5E73A()
   sub_17198();
   v4 = (int)operator new(v3);
   if ( v4 )
-    v5 = sub_10E6C(v4);
+    v5 = logNewTPalette(v4);
   else
     v5 = 0;
   v0 = sub_10E08();
@@ -50281,7 +50281,7 @@ int sub_5E73A()
   result = v5;
   if ( v5 )
   {
-    v2 = sub_10E2C(v5);
+    v2 = logDeleteTPalette(v5);
     result = sub_F4064(v2);
   }
   return result;
@@ -50301,7 +50301,7 @@ int sub_5E815()
   sub_17198();
   v4 = (int)operator new(v3);
   if ( v4 )
-    v5 = sub_10E6C(v4);
+    v5 = logNewTPalette(v4);
   else
     v5 = 0;
   v0 = sub_10E08();
@@ -50314,7 +50314,7 @@ int sub_5E815()
   result = v5;
   if ( v5 )
   {
-    v2 = sub_10E2C(v5);
+    v2 = logDeleteTPalette(v5);
     result = sub_F4064(v2);
   }
   return result;
@@ -50334,7 +50334,7 @@ int sub_5E8F0()
   sub_17198();
   v4 = (int)operator new(v3);
   if ( v4 )
-    v5 = sub_10E6C(v4);
+    v5 = logNewTPalette(v4);
   else
     v5 = 0;
   v0 = sub_10E08();
@@ -50347,7 +50347,7 @@ int sub_5E8F0()
   result = v5;
   if ( v5 )
   {
-    v2 = sub_10E2C(v5);
+    v2 = logDeleteTPalette(v5);
     result = sub_F4064(v2);
   }
   return result;
@@ -52974,7 +52974,7 @@ int sub_6374C()
   int result; // eax@1
 
   _wcpp_2_mod_register_(&unk_138010);
-  result = sub_10E6C((int)&unk_1AFC38);
+  result = logNewTPalette((int)&unk_1AFC38);
   dword_138018 = 1;
   return result;
 }
@@ -56441,7 +56441,7 @@ int __fastcall sub_6AF35(int a1)
   }
   v15 = (int)operator new(v9);
   if ( v15 )
-    v10 = sub_10E6C(v15);
+    v10 = logNewTPalette(v15);
   else
     v10 = 0;
   dword_1B0194 = v10;
@@ -56524,7 +56524,7 @@ int __fastcall sub_6AF35(int a1)
   dword_1B018C = 0;
   if ( dword_1B0194 )
   {
-    v7 = sub_10E2C(dword_1B0194);
+    v7 = logDeleteTPalette(dword_1B0194);
     sub_F4064(v7);
   }
   sub_17198();
@@ -57213,7 +57213,7 @@ int sub_6C925()
   sub_122D0(20);
   v7 = (int)operator new(v6);
   if ( v7 )
-    v9 = sub_10E6C(v7);
+    v9 = logNewTPalette(v7);
   else
     v9 = 0;
   v8 = (int)sub_12C6E(640, 480, 0);
@@ -57237,7 +57237,7 @@ int sub_6C925()
   result = v9;
   if ( v9 )
   {
-    v5 = sub_10E2C(v9);
+    v5 = logDeleteTPalette(v9);
     result = sub_F4064(v5);
   }
   return result;
