@@ -8790,3 +8790,50 @@ Additional harness notes:
   - mission `04` remains partial until repeat gate damage, breach/capture, battle exit, and `mission_objective_complete` are recovered.
   - mission `01..03` regression entries are wired but not rerun in this batch because the validated opt-in run focused on the active mission-04 frontier.
   - first-mission turn/end-turn route remains an opt-in repair probe until it has stable promoted evidence.
+
+## Batch 125 - Conversation Findings Documentation Integration Wave
+- Current frontier:
+  - absorb prior reverse-engineering conversation findings in a documentation-first, canonical-artifacts-first batch without reopening already-landed rename or structure families
+- Functions renamed:
+  - none this batch
+- Structs/classes/globals/tables recovered or renamed:
+  - none this batch
+- High-priority unknown functions reviewed:
+  - none; this wave was intentionally scoped to repo documentation and artifact crosswalk material
+- Blockers removed this batch:
+  - added a repo-root contributor guide that fixes the missing evidence-order and naming-policy reference point for future disassembly passes
+  - added a maintainer-facing gap audit so future Codex work does not spend time re-deriving rename families and state blocks that are already canonical
+  - added a grep-friendly machine-readable crosswalk that records which conversation findings are already present, which files own them, and what action remains
+- SDL replacements/cleanups this batch:
+  - none
+- Menu/UI fixes this batch:
+  - none
+- Session-init fixes this batch:
+  - none
+- Validation probe:
+  - `git diff --check`
+  - `test -f DISASSEMBLY_GUIDE.md`
+  - `test -f docs/CONVERSATION_FINDINGS_GAP_AUDIT.md`
+  - `test -f data/conversation_findings_crosswalk.csv`
+  - `rg -n "documentation-first|canonical-artifacts-first|DISASSEMBLY_GUIDE|CONVERSATION_FINDINGS_GAP_AUDIT|conversation_findings_crosswalk" COMPILATION_PROGRESS.md DISASSEMBLY_GUIDE.md docs/CONVERSATION_FINDINGS_GAP_AUDIT.md data/conversation_findings_crosswalk.csv`
+- Compile status:
+  - no source or build-surface files changed in this wave; compile status was intentionally left unchanged and not re-probed beyond docs-scope validation
+- Link status:
+  - unchanged from Batch 124; this was not a link/runtime recovery batch
+- Runtime status:
+  - unchanged from Batch 124; no executable-path or SDL-seam changes were made
+- Highest authentic runtime milestone reached:
+  - unchanged from Batch 124: authentic startup enters the real archive/resource mount path inside `sub_442AD0` under WSL/SDL and reaches the private stream seek/cursor helper band before faulting
+- Key evidence used:
+  - repo audit confirmed the likely conversation-landed rename families are already present in `REVERSE_ENGINEERING_RENAME_LOG.md`
+  - repo audit confirmed the likely conversation-landed state blocks are already present in `RECOVERED_STRUCTURES.json`
+  - repo audit confirmed the 35-entry roster plus conservative cargo/personage taxonomy is already present in `UNIT_TYPES_AND_STATS_REPORT.md` and `UNIT_TYPES_AND_STATS.json`
+  - root-level repo audit confirmed `DISASSEMBLY_GUIDE.md` was still missing before this batch
+- Ambiguous candidates deferred:
+  - unit types `33` and `34` remain conservatively framed as special personage entries rather than more specific classes
+  - soft field names such as `aux_context`, `visual_class_index`, and `pending_exit_countdown` remain conservative
+  - the exact semantic boundary of `AST_Append` remains intentionally unresolved
+  - no canonical rename or structure file was edited because the audit did not prove a real gap
+- total rename count so far:
+  - `1193`
+
