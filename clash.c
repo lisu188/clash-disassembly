@@ -2412,7 +2412,7 @@ signed int __fastcall sub_A6BF0(int a1, int a2, int a3, int a4, int a5);
 int __fastcall sub_A6DA0(int a1, int a2, int a3, signed int a4);
 int __fastcall sub_A6F50(int a1, int a2, int a3, signed int a4);
 signed int sub_A6FB0();
-// int __usercall sub_A7110@<eax>(int a1@<eax>, long double a2@<st0>);
+// int __usercall AssertCommand@<eax>(int a1@<eax>, long double a2@<st0>);
 // void __usercall RetractCommand(int a1@<eax>, int a2@<edx>, int a3@<ebx>, int a4@<ecx>, long double a5@<st0>);
 // int __usercall SetFactDuplicationCommand@<eax>(int a1@<edx>, int a2@<ecx>, long double a3@<st0>);
 int GetFactDuplicationCommand(); // weak
@@ -3738,8 +3738,8 @@ int __fastcall sub_E9A20(int result);
 int __fastcall sub_E9A70(int result);
 int __fastcall sub_E9A90(int result);
 signed int sub_E9AA0();
-// signed int __usercall sub_E9B20@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
-// signed int __usercall sub_E9B40@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
+// signed int __usercall ModifyCommand@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
+// signed int __usercall DuplicateCommand@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>);
 // void __usercall sub_E9B60(int a1@<eax>, int a2@<edx>, long double a3@<st0>, int a4@<ebx>);
 signed int __fastcall sub_E9E90(int a1, int a2, int a3);
 int __fastcall sub_E9FD0(int a1, int a2);
@@ -101139,7 +101139,7 @@ int __fastcall sub_A6F50(int a1, int a2, int a3, signed int a4)
 signed int sub_A6FB0()
 {
   registerClipsCallback((int)aFacts_1, 118, (int)FactsCommand, (int)aFactscommand, (int)a4iu);
-  sub_A58F0((int)aAssert, 117, (int)sub_A7110, (int)aAssertcommand);
+  sub_A58F0((int)aAssert, 117, (int)AssertCommand, (int)aAssertcommand);
   registerClipsCallback((int)aRetract_0, 118, (int)RetractCommand, (int)aRetractcommand, (int)a1Z);
   registerClipsCallback((int)aAssertString, 117, (int)AssertStringFunction, (int)aAssertstringfu, (int)a11s_0);
   registerClipsCallback((int)aStrAssert, 117, (int)AssertStringFunction, (int)aAssertstringfu, (int)a11s_0);
@@ -101154,7 +101154,7 @@ signed int sub_A6FB0()
 // A73F0: using guessed type int GetFactDuplicationCommand();
 
 //----- (000A7110) --------------------------------------------------------
-int __usercall sub_A7110@<eax>(int a1@<eax>, long double a2@<st0>)
+int __usercall AssertCommand@<eax>(int a1@<eax>, long double a2@<st0>)
 {
   int v2; // edi@1
   signed int v3; // ebp@1
@@ -159164,8 +159164,8 @@ int __fastcall sub_E9A90(int result)
 //----- (000E9AA0) --------------------------------------------------------
 signed int sub_E9AA0()
 {
-  sub_A58F0((int)aModify, 117, (int)sub_E9B20, (int)aModifycommand);
-  sub_A58F0((int)aDuplicate, 117, (int)sub_E9B40, (int)aDuplicatecomma);
+  sub_A58F0((int)aModify, 117, (int)ModifyCommand, (int)aModifycommand);
+  sub_A58F0((int)aDuplicate, 117, (int)DuplicateCommand, (int)aDuplicatecomma);
   sub_A5A70((int)aModify, (int)sub_EA030);
   sub_A5A70((int)aDuplicate, (int)sub_EA050);
   sub_A5AF0((int)aModify, 0, 0);
@@ -159173,7 +159173,7 @@ signed int sub_E9AA0()
 }
 
 //----- (000E9B20) --------------------------------------------------------
-signed int __usercall sub_E9B20@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
+signed int __usercall ModifyCommand@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   signed int result; // eax@1
 
@@ -159182,7 +159182,7 @@ signed int __usercall sub_E9B20@<eax>(int a1@<eax>, int a2@<ebx>, long double a3
 }
 
 //----- (000E9B40) --------------------------------------------------------
-signed int __usercall sub_E9B40@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
+signed int __usercall DuplicateCommand@<eax>(int a1@<eax>, int a2@<ebx>, long double a3@<st0>)
 {
   signed int result; // eax@1
 
