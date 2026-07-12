@@ -17,7 +17,7 @@
 - There is still no fully recovered `main` / `_WinMain@16` end-to-end executable path.
 - `_wcpp_*` and related CRT/runtime glue families are still only partially understood.
 - Quarantined allocator, file-handle, event, and thread stubs still stand in for real behavior in important areas.
-- `JUMPOUT` control-flow scars still exist in meaningful boot/runtime paths.
+- `JUMPOUT` control-flow scars are fully eliminated: all 17 "control flows out of bounds" artifacts in `clash95.c` are recovered into authentic structured C backed by `clash95.asm` (`grep -c JUMPOUT clash95.c` == 0). See `docs/STATUS.md` and the 2026-06-30 rename-log entry.
 - SDL containment exists, but the repo is not yet at "boot to menu and play a match."
 
 ## 4. Practical Priority Order

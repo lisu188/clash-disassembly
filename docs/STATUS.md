@@ -2,6 +2,20 @@
 
 Last consolidated: 2026-07-03.
 
+## Disassembly Control-Flow Recovery: Complete
+
+All 17 remaining `JUMPOUT(...)` "control flows out of bounds" decompiler scars in
+`clash95.c` are recovered into authentic structured C, each backed by
+`clash95.asm`. `grep -c JUMPOUT clash95.c` is `0`. Seven were shared
+register-restore epilogues (now plain `return;`); ten were voice-mix
+format-select thunks (`Audio_SelectMixFormat{1..5}{Mono,Stereo}`) that set an
+inner-loop pointer table (`g_Audio_MixFormatDispatchTable`) and tail-jumped into
+the shared span chunks `loc_46BB40` / `loc_46BB9A`, now recovered via the
+`Audio_MixVoiceSpanDispatch_46BB40` / `Audio_MixVoiceSpanDispatch_46BB9A`
+helpers. See `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md` for the full
+per-address table. This removes the "JUMPOUT control-flow scars" blocker family
+from AGENTS.md; the recovered C now has no out-of-bounds control-flow artifacts.
+
 ## Validated State
 
 - The `sub_XXXXXX` placeholder-rename campaign is complete: all 3031 distinct

@@ -1,5 +1,41 @@
 # Reverse Engineering Rename Log
 
+## 2026-06-30 - JUMPOUT Control-Flow Scar Elimination (Disassembly Recovery Completion)
+
+Recovered all 17 remaining `JUMPOUT(...)` decompiler scars in `clash95.c` into
+authentic structured C control flow, each backed directly by `clash95.asm`. This
+removes the last "control flows out of bounds" artifacts from the recovered
+source. `grep -c JUMPOUT clash95.c` is now `0`; the previously-undefined
+`JUMPOUT` symbol no longer appears in the compiled object.
+
+Two structural patterns, both behavior-preserving:
+
+| Address(es) | Function(s) | Pattern | Recovery | Confidence |
+|---|---|---|---|---|
+| `413918` | `Unit_BuildBigInfoGraphicPath` | Shared register-restore epilogue (`pop edi/esi/ecx/ebx; retn`) shared with the sibling at `0x413920` | `return;` | High (asm-confirmed) |
+| `4517A0` | `Cheat_HealSelectedSquadAndClearDamage` | Shared epilogue (`pop edx/ecx/ebx; retn`) shared with the sibling at `0x451730` | `return;` | High (asm-confirmed) |
+| `451C1C` | `Cheat_SetFactionColorAndCastleFlags` | Shared epilogue shared with the sibling at `0x451AE0` | `return;` | High (asm-confirmed) |
+| `4B3453` (x2) | `IO_ScanfReadStringField`, `IO_ScanfReadFloatField` | Shared epilogue (`pop ebp/es/edi/esi/ecx/ebx; retn`) shared with the sibling at `0x4B3378` | `return;` | High (asm-confirmed) |
+| `4B9BCE` | `Rules_CEPrintExpression` | Shared epilogue (`pop ebp/edi/esi/ecx/ebx; retn`) shared with the sibling at `0x4B9AF0` | `return;` | High (asm-confirmed) |
+| `4E5F83` | `CRT_PutEnvEntryA` | Shared register-restore epilogue in `putenv_` | `return;` | High (asm-confirmed) |
+| `46BB40` (x5) | `Audio_SelectMixFormat{1..5}Mono` | Set inner-loop table `g_Audio_MixFormatDispatchTable`, tail-jump into shared voice-mix span chunk `loc_46BB40` (== `Audio_MixMonoVoiceIntoBuffer` body) | Load own table, then call new `Audio_MixVoiceSpanDispatch_46BB40` | High (asm-confirmed) |
+| `46BB9A` (x5) | `Audio_SelectMixFormat{1..5}Stereo` | Set inner-loop table `g_Audio_MixFormatDispatchTable`, tail-jump into shared voice-mix span chunk `loc_46BB9A` (== `Audio_MixPannedVoiceIntoBuffer` body) | Load own table, then call new `Audio_MixVoiceSpanDispatch_46BB9A` | High (asm-confirmed) |
+
+New helpers (extracted shared voice-mix span-dispatch chunks, mirroring the
+asm `FUNCTION CHUNK AT 0046BB40/0046BB9A` shared by these entries):
+
+| New Name | Kind | Subsystem | Evidence |
+|---|---|---|---|
+| `Audio_MixVoiceSpanDispatch_46BB40` | static function | Audio / Voice Mixer | c, asm (`loc_46BB40`; identical to `Audio_MixMonoVoiceIntoBuffer` inlined body) |
+| `Audio_MixVoiceSpanDispatch_46BB9A` | static function | Audio / Voice Mixer | c, asm (`loc_46BB9A`; identical to `Audio_MixPannedVoiceIntoBuffer` inlined body) |
+
+The ten voice-mix format-select thunks gained their true `__usercall` register
+signatures (matching `Audio_MixMonoVoiceIntoBuffer` / `Audio_MixPannedVoiceIntoBuffer`),
+and their forward declarations were updated to match. Build (`clash95_bootstrap`, `clash95_recovered`) stays green;
+JSON, markdown-link, and whitespace checks pass; the CTest baseline is unchanged
+(the four CD-data-dependent runtime smokes remain environment-gated in this
+checkout, identical to before this change).
+
 ## 2026-06-17 - Multi-Agent Boot/Menu/Save And Battle-AI Rename Pass
 
 | Old Name / Pattern | New Name | Kind | Subsystem | Confidence | Evidence Summary | Sources | Subagent Evidence |

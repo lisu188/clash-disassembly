@@ -1862,16 +1862,16 @@ int  Audio_ReadWavHeaderFromStream(int a1, _DWORD *a2);
 void  Audio_MixResampledVoice(int *a1);
 int  Audio_MixMonoVoiceIntoBuffer(signed int a1, int a2, char a3, void *a4);
 unsigned int  Audio_MixPannedVoiceIntoBuffer(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
-void Audio_SelectMixFormat1Mono();
-void Audio_SelectMixFormat1Stereo();
-void Audio_SelectMixFormat2Mono();
-void Audio_SelectMixFormat2Stereo();
-void Audio_SelectMixFormat3Mono();
-void Audio_SelectMixFormat3Stereo();
-void Audio_SelectMixFormat4Mono();
-void Audio_SelectMixFormat4Stereo();
-void Audio_SelectMixFormat5Mono();
-void Audio_SelectMixFormat5Stereo();
+int Audio_SelectMixFormat1Mono(signed int a1, int a2, char a3, void *a4);
+unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
+int Audio_SelectMixFormat2Mono(signed int a1, int a2, char a3, void *a4);
+unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
+int Audio_SelectMixFormat3Mono(signed int a1, int a2, char a3, void *a4);
+unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
+int Audio_SelectMixFormat4Mono(signed int a1, int a2, char a3, void *a4);
+unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
+int Audio_SelectMixFormat5Mono(signed int a1, int a2, char a3, void *a4);
+unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5);
 int __cdecl Audio_ClearGlobalMixBuffer(int a1);
 int  Audio_ZeroMixAccumulatorBuffer(int a1, void *a2);
 int __cdecl Audio_GetFixedCapabilityFlag(_DWORD *a1);
@@ -28229,7 +28229,9 @@ void  Unit_BuildBigInfoGraphicPath(char *a1, unsigned __int8 a2, int a3)
     v16 += 2;
   }
   while ( v18 );
-  JUMPOUT(0x413918);
+  // 413915: falls through to the shared register-restore epilogue at 413918
+  // (pop edi/esi/ecx/ebx; retn) shared with sub_413920; in C this is the return.
+  return;
 }
 // 413915: control flows out of bounds to 413918
 // 511130: using guessed type char g_LanguageIndex;
@@ -69107,7 +69109,9 @@ void Cheat_HealSelectedSquadAndClearDamage()
       *(_BYTE *)(v1 + 31 + gameData + 725 * g_SelectedUnitIndex + 147158) = 100;
     }
   }
-  JUMPOUT(0x4517A0);
+  // 4517CA: falls through to the shared epilogue loc_4517A0 (pop edx/ecx/ebx; retn)
+  // shared with sub_451730; in C this is the function return.
+  return;
 }
 // 4517CA: control flows out of bounds to 4517A0
 // 4517ED: variable 'v2' is possibly undefined
@@ -69300,7 +69304,9 @@ void Cheat_SetFactionColorAndCastleFlags()
     do
     {
       if ( ++v0 >= 100 )
-        JUMPOUT(0x451C1C);
+        // 451CE5: loop exit jumps to the shared epilogue loc_451C1C
+        // (pop edx/ecx/ebx; retn) shared with sub_451AE0; in C this is the return.
+        return;
     }
     while ( v0 < 0 );
   }
@@ -83027,103 +83033,166 @@ unsigned int  Audio_MixPannedVoiceIntoBuffer(
 // 519BBA: using guessed type int dword_519BBA;
 // 54DB8C: using guessed type int dword_54DB8C;
 
+// Recovered shared voice-mix span-dispatch chunks (loc_46BB40 / loc_46BB9A
+// in clash95.asm). Each Audio_SelectMixFormat* entry below first loads its own
+// inner-loop pointer table into g_Audio_MixFormatDispatchTable, then tail-jumps
+// into one of these shared chunks, which selects an unrolled mix variant by
+// destination alignment and calls it. Audio_MixMonoVoiceIntoBuffer and
+// Audio_MixPannedVoiceIntoBuffer inline these same two chunks directly.
+static int Audio_MixVoiceSpanDispatch_46BB40(signed int a1, int a2, char a3, void *a4)
+{
+  int (__thiscall *v4)(signed int); // eax
+  int result; // eax
+
+  if ( a2 )
+  {
+    if ( !a3 )
+      memset(a4, 0, 4 * a2);
+    v4 = *(int (__thiscall **)(signed int))(g_Audio_MixFormatDispatchTable + -4 * (a2 & 3) + 16);
+    g_Audio_MixVoice_StepIntArg = a1 >> 16;
+    return v4(a1 << 16);
+  }
+  return result;
+}
+
+static unsigned int Audio_MixVoiceSpanDispatch_46BB9A(
+        unsigned int result,
+        signed int a2,
+        unsigned int a3,
+        __int16 a4,
+        void *a5)
+{
+  int (__thiscall *v5)(unsigned int); // eax
+  __int16 v6; // cx
+
+  if ( a3 )
+  {
+    if ( !(_BYTE)a4 )
+    {
+      HIWORD(result) = 0;
+      memset(a5, 0, 8 * a3);
+    }
+    if ( (_BYTE)g_Audio_MixVoice_Pan == 0x80 )
+    {
+      g_Audio_MixVoice_LeftVolumeStep = -1;
+      g_Audio_MixVoice_RightVolumeStep = 1;
+      g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
+      g_Audio_MixVoice_RightVolume = HIBYTE(a4);
+    }
+    else
+    {
+      g_Audio_MixVoice_LeftVolumeStep = 0;
+      g_Audio_MixVoice_RightVolumeStep = 0;
+      if ( (g_Audio_MixVoice_Pan & 0x80u) == 0 )
+      {
+        g_Audio_MixVoice_RightVolume = HIBYTE(a4);
+        LOWORD(result) = (unsigned __int8)(64 - g_Audio_MixVoice_Pan) * HIBYTE(a4);
+        g_Audio_MixVoice_LeftVolume = result >> 6;
+      }
+      else
+      {
+        g_Audio_MixVoice_LeftVolume = HIBYTE(a4);
+        LOWORD(result) = (unsigned __int8)(g_Audio_MixVoice_Pan + 64) * HIBYTE(a4);
+        g_Audio_MixVoice_RightVolume = result >> 6;
+      }
+    }
+    g_Audio_MixVoice_PanStepFracArg = a2 << 16;
+    v5 = *(int (__thiscall **)(unsigned int))(g_Audio_MixFormatDispatchTable + -4 * (a3 & 3) + 16);
+    LOBYTE(v6) = (a3 >> 2) + 1;
+    g_Audio_MixVoice_StepIntArg = a2 >> 16;
+    HIBYTE(v6) = (unsigned __int8)(g_Audio_MixVoice_RightVolume + 1) >> 1;
+    return v5(((unsigned int)dword_54DB8C >> 2) + (v6 & 0xFF00));
+  }
+  return result;
+}
+
 //----- (0046BE88) --------------------------------------------------------
-void Audio_SelectMixFormat1Mono()
+int Audio_SelectMixFormat1Mono(signed int a1, int a2, char a3, void *a4)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1MonoDispatchBase;
-  JUMPOUT(0x46BB40);
+  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
 }
-// 46BE92: control flows out of bounds to 46BB40
 // 46BDD1: using guessed type void *off_46BDD1;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046BF5E) --------------------------------------------------------
-void Audio_SelectMixFormat1Stereo()
+unsigned int Audio_SelectMixFormat1Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat1StereoDispatchBase;
-  JUMPOUT(0x46BB9A);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
 }
-// 46BF68: control flows out of bounds to 46BB9A
 // 46BE97: using guessed type void *off_46BE97;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C030) --------------------------------------------------------
-void Audio_SelectMixFormat2Mono()
+int Audio_SelectMixFormat2Mono(signed int a1, int a2, char a3, void *a4)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2MonoDispatchBase;
-  JUMPOUT(0x46BB40);
+  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
 }
-// 46C03A: control flows out of bounds to 46BB40
 // 46BF6D: using guessed type void *off_46BF6D;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C1A2) --------------------------------------------------------
-void Audio_SelectMixFormat2Stereo()
+unsigned int Audio_SelectMixFormat2Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat2StereoDispatchBase;
-  JUMPOUT(0x46BB9A);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
 }
-// 46C1AC: control flows out of bounds to 46BB9A
 // 46C03F: using guessed type void *off_46C03F;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C2FC) --------------------------------------------------------
-void Audio_SelectMixFormat3Mono()
+int Audio_SelectMixFormat3Mono(signed int a1, int a2, char a3, void *a4)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3MonoDispatchBase;
-  JUMPOUT(0x46BB40);
+  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
 }
-// 46C306: control flows out of bounds to 46BB40
 // 46C1B1: using guessed type void *off_46C1B1;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C472) --------------------------------------------------------
-void Audio_SelectMixFormat3Stereo()
+unsigned int Audio_SelectMixFormat3Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat3StereoDispatchBase;
-  JUMPOUT(0x46BB9A);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
 }
-// 46C47C: control flows out of bounds to 46BB9A
 // 46C30B: using guessed type void *off_46C30B;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C6B4) --------------------------------------------------------
-void Audio_SelectMixFormat4Mono()
+int Audio_SelectMixFormat4Mono(signed int a1, int a2, char a3, void *a4)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4MonoDispatchBase;
-  JUMPOUT(0x46BB40);
+  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
 }
-// 46C6BE: control flows out of bounds to 46BB40
 // 46C481: using guessed type void *off_46C481;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046C996) --------------------------------------------------------
-void Audio_SelectMixFormat4Stereo()
+unsigned int Audio_SelectMixFormat4Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat4StereoDispatchBase;
-  JUMPOUT(0x46BB9A);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
 }
-// 46C9A0: control flows out of bounds to 46BB9A
 // 46C6C3: using guessed type void *off_46C6C3;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046CE10) --------------------------------------------------------
-void Audio_SelectMixFormat5Mono()
+int Audio_SelectMixFormat5Mono(signed int a1, int a2, char a3, void *a4)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5MonoDispatchBase;
-  JUMPOUT(0x46BB40);
+  return Audio_MixVoiceSpanDispatch_46BB40(a1, a2, a3, a4);
 }
-// 46CE1A: control flows out of bounds to 46BB40
 // 46C9A5: using guessed type void *off_46C9A5;
 // 519B94: using guessed type int dword_519B94;
 
 //----- (0046D2A6) --------------------------------------------------------
-void Audio_SelectMixFormat5Stereo()
+unsigned int Audio_SelectMixFormat5Stereo(unsigned int result, signed int a2, unsigned int a3, __int16 a4, void *a5)
 {
   g_Audio_MixFormatDispatchTable = (int)&g_Audio_SelectMixFormat5StereoDispatchBase;
-  JUMPOUT(0x46BB9A);
+  return Audio_MixVoiceSpanDispatch_46BB9A(result, a2, a3, a4, a5);
 }
-// 46D2B0: control flows out of bounds to 46BB9A
 // 46CE1F: using guessed type void *off_46CE1F;
 // 519B94: using guessed type int dword_519B94;
 
@@ -143859,7 +143928,9 @@ LABEL_28:
       *(_WORD *)a3 = 0;
   }
 LABEL_33:
-  JUMPOUT(0x4B3453);
+  // 4B35A8: jumps to the shared epilogue loc_4B3453 (pop ebp/es/edi/esi/ecx/ebx; retn)
+  // shared with sub_4B3378; in C this is the function return.
+  return;
 }
 // 4B35A8: control flows out of bounds to 4B3453
 // 4B34BB: variable 'v3' is possibly undefined
@@ -144142,7 +144213,9 @@ LABEL_42:
           *v18 = v22;
         }
 LABEL_60:
-        JUMPOUT(0x4B3453);
+        // 4B3597: jumps to the shared epilogue loc_4B3453 (pop ebp/es/edi/esi/ecx/ebx; retn)
+        // shared with sub_4B3378; in C this is the function return.
+        return;
       }
 LABEL_17:
       if ( v6 == 46 )
@@ -148608,7 +148681,9 @@ LABEL_9:
         Output_Write(v2, (int)asc_50A0B4, v2);
     }
   }
-  JUMPOUT(0x4B9BCE);
+  // 4B9C1B: jumps to the shared epilogue loc_4B9BCE (pop ebp/edi/esi/ecx/ebx; retn)
+  // shared with sub_4B9AF0; in C this is the function return.
+  return;
 }
 // 4B9C1B: control flows out of bounds to 4B9BCE
 // 4B9C4C: variable 'v2' is possibly undefined
@@ -187282,7 +187357,9 @@ LABEL_22:
     }
   }
 LABEL_23:
-  JUMPOUT(0x4E5F83);
+  // 4E60F0: jumps to the shared register-restore epilogue at 4E5F83 (in putenv_);
+  // in C this is the function return.
+  return;
 }
 // 4E60F0: control flows out of bounds to 4E5F83
 // 4E603E: variable 'v7' is possibly undefined
