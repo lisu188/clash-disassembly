@@ -484,6 +484,18 @@
       "evidence": "Stored in `g_UnitTypeBaseWallAttack`, consumed by `UnitStats_CalcEffectiveWallAttack`, and applied directly to wall-section health during `UnitBattle_AttackWall`."
     },
     {
+      "name": "production_turns",
+      "confidence": "high",
+      "semantic_role": "per-type number of turns needed for a building to finish producing the unit",
+      "evidence": "Stored in `g_UnitTypeProductionTurns`, copied into BuildingRecord +415 by `Building_SetUnitProduction`, and decremented by the building per-turn production resolver until the unit is created."
+    },
+    {
+      "name": "production_cost",
+      "confidence": "high",
+      "semantic_role": "per-type local building-resource cost paid when production completes",
+      "evidence": "Stored in `g_UnitTypeProductionCost`, checked against BuildingRecord +438, and subtracted when the produced unit is inserted into the building garrison."
+    },
+    {
       "name": "road_move_cost",
       "confidence": "high",
       "semantic_role": "move cost on road and bridge overlays",
