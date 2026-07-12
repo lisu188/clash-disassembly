@@ -8852,3 +8852,46 @@ Additional harness notes:
 - Renamed functions/helpers/globals/tables/structs: none.
 - Ambiguous candidates deferred: `.agent/wiki/` relocation, deeper archive-log link rewriting, splitting large progress logs, and moving route scripts remain deferred to avoid losing evidence or breaking local workflows.
 
+
+## Batch 97 - Queen Childbirth State And Building Service Byte Wave
+- Repairs:
+  - added small readability-only semantics in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c):
+    - `QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING = 9`
+    - `BUILDING_GARRISON_SERVICE_STATE_OFFSET`
+    - `BUILDING_GARRISON_TRAINING_TURNS_MASK`
+    - `BUILDING_GARRISON_REPAIR_TURNS_MASK`
+    - `BUILDING_GARRISON_SERVICE_STATE(buildingPtr, slotIndex)`
+  - rebound the queen birth branch in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) from raw literal `9` to `QUEEN_RELATIONSHIP_STATE_CHILDBIRTH_PENDING`
+  - rewrote the core building train/repair timer helpers in [clash95.c](/home/andrz/git/clash-disassembly/clash95.c) to use the recovered service-state offset/masks instead of anonymous `+390` / `0x07` / `0x38` accesses
+  - updated [RECOVERED_STRUCTURES.json](/home/andrz/git/clash-disassembly/RECOVERED_STRUCTURES.json) to rename:
+    - `BuildingRecord.garrison_order_bytes[12]` -> `BuildingRecord.garrison_service_state[12]`
+    - and to record the confirmed queen-state fragment `queen_relationship_state == 9 -> childbirth pending`
+  - extended [UNIT_TYPES_AND_STATS_REPORT.md](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS_REPORT.md) and [UNIT_TYPES_AND_STATS.json](/home/andrz/git/clash-disassembly/UNIT_TYPES_AND_STATS.json) with the direct relationship:
+    - `SpecialPersonageCategory` <- `queen_relationship_state` birth-trigger evidence
+- Validation probe:
+  - `gcc -std=gnu89 -w -I. -fsyntax-only clash95.c`
+  - `gcc -std=gnu89 -w -I. -c clash95.c -o /tmp/clash95_batch97.o`
+  - `cmake --build /tmp/clash95-cmake-build --target clash95_recovered`
+  - `python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures_batch97.json`
+  - `python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_and_stats_batch97.json`
+  - `git diff --check`
+- Windows dependencies replaced with SDL this batch:
+  - none; this wave stayed in gameplay/state semantics and preserved the existing SDL seam unchanged
+- Current leading blockers:
+  - unchanged at the broader executable/link surface:
+    - missing `main`
+    - `_wcpp_*` runtime helpers
+    - `j__nfree_` / `j_j__nfree_`
+    - `sub_473ED5`
+    - `memset_` / `nmalloc_` / `nrealloc_` / `memcpy_` / `memmove_`
+    - `_set_errno_nt_` / `_set_errno_dos_`
+    - residual `JUMPOUT` control-flow scars
+- Key evidence used:
+  - `Queen_NewTurn` checks `PLAYER_QUEEN_RELATIONSHIP_STATE(g_CurrentPlayerIndex) == 9`, spawns type `33` or `34` via `Building_CreateSpecialPersonageGarrisonUnit`, and then rewrites the byte to `5`, which secures the childbirth-pending meaning of value `9`
+  - `Building_TrainUnit`, `Building_ClearGarrisonTrainingTimer`, `Building_RepairUnit`, `Building_ClearGarrisonRepairTimer`, and `Building_UpdateGarrisonTrainRepairTimers` all converge on `building + 390 + slot` as one packed byte with independent training and repair countdown bands
+  - the recovered unit-taxonomy artifacts already established types `33` and `34` as the special-personage family reused by both prisoner and queen-birth flows, so the state-byte fragment could be logged directly without inventing stronger labels for the remaining values
+- Net effect:
+  - the queen relationship byte now has one explicit, code-level enum fragment instead of an unexplained magic value in the birth path
+  - the building `+390..+401` family is now documented in service-state terms that match the actual training/repair lifecycle instead of the older generic order-byte label
+  - the unit-type/stat artifacts now capture the direct player-state trigger that emits the special-personage unit family
+
