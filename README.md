@@ -35,6 +35,8 @@ git diff --check
 - `docs/ROADMAP.md` - near-term and long-term recovery goals.
 - `docs/REVERSE_ENGINEERING.md` - source-of-truth, naming, and patch policy.
 - `docs/STRUCTURES.md` - structure/data recovery policy and metadata links.
+- `docs/AI_SCRIPTING_API.md` - the strategic-AI CLIPS host-function API (the
+  commands `strateg\clash.dat` rules call into the engine).
 - `docs/artifacts.md` - artifact retention and pruning policy.
 - `docs/archive/` - preserved historical logs, reports, and old navigation
   notes.

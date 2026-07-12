@@ -3396,7 +3396,7 @@ _DWORD * Help_FreeTopicTree(_DWORD *result);
 signed int  Help_RunInteractiveHelpBrowser(int a1, DWORD a2, double a3);
 signed int  Help_SetHelpFilePathCommand(int a1, double a2);
 int * Help_LoadHelpFileCommand(DWORD a1, double a2);
-int  Help_PrintTopicEntryCommand(double a1);
+int  Help_PrintRegionCommand(double a1);
 signed int  Help_UnloadHelpFileCommand(int a1, double a2);
 BOOL __thiscall Help_RouterQueryMatchesWhelp(void *this);
 int __fastcall Rules_HelpRouterPrint(int a1, int a2);
@@ -4149,7 +4149,7 @@ int  Method_PackRestrictionTypes(_DWORD *a1, int a2);
 int  Method_FreeRestrictionChain(int result);
 int  Method_FindInsertionIndex(int a1, int a2, int a3, int a4, unsigned int *a5);
 signed int Defgeneric_ParseDeclaration();
-signed int  Defgeneric_EmitQualifiedNameBanner(int a1);
+signed int  Defgeneric_CreateDefaultPPForm(int a1);
 int  Method_ParseIndexModifier(int a1, _DWORD *a2);
 int  Method_ParseParameterList(int a1, signed int *a2, int *a3);
 int  Method_ParseParameterRestriction(int a1);
@@ -131335,7 +131335,7 @@ int * Help_LoadHelpFileCommand(DWORD a1, double a2)
 // 54DD70: using guessed type int dword_54DD70;
 
 //----- (004A60A0) --------------------------------------------------------
-int  Help_PrintTopicEntryCommand(double a1)
+int  Help_PrintRegionCommand(double a1)
 {
   _DWORD *v1; // edi
   _DWORD *v2; // ebp
@@ -131755,7 +131755,7 @@ signed int Rules_RegisterHelpFunctions()
   Rules_RegisterHostFunction(aHelpPath, 118, (int)aHelppathfuncti, (int)Help_SetHelpFilePathCommand, (int)a1k);
   Rules_RegisterHostFunction(aFetch, 117, (int)aFetchcommand, (int)Help_LoadHelpFileCommand, (int)a11k_2);
   Rules_RegisterHostFunction(aToss, 98, (int)aTosscommand, (int)Help_UnloadHelpFileCommand, (int)a11k_2);
-  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)aPrintregioncom, (int)Help_PrintTopicEntryCommand, (int)a2Wk);
+  return Rules_RegisterHostFunction(aPrintRegion, 98, (int)aPrintregioncom, (int)Help_PrintRegionCommand, (int)a2Wk);
 }
 
 //----- (004A66B0) --------------------------------------------------------
@@ -162654,7 +162654,7 @@ signed int  Defgeneric_ParseDefmethod(int a1)
   v4 = Defgeneric_AddConstruct(v3, &v29);
   v5 = (_DWORD *)v4;
   if ( v29 )
-    Defgeneric_EmitQualifiedNameBanner(v4);
+    Defgeneric_CreateDefaultPPForm(v4);
   Rules_IncrementIndentDepth(1);
   v34 = Method_ParseParameterList(v36, v6, &v32);
   Rules_DecrementIndentDepth(1);
@@ -163172,7 +163172,7 @@ signed int Defgeneric_ParseDeclaration()
 // 51A614: using guessed type char *off_51A614[5];
 
 //----- (004C9DB0) --------------------------------------------------------
-signed int  Defgeneric_EmitQualifiedNameBanner(int a1)
+signed int  Defgeneric_CreateDefaultPPForm(int a1)
 {
   int v2; // eax
   const char *Name; // esi
