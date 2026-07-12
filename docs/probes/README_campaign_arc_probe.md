@@ -42,8 +42,32 @@ CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
 ```
 
 The route-regression CTest entries are skipped by default because they launch
-Xvfb, open the SDL window, and drive authentic input. They currently cover the
-verified direct-route milestones for missions `01..04`.
+Xvfb, open the SDL window inside that virtual X11 display, and drive authentic
+input. The route runner pins child SDL launches to `SDL_VIDEODRIVER=x11`,
+clears inherited `WAYLAND_DISPLAY`, and refreshes the matched SDL window id
+before host-driven clicks/keys so WSLg does not surface a Windows-visible
+window during normal probe runs. The entries currently cover the verified
+direct-route milestones for missions `01..04`.
+
+Route scripts support fixed log waits with `wait_log`, fresh-marker waits with
+`wait_log_new`, expected final markers with `expect_log`, and alternative
+authentic markers with `wait_log_any` / `wait_log_any_new` using
+`pattern A || pattern B`. Use the alternative waits only when runtime evidence
+shows real route variance, such as AI-turn damage changing a defender's
+remaining count before the next player attack. `mark_log_count NAME PATTERN`,
+`wait_log_marked [timeout] NAME [PATTERN]`, and
+`wait_log_marked_any [timeout] NAME || OTHER_NAME` pin later waits to counts
+captured before a route input, which avoids stale matches in long battle logs.
+Use `stop` to end a quarantined partial route at a deliberately proven milestone
+while preserving later experimental steps in the route file for future repair.
+Use `if_env NAME [value]` / `endif` to guard a small branch-specific block, and
+`stop_unless_env NAME [value] [label]` when the same route file should stop for
+canonical regression but continue through an opt-in environment variable during
+debug probes. Use `fail_if_log PATTERN` for branch-specific probe tails where a
+known alternate recovered branch must abort before stale input is sent through
+the wrong input channel. Use `if_last_wait_log_mark NAME` and
+`fail_unless_last_wait_log_mark NAME` for branch-specific continuations selected
+by a prior marked-any wait.
 
 Acceptance requirements:
 
@@ -99,9 +123,10 @@ Artifact size controls:
 
 Current repair state:
 
-- Missions `00..03` are currently marked `complete` by their route env files.
-- Mission `04` remains `partial`: the direct route reaches the castle tactical
-  battle and breaches the gate, but objective completion/castle capture still
-  needs proof.
+- Missions `00..04` are currently marked `complete` by their route env files.
+- Mission `04` has a complete direct-boot route through three authentic
+  Hopenberg assaults, empty-garrison capture, natural objective completion, and
+  a fresh nonblank final checkpoint. Full Campaign-menu auto-advance remains
+  an arc-level acceptance gate.
 - Missions `05..19` are partial direct-load evidence probes until authentic
   completion routes are repaired.

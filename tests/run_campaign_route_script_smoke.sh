@@ -76,6 +76,11 @@ xvfb_pid=""
 window=""
 preserve_artifacts=0
 route_input_step=0
+last_wait_log_any_pattern=""
+last_wait_log_any_mark=""
+route_runtime_selected_unit=""
+declare -A marked_log_counts=()
+declare -A marked_log_patterns=()
 : >"$log_path"
 : >"$world_input_script"
 : >"$platform_input_script"
@@ -85,6 +90,7 @@ route_input_step=0
 fail_smoke() {
   local message="$1"
 
+  echo "[campaign-route] failure message=${message}" >>"$log_path" 2>/dev/null || true
   echo "$message" >&2
   write_visual_failure_montage || true
   if [ "${CLASH95_CAMPAIGN_ROUTE_FAIL_FULL_LOG:-0}" = "1" ]; then
@@ -96,16 +102,29 @@ fail_smoke() {
   exit 1
 }
 
-latest_frame_path() {
-  local captured_frame
-  local last_frame=""
+collect_presented_frames_by_mtime() {
+  local destination_name="$1"
+  local -n destination_ref="$destination_name"
+  local frame_dir="${frame_prefix%/*}"
+  local frame_name="${frame_prefix##*/}"
+  local timestamped_path
 
-  for captured_frame in "$frame_prefix"-*.bmp; do
-    if [ -f "$captured_frame" ]; then
-      last_frame="$captured_frame"
-    fi
-  done
-  printf '%s' "$last_frame"
+  destination_ref=()
+  while IFS= read -r -d '' timestamped_path; do
+    destination_ref+=( "${timestamped_path#* }" )
+  done < <(
+    find "$frame_dir" -maxdepth 1 -type f -name "${frame_name}-*.bmp" -printf '%T@ %p\0' |
+      sort -z -n
+  )
+}
+
+latest_frame_path() {
+  local -a captured_frames=()
+
+  collect_presented_frames_by_mtime captured_frames
+  if [ "${#captured_frames[@]}" -gt 0 ]; then
+    printf '%s' "${captured_frames[$((${#captured_frames[@]} - 1))]}"
+  fi
 }
 
 write_visual_failure_montage() {
@@ -127,8 +146,8 @@ write_visual_failure_montage() {
   if ! is_unsigned_integer "$head_count"; then
     head_count=8
   fi
+  collect_presented_frames_by_mtime presented_frames
   shopt -s nullglob
-  presented_frames=( "$frame_prefix"-*.bmp )
   checkpoint_frames=( "$smoke_root"/checkpoint-*.bmp )
   shopt -u nullglob
   if [ "${#checkpoint_frames[@]}" -gt 0 ]; then
@@ -286,12 +305,17 @@ copy_capped_log() {
   local head_lines="${CLASH95_CAMPAIGN_ROUTE_LOG_HEAD_LINES:-1200}"
   local tail_lines="${CLASH95_CAMPAIGN_ROUTE_LOG_TAIL_LINES:-2400}"
 
+  durable_log_original_bytes=0
+  durable_log_retained_bytes=0
   durable_log_bytes="$(wc -c <"$source_path" 2>/dev/null || echo 0)"
   durable_log_bytes="${durable_log_bytes//[[:space:]]/}"
+  durable_log_original_bytes="$durable_log_bytes"
   durable_log_truncated=0
 
   if ! is_unsigned_integer "$max_bytes" || [ "$max_bytes" = "0" ]; then
     cp -f "$source_path" "$target_path" 2>/dev/null || true
+    durable_log_retained_bytes="$(wc -c <"$target_path" 2>/dev/null || echo 0)"
+    durable_log_retained_bytes="${durable_log_retained_bytes//[[:space:]]/}"
     return 0
   fi
   if ! is_unsigned_integer "$head_lines"; then
@@ -302,6 +326,8 @@ copy_capped_log() {
   fi
   if [ "${durable_log_bytes:-0}" -le "$max_bytes" ]; then
     cp -f "$source_path" "$target_path" 2>/dev/null || true
+    durable_log_retained_bytes="$(wc -c <"$target_path" 2>/dev/null || echo 0)"
+    durable_log_retained_bytes="${durable_log_retained_bytes//[[:space:]]/}"
     return 0
   fi
 
@@ -319,6 +345,8 @@ copy_capped_log() {
     echo "--- log tail ---"
     tail -n "$tail_lines" "$source_path" || true
   } >"$target_path" 2>/dev/null || true
+  durable_log_retained_bytes="$(wc -c <"$target_path" 2>/dev/null || echo 0)"
+  durable_log_retained_bytes="${durable_log_retained_bytes//[[:space:]]/}"
 }
 
 copy_capped_presented_frames() {
@@ -345,14 +373,13 @@ copy_capped_presented_frames() {
     head_count=8
   fi
 
-  shopt -s nullglob
-  local captured_frames=( "$frame_prefix"-*.bmp )
-  shopt -u nullglob
+  local -a captured_frames=()
+  collect_presented_frames_by_mtime captured_frames
   captured_frames_total="${#captured_frames[@]}"
   if [ "$captured_frames_total" -eq 0 ]; then
     return 0
   fi
-  last_frame="${captured_frames[$((captured_frames_total - 1))]}"
+  last_frame="$(latest_frame_path)"
   if [ "$max_frames" -eq 0 ]; then
     frames_truncated=1
     return 0
@@ -402,6 +429,57 @@ copy_capped_presented_frames() {
   while [ "$index" -lt "$captured_frames_total" ]; do
     copy_one_frame "${captured_frames[$index]}"
     index=$((index + 1))
+  done
+}
+
+copy_capped_checkpoint_frames() {
+  local target_dir="$1"
+  local max_checkpoints="${CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_CHECKPOINTS:-32}"
+  local head_count="${CLASH95_CAMPAIGN_ROUTE_COPIED_CHECKPOINT_HEAD_COUNT:-8}"
+  local checkpoint_frame
+  local -a checkpoint_frames=()
+  local -a sampled_checkpoint_frames=()
+  local -A copied_checkpoint_paths=()
+
+  copied_checkpoints=0
+  checkpoint_frames_total=0
+  checkpoints_truncated=0
+  copied_checkpoint_cap="$max_checkpoints"
+
+  if ! is_unsigned_integer "$max_checkpoints"; then
+    max_checkpoints=32
+  fi
+  copied_checkpoint_cap="$max_checkpoints"
+  if ! is_unsigned_integer "$head_count"; then
+    head_count=8
+  fi
+
+  shopt -s nullglob
+  checkpoint_frames=( "$smoke_root"/checkpoint-*.bmp )
+  shopt -u nullglob
+  checkpoint_frames_total="${#checkpoint_frames[@]}"
+  if [ "$checkpoint_frames_total" -eq 0 ]; then
+    return 0
+  fi
+  if [ "$max_checkpoints" -eq 0 ]; then
+    checkpoints_truncated=1
+    return 0
+  fi
+  if [ "$checkpoint_frames_total" -gt "$max_checkpoints" ]; then
+    checkpoints_truncated=1
+  fi
+
+  sample_frame_array checkpoint_frames sampled_checkpoint_frames "$max_checkpoints" "$head_count"
+  for checkpoint_frame in "${sampled_checkpoint_frames[@]}"; do
+    if [ ! -f "$checkpoint_frame" ]; then
+      continue
+    fi
+    if [ -n "${copied_checkpoint_paths[$checkpoint_frame]+x}" ]; then
+      continue
+    fi
+    cp -f "$checkpoint_frame" "$target_dir/" 2>/dev/null || true
+    copied_checkpoint_paths[$checkpoint_frame]=1
+    copied_checkpoints=$((copied_checkpoints + 1))
   done
 }
 
@@ -472,8 +550,13 @@ persist_route_artifacts() {
   local checkpoint_frames_total=0
   local copied_checkpoints=0
   local durable_log_bytes=0
+  local durable_log_original_bytes=0
+  local durable_log_retained_bytes=0
   local durable_log_truncated=0
+  local durable_run_bytes=0
   local last_frame
+  local copied_checkpoint_cap=0
+  local checkpoints_truncated=0
   local frame_mean
   local last_frame_metrics
   local progression_metrics
@@ -501,13 +584,7 @@ persist_route_artifacts() {
   env | grep '^CLASH95_' | sort >"$durable_run/clash95-env.txt" 2>/dev/null || true
 
   copy_capped_presented_frames "$durable_run"
-  for captured_frame in "$smoke_root"/checkpoint-*.bmp; do
-    if [ -f "$captured_frame" ]; then
-      checkpoint_frames_total=$((checkpoint_frames_total + 1))
-      cp -f "$captured_frame" "$durable_run/" 2>/dev/null || true
-      copied_checkpoints=$((copied_checkpoints + 1))
-    fi
-  done
+  copy_capped_checkpoint_frames "$durable_run"
   frame_mean=""
   last_frame_metrics=""
   progression_metrics=""
@@ -518,9 +595,7 @@ persist_route_artifacts() {
     fi
   fi
   if command -v python3 >/dev/null 2>&1 && [ -f "$frame_metrics_tool" ]; then
-    shopt -s nullglob
-    summary_frames=( "$frame_prefix"-*.bmp )
-    shopt -u nullglob
+    collect_presented_frames_by_mtime summary_frames
     sample_frame_array summary_frames sampled_summary_frames "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_MAX_FRAMES:-96}" "${CLASH95_CAMPAIGN_ROUTE_SUMMARY_METRICS_HEAD_COUNT:-8}"
     if [ "${#sampled_summary_frames[@]}" -ge 2 ]; then
       progression_metrics="$(python3 "$frame_metrics_tool" \
@@ -530,6 +605,7 @@ persist_route_artifacts() {
   fi
 
   summary_path="$durable_run/summary.txt"
+  durable_run_bytes="$(du -sb "$durable_run" 2>/dev/null | awk '{ print $1 + 0 }' || true)"
   {
     echo "durable_run=$durable_run"
     echo "mission_id=$mission_id"
@@ -541,12 +617,17 @@ persist_route_artifacts() {
     echo "frames_truncated=$frames_truncated"
     echo "checkpoint_frames_total=$checkpoint_frames_total"
     echo "copied_checkpoints=$copied_checkpoints"
+    echo "copied_checkpoint_cap=$copied_checkpoint_cap"
+    echo "checkpoints_truncated=$checkpoints_truncated"
     echo "last_frame=$last_frame"
     echo "last_frame_mean=${frame_mean:-unavailable}"
     echo "last_frame_visual_metrics=${last_frame_metrics:-unavailable}"
     echo "frame_progression_metrics=${progression_metrics:-unavailable}"
     echo "durable_log_bytes=${durable_log_bytes:-0}"
+    echo "durable_log_original_bytes=${durable_log_original_bytes:-${durable_log_bytes:-0}}"
+    echo "durable_log_retained_bytes=${durable_log_retained_bytes:-0}"
     echo "durable_log_truncated=${durable_log_truncated:-0}"
+    echo "durable_run_bytes=${durable_run_bytes:-0}"
     echo "mission_objective_complete_count=$(game_log_count "mission_objective_complete")"
     echo "mission_objective_blocked_count=$(game_log_count "mission_objective_blocked")"
     echo "route_input_step_count=$(grep -Fc "[campaign-route] route-input-step" "$log_path" 2>/dev/null || true)"
@@ -554,11 +635,17 @@ persist_route_artifacts() {
     echo "mission markers:"
     grep -E "mission_load_|mission_objective_|mission_auto_advance|campaign_.*victory_branch" "$log_path" | grep -Fv "[campaign-route]" | tail -n 120 || true
     echo
+    echo "battle prompt/outcome markers:"
+    grep -E "battle_prompt_layout|unit_attack_|capture_defeated|unit_kill" "$log_path" | grep -Fv "[campaign-route]" | tail -n 160 || true
+    echo
     echo "route input timeline:"
     grep -E "route-input-step|wait-log|expect-log|checkpoint|nonblank|visual" "$log_path" | tail -n 260 || true
     echo
     echo "battle/result markers:"
     grep -E "battle_|unit_attack_|enemy_attack_|capture_defeated|unit_kill" "$log_path" | grep -Fv "[campaign-route]" | tail -n 160 || true
+    echo
+    echo "battle unit snapshots:"
+    grep -F "[battle_units]" "$log_path" | tail -n 120 || true
     echo
     echo "recent log:"
     tail -n 180 "$log_path" || true
@@ -570,9 +657,15 @@ persist_route_artifacts() {
     echo "captured_frames_total=$captured_frames_total"
     echo "copied_frames=$copied_frames"
     echo "frames_truncated=$frames_truncated"
+    echo "checkpoint_frames_total=$checkpoint_frames_total"
+    echo "copied_checkpoints=$copied_checkpoints"
+    echo "checkpoints_truncated=$checkpoints_truncated"
     echo "last_frame_mean=${frame_mean:-unavailable}"
     echo "durable_log_bytes=${durable_log_bytes:-0}"
+    echo "durable_log_original_bytes=${durable_log_original_bytes:-${durable_log_bytes:-0}}"
+    echo "durable_log_retained_bytes=${durable_log_retained_bytes:-0}"
     echo "durable_log_truncated=${durable_log_truncated:-0}"
+    echo "durable_run_bytes=${durable_run_bytes:-0}"
     echo "summary=$summary_path"
   } >"$durable_root/latest.txt" 2>/dev/null || true
   prune_old_campaign_route_runs "$durable_root"
@@ -585,9 +678,15 @@ cleanup() {
   if [ -n "${pid:-}" ]; then
     kill -TERM "-$pid" 2>/dev/null || true
     kill -KILL "-$pid" 2>/dev/null || true
+    wait "$pid" 2>/dev/null || true
   fi
   if [ -n "${xvfb_pid:-}" ]; then
     kill "$xvfb_pid" 2>/dev/null || true
+    sleep 0.1
+    if kill -0 "$xvfb_pid" 2>/dev/null; then
+      kill -KILL "$xvfb_pid" 2>/dev/null || true
+    fi
+    wait "$xvfb_pid" 2>/dev/null || true
   fi
   persist_route_artifacts
   if [ "${CLASH95_KEEP_SMOKE_ARTIFACTS:-0}" = "1" ] || [ "$preserve_artifacts" = "1" ]; then
@@ -614,6 +713,8 @@ wait_for_fixed_log_pattern() {
   local timeout_seconds="${3:-20}"
   local start_seconds="$SECONDS"
 
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
   echo "[campaign-route] wait-log label=${label} timeout=${timeout_seconds}s pattern=${expected_pattern}" >>"$log_path"
   while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
     if grep -F "$expected_pattern" "$log_path" | grep -Fv "[campaign-route]" >/dev/null 2>&1; then
@@ -628,6 +729,218 @@ wait_for_fixed_log_pattern() {
   fail_smoke "campaign route script smoke timed out waiting for ${label}: $expected_pattern"
 }
 
+wait_for_new_fixed_log_pattern() {
+  local expected_pattern="$1"
+  local label="${2:-$1}"
+  local timeout_seconds="${3:-20}"
+  local start_seconds="$SECONDS"
+  local start_count
+  local current_count
+
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
+  start_count="$(game_log_count "$expected_pattern")"
+  echo "[campaign-route] wait-log-new label=${label} timeout=${timeout_seconds}s baseline=${start_count} pattern=${expected_pattern}" >>"$log_path"
+  while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
+    current_count="$(game_log_count "$expected_pattern")"
+    if [ "${current_count:-0}" -gt "${start_count:-0}" ]; then
+      echo "[campaign-route] wait-log-new-done label=${label} count=${current_count}" >>"$log_path"
+      return 0
+    fi
+    if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+      fail_smoke "campaign route script smoke process exited while waiting for new ${label}: $expected_pattern"
+    fi
+    sleep 0.1
+  done
+  fail_smoke "campaign route script smoke timed out waiting for new ${label}: $expected_pattern"
+}
+
+wait_for_any_fixed_log_pattern() {
+  local label="$1"
+  local timeout_seconds="$2"
+  shift 2
+  local start_seconds="$SECONDS"
+  local expected_pattern
+  local joined_patterns=""
+
+  if [ "$#" -eq 0 ]; then
+    fail_smoke "campaign route script smoke wait_log_any requires at least one pattern for ${label}"
+  fi
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
+  for expected_pattern in "$@"; do
+    if [ -z "$joined_patterns" ]; then
+      joined_patterns="$expected_pattern"
+    else
+      joined_patterns="${joined_patterns} || ${expected_pattern}"
+    fi
+  done
+
+  echo "[campaign-route] wait-log-any label=${label} timeout=${timeout_seconds}s patterns=${joined_patterns}" >>"$log_path"
+  while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
+    for expected_pattern in "$@"; do
+      if grep -F "$expected_pattern" "$log_path" | grep -Fv "[campaign-route]" >/dev/null 2>&1; then
+        last_wait_log_any_pattern="$expected_pattern"
+        echo "[campaign-route] wait-log-any-done label=${label} pattern=${expected_pattern}" >>"$log_path"
+        return 0
+      fi
+    done
+    if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+      fail_smoke "campaign route script smoke process exited while waiting for ${label}: ${joined_patterns}"
+    fi
+    sleep 0.1
+  done
+  fail_smoke "campaign route script smoke timed out waiting for ${label}: ${joined_patterns}"
+}
+
+wait_for_new_any_fixed_log_pattern() {
+  local label="$1"
+  local timeout_seconds="$2"
+  shift 2
+  local start_seconds="$SECONDS"
+  local expected_pattern
+  local joined_patterns=""
+  local current_count
+  local index
+  local -a start_counts=()
+
+  if [ "$#" -eq 0 ]; then
+    fail_smoke "campaign route script smoke wait_log_any_new requires at least one pattern for ${label}"
+  fi
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
+  for expected_pattern in "$@"; do
+    if [ -z "$joined_patterns" ]; then
+      joined_patterns="$expected_pattern"
+    else
+      joined_patterns="${joined_patterns} || ${expected_pattern}"
+    fi
+    start_counts+=( "$(game_log_count "$expected_pattern")" )
+  done
+
+  echo "[campaign-route] wait-log-any-new label=${label} timeout=${timeout_seconds}s baselines=${start_counts[*]} patterns=${joined_patterns}" >>"$log_path"
+  while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
+    index=0
+    for expected_pattern in "$@"; do
+      current_count="$(game_log_count "$expected_pattern")"
+      if [ "${current_count:-0}" -gt "${start_counts[$index]:-0}" ]; then
+        last_wait_log_any_pattern="$expected_pattern"
+        echo "[campaign-route] wait-log-any-new-done label=${label} pattern=${expected_pattern} count=${current_count}" >>"$log_path"
+        return 0
+      fi
+      index=$((index + 1))
+    done
+    if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+      fail_smoke "campaign route script smoke process exited while waiting for new ${label}: ${joined_patterns}"
+    fi
+    sleep 0.1
+  done
+  fail_smoke "campaign route script smoke timed out waiting for new ${label}: ${joined_patterns}"
+}
+
+mark_fixed_log_pattern_count() {
+  local mark_name="$1"
+  local expected_pattern="$2"
+  local baseline
+
+  if [ -z "$mark_name" ] || [ -z "$expected_pattern" ]; then
+    fail_smoke "campaign route script smoke cannot mark an empty log pattern"
+  fi
+  baseline="$(game_log_count "$expected_pattern")"
+  marked_log_counts["$mark_name"]="$baseline"
+  marked_log_patterns["$mark_name"]="$expected_pattern"
+  echo "[campaign-route] mark-log-count mark=${mark_name} baseline=${baseline} pattern=${expected_pattern}" >>"$log_path"
+}
+
+wait_for_marked_log_pattern() {
+  local mark_name="$1"
+  local label="${2:-$1}"
+  local timeout_seconds="${3:-20}"
+  local expected_pattern="${4:-}"
+  local baseline
+  local current_count
+  local start_seconds="$SECONDS"
+
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
+  if [ -z "$mark_name" ] || [ -z "${marked_log_counts[$mark_name]+x}" ]; then
+    fail_smoke "campaign route script smoke wait_log_marked references unknown mark: ${mark_name}"
+  fi
+  baseline="${marked_log_counts[$mark_name]}"
+  if [ -z "$expected_pattern" ]; then
+    expected_pattern="${marked_log_patterns[$mark_name]}"
+  fi
+  if [ -z "$expected_pattern" ]; then
+    fail_smoke "campaign route script smoke wait_log_marked has empty pattern for mark: ${mark_name}"
+  fi
+
+  echo "[campaign-route] wait-log-marked label=${label} mark=${mark_name} timeout=${timeout_seconds}s baseline=${baseline} pattern=${expected_pattern}" >>"$log_path"
+  while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
+    current_count="$(game_log_count "$expected_pattern")"
+    if [ "${current_count:-0}" -gt "${baseline:-0}" ]; then
+      echo "[campaign-route] wait-log-marked-done label=${label} mark=${mark_name} count=${current_count}" >>"$log_path"
+      return 0
+    fi
+    if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+      fail_smoke "campaign route script smoke process exited while waiting for marked ${label}: $expected_pattern"
+    fi
+    sleep 0.1
+  done
+  fail_smoke "campaign route script smoke timed out waiting for marked ${label}: $expected_pattern"
+}
+
+wait_for_any_marked_log_pattern() {
+  local label="$1"
+  local timeout_seconds="$2"
+  shift 2
+  local start_seconds="$SECONDS"
+  local mark_name
+  local expected_pattern
+  local joined_marks=""
+  local joined_patterns=""
+  local current_count
+  local baseline
+
+  if [ "$#" -eq 0 ]; then
+    fail_smoke "campaign route script smoke wait_log_marked_any requires at least one mark for ${label}"
+  fi
+  last_wait_log_any_pattern=""
+  last_wait_log_any_mark=""
+  for mark_name in "$@"; do
+    if [ -z "${marked_log_counts[$mark_name]+x}" ]; then
+      fail_smoke "campaign route script smoke wait_log_marked_any references unknown mark: ${mark_name}"
+    fi
+    expected_pattern="${marked_log_patterns[$mark_name]}"
+    if [ -z "$joined_marks" ]; then
+      joined_marks="$mark_name"
+      joined_patterns="$expected_pattern"
+    else
+      joined_marks="${joined_marks} || ${mark_name}"
+      joined_patterns="${joined_patterns} || ${expected_pattern}"
+    fi
+  done
+
+  echo "[campaign-route] wait-log-marked-any label=${label} timeout=${timeout_seconds}s marks=${joined_marks} patterns=${joined_patterns}" >>"$log_path"
+  while [ $((SECONDS - start_seconds)) -lt "$timeout_seconds" ]; do
+    for mark_name in "$@"; do
+      expected_pattern="${marked_log_patterns[$mark_name]}"
+      baseline="${marked_log_counts[$mark_name]}"
+      current_count="$(game_log_count "$expected_pattern")"
+      if [ "${current_count:-0}" -gt "${baseline:-0}" ]; then
+        last_wait_log_any_pattern="$expected_pattern"
+        last_wait_log_any_mark="$mark_name"
+        echo "[campaign-route] wait-log-marked-any-done label=${label} mark=${mark_name} pattern=${expected_pattern} count=${current_count}" >>"$log_path"
+        return 0
+      fi
+    done
+    if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+      fail_smoke "campaign route script smoke process exited while waiting for marked ${label}: ${joined_patterns}"
+    fi
+    sleep 0.1
+  done
+  fail_smoke "campaign route script smoke timed out waiting for marked ${label}: ${joined_patterns}"
+}
+
 log_route_input_step() {
   local channel="$1"
   local action="$2"
@@ -637,6 +950,19 @@ log_route_input_step() {
   echo "[campaign-route] route-input-step step=${route_input_step} channel=${channel} action=${action} label=${label}" >>"$log_path"
 }
 
+refresh_route_window() {
+  local refreshed_window
+
+  if [ "${CLASH95_CAMPAIGN_ROUTE_REFRESH_WINDOW_BEFORE_INPUT:-1}" != "1" ]; then
+    return 0
+  fi
+  refreshed_window="$(timeout 2s xdotool search --sync --onlyvisible --name "${CLASH95_WINDOW_NAME:-Clash}" | head -n 1 || true)"
+  if [ -n "$refreshed_window" ] && [ "$refreshed_window" != "${window:-}" ]; then
+    echo "[campaign-route] refreshed SDL window id old=${window:-none} new=${refreshed_window}" >>"$log_path"
+    window="$refreshed_window"
+  fi
+}
+
 click_at() {
   local x="$1"
   local y="$2"
@@ -644,6 +970,7 @@ click_at() {
   local gap="${4:-${CLASH95_REAL_INPUT_CLICK_GAP:-0.55}}"
   local label="${5:-click}"
 
+  refresh_route_window
   if [ -z "${window:-}" ]; then
     fail_smoke "campaign route script smoke cannot execute host click ${label}; no SDL window was acquired"
   fi
@@ -664,6 +991,7 @@ key_at() {
   local gap="${3:-0.20}"
   local label="${4:-key}"
 
+  refresh_route_window
   if [ -z "${window:-}" ]; then
     fail_smoke "campaign route script smoke cannot execute host key ${label}; no SDL window was acquired"
   fi
@@ -762,9 +1090,7 @@ check_presented_frame_progression() {
   if ! command -v python3 >/dev/null 2>&1 || [ ! -f "$frame_metrics_tool" ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; python3 frame metrics are unavailable"
   fi
-  shopt -s nullglob
-  visual_frames=( "$frame_prefix"-*.bmp )
-  shopt -u nullglob
+  collect_presented_frames_by_mtime visual_frames
   if [ "${#visual_frames[@]}" -lt 2 ]; then
     fail_smoke "campaign route script smoke cannot run frame progression check ${label}; fewer than 2 frames captured"
   fi
@@ -789,12 +1115,50 @@ check_presented_frame_progression() {
 }
 
 execute_route_script() {
+  local script_path="${1:-$route_script}"
   local line
   local line_number=0
   local command
   local args
+  local include_path
   local timeout_value
   local pattern
+  local pattern_list
+  local -a any_patterns
+  local skip_depth=0
+  local env_name
+  local expected_value
+  local actual_value
+  local click_x
+  local click_y
+  local click_reads
+  local click_gap
+  local max_clicks
+  local click_label
+  local click_attempts
+  local terminal_mark
+  local completion_mark
+  local terminal_count
+  local completion_count
+  local completion_baseline
+  local attempt_timeout
+  local attempt_deadline
+  local click_completed
+  local current_count
+  local target_left
+  local target_top
+  local max_pan_attempts
+  local pan_attempts
+  local viewport_line
+  local current_left
+  local current_top
+  local scan_code
+  local cursor_baseline
+  local cursor_count
+  local cursor_deadline
+  local probe_x=319
+  local selected_line
+  local selected_value
 
   while IFS= read -r line || [ -n "$line" ]; do
     line_number=$((line_number + 1))
@@ -810,6 +1174,102 @@ execute_route_script() {
     fi
     args="${args//\{mission_id\}/$mission_id}"
     args="${args//\{mission_number\}/$mission_number}"
+    if [ -n "$route_runtime_selected_unit" ]; then
+      args="${args//\{selected_unit\}/$route_runtime_selected_unit}"
+    fi
+    if [ "$skip_depth" -eq 0 ] && [[ "$args" == *"{selected_unit}"* ]]; then
+      fail_smoke "campaign route script line ${line_number}: selected_unit placeholder used before capture_battle_selected_unit"
+    fi
+
+    case "$command" in
+      if_env)
+        if [ "$skip_depth" -gt 0 ]; then
+          skip_depth=$((skip_depth + 1))
+          continue
+        fi
+        set -- $args
+        if [ "$#" -lt 1 ]; then
+          fail_smoke "campaign route script line ${line_number}: if_env requires variable name"
+        fi
+        env_name="$1"
+        expected_value="${2:-1}"
+        actual_value="${!env_name:-}"
+        if [ "$actual_value" != "$expected_value" ]; then
+          echo "[campaign-route] if-env-skip line=${line_number} env=${env_name} expected=${expected_value} actual=${actual_value}" >>"$log_path"
+          skip_depth=1
+        else
+          echo "[campaign-route] if-env-enter line=${line_number} env=${env_name} value=${expected_value}" >>"$log_path"
+        fi
+        continue
+        ;;
+      if_last_wait_log_any)
+        if [ "$skip_depth" -gt 0 ]; then
+          skip_depth=$((skip_depth + 1))
+          continue
+        fi
+        pattern="$args"
+        if [ -z "$pattern" ]; then
+          fail_smoke "campaign route script line ${line_number}: if_last_wait_log_any requires pattern text"
+        fi
+        if [ "$last_wait_log_any_pattern" != "$pattern" ]; then
+          echo "[campaign-route] if-last-wait-log-any-skip line=${line_number} expected=${pattern} actual=${last_wait_log_any_pattern}" >>"$log_path"
+          skip_depth=1
+        else
+          echo "[campaign-route] if-last-wait-log-any-enter line=${line_number} pattern=${pattern}" >>"$log_path"
+        fi
+        continue
+        ;;
+      if_last_wait_log_mark)
+        if [ "$skip_depth" -gt 0 ]; then
+          skip_depth=$((skip_depth + 1))
+          continue
+        fi
+        pattern="$args"
+        if [ -z "$pattern" ]; then
+          fail_smoke "campaign route script line ${line_number}: if_last_wait_log_mark requires mark name"
+        fi
+        if [ "$last_wait_log_any_mark" != "$pattern" ]; then
+          echo "[campaign-route] if-last-wait-log-mark-skip line=${line_number} expected=${pattern} actual=${last_wait_log_any_mark}" >>"$log_path"
+          skip_depth=1
+        else
+          echo "[campaign-route] if-last-wait-log-mark-enter line=${line_number} mark=${pattern}" >>"$log_path"
+        fi
+        continue
+        ;;
+      endif)
+        if [ "$skip_depth" -gt 0 ]; then
+          skip_depth=$((skip_depth - 1))
+          if [ "$skip_depth" -eq 0 ]; then
+            echo "[campaign-route] if-env-skip-end line=${line_number}" >>"$log_path"
+          fi
+        else
+          echo "[campaign-route] if-env-end line=${line_number}" >>"$log_path"
+        fi
+        continue
+        ;;
+      include_script)
+        if [ "$skip_depth" -gt 0 ]; then
+          continue
+        fi
+        include_path="$args"
+        if [ -z "$include_path" ]; then
+          fail_smoke "campaign route script line ${line_number}: include_script requires a script path"
+        fi
+        case "$include_path" in
+          /*) ;;
+          *) include_path="$repo_root/$include_path" ;;
+        esac
+        if [ ! -f "$include_path" ]; then
+          fail_smoke "campaign route script line ${line_number}: include_script path does not exist: $include_path"
+        fi
+        echo "[campaign-route] include-script line=${line_number} path=${include_path}" >>"$log_path"
+        execute_route_script "$include_path"
+        continue
+        ;;
+    esac
+    if [ "$skip_depth" -gt 0 ]; then
+      continue
+    fi
 
     case "$command" in
       wait)
@@ -828,9 +1288,131 @@ execute_route_script() {
         fi
         wait_for_fixed_log_pattern "$pattern" "script:${line_number}" "$timeout_value"
         ;;
+      wait_log_new)
+        set -- $args
+        if [ "$#" -ge 2 ] && printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+          timeout_value="$1"
+          shift
+          pattern="$*"
+        else
+          timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+          pattern="$args"
+        fi
+        wait_for_new_fixed_log_pattern "$pattern" "script:${line_number}" "$timeout_value"
+        ;;
+      wait_log_any)
+        set -- $args
+        if [ "$#" -ge 2 ] && printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+          timeout_value="$1"
+          pattern_list="${args#"$1"}"
+          pattern_list="${pattern_list#"${pattern_list%%[![:space:]]*}"}"
+        else
+          timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+          pattern_list="$args"
+        fi
+        any_patterns=()
+        while [[ "$pattern_list" == *" || "* ]]; do
+          any_patterns+=( "${pattern_list%% || *}" )
+          pattern_list="${pattern_list#* || }"
+        done
+        any_patterns+=( "$pattern_list" )
+        wait_for_any_fixed_log_pattern "script:${line_number}" "$timeout_value" "${any_patterns[@]}"
+        ;;
+      wait_log_any_new)
+        set -- $args
+        if [ "$#" -ge 2 ] && printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+          timeout_value="$1"
+          pattern_list="${args#"$1"}"
+          pattern_list="${pattern_list#"${pattern_list%%[![:space:]]*}"}"
+        else
+          timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+          pattern_list="$args"
+        fi
+        any_patterns=()
+        while [[ "$pattern_list" == *" || "* ]]; do
+          any_patterns+=( "${pattern_list%% || *}" )
+          pattern_list="${pattern_list#* || }"
+        done
+        any_patterns+=( "$pattern_list" )
+        wait_for_new_any_fixed_log_pattern "script:${line_number}" "$timeout_value" "${any_patterns[@]}"
+        ;;
+      mark_log_count)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: mark_log_count requires mark name and pattern"
+        fi
+        env_name="$1"
+        shift
+        mark_fixed_log_pattern_count "$env_name" "$*"
+        ;;
+      wait_log_marked)
+        set -- $args
+        if [ "$#" -lt 1 ]; then
+          fail_smoke "campaign route script line ${line_number}: wait_log_marked requires mark name"
+        fi
+        if printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+          timeout_value="$1"
+          shift
+          if [ "$#" -lt 1 ]; then
+            fail_smoke "campaign route script line ${line_number}: wait_log_marked timeout form requires mark name"
+          fi
+          env_name="$1"
+          shift
+        else
+          env_name="$1"
+          shift
+          if [ "$#" -ge 1 ] && printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+            timeout_value="$1"
+            shift
+          else
+            timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+          fi
+        fi
+        if [ -z "${timeout_value:-}" ]; then
+          timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+        fi
+        pattern="$*"
+        wait_for_marked_log_pattern "$env_name" "script:${line_number}" "$timeout_value" "$pattern"
+        ;;
+      wait_log_marked_any)
+        set -- $args
+        if [ "$#" -ge 2 ] && printf '%s' "$1" | grep -Eq '^[0-9]+([.][0-9]+)?$'; then
+          timeout_value="$1"
+          pattern_list="${args#"$1"}"
+          pattern_list="${pattern_list#"${pattern_list%%[![:space:]]*}"}"
+        else
+          timeout_value="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-20}"
+          pattern_list="$args"
+        fi
+        any_patterns=()
+        while [[ "$pattern_list" == *" || "* ]]; do
+          any_patterns+=( "${pattern_list%% || *}" )
+          pattern_list="${pattern_list#* || }"
+        done
+        any_patterns+=( "$pattern_list" )
+        wait_for_any_marked_log_pattern "script:${line_number}" "$timeout_value" "${any_patterns[@]}"
+        ;;
       expect_log)
         printf '%s\n' "$args" >>"$expected_log_file"
         echo "[campaign-route] expect-log-queued line=${line_number} pattern=${args}" >>"$log_path"
+        ;;
+      fail_if_log)
+        if grep -F "$args" "$log_path" | grep -Fv "[campaign-route]" >/dev/null 2>&1; then
+          fail_smoke "campaign route script line ${line_number}: forbidden log pattern was present: $args"
+        fi
+        echo "[campaign-route] fail-if-log-clear line=${line_number} pattern=${args}" >>"$log_path"
+        ;;
+      fail_unless_last_wait_log_any)
+        if [ "$last_wait_log_any_pattern" != "$args" ]; then
+          fail_smoke "campaign route script line ${line_number}: last wait_log_any pattern was '${last_wait_log_any_pattern}', expected: $args"
+        fi
+        echo "[campaign-route] fail-unless-last-wait-log-any-clear line=${line_number} pattern=${args}" >>"$log_path"
+        ;;
+      fail_unless_last_wait_log_mark)
+        if [ "$last_wait_log_any_mark" != "$args" ]; then
+          fail_smoke "campaign route script line ${line_number}: last wait_log_any mark was '${last_wait_log_any_mark}', expected: $args"
+        fi
+        echo "[campaign-route] fail-unless-last-wait-log-mark-clear line=${line_number} mark=${args}" >>"$log_path"
         ;;
       click)
         set -- $args
@@ -853,6 +1435,27 @@ execute_route_script() {
         fi
         write_world_script click "click $1 $2 ${3:-4}" "${4:-0.70}" "" "" "${5:-world-click-${line_number}}"
         ;;
+      world_move)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_move requires x y"
+        fi
+        write_world_script move "move $1 $2" "${3:-0.40}" "" "" "${4:-world-move-${line_number}}"
+        ;;
+      world_down)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_down requires x y"
+        fi
+        write_world_script down "down $1 $2" "${3:-0.40}" "" "" "${4:-world-down-${line_number}}"
+        ;;
+      world_up)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_up requires x y"
+        fi
+        write_world_script up "up $1 $2" "${3:-0.40}" "" "" "${4:-world-up-${line_number}}"
+        ;;
       world_wait)
         set -- $args
         write_world_script wait "wait ${1:-8}" "${2:-0.40}" "" "" "${3:-world-wait-${line_number}}"
@@ -864,12 +1467,178 @@ execute_route_script() {
         fi
         write_world_script key "key $1 ${2:-4}" "${3:-0.40}" "" "" "${4:-world-key-${line_number}}"
         ;;
+      world_pan_viewport)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires left top"
+        fi
+        target_left="$1"
+        target_top="$2"
+        max_pan_attempts="${3:-160}"
+        if ! is_unsigned_integer "$target_left" ||
+           ! is_unsigned_integer "$target_top" ||
+           ! is_unsigned_integer "$max_pan_attempts" ||
+           [ "$max_pan_attempts" = "0" ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport requires nonnegative left/top and positive max-attempts"
+        fi
+        pan_attempts=0
+        while [ "$pan_attempts" -lt "$max_pan_attempts" ]; do
+          viewport_line="$(grep -F "[world_cursor]" "$log_path" | grep -Fv "[campaign-route]" | tail -n 1 || true)"
+          if [[ "$viewport_line" != *" left="* ]] || [[ "$viewport_line" != *" top="* ]]; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport cannot read a world cursor viewport"
+          fi
+          current_left="${viewport_line#* left=}"
+          current_left="${current_left%% *}"
+          current_top="${viewport_line#* top=}"
+          current_top="${current_top%% *}"
+          if ! is_unsigned_integer "$current_left" || ! is_unsigned_integer "$current_top"; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport parsed invalid viewport: left=${current_left} top=${current_top}"
+          fi
+          if [ "$current_left" = "$target_left" ] && [ "$current_top" = "$target_top" ]; then
+            echo "[campaign-route] world-pan-viewport-done line=${line_number} left=${current_left} top=${current_top} attempts=${pan_attempts}" >>"$log_path"
+            break
+          fi
+          if [ "$current_left" -lt "$target_left" ]; then
+            scan_code=205
+          elif [ "$current_left" -gt "$target_left" ]; then
+            scan_code=203
+          elif [ "$current_top" -lt "$target_top" ]; then
+            scan_code=208
+          else
+            scan_code=200
+          fi
+          pan_attempts=$((pan_attempts + 1))
+          write_world_script key "key ${scan_code} 12" 0.22 "" "" "world-pan-viewport-${line_number}-key-${pan_attempts}"
+          cursor_baseline="$(game_log_count "[world_cursor]")"
+          if [ "$probe_x" = "319" ]; then
+            probe_x=320
+          else
+            probe_x=319
+          fi
+          write_world_script move "move ${probe_x} 239" 0.25 "" "" "world-pan-viewport-${line_number}-probe-${pan_attempts}"
+          cursor_deadline=$((SECONDS + 5))
+          cursor_count="$cursor_baseline"
+          while [ "$SECONDS" -lt "$cursor_deadline" ]; do
+            cursor_count="$(game_log_count "[world_cursor]")"
+            if [ "${cursor_count:-0}" -gt "${cursor_baseline:-0}" ]; then
+              break
+            fi
+            if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+              fail_smoke "campaign route script smoke process exited during world_pan_viewport"
+            fi
+            sleep 0.1
+          done
+          if [ "${cursor_count:-0}" -le "${cursor_baseline:-0}" ]; then
+            fail_smoke "campaign route script line ${line_number}: world_pan_viewport timed out waiting for cursor probe"
+          fi
+        done
+        if [ "$current_left" != "$target_left" ] || [ "$current_top" != "$target_top" ]; then
+          fail_smoke "campaign route script line ${line_number}: world_pan_viewport exhausted ${max_pan_attempts} attempts at left=${current_left} top=${current_top}"
+        fi
+        ;;
+      capture_battle_selected_unit)
+        selected_line="$(grep -F "[battle_click] tile_input" "$log_path" |
+          grep -F "occupant_type=1 occupant_owner=0" |
+          grep -Fv "[campaign-route]" |
+          tail -n 1 || true)"
+        if [ -z "$selected_line" ]; then
+          fail_smoke "campaign route script line ${line_number}: capture_battle_selected_unit found no clicked infantry trace"
+        fi
+        selected_value="${selected_line#* occupant=}"
+        selected_value="${selected_value%% *}"
+        if ! is_unsigned_integer "$selected_value" || [ "$selected_value" -gt 21 ]; then
+          fail_smoke "campaign route script line ${line_number}: capture_battle_selected_unit parsed invalid index: ${selected_value}"
+        fi
+        route_runtime_selected_unit="$selected_value"
+        echo "[campaign-route] capture-battle-selected-unit line=${line_number} selected=${route_runtime_selected_unit} label=${args:-captured}" >>"$log_path"
+        ;;
       battle_click)
         set -- $args
         if [ "$#" -lt 2 ]; then
           fail_smoke "campaign route script line ${line_number}: battle_click requires x y"
         fi
         write_battle_script click "click $1 $2 ${3:-4}" "${4:-0.70}" "" "" "${5:-battle-click-${line_number}}"
+        ;;
+      battle_click_until_marked)
+        set -- $args
+        if [ "$#" -lt 7 ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked requires x y reads gap max-clicks terminal-mark completion-mark"
+        fi
+        click_x="$1"
+        click_y="$2"
+        click_reads="$3"
+        click_gap="$4"
+        max_clicks="$5"
+        terminal_mark="$6"
+        completion_mark="$7"
+        click_label="${8:-battle-click-until-${terminal_mark}}"
+        if ! is_unsigned_integer "$max_clicks" || [ "$max_clicks" = "0" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked max-clicks must be a positive integer"
+        fi
+        if [ -z "${marked_log_counts[$terminal_mark]+x}" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked references unknown terminal mark: ${terminal_mark}"
+        fi
+        if [ -z "${marked_log_counts[$completion_mark]+x}" ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_click_until_marked references unknown completion mark: ${completion_mark}"
+        fi
+        attempt_timeout="${CLASH95_CAMPAIGN_ROUTE_WAIT_LOG_TIMEOUT:-60}"
+        if ! is_unsigned_integer "$attempt_timeout" || [ "$attempt_timeout" = "0" ]; then
+          attempt_timeout=60
+        fi
+        click_attempts=0
+        while [ "$click_attempts" -lt "$max_clicks" ]; do
+          terminal_count="$(game_log_count "${marked_log_patterns[$terminal_mark]}")"
+          if [ "${terminal_count:-0}" -gt "${marked_log_counts[$terminal_mark]:-0}" ]; then
+            break
+          fi
+          completion_baseline="$(game_log_count "${marked_log_patterns[$completion_mark]}")"
+          click_attempts=$((click_attempts + 1))
+          write_battle_script click "click ${click_x} ${click_y} ${click_reads}" "$click_gap" "" "" "${click_label}-${click_attempts}"
+          attempt_deadline=$((SECONDS + attempt_timeout))
+          click_completed=0
+          while [ "$SECONDS" -lt "$attempt_deadline" ]; do
+            terminal_count="$(game_log_count "${marked_log_patterns[$terminal_mark]}")"
+            if [ "${terminal_count:-0}" -gt "${marked_log_counts[$terminal_mark]:-0}" ]; then
+              click_completed=1
+              break
+            fi
+            completion_count="$(game_log_count "${marked_log_patterns[$completion_mark]}")"
+            if [ "${completion_count:-0}" -gt "${completion_baseline:-0}" ]; then
+              click_completed=1
+              break
+            fi
+            if [ -n "${pid:-}" ] && ! kill -0 "$pid" 2>/dev/null; then
+              fail_smoke "campaign route script smoke process exited during battle_click_until_marked ${terminal_mark}"
+            fi
+            sleep 0.1
+          done
+          if [ "$click_completed" != "1" ]; then
+            fail_smoke "campaign route script line ${line_number}: battle_click_until_marked timed out waiting for attack completion: ${completion_mark}"
+          fi
+        done
+        echo "[campaign-route] battle-click-until-marked line=${line_number} terminal=${terminal_mark} completion=${completion_mark} attempts=${click_attempts} max=${max_clicks}" >>"$log_path"
+        wait_for_marked_log_pattern "$terminal_mark" "script:${line_number}" "$attempt_timeout" ""
+        ;;
+      battle_move)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_move requires x y"
+        fi
+        write_battle_script move "move $1 $2" "${3:-0.40}" "" "" "${4:-battle-move-${line_number}}"
+        ;;
+      battle_down)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_down requires x y"
+        fi
+        write_battle_script down "down $1 $2" "${3:-0.40}" "" "" "${4:-battle-down-${line_number}}"
+        ;;
+      battle_up)
+        set -- $args
+        if [ "$#" -lt 2 ]; then
+          fail_smoke "campaign route script line ${line_number}: battle_up requires x y"
+        fi
+        write_battle_script up "up $1 $2" "${3:-0.40}" "" "" "${4:-battle-up-${line_number}}"
         ;;
       battle_wait)
         set -- $args
@@ -926,11 +1695,29 @@ execute_route_script() {
         set -- $args
         check_latest_frame_nonblank "${1:-nonblank-${line_number}}"
         ;;
+      stop)
+        echo "[campaign-route] stop line=${line_number} label=${args:-route-stop}" >>"$log_path"
+        return 0
+        ;;
+      stop_unless_env)
+        set -- $args
+        if [ "$#" -lt 1 ]; then
+          fail_smoke "campaign route script line ${line_number}: stop_unless_env requires variable name"
+        fi
+        env_name="$1"
+        expected_value="${2:-1}"
+        actual_value="${!env_name:-}"
+        if [ "$actual_value" != "$expected_value" ]; then
+          echo "[campaign-route] stop-unless-env line=${line_number} env=${env_name} expected=${expected_value} actual=${actual_value} label=${3:-route-stop}" >>"$log_path"
+          return 0
+        fi
+        echo "[campaign-route] continue-after-env line=${line_number} env=${env_name} value=${expected_value} label=${3:-route-continue}" >>"$log_path"
+        ;;
       *)
         fail_smoke "campaign route script line ${line_number}: unknown command: $command"
         ;;
     esac
-  done <"$route_script"
+  done <"$script_path"
 }
 
 if [ "${CLASH95_XVFB_DISPLAY_NUMBER:-}" ]; then
@@ -992,7 +1779,8 @@ fi
 
 set +e
 if [ "$start_mode" = "direct" ]; then
-  setsid timeout "${timeout_seconds}s" env \
+  setsid timeout "${timeout_seconds}s" env -u WAYLAND_DISPLAY \
+    SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-x11}" \
     SDL_AUDIODRIVER=dummy \
     CLASH95_SKIP_BOOT_AVI=1 \
     CLASH95_DIRECT_CAMPAIGN_MISSION=1 \
@@ -1010,7 +1798,8 @@ if [ "$start_mode" = "direct" ]; then
     CLASH95_DUMP_PRESENTED_FRAMES_LIMIT="${CLASH95_DUMP_PRESENTED_FRAMES_LIMIT:-72}" \
     "${run_command[@]}" >>"$log_path" 2>&1 &
 else
-  setsid timeout "${timeout_seconds}s" env \
+  setsid timeout "${timeout_seconds}s" env -u WAYLAND_DISPLAY \
+    SDL_VIDEODRIVER="${SDL_VIDEODRIVER:-x11}" \
     SDL_AUDIODRIVER=dummy \
     CLASH95_SKIP_BOOT_AVI=1 \
     CLASH95_TRACE_WORLD_CLICK="${CLASH95_TRACE_WORLD_CLICK:-1}" \

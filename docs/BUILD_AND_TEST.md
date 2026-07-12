@@ -36,6 +36,7 @@ Shell syntax checks for common route/probe scripts:
 bash -n tests/run_campaign_route_script_smoke.sh \
   tests/run_campaign_route_regression.sh \
   tests/run_clash95_soak_probe.sh \
+  tests/run_multiplayer_map_probe.sh \
   tests/prune_artifacts.sh
 ```
 
@@ -75,12 +76,37 @@ CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_DURATION_SECONDS=120 \
 ```
 
 Useful `CLASH95_SOAK_SCENARIO` values include `world-map-pan`,
-`castle-economy`, `first-mission-attack`, and `campaign-route`.
+`castle-economy`, `first-mission-attack`, `campaign-route`, and
+`multiplayer-map`.
+
+## Multiplayer Map Probes
+
+Run the default direct all-AI multiplayer map probe for `/A0`:
+
+```sh
+CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 \
+  ctest --test-dir build -R clash95_multiplayer_map_probe --output-on-failure
+```
+
+Run a wider map set:
+
+```sh
+CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 \
+CLASH95_MULTIPLAYER_MAP_IDS="0 1 2 3 4 5 6 7 8 9 10" \
+  ctest --test-dir build -R clash95_multiplayer_map_probe --output-on-failure
+```
+
+The probe is skipped by default. It launches Xvfb, follows the recovered `/A#`
+multiplayer map path, checks bootstrap load/play markers, and validates a
+nonblank presented frame. Details live in
+`docs/probes/README_multiplayer_map_probe.md`.
 
 ## Important Environment Variables
 
 - `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1` enables route CTest probes.
 - `CLASH95_ENABLE_SOAK_PROBE=1` enables soak probes.
+- `CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1` enables direct multiplayer map
+  visual/liveness probes.
 - `CLASH95_SCREENSHOT_PREFIX` and `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`
   capture frame evidence for visual validation.
 - `CLASH95_ARTIFACT_PRUNE_AFTER_RUN=0` disables automatic artifact pruning for

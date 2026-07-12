@@ -67,6 +67,15 @@ first_mission_probe_objective_blocked_count=0
 first_mission_probe_input_step_count=0
 first_mission_probe_enemy_attack_return_count=0
 first_mission_probe_unit_attack_enter_count=0
+multiplayer_map_probe_iterations=0
+multiplayer_map_probe_ids=""
+multiplayer_map_probe_summary_count=0
+multiplayer_map_probe_pass_count=0
+multiplayer_map_probe_captured_frames=0
+multiplayer_map_probe_copied_frames=0
+multiplayer_map_probe_runtime_samples=0
+multiplayer_map_probe_rss_peak_kb=0
+multiplayer_map_probe_latest_summary=""
 : >"$log_path"
 : >"$world_input_script"
 : >"$platform_input_script"
@@ -365,6 +374,57 @@ update_first_mission_probe_summary() {
   first_mission_probe_unit_attack_enter_count="$(grep -Fc "unit_attack_enter" "$first_mission_probe_summary" 2>/dev/null || true)"
 }
 
+update_multiplayer_map_probe_summary() {
+  local probe_dir="$artifact_run/multiplayer-maps"
+  local latest_path
+  local summary_path
+  local status
+  local captured
+  local copied
+  local samples
+  local rss_peak
+
+  multiplayer_map_probe_summary_count=0
+  multiplayer_map_probe_pass_count=0
+  multiplayer_map_probe_captured_frames=0
+  multiplayer_map_probe_copied_frames=0
+  multiplayer_map_probe_runtime_samples=0
+  multiplayer_map_probe_rss_peak_kb=0
+  multiplayer_map_probe_latest_summary=""
+
+  for latest_path in "$probe_dir"/map-*/latest.txt; do
+    if [ ! -f "$latest_path" ]; then
+      continue
+    fi
+    summary_path="$(sed -n '1p' "$latest_path" 2>/dev/null || true)"
+    if [ ! -f "$summary_path" ]; then
+      continue
+    fi
+    multiplayer_map_probe_summary_count=$((multiplayer_map_probe_summary_count + 1))
+    multiplayer_map_probe_latest_summary="$summary_path"
+    status="$(summary_value "$summary_path" "status")"
+    if [ "$status" = "pass" ]; then
+      multiplayer_map_probe_pass_count=$((multiplayer_map_probe_pass_count + 1))
+    fi
+    captured="$(summary_value "$summary_path" "captured_frames_total")"
+    copied="$(summary_value "$summary_path" "copied_frames")"
+    samples="$(summary_value "$summary_path" "runtime_sample_count")"
+    rss_peak="$(summary_value "$summary_path" "rss_peak_kb")"
+    if is_unsigned_integer "${captured:-}"; then
+      multiplayer_map_probe_captured_frames=$((multiplayer_map_probe_captured_frames + captured))
+    fi
+    if is_unsigned_integer "${copied:-}"; then
+      multiplayer_map_probe_copied_frames=$((multiplayer_map_probe_copied_frames + copied))
+    fi
+    if is_unsigned_integer "${samples:-}"; then
+      multiplayer_map_probe_runtime_samples=$((multiplayer_map_probe_runtime_samples + samples))
+    fi
+    if is_unsigned_integer "${rss_peak:-}" && [ "$rss_peak" -gt "$multiplayer_map_probe_rss_peak_kb" ]; then
+      multiplayer_map_probe_rss_peak_kb="$rss_peak"
+    fi
+  done
+}
+
 prune_soak_artifacts() {
   if [ "${CLASH95_ARTIFACT_PRUNE_AFTER_RUN:-1}" != "1" ]; then
     return 0
@@ -462,6 +522,15 @@ persist_soak_artifacts() {
     echo "first_mission_probe_input_step_count=${first_mission_probe_input_step_count:-0}"
     echo "first_mission_probe_enemy_attack_return_count=${first_mission_probe_enemy_attack_return_count:-0}"
     echo "first_mission_probe_unit_attack_enter_count=${first_mission_probe_unit_attack_enter_count:-0}"
+    echo "multiplayer_map_probe_iterations=$multiplayer_map_probe_iterations"
+    echo "multiplayer_map_probe_ids=${multiplayer_map_probe_ids:-none}"
+    echo "multiplayer_map_probe_summary_count=${multiplayer_map_probe_summary_count:-0}"
+    echo "multiplayer_map_probe_pass_count=${multiplayer_map_probe_pass_count:-0}"
+    echo "multiplayer_map_probe_captured_frames=${multiplayer_map_probe_captured_frames:-0}"
+    echo "multiplayer_map_probe_copied_frames=${multiplayer_map_probe_copied_frames:-0}"
+    echo "multiplayer_map_probe_runtime_samples=${multiplayer_map_probe_runtime_samples:-0}"
+    echo "multiplayer_map_probe_rss_peak_kb=${multiplayer_map_probe_rss_peak_kb:-0}"
+    echo "multiplayer_map_probe_latest_summary=${multiplayer_map_probe_latest_summary:-none}"
     echo "castle_first_present_count=$(game_log_count "[castle] first_present")"
     echo "economy_first_present_count=$(game_log_count "[economy] first_present")"
     echo "economy_list_next_count=$(game_log_count "[economy] list_next")"
@@ -484,6 +553,11 @@ persist_soak_artifacts() {
     echo "first_mission_probe_summary=${first_mission_probe_summary:-none}"
     echo "first_mission_probe_captured_frames=${first_mission_probe_captured_frames:-0}"
     echo "first_mission_probe_enemy_attack_return_count=${first_mission_probe_enemy_attack_return_count:-0}"
+    echo "multiplayer_map_probe_iterations=$multiplayer_map_probe_iterations"
+    echo "multiplayer_map_probe_summary_count=${multiplayer_map_probe_summary_count:-0}"
+    echo "multiplayer_map_probe_pass_count=${multiplayer_map_probe_pass_count:-0}"
+    echo "multiplayer_map_probe_captured_frames=${multiplayer_map_probe_captured_frames:-0}"
+    echo "multiplayer_map_probe_rss_peak_kb=${multiplayer_map_probe_rss_peak_kb:-0}"
   } >"$artifact_root/latest.txt" 2>/dev/null || true
   prune_soak_artifacts
   echo "[soak] durable artifacts: $artifact_run" >&2
@@ -922,6 +996,49 @@ run_first_mission_attack_replay() {
   echo "[soak] first-mission-attack-complete iterations=$first_mission_probe_iterations nested_summary=${first_mission_probe_summary:-none}" >>"$log_path"
 }
 
+run_multiplayer_map_soak() {
+  local map_ids="${CLASH95_SOAK_MULTIPLAYER_MAP_IDS:-0}"
+  local probe_seconds="${CLASH95_SOAK_MULTIPLAYER_MAP_PROBE_SECONDS:-$duration_seconds}"
+
+  if [ ! -f "$repo_root/tests/run_multiplayer_map_probe.sh" ]; then
+    fail_probe "multiplayer map soak cannot find run_multiplayer_map_probe.sh"
+  fi
+  if ! is_unsigned_integer "$probe_seconds" || [ "$probe_seconds" = "0" ]; then
+    fail_probe "CLASH95_SOAK_MULTIPLAYER_MAP_PROBE_SECONDS must be a positive integer, got: $probe_seconds"
+  fi
+
+  multiplayer_map_probe_iterations=1
+  multiplayer_map_probe_ids="$map_ids"
+  mkdir -p "$artifact_run/multiplayer-maps"
+  echo "[soak] multiplayer-map probe map_ids=$map_ids probe_seconds=$probe_seconds" >>"$log_path"
+  CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 \
+  CLASH95_MULTIPLAYER_MAP_ARTIFACT_DIR="$artifact_run/multiplayer-maps" \
+  CLASH95_MULTIPLAYER_MAP_IDS="$map_ids" \
+  CLASH95_MULTIPLAYER_MAP_PROBE_SECONDS="$probe_seconds" \
+  CLASH95_MULTIPLAYER_MAP_SAMPLE_INTERVAL_SECONDS="${CLASH95_SOAK_MULTIPLAYER_MAP_SAMPLE_INTERVAL_SECONDS:-$sample_interval}" \
+  CLASH95_MULTIPLAYER_MAP_FRAME_DUMP_LIMIT="${CLASH95_SOAK_MULTIPLAYER_MAP_FRAME_DUMP_LIMIT:-240}" \
+  CLASH95_MULTIPLAYER_MAP_MAX_COPIED_FRAMES="${CLASH95_SOAK_MULTIPLAYER_MAP_MAX_COPIED_FRAMES:-64}" \
+  CLASH95_MULTIPLAYER_MAP_MAX_LOG_BYTES="${CLASH95_SOAK_MULTIPLAYER_MAP_MAX_LOG_BYTES:-4000000}" \
+  CLASH95_MULTIPLAYER_MAP_KEEP_RUNS="${CLASH95_SOAK_MULTIPLAYER_MAP_KEEP_RUNS:-4}" \
+  CLASH95_ARTIFACT_PRUNE_AFTER_RUN="${CLASH95_ARTIFACT_PRUNE_AFTER_RUN:-1}" \
+    bash "$repo_root/tests/run_multiplayer_map_probe.sh" "$bootstrap_bin" >>"$log_path" 2>&1 \
+    || {
+      update_multiplayer_map_probe_summary
+      fail_probe "multiplayer map soak failed for map ids: $map_ids"
+    }
+
+  update_multiplayer_map_probe_summary
+  if [ "${CLASH95_SOAK_MULTIPLAYER_MAP_REQUIRE_ALL_PASS:-1}" = "1" ] \
+    && [ "$multiplayer_map_probe_summary_count" != "$multiplayer_map_probe_pass_count" ]; then
+    fail_probe "multiplayer map soak did not pass every retained map summary"
+  fi
+  if [ "${CLASH95_SOAK_MULTIPLAYER_MAP_REQUIRE_FRAMES:-1}" = "1" ] \
+    && [ "${multiplayer_map_probe_captured_frames:-0}" = "0" ]; then
+    fail_probe "multiplayer map soak nested probe captured no frames"
+  fi
+  echo "[soak] multiplayer-map-complete summaries=$multiplayer_map_probe_summary_count pass=$multiplayer_map_probe_pass_count frames=$multiplayer_map_probe_captured_frames rss_peak_kb=$multiplayer_map_probe_rss_peak_kb" >>"$log_path"
+}
+
 case "$scenario" in
   main-menu-idle)
     run_main_menu_idle
@@ -938,9 +1055,12 @@ case "$scenario" in
   campaign-route)
     run_campaign_route_replay
     ;;
+  multiplayer-map)
+    run_multiplayer_map_soak
+    ;;
   *)
     echo "unknown CLASH95_SOAK_SCENARIO: $scenario" >&2
-    echo "supported scenarios: main-menu-idle, world-map-pan, castle-economy, first-mission-attack, campaign-route" >&2
+    echo "supported scenarios: main-menu-idle, world-map-pan, castle-economy, first-mission-attack, campaign-route, multiplayer-map" >&2
     exit 2
     ;;
 esac

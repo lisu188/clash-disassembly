@@ -48,10 +48,10 @@ Acceptance requirements:
 
 Current repair state:
 
-- Missions `00..03` are currently marked `complete` by their route env files.
-- Mission `04` remains `partial`: the direct route reaches the castle tactical
-  battle and breaches the gate, but objective completion/castle capture still
-  needs proof.
+- Missions `00..04` are currently marked `complete` by their route env files.
+- Mission `04` now clears Hopenberg over three authentic assaults, captures
+  the empty-garrison castle, and logs natural objective completion. Full-menu
+  sequential auto-advance remains a separate first-arc acceptance gate.
 - Missions `05..09` are partial direct-load evidence probes until authentic
   completion routes are repaired.
 - Use `tests/run_first_campaign_mission00_gate_build_probe.sh` only for the

@@ -77,6 +77,7 @@ static int g_platform_frame_present_index;
 static int g_platform_frame_dump_index;
 static int g_platform_frame_dump_skip;
 static int g_platform_frame_dump_limit;
+static int g_platform_frame_dump_stride;
 static HWND g_platform_foreground_window;
 static int g_platform_host_mouse_primary_pending_hold_reads;
 static int g_platform_host_mouse_secondary_pending_hold_reads;
@@ -468,6 +469,9 @@ static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
     g_platform_frame_dump_limit = PlatformReadNonNegativeIntEnv(
       "CLASH95_DUMP_PRESENTED_FRAMES_LIMIT",
       PLATFORM_PRESENTED_FRAME_DUMP_DEFAULT_LIMIT);
+    g_platform_frame_dump_stride = PlatformReadNonNegativeIntEnv("CLASH95_DUMP_PRESENTED_FRAMES_STRIDE", 1);
+    if ( g_platform_frame_dump_stride < 1 )
+      g_platform_frame_dump_stride = 1;
     g_platform_frame_dump_checked = 1;
   }
   if ( !g_platform_frame_dump_prefix || !*g_platform_frame_dump_prefix || !surface )
@@ -475,9 +479,11 @@ static void PlatformMaybeDumpPresentedFrame(SDL2_Surface *surface)
   current_present_index = g_platform_frame_present_index++;
   if ( current_present_index < g_platform_frame_dump_skip )
     return;
+  if ( (current_present_index - g_platform_frame_dump_skip) % g_platform_frame_dump_stride )
+    return;
   if ( g_platform_frame_dump_limit && g_platform_frame_dump_index >= g_platform_frame_dump_limit )
     return;
-  snprintf(frame_path, sizeof(frame_path), "%s-%03d.bmp", g_platform_frame_dump_prefix, g_platform_frame_dump_index++);
+  snprintf(frame_path, sizeof(frame_path), "%s-%06d.bmp", g_platform_frame_dump_prefix, g_platform_frame_dump_index++);
   if ( SDL_SaveBMP(surface, frame_path) != 0 )
     fprintf(stderr, "[platform_sdl] SDL_SaveBMP failed for %s: %s\n", frame_path, SDL_GetError());
 }

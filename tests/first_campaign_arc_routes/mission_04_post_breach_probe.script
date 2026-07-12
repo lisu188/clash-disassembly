@@ -6,117 +6,861 @@ wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
 screenshot mission04-post-breach-start
 nonblank mission04-post-breach-start
 
-click 320 368 0.18 0.8 select-stack0
+platform_down 320 368 0.20 select-stack0-down
+platform_up 320 368 0.80 select-stack0-up
 wait_log 30 selected_stack_changed selected=0 a=41 b=50
 
-world_key 205 35 1.0 pan-right-toward-target
-world_key 208 320 7.0 pan-down-toward-target
-click 609 273 0.05 1.5 click-target-56-69
+world_pan_viewport 47 65 160
+platform_down 609 273 0.05 click-target-56-69-down
+platform_up 609 273 1.50 click-target-56-69-up
 wait_log 30 building_path_ready selected=0 a=56 b=69
 wait_log 30 unit_move_after_path_state selected=0 a=45 b=54
 
-click 500 2 0.18 1.0 end-human-turn-1
+if_env CLASH95_MISSION04_STOP_AFTER_INITIAL_PATH 1
+screenshot mission04-initial-path-timing-probe
+nonblank mission04-initial-path-timing-probe
+stop mission04-initial-path-timing-probe
+endif
+
+world_move 491 2 0.20 position-end-human-turn-1
+world_click 491 2 8 0.35 open-end-human-turn-1
+world_click 491 2 8 1.0 confirm-end-human-turn-1
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-1-skip-1
-click 320 240 0.12 0.65 post-end-turn-1-skip-2
-click 320 240 0.12 0.65 post-end-turn-1-skip-3
-click 320 240 0.12 0.65 post-end-turn-1-skip-4
+world_click 320 240 4 0.65 post-end-turn-1-skip-1
+world_click 320 240 4 0.65 post-end-turn-1-skip-2
+world_click 320 240 4 0.65 post-end-turn-1-skip-3
+world_click 320 240 4 0.65 post-end-turn-1-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=2
-click 496 416 0.22 0.8 next-unit-stack0-turn-2
+world_down 480 400 0.20 next-unit-stack0-turn-2-down
+platform_up 480 400 0.80 next-unit-stack0-turn-2-up
 wait_log 30 next_unit_selected selected=0 a=45 b=54
-click 320 240 0.18 3.0 continue-castle-path-turn-2
+world_down 320 240 0.20 continue-castle-path-turn-2-down
+platform_up 320 240 3.00 continue-castle-path-turn-2-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 500 2 0.18 1.0 end-human-turn-2
+world_move 491 2 0.20 position-end-human-turn-2
+world_click 491 2 8 0.35 open-end-human-turn-2
+world_click 491 2 8 1.0 confirm-end-human-turn-2
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-2-skip-1
-click 320 240 0.12 0.65 post-end-turn-2-skip-2
-click 320 240 0.12 0.65 post-end-turn-2-skip-3
-click 320 240 0.12 0.65 post-end-turn-2-skip-4
+world_click 320 240 4 0.65 post-end-turn-2-skip-1
+world_click 320 240 4 0.65 post-end-turn-2-skip-2
+world_click 320 240 4 0.65 post-end-turn-2-skip-3
+world_click 320 240 4 0.65 post-end-turn-2-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=3
-click 496 416 0.22 0.8 next-unit-stack0-turn-3
+world_down 480 400 0.20 next-unit-stack0-turn-3-down
+platform_up 480 400 0.80 next-unit-stack0-turn-3-up
 wait_log 30 next_unit_selected selected=0 a=51 b=54
-click 320 240 0.18 3.0 continue-castle-path-turn-3
+world_down 320 240 0.20 continue-castle-path-turn-3-down
+platform_up 320 240 3.00 continue-castle-path-turn-3-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 500 2 0.18 1.0 end-human-turn-3
+world_move 491 2 0.20 position-end-human-turn-3
+world_click 491 2 8 0.35 open-end-human-turn-3
+world_click 491 2 8 1.0 confirm-end-human-turn-3
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-3-skip-1
-click 320 240 0.12 0.65 post-end-turn-3-skip-2
-click 320 240 0.12 0.65 post-end-turn-3-skip-3
-click 320 240 0.12 0.65 post-end-turn-3-skip-4
+world_click 320 240 4 0.65 post-end-turn-3-skip-1
+world_click 320 240 4 0.65 post-end-turn-3-skip-2
+world_click 320 240 4 0.65 post-end-turn-3-skip-3
+world_click 320 240 4 0.65 post-end-turn-3-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=4
-click 496 416 0.22 0.8 next-unit-stack0-turn-4
+world_down 480 400 0.20 next-unit-stack0-turn-4-down
+platform_up 480 400 0.80 next-unit-stack0-turn-4-up
 wait_log 30 next_unit_selected selected=0 a=56 b=58
-click 320 240 0.18 3.0 continue-castle-path-turn-4
+world_down 320 240 0.20 continue-castle-path-turn-4-down
+platform_up 320 240 3.00 continue-castle-path-turn-4-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 500 2 0.18 1.0 end-human-turn-4
+world_move 491 2 0.20 position-end-human-turn-4
+world_click 491 2 8 0.35 open-end-human-turn-4
+world_click 491 2 8 1.0 confirm-end-human-turn-4
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-4-skip-1
-click 320 240 0.12 0.65 post-end-turn-4-skip-2
-click 320 240 0.12 0.65 post-end-turn-4-skip-3
-click 320 240 0.12 0.65 post-end-turn-4-skip-4
+world_click 320 240 4 0.65 post-end-turn-4-skip-1
+world_click 320 240 4 0.65 post-end-turn-4-skip-2
+world_click 320 240 4 0.65 post-end-turn-4-skip-3
+world_click 320 240 4 0.65 post-end-turn-4-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=5
-click 496 416 0.22 0.8 next-unit-stack0-turn-5
+world_down 480 400 0.20 next-unit-stack0-turn-5-down
+platform_up 480 400 0.80 next-unit-stack0-turn-5-up
 wait_log 30 next_unit_selected selected=0 a=61 b=61
-click 320 240 0.18 3.0 continue-castle-path-turn-5
+world_down 320 240 0.20 continue-castle-path-turn-5-down
+platform_up 320 240 3.00 continue-castle-path-turn-5-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 500 2 0.18 1.0 end-human-turn-5
+world_move 491 2 0.20 position-end-human-turn-5
+world_click 491 2 8 0.35 open-end-human-turn-5
+world_click 491 2 8 1.0 confirm-end-human-turn-5
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-5-skip-1
-click 320 240 0.12 0.65 post-end-turn-5-skip-2
-click 320 240 0.12 0.65 post-end-turn-5-skip-3
-click 320 240 0.12 0.65 post-end-turn-5-skip-4
+world_click 320 240 4 0.65 post-end-turn-5-skip-1
+world_click 320 240 4 0.65 post-end-turn-5-skip-2
+world_click 320 240 4 0.65 post-end-turn-5-skip-3
+world_click 320 240 4 0.65 post-end-turn-5-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=6
-click 496 416 0.22 0.8 next-unit-stack0-turn-6
+world_down 480 400 0.20 next-unit-stack0-turn-6-down
+platform_up 480 400 0.80 next-unit-stack0-turn-6-up
 wait_log 30 next_unit_selected selected=0 a=65 b=66
-click 320 240 0.18 3.0 continue-castle-path-turn-6
+world_down 320 240 0.20 continue-castle-path-turn-6-down
+platform_up 320 240 3.00 continue-castle-path-turn-6-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 500 2 0.18 1.0 end-human-turn-6
+world_move 491 2 0.20 position-end-human-turn-6
+world_click 491 2 8 0.35 open-end-human-turn-6
+world_click 491 2 8 1.0 confirm-end-human-turn-6
 wait 4.0
-click 320 240 0.12 0.65 post-end-turn-6-skip-1
-click 320 240 0.12 0.65 post-end-turn-6-skip-2
-click 320 240 0.12 0.65 post-end-turn-6-skip-3
-click 320 240 0.12 0.65 post-end-turn-6-skip-4
+world_click 320 240 4 0.65 post-end-turn-6-skip-1
+world_click 320 240 4 0.65 post-end-turn-6-skip-2
+world_click 320 240 4 0.65 post-end-turn-6-skip-3
+world_click 320 240 4 0.65 post-end-turn-6-skip-4
 wait_log 90 playgame_before_human_turn selected=-1 a=0 b=7
-click 496 416 0.22 0.8 next-unit-stack0-turn-7
+world_down 480 400 0.20 next-unit-stack0-turn-7-down
+platform_up 480 400 0.80 next-unit-stack0-turn-7-up
 wait_log 30 next_unit_selected selected=0 a=60 b=68
-click 320 240 0.18 3.0 continue-castle-path-turn-7
+world_down 320 240 0.20 continue-castle-path-turn-7-down
+platform_up 320 240 3.00 continue-castle-path-turn-7-up
 wait_log 60 unit_move_after_path_state selected=0
+wait 1.0
 
-click 64 273 0.18 4.0 capture-target-castle-56-69
-wait_log 30 tile_input cursor=64,273 tile=56,69
-click 354 160 0.18 3.0 lead-castle-battle-prompt
-wait 5.0
+world_down 64 273 0.20 capture-target-castle-56-69-down
+platform_up 64 273 4.00 capture-target-castle-56-69-up
+wait_log 30 tile=56,69
+wait_log 30 battle_prompt_layout_primary
+world_down 354 160 0.20 lead-castle-battle-prompt-down
+platform_up 354 160 3.00 lead-castle-battle-prompt-up
+wait_log 60 unit_attack_building_battle_enter selected=0
+wait 2.0
 battle_click 577 386 4 1.0 select-light-infantry-after-peasant
+battle_click 577 386 4 1.0 confirm-light-infantry-selected
+wait_log 30 battle_action_next_unit_selected selected=1
 battle_key 205 80 1.0 pan-battle-right-to-gate
 battle_click 128 240 4 2.0 attack-gate-10-3
 wait_log 60 battle_wall_attack_return
-battle_click 288 240 4 2.0 attack-gate-10-3-repeat
+battle_key 205 80 1.0 pan-battle-right-after-gate-hit
+battle_click 128 240 4 2.0 attack-gate-10-3-repeat-primary
 wait_log 60 wall_after=0
-battle_click 288 240 4 2.0 move-through-open-gate-10-3
-wait_log 60 battle_move_execute_return selected=0 a=10 b=3
+battle_key 205 20 0.5 pan-battle-right-after-gate-breach
+battle_click 128 240 4 2.0 move-through-open-gate-10-3-primary
+battle_click 160 240 4 2.0 move-through-open-gate-10-3-secondary
+wait_log_any 60 battle_move_execute_return selected=1 a=10 b=3 || battle_move_execute_return selected=1 a=11 b=3
 screenshot mission04-post-breach-gate-move
 nonblank mission04-post-breach-gate-move
 
-battle_click 352 240 4 2.0 probe-inside-gate-11-3
+battle_click 224 240 4 2.0 probe-inside-gate-11-3
 wait_log 30 tile=11,3
-wait_log 60 battle_move_execute_return selected=0 a=11 b=3
+wait_log 60 battle_move_execute_return selected=1 a=11 b=3
 screenshot mission04-post-breach-inside-gate
 nonblank mission04-post-breach-inside-gate
 
-battle_click 416 240 4 2.0 probe-inside-gate-12-3
+battle_click 288 240 4 2.0 probe-inside-gate-12-3
 wait_log 30 tile=12,3
-wait_log 60 battle_move_execute_return selected=0 a=12 b=3
+wait_log 60 battle_move_execute_return selected=1 a=12 b=3
 screenshot mission04-post-breach-inside-gate-12-3
 nonblank mission04-post-breach-inside-gate-12-3
 
 battle_key 205 12 0.8 pan-battle-right-inside-castle
 battle_click 288 240 4 2.0 probe-inside-gate-13-3
 wait_log 30 tile=13,3
-wait_log 60 battle_move_execute_return selected=0 a=13 b=3
+wait_log 60 battle_move_execute_return selected=1 a=13 b=3
 screenshot mission04-post-breach-inside-gate-13-3
 nonblank mission04-post-breach-inside-gate-13-3
+
+battle_click 384 240 4 2.0 attack-first-defender-14-3
+wait_log 30 tile=14,3
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=93
+wait_log 60 battle_attack_return selected=1 a=9 b=0 c=0
+screenshot mission04-post-breach-attack-defender-14-3
+nonblank mission04-post-breach-attack-defender-14-3
+
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-02
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=86
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-03
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=79
+battle_click 510 21 4 1.0 end-battle-turn-after-ap-exhausted
+wait_log 30 battle_action_loop_exit_requested selected=1
+wait 15.0
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-04
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=72
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-05
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=65
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-06
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=58
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-07
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=51
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-08
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=44
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-09
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=37
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-10
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=30
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-11
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=23
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-12
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=16
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-13
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=9
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-14
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=2
+battle_click 384 240 4 2.0 attack-first-defender-14-3-repeat-15
+wait_log 60 battle_attack_after_exchange selected=1 a=9 b=100 c=0
+wait_log 60 battle_attack_return selected=1 a=9 b=0 c=1
+screenshot mission04-post-breach-defender-14-3-defeated
+nonblank mission04-post-breach-defender-14-3-defeated
+
+battle_click 384 240 4 2.0 move-into-defeated-defender-tile-14-3
+wait_log 30 tile=14,3
+wait_log 60 battle_move_execute_return selected=1 a=14 b=3
+screenshot mission04-post-breach-occupy-14-3
+nonblank mission04-post-breach-occupy-14-3
+
+battle_click 384 304 4 2.0 attack-adjacent-defender-14-4
+wait_log 30 tile=14,4
+wait_log 60 battle_attack_after_exchange selected=1 a=10
+wait_log 60 battle_attack_return selected=1 a=10 b=0
+screenshot mission04-post-breach-attack-defender-14-4
+nonblank mission04-post-breach-attack-defender-14-4
+
+battle_click 577 386 4 1.0 select-light-infantry-slot2-after-highlander
+wait_log 30 battle_turn_loop_after_input_widgets selected=2
+battle_key 205 80 1.0 pan-slot2-right-to-courtyard
+battle_click 288 304 4 2.0 move-slot2-to-13-4
+wait_log 30 tile=13,4
+wait_log 60 battle_move_execute_return selected=2 a=13 b=4
+screenshot mission04-slot2-occupy-13-4
+nonblank mission04-slot2-occupy-13-4
+
+battle_key 205 20 0.5 settle-slot2-courtyard-viewport-after-move
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4
+wait_log 30 tile=14,4
+wait_log 60 battle_attack_after_exchange selected=2 a=10
+wait_log 60 battle_attack_return selected=2 a=10 b=0
+screenshot mission04-slot2-attack-defender-14-4
+nonblank mission04-slot2-attack-defender-14-4
+
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-02
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=79
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-03
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=72
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-04
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=65
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-05
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=58
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-06
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=51
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-07
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=44
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-08
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=37
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-09
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=30
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-10
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=23
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-11
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=16
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-12
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=9
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-13
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=2
+battle_click 384 304 4 2.0 slot2-attack-defender-14-4-repeat-14
+wait_log 60 battle_attack_after_exchange selected=2 a=10 b=100 c=0
+wait_log 60 battle_attack_return selected=2 a=10 b=0 c=1
+screenshot mission04-slot2-defender-14-4-defeated
+nonblank mission04-slot2-defender-14-4-defeated
+
+battle_click 384 304 4 2.0 move-slot2-into-defeated-defender-14-4
+wait_log 30 tile=14,4
+wait_log 60 battle_move_execute_return selected=2 a=14 b=4
+screenshot mission04-slot2-occupy-14-4
+nonblank mission04-slot2-occupy-14-4
+
+battle_click 448 304 4 2.0 slot2-attack-next-defender-15-4
+wait_log 30 tile=15,4
+wait_log 60 battle_attack_after_exchange selected=2 a=17
+wait_log 60 battle_attack_return selected=2 a=17 b=0
+screenshot mission04-slot2-attack-defender-15-4
+nonblank mission04-slot2-attack-defender-15-4
+
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-02
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=86
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-03
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=79
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-04
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=72
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-05
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=65
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-06
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=58
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-07
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=51
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-08
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=44
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-09
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=37
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-10
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=30
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-11
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=23
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-12
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=16
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-13
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=9
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-14
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=2
+battle_click 448 304 4 2.0 slot2-attack-defender-15-4-repeat-15
+wait_log 60 battle_attack_after_exchange selected=2 a=17 b=100 c=0
+wait_log 60 battle_attack_return selected=2 a=17 b=0 c=1
+screenshot mission04-slot2-defender-15-4-defeated
+nonblank mission04-slot2-defender-15-4-defeated
+
+battle_click 448 304 4 2.0 move-slot2-into-defeated-defender-15-4
+wait_log 30 tile=15,4
+wait_log 60 battle_move_execute_return selected=2 a=15 b=4
+screenshot mission04-slot2-occupy-15-4
+nonblank mission04-slot2-occupy-15-4
+
+battle_click 448 368 4 2.0 slot2-attack-next-defender-15-5
+wait_log 30 tile=15,5
+wait_log 60 battle_attack_after_exchange selected=2 a=19
+wait_log 60 battle_attack_return selected=2 a=19 b=0
+screenshot mission04-slot2-attack-defender-15-5
+nonblank mission04-slot2-attack-defender-15-5
+
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-02
+wait_log 60 battle_attack_after_exchange selected=2 a=19 b=100 c=86
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-03
+wait_log 60 battle_attack_after_exchange selected=2 a=19 b=100 c=79
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-04
+wait_log 60 battle_attack_after_exchange selected=2 a=19 b=100 c=72
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-05
+wait_log 60 battle_attack_after_exchange selected=2 a=19 b=100 c=65
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-06
+wait_log 60 battle_attack_after_exchange selected=2 a=19 b=100 c=58
+mark_log_count post_ai_world_return unit_attack_building_battle_return selected=0 a=1 b=2 c=9
+mark_log_count post_ai_tactical_control battle_turn_loop_after_input_widgets selected=2 a=0 b=1
+battle_click 510 21 4 1.0 end-battle-turn-after-slot19-ap-exhausted
+wait_log 30 battle_action_loop_exit_requested selected=2
+wait_log 60 battle_ai_turn_enter selected=1
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_AI 1 mission04-first-assault-defender-ai-handoff
+wait_log_marked_any 90 post_ai_world_return || post_ai_tactical_control
+screenshot mission04-post-ai-branch-observed
+nonblank mission04-post-ai-branch-observed
+
+if_env CLASH95_MISSION04_REQUIRE_POST_AI_BRANCH world_return
+fail_unless_last_wait_log_mark post_ai_world_return
+endif
+if_env CLASH95_MISSION04_REQUIRE_POST_AI_BRANCH tactical
+fail_unless_last_wait_log_mark post_ai_tactical_control
+endif
+
+if_last_wait_log_mark post_ai_world_return
+stop_unless_env CLASH95_MISSION04_CONTINUE_WORLD_RETURN 1 mission04-world-return-branch-observed
+wait 2.0
+screenshot mission04-world-return-after-battle
+nonblank mission04-world-return-after-battle
+mark_log_count world_return_select_stack selected_stack_changed selected=0 a=56 b=68
+mark_log_count world_return_reentry_tile_input tile=56,69
+mark_log_count world_return_reentry_cursor world_cursor] cursor=64,273 tile=56,69
+mark_log_count world_return_battle_prompt battle_prompt_layout_primary
+mark_log_count world_return_battle_enter unit_attack_building_battle_enter selected=0
+mark_log_count world_return_next_human_turn playgame_before_human_turn selected=-1 a=0
+world_move 491 2 0.20 position-end-turn-top-menu-after-world-return
+world_click 491 2 8 0.35 open-end-turn-top-menu-after-world-return
+world_click 491 2 8 1.0 confirm-end-turn-top-menu-after-world-return
+wait 4.0
+world_click 320 240 4 0.65 post-world-return-turn-skip-1
+world_click 320 240 4 0.65 post-world-return-turn-skip-2
+world_click 320 240 4 0.65 post-world-return-turn-skip-3
+world_click 320 240 4 0.65 post-world-return-turn-skip-4
+wait_log_marked 120 world_return_next_human_turn
+world_move 96 240 0.35 position-stack0-after-world-return
+world_down 95 240 0.20 select-stack0-after-world-return-down
+platform_up 95 240 0.80 select-stack0-after-world-return-up
+wait_log_marked 30 world_return_select_stack
+world_click 64 273 8 0.35 position-target-castle-from-world-return
+world_down 64 273 0.20 reenter-target-castle-from-world-return-down
+platform_up 64 273 4.00 reenter-target-castle-from-world-return-up
+wait_log_marked_any 30 world_return_reentry_tile_input || world_return_reentry_cursor
+wait_log_marked_any 60 world_return_battle_prompt || world_return_battle_enter
+world_click 354 160 8 0.25 position-world-return-castle-battle-prompt
+world_down 354 160 0.10 lead-world-return-castle-battle-prompt-down
+platform_up 354 160 0.25 lead-world-return-castle-battle-prompt-up
+wait_log_marked 60 world_return_battle_enter
+expect_log unit_attack_building_battle_enter selected=0
+screenshot mission04-world-return-reentered-castle
+nonblank mission04-world-return-reentered-castle
+if_env CLASH95_MISSION04_CONTINUE_TO_OBJECTIVE_AFTER_POST_OCCUPY 1
+include_script tests/first_campaign_arc_routes/mission_04_world_return_objective_tail.script
+endif
+stop mission04-world-return-reentered-castle
+endif
+
+if_last_wait_log_mark post_ai_tactical_control
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_POST_AI 1 mission04-post-ai-tactical-branch-observed
+wait_log 5 battle_turn_loop_after_input_widgets selected=2 a=0 b=1
+
+mark_log_count post_ai_attack_07_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_07_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-07
+wait_log_marked 60 post_ai_attack_07_exchange
+wait_log_marked 60 post_ai_attack_07_return
+screenshot mission04-slot2-post-ai-attack-defender-15-5
+nonblank mission04-slot2-post-ai-attack-defender-15-5
+mark_log_count post_ai_attack_08_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_08_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-08
+wait_log_marked 60 post_ai_attack_08_exchange
+wait_log_marked 60 post_ai_attack_08_return
+screenshot mission04-slot2-post-ai-second-attack-defender-15-5
+nonblank mission04-slot2-post-ai-second-attack-defender-15-5
+mark_log_count post_ai_attack_09_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_09_return battle_attack_return selected=2 a=19 b=0
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-09
+wait_log_marked 60 post_ai_attack_09_exchange
+wait_log_marked 60 post_ai_attack_09_return
+screenshot mission04-slot2-post-ai-third-attack-defender-15-5
+nonblank mission04-slot2-post-ai-third-attack-defender-15-5
+mark_log_count post_ai_attack_10_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_10_return_survived battle_attack_return selected=2 a=19 b=0 c=0
+mark_log_count post_ai_attack_10_return_defeated battle_attack_return selected=2 a=19 b=0 c=1
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-10
+wait_log_marked 60 post_ai_attack_10_exchange
+wait_log_marked_any 60 post_ai_attack_10_return_defeated || post_ai_attack_10_return_survived
+screenshot mission04-slot2-post-ai-fourth-attack-defender-15-5
+nonblank mission04-slot2-post-ai-fourth-attack-defender-15-5
+if_last_wait_log_mark post_ai_attack_10_return_defeated
+screenshot mission04-slot2-post-ai-defender-15-5-defeated
+nonblank mission04-slot2-post-ai-defender-15-5-defeated
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_POST_AI_DEFEAT 1 mission04-slot2-post-ai-defender-15-5-defeated
+mark_log_count post_ai_move_15_5 battle_move_execute_return selected=2 a=15 b=5
+battle_click 448 368 4 0.25 slot2-post-ai-move-into-cleared-15-5
+wait_log_marked 60 post_ai_move_15_5
+expect_log battle_move_execute_return selected=2 a=15 b=5
+screenshot mission04-slot2-post-ai-occupy-15-5
+nonblank mission04-slot2-post-ai-occupy-15-5
+stop_unless_env CLASH95_MISSION04_HOVER_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-occupy-15-5
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-east-16-5
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-east-16-5
+nonblank mission04-slot2-post-ai-hover-east-16-5
+battle_pulse -64 64 0 0 4 0.25 hover-slot2-post-ai-south-15-6
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-south-15-6
+nonblank mission04-slot2-post-ai-hover-south-15-6
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-southeast-16-6
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-southeast-16-6
+nonblank mission04-slot2-post-ai-hover-southeast-16-6
+if_env CLASH95_MISSION04_END_TURN_AFTER_OCCUPY_15_5 1
+mark_log_count post_occupy_world_return unit_attack_building_battle_return selected=0
+mark_log_count post_occupy_tactical_control battle_turn_loop_after_input_widgets selected=2 a=0 b=1
+battle_click 510 21 4 1.0 end-battle-turn-after-occupy-15-5
+wait_log 30 battle_action_loop_exit_requested selected=2
+wait_log 60 battle_ai_turn_enter selected=1
+wait_log_marked_any 90 post_occupy_world_return || post_occupy_tactical_control
+expect_log battle_action_loop_exit_requested selected=2
+screenshot mission04-slot2-post-ai-after-occupy-end-turn-branch
+nonblank mission04-slot2-post-ai-after-occupy-end-turn-branch
+if_last_wait_log_mark post_occupy_tactical_control
+stop_unless_env CLASH95_MISSION04_ATTACK_14_5_AFTER_POST_OCCUPY_END_TURN 1 mission04-slot2-post-ai-after-occupy-end-turn-branch
+mark_log_count post_occupy_attack_14_5_exchange battle_attack_after_exchange selected=2 a=12
+battle_click 384 368 4 0.25 slot2-post-occupy-attack-defender-14-5
+wait_log 30 tile=14,5
+wait_log_marked 60 post_occupy_attack_14_5_exchange
+wait_log 60 battle_attack_return selected=2 a=12 b=0
+screenshot mission04-slot2-post-occupy-attack-defender-14-5
+nonblank mission04-slot2-post-occupy-attack-defender-14-5
+if_env CLASH95_MISSION04_CONTINUE_TO_OBJECTIVE_AFTER_POST_OCCUPY 1
+include_script tests/first_campaign_arc_routes/mission_04_post_occupy_objective_tail.script
+endif
+stop mission04-slot2-post-occupy-attack-defender-14-5
+endif
+stop mission04-slot2-post-ai-after-occupy-end-turn-branch
+endif
+stop_unless_env CLASH95_MISSION04_CLICK_EAST_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-hover-after-occupy-15-5
+mark_log_count post_occupy_click_16_5_tile tile=16,5
+battle_click 512 368 4 0.25 click-slot2-post-ai-east-16-5
+wait_log_marked 30 post_occupy_click_16_5_tile
+wait 1.0
+expect_log tile=16,5
+screenshot mission04-slot2-post-ai-click-east-16-5
+nonblank mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-occupy-15-5
+endif
+if_last_wait_log_mark post_ai_attack_10_return_survived
+mark_log_count post_ai_attack_11_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_11_return_survived battle_attack_return selected=2 a=19 b=0 c=0
+mark_log_count post_ai_attack_11_return_defeated battle_attack_return selected=2 a=19 b=0 c=1
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-11
+wait_log_marked 60 post_ai_attack_11_exchange
+wait_log_marked_any 60 post_ai_attack_11_return_defeated || post_ai_attack_11_return_survived
+screenshot mission04-slot2-post-ai-fifth-attack-defender-15-5
+nonblank mission04-slot2-post-ai-fifth-attack-defender-15-5
+if_last_wait_log_mark post_ai_attack_11_return_defeated
+screenshot mission04-slot2-post-ai-defender-15-5-defeated
+nonblank mission04-slot2-post-ai-defender-15-5-defeated
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_POST_AI_DEFEAT 1 mission04-slot2-post-ai-defender-15-5-defeated
+mark_log_count post_ai_move_15_5_after_11 battle_move_execute_return selected=2 a=15 b=5
+battle_click 448 368 4 0.25 slot2-post-ai-move-into-cleared-15-5-after-11
+wait_log_marked 60 post_ai_move_15_5_after_11
+expect_log battle_move_execute_return selected=2 a=15 b=5
+screenshot mission04-slot2-post-ai-occupy-15-5
+nonblank mission04-slot2-post-ai-occupy-15-5
+stop_unless_env CLASH95_MISSION04_HOVER_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-occupy-15-5
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-east-16-5-after-11
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-east-16-5
+nonblank mission04-slot2-post-ai-hover-east-16-5
+battle_pulse -64 64 0 0 4 0.25 hover-slot2-post-ai-south-15-6-after-11
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-south-15-6
+nonblank mission04-slot2-post-ai-hover-south-15-6
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-southeast-16-6-after-11
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-southeast-16-6
+nonblank mission04-slot2-post-ai-hover-southeast-16-6
+if_env CLASH95_MISSION04_END_TURN_AFTER_OCCUPY_15_5 1
+mark_log_count post_occupy_world_return_after_11 unit_attack_building_battle_return selected=0
+mark_log_count post_occupy_tactical_control_after_11 battle_turn_loop_after_input_widgets selected=2 a=0 b=1
+battle_click 510 21 4 1.0 end-battle-turn-after-occupy-15-5-after-11
+wait_log 30 battle_action_loop_exit_requested selected=2
+wait_log 60 battle_ai_turn_enter selected=1
+wait_log_marked_any 90 post_occupy_world_return_after_11 || post_occupy_tactical_control_after_11
+expect_log battle_action_loop_exit_requested selected=2
+screenshot mission04-slot2-post-ai-after-occupy-end-turn-branch
+nonblank mission04-slot2-post-ai-after-occupy-end-turn-branch
+if_last_wait_log_mark post_occupy_tactical_control_after_11
+stop_unless_env CLASH95_MISSION04_ATTACK_14_5_AFTER_POST_OCCUPY_END_TURN 1 mission04-slot2-post-ai-after-occupy-end-turn-branch
+mark_log_count post_occupy_attack_14_5_exchange_after_11 battle_attack_after_exchange selected=2 a=12
+battle_click 384 368 4 0.25 slot2-post-occupy-attack-defender-14-5-after-11
+wait_log 30 tile=14,5
+wait_log_marked 60 post_occupy_attack_14_5_exchange_after_11
+wait_log 60 battle_attack_return selected=2 a=12 b=0
+screenshot mission04-slot2-post-occupy-attack-defender-14-5
+nonblank mission04-slot2-post-occupy-attack-defender-14-5
+if_env CLASH95_MISSION04_CONTINUE_TO_OBJECTIVE_AFTER_POST_OCCUPY 1
+include_script tests/first_campaign_arc_routes/mission_04_post_occupy_objective_tail.script
+endif
+stop mission04-slot2-post-occupy-attack-defender-14-5
+endif
+stop mission04-slot2-post-ai-after-occupy-end-turn-branch
+endif
+stop_unless_env CLASH95_MISSION04_CLICK_EAST_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-hover-after-occupy-15-5
+mark_log_count post_occupy_click_16_5_tile_after_11 tile=16,5
+battle_click 512 368 4 0.25 click-slot2-post-ai-east-16-5-after-11
+wait_log_marked 30 post_occupy_click_16_5_tile_after_11
+wait 1.0
+expect_log tile=16,5
+screenshot mission04-slot2-post-ai-click-east-16-5
+nonblank mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-occupy-15-5
+endif
+if_last_wait_log_mark post_ai_attack_11_return_survived
+mark_log_count post_ai_attack_12_exchange battle_attack_after_exchange selected=2 a=19 b=100
+mark_log_count post_ai_attack_12_return battle_attack_return selected=2 a=19 b=0 c=1
+battle_click 448 368 4 0.25 slot2-post-ai-attack-defender-15-5-repeat-12
+wait_log_marked 60 post_ai_attack_12_exchange
+wait_log_marked 60 post_ai_attack_12_return
+screenshot mission04-slot2-post-ai-defender-15-5-defeated
+nonblank mission04-slot2-post-ai-defender-15-5-defeated
+stop_unless_env CLASH95_MISSION04_CONTINUE_AFTER_POST_AI_DEFEAT 1 mission04-slot2-post-ai-defender-15-5-defeated
+mark_log_count post_ai_move_15_5_after_12 battle_move_execute_return selected=2 a=15 b=5
+battle_click 448 368 4 0.25 slot2-post-ai-move-into-cleared-15-5-after-12
+wait_log_marked 60 post_ai_move_15_5_after_12
+expect_log battle_move_execute_return selected=2 a=15 b=5
+screenshot mission04-slot2-post-ai-occupy-15-5
+nonblank mission04-slot2-post-ai-occupy-15-5
+stop_unless_env CLASH95_MISSION04_HOVER_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-occupy-15-5
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-east-16-5-after-12
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-east-16-5
+nonblank mission04-slot2-post-ai-hover-east-16-5
+battle_pulse -64 64 0 0 4 0.25 hover-slot2-post-ai-south-15-6-after-12
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-south-15-6
+nonblank mission04-slot2-post-ai-hover-south-15-6
+battle_pulse 64 0 0 0 4 0.25 hover-slot2-post-ai-southeast-16-6
+wait 0.8
+screenshot mission04-slot2-post-ai-hover-southeast-16-6
+nonblank mission04-slot2-post-ai-hover-southeast-16-6
+if_env CLASH95_MISSION04_END_TURN_AFTER_OCCUPY_15_5 1
+mark_log_count post_occupy_world_return_after_12 unit_attack_building_battle_return selected=0
+mark_log_count post_occupy_tactical_control_after_12 battle_turn_loop_after_input_widgets selected=2 a=0 b=1
+battle_click 510 21 4 1.0 end-battle-turn-after-occupy-15-5-after-12
+wait_log 30 battle_action_loop_exit_requested selected=2
+wait_log 60 battle_ai_turn_enter selected=1
+wait_log_marked_any 90 post_occupy_world_return_after_12 || post_occupy_tactical_control_after_12
+expect_log battle_action_loop_exit_requested selected=2
+screenshot mission04-slot2-post-ai-after-occupy-end-turn-branch
+nonblank mission04-slot2-post-ai-after-occupy-end-turn-branch
+if_last_wait_log_mark post_occupy_tactical_control_after_12
+stop_unless_env CLASH95_MISSION04_ATTACK_14_5_AFTER_POST_OCCUPY_END_TURN 1 mission04-slot2-post-ai-after-occupy-end-turn-branch
+mark_log_count post_occupy_attack_14_5_exchange_after_12 battle_attack_after_exchange selected=2 a=12
+battle_click 384 368 4 0.25 slot2-post-occupy-attack-defender-14-5-after-12
+wait_log 30 tile=14,5
+wait_log_marked 60 post_occupy_attack_14_5_exchange_after_12
+wait_log 60 battle_attack_return selected=2 a=12 b=0
+screenshot mission04-slot2-post-occupy-attack-defender-14-5
+nonblank mission04-slot2-post-occupy-attack-defender-14-5
+if_env CLASH95_MISSION04_CONTINUE_TO_OBJECTIVE_AFTER_POST_OCCUPY 1
+include_script tests/first_campaign_arc_routes/mission_04_post_occupy_objective_tail.script
+endif
+stop mission04-slot2-post-occupy-attack-defender-14-5
+endif
+stop mission04-slot2-post-ai-after-occupy-end-turn-branch
+endif
+stop_unless_env CLASH95_MISSION04_CLICK_EAST_AFTER_OCCUPY_15_5 1 mission04-slot2-post-ai-hover-after-occupy-15-5
+mark_log_count post_occupy_click_16_5_tile_after_12 tile=16,5
+battle_click 512 368 4 0.25 click-slot2-post-ai-east-16-5-after-12
+wait_log_marked 30 post_occupy_click_16_5_tile_after_12
+wait 1.0
+expect_log tile=16,5
+screenshot mission04-slot2-post-ai-click-east-16-5
+nonblank mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-click-east-16-5
+stop mission04-slot2-post-ai-occupy-15-5
+endif
+endif
+endif
+
+world_move 491 2 0.20 position-end-human-turn-after-first-assault
+world_click 491 2 8 0.35 open-end-human-turn-after-first-assault
+world_click 491 2 8 1.0 confirm-end-human-turn-after-first-assault
+wait 4.0
+world_click 320 240 4 0.65 post-first-assault-turn-skip-1
+world_click 320 240 4 0.65 post-first-assault-turn-skip-2
+world_click 320 240 4 0.65 post-first-assault-turn-skip-3
+world_click 320 240 4 0.65 post-first-assault-turn-skip-4
+wait_log_new 90 playgame_before_human_turn selected=-1 a=0 b=8
+world_down 480 400 0.20 next-unit-stack0-after-first-assault-down
+platform_up 480 400 0.80 next-unit-stack0-after-first-assault-up
+wait_log_new 30 next_unit_selected selected=0
+world_down 64 273 0.20 reenter-target-castle-56-69-down
+platform_up 64 273 4.00 reenter-target-castle-56-69-up
+wait_log_new 30 tile=56,69
+wait_log_new 30 battle_prompt_layout_primary
+world_down 354 160 0.20 lead-second-castle-battle-prompt-down
+platform_up 354 160 3.00 lead-second-castle-battle-prompt-up
+wait_log_new 60 unit_attack_building_battle_enter selected=0 a=1 b=9 c=12
+screenshot mission04-second-assault-entered
+nonblank mission04-second-assault-entered
+stop mission04-second-assault-entered
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-07
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-08
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-09
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-10
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-11
+wait_log_any 60 battle_attack_after_exchange selected=2 a=19 b=100 c=2 || battle_attack_after_exchange selected=2 a=19 b=100 c=0
+battle_click 448 368 4 2.0 slot2-attack-defender-15-5-repeat-12-or-enter
+wait_log_any 60 battle_attack_after_exchange selected=2 a=19 b=100 c=0 || battle_move_execute_return selected=2 a=15 b=5
+wait_log 60 battle_attack_return selected=2 a=19 b=0 c=1
+screenshot mission04-slot2-defender-15-5-defeated
+nonblank mission04-slot2-defender-15-5-defeated
+
+battle_click 448 368 4 2.0 ensure-slot2-occupies-defeated-defender-15-5
+wait_log 30 tile=15,5
+wait_log 60 battle_move_execute_return selected=2 a=15 b=5
+screenshot mission04-slot2-occupy-15-5
+nonblank mission04-slot2-occupy-15-5
+
+battle_click 384 368 4 2.0 slot2-attack-next-defender-14-5
+wait_log 30 tile=14,5
+wait_log 60 battle_attack_after_exchange selected=2 a=12 b=100
+wait_log 60 battle_attack_return selected=2 a=12 b=0
+screenshot mission04-slot2-attack-defender-14-5
+nonblank mission04-slot2-attack-defender-14-5
+
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-02
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-03
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-04
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-05
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-06
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-07
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-08
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-09
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-10
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-11
+wait_log_any 60 battle_attack_after_exchange selected=2 a=12 b=100 c=5 || battle_attack_after_exchange selected=2 a=12 b=100 c=2 || battle_attack_after_exchange selected=2 a=12 b=100 c=0
+battle_click 384 368 4 2.0 slot2-attack-defender-14-5-repeat-12-or-enter
+wait_log_any 60 battle_attack_after_exchange selected=2 a=12 b=100 c=0 || battle_move_execute_return selected=2 a=14 b=5
+wait_log 60 battle_attack_return selected=2 a=12 b=0 c=1
+screenshot mission04-slot2-defender-14-5-defeated
+nonblank mission04-slot2-defender-14-5-defeated
+
+battle_click 384 368 4 2.0 ensure-slot2-occupies-defeated-defender-14-5
+wait_log 30 tile=14,5
+wait_log 60 battle_move_execute_return selected=2 a=14 b=5
+screenshot mission04-slot2-occupy-14-5
+nonblank mission04-slot2-occupy-14-5
+
+battle_click 384 432 4 2.0 slot2-attack-next-defender-14-6
+wait_log 30 tile=14,6
+wait_log 60 battle_attack_after_exchange selected=2 a=14
+wait_log 60 battle_attack_return selected=2 a=14 b=0
+screenshot mission04-slot2-attack-defender-14-6
+nonblank mission04-slot2-attack-defender-14-6
+
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-02
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-03
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-04
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-05
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-06
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-07
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-08
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-09
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-10
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-11
+wait_log_any 60 battle_attack_after_exchange selected=2 a=14 b=100 c=5 || battle_attack_after_exchange selected=2 a=14 b=100 c=3 || battle_attack_after_exchange selected=2 a=14 b=100 c=2 || battle_attack_after_exchange selected=2 a=14 b=100 c=0
+battle_click 384 432 4 2.0 slot2-attack-defender-14-6-repeat-12-or-enter
+wait_log_any 60 battle_attack_after_exchange selected=2 a=14 b=100 c=0 || battle_move_execute_return selected=2 a=14 b=6
+wait_log 60 battle_attack_return selected=2 a=14 b=0 c=1
+screenshot mission04-slot2-defender-14-6-defeated
+nonblank mission04-slot2-defender-14-6-defeated
+
+battle_click 384 432 4 2.0 ensure-slot2-occupies-defeated-defender-14-6
+wait_log 30 tile=14,6
+wait_log 60 battle_move_execute_return selected=2 a=14 b=6
+screenshot mission04-slot2-occupy-14-6
+nonblank mission04-slot2-occupy-14-6
+
+battle_click 510 16 4 1.0 end-battle-turn-before-upper-courtyard
+wait_log 30 battle_action_loop_exit_requested selected=2
+wait 15.0
+
+battle_click 384 368 4 2.0 move-slot2-back-to-14-5
+wait_log 30 tile=14,5
+wait_log 60 battle_move_execute_return selected=2 a=14 b=5
+screenshot mission04-slot2-return-14-5
+nonblank mission04-slot2-return-14-5
+
+battle_click 384 304 4 2.0 move-slot2-back-to-14-4
+wait_log 30 tile=14,4
+wait_log 60 battle_move_execute_return selected=2 a=14 b=4
+screenshot mission04-slot2-return-14-4
+nonblank mission04-slot2-return-14-4
+
+battle_click 448 240 4 2.0 slot2-attack-upper-defender-15-3
+wait_log 30 tile=15,3
+wait_log 60 battle_attack_after_exchange selected=2 a=16
+wait_log 60 battle_attack_return selected=2 a=16 b=0
+screenshot mission04-slot2-attack-defender-15-3
+nonblank mission04-slot2-attack-defender-15-3
+
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-02
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-03
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-04
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-05
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-06
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-07
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-08
+battle_click 448 240 4 2.0 slot2-attack-defender-15-3-repeat-09
+wait_log 60 battle_attack_return selected=2 a=16 b=0 c=1
+screenshot mission04-slot2-defender-15-3-defeated
+nonblank mission04-slot2-defender-15-3-defeated
+
+battle_click 448 240 4 2.0 move-slot2-into-defeated-defender-15-3
+wait_log 30 tile=15,3
+wait_log 60 battle_move_execute_return selected=2 a=15 b=3
+screenshot mission04-slot2-occupy-15-3
+nonblank mission04-slot2-occupy-15-3
+
+battle_click 448 176 4 2.0 slot2-attack-next-defender-15-2
+wait_log 30 tile=15,2
+wait_log 60 battle_attack_after_exchange selected=2 a=18
+wait_log 60 battle_attack_return selected=2 a=18 b=0
+screenshot mission04-slot2-attack-defender-15-2
+nonblank mission04-slot2-attack-defender-15-2
+
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-02
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-03
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-04
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-05
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-06
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-07
+battle_click 448 176 4 2.0 slot2-attack-defender-15-2-repeat-08
+wait_log 60 battle_attack_return selected=2 a=18 b=0 c=1
+screenshot mission04-slot2-defender-15-2-defeated
+nonblank mission04-slot2-defender-15-2-defeated
+
+battle_click 448 176 4 2.0 move-slot2-into-defeated-defender-15-2
+wait_log 30 tile=15,2
+wait_log 60 battle_move_execute_return selected=2 a=15 b=2
+screenshot mission04-slot2-occupy-15-2
+nonblank mission04-slot2-occupy-15-2
+
+battle_click 448 112 4 2.0 slot2-attack-next-defender-15-1
+wait_log 30 tile=15,1
+wait_log 60 battle_attack_after_exchange selected=2 a=20
+wait_log 60 battle_attack_return selected=2 a=20 b=0
+screenshot mission04-slot2-attack-defender-15-1
+nonblank mission04-slot2-attack-defender-15-1
+
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-02
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-03
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-04
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-05
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-06
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-07
+battle_click 448 112 4 2.0 slot2-attack-defender-15-1-repeat-08
+wait_log 60 battle_attack_return selected=2 a=20 b=0 c=1
+screenshot mission04-slot2-defender-15-1-defeated
+nonblank mission04-slot2-defender-15-1-defeated
+
+battle_click 448 112 4 2.0 move-slot2-into-defeated-defender-15-1
+wait_log 30 tile=15,1
+wait_log 60 battle_move_execute_return selected=2 a=15 b=1
+screenshot mission04-slot2-occupy-15-1
+nonblank mission04-slot2-occupy-15-1
+
+battle_click 384 112 4 2.0 slot2-probe-next-defender-14-1
+wait_log 30 tile=14,1
+wait_log 60 battle_attack_after_exchange selected=2 a=13
+wait_log 60 battle_attack_return selected=2 a=13 b=0
+screenshot mission04-slot2-attack-defender-14-1
+nonblank mission04-slot2-attack-defender-14-1
+
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-02
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-03
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-04
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-05
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-06
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-07
+battle_click 384 112 4 2.0 slot2-attack-defender-14-1-repeat-08
+wait_log 60 battle_attack_return selected=2 a=13 b=0 c=1
+screenshot mission04-slot2-defender-14-1-defeated
+nonblank mission04-slot2-defender-14-1-defeated
+
+battle_click 384 112 4 2.0 move-slot2-into-defeated-defender-14-1
+wait_log 30 tile=14,1
+wait_log 60 battle_move_execute_return selected=2 a=14 b=1
+screenshot mission04-slot2-occupy-14-1
+nonblank mission04-slot2-occupy-14-1
+
+battle_click 384 176 4 2.0 slot2-probe-next-defender-14-2
+wait_log 30 tile=14,2
+wait_log 60 battle_attack_after_exchange selected=2 a=11
+wait_log 60 battle_attack_return selected=2 a=11 b=0
+screenshot mission04-slot2-attack-defender-14-2
+nonblank mission04-slot2-attack-defender-14-2
+
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-02
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-03
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-04
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-05
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-06
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-07
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-08
+battle_click 384 176 4 2.0 slot2-attack-defender-14-2-repeat-09
+wait_log 60 battle_attack_after_exchange selected=2 a=11 b=100 c=0
+wait_log 60 battle_attack_return selected=2 a=11 b=0 c=1
+screenshot mission04-slot2-defender-14-2-defeated
+nonblank mission04-slot2-defender-14-2-defeated
+
+battle_click 384 176 4 2.0 move-slot2-into-defeated-defender-14-2
+wait_log 30 tile=14,2
+wait_log 60 battle_move_execute_return selected=2 a=14 b=2
+screenshot mission04-slot2-occupy-14-2
+nonblank mission04-slot2-occupy-14-2

@@ -1,0 +1,131 @@
+# Mission 04 third-assault tail. This starts on the world map after the
+# second tactical assault returned with three Hopenberg garrison entries.
+
+wait 2.0
+screenshot mission04-third-assault-world-start
+nonblank mission04-third-assault-world-start
+
+mark_log_count third_assault_next_human_turn playgame_before_human_turn selected=-1 a=0
+mark_log_count third_assault_select_stack selected_stack_changed selected=0 a=56 b=68
+world_move 491 2 0.20 position-end-turn-top-menu-before-third-assault
+world_click 491 2 8 0.35 open-end-turn-top-menu-before-third-assault
+world_click 491 2 8 1.0 confirm-end-turn-top-menu-before-third-assault
+wait 4.0
+world_click 320 240 4 0.65 third-assault-turn-skip-1
+world_click 320 240 4 0.65 third-assault-turn-skip-2
+world_click 320 240 4 0.65 third-assault-turn-skip-3
+world_click 320 240 4 0.65 third-assault-turn-skip-4
+wait_log_marked 120 third_assault_next_human_turn
+
+world_move 96 240 0.35 position-stack0-before-third-assault
+world_down 95 240 0.20 select-stack0-before-third-assault-down
+platform_up 95 240 0.80 select-stack0-before-third-assault-up
+wait_log_marked 30 third_assault_select_stack
+
+mark_log_count third_assault_reentry_tile tile=56,69
+mark_log_count third_assault_reentry_cursor world_cursor] cursor=64,273 tile=56,69
+mark_log_count third_assault_battle_prompt battle_prompt_layout_primary
+mark_log_count third_assault_battle_enter unit_attack_building_battle_enter selected=0
+world_click 64 273 8 0.35 position-target-castle-before-third-assault
+world_down 64 273 0.20 reenter-target-castle-before-third-assault-down
+platform_up 64 273 4.00 reenter-target-castle-before-third-assault-up
+wait_log_marked_any 30 third_assault_reentry_tile || third_assault_reentry_cursor
+wait_log_marked_any 60 third_assault_battle_prompt || third_assault_battle_enter
+world_click 354 160 8 0.25 position-third-assault-castle-battle-prompt
+world_down 354 160 0.10 lead-third-assault-castle-battle-prompt-down
+platform_up 354 160 0.25 lead-third-assault-castle-battle-prompt-up
+wait_log_marked 60 third_assault_battle_enter
+screenshot mission04-third-assault-entered
+nonblank mission04-third-assault-entered
+
+mark_log_count third_assault_infantry_tile tile=1,5 viewport=0,0
+battle_click 128 368 4 1.0 select-third-assault-infantry-at-1-5
+wait_log_marked 30 third_assault_infantry_tile
+capture_battle_selected_unit third-assault-infantry
+mark_log_count third_assault_infantry_selected battle_turn_loop_after_input_widgets selected={selected_unit}
+wait_log_marked 30 third_assault_infantry_selected
+
+mark_log_count third_assault_move_4_4 battle_move_execute_return selected={selected_unit} a=4 b=4
+battle_click 320 304 4 2.0 move-third-assault-to-gate-approach-4-4
+wait_log_marked 60 third_assault_move_4_4
+
+mark_log_count third_assault_move_6_4 battle_move_execute_return selected={selected_unit} a=6 b=4
+battle_click 448 304 4 2.0 move-third-assault-to-gate-approach-6-4
+wait_log_marked 60 third_assault_move_6_4
+screenshot mission04-third-assault-gate-approach
+nonblank mission04-third-assault-gate-approach
+
+# The breached gate is persisted in the building record. Retain a wall-hit
+# branch as evidence-safe handling if the loaded wall state still needs a hit.
+battle_key 205 80 1.0 pan-third-assault-right-to-courtyard
+mark_log_count third_assault_gate_move_10_3 battle_move_execute_return selected={selected_unit} a=10 b=3
+mark_log_count third_assault_gate_move_11_3 battle_move_execute_return selected={selected_unit} a=11 b=3
+mark_log_count third_assault_gate_wall_open wall_after=0
+mark_log_count third_assault_gate_wall_hit battle_wall_attack_return selected={selected_unit} a=10 b=3
+battle_click 128 240 4 2.0 enter-or-attack-third-assault-gate-10-3
+wait_log_marked_any 60 third_assault_gate_move_10_3 || third_assault_gate_move_11_3 || third_assault_gate_wall_open || third_assault_gate_wall_hit
+if_last_wait_log_mark third_assault_gate_wall_open
+battle_key 205 80 1.0 pan-third-assault-right-after-opening-hit
+battle_click 128 240 4 2.0 move-third-assault-through-newly-open-gate-10-3
+endif
+if_last_wait_log_mark third_assault_gate_wall_hit
+battle_key 205 80 1.0 pan-third-assault-right-after-gate-hit
+battle_click 128 240 4 2.0 repeat-third-assault-gate-hit-10-3
+wait_log_marked 60 third_assault_gate_wall_open
+battle_key 205 20 0.5 pan-third-assault-right-after-gate-breach
+battle_click 128 240 4 2.0 move-third-assault-through-open-gate-10-3
+endif
+wait_log_marked_any 60 third_assault_gate_move_10_3 || third_assault_gate_move_11_3
+if_last_wait_log_mark third_assault_gate_move_10_3
+battle_click 160 240 4 2.0 move-third-assault-to-11-3
+wait_log_marked 60 third_assault_gate_move_11_3
+endif
+
+mark_log_count third_assault_move_12_3 battle_move_execute_return selected={selected_unit} a=12 b=3
+battle_click 224 240 4 2.0 move-third-assault-to-12-3
+wait_log_marked 60 third_assault_move_12_3
+
+mark_log_count third_assault_move_13_3 battle_move_execute_return selected={selected_unit} a=13 b=3
+battle_click 288 240 4 2.0 move-third-assault-to-13-3
+wait_log_marked 60 third_assault_move_13_3
+
+mark_log_count third_assault_move_13_5 battle_move_execute_return selected={selected_unit} a=13 b=5
+battle_click 288 368 4 2.0 move-third-assault-to-13-5
+wait_log_marked 60 third_assault_move_13_5
+screenshot mission04-third-assault-courtyard-approach
+nonblank mission04-third-assault-courtyard-approach
+
+# The retained third-assault defenders are all archers. Bounded click-until
+# steps stop on fresh per-attack completion and defeat markers, independent of
+# their survivor counts or the deployment sorter's count-to-tile assignment.
+mark_log_count third_assault_14_4_defeated battle_attack_return selected={selected_unit} a=10 b=0 c=1
+mark_log_count third_assault_14_4_attack_complete battle_attack_return selected={selected_unit} a=10 b=0
+battle_click_until_marked 384 304 4 2.0 16 third_assault_14_4_defeated third_assault_14_4_attack_complete third-assault-attack-defender-14-4
+
+mark_log_count third_assault_occupy_14_4 battle_move_execute_return selected={selected_unit} a=14 b=4
+battle_click 384 304 4 2.0 third-assault-occupy-defeated-14-4
+wait_log_marked 60 third_assault_occupy_14_4
+screenshot mission04-third-assault-occupy-14-4
+nonblank mission04-third-assault-occupy-14-4
+
+mark_log_count third_assault_14_3_defeated battle_attack_return selected={selected_unit} a=9 b=0 c=1
+mark_log_count third_assault_14_3_attack_complete battle_attack_return selected={selected_unit} a=9 b=0
+battle_click_until_marked 384 240 4 2.0 16 third_assault_14_3_defeated third_assault_14_3_attack_complete third-assault-attack-defender-14-3
+
+mark_log_count third_assault_occupy_14_3 battle_move_execute_return selected={selected_unit} a=14 b=3
+battle_click 384 240 4 2.0 third-assault-occupy-defeated-14-3
+wait_log_marked 60 third_assault_occupy_14_3
+screenshot mission04-third-assault-occupy-14-3
+nonblank mission04-third-assault-occupy-14-3
+
+mark_log_count third_assault_14_2_defeated battle_attack_return selected={selected_unit} a=11 b=0 c=1
+mark_log_count third_assault_14_2_attack_complete battle_attack_return selected={selected_unit} a=11 b=0
+mark_log_count third_assault_battle_return unit_attack_building_battle_return selected=0 a=1 b=0 c=0
+mark_log_count third_assault_objective_complete mission_objective_complete
+battle_click_until_marked 384 176 4 2.0 16 third_assault_14_2_defeated third_assault_14_2_attack_complete third-assault-attack-final-defender-14-2
+
+wait_log_marked 180 third_assault_battle_return
+wait_log_marked 180 third_assault_objective_complete
+wait 2.0
+screenshot mission04-third-assault-objective-complete
+nonblank mission04-third-assault-objective-complete

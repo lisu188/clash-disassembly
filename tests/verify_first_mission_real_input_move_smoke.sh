@@ -1091,6 +1091,7 @@ if [ "${CLASH95_FIRST_MISSION_MOVE_SECOND_ACTION:-0}" = "1" ]; then
       0.70 \
       "second-unit-slot"
   fi
+  second_action_attack_start="$(next_log_line_number)"
   click_at \
     "$window" \
     "${CLASH95_CLICK_SECOND_MOVE_TARGET_X:-384}" \
@@ -1119,7 +1120,36 @@ if [ "${CLASH95_FIRST_MISSION_MOVE_SECOND_ACTION:-0}" = "1" ]; then
         "second-attack-retry-${enemy_attack_retry_index}"
     done
     echo "[smoke] enemy-attack-detected-after-retries: ${enemy_attack_retry_index}" >>"$log_path"
-    if [ "${CLASH95_FIRST_MISSION_MOVE_WAIT_FOR_ENEMY_ATTACK_RETURN:-1}" = "1" ]; then
+    if [ "${CLASH95_SECOND_ACTION_CLICK_BATTLE_PROMPT:-0}" = "1" ]; then
+      if [ "${CLASH95_SECOND_ACTION_WAIT_FOR_BATTLE_PROMPT:-1}" = "1" ]; then
+        wait_for_fixed_log_pattern_since \
+          "${CLASH95_SECOND_ACTION_BATTLE_PROMPT_PATTERN:-battle_prompt_layout_secondary}" \
+          "first-mission second-action battle prompt" \
+          "${CLASH95_SECOND_ACTION_BATTLE_PROMPT_TIMEOUT:-10}" \
+          "$second_action_attack_start"
+      fi
+      click_at \
+        "$window" \
+        "${CLASH95_CLICK_SECOND_BATTLE_PROMPT_X:-354}" \
+        "${CLASH95_CLICK_SECOND_BATTLE_PROMPT_Y:-158}" \
+        "${CLASH95_CLICK_SECOND_BATTLE_PROMPT_HOLD:-0.22}" \
+        "${CLASH95_CLICK_SECOND_BATTLE_PROMPT_GAP:-4.0}" \
+        "second-battle-prompt"
+      if [ "${CLASH95_SECOND_ACTION_WAIT_FOR_BATTLE_RESULT:-1}" = "1" ]; then
+        wait_for_fixed_log_pattern_since \
+          "${CLASH95_SECOND_ACTION_BATTLE_RESULT_PATTERN:-unit_attack_autoresolve_done selected=10 a=3}" \
+          "first-mission second-action battle result" \
+          "${CLASH95_SECOND_ACTION_BATTLE_RESULT_TIMEOUT:-20}" \
+          "$second_action_attack_start"
+      fi
+      if [ "${CLASH95_SECOND_ACTION_WAIT_FOR_BATTLE_RETURN:-1}" = "1" ]; then
+        wait_for_fixed_log_pattern_since \
+          "${CLASH95_SECOND_ACTION_BATTLE_RETURN_PATTERN:-unit_attack_autoresolve_return selected=10 a=3}" \
+          "first-mission second-action battle return" \
+          "${CLASH95_SECOND_ACTION_BATTLE_RETURN_TIMEOUT:-20}" \
+          "$second_action_attack_start"
+      fi
+    elif [ "${CLASH95_FIRST_MISSION_MOVE_WAIT_FOR_ENEMY_ATTACK_RETURN:-1}" = "1" ]; then
       wait_for_fixed_log_pattern \
         "${CLASH95_FIRST_MISSION_MOVE_ENEMY_ATTACK_RETURN_PATTERN:-enemy_attack_return selected=10 a=3 b=46 c=45}" \
         "first-mission enemy attack return" \

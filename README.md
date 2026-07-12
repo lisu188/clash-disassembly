@@ -4,10 +4,12 @@ Evidence-driven C/SDL reconstruction of the original `clash95` game binary.
 `clash95.asm` is the protected behavioral source of truth; `clash95.c` is the
 recovered implementation under build and route validation.
 
-Current validated campaign-route state: missions `00..03` are complete through
-their route gates, mission `04` is partial at the castle gate/capture route, and
-missions `05..19` are direct-load evidence probes. See `docs/STATUS.md` for the
-active blocker and latest milestone.
+Current validated campaign-route state: missions `00..04` are complete through
+their route gates. Mission `04` now clears Hopenberg through three authentic
+tactical assaults, transfers the empty-garrison castle, and reaches
+`mission_objective_complete`; missions `05..19` remain direct-load evidence
+probes. See
+`docs/STATUS.md` for the active blocker and latest milestone.
 
 ## Quick Start
 
@@ -28,19 +30,24 @@ git diff --check
 
 ## Documentation
 
-- `docs/STATUS.md` - current validated state, active blocker, next target.
-- `docs/BUILD_AND_TEST.md` - build, CTest, route, and validation commands.
-- `docs/RUNTIME_MILESTONES.md` - route/milestone table with commands, evidence,
-  and remaining gaps.
-- `docs/ROADMAP.md` - near-term and long-term recovery goals.
-- `docs/REVERSE_ENGINEERING.md` - source-of-truth, naming, and patch policy.
-- `docs/STRUCTURES.md` - structure/data recovery policy and metadata links.
-- `docs/AI_SCRIPTING_API.md` - the strategic-AI CLIPS host-function API (the
-  commands `strateg\clash.dat` rules call into the engine).
-- `docs/artifacts.md` - artifact retention and pruning policy.
-- `docs/archive/` - preserved historical logs, reports, and old navigation
-  notes.
-- `docs/probes/` - focused probe and route-runner notes.
+- [docs/STATUS.md](docs/STATUS.md) - current validated state, active blocker,
+  next target.
+- [docs/BUILD_AND_TEST.md](docs/BUILD_AND_TEST.md) - build, CTest, route, and
+  validation commands.
+- [docs/RUNTIME_MILESTONES.md](docs/RUNTIME_MILESTONES.md) - route/milestone
+  table with commands, evidence, and remaining gaps.
+- [docs/ROADMAP.md](docs/ROADMAP.md) - near-term and long-term recovery goals.
+- [docs/REVERSE_ENGINEERING.md](docs/REVERSE_ENGINEERING.md) -
+  source-of-truth, naming, and patch policy.
+- [docs/STRUCTURES.md](docs/STRUCTURES.md) - structure/data recovery policy and
+  metadata links.
+- [docs/AI_SCRIPTING_API.md](docs/AI_SCRIPTING_API.md) - the strategic-AI CLIPS
+  host-function API (the commands `strateg\clash.dat` rules call into the engine).
+- [docs/artifacts.md](docs/artifacts.md) - artifact retention and pruning
+  policy.
+- [docs/archive/](docs/archive/) - preserved historical logs, reports, and old
+  navigation notes.
+- [docs/probes/](docs/probes/) - focused probe and route-runner notes.
 
 Generated build trees, frame dumps, route artifacts, screenshots, crash dumps,
 and local scratch are ignored by default. Promote durable evidence only when it

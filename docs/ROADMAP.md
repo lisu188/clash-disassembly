@@ -5,8 +5,9 @@
 - Keep `clash95_bootstrap` building cleanly under the SDL-backed runtime.
 - Preserve menu and route input responsiveness while fixing reached
   gameplay/runtime blockers.
-- Finish mission `04` from the authentic post-breach battle route to natural
-  objective completion.
+- Recover mission `05` from its direct-load owner-3 elimination blocker to
+  natural objective completion, without triggering its player-1/player-2
+  friendly-attack failure branch.
 - Promote route env files from `partial` to `complete` only after the objective
   markers and nonblank frame evidence pass.
 - Keep artifact pruning enabled so long route investigations do not grow the

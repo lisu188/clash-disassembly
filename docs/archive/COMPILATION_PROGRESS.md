@@ -9,6 +9,31 @@
 - Highest authentic runtime milestone reached: unchanged. Retained evidence still places the validated frontier at mission `04`, with direct load, march to Hopenberg, manual castle battle entry, repeated authentic gate attacks, and active gate breach; castle capture, battle-loop exit, world-map return, and objective completion remain pending.
 - Renamed functions/helpers/globals/tables/structs: `dword_544CD8 -> g_RenderState`, `sub_460D80 -> RenderState_SelectCursorDescriptor`, `sub_460B20 -> RenderState_RecalculateCursorBoundsForRect`, `sub_460A50 -> RenderState_PollInputAndClampCursor`, `sub_419B80 -> UIWidget_PollHitHoverAndClick`, `sub_419DC0 -> UIWidgetTable_PollHoverAndActions`, `sub_419D80 -> UIWidgetTable_InitDrawStates`, `sub_419ED0 -> UIWidget_PlayPressedReleaseAnimation`, `sub_401A40 -> Render_LoadResourceBackbuffer`, `sub_442760 -> FileSystem_InitRootMount`, `sub_442AD0 -> ResourceArchives_MountStartupArchives`, `dword_51D020 -> g_AppCommandLine`, `dword_51D018 -> g_MousePresentAtStartup`, `sub_4443C0 -> SaveSlot_FormatDataFilePath`, `sub_4443D0 -> SaveSlot_FormatFactsFilePath`, `sub_4446E0 -> SaveSlot_LoadLabelOrPlaceholder`, `sub_444750 -> SaveSlot_HasDataFile`, `sub_44A140 -> LoadMenu_RedrawSaveSlotRow`, `sub_43BE50 -> UnitBattle_ExecuteAiActionForUnit`, `sub_43A8B0 -> UnitBattle_SelectAiActionForUnit`, `sub_4382E0 -> UnitBattle_ScoreAiActionGridForUnit`, and `sub_43CB80 -> UnitBattle_ScanAiWallTargetColumns`.
 - Ambiguous candidates deferred: `sub_43C6B0` remains a tactical-AI plan/ranged-line candidate but was not renamed; `dword_5437C0` and adjacent queue/count globals remain deferred until the battle-AI action queue layout can be documented together; allocator/runtime candidates `sub_4725B0`, `sub_472860`, and rules-loader candidate `sub_451E46` remain future startup-glue work.
+## 2026-06-16 - Mission 04 First-Assault AI Handoff
+
+- Current frontier: mission `04` castle capture after the first-assault tactical route reaches defender AI from authentic input, observes both recovered post-AI branches, and proves tactical-branch post-AI continuation through defender `15,5` defeat plus selected unit `2` occupying the cleared `15,5` tile.
+- Blockers removed: repaired the mission-04 post-breach route overclaim by stopping at the deterministic defender-AI handoff instead of depending on the unstable post-AI branch, where the recovered flow may either return to the world or hand control back inside tactical battle.
+- Harness refined: `tests/run_campaign_route_script_smoke.sh` now supports `wait_log_new`, `wait_log_any_new`, `mark_log_count`, `wait_log_marked`, `wait_log_marked_any`, `if_last_wait_log_mark`, `fail_unless_last_wait_log_mark`, `stop`, `if_env`/`endif`, `stop_unless_env`, and `fail_if_log`, allowing quarantined route scripts to require fresh post-baseline markers, preserve a stable canonical stop, guard small branch-specific blocks, opt into later experimental steps only when requested, and abort branch-specific tails before stale input is sent down the wrong channel.
+- Route advanced: `tests/first_campaign_arc_routes/mission_04_post_breach_probe.script` now uses the asm/recovered input path through gate breach, interior movement, chained defender attacks through the `15,4`/`15,5` boundary, and an explicit defender-AI handoff marker; `mission_04.env` now records that partial milestone instead of requiring world return.
+- Compile/link/runtime status: `bash -n tests/run_campaign_route_script_smoke.sh` passed; `git diff --check` passed; `CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_FRAMES=4 CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_CHECKPOINTS=12 CLASH95_CAMPAIGN_ROUTE_MAX_LOG_BYTES=2500000 ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure` passed after the stop ordering change; the quarantined `mission_04_post_breach_probe.env` direct smoke passed after branch detection was tightened; `mission_04_post_ai_attack_probe.env` passed with fresh counted post-AI tactical attacks through defender `15,5` defeat; `mission_04_post_ai_branch_progress_probe.env` passed with defender `15,5` defeat plus the authentic move into the cleared tile.
+- Highest authentic runtime milestone reached: direct mission `04` reaches Hopenberg, breaches the castle gate, moves inside, clears chained courtyard defenders to the first-assault defender-AI handoff, and retains nonblank frame/checkpoint evidence at `artifacts/campaign-routes/mission-04/20260616T154441Z-570279/summary.txt`. The quarantined continuation at `artifacts/campaign-routes/mission-04/20260616T142830Z-516601/summary.txt` observes `battle_ai_turn_exit selected=1 a=1 b=0` followed by `unit_attack_building_battle_return selected=0 a=1 b=2 c=9`; evidence at `artifacts/campaign-routes/mission-04/20260616T165526Z-619297/summary.txt` observes the tactical-control branch, executes fresh counted authentic attacks through defender `15,5` defeat, logs `battle_move_execute_return selected=2 a=15 b=5`, and retains `checkpoint-mission04-slot2-post-ai-occupy-15-5.bmp`.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: branch-specific world-return reentry, tactical-control continuation after occupying `15,5`, remaining castle defenders, `Unit_CaptureBuilding`, and `mission_objective_complete` remain pending.
+
+## 2026-06-16 - Multiplayer Map Probe Coverage
+
+- Current frontier: opt-in multiplayer-map probe coverage through the recovered direct `/A#` all-AI map-loading route.
+- Blockers removed: added `tests/run_multiplayer_map_probe.sh`, a skipped-by-default `clash95_multiplayer_map_probe` CTest entry, and docs for running map ID sweeps with capped logs/frames under `artifacts/multiplayer-maps/map-NN/`.
+- Runtime repairs: direct `/A#` multiplayer boot now reuses the direct-route parser allocator reset before `WorldMap_Initialize`, matching the containment already used by direct campaign mission boot; this removed the Xvfb `/A0` crash in `sub_472D70` before map PlayGame handoff.
+- Parser host-width repairs: `sub_48CC80` now keeps its 12-byte token record in the low32 compatibility arena and uses an explicit asm-backed node count for `sub_48CD70`; `Parser_NextToken` normalizes `Lexer_ReadToken` symbol handles before dereference; `sub_4BD280` and `Parser_ParseExpression` now use low32 token records and mask token symbol/text fields before dereference. `sub_4A9810`, `sub_4AA610`, and `sub_4AA7C0` now use low32 make-instance/init-slots data-object scratch buffers, and `sub_4A9810` enforces the asm-backed result invariant that failed `make-instance` returns `nil` unless it has promoted the result to an instance address. `sub_481090` now masks the recovered `(*record)->name` string field before hashing it. These repairs removed reached crashes while loading and soaking multiplayer maps `multi1.map`, `multi2.map`, and `multi5.map`.
+- Diagnostics added: `CLASH95_TRACE_PARSER_TOKEN=1`, `CLASH95_TRACE_RULES_ASSERT_FACT=1`, and `CLASH95_TRACE_PARSER_QUALIFIER_SCAN=1` emit parser/rules addresses for future host-width parser crashes; they are inert unless explicitly enabled.
+- Artifact controls tightened: `tests/prune_artifacts.sh` now recognizes `artifacts/multiplayer-maps/map-*` as first-class prune groups, and the multiplayer probe caps retained logs and frame samples by default.
+- Compile/link/runtime status: `cmake --build build --target clash95_bootstrap -j2` passed; `ctest --test-dir build -R clash95_direct_a0_route_smoke --output-on-failure` passed; `ctest --test-dir build -R clash95_multiplayer_map_probe --output-on-failure` passed in the default skipped state; full default `ctest --test-dir build --output-on-failure` passed with 17 tests, 0 failures, and expected opt-in skips; Markdown link checks, JSON validation, shell syntax checks, and `git diff --check` passed.
+- Multiplayer validation: `CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 CLASH95_MULTIPLAYER_MAP_IDS=0,1,2,3,4,5,6,7,8,9,10 CLASH95_MULTIPLAYER_MAP_PROBE_SECONDS=5 CLASH95_MULTIPLAYER_MAP_SAMPLE_INTERVAL_SECONDS=2 CLASH95_MULTIPLAYER_MAP_FRAME_DUMP_LIMIT=24 CLASH95_MULTIPLAYER_MAP_MAX_COPIED_FRAMES=4 CLASH95_MULTIPLAYER_MAP_MAX_LOG_BYTES=1000000 bash tests/run_multiplayer_map_probe.sh build/bin/clash95_bootstrap` passed for map IDs `0..10`.
+- Multiplayer soak validation: `CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=multiplayer-map CLASH95_SOAK_MULTIPLAYER_MAP_IDS=0 CLASH95_SOAK_DURATION_SECONDS=30 CLASH95_SOAK_SAMPLE_INTERVAL_SECONDS=5 CLASH95_SOAK_MULTIPLAYER_MAP_FRAME_DUMP_LIMIT=72 CLASH95_SOAK_MULTIPLAYER_MAP_MAX_COPIED_FRAMES=8 CLASH95_SOAK_MULTIPLAYER_MAP_MAX_LOG_BYTES=1000000 ctest --test-dir build -R clash95_soak_probe --output-on-failure` passed with durable summary `artifacts/soak/multiplayer-map/20260616T104558Z-400385/summary.txt`.
+- Highest authentic runtime milestone reached: recovered direct multiplayer map IDs `0..10` load `multi1.map` through `multi11.map`, enter `PlayGame`, remain live through the 5-second probe window, and retain nonblank SDL frame evidence; map ID `0` additionally holds a 30-second no-trace soak. This is direct all-AI map-load/playgame proof, not human multiplayer menu acceptance.
+- Renamed functions/helpers/globals/tables/structs: none.
+- Ambiguous candidates deferred: human multiplayer menu setup/input, player-type configuration, multiplayer map interaction after PlayGame, longer all-AI endurance, and campaign mission-04 capture completion remain pending.
 
 ## 2026-06-15 - Documentation Consolidation
 
@@ -8949,3 +8974,126 @@ Additional harness notes:
 - total rename count so far:
   - not re-enumerated in this conflict-resolution batch
 
+## Batch 253 - Mission 04 post-AI tactical end-turn continuation (2026-06-16)
+
+- Current frontier: mission `04` castle tactical-battle route repair; missions
+  `00..03` remain complete by direct route evidence, while mission `04` now has
+  quarantined tactical-branch proof past defender `15,5` occupation and through
+  an authentic tactical end-turn/AI handoff.
+- Blockers removed:
+  - added `tests/first_campaign_arc_routes/mission_04_post_ai_branch_end_turn_probe.env`,
+    a branch-neutral continuation wrapper around the mission `04` post-breach
+    route. The world-return branch is allowed to follow its reentry block, while
+    the tactical branch continues through defender `15,5` defeat, tile
+    occupation, hover checkpoints, and the recovered end-turn input.
+  - added `tests/first_campaign_arc_routes/mission_04_post_ai_after_end_turn_attack_probe.env`,
+    a focused tactical continuation that stops cleanly on the world-return branch
+    but, on the tactical branch, continues after the post-occupy end-turn marker
+    and attacks the next defender at battle tile `14,5`.
+  - extended the world-return reentry block to accept the observed
+    `world_cursor] cursor=64,273 tile=56,69` marker as well as the earlier
+    `tile_input` marker, and to reselect stack `0` before attempting reentry.
+  - hardened `tests/run_campaign_route_script_smoke.sh` so child SDL launches
+    use X11 inside Xvfb (`SDL_VIDEODRIVER=x11`) with inherited
+    `WAYLAND_DISPLAY` cleared. The harness also refreshes the matched SDL window
+    id before host-driven clicks/keys, which prevents stale post-battle window
+    targeting without changing recovered runtime behavior.
+- Compile/link/runtime status:
+  - `bash -n tests/run_campaign_route_script_smoke.sh
+    tests/first_campaign_arc_routes/mission_04_post_breach_probe.script
+    tests/first_campaign_arc_routes/mission_04_post_ai_branch_end_turn_probe.env`
+    passed.
+  - `git diff --check -- tests/run_campaign_route_script_smoke.sh
+    tests/first_campaign_arc_routes/mission_04_post_breach_probe.script
+    tests/first_campaign_arc_routes/mission_04_post_ai_branch_end_turn_probe.env`
+    passed.
+  - the branch-neutral mission `04` continuation passed with capped artifacts:
+    `CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_FRAMES=4
+    CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_CHECKPOINTS=36
+    CLASH95_CAMPAIGN_ROUTE_MAX_LOG_BYTES=2500000
+    bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap
+    04 tests/first_campaign_arc_routes/mission_04_post_ai_branch_end_turn_probe.env`.
+    Durable evidence:
+    `artifacts/campaign-routes/mission-04/20260616T202028Z-688394/summary.txt`.
+    This rerun enables `CLASH95_DUMP_PRESENTED_FRAMES_RESET_ON_BATTLE_ENTER=1`
+    and raises the battle-window dump cap so retained late checkpoints show the
+    tactical battle rather than a stale pre-battle world frame.
+  - a world-return-only reentry probe was rerun after the harness patch, but the
+    nondeterministic branch split took `post_ai_tactical_control`; it failed at
+    the intentional world-return assertion and did not validate reentry.
+  - the post-end-turn attack probe passed with capped artifacts:
+    `CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_FRAMES=4
+    CLASH95_CAMPAIGN_ROUTE_MAX_COPIED_CHECKPOINTS=38
+    CLASH95_CAMPAIGN_ROUTE_MAX_LOG_BYTES=2500000
+    bash tests/run_campaign_route_script_smoke.sh build/bin/clash95_bootstrap
+    04 tests/first_campaign_arc_routes/mission_04_post_ai_after_end_turn_attack_probe.env`.
+    Durable evidence:
+    `artifacts/campaign-routes/mission-04/20260616T203419Z-692412/summary.txt`.
+- Highest authentic runtime milestone reached:
+  - the mission `04` tactical-control branch now defeats defender `15,5`, moves
+    selected unit `2` into the cleared `15,5` battle tile, captures nonblank
+    hover checkpoints, sends the recovered end-turn input, logs
+    `battle_action_loop_exit_requested selected=2` and
+    `battle_ai_turn_enter selected=1`, then observes
+    `post_occupy_tactical_control_after_12`.
+  - a follow-up tactical branch run continued from the post-occupy end-turn
+    marker, clicked battle tile `14,5`, and logged
+    `battle_attack_after_exchange selected=2 a=12 b=100 c=43` with a nonblank
+    tactical checkpoint.
+- Renamed functions/helpers/globals/tables/structs:
+  - no recovered gameplay symbols were renamed in this batch; changes were
+    route/harness durability only.
+- Ambiguous candidates deferred:
+  - mission `04` still needs remaining defender cleanup, castle capture, and
+    natural `mission_objective_complete`.
+  - the world-return branch still needs stable castle reentry proof from the
+    returned world state; current branch variance prevented validating that path
+    in this batch.
+
+## Batch 258 - Recovered 100 Hz performance timer and wait deadlines (2026-07-10)
+
+- Current frontier: authentic runtime timing fidelity is restored; campaign
+  completion remains on mission `04` after the retained July second-assault
+  diagnostic returned to the world map with three castle defenders remaining.
+- Blockers removed:
+  - restored `Timer_InitPerfCounterFrequency` from the original startup
+    sequence immediately after `CSS_SetDeviceSearch`.
+  - recovered the assembly-backed divide-by-100 operation, converting SDL's
+    1000000 Hz microsecond performance counter into the original 100 Hz
+    centisecond timebase instead of clobbering `Frequency` to zero.
+  - removed the undefined decompiler temporaries from
+    `UI_WaitForKeyOrTimeout` and `UI_WaitForAnyKeyOrClick`; both helpers now
+    preserve the requested delay/deadline demonstrated by the assembly.
+  - increased the first-mission attack probe's battle-prompt wait to 45 seconds
+    because authentic movement/animation timing makes the 13-tile approach
+    legitimately exceed the former 10-second harness assumption.
+- Compile/link/runtime status:
+  - `cmake --build build --target clash95_bootstrap -j2` passed.
+  - the optional coverage target built, and the new timer assertions completed
+    without a timer-test failure; the experimental full coverage binary still
+    reports its pre-existing unrelated best-effort failures/crashes.
+  - `ctest --test-dir build --output-on-failure` completed with zero failures:
+    nine tests passed and eight opt-in probes skipped by their normal guards.
+  - the real-input first-mission attack probe passed in 56.51 seconds under the
+    restored timebase.
+- Highest authentic runtime milestone reached:
+  - startup, visible main-menu Exit, first-mission playability/attack,
+    castle-economy, save-format, and direct-route smokes all pass using the
+    recovered 100 Hz timing domain.
+  - the strongest retained mission `04` diagnostic remains the July 5 failed
+    objective probe: stable world-return/reentry, a second castle assault,
+    defender cleanup through occupied tile `14,1`, an attack on `14,2`, and a
+    return with three defenders still present. This is informative exploratory
+    evidence, not a promoted complete route.
+- Renamed functions/helpers/globals/tables/structs:
+  - no symbols were renamed. Evidence and behavior were strengthened for
+    `Timer_InitPerfCounterFrequency`, `Time_Now`,
+    `UI_WaitForKeyOrTimeout`, `UI_WaitForAnyKeyOrClick`, and the
+    `CentisecondPerformanceTimer` runtime mechanism.
+- Ambiguous candidates deferred:
+  - `CSS_Init` and its three-entry legacy audio/device table remain
+    quarantined; restoring the timer does not claim that wider startup family.
+  - mission `04` still needs a further authentic reentry/assault, removal of
+    the final three defenders, `Unit_CaptureBuilding`, and natural
+    `mission_objective_complete`.
+  - no unit roster/stat confidence changed in this batch.

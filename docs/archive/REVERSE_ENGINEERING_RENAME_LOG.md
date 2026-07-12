@@ -68,6 +68,18 @@ checkout, identical to before this change).
 - `sub_43C6B0` remains deferred. The body clearly participates in tactical AI plan-mode selection and ranged-line reachability, but `UnitBattle_AiHasReachableRangedLine` is still provisional until the exact mode semantics are corroborated against asm/runtime evidence.
 - `dword_5437C0` remains deferred until the adjacent queue/count globals can be named together as one battle-AI action queue/list layout.
 - Cursor descriptor fields and widget result enum values were not formalized in `RECOVERED_STRUCTURES.json`; this batch is a source-level semantic rename only.
+## 2026-06-16 - Mission 04 First-Assault AI Handoff Note
+
+- No semantic renames were made in this batch.
+- Added route-harness-only `wait_log_new`, `wait_log_any_new`, `mark_log_count`, `wait_log_marked`, `wait_log_marked_any`, `if_last_wait_log_mark`, `fail_unless_last_wait_log_mark`, `stop`, `if_env`/`endif`, `stop_unless_env`, and `fail_if_log` commands so quarantined campaign routes can prove fresh markers, stop at deliberate partial milestones, guard small branch-specific blocks, opt into later route tails, and abort branch-specific tails without mutating recovered game state.
+- Updated mission `04` route evidence to keep the canonical regression at the first-assault defender-AI handoff while quarantined continuations observe both post-AI world return and attacker tactical-control resumption. The tactical branch now proves fresh counted post-AI attacks through defender `15,5` defeat plus selected unit `2` occupying the cleared tile; remaining branch-specific continuation, castle cleanup, and mission completion remain deferred.
+
+## 2026-06-16 - Multiplayer Map Probe Note
+
+- No semantic renames were made in this batch.
+- Added opt-in direct `/A#` multiplayer-map visual/liveness probes and artifact-pruner recognition for `artifacts/multiplayer-maps/map-*`.
+- Repaired reached direct-route/parser host-width defects needed for map probe coverage: direct `/A#` parser allocator reset, low32 token records in `sub_48CC80`, `sub_4BD280`, `Parser_ParseExpression`, `sub_4A9810`, `sub_4AA610`, and `sub_4AA7C0`; low32 normalization of `Lexer_ReadToken` handles in `Parser_NextToken`; the asm-backed failed-`make-instance` `nil` result invariant in `sub_4A9810`; and recovered-field string pointer masking in `sub_481090`.
+- The latest sweep proves direct all-AI map IDs `0..10` load and enter `PlayGame` with nonblank frames for 5-second probe windows, and map ID `0` holds a 30-second no-trace soak; it does not promote human multiplayer menu playability or campaign completion.
 
 ## 2026-06-15 - Documentation Consolidation Note
 
@@ -2946,3 +2958,44 @@ anchors per section 3.1 of `docs/REVERSE_ENGINEERING.md`).
 | `missing _set_errno_dos_ runtime mapper` | `asm-backed DOS errno mapper wrapper in compat/decomp_runtime_stubs.c` | link_fix | Runtime / CRT | High | `clash95.map` binds `__set_errno_dos_` to `0x485306`, and the asm body stores the raw DOS/Win32 code, special-cases `0x7B`, `0xCE`, and `0xB7`, then maps the remaining codes through the signed-byte table at `0x51A54D` before returning `-1`. | asm, map | yes: Hypatia |
 | `missing _set_errno_nt_ runtime mapper` | `GetLastError -> _set_errno_dos_ wrapper in compat/decomp_runtime_stubs.c` | link_fix | Runtime / CRT | High | `clash95.map` binds `__set_errno_nt_` to `0x485357`, and the collapsed asm body is the thin NT-to-DOS errno bridge above the DOS mapper. A `GetLastError()` forwarding wrapper preserves that role without caller surgery. | asm, map | yes: Hypatia |
 | `missing GetLastError / SetLastError platform seam` | `SDL-target last-error storage wrappers in platform_sdl_runtime.c` | sdl_port_fix | Platform / SDL Runtime | High | The recovered CRT bridge now depends on `GetLastError`, and the SDL-target platform shim already owns the other Win32 compatibility calls. Keeping the last-error latch inside `platform_sdl_runtime.c` contains the Win32-era API surface behind the existing SDL seam. | c, prior-artifact | no |
+### 2026-07-10 - Performance-counter timebase and UI deadline recovery
+
+- `Timer_InitPerfCounterFrequency`: corrected the decompiler's
+  `_I8D(0)` scar. Assembly loads divisor `100` before `__I8D` and stores the
+  quotient back to `Frequency`, establishing the original centisecond
+  timebase.
+- `Bootstrap_RunRecoveredRuntimeAndRenderInit`: restored the original timer
+  initialization call immediately after `CSS_SetDeviceSearch`.
+- `UI_WaitForKeyOrTimeout` and `UI_WaitForAnyKeyOrClick`: replaced undefined
+  delay/deadline temporaries with the explicit values preserved in EDX/ECX by
+  the original assembly.
+- No symbol names changed in this batch. `CentisecondPerformanceTimer` was
+  added to `RECOVERED_STRUCTURES.json` as a high-confidence runtime mechanism.
+- Runtime evidence: the default 17-test SDL suite passes under the restored
+  100 Hz timing domain; the first-mission attack harness now allows the
+  authentic long approach animation to reach its battle prompt.
+
+### 2026-07-12 - Mission-04 castle capture and objective-route recovery
+
+- No recovered C symbols were renamed in this batch.
+- `PlatformMaybeDumpPresentedFrame` now supports a configurable presented-frame
+  stride and six-digit frame indices, preserving bounded visual evidence during
+  long tactical replays.
+- The generic route harness now orders frame files by modification time across
+  battle-entry counter resets, uses adaptive authentic key pulses to reach a
+  requested world viewport, resolves the selected tactical unit from the fresh
+  clicked-tile occupant trace, and substitutes that runtime index into later
+  exact markers.
+- Bounded repeated attacks now wait for a fresh per-exchange completion marker
+  before deciding whether another click is needed, preventing queued lethal
+  overshoot.
+- Runtime evidence at
+  `artifacts/campaign-routes/mission-04/20260711T202215Z-195443/summary.txt`
+  records three strategic returns with garrison counts `6`, `3`, and `0`,
+  followed by `mission_objective_complete` and a fresh nonblank final frame.
+- `Mission04CastleCaptureObjectivePath` was added to
+  `RECOVERED_STRUCTURES.json` as a high-confidence runtime mechanism.
+- The next-frontier audit added `Mission05LanguageDependentEliminationObjective`
+  to `RECOVERED_STRUCTURES.json`: the active language branch must remove all
+  player-3 buildings/stacks, while attacking players 1 or 2 raises its failure
+  flag.

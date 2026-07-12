@@ -21330,6 +21330,20 @@ static void WorldMap_RunInputScriptStep(void)
       Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 0, 0);
       return;
     }
+    if ( strcmp(command, "down") == 0 && fields >= 3 )
+    {
+      if ( trace_enabled )
+        fprintf(stderr, "[world_input] command=down target=%d,%d cursor=%d,%d delta=%d,%d\n", a, b, cursor_x, cursor_y, a - cursor_x, b - cursor_y);
+      Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 1, 0);
+      return;
+    }
+    if ( strcmp(command, "up") == 0 && fields >= 3 )
+    {
+      if ( trace_enabled )
+        fprintf(stderr, "[world_input] command=up target=%d,%d cursor=%d,%d delta=%d,%d\n", a, b, cursor_x, cursor_y, a - cursor_x, b - cursor_y);
+      Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 0, 0);
+      return;
+    }
     if ( strcmp(command, "click") == 0 && fields >= 3 )
     {
       int reads = fields >= 4 && c > 0 ? c : 2;
@@ -21446,6 +21460,20 @@ static void Battle_RunInputScriptStep(void)
     {
       if ( g_BattleInputScriptTraceEnabled )
         fprintf(stderr, "[battle_input] command=move target=%d,%d cursor=%d,%d delta=%d,%d\n", a, b, cursor_x, cursor_y, a - cursor_x, b - cursor_y);
+      Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 0, 0);
+      return;
+    }
+    if ( strcmp(command, "down") == 0 && fields >= 3 )
+    {
+      if ( g_BattleInputScriptTraceEnabled )
+        fprintf(stderr, "[battle_input] command=down target=%d,%d cursor=%d,%d delta=%d,%d\n", a, b, cursor_x, cursor_y, a - cursor_x, b - cursor_y);
+      Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 1, 0);
+      return;
+    }
+    if ( strcmp(command, "up") == 0 && fields >= 3 )
+    {
+      if ( g_BattleInputScriptTraceEnabled )
+        fprintf(stderr, "[battle_input] command=up target=%d,%d cursor=%d,%d delta=%d,%d\n", a, b, cursor_x, cursor_y, a - cursor_x, b - cursor_y);
       Platform_DebugPrimeInputFallbackMouseDelta(a - cursor_x, b - cursor_y, 0, 0);
       return;
     }
@@ -30474,7 +30502,7 @@ LABEL_133:
   if ( v94 != -1 )
   {
     TextSprite_SetStyleFlag(1);
-    v55 = DLX_GetSpriteForChar(g_FogOverlaySpriteSet, v54);
+    v55 = DLX_GetSpriteForChar(g_FogOverlaySpriteSet, v94);
     Compat_RenderDeviceDrawMenuSprite(a1, a2, v55, 1);
   }
   UI_DrawTileHighlightOverlay(v3, v4, a2, a1);
@@ -33235,6 +33263,7 @@ LABEL_15:
             v23 = Unit_GetSquadCount((int)v61);
             v25 = UI_PromptLeadTroopsPersonally((int)(v61 + 3), v23, 12, (int)(v7 + 18), (DWORD)v7, v16, 1) == 0;
           }
+          Diagnostics_TraceWorldMapActionEvent("unit_attack_building_prompt_result", v60, v59, v25, dword_51D01C);
           if ( dword_51D01C )
           {
             v25 = 1;
@@ -33283,7 +33312,14 @@ LABEL_47:
               v43 = v61 + 3;
               v40 = (char)v16;
               v44 = Unit_GetSquadCount((int)v61);
+              Diagnostics_TraceWorldMapActionEvent("unit_attack_building_autoresolve", v60, v59, v44, v51);
               CalculateBattleResult(v43, v44, v45, v16, (DWORD)v7, v51, v52, v53, 0);
+              Diagnostics_TraceWorldMapActionEvent(
+                "unit_attack_building_autoresolve_done",
+                v60,
+                v59,
+                Unit_GetSquadCount((int)v61),
+                Building_CountGarrison(v53));
               v36 = 0;
 LABEL_42:
               UnitSlots_AppendEntriesForBuildingAttack((char *)v61 + 6, v54);
@@ -33341,54 +33377,58 @@ LABEL_42:
             CSS_EmptySampleCache();
             TextSprite_ReleaseAllResourceSlots();
             v34 = (unsigned __int8 *)(gameData + 509674 + v32);
+            Diagnostics_TraceWorldMapActionEvent(
+              "unit_attack_building_battle_enter",
+              v60,
+              v59,
+              Unit_GetSquadCount((int)v61),
+              Building_CountGarrison((int)v7));
             v36 = Battle_RunTacticalCombat((__int16 *)(725 * v60 + gameData + 147174), 0, (int)v16, v34, (DWORD)v7, v57);
+            Diagnostics_TraceWorldMapActionEvent(
+              "unit_attack_building_battle_return",
+              v60,
+              v59,
+              v36,
+              Building_CountGarrison((int)v7));
             v37 = *(_BYTE *)(gameData + 140016);
-            if ( v37 )
-            {
-              if ( v37 <= 1u )
-              {
-                if ( dword_5202C0 )
-                  DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
-                v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
-                if ( !v38 )
-                  goto LABEL_37;
-              }
-              else
-              {
-                if ( v37 != 2 )
-                  goto LABEL_38;
-                if ( dword_5202C0 )
-                  DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
-                v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
-                if ( !v38 )
-                {
-LABEL_37:
-                  dword_5202C0 = (int)v38;
-LABEL_38:
-                  v39 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
-                  if ( v39 )
-                    v39 = DLXSpriteSet_Load(v39, (char)v34);
-                  v40 = -45;
-                  dword_5202BC = (int)v39;
-                  Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
-                  Palette_LoadOrBuildBlendLookupTable(aMainmap_1, dword_5202F4, v41, (DWORD)v7);
-                  v58 = 1;
-                  if ( v56 )
-                    UI_LoadTurnBannerGfx(211, (DWORD)v7);
-                  goto LABEL_42;
-                }
-              }
-            }
-            else
+            if ( v37 == 0 )
             {
               if ( dword_5202C0 )
                 DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
-              v38 = (_DWORD *)Mem_Alloc(4112, v35, (char)v34, (DWORD)v7);
-              if ( !v38 )
-                goto LABEL_37;
+              v38 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)v7);
+              if ( v38 )
+                v38 = DLXSpriteSet_Load(v38, "backgr1.s32");
+              dword_5202C0 = (int)v38;
             }
-            v38 = DLXSpriteSet_Load(v38, (char)v34);
-            goto LABEL_37;
+            else if ( v37 == 1 )
+            {
+              if ( dword_5202C0 )
+                DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
+              v38 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)v7);
+              if ( v38 )
+                v38 = DLXSpriteSet_Load(v38, "backgr2.s32");
+              dword_5202C0 = (int)v38;
+            }
+            else if ( v37 == 2 )
+            {
+              if ( dword_5202C0 )
+                DLXSpriteSet_ReleaseAndClear(&dword_5202C0);
+              v38 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)v7);
+              if ( v38 )
+                v38 = DLXSpriteSet_Load(v38, "backgr3.s32");
+              dword_5202C0 = (int)v38;
+            }
+            v39 = (_DWORD *)Mem_Alloc(4112, 0, 0, (DWORD)v7);
+            if ( v39 )
+              v39 = DLXSpriteSet_Load(v39, "frame.s32");
+            v40 = -45;
+            dword_5202BC = (int)v39;
+            Tooltip_CaptureBackdrop(160, 473, 3, 467, 76);
+            Palette_LoadOrBuildBlendLookupTable(aMainmap_1, dword_5202F4, 1, (DWORD)v7);
+            v58 = 1;
+            if ( v56 )
+              UI_LoadTurnBannerGfx(211, (DWORD)v7);
+            goto LABEL_42;
           }
           Win_PlayModeChangeFrameTransition(aAtak_zam, 0, 0, 0, 0);
           goto LABEL_28;
@@ -36254,14 +36294,10 @@ int  Building_ShowConstructionProgressDialog(DWORD a1, char a2, DWORD a3, double
 //----- (00420770) --------------------------------------------------------
 DWORD Timer_InitPerfCounterFrequency()
 {
-  LARGE_INTEGER v0; // rax
-
   QueryPerformanceFrequency(&Frequency);
-  v0.QuadPart = _I8D(0);
-  Frequency = v0;
-  return v0.LowPart;
+  Frequency.QuadPart /= 100;
+  return Frequency.LowPart;
 }
-// 4763D2: using guessed type __int64 __thiscall _I8D(_DWORD);
 
 //----- (004207B0) --------------------------------------------------------
 int __fastcall Time_Now(int a1, int a2)
@@ -42268,18 +42304,18 @@ LABEL_22:
     else
     {
       Audio_PlayUnitHitSound((__int16)*v100);
-      g_UnitBattleAnimatingUnitIndex = v74;
+      g_UnitBattleAnimatingUnitIndex = v101;
       dword_5320EC = Rng_RandRange(0, 7);
-      Time_Now(v75, 3);
-      v12 = Rng_RandRange(1, v76);
+      v64 = Time_Now(0, 3);
+      v12 = Rng_RandRange(1, 3);
       while ( v12 >= 0 )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        DD_Pump((int)g_RenderState, v65);
-        v79 = Time_Now(v78, v77);
+        DD_Pump((int)g_RenderState, 0);
+        v79 = Time_Now(0, 0);
         if ( (unsigned int)(v79 - v64) >= 3 )
         {
-          Time_Now(v64, v80);
+          v64 = Time_Now(0, 0);
           UnitBattle_RedrawUnitNeighborhood(v101);
           LOBYTE(v65) = (dword_5320EC + 1) & 7;
           --v12;
@@ -42477,6 +42513,7 @@ int  UnitBattle_PlayDeathAnimation(int a1, int a2, char a3, DWORD a4)
   int v26; // [esp+8h] [ebp-1Ch]
 
   Debug_Log(a2, a3, a4, (int)aDeathanimD);
+  v5 = a1;
   v6 = 31 * v5;
   v7 = (__int16 *)(g_MapData + 852 + 31 * v5);
   Audio_PlayUnitDeathSound(*v7);
@@ -45921,6 +45958,13 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                   v7 = &g_CursorDesc_Blocked;
               }
               Diagnostics_TraceWorldMapActionEvent(
+                "battle_wall_selected_state",
+                g_SelectedUnitIndex,
+                *(__int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 852),
+                (*(unsigned __int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 856) << 8)
+                  | *(unsigned __int16 *)(g_MapData + 31 * g_SelectedUnitIndex + 858),
+                *(unsigned __int8 *)(g_MapData + 31 * g_SelectedUnitIndex + 864));
+              Diagnostics_TraceWorldMapActionEvent(
                 "battle_wall_move_track_cost",
                 g_SelectedUnitIndex,
                 HIWORD(v26),
@@ -45971,7 +46015,7 @@ __int16 UnitBattle_HandleBattlefieldInteraction()
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_enter", g_SelectedUnitIndex, v2, v3, v5);
                 UnitBattle_Move(g_SelectedUnitIndex, 0, 0, 0);
                 Diagnostics_TraceWorldMapActionEvent("battle_move_execute_return", g_SelectedUnitIndex, v2, v3, v5);
-                Render_Begin((int)g_RenderState, v24);
+                Render_Begin((int)g_RenderState, 0);
               }
               else
               {
@@ -64028,23 +64072,18 @@ int  MainMenu_RequestLoadGameMenu(uintptr_t a1)
 //----- (004477A0) --------------------------------------------------------
 signed int  UI_WaitForKeyOrTimeout(int a1, int a2)
 {
-  int v3; // eax
-  int v4; // edx
-
-  v3 = Time_Now(a2, a1);
-  return UI_WaitForAnyKeyOrClick(v4 + v3, v4);
+  (void)a2;
+  return UI_WaitForAnyKeyOrClick(Time_Now(0, 0) + a1, 0);
 }
-// 4477A8: variable 'v4' is possibly undefined
 
 //----- (004477C0) --------------------------------------------------------
 signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
 {
-  int v4; // edx
-  int v5; // ecx
-  unsigned int v6; // eax
-  unsigned int v7; // ecx
+  unsigned int deadline;
 
-  Time_Now(a1, a2);
+  (void)a2;
+  deadline = (unsigned int)a1;
+  Time_Now(0, 0);
   do
   {
     DD_Pump((int)g_RenderState, 0);
@@ -64056,9 +64095,8 @@ signed int  UI_WaitForAnyKeyOrClick(int a1, int a2)
     {
       return 1;
     }
-    v6 = Time_Now(v5, v4);
   }
-  while ( v6 <= v7 );
+  while ( (unsigned int)Time_Now(0, 0) <= deadline );
   return 0;
 }
 // 544CD8: using guessed type _DWORD g_RenderState[9];
@@ -98637,11 +98675,18 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
   int token_buffer_ptr; // ecx
   _DWORD *token_buffer; // esi
   int trace_load_save; // eax
+  int trace_rules_assert; // eax
 
   (void)a2;
   trace_load_save = 0;
+  trace_rules_assert = getenv("CLASH95_TRACE_RULES_ASSERT_FACT") != 0;
   if ( trace_load_save )
     fprintf(stderr, "[menu-probe] rules-assert-enter %s\n", a1);
+  if ( trace_rules_assert )
+  {
+    fprintf(stderr, "[rules] assert-enter fact=\"%s\" caller=%p\n", a1 ? a1 : "<null>", __builtin_return_address(0));
+    fflush(stderr);
+  }
   parse_buffer_ptr = Compat_AllocLow32Bytes(28);
   token_buffer_ptr = Compat_AllocLow32Bytes(28);
   if ( !parse_buffer_ptr || !token_buffer_ptr )
@@ -98664,6 +98709,16 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
     Parser_NextToken((int)aMkins, token_buffer_ptr);
     if ( trace_load_save )
       fprintf(stderr, "[menu-probe] rules-assert-after-first-token token=%d\n", token_buffer[0]);
+    if ( trace_rules_assert )
+    {
+      fprintf(
+        stderr,
+        "[rules] assert-token1 token=%d symbol=%08x fact=\"%s\"\n",
+        token_buffer[0],
+        token_buffer[1],
+        a1 ? a1 : "<null>");
+      fflush(stderr);
+    }
     if ( token_buffer[0] == 100 )
     {
       if ( !dword_54DD40 )
@@ -98685,12 +98740,36 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
         Parser_NextToken((int)aMkins, token_buffer_ptr);
         if ( trace_load_save )
           fprintf(stderr, "[menu-probe] rules-assert-after-second-token token=%d\n", token_buffer[0]);
+        if ( trace_rules_assert )
+        {
+          fprintf(
+            stderr,
+            "[rules] assert-token2 token=%d symbol=%08x fact=\"%s\"\n",
+            token_buffer[0],
+            token_buffer[1],
+            a1 ? a1 : "<null>");
+          fflush(stderr);
+        }
         if ( token_buffer[0] == 102 )
           Parser_ParseForm((__int16 *)v5, parse_buffer, (int)aMkins, a3);
         else
           Parser_ReportSyntaxError();
         if ( trace_load_save )
           fprintf(stderr, "[menu-probe] rules-assert-after-parse-form\n");
+        if ( trace_rules_assert )
+        {
+          fprintf(
+            stderr,
+            "[rules] assert-parsed form=%08x type=%08x value=%08x extra=%08x:%08x:%08x fact=\"%s\"\n",
+            parse_buffer[0],
+            parse_buffer[1],
+            parse_buffer[2],
+            parse_buffer[3],
+            parse_buffer[4],
+            parse_buffer[5],
+            a1 ? a1 : "<null>");
+          fflush(stderr);
+        }
         AST_Free(v5);
       }
     }
@@ -98703,6 +98782,17 @@ _DWORD * Rules_AssertFact(const char *a1, int a2, double a3)
       fprintf(stderr, "[menu-probe] rules-assert-after-router-remove\n");
     if ( !dword_51A96C && !dword_51A97C && !dword_51A960 )
       Rules_RunPeriodicCleanup(1, 0);
+    if ( trace_rules_assert )
+    {
+      fprintf(
+        stderr,
+        "[rules] assert-result-candidate type=%08x value=%08x nil=%08x fact=\"%s\"\n",
+        parse_buffer[1],
+        parse_buffer[2],
+        dword_54DD70,
+        a1 ? a1 : "<null>");
+      fflush(stderr);
+    }
     if ( parse_buffer[1] == 2 && parse_buffer[2] == dword_54DD70 )
       result = (_DWORD *)(dword_54DD70 ^ parse_buffer[2]);
     else
@@ -99655,6 +99745,8 @@ int * Rules_InsertFunctionHashEntry(int a1)
   int *bucket_head_ptr; // eax
   int existing_head; // edx
   int host_function_ptr; // ecx
+  int symbol_record; // eax
+  int symbol_name; // eax
 
   if ( !dword_54DD40 )
     Rules_InitFunctionNameHashTable();
@@ -99670,7 +99762,10 @@ int * Rules_InsertFunctionHashEntry(int a1)
     host_function_ptr = Mem_HeapAllocWithRetry((_DWORD *)8);
   }
   *(_DWORD *)(host_function_ptr + 0) = a1;
-  bucket_head_ptr = (int *)(dword_54DD40 + 4 * Rules_HashSymbolName(*(_BYTE **)(*(_DWORD *)a1 + 16), 0x33u));
+  symbol_record = *(_DWORD *)(uintptr_t)(unsigned int)a1;
+  symbol_name = *(_DWORD *)((uintptr_t)(unsigned int)symbol_record + 16);
+  bucket_head_ptr = (int *)(dword_54DD40
+                          + 4 * Rules_HashSymbolName((_BYTE *)(uintptr_t)(unsigned int)symbol_name, 0x33u));
   existing_head = *bucket_head_ptr;
   *bucket_head_ptr = host_function_ptr;
   *(_DWORD *)(host_function_ptr + 4) = existing_head;
@@ -101836,6 +101931,18 @@ _DWORD * Instance_FindByName(int a1)
 
   current_module = Module_GetCurrent();
   name_text = *(_DWORD *)((uintptr_t)(unsigned int)a1 + 16);
+  if ( getenv("CLASH95_TRACE_PARSER_QUALIFIER_SCAN") )
+  {
+    fprintf(
+      stderr,
+      "[parser] fact-lookup symbol=%08x tag=%04x flags=%04x name=%08x caller=%p\n",
+      a1,
+      *(unsigned short *)(uintptr_t)(unsigned int)a1,
+      *(unsigned short *)((uintptr_t)(unsigned int)a1 + 12),
+      name_text,
+      __builtin_return_address(0));
+    fflush(stderr);
+  }
   qualifier_length = Rules_FindModuleSeparator((_BYTE *)(uintptr_t)(unsigned int)name_text);
   if ( !qualifier_length )
     return Instance_LookupInHashBucket(a1, current_module, 0, current_module);
@@ -109165,39 +109272,46 @@ _DWORD * Rules_CreateMultifieldFromString(const char *a1)
   signed int *v4; // edx
   __int16 v5; // ax
   signed int v6; // eax
-  signed int v7; // ecx
   _DWORD *v8; // ebx
   char *v9; // edx
   int v10; // ecx
   int i; // eax
-  _DWORD v13[9]; // [esp+0h] [ebp-24h] BYREF
+  int token_buffer_ptr;
+  _DWORD *token_buffer;
+  int node_count;
 
+  token_buffer_ptr = Compat_AllocLow32Bytes(12);
+  if ( !token_buffer_ptr )
+    return 0;
+  token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
   IO_OpenStringSource((int)aMultifieldStr, a1, 0);
   v1 = 0;
-  Parser_NextToken((int)aMultifieldStr, (int)v13);
+  Parser_NextToken((int)aMultifieldStr, token_buffer_ptr);
   v3 = 0;
-  while ( v13[0] != 102 )
+  node_count = 0;
+  while ( token_buffer[0] != 102 )
   {
-    if ( v13[0] == 2 || v13[0] == 3 || v13[0] < 2u || v13[0] == 8 )
+    if ( token_buffer[0] == 2 || token_buffer[0] == 3 || token_buffer[0] < 2u || token_buffer[0] == 8 )
     {
-      v4 = (signed int *)v13[1];
-      v5 = v13[0];
+      v4 = (signed int *)(uintptr_t)(unsigned int)token_buffer[1];
+      v5 = token_buffer[0];
     }
     else
     {
-      v4 = Str_Intern((char *)v13[2], v2);
+      v4 = Str_Intern((char *)(uintptr_t)(unsigned int)token_buffer[2], v2);
       v5 = 3;
     }
     v6 = AST_NewNode(v5, (int)v4);
+    ++node_count;
     if ( v1 )
       *(_DWORD *)(v3 + 10) = v6;
     else
       v1 = v6;
     v3 = v6;
-    Parser_NextToken((int)aMultifieldStr, (int)v13);
+    Parser_NextToken((int)aMultifieldStr, token_buffer_ptr);
   }
   IO_CloseStringRouter((int)aMultifieldStr);
-  v8 = Rules_CreateEphemeralMultifield(v7);
+  v8 = Rules_CreateEphemeralMultifield(node_count);
   v9 = (char *)v8 + 14;
   v10 = 0;
   for ( i = v1; i; ++v10 )
@@ -109208,10 +109322,10 @@ _DWORD * Rules_CreateMultifieldFromString(const char *a1)
     i = *(_DWORD *)(i + 10);
   }
   AST_Free(v1);
+  Compat_FreeLow32Bytes(token_buffer_ptr);
   return v8;
 }
 // 48CD3A: simplified comparisons for '%var_24.4': ==0 || ==1 became <2u
-// 48CCF4: variable 'v7' is possibly undefined
 // 48CD52: variable 'v2' is possibly undefined
 
 //----- (0048CD70) --------------------------------------------------------
@@ -114640,6 +114754,11 @@ int  Rules_FindModuleSeparator(_BYTE *a1)
   int v2; // edx
   char v3; // bl
 
+  if ( getenv("CLASH95_TRACE_PARSER_QUALIFIER_SCAN") )
+  {
+    fprintf(stderr, "[parser] qualifier-scan text=%p caller=%p\n", a1, __builtin_return_address(0));
+    fflush(stderr);
+  }
   v1 = 0;
   v2 = 0;
   if ( *a1 )
@@ -115632,6 +115751,16 @@ char * Parser_NextToken(int a1, int a2)
   int v49; // [esp+0h] [ebp-1Ch] BYREF
   int i; // [esp+4h] [ebp-18h]
 
+  if ( getenv("CLASH95_TRACE_PARSER_TOKEN") )
+  {
+    fprintf(
+      stderr,
+      "[parser] next-token lexer=%08x token=%08x caller=%p\n",
+      a1,
+      a2,
+      __builtin_return_address(0));
+    fflush(stderr);
+  }
   *(_DWORD *)a2 = 103;
   *(_DWORD *)(a2 + 4) = 0;
   *(_DWORD *)(a2 + 8) = aUnknown;
@@ -115661,8 +115790,8 @@ char * Parser_NextToken(int a1, int a2)
     v8 = a1;
     v9 = 0;
 LABEL_12:
-    v10 = Lexer_ReadToken(v8, v9, &v49, v7);
-    *(_DWORD *)(a2 + 4) = v10;
+    v10 = (signed int *)(uintptr_t)(unsigned int)(uintptr_t)Lexer_ReadToken(v8, v9, &v49, v7);
+    *(_DWORD *)(a2 + 4) = (int)(uintptr_t)v10;
 LABEL_13:
     v11 = v10[4];
 LABEL_14:
@@ -115790,7 +115919,7 @@ LABEL_30:
       Lexer_SkipChar(i, a1, v4);
       *(_DWORD *)(a2 + 4) = Lexer_ReadToken(a1, 0, &v49, v47);
       *(_DWORD *)a2 = v49;
-      v10 = *(signed int **)(a2 + 4);
+      v10 = (signed int *)(uintptr_t)(unsigned int)*(_DWORD *)(a2 + 4);
       goto LABEL_13;
     }
     *(_DWORD *)(a2 + 8) = aUnprintableCha;
@@ -134956,9 +135085,14 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
   int instance_name; // ecx
   int class_record; // edx
   _DWORD *result; // eax
-  _DWORD parsed[6]; // [esp+0h] [ebp-24h] BYREF
+  int parsed_ptr; // ecx
+  _DWORD *parsed; // [esp+0h] [ebp-24h] BYREF
 
-  memset(parsed, 0, sizeof(parsed));
+  parsed_ptr = Compat_AllocLow32Bytes(24);
+  if ( !parsed_ptr )
+    return 0;
+  parsed = (_DWORD *)(uintptr_t)(unsigned int)parsed_ptr;
+  memset(parsed, 0, 24);
   *(_DWORD *)(a1 + 4) = 2;
   *(_DWORD *)(a1 + 8) = dword_54DD70;
   expression = (uintptr_t)(unsigned int)*(_DWORD *)(dword_51A960 + 6);
@@ -134967,7 +135101,8 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
   {
     Rules_PrintErrorID((int)aInsmngr, 1, 0);
     Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_2, 0);
-    return (_DWORD *)Lexer_ErrorRecover(1);
+    result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
+    goto done;
   }
   expression = (uintptr_t)(unsigned int)*(_DWORD *)(expression + 10);
   instance_name = parsed[2];
@@ -134982,15 +135117,17 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
     {
       Rules_PrintErrorID((int)aInsmngr, 2, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_3, 0);
-      return (_DWORD *)Lexer_ErrorRecover(1);
+      result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
+      goto done;
     }
-    class_record = (int)Class_LookupInScope(*(_BYTE **)(parsed[2] + 16));
+    class_record = (int)Class_LookupInScope(*(_BYTE **)((uintptr_t)(unsigned int)parsed[2] + 16));
     if ( !class_record )
     {
       Class_ReportLookupError(
         *(_DWORD *)(*(_DWORD *)((uintptr_t)(unsigned int)*(_DWORD *)(dword_51A960 + 2)) + 16),
-        *(_DWORD *)(parsed[2] + 16));
-      return (_DWORD *)Lexer_ErrorRecover(1);
+        *(_DWORD *)((uintptr_t)(unsigned int)parsed[2] + 16));
+      result = (_DWORD *)(uintptr_t)(unsigned int)Lexer_ErrorRecover(1);
+      goto done;
     }
   }
   result = Instance_BuildInstance(instance_name, class_record, 1, a3);
@@ -135004,9 +135141,28 @@ _DWORD * Instance_ActiveMakeInstanceFunction(uintptr_t a1, uintptr_t a2, double 
     }
     else
     {
-      return (_DWORD *)Instance_DeleteInstance((int)result, a3);
+      result = (_DWORD *)(uintptr_t)(unsigned int)Instance_DeleteInstance((int)result, a3);
+      *(_DWORD *)(a1 + 4) = 2;
+      *(_DWORD *)(a1 + 8) = dword_54DD70;
+      goto done;
     }
   }
+done:
+  if ( *(_DWORD *)(a1 + 4) == 2 && *(_DWORD *)(a1 + 8) != dword_54DD70 )
+  {
+    if ( getenv("CLASH95_TRACE_RULES_ASSERT_FACT") )
+    {
+      fprintf(
+        stderr,
+        "[rules] make-instance-reset-invalid-symbol value=%08x nil=%08x caller=%p\n",
+        *(_DWORD *)(a1 + 8),
+        dword_54DD70,
+        __builtin_return_address(0));
+      fflush(stderr);
+    }
+    *(_DWORD *)(a1 + 8) = dword_54DD70;
+  }
+  Compat_FreeLow32Bytes(parsed_ptr);
   return result;
 }
 // 51A614: using guessed type char *off_51A614[5];
@@ -135695,15 +135851,25 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
 {
   int slot_override; // edi
   int *slot_value; // esi
+  signed int result; // eax
+  int parsed_ptr; // ecx
   int saved_context; // [esp+18h] [ebp-1Ch]
   int *saved_slot_value; // [esp+1Ch] [ebp-18h]
-  _DWORD parsed[6]; // [esp+0h] [ebp-34h] BYREF
+  _DWORD *parsed; // [esp+0h] [ebp-34h] BYREF
 
   slot_override = a2;
   dword_51A964 = 0;
   saved_context = g_Instance_SlotInitInProgress;
+  parsed_ptr = Compat_AllocLow32Bytes(24);
+  if ( !parsed_ptr )
+    return 0;
+  parsed = (_DWORD *)(uintptr_t)(unsigned int)parsed_ptr;
+  memset(parsed, 0, 24);
   if ( !a2 )
-    return 1;
+  {
+    result = 1;
+    goto done;
+  }
   while ( 1 )
   {
     int slot_name_symbol;
@@ -135715,7 +135881,8 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
       Rules_PrintErrorID((int)aInsmngr, 9, 0);
       Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aExpectedAVal_4, 0);
       Lexer_ErrorRecover(1);
-      return 0;
+      result = 0;
+      goto done;
     }
     slot_name_symbol = parsed[2];
     slot_value = (int *)Instance_GetSlotValueBySymbol((int)(uintptr_t)a1, slot_name_symbol);
@@ -135735,11 +135902,17 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
     }
     g_Instance_SlotInitInProgress = saved_context;
     if ( dword_51A964 )
-      return 0;
+    {
+      result = 0;
+      goto done;
+    }
     *((_BYTE *)saved_slot_value + 4) |= 2u;
     slot_override = *(_DWORD *)((uintptr_t)(unsigned int)pair_node + 10);
     if ( !slot_override )
-      return 1;
+    {
+      result = 1;
+      goto done;
+    }
   }
   Rules_PrintErrorID((int)aInsmngr, 13, 0);
   Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aSlot_2, 0);
@@ -135748,7 +135921,10 @@ signed int  Instance_ApplySlotOverrideList(_DWORD *a1, int a2, int a3, double a4
   Output_Write((int)g_IO_LogicalNameTable_WError[0], *(_DWORD *)((uintptr_t)(unsigned int)a1[7] + 16), 0);
   Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)a__17, 0);
   Lexer_ErrorRecover(1);
-  return 0;
+  result = 0;
+done:
+  Compat_FreeLow32Bytes(parsed_ptr);
+  return result;
 }
 // 51A27C: using guessed type int dword_51A27C;
 // 51A284: using guessed type int dword_51A284;
@@ -135765,10 +135941,16 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
   unsigned __int8 slot_flags; // dh
   unsigned __int8 descriptor_flags; // bl
   char result; // al
-  _DWORD parsed[6]; // [esp+0h] [ebp-34h] BYREF
+  int parsed_ptr; // ecx
+  _DWORD *parsed; // [esp+0h] [ebp-34h] BYREF
   unsigned int i; // [esp+18h] [ebp-1Ch]
 
   result = 1;
+  parsed_ptr = Compat_AllocLow32Bytes(24);
+  if ( !parsed_ptr )
+    return 0;
+  parsed = (_DWORD *)(uintptr_t)(unsigned int)parsed_ptr;
+  memset(parsed, 0, 24);
   if ( (*(_BYTE *)((uintptr_t)(unsigned int)a1 + 24) & 4) != 0 )
   {
     slot_value_offset = 0;
@@ -135843,7 +136025,7 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
         result = Lexer_ErrorRecover(1);
       }
       if ( dword_51A964 )
-        return result;
+        goto done;
       slot_value_offset += 4;
     }
     *(_BYTE *)((uintptr_t)(unsigned int)a1 + 24) &= ~4u;
@@ -135854,6 +136036,8 @@ char  Instance_InitSlots(int a1, __int16 a2, double a3)
     Lexer_ErrorRecover(1);
     result = Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aInitSlotsNotVa, 0);
   }
+done:
+  Compat_FreeLow32Bytes(parsed_ptr);
   return result;
 }
 // 51A614: using guessed type char *off_51A614[5];
@@ -151673,14 +151857,27 @@ int Rules_GetIncrementalResetCommand()
 int  Parser_ParseRequiredFunctionCall(int a1, int a2)
 {
   int v3; // ecx
-  _DWORD v5[5]; // [esp+0h] [ebp-14h] BYREF
+  int token_buffer_ptr;
+  _DWORD *token_buffer;
+  int result;
 
-  v5[4] = a2;
-  Parser_NextToken(a1, (int)v5);
-  if ( v5[0] == 100 )
-    return Parser_ParseExpression(v3, v3);
-  Parser_ReportSyntaxError();
-  return 0;
+  token_buffer_ptr = Compat_AllocLow32Bytes(20);
+  if ( !token_buffer_ptr )
+    return 0;
+  token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
+  token_buffer[4] = a2;
+  Parser_NextToken(a1, token_buffer_ptr);
+  if ( token_buffer[0] == 100 )
+  {
+    result = Parser_ParseExpression(v3, v3);
+  }
+  else
+  {
+    Parser_ReportSyntaxError();
+    result = 0;
+  }
+  Compat_FreeLow32Bytes(token_buffer_ptr);
+  return result;
 }
 // 4BD2A8: variable 'v3' is possibly undefined
 
@@ -151691,15 +151888,32 @@ int a2;
 {
   int v3; // ecx
   int v4; // ecx
-  _DWORD v6[5]; // [esp+0h] [ebp-14h] BYREF
+  int token_buffer_ptr;
+  _DWORD *token_buffer;
+  int result;
+  int token_symbol;
+  _BYTE *token_text;
 
-  v6[4] = a2;
-  Parser_NextToken(a1, (int)v6);
-  if ( v6[0] == 2 )
-    return Parser_ParseFunctionCallExpr(v3, *(_BYTE **)(v6[1] + 16));
-  Rules_PrintErrorID((int)aExprnpsr, 1, 1);
-  Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAFunctionNameM, v4);
-  return 0;
+  token_buffer_ptr = Compat_AllocLow32Bytes(20);
+  if ( !token_buffer_ptr )
+    return 0;
+  token_buffer = (_DWORD *)(uintptr_t)(unsigned int)token_buffer_ptr;
+  token_buffer[4] = a2;
+  Parser_NextToken(a1, token_buffer_ptr);
+  if ( token_buffer[0] == 2 )
+  {
+    token_symbol = token_buffer[1];
+    token_text = (_BYTE *)(uintptr_t)(unsigned int)*(_DWORD *)((uintptr_t)(unsigned int)token_symbol + 16);
+    result = Parser_ParseFunctionCallExpr(v3, token_text);
+  }
+  else
+  {
+    Rules_PrintErrorID((int)aExprnpsr, 1, 1);
+    Output_Write((int)g_IO_LogicalNameTable_WError[0], (int)aAFunctionNameM, v4);
+    result = 0;
+  }
+  Compat_FreeLow32Bytes(token_buffer_ptr);
+  return result;
 }
 // 4BD2F0: variable 'v4' is possibly undefined
 // 4BD307: variable 'v3' is possibly undefined
