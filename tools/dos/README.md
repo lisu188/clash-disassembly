@@ -54,7 +54,7 @@ python tools\dos\run_crossbuild_pipeline.py `
   --regenerate
 ```
 
-The work directory must be outside the repository and empty unless `--resume` is supplied. `--regenerate` requires a review file, a complete CLIPS calibration, and at least 95% confirmation. The runner creates independent feature and regeneration database copies, builds the candidate map only inside the work directory, verifies the regenerated C file, and writes `pipeline_manifest.json` with SHA-256 hashes of inputs and outputs. `--dry-run` prints the complete command plan without requiring Windows or IDA.
+The work directory must be outside the repository and empty unless `--resume` is supplied. `--regenerate` requires a review file, a complete CLIPS calibration, and at least 95% confirmation. The runner creates independent feature and regeneration database copies, builds the candidate map only inside the work directory, verifies the regenerated C file, and writes a SHA-256 input/output manifest in the work directory. `--dry-run` prints the complete command plan without requiring Windows or IDA.
 
 ## IDA helpers
 
