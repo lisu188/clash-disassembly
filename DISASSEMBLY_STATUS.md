@@ -3,6 +3,16 @@
 Honest completeness report for `clash.c`, the Hex-Rays decompilation of the
 **Clash** binary (a Polish turn-based strategy game; Watcom C++, ~1997).
 
+> **2026-07-13 — `clash.c` regenerated from IDA Pro 9.0 / Hex-Rays 9.0** with all
+> recovered names seeded into the database (see `tools/dos/`, `docs/DOS_CLIPS_PIN.md`).
+> **Decompilation: 99.98% (4,218 / 4,219)** — only `0xFDF26` (a jump-table coroutine
+> dispatcher) still resists. **Naming: 884 / 4,219 = 21%** (from 11%), of which
+> 704 / 2,015 = 35% of the embedded CLIPS engine, via string-anchor + error-id +
+> adversarially-verified sequence alignment against CLIPS 6.24 source. Address set
+> and the 4,219 `//----- (ADDR)` markers are byte-identical to the prior file; the
+> large diff is the newer decompiler's output. Campaign continues per
+> `tools/dos/CONTINUATION_GUIDE.md`.
+
 ## What "complete" means here
 
 `clash.c` is a decompiler artifact. There are two independent axes of completeness:
