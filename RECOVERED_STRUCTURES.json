@@ -2138,8 +2138,8 @@
     "participants": [
       "Scenario_LoadMissionByIndex",
       "Mission_CheckObjectiveComplete",
-      "Mission_MarkObjective05CompleteOnAttack",
-      "UI_CheckDialogAccepted",
+      "Mission05_MarkFailureOnFriendlyAttack",
+      "Mission_CheckFailureCondition",
       "Unit_Attack",
       "Unit_AttackBuilding"
     ],
@@ -2147,7 +2147,7 @@
       "Scenario_LoadMissionByIndex names player 3 Agordeh in every language branch and assigns that player to the mission-05 rules fact.",
       "For nonzero g_LanguageIndex, Mission_CheckObjectiveComplete first scans all live buildings and then all live stacks for owner 3, returning true only when neither scan finds a survivor.",
       "For zero g_LanguageIndex, the same function scans for surviving owners 1 or 2 instead.",
-      "Mission_MarkObjective05CompleteOnAttack sets the mission-local byte when player 0 attacks player 1 or 2 in the nonzero-language branch; UI_CheckDialogAccepted reads that byte as the mission-ending failure condition before the objective-complete check.",
+      "Mission05_MarkFailureOnFriendlyAttack sets the mission-local failure byte when player 0 attacks player 1 or 2 in the nonzero-language branch; Mission_CheckFailureCondition reads that byte before the objective-complete check.",
       "The retained direct mission-05 probe takes the nonzero-language path and traces mission_objective_blocked selected=5 a=4 b=3 c=0, identifying player-3 building index 4 as the first current blocker.",
       "Scenario setup creates one player-3 castle and six player-3 world stacks, including a remote stack at (87,66)."
     ]

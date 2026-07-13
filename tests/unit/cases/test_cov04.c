@@ -256,19 +256,19 @@ TEST(cov04_roadbuild, request_exit) {
 TEST(cov04_unitbattle, get_target_crowding_scale_zero_enemies) {
   static unsigned char unit[64];
   static unsigned char battleCtx[2048];
-  int saved_ctx = dword_532048;
+  int saved_ctx = g_MapData;
 
   memset(unit, 0, sizeof unit);
   memset(battleCtx, 0, sizeof battleCtx);
-  /* dword_532048 (battle-context base) defaults to 0, which would make
+  /* g_MapData (battle-context base) defaults to 0, which would make
    * UnitBattle_CountAdjacentEnemies dereference near-null memory. Point it at
    * a zeroed buffer instead: the width field it reads (offset 804) is then 0,
    * so every neighbor check fails its bounds test and the enemy count stays
    * a deterministic 0 without ever touching the (unmodeled) battlefield grid
    * further into the buffer. */
-  dword_532048 = (int)(intptr_t)battleCtx;
+  g_MapData = (int)(intptr_t)battleCtx;
   CHECK_EQ(UnitBattle_GetTargetCrowdingScale((int)(intptr_t)unit), 256);
-  dword_532048 = saved_ctx;
+  g_MapData = saved_ctx;
 }
 
 /* ---- BuildingEconomyDialog_SetExitSignal ------------------------------- */
