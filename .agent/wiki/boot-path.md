@@ -25,7 +25,8 @@
 - Menu-probe and capture environment controls are no longer active bootstrap selectors.
 - The only tracked runtime `CLASH95_*` environment reads that remain intentional are SDL presented-frame dump diagnostics: `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX` and the compatibility alias `CLASH95_SCREENSHOT_PREFIX`.
 
-## Next Frontier
-- Add an authentic finite shutdown or deterministic full-route verification milestone.
-- Recover or safely quarantine the still-skipped `CSS_Init` DirectSound-era device-table path.
-- Continue widening toward a broader playable `App_WinMain` / `PlayGame` session without reintroducing fake host-side menu probes.
+## Next Frontier (2026-04 snapshot)
+- These goals reflect the April 2026 state; the playable-session widening has
+  since landed (missions `00..04` are route-complete). The current frontier is
+  mission 05 — see `docs/STATUS.md`. Still-true item: recover or safely
+  quarantine the skipped `CSS_Init` DirectSound-era device-table path.

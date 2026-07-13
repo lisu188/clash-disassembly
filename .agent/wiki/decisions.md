@@ -1,5 +1,10 @@
 # Decisions
 
+> Append-only per-decision rationale; the reasoning stays valid regardless of
+> the moving frontier. "Next target" phrasing inside entries reflects the
+> frontier at the time each decision was made — current priorities live in
+> `docs/PROJECT_TRACKS.md`.
+
 - Keep the contained post-confirm probe keyed to `CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`.
   - Reason: the load-menu loop reads its own env var, and the older duplicated `CLASH95_MENU_PROBE_AUTO_CLICK=load` command was stale and stopped before the bottom-row confirm click.
 - Rebind retained mission-loader helper calls onto `MiniMap_CreateSurface` and `Game_InitPlayerViewState` in recovered C.

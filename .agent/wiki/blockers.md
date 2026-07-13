@@ -1,6 +1,11 @@
-# Current Blockers
+# Blockers (historical snapshot, 2026-04)
 
-## Active Full-Route Blockers
+> **Superseded for current state.** The active blocker is now **mission 05**
+> (missions `00..04` route-complete) — see `docs/STATUS.md` "Active Blocker".
+> `CSS_Init` remains real deferred startup debt. The list below is the 2026-04
+> full-route startup snapshot, retained as recovery context.
+
+## Active Full-Route Blockers (as of 2026-04)
 - The default executable route is now `main -> App_WinMain`; host-side menu/startup probe modes are not active selectors anymore.
 - Lowercase `r` is now the first finite recovered startup/shutdown route: it enters early startup and runtime/render init, skips the game-entry handoff, shuts down, and exits `0`.
 - The default no-arg route now reaches the recovered main-menu presentation/wait loop and passes `clash95_full_route_smoke`; this is a liveness milestone, not a finite recovered quit path.

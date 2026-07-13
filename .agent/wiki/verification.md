@@ -1,4 +1,11 @@
-# Verification
+# Verification (historical transcripts, 2026-04)
+
+> **Historical.** These are dated verification transcripts from the April 2026
+> executable-regeneration slices; some commands are no longer runnable (the
+> `--authentic-*` probe switches and menu-probe env selectors were removed, and
+> the menu-capture CTest was replaced — see `boot-path.md` and `blockers.md`).
+> Current build/test/validation commands live in `docs/BUILD_AND_TEST.md`;
+> current validated state lives in `docs/STATUS.md`.
 
 ## 2026-04-16 Default Full-Route Menu Liveness Slice
 - `cmake --build build --target clash95_recovered clash95_bootstrap clash95_cpp_core clash95_cpp_regen -j`

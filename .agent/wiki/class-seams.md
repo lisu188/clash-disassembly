@@ -1,10 +1,16 @@
 # Class Seams
 
+> Frontier notes below are the 2026-04 state; the current frontier is mission 05
+> (`docs/STATUS.md`). Note: "all 20 `Scenario_LoadMissionByIndex` case arms are
+> recovered" is a *code-coverage* fact about the mission-loader switch in
+> recovered C — it does not mean the missions are route-complete (only `00..04`
+> are; see `docs/PROJECT_TRACKS.md` for the completion-language distinction).
+
 - Existing conservative executable-regeneration seams remain:
   - `DLXSpriteSet`
   - `CAviDecompressor`
   - `CSyncObject`
-- Current frontier notes:
+- Frontier notes (2026-04):
   - the contained authentic load-game lane is still carried by recovered C menu/save helpers, not by a broader class-runtime splice
   - the current broader contained crash is still at `parse-make-instance-before-class-lookup` on `oddzial`
   - retained probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame` now all link

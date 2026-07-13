@@ -1,4 +1,9 @@
-# Agent Log
+# Agent Log (historical journal; newest entry 2026-04-16)
+
+> **Historical.** This journal ends 2026-04-16; later work is recorded in
+> `docs/archive/COMPILATION_PROGRESS.md` and
+> `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`. Kept in place per the
+> archive-index deferred-cleanup policy (tooling may expect `.agent/wiki/*`).
 
 ## 2026-04-16
 

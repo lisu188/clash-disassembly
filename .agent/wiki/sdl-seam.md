@@ -1,7 +1,14 @@
 # SDL Seam
 
-- The current contained and retained frontiers are still below SDL.
-- Current evidence:
+> Evidence below is the 2026-04 state; the current frontier is mission 05
+> (`docs/STATUS.md`). The `--authentic-*` switches and the load-menu-probe env
+> controls cited as evidence were **later removed** as active selectors (see
+> `boot-path.md` "Removed Selectors") — do not treat those commands as runnable
+> today. The seam conclusion itself (gameplay blockers sit below SDL, not in
+> `platform_sdl_runtime.c`) still holds.
+
+- The contained and retained 2026-04 frontiers were below SDL.
+- Evidence (2026-04; probe switches since removed):
   - `clash95_bootstrap` default run stays alive for `1s`
   - `--authentic-startup-prelude` stays alive for `2s`
   - the corrected post-confirm contained probes (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm`) still reproduce `oddzial` with broader rules and `MAIN` without them

@@ -1,5 +1,29 @@
 # Agent Wiki Index
 
+> **Scope note (2026-07-13).** This wiki records executable-regeneration context
+> and decisions. For the *current* project state, do not read frontier claims
+> here — they drift. Canonical sources:
+> - current runtime state, active blocker, next target: `docs/STATUS.md`
+> - track boundaries and priority sequence: `docs/PROJECT_TRACKS.md`
+> - DOS naming baseline: `DISASSEMBLY_STATUS.md`
+>
+> As of 2026-07-13 the campaign frontier is **mission 05** (missions `00..04`
+> route-complete); the frontier snapshot below is the older 2026-04 state and is
+> retained as history.
+
+## Core notes
+
+- [boot-path.md](boot-path.md) — recovered boot route and removed host-side selectors
+- [runtime-glue.md](runtime-glue.md) — repaired runtime-glue bands and quarantines
+- [sdl-seam.md](sdl-seam.md) — what sits below the SDL seam
+- [class-seams.md](class-seams.md) — conservative C++ class-regeneration seams
+- [blockers.md](blockers.md) — startup blocker list (historical snapshot)
+- [verification.md](verification.md) — dated verification transcripts (historical)
+- [decisions.md](decisions.md) — per-decision recovery rationale (timeless)
+- [log.md](log.md) — chronological work journal (ends 2026-04-16)
+
+## Historical frontier snapshot (2026-04)
+
 - Current frontier:
   - keep the contained authentic load-menu wedge green while separating it from the broader retained gameplay/session widening that now starts after `sub_451E46 -> sub_460490 -> UI_StartAnims -> PlayGame_Dispatch -> PlayGame`
   - the retained mission-loader slice in `clash95.c` now covers all 20 switch arms, cases `0` through `19`
@@ -9,38 +33,15 @@
   - `clash95_recovered`
   - `clash95_bootstrap`
   - `clash95_cpp_regen`
-  - retained probe `sub_451E46`
-  - retained probe `sub_460490`
-  - retained probe `UI_StartAnims`
-  - retained probe `PlayGame_Dispatch`
-  - retained probe `PlayGame`
-- Highest runtime milestone:
-  - authentic load-menu row resources load
-  - all ten contained `sub_44A140` row draws complete
+  - retained probes `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, `PlayGame`, `WorldMap_RunHumanTurnLoop`
+- Highest runtime milestone (of that era):
+  - authentic load-menu row resources load; all ten contained `sub_44A140` row draws complete
   - authentic slot-strip click plus bottom-row load confirm exits with `selected_slot = 0`, `confirm = 1`, `screen = 5`
   - the corrected post-confirm probe lane (`CLASH95_LOAD_MENU_PROBE_AUTO_CLICK=confirm` plus `CLASH95_LOAD_MENU_PROBE_POST_CONFIRM=1`) reaches `load-menu-post-confirm-load-save`
   - the traced contained split still reproduces `class-lookup-no-table name=oddzial` with broader rules and `symbol-lookup-missing-table MAIN` without them
-  - case `18` / `p_mapa9j.map` is now materialized in recovered C with its five-player `Raylin` / `Tubius` / `Lord Gorio` / `McDan` / `Drebegen` setup, the `Stone Bell` `BUILDING_RECORD(+438) -= 100` cut, the `Fhur Tao` `BUILDING_RECORD(+438) += 200` boost, the six raw slot-state mutation bands on the `+28` lane, and the preserved absence of any post-init camera override or `Rules_LogAssigned*` tail
-  - case `19` / `p_map10z.map` was already present and is now corroborated against `mapP10`, completing the 20-case mission switch without introducing new SDL, compat, or `src_cpp` glue
-  - retained standalone probes for `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame` now link and stay alive under `timeout 1s`
-- Adjacent blocked widening:
-  - the broader-rules-contained probe still reaches `parse-make-instance-before-class-lookup` on `oddzial` and then reports a null defclass registry
-  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still fails earlier on `symbol-lookup-missing-table MAIN`
-  - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` is still deferred
-  - the next retained widening is the gameplay/session surface after the now-complete `Scenario_LoadMissionByIndex` switch, still centered on `WorldMap_RunHumanTurnLoop` but now past its zero-init entry and `arama1` / `kon_por1` mission-success tail
-- Core notes:
-  - [boot-path.md](/home/andrz/git/clash-disassembly/.agent/wiki/boot-path.md)
-  - [runtime-glue.md](/home/andrz/git/clash-disassembly/.agent/wiki/runtime-glue.md)
-  - [sdl-seam.md](/home/andrz/git/clash-disassembly/.agent/wiki/sdl-seam.md)
-  - [class-seams.md](/home/andrz/git/clash-disassembly/.agent/wiki/class-seams.md)
-  - [blockers.md](/home/andrz/git/clash-disassembly/.agent/wiki/blockers.md)
-  - [verification.md](/home/andrz/git/clash-disassembly/.agent/wiki/verification.md)
-  - [decisions.md](/home/andrz/git/clash-disassembly/.agent/wiki/decisions.md)
-  - [log.md](/home/andrz/git/clash-disassembly/.agent/wiki/log.md)
-
-## Latest Update
-- `WorldMap_RunHumanTurnLoop` now also restores the zero-arg loop-entry helper lane, held-key `DD_Pump` loops, the queued-path AP compare, and the saved render-hook/resource-handle debug block.
-- Last green retained targets now include `WorldMap_RunHumanTurnLoop` alongside `sub_451E46`, `sub_460490`, `UI_StartAnims`, `PlayGame_Dispatch`, and `PlayGame`.
-- The next honest retained blocker stays in the deeper `WorldMap_RunHumanTurnLoop` loop body after those repaired call-shape slices, not in SDL, compat, or the already-covered mission-loader switch.
-
-- `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` now restore their retained helper bands directly in recovered C, so the next honest retained blocker is deeper in `WorldMap_RunHumanTurnLoop` at `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`.
+  - case `18` / `p_mapa9j.map` materialized in recovered C (five-player setup, `Stone Bell` cut, `Fhur Tao` boost, six raw `+28` slot-state bands); case `19` / `p_map10z.map` corroborated against `mapP10`, completing the 20-case mission switch
+- Adjacent blocked widening (of that era):
+  - the broader-rules-contained probe still reached `parse-make-instance-before-class-lookup` on `oddzial` and then reported a null defclass registry
+  - the `CLASH95_LOAD_MENU_PROBE_BROADER_RULES=0` probe still failed earlier on `symbol-lookup-missing-table MAIN`
+  - the contained save-slot repaint/name lane after `load-menu-skip-save-slot-draw` was deferred
+  - `WorldMap_HandleTopMenuBar` and `UnitStackSelection_HandleInput` restored their retained helper bands directly in recovered C, pointing the next retained blocker at `WorldMap_HandleTileHoverAndClick` / `sub_4084A0`

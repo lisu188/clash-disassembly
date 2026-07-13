@@ -1,6 +1,10 @@
 # Runtime Glue
 
-- Active repaired glue on the live frontier:
+> "Live frontier" below is the 2026-04 state; the current frontier is mission 05
+> (`docs/STATUS.md`). The repaired-band and quarantine records remain valid
+> recovery context.
+
+- Repaired glue on the 2026-04 frontier:
   - `Render_LoadResourceSprite_v4`, `Render_LoadResourceSprite_v3`, and `sub_40BC00` still carry the contained row-resource / row-draw lane
   - `sub_4163F0`, `sub_4443C0`, and `sub_4443D0` still carry the world-map-init and save-path corridor
   - `Scenario_LoadMissionByIndexAndPlay` now keeps its real 27-byte campaign-state save/restore explicit instead of forwarding decompiler garbage into `PlayGame`
