@@ -1,15 +1,22 @@
 # clash-disassembly
 
-Evidence-driven C/SDL reconstruction of the original `clash95` game binary.
-`clash95.asm` is the protected behavioral source of truth; `clash95.c` is the
-recovered implementation under build and route validation.
+Evidence-driven recovery of the original DOS and Win95 Clash binaries.
+
+- `clash.c` is the generated IDA/Hex-Rays decompilation of the DOS binary under
+  evidence-gated naming and regeneration validation.
+- `clash95.asm` is the protected Win95 behavioral source of truth.
+- `clash95.c` is the recovered Win95 implementation under SDL build, runtime, and
+  campaign-route validation.
+
+The repository tracks DOS semantic recovery, Win95 runtime reconstruction, and
+campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting
+or reporting completion percentages.
 
 Current validated campaign-route state: missions `00..04` are complete through
-their route gates. Mission `04` now clears Hopenberg through three authentic
-tactical assaults, transfers the empty-garrison castle, and reaches
+their route gates. Mission `04` clears Hopenberg through three authentic tactical
+assaults, transfers the empty-garrison castle, and reaches
 `mission_objective_complete`; missions `05..19` remain direct-load evidence
-probes. See
-`docs/STATUS.md` for the active blocker and latest milestone.
+probes. See `docs/STATUS.md` for the active blocker and latest milestone.
 
 ## Quick Start
 
@@ -30,21 +37,24 @@ git diff --check
 
 ## Documentation
 
-- [docs/STATUS.md](docs/STATUS.md) - current validated state, active blocker,
-  next target.
+- [docs/PROJECT_TRACKS.md](docs/PROJECT_TRACKS.md) - boundaries, current baselines,
+  completion language, and immediate priorities for each recovery track.
+- [DISASSEMBLY_STATUS.md](DISASSEMBLY_STATUS.md) - current DOS decompilation and
+  semantic naming baseline.
+- [docs/STATUS.md](docs/STATUS.md) - current validated Win95 runtime state, active
+  blocker, and next target.
 - [docs/BUILD_AND_TEST.md](docs/BUILD_AND_TEST.md) - build, CTest, route, and
   validation commands.
 - [docs/RUNTIME_MILESTONES.md](docs/RUNTIME_MILESTONES.md) - route/milestone
   table with commands, evidence, and remaining gaps.
 - [docs/ROADMAP.md](docs/ROADMAP.md) - near-term and long-term recovery goals.
-- [docs/REVERSE_ENGINEERING.md](docs/REVERSE_ENGINEERING.md) -
-  source-of-truth, naming, and patch policy.
+- [docs/REVERSE_ENGINEERING.md](docs/REVERSE_ENGINEERING.md) - source-of-truth,
+  naming, and patch policy.
 - [docs/STRUCTURES.md](docs/STRUCTURES.md) - structure/data recovery policy and
   metadata links.
 - [docs/AI_SCRIPTING_API.md](docs/AI_SCRIPTING_API.md) - the strategic-AI CLIPS
-  host-function API (the commands `strateg\clash.dat` rules call into the engine).
-- [docs/artifacts.md](docs/artifacts.md) - artifact retention and pruning
-  policy.
+  host-function API used by `strateg\clash.dat`.
+- [docs/artifacts.md](docs/artifacts.md) - artifact retention and pruning policy.
 - [docs/archive/](docs/archive/) - preserved historical logs, reports, and old
   navigation notes.
 - [docs/probes/](docs/probes/) - focused probe and route-runner notes.
