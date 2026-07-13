@@ -1,20 +1,19 @@
-# Mission 05 pan (mission_04 pattern): select a stack via platform_up FIRST, then
-# world_pan_viewport toward player 3. mission_04 datum: stack@tile(41,50) -> view(47,65).
-# mission_05 datum: tile(71,44) -> view(left67,top42). Sweep toward player-3 (~42,55).
+# Mission 05 pan: use the WORKING next-unit selection (click 496 416 selected idx4 in
+# the opening calibration) THEN world_pan_viewport. Pan needs a selected stack.
 wait_log 60 mission_load_done selected=-1 a=5
 wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
-# select a player-0 stack (screen ~300,250 == tile 71,44 in start view)
-platform_up 300 250 0.80 select-p0-stack
-wait 2.0
-click 320 240 0.18 0.6 baseline-after-select
+click 496 416 0.18 0.8 next-unit-select
+wait_log 20 next_unit_selected selected=4
 wait 1.0
-# pan toward player-3 region; harness arrow-keys until it reaches the target
-world_pan_viewport 40 55 260
-click 320 240 0.18 0.6 probe-P-40-55
+# now a stack is selected; pan toward player-3 region and probe
+world_pan_viewport 45 55 300
+click 320 240 0.18 0.6 probe-1
 wait 0.8
-click 200 300 0.18 0.6 probe-P2
+click 200 260 0.18 0.6 probe-2
 wait 0.8
-click 440 180 0.18 0.6 probe-P3
+click 440 220 0.18 0.6 probe-3
 wait 0.8
-screenshot mission05-pan-40-55
-nonblank mission05-pan-40-55
+click 320 360 0.18 0.6 probe-4
+wait 0.8
+screenshot mission05-pan-select-45-55
+nonblank mission05-pan-select-45-55

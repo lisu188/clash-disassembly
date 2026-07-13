@@ -113,3 +113,18 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
   a verify-and-retry loop (click, check `selected_stack_changed`, nudge, repeat).
 - Net: **pan still unsolved for mission 05** after 3 runs — blocked on reliable stack
   selection first. This is the crux of why each mission is many iterations.
+
+## PAN MECHANISM SOLVED (run 20260713T112647Z)
+**`next-unit` (click 496 416) to select a stack, THEN `world_pan_viewport` — pans.**
+With idx4 selected (`next_unit_selected selected=4`), the viewport moved
+`left 67→65→63 top 42→41` in the correct direction toward player 3 (rows 41-44).
+Earlier pan failures were solely the missing selection.
+- Direction: decreasing `left` heads toward player 3; est. target for the player-3
+  view ≈ **left~38, top~53** (extrapolating tile(71,44)@view(67,42) → tile(42,55)).
+- Caveat: the harness `world_pan_viewport` loop stalled after ~3 steps (its per-step
+  `move 319 239` cursor-reprobe timed out on a long pan). Fix for next run: pan in
+  smaller increments (several `world_pan_viewport` calls of a few steps each), or raise
+  the route timeout well above the ~(steps × 6s) the reprobe loop needs (~25 steps → 150s+).
+- **This unblocks the march**: once the view shows player 3, `world_click` a path tile
+  toward them (verify `enemy_stack=1`/adjacency), end turn, repeat; then attempt
+  autoresolve per stack. The selection→pan→march→battle loop is now unblocked end-to-end.
