@@ -1,0 +1,24 @@
+# Mission 05 opening: calibrate minimap->view + world-click->tile, select mobile
+# stack (idx4 @ tile 71,44), begin march toward player-3 cluster (~42,55).
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+screenshot mission05-open-00-start
+nonblank mission05-open-00-start
+# cycle next-unit to select a player-0 stack; capture which stack/tile
+click 496 416 0.20 0.8 next-unit-1
+wait 2.0
+click 496 416 0.20 0.8 next-unit-2
+wait 2.0
+# pan minimap to the SW cluster region and record the view mapping
+click 470 150 0.18 1.0 minimap-sw-1
+wait 2.0
+screenshot mission05-open-01-minimap-sw
+# probe a few world clicks to learn screen->tile mapping (tile_input trace)
+click 300 250 0.18 1.0 probe-tile-a
+wait 1.5
+click 200 300 0.18 1.0 probe-tile-b
+wait 1.5
+click 400 200 0.18 1.0 probe-tile-c
+wait 1.5
+screenshot mission05-open-02-after-probes
+nonblank mission05-open-02-after-probes
