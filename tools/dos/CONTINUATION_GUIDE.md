@@ -1,6 +1,6 @@
 # DOS `clash.c` naming campaign — continuation guide
 
-Read `tools/dos/README.md`, `docs/DOS_CLIPS_PIN.md`, and `docs/archive/DOS_CLIPS_CROSSREF.md` first. Preserve `tools/dos/CONTINUATION.md` exactly; it is an untracked truncated artifact and is not the active guide.
+Read `tools/dos/README.md`, `docs/DOS_CLIPS_PIN.md`, and `docs/archive/DOS_CLIPS_CROSSREF.md` first. Preserve the local untracked truncated continuation artifact exactly; it is not the active guide.
 
 ## Non-negotiable rule
 
@@ -8,7 +8,7 @@ Never invent a name. A DOS rename requires registered ground truth, direct CLIPS
 
 ## Current baseline
 
-- 886 named addresses in `dos_master_map.json`.
+- 886 named addresses in `tools/dos/dos_master_map.json`.
 - 872 distinct semantic base names.
 - 14 deterministic emitted `_EA` collision symbols.
 - 4,219 marker addresses.
@@ -54,7 +54,7 @@ The first run must leave confirmed rows empty because no independent review file
 
 Review all selected CLIPS pairs, up to 40 evenly distributed rows. For each pair compare both bodies and CLIPS 6.24 evidence. Record `CONFIRM`, `REJECT`, or `UNCERTAIN` plus a concrete reason. Missing, rejected, and uncertain rows are failures. At least 95% of the complete set must confirm.
 
-Re-run the matcher with `--reviews <review.json>`. Stop if `dos_crossbuild_calibration.json` reports `passed: false`.
+Re-run the matcher with `--reviews <review.json>`. Stop if `tools/dos/dos_crossbuild_calibration.json` reports `passed: false`.
 
 ## 5. Independently review every game candidate
 
@@ -70,7 +70,7 @@ A shared literal only proposes the pair. It never confirms it. Transferred confi
 
 ## 6. Rebuild and check the master map
 
-Only `dos_crossbuild_confirmed.json` may feed transfer rows into the map.
+Only `tools/dos/dos_crossbuild_confirmed.json` may feed transfer rows into the map.
 
 ```powershell
 python tools\dos\build_master_map.py
