@@ -47,15 +47,32 @@ jobs:
           git diff --check
       - name: Build recovered executable and tests
         run: |
-          cmake -S . -B build-mission05 -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
-          cmake --build build-mission05 --target clash95_bootstrap clash95_unit_tests runtime_mission_trace_tests -j2
+          set +e
+          {
+            cmake -S . -B build-mission05 -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCLASH95_COVERAGE=ON
+            cmake --build build-mission05 --target clash95_bootstrap clash95_unit_tests runtime_mission_trace_tests -j2
+          } >mission05-build.log 2>&1
+          echo $? >mission05-build.rc
+          set -e
+          cat mission05-build.log
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission05-build-diagnostics
+          path: |
+            mission05-build.log
+            mission05-build.rc
+          if-no-files-found: error
+      - name: Require build success
+        run: test "$(cat mission05-build.rc)" = 0
       - name: Run tests
         run: |
           ctest --test-dir build-mission05 -R '^runtime_mission_trace_tests$' --output-on-failure
           build-mission05/bin/clash95_unit_tests
       - name: Commit recovered changes
         run: |
-          rm -f mission05-patch.log mission05-patch.rc
+          rm -f mission05-patch.log mission05-patch.rc mission05-build.log mission05-build.rc
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
