@@ -23,6 +23,11 @@ jobs:
       - name: Apply recovery patch
         run: |
           sed -i 's/"UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 1, "rename index dispatcher"/"UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 3, "rename index dispatcher"/' tools/apply_mission05_failure_recovery.py
+          sed -i 's/dword_532048/g_MapData/g' \
+            tests/unit/cases/test_cov04.c \
+            tests/unit/cases/test_cov2_04.c \
+            tests/unit/cases/test_cov3_00.c \
+            tests/unit/cases/test_cov4_00.c
           set +e
           python3 tools/apply_mission05_failure_recovery.py >mission05-patch.log 2>&1
           echo $? >mission05-patch.rc
