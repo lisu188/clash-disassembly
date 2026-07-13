@@ -8,9 +8,6 @@ TARGETS = [
     "Mission_CheckObjectiveComplete",
     "UI_CheckDialogAccepted",
     "Mission_MarkObjective05CompleteOnAttack",
-    "Unit_Attack",
-    "Unit_AttackBuilding",
-    "WorldMap_RunHumanTurnLoop",
 ]
 
 
@@ -53,9 +50,9 @@ def main() -> None:
     for name in TARGETS:
         print(f"\n===== {name} =====")
         print(extract_function(text, name))
-    print("\n===== mission-05 related references =====")
+    print("\n===== exact references =====")
     for line_number, line in enumerate(text.splitlines(), 1):
-        if any(token in line for token in ("Mission05", "mission05", "Objective05", "g_LanguageIndex")):
+        if any(token in line for token in TARGETS + ["g_LanguageIndex"]):
             print(f"{line_number}: {line}")
 
 
