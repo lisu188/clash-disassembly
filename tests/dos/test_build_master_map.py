@@ -47,6 +47,25 @@ class MasterMapTests(unittest.TestCase):
         self.assertEqual(master[0x100]["name"], "ErrorName")
         self.assertEqual(conflicts[0]["resolution"], "clips-errid")
 
+    def test_rejected_anchor_input_reproduces_dropped_audit(self):
+        master, conflicts, dropped = builder.merge_sources(
+            existing={0x100: {"name": "GroundTruth"}},
+            registered={0x100: {"name": "GroundTruth"}},
+            anchors={},
+            string_matches={},
+            alignments={},
+            transfers={},
+            rejected_anchors={0x100: {"name": "WrongName", "kind": "errid"}},
+        )
+        self.assertEqual(master[0x100]["name"], "GroundTruth")
+        self.assertEqual(conflicts, [])
+        self.assertEqual(dropped, [{
+            "ea": "0x100",
+            "registered": "GroundTruth",
+            "dropped_anchor": "WrongName",
+            "kind": "errid",
+        }])
+
     def test_alignment_only_fills_unnamed_address(self):
         master, conflicts, _ = builder.merge_sources(
             existing={0x100: {"name": "Existing"}},
@@ -58,6 +77,7 @@ class MasterMapTests(unittest.TestCase):
         )
         self.assertEqual(master[0x100]["name"], "Existing")
         self.assertEqual(master[0x200]["name"], "NewAlignment")
+        self.assertEqual(master[0x200]["confidence"], "high")
         self.assertEqual(conflicts[0]["kind"], "clips-align-cannot-overwrite")
 
     def test_transfer_name_collision_is_rejected(self):
