@@ -1,0 +1,418 @@
+{
+ "0xa2670": {
+  "name": "NextActivationToFire",
+  "evidence": "align+adversarial-verify: sub_A2670 maps block-for-block to NextActivationToFire. (1) Opening guard `if (!"
+ },
+ "0xa33e0": {
+  "name": "InstallPrimitive",
+  "evidence": "align+adversarial-verify: DOS sub_A33E0(result, a2) mirrors InstallPrimitive(env, thePrimitive, whichPosit"
+ },
+ "0x8d5d0": {
+  "name": "PrintSlotSources",
+  "evidence": "align+adversarial-verify: Definitive structural match. DOS sub_8D5D0 is self-recursive like PrintSlotSourc"
+ },
+ "0x8aa10": {
+  "name": "BloadandRefresh",
+  "evidence": "align+adversarial-verify: Structure matches exactly. if(result) guard = if(objcnt==0) return. sub_C19B0(su"
+ },
+ "0x91e20": {
+  "name": "BuildCompositeFacets",
+  "evidence": "align+adversarial-verify: Loop shape matches exactly: for(i=1; i<classCount; ++i) calling sub_8DA30 (FindC"
+ },
+ "0x9e1b0": {
+  "name": "CloseDeffunctionFiles",
+  "evidence": "align+adversarial-verify: Two conditional blocks each null-check a file arg and call the same callee sub_9"
+ },
+ "0x9e210": {
+  "name": "DeffunctionModuleToCode",
+  "evidence": "align+adversarial-verify: fprintf(f,asc_1257BC) with asc_1257BC=\"{\", then single call sub_94150 (=Construc"
+ },
+ "0x9a4c0": {
+  "name": "ParseTypeAttribute",
+  "evidence": "align+adversarial-verify: sub_9A4C0 matches ParseTypeAttribute structurally in every detail. Token loop vi"
+ },
+ "0x96ca0": {
+  "name": "ParseConstruct",
+  "evidence": "align+adversarial-verify: 1:1 structural match. sub_94240(a1) is FindConstruct guard returning -1 on NULL."
+ },
+ "0x97030": {
+  "name": "RemoveConstructFromModule",
+  "evidence": "align+adversarial-verify: Exact match. Linked-list walk for(i=*(module+4)=firstItem; i!=theConstruct; i=*("
+ },
+ "0x89cf0": {
+  "name": "RtnArgCount",
+  "evidence": "align+adversarial-verify: Linked-list argument counter: v1=*(dword_13AAEC+6) then loop v1=*(v1+10) increme"
+ },
+ "0x89d20": {
+  "name": "ArgCountCheck",
+  "evidence": "align+adversarial-verify: Inlines the same arg-count loop, then countRelation switch: 0(EXACTLY)==, 1(AT_L"
+ },
+ "0x8a050": {
+  "name": "GetNumericArgument",
+  "evidence": "align+adversarial-verify: Reads *(WORD*)theArgument->type; if >1 (not FLOAT=0/INTEGER=1) calls EvaluateExp"
+ },
+ "0x8a0f0": {
+  "name": "GetLogicalName",
+  "evidence": "align+adversarial-verify: RtnUnknown(sub_89C80); type in {2,3,8}=SYMBOL/STRING/INSTANCE_NAME uses ValueToS"
+ },
+ "0x8a250": {
+  "name": "GetModuleName",
+  "evidence": "align+adversarial-verify: *error=0; RtnUnknown; type!=2(SYMBOL) -> ExpectedTypeError1 'defmodule name'(aDe"
+ },
+ "0x8a2d0": {
+  "name": "GetConstructName",
+  "evidence": "align+adversarial-verify: Counts args via same loop; if count!=1 -> ExpectedCountError(EXACTLY,1) via sub_"
+ },
+ "0x8a470": {
+  "name": "CheckFunctionArgCount",
+  "evidence": "align+adversarial-verify: theChar='0'(48); isdigit via IsTable[c+1]&0x20 on restrictions[0]/[1]; atoi; def"
+ },
+ "0x8a5e0": {
+  "name": "ExpectedTypeError2",
+  "evidence": "align+adversarial-verify: FindFunction(sub_A5D60); if null return; GetNthRestriction(sub_A5C50)->GetArgume"
+ },
+ "0x9ec10": {
+  "name": "DeffunctionDeleteError",
+  "evidence": "align+adversarial-verify: sub_9EC10 calls sub_DA690((int)aDeffunction_0) where aDeffunction_0=\"deffunction"
+ },
+ "0x9ec30": {
+  "name": "SaveDeffunctionHeaders",
+  "evidence": "align+adversarial-verify: sub_9EC30 calls sub_966B0(sub_9EC60, dword_1B1100, 0) = DoForAllConstructsInModu"
+ },
+ "0xb21d0": {
+  "name": "CheckGenericExists",
+  "evidence": "align+adversarial-verify: Exact structural match: lookup call followed by error path with PrintErrorID(\"GE"
+ },
+ "0xc54c0": {
+  "name": "DeleteDefmodule",
+  "evidence": "align+adversarial-verify: DOS body is exactly strcmp(getName(construct), literal) ? global : 0, matching D"
+ },
+ "0xb9480": {
+  "name": "LoadSingleBinaryInstance",
+  "evidence": "align+adversarial-verify: Exact structural match: three BufferedRead(4) calls for instanceName/className/s"
+ },
+ "0xbb310": {
+  "name": "InitSlotsCommand",
+  "evidence": "align+adversarial-verify: Exact structural match: DOS sets result type=2 (SYMBOL) with FalseSymbol global,"
+ },
+ "0xc95d0": {
+  "name": "FindApplicableHandlers",
+  "evidence": "align+adversarial-verify: DOS body zeroes two adjacent 4-slot pointer arrays (tops[4]/bots[4] for MAROUND."
+ },
+ "0xc9630": {
+  "name": "CallHandlers",
+  "evidence": "align+adversarial-verify: Early-out on HaltExecution global; saves/restores CurrentCore/NextInCore globals"
+ },
+ "0xc3250": {
+  "name": "ExpandFuncMultifield",
+  "evidence": "align+adversarial-verify: Exact structural match: while-loop over expr list; on value==expmult calls Evalu"
+ },
+ "0xc3430": {
+  "name": "CauseEvaluationError",
+  "evidence": "align+adversarial-verify: Body is exactly SetEvaluationError(TRUE) (sub_A3420(1)) followed by return of Fa"
+ },
+ "0xaf430": {
+  "name": "CloseDefgenericFiles",
+  "evidence": "align+adversarial-verify: Loop runs exactly i<5 matching SAVE_ITEMS=5 in genrccmp.c; count reset to maxInd"
+ },
+ "0xaf4b0": {
+  "name": "DefgenericModuleToCode",
+  "evidence": "align+adversarial-verify: Body is fprintf(file,\"{\") / single call to sub_94150 (ConstructModuleToCode) wit"
+ },
+ "0xafdb0": {
+  "name": "EnvUndefgeneric",
+  "evidence": "align+adversarial-verify: Exact control-flow match with EnvUndefgeneric: NULL-arg branch sets success=1 th"
+ },
+ "0xb09c0": {
+  "name": "ListMethodsForGeneric",
+  "evidence": "align+adversarial-verify: Loop while gi < gfunc->mcnt (*(a2+32)); per iteration prints EnvGetDefgenericNam"
+ },
+ "0xb0a50": {
+  "name": "DefgenericWatchAccess",
+  "evidence": "align+adversarial-verify: Single tail call to sub_967E0 (ConstructSetWatchAccess) with DefgenericConstruct"
+ },
+ "0xb0a80": {
+  "name": "DefgenericWatchPrint",
+  "evidence": "align+adversarial-verify: Single tail call to sub_967B0 (ConstructPrintWatchAccess) with same DefgenericCo"
+ },
+ "0xb0ab0": {
+  "name": "DefmethodWatchAccess",
+  "evidence": "align+adversarial-verify: Contains the source's distinctive ternary: newState ? \"watch\" : \"unwatch\" (aWatc"
+ },
+ "0xb0af0": {
+  "name": "DefmethodWatchPrint",
+  "evidence": "align+adversarial-verify: Single call to sub_B0B20 (DefmethodWatchSupport) with string \"list-watch-items\" "
+ },
+ "0xa5270": {
+  "name": "PushRtnBrkContexts",
+  "evidence": "align+adversarial-verify: Exact get_struct(saved_contexts) pattern: pops free list at env+48 or allocates "
+ },
+ "0xa52d0": {
+  "name": "PopRtnBrkContexts",
+  "evidence": "align+adversarial-verify: Exact mirror of A5270: restores 1B1294/1B1290 from svContexts +0/+4, advances sv"
+ },
+ "0xa5320": {
+  "name": "CheckExpressionAgainstRestrictions",
+  "evidence": "align+adversarial-verify: All magic constants match: theChar init to 48 ('0'), '*'==42 checks, max-args fa"
+ },
+ "0xa54b0": {
+  "name": "CollectArguments",
+  "evidence": "align+adversarial-verify: Loop shape identical: SavePPBuffer(\" \") (sub_D6550/asc_1264A0), errorFlag local,"
+ },
+ "0xa5530": {
+  "name": "ArgumentParse",
+  "evidence": "align+adversarial-verify: GetToken (sub_E1E30); RPAREN==101 returns NULL; constant/variable token set {2,3"
+ },
+ "0xa55f0": {
+  "name": "ParseAtomOrExpression",
+  "evidence": "align+adversarial-verify: Distinctive useToken==NULL branch that GetTokens into a local (sub_E1E30 on &v9)"
+ },
+ "0xa5690": {
+  "name": "GroupActions",
+  "evidence": "align+adversarial-verify: Creates GenConstant(FCALL=10, FindFunction(\"progn\")) via sub_A5D60(aProgn); read"
+ },
+ "0xa57b0": {
+  "name": "SetSequenceOperatorRecognition",
+  "evidence": "align+adversarial-verify: Trivial but corroborated: saves old value of dword_13AB04, stores new, returns o"
+ },
+ "0xc9fb0": {
+  "name": "SlotReferenceVar",
+  "evidence": "align+adversarial-verify: Type gate on 15/16 (SF_VARIABLE/MF_VARIABLE); strncmp against \"self\" with len 4 "
+ },
+ "0xa7610": {
+  "name": "Facts",
+  "evidence": "align+adversarial-verify: 5-arg body mirrors EnvFacts exactly: GetCurrentModule save/restore (sub_C4A50/su"
+ },
+ "0xa7930": {
+  "name": "SaveFacts",
+  "evidence": "align+adversarial-verify: Matches EnvSaveFacts structure point-for-point: fopen(fileName,\"w\") with OpenErr"
+ },
+ "0xda560": {
+  "name": "PrintErrorID",
+  "evidence": "align+adversarial-verify: Body is the exact 4-router-call shape of PrintErrorID: conditional \"\\n\" on print"
+ },
+ "0xcc2b0": {
+  "name": "GetMvPrognField",
+  "evidence": "align+adversarial-verify: Depth-walk of FieldVarStack linked list (v2=*(v2+12) i.e. tmpField->nxt) driven "
+ },
+ "0xcc320": {
+  "name": "ReplaceMultiValueField",
+  "evidence": "align+adversarial-verify: srclen = src->end - src->begin + 1 with NULL guard; five-way range check is exac"
+ },
+ "0xcc520": {
+  "name": "InsertMultiValueField",
+  "evidence": "align+adversarial-verify: theIndex<1 failure calls sub_CC770(a3,a3,srclen+1) matching MVRangeError(theInde"
+ },
+ "0xc04c0": {
+  "name": "ReadTokenFromStdin",
+  "evidence": "align+adversarial-verify: Exact structural match: outer while(type==STOP) loop (STOP=102 in this CLIPS bui"
+ },
+ "0xb56a0": {
+  "name": "AddDefglobal",
+  "evidence": "align+adversarial-verify: Full structural match to static AddDefglobal in globlpsr.c: QFindDefglobal looku"
+ },
+ "0xb57f0": {
+  "name": "ReplaceGlobalVariable",
+  "evidence": "align+adversarial-verify: Exact three-branch match to ReplaceGlobalVariable: FindImportedConstruct(\"defglo"
+ },
+ "0xc7680": {
+  "name": "NewSystemHandler",
+  "evidence": "align+adversarial-verify: Calls LookupDefclassInScope(sub_8C360), AddSymbol(sub_E5680), then sub_C7720(cls"
+ },
+ "0xc7720": {
+  "name": "InsertHandlerHeader",
+  "evidence": "align+adversarial-verify: sizeof(HANDLER)=36 throughout: gm2(36*(handlerCount+1)) and gm2(4*(handlerCount+"
+ },
+ "0xc7a30": {
+  "name": "HandlersExecuting",
+  "evidence": "align+adversarial-verify: Single loop i<cls->handlerCount(+96) over handlers(+88) with 36-byte stride test"
+ },
+ "0xc7a80": {
+  "name": "DeleteHandler",
+  "evidence": "align+adversarial-verify: handlerCount==0 branch calls EnvGetDefclassName(sub_961F0)+HandlerDeleteError(su"
+ },
+ "0xc7cd0": {
+  "name": "DeallocateMarkedHandlers",
+  "evidence": "align+adversarial-verify: Loop over 36-byte handlers testing mark bit 8: DecrementSymbolCount(sub_E5E10 on"
+ },
+ "0xc8060": {
+  "name": "PrintHandler",
+  "evidence": "align+adversarial-verify: Five sequential prints: EnvPrintRouter(logName, ValueToString(hnd->name)) via *("
+ },
+ "0xc80c0": {
+  "name": "FindHandlerByAddress",
+  "evidence": "align+adversarial-verify: Calls FindHandlerNameGroup(sub_C81B0); if -1 returns NULL; scans i=b..handlerCou"
+ },
+ "0xc8130": {
+  "name": "FindHandlerByIndex",
+  "evidence": "align+adversarial-verify: Identical scan to sub_C80C0 (same FindHandlerNameGroup start, same name/type che"
+ },
+ "0xc81b0": {
+  "name": "FindHandlerNameGroup",
+  "evidence": "align+adversarial-verify: Returns -1 when handlerCount==0; binary search b/e=(count-1) with i=(b+e)/2 comp"
+ },
+ "0xc8380": {
+  "name": "DisplayCore",
+  "evidence": "align+adversarial-verify: Dispatches on type bitfield (flags&6): ==0 (MAROUND) path prints BEGIN_TRACE, re"
+ },
+ "0xc8480": {
+  "name": "FindPreviewApplicableHandlers",
+  "evidence": "align+adversarial-verify: Initializes two 4-element pointer arrays (tops[4]/bots[4]) to NULL in a 0..3 loo"
+ },
+ "0xc84e0": {
+  "name": "WatchMessage",
+  "evidence": "align+adversarial-verify: Prints 'MSG ', tstring, ' ', ValueToString(CurrentMessageName) via *(dword_13B0F"
+ },
+ "0xdfaa0": {
+  "name": "MultifieldCardinalityViolation",
+  "evidence": "align+adversarial-verify: Exact structural match: early-out on multifieldSlot bit (*(a1+8)&4); loop over b"
+ },
+ "0xdff20": {
+  "name": "AddToVariableConstraints",
+  "evidence": "align+adversarial-verify: Exact match of the distinctive list-merge loop: for each newItems node, save rig"
+ },
+ "0xdff90": {
+  "name": "UnionVariableConstraints",
+  "evidence": "align+adversarial-verify: Exact match: outer loop over list1, inner scan of list2 for value match (+4); on"
+ },
+ "0xe0010": {
+  "name": "GetExpressionVarConstraints",
+  "evidence": "align+adversarial-verify: Exact match: self-recursive on theExpression->right (+64) followed by AddToVaria"
+ },
+ "0xe0090": {
+  "name": "DeriveVariableConstraints",
+  "evidence": "align+adversarial-verify: Exact match: outer loop over theNode->bottom (+68) advancing via bottom; inner l"
+ },
+ "0xe0110": {
+  "name": "CheckRHSForConstraintErrors",
+  "evidence": "align+adversarial-verify: Exact match: NULL early-out; outer loop over checkList via nextArg (+10); takes "
+ },
+ "0xe2410": {
+  "name": "ScanSymbol",
+  "evidence": "align+adversarial-verify: Loop break condition tests exact delimiter constants 60,34,40,41,38,124,126,32,5"
+ },
+ "0xe1990": {
+  "name": "CreateNewDisjunct",
+  "evidence": "align+adversarial-verify: get_struct(defrule) free-list alloc of 52 bytes; IncrementSymbolCount on ruleNam"
+ },
+ "0xe1aa0": {
+  "name": "ReplaceRHSVariable",
+  "evidence": "align+adversarial-verify: FCALL branch (type==10) with FindFunction(\"modify\")/FindFunction(\"duplicate\") po"
+ },
+ "0xe1b50": {
+  "name": "ParseRuleRHS",
+  "evidence": "align+adversarial-verify: SavePPBuffer(\"\\n   \") then SetIndentDepth(3), GroupActions call, two consecutive"
+ },
+ "0xe1bd0": {
+  "name": "RuleComplexity",
+  "evidence": "align+adversarial-verify: Triple-nested loop mirroring RuleComplexity: per LHS node complexity += 1 + Expr"
+ },
+ "0xe1c30": {
+  "name": "ExpressionComplexity",
+  "evidence": "align+adversarial-verify: FCALL (type==10) arm compares value against three globals (PTR_AND/PTR_NOT/PTR_O"
+ },
+ "0xd0fe0": {
+  "name": "PlaceObjectPattern",
+  "evidence": "align+adversarial-verify: do-while over pattern fields with multifieldSlot bit test and bottom-descent, ca"
+ },
+ "0xd1160": {
+  "name": "FindObjectPatternNode",
+  "evidence": "align+adversarial-verify: Sets *nodeSlotGroup=NULL then walks rightNode list with the distinctive ternary "
+ },
+ "0xd1220": {
+  "name": "CreateNewObjectPatternNode",
+  "evidence": "align+adversarial-verify: Allocates 40-byte objectPatternNode from pool, zero-inits, AddHashedExpression ("
+ },
+ "0xd13f0": {
+  "name": "DetachObjectPattern",
+  "evidence": "align+adversarial-verify: Calls sub_D1610 (ClearObjectPatternMatches), MarkBitMapClassesBusy + DeleteClass"
+ },
+ "0xd1610": {
+  "name": "ClearObjectPatternMatches",
+  "evidence": "align+adversarial-verify: Exactly two loops: over global InstanceList (nxtList at +68) calling sub_D1660(i"
+ },
+ "0xd1660": {
+  "name": "RemoveObjectPartialMatches",
+  "evidence": "align+adversarial-verify: Walks ins->partialMatchList (+16); on match_ptr->matchingPattern (+8) == phead d"
+ },
+ "0xe0af0": {
+  "name": "ParseSalience",
+  "evidence": "align+adversarial-verify: Unique salience range constants +/-10000 (MAX/MIN_DEFRULE_SALIENCE) present; DAT"
+ },
+ "0xe0bc0": {
+  "name": "ParseAutoFocus",
+  "evidence": "align+adversarial-verify: strcmp against aTrue_0/aFalse_0 setting global dword_1B14A0 to 1/0 (GlobalAutoFo"
+ },
+ "0xe0c40": {
+  "name": "LHSPattern",
+  "evidence": "align+adversarial-verify: firstToken?CopyToken:GetToken prologue; LPAREN==100 branch with strcmp chain 'de"
+ },
+ "0xe11f0": {
+  "name": "GroupPatterns",
+  "evidence": "align+adversarial-verify: Infinite loop calling sub_E0C40 (LHSPattern) with trailing args FALSE,NULL,NULL;"
+ },
+ "0xe1290": {
+  "name": "TestPattern",
+  "evidence": "align+adversarial-verify: GetLHSParseNode (sub_DB430) with node->type = 84 (TEST_CE, consistent with CE co"
+ },
+ "0xd89a0": {
+  "name": "ReplaceLoopCountVars",
+  "evidence": "align+adversarial-verify: while-loop over nextArg(+10) with recursion into argList(+6); strcmps symbol con"
+ },
+ "0xd8a50": {
+  "name": "IfParse",
+  "evidence": "align+adversarial-verify: SavePPBuffer(\" \"); ParseAtomOrExpression into top->argList; IncrementIndentDepth"
+ },
+ "0xd8c30": {
+  "name": "PrognParse",
+  "evidence": "align+adversarial-verify: Exact 1:1 with the short PrognParse body: ReturnExpression(top); BreakContext/Re"
+ },
+ "0xd8cb0": {
+  "name": "BindParse",
+  "evidence": "align+adversarial-verify: Variable-type gate type!=15 && type!=13 && (type!=16 || SequenceOpMode) = SF/GBL"
+ },
+ "0xaa530": {
+  "name": "PrintFactIdentifier",
+  "evidence": "align+adversarial-verify: sprintf(buf, \"f-%ld\", *(fact+24)=factIndex) then single PrintRouter call (sub_DC"
+ },
+ "0xaa5e0": {
+  "name": "DecrementFactBasisCount",
+  "evidence": "align+adversarial-verify: Body is bare --*(fact+8) = busyCount-- (offset 8 = busyCount, corroborated by Re"
+ },
+ "0xaa5f0": {
+  "name": "IncrementFactBasisCount",
+  "evidence": "align+adversarial-verify: Body is bare ++*(fact+8) = busyCount++; same reasoning as 0xAA5E0: pre-6.24 buil"
+ },
+ "0xaa600": {
+  "name": "PrintFact",
+  "evidence": "align+adversarial-verify: Tests implied bit on *(fact+16)=whichDeftemplate (bit &1 at +24); if implied: pr"
+ },
+ "0xaa680": {
+  "name": "MatchFactFunction",
+  "evidence": "align+adversarial-verify: One-line body: sub_A9C00(fact, *(*(fact+16)+32), 0, 0, <st0 decompiler artifact>"
+ },
+ "0xaa860": {
+  "name": "RemoveGarbageFacts",
+  "evidence": "align+adversarial-verify: Registered exactly as in source: DOS InitializeFacts (sub_AA450, clash.c:104024)"
+ },
+ "0xd6d80": {
+  "name": "GenProcWildcardReference",
+  "evidence": "align+adversarial-verify: One-liner GenConstant(66, AddBitMap(&local,4)) matches GenConstant(PROC_WILD_PAR"
+ },
+ "0xd6db0": {
+  "name": "PushProcParameters",
+  "evidence": "align+adversarial-verify: get_struct of 24-byte ProcParamStack (free-list at env+96 else alloc 24), saves "
+ },
+ "0xd6e80": {
+  "name": "PopProcParameters",
+  "evidence": "align+adversarial-verify: rm(ParamArray, 24*size) [sizeof(DATA_OBJECT)=24] and rm(ParamExpressions, 14*siz"
+ },
+ "0xd6f80": {
+  "name": "GetProcParamExpressions",
+  "evidence": "align+adversarial-verify: Guard (ParamArray && !ParamExpressions), gm2(14*ArraySize), loop: type word@+0 f"
+ },
+ "0xd7690": {
+  "name": "RtnProcParam",
+  "evidence": "align+adversarial-verify: src = ProcParamArray(13B3D4) + 24*(*(int*)bitmapContents@+16 - 1); unconditional"
+ }
+}

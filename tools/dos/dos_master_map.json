@@ -1274,6 +1274,20 @@
   "evidence": "unique shared literal: RtnUnknown"
  },
  {
+  "ea": "0x89cf0",
+  "name": "RtnArgCount",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Linked-list argument counter: v1=*(dword_13AAEC+6) then loop v1=*(v1+10) increme"
+ },
+ {
+  "ea": "0x89d20",
+  "name": "ArgCountCheck",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Inlines the same arg-count loop, then countRelation switch: 0(EXACTLY)==, 1(AT_L"
+ },
+ {
   "ea": "0x89da0",
   "name": "ArgRangeCheck",
   "confidence": "high",
@@ -1286,6 +1300,20 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: instance address or instance name"
+ },
+ {
+  "ea": "0x8a050",
+  "name": "GetNumericArgument",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Reads *(WORD*)theArgument->type; if >1 (not FLOAT=0/INTEGER=1) calls EvaluateExp"
+ },
+ {
+  "ea": "0x8a0f0",
+  "name": "GetLogicalName",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: RtnUnknown(sub_89C80); type in {2,3,8}=SYMBOL/STRING/INSTANCE_NAME uses ValueToS"
  },
  {
   "ea": "0x8a190",
@@ -1302,6 +1330,20 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn OpenErrorMessage"
  },
  {
+  "ea": "0x8a250",
+  "name": "GetModuleName",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: *error=0; RtnUnknown; type!=2(SYMBOL) -> ExpectedTypeError1 'defmodule name'(aDe"
+ },
+ {
+  "ea": "0x8a2d0",
+  "name": "GetConstructName",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Counts args via same loop; if count!=1 -> ExpectedCountError(EXACTLY,1) via sub_"
+ },
+ {
   "ea": "0x8a350",
   "name": "NonexistantError",
   "confidence": "high",
@@ -1316,11 +1358,25 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ExpectedCountError"
  },
  {
+  "ea": "0x8a470",
+  "name": "CheckFunctionArgCount",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: theChar='0'(48); isdigit via IsTable[c+1]&0x20 on restrictions[0]/[1]; atoi; def"
+ },
+ {
   "ea": "0x8a550",
   "name": "ExpectedTypeError1",
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ExpectedTypeError1"
+ },
+ {
+  "ea": "0x8a5e0",
+  "name": "ExpectedTypeError2",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: FindFunction(sub_A5D60); if null return; GetNthRestriction(sub_A5C50)->GetArgume"
  },
  {
   "ea": "0x8a620",
@@ -1335,6 +1391,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn EnvBload"
+ },
+ {
+  "ea": "0x8aa10",
+  "name": "BloadandRefresh",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Structure matches exactly. if(result) guard = if(objcnt==0) return. sub_C19B0(su"
  },
  {
   "ea": "0x8aaf0",
@@ -1582,6 +1645,13 @@
   "evidence": "unique shared literal: FLD DEF PRP ACC STO MCH SRC VIS CRT "
  },
  {
+  "ea": "0x8d5d0",
+  "name": "PrintSlotSources",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Definitive structural match. DOS sub_8D5D0 is self-recursive like PrintSlotSourc"
+ },
+ {
   "ea": "0x8d690",
   "name": "DisplaySlotConstraintInfo",
   "confidence": "high",
@@ -1743,6 +1813,13 @@
   "evidence": "unique shared literal: default facet already specified.\\n"
  },
  {
+  "ea": "0x91e20",
+  "name": "BuildCompositeFacets",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop shape matches exactly: for(i=1; i<classCount; ++i) calling sub_8DA30 (FindC"
+ },
+ {
   "ea": "0x92010",
   "name": "CheckForFacetConflicts",
   "confidence": "high",
@@ -1869,11 +1946,25 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn FindConstructBeginning"
  },
  {
+  "ea": "0x96ca0",
+  "name": "ParseConstruct",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: 1:1 structural match. sub_94240(a1) is FindConstruct guard returning -1 on NULL."
+ },
+ {
   "ea": "0x96d30",
   "name": "GetConstructNameAndComment",
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn GetConstructNameAndComment"
+ },
+ {
+  "ea": "0x97030",
+  "name": "RemoveConstructFromModule",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match. Linked-list walk for(i=*(module+4)=firstItem; i!=theConstruct; i=*("
  },
  {
   "ea": "0x970a0",
@@ -1923,6 +2014,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn NoConjunctiveUseError"
+ },
+ {
+  "ea": "0x9a4c0",
+  "name": "ParseTypeAttribute",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sub_9A4C0 matches ParseTypeAttribute structurally in every detail. Token loop vi"
  },
  {
   "ea": "0x9a600",
@@ -2030,6 +2128,20 @@
   "evidence": "unique shared literal: DEFFUNCTION_MODULE"
  },
  {
+  "ea": "0x9e1b0",
+  "name": "CloseDeffunctionFiles",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Two conditional blocks each null-check a file arg and call the same callee sub_9"
+ },
+ {
+  "ea": "0x9e210",
+  "name": "DeffunctionModuleToCode",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: fprintf(f,asc_1257BC) with asc_1257BC=\"{\", then single call sub_94150 (=Construc"
+ },
+ {
   "ea": "0x9e260",
   "name": "SingleDeffunctionToCode",
   "confidence": "high",
@@ -2084,6 +2196,20 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: DFFNXFUN"
+ },
+ {
+  "ea": "0x9ec10",
+  "name": "DeffunctionDeleteError",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sub_9EC10 calls sub_DA690((int)aDeffunction_0) where aDeffunction_0=\"deffunction"
+ },
+ {
+  "ea": "0x9ec30",
+  "name": "SaveDeffunctionHeaders",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sub_9EC30 calls sub_966B0(sub_9EC60, dword_1B1100, 0) = DoForAllConstructsInModu"
  },
  {
   "ea": "0x9ec60",
@@ -2401,6 +2527,13 @@
   "evidence": "unique shared literal:         Run time is "
  },
  {
+  "ea": "0xa2670",
+  "name": "NextActivationToFire",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sub_A2670 maps block-for-block to NextActivationToFire. (1) Opening guard `if (!"
+ },
+ {
   "ea": "0xa26d0",
   "name": "RemoveFocus",
   "confidence": "high",
@@ -2499,6 +2632,13 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn EvaluateExpression"
  },
  {
+  "ea": "0xa33e0",
+  "name": "InstallPrimitive",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: DOS sub_A33E0(result, a2) mirrors InstallPrimitive(env, thePrimitive, whichPosit"
+ },
+ {
   "ea": "0xa34d0",
   "name": "PrintDataObject",
   "confidence": "high",
@@ -2532,6 +2672,62 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ReplaceSequenceExpansionOps"
+ },
+ {
+  "ea": "0xa5270",
+  "name": "PushRtnBrkContexts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact get_struct(saved_contexts) pattern: pops free list at env+48 or allocates "
+ },
+ {
+  "ea": "0xa52d0",
+  "name": "PopRtnBrkContexts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact mirror of A5270: restores 1B1294/1B1290 from svContexts +0/+4, advances sv"
+ },
+ {
+  "ea": "0xa5320",
+  "name": "CheckExpressionAgainstRestrictions",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: All magic constants match: theChar init to 48 ('0'), '*'==42 checks, max-args fa"
+ },
+ {
+  "ea": "0xa54b0",
+  "name": "CollectArguments",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop shape identical: SavePPBuffer(\" \") (sub_D6550/asc_1264A0), errorFlag local,"
+ },
+ {
+  "ea": "0xa5530",
+  "name": "ArgumentParse",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: GetToken (sub_E1E30); RPAREN==101 returns NULL; constant/variable token set {2,3"
+ },
+ {
+  "ea": "0xa55f0",
+  "name": "ParseAtomOrExpression",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Distinctive useToken==NULL branch that GetTokens into a local (sub_E1E30 on &v9)"
+ },
+ {
+  "ea": "0xa5690",
+  "name": "GroupActions",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Creates GenConstant(FCALL=10, FindFunction(\"progn\")) via sub_A5D60(aProgn); read"
+ },
+ {
+  "ea": "0xa57b0",
+  "name": "SetSequenceOperatorRecognition",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Trivial but corroborated: saves old value of dword_13AB04, stores new, returns o"
  },
  {
   "ea": "0xa57d0",
@@ -2639,6 +2835,13 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xa7610",
+  "name": "Facts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: 5-arg body mirrors EnvFacts exactly: GetCurrentModule save/restore (sub_C4A50/su"
+ },
+ {
   "ea": "0xa76f0",
   "name": "GetFactsArgument",
   "confidence": "high",
@@ -2665,6 +2868,13 @@
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xa7930",
+  "name": "SaveFacts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Matches EnvSaveFacts structure point-for-point: fopen(fileName,\"w\") with OpenErr"
  },
  {
   "ea": "0xa7ae0",
@@ -2765,6 +2975,13 @@
   "evidence": "unique shared literal: f-%-5ld "
  },
  {
+  "ea": "0xaa530",
+  "name": "PrintFactIdentifier",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sprintf(buf, \"f-%ld\", *(fact+24)=factIndex) then single PrintRouter call (sub_DC"
+ },
+ {
   "ea": "0xaa570",
   "name": "PrintFactIdentifierInLongForm",
   "confidence": "high",
@@ -2772,11 +2989,46 @@
   "evidence": "unique shared literal: <Fact-"
  },
  {
+  "ea": "0xaa5e0",
+  "name": "DecrementFactBasisCount",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Body is bare --*(fact+8) = busyCount-- (offset 8 = busyCount, corroborated by Re"
+ },
+ {
+  "ea": "0xaa5f0",
+  "name": "IncrementFactBasisCount",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Body is bare ++*(fact+8) = busyCount++; same reasoning as 0xAA5E0: pre-6.24 buil"
+ },
+ {
+  "ea": "0xaa600",
+  "name": "PrintFact",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Tests implied bit on *(fact+16)=whichDeftemplate (bit &1 at +24); if implied: pr"
+ },
+ {
+  "ea": "0xaa680",
+  "name": "MatchFactFunction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: One-line body: sub_A9C00(fact, *(*(fact+16)+32), 0, 0, <st0 decompiler artifact>"
+ },
+ {
   "ea": "0xaa6b0",
   "name": "Retract",
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn EnvRetract"
+ },
+ {
+  "ea": "0xaa860",
+  "name": "RemoveGarbageFacts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Registered exactly as in source: DOS InitializeFacts (sub_AA450, clash.c:104024)"
  },
  {
   "ea": "0xaa8e0",
@@ -2884,6 +3136,20 @@
   "evidence": "unique shared literal: #include \\\"genrcfun.h\\\"\\n"
  },
  {
+  "ea": "0xaf430",
+  "name": "CloseDefgenericFiles",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop runs exactly i<5 matching SAVE_ITEMS=5 in genrccmp.c; count reset to maxInd"
+ },
+ {
+  "ea": "0xaf4b0",
+  "name": "DefgenericModuleToCode",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Body is fprintf(file,\"{\") / single call to sub_94150 (ConstructModuleToCode) wit"
+ },
+ {
   "ea": "0xaf500",
   "name": "SingleDefgenericToCode",
   "confidence": "high",
@@ -2917,6 +3183,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn UndefmethodCommand"
+ },
+ {
+  "ea": "0xafdb0",
+  "name": "Undefgeneric",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact control-flow match with EnvUndefgeneric: NULL-arg branch sets success=1 th"
  },
  {
   "ea": "0xafe20",
@@ -2982,6 +3255,41 @@
   "evidence": "unique shared literal: Cannot remove implicit system function method for generic fu"
  },
  {
+  "ea": "0xb09c0",
+  "name": "ListMethodsForGeneric",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop while gi < gfunc->mcnt (*(a2+32)); per iteration prints EnvGetDefgenericNam"
+ },
+ {
+  "ea": "0xb0a50",
+  "name": "DefgenericWatchAccess",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Single tail call to sub_967E0 (ConstructSetWatchAccess) with DefgenericConstruct"
+ },
+ {
+  "ea": "0xb0a80",
+  "name": "DefgenericWatchPrint",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Single tail call to sub_967B0 (ConstructPrintWatchAccess) with same DefgenericCo"
+ },
+ {
+  "ea": "0xb0ab0",
+  "name": "DefmethodWatchAccess",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Contains the source's distinctive ternary: newState ? \"watch\" : \"unwatch\" (aWatc"
+ },
+ {
+  "ea": "0xb0af0",
+  "name": "DefmethodWatchPrint",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Single call to sub_B0B20 (DefmethodWatchSupport) with string \"list-watch-items\" "
+ },
+ {
   "ea": "0xb0b20",
   "name": "DefmethodWatchSupport",
   "confidence": "high",
@@ -3036,6 +3344,13 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: %-2d "
+ },
+ {
+  "ea": "0xb21d0",
+  "name": "CheckGenericExists",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: lookup call followed by error path with PrintErrorID(\"GE"
  },
  {
   "ea": "0xb2260",
@@ -3211,6 +3526,20 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: Defining defglobal: "
+ },
+ {
+  "ea": "0xb56a0",
+  "name": "AddDefglobal",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Full structural match to static AddDefglobal in globlpsr.c: QFindDefglobal looku"
+ },
+ {
+  "ea": "0xb57f0",
+  "name": "ReplaceGlobalVariable",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact three-branch match to ReplaceGlobalVariable: FindImportedConstruct(\"defglo"
  },
  {
   "ea": "0xb5870",
@@ -3437,6 +3766,13 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn VerifyBinaryHeader"
  },
  {
+  "ea": "0xb9480",
+  "name": "LoadSingleBinaryInstance",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: three BufferedRead(4) calls for instanceName/className/s"
+ },
+ {
   "ea": "0xb96c0",
   "name": "BinaryLoadInstanceError",
   "confidence": "high",
@@ -3533,6 +3869,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn BuildInstance"
+ },
+ {
+  "ea": "0xbb310",
+  "name": "InitSlotsCommand",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: DOS sets result type=2 (SYMBOL) with FalseSymbol global,"
  },
  {
   "ea": "0xbb380",
@@ -3780,6 +4123,13 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xc04c0",
+  "name": "ReadTokenFromStdin",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: outer while(type==STOP) loop (STOP=102 in this CLIPS bui"
+ },
+ {
   "ea": "0xc05c0",
   "name": "OpenFunction",
   "confidence": "high",
@@ -3976,6 +4326,20 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xc3250",
+  "name": "ExpandFuncMultifield",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: while-loop over expr list; on value==expmult calls Evalu"
+ },
+ {
+  "ea": "0xc3430",
+  "name": "CauseEvaluationError",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Body is exactly SetEvaluationError(TRUE) (sub_A3420(1)) followed by return of Fa"
+ },
+ {
   "ea": "0xc3450",
   "name": "SetSORCommand",
   "confidence": "high",
@@ -4051,6 +4415,13 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: (defmodule "
+ },
+ {
+  "ea": "0xc54c0",
+  "name": "DeleteDefmodule",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: DOS body is exactly strcmp(getName(construct), literal) ? global : 0, matching D"
  },
  {
   "ea": "0xc54f0",
@@ -4151,6 +4522,41 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn SlotVisibilityViolationError"
  },
  {
+  "ea": "0xc7680",
+  "name": "NewSystemHandler",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Calls LookupDefclassInScope(sub_8C360), AddSymbol(sub_E5680), then sub_C7720(cls"
+ },
+ {
+  "ea": "0xc7720",
+  "name": "InsertHandlerHeader",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: sizeof(HANDLER)=36 throughout: gm2(36*(handlerCount+1)) and gm2(4*(handlerCount+"
+ },
+ {
+  "ea": "0xc7a30",
+  "name": "HandlersExecuting",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Single loop i<cls->handlerCount(+96) over handlers(+88) with 36-byte stride test"
+ },
+ {
+  "ea": "0xc7a80",
+  "name": "DeleteHandler",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: handlerCount==0 branch calls EnvGetDefclassName(sub_961F0)+HandlerDeleteError(su"
+ },
+ {
+  "ea": "0xc7cd0",
+  "name": "DeallocateMarkedHandlers",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop over 36-byte handlers testing mark bit 8: DecrementSymbolCount(sub_E5E10 on"
+ },
+ {
   "ea": "0xc7ef0",
   "name": "HandlerType",
   "confidence": "high",
@@ -4165,11 +4571,60 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn CheckCurrentMessage"
  },
  {
+  "ea": "0xc8060",
+  "name": "PrintHandler",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Five sequential prints: EnvPrintRouter(logName, ValueToString(hnd->name)) via *("
+ },
+ {
+  "ea": "0xc80c0",
+  "name": "FindHandlerByAddress",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Calls FindHandlerNameGroup(sub_C81B0); if -1 returns NULL; scans i=b..handlerCou"
+ },
+ {
+  "ea": "0xc8130",
+  "name": "FindHandlerByIndex",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Identical scan to sub_C80C0 (same FindHandlerNameGroup start, same name/type che"
+ },
+ {
+  "ea": "0xc81b0",
+  "name": "FindHandlerNameGroup",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Returns -1 when handlerCount==0; binary search b/e=(count-1) with i=(b+e)/2 comp"
+ },
+ {
   "ea": "0xc8330",
   "name": "HandlerDeleteError",
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn HandlerDeleteError"
+ },
+ {
+  "ea": "0xc8380",
+  "name": "DisplayCore",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Dispatches on type bitfield (flags&6): ==0 (MAROUND) path prints BEGIN_TRACE, re"
+ },
+ {
+  "ea": "0xc8480",
+  "name": "FindPreviewApplicableHandlers",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Initializes two 4-element pointer arrays (tops[4]/bots[4]) to NULL in a 0..3 loo"
+ },
+ {
+  "ea": "0xc84e0",
+  "name": "WatchMessage",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Prints 'MSG ', tstring, ' ', ValueToString(CurrentMessageName) via *(dword_13B0F"
  },
  {
   "ea": "0xc8550",
@@ -4221,6 +4676,20 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn PerformMessage"
  },
  {
+  "ea": "0xc95d0",
+  "name": "FindApplicableHandlers",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: DOS body zeroes two adjacent 4-slot pointer arrays (tops[4]/bots[4] for MAROUND."
+ },
+ {
+  "ea": "0xc9630",
+  "name": "CallHandlers",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Early-out on HaltExecution global; saves/restores CurrentCore/NextInCore globals"
+ },
+ {
   "ea": "0xc9880",
   "name": "EarlySlotBindError",
   "confidence": "high",
@@ -4247,6 +4716,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn IsParameterSlotReference"
+ },
+ {
+  "ea": "0xc9fb0",
+  "name": "SlotReferenceVar",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Type gate on 15/16 (SF_VARIABLE/MF_VARIABLE); strncmp against \"self\" with len 4 "
  },
  {
   "ea": "0xca0c0",
@@ -4396,11 +4872,32 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xcc2b0",
+  "name": "GetMvPrognField",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Depth-walk of FieldVarStack linked list (v2=*(v2+12) i.e. tmpField->nxt) driven "
+ },
+ {
   "ea": "0xcc2f0",
   "name": "GetMvPrognIndex",
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xcc320",
+  "name": "ReplaceMultiValueField",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: srclen = src->end - src->begin + 1 with NULL guard; five-way range check is exac"
+ },
+ {
+  "ea": "0xcc520",
+  "name": "InsertMultiValueField",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: theIndex<1 failure calls sub_CC770(a3,a3,srclen+1) matching MVRangeError(theInde"
  },
  {
   "ea": "0xcc770",
@@ -4443,6 +4940,48 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ReorderAndAnalyzeObjectPattern"
+ },
+ {
+  "ea": "0xd0fe0",
+  "name": "PlaceObjectPattern",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: do-while over pattern fields with multifieldSlot bit test and bottom-descent, ca"
+ },
+ {
+  "ea": "0xd1160",
+  "name": "FindObjectPatternNode",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Sets *nodeSlotGroup=NULL then walks rightNode list with the distinctive ternary "
+ },
+ {
+  "ea": "0xd1220",
+  "name": "CreateNewObjectPatternNode",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Allocates 40-byte objectPatternNode from pool, zero-inits, AddHashedExpression ("
+ },
+ {
+  "ea": "0xd13f0",
+  "name": "DetachObjectPattern",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Calls sub_D1610 (ClearObjectPatternMatches), MarkBitMapClassesBusy + DeleteClass"
+ },
+ {
+  "ea": "0xd1610",
+  "name": "ClearObjectPatternMatches",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exactly two loops: over global InstanceList (nxtList at +68) calling sub_D1660(i"
+ },
+ {
+  "ea": "0xd1660",
+  "name": "RemoveObjectPartialMatches",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Walks ins->partialMatchList (+16); on match_ptr->matchingPattern (+8) == phead d"
  },
  {
   "ea": "0xd16e0",
@@ -4529,6 +5068,34 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ReplaceProcVars"
  },
  {
+  "ea": "0xd6d80",
+  "name": "GenProcWildcardReference",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: One-liner GenConstant(66, AddBitMap(&local,4)) matches GenConstant(PROC_WILD_PAR"
+ },
+ {
+  "ea": "0xd6db0",
+  "name": "PushProcParameters",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: get_struct of 24-byte ProcParamStack (free-list at env+96 else alloc 24), saves "
+ },
+ {
+  "ea": "0xd6e80",
+  "name": "PopProcParameters",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: rm(ParamArray, 24*size) [sizeof(DATA_OBJECT)=24] and rm(ParamExpressions, 14*siz"
+ },
+ {
+  "ea": "0xd6f80",
+  "name": "GetProcParamExpressions",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Guard (ParamArray && !ParamExpressions), gm2(14*ArraySize), loop: type word@+0 f"
+ },
+ {
   "ea": "0xd70a0",
   "name": "EvaluateProcActions",
   "confidence": "high",
@@ -4541,6 +5108,13 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn EvaluateProcParameters"
+ },
+ {
+  "ea": "0xd7690",
+  "name": "RtnProcParam",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: src = ProcParamArray(13B3D4) + 24*(*(int*)bitmapContents@+16 - 1); unconditional"
  },
  {
   "ea": "0xd76e0",
@@ -4625,6 +5199,34 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn LoopForCountParse"
+ },
+ {
+  "ea": "0xd89a0",
+  "name": "ReplaceLoopCountVars",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: while-loop over nextArg(+10) with recursion into argList(+6); strcmps symbol con"
+ },
+ {
+  "ea": "0xd8a50",
+  "name": "IfParse",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: SavePPBuffer(\" \"); ParseAtomOrExpression into top->argList; IncrementIndentDepth"
+ },
+ {
+  "ea": "0xd8c30",
+  "name": "PrognParse",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact 1:1 with the short PrognParse body: ReturnExpression(top); BreakContext/Re"
+ },
+ {
+  "ea": "0xd8cb0",
+  "name": "BindParse",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Variable-type gate type!=15 && type!=13 && (type!=16 || SequenceOpMode) = SF/GBL"
  },
  {
   "ea": "0xd8e40",
@@ -4816,6 +5418,13 @@
   "evidence": "unique shared literal: For a total of "
  },
  {
+  "ea": "0xda560",
+  "name": "PrintErrorID",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Body is the exact 4-router-call shape of PrintErrorID: conditional \"\\n\" on print"
+ },
+ {
   "ea": "0xda5c0",
   "name": "PrintWarningID",
   "confidence": "high",
@@ -4991,6 +5600,13 @@
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ConstraintConflictMessage"
  },
  {
+  "ea": "0xdfaa0",
+  "name": "MultifieldCardinalityViolation",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact structural match: early-out on multifieldSlot bit (*(a1+8)&4); loop over b"
+ },
+ {
   "ea": "0xdfbe0",
   "name": "ProcessConnectedConstraints",
   "confidence": "high",
@@ -5003,6 +5619,41 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ConstraintReferenceErrorMessage"
+ },
+ {
+  "ea": "0xdff20",
+  "name": "AddToVariableConstraints",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match of the distinctive list-merge loop: for each newItems node, save rig"
+ },
+ {
+  "ea": "0xdff90",
+  "name": "UnionVariableConstraints",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match: outer loop over list1, inner scan of list2 for value match (+4); on"
+ },
+ {
+  "ea": "0xe0010",
+  "name": "GetExpressionVarConstraints",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match: self-recursive on theExpression->right (+64) followed by AddToVaria"
+ },
+ {
+  "ea": "0xe0090",
+  "name": "DeriveVariableConstraints",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match: outer loop over theNode->bottom (+68) advancing via bottom; inner l"
+ },
+ {
+  "ea": "0xe0110",
+  "name": "CheckRHSForConstraintErrors",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Exact match: NULL early-out; outer loop over checkList via nextArg (+10); takes "
  },
  {
   "ea": "0xe01d0",
@@ -5019,11 +5670,46 @@
   "evidence": "unique shared literal: salience declaration"
  },
  {
+  "ea": "0xe0af0",
+  "name": "ParseSalience",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Unique salience range constants +/-10000 (MAX/MIN_DEFRULE_SALIENCE) present; DAT"
+ },
+ {
+  "ea": "0xe0bc0",
+  "name": "ParseAutoFocus",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: strcmp against aTrue_0/aFalse_0 setting global dword_1B14A0 to 1/0 (GlobalAutoFo"
+ },
+ {
+  "ea": "0xe0c40",
+  "name": "LHSPattern",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: firstToken?CopyToken:GetToken prologue; LPAREN==100 branch with strcmp chain 'de"
+ },
+ {
   "ea": "0xe0e00",
   "name": "ConnectedPatternParse",
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn ConnectedPatternParse"
+ },
+ {
+  "ea": "0xe11f0",
+  "name": "GroupPatterns",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Infinite loop calling sub_E0C40 (LHSPattern) with trailing args FALSE,NULL,NULL;"
+ },
+ {
+  "ea": "0xe1290",
+  "name": "TestPattern",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: GetLHSParseNode (sub_DB430) with node->type = 84 (TEST_CE, consistent with CE co"
  },
  {
   "ea": "0xe1330",
@@ -5047,6 +5733,41 @@
   "evidence": "unique shared literal: RHS of defrule"
  },
  {
+  "ea": "0xe1990",
+  "name": "CreateNewDisjunct",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: get_struct(defrule) free-list alloc of 52 bytes; IncrementSymbolCount on ruleNam"
+ },
+ {
+  "ea": "0xe1aa0",
+  "name": "ReplaceRHSVariable",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: FCALL branch (type==10) with FindFunction(\"modify\")/FindFunction(\"duplicate\") po"
+ },
+ {
+  "ea": "0xe1b50",
+  "name": "ParseRuleRHS",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: SavePPBuffer(\"\\n   \") then SetIndentDepth(3), GroupActions call, two consecutive"
+ },
+ {
+  "ea": "0xe1bd0",
+  "name": "RuleComplexity",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Triple-nested loop mirroring RuleComplexity: per LHS node complexity += 1 + Expr"
+ },
+ {
+  "ea": "0xe1c30",
+  "name": "ExpressionComplexity",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: FCALL (type==10) arm compares value against three globals (PTR_AND/PTR_NOT/PTR_O"
+ },
+ {
   "ea": "0xe1cb0",
   "name": "LogicalAnalysis",
   "confidence": "high",
@@ -5059,6 +5780,13 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: <<<unprintable character>>>"
+ },
+ {
+  "ea": "0xe2410",
+  "name": "ScanSymbol",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify: Loop break condition tests exact delimiter constants 60,34,40,41,38,124,126,32,5"
  },
  {
   "ea": "0xe2520",
