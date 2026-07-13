@@ -26,6 +26,36 @@ IDA Pro 9.0 headless executable:
 
 CLIPS reference source remains pinned as documented in `docs/DOS_CLIPS_PIN.md`.
 
+## One-command runner
+
+`tools/dos/run_crossbuild_pipeline.py` orchestrates the private Windows/IDA portion without modifying repository files or opening either original database for writing.
+
+Proposal-only run:
+
+```powershell
+python tools\dos\run_crossbuild_pipeline.py `
+  --work-dir C:\Clash\work\dos-crossbuild-01
+```
+
+Reviewed proposal run:
+
+```powershell
+python tools\dos\run_crossbuild_pipeline.py `
+  --work-dir C:\Clash\work\dos-crossbuild-02 `
+  --reviews C:\Clash\work\reviews.json
+```
+
+Full scratch regeneration after the review gate passes:
+
+```powershell
+python tools\dos\run_crossbuild_pipeline.py `
+  --work-dir C:\Clash\work\dos-crossbuild-03 `
+  --reviews C:\Clash\work\reviews.json `
+  --regenerate
+```
+
+The work directory must be outside the repository and empty unless `--resume` is supplied. `--regenerate` requires a review file, a complete CLIPS calibration, and at least 95% confirmation. The runner creates independent feature and regeneration database copies, builds the candidate map only inside the work directory, verifies the regenerated C file, and writes `pipeline_manifest.json` with SHA-256 hashes of inputs and outputs. `--dry-run` prints the complete command plan without requiring Windows or IDA.
+
 ## IDA helpers
 
 ```text
@@ -83,4 +113,4 @@ python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
 python3 -m py_compile tools/dos/*.py tests/dos/*.py
 ```
 
-The tests cover multiline IDA signatures, literal uniqueness, pair collapsing, bijection conflicts, confidence/basic-block gates, deterministic calibration selection, master-map precedence and overwrite rejection, name-collision rejection, and regeneration marker/error parsing.
+The tests cover multiline IDA signatures, literal uniqueness, pair collapsing, bijection conflicts, confidence/basic-block gates, deterministic calibration selection, master-map precedence and overwrite rejection, name-collision rejection, regeneration marker/error parsing, and runner safety.
