@@ -9159,7 +9159,7 @@ _DWORD * Module_UpdateItemHeader(_DWORD *result, _DWORD *a2, int a3, int a4)
   int v5; // esi
   int v6; // ebx
 
-  *a2 = 32 * *result + dword_51C704;
+  *a2 = 32 * *result + g_ClipsModuleArrayBase;
   v4 = result[1];
   if ( v4 == -1 )
   {
@@ -9418,7 +9418,7 @@ int __fastcall Module_BloadReadHeaderCounts(int a1)
   {
     v2[0] = 32 * g_ClipsBsaveModuleCount;
     result = Mem_HeapAllocWithRetry((_DWORD *)(32 * g_ClipsBsaveModuleCount));
-    dword_51C704 = result;
+    g_ClipsModuleArrayBase = result;
     if ( g_ClipsBloadPortItemCount )
     {
       v2[0] = 16 * g_ClipsBloadPortItemCount;
@@ -9432,7 +9432,7 @@ int __fastcall Module_BloadReadHeaderCounts(int a1)
   }
   else
   {
-    dword_51C704 = 0;
+    g_ClipsModuleArrayBase = 0;
   }
   return result;
 }
@@ -9453,7 +9453,7 @@ int Module_BloadRefreshModules()
   {
     Rules_BloadAndRefresh(g_ClipsBsaveModuleCount, 20, (void (__fastcall *)(signed int, signed int))Module_BloadFixupModuleRecord);
     Rules_BloadAndRefresh(g_ClipsBloadPortItemCount, 16, (void (__fastcall *)(signed int, signed int))Module_BloadFixupPortItemRecord);
-    Module_SetModuleListHead(dword_51C704);
+    Module_SetModuleListHead(g_ClipsModuleArrayBase);
     Enum = Module_NextEnum(0);
     return Module_SetCurrent(Enum);
   }
@@ -9478,14 +9478,14 @@ int  Module_BloadFixupModuleRecord(_DWORD *a1, int a2)
   int result; // eax
 
   module_offset = 32 * a2;
-  module = dword_51C704 + module_offset;
+  module = g_ClipsModuleArrayBase + module_offset;
   *(_DWORD *)module = *(_DWORD *)(4 * *a1 + g_ClipsBloadSymbolPointerArray);
   ++*(_DWORD *)(*(_DWORD *)module + 4);
   parent_index = a1[3];
   if ( parent_index == -1 )
     *(_DWORD *)(module + 28) = 0;
   else
-    *(_DWORD *)(module + 28) = dword_51C704 + 32 * parent_index;
+    *(_DWORD *)(module + 28) = g_ClipsModuleArrayBase + 32 * parent_index;
   *(_DWORD *)(module + 8) = Mem_SmallBlockAlloc(4 * Module_GetItemCount());
   constraint = Module_GetItemList();
   constraint_index = 0;
@@ -9595,8 +9595,8 @@ int Module_ClearBloadData()
     v1 = 0;
     do
     {
-      Rules_DecrementSymbolCount(*(_DWORD *)(v1 + dword_51C704), v1);
-      for ( i = *(int **)(v2 + dword_51C704 + 12); i; i = (int *)i[3] )
+      Rules_DecrementSymbolCount(*(_DWORD *)(v1 + g_ClipsModuleArrayBase), v1);
+      for ( i = *(int **)(v2 + g_ClipsModuleArrayBase + 12); i; i = (int *)i[3] )
       {
         if ( *i )
           Rules_DecrementSymbolCount(*i, v2);
@@ -9606,7 +9606,7 @@ int Module_ClearBloadData()
         if ( i[2] )
           Rules_DecrementSymbolCount(i[2], v2);
       }
-      for ( j = *(int **)(v2 + dword_51C704 + 16); j; j = (int *)j[3] )
+      for ( j = *(int **)(v2 + g_ClipsModuleArrayBase + 16); j; j = (int *)j[3] )
       {
         if ( *j )
           Rules_DecrementSymbolCount(*j, v2);
@@ -9618,13 +9618,13 @@ int Module_ClearBloadData()
       }
       v7 = Module_GetItemCount();
       ++v0;
-      Mem_SmallBlockFree(*(_DWORD **)(v8 + dword_51C704 + 8), 4 * v7);
+      Mem_SmallBlockFree(*(_DWORD **)(v8 + g_ClipsModuleArrayBase + 8), 4 * v7);
       v1 = v9 + 32;
     }
     while ( v0 < g_ClipsBsaveModuleCount );
   }
   if ( 32 * g_ClipsBsaveModuleCount )
-    Mem_ReleasePoolBlock(dword_51C704, 32 * g_ClipsBsaveModuleCount);
+    Mem_ReleasePoolBlock(g_ClipsModuleArrayBase, 32 * g_ClipsBsaveModuleCount);
   if ( 16 * g_ClipsBloadPortItemCount )
     Mem_ReleasePoolBlock(g_Defmodule_PortItemArrayPtr, 16 * g_ClipsBloadPortItemCount);
   Module_SetModuleListHead(0);

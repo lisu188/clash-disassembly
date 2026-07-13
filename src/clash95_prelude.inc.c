@@ -248,8 +248,8 @@ typedef struct TileHighlightSlot
 } TileHighlightSlot;
 
 #define g_QueenWhimRecords ((QueenWhimRecord *)&g_QueenWhimRecords_5191F0)
-#define dword_5451A8 (g_InputBackendState.mouse_delta_x)
-#define dword_5451AC (g_InputBackendState.mouse_delta_y)
+#define g_InputMouseDeltaX (g_InputBackendState.mouse_delta_x)
+#define g_InputMouseDeltaY (g_InputBackendState.mouse_delta_y)
 #define g_InputMousePrimaryButtonState (*((signed char *)&g_InputBackendState.mouse_button_primary))
 #define g_InputMouseSecondaryButtonState (*((signed char *)&g_InputBackendState.mouse_button_secondary))
 #define g_Input_KeyStateArray ((signed char *)&g_InputBackendState.keyboard_state[0])
@@ -12133,7 +12133,7 @@ int g_Rules_BloadBitmapCount = 0; // weak
 int g_BinaryItemListHead = 0; // weak
 int g_ClipsConstructQueueHead = 0; // weak
 int g_CLIPS_StaticConstraintCheckingFlag = 1; // weak
-int dword_51AAB4 = 0; // weak
+int g_ClipsEventStateFlag = 0; // weak
 _UNKNOWN g_EvalDescriptor_Defgeneric; // weak
 int g_Rules_WatchDeffunctions = 0; // weak
 _UNKNOWN g_EvalDescriptor_Deffunction; // weak
@@ -12590,7 +12590,7 @@ int g_ClipsParsedFormAst = 0; // weak
 int g_ClipsBsaveModuleCount = 0; // weak
 int g_ClipsBloadPortItemCount = 0; // weak
 int g_Defmodule_PortItemArrayPtr = 0; // weak
-int dword_51C704 = 0; // weak
+int g_ClipsModuleArrayBase = 0; // weak
 int g_MessageHandler_SelfSymbol = 0; // weak
 int g_ClipsDefinstancesBloadArray = 0; // weak
 int g_Definstances_Count = 0; // weak

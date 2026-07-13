@@ -811,7 +811,7 @@ int  Rules_SetDynamicConstraintCheckingCommand(int a1, double a2)
   if ( v3 == -1 )
     return v4;
   Rules_RtnUnknown(1, &v7, a2);
-  dword_51AAB4 = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
+  g_ClipsEventStateFlag = v8 != __PAIR64__(g_ClipsFalseSymbol, 2);
   return v5;
 }
 // 49707E: variable 'v4' is possibly undefined
@@ -869,8 +869,8 @@ int __fastcall unknown_libname_10(int a1, int a2)
   int previous_state;
 
   (void)a2;
-  previous_state = dword_51AAB4;
-  dword_51AAB4 = a1;
+  previous_state = g_ClipsEventStateFlag;
+  g_ClipsEventStateFlag = a1;
   return previous_state;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
@@ -878,7 +878,7 @@ int __fastcall unknown_libname_10(int a1, int a2)
 //----- (004971B0) --------------------------------------------------------
 int Rules_DynamicConstraintCheckingEnabled()
 {
-  return dword_51AAB4;
+  return g_ClipsEventStateFlag;
 }
 // 51AAB4: using guessed type int dword_51AAB4;
 
