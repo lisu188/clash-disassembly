@@ -258,13 +258,17 @@ def load_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def pair_key(row):
+    return str(row.get("dos_ea", "")).lower(), str(row.get("clash95_ea", "")).lower()
+
+
 def require_review_gate(paths, reviews, dry_run=False):
     if dry_run:
         return
-    calibration_path = paths.crossbuild_dir / "dos_crossbuild_calibration.json"
-    confirmed_path = paths.crossbuild_dir / "dos_crossbuild_confirmed.json"
-    calibration = load_json(calibration_path)
-    confirmed = load_json(confirmed_path)
+    calibration = load_json(paths.crossbuild_dir / "dos_crossbuild_calibration.json")
+    confirmed = load_json(paths.crossbuild_dir / "dos_crossbuild_confirmed.json")
+    proposals = load_json(paths.crossbuild_dir / "dos_crossbuild_proposals.json")
+    review = load_json(paths.crossbuild_dir / "dos_crossbuild_review.json")
     if reviews is None:
         if confirmed.get("rows"):
             raise RuntimeError("unreviewed matcher run unexpectedly emitted confirmed transfers")
@@ -274,6 +278,20 @@ def require_review_gate(paths, reviews, dry_run=False):
         raise RuntimeError("calibration is incomplete or below the 95% confirmation threshold")
     if not confirmed.get("calibration_passed"):
         raise RuntimeError("confirmed transfer artifact does not record a passed calibration")
+    proposal_rows = proposals.get("candidates", [])
+    review_rows = review.get("candidate_reviews", [])
+    if len(review_rows) != len(proposal_rows):
+        raise RuntimeError("every game proposal must have an independent review")
+    if {pair_key(row) for row in review_rows} != {pair_key(row) for row in proposal_rows}:
+        raise RuntimeError("game review rows do not match the generated proposals")
+    valid_verdicts = {"CONFIRM", "REJECT", "UNCERTAIN"}
+    for row in review_rows:
+        verdict = row.get("verdict")
+        reason = str(row.get("review_reason", "")).strip()
+        if verdict not in valid_verdicts or not reason:
+            raise RuntimeError("every game proposal requires a verdict and concrete review reason")
+        if verdict == "CONFIRM" and not row.get("evidence_complete"):
+            raise RuntimeError("confirmed game proposals require complete structural evidence")
 
 
 def sha256(path):
@@ -287,7 +305,27 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def write_manifest(paths, reviews, regenerate, dry_run=False):
+def snapshot_originals(paths, dry_run=False):
+    if dry_run:
+        return {}
+    return {
+        str(paths.dos_source): sha256(paths.dos_source),
+        str(paths.clash95_source): sha256(paths.clash95_source),
+    }
+
+
+def verify_originals_unchanged(paths, original_hashes, dry_run=False):
+    if dry_run:
+        return
+    current = {
+        str(paths.dos_source): sha256(paths.dos_source),
+        str(paths.clash95_source): sha256(paths.clash95_source),
+    }
+    if current != original_hashes:
+        raise RuntimeError("an original IDA database changed during the pipeline")
+
+
+def write_manifest(paths, reviews, regenerate, original_hashes, dry_run=False):
     if dry_run:
         return
     outputs = [
@@ -303,19 +341,19 @@ def write_manifest(paths, reviews, regenerate, dry_run=False):
     ]
     if regenerate:
         outputs.extend([paths.seed_report, paths.generated_c, paths.export_report, paths.verify_report])
+    inputs = dict(original_hashes)
+    inputs.update({
+        str(paths.repo / "clash.c"): sha256(paths.repo / "clash.c"),
+        str(paths.repo / "clash95.c"): sha256(paths.repo / "clash95.c"),
+        str(paths.repo / "tools/dos/dos_master_map.json"): sha256(paths.repo / "tools/dos/dos_master_map.json"),
+    })
     manifest = {
         "schema": 1,
         "repo": str(paths.repo),
         "work": str(paths.work),
         "reviews": str(reviews) if reviews else None,
         "regenerated": regenerate,
-        "inputs": {
-            str(paths.dos_source): sha256(paths.dos_source),
-            str(paths.clash95_source): sha256(paths.clash95_source),
-            str(paths.repo / "clash.c"): sha256(paths.repo / "clash.c"),
-            str(paths.repo / "clash95.c"): sha256(paths.repo / "clash95.c"),
-            str(paths.repo / "tools/dos/dos_master_map.json"): sha256(paths.repo / "tools/dos/dos_master_map.json"),
-        },
+        "inputs": inputs,
         "outputs": {str(path): sha256(path) for path in outputs if path.is_file()},
     }
     paths.manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -359,28 +397,33 @@ def main(argv=None):
     if args.regenerate and reviews is None:
         raise ValueError("--regenerate requires --reviews")
     validate_layout(paths, args.dry_run)
-    prepare_workdir(paths, args.resume, args.dry_run)
-    copy_database(paths.dos_source, paths.dos_feature_db, args.resume, args.dry_run)
-    copy_database(paths.clash95_source, paths.clash95_feature_db, args.resume, args.dry_run)
-    if args.regenerate:
-        copy_database(paths.dos_source, paths.regen_db, args.resume, args.dry_run)
-    commands = build_commands(paths, args.python, reviews, args.regenerate)
-    for name, command in commands:
-        run_command(name, command, paths.repo, args.dry_run)
-        if name == "export-dos-features":
-            require_file(paths.dos_features, args.dry_run)
-        elif name == "export-clash95-features":
-            require_file(paths.clash95_features, args.dry_run)
-        elif name == "generate-crossbuild-artifacts":
-            require_review_gate(paths, reviews, args.dry_run)
-        elif name == "seed-regeneration-database":
-            require_file(paths.seed_report, args.dry_run)
-        elif name == "export-regenerated-clash-c":
-            require_file(paths.generated_c, args.dry_run)
-            require_file(paths.export_report, args.dry_run)
-        elif name == "verify-regeneration":
-            require_file(paths.verify_report, args.dry_run)
-    write_manifest(paths, reviews, args.regenerate, args.dry_run)
+    original_hashes = snapshot_originals(paths, args.dry_run)
+    try:
+        prepare_workdir(paths, args.resume, args.dry_run)
+        copy_database(paths.dos_source, paths.dos_feature_db, args.resume, args.dry_run)
+        copy_database(paths.clash95_source, paths.clash95_feature_db, args.resume, args.dry_run)
+        if args.regenerate:
+            copy_database(paths.dos_source, paths.regen_db, False, args.dry_run)
+        commands = build_commands(paths, args.python, reviews, args.regenerate)
+        for name, command in commands:
+            run_command(name, command, paths.repo, args.dry_run)
+            if name == "export-dos-features":
+                require_file(paths.dos_features, args.dry_run)
+            elif name == "export-clash95-features":
+                require_file(paths.clash95_features, args.dry_run)
+            elif name == "generate-crossbuild-artifacts":
+                require_review_gate(paths, reviews, args.dry_run)
+            elif name == "seed-regeneration-database":
+                require_file(paths.seed_report, args.dry_run)
+            elif name == "export-regenerated-clash-c":
+                require_file(paths.generated_c, args.dry_run)
+                require_file(paths.export_report, args.dry_run)
+            elif name == "verify-regeneration":
+                require_file(paths.verify_report, args.dry_run)
+        verify_originals_unchanged(paths, original_hashes, args.dry_run)
+        write_manifest(paths, reviews, args.regenerate, original_hashes, args.dry_run)
+    finally:
+        verify_originals_unchanged(paths, original_hashes, args.dry_run)
     print(f"pipeline complete: {paths.work}")
     return 0
 
