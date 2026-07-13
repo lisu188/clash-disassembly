@@ -1,9 +1,8 @@
 name: Mission05 Source Inspect
 
 on:
-  push:
-    branches:
-      - codex/mission05-failure-observability
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
