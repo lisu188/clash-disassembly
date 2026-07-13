@@ -106,6 +106,25 @@ def merge_sources(existing, registered, anchors, string_matches, alignments, tra
                 })
                 continue
             current = master.get(ea)
+            if current and current["source"] == "clips-registered":
+                if normalize_name(current["name"]) != name:
+                    dropped_false.append({
+                        "ea": hex(ea),
+                        "registered": current["name"],
+                        "dropped_anchor": row["name"],
+                        "kind": source_name,
+                    })
+                continue
+            if current and current["source"] in {"clips-errid", "clips-string"}:
+                if normalize_name(current["name"]) != name:
+                    conflicts.append({
+                        "ea": hex(ea),
+                        "kind": f"{source_name}-vs-{current['source']}",
+                        "current": current["name"],
+                        "incoming": row["name"],
+                        "resolution": current["source"],
+                    })
+                continue
             if current and normalize_name(current["name"]) != name:
                 conflicts.append({
                     "ea": hex(ea),
