@@ -2,31 +2,18 @@
 
 ## 1. Mission
 
-- Recover the DOS and Win95 Clash binaries into readable, evidence-backed C and
+- Recover the Win95 Clash binary into readable, evidence-backed C and
   structured recovery artifacts.
 - Keep the Win95 reconstruction buildable and increasingly behaviorally faithful
   under the SDL-backed runtime.
 - Recover campaign behavior through authentic routes rather than state shortcuts.
-- Keep the three project tracks separate: DOS disassembly, Win95 runtime
-  reconstruction, and campaign-route validation.
+- Keep the two project tracks separate: Win95 runtime reconstruction and
+  campaign-route validation.
 
 See `docs/PROJECT_TRACKS.md` for the current boundaries, baselines, and completion
 language for each track.
 
 ## 2. Current Repo Reality
-
-### DOS disassembly
-
-- `clash.c` is generated DOS decompiler output kept only as a reference artifact.
-  It is not an editable implementation source: do not implement fixes or features
-  in it, and never patch it manually. DOS changes must originate in the disposable
-  IDA database, reviewed name/control-flow inputs, or regeneration tooling, then be
-  reproduced by regenerating `clash.c`.
-- The DOS baseline (markers, decompiled/failed functions, named addresses, CLIPS
-  coverage) lives in `DISASSEMBLY_STATUS.md`; `0xFDF26` remains the only failed
-  function.
-- The next naming milestone is a fresh, independently reviewed
-  `clash95`-to-DOS cross-build transfer followed by full IDA regeneration checks.
 
 ### Win95 reconstruction
 
@@ -56,8 +43,6 @@ language for each track.
   debt.
 - Reached allocator, file-handle, event, thread, and CRT compatibility stubs may
   still approximate original behavior.
-- DOS semantic coverage remains sparse outside the CLIPS region.
-- DOS function `0xFDF26` still requires manual control-flow recovery in IDA.
 
 ## 4. Practical Priority Order
 
@@ -67,9 +52,6 @@ than a copy kept in sync by hand.
 
 ## 5. Scope
 
-- **DOS scope:** IDA database analysis, evidence-gated naming, cross-build
-  matching, CLIPS-source matching, control-flow recovery, generated-C
-  regeneration, and deterministic verification.
 - **Win95 scope:** assembly-backed source recovery, SDL platform containment,
   runtime helper recovery, typed state/record recovery, build/link fidelity, and
   reached gameplay behavior.
@@ -79,22 +61,9 @@ than a copy kept in sync by hand.
   config loaders, AI scripting APIs, and serialization when they support a
   current frontier.
 - **Out of scope:** speculative rewrites, cosmetic cleanup, fake/demo loops,
-  objective-state shortcuts, generated DOS C text patches, or behavior changes
-  made only for convenience.
+  objective-state shortcuts, or behavior changes made only for convenience.
 
 ## 6. Evidence Order
-
-### DOS
-
-1. Original DOS binary and disposable IDA database analysis.
-2. Generated `clash.c`, function markers, raw control flow, callers, callees,
-   constants, strings, and data references.
-3. Registered CLIPS ground truth and pinned CLIPS source evidence.
-4. Independently confirmed cross-build equivalence with `clash95`.
-5. Existing repository labels only when they do not conflict with stronger
-   evidence.
-
-### Win95
 
 1. `clash95.map` for public symbol spelling and segment-relative addresses.
 2. `clash95.asm`, `clash95.c`, and live route evidence for behavior.
@@ -138,13 +107,10 @@ than a copy kept in sync by hand.
 ## 10. Workflow
 
 - Work on one explicit track and frontier per batch.
-- Do not edit original IDA databases; use disposable copies.
-- Never manually patch generated DOS `clash.c`.
 - Recover whole function families and contiguous state blocks rather than isolated
   names when practical.
 - Revisit earlier conclusions when stronger evidence appears.
 - Continue existing progress artifacts rather than recreating them:
-  - `DISASSEMBLY_STATUS.md`
   - `docs/STATUS.md`
   - `docs/archive/COMPILATION_PROGRESS.md`
   - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
@@ -155,7 +121,6 @@ than a copy kept in sync by hand.
   track-specific gate:
   - formatting and JSON checks;
   - compile and link checks;
-  - DOS tooling and regeneration invariants;
   - executable smoke tests;
   - route objective/failure markers;
   - current nonblank frame evidence;

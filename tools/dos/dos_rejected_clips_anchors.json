@@ -1,9 +1,0 @@
-[
- {
-  "ea": "0xe7e50",
-  "name": "TextLookupFetch",
-  "registered_name": "FetchCommand",
-  "kind": "errid",
-  "evidence": "historical direct CLIPS candidate rejected by registered function ground truth"
- }
-]

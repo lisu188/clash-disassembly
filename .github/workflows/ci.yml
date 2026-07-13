@@ -1,4 +1,4 @@
-name: DOS Tooling
+name: CI
 
 on:
   push:
@@ -11,12 +11,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: dos-tooling-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  dos-integrity:
-    name: DOS integrity
+  repo-checks:
+    name: Repo checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -30,10 +30,7 @@ jobs:
           python-version: "3.11"
 
       - name: Compile Python tooling
-        run: python3 -m py_compile tools/dos/*.py tests/dos/*.py
-
-      - name: Run DOS tooling tests
-        run: python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
+        run: python3 -m py_compile tools/*.py
 
       - name: Validate JSON files
         shell: bash
@@ -41,37 +38,6 @@ jobs:
           set -euo pipefail
           python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
           python3 -m json.tool UNIT_TYPES_AND_STATS.json >/dev/null
-          while IFS= read -r -d '' file; do
-            python3 -m json.tool "$file" >/dev/null
-          done < <(find tools/dos -maxdepth 1 -type f -name '*.json' -print0 | sort -z)
-
-      - name: Verify generated DOS name maps
-        id: verify-maps
-        shell: bash
-        run: |
-          set -euo pipefail
-          if python3 tools/dos/build_master_map.py --check; then
-            exit 0
-          fi
-          python3 tools/dos/build_master_map.py
-          git diff --no-ext-diff -- \
-            tools/dos/dos_master_map.json \
-            tools/dos/dos_name_conflicts.json \
-            tools/dos/dos_dropped_false_anchors.json >dos-master-map.patch
-          cat dos-master-map.patch
-          exit 1
-
-      - name: Upload generated-map diagnostics
-        if: failure() && steps.verify-maps.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: dos-master-map-diagnostics
-          path: |
-            dos-master-map.patch
-            tools/dos/dos_master_map.json
-            tools/dos/dos_name_conflicts.json
-            tools/dos/dos_dropped_false_anchors.json
-          if-no-files-found: error
 
       - name: Check Markdown links
         id: markdown-links

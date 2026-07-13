@@ -1,16 +1,14 @@
 # clash-disassembly
 
-Evidence-driven recovery of the original DOS and Win95 Clash binaries.
+Evidence-driven recovery of the original Win95 Clash binary.
 
-- `clash.c` is the generated IDA/Hex-Rays decompilation of the DOS binary under
-  evidence-gated naming and regeneration validation.
 - `clash95.asm` is the protected Win95 behavioral source of truth.
 - `clash95.c` is the recovered Win95 implementation under SDL build, runtime, and
   campaign-route validation.
 
-The repository tracks DOS semantic recovery, Win95 runtime reconstruction, and
-campaign validation separately. See `docs/PROJECT_TRACKS.md` before interpreting
-or reporting completion percentages.
+The repository tracks Win95 runtime reconstruction and campaign validation
+separately. See `docs/PROJECT_TRACKS.md` before interpreting or reporting
+completion percentages.
 
 Current validated campaign-route state: missions `00..04` are complete through
 their route gates. Mission `04` clears Hopenberg through three authentic tactical
@@ -39,8 +37,6 @@ git diff --check
 
 - [docs/PROJECT_TRACKS.md](docs/PROJECT_TRACKS.md) - boundaries, current baselines,
   completion language, and immediate priorities for each recovery track.
-- [DISASSEMBLY_STATUS.md](DISASSEMBLY_STATUS.md) - current DOS decompilation and
-  semantic naming baseline.
 - [docs/STATUS.md](docs/STATUS.md) - current validated Win95 runtime state, active
   blocker, and next target.
 - [docs/BUILD_AND_TEST.md](docs/BUILD_AND_TEST.md) - build, CTest, route, and

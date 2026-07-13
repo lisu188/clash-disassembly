@@ -1,41 +1,9 @@
 # Project Tracks
 
-The repository contains three related but independent recovery tracks. Progress in
+The repository contains two related but independent recovery tracks. Progress in
 one track must not be reported as completion of another.
 
-## 1. DOS disassembly and semantic recovery
-
-Primary artifacts:
-
-- `clash.c`
-- `DISASSEMBLY_STATUS.md`
-- `MODULES.md`
-- `tools/dos/`
-- `tools/ida/`
-
-Current baseline:
-
-- 4,219 function markers are preserved.
-- 4,218 functions decompile successfully.
-- `0xFDF26` is the only failed function.
-- 886 addresses have evidence-backed names.
-- 704 of 2,015 functions in the embedded CLIPS region are named.
-
-The next DOS milestone is not another text-level rename sweep. It is a fresh,
-reviewed `clash95`-to-DOS cross-build transfer using disposable IDA databases,
-complete calibration reviews, independent game-candidate reviews, master-map
-rebuilding, and full regeneration verification.
-
-A DOS batch is accepted only when generated `clash.c` preserves every marker,
-prior name, collision invariant, and the expected failed-function set. Never edit
-generated DOS C manually.
-
-Longer-term DOS completion requires both:
-
-1. all functions decompiled, including `0xFDF26`;
-2. substantially broader evidence-backed semantic naming outside the CLIPS region.
-
-## 2. Win95 reconstruction and SDL runtime
+## 1. Win95 reconstruction and SDL runtime
 
 Primary artifacts:
 
@@ -65,7 +33,7 @@ table.
 Do not move original gameplay semantics into the SDL shim. Do not restore Win32
 as the final platform target.
 
-## 3. Campaign-route validation
+## 2. Campaign-route validation
 
 Primary artifacts:
 
@@ -101,13 +69,11 @@ entry, natural completion, and automatic advancement.
 
 ## Immediate priority sequence
 
-1. Keep public CI, DOS regeneration checks, and the current SDL build green.
-2. Run the first reviewed fresh cross-build transfer into the DOS name map.
-3. Add mission-05 observability and recover its authentic completion route.
-4. Prove Campaign-menu entry and at least one natural automatic mission advance.
-5. Recover DOS function `0xFDF26` without manually patching generated C.
-6. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.
-7. Continue structure and semantic recovery only where it supports these active
+1. Keep public CI and the current SDL build green.
+2. Add mission-05 observability and recover its authentic completion route.
+3. Prove Campaign-menu entry and at least one natural automatic mission advance.
+4. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.
+5. Continue structure and semantic recovery only where it supports these active
    frontiers.
 
 ## Completion language

@@ -1,24 +1,12 @@
 # Roadmap
 
-The repository has three active recovery tracks. See `docs/PROJECT_TRACKS.md` for
+The repository has two active recovery tracks. See `docs/PROJECT_TRACKS.md` for
 current baselines and completion language.
 
 ## Immediate Sequence
 
 See `docs/PROJECT_TRACKS.md` → "Immediate priority sequence" for the current
 ordered near-term steps. The per-track goals below are the longer-term view.
-
-## DOS Disassembly
-
-- Preserve all 4,219 generated function markers and every accepted prior name.
-- Promote names only from registered ground truth, direct evidence, independently
-  confirmed CLIPS alignment, or independently confirmed cross-build equivalence.
-- Expand cross-build matching from unique literals toward reviewed structural
-  evidence only after the first calibrated transfer batch succeeds.
-- Recover `0xFDF26` without manually patching generated C.
-- Increase evidence-backed semantic coverage outside the embedded CLIPS region.
-- Keep master-map, collision, marker, failed-function, and round-trip checks
-  deterministic and fail-closed.
 
 ## Campaign Recovery
 

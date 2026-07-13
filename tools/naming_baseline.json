@@ -462,27 +462,5 @@
    }
   },
   "file_count": 26
- },
- "dos": {
-  "generated_text": {
-   "func_sub_distinct": 3337,
-   "globals_distinct": {
-    "dword_": 1047,
-    "word_": 140,
-    "byte_": 164,
-    "qword_": 0,
-    "off_": 191,
-    "unk_": 241,
-    "dbl_": 40,
-    "flt_": 3,
-    "loc_": 111
-   },
-   "globals_distinct_total": 1937,
-   "param_aN_occurrences": 39059,
-   "local_vN_occurrences": 73635
-  },
-  "master_map_named_functions": 935,
-  "total_functions": 4219,
-  "unnamed_functions": 3284
  }
 }

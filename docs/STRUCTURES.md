@@ -16,10 +16,6 @@ python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
 python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
 ```
 
-DOS naming batches (e.g. Batch 261) that promote no unit, stat, field, or
-structure semantics do not touch these files; per-batch DOS evidence is recorded
-in `docs/archive/DOS_CLIPS_CROSSREF.md`.
-
 ## Policy
 
 - Treat `clash95.asm`, `clash95.c`, `clash95.map`, and the original binary as

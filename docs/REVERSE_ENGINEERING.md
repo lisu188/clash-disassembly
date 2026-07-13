@@ -450,8 +450,7 @@ to this same shell; treat CLIPS 6.0 as their authoritative external reference.
 The version labels across the CLIPS docs are consistent once the binary is fixed:
 this `clash95` (Win95) engine is **CLIPS 6.0** (the `"V6.00"` stamp below), and
 the public **6.30** core source is used only as a stand-in where 6.0 source is not
-distributed. The separate **DOS** `clash` engine is pinned independently, by
-error-id layout to the 6.2x family (6.24 proxy), in `docs/DOS_CLIPS_PIN.md`.
+distributed.
 
 Concrete in-repo evidence (all verifiable by grep against `clash95.c`):
 

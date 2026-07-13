@@ -3,8 +3,7 @@
 The `clash95` (Win95) embedded rules engine is CLIPS 6.0 (see
 `docs/REVERSE_ENGINEERING.md`, "Provenance: the rules engine is CLIPS 6.0").
 The public 6.30 core source is used only as a stand-in because 6.0 source is not
-distributed. (The DOS build's CLIPS is pinned separately, by error-id layout, in
-`docs/DOS_CLIPS_PIN.md`.)
+distributed.
 CLIPS 6.0 source is not distributed, but the diagnostic strings, format
 strings, and internal function names of the CLIPS core are stable across the
 6.x line. This table cross-references recovered Queue F (rules engine / COOL

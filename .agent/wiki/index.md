@@ -5,7 +5,6 @@
 > here — they drift. Canonical sources:
 > - current runtime state, active blocker, next target: `docs/STATUS.md`
 > - track boundaries and priority sequence: `docs/PROJECT_TRACKS.md`
-> - DOS naming baseline: `DISASSEMBLY_STATUS.md`
 >
 > As of 2026-07-13 the campaign frontier is **mission 05** (missions `00..04`
 > route-complete); the frontier snapshot below is the older 2026-04 state and is
