@@ -21,7 +21,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev
       - name: Apply recovery patch
-        run: python3 tools/apply_mission05_failure_recovery.py
+        run: |
+          python3 tools/apply_mission05_failure_recovery.py
+          rm -f tools/trigger_mission05_apply.txt
       - name: Validate metadata and documentation
         run: |
           python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
