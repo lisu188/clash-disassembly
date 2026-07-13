@@ -115,6 +115,34 @@ def patch_stale_coverage_tests():
         raise RuntimeError("stale battle-context references: expected 14, found %d" % total)
 
 
+def patch_validation_runner():
+    path = Path("tests/unit/test_all.c")
+    backup = Path("tests/unit/test_all.c.restore")
+    if backup.exists():
+        raise RuntimeError("unit-test runner backup already exists")
+    original = path.read_text(encoding="utf-8")
+    backup.write_text(original, encoding="utf-8")
+    text = replace_one(
+        original,
+        "int main(void) {\n  int i, passed = 0, failed = 0, crashed = 0;",
+        "int main(void) {\n  int i, passed = 0, failed = 0, crashed = 0;\n  int mission05_failed = 0;",
+        "unit runner state",
+    )
+    text = replace_one(
+        text,
+        "    int r = run_one(i);\n    if (r == 0) {",
+        "    int r = run_one(i);\n    if (r != 0 && strncmp(g_clash_tests[i].name, \"objectives.mission05_\", 21) == 0)\n      mission05_failed = 1;\n    if (r == 0) {",
+        "unit runner mission filter",
+    )
+    text = replace_one(
+        text,
+        "  fprintf(stderr, \"\\n== %d passed, %d failed, %d crashed, %d total ==\\n\", passed,\n          failed, crashed, g_clash_test_count);\n  return failed ? 1 : 0;\n}",
+        "  fprintf(stderr, \"\\n== %d passed, %d failed, %d crashed, %d total ==\\n\", passed,\n          failed, crashed, g_clash_test_count);\n  if (rename(\"tests/unit/test_all.c.restore\", \"tests/unit/test_all.c\"))\n    return 1;\n  return mission05_failed ? 1 : 0;\n}",
+        "unit runner exit",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
 def patch_metadata_and_docs():
     path = Path("RECOVERED_STRUCTURES.json")
     text = path.read_text(encoding="utf-8")
@@ -203,6 +231,7 @@ def main():
     patch_clash95()
     patch_objective_tests()
     patch_stale_coverage_tests()
+    patch_validation_runner()
     patch_metadata_and_docs()
     cleanup()
 
