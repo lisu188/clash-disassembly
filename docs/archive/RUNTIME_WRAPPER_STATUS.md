@@ -1,5 +1,12 @@
 # Runtime wrapper status
 
+> **Historical (pre-2026-06-30).** This file predates the JUMPOUT control-flow
+> recovery: all 17 `JUMPOUT` scars have since been recovered into assembly-backed
+> C (`grep -c JUMPOUT clash95.c` is `0`), and `clash95_bootstrap` builds and boots
+> under SDL. Entries that frame JUMPOUT sites or the "bootstrap wedge" as live
+> blockers are superseded — see `docs/STATUS.md` for current state. Retained for
+> the wrapper-classification method and per-symbol quarantine evidence.
+
 This file classifies the current runtime/quarantine surface for executable regeneration.
 
 ## Status classes

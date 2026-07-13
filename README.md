@@ -54,7 +54,7 @@ git diff --check
   metadata links.
 - [docs/AI_SCRIPTING_API.md](docs/AI_SCRIPTING_API.md) - the strategic-AI CLIPS
   host-function API used by `strateg\clash.dat`.
-- [docs/artifacts.md](docs/artifacts.md) - artifact retention and pruning policy.
+- [docs/ARTIFACTS.md](docs/ARTIFACTS.md) - artifact retention and pruning policy.
 - [docs/archive/](docs/archive/) - preserved historical logs, reports, and old
   navigation notes.
 - [docs/probes/](docs/probes/) - focused probe and route-runner notes.

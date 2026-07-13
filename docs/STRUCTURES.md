@@ -16,14 +16,9 @@ python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
 python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
 ```
 
-## Batch 261 maintenance note
-
-The DOS cross-build naming batch promoted no unit type, stat, category,
-relationship, field, or structure semantics. `RECOVERED_STRUCTURES.json` and
-`UNIT_TYPES_AND_STATS.json` remain outside the change set; no placeholder
-structure entry was invented. The focused Batch 261 evidence is recorded in
-`docs/archive/DOS_COMPILATION_PROGRESS.md`, `docs/archive/DOS_RENAME_LOG.md`,
-and `docs/archive/DOS_CLIPS_CROSSREF.md`.
+DOS naming batches (e.g. Batch 261) that promote no unit, stat, field, or
+structure semantics do not touch these files; per-batch DOS evidence is recorded
+in `docs/archive/DOS_CLIPS_CROSSREF.md`.
 
 ## Policy
 

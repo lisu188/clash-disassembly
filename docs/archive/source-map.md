@@ -3,6 +3,12 @@
 This map classifies the tracked repository sources after the source-hygiene
 pass. It is meant to keep future recovery work focused without hiding evidence.
 
+> Note: the source/binary classification below is still accurate, but for
+> **documentation** navigation this file is superseded by
+> [INDEX.md](INDEX.md). The doc/progress-file rows have been repointed to their
+> current `docs/archive/` locations; `DISASSEMBLY_GUIDE.md` was a planned import
+> that was never created.
+
 ## Classification Table
 
 | Path | Classification | Notes |
@@ -21,10 +27,10 @@ pass. It is meant to keep future recovery work focused without hiding evidence.
 | `RECOVERED_STRUCTURES.json` | generated metadata | Structured recovery metadata. Validate with `python3 -m json.tool`. |
 | `UNIT_TYPES_AND_STATS.json` | generated metadata | Unit/stat recovery metadata. Validate with `python3 -m json.tool`. |
 | `LINK_SURFACE_AUDIT.csv`, `data/*.csv` | generated metadata | Audit/crosswalk evidence used to guide recovery. |
-| `COMPILATION_PROGRESS.md` | progress log | Required durable progress log. Keep newest entry near the top. |
-| `REVERSE_ENGINEERING_RENAME_LOG.md` | progress log | Semantic rename evidence; append only when names or recovery notes change. |
-| `UNIT_TYPES_AND_STATS_REPORT.md` | progress report | Human-readable report backing the unit/stat JSON. |
-| `DISASSEMBLY_GUIDE.md`, `RENAME_PROGRESS.md`, `RUNTIME_WRAPPER_STATUS.md`, `STRUCT_RECOVERY_NOTES.md` | progress docs | Historical and current reverse-engineering notes. Retain as evidence. |
+| `docs/archive/COMPILATION_PROGRESS.md` | progress log | Required durable progress log. Keep newest entry near the top. |
+| `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md` | progress log | Semantic rename evidence; append only when names or recovery notes change. |
+| `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md` | progress report | Human-readable report backing the unit/stat JSON. |
+| `docs/archive/RENAME_PROGRESS.md`, `docs/archive/RUNTIME_WRAPPER_STATUS.md`, `docs/archive/STRUCT_RECOVERY_NOTES.md` | progress docs | Historical reverse-engineering notes. Retain as evidence. |
 | `.agent/state.json`, `.agent/wiki/` | progress sidecar | Durable agent notes. Some entries are stale, but they preserve recovery reasoning. |
 | `.agents/skills/` | agent-only support | Local skill instructions used by future agents; not part of the build. |
 
@@ -43,8 +49,8 @@ pass. It is meant to keep future recovery work focused without hiding evidence.
 | `clash95.c` | Current recovered implementation and build input. |
 | `clash95.exe` | Original binary evidence. |
 | `clash95.map` | Symbol and address evidence. |
-| `COMPILATION_PROGRESS.md` | Required durable recovery log, despite size. |
-| `REVERSE_ENGINEERING_RENAME_LOG.md` | Required rename/evidence log, despite size. |
+| `docs/archive/COMPILATION_PROGRESS.md` | Required durable recovery log, despite size. |
+| `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md` | Required rename/evidence log, despite size. |
 
 ## Deferred Compaction
 

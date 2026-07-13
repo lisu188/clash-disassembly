@@ -1,6 +1,6 @@
 # DOS `clash.c` naming campaign — continuation guide
 
-Read `tools/dos/README.md`, `docs/DOS_CLIPS_PIN.md`, and `docs/archive/DOS_CLIPS_CROSSREF.md` first. Preserve the local untracked truncated continuation artifact exactly; it is not the active guide.
+Read `tools/dos/README.md`, `docs/DOS_CLIPS_PIN.md`, and `docs/archive/DOS_CLIPS_CROSSREF.md` first. This file is the active runbook.
 
 ## Non-negotiable rule
 

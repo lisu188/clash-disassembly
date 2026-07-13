@@ -22,21 +22,19 @@ language for each track.
   in it, and never patch it manually. DOS changes must originate in the disposable
   IDA database, reviewed name/control-flow inputs, or regeneration tooling, then be
   reproduced by regenerating `clash.c`.
-- `clash.c` preserves 4,219 function markers.
-- 4,218 of 4,219 functions decompile successfully; `0xFDF26` is the only failed
+- The DOS baseline (markers, decompiled/failed functions, named addresses, CLIPS
+  coverage) lives in `DISASSEMBLY_STATUS.md`; `0xFDF26` remains the only failed
   function.
-- 886 addresses have evidence-backed names.
-- The embedded CLIPS region has 704 of 2,015 functions named.
 - The next naming milestone is a fresh, independently reviewed
   `clash95`-to-DOS cross-build transfer followed by full IDA regeneration checks.
 
 ### Win95 reconstruction
 
-- The 3,031-symbol `sub_XXXXXX` rename campaign is complete.
-- All 17 `JUMPOUT` control-flow scars are recovered into assembly-backed C.
+- The `sub_XXXXXX` placeholder-rename campaign is complete and all `JUMPOUT`
+  control-flow scars are recovered into assembly-backed C (counts and current
+  state in `docs/STATUS.md`).
 - `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
   runtime, reaches responsive menus, and runs validated gameplay routes.
-- Multiplayer map IDs `0..10` have direct-load visual/liveness evidence.
 - Broad placeholder renaming is no longer the main frontier. Remaining work is
   reached behavioral recovery, structure recovery, compatibility cleanup, and
   campaign validation.
@@ -63,15 +61,9 @@ language for each track.
 
 ## 4. Practical Priority Order
 
-1. Keep public CI, DOS regeneration checks, and `clash95_bootstrap` green.
-2. Run the first fresh reviewed `clash95`-to-DOS cross-build transfer batch.
-3. Add mission-05 turn, AI, building, stack, and objective observability.
-4. Recover and regression-test authentic mission-05 completion.
-5. Prove real Campaign-menu entry and at least one automatic mission advance.
-6. Recover DOS function `0xFDF26` without manually editing generated `clash.c`.
-7. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.
-8. Continue semantic and structure recovery only where it supports an active
-   frontier or has unusually strong independent evidence.
+The current priority sequence is maintained in one place:
+`docs/PROJECT_TRACKS.md` → "Immediate priority sequence". Follow it there rather
+than a copy kept in sync by hand.
 
 ## 5. Scope
 

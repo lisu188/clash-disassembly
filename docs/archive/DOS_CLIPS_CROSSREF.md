@@ -1,6 +1,8 @@
 # DOS CLIPS and clash95 Cross-Reference
 
-This document records the reproducible naming state for the DOS `clash.c` artifact and the evidence boundary for cross-build name transfer.
+This document records the reproducible naming state for the DOS `clash.c` artifact and the evidence boundary for cross-build name transfer. It is the single live DOS naming record: the former `DOS_COMPILATION_PROGRESS.md` and `DOS_RENAME_LOG.md` were folded in here during the 2026-07-13 documentation pass.
+
+The counts below are the canonical DOS baseline, mirrored (not re-derived) by `DISASSEMBLY_STATUS.md` and `MODULES.md`.
 
 ## Baseline accounting
 
@@ -134,6 +136,45 @@ None in Batch 261.
 ### Deferred candidates
 
 All preliminary candidates remain deferred pending fresh feature exports, complete CLIPS calibration, and independent body-level game review. The checked-in artifacts intentionally do not guess their names.
+
+## Batch 261 validation (from the former DOS_COMPILATION_PROGRESS.md)
+
+Static checks performed in the connector environment:
+
+```text
+python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
+20 tests passed
+
+python3 -m py_compile tools/dos/*.py tests/dos/*.py
+passed
+```
+
+The branch diff confirmed `clash.c`, `tools/dos/dos_master_map.json`, `RECOVERED_STRUCTURES.json`, and `UNIT_TYPES_AND_STATS.json` unchanged.
+
+Checks deliberately **not** run in the connector environment, and mandatory before any later batch promotes transfers or replaces `clash.c`:
+
+- IDA Pro feature export, seeding, or regeneration against the private `.i64` files;
+- WSL `clash95_bootstrap` build/link;
+- the default CTest suite in the LF-preserving WSL checkout;
+- real-input UI probes.
+
+## Evidence required for a future accepted row (from the former DOS_RENAME_LOG.md)
+
+Each accepted cross-build row must record:
+
+- DOS address;
+- clash95 address;
+- collision-free semantic name;
+- high or medium clash95 confidence;
+- one or more unique shared literals;
+- distinctive constants;
+- branch, switch, loop, edge, and back-edge agreement;
+- callee and data-reference agreement;
+- complete literal-context explanation;
+- independent reviewer verdict and reason;
+- `source: "clash95-transfer"`.
+
+Transferred confidence may equal but never exceed the clash95 confidence. `REJECT`, `UNCERTAIN`, missing review, incomplete review evidence, failed calibration, existing-address conflict, and name collision all prevent promotion; deferred rows remain in `dos_crossbuild_review.json`.
 
 ## Scope protection
 

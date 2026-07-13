@@ -5,15 +5,8 @@ current baselines and completion language.
 
 ## Immediate Sequence
 
-1. Keep public CI, DOS regeneration checks, and `clash95_bootstrap` green.
-2. Run a fresh, independently reviewed `clash95`-to-DOS cross-build transfer and
-   regenerate `clash.c` only after every invariant passes.
-3. Add mission-05 strategic-turn, AI, building, stack, and objective observability.
-4. Recover mission `05` to natural objective completion without attacking players
-   `1` or `2`.
-5. Prove Campaign-menu entry and at least one natural automatic mission advance.
-6. Recover DOS function `0xFDF26` through correct IDA control-flow reconstruction.
-7. Recover `CSS_Init` and its legacy audio/device table behind the SDL seam.
+See `docs/PROJECT_TRACKS.md` → "Immediate priority sequence" for the current
+ordered near-term steps. The per-track goals below are the longer-term view.
 
 ## DOS Disassembly
 

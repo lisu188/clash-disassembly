@@ -4,11 +4,10 @@ Reconstructed source-file layout of `clash.c` (Hex-Rays decompilation of the Wat
 
 ## Current accounting
 
-- **Total functions:** 4,219.
-- **Named addresses:** 886 (21.0%).
-- **Distinct semantic base names:** 872.
-- **Deterministic emitted `_EA` collision symbols:** 14.
-- **CLIPS functions named:** 704 / 2,015 (34.9%).
+The DOS baseline (total functions, named addresses, distinct base names,
+collision symbols, and CLIPS-region coverage) is maintained in one place:
+[DISASSEMBLY_STATUS.md](DISASSEMBLY_STATUS.md). This file owns only the region
+and module map below.
 
 For cross-build transfer, `0x88370` is the conservative confirmed CLIPS boundary. The first exact CLIPS module anchor below remains `0x89860`; the intervening range is excluded from game/game-engine transfer and may be used only for CLIPS calibration.
 

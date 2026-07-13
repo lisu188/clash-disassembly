@@ -22,13 +22,12 @@ The Markdown cleanup followed this classification:
 - Ignored local worktrees and generated artifacts are not part of the tracked
   documentation tree.
 
-The 2026-06-16 follow-up inventory found no git-visible untracked Markdown and
-only two root Markdown files: `README.md` and `AGENTS.md`. Both are intentionally
-retained at root: `README.md` is the public entrypoint, and `AGENTS.md` is
-tool/workflow context expected by agents.
-
-No additional Markdown moves were needed in that follow-up; the cleanup was a
-status/link consistency pass over the existing consolidated tree.
+Four Markdown files are intentionally retained at the repository root:
+`README.md` (public entrypoint), `AGENTS.md` (tool/workflow context expected by
+agents), `DISASSEMBLY_STATUS.md` (canonical DOS decompilation/naming baseline),
+and `MODULES.md` (DOS region/module map). The last two sit at root because they
+are the DOS-track counterparts to the runtime docs and are referenced directly
+from `README.md` and `AGENTS.md`.
 
 | Current path | Original path | Classification |
 | --- | --- | --- |
@@ -40,13 +39,24 @@ status/link consistency pass over the existing consolidated tree.
 | `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md` | `UNIT_TYPES_AND_STATS_REPORT.md` | unit/stat report history |
 | `docs/archive/CONVERSATION_FINDINGS_GAP_AUDIT.md` | `docs/CONVERSATION_FINDINGS_GAP_AUDIT.md` | historical gap audit |
 | `docs/archive/source-map.md` | `docs/source-map.md` | previous source-hygiene map |
-| `docs/archive/DOS_COMPILATION_PROGRESS.md` | new | focused DOS Batch 259-261 validation history |
-| `docs/archive/DOS_RENAME_LOG.md` | new | focused DOS master-map and cross-build rename evidence |
-| `docs/archive/DOS_CLIPS_CROSSREF.md` | new | DOS baseline, CLIPS calibration, and clash95 transfer contract |
+| `docs/archive/DOS_CLIPS_CROSSREF.md` | new | DOS baseline, CLIPS calibration, and clash95 transfer contract; absorbed `DOS_COMPILATION_PROGRESS.md` and `DOS_RENAME_LOG.md` (2026-07-13) |
+| `docs/archive/RENAME_PROGRESS_WAVE4_PROPOSALS.md` | `RENAME_PROGRESS_WAVE4_PROPOSALS.md` | bulk wave-4 rename proposals (string-literal / host-function symbols) |
 
 Historical entries may mention paths that were correct at the time they were
 written. Prefer current docs in `docs/` for navigation, and preserve archived
 paths when changing them would blur provenance.
+
+## Active references kept under `docs/archive/`
+
+A few files live under `docs/archive/` only to keep their established paths
+stable; they are **live references**, not frozen history, and are linked from
+the current docs:
+
+| Path | Role | Linked from |
+| --- | --- | --- |
+| `docs/archive/SUB_RENAME_INDEX.md` | canonical `sub_XXXXXX` ↔ semantic-name grep index (both directions) | `docs/STATUS.md`, `docs/REVERSE_ENGINEERING.md` |
+| `docs/archive/DOS_CLIPS_CROSSREF.md` | live DOS naming record and cross-build transfer contract (all counts current) | `DISASSEMBLY_STATUS.md`, `docs/STRUCTURES.md` |
+| `docs/archive/CLIPS_SOURCE_CROSSREF.md` | CLIPS engine source cross-reference (accuracy check) | `docs/STATUS.md`, `docs/REVERSE_ENGINEERING.md` |
 
 ## Current Public Docs
 

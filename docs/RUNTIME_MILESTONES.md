@@ -3,41 +3,11 @@
 This index points to current route evidence without duplicating the full
 progress logs.
 
-## Current Validation Commands
+## Validation Commands
 
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --target clash95_bootstrap -j2
-ctest --test-dir build --output-on-failure
-python3 -m json.tool RECOVERED_STRUCTURES.json >/tmp/recovered_structures.check
-python3 -m json.tool UNIT_TYPES_AND_STATS.json >/tmp/unit_types_stats.check
-bash tests/summarize_campaign_arc_routes.sh
-CLASH95_ARTIFACT_PRUNE_MAX_BYTES=805306368 bash tests/prune_artifacts.sh --dry-run
-CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_DURATION_SECONDS=120 \
-  ctest --test-dir build -R clash95_soak_probe --output-on-failure
-CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=world-map-pan \
-  CLASH95_SOAK_DURATION_SECONDS=120 \
-  ctest --test-dir build -R clash95_soak_probe --output-on-failure
-CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=castle-economy \
-  CLASH95_SOAK_DURATION_SECONDS=120 \
-  ctest --test-dir build -R clash95_soak_probe --output-on-failure
-CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=first-mission-attack \
-  CLASH95_SOAK_DURATION_SECONDS=20 \
-  ctest --test-dir build -R clash95_soak_probe --output-on-failure
-CLASH95_ENABLE_SOAK_PROBE=1 CLASH95_SOAK_SCENARIO=campaign-route \
-  CLASH95_SOAK_ROUTE_MISSION_ID=04 CLASH95_SOAK_DURATION_SECONDS=20 \
-  ctest --test-dir build -R clash95_soak_probe --output-on-failure
-CLASH95_ENABLE_MULTIPLAYER_MAP_PROBE=1 \
-  ctest --test-dir build -R clash95_multiplayer_map_probe --output-on-failure
-git diff --check
-```
-
-Opt-in route regression:
-
-```sh
-CLASH95_ENABLE_CAMPAIGN_ROUTE_REGRESSION=1 \
-  ctest --test-dir build -R clash95_campaign_route_04_regression --output-on-failure
-```
+The canonical build/test/probe command reference is `docs/BUILD_AND_TEST.md`.
+The milestone table below maps each route/runtime milestone to the test that
+exercises it and the durable evidence it produces.
 
 ## Route Milestones
 
@@ -111,19 +81,6 @@ remain the canonical machine-readable status source.
 
 ## Artifact Policy
 
-Route and soak runs write logs, screenshots, frame dumps, and failure montages
-under temporary directories or `artifacts/`. These outputs are ignored unless a
-future change intentionally promotes a small, documented evidence artifact.
-Durable mission/campaign route and soak writers cap copied logs, presented
-frames, and checkpoint frames, prune old per-group runs, and default to a 768 MiB
-repo-wide artifacts cap after high-volume runs. Multiplayer map probes use the
-same capped-log/capped-frame pattern under `artifacts/multiplayer-maps/`. Manual
-`tests/prune_artifacts.sh` runs recognize campaign route, first-campaign, and
-multiplayer-map, and soak groups by default; the global size-cap pass keeps at
-least the newest run per group unless overridden with `--min-keep`, and dry-runs
-report unrecognized top-level artifact children. Use
-`tests/prune_artifacts.sh --dry-run` before manual cleanup, and
-`CLASH95_ARTIFACT_PRUNE_AFTER_RUN=0` to opt out during deep investigations.
-The campaign route runner pins child SDL launches to X11 and clears inherited
-Wayland display state so its real SDL window stays inside the Xvfb display
-instead of surfacing through WSLg.
+Route and soak runs write logs, screenshots, and frame dumps under temporary
+directories or `artifacts/`, ignored unless deliberately promoted. Retention
+caps, pruning, and the promotion rule are documented in `docs/ARTIFACTS.md`.

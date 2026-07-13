@@ -57,8 +57,11 @@ evidence (override stale hand-labels, dropped where they contradict ground truth
 hand-labels. Consolidated into `tools/dos/dos_master_map.json` (built by
 `tools/dos/build_master_map.py`).
 
-**Coverage so far:** **782 / 4,219 named (19%)**, of which **600 / 2,015 in the CLIPS
-region (30%)** — before the sequence-alignment extension.
+**Coverage at this Stage-0 method milestone:** 782 / 4,219 named (19%), of which
+600 / 2,015 in the CLIPS region (30%), before the sequence-alignment extension.
+The current DOS naming baseline (886 named / 704 CLIPS) is maintained in
+[../DISASSEMBLY_STATUS.md](../DISASSEMBLY_STATUS.md); this figure records only
+where the string-anchor/error-id method stood.
 
 ## Reproduction
 

@@ -34,13 +34,12 @@ Every accepted name must trace to one of these sources:
 
 The master-map precedence and fail-closed behavior are implemented by `tools/dos/build_master_map.py`. Alignment and cross-build rows may only fill unnamed addresses. They cannot replace existing rows.
 
-## Batch history reconciliation
+## Batch history
 
-- **Batch 259:** mission-04 completion and associated repository history. It did not alter the DOS name map.
-- **Batch 260:** IDA 9 regeneration with 886 master-map rows, 872 semantic base names, 14 deterministic suffix collisions, 4,219 preserved markers, and one failed function at `0xFDF26`.
-- **Batch 261:** deterministic clash95-to-DOS proposal, calibration, review, master-map, and regeneration tooling. No transfer was promoted because the repository lacks a fresh clash95 feature export and completed independent reviews.
-
-The preliminary Batch 261 scan reported 17 bijective literal pairs and 10 pairs passing the DOS three-basic-block gate. These numbers are leads, not accepted mappings.
+The per-batch DOS naming record (Batches 259–261: mission-04 reconciliation, the
+IDA 9 regeneration, and the cross-build transfer tooling) is the live DOS naming
+reference [docs/archive/DOS_CLIPS_CROSSREF.md](docs/archive/DOS_CLIPS_CROSSREF.md).
+No clash95-to-DOS transfer has been promoted.
 
 ## Reproducible regeneration
 

@@ -1,8 +1,10 @@
 # Recovered source modules
 
-`clash95.c` is the only translation unit. It includes the fragments in this directory in original source order.
+`clash95.c` (at the repository root, not in this directory) is the only
+translation unit. It `#include`s the recovered .inc.c fragments in this
+directory in original source order.
 
-The `.inc.c` files are not standalone sources. This first-stage split preserves shared globals, static helper visibility, declaration order, and the direct-include unit-test model.
+These fragment files are not standalone sources. This first-stage split preserves shared globals, static helper visibility, declaration order, and the direct-include unit-test model.
 
 Repeated `_partN` fragments occur where recovered function-marker addresses are not monotonic in the decompiler output; keeping those parts separate prevents source reordering.
 
