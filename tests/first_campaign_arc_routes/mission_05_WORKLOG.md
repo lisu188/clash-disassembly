@@ -88,3 +88,15 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
 3. Author + tune one tactical battle per player-3 stack (win by contact, autoresolve off).
 4. Capture player-3 building idx4; then march to (87,66) for stack 21.
 5. Expect `mission_objective_complete selected=-1 a=5`; flip `mission_05.env` to complete.
+
+## Pan calibration attempts (run 20260713T111724Z) — BOTH FAILED
+- Solved the view transform: `R ≈ 0.005x - 0.01y + 72`, `C ≈ 0.0075x + 0.035y + 33`.
+  Player 3 (42,56) → screen ≈ (-3280,+1360): far off-view, so **panning is mandatory**.
+- Keyboard arrows (scan 203 left / 200 up, ×200 reads) did **not** move the view origin
+  (`left=67 top=42` constant). Minimap globe (420-430,400-407) also did not pan.
+- **Unsolved pan levers to try next:** (a) edge-scroll — hold the SDL cursor at a screen
+  border (may need a `pulse`/`delta` that keeps the cursor pinned, not a click); (b)
+  right-button drag; (c) find the true minimap panel (probe the full bottom HUD strip
+  y>430 and the corners for a `minimap_update`); (d) a low-level `move R C` toward an
+  off-screen tile may auto-scroll the view to follow the cursor. Panning must be solved
+  before the march; then autoresolve (vs hand-tuned battles) is the next question.

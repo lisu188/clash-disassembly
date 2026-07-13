@@ -1,0 +1,27 @@
+# Mission 05 pan calibration: find how to scroll the view toward player 3 (rows 41-44).
+# Try keyboard arrows (scan: left=203 right=205 up=200 down=208) and re-probe a tile to
+# read the new view origin (left/top). Player-0 view starts at left=67 top=42.
+wait_log 60 mission_load_done selected=-1 a=5
+wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
+click 300 250 0.18 0.6 baseline-probe
+wait 1.0
+# --- press LEFT arrow x20 ---
+key 203 40 left-1
+key 203 40 left-2
+key 203 40 left-3
+key 203 40 left-4
+key 203 40 left-5
+wait 1.0
+click 300 250 0.18 0.6 after-left-probe
+wait 1.0
+# --- press UP arrow x20 ---
+key 200 40 up-1
+key 200 40 up-2
+key 200 40 up-3
+key 200 40 up-4
+key 200 40 up-5
+wait 1.0
+click 300 250 0.18 0.6 after-up-probe
+wait 1.0
+screenshot mission05-pan-after-left-up
+nonblank mission05-pan-after-left-up
