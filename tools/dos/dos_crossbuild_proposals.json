@@ -1,0 +1,10 @@
+{
+  "candidate_count": 0,
+  "candidates": [],
+  "preliminary_scan": {
+    "bijective_pairs": 17,
+    "dos_three_basic_block_gate": 10
+  },
+  "schema": 1,
+  "status": "deferred-no-clash95-feature-export"
+}

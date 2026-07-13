@@ -1,45 +1,86 @@
 # DOS `clash.c` naming pipeline
 
-Tooling to name the DOS/Watcom build (`clash.c`, 4,219 functions) and regenerate
-it from IDA Pro 9.0. Unlike the `clash95` side (which text-patches `sub_XXXXXX`
-via `tools/apply_sub_renames.py`), the DOS build is named **by integer address in
-the IDA database, then re-exported** — the `apply_sub_renames.py` regex assumes
-6-digit hex names, but DOS addresses are mostly 5 digits and would be corrupted.
+This directory contains the evidence-gated naming and regeneration pipeline for the DOS/Watcom build. DOS names are applied to a temporary IDA database copy by integer address and `clash.c` is regenerated from Hex-Rays; the generated file is never text-patched.
 
-## Assets (outside the repo)
-- `C:\Clash\clash.i64` — the IDA database `clash.c` was decompiled from. Work on a
-  **copy**, never the original.
-- `C:\Program Files\IDA Professional 9.0\idat.exe` — headless decompiler
-  (`idat -A -S"script.py args" -Llog db.i64`).
-- `C:\Clash\ref\clips\{624,630}\` — CLIPS reference source (see `docs/DOS_CLIPS_PIN.md`).
+## Verified baseline
 
-## Name sources → one master `{ea → name}` map
-1. **`dos_existing_names.json`** (470) — the names already in `clash.c` (recovered
-   this project from embedded evidence: CLIPS `DefineFunction2` tables, function-entry
-   debug traces, TPalette hooks). Extracted by parsing `//----- (ADDR)` markers.
-2. **`dos_clips_anchors.json`** (130, high-confidence) — CLIPS functions uniquely
-   identified by their `PrintErrorID(module,id)` fingerprint, matched to CLIPS 6.24
-   source function names (`Env` prefix stripped for the pre-environment DOS era).
-   Produced by `clips_xref.py`. This is the **Stage-1 definitive-anchor** subset; the
-   full campaign extends it via per-module sequence-alignment + call-graph propagation
-   with adversarial verification (see `docs/DOS_CLIPS_PIN.md` and the project plan).
-3. (later) cross-build transfer from `clash95` via binary diffing (`clash95.i64` exists).
+- 4,219 function markers.
+- 886 master-map rows.
+- 872 distinct semantic base names.
+- 14 deterministic address-suffixed IDA collision names.
+- One failed decompilation, function `0xFDF26`.
+- 704 of 2,015 functions named in the embedded CLIPS region.
 
-## Scripts
-- `extract_errids.py` — DOS `(module,id)` PrintErrorID inventory from `clash.c`.
-- `clips_xref.py` — version-pin scoring + `(module,id)` → CLIPS-function anchoring.
-- `../ida/seed_names.py` — apply a `{ea,name}` map into an i64 copy (`set_name`,
-  collision-suffix with hex address, saves DB).
-- `../ida/export_clash_c.py` — `decompile_many` the whole DB to one C file
-  (reproduces the `//----- (ADDR)` marker format).
+A map row is a requested semantic name for one address. When IDA cannot emit that name uniquely, `seed_names.py` records the deterministic `<name>_<EA>` symbol. This is why 886 named addresses correspond to 872 distinct base names and 14 suffixed emitted symbols.
 
-Paths in the scripts point at the out-of-repo assets above — adjust for your machine.
+## External assets
 
-## Regeneration (validated 2026-07-12)
-IDA-9 `decompile_many` reproduces the exact marker format and **all 4,219 original
-function addresses (zero set difference)** with strictly better types. It fixes the
-4 "positive sp value" decompile failures; 3 "call analysis failed" regressions all
-trace to one callee (`sub_E1E30`) whose prototype must be set, leaving a **single
-residual** `#error` (`0xFDF26`, a genuine coroutine/jump-table dispatcher). Order:
-seed all names + fix `sub_E1E30` in the i64 copy → regenerate once → verify (4,219
-markers, ≤1 `#error`, names round-trip) → replace `clash.c` in one commit.
+Work only on temporary copies of:
+
+- `C:\Clash\clash.i64`
+- `C:\Clash\clash95.i64`
+
+IDA Pro 9.0 headless executable:
+
+- `C:\Program Files\IDA Professional 9.0\idat.exe`
+
+CLIPS reference source remains pinned as documented in `docs/DOS_CLIPS_PIN.md`.
+
+## IDA helpers
+
+```text
+export_features.py <output.json>
+seed_names.py <map.json> <report.json> --fix-dos-gettoken
+export_clash_c.py <output.c> <report.json>
+```
+
+`export_features.py` records function names, sizes, basic-block/edge/back-edge counts, immediate constants, callers, callees, data references, and decoded literals. `seed_names.py` applies the master map, reports every collision, and optionally applies the known `GetToken` prototype at `0xE1E30`. `export_clash_c.py` writes the generated C file and a machine-readable marker/decompilation report.
+
+## Master-map precedence
+
+`build_master_map.py` uses this order:
+
+1. registered CLIPS ground truth;
+2. direct CLIPS error-id and unique-string evidence;
+3. existing embedded labels;
+4. independently confirmed CLIPS alignment and clash95 transfer rows.
+
+Alignment and transfer rows only fill unnamed addresses. A clash95 transfer is rejected if its semantic name already exists. `python tools/dos/build_master_map.py --check` verifies that the checked-in generated map and reports match the source artifacts.
+
+## Cross-build transfer
+
+`crossbuild_match.py` consumes feature exports for both databases, the generated C files, the DOS master map, `docs/archive/SUB_RENAME_INDEX.md`, and an independent review JSON. It deterministically produces:
+
+- `dos_crossbuild_proposals.json`
+- `dos_crossbuild_calibration.json`
+- `dos_crossbuild_confirmed.json`
+- `dos_crossbuild_review.json`
+
+A candidate must use literals of at least five characters that are unique to exactly one function in each build. Multiple literals may corroborate one pair, but all mappings must remain bijective. Game candidates must be in `0x12C6E..0x8836F`, remain `sub_<EA>`, be absent from the master map, have at least three basic blocks in both builds, and map to a high- or medium-confidence clash95 name.
+
+Calibration selects 40 evenly distributed eligible CLIPS pairs, or all pairs when fewer exist. Every selected pair must receive an independent verdict; `REJECT`, `UNCERTAIN`, and missing reviews are failures. Transfers remain blocked unless at least 95% confirm equivalence. A game candidate then needs a separate review covering distinctive constants, branch/loop shape, callees, data accesses, and literal context. Literal proximity alone is never sufficient.
+
+The checked-in Batch 261 artifacts are intentionally empty: the repository does not contain a fresh clash95 feature export or completed independent reviews. The preliminary scan reported 17 bijective pairs and 10 that passed the DOS three-basic-block gate, but no name was promoted.
+
+## Regeneration gate
+
+After calibration and candidate review pass:
+
+1. copy both original `.i64` files to scratch locations;
+2. export features from the copies;
+3. run the matcher and inspect all review artifacts;
+4. run `build_master_map.py --check`, then rebuild the map only when confirmed rows exist;
+5. seed a fresh DOS copy with `--fix-dos-gettoken`;
+6. regenerate into scratch;
+7. run `verify_regeneration.py`.
+
+The verifier requires all 4,219 marker addresses in the same order, exactly one failed function at `0xFDF26`, complete master-map round-tripping including documented suffixes, no lost prior name, exactly `886 + confirmed transfers` named functions, exactly 14 existing collisions, and no new transfer collision. Replace repository `clash.c` only when every check passes.
+
+## Tests
+
+```bash
+python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
+python3 -m py_compile tools/dos/*.py tests/dos/*.py
+```
+
+The tests cover multiline IDA signatures, literal uniqueness, pair collapsing, bijection conflicts, confidence/basic-block gates, deterministic calibration selection, master-map precedence and overwrite rejection, name-collision rejection, and regeneration marker/error parsing.

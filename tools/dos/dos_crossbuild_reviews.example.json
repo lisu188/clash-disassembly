@@ -1,0 +1,24 @@
+{
+  "calibration": [
+    {
+      "dos_ea": "0x89860",
+      "clash95_ea": "0x00000000",
+      "verdict": "CONFIRM",
+      "reason": "Both bodies match the same CLIPS 6.24 function by constants, control flow, callees, data accesses, and literal use."
+    }
+  ],
+  "game": [
+    {
+      "dos_ea": "0x12c6e",
+      "clash95_ea": "0x00000000",
+      "verdict": "CONFIRM",
+      "reason": "Independent body-level equivalence review.",
+      "distinctive_constants": [
+        "0x00000000"
+      ],
+      "branch_loop_shape": "Describe matching branches, switch arms, loops, edge count, and back edges.",
+      "callee_data_evidence": "Describe matching callees and data references.",
+      "literal_context": "Describe how every shared literal is used in the matching bodies."
+    }
+  ]
+}
