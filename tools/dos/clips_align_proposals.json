@@ -1,0 +1,874 @@
+[
+ {
+  "ea": "0x89cf0",
+  "name": "RtnArgCount",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "order-locked in argacces.c (seg 3->6, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x89d20",
+  "name": "ArgCountCheck",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "order-locked in argacces.c (seg 3->6, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a050",
+  "name": "GetNumericArgument",
+  "clips_file": "argacces.c",
+  "confidence": "high",
+  "evidence": "shared string: integer or float",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a0f0",
+  "name": "GetLogicalName",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "callee agree: strcmp",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a250",
+  "name": "GetModuleName",
+  "clips_file": "argacces.c",
+  "confidence": "high",
+  "evidence": "shared string: defmodule name",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a2d0",
+  "name": "GetConstructName",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "order-locked in argacces.c (seg 11->14, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a470",
+  "name": "CheckFunctionArgCount",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "callee agree: atoi",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8a5e0",
+  "name": "ExpectedTypeError2",
+  "clips_file": "argacces.c",
+  "confidence": "medium",
+  "evidence": "order-locked in argacces.c (seg 17->19, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8aa10",
+  "name": "BloadandRefresh",
+  "clips_file": "bload.c",
+  "confidence": "medium",
+  "evidence": "order-locked in bload.c (seg 2->4, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x8d5d0",
+  "name": "PrintSlotSources",
+  "clips_file": "classexm.c",
+  "confidence": "medium",
+  "evidence": "order-locked in classexm.c (seg 7->9, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x91e20",
+  "name": "BuildCompositeFacets",
+  "clips_file": "clsltpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in clsltpsr.c (seg 3->5, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x96ca0",
+  "name": "ParseConstruct",
+  "clips_file": "cstrcpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in cstrcpsr.c (seg 2->4, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x97030",
+  "name": "RemoveConstructFromModule",
+  "clips_file": "cstrcpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: CSTRCPSR",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x9a4c0",
+  "name": "ParseTypeAttribute",
+  "clips_file": "cstrnpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: ?VARIABLE",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x9e1b0",
+  "name": "CloseDeffunctionFiles",
+  "clips_file": "dffnxcmp.c",
+  "confidence": "medium",
+  "evidence": "order-locked in dffnxcmp.c (seg 1->4, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x9e210",
+  "name": "DeffunctionModuleToCode",
+  "clips_file": "dffnxcmp.c",
+  "confidence": "medium",
+  "evidence": "order-locked in dffnxcmp.c (seg 1->4, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x9ec10",
+  "name": "DeffunctionDeleteError",
+  "clips_file": "dffnxfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in dffnxfun.c (seg 9->12, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0x9ec30",
+  "name": "SaveDeffunctionHeaders",
+  "clips_file": "dffnxfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in dffnxfun.c (seg 9->12, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa2670",
+  "name": "NextActivationToFire",
+  "clips_file": "engine.c",
+  "confidence": "medium",
+  "evidence": "order-locked in engine.c (seg 2->4, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa33e0",
+  "name": "InstallPrimitive",
+  "clips_file": "evaluatn.c",
+  "confidence": "high",
+  "evidence": "shared string: EVALUATN",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa3420",
+  "name": "SetEvaluationError",
+  "clips_file": "evaluatn.c",
+  "confidence": "medium",
+  "evidence": "order-locked in evaluatn.c (seg 1->8, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa3440",
+  "name": "GetEvaluationError",
+  "clips_file": "evaluatn.c",
+  "confidence": "medium",
+  "evidence": "order-locked in evaluatn.c (seg 1->8, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa3450",
+  "name": "SetHaltExecution",
+  "clips_file": "evaluatn.c",
+  "confidence": "medium",
+  "evidence": "order-locked in evaluatn.c (seg 1->8, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa3460",
+  "name": "GetHaltExecution",
+  "clips_file": "evaluatn.c",
+  "confidence": "medium",
+  "evidence": "order-locked in evaluatn.c (seg 1->8, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa3470",
+  "name": "ReturnValues",
+  "clips_file": "evaluatn.c",
+  "confidence": "medium",
+  "evidence": "order-locked in evaluatn.c (seg 1->8, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa5270",
+  "name": "PushRtnBrkContexts",
+  "clips_file": "exprnpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in exprnpsr.c (seg 3->13, 9 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa52d0",
+  "name": "PopRtnBrkContexts",
+  "clips_file": "exprnpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in exprnpsr.c (seg 3->13, 9 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa5320",
+  "name": "CheckExpressionAgainstRestrictions",
+  "clips_file": "exprnpsr.c",
+  "confidence": "medium",
+  "evidence": "callee agree: atoi",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa54b0",
+  "name": "CollectArguments",
+  "clips_file": "exprnpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in exprnpsr.c (seg 3->13, 9 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa5530",
+  "name": "ArgumentParse",
+  "clips_file": "exprnpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: EXPRNPSR",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa55f0",
+  "name": "ParseAtomOrExpression",
+  "clips_file": "exprnpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: EXPRNPSR",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa5690",
+  "name": "GroupActions",
+  "clips_file": "exprnpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: (expansion-call)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa57b0",
+  "name": "SetSequenceOperatorRecognition",
+  "clips_file": "exprnpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in exprnpsr.c (seg 3->13, 9 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa7610",
+  "name": "Facts",
+  "clips_file": "factcom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factcom.c (seg 6->8, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xa7930",
+  "name": "SaveFacts",
+  "clips_file": "factcom.c",
+  "confidence": "high",
+  "evidence": "shared string: save-facts",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa530",
+  "name": "PrintFactIdentifier",
+  "clips_file": "factmngr.c",
+  "confidence": "high",
+  "evidence": "shared string: f-%ld",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa5e0",
+  "name": "DecrementFactBasisCount",
+  "clips_file": "factmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factmngr.c (seg 4->9, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa5f0",
+  "name": "IncrementFactBasisCount",
+  "clips_file": "factmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factmngr.c (seg 4->9, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa600",
+  "name": "PrintFact",
+  "clips_file": "factmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factmngr.c (seg 4->9, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa680",
+  "name": "MatchFactFunction",
+  "clips_file": "factmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factmngr.c (seg 4->9, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaa860",
+  "name": "RemoveGarbageFacts",
+  "clips_file": "factmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in factmngr.c (seg 9->11, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaf430",
+  "name": "CloseDefgenericFiles",
+  "clips_file": "genrccmp.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccmp.c (seg 1->4, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xaf4b0",
+  "name": "DefgenericModuleToCode",
+  "clips_file": "genrccmp.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccmp.c (seg 1->4, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xafdb0",
+  "name": "Undefgeneric",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 30->32, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb09c0",
+  "name": "ListMethodsForGeneric",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 9->15, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb0a50",
+  "name": "DefgenericWatchAccess",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 9->15, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb0a80",
+  "name": "DefgenericWatchPrint",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 9->15, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb0ab0",
+  "name": "DefmethodWatchAccess",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 9->15, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb0af0",
+  "name": "DefmethodWatchPrint",
+  "clips_file": "genrccom.c",
+  "confidence": "medium",
+  "evidence": "order-locked in genrccom.c (seg 9->15, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb21d0",
+  "name": "CheckGenericExists",
+  "clips_file": "genrcfun.c",
+  "confidence": "high",
+  "evidence": "shared string:  in function ",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb56a0",
+  "name": "AddDefglobal",
+  "clips_file": "globlpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: defglobal",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb57f0",
+  "name": "ReplaceGlobalVariable",
+  "clips_file": "globlpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: defglobal",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xb9480",
+  "name": "LoadSingleBinaryInstance",
+  "clips_file": "insfile.c",
+  "confidence": "medium",
+  "evidence": "order-locked in insfile.c (seg 13->15, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xbb310",
+  "name": "InitSlotsCommand",
+  "clips_file": "insmngr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in insmngr.c (seg 11->13, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc04c0",
+  "name": "ReadTokenFromStdin",
+  "clips_file": "iofun.c",
+  "confidence": "high",
+  "evidence": "shared string: stdin",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc3250",
+  "name": "ExpandFuncMultifield",
+  "clips_file": "miscfun.c",
+  "confidence": "high",
+  "evidence": "shared string: (set-evaluation-error)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc3430",
+  "name": "CauseEvaluationError",
+  "clips_file": "miscfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in miscfun.c (seg 14->20, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc54c0",
+  "name": "DeleteDefmodule",
+  "clips_file": "modulpsr.c",
+  "confidence": "medium",
+  "evidence": "callee agree: strcmp",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc7680",
+  "name": "NewSystemHandler",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 6->12, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc7720",
+  "name": "InsertHandlerHeader",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 6->12, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc7a30",
+  "name": "HandlersExecuting",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 6->12, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc7a80",
+  "name": "DeleteHandler",
+  "clips_file": "msgfun.c",
+  "confidence": "high",
+  "evidence": "shared string: MSGPSR",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc7cd0",
+  "name": "DeallocateMarkedHandlers",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "callee agree: strlen",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc8060",
+  "name": "PrintHandler",
+  "clips_file": "msgfun.c",
+  "confidence": "high",
+  "evidence": "shared string:  in class ",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc80c0",
+  "name": "FindHandlerByAddress",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 13->18, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc8130",
+  "name": "FindHandlerByIndex",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 13->18, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc81b0",
+  "name": "FindHandlerNameGroup",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 13->18, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc8380",
+  "name": "DisplayCore",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 18->22, 3 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc8480",
+  "name": "FindPreviewApplicableHandlers",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 18->22, 3 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc84e0",
+  "name": "WatchMessage",
+  "clips_file": "msgfun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgfun.c (seg 18->22, 3 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc95d0",
+  "name": "FindApplicableHandlers",
+  "clips_file": "msgpass.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgpass.c (seg 0->3, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc9630",
+  "name": "CallHandlers",
+  "clips_file": "msgpass.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgpass.c (seg 0->3, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xc9fb0",
+  "name": "SlotReferenceVar",
+  "clips_file": "msgpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in msgpsr.c (seg 0->2, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xcc2b0",
+  "name": "GetMvPrognField",
+  "clips_file": "multifun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in multifun.c (seg 19->25, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xcc320",
+  "name": "ReplaceMultiValueField",
+  "clips_file": "multifun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in multifun.c (seg 19->25, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xcc520",
+  "name": "InsertMultiValueField",
+  "clips_file": "multifun.c",
+  "confidence": "medium",
+  "evidence": "order-locked in multifun.c (seg 19->25, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd0fe0",
+  "name": "PlaceObjectPattern",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd1160",
+  "name": "FindObjectPatternNode",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd1220",
+  "name": "CreateNewObjectPatternNode",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd13f0",
+  "name": "DetachObjectPattern",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd1610",
+  "name": "ClearObjectPatternMatches",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd1660",
+  "name": "RemoveObjectPartialMatches",
+  "clips_file": "objrtbld.c",
+  "confidence": "medium",
+  "evidence": "order-locked in objrtbld.c (seg 2->9, 6 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd6d80",
+  "name": "GenProcWildcardReference",
+  "clips_file": "prccode.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prccode.c (seg 14->19, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd6db0",
+  "name": "PushProcParameters",
+  "clips_file": "prccode.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prccode.c (seg 14->19, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd6e80",
+  "name": "PopProcParameters",
+  "clips_file": "prccode.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prccode.c (seg 14->19, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd6f80",
+  "name": "GetProcParamExpressions",
+  "clips_file": "prccode.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prccode.c (seg 14->19, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd7690",
+  "name": "RtnProcParam",
+  "clips_file": "prccode.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prccode.c (seg 0->2, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd89a0",
+  "name": "ReplaceLoopCountVars",
+  "clips_file": "prcdrpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: loop-for-count",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd8a50",
+  "name": "IfParse",
+  "clips_file": "prcdrpsr.c",
+  "confidence": "medium",
+  "evidence": "callee agree: strcmp",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd8c30",
+  "name": "PrognParse",
+  "clips_file": "prcdrpsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prcdrpsr.c (seg 6->11, 4 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xd8cb0",
+  "name": "BindParse",
+  "clips_file": "prcdrpsr.c",
+  "confidence": "high",
+  "evidence": "shared string: defglobal",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xda560",
+  "name": "PrintErrorID",
+  "clips_file": "prntutil.c",
+  "confidence": "medium",
+  "evidence": "order-locked in prntutil.c (seg 5->7, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xdfaa0",
+  "name": "MultifieldCardinalityViolation",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 1->3, 1 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xdff20",
+  "name": "AddToVariableConstraints",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 4->10, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xdff90",
+  "name": "UnionVariableConstraints",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 4->10, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0010",
+  "name": "GetExpressionVarConstraints",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 4->10, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0090",
+  "name": "DeriveVariableConstraints",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 4->10, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0110",
+  "name": "CheckRHSForConstraintErrors",
+  "clips_file": "rulecstr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulecstr.c (seg 4->10, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0af0",
+  "name": "ParseSalience",
+  "clips_file": "rulelhs.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulelhs.c (seg 2->6, 3 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0bc0",
+  "name": "ParseAutoFocus",
+  "clips_file": "rulelhs.c",
+  "confidence": "high",
+  "evidence": "shared string: FALSE",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe0c40",
+  "name": "LHSPattern",
+  "clips_file": "rulelhs.c",
+  "confidence": "high",
+  "evidence": "shared string: RULELHS",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe11f0",
+  "name": "GroupPatterns",
+  "clips_file": "rulelhs.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulelhs.c (seg 6->9, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1290",
+  "name": "TestPattern",
+  "clips_file": "rulelhs.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulelhs.c (seg 6->9, 2 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1990",
+  "name": "CreateNewDisjunct",
+  "clips_file": "rulepsr.c",
+  "confidence": "high",
+  "evidence": "shared string: defrule",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1aa0",
+  "name": "ReplaceRHSVariable",
+  "clips_file": "rulepsr.c",
+  "confidence": "high",
+  "evidence": "shared string: duplicate",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1b50",
+  "name": "ParseRuleRHS",
+  "clips_file": "rulepsr.c",
+  "confidence": "high",
+  "evidence": "shared string: \\n   ",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1bd0",
+  "name": "RuleComplexity",
+  "clips_file": "rulepsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulepsr.c (seg 1->7, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe1c30",
+  "name": "ExpressionComplexity",
+  "clips_file": "rulepsr.c",
+  "confidence": "medium",
+  "evidence": "order-locked in rulepsr.c (seg 1->7, 5 fns)",
+  "source": "clips-align"
+ },
+ {
+  "ea": "0xe2410",
+  "name": "ScanSymbol",
+  "clips_file": "scanner.c",
+  "confidence": "medium",
+  "evidence": "order-locked in scanner.c (seg 2->4, 1 fns)",
+  "source": "clips-align"
+ }
+]
