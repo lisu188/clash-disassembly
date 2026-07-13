@@ -1,108 +1,194 @@
 # AGENTS
 
 ## 1. Mission
-- Reverse-engineer this decompiled Clash-like codebase into a readable, buildable, and increasingly runnable C project.
-- Long-term semantic goal: recover concrete unit types, categories, stats, and their relationships from implementation evidence.
-- Current engineering goal: turn the recovered gameplay core into a real SDL-backed executable that enters the authentic boot path, reaches responsive menus, and eventually supports at least one narrow playable turn.
+
+- Recover the DOS and Win95 Clash binaries into readable, evidence-backed C and
+  structured recovery artifacts.
+- Keep the Win95 reconstruction buildable and increasingly behaviorally faithful
+  under the SDL-backed runtime.
+- Recover campaign behavior through authentic routes rather than state shortcuts.
+- Keep the three project tracks separate: DOS disassembly, Win95 runtime
+  reconstruction, and campaign-route validation.
+
+See `docs/PROJECT_TRACKS.md` for the current boundaries, baselines, and completion
+language for each track.
 
 ## 2. Current Repo Reality
-- `clash95.c` already compiles cleanly enough for the repo's recovered static-library target.
-- The project is much closer to a recovered gameplay core than to a playable port.
-- Gameplay semantics are already moderately recovered across unit, battle, building, port, road, and prisoner systems.
-- The main frontier is no longer parser triage; it is startup, link, runtime, and boot-path fidelity.
-- The final platform target remains SDL. Do not reintroduce Win32 as the final runtime layer.
-- The recovered executable is expected to run under WSL with SDL as the platform layer; do not rely on a native Windows host.
+
+### DOS disassembly
+
+- `clash.c` preserves 4,219 function markers.
+- 4,218 of 4,219 functions decompile successfully; `0xFDF26` is the only failed
+  function.
+- 886 addresses have evidence-backed names.
+- The embedded CLIPS region has 704 of 2,015 functions named.
+- The next naming milestone is a fresh, independently reviewed
+  `clash95`-to-DOS cross-build transfer followed by full IDA regeneration checks.
+
+### Win95 reconstruction
+
+- The 3,031-symbol `sub_XXXXXX` rename campaign is complete.
+- All 17 `JUMPOUT` control-flow scars are recovered into assembly-backed C.
+- `clash95_bootstrap` compiles, links, boots through the authentic SDL-backed
+  runtime, reaches responsive menus, and runs validated gameplay routes.
+- Multiplayer map IDs `0..10` have direct-load visual/liveness evidence.
+- Broad placeholder renaming is no longer the main frontier. Remaining work is
+  reached behavioral recovery, structure recovery, compatibility cleanup, and
+  campaign validation.
+
+### Campaign validation
+
+- Missions `00..04` are complete through their canonical direct-route gates.
+- Missions `05..19` remain partial direct-load probes.
+- Mission `05` is the first active campaign blocker.
+- Full Campaign-menu entry and automatic mission advancement remain unproven.
 
 ## 3. Current Blocker Families
-- There is still no fully recovered `main` / `_WinMain@16` end-to-end executable path.
-- `_wcpp_*` and related CRT/runtime glue families are still only partially understood.
-- Quarantined allocator, file-handle, event, and thread stubs still stand in for real behavior in important areas.
-- `JUMPOUT` control-flow scars are fully eliminated: all 17 "control flows out of bounds" artifacts in `clash95.c` are recovered into authentic structured C backed by `clash95.asm` (`grep -c JUMPOUT clash95.c` == 0). See `docs/STATUS.md` and the 2026-06-30 rename-log entry.
-- SDL containment exists, but the repo is not yet at "boot to menu and play a match."
+
+- Mission `05` lacks enough strategic-turn and AI-state observability to recover
+  the smallest authentic owner-3 elimination route safely.
+- Full-menu campaign progression and automatic mission advancement are not yet
+  validated.
+- `CSS_Init` and its quarantined legacy audio/device table remain broader startup
+  debt.
+- Reached allocator, file-handle, event, thread, and CRT compatibility stubs may
+  still approximate original behavior.
+- DOS semantic coverage remains sparse outside the CLIPS region.
+- DOS function `0xFDF26` still requires manual control-flow recovery in IDA.
 
 ## 4. Practical Priority Order
-1. Produce a runnable executable binary.
-2. Make it enter the authentic game boot path.
-3. Make menus and UI responsive under SDL-backed input, timing, and rendering.
-4. Make one narrow playable turn possible.
-5. Continue semantic renaming and structure recovery where it directly supports those goals.
-6. Continue broader unit/stat recovery when it is the highest-value safe frontier or when it clarifies the boot/menu/turn path.
+
+1. Keep public CI, DOS regeneration checks, and `clash95_bootstrap` green.
+2. Run the first fresh reviewed `clash95`-to-DOS cross-build transfer batch.
+3. Add mission-05 turn, AI, building, stack, and objective observability.
+4. Recover and regression-test authentic mission-05 completion.
+5. Prove real Campaign-menu entry and at least one automatic mission advance.
+6. Recover DOS function `0xFDF26` without manually editing generated `clash.c`.
+7. Recover `CSS_Init` and replace reached compatibility stubs behind the SDL seam.
+8. Continue semantic and structure recovery only where it supports an active
+   frontier or has unusually strong independent evidence.
 
 ## 5. Scope
-- **In scope:** startup/entrypoint reconstruction, SDL seam work, build/link recovery, runtime helper recovery, menu/UI/event-loop behavior, session/game-start initialization, narrow playable-turn enablement, and semantic recovery of enums/registries/structs/tables/helpers that materially support those goals.
-- **Also in scope:** unit type registries, spawn/factory logic, stat structs/tables, config loaders, targeting/scaling/serialization logic when they expose types or stats.
-- **Out of scope:** unrelated refactors, speculative rewrites, cosmetic cleanup, behavior changes made only for convenience, or fake/demo loops that bypass authentic recovered game code.
+
+- **DOS scope:** IDA database analysis, evidence-gated naming, cross-build
+  matching, CLIPS-source matching, control-flow recovery, generated-C
+  regeneration, and deterministic verification.
+- **Win95 scope:** assembly-backed source recovery, SDL platform containment,
+  runtime helper recovery, typed state/record recovery, build/link fidelity, and
+  reached gameplay behavior.
+- **Campaign scope:** authentic menu, mission, battle, objective, failure,
+  persistence, and automatic-advance behavior with log and frame evidence.
+- **Also in scope:** unit registries, stats, structures, tables, save formats,
+  config loaders, AI scripting APIs, and serialization when they support a
+  current frontier.
+- **Out of scope:** speculative rewrites, cosmetic cleanup, fake/demo loops,
+  objective-state shortcuts, generated DOS C text patches, or behavior changes
+  made only for convenience.
 
 ## 6. Evidence Order
-1. Corroborated behavior across `clash95.c`, `clash95.asm`, `clash95.map`, and `clash95.exe`.
-2. Function bodies and direct data flow in `clash95.c`.
-3. Struct layouts, lookup tables, arrays, enums, switch dispatch, and shared-state access patterns.
-4. Call graph neighborhoods, strings, debug text, config/resource keys, and map ordering.
-5. Existing recovered artifacts and prior rename logs.
-6. External Clash terminology only as secondary confirmation.
+
+### DOS
+
+1. Original DOS binary and disposable IDA database analysis.
+2. Generated `clash.c`, function markers, raw control flow, callers, callees,
+   constants, strings, and data references.
+3. Registered CLIPS ground truth and pinned CLIPS source evidence.
+4. Independently confirmed cross-build equivalence with `clash95`.
+5. Existing repository labels only when they do not conflict with stronger
+   evidence.
+
+### Win95
+
+1. `clash95.map` for public symbol spelling and segment-relative addresses.
+2. `clash95.asm`, `clash95.c`, and live route evidence for behavior.
+3. Struct layouts, lookup tables, arrays, enums, switch dispatch, and shared-state
+   access patterns.
+4. Call graph neighborhoods, strings, resource keys, and local installed game
+   data.
+5. Existing recovered artifacts and rename logs.
+6. External terminology only as secondary confirmation.
 
 ## 7. Local Game-File Corroboration
-- The installed game files under `/mnt/c/clash` are the real local game-data root and can be inspected when actual asset, config, resource, or text evidence is needed.
-- `/mnt/c/clash/Manual.pdf` can also be inspected as secondary evidence for game concepts, UI flow, and terminology.
-- Treat `/mnt/c/clash` as corroborating evidence, not as a replacement for function/data-flow proof from the recovered codebase.
+
+- The installed game files under `/mnt/c/clash` are the runtime asset root for
+  asset-dependent route work.
+- `/mnt/c/clash/Manual.pdf` may provide secondary terminology and UI-flow
+  evidence.
+- Local assets corroborate code evidence; they do not replace control-flow or
+  data-flow proof.
+- Public CI must not require or publish retail assets.
 
 ## 8. Confidence Rules
+
 - **High:** multiple independent signals align.
 - **Medium:** strongly suggested but not fully proven.
 - **Low:** ambiguous or speculative; never present it as fact.
-- Mark every ambiguous finding explicitly as ambiguous.
-- Prefer small, behavior-preserving repairs over rich guessed abstractions.
+- Record rejected and uncertain candidates, not only confirmations.
+- Never silently upgrade inferred semantics to confirmed semantics.
+- Prefer small behavior-preserving repairs over rich guessed abstractions.
 
 ## 9. SDL Platform Rule
-- SDL is the final platform, window, render, timing, and input layer.
-- Keep gameplay code separated from platform glue.
-- Replace or contain Win32-era assumptions behind the existing SDL seam in `platform_sdl.h` and `platform_sdl_runtime.c`.
-- The supported runtime target is WSL plus SDL, not a Windows-only deployment path.
-- A dummy SDL window alone is not success; the goal is authentic recovered boot/runtime behavior.
+
+- SDL remains the final platform, window, render, timing, input, and audio layer.
+- Keep original gameplay behavior separate from platform glue.
+- Contain Win32-era assumptions behind `platform_sdl.h` and
+  `platform_sdl_runtime.c`.
+- Put inert compile-only scaffolding in `compat/decomp_runtime_stubs.c` and replace
+  it only when reached behavior is understood.
+- A live process or dummy window is not sufficient proof; inspect actual
+  presented frames for visual milestones.
 
 ## 10. Workflow
-- Continue until canceled, safely exhausted, or blocked by concrete repo-wide limits.
-- Revisit earlier conclusions when new evidence surfaces.
-- Continue the existing progress artifacts rather than recreating them:
+
+- Work on one explicit track and frontier per batch.
+- Do not edit original IDA databases; use disposable copies.
+- Never manually patch generated DOS `clash.c`.
+- Recover whole function families and contiguous state blocks rather than isolated
+  names when practical.
+- Revisit earlier conclusions when stronger evidence appears.
+- Continue existing progress artifacts rather than recreating them:
+  - `DISASSEMBLY_STATUS.md`
+  - `docs/STATUS.md`
   - `docs/archive/COMPILATION_PROGRESS.md`
   - `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`
   - `RECOVERED_STRUCTURES.json`
   - `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`
   - `UNIT_TYPES_AND_STATS.json`
-- Prefer the current highest-value frontier in this order:
-  1. executable/link blockers
-  2. startup blockers
-  3. SDL/platform blockers
-  4. menu/UI blockers
-  5. session-init blockers
-  6. one-playable-turn blockers
-  7. nearby semantic rename/structure recovery
-- Validate after each batch with the cheapest meaningful checks available:
-  - compile check
-  - link/build check
-  - executable launch smoke test
-  - runtime milestone check
-  - when validating rendering or UI/runtime behavior, inspect captured frames instead of relying only on logs, counters, or breakpoints
-- When testing any SDL/windowed executable path, inspect actual presented frames in addition to process liveness. Use the frame-dump hook (`CLASH95_SCREENSHOT_PREFIX` or `CLASH95_DUMP_PRESENTED_FRAMES_PREFIX`) when practical, and verify that captured frames are not blank/all-black before treating a visual runtime milestone as reached.
+- Validate each batch with the cheapest meaningful checks, then the relevant
+  track-specific gate:
+  - formatting and JSON checks;
+  - compile and link checks;
+  - DOS tooling and regeneration invariants;
+  - executable smoke tests;
+  - route objective/failure markers;
+  - current nonblank frame evidence;
+  - repeatable regression runs.
 
 ## 11. Required Outputs
-- Maintain `docs/archive/COMPILATION_PROGRESS.md`.
-- Maintain `docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md`.
-- Maintain `RECOVERED_STRUCTURES.json`.
-- Maintain `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md`.
-- Maintain `UNIT_TYPES_AND_STATS.json`.
-- After each batch, record:
-  - current frontier
-  - blockers removed
-  - compile/link/runtime status
-  - highest authentic runtime milestone reached
-  - renamed functions/helpers/globals/tables/structs
-  - ambiguous candidates deferred
+
+After each batch, record:
+
+- track and current frontier;
+- blockers removed;
+- evidence used and confidence level;
+- compile/link/runtime or regeneration status;
+- highest authentic runtime or naming milestone reached;
+- renamed functions, globals, tables, structures, or fields;
+- rejected and ambiguous candidates deferred;
+- exact validation commands and durable evidence locations.
+
+Update only the artifacts affected by the batch. Do not manufacture placeholder
+structure or semantic entries to make reports look complete.
 
 ## 12. Do-Not Rules
-- Do not invent semantics absent code evidence.
+
+- Do not invent semantics absent evidence.
 - Do not let external terminology override implementation proof.
-- Do not drift into unrelated cleanup while boot/runtime blockers remain.
-- Do not treat "the static library compiles" as the final success condition.
-- Do not accept semantic drift just because something links.
-- Do not replace authentic recovered flow with a fake demo harness unless it is clearly quarantined as a temporary smoke-only step.
+- Do not conflate decompiled, named, buildable, runnable, route-complete, and
+  campaign-complete.
+- Do not drift into unrelated cleanup while an active frontier is blocked.
+- Do not accept semantic drift merely because code compiles or links.
+- Do not replace authentic recovered flow with fake demo behavior.
+- Do not promote direct mission boot as final campaign acceptance.
+- Do not remove historical evidence unless a documented replacement supersedes
+  it.
