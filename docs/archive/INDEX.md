@@ -40,6 +40,9 @@ status/link consistency pass over the existing consolidated tree.
 | `docs/archive/UNIT_TYPES_AND_STATS_REPORT.md` | `UNIT_TYPES_AND_STATS_REPORT.md` | unit/stat report history |
 | `docs/archive/CONVERSATION_FINDINGS_GAP_AUDIT.md` | `docs/CONVERSATION_FINDINGS_GAP_AUDIT.md` | historical gap audit |
 | `docs/archive/source-map.md` | `docs/source-map.md` | previous source-hygiene map |
+| `docs/archive/DOS_COMPILATION_PROGRESS.md` | new | focused DOS Batch 259-261 validation history |
+| `docs/archive/DOS_RENAME_LOG.md` | new | focused DOS master-map and cross-build rename evidence |
+| `docs/archive/DOS_CLIPS_CROSSREF.md` | new | DOS baseline, CLIPS calibration, and clash95 transfer contract |
 
 Historical entries may mention paths that were correct at the time they were
 written. Prefer current docs in `docs/` for navigation, and preserve archived
