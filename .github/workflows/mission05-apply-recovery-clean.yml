@@ -21,7 +21,23 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev
       - name: Apply recovery patch
-        run: python3 tools/apply_mission05_failure_recovery.py
+        run: |
+          set +e
+          python3 tools/apply_mission05_failure_recovery.py >mission05-patch.log 2>&1
+          echo $? >mission05-patch.rc
+          set -e
+          cat mission05-patch.log
+      - name: Upload patch diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission05-patch-diagnostics
+          path: |
+            mission05-patch.log
+            mission05-patch.rc
+          if-no-files-found: error
+      - name: Require patch success
+        run: test "$(cat mission05-patch.rc)" = 0
       - name: Validate metadata and documentation
         run: |
           python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
@@ -38,6 +54,7 @@ jobs:
           build-mission05/bin/clash95_unit_tests
       - name: Commit recovered changes
         run: |
+          rm -f mission05-patch.log mission05-patch.rc
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
