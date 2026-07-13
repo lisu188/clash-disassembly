@@ -7,15 +7,18 @@ enable_testing()
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 find_package(X11 REQUIRED)
+find_package(Threads REQUIRED)
 
 add_library(clash95_recovered STATIC
   clash95.c
+  runtime_mission_trace.c
   platform_sdl_runtime.c
   compat/decomp_runtime_stubs.c
 )
 
 add_library(clash95_bootstrap_objects OBJECT
   clash95.c
+  runtime_mission_trace.c
   platform_sdl_runtime.c
   compat/decomp_runtime_stubs.c
 )
@@ -50,8 +53,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_link_options(clash95_bootstrap PRIVATE -Wl,--gc-sections -no-pie)
 endif()
 
-target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2 X11::X11)
-target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 X11::X11 m)
+target_link_libraries(clash95_recovered PUBLIC PkgConfig::SDL2 X11::X11 Threads::Threads)
+target_link_libraries(clash95_bootstrap PRIVATE PkgConfig::SDL2 X11::X11 Threads::Threads m)
 
 set_target_properties(clash95_recovered PROPERTIES
   OUTPUT_NAME clash95_recovered
@@ -230,6 +233,32 @@ add_campaign_route_regression_test(02 900)
 add_campaign_route_regression_test(03 900)
 # Leave CTest headroom above mission_04.env's 3600-second route timeout.
 add_campaign_route_regression_test(04 3900)
+
+add_executable(runtime_mission_trace_tests
+  tests/runtime_mission_trace_test.c
+  runtime_mission_trace.c
+)
+target_include_directories(runtime_mission_trace_tests PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
+target_compile_definitions(runtime_mission_trace_tests PRIVATE
+  RUNTIME_MISSION_TRACE_DISABLE_CONSTRUCTOR=1
+)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(runtime_mission_trace_tests PRIVATE -std=gnu89 -w)
+endif()
+target_link_libraries(runtime_mission_trace_tests PRIVATE Threads::Threads)
+set_target_properties(runtime_mission_trace_tests PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+add_test(
+  NAME runtime_mission_trace_tests
+  COMMAND $<TARGET_FILE:runtime_mission_trace_tests>
+)
+set_tests_properties(runtime_mission_trace_tests PROPERTIES
+  TIMEOUT 10
+  LABELS "unit;mission_state"
+)
 
 # ---------------------------------------------------------------------------
 # Unit-test / coverage target (opt-in: -DCLASH95_COVERAGE=ON).
