@@ -7,6 +7,7 @@ import ida_funcs
 import ida_gdl
 import ida_nalt
 import ida_pro
+import ida_ua
 import idautils
 import idc
 
@@ -41,14 +42,25 @@ def main():
         function = ida_funcs.get_func(ea)
         if not function:
             continue
+        edge_count = 0
+        back_edges = 0
         try:
-            basic_blocks = ida_gdl.FlowChart(function).size
+            flow = ida_gdl.FlowChart(function)
+            basic_blocks = flow.size
+            for block in flow:
+                successors = list(block.succs())
+                edge_count += len(successors)
+                back_edges += sum(1 for successor in successors if successor.start_ea <= block.start_ea)
         except Exception:
             basic_blocks = 0
         callees = set()
         data_refs = set()
         literals = set()
+        constants = set()
         for item in idautils.FuncItems(ea):
+            for operand_index in range(8):
+                if idc.get_operand_type(item, operand_index) == ida_ua.o_imm:
+                    constants.add(idc.get_operand_value(item, operand_index))
             for target in idautils.CodeRefsFrom(item, 0):
                 target_function = ida_funcs.get_func(target)
                 if target_function and target_function.start_ea != function.start_ea:
@@ -68,6 +80,9 @@ def main():
             "name": ida_funcs.get_func_name(ea),
             "size": function.end_ea - function.start_ea,
             "bb": basic_blocks,
+            "edges": edge_count,
+            "back_edges": back_edges,
+            "constants": ["0x%X" % value for value in sorted(constants)],
             "callees": ["0x%X" % value for value in sorted(callees)],
             "callers": ["0x%X" % value for value in sorted(callers)],
             "data_refs": ["0x%X" % value for value in sorted(data_refs)],
