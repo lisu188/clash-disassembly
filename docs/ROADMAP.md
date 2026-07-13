@@ -1,36 +1,73 @@
 # Roadmap
 
-## Near Term
+The repository has three active recovery tracks. See `docs/PROJECT_TRACKS.md` for
+current baselines and completion language.
 
-- Keep `clash95_bootstrap` building cleanly under the SDL-backed runtime.
-- Preserve menu and route input responsiveness while fixing reached
-  gameplay/runtime blockers.
-- Recover mission `05` from its direct-load owner-3 elimination blocker to
-  natural objective completion, without triggering its player-1/player-2
-  friendly-attack failure branch.
-- Promote route env files from `partial` to `complete` only after the objective
-  markers and nonblank frame evidence pass.
-- Keep artifact pruning enabled so long route investigations do not grow the
-  checkout indefinitely.
+## Immediate Sequence
+
+1. Keep public CI, DOS regeneration checks, and `clash95_bootstrap` green.
+2. Run a fresh, independently reviewed `clash95`-to-DOS cross-build transfer and
+   regenerate `clash.c` only after every invariant passes.
+3. Add mission-05 strategic-turn, AI, building, stack, and objective observability.
+4. Recover mission `05` to natural objective completion without attacking players
+   `1` or `2`.
+5. Prove Campaign-menu entry and at least one natural automatic mission advance.
+6. Recover DOS function `0xFDF26` through correct IDA control-flow reconstruction.
+7. Recover `CSS_Init` and its legacy audio/device table behind the SDL seam.
+
+## DOS Disassembly
+
+- Preserve all 4,219 generated function markers and every accepted prior name.
+- Promote names only from registered ground truth, direct evidence, independently
+  confirmed CLIPS alignment, or independently confirmed cross-build equivalence.
+- Expand cross-build matching from unique literals toward reviewed structural
+  evidence only after the first calibrated transfer batch succeeds.
+- Recover `0xFDF26` without manually patching generated C.
+- Increase evidence-backed semantic coverage outside the embedded CLIPS region.
+- Keep master-map, collision, marker, failed-function, and round-trip checks
+  deterministic and fail-closed.
 
 ## Campaign Recovery
 
 - First campaign: clear missions `00..09` from the real Campaign menu path.
 - Second campaign: clear missions `10..19` from the real Campaign menu path.
-- Direct mission boot remains a debugging tool only; final proof must use menu
-  entry, natural mission completion, and auto-advance.
+- Treat direct mission boot as a diagnostic tool only.
+- Promote route env files from `partial` to `complete` only after natural objective
+  completion, absence of mission failure, deterministic checkpoints, repeatable
+  regression success, and current nonblank frame evidence.
+- Prove campaign persistence and automatic advancement separately from direct
+  route completion.
 
-## Runtime Recovery
+## Win95 Runtime Recovery
 
-- Continue replacing reached decompiler scars with assembly-backed recovered C.
-- Keep SDL, timing, input, and rendering behavior behind the existing platform
-  seam.
-- Do not add fake/demo loops or objective-state shortcuts as acceptance proof.
+- Keep `clash95_bootstrap` building cleanly under the SDL-backed runtime.
+- Preserve menu, route, timing, input, rendering, save-format, and multiplayer-map
+  milestones while fixing reached blockers.
+- Continue replacing reached decompiler artifacts with assembly-backed recovered C.
+- Inventory and replace compatibility stubs only when active routes reach them.
+- Keep original game behavior out of platform and compile-only shims.
+- Do not add fake loops, objective-state shortcuts, or host-specific behavior as
+  acceptance proof.
+
+## Semantic And Structure Recovery
+
+- Recover whole function families and contiguous state blocks rather than isolated
+  symbols when practical.
+- Prioritize player, building, unit-stack, mission, and strategic-AI state needed
+  by mission `05` and campaign advancement.
+- Preserve raw offsets until typed overlays are supported by multiple callsites and
+  compile-time layout checks.
+- Keep ambiguous findings explicitly labeled in reports and JSON metadata.
+- Continue broader unit, structure, rule, UI, save-format, and AI API recovery when
+  implementation evidence is strong and it supports an active frontier.
+
+## Validation Infrastructure
+
+- Keep public CI asset-independent.
+- Use a private or local asset-backed environment for menu, campaign, multiplayer,
+  audio, and soak validation.
 - Preserve frame-based validation for visual milestones.
-
-## Semantic Recovery
-
-- Continue unit, structure, rule, and UI naming when implementation evidence is
-  strong and it supports the active runtime frontier.
-- Keep ambiguous findings explicitly labeled in the historical reports and JSON
-  metadata.
+- Keep artifact pruning enabled so long route investigations do not grow the
+  checkout indefinitely.
+- Record exact commands, durable evidence paths, and rejected or uncertain
+  findings after every recovery batch.
