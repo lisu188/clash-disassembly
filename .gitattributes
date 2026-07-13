@@ -9,3 +9,7 @@
 *.script   text eol=lf
 *.env      text eol=lf
 *.gdb      text eol=lf
+
+# Large generated reference dumps: never normalize line endings (avoid churn).
+*.asm      -text
+*.map      -text
