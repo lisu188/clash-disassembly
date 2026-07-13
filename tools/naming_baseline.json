@@ -1,0 +1,488 @@
+{
+ "win95": {
+  "total": {
+   "func_sub_distinct": 0,
+   "globals_distinct": {
+    "dword_": 682,
+    "word_": 18,
+    "byte_": 58,
+    "qword_": 2,
+    "off_": 9,
+    "unk_": 61,
+    "dbl_": 0,
+    "flt_": 0,
+    "loc_": 103
+   },
+   "globals_distinct_total": 933,
+   "param_aN_occurrences": 37604,
+   "local_vN_occurrences": 85051
+  },
+  "per_file": {
+   "src\\clash95_prelude.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 680,
+     "word_": 18,
+     "byte_": 58,
+     "qword_": 2,
+     "off_": 9,
+     "unk_": 61,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 103
+    },
+    "globals_distinct_total": 931,
+    "param_aN_occurrences": 7703,
+    "local_vN_occurrences": 0
+   },
+   "src\\core\\010_bootstrap.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 1,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 2,
+    "param_aN_occurrences": 6,
+    "local_vN_occurrences": 35
+   },
+   "src\\core\\020_utilities.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 82,
+    "local_vN_occurrences": 159
+   },
+   "src\\game\\040_world_map.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 38,
+     "word_": 8,
+     "byte_": 6,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 4,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 56,
+    "param_aN_occurrences": 622,
+    "local_vN_occurrences": 1484
+   },
+   "src\\game\\050_units.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 41,
+     "word_": 1,
+     "byte_": 5,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 2,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 49,
+    "param_aN_occurrences": 1749,
+    "local_vN_occurrences": 5779
+   },
+   "src\\game\\060_buildings.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 69,
+     "word_": 1,
+     "byte_": 4,
+     "qword_": 1,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 76,
+    "param_aN_occurrences": 1452,
+    "local_vN_occurrences": 6636
+   },
+   "src\\game\\070_battle.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 34,
+     "word_": 0,
+     "byte_": 2,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 2,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 38,
+    "param_aN_occurrences": 446,
+    "local_vN_occurrences": 2333
+   },
+   "src\\game\\080_building_ui.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 64,
+     "word_": 1,
+     "byte_": 8,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 74,
+    "param_aN_occurrences": 1376,
+    "local_vN_occurrences": 5963
+   },
+   "src\\game\\090_special_sites_savegame.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 27,
+     "word_": 0,
+     "byte_": 9,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 4,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 40,
+    "param_aN_occurrences": 964,
+    "local_vN_occurrences": 4532
+   },
+   "src\\render\\030_render.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 22,
+     "word_": 7,
+     "byte_": 9,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 4,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 42,
+    "param_aN_occurrences": 1038,
+    "local_vN_occurrences": 2760
+   },
+   "src\\render\\120_media.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 121,
+     "word_": 1,
+     "byte_": 2,
+     "qword_": 1,
+     "off_": 0,
+     "unk_": 3,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 128,
+    "param_aN_occurrences": 5257,
+    "local_vN_occurrences": 8361
+   },
+   "src\\render\\120_media_part2.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 4,
+    "local_vN_occurrences": 0
+   },
+   "src\\rules\\100_strategic.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 22,
+     "word_": 2,
+     "byte_": 5,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 2,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 87
+    },
+    "globals_distinct_total": 118,
+    "param_aN_occurrences": 1872,
+    "local_vN_occurrences": 2875
+   },
+   "src\\rules\\130_clips_language.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 1,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 1,
+    "param_aN_occurrences": 32,
+    "local_vN_occurrences": 42
+   },
+   "src\\rules\\130_clips_language_part2.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 91,
+     "word_": 0,
+     "byte_": 1,
+     "qword_": 0,
+     "off_": 2,
+     "unk_": 8,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 1
+    },
+    "globals_distinct_total": 103,
+    "param_aN_occurrences": 2404,
+    "local_vN_occurrences": 5602
+   },
+   "src\\rules\\140_clips_objects.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 22,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 23,
+    "param_aN_occurrences": 441,
+    "local_vN_occurrences": 1009
+   },
+   "src\\rules\\150_clips_ast.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 34,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 34,
+    "param_aN_occurrences": 187,
+    "local_vN_occurrences": 754
+   },
+   "src\\rules\\160_clips_events.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 74,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 1,
+     "off_": 0,
+     "unk_": 9,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 84,
+    "param_aN_occurrences": 1203,
+    "local_vN_occurrences": 3158
+   },
+   "src\\rules\\170_clips_symbols.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 51,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 1,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 52,
+    "param_aN_occurrences": 2027,
+    "local_vN_occurrences": 5855
+   },
+   "src\\rules\\180_clips_compiler.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 171,
+     "word_": 1,
+     "byte_": 9,
+     "qword_": 1,
+     "off_": 5,
+     "unk_": 14,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 201,
+    "param_aN_occurrences": 3781,
+    "local_vN_occurrences": 12221
+   },
+   "src\\rules\\190_clips_methods.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 52,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 1,
+     "off_": 2,
+     "unk_": 2,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 57,
+    "param_aN_occurrences": 1172,
+    "local_vN_occurrences": 3506
+   },
+   "src\\runtime\\110_platform_input.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 12,
+     "word_": 0,
+     "byte_": 2,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 15,
+    "param_aN_occurrences": 329,
+    "local_vN_occurrences": 799
+   },
+   "src\\runtime\\200_recovered_runtime.inc.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 80,
+     "word_": 1,
+     "byte_": 3,
+     "qword_": 0,
+     "off_": 3,
+     "unk_": 12,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 99,
+    "param_aN_occurrences": 3333,
+    "local_vN_occurrences": 11188
+   },
+   "bootstrap_main.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 11,
+     "word_": 0,
+     "byte_": 2,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 1,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 14,
+    "param_aN_occurrences": 124,
+    "local_vN_occurrences": 0
+   },
+   "platform_sdl_runtime.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 0,
+    "local_vN_occurrences": 0
+   },
+   "runtime_mission_trace.c": {
+    "func_sub_distinct": 0,
+    "globals_distinct": {
+     "dword_": 0,
+     "word_": 0,
+     "byte_": 0,
+     "qword_": 0,
+     "off_": 0,
+     "unk_": 0,
+     "dbl_": 0,
+     "flt_": 0,
+     "loc_": 0
+    },
+    "globals_distinct_total": 0,
+    "param_aN_occurrences": 0,
+    "local_vN_occurrences": 0
+   }
+  },
+  "file_count": 26
+ },
+ "dos": {
+  "generated_text": {
+   "func_sub_distinct": 3337,
+   "globals_distinct": {
+    "dword_": 1047,
+    "word_": 140,
+    "byte_": 164,
+    "qword_": 0,
+    "off_": 191,
+    "unk_": 241,
+    "dbl_": 40,
+    "flt_": 3,
+    "loc_": 111
+   },
+   "globals_distinct_total": 1937,
+   "param_aN_occurrences": 39059,
+   "local_vN_occurrences": 73635
+  },
+  "master_map_named_functions": 935,
+  "total_functions": 4219,
+  "unnamed_functions": 3284
+ }
+}
