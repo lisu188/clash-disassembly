@@ -3,58 +3,58 @@
  * Included by clash95.c; not a standalone translation unit. */
 
 //----- (004338C0) --------------------------------------------------------
-int  BuildingGarrisonDialog_RequestClose(int a1)
+int  BuildingGarrisonDialog_RequestClose(int widget)
 {
   int result; // eax
 
-  result = UIWidget_PlayPressedReleaseAnimation(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(widget);
   g_BuildingGarrisonDialogCloseRequested = 1;
   return result;
 }
 // 532148: using guessed type int dword_532148;
 
 //----- (004338E0) --------------------------------------------------------
-int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
+int  BuildingGarrisonDialog_ShowProductionDialog(int widget, DWORD renderContext, char panelArg)
 {
   int result; // eax
-  char *v4; // edx
-  char v5; // bl
-  CHAR *v6; // eax
+  char *backgroundPath; // edx
+  char resourceHandle; // bl
+  CHAR *palettePath; // eax
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
   int v10; // ecx
   int v11; // ecx
 
-  UIWidget_PlayPressedReleaseAnimation(a1);
+  UIWidget_PlayPressedReleaseAnimation(widget);
   result = g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 2) != 0 )
   {
     Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
     Render_Pump();
-    Castle_ShowUnitProductionPanel(g_BuildingGarrisonDialogActiveBuilding, a2, a3);
+    Castle_ShowUnitProductionPanel(g_BuildingGarrisonDialogActiveBuilding, renderContext, panelArg);
     if ( g_BuildingGarrisonDialogUseChrTheme )
-      v4 = aCastle_chrD_15;
+      backgroundPath = aCastle_chrD_15;
     else
-      v4 = aCastle_pogD_15;
-    v5 = g_BuildingGarrisonDialogResourceHandle;
-    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, v4);
+      backgroundPath = aCastle_pogD_15;
+    resourceHandle = g_BuildingGarrisonDialogResourceHandle;
+    (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, backgroundPath);
     if ( g_BuildingGarrisonDialogUseChrTheme )
-      v6 = aCastle_chrD_16;
+      palettePath = aCastle_chrD_16;
     else
-      v6 = aCastle_pogD_16;
-    Palette_LoadOrBuildBlendLookupTable(v6, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, a2);
-    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, a2);
-    Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, v5, a2);
-    Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, v5, a2);
-    Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, v5, a2);
+      palettePath = aCastle_pogD_16;
+    Palette_LoadOrBuildBlendLookupTable(palettePath, g_BuildingGarrisonDialogResourceHandle, g_BuildingGarrisonDialogUseChrTheme, renderContext);
+    RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_BuildingGarrisonDialogResourceHandle, v7, renderContext);
+    Render_LoadResourceSprite_v4(5, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v8, resourceHandle, renderContext);
+    Render_LoadResourceSprite_v4(7, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v9, resourceHandle, renderContext);
+    Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_BuildingGarrisonDialogResourceHandle, v10, resourceHandle, renderContext);
     g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
     BuildingGarrisonDialog_EnsureActionWidgets(g_BuildingGarrisonDialogActiveBuilding);
     UIWidgetTable_InitDrawStates((_DWORD *)BuildingGarrisonDialogActions);
     (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
     BuildingGarrisonDialog_DrawSlotGrid(-1);
     BuildingGarrisonDialog_DrawSelectedUnitPanel();
-    BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, a2);
+    BuildingGarrisonDialog_RebuildSelectedUnitPanelAssets(v11, 20, renderContext);
     Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_BuildingGarrisonDialogResourceHandle, 20);
     Render_Present((int)g_RenderState);
     RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
@@ -79,31 +79,31 @@ int  BuildingGarrisonDialog_ShowProductionDialog(int a1, DWORD a2, char a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00433A40) --------------------------------------------------------
-void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2)
+void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int widget, DWORD gameContext)
 {
   void *result; // eax
-  int v4; // ecx
-  int v5; // ebx
+  int slotIndex; // ecx
+  int selectedSlotIndex; // ebx
 
-  UIWidget_PlayPressedReleaseAnimation(a1);
+  UIWidget_PlayPressedReleaseAnimation(widget);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 1) != 0 )
   {
-    v4 = 0;
-    v5 = 0;
+    slotIndex = 0;
+    selectedSlotIndex = 0;
     do
     {
-      if ( g_BuildingGarrisonDialogSelectedSlots[v5] )
+      if ( g_BuildingGarrisonDialogSelectedSlots[selectedSlotIndex] )
       {
-        if ( (BUILDING_GARRISON_SERVICE_STATE(g_BuildingGarrisonDialogActiveBuilding, v4) & BUILDING_GARRISON_REPAIR_TURNS_MASK) != 0 )
-          Building_ClearGarrisonRepairTimer(g_BuildingGarrisonDialogActiveBuilding, v4);
+        if ( (BUILDING_GARRISON_SERVICE_STATE(g_BuildingGarrisonDialogActiveBuilding, slotIndex) & BUILDING_GARRISON_REPAIR_TURNS_MASK) != 0 )
+          Building_ClearGarrisonRepairTimer(g_BuildingGarrisonDialogActiveBuilding, slotIndex);
         else
-          Building_RepairUnit(g_BuildingGarrisonDialogActiveBuilding, v4, a2);
+          Building_RepairUnit(g_BuildingGarrisonDialogActiveBuilding, slotIndex, gameContext);
       }
-      ++v4;
-      ++v5;
+      ++slotIndex;
+      ++selectedSlotIndex;
     }
-    while ( v4 < 12 );
+    while ( slotIndex < 12 );
     memset(g_BuildingGarrisonDialogSelectedSlots, 0, sizeof(g_BuildingGarrisonDialogSelectedSlots));
     return BuildingGarrisonDialog_DrawSlotGrid(-1);
   }
@@ -113,31 +113,31 @@ void * BuildingGarrisonDialog_ToggleRepairSelectedUnits(int a1, DWORD a2)
 // 532158: using guessed type int g_BuildingGarrisonDialogSelectedSlots[12];
 
 //----- (00433AC0) --------------------------------------------------------
-void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int a1, DWORD a2)
+void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int widget, DWORD gameContext)
 {
   void *result; // eax
-  int v4; // ecx
-  int v5; // ebx
+  int slotIndex; // ecx
+  int selectedSlotIndex; // ebx
 
-  UIWidget_PlayPressedReleaseAnimation(a1);
+  UIWidget_PlayPressedReleaseAnimation(widget);
   result = (void *)g_BuildingGarrisonDialogActiveBuilding;
   if ( (*(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 416) & 8) != 0 )
   {
-    v4 = 0;
-    v5 = 0;
+    slotIndex = 0;
+    selectedSlotIndex = 0;
     do
     {
-      if ( g_BuildingGarrisonDialogSelectedSlots[v5] )
+      if ( g_BuildingGarrisonDialogSelectedSlots[selectedSlotIndex] )
       {
-        if ( (BUILDING_GARRISON_SERVICE_STATE(g_BuildingGarrisonDialogActiveBuilding, v4) & BUILDING_GARRISON_TRAINING_TURNS_MASK) != 0 )
-          Building_ClearGarrisonTrainingTimer(g_BuildingGarrisonDialogActiveBuilding, v4);
+        if ( (BUILDING_GARRISON_SERVICE_STATE(g_BuildingGarrisonDialogActiveBuilding, slotIndex) & BUILDING_GARRISON_TRAINING_TURNS_MASK) != 0 )
+          Building_ClearGarrisonTrainingTimer(g_BuildingGarrisonDialogActiveBuilding, slotIndex);
         else
-          Building_TrainUnit(g_BuildingGarrisonDialogActiveBuilding, v5 * 4, a2);
+          Building_TrainUnit(g_BuildingGarrisonDialogActiveBuilding, selectedSlotIndex * 4, gameContext);
       }
-      ++v4;
-      ++v5;
+      ++slotIndex;
+      ++selectedSlotIndex;
     }
-    while ( v4 < 12 );
+    while ( slotIndex < 12 );
     memset(g_BuildingGarrisonDialogSelectedSlots, 0, sizeof(g_BuildingGarrisonDialogSelectedSlots));
     return BuildingGarrisonDialog_DrawSlotGrid(-1);
   }
@@ -147,43 +147,43 @@ void * BuildingGarrisonDialog_ToggleTrainingSelectedUnits(int a1, DWORD a2)
 // 532158: using guessed type int g_BuildingGarrisonDialogSelectedSlots[12];
 
 //----- (00433B40) --------------------------------------------------------
-int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
+int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int widget)
 {
-  int v3; // eax
-  int v4; // ebx
-  int v5; // edx
-  int v6; // ecx
-  int v11[16]; // [esp+4h] [ebp-40h]
+  int slotIndex; // eax
+  int selectedCount; // ebx
+  int selectedSlotIndex; // edx
+  int writeIndex; // ecx
+  int selectedSlots[16]; // [esp+4h] [ebp-40h]
 
-  v3 = 0;
-  v4 = 0;
-  v5 = 0;
-  v6 = 0;
+  slotIndex = 0;
+  selectedCount = 0;
+  selectedSlotIndex = 0;
+  writeIndex = 0;
   do
   {
-    if ( g_BuildingGarrisonDialogSelectedSlots[v5] )
+    if ( g_BuildingGarrisonDialogSelectedSlots[selectedSlotIndex] )
     {
-      ++v6;
-      ++v4;
-      v11[v6 - 1] = v3;
+      ++writeIndex;
+      ++selectedCount;
+      selectedSlots[writeIndex - 1] = slotIndex;
     }
-    ++v3;
-    ++v5;
+    ++slotIndex;
+    ++selectedSlotIndex;
   }
-  while ( v3 < 12 );
-  v11[v4] = -1;
+  while ( slotIndex < 12 );
+  selectedSlots[selectedCount] = -1;
   Diagnostics_TraceWorldMapActionEvent(
     "garrison_exit_begin",
-    v4,
-    v11[0],
+    selectedCount,
+    selectedSlots[0],
     *(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 0),
     *(_BYTE *)(g_BuildingGarrisonDialogActiveBuilding + 1));
-  if ( v11[0] == -1 || !Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding) )
+  if ( selectedSlots[0] == -1 || !Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding) )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "garrison_exit_blocked",
-      v4,
-      v11[0],
+      selectedCount,
+      selectedSlots[0],
       Building_HasFreeAdjacentExitTile((unsigned __int8 *)g_BuildingGarrisonDialogActiveBuilding),
       0);
     Audio_PlayButtonSound(aWrong_7);
@@ -191,10 +191,10 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
   }
   else
   {
-    UIWidget_ShowPressedState(a1);
+    UIWidget_ShowPressedState(widget);
     g_BuildingGarrisonDialogPendingExitCountdown = 1;
     Audio_PlaySoundEffectByName(aDclose, 64);
-    return UIWidget_ShowReleasedState(a1, 1);
+    return UIWidget_ShowReleasedState(widget, 1);
   }
 }
 // 532150: using guessed type int g_BuildingGarrisonDialogActiveBuilding;
@@ -203,31 +203,31 @@ int  BuildingGarrisonDialog_BeginSelectedUnitsExit(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00433BF0) --------------------------------------------------------
-int  BuildingGarrisonDialog_TickAnimations(double a1)
+int  BuildingGarrisonDialog_TickAnimations(double deltaTime)
 {
   int previous_resource_handle;
 
   previous_resource_handle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   BuildingGarrisonDialog_AnimateSelectedUnit(0);
-  BuildingGarrisonDialog_TickExitCountdown(0, a1);
+  BuildingGarrisonDialog_TickExitCountdown(0, deltaTime);
   return Render_SetResourceHandle((int)&g_MainRenderDevice, previous_resource_handle);
 }
 
 //----- (00434110) --------------------------------------------------------
 int CastleProduction_DrawSelectedUnitPortrait()
 {
-  void *v0; // ebp
+  void *savedRenderDevice; // ebp
   __int16 SpriteWidth; // ax
-  int v2; // edi
-  __int16 v3; // cx
+  int cursorOverlayPresented; // edi
+  __int16 spriteHeight; // cx
   int SpriteForChar; // eax
   int result; // eax
 
-  v0 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   DLX_GetSpriteHeight(g_CastleProductionSelectedUnitSpriteSet, 0);
   SpriteWidth = DLX_GetSpriteWidth(g_CastleProductionSelectedUnitSpriteSet, 0);
-  v2 = g_CursorOverlayPresented;
-  RenderState_PumpIfRectInViewBounds(g_RenderState, 0x50u, v3 + 80, 0xC3u, SpriteWidth + 195);
+  cursorOverlayPresented = g_CursorOverlayPresented;
+  RenderState_PumpIfRectInViewBounds(g_RenderState, 0x50u, spriteHeight + 80, 0xC3u, SpriteWidth + 195);
   g_RenderDevice = &g_MainRenderDevice;
   SpriteForChar = DLX_GetSpriteForChar(g_CastleProductionSelectedUnitSpriteSet, g_CastleProductionUnitPortraitFrame);
   result = (*(int (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46)
@@ -241,9 +241,9 @@ int CastleProduction_DrawSelectedUnitPortrait()
              1,
              0,
              0);
-  if ( v2 )
+  if ( cursorOverlayPresented )
     result = Render_Present((int)g_RenderState);
-  g_RenderDevice = v0;
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 43415E: variable 'v3' is possibly undefined
@@ -275,7 +275,7 @@ unsigned int __thiscall CastleProduction_AnimateSelectedUnitPortrait(void *this)
 // 5322CC: using guessed type int dword_5322CC;
 
 //----- (004347A0) --------------------------------------------------------
-void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4, int a5)
+void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD renderContext, int a4, int a5)
 {
   int v5; // ecx
   _DWORD *v6; // eax
@@ -285,19 +285,19 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   int *v10; // ebx
   _DWORD *v11; // edx
   int SpriteForChar; // eax
-  int v13; // ebx
-  int v14; // esi
+  int stripUnitIndex; // ebx
+  int rowY; // esi
   int v15; // ecx
-  int v16; // edx
+  int unitType; // edx
   int v17; // ecx
   int v18; // ecx
   int v19; // ecx
   int v20; // ecx
   int v21; // ecx
-  int v22; // esi
+  int selectedUnitMetaOffset; // esi
   int v23; // eax
   DWORD v24; // ebp
-  char *v25; // esi
+  char *unitMetadataPtr; // esi
   DWORD v26; // ebp
   int v27; // edx
   int v28; // edx
@@ -308,21 +308,21 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   unsigned __int16 v33; // [esp-18h] [ebp-490h]
   int v35; // [esp-8h] [ebp-480h]
   int v36; // [esp+380h] [ebp-F8h] BYREF
-  char v37[100]; // [esp+400h] [ebp-78h] BYREF
+  char pathBuffer[100]; // [esp+400h] [ebp-78h] BYREF
   DWORD v38; // [esp+464h] [ebp-14h]
-  void *v39; // [esp+468h] [ebp-10h]
+  void *savedRenderDevice; // [esp+468h] [ebp-10h]
   int v40; // [esp+46Ch] [ebp-Ch]
 
   if ( g_CastleProductionSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
-  Unit_BuildSelectedUnitPanelIconSpritePath(v37, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], a1);
-  v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, a3);
+  Unit_BuildSelectedUnitPanelIconSpritePath(pathBuffer, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], a1);
+  v6 = (_DWORD *)Mem_Alloc(4112, 0x1010, a2, renderContext);
   if ( v6 )
-    v6 = DLXSpriteSet_Load(v6, v37);
+    v6 = DLXSpriteSet_Load(v6, pathBuffer);
   v35 = v7;
   g_CastleProductionSelectedUnitSpriteSet = (int)v6;
-  Unit_BuildSelectedUnitPanelIconPalettePath(v37, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v7);
-  Palette_LoadFromQueryHandle(v8, a3);
+  Unit_BuildSelectedUnitPanelIconPalettePath(pathBuffer, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v7);
+  Palette_LoadFromQueryHandle(v8, renderContext);
   v9 = 224;
   v10 = &v36;
   do
@@ -332,7 +332,7 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
     *v11 = *(v10 - 1);
   }
   while ( v9 <= 255 );
-  v39 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 20);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD, int, int, int, int))(*((_DWORD *)g_RenderDevice
@@ -351,68 +351,68 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
     a2,
     v35,
     a5);
-  Render_ReleaseSurface(5, a3);
-  v13 = g_CastleProductionSelectedAvailableUnitIndex - 2;
-  v14 = 35;
+  Render_ReleaseSurface(5, renderContext);
+  stripUnitIndex = g_CastleProductionSelectedAvailableUnitIndex - 2;
+  rowY = 35;
   v15 = 4 * (g_CastleProductionSelectedAvailableUnitIndex - 2);
-  while ( v13 <= g_CastleProductionSelectedAvailableUnitIndex + 2 )
+  while ( stripUnitIndex <= g_CastleProductionSelectedAvailableUnitIndex + 2 )
   {
-    if ( v13 < 0 || (v16 = g_CastleProduction_AvailableUnitTypes[v15 / 4], v16 == -1) )
+    if ( stripUnitIndex < 0 || (unitType = g_CastleProduction_AvailableUnitTypes[v15 / 4], unitType == -1) )
     {
       v15 += 4;
-      ++v13;
-      v14 += 17;
+      ++stripUnitIndex;
+      rowY += 17;
     }
-    else if ( v13 == g_CastleProductionSelectedAvailableUnitIndex )
+    else if ( stripUnitIndex == g_CastleProductionSelectedAvailableUnitIndex )
     {
       Render_ReleaseSurface(9, 0x2Du);
       UI_DrawText(
         45,
-        v14,
-        (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
+        rowY,
+        (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
       Render_ReleaseSurface(5, 0x2Du);
       v15 += 4;
-      ++v13;
-      v14 += 17;
+      ++stripUnitIndex;
+      rowY += 17;
     }
     else
     {
-      if ( Building_HasUnitLicence(g_CastleProductionBuildingPtr, v16) )
+      if ( Building_HasUnitLicence(g_CastleProductionBuildingPtr, unitType) )
       {
         Render_ReleaseSurface(20, 0x2Du);
         UI_DrawText(
           45,
-          v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
+          rowY,
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
         Render_ReleaseSurface(5, 0x2Du);
       }
       else
       {
         UI_DrawText(
           45,
-          v14,
-          (int)(**(&g_UnitTypeMetadataRecords + 22 * v16))[(unsigned __int8)g_LanguageIndex]);
+          rowY,
+          (int)(**(&g_UnitTypeMetadataRecords + 22 * unitType))[(unsigned __int8)g_LanguageIndex]);
       }
       v15 += 4;
-      ++v13;
-      v14 += 17;
+      ++stripUnitIndex;
+      rowY += 17;
     }
   }
-  v22 = 88 * g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
+  selectedUnitMetaOffset = 88 * g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
   v23 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 17);
   v24 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int))(v24 + 52))(186, v23, -1, -1, -1);
-  v25 = (char *)&g_UnitTypeMetadataRecords + v22;
+  unitMetadataPtr = (char *)&g_UnitTypeMetadataRecords + selectedUnitMetaOffset;
   Render_ReleaseSurface(7, v24);
-  v26 = *(_DWORD *)(*(_DWORD *)v25 + 4 * (unsigned __int8)g_LanguageIndex);
+  v26 = *(_DWORD *)(*(_DWORD *)unitMetadataPtr + 4 * (unsigned __int8)g_LanguageIndex);
   UI_DrawTextFmt(69, 133, 261, 191, 3, v26);
   UI_DrawTextFmt(69, 201, 217, v40 + 95, 2, (int)aD_68);
   UI_DrawTextFmt(69, 154, 174, v40 + 50, 2, (int)aD_69);
   UI_DrawTextFmt(69, 201, 217, v40 + 50, 2, (int)aD_70);
   UI_DrawTextFmt(69, 229, 260, v27, 2, (int)a0_3);
-  if ( v25[25] )
+  if ( unitMetadataPtr[25] )
   {
-    if ( v25[22] )
+    if ( unitMetadataPtr[22] )
     {
       UI_DrawTextFmt(154, 154, 174, v40 + 74, 2, (int)aD_73);
       UI_DrawTextFmt(154, 154, v28, v40 + 95, 2, (int)aD_74);
@@ -448,8 +448,8 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 186, 69, v30 + 69, v33, 0x45u, 0xBAu);
   Render_SaveBackbuffer((int)&g_MainRenderDevice);
   CastleProduction_DrawSelectedUnitPortrait();
-  result = v39;
-  g_RenderDevice = v39;
+  result = savedRenderDevice;
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 4347A0: could not find valid save-restore pair for edi
@@ -479,8 +479,8 @@ void * CastleProduction_RedrawSelectedUnitPanel(int a1, int a2, DWORD a3, int a4
 //----- (00434E20) --------------------------------------------------------
 void * CastleProduction_DrawLicenceGrid()
 {
-  int v0; // esi
-  int v1; // edi
+  int slotIndex; // esi
+  int slotX; // edi
   int v2; // eax
   int v3; // eax
   int v4; // eax
@@ -488,28 +488,28 @@ void * CastleProduction_DrawLicenceGrid()
   int v6; // edx
   void *result; // eax
   int SpriteForChar; // edx
-  int v9; // [esp+8Ch] [ebp-2Ch]
-  int v10; // [esp+90h] [ebp-28h]
-  void *v11; // [esp+98h] [ebp-20h]
-  int v12; // [esp+9Ch] [ebp-1Ch]
+  int cursorOverlayPresented; // [esp+8Ch] [ebp-2Ch]
+  int slotAnimIndex; // [esp+90h] [ebp-28h]
+  void *savedRenderDevice; // [esp+98h] [ebp-20h]
+  int slotY; // [esp+9Ch] [ebp-1Ch]
 
-  v0 = 0;
-  v11 = g_RenderDevice;
+  slotIndex = 0;
+  savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  v10 = 0;
+  slotAnimIndex = 0;
   do
   {
-    v1 = 48 * (v0 % 4) + 426;
-    v12 = 82 * ((v0 - (__CFSHL__(v0 >> 31, 2) + 4 * (v0 >> 31))) >> 2) + 32;
-    if ( v0 % 4 >= 2 )
-      v1 = 48 * (v0 % 4) + 425;
-    v9 = g_CursorOverlayPresented;
-    RenderState_PumpIfRectInViewBounds(g_RenderState, v1, v1 + 31, v12, v12 + 63);
-    if ( *(char *)(v0 + g_CastleProductionBuildingPtr + 402) == -1 )
+    slotX = 48 * (slotIndex % 4) + 426;
+    slotY = 82 * ((slotIndex - (__CFSHL__(slotIndex >> 31, 2) + 4 * (slotIndex >> 31))) >> 2) + 32;
+    if ( slotIndex % 4 >= 2 )
+      slotX = 48 * (slotIndex % 4) + 425;
+    cursorOverlayPresented = g_CursorOverlayPresented;
+    RenderState_PumpIfRectInViewBounds(g_RenderState, slotX, slotX + 31, slotY, slotY + 63);
+    if ( *(char *)(slotIndex + g_CastleProductionBuildingPtr + 402) == -1 )
     {
       SpriteForChar = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 22);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-        v12,
+        slotY,
         SpriteForChar,
         -1,
         -1,
@@ -521,9 +521,9 @@ void * CastleProduction_DrawLicenceGrid()
     }
     else
     {
-      v2 = DLX_GetSpriteForChar(g_CastleProduction_LicenceSlotSpriteHandles[v10], g_CastleProductionSlotAnimFrames[v10]);
+      v2 = DLX_GetSpriteForChar(g_CastleProduction_LicenceSlotSpriteHandles[slotAnimIndex], g_CastleProductionSlotAnimFrames[slotAnimIndex]);
       (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-        v12,
+        slotY,
         v2,
         -1,
         -1,
@@ -532,11 +532,11 @@ void * CastleProduction_DrawLicenceGrid()
         1,
         0,
         0);
-      if ( v0 == g_ProductionGridSelectedIndex )
+      if ( slotIndex == g_ProductionGridSelectedIndex )
       {
         v3 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 32);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-          82 * ((v0 - (__CFSHL__(v0 >> 31, 2) + 4 * (v0 >> 31))) >> 2) + 33,
+          82 * ((slotIndex - (__CFSHL__(slotIndex >> 31, 2) + 4 * (slotIndex >> 31))) >> 2) + 33,
           v3,
           -1,
           -1,
@@ -546,11 +546,11 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) == v0 )
+      if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) == slotIndex )
       {
         v4 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 21);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-          v12,
+          slotY,
           v4,
           -1,
           -1,
@@ -560,11 +560,11 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( v0 == g_LicenceGridAddAnimSlotIndex )
+      if ( slotIndex == g_LicenceGridAddAnimSlotIndex )
       {
         v5 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, g_CastleProductionLicenceTransitionFrame + 22);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-          v12,
+          slotY,
           v5,
           -1,
           -1,
@@ -574,11 +574,11 @@ void * CastleProduction_DrawLicenceGrid()
           0,
           0);
       }
-      if ( v0 == g_CastleLicenceRemovalSlotIndex )
+      if ( slotIndex == g_CastleLicenceRemovalSlotIndex )
       {
         v6 = DLX_GetSpriteForChar(g_BuildingUiDlxSpriteSet, 30 - g_CastleProductionLicenceTransitionFrame);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
-          v12,
+          slotY,
           v6,
           -1,
           -1,
@@ -589,14 +589,14 @@ void * CastleProduction_DrawLicenceGrid()
           0);
       }
     }
-    if ( v9 )
+    if ( cursorOverlayPresented )
       Render_Present((int)g_RenderState);
-    ++v0;
-    ++v10;
+    ++slotIndex;
+    ++slotAnimIndex;
   }
-  while ( v0 < 12 );
-  result = v11;
-  g_RenderDevice = v11;
+  while ( slotIndex < 12 );
+  result = savedRenderDevice;
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -612,35 +612,35 @@ void * CastleProduction_DrawLicenceGrid()
 // 544D10: using guessed type int dword_544D10;
 
 //----- (004350A0) --------------------------------------------------------
-int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2)
+int  CastleProduction_ReloadLicenceSlotSprite(int slotIndex, char resourceContext)
 {
   int result; // eax
   DWORD sprite_set; // ebp
-  char v9[112]; // [esp+0h] [ebp-70h] BYREF
+  char iconSpritePath[112]; // [esp+0h] [ebp-70h] BYREF
 
-  result = *(char *)(a1 + g_CastleProductionBuildingPtr + 402);
+  result = *(char *)(slotIndex + g_CastleProductionBuildingPtr + 402);
   if ( result == -1 )
   {
-    if ( g_CastleProduction_LicenceSlotSpriteHandles[a1] )
+    if ( g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] )
     {
-      result = nfree_(g_CastleProduction_LicenceSlotSpriteHandles[a1]);
-      g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
+      result = nfree_(g_CastleProduction_LicenceSlotSpriteHandles[slotIndex]);
+      g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = 0;
     }
-    g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
+    g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = 0;
   }
   else
   {
-    sprite_set = g_CastleProduction_LicenceSlotSpriteHandles[a1];
+    sprite_set = g_CastleProduction_LicenceSlotSpriteHandles[slotIndex];
     if ( sprite_set )
     {
       nfree_(sprite_set);
-      g_CastleProduction_LicenceSlotSpriteHandles[a1] = 0;
+      g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = 0;
     }
-    Unit_BuildGarrisonSlotIconSpritePath(v9, *(_BYTE *)(a1 + g_CastleProductionBuildingPtr + 402), a1);
-    result = Mem_Alloc(4112, 0x1010, a2, sprite_set);
+    Unit_BuildGarrisonSlotIconSpritePath(iconSpritePath, *(_BYTE *)(slotIndex + g_CastleProductionBuildingPtr + 402), slotIndex);
+    result = Mem_Alloc(4112, 0x1010, resourceContext, sprite_set);
     if ( result )
-      result = (int)DLXSpriteSet_Load((_DWORD *)result, v9);
-    g_CastleProduction_LicenceSlotSpriteHandles[a1] = result;
+      result = (int)DLXSpriteSet_Load((_DWORD *)result, iconSpritePath);
+    g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = result;
   }
   return result;
 }
@@ -649,18 +649,18 @@ int  CastleProduction_ReloadLicenceSlotSprite(int a1, char a2)
 // 532304: using guessed type int dword_532304[12];
 
 //----- (00435150) --------------------------------------------------------
-void * CastleProduction_ReloadLicenceSlotSprites(char a1)
+void * CastleProduction_ReloadLicenceSlotSprites(char resourceContext)
 {
   int i; // edx
 
-  for ( i = 0; i < 12; CastleProduction_ReloadLicenceSlotSprite(i, a1) )
+  for ( i = 0; i < 12; CastleProduction_ReloadLicenceSlotSprite(i, resourceContext) )
     ;
   return CastleProduction_DrawLicenceGrid();
 }
 // 435163: variable 'i' is possibly undefined
 
 //----- (00435180) --------------------------------------------------------
-void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2)
+void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD gameContext)
 {
   void *result; // eax
   unsigned int v3; // edx
@@ -677,7 +677,7 @@ void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2)
     {
       if ( g_CastleLicenceRemovalSlotIndex != -1 )
       {
-        Building_RemoveUnitLicence(g_CastleProductionBuildingPtr, *(char *)(g_CastleLicenceRemovalSlotIndex + g_CastleProductionBuildingPtr + 402), a2);
+        Building_RemoveUnitLicence(g_CastleProductionBuildingPtr, *(char *)(g_CastleLicenceRemovalSlotIndex + g_CastleProductionBuildingPtr + 402), gameContext);
         nfree_(g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex]);
         g_ProductionGridSelectedIndex = -1;
         g_CastleProduction_LicenceSlotSpriteHandles[g_CastleLicenceRemovalSlotIndex] = 0;
@@ -704,12 +704,12 @@ void * CastleProduction_TickLicenceGridAnimations(int a1, DWORD a2)
 // 53233C: using guessed type int dword_53233C;
 
 //----- (00435280) --------------------------------------------------------
-int  CastleProduction_DrawProductionStatus(DWORD a1)
+int  CastleProduction_DrawProductionStatus(DWORD renderContext)
 {
   int result; // eax
-  char *v2; // eax
-  int v3; // edi
-  int v4; // eax
+  char *turnLabelText; // eax
+  int statusLine1; // edi
+  int turnsRemaining; // eax
   int v5[3]; // [esp+0h] [ebp-6Ch]
   int v6[3]; // [esp+Ch] [ebp-60h] BYREF
   int v7[3]; // [esp+18h] [ebp-54h] BYREF
@@ -721,7 +721,7 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
 
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 288, 401, 0x251u, 0x165u, 0x191u, 0x120u);
   g_RenderDevice = &g_MainRenderDevice;
-  Render_ReleaseSurface(5, a1);
+  Render_ReleaseSurface(5, renderContext);
   result = g_CastleProductionBuildingPtr;
   if ( BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(g_CastleProductionBuildingPtr) != -1 )
   {
@@ -731,9 +731,9 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
       v10[1] = (int)UI_Locale_StatusHeader[1];
       v11 = UI_Locale_StatusHeader[2];
       if ( BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr) == 1 )
-        v2 = aDZugBisZum;
+        turnLabelText = aDZugBisZum;
       else
-        v2 = aDZbgeBisZum;
+        turnLabelText = aDZbgeBisZum;
       v7[0] = (int)UI_Locale_StatusLine1[0];
       v7[1] = (int)UI_Locale_StatusLine1[1];
       v7[2] = (int)UI_Locale_StatusLine1[2];
@@ -746,22 +746,22 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
       v5[0] = (int)UI_Locale_StatusDetail_C[0];
       v5[1] = (int)UI_Locale_StatusDetail_C[1];
       v5[2] = (int)UI_Locale_StatusDetail_C[2];
-      v11 = v2;
+      v11 = turnLabelText;
       UI_DrawTextFmt((int)v6, 401, 593, 297, 3, v10[(unsigned __int8)g_LanguageIndex]);
-      v3 = v7[(unsigned __int8)g_LanguageIndex];
-      UI_DrawTextFmt(v3, 401, 593, 317, 3, v3);
-      v4 = BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr);
-      if ( v4 == 1 )
+      statusLine1 = v7[(unsigned __int8)g_LanguageIndex];
+      UI_DrawTextFmt(statusLine1, 401, 593, 317, 3, statusLine1);
+      turnsRemaining = BUILDING_PRODUCTION_TURNS_REMAINING(g_CastleProductionBuildingPtr);
+      if ( turnsRemaining == 1 )
       {
-        return UI_DrawTextFmt(v3, 401, 593, 337, 3, v9[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v9[(unsigned __int8)g_LanguageIndex]);
       }
-      else if ( v4 < 2 || v4 > 4 )
+      else if ( turnsRemaining < 2 || turnsRemaining > 4 )
       {
-        return UI_DrawTextFmt(v3, 401, 593, 337, 3, v8[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v8[(unsigned __int8)g_LanguageIndex]);
       }
       else
       {
-        return UI_DrawTextFmt(v3, 401, 593, 337, 3, v5[(unsigned __int8)g_LanguageIndex]);
+        return UI_DrawTextFmt(statusLine1, 401, 593, 337, 3, v5[(unsigned __int8)g_LanguageIndex]);
       }
     }
     else
@@ -791,16 +791,16 @@ int  CastleProduction_DrawProductionStatus(DWORD a1)
 // 532218: using guessed type int dword_532218;
 
 //----- (00435500) --------------------------------------------------------
-int  UI_DrawActionBox(int a1)
+int  UI_DrawActionBox(int drawContext)
 {
-  void *v1; // esi
+  void *savedRenderDevice; // esi
   int result; // eax
 
-  v1 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 425, 285, 0x15Eu, 0x1C2u, 0x11Du, 0x1A9u);
-  result = UI_DrawTextFmt(a1, 285, 349, 430, 3, (int)aD_38);
-  g_RenderDevice = v1;
+  result = UI_DrawTextFmt(drawContext, 285, 349, 430, 3, (int)aD_38);
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 511230: using guessed type _UNKNOWN *g_RenderDevice;
@@ -810,20 +810,20 @@ int  UI_DrawActionBox(int a1)
 //----- (00435580) --------------------------------------------------------
 int UI_GetGridIndexFromMouse()
 {
-  int v0; // eax
-  int v1; // ebx
-  int v2; // ecx
-  int v3; // eax
+  int mouseX; // eax
+  int gridY; // ebx
+  int col; // ecx
+  int row; // eax
 
-  v0 = g_MouseCursorRawX >> g_CursorCoordShift;
+  mouseX = g_MouseCursorRawX >> g_CursorCoordShift;
   if ( g_MouseCursorRawX >> g_CursorCoordShift >= 426
     && g_MouseCursorRawY >> g_CursorCoordShift >= 32
-    && (v1 = (g_MouseCursorRawY >> g_CursorCoordShift) - 32, (v0 - 426) % 48 <= 33)
-    && v1 % 82 <= 64
-    && (v2 = (v0 - 426) / 48, v3 = v1 / 82, v2 < 4)
-    && v3 < 3 )
+    && (gridY = (g_MouseCursorRawY >> g_CursorCoordShift) - 32, (mouseX - 426) % 48 <= 33)
+    && gridY % 82 <= 64
+    && (col = (mouseX - 426) / 48, row = gridY / 82, col < 4)
+    && row < 3 )
   {
-    return v2 + 4 * v3;
+    return col + 4 * row;
   }
   else
   {
@@ -835,12 +835,12 @@ int UI_GetGridIndexFromMouse()
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00435620) --------------------------------------------------------
-int  CastleProduction_SetExitSignal(int a1)
+int  CastleProduction_SetExitSignal(int widget)
 {
   int result; // eax
   int v3; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimation(a1);
+  result = UIWidget_PlayPressedReleaseAnimation(widget);
   g_CastleProductionExitSignal = v3;
   return result;
 }
@@ -848,15 +848,15 @@ int  CastleProduction_SetExitSignal(int a1)
 // 532210: using guessed type int g_CastleProductionExitSignal;
 
 //----- (00435640) --------------------------------------------------------
-int  CastleProduction_SelectPreviousAvailableUnit(int a1, int a2, DWORD a3, int a4, int a5)
+int  CastleProduction_SelectPreviousAvailableUnit(int widget, int a2, DWORD renderContext, int a4, int a5)
 {
   int v5; // ecx
   int v6; // ecx
 
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   if ( g_CastleProductionSelectedAvailableUnitIndex )
     --g_CastleProductionSelectedAvailableUnitIndex;
-  CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
+  CastleProduction_RedrawSelectedUnitPanel(v5, a2, renderContext, a4, a5);
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
@@ -866,15 +866,15 @@ int  CastleProduction_SelectPreviousAvailableUnit(int a1, int a2, DWORD a3, int 
 // 532220: using guessed type int dword_532220[];
 
 //----- (00435680) --------------------------------------------------------
-int  CastleProduction_SelectNextAvailableUnit(int a1, int a2, DWORD a3, int a4, int a5)
+int  CastleProduction_SelectNextAvailableUnit(int widget, int a2, DWORD renderContext, int a4, int a5)
 {
   int v5; // ecx
   int v6; // ecx
 
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   if ( g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex + 1] != -1 )
     ++g_CastleProductionSelectedAvailableUnitIndex;
-  CastleProduction_RedrawSelectedUnitPanel(v5, a2, a3, a4, a5);
+  CastleProduction_RedrawSelectedUnitPanel(v5, a2, renderContext, a4, a5);
   Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
   return UIWidget_ShowReleasedState(v6, v6);
 }
@@ -885,37 +885,37 @@ int  CastleProduction_SelectNextAvailableUnit(int a1, int a2, DWORD a3, int a4, 
 // 532228: using guessed type int dword_532228[40];
 
 //----- (004356C0) --------------------------------------------------------
-int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
+int  CastleProduction_HandleBuyLicenceAction(int widget, DWORD gameContext, int actionContext)
 {
   int v4; // ecx
   int v5; // ecx
   int i; // ecx
-  int v8; // esi
+  int selectedUnitType; // esi
   int v9; // ecx
   int v10; // edx
   void *v11; // ecx
   int v12; // ecx
   int v13; // [esp-Ch] [ebp-10h]
 
-  UIWidget_ShowPressedState(a1);
-  if ( !Building_BuyUnitLicence(g_CastleProductionBuildingPtr, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v4, a2) )
-    return UIWidget_ShowReleasedState(a1, v5);
+  UIWidget_ShowPressedState(widget);
+  if ( !Building_BuyUnitLicence(g_CastleProductionBuildingPtr, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v4, gameContext) )
+    return UIWidget_ShowReleasedState(widget, v5);
   v13 = v5;
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Busy);
   for ( i = 0; ; ++i )
   {
-    v8 = g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
-    if ( *(char *)(i + g_CastleProductionBuildingPtr + 402) == v8 )
+    selectedUnitType = g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex];
+    if ( *(char *)(i + g_CastleProductionBuildingPtr + 402) == selectedUnitType )
       break;
   }
   g_LicenceGridAddAnimSlotIndex = i;
   Audio_PlaySoundEffectByName(aDopen, 64);
-  CastleProduction_ReloadLicenceSlotSprite(i, a1);
-  UI_DrawActionBox(a3);
+  CastleProduction_ReloadLicenceSlotSprite(i, widget);
+  UI_DrawActionBox(actionContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v10);
   CastleProduction_RebuildAvailableUnitList(v11);
-  CastleProduction_RedrawSelectedUnitPanel(v12, a1, a2, a3, v8);
-  return UIWidget_ShowReleasedState(a1, v13);
+  CastleProduction_RedrawSelectedUnitPanel(v12, widget, gameContext, actionContext, selectedUnitType);
+  return UIWidget_ShowReleasedState(widget, v13);
 }
 // 4356DB: variable 'v4' is possibly undefined
 // 4356E7: variable 'v5' is possibly undefined
@@ -931,11 +931,11 @@ int  CastleProduction_HandleBuyLicenceAction(int a1, DWORD a2, int a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435770) --------------------------------------------------------
-int  CastleProduction_HandleRemoveLicenceAction(int a1)
+int  CastleProduction_HandleRemoveLicenceAction(int widget)
 {
   int v2; // ecx
 
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   Render_Begin((int)g_RenderState, 0);
   if ( g_ProductionGridSelectedIndex != -1 )
   {
@@ -953,7 +953,7 @@ int  CastleProduction_HandleRemoveLicenceAction(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004357E0) --------------------------------------------------------
-int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
+int  CastleProduction_HandleProduceAction(int result, char productionSlot, DWORD gameContext)
 {
   int v4; // ecx
 
@@ -961,9 +961,9 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
   {
     UIWidget_ShowPressedState(result);
     Render_Begin((int)g_RenderState, 0);
-    Building_SetUnitProduction(g_CastleProductionBuildingPtr, a2, a3);
+    Building_SetUnitProduction(g_CastleProductionBuildingPtr, productionSlot, gameContext);
     CastleProduction_DrawLicenceGrid();
-    CastleProduction_DrawProductionStatus(a3);
+    CastleProduction_DrawProductionStatus(gameContext);
     return UIWidget_ShowReleasedState(v4, v4);
   }
   return result;
@@ -974,16 +974,16 @@ int  CastleProduction_HandleProduceAction(int result, char a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435830) --------------------------------------------------------
-int  CastleProduction_HandleStopProductionAction(int a1, char a2, DWORD a3)
+int  CastleProduction_HandleStopProductionAction(int widget, char productionSlot, DWORD gameContext)
 {
   int v3; // ecx
   int v4; // edx
   int v5; // ecx
 
-  UIWidget_ShowPressedState(a1);
-  Building_StopUnitProduction(v3, a2, a3);
+  UIWidget_ShowPressedState(widget);
+  Building_StopUnitProduction(v3, productionSlot, gameContext);
   CastleProduction_DrawLicenceGrid();
-  CastleProduction_DrawProductionStatus(a3);
+  CastleProduction_DrawProductionStatus(gameContext);
   return UIWidget_ShowReleasedState(v4, v5);
 }
 // 43583D: variable 'v3' is possibly undefined
@@ -992,21 +992,21 @@ int  CastleProduction_HandleStopProductionAction(int a1, char a2, DWORD a3)
 // 532218: using guessed type int dword_532218;
 
 //----- (00435860) --------------------------------------------------------
-int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
+int  CastleProduction_HandleInfoAction(int widget, int a2, DWORD gameContext, char a4)
 {
   int v5; // ecx
-  char *v6; // edx
-  int v7; // esi
+  char *backgroundPath; // edx
+  int renderSurface; // esi
   int v8; // ecx
-  char v10[108]; // [esp-70h] [ebp-74h] BYREF
+  char infoGraphicPath[108]; // [esp-70h] [ebp-74h] BYREF
   int v11; // [esp-4h] [ebp-8h]
 
   v11 = a2;
-  UIWidget_PlayPressedReleaseAnimation(a1);
+  UIWidget_PlayPressedReleaseAnimation(widget);
   Render_Pump();
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
-  Unit_BuildBigInfoGraphicPath(v10, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v5);
-  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, v10);
+  Unit_BuildBigInfoGraphicPath(infoGraphicPath, g_CastleProduction_AvailableUnitTypes[g_CastleProductionSelectedAvailableUnitIndex], v5);
+  (*(void (__fastcall **)(_DWORD, char *))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 48))(0, infoGraphicPath);
   (*(void (**)(void))(*(_DWORD *)(g_PrimaryRenderSurface + 184) + 36))();
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   Render_Begin((int)g_RenderState, 0);
@@ -1014,18 +1014,18 @@ int  CastleProduction_HandleInfoAction(int a1, int a2, DWORD a3, char a4)
     DD_Pump((int)g_RenderState, (char)g_RenderState);
   Palette_FadeOutToBlack((int *)&g_MainRenderDevice, 20);
   if ( g_CastleProductionUseChrTheme )
-    v6 = aCastle_chrD_23;
+    backgroundPath = aCastle_chrD_23;
   else
-    v6 = aCastle_pogD_23;
-  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *))(v7 + 48))(0, v6);
+    backgroundPath = aCastle_pogD_23;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *))(renderSurface + 48))(0, backgroundPath);
   Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  CastleProduction_RedrawSelectedUnitPanel(v8, 20, a3, a4, v7);
+  CastleProduction_RedrawSelectedUnitPanel(v8, 20, gameContext, a4, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
-  CastleProduction_DrawProductionStatus(a3);
+  CastleProduction_DrawProductionStatus(gameContext);
   UI_DrawActionBox(a4);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   return Render_Present((int)g_RenderState);
@@ -1070,45 +1070,45 @@ BOOL __thiscall CastleProduction_RebuildAvailableUnitList(void *this)
 // 532220: using guessed type int dword_532220[];
 
 //----- (00435A00) --------------------------------------------------------
-int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
+int  CastleProduction_HandleLicenceGridClick(DWORD gameContext, int a2, int a3)
 {
   int result; // eax
-  int v4; // ecx
+  int gridIndex; // ecx
   int v5; // ecx
-  int v6; // edx
-  int v7; // ecx
+  int availableUnitIndex; // edx
+  int slotUnitType; // ecx
 
   result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
     result = UI_GetGridIndexFromMouse();
-    v4 = result;
+    gridIndex = result;
     if ( result != -1 )
     {
       result = *(char *)(result + g_CastleProductionBuildingPtr + 402);
-      if ( result != -1 && v4 != g_ProductionGridSelectedIndex )
+      if ( result != -1 && gridIndex != g_ProductionGridSelectedIndex )
       {
         Audio_PlaySoundEffectByName(aMarker_0, 64);
         g_ProductionGridSelectedIndex = v5;
-        v6 = 0;
-        v7 = *(char *)(v5 + g_CastleProductionBuildingPtr + 402);
+        availableUnitIndex = 0;
+        slotUnitType = *(char *)(v5 + g_CastleProductionBuildingPtr + 402);
         result = 0;
         if ( g_CastleProduction_AvailableUnitTypes[0] != -1 )
         {
           do
           {
-            if ( v7 == g_CastleProduction_AvailableUnitTypes[v6] )
+            if ( slotUnitType == g_CastleProduction_AvailableUnitTypes[availableUnitIndex] )
               break;
-            a3 = g_CastleProductionAvailableUnitTypesLookahead[v6];
+            a3 = g_CastleProductionAvailableUnitTypesLookahead[availableUnitIndex];
             result += sizeof(int);
-            ++v6;
+            ++availableUnitIndex;
           }
           while ( a3 != -1 );
         }
-        if ( v7 == g_CastleProduction_AvailableUnitTypes[v6] && v6 != g_CastleProductionSelectedAvailableUnitIndex )
+        if ( slotUnitType == g_CastleProduction_AvailableUnitTypes[availableUnitIndex] && availableUnitIndex != g_CastleProductionSelectedAvailableUnitIndex )
         {
-          g_CastleProductionSelectedAvailableUnitIndex = v6;
-          CastleProduction_RedrawSelectedUnitPanel(v7, g_CastleProduction_AvailableUnitTypes[0], a1, a2, a3);
+          g_CastleProductionSelectedAvailableUnitIndex = availableUnitIndex;
+          CastleProduction_RedrawSelectedUnitPanel(slotUnitType, g_CastleProduction_AvailableUnitTypes[0], gameContext, a2, a3);
           return Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
         }
       }
@@ -1126,13 +1126,13 @@ int  CastleProduction_HandleLicenceGridClick(DWORD a1, int a2, int a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435AC0) --------------------------------------------------------
-int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
+int  CastleProduction_HandleAvailableUnitStripClick(DWORD gameContext, int a2, int a3)
 {
-  int v3; // ebx
+  int stripRowOffset; // ebx
   int result; // eax
   int v5; // ecx
 
-  v3 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 35) / 17 - 2;
+  stripRowOffset = ((g_MouseCursorRawY >> g_CursorCoordShift) - 35) / 17 - 2;
   result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
@@ -1140,14 +1140,14 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
     {
       result = (unsigned __int16)DLX_GetSpriteHeight(g_BuildingUiDlxSpriteSet, 0x14u) + 40;
       if ( g_MouseCursorRawX >> g_CursorCoordShift <= result
-        && v3 >= -2
-        && v3 <= 2
-        && v3 + g_CastleProductionSelectedAvailableUnitIndex >= 0
-        && g_CastleProduction_AvailableUnitTypes[v3 + g_CastleProductionSelectedAvailableUnitIndex] != -1 )
+        && stripRowOffset >= -2
+        && stripRowOffset <= 2
+        && stripRowOffset + g_CastleProductionSelectedAvailableUnitIndex >= 0
+        && g_CastleProduction_AvailableUnitTypes[stripRowOffset + g_CastleProductionSelectedAvailableUnitIndex] != -1 )
       {
-        g_CastleProductionSelectedAvailableUnitIndex += v3;
+        g_CastleProductionSelectedAvailableUnitIndex += stripRowOffset;
         Render_Pump();
-        CastleProduction_RedrawSelectedUnitPanel(v5, v3, a1, a2, a3);
+        CastleProduction_RedrawSelectedUnitPanel(v5, stripRowOffset, gameContext, a2, a3);
         Palette_ApplyWithBrightnessOffset((int *)&g_MainRenderDevice, (const void *)g_CastleProductionPaletteBuffer);
         Render_Present((int)g_RenderState);
         return Render_Begin((int)g_RenderState, 0);
@@ -1167,35 +1167,35 @@ int  CastleProduction_HandleAvailableUnitStripClick(DWORD a1, int a2, int a3)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00435B90) --------------------------------------------------------
-int  CastleProduction_TickAnimations(DWORD a1)
+int  CastleProduction_TickAnimations(DWORD gameContext)
 {
-  int v1; // edx
+  int previousResourceHandle; // edx
   void *v2; // ecx
   int v3; // ecx
 
-  v1 = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
+  previousResourceHandle = Render_SetResourceHandle((int)&g_MainRenderDevice, 0);
   CastleProduction_AnimateSelectedUnitPortrait(v2);
-  CastleProduction_TickLicenceGridAnimations(v3, a1);
-  return Render_SetResourceHandle((int)&g_MainRenderDevice, v1);
+  CastleProduction_TickLicenceGridAnimations(v3, gameContext);
+  return Render_SetResourceHandle((int)&g_MainRenderDevice, previousResourceHandle);
 }
 // 435B9F: variable 'v2' is possibly undefined
 // 435BA4: variable 'v3' is possibly undefined
 
 //----- (00435BC0) --------------------------------------------------------
-int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
+int  Castle_ShowUnitProductionPanel(int buildingPtr, DWORD a2, int a3)
 {
   unsigned int v3; // eax
   int v4; // ecx
   int v5; // ecx
-  int v6; // eax
+  int paletteBuffer; // eax
   int v7; // ecx
-  DWORD v8; // ebp
-  char *v9; // edx
-  int v10; // esi
+  DWORD useChrTheme; // ebp
+  char *panelBackgroundPath; // edx
+  int renderSurface; // esi
   char v11; // bl
   int v12; // ecx
   _DWORD *v13; // eax
-  CHAR *v14; // eax
+  CHAR *panelPalettePath; // eax
   int v15; // ecx
   int v16; // ecx
   int v17; // ecx
@@ -1204,57 +1204,57 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   int v20; // ecx
   int v21; // edx
   int v22; // ecx
-  int (*v23)(void); // ecx
-  int v24; // edx
+  int (*previousAnimationHook)(void); // ecx
+  int slotIndex; // edx
   int v25; // ecx
 
-  g_CastleProductionBuildingPtr = a1;
-  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140063);
+  g_CastleProductionBuildingPtr = buildingPtr;
+  g_CastleProductionUseChrTheme = *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(buildingPtr + 2) + 140063);
   g_CastleProductionSelectedAvailableUnitIndex = 0;
   g_CastleProductionSelectedUnitSpriteSet = 0;
   memset(g_CastleProduction_LicenceSlotSpriteHandles, 0, sizeof(g_CastleProduction_LicenceSlotSpriteHandles));
-  for ( v24 = 0; v24 != 12; ++v24 )
-    g_CastleProductionSlotAnimFrames[v24] = Rng_RandRange(0, 7);
+  for ( slotIndex = 0; slotIndex != 12; ++slotIndex )
+    g_CastleProductionSlotAnimFrames[slotIndex] = Rng_RandRange(0, 7);
   g_CastleLicenceRemovalSlotIndex = -1;
   g_LicenceGridAddAnimSlotIndex = -1;
   g_ProductionGridSelectedIndex = -1;
   CastleProduction_RebuildAvailableUnitList(0);
-  v6 = Mem_Alloc(1024, v5, -1, a2);
-  if ( v6 )
-    v6 = _wcpp_4_ctor_array__(v7, 256);
-  v8 = g_CastleProductionUseChrTheme;
-  g_CastleProductionPaletteBuffer = v6;
+  paletteBuffer = Mem_Alloc(1024, v5, -1, a2);
+  if ( paletteBuffer )
+    paletteBuffer = _wcpp_4_ctor_array__(v7, 256);
+  useChrTheme = g_CastleProductionUseChrTheme;
+  g_CastleProductionPaletteBuffer = paletteBuffer;
   if ( g_CastleProductionUseChrTheme )
-    v9 = aCastle_chrD_17;
+    panelBackgroundPath = aCastle_chrD_17;
   else
-    v9 = aCastle_pogD_17;
-  v10 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+    panelBackgroundPath = aCastle_pogD_17;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
   v11 = g_CastleProductionPaletteBuffer;
-  (*(void (__fastcall **)(_DWORD, char *))(v10 + 48))(0, v9);
+  (*(void (__fastcall **)(_DWORD, char *))(renderSurface + 48))(0, panelBackgroundPath);
   Palette_QuantizeChannelsInPlace((_BYTE *)g_CastleProductionPaletteBuffer, 6);
-  v13 = (_DWORD *)Mem_Alloc(4112, v12, v11, v8);
+  v13 = (_DWORD *)Mem_Alloc(4112, v12, v11, useChrTheme);
   if ( v13 )
     v13 = DLXSpriteSet_Load(v13, g_CastleProductionUseChrTheme ? aCastle_chrD_19 : aCastle_pogD_19);
   g_BuildingUiDlxSpriteSet = (int)v13;
   if ( g_CastleProductionUseChrTheme )
-    v14 = aCastle_chrD_19;
+    panelPalettePath = aCastle_chrD_19;
   else
-    v14 = aCastle_pogD_19;
-  Palette_LoadOrBuildBlendLookupTable(v14, g_CastleProductionPaletteBuffer, g_CastleProductionUseChrTheme, v8);
-  Render_LoadResourceSprite_v4(5, (_BYTE *)g_CastleProductionPaletteBuffer, v15, v11, v8);
-  Render_LoadResourceSprite_v4(20, (_BYTE *)g_CastleProductionPaletteBuffer, v16, v11, v8);
-  Render_LoadResourceSprite_v4(9, (_BYTE *)g_CastleProductionPaletteBuffer, v17, v11, v8);
-  Render_LoadResourceSprite_v4(7, (_BYTE *)g_CastleProductionPaletteBuffer, v18, v11, v8);
-  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_CastleProductionPaletteBuffer, v19, v11, v8);
+    panelPalettePath = aCastle_pogD_19;
+  Palette_LoadOrBuildBlendLookupTable(panelPalettePath, g_CastleProductionPaletteBuffer, g_CastleProductionUseChrTheme, useChrTheme);
+  Render_LoadResourceSprite_v4(5, (_BYTE *)g_CastleProductionPaletteBuffer, v15, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(20, (_BYTE *)g_CastleProductionPaletteBuffer, v16, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(9, (_BYTE *)g_CastleProductionPaletteBuffer, v17, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(7, (_BYTE *)g_CastleProductionPaletteBuffer, v18, v11, useChrTheme);
+  Render_LoadResourceSprite_v4(g_ActiveWidgetSpriteTableIndex, (_BYTE *)g_CastleProductionPaletteBuffer, v19, v11, useChrTheme);
   UI_SetActiveWidgetTable(8);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_CastleProductionPaletteBuffer, v20, v8);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, g_CastleProductionPaletteBuffer, v20, useChrTheme);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
   UIWidgetTable_InitDrawStates(g_CastleUnitProductionWidgetTable);
   RenderState_SelectCursorDescriptor((int)g_RenderState, v21);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  CastleProduction_RedrawSelectedUnitPanel(v22, 20, v8, a3, v10);
+  CastleProduction_RedrawSelectedUnitPanel(v22, 20, useChrTheme, a3, renderSurface);
   CastleProduction_ReloadLicenceSlotSprites(20);
-  CastleProduction_DrawProductionStatus(v8);
+  CastleProduction_DrawProductionStatus(useChrTheme);
   UI_DrawActionBox(a3);
   Palette_FadeInFromBlack((int *)&g_MainRenderDevice, (unsigned __int8 *)g_CastleProductionPaletteBuffer, 20);
   Render_Present((int)g_RenderState);
@@ -1263,26 +1263,26 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    CastleProduction_TickAnimations(v8);
+    CastleProduction_TickAnimations(useChrTheme);
     UI_RunHoverTooltipZones(g_CastleUnitProductionTooltipZone);
     g_RenderDevice = &g_MainRenderDevice;
-    if ( !UIWidgetTable_PollHoverAndActions(g_CastleUnitProductionWidgetTable, v8) )
+    if ( !UIWidgetTable_PollHoverAndActions(g_CastleUnitProductionWidgetTable, useChrTheme) )
     {
-      CastleProduction_HandleLicenceGridClick(v8, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
-      CastleProduction_HandleAvailableUnitStripClick(v8, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleLicenceGridClick(useChrTheme, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
+      CastleProduction_HandleAvailableUnitStripClick(useChrTheme, (int)&g_MainRenderDevice, (int)g_CastleUnitProductionWidgetTable);
     }
   }
   while ( !g_CastleProductionExitSignal );
-  g_ActiveDialogAnimationTickHook = v23;
+  g_ActiveDialogAnimationTickHook = previousAnimationHook;
   DLXSpriteSet_ReleaseAndClear(&g_BuildingUiDlxSpriteSet);
   if ( g_CastleProductionSelectedUnitSpriteSet )
     DLXSpriteSet_ReleaseAndClear(&g_CastleProductionSelectedUnitSpriteSet);
-  for ( v24 = 0; v24 != 12; ++v24 )
+  for ( slotIndex = 0; slotIndex != 12; ++slotIndex )
   {
-    if ( g_CastleProduction_LicenceSlotSpriteHandles[v24] )
+    if ( g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] )
     {
-      nfree_(g_CastleProduction_LicenceSlotSpriteHandles[v24]);
-      g_CastleProduction_LicenceSlotSpriteHandles[v24] = 0;
+      nfree_(g_CastleProduction_LicenceSlotSpriteHandles[slotIndex]);
+      g_CastleProduction_LicenceSlotSpriteHandles[slotIndex] = 0;
     }
   }
   Render_Pump();
@@ -1327,7 +1327,7 @@ int  Castle_ShowUnitProductionPanel(int a1, DWORD a2, int a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00435ED0) --------------------------------------------------------
-int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
+int  Palette_LoadOrBuildBlendLookupTable(CHAR *themeName, int palettePtr, int a3, DWORD fileContext)
 {
   unsigned int cube_size;
   int query_handle;
@@ -1336,20 +1336,20 @@ int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
 
   (void)a3;
   strcpy(path, aGfx_5);
-  strcat(path, a1);
+  strcat(path, themeName);
   strcat(path, a_mtb);
   query_handle = FileSystem_ResolveReadPath(path, 0);
   if ( query_handle )
   {
     cube_size = 1u << g_Palette_ColorCubeBits;
     cube_size *= cube_size * cube_size;
-    g_Palette_ActivePalettePtr = a2;
+    g_Palette_ActivePalettePtr = palettePtr;
     Compat_QueryRead(query_handle, g_Rgb15ToPaletteLut, (int)cube_size);
     return Compat_FileSystemQueryRelease((int)&g_FileSystemMountTable, &query_handle);
   }
 
-  Palette_BuildNearestColorLUT(a2);
-  output_handle = IO_FOpen(path, (unsigned __int8 *)aWb_0, 0, a4);
+  Palette_BuildNearestColorLUT(palettePtr);
+  output_handle = IO_FOpen(path, (unsigned __int8 *)aWb_0, 0, fileContext);
   cube_size = 1u << g_Palette_ColorCubeBits;
   cube_size *= cube_size * cube_size;
   fwrite_(g_Rgb15ToPaletteLut, (int)cube_size, output_handle, 1);
@@ -1360,19 +1360,19 @@ int  Palette_LoadOrBuildBlendLookupTable(CHAR *a1, int a2, int a3, DWORD a4)
 // 519A18: using guessed type char byte_519A18;
 
 //----- (00435FE0) --------------------------------------------------------
-int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD a1, int a2)
+int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD renderContext, int drawContext)
 {
-  void *v2; // esi
+  void *savedRenderDevice; // esi
   int v3; // edx
   int result; // eax
 
-  v2 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  Render_ReleaseSurface(5, a1);
+  Render_ReleaseSurface(5, renderContext);
   Render_SaveBackbuffer(v3);
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 48, 400, 0x1BBu, 0x3Cu, 0x190u, 0x30u);
-  result = UI_DrawTextFmt(a2, 347, 445, 48, 3, (int)aD_39);
-  g_RenderDevice = v2;
+  result = UI_DrawTextFmt(drawContext, 347, 445, 48, 3, (int)aD_39);
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 436001: variable 'v3' is possibly undefined
@@ -1381,19 +1381,19 @@ int  BuildingTransferDialog_DrawSourceRemainingValue(DWORD a1, int a2)
 // 532354: using guessed type int dword_532354;
 
 //----- (00436060) --------------------------------------------------------
-int  BuildingTransferDialog_DrawTransferAmountValue(DWORD a1, int a2)
+int  BuildingTransferDialog_DrawTransferAmountValue(DWORD renderContext, int drawContext)
 {
-  void *v2; // esi
+  void *savedRenderDevice; // esi
   int v3; // edx
   int result; // eax
 
-  v2 = g_RenderDevice;
+  savedRenderDevice = g_RenderDevice;
   g_RenderDevice = &g_MainRenderDevice;
-  Render_ReleaseSurface(5, a1);
+  Render_ReleaseSurface(5, renderContext);
   Render_SaveBackbuffer(v3);
   Render_FillRect((_DWORD *)g_PrimaryRenderSurface, 0, 272, 548, 0x259u, 0x12Cu, 0x224u, 0x110u);
-  result = UI_DrawTextFmt(a2, 548, 601, 272, 3, (int)aD_40);
-  g_RenderDevice = v2;
+  result = UI_DrawTextFmt(drawContext, 548, 601, 272, 3, (int)aD_40);
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 436081: variable 'v3' is possibly undefined
@@ -1402,12 +1402,12 @@ int  BuildingTransferDialog_DrawTransferAmountValue(DWORD a1, int a2)
 // 532350: using guessed type int dword_532350;
 
 //----- (004360E0) --------------------------------------------------------
-int  BuildingTransferDialog_HandleExitButtonPress(int a1, int a2)
+int  BuildingTransferDialog_HandleExitButtonPress(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_BuildingTransferDialogExitScratch = v4;
   return result;
 }
@@ -1415,21 +1415,21 @@ int  BuildingTransferDialog_HandleExitButtonPress(int a1, int a2)
 // 53234C: using guessed type int dword_53234C;
 
 //----- (00436100) --------------------------------------------------------
-int  BuildingTransferDialog_CommitTransfer(int a1, int a2, DWORD a3, double a4)
+int  BuildingTransferDialog_CommitTransfer(int widget, int delayTicks, DWORD renderContext, double a4)
 {
   int result; // eax
-  int v6; // esi
+  int targetBuildingId; // esi
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   if ( g_Building_TransferAmount )
   {
-    v6 = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
-    if ( v6 == -2 )
-      v6 = -1;
-    Building_Transfer((g_BuildingTransferSourcePtr - (gameData + 509674)) / 467, v6, 1, g_Building_TransferAmount, a4);
+    targetBuildingId = g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex];
+    if ( targetBuildingId == -2 )
+      targetBuildingId = -1;
+    Building_Transfer((g_BuildingTransferSourcePtr - (gameData + 509674)) / 467, targetBuildingId, 1, g_Building_TransferAmount, a4);
     g_Building_TransferAmount = 0;
-    BuildingTransferDialog_DrawTransferAmountValue(a3, 467);
-    return BuildingTransferDialog_DrawSourceRemainingValue(a3, 467);
+    BuildingTransferDialog_DrawTransferAmountValue(renderContext, 467);
+    return BuildingTransferDialog_DrawSourceRemainingValue(renderContext, 467);
   }
   return result;
 }
@@ -1440,11 +1440,11 @@ int  BuildingTransferDialog_CommitTransfer(int a1, int a2, DWORD a3, double a4)
 // 532360: using guessed type __int16 g_BuildingTransferTargetIds[];
 
 //----- (00436180) --------------------------------------------------------
-int  BuildingTransferDialog_IncreaseTransferAmount(int a1)
+int  BuildingTransferDialog_IncreaseTransferAmount(int widget)
 {
   int v2; // edx
   int v3; // ecx
-  int v4; // ebx
+  int startAmount; // ebx
   int v5; // edx
   int v6; // ecx
   int v7; // eax
@@ -1452,33 +1452,33 @@ int  BuildingTransferDialog_IncreaseTransferAmount(int a1)
   int v9; // eax
   int v10; // edx
   int v11; // ecx
-  DWORD v12; // ebp
+  DWORD sourceGold; // ebp
   int v13; // ecx
 
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   Render_Pump();
   Time_Now(v3, v2);
   g_Building_TransferAmount += 10;
-  v4 = g_Building_TransferAmount;
+  startAmount = g_Building_TransferAmount;
   do
   {
-    DD_Pump((int)g_RenderState, v4);
+    DD_Pump((int)g_RenderState, startAmount);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
-    g_Building_TransferAmount = 10 * ((v4 + (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
+    g_Building_TransferAmount = 10 * ((startAmount + (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
     if ( g_Building_TransferAmount > 1000 )
       g_Building_TransferAmount = 1000;
-    v12 = *(_DWORD *)(g_BuildingTransferSourcePtr + 438);
-    if ( g_Building_TransferAmount > v12 )
+    sourceGold = *(_DWORD *)(g_BuildingTransferSourcePtr + 438);
+    if ( g_Building_TransferAmount > sourceGold )
     {
-      v12 = 10;
+      sourceGold = 10;
       g_Building_TransferAmount = 10 * (*(_DWORD *)(g_BuildingTransferSourcePtr + 438) / 0xAu);
     }
-    BuildingTransferDialog_DrawTransferAmountValue(v12, (int)g_RenderState);
+    BuildingTransferDialog_DrawTransferAmountValue(sourceGold, (int)g_RenderState);
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return UIWidget_ShowReleasedState(a1, v13);
+  return UIWidget_ShowReleasedState(widget, v13);
 }
 // 436197: variable 'v3' is possibly undefined
 // 436197: variable 'v2' is possibly undefined
@@ -1493,11 +1493,11 @@ int  BuildingTransferDialog_IncreaseTransferAmount(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00436250) --------------------------------------------------------
-int  BuildingTransferDialog_DecreaseTransferAmount(int a1)
+int  BuildingTransferDialog_DecreaseTransferAmount(int widget)
 {
   int v2; // edx
   int v3; // ecx
-  int v4; // ebx
+  int startAmount; // ebx
   int v5; // edx
   int v6; // ecx
   int v7; // eax
@@ -1507,24 +1507,24 @@ int  BuildingTransferDialog_DecreaseTransferAmount(int a1)
   int v11; // ecx
   int v12; // ecx
 
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   Render_Pump();
   Time_Now(v3, v2);
   g_Building_TransferAmount -= 10;
-  v4 = g_Building_TransferAmount;
+  startAmount = g_Building_TransferAmount;
   do
   {
-    DD_Pump((int)g_RenderState, v4);
+    DD_Pump((int)g_RenderState, startAmount);
     v7 = Time_Now(v6, v5);
     v9 = Time_Now(v8, v7);
-    g_Building_TransferAmount = 10 * ((v4 - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
+    g_Building_TransferAmount = 10 * ((startAmount - (v10 - v11) * (v9 - v11) / 0x32u) / 0xA);
     if ( g_Building_TransferAmount < 0 )
       g_Building_TransferAmount = 0;
     BuildingTransferDialog_DrawTransferAmountValue((DWORD)g_RenderState, 0);
   }
   while ( DD_IsFlipping((int)g_RenderState) );
   Render_Present((int)g_RenderState);
-  return UIWidget_ShowReleasedState(a1, v12);
+  return UIWidget_ShowReleasedState(widget, v12);
 }
 // 43626A: variable 'v3' is possibly undefined
 // 43626A: variable 'v2' is possibly undefined
@@ -1538,19 +1538,19 @@ int  BuildingTransferDialog_DecreaseTransferAmount(int a1)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (00436610) --------------------------------------------------------
-int  BuildingTransferTargetList_SetDrawOrigin(int result, int a2)
+int  BuildingTransferTargetList_SetDrawOrigin(int result, int originY)
 {
   g_BuildingTransferTargetListDrawX = result;
-  g_BuildingTransferTargetListDrawY = a2;
+  g_BuildingTransferTargetListDrawY = originY;
   return result;
 }
 // 53242C: using guessed type int g_BuildingTransferTargetListDrawX;
 // 532430: using guessed type int g_BuildingTransferTargetListDrawY;
 
 //----- (00436620) --------------------------------------------------------
-void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
+void * BuildingTransferTargetList_Draw(int a1, DWORD renderContext)
 {
-  _DWORD *v2; // eax
+  _DWORD *spriteSet; // eax
   int row_y_offset; // ebp
   int target_index; // edi
   void *saved_render_device; // eax
@@ -1567,13 +1567,13 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
   g_RenderDevice = &g_MainRenderDevice;
   if ( !g_BuildingTransferTargetListSpriteSet )
   {
-    v2 = (_DWORD *)Mem_Alloc(4112, a1, 0, a2);
-    if ( v2 )
-      v2 = DLXSpriteSet_Load(v2, aCas_list_s32);
-    g_BuildingTransferTargetListSpriteSet = (int)v2;
-    DLXSpriteSet_DrawFormattedText((DWORD)v2, -1, a1, aCas_list_pal);
+    spriteSet = (_DWORD *)Mem_Alloc(4112, a1, 0, renderContext);
+    if ( spriteSet )
+      spriteSet = DLXSpriteSet_Load(spriteSet, aCas_list_s32);
+    g_BuildingTransferTargetListSpriteSet = (int)spriteSet;
+    DLXSpriteSet_DrawFormattedText((DWORD)spriteSet, -1, a1, aCas_list_pal);
   }
-  Render_ReleaseSurface(5, a2);
+  Render_ReleaseSurface(5, renderContext);
   row_index = g_BuildingTransferTargetListIndex - 2;
   row_y_offset = 0;
   row_bottom = 18;
@@ -1658,12 +1658,12 @@ void * BuildingTransferTargetList_Draw(int a1, DWORD a2)
 // 532430: using guessed type int g_BuildingTransferTargetListDrawY;
 
 //----- (004368F0) --------------------------------------------------------
-int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
+int  BuildingTransferTargetList_SelectPrevious(int widget, DWORD renderContext)
 {
   int old_index;
 
   old_index = g_BuildingTransferTargetListIndex;
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   if ( g_BuildingTransferTargetListIndex )
     --g_BuildingTransferTargetListIndex;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -1673,19 +1673,19 @@ int  BuildingTransferTargetList_SelectPrevious(int a1, DWORD a2)
       old_index,
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
-  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a2);
-  return UIWidget_ShowReleasedState(a1, 1);
+  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, renderContext);
+  return UIWidget_ShowReleasedState(widget, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
 
 //----- (00436930) --------------------------------------------------------
-int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
+int  BuildingTransferTargetList_SelectNext(int widget, DWORD renderContext)
 {
   int old_index;
 
   old_index = g_BuildingTransferTargetListIndex;
-  UIWidget_ShowPressedState(a1);
+  UIWidget_ShowPressedState(widget);
   if ( g_BuildingTransferTargetIdsLookahead[g_BuildingTransferTargetListIndex] != -1 )
     ++g_BuildingTransferTargetListIndex;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
@@ -1695,15 +1695,15 @@ int  BuildingTransferTargetList_SelectNext(int a1, DWORD a2)
       old_index,
       g_BuildingTransferTargetListIndex,
       g_BuildingTransferTargetIds[g_BuildingTransferTargetListIndex]);
-  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a2);
-  return UIWidget_ShowReleasedState(a1, 1);
+  BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, renderContext);
+  return UIWidget_ShowReleasedState(widget, 1);
 }
 // 511234: using guessed type char (*off_511234)[1024];
 // 53235C: using guessed type int g_BuildingTransferTargetListIndex;
 // 532362: using guessed type __int16 word_532362[99];
 
 //----- (00436970) --------------------------------------------------------
-int  BuildingTransferTargetList_Rebuild(int a1, int a2)
+int  BuildingTransferTargetList_Rebuild(int sourceBuildingRecord, int reserveFirstSlot)
 {
   int building_index; // edx
   int insert_index; // ebx
@@ -1716,14 +1716,14 @@ int  BuildingTransferTargetList_Rebuild(int a1, int a2)
   building_index = 0;
   current_player = g_CurrentPlayerIndex;
   result = 0;
-  insert_index = a2 ? 1 : 0;
+  insert_index = reserveFirstSlot ? 1 : 0;
   do
   {
     building_record = result + gameData + BUILDING_TABLE_OFFSET;
     if ( *(char *)(result + gameData + 509678) != -1
       && *(_BYTE *)(result + gameData + 509678)
       && *(unsigned __int8 *)(building_record + 2) == current_player
-      && building_record != a1
+      && building_record != sourceBuildingRecord
       && !*(_WORD *)(building_record + 16)
       && insert_index < BUILDING_TRANSFER_TARGET_LIST_CAPACITY )
     {
@@ -1743,12 +1743,12 @@ int  BuildingTransferTargetList_Rebuild(int a1, int a2)
 // 532360: using guessed type __int16 g_BuildingTransferTargetIds[];
 
 //----- (00436A30) --------------------------------------------------------
-int  BuildingTransferTargetList_HandleClick(DWORD a1)
+int  BuildingTransferTargetList_HandleClick(DWORD renderContext)
 {
-  int v2; // ebx
+  int rowOffset; // ebx
   int result; // eax
 
-  v2 = ((g_MouseCursorRawY >> g_CursorCoordShift) - g_BuildingTransferTargetListDrawY) / 18 - 2;
+  rowOffset = ((g_MouseCursorRawY >> g_CursorCoordShift) - g_BuildingTransferTargetListDrawY) / 18 - 2;
   result = DD_IsFlipping((int)g_RenderState);
   if ( result )
   {
@@ -1756,16 +1756,16 @@ int  BuildingTransferTargetList_HandleClick(DWORD a1)
     {
       result = g_BuildingTransferTargetListDrawX + 266;
       if ( g_MouseCursorRawX >> g_CursorCoordShift <= g_BuildingTransferTargetListDrawX + 266
-        && v2 >= -2
-        && v2 <= 2
-        && v2 + g_BuildingTransferTargetListIndex >= 0 )
+        && rowOffset >= -2
+        && rowOffset <= 2
+        && rowOffset + g_BuildingTransferTargetListIndex >= 0 )
       {
-        result = g_BuildingTransferTargetIds[v2 + g_BuildingTransferTargetListIndex];
+        result = g_BuildingTransferTargetIds[rowOffset + g_BuildingTransferTargetListIndex];
         if ( result != -1 )
         {
-          g_BuildingTransferTargetListIndex += v2;
+          g_BuildingTransferTargetListIndex += rowOffset;
           Render_Pump();
-          BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, a1);
+          BuildingTransferTargetList_Draw((int)g_BuildingTransferTargetListSurfaceBuffer, renderContext);
           Render_Present((int)g_RenderState);
           return Render_Begin((int)g_RenderState, 0);
         }
@@ -1797,9 +1797,9 @@ int BuildingTransferTargetList_FreeSpriteSet()
 // 532428: using guessed type int g_BuildingTransferTargetListSpriteSet;
 
 //----- (00436B20) --------------------------------------------------------
-int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
+int  UI_DrawFormattedTokenLine(int leftX, int rightX, int templateIndex, int penX)
 {
-  int v6; // esi
+  int availableWidth; // esi
   int result; // eax
   unsigned __int8 *v8; // ecx
   int v9; // ecx
@@ -1808,40 +1808,40 @@ int  UI_DrawFormattedTokenLine(int a1, int a2, int a3, int a4)
   char *v12; // eax
   int v13; // ecx
   _BYTE *v14; // edx
-  char *v15; // [esp+0h] [ebp-18h]
-  int v16; // [esp+4h] [ebp-14h]
-  char v17; // [esp+8h] [ebp-10h]
+  char *templateRow; // [esp+0h] [ebp-18h]
+  int tokenOffset; // [esp+4h] [ebp-14h]
+  char savedChar; // [esp+8h] [ebp-10h]
 
-  v6 = a2 - a1;
-  v16 = 0;
-  v15 = (char *)&g_UiFormattedMessageTemplateTable + 150 * a3;
+  availableWidth = rightX - leftX;
+  tokenOffset = 0;
+  templateRow = (char *)&g_UiFormattedMessageTemplateTable + 150 * templateIndex;
   do
   {
-    result = (int)&v15[50 * (unsigned __int8)g_LanguageIndex];
-    v8 = (unsigned __int8 *)(result + v16);
-    if ( !*(_DWORD *)(result + v16 + 1) )
+    result = (int)&templateRow[50 * (unsigned __int8)g_LanguageIndex];
+    v8 = (unsigned __int8 *)(result + tokenOffset);
+    if ( !*(_DWORD *)(result + tokenOffset + 1) )
       break;
-    if ( *v8 == 4 && (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)(v8 + 1)) > v6 )
+    if ( *v8 == 4 && (unsigned __int16)Render_LoadResourceSprite_v3(*(_BYTE **)(v8 + 1)) > availableWidth )
     {
       v10 = *(_BYTE **)(v8 + 1);
-      while ( (unsigned __int16)Render_LoadResourceSprite_v3(v10) > v6 )
+      while ( (unsigned __int16)Render_LoadResourceSprite_v3(v10) > availableWidth )
       {
-        v12 = TextSprite_FindWordWrapBreak(v11, v6);
-        v17 = *v12;
+        v12 = TextSprite_FindWordWrapBreak(v11, availableWidth);
+        savedChar = *v12;
         *v12 = 0;
-        UI_DrawTextFmt(a1, a1, a2, a4, 4, v13);
-        *v14 = v17;
-        a4 += UI_GetTextXOffset(g_ActiveTextSpriteSlot);
+        UI_DrawTextFmt(leftX, leftX, rightX, penX, 4, v13);
+        *v14 = savedChar;
+        penX += UI_GetTextXOffset(g_ActiveTextSpriteSlot);
       }
-      UI_DrawTextFmt(a1, a1, a2, a4, 1, (int)v11);
+      UI_DrawTextFmt(leftX, leftX, rightX, penX, 1, (int)v11);
     }
     else
     {
-      UI_DrawTextFmt(a1, a1, a2, a4, *v8, *(_DWORD *)(v8 + 1));
+      UI_DrawTextFmt(leftX, leftX, rightX, penX, *v8, *(_DWORD *)(v8 + 1));
     }
     result = UI_GetTextXOffset(g_ActiveTextSpriteSlot);
-    a4 += result;
-    v16 = v9 + 5;
+    penX += result;
+    tokenOffset = v9 + 5;
   }
   while ( v9 + 5 < 50 );
   return result;
@@ -1876,46 +1876,46 @@ int __thiscall UnitBattle_ConstructAiCandidateQueue(void *this)
 // 5437D4: using guessed type int dword_5437D4;
 
 //----- (00436C50) --------------------------------------------------------
-int  UnitBattle_ResetAiReachGridForSide(int a1)
+int  UnitBattle_ResetAiReachGridForSide(int side)
 {
-  int v1; // edi
+  int reachGridBase; // edi
   int result; // eax
-  int v3; // ecx
-  int v4; // ebx
-  int v6; // [esp+4h] [ebp-1Ch]
+  int gridRow; // ecx
+  int rowEndOffset; // ebx
+  int unitRecordOffset; // [esp+4h] [ebp-1Ch]
 
-  v1 = 0;
-  v6 = 0;
+  reachGridBase = 0;
+  unitRecordOffset = 0;
   do
   {
-    result = v6 + g_MapData;
-    if ( *(__int16 *)(v6 + g_MapData + 852) != -1 )
+    result = unitRecordOffset + g_MapData;
+    if ( *(__int16 *)(unitRecordOffset + g_MapData + 852) != -1 )
     {
       result = *(unsigned __int8 *)(result + 854);
-      if ( result == a1 )
+      if ( result == side )
       {
-        v3 = 0;
-        v4 = v1 + 160;
+        gridRow = 0;
+        rowEndOffset = reachGridBase + 160;
         do
         {
-          result = v1 + 160 * v3;
+          result = reachGridBase + 160 * gridRow;
           do
           {
             result += 8;
             *(int *)((char *)&g_UnitBattleAiReachGrid + result) = 0;
             *(int *)((char *)&g_UnitBattleAiReachGridCellSecondField + result) = 0;
           }
-          while ( result != v4 );
-          ++v3;
-          v4 += 160;
+          while ( result != rowEndOffset );
+          ++gridRow;
+          rowEndOffset += 160;
         }
-        while ( v3 < 20 );
+        while ( gridRow < 20 );
       }
     }
-    v1 += 3204;
-    v6 += 31;
+    reachGridBase += 3204;
+    unitRecordOffset += 31;
   }
-  while ( v1 != 70488 );
+  while ( reachGridBase != 70488 );
   return result;
 }
 // 532048: using guessed type int g_MapData;
@@ -1923,10 +1923,10 @@ int  UnitBattle_ResetAiReachGridForSide(int a1)
 // 532444: using guessed type int dword_532444;
 
 //----- (00436D10) --------------------------------------------------------
-signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
+signed int  UnitBattle_RetreatUnit(int unitIndex, int a2, char a3, DWORD a4)
 {
   int v5; // edx
-  __int16 *v6; // ecx
+  __int16 *unitRecord; // ecx
   signed int j; // ebp
   int v8; // ebx
   signed int result; // eax
@@ -1934,68 +1934,68 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
   int v11; // eax
   int *v12; // eax
   int v13; // ecx
-  int v14; // [esp+4h] [ebp-34h]
+  int searchRadius; // [esp+4h] [ebp-34h]
   int v15; // [esp+8h] [ebp-30h]
   int i; // [esp+Ch] [ebp-2Ch]
   int v17; // [esp+10h] [ebp-28h]
   int v18; // [esp+14h] [ebp-24h]
-  int v19; // [esp+18h] [ebp-20h]
-  int v20; // [esp+1Ch] [ebp-1Ch]
-  int v21; // [esp+20h] [ebp-18h]
-  int v22; // [esp+24h] [ebp-14h]
+  int originY; // [esp+18h] [ebp-20h]
+  int originX; // [esp+1Ch] [ebp-1Ch]
+  int candidateY; // [esp+20h] [ebp-18h]
+  int candidateX; // [esp+24h] [ebp-14h]
 
   Debug_Log(a2, a3, a4, (int)aCofnij_oddzial);
-  v6 = (__int16 *)(31 * v5 + g_MapData + 852);
-  v14 = 0;
-  v20 = (unsigned __int16)v6[2];
+  unitRecord = (__int16 *)(31 * v5 + g_MapData + 852);
+  searchRadius = 0;
+  originX = (unsigned __int16)unitRecord[2];
   v18 = 1;
   v15 = 1;
-  v19 = (unsigned __int16)v6[3];
+  originY = (unsigned __int16)unitRecord[3];
   while ( 2 )
   {
     for ( i = 1; i <= 2; ++i )
     {
       v15 = -v15;
       v17 = 0;
-      v21 = v15 * v14 + v19;
+      candidateY = v15 * searchRadius + originY;
       while ( 2 )
       {
         for ( j = 1; j <= 2; ++j )
         {
           v18 = -v18;
-          v22 = v18 * v17 + v20;
-          if ( v22 < 0 )
-            v22 = 0;
-          if ( v22 > *(_DWORD *)(g_MapData + 804) )
-            v22 = *(_DWORD *)(g_MapData + 804);
-          if ( v21 < 0 )
-            v21 = 0;
+          candidateX = v18 * v17 + originX;
+          if ( candidateX < 0 )
+            candidateX = 0;
+          if ( candidateX > *(_DWORD *)(g_MapData + 804) )
+            candidateX = *(_DWORD *)(g_MapData + 804);
+          if ( candidateY < 0 )
+            candidateY = 0;
           v8 = *(_DWORD *)(g_MapData + 800);
-          if ( v21 > v8 )
-            v21 = *(_DWORD *)(g_MapData + 800);
-          if ( *(__int16 *)(40 * v22 + g_MapData + 2 * v21 + 1534) == -1 )
+          if ( candidateY > v8 )
+            candidateY = *(_DWORD *)(g_MapData + 800);
+          if ( *(__int16 *)(40 * candidateX + g_MapData + 2 * candidateY + 1534) == -1 )
           {
-            v8 = v21;
-            if ( UnitBattle_GetTileMoveCostOrZero(*v6, v22, v21) )
+            v8 = candidateY;
+            if ( UnitBattle_GetTileMoveCostOrZero(*unitRecord, candidateX, candidateY) )
             {
-              v6[2] = v22;
+              unitRecord[2] = candidateX;
               v10 = 0;
-              v6[3] = v21;
+              unitRecord[3] = candidateY;
               while ( 1 )
               {
                 v11 = v10 + g_MapData;
-                if ( *(__int16 *)(v10 + g_MapData + 852) != -1 && *(_BYTE *)(v11 + 854) != *((_BYTE *)v6 + 2) )
+                if ( *(__int16 *)(v10 + g_MapData + 852) != -1 && *(_BYTE *)(v11 + 854) != *((_BYTE *)unitRecord + 2) )
                 {
                   v8 = *(unsigned __int16 *)(v11 + 858);
-                  if ( UnitBattle_IsTileWithinRange(a1, *(unsigned __int16 *)(v11 + 856), (unsigned __int16)v8) )
+                  if ( UnitBattle_IsTileWithinRange(unitIndex, *(unsigned __int16 *)(v11 + 856), (unsigned __int16)v8) )
                   {
-                    v6[2] = v20;
-                    v6[3] = v19;
+                    unitRecord[2] = originX;
+                    unitRecord[3] = originY;
                     g_UnitBattleScanTileRow = *(unsigned __int16 *)(v10 + g_MapData + 856);
-                    v8 = v21;
+                    v8 = candidateY;
                     g_BattleTargetTileCol = *(unsigned __int16 *)(v10 + g_MapData + 858);
-                    v12 = UnitBattle_MoveTrack(a1, v22, (int)v6, v21, j);
-                    *(_DWORD *)((char *)v6 + 23) = v12;
+                    v12 = UnitBattle_MoveTrack(unitIndex, candidateX, (int)unitRecord, candidateY, j);
+                    *(_DWORD *)((char *)unitRecord + 23) = v12;
                     if ( v12 )
                       break;
                   }
@@ -2004,7 +2004,7 @@ signed int  UnitBattle_RetreatUnit(int a1, int a2, char a3, DWORD a4)
                 if ( v10 >= 682 )
                   goto LABEL_14;
               }
-              UnitBattle_Move(a1, (int)v6, v21, j);
+              UnitBattle_Move(unitIndex, (int)unitRecord, candidateY, j);
               if ( *(_DWORD *)(v13 + 23) )
                 j__nfree_();
               result = 1;
@@ -2021,7 +2021,7 @@ LABEL_14:
         break;
       }
     }
-    if ( ++v14 <= 2 )
+    if ( ++searchRadius <= 2 )
       continue;
     return 0;
   }
@@ -2034,27 +2034,27 @@ LABEL_14:
 // 5437A4: using guessed type int dword_5437A4;
 
 //----- (00437050) --------------------------------------------------------
-BOOL  UnitBattle_IsTileWithinMinRange(int a1, int a2, int a3)
+BOOL  UnitBattle_IsTileWithinMinRange(int unitIndex, int targetX, int targetY)
 {
   int unit_record;
   signed int distance; // eax
 
-  if ( !g_MapData || a1 < 0 || a1 >= 22 )
+  if ( !g_MapData || unitIndex < 0 || unitIndex >= 22 )
     return 0;
-  unit_record = g_MapData + 31 * a1 + 852;
+  unit_record = g_MapData + 31 * unitIndex + 852;
   if ( *(__int16 *)unit_record == -1 )
     return 0;
   distance = Math_CeilSqrt(
-         (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
-       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 4) - a2)
-       + (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3)
-       * (*(unsigned __int16 *)(31 * a1 + g_MapData + 852 + 6) - a3));
+         (*(unsigned __int16 *)(31 * unitIndex + g_MapData + 852 + 4) - targetX)
+       * (*(unsigned __int16 *)(31 * unitIndex + g_MapData + 852 + 4) - targetX)
+       + (*(unsigned __int16 *)(31 * unitIndex + g_MapData + 852 + 6) - targetY)
+       * (*(unsigned __int16 *)(31 * unitIndex + g_MapData + 852 + 6) - targetY));
   return distance <= (unsigned __int8)g_UnitTypeMinRange_512583[88 * *(__int16 *)unit_record];
 }
 // 532048: using guessed type int g_MapData;
 
 //----- (004370B0) --------------------------------------------------------
-signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
+signed int  UnitBattle_MoveShootingUnit(int attackerIndex, int defenderSide, char a3, DWORD a4)
 {
   int v4; // edx
   DWORD v5; // ebp
@@ -2091,7 +2091,7 @@ signed int  UnitBattle_MoveShootingUnit(int a1, int a2, char a3, DWORD a4)
   __int16 v36; // [esp+4h] [ebp-28h]
   int v38; // [esp+14h] [ebp-18h]
 
-  Debug_Log(a1, a3, a4, (int)aRuch_oddzialem);
+  Debug_Log(attackerIndex, a3, a4, (int)aRuch_oddzialem);
   v5 = 31 * v4;
   v6 = g_MapData + 852 + 31 * v4;
   g_BattleShootingUnitMoveActiveFlag = 1;
@@ -2194,7 +2194,7 @@ LABEL_41:
   if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) <= 0
     || *(unsigned __int8 *)(g_MapData + 31 * v19 + 854) != *(_DWORD *)(g_MapData + 836)
     || (v25 = *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), v25 != -1)
-    && *(unsigned __int8 *)(31 * v25 + g_MapData + 854) != a2 )
+    && *(unsigned __int8 *)(31 * v25 + g_MapData + 854) != defenderSide )
   {
     if ( UnitBattle_IsTileWithinRange(v19, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
     {
@@ -2252,9 +2252,9 @@ LABEL_41:
 // 5437AC: using guessed type int dword_5437AC;
 
 //----- (00437630) --------------------------------------------------------
-int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2)
+int * UnitBattle_EstimateDamageScoreAgainstUnit(int attackerIndex, DWORD defenderIndex)
 {
-  __int16 *v4; // esi
+  __int16 *attackerRecord; // esi
   int v5; // eax
   int *result; // eax
   char *v7; // ecx
@@ -2277,80 +2277,80 @@ int * UnitBattle_EstimateDamageScoreAgainstUnit(int a1, DWORD a2)
   char v24; // [esp+4h] [ebp-3Ch]
   int v25; // [esp+8h] [ebp-38h] BYREF
   int v26; // [esp+Ch] [ebp-34h] BYREF
-  int v27; // [esp+10h] [ebp-30h]
-  int v28; // [esp+14h] [ebp-2Ch]
+  int savedCol; // [esp+10h] [ebp-30h]
+  int savedRow; // [esp+14h] [ebp-2Ch]
   int v29; // [esp+18h] [ebp-28h]
   int v30; // [esp+1Ch] [ebp-24h]
-  __int16 *v31; // [esp+20h] [ebp-20h]
+  __int16 *defenderRecord; // [esp+20h] [ebp-20h]
   int v32; // [esp+24h] [ebp-1Ch]
   int *v33; // [esp+28h] [ebp-18h]
 
-  v4 = (__int16 *)(g_MapData + 852 + 31 * a1);
-  v27 = (unsigned __int16)v4[2];
-  v28 = (unsigned __int16)v4[3];
-  v24 = *((_BYTE *)v4 + 8);
-  v5 = *v4;
-  v31 = (__int16 *)(31 * a2 + g_MapData + 852);
+  attackerRecord = (__int16 *)(g_MapData + 852 + 31 * attackerIndex);
+  savedCol = (unsigned __int16)attackerRecord[2];
+  savedRow = (unsigned __int16)attackerRecord[3];
+  v24 = *((_BYTE *)attackerRecord + 8);
+  v5 = *attackerRecord;
+  defenderRecord = (__int16 *)(31 * defenderIndex + g_MapData + 852);
   if ( v5 == UNIT_TYPE_RAM )
     return 0;
   result = (int *)UnitBattle_MoveTrackNear(
-                    a1,
-                    31 * a2 + g_MapData + 852,
-                    *(unsigned __int16 *)(31 * a2 + g_MapData + 852 + 6),
-                    a2);
+                    attackerIndex,
+                    31 * defenderIndex + g_MapData + 852,
+                    *(unsigned __int16 *)(31 * defenderIndex + g_MapData + 852 + 6),
+                    defenderIndex);
   v33 = result;
   if ( result )
   {
     v29 = Unit_CalcEffectivenessA(v7, 0);
-    v8 = Unit_CalcEffectivenessC(v31);
+    v8 = Unit_CalcEffectivenessC(defenderRecord);
     if ( v8 > v9 )
       v29 = v8;
-    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * a1 + 852)] )
+    if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * attackerIndex + 852)] )
     {
-      v30 = *((char *)v31 + 9);
+      v30 = *((char *)defenderRecord + 9);
       HIWORD(v32) = 0;
       for ( i = *v33 == 0; ; i = *v33 == 0 )
       {
         if ( i || !v33 )
         {
-          v4[2] = v27;
-          v4[3] = v28;
+          attackerRecord[2] = savedCol;
+          attackerRecord[3] = savedRow;
           v15 = v33;
-          *((_BYTE *)v4 + 8) = v24;
+          *((_BYTE *)attackerRecord + 8) = v24;
           if ( !v15 )
             return 0;
           goto LABEL_41;
         }
-        if ( UnitBattle_IsUnitWithinRange(a1, a2) )
+        if ( UnitBattle_IsUnitWithinRange(attackerIndex, defenderIndex) )
           break;
         v19 = *v33 - 1;
         v20 = v33;
         *v33 = v19;
         v32 = v20[v19 + 1];
-        v4[2] = (unsigned __int8)v32;
-        v4[3] = BYTE1(v32);
+        attackerRecord[2] = (unsigned __int8)v32;
+        attackerRecord[3] = BYTE1(v32);
         v21 = HIWORD(v32) - v16;
-        if ( v21 > *((unsigned __int8 *)v4 + 8) )
+        if ( v21 > *((unsigned __int8 *)attackerRecord + 8) )
         {
-          v4[2] = v27;
-          v4[3] = v28;
-          *((_BYTE *)v4 + 8) = v24;
+          attackerRecord[2] = savedCol;
+          attackerRecord[3] = savedRow;
+          *((_BYTE *)attackerRecord + 8) = v24;
 LABEL_41:
           j__nfree_();
           return 0;
         }
-        *((_BYTE *)v4 + 8) -= v21;
+        *((_BYTE *)attackerRecord + 8) -= v21;
       }
-      while ( *((unsigned __int8 *)v4 + 8) >= HIWORD(v32) + 5 )
+      while ( *((unsigned __int8 *)attackerRecord + 8) >= HIWORD(v32) + 5 )
       {
-        *((_BYTE *)v31 + 9) = UnitBattle_CalcShotTargetHealthAfterHit(a1, a2);
-        *((_BYTE *)v4 + 8) -= 5;
+        *((_BYTE *)defenderRecord + 9) = UnitBattle_CalcShotTargetHealthAfterHit(attackerIndex, defenderIndex);
+        *((_BYTE *)attackerRecord + 8) -= 5;
       }
       v26 = v30;
-      v4[2] = v27;
-      v4[3] = v28;
-      v17 = v31;
-      *((_BYTE *)v4 + 8) = v24;
+      attackerRecord[2] = savedCol;
+      attackerRecord[3] = savedRow;
+      v17 = defenderRecord;
+      *((_BYTE *)attackerRecord + 8) = v24;
       v18 = v33;
       *((_BYTE *)v17 + 9) = v30;
       if ( v18 )
@@ -2364,9 +2364,9 @@ LABEL_41:
       if ( *v33 )
       {
         v32 = v33[1];
-        if ( *((unsigned __int8 *)v4 + 8) < HIWORD(v32) + 5 )
+        if ( *((unsigned __int8 *)attackerRecord + 8) < HIWORD(v32) + 5 )
         {
-          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
+          UnitBattle_CalcMeleeExchange(attackerIndex, defenderIndex, &v26, &v25, 0);
           if ( v33 )
           {
             j__nfree_();
@@ -2374,45 +2374,45 @@ LABEL_41:
           }
           return 0;
         }
-        v22 = *((_BYTE *)v4 + 9);
-        v30 = *((char *)v31 + 9);
-        while ( *((unsigned __int8 *)v4 + 8) >= HIWORD(v32) + 5 )
+        v22 = *((_BYTE *)attackerRecord + 9);
+        v30 = *((char *)defenderRecord + 9);
+        while ( *((unsigned __int8 *)attackerRecord + 8) >= HIWORD(v32) + 5 )
         {
-          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
-          *((_BYTE *)v4 + 9) = v25;
-          *((_BYTE *)v31 + 9) = v26;
-          *((_BYTE *)v4 + 8) -= 5;
+          UnitBattle_CalcMeleeExchange(attackerIndex, defenderIndex, &v26, &v25, 0);
+          *((_BYTE *)attackerRecord + 9) = v25;
+          *((_BYTE *)defenderRecord + 9) = v26;
+          *((_BYTE *)attackerRecord + 8) -= 5;
         }
-        *((_BYTE *)v4 + 8) = v24;
-        v10 = v31;
-        *((_BYTE *)v4 + 9) = v22;
+        *((_BYTE *)attackerRecord + 8) = v24;
+        v10 = defenderRecord;
+        *((_BYTE *)attackerRecord + 9) = v22;
         v11 = v33;
         *((_BYTE *)v10 + 9) = v30;
         if ( v11 )
           j__nfree_();
         return (int *)(v29 * (v30 - v26) / 100);
       }
-      else if ( *((unsigned __int8 *)v4 + 8) < 5u )
+      else if ( *((unsigned __int8 *)attackerRecord + 8) < 5u )
       {
-        v30 = *(char *)(31 * a2 + g_MapData + 861);
-        UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
+        v30 = *(char *)(31 * defenderIndex + g_MapData + 861);
+        UnitBattle_CalcMeleeExchange(attackerIndex, defenderIndex, &v26, &v25, 0);
         j__nfree_();
         return (int *)(v29 * (v30 - v26) / 100);
       }
       else
       {
-        v23 = *((_BYTE *)v4 + 9);
-        v30 = *((char *)v31 + 9);
-        while ( *((unsigned __int8 *)v4 + 8) >= 5u )
+        v23 = *((_BYTE *)attackerRecord + 9);
+        v30 = *((char *)defenderRecord + 9);
+        while ( *((unsigned __int8 *)attackerRecord + 8) >= 5u )
         {
-          UnitBattle_CalcMeleeExchange(a1, a2, &v26, &v25, 0);
-          *((_BYTE *)v4 + 9) = v25;
-          *((_BYTE *)v31 + 9) = v26;
-          *((_BYTE *)v4 + 8) -= 5;
+          UnitBattle_CalcMeleeExchange(attackerIndex, defenderIndex, &v26, &v25, 0);
+          *((_BYTE *)attackerRecord + 9) = v25;
+          *((_BYTE *)defenderRecord + 9) = v26;
+          *((_BYTE *)attackerRecord + 8) -= 5;
         }
-        *((_BYTE *)v4 + 8) = v24;
-        v12 = v31;
-        *((_BYTE *)v4 + 9) = v23;
+        *((_BYTE *)attackerRecord + 8) = v24;
+        v12 = defenderRecord;
+        *((_BYTE *)attackerRecord + 9) = v23;
         v13 = v33;
         *((_BYTE *)v12 + 9) = v30;
         if ( v13 )
@@ -2432,7 +2432,7 @@ LABEL_41:
 // 532048: using guessed type int g_MapData;
 
 //----- (00437A90) --------------------------------------------------------
-int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
+int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int unitIndex, int side, int a3)
 {
   int v3; // edx
   int v4; // eax
@@ -2491,11 +2491,11 @@ int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
 
   v50 = 0;
   v43 = 0;
-  v46 = 31 * a1;
+  v46 = 31 * unitIndex;
   do
   {
     v3 = *(__int16 *)(g_MapData + v43 + 852);
-    if ( v3 != -1 && *(unsigned __int8 *)(g_MapData + v43 + 854) == a2 && g_UnitTypeRole[88 * v3] == 4 )
+    if ( v3 != -1 && *(unsigned __int8 *)(g_MapData + v43 + 854) == side && g_UnitTypeRole[88 * v3] == 4 )
     {
       Unit_CalcEffectivenessA((char *)(v46 + g_MapData + 852), 0);
       v4 = Unit_CalcEffectivenessC((__int16 *)(v46 + g_MapData + 852));
@@ -2509,7 +2509,7 @@ int  UnitBattle_ScoreTileAgainstRangedUnitsOfSide(int a1, int a2, int a3)
       Debug_Log(v43, v7, a3, (int)aOddzial_w_zasi);
       v8 = v46 + g_MapData + 852;
       a3 = (unsigned __int16)v7;
-      if ( UnitBattle_IsTileWithinRange(a1, v9, (unsigned __int16)v7)
+      if ( UnitBattle_IsTileWithinRange(unitIndex, v9, (unsigned __int16)v7)
         && (*(_BYTE *)(v46 + g_MapData + 864) & 3)
          + 1
          - ((unsigned __int8)(2 * *(_BYTE *)(v46 + g_MapData + 864)) >> 5) > 0 )
@@ -2522,23 +2522,23 @@ LABEL_10:
       v20 = v57;
       if ( *(char *)(g_MapData + 20 * v57 + v7 + 3134) <= 0
         || (v20 = g_MapData + 40 * v57, *(__int16 *)(v20 + 2 * v7 + 1534) != -1)
-        && ((v21 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
+        && ((v21 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v21 + 852)] & 1) != 0)
          || (*(_BYTE *)(v21 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v21 + 864)) >> 5) > 0) )
       {
-        v22 = (int *)UnitBattle_MoveTrackNear(a1, v20, v7, (unsigned __int16)v7);
+        v22 = (int *)UnitBattle_MoveTrackNear(unitIndex, v20, v7, (unsigned __int16)v7);
       }
       else
       {
-        v22 = UnitBattle_MoveTrackNearWall(a1, v57, v7, (unsigned __int16)v7);
+        v22 = UnitBattle_MoveTrackNearWall(unitIndex, v57, v7, (unsigned __int16)v7);
       }
       v23 = v22;
       if ( !v22 )
       {
-        v24 = 31 * a1 + g_MapData;
+        v24 = 31 * unitIndex + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v24 + 852)] )
         {
           if ( (*(_BYTE *)(v24 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v24 + 864)) >> 5) > 0 )
-            v23 = UnitBattle_MoveTrackForce(a1, v7, (unsigned __int16)v7);
+            v23 = UnitBattle_MoveTrackForce(unitIndex, v7, (unsigned __int16)v7);
         }
       }
       if ( !v23 )
@@ -2551,7 +2551,7 @@ LABEL_10:
         j__nfree_();
         goto LABEL_10;
       }
-      v25 = g_MapData + 31 * a1;
+      v25 = g_MapData + 31 * unitIndex;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v25 + 852)]
         && (*(_BYTE *)(v25 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v25 + 864)) >> 5) > 0 )
       {
@@ -2560,7 +2560,7 @@ LABEL_10:
         v53 = *(_WORD *)(v8 + 6);
         if ( *v23 )
         {
-          while ( !UnitBattle_IsTileWithinRange(a1, v57, (unsigned __int16)v7) )
+          while ( !UnitBattle_IsTileWithinRange(unitIndex, v57, (unsigned __int16)v7) )
           {
             v30 = *v28 - 1;
             *v28 = v30;
@@ -2584,7 +2584,7 @@ LABEL_10:
           goto LABEL_48;
         }
 LABEL_51:
-        if ( UnitBattle_IsTileWithinRange(a1, v57, (unsigned __int16)v7) )
+        if ( UnitBattle_IsTileWithinRange(unitIndex, v57, (unsigned __int16)v7) )
         {
           *(_WORD *)(v8 + 4) = v45;
           *(_WORD *)(v8 + 6) = v53;
@@ -2633,7 +2633,7 @@ LABEL_11:
       Debug_Log(v14, v15, a3, (int)aOddzial_w_zasi);
       v16 = g_MapData + 852 + v46;
       a3 = v17;
-      if ( UnitBattle_IsTileWithinRange(a1, v17, (unsigned __int16)v15)
+      if ( UnitBattle_IsTileWithinRange(unitIndex, v17, (unsigned __int16)v15)
         && (*(_BYTE *)(v46 + g_MapData + 864) & 3)
          + 1
          - ((unsigned __int8)(2 * *(_BYTE *)(v46 + g_MapData + 864)) >> 5) > 0 )
@@ -2654,24 +2654,24 @@ LABEL_18:
       {
         v32 = g_MapData + 40 * a3;
         if ( *(__int16 *)(v32 + 2 * (unsigned __int16)v15 + 1534) == -1
-          || (v33 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
+          || (v33 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v33 + 852)] & 1) == 0)
           && (*(_BYTE *)(v33 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v33 + 864)) >> 5) <= 0 )
         {
-          v34 = UnitBattle_MoveTrackNearWall(a1, a3, (unsigned __int16)v15, a3);
+          v34 = UnitBattle_MoveTrackNearWall(unitIndex, a3, (unsigned __int16)v15, a3);
           goto LABEL_61;
         }
         v15 = (unsigned __int16)v15;
       }
-      v34 = (int *)UnitBattle_MoveTrackNear(a1, v32, v15, a3);
+      v34 = (int *)UnitBattle_MoveTrackNear(unitIndex, v32, v15, a3);
 LABEL_61:
       v35 = v34;
       if ( !v34 )
       {
-        v36 = 31 * a1 + g_MapData;
+        v36 = 31 * unitIndex + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
         {
           if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
-            v35 = UnitBattle_MoveTrackForce(a1, (unsigned __int16)v15, a3);
+            v35 = UnitBattle_MoveTrackForce(unitIndex, (unsigned __int16)v15, a3);
         }
       }
       if ( !v35 )
@@ -2684,7 +2684,7 @@ LABEL_61:
         j__nfree_();
         goto LABEL_17;
       }
-      v37 = g_MapData + 31 * a1;
+      v37 = g_MapData + 31 * unitIndex;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v37 + 852)]
         && (*(_BYTE *)(v37 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v37 + 864)) >> 5) > 0 )
       {
@@ -2693,7 +2693,7 @@ LABEL_61:
         HIWORD(v56) = 0;
         if ( *v35 )
         {
-          while ( !UnitBattle_IsTileWithinRange(a1, a3, v58) )
+          while ( !UnitBattle_IsTileWithinRange(unitIndex, a3, v58) )
           {
             v41 = *v39 - 1;
             *v39 = v41;
@@ -2719,7 +2719,7 @@ LABEL_83:
           goto LABEL_18;
         }
 LABEL_86:
-        if ( !UnitBattle_IsTileWithinRange(a1, a3, v58) )
+        if ( !UnitBattle_IsTileWithinRange(unitIndex, a3, v58) )
         {
 LABEL_89:
           *(_WORD *)(v16 + 4) = v59;
@@ -2775,7 +2775,7 @@ LABEL_19:
 // 532048: using guessed type int g_MapData;
 
 //----- (004382E0) --------------------------------------------------------
-signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed int a4)
+signed int  UnitBattle_ScoreAiActionGridForUnit(int unitIndex, int side, int a3, signed int a4)
 {
   int v5; // ecx
   int v6; // edi
@@ -2990,13 +2990,13 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
     case 4:
       goto LABEL_29;
     case 1:
-      v175 = 801 * a1;
+      v175 = 801 * unitIndex;
       v211 = 0;
       v177 = 0;
-      v186 = 31 * a1;
+      v186 = 31 * unitIndex;
       do
       {
-        if ( *(__int16 *)(v177 + g_MapData + 852) != -1 && *(unsigned __int8 *)(v177 + g_MapData + 854) != a2 )
+        if ( *(__int16 *)(v177 + g_MapData + 852) != -1 && *(unsigned __int8 *)(v177 + g_MapData + 854) != side )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
           v167 = 0;
@@ -3010,17 +3010,17 @@ signed int  UnitBattle_ScoreAiActionGridForUnit(int a1, int a2, int a3, signed i
           v198 = v142;
           v143 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v184] + v140) - 800;
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v184] + v140) = v143;
-          v144 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v211);
+          v144 = UnitBattle_EstimateDamageScoreAgainstUnit(unitIndex, v211);
           v146 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) - 15 * (_DWORD)v144;
           v147 = v177 + g_MapData;
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146;
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v145] + v140) = v146 - 2 * *(unsigned __int8 *)(v147 + 860);
-          v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v211, a2, v143);
+          v148 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v211, side, v143);
           *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v149] + v140) -= 2 * v148;
           v208 = v149;
           Debug_Log(v149, v140, v171, (int)aOddzial_w_zasi);
           v150 = v186 + g_MapData + 852;
-          if ( UnitBattle_IsTileWithinRange(a1, v151, v152)
+          if ( UnitBattle_IsTileWithinRange(unitIndex, v151, v152)
             && (*(_BYTE *)(v186 + g_MapData + 864) & 3)
              + 1
              - ((unsigned __int8)(2 * *(_BYTE *)(v186 + g_MapData + 864)) >> 5) > 0 )
@@ -3039,24 +3039,24 @@ LABEL_278:
           {
             v154 = g_MapData + 40 * v171;
             if ( *(__int16 *)(v154 + 2 * v208 + 1534) == -1
-              || (v155 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
+              || (v155 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v155 + 852)] & 1) == 0)
               && (*(_BYTE *)(v155 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v155 + 864)) >> 5) <= 0 )
             {
-              v157 = UnitBattle_MoveTrackNearWall(a1, v171, v208, v171);
+              v157 = UnitBattle_MoveTrackNearWall(unitIndex, v171, v208, v171);
               goto LABEL_289;
             }
             v156 = v208;
           }
-          v157 = (int *)UnitBattle_MoveTrackNear(a1, v154, v156, v171);
+          v157 = (int *)UnitBattle_MoveTrackNear(unitIndex, v154, v156, v171);
 LABEL_289:
           v158 = v157;
           if ( !v157 )
           {
-            v159 = g_MapData + 31 * a1;
+            v159 = g_MapData + 31 * unitIndex;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v159 + 852)] )
             {
               if ( (*(_BYTE *)(v159 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v159 + 864)) >> 5) > 0 )
-                v158 = UnitBattle_MoveTrackForce(a1, v208, v171);
+                v158 = UnitBattle_MoveTrackForce(unitIndex, v208, v171);
             }
           }
           if ( !v158 )
@@ -3066,7 +3066,7 @@ LABEL_289:
             j__nfree_();
             goto LABEL_278;
           }
-          v160 = 31 * a1 + g_MapData;
+          v160 = 31 * unitIndex + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v160 + 852)]
             && (*(_BYTE *)(v160 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v160 + 864)) >> 5) > 0 )
           {
@@ -3075,7 +3075,7 @@ LABEL_289:
             v169 = *(_WORD *)(v150 + 6);
             if ( *v158 )
             {
-              while ( !UnitBattle_IsTileWithinRange(a1, v171, v208) )
+              while ( !UnitBattle_IsTileWithinRange(unitIndex, v171, v208) )
               {
                 v165 = *v162 - 1;
                 *v162 = v165;
@@ -3102,7 +3102,7 @@ LABEL_311:
               goto LABEL_280;
             }
 LABEL_314:
-            if ( !UnitBattle_IsTileWithinRange(a1, v171, v208) )
+            if ( !UnitBattle_IsTileWithinRange(unitIndex, v171, v208) )
             {
 LABEL_317:
               *(_WORD *)(v150 + 4) = v176;
@@ -3154,25 +3154,25 @@ LABEL_282:
       return v167;
     case 2:
     case 6:
-      if ( a2 == *(_DWORD *)(g_MapData + 836) )
+      if ( side == *(_DWORD *)(g_MapData + 836) )
       {
         if ( g_AttackerStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
       }
-      if ( a2 == *(_DWORD *)(g_MapData + 840) )
+      if ( side == *(_DWORD *)(g_MapData + 840) )
       {
         if ( g_DefenderStartsOnLeft == 1 )
           a4 = 1;
         else
           a4 = -1;
       }
-      v6 = 801 * a1;
+      v6 = 801 * unitIndex;
       if ( UnitBattle_GetTileMoveCostOrZero(
-             *(__int16 *)(31 * a1 + g_MapData + 852),
-             *(unsigned __int16 *)(31 * a1 + g_MapData + 856) + 3 * a4,
-             *(unsigned __int16 *)(31 * a1 + g_MapData + 858)) )
+             *(__int16 *)(31 * unitIndex + g_MapData + 852),
+             *(unsigned __int16 *)(31 * unitIndex + g_MapData + 856) + 3 * a4,
+             *(unsigned __int16 *)(31 * unitIndex + g_MapData + 858)) )
       {
         g_UnitBattleTileScoreGrid[120 * a4
                    + 40 * *(unsigned __int16 *)(g_MapData + v5 + 856)
@@ -3224,13 +3224,13 @@ LABEL_282:
       for ( i = 0; i < 682; i += 31 )
       {
         v16 = i + g_MapData;
-        if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v16 + 854) != a2 )
+        if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v16 + 854) != side )
         {
-          v17 = (int *)UnitBattle_MoveTrackNear(a1, i, *(unsigned __int16 *)(v16 + 858), a3);
+          v17 = (int *)UnitBattle_MoveTrackNear(unitIndex, i, *(unsigned __int16 *)(v16 + 858), a3);
           if ( v17 && *v17 > 3 )
           {
             v18 = v17[*v17 - 3];
-            g_UnitBattleTileScoreGrid[801 * a1 + 40 * (unsigned __int8)v18 + 2 * BYTE1(v18)] -= 500;
+            g_UnitBattleTileScoreGrid[801 * unitIndex + 40 * (unsigned __int8)v18 + 2 * BYTE1(v18)] -= 500;
             j__nfree_();
             return 0;
           }
@@ -3239,17 +3239,17 @@ LABEL_282:
         }
       }
 LABEL_29:
-      v194 = 801 * a1;
+      v194 = 801 * unitIndex;
       v178 = 0;
       v205 = 0;
-      v179 = 31 * a1;
+      v179 = 31 * unitIndex;
       break;
     default:
       return v167;
   }
   while ( 1 )
   {
-    if ( *(__int16 *)(v205 + g_MapData + 852) == -1 || *(unsigned __int8 *)(v205 + g_MapData + 854) == a2 )
+    if ( *(__int16 *)(v205 + g_MapData + 852) == -1 || *(unsigned __int8 *)(v205 + g_MapData + 854) == side )
       goto LABEL_39;
     UnitBattle_UpdateIdleAnimatedUnits();
     v170 = *(unsigned __int16 *)(g_MapData + v205 + 856);
@@ -3263,18 +3263,18 @@ LABEL_29:
     *(_WORD *)(v22 + 1534) = -1;
     v168 = v23;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v172] + v21) -= 800;
-    v24 = UnitBattle_EstimateDamageScoreAgainstUnit(a1, v178);
+    v24 = UnitBattle_EstimateDamageScoreAgainstUnit(unitIndex, v178);
     v26 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) - 15 * (_DWORD)v24;
     v27 = v205 + g_MapData;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) = v26;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v25] + v21) = v26 - 2 * *(unsigned __int8 *)(v27 + 860);
-    v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v178, a2, a3);
+    v28 = UnitBattle_ScoreTileAgainstRangedUnitsOfSide(v178, side, a3);
     v30 = *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + v21) - 2 * v28;
     *(int *)((char *)&g_UnitBattleTileScoreGrid[2 * v29] + v21) = v30;
     Debug_Log(v29, v21, v30, (int)aOddzial_w_zasi);
     v31 = v179 + g_MapData + 852;
     a3 = v32;
-    if ( UnitBattle_IsTileWithinRange(a1, v33, v32)
+    if ( UnitBattle_IsTileWithinRange(unitIndex, v33, v32)
       && (*(_BYTE *)(v179 + g_MapData + 864) & 3)
        + 1
        - ((unsigned __int8)(2 * *(_BYTE *)(v179 + g_MapData + 864)) >> 5) > 0 )
@@ -3293,24 +3293,24 @@ LABEL_35:
     {
       v83 = g_MapData + 40 * v170;
       if ( *(__int16 *)(v83 + 2 * a3 + 1534) == -1
-        || (v84 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
+        || (v84 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v84 + 852)] & 1) == 0)
         && (*(_BYTE *)(v84 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v84 + 864)) >> 5) <= 0 )
       {
-        v86 = UnitBattle_MoveTrackNearWall(a1, v170, a3, a3);
+        v86 = UnitBattle_MoveTrackNearWall(unitIndex, v170, a3, a3);
         goto LABEL_83;
       }
       v85 = a3;
     }
-    v86 = (int *)UnitBattle_MoveTrackNear(a1, v83, v85, a3);
+    v86 = (int *)UnitBattle_MoveTrackNear(unitIndex, v83, v85, a3);
 LABEL_83:
     v87 = v86;
     if ( !v86 )
     {
-      v88 = 31 * a1 + g_MapData;
+      v88 = 31 * unitIndex + g_MapData;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v88 + 852)] )
       {
         if ( (*(_BYTE *)(v88 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v88 + 864)) >> 5) > 0 )
-          v87 = UnitBattle_MoveTrackForce(a1, a3, a3);
+          v87 = UnitBattle_MoveTrackForce(unitIndex, a3, a3);
       }
     }
     if ( !v87 )
@@ -3324,7 +3324,7 @@ LABEL_88:
       j__nfree_();
       goto LABEL_35;
     }
-    v89 = g_MapData + 31 * a1;
+    v89 = g_MapData + 31 * unitIndex;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v89 + 852)]
       && (*(_BYTE *)(v89 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v89 + 864)) >> 5) > 0 )
     {
@@ -3333,7 +3333,7 @@ LABEL_88:
       v183 = *(_WORD *)(v31 + 6);
       if ( *v87 )
       {
-        while ( !UnitBattle_IsTileWithinRange(a1, v170, a3) )
+        while ( !UnitBattle_IsTileWithinRange(unitIndex, v170, a3) )
         {
           v93 = *v91 - 1;
           *v91 = v93;
@@ -3356,7 +3356,7 @@ LABEL_88:
       else
       {
 LABEL_108:
-        if ( !UnitBattle_IsTileWithinRange(a1, v170, a3) )
+        if ( !UnitBattle_IsTileWithinRange(unitIndex, v170, a3) )
         {
 LABEL_111:
           *(_WORD *)(v31 + 4) = v182;
@@ -3404,15 +3404,15 @@ LABEL_39:
     if ( (int)++v178 >= 22 )
     {
       v35 = g_UnitBattleWallScanTileRow;
-      if ( g_UnitBattleWallScanTileRow <= 0 || *(unsigned __int16 *)(g_MapData + 31 * a1 + 856) == g_UnitBattleWallScanTileRow )
+      if ( g_UnitBattleWallScanTileRow <= 0 || *(unsigned __int16 *)(g_MapData + 31 * unitIndex + 856) == g_UnitBattleWallScanTileRow )
         return v167;
       v36 = g_BattleWallScanColumn;
       if ( *(char *)(g_BattleWallScanColumn + g_MapData + 20 * g_UnitBattleWallScanTileRow + 3134) <= 0 )
         goto LABEL_49;
-      Debug_Log(31 * a1, g_BattleWallScanColumn, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
+      Debug_Log(31 * unitIndex, g_BattleWallScanColumn, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
       v38 = v37 + g_MapData + 852;
       v39 = v36;
-      if ( UnitBattle_IsTileWithinRange(a1, v35, v36)
+      if ( UnitBattle_IsTileWithinRange(unitIndex, v35, v36)
         && (*(_BYTE *)(v40 + g_MapData + 864) & 3)
          + 1
          - ((unsigned __int8)(2 * *(_BYTE *)(v40 + g_MapData + 864)) >> 5) > 0 )
@@ -3422,27 +3422,27 @@ LABEL_39:
       }
       if ( *(char *)(v36 + g_MapData + 20 * v35 + 3134) <= 0
         || *(__int16 *)(g_MapData + 40 * v35 + 2 * v36 + 1534) != -1
-        && ((v95 = g_MapData + 31 * a1, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
+        && ((v95 = g_MapData + 31 * unitIndex, (g_UnitTypeFlags[22 * *(__int16 *)(v95 + 852)] & 1) != 0)
          || (*(_BYTE *)(v95 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v95 + 864)) >> 5) > 0) )
       {
-        v96 = (int *)UnitBattle_MoveTrackNear(a1, g_MapData, v36, v35);
+        v96 = (int *)UnitBattle_MoveTrackNear(unitIndex, g_MapData, v36, v35);
       }
       else
       {
-        v96 = UnitBattle_MoveTrackNearWall(a1, v35, v36, v35);
+        v96 = UnitBattle_MoveTrackNearWall(unitIndex, v35, v36, v35);
       }
       v97 = v96;
       if ( !v96 )
       {
         LOBYTE(v36) = g_MapData;
-        v98 = g_MapData + 31 * a1;
+        v98 = g_MapData + 31 * unitIndex;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v98 + 852)] )
         {
           v36 = *(_BYTE *)(v98 + 864) & 3;
           if ( v36 + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v98 + 864)) >> 5) > 0 )
           {
             LOBYTE(v36) = v39;
-            v97 = UnitBattle_MoveTrackForce(a1, v39, v35);
+            v97 = UnitBattle_MoveTrackForce(unitIndex, v39, v35);
           }
         }
       }
@@ -3455,13 +3455,13 @@ LABEL_49:
         v48 = g_UnitBattleWallScanTileRow;
         Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
         v35 = v49;
-        v50 = 31 * a1 + g_MapData + 852;
-        if ( UnitBattle_IsTileWithinRange(a1, v48, v49) )
+        v50 = 31 * unitIndex + g_MapData + 852;
+        if ( UnitBattle_IsTileWithinRange(unitIndex, v48, v49) )
         {
-          LOBYTE(v36) = 31 * a1;
-          if ( (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
+          LOBYTE(v36) = 31 * unitIndex;
+          if ( (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
              + 1
-             - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
+             - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
           {
             v51 = 0;
             goto LABEL_53;
@@ -3470,27 +3470,27 @@ LABEL_49:
         v105 = g_MapData;
         if ( *(char *)(g_MapData + 20 * v48 + v35 + 3134) <= 0
           || *(__int16 *)(g_MapData + 40 * v48 + 2 * v35 + 1534) != -1
-          && ((v105 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
+          && ((v105 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v105 + 852)] & 1) != 0)
            || (*(_BYTE *)(v105 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v105 + 864)) >> 5) > 0) )
         {
           LOBYTE(v36) = v35;
-          v106 = (int *)UnitBattle_MoveTrackNear(a1, v105, v35, v35);
+          v106 = (int *)UnitBattle_MoveTrackNear(unitIndex, v105, v35, v35);
         }
         else
         {
           LOBYTE(v36) = v35;
-          v106 = UnitBattle_MoveTrackNearWall(a1, v48, v35, v35);
+          v106 = UnitBattle_MoveTrackNearWall(unitIndex, v48, v35, v35);
         }
         v107 = v106;
         if ( !v106 )
         {
-          v36 = 31 * a1 + g_MapData;
+          v36 = 31 * unitIndex + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
           {
             if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             {
               LOBYTE(v36) = v35;
-              v107 = UnitBattle_MoveTrackForce(a1, v35, v35);
+              v107 = UnitBattle_MoveTrackForce(unitIndex, v35, v35);
             }
           }
         }
@@ -3503,13 +3503,13 @@ LABEL_56:
           v55 = g_UnitBattleWallScanTileRow;
           Debug_Log(g_MapData, v36, v35, (int)aOddzial_w_zasi);
           v35 = v56;
-          v57 = 31 * a1 + g_MapData + 852;
-          if ( UnitBattle_IsTileWithinRange(a1, v55, v56) )
+          v57 = 31 * unitIndex + g_MapData + 852;
+          if ( UnitBattle_IsTileWithinRange(unitIndex, v55, v56) )
           {
-            LOBYTE(v36) = 31 * a1;
-            if ( (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
+            LOBYTE(v36) = 31 * unitIndex;
+            if ( (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
                + 1
-               - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
+               - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
             {
               v58 = 0;
               goto LABEL_60;
@@ -3518,27 +3518,27 @@ LABEL_56:
           v113 = g_MapData;
           if ( *(char *)(g_MapData + 20 * v55 + v35 + 3134) <= 0
             || *(__int16 *)(g_MapData + 40 * v55 + 2 * v35 + 1534) != -1
-            && ((v113 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
+            && ((v113 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v113 + 852)] & 1) != 0)
              || (*(_BYTE *)(v113 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v113 + 864)) >> 5) > 0) )
           {
             LOBYTE(v36) = v35;
-            v114 = (int *)UnitBattle_MoveTrackNear(a1, v113, v35, v35);
+            v114 = (int *)UnitBattle_MoveTrackNear(unitIndex, v113, v35, v35);
           }
           else
           {
             LOBYTE(v36) = v35;
-            v114 = UnitBattle_MoveTrackNearWall(a1, v55, v35, v35);
+            v114 = UnitBattle_MoveTrackNearWall(unitIndex, v55, v35, v35);
           }
           v115 = v114;
           if ( !v114 )
           {
-            v36 = 31 * a1 + g_MapData;
+            v36 = 31 * unitIndex + g_MapData;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)] )
             {
               if ( (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
               {
                 LOBYTE(v36) = v35;
-                v115 = UnitBattle_MoveTrackForce(a1, v35, v35);
+                v115 = UnitBattle_MoveTrackForce(unitIndex, v35, v35);
               }
             }
           }
@@ -3551,9 +3551,9 @@ LABEL_63:
             v35 = g_UnitBattleWallScanTileRow;
             v62 = g_BattleWallScanColumn + 2;
             v36 = g_BattleWallScanColumn + 2;
-            Debug_Log(a1, g_BattleWallScanColumn + 2, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
+            Debug_Log(unitIndex, g_BattleWallScanColumn + 2, g_UnitBattleWallScanTileRow, (int)aOddzial_w_zasi);
             v63 = g_MapData + 852;
-            v64 = UnitBattle_IsTileWithinRange(a1, v35, v36);
+            v64 = UnitBattle_IsTileWithinRange(unitIndex, v35, v36);
             v66 = v65 + v63;
             if ( v64
               && (*(_BYTE *)(v65 + g_MapData + 864) & 3)
@@ -3565,28 +3565,28 @@ LABEL_63:
             }
             if ( *(char *)(v62 + g_MapData + 20 * v35 + 3134) <= 0
               || *(__int16 *)(g_MapData + 40 * v35 + 2 * v62 + 1534) != -1
-              && ((v65 = a1, v121 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
+              && ((v65 = unitIndex, v121 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v121 + 852)] & 1) != 0)
                || (*(_BYTE *)(v121 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v121 + 864)) >> 5) > 0) )
             {
               LOBYTE(v36) = v62;
-              v122 = (int *)UnitBattle_MoveTrackNear(a1, v65, v62, v35);
+              v122 = (int *)UnitBattle_MoveTrackNear(unitIndex, v65, v62, v35);
             }
             else
             {
               LOBYTE(v36) = v62;
-              v122 = UnitBattle_MoveTrackNearWall(a1, v35, v62, v35);
+              v122 = UnitBattle_MoveTrackNearWall(unitIndex, v35, v62, v35);
             }
             v123 = v122;
             if ( !v122 )
             {
               LOBYTE(v36) = g_MapData;
-              v124 = g_MapData + 31 * a1;
+              v124 = g_MapData + 31 * unitIndex;
               if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v124 + 852)] )
               {
                 if ( (*(_BYTE *)(v124 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v124 + 864)) >> 5) > 0 )
                 {
                   LOBYTE(v36) = v62;
-                  v123 = UnitBattle_MoveTrackForce(a1, v62, v35);
+                  v123 = UnitBattle_MoveTrackForce(unitIndex, v62, v35);
                 }
               }
             }
@@ -3602,11 +3602,11 @@ LABEL_70:
               v74 = v73;
               v75 = v71;
               v76 = v71;
-              v77 = 31 * a1 + g_MapData + 852;
-              if ( UnitBattle_IsTileWithinRange(a1, v73, v76)
-                && (*(_BYTE *)(31 * a1 + g_MapData + 864) & 3)
+              v77 = 31 * unitIndex + g_MapData + 852;
+              if ( UnitBattle_IsTileWithinRange(unitIndex, v73, v76)
+                && (*(_BYTE *)(31 * unitIndex + g_MapData + 864) & 3)
                  + 1
-                 - ((unsigned __int8)(2 * *(_BYTE *)(31 * a1 + g_MapData + 864)) >> 5) > 0 )
+                 - ((unsigned __int8)(2 * *(_BYTE *)(31 * unitIndex + g_MapData + 864)) >> 5) > 0 )
               {
                 v78 = 0;
                 goto LABEL_74;
@@ -3614,30 +3614,30 @@ LABEL_70:
               v130 = g_MapData;
               if ( *(char *)(v75 + g_MapData + 20 * v74 + 3134) <= 0
                 || *(__int16 *)(g_MapData + 40 * v74 + 2 * v75 + 1534) != -1
-                && ((v130 = 31 * a1 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
+                && ((v130 = 31 * unitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v130 + 852)] & 1) != 0)
                  || (*(_BYTE *)(v130 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v130 + 864)) >> 5) > 0) )
               {
-                v131 = (int *)UnitBattle_MoveTrackNear(a1, v130, v75, v74);
+                v131 = (int *)UnitBattle_MoveTrackNear(unitIndex, v130, v75, v74);
               }
               else
               {
-                v131 = UnitBattle_MoveTrackNearWall(a1, v74, v75, v74);
+                v131 = UnitBattle_MoveTrackNearWall(unitIndex, v74, v75, v74);
               }
               v132 = v131;
               if ( !v131 )
               {
-                v133 = 31 * a1 + g_MapData;
+                v133 = 31 * unitIndex + g_MapData;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v133 + 852)] )
                 {
                   if ( (*(_BYTE *)(v133 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v133 + 864)) >> 5) > 0 )
-                    v132 = UnitBattle_MoveTrackForce(a1, v75, v74);
+                    v132 = UnitBattle_MoveTrackForce(unitIndex, v75, v74);
                 }
               }
               if ( !v132 )
                 return v167;
               if ( *v132 )
               {
-                v134 = 31 * a1 + g_MapData;
+                v134 = 31 * unitIndex + g_MapData;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v134 + 852)]
                   && (*(_BYTE *)(v134 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v134 + 864)) >> 5) > 0 )
                 {
@@ -3646,7 +3646,7 @@ LABEL_70:
                   HIWORD(v210) = 0;
                   if ( *v132 )
                   {
-                    while ( !UnitBattle_IsTileWithinRange(a1, v74, v75) )
+                    while ( !UnitBattle_IsTileWithinRange(unitIndex, v74, v75) )
                     {
                       v138 = *v136 - 1;
                       *v136 = v138;
@@ -3670,7 +3670,7 @@ LABEL_70:
 LABEL_265:
                     v78 = 0;
 LABEL_76:
-                    v79 = 8 * g_BattleWallScanTileX + 3204 * a1 + 160 * g_UnitBattleWallScanTileRow;
+                    v79 = 8 * g_BattleWallScanTileX + 3204 * unitIndex + 160 * g_UnitBattleWallScanTileRow;
                     v80 = *(int *)((char *)g_UnitBattleTileScoreGrid + v79) - 640 - 5 * (v78 / 5);
                     v81 = g_BattleWallScanTileX;
                     v82 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
@@ -3680,7 +3680,7 @@ LABEL_76:
                     return v167;
                   }
 LABEL_268:
-                  if ( !UnitBattle_IsTileWithinRange(a1, v74, v75) )
+                  if ( !UnitBattle_IsTileWithinRange(unitIndex, v74, v75) )
                   {
 LABEL_271:
                     *(_WORD *)(v77 + 4) = v192;
@@ -3729,7 +3729,7 @@ LABEL_67:
               LOBYTE(v67) = *(_BYTE *)(v66 + 8);
               goto LABEL_68;
             }
-            v36 = 31 * a1 + g_MapData;
+            v36 = 31 * unitIndex + g_MapData;
             if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
               && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
             {
@@ -3741,7 +3741,7 @@ LABEL_67:
                 while ( 1 )
                 {
                   LOBYTE(v36) = v62;
-                  if ( UnitBattle_IsTileWithinRange(a1, v35, v62) )
+                  if ( UnitBattle_IsTileWithinRange(unitIndex, v35, v62) )
                     break;
                   v128 = *v126 - 1;
                   *v126 = v128;
@@ -3765,7 +3765,7 @@ LABEL_67:
 LABEL_233:
                 v67 = 0;
 LABEL_69:
-                v68 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
+                v68 = 3204 * unitIndex + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
                 v35 = *(int *)((char *)g_UnitBattleTileScoreGrid + v68) - 640 - 5 * (v67 / 5);
                 v69 = g_BattleWallScanTileX;
                 v70 = g_MapData + 20 * g_UnitBattleWallScanTileRow;
@@ -3776,7 +3776,7 @@ LABEL_69:
                 goto LABEL_70;
               }
 LABEL_236:
-              if ( !UnitBattle_IsTileWithinRange(a1, v35, v62) )
+              if ( !UnitBattle_IsTileWithinRange(unitIndex, v35, v62) )
               {
 LABEL_239:
                 *(_WORD *)(v66 + 4) = v196;
@@ -3823,7 +3823,7 @@ LABEL_60:
             LOBYTE(v58) = *(_BYTE *)(v57 + 8);
             goto LABEL_61;
           }
-          v36 = 31 * a1 + g_MapData;
+          v36 = 31 * unitIndex + g_MapData;
           if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
             && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
           {
@@ -3835,7 +3835,7 @@ LABEL_60:
               while ( 1 )
               {
                 LOBYTE(v36) = v35;
-                if ( UnitBattle_IsTileWithinRange(a1, v55, v35) )
+                if ( UnitBattle_IsTileWithinRange(unitIndex, v55, v35) )
                   break;
                 v119 = *v117 - 1;
                 *v117 = v119;
@@ -3859,7 +3859,7 @@ LABEL_60:
 LABEL_201:
               v58 = 0;
 LABEL_62:
-              v59 = 160 * g_UnitBattleWallScanTileRow + 3204 * a1 + 8 * g_BattleWallScanTileX;
+              v59 = 160 * g_UnitBattleWallScanTileRow + 3204 * unitIndex + 8 * g_BattleWallScanTileX;
               *(int *)((char *)g_UnitBattleTileScoreGrid + v59) -= 640;
               v60 = *(int *)((char *)g_UnitBattleTileScoreGrid + v59) - 5 * (v58 / 5);
               LOBYTE(v36) = g_MapData;
@@ -3870,7 +3870,7 @@ LABEL_62:
               goto LABEL_63;
             }
 LABEL_204:
-            if ( !UnitBattle_IsTileWithinRange(a1, v55, v35) )
+            if ( !UnitBattle_IsTileWithinRange(unitIndex, v55, v35) )
             {
 LABEL_207:
               *(_WORD *)(v57 + 4) = v193;
@@ -3917,7 +3917,7 @@ LABEL_53:
           LOBYTE(v51) = *(_BYTE *)(v50 + 8);
           goto LABEL_54;
         }
-        v36 = 31 * a1 + g_MapData;
+        v36 = 31 * unitIndex + g_MapData;
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v36 + 852)]
           && (*(_BYTE *)(v36 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v36 + 864)) >> 5) > 0 )
         {
@@ -3929,7 +3929,7 @@ LABEL_53:
             while ( 1 )
             {
               LOBYTE(v36) = v35;
-              if ( UnitBattle_IsTileWithinRange(a1, v48, v35) )
+              if ( UnitBattle_IsTileWithinRange(unitIndex, v48, v35) )
                 break;
               v111 = *v109 - 1;
               *v109 = v111;
@@ -3953,7 +3953,7 @@ LABEL_53:
 LABEL_169:
             v51 = 0;
 LABEL_55:
-            v52 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
+            v52 = 3204 * unitIndex + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanTileX;
             *(int *)((char *)g_UnitBattleTileScoreGrid + v52) -= 640;
             v53 = *(int *)((char *)g_UnitBattleTileScoreGrid + v52) - 5 * (v51 / 5);
             LOBYTE(v36) = g_MapData;
@@ -3964,7 +3964,7 @@ LABEL_55:
             goto LABEL_56;
           }
 LABEL_172:
-          if ( !UnitBattle_IsTileWithinRange(a1, v48, v35) )
+          if ( !UnitBattle_IsTileWithinRange(unitIndex, v48, v35) )
           {
 LABEL_175:
             *(_WORD *)(v50 + 4) = v188;
@@ -4012,7 +4012,7 @@ LABEL_46:
         goto LABEL_47;
       }
       LOBYTE(v36) = g_MapData;
-      v99 = g_MapData + 31 * a1;
+      v99 = g_MapData + 31 * unitIndex;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v99 + 852)]
         && (*(_BYTE *)(v99 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v99 + 864)) >> 5) > 0 )
       {
@@ -4024,7 +4024,7 @@ LABEL_46:
           while ( 1 )
           {
             LOBYTE(v36) = v39;
-            if ( UnitBattle_IsTileWithinRange(a1, v35, v39) )
+            if ( UnitBattle_IsTileWithinRange(unitIndex, v35, v39) )
               break;
             v103 = *v101 - 1;
             *v101 = v103;
@@ -4048,7 +4048,7 @@ LABEL_46:
 LABEL_137:
           v41 = 0;
 LABEL_48:
-          v42 = 3204 * a1 + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanColumn;
+          v42 = 3204 * unitIndex + 160 * g_UnitBattleWallScanTileRow + 8 * g_BattleWallScanColumn;
           v43 = v41;
           v44 = g_UnitBattleWallScanTileRow;
           v36 = *(int *)((char *)g_UnitBattleTileScoreGrid + v42) - 5 * (v43 / 5);
@@ -4063,7 +4063,7 @@ LABEL_48:
           goto LABEL_49;
         }
 LABEL_140:
-        if ( !UnitBattle_IsTileWithinRange(a1, v35, v39) )
+        if ( !UnitBattle_IsTileWithinRange(unitIndex, v35, v39) )
         {
 LABEL_143:
           *(_WORD *)(v38 + 4) = v197;
@@ -4173,16 +4173,16 @@ LABEL_47:
 // 5437B8: using guessed type int dword_5437B8;
 
 //----- (0043A800) --------------------------------------------------------
-int  WCIsvListBase_TransferAllInto(int result, int a2)
+int  WCIsvListBase_TransferAllInto(int result, int destList)
 {
   int v3; // ecx
   int v4; // ecx
 
   if ( *(_DWORD *)(result + 8) )
   {
-    WCIsvListBase_PopFrontValue(result, a2);
-    WCIsvListBase_TransferAllInto(v3, a2);
-    return WCIsvListBase_AppendValue(a2, v4);
+    WCIsvListBase_PopFrontValue(result, destList);
+    WCIsvListBase_TransferAllInto(v3, destList);
+    return WCIsvListBase_AppendValue(destList, v4);
   }
   return result;
 }
@@ -4190,19 +4190,19 @@ int  WCIsvListBase_TransferAllInto(int result, int a2)
 // 43A82C: variable 'v4' is possibly undefined
 
 //----- (0043A880) --------------------------------------------------------
-signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int a2)
+signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int list)
 {
-  int v3; // eax
-  int v4; // ecx
+  int poppedValue; // eax
+  int targetValue; // ecx
 
-  if ( !*(_DWORD *)(a2 + 8) )
+  if ( !*(_DWORD *)(list + 8) )
     return 0;
   while ( 1 )
   {
-    v3 = WCIsvListBase_PopFrontValue(a2, a2);
-    if ( v3 == v4 )
+    poppedValue = WCIsvListBase_PopFrontValue(list, list);
+    if ( poppedValue == targetValue )
       break;
-    if ( !*(_DWORD *)(a2 + 8) )
+    if ( !*(_DWORD *)(list + 8) )
       return 0;
   }
   return 1;
@@ -4210,7 +4210,7 @@ signed int __fastcall WCIsvListBase_PopUntilMatchOrEmpty(int a1, int a2)
 // 43A898: variable 'v4' is possibly undefined
 
 //----- (0043A8B0) --------------------------------------------------------
-signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
+signed int  UnitBattle_SelectAiActionForUnit(int unitIndex, int side)
 {
   int v2; // eax
   int v3; // ebx
@@ -4272,26 +4272,26 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   int v60; // [esp+120h] [ebp-44h]
   int v61; // [esp+124h] [ebp-40h]
   int v62; // [esp+128h] [ebp-3Ch]
-  int v63; // [esp+12Ch] [ebp-38h]
+  int sideCopy; // [esp+12Ch] [ebp-38h]
   int v64; // [esp+130h] [ebp-34h]
   int v65; // [esp+134h] [ebp-30h]
   int v66; // [esp+138h] [ebp-2Ch]
   int v67; // [esp+13Ch] [ebp-28h]
-  int v68; // [esp+140h] [ebp-24h]
+  int unitIndexCopy; // [esp+140h] [ebp-24h]
   int v69; // [esp+144h] [ebp-20h]
   int v70; // [esp+148h] [ebp-1Ch]
   int v71; // [esp+14Ch] [ebp-18h]
 
-  v68 = a1;
-  v63 = a2;
+  unitIndexCopy = unitIndex;
+  sideCopy = side;
   g_BattleTargetTileCol = -1;
   g_UnitBattleScanTileRow = -1;
-  v2 = g_MapData + 31 * a1;
+  v2 = g_MapData + 31 * unitIndex;
   v3 = 0;
   if ( g_UnitTypeRole[88 * *(__int16 *)(v2 + 852)] == 4
     && (*(_BYTE *)(v2 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v2 + 864)) >> 5) <= 0 )
   {
-    g_BattleCellStateGrid[801 * v68 - 42] = 5;
+    g_BattleCellStateGrid[801 * unitIndexCopy - 42] = 5;
     return 1;
   }
   v4 = 0;
@@ -4302,7 +4302,7 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
     v6 = 0;
     while ( v5 < *(_DWORD *)(g_MapData + 800) )
     {
-      v8 = v6 + v61 + 3204 * v68;
+      v8 = v6 + v61 + 3204 * unitIndexCopy;
       if ( v3 > *(int *)((char *)g_UnitBattleTileScoreGrid + v8) )
       {
         g_UnitBattleScanTileRow = v4;
@@ -4317,22 +4317,22 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
   }
   if ( g_UnitBattleAiCurrentPlanMode == 2 || g_UnitBattleAiCurrentPlanMode == 6 )
   {
-    g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 6;
+    g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 6;
     return 1;
   }
-  v9 = 801 * v68;
+  v9 = 801 * unitIndexCopy;
   if ( v3 < 0 )
   {
-    v11 = 31 * v68 + g_MapData;
+    v11 = 31 * unitIndexCopy + g_MapData;
     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v11 + 852)] )
     {
       if ( (*(_BYTE *)(v11 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v11 + 864)) >> 5) > 0 )
       {
         LOBYTE(v3) = g_BattleTargetTileCol;
-        if ( UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+        if ( UnitBattle_IsTileWithinRange(unitIndexCopy, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
         {
           if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
-            && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
+            && *(unsigned __int8 *)(g_MapData + 31 * unitIndexCopy + 854) == *(_DWORD *)(g_MapData + 836)
             && *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534) == -1 )
           {
             g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + v9] = 8;
@@ -4340,18 +4340,18 @@ signed int  UnitBattle_SelectAiActionForUnit(int a1, int a2)
           }
           else
           {
-            g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 1;
+            g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 1;
             return 1;
           }
         }
       }
     }
     v12 = g_BattleTargetTileCol;
-    v71 = v68;
+    v71 = unitIndexCopy;
     v67 = g_UnitBattleScanTileRow;
-    Debug_Log(31 * v68, v3, g_BattleTargetTileCol, (int)aOddzial_w_zasi);
+    Debug_Log(31 * unitIndexCopy, v3, g_BattleTargetTileCol, (int)aOddzial_w_zasi);
     v14 = g_MapData + 852 + v13;
-    if ( UnitBattle_IsTileWithinRange(v68, v67, v12)
+    if ( UnitBattle_IsTileWithinRange(unitIndexCopy, v67, v12)
       && (*(_BYTE *)(g_MapData + v15 + 864) & 3)
        + 1
        - ((unsigned __int8)(2 * *(_BYTE *)(g_MapData + v15 + 864)) >> 5) > 0 )
@@ -4431,36 +4431,36 @@ LABEL_25:
                 if ( v16 >= 5 )
                 {
                   if ( *(char *)(g_BattleTargetTileCol + g_MapData + 20 * g_UnitBattleScanTileRow + 3134) > 0
-                    && *(unsigned __int8 *)(g_MapData + 31 * v68 + 854) == *(_DWORD *)(g_MapData + 836)
+                    && *(unsigned __int8 *)(g_MapData + 31 * unitIndexCopy + 854) == *(_DWORD *)(g_MapData + 836)
                     && *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534) == -1 )
                   {
-                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * v68;
+                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * unitIndexCopy;
                     *(int *)((char *)&g_BattleCellStateGrid[2 * g_BattleTargetTileCol] + v17) = 8;
                   }
                   else
                   {
-                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * v68;
+                    v17 = 160 * g_UnitBattleScanTileRow + 3204 * unitIndexCopy;
                     *(int *)((char *)&g_BattleCellStateGrid[2 * g_BattleTargetTileCol] + v17) = 1;
                   }
                   goto LABEL_30;
                 }
 LABEL_63:
-                v34 = g_MapData + 31 * v68;
+                v34 = g_MapData + 31 * unitIndexCopy;
                 if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v34 + 852)]
                   && (*(_BYTE *)(v34 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v34 + 864)) >> 5) <= 0 )
                 {
-                  g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
+                  g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
                   return 1;
                 }
-                v17 = 3204 * v68;
-                g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 7;
+                v17 = 3204 * unitIndexCopy;
+                g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 7;
 LABEL_30:
-                v18 = (int *)UnitBattle_MoveTrackNear(v68, v17, g_BattleTargetTileCol, v12);
+                v18 = (int *)UnitBattle_MoveTrackNear(unitIndexCopy, v17, g_BattleTargetTileCol, v12);
                 if ( !v18 )
-                  v18 = UnitBattle_MoveTrackForce(v68, g_BattleTargetTileCol, v12);
+                  v18 = UnitBattle_MoveTrackForce(unitIndexCopy, g_BattleTargetTileCol, v12);
                 if ( v18 && *v18 )
                 {
-                  v19 = v63;
+                  v19 = sideCopy;
                   v20 = 0;
                   for ( i = 0; i != 66; i += 3 )
                   {
@@ -4480,7 +4480,7 @@ LABEL_30:
                     }
                     v20 += 31;
                   }
-                  v24 = UnitBattle_MoveTrackNear(v68, v22, g_BattleTargetTileCol, v19);
+                  v24 = UnitBattle_MoveTrackNear(unitIndexCopy, v22, g_BattleTargetTileCol, v19);
                   for ( j = 0; j != 66; j += 3 )
                   {
                     if ( v53[j] != -1 )
@@ -4489,7 +4489,7 @@ LABEL_30:
                   v26 = g_BattleAiActionAttemptCount++;
                   if ( v26 > 20 )
                   {
-                    g_BattleCellStateGrid[801 * v68 + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
+                    g_BattleCellStateGrid[801 * unitIndexCopy + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol] = 5;
                     if ( v24 )
                       j__nfree_();
 LABEL_123:
@@ -4503,16 +4503,16 @@ LABEL_123:
                   j__nfree_();
                   if ( HIWORD(v66) < HIWORD(v60) )
                   {
-                    v43 = g_MapData + 31 * v68;
+                    v43 = g_MapData + 31 * unitIndexCopy;
                     v65 = *(unsigned __int16 *)(v43 + 856);
                     v64 = *(unsigned __int16 *)(v43 + 858);
                     if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v43 + 852)]
                       && (*(_BYTE *)(v43 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v43 + 864)) >> 5) > 0
-                      && UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+                      && UnitBattle_IsTileWithinRange(unitIndexCopy, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
                     {
                       return 1;
                     }
-                    v44 = 31 * v68;
+                    v44 = 31 * unitIndexCopy;
                     while ( v42 && *v42 )
                     {
                       UnitBattle_UpdateIdleAnimatedUnits();
@@ -4526,7 +4526,7 @@ LABEL_123:
                         *(_WORD *)(v46 + 856) = (unsigned __int8)v66;
                         *(_WORD *)(g_MapData + v44 + 858) = BYTE1(v66);
                         if ( *(__int16 *)(40 * (unsigned __int8)v66 + g_MapData + 2 * BYTE1(v66) + 1534) == -1
-                          && UnitBattle_IsTileWithinRange(v68, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
+                          && UnitBattle_IsTileWithinRange(unitIndexCopy, g_UnitBattleScanTileRow, g_BattleTargetTileCol) )
                         {
                           *(_WORD *)(v44 + g_MapData + 856) = v65;
                           *(_WORD *)(g_MapData + v44 + 858) = v64;
@@ -4541,10 +4541,10 @@ LABEL_123:
                       if ( v47 != -1 )
                       {
                         v48 = *(unsigned __int8 *)(31 * v47 + g_MapData + 854);
-                        if ( v48 == v63 )
+                        if ( v48 == sideCopy )
                         {
                           v54 = 0;
-                          v56 = v63 ^ v48;
+                          v56 = sideCopy ^ v48;
                           v57 = 0;
                           v58 = 0;
                           v55 = &g_WCIsvListBaseVariant124_Vtable;
@@ -4643,7 +4643,7 @@ LABEL_24:
 // 5437C0: using guessed type int dword_5437C0;
 
 //----- (0043B740) --------------------------------------------------------
-int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
+int  UnitBattle_ApproachToSafeDistance(int unitIndex, int a2, char a3, int a4)
 {
   int v4; // edx
   int v5; // edx
@@ -4692,27 +4692,27 @@ int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
   if ( *(__int16 *)(v6 + 2 * g_BattleTargetTileCol + 1534) == -1 )
   {
     v7 = g_BattleTargetTileCol;
-    v8 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a4);
+    v8 = UnitBattle_MoveTrackNear(unitIndex, v6, g_BattleTargetTileCol, a4);
     *(_DWORD *)(v37 + 23) = v8;
     if ( !v8 )
     {
       v7 = g_BattleTargetTileCol;
-      *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a4);
+      *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(unitIndex, g_BattleTargetTileCol, a4);
     }
     if ( *(_DWORD *)(v37 + 23) )
-      UnitBattle_Move(a1, v9, v7, a4);
+      UnitBattle_Move(unitIndex, v9, v7, a4);
     v10 = *(_DWORD *)(v37 + 23);
     if ( v10 )
       goto LABEL_7;
     goto LABEL_8;
   }
   LOWORD(v10) = g_BattleTargetTileCol;
-  v12 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a4);
+  v12 = UnitBattle_MoveTrackNear(unitIndex, v6, g_BattleTargetTileCol, a4);
   *(_DWORD *)(v37 + 23) = v12;
   if ( !v12 )
   {
     LOWORD(v10) = g_BattleTargetTileCol;
-    *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a4);
+    *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(unitIndex, g_BattleTargetTileCol, a4);
   }
   if ( *(_DWORD *)(v37 + 23) )
   {
@@ -4731,16 +4731,16 @@ int  UnitBattle_ApproachToSafeDistance(int a1, int a2, char a3, int a4)
         if ( v42 != 255 )
         {
           LOWORD(v10) = v43;
-          v13 = UnitBattle_MoveTrack(a1, v42, v42, v43, a4);
+          v13 = UnitBattle_MoveTrack(unitIndex, v42, v42, v43, a4);
           *(_DWORD *)(v37 + 23) = v13;
           if ( !v13 )
           {
             LOWORD(v10) = v43;
-            *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, v43, a4);
+            *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(unitIndex, v43, a4);
           }
         }
         if ( *(_DWORD *)(v37 + 23) )
-          UnitBattle_Move(a1, v9, v10, a4);
+          UnitBattle_Move(unitIndex, v9, v10, a4);
         if ( !*(_DWORD *)(v37 + 23) )
           goto LABEL_8;
 LABEL_7:
@@ -4779,15 +4779,15 @@ LABEL_35:
             j__nfree_();
           LOWORD(v10) = v43;
           *(_DWORD *)(v37 + 23) = 0;
-          v32 = UnitBattle_MoveTrack(a1, v42, v42, v43, a4);
+          v32 = UnitBattle_MoveTrack(unitIndex, v42, v42, v43, a4);
           *(_DWORD *)(v37 + 23) = v32;
           if ( !v32 )
           {
             LOWORD(v10) = v43;
-            *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(a1, v43, a4);
+            *(_DWORD *)(v37 + 23) = UnitBattle_MoveTrackForce(unitIndex, v43, a4);
           }
           if ( *(_DWORD *)(v37 + 23) )
-            UnitBattle_Move(a1, v9, v10, a4);
+            UnitBattle_Move(unitIndex, v9, v10, a4);
           if ( !*(_DWORD *)(v37 + 23) )
             goto LABEL_8;
         }
@@ -4953,10 +4953,10 @@ LABEL_72:
 // 5437A4: using guessed type int dword_5437A4;
 
 //----- (0043BE50) --------------------------------------------------------
-int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
+int  UnitBattle_ExecuteAiActionForUnit(int unitIndex, int side, DWORD gameContext)
 {
   DWORD v4; // ebx
-  DWORD v5; // edi
+  DWORD cellStateBase; // edi
   int v6; // ecx
   int result; // eax
   __int16 v8; // bx
@@ -4976,49 +4976,49 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
   int v22; // [esp+8h] [ebp-24h]
   signed int v23; // [esp+Ch] [ebp-20h]
   DWORD v24; // [esp+10h] [ebp-1Ch]
-  __int16 *v25; // [esp+14h] [ebp-18h]
+  __int16 *unitRecord; // [esp+14h] [ebp-18h]
 
-  v4 = 31 * a1;
-  v25 = (__int16 *)(31 * a1 + g_MapData + 852);
-  v5 = 801 * a1;
+  v4 = 31 * unitIndex;
+  unitRecord = (__int16 *)(31 * unitIndex + g_MapData + 852);
+  cellStateBase = 801 * unitIndex;
   v23 = 0;
   UnitBattle_UpdateIdleAnimatedUnits();
   v6 = g_UnitBattleScanTileRow;
-  switch ( g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + v5] )
+  switch ( g_BattleCellStateGrid[40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + cellStateBase] )
   {
     case 1:
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v4 + g_MapData + 852)] )
       {
-        v6 = (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5);
+        v6 = (unitRecord[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)unitRecord + 12)) >> 5);
         if ( v6 > 0 )
           goto LABEL_4;
       }
       v11 = g_BattleTargetTileCol;
-      v12 = UnitBattle_MoveTrackNear(a1, v6, g_BattleTargetTileCol, a3);
-      *(_DWORD *)((char *)v25 + 23) = v12;
+      v12 = UnitBattle_MoveTrackNear(unitIndex, v6, g_BattleTargetTileCol, gameContext);
+      *(_DWORD *)((char *)unitRecord + 23) = v12;
       if ( v12 )
-        UnitBattle_Move(a1, v13, v11, a3);
-      if ( *(_DWORD *)((char *)v25 + 23) )
+        UnitBattle_Move(unitIndex, v13, v11, gameContext);
+      if ( *(_DWORD *)((char *)unitRecord + 23) )
       {
         j__nfree_();
-        *(_DWORD *)((char *)v25 + 23) = 0;
+        *(_DWORD *)((char *)unitRecord + 23) = 0;
       }
-      v24 = 31 * a1;
+      v24 = 31 * unitIndex;
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         v14 = *(char *)(31 * *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534)
                       + g_MapData
                       + 861);
-        v15 = *((char *)v25 + 9);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 0);
+        v15 = *((char *)unitRecord + 9);
+        UnitBattle_CalcMeleeExchange(unitIndex, *(__int16 *)(g_MapData + 40 * g_UnitBattleScanTileRow + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 0);
         v22 = v14 - v21 - (v15 - v20);
-        UnitBattle_CalcMeleeExchange(a1, *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 1);
+        UnitBattle_CalcMeleeExchange(unitIndex, *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534), &v21, &v20, 1);
         v16 = v14 - v21;
         v17 = v15 - v20;
         if ( v16 <= 0 && v17 <= 0
           || !UnitBattle_Attack(
-                a1,
+                unitIndex,
                 *(__int16 *)(40 * g_UnitBattleScanTileRow + g_MapData + 2 * g_BattleTargetTileCol + 1534),
                 v16 - v17 > v22)
           || *(__int16 *)(g_MapData + v24 + 852) == -1 )
@@ -5037,33 +5037,33 @@ int  UnitBattle_ExecuteAiActionForUnit(int a1, int a2, DWORD a3)
       break;
     case 6:
       v8 = g_BattleTargetTileCol;
-      v9 = UnitBattle_MoveTrackForce(a1, g_BattleTargetTileCol, a3);
-      *(_DWORD *)((char *)v25 + 23) = v9;
+      v9 = UnitBattle_MoveTrackForce(unitIndex, g_BattleTargetTileCol, gameContext);
+      *(_DWORD *)((char *)unitRecord + 23) = v9;
       if ( v9 )
-        UnitBattle_Move(a1, v10, v8, a3);
-      if ( *(_DWORD *)((char *)v25 + 23) )
+        UnitBattle_Move(unitIndex, v10, v8, gameContext);
+      if ( *(_DWORD *)((char *)unitRecord + 23) )
       {
         j__nfree_();
-        *(_DWORD *)((char *)v25 + 23) = 0;
+        *(_DWORD *)((char *)unitRecord + 23) = 0;
       }
       result = 0;
       break;
     case 7:
-      result = UnitBattle_ApproachToSafeDistance(a1, g_UnitBattleScanTileRow, v4, a3);
+      result = UnitBattle_ApproachToSafeDistance(unitIndex, g_UnitBattleScanTileRow, v4, gameContext);
       break;
     case 8:
-      if ( g_UnitTypeMaxRange_512582[88 * *v25] && (v25[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)v25 + 12)) >> 5) > 0 )
+      if ( g_UnitTypeMaxRange_512582[88 * *unitRecord] && (unitRecord[6] & 3) + 1 - ((unsigned __int8)(2 * *((_BYTE *)unitRecord + 12)) >> 5) > 0 )
       {
 LABEL_4:
         UnitBattle_UpdateIdleAnimatedUnits();
-        v23 = UnitBattle_MoveShootingUnit(a1, a2, v4, a3);
+        v23 = UnitBattle_MoveShootingUnit(unitIndex, side, v4, gameContext);
         goto LABEL_5;
       }
-      v18 = 31 * a1;
+      v18 = 31 * unitIndex;
       do
       {
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( !UnitBattle_AttackWall(a1, g_UnitBattleScanTileRow, v19, g_BattleTargetTileCol) || *(__int16 *)(g_MapData + v18 + 852) == -1 )
+        if ( !UnitBattle_AttackWall(unitIndex, g_UnitBattleScanTileRow, v19, g_BattleTargetTileCol) || *(__int16 *)(g_MapData + v18 + 852) == -1 )
           goto LABEL_5;
       }
       while ( *(_BYTE *)(g_BattleTargetTileCol + 20 * g_UnitBattleScanTileRow + g_MapData + 3134) );
@@ -5088,7 +5088,7 @@ LABEL_5:
 // 5437A4: using guessed type int dword_5437A4;
 
 //----- (0043C1E0) --------------------------------------------------------
-signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
+signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int side)
 {
   int v1; // edx
   int v2; // ecx
@@ -5123,7 +5123,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   int v31; // eax
   int v32; // ecx
   __int16 v33; // [esp+0h] [ebp-72h]
-  WCIsvListBase *v34[5]; // [esp+2h] [ebp-70h]
+  WCIsvListBase *occupantUnitIds[5]; // [esp+2h] [ebp-70h]
   int v35; // [esp+16h] [ebp-5Ch]
   int v36; // [esp+1Ah] [ebp-58h]
   int v37; // [esp+1Eh] [ebp-54h]
@@ -5135,17 +5135,17 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   int v43; // [esp+36h] [ebp-3Ch]
   int v44; // [esp+3Ah] [ebp-38h]
   int v45; // [esp+3Eh] [ebp-34h]
-  int v46; // [esp+42h] [ebp-30h]
+  int sideCopy; // [esp+42h] [ebp-30h]
   int v47; // [esp+46h] [ebp-2Ch]
   int v48; // [esp+4Ah] [ebp-28h]
   int v49; // [esp+4Eh] [ebp-24h]
   signed int v50; // [esp+52h] [ebp-20h]
-  int v51; // [esp+56h] [ebp-1Ch]
+  int occupantCount; // [esp+56h] [ebp-1Ch]
 
-  v46 = a1;
+  sideCopy = side;
   WCIsvListBase_base_destroy((WCIsvListBase *)&g_UnitBattleAiCandidateQueue);
-  memset(v34, 0xFF, 20);
-  v51 = 0;
+  memset(occupantUnitIds, 0xFF, 20);
+  occupantCount = 0;
   v44 = 0;
   v45 = 0;
   while ( *(_DWORD *)(g_MapData + 804) - 1 >= v44 )
@@ -5153,12 +5153,12 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     v12 = 0;
     v35 = v45;
     v13 = 0;
-    v14 = 2 * v51;
+    v14 = 2 * occupantCount;
     while ( v12 <= *(_DWORD *)(g_MapData + 800) - 1 )
     {
       v15 = v13 + g_MapData + v35;
       v16 = *(__int16 *)(v15 + 1534);
-      if ( v16 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v16 + 854) != v46 )
+      if ( v16 == -1 || *(unsigned __int8 *)(g_MapData + 31 * v16 + 854) != sideCopy )
       {
         v13 += 2;
         ++v12;
@@ -5167,9 +5167,9 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       {
         v17 = *(_WORD *)(v15 + 1534);
         v14 += 2;
-        v18 = v51 + 1;
+        v18 = occupantCount + 1;
         *(__int16 *)((char *)&v33 + v14) = v17;
-        v51 = v18;
+        occupantCount = v18;
         v13 += 2;
         ++v12;
       }
@@ -5181,15 +5181,15 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   {
     if ( (unsigned int)g_UnitBattleAiCurrentPlanMode <= 2 || g_UnitBattleAiCurrentPlanMode == 6 )
     {
-      v19 = *(unsigned __int16 *)(g_MapData + 31 * SLOWORD(v34[0]) + 856);
+      v19 = *(unsigned __int16 *)(g_MapData + 31 * SLOWORD(occupantUnitIds[0]) + 856);
       if ( (unsigned __int16)v19 >= *(_DWORD *)(g_MapData + 804) / 2 )
       {
         for ( i = 0; i != 20; i += 2 )
         {
-          result = *(__int16 *)((char *)v34 + i);
+          result = *(__int16 *)((char *)occupantUnitIds + i);
           if ( result != -1 )
           {
-            v36 = *(__int16 *)((char *)v34 + i);
+            v36 = *(__int16 *)((char *)occupantUnitIds + i);
             result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v36);
           }
         }
@@ -5198,10 +5198,10 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       {
         for ( j = 18; j != -2; j -= 2 )
         {
-          result = *(__int16 *)((char *)v34 + j);
+          result = *(__int16 *)((char *)occupantUnitIds + j);
           if ( result != -1 )
           {
-            v37 = *(__int16 *)((char *)v34 + j);
+            v37 = *(__int16 *)((char *)occupantUnitIds + j);
             result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v37);
           }
         }
@@ -5221,13 +5221,13 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
       v5 = 0;
       do
       {
-        v6 = *(__int16 *)((char *)v34 + v5);
+        v6 = *(__int16 *)((char *)occupantUnitIds + v5);
         if ( v6 != -1 && !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * v6 + g_MapData + 852)] )
         {
           v47 = 1;
           if ( v3 < Unit_CalcEffectivenessA((char *)(31 * v6 + g_MapData + 852), 0) )
           {
-            v7 = (char *)(31 * *(__int16 *)((char *)v34 + v5) + g_MapData + 852);
+            v7 = (char *)(31 * *(__int16 *)((char *)occupantUnitIds + v5) + g_MapData + 852);
             v49 = v4;
             v3 = Unit_CalcEffectivenessA(v7, 0);
           }
@@ -5236,34 +5236,34 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
         v5 += 2;
       }
       while ( v4 < 10 );
-      if ( *((__int16 *)v34 + v49) != -1 )
+      if ( *((__int16 *)occupantUnitIds + v49) != -1 )
       {
-        v38 = *((__int16 *)v34 + v49);
+        v38 = *((__int16 *)occupantUnitIds + v49);
         WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v38);
       }
-      *((_WORD *)v34 + v49) = -1;
+      *((_WORD *)occupantUnitIds + v49) = -1;
     }
     while ( v47 );
     for ( k = 0; k != 20; k += 2 )
     {
-      v9 = *(__int16 *)((char *)v34 + k);
+      v9 = *(__int16 *)((char *)occupantUnitIds + k);
       if ( v9 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v9 + g_MapData + 852)] == 4 )
       {
-        v39 = *(__int16 *)((char *)v34 + k);
+        v39 = *(__int16 *)((char *)occupantUnitIds + k);
         WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v39);
-        *(_WORD *)((char *)v34 + k) = -1;
+        *(_WORD *)((char *)occupantUnitIds + k) = -1;
       }
     }
     for ( m = 0; m != 20; m += 2 )
     {
-      result = *(__int16 *)((char *)v34 + m);
+      result = *(__int16 *)((char *)occupantUnitIds + m);
       if ( result != -1 )
       {
         if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(31 * result + g_MapData + 852)] )
         {
-          v40 = *(__int16 *)((char *)v34 + m);
+          v40 = *(__int16 *)((char *)occupantUnitIds + m);
           result = WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v40);
-          *(_WORD *)((char *)v34 + m) = -1;
+          *(_WORD *)((char *)occupantUnitIds + m) = -1;
         }
       }
     }
@@ -5271,22 +5271,22 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
   }
   for ( n = 0; n != 20; n += 2 )
   {
-    v27 = *(__int16 *)((char *)v34 + n);
+    v27 = *(__int16 *)((char *)occupantUnitIds + n);
     if ( v27 != -1 && g_UnitTypeRole[88 * *(__int16 *)(31 * v27 + g_MapData + 852)] == 4 )
     {
-      v41 = *(__int16 *)((char *)v34 + n);
+      v41 = *(__int16 *)((char *)occupantUnitIds + n);
       WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v41);
-      *(_WORD *)((char *)v34 + n) = -1;
+      *(_WORD *)((char *)occupantUnitIds + n) = -1;
     }
   }
   for ( ii = 0; ii != 20; ii += 2 )
   {
-    v29 = *(__int16 *)((char *)v34 + ii);
+    v29 = *(__int16 *)((char *)occupantUnitIds + ii);
     if ( v29 != -1 && g_UnitTypeMaxRange_512582[88 * *(__int16 *)(g_MapData + 31 * v29 + 852)] )
     {
-      v42 = *(__int16 *)((char *)v34 + ii);
+      v42 = *(__int16 *)((char *)occupantUnitIds + ii);
       WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v42);
-      *(_WORD *)((char *)v34 + ii) = -1;
+      *(_WORD *)((char *)occupantUnitIds + ii) = -1;
     }
   }
   do
@@ -5299,7 +5299,7 @@ signed int  UnitBattle_BuildAiUnitQueueForCurrentMode(int a1)
     v25 = 0;
     while ( 1 )
     {
-      v30 = *(__int16 *)((char *)v34 + v25);
+      v30 = *(__int16 *)((char *)occupantUnitIds + v25);
       if ( v30 != -1 )
         break;
 LABEL_45:
@@ -5314,7 +5314,7 @@ LABEL_45:
     {
       if ( v24 < Unit_CalcEffectivenessA((char *)(g_MapData + 852 + v31), 0) )
       {
-        v23 = (char *)(31 * *(__int16 *)((char *)v34 + v25) + g_MapData + 852);
+        v23 = (char *)(31 * *(__int16 *)((char *)occupantUnitIds + v25) + g_MapData + 852);
         v50 = v22;
         v24 = Unit_CalcEffectivenessA(v23, 0);
       }
@@ -5322,14 +5322,14 @@ LABEL_45:
     }
     v50 = v22;
 LABEL_63:
-    if ( *((__int16 *)v34 + v50) != -1 )
+    if ( *((__int16 *)occupantUnitIds + v50) != -1 )
     {
-      v43 = *((__int16 *)v34 + v50);
+      v43 = *((__int16 *)occupantUnitIds + v50);
       WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v43);
     }
     result = v50;
     v32 = v48;
-    *((_WORD *)v34 + v50) = -1;
+    *((_WORD *)occupantUnitIds + v50) = -1;
   }
   while ( v32 );
   return result;
@@ -5352,14 +5352,14 @@ LABEL_63:
 // 5437C0: using guessed type int dword_5437C0;
 
 //----- (0043C6B0) --------------------------------------------------------
-signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
+signed int  UnitBattle_ScanAiPlanRangeLine(int side, signed int scanDirection)
 {
   int i; // eax
   int v3; // edx
   int v4; // edx
-  int v5; // ebp
+  int targetRow; // ebp
   int v6; // ebx
-  int v7; // ebx
+  int targetCol; // ebx
   int v8; // esi
   int v9; // edx
   BOOL v10; // eax
@@ -5384,76 +5384,76 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
   int battle_height;
   __int16 v30; // [esp+14h] [ebp-28h]
   __int16 v31; // [esp+18h] [ebp-24h]
-  int v32; // [esp+1Ch] [ebp-20h]
-  int v33; // [esp+20h] [ebp-1Ch]
+  int bestProjectedRow; // [esp+1Ch] [ebp-20h]
+  int enemyUnitIndex; // [esp+20h] [ebp-1Ch]
 
-  v32 = -20;
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_enter", a1, a2, g_AttackerStartsOnLeft, g_DefenderStartsOnLeft);
-  if ( *(_DWORD *)(g_MapData + 836) == a1 )
+  bestProjectedRow = -20;
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_enter", side, scanDirection, g_AttackerStartsOnLeft, g_DefenderStartsOnLeft);
+  if ( *(_DWORD *)(g_MapData + 836) == side )
   {
     if ( g_AttackerStartsOnLeft )
-      a2 = 1;
+      scanDirection = 1;
     else
-      a2 = -1;
+      scanDirection = -1;
   }
-  if ( a1 == *(_DWORD *)(g_MapData + 840) )
+  if ( side == *(_DWORD *)(g_MapData + 840) )
   {
     if ( g_DefenderStartsOnLeft )
-      a2 = 1;
+      scanDirection = 1;
     else
-      a2 = -1;
+      scanDirection = -1;
   }
   for ( i = 0; i != 682; i += 31 )
   {
     v3 = i + g_MapData;
-    if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == a1 )
+    if ( *(__int16 *)(i + g_MapData + 852) != -1 && *(unsigned __int8 *)(v3 + 854) == side )
     {
-      v4 = a2 * *(unsigned __int16 *)(v3 + 856);
-      if ( v4 > v32 )
-        v32 = v4;
+      v4 = scanDirection * *(unsigned __int16 *)(v3 + 856);
+      if ( v4 > bestProjectedRow )
+        bestProjectedRow = v4;
     }
   }
-  v33 = 0;
+  enemyUnitIndex = 0;
   v29 = 0;
-  v5 = a2 * (v32 + 3);
+  targetRow = scanDirection * (bestProjectedRow + 3);
   battle_width = *(_DWORD *)(g_MapData + 800);
   battle_height = *(_DWORD *)(g_MapData + 804);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_ai_plan_range_line",
-    a1,
-    v5,
+    side,
+    targetRow,
     battle_width,
     battle_height);
-  if ( v5 < 0 || v5 >= battle_height )
+  if ( targetRow < 0 || targetRow >= battle_height )
     return 0;
   while ( 1 )
   {
     v6 = g_MapData + v29;
-    if ( *(__int16 *)(g_MapData + v29 + 852) == -1 || *(unsigned __int8 *)(v6 + 854) == a1 )
+    if ( *(__int16 *)(g_MapData + v29 + 852) == -1 || *(unsigned __int8 *)(v6 + 854) == side )
       goto LABEL_23;
-    v7 = *(unsigned __int16 *)(v6 + 858);
+    targetCol = *(unsigned __int16 *)(v6 + 858);
     Diagnostics_TraceWorldMapActionEvent(
       "battle_ai_plan_range_candidate",
-      v33,
-      v5,
-      v7,
+      enemyUnitIndex,
+      targetRow,
+      targetCol,
       *(__int16 *)(v6 + 852));
-    if ( v7 < 0 || v7 >= battle_width )
+    if ( targetCol < 0 || targetCol >= battle_width )
     {
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_skip_oob_target", v33, v5, v7, battle_width);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_skip_oob_target", enemyUnitIndex, targetRow, targetCol, battle_width);
       goto LABEL_23;
     }
-    if ( *(__int16 *)(40 * v5 + g_MapData + 2 * v7 + 1534) != -1 )
+    if ( *(__int16 *)(40 * targetRow + g_MapData + 2 * targetCol + 1534) != -1 )
     {
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_target_occupied", v33, v5, v7, 0);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_target_occupied", enemyUnitIndex, targetRow, targetCol, 0);
       return 0;
     }
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_log", v33, v5, v7, a1);
-    Debug_Log(a1, v7, v5, (int)aOddzial_w_zasi);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_log", enemyUnitIndex, targetRow, targetCol, side);
+    Debug_Log(side, targetCol, targetRow, (int)aOddzial_w_zasi);
     v8 = g_MapData + 852;
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_range", v33, v5, v7, a1);
-    v10 = UnitBattle_IsTileWithinRange(v33, v5, v7);
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_after_range", v33, v5, v7, v10);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_before_range", enemyUnitIndex, targetRow, targetCol, side);
+    v10 = UnitBattle_IsTileWithinRange(enemyUnitIndex, targetRow, targetCol);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_plan_range_after_range", enemyUnitIndex, targetRow, targetCol, v10);
     v12 = g_MapData + v29 + 852;
     if ( v10
       && (*(_BYTE *)(v29 + g_MapData + 864) & 3)
@@ -5462,26 +5462,26 @@ signed int  UnitBattle_ScanAiPlanRangeLine(int a1, signed int a2)
     {
       goto LABEL_17;
     }
-    v14 = v7;
-    if ( *(char *)(v7 + g_MapData + 20 * v5 + 3134) <= 0
-      || (v14 = g_MapData + 40 * v5, *(__int16 *)(v14 + 2 * v7 + 1534) != -1)
-      && ((v15 = 31 * v33 + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
+    v14 = targetCol;
+    if ( *(char *)(targetCol + g_MapData + 20 * targetRow + 3134) <= 0
+      || (v14 = g_MapData + 40 * targetRow, *(__int16 *)(v14 + 2 * targetCol + 1534) != -1)
+      && ((v15 = 31 * enemyUnitIndex + g_MapData, (g_UnitTypeFlags[22 * *(__int16 *)(v15 + 852)] & 1) != 0)
        || (v14 = (unsigned __int8)(2 * *(_BYTE *)(v15 + 864)) >> 5, (*(_BYTE *)(v15 + 864) & 3) + 1 - v14 > 0)) )
     {
-      v16 = UnitBattle_MoveTrackNear(v33, v5, v7, v5);
+      v16 = UnitBattle_MoveTrackNear(enemyUnitIndex, targetRow, targetCol, targetRow);
     }
     else
     {
-      v16 = UnitBattle_MoveTrackNearWall(v33, v5, v7, v5);
+      v16 = UnitBattle_MoveTrackNearWall(enemyUnitIndex, targetRow, targetCol, targetRow);
     }
     v17 = v16;
     if ( !v16 )
     {
-      v18 = g_MapData + 31 * v33;
+      v18 = g_MapData + 31 * enemyUnitIndex;
       if ( g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v18 + 852)] )
       {
         if ( (*(_BYTE *)(v18 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v18 + 864)) >> 5) > 0 )
-          v17 = UnitBattle_MoveTrackForce(v33, v7, v5);
+          v17 = UnitBattle_MoveTrackForce(enemyUnitIndex, targetCol, targetRow);
       }
     }
     if ( !v17 )
@@ -5494,7 +5494,7 @@ LABEL_17:
         return 0;
       goto LABEL_23;
     }
-    v19 = 31 * v33 + g_MapData;
+    v19 = 31 * enemyUnitIndex + g_MapData;
     if ( !g_UnitTypeMaxRange_512582[88 * *(__int16 *)(v19 + 852)]
       || (*(_BYTE *)(v19 + 864) & 3) + 1 - ((unsigned __int8)(2 * *(_BYTE *)(v19 + 864)) >> 5) <= 0 )
     {
@@ -5514,7 +5514,7 @@ LABEL_17:
     if ( *v17 )
       break;
 LABEL_50:
-    if ( !UnitBattle_IsTileWithinRange(v33, v5, v7) )
+    if ( !UnitBattle_IsTileWithinRange(enemyUnitIndex, targetRow, targetCol) )
     {
 LABEL_58:
       *(_WORD *)(v12 + 4) = v30;
@@ -5532,10 +5532,10 @@ LABEL_59:
       return 0;
 LABEL_23:
     v29 += 31;
-    if ( ++v33 >= 22 )
+    if ( ++enemyUnitIndex >= 22 )
       return 1;
   }
-  while ( !UnitBattle_IsTileWithinRange(v33, v5, v7) )
+  while ( !UnitBattle_IsTileWithinRange(enemyUnitIndex, targetRow, targetCol) )
   {
     v23 = *v17 - 1;
     *v17 = v23;
@@ -5569,9 +5569,9 @@ LABEL_23:
 //----- (0043CB80) --------------------------------------------------------
 void UnitBattle_ScanAiWallTargetColumns()
 {
-  int v0; // edx
+  int scanRow; // edx
   int v1; // ecx
-  int v2; // eax
+  int scanCol; // eax
   int v3; // esi
   int v4; // edx
   int battle_width;
@@ -5588,30 +5588,30 @@ void UnitBattle_ScanAiWallTargetColumns()
     return;
   }
   g_UnitBattleWallScanTileRow = 1;
-  v0 = 1;
+  scanRow = 1;
   v1 = 20;
-  while ( v0 < battle_height - 1 )
+  while ( scanRow < battle_height - 1 )
   {
     if ( *(char *)(g_MapData + v1 + wall_column + 3135) > 0 )
-      g_UnitBattleWallScanTileRow = v0;
+      g_UnitBattleWallScanTileRow = scanRow;
     v1 += 20;
-    ++v0;
+    ++scanRow;
   }
   g_BattleWallScanColumn = wall_column;
   g_BattleWallScanTileX = g_BattleWallScanColumn + 1;
-  v2 = 1;
+  scanCol = 1;
   v3 = 20 * g_UnitBattleWallScanTileRow;
-  while ( v2 < battle_width - 1 )
+  while ( scanCol < battle_width - 1 )
   {
-    v4 = g_MapData + v3 + v2;
+    v4 = g_MapData + v3 + scanCol;
     if ( *(char *)(v4 + 3134) >= 0 && *(_BYTE *)(v4 + 3134) < *(_BYTE *)(g_BattleWallScanColumn + g_MapData + v3 + 3134) )
     {
       g_BattleWallScanTileX = g_BattleWallScanColumn;
-      g_BattleWallScanColumn = v2++;
+      g_BattleWallScanColumn = scanCol++;
     }
     else
     {
-      ++v2;
+      ++scanCol;
     }
   }
   Diagnostics_TraceWorldMapActionEvent("battle_ai_wall_scan_exit", g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX, 0);
@@ -5624,20 +5624,20 @@ void UnitBattle_ScanAiWallTargetColumns()
 // 5437B8: using guessed type int dword_5437B8;
 
 //----- (0043CC50) --------------------------------------------------------
-signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
+signed int  UnitBattle_SelectAiPlanMode(int side, signed int scanDirection)
 {
-  int v2; // edx
+  int sideCopy; // edx
 
-  v2 = a1;
-  if ( g_UnitBattleAiTurnCounter <= 3 && UnitBattle_ScanAiPlanRangeLine(a1, a2) )
+  sideCopy = side;
+  if ( g_UnitBattleAiTurnCounter <= 3 && UnitBattle_ScanAiPlanRangeLine(side, scanDirection) )
     return 2;
   if ( *(int *)(g_MapData + 828) <= 0 )
     return 4;
-  if ( g_UnitBattleAiTurnCounter == 1 && v2 == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
+  if ( g_UnitBattleAiTurnCounter == 1 && sideCopy == *(_DWORD *)(g_MapData + 840) && g_UnitBattleAiCurrentPlanMode != 6 )
     return 6;
-  if ( v2 == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter < 3 )
+  if ( sideCopy == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter < 3 )
     return 0;
-  if ( v2 == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter >= 3 )
+  if ( sideCopy == *(_DWORD *)(g_MapData + 836) && g_UnitBattleAiTurnCounter >= 3 )
     return 4;
   return 1;
 }
@@ -5647,9 +5647,9 @@ signed int  UnitBattle_SelectAiPlanMode(int a1, signed int a2)
 // 532078: using guessed type int dword_532078;
 
 //----- (0043CD00) --------------------------------------------------------
-signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
+signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 side)
 {
-  signed int v2; // esi
+  signed int turnResult; // esi
   int v3; // edx
   int v4; // eax
   int v5; // ecx
@@ -5657,7 +5657,7 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
   int v7; // ecx
   int v8; // ecx
   int v9; // ecx
-  signed int v10; // esi
+  signed int queueIndex; // esi
   int i; // edi
   int v12; // eax
   int v13; // ecx
@@ -5672,32 +5672,32 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
   int v22; // ecx
   int v23; // ecx
   int v24; // ecx
-  int v26; // [esp+0h] [ebp-1Ch]
+  int unitIndex; // [esp+0h] [ebp-1Ch]
 
-  v2 = 1;
-  v26 = 0;
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", a1, g_CurrentPlayerIndex, g_UnitBattleAiTurnCounter, 0);
+  turnResult = 1;
+  unitIndex = 0;
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_enter", side, g_CurrentPlayerIndex, g_UnitBattleAiTurnCounter, 0);
   g_BattleAiActionAttemptCount = 0;
   ++g_UnitBattleAiTurnCounter;
   if ( *(_DWORD *)(g_MapData + 828) != -1 )
   {
     Diagnostics_TraceWorldMapActionEvent(
       "battle_ai_before_wall_scan",
-      a1,
+      side,
       *(_DWORD *)(g_MapData + 828),
       *(_DWORD *)(g_MapData + 800),
       *(_DWORD *)(g_MapData + 804));
     UnitBattle_ScanAiWallTargetColumns();
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", a1, g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_after_wall_scan", side, g_UnitBattleWallScanTileRow, g_BattleWallScanColumn, g_BattleWallScanTileX);
   }
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", a1, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_before_idle", side, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_idle", a1, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
-  g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiTurnCounter, 0);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_idle", side, g_SelectedUnitIndex, g_UnitBattleAiTurnCounter, 0);
+  g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(side, side);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_mode", side, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiTurnCounter, 0);
   UnitBattle_UpdateIdleAnimatedUnits();
-  UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
+  UnitBattle_BuildAiUnitQueueForCurrentMode(side);
+  Diagnostics_TraceWorldMapActionEvent("battle_ai_after_queue", side, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
   UnitBattle_UpdateIdleAnimatedUnits();
   g_BattleShootingUnitMoveActiveFlag = 0;
   switch ( g_UnitBattleAiCurrentPlanMode )
@@ -5711,45 +5711,45 @@ signed int  UnitBattle_RunAiTurnForSide(unsigned __int8 a1)
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         v4 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
-        v26 = v4;
-        UnitBattle_ResetAiReachGridForSide(a1);
-        UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, 1);
+        unitIndex = v4;
+        UnitBattle_ResetAiReachGridForSide(side);
+        UnitBattle_ScoreAiActionGridForUnit(unitIndex, side, 0, 1);
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
+        if ( UnitBattle_SelectAiActionForUnit(unitIndex, side) )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
-          UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
+          UnitBattle_ExecuteAiActionForUnit(unitIndex, side, 0);
         }
         else
         {
-          WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
+          WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
         }
       }
       goto LABEL_8;
     case 6:
 LABEL_8:
-      v10 = 0;
-      for ( i = g_BattleAiUnitQueueCount; v10 < i; ++v10 )
+      queueIndex = 0;
+      for ( i = g_BattleAiUnitQueueCount; queueIndex < i; ++queueIndex )
       {
         UnitBattle_UpdateIdleAnimatedUnits();
         v12 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
-        v26 = v12;
-        UnitBattle_ResetAiReachGridForSide(a1);
-        UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v10);
+        unitIndex = v12;
+        UnitBattle_ResetAiReachGridForSide(side);
+        UnitBattle_ScoreAiActionGridForUnit(unitIndex, side, 0, queueIndex);
         UnitBattle_UpdateIdleAnimatedUnits();
-        if ( UnitBattle_SelectAiActionForUnit(v26, a1) )
+        if ( UnitBattle_SelectAiActionForUnit(unitIndex, side) )
         {
           UnitBattle_UpdateIdleAnimatedUnits();
-          UnitBattle_ExecuteAiActionForUnit(v26, a1, 0);
+          UnitBattle_ExecuteAiActionForUnit(unitIndex, side, 0);
         }
-        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
+        WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
       }
       UnitBattle_UpdateIdleAnimatedUnits();
-      g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(a1, a1);
+      g_UnitBattleAiCurrentPlanMode = UnitBattle_SelectAiPlanMode(side, side);
       UnitBattle_UpdateIdleAnimatedUnits();
-      v2 = 0;
-      UnitBattle_BuildAiUnitQueueForCurrentMode(a1);
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", a1, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
+      turnResult = 0;
+      UnitBattle_BuildAiUnitQueueForCurrentMode(side);
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_after_requeue", side, g_UnitBattleAiCurrentPlanMode, g_UnitBattleAiCandidateQueueTail, g_BattleAiUnitQueueCount);
       UnitBattle_UpdateIdleAnimatedUnits();
 LABEL_13:
       if ( !g_UnitBattleAiCandidateQueueTail )
@@ -5761,36 +5761,36 @@ LABEL_13:
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    v26 = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
-    Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", v26, a1, g_UnitBattleAiCandidateQueueTail, v2);
-    v19 = g_MapData + 31 * v26;
-    if ( *(__int16 *)(v19 + 852) != -1 && a1 == *(_BYTE *)(v19 + 854) )
+    unitIndex = WCIsvListBase_PopFrontValue((int)&g_UnitBattleAiCandidateQueue, 0);
+    Diagnostics_TraceWorldMapActionEvent("battle_ai_unit_candidate", unitIndex, side, g_UnitBattleAiCandidateQueueTail, turnResult);
+    v19 = g_MapData + 31 * unitIndex;
+    if ( *(__int16 *)(v19 + 852) != -1 && side == *(_BYTE *)(v19 + 854) )
       break;
 LABEL_20:
     if ( !g_UnitBattleAiCandidateQueueTail )
     {
 LABEL_21:
       WCIsvListBase_base_destroy((WCIsvListBase *)&g_UnitBattleAiCandidateQueue);
-      Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_exit", a1, v2, g_UnitBattleAiCandidateQueueTail, 0);
-      return v2;
+      Diagnostics_TraceWorldMapActionEvent("battle_ai_turn_exit", side, turnResult, g_UnitBattleAiCandidateQueueTail, 0);
+      return turnResult;
     }
   }
   while ( 1 )
   {
     UnitBattle_UpdateIdleAnimatedUnits();
-    UnitBattle_ResetAiReachGridForSide(a1);
-    if ( UnitBattle_ScoreAiActionGridForUnit(v26, a1, 0, v2) )
+    UnitBattle_ResetAiReachGridForSide(side);
+    if ( UnitBattle_ScoreAiActionGridForUnit(unitIndex, side, 0, turnResult) )
       return 1;
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( !UnitBattle_SelectAiActionForUnit(v26, a1) )
+    if ( !UnitBattle_SelectAiActionForUnit(unitIndex, side) )
     {
-      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, v26);
+      WCIsvListBase_AppendValue((int)&g_UnitBattleAiCandidateQueue, unitIndex);
 LABEL_19:
-      v2 = 0;
+      turnResult = 0;
       goto LABEL_20;
     }
     UnitBattle_UpdateIdleAnimatedUnits();
-    if ( !UnitBattle_ExecuteAiActionForUnit(v26, a1, 0) )
+    if ( !UnitBattle_ExecuteAiActionForUnit(unitIndex, side, 0) )
       goto LABEL_19;
   }
 }
@@ -6244,82 +6244,82 @@ int  WCIsvListBase_CopyCtor(_DWORD *a1, _DWORD *a2)
 // 50F134: using guessed type void *off_50F134;
 
 //----- (0043D2D0) --------------------------------------------------------
-int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int a5)
+int  Battle_DeploySideUnitsByRoleBuckets(char *ownUnits, int ownCount, char *enemyUnits, int a4, int enemyCount)
 {
-  int v5; // esi
-  int v6; // edi
-  int v7; // ebp
-  int v8; // ebx
+  int ownDefenseTotal; // esi
+  int ownAttackTotal; // edi
+  int enemyAttackTotal; // ebp
+  int ownIndex; // ebx
   char *v9; // ecx
-  int v13; // ebx
+  int enemyIndex; // ebx
   char *v14; // ecx
   int v17; // eax
-  unsigned __int8 v19; // al
+  unsigned __int8 deployMode; // al
   float v24; // [esp+10h] [ebp-24h]
   float v25; // [esp+14h] [ebp-20h]
-  int v28; // [esp+20h] [ebp-14h]
+  int enemyDefenseTotal; // [esp+20h] [ebp-14h]
   int v29; // [esp+24h] [ebp-10h]
   int v30; // [esp+24h] [ebp-10h]
   int deploy_result;
 
-  Diagnostics_TraceWorldMapActionEvent("battle_deploy_enter", a2, a4, a5, *(__int16 *)a1);
-  v5 = 0;
-  v6 = 0;
-  v7 = 0;
-  v8 = 0;
-  v28 = 0;
-  if ( a2 > 0 )
+  Diagnostics_TraceWorldMapActionEvent("battle_deploy_enter", ownCount, a4, enemyCount, *(__int16 *)ownUnits);
+  ownDefenseTotal = 0;
+  ownAttackTotal = 0;
+  enemyAttackTotal = 0;
+  ownIndex = 0;
+  enemyDefenseTotal = 0;
+  if ( ownCount > 0 )
   {
-    v9 = a1;
+    v9 = ownUnits;
     do
     {
-      v6 += Unit_CalcEffectivenessA(v9, 0);
+      ownAttackTotal += Unit_CalcEffectivenessA(v9, 0);
       Unit_CalcEffectivenessB(v9, 0);
-      ++v8;
-      v5 += Unit_CalcEffectivenessC((__int16 *)v9);
+      ++ownIndex;
+      ownDefenseTotal += Unit_CalcEffectivenessC((__int16 *)v9);
       v9 += UNIT_STACK_SLOT_STRIDE;
     }
-    while ( v8 < a2 );
+    while ( ownIndex < ownCount );
   }
-  v13 = 0;
-  if ( a5 > 0 )
+  enemyIndex = 0;
+  if ( enemyCount > 0 )
   {
-    v14 = a3;
+    v14 = enemyUnits;
     do
     {
-      v7 += Unit_CalcEffectivenessA(v14, 0);
+      enemyAttackTotal += Unit_CalcEffectivenessA(v14, 0);
       Unit_CalcEffectivenessB(v14, 0);
-      ++v13;
+      ++enemyIndex;
       v17 = Unit_CalcEffectivenessC((__int16 *)v14);
       v14 += UNIT_STACK_SLOT_STRIDE;
-      v28 += v17;
+      enemyDefenseTotal += v17;
     }
-    while ( v13 < a5 );
+    while ( enemyIndex < enemyCount );
   }
-  if ( v7 <= 0 )
-    v29 = v6;
+  if ( enemyAttackTotal <= 0 )
+    v29 = ownAttackTotal;
   else
-    v29 = v6 / v7;
+    v29 = ownAttackTotal / enemyAttackTotal;
   v25 = (float)v29;
-  if ( v28 <= 0 )
-    v30 = v5;
+  if ( enemyDefenseTotal <= 0 )
+    v30 = ownDefenseTotal;
   else
-    v30 = v5 / v28;
+    v30 = ownDefenseTotal / enemyDefenseTotal;
   v24 = (float)v30;
-  v19 = v24 < g_Battle_RoleDeployRatioHighThreshold && (v24 <= g_Battle_RoleDeployRatioLowThreshold || SLODWORD(v25) > 1065353216);
-  Battle_BuildRoleDeploymentBuckets((int)a1, a2, v19);
+  deployMode = v24 < g_Battle_RoleDeployRatioHighThreshold && (v24 <= g_Battle_RoleDeployRatioLowThreshold || SLODWORD(v25) > 1065353216);
+  Battle_BuildRoleDeploymentBuckets((int)ownUnits, ownCount, deployMode);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_deploy_after_build",
-    a2,
-    v19,
+    ownCount,
+    deployMode,
     Diagnostics_CountBattleDeploymentBucketEntries(),
-    *(__int16 *)a1);
-  deploy_result = Battle_PlaceRoleDeploymentBuckets(v19, a4);
+    *(__int16 *)ownUnits);
+  deploy_result = Battle_PlaceRoleDeploymentBuckets(deployMode, a4);
   Diagnostics_TraceWorldMapActionEvent(
     "battle_deploy_after_place",
     deploy_result,
     Diagnostics_CountBattleUnitsTotal(),
-    Diagnostics_CountBattleUnitsForOwner(a1[2]),
+    Diagnostics_CountBattleUnitsForOwner(ownUnits[2]),
     g_SelectedUnitIndex);
   return deploy_result;
 }
@@ -6328,42 +6328,42 @@ int  Battle_DeploySideUnitsByRoleBuckets(char *a1, int a2, char *a3, int a4, int
 // 4F18AF: using guessed type double dbl_4F18AF;
 
 //----- (0043D430) --------------------------------------------------------
-int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
+int  Battle_BuildRoleDeploymentBuckets(int unitsPtr, int unitCount, unsigned __int8 deployMode)
 {
   int result; // eax
-  __int16 *v4; // ecx
-  int v5; // edi
-  int v6; // ebp
-  int v7; // esi
-  int v9; // [esp+4h] [ebp-20h]
-  unsigned __int8 v10; // [esp+Ch] [ebp-18h]
+  __int16 *unitRecord; // ecx
+  int unitIndex; // edi
+  int bucket1Count; // ebp
+  int bucket2Count; // esi
+  int bucket3Count; // [esp+4h] [ebp-20h]
+  unsigned __int8 bucketCode; // [esp+Ch] [ebp-18h]
 
   memset(g_BattleDeploymentBucketStorage_5437DC, 0, 0xC0);
   result = 0;
-  v4 = (__int16 *)(uintptr_t)(unsigned int)a1;
-  v5 = 0;
-  if ( a2 > 0 )
+  unitRecord = (__int16 *)(uintptr_t)(unsigned int)unitsPtr;
+  unitIndex = 0;
+  if ( unitCount > 0 )
   {
-    v9 = 0;
-    v6 = 0;
-    v7 = 0;
+    bucket3Count = 0;
+    bucket1Count = 0;
+    bucket2Count = 0;
     do
     {
-      v10 = g_BattleRoleDeploymentBucketTable[7 * a3 + (unsigned __int8)g_UnitTypeRole[88 * *v4]];
-      if ( (v10 - v10 % 10) / 10 == 1 )
-        g_BattleDeploymentBucketRole1[++v6] = (int)v4;
-      if ( (v10 - v10 % 10) / 10 == 2 )
-        g_BattleDeploymentBucketRole2[++v7] = (int)v4;
-      result = (v10 - v10 % 10) / 10;
+      bucketCode = g_BattleRoleDeploymentBucketTable[7 * deployMode + (unsigned __int8)g_UnitTypeRole[88 * *unitRecord]];
+      if ( (bucketCode - bucketCode % 10) / 10 == 1 )
+        g_BattleDeploymentBucketRole1[++bucket1Count] = (int)unitRecord;
+      if ( (bucketCode - bucketCode % 10) / 10 == 2 )
+        g_BattleDeploymentBucketRole2[++bucket2Count] = (int)unitRecord;
+      result = (bucketCode - bucketCode % 10) / 10;
       if ( result == 3 )
       {
-        result = v9 * 4;
-        g_BattleDeploymentBucketRole3[v9++] = (int)v4;
+        result = bucket3Count * 4;
+        g_BattleDeploymentBucketRole3[bucket3Count++] = (int)unitRecord;
       }
-      ++v5;
-      v4 = (__int16 *)((char *)v4 + 31);
+      ++unitIndex;
+      unitRecord = (__int16 *)((char *)unitRecord + 31);
     }
-    while ( v5 < a2 );
+    while ( unitIndex < unitCount );
   }
   return result;
 }
@@ -6374,67 +6374,67 @@ int  Battle_BuildRoleDeploymentBuckets(int a1, int a2, unsigned __int8 a3)
 // 54386C: using guessed type int dword_54386C[];
 
 //----- (0043D560) --------------------------------------------------------
-signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *a1, _DWORD *a2, int a3, int *a4)
+signed int  Battle_PlaceUnitAtNextOpenDeploymentTile(unsigned __int8 *unitRecord, _DWORD *columnCursor, int isAttackerSide, int *rowCursor)
 {
-  int v5; // ebp
+  int tileY; // ebp
   int v6; // edx
   int v7; // ecx
-  int v8; // ebp
+  int tileX2; // ebp
   char v9; // al
   signed int result; // eax
   int v11; // edx
   char v12; // al
   int v14; // [esp+8h] [ebp-18h]
-  int v15; // [esp+Ch] [ebp-14h]
+  int tileX; // [esp+Ch] [ebp-14h]
 
   while ( 1 )
   {
     while ( 1 )
     {
-      v5 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(g_MapData + 804) - 3;
-      v15 = *(_DWORD *)(g_MapData + 800) / 2 + *a2;
-      if ( v15 < *(_DWORD *)(g_MapData + 800) )
+      tileY = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(g_MapData + 804) - 3;
+      tileX = *(_DWORD *)(g_MapData + 800) / 2 + *columnCursor;
+      if ( tileX < *(_DWORD *)(g_MapData + 800) )
         break;
-      *a2 = 0;
-      v6 = ++*a4 % 3;
-      *a4 = v6;
+      *columnCursor = 0;
+      v6 = ++*rowCursor % 3;
+      *rowCursor = v6;
     }
-    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)a1, v5, v15) )
+    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)unitRecord, tileY, tileX) )
     {
-      v9 = a3 ? 2 : 6;
-      result = Battle_PlaceUnit(a1, v5, v9, v15);
+      v9 = isAttackerSide ? 2 : 6;
+      result = Battle_PlaceUnit(unitRecord, tileY, v9, tileX);
       if ( result )
         break;
     }
     while ( 1 )
     {
-      v7 = a3 ? 2 - *a4 : *a4 + *(_DWORD *)(g_MapData + 804) - 3;
-      v8 = *(_DWORD *)(g_MapData + 800) / 2 - *a2;
+      v7 = isAttackerSide ? 2 - *rowCursor : *rowCursor + *(_DWORD *)(g_MapData + 804) - 3;
+      tileX2 = *(_DWORD *)(g_MapData + 800) / 2 - *columnCursor;
       v14 = v7;
-      if ( v8 >= 0 )
+      if ( tileX2 >= 0 )
         break;
-      *a2 = 0;
-      v11 = ++*a4 % 3;
-      *a4 = v11;
+      *columnCursor = 0;
+      v11 = ++*rowCursor % 3;
+      *rowCursor = v11;
     }
-    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)a1, v7, v8) )
+    if ( UnitBattle_GetTileMoveCostOrZero(*(__int16 *)unitRecord, v7, tileX2) )
     {
-      v12 = a3 ? 2 : 6;
-      result = Battle_PlaceUnit(a1, v14, v12, v8);
+      v12 = isAttackerSide ? 2 : 6;
+      result = Battle_PlaceUnit(unitRecord, v14, v12, tileX2);
       if ( result )
       {
-        ++*a2;
+        ++*columnCursor;
         return result;
       }
     }
-    ++*a2;
+    ++*columnCursor;
   }
   return result;
 }
 // 532048: using guessed type int g_MapData;
 
 //----- (0043D6E0) --------------------------------------------------------
-int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
+int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 deployMode, int placementSide)
 {
   int v2; // edi
   int v3; // ebx
@@ -6447,7 +6447,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
   int v10; // eax
   unsigned int v11; // edx
   int v12; // ebp
-  int v13; // [esp+0h] [ebp-44h] BYREF
+  int rowCursor; // [esp+0h] [ebp-44h] BYREF
   int v14; // [esp+4h] [ebp-40h] BYREF
   int v15; // [esp+8h] [ebp-3Ch]
   int v16; // [esp+Ch] [ebp-38h]
@@ -6459,13 +6459,13 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
   int v22; // [esp+24h] [ebp-20h]
   int v23; // [esp+28h] [ebp-1Ch]
   int v24; // [esp+2Ch] [ebp-18h]
-  unsigned __int8 v25; // [esp+30h] [ebp-14h]
+  unsigned __int8 deployModeCopy; // [esp+30h] [ebp-14h]
   unsigned __int8 *candidate;
   unsigned __int8 *best_candidate;
 
-  v25 = a1;
-  v17 = a2;
-  v13 = 0;
+  deployModeCopy = deployMode;
+  v17 = placementSide;
+  rowCursor = 0;
   v22 = 1;
   v16 = 48;
   do
@@ -6473,7 +6473,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
     v14 = 0;
     v21 = 0;
     v20 = 0;
-    v13 = (v13 + 1) % 3;
+    rowCursor = (rowCursor + 1) % 3;
     v18 = v16;
     v19 = v16;
     do
@@ -6495,8 +6495,8 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
             v4 = v5;
           }
           candidate = BattleDeploymentBucketReadPointer(v2);
-          v8 = 7 * v25 + (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)candidate];
-          v24 = 7 * v25;
+          v8 = 7 * deployModeCopy + (unsigned __int8)g_UnitTypeRole[88 * *(__int16 *)candidate];
+          v24 = 7 * deployModeCopy;
           best_candidate = BattleDeploymentBucketReadPointer(48 * v3 + 4 * v4);
           v9 = (char *)best_candidate;
           v10 = 88 * *(__int16 *)v9;
@@ -6530,7 +6530,7 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
         v7 = 48 * v3 + 4 * v4;
         if ( *(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + v7) )
         {
-          result = Battle_PlaceUnitAtNextOpenDeploymentTile(BattleDeploymentBucketReadPointer(v7), &v14, v17, &v13);
+          result = Battle_PlaceUnitAtNextOpenDeploymentTile(BattleDeploymentBucketReadPointer(v7), &v14, v17, &rowCursor);
           *(int *)((char *)g_BattleDeploymentBucketStorage_5437DC + v7) = 0;
         }
       }
@@ -6547,12 +6547,12 @@ int  Battle_PlaceRoleDeploymentBuckets(unsigned __int8 a1, int a2)
 // 5437DC: using guessed type int dword_5437DC[];
 
 //----- (0043D8C0) --------------------------------------------------------
-int  Building_HandleGateDoorDialogClose_v1(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v1(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_GateDoorDialogExitFlag_V1 = v4;
   return result;
 }
@@ -6560,61 +6560,61 @@ int  Building_HandleGateDoorDialogClose_v1(int a1, int a2)
 // 5438A4: using guessed type int dword_5438A4;
 
 //----- (0043D8E0) --------------------------------------------------------
-int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v1(int buildingPtr, int a2, DWORD renderContext)
 {
-  int v4; // esi
+  int useChrTheme; // esi
   int v5; // ecx
-  char *v6; // edx
-  int v7; // edi
+  char *backgroundPath; // edx
+  int renderSurface; // edi
   int v8; // ecx
   _DWORD *v9; // eax
   int v10; // ecx
-  char v11; // bl
-  CHAR *v12; // eax
+  char spriteSetByte; // bl
+  CHAR *palettePath; // eax
   int v13; // ecx
   int v14; // ecx
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
   int v18; // ecx
-  unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
+  unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
-  if ( v4 )
-    v6 = aCastle_chrDw_3;
+  if ( useChrTheme )
+    backgroundPath = aCastle_chrDw_3;
   else
-    v6 = aCastle_pogDw_3;
-  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
-  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
-  v11 = (char)v9;
+    backgroundPath = aCastle_pogDw_3;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
+  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
+  spriteSetByte = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
   g_GateDoorDialogV1SpriteSet = (int)v9;
-  if ( v4 )
-    v12 = aCastle_chrDw_5;
+  if ( useChrTheme )
+    palettePath = aCastle_chrDw_5;
   else
-    v12 = aCastle_pogDw_5;
-  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
-  Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
-  Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
+    palettePath = aCastle_pogDw_5;
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
+  Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  Render_ReleaseSurface(8, a3);
-  UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_6);
-  Render_ReleaseSurface(10, a3);
+  Render_ReleaseSurface(8, renderContext);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_6);
+  Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V1);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   g_GateDoorDialogExitFlag_V1 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V1, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V1, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V1 );
   DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV1SpriteSet);
@@ -6641,12 +6641,12 @@ int  Building_ShowGateDoorDialog_v1(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DAC0) --------------------------------------------------------
-int  Building_HandleGateDoorDialogClose_v2(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v2(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_GateDoorDialogExitFlag_V2 = v4;
   return result;
 }
@@ -6654,61 +6654,61 @@ int  Building_HandleGateDoorDialogClose_v2(int a1, int a2)
 // 5438B0: using guessed type int dword_5438B0;
 
 //----- (0043DAE0) --------------------------------------------------------
-int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v2(int buildingPtr, int a2, DWORD renderContext)
 {
-  int v4; // esi
+  int useChrTheme; // esi
   int v5; // ecx
-  char *v6; // edx
-  int v7; // edi
+  char *backgroundPath; // edx
+  int renderSurface; // edi
   int v8; // ecx
   _DWORD *v9; // eax
   int v10; // ecx
-  char v11; // bl
-  CHAR *v12; // eax
+  char spriteSetByte; // bl
+  CHAR *palettePath; // eax
   int v13; // ecx
   int v14; // ecx
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
   int v18; // ecx
-  unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
+  unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
-  if ( v4 )
-    v6 = aCastle_chrDw_6;
+  if ( useChrTheme )
+    backgroundPath = aCastle_chrDw_6;
   else
-    v6 = aCastle_pogDw_6;
-  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
-  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
-  v11 = (char)v9;
+    backgroundPath = aCastle_pogDw_6;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
+  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
+  spriteSetByte = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
   g_GateDoorDialogV2SpriteSet = (int)v9;
-  if ( v4 )
-    v12 = aCastle_chrDw_8;
+  if ( useChrTheme )
+    palettePath = aCastle_chrDw_8;
   else
-    v12 = aCastle_pogDw_8;
-  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
-  Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
-  Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
+    palettePath = aCastle_pogDw_8;
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
+  Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  Render_ReleaseSurface(8, a3);
-  UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_7);
-  Render_ReleaseSurface(10, a3);
+  Render_ReleaseSurface(8, renderContext);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_7);
+  Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V2);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   g_GateDoorDialogExitFlag_V2 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V2, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V2, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V2 );
   DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV2SpriteSet);
@@ -6735,12 +6735,12 @@ int  Building_ShowGateDoorDialog_v2(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DCC0) --------------------------------------------------------
-int  Building_HandleGateDoorDialogClose_v3(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v3(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_GateDoorDialogExitFlag_V3 = v4;
   return result;
 }
@@ -6748,61 +6748,61 @@ int  Building_HandleGateDoorDialogClose_v3(int a1, int a2)
 // 5438BC: using guessed type int dword_5438BC;
 
 //----- (0043DCE0) --------------------------------------------------------
-int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v3(int buildingPtr, int a2, DWORD renderContext)
 {
-  int v4; // esi
+  int useChrTheme; // esi
   int v5; // ecx
-  char *v6; // edx
-  int v7; // edi
+  char *backgroundPath; // edx
+  int renderSurface; // edi
   int v8; // ecx
   _DWORD *v9; // eax
   int v10; // ecx
-  char v11; // bl
-  CHAR *v12; // eax
+  char spriteSetByte; // bl
+  CHAR *palettePath; // eax
   int v13; // ecx
   int v14; // ecx
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
   int v18; // ecx
-  unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
+  unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
-  if ( v4 )
-    v6 = aCastle_chrDw_9;
+  if ( useChrTheme )
+    backgroundPath = aCastle_chrDw_9;
   else
-    v6 = aCastle_pogDw_9;
-  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
-  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
-  v11 = (char)v9;
+    backgroundPath = aCastle_pogDw_9;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
+  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
+  spriteSetByte = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
   g_GateDoorDialogV3SpriteSet = (int)v9;
-  if ( v4 )
-    v12 = aCastle_chrD_11;
+  if ( useChrTheme )
+    palettePath = aCastle_chrD_11;
   else
-    v12 = aCastle_pogD_11;
-  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
-  Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
-  Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
+    palettePath = aCastle_pogD_11;
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
+  Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  Render_ReleaseSurface(8, a3);
-  UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_8);
-  Render_ReleaseSurface(10, a3);
+  Render_ReleaseSurface(8, renderContext);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_8);
+  Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V3);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   g_GateDoorDialogExitFlag_V3 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V3, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V3, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V3 );
   DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV3SpriteSet);
@@ -6829,12 +6829,12 @@ int  Building_ShowGateDoorDialog_v3(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043DEC0) --------------------------------------------------------
-int  Building_HandleGateDoorDialogClose_v4(int a1, int a2)
+int  Building_HandleGateDoorDialogClose_v4(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_GateDoorDialogExitFlag_V4 = v4;
   return result;
 }
@@ -6842,61 +6842,61 @@ int  Building_HandleGateDoorDialogClose_v4(int a1, int a2)
 // 5438C8: using guessed type int dword_5438C8;
 
 //----- (0043DEE0) --------------------------------------------------------
-int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
+int  Building_ShowGateDoorDialog_v4(int buildingPtr, int a2, DWORD renderContext)
 {
-  int v4; // esi
+  int useChrTheme; // esi
   int v5; // ecx
-  char *v6; // edx
-  int v7; // edi
+  char *backgroundPath; // edx
+  int renderSurface; // edi
   int v8; // ecx
   _DWORD *v9; // eax
   int v10; // ecx
-  char v11; // bl
-  CHAR *v12; // eax
+  char spriteSetByte; // bl
+  CHAR *palettePath; // eax
   int v13; // ecx
   int v14; // ecx
   int v15; // edx
   int v16; // ecx
   int v17; // ecx
   int v18; // ecx
-  unsigned __int8 v20[1040]; // [esp+0h] [ebp-410h] BYREF
+  unsigned __int8 paletteBuffer[1040]; // [esp+0h] [ebp-410h] BYREF
 
-  v4 = *(_DWORD *)(1423 * *(unsigned __int8 *)(a1 + 2) + gameData + 140063);
+  useChrTheme = *(_DWORD *)(1423 * *(unsigned __int8 *)(buildingPtr + 2) + gameData + 140063);
   _wcpp_4_ctor_array__(a2, 256);
-  if ( v4 )
-    v6 = aCastle_chrD_12;
+  if ( useChrTheme )
+    backgroundPath = aCastle_chrD_12;
   else
-    v6 = aCastle_pogD_12;
-  v7 = *(_DWORD *)(g_PrimaryRenderSurface + 184);
-  (*(void (__fastcall **)(_DWORD, char *, int))(v7 + 48))(0, v6, v5);
-  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)v20, a3);
-  v11 = (char)v9;
+    backgroundPath = aCastle_pogD_12;
+  renderSurface = *(_DWORD *)(g_PrimaryRenderSurface + 184);
+  (*(void (__fastcall **)(_DWORD, char *, int))(renderSurface + 48))(0, backgroundPath, v5);
+  v9 = (_DWORD *)Mem_Alloc(4112, v8, (char)paletteBuffer, renderContext);
+  spriteSetByte = (char)v9;
   if ( v9 )
     v9 = DLXSpriteSet_Load(v9, (char)v9);
   g_GateDoorDialogV4SpriteSet = (int)v9;
-  if ( v4 )
-    v12 = aCastle_chrD_14;
+  if ( useChrTheme )
+    palettePath = aCastle_chrD_14;
   else
-    v12 = aCastle_pogD_14;
-  Palette_LoadOrBuildBlendLookupTable(v12, (int)v20, v10, a3);
-  Render_LoadResourceSprite_v4(10, v20, v13, v11, a3);
-  Render_LoadResourceSprite_v4(8, v20, v14, v11, a3);
+    palettePath = aCastle_pogD_14;
+  Palette_LoadOrBuildBlendLookupTable(palettePath, (int)paletteBuffer, v10, renderContext);
+  Render_LoadResourceSprite_v4(10, paletteBuffer, v13, spriteSetByte, renderContext);
+  Render_LoadResourceSprite_v4(8, paletteBuffer, v14, spriteSetByte, renderContext);
   g_RenderDevice = (_UNKNOWN *)g_PrimaryRenderSurface;
-  Render_ReleaseSurface(8, a3);
-  UI_DrawTextFmt(v7, 193, 439, 80, 3, (int)aS_9);
-  Render_ReleaseSurface(10, a3);
+  Render_ReleaseSurface(8, renderContext);
+  UI_DrawTextFmt(renderSurface, 193, 439, 80, 3, (int)aS_9);
+  Render_ReleaseSurface(10, renderContext);
   UI_DrawFormattedTokenLine(95, v15, v16, 140);
   UIWidgetTable_InitDrawStates(g_GateDoorDialogWidgetTable_V4);
   (*(void (**)(void))(*((_DWORD *)g_RenderDevice + 46) + 36))();
-  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, v20, 20);
-  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)v20, v17, a3);
+  Palette_FadeInFromBlack((int *)&g_MainRenderDevice, paletteBuffer, 20);
+  RenderState_LoadOrRenderCursorLabelSprite((int)g_RenderState, (int)paletteBuffer, v17, renderContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   Render_Present((int)g_RenderState);
   g_GateDoorDialogExitFlag_V4 = v18;
   do
   {
     DD_Pump((int)g_RenderState, 0);
-    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V4, a3);
+    UIWidgetTable_PollHoverAndActions(g_GateDoorDialogWidgetTable_V4, renderContext);
   }
   while ( !g_GateDoorDialogExitFlag_V4 );
   DLXSpriteSet_ReleaseAndClear(&g_GateDoorDialogV4SpriteSet);
@@ -6923,31 +6923,31 @@ int  Building_ShowGateDoorDialog_v4(int a1, int a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (0043E0C0) --------------------------------------------------------
-BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1)
+BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *building)
 {
-  int *v2; // esi
+  int *neighborOffsets; // esi
   int i; // ebp
-  int v4; // ebx
-  int v5; // ecx
+  int neighborX; // ebx
+  int neighborY; // ecx
 
-  if ( a1[4] )
-    v2 = (int *)&g_LargeBuildingNeighborOffsets;
+  if ( building[4] )
+    neighborOffsets = (int *)&g_LargeBuildingNeighborOffsets;
   else
-    v2 = Map_NeighborDX;
+    neighborOffsets = Map_NeighborDX;
   for ( i = 0; i < 12; ++i )
   {
-    v4 = *v2 + *a1;
-    v5 = v2[1] + a1[1];
-    if ( v4 >= 0
-      && v4 < *(_DWORD *)(gameData + 140000)
-      && v5 >= 0
-      && v5 < *(_DWORD *)(gameData + 140004)
-      && *(unsigned __int16 *)(TILE_INDEX(v4, v5)) == 0xFFFF
-      && Map_GetUnitTileMoveCostOrZero(a1[2], 0, v5, v4) )
+    neighborX = *neighborOffsets + *building;
+    neighborY = neighborOffsets[1] + building[1];
+    if ( neighborX >= 0
+      && neighborX < *(_DWORD *)(gameData + 140000)
+      && neighborY >= 0
+      && neighborY < *(_DWORD *)(gameData + 140004)
+      && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
+      && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
       break;
     }
-    v2 += 2;
+    neighborOffsets += 2;
   }
   return i != 12;
 }
@@ -6955,18 +6955,18 @@ BOOL  Building_HasFreeAdjacentExitTile(unsigned __int8 *a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E160) --------------------------------------------------------
-signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3)
+signed int  Building_UnitsLeave(unsigned __int8 *building, int *exitSlots, double a3)
 {
-  int *v4; // esi
+  int *neighborOffset; // esi
   int i; // edi
-  int v6; // ebx
-  int v7; // ecx
+  int neighborX; // ebx
+  int neighborY; // ecx
   int *v8; // edx
-  int v9; // edi
-  int v10; // esi
-  char v11; // al
-  int *v12; // eax
-  int v13; // edx
+  int spawnY; // edi
+  int spawnX; // esi
+  char facing; // al
+  int *slotIndexPtr; // eax
+  int movedCount; // edx
   __int16 *v14; // ebx
   unsigned __int8 *v15; // esi
   int v16; // esi
@@ -6977,75 +6977,75 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3)
   double v21; // st7
   double v22; // st7
   int v23; // ecx
-  int *v25; // [esp+0h] [ebp-20h]
-  __int16 *v27; // [esp+8h] [ebp-18h]
+  int *neighborOffsets; // [esp+0h] [ebp-20h]
+  __int16 *newStackRecord; // [esp+8h] [ebp-18h]
 
-  Debug_Log(a2[3], a2[2], (DWORD)a1, (int)aBuildingUnitsLeave);
-  if ( a1[4] )
-    v25 = (int *)&g_LargeBuildingNeighborOffsets;
+  Debug_Log(exitSlots[3], exitSlots[2], (DWORD)building, (int)aBuildingUnitsLeave);
+  if ( building[4] )
+    neighborOffsets = (int *)&g_LargeBuildingNeighborOffsets;
   else
-    v25 = Map_NeighborDX;
-  v4 = v25;
+    neighborOffsets = Map_NeighborDX;
+  neighborOffset = neighborOffsets;
   for ( i = 0; i < 12; ++i )
   {
-    v6 = *v4 + *a1;
-    v7 = v4[1] + a1[1];
-    if ( v6 >= 0
-      && v6 < *(_DWORD *)(gameData + 140000)
-      && v7 >= 0
-      && v7 < *(_DWORD *)(gameData + 140004)
-      && *(unsigned __int16 *)(TILE_INDEX(v6, v7)) == 0xFFFF
-      && Map_GetUnitTileMoveCostOrZero(a1[2], 0, v7, v6) )
+    neighborX = *neighborOffset + *building;
+    neighborY = neighborOffset[1] + building[1];
+    if ( neighborX >= 0
+      && neighborX < *(_DWORD *)(gameData + 140000)
+      && neighborY >= 0
+      && neighborY < *(_DWORD *)(gameData + 140004)
+      && *(unsigned __int16 *)(TILE_INDEX(neighborX, neighborY)) == 0xFFFF
+      && Map_GetUnitTileMoveCostOrZero(building[2], 0, neighborY, neighborX) )
     {
       break;
     }
-    v4 += 2;
+    neighborOffset += 2;
   }
   if ( i == 12 )
     return -1;
-  v8 = &v25[2 * i];
-  v9 = a1[1] + v8[1];
-  v10 = *a1 + *v8;
-  v11 = Facing_DirectionFromDelta8(*v8, v8[1]);
-  Diagnostics_TraceWorldMapActionEvent("building_units_leave_request", -1, *a1, a1[1], a2[0]);
-  Unit_Create(0xFFFFFFFF, a1[2], v10, v11, v9);
-  v12 = a2;
-  v13 = 0;
-  v27 = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(v10, v9)) + gameData + 147174);
+  v8 = &neighborOffsets[2 * i];
+  spawnY = building[1] + v8[1];
+  spawnX = *building + *v8;
+  facing = Facing_DirectionFromDelta8(*v8, v8[1]);
+  Diagnostics_TraceWorldMapActionEvent("building_units_leave_request", -1, *building, building[1], exitSlots[0]);
+  Unit_Create(0xFFFFFFFF, building[2], spawnX, facing, spawnY);
+  slotIndexPtr = exitSlots;
+  movedCount = 0;
+  newStackRecord = (__int16 *)(725 * *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)) + gameData + 147174);
   Diagnostics_TraceWorldMapActionEvent(
     "building_units_leave_spawn",
-    *(unsigned __int16 *)(TILE_INDEX(v10, v9)),
-    v10,
-    v9,
-    a2[0]);
-  v14 = v27 + 3;
-  if ( *a2 != -1 )
+    *(unsigned __int16 *)(TILE_INDEX(spawnX, spawnY)),
+    spawnX,
+    spawnY,
+    exitSlots[0]);
+  v14 = newStackRecord + 3;
+  if ( *exitSlots != -1 )
   {
     do
     {
-      v15 = &a1[31 * *v12 + 18];
+      v15 = &building[31 * *slotIndexPtr + 18];
       qmemcpy(v14, v15, 0x1Cu);
       v15 += 28;
       v14[14] = *(_WORD *)v15;
       *((_BYTE *)v14 + 30) = v15[2];
-      *(_WORD *)&a1[31 * *v12 + 18] = -1;
-      BUILDING_GARRISON_SERVICE_STATE(a1, *v12) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
-      v16 = *v12++;
-      ++v13;
+      *(_WORD *)&building[31 * *slotIndexPtr + 18] = -1;
+      BUILDING_GARRISON_SERVICE_STATE(building, *slotIndexPtr) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
+      v16 = *slotIndexPtr++;
+      ++movedCount;
       v14 = (__int16 *)((char *)v14 + 31);
-      BUILDING_GARRISON_SERVICE_STATE(a1, v16) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
+      BUILDING_GARRISON_SERVICE_STATE(building, v16) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
     }
-    while ( v13 < 10 && *v12 != -1 );
+    while ( movedCount < 10 && *slotIndexPtr != -1 );
   }
-  UnitStack_ClearRemainingActionPoints(v27, (DWORD)a1, a3);
-  Rules_LinkArmyFact(v27, v17, v18, a3, (char)v14, (DWORD)a1);
-  Rules_SyncArmyFactStrength(v27, 0, v19, (char)v14, (DWORD)a1, a3);
-  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000, v20, v21);
-  UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])));
-  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(TILE_INDEX(*v27, v27[1])), v22);
-  Debug_Log(v23, (char)v14, (DWORD)a1, (int)aBuildings_unit);
-  Unit_DebugDumpFormationSizes((int)v27, (DWORD)a1);
-  return *(unsigned __int16 *)(TILE_INDEX(*v27, v27[1]));
+  UnitStack_ClearRemainingActionPoints(newStackRecord, (DWORD)building, a3);
+  Rules_LinkArmyFact(newStackRecord, v17, v18, a3, (char)v14, (DWORD)building);
+  Rules_SyncArmyFactStrength(newStackRecord, 0, v19, (char)v14, (DWORD)building, a3);
+  Building_OnGarrisonChange(*(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - 0x8000, v20, v21);
+  UnitStack_UpdateVision(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])));
+  UnitStack_RevealHiddenEnemiesAndAttackAdjacent(*(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1])), v22);
+  Debug_Log(v23, (char)v14, (DWORD)building, (int)aBuildings_unit);
+  Unit_DebugDumpFormationSizes((int)newStackRecord, (DWORD)building);
+  return *(unsigned __int16 *)(TILE_INDEX(*newStackRecord, newStackRecord[1]));
 }
 // 43E33C: variable 'v17' is possibly undefined
 // 43E33C: variable 'v18' is possibly undefined
@@ -7058,37 +7058,37 @@ signed int  Building_UnitsLeave(unsigned __int8 *a1, int *a2, double a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E4B0) --------------------------------------------------------
-int  Building_CountFreeGarrisonSlots(int a1)
+int  Building_CountFreeGarrisonSlots(int buildingId)
 {
-  int v1; // esi
-  int v2; // ebx
-  int v3; // eax
+  int buildingRecord; // esi
+  int freeCount; // ebx
+  int slotPtr; // eax
   int i; // edx
-  int v5; // ecx
+  int slotLimit; // ecx
 
-  v1 = UNIT_RECORD(a1);
-  v2 = 0;
-  v3 = v1;
+  buildingRecord = UNIT_RECORD(buildingId);
+  freeCount = 0;
+  slotPtr = buildingRecord;
   for ( i = 0; ; ++i )
   {
-    v5 = *(_BYTE *)(v1 + 4) ? 12 : 10;
-    if ( i >= v5 )
+    slotLimit = *(_BYTE *)(buildingRecord + 4) ? 12 : 10;
+    if ( i >= slotLimit )
       break;
-    if ( *(__int16 *)(v3 + 18) == -1 )
-      ++v2;
-    v3 += 31;
+    if ( *(__int16 *)(slotPtr + 18) == -1 )
+      ++freeCount;
+    slotPtr += 31;
   }
-  return v2;
+  return freeCount;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E500) --------------------------------------------------------
 signed int  Building_UnitGetInto(
-        int a1,
-        int a2,
+        int unitStackId,
+        int buildingId,
         char a3,
         signed int i,
-        double a5)
+        double gameTime)
 {
   int stack_record;
   int building_record;
@@ -7103,13 +7103,13 @@ signed int  Building_UnitGetInto(
   (void)i;
 
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-enter");
-  Debug_Log(a1, a2, (DWORD)a1, (int)aBuilding_unitg);
+  Debug_Log(unitStackId, buildingId, (DWORD)unitStackId, (int)aBuilding_unitg);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-debug-log");
-  Render_DrawSprite_v3(a1, a1);
+  Render_DrawSprite_v3(unitStackId, unitStackId);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-debug-dump");
 
-  stack_record = UNIT_STACK(a1);
-  building_record = BUILDING_RECORD(a2);
+  stack_record = UNIT_STACK(unitStackId);
+  building_record = BUILDING_RECORD(buildingId);
   stack = (__int16 *)stack_record;
 
   if ( *(_DWORD *)(stack_record + UNIT_STACK_PATH_OFFSET) )
@@ -7145,18 +7145,18 @@ signed int  Building_UnitGetInto(
   }
 
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-compact-1");
-  Unit_CompactSquad(stack, 0, a5);
+  Unit_CompactSquad(stack, 0, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-compact-1");
   squad_count = Unit_GetSquadCount(stack_record);
   if ( !squad_count )
   {
     Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-unlink-empty");
-    Rules_UnlinkArmyFact(stack, a5);
+    Rules_UnlinkArmyFact(stack, gameTime);
     Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-after-unlink-empty");
     return 1;
   }
 
-  if ( squad_count <= Building_CountFreeGarrisonSlots(a2) )
+  if ( squad_count <= Building_CountFreeGarrisonSlots(buildingId) )
   {
     for ( source_slot = 0; source_slot < UNIT_STACK_SLOT_COUNT; ++source_slot )
     {
@@ -7177,16 +7177,16 @@ signed int  Building_UnitGetInto(
   }
 
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-compact-2");
-  Unit_CompactSquad(stack, 0, a5);
+  Unit_CompactSquad(stack, 0, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-link-finalize");
-  Rules_LinkArmyFinalize(stack, a5);
+  Rules_LinkArmyFinalize(stack, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-link-fact");
-  Rules_LinkArmyFact(stack, 0, 0, a5, 0, (DWORD)stack_record);
+  Rules_LinkArmyFact(stack, 0, 0, gameTime, 0, (DWORD)stack_record);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-sync-strength");
-  Rules_SyncArmyFactStrength(stack, 0, 0, 0, (DWORD)stack_record, a5);
+  Rules_SyncArmyFactStrength(stack, 0, 0, 0, (DWORD)stack_record, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-before-garrison-change");
   if ( *(_DWORD *)(building_record + 463) )
-    Building_OnGarrisonChange(a2, 0, a5);
+    Building_OnGarrisonChange(buildingId, 0, gameTime);
   Diagnostics_TraceBootstrapEvent("Building_UnitGetInto-done");
   return 1;
 }
@@ -7203,24 +7203,24 @@ signed int  Building_UnitGetInto(
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E770) --------------------------------------------------------
-signed int  Building_CanAcceptUnitStack(int a1, int a2)
+signed int  Building_CanAcceptUnitStack(int stackIndex, int buildingId)
 {
-  int v2; // ecx
-  int v3; // edx
-  unsigned __int8 v4; // al
+  int buildingRecord; // ecx
+  int stackRecord; // edx
+  unsigned __int8 buildingType; // al
   int v5; // edx
   int v6; // edx
 
-  v2 = UNIT_RECORD(a2);
-  v3 = 725 * a1 + gameData + 147174;
-  if ( *(_WORD *)(v2 + 16) )
+  buildingRecord = UNIT_RECORD(buildingId);
+  stackRecord = 725 * stackIndex + gameData + 147174;
+  if ( *(_WORD *)(buildingRecord + 16) )
     return 0;
-  v4 = *(_BYTE *)(v2 + 4);
-  if ( !v4 )
-    return UnitStack_HasNormalCombatUnits(v3);
-  if ( v4 > 1u )
-    return v4 == 2;
-  if ( UnitStack_HasPeasantCargo(v3) )
+  buildingType = *(_BYTE *)(buildingRecord + 4);
+  if ( !buildingType )
+    return UnitStack_HasNormalCombatUnits(stackRecord);
+  if ( buildingType > 1u )
+    return buildingType == 2;
+  if ( UnitStack_HasPeasantCargo(stackRecord) )
     return 0;
   return UnitStack_HasNormalCombatUnits(v5) || UnitStack_HasGoldCargo(v5) || UnitStack_HasSpecialPersonageUnits(v6);
 }
@@ -7229,60 +7229,60 @@ signed int  Building_CanAcceptUnitStack(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E820) --------------------------------------------------------
-signed int  Building_HasUnitLicence(int a1, unit_type a2)
+signed int  Building_HasUnitLicence(int building, unit_type unitType)
 {
-  int v2; // esi
-  int v3; // ecx
+  int licenceEnd; // esi
+  int hasLicence; // ecx
 
-  v2 = a1 + 12;
-  v3 = 0;
+  licenceEnd = building + 12;
+  hasLicence = 0;
   do
   {
-    if ( *(char *)(a1 + 402) == a2 )
-      v3 = 1;
-    ++a1;
+    if ( *(char *)(building + 402) == unitType )
+      hasLicence = 1;
+    ++building;
   }
-  while ( a1 != v2 );
-  return v3;
+  while ( building != licenceEnd );
+  return hasLicence;
 }
 
 //----- (0043E850) --------------------------------------------------------
-BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4)
+BOOL  Building_BuyUnitLicence(int building, unit_type unitType, int a3, DWORD gameContext)
 {
   int v5; // edx
   BOOL result; // eax
-  int v7; // eax
-  unsigned int v8; // esi
+  int nationData; // eax
+  unsigned int licenceCost; // esi
   int v9; // edx
-  int v10; // eax
+  int slotIndex; // eax
 
-  Debug_Log(a3, a1, a4, (int)aBuildingBuyUnitLicence);
-  if ( Building_HasUnitLicence(a1, a2) )
+  Debug_Log(a3, building, gameContext, (int)aBuildingBuyUnitLicence);
+  if ( Building_HasUnitLicence(building, unitType) )
     return 0;
-  result = Building_IsUnitLicenceEligible((char *)a1, a2);
+  result = Building_IsUnitLicenceEligible((char *)building, unitType);
   if ( result )
   {
-    v7 = gameData + 1423 * *(unsigned __int8 *)(a1 + 2);
-    v8 = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * a2];
-    if ( !*(_DWORD *)(v7 + 140051) && *(int *)(v7 + 140055) >= 2 )
-      v8 = (int)(75 * v8) / 100;
-    if ( v8 > *(_DWORD *)(a1 + 438) )
+    nationData = gameData + 1423 * *(unsigned __int8 *)(building + 2);
+    licenceCost = (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * unitType];
+    if ( !*(_DWORD *)(nationData + 140051) && *(int *)(nationData + 140055) >= 2 )
+      licenceCost = (int)(75 * licenceCost) / 100;
+    if ( licenceCost > *(_DWORD *)(building + 438) )
       return 0;
-    v9 = a1;
-    v10 = 0;
+    v9 = building;
+    slotIndex = 0;
     while ( *(char *)(v9 + 402) != -1 )
     {
-      ++v10;
+      ++slotIndex;
       ++v9;
-      if ( v10 >= 12 )
+      if ( slotIndex >= 12 )
       {
-        if ( v10 == 12 )
+        if ( slotIndex == 12 )
           return 0;
         break;
       }
     }
-    *(_DWORD *)(a1 + 438) -= v8;
-    *(_BYTE *)(a1 + v10 + 402) = a2;
+    *(_DWORD *)(building + 438) -= licenceCost;
+    *(_BYTE *)(building + slotIndex + 402) = unitType;
     return 1;
   }
   return result;
@@ -7293,165 +7293,165 @@ BOOL  Building_BuyUnitLicence(int a1, unit_type a2, int a3, DWORD a4)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043E940) --------------------------------------------------------
-int  Building_RemoveUnitLicence(int a1, unit_type a2, DWORD a3)
+int  Building_RemoveUnitLicence(int building, unit_type unitType, DWORD gameContext)
 {
   int activeProductionLicenceSlot; // eax
   int addonSlot; // edx
 
-  Debug_Log(a1, a2, a3, (int)aBuildingRemoveUnitLicence);
-  activeProductionLicenceSlot = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(a1);
-  if ( activeProductionLicenceSlot != -1 && *(signed __int8 *)(a1 + activeProductionLicenceSlot + 402) == a2 )
-    Building_StopUnitProduction(a1, a2, a3);
+  Debug_Log(building, unitType, gameContext, (int)aBuildingRemoveUnitLicence);
+  activeProductionLicenceSlot = BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building);
+  if ( activeProductionLicenceSlot != -1 && *(signed __int8 *)(building + activeProductionLicenceSlot + 402) == unitType )
+    Building_StopUnitProduction(building, unitType, gameContext);
   for ( addonSlot = 0; addonSlot < 12; ++addonSlot )
   {
-    if ( *(signed __int8 *)(a1 + addonSlot + 402) == a2 )
+    if ( *(signed __int8 *)(building + addonSlot + 402) == unitType )
     {
-      *(_BYTE *)(a1 + addonSlot + 402) = -1;
-      return a1 + addonSlot;
+      *(_BYTE *)(building + addonSlot + 402) = -1;
+      return building + addonSlot;
     }
   }
-  return a1 + 12;
+  return building + 12;
 }
 
 //----- (0043E9A0) --------------------------------------------------------
-int  Building_SetUnitProduction(int a1, char a2, DWORD a3)
+int  Building_SetUnitProduction(int building, char licenceSlot, DWORD gameContext)
 {
-  unsigned __int8 *v3; // ecx
-  int v4; // edx
+  unsigned __int8 *buildingPtr; // ecx
+  int slotIndex; // edx
   int result; // eax
 
-  v3 = (unsigned __int8 *)a1;
-  v4 = (unsigned __int8)a2;
-  Debug_Log(a1, a2, a3, (int)aBuildingSetUnitProduction);
-  BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(v3) = v4;
-  result = 1423 * v3[2];
-  BUILDING_PRODUCTION_TURNS_REMAINING(v3) = g_UnitTypeProductionTime[88 * (char)v3[v4 + 402]];
+  buildingPtr = (unsigned __int8 *)building;
+  slotIndex = (unsigned __int8)licenceSlot;
+  Debug_Log(building, licenceSlot, gameContext, (int)aBuildingSetUnitProduction);
+  BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(buildingPtr) = slotIndex;
+  result = 1423 * buildingPtr[2];
+  BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) = g_UnitTypeProductionTime[88 * (char)buildingPtr[slotIndex + 402]];
   if ( !*(_DWORD *)(result + gameData + 140051)
     && *(int *)(result + gameData + 140055) >= 1
-    && (char)BUILDING_PRODUCTION_TURNS_REMAINING(v3) > 1 )
+    && (char)BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr) > 1 )
   {
-    --BUILDING_PRODUCTION_TURNS_REMAINING(v3);
+    --BUILDING_PRODUCTION_TURNS_REMAINING(buildingPtr);
   }
   return result;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043EA10) --------------------------------------------------------
-void  Building_StopUnitProduction(int a1, char a2, DWORD a3)
+void  Building_StopUnitProduction(int building, char unitType, DWORD gameContext)
 {
-  Debug_Log(a1, a2, a3, (int)aBuildingStopUnitProduction);
-  BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(a1) = -1;
+  Debug_Log(building, unitType, gameContext, (int)aBuildingStopUnitProduction);
+  BUILDING_ACTIVE_PRODUCTION_LICENCE_SLOT_INDEX(building) = -1;
 }
 
 //----- (0043EA30) --------------------------------------------------------
-_BYTE * Building_TrainUnit(int a1, char a2, DWORD a3)
+_BYTE * Building_TrainUnit(int building, char a2, DWORD gameContext)
 {
-  int v3; // edx
+  int slotIndex; // edx
   int v4; // ecx
   _BYTE *result; // eax
-  char v6; // bl
-  char v7; // bh
+  char trainingTurns; // bl
+  char serviceStateBits; // bh
 
-  v3 = (unsigned __int8)a2;
-  v4 = a1;
-  Debug_Log(a1, a2, a3, (int)aBuildingTrainUnit);
-  result = (_BYTE *)(*(_BYTE *)(v4 + 31 * v3 + 30) & 3);
+  slotIndex = (unsigned __int8)a2;
+  v4 = building;
+  Debug_Log(building, a2, gameContext, (int)aBuildingTrainUnit);
+  result = (_BYTE *)(*(_BYTE *)(v4 + 31 * slotIndex + 30) & 3);
   if ( result != (_BYTE *)3 )
   {
-    result = (_BYTE *)(v4 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + v3);
+    result = (_BYTE *)(v4 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
     if ( *(_DWORD *)(1423 * *(unsigned __int8 *)(v4 + 2) + gameData + 140051) )
-      v6 = (*(_BYTE *)(v4 + 4) == 2) + 1;
+      trainingTurns = (*(_BYTE *)(v4 + 4) == 2) + 1;
     else
-      v6 = (*(_BYTE *)(v4 + 4) == 2) + 4;
-    v7 = *result & 0xF8;
-    *result = v7;
-    *result = v6 & BUILDING_GARRISON_TRAINING_TURNS_MASK | v7;
-    BUILDING_GARRISON_SERVICE_STATE(v4, v3) &= 0xC7u;
+      trainingTurns = (*(_BYTE *)(v4 + 4) == 2) + 4;
+    serviceStateBits = *result & 0xF8;
+    *result = serviceStateBits;
+    *result = trainingTurns & BUILDING_GARRISON_TRAINING_TURNS_MASK | serviceStateBits;
+    BUILDING_GARRISON_SERVICE_STATE(v4, slotIndex) &= 0xC7u;
   }
   return result;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043EAC0) --------------------------------------------------------
-int  Building_ClearGarrisonTrainingTimer(int result, int a2)
+int  Building_ClearGarrisonTrainingTimer(int result, int building)
 {
-  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
+  BUILDING_GARRISON_SERVICE_STATE(building, result) &= ~BUILDING_GARRISON_TRAINING_TURNS_MASK;
   return result;
 }
 
 //----- (0043EAD0) --------------------------------------------------------
-__int16  Building_RepairUnit(int a1, int a2, DWORD a3)
+__int16  Building_RepairUnit(int building, int slotIndex, DWORD gameContext)
 {
-  int v6; // eax
+  int currentHealth; // eax
   unsigned __int8 *repairTimer; // edx
   unsigned __int8 repairTurns; // al
 
-  Debug_Log(a1, a2, a3, (int)aBuildingRepairUnit);
-  v6 = *(signed __int8 *)(a1 + 31 * a2 + 27);
-  if ( v6 != 100 )
+  Debug_Log(building, slotIndex, gameContext, (int)aBuildingRepairUnit);
+  currentHealth = *(signed __int8 *)(building + 31 * slotIndex + 27);
+  if ( currentHealth != 100 )
   {
-    repairTimer = (unsigned __int8 *)(a1 + BUILDING_GARRISON_SERVICE_STATE_OFFSET + a2);
-    repairTurns = (*(_BYTE *)(a1 + 4) == 2) + 2;
+    repairTimer = (unsigned __int8 *)(building + BUILDING_GARRISON_SERVICE_STATE_OFFSET + slotIndex);
+    repairTurns = (*(_BYTE *)(building + 4) == 2) + 2;
     *repairTimer = *repairTimer & 0xC0 | ((repairTurns & 7) << 3);
   }
-  return v6;
+  return currentHealth;
 }
 
 //----- (0043EB40) --------------------------------------------------------
-int  Building_ClearGarrisonRepairTimer(int result, int a2)
+int  Building_ClearGarrisonRepairTimer(int result, int building)
 {
-  BUILDING_GARRISON_SERVICE_STATE(a2, result) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
+  BUILDING_GARRISON_SERVICE_STATE(building, result) &= ~BUILDING_GARRISON_REPAIR_TURNS_MASK;
   return result;
 }
 
 //----- (0043EB50) --------------------------------------------------------
-int  Building_CountGarrison(int a1)
+int  Building_CountGarrison(int building)
 {
-  int v1; // ebx
-  int v2; // edx
+  int garrisonEnd; // ebx
+  int count; // edx
 
-  v1 = a1 + 372;
-  v2 = 0;
+  garrisonEnd = building + 372;
+  count = 0;
   do
   {
-    if ( *(__int16 *)(a1 + 18) != -1 )
-      ++v2;
-    a1 += 31;
+    if ( *(__int16 *)(building + 18) != -1 )
+      ++count;
+    building += 31;
   }
-  while ( a1 != v1 );
-  return v2;
+  while ( building != garrisonEnd );
+  return count;
 }
 
 //----- (0043EB80) --------------------------------------------------------
-int  Building_CountSpecialPersonageGarrisonEntries(int a1)
+int  Building_CountSpecialPersonageGarrisonEntries(int building)
 {
-  int v1; // ebx
-  int v2; // ecx
-  int v3; // edx
+  int garrisonEnd; // ebx
+  int count; // ecx
+  int unitType; // edx
 
-  v1 = a1 + 372;
-  v2 = 0;
+  garrisonEnd = building + 372;
+  count = 0;
   do
   {
     while ( 1 )
     {
-      v3 = *(__int16 *)(a1 + 18);
-      if ( v3 != -1 )
+      unitType = *(__int16 *)(building + 18);
+      if ( unitType != -1 )
         break;
 LABEL_5:
-      a1 += 31;
-      if ( a1 == v1 )
-        return v2;
+      building += 31;
+      if ( building == garrisonEnd )
+        return count;
     }
-    if ( v3 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v3 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+    if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      ++v2;
+      ++count;
       goto LABEL_5;
     }
-    a1 += 31;
+    building += 31;
   }
-  while ( a1 != v1 );
-  return v2;
+  while ( building != garrisonEnd );
+  return count;
 }
 
 int  Building_DrawGarrisonRow(int a1)
@@ -7460,86 +7460,86 @@ int  Building_DrawGarrisonRow(int a1)
 }
 
 //----- (0043EBC0) --------------------------------------------------------
-int  Building_CountNonCombatGarrisonEntries(int a1)
+int  Building_CountNonCombatGarrisonEntries(int building)
 {
-  int v1; // edx
-  int v2; // ecx
-  int v3; // ebx
-  int v4; // eax
+  int slotPtr; // edx
+  int count; // ecx
+  int garrisonEnd; // ebx
+  int unitType; // eax
 
-  v1 = a1;
-  v2 = 0;
-  v3 = a1 + 372;
+  slotPtr = building;
+  count = 0;
+  garrisonEnd = building + 372;
   do
   {
     while ( 1 )
     {
-      v4 = *(__int16 *)(v1 + 18);
-      if ( v4 != -1 )
+      unitType = *(__int16 *)(slotPtr + 18);
+      if ( unitType != -1 )
         break;
 LABEL_5:
-      v1 += 31;
-      if ( v1 == v3 )
-        return v2;
+      slotPtr += 31;
+      if ( slotPtr == garrisonEnd )
+        return count;
     }
-    if ( v4 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
-      || v4 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE
-      || v4 == UNIT_TYPE_GOLD_CARGO
-      || v4 == UNIT_TYPE_PEASANT_CARGO )
+    if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
+      || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE
+      || unitType == UNIT_TYPE_GOLD_CARGO
+      || unitType == UNIT_TYPE_PEASANT_CARGO )
     {
-      ++v2;
+      ++count;
       goto LABEL_5;
     }
-    v1 += 31;
+    slotPtr += 31;
   }
-  while ( v1 != v3 );
-  return v2;
+  while ( slotPtr != garrisonEnd );
+  return count;
 }
 
 //----- (0043EC10) --------------------------------------------------------
-signed int  Building_HasSpecialPersonageGarrisonEntries(int a1)
+signed int  Building_HasSpecialPersonageGarrisonEntries(int building)
 {
-  int v1; // edx
-  int v2; // ecx
+  int slotIndex; // edx
+  int unitType; // ecx
 
-  v1 = 0;
+  slotIndex = 0;
   while ( 1 )
   {
-    v2 = *(__int16 *)(a1 + 18);
-    if ( v2 == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || v2 == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
+    unitType = *(__int16 *)(building + 18);
+    if ( unitType == UNIT_TYPE_SPECIAL_FOOT_PERSONAGE || unitType == UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
       break;
-    ++v1;
-    a1 += 31;
-    if ( v1 >= 12 )
+    ++slotIndex;
+    building += 31;
+    if ( slotIndex >= 12 )
       return 0;
   }
   return 1;
 }
 
 //----- (0043EC40) --------------------------------------------------------
-int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a3)
+int  Building_CompactGarrison(unsigned __int8 *building, unsigned __int8 *a2, double a3)
 {
-  int v3; // ebp
+  int writeIndex; // ebp
   int v4; // edx
-  unsigned __int8 *v5; // eax
+  unsigned __int8 *movePtr; // eax
   unsigned __int8 *j; // ebx
   _BYTE *v7; // edi
   _BYTE *v8; // esi
   int i; // [esp+4h] [ebp-20h]
-  unsigned __int8 *v12; // [esp+8h] [ebp-1Ch]
+  unsigned __int8 *slotPtr; // [esp+8h] [ebp-1Ch]
 
-  v3 = 0;
-  v12 = a1;
+  writeIndex = 0;
+  slotPtr = building;
   for ( i = 0; i < 11; ++i )
   {
-    if ( *((__int16 *)v12 + 9) == -1 )
+    if ( *((__int16 *)slotPtr + 9) == -1 )
     {
-      v4 = v3;
-      v5 = &a1[31 * v3];
-      for ( j = &a1[31 * v3 + 31]; v4 < 11; v7[2] = v8[2] )
+      v4 = writeIndex;
+      movePtr = &building[31 * writeIndex];
+      for ( j = &building[31 * writeIndex + 31]; v4 < 11; v7[2] = v8[2] )
       {
-        v7 = v5 + 18;
-        v5 += 31;
+        v7 = movePtr + 18;
+        movePtr += 31;
         v8 = j + 18;
         j += 31;
         ++v4;
@@ -7549,144 +7549,144 @@ int  Building_CompactGarrison(unsigned __int8 *a1, unsigned __int8 *a2, double a
         a2 = 0;
         *(_WORD *)v7 = *(_WORD *)v8;
       }
-      *((_WORD *)v5 + 9) = -1;
+      *((_WORD *)movePtr + 9) = -1;
     }
     else
     {
-      a2 = v12 + 31;
-      ++v3;
-      v12 += 31;
+      a2 = slotPtr + 31;
+      ++writeIndex;
+      slotPtr += 31;
     }
   }
   return Building_OnGarrisonChange(
-           *(unsigned __int16 *)(TILE_INDEX(*a1, a1[1])) - 0x8000,
+           *(unsigned __int16 *)(TILE_INDEX(*building, building[1])) - 0x8000,
            (int)a2,
            a3);
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043ED20) --------------------------------------------------------
-BOOL  Building_IsUnitLicenceEligible(char *a1, unit_type a2)
+BOOL  Building_IsUnitLicenceEligible(char *building, unit_type unitType)
 {
-  int v4; // eax
+  int buildingType; // eax
   int v5; // edx
-  char v6; // al
+  char requiredTechLevel; // al
   int i; // eax
-  int v8; // edx
+  int smithReqType; // edx
   int j; // eax
-  int v11; // edx
+  int workshopReqType; // edx
 
-  v4 = a1[4];
-  if ( !v4 )
+  buildingType = building[4];
+  if ( !buildingType )
     return 0;
-  v5 = 88 * a2;
-  v6 = v4 == 2
+  v5 = 88 * unitType;
+  requiredTechLevel = buildingType == 2
      ? g_UnitTypeProductionRequiredTechLevelMode2[v5]
      : g_UnitTypeProductionRequiredTechLevelOtherModes[v5];
-  if ( (unsigned __int8)(a1[444] & 7) < (unsigned __int8)v6 )
+  if ( (unsigned __int8)(building[444] & 7) < (unsigned __int8)requiredTechLevel )
     return 0;
-  if ( (a1[416] & 0x10) == 0 )
+  if ( (building[416] & 0x10) == 0 )
   {
     for ( i = 0; ; ++i )
     {
-      v8 = g_ProductionLicenceSmithsRequiredUnitTypes[i];
-      if ( v8 == -1 || v8 == a2 )
+      smithReqType = g_ProductionLicenceSmithsRequiredUnitTypes[i];
+      if ( smithReqType == -1 || smithReqType == unitType )
         break;
     }
-    if ( g_ProductionLicenceSmithsRequiredUnitTypes[i] == a2 )
+    if ( g_ProductionLicenceSmithsRequiredUnitTypes[i] == unitType )
       return 0;
   }
-  if ( (a1[416] & 4) != 0 )
+  if ( (building[416] & 4) != 0 )
     return 1;
   for ( j = 0; ; ++j )
   {
-    v11 = g_ProductionLicenceWorkshopRequiredUnitTypes[j];
-    if ( v11 == -1 || v11 == a2 )
+    workshopReqType = g_ProductionLicenceWorkshopRequiredUnitTypes[j];
+    if ( workshopReqType == -1 || workshopReqType == unitType )
       break;
   }
-  return g_ProductionLicenceWorkshopRequiredUnitTypes[j] != a2;
+  return g_ProductionLicenceWorkshopRequiredUnitTypes[j] != unitType;
 }
 
 //----- (0043EDC0) --------------------------------------------------------
-int  Building_AdjustAllGarrisonMoraleByDelta(int a1, int a2)
+int  Building_AdjustAllGarrisonMoraleByDelta(int building, int moraleDelta)
 {
   int slot; // ebp
   int slot_index; // ecx
   int result; // eax
 
-  slot = a1 + 18;
+  slot = building + 18;
   result = 0;
   for ( slot_index = 0; slot_index < 12; ++slot_index )
   {
     if ( *(__int16 *)slot != -1 )
-      result = UnitSlot_AdjustMoraleByPredicate(slot, a2, UnitSlot_PredicateAlways);
+      result = UnitSlot_AdjustMoraleByPredicate(slot, moraleDelta, UnitSlot_PredicateAlways);
     slot += 31;
   }
   return result;
 }
 
 //----- (0043EE10) --------------------------------------------------------
-int  Building_CycleAllGarrisonOrdersOnce(int a1)
+int  Building_CycleAllGarrisonOrdersOnce(int building)
 {
-  int v1; // esi
-  int v2; // edx
-  int v3; // ecx
+  int garrisonBase; // esi
+  int slotIndex; // edx
+  int slotPtr; // ecx
   int result; // eax
   int v5; // edx
   int v6; // ecx
 
-  v1 = a1 + 18;
-  v2 = 0;
-  v3 = a1;
+  garrisonBase = building + 18;
+  slotIndex = 0;
+  slotPtr = building;
   do
   {
     while ( 1 )
     {
-      result = 31 * v2;
-      if ( *(__int16 *)(v3 + 18) != -1 )
+      result = 31 * slotIndex;
+      if ( *(__int16 *)(slotPtr + 18) != -1 )
         break;
-      ++v2;
-      v3 += 31;
-      if ( v2 >= 12 )
+      ++slotIndex;
+      slotPtr += 31;
+      if ( slotIndex >= 12 )
         return result;
     }
-    result = UnitSlot_CycleOrderState(v1 + result);
-    v2 = v5 + 1;
-    v3 = v6 + 31;
+    result = UnitSlot_CycleOrderState(garrisonBase + result);
+    slotIndex = v5 + 1;
+    slotPtr = v6 + 31;
   }
-  while ( v2 < 12 );
+  while ( slotIndex < 12 );
   return result;
 }
 // 43EE41: variable 'v5' is possibly undefined
 // 43EE42: variable 'v6' is possibly undefined
 
 //----- (0043EE50) --------------------------------------------------------
-signed int  Building_GetTaxBurdenTier(int a1)
+signed int  Building_GetTaxBurdenTier(int building)
 {
-  unsigned __int16 v2; // ax
-  int v3; // edx
-  int v4; // edx
+  unsigned __int16 population; // ax
+  int populationTier; // edx
+  int thresholdIndex; // edx
   signed int result; // eax
 
-  v2 = *(_WORD *)(a1 + 430);
-  HIBYTE(v2) &= 0xFu;
-  if ( v2 >= 0x1F4u )
+  population = *(_WORD *)(building + 430);
+  HIBYTE(population) &= 0xFu;
+  if ( population >= 0x1F4u )
   {
-    if ( v2 >= 0x3E8u )
-      v3 = 2;
+    if ( population >= 0x3E8u )
+      populationTier = 2;
     else
-      v3 = 1;
+      populationTier = 1;
   }
   else
   {
-    v3 = 0;
+    populationTier = 0;
   }
-  v4 = 4 * v3;
+  thresholdIndex = 4 * populationTier;
   result = 0;
-  while ( (unsigned __int8)(*(_BYTE *)(a1 + 436) & 0x3F) > (unsigned __int8)g_SettlementTaxBurdenThresholds[v4] )
+  while ( (unsigned __int8)(*(_BYTE *)(building + 436) & 0x3F) > (unsigned __int8)g_SettlementTaxBurdenThresholds[thresholdIndex] )
   {
     ++result;
-    ++v4;
+    ++thresholdIndex;
     if ( result > 3 )
       return 3;
   }
@@ -7695,7 +7695,7 @@ signed int  Building_GetTaxBurdenTier(int a1)
 // 43EE8A: conditional instruction was optimized away because eax.4<4
 
 //----- (0043EED0) --------------------------------------------------------
-__int16  Building_UpdatePopulationGrowth(int a1)
+__int16  Building_UpdatePopulationGrowth(int buildingRecord)
 {
   uintptr_t building; // ecx
   int previous_growth; // edx/eax
@@ -7707,7 +7707,7 @@ __int16  Building_UpdatePopulationGrowth(int a1)
   unsigned __int16 population_flags; // si
   int updated_population; // eax
 
-  building = (uintptr_t)(unsigned int)a1;
+  building = (uintptr_t)(unsigned int)buildingRecord;
   previous_growth = (__int16)(16 * *(_WORD *)(building + 432)) >> 4;
   if ( previous_growth <= 0 )
     satisfaction = previous_growth / 2;
@@ -7771,38 +7771,38 @@ __int16  Building_UpdatePopulationGrowth(int a1)
 }
 
 //----- (0043F0C0) --------------------------------------------------------
-int  Building_CollectGoldIncome(int a1)
+int  Building_CollectGoldIncome(int building)
 {
-  int v2; // ecx
-  unsigned __int16 v3; // ax
-  int v4; // ecx
+  int incomeDivisor; // ecx
+  unsigned __int16 population; // ax
+  int goldIncome; // ecx
   int result; // eax
-  int v6; // esi
+  int currentGold; // esi
 
-  if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(a1 + 2) + 140051) )
-    v2 = 400;
+  if ( *(_DWORD *)(gameData + 1423 * *(unsigned __int8 *)(building + 2) + 140051) )
+    incomeDivisor = 400;
   else
-    v2 = 200;
-  v3 = *(_WORD *)(a1 + 430);
-  HIBYTE(v3) &= 0xFu;
-  v4 = (*(_BYTE *)(a1 + 436) & 0x3F) * v3 / v2;
-  result = *(char *)(a1 + 434);
+    incomeDivisor = 200;
+  population = *(_WORD *)(building + 430);
+  HIBYTE(population) &= 0xFu;
+  goldIncome = (*(_BYTE *)(building + 436) & 0x3F) * population / incomeDivisor;
+  result = *(char *)(building + 434);
   if ( result < 25 )
   {
-    result = v4 / 2;
-    v4 /= 2;
+    result = goldIncome / 2;
+    goldIncome /= 2;
   }
-  if ( (*(_BYTE *)(a1 + 435) & 7) != 0 )
-    v4 = 0;
-  v6 = *(_DWORD *)(a1 + 438);
-  *(_WORD *)(a1 + 442) = v4;
-  *(_DWORD *)(a1 + 438) = v4 + v6;
+  if ( (*(_BYTE *)(building + 435) & 7) != 0 )
+    goldIncome = 0;
+  currentGold = *(_DWORD *)(building + 438);
+  *(_WORD *)(building + 442) = goldIncome;
+  *(_DWORD *)(building + 438) = goldIncome + currentGold;
   return result;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F160) --------------------------------------------------------
-__int16  Building_UpdatePlagueState(unsigned int a1)
+__int16  Building_UpdatePlagueState(unsigned int buildingRecord)
 {
   uintptr_t building; // ecx
   unsigned int plague_state; // eax
@@ -7812,7 +7812,7 @@ __int16  Building_UpdatePlagueState(unsigned int a1)
   unsigned int result; // eax
   unsigned char building_state; // dl
 
-  building = (uintptr_t)a1;
+  building = (uintptr_t)buildingRecord;
   plague_state = *(_BYTE *)(building + 435) & 7;
   if ( plague_state )
   {
@@ -7840,85 +7840,85 @@ __int16  Building_UpdatePlagueState(unsigned int a1)
 }
 
 //----- (0043F240) --------------------------------------------------------
-int  Building_GetTotalValue(int a1)
+int  Building_GetTotalValue(int building)
 {
-  int v2; // ecx
-  unsigned __int16 v3; // ax
-  int v4; // ecx
-  int v5; // eax
-  int v6; // ebx
-  int v7; // edx
+  int goldReserve; // ecx
+  unsigned __int16 population; // ax
+  int totalValue; // ecx
+  int licencePtr; // eax
+  int licenceEnd; // ebx
+  int licenceType; // edx
 
-  v2 = *(_DWORD *)(a1 + 438);
-  v3 = *(_WORD *)(a1 + 430);
-  HIBYTE(v3) &= 0xFu;
-  v4 = 190 * (*(_DWORD *)(a1 + 416) << 29 >> 31)
-     + 200 * (*(_DWORD *)(a1 + 416) << 30 >> 31)
-     + 230 * (*(_DWORD *)(a1 + 416) << 27 >> 31)
-     + 400 * (*(_DWORD *)(a1 + 416) << 28 >> 31)
-     + 200 * (*(_DWORD *)(a1 + 416) & 1)
-     + v3
-     + v2;
-  v5 = a1;
-  v6 = a1 + 12;
+  goldReserve = *(_DWORD *)(building + 438);
+  population = *(_WORD *)(building + 430);
+  HIBYTE(population) &= 0xFu;
+  totalValue = 190 * (*(_DWORD *)(building + 416) << 29 >> 31)
+     + 200 * (*(_DWORD *)(building + 416) << 30 >> 31)
+     + 230 * (*(_DWORD *)(building + 416) << 27 >> 31)
+     + 400 * (*(_DWORD *)(building + 416) << 28 >> 31)
+     + 200 * (*(_DWORD *)(building + 416) & 1)
+     + population
+     + goldReserve;
+  licencePtr = building;
+  licenceEnd = building + 12;
   do
   {
-    v7 = *(char *)(v5 + 402);
-    if ( v7 != -1 )
-      v4 += (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * v7];
-    ++v5;
+    licenceType = *(char *)(licencePtr + 402);
+    if ( licenceType != -1 )
+      totalValue += (unsigned __int16)g_UnitTypeProductionLicenceCost[44 * licenceType];
+    ++licencePtr;
   }
-  while ( v5 != v6 );
-  return v4;
+  while ( licencePtr != licenceEnd );
+  return totalValue;
 }
 // 5125B1: using guessed type __int16 g_UnitTypeProductionLicenceCost[];
 
 //----- (0043F340) --------------------------------------------------------
-int  AI_TickNationPostTurn(int a1)
+int  AI_TickNationPostTurn(int playerIndex)
 {
-  int v1; // ecx
-  int v2; // edx
-  int v3; // ebx
+  int totalValue; // ecx
+  int buildingIndex; // edx
+  int buildingOffset; // ebx
   int v4; // eax
-  int v5; // eax
-  int v6; // eax
+  int buildingRecord; // eax
+  int buildingValue; // eax
   int v7; // ecx
   int i; // edi
   int j; // eax
-  int v10; // edx
+  int cargoType; // edx
 
-  v1 = 0;
-  v2 = 0;
-  v3 = 0;
+  totalValue = 0;
+  buildingIndex = 0;
+  buildingOffset = 0;
   do
   {
-    v4 = *(char *)(v3 + gameData + 509678);
-    if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(v3 + gameData + 509676) == a1 && v2 >= 0 )
+    v4 = *(char *)(buildingOffset + gameData + 509678);
+    if ( (v4 == 2 || v4 == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
-      v5 = v3 + gameData + 509674;
-      if ( (unsigned int)*(char *)(v5 + 4) < 4 && *(__int16 *)(v5 + 16) != -1 )
+      buildingRecord = buildingOffset + gameData + 509674;
+      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
       {
-        v6 = Building_GetTotalValue(v5);
-        v1 = v6 + v7;
+        buildingValue = Building_GetTotalValue(buildingRecord);
+        totalValue = buildingValue + v7;
       }
     }
-    ++v2;
-    v3 += 467;
+    ++buildingIndex;
+    buildingOffset += 467;
   }
-  while ( v2 < 100 );
+  while ( buildingIndex < 100 );
   for ( i = 0; i != 362500; i += 725 )
   {
-    if ( *(unsigned __int8 *)(i + gameData + 147178) == a1 && *(__int16 *)(i + gameData + 147180) != -1 )
+    if ( *(unsigned __int8 *)(i + gameData + 147178) == playerIndex && *(__int16 *)(i + gameData + 147180) != -1 )
     {
       for ( j = 0; j != 310; j += 31 )
       {
-        v10 = *(__int16 *)(i + gameData + j + 147180);
-        if ( v10 == UNIT_TYPE_GOLD_CARGO || v10 == UNIT_TYPE_PEASANT_CARGO )
-          v1 += *(char *)(i + gameData + j + 147189);
+        cargoType = *(__int16 *)(i + gameData + j + 147180);
+        if ( cargoType == UNIT_TYPE_GOLD_CARGO || cargoType == UNIT_TYPE_PEASANT_CARGO )
+          totalValue += *(char *)(i + gameData + j + 147189);
       }
     }
   }
-  return v1;
+  return totalValue;
 }
 // 43F391: conditional instruction was optimized away because edx.4<64u
 // 43F3A0: simplified comparisons for 'esi.4': <0 || >=4 became >=4u
@@ -7927,65 +7927,65 @@ int  AI_TickNationPostTurn(int a1)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F460) --------------------------------------------------------
-int  Player_CalcAvailableStrongholdFunds(int a1)
+int  Player_CalcAvailableStrongholdFunds(int playerIndex)
 {
-  int v2; // edi
-  int v3; // eax
-  int v4; // edx
-  int v5; // ecx
-  int v6; // ecx
+  int totalFunds; // edi
+  int buildingIndex; // eax
+  int buildingOffset; // edx
+  int buildingState; // ecx
+  int buildingRecord; // ecx
 
-  v2 = 0;
-  v3 = 0;
-  v4 = 0;
+  totalFunds = 0;
+  buildingIndex = 0;
+  buildingOffset = 0;
   do
   {
-    v5 = *(char *)(gameData + v4 + 509678);
-    if ( (v5 == 2 || v5 == 1) && *(unsigned __int8 *)(v4 + gameData + 509676) == a1 && v3 >= 0 )
+    buildingState = *(char *)(gameData + buildingOffset + 509678);
+    if ( (buildingState == 2 || buildingState == 1) && *(unsigned __int8 *)(buildingOffset + gameData + 509676) == playerIndex && buildingIndex >= 0 )
     {
-      v6 = v4 + gameData + 509674;
-      if ( (unsigned int)*(char *)(v6 + 4) < 4 && *(__int16 *)(v6 + 16) != -1 )
-        v2 += *(_DWORD *)(v4 + gameData + 510112);
+      buildingRecord = buildingOffset + gameData + 509674;
+      if ( (unsigned int)*(char *)(buildingRecord + 4) < 4 && *(__int16 *)(buildingRecord + 16) != -1 )
+        totalFunds += *(_DWORD *)(buildingOffset + gameData + 510112);
     }
-    ++v3;
-    v4 += 467;
+    ++buildingIndex;
+    buildingOffset += 467;
   }
-  while ( v3 < 100 );
-  return v2;
+  while ( buildingIndex < 100 );
+  return totalFunds;
 }
 // 43F4AE: conditional instruction was optimized away because eax.4<64u
 // 43F4BE: simplified comparisons for 'esi.4': <0 || >=4 became >=4u
 // 5202E4: using guessed type int gameData;
 
 //----- (0043F500) --------------------------------------------------------
-int  Player_SpendStrongholdFundsEvenly(int a1, signed int a2)
+int  Player_SpendStrongholdFundsEvenly(int playerIndex, signed int remaining)
 {
-  int v4; // ecx
+  int strongholdCount; // ecx
   int i; // eax
   int v6; // edx
-  unsigned int v7; // esi
+  unsigned int sharePerStronghold; // esi
   int v8; // edx
   int result; // eax
-  unsigned int v10; // ebp
+  unsigned int availableFunds; // ebp
 
   do
   {
-    v4 = 0;
+    strongholdCount = 0;
     for ( i = 0; i != 46700; i += 467 )
     {
       v6 = *(char *)(gameData + i + 509678);
       if ( (v6 == 2 || v6 == 1)
-        && *(unsigned __int8 *)(i + gameData + 509676) == a1
+        && *(unsigned __int8 *)(i + gameData + 509676) == playerIndex
         && *(_DWORD *)(i + gameData + 510112) )
       {
-        ++v4;
+        ++strongholdCount;
       }
     }
-    v7 = a2 / v4;
-    if ( !(a2 / v4) )
+    sharePerStronghold = remaining / strongholdCount;
+    if ( !(remaining / strongholdCount) )
     {
-      v4 = 1;
-      v7 = a2;
+      strongholdCount = 1;
+      sharePerStronghold = remaining;
     }
     v8 = 0;
     do
@@ -7994,30 +7994,30 @@ int  Player_SpendStrongholdFundsEvenly(int a1, signed int a2)
       if ( result == 2 || result == 1 )
       {
         result = v8 + gameData;
-        if ( a1 == *(unsigned __int8 *)(v8 + gameData + 509676) )
+        if ( playerIndex == *(unsigned __int8 *)(v8 + gameData + 509676) )
         {
-          v10 = *(_DWORD *)(result + 510112);
-          if ( v10 )
+          availableFunds = *(_DWORD *)(result + 510112);
+          if ( availableFunds )
           {
-            --v4;
-            if ( v7 > v10 )
+            --strongholdCount;
+            if ( sharePerStronghold > availableFunds )
             {
               *(_DWORD *)(result + 510112) = 0;
-              a2 -= v10;
+              remaining -= availableFunds;
             }
             else
             {
-              a2 -= v7;
-              *(_DWORD *)(result + 510112) = v10 - v7;
+              remaining -= sharePerStronghold;
+              *(_DWORD *)(result + 510112) = availableFunds - sharePerStronghold;
             }
           }
         }
       }
       v8 += 467;
     }
-    while ( v8 < 46700 && v4 );
+    while ( v8 < 46700 && strongholdCount );
   }
-  while ( a2 );
+  while ( remaining );
   return result;
 }
 // 43F5D4: conditional instruction was optimized away because ecx.4!=0
@@ -8039,7 +8039,7 @@ int  BuildingSpriteCache_LoadEntry(
         int a2,
         signed int a3,
         int a4,
-        DWORD a5,
+        DWORD allocContext,
         signed int a6,
         int a7)
 {
@@ -8049,10 +8049,10 @@ int  BuildingSpriteCache_LoadEntry(
   int i;
   signed int v16; // eax
   signed int v17; // ebx
-  int v18; // ebx
+  int spriteAssetIndex; // ebx
   unsigned __int8 v19; // al
   int v20; // eax
-  int v21; // ebx
+  int variantSubIndex; // ebx
   int v22; // eax
   int v25; // eax
   int v27; // eax
@@ -8096,7 +8096,7 @@ int  BuildingSpriteCache_LoadEntry(
   {
     if ( a3 >= 3 )
     {
-      v21 = 4 * a2 + 12 + a7;
+      variantSubIndex = 4 * a2 + 12 + a7;
     }
     else
     {
@@ -8104,9 +8104,9 @@ int  BuildingSpriteCache_LoadEntry(
         v20 = a7 + 32;
       else
         v20 = a7 + 4 * a3;
-      v21 = v20;
+      variantSubIndex = v20;
     }
-    v18 = 36 * a4 + 180 * (a1 - 1) + 45 + v21;
+    spriteAssetIndex = 36 * a4 + 180 * (a1 - 1) + 45 + variantSubIndex;
   }
   else
   {
@@ -8122,30 +8122,30 @@ int  BuildingSpriteCache_LoadEntry(
         v16 = a3;
       v17 = v16;
     }
-    v18 = 9 * a4 + v17;
+    spriteAssetIndex = 9 * a4 + v17;
   }
   v19 = *(_BYTE *)(gameData + 140016);
   if ( v19 == 0 )
   {
-    v22 = Mem_Alloc(22, entry_index, v18, a5);
+    v22 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
     if ( v22 )
-      v22 = DLXSprite_LoadCachedEntry(v22, aBuildin1_s32, v18);
+      v22 = DLXSprite_LoadCachedEntry(v22, aBuildin1_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v22;
     return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
   if ( v19 == 1 )
   {
-    v25 = Mem_Alloc(22, entry_index, v18, a5);
+    v25 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
     if ( v25 )
-      v25 = DLXSprite_LoadCachedEntry(v25, aBuildin2_s32, v18);
+      v25 = DLXSprite_LoadCachedEntry(v25, aBuildin2_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v25;
     return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
   if ( v19 == 2 )
   {
-    v27 = Mem_Alloc(22, entry_index, v18, a5);
+    v27 = Mem_Alloc(22, entry_index, spriteAssetIndex, allocContext);
     if ( v27 )
-      v27 = DLXSprite_LoadCachedEntry(v27, aBuildin3_s32, v18);
+      v27 = DLXSprite_LoadCachedEntry(v27, aBuildin3_s32, spriteAssetIndex);
     *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5) = v27;
     return *(int *)(void *)(g_BuildingSpriteCache + entry_offset + 5);
   }
@@ -8216,16 +8216,16 @@ int BuildingSpriteCache_Clear()
 //----- (0043F980) --------------------------------------------------------
 int BuildingSpriteCache_CountEntries()
 {
-  int v0; // edx
+  int count; // edx
   int i; // eax
 
-  v0 = 0;
+  count = 0;
   for ( i = 0; i != 650; i += 13 )
   {
     if ( g_BuildingSpriteCache[i] != -1 )
-      ++v0;
+      ++count;
   }
-  return v0;
+  return count;
 }
 
 //----- (0043F9B0) --------------------------------------------------------
@@ -8253,11 +8253,11 @@ int Rules_RebuildTempleFacts()
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FB10) --------------------------------------------------------
-signed int  MapTile_GetReligiousSiteCategory(int a1, int a2)
+signed int  MapTile_GetReligiousSiteCategory(int tileX, int tileY)
 {
   signed int result; // eax
 
-  switch ( *(_WORD *)(gameData + 1400 * a1 + 14 * a2 + 2) )
+  switch ( *(_WORD *)(gameData + 1400 * tileX + 14 * tileY + 2) )
   {
     case 0x2D8:
     case 0x2DA:
@@ -8288,7 +8288,7 @@ signed int  MapTile_GetReligiousSiteCategory(int a1, int a2)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FBA0) --------------------------------------------------------
-int * Temple_GenerateApproachTrack(int a1, int a2, int a3, int a4)
+int * Temple_GenerateApproachTrack(int stackIndex, int tileX, int a3, int tileY)
 {
   int tile_column_offset; // ebp
   int tile_record_offset; // eax
@@ -8297,33 +8297,33 @@ int * Temple_GenerateApproachTrack(int a1, int a2, int a3, int a4)
   int *result; // eax
 
   (void)a3;
-  tile_column_offset = 1400 * a2;
-  tile_record_offset = tile_column_offset + 14 * a4;
-  Debug_Log(a1, a2, a4, (int)aUnit_movetra_2);
+  tile_column_offset = 1400 * tileX;
+  tile_record_offset = tile_column_offset + 14 * tileY;
+  Debug_Log(stackIndex, tileX, tileY, (int)aUnit_movetra_2);
   saved_site_word = *(_WORD *)(gameData + tile_record_offset + 2);
   *(_WORD *)(gameData + tile_record_offset + 2) = -1;
-  current_y = *(__int16 *)(725 * a1 + gameData + 147176);
+  current_y = *(__int16 *)(725 * stackIndex + gameData + 147176);
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
-    Diagnostics_TraceWorldMapActionEvent("temple_track_request", a1, a2, a4, saved_site_word);
+    Diagnostics_TraceWorldMapActionEvent("temple_track_request", stackIndex, tileX, tileY, saved_site_word);
   result = Unit_MoveTrack(
-             a1,
-             *(__int16 *)(725 * a1 + gameData + 147174),
-             a2,
+             stackIndex,
+             *(__int16 *)(725 * stackIndex + gameData + 147174),
+             tileX,
              current_y,
-             a2,
-             a4);
+             tileX,
+             tileY);
   *(_WORD *)(gameData + tile_record_offset + 2) = saved_site_word;
   if ( Diagnostics_IsWorldMapClickTraceEnabled() )
-    Diagnostics_TraceWorldMapActionEvent("temple_track_result", a1, a2, a4, result ? *result : -1);
+    Diagnostics_TraceWorldMapActionEvent("temple_track_result", stackIndex, tileX, tileY, result ? *result : -1);
   return result;
 }
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FC60) --------------------------------------------------------
-__int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
+__int16 * Temple_SpawnGiftUnitGroup(int tileX, int tileY, double a3)
 {
   char v3; // cl
-  signed int v4; // ebp
+  signed int giftUnitCount; // ebp
   _WORD *v5; // edi
   int i; // esi
   __int16 *result; // eax
@@ -8333,32 +8333,32 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
   unsigned int v11; // eax
   char v12; // cl
   char v13; // bl
-  unit_type v14; // edx
+  unit_type unitType; // edx
   unsigned int v15; // eax
   char v16; // cl
-  _WORD v17[172]; // [esp+0h] [ebp-170h] BYREF
-  int v18; // [esp+158h] [ebp-18h]
-  int v19; // [esp+15Ch] [ebp-14h]
+  _WORD unitStack[172]; // [esp+0h] [ebp-170h] BYREF
+  int siteX; // [esp+158h] [ebp-18h]
+  int siteY; // [esp+15Ch] [ebp-14h]
 
-  v18 = a1;
-  v19 = a2;
-  v4 = Rng_RandRange(1, 5);
-  if ( ACTIVE_MISSION_INDEX == 2 && v18 == 95 && v19 == 16 || ACTIVE_MISSION_INDEX == 12 && v18 == 58 && v19 == 77 )
+  siteX = tileX;
+  siteY = tileY;
+  giftUnitCount = Rng_RandRange(1, 5);
+  if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16 || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
   {
-    v5 = v17;
+    v5 = unitStack;
     for ( i = 0; i != 4; ++i )
     {
       UnitSlot_InitFromType((int)v5, g_TempleGiftUnitPool_ScriptedRam[i], v3);
       v5 = (_WORD *)((char *)v5 + 31);
     }
-    v4 = 4;
+    giftUnitCount = 4;
   }
   else
   {
     v8 = 0;
-    if ( v4 > 0 )
+    if ( giftUnitCount > 0 )
     {
-      v9 = v17;
+      v9 = unitStack;
       do
       {
         v10 = ACTIVE_MISSION_INDEX;
@@ -8366,23 +8366,23 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
         {
           v11 = Rng_RandRange(0, 6);
           v13 = v12;
-          v14 = g_TempleGiftUnitPool_HumanTroops[v11];
+          unitType = g_TempleGiftUnitPool_HumanTroops[v11];
         }
         else
         {
           v15 = Rng_RandRange(0, 4);
           v13 = v16;
-          v14 = g_TempleGiftUnitPool_MinorMonsters[v15];
+          unitType = g_TempleGiftUnitPool_MinorMonsters[v15];
         }
-        UnitSlot_InitFromType((int)v9, v14, v13);
+        UnitSlot_InitFromType((int)v9, unitType, v13);
         ++v8;
         v9 = (_WORD *)((char *)v9 + 31);
       }
-      while ( v8 < v4 );
+      while ( v8 < giftUnitCount );
     }
   }
-  *(_WORD *)((char *)v17 + 31 * v4) = -1;
-  result = (__int16 *)Unit_CreateNearbyUnitGroup(v18, v19, (unsigned __int8 *)v17, a3);
+  *(_WORD *)((char *)unitStack + 31 * giftUnitCount) = -1;
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(siteX, siteY, (unsigned __int8 *)unitStack, a3);
   if ( result )
     return (__int16 *)UI_StartWorldMapUnitAttentionFlash(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
@@ -8399,36 +8399,36 @@ __int16 * Temple_SpawnGiftUnitGroup(int a1, int a2, double a3)
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FDE0) --------------------------------------------------------
-__int16 * Temple_SpawnGiftGoldCargoStack(signed int a1, int a2, char a3, int a4, double a5)
+__int16 * Temple_SpawnGiftGoldCargoStack(signed int goldAmount, int originX, char ownerFaction, int originY, double a5)
 {
-  int v6; // esi
+  int cargoSlotCount; // esi
   int v7; // ebp
   int i; // ecx
   signed int v9; // eax
-  int v10; // esi
-  char v11; // dl
+  int lastSlotIndex; // esi
+  char partialGold; // dl
   __int16 *result; // eax
-  _WORD v13[4]; // [esp+0h] [ebp-170h] BYREF
+  _WORD cargoStack[4]; // [esp+0h] [ebp-170h] BYREF
   char v14[335]; // [esp+9h] [ebp-167h]
-  int v15; // [esp+158h] [ebp-18h]
-  int v16; // [esp+15Ch] [ebp-14h]
-  signed int v17; // [esp+160h] [ebp-10h]
+  int spawnY; // [esp+158h] [ebp-18h]
+  int spawnX; // [esp+15Ch] [ebp-14h]
+  signed int goldAmountCopy; // [esp+160h] [ebp-10h]
 
-  v17 = a1;
-  v16 = a2;
-  v15 = a4;
-  v6 = 0;
-  v7 = 31 * (a1 / 100);
-  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)v13 + i, UNIT_TYPE_GOLD_CARGO, a3) )
-    ++v6;
-  v9 = v17;
-  *(_WORD *)((char *)v13 + i) = -1;
-  v10 = v6 - 1;
-  v11 = 100 * (v9 % 100) / 100;
-  v14[31 * v10] = v11;
-  if ( !v11 )
-    *(_WORD *)((char *)v13 + 31 * v10) = -1;
-  result = (__int16 *)Unit_CreateNearbyUnitGroup(v16, v15, (unsigned __int8 *)v13, a5);
+  goldAmountCopy = goldAmount;
+  spawnX = originX;
+  spawnY = originY;
+  cargoSlotCount = 0;
+  v7 = 31 * (goldAmount / 100);
+  for ( i = 0; i <= v7; UnitSlot_InitFromType((int)cargoStack + i, UNIT_TYPE_GOLD_CARGO, ownerFaction) )
+    ++cargoSlotCount;
+  v9 = goldAmountCopy;
+  *(_WORD *)((char *)cargoStack + i) = -1;
+  lastSlotIndex = cargoSlotCount - 1;
+  partialGold = 100 * (v9 % 100) / 100;
+  v14[31 * lastSlotIndex] = partialGold;
+  if ( !partialGold )
+    *(_WORD *)((char *)cargoStack + 31 * lastSlotIndex) = -1;
+  result = (__int16 *)Unit_CreateNearbyUnitGroup(spawnX, spawnY, (unsigned __int8 *)cargoStack, a5);
   if ( result )
     return (__int16 *)UI_StartWorldMapUnitAttentionFlash(
                         *(unsigned __int16 *)(TILE_INDEX(*result, result[1])),
@@ -8440,14 +8440,14 @@ __int16 * Temple_SpawnGiftGoldCargoStack(signed int a1, int a2, char a3, int a4,
 // 5202E4: using guessed type int gameData;
 
 //----- (0043FEF0) --------------------------------------------------------
-int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
+int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD gameContext)
 {
   _DWORD *v5; // eax
   int SpriteWidth; // edx
   int v7; // ecx
   int v8; // eax
   _DWORD *Surface; // eax
-  int v10; // edi
+  int surface; // edi
   int SpriteForChar; // eax
   int v12; // eax
   DWORD v13; // ebp
@@ -8456,35 +8456,35 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
   int v16; // eax
   int v18; // eax
   int v19; // ecx
-  _DWORD *v20; // [esp+38h] [ebp-28h] BYREF
+  _DWORD *spriteSet; // [esp+38h] [ebp-28h] BYREF
   int v21; // [esp+3Ch] [ebp-24h]
   DWORD v22; // [esp+40h] [ebp-20h]
-  int v23; // [esp+44h] [ebp-1Ch]
-  int v24; // [esp+48h] [ebp-18h]
-  int v25; // [esp+4Ch] [ebp-14h]
+  int messageText; // [esp+44h] [ebp-1Ch]
+  int popupHeight; // [esp+48h] [ebp-18h]
+  int iconIndex; // [esp+4Ch] [ebp-14h]
 
-  v23 = a1;
-  v25 = a2;
+  messageText = a1;
+  iconIndex = a2;
   v21 = a4;
-  v5 = (_DWORD *)Mem_Alloc(4112, a3, a4, a5);
+  v5 = (_DWORD *)Mem_Alloc(4112, a3, a4, gameContext);
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, a4);
-  v20 = v5;
+  spriteSet = v5;
   Render_Pump();
   RenderState_SelectCursorDescriptor((int)g_RenderState, g_ActiveCursorDescriptor);
-  DLX_GetSpriteWidth((int)v20, 0x17u);
-  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)v20, 0x16u);
+  DLX_GetSpriteWidth((int)spriteSet, 0x17u);
+  SpriteWidth = (unsigned __int16)DLX_GetSpriteWidth((int)spriteSet, 0x16u);
   v8 = v7 + 6;
   if ( (unsigned __int16)SpriteWidth > v7 + 6 )
     v8 = SpriteWidth;
-  v24 = v8;
-  Surface = (_DWORD *)Mem_Alloc(188, v7, a4, a5);
+  popupHeight = v8;
+  Surface = (_DWORD *)Mem_Alloc(188, v7, a4, gameContext);
   if ( Surface )
-    Surface = Render_CreateSurface((int)Surface, 640, v24);
-  v10 = (int)Surface;
-  Render_FillRect(0, Surface, 150, 0, 0x27Fu, v24 + 149, 0, 0);
+    Surface = Render_CreateSurface((int)Surface, 640, popupHeight);
+  surface = (int)Surface;
+  Render_FillRect(0, Surface, 150, 0, 0x27Fu, popupHeight + 149, 0, 0);
   g_RenderDevice = &g_MainRenderDevice;
-  SpriteForChar = DLX_GetSpriteForChar((int)v20, 22);
+  SpriteForChar = DLX_GetSpriteForChar((int)spriteSet, 22);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(
     150,
@@ -8496,8 +8496,8 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
     1,
     0,
     0);
-  DLX_GetSpriteHeight((int)v20, 0x16u);
-  v12 = DLX_GetSpriteForChar((int)v20, 23);
+  DLX_GetSpriteHeight((int)spriteSet, 0x16u);
+  v12 = DLX_GetSpriteForChar((int)spriteSet, 23);
   v22 = *((_DWORD *)g_RenderDevice + 46);
   v13 = v22;
   (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v22 + 52))(
@@ -8510,9 +8510,9 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
     1,
     0,
     0);
-  if ( v25 != -1 )
+  if ( iconIndex != -1 )
   {
-    v18 = DLX_GetSpriteForChar((int)v20, v25);
+    v18 = DLX_GetSpriteForChar((int)spriteSet, iconIndex);
     v13 = *((_DWORD *)g_RenderDevice + 46);
     (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v13 + 52))(
       285,
@@ -8526,7 +8526,7 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
       0);
   }
   Render_ReleaseSurface(17, v13);
-  UI_DrawTextFmt(v10, 70, 569, 210, 6, v23);
+  UI_DrawTextFmt(surface, 70, 569, 210, 6, messageText);
   Render_Present((int)g_RenderState);
   Render_Begin((int)g_RenderState, 0);
   while ( !DD_IsFlipping(v14) && !DD_IsLost(v15) )
@@ -8534,17 +8534,17 @@ int  Temple_ShowOutcomePopup(int a1, int a2, int a3, int a4, DWORD a5)
   Render_Begin((int)g_RenderState, 0);
   if ( v21 )
   {
-    v16 = v25;
-    if ( v25 == -1 )
+    v16 = iconIndex;
+    if ( iconIndex == -1 )
       v16 = 7;
     Audio_PlayArtifactSound(v16);
   }
   Render_Pump();
-  Render_FillRect((_DWORD *)v10, 0, 0, 0, 0x27Fu, v24 - 1, 0, 0x96u);
+  Render_FillRect((_DWORD *)surface, 0, 0, 0, 0x27Fu, popupHeight - 1, 0, 0x96u);
   Render_Present((int)g_RenderState);
-  if ( v10 )
-    (**(void (***)(void))(v10 + 184))();
-  return DLXSpriteSet_ReleaseAndClear((int *)&v20);
+  if ( surface )
+    (**(void (***)(void))(surface + 184))();
+  return DLXSpriteSet_ReleaseAndClear((int *)&spriteSet);
 }
 // 43FF56: variable 'v7' is possibly undefined
 // 44008E: variable 'v14' is possibly undefined
@@ -8561,35 +8561,35 @@ int a2;
 char a3;
 DWORD a4;
 {
-  int v6; // ecx
+  int totalWeight; // ecx
   _DWORD *v7; // eax
-  int v8; // ebx
+  int entryWeight; // ebx
   int v9; // edi
-  signed int v10; // ebx
+  signed int roll; // ebx
   int v11; // ecx
-  signed int v12; // edx
+  signed int cumulative; // edx
   _DWORD *result; // eax
 
   Debug_Log(a2, a3, a4, (int)aTemple_random);
-  v6 = 0;
+  totalWeight = 0;
   v7 = a1;
   if ( *a1 != -1 )
   {
     do
     {
-      v8 = v7[1];
+      entryWeight = v7[1];
       v9 = v7[6];
       v7 += 6;
-      v6 += v8;
+      totalWeight += entryWeight;
     }
     while ( v9 != -1 );
   }
-  v10 = Rng_RandRange(0, v6 - 1);
-  Debug_Log(v11, v10, a4, (int)a__RDSum_probD);
+  roll = Rng_RandRange(0, totalWeight - 1);
+  Debug_Log(v11, roll, a4, (int)a__RDSum_probD);
   for ( result = a1; ; result += 6 )
   {
-    v12 += result[1];
-    if ( v12 >= v10 )
+    cumulative += result[1];
+    if ( cumulative >= roll )
       break;
   }
   return result;
@@ -8598,17 +8598,17 @@ DWORD a4;
 // 4401EF: variable 'v12' is possibly undefined
 
 //----- (00440250) --------------------------------------------------------
-void  Temple_ProcessGift(DWORD a1, __int16 *a2, int a3, char a4, double a5)
+void  Temple_ProcessGift(DWORD giftType, __int16 *unitStack, int a3, char a4, double gameTime)
 {
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
   int v10; // ecx
-  __int16 *v11; // eax
-  int v12; // edx
-  int v13; // ecx
+  __int16 *slotPtr; // eax
+  int slotIndex; // edx
+  int slotUnitType; // ecx
   int v14; // ecx
-  __int16 *v15; // eax
+  __int16 *slotPtrB; // eax
   int v16; // ecx
   int v17; // edx
   int v18; // ecx
@@ -8616,92 +8616,92 @@ void  Temple_ProcessGift(DWORD a1, __int16 *a2, int a3, char a4, double a5)
   int v20; // ecx
   int v21; // ecx
 
-  Debug_Log(a3, a4, a1, (int)aTemple_process);
-  switch ( a1 )
+  Debug_Log(a3, a4, giftType, (int)aTemple_process);
+  switch ( giftType )
   {
     case 0u:
-      Temple_SpawnGiftUnitGroup(a4, v7, a5);
+      Temple_SpawnGiftUnitGroup(a4, v7, gameTime);
       return;
     case 1u:
-      UI_StartTileBlinkFlash(*a2, a2[1], v8);
-      Unit_Kill((int)a2, a4, a1, a5);
+      UI_StartTileBlinkFlash(*unitStack, unitStack[1], v8);
+      Unit_Kill((int)unitStack, a4, giftType, gameTime);
       return;
     case 2u:
-      UnitStack_AdjustFatigueByPredicate(a2, -100, UnitSlot_PredicateAlways, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v9);
+      UnitStack_AdjustFatigueByPredicate(unitStack, -100, UnitSlot_PredicateAlways, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v9);
       return;
     case 3u:
-      UnitStack_AdjustMoraleByPredicate(a2, 20, UnitSlot_PredicateAlways, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v10);
+      UnitStack_AdjustMoraleByPredicate(unitStack, 20, UnitSlot_PredicateAlways, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v10);
       return;
     case 4u:
-      v11 = a2;
-      v12 = v8 ^ v7;
+      slotPtr = unitStack;
+      slotIndex = v8 ^ v7;
       do
       {
-        v13 = v11[3];
-        if ( v13 == -1 )
+        slotUnitType = slotPtr[3];
+        if ( slotUnitType == -1 )
           break;
-        v11 = (__int16 *)((char *)v11 + 31);
-        ++v12;
-        *((_BYTE *)v11 - 16) = 100;
+        slotPtr = (__int16 *)((char *)slotPtr + 31);
+        ++slotIndex;
+        *((_BYTE *)slotPtr - 16) = 100;
       }
-      while ( v12 < 10 );
+      while ( slotIndex < 10 );
       goto LABEL_9;
     case 5u:
-      v15 = a2;
-      v12 = v8 ^ v7;
+      slotPtrB = unitStack;
+      slotIndex = v8 ^ v7;
       do
       {
-        v13 = v15[3];
-        if ( v13 == -1 )
+        slotUnitType = slotPtrB[3];
+        if ( slotUnitType == -1 )
           break;
-        v15 = (__int16 *)((char *)v15 + 31);
-        *((_BYTE *)v15 - 16) = 100;
-        ++v12;
-        *((_BYTE *)v15 - 15) = 0;
+        slotPtrB = (__int16 *)((char *)slotPtrB + 31);
+        *((_BYTE *)slotPtrB - 16) = 100;
+        ++slotIndex;
+        *((_BYTE *)slotPtrB - 15) = 0;
       }
-      while ( v12 < 10 );
+      while ( slotIndex < 10 );
 LABEL_9:
-      Rules_SyncArmyFactStrength(a2, v12, v13, a4, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v14);
+      Rules_SyncArmyFactStrength(unitStack, slotIndex, slotUnitType, a4, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v14);
       return;
     case 6u:
       do
-        UnitStack_CycleAllSlotOrders(a2, a1, a5);
+        UnitStack_CycleAllSlotOrders(unitStack, giftType, gameTime);
       while ( v17 < 3 );
       goto LABEL_15;
     case 7u:
-      UnitStack_AdjustMoraleByPredicate(a2, 2, UnitSlot_PredicateAlways, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), a2[1], v18);
+      UnitStack_AdjustMoraleByPredicate(unitStack, 2, UnitSlot_PredicateAlways, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), unitStack[1], v18);
       return;
     case 8u:
       do
-        UnitStack_CycleAllSlotOrders(a2, a1, a5);
+        UnitStack_CycleAllSlotOrders(unitStack, giftType, gameTime);
       while ( v19 < 2 );
 LABEL_15:
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), gameData + 200 * *a2, v16);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), gameData + 200 * *unitStack, v16);
       break;
     case 9u:
-      Temple_SpawnGiftGoldCargoStack(100, a4, *((_BYTE *)a2 + 4), v7, a5);
+      Temple_SpawnGiftGoldCargoStack(100, a4, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
     case 0xAu:
-      Temple_SpawnGiftGoldCargoStack(200, a4, *((_BYTE *)a2 + 4), v7, a5);
+      Temple_SpawnGiftGoldCargoStack(200, a4, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
     case 0xBu:
-      Temple_SpawnGiftGoldCargoStack(50, a4, *((_BYTE *)a2 + 4), v7, a5);
+      Temple_SpawnGiftGoldCargoStack(50, a4, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
     case 0xCu:
-      Temple_SpawnGiftGoldCargoStack(300, a4, *((_BYTE *)a2 + 4), v7, a5);
+      Temple_SpawnGiftGoldCargoStack(300, a4, *((_BYTE *)unitStack + 4), v7, gameTime);
       break;
     case 0xDu:
-      UnitStack_AdjustMoraleByPredicate(a2, -20, UnitSlot_PredicateAlways, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v20);
+      UnitStack_AdjustMoraleByPredicate(unitStack, -20, UnitSlot_PredicateAlways, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v20);
       break;
     case 0xEu:
-      UnitStack_AdjustMoraleByPredicate(a2, -1, UnitSlot_PredicateAlways, a1, a5);
-      UnitStack_AdjustFatigueByPredicate(a2, 50, UnitSlot_PredicateAlways, a1, a5);
-      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*a2, a2[1])), 200 * *a2 + gameData, v21);
+      UnitStack_AdjustMoraleByPredicate(unitStack, -1, UnitSlot_PredicateAlways, giftType, gameTime);
+      UnitStack_AdjustFatigueByPredicate(unitStack, 50, UnitSlot_PredicateAlways, giftType, gameTime);
+      UI_StartUnitBlinkFlash(*(unsigned __int16 *)(TILE_INDEX(*unitStack, unitStack[1])), 200 * *unitStack + gameData, v21);
       break;
     default:
       return;
@@ -8724,10 +8724,10 @@ LABEL_15:
 int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, double a5)
 {
   int v6; // edx
-  __int16 *v7; // ebp
+  __int16 *unitStack; // ebp
   int v8; // eax
-  _DWORD *v9; // esi
-  signed int v10; // eax
+  _DWORD *outcomeTable; // esi
+  signed int siteCategory; // eax
   int v11; // ebx
   int v12; // ecx
   int v13; // ecx
@@ -8735,7 +8735,7 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
   int v15; // ecx
   _DWORD *v16; // edi
   int v17; // ecx
-  DWORD *v18; // esi
+  DWORD *outcomePtr; // esi
   int v19; // edx
   int v20; // edx
   int v21; // ecx
@@ -8748,103 +8748,103 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
   int v28[3]; // [esp+0h] [ebp-3Ch]
   int v29[3]; // [esp+Ch] [ebp-30h]
   int v30[3]; // [esp+18h] [ebp-24h]
-  int v31; // [esp+24h] [ebp-18h]
-  int v32; // [esp+28h] [ebp-14h]
+  int siteX; // [esp+24h] [ebp-18h]
+  int siteY; // [esp+28h] [ebp-14h]
 
-  v31 = tile_x;
-  v32 = tile_y;
+  siteX = tile_x;
+  siteY = tile_y;
   Debug_Log(tile_x, tile_y, a4, (int)aTemple_unitget);
-  v7 = (__int16 *)(725 * stack_index + gameData + 147174);
+  unitStack = (__int16 *)(725 * stack_index + gameData + 147174);
   Diagnostics_TraceWorldMapActionEvent("temple_unit_getinto_enter", stack_index, tile_x, tile_y, MapTile_GetReligiousSiteCategory(tile_x, tile_y));
-  v8 = gameData + 1423 * *((unsigned __int8 *)v7 + 4);
+  v8 = gameData + 1423 * *((unsigned __int8 *)unitStack + 4);
   if ( *(_DWORD *)(v8 + 140063) )
   {
     if ( *(_DWORD *)(v8 + 140051) )
-      v9 = &g_TempleGiftOutcomeTable_OwnCultActive;
+      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultActive;
     else
-      v9 = &g_TempleGiftOutcomeTable_OwnCultInactive;
+      outcomeTable = &g_TempleGiftOutcomeTable_OwnCultInactive;
   }
   else if ( *(_DWORD *)(v8 + 140051) )
   {
-    v9 = &g_TempleGiftOutcomeTable_ForeignCultActive;
+    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultActive;
   }
   else
   {
-    v9 = &g_TempleGiftOutcomeTable_ForeignCultInactive;
+    outcomeTable = &g_TempleGiftOutcomeTable_ForeignCultInactive;
   }
-  v10 = MapTile_GetReligiousSiteCategory(v31, v32);
-  v11 = 1423 * *((unsigned __int8 *)v7 + 4);
+  siteCategory = MapTile_GetReligiousSiteCategory(siteX, siteY);
+  v11 = 1423 * *((unsigned __int8 *)unitStack + 4);
   v12 = *(_DWORD *)(gameData + v11 + 140063);
-  if ( v12 && (v10 == 3 || v10 == 4)
-    || (LOBYTE(v11) = gameData, !*(_DWORD *)(1423 * *((unsigned __int8 *)v7 + 4) + gameData + 140063))
-    && (v10 == 1 || v10 == 2) )
+  if ( v12 && (siteCategory == 3 || siteCategory == 4)
+    || (LOBYTE(v11) = gameData, !*(_DWORD *)(1423 * *((unsigned __int8 *)unitStack + 4) + gameData + 140063))
+    && (siteCategory == 1 || siteCategory == 2) )
   {
-    Debug_Log(v12, v11, (DWORD)v7, (int)aTemple_unitg_0);
+    Debug_Log(v12, v11, (DWORD)unitStack, (int)aTemple_unitg_0);
     v30[0] = (int)g_TempleSacrilegeUnitKilledTexts[0];
     v30[1] = (int)g_TempleSacrilegeUnitKilledTexts[1];
     v30[2] = (int)g_TempleSacrilegeUnitKilledTexts[2];
-    if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)v7 + 4) + 140051) )
+    if ( *(_DWORD *)(gameData + 1423 * *((unsigned __int8 *)unitStack + 4) + 140051) )
     {
       LOBYTE(v11) = 1;
-      Temple_ShowOutcomePopup(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)v7);
+      Temple_ShowOutcomePopup(v30[(unsigned __int8)g_LanguageIndex], 0, v13, 1, (DWORD)unitStack);
     }
-    UI_StartTileBlinkFlash(*v7, v7[1], v13);
-    return Unit_Kill((int)v7, v11, (DWORD)v7, a5);
+    UI_StartTileBlinkFlash(*unitStack, unitStack[1], v13);
+    return Unit_Kill((int)unitStack, v11, (DWORD)unitStack, a5);
   }
   else
   {
     v15 = ACTIVE_MISSION_INDEX;
     if ( v15 == 1 || v15 == 11 )
     {
-      result = 14 * v32;
-      ++*(_WORD *)(gameData + 1400 * v31 + 14 * v32 + 2);
+      result = 14 * siteY;
+      ++*(_WORD *)(gameData + 1400 * siteX + 14 * siteY + 2);
       Diagnostics_TraceWorldMapActionEvent(
         "temple_unit_getinto_mission_site_increment",
         stack_index,
-        v31,
-        v32,
-        MapTile_GetReligiousSiteCategory(v31, v32));
+        siteX,
+        siteY,
+        MapTile_GetReligiousSiteCategory(siteX, siteY));
     }
-    else if ( v10 == 2 || v10 == 4 )
+    else if ( siteCategory == 2 || siteCategory == 4 )
     {
-      Debug_Log(v15, gameData, (DWORD)v7, (int)aTemple_unitg_2);
+      Debug_Log(v15, gameData, (DWORD)unitStack, (int)aTemple_unitg_2);
       v29[0] = (int)g_TempleGiftRewardText[0];
       v29[1] = (int)g_TempleGiftRewardText[1];
       v29[2] = (int)g_TempleGiftRewardText[2];
       v28[0] = (int)g_TempleGiftEmptyText[0];
       v28[1] = (int)g_TempleGiftEmptyText[1];
       v28[2] = (int)g_TempleGiftEmptyText[2];
-      result = 1423 * *((unsigned __int8 *)v7 + 4) + gameData;
+      result = 1423 * *((unsigned __int8 *)unitStack + 4) + gameData;
       if ( *(_DWORD *)(result + 140051) )
       {
         v27 = *(_DWORD *)(result + 140063);
         if ( v27 )
-          return Temple_ShowOutcomePopup(v29[(unsigned __int8)g_LanguageIndex], -1, v27, 0, (DWORD)v7);
+          return Temple_ShowOutcomePopup(v29[(unsigned __int8)g_LanguageIndex], -1, v27, 0, (DWORD)unitStack);
         else
-          return Temple_ShowOutcomePopup(v28[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)v7);
+          return Temple_ShowOutcomePopup(v28[(unsigned __int8)g_LanguageIndex], -1, 0, 0, (DWORD)unitStack);
       }
     }
     else
     {
-      v16 = v9;
-      v18 = Temple_Random(v9, v15, gameData, (DWORD)v7);
+      v16 = outcomeTable;
+      outcomePtr = Temple_Random(outcomeTable, v15, gameData, (DWORD)unitStack);
       v19 = ACTIVE_MISSION_INDEX;
       if ( (v19 == 2 || v19 == 6 || v19 == 12 || v19 == 16)
-        && *(_DWORD *)(1423 * *((unsigned __int8 *)v7 + 4) + gameData + 140051) )
+        && *(_DWORD *)(1423 * *((unsigned __int8 *)unitStack + 4) + gameData + 140051) )
       {
-        if ( ACTIVE_MISSION_INDEX == 2 && v31 == 95 && v32 == 16
-          || ACTIVE_MISSION_INDEX == 12 && v31 == 58 && v32 == 77 )
+        if ( ACTIVE_MISSION_INDEX == 2 && siteX == 95 && siteY == 16
+          || ACTIVE_MISSION_INDEX == 12 && siteX == 58 && siteY == 77 )
         {
-          v18 = (DWORD *)&g_TempleGiftOutcomeTable_OwnCultActive;
+          outcomePtr = (DWORD *)&g_TempleGiftOutcomeTable_OwnCultActive;
         }
         else
         {
-          while ( *v18 && *v18 != 15 )
-            v18 = Temple_Random(v16, v17, v11, (DWORD)v7);
+          while ( *outcomePtr && *outcomePtr != 15 )
+            outcomePtr = Temple_Random(v16, v17, v11, (DWORD)unitStack);
         }
       }
-      Debug_Log(v17, v11, (DWORD)v7, (int)aTemple_unitg_1);
-      v20 = 1423 * *((unsigned __int8 *)v7 + 4);
+      Debug_Log(v17, v11, (DWORD)unitStack, (int)aTemple_unitg_1);
+      v20 = 1423 * *((unsigned __int8 *)unitStack + 4);
       v21 = *(_DWORD *)(v20 + gameData + 140051);
       if ( v21 )
       {
@@ -8853,14 +8853,14 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
           v23 = aSw_chs;
         else
           v23 = aSw_pog;
-        Win_PlayModeChangeFrameTransition(v23, 1, v21, v22, (DWORD)v7);
-        Temple_ShowOutcomePopup(v18[(unsigned __int8)g_LanguageIndex + 3], v18[2], v24, 1, (DWORD)v7);
+        Win_PlayModeChangeFrameTransition(v23, 1, v21, v22, (DWORD)unitStack);
+        Temple_ShowOutcomePopup(outcomePtr[(unsigned __int8)g_LanguageIndex + 3], outcomePtr[2], v24, 1, (DWORD)unitStack);
       }
-      Temple_ProcessGift(*v18, v7, v32, v31, a5);
-      v25 = gameData + 1400 * v31;
-      LOWORD(v26) = *(_WORD *)(v25 + 14 * v32 + 2);
-      *(_WORD *)(v25 + 14 * v32 + 2) = ++v26;
-      return (int)Rules_RetractTempleFact(v31, v26, v25, (DWORD)v7);
+      Temple_ProcessGift(*outcomePtr, unitStack, siteY, siteX, a5);
+      v25 = gameData + 1400 * siteX;
+      LOWORD(v26) = *(_WORD *)(v25 + 14 * siteY + 2);
+      *(_WORD *)(v25 + 14 * siteY + 2) = ++v26;
+      return (int)Rules_RetractTempleFact(siteX, v26, v25, (DWORD)unitStack);
     }
   }
   return result;
@@ -8877,12 +8877,12 @@ int  Temple_UnitGetInto(int stack_index, int tile_x, int tile_y, DWORD a4, doubl
 // 5202E4: using guessed type int gameData;
 
 //----- (00440A20) --------------------------------------------------------
-int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2)
+int  Temple_OutcomePopup_HandleCloseClick(int widget, int delayTicks)
 {
   int result; // eax
   int v4; // edx
 
-  result = UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  result = UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_TempleOutcomePopupCloseFlag = v4;
   return result;
 }
@@ -8890,56 +8890,56 @@ int  Temple_OutcomePopup_HandleCloseClick(int a1, int a2)
 // 543C84: using guessed type int dword_543C84;
 
 //----- (00440A40) --------------------------------------------------------
-_DWORD * Temple_OutcomePopup_HandleDestroyBuildingClick(int a1, int a2, char a3, DWORD a4, double a5)
+_DWORD * Temple_OutcomePopup_HandleDestroyBuildingClick(int widget, int delayTicks, char a3, DWORD gameContext, double gameTime)
 {
-  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   g_TempleOutcomePopupCloseFlag = 1;
-  return Building_Destroy(g_BuildingUIRecordPtr, a3, a4, a5);
+  return Building_Destroy(g_BuildingUIRecordPtr, a3, gameContext, gameTime);
 }
 // 543C80: using guessed type int dword_543C80;
 // 543C84: using guessed type int dword_543C84;
 
 //----- (00440A60) --------------------------------------------------------
-int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
+int  Temple_OutcomePopup_HandleAcceptUnitsClick(int widget, int delayTicks, double gameTime)
 {
   int result; // eax
   int v5; // ecx
-  int v6; // edx
+  int selectedCount; // edx
   int v7; // edx
   int v8; // ecx
   int v9; // ecx
   int v10; // ebx
   unsigned int v11; // eax
   unsigned int v12; // edx
-  int v13; // ebp
+  int animFrame; // ebp
   int i; // esi
   int SpriteForChar; // eax
   int v16; // ecx
   int v17; // edi
   int v18; // [esp+0h] [ebp-50h]
-  int v19[11]; // [esp+4h] [ebp-4Ch] BYREF
+  int selectedSlots[11]; // [esp+4h] [ebp-4Ch] BYREF
   int v20; // [esp+30h] [ebp-20h]
   int v21; // [esp+34h] [ebp-1Ch]
 
-  UIWidget_PlayPressedReleaseAnimationWithDelay(a1, a2);
+  UIWidget_PlayPressedReleaseAnimationWithDelay(widget, delayTicks);
   result = 0;
   v5 = 0;
-  v6 = 0;
+  selectedCount = 0;
   do
   {
     if ( g_BuildingUnitsPopupSelectedSlots[result] )
     {
-      ++v6;
+      ++selectedCount;
       ++v5;
-      v19[v6 - 1] = result;
+      selectedSlots[selectedCount - 1] = result;
     }
     ++result;
   }
   while ( result < 10 );
-  v19[v5] = -1;
-  if ( v19[0] != -1 )
+  selectedSlots[v5] = -1;
+  if ( selectedSlots[0] != -1 )
   {
-    Building_UnitsLeave((unsigned __int8 *)g_BuildingUIRecordPtr, v19, a3);
+    Building_UnitsLeave((unsigned __int8 *)g_BuildingUIRecordPtr, selectedSlots, gameTime);
     Audio_PlaySoundEffectByName(aDclose_1, 64);
     v21 = 12;
     g_RenderDevice = &g_MainRenderDevice;
@@ -8949,12 +8949,12 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
       do
         v11 = Time_Now(v9, v10 + 10);
       while ( v11 < v12 );
-      v13 = v21;
+      animFrame = v21;
       for ( i = 0; i < 10; ++i )
       {
         if ( g_BuildingUnitsPopupSelectedSlots[i] )
         {
-          SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, v13);
+          SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, animFrame);
           v18 = 0;
           v20 = *((_DWORD *)g_RenderDevice + 46);
           (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v20 + 52))(
@@ -8990,12 +8990,12 @@ int  Temple_OutcomePopup_HandleAcceptUnitsClick(int a1, int a2, double a3)
 // 543C84: using guessed type int dword_543C84;
 
 //----- (00440BB0) --------------------------------------------------------
-void * RenderHook_DemoText(int a1, char a2, DWORD a3)
+void * RenderHook_DemoText(int a1, char a2, DWORD renderContext)
 {
   _DWORD *Surface; // eax
   int SpriteForChar; // eax
-  int v6; // esi
-  int v7; // edi
+  int slotIndex; // esi
+  int slotOffset; // edi
   DWORD v8; // ebp
   int v9; // eax
   int v10; // eax
@@ -9006,19 +9006,19 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
   __int16 SpriteHeight; // ax
   int v16; // ecx
   unsigned __int16 v17; // [esp+60h] [ebp-38h]
-  void *v18; // [esp+70h] [ebp-28h]
-  _DWORD *v19; // [esp+74h] [ebp-24h]
-  int v20; // [esp+78h] [ebp-20h]
+  void *savedRenderDevice; // [esp+70h] [ebp-28h]
+  _DWORD *surface; // [esp+74h] [ebp-24h]
+  int spriteSetIndex; // [esp+78h] [ebp-20h]
 
-  v18 = g_RenderDevice;
-  Surface = (_DWORD *)Mem_Alloc(188, a1, a2, a3);
+  savedRenderDevice = g_RenderDevice;
+  Surface = (_DWORD *)Mem_Alloc(188, a1, a2, renderContext);
   if ( Surface )
   {
     v14 = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) + 1;
     SpriteHeight = DLX_GetSpriteHeight(g_DemoTextDLXSpriteSet, 0);
     Surface = Render_CreateSurface(v16, SpriteHeight + 1, v14);
   }
-  v19 = Surface;
+  surface = Surface;
   g_RenderDevice = Surface;
   SpriteForChar = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 0);
   (*(void (__fastcall **)(_DWORD, int, int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -9031,12 +9031,12 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
     1,
     0,
     0);
-  v6 = 0;
-  v7 = 0;
-  v20 = 0;
+  slotIndex = 0;
+  slotOffset = 0;
+  spriteSetIndex = 0;
   do
   {
-    if ( *(__int16 *)(v7 + g_BuildingUIRecordPtr + 18) == -1 )
+    if ( *(__int16 *)(slotOffset + g_BuildingUIRecordPtr + 18) == -1 )
     {
       DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 5);
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(*((_DWORD *)g_RenderDevice + 46) + 52))(
@@ -9050,15 +9050,15 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
     }
     else
     {
-      DLX_GetSpriteForChar(g_BuildingUnitsPopupSlotSpriteSets[v20], 0);
+      DLX_GetSpriteForChar(g_BuildingUnitsPopupSlotSpriteSets[spriteSetIndex], 0);
       v8 = *((_DWORD *)g_RenderDevice + 46);
       (*(void (__stdcall **)(int, int, int, int, int, _DWORD, _DWORD))(v8 + 52))(-1, -1, -1, -1, 1, 0, 0);
-      if ( g_BuildingUnitsPopupSelectedSlots[v6] )
+      if ( g_BuildingUnitsPopupSelectedSlots[slotIndex] )
       {
         v9 = DLX_GetSpriteForChar(g_MarksSpriteSet, 5);
         v8 = *((_DWORD *)g_RenderDevice + 46);
         (*(void (__fastcall **)(int, int, int, int, int, int, int, _DWORD, _DWORD))(v8 + 52))(
-          78 * (v6 / 5) + 50,
+          78 * (slotIndex / 5) + 50,
           v9,
           -1,
           -1,
@@ -9068,7 +9068,7 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
           0,
           0);
       }
-      if ( *(_BYTE *)(v7 + g_BuildingUIRecordPtr + 28) )
+      if ( *(_BYTE *)(slotOffset + g_BuildingUIRecordPtr + 28) )
       {
         v10 = DLX_GetSpriteForChar(g_DemoTextDLXSpriteSet, 3);
         v8 = *((_DWORD *)g_RenderDevice + 46);
@@ -9085,27 +9085,27 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
       }
       Render_ReleaseSurface(7, v8);
       UI_DrawTextFmt(
-        v7,
-        (unsigned __int16)g_DemoTextColumnXOffsets[v6 % 5],
-        (unsigned __int16)g_DemoTextColumnXOffsets[v6 % 5] + 32,
-        78 * (v6 / 5) + 98,
+        slotOffset,
+        (unsigned __int16)g_DemoTextColumnXOffsets[slotIndex % 5],
+        (unsigned __int16)g_DemoTextColumnXOffsets[slotIndex % 5] + 32,
+        78 * (slotIndex / 5) + 98,
         3,
         (int)aD_78);
     }
-    v7 += 31;
-    ++v6;
-    ++v20;
+    slotOffset += 31;
+    ++slotIndex;
+    ++spriteSetIndex;
   }
-  while ( v6 < 10 );
+  while ( slotIndex < 10 );
   Render_Pump();
   v17 = DLX_GetSpriteWidth(g_DemoTextDLXSpriteSet, 0) - 1;
   v12 = DLX_GetSpriteHeight(g_DemoTextDLXSpriteSet, 0);
-  Render_BlitSurfaceRect(v19, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
+  Render_BlitSurfaceRect(surface, 0, 0, 0, v12 - 1, v17, 0xC8u, 0x64u);
   Render_Present((int)g_RenderState);
-  if ( v19 )
-    (*(void (**)(void))v19[46])();
-  result = v18;
-  g_RenderDevice = v18;
+  if ( surface )
+    (*(void (**)(void))surface[46])();
+  result = savedRenderDevice;
+  g_RenderDevice = savedRenderDevice;
   return result;
 }
 // 440E4A: variable 'v16' is possibly undefined
@@ -9119,23 +9119,23 @@ void * RenderHook_DemoText(int a1, char a2, DWORD a3)
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
 //----- (004410B0) --------------------------------------------------------
-int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
+int  UI_DemoTextPresent(int unitStackId, int a2, char a3, DWORD renderContext)
 {
   _DWORD *v5; // eax
   int v6; // esi
-  int v7; // ecx
+  int spriteSetOffset; // ecx
   int v8; // eax
   char v9; // bl
   int v10; // ecx
   _DWORD *v11; // eax
-  unsigned __int8 *v12; // ebx
+  unsigned __int8 *selectedSlot; // ebx
   int v13; // ecx
   void *v14; // ecx
   int v15; // edx
   int v16; // ecx
-  unsigned int v18; // edi
-  int v19; // edx
-  int v20; // ecx
+  unsigned int hoverRow; // edi
+  int columnIndex; // edx
+  int relativeMouseX; // ecx
   int v21; // eax
   int v22; // ecx
   signed int v23; // eax
@@ -9146,9 +9146,9 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
 
   v27 = a2;
   v26 = g_RenderDevice;
-  g_BuildingUIRecordPtr = UNIT_RECORD(a1);
+  g_BuildingUIRecordPtr = UNIT_RECORD(unitStackId);
   g_TempleOutcomePopupCloseFlag = 0;
-  v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, a4);
+  v5 = (_DWORD *)Mem_Alloc(4112, a2, a3, renderContext);
   if ( v5 )
     v5 = DLXSpriteSet_Load(v5, a3);
   g_DemoTextDLXSpriteSet = (int)v5;
@@ -9161,58 +9161,58 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
     {
       v9 = *(_BYTE *)(v8 + 20);
       UI_BeginUnitInfo(v25, *(_BYTE *)(v8 + 18), v9);
-      v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, a4);
+      v11 = (_DWORD *)Mem_Alloc(4112, v10, v9, renderContext);
       if ( v11 )
         v11 = DLXSpriteSet_Load(v11, v9);
-      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + v7) = (int)v11;
+      *(int *)((char *)g_BuildingUnitsPopupSlotSpriteSets + spriteSetOffset) = (int)v11;
     }
-    v7 += 4;
+    spriteSetOffset += 4;
     v6 += 31;
   }
-  while ( v7 != 40 );
-  LOBYTE(v12) = 10;
+  while ( spriteSetOffset != 40 );
+  LOBYTE(selectedSlot) = 10;
   memset_(40, 0);
-  RenderHook_DemoText(v13, 10, a4);
+  RenderHook_DemoText(v13, 10, renderContext);
   RenderState_SelectCursorDescriptor((int)g_RenderState, (int)&g_CursorDesc_Default);
   g_RenderDevice = v14;
   Render_Begin((int)g_RenderState, 0);
   while ( !g_TempleOutcomePopupCloseFlag )
   {
-    DD_Pump((int)g_RenderState, (char)v12);
-    v12 = 0;
-    v18 = ((g_MouseCursorRawY >> g_CursorCoordShift) - 148) / 78;
-    v19 = 0;
-    v20 = (g_MouseCursorRawX >> g_CursorCoordShift) - 200;
+    DD_Pump((int)g_RenderState, (char)selectedSlot);
+    selectedSlot = 0;
+    hoverRow = ((g_MouseCursorRawY >> g_CursorCoordShift) - 148) / 78;
+    columnIndex = 0;
+    relativeMouseX = (g_MouseCursorRawX >> g_CursorCoordShift) - 200;
     do
     {
-      v21 = (unsigned __int16)g_DemoTextColumnXOffsets[v19];
-      if ( (unsigned __int16)v21 <= v20 && v20 <= v21 + 32 )
+      v21 = (unsigned __int16)g_DemoTextColumnXOffsets[columnIndex];
+      if ( (unsigned __int16)v21 <= relativeMouseX && relativeMouseX <= v21 + 32 )
         break;
-      ++v19;
-      ++v12;
+      ++columnIndex;
+      ++selectedSlot;
     }
-    while ( v19 < 5 );
-    if ( v18 <= 1 && (unsigned int)v12 <= 4 )
+    while ( columnIndex < 5 );
+    if ( hoverRow <= 1 && (unsigned int)selectedSlot <= 4 )
     {
-      v12 += 5 * v18;
-      if ( *(__int16 *)(31 * (_DWORD)v12 + g_BuildingUIRecordPtr + 18) != -1 )
+      selectedSlot += 5 * hoverRow;
+      if ( *(__int16 *)(31 * (_DWORD)selectedSlot + g_BuildingUIRecordPtr + 18) != -1 )
       {
         if ( DD_IsFlipping((int)g_RenderState) )
         {
-          g_BuildingUnitsPopupSelectedSlots[(_DWORD)v12] ^= 1u;
+          g_BuildingUnitsPopupSelectedSlots[(_DWORD)selectedSlot] ^= 1u;
           Audio_PlaySoundEffectByName(aMarker, 64);
-          RenderHook_DemoText(v22, (char)v12, a4);
+          RenderHook_DemoText(v22, (char)selectedSlot, renderContext);
           Render_Begin((int)g_RenderState, 0);
         }
         else if ( DD_IsLost((int)g_RenderState) )
         {
           v23 = Building_HasSpecialPersonageGarrisonEntries(g_BuildingUIRecordPtr);
-          v12 = (unsigned __int8 *)(g_BuildingUIRecordPtr + 18 + v24);
-          Unit_Info(100, 100, v23, v12, a4, 0);
+          selectedSlot = (unsigned __int8 *)(g_BuildingUIRecordPtr + 18 + v24);
+          Unit_Info(100, 100, v23, selectedSlot, renderContext, 0);
         }
       }
     }
-    UIWidgetTable_PollHoverAndActions(g_DemoTextHoverWidgetTable, a4);
+    UIWidgetTable_PollHoverAndActions(g_DemoTextHoverWidgetTable, renderContext);
   }
   DLXSpriteSet_ReleaseAndClear(&g_DemoTextDLXSpriteSet);
   v15 = 0;
@@ -9256,7 +9256,7 @@ int  UI_DemoTextPresent(int a1, int a2, char a3, DWORD a4)
 // 54512C: using guessed type char byte_54512C;
 
 //----- (00441350) --------------------------------------------------------
-void  BattleMapFileName(char *a1, int a2, int a3)
+void  BattleMapFileName(char *outPath, int tileX, int tileY)
 {
   unsigned __int16 primary; // bx
   unsigned __int16 secondary; // cx
@@ -9264,9 +9264,9 @@ void  BattleMapFileName(char *a1, int a2, int a3)
   const char *suffix;
   int tile;
 
-  Debug_Log(a2, a3, (DWORD)a1, (int)aBattlemapfilen);
-  strcpy(a1, aMaps);
-  tile = gameData + 1400 * a2 + 14 * a3;
+  Debug_Log(tileX, tileY, (DWORD)outPath, (int)aBattlemapfilen);
+  strcpy(outPath, aMaps);
+  tile = gameData + 1400 * tileX + 14 * tileY;
   primary = *(_WORD *)tile;
   secondary = *(_WORD *)(tile + 2);
   tertiary = *(_WORD *)(tile + 4);
@@ -9282,22 +9282,22 @@ void  BattleMapFileName(char *a1, int a2, int a3)
   {
     suffix = primary < 7 && g_BattleMapFileSuffixByFactionTable[primary] ? g_BattleMapFileSuffixByFactionTable[primary] : g_BattleMapFileSuffixByFactionTable[0];
   }
-  strcat(a1, suffix);
-  a1[strlen(a1) + 1] = 0;
-  a1[strlen(a1)] = Rng_RandRange(0, 1) + 48;
-  strcat(a1, a_mab);
-  Debug_Log((int)a1, 0, 0, (int)aBattlemapfil_0);
+  strcat(outPath, suffix);
+  outPath[strlen(outPath) + 1] = 0;
+  outPath[strlen(outPath)] = Rng_RandRange(0, 1) + 48;
+  strcat(outPath, a_mab);
+  Debug_Log((int)outPath, 0, 0, (int)aBattlemapfil_0);
 }
 // 4413AA: variable 'v5' is possibly undefined
 // 516410: using guessed type char *off_516410[7];
 // 5202E4: using guessed type int gameData;
 
 //----- (004414C0) --------------------------------------------------------
-char  Str_SwapAndConcatInPlace(char *a1, char *a2)
+char  Str_SwapAndConcatInPlace(char *targetStr, char *otherStr)
 {
-  const char *v4; // esi
-  char *v5; // edi
-  char *v6; // edx
+  const char *readCursor; // esi
+  char *writeCursor; // edi
+  char *savedCopy; // edx
   char v7; // al
   char v8; // al
   char *v9; // esi
@@ -9308,23 +9308,23 @@ char  Str_SwapAndConcatInPlace(char *a1, char *a2)
   char *v14; // edi
   char result; // al
 
-  v4 = a1;
-  v5 = (char *)j_Mem_Alloc(strlen(a1));
-  v6 = v5;
+  readCursor = targetStr;
+  writeCursor = (char *)j_Mem_Alloc(strlen(targetStr));
+  savedCopy = writeCursor;
   do
   {
-    v7 = *v4;
-    *v5 = *v4;
+    v7 = *readCursor;
+    *writeCursor = *readCursor;
     if ( !v7 )
       break;
-    v8 = v4[1];
-    v4 += 2;
-    v5[1] = v8;
-    v5 += 2;
+    v8 = readCursor[1];
+    readCursor += 2;
+    writeCursor[1] = v8;
+    writeCursor += 2;
   }
   while ( v8 );
-  v9 = a2;
-  v10 = a1;
+  v9 = otherStr;
+  v10 = targetStr;
   do
   {
     v11 = *v9;
@@ -9337,8 +9337,8 @@ char  Str_SwapAndConcatInPlace(char *a1, char *a2)
     v10 += 2;
   }
   while ( v12 );
-  v13 = v6;
-  v14 = &a1[strlen(a1)];
+  v13 = savedCopy;
+  v14 = &targetStr[strlen(targetStr)];
   do
   {
     result = *v13;
@@ -9356,18 +9356,18 @@ char  Str_SwapAndConcatInPlace(char *a1, char *a2)
 // 4730FB: using guessed type int __thiscall j_Mem_Alloc(_DWORD);
 
 //----- (00441550) --------------------------------------------------------
-char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3)
+char  BattleMap_GetOutcomeVariantFileName(char *outPath, int tileX, int tileY)
 {
   char *name;
   int insert_offset;
 
-  BattleMapFileName(a1, a2, a3);
-  name = strrchr(a1, '\\');
+  BattleMapFileName(outPath, tileX, tileY);
+  name = strrchr(outPath, '\\');
   if ( name )
     ++name;
   else
-    name = a1;
-  insert_offset = (a2 == 0) + 1;
+    name = outPath;
+  insert_offset = (tileX == 0) + 1;
   if ( name[0] == 'n' )
   {
     name[0] = 'v';
@@ -9383,14 +9383,14 @@ char  BattleMap_GetOutcomeVariantFileName(char *a1, int a2, int a3)
 }
 
 //----- (004415A0) --------------------------------------------------------
-int  BattleMap_GetMoveSoundSurfaceClass(int a1, int a2)
+int  BattleMap_GetMoveSoundSurfaceClass(int tileRow, int tileCol)
 {
-  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * a1 + g_MapData + 2 * a2)];
+  return (unsigned __int8)g_MoveSoundSurfaceClassTable[*(__int16 *)(40 * tileRow + g_MapData + 2 * tileCol)];
 }
 // 532048: using guessed type int g_MapData;
 
 //----- (004415E0) --------------------------------------------------------
-char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
+char * Sound_BuildMusicTrackPath(char *outPath, char *trackSubdir, int trackNumber)
 {
   char *v4; // esi
   char *v5; // edi
@@ -9407,7 +9407,7 @@ char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
   _BYTE v19[28]; // [esp+0h] [ebp-1Ch] BYREF
 
   v4 = aSfxMusic;
-  v5 = a1;
+  v5 = outPath;
   do
   {
     v6 = *v4;
@@ -9420,21 +9420,21 @@ char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
     v5 += 2;
   }
   while ( v7 );
-  v9 = &a1[strlen(a1)];
+  v9 = &outPath[strlen(outPath)];
   do
   {
-    v10 = *a2;
-    *v9 = *a2;
+    v10 = *trackSubdir;
+    *v9 = *trackSubdir;
     if ( !v10 )
       break;
-    v11 = a2[1];
-    a2 += 2;
+    v11 = trackSubdir[1];
+    trackSubdir += 2;
     v9[1] = v11;
     v9 += 2;
   }
   while ( v11 );
-  v12 = a1;
-  sprintf_(v19, "%d.wav", a3);
+  v12 = outPath;
+  sprintf_(v19, "%d.wav", trackNumber);
   v13 = v19;
   v14 = (char *)&v12[strlen(v12)];
   do
@@ -9449,12 +9449,12 @@ char * Sound_BuildMusicTrackPath(char *a1, char *a2, int a3)
     v14 += 2;
   }
   while ( v16 );
-  return a1;
+  return outPath;
 }
 // 4761CE: using guessed type _DWORD sprintf_(_DWORD, const char *, ...);
 
 //----- (00441670) --------------------------------------------------------
-int  Sound_PlayNamedSfxFile(char *a1, int a2)
+int  Sound_PlayNamedSfxFile(char *soundName, int volume)
 {
   char *v4; // edi
   char v5; // al
@@ -9463,27 +9463,27 @@ int  Sound_PlayNamedSfxFile(char *a1, int a2)
   char *v8; // edi
   char v9; // al
   char v10; // al
-  int v11; // esi
-  char v12[100]; // [esp+0h] [ebp-64h] BYREF
+  int soundHandle; // esi
+  char pathBuffer[100]; // [esp+0h] [ebp-64h] BYREF
 
   if ( !g_Audio_MusicActiveFlag )
     return 0;
-  qmemcpy(v12, aSfx_0, sizeof(v12));
-  v4 = &v12[strlen(v12)];
+  qmemcpy(pathBuffer, aSfx_0, sizeof(pathBuffer));
+  v4 = &pathBuffer[strlen(pathBuffer)];
   do
   {
-    v5 = *a1;
-    *v4 = *a1;
+    v5 = *soundName;
+    *v4 = *soundName;
     if ( !v5 )
       break;
-    v6 = a1[1];
-    a1 += 2;
+    v6 = soundName[1];
+    soundName += 2;
     v4[1] = v6;
     v4 += 2;
   }
   while ( v6 );
   v7 = a_wav_5;
-  v8 = &v12[strlen(v12)];
+  v8 = &pathBuffer[strlen(pathBuffer)];
   do
   {
     v9 = *v7;
@@ -9496,16 +9496,16 @@ int  Sound_PlayNamedSfxFile(char *a1, int a2)
     v8 += 2;
   }
   while ( v10 );
-  v11 = CSS_PlaySound((int)v12, a2, 0, 0);
-  Audio_SetSoundLoopIfMusicActive(v11, 0, -1);
-  g_Audio_ActiveSoundHandle = v11;
-  return v11;
+  soundHandle = CSS_PlaySound((int)pathBuffer, volume, 0, 0);
+  Audio_SetSoundLoopIfMusicActive(soundHandle, 0, -1);
+  g_Audio_ActiveSoundHandle = soundHandle;
+  return soundHandle;
 }
 // 5174D0: using guessed type int dword_5174D0;
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (00441720) --------------------------------------------------------
-int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
+int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD gameContext)
 {
   int v4; // ecx
   int v5; // edx
@@ -9519,8 +9519,8 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
   int v13; // edx
   int v14; // ecx
   int v15; // ecx
-  CHAR v16[100]; // [esp+0h] [ebp-D0h] BYREF
-  char v17[100]; // [esp+64h] [ebp-6Ch] BYREF
+  CHAR wavPath[100]; // [esp+0h] [ebp-D0h] BYREF
+  char sourcePath[100]; // [esp+64h] [ebp-6Ch] BYREF
   int v18; // [esp+C8h] [ebp-8h]
   int v19; // [esp+CCh] [ebp-4h]
 
@@ -9528,8 +9528,8 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
   v18 = a2;
   if ( g_Audio_MusicActiveFlag )
   {
-    sprintf_(v16, "data\\mainmap%d.wav", result + 1);
-    if ( IO_FOpen(v16, (unsigned __int8 *)aRb, v4, a4) )
+    sprintf_(wavPath, "data\\mainmap%d.wav", result + 1);
+    if ( IO_FOpen(wavPath, (unsigned __int8 *)aRb, v4, gameContext) )
     {
       fclose_(v6);
     }
@@ -9540,10 +9540,10 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
       IO_RemoveFileByPath(v10, v9);
       IO_RemoveFileByPath(v12, v11);
       IO_RemoveFileByPath(v14, v13);
-      sprintf_(v17, "sfx\\music\\mainmap%d.wav", v15);
-      loadFileSusp(v17, v16);
+      sprintf_(sourcePath, "sfx\\music\\mainmap%d.wav", v15);
+      loadFileSusp(sourcePath, wavPath);
     }
-    g_MainMapMusicHandle = CSS_PlaySound((int)v16, 64, 0, 2000);
+    g_MainMapMusicHandle = CSS_PlaySound((int)wavPath, 64, 0, 2000);
     CSS_SetSoundLoop(g_MainMapMusicHandle, 0, -1);
     result = g_MainMapMusicHandle;
     g_Audio_ActiveSoundHandle = g_MainMapMusicHandle;
@@ -9570,19 +9570,19 @@ int  Music_PlayMainMapTrack(int result, int a2, int a3, DWORD a4)
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441800) --------------------------------------------------------
-int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2)
+int  Audio_PauseMusicAndPlayLoopedSound(char *trackName, int trackNumber)
 {
-  int v5; // ebx
-  char v6[108]; // [esp+0h] [ebp-6Ch] BYREF
+  int soundHandle; // ebx
+  char pathBuffer[108]; // [esp+0h] [ebp-6Ch] BYREF
 
   if ( !g_Audio_MusicActiveFlag )
     return 0;
   CSS_PauseSound(g_MainMapMusicHandle, 2000);
-  Sound_BuildMusicTrackPath(v6, a1, a2);
-  v5 = CSS_PlaySound((int)v6, 64, 0, 2000);
-  CSS_SetSoundLoop(v5, 0, -1);
-  g_Audio_ActiveSoundHandle = v5;
-  return v5;
+  Sound_BuildMusicTrackPath(pathBuffer, trackName, trackNumber);
+  soundHandle = CSS_PlaySound((int)pathBuffer, 64, 0, 2000);
+  CSS_SetSoundLoop(soundHandle, 0, -1);
+  g_Audio_ActiveSoundHandle = soundHandle;
+  return soundHandle;
 }
 // 5174D0: using guessed type int dword_5174D0;
 // 5174D8: using guessed type int dword_5174D8;
@@ -9591,14 +9591,14 @@ int  Audio_PauseMusicAndPlayLoopedSound(char *a1, int a2)
 //----- (00441870) --------------------------------------------------------
 int  Audio_ResumeMusicAndStopLoopedSound(int result)
 {
-  int v1; // ebx
+  int soundHandle; // ebx
 
-  v1 = result;
+  soundHandle = result;
   if ( g_Audio_MusicActiveFlag )
   {
     CSS_ResumeSound(g_MainMapMusicHandle, 2000);
     CSS_SetSoundVolume(g_MainMapMusicHandle, 64, 1000);
-    result = CSS_StopSound(v1, 0);
+    result = CSS_StopSound(soundHandle, 0);
     g_Audio_ActiveSoundHandle = g_MainMapMusicHandle;
   }
   return result;
@@ -9646,34 +9646,34 @@ void Audio_RestoreMusicVolume()
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441960) --------------------------------------------------------
-int  Audio_SetMusicVolume(int a1, signed int a2)
+int  Audio_SetMusicVolume(int volume, signed int fadeMs)
 {
   int result; // eax
 
   if ( g_Audio_MusicActiveFlag )
-    return CSS_SetSoundVolume(g_MainMapMusicHandle, a1, a2);
+    return CSS_SetSoundVolume(g_MainMapMusicHandle, volume, fadeMs);
   return result;
 }
 // 5174D8: using guessed type int dword_5174D8;
 // 543C9C: using guessed type int dword_543C9C;
 
 //----- (00441980) --------------------------------------------------------
-void  Audio_SetSoundLoopIfMusicActive(int a1, int a2, int a3)
+void  Audio_SetSoundLoopIfMusicActive(int soundHandle, int loopStart, int loopEnd)
 {
   if ( g_Audio_MusicActiveFlag )
-    CSS_SetSoundLoop(a1, a2, a3);
+    CSS_SetSoundLoop(soundHandle, loopStart, loopEnd);
 }
 // 5174D8: using guessed type int dword_5174D8;
 
 //----- (004419A0) --------------------------------------------------------
-int  Audio_StartMainMusicIfStopped(int a1, DWORD a2)
+int  Audio_StartMainMusicIfStopped(int a1, DWORD gameContext)
 {
   int result; // eax
 
   if ( !g_Audio_MusicActiveFlag )
   {
     g_Audio_MusicActiveFlag = 1;
-    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), a1, 1, a2);
+    return Music_PlayMainMapTrack(*(unsigned __int8 *)(gameData + 140016), a1, 1, gameContext);
   }
   return result;
 }
@@ -9727,7 +9727,7 @@ void Audio_DisableUnitSounds()
 //----- (00441A30) --------------------------------------------------------
 int  Audio_PlayUnitActivateSound(int result)
 {
-  char *v1; // esi
+  char *resourceKey; // esi
   char *v2; // edi
   char v3; // al
   char v4; // al
@@ -9736,27 +9736,27 @@ int  Audio_PlayUnitActivateSound(int result)
   char v7; // al
   char v8; // al
   char v9[5]; // [esp+1h] [ebp-69h]
-  char v10[100]; // [esp+6h] [ebp-64h] BYREF
+  char soundPath[100]; // [esp+6h] [ebp-64h] BYREF
 
   if ( g_UnitSoundsEnabled )
   {
-    qmemcpy(v10, aSfxOddzialy, sizeof(v10));
-    v1 = (&g_UnitTypeResourceKeys)[22 * result];
-    v2 = &v10[strlen(v10)];
+    qmemcpy(soundPath, aSfxOddzialy, sizeof(soundPath));
+    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    v2 = &soundPath[strlen(soundPath)];
     do
     {
-      v3 = *v1;
-      *v2 = *v1;
+      v3 = *resourceKey;
+      *v2 = *resourceKey;
       if ( !v3 )
         break;
-      v4 = v1[1];
-      v1 += 2;
+      v4 = resourceKey[1];
+      resourceKey += 2;
       v2[1] = v4;
       v2 += 2;
     }
     while ( v4 );
     v5 = aActiv1_wav;
-    v6 = &v10[strlen(v10)];
+    v6 = &soundPath[strlen(soundPath)];
     do
     {
       v7 = *v5;
@@ -9769,8 +9769,8 @@ int  Audio_PlayUnitActivateSound(int result)
       v6 += 2;
     }
     while ( v8 );
-    v9[strlen(v10)] = Rng_RandRange(49, 50);
-    result = CSS_PlaySound((int)v10, 64, 0, 0);
+    v9[strlen(soundPath)] = Rng_RandRange(49, 50);
+    result = CSS_PlaySound((int)soundPath, 64, 0, 0);
     g_LastUnitActivateSoundHandle = result;
   }
   return result;
@@ -9782,8 +9782,8 @@ int  Audio_PlayUnitActivateSound(int result)
 //----- (00441B00) --------------------------------------------------------
 int  Audio_PlayUnitMoveOrderSound(int result)
 {
-  int v1; // ebx
-  char *v2; // esi
+  int metadataOffset; // ebx
+  char *resourceKey; // esi
   char *v3; // edi
   char v4; // al
   char v5; // al
@@ -9792,29 +9792,29 @@ int  Audio_PlayUnitMoveOrderSound(int result)
   char v8; // al
   char v9; // al
   char v10[5]; // [esp+1h] [ebp-6Dh]
-  char v11[104]; // [esp+6h] [ebp-68h] BYREF
+  char soundPath[104]; // [esp+6h] [ebp-68h] BYREF
 
   if ( g_UnitSoundsEnabled )
   {
-    v1 = 22 * result;
+    metadataOffset = 22 * result;
     CSS_SetSoundVolume(g_LastUnitActivateSoundHandle, 0, 500);
-    qmemcpy(v11, aSfxOddzialy_0, 0x64u);
-    v2 = (&g_UnitTypeResourceKeys)[v1];
-    v3 = &v11[strlen(v11)];
+    qmemcpy(soundPath, aSfxOddzialy_0, 0x64u);
+    resourceKey = (&g_UnitTypeResourceKeys)[metadataOffset];
+    v3 = &soundPath[strlen(soundPath)];
     do
     {
-      v4 = *v2;
-      *v3 = *v2;
+      v4 = *resourceKey;
+      *v3 = *resourceKey;
       if ( !v4 )
         break;
-      v5 = v2[1];
-      v2 += 2;
+      v5 = resourceKey[1];
+      resourceKey += 2;
       v3[1] = v5;
       v3 += 2;
     }
     while ( v5 );
     v6 = aGo1_wav;
-    v7 = &v11[strlen(v11)];
+    v7 = &soundPath[strlen(soundPath)];
     do
     {
       v8 = *v6;
@@ -9827,8 +9827,8 @@ int  Audio_PlayUnitMoveOrderSound(int result)
       v7 += 2;
     }
     while ( v9 );
-    v10[strlen(v11)] = Rng_RandRange(49, 50);
-    return CSS_PlaySound((int)v11, 64, 0, 0);
+    v10[strlen(soundPath)] = Rng_RandRange(49, 50);
+    return CSS_PlaySound((int)soundPath, 64, 0, 0);
   }
   return result;
 }
@@ -9839,7 +9839,7 @@ int  Audio_PlayUnitMoveOrderSound(int result)
 //----- (00441BE0) --------------------------------------------------------
 int  Audio_PlayUnitRangedAttackSound(int result)
 {
-  char *v1; // esi
+  char *resourceKey; // esi
   char *v2; // edi
   char v3; // al
   char v4; // al
@@ -9847,27 +9847,27 @@ int  Audio_PlayUnitRangedAttackSound(int result)
   char *v6; // edi
   char v7; // al
   char v8; // al
-  char v9[100]; // [esp+0h] [ebp-64h] BYREF
+  char soundPath[100]; // [esp+0h] [ebp-64h] BYREF
 
   if ( g_UnitSoundsEnabled )
   {
-    qmemcpy(v9, aSfxOddzialy_1, sizeof(v9));
-    v1 = (&g_UnitTypeResourceKeys)[22 * result];
-    v2 = &v9[strlen(v9)];
+    qmemcpy(soundPath, aSfxOddzialy_1, sizeof(soundPath));
+    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    v2 = &soundPath[strlen(soundPath)];
     do
     {
-      v3 = *v1;
-      *v2 = *v1;
+      v3 = *resourceKey;
+      *v2 = *resourceKey;
       if ( !v3 )
         break;
-      v4 = v1[1];
-      v1 += 2;
+      v4 = resourceKey[1];
+      resourceKey += 2;
       v2[1] = v4;
       v2 += 2;
     }
     while ( v4 );
     v5 = aStrzal_wav;
-    v6 = &v9[strlen(v9)];
+    v6 = &soundPath[strlen(soundPath)];
     do
     {
       v7 = *v5;
@@ -9880,7 +9880,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
       v6 += 2;
     }
     while ( v8 );
-    return CSS_PlaySound((int)v9, 64, 0, 0);
+    return CSS_PlaySound((int)soundPath, 64, 0, 0);
   }
   return result;
 }
@@ -9890,7 +9890,7 @@ int  Audio_PlayUnitRangedAttackSound(int result)
 //----- (00441C80) --------------------------------------------------------
 int  Audio_PlayUnitHitSound(int result)
 {
-  char *v1; // esi
+  char *resourceKey; // esi
   char *v2; // edi
   char v3; // al
   char v4; // al
@@ -9898,27 +9898,27 @@ int  Audio_PlayUnitHitSound(int result)
   char *v6; // edi
   char v7; // al
   char v8; // al
-  char v9[100]; // [esp+0h] [ebp-64h] BYREF
+  char soundPath[100]; // [esp+0h] [ebp-64h] BYREF
 
   if ( g_UnitSoundsEnabled )
   {
-    qmemcpy(v9, aSfxOddzialy_2, sizeof(v9));
-    v1 = (&g_UnitTypeResourceKeys)[22 * result];
-    v2 = &v9[strlen(v9)];
+    qmemcpy(soundPath, aSfxOddzialy_2, sizeof(soundPath));
+    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    v2 = &soundPath[strlen(soundPath)];
     do
     {
-      v3 = *v1;
-      *v2 = *v1;
+      v3 = *resourceKey;
+      *v2 = *resourceKey;
       if ( !v3 )
         break;
-      v4 = v1[1];
-      v1 += 2;
+      v4 = resourceKey[1];
+      resourceKey += 2;
       v2[1] = v4;
       v2 += 2;
     }
     while ( v4 );
     v5 = aDostal_wav;
-    v6 = &v9[strlen(v9)];
+    v6 = &soundPath[strlen(soundPath)];
     do
     {
       v7 = *v5;
@@ -9931,7 +9931,7 @@ int  Audio_PlayUnitHitSound(int result)
       v6 += 2;
     }
     while ( v8 );
-    return CSS_PlaySound((int)v9, 64, 0, 0);
+    return CSS_PlaySound((int)soundPath, 64, 0, 0);
   }
   return result;
 }
@@ -9941,7 +9941,7 @@ int  Audio_PlayUnitHitSound(int result)
 //----- (00441D20) --------------------------------------------------------
 int  Audio_PlayUnitDeathSound(int result)
 {
-  char *v1; // esi
+  char *resourceKey; // esi
   char *v2; // edi
   char v3; // al
   char v4; // al
@@ -9949,27 +9949,27 @@ int  Audio_PlayUnitDeathSound(int result)
   char *v6; // edi
   char v7; // al
   char v8; // al
-  char v9[100]; // [esp+0h] [ebp-64h] BYREF
+  char soundPath[100]; // [esp+0h] [ebp-64h] BYREF
 
   if ( g_UnitSoundsEnabled )
   {
-    qmemcpy(v9, aSfxOddzialy_3, sizeof(v9));
-    v1 = (&g_UnitTypeResourceKeys)[22 * result];
-    v2 = &v9[strlen(v9)];
+    qmemcpy(soundPath, aSfxOddzialy_3, sizeof(soundPath));
+    resourceKey = (&g_UnitTypeResourceKeys)[22 * result];
+    v2 = &soundPath[strlen(soundPath)];
     do
     {
-      v3 = *v1;
-      *v2 = *v1;
+      v3 = *resourceKey;
+      *v2 = *resourceKey;
       if ( !v3 )
         break;
-      v4 = v1[1];
-      v1 += 2;
+      v4 = resourceKey[1];
+      resourceKey += 2;
       v2[1] = v4;
       v2 += 2;
     }
     while ( v4 );
     v5 = aDead_wav;
-    v6 = &v9[strlen(v9)];
+    v6 = &soundPath[strlen(soundPath)];
     do
     {
       v7 = *v5;
@@ -9982,7 +9982,7 @@ int  Audio_PlayUnitDeathSound(int result)
       v6 += 2;
     }
     while ( v8 );
-    return CSS_PlaySound((int)v9, 64, 0, 0);
+    return CSS_PlaySound((int)soundPath, 64, 0, 0);
   }
   return result;
 }
