@@ -75,8 +75,15 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
    globe icon in the HUD at approx screen **(430, 407)**, bottom-center. Confirm it pans
    (watch for a `left/top` change in the next `tile_input`), then calibrate the SW view.
    HUD note: player-0's red stacks render at the bottom-center of the world view; a
-   **central castle** sits at ~screen (340,270) — verify its `building_owner` (if it is
-   player-3 building idx4, capturing it locally is a large shortcut vs the 29-tile march).
+   **central castle** sits at ~screen (340,270) — verify its `building_owner`.
+   **RESOLVED (run 20260713T111323Z):** the central castle is **player-0's OWN**
+   building (`building_idx=0 building_owner=0 building_kind=2` at tile 71,45) — **no
+   shortcut**; player-3 building idx4 is at their SW cluster, so the full march is
+   required. Also: clicking the HUD globe at (420,400)/(430,407) produced **0
+   `minimap_update`** — that is not the pan hot-region. Next: try world-edge scroll
+   (cursor to screen borders) or the low-level `move R C` toward off-screen tiles, and
+   check whether `autoresolve` (which complete routes deliberately avoid, per
+   `mission_00_stack9`) can win the stack battles to avoid hand-tuning all 6.
 2. March the mobile stack(s) to the cluster over N turns.
 3. Author + tune one tactical battle per player-3 stack (win by contact, autoresolve off).
 4. Capture player-3 building idx4; then march to (87,66) for stack 21.
