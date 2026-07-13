@@ -17,14 +17,6 @@ def replace_count(text, old, new, expected, label):
     return text.replace(old, new)
 
 
-def write_changed(path, updated):
-    file_path = Path(path)
-    original = file_path.read_text(encoding="utf-8")
-    if updated == original:
-        raise RuntimeError("%s: no changes" % path)
-    file_path.write_text(updated, encoding="utf-8")
-
-
 def patch_clash95():
     path = Path("clash95.c")
     text = path.read_text(encoding="utf-8")
@@ -131,6 +123,26 @@ TEST(objectives, mission05_failure_ignores_enemy_attack_and_zero_language) {
     path.write_text(text, encoding="utf-8")
 
 
+def patch_stale_coverage_tests():
+    paths = (
+        "tests/unit/cases/test_cov04.c",
+        "tests/unit/cases/test_cov2_04.c",
+        "tests/unit/cases/test_cov3_00.c",
+        "tests/unit/cases/test_cov4_00.c",
+    )
+    total = 0
+    for name in paths:
+        path = Path(name)
+        text = path.read_text(encoding="utf-8")
+        count = text.count("dword_532048")
+        if count == 0:
+            raise RuntimeError("%s: stale battle-context reference not found" % name)
+        path.write_text(text.replace("dword_532048", "g_MapData"), encoding="utf-8")
+        total += count
+    if total != 12:
+        raise RuntimeError("stale battle-context references: expected 12, found %d" % total)
+
+
 def patch_metadata():
     path = Path("RECOVERED_STRUCTURES.json")
     text = path.read_text(encoding="utf-8")
@@ -162,7 +174,8 @@ def patch_status():
 - renamed the misidentified attack helper to `Mission05_MarkFailureOnFriendlyAttack` and the defeat dispatcher to `Mission_CheckFailureCondition`;
 - introduced `MISSION_FAILURE_FLAG` for `gameData + 140021` while preserving mission-05 and mission-15 behavior;
 - added the trace-gated `mission05_failure_friendly_attack` marker;
-- added asset-independent tests for the friendly-attack failure branch and its exclusions.
+- added asset-independent tests for the friendly-attack failure branch and its exclusions;
+- repaired four coverage cases that still referenced the retired `dword_532048` spelling instead of `g_MapData`.
 
 """
     text = replace_once(text, "## Latest Validation\n\n", section, "latest validation")
@@ -173,7 +186,7 @@ def patch_index_and_logs():
     path = Path("docs/archive/SUB_RENAME_INDEX.md")
     text = path.read_text(encoding="utf-8")
     text = replace_count(text, "Mission_MarkObjective05CompleteOnAttack", "Mission05_MarkFailureOnFriendlyAttack", 1, "rename index helper")
-    text = replace_count(text, "UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 1, "rename index dispatcher")
+    text = replace_count(text, "UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 3, "rename index dispatcher")
     path.write_text(text, encoding="utf-8")
 
     path = Path("docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md")
@@ -198,6 +211,7 @@ def patch_index_and_logs():
 
 - Corrected two reached semantic names in the mission-05 defeat path and named the shared mission failure byte at `gameData + 140021`.
 - Added read-only failure tracing plus asset-independent regression coverage; no objective, combat, ownership, or turn behavior was changed.
+- Repaired four stale coverage tests that still used the retired `dword_532048` battle-context spelling after the source moved to `g_MapData`.
 
 """
     text = replace_once(text, "# Compilation Progress\n\n", entry, "compilation log heading")
@@ -220,6 +234,7 @@ def cleanup_helpers():
 def main():
     patch_clash95()
     patch_tests()
+    patch_stale_coverage_tests()
     patch_metadata()
     patch_status()
     patch_index_and_logs()
