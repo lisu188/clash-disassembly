@@ -4,6 +4,7 @@ from pathlib import Path
 import re
 
 SOURCE = Path("clash95.c")
+OUTPUT = Path("mission05-source-slices.txt")
 TARGETS = [
     "Mission_CheckObjectiveComplete",
     "UI_CheckDialogAccepted",
@@ -47,13 +48,16 @@ def extract_function(text: str, name: str) -> str:
 
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8", errors="replace")
+    sections = []
     for name in TARGETS:
-        print(f"\n===== {name} =====")
-        print(extract_function(text, name))
-    print("\n===== exact references =====")
+        sections.append(f"===== {name} =====\n{extract_function(text, name)}")
+    references = ["===== exact references ====="]
     for line_number, line in enumerate(text.splitlines(), 1):
         if any(token in line for token in TARGETS + ["g_LanguageIndex"]):
-            print(f"{line_number}: {line}")
+            references.append(f"{line_number}: {line}")
+    sections.append("\n".join(references))
+    OUTPUT.write_text("\n\n".join(sections) + "\n", encoding="utf-8")
+    print(OUTPUT)
 
 
 if __name__ == "__main__":
