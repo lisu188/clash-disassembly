@@ -17,7 +17,8 @@
         "0x00000000"
       ],
       "branch_loop_shape": "Describe matching branches, switch arms, loops, edge count, and back edges.",
-      "callee_data_evidence": "Describe matching callees, data references, and complete literal context."
+      "callee_data_evidence": "Describe matching callees and data references.",
+      "literal_context": "Describe how every shared literal is used in the matching bodies."
     }
   ]
 }
