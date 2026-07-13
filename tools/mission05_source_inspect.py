@@ -57,7 +57,7 @@ def main() -> None:
             references.append(f"{line_number}: {line}")
     sections.append("\n".join(references))
     OUTPUT.write_text("\n\n".join(sections) + "\n", encoding="utf-8")
-    print(OUTPUT)
+    print(f"{OUTPUT} {OUTPUT.stat().st_size} bytes")
 
 
 if __name__ == "__main__":
