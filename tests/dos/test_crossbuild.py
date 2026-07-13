@@ -131,6 +131,40 @@ sub_20000(
         _, _, _, summary = matcher.apply_reviews([], calibration, reviews)
         self.assertFalse(summary["passed"])
 
+    def test_game_confirmation_requires_complete_independent_evidence(self):
+        proposal = {
+            "dos_ea": "0x20000",
+            "clash95_ea": "0x400000",
+            "proposed_name": "Named",
+            "clash95_confidence": "medium",
+            "shared_unique_literals": ["shared"]
+        }
+        calibration = [{"dos_ea": "0x90000", "clash95_ea": "0x500000", "proposed_name": "Known"}]
+        reviews = {
+            "calibration": [{"dos_ea": "0x90000", "clash95_ea": "0x500000", "verdict": "CONFIRM", "reason": "CLIPS body and source match"}],
+            "game": [{"dos_ea": "0x20000", "clash95_ea": "0x400000", "verdict": "CONFIRM", "reason": "body match"}]
+        }
+        _, candidate_reviews, confirmed, summary = matcher.apply_reviews([proposal], calibration, reviews)
+        self.assertTrue(summary["passed"])
+        self.assertFalse(candidate_reviews[0]["evidence_complete"])
+        self.assertEqual(confirmed, [])
+        reviews["game"][0].update({
+            "distinctive_constants": ["0x10"],
+            "branch_loop_shape": "matching branch and loop structure",
+            "callee_data_evidence": "matching callees and data references",
+            "literal_context": "shared literal is used in the same error path"
+        })
+        _, candidate_reviews, confirmed, _ = matcher.apply_reviews([proposal], calibration, reviews)
+        self.assertTrue(candidate_reviews[0]["evidence_complete"])
+        self.assertEqual(confirmed[0]["confidence"], "medium")
+
+    def test_calibration_reason_is_required(self):
+        calibration = [{"dos_ea": "0x90000", "clash95_ea": "0x500000", "proposed_name": "Known"}]
+        reviews = {"calibration": [{"dos_ea": "0x90000", "clash95_ea": "0x500000", "verdict": "CONFIRM", "reason": ""}], "game": []}
+        _, _, _, summary = matcher.apply_reviews([], calibration, reviews)
+        self.assertFalse(summary["complete"])
+        self.assertFalse(summary["passed"])
+
     def test_rename_index_parser(self):
         text = '''| Old | New | Confidence | Area | Evidence |
 |---|---|---|---|---|
