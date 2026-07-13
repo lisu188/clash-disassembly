@@ -74,7 +74,19 @@ jobs:
           if-no-files-found: error
 
       - name: Check Markdown links
-        run: python3 tests/check_markdown_links.py
+        id: markdown-links
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 tests/check_markdown_links.py 2>&1 | tee markdown-links.log
+
+      - name: Upload Markdown-link diagnostics
+        if: failure() && steps.markdown-links.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: markdown-link-diagnostics
+          path: markdown-links.log
+          if-no-files-found: error
 
       - name: Check whitespace errors
         run: git diff --check
