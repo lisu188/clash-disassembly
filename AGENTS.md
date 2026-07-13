@@ -17,6 +17,11 @@ language for each track.
 
 ### DOS disassembly
 
+- `clash.c` is generated DOS decompiler output kept only as a reference artifact.
+  It is not an editable implementation source: do not implement fixes or features
+  in it, and never patch it manually. DOS changes must originate in the disposable
+  IDA database, reviewed name/control-flow inputs, or regeneration tooling, then be
+  reproduced by regenerating `clash.c`.
 - `clash.c` preserves 4,219 function markers.
 - 4,218 of 4,219 functions decompile successfully; `0xFDF26` is the only failed
   function.
