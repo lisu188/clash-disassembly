@@ -1,11 +1,16 @@
 # Clash — Module Map
 
-Reconstructed source-file layout of `clash.c` (Hex-Rays decompilation of the
-Watcom C++ binary). Functions are laid out in the executable by source file in
-link order, so debug/assert string references act as **module anchors**:
-everything between two anchors of the same module belongs to that module.
-Anchors are exact; the module of functions in a large gap between different
-anchors is *inferred* and marked accordingly.
+Reconstructed source-file layout of `clash.c` (Hex-Rays decompilation of the Watcom C++ binary). Functions are laid out in executable link order, so debug/assert string references act as module anchors. Everything between two anchors of the same module belongs to that module; large gaps between different anchors remain inferred.
+
+## Current accounting
+
+- **Total functions:** 4,219.
+- **Named addresses:** 886 (21.0%).
+- **Distinct semantic base names:** 872.
+- **Deterministic emitted `_EA` collision symbols:** 14.
+- **CLIPS functions named:** 704 / 2,015 (34.9%).
+
+For cross-build transfer, `0x88370` is the conservative confirmed CLIPS boundary. The first exact CLIPS module anchor below remains `0x89860`; the intervening range is excluded from game/game-engine transfer and may be used only for CLIPS calibration.
 
 ## High-level regions
 
@@ -16,8 +21,6 @@ anchors is *inferred* and marked accordingly.
 | Game engine: graphics / sound / AI glue | `0654D5`–`089860` | 695 | unanchored (no asserts) |
 | CLIPS 6.x expert system (73 modules) | `089860`–`0EB580` | 2015 | CLIPS module-id anchors |
 | Trailing library / math / DPMI runtime | `0EB580`–`1208EB` | 470 | unanchored |
-
-**Total:** 4219 functions. **Named:** 470 (11.1%).
 
 ## Game modules (`0x12C6E`–`0x654D5`)
 
@@ -53,7 +56,7 @@ Order matches link order. Range = first..last confirmed anchor for that module.
 
 ## CLIPS modules (`0x89860`–`0xEB580`)
 
-The embedded [CLIPS](https://en.wikipedia.org/wiki/CLIPS) expert system (NASA rule engine) — ~48% of the binary. Module ids recovered from `PrintErrorID`/`SystemError` string arguments; each maps to a CLIPS 6.x source file (e.g. `FACTMNGR`→`factmngr.c`).
+The embedded CLIPS expert system is approximately 48% of the binary. Module ids are recovered from `PrintErrorID`/`SystemError` arguments and mapped to CLIPS 6.24 source files.
 
 | CLIPS module | Anchor range |
 |---|---|
