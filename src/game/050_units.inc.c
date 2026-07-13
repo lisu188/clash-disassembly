@@ -2519,27 +2519,27 @@ int  Unit_CreateNearbyUnitGroup(int originRow, int originColumn, unsigned __int8
 // 5202E4: using guessed type int gameData;
 
 //----- (004127A0) --------------------------------------------------------
-int  UnitSlot_AdjustFatigueByPredicate(int a1, int a2, BOOL ( *a3)(int a1))
+int  UnitSlot_AdjustFatigueByPredicate(int slotPtr, int fatigueDelta, BOOL ( *predicate)(int slotPtr))
 {
   int result; // eax
-  signed char v4; // cl
+  signed char newFatigue; // cl
 
-  result = a3(a1);
+  result = predicate(slotPtr);
   if ( result )
   {
-    result = *(__int16 *)a1;
+    result = *(__int16 *)slotPtr;
     if ( result != UNIT_TYPE_GOLD_CARGO
       && result != UNIT_TYPE_PEASANT_CARGO
       && result != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
       && result != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      v4 = a2 + *(char *)(a1 + 10);
-      *(_BYTE *)(a1 + 10) = v4;
-      if ( v4 < 0 )
-        *(_BYTE *)(a1 + 10) = 0;
-      if ( *(char *)(a1 + 10) > 100 )
-        *(_BYTE *)(a1 + 10) = 100;
-      return *(char *)(a1 + 10);
+      newFatigue = fatigueDelta + *(char *)(slotPtr + 10);
+      *(_BYTE *)(slotPtr + 10) = newFatigue;
+      if ( newFatigue < 0 )
+        *(_BYTE *)(slotPtr + 10) = 0;
+      if ( *(char *)(slotPtr + 10) > 100 )
+        *(_BYTE *)(slotPtr + 10) = 100;
+      return *(char *)(slotPtr + 10);
     }
   }
   return result;
@@ -2599,30 +2599,30 @@ signed int  UnitStack_AdjustFatigueByPredicate(
 }
 
 //----- (00412880) --------------------------------------------------------
-int  UnitSlot_AdjustMoraleByPredicate(int a1, int a2, BOOL ( *a3)(int a1))
+int  UnitSlot_AdjustMoraleByPredicate(int slotPtr, int moraleDelta, BOOL ( *predicate)(int slotPtr))
 {
   int result; // eax
   int unit_type; // eax
   int morale; // eax
 
-  result = a3(a1);
+  result = predicate(slotPtr);
   if ( result )
   {
-    unit_type = *(__int16 *)a1;
+    unit_type = *(__int16 *)slotPtr;
     if ( unit_type != UNIT_TYPE_GOLD_CARGO
       && unit_type != UNIT_TYPE_PEASANT_CARGO
       && unit_type != UNIT_TYPE_SPECIAL_FOOT_PERSONAGE
       && unit_type != UNIT_TYPE_SPECIAL_MOUNTED_PERSONAGE )
     {
-      morale = *(char *)(a1 + 11) + a2;
-      *(_BYTE *)(a1 + 11) = morale;
-      if ( a2 > 0 )
-        *(_BYTE *)(a1 + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
-      if ( *(char *)(a1 + 11) < 0 )
-        *(_BYTE *)(a1 + 11) = 0;
-      if ( *(char *)(a1 + 11) > 20 )
-        *(_BYTE *)(a1 + 11) = 20;
-      return *(char *)(a1 + 11);
+      morale = *(char *)(slotPtr + 11) + moraleDelta;
+      *(_BYTE *)(slotPtr + 11) = morale;
+      if ( moraleDelta > 0 )
+        *(_BYTE *)(slotPtr + 13) &= ~UNIT_SLOT_FLAG_LOW_MORALE;
+      if ( *(char *)(slotPtr + 11) < 0 )
+        *(_BYTE *)(slotPtr + 11) = 0;
+      if ( *(char *)(slotPtr + 11) > 20 )
+        *(_BYTE *)(slotPtr + 11) = 20;
+      return *(char *)(slotPtr + 11);
     }
   }
   return result;

@@ -28,8 +28,10 @@ from apply_sub_renames import split_code_and_literals  # noqa: E402
 
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 GEN_LOCAL = re.compile(r"^(a|v)\d+$")
-# A function definition: return-type/qualifiers + Name(...) at column 0, then `{`.
-SIG = re.compile(r"^[A-Za-z_].*\b([A-Za-z_][A-Za-z0-9_]*)\s*\(")
+# A function definition: return-type/qualifiers + Name( at column 0, then `{`.
+# Non-greedy over type tokens so we capture the function name before the FIRST
+# paren, not an inner paren of a function-pointer parameter like BOOL (*a3)(int).
+SIG = re.compile(r"^[A-Za-z_][A-Za-z0-9_ \t\*]*?\b([A-Za-z_][A-Za-z0-9_]*)\s*\(")
 
 
 def find_functions(text):
