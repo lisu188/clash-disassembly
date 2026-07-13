@@ -31,6 +31,35 @@ build predates it — it is effectively a **6.0/6.1-era** engine whose error-id
 **un-prefixed** `ArgRangeCheck`. Our tooling strips a leading `Env` from
 6.24-sourced names for DOS use, recording the source name alongside as evidence.
 
+## String-anchor matching + calibration (Stage-0)
+
+A general **string-anchor matcher** (`tools/dos/clips_match.py`) generalizes the
+error-id method to *all* string literals: a literal referenced by exactly one CLIPS
+source function and exactly one DOS function is a definitive name match.
+
+**Calibration gate — passed.** The 394 functions the DOS binary registers by name
+via `DefineFunction2`/`registerClipsCallback` are ground truth
+(`tools/dos/dos_registered_groundtruth.json`). Auditing the anchors against them:
+
+- String-anchor: **0 contradictions / 394 (100% precision)**.
+- Error-id anchor: **1 contradiction / 130 (99.2%)** — `0xE7E50`, where the error
+  moved from `FetchCommand` (DOS) into the `TextLookupFetch` helper by 6.24 (version
+  skew). The false anchor was **dropped** (`tools/dos/dos_dropped_false_anchors.json`);
+  registered names always win.
+
+The matcher also **caught a pre-existing mislabel**: `0xAA6B0`, hand-labeled
+`addClipsFact`, is actually `Retract` (its body is the exact `EnvRetract` logic —
+join-in-progress guard, then fact-list unlink + free-list push). Corrected via the
+master map (`tools/dos/dos_name_conflicts.json`).
+
+**Precedence:** registered ground-truth (immutable) > string-anchor / error-id
+evidence (override stale hand-labels, dropped where they contradict ground truth) >
+hand-labels. Consolidated into `tools/dos/dos_master_map.json` (built by
+`build_master_map.py`).
+
+**Coverage so far:** **782 / 4,219 named (19%)**, of which **600 / 2,015 in the CLIPS
+region (30%)** — before the sequence-alignment extension.
+
 ## Reproduction
 
 - Sources: `https://sourceforge.net/projects/clipsrules/files/CLIPS/6.24/clips_core_source_624.zip`

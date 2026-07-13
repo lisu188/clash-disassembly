@@ -1116,15 +1116,6 @@
   "source": "clips-xref"
  },
  {
-  "ea": "0xe7e50",
-  "name": "TextLookupFetch",
-  "clips_source_name": "TextLookupFetch",
-  "confidence": "high",
-  "area": "clips",
-  "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn TextLookupFetch",
-  "source": "clips-xref"
- },
- {
   "ea": "0xea070",
   "name": "ModAndDupParse",
   "clips_source_name": "ModAndDupParse",
