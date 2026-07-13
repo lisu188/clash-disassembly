@@ -1,0 +1,11 @@
+# The runtime/mission-route test harness is bash + python. On Windows checkouts,
+# core.autocrlf rewrites these to CRLF, which makes WSL bash fail with
+# "set: pipefail: invalid option name" (a trailing \r on `set -euo pipefail`)
+# and breaks python route/script parsing — so the mission harness cannot run.
+# The blobs are already LF; these rules stop autocrlf from mangling them on
+# checkout, making the harness runnable in a Windows + WSL checkout.
+*.sh       text eol=lf
+*.py       text eol=lf
+*.script   text eol=lf
+*.env      text eol=lf
+*.gdb      text eol=lf
