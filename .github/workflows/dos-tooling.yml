@@ -1,0 +1,75 @@
+name: DOS Tooling
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dos-tooling-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dos-integrity:
+    name: DOS integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python tooling
+        run: python3 -m py_compile tools/dos/*.py tests/dos/*.py
+
+      - name: Run DOS tooling tests
+        run: python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
+
+      - name: Validate JSON files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool RECOVERED_STRUCTURES.json >/dev/null
+          python3 -m json.tool UNIT_TYPES_AND_STATS.json >/dev/null
+          while IFS= read -r -d '' file; do
+            python3 -m json.tool "$file" >/dev/null
+          done < <(find tools/dos -maxdepth 1 -type f -name '*.json' -print0 | sort -z)
+
+      - name: Verify generated DOS name maps
+        run: python3 tools/dos/build_master_map.py --check
+
+      - name: Check Markdown links
+        run: python3 tests/check_markdown_links.py
+
+      - name: Check whitespace errors
+        run: git diff --check
+
+  linux-build:
+    name: Linux compile and link
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libsdl2-dev libx11-dev
+
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build clash95_bootstrap
+        run: cmake --build build --target clash95_bootstrap -j2
