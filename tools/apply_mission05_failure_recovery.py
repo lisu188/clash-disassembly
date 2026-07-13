@@ -3,50 +3,37 @@
 from pathlib import Path
 
 
-def replace_once(text, old, new, label):
-    count = text.count(old)
-    if count != 1:
-        raise RuntimeError("%s: expected one match, found %d" % (label, count))
-    return text.replace(old, new, 1)
-
-
-def replace_count(text, old, new, expected, label):
-    count = text.count(old)
-    if count != expected:
-        raise RuntimeError("%s: expected %d matches, found %d" % (label, expected, count))
+def replace_exact(text, old, new, expected, label):
+    actual = text.count(old)
+    if actual != expected:
+        raise RuntimeError("%s: expected %d matches, found %d" % (label, expected, actual))
     return text.replace(old, new)
+
+
+def replace_one(text, old, new, label):
+    return replace_exact(text, old, new, 1, label)
 
 
 def patch_clash95():
     path = Path("clash95.c")
     text = path.read_text(encoding="utf-8")
-    text = replace_once(
+    text = replace_one(
         text,
         "#define ACTIVE_MISSION_INDEX_OFFSET 140017\n#define GAME_TURN_COUNTER_OFFSET 140022",
         "#define ACTIVE_MISSION_INDEX_OFFSET 140017\n#define MISSION_FAILURE_FLAG_OFFSET 140021\n#define GAME_TURN_COUNTER_OFFSET 140022",
         "failure flag offset",
     )
-    text = replace_once(
+    text = replace_one(
         text,
         "#define ACTIVE_MISSION_INDEX (*(_DWORD *)(gameData + ACTIVE_MISSION_INDEX_OFFSET))\n#define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))",
         "#define ACTIVE_MISSION_INDEX (*(_DWORD *)(gameData + ACTIVE_MISSION_INDEX_OFFSET))\n#define MISSION_FAILURE_FLAG (*((unsigned __int8 *)(gameData + MISSION_FAILURE_FLAG_OFFSET)))\n#define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))",
         "failure flag accessor",
     )
-    text = replace_count(
+    text = replace_exact(text, "Mission_MarkObjective05CompleteOnAttack", "Mission05_MarkFailureOnFriendlyAttack", 4, "mission 05 helper rename")
+    text = replace_exact(text, "UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 3, "failure dispatcher rename")
+    text = replace_one(
         text,
-        "Mission_MarkObjective05CompleteOnAttack",
-        "Mission05_MarkFailureOnFriendlyAttack",
-        4,
-        "mission 05 helper rename",
-    )
-    text = replace_count(
-        text,
-        "UI_CheckDialogAccepted",
-        "Mission_CheckFailureCondition",
-        3,
-        "failure dispatcher rename",
-    )
-    old_body = """int  Mission05_MarkFailureOnFriendlyAttack(int result, int a2)
+        """int  Mission05_MarkFailureOnFriendlyAttack(int result, int a2)
 {
   if ( g_LanguageIndex && !result && (a2 == 1 || a2 == 2) )
   {
@@ -54,8 +41,8 @@ def patch_clash95():
     *(_BYTE *)(gameData + 140021) = 1;
   }
   return result;
-}"""
-    new_body = """int  Mission05_MarkFailureOnFriendlyAttack(int result, int target_owner_index)
+}""",
+        """int  Mission05_MarkFailureOnFriendlyAttack(int result, int target_owner_index)
 {
   if ( g_LanguageIndex && !result && (target_owner_index == 1 || target_owner_index == 2) )
   {
@@ -69,30 +56,18 @@ def patch_clash95():
     MISSION_FAILURE_FLAG = 1;
   }
   return result;
-}"""
-    text = replace_once(text, old_body, new_body, "mission 05 helper body")
-    text = replace_count(
-        text,
-        "return *(unsigned __int8 *)(gameData + 140021);",
-        "return MISSION_FAILURE_FLAG;",
-        2,
-        "failure flag reads",
+}""",
+        "mission 05 helper body",
     )
-    text = replace_count(
-        text,
-        "*(_BYTE *)(gameData + 140021) = 1;",
-        "MISSION_FAILURE_FLAG = 1;",
-        1,
-        "mission 15 failure write",
-    )
+    text = replace_exact(text, "return *(unsigned __int8 *)(gameData + 140021);", "return MISSION_FAILURE_FLAG;", 2, "failure flag reads")
+    text = replace_exact(text, "*(_BYTE *)(gameData + 140021) = 1;", "MISSION_FAILURE_FLAG = 1;", 1, "mission 15 failure write")
     path.write_text(text, encoding="utf-8")
 
 
-def patch_tests():
+def patch_objective_tests():
     path = Path("tests/unit/cases/test_gameplay_objectives.c")
     text = path.read_text(encoding="utf-8").rstrip()
-    marker = "TEST(objectives, mission05_friendly_attack_sets_failure_condition)"
-    if marker in text:
+    if "mission05_friendly_attack_sets_failure_condition" in text:
         raise RuntimeError("mission 05 failure tests already present")
     text += r'''
 
@@ -134,21 +109,18 @@ def patch_stale_coverage_tests():
     for name in paths:
         path = Path(name)
         text = path.read_text(encoding="utf-8")
-        count = text.count("dword_532048")
-        if count == 0:
-            raise RuntimeError("%s: stale battle-context reference not found" % name)
+        total += text.count("dword_532048")
         path.write_text(text.replace("dword_532048", "g_MapData"), encoding="utf-8")
-        total += count
-    if total != 12:
-        raise RuntimeError("stale battle-context references: expected 12, found %d" % total)
+    if total != 14:
+        raise RuntimeError("stale battle-context references: expected 14, found %d" % total)
 
 
-def patch_metadata():
+def patch_metadata_and_docs():
     path = Path("RECOVERED_STRUCTURES.json")
     text = path.read_text(encoding="utf-8")
-    text = replace_count(text, '"Mission_MarkObjective05CompleteOnAttack"', '"Mission05_MarkFailureOnFriendlyAttack"', 1, "metadata helper")
-    text = replace_count(text, '"UI_CheckDialogAccepted"', '"Mission_CheckFailureCondition"', 1, "metadata dispatcher")
-    text = replace_once(
+    text = replace_exact(text, '"Mission_MarkObjective05CompleteOnAttack"', '"Mission05_MarkFailureOnFriendlyAttack"', 1, "metadata helper")
+    text = replace_exact(text, '"UI_CheckDialogAccepted"', '"Mission_CheckFailureCondition"', 1, "metadata dispatcher")
+    text = replace_one(
         text,
         "Mission_MarkObjective05CompleteOnAttack sets the mission-local byte when player 0 attacks player 1 or 2 in the nonzero-language branch; UI_CheckDialogAccepted reads that byte as the mission-ending failure condition before the objective-complete check.",
         "Mission05_MarkFailureOnFriendlyAttack sets the mission-local failure byte when player 0 attacks player 1 or 2 in the nonzero-language branch; Mission_CheckFailureCondition reads that byte before the objective-complete check.",
@@ -156,18 +128,16 @@ def patch_metadata():
     )
     path.write_text(text, encoding="utf-8")
 
-
-def patch_status():
     path = Path("docs/STATUS.md")
     text = path.read_text(encoding="utf-8")
     text = text.replace("Last consolidated: 2026-07-12.", "Last consolidated: 2026-07-13.")
-    text = replace_once(
+    text = replace_one(
         text,
         "`UI_CheckDialogAccepted` separately treats a player-0 attack on players `1`\nor `2` as mission failure.",
         "`Mission_CheckFailureCondition` reads the mission failure flag set by\n`Mission05_MarkFailureOnFriendlyAttack` when player `0` attacks players `1` or\n`2`.",
         "status failure description",
     )
-    section = """## Latest Validation
+    validation = """## Latest Validation
 
 2026-07-13 mission-05 failure-predicate recovery:
 
@@ -175,18 +145,16 @@ def patch_status():
 - introduced `MISSION_FAILURE_FLAG` for `gameData + 140021` while preserving mission-05 and mission-15 behavior;
 - added the trace-gated `mission05_failure_friendly_attack` marker;
 - added asset-independent tests for the friendly-attack failure branch and its exclusions;
-- repaired four coverage cases that still referenced the retired `dword_532048` spelling instead of `g_MapData`.
+- repaired four coverage cases that still referenced `dword_532048` instead of `g_MapData`.
 
 """
-    text = replace_once(text, "## Latest Validation\n\n", section, "latest validation")
+    text = replace_one(text, "## Latest Validation\n\n", validation, "latest validation")
     path.write_text(text, encoding="utf-8")
 
-
-def patch_index_and_logs():
     path = Path("docs/archive/SUB_RENAME_INDEX.md")
     text = path.read_text(encoding="utf-8")
-    text = replace_count(text, "Mission_MarkObjective05CompleteOnAttack", "Mission05_MarkFailureOnFriendlyAttack", 1, "rename index helper")
-    text = replace_count(text, "UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 3, "rename index dispatcher")
+    text = replace_exact(text, "Mission_MarkObjective05CompleteOnAttack", "Mission05_MarkFailureOnFriendlyAttack", 1, "rename index helper")
+    text = replace_exact(text, "UI_CheckDialogAccepted", "Mission_CheckFailureCondition", 3, "rename index dispatcher")
     path.write_text(text, encoding="utf-8")
 
     path = Path("docs/archive/REVERSE_ENGINEERING_RENAME_LOG.md")
@@ -200,7 +168,7 @@ def patch_index_and_logs():
 - Added `MISSION_FAILURE_FLAG_OFFSET` / `MISSION_FAILURE_FLAG` for `gameData + 140021` and a trace-gated mission-05 friendly-attack marker.
 
 """
-    text = replace_once(text, "# Reverse Engineering Rename Log\n\n", entry, "rename log heading")
+    text = replace_one(text, "# Reverse Engineering Rename Log\n\n", entry, "rename log")
     path.write_text(text, encoding="utf-8")
 
     path = Path("docs/archive/COMPILATION_PROGRESS.md")
@@ -211,14 +179,14 @@ def patch_index_and_logs():
 
 - Corrected two reached semantic names in the mission-05 defeat path and named the shared mission failure byte at `gameData + 140021`.
 - Added read-only failure tracing plus asset-independent regression coverage; no objective, combat, ownership, or turn behavior was changed.
-- Repaired four stale coverage tests that still used the retired `dword_532048` battle-context spelling after the source moved to `g_MapData`.
+- Repaired four stale coverage tests that still used `dword_532048` after the source moved to `g_MapData`.
 
 """
-    text = replace_once(text, "# Compilation Progress\n\n", entry, "compilation log heading")
+    text = replace_one(text, "# Compilation Progress\n\n", entry, "compilation log")
     path.write_text(text, encoding="utf-8")
 
 
-def cleanup_helpers():
+def cleanup():
     for name in (
         ".github/workflows/mission05-source-inspect.yml",
         "tools/mission05_source_inspect.py",
@@ -233,12 +201,10 @@ def cleanup_helpers():
 
 def main():
     patch_clash95()
-    patch_tests()
+    patch_objective_tests()
     patch_stale_coverage_tests()
-    patch_metadata()
-    patch_status()
-    patch_index_and_logs()
-    cleanup_helpers()
+    patch_metadata_and_docs()
+    cleanup()
 
 
 if __name__ == "__main__":
