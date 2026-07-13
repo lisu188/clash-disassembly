@@ -1,0 +1,23 @@
+name: Mission05 Source Inspect
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export mission 05 source slices
+        run: python3 tools/mission05_source_inspect.py
+      - name: Upload mission 05 source slices
+        uses: actions/upload-artifact@v4
+        with:
+          name: mission05-source-slices
+          path: mission05-source-slices.txt
+          if-no-files-found: error
