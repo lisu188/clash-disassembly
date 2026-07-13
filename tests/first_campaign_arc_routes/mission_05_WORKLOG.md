@@ -71,9 +71,12 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
   `click 475 153` for its minimap but the panel layout differs per resolution/mission).
 
 ## Next steps
-1. Locate the minimap hot-region (probe screen corners, watch for `minimap_update`
-   instead of `tile_input`), OR pan by clicking near-edge tiles + end-turn to walk the
-   view. Then calibrate screen→tile for the SW cluster view.
+1. **Minimap located** (from `checkpoint-mission05-open-00-start.bmp`): it's the small
+   globe icon in the HUD at approx screen **(430, 407)**, bottom-center. Confirm it pans
+   (watch for a `left/top` change in the next `tile_input`), then calibrate the SW view.
+   HUD note: player-0's red stacks render at the bottom-center of the world view; a
+   **central castle** sits at ~screen (340,270) — verify its `building_owner` (if it is
+   player-3 building idx4, capturing it locally is a large shortcut vs the 29-tile march).
 2. March the mobile stack(s) to the cluster over N turns.
 3. Author + tune one tactical battle per player-3 stack (win by contact, autoresolve off).
 4. Capture player-3 building idx4; then march to (87,66) for stack 21.
