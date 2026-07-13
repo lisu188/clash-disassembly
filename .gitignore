@@ -81,3 +81,6 @@ Thumbs.db
 
 __pycache__/
 build-cov/
+
+# Rename-provenance ledgers are durable evidence (exception to *.jsonl).
+!docs/archive/*_rename_accum.jsonl
