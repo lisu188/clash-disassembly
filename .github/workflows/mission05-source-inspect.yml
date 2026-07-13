@@ -1,0 +1,18 @@
+name: Mission05 Source Inspect
+
+on:
+  push:
+    branches:
+      - codex/mission05-failure-observability
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print mission 05 source slices
+        run: python3 tools/mission05_source_inspect.py
