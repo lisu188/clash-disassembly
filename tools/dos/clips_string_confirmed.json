@@ -1,0 +1,754 @@
+{
+ "0x88370": {
+  "name": "InitializeAgenda",
+  "evidence": "RefreshAgendaCommand"
+ },
+ "0x88450": {
+  "name": "AddActivation",
+  "evidence": "==> Activation "
+ },
+ "0x88770": {
+  "name": "PrintActivation",
+  "evidence": "%-6d "
+ },
+ "0x887d0": {
+  "name": "Agenda",
+  "evidence": "activation"
+ },
+ "0x88800": {
+  "name": "RemoveActivation",
+  "evidence": "<== Activation "
+ },
+ "0x88a90": {
+  "name": "SalienceInformationError",
+  "evidence": "This error occurred while evaluating the salience"
+ },
+ "0x88b00": {
+  "name": "SalienceRangeError",
+  "evidence": "Salience value out of range "
+ },
+ "0x88b70": {
+  "name": "SalienceNonIntegerError",
+  "evidence": "Salience value must be an integer value.\\n"
+ },
+ "0x895b0": {
+  "name": "UnboundVariablesInPattern",
+  "evidence": "A literal restriction value"
+ },
+ "0x899e0": {
+  "name": "RtnLexeme",
+  "evidence": "RtnLexeme"
+ },
+ "0x89a90": {
+  "name": "RtnDouble",
+  "evidence": "RtnDouble"
+ },
+ "0x89ba0": {
+  "name": "RtnLong",
+  "evidence": "RtnLong"
+ },
+ "0x89c80": {
+  "name": "RtnUnknown",
+  "evidence": "RtnUnknown"
+ },
+ "0x89e70": {
+  "name": "ArgTypeCheck",
+  "evidence": "instance address or instance name"
+ },
+ "0x8a190": {
+  "name": "GetFileName",
+  "evidence": "file name"
+ },
+ "0x8af20": {
+  "name": "BasicMathFunctionDefinitions",
+  "evidence": "FloatFunction"
+ },
+ "0x8c950": {
+  "name": "DescribeClass",
+  "evidence": "Inheritance Precedence:"
+ },
+ "0x8d3a0": {
+  "name": "DisplaySlotBasicInfo",
+  "evidence": "FLD DEF PRP ACC STO MCH SRC VIS CRT "
+ },
+ "0x8d690": {
+  "name": "DisplaySlotConstraintInfo",
+  "evidence": " +   +   +   +   +   +   +   +  RNG:[-oo..+oo]"
+ },
+ "0x8fd00": {
+  "name": "SetupObjectPatternStuff",
+  "evidence": "object-pattern-match-delay"
+ },
+ "0x8ffd0": {
+  "name": "SetupDefclasses",
+  "evidence": "SlotInitablePCommand"
+ },
+ "0x913f0": {
+  "name": "InitializeKeywords",
+  "evidence": "create-accessor"
+ },
+ "0x91b10": {
+  "name": "InsertSlot",
+  "evidence": "Duplicate slots not allowed.\\n"
+ },
+ "0x91bc0": {
+  "name": "ParseSimpleFacet",
+  "evidence": " facet already specified.\\n"
+ },
+ "0x91d50": {
+  "name": "ParseDefaultFacet",
+  "evidence": "default facet already specified.\\n"
+ },
+ "0x92d80": {
+  "name": "ConstructsToC",
+  "evidence": "#include <stdio.h>\\n"
+ },
+ "0x93430": {
+  "name": "ConstructsToC",
+  "evidence": "  }\\n"
+ },
+ "0x94090": {
+  "name": "ConstructHeaderToCode",
+  "evidence": "MIHS &%s%d_%d[%d],"
+ },
+ "0x943e0": {
+  "name": "InitializeConstructs",
+  "evidence": "ResetCommand"
+ },
+ "0x949c0": {
+  "name": "InitializeConstraints",
+  "evidence": "SDCCommand"
+ },
+ "0x97160": {
+  "name": "WriteNeededConstraints",
+  "evidence": "CSTRNBIN"
+ },
+ "0x97a90": {
+  "name": "ConstraintViolationErrorMessage",
+  "evidence": " for slot "
+ },
+ "0x97f10": {
+  "name": "ConstraintsToCode",
+  "evidence": "Constraints are not saved with a constructs-to-c image\\n"
+ },
+ "0x9bfa0": {
+  "name": "SetupDefinstances",
+  "evidence": "ListDefinstancesCommand"
+ },
+ "0x9c2d0": {
+  "name": "ParseDefinstances",
+  "evidence": "(definstances "
+ },
+ "0x9cf30": {
+  "name": "DeffactsBasicCommands",
+  "evidence": "PPDeffactsCommand"
+ },
+ "0x9d2e0": {
+  "name": "ConstructToCode",
+  "evidence": "struct deffacts"
+ },
+ "0x9d810": {
+  "name": "ParseDeffacts",
+  "evidence": "(deffacts "
+ },
+ "0x9dfe0": {
+  "name": "DeffunctionsToCode",
+  "evidence": "DEFFUNCTION_MODULE"
+ },
+ "0x9e260": {
+  "name": "SingleDeffunctionToCode",
+  "evidence": ",%d,%d,%d"
+ },
+ "0x9e450": {
+  "name": "UnboundDeffunctionErr",
+  "evidence": "deffunction "
+ },
+ "0x9e550": {
+  "name": "SetupDeffunctions",
+  "evidence": "ListDeffunctionsCommand"
+ },
+ "0x9eaf0": {
+  "name": "RemoveAllDeffunctions",
+  "evidence": "DFFNXFUN"
+ },
+ "0x9ec60": {
+  "name": "SaveDeffunctionHeader",
+  "evidence": "$?wildargs))\\n\\n"
+ },
+ "0x9f850": {
+  "name": "DefinstancesToCode",
+  "evidence": "DEFINSTANCES"
+ },
+ "0xa05c0": {
+  "name": "ExtendedMathFunctionDefinitions",
+  "evidence": "PiFunction"
+ },
+ "0xa2000": {
+  "name": "Run",
+  "evidence": "        Run time is "
+ },
+ "0xa26d0": {
+  "name": "RemoveFocus",
+  "evidence": "<== Focus "
+ },
+ "0xa2840": {
+  "name": "Focus",
+  "evidence": " from "
+ },
+ "0xa34d0": {
+  "name": "PrintDataObject",
+  "evidence": "<UnknownPrintType"
+ },
+ "0xa3b20": {
+  "name": "InitExpressionPointers",
+  "evidence": "EXPRESSN"
+ },
+ "0xa5a70": {
+  "name": "AddFunctionParser",
+  "evidence": "Function parsers can only be added for existing functions.\\n"
+ },
+ "0xa5af0": {
+  "name": "FuncSeqOvlFlags",
+  "evidence": "Only existing functions can be marked as using sequence expa"
+ },
+ "0xa5bb0": {
+  "name": "GetArgumentTypeName",
+  "evidence": "external address"
+ },
+ "0xa6bf0": {
+  "name": "PatternNetworkToCode",
+  "evidence": "#include \\\"factbld.h\\\"\\n"
+ },
+ "0xa6da0": {
+  "name": "PatternNodeToCode",
+  "evidence": ",&%s%d_%ld[%ld],"
+ },
+ "0xa6fb0": {
+  "name": "FactCommandDefinitions",
+  "evidence": "GetFactDuplicationCommand"
+ },
+ "0xa76f0": {
+  "name": "GetFactsArgument",
+  "evidence": "positive number"
+ },
+ "0xa7ae0": {
+  "name": "GetSaveFactsDeftemplateNames",
+  "evidence": "visible deftemplate name"
+ },
+ "0xa7db0": {
+  "name": "StandardLoadFact",
+  "evidence": "Function load-facts encountered an error\\n"
+ },
+ "0xa7e70": {
+  "name": "AssertParse",
+  "evidence": "assert command"
+ },
+ "0xa7ed0": {
+  "name": "FactFunctionDefinitions",
+  "evidence": "GetFactListFunction"
+ },
+ "0xa8450": {
+  "name": "GetFactAddressOrIndexArgument",
+  "evidence": "fact-address or fact-index"
+ },
+ "0xa9a30": {
+  "name": "CreateInitialFactPattern",
+  "evidence": "Creating implied initial-fact deftemplate in module "
+ },
+ "0xaa310": {
+  "name": "TraceErrorToJoin",
+  "evidence": "      Of pattern #%d in rule(s):\\n"
+ },
+ "0xaa4e0": {
+  "name": "PrintFactWithIdentifier",
+  "evidence": "f-%-5ld "
+ },
+ "0xaa570": {
+  "name": "PrintFactIdentifierInLongForm",
+  "evidence": "<Fact-"
+ },
+ "0xac360": {
+  "name": "StringToFact",
+  "evidence": "assert_str"
+ },
+ "0xac4b0": {
+  "name": "FileCommandDefinitions",
+  "evidence": "DribbleOnCommand"
+ },
+ "0xad3c0": {
+  "name": "InitializeFileRouter",
+  "evidence": "fileio"
+ },
+ "0xadfd0": {
+  "name": "SetupGenericsBload",
+  "evidence": "generic functions"
+ },
+ "0xaed90": {
+  "name": "SetupGenericsCompiler",
+  "evidence": "generics"
+ },
+ "0xaee80": {
+  "name": "DefgenericsToCode",
+  "evidence": "#include \\\"genrcfun.h\\\"\\n"
+ },
+ "0xaf500": {
+  "name": "SingleDefgenericToCode",
+  "evidence": ",0,0,"
+ },
+ "0xaf5b0": {
+  "name": "MethodToCode",
+  "evidence": "{%u,0,%d,%d,%d,%d,%u,0,"
+ },
+ "0xaf6f0": {
+  "name": "SetupGenericFunctions",
+  "evidence": "CallNextMethod"
+ },
+ "0xb0870": {
+  "name": "RemoveDefgenericMethod",
+  "evidence": "Cannot remove implicit system function method for generic fu"
+ },
+ "0xb0b20": {
+  "name": "DefmethodWatchSupport",
+  "evidence": "method index"
+ },
+ "0xb1120": {
+  "name": "UnboundMethodErr",
+  "evidence": "generic function "
+ },
+ "0xb18a0": {
+  "name": "DetermineRestrictionClass",
+  "evidence": "Unable to determine class of "
+ },
+ "0xb2010": {
+  "name": "PrintMethod",
+  "evidence": "%-2d "
+ },
+ "0xb2f20": {
+  "name": "CreateDefaultGenericPPForm",
+  "evidence": "(defgeneric %s::%s)\\n"
+ },
+ "0xb41d0": {
+  "name": "DefglobalBasicCommands",
+  "evidence": "DefglobalModuleFunction"
+ },
+ "0xb45d0": {
+  "name": "ConstructToCode",
+  "evidence": "struct defglobal"
+ },
+ "0xb4850": {
+  "name": "DefglobalToCode",
+  "evidence": "{NULL,RVOID}"
+ },
+ "0xb49b0": {
+  "name": "DefglobalCommandDefinitions",
+  "evidence": "SetResetGlobalsCommand"
+ },
+ "0xb4c50": {
+  "name": "InitializeDefglobals",
+  "evidence": "defglobals"
+ },
+ "0xb4eb0": {
+  "name": "QSetDefglobalValue",
+  "evidence": " <== "
+ },
+ "0xb53a0": {
+  "name": "ParseDefglobal",
+  "evidence": "(defglobal "
+ },
+ "0xb54e0": {
+  "name": "GetVariableDefinition",
+  "evidence": "Defining defglobal: "
+ },
+ "0xb6b10": {
+  "name": "PrintPartialOrderLoop",
+  "evidence": "Precedence loop in superclasses:"
+ },
+ "0xb6ce0": {
+  "name": "SetupInstances",
+  "evidence": "InitializeInstanceCommand"
+ },
+ "0xb7370": {
+  "name": "MakeInstance",
+  "evidence": "***MKINS***"
+ },
+ "0xb80b0": {
+  "name": "SetupInstanceFileCommands",
+  "evidence": "LoadInstancesCommand"
+ },
+ "0xb8720": {
+  "name": "InstancesSaveCommandParser",
+  "evidence": "symbol \\\"local\\\" or \\\"visible\\\""
+ },
+ "0xb8870": {
+  "name": "ProcessSaveClassList",
+  "evidence": "valid class name"
+ },
+ "0xb8c40": {
+  "name": "SaveSingleInstanceText",
+  "evidence": "\\n   ("
+ },
+ "0xba770": {
+  "name": "PrintSlot",
+  "evidence": " of instance ["
+ },
+ "0xba930": {
+  "name": "PrintInstanceName",
+  "evidence": "<stale instance ["
+ },
+ "0xba9a0": {
+  "name": "PrintInstanceLongForm",
+  "evidence": "\\\"<Dummy Instance>\\\""
+ },
+ "0xbae70": {
+  "name": "GetFullInstanceName",
+  "evidence": "Dummy Instance"
+ },
+ "0xbbe10": {
+  "name": "PrintInstanceWatch",
+  "evidence": " instance "
+ },
+ "0xbbe50": {
+  "name": "SetupInstanceModDupCommands",
+  "evidence": "MsgModifyMsgHandler"
+ },
+ "0xbc600": {
+  "name": "EvaluateSlotOverrides",
+  "evidence": "slot name"
+ },
+ "0xbcd70": {
+  "name": "SetupInstanceMultifieldCommands",
+  "evidence": "slot-direct-replace$"
+ },
+ "0xbdea0": {
+  "name": "SetupQuery",
+  "evidence": "AnyInstances"
+ },
+ "0xbfae0": {
+  "name": "ParseQueryTestExpression",
+  "evidence": "Binds are not allowed in instance-set query in function "
+ },
+ "0xbfbe0": {
+  "name": "ParseQueryActionExpression",
+  "evidence": "Cannot rebind instance-set member variable "
+ },
+ "0xc0030": {
+  "name": "IOFunctionDefinitions",
+  "evidence": "CloseFunction"
+ },
+ "0xc0de0": {
+  "name": "PrintFormatFlag",
+  "evidence": " Error in format, the conversion character"
+ },
+ "0xc1bb0": {
+  "name": "ReleaseMem",
+  "evidence": "*** MEMORY  DEALLOCATED ***\\n"
+ },
+ "0xc1f00": {
+  "name": "InitializeBlockMemory",
+  "evidence": "Unable to allocate initial memory pool\\n"
+ },
+ "0xc24f0": {
+  "name": "MiscFunctionDefinitions",
+  "evidence": "SetSORCommand"
+ },
+ "0xc3ec0": {
+  "name": "DefmoduleBasicCommands",
+  "evidence": "PPDefmoduleCommand"
+ },
+ "0xc4260": {
+  "name": "ConstructToCode",
+  "evidence": "#include \\\"moduldef.h\\\"\\n"
+ },
+ "0xc48d0": {
+  "name": "InitializeDefmodules",
+  "evidence": "GetCurrentModuleCommand"
+ },
+ "0xc5190": {
+  "name": "ParseDefmodule",
+  "evidence": "(defmodule "
+ },
+ "0xc54f0": {
+  "name": "ParsePortSpecifications",
+  "evidence": "export"
+ },
+ "0xc6070": {
+  "name": "AmbiguousReferenceErrorMessage",
+  "evidence": ".\\nIt is imported from more than one module.\\n"
+ },
+ "0xc63b0": {
+  "name": "SetupMessageHandlers",
+  "evidence": "DynamicHandlerGetSlot"
+ },
+ "0xc6f80": {
+  "name": "DefmessageHandlerWatchSupport",
+  "evidence": "handler type"
+ },
+ "0xc73b0": {
+  "name": "UnboundHandlerErr",
+  "evidence": "message-handler "
+ },
+ "0xc7440": {
+  "name": "CheckHandlerArgCount",
+  "evidence": "Message-handler "
+ },
+ "0xc8550": {
+  "name": "WatchHandler",
+  "evidence": "       ED:"
+ },
+ "0xc9e10": {
+  "name": "CreateGetAndPutHandlers",
+  "evidence": "%s get-%s () ?self:%s)"
+ },
+ "0xca5d0": {
+  "name": "StringToMultifield",
+  "evidence": "multifield-str"
+ },
+ "0xcae40": {
+  "name": "MultifieldFunctionDefinitions",
+  "evidence": "RestFunction"
+ },
+ "0xcbde0": {
+  "name": "MultifieldPrognParser",
+  "evidence": "Cannot rebind field variable in function progn$.\\n"
+ },
+ "0xcc040": {
+  "name": "ReplaceMvPrognFieldVars",
+  "evidence": "-index"
+ },
+ "0xcd820": {
+  "name": "BloadStorageObjects",
+  "evidence": "OBJBIN"
+ },
+ "0xcedd0": {
+  "name": "ClassIDMapToCode",
+  "evidence": "};\\n\\n"
+ },
+ "0xcfd60": {
+  "name": "SetupObjectPatternsBload",
+  "evidence": "object patterns"
+ },
+ "0xd26b0": {
+  "name": "ObjectPatternsCompilerSetup",
+  "evidence": "object-patterns"
+ },
+ "0xd2960": {
+  "name": "IntermediatePatternNodesToCode",
+  "evidence": "extern OBJECT_PATTERN_NODE %s%d_%d[];\\n"
+ },
+ "0xd2bd0": {
+  "name": "AlphaPatternNodesToCode",
+  "evidence": "extern OBJECT_ALPHA_NODE %s%d_%d[];\\n"
+ },
+ "0xd5760": {
+  "name": "TraceErrorToObjectPattern",
+  "evidence": " in rule(s):\\n"
+ },
+ "0xd5b90": {
+  "name": "PatternNodeHeaderToCode",
+  "evidence": "{NULL,NULL,"
+ },
+ "0xd70a0": {
+  "name": "EvaluateProcActions",
+  "evidence": "Execution halted during the actions of "
+ },
+ "0xd7a70": {
+  "name": "ProceduralFunctionDefinitions",
+  "evidence": "GetLoopCount"
+ },
+ "0xd8e40": {
+  "name": "ReturnParse",
+  "evidence": "The return function is not valid in this context.\\n"
+ },
+ "0xd8f30": {
+  "name": "BreakParse",
+  "evidence": "The break function not valid in this context.\\n"
+ },
+ "0xd9400": {
+  "name": "PredicateFunctionDefinitions",
+  "evidence": "wordp"
+ },
+ "0xda340": {
+  "name": "PrintAtom",
+  "evidence": "<unknown atom type>"
+ },
+ "0xda500": {
+  "name": "PrintTally",
+  "evidence": "For a total of "
+ },
+ "0xda5c0": {
+  "name": "PrintWarningID",
+  "evidence": "] WARNING: "
+ },
+ "0xda690": {
+  "name": "CantDeleteItemErrorMessage",
+  "evidence": "Unable to delete "
+ },
+ "0xdb8a0": {
+  "name": "PrintNodes",
+  "evidence": "(and "
+ },
+ "0xdc540": {
+  "name": "NetworkRetract",
+  "evidence": "RETRACT"
+ },
+ "0xdcd30": {
+  "name": "InitializeDefaultRouters",
+  "evidence": "ExitCommand"
+ },
+ "0xde3b0": {
+  "name": "AttachTestCEsToPatternCEs",
+  "evidence": "BUILD"
+ },
+ "0xde750": {
+  "name": "DefruleBasicCommands",
+  "evidence": "PPDefruleCommand"
+ },
+ "0xdec20": {
+  "name": "ConstructToCode",
+  "evidence": "struct defruleModule"
+ },
+ "0xdefa0": {
+  "name": "DefruleToCode",
+  "evidence": ",%d,%d,%d,%d,%d,%d,%d,%d,"
+ },
+ "0xdf480": {
+  "name": "DefruleCommands",
+  "evidence": "RemoveBreakCommand"
+ },
+ "0xdf6f0": {
+  "name": "Matches",
+  "evidence": "Activations\\n"
+ },
+ "0xdfbe0": {
+  "name": "ProcessConnectedConstraints",
+  "evidence": "The group of restrictions"
+ },
+ "0xe0900": {
+  "name": "DeclarationParse",
+  "evidence": "salience declaration"
+ },
+ "0xe15e0": {
+  "name": "ParseDefrule",
+  "evidence": "(defrule "
+ },
+ "0xe1800": {
+  "name": "ProcessRuleLHS",
+  "evidence": "RHS of defrule"
+ },
+ "0xe1e30": {
+  "name": "GetToken",
+  "evidence": "<<<unprintable character>>>"
+ },
+ "0xe2520": {
+  "name": "ScanString",
+  "evidence": "\\nEncountered End-Of-File while scanning a string\\n"
+ },
+ "0xe25d0": {
+  "name": "ScanNumber",
+  "evidence": "Over or underflow of long integer.\\n"
+ },
+ "0xe2c20": {
+  "name": "StringFunctionDefinitions",
+  "evidence": "SymCatFunction"
+ },
+ "0xe2dc0": {
+  "name": "StrOrSymCatFunction",
+  "evidence": "string, instance name, symbol, float, or integer"
+ },
+ "0xe45e0": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "struct symbolHashNode S%d_%d[] = {\\n"
+ },
+ "0xe4810": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "{&B%d_%d[%d],"
+ },
+ "0xe4a90": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "unsigned long L%d_%d[] = {\\n"
+ },
+ "0xe4d10": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "extern struct floatHashNode F%d_%d[];\\n"
+ },
+ "0xe4f60": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "extern struct integerHashNode I%d_%d[];\\n"
+ },
+ "0xe51a0": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "extern struct floatHashNode *fht%d[];\\n"
+ },
+ "0xe5470": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "&S%d_%d[%d]"
+ },
+ "0xe54e0": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "&F%d_%d[%d]"
+ },
+ "0xe5530": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "&I%d_%d[%d]"
+ },
+ "0xe5580": {
+  "name": "SymbolHashNodesToCode",
+  "evidence": "&B%d_%d[%d]"
+ },
+ "0xe8120": {
+  "name": "GetCommandLineTopics",
+  "evidence": "***ERROR***"
+ },
+ "0xe8210": {
+  "name": "AskForNewHelpTopic",
+  "evidence": " Topic? "
+ },
+ "0xe8460": {
+  "name": "HelpFunctionDefinitions",
+  "evidence": "2**wk"
+ },
+ "0xe8e00": {
+  "name": "DeftemplateBasicCommands",
+  "evidence": "UndeftemplateCommand"
+ },
+ "0xe9140": {
+  "name": "ConstructToCode",
+  "evidence": "struct templateSlot"
+ },
+ "0xe94c0": {
+  "name": "DeftemplateToCode",
+  "evidence": "%d,0,0,%d,%ld,"
+ },
+ "0xe95d0": {
+  "name": "SlotToCode",
+  "evidence": ",%d,%d,%d,%d,"
+ },
+ "0xe9770": {
+  "name": "InitializeDeftemplates",
+  "evidence": "deftemplates"
+ },
+ "0xe9aa0": {
+  "name": "DeftemplateFunctions",
+  "evidence": "DuplicateCommand"
+ },
+ "0xea6a0": {
+  "name": "ParseDeftemplate",
+  "evidence": "(deftemplate "
+ },
+ "0xea9f0": {
+  "name": "ParseSlot",
+  "evidence": "the default-dynamic attribute"
+ },
+ "0xeb580": {
+  "name": "CheckTemplateFact",
+  "evidence": "fact f-%-5ld "
+ },
+ "0xeb6c0": {
+  "name": "CheckRHSSlotTypes",
+  "evidence": "Literal slot values"
+ },
+ "0xec660": {
+  "name": "WatchFunctionDefinitions",
+  "evidence": "ListWatchItemsCommand"
+ }
+}

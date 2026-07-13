@@ -5,6 +5,10 @@ import sys
 from pathlib import Path
 
 
+CLIPS_START = 0x88370
+CLIPS_END = 0xEB580
+
+
 def normalize_ea(value):
     return value if isinstance(value, int) else int(str(value), 0)
 
@@ -28,10 +32,7 @@ def rows_by_ea(data):
     if isinstance(data, dict):
         result = {}
         for key, value in data.items():
-            if isinstance(value, str):
-                row = {"name": value}
-            else:
-                row = dict(value)
+            row = {"name": value} if isinstance(value, str) else dict(value)
             row.setdefault("ea", key)
             result[normalize_ea(row["ea"])] = row
         return result
@@ -55,10 +56,45 @@ def json_text(data):
     return json.dumps(data, indent=1, ensure_ascii=False) + "\n"
 
 
-def merge_sources(existing, registered, anchors, string_matches, alignments, transfers):
+def direct_conflict(ea, current, incoming, source_name):
+    if current["source"] == "existing":
+        return {
+            "ea": hex(ea),
+            "existing": current["name"],
+            "clips": incoming,
+            "via": "errid-anchor" if source_name == "clips-errid" else "string-anchor",
+        }
+    return {
+        "ea": hex(ea),
+        "kind": f"{source_name}-vs-{current['source']}",
+        "current": current["name"],
+        "incoming": incoming,
+        "resolution": current["source"],
+    }
+
+
+def dropped_anchor_row(ea, row, registered_name, source_name):
+    return {
+        "ea": hex(ea),
+        "registered": registered_name,
+        "dropped_anchor": row["name"],
+        "kind": row.get("kind", source_name),
+    }
+
+
+def merge_sources(
+    existing,
+    registered,
+    anchors,
+    string_matches,
+    alignments,
+    transfers,
+    rejected_anchors=None,
+):
     master = {}
     conflicts = []
     dropped_false = []
+    rejected_anchors = rejected_anchors or {}
 
     for ea, row in sorted(existing.items()):
         master[ea] = {
@@ -93,46 +129,45 @@ def merge_sources(existing, registered, anchors, string_matches, alignments, tra
                 "evidence": row.get("evidence", "registered CLIPS function ground truth"),
             }
 
+    for ea, row in sorted(rejected_anchors.items()):
+        registered_row = registered.get(ea)
+        if registered_row is None:
+            conflicts.append({
+                "ea": hex(ea),
+                "kind": "rejected-anchor-without-registered-ground-truth",
+                "incoming": row["name"],
+                "resolution": "rejected-input-invalid",
+            })
+            continue
+        registered_name = registered_row["name"]
+        if normalize_name(registered_name) == normalize_name(row["name"]):
+            conflicts.append({
+                "ea": hex(ea),
+                "kind": "rejected-anchor-agrees-with-registered-ground-truth",
+                "incoming": row["name"],
+                "resolution": "rejected-input-invalid",
+            })
+            continue
+        dropped_false.append(dropped_anchor_row(ea, row, registered_name, "clips-errid"))
+
     def merge_direct(source_rows, source_name, evidence_builder):
         for ea, row in sorted(source_rows.items()):
             name = normalize_name(row["name"])
             registered_row = registered.get(ea)
             if registered_row and normalize_name(registered_row["name"]) != name:
-                dropped_false.append({
-                    "ea": hex(ea),
-                    "registered": registered_row["name"],
-                    "dropped_anchor": row["name"],
-                    "kind": source_name,
-                })
+                dropped_false.append(dropped_anchor_row(ea, row, registered_row["name"], source_name))
                 continue
             current = master.get(ea)
             if current and current["source"] == "clips-registered":
                 if normalize_name(current["name"]) != name:
-                    dropped_false.append({
-                        "ea": hex(ea),
-                        "registered": current["name"],
-                        "dropped_anchor": row["name"],
-                        "kind": source_name,
-                    })
+                    dropped_false.append(dropped_anchor_row(ea, row, current["name"], source_name))
                 continue
             if current and current["source"] in {"clips-errid", "clips-string"}:
                 if normalize_name(current["name"]) != name:
-                    conflicts.append({
-                        "ea": hex(ea),
-                        "kind": f"{source_name}-vs-{current['source']}",
-                        "current": current["name"],
-                        "incoming": row["name"],
-                        "resolution": current["source"],
-                    })
+                    conflicts.append(direct_conflict(ea, current, row["name"], source_name))
                 continue
             if current and normalize_name(current["name"]) != name:
-                conflicts.append({
-                    "ea": hex(ea),
-                    "kind": f"{source_name}-vs-{current['source']}",
-                    "current": current["name"],
-                    "incoming": row["name"],
-                    "resolution": source_name,
-                })
+                conflicts.append(direct_conflict(ea, current, row["name"], source_name))
             master[ea] = {
                 "name": name,
                 "confidence": "high",
@@ -151,7 +186,7 @@ def merge_sources(existing, registered, anchors, string_matches, alignments, tra
         lambda row: "unique shared literal: " + row.get("evidence", "")[:60],
     )
 
-    def fill_unnamed(source_rows, expected_source):
+    def fill_unnamed(source_rows, expected_source, default_confidence):
         used_names = {}
         for ea, row in master.items():
             used_names.setdefault(normalize_name(row["name"]), set()).add(ea)
@@ -179,14 +214,16 @@ def merge_sources(existing, registered, anchors, string_matches, alignments, tra
                 continue
             master[ea] = {
                 "name": name,
-                "confidence": row.get("confidence", "medium"),
+                "confidence": row.get("confidence", default_confidence),
                 "source": expected_source,
                 "evidence": row.get("evidence", ""),
             }
             used_names.setdefault(name, set()).add(ea)
 
-    fill_unnamed(alignments, "clips-align")
-    fill_unnamed(transfers, "clash95-transfer")
+    fill_unnamed(alignments, "clips-align", "high")
+    fill_unnamed(transfers, "clash95-transfer", "medium")
+    conflicts.sort(key=lambda row: (normalize_ea(row["ea"]), row.get("kind", row.get("via", ""))))
+    dropped_false.sort(key=lambda row: normalize_ea(row["ea"]))
     return master, conflicts, dropped_false
 
 
@@ -217,7 +254,8 @@ def main(argv=None):
     parser.add_argument("--existing", default=repo / "tools/dos/dos_existing_names.json")
     parser.add_argument("--registered", default=script_dir / "dos_registered_groundtruth.json")
     parser.add_argument("--anchors", default=repo / "tools/dos/dos_clips_anchors.json")
-    parser.add_argument("--strings", default=script_dir / "clips_string_matches.json")
+    parser.add_argument("--rejected-anchors", default=script_dir / "dos_rejected_clips_anchors.json")
+    parser.add_argument("--strings", default=script_dir / "clips_string_confirmed.json")
     parser.add_argument("--alignments", default=script_dir / "clips_align_confirmed.json")
     parser.add_argument("--transfers", default=script_dir / "dos_crossbuild_confirmed.json")
     parser.add_argument("--output", default=script_dir / "dos_master_map.json")
@@ -229,6 +267,7 @@ def main(argv=None):
     existing = rows_by_ea(load_json(args.existing, []))
     registered = rows_by_ea(load_json(args.registered, {}))
     anchors = rows_by_ea(load_json(args.anchors, []))
+    rejected_anchors = rows_by_ea(load_json(args.rejected_anchors, []))
     string_matches = rows_by_ea(load_json(args.strings, {}))
     alignments = rows_by_ea(load_json(args.alignments, {}))
     transfers_data = load_json(args.transfers, {"rows": []})
@@ -241,6 +280,7 @@ def main(argv=None):
         string_matches,
         alignments,
         transfers,
+        rejected_anchors,
     )
     rows = canonical_rows(master)
     ok = True
@@ -248,7 +288,7 @@ def main(argv=None):
     ok &= compare_or_write(args.conflicts, conflicts, args.check)
     ok &= compare_or_write(args.dropped, dropped, args.check)
 
-    clips_named = sum(1 for ea in master if 0x89860 <= ea < 0xEB580)
+    clips_named = sum(1 for ea in master if CLIPS_START <= ea < CLIPS_END)
     by_source = {}
     for row in master.values():
         by_source[row["source"]] = by_source.get(row["source"], 0) + 1
