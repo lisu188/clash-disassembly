@@ -41,7 +41,7 @@ No transfer was accepted. The repository lacks a fresh clash95 feature export an
 
 ```text
 python3 -m unittest discover -s tests/dos -p 'test_*.py' -v
-19 tests passed
+20 tests passed
 
 python3 -m py_compile tools/dos/*.py tests/dos/*.py
 passed
