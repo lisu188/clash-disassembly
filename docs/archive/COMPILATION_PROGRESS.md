@@ -1,5 +1,11 @@
 # Compilation Progress
 
+## 2026-07-13 - Mission 05 failure-predicate recovery
+
+- Corrected two reached semantic names in the mission-05 defeat path and named the shared mission failure byte at `gameData + 140021`.
+- Added read-only failure tracing plus asset-independent regression coverage; no objective, combat, ownership, or turn behavior was changed.
+- Repaired four stale coverage tests that still used `dword_532048` after the source moved to `g_MapData`.
+
 ## 2026-06-17 - Multi-Agent Rename Candidate Pass
 
 - Current frontier: semantic navigation for the validated SDL/menu boot path and the mission-04 tactical battle AI/castle-capture blocker; no behavior changes were made.

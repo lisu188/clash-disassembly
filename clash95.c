@@ -32,6 +32,7 @@
 #define PLAYER_QUEEN_NEXT_RELATIONSHIP_CHECK_TURN_OFFSET 1421
 #define MAP_THEME_INDEX_OFFSET 140016
 #define ACTIVE_MISSION_INDEX_OFFSET 140017
+#define MISSION_FAILURE_FLAG_OFFSET 140021
 #define GAME_TURN_COUNTER_OFFSET 140022
 #define MAP_WIDTH_TILES_OFFSET 140000
 #define MAP_HEIGHT_TILES_OFFSET 140004
@@ -107,6 +108,7 @@ extern int g_BootstrapSkipIntroAviPlayback;
 #define MAP_VIEW_LEFT (*(_DWORD *)(gameData + MAP_VIEW_LEFT_OFFSET))
 #define MAP_VIEW_TOP (*(_DWORD *)(gameData + MAP_VIEW_TOP_OFFSET))
 #define ACTIVE_MISSION_INDEX (*(_DWORD *)(gameData + ACTIVE_MISSION_INDEX_OFFSET))
+#define MISSION_FAILURE_FLAG (*((unsigned __int8 *)(gameData + MISSION_FAILURE_FLAG_OFFSET)))
 #define GAME_TURN_COUNTER (*(_WORD *)(gameData + GAME_TURN_COUNTER_OFFSET))
 #define TURN_OWNER_PLAYER_INDEX (*(_DWORD *)(gameData + TURN_OWNER_PLAYER_INDEX_OFFSET))
 #define VIEWED_PLAYER_INDEX (*(_DWORD *)(gameData + VIEWED_PLAYER_INDEX_OFFSET))
@@ -1635,13 +1637,13 @@ int  AI_FindBestStrategicTargetNearTile(int a1, int a2, int a3, int a4, signed i
 signed int  createUnit(double a1, int a2, int a3, int a4, unit_type a5, unit_type a6, ...);
 int  createCastle(double st7_0, int a2, int a3, int a4, int a5, char *a6, unit_type a7, unit_type a8, ...);
 int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4);
-int  Mission_MarkObjective05CompleteOnAttack(int result, int a2);
+int  Mission05_MarkFailureOnFriendlyAttack(int result, int a2);
 int  WorldMap_DrawMission07TreasureMarker(int result, int a2);
 int  WorldMap_DrawMission11ShrineMarker(int result, int a2, int a3, int a4);
 int  Mission_MarkObjective15CompleteOnAttack(int result, int a2);
 int  WorldMap_DrawMission17TreasureMarker(int result, int a2);
 BOOL  Mission_CheckObjectiveComplete(DWORD a1, double a2);
-int UI_CheckDialogAccepted();
+int Mission_CheckFailureCondition();
 void Scenario_LoadMissionByIndex(int mission_index, double a2);
 int  Scenario_LoadMissionByIndexAndPlay(char *a1, int a2, DWORD a3, double a4);
 int __thiscall RenderState_ConstructGlobalInstance(void *this);
@@ -21673,7 +21675,7 @@ LABEL_24:
       dword_520300 = 1;
       dword_5202F8 = 1;
     }
-    if ( ACTIVE_MISSION_INDEX != -1 && UI_CheckDialogAccepted() )
+    if ( ACTIVE_MISSION_INDEX != -1 && Mission_CheckFailureCondition() )
     {
       dword_520300 = 1;
       dword_5202F8 = 1;
@@ -32898,7 +32900,7 @@ LABEL_22:
             if ( ACTIVE_MISSION_INDEX == 15 )
               Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             if ( ACTIVE_MISSION_INDEX == 5 )
-              Mission_MarkObjective05CompleteOnAttack(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
+              Mission05_MarkFailureOnFriendlyAttack(*((unsigned __int8 *)v8 + 4), *((unsigned __int8 *)v62 + 4));
             v18 = (unsigned __int8 *)UnitStack_HasSpecialPersonageUnits((intptr_t)v8);
             v60 = UnitStack_HasSpecialPersonageUnits((intptr_t)v62);
             v19 = Unit_GetSquadCount((int)v8);
@@ -33250,7 +33252,7 @@ LABEL_15:
           if ( ACTIVE_MISSION_INDEX == 15 )
             Mission_MarkObjective15CompleteOnAttack(*((unsigned __int8 *)v61 + 4), v7[2]);
           if ( ACTIVE_MISSION_INDEX == 5 )
-            Mission_MarkObjective05CompleteOnAttack(*((unsigned __int8 *)v61 + 4), v7[2]);
+            Mission05_MarkFailureOnFriendlyAttack(*((unsigned __int8 *)v61 + 4), v7[2]);
           v16 = UnitStack_HasSpecialPersonageUnits((intptr_t)v61);
           v57 = Building_HasSpecialPersonageGarrisonEntries((int)v7);
           v19 = PLAYER_HAS_HUMAN_CONTROLLER(UNIT_STACK_OWNER_INDEX((int)v61)) || PLAYER_HAS_HUMAN_CONTROLLER(v7[2]);
@@ -73082,12 +73084,18 @@ int  WorldMap_DrawMission01ShrineMarker(int result, int a2, int a3, int a4)
 // 5202C0: using guessed type int dword_5202C0;
 
 //----- (0045B3C0) --------------------------------------------------------
-int  Mission_MarkObjective05CompleteOnAttack(int result, int a2)
+int  Mission05_MarkFailureOnFriendlyAttack(int result, int target_owner_index)
 {
-  if ( g_LanguageIndex && !result && (a2 == 1 || a2 == 2) )
+  if ( g_LanguageIndex && !result && (target_owner_index == 1 || target_owner_index == 2) )
   {
+    Diagnostics_TraceWorldMapActionEvent(
+      "mission05_failure_friendly_attack",
+      g_SelectedUnitIndex,
+      result,
+      target_owner_index,
+      GAME_TURN_COUNTER);
     result = gameData;
-    *(_BYTE *)(gameData + 140021) = 1;
+    MISSION_FAILURE_FLAG = 1;
   }
   return result;
 }
@@ -73159,7 +73167,7 @@ int  Mission_MarkObjective15CompleteOnAttack(int result, int a2)
   if ( result == 1 && (a2 == 2 || a2 == 3) )
   {
     result = gameData;
-    *(_BYTE *)(gameData + 140021) = 1;
+    MISSION_FAILURE_FLAG = 1;
   }
   return result;
 }
@@ -73643,7 +73651,7 @@ LABEL_105:
 // 5448A0: using guessed type int dword_5448A0;
 
 //----- (004602F0) --------------------------------------------------------
-int UI_CheckDialogAccepted()
+int Mission_CheckFailureCondition()
 {
   int result; // eax
   int v1; // ebx
@@ -73673,7 +73681,7 @@ int UI_CheckDialogAccepted()
     case 5:
       result = (unsigned __int8)g_LanguageIndex;
       if ( g_LanguageIndex )
-        return *(unsigned __int8 *)(gameData + 140021);
+        return MISSION_FAILURE_FLAG;
       return result;
     case 8:
       v1 = 0;
@@ -73716,7 +73724,7 @@ LABEL_19:
     case 0xD:
       return *(unsigned __int8 *)(467 * (*(unsigned __int16 *)(gameData + 561026) - 0x8000) + gameData + 509676) != 1;
     case 0xF:
-      return *(unsigned __int8 *)(gameData + 140021);
+      return MISSION_FAILURE_FLAG;
     case 0x12:
       v9 = 0;
       v10 = 0;

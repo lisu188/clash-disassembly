@@ -200,11 +200,11 @@ TEST(cov3_00_unitbattle, get_target_crowding_scale_radius_sweep) {
   static unsigned char unit[16];
   static const int radii[] = {0, 1, 2, 3, 4,  5,  6,  7,
                                8, 9, 10, 15, 20, 30, 40};
-  int saved = dword_532048;
+  int saved = g_MapData;
   int x = 50, y = 50;
   size_t ri;
 
-  dword_532048 = (int)(intptr_t)mapbuf;
+  g_MapData = (int)(intptr_t)mapbuf;
   for (ri = 0; ri < sizeof(radii) / sizeof(radii[0]); ++ri) {
     int rad = radii[ri];
     int dy;
@@ -228,7 +228,7 @@ TEST(cov3_00_unitbattle, get_target_crowding_scale_radius_sweep) {
     unit[2] = 0;
     TOUCH(UnitBattle_GetTargetCrowdingScale((int)(intptr_t)unit));
   }
-  dword_532048 = saved;
+  g_MapData = saved;
 }
 
 /* ---- MainMenu_RequestMultiplayerMenu: previously entirely uncovered

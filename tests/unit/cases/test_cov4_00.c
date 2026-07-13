@@ -49,13 +49,13 @@
 TEST(cov4_00_crowding, get_target_crowding_scale_sweep) {
   static _DWORD mapbuf[4096];
   static unsigned char unit[8];
-  int saved532048 = dword_532048;
+  int saved532048 = g_MapData;
   int tx, ty, w;
 
   memset(mapbuf, 0, sizeof mapbuf);
   mapbuf[200] = 500; /* offset 800: map height */
   mapbuf[201] = 500; /* offset 804: map width  */
-  dword_532048 = (int)(intptr_t)mapbuf;
+  g_MapData = (int)(intptr_t)mapbuf;
 
   for (w = 0; w < 6; ++w) {
     for (tx = 0; tx < 4; ++tx) {
@@ -68,7 +68,7 @@ TEST(cov4_00_crowding, get_target_crowding_scale_sweep) {
       }
     }
   }
-  dword_532048 = saved532048;
+  g_MapData = saved532048;
 }
 
 /* =========================================================================

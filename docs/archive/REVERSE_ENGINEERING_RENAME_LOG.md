@@ -1,5 +1,11 @@
 # Reverse Engineering Rename Log
 
+## 2026-07-13 - Mission 05 failure-predicate recovery
+
+- `Mission_MarkObjective05CompleteOnAttack` -> `Mission05_MarkFailureOnFriendlyAttack`: the helper sets the mission-local failure byte when player `0` attacks player `1` or `2`; it does not complete the objective.
+- `UI_CheckDialogAccepted` -> `Mission_CheckFailureCondition`: the switch dispatches campaign defeat conditions before objective checks.
+- Added `MISSION_FAILURE_FLAG_OFFSET` / `MISSION_FAILURE_FLAG` for `gameData + 140021` and a trace-gated mission-05 friendly-attack marker.
+
 ## 2026-06-30 - JUMPOUT Control-Flow Scar Elimination (Disassembly Recovery Completion)
 
 Recovered all 17 remaining `JUMPOUT(...)` decompiler scars in `clash95.c` into

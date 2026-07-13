@@ -206,3 +206,27 @@ TEST(objectives, mission05_zero_language_targets_players1_and2_not_player3) {
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
   gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
 }
+
+TEST(objectives, mission05_friendly_attack_sets_failure_condition) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  CHECK_EQ(Mission_CheckFailureCondition(), 0);
+  Mission05_MarkFailureOnFriendlyAttack(0, 1);
+  CHECK_EQ(MISSION_FAILURE_FLAG, 1);
+  CHECK_EQ(Mission_CheckFailureCondition(), 1);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_failure_ignores_enemy_attack_and_zero_language) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  Mission05_MarkFailureOnFriendlyAttack(0, 3);
+  Mission05_MarkFailureOnFriendlyAttack(1, 2);
+  CHECK_EQ(MISSION_FAILURE_FLAG, 0);
+  CHECK_EQ(Mission_CheckFailureCondition(), 0);
+  cov_m05_reset(0);
+  Mission05_MarkFailureOnFriendlyAttack(0, 1);
+  CHECK_EQ(MISSION_FAILURE_FLAG, 0);
+  CHECK_EQ(Mission_CheckFailureCondition(), 0);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}

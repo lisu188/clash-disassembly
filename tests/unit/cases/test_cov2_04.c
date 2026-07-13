@@ -161,7 +161,7 @@ TEST(cov2_04_instance, register_modify_and_duplicate_functions) {
  * offsets sourced from dword_514500/dword_514504 (each recovered as a
  * single-element weak array, so indices beyond 0 read whatever data
  * happens to sit next to them in .data -- not reconstructible). Backing
- * dword_532048 (the map-data pointer) with a zeroed static buffer keeps
+ * g_MapData (the map-data pointer) with a zeroed static buffer keeps
  * every dereference inside owned memory regardless of what those stray
  * "delta" values turn out to be, and varying a1's own faction byte and
  * neighboring-tile bounds sweeps whatever mix of case values the corrupted
@@ -177,13 +177,13 @@ TEST(cov2_04_unitbattle, get_target_crowding_scale_sweep) {
    * owned, zeroed memory instead of unrelated globals. */
   static _DWORD mapbuf[4096];
   unsigned char unit[8];
-  int saved532048 = dword_532048;
+  int saved532048 = g_MapData;
   int i;
 
   memset(mapbuf, 0, sizeof mapbuf);
   mapbuf[200] = 200; /* offset 800: map height */
   mapbuf[201] = 200; /* offset 804: map width  */
-  dword_532048 = (int)(intptr_t)mapbuf;
+  g_MapData = (int)(intptr_t)mapbuf;
 
   for (i = 0; i < 8; ++i) {
     memset(unit, 0, sizeof unit);
@@ -193,7 +193,7 @@ TEST(cov2_04_unitbattle, get_target_crowding_scale_sweep) {
     TOUCH(UnitBattle_GetTargetCrowdingScale((int)(intptr_t)unit));
   }
 
-  dword_532048 = saved532048;
+  g_MapData = saved532048;
 }
 
 /* ---- MessageHandler_UndefineForClassOrAll: sweep a1 (class record vs

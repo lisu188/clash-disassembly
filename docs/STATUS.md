@@ -1,6 +1,6 @@
 # Current Status
 
-Last consolidated: 2026-07-12.
+Last consolidated: 2026-07-13.
 
 ## Disassembly Control-Flow Recovery: Complete
 
@@ -109,8 +109,9 @@ nonzero-language branch, `Mission_CheckObjectiveComplete` requires every
 building and stack owned by player `3` (Agordeh) to be eliminated. The retained
 direct-load trace stops on player-3 building index `4`; scenario setup also
 creates six player-3 stacks, including one remote stack at `(87,66)`.
-`UI_CheckDialogAccepted` separately treats a player-0 attack on players `1`
-or `2` as mission failure. No authentic sequence through that conquest
+`Mission_CheckFailureCondition` reads the mission failure flag set by
+`Mission05_MarkFailureOnFriendlyAttack` when player `0` attacks players `1` or
+`2`. No authentic sequence through that conquest
 objective has yet been recovered, and full-menu campaign auto-advance across
 the completed route gates also remains unproven.
 
@@ -133,6 +134,14 @@ audio/device table.
 - Route/probe notes: `docs/probes/`
 
 ## Latest Validation
+
+2026-07-13 mission-05 failure-predicate recovery:
+
+- renamed the misidentified attack helper to `Mission05_MarkFailureOnFriendlyAttack` and the defeat dispatcher to `Mission_CheckFailureCondition`;
+- introduced `MISSION_FAILURE_FLAG` for `gameData + 140021` while preserving mission-05 and mission-15 behavior;
+- added the trace-gated `mission05_failure_friendly_attack` marker;
+- added asset-independent tests for the friendly-attack failure branch and its exclusions;
+- repaired four coverage cases that still referenced `dword_532048` instead of `g_MapData`.
 
 2026-07-12 mission-04 completion validation:
 
