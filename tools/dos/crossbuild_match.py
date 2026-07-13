@@ -317,14 +317,17 @@ def apply_reviews(proposals, calibration, reviews):
     game_reviews = {review_key(row): row for row in reviews.get("game", [])}
 
     calibration_results = []
+    valid_verdicts = {"CONFIRM", "REJECT", "UNCERTAIN"}
     for row in calibration:
         key = review_key(row)
         review = calibration_reviews.get(key)
         result = dict(row)
-        result["verdict"] = review.get("verdict", "PENDING") if review else "PENDING"
-        result["review_reason"] = review.get("reason", "") if review else ""
+        verdict = review.get("verdict", "PENDING") if review else "PENDING"
+        reason = review.get("reason", "") if review else ""
+        result["verdict"] = verdict if verdict in valid_verdicts and reason.strip() else "PENDING"
+        result["review_reason"] = reason
         calibration_results.append(result)
-    reviewed = [row for row in calibration_results if row["verdict"] != "PENDING"]
+    reviewed = [row for row in calibration_results if row["verdict"] in valid_verdicts]
     confirmed = [row for row in calibration_results if row["verdict"] == "CONFIRM"]
     complete = len(reviewed) == len(calibration_results) and bool(calibration_results)
     ratio = len(confirmed) / len(calibration_results) if calibration_results else 0.0
@@ -341,10 +344,17 @@ def apply_reviews(proposals, calibration, reviews):
         reviewed_row["distinctive_constants"] = review.get("distinctive_constants", []) if review else []
         reviewed_row["branch_loop_shape"] = review.get("branch_loop_shape", "") if review else ""
         reviewed_row["callee_data_evidence"] = review.get("callee_data_evidence", "") if review else ""
+        reviewed_row["literal_context"] = review.get("literal_context", "") if review else ""
+        evidence_complete = bool(
+            reviewed_row["review_reason"].strip()
+            and reviewed_row["distinctive_constants"]
+            and reviewed_row["branch_loop_shape"].strip()
+            and reviewed_row["callee_data_evidence"].strip()
+            and reviewed_row["literal_context"].strip()
+        )
+        reviewed_row["evidence_complete"] = evidence_complete
         candidate_reviews.append(reviewed_row)
-        if not calibration_passed or reviewed_row["verdict"] != "CONFIRM":
-            continue
-        if not reviewed_row["review_reason"].strip():
+        if not calibration_passed or reviewed_row["verdict"] != "CONFIRM" or not evidence_complete:
             continue
         confirmed_transfers.append({
             "ea": row["dos_ea"],
