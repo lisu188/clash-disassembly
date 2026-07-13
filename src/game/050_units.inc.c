@@ -8625,6 +8625,24 @@ int  UI_DrawSpecialUnitInfoPane(
 // 512568: using guessed type char *(*g_UnitTypeMetadataRecords)[102];
 // 544CD8: using guessed type _DWORD g_RenderState[9];
 
+// Test hook: CLASH95_FORCE_AUTORESOLVE routes combats through the authentic
+// autoresolve path (CalculateBattleResult) even under direct-boot, where
+// dword_51D01C otherwise forces manual tactical battles. This exercises the same
+// recovered battle-resolution the real menu path uses, letting campaign-route
+// probes resolve combats without hand-authored battlefield input.
+static int Diagnostics_ForceAutoresolveEnabled(void)
+{
+  static int checked;
+  static int enabled;
+  if ( !checked )
+  {
+    const char *value = getenv("CLASH95_FORCE_AUTORESOLVE");
+    enabled = value && *value;
+    checked = 1;
+  }
+  return enabled;
+}
+
 //----- (0041AD20) --------------------------------------------------------
 void  Unit_Attack(int a1, int a2, char a3, DWORD a4, double a5)
 {
@@ -8782,7 +8800,7 @@ LABEL_22:
             {
               v27 = 0;
             }
-            v33 = dword_51D01C || v27;
+            v33 = (dword_51D01C || v27) && !Diagnostics_ForceAutoresolveEnabled();
             if ( v33 )
             {
               if ( *((_BYTE *)v8 + 720) )
@@ -9126,7 +9144,7 @@ LABEL_15:
             v25 = UI_PromptLeadTroopsPersonally((int)(v61 + 3), v23, 12, (int)(v7 + 18), (DWORD)v7, v16, 1) == 0;
           }
           Diagnostics_TraceWorldMapActionEvent("unit_attack_building_prompt_result", v60, v59, v25, dword_51D01C);
-          if ( dword_51D01C )
+          if ( dword_51D01C && !Diagnostics_ForceAutoresolveEnabled() )
           {
             v25 = 1;
           }
