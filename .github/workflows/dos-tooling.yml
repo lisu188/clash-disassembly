@@ -46,7 +46,32 @@ jobs:
           done < <(find tools/dos -maxdepth 1 -type f -name '*.json' -print0 | sort -z)
 
       - name: Verify generated DOS name maps
-        run: python3 tools/dos/build_master_map.py --check
+        id: verify-maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python3 tools/dos/build_master_map.py --check; then
+            exit 0
+          fi
+          python3 tools/dos/build_master_map.py
+          git diff --no-ext-diff -- \
+            tools/dos/dos_master_map.json \
+            tools/dos/dos_name_conflicts.json \
+            tools/dos/dos_dropped_false_anchors.json >dos-master-map.patch
+          cat dos-master-map.patch
+          exit 1
+
+      - name: Upload generated-map diagnostics
+        if: failure() && steps.verify-maps.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dos-master-map-diagnostics
+          path: |
+            dos-master-map.patch
+            tools/dos/dos_master_map.json
+            tools/dos/dos_name_conflicts.json
+            tools/dos/dos_dropped_false_anchors.json
+          if-no-files-found: error
 
       - name: Check Markdown links
         run: python3 tests/check_markdown_links.py
