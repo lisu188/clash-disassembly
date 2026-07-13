@@ -160,7 +160,7 @@ def parse_rename_index(path):
 
 def load_master_map(path):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    rows = data.get("rows", data)
+    rows = data.get("rows", data) if isinstance(data, dict) else data
     return {normalize_ea(row["ea"]): dict(row) for row in rows}
 
 
