@@ -14,7 +14,7 @@ Honest completeness report for `clash.c`, the IDA Pro 9.0 / Hex-Rays 9.0 decompi
 | Deterministic address-suffixed emitted symbols | 14 |
 | Named CLIPS-region functions | 704 / 2,015 (34.9%) |
 
-The older 884-name figure was an emitted-symbol counting error. `dos_master_map.json` contains 886 requested address/name rows. Fourteen requested base names collide with an existing IDA symbol and are emitted deterministically as `<name>_<EA>`, leaving 872 distinct semantic base names while still naming all 886 addresses.
+The older 884-name figure was an emitted-symbol counting error. `tools/dos/dos_master_map.json` contains 886 requested address/name rows. Fourteen requested base names collide with an existing IDA symbol and are emitted deterministically as `<name>_<EA>`, leaving 872 distinct semantic base names while still naming all 886 addresses.
 
 ## Decompilation coverage
 
