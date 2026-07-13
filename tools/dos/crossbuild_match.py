@@ -104,6 +104,9 @@ def load_feature_export(path):
         row["size"] = int(row.get("size", 0))
         row["name"] = row.get("name") or f"sub_{ea:X}"
         row["literals"] = sorted(set(row.get("literals", [])))
+        row["constants"] = sorted({ea_text(x) for x in row.get("constants", [])})
+        row["edges"] = int(row.get("edges", 0))
+        row["back_edges"] = int(row.get("back_edges", 0))
         row["callees"] = sorted(ea_text(x) for x in row.get("callees", []))
         row["data_refs"] = sorted(ea_text(x) for x in row.get("data_refs", []))
         result[ea] = row
@@ -238,9 +241,17 @@ def candidate_row(dos_ea, clash95_ea, literals, dos, clash95, rename):
         "clash95_size": clash95.get("size", 0),
         "dos_basic_blocks": dos.get("bb", 0),
         "clash95_basic_blocks": clash95.get("bb", 0),
+        "dos_edges": dos.get("edges", 0),
+        "clash95_edges": clash95.get("edges", 0),
+        "dos_back_edges": dos.get("back_edges", 0),
+        "clash95_back_edges": clash95.get("back_edges", 0),
+        "dos_constants": dos.get("constants", []),
+        "clash95_constants": clash95.get("constants", []),
         "shared_unique_literals": sorted(literals),
         "dos_callees": dos.get("callees", []),
         "clash95_callees": clash95.get("callees", []),
+        "dos_data_refs": dos.get("data_refs", []),
+        "clash95_data_refs": clash95.get("data_refs", []),
         "status": "pending-independent-review",
     }
 
