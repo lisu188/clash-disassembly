@@ -1,0 +1,96 @@
+# Mission 13 survival route.
+# Objective evidence: Mission_CheckObjectiveComplete completes when GAME_TURN_COUNTER > 10.
+wait_log 60 mission_load_done selected=-1 a=13
+wait 3.0
+screenshot mission13-survival-start
+nonblank mission13-survival-start
+
+world_click 500 2 2 0.5 turn-01-position-top
+world_click 500 2 4 0.5 turn-01-open-top-menu
+world_click 500 2 4 1.0 turn-01-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-01-skip-1
+world_click 320 240 2 0.35 turn-01-skip-2
+wait 7.0
+screenshot mission13-turn-02
+nonblank mission13-turn-02
+
+world_click 500 2 2 0.5 turn-02-position-top
+world_click 500 2 4 0.5 turn-02-open-top-menu
+world_click 500 2 4 1.0 turn-02-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-02-skip-1
+world_click 320 240 2 0.35 turn-02-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-03-position-top
+world_click 500 2 4 0.5 turn-03-open-top-menu
+world_click 500 2 4 1.0 turn-03-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-03-skip-1
+world_click 320 240 2 0.35 turn-03-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-04-position-top
+world_click 500 2 4 0.5 turn-04-open-top-menu
+world_click 500 2 4 1.0 turn-04-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-04-skip-1
+world_click 320 240 2 0.35 turn-04-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-05-position-top
+world_click 500 2 4 0.5 turn-05-open-top-menu
+world_click 500 2 4 1.0 turn-05-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-05-skip-1
+world_click 320 240 2 0.35 turn-05-skip-2
+wait 7.0
+screenshot mission13-turn-06
+nonblank mission13-turn-06
+
+world_click 500 2 2 0.5 turn-06-position-top
+world_click 500 2 4 0.5 turn-06-open-top-menu
+world_click 500 2 4 1.0 turn-06-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-06-skip-1
+world_click 320 240 2 0.35 turn-06-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-07-position-top
+world_click 500 2 4 0.5 turn-07-open-top-menu
+world_click 500 2 4 1.0 turn-07-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-07-skip-1
+world_click 320 240 2 0.35 turn-07-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-08-position-top
+world_click 500 2 4 0.5 turn-08-open-top-menu
+world_click 500 2 4 1.0 turn-08-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-08-skip-1
+world_click 320 240 2 0.35 turn-08-skip-2
+wait 7.0
+
+world_click 500 2 2 0.5 turn-09-position-top
+world_click 500 2 4 0.5 turn-09-open-top-menu
+world_click 500 2 4 1.0 turn-09-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-09-skip-1
+world_click 320 240 2 0.35 turn-09-skip-2
+wait 7.0
+screenshot mission13-turn-10
+nonblank mission13-turn-10
+
+world_click 500 2 2 0.5 turn-10-position-top
+world_click 500 2 4 0.5 turn-10-open-top-menu
+world_click 500 2 4 1.0 turn-10-end-human-turn
+wait 4.0
+world_click 320 240 2 0.35 turn-10-skip-1
+world_click 320 240 2 0.35 turn-10-skip-2
+wait 7.0
+wait_log 45 mission_objective_complete
+screenshot mission13-survival-complete
+nonblank mission13-survival-complete
+expect_log mission_objective_complete
