@@ -49,6 +49,17 @@ sub_20000(
         self.assertEqual(candidate["dos_data_refs"], ["0x40000"])
         self.assertEqual(candidate["dos_constants"], ["0x10", "0x20"])
 
+    def test_master_map_loader_accepts_top_level_row_list(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "master.json"
+            path.write_text(json.dumps([{
+                "ea": "0x20000",
+                "name": "Known",
+                "source": "existing"
+            }]), encoding="utf-8")
+            master = matcher.load_master_map(path)
+        self.assertEqual(master[0x20000]["name"], "Known")
+
     def test_shared_literal_must_be_unique_in_both_builds(self):
         dos = {
             1: {"literals": ["unique", "shared-many"]},
