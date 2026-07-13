@@ -100,3 +100,16 @@ march to (87,66) for the last stack. Comparable to mission 04 (347 inputs).
   y>430 and the corners for a `minimap_update`); (d) a low-level `move R C` toward an
   off-screen tile may auto-scroll the view to follow the cursor. Panning must be solved
   before the march; then autoresolve (vs hand-tuned battles) is the next question.
+
+## Pan/selection attempts 2-3 (runs ...112138Z, ...) — still blocked
+- `world_pan_viewport` IS the pan cmd (harness presses arrow keys 205/203/208/200 until
+  the `[world_cursor]` left/top reaches target). mission_04 datum: select stack0
+  (`platform_up 320 368` → `selected_stack_changed selected=0 a=41 b=50`) THEN
+  `world_pan_viewport 47 65 160`. So **a stack must be selected before panning.**
+- My selection attempts failed: `platform_up 300 250` hit tile (71,45) which has
+  `own_stack=0` (my stacks are at cols 44 & 47, not 45). Transform to hit a real stack,
+  e.g. idx1 @ tile(71,47): screen ≈ (420,310); idx4 @ (71,44): ≈ (300,250) but the
+  mapping drifts run-to-run (saw (300,250)→(71,44) then →(71,45)), so selection needs
+  a verify-and-retry loop (click, check `selected_stack_changed`, nudge, repeat).
+- Net: **pan still unsolved for mission 05** after 3 runs — blocked on reliable stack
+  selection first. This is the crux of why each mission is many iterations.

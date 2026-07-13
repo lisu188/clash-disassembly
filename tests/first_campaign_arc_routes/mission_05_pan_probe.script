@@ -1,27 +1,20 @@
-# Mission 05 pan calibration: find how to scroll the view toward player 3 (rows 41-44).
-# Try keyboard arrows (scan: left=203 right=205 up=200 down=208) and re-probe a tile to
-# read the new view origin (left/top). Player-0 view starts at left=67 top=42.
+# Mission 05 pan (mission_04 pattern): select a stack via platform_up FIRST, then
+# world_pan_viewport toward player 3. mission_04 datum: stack@tile(41,50) -> view(47,65).
+# mission_05 datum: tile(71,44) -> view(left67,top42). Sweep toward player-3 (~42,55).
 wait_log 60 mission_load_done selected=-1 a=5
 wait_log 60 playgame_before_human_turn selected=-1 a=0 b=1
-click 300 250 0.18 0.6 baseline-probe
+# select a player-0 stack (screen ~300,250 == tile 71,44 in start view)
+platform_up 300 250 0.80 select-p0-stack
+wait 2.0
+click 320 240 0.18 0.6 baseline-after-select
 wait 1.0
-# --- press LEFT arrow x20 ---
-key 203 40 left-1
-key 203 40 left-2
-key 203 40 left-3
-key 203 40 left-4
-key 203 40 left-5
-wait 1.0
-click 300 250 0.18 0.6 after-left-probe
-wait 1.0
-# --- press UP arrow x20 ---
-key 200 40 up-1
-key 200 40 up-2
-key 200 40 up-3
-key 200 40 up-4
-key 200 40 up-5
-wait 1.0
-click 300 250 0.18 0.6 after-up-probe
-wait 1.0
-screenshot mission05-pan-after-left-up
-nonblank mission05-pan-after-left-up
+# pan toward player-3 region; harness arrow-keys until it reaches the target
+world_pan_viewport 40 55 260
+click 320 240 0.18 0.6 probe-P-40-55
+wait 0.8
+click 200 300 0.18 0.6 probe-P2
+wait 0.8
+click 440 180 0.18 0.6 probe-P3
+wait 0.8
+screenshot mission05-pan-40-55
+nonblank mission05-pan-40-55
