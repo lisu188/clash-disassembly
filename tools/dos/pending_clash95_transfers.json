@@ -1,0 +1,177 @@
+[
+ {
+  "ea": "0x15f72",
+  "name": "DLXSprite_RemapPalette",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Symbol aCannotConform2 (\"Cannot conform 2 pal sprite with imploding\") is referenced in exactly one function in each build. clash.c 0x15F72 calls sub_11DDD((int)aCannotConform2,0) on an error path; clash95 DLXSprite_RemapPalette calls App_RequestQuit((int)aCannotConform2). Highly specific palette-err"
+ },
+ {
+  "ea": "0x1a83b",
+  "name": "WorldMap_RefreshUnitStatusPanel",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Anchor \"      %s\" is a weak whitespace format, but its symbol (aS_11/aS) appears in exactly one function per build, and the bodies match structurally: both check selected-unit == -1 (early return), test low-morale unit -> show morale tooltip, else show unit-type-name tooltip via the %s string, then "
+ },
+ {
+  "ea": "0x1bf1e",
+  "name": "WorldMap_HandleScrollKeysAndIdle",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Raw asterisk runs are generic (10/7 hits), but the specific 56-char string is its own symbol (asc_110B24/asc_4EC5AC) referenced in exactly one function each. DOS 0x1BF1E reads scroll-key flags (off_130268[...]), adjusts map scroll offsets, and calls log((int)asc_110B24,v6); clash95 usage is inside W"
+ },
+ {
+  "ea": "0x1ebc4",
+  "name": "WorldMap_DrawTurnBannerReveal",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Symbol aTuraD (\"tura %d\") referenced in exactly one function per build (the separate \"(tura %d)\" literal is a different symbol elsewhere). clash.c 0x1EBC4 passes aTuraD to a text-draw call; clash95 usage is inside WorldMap_DrawTurnBannerReveal via UI_DrawText. Same distinctive turn-banner string and"
+ },
+ {
+  "ea": "0x1edd1",
+  "name": "WorldMap_RenderPlayerTurnIntroScreen",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Symbol aPlayerSYourTur (\"PLAYER %s - YOUR TURN\") referenced in exactly one function per build. clash.c 0x1EDD1 passes it with the current player name; clash95 usage is inside WorldMap_RenderPlayerTurnIntroScreen via UI_DrawTextFmt with PLAYER_DATA(g_CurrentPlayerIndex). Highly specific string, same "
+ },
+ {
+  "ea": "0x20c97",
+  "name": "TextSprite_BuildOrLoadCachedFont",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Anchor '_ConformFont2Pal(%d)' referenced in exactly one function per file. Both bodies log it, free the cached sprite set, XOR/sum-checksum 768 bytes, sprintf(\"cache\\\\%02x%02x%04x.s32\"), then load or build+save the sprite set with palette handling. Same function."
+ },
+ {
+  "ea": "0x26cdb",
+  "name": "Debug_LogUnitSquadDetails",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Both log aUnitD0x08x then loop over squad/formation count logging a15sPl1dP per element. DOS wrappers sub_26E06 and LogAllUnits mirror Win95's Unit_DebugDumpFormationSizesForStackIndex and LogAllUnits chains that call this. Same function."
+ },
+ {
+  "ea": "0x61f8c",
+  "name": "WorldMap_NotifyPlagueOutbreak",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "'zaraza' (aZaraza) referenced in exactly one function per file. Both iterate 100 map entries at 467-byte stride, mask &7==5 and match currentPlayer/g_CurrentPlayerIndex, invoke the zaraza transition, sprintf with a language-indexed plague format-text array, and show an info window. Same function."
+ },
+ {
+  "ea": "0x623c7",
+  "name": "Building_ShowConstructionFinishedDialog",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "'Message_BuildFinished %s' (aMessage_buildf) referenced in exactly one function per file. Both log it with a1+5, build two 3-entry notice-text arrays (off_137D1C/off_137D28 == g_BuildingCompleteNoticeText/Alt), copy the name at a1+5 into a byte buffer, load a sprite, and render the construction-fini"
+ },
+ {
+  "ea": "0x64688",
+  "name": "MultiplayerSetup_RedrawOpponentNameList",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "aKarkhan name-table base referenced in exactly one function per file. Both loop 11 rows at y=22*i+134 x=356, fill/blit a rect, bound-check scrollOffset+i<20, highlight the selected row (18/21 vs dword_1AFF8C/dword_5441D8), draw the name from &aKarkhan[13*offset+13*i], with the same guarded present a"
+ },
+ {
+  "ea": "0x8fd70",
+  "name": "Class_CreateSystemClasses",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "aPrimitive (\"PRIMITIVE\") is uniquely declared/used once in each file; used in DOS 0x8FD70 (line 83111) and clash95 Class_CreateSystemClasses (121307). DOS body creates the full system class hierarchy (OBJECT, PRIMITIVE, USER, NUMBER, INTEGER, FLOAT, LEXEME, SYMBOL, STRING, MULTIFIELD, ADDRESS...) vi"
+ },
+ {
+  "ea": "0x92150",
+  "name": "Class_EvaluateSlotDefaultValue",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "aDynamicDefault (\"dynamic default value\") declared/used exactly once each side; in DOS 0x92150 (line 84783, PrintSlot(...aDynamicDefault)) and clash95 Class_EvaluateSlotDefaultValue (186493, Output_Write(...aDynamicDefault)). Both emit a slot dynamic-default error via the build's output primitive; r"
+ },
+ {
+  "ea": "0x928f0",
+  "name": "Rules_PrintPrompt",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "aClips (\"CLIPS> \") used in DOS 0x928F0 (line 85025, sub_DCD70(off_13B504[0], aClips)) and clash95 Rules_PrintPrompt (112876, Output_Write(g_IO_LogicalNameTable_WClips[0], aClips, this)). Each writes the prompt string to the logical output; single-purpose prompt printer, roles match."
+ },
+ {
+  "ea": "0x99490",
+  "name": "Rules_CheckConstraintParseConflicts",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "aAllowedInteger (\"allowed-integers/numbers\") declared/used once each side; DOS 0x99490 (line 90551, AttributeConflictErrorMessage(aType_0, aAllowedInteger)) and clash95 Rules_CheckConstraintParseConflicts (178653, Rules_ReportAttributeConflict(a2, aAllowedInteger)). Both report the integers-vs-numbe"
+ },
+ {
+  "ea": "0x9c570",
+  "name": "Definstances_ParseHeaderAndActiveFlag",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "Shared string \"active\" is generic (52/136 occurrences), but corroborating evidence is decisive: DOS 0x9C570 and clash95 Definstances_ParseHeaderAndActiveFlag are structurally near-identical — both call (Rules_)GetConstructNameAndComment with aDefinstances, then on state==2 strcmp against aActive, wi"
+ },
+ {
+  "ea": "0xabf60",
+  "name": "Rules_ParseAssertRHSPattern",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"a relation name\" is unique in both files. DOS usage at clash.c:105437 sits inside marker 000ABF60 (the proposed EA), passing aARelationName to a reserved-pattern-symbol error routine; clash95 Rules_ParseAssertRHSPattern does the same (calls Rules_PrintReservedSymbolErrorMessage with aARelationName)"
+ },
+ {
+  "ea": "0xb3610",
+  "name": "Method_ReplaceCurrentArgumentRefs",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"current-argument\" unique in both. DOS sub_B3610 (marker 000B3610 contains usage at 111156) iterates a node list and strcmp's a field-offset-16 pointer against aCurrentArgumen; clash95 Method_ReplaceCurrentArgumentRefs does the identical strcmp against the same string. Same job."
+ },
+ {
+  "ea": "0xbfe60",
+  "name": "Parser_ResolveInstanceQuerySlotReference",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"query-var\" unique in both. DOS marker 000BFE60 opens a string source named aQueryVar via GetToken then closes it (sub_E3DE0); clash95 Parser_ResolveInstanceQuerySlotReference uses IO_OpenStringSource/Parser_NextToken/IO_CloseStringRouter on aQueryVar. Same parse-token-from-string pattern; medium co"
+ },
+ {
+  "ea": "0xc2140",
+  "name": "Mem_PoolAllocBlock",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"bmexit\" unique in both. Bodies are structurally identical: check init flag, call pool-init (InitializeBlockMemory/Mem_InitPool), register exit router with aBmexit and args (-2000,0,0,0,0,0,handler), then run the same size-rounding pool-alloc loop with matching split-block call. Clear match."
+ },
+ {
+  "ea": "0xc4660",
+  "name": "Compiler_WritePortItemTableFile",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"struct portItem\" unique in both. DOS marker 000C4660 passes aStructPortitem into a printf-like call with an identical trailing argument list (a6, ...aStructPortitem, *(dword+20)+8, 0, 0) that clash95 Compiler_WritePortItemTableFile reproduces exactly. Same emit-C-struct role."
+ },
+ {
+  "ea": "0xcef80",
+  "name": "ObjectsCompiler_WriteSlotNameHashTable",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"SLOT_NAME *\" (aSlot_name) is used in exactly one function per build. DOS sub_CEF80 (132373-132406) uses it; clash95 WriteSlotNameHashTable (169114) uses it. Both call the code-file-open helper (sub_93F30 / Rules_ConstructCodeFileOpen) with offset 36, loop the hash array to 167 calling a per-slot po"
+ },
+ {
+  "ea": "0xcf040",
+  "name": "ObjectsCompiler_WriteSlotNameRecords",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"SLOT_NAME\" (aSlot_name_0) used once per build. DOS sub_CF040 (132406-132686) uses it at offset 32 with nested hash-bucket iteration; clash95 WriteSlotNameRecords (169158) matches. Same 6-arg signature, correctly distinguished from the starred hash-table variant."
+ },
+ {
+  "ea": "0xcf710",
+  "name": "ObjectsCompiler_WriteSlotDescArray",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"SLOT_DESC\" (aSlot_desc) used exactly once per build. DOS sub_CF710 (132686-132794) uses it; clash95 WriteSlotDescArray (169556) uses it. Function order and 12-arg signature align; string correctly distinguished from the \" *\" pointer-array variant."
+ },
+ {
+  "ea": "0xcf990",
+  "name": "ObjectsCompiler_WriteSlotDescPointerArray",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"SLOT_DESC *\" (aSlot_desc_0) used exactly once per build. DOS sub_CF990 (132794-132908) uses it; clash95 WriteSlotDescPointerArray (169698) uses it. 12-arg signature matches; correctly paired to the starred pointer-array variant, not the plain SLOT_DESC array."
+ },
+ {
+  "ea": "0xcfb40",
+  "name": "ObjectsCompiler_WriteHandlerArray",
+  "confidence": "high",
+  "source": "clash95-transfer",
+  "evidence": "\"HANDLER\" (aHandler_1) used exactly once per build. DOS sub_CFB40 (132908) uses it at struct offset 24, guarded by *(a8+96), with matching 12-param signature; clash95 WriteHandlerArray (169813) matches. Same role and structure."
+ }
+]

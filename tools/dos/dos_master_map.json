@@ -1561,6 +1561,13 @@
   "evidence": "unique shared literal: Inheritance Precedence:"
  },
  {
+  "ea": "0x8cb70",
+  "name": "GetCreateAccessorString",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS sub_8CB70 reads a bitfield byte at (slot+1) and tests bits 0x8 and 0x10, returning exactly four string literals aRw_0=\"RW\", aNil_1=\"NIL\", aR_2=\"R\", aW_0=\"W\" (verified in clash.c lines 6087-6090). This maps 1:1 onto GetCreateAccessorString: createReadAccessor&&create"
+ },
+ {
   "ea": "0x8cbd0",
   "name": "GetDefclassModuleCommand",
   "confidence": "high",
@@ -1685,6 +1692,13 @@
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0x8eb00",
+  "name": "ClassInfoFnxArgs",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS body at 0x8EB00 matches ClassInfoFnxArgs structurally line-for-line: *a2=0 (*inhp=0); !RtnArgCount() guard -> ExpectedCountError(a1,1,1)+sub_A3420(1)=SetEvaluationError(TRUE); ArgTypeCheck arg1 SYMBOL; sub_8C2D0=LookupDefclassByMdlOrScope; ClassExistError on NULL; R"
  },
  {
   "ea": "0x8ebf0",
@@ -2051,6 +2065,20 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0x9c1c0",
+  "name": "Undefinstances",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS sub_9C1C0 structurally matches EnvUndefinstances (Env-stripped macro form): Bloaded guard (sub_8ACA0 -> return 0), NULL-arg -> RemoveAllDefinstances (!a1 -> sub_9C6E0), IsDefinstancesDeletable check on busy-count field *(a1+20), then named RemoveConstructFromModule "
+ },
+ {
+  "ea": "0x9c220",
+  "name": "PPDefinstancesCommand",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_9C220 returns sub_95F20(aPpdefinstanc_0, DefinstancesData->construct dword_1B10A4, a3, a4), i.e. PPConstructCommand(theEnv,\"ppdefinstances\",...). Shared string literal aPpdefinstanc_0=\"ppdefinstances\" matches CLIPS body, and the callback registration at line 92683 e"
+ },
+ {
   "ea": "0x9c240",
   "name": "ListDefinstancesCommand",
   "confidence": "high",
@@ -2077,6 +2105,27 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: PPDeffactsCommand"
+ },
+ {
+  "ea": "0x9d020",
+  "name": "ResetDeffacts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_9D020 returns sub_966B0(sub_9D050, dword_1B10D0, 1, 0). Matches DoForAllConstructs(theEnv, ResetDeffactsAction, DeffactsModuleIndex, TRUE, NULL): the action func-ptr arg is sub_9D050 (which is ResetDeffactsAction, the very next proposal), followed by the module inde"
+ },
+ {
+  "ea": "0x9d050",
+  "name": "ResetDeffactsAction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_9D050 tests *(a1+20) (theDeffacts->assertList) for NULL and returns early, then calls sub_A3420(0) = SetEvaluationError(theEnv, FALSE), then EvaluateExpression(assertList, &local_buffer v4, ...). Matches ResetDeffactsAction line-for-line: assertList==NULL guard, Set"
+ },
+ {
+  "ea": "0x9d080",
+  "name": "ClearDeffacts",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): References strings aAssert_1=\"assert\" and aInitialFact=\"initial-fact\". Two GenConstant calls (sub_A4AD0 with constants 10=FCALL and 35=DEFTEMPLATE_PTR), FindFunction(sub_A5D60), EnvFindDeftemplate(sub_E98E0), ExpressionInstall(sub_A3BC0), get_struct, EnvAddSymbol(sub_E5"
  },
  {
   "ea": "0x9d160",
@@ -2597,11 +2646,25 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xa2de0",
+  "name": "ListFocusStack",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A2DE0 takes a logical-name arg, guards on dword_13AAD8 (CurrentFocus), and a do-while loop prints the module name (sub_C4D50 = EnvGetDefmoduleName) then the distinctive literal \"\\n\" via sub_DCD70 (EnvPrintRouter), advancing theFocus->next at offset 8 (v2[2]). This e"
+ },
+ {
   "ea": "0xa2e30",
   "name": "GetFocusStackFunction",
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xa2e60",
+  "name": "GetFocusStack",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A2E60 takes a DATA_OBJECT_PTR (a1), does a count pass over dword_13AAD8 (CurrentFocus, next at +8), sets type=4 (MULTIFIELD), calls sub_CA6B0(count) (EnvCreateMultifield), then a second loop marking each element type=2 (SYMBOL) and storing **i (theModule->name); NUL"
  },
  {
   "ea": "0xa2f00",
@@ -2637,6 +2700,41 @@
   "confidence": "high",
   "source": "clips-align",
   "evidence": "align+adversarial-verify: DOS sub_A33E0(result, a2) mirrors InstallPrimitive(env, thePrimitive, whichPosit"
+ },
+ {
+  "ea": "0xa3420",
+  "name": "SetEvaluationError",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A3420(result): dword_13AAF0=result; if(result==1) dword_13AAF4=1. Exactly matches SetEvaluationError: EvaluationError=value; if(value==TRUE) HaltExecution=TRUE. TRUE==1 magic, and the distinctive side-effect of setting a SECOND flag only when value==1 nails it. Esta"
+ },
+ {
+  "ea": "0xa3440",
+  "name": "GetEvaluationError",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A3440() returns dword_13AAF0, which the 0xA3420 setter identified as the EvaluationError field. Matches GetEvaluationError: return EvaluationError. Trivial accessor, consistent flag address."
+ },
+ {
+  "ea": "0xa3450",
+  "name": "SetHaltExecution",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A3450(result): dword_13AAF4=result; return. Matches SetHaltExecution: HaltExecution=value. 13AAF4 was established as HaltExecution by the 0xA3420 setter's conditional write. No extra side-effect, consistent with the simple setter."
+ },
+ {
+  "ea": "0xa3460",
+  "name": "GetHaltExecution",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A3460() returns dword_13AAF4 = HaltExecution field. Matches GetHaltExecution: return HaltExecution. Consistent flag address with the two setters."
+ },
+ {
+  "ea": "0xa3470",
+  "name": "ReturnValues",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): while(v1){ next=*(v1+20); if(*(v1+4)==4) sub_CA580(*(v1+8)) else sub_A3670(...); rtn_struct inline: link v1 onto free list *(dword_1B1390+96); v1=next; }. Matches ReturnValues: while loop over DATA_OBJECT list, next=garbagePtr->next (offset 20), inlined ValueDeinstall ("
  },
  {
   "ea": "0xa34d0",
@@ -2926,11 +3024,25 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xa80d0",
+  "name": "FactSlotValue",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A80D0(a1=theFact, a2=theSlotName char*, a3=returnValue) reproduces FactSlotValue exactly: (1) tests whichDeftemplate->implied via *(a1+16)+24 &1; (2) strcmp(a2, aImplied) == strcmp(theSlotName,\"implied\"); (3) else-branch sub_E5680(a2)=EnvAddSymbol + sub_EB920(tmpl,s"
+ },
+ {
   "ea": "0xa8180",
   "name": "FactSlotNamesFunction",
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xa81e0",
+  "name": "FactSlotNames",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_A81E0(a1=theFact, a2=returnValue) reproduces EnvFactSlotNames (=FactSlotNames after Env-strip) exactly. Implied branch: sets type MULTIFIELD (a2[1]=4), sub_CA6B0(1)=EnvCreateMultifield(1), SetMFType SYMBOL (word=2), stores sub_E5680(aImplied)=EnvAddSymbol(\"implied\")"
  },
  {
   "ea": "0xa82a0",
@@ -3241,6 +3353,13 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xb0330",
+  "name": "GetDefmethodList",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_B0330 structurally matches EnvGetDefmethodList (Env-stripped form of proposal). Preamble reproduces the vgfunc!=NULL save/restore: EnvGetNextDefgeneric + SetNextDefgeneric(vgfunc,NULL) (sub_96640/sub_96610). Count loop sums gfunc->mcnt at offset 32 then doubles it ("
+ },
+ {
   "ea": "0xb0450",
   "name": "GetMethodRestrictionsCommand",
   "confidence": "high",
@@ -3309,6 +3428,20 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: generic function "
+ },
+ {
+  "ea": "0xb1190",
+  "name": "IsMethodApplicable",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_B1190 matches IsMethodApplicable exactly. Guard: ProcParamArraySize(dword_13B3D8) < meth->minRestrictions(*(a1+12)), or > minRestrictions && maxRestrictions(*(a1+16)) != -1 => return 0 -- identical to the two-part applicability guard. Outer loop over ProcParamArrayS"
+ },
+ {
+  "ea": "0xb1360",
+  "name": "NextMethodP",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_B1360 matches NextMethodP exactly. if(!CurrentMethod=dword_13AEA0) return 0; then FindApplicableMethod(CurrentGeneric=dword_13AE9C, CurrentMethod=dword_13AEA0) via sub_B1650; if non-null: result=1 and meth->busy-- (--*(v2+4)); else 0. The same sub_B1650(dword_13AE9C"
  },
  {
   "ea": "0xb13a0",
@@ -3428,6 +3561,27 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: DefglobalModuleFunction"
+ },
+ {
+  "ea": "0xb42d0",
+  "name": "ResetDefglobals",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Registered at clash.c:111717 as sub_94590(\"defglobal\", sub_B42D0, 50) = EnvAddResetFunction(theEnv,\"defglobal\",ResetDefglobals,50); priority constant 50 matches CLIPS globlbsc.c:84 exactly. Body: guard on sub_B4AF0() (=EnvGetResetGlobals) returning early, then sub_966B0"
+ },
+ {
+  "ea": "0xb4310",
+  "name": "ResetDefglobalAction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Passed as the action callback inside sub_B42D0's DoForAllConstructs. Body matches ResetDefglobalAction line-for-line: EvaluateExpression(*(a1+52)=theDefglobal->initial, v7=&assignValue); on success v7[1]=2 (assignValue.type=SYMBOL, SYMBOL==2) and v7[2]=dword_1B14E0 (Fal"
+ },
+ {
+  "ea": "0xb4360",
+  "name": "SaveDefglobals",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Registered at clash.c:111716 as sub_94990(\"defglobal\", sub_B4360, 40) = AddSaveFunction(theEnv,\"defglobal\",SaveDefglobals,40); the distinctive priority constant 40 matches CLIPS globlbsc.c:83 exactly. Body sub_96160(a1, dword_1B1374=DefglobalConstruct) = SaveConstruct(l"
  },
  {
   "ea": "0xb4380",
@@ -3605,6 +3759,13 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xb72a0",
+  "name": "Instances",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_B72A0 is a near-exact structural clone of EnvInstances (the Env-stripped counterpart of the proposed 'Instances'). Both begin with TraversalID=GetTraversalID() and return early when ==-1. Then SaveCurrentModule (sub_C4AB0). The a2/theVModule branch is identical: if "
+ },
+ {
   "ea": "0xb7370",
   "name": "MakeInstance",
   "confidence": "high",
@@ -3722,6 +3883,20 @@
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xb82e0",
+  "name": "BinaryLoadInstances",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS body matches EnvBinaryLoadInstances (Env-prefixed variant) point-for-point. Opens with sub_E6DC0(aBloadInstances,...) == GenOpenReadBinary(theEnv,\"bload-instances\",file); on failure calls SetEvaluationError (sub_A3420(1)) and returns -1. Then VerifyBinaryHeader (nam"
+ },
+ {
+  "ea": "0xb8400",
+  "name": "SaveInstances",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS body matches EnvSaveInstances (Env-prefixed variant). Opens with ProcessSaveClassList(aSaveInstances,...) (named callee + string \"save-instances\"); early-return 0 when classList NULL and expr list present (if(result||!a4)). First SaveOrMarkInstances mark pass sub_B8"
  },
  {
   "ea": "0xb8570",
@@ -3955,6 +4130,27 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xbc4f0",
+  "name": "InactiveMsgModifyInstance",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS body is the exact Inactive wrapper shape: v4=sub_D48A0(1,..) [SetDelayObjectPatternMatching(TRUE)], inner call, sub_D48A0(v4,..) restore. Inner callee is already named MsgModifyInstance, matching CLIPS InactiveMsgModifyInstance which calls MsgModifyInstance between "
+ },
+ {
+  "ea": "0xbc520",
+  "name": "InactiveDuplicateInstance",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Same Inactive wrapper: SetDelayObjectPatternMatching(TRUE)/restore around inner call. Inner callee already named DuplicateInstance, exactly matching InactiveDuplicateInstance which wraps DuplicateInstance."
+ },
+ {
+  "ea": "0xbc550",
+  "name": "InactiveMsgDuplicateInstance",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Same Inactive wrapper shape; inner callee already named MsgDuplicateInstance, exactly matching InactiveMsgDuplicateInstance which wraps MsgDuplicateInstance. Ordering BC4F0/BC520/BC550 also aligns with CLIPS source order."
+ },
+ {
   "ea": "0xbc580",
   "name": "DirectDuplicateMsgHandler",
   "confidence": "high",
@@ -3967,6 +4163,13 @@
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xbc5c0",
+  "name": "DirectModifyMsgHandler",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS calls ModifyMsgHandlerSupport(a1,0,..). DirectModifyMsgHandler calls ModifyMsgHandlerSupport(theEnv,result,FALSE=0), while MsgModifyMsgHandler uses TRUE=1 and is at BC5E0. The 0 argument discriminates Direct correctly and the callee is already named ModifyMsgHandler"
  },
  {
   "ea": "0xbc5e0",
@@ -4361,11 +4564,39 @@
   "evidence": "unique shared literal: PPDefmoduleCommand"
  },
  {
+  "ea": "0xc3f60",
+  "name": "ClearDefmodules",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): sub_8ACA0 returns a global flag (Bloaded); guard 'if(result!=1)' = 'if not bloaded, do work' matching if(Bloaded==TRUE)return. sub_C4D70 walks defmodule linked list at dword_13B054 removing each and zeroing list/last pointers = RemoveAllDefmodules; sub_C4BC0 = CreateMai"
+ },
+ {
+  "ea": "0xc3f90",
+  "name": "SaveDefmodules",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Single arg (logicalName). Loops over GetNextDefmodule (sub_C4D30), fetches PP form (sub_C4D60), null-checks, then PrintInChunks (sub_DA270) + PrintRouter of '\\n' (sub_DCD70/asc_12A8A8). Matches CLIPS 6.2 SaveDefmodules which loops internally over all modules (6.24 ref s"
+ },
+ {
+  "ea": "0xc3ff0",
+  "name": "GetDefmoduleList",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Pure delegation: sub_94810(returnValue, sub_C4D30, sub_C4D50) = OldGetConstructList(theEnv, returnValue, EnvGetNextDefmodule, EnvGetDefmoduleName). sub_C4D30 is GetNextDefmodule (used as such in sub_C3F90/sub_C40C0) and sub_C4D50 is GetDefmoduleName (prints the name in "
+ },
+ {
   "ea": "0xc4010",
   "name": "PPDefmoduleCommand",
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xc4040",
+  "name": "PPDefmodule",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Two args (defmoduleName, logicalName). sub_C4F30(name)=FindDefmodule; NULL branch calls sub_DA620(aDefmodule_0,name)=CantFindItemErrorMessage(\"defmodule\",name) and returns 0/FALSE; non-NULL branch checks GetDefmodulePPForm (sub_C4D60), and if present PrintInChunks(logic"
  },
  {
   "ea": "0xc4090",
@@ -4641,6 +4872,13 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xc8870",
+  "name": "GetNthMessageArgument",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Body is `return 24*a1 + dword_13B3D4`, i.e. &ProcParamArray[n] with DATA_OBJECT stride of 24 bytes and dword_13B3D4 as the ProcParamArray base (same base used as +8=.value in the slot funcs). Matches source exactly; next DOS fn is NextHandlerAvailable, matching CLIPS so"
+ },
+ {
   "ea": "0xc88a0",
   "name": "NextHandlerAvailable",
   "confidence": "high",
@@ -4653,6 +4891,48 @@
   "confidence": "high",
   "source": "clips-errid",
   "evidence": "unique PrintErrorID (module,id) -> CLIPS 6.24 source fn CallNextHandler"
+ },
+ {
+  "ea": "0xc8b40",
+  "name": "FindApplicableOfName",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Calls FindHandlerNameGroup(cls,mname); uses cls->handlerCount-1 (a1[24]), cls->handlers (a1[23]), handlerOrderMap (a1[22]); breaks on hnd[arr[i]].name!=mname (name at +8, HANDLER stride 36); get_struct via free-list/sub_C1A70(8); busy++ (+4); IncrementDefclassBusyCount;"
+ },
+ {
+  "ea": "0xc8cf0",
+  "name": "JoinHandlerLinks",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Guard on tops[MPRIMARY]==NULL (a1[2]) -> PrintNoHandlerError, loop i=0..3 DestroyHandlerLinks(sub_C8790), SetEvaluationError(sub_A3420(1)), return 0. Else splices bots[MBEFORE]->nxt (a1[1]), then bots[MAROUND]->nxt (a1[0]), then bots[MPRIMARY]->nxt=tops[MAFTER] (a2[2]<-"
+ },
+ {
+  "ea": "0xc8d60",
+  "name": "PrintHandlerSlotGetFunction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Empty body. PrintHandlerSlotGetFunction has its whole body under #if DEVELOPER, so in the non-DEVELOPER build it compiles to an empty function. Positioned immediately before HandlerSlotGetFunction, exactly where the source places it. Evidence is positional + build-confi"
+ },
+ {
+  "ea": "0xc8d70",
+  "name": "HandlerSlotGetFunction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): theReference=ValueToBitMap (+16), theInstance=ProcParamArray[0].value (13B3D4+8), theDefclass=ClassIDMap[classID] (13A99C[classID]), compares theInstance->cls (+44); uses slotNameMap (+60)/slotAddresses (+72); else-branch checks maxSlotNameID (+76), slotNameMap==0, sp->"
+ },
+ {
+  "ea": "0xc8e40",
+  "name": "PrintHandlerSlotPutFunction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Empty body; PrintHandlerSlotPutFunction is entirely #if DEVELOPER so compiles to empty in this build. Sits immediately before HandlerSlotPutFunction, matching source order. Positional + build-config evidence, consistent."
+ },
+ {
+  "ea": "0xc8e50",
+  "name": "HandlerSlotPutFunction",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Same prologue as the Get variant (ValueToBitMap +16, ProcParamArray[0].value, ClassIDMap[classID], cls compare +44, slotAddresses +72, else->EarlySlotBindError). Then does the Put-specific work: no-write check ((*slot&0x20)==0 || override flag 13AF9C), else SlotAccessVi"
  },
  {
   "ea": "0xc8f60",
@@ -5166,6 +5446,20 @@
   "evidence": "in original clash.c"
  },
  {
+  "ea": "0xd8120",
+  "name": "GetBoundVariable",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS walks linked list from head dword_13B4C0 via next-pointer at offset 20, compares arg a2 against field at offset 0, and on match copies 4 consecutive fields (+4,+8,+12,+16) into a1[1..4] returning 1 else 0. Matches GetBoundVariable exactly: for-loop over BindList com"
+ },
+ {
+  "ea": "0xd8170",
+  "name": "FlushBindList",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): DOS body is result=sub_A3470(dword_13B4C0); dword_13B4C0=0; return. Exactly FlushBindList: ReturnValues(theEnv, BindList); BindList=NULL. Same BindList global dword_13B4C0 as the confirmed GetBoundVariable, mutually corroborating (sub_A3470=ReturnValues)."
+ },
+ {
   "ea": "0xd8190",
   "name": "PrognFunction",
   "confidence": "high",
@@ -5523,11 +5817,39 @@
   "evidence": "unique shared literal: PPDefruleCommand"
  },
  {
+  "ea": "0xde890",
+  "name": "ResetDefrules",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Exact structural match: dword_13B514=0 (CurrentEntityTimeTag=0L), sub_A2960() (EnvClearFocusStack, implicit-theEnv convention), sub_C4F30(aMain_3) (EnvFindDefmodule with \"MAIN\" string literal), Focus(v0) (EnvFocus). Same 4-step shape and the distinctive MAIN string."
+ },
+ {
+  "ea": "0xde8c0",
+  "name": "ClearDefrulesReady",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): if(dword_13AAC8) return 0 = if(ExecutingRule!=NULL) return FALSE; sub_A2960()=EnvClearFocusStack (same callee as ResetDefrules); sub_C4A50()=EnvGetCurrentModule with NULL->return-0, else set dword_13B514=0 (same CurrentEntityTimeTag global) and return 1. Compiler merged"
+ },
+ {
+  "ea": "0xde900",
+  "name": "ClearDefrules",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Two-statement body sub_C4F30(aMain_3)=EnvFindDefmodule(\"MAIN\") then Focus(v0)=EnvFocus. Identical callees and MAIN string as ResetDefrules' tail; matches ClearDefrules' exact 2-line body."
+ },
+ {
   "ea": "0xde940",
   "name": "UndefruleCommand",
   "confidence": "high",
   "source": "existing",
   "evidence": "in original clash.c"
+ },
+ {
+  "ea": "0xde960",
+  "name": "Undefrule",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Callee sub_96090 is unmistakably Undefconstruct: vtable deletability check (a2+36), RemoveConstructFromModule, delete (a2+44), single-construct path vs loop-all-constructs path, CantDeleteItemErrorMessage. EnvUndefrule -> Undefconstruct(theDefrule, DefruleConstruct) = s"
  },
  {
   "ea": "0xde980",
@@ -6034,6 +6356,27 @@
   "evidence": "unique shared literal: UndeftemplateCommand"
  },
  {
+  "ea": "0xe8ef0",
+  "name": "ResetDeftemplates",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): clash.c DeftemplateBasicCommands (ea E8E00) calls sub_94590((int)aDeftemplate_1,(int)sub_E8EF0,0). sub_94590 is proven = EnvAddResetFunction by its cross-construct use (registers reset handlers for deffacts/facts/defglobal/defrule with priorities 0/60/50/70), exactly ma"
+ },
+ {
+  "ea": "0xe8f00",
+  "name": "ClearDeftemplates",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Two independent proofs. (1) Body: v0=sub_E5680(aInitialFact_2 = \"initial-fact\"); return sub_EB960(v0,0) == CreateImpliedDeftemplate(theEnv, EnvAddSymbol(theEnv,\"initial-fact\"), FALSE) -- exact structural match to source line 139, including the FALSE(0) arg and the initi"
+ },
+ {
+  "ea": "0xe8f20",
+  "name": "SaveDeftemplates",
+  "confidence": "high",
+  "source": "clips-align",
+  "evidence": "align+adversarial-verify(r2): Registration: sub_94990((int)aDeftemplate_1,(int)sub_E8F20,10). sub_94990 is proven = AddSaveFunction by cross-construct use (registers named SaveDeffunctionHeaders and other SaveXxx wrappers; priorities 10/1000/0), and priority 10 matches source line 88 AddSaveFunction"
+ },
+ {
   "ea": "0xe8f40",
   "name": "UndeftemplateCommand",
   "confidence": "high",
@@ -6200,523 +6543,5 @@
   "confidence": "high",
   "source": "clips-string",
   "evidence": "unique shared literal: ListWatchItemsCommand"
- },
- {
-  "ea": "0x8cb70",
-  "name": "GetCreateAccessorString",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS sub_8CB70 reads a bitfield byte at (slot+1) and tests bits 0x8 and 0x10, returning exactly four string literals aRw_0=\"RW\", aNil_1=\"NIL\", aR_2=\"R\", aW_0=\"W\" (verified in clash.c lines 6087-6090). "
- },
- {
-  "ea": "0x8eb00",
-  "name": "ClassInfoFnxArgs",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS body at 0x8EB00 matches ClassInfoFnxArgs structurally line-for-line: *a2=0 (*inhp=0); !RtnArgCount() guard -> ExpectedCountError(a1,1,1)+sub_A3420(1)=SetEvaluationError(TRUE); ArgTypeCheck arg1 SY"
- },
- {
-  "ea": "0x9c1c0",
-  "name": "Undefinstances",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS sub_9C1C0 structurally matches EnvUndefinstances (Env-stripped macro form): Bloaded guard (sub_8ACA0 -> return 0), NULL-arg -> RemoveAllDefinstances (!a1 -> sub_9C6E0), IsDefinstancesDeletable che"
- },
- {
-  "ea": "0x9c220",
-  "name": "PPDefinstancesCommand",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_9C220 returns sub_95F20(aPpdefinstanc_0, DefinstancesData->construct dword_1B10A4, a3, a4), i.e. PPConstructCommand(theEnv,\"ppdefinstances\",...). Shared string literal aPpdefinstanc_0=\"ppdefinstan"
- },
- {
-  "ea": "0x9d020",
-  "name": "ResetDeffacts",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_9D020 returns sub_966B0(sub_9D050, dword_1B10D0, 1, 0). Matches DoForAllConstructs(theEnv, ResetDeffactsAction, DeffactsModuleIndex, TRUE, NULL): the action func-ptr arg is sub_9D050 (which is Res"
- },
- {
-  "ea": "0x9d050",
-  "name": "ResetDeffactsAction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_9D050 tests *(a1+20) (theDeffacts->assertList) for NULL and returns early, then calls sub_A3420(0) = SetEvaluationError(theEnv, FALSE), then EvaluateExpression(assertList, &local_buffer v4, ...). "
- },
- {
-  "ea": "0x9d080",
-  "name": "ClearDeffacts",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "References strings aAssert_1=\"assert\" and aInitialFact=\"initial-fact\". Two GenConstant calls (sub_A4AD0 with constants 10=FCALL and 35=DEFTEMPLATE_PTR), FindFunction(sub_A5D60), EnvFindDeftemplate(sub"
- },
- {
-  "ea": "0xa2de0",
-  "name": "EnvListFocusStack",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A2DE0 takes a logical-name arg, guards on dword_13AAD8 (CurrentFocus), and a do-while loop prints the module name (sub_C4D50 = EnvGetDefmoduleName) then the distinctive literal \"\\n\" via sub_DCD70 "
- },
- {
-  "ea": "0xa2e60",
-  "name": "EnvGetFocusStack",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A2E60 takes a DATA_OBJECT_PTR (a1), does a count pass over dword_13AAD8 (CurrentFocus, next at +8), sets type=4 (MULTIFIELD), calls sub_CA6B0(count) (EnvCreateMultifield), then a second loop marki"
- },
- {
-  "ea": "0xa3420",
-  "name": "SetEvaluationError",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A3420(result): dword_13AAF0=result; if(result==1) dword_13AAF4=1. Exactly matches SetEvaluationError: EvaluationError=value; if(value==TRUE) HaltExecution=TRUE. TRUE==1 magic, and the distinctive "
- },
- {
-  "ea": "0xa3440",
-  "name": "GetEvaluationError",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A3440() returns dword_13AAF0, which the 0xA3420 setter identified as the EvaluationError field. Matches GetEvaluationError: return EvaluationError. Trivial accessor, consistent flag address."
- },
- {
-  "ea": "0xa3450",
-  "name": "SetHaltExecution",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A3450(result): dword_13AAF4=result; return. Matches SetHaltExecution: HaltExecution=value. 13AAF4 was established as HaltExecution by the 0xA3420 setter's conditional write. No extra side-effect, "
- },
- {
-  "ea": "0xa3460",
-  "name": "GetHaltExecution",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A3460() returns dword_13AAF4 = HaltExecution field. Matches GetHaltExecution: return HaltExecution. Consistent flag address with the two setters."
- },
- {
-  "ea": "0xa3470",
-  "name": "ReturnValues",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "while(v1){ next=*(v1+20); if(*(v1+4)==4) sub_CA580(*(v1+8)) else sub_A3670(...); rtn_struct inline: link v1 onto free list *(dword_1B1390+96); v1=next; }. Matches ReturnValues: while loop over DATA_OB"
- },
- {
-  "ea": "0xa80d0",
-  "name": "FactSlotValue",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A80D0(a1=theFact, a2=theSlotName char*, a3=returnValue) reproduces FactSlotValue exactly: (1) tests whichDeftemplate->implied via *(a1+16)+24 &1; (2) strcmp(a2, aImplied) == strcmp(theSlotName,\"im"
- },
- {
-  "ea": "0xa81e0",
-  "name": "EnvFactSlotNames",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_A81E0(a1=theFact, a2=returnValue) reproduces EnvFactSlotNames (=FactSlotNames after Env-strip) exactly. Implied branch: sets type MULTIFIELD (a2[1]=4), sub_CA6B0(1)=EnvCreateMultifield(1), SetMFTy"
- },
- {
-  "ea": "0xb0330",
-  "name": "EnvGetDefmethodList",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_B0330 structurally matches EnvGetDefmethodList (Env-stripped form of proposal). Preamble reproduces the vgfunc!=NULL save/restore: EnvGetNextDefgeneric + SetNextDefgeneric(vgfunc,NULL) (sub_96640/"
- },
- {
-  "ea": "0xb1190",
-  "name": "IsMethodApplicable",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_B1190 matches IsMethodApplicable exactly. Guard: ProcParamArraySize(dword_13B3D8) < meth->minRestrictions(*(a1+12)), or > minRestrictions && maxRestrictions(*(a1+16)) != -1 => return 0 -- identica"
- },
- {
-  "ea": "0xb1360",
-  "name": "NextMethodP",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_B1360 matches NextMethodP exactly. if(!CurrentMethod=dword_13AEA0) return 0; then FindApplicableMethod(CurrentGeneric=dword_13AE9C, CurrentMethod=dword_13AEA0) via sub_B1650; if non-null: result=1"
- },
- {
-  "ea": "0xb42d0",
-  "name": "ResetDefglobals",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Registered at clash.c:111717 as sub_94590(\"defglobal\", sub_B42D0, 50) = EnvAddResetFunction(theEnv,\"defglobal\",ResetDefglobals,50); priority constant 50 matches CLIPS globlbsc.c:84 exactly. Body: guar"
- },
- {
-  "ea": "0xb4310",
-  "name": "ResetDefglobalAction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Passed as the action callback inside sub_B42D0's DoForAllConstructs. Body matches ResetDefglobalAction line-for-line: EvaluateExpression(*(a1+52)=theDefglobal->initial, v7=&assignValue); on success v7"
- },
- {
-  "ea": "0xb4360",
-  "name": "SaveDefglobals",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Registered at clash.c:111716 as sub_94990(\"defglobal\", sub_B4360, 40) = AddSaveFunction(theEnv,\"defglobal\",SaveDefglobals,40); the distinctive priority constant 40 matches CLIPS globlbsc.c:83 exactly."
- },
- {
-  "ea": "0xb72a0",
-  "name": "EnvInstances",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_B72A0 is a near-exact structural clone of EnvInstances (the Env-stripped counterpart of the proposed 'Instances'). Both begin with TraversalID=GetTraversalID() and return early when ==-1. Then Sav"
- },
- {
-  "ea": "0xb82e0",
-  "name": "EnvBinaryLoadInstances",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS body matches EnvBinaryLoadInstances (Env-prefixed variant) point-for-point. Opens with sub_E6DC0(aBloadInstances,...) == GenOpenReadBinary(theEnv,\"bload-instances\",file); on failure calls SetEvalu"
- },
- {
-  "ea": "0xb8400",
-  "name": "EnvSaveInstances",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS body matches EnvSaveInstances (Env-prefixed variant). Opens with ProcessSaveClassList(aSaveInstances,...) (named callee + string \"save-instances\"); early-return 0 when classList NULL and expr list"
- },
- {
-  "ea": "0xbc4f0",
-  "name": "InactiveMsgModifyInstance",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS body is the exact Inactive wrapper shape: v4=sub_D48A0(1,..) [SetDelayObjectPatternMatching(TRUE)], inner call, sub_D48A0(v4,..) restore. Inner callee is already named MsgModifyInstance, matching "
- },
- {
-  "ea": "0xbc520",
-  "name": "InactiveDuplicateInstance",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Same Inactive wrapper: SetDelayObjectPatternMatching(TRUE)/restore around inner call. Inner callee already named DuplicateInstance, exactly matching InactiveDuplicateInstance which wraps DuplicateInst"
- },
- {
-  "ea": "0xbc550",
-  "name": "InactiveMsgDuplicateInstance",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Same Inactive wrapper shape; inner callee already named MsgDuplicateInstance, exactly matching InactiveMsgDuplicateInstance which wraps MsgDuplicateInstance. Ordering BC4F0/BC520/BC550 also aligns wit"
- },
- {
-  "ea": "0xbc5c0",
-  "name": "DirectModifyMsgHandler",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS calls ModifyMsgHandlerSupport(a1,0,..). DirectModifyMsgHandler calls ModifyMsgHandlerSupport(theEnv,result,FALSE=0), while MsgModifyMsgHandler uses TRUE=1 and is at BC5E0. The 0 argument discrimin"
- },
- {
-  "ea": "0xc3f60",
-  "name": "ClearDefmodules",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "sub_8ACA0 returns a global flag (Bloaded); guard 'if(result!=1)' = 'if not bloaded, do work' matching if(Bloaded==TRUE)return. sub_C4D70 walks defmodule linked list at dword_13B054 removing each and z"
- },
- {
-  "ea": "0xc3f90",
-  "name": "SaveDefmodules",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Single arg (logicalName). Loops over GetNextDefmodule (sub_C4D30), fetches PP form (sub_C4D60), null-checks, then PrintInChunks (sub_DA270) + PrintRouter of '\\n' (sub_DCD70/asc_12A8A8). Matches CLIPS "
- },
- {
-  "ea": "0xc3ff0",
-  "name": "GetDefmoduleList",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Pure delegation: sub_94810(returnValue, sub_C4D30, sub_C4D50) = OldGetConstructList(theEnv, returnValue, EnvGetNextDefmodule, EnvGetDefmoduleName). sub_C4D30 is GetNextDefmodule (used as such in sub_C"
- },
- {
-  "ea": "0xc4040",
-  "name": "PPDefmodule",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Two args (defmoduleName, logicalName). sub_C4F30(name)=FindDefmodule; NULL branch calls sub_DA620(aDefmodule_0,name)=CantFindItemErrorMessage(\"defmodule\",name) and returns 0/FALSE; non-NULL branch che"
- },
- {
-  "ea": "0xc8870",
-  "name": "GetNthMessageArgument",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Body is `return 24*a1 + dword_13B3D4`, i.e. &ProcParamArray[n] with DATA_OBJECT stride of 24 bytes and dword_13B3D4 as the ProcParamArray base (same base used as +8=.value in the slot funcs). Matches "
- },
- {
-  "ea": "0xc8b40",
-  "name": "FindApplicableOfName",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Calls FindHandlerNameGroup(cls,mname); uses cls->handlerCount-1 (a1[24]), cls->handlers (a1[23]), handlerOrderMap (a1[22]); breaks on hnd[arr[i]].name!=mname (name at +8, HANDLER stride 36); get_struc"
- },
- {
-  "ea": "0xc8cf0",
-  "name": "JoinHandlerLinks",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Guard on tops[MPRIMARY]==NULL (a1[2]) -> PrintNoHandlerError, loop i=0..3 DestroyHandlerLinks(sub_C8790), SetEvaluationError(sub_A3420(1)), return 0. Else splices bots[MBEFORE]->nxt (a1[1]), then bots"
- },
- {
-  "ea": "0xc8d60",
-  "name": "PrintHandlerSlotGetFunction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Empty body. PrintHandlerSlotGetFunction has its whole body under #if DEVELOPER, so in the non-DEVELOPER build it compiles to an empty function. Positioned immediately before HandlerSlotGetFunction, ex"
- },
- {
-  "ea": "0xc8d70",
-  "name": "HandlerSlotGetFunction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "theReference=ValueToBitMap (+16), theInstance=ProcParamArray[0].value (13B3D4+8), theDefclass=ClassIDMap[classID] (13A99C[classID]), compares theInstance->cls (+44); uses slotNameMap (+60)/slotAddress"
- },
- {
-  "ea": "0xc8e40",
-  "name": "PrintHandlerSlotPutFunction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Empty body; PrintHandlerSlotPutFunction is entirely #if DEVELOPER so compiles to empty in this build. Sits immediately before HandlerSlotPutFunction, matching source order. Positional + build-config e"
- },
- {
-  "ea": "0xc8e50",
-  "name": "HandlerSlotPutFunction",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Same prologue as the Get variant (ValueToBitMap +16, ProcParamArray[0].value, ClassIDMap[classID], cls compare +44, slotAddresses +72, else->EarlySlotBindError). Then does the Put-specific work: no-wr"
- },
- {
-  "ea": "0xd8120",
-  "name": "GetBoundVariable",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS walks linked list from head dword_13B4C0 via next-pointer at offset 20, compares arg a2 against field at offset 0, and on match copies 4 consecutive fields (+4,+8,+12,+16) into a1[1..4] returning "
- },
- {
-  "ea": "0xd8170",
-  "name": "FlushBindList",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "DOS body is result=sub_A3470(dword_13B4C0); dword_13B4C0=0; return. Exactly FlushBindList: ReturnValues(theEnv, BindList); BindList=NULL. Same BindList global dword_13B4C0 as the confirmed GetBoundVar"
- },
- {
-  "ea": "0xde890",
-  "name": "ResetDefrules",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Exact structural match: dword_13B514=0 (CurrentEntityTimeTag=0L), sub_A2960() (EnvClearFocusStack, implicit-theEnv convention), sub_C4F30(aMain_3) (EnvFindDefmodule with \"MAIN\" string literal), Focus("
- },
- {
-  "ea": "0xde8c0",
-  "name": "ClearDefrulesReady",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "if(dword_13AAC8) return 0 = if(ExecutingRule!=NULL) return FALSE; sub_A2960()=EnvClearFocusStack (same callee as ResetDefrules); sub_C4A50()=EnvGetCurrentModule with NULL->return-0, else set dword_13B"
- },
- {
-  "ea": "0xde900",
-  "name": "ClearDefrules",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Two-statement body sub_C4F30(aMain_3)=EnvFindDefmodule(\"MAIN\") then Focus(v0)=EnvFocus. Identical callees and MAIN string as ResetDefrules' tail; matches ClearDefrules' exact 2-line body."
- },
- {
-  "ea": "0xde960",
-  "name": "Undefrule",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Callee sub_96090 is unmistakably Undefconstruct: vtable deletability check (a2+36), RemoveConstructFromModule, delete (a2+44), single-construct path vs loop-all-constructs path, CantDeleteItemErrorMes"
- },
- {
-  "ea": "0xe8ef0",
-  "name": "ResetDeftemplates",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "clash.c DeftemplateBasicCommands (ea E8E00) calls sub_94590((int)aDeftemplate_1,(int)sub_E8EF0,0). sub_94590 is proven = EnvAddResetFunction by its cross-construct use (registers reset handlers for de"
- },
- {
-  "ea": "0xe8f00",
-  "name": "ClearDeftemplates",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Two independent proofs. (1) Body: v0=sub_E5680(aInitialFact_2 = \"initial-fact\"); return sub_EB960(v0,0) == CreateImpliedDeftemplate(theEnv, EnvAddSymbol(theEnv,\"initial-fact\"), FALSE) -- exact structu"
- },
- {
-  "ea": "0xe8f20",
-  "name": "SaveDeftemplates",
-  "confidence": "high",
-  "source": "clips-align-r2",
-  "evidence": "Registration: sub_94990((int)aDeftemplate_1,(int)sub_E8F20,10). sub_94990 is proven = AddSaveFunction by cross-construct use (registers named SaveDeffunctionHeaders and other SaveXxx wrappers; priorit"
- },
- {
-  "ea": "0x15f72",
-  "name": "DLXSprite_RemapPalette",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Symbol aCannotConform2 (\"Cannot conform 2 pal sprite with imploding\") is referenced in exactly one function in each build. clash.c 0x15F72 calls sub_11DDD((int)aCannotConform2,0) on an error path; cla"
- },
- {
-  "ea": "0x1a83b",
-  "name": "WorldMap_RefreshUnitStatusPanel",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Anchor \"      %s\" is a weak whitespace format, but its symbol (aS_11/aS) appears in exactly one function per build, and the bodies match structurally: both check selected-unit == -1 (early return), te"
- },
- {
-  "ea": "0x1bf1e",
-  "name": "WorldMap_HandleScrollKeysAndIdle",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Raw asterisk runs are generic (10/7 hits), but the specific 56-char string is its own symbol (asc_110B24/asc_4EC5AC) referenced in exactly one function each. DOS 0x1BF1E reads scroll-key flags (off_13"
- },
- {
-  "ea": "0x1ebc4",
-  "name": "WorldMap_DrawTurnBannerReveal",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Symbol aTuraD (\"tura %d\") referenced in exactly one function per build (the separate \"(tura %d)\" literal is a different symbol elsewhere). clash.c 0x1EBC4 passes aTuraD to a text-draw call; clash95 us"
- },
- {
-  "ea": "0x1edd1",
-  "name": "WorldMap_RenderPlayerTurnIntroScreen",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Symbol aPlayerSYourTur (\"PLAYER %s - YOUR TURN\") referenced in exactly one function per build. clash.c 0x1EDD1 passes it with the current player name; clash95 usage is inside WorldMap_RenderPlayerTurn"
- },
- {
-  "ea": "0x20c97",
-  "name": "TextSprite_BuildOrLoadCachedFont",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Anchor '_ConformFont2Pal(%d)' referenced in exactly one function per file. Both bodies log it, free the cached sprite set, XOR/sum-checksum 768 bytes, sprintf(\"cache\\\\%02x%02x%04x.s32\"), then load or "
- },
- {
-  "ea": "0x26cdb",
-  "name": "Debug_LogUnitSquadDetails",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Both log aUnitD0x08x then loop over squad/formation count logging a15sPl1dP per element. DOS wrappers sub_26E06 and LogAllUnits mirror Win95's Unit_DebugDumpFormationSizesForStackIndex and LogAllUnits"
- },
- {
-  "ea": "0x61f8c",
-  "name": "WorldMap_NotifyPlagueOutbreak",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "'zaraza' (aZaraza) referenced in exactly one function per file. Both iterate 100 map entries at 467-byte stride, mask &7==5 and match currentPlayer/g_CurrentPlayerIndex, invoke the zaraza transition, "
- },
- {
-  "ea": "0x623c7",
-  "name": "Building_ShowConstructionFinishedDialog",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "'Message_BuildFinished %s' (aMessage_buildf) referenced in exactly one function per file. Both log it with a1+5, build two 3-entry notice-text arrays (off_137D1C/off_137D28 == g_BuildingCompleteNotice"
- },
- {
-  "ea": "0x64688",
-  "name": "MultiplayerSetup_RedrawOpponentNameList",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "aKarkhan name-table base referenced in exactly one function per file. Both loop 11 rows at y=22*i+134 x=356, fill/blit a rect, bound-check scrollOffset+i<20, highlight the selected row (18/21 vs dword"
- },
- {
-  "ea": "0x8fd70",
-  "name": "Class_CreateSystemClasses",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "aPrimitive (\"PRIMITIVE\") is uniquely declared/used once in each file; used in DOS 0x8FD70 (line 83111) and clash95 Class_CreateSystemClasses (121307). DOS body creates the full system class hierarchy "
- },
- {
-  "ea": "0x92150",
-  "name": "Class_EvaluateSlotDefaultValue",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "aDynamicDefault (\"dynamic default value\") declared/used exactly once each side; in DOS 0x92150 (line 84783, PrintSlot(...aDynamicDefault)) and clash95 Class_EvaluateSlotDefaultValue (186493, Output_Wr"
- },
- {
-  "ea": "0x928f0",
-  "name": "Rules_PrintPrompt",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "aClips (\"CLIPS> \") used in DOS 0x928F0 (line 85025, sub_DCD70(off_13B504[0], aClips)) and clash95 Rules_PrintPrompt (112876, Output_Write(g_IO_LogicalNameTable_WClips[0], aClips, this)). Each writes t"
- },
- {
-  "ea": "0x99490",
-  "name": "Rules_CheckConstraintParseConflicts",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "aAllowedInteger (\"allowed-integers/numbers\") declared/used once each side; DOS 0x99490 (line 90551, AttributeConflictErrorMessage(aType_0, aAllowedInteger)) and clash95 Rules_CheckConstraintParseConfl"
- },
- {
-  "ea": "0x9c570",
-  "name": "Definstances_ParseHeaderAndActiveFlag",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "Shared string \"active\" is generic (52/136 occurrences), but corroborating evidence is decisive: DOS 0x9C570 and clash95 Definstances_ParseHeaderAndActiveFlag are structurally near-identical \u2014 both cal"
- },
- {
-  "ea": "0xabf60",
-  "name": "Rules_ParseAssertRHSPattern",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"a relation name\" is unique in both files. DOS usage at clash.c:105437 sits inside marker 000ABF60 (the proposed EA), passing aARelationName to a reserved-pattern-symbol error routine; clash95 Rules_P"
- },
- {
-  "ea": "0xb3610",
-  "name": "Method_ReplaceCurrentArgumentRefs",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"current-argument\" unique in both. DOS sub_B3610 (marker 000B3610 contains usage at 111156) iterates a node list and strcmp's a field-offset-16 pointer against aCurrentArgumen; clash95 Method_ReplaceC"
- },
- {
-  "ea": "0xbfe60",
-  "name": "Parser_ResolveInstanceQuerySlotReference",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"query-var\" unique in both. DOS marker 000BFE60 opens a string source named aQueryVar via GetToken then closes it (sub_E3DE0); clash95 Parser_ResolveInstanceQuerySlotReference uses IO_OpenStringSource"
- },
- {
-  "ea": "0xc2140",
-  "name": "Mem_PoolAllocBlock",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"bmexit\" unique in both. Bodies are structurally identical: check init flag, call pool-init (InitializeBlockMemory/Mem_InitPool), register exit router with aBmexit and args (-2000,0,0,0,0,0,handler), "
- },
- {
-  "ea": "0xc4660",
-  "name": "Compiler_WritePortItemTableFile",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"struct portItem\" unique in both. DOS marker 000C4660 passes aStructPortitem into a printf-like call with an identical trailing argument list (a6, ...aStructPortitem, *(dword+20)+8, 0, 0) that clash95"
- },
- {
-  "ea": "0xcef80",
-  "name": "ObjectsCompiler_WriteSlotNameHashTable",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"SLOT_NAME *\" (aSlot_name) is used in exactly one function per build. DOS sub_CEF80 (132373-132406) uses it; clash95 WriteSlotNameHashTable (169114) uses it. Both call the code-file-open helper (sub_9"
- },
- {
-  "ea": "0xcf040",
-  "name": "ObjectsCompiler_WriteSlotNameRecords",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"SLOT_NAME\" (aSlot_name_0) used once per build. DOS sub_CF040 (132406-132686) uses it at offset 32 with nested hash-bucket iteration; clash95 WriteSlotNameRecords (169158) matches. Same 6-arg signatur"
- },
- {
-  "ea": "0xcf710",
-  "name": "ObjectsCompiler_WriteSlotDescArray",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"SLOT_DESC\" (aSlot_desc) used exactly once per build. DOS sub_CF710 (132686-132794) uses it; clash95 WriteSlotDescArray (169556) uses it. Function order and 12-arg signature align; string correctly di"
- },
- {
-  "ea": "0xcf990",
-  "name": "ObjectsCompiler_WriteSlotDescPointerArray",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"SLOT_DESC *\" (aSlot_desc_0) used exactly once per build. DOS sub_CF990 (132794-132908) uses it; clash95 WriteSlotDescPointerArray (169698) uses it. 12-arg signature matches; correctly paired to the s"
- },
- {
-  "ea": "0xcfb40",
-  "name": "ObjectsCompiler_WriteHandlerArray",
-  "confidence": "high",
-  "source": "clash95-xfer",
-  "evidence": "\"HANDLER\" (aHandler_1) used exactly once per build. DOS sub_CFB40 (132908) uses it at struct offset 24, guarded by *(a8+96), with matching 12-param signature; clash95 WriteHandlerArray (169813) matche"
  }
 ]
