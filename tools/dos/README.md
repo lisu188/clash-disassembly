@@ -34,7 +34,7 @@ seed_names.py <map.json> <report.json> --fix-dos-gettoken
 export_clash_c.py <output.c> <report.json>
 ```
 
-`export_features.py` records function names, sizes, basic-block counts, callers, callees, data references, and decoded literals. `seed_names.py` applies the master map, reports every collision, and optionally applies the known `GetToken` prototype at `0xE1E30`. `export_clash_c.py` writes the generated C file and a machine-readable marker/decompilation report.
+`export_features.py` records function names, sizes, basic-block/edge/back-edge counts, immediate constants, callers, callees, data references, and decoded literals. `seed_names.py` applies the master map, reports every collision, and optionally applies the known `GetToken` prototype at `0xE1E30`. `export_clash_c.py` writes the generated C file and a machine-readable marker/decompilation report.
 
 ## Master-map precedence
 
