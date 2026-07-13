@@ -43,7 +43,7 @@ visual-failure-montage.*
 __pycache__/
 *.pyc
 *.core
-core
+/core
 core.*
 *.dmp
 *.trace
