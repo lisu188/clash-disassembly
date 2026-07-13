@@ -55,7 +55,7 @@ master map (`tools/dos/dos_name_conflicts.json`).
 **Precedence:** registered ground-truth (immutable) > string-anchor / error-id
 evidence (override stale hand-labels, dropped where they contradict ground truth) >
 hand-labels. Consolidated into `tools/dos/dos_master_map.json` (built by
-`build_master_map.py`).
+`tools/dos/build_master_map.py`).
 
 **Coverage so far:** **782 / 4,219 named (19%)**, of which **600 / 2,015 in the CLIPS
 region (30%)** — before the sequence-alignment extension.
