@@ -115,3 +115,94 @@ TEST(objectives, mission13_shares_survival_gate) {
   CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
   gameData = gd; dword_5448A0 = ch;
 }
+
+/* Mission 05 uses two language-dependent elimination branches. The nonzero
+ * language branch targets player 3. The zero-language branch targets players
+ * 1 and 2. A building is live while construction_turns_remaining != -1; a
+ * stack is live while at least one of its ten unit slots is occupied. */
+static unsigned char cov_m05_gamedata[600000];
+
+static void cov_m05_reset(int language_index) {
+  memset(cov_m05_gamedata, 0, sizeof cov_m05_gamedata);
+  gameData = (int)(intptr_t)cov_m05_gamedata;
+  dword_5448A0 = 0;
+  ACTIVE_MISSION_INDEX = 5;
+  g_LanguageIndex = language_index;
+}
+
+static void cov_m05_set_building(int index, int owner, int live) {
+  unsigned char *building = BUILDING_RECORD(index);
+  memset(building, 0, BUILDING_RECORD_SIZE);
+  building[2] = (unsigned char)owner;
+  *(short *)(building + 16) = live ? 0 : -1;
+}
+
+static void cov_m05_set_stack(int index, int owner, int live) {
+  unsigned char *stack = UNIT_STACK(index);
+  int slot_index;
+
+  memset(stack, 0, UNIT_STACK_STRIDE);
+  UNIT_STACK_TILE_ROW(stack) = 10;
+  UNIT_STACK_TILE_COLUMN(stack) = 10;
+  UNIT_STACK_OWNER_INDEX(stack) = (unsigned char)owner;
+  for (slot_index = 0; slot_index < UNIT_STACK_SLOT_COUNT; ++slot_index)
+    UNIT_SLOT_TYPE(UNIT_STACK_SLOT(stack, slot_index)) = -1;
+  if (live)
+    UNIT_SLOT_TYPE(UNIT_STACK_SLOT(stack, 0)) = UNIT_TYPE_PEASANT;
+}
+
+TEST(objectives, mission05_nonzero_language_complete_without_player3_survivors) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  cov_m05_set_building(4, 0, 1);
+  cov_m05_set_stack(11, 0, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_nonzero_language_blocked_by_live_player3_building) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  cov_m05_set_building(4, 3, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_nonzero_language_ignores_destroyed_player3_building) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  cov_m05_set_building(4, 3, 0);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_nonzero_language_blocked_by_live_player3_stack) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  cov_m05_set_stack(11, 3, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_nonzero_language_ignores_empty_player3_stack) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(1);
+  cov_m05_set_stack(11, 3, 0);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
+
+TEST(objectives, mission05_zero_language_targets_players1_and2_not_player3) {
+  int gd = gameData, ch = dword_5448A0, lang = g_LanguageIndex;
+  cov_m05_reset(0);
+  cov_m05_set_building(4, 3, 1);
+  cov_m05_set_stack(11, 3, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 1);
+  cov_m05_reset(0);
+  cov_m05_set_building(4, 1, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
+  cov_m05_reset(0);
+  cov_m05_set_stack(11, 2, 1);
+  CHECK_EQ(Mission_CheckObjectiveComplete(0, 0.0), 0);
+  gameData = gd; dword_5448A0 = ch; g_LanguageIndex = lang;
+}
